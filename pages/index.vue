@@ -1,13 +1,5 @@
 <template>
   <div>
-    <h1>Au boulot</h1>
-
-    <Button type="primary" size="medium">Suivant</Button>
+    <h1>REVA</h1>
   </div>
 </template>
-
-<script lang="ts">
-// import Vue from 'vue'
-
-// export default Vue.extend({})
-</script>

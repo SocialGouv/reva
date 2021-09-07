@@ -5,7 +5,7 @@
 <script lang="ts">
 import { inspect } from '@xstate/inspect'
 
-if (process.client) {
+if (!process.env.isProduction && process.client) {
   inspect({
     // options
     // url: 'http://localhost:3001/viz', // (default)

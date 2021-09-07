@@ -47,4 +47,8 @@ export default {
   server: {
     host: '0',
   },
+  env: {
+    baseUrl: process.env.BASE_URL || 'http://localhost:3000',
+    isProduction: process.env.NODE_ENV === 'production',
+  },
 }
