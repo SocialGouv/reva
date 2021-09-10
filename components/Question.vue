@@ -56,14 +56,15 @@ export default defineComponent({
     },
   },
 
-  setup(_props) {},
-  methods: {
-    onSelectAnswer(answer: any) {
-      this.$emit('selectAnswer', { answer })
-    },
-    onSelectSatisfactionAnswer(answer: any) {
-      this.$emit('selectSatisfactionAnswer', { answer })
-    },
+  setup(_props, { emit }) {
+    return {
+      onSelectAnswer(answer: any) {
+        emit('selectAnswer', { answer })
+      },
+      onSelectSatisfactionAnswer(answer: any) {
+        emit('selectSatisfactionAnswer', { answer })
+      },
+    }
   },
 })
 </script>

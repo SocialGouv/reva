@@ -28,10 +28,12 @@ export default defineComponent({
       default: () => {},
     },
   },
-  methods: {
-    onStart() {
-      this.$emit('start')
-    },
+  setup(_props, { emit }) {
+    return {
+      onStart() {
+        emit('start')
+      },
+    }
   },
 })
 </script>
