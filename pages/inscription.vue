@@ -1,11 +1,19 @@
 <template>
-  <Questions :questions="questions" />
+  <div>
+    <Welcome
+      v-if="state.matches('welcome')"
+      :is-loading-questions="state.matches('welcome.loading')"
+      :error="state.context.error"
+      @start="send('START')"
+    />
+    <Questions
+      v-if="state.matches('questions')"
+      :questions="state.context.questions"
+    />
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from '@nuxtjs/composition-api'
-import { getQuestions, Question } from '@/services/questions'
-
 // Questions
 // [{
 //   "id": "132123123123",
@@ -48,20 +56,17 @@ import { getQuestions, Question } from '@/services/questions'
 //     }
 //   ],
 // }
+import { defineComponent } from '@nuxtjs/composition-api'
+import { useMachine } from 'xstate-vue2'
+import { onBoardingMachine } from '~/machines/on-boarding.machine'
 
 export default defineComponent({
   setup() {
-    const questions = ref([] as Question[])
-
-    const fetchQuestions = async () => {
-      questions.value = await getQuestions()
-    }
-
-    onMounted(fetchQuestions)
+    const { state, send } = useMachine(onBoardingMachine, { devTools: true })
 
     return {
-      questions,
-      fetchQuestions,
+      state,
+      send,
     }
   },
 })

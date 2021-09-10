@@ -3,11 +3,14 @@ import axios from 'axios'
 export interface Answer {
   id: string
   label: string
+  description?: string
   order: number
 }
 
 export interface SatisfactionQuestion {
   label: string
+  description?: string
+  additionalInformation?: string
   answers: Answer[]
 }
 
