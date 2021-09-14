@@ -40,18 +40,39 @@ router.get('/questions', (_req: any, res: any) => {
           order: 5,
         },
       ],
-      survey: {
-        label: 'survey question ?',
+      satisfactionQuestion: {
+        id: '123r2324234',
+        label: `Selon vous, la question ci-dessus permet de savoir qu'il existe bien une relation entre votre ou vos métiers et le diplôme ciblé`,
         answers: [
           {
             id: 's234sdf2345wdf235',
-            label: 'answer 1',
+            label: `Complètement d'accord`,
             order: 1,
+            requireAdditionalInformation: false,
           },
           {
             id: 's36sdge56dgf45',
-            label: 'answer 2',
+            label: `Plutôt d'accord`,
             order: 2,
+            requireAdditionalInformation: false,
+          },
+          {
+            id: 's36sdgee6dgh45',
+            label: `Ni d'accord, ni pas d'accord`,
+            order: 3,
+            requireAdditionalInformation: true,
+          },
+          {
+            id: 's36sdge56dgf456',
+            label: `Pas d'accord`,
+            order: 4,
+            requireAdditionalInformation: true,
+          },
+          {
+            id: 's36sdfse56dgf45',
+            label: `Pas du tout d'accord`,
+            order: 5,
+            requireAdditionalInformation: true,
           },
         ],
       },
@@ -88,18 +109,34 @@ router.get('/questions', (_req: any, res: any) => {
           order: 5,
         },
       ],
-      survey: {
-        label: 'survey question ?',
+      satisfactionQuestion: {
+        id: '123r2324234',
+        label: `Selon vous, la question ci-dessus permet de quantifier vos expériences, vos pratiques et vos savoir-faire`,
         answers: [
           {
-            id: '2s234sdf2345wdf235',
-            label: 'answer 1',
+            id: 's234sdf2345wdf235',
+            label: `Complètement d'accord`,
             order: 1,
           },
           {
-            id: '2s36sdge56dgf45',
-            label: 'answer 2',
+            id: 's36sdge56dgf45',
+            label: `Plutôt d'accord`,
             order: 2,
+          },
+          {
+            id: 's36sdgee6dgh45',
+            label: `Ni d'accord, ni pas d'accord`,
+            order: 3,
+          },
+          {
+            id: 's34gdfgs36sdge56dgf45',
+            label: `Pas d'accord`,
+            order: 4,
+          },
+          {
+            id: 's36sdfse56dgf45',
+            label: `Pas du tout d'accord`,
+            order: 5,
           },
         ],
       },

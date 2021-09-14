@@ -13,6 +13,7 @@
         text-indigo-600
         border-gray-300
         focus:ring-indigo-500
+        flex-none
       "
       :aria-describedby="id + '-description'"
       :aria-labelledby="id + '-label'"
@@ -59,11 +60,12 @@ export default defineComponent({
     },
   },
 
-  setup(_props) {},
-  methods: {
-    onChange() {
-      this.$emit('change')
-    },
+  setup(_props, { emit }) {
+    return {
+      onChange() {
+        emit('change')
+      },
+    }
   },
 })
 </script>

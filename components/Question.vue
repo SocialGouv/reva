@@ -1,6 +1,6 @@
 <template>
-  <section class="px-4 flex justify-center bg-white transition-opacity">
-    <div class="w-full max-w-xl mx-auto pb-24 pt-6">
+  <section class="px-4 flex flex-1 justify-center transition-opacity">
+    <div class="w-full max-w-xl mx-auto pt-6">
       <div class="pb-5">
         <h3 class="text-2xl leading-10 font-medium text-gray-900">
           {{ question.label }}
@@ -18,12 +18,41 @@
             v-for="answer in question.answers"
             :id="answer.id"
             :key="answer.id"
-            :checked="false"
+            :checked="answer.id === selectedAnswer.id"
             :name="question.id"
             :label="answer.label"
             :description="answer.description"
             @change="onSelectAnswer(answer)"
           />
+        </div>
+
+        <div
+          v-if="
+            currentQuestion.answer &&
+            currentQuestion.answer.requireAdditionalInformation
+          "
+          class="mt-4"
+        >
+          <label for="about" class="block text-sm font-medium sm:mt-px sm:pt-2">
+            Pouvez-vous compléter votre choix ?
+          </label>
+          <div class="mt-1 sm:mt-0 sm:col-span-2">
+            <textarea
+              id="additionalInformation"
+              :value="currentQuestion.additionalInformation"
+              name="about"
+              rows="5"
+              class="
+                block
+                w-full
+                focus:ring-indigo-500 focus:border-indigo-500
+                sm:text-sm
+                border border-gray-300
+                rounded-md
+              "
+              @input="onChangeAdditionalInformation"
+            ></textarea>
+          </div>
         </div>
       </fieldset>
     </div>
@@ -31,7 +60,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from '@nuxtjs/composition-api'
+import {
+  defineComponent,
+  PropType,
+  reactive,
+  toRefs,
+} from '@nuxtjs/composition-api'
 import Checkbox from './Checkbox.vue'
 import { Question } from '~/services/questions'
 
@@ -42,6 +76,10 @@ export default defineComponent({
       type: Object as PropType<Question>,
       required: true,
     },
+    selectedAnswer: {
+      type: Object,
+      default: () => ({}),
+    },
     selectAnswer: {
       type: Function,
       default: () => {},
@@ -50,19 +88,49 @@ export default defineComponent({
       type: Function,
       default: () => {},
     },
-    isLastQuestion: {
-      type: Boolean,
-      default: false,
-    },
   },
 
-  setup(_props, { emit }) {
+  setup(props, { emit }) {
+    const { selectedAnswer } = toRefs(props)
+
+    const emitChange = () => {
+      if (!currentQuestion.answer.requireAdditionalInformation) {
+        currentQuestion.additionalInformation = null
+      }
+
+      emit('selectAnswer', {
+        answer: {
+          ...currentQuestion.answer,
+          additionalInformation: currentQuestion.additionalInformation,
+        },
+      })
+    }
+
+    const currentQuestion = reactive({
+      answer: selectedAnswer.value,
+      additionalInformation: selectedAnswer.value.additionalInformation,
+    })
     return {
+      currentQuestion,
       onSelectAnswer(answer: any) {
-        emit('selectAnswer', { answer })
+        currentQuestion.answer = answer
+
+        if (
+          !currentQuestion.answer.requireAdditionalInformation ||
+          !!currentQuestion.additionalInformation
+        ) {
+          emitChange()
+        }
       },
-      onSelectSatisfactionAnswer(answer: any) {
-        emit('selectSatisfactionAnswer', { answer })
+      onChangeAdditionalInformation($event: any) {
+        currentQuestion.additionalInformation = $event.target.value
+
+        if (
+          !currentQuestion.answer.requireAdditionalInformation ||
+          !!currentQuestion.additionalInformation
+        ) {
+          emitChange()
+        }
       },
     }
   },

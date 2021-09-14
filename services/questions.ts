@@ -4,14 +4,8 @@ export interface Answer {
   id: string
   label: string
   description?: string
+  requireAdditionalInformation: boolean
   order: number
-}
-
-export interface SatisfactionQuestion {
-  label: string
-  description?: string
-  additionalInformation?: string
-  answers: Answer[]
 }
 
 export interface Question {
@@ -19,10 +13,13 @@ export interface Question {
   label: string
   order: number
   answers: Answer[]
-  satisfactionQuestion: SatisfactionQuestion
+}
+
+export interface UserQuestion extends Question {
+  satisfactionQuestion: Question
 }
 
 export const getQuestions = async () => {
   const result = await axios.get('/api/questions')
-  return result.data as Question[]
+  return result.data as UserQuestion[]
 }
