@@ -1,27 +1,38 @@
-import { assign, createMachine } from 'xstate'
-import { getQuestions } from '~/services/questions'
+import { assign } from 'xstate'
+import { createModel } from 'xstate/lib/model'
+import { Survey, getSurvey } from '~/services/survey'
 
-export const onBoardingMachine = createMachine({
+const onBoardingModel = createModel(
+  {
+    survey: null as unknown as Survey,
+    error: null as unknown as string | null,
+  },
+  {
+    events: {
+      START: () => ({}),
+      QUESTIONS_ANSWERED: () => ({}),
+    },
+  }
+)
+
+export const onBoardingMachine = onBoardingModel.createMachine({
   id: 'onBoarding',
   initial: 'welcome',
-  context: {
-    questions: [],
-    error: null,
-  },
+  context: onBoardingModel.initialContext,
   states: {
     welcome: {
       initial: 'loading',
       states: {
         loading: {
           invoke: {
-            id: 'getQuestions',
-            src: (_context: any, _event: any) => getQuestions,
+            id: 'getSurvey',
+            src: (_context: any, _event: any) => getSurvey,
             onDone: {
               target: 'success',
               actions: assign({
-                questions: (_context, event) => event.data,
+                survey: (_context, event) => event.data as Survey,
                 error: (_context, event) =>
-                  event.data.length === 0 ? 'Pas de questions' : null,
+                  event.data.questions.length === 0 ? 'Pas de questions' : null,
               }),
             },
             onError: {
@@ -35,10 +46,10 @@ export const onBoardingMachine = createMachine({
         failure: {},
       },
       on: {
-        START: 'questions',
+        START: 'survey',
       },
     },
-    questions: {
+    survey: {
       on: {
         QUESTIONS_ANSWERED: 'end',
       },

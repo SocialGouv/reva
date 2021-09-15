@@ -1,7 +1,7 @@
 const bodyParser = require('body-parser')
 const app = require('express')()
 
-const questions = require('./questions')
+const questions = require('./survey')
 
 app.use(bodyParser.json())
 app.use(questions)

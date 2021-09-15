@@ -6,9 +6,10 @@
       :error="state.context.error"
       @start="send('START')"
     />
-    <Questions
-      v-if="state.matches('questions')"
-      :questions="state.context.questions"
+    <Survey
+      v-if="state.matches('survey')"
+      :survey="state.context.survey"
+      @surveyAnswered="surveyAnswered"
     />
   </div>
 </template>
@@ -64,9 +65,12 @@ export default defineComponent({
   setup() {
     const { state, send } = useMachine(onBoardingMachine, { devTools: true })
 
+    const surveyAnswered = () => {}
+
     return {
       state,
       send,
+      surveyAnswered,
     }
   },
 })

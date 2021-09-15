@@ -67,7 +67,7 @@ import {
   toRefs,
 } from '@nuxtjs/composition-api'
 import Checkbox from './Checkbox.vue'
-import { Question } from '~/services/questions'
+import { Question } from '~/services/survey'
 
 export default defineComponent({
   components: { Checkbox },
@@ -79,10 +79,6 @@ export default defineComponent({
     selectedAnswer: {
       type: Object,
       default: () => ({}),
-    },
-    selectAnswer: {
-      type: Function,
-      default: () => {},
     },
     closeQuestion: {
       type: Function,

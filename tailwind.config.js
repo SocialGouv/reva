@@ -16,6 +16,7 @@ module.exports = {
   variants: {
     extend: {
       opacity: ['disabled'],
+      padding: ['last'],
     },
   },
   plugins: [
