@@ -1,3 +1,6 @@
+const plugin = require('tailwindcss/plugin');
+// const defaultTheme = require('tailwindcss/defaultTheme');
+
 module.exports = {
   purge: [
     './components/**/*.{vue,js}',
@@ -15,5 +18,30 @@ module.exports = {
       opacity: ['disabled'],
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/line-clamp'),
+    plugin(function ({ addUtilities }) {
+      const capitalizeFirst = {
+        '.capitalize-first:first-letter': {
+          textTransform: 'uppercase',
+        }
+      }
+      const extendUnderline = {
+        '.underline-resport': {
+          'textDecoration': 'underline',
+          'text-decoration-color': '#17DC2B',
+        },
+      }
+      const bgOverlay = {
+        '.bg-overlay': {
+          'background': 'linear-gradient(var(--overlay-angle), var(--overlay-colors)), var(--overlay-image)',
+          'background-position': 'center',
+          'background-size': 'cover',
+        }
+      }
+      addUtilities([capitalizeFirst, bgOverlay, extendUnderline]);
+    }),
+  ],
 }
