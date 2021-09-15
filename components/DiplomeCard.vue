@@ -5,7 +5,7 @@
         <p class="text-sm font-medium text-custom">
           Région concernée : Pays de la Loire (44, 49, 53, 85)
         </p>
-        <p class="text-xl font-semibold text-gray-900 mt-2">
+        <p class="text-2xl font-semibold text-gray-900 mt-2">
           Diplôme d'état d'accessibilité à l'éducation sanitaire et social
         </p>
         <p class="mt-3 text-base text-gray-500">
@@ -28,5 +28,8 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
+.text-custom {
+  color: #3A21BB
+}
 </style>

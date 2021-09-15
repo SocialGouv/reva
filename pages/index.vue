@@ -188,7 +188,7 @@
           </div>
 
 
-          <div class="diplomes grid grid-cols-3 gap-8">
+          <div class="diplomes grid grid-cols-1 sm:grid-cols-3 gap-8">
 
             <DiplomeCard />
             <DiplomeCard />
@@ -213,10 +213,10 @@
     <section class="bg-custom text-white">
       <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div class="py-12">
-          <div class="mt-4 max-w-3xl mx-auto text-center">
+          <div class="px-6 mt-4 max-w-3xl mx-auto text-center">
             <h2 class="text-4xl font-extrabold text-white sm:text-5xl sm:tracking-tight">Qu'est ce qui vous attends ?</h2>
           </div>
-          <div class="flow-root mt-20 max-w-sm mx-auto">
+          <div class="flow-root px-6 mt-20 max-w-sm mx-auto">
             <ul role="list" class="-mb-8">
               <li>
                 <div class="relative pb-8">
@@ -321,7 +321,7 @@
     <section class="bg-white">
       <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div class="py-12">
-          <div class="mt-4 max-w-3xl mx-auto text-center">
+          <div class="px-6 mt-4 max-w-3xl mx-auto text-center">
             <h3 class="text-4xl font-extrabold sm:text-5xl sm:tracking-tight">Qui sommes-nous ?</h3>
           </div>
           <div class="mt-10">
@@ -366,8 +366,5 @@
 <style lang="scss" scoped>
 .bg-custom {
   background-color: #3A21BB
-}
-.text-custom {
-  color: #3A21BB
 }
 </style>
