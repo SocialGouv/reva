@@ -24,7 +24,7 @@
 
                   <div class="sm:mx-auto sm:w-full sm:max-w-md">
                     <div class="bg-white pt-4 py-8 px-4 shadow sm:rounded-lg sm:px-10">
-                      <form class="space-y-6" action="#" method="POST">
+                      <form  v-on:submit.prevent="HighFive" class="space-y-6" action="#" method="POST">
 
                         <fieldset class="mt-2 sm:mt-6">
                           <div>
@@ -362,6 +362,33 @@
 
   </div>
 </template>
+
+<script>
+import confetti from 'canvas-confetti'
+export default {
+  methods: {
+    HighFive() {
+
+      confetti({
+        particleCount: 100,
+        startVelocity: 30,
+        spread: 360,
+        origin: {
+          x: Math.random(),
+          y: Math.random() - 0.2
+        }
+      });
+
+      setTimeout( () => {
+        // go !
+      }
+      , 900)
+
+    }
+  }
+}
+
+</script>
 
 <style lang="scss" scoped>
 .bg-custom {

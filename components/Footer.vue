@@ -29,7 +29,7 @@
             </div>
           </div>
 
-          <div class="mt-12 flex flex-col sm:flex-row sm:gap-8 xl:mt-0 xl:col-span-2 border-t pt-6">
+          <div class="mt-12 flex flex-col sm:flex-row sm:gap-8 xl:col-span-2 border-t pt-6">
 
             <div class="sm:border-r pr-4">
               <a href="#">Plan du site</a>
