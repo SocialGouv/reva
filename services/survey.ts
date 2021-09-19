@@ -25,7 +25,7 @@ export interface Survey {
   questions: UserQuestion[]
 }
 
-interface Canditate {
+export interface Candidate {
   email: string
   firstname: string
   lastname: string
@@ -49,7 +49,7 @@ export const postQuestions = ({
 }: {
   surveyId: string
   answers: any
-  candidate: Canditate
+  candidate: Candidate
 }) => {
   return axios.post('/api/surveys/latest/candidates', {
     surveyId,

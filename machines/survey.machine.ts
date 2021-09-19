@@ -1,6 +1,11 @@
-import { assign, createMachine } from 'xstate'
+import { assign } from 'xstate'
 import { createModel } from 'xstate/lib/model'
-import { Answer, postQuestions, UserQuestion } from '~/services/survey'
+import {
+  Answer,
+  Candidate,
+  postQuestions,
+  UserQuestion,
+} from '~/services/survey'
 
 const surveyModel = createModel(
   {
@@ -12,11 +17,7 @@ const surveyModel = createModel(
       [key: string]: { answer: Answer; satisfactionAnswer: Answer }
     },
     nbQuestions: 0,
-    candidate: null as unknown as {
-      firstname: string
-      email: string
-      lastname: string
-    },
+    candidate: null as unknown as Candidate | null,
   },
   {
     events: {
