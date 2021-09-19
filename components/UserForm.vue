@@ -13,7 +13,7 @@
           <!-- Checked: "bg-indigo-50 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
           <p class="block">Donne nous ton email:</p>
           <input
-            v-model="email"
+            v-model="candidate.email"
             class="
               mt-2
               focus:ring-indigo-500 focus:border-indigo-500
@@ -28,6 +28,73 @@
             type="email"
             name="email"
             placeholder="john.doe@mail.com"
+            required="true"
+          />
+        </div>
+        <div class="flex flex-col bg-white rounded-md">
+          <!-- Checked: "bg-indigo-50 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
+          <p class="block">Donne nous ton prénom:</p>
+          <input
+            v-model="candidate.firstname"
+            class="
+              mt-2
+              focus:ring-indigo-500 focus:border-indigo-500
+              block
+              w-full
+              shadow-sm
+              px-4
+              py-2
+              border-gray-100 border
+              rounded
+            "
+            type="text"
+            name="firstname"
+            placeholder="John"
+            required="true"
+          />
+        </div>
+        <div class="flex flex-col bg-white rounded-md">
+          <!-- Checked: "bg-indigo-50 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
+          <p class="block">Donne nous ton nom:</p>
+          <input
+            v-model="candidate.lastname"
+            class="
+              mt-2
+              focus:ring-indigo-500 focus:border-indigo-500
+              block
+              w-full
+              shadow-sm
+              px-4
+              py-2
+              border-gray-100 border
+              rounded
+            "
+            type="text"
+            name="lastname"
+            placeholder="Doe"
+            required="true"
+          />
+        </div>
+        <div class="flex flex-col bg-white rounded-md">
+          <!-- Checked: "bg-indigo-50 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
+          <p class="block">Donne nous ton numero de telephone:</p>
+          <input
+            v-model="candidate.phoneNumber"
+            class="
+              mt-2
+              focus:ring-indigo-500 focus:border-indigo-500
+              block
+              w-full
+              shadow-sm
+              px-4
+              py-2
+              border-gray-100 border
+              rounded
+            "
+            type="tel"
+            name="phoneNumber"
+            placeholder="0600110011"
+            pattern="[0-9]{10}"
             required="true"
           />
         </div>
@@ -50,17 +117,24 @@
         md:justify-end
       "
     >
-      <Button :disabled="!isValidEmail" @click="register"> Terminer</Button>
+      <Button :disabled="!isValideCandidate" @click="register">
+        Terminer</Button
+      >
     </div>
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
+import { defineComponent, reactive, ref, watch } from '@nuxtjs/composition-api'
 import * as yup from 'yup'
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
+  firstname: yup.string().required(),
+  lastname: yup.string().required(),
+  phoneNumber: yup
+    .string()
+    .matches(/^[0-9]{10}$/, 'Numéro de téléphone invalide.'),
 })
 
 export default defineComponent({
@@ -72,20 +146,23 @@ export default defineComponent({
     },
   },
   setup(_props, { emit }) {
-    const email = ref('')
-    const isValidEmail = ref(false)
+    const candidate = reactive({
+      email: '',
+      firstname: '',
+      lastname: '',
+      phoneNumber: '',
+    })
+    const isValideCandidate = ref(false)
 
     const register = () => {
-      emit('submit', email.value)
+      emit('submit', candidate)
     }
 
-    watch(email, async () => {
-      const isValid = await schema.isValid({
-        email: email.value,
-      })
-      isValidEmail.value = isValid
+    watch(candidate, async () => {
+      const isValid = await schema.isValid(candidate)
+      isValideCandidate.value = isValid
     })
-    return { email, register, isValidEmail }
+    return { candidate, register, isValideCandidate }
   },
 })
 </script>

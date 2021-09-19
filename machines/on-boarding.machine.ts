@@ -5,6 +5,7 @@ import { Survey, getSurvey } from '~/services/survey'
 const onBoardingModel = createModel(
   {
     survey: null as unknown as Survey,
+    useSatisfaction: false,
     error: null as unknown as string | null,
   },
   {

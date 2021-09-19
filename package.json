@@ -10,7 +10,8 @@
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "prepare": "husky install",
     "lint": "yarn lint:js",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "db-migrate": "db-migrate"
   },
   "lint-staged": {
     "*.{js,vue}": "eslint"
@@ -18,6 +19,7 @@
   "dependencies": {
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/composition-api": "^0.28.0",
+    "@nuxtjs/dotenv": "^1.4.1",
     "@tailwindcss/forms": "^0.3.3",
     "@tailwindcss/line-clamp": "^0.2.1",
     "@tailwindcss/typography": "^0.4.1",
@@ -26,9 +28,11 @@
     "canvas-confetti": "^1.4.0",
     "core-js": "^3.15.1",
     "db-migrate": "^0.11.12",
+    "db-migrate-pg": "^1.2.2",
     "express": "^4.17.1",
     "node-sass": "^6.0.1",
     "nuxt": "^2.15.7",
+    "pg": "^8.7.1",
     "sass": "^1.41.0",
     "sass-loader": "10.1.1",
     "xstate": "^4.23.4",

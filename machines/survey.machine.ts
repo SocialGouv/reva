@@ -4,6 +4,7 @@ import { Answer, postQuestions, UserQuestion } from '~/services/survey'
 
 const surveyModel = createModel(
   {
+    id: null as unknown as string,
     previousQuestions: [],
     currentQuestion: null as unknown as UserQuestion,
     nextQuestions: [] as UserQuestion[],
@@ -11,6 +12,11 @@ const surveyModel = createModel(
       [key: string]: { answer: Answer; satisfactionAnswer: Answer }
     },
     nbQuestions: 0,
+    candidate: null as unknown as {
+      firstname: string
+      email: string
+      lastname: string
+    },
   },
   {
     events: {
@@ -107,17 +113,27 @@ export const surveyMachine = surveyModel.createMachine({
       states: {
         idle: {
           on: {
-            SUBMIT: 'submittingData',
+            SUBMIT: {
+              target: 'submittingData',
+              actions: surveyModel.assign({
+                candidate: (_context: any, event: any) => ({
+                  email: event.email,
+                  firstname: event.firstname,
+                  lastname: event.lastname,
+                  phoneNumber: event.phoneNumber,
+                }),
+              }),
+            },
           },
         },
         submittingData: {
           invoke: {
             id: 'postData',
-            src: (context: any, event: any) =>
+            src: (context: any, _event: any) =>
               postQuestions({
-                surveyId: '1234',
+                surveyId: context.id,
                 answers: context.answers,
-                email: event.email,
+                candidate: context.candidate,
               }),
             onDone: {
               target: 'success',
@@ -128,7 +144,11 @@ export const surveyMachine = surveyModel.createMachine({
           },
         },
         success: {},
-        failure: {},
+        failure: {
+          on: {
+            SUBMIT: 'submittingData',
+          },
+        },
       },
     },
 

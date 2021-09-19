@@ -100,13 +100,19 @@
         >
           Question précédente
         </Button>
-        <Button v-if="hasAlreadyAnswered" @click="nextQuestion">
+        <Button
+          v-if="
+            hasAlreadyAnswered ||
+            (!useSatisfaction && isDisplayingSatisfactionQuestion)
+          "
+          @click="nextQuestion"
+        >
           Question suivante
         </Button>
       </div>
 
       <section
-        v-if="isDisplayingSatisfactionQuestion"
+        v-if="useSatisfaction && isDisplayingSatisfactionQuestion"
         class="
           flex
           justify-center
@@ -167,8 +173,8 @@
     </div>
     <div v-if="!isDisplayingPrebilan" class="relative">
       <user-form
-        :hasError="state.matches('userInformations.failure')"
-        @submit="(email) => send('SUBMIT', { email })"
+        :has-error="state.matches('userInformations.failure')"
+        @submit="(candidate) => send('SUBMIT', candidate)"
       />
     </div>
   </div>
@@ -191,6 +197,10 @@ import { surveyMachine } from '~/machines/survey.machine'
 export default defineComponent({
   components: { Button, Question, UserForm },
   props: {
+    useSatisfaction: {
+      type: Boolean,
+      default: true,
+    },
     survey: {
       type: Object as PropType<surveyService.Survey>,
       required: true,
@@ -202,11 +212,13 @@ export default defineComponent({
 
     const { state, send } = useMachine(
       surveyMachine.withContext({
+        id: survey.value.id,
         previousQuestions: [],
         currentQuestion: survey.value.questions[0],
         nextQuestions: survey.value.questions.slice(1),
         nbQuestions: survey.value.questions.length,
         answers: {},
+        candidate: null,
       }),
       { devTools: true }
     )

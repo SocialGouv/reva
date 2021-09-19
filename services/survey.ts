@@ -25,6 +25,13 @@ export interface Survey {
   questions: UserQuestion[]
 }
 
+interface Canditate {
+  email: string
+  firstname: string
+  lastname: string
+  phoneNumber: string
+}
+
 export const getQuestions = async () => {
   const result = await axios.get('/api/surveys/latest')
   return result.data.questions as UserQuestion[]
@@ -38,11 +45,15 @@ export const getSurvey = async () => {
 export const postQuestions = ({
   surveyId,
   answers,
-  email,
+  candidate,
 }: {
   surveyId: string
   answers: any
-  email: string
+  candidate: Canditate
 }) => {
-  return axios.post('/api/questions', { surveyId, answers, email })
+  return axios.post('/api/surveys/latest/candidates', {
+    surveyId,
+    answers,
+    candidate,
+  })
 }

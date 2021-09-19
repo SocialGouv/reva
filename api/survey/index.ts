@@ -1,151 +1,42 @@
 const router = require('express').Router()
+const yup = require('yup')
+const data = require('./data')
 
-router.get('/surveys/latest', (_req: any, res: any) => {
-  res.json({
-    id: '123',
-    latest: true,
-    questions: [
-      {
-        id: '132123123123',
-        label: `J'ai exercé un métier en lien avec le diplôme`,
-        description: `Exemple : j'ai exercé le métier de Boulanger, je peux donc prétendre à la certification "Boulanger"`,
-        order: 1,
-        isActive: true,
-        answers: [
-          {
-            id: '234sdf2345wdf235',
-            label: 'Oui, plusieurs',
-            description: `J'ai exercé plusieurs métiers fortement liés au diplôme`,
-            order: 1,
-          },
-          {
-            id: '36s2dge56dgf45',
-            label: 'Oui, un métier pendant longtemps',
-            description: `J'ai exercé plusieurs métiers fortement liés au diplôme`,
-            order: 2,
-          },
-          {
-            id: '36s6dge56dgf45',
-            label: 'Oui, un métier et peu de temps',
-            description: `J'ai exercé un métier en lien avec le diplôme peu de temps mais suffisamment pour valider mes compétences`,
-            order: 3,
-          },
-          {
-            id: '36s6dge57dgf45',
-            label: 'Pas complètement',
-            description: `J'ai exercé un métier en partie ou similaire au diplôme`,
-            order: 4,
-          },
-          {
-            id: '36s6tge57dgf45',
-            label: 'Non',
-            description: `Je n'ai pas du tout exercé de métier en lien avec le diplôme`,
-            order: 5,
-          },
-        ],
-        satisfactionQuestion: {
-          id: '123r2324234',
-          label: `Selon vous, la question ci-dessus permet de savoir qu'il existe bien une relation entre votre ou vos métiers et le diplôme ciblé`,
-          answers: [
-            {
-              id: 's234sdf2345wdf235',
-              label: `Complètement d'accord`,
-              order: 1,
-              requireAdditionalInformation: false,
-            },
-            {
-              id: 's36sdge56dgf45',
-              label: `Plutôt d'accord`,
-              order: 2,
-              requireAdditionalInformation: false,
-            },
-            {
-              id: 's36sdgee6dgh45',
-              label: `Ni d'accord, ni pas d'accord`,
-              order: 3,
-              requireAdditionalInformation: true,
-            },
-            {
-              id: 's36sdge56dgf456',
-              label: `Pas d'accord`,
-              order: 4,
-              requireAdditionalInformation: true,
-            },
-            {
-              id: 's36sdfse56dgf45',
-              label: `Pas du tout d'accord`,
-              order: 5,
-              requireAdditionalInformation: true,
-            },
-          ],
-        },
-      },
-      {
-        id: '2323232323',
-        label: `J'ai des expériences professionnelles à valoriser`,
-        description: `Les pratiques et les savoir-faire sont aussi valorisables`,
-        order: 2,
-        answers: [
-          {
-            id: '2234sdtf2345wdf235',
-            label: `Complètement d'accord`,
-            order: 1,
-          },
-          {
-            id: '236sdgye56dgf45',
-            label: `Plutôt d'accord`,
-            order: 2,
-          },
-          {
-            id: '236sdgye5wdef45',
-            label: `Ni d'accord, ni pas d'accord`,
-            order: 3,
-          },
-          {
-            id: '236qdgye5zdef45',
-            label: `Pas d'accord`,
-            order: 4,
-          },
-          {
-            id: '236qdgyeszdef45',
-            label: `Pas du tout d'accord`,
-            order: 5,
-          },
-        ],
-        satisfactionQuestion: {
-          id: '123r2324234',
-          label: `Selon vous, la question ci-dessus permet de quantifier vos expériences, vos pratiques et vos savoir-faire`,
-          answers: [
-            {
-              id: 's234sdf2345wdf235',
-              label: `Complètement d'accord`,
-              order: 1,
-            },
-            {
-              id: 's36sdge56dgf45',
-              label: `Plutôt d'accord`,
-              order: 2,
-            },
-            {
-              id: 's36sdgee6dgh45',
-              label: `Ni d'accord, ni pas d'accord`,
-              order: 3,
-            },
-            {
-              id: 's34gdfgs36sdge56dgf45',
-              label: `Pas d'accord`,
-              order: 4,
-            },
-            {
-              id: 's36sdfse56dgf45',
-              label: `Pas du tout d'accord`,
-              order: 5,
-            },
-          ],
-        },
-      },
-    ],
+router.get('/surveys/latest', async (_req: any, res: any) => {
+  const survey = await data.getLatestSurvey()
+
+  if (!survey) {
+    return res.status(404).send()
+  }
+
+  res.json(survey)
+})
+
+router.post('/surveys/:id/candidates', async (req: any, res: any) => {
+  const schema = yup.object().shape({
+    surveyId: yup.string().required(),
+    answers: yup.object().required(),
+    candidate: yup
+      .object()
+      .required()
+      .shape({
+        email: yup.string().email().required(),
+        firstname: yup.string().required(),
+        lastname: yup.string().required(),
+        phoneNumber: yup
+          .string()
+          .matches(/^[0-9]{10}$/, 'Numéro de téléphone invalide.'),
+      }),
   })
+
+  const isValid = await schema.isValid(req.body)
+
+  if (!isValid) {
+    res.status(500).send('Bad format')
+  } else {
+    await data.saveCandidateSurvey(req.body)
+    res.status(200).send()
+  }
 })
 
 module.exports = router

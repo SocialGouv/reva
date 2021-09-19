@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Header />
     <Welcome
       v-if="state.matches('welcome')"
       :is-loading-questions="state.matches('welcome.loading')"
