@@ -5,12 +5,15 @@ import { Survey, getSurvey } from '~/services/survey'
 const onBoardingModel = createModel(
   {
     survey: null as unknown as Survey,
-    useSatisfaction: false,
+    displayEnquete: false,
+    diplome: null as unknown as string | null,
     error: null as unknown as string | null,
   },
   {
     events: {
-      START: () => ({}),
+      START: (payload: { displayEnquete: boolean }) => ({
+        payload,
+      }),
       QUESTIONS_ANSWERED: () => ({}),
     },
   }
@@ -47,7 +50,14 @@ export const onBoardingMachine = onBoardingModel.createMachine({
         failure: {},
       },
       on: {
-        START: 'survey',
+        START: {
+          target: 'survey',
+          actions: onBoardingModel.assign({
+            displayEnquete: (_context, event) => {
+              return event.payload.displayEnquete
+            },
+          }),
+        },
       },
     },
     survey: {

@@ -17,6 +17,7 @@ const surveyModel = createModel(
       [key: string]: { answer: Answer; satisfactionAnswer: Answer }
     },
     nbQuestions: 0,
+    diplome: null as unknown as String | null,
     candidate: null as unknown as Candidate | null,
   },
   {
@@ -117,11 +118,12 @@ export const surveyMachine = surveyModel.createMachine({
             SUBMIT: {
               target: 'submittingData',
               actions: surveyModel.assign({
-                candidate: (_context: any, event: any) => ({
+                candidate: (context: any, event: any) => ({
                   email: event.email,
                   firstname: event.firstname,
                   lastname: event.lastname,
                   phoneNumber: event.phoneNumber,
+                  diplome: context.diplome,
                 }),
               }),
             },
@@ -152,8 +154,6 @@ export const surveyMachine = surveyModel.createMachine({
         },
       },
     },
-
-    end: {},
   },
   on: {
     BACK_TO_QUESTION: 'idle',
@@ -179,8 +179,8 @@ export const surveyMachine = surveyModel.createMachine({
         actions: assign((context: any, _event: any) => {
           return {
             previousQuestions: [
-              ...context.previousQuestions,
               context.currentQuestion,
+              ...context.previousQuestions,
             ],
             currentQuestion: context.nextQuestions[0],
             nextQuestions: context.nextQuestions.slice(1),

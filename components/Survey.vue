@@ -103,7 +103,7 @@
         <Button
           v-if="
             hasAlreadyAnswered ||
-            (!useSatisfaction && isDisplayingSatisfactionQuestion)
+            (!displayEnquete && isDisplayingSatisfactionQuestion)
           "
           @click="nextQuestion"
         >
@@ -112,7 +112,7 @@
       </div>
 
       <section
-        v-if="useSatisfaction && isDisplayingSatisfactionQuestion"
+        v-if="displayEnquete && isDisplayingSatisfactionQuestion"
         class="
           flex
           justify-center
@@ -171,11 +171,37 @@
         </div>
       </section>
     </div>
-    <div v-if="!isDisplayingPrebilan" class="relative">
+    <div v-if="!isDisplayingPrebilan && !isEnded" class="relative">
       <user-form
         :has-error="state.matches('userInformations.failure')"
         @submit="(candidate) => send('SUBMIT', candidate)"
       />
+    </div>
+    <div v-if="isEnded" class="relative">
+      <div
+        class="
+          w-full
+          max-w-x
+          py-4
+          px-4
+          flex flex-1
+          items-center
+          justify-center
+          transition-opacity
+        "
+      >
+        <div class="text-gray-800">
+          <h1 class="py-3">Merci,</h1>
+
+          <p class="mt-2">
+            Nous te contacterons dès que nous aurons étudié ta candidature.
+          </p>
+
+          <div class="flex justify-center items-center mt-8">
+            <Button @click="backToHome"> Router à l'accueil </Button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -186,6 +212,7 @@ import {
   defineComponent,
   PropType,
   toRefs,
+  useRouter,
 } from '@nuxtjs/composition-api'
 import { useMachine } from 'xstate-vue2'
 import Button from './Button.vue'
@@ -197,9 +224,13 @@ import { surveyMachine } from '~/machines/survey.machine'
 export default defineComponent({
   components: { Button, Question, UserForm },
   props: {
-    useSatisfaction: {
+    displayEnquete: {
       type: Boolean,
       default: true,
+    },
+    diplome: {
+      type: String,
+      required: true,
     },
     survey: {
       type: Object as PropType<surveyService.Survey>,
@@ -208,7 +239,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     // const router = useRouter()
-    const { survey } = toRefs(props)
+    const { survey, displayEnquete, diplome } = toRefs(props)
 
     const { state, send } = useMachine(
       surveyMachine.withContext({
@@ -218,6 +249,7 @@ export default defineComponent({
         nextQuestions: survey.value.questions.slice(1),
         nbQuestions: survey.value.questions.length,
         answers: {},
+        diplome: diplome.value,
         candidate: null,
       }),
       { devTools: true }
@@ -231,6 +263,10 @@ export default defineComponent({
 
     const isDisplayingPrebilan = computed(
       () => !state.value.matches('userInformations')
+    )
+
+    const isEnded = computed(() =>
+      state.value.matches('userInformations.success')
     )
 
     const answer = computed(
@@ -250,8 +286,10 @@ export default defineComponent({
 
     const hasAlreadyAnswered = computed(
       () =>
-        !!state.value.context.answers[state.value.context.currentQuestion.id]
-          ?.satisfactionAnswer
+        (!!state.value.context.answers[state.value.context.currentQuestion.id]
+          ?.satisfactionAnswer &&
+          displayEnquete) ||
+        state.value.context.answers[state.value.context.currentQuestion.id]
     )
 
     const nextQuestion = () => {
@@ -259,6 +297,11 @@ export default defineComponent({
       if (state.value.matches('end')) {
         emit('questionsAnswered')
       }
+    }
+
+    const router = useRouter()
+    const backToHome = () => {
+      router.push('/')
     }
 
     // const route = useRoute()
@@ -285,10 +328,12 @@ export default defineComponent({
       hasPreviousQuestion,
       isDisplayingSatisfactionQuestion,
       isDisplayingPrebilan,
+      isEnded,
       satisfactionAnswer,
       state,
       send,
       nextQuestion,
+      backToHome,
     }
   },
 })

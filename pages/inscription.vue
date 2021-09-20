@@ -1,15 +1,17 @@
 <template>
-  <div>
+  <div v-if="diplome">
     <Header />
     <Welcome
       v-if="state.matches('welcome')"
       :is-loading-questions="state.matches('welcome.loading')"
       :error="state.context.error"
-      @start="send('START')"
+      @start="(payload) => send({ type: 'START', payload })"
     />
     <Survey
       v-if="state.matches('survey')"
+      :display-enquete="state.context.displayEnquete"
       :survey="state.context.survey"
+      :diplome="state.context.diplome"
       @surveyAnswered="surveyAnswered"
     />
   </div>
@@ -58,17 +60,38 @@
 //     }
 //   ],
 // }
-import { defineComponent } from '@nuxtjs/composition-api'
+import {
+  computed,
+  defineComponent,
+  useRoute,
+  useRouter,
+} from '@nuxtjs/composition-api'
 import { useMachine } from 'xstate-vue2'
 import { onBoardingMachine } from '~/machines/on-boarding.machine'
 
 export default defineComponent({
   setup() {
-    const { state, send } = useMachine(onBoardingMachine, { devTools: true })
+    const route = useRoute()
+    const router = useRouter()
+    const diplome = computed(() => route.value.query.diplome)
+
+    if (!diplome.value) {
+      router.push('/')
+      return
+    }
+
+    const { state, send } = useMachine(
+      onBoardingMachine.withContext({
+        ...onBoardingMachine.context,
+        diplome: diplome.value as string,
+      }),
+      { devTools: true }
+    )
 
     const surveyAnswered = () => {}
 
     return {
+      diplome,
       state,
       send,
       surveyAnswered,
