@@ -1,7 +1,7 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'reva-frontend',
+    title: "REVA - REconnaître et VAlider l'expérience",
     htmlAttrs: {
       lang: 'en',
     },

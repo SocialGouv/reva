@@ -32,7 +32,8 @@
                   Votre diplôme en 4 mois, financé, accompagné et personnalisé
                 </h1>
                 <p class="mt-6 text-lg text-gray-700 sm:text-2xl">
-                  REVA est une expérimentation beta.gouv visant à simplifier la Validation des Acquis d'Expérience (VAE)
+                  REVA est une expérimentation beta.gouv visant à simplifier la
+                  Validation des Acquis d'Expérience (VAE)
                 </p>
               </div>
 
@@ -44,112 +45,22 @@
                     <div
                       class="
                         bg-white
+                        mt-4
                         pt-4
                         py-8
                         px-4
                         shadow
-                        sm:rounded-lg sm:px-10
+                        sm:rounded-lg sm:px-10 sm:mt-0
                       "
                     >
                       <form
-                        v-on:submit.prevent="HighFive"
                         class="space-y-6"
                         action="#"
                         method="POST"
+                        @submit.prevent="submitParticipate"
                       >
-                        <fieldset class="mt-2 sm:mt-6">
-                          <div>
-                            <legend class="text-base text-gray-900">
-                              Êtes-vous demandeur d'emploi ?
-                            </legend>
-                            <p class="text-sm text-gray-500">
-                              L'expérimentation REVA est pour l'instant limitée aux demandeurs d'emploi
-                            </p>
-                          </div>
-                          <div class="mt-4 space-y-2">
-                            <div class="flex items-center">
-                              <input
-                                id="push-everything"
-                                name="push-notifications"
-                                type="radio"
-                                class="
-                                  focus:ring-indigo-500
-                                  h-4
-                                  w-4
-                                  text-indigo-600
-                                  border-gray-300
-                                "
-                              />
-                              <label
-                                for="push-everything"
-                                class="
-                                  ml-3
-                                  block
-                                  text-sm
-                                  font-medium
-                                  text-gray-700
-                                "
-                              >
-                                Oui
-                              </label>
-                            </div>
-                            <div class="flex items-center">
-                              <input
-                                id="push-email"
-                                name="push-notifications"
-                                type="radio"
-                                class="
-                                  focus:ring-indigo-500
-                                  h-4
-                                  w-4
-                                  text-indigo-600
-                                  border-gray-300
-                                "
-                              />
-                              <label
-                                for="push-email"
-                                class="
-                                  ml-3
-                                  block
-                                  text-sm
-                                  font-medium
-                                  text-gray-700
-                                "
-                              >
-                                Non
-                              </label>
-                            </div>
-                            <div class="flex items-center">
-                              <input
-                                id="push-nothing"
-                                name="push-notifications"
-                                type="radio"
-                                class="
-                                  focus:ring-indigo-500
-                                  h-4
-                                  w-4
-                                  text-indigo-600
-                                  border-gray-300
-                                "
-                              />
-                              <label
-                                for="push-nothing"
-                                class="
-                                  ml-3
-                                  block
-                                  text-sm
-                                  font-medium
-                                  text-gray-700
-                                "
-                              >
-                                Prochainement
-                              </label>
-                            </div>
-                          </div>
-                        </fieldset>
-
                         <!-- Choix du diplome -->
-                        <div class="pt-6">
+                        <div class="pt-4">
                           <!-- This example requires Tailwind CSS v2.0+ -->
                           <!--
                             Custom select controls like this require a considerable amount of JS to implement from scratch. We're planning
@@ -166,92 +77,32 @@
                             <div class="relative">
                               <div class="pr-4">
                                 <legend class="text-base text-gray-900">
-                                  Envisagez-vous d'obtenir l'un de ces diplômes, si oui
-                                  lequel ?
+                                  Vous êtes demandeur d'emploi et vous envisagez
+                                  d'obtenir l'un des diplômes suivants :
                                 </legend>
                                 <p class="text-sm text-gray-500">
-                                  L'expérimentation REVA est pour l'istant limitée à quelques diplômes
+                                  L'expérimentation REVA est pour l'instant
+                                  limitée à quelques diplômes
                                 </p>
-                                <div
-                                  class="
-                                    relative
-                                    z-0
-                                    inline-flex
-                                    rounded-md
-                                    mt-3
-                                  "
-                                >
-                                  <div
-                                    class="
-                                      relative
-                                      inline-flex
-                                      items-center
-                                      bg-gray-100
-                                      py-2
-                                      pl-3
-                                      pr-4
-                                      border border-transparent
-                                      rounded-l-md
-                                      text-gray-700
-                                    "
-                                  >
-                                    <p class="text-left font-medium">
-                                      Diplômes disponibles
-                                    </p>
-                                  </div>
-                                  <button
-                                    type="button"
-                                    class="
-                                      relative
-                                      inline-flex
-                                      items-center
-                                      bg-gray-100
-                                      p-2
-                                      rounded-l-none rounded-r-md
-                                      text-sm
-                                      font-medium
-                                      text-white
-                                      hover:bg-indigo-600
-                                      focus:outline-none
-                                      focus:z-10
-                                      focus:ring-2
-                                      focus:ring-offset-2
-                                      focus:ring-offset-gray-50
-                                      focus:ring-indigo-500
-                                    "
-                                    aria-haspopup="listbox"
-                                    aria-expanded="true"
-                                    aria-labelledby="listbox-label"
-                                  >
-                                    <span class="sr-only"
-                                      >Changer le diplôme</span
-                                    >
-
-                                    <svg
-                                      class="h-5 w-5 text-gray-500"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      viewBox="0 0 20 20"
-                                      fill="currentColor"
-                                      aria-hidden="true"
-                                    >
-                                      <path
-                                        fill-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clip-rule="evenodd"
-                                      />
-                                    </svg>
-                                  </button>
-                                </div>
                               </div>
 
-                              <diplome-select />
+                              <diplome-select
+                                :diplomes="diplomes"
+                                :selected="selectedDiplome"
+                                @select="onSelectDiplome"
+                              />
                             </div>
                           </div>
                         </div>
 
                         <div>
                           <button
+                            :disabled="selectedDiplome === null"
                             type="submit"
+                            :class="{
+                              'cursor-not-allowed': selectedDiplome === null,
+                              'opacity-50': selectedDiplome === null,
+                            }"
                             class="
                               inline-flex
                               items-center
@@ -318,7 +169,9 @@
                 class="mt-4 max-w-3xl mx-auto text-center text-xl text-gray-500"
               >
                 Sous l'impulsion du Ministère du Travail et en collaboration
-                avec Pôle emploi, REVA propose à 200 personnes ayant une expérience dans le secteur du service à la personne d’obtenir un diplôme dans ce domaine.
+                avec Pôle emploi, REVA propose à 200 personnes ayant une
+                expérience dans le secteur du service à la personne d’obtenir un
+                diplôme dans ce domaine.
               </p>
             </div>
           </div>
@@ -467,10 +320,16 @@
                       <div>
                         <p class="font-bold">Une candidature simple</p>
                         <p class="text-sm text-white opacity-70 mb-4">
-                          Au travers d'un rapide questionnaire et d'un rendez-vous avec l'organisme certificateur, vous déciderez ensemble si cette expérimentation est faite pour vous.
+                          Au travers d'un rapide questionnaire et d'un
+                          rendez-vous avec l'organisme certificateur, vous
+                          déciderez ensemble si cette expérimentation est faite
+                          pour vous.
                         </p>
                         <p class="text-sm text-white opacity-70">
-                          Vous rejoindrez alors une nouvelle méthode innovante pour obtenir un diplôme. Pour améliorer en continu cette approche, nous vous solliciterons régulièrement pour avoir vos retours et avis sur l'expérimentation.
+                          Vous rejoindrez alors une nouvelle méthode innovante
+                          pour obtenir un diplôme. Pour améliorer en continu
+                          cette approche, nous vous solliciterons régulièrement
+                          pour avoir vos retours et avis sur l'expérimentation.
                         </p>
                       </div>
                     </div>
@@ -535,10 +394,15 @@
                       <div>
                         <p class="font-bold">Un accompagnement à 100%</p>
                         <p class="text-sm text-white opacity-70 mb-4">
-                          Un organisme spécialisé vous aidera à expliquer et décrire votre expérience : vous ne serez jamais seul⋅e.
+                          Un organisme spécialisé vous aidera à expliquer et
+                          décrire votre expérience : vous ne serez jamais
+                          seul⋅e.
                         </p>
                         <p class="text-sm text-white opacity-70">
-                          Selon votre situation, l’accompagnement se fera en individuel ou en groupe, en présence ou à distance. Et ce, sans aucun frais pour vous : l'intégralité de l'accompagnement est financé par Pôle Emploi.
+                          Selon votre situation, l’accompagnement se fera en
+                          individuel ou en groupe, en présence ou à distance. Et
+                          ce, sans aucun frais pour vous : l'intégralité de
+                          l'accompagnement est financé par Pôle Emploi.
                         </p>
                       </div>
                     </div>
@@ -601,13 +465,16 @@
                       "
                     >
                       <div>
-                        <p class="font-bold">Une reconnaissance de votre expérience</p>
-                        <p class="text-sm text-white opacity-70 mb-4">
-                          En s’appuyant sur votre expérience professionnelle, vous serez accompagné dans la rédaction de votre dossier professionnel et dans le témoignage de vos compétences.
+                        <p class="font-bold">
+                          Une reconnaissance de votre expérience
                         </p>
                         <p class="text-sm text-white opacity-70 mb-4">
-                          ...
+                          En s’appuyant sur votre expérience professionnelle,
+                          vous serez accompagné dans la rédaction de votre
+                          dossier professionnel et dans le témoignage de vos
+                          compétences.
                         </p>
+                        <p class="text-sm text-white opacity-70 mb-4">...</p>
                       </div>
                     </div>
                   </div>
@@ -671,11 +538,11 @@
                       <div>
                         <p class="font-bold">Un diplôme reconnu à la clef</p>
                         <p class="text-sm text-white opacity-70">
-                          Le dossier professionnel en main, et vos témoignages entendus par un jury, votre expérience professionnelle sera reconnue par un diplôme officiel.
+                          Le dossier professionnel en main, et vos témoignages
+                          entendus par un jury, votre expérience professionnelle
+                          sera reconnue par un diplôme officiel.
                         </p>
-                        <p class="text-sm text-white opacity-70">
-                          ...
-                        </p>
+                        <p class="text-sm text-white opacity-70">...</p>
                       </div>
                     </div>
                   </div>
@@ -710,8 +577,14 @@
                   </p>
                 </dt>
                 <dd class="mt-2 text-base text-gray-500">
-                  <a href="https://beta.gouv.fr">beta.gouv</a> est une mission de la direction interministérielle du numérique (DINUM), qui aide les administrations publiques à construire des services numériques utiles, simples, faciles à utiliser et qui répondent vraiment aux besoins des gens.<br/>
-                  Elle s'incarne au sein de Startups d'État, équipes pluridisciplinaires s'appuyant sur une approche innovante de la conception de services numériques.
+                  <a href="https://beta.gouv.fr">beta.gouv</a> est une mission
+                  de la direction interministérielle du numérique (DINUM), qui
+                  aide les administrations publiques à construire des services
+                  numériques utiles, simples, faciles à utiliser et qui
+                  répondent vraiment aux besoins des gens.<br />
+                  Elle s'incarne au sein de Startups d'État, équipes
+                  pluridisciplinaires s'appuyant sur une approche innovante de
+                  la conception de services numériques.
                 </dd>
               </div>
 
@@ -722,8 +595,10 @@
                   </p>
                 </dt>
                 <dd class="mt-2 text-base text-gray-500">
-                  Startup d'État visant à <b>RE</b>connaître et <b>VA</b>lider l'expérience. <br/>
-                  Une équipe de 9 personnes au service de la reconnaissance de vos compétences.
+                  Startup d'État visant à <b>RE</b>connaître et <b>VA</b>lider
+                  l'expérience. <br />
+                  Une équipe de 9 personnes au service de la reconnaissance de
+                  vos compétences.
                 </dd>
               </div>
 
@@ -733,9 +608,7 @@
                     Implulsé par le ministère du travail
                   </p>
                 </dt>
-                <dd class="mt-2 text-base text-gray-500">
-                  ...
-                </dd>
+                <dd class="mt-2 text-base text-gray-500">...</dd>
               </div>
             </dl>
           </div>
@@ -747,11 +620,84 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { ref, useRouter } from '@nuxtjs/composition-api'
 import confetti from 'canvas-confetti'
 import DiplomeSelect from '~/components/DiplomeSelect.vue'
 export default {
   components: { DiplomeSelect },
+  setup() {
+    const router = useRouter()
+    const selectedDiplome = ref(null as any)
+
+    const onSelectDiplome = (diplome: any) => {
+      selectedDiplome.value = diplome
+    }
+
+    const submitParticipate = () => {
+      if (!selectedDiplome.value) {
+        return
+      }
+      router.push(`/inscription?diplome=${selectedDiplome.value.id}`)
+    }
+    return {
+      diplomes: [
+        {
+          id: '9bbc43a9-8b51-4feb-aab0-a1b2b49d27b2',
+          label: 'Diplôme Assistant⋅e de Vie aux Familles (ADVF)',
+          region:
+            'Uniquement sur les régions Auvergne-Rhône-Alpes (Montluçon et Lyon) et Ile de France (Paris 12ème et Cergy)',
+        },
+        {
+          id: '1d0863c5-aa0c-4d46-aa71-6f3d467ff45e',
+          label: 'Diplôme Agent⋅e de Service Médico-social (ASMS)',
+          region:
+            'Uniquement sur les régions Auvergne-Rhône-Alpes (Montluçon et Lyon) et Ile de France (Paris 12ème et Cergy)',
+        },
+        {
+          id: 'fa4e7e6e-8965-44ba-97f0-81440764f91a',
+          label: 'Diplôme Accompagnant Éducatif et Social (DEAES)',
+          region:
+            'Uniquement sur les régions Hauts-de-france (Lille), Auvergne-Rhône-Alpes (Lyon) et Ile de France (Paris 12ème et Cergy)',
+        },
+        {
+          id: '65d1cc68-c601-4aa2-bae9-c422bea065bf',
+          label:
+            'Conducteur Accompagnateur de Personne à Mobilité Réduite (CaPMR)',
+          region:
+            'Uniquement sur les régions Grand-Est (Mulhouse), Auvergne-Rhône-Alpes (Lyon) et Ile de France (Paris 12ème et Cergy)',
+        },
+        {
+          id: '5ee1f090-c6f1-42dc-a712-54814cbdaf22',
+          label: 'Diplôme Accompagnant⋅e en gérontologie',
+          region:
+            'Uniquement sur les régions Occitanie (Nîmes et Toulouse), Auvergne-Rhône-Alpes (Lyon) et Ile de France (Paris 12ème et Cergy)',
+        },
+        {
+          id: 'a93a84de-f041-445c-882a-7d9cc066d348',
+          label:
+            'Diplôme Accompagnement, soins et services à la personne (SSP)',
+          region:
+            'Uniquement sur les régions Auvergne-Rône-Alpes (Lyon) et Ile de France (Paris 12ème et Cergy)',
+        },
+        {
+          id: 'e7f900e0-c9b0-4143-b5a6-8bb4ba66179c',
+          label: 'Diplôme Employé⋅e Familial',
+          region:
+            'Uniquement sur les régions Provence-Alpes-Côte d’Azur (Nice et Toulon), Auvergne-Rhône-Alpes (Lyon) et Ile de France (Paris 12ème et Cergy)',
+        },
+        {
+          id: '2cfb796f-9392-4f60-9a26-b41fc6b0ffde',
+          label: 'Diplôme Assistant⋅e de vie dépendance',
+          region:
+            'Uniquement sur les régions Provence-Alpes-Côte d’Azur (Nice et Toulon), Auvergne-Rhône-Alpes (Lyon) et Ile de France (Paris 12ème et Cergy)',
+        },
+      ],
+      selectedDiplome,
+      onSelectDiplome,
+      submitParticipate,
+    }
+  },
   methods: {
     HighFive() {
       confetti({
