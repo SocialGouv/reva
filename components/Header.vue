@@ -20,7 +20,7 @@
           <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
             <div class="ml-2 text-gray-700">
               <span class="font-bold">REVA - </span>
-              <span>REconnaître et VAlider l'expérience</span>
+              <span>Reconnaître et valider l'expérience</span>
             </div>
           </div>
         </div>

@@ -595,20 +595,28 @@
                   </p>
                 </dt>
                 <dd class="mt-2 text-base text-gray-500">
-                  Startup d'État visant à <b>RE</b>connaître et <b>VA</b>lider
-                  l'expérience. <br />
-                  Une équipe de 9 personnes au service de la reconnaissance de
-                  vos compétences.
+                  Plateforme numérique en construction qui vise à
+                  <b>RE</b>connaître et <b>VA</b>lider l'expérience. <br/>
+                  Nous sommes une équipe de 9 personnes, au sein d'une Startup
+                  d'État, au service de la reconnaissance de vos compétences.
                 </dd>
               </div>
 
               <div class="relative">
                 <dt>
                   <p class="text-lg leading-6 font-medium text-gray-900">
-                    Implulsé par le ministère du travail
+                    Ministères & partenaires
                   </p>
                 </dt>
-                <dd class="mt-2 text-base text-gray-500">...</dd>
+                <dd class="mt-2 text-base text-gray-500">
+                  Ce projet est initié par le Ministère du Travail, de
+                  l'Emploi et de l'Insertion, ainsi que par le Haut
+                  Commissariat aux compétences. Il associe également
+                  le Ministère des Solidarités et de la Santé, le Ministère
+                  de l'Agriculture et de l'Alimentation, le Ministère de
+                  l'Éducation Nationale, de la Jeunesse et des Sports et la
+                  branche des professionnels du Particulier Employeur.
+                </dd>
               </div>
             </dl>
           </div>

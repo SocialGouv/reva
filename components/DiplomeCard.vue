@@ -32,11 +32,26 @@
 <script>
 export default {
   props: {
-    region: String,
-    label: String,
-    description: String,
-    certificateur: String,
-    link: String,
+    region: {
+      type: String,
+      required: true
+    },
+    label: {
+      type: String,
+      required: true
+    },
+    description: {
+      type: String,
+      required: true
+    },
+    certificateur: {
+      type: String,
+      required: true
+    },
+    link: {
+      type: String,
+      required: true
+    },
   },
 }
 </script>

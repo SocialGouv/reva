@@ -8,7 +8,7 @@
           <img class="-ml-4 lg:block h-32 w-auto" src="/illustrations/republique-francaise-logo.png" alt="Reva">
           <div class="space-y-8 xl:col-span-1">
             <p class="text-gray-500 text-base">
-              REVA - REconnaît et VAlide votre expérience
+              REVA - Reconnaître et valider l'expérience
             </p>
             <div class="flex flex-col sm:flex-row sm:space-x-6">
               <a href="https://beta.gouv.fr" class="font-bold">
