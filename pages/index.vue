@@ -434,12 +434,62 @@
           </div>
 
           <div class="diplomes grid grid-cols-1 sm:grid-cols-3 gap-8">
-            <DiplomeCard />
-            <DiplomeCard />
-            <DiplomeCard />
-            <DiplomeCard />
-            <DiplomeCard />
-            <DiplomeCard />
+            <DiplomeCard
+              label="Assistant⋅e de Vie aux Familles (ADVF)"
+              certificateur="Diplôme (titre professionnel) délivré par le Ministère du Travail"
+              description="Les personnes assistantes  de  vie  aux  familles contribuent au bien être des personnes au sein de leur foyer en respectant leur dignité, leur intégrité, leur vie privée et leur sécurité."
+              link="https://www.francecompetences.fr/recherche/rncp/35506/"
+              region="Auvergne-Rhône-Alpes - Montluçon et Lyon, Ile de France - Paris 12ème et Cergy"
+            />
+            <DiplomeCard
+              label="Agent⋅e de Service Médico-social (ASMS)"
+              certificateur="Diplôme (titre professionnel) délivré par le Ministère du Travail"
+              description="L’agent⋅e de service médico-social réalise le nettoyage et le bionettoyage des locaux de l'établissement et contribue aux prestations du service hôtelier tout en prenant en compte la disposition psychique et l'état physique du résident au moment où il intervient auprès de lui ou dans son espace."
+              link="https://www.francecompetences.fr/recherche/rncp/35028/"
+              region="Auvergne-Rhône-Alpes - Montluçon et Lyon, Ile de France - Paris 12ème et Cergy"
+            />
+            <DiplomeCard
+              label="Accompagnant Éducatif et Social (DEAES)"
+              certificateur="Diplôme d’État délivré par le Ministère des Solidarités et de la Santé"
+              description="L’accompagnant éducatif et social de proximité réalise une intervention sociale au quotidien visant à compenser les conséquences d'un handicap, quelles qu’en soient l’origine ou la nature."
+              link="https://www.francecompetences.fr/recherche/rncp/25467/"
+              region="Hauts-de-france Lille, Auvergne-Rhône-Alpes - Montluçon et Lyon, Ile de France - Paris 12ème et Cergy"
+            />
+            <DiplomeCard
+              label="Conducteur Accompagnateur de Personne à Mobilité Réduite (CaPMR)"
+              certificateur="Diplôme (certification) délivré par le Conseil National de l’Enseignement Agricole Privé (CNEAP) et Brigitte Croff Conseil et Associés (BCCA) et reconnu par la branche professionnelle"
+              description="Le conducteur accompagnateur ou la conductrice accompagnatrice accompagne les personnes à mobilité réduite du fait d'un handicap physique, mental, sensoriel ou intellectuel ou d'une forme de dépendance quelle qu'elle soit qui rend impossibles les déplacements sans accompagnement."
+              link="https://www.francecompetences.fr/recherche/rncp/17163/"
+              region="Région Grand-Est - Mulhouse, Auvergne-Rhône-Alpes - Lyon, Ile de France - Paris 12ème et Cergy"
+            />
+            <DiplomeCard
+              label="Accompagnant⋅e en gérontologie"
+              certificateur="Diplôme délivré par le Ministère de l’Education Nationale (GIP FCIP Toulouse) et la Croix Rouge Française"
+              description="L'accompagnant⋅e en gérontologie dispense des soins de nature préventive, curative, visant à promouvoir, maintenir et restaurer le bien-être, l’autonomie, l’hygiène et le confort de la personne âgée."
+              link="https://www.francecompetences.fr/recherche/rncp/35558/"
+              region="Occitanie - Nîmes et Toulouse, Auvergne-Rhône-Alpes - Lyon, Ile de France - Paris 12ème et Cergy"
+            />
+            <DiplomeCard
+              label="Accompagnement, soins et services à la personne (SSP)"
+              certificateur="Bac Professionnel délivré par le Ministère de l’Education Nationale"
+              description="Le baccalauréat professionnel  Accompagnement, soins et services à la personne » option « en structure » permet de travailler  auprès de personnes en situation temporaire ou permanente de dépendance en structures collectives."
+              link="https://www.francecompetences.fr/recherche/rncp/12301/"
+              region="Auvergne-Rône-Alpes - Lyon, Ile de France - Paris 12ème et Cergy"
+            />
+            <DiplomeCard
+              label="Employé⋅e Familial"
+              certificateur="Diplôme délivré par IPERIA et reconnu par la branche professionnelle"
+              description="L’employé⋅e familial intervient au domicile des particuliers (en leur présence ou non) principalement pour l’entretien du cadre de vie, du linge et la préparation des repas."
+              link="https://www.francecompetences.fr/recherche/rncp/34692/"
+              region="Provence-Alpes-Côte d’Azur - Nice et Toulon, Auvergne-Rhône-Alpes - Lyon, Ile de France - Paris 12ème et Cergy"
+            />
+            <DiplomeCard
+              label="Assistant⋅e de vie dépendance"
+              certificateur="Diplôme délivré par IPERIA et reconnu par la branche professionnelle"
+              description="La mission de l’assistant⋅e de vie dépendance est d’accompagner des personnes dont l’autonomie est altérée dans la réalisation de leurs activités, pouvant aller des tâches courantes aux actes essentiels de la vie quotidienne."
+              link="https://www.francecompetences.fr/recherche/rncp/34690/"
+              region="Provence-Alpes-Côte d’Azur - Nice et Toulon, Auvergne-Rhône-Alpes - Lyon, Ile de France - Paris 12ème et Cergy"
+            />
           </div>
 
           <!-- <div class="text-center mx-auto py-6 mt-12">
