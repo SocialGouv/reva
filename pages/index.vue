@@ -622,7 +622,6 @@
 
 <script lang="ts">
 import { ref, useRouter } from '@nuxtjs/composition-api'
-import confetti from 'canvas-confetti'
 import DiplomeSelect from '~/components/DiplomeSelect.vue'
 export default {
   components: { DiplomeSelect },
@@ -698,23 +697,7 @@ export default {
       submitParticipate,
     }
   },
-  methods: {
-    HighFive() {
-      confetti({
-        particleCount: 100,
-        startVelocity: 30,
-        spread: 360,
-        origin: {
-          x: Math.random(),
-          y: Math.random() - 0.2,
-        },
-      })
-
-      setTimeout(() => {
-        // go !
-      }, 900)
-    },
-  },
+  methods: {},
 }
 </script>
 
