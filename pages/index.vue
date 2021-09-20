@@ -29,11 +29,10 @@
                     lg:text-6xl
                   "
                 >
-                  Votre diplôme en 3 mois, financé, accompagné et personnalisé
+                  Votre diplôme en 4 mois, financé, accompagné et personnalisé
                 </h1>
                 <p class="mt-6 text-lg text-gray-700 sm:text-2xl">
-                  REVA est une expérimentation beta.gouv autour du sujet de la
-                  simplification de la VAE
+                  REVA est une expérimentation beta.gouv visant à simplifier la Validation des Acquis d'Expérience (VAE)
                 </p>
               </div>
 
@@ -64,8 +63,7 @@
                               Êtes-vous demandeur d'emploi ?
                             </legend>
                             <p class="text-sm text-gray-500">
-                              REVA en tant qu'expérimentation est à ce jour
-                              limité aux demandeurs d'emploi
+                              L'expérimentation REVA est pour l'instant limitée aux demandeurs d'emploi
                             </p>
                           </div>
                           <div class="mt-4 space-y-2">
@@ -144,7 +142,7 @@
                                   text-gray-700
                                 "
                               >
-                                C'est en cours
+                                Prochainement
                               </label>
                             </div>
                           </div>
@@ -167,9 +165,12 @@
                             </label>
                             <div class="relative">
                               <div class="pr-4">
-                                <p>
-                                  Envisagez-vous l'un de ces diplômes, si oui
+                                <legend class="text-base text-gray-900">
+                                  Envisagez-vous d'obtenir l'un de ces diplômes, si oui
                                   lequel ?
+                                </legend>
+                                <p class="text-sm text-gray-500">
+                                  L'expérimentation REVA est pour l'istant limitée à quelques diplômes
                                 </p>
                                 <div
                                   class="
@@ -427,19 +428,68 @@
                 class="mt-4 max-w-3xl mx-auto text-center text-xl text-gray-500"
               >
                 Sous l'impulsion du Ministère du Travail et en collaboration
-                avec Pôle emploi, REVA propose à 200 personnes des secteurs de
-                l'aide à domicile d'obtenir un diplôme dans ce secteur
+                avec Pôle emploi, REVA propose à 200 personnes ayant une expérience dans le secteur du service à la personne d’obtenir un diplôme dans ce domaine.
               </p>
             </div>
           </div>
 
           <div class="diplomes grid grid-cols-1 sm:grid-cols-3 gap-8">
-            <DiplomeCard />
-            <DiplomeCard />
-            <DiplomeCard />
-            <DiplomeCard />
-            <DiplomeCard />
-            <DiplomeCard />
+            <DiplomeCard
+              label="Assistant⋅e de Vie aux Familles (ADVF)"
+              certificateur="Diplôme (titre professionnel) délivré par le Ministère du Travail"
+              description="Les personnes assistantes  de  vie  aux  familles contribuent au bien être des personnes au sein de leur foyer en respectant leur dignité, leur intégrité, leur vie privée et leur sécurité."
+              link="https://www.francecompetences.fr/recherche/rncp/35506/"
+              region="Auvergne-Rhône-Alpes - Montluçon et Lyon, Ile de France - Paris 12ème et Cergy"
+            />
+            <DiplomeCard
+              label="Agent⋅e de Service Médico-social (ASMS)"
+              certificateur="Diplôme (titre professionnel) délivré par le Ministère du Travail"
+              description="L’agent⋅e de service médico-social réalise le nettoyage et le bionettoyage des locaux de l'établissement et contribue aux prestations du service hôtelier tout en prenant en compte la disposition psychique et l'état physique du résident au moment où il intervient auprès de lui ou dans son espace."
+              link="https://www.francecompetences.fr/recherche/rncp/35028/"
+              region="Auvergne-Rhône-Alpes - Montluçon et Lyon, Ile de France - Paris 12ème et Cergy"
+            />
+            <DiplomeCard
+              label="Accompagnant Éducatif et Social (DEAES)"
+              certificateur="Diplôme d’État délivré par le Ministère des Solidarités et de la Santé"
+              description="L’accompagnant éducatif et social de proximité réalise une intervention sociale au quotidien visant à compenser les conséquences d'un handicap, quelles qu’en soient l’origine ou la nature."
+              link="https://www.francecompetences.fr/recherche/rncp/25467/"
+              region="Hauts-de-france Lille, Auvergne-Rhône-Alpes - Montluçon et Lyon, Ile de France - Paris 12ème et Cergy"
+            />
+            <DiplomeCard
+              label="Conducteur Accompagnateur de Personne à Mobilité Réduite (CaPMR)"
+              certificateur="Diplôme (certification) délivré par le Conseil National de l’Enseignement Agricole Privé (CNEAP) et Brigitte Croff Conseil et Associés (BCCA) et reconnu par la branche professionnelle"
+              description="Le conducteur accompagnateur ou la conductrice accompagnatrice accompagne les personnes à mobilité réduite du fait d'un handicap physique, mental, sensoriel ou intellectuel ou d'une forme de dépendance quelle qu'elle soit qui rend impossibles les déplacements sans accompagnement."
+              link="https://www.francecompetences.fr/recherche/rncp/17163/"
+              region="Région Grand-Est - Mulhouse, Auvergne-Rhône-Alpes - Lyon, Ile de France - Paris 12ème et Cergy"
+            />
+            <DiplomeCard
+              label="Accompagnant⋅e en gérontologie"
+              certificateur="Diplôme délivré par le Ministère de l’Education Nationale (GIP FCIP Toulouse) et la Croix Rouge Française"
+              description="L'accompagnant⋅e en gérontologie dispense des soins de nature préventive, curative, visant à promouvoir, maintenir et restaurer le bien-être, l’autonomie, l’hygiène et le confort de la personne âgée."
+              link="https://www.francecompetences.fr/recherche/rncp/35558/"
+              region="Occitanie - Nîmes et Toulouse, Auvergne-Rhône-Alpes - Lyon, Ile de France - Paris 12ème et Cergy"
+            />
+            <DiplomeCard
+              label="Accompagnement, soins et services à la personne (SSP)"
+              certificateur="Bac Professionnel délivré par le Ministère de l’Education Nationale"
+              description="Le baccalauréat professionnel  Accompagnement, soins et services à la personne » option « en structure » permet de travailler  auprès de personnes en situation temporaire ou permanente de dépendance en structures collectives."
+              link="https://www.francecompetences.fr/recherche/rncp/12301/"
+              region="Auvergne-Rône-Alpes - Lyon, Ile de France - Paris 12ème et Cergy"
+            />
+            <DiplomeCard
+              label="Employé⋅e Familial"
+              certificateur="Diplôme délivré par IPERIA et reconnu par la branche professionnelle"
+              description="L’employé⋅e familial intervient au domicile des particuliers (en leur présence ou non) principalement pour l’entretien du cadre de vie, du linge et la préparation des repas."
+              link="https://www.francecompetences.fr/recherche/rncp/34692/"
+              region="Provence-Alpes-Côte d’Azur - Nice et Toulon, Auvergne-Rhône-Alpes - Lyon, Ile de France - Paris 12ème et Cergy"
+            />
+            <DiplomeCard
+              label="Assistant⋅e de vie dépendance"
+              certificateur="Diplôme délivré par IPERIA et reconnu par la branche professionnelle"
+              description="La mission de l’assistant⋅e de vie dépendance est d’accompagner des personnes dont l’autonomie est altérée dans la réalisation de leurs activités, pouvant aller des tâches courantes aux actes essentiels de la vie quotidienne."
+              link="https://www.francecompetences.fr/recherche/rncp/34690/"
+              region="Provence-Alpes-Côte d’Azur - Nice et Toulon, Auvergne-Rhône-Alpes - Lyon, Ile de France - Paris 12ème et Cergy"
+            />
           </div>
 
           <!-- <div class="text-center mx-auto py-6 mt-12">
@@ -464,7 +514,7 @@
                 sm:text-5xl sm:tracking-tight
               "
             >
-              Qu'est ce qui vous attends ?
+              Qu'est-ce qui vous attend ?
             </h2>
           </div>
           <div class="flow-root px-6 mt-20 max-w-sm mx-auto">
@@ -525,11 +575,12 @@
                       "
                     >
                       <div>
-                        <p class="font-bold">Candidature</p>
+                        <p class="font-bold">Une candidature simple</p>
+                        <p class="text-sm text-white opacity-70 mb-4">
+                          Au travers d'un rapide questionnaire et d'un rendez-vous avec l'organisme certificateur, vous déciderez ensemble si cette expérimentation est faite pour vous.
+                        </p>
                         <p class="text-sm text-white opacity-70">
-                          Maecenas sed diam eget risus varius blandit sit amet
-                          non magna. Praesent commodo cursus magna, vel
-                          scelerisque nisl consectetur et.
+                          Vous rejoindrez alors une nouvelle méthode innovante pour obtenir un diplôme. Pour améliorer en continu cette approche, nous vous solliciterons régulièrement pour avoir vos retours et avis sur l'expérimentation.
                         </p>
                       </div>
                     </div>
@@ -592,11 +643,12 @@
                       "
                     >
                       <div>
-                        <p class="font-bold">Accompagnement</p>
+                        <p class="font-bold">Un accompagnement à 100%</p>
+                        <p class="text-sm text-white opacity-70 mb-4">
+                          Un organisme spécialisé vous aidera à expliquer et décrire votre expérience : vous ne serez jamais seul⋅e.
+                        </p>
                         <p class="text-sm text-white opacity-70">
-                          Maecenas sed diam eget risus varius blandit sit amet
-                          non magna. Praesent commodo cursus magna, vel
-                          scelerisque nisl consectetur et.
+                          Selon votre situation, l’accompagnement se fera en individuel ou en groupe, en présence ou à distance. Et ce, sans aucun frais pour vous : l'intégralité de l'accompagnement est financé par Pôle Emploi.
                         </p>
                       </div>
                     </div>
@@ -659,11 +711,12 @@
                       "
                     >
                       <div>
-                        <p class="font-bold">Dossier Professionnel</p>
-                        <p class="text-sm text-white opacity-70">
-                          Maecenas sed diam eget risus varius blandit sit amet
-                          non magna. Praesent commodo cursus magna, vel
-                          scelerisque nisl consectetur et.
+                        <p class="font-bold">Une reconnaissance de votre expérience</p>
+                        <p class="text-sm text-white opacity-70 mb-4">
+                          En s’appuyant sur votre expérience professionnelle, vous serez accompagné dans la rédaction de votre dossier professionnel et dans le témoignage de vos compétences.
+                        </p>
+                        <p class="text-sm text-white opacity-70 mb-4">
+                          ...
                         </p>
                       </div>
                     </div>
@@ -726,11 +779,12 @@
                       "
                     >
                       <div>
-                        <p class="font-bold">Examen</p>
+                        <p class="font-bold">Un diplôme reconnu à la clef</p>
                         <p class="text-sm text-white opacity-70">
-                          Maecenas sed diam eget risus varius blandit sit amet
-                          non magna. Praesent commodo cursus magna, vel
-                          scelerisque nisl consectetur et.
+                          Le dossier professionnel en main, et vos témoignages entendus par un jury, votre expérience professionnelle sera reconnue par un diplôme officiel.
+                        </p>
+                        <p class="text-sm text-white opacity-70">
+                          ...
                         </p>
                       </div>
                     </div>
@@ -766,35 +820,31 @@
                   </p>
                 </dt>
                 <dd class="mt-2 text-base text-gray-500">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Maiores impedit perferendis suscipit eaque, iste dolor
-                  cupiditate blanditiis ratione.
+                  <a href="https://beta.gouv.fr">beta.gouv</a> est une mission de la direction interministérielle du numérique (DINUM), qui aide les administrations publiques à construire des services numériques utiles, simples, faciles à utiliser et qui répondent vraiment aux besoins des gens.<br/>
+                  Elle s'incarne au sein de Startups d'État, équipes pluridisciplinaires s'appuyant sur une approche innovante de la conception de services numériques.
                 </dd>
               </div>
 
               <div class="relative">
                 <dt>
                   <p class="text-lg leading-6 font-medium text-gray-900">
-                    Incubateur d'état
+                    REVA
                   </p>
                 </dt>
                 <dd class="mt-2 text-base text-gray-500">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Maiores impedit perferendis suscipit eaque, iste dolor
-                  cupiditate blanditiis ratione.
+                  Startup d'État visant à <b>RE</b>connaître et <b>VA</b>lider l'expérience. <br/>
+                  Une équipe de 9 personnes au service de la reconnaissance de vos compétences.
                 </dd>
               </div>
 
               <div class="relative">
                 <dt>
                   <p class="text-lg leading-6 font-medium text-gray-900">
-                    Porté par le ministère du travail
+                    Implulsé par le ministère du travail
                   </p>
                 </dt>
                 <dd class="mt-2 text-base text-gray-500">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Maiores impedit perferendis suscipit eaque, iste dolor
-                  cupiditate blanditiis ratione.
+                  ...
                 </dd>
               </div>
             </dl>

@@ -8,44 +8,41 @@
           <img class="-ml-4 lg:block h-32 w-auto" src="/illustrations/republique-francaise-logo.png" alt="Reva">
           <div class="space-y-8 xl:col-span-1">
             <p class="text-gray-500 text-base">
-              REVA simplifie la VAE
+              REVA - REconnaît et VAlide votre expérience
             </p>
             <div class="flex flex-col sm:flex-row sm:space-x-6">
-              <a href="#" class="font-bold">
-                legifrance.gouv.fr
+              <a href="https://beta.gouv.fr" class="font-bold">
+                beta.gouv.fr
               </a>
-
-              <a href="#" class="font-bold">
-                gouvernement.fr
+              <a href="https://travail-emploi.gouv.fr/" class="font-bold">
+                Ministère du travail, de l'emploi et de l'insertion
               </a>
-
-              <a href="#" class="font-bold">
-                service-public.fr
+              <a href="https://solidarites-sante.gouv.fr/" class="font-bold">
+                Ministère des solidarités et de la santé
               </a>
-
-              <a href="#" class="font-bold">
-                data.gouv.fr
+              <a href="https://www.education.gouv.fr/" class="font-bold">
+                Ministère de l'éducation nationale, de la jeunesse et des sports
               </a>
             </div>
           </div>
 
           <div class="mt-12 flex flex-col sm:flex-row sm:gap-8 xl:col-span-2 border-t pt-6">
 
-            <div class="sm:border-r pr-4">
+            <!-- <div class="sm:border-r pr-4">
               <a href="#">Plan du site</a>
-            </div>
-            <div class="sm:border-r pr-4">
+            </div> -->
+            <!-- <div class="sm:border-r pr-4">
               <a href="#">Accessibilité</a>
-            </div>
+            </div> -->
             <div class="sm:border-r pr-4">
               <a href="#">Mentions légales</a>
             </div>
             <div class="sm:border-r pr-4">
               <a href="#">Données personnelles</a>
             </div>
-            <div class="">
+            <!-- <div class="">
               <a href="#">Gestion des cookies</a>
-            </div>
+            </div> -->
 
           </div>
 

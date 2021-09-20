@@ -3,19 +3,25 @@
     <div class="flex-1 bg-white p-6 flex flex-col justify-between">
       <div class="flex-1">
         <p class="text-sm font-medium text-custom">
-          Région concernée : Pays de la Loire (44, 49, 53, 85)
+          {{ region }}
         </p>
         <p class="text-2xl font-semibold text-gray-900 mt-2">
-          Diplôme d'état d'accessibilité à l'éducation sanitaire et social
+          {{ label }}
+        </p>
+        <p class="mt-3 text-sm text-gray-500 italic">
+          {{ certificateur }}
         </p>
         <p class="mt-3 text-base text-gray-500">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit facilis asperiores porro quaerat doloribus, eveniet dolore. Adipisci tempora aut inventore optio animi., tempore temporibus quo laudantium.
+          {{ description }}
         </p>
       </div>
       <div class="mt-12 flex items-center">
         <p class="text-sm font-medium text-gray-900">
-          <a href="#" class="underline">
-            Connaître les détails du diplôme
+          <a :href="link" target="_blank" class="underline">
+            Voir les détails du diplôme
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 float-right mt-0.5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
           </a>
         </p>
       </div>
@@ -25,6 +31,13 @@
 
 <script>
 export default {
+  props: {
+    region: String,
+    label: String,
+    description: String,
+    certificateur: String,
+    link: String,
+  },
 }
 </script>
 
