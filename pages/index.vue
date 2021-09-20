@@ -29,11 +29,10 @@
                     lg:text-6xl
                   "
                 >
-                  Votre diplôme en 3 mois, financé, accompagné et personnalisé
+                  Votre diplôme en 4 mois, financé, accompagné et personnalisé
                 </h1>
                 <p class="mt-6 text-lg text-gray-700 sm:text-2xl">
-                  REVA est une expérimentation beta.gouv autour du sujet de la
-                  simplification de la VAE
+                  REVA est une expérimentation beta.gouv visant à simplifier la Validation des Acquis d'Expérience (VAE)
                 </p>
               </div>
 
@@ -64,8 +63,7 @@
                               Êtes-vous demandeur d'emploi ?
                             </legend>
                             <p class="text-sm text-gray-500">
-                              REVA en tant qu'expérimentation est à ce jour
-                              limité aux demandeurs d'emploi
+                              L'expérimentation REVA est pour l'instant limitée aux demandeurs d'emploi
                             </p>
                           </div>
                           <div class="mt-4 space-y-2">
@@ -144,7 +142,7 @@
                                   text-gray-700
                                 "
                               >
-                                C'est en cours
+                                Prochainement
                               </label>
                             </div>
                           </div>
@@ -167,9 +165,12 @@
                             </label>
                             <div class="relative">
                               <div class="pr-4">
-                                <p>
-                                  Envisagez-vous l'un de ces diplômes, si oui
+                                <legend class="text-base text-gray-900">
+                                  Envisagez-vous d'obtenir l'un de ces diplômes, si oui
                                   lequel ?
+                                </legend>
+                                <p class="text-sm text-gray-500">
+                                  L'expérimentation REVA est pour l'istant limitée à quelques diplômes
                                 </p>
                                 <div
                                   class="
@@ -427,8 +428,7 @@
                 class="mt-4 max-w-3xl mx-auto text-center text-xl text-gray-500"
               >
                 Sous l'impulsion du Ministère du Travail et en collaboration
-                avec Pôle emploi, REVA propose à 200 personnes des secteurs de
-                l'aide à domicile d'obtenir un diplôme dans ce secteur
+                avec Pôle emploi, REVA propose à 200 personnes ayant une expérience dans le secteur du service à la personne d’obtenir un diplôme dans ce domaine.
               </p>
             </div>
           </div>
@@ -464,7 +464,7 @@
                 sm:text-5xl sm:tracking-tight
               "
             >
-              Qu'est ce qui vous attends ?
+              Qu'est-ce qui vous attend ?
             </h2>
           </div>
           <div class="flow-root px-6 mt-20 max-w-sm mx-auto">
@@ -525,11 +525,12 @@
                       "
                     >
                       <div>
-                        <p class="font-bold">Candidature</p>
+                        <p class="font-bold">Une candidature simple</p>
+                        <p class="text-sm text-white opacity-70 mb-4">
+                          Au travers d'un rapide questionnaire et d'un rendez-vous avec l'organisme certificateur, vous déciderez ensemble si cette expérimentation est faite pour vous.
+                        </p>
                         <p class="text-sm text-white opacity-70">
-                          Maecenas sed diam eget risus varius blandit sit amet
-                          non magna. Praesent commodo cursus magna, vel
-                          scelerisque nisl consectetur et.
+                          Vous rejoindrez alors une nouvelle méthode innovante pour obtenir un diplôme. Pour améliorer en continu cette approche, nous vous solliciterons régulièrement pour avoir vos retours et avis sur l'expérimentation.
                         </p>
                       </div>
                     </div>
@@ -592,11 +593,12 @@
                       "
                     >
                       <div>
-                        <p class="font-bold">Accompagnement</p>
+                        <p class="font-bold">Un accompagnement à 100%</p>
+                        <p class="text-sm text-white opacity-70 mb-4">
+                          Un organisme spécialisé vous aidera à expliquer et décrire votre expérience : vous ne serez jamais seul⋅e.
+                        </p>
                         <p class="text-sm text-white opacity-70">
-                          Maecenas sed diam eget risus varius blandit sit amet
-                          non magna. Praesent commodo cursus magna, vel
-                          scelerisque nisl consectetur et.
+                          Selon votre situation, l’accompagnement se fera en individuel ou en groupe, en présence ou à distance. Et ce, sans aucun frais pour vous : l'intégralité de l'accompagnement est financé par Pôle Emploi.
                         </p>
                       </div>
                     </div>
@@ -659,11 +661,12 @@
                       "
                     >
                       <div>
-                        <p class="font-bold">Dossier Professionnel</p>
-                        <p class="text-sm text-white opacity-70">
-                          Maecenas sed diam eget risus varius blandit sit amet
-                          non magna. Praesent commodo cursus magna, vel
-                          scelerisque nisl consectetur et.
+                        <p class="font-bold">Une reconnaissance de votre expérience</p>
+                        <p class="text-sm text-white opacity-70 mb-4">
+                          En s’appuyant sur votre expérience professionnelle, vous serez accompagné dans la rédaction de votre dossier professionnel et dans le témoignage de vos compétences.
+                        </p>
+                        <p class="text-sm text-white opacity-70 mb-4">
+                          ...
                         </p>
                       </div>
                     </div>
@@ -726,11 +729,12 @@
                       "
                     >
                       <div>
-                        <p class="font-bold">Examen</p>
+                        <p class="font-bold">Un diplôme reconnu à la clef</p>
                         <p class="text-sm text-white opacity-70">
-                          Maecenas sed diam eget risus varius blandit sit amet
-                          non magna. Praesent commodo cursus magna, vel
-                          scelerisque nisl consectetur et.
+                          Le dossier professionnel en main, et vos témoignages entendus par un jury, votre expérience professionnelle sera reconnue par un diplôme officiel.
+                        </p>
+                        <p class="text-sm text-white opacity-70">
+                          ...
                         </p>
                       </div>
                     </div>
@@ -766,35 +770,31 @@
                   </p>
                 </dt>
                 <dd class="mt-2 text-base text-gray-500">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Maiores impedit perferendis suscipit eaque, iste dolor
-                  cupiditate blanditiis ratione.
+                  <a href="https://beta.gouv.fr">beta.gouv</a> est une mission de la direction interministérielle du numérique (DINUM), qui aide les administrations publiques à construire des services numériques utiles, simples, faciles à utiliser et qui répondent vraiment aux besoins des gens.<br/>
+                  Elle s'incarne au sein de Startups d'État, équipes pluridisciplinaires s'appuyant sur une approche innovante de la conception de services numériques.
                 </dd>
               </div>
 
               <div class="relative">
                 <dt>
                   <p class="text-lg leading-6 font-medium text-gray-900">
-                    Incubateur d'état
+                    REVA
                   </p>
                 </dt>
                 <dd class="mt-2 text-base text-gray-500">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Maiores impedit perferendis suscipit eaque, iste dolor
-                  cupiditate blanditiis ratione.
+                  Startup d'État visant à <b>RE</b>connaître et <b>VA</b>lider l'expérience. <br/>
+                  Une équipe de 9 personnes au service de la reconnaissance de vos compétences.
                 </dd>
               </div>
 
               <div class="relative">
                 <dt>
                   <p class="text-lg leading-6 font-medium text-gray-900">
-                    Porté par le ministère du travail
+                    Implulsé par le ministère du travail
                   </p>
                 </dt>
                 <dd class="mt-2 text-base text-gray-500">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Maiores impedit perferendis suscipit eaque, iste dolor
-                  cupiditate blanditiis ratione.
+                  ...
                 </dd>
               </div>
             </dl>
