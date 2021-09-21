@@ -103,8 +103,6 @@
         class="
           text-gray-900
           hover:bg-gray-50
-          border-l
-          hover:border-indigo-600
           cursor-pointer
           select-none
           relative
