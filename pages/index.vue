@@ -33,7 +33,7 @@
                 </h1>
                 <p class="mt-6 text-lg text-gray-700 sm:text-2xl">
                   REVA est une expérimentation beta.gouv visant à simplifier la
-                  Validation des Acquis d'Expérience (VAE)
+                  Validation des Acquis de l'Expérience (VAE)
                 </p>
               </div>
 
@@ -596,7 +596,7 @@
                 </dt>
                 <dd class="mt-2 text-base text-gray-500">
                   Plateforme numérique en construction qui vise à
-                  <b>RE</b>connaître et <b>VA</b>lider l'expérience. <br/>
+                  <b>RE</b>connaître et <b>VA</b>lider l'expérience. <br />
                   Nous sommes une équipe de 9 personnes, au sein d'une Startup
                   d'État, au service de la reconnaissance de vos compétences.
                 </dd>
@@ -609,13 +609,13 @@
                   </p>
                 </dt>
                 <dd class="mt-2 text-base text-gray-500">
-                  Ce projet est initié par le Ministère du Travail, de
-                  l'Emploi et de l'Insertion, ainsi que par le Haut
-                  Commissariat aux Compétences. Il associe également
-                  le Ministère des Solidarités et de la Santé, le Ministère
-                  de l'Agriculture et de l'Alimentation, le Ministère de
-                  l'Éducation Nationale, de la Jeunesse et des Sports et la
-                  branche professionnelle du Particulier Employeur.
+                  Ce projet est initié par le Ministère du Travail, de l'Emploi
+                  et de l'Insertion, ainsi que par le Haut Commissariat aux
+                  Compétences. Il associe également le Ministère des Solidarités
+                  et de la Santé, le Ministère de l'Agriculture et de
+                  l'Alimentation, le Ministère de l'Éducation Nationale, de la
+                  Jeunesse et des Sports, de la branche professionnelle du
+                  Particulier Employeur et de la Croix Rouge.
                 </dd>
               </div>
             </dl>

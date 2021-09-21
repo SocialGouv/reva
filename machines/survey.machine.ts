@@ -160,6 +160,7 @@ export const surveyMachine = surveyModel.createMachine({
     PREVIOUS_QUESTION: {
       target: 'idle',
       actions: assign((context: any, _event: any) => {
+        window.scrollTo({ top: 0 })
         const previousQuestion = context.previousQuestions[0]
         const previousQuestions = context.previousQuestions.slice(1)
         const nextQuestions = [
@@ -177,6 +178,7 @@ export const surveyMachine = surveyModel.createMachine({
       {
         target: 'idle',
         actions: assign((context: any, _event: any) => {
+          window.scrollTo({ top: 0 })
           return {
             previousQuestions: [
               context.currentQuestion,
@@ -191,6 +193,7 @@ export const surveyMachine = surveyModel.createMachine({
       {
         target: 'userInformations',
         actions: assign((context: any, _event: any) => {
+          window.scrollTo({ top: 0 })
           return {
             previousQuestions: [
               ...context.previousQuestions,

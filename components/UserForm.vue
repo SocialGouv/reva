@@ -3,15 +3,16 @@
     <div class="w-full max-w-xl mx-auto pt-6">
       <div class="pb-5">
         <h3 class="text-2xl leading-10 font-medium text-gray-900">
-          On va te prendre en charge
+          L'organisme certificateur va revenir très vite vers toi !
         </h3>
       </div>
 
       <fieldset class="mt-2">
+        <p>Pour celà, nous avons besoin de tes coordonnées :</p>
         <legend class="sr-only">Pré-bilan</legend>
-        <div class="flex flex-col bg-white rounded-md">
+        <div class="flex flex-col mt-8 bg-white rounded-md">
           <!-- Checked: "bg-indigo-50 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
-          <p class="block">Donne nous ton email:</p>
+          <p class="block">E-mail :</p>
           <input
             v-model="candidate.email"
             class="
@@ -31,9 +32,9 @@
             required="true"
           />
         </div>
-        <div class="flex flex-col bg-white rounded-md">
+        <div class="flex flex-col mt-4 bg-white rounded-md">
           <!-- Checked: "bg-indigo-50 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
-          <p class="block">Donne nous ton prénom:</p>
+          <p class="block">Prénom :</p>
           <input
             v-model="candidate.firstname"
             class="
@@ -53,9 +54,9 @@
             required="true"
           />
         </div>
-        <div class="flex flex-col bg-white rounded-md">
+        <div class="flex flex-col mt-4 bg-white rounded-md">
           <!-- Checked: "bg-indigo-50 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
-          <p class="block">Donne nous ton nom:</p>
+          <p class="block">Nom :</p>
           <input
             v-model="candidate.lastname"
             class="
@@ -75,9 +76,9 @@
             required="true"
           />
         </div>
-        <div class="flex flex-col bg-white rounded-md">
+        <div class="flex flex-col mt-4 bg-white rounded-md">
           <!-- Checked: "bg-indigo-50 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
-          <p class="block">Donne nous ton numero de telephone:</p>
+          <p class="block">Numéro de téléphone :</p>
           <input
             v-model="candidate.phoneNumber"
             class="
