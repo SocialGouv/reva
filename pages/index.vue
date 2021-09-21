@@ -573,7 +573,7 @@
               <div class="relative">
                 <dt>
                   <p class="text-lg leading-6 font-medium text-gray-900">
-                    Beta Gouv
+                    beta.gouv.fr
                   </p>
                 </dt>
                 <dd class="mt-2 text-base text-gray-500">
@@ -611,11 +611,11 @@
                 <dd class="mt-2 text-base text-gray-500">
                   Ce projet est initié par le Ministère du Travail, de
                   l'Emploi et de l'Insertion, ainsi que par le Haut
-                  Commissariat aux compétences. Il associe également
+                  Commissariat aux Compétences. Il associe également
                   le Ministère des Solidarités et de la Santé, le Ministère
                   de l'Agriculture et de l'Alimentation, le Ministère de
                   l'Éducation Nationale, de la Jeunesse et des Sports et la
-                  branche des professionnels du Particulier Employeur.
+                  branche professionnelle du Particulier Employeur.
                 </dd>
               </div>
             </dl>
