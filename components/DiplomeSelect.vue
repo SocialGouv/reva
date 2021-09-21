@@ -15,7 +15,9 @@
             border border-transparent
             rounded-l-md
             text-gray-700
+            cursor-pointer
           "
+          @click="toggle"
         >
           <p v-if="!selected" class="text-left font-medium">
             Diplômes disponibles
@@ -33,8 +35,8 @@
             rounded-l-none rounded-r-md
             text-sm
             font-medium
-            text-white
-            hover:bg-indigo-600
+            text-gray-500
+            hover:text-white hover:bg-indigo-600
             focus:outline-none
             focus:z-10
             focus:ring-2
@@ -50,7 +52,7 @@
           <span class="sr-only">Changer le diplôme</span>
 
           <svg
-            class="h-5 w-5 text-gray-500"
+            class="h-5 w-5"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
@@ -98,7 +100,17 @@
       <li
         v-for="diplome in diplomes"
         :key="diplome.id"
-        class="text-gray-900 cursor-default select-none relative p-4 text-sm"
+        class="
+          text-gray-900
+          hover:bg-gray-50
+          border-l
+          hover:border-indigo-600
+          cursor-pointer
+          select-none
+          relative
+          p-4
+          text-sm
+        "
         role="option"
         @click="select(diplome)"
       >
