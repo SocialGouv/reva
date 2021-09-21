@@ -198,7 +198,7 @@
           </p>
 
           <div class="flex justify-center items-center mt-8">
-            <Button @click="backToHome"> Router à l'accueil </Button>
+            <Button @click="backToHome">Retour à l'accueil </Button>
           </div>
         </div>
       </div>
