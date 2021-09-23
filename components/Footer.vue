@@ -54,7 +54,7 @@
                 href="https://irfss-occitanie.croix-rouge.fr/"
                 class="font-bold"
               >
-                Croix Rouge
+                Croix-Rouge
               </a>
             </div>
           </div>
