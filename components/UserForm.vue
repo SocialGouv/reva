@@ -3,12 +3,12 @@
     <div class="w-full max-w-xl mx-auto pt-6">
       <div class="pb-5">
         <h3 class="text-2xl leading-10 font-medium text-gray-900">
-          L'organisme certificateur va revenir très vite vers toi !
+          L'organisme certificateur va revenir très vite vers vous !
         </h3>
       </div>
 
       <fieldset class="mt-2">
-        <p>Pour celà, nous avons besoin de tes coordonnées :</p>
+        <p>Pour celà, nous avons besoin de vos coordonnées :</p>
         <legend class="sr-only">Pré-bilan</legend>
         <div class="flex flex-col mt-8 bg-white rounded-md">
           <!-- Checked: "bg-indigo-50 border-indigo-200 z-10", Not Checked: "border-gray-200" -->

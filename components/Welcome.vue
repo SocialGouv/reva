@@ -18,8 +18,8 @@
       </h1>
 
       <p class="mt-2">
-        Dans le but d'améliorer notre service, nous souhaiterions avoir ton avis
-        sur la pertinence des questions que nous allons te poser :
+        Dans le but d'améliorer notre questionnaire, nous souhaiterions avoir
+        votre avis sur la pertinence des questions que nous allons vous poser :
       </p>
 
       <label class="relative mt-6 flex cursor-pointer focus:outline-none">

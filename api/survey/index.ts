@@ -24,6 +24,7 @@ router.post('/surveys/:id/candidates', async (req: any, res: any) => {
         firstname: yup.string().required(),
         lastname: yup.string().required(),
         diplome: yup.string().required(),
+        cohorte: yup.string().required(),
         phoneNumber: yup
           .string()
           .matches(/^[0-9]{10}$/, 'Numéro de téléphone invalide.'),

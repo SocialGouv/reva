@@ -91,17 +91,29 @@
                                 :selected="selectedDiplome"
                                 @select="onSelectDiplome"
                               />
+                              <cohorte-select
+                                :cohortes="cohortes"
+                                :selected="selectedCohorte"
+                                @select="onSelectCohorte"
+                              />
                             </div>
                           </div>
                         </div>
 
                         <div>
                           <button
-                            :disabled="selectedDiplome === null"
+                            :disabled="
+                              selectedDiplome === null ||
+                              selectedCohorte === null
+                            "
                             type="submit"
                             :class="{
-                              'cursor-not-allowed': selectedDiplome === null,
-                              'opacity-50': selectedDiplome === null,
+                              'cursor-not-allowed':
+                                selectedDiplome === null ||
+                                selectedCohorte === null,
+                              'opacity-50':
+                                selectedDiplome === null ||
+                                selectedCohorte === null,
                             }"
                             class="
                               inline-flex
@@ -629,24 +641,146 @@
 </template>
 
 <script lang="ts">
-import { ref, useRouter } from '@nuxtjs/composition-api'
+import { ref, useRouter, watch } from '@nuxtjs/composition-api'
+import CohorteSelect from '~/components/CohorteSelect.vue'
 import DiplomeSelect from '~/components/DiplomeSelect.vue'
 export default {
-  components: { DiplomeSelect },
+  components: { CohorteSelect, DiplomeSelect },
   setup() {
     const router = useRouter()
     const selectedDiplome = ref(null as any)
+    const selectedCohorte = ref(null as any)
+    const filteredCohortes = ref([] as any[])
 
     const onSelectDiplome = (diplome: any) => {
       selectedDiplome.value = diplome
+    }
+
+    const onSelectCohorte = (cohorte: any) => {
+      selectedCohorte.value = cohorte
     }
 
     const submitParticipate = () => {
       if (!selectedDiplome.value) {
         return
       }
-      router.push(`/inscription?diplome=${selectedDiplome.value.id}`)
+      router.push(
+        `/inscription?diplome=${selectedDiplome.value.id}&cohorte=${selectedCohorte.value.id}`
+      )
     }
+
+    const cohortes = [
+      {
+        id: 'f4e2d93a-5cee-490e-adc3-e23aeb66ffcb',
+        label: 'Paris 12',
+        region: 'Île-de-France',
+        diplomes: [
+          '9bbc43a9-8b51-4feb-aab0-a1b2b49d27b2',
+          '1d0863c5-aa0c-4d46-aa71-6f3d467ff45e',
+          'fa4e7e6e-8965-44ba-97f0-81440764f91a',
+          '65d1cc68-c601-4aa2-bae9-c422bea065bf',
+          '5ee1f090-c6f1-42dc-a712-54814cbdaf22',
+          'a93a84de-f041-445c-882a-7d9cc066d348',
+          'e7f900e0-c9b0-4143-b5a6-8bb4ba66179c',
+          '2cfb796f-9392-4f60-9a26-b41fc6b0ffde',
+        ],
+      },
+      {
+        id: '84b3218a-a5bd-4e4b-b359-8562de9b04b7',
+        label: 'Cergy',
+        region: 'Île-de-France',
+        diplomes: [
+          '9bbc43a9-8b51-4feb-aab0-a1b2b49d27b2',
+          '1d0863c5-aa0c-4d46-aa71-6f3d467ff45e',
+          'fa4e7e6e-8965-44ba-97f0-81440764f91a',
+          '65d1cc68-c601-4aa2-bae9-c422bea065bf',
+          '5ee1f090-c6f1-42dc-a712-54814cbdaf22',
+          'a93a84de-f041-445c-882a-7d9cc066d348',
+          'e7f900e0-c9b0-4143-b5a6-8bb4ba66179c',
+          '2cfb796f-9392-4f60-9a26-b41fc6b0ffde',
+        ],
+      },
+      {
+        id: 'bab74b41-5710-44e6-bfa6-e28d4ecf60b8',
+        label: 'Lyon',
+        region: 'Auvergne-Rhône-Alpes',
+        diplomes: [
+          '9bbc43a9-8b51-4feb-aab0-a1b2b49d27b2',
+          '1d0863c5-aa0c-4d46-aa71-6f3d467ff45e',
+          'fa4e7e6e-8965-44ba-97f0-81440764f91a',
+          '65d1cc68-c601-4aa2-bae9-c422bea065bf',
+          '5ee1f090-c6f1-42dc-a712-54814cbdaf22',
+          'a93a84de-f041-445c-882a-7d9cc066d348',
+          'e7f900e0-c9b0-4143-b5a6-8bb4ba66179c',
+          '2cfb796f-9392-4f60-9a26-b41fc6b0ffde',
+        ],
+      },
+      {
+        id: '9566e646-6c2b-4c75-9206-2317a818c364',
+        label: 'Montluçon',
+        region: 'Auvergne-Rhône-Alpes',
+        diplomes: [
+          '9bbc43a9-8b51-4feb-aab0-a1b2b49d27b2',
+          '1d0863c5-aa0c-4d46-aa71-6f3d467ff45e',
+        ],
+      },
+      {
+        id: '52dd96d7-8b69-4ddb-aa5f-2387766d0760',
+        label: 'Lille',
+        region: 'Hauts-de-France',
+        diplomes: ['fa4e7e6e-8965-44ba-97f0-81440764f91a'],
+      },
+      {
+        id: '7c032d28-fa28-4de2-98d6-34251a5097d9',
+        label: 'Oise',
+        region: 'Hauts-de-France',
+        diplomes: ['fa4e7e6e-8965-44ba-97f0-81440764f91a'],
+      },
+      {
+        id: '1703872a-7e89-422d-b7c5-4434906bae5f',
+        label: 'Grand Est',
+        region: 'Mulhouse',
+        diplomes: ['65d1cc68-c601-4aa2-bae9-c422bea065bf'],
+      },
+      {
+        id: '415f96fe-fef9-4f4b-bc02-20fcda3398eb',
+        label: 'Montpellier',
+        region: 'Occitanie',
+        diplomes: ['5ee1f090-c6f1-42dc-a712-54814cbdaf22'],
+      },
+      {
+        id: '2b877072-4637-4cb3-8b67-6a9b15a7250c',
+        label: 'Toulouse',
+        region: 'Occitanie',
+        diplomes: ['5ee1f090-c6f1-42dc-a712-54814cbdaf22'],
+      },
+      {
+        id: '98a3c0aa-86db-45ff-9ca1-761c5a04dce7',
+        label: `Nice`,
+        region: `Provence-Alpes-Côte d'Azur`,
+        diplomes: [
+          'e7f900e0-c9b0-4143-b5a6-8bb4ba66179c',
+          '2cfb796f-9392-4f60-9a26-b41fc6b0ffde',
+        ],
+      },
+      {
+        id: 'dde7f9f7-b9d1-4cba-8f37-2224b9ca6dd2',
+        label: `Toulon`,
+        region: `Provence-Alpes-Côte d'Azur`,
+        diplomes: [
+          'e7f900e0-c9b0-4143-b5a6-8bb4ba66179c',
+          '2cfb796f-9392-4f60-9a26-b41fc6b0ffde',
+        ],
+      },
+    ]
+
+    watch(selectedDiplome, () => {
+      selectedCohorte.value = null
+      filteredCohortes.value = cohortes.filter((c) =>
+        c.diplomes.includes(selectedDiplome.value.id)
+      )
+    })
+
     return {
       diplomes: [
         {
@@ -700,8 +834,11 @@ export default {
             'Uniquement sur les régions Provence-Alpes-Côte d’Azur (Nice et Toulon), Auvergne-Rhône-Alpes (Lyon) et Ile de France (Paris 12ème et Cergy)',
         },
       ],
+      cohortes: filteredCohortes,
       selectedDiplome,
+      selectedCohorte,
       onSelectDiplome,
+      onSelectCohorte,
       submitParticipate,
     }
   },

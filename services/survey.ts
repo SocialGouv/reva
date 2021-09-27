@@ -5,6 +5,7 @@ export interface Answer {
   label: string
   description?: string
   requireAdditionalInformation: boolean
+  additionalInformation: string | null
   order: number
 }
 
@@ -13,6 +14,7 @@ export interface Question {
   label: string
   order: number
   answers: Answer[]
+  multiValue: boolean
 }
 
 export interface UserQuestion extends Question {

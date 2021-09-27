@@ -69,10 +69,8 @@
       <question
         :question="state.context.currentQuestion"
         :is-last-question="state.context.nextQuestions.length === 0"
-        :selected-answer="answer"
-        @selectAnswer="
-          ({ answer }) => send({ type: 'ANSWER_SELECTED', answer })
-        "
+        :selected-answer="currentAnswer"
+        @selectAnswer="selectAnswer"
       />
 
       <div
@@ -88,25 +86,18 @@
           justify-center
         "
         :class="{
-          'md:justify-start': hasPreviousQuestion && !hasAlreadyAnswered,
-          'md:justify-end': !hasPreviousQuestion && hasAlreadyAnswered,
-          'md:justify-between': hasPreviousQuestion && hasAlreadyAnswered,
+          'md:justify-end': !hasPreviousQuestion,
+          'md:justify-between': hasPreviousQuestion,
         }"
       >
         <Button
           v-if="hasPreviousQuestion"
           type="secondary"
-          @click="send('PREVIOUS_QUESTION')"
+          @click="previousQuestion"
         >
           Question précédente
         </Button>
-        <Button
-          v-if="
-            hasAlreadyAnswered ||
-            (!displayEnquete && isDisplayingSatisfactionQuestion)
-          "
-          @click="nextQuestion"
-        >
+        <Button :disabled="!canGoNext" @click="nextQuestion">
           Question suivante
         </Button>
       </div>
@@ -124,16 +115,13 @@
           w-screen
           min-h-screen
         "
-        @click="send('BACK_TO_QUESTION')"
+        @click="backToQuestion"
       >
         <div class="bg-yellow-100 w-full min-h-full" @click.stop="() => {}">
           <question
             :question="state.context.currentQuestion.satisfactionQuestion"
             :selected-answer="satisfactionAnswer"
-            @selectAnswer="
-              ({ answer }) =>
-                send({ type: 'SATISFACTION_ANSWER_SELECTED', answer })
-            "
+            @selectAnswer="selectSatisfactionAnswer"
           />
 
           <div
@@ -149,7 +137,6 @@
               justify-center
             "
             :class="{
-              'md:justify-start': hasPreviousQuestion && !hasAlreadyAnswered,
               'md:justify-end': !hasPreviousQuestion,
               'md:justify-between': hasPreviousQuestion,
             }"
@@ -157,14 +144,11 @@
             <Button
               v-if="hasPreviousQuestion"
               type="secondary"
-              @click="send('PREVIOUS_QUESTION')"
+              @click="previousQuestion"
             >
               Question précédente
             </Button>
-            <Button
-              :disabled="!state.matches('displayCloseButton')"
-              @click="nextQuestion"
-            >
+            <Button :disabled="!canGoNext" @click="nextQuestion">
               Question suivante
             </Button>
           </div>
@@ -174,7 +158,7 @@
     <div v-if="!isDisplayingPrebilan && !isEnded" class="relative">
       <user-form
         :has-error="state.matches('userInformations.failure')"
-        @submit="(candidate) => send('SUBMIT', candidate)"
+        @submit="submit"
       />
     </div>
     <div v-if="isEnded" class="relative">
@@ -194,7 +178,7 @@
           <h1 class="py-3">Merci,</h1>
 
           <p class="mt-2">
-            Nous te contacterons dès que nous aurons étudié ta candidature.
+            Nous vous contacterons dès que nous aurons étudié votre candidature.
           </p>
 
           <div class="flex justify-center items-center mt-8">
@@ -214,12 +198,11 @@ import {
   toRefs,
   useRouter,
 } from '@nuxtjs/composition-api'
-import { useMachine } from 'xstate-vue2'
 import Button from './Button.vue'
 import Question from './Question.vue'
 import UserForm from './UserForm.vue'
 import type * as surveyService from '~/services/survey'
-import { surveyMachine } from '~/machines/survey.machine'
+import { useSurveyMachine } from '~/machines/survey.machine'
 
 export default defineComponent({
   components: { Button, Question, UserForm },
@@ -232,35 +215,38 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    cohorte: {
+      type: String,
+      required: true,
+    },
     survey: {
       type: Object as PropType<surveyService.Survey>,
       required: true,
     },
   },
-  setup(props, { emit }) {
+  setup(props) {
     // const router = useRouter()
-    const { survey, displayEnquete, diplome } = toRefs(props)
+    const { survey, displayEnquete, diplome, cohorte } = toRefs(props)
 
-    const { state, send } = useMachine(
-      surveyMachine.withContext({
-        id: survey.value.id,
-        previousQuestions: [],
-        currentQuestion: survey.value.questions[0],
-        nextQuestions: survey.value.questions.slice(1),
-        nbQuestions: survey.value.questions.length,
-        answers: {},
-        diplome: diplome.value,
-        candidate: null,
-      }),
-      { devTools: true }
-    )
-
-    const isDisplayingSatisfactionQuestion = computed(() =>
-      ['displaySatisfactionQuestion', 'displayCloseButton'].some(
-        state.value.matches
-      )
-    )
-
+    const {
+      state,
+      selectAnswer,
+      selectSatisfactionAnswer,
+      backToQuestion,
+      nextQuestion,
+      previousQuestion,
+      submit,
+      canGoNext,
+      isDisplayingSatisfactionQuestion,
+      hasPreviousQuestion,
+      currentAnswer,
+    } = useSurveyMachine({
+      id: survey.value.id,
+      questions: survey.value.questions,
+      diplome: diplome.value,
+      cohorte: cohorte.value,
+      displaySatisfaction: displayEnquete.value,
+    })
     const isDisplayingPrebilan = computed(
       () => !state.value.matches('userInformations')
     )
@@ -269,19 +255,10 @@ export default defineComponent({
       state.value.matches('userInformations.success')
     )
 
-    const answer = computed(
-      () =>
-        state.value.context.answers[state.value.context.currentQuestion?.id]
-          ?.answer
-    )
     const satisfactionAnswer = computed(
       () =>
         state.value.context.answers[state.value.context.currentQuestion.id]
           ?.satisfactionAnswer
-    )
-
-    const hasPreviousQuestion = computed(
-      () => !!state.value.context.previousQuestions.length
     )
 
     const hasAlreadyAnswered = computed(
@@ -291,13 +268,6 @@ export default defineComponent({
           displayEnquete) ||
         state.value.context.answers[state.value.context.currentQuestion.id]
     )
-
-    const nextQuestion = () => {
-      send('NEXT_QUESTION')
-      if (state.value.matches('end')) {
-        emit('questionsAnswered')
-      }
-    }
 
     const router = useRouter()
     const backToHome = () => {
@@ -323,7 +293,8 @@ export default defineComponent({
     // })
 
     return {
-      answer,
+      currentAnswer,
+      canGoNext,
       hasAlreadyAnswered,
       hasPreviousQuestion,
       isDisplayingSatisfactionQuestion,
@@ -331,9 +302,15 @@ export default defineComponent({
       isEnded,
       satisfactionAnswer,
       state,
-      send,
+      // send,
+      // nextQuestion,
+      selectAnswer,
+      selectSatisfactionAnswer,
+      backToQuestion,
       nextQuestion,
+      previousQuestion,
       backToHome,
+      submit,
     }
   },
 })

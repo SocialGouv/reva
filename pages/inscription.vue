@@ -12,6 +12,7 @@
       :display-enquete="state.context.displayEnquete"
       :survey="state.context.survey"
       :diplome="state.context.diplome"
+      :cohorte="state.context.cohorte"
       @surveyAnswered="surveyAnswered"
     />
   </div>
@@ -74,8 +75,9 @@ export default defineComponent({
     const route = useRoute()
     const router = useRouter()
     const diplome = computed(() => route.value.query.diplome)
+    const cohorte = computed(() => route.value.query.cohorte)
 
-    if (!diplome.value) {
+    if (!diplome.value || !cohorte.value) {
       router.push('/')
       return
     }
@@ -84,6 +86,7 @@ export default defineComponent({
       onBoardingMachine.withContext({
         ...onBoardingMachine.context,
         diplome: diplome.value as string,
+        cohorte: cohorte.value as string,
       }),
       { devTools: true }
     )
@@ -92,6 +95,7 @@ export default defineComponent({
 
     return {
       diplome,
+      cohorte,
       state,
       send,
       surveyAnswered,

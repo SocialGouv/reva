@@ -7,6 +7,7 @@ const onBoardingModel = createModel(
     survey: null as unknown as Survey,
     displayEnquete: false,
     diplome: null as unknown as string | null,
+    cohorte: null as unknown as string | null,
     error: null as unknown as string | null,
   },
   {

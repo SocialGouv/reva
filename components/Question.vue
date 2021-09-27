@@ -17,7 +17,7 @@
           <checkbox
             v-for="answer in question.answers"
             :id="answer.id"
-            :key="answer.id"
+            :key="answer.id + question.id"
             :checked="answer.id === selectedAnswer.id"
             :name="question.id"
             :label="answer.label"
@@ -65,6 +65,7 @@ import {
   PropType,
   reactive,
   toRefs,
+  watch,
 } from '@nuxtjs/composition-api'
 import Checkbox from './Checkbox.vue'
 import { Question } from '~/services/survey'
@@ -106,27 +107,26 @@ export default defineComponent({
       answer: selectedAnswer.value,
       additionalInformation: selectedAnswer.value.additionalInformation,
     })
+
+    watch(
+      () => props.question,
+      () => {
+        currentQuestion.answer = selectedAnswer.value
+        currentQuestion.additionalInformation =
+          selectedAnswer.value.additionalInformation
+      }
+    )
+
     return {
       currentQuestion,
       onSelectAnswer(answer: any) {
         currentQuestion.answer = answer
-
-        if (
-          !currentQuestion.answer.requireAdditionalInformation ||
-          !!currentQuestion.additionalInformation
-        ) {
-          emitChange()
-        }
+        emitChange()
       },
       onChangeAdditionalInformation($event: any) {
         currentQuestion.additionalInformation = $event.target.value
 
-        if (
-          !currentQuestion.answer.requireAdditionalInformation ||
-          !!currentQuestion.additionalInformation
-        ) {
-          emitChange()
-        }
+        emitChange()
       },
     }
   },
