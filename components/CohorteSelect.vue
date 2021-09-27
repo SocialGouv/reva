@@ -83,7 +83,6 @@
         sm:w-72
         rounded-md
         shadow-lg
-        overflow-hidden
         bg-white
         divide-y divide-gray-200
         ring-1 ring-black ring-opacity-5

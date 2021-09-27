@@ -30,8 +30,8 @@
                 ]"
                 class="
                   relative
-                  w-6
-                  h-6
+                  w-3
+                  h-3
                   flex
                   items-center
                   justify-center
