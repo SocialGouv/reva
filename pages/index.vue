@@ -785,19 +785,19 @@ export default {
       diplomes: [
         {
           id: '9bbc43a9-8b51-4feb-aab0-a1b2b49d27b2',
-          label: 'Diplôme Assistant⋅e de Vie aux Familles (ADVF)',
+          label: 'Assistant⋅e de Vie aux Familles (ADVF)',
           region:
             'Uniquement sur les régions Auvergne-Rhône-Alpes (Montluçon et Lyon) et Ile de France (Paris 12ème et Cergy)',
         },
         {
           id: '1d0863c5-aa0c-4d46-aa71-6f3d467ff45e',
-          label: 'Diplôme Agent⋅e de Service Médico-social (ASMS)',
+          label: 'Agent⋅e de Service Médico-social (ASMS)',
           region:
             'Uniquement sur les régions Auvergne-Rhône-Alpes (Montluçon et Lyon) et Ile de France (Paris 12ème et Cergy)',
         },
         {
           id: 'fa4e7e6e-8965-44ba-97f0-81440764f91a',
-          label: 'Diplôme Accompagnant Éducatif et Social (DEAES)',
+          label: `Accompagnant⋅e Éducatif et Social - Diplôme d'État (DEAES)`,
           region:
             'Uniquement sur les régions Hauts-de-france (Lille), Auvergne-Rhône-Alpes (Lyon) et Ile de France (Paris 12ème et Cergy)',
         },
@@ -810,26 +810,25 @@ export default {
         },
         {
           id: '5ee1f090-c6f1-42dc-a712-54814cbdaf22',
-          label: 'Diplôme Accompagnant⋅e en gérontologie',
+          label: 'Accompagnant⋅e en gérontologie',
           region:
             'Uniquement sur les régions Occitanie (Montpellier et Toulouse), Auvergne-Rhône-Alpes (Lyon) et Ile de France (Paris 12ème et Cergy)',
         },
         {
           id: 'a93a84de-f041-445c-882a-7d9cc066d348',
-          label:
-            'Diplôme Accompagnement, soins et services à la personne (SSP)',
+          label: 'Accompagnement, soins et services à la personne (SSP)',
           region:
             'Uniquement sur les régions Auvergne-Rône-Alpes (Lyon) et Ile de France (Paris 12ème et Cergy)',
         },
         {
           id: 'e7f900e0-c9b0-4143-b5a6-8bb4ba66179c',
-          label: 'Diplôme Employé⋅e Familial',
+          label: 'Employé⋅e Familial',
           region:
             'Uniquement sur les régions Provence-Alpes-Côte d’Azur (Nice et Toulon), Auvergne-Rhône-Alpes (Lyon) et Ile de France (Paris 12ème et Cergy)',
         },
         {
           id: '2cfb796f-9392-4f60-9a26-b41fc6b0ffde',
-          label: 'Diplôme Assistant⋅e de vie dépendance',
+          label: 'Assistant⋅e de vie dépendance',
           region:
             'Uniquement sur les régions Provence-Alpes-Côte d’Azur (Nice et Toulon), Auvergne-Rhône-Alpes (Lyon) et Ile de France (Paris 12ème et Cergy)',
         },
