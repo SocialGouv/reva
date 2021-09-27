@@ -37,6 +37,14 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/dotenv',
+    [
+      'nuxt-matomo',
+      {
+        matomoUrl: process.env.MATOMO_URL,
+        siteId: process.env.MATOMO_SITE_ID,
+        debug: process.env.NODE_ENV !== 'production',
+      },
+    ],
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
