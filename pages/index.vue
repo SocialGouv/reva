@@ -785,50 +785,51 @@ export default {
       diplomes: [
         {
           id: '9bbc43a9-8b51-4feb-aab0-a1b2b49d27b2',
-          label: 'Assistant⋅e de Vie aux Familles (ADVF)',
+          label: 'Assistant⋅e de Vie aux Familles (TP ADVF)',
           region:
             'Uniquement sur les régions Auvergne-Rhône-Alpes (Montluçon et Lyon) et Ile de France (Paris 12ème et Cergy)',
         },
         {
           id: '1d0863c5-aa0c-4d46-aa71-6f3d467ff45e',
-          label: 'Agent⋅e de Service Médico-social (ASMS)',
+          label: 'Agent⋅e de Service Médico-social (TP ASMS)',
           region:
             'Uniquement sur les régions Auvergne-Rhône-Alpes (Montluçon et Lyon) et Ile de France (Paris 12ème et Cergy)',
         },
         {
           id: 'fa4e7e6e-8965-44ba-97f0-81440764f91a',
-          label: `Accompagnant⋅e Éducatif et Social - Diplôme d'État (DEAES)`,
+          label: `Accompagnant⋅e Éducatif et Social (Diplôme d'État AES)`,
           region:
             'Uniquement sur les régions Hauts-de-france (Lille), Auvergne-Rhône-Alpes (Lyon) et Ile de France (Paris 12ème et Cergy)',
         },
         {
           id: '65d1cc68-c601-4aa2-bae9-c422bea065bf',
           label:
-            'Conducteur Accompagnateur de Personne à Mobilité Réduite (CaPMR)',
+            'Conducteur Accompagnateur de Personne à Mobilité Réduite (Titre CaPMR)',
           region:
             'Uniquement sur les régions Grand-Est (Mulhouse), Auvergne-Rhône-Alpes (Lyon) et Ile de France (Paris 12ème et Cergy)',
         },
         {
           id: '5ee1f090-c6f1-42dc-a712-54814cbdaf22',
-          label: 'Accompagnant⋅e en gérontologie',
+          label: 'Titre Accompagnant⋅e en gérontologie',
           region:
             'Uniquement sur les régions Occitanie (Montpellier et Toulouse), Auvergne-Rhône-Alpes (Lyon) et Ile de France (Paris 12ème et Cergy)',
         },
         {
           id: 'a93a84de-f041-445c-882a-7d9cc066d348',
-          label: 'Accompagnement, soins et services à la personne (SSP)',
+          label:
+            'Accompagnement, soins et services à la personne (Bac pro SSP)',
           region:
             'Uniquement sur les régions Auvergne-Rône-Alpes (Lyon) et Ile de France (Paris 12ème et Cergy)',
         },
         {
           id: 'e7f900e0-c9b0-4143-b5a6-8bb4ba66179c',
-          label: 'Employé⋅e Familial',
+          label: 'Titre Employé⋅e Familial⋅e',
           region:
             'Uniquement sur les régions Provence-Alpes-Côte d’Azur (Nice et Toulon), Auvergne-Rhône-Alpes (Lyon) et Ile de France (Paris 12ème et Cergy)',
         },
         {
           id: '2cfb796f-9392-4f60-9a26-b41fc6b0ffde',
-          label: 'Assistant⋅e de vie dépendance',
+          label: 'Titre Assistant⋅e de vie dépendance',
           region:
             'Uniquement sur les régions Provence-Alpes-Côte d’Azur (Nice et Toulon), Auvergne-Rhône-Alpes (Lyon) et Ile de France (Paris 12ème et Cergy)',
         },

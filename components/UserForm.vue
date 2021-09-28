@@ -3,7 +3,7 @@
     <div class="w-full max-w-xl mx-auto pt-6">
       <div class="pb-5">
         <h3 class="text-2xl leading-10 font-medium text-gray-900">
-          L'organisme certificateur va revenir très vite vers vous !
+          Merci ! L'organisme certificateur va revenir très vite vers vous !
         </h3>
       </div>
 

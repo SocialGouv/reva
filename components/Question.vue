@@ -34,7 +34,7 @@
           class="mt-4"
         >
           <label for="about" class="block text-sm font-medium sm:mt-px sm:pt-2">
-            Pouvez-vous compléter votre choix ?
+            Pouvez-vous nous en dire plus sur votre réponse ?
           </label>
           <div class="mt-1 sm:mt-0 sm:col-span-2">
             <textarea
