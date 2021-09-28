@@ -610,7 +610,11 @@
                   Plateforme numérique en construction qui vise à
                   <b>RE</b>connaître et <b>VA</b>lider l'expérience. <br />
                   Nous sommes une équipe de 9 personnes, au sein d'une Startup
-                  d'État, au service de la reconnaissance de vos compétences.
+                  d'État incubée à la
+                  <a href="https://www.fabrique.social.gouv.fr/"
+                  target="_blank">Fabrique Numérique des Ministères Sociaux</a>
+                  et nous œuvrons au service de la reconnaissance de vos
+                  compétences.
                 </dd>
               </div>
 
