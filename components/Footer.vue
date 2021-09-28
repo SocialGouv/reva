@@ -19,21 +19,21 @@
                 href="https://travail-emploi.gouv.fr/"
                 class="font-bold"
               >
-                Ministère du travail, de l'emploi et de l'insertion
+                Ministère du Travail, de l'Emploi et de l'Insertion
               </a>
               <a
                 target="_blank"
                 href="https://solidarites-sante.gouv.fr/"
                 class="font-bold"
               >
-                Ministère des solidarités et de la santé
+                Ministère des Solidarités et de la Santé
               </a>
               <a
                 target="_blank"
                 href="https://www.education.gouv.fr/"
                 class="font-bold"
               >
-                Ministère de l'éducation nationale, de la jeunesse et des sports
+                Ministère de l'Éducation nationale, de la Jeunesse et des Sports
               </a>
               <a
                 target="_blank"
