@@ -8,7 +8,7 @@
       </div>
 
       <fieldset class="mt-2">
-        <p>Pour celà, nous avons besoin de vos coordonnées :</p>
+        <p>Pour cela, nous avons besoin de vos coordonnées :</p>
         <legend class="sr-only">Pré-bilan</legend>
         <div class="flex flex-col mt-8 bg-white rounded-md">
           <!-- Checked: "bg-indigo-50 border-indigo-200 z-10", Not Checked: "border-gray-200" -->
