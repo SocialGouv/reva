@@ -611,8 +611,9 @@
                   <b>RE</b>connaître et <b>VA</b>lider l'expérience. <br />
                   Nous sommes une équipe de 9 personnes, au sein d'une Startup
                   d'État incubée à la
-                  <a href="https://www.fabrique.social.gouv.fr/"
-                  target="_blank">Fabrique Numérique des Ministères Sociaux</a>
+                  <a href="https://www.fabrique.social.gouv.fr/" target="_blank"
+                    >Fabrique Numérique des Ministères Sociaux</a
+                  >
                   et nous œuvrons au service de la reconnaissance de vos
                   compétences.
                 </dd>
@@ -809,7 +810,7 @@ export default {
         },
         {
           id: '1d0863c5-aa0c-4d46-aa71-6f3d467ff45e',
-          label: 'TP Agent⋅e de Service Médico-social (TP ASMS)',
+          label: 'TP Agent⋅e de Service Médico-Social (TP ASMS)',
           region: '',
         },
         {
@@ -831,7 +832,7 @@ export default {
         {
           id: 'a93a84de-f041-445c-882a-7d9cc066d348',
           label:
-            'Bac pro Accompagnement, soins et services à la personne (Bac pro SSP)',
+            'Bac pro Accompagnement, Soins et Services à la Personne (Bac pro SSP)',
           region: '',
         },
         {
