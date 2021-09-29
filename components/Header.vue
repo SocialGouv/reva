@@ -10,21 +10,25 @@
                 src="/illustrations/republique-francaise-logo.png"
                 alt="Reva"
               />
-              <img
-                class="block lg:hidden h-6 w-auto ml-2"
-                src="/illustrations/betagouv-disque.png"
-                alt="beta.gouv"
-              />
+              <a href="https://beta.gouv.fr/" target="_blank">
+                <img
+                  class="block lg:hidden h-6 w-auto ml-2"
+                  src="/illustrations/betagouv-disque.png"
+                  alt="beta.gouv"
+                />
+              </a>
               <img
                 class="hidden lg:block h-20 w-auto"
                 src="/illustrations/republique-francaise-logo.png"
                 alt="Reva"
               />
-              <img
-                class="hidden lg:block h-14 w-auto ml-2"
-                src="/illustrations/betagouv-disque.png"
-                alt="beta.gouv"
-              />
+              <a href="https://beta.gouv.fr/" target="_blank">
+                <img
+                  class="hidden lg:block h-14 w-auto ml-2"
+                  src="/illustrations/betagouv-disque.png"
+                  alt="beta.gouv"
+                />
+              </a>
             </div>
           </div>
         </div>
