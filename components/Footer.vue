@@ -4,11 +4,6 @@
       <div id="footer-heading" class="sr-only">Footer</div>
       <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
         <div>
-          <img
-            class="-ml-4 lg:block h-32 w-auto"
-            src="/illustrations/republique-francaise-logo.png"
-            alt="Reva"
-          />
           <a href="https://beta.gouv.fr/" target="_blank">
             <img
               class="lg:block h-16 w-auto"
