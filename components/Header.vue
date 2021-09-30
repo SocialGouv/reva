@@ -12,8 +12,8 @@
               />
               <a href="https://beta.gouv.fr/" target="_blank">
                 <img
-                  class="block lg:hidden h-6 w-auto ml-2"
-                  src="/illustrations/betagouv-disque.png"
+                  class="block lg:hidden h-4 w-auto ml-2"
+                  src="/illustrations/beta-gouv-logo-a3.png"
                   alt="beta.gouv"
                 />
               </a>
@@ -24,8 +24,8 @@
               />
               <a href="https://beta.gouv.fr/" target="_blank">
                 <img
-                  class="hidden lg:block h-14 w-auto ml-2"
-                  src="/illustrations/betagouv-disque.png"
+                  class="hidden lg:block h-10 w-auto ml-2"
+                  src="/illustrations/beta-gouv-logo-a3.png"
                   alt="beta.gouv"
                 />
               </a>

@@ -9,6 +9,14 @@
             src="/illustrations/republique-francaise-logo.png"
             alt="Reva"
           />
+          <a href="https://beta.gouv.fr/" target="_blank">
+            <img
+              class="lg:block h-16 w-auto"
+              src="/illustrations/beta-gouv-logo-a3.png"
+              alt="Reva"
+            />
+          </a>
+
           <div class="space-y-8 xl:col-span-1">
             <p class="text-gray-500 text-base">
               REVA - Reconnaître et valider l'expérience
