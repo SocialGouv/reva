@@ -45,7 +45,14 @@ export default {
         debug: process.env.NODE_ENV !== 'production',
       },
     ],
+    '@nuxtjs/sentry',
   ],
+  sentry: {
+    dsn: process.env.SENTRY_DSN,
+    config: {
+      environment: process.env.SENTRY_ENV,
+    },
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
