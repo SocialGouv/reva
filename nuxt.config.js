@@ -18,7 +18,12 @@ export default {
   css: ['./assets/main.scss'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+    {
+      src: '~/plugins/hotjar.js',
+      mode: 'client',
+    },
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -66,5 +71,9 @@ export default {
   env: {
     baseUrl: process.env.BASE_URL || 'http://localhost:3000',
     isProduction: process.env.NODE_ENV === 'production',
+  },
+  publicRuntimeConfig: {
+    hotjarId: process.env.HOTJAR_ID,
+    hotjarVersion: process.env.HOTJAR_VERSION,
   },
 }
