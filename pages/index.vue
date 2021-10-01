@@ -219,17 +219,10 @@
             />
             <DiplomeCard
               label="Accompagnant⋅e en gérontologie"
-              certificateur="Diplôme délivré par le Ministère de l’Education Nationale (GIP FCIP Toulouse) et la Croix Rouge Française"
+              certificateur="Diplôme délivré par la Croix Rouge Française"
               description="L'accompagnant⋅e en gérontologie dispense des soins de nature préventive, curative, visant à promouvoir, maintenir et restaurer le bien-être, l’autonomie, l’hygiène et le confort de la personne âgée."
               link="https://www.francecompetences.fr/recherche/rncp/35558/"
               region="Occitanie - Montpellier et Toulouse, Auvergne-Rhône-Alpes - Lyon, Ile de France - Paris 12ème et Cergy"
-            />
-            <DiplomeCard
-              label="Accompagnement, soins et services à la personne (SSP)"
-              certificateur="Bac Professionnel délivré par le Ministère de l’Education Nationale"
-              description="Le baccalauréat professionnel  Accompagnement, soins et services à la personne » option « en structure » permet de travailler  auprès de personnes en situation temporaire ou permanente de dépendance en structures collectives."
-              link="https://www.francecompetences.fr/recherche/rncp/12301/"
-              region="Auvergne-Rône-Alpes - Lyon, Ile de France - Paris 12ème et Cergy"
             />
             <DiplomeCard
               label="Employé⋅e Familial"
@@ -630,9 +623,8 @@
                   et de l'Insertion, ainsi que par le Haut Commissariat aux
                   Compétences. Il associe également le Ministère des Solidarités
                   et de la Santé, le Ministère de l'Agriculture et de
-                  l'Alimentation, le Ministère de l'Éducation Nationale, de la
-                  Jeunesse et des Sports, de la branche professionnelle du
-                  Particulier Employeur et de la Croix Rouge.
+                  l'Alimentation, de la branche professionnelle du Particulier
+                  Employeur et de la Croix Rouge.
                 </dd>
               </div>
             </dl>
@@ -758,8 +750,8 @@ export default {
       },
       {
         id: '1703872a-7e89-422d-b7c5-4434906bae5f',
-        label: 'Grand Est',
-        region: 'Mulhouse',
+        label: 'Mulhouse',
+        region: 'Grand Est',
         diplomes: ['65d1cc68-c601-4aa2-bae9-c422bea065bf'],
       },
       {
@@ -827,12 +819,6 @@ export default {
         {
           id: '5ee1f090-c6f1-42dc-a712-54814cbdaf22',
           label: 'Titre Accompagnant⋅e en gérontologie',
-          region: '',
-        },
-        {
-          id: 'a93a84de-f041-445c-882a-7d9cc066d348',
-          label:
-            'Bac pro Accompagnement, Soins et Services à la Personne (Bac pro SSP)',
           region: '',
         },
         {
