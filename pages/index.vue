@@ -219,7 +219,7 @@
             />
             <DiplomeCard
               label="Accompagnant⋅e en gérontologie"
-              certificateur="Diplôme délivré par la Croix Rouge Française"
+              certificateur="Diplôme délivré par le GIP FCIP de Toulouse et la Croix Rouge Française"
               description="L'accompagnant⋅e en gérontologie dispense des soins de nature préventive, curative, visant à promouvoir, maintenir et restaurer le bien-être, l’autonomie, l’hygiène et le confort de la personne âgée."
               link="https://www.francecompetences.fr/recherche/rncp/35558/"
               region="Occitanie - Montpellier et Toulouse, Auvergne-Rhône-Alpes - Lyon, Ile de France - Paris 12ème et Cergy"

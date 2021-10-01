@@ -33,13 +33,6 @@
               </a>
               <a
                 target="_blank"
-                href="https://www.education.gouv.fr/"
-                class="font-bold"
-              >
-                Ministère de l'Éducation nationale, de la Jeunesse et des Sports
-              </a>
-              <a
-                target="_blank"
                 href="https://agriculture.gouv.fr/"
                 class="font-bold"
               >
