@@ -72,10 +72,13 @@
               <a href="#">Accessibilité</a>
             </div> -->
             <div class="sm:border-r pr-4">
-              <a href="#">Mentions légales</a>
+              <a href="/legal">Mentions légales</a>
             </div>
             <div class="sm:border-r pr-4">
-              <a href="#">Données personnelles</a>
+              <a href="/cgu">Conditions générales d'utilisation</a>
+            </div>
+            <div class="sm:border-r pr-4">
+              <a href="/privacy">Données personnelles</a>
             </div>
             <!-- <div class="">
               <a href="#">Gestion des cookies</a>
