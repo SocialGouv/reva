@@ -3,7 +3,6 @@ import { assign } from 'xstate'
 import { useMachine } from 'xstate-vue2'
 import { createModel } from 'xstate/lib/model'
 import {
-  Answer,
   Candidate,
   postQuestions,
   UserAnswer,
