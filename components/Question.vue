@@ -134,7 +134,7 @@ export default defineComponent({
 
           if (isChecked) {
             currentQuestion.answers = currentQuestion.answers.filter(
-              (a) => a.id === answer.id
+              (a) => a.id !== answer.id
             )
           } else {
             currentQuestion.answers = [

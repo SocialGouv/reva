@@ -70,10 +70,6 @@ const goPreviousQuestion = assign((context: any, _event: any) => {
     currentUserAnswer: context.answers[currentQuestion.id].answer,
     answers: {
       ...context.answers,
-      [context.currentQuestion.id]: {
-        ...context.answers[context.currentQuestion.id],
-        answer: context.currentUserAnswer,
-      },
     },
     previousQuestions: context.previousQuestions.slice(1),
     currentQuestion,
