@@ -18,21 +18,16 @@
             v-for="answer in question.answers"
             :id="answer.id"
             :key="answer.id + question.id"
-            :checked="answer.id === selectedAnswer.id"
+            :checked="isSelected(answer)"
             :name="question.id"
             :label="answer.label"
             :description="answer.description"
+            :is-multi="question.multiValue"
             @change="onSelectAnswer(answer)"
           />
         </div>
 
-        <div
-          v-if="
-            currentQuestion.answer &&
-            currentQuestion.answer.requireAdditionalInformation
-          "
-          class="mt-4"
-        >
+        <div v-if="requireAdditionalInformation()" class="mt-4">
           <label for="about" class="block text-sm font-medium sm:mt-px sm:pt-2">
             Pouvez-vous nous en dire plus sur votre réponse ?
           </label>
@@ -68,7 +63,7 @@ import {
   watch,
 } from '@nuxtjs/composition-api'
 import Checkbox from './Checkbox.vue'
-import { Question } from '~/services/survey'
+import { Answer, Question, UserAnswer } from '~/services/survey'
 
 export default defineComponent({
   components: { Checkbox },
@@ -78,8 +73,11 @@ export default defineComponent({
       required: true,
     },
     selectedAnswer: {
-      type: Object,
-      default: () => ({}),
+      type: Object as PropType<UserAnswer>,
+      default: () => ({
+        answers: [],
+        additionalInformation: undefined,
+      }),
     },
     closeQuestion: {
       type: Function,
@@ -88,30 +86,28 @@ export default defineComponent({
   },
 
   setup(props, { emit }) {
-    const { selectedAnswer } = toRefs(props)
+    const { question, selectedAnswer } = toRefs(props)
 
     const emitChange = () => {
-      if (!currentQuestion.answer.requireAdditionalInformation) {
+      if (!currentQuestion.answers[0]?.requireAdditionalInformation) {
         currentQuestion.additionalInformation = null
       }
 
       emit('selectAnswer', {
-        answer: {
-          ...currentQuestion.answer,
-          additionalInformation: currentQuestion.additionalInformation,
-        },
+        answers: currentQuestion.answers,
+        additionalInformation: currentQuestion.additionalInformation,
       })
     }
 
     const currentQuestion = reactive({
-      answer: selectedAnswer.value,
+      answers: selectedAnswer.value.answers,
       additionalInformation: selectedAnswer.value.additionalInformation,
     })
 
     watch(
       () => props.question,
       () => {
-        currentQuestion.answer = selectedAnswer.value
+        currentQuestion.answers = selectedAnswer.value.answers
         currentQuestion.additionalInformation =
           selectedAnswer.value.additionalInformation
       }
@@ -119,8 +115,34 @@ export default defineComponent({
 
     return {
       currentQuestion,
+      requireAdditionalInformation() {
+        return (
+          currentQuestion.answers.length &&
+          !!currentQuestion.answers[0].requireAdditionalInformation
+        )
+      },
+      isSelected(answer: Answer) {
+        return selectedAnswer.value.answers.some((a) => a.id === answer.id)
+      },
       onSelectAnswer(answer: any) {
-        currentQuestion.answer = answer
+        if (!question.value.multiValue) {
+          currentQuestion.answers = [answer]
+        } else {
+          const isChecked = currentQuestion.answers.some(
+            (a) => a.id === answer.id
+          )
+
+          if (isChecked) {
+            currentQuestion.answers = currentQuestion.answers.filter(
+              (a) => a.id === answer.id
+            )
+          } else {
+            currentQuestion.answers = [
+              ...currentQuestion.answers,
+              { ...answer },
+            ]
+          }
+        }
         emitChange()
       },
       onChangeAdditionalInformation($event: any) {

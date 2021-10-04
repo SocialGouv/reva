@@ -3,7 +3,7 @@
     <input
       :id="id"
       :checked="checked"
-      type="radio"
+      :type="getType()"
       :value="id"
       class="
         h-4
@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent, toRefs } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   props: {
@@ -58,10 +58,18 @@ export default defineComponent({
       type: String,
       default: '',
     },
+    isMulti: {
+      type: Boolean,
+      default: () => false,
+    },
   },
 
-  setup(_props, { emit }) {
+  setup(props, { emit }) {
+    const { isMulti } = toRefs(props)
     return {
+      getType() {
+        return isMulti.value ? 'checkbox' : 'radio'
+      },
       onChange() {
         emit('change')
       },

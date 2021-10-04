@@ -69,13 +69,13 @@
       <question
         :question="state.context.currentQuestion"
         :is-last-question="state.context.nextQuestions.length === 0"
-        :selected-answer="currentAnswer"
-        @selectAnswer="selectAnswer"
+        :selected-answer="currentUserAnswer"
+        @selectAnswer="selectUserAnswer"
       />
 
       <div
         class="
-          flex flex-col
+          flex flex-col-reverse
           md:flex-row
           items-center
           py-12
@@ -126,7 +126,7 @@
 
           <div
             class="
-              flex flex-col
+              flex flex-col-reverse
               md:flex-row
               items-center
               py-12
@@ -230,7 +230,7 @@ export default defineComponent({
 
     const {
       state,
-      selectAnswer,
+      selectUserAnswer,
       selectSatisfactionAnswer,
       backToQuestion,
       nextQuestion,
@@ -239,7 +239,7 @@ export default defineComponent({
       canGoNext,
       isDisplayingSatisfactionQuestion,
       hasPreviousQuestion,
-      currentAnswer,
+      currentUserAnswer,
     } = useSurveyMachine({
       id: survey.value.id,
       questions: survey.value.questions,
@@ -293,7 +293,7 @@ export default defineComponent({
     // })
 
     return {
-      currentAnswer,
+      currentUserAnswer,
       canGoNext,
       hasAlreadyAnswered,
       hasPreviousQuestion,
@@ -304,7 +304,7 @@ export default defineComponent({
       state,
       // send,
       // nextQuestion,
-      selectAnswer,
+      selectUserAnswer,
       selectSatisfactionAnswer,
       backToQuestion,
       nextQuestion,

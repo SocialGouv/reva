@@ -6,6 +6,7 @@ import {
   Answer,
   Candidate,
   postQuestions,
+  UserAnswer,
   UserQuestion,
 } from '~/services/survey'
 
@@ -14,10 +15,10 @@ const surveyModel = createModel(
     id: null as unknown as string,
     previousQuestions: [],
     currentQuestion: undefined as unknown as UserQuestion,
-    currentAnswer: undefined as unknown as Answer | undefined,
+    currentUserAnswer: undefined as unknown as UserAnswer | undefined,
     nextQuestions: [] as UserQuestion[],
     answers: {} as {
-      [key: string]: { answer: Answer; satisfactionAnswer: Answer }
+      [key: string]: { answer: UserAnswer; satisfactionAnswer: UserAnswer }
     },
     nbQuestions: 0,
     diplome: null as unknown as String | null,
@@ -27,10 +28,10 @@ const surveyModel = createModel(
   },
   {
     events: {
-      ANSWER_SELECTED: (answer: Answer) => ({
+      USER_ANSWER_SELECTED: (answer: UserAnswer) => ({
         answer,
       }),
-      SATISFACTION_ANSWER_SELECTED: (answer: Answer) => ({
+      SATISFACTION_ANSWER_SELECTED: (answer: UserAnswer) => ({
         answer,
       }),
       BACK_TO_QUESTION: () => ({}),
@@ -47,12 +48,12 @@ const saveAnswerAndGoNext = assign((context: any, _event: any) => {
   const currentQuestion = context.nextQuestions[0]
 
   return {
-    currentAnswer: context.answers[currentQuestion.id]?.answer || undefined,
+    currentUserAnswer: context.answers[currentQuestion.id]?.answer || undefined,
     answers: {
       ...context.answers,
       [context.currentQuestion.id]: {
         ...context.answers[context.currentQuestion.id],
-        answer: context.currentAnswer,
+        answer: context.currentUserAnswer,
       },
     },
     previousQuestions: [context.currentQuestion, ...context.previousQuestions],
@@ -67,12 +68,12 @@ const goPreviousQuestion = assign((context: any, _event: any) => {
   const currentQuestion = context.previousQuestions[0]
 
   return {
-    currentAnswer: context.answers[currentQuestion.id].answer,
+    currentUserAnswer: context.answers[currentQuestion.id].answer,
     answers: {
       ...context.answers,
       [context.currentQuestion.id]: {
         ...context.answers[context.currentQuestion.id],
-        answer: context.currentAnswer,
+        answer: context.currentUserAnswer,
       },
     },
     previousQuestions: context.previousQuestions.slice(1),
@@ -88,10 +89,10 @@ export const surveyMachine = surveyModel.createMachine({
   states: {
     displayQuestion: {
       on: {
-        ANSWER_SELECTED: {
+        USER_ANSWER_SELECTED: {
           target: 'displayQuestion',
           actions: assign({
-            currentAnswer: (_context, event: any) => event.answer,
+            currentUserAnswer: (_context, event: any) => event.answer,
           }),
         },
         // {
@@ -378,7 +379,7 @@ export const useSurveyMachine = ({
       id,
       previousQuestions: [],
       currentQuestion: questions[0],
-      currentAnswer: undefined,
+      currentUserAnswer: undefined,
       nextQuestions: questions.slice(1),
       nbQuestions: questions.length,
       answers: {},
@@ -390,10 +391,13 @@ export const useSurveyMachine = ({
     { devTools: true }
   )
 
-  const selectAnswer = ({ answer }: { answer: Answer }) =>
-    send({ type: 'ANSWER_SELECTED', answer })
-
-  const selectSatisfactionAnswer = ({ answer }: { answer: Answer }) =>
+  const selectUserAnswer = (answer: UserAnswer) => {
+    send({
+      type: 'USER_ANSWER_SELECTED',
+      answer,
+    })
+  }
+  const selectSatisfactionAnswer = (answer: UserAnswer) =>
     send({ type: 'SATISFACTION_ANSWER_SELECTED', answer })
 
   const nextQuestion = () => send({ type: 'NEXT_QUESTION' })
@@ -408,7 +412,7 @@ export const useSurveyMachine = ({
     () => !!state.value.context.previousQuestions.length
   )
 
-  const currentAnswer = computed(
+  const currentUserAnswer = computed(
     () =>
       state.value.context.answers[state.value.context.currentQuestion?.id]
         ?.answer
@@ -416,15 +420,15 @@ export const useSurveyMachine = ({
 
   // hasAlreadyAnswered || (!displayEnquete && isDisplayingSatisfactionQuestion)
   const canGoNext = computed(() => {
-    const currentAnswer = state.value.context.currentAnswer
+    const currentUserAnswer = state.value.context.currentUserAnswer
 
-    if (!currentAnswer) {
+    if (!currentUserAnswer) {
       return false
     }
 
     const additionalInformationFilled =
-      currentAnswer.additionalInformation &&
-      currentAnswer.additionalInformation.trim() !== ''
+      currentUserAnswer.additionalInformation &&
+      currentUserAnswer.additionalInformation.trim() !== ''
 
     // satisfaction
     if (
@@ -435,14 +439,19 @@ export const useSurveyMachine = ({
         ?.satisfactionAnswer
     }
 
+    if (state.value.context.currentQuestion.multiValue) {
+      return !!currentUserAnswer.answers.length
+    }
+
     return (
-      !currentAnswer.requireAdditionalInformation || additionalInformationFilled
+      !currentUserAnswer.answers[0].requireAdditionalInformation ||
+      additionalInformationFilled
     )
   })
 
   return {
     state,
-    selectAnswer,
+    selectUserAnswer,
     selectSatisfactionAnswer,
     backToQuestion,
     nextQuestion,
@@ -451,6 +460,6 @@ export const useSurveyMachine = ({
     canGoNext,
     hasPreviousQuestion,
     isDisplayingSatisfactionQuestion,
-    currentAnswer,
+    currentUserAnswer,
   }
 }
