@@ -1,4 +1,6 @@
 {
-  "dev": "postgres://reva_stagin_2519:krvZseX2uiRWL8FWEPE9@127.0.0.1:10000/reva_stagin_2519",
-  "prod": "postgres://reva_prod_4836:6_oOGGHW8Yi_8BC9kmuY@127.0.0.1:10000/reva_prod_4836"
+  "dev": "",
+  "prod": {
+    "ENV": "DATABASE_URL"
+  }
 }
