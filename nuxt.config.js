@@ -51,6 +51,7 @@ export default {
       },
     ],
     '@nuxtjs/sentry',
+    '@nuxt/content',
   ],
   sentry: {
     dsn: process.env.SENTRY_DSN,
