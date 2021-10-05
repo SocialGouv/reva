@@ -13,5 +13,16 @@ if (!process.env.isProduction && process.client) {
   })
 }
 
-export default {}
+export default {
+  head() {
+    return {
+      link: [
+        {
+          rel: 'canonical',
+          href: 'https://reva.beta.gouv.fr' + this.$route.path,
+        },
+      ],
+    }
+  },
+}
 </script>
