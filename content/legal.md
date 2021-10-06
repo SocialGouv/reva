@@ -1,20 +1,6 @@
 # Mentions légales
 
 
-## Éditeur
-
-Ce site est édité par **Pôle emploi**
-
-Pôle Emploi  
-1-5 avenue du Docteur Gley  
-75987 Paris cedex 20
-
-
-## Directeur de la publication
-
-Monsieur Jean Bassères, Directeur général.
-
-
 ## Hébergement du site
 
 Ce site est hébergé par :
@@ -26,12 +12,12 @@ Scalingo
 
 ## Accessibilité
 
-La conformité aux normes d’accessibilité numérique est un objectif ultérieur, mais nous tâchons de rendre ce site accessible à toutes et à tous.
+La conformité aux normes d’accessibilité numérique est une priorité, en cours de mise en oeuvre et sera effective dans une prochaine version de ce site.
 
 
-## Signaler un dysfonctionnement
+### Signaler un dysfonctionnement
 
-Si vous rencontrez un défaut d’accessibilité vous empêchant d’accéder à un contenu ou une fonctionnalité du site, merci de nous en faire part.
+Si vous rencontrez un défaut d’accessibilité vous empêchant d’accéder à un contenu ou une fonctionnalité du site, merci de nous en faire part à l'adresse [contact@reva.beta.gouv.fr](mailto:contact@reva.beta.gouv.fr).
 
 Si vous n’obtenez pas de réponse rapide de notre part, vous êtes en droit de faire parvenir vos doléances ou une demande de saisine au Défenseur des droits.
 
