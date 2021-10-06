@@ -2,7 +2,7 @@
   <Nuxt />
 </template>
 
-<script lang="ts">
+<script>
 import { inspect } from '@xstate/inspect'
 
 if (!process.env.isProduction && process.client) {
