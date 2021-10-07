@@ -120,6 +120,13 @@ export const surveyMachine = surveyModel.createMachine({
                   ...context.previousQuestions,
                   context.currentQuestion,
                 ],
+                answers: {
+                  ...context.answers,
+                  [context.currentQuestion.id]: {
+                    ...context.answers[context.currentQuestion.id],
+                    answer: context.currentUserAnswer,
+                  },
+                },
                 currentQuestion: null,
                 nextQuestions: [],
               }
@@ -164,6 +171,13 @@ export const surveyMachine = surveyModel.createMachine({
                   ...context.previousQuestions,
                   context.currentQuestion,
                 ],
+                answers: {
+                  ...context.answers,
+                  [context.currentQuestion.id]: {
+                    ...context.answers[context.currentQuestion.id],
+                    answer: context.currentUserAnswer,
+                  },
+                },
                 currentQuestion: null,
                 nextQuestions: [],
               }
