@@ -1,5 +1,5 @@
 {
-  "dev": "",
+  "dev": "postgres://reva:password@127.0.0.1:5432/reva",
   "prod": {
     "ENV": "DATABASE_URL"
   }

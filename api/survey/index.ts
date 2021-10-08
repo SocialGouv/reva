@@ -1,9 +1,9 @@
-const router = require('express').Router()
+import { getLatestSurvey, saveCandidateSurvey } from './data'
+const surveyRouter = require('express').Router()
 const yup = require('yup')
-const data = require('./data')
 
-router.get('/surveys/latest', async (_req: any, res: any) => {
-  const survey = await data.getLatestSurvey()
+surveyRouter.get('/surveys/latest', async (_req: any, res: any) => {
+  const survey = await getLatestSurvey()
 
   if (!survey) {
     return res.status(404).send()
@@ -12,7 +12,7 @@ router.get('/surveys/latest', async (_req: any, res: any) => {
   res.json(survey)
 })
 
-router.post('/surveys/:id/candidates', async (req: any, res: any) => {
+surveyRouter.post('/surveys/:id/candidates', async (req: any, res: any) => {
   const schema = yup.object().shape({
     surveyId: yup.string().required(),
     answers: yup.object().required(),
@@ -36,9 +36,13 @@ router.post('/surveys/:id/candidates', async (req: any, res: any) => {
   if (!isValid) {
     res.status(500).send('Bad format')
   } else {
-    await data.saveCandidateSurvey(req.body)
-    res.status(200).send()
+    try {
+      await saveCandidateSurvey(req.body)
+      res.status(200).send()
+    } catch (e) {
+      res.status(500).send('An error occured while saving survey')
+    }
   }
 })
 
-module.exports = router
+export default surveyRouter
