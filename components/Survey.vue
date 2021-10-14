@@ -289,7 +289,7 @@ export default defineComponent({
     })
 
     watch(state, (current, old) => {
-      if (isEnded && !old.matches('userInformations.success')) {
+      if (isEnded.value && !old.matches('userInformations.success')) {
         router.push({
           path: routeValue.value.path,
           query: {
