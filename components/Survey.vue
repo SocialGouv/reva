@@ -196,7 +196,9 @@ import {
   defineComponent,
   PropType,
   toRefs,
+  useRoute,
   useRouter,
+  watch,
 } from '@nuxtjs/composition-api'
 import Button from './Button.vue'
 import Question from './Question.vue'
@@ -274,23 +276,27 @@ export default defineComponent({
       router.push('/')
     }
 
-    // const route = useRoute()
-    // const routeValue = computed(() => route.value)
+    const route = useRoute()
+    const routeValue = computed(() => route.value)
 
-    // router.push(`#${state.value.context.currentQuestion.id}`)
+    router.push({
+      path: routeValue.value.path,
+      query: {
+        ...routeValue.value.query,
+        questionId: state.value.context.currentQuestion.id,
+      },
+    })
 
-    // watch(state, () => {
-    //   isDisplayingPrebilan &&
-    //     router.push(`#${state.value.context.currentQuestion.id}`)
-    // })
-
-    // watch(routeValue, () => {
-    //   console.log(
-    //     'route change',
-    //     routeValue,
-    //     state.value.context.currentQuestion.id
-    //   )
-    // })
+    watch(state, (current, old) => {
+      current.context.currentQuestion?.id !== old.context.currentQuestion?.id &&
+        router.push({
+          path: routeValue.value.path,
+          query: {
+            ...routeValue.value.query,
+            questionId: current.context.currentQuestion.id,
+          },
+        })
+    })
 
     return {
       currentUserAnswer,
