@@ -100,7 +100,7 @@ export default defineComponent({
       path: routeValue.value.path,
       query: {
         ...routeValue.value.query,
-        state: 'welcome',
+        step: 'welcome',
         questionId: undefined,
       },
     })

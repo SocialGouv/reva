@@ -175,7 +175,7 @@ export default defineComponent({
       path: routeValue.value.path,
       query: {
         ...routeValue.value.query,
-        state: 'user-form',
+        step: 'user-form',
         questionId: undefined,
       },
     })

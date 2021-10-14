@@ -283,22 +283,33 @@ export default defineComponent({
       path: routeValue.value.path,
       query: {
         ...routeValue.value.query,
-        state: 'question',
+        step: 'question',
         questionId: state.value.context.currentQuestion.id,
       },
     })
 
     watch(state, (current, old) => {
-      current.context.currentQuestion &&
-        current.context.currentQuestion?.id !==
-          old.context.currentQuestion?.id &&
+      if (isEnded && !old.matches('userInformations.success')) {
         router.push({
           path: routeValue.value.path,
           query: {
             ...routeValue.value.query,
-            questionId: current.context.currentQuestion.id,
+            step: 'success',
+            questionId: undefined,
           },
         })
+      } else {
+        current.context.currentQuestion &&
+          current.context.currentQuestion?.id !==
+            old.context.currentQuestion?.id &&
+          router.push({
+            path: routeValue.value.path,
+            query: {
+              ...routeValue.value.query,
+              questionId: current.context.currentQuestion.id,
+            },
+          })
+      }
     })
 
     return {
