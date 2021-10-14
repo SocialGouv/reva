@@ -283,12 +283,15 @@ export default defineComponent({
       path: routeValue.value.path,
       query: {
         ...routeValue.value.query,
+        state: 'question',
         questionId: state.value.context.currentQuestion.id,
       },
     })
 
     watch(state, (current, old) => {
-      current.context.currentQuestion?.id !== old.context.currentQuestion?.id &&
+      current.context.currentQuestion &&
+        current.context.currentQuestion?.id !==
+          old.context.currentQuestion?.id &&
         router.push({
           path: routeValue.value.path,
           query: {

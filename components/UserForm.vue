@@ -126,7 +126,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, watch } from '@nuxtjs/composition-api'
+import {
+  computed,
+  defineComponent,
+  reactive,
+  ref,
+  useRoute,
+  useRouter,
+  watch,
+} from '@nuxtjs/composition-api'
 import * as yup from 'yup'
 
 const schema = yup.object().shape({
@@ -158,6 +166,19 @@ export default defineComponent({
     const register = () => {
       emit('submit', candidate)
     }
+
+    const router = useRouter()
+    const route = useRoute()
+    const routeValue = computed(() => route.value)
+
+    router.push({
+      path: routeValue.value.path,
+      query: {
+        ...routeValue.value.query,
+        state: 'user-form',
+        questionId: undefined,
+      },
+    })
 
     watch(candidate, async () => {
       const isValid = await schema.isValid(candidate)

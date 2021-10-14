@@ -64,7 +64,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@nuxtjs/composition-api'
+import {
+  computed,
+  defineComponent,
+  ref,
+  useRoute,
+  useRouter,
+} from '@nuxtjs/composition-api'
 // import Button from '~/components/Button.vue'
 
 export default defineComponent({
@@ -85,6 +91,20 @@ export default defineComponent({
   },
   setup(_props, { emit }) {
     const displayEnquete = ref(false)
+
+    const router = useRouter()
+    const route = useRoute()
+    const routeValue = computed(() => route.value)
+
+    router.push({
+      path: routeValue.value.path,
+      query: {
+        ...routeValue.value.query,
+        state: 'welcome',
+        questionId: undefined,
+      },
+    })
+
     return {
       displayEnquete,
       onStart() {
