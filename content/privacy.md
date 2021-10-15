@@ -5,29 +5,22 @@
 
 Le présent site [https://reva.beta.gouv.fr](https://reva.beta.gouv.fr/#) est développé au sein de l’incubateur interministériel du numérique « Beta.gouv ».
 
-Le responsable de traitement des données à caractère personnel collectées par le site [ https://reva.beta.gouv.fr](https://reva.beta.gouv.fr/#) est Pôle Emploi représenté par Monsieur Jean Bassères, Directeur général.
-
 
 ## Finalités
 
 Le site REVA a pour objectif le support de l’expérimentation REVA, visant à proposer une nouvelle approche du dispositif de Validation des Acquis d’Expérience (VAE), au travers d’une réforme réglementaire, d’une innovation autour du service rendu et d’une facilitation numérique des démarches.
 
 Des données à caractère personnel seront traitées notamment pour : 
-
-
-
 * Permettre aux personnes utilisatrices de candidater simplement en vue d’obtenir une certification en adéquation avec leurs compétences et leurs aspirations professionnelles ;
 * Être accompagné par un organisme spécialisé dans la définition de son projet, la description de ses expériences, la rédaction du dossier professionnel et la préparation au jury ;
 * Suivre la confiance et la motivation de la personne candidate dans son parcours et dans le dispositif expérimental REVA ;
-* Reconnaître les expériences et compétences de la personne candidate.
+* Reconnaître les expériences et compétences de la personne candidate ;
+* Étudier et comprendre les comportements des utilisateurs sur le site.
 
 
 ## Données à caractère personnel traitées
 
 Le site peut traiter les données à caractère personnel suivantes :
-
-
-
 * Données de contact (nom, prénom, adresse e-mail, numéro de téléphone) ;
 * Données relatives aux questionnaires (zone de commentaire, situation d’emploi) ;
 * Données relatives aux entretiens et tests réalisés par l’organisme certificateur ou accompagnateur ;
@@ -39,23 +32,17 @@ Le site peut traiter les données à caractère personnel suivantes :
 ## Bases juridiques des traitements de données
 
 Les données traitées par le site ont plusieurs fondements juridiques :
-
-
-
 * Le consentement de la personne concernée pour une ou plusieurs finalités spécifiques au sens de l’article 6-a du RGPD et en application de l’article 5(3) de la directive 2002/58/CE modifiée ;
 * L’obligation légale à laquelle est soumise le responsable de traitements au sens de l’article 6-c du RGPD ;
 * L’exécution d’une mission d’intérêt public ou relevant de l’exercice de l’autorité publique dont est investi le responsable de traitement au sens de l’article 6-e du RPGD ;
 
 **Ces fondements sont précisés ci-dessous** :
 
-
-
 1. Données de contact
 
 Ce traitement est nécessaire à l’exécution d’une mission d’intérêt public ou relevant de l’exercice de l’autorité publique dont est investi le responsable de traitement au sens de l’article 6-e du règlement (UE) 2016/679 du Parlement européen et du Conseil du 27 avril 2016 relatif à la protection des personnes physiques à l’égard du traitement des données à caractère personnel et à la libre circulation de ces données.
 
 Cette mission d’intérêt public est notamment mise en œuvre en application des articles 4 et 6 de l’arrêté du 4 mai 2017 portant organisation de la délégation générale à l’emploi et à la formation professionnelle.
-
 
 
 2. Données relatives aux questionnaires
@@ -65,13 +52,11 @@ Ce traitement est nécessaire à l’exécution d’une mission d’intérêt pu
 Cette mission d’intérêt public est notamment mise en œuvre en application des articles 4 et 6 de l’arrêté du 4 mai 2017 portant organisation de la délégation générale à l’emploi et à la formation professionnelle
 
 
-
 3. Données relatives aux entretiens et tests réalisés par l’organisme certificateur ou accompagnateur
 
 Ce traitement est nécessaire à l’exécution d’une mission d’intérêt public ou relevant de l’exercice de l’autorité publique dont est investi le responsable de traitement au sens de l’article 6-e du règlement (UE) 2016/679 du Parlement européen et du Conseil du 27 avril 2016 relatif à la protection des personnes physiques à l’égard du traitement des données à caractère personnel et à la libre circulation de ces données.
 
 Cette mission d’intérêt public est notamment mise en œuvre en application des articles 4 et 6 de l’arrêté du 4 mai 2017 portant organisation de la délégation générale à l’emploi et à la formation professionnelle.
-
 
 
 4. Données relatives aux résultats de l’expérimentation 
@@ -81,13 +66,11 @@ Ce traitement est nécessaire à l’exécution d’une mission d’intérêt pu
 Cette mission d’intérêt public est notamment mise en œuvre en application des articles 4 et 6 de l’arrêté du 4 mai 2017 portant organisation de la délégation générale à l’emploi et à la formation professionnelle.
 
 
-
 5. Données d’hébergeur ou de connexion
 
 Ce traitement est nécessaire au respect d'une obligation légale à laquelle le responsable de traitement est soumis au sens de l'article 6-c du Règlement (UE) 2016/679 du Parlement européen et du Conseil du 27 avril 2016 relatif à la protection des personnes physiques à l'égard du traitement des données à caractère personnel et à la libre circulation de ces données.
 
 L'obligation légale est posée par la loi LCEN n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique et par les articles 1 et 3 du décret n°2011-219 du 25 février 2011.
-
 
 
 6. Cookies
@@ -154,9 +137,6 @@ Ce consentement de la personne concernée pour une ou plusieurs finalités spéc
 ## Droit des personnes concernées
 
 Vous disposez des droits suivants concernant vos données à caractère personnel :
-
-
-
 * Droit d’information et droit d’accès aux données ;
 * Droit de rectification et le cas échéant de suppression des données ;
 * Droit au retrait du consentement (pour les cookies).
@@ -173,7 +153,6 @@ Le responsable de traitement s’engage à répondre dans un délai raisonnable 
 ## Destinataires des données
 
 Le responsable de traitement s’engage à ce que les données à caractères personnels soient traitées par les seules personnes autorisées. Les données sont transmises dans le cadre de leurs missions d’intérêt public aux organismes certificateurs ou accompagnateurs.
-
 
 <table>
   <tr>
@@ -261,9 +240,6 @@ Direction Générale de la Cohésion Sociale (DGCS)
 **Sécurité et confidentialité des données**
 
 Les mesures techniques et organisationnelles de sécurité adoptées pour assurer la confidentialité, l’intégrité et protéger l’accès des données sont notamment : 
-
-
-
 * Pseudonymisation
 * Anonymisation 
 * Stockage des données en base de données SecNumCloud
@@ -309,14 +285,13 @@ Certaines des données sont envoyées à des sous-traitants pour réaliser certa
 
 ## Cookies et traceurs
 
-Un cookie est un fichier déposé sur votre terminal lors de la visite d’un site. Il a pour but de collecter des informations relatives à votre navigation et de vous adresser des services adaptés à votre terminal (ordinateur, mobile ou tablette).
+Un cookie est un fichier déposé sur votre terminal lors de la visite d’un site. Il a pour but de collecter des informations relatives à votre navigation et de vous adresser des services plus personnalisés, adaptés à vos usages.
 
-**Nous utilisons pour cela Matomo,** un outil de mesure d’audience web libre, paramétré pour être en conformité avec la recommandation « Cookies » de la CNIL. Cela signifie que votre adresse IP, par exemple, est anonymisée avant d’être enregistrée. Il est donc impossible d’associer vos visites sur ce site à votre personne.
+Afin de mieux comprendre les besoins de nos utilisateurs et d'optimiser ce service ainsi que leur expérience, nous utilisons les outils de traçage suivant :
+* **Matomo**, un outil de mesure d’audience web libre, hébergé par les services de la DINUM et paramétré pour être en conformité avec la recommandation « Cookies » de la CNIL. Cela signifie que votre adresse IP, par exemple, est anonymisée avant d’être enregistrée. Il est donc impossible d’associer vos visites sur ce site à votre personne.
+* **Hotjar**, un outil de mesure et d'analyse des comportements des utilisateurs sur le site. Hotjar utilise des cookies et d'autres technologies pour collecter des données sur le comportement de nos utilisateurs et leurs appareils. Il s'agit notamment de l'adresse IP d'un appareil (traitée pendant votre session et stockée sous une forme dépersonnalisée), de la taille de l'écran de l'appareil, du type d'appareil (identifiants uniques de l'appareil), des informations sur le navigateur, de l'emplacement géographique (pays uniquement) et de la langue préférée utilisée pour afficher notre site Web. Hotjar stocke ces informations en notre nom dans un profil d'utilisateur pseudonymisé. Il est contractuellement interdit à Hotjar de vendre les données collectées en notre nom. Pour plus de détails, veuillez consulter la section "à propos de Hotjar" du [site d'assistance de Hotjar](https://help.hotjar.com/hc/en-us/categories/115001323967-About-Hotjar).
 
 Il convient d’indiquer que :
-
-
-
 * Les données collectées ne sont pas recoupées avec d’autres traitements
 * Les cookies ne permettent pas de suivre la navigation de l’internaute sur d’autres sites
 
@@ -326,8 +301,5 @@ Il convient d’indiquer que :
 À tout moment, vous pouvez refuser l’utilisation des cookies et désactiver le dépôt sur votre ordinateur en utilisant la fonction dédiée de votre navigateur (fonction disponible notamment sur Microsoft Internet Explorer 11, Google Chrome, Mozilla Firefox, Apple Safari et Opera).
 
 Pour aller plus loin, vous pouvez consulter les fiches proposées par la Commission Nationale de l'Informatique et des Libertés (CNIL) : 
-
-
-
 * [Cookies & traceurs : que dit la loi ?](https://www.cnil.fr/fr/cookies-traceurs-que-dit-la-loi)
 * [Cookies : les outils pour les maîtriser](https://www.cnil.fr/fr/cookies-les-outils-pour-les-maitriser)
