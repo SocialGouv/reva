@@ -43,7 +43,7 @@
                 href="https://www.iperia.eu/"
                 class="font-bold"
               >
-                Branche professionnelles du Particulier Employeur
+                Branche professionnelle du Particulier Employeur
               </a>
               <a
                 target="_blank"
