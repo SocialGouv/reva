@@ -64,7 +64,32 @@ export default {
   axios: {},
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    extend(config, { isDev }) {
+      const elmLoaders = [
+        {
+          loader: 'elm-webpack-loader',
+          options: {
+            // cwd: elmSource,
+            cwd: __dirname,
+            optimize: !isDev,
+            debug: isDev,
+          },
+        },
+      ]
+
+      // if (isDev) {
+      //   console.log('on push dev')
+      //   elmLoaders.push({ loader: 'elm-hot-webpack-loader' })
+      // }
+
+      config.module.rules.push({
+        test: /\.elm$/,
+        exclude: [/elm-stuff/, /node_modules/],
+        use: elmLoaders.reverse(),
+      })
+    },
+  },
   serverMiddleware: [{ path: '/api', handler: '~/api/index.ts' }],
   server: {
     host: '0',
