@@ -1,6 +1,6 @@
 <template>
   <div>
-    <App :flags="flags" />
+    <App :flags="flags" :ports="setupPorts" />
   </div>
 </template>
 
@@ -16,10 +16,18 @@ export default defineComponent({
   data: () => {
     return {
       flags: {
-        token: null,
+        token: (process.client && window.localStorage.getItem('token')) || null,
         baseUrl: '/app',
       },
     }
+  },
+  methods: {
+    setupPorts(ports) {
+      ports.storeToken.subscribe(function (token) {
+        window.localStorage.setItem('token', token)
+      })
+      this.ports = ports
+    },
   },
 })
 </script>

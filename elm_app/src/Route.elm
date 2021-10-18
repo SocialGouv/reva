@@ -38,7 +38,7 @@ fromRoute : String -> Route -> String
 fromRoute baseUrl route =
     case route of
         Home ->
-            baseUrl
+            baseUrl ++ "/"
 
         Login ->
             baseUrl ++ "/auth/login"

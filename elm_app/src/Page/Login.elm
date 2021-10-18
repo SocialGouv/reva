@@ -1,8 +1,8 @@
 module Page.Login exposing (Model, init, validateLogin, view)
 
 import Html.Styled exposing (Html, a, button, div, form, h2, img, input, label, span, text)
-import Html.Styled.Attributes exposing (alt, class, for, href, id, name, novalidate, placeholder, src, type_, value)
-import Html.Styled.Events exposing (onInput, onSubmit)
+import Html.Styled.Attributes exposing (alt, checked, class, for, href, id, name, novalidate, placeholder, src, type_, value)
+import Html.Styled.Events exposing (onClick, onInput, onSubmit)
 import Route exposing (Route(..))
 import Svg.Styled exposing (path, svg)
 import Svg.Styled.Attributes exposing (clipRule, d, fill, fillRule, viewBox)
@@ -12,6 +12,7 @@ import Validate exposing (Validator, ifBlank, ifInvalidEmail, validate)
 type alias LoginForm =
     { email : String
     , password : String
+    , rememberMe : Bool
     }
 
 
@@ -33,6 +34,7 @@ init =
     { form =
         { email = ""
         , password = ""
+        , rememberMe = False
         }
     , errors = []
     , isSubmitting = False
@@ -95,6 +97,8 @@ view events model =
                             , name "remember-me"
                             , type_ "checkbox"
                             , class "h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                            , checked model.form.rememberMe
+                            , onClick (withToggleRememberMe model |> events.onUpdateModel)
                             ]
                             []
                         , label [ for "remember-me", class "ml-2 block text-sm text-gray-900" ]
@@ -141,6 +145,18 @@ withPassword model password =
 
         newForm =
             { currentForm | password = password }
+    in
+    { model | form = newForm }
+
+
+withToggleRememberMe : Model -> Model
+withToggleRememberMe model =
+    let
+        currentForm =
+            model.form
+
+        newForm =
+            { currentForm | rememberMe = not currentForm.rememberMe }
     in
     { model | form = newForm }
 

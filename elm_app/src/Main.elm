@@ -1,4 +1,4 @@
-module Main exposing (main)
+port module Main exposing (main)
 
 import Api
 import Browser
@@ -7,6 +7,7 @@ import Html.Styled exposing (Html, a, button, div, form, h2, img, input, label, 
 import Html.Styled.Attributes exposing (action, alt, class, for, href, id, method, name, placeholder, src, type_, value)
 import Html.Styled.Events exposing (onClick)
 import Http
+import Page.Candidates as Candidates exposing (Candidate, Model)
 import Page.Login
 import Route exposing (Route(..))
 import Url exposing (Url)
@@ -35,13 +36,13 @@ type alias Model =
 
 
 type State
-    = Loading
-    | NotLoggedIn Page.Login.Model
+    = NotLoggedIn Page.Login.Model
     | LoggedIn Token Page
 
 
 type Page
-    = Home
+    = Home Candidates.Model
+    | Loading
 
 
 type Msg
@@ -52,6 +53,7 @@ type Msg
     | GotLoginUpdate Page.Login.Model
     | GotLoginSubmit
     | GotLoginResponse (Result Http.Error String)
+    | GotCandidatesResponse (Result Http.Error (List Candidate))
 
 
 main : Program Flags Model Msg
@@ -80,9 +82,6 @@ view model =
 viewPage : Model -> Html Msg
 viewPage model =
     case model.state of
-        Loading ->
-            text "Loading"
-
         NotLoggedIn loginModel ->
             Page.Login.view
                 { onSubmit = GotLoginSubmit
@@ -90,8 +89,11 @@ viewPage model =
                 }
                 loginModel
 
-        LoggedIn _ _ ->
-            text "LoggedIn"
+        LoggedIn _ (Home candidateModel) ->
+            Candidates.view candidateModel
+
+        _ ->
+            div [] []
 
 
 
@@ -130,11 +132,32 @@ update msg model =
                 Err errors ->
                     ( model, Cmd.none )
 
-        ( GotLoginResponse (Ok token), NotLoggedIn _ ) ->
-            ( { model | state = LoggedIn (Token token) Home }, Cmd.none )
+        ( GotLoginResponse (Ok token), NotLoggedIn loginModel ) ->
+            ( { model | state = LoggedIn (Token token) (Home Candidates.init) }
+            , Cmd.batch
+                [ if loginModel.form.rememberMe then
+                    storeToken token
+
+                  else
+                    Cmd.none
+                , Api.fetchCandidates GotCandidatesResponse { token = token }
+                , Nav.pushUrl model.key (Route.fromRoute model.baseUrl Route.Home)
+                ]
+            )
 
         ( GotLoginResponse (Err _), NotLoggedIn _ ) ->
+            -- TODO: Manage the Err
             ( model, Cmd.none )
+
+        ( GotCandidatesResponse (Ok candidates), LoggedIn token _ ) ->
+            ( { model
+                | state =
+                    Candidates.receiveCandidates candidates
+                        |> Home
+                        |> LoggedIn token
+              }
+            , Cmd.none
+            )
 
         _ ->
             ( model, Cmd.none )
@@ -146,7 +169,7 @@ init flags url key =
         state =
             case flags.token of
                 Just token ->
-                    Loading
+                    LoggedIn (Token token) Loading
 
                 Nothing ->
                     NotLoggedIn Page.Login.init
@@ -162,11 +185,18 @@ init flags url key =
         NotLoggedIn _ ->
             Nav.pushUrl key (Route.fromRoute flags.baseUrl Route.Login)
 
-        _ ->
-            Cmd.none
+        LoggedIn (Token token) _ ->
+            Api.fetchCandidates GotCandidatesResponse { token = token }
     )
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
+
+
+
+-- PORT
+
+
+port storeToken : String -> Cmd msg
