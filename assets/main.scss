@@ -1,12 +1,12 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
 /* global styles */
 html {
-  font-size: 16px
+  font-size: 16px;
 }
-@media (min-width:420px) {
+@media (min-width: 420px) {
   html {
-    font-size: 20px
+    font-size: 16px;
   }
 }
-@import "tailwindcss/utilities";
+@import 'tailwindcss/utilities';
