@@ -4,7 +4,7 @@ const pg = require('../pg')
 
 export const getCandidates = async (cohorteId: string) => {
   let query = `
-  SELECT c.candidate, to_json(co.*) as cohorte, to_json(di.*) as diplome 
+  SELECT c.candidate, co.id as cohorte_id, co.label as cohorte_label, co.region as cohorte_region, di.id as diplome_id, di.label as diplome_label, MAX(c.created_at) as last_created_at
   FROM candidate_answers c 
   INNER JOIN cohortes co ON c.candidate->>'cohorte' = co.id::text
   INNER JOIN diplomes di ON c.candidate->>'diplome' = di.id::text
@@ -15,11 +15,21 @@ export const getCandidates = async (cohorteId: string) => {
     parameters.push(cohorteId)
   }
 
+  query = `${query} GROUP BY c.candidate, cohorte_id, cohorte_label, diplome_id, diplome_label`
+
   const { rows } = await pg.query(query, parameters)
 
   return rows.map((r: any) => ({
     ...r.candidate,
-    cohorte: r.cohorte,
-    diplome: r.diplome,
+    cohorte: {
+      id: r.cohorte_id,
+      label: r.cohorte_label,
+      region: r.cohorte_region,
+    },
+    diplome: {
+      id: r.diplome_id,
+      label: r.diplome_label,
+    },
+    createdAt: r.created_at,
   }))
 }

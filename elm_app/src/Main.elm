@@ -49,6 +49,9 @@ type Msg
     = -- Message naming conventions: https://youtu.be/w6OVDBqergc
       BrowserChangedUrl Url
     | UserClickedLink Browser.UrlRequest
+    | GotLoginError String
+      -- PROFILE
+    | GotProfileResponse (Result Http.Error ())
       -- LOGIN
     | GotLoginUpdate Page.Login.Model
     | GotLoginSubmit
@@ -127,7 +130,7 @@ update msg model =
         ( GotLoginSubmit, NotLoggedIn loginModel ) ->
             case Page.Login.validateLogin loginModel of
                 Ok validateModel ->
-                    ( model, Validate.fromValid validateModel |> Api.login GotLoginResponse )
+                    ( model, Validate.fromValid validateModel |> Api.login (GotLoginResponse |> withAuthHandle) )
 
                 Err errors ->
                     ( model, Cmd.none )
@@ -159,8 +162,30 @@ update msg model =
             , Cmd.none
             )
 
+        ( GotCandidatesResponse error, LoggedIn token _ ) ->
+            ( model, Cmd.none )
+
+        ( GotLoginError _, _ ) ->
+            ( { model | state = NotLoggedIn Page.Login.init }, Cmd.batch [ Nav.pushUrl model.key (Route.fromRoute model.baseUrl Route.Login) ] )
+
         _ ->
             ( model, Cmd.none )
+
+
+withAuthHandle : (Result Http.Error a -> Msg) -> Result Http.Error a -> Msg
+withAuthHandle msg result =
+    case result of
+        Ok _ ->
+            msg result
+
+        Err (Http.BadStatus 401) ->
+            GotLoginError "Not authenticated"
+
+        Err (Http.BadStatus 403) ->
+            GotLoginError "Not authorized"
+
+        Err _ ->
+            GotLoginError "An error occured"
 
 
 init : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
@@ -174,8 +199,6 @@ init flags url key =
                 Nothing ->
                     NotLoggedIn Page.Login.init
 
-        route =
-            Route.fromUrl flags.baseUrl url
     in
     ( { key = key
       , baseUrl = flags.baseUrl
@@ -186,7 +209,7 @@ init flags url key =
             Nav.pushUrl key (Route.fromRoute flags.baseUrl Route.Login)
 
         LoggedIn (Token token) _ ->
-            Api.fetchCandidates GotCandidatesResponse { token = token }
+            Api.fetchCandidates (GotCandidatesResponse |> withAuthHandle) { token = token }
     )
 
 
