@@ -80,9 +80,9 @@
             <div class="sm:border-r pr-4">
               <a href="/privacy">Données personnelles</a>
             </div>
-            <!-- <div class="">
-              <a href="#">Gestion des cookies</a>
-            </div> -->
+            <div>
+              <a href="#tarteaucitron">Gestion des cookies</a>
+            </div>
           </div>
         </div>
         <div class="pt-8">

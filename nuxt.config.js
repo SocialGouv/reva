@@ -12,6 +12,7 @@ export default {
       { name: 'format-detection', content: 'telephone=no' },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    script: [{ src: '/tarteaucitronjs/tarteaucitron.js', mode: 'client' }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -20,7 +21,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     {
-      src: '~/plugins/hotjar.js',
+      src: '~/plugins/tarteaucitron.js',
       mode: 'client',
     },
   ],
