@@ -1,4 +1,4 @@
-module Page.Candidates exposing (Candidate, Model, candidatesDecoder, init, receiveCandidates, view)
+module Page.Candidates exposing (Candidate, Model, addFilter, candidatesDecoder, init, receiveCandidates, view)
 
 import Html.Styled exposing (Html, a, div, img, span, table, tbody, td, text, th, thead, tr)
 import Html.Styled.Attributes exposing (alt, class, href, scope, src)
@@ -7,7 +7,11 @@ import Json.Decode.Pipeline exposing (optional, required)
 import Page.Login exposing (Model)
 
 
-type Model
+type alias Model =
+    { filter : Maybe String, state : State }
+
+
+type State
     = Loading
     | Idle (List Candidate)
 
@@ -37,12 +41,33 @@ type alias Diplome =
 
 init : Model
 init =
-    Loading
+    { filter = Nothing, state = Loading }
 
 
-receiveCandidates : List Candidate -> Model
-receiveCandidates candidates =
-    Idle candidates
+receiveCandidates : Model -> List Candidate -> Model
+receiveCandidates model candidates =
+    { model | state = Idle candidates }
+
+
+addFilter : Model -> String -> Model
+addFilter model filter =
+    { model | filter = Just filter }
+
+
+filterCandidate : String -> Candidate -> Bool
+filterCandidate filter candidate =
+    let
+        match s =
+            String.toLower s
+                |> String.contains (String.toLower filter)
+    in
+    match candidate.email
+        || match candidate.firstname
+        || match candidate.lastname
+        || (Maybe.map (.label >> match) candidate.diplome |> Maybe.withDefault False)
+        || (Maybe.map (\cohorte -> match cohorte.label || match cohorte.region) candidate.cohorte
+                |> Maybe.withDefault False
+           )
 
 
 
@@ -51,34 +76,41 @@ receiveCandidates candidates =
 
 view : Model -> Html msg
 view model =
-    case model of
+    case model.state of
         Loading ->
             div [] [ text "loading" ]
 
         Idle candidates ->
-            viewCandidates candidates
+            case model.filter of
+                Nothing ->
+                    viewCandidates candidates
+
+                Just filter ->
+                    let
+                        filteredCandidate =
+                            List.filter (filterCandidate filter) candidates
+                    in
+                    viewCandidates filteredCandidate
 
 
 viewCandidates : List Candidate -> Html msg
 viewCandidates candidates =
-    div [ class "flex flex-col lg:items-center bg-gray-100 w-full py-24 text-sm" ]
-        [ div [ class "-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8" ]
-            [ div [ class "py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8" ]
-                [ div [ class "shadow overflow-hidden border-b border-gray-200 sm:rounded-lg min-w-screen-lg max-w-screen-xl" ]
-                    [ table [ class "min-w-full divide-y divide-gray-200" ]
-                        [ thead [ class "bg-gray-50" ]
-                            [ tr []
-                                [ th [ scope "col", class "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" ]
-                                    [ text "Nom" ]
-                                , th [ scope "col", class "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" ]
-                                    [ text "Diplôme" ]
-                                , th [ scope "col", class "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-right" ]
-                                    [ text "Date de création" ]
-                                ]
+    div [ class "-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 text-sm" ]
+        [ div [ class "py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8" ]
+            [ div [ class "shadow overflow-hidden border-b border-gray-200 sm:rounded-lg min-w-screen-lg max-w-screen-xl" ]
+                [ table [ class "min-w-full divide-y divide-gray-200" ]
+                    [ thead [ class "bg-gray-50" ]
+                        [ tr []
+                            [ th [ scope "col", class "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" ]
+                                [ text "Nom" ]
+                            , th [ scope "col", class "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" ]
+                                [ text "Diplôme" ]
+                            , th [ scope "col", class "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-right" ]
+                                [ text "Date de création" ]
                             ]
-                        , tbody [ class "bg-white divide-y divide-gray-200" ]
-                            (List.map viewCandidate candidates)
                         ]
+                    , tbody [ class "bg-white divide-y divide-gray-200" ]
+                        (List.map viewCandidate candidates)
                     ]
                 ]
             ]

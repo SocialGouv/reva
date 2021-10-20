@@ -12,6 +12,7 @@ import Page.Login
 import Route exposing (Route(..))
 import Url exposing (Url)
 import Validate
+import View
 
 
 type alias Flags =
@@ -49,6 +50,7 @@ type Msg
     = -- Message naming conventions: https://youtu.be/w6OVDBqergc
       BrowserChangedUrl Url
     | UserClickedLink Browser.UrlRequest
+    | UserAddedFilter String
     | GotLoginError String
       -- PROFILE
     | GotProfileResponse (Result Http.Error ())
@@ -78,7 +80,11 @@ main =
 view : Model -> Browser.Document Msg
 view model =
     { title = "REVA"
-    , body = [ div [] [ viewPage model ] |> toUnstyled ]
+    , body =
+        [ viewPage model
+            |> View.layout { onFilter = UserAddedFilter }
+            |> toUnstyled
+        ]
     }
 
 
@@ -124,6 +130,16 @@ update msg model =
                     , Nav.load url
                     )
 
+        ( UserAddedFilter filter, LoggedIn token (Home candidatesModel) ) ->
+            ( { model
+                | state =
+                    Candidates.addFilter candidatesModel filter
+                        |> Home
+                        |> LoggedIn token
+              }
+            , Cmd.none
+            )
+
         ( GotLoginUpdate loginModel, NotLoggedIn _ ) ->
             ( { model | state = NotLoggedIn loginModel }, Cmd.none )
 
@@ -152,10 +168,20 @@ update msg model =
             -- TODO: Manage the Err
             ( model, Cmd.none )
 
-        ( GotCandidatesResponse (Ok candidates), LoggedIn token _ ) ->
+        ( GotCandidatesResponse (Ok candidates), LoggedIn token (Home candidatesModel) ) ->
             ( { model
                 | state =
-                    Candidates.receiveCandidates candidates
+                    Candidates.receiveCandidates candidatesModel candidates
+                        |> Home
+                        |> LoggedIn token
+              }
+            , Cmd.none
+            )
+
+        ( GotCandidatesResponse (Ok candidates), LoggedIn token Loading ) ->
+            ( { model
+                | state =
+                    Candidates.receiveCandidates Candidates.init candidates
                         |> Home
                         |> LoggedIn token
               }
