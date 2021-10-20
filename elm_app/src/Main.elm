@@ -198,7 +198,6 @@ init flags url key =
 
                 Nothing ->
                     NotLoggedIn Page.Login.init
-
     in
     ( { key = key
       , baseUrl = flags.baseUrl

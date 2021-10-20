@@ -13,7 +13,8 @@ type Model
 
 
 type alias Candidate =
-    { email : String
+    { lastCreatedAt : String
+    , email : String
     , firstname : String
     , lastname : String
     , diplome : Maybe Diplome
@@ -60,27 +61,23 @@ view model =
 
 viewCandidates : List Candidate -> Html msg
 viewCandidates candidates =
-    div [ class "flex justify-center py-8" ]
-        [ div [ class "flex flex-col max-w-screen-lg" ]
-            [ div [ class "-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8" ]
-                [ div [ class "py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8" ]
-                    [ div [ class "shadow overflow-hidden border-b border-gray-200 sm:rounded-lg" ]
-                        [ table [ class "min-w-full divide-y divide-gray-200" ]
-                            [ thead [ class "bg-gray-50" ]
-                                [ tr []
-                                    [ th [ scope "col", class "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" ]
-                                        [ text "Nom" ]
-                                    , th [ scope "col", class "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" ]
-                                        [ text "Diplôme" ]
-                                    , th [ scope "col", class "relative px-6 py-3" ]
-                                        [ span [ class "sr-only" ]
-                                            [ text "" ]
-                                        ]
-                                    ]
+    div [ class "flex flex-col lg:items-center bg-gray-100 w-full py-24 text-sm" ]
+        [ div [ class "-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8" ]
+            [ div [ class "py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8" ]
+                [ div [ class "shadow overflow-hidden border-b border-gray-200 sm:rounded-lg min-w-screen-lg max-w-screen-xl" ]
+                    [ table [ class "min-w-full divide-y divide-gray-200" ]
+                        [ thead [ class "bg-gray-50" ]
+                            [ tr []
+                                [ th [ scope "col", class "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" ]
+                                    [ text "Nom" ]
+                                , th [ scope "col", class "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" ]
+                                    [ text "Diplôme" ]
+                                , th [ scope "col", class "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-right" ]
+                                    [ text "Date de création" ]
                                 ]
-                            , tbody [ class "bg-white divide-y divide-gray-200" ]
-                                (List.map viewCandidate candidates)
                             ]
+                        , tbody [ class "bg-white divide-y divide-gray-200" ]
+                            (List.map viewCandidate candidates)
                         ]
                     ]
                 ]
@@ -91,21 +88,21 @@ viewCandidates candidates =
 viewCandidate : Candidate -> Html msg
 viewCandidate candidate =
     tr []
-        [ td [ class "px-6 py-4 whitespace-nowrap" ]
-            [ div [ class "text-sm font-medium text-gray-900" ]
+        [ td [ class "px-6 py-4 max-w-sm" ]
+            [ div [ class "font-medium truncate" ]
                 [ text (candidate.firstname ++ " " ++ candidate.lastname) ]
-            , div [ class "text-sm text-gray-500" ]
+            , div [ class "text-gray-500 truncate" ]
                 [ text candidate.email ]
             ]
-        , td [ class "px-6 py-4 whitespace-nowrap" ]
-            [ div [ class "text-sm text-gray-900" ]
+        , td [ class "px-6 py-4 max-w-xl" ]
+            [ div [ class "truncate" ]
                 [ text (candidate.diplome |> Maybe.map (\diplome -> diplome.label) |> Maybe.withDefault "") ]
-            , div [ class "text-sm text-gray-500" ]
+            , div [ class "text-gray-500 truncate" ]
                 [ text (candidate.cohorte |> Maybe.map (\cohorte -> cohorte.label ++ ", " ++ cohorte.region) |> Maybe.withDefault "") ]
             ]
-        , td [ class "px-6 py-4 whitespace-nowrap text-right text-sm font-medium" ]
-            [ a [ href "#", class "text-indigo-600 hover:text-indigo-900" ]
-                [ text "Edit" ]
+        , td [ class "px-6 py-4" ]
+            [ div [ class "text-gray-500 text-right" ]
+                [ text candidate.lastCreatedAt ]
             ]
         ]
 
@@ -132,6 +129,7 @@ cohorteDecoder =
 candidateDecoder : Decoder Candidate
 candidateDecoder =
     Decode.succeed Candidate
+        |> required "lastCreatedAt" Decode.string
         |> required "email" Decode.string
         |> required "firstname" Decode.string
         |> required "lastname" Decode.string
