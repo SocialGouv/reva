@@ -3,9 +3,7 @@ port module Main exposing (main)
 import Api
 import Browser
 import Browser.Navigation as Nav
-import Html.Styled exposing (Html, a, button, div, form, h2, img, input, label, span, text, toUnstyled)
-import Html.Styled.Attributes exposing (action, alt, class, for, href, id, method, name, placeholder, src, type_, value)
-import Html.Styled.Events exposing (onClick)
+import Html.Styled exposing (Html, div, toUnstyled)
 import Http
 import Page.Candidates as Candidates exposing (Candidate, Model)
 import Page.Login
@@ -82,7 +80,6 @@ view model =
     { title = "REVA"
     , body =
         [ viewPage model
-            |> View.layout { onFilter = UserAddedFilter }
             |> toUnstyled
         ]
     }
@@ -100,6 +97,7 @@ viewPage model =
 
         LoggedIn _ (Home candidateModel) ->
             Candidates.view candidateModel
+                |> View.layout { onFilter = UserAddedFilter }
 
         _ ->
             div [] []

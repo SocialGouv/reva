@@ -122,8 +122,14 @@ viewCandidate candidate =
     tr []
         [ td [ class "px-6 py-4 max-w-sm" ]
             [ div [ class "font-medium truncate" ]
-                [ text (candidate.firstname ++ " " ++ candidate.lastname) ]
-            , div [ class "text-gray-500 truncate" ]
+                [ text candidate.lastname
+                , text " "
+                , span [ class "text-gray-500" ] [ text candidate.firstname ]
+                ]
+            , a
+                [ class "text-blue-500 hover:text-blue-600 truncate"
+                , href ("mailto:" ++ candidate.email)
+                ]
                 [ text candidate.email ]
             ]
         , td [ class "px-6 py-4 max-w-xl" ]

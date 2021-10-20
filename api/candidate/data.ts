@@ -15,8 +15,11 @@ export const getCandidates = async (cohorteId: string) => {
     parameters.push(cohorteId)
   }
 
-  query = `${query} GROUP BY c.candidate, cohorte_id, cohorte_label, diplome_id, diplome_label`
-
+  query = `
+    ${query}
+    GROUP BY c.candidate, cohorte_id, cohorte_label, diplome_id, diplome_label
+    ORDER BY c.candidate->>'lastname'
+    `
   const { rows } = await pg.query(query, parameters)
 
   const dateOptions = {
