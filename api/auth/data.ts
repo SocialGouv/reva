@@ -8,9 +8,13 @@ export const saveUser = async (user: any) => {
 
   const userId = result.rows[0].id
 
-  return pg.query(
-    'INSERT INTO users_roles(id, user_id, role_id) VALUES (uuid_generate_v4(), $1, $2);',
-    [userId, user.role]
+  return Promise.all(
+    user.roles.map((role: string) =>
+      pg.query(
+        'INSERT INTO users_roles(id, user_id, role_id) VALUES (uuid_generate_v4(), $1, $2);',
+        [userId, role]
+      )
+    )
   )
 }
 
@@ -25,7 +29,7 @@ export const getUsers = async () => {
 
 export const getUserById = async (id: string) => {
   const { rows } = await pg.query(
-    'SELECT u.*, ur.* FROM users u, users_roles ur WHERE u.id = ur.user_id AND u.id = $1;',
+    'SELECT u.*, jsonb_agg((ur.*)) as roles FROM users u, users_roles ur WHERE u.id = ur.user_id AND u.id = $1 GROUP BY u.id;',
     [id]
   )
 
@@ -49,4 +53,4 @@ export const getUserByEmail = async (email: string) => {
   return rows[0]
 }
 
-export const isAdmin = (role: string) => role === 'admin'
+export const isAdmin = (roles: string[]) => roles.indexOf('admin') > 0

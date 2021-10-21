@@ -106,7 +106,7 @@ viewCandidates candidates =
                             , th [ scope "col", class "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" ]
                                 [ text "Diplôme" ]
                             , th [ scope "col", class "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-right" ]
-                                [ text "Date de création" ]
+                                [ text "Dernière date de passage" ]
                             ]
                         ]
                     , tbody [ class "bg-white divide-y divide-gray-200" ]

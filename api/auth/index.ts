@@ -23,7 +23,7 @@ authRouter.post(
       lastname: yup.string().required(),
       email: yup.string().email().required(),
       password: yup.string().required(),
-      role: yup.string().required(),
+      roles: yup.array().of(yup.string()).required(),
     })
 
     const isValid = await schema.isValid(req.body)
@@ -32,7 +32,7 @@ authRouter.post(
       res
         .status(500)
         .send(
-          'Bad format, required fields are: firstname, lastname, email, password, role'
+          'Bad format, required fields are: firstname, lastname, email, password, roles'
         )
     } else {
       try {

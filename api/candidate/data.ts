@@ -2,7 +2,7 @@ import { isAdmin } from '../auth/data'
 
 const pg = require('../pg')
 
-export const getCandidates = async (cohorteId: string) => {
+export const getCandidates = async (roles: any[]) => {
   let query = `
   SELECT c.candidate, co.id as cohorte_id, co.label as cohorte_label, co.region as cohorte_region, di.id as diplome_id, di.label as diplome_label, MAX(c.created_at) as last_created_at
   FROM candidate_answers c
@@ -10,9 +10,9 @@ export const getCandidates = async (cohorteId: string) => {
   INNER JOIN diplomes di ON c.candidate->>'diplome' = di.id::text
   `
   const parameters = []
-  if (!isAdmin(cohorteId)) {
-    query = `${query} WHERE c.candidate->>'cohorte' = $1`
-    parameters.push(cohorteId)
+  if (!isAdmin(roles.map((r) => r.role_id))) {
+    query = `${query} WHERE c.candidate->>'cohorte' = ANY($1::text[])`
+    parameters.push(roles.map((r) => r.role_id))
   }
 
   query = `
@@ -20,6 +20,7 @@ export const getCandidates = async (cohorteId: string) => {
     GROUP BY c.candidate, cohorte_id, cohorte_label, diplome_id, diplome_label
     ORDER BY c.candidate->>'lastname'
     `
+
   const { rows } = await pg.query(query, parameters)
 
   const dateOptions = {

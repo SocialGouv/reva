@@ -26,7 +26,7 @@ export const jwtMiddleware = async (req: any, res: any, next: any) => {
         id: user.id,
         firstname: user.firstname,
         lastname: user.lastname,
-        roleId: user.role_id,
+        roles: user.roles,
       }
       next()
     } else {
