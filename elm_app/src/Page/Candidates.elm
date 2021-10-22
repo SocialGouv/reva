@@ -22,11 +22,11 @@ type alias Candidate =
     , firstname : String
     , lastname : String
     , diplome : Maybe Diplome
-    , cohorte : Maybe Cohorte
+    , city : Maybe City
     }
 
 
-type alias Cohorte =
+type alias City =
     { id : String
     , label : String
     , region : String
@@ -65,7 +65,7 @@ filterCandidate filter candidate =
         || match candidate.firstname
         || match candidate.lastname
         || (Maybe.map (.label >> match) candidate.diplome |> Maybe.withDefault False)
-        || (Maybe.map (\cohorte -> match cohorte.label || match cohorte.region) candidate.cohorte
+        || (Maybe.map (\city -> match city.label || match city.region) candidate.city
                 |> Maybe.withDefault False
            )
 
@@ -136,7 +136,7 @@ viewCandidate candidate =
             [ div [ class "truncate" ]
                 [ text (candidate.diplome |> Maybe.map (\diplome -> diplome.label) |> Maybe.withDefault "") ]
             , div [ class "text-gray-500 truncate" ]
-                [ text (candidate.cohorte |> Maybe.map (\cohorte -> cohorte.label ++ ", " ++ cohorte.region) |> Maybe.withDefault "") ]
+                [ text (candidate.city |> Maybe.map (\city -> city.label ++ ", " ++ city.region) |> Maybe.withDefault "") ]
             ]
         , td [ class "px-6 py-4" ]
             [ div [ class "text-gray-500 text-right" ]
@@ -156,9 +156,9 @@ diplomeDecoder =
         |> required "label" Decode.string
 
 
-cohorteDecoder : Decoder Cohorte
-cohorteDecoder =
-    Decode.succeed Cohorte
+cityDecoder : Decoder City
+cityDecoder =
+    Decode.succeed City
         |> required "id" Decode.string
         |> required "label" Decode.string
         |> required "region" Decode.string
@@ -172,7 +172,7 @@ candidateDecoder =
         |> required "firstname" Decode.string
         |> required "lastname" Decode.string
         |> optional "diplome" (Decode.maybe diplomeDecoder) Nothing
-        |> optional "cohorte" (Decode.maybe cohorteDecoder) Nothing
+        |> optional "city" (Decode.maybe cityDecoder) Nothing
 
 
 candidatesDecoder : Decoder (List Candidate)

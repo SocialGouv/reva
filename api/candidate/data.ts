@@ -44,10 +44,10 @@ export const getCandidates = async (user: {
 
   return rows.map((r: any) => ({
     ...r.candidate,
-    cohorte: {
-      id: r.cohorte_id,
-      label: r.cohorte_label,
-      region: r.cohorte_region,
+    city: {
+      id: r.city_id,
+      label: r.city_label,
+      region: r.city_region,
     },
     diplome: {
       id: r.diplome_id,
