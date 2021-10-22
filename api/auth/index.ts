@@ -5,7 +5,7 @@ const argon2 = require('argon2')
 const authRouter = require('express').Router()
 const yup = require('yup')
 
-const isAdminMiddleware = (req: any, res: any, next: any) => {
+export const isAdminMiddleware = (req: any, res: any, next: any) => {
   const token = req.headers.authorization?.substring('Bearer '.length)
   if (!token || token !== process.env.ADMIN_TOKEN) {
     return res.status(403).send()
