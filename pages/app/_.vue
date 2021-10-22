@@ -26,6 +26,10 @@ export default defineComponent({
       ports.storeToken.subscribe(function (token) {
         window.localStorage.setItem('token', token)
       })
+      ports.removeToken.subscribe(function () {
+        window.localStorage.removeItem('token')
+        window.location.reload()
+      })
       this.ports = ports
     },
   },

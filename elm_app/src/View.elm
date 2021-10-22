@@ -2,11 +2,11 @@ module View exposing (layout)
 
 import Html.Styled exposing (a, button, div, form, h1, img, input, label, nav, node, span, text)
 import Html.Styled.Attributes exposing (action, alt, attribute, class, for, href, id, method, name, placeholder, src, type_)
-import Html.Styled.Events exposing (onInput)
+import Html.Styled.Events exposing (onClick, onInput)
 import View.Icons as Icons
 
 
-layout : { onFilter : String -> msg } -> Html.Styled.Html msg -> Html.Styled.Html msg
+layout : { onFilter : String -> msg, onLogout : msg } -> Html.Styled.Html msg -> Html.Styled.Html msg
 layout config content =
     div
         [ class "bg-gray-100 h-screen" ]
@@ -44,6 +44,11 @@ layout config content =
                             [ Icons.candidats
                             , text "Candidats"
                             ]
+                        , button
+                            [ onClick config.onLogout, class "bg-gray-100 text-gray-900 group flex items-center px-2 py-2 text-base font-medium rounded-md" ]
+                            [ Icons.signout
+                            , text "Déconnexion"
+                            ]
                         ]
                     ]
                 ]
@@ -70,6 +75,11 @@ layout config content =
                             [ href "#", class "bg-gray-100 text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md" ]
                             [ Icons.candidats
                             , text "Candidats"
+                            ]
+                        , button
+                            [ onClick config.onLogout, class "w-full text-gray-900 group flex items-center px-2 py-2 text-sm font-base hover:font-medium rounded-md" ]
+                            [ Icons.signout
+                            , text "Déconnexion"
                             ]
                         ]
                     ]

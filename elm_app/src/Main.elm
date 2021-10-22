@@ -48,6 +48,7 @@ type Msg
     = -- Message naming conventions: https://youtu.be/w6OVDBqergc
       BrowserChangedUrl Url
     | UserClickedLink Browser.UrlRequest
+    | UserLoggedOut
     | UserAddedFilter String
     | GotLoginError String
       -- PROFILE
@@ -97,7 +98,10 @@ viewPage model =
 
         LoggedIn _ (Home candidateModel) ->
             Candidates.view candidateModel
-                |> View.layout { onFilter = UserAddedFilter }
+                |> View.layout
+                    { onFilter = UserAddedFilter
+                    , onLogout = UserLoggedOut
+                    }
 
         _ ->
             div [] []
@@ -137,6 +141,9 @@ update msg model =
               }
             , Cmd.none
             )
+
+        ( UserLoggedOut, LoggedIn _ _ ) ->
+            ( model, removeToken () )
 
         ( GotLoginUpdate loginModel, NotLoggedIn _ ) ->
             ( { model | state = NotLoggedIn loginModel }, Cmd.none )
@@ -246,3 +253,6 @@ subscriptions model =
 
 
 port storeToken : String -> Cmd msg
+
+
+port removeToken : () -> Cmd msg
