@@ -24,6 +24,7 @@ authRouter.post(
       email: yup.string().email().required(),
       password: yup.string().required(),
       roles: yup.array().of(yup.string()).required(),
+      cohortes: yup.array().of(yup.string()).required(),
     })
 
     const isValid = await schema.isValid(req.body)
@@ -32,7 +33,7 @@ authRouter.post(
       res
         .status(500)
         .send(
-          'Bad format, required fields are: firstname, lastname, email, password, roles'
+          'Bad format, required fields are: firstname, lastname, email, password, roles, cohortes'
         )
     } else {
       try {
@@ -42,6 +43,7 @@ authRouter.post(
         })
         res.status(200).send()
       } catch (e) {
+        // console.log(e)
         res.status(500).send('An error occurd while creating user')
       }
     }

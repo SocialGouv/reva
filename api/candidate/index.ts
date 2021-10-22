@@ -7,7 +7,7 @@ candidateRouter.get(
   '/candidates',
   jwtMiddleware,
   async (req: any, res: any) => {
-    const users = await getCandidates(req.user.roles)
+    const users = await getCandidates(req.user)
 
     if (!users.length) {
       return res.status(404).send()
