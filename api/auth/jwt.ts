@@ -46,6 +46,7 @@ export const generateToken = (userId: string) => {
     {
       issuer,
       audience,
+      expiresIn: '2d',
     }
   )
 }
