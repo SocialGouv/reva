@@ -23,6 +23,7 @@ type alias Candidate =
     , lastname : String
     , diplome : Maybe Diplome
     , city : Maybe City
+    , passes : String
     }
 
 
@@ -106,7 +107,9 @@ viewCandidates candidates =
                             , th [ scope "col", class "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" ]
                                 [ text "Diplôme" ]
                             , th [ scope "col", class "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-right" ]
-                                [ text "Dernière date de passage" ]
+                                [ text "Passages" ]
+                            , th [ scope "col", class "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-right" ]
+                                [ text "Dernier passage" ]
                             ]
                         ]
                     , tbody [ class "bg-white divide-y divide-gray-200" ]
@@ -137,6 +140,10 @@ viewCandidate candidate =
                 [ text (candidate.diplome |> Maybe.map (\diplome -> diplome.label) |> Maybe.withDefault "") ]
             , div [ class "text-gray-500 truncate" ]
                 [ text (candidate.city |> Maybe.map (\city -> city.label ++ ", " ++ city.region) |> Maybe.withDefault "") ]
+            ]
+        , td [ class "px-6 py-4" ]
+            [ div [ class "text-gray-500 text-right" ]
+                [ text candidate.passes ]
             ]
         , td [ class "px-6 py-4" ]
             [ div [ class "text-gray-500 text-right" ]
@@ -173,6 +180,7 @@ candidateDecoder =
         |> required "lastname" Decode.string
         |> optional "diplome" (Decode.maybe diplomeDecoder) Nothing
         |> optional "city" (Decode.maybe cityDecoder) Nothing
+        |> required "passes" Decode.string
 
 
 candidatesDecoder : Decoder (List Candidate)

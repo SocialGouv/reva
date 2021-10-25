@@ -15,7 +15,8 @@ export const getCandidates = async (user: {
     ci.region as city_region, 
     di.id as diplome_id, 
     di.label as diplome_label, 
-    MAX(c.created_at) as last_created_at
+    MAX(c.created_at) as last_created_at,
+    COUNT(1) as passes
   FROM candidate_answers c
   INNER JOIN cities ci ON c.candidate->>'cohorte' = ci.id::text
   INNER JOIN diplomes di ON c.candidate->>'diplome' = di.id::text
@@ -54,5 +55,6 @@ export const getCandidates = async (user: {
       label: r.diplome_label,
     },
     lastCreatedAt: r.last_created_at.toLocaleDateString('fr-FR', dateOptions),
+    passes: r.passes
   }))
 }

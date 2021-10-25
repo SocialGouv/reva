@@ -100,7 +100,7 @@ layout config content =
                     [ class "flex-1 px-4 flex justify-between" ]
                     [ div
                         [ class "flex-1 flex" ]
-                        [ form
+                        [ div
                             [ class "w-full flex md:ml-0", action "#", method "GET" ]
                             [ label
                                 [ for "search-field", class "sr-only" ]
