@@ -113,19 +113,19 @@ view config model =
         Idle candidates ->
             case model.filter of
                 Nothing ->
-                    viewCandidates config model candidates
+                    viewContent config model candidates
 
                 Just filter ->
                     List.filter (filterCandidate filter) candidates
-                        |> viewCandidates config model
+                        |> viewContent config model
 
 
-viewCandidates :
+viewContent :
     { a | onFilter : String -> msg, onSelect : Candidate -> msg }
     -> Model
     -> List Candidate
     -> Html msg
-viewCandidates config model candidates =
+viewContent config model candidates =
     div
         [ class "flex flex-col min-w-0 flex-1 overflow-hidden" ]
         [ div
@@ -150,15 +150,15 @@ viewCandidates config model candidates =
             ]
         , div
             [ class "flex-1 relative z-0 flex overflow-hidden" ]
-            [ Maybe.map candidateProfile model.selected
+            [ Maybe.map viewProfile model.selected
                 |> Maybe.withDefault (div [ class "h-full w-full bg-gray-500" ] [])
-            , candidateDirectory config candidates
+            , viewDirectory config candidates
             ]
         ]
 
 
-candidateProfile : Candidate -> Html msg
-candidateProfile candidate =
+viewProfile : Candidate -> Html msg
+viewProfile candidate =
     node "main"
         [ class "flex-1 relative z-0 overflow-y-auto focus:outline-none xl:order-last" ]
         [ nav
@@ -242,33 +242,33 @@ candidateProfile candidate =
                     [ class "grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2" ]
                     [ maybeDiplomeToString candidate.diplome
                         |> text
-                        |> candidateInfo "Diplôme"
+                        |> viewInfo "Diplôme"
                     , maybeCityToString candidate.city
                         |> text
-                        |> candidateInfo "Ville"
+                        |> viewInfo "Ville"
                     , candidate.lastCreatedAt
                         |> text
-                        |> candidateInfo "Dernier passage"
+                        |> viewInfo "Dernier passage"
                     , candidate.passes
                         |> text
-                        |> candidateInfo "Nombre de passages"
+                        |> viewInfo "Nombre de passages"
                     , a
                         [ class "text-blue-500 hover:text-blue-600 truncate"
                         , href ("mailto:" ++ candidate.email)
                         ]
                         [ text candidate.email ]
-                        |> candidateInfo "Email"
+                        |> viewInfo "Email"
                     , candidate.phoneNumber
                         |> text
-                        |> candidateInfo "Téléphone"
+                        |> viewInfo "Téléphone"
                     ]
                 ]
             ]
         ]
 
 
-candidateInfo : String -> Html msg -> Html msg
-candidateInfo label value =
+viewInfo : String -> Html msg -> Html msg
+viewInfo label value =
     div
         [ class "sm:col-span-1" ]
         [ dt
@@ -280,14 +280,14 @@ candidateInfo label value =
         ]
 
 
-candidateDirectory :
+viewDirectory :
     { a
         | onFilter : String -> msg
         , onSelect : Candidate -> msg
     }
     -> List Candidate
     -> Html msg
-candidateDirectory config candidates =
+viewDirectory config candidates =
     let
         candidatesByFirstLetter =
             List.Extra.groupWhile
@@ -330,20 +330,13 @@ candidateDirectory config candidates =
                     ]
                 ]
             ]
-        , List.map (candidateGroupe config) candidatesByFirstLetter
+        , List.map (viewDirectoryGroup config) candidatesByFirstLetter
             |> nav [ class "flex-1 min-h-0 overflow-y-auto", attribute "aria-label" "Candidats" ]
         ]
 
 
-candidateFirstLetter : Candidate -> Char
-candidateFirstLetter candidate =
-    String.uncons candidate.lastname
-        |> Maybe.map (\( firstLetter, _ ) -> Char.toLower firstLetter)
-        |> Maybe.withDefault ' '
-
-
-candidateGroupe : { a | onSelect : Candidate -> msg } -> ( Candidate, List Candidate ) -> Html msg
-candidateGroupe config ( firstCandidate, candidates ) =
+viewDirectoryGroup : { a | onSelect : Candidate -> msg } -> ( Candidate, List Candidate ) -> Html msg
+viewDirectoryGroup config ( firstCandidate, candidates ) =
     div
         [ class "relative" ]
         [ div
@@ -356,13 +349,13 @@ candidateGroupe config ( firstCandidate, candidates ) =
                     |> text
                 ]
             ]
-        , List.map (candidateItem config) (firstCandidate :: candidates)
+        , List.map (viewItem config) (firstCandidate :: candidates)
             |> ul [ attribute "role" "list", class "relative z-0 divide-y divide-gray-200" ]
         ]
 
 
-candidateItem : { a | onSelect : Candidate -> msg } -> Candidate -> Html msg
-candidateItem config candidate =
+viewItem : { a | onSelect : Candidate -> msg } -> Candidate -> Html msg
+viewItem config candidate =
     li
         []
         [ div
@@ -395,6 +388,13 @@ candidateItem config candidate =
 
 
 -- HELPERS
+
+
+candidateFirstLetter : Candidate -> Char
+candidateFirstLetter candidate =
+    String.uncons candidate.lastname
+        |> Maybe.map (\( firstLetter, _ ) -> Char.toLower firstLetter)
+        |> Maybe.withDefault ' '
 
 
 maybeCityToString : Maybe City -> String
