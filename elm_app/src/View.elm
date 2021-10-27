@@ -69,6 +69,7 @@ mobileMenu config =
         ]
 
 
+sideMenu : { a | onLogout : msg } -> Html msg
 sideMenu config =
     div
         [ class "flex-1 flex flex-col flex-grow min-h-0 border-r border-gray-200 pt-5 bg-gray-100 overflow-y-auto" ]

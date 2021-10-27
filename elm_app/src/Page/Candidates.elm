@@ -1,7 +1,16 @@
-module Page.Candidates exposing (Candidate, Model, addFilter, candidatesDecoder, init, receiveCandidates, selectCandidate, view)
+module Page.Candidates exposing
+    ( Candidate
+    , Model
+    , addFilter
+    , candidatesDecoder
+    , init
+    , receiveCandidates
+    , selectCandidate
+    , view
+    )
 
-import Html.Styled exposing (Html, a, article, aside, button, dd, div, dl, dt, h1, h2, h3, img, input, label, li, nav, node, p, span, table, tbody, td, text, th, thead, tr, ul)
-import Html.Styled.Attributes exposing (action, alt, attribute, class, for, href, id, name, placeholder, src, type_)
+import Html.Styled exposing (Html, a, article, aside, button, dd, div, dl, dt, h1, h2, h3, input, label, li, nav, node, p, span, text, ul)
+import Html.Styled.Attributes exposing (action, attribute, class, for, href, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onClick, onInput)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline exposing (optional, required)
@@ -107,11 +116,8 @@ view config model =
                     viewCandidates config model candidates
 
                 Just filter ->
-                    let
-                        filteredCandidate =
-                            List.filter (filterCandidate filter) candidates
-                    in
-                    viewCandidates config model filteredCandidate
+                    List.filter (filterCandidate filter) candidates
+                        |> viewCandidates config model
 
 
 viewCandidates :
@@ -128,7 +134,7 @@ viewCandidates config model candidates =
                 [ class "flex items-center justify-between bg-gray-50 border-b border-gray-200 px-4 py-1.5" ]
                 [ div
                     []
-                    [-- Logo
+                    [-- Logo here
                     ]
                 , div
                     []
@@ -144,14 +150,15 @@ viewCandidates config model candidates =
             ]
         , div
             [ class "flex-1 relative z-0 flex overflow-hidden" ]
-            [ Maybe.map profile model.selected |> Maybe.withDefault (div [ class "h-full w-full bg-gray-500" ] [])
+            [ Maybe.map candidateProfile model.selected
+                |> Maybe.withDefault (div [ class "h-full w-full bg-gray-500" ] [])
             , candidateDirectory config candidates
             ]
         ]
 
 
-profile : Candidate -> Html msg
-profile candidate =
+candidateProfile : Candidate -> Html msg
+candidateProfile candidate =
     node "main"
         [ class "flex-1 relative z-0 overflow-y-auto focus:outline-none xl:order-last" ]
         [ nav
@@ -168,12 +175,7 @@ profile candidate =
             []
             [ div
                 []
-                [ div
-                    []
-                    [ div
-                        [ class "h-28 w-full object-cover bg-gray-500 lg:h-32" ]
-                        []
-                    ]
+                [ div [] [ div [ class "h-28 w-full object-cover bg-gray-500 lg:h-32" ] [] ]
                 , div
                     [ class "max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" ]
                     [ div
@@ -200,9 +202,7 @@ profile candidate =
                                 [ button
                                     [ type_ "button", class "inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" ]
                                     [ Icons.mail
-                                    , span
-                                        []
-                                        [ text "Message" ]
+                                    , span [] [ text "Message" ]
                                     ]
                                 ]
                             ]
@@ -240,17 +240,27 @@ profile candidate =
                 [ class "mt-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" ]
                 [ dl
                     [ class "grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2" ]
-                    [ candidateInfo "Diplôme" <| text <| maybeDiplomeToString candidate.diplome
-                    , candidateInfo "Ville" <| text <| maybeCityToString candidate.city
-                    , candidateInfo "Dernier passage" <| text candidate.lastCreatedAt
-                    , candidateInfo "Nombre de passages" <| text candidate.passes
-                    , candidateInfo "Email" <|
-                        a
-                            [ class "text-blue-500 hover:text-blue-600 truncate"
-                            , href ("mailto:" ++ candidate.email)
-                            ]
-                            [ text candidate.email ]
-                    , candidateInfo "Téléphone" (text candidate.phoneNumber)
+                    [ maybeDiplomeToString candidate.diplome
+                        |> text
+                        |> candidateInfo "Diplôme"
+                    , maybeCityToString candidate.city
+                        |> text
+                        |> candidateInfo "Ville"
+                    , candidate.lastCreatedAt
+                        |> text
+                        |> candidateInfo "Dernier passage"
+                    , candidate.passes
+                        |> text
+                        |> candidateInfo "Nombre de passages"
+                    , a
+                        [ class "text-blue-500 hover:text-blue-600 truncate"
+                        , href ("mailto:" ++ candidate.email)
+                        ]
+                        [ text candidate.email ]
+                        |> candidateInfo "Email"
+                    , candidate.phoneNumber
+                        |> text
+                        |> candidateInfo "Téléphone"
                     ]
                 ]
             ]
@@ -318,21 +328,10 @@ candidateDirectory config candidates =
                             []
                         ]
                     ]
-
-                {- , button
-                   [ type_ "button", class "inline-flex justify-center px-3.5 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" ]
-                   [ Icons.filter
-                   , span
-                       [ class "sr-only" ]
-                       [ text "Filtrer" ]
-                   ]
-                -}
                 ]
             ]
-        , nav
-            [ class "flex-1 min-h-0 overflow-y-auto", attribute "aria-label" "Directory" ]
-          <|
-            List.map (candidateGroupe config) candidatesByFirstLetter
+        , List.map (candidateGroupe config) candidatesByFirstLetter
+            |> nav [ class "flex-1 min-h-0 overflow-y-auto", attribute "aria-label" "Candidats" ]
         ]
 
 
@@ -351,12 +350,14 @@ candidateGroupe config ( firstCandidate, candidates ) =
             [ class "z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500" ]
             [ h3
                 []
-                [ text <| String.toUpper <| String.fromChar <| candidateFirstLetter firstCandidate ]
+                [ candidateFirstLetter firstCandidate
+                    |> String.fromChar
+                    |> String.toUpper
+                    |> text
+                ]
             ]
-        , ul
-            [ attribute "role" "list", class "relative z-0 divide-y divide-gray-200" ]
-          <|
-            List.map (candidateItem config) (firstCandidate :: candidates)
+        , List.map (candidateItem config) (firstCandidate :: candidates)
+            |> ul [ attribute "role" "list", class "relative z-0 divide-y divide-gray-200" ]
         ]
 
 
@@ -371,7 +372,7 @@ candidateItem config candidate =
             , div
                 [ class "flex-1 min-w-0" ]
                 [ a
-                    [ onClick <| config.onSelect candidate
+                    [ onClick (config.onSelect candidate)
                     , href "#"
                     , class "focus:outline-none"
                     ]
@@ -385,11 +386,15 @@ candidateItem config candidate =
                         , text candidate.lastname
                         ]
                     , p [ class "text-sm text-gray-500 truncate" ]
-                        [ text <| maybeDiplomeToString candidate.diplome ]
+                        [ text (maybeDiplomeToString candidate.diplome) ]
                     ]
                 ]
             ]
         ]
+
+
+
+-- HELPERS
 
 
 maybeCityToString : Maybe City -> String
