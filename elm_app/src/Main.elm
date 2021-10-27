@@ -49,6 +49,7 @@ type Msg
       BrowserChangedUrl Url
     | UserClickedLink Browser.UrlRequest
     | UserLoggedOut
+    | UserSelectedCandidate Candidate
     | UserAddedFilter String
     | GotLoginError String
       -- PROFILE
@@ -88,6 +89,13 @@ view model =
 
 viewPage : Model -> Html Msg
 viewPage model =
+    let
+        config =
+            { onFilter = UserAddedFilter
+            , onLogout = UserLoggedOut
+            , onSelect = UserSelectedCandidate
+            }
+    in
     case model.state of
         NotLoggedIn loginModel ->
             Page.Login.view
@@ -97,11 +105,8 @@ viewPage model =
                 loginModel
 
         LoggedIn _ (Home candidateModel) ->
-            Candidates.view candidateModel
-                |> View.layout
-                    { onFilter = UserAddedFilter
-                    , onLogout = UserLoggedOut
-                    }
+            Candidates.view config candidateModel
+                |> View.layout config
 
         _ ->
             div [] []
@@ -136,6 +141,16 @@ update msg model =
             ( { model
                 | state =
                     Candidates.addFilter candidatesModel filter
+                        |> Home
+                        |> LoggedIn token
+              }
+            , Cmd.none
+            )
+
+        ( UserSelectedCandidate candidate, LoggedIn token (Home candidatesModel) ) ->
+            ( { model
+                | state =
+                    Candidates.selectCandidate candidatesModel candidate
                         |> Home
                         |> LoggedIn token
               }
