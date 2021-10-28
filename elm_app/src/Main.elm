@@ -169,7 +169,7 @@ update msg model =
                     ( model, Validate.fromValid validateModel |> Api.login (GotLoginResponse |> withAuthHandle) )
 
                 Err errors ->
-                    ( model, Cmd.none )
+                    ( { model | state = Page.Login.withErrors loginModel errors |> NotLoggedIn }, Cmd.none )
 
         ( GotLoginResponse (Ok token), NotLoggedIn loginModel ) ->
             ( { model | state = LoggedIn (Token token) (Home Candidates.init) }
@@ -183,10 +183,6 @@ update msg model =
                 , Nav.pushUrl model.key (Route.fromRoute model.baseUrl Route.Home)
                 ]
             )
-
-        ( GotLoginResponse (Err _), NotLoggedIn _ ) ->
-            -- TODO: Manage the Err
-            ( model, Cmd.none )
 
         ( GotCandidatesResponse (Ok candidates), LoggedIn token (Home candidatesModel) ) ->
             ( { model
@@ -211,6 +207,9 @@ update msg model =
         ( GotCandidatesResponse error, LoggedIn token _ ) ->
             ( model, Cmd.none )
 
+        ( GotLoginError error, NotLoggedIn state ) ->
+            ( { model | state = Page.Login.withErrors state [ ( Page.Login.Global, error ) ] |> NotLoggedIn }, Cmd.none )
+
         ( GotLoginError _, _ ) ->
             ( { model | state = NotLoggedIn Page.Login.init }, Cmd.batch [ Nav.pushUrl model.key (Route.fromRoute model.baseUrl Route.Login) ] )
 
@@ -224,14 +223,20 @@ withAuthHandle msg result =
         Ok _ ->
             msg result
 
+        Err (Http.BadStatus 400) ->
+            GotLoginError "Vos identifiants sont incorrects"
+
         Err (Http.BadStatus 401) ->
-            GotLoginError "Not authenticated"
+            GotLoginError "Vos identifiants sont incorrects"
 
         Err (Http.BadStatus 403) ->
-            GotLoginError "Not authorized"
+            GotLoginError "Vous n'êtes pas autorisé à vous connecter"
 
-        Err _ ->
-            GotLoginError "An error occured"
+        Err Http.NetworkError ->
+            GotLoginError "Une erreur réseau est survenue, veuillez réitérer"
+
+        _ ->
+            GotLoginError "Une erreur technique est survenue, si le problème veuillez contacter votre correspondant REVA."
 
 
 init : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )

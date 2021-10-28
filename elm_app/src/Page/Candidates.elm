@@ -295,7 +295,7 @@ viewDirectory config candidates =
                 candidates
     in
     aside
-        [ class "hidden xl:order-first xl:flex xl:flex-col flex-shrink-0 w-96 border-r border-gray-200" ]
+        [ class "hidden sm:order-first sm:flex sm:flex-col flex-shrink-0 w-96 border-r border-gray-200" ]
         [ div
             [ class "px-6 pt-6 pb-4" ]
             [ h2

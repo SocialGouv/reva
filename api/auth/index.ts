@@ -73,7 +73,7 @@ authRouter.post('/auth/login', async (req: any, res: any) => {
   const isValid = await schema.isValid(req.body)
 
   if (!isValid) {
-    res.status(500).send('Bad format, required fields are: email, password')
+    res.status(400).send('Bad format, required fields are: email, password')
   } else {
     try {
       const user = await getUserByEmail(req.body.email)
