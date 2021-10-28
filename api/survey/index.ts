@@ -1,4 +1,5 @@
-import { getLatestSurvey, saveCandidateSurvey } from './data'
+import { isAdminMiddleware } from '../auth'
+import { getLatestSurvey, getSurveys, saveCandidateSurvey } from './data'
 const surveyRouter = require('express').Router()
 const yup = require('yup')
 
@@ -43,6 +44,61 @@ surveyRouter.post('/surveys/:id/candidates', async (req: any, res: any) => {
       res.status(500).send('An error occured while saving survey')
     }
   }
+})
+
+const sortByOrder = (
+  elementA: { order: number },
+  elementB: { order: number }
+) => elementA.order < elementB.order
+
+const reduceSurvey = (survey: any) => {
+  return survey.questions
+    .sort(sortByOrder)
+    .reduce((memo: any, question: any) => {
+      const rows = reduceQuestion(survey.id, survey.version, question)
+      return [...memo, rows]
+    }, [])
+}
+
+const reduceQuestion = (
+  surveyId: any,
+  surveyVersion: number,
+  question: any
+) => {
+  const answersLabel = question.answers
+    .sort(sortByOrder)
+    .map((r) => r.label)
+    .join(',')
+
+  const satisfactionAnswersLabel = question.satisfactionQuestion.answers
+    .sort(sortByOrder)
+    .map((r) => r.label)
+    .join(',')
+
+  const value = {
+    surveyId,
+    version: surveyVersion,
+    order: question.order,
+    questionId: question.id,
+    questionLabel: question.label,
+    questionType: question.multiValue ? 'multiple' : 'simple',
+    questionAnswers: answersLabel,
+    satisfactionLabel: question.satisfactionQuestion.label,
+    satisfactionAnswers: satisfactionAnswersLabel,
+  }
+  return value
+}
+
+surveyRouter.get('/surveys', isAdminMiddleware, async (req: any, res: any) => {
+  const surveys = await getSurveys()
+
+  const rows = surveys.reduce((memo: any, survey: any, index: number) => {
+    // TODO Get the version for SQL
+    const surveyRows = reduceSurvey({ ...survey, version: index + 1 })
+    return [...memo, ...surveyRows]
+  }, [])
+
+  return res.json(rows)
 })
 
 export default surveyRouter

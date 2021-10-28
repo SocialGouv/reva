@@ -18,3 +18,23 @@ export const saveCandidateSurvey = (survey: any) => {
     [survey.surveyId, survey.answers, survey.candidate]
   )
 }
+
+export const getSurveys = async () => {
+  const query = `
+  SELECT 
+    id,
+    questions,
+    latest,
+    created_at,
+    updated_at
+  FROM surveys
+  ORDER BY created_at ASC;`
+
+  const { rows } = await pg.query(query, [])
+
+  return rows.map((r: any) => ({
+    ...r,
+    createdAt: r.created_at,
+    updatedAt: r.updated_at,
+  }))
+}
