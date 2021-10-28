@@ -129,7 +129,7 @@ viewContent config model candidates =
     div
         [ class "flex flex-col min-w-0 flex-1 overflow-hidden" ]
         [ div
-            [ class "lg:hidden" ]
+            [ class "sm:hidden" ]
             [ div
                 [ class "flex items-center justify-between bg-gray-50 border-b border-gray-200 px-4 py-1.5" ]
                 [ div
@@ -162,7 +162,7 @@ viewProfile candidate =
     node "main"
         [ class "flex-1 relative z-0 overflow-y-auto focus:outline-none xl:order-last" ]
         [ nav
-            [ class "flex items-start px-4 py-3 sm:px-6 lg:px-8 xl:hidden", attribute "aria-label" "Breadcrumb" ]
+            [ class "flex items-start px-4 py-3 sm:px-6 lg:px-8 md:hidden", attribute "aria-label" "Breadcrumb" ]
             [ a
                 [ href "#", class "inline-flex items-center space-x-3 text-sm font-medium text-gray-900" ]
                 [ Icons.chevronLeft
@@ -197,14 +197,15 @@ viewProfile candidate =
                                     , text candidate.lastname
                                     ]
                                 ]
-                            , div
-                                [ class "mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4" ]
-                                [ button
-                                    [ type_ "button", class "inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" ]
-                                    [ Icons.mail
-                                    , span [] [ text "Message" ]
-                                    ]
-                                ]
+
+                            -- , div
+                            --     [ class "mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4" ]
+                            --     [ button
+                            --         [ type_ "button", class "inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" ]
+                            --         [ Icons.mail
+                            --         , span [] [ text "Message" ]
+                            --         ]
+                            --     ]
                             ]
                         ]
                     , div
@@ -229,9 +230,10 @@ viewProfile candidate =
                             [ a
                                 [ href "#", class "border-indigo-500 text-gray-900 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm", attribute "aria-current" "page" ]
                                 [ text "Profile" ]
-                            , a
-                                [ href "#", class "text-gray-900 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm", attribute "aria-current" "page" ]
-                                [ text "Questionnaires" ]
+
+                            -- , a
+                            --     [ href "#", class "text-gray-900 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm", attribute "aria-current" "page" ]
+                            --     [ text "Questionnaires" ]
                             ]
                         ]
                     ]
@@ -239,7 +241,7 @@ viewProfile candidate =
             , div
                 [ class "mt-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" ]
                 [ dl
-                    [ class "grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2" ]
+                    [ class "grid grid-cols-1 gap-x-4 gap-y-8 xl:grid-cols-2" ]
                     [ maybeDiplomeToString candidate.diplome
                         |> text
                         |> viewInfo "Diplôme"
@@ -252,15 +254,15 @@ viewProfile candidate =
                     , candidate.passes
                         |> text
                         |> viewInfo "Nombre de passages"
+                    , candidate.phoneNumber
+                        |> text
+                        |> viewInfo "Téléphone"
                     , a
                         [ class "text-blue-500 hover:text-blue-600 truncate"
                         , href ("mailto:" ++ candidate.email)
                         ]
                         [ text candidate.email ]
                         |> viewInfo "Email"
-                    , candidate.phoneNumber
-                        |> text
-                        |> viewInfo "Téléphone"
                     ]
                 ]
             ]
@@ -295,7 +297,7 @@ viewDirectory config candidates =
                 candidates
     in
     aside
-        [ class "hidden sm:order-first sm:flex sm:flex-col flex-shrink-0 w-96 border-r border-gray-200" ]
+        [ class "hidden md:order-first md:flex md:flex-col flex-shrink-0 w-96 border-r border-gray-200" ]
         [ div
             [ class "px-6 pt-6 pb-4" ]
             [ h2

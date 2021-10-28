@@ -12,8 +12,8 @@ layout config content =
         [ class "bg-gray-white h-screen flex" ]
         [ mobileMenu config
         , div
-            [ class "hidden lg:flex lg:flex-shrink-0" ]
-            [ div [ class "flex flex-col w-64" ] [ sideMenu config ] ]
+            [ class "hidden sm:flex lg:flex-shrink-0" ]
+            [ div [ class "flex flex-col sm:w-14 lg:w-64" ] [ sideMenu config ] ]
         , content
         ]
 
@@ -74,11 +74,11 @@ sideMenu config =
     div
         [ class "flex-1 flex flex-col flex-grow min-h-0 border-r border-gray-200 pt-5 bg-gray-100 overflow-y-auto" ]
         [ div
-            [ class "flex items-start flex-shrink-0 px-4" ]
+            [ class "flex flex-col items-center justify-center lg:justify-start lg:flex-row items-start flex-shrink-0 px-4" ]
             [ img
-                [ class "h-10 w-auto", src "/illustrations/beta-gouv-logo-a3.png", alt "BetaGouv - Reva" ]
+                [ class "h-4 lg:h-8 w-auto", src "/illustrations/beta-gouv-logo-a3.png", alt "BetaGouv - Reva" ]
                 []
-            , span [ class "font-bold ml-2" ] [ text "REVA" ]
+            , span [ class "font-bold lg:ml-2 text-xs lg:text-base" ] [ text "REVA" ]
             ]
         , div
             [ class "mt-5 flex-grow flex flex-col" ]
@@ -87,12 +87,12 @@ sideMenu config =
                 [ a
                     [ href "#", class "bg-gray-200 text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md" ]
                     [ Icons.candidates
-                    , text "Candidats"
+                    , span [ class "hidden lg:block" ] [ text "Candidats" ]
                     ]
                 , button
                     [ onClick config.onLogout, class "w-full text-gray-900 group flex items-center px-2 py-2 text-sm font-base hover:font-medium rounded-md" ]
                     [ Icons.signout
-                    , text "Déconnexion"
+                    , span [ class "hidden lg:block" ] [ text "Déconnexion" ]
                     ]
                 ]
             ]
