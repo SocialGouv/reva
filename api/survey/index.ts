@@ -89,7 +89,7 @@ const reduceQuestion = (
   return value
 }
 
-surveyRouter.get('/surveys', isAdminMiddleware, async (req: any, res: any) => {
+surveyRouter.get('/surveys', isAdminMiddleware, async (_req: any, res: any) => {
   const surveys = await getSurveys()
 
   const rows = surveys.reduce((memo: any, survey: any, index: number) => {
