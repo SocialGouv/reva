@@ -67,12 +67,12 @@ const reduceQuestion = (
 ) => {
   const answersLabel = question.answers
     .sort(sortByOrder)
-    .map((r) => r.label)
+    .map((r: any) => r.label)
     .join(',')
 
   const satisfactionAnswersLabel = question.satisfactionQuestion.answers
     .sort(sortByOrder)
-    .map((r) => r.label)
+    .map((r: any) => r.label)
     .join(',')
 
   const value = {
