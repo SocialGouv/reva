@@ -1,13 +1,11 @@
 <template>
   <section class="px-4 flex flex-col flex-1 justify-center transition-opacity">
-    <div class="w-full max-w-xl mx-auto pt-6">
-      <div class="pb-5">
-        <h3 class="text-2xl leading-10 font-medium text-gray-900">
-          Merci ! L'organisme certificateur va revenir très vite vers vous !
-        </h3>
-      </div>
+    <div class="mt-4 lg:mt-8 w-full max-w-xl mx-auto">
+      <h3 class="leading-tight text-2xl font-bold text-gray-900">
+        Merci ! L'organisme certificateur va revenir très vite vers vous !
+      </h3>
 
-      <fieldset class="mt-2">
+      <fieldset class="mt-4">
         <p>Pour cela, nous avons besoin de vos coordonnées :</p>
         <legend class="sr-only">Pré-bilan</legend>
         <div class="flex flex-col mt-8 bg-white rounded-md">
