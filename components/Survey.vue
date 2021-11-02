@@ -163,24 +163,31 @@
     </div>
     <div v-if="isEnded" class="relative">
       <div
-        class="
-          w-full
-          max-w-x
-          py-4
-          px-4
-          flex flex-1
-          items-center
-          justify-center
-          transition-opacity
-        "
+        class="px-4 lg:px-0 flex items-center justify-center transition-opacity"
       >
-        <div class="text-gray-800">
-          <h1 class="py-3">Merci,</h1>
-
-          <p class="mt-2">
-            Nous vous contacterons dès que nous aurons étudié votre candidature.
+        <div class="text-gray-700 max-w-xl">
+          <h3
+            class="mt-4 lg:mt-8 leading-tight text-2xl font-bold text-gray-900"
+          >
+            Merci d'avoir répondu à ce questionnaire, votre candidature a bien
+            été prise en compte !
+          </h3>
+          <p class="mt-4">
+            Elle sera étudiée dans les jours à venir et un rendez-vous vous sera
+            proposé par votre accompagnateur pour valider votre participation à
+            cette expérimentation REVA, conduite pour le Ministère du Travail
+            afin de simplifier la VAE.
           </p>
-
+          <p class="mt-4">
+            Dans le cadre de votre parcours VAE, vous serez amené à passer à
+            nouveau ce questionnaire à plusieurs reprises, sur invitation de
+            votre accompagnateur, pour mesurer d'éventuelles évolutions de
+            motivation et de confiance au cours du temps.
+          </p>
+          <p class="mt-4">
+            Merci de participer, à nos côtés, à simplifier la VAE. Nous comptons
+            sur vous !
+          </p>
           <div class="flex justify-center items-center mt-8">
             <Button @click="backToHome">Retour à l'accueil </Button>
           </div>
