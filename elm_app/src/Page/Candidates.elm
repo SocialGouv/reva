@@ -213,14 +213,14 @@ viewProfile candidate =
                             ]
                         , div
                             [ class "mt-6 sm:flex-1 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:space-x-6 sm:pb-1" ]
-                            [-- , div
-                             --     [ class "mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4" ]
-                             --     [ button
-                             --         [ type_ "button", class "inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" ]
-                             --         [ Icons.mail
-                             --         , span [] [ text "Message" ]
-                             --         ]
-                             --     ]
+                            [ div
+                                [ class "mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4" ]
+                                [ a
+                                    [ href ("mailto:" ++ candidate.email), class "inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" ]
+                                    [ Icons.mail
+                                    , span [] [ text "Message" ]
+                                    ]
+                                ]
                             ]
                         ]
                     , div
@@ -258,8 +258,7 @@ viewProfile candidate =
                 [ h3
                     [ class "text-sm font-medium text-gray-500" ]
                     [ text "Événements" ]
-                , surveyHistory
-                    |> Timeline.view
+                , Timeline.view surveyHistory
                 , dl
                     [ class "grid grid-cols-1 gap-x-4 gap-y-8 2xl:grid-cols-2" ]
                     [ candidate.phoneNumber
