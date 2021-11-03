@@ -259,7 +259,7 @@ viewProfile candidate =
                     , candidate.surveyDates
                         |> List.map (\d -> li [ dataTest "survey-date" ] [ text d ])
                         |> ul []
-                        |> viewInfo "Dates de passage"
+                        |> viewInfo "Dates de passages"
                     , List.length candidate.surveyDates
                         |> String.fromInt
                         |> text
