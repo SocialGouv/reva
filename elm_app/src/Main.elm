@@ -119,7 +119,7 @@ viewPage model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model.state ) of
-        ( BrowserChangedUrl url, _ ) ->
+        ( BrowserChangedUrl _, _ ) ->
             -- ( { model | route = Route.fromUrl "app" url }
             ( model
             , Cmd.none

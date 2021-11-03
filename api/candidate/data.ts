@@ -15,8 +15,7 @@ export const getCandidates = async (user: {
     ci.region as city_region, 
     di.id as diplome_id, 
     di.label as diplome_label, 
-    MAX(c.created_at) as last_created_at,
-    COUNT(1) as passes
+    ARRAY_AGG(c.created_at ORDER BY c.created_at) as survey_dates
   FROM candidate_answers c
   INNER JOIN cities ci ON c.candidate->>'cohorte' = ci.id::text
   INNER JOIN diplomes di ON c.candidate->>'diplome' = di.id::text
@@ -37,10 +36,12 @@ export const getCandidates = async (user: {
 
   const { rows } = await pg.query(query, parameters)
 
-  const dateOptions = {
+  const dateOptions: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
   }
 
   return rows.map((r: any) => ({
@@ -54,7 +55,8 @@ export const getCandidates = async (user: {
       id: r.diplome_id,
       label: r.diplome_label,
     },
-    lastCreatedAt: r.last_created_at.toLocaleDateString('fr-FR', dateOptions),
-    passes: r.passes
+    surveyDates: r.survey_dates.map((d: Date) =>
+      d.toLocaleDateString('fr-FR', dateOptions)
+    ),
   }))
 }
