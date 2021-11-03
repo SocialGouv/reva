@@ -15,6 +15,7 @@ import Html.Styled.Events exposing (onClick, onInput)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline exposing (optional, required)
 import List.Extra
+import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 
 
@@ -31,13 +32,12 @@ type State
 
 
 type alias Candidate =
-    { lastCreatedAt : String
+    { surveyDates : List String
     , email : String
     , firstname : String
     , lastname : String
     , diplome : Maybe Diplome
     , city : Maybe City
-    , passes : String
     , phoneNumber : String
     }
 
@@ -86,8 +86,7 @@ filterCandidate filter candidate =
                 |> String.contains (String.toLower filter)
     in
     match candidate.email
-        || match candidate.firstname
-        || match candidate.lastname
+        || match (candidate.firstname ++ " " ++ candidate.lastname)
         || (Maybe.map (.label >> match) candidate.diplome |> Maybe.withDefault False)
         || (Maybe.map (\city -> match city.label || match city.region) candidate.city
                 |> Maybe.withDefault False
@@ -152,7 +151,7 @@ viewContent config model candidates =
             [ class "flex-1 relative z-0 flex overflow-hidden" ]
             [ Maybe.map viewProfile model.selected
                 |> Maybe.withDefault (div [ class "h-full w-full bg-gray-500" ] [])
-            , viewDirectory config candidates
+            , viewDirectoryPanel config candidates
             ]
         ]
 
@@ -160,7 +159,7 @@ viewContent config model candidates =
 viewProfile : Candidate -> Html msg
 viewProfile candidate =
     node "main"
-        [ class "flex-1 relative z-0 overflow-y-auto focus:outline-none xl:order-last" ]
+        [ dataTest "profile", class "flex-1 relative z-0 overflow-y-auto focus:outline-none xl:order-last" ]
         [ nav
             [ class "flex items-start px-4 py-3 sm:px-6 lg:px-8 md:hidden", attribute "aria-label" "Breadcrumb" ]
             [ a
@@ -248,12 +247,6 @@ viewProfile candidate =
                     , maybeCityToString candidate.city
                         |> text
                         |> viewInfo "Ville"
-                    , candidate.lastCreatedAt
-                        |> text
-                        |> viewInfo "Dernier passage"
-                    , candidate.passes
-                        |> text
-                        |> viewInfo "Nombre de passages"
                     , candidate.phoneNumber
                         |> text
                         |> viewInfo "Téléphone"
@@ -263,6 +256,14 @@ viewProfile candidate =
                         ]
                         [ text candidate.email ]
                         |> viewInfo "Email"
+                    , candidate.surveyDates
+                        |> List.map (\d -> li [] [ text d ])
+                        |> ul []
+                        |> viewInfo "Dates de passage"
+                    , List.length candidate.surveyDates
+                        |> String.fromInt
+                        |> text
+                        |> viewInfo "Nombre de passages"
                     ]
                 ]
             ]
@@ -282,14 +283,14 @@ viewInfo label value =
         ]
 
 
-viewDirectory :
+viewDirectoryPanel :
     { a
         | onFilter : String -> msg
         , onSelect : Candidate -> msg
     }
     -> List Candidate
     -> Html msg
-viewDirectory config candidates =
+viewDirectoryPanel config candidates =
     let
         candidatesByFirstLetter =
             List.Extra.groupWhile
@@ -332,25 +333,26 @@ viewDirectory config candidates =
                     ]
                 ]
             ]
-        , List.map (viewDirectoryGroup config) candidatesByFirstLetter
-            |> nav [ class "flex-1 min-h-0 overflow-y-auto", attribute "aria-label" "Candidats" ]
+        , List.map (viewDirectory config) candidatesByFirstLetter
+            |> nav [ dataTest "directory", class "flex-1 min-h-0 overflow-y-auto", attribute "aria-label" "Candidats" ]
         ]
 
 
-viewDirectoryGroup : { a | onSelect : Candidate -> msg } -> ( Candidate, List Candidate ) -> Html msg
-viewDirectoryGroup config ( firstCandidate, candidates ) =
+viewDirectory : { a | onSelect : Candidate -> msg } -> ( Candidate, List Candidate ) -> Html msg
+viewDirectory config ( firstCandidate, candidates ) =
+    let
+        groupName =
+            candidateFirstLetter firstCandidate
+                |> String.fromChar
+                |> String.toUpper
+    in
     div
-        [ class "relative" ]
+        [ dataTest "directory-group", class "relative" ]
         [ div
-            [ class "z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500" ]
-            [ h3
-                []
-                [ candidateFirstLetter firstCandidate
-                    |> String.fromChar
-                    |> String.toUpper
-                    |> text
-                ]
+            [ dataTest "directory-group-name"
+            , class "z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500"
             ]
+            [ h3 [] [ text groupName ] ]
         , List.map (viewItem config) (firstCandidate :: candidates)
             |> ul [ attribute "role" "list", class "relative z-0 divide-y divide-gray-200" ]
         ]
@@ -359,7 +361,7 @@ viewDirectoryGroup config ( firstCandidate, candidates ) =
 viewItem : { a | onSelect : Candidate -> msg } -> Candidate -> Html msg
 viewItem config candidate =
     li
-        []
+        [ dataTest "directory-item" ]
         [ div
             [ class "relative px-6 py-5 flex items-center space-x-3 hover:bg-gray-50 focus-within:ring-1 focus-within:ring-inset focus-within:ring-indigo-500" ]
             [ div [ class "flex-shrink-0 text-gray-400" ]
@@ -431,13 +433,12 @@ cityDecoder =
 candidateDecoder : Decoder Candidate
 candidateDecoder =
     Decode.succeed Candidate
-        |> required "lastCreatedAt" Decode.string
+        |> required "surveyDates" (Decode.list Decode.string)
         |> required "email" Decode.string
         |> required "firstname" Decode.string
         |> required "lastname" Decode.string
         |> optional "diplome" (Decode.maybe diplomeDecoder) Nothing
         |> optional "city" (Decode.maybe cityDecoder) Nothing
-        |> required "passes" Decode.string
         |> required "phoneNumber" Decode.string
 
 
