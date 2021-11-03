@@ -20,7 +20,7 @@ type alias Event =
 view : List Event -> Html msg
 view events =
     div
-        [ dataTest "timeline", class "flow-root w-full mt-2 bg-gray-100 p-6 rounded-md" ]
+        [ dataTest "timeline", class "flow-root w-full mt-2 mb-8 bg-gray-100 p-6 rounded-md" ]
         [ ul
             [ attribute "role" "list"
             , class "-mb-8"

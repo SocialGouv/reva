@@ -9,8 +9,9 @@ module Page.Candidates exposing
     , view
     )
 
+import Css exposing (height, px)
 import Html.Styled exposing (Html, a, article, aside, button, dd, div, dl, dt, h1, h2, h3, input, label, li, nav, node, p, span, text, ul)
-import Html.Styled.Attributes exposing (action, attribute, class, for, href, id, name, placeholder, type_)
+import Html.Styled.Attributes exposing (action, attribute, class, css, for, href, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onClick, onInput)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline exposing (optional, required)
@@ -193,9 +194,15 @@ viewProfile candidate =
             []
             [ div
                 []
-                [ div [] [ div [ class "h-28 w-full object-cover bg-gray-500 lg:h-32" ] [] ]
+                [ div []
+                    [ div
+                        [ css [ height (px 88) ]
+                        , class "w-full object-cover bg-gray-500"
+                        ]
+                        []
+                    ]
                 , div
-                    [ class "max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" ]
+                    [ class "max-w-2xl mx-auto px-4 sm:px-6 lg:px-8" ]
                     [ div
                         [ class "sm:-mt-10 sm:flex sm:items-end sm:space-x-5" ]
                         [ div
@@ -206,28 +213,18 @@ viewProfile candidate =
                             ]
                         , div
                             [ class "mt-6 sm:flex-1 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:space-x-6 sm:pb-1" ]
-                            [ div
-                                [ class "sm:hidden 2xl:block mt-6 min-w-0 flex-1" ]
-                                [ h1
-                                    [ class "text-2xl font-bold text-gray-900 truncate" ]
-                                    [ text candidate.firstname
-                                    , text " "
-                                    , text candidate.lastname
-                                    ]
-                                ]
-
-                            -- , div
-                            --     [ class "mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4" ]
-                            --     [ button
-                            --         [ type_ "button", class "inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" ]
-                            --         [ Icons.mail
-                            --         , span [] [ text "Message" ]
-                            --         ]
-                            --     ]
+                            [-- , div
+                             --     [ class "mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4" ]
+                             --     [ button
+                             --         [ type_ "button", class "inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" ]
+                             --         [ Icons.mail
+                             --         , span [] [ text "Message" ]
+                             --         ]
+                             --     ]
                             ]
                         ]
                     , div
-                        [ class "hidden sm:block 2xl:hidden mt-6 min-w-0 flex-1" ]
+                        [ class "mt-3 min-w-0 flex-1" ]
                         [ h1
                             [ class "text-2xl font-bold text-gray-900 truncate" ]
                             [ text candidate.firstname
@@ -238,11 +235,11 @@ viewProfile candidate =
                     ]
                 ]
             , div
-                [ class "mt-6 sm:mt-2 2xl:mt-5" ]
+                [ class "mt-0" ]
                 [ div
                     [ class "border-b border-gray-200" ]
                     [ div
-                        [ class "max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" ]
+                        [ class "max-w-2xl mx-auto px-4 sm:px-6 lg:px-8" ]
                         [ nav
                             [ class "-mb-px flex space-x-8", attribute "aria-label" "Tabs" ]
                             [ a
@@ -257,20 +254,15 @@ viewProfile candidate =
                     ]
                 ]
             , div
-                [ class "mt-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" ]
-                [ dl
-                    [ class "grid grid-cols-1 gap-x-4 gap-y-8 xl:grid-cols-2" ]
-                    [ surveyHistory
-                        |> Timeline.view
-                        |> viewInfo "Événements"
-                    , div [] []
-                    , maybeDiplomeToString candidate.diplome
-                        |> text
-                        |> viewInfo "Diplôme"
-                    , maybeCityToString candidate.city
-                        |> text
-                        |> viewInfo "Ville"
-                    , candidate.phoneNumber
+                [ class "my-6 max-w-2xl   mx-auto px-4 sm:px-6 lg:px-8" ]
+                [ h3
+                    [ class "text-sm font-medium text-gray-500" ]
+                    [ text "Événements" ]
+                , surveyHistory
+                    |> Timeline.view
+                , dl
+                    [ class "grid grid-cols-1 gap-x-4 gap-y-8 2xl:grid-cols-2" ]
+                    [ candidate.phoneNumber
                         |> text
                         |> viewInfo "Téléphone"
                     , a
@@ -279,6 +271,12 @@ viewProfile candidate =
                         ]
                         [ text candidate.email ]
                         |> viewInfo "Email"
+                    , maybeDiplomeToString candidate.diplome
+                        |> text
+                        |> viewInfo "Diplôme"
+                    , maybeCityToString candidate.city
+                        |> text
+                        |> viewInfo "Ville"
                     ]
                 ]
             ]

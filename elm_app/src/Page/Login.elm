@@ -49,7 +49,7 @@ type alias Events msg =
 
 view : Events msg -> Model -> Html msg
 view events model =
-    div [ class "min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-50" ]
+    div [ class "min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-50 antialiased" ]
         [ div [ class "sm:mx-auto sm:w-full sm:max-w-md" ]
             [ img [ class "mx-auto h-12 w-auto", src "/illustrations/beta-gouv-logo-a3.png", alt "REVA" ]
                 []
