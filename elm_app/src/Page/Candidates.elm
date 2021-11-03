@@ -257,7 +257,7 @@ viewProfile candidate =
                         [ text candidate.email ]
                         |> viewInfo "Email"
                     , candidate.surveyDates
-                        |> List.map (\d -> li [] [ text d ])
+                        |> List.map (\d -> li [ dataTest "survey-date" ] [ text d ])
                         |> ul []
                         |> viewInfo "Dates de passage"
                     , List.length candidate.surveyDates

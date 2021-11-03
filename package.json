@@ -12,7 +12,7 @@
     "lint:js": "eslint --ext \".js,.ts,.vue\" .",
     "prepare": "husky install",
     "lint": "yarn lint:js",
-    "test": "jest --passWithNoTests",
+    "test": "cypress run",
     "db-migrate": "db-migrate",
     "postinstall": "cp -r node_modules/tarteaucitronjs static/."
   },
@@ -63,7 +63,6 @@
     "@nuxtjs/tailwindcss": "^4.2.0",
     "@vue/test-utils": "^1.2.1",
     "babel-core": "7.0.0-bridge.0",
-    "babel-jest": "^27.0.5",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^6.3.0",
     "eslint": "^7.29.0",
@@ -71,11 +70,9 @@
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-vue": "^7.12.1",
     "husky": "^6.0.0",
-    "jest": "^27.0.5",
     "lint-staged": "^10.5.4",
     "postcss": "^8.3.6",
     "prettier": "^2.3.2",
-    "ts-jest": "^27.0.3",
     "vue-jest": "^3.0.4"
   }
 }
