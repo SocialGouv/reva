@@ -37,10 +37,12 @@ export const getCandidates = async (user: {
 
   const { rows } = await pg.query(query, parameters)
 
-  const dateOptions = {
+  const dateOptions: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
   }
 
   return rows.map((r: any) => ({
