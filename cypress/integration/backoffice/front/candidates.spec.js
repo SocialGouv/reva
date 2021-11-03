@@ -38,7 +38,7 @@ describe('List all candidates', () => {
     cy.get('@directoryItems').should('have.length', 1)
     cy.get('@directoryItems').first().contains('Mickey Smith')
 
-    // When we clear the input, we display again all candidats
+    // When we clear the input, we display again all candidates
     cy.get('#search').clear()
     cy.get('@directoryItems').should('have.length', 5)
   })
