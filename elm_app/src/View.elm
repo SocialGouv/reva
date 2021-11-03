@@ -9,7 +9,7 @@ import View.Icons as Icons
 layout : { a | onLogout : msg } -> Html msg -> Html.Styled.Html msg
 layout config content =
     div
-        [ class "bg-gray-white h-screen flex" ]
+        [ class "bg-gray-white h-screen flex antialiased" ]
         [ mobileMenu config
         , div
             [ class "hidden sm:flex lg:flex-shrink-0" ]

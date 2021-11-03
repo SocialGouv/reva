@@ -15,7 +15,7 @@ export const getCandidates = async (user: {
     ci.region as city_region, 
     di.id as diplome_id, 
     di.label as diplome_label, 
-    ARRAY_AGG(c.created_at ORDER BY c.created_at) as survey_dates
+    ARRAY_AGG(c.created_at ORDER BY c.created_at DESC) as survey_dates
   FROM candidate_answers c
   INNER JOIN cities ci ON c.candidate->>'cohorte' = ci.id::text
   INNER JOIN diplomes di ON c.candidate->>'diplome' = di.id::text
