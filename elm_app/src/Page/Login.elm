@@ -1,11 +1,9 @@
 module Page.Login exposing (Field(..), Model, init, validateLogin, view, withErrors)
 
-import Html.Styled exposing (Html, a, button, div, form, h2, img, input, label, span, text)
-import Html.Styled.Attributes exposing (alt, checked, class, for, href, id, name, novalidate, placeholder, src, type_, value)
+import Html.Styled exposing (Html, button, div, form, h2, img, input, label, text)
+import Html.Styled.Attributes exposing (alt, checked, class, for, id, name, novalidate, placeholder, src, type_, value)
 import Html.Styled.Events exposing (onClick, onInput, onSubmit)
 import Route exposing (Route(..))
-import Svg.Styled exposing (path, svg)
-import Svg.Styled.Attributes exposing (clipRule, d, fill, fillRule, viewBox)
 import Validate exposing (Validator, ifBlank, ifInvalidEmail, validate)
 import View.Form as Form
 import View.Label as Label

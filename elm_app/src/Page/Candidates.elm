@@ -17,6 +17,7 @@ import Json.Decode.Pipeline exposing (optional, required)
 import List.Extra
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
+import View.Timeline as Timeline
 
 
 type alias Model =
@@ -158,6 +159,24 @@ viewContent config model candidates =
 
 viewProfile : Candidate -> Html msg
 viewProfile candidate =
+    let
+        successEvent date =
+            { label = "A répondu au questionnaire"
+            , status = Timeline.Success date
+            }
+
+        surveyHistory =
+            case candidate.surveyDates of
+                [ submission ] ->
+                    [ { label = "En attente du deuxième passage"
+                      , status = Timeline.Pending
+                      }
+                    , successEvent submission
+                    ]
+
+                l ->
+                    List.map successEvent l
+    in
     node "main"
         [ dataTest "profile", class "flex-1 relative z-0 overflow-y-auto focus:outline-none xl:order-last" ]
         [ nav
@@ -241,7 +260,11 @@ viewProfile candidate =
                 [ class "mt-6 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8" ]
                 [ dl
                     [ class "grid grid-cols-1 gap-x-4 gap-y-8 xl:grid-cols-2" ]
-                    [ maybeDiplomeToString candidate.diplome
+                    [ surveyHistory
+                        |> Timeline.view
+                        |> viewInfo "Événements"
+                    , div [] []
+                    , maybeDiplomeToString candidate.diplome
                         |> text
                         |> viewInfo "Diplôme"
                     , maybeCityToString candidate.city
@@ -256,14 +279,6 @@ viewProfile candidate =
                         ]
                         [ text candidate.email ]
                         |> viewInfo "Email"
-                    , candidate.surveyDates
-                        |> List.map (\d -> li [ dataTest "survey-date" ] [ text d ])
-                        |> ul []
-                        |> viewInfo "Dates de passages"
-                    , List.length candidate.surveyDates
-                        |> String.fromInt
-                        |> text
-                        |> viewInfo "Nombre de passages"
                     ]
                 ]
             ]
