@@ -244,7 +244,7 @@ viewProfile candidate =
                             [ class "-mb-px flex space-x-8", attribute "aria-label" "Tabs" ]
                             [ a
                                 [ href "#", class "border-indigo-500 text-gray-900 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm", attribute "aria-current" "page" ]
-                                [ text "Profile" ]
+                                [ text "Profil" ]
 
                             -- , a
                             --     [ href "#", class "text-gray-900 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm", attribute "aria-current" "page" ]
