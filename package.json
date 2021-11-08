@@ -1,5 +1,9 @@
 {
   "name": "reva-frontend",
+  "engines": {
+    "node": "16",
+    "npm": "8"
+  },
   "version": "1.0.0",
   "private": true,
   "scripts": {
