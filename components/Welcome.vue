@@ -59,7 +59,7 @@
       </div>
     </div>
 
-    <pre v-if="!!error">{{ error }}</pre>
+    <pre v-if="!!error">{{ error.message }}</pre>
   </div>
 </template>
 
@@ -81,7 +81,7 @@ export default defineComponent({
       default: false,
     },
     error: {
-      type: String,
+      type: Error,
       default: null,
     },
     start: {
