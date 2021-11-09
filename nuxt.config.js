@@ -24,6 +24,10 @@ export default {
       src: '~/plugins/tarteaucitron.js',
       mode: 'client',
     },
+    {
+      src: '~/plugins/crisp.js',
+      mode: 'client',
+    },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -100,6 +104,7 @@ export default {
     isProduction: process.env.NODE_ENV === 'production',
   },
   publicRuntimeConfig: {
+    crispWebsiteId: process.env.CRISP_WEBSITE_ID,
     hotjarId: process.env.HOTJAR_ID,
     hotjarVersion: process.env.HOTJAR_VERSION,
   },
