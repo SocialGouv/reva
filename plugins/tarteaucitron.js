@@ -1,5 +1,5 @@
-export default ({ $config: { hotjarId, hotjarVersion } }) => {
-  if (!hotjarId || !hotjarVersion) {
+export default ({ $config: { hotjarId, hotjarVersion }, route: { path } }) => {
+  if (!hotjarId || !hotjarVersion || path.startsWith('/app/')) {
     return
   }
 
