@@ -24,6 +24,10 @@ export default {
       src: '~/plugins/tarteaucitron.js',
       mode: 'client',
     },
+    {
+      src: '~/plugins/crisp.js',
+      mode: 'client',
+    },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
