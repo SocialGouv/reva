@@ -60,3 +60,42 @@ export const getCandidates = async (user: {
     ),
   }))
 }
+
+
+export const getCandidateAnswers = async (
+  user: {
+    id: string
+    // eslint-disable-next-line camelcase
+    roles: { role_id: string }[]
+  }
+) => {
+  let query = `
+  SELECT
+    c.id,
+    c.survey_id,
+    co.label as cohorte_label,
+    c.answers,
+    c.candidate, 
+    ci.id as city_id, 
+    ci.label as city_label, 
+    ci.region as city_region, 
+    di.id as diplome_id, 
+    di.label as diplome_label, 
+    c.created_at as last_created_at
+  FROM candidate_answers c
+  INNER JOIN cities ci ON c.candidate->>'cohorte' = ci.id::text
+  INNER JOIN diplomes di ON c.candidate->>'diplome' = di.id::text
+  INNER JOIN cohortes_diplomes_cities cdc ON ci.id = cdc.city_id AND di.id = cdc.diplome_id
+  INNER JOIN cohortes co ON co.id = cdc.cohorte_id
+  `
+  const parameters = []
+
+  if (!isAdmin(user.roles.map((r) => r.role_id))) {
+    query = `${query} 
+    INNER JOIN users_cohortes uc ON uc.cohorte_id = cdc.cohorte_id AND uc.user_id = $1`
+    parameters.push(user.id)
+  }
+
+  const { rows } = await pg.query(query, parameters)
+  return rows
+}

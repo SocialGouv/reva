@@ -11,6 +11,9 @@ export const isAdminMiddleware = (req: any, res: any, next: any) => {
     return res.status(403).send()
   }
 
+  req.user = req.user || { roles: [] }
+  req.user.roles = [...req.user.roles, { role_id: 'admin' }]
+
   next()
 }
 
