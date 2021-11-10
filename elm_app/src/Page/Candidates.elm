@@ -19,6 +19,7 @@ import List.Extra
 import String.Interpolate exposing (interpolate)
 import Url
 import Url.Builder
+import View.Grade as Grade
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 import View.Timeline as Timeline
@@ -179,15 +180,23 @@ Vos réponses à ce questionnaire sont précieuses pour nous, afin d'évaluer vo
 viewProfile : Candidate -> Html msg
 viewProfile candidate =
     let
+        successEvent : String -> Timeline.Event msg
         successEvent date =
-            { label = "A répondu au questionnaire"
+            { content =
+                [ text "A répondu au questionnaire"
+                , div [ class "flex items-center" ]
+                    [ Grade.view "Profil" Grade.A
+                    , Grade.view "Obtention" Grade.B
+                    ]
+                ]
             , status = Timeline.Success date
             }
 
+        surveyHistory : List (Timeline.Event msg)
         surveyHistory =
             case candidate.surveyDates of
                 [ submission ] ->
-                    [ { label = "En attente du deuxième passage"
+                    [ { content = [ text "En attente du deuxième passage" ]
                       , status = Timeline.Pending
                       }
                     , successEvent submission

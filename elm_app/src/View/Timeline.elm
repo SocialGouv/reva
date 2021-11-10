@@ -1,4 +1,4 @@
-module View.Timeline exposing (Status(..), view)
+module View.Timeline exposing (Event, Status(..), view)
 
 import Css exposing (display, lastChild, none)
 import Css.Global exposing (descendants, typeSelector)
@@ -13,14 +13,14 @@ type Status
     | Pending
 
 
-type alias Event =
-    { label : String, status : Status }
+type alias Event msg =
+    { content : List (Html msg), status : Status }
 
 
-view : List Event -> Html msg
+view : List (Event msg) -> Html msg
 view events =
     div
-        [ dataTest "timeline", class "flow-root w-full mb-8 bg-gray-100 p-6 rounded-md" ]
+        [ dataTest "timeline", class "flow-root w-full mb-8 border p-6 rounded-md" ]
         [ ul
             [ attribute "role" "list"
             , class "-mb-8"
@@ -30,7 +30,7 @@ view events =
         ]
 
 
-viewEvent : Event -> Html msg
+viewEvent : Event msg -> Html msg
 viewEvent event =
     li
         [ css
@@ -41,7 +41,7 @@ viewEvent event =
         [ div
             [ class "relative pb-8" ]
             [ span
-                [ class "divider absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-300"
+                [ class "divider absolute top-3 left-3 -ml-px h-full w-0.5 bg-gray-300"
                 , attribute "aria-hidden" "true"
                 ]
                 []
@@ -50,19 +50,19 @@ viewEvent event =
                 [ div
                     []
                     [ span
-                        [ class "h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-gray-100"
+                        [ class "h-6 w-6 rounded-full flex items-center justify-center ring-8 ring-white"
                         , class <| statusToClass event.status
                         ]
                         [ statusToIcon event.status ]
                     ]
                 , div
-                    [ class "min-w-0 flex-1 pt-1.5 flex justify-between space-x-4" ]
+                    [ class "min-w-0 flex-1 pt-0.5 flex justify-between space-x-4" ]
                     [ div
                         []
                         [ p
-                            [ class "text-sm text-gray-600"
+                            [ class "text-sm text-gray-700"
                             ]
-                            [ text event.label ]
+                            event.content
                         ]
                     , statusToDate event.status
                     ]
