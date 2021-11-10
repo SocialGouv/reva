@@ -47,7 +47,7 @@ describe('List all candidates', () => {
     cy.get('#search').type('Auvergne-Rhône-Alpes')
     cy.get('@directoryItems').should('have.length', 2)
     cy.get('@directoryItems').first().contains('Clara Oswald')
-    cy.get('@directoryItems').last().contains('Williams Rory')
+    cy.get('@directoryItems').last().contains('Rory Williams')
   })
 
   it('search by diploma', function () {
@@ -63,6 +63,16 @@ describe('List all candidates', () => {
       cy.get('@surveyDates').should('have.length', 2)
       cy.get('@surveyDates').eq(0).contains('20 oct. 2021, 11:53')
       cy.get('@surveyDates').eq(1).contains('2 nov. 2021, 15:56')
+    })
+
+    it('show a link to pass again the survey', function () {
+      const emailLink = `mailto:rory.williams@example.com?subject=[REVA] Je vous invite à passer à nouveau le questionnaire de l'expérimentation !&body=Bonjour Rory,\n%0A%0A\nDans le cadre de votre parcours VAE au sein de l'expérimentation REVA, je vous invite à remplir à nouveau le questionnaire avant la prochaine étape de votre accompagnement :\n%0A%0A\n%5B Description de la prochaine étape %5D\n%0A%0A\nhttps%3A%2F%2Freva.beta.gouv.fr%2Finscription%3Fdiplome%3D9bbc43a9-8b51-4feb-aab0-a1b2b49d27b2%26cohorte%3D84b3218a-a5bd-4e4b-b359-8562de9b04b7%26step%3Dwelcome\n%0A%0A\nVos réponses à ce questionnaire sont précieuses pour nous, afin d'évaluer votre perception du parcours expérimental auquel vous participez. Elles nous permettent d'améliorer et de faciliter la reconnaissance et la validation de votre expérience.\n%0A%0A\n%5B Signature %5D`
+      cy.get('@directoryItems').eq(3).click()
+      cy.get('[data-test=survey-invitation]').should(
+        'have.attr',
+        'href',
+        emailLink
+      )
     })
   })
 })

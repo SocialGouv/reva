@@ -16,6 +16,9 @@ import Html.Styled.Events exposing (onClick, onInput)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline exposing (optional, required)
 import List.Extra
+import String.Interpolate exposing (interpolate)
+import Url
+import Url.Builder
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 import View.Timeline as Timeline
@@ -158,6 +161,21 @@ viewContent config model candidates =
         ]
 
 
+emailLinkTemplate : String
+emailLinkTemplate =
+    """mailto:{0}?subject=[REVA] Je vous invite à passer à nouveau le questionnaire de l'expérimentation !&body=Bonjour {1},
+%0A%0A
+Dans le cadre de votre parcours VAE au sein de l'expérimentation REVA, je vous invite à remplir à nouveau le questionnaire avant la prochaine étape de votre accompagnement :
+%0A%0A
+%5B Description de la prochaine étape %5D
+%0A%0A
+{2}
+%0A%0A
+Vos réponses à ce questionnaire sont précieuses pour nous, afin d'évaluer votre perception du parcours expérimental auquel vous participez. Elles nous permettent d'améliorer et de faciliter la reconnaissance et la validation de votre expérience.
+%0A%0A
+%5B Signature %5D"""
+
+
 viewProfile : Candidate -> Html msg
 viewProfile candidate =
     let
@@ -177,6 +195,26 @@ viewProfile candidate =
 
                 l ->
                     List.map successEvent l
+
+        baseUrl =
+            "https://reva.beta.gouv.fr"
+
+        surveyWebsiteLink =
+            case ( candidate.diplome, candidate.city ) of
+                ( Just diplome, Just city ) ->
+                    Url.Builder.crossOrigin baseUrl
+                        [ "inscription" ]
+                        [ Url.Builder.string "diplome" diplome.id
+                        , Url.Builder.string "cohorte" city.id
+                        , Url.Builder.string "step" "welcome"
+                        ]
+                        |> Url.percentEncode
+
+                _ ->
+                    baseUrl
+
+        surveyEmailLink =
+            interpolate emailLinkTemplate [ candidate.email, candidate.firstname, surveyWebsiteLink ]
     in
     node "main"
         [ dataTest "profile", class "flex-1 relative z-0 overflow-y-auto focus:outline-none xl:order-last" ]
@@ -255,9 +293,17 @@ viewProfile candidate =
                 ]
             , div
                 [ class "my-6 max-w-2xl   mx-auto px-4 sm:px-6 lg:px-8" ]
-                [ h3
-                    [ class "text-sm font-medium text-gray-500" ]
-                    [ text "Événements" ]
+                [ div [ class "text-sm flex items-center justify-between" ]
+                    [ h3
+                        [ class "font-medium text-gray-500" ]
+                        [ text "Événements" ]
+                    , a
+                        [ dataTest "survey-invitation"
+                        , class "py-2 text-blue-500 hover:text-blue-700"
+                        , href surveyEmailLink
+                        ]
+                        [ text "Inviter à passer à nouveau le questionnaire" ]
+                    ]
                 , Timeline.view surveyHistory
                 , dl
                     [ class "grid grid-cols-1 gap-x-4 gap-y-8 2xl:grid-cols-2" ]

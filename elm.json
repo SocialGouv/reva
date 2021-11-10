@@ -15,6 +15,7 @@
             "elm/svg": "1.0.1",
             "elm/url": "1.0.0",
             "elm-community/list-extra": "8.5.1",
+            "lukewestby/elm-string-interpolate": "1.0.4",
             "rtfeldman/elm-css": "17.0.0",
             "rtfeldman/elm-validate": "4.0.1"
         },
