@@ -19,6 +19,9 @@ jobs:
         os: [ubuntu-latest]
         node: [16]
 
+    env:
+      DEPLOY_URL: 'https://reva-staging-${{ github.event.pull_request.number }}.osc-fr1.scalingo.io'
+
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@master
@@ -48,5 +51,9 @@ jobs:
       - name: Run linter 👀
         run: yarn lint
 
-      - name: Run tests 🧪
-        run: yarn test
+      - name: Run Cypress tests 🧪
+        uses: cypress-io/github-action@v2.9.7
+        with:
+          wait-on: ${{ env.DEPLOY_URL }}
+          wait-on-timeout: 480
+          config: baseUrl=${{ env.DEPLOY_URL }}
