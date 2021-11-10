@@ -51,9 +51,8 @@ jobs:
       - name: Run linter 👀
         run: yarn lint
 
-      - name: Run Cypress tests 🧪
-        uses: cypress-io/github-action@v2.9.7
-        with:
-          wait-on: ${{ env.DEPLOY_URL }}
-          wait-on-timeout: 480
-          config: baseUrl=${{ env.DEPLOY_URL }}
+      - name: Build
+        run: yarn build
+
+      - name: Start and run Cypress tests 🧪
+        run: yarn test:ci
