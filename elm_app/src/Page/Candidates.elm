@@ -11,7 +11,7 @@ module Page.Candidates exposing
 
 import Css exposing (height, px)
 import Html.Styled exposing (Html, a, article, aside, button, dd, div, dl, dt, h1, h2, h3, input, label, li, nav, node, p, span, text, ul)
-import Html.Styled.Attributes exposing (action, attribute, class, css, for, href, id, name, placeholder, type_)
+import Html.Styled.Attributes exposing (action, attribute, class, css, for, href, id, name, placeholder, target, type_)
 import Html.Styled.Events exposing (onClick, onInput)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline exposing (optional, required)
@@ -301,6 +301,7 @@ viewProfile candidate =
                         [ dataTest "survey-invitation"
                         , class "py-2 text-blue-500 hover:text-blue-700"
                         , href surveyEmailLink
+                        , target "_blank"
                         ]
                         [ text "Inviter à passer à nouveau le questionnaire" ]
                     ]
