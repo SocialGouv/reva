@@ -43,15 +43,20 @@ type alias Grades =
     }
 
 
+type alias Survey =
+    { date : String
+    , grades : Grades
+    }
+
+
 type alias Candidate =
     { city : Maybe City
     , diplome : Maybe Diplome
     , email : String
     , firstname : String
-    , grades : Grades
     , lastname : String
     , phoneNumber : String
-    , surveyDates : List String
+    , surveys : List Survey
     }
 
 
@@ -187,21 +192,21 @@ Vos réponses à ce questionnaire sont précieuses pour nous, afin d'évaluer vo
 viewProfile : Candidate -> Html msg
 viewProfile candidate =
     let
-        successEvent : String -> Timeline.Event msg
-        successEvent date =
+        successEvent : Survey -> Timeline.Event msg
+        successEvent survey =
             { content =
                 [ text "A répondu au questionnaire"
                 , div [ class "flex items-center" ]
-                    [ Grade.view "Profil" candidate.grades.profile
-                    , Grade.view "Obtention" candidate.grades.obtainment
+                    [ Grade.view "Profil" survey.grades.profile
+                    , Grade.view "Obtention" survey.grades.obtainment
                     ]
                 ]
-            , status = Timeline.Success date
+            , status = Timeline.Success survey.date
             }
 
         surveyHistory : List (Timeline.Event msg)
         surveyHistory =
-            case candidate.surveyDates of
+            case candidate.surveys of
                 [ submission ] ->
                     [ { content = [ text "En attente du deuxième passage" ]
                       , status = Timeline.Pending
@@ -505,11 +510,18 @@ cityDecoder =
         |> required "region" Decode.string
 
 
-candidateGradeDecoder : Decoder Grades
-candidateGradeDecoder =
+gradeDecoder : Decoder Grades
+gradeDecoder =
     Decode.succeed Grades
         |> required "obtainment" (Decode.string |> Decode.map Grade.fromString)
         |> required "profile" (Decode.string |> Decode.map Grade.fromString)
+
+
+surveyDecoder : Decoder Survey
+surveyDecoder =
+    Decode.succeed Survey
+        |> required "date" Decode.string
+        |> optional "grades" gradeDecoder { obtainment = Grade.Unknown, profile = Grade.Unknown }
 
 
 candidateDecoder : Decoder Candidate
@@ -519,10 +531,9 @@ candidateDecoder =
         |> optional "diplome" (Decode.maybe diplomeDecoder) Nothing
         |> required "email" Decode.string
         |> required "firstname" Decode.string
-        |> optional "grades" candidateGradeDecoder { obtainment = Grade.Unknown, profile = Grade.Unknown }
         |> required "lastname" Decode.string
         |> required "phoneNumber" Decode.string
-        |> required "surveyDates" (Decode.list Decode.string)
+        |> required "surveys" (Decode.list surveyDecoder)
 
 
 candidatesDecoder : Decoder (List Candidate)

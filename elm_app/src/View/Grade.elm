@@ -47,7 +47,7 @@ toString grade =
             "D"
 
         Unknown ->
-            "?"
+            "NC"
 
 
 fromString : String -> Grade
@@ -85,4 +85,4 @@ toTextColor grade =
             "text-red-800"
 
         Unknown ->
-            "text-gray-500"
+            "text-gray-400"

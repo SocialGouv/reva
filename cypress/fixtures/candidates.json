@@ -8,6 +8,10 @@
     },
     "lastname": "Oswald",
     "firstname": "Clara",
+    "grades": {
+      "obtainment": "A",
+      "profile": "B"
+    },
     "phoneNumber": "0600000000",
     "city": {
       "id": "84b3218a-a5bd-4e4b-b359-8562de9b04b7",
