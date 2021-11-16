@@ -79,10 +79,10 @@ toTextColor grade =
             "text-yellow-500"
 
         C ->
-            "text-yellow-700"
+            "text-red-600"
 
         D ->
-            "text-red-800"
+            "text-red-900"
 
         Unknown ->
             "text-gray-400"
