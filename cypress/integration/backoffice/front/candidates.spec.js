@@ -90,7 +90,7 @@ describe('List all candidates', () => {
       cy.get('@directoryItems').eq(3).click()
       cy.get('[data-test=grade]').should('have.length', 2)
       cy.get('[data-test=grades]').eq(0).contains('Profil : D')
-      cy.get('[data-test=grades]').eq(0).contains('Obtention : C')
+      cy.get('[data-test=grades]').eq(0).contains('Obtention : NC')
     })
   })
 })

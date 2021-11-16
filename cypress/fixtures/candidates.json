@@ -91,7 +91,7 @@
     "surveys": [
       {
         "date": "2 nov. 2021, 15:23",
-        "grades": { "obtainment": "C", "profile": "D" }
+        "grades": { "obtainment": "unknown", "profile": "D" }
       }
     ]
   },
