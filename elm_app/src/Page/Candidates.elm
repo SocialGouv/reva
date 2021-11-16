@@ -196,7 +196,8 @@ viewProfile candidate =
         successEvent survey =
             { content =
                 [ text "A répondu au questionnaire"
-                , div [ class "flex items-center" ]
+                , div
+                    [ dataTest "grades", class "flex items-center" ]
                     [ Grade.view "Profil" survey.grades.profile
                     , Grade.view "Obtention" survey.grades.obtainment
                     ]
