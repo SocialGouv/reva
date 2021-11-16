@@ -19,7 +19,7 @@ import List.Extra
 import String.Interpolate exposing (interpolate)
 import Url
 import Url.Builder
-import View.Grade as Grade
+import View.Grade as Grade exposing (Grade)
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 import View.Timeline as Timeline
@@ -37,14 +37,21 @@ type State
     | Idle (List Candidate)
 
 
+type alias Grades =
+    { obtainment : Grade
+    , profile : Grade
+    }
+
+
 type alias Candidate =
-    { surveyDates : List String
+    { city : Maybe City
+    , diplome : Maybe Diplome
     , email : String
     , firstname : String
+    , grades : Grades
     , lastname : String
-    , diplome : Maybe Diplome
-    , city : Maybe City
     , phoneNumber : String
+    , surveyDates : List String
     }
 
 
@@ -185,8 +192,8 @@ viewProfile candidate =
             { content =
                 [ text "A répondu au questionnaire"
                 , div [ class "flex items-center" ]
-                    [ Grade.view "Profil" Grade.A
-                    , Grade.view "Obtention" Grade.B
+                    [ Grade.view "Profil" candidate.grades.profile
+                    , Grade.view "Obtention" candidate.grades.obtainment
                     ]
                 ]
             , status = Timeline.Success date
@@ -498,16 +505,24 @@ cityDecoder =
         |> required "region" Decode.string
 
 
+candidateGradeDecoder : Decoder Grades
+candidateGradeDecoder =
+    Decode.succeed Grades
+        |> required "obtainment" (Decode.string |> Decode.map Grade.fromString)
+        |> required "profile" (Decode.string |> Decode.map Grade.fromString)
+
+
 candidateDecoder : Decoder Candidate
 candidateDecoder =
     Decode.succeed Candidate
-        |> required "surveyDates" (Decode.list Decode.string)
+        |> optional "city" (Decode.maybe cityDecoder) Nothing
+        |> optional "diplome" (Decode.maybe diplomeDecoder) Nothing
         |> required "email" Decode.string
         |> required "firstname" Decode.string
+        |> optional "grades" candidateGradeDecoder { obtainment = Grade.Unknown, profile = Grade.Unknown }
         |> required "lastname" Decode.string
-        |> optional "diplome" (Decode.maybe diplomeDecoder) Nothing
-        |> optional "city" (Decode.maybe cityDecoder) Nothing
         |> required "phoneNumber" Decode.string
+        |> required "surveyDates" (Decode.list Decode.string)
 
 
 candidatesDecoder : Decoder (List Candidate)

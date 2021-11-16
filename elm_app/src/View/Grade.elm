@@ -1,4 +1,4 @@
-module View.Grade exposing (Grade(..), view)
+module View.Grade exposing (Grade(..), fromString, view)
 
 import Html.Styled exposing (Html, div, span, text)
 import Html.Styled.Attributes exposing (class)
@@ -11,6 +11,7 @@ type Grade
     | B
     | C
     | D
+    | Unknown
 
 
 view : String -> Grade -> Html msg
@@ -45,6 +46,28 @@ toString grade =
         D ->
             "D"
 
+        Unknown ->
+            "?"
+
+
+fromString : String -> Grade
+fromString grade =
+    case grade of
+        "A" ->
+            A
+
+        "B" ->
+            B
+
+        "C" ->
+            C
+
+        "D" ->
+            D
+
+        _ ->
+            Unknown
+
 
 toTextColor : Grade -> String
 toTextColor grade =
@@ -60,3 +83,6 @@ toTextColor grade =
 
         D ->
             "text-red-800"
+
+        Unknown ->
+            "text-gray-500"
