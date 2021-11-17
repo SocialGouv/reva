@@ -1,4 +1,4 @@
-module Candidate.File exposing (Status(..), fromString)
+module Candidate.Status exposing (Status(..), fromString)
 
 import Candidate.Grade exposing (Grade(..))
 
@@ -39,7 +39,7 @@ toString status =
             "Avis de recevabilité reçu : " ++ admissibilityToString admissibility
 
         Reviewed ->
-            "Reçu dans l'expérimentation et accompagnement en cours."
+            "Reçu dans l'expérimentation et accompagnement en cours"
 
         Pending ->
             "En attente des résultats du jury"

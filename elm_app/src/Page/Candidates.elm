@@ -10,6 +10,7 @@ module Page.Candidates exposing
     )
 
 import Candidate.Grade as Grade exposing (Grade)
+import Candidate.Status as Status exposing (Status(..))
 import Css exposing (height, px)
 import Html.Styled exposing (Html, a, article, aside, button, dd, div, dl, dt, h1, h2, h3, input, label, li, nav, node, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, css, for, href, id, name, placeholder, target, type_)
@@ -43,9 +44,15 @@ type alias Grades =
     }
 
 
-type alias Survey =
+type alias SurveyEvent =
     { date : String
     , grades : Grades
+    }
+
+
+type alias StatusEvent =
+    { date : String
+    , status : Status
     }
 
 
@@ -56,7 +63,8 @@ type alias Candidate =
     , firstname : String
     , lastname : String
     , phoneNumber : String
-    , surveys : List Survey
+    , status : List StatusEvent
+    , surveys : List SurveyEvent
     }
 
 
@@ -192,7 +200,7 @@ Vos réponses à ce questionnaire sont précieuses pour nous, afin d'évaluer vo
 viewProfile : Candidate -> Html msg
 viewProfile candidate =
     let
-        successEvent : Survey -> Timeline.Event msg
+        successEvent : SurveyEvent -> Timeline.Event msg
         successEvent survey =
             { content =
                 [ text "A répondu au questionnaire"
@@ -518,11 +526,18 @@ gradeDecoder =
         |> required "profile" (Decode.string |> Decode.map Grade.fromString)
 
 
-surveyDecoder : Decoder Survey
+surveyDecoder : Decoder SurveyEvent
 surveyDecoder =
-    Decode.succeed Survey
+    Decode.succeed SurveyEvent
         |> required "date" Decode.string
         |> optional "grades" gradeDecoder { obtainment = Grade.Unknown, profile = Grade.Unknown }
+
+
+statusDecoder : Decoder StatusEvent
+statusDecoder =
+    Decode.succeed StatusEvent
+        |> required "date" Decode.string
+        |> required "name" (Decode.string |> Decode.map Status.fromString)
 
 
 candidateDecoder : Decoder Candidate
@@ -534,6 +549,7 @@ candidateDecoder =
         |> required "firstname" Decode.string
         |> required "lastname" Decode.string
         |> required "phoneNumber" Decode.string
+        |> required "status" (Decode.list statusDecoder)
         |> required "surveys" (Decode.list surveyDecoder)
 
 
