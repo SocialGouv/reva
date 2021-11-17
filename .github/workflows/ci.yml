@@ -20,7 +20,7 @@ jobs:
         node: [16]
 
     env:
-      DEPLOY_URL: 'https://reva-staging-${{ github.event.pull_request.number }}.osc-fr1.scalingo.io'
+      DEPLOY_URL: 'https://reva-staging-pr${{ github.event.pull_request.number }}.osc-fr1.scalingo.io'
 
     steps:
       - name: Checkout 🛎
