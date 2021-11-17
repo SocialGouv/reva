@@ -9,8 +9,8 @@ module Page.Candidates exposing
     , view
     )
 
+import Candidate.Grade as Grade exposing (Grade)
 import Css exposing (height, px)
-import Grade exposing (Grade)
 import Html.Styled exposing (Html, a, article, aside, button, dd, div, dl, dt, h1, h2, h3, input, label, li, nav, node, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, css, for, href, id, name, placeholder, target, type_)
 import Html.Styled.Events exposing (onClick, onInput)

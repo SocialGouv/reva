@@ -1,4 +1,4 @@
-module Grade exposing (Grade(..), fromString, view)
+module Candidate.Grade exposing (Grade(..), fromString, view)
 
 import Html.Styled exposing (Html, div, span, text)
 import Html.Styled.Attributes exposing (class)
