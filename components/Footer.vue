@@ -58,11 +58,13 @@
           <div
             class="
               mt-12
+              text-sm
               flex flex-col
-              sm:flex-row sm:gap-8
+              sm:flex-row sm:gap-4
               xl:col-span-2
               border-t
               pt-6
+              text-gray-700
             "
           >
             <!-- <div class="sm:border-r pr-4">
@@ -80,13 +82,18 @@
             <div class="sm:border-r pr-4">
               <a href="/privacy">Données personnelles</a>
             </div>
-            <div>
+            <div class="sm:border-r pr-4">
               <a href="#tarteaucitron">Gestion des cookies</a>
+            </div>
+            <div>
+              <a href="https://beta.gouv.fr/accessibilite/">
+                Accessibilité : non conforme
+              </a>
             </div>
           </div>
         </div>
         <div class="pt-8">
-          <p class="text-base text-gray-400 xl:text-center">
+          <p class="text-sm text-gray-400">
             <a
               class="underline"
               href="https://github.com/etalab/licence-ouverte/blob/master/LO.md"
