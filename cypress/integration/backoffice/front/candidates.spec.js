@@ -74,5 +74,23 @@ describe('List all candidates', () => {
         emailLink
       )
     })
+
+    it('show grades for all survey', function () {
+      // This candidate passed two surveys, it has 4 grades (2 per survey)
+      cy.get('@directoryItems').eq(2).click()
+      cy.get('[data-test=grade]').should('have.length', 4)
+      // Second survey
+      cy.get('[data-test=grades]').eq(0).contains('Profil : A')
+      cy.get('[data-test=grades]').eq(0).contains('Obtention : B')
+      // First survey
+      cy.get('[data-test=grades]').eq(1).contains('Profil : C')
+      cy.get('[data-test=grades]').eq(1).contains('Obtention : D')
+
+      // This candidate passed one survey
+      cy.get('@directoryItems').eq(3).click()
+      cy.get('[data-test=grade]').should('have.length', 2)
+      cy.get('[data-test=grades]').eq(0).contains('Profil : D')
+      cy.get('[data-test=grades]').eq(0).contains('Obtention : NC')
+    })
   })
 })

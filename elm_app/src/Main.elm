@@ -204,7 +204,7 @@ update msg model =
             , Cmd.none
             )
 
-        ( GotCandidatesResponse error, LoggedIn token _ ) ->
+        ( GotCandidatesResponse _, LoggedIn _ _ ) ->
             ( model, Cmd.none )
 
         ( GotLoginError error, NotLoggedIn state ) ->
@@ -240,7 +240,7 @@ withAuthHandle msg result =
 
 
 init : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
-init flags url key =
+init flags _ key =
     let
         state =
             case flags.token of

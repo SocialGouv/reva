@@ -2,6 +2,21 @@ import { isAdmin } from '../auth/data'
 
 const pg = require('../pg')
 
+function createSurvey(date: Date) {
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  }
+
+  return {
+    date: date.toLocaleDateString('fr-FR', dateOptions),
+    grades: { obtainment: 'unknown', profile: 'unknown' },
+  }
+}
+
 export const getCandidates = async (user: {
   id: string
   // eslint-disable-next-line camelcase
@@ -36,14 +51,6 @@ export const getCandidates = async (user: {
 
   const { rows } = await pg.query(query, parameters)
 
-  const dateOptions: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-  }
-
   return rows.map((r: any) => ({
     ...r.candidate,
     city: {
@@ -55,20 +62,15 @@ export const getCandidates = async (user: {
       id: r.diplome_id,
       label: r.diplome_label,
     },
-    surveyDates: r.survey_dates.map((d: Date) =>
-      d.toLocaleDateString('fr-FR', dateOptions)
-    ),
+    surveys: r.survey_dates.map(createSurvey),
   }))
 }
 
-
-export const getCandidateAnswers = async (
-  user: {
-    id: string
-    // eslint-disable-next-line camelcase
-    roles: { role_id: string }[]
-  }
-) => {
+export const getCandidateAnswers = async (user: {
+  id: string
+  // eslint-disable-next-line camelcase
+  roles: { role_id: string }[]
+}) => {
   let query = `
   SELECT
     c.id,

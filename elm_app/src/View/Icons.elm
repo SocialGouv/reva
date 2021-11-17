@@ -1,4 +1,4 @@
-module View.Icons exposing (candidates, chevronLeft, close, filter, mail, menu, pending, search, signout, success, user, userLarge)
+module View.Icons exposing (candidates, chevronLeft, close, dot, filter, mail, menu, pending, search, signout, success, user, userLarge)
 
 import Html.Styled exposing (Html)
 import Html.Styled.Attributes as Attr exposing (attribute)
@@ -71,13 +71,26 @@ userLarge =
 
 
 
+-- Badge
+
+
+dot : Html msg
+dot =
+    svg
+        [ fill "currentColor"
+        , viewBox "0 0 8 8"
+        ]
+        [ Svg.circle [ cx "4", cy "4", r "3" ] [] ]
+
+
+
 -- Timeline icons
 
 
 success : Html msg
 success =
     svg
-        [ class "h-5 w-5 text-white"
+        [ class "h-4 w-4 text-white"
         , viewBox "0 0 20 20"
         , fill "currentColor"
         , Attr.attribute "aria-hidden" "true"
@@ -94,7 +107,7 @@ success =
 pending : Html msg
 pending =
     svg
-        [ class "h-5 w-5 text-white"
+        [ class "h-4 w-4 text-white"
         , viewBox "0 0 20 20"
         , fill "currentColor"
         ]

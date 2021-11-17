@@ -9,6 +9,7 @@ module Page.Candidates exposing
     , view
     )
 
+import Candidate.Grade as Grade exposing (Grade)
 import Css exposing (height, px)
 import Html.Styled exposing (Html, a, article, aside, button, dd, div, dl, dt, h1, h2, h3, input, label, li, nav, node, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, css, for, href, id, name, placeholder, target, type_)
@@ -36,14 +37,26 @@ type State
     | Idle (List Candidate)
 
 
+type alias Grades =
+    { obtainment : Grade
+    , profile : Grade
+    }
+
+
+type alias Survey =
+    { date : String
+    , grades : Grades
+    }
+
+
 type alias Candidate =
-    { surveyDates : List String
+    { city : Maybe City
+    , diplome : Maybe Diplome
     , email : String
     , firstname : String
     , lastname : String
-    , diplome : Maybe Diplome
-    , city : Maybe City
     , phoneNumber : String
+    , surveys : List Survey
     }
 
 
@@ -179,15 +192,24 @@ Vos réponses à ce questionnaire sont précieuses pour nous, afin d'évaluer vo
 viewProfile : Candidate -> Html msg
 viewProfile candidate =
     let
-        successEvent date =
-            { label = "A répondu au questionnaire"
-            , status = Timeline.Success date
+        successEvent : Survey -> Timeline.Event msg
+        successEvent survey =
+            { content =
+                [ text "A répondu au questionnaire"
+                , div
+                    [ dataTest "grades", class "flex items-center" ]
+                    [ Grade.view "Profil" survey.grades.profile
+                    , Grade.view "Obtention" survey.grades.obtainment
+                    ]
+                ]
+            , status = Timeline.Success survey.date
             }
 
+        surveyHistory : List (Timeline.Event msg)
         surveyHistory =
-            case candidate.surveyDates of
+            case candidate.surveys of
                 [ submission ] ->
-                    [ { label = "En attente du deuxième passage"
+                    [ { content = [ text "En attente du deuxième passage" ]
                       , status = Timeline.Pending
                       }
                     , successEvent submission
@@ -489,16 +511,30 @@ cityDecoder =
         |> required "region" Decode.string
 
 
+gradeDecoder : Decoder Grades
+gradeDecoder =
+    Decode.succeed Grades
+        |> required "obtainment" (Decode.string |> Decode.map Grade.fromString)
+        |> required "profile" (Decode.string |> Decode.map Grade.fromString)
+
+
+surveyDecoder : Decoder Survey
+surveyDecoder =
+    Decode.succeed Survey
+        |> required "date" Decode.string
+        |> optional "grades" gradeDecoder { obtainment = Grade.Unknown, profile = Grade.Unknown }
+
+
 candidateDecoder : Decoder Candidate
 candidateDecoder =
     Decode.succeed Candidate
-        |> required "surveyDates" (Decode.list Decode.string)
+        |> optional "city" (Decode.maybe cityDecoder) Nothing
+        |> optional "diplome" (Decode.maybe diplomeDecoder) Nothing
         |> required "email" Decode.string
         |> required "firstname" Decode.string
         |> required "lastname" Decode.string
-        |> optional "diplome" (Decode.maybe diplomeDecoder) Nothing
-        |> optional "city" (Decode.maybe cityDecoder) Nothing
         |> required "phoneNumber" Decode.string
+        |> required "surveys" (Decode.list surveyDecoder)
 
 
 candidatesDecoder : Decoder (List Candidate)

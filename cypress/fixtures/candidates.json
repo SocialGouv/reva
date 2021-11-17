@@ -8,13 +8,22 @@
     },
     "lastname": "Oswald",
     "firstname": "Clara",
+    "grades": {
+      "obtainment": "A",
+      "profile": "B"
+    },
     "phoneNumber": "0600000000",
     "city": {
       "id": "84b3218a-a5bd-4e4b-b359-8562de9b04b7",
       "label": "Lyon",
       "region": "Auvergne-Rhône-Alpes"
     },
-    "surveyDates": ["15 oct. 2021, 10:23"]
+    "surveys": [
+      {
+        "date": "15 oct. 2021, 10:23",
+        "grades": { "obtainment": "A", "profile": "B" }
+      }
+    ]
   },
   {
     "email": "lady.cassandra.o-brienc@example.com",
@@ -31,7 +40,12 @@
       "label": "Nice",
       "region": "Provence-Alpes-Côte d'Azur"
     },
-    "surveyDates": ["10 oct. 2021, 12:27"]
+    "surveys": [
+      {
+        "date": "10 oct. 2021, 12:27",
+        "grades": { "obtainment": "A", "profile": "B" }
+      }
+    ]
   },
   {
     "email": "amy.pond@example.com",
@@ -48,7 +62,16 @@
       "label": "Toulouse",
       "region": "Occitanie"
     },
-    "surveyDates": ["20 oct. 2021, 11:53", "2 nov. 2021, 15:56"]
+    "surveys": [
+      {
+        "date": "20 oct. 2021, 11:53",
+        "grades": { "obtainment": "B", "profile": "A" }
+      },
+      {
+        "date": "2 nov. 2021, 15:56",
+        "grades": { "obtainment": "D", "profile": "C" }
+      }
+    ]
   },
   {
     "email": "rory.williams@example.com",
@@ -65,7 +88,12 @@
       "label": "Lyon",
       "region": "Auvergne-Rhône-Alpes"
     },
-    "surveyDates": ["2 nov. 2021, 15:23"]
+    "surveys": [
+      {
+        "date": "2 nov. 2021, 15:23",
+        "grades": { "obtainment": "unknown", "profile": "D" }
+      }
+    ]
   },
   {
     "email": "mickey.smith@example.com",
@@ -82,6 +110,11 @@
       "label": "Cergy",
       "region": "Île-de-France"
     },
-    "surveyDates": ["29 sept. 2021, 10:23"]
+    "surveys": [
+      {
+        "date": "29 sept. 2021, 10:23",
+        "grades": { "obtainment": "C", "profile": "D" }
+      }
+    ]
   }
 ]
