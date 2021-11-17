@@ -20,16 +20,16 @@
     },
     "status": [
       {
-        "name": "submitted",
-        "date": "15 oct. 2021, 10:23"
+        "name": "reviewed",
+        "date": "29 oct. 2021, 17:13"
       },
       {
         "name": "estimated_favorable",
         "date": "16 oct. 2021, 11:13"
       },
       {
-        "name": "reviewed",
-        "date": "29 oct. 2021, 17:13"
+        "name": "submitted",
+        "date": "15 oct. 2021, 10:23"
       }
     ],
     "surveys": [
@@ -56,16 +56,16 @@
     },
     "status": [
       {
-        "name": "submitted",
-        "date": "10 oct. 2021, 12:27"
+        "name": "reviewed",
+        "date": "14 oct. 2021, 16:13"
       },
       {
         "name": "estimated_favorable",
         "date": "12 oct. 2021, 10:11"
       },
       {
-        "name": "reviewed",
-        "date": "14 oct. 2021, 16:13"
+        "name": "submitted",
+        "date": "10 oct. 2021, 12:27"
       }
     ],
     "surveys": [
@@ -92,30 +92,30 @@
     },
     "status": [
       {
-        "name": "submitted",
-        "date": "20 oct. 2021, 11:53"
-      },
-      {
-        "name": "estimated_favorable",
-        "date": "4 nov. 2021, 10:11"
+        "name": "pending",
+        "date": "17 nov. 2021, 12:13"
       },
       {
         "name": "reviewed",
         "date": "7 nov. 2021, 16:13"
       },
       {
-        "name": "pending",
-        "date": "17 nov. 2021, 12:13"
+        "name": "estimated_favorable",
+        "date": "4 nov. 2021, 10:11"
+      },
+      {
+        "name": "submitted",
+        "date": "20 oct. 2021, 11:53"
       }
     ],
     "surveys": [
       {
-        "date": "20 oct. 2021, 11:53",
-        "grades": { "obtainment": "B", "profile": "A" }
-      },
-      {
         "date": "2 nov. 2021, 15:56",
         "grades": { "obtainment": "D", "profile": "C" }
+      },
+      {
+        "date": "20 oct. 2021, 11:53",
+        "grades": { "obtainment": "B", "profile": "A" }
       }
     ]
   },
@@ -136,16 +136,16 @@
     },
     "status": [
       {
-        "name": "submitted",
-        "date": "2 nov. 2021, 15:23"
+        "name": "rejected_by_adviser",
+        "date": "7 nov. 2021, 16:13"
       },
       {
         "name": "estimated_negative",
         "date": "4 nov. 2021, 10:11"
       },
       {
-        "name": "rejected_by_adviser",
-        "date": "7 nov. 2021, 16:13"
+        "name": "submitted",
+        "date": "2 nov. 2021, 15:23"
       }
     ],
     "surveys": [
@@ -172,16 +172,16 @@
     },
     "status": [
       {
-        "name": "submitted",
-        "date": "29 sept. 2021, 10:23"
+        "name": "rejected_by_adviser",
+        "date": "8 nov. 2021, 14:19"
       },
       {
         "name": "estimated_negative",
         "date": "2 nov. 2021, 11:11"
       },
       {
-        "name": "rejected_by_adviser",
-        "date": "8 nov. 2021, 14:19"
+        "name": "submitted",
+        "date": "29 sept. 2021, 10:23"
       }
     ],
     "surveys": [

@@ -200,8 +200,8 @@ Vos réponses à ce questionnaire sont précieuses pour nous, afin d'évaluer vo
 viewProfile : Candidate -> Html msg
 viewProfile candidate =
     let
-        successEvent : SurveyEvent -> Timeline.Event msg
-        successEvent survey =
+        successSurveyEvent : SurveyEvent -> Timeline.Event msg
+        successSurveyEvent survey =
             { content =
                 [ text "A répondu au questionnaire"
                 , div
@@ -220,11 +220,34 @@ viewProfile candidate =
                     [ { content = [ text "En attente du deuxième passage" ]
                       , status = Timeline.Pending
                       }
-                    , successEvent submission
+                    , successSurveyEvent submission
                     ]
 
                 l ->
-                    List.map successEvent l
+                    List.map successSurveyEvent l
+
+        successStatusEvent : StatusEvent -> Timeline.Event msg
+        successStatusEvent event =
+            { content = [ text <| Status.toString event.status ]
+            , status = Timeline.Success event.date
+            }
+
+        statusHistory : List (Timeline.Event msg)
+        statusHistory =
+            let
+                events =
+                    List.map successStatusEvent candidate.status
+            in
+            List.head candidate.status
+                |> Maybe.andThen (.status >> Status.toNextStepString)
+                |> Maybe.map
+                    (\next ->
+                        { content = [ text next ]
+                        , status = Timeline.Pending
+                        }
+                            :: events
+                    )
+                |> Maybe.withDefault events
 
         baseUrl =
             "https://reva.beta.gouv.fr"
@@ -326,7 +349,7 @@ viewProfile candidate =
                 [ div [ class "text-sm flex items-center justify-between" ]
                     [ h3
                         [ class "font-medium text-gray-500" ]
-                        [ text "Événements" ]
+                        [ text "Questionnaires" ]
                     , a
                         [ dataTest "survey-invitation"
                         , class "py-2 text-blue-500 hover:text-blue-700"
@@ -335,7 +358,20 @@ viewProfile candidate =
                         ]
                         [ text "Inviter à passer à nouveau le questionnaire" ]
                     ]
-                , Timeline.view surveyHistory
+                , Timeline.view "survey" surveyHistory
+                , div [ class "text-sm flex items-center justify-between" ]
+                    [ h3
+                        [ class "font-medium text-gray-500" ]
+                        [ text "Statut" ]
+                    , a
+                        [ dataTest "survey-invitation"
+                        , class "py-2 text-blue-500 hover:text-blue-700"
+                        , href surveyEmailLink
+                        , target "_blank"
+                        ]
+                        [ text "Mettre à jour le statut" ]
+                    ]
+                , Timeline.view "status" statusHistory
                 , dl
                     [ class "grid grid-cols-1 gap-x-4 gap-y-8 2xl:grid-cols-2" ]
                     [ candidate.phoneNumber

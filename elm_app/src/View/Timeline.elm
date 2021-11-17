@@ -17,10 +17,10 @@ type alias Event msg =
     { content : List (Html msg), status : Status }
 
 
-view : List (Event msg) -> Html msg
-view events =
+view : String -> List (Event msg) -> Html msg
+view id events =
     div
-        [ dataTest "timeline", class "flow-root w-full mb-8 border p-6 rounded-md" ]
+        [ dataTest <| id ++ "-timeline", class "flow-root w-full mb-8 border p-6 rounded-md" ]
         [ ul
             [ attribute "role" "list"
             , class "-mb-8"

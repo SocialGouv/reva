@@ -59,10 +59,10 @@ describe('List all candidates', () => {
   context('open candidate details', () => {
     it('show all survey dates', function () {
       cy.get('@directoryItems').eq(2).click()
-      cy.get('[data-test=timeline] time').as('surveyDates')
+      cy.get('[data-test=survey-timeline] time').as('surveyDates')
       cy.get('@surveyDates').should('have.length', 2)
-      cy.get('@surveyDates').eq(0).contains('20 oct. 2021, 11:53')
-      cy.get('@surveyDates').eq(1).contains('2 nov. 2021, 15:56')
+      cy.get('@surveyDates').eq(0).contains()
+      cy.get('@surveyDates').eq(1).contains('20 oct. 2021, 11:53')
     })
 
     it('show a link to pass again the survey', function () {

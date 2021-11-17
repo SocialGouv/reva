@@ -1,4 +1,4 @@
-module Candidate.Status exposing (Status(..), fromString)
+module Candidate.Status exposing (Status(..), fromString, toNextStepString, toString)
 
 import Candidate.Grade exposing (Grade(..))
 
@@ -33,16 +33,16 @@ toString : Status -> String
 toString status =
     case status of
         Submitted ->
-            "Candidature en attente de traitement"
+            "Candidature reçue"
 
         Estimated admissibility ->
             "Avis de recevabilité reçu : " ++ admissibilityToString admissibility
 
         Reviewed ->
-            "Reçu dans l'expérimentation et accompagnement en cours"
+            "Reçu dans l'expérimentation"
 
         Pending ->
-            "En attente des résultats du jury"
+            "Dossier soumis au jury, en attente des résultats"
 
         AcceptedAt Partial ->
             "Reçu partiellement"
@@ -58,6 +58,37 @@ toString status =
 
         Unknown ->
             "Statut introuvable"
+
+
+toNextStepString : Status -> Maybe String
+toNextStepString status =
+    case status of
+        Submitted ->
+            Just "En attente de l'avis de recevabilité"
+
+        Estimated _ ->
+            Just "En attente d'une décision de recevabilité"
+
+        Reviewed ->
+            Just "Accompagnement en cours"
+
+        Pending ->
+            Just "En attente des résultats du jury"
+
+        AcceptedAt Partial ->
+            Nothing
+
+        AcceptedAt Full ->
+            Nothing
+
+        RejectedBy Adviser ->
+            Nothing
+
+        RejectedBy Jury ->
+            Nothing
+
+        Unknown ->
+            Nothing
 
 
 admissibilityToString : Admissibility -> String
