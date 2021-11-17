@@ -10,6 +10,7 @@ module Page.Candidates exposing
     )
 
 import Css exposing (height, px)
+import Grade exposing (Grade)
 import Html.Styled exposing (Html, a, article, aside, button, dd, div, dl, dt, h1, h2, h3, input, label, li, nav, node, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, css, for, href, id, name, placeholder, target, type_)
 import Html.Styled.Events exposing (onClick, onInput)
@@ -19,7 +20,6 @@ import List.Extra
 import String.Interpolate exposing (interpolate)
 import Url
 import Url.Builder
-import View.Grade as Grade exposing (Grade)
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 import View.Timeline as Timeline
