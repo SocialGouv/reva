@@ -56,3 +56,19 @@ jobs:
 
       - name: Start and run Cypress tests 🧪
         run: yarn test:ci
+      - name: Find Comment
+        uses: peter-evans/find-comment@v1
+        id: find-deploy-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: La PR est déployée sur
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ steps.find-deploy-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          edit-mode: replace
+          body: |
+            La PR est déployée sur ${{ env.DEPLOY_URL }}
+          reactions: rocket
