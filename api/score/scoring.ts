@@ -1,72 +1,68 @@
-export const calculateScore = (measures: any, measuresAnswers: Map<string, number>, candidatesAnswers: any) => {
-    // console.log(measuresAnswers)//, measuresAnswers, candidatesAnswers)
+export const calculateScore = (measures: any, measuresAnswers: Map<string, number>, candidateAnswer: any) => {
 
+    const questionsMeasures = Object.entries(candidateAnswer.answers).map(([questionId, questionAnswer]: any) => {
+        const answers = getAnswersFromQuestion(questionAnswer)
 
-    return candidatesAnswers.map((candidateAnswer: any) => {
-        // for each candidatures
-        const questionsMeasures = Object.entries(candidateAnswer.answers).map(([questionId, questionAnswer]: any) => {
-
-            const answers = getAnswersFromQuestion(questionAnswer)
-
-            const answerMeasureResult = measures.map((measure: any) => {
-                const result = answers.reduce((sum: any, a: any) => {
-                    const key = generateMapKey({
-                        measureId: measure.id,
-                        surveyId: candidateAnswer.surveyId,
-                        questionId,
-                        answerId: a.id   
-                    })
-                    return sum + (measuresAnswers.get(key))
-                }, 0)
-                return {
+        const answerMeasureResult = measures.map((measure: any) => {
+            const result = answers.reduce((answerSum: any, a: any) => {
+                const key = generateMapKey({
                     measureId: measure.id,
-                    mesureLabel: measure.label,
-                    factor: measure.factor,
-                    indicator: measure.indicator,
-                    score: (result * measure.factor) / answers.length,
-                    max: measure.max * measure.factor
-                }
-            })
+                    surveyId: candidateAnswer.surveyId,
+                    questionId,
+                    answerId: a.id   
+                })
 
-            return answerMeasureResult
+                return {
+                    sum: measuresAnswers.has(key) ? answerSum.sum + (measuresAnswers.get(key)) : answerSum.sum,
+                    nbAnswersWithSameMeasureImpact: measuresAnswers.has(key) ? answerSum.nbAnswersWithSameMeasureImpact + 1 : answerSum.nbAnswersWithSameMeasureImpact
+                }
+            }, { sum: 0, nbAnswersWithSameMeasureImpact: 0 })
+
+            return {
+                measureId: measure.id,
+                mesureLabel: measure.label,
+                factor: measure.factor,
+                indicator: measure.indicator,
+                score: (result.sum * measure.factor) / (result.nbAnswersWithSameMeasureImpact > 0 ? result.nbAnswersWithSameMeasureImpact : 1),
+                max: measure.max * measure.factor
+            }
         })
-            .flat()
-            
 
-        const scoreByMeasure = Array.from(questionsMeasures.reduce((scoresMap, questionMeasure) => {
+        return answerMeasureResult
+    }).flat()
+    
+    const scoreByMeasure = Array.from(questionsMeasures.reduce((scoresMap, questionMeasure) => {
 
-            const scoreValue = scoresMap.get(questionMeasure.mesureLabel)
-            if (!scoreValue) {
-                scoresMap.set(questionMeasure.mesureLabel, { ...questionMeasure })
-            } else {
-                scoresMap.set(questionMeasure.mesureLabel, { ...scoreValue, score: scoreValue.score + + questionMeasure.score }) 
+        const scoreValue = scoresMap.get(questionMeasure.mesureLabel)
+        if (!scoreValue) {
+            scoresMap.set(questionMeasure.mesureLabel, { ...questionMeasure })
+        } else {
+            scoresMap.set(questionMeasure.mesureLabel, { ...scoreValue, score: scoreValue.score + + questionMeasure.score }) 
+        }
+
+        return scoresMap
+    }, new Map())).map(([_key, value]: any) => value)
+
+    const scoreByIndicator = scoreByMeasure.reduce((score, scoreMeasure) => {
+        if (!score[scoreMeasure.indicator]) {
+            score[scoreMeasure.indicator] = {
+                score: scoreMeasure.score,
+                max: scoreMeasure.max
             }
+        } else {
+            score[scoreMeasure.indicator].score = score[scoreMeasure.indicator].score + scoreMeasure.score
+            score[scoreMeasure.indicator].max = score[scoreMeasure.indicator].max + scoreMeasure.max
+        }
+        return score
+    }, {})
 
-            return scoresMap
-        }, new Map())).map(([key, value]: any) => value)
+    const grades = Object.entries(scoreByIndicator).reduce((agg: any, [key, value]: any) => {
+        agg[key] = Number(Number(value.score / value.max).toPrecision(4))
+        return agg
+    }, {})
 
-        const scoreByIndicator = scoreByMeasure.reduce((score, scoreMeasure) => {
-            if (!score[scoreMeasure.indicator]) {
-                score[scoreMeasure.indicator] = {
-                    score: scoreMeasure.score,
-                    max: scoreMeasure.max
-                }
-            } else {
-                score[scoreMeasure.indicator].score = score[scoreMeasure.indicator].score + scoreMeasure.score
-            }
-            return score
-        }, {})
-
-
-        const grades = Object.entries(scoreByIndicator).reduce((agg: any, [key, value]: any) => {
-            agg[key] = value.score / value.max 
-            return agg
-        }, {})
-
-        return { ...candidateAnswer, grades }
-    })
+    return { ...candidateAnswer, grades }
 }
-
 
 const getAnswersFromQuestion = (question: any) => {
     let answers = [] as any

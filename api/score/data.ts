@@ -11,7 +11,8 @@ export const getMeasuresAnswers = async () => {
     score,
     created_at,
     updated_at
-  FROM measures_answers;`
+  FROM measures_answers
+  WHERE score IS NOT NULL;`
 
   const { rows } = await pg.query(query, [])
 
@@ -51,7 +52,11 @@ export const getMeasures = async () => {
 
 export const getCandidateAnswers = async () => {
   const { rows } = await pg.query(
-    'SELECT id, survey_id, answers, created_at, updated_at FROM candidate_answers'
+    `SELECT ca.id, ca.survey_id, ca.answers, ca.created_at, ca.updated_at 
+    FROM candidate_answers ca, surveys s
+    WHERE s.id = ca.survey_id
+    AND s.latest = true;
+    `
   )
 
   return rows.map((r: any) => ({
