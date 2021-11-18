@@ -1,0 +1,68 @@
+[
+    {
+        "id": "1e2be96b-3a03-4817-9c5c-6040d9c4e82e",
+        "label": "experience",
+        "factor": 5,
+        "indicator": "obtention",
+        "max": 13,
+        "created_at": "2021-11-16T16:30:39.890Z",
+        "updated_at": "2021-11-16T16:30:39.890Z",
+        "createdAt": "2021-11-16T16:30:39.890Z",
+        "updatedAt": "2021-11-16T16:30:39.890Z"
+    },
+    {
+        "id": "1eb9c19c-3a69-4784-b848-380563be1c31",
+        "label": "motivation_intrinseque",
+        "factor": 5,
+        "indicator": "profil",
+        "max": 25,
+        "created_at": "2021-11-16T16:30:39.890Z",
+        "updated_at": "2021-11-16T16:30:39.890Z",
+        "createdAt": "2021-11-16T16:30:39.890Z",
+        "updatedAt": "2021-11-16T16:30:39.890Z"
+    },
+    {
+        "id": "16973ca0-db15-40c0-b3d4-2715d701e598",
+        "label": "confiance_extrinseque",
+        "factor": 2,
+        "indicator": "profil",
+        "max": 5,
+        "created_at": "2021-11-16T16:30:39.890Z",
+        "updated_at": "2021-11-16T16:30:39.890Z",
+        "createdAt": "2021-11-16T16:30:39.890Z",
+        "updatedAt": "2021-11-16T16:30:39.890Z"
+    },
+    {
+        "id": "842ccb92-8fc6-4bea-893a-27180f4b2841",
+        "label": "confiance_intrinseque",
+        "factor": 2,
+        "indicator": "profil",
+        "max": 15,
+        "created_at": "2021-11-16T16:30:39.890Z",
+        "updated_at": "2021-11-16T16:30:39.890Z",
+        "createdAt": "2021-11-16T16:30:39.890Z",
+        "updatedAt": "2021-11-16T16:30:39.890Z"
+    },
+    {
+        "id": "f51ae239-fff1-407f-a17e-e500a05791db",
+        "label": "disponibilite",
+        "factor": 3,
+        "indicator": "obtention",
+        "max": 5,
+        "created_at": "2021-11-16T16:30:39.890Z",
+        "updated_at": "2021-11-16T16:30:39.890Z",
+        "createdAt": "2021-11-16T16:30:39.890Z",
+        "updatedAt": "2021-11-16T16:30:39.890Z"
+    },
+    {
+        "id": "aca965fa-70b9-46f8-9829-31f0c5b045cd",
+        "label": "aisance_numerique",
+        "factor": 1,
+        "indicator": "profil",
+        "max": 5,
+        "created_at": "2021-11-16T16:30:39.890Z",
+        "updated_at": "2021-11-16T16:30:39.890Z",
+        "createdAt": "2021-11-16T16:30:39.890Z",
+        "updatedAt": "2021-11-16T16:30:39.890Z"
+    }
+]
