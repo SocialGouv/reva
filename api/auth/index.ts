@@ -96,4 +96,27 @@ authRouter.post('/auth/login', async (req: any, res: any) => {
   }
 })
 
+if (process.env.CONTEXT && process.env.CONTEXT !== 'production') {
+  getUsers()
+    .then(users => {
+      if (users.length !== 0) {
+        console.log("Users already created")
+        return
+      } else {
+        return argon2.hash('1234').then((password: string) => {
+          return saveUser({
+            
+            firstname: 'John',
+            lastname: 'Doe',
+            email: 'admin@reva.staging.fr',
+            password,
+            roles: ['admin'],
+            cohortes: [],
+          })
+        })
+      }
+    }).then(() => console.log("Staging users done"))
+    .catch(e => console.log(e))
+}
+
 export default authRouter
