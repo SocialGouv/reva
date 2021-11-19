@@ -1,22 +1,37 @@
-import { getCandidateAnswers, getMeasures, getMeasuresAnswers } from "./data"
-import { calculateScore } from "./scoring"
+import { isAdminMiddleware } from "../auth"
+import { getCandidateAnswers, getMeasures, getMeasuresAnswers, updateCandidateAnswersScore } from "./data"
+import { calculateScore, generateMeasuresAnswersMap } from "./scoring"
 
 const scoreRouter = require('express').Router()
 
 
-scoreRouter.get(
-    '/scores',
+scoreRouter.post(
+    '/scores/calculate',
+    isAdminMiddleware,
     async (_req: any, res: any) => {
 
+        try {
+            const measures = await getMeasures()
+            const measuresAnswers = await getMeasuresAnswers()
+            const candidateAnswers = await getCandidateAnswers()
 
-        const measures = await getMeasures()
-        const measuresAnswers = await getMeasuresAnswers()
-        const candidateAnswers = await getCandidateAnswers()
+            const measuresMap = generateMeasuresAnswersMap(measuresAnswers)
 
-        const measuresMap = new Map(measuresAnswers.map((m: any) => ([`${m.measureId}-${m.surveyId}-${m.questionId}-${m.answerId}`, m.score]))) as Map<string, number>
-        // console.log(measuresMap)
-        const grades = calculateScore(measures, measuresMap, candidateAnswers[0])
-        return res.json(grades)
+            const updatePromises = candidateAnswers
+                .map((candidateAnswer: { id: string }) => {
+                    const score = calculateScore(measures, measuresMap, candidateAnswer)
+                    return { id: candidateAnswer.id, score }            
+                })
+                .map(updateCandidateAnswersScore)
+
+            await Promise.all(updatePromises)
+
+            return res.status(200).send()
+
+        } catch (e) {
+            console.log(e)
+            res.status(500).send(e.message)
+        }
     }
 )
 

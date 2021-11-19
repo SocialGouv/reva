@@ -2,7 +2,7 @@ import { isAdmin } from '../auth/data'
 
 const pg = require('../pg')
 
-function createSurvey(date: Date) {
+function createSurvey(survey: { grades: { obtainment: number, profile: number }, createdAt: Date }) {
   const dateOptions: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'short',
@@ -12,9 +12,12 @@ function createSurvey(date: Date) {
   }
 
   return {
-    date: date.toLocaleDateString('fr-FR', dateOptions),
-    grades: { obtainment: 'unknown', profile: 'unknown' },
-    timestamp: date.getTime(),
+    date: survey.createdAt.toLocaleDateString('fr-FR', dateOptions),
+    grades: survey.grades ? {
+      obtainment: letterFromScore(survey.grades.obtainment),
+      profile: letterFromScore(survey.grades.profile),
+    } : { obtainment: 'unknown', profile: 'unknown' },
+    timestamp: survey.createdAt.getTime(),
   }
 }
 
@@ -31,7 +34,7 @@ export const getCandidates = async (user: {
     ci.region as city_region, 
     di.id as diplome_id, 
     di.label as diplome_label, 
-    ARRAY_AGG(c.created_at ORDER BY c.created_at DESC) as survey_dates
+    ARRAY_AGG(json_build_object('grades',c.score->'grades','createdAt',c.created_at) ORDER BY c.created_at DESC) as survey_dates
   FROM candidate_answers c
   INNER JOIN cities ci ON c.candidate->>'cohorte' = ci.id::text
   INNER JOIN diplomes di ON c.candidate->>'diplome' = di.id::text
@@ -102,4 +105,24 @@ export const getCandidateAnswers = async (user: {
 
   const { rows } = await pg.query(query, parameters)
   return rows
+}
+
+
+const letterFromScore = (score: number) => {
+
+  switch (true) {
+    case (score >= 0.89431):
+      return 'A'
+      break;
+    case (score >= 0.72358):
+      return 'B'
+      break;
+    case (score >= 0.44716):
+      return 'C'
+      break;
+    default:
+      return 'D'
+      break;
+
+  }
 }

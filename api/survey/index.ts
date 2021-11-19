@@ -1,4 +1,6 @@
 import { isAdminMiddleware } from '../auth'
+import { getMeasures, getMeasuresAnswers } from '../score/data'
+import { calculateScore, generateMeasuresAnswersMap } from '../score/scoring'
 import { getLatestSurvey, getSurveys, saveCandidateSurvey } from './data'
 const surveyRouter = require('express').Router()
 const yup = require('yup')
@@ -38,7 +40,13 @@ surveyRouter.post('/surveys/:id/candidates', async (req: any, res: any) => {
     res.status(500).send('Bad format')
   } else {
     try {
-      await saveCandidateSurvey(req.body)
+
+      const measures = await getMeasures()
+      const measuresAnswers = await getMeasuresAnswers()
+      const measuresMap = generateMeasuresAnswersMap(measuresAnswers)
+
+      const score = calculateScore(measures, measuresMap, req.body)
+      await saveCandidateSurvey({ ...req.body, score })
       res.status(200).send()
     } catch (e) {
       res.status(500).send('An error occured while saving survey')

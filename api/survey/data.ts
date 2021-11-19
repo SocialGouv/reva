@@ -14,8 +14,8 @@ export const getLatestSurvey = async () => {
 
 export const saveCandidateSurvey = (survey: any) => {
   return pg.query(
-    'INSERT INTO candidate_answers(id, survey_id, answers, candidate) VALUES (uuid_generate_v4(), $1, $2, $3);',
-    [survey.surveyId, survey.answers, survey.candidate]
+    'INSERT INTO candidate_answers(id, survey_id, answers, candidate, score) VALUES (uuid_generate_v4(), $1, $2, $3, $4);',
+    [survey.surveyId, survey.answers, survey.candidate, survey.score]
   )
 }
 

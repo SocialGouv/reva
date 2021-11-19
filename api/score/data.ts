@@ -66,3 +66,7 @@ export const getCandidateAnswers = async () => {
     updatedAt: r.updated_at,
   }))
 }
+
+export const updateCandidateAnswersScore = async ({ id, score }: { id: string, score: any }) => {
+  return await pg.query(`UPDATE candidate_answers SET score = $1 WHERE id = $2;`, [score, id])
+}

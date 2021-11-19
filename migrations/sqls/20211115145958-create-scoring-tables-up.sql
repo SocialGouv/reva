@@ -2,7 +2,7 @@ CREATE TYPE indicator AS ENUM ('obtainment', 'profile');
 
 CREATE TABLE measures (
   id UUID DEFAULT uuid_generate_v4(),
-  label varchar(255) NOT NULL,
+  label varchar(255) UNIQUE NOT NULL,
   indicator indicator NOT NULL,
   factor INT NOT NULL,
   min INT NOT NULL,
@@ -38,6 +38,8 @@ BEFORE UPDATE ON measures_answers
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 
+
+ALTER TABLE candidate_answers ADD COLUMN score jsonb;
 
 -- INSERT MEASURES
 
