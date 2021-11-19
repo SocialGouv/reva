@@ -15,7 +15,7 @@ scoreRouter.get(
 
         const measuresMap = new Map(measuresAnswers.map((m: any) => ([`${m.measureId}-${m.surveyId}-${m.questionId}-${m.answerId}`, m.score]))) as Map<string, number>
         // console.log(measuresMap)
-        const grades = calculateScore(measures, measuresMap, candidateAnswers)
+        const grades = calculateScore(measures, measuresMap, candidateAnswers[0])
         return res.json(grades)
     }
 )

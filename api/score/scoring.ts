@@ -1,6 +1,6 @@
 export const calculateScore = (measures: any, measuresAnswers: Map<string, number>, candidateAnswer: any) => {
 
-    const questionsMeasures = Object.entries(candidateAnswer.answers).map(([questionId, questionAnswer]: any) => {
+    const scoresByQuestions = Object.entries(candidateAnswer.answers).map(([questionId, questionAnswer]: any) => {
         const answers = getAnswersFromQuestion(questionAnswer)
 
         const answerMeasureResult = measures.map((measure: any) => {
@@ -31,9 +31,9 @@ export const calculateScore = (measures: any, measuresAnswers: Map<string, numbe
         return { questionId, measures: answerMeasureResult }
     }).flat()
 
-    const allQuestionsAnswersMeasures = questionsMeasures.map(q => q.measures).flat()
+    const allScores = scoresByQuestions.map(q => q.measures).flat()
     
-    const scoreByMeasure = Array.from(allQuestionsAnswersMeasures.reduce((scoresMap, questionMeasure) => {
+    const scoresByMeasures = Array.from(allScores.reduce((scoresMap, questionMeasure) => {
 
         const scoreValue = scoresMap.get(questionMeasure.mesureLabel)
         if (!scoreValue) {
@@ -45,7 +45,7 @@ export const calculateScore = (measures: any, measuresAnswers: Map<string, numbe
         return scoresMap
     }, new Map())).map(([_key, value]: any) => value)
 
-    const scoreByIndicator = scoreByMeasure.reduce((score, scoreMeasure) => {
+    const scoreByIndicator = scoresByMeasures.reduce((score, scoreMeasure) => {
         if (!score[scoreMeasure.indicator]) {
             score[scoreMeasure.indicator] = {
                 score: scoreMeasure.score,
@@ -63,7 +63,7 @@ export const calculateScore = (measures: any, measuresAnswers: Map<string, numbe
         return agg
     }, {})
 
-    return { grades, questionsMeasures, scoreByMeasure }
+    return { grades, scoresByQuestions, scoresByMeasures }
 }
 
 const getAnswersFromQuestion = (question: any) => {
