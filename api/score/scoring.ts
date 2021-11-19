@@ -28,10 +28,12 @@ export const calculateScore = (measures: any, measuresAnswers: Map<string, numbe
             }
         })
 
-        return answerMeasureResult
+        return { questionId, measures: answerMeasureResult }
     }).flat()
+
+    const allQuestionsAnswersMeasures = questionsMeasures.map(q => q.measures).flat()
     
-    const scoreByMeasure = Array.from(questionsMeasures.reduce((scoresMap, questionMeasure) => {
+    const scoreByMeasure = Array.from(allQuestionsAnswersMeasures.reduce((scoresMap, questionMeasure) => {
 
         const scoreValue = scoresMap.get(questionMeasure.mesureLabel)
         if (!scoreValue) {
@@ -61,7 +63,7 @@ export const calculateScore = (measures: any, measuresAnswers: Map<string, numbe
         return agg
     }, {})
 
-    return { ...candidateAnswer, grades }
+    return { grades, questionsMeasures, scoreByMeasure }
 }
 
 const getAnswersFromQuestion = (question: any) => {

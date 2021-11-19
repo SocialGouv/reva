@@ -293,6 +293,7 @@ test('given a basic candidate answer to survey v2 with new format (answer is obj
         obtainment: 0.9375,
         profile: 0.6867
     })
+    expect(score).toMatchSnapshot()
 });
 
 test('given a candidate answer with 2 answers with the same score in a multiple answers question, when calculateScore is called, then it should return the good grades values', () => {
@@ -452,6 +453,7 @@ test('given a candidate answer with 2 answers with the same score in a multiple 
         obtainment: 0.9375,
         profile: 0.6867
     })
+    expect(score).toMatchSnapshot()
 });
 
 
@@ -612,4 +614,5 @@ test('given a candidate answer with 2 answers with different score in a multiple
         obtainment: 0.9375,
         profile: 0.7169
     })
+    expect(score).toMatchSnapshot()
 });
