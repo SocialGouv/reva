@@ -20,7 +20,7 @@ export const calculateScore = (measures: any, measuresAnswers: Map<string, numbe
 
             return {
                 measureId: measure.id,
-                mesureLabel: measure.label,
+                measureLabel: measure.label,
                 factor: measure.factor,
                 indicator: measure.indicator,
                 score: (result.sum * measure.factor) / (result.nbAnswersWithSameMeasureImpact > 0 ? result.nbAnswersWithSameMeasureImpact : 1),
@@ -35,11 +35,11 @@ export const calculateScore = (measures: any, measuresAnswers: Map<string, numbe
     
     const scoresByMeasures = Array.from(allScores.reduce((scoresMap, questionMeasure) => {
 
-        const scoreValue = scoresMap.get(questionMeasure.mesureLabel)
+        const scoreValue = scoresMap.get(questionMeasure.measureLabel)
         if (!scoreValue) {
-            scoresMap.set(questionMeasure.mesureLabel, { ...questionMeasure })
+            scoresMap.set(questionMeasure.measureLabel, { ...questionMeasure })
         } else {
-            scoresMap.set(questionMeasure.mesureLabel, { ...scoreValue, score: scoreValue.score + + questionMeasure.score }) 
+            scoresMap.set(questionMeasure.measureLabel, { ...scoreValue, score: scoreValue.score + + questionMeasure.score }) 
         }
 
         return scoresMap
