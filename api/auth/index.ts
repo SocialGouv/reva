@@ -101,11 +101,9 @@ if (process.env.CONTEXT && process.env.CONTEXT !== 'production') {
     .then(users => {
       if (users.length !== 0) {
         console.log("Users already created")
-        return
       } else {
         return argon2.hash('1234').then((password: string) => {
           return saveUser({
-            
             firstname: 'John',
             lastname: 'Doe',
             email: 'admin@reva.staging.fr',

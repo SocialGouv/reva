@@ -109,20 +109,14 @@ export const getCandidateAnswers = async (user: {
 
 
 const letterFromScore = (score: number) => {
-
   switch (true) {
     case (score >= 0.89431):
       return 'A'
-      break;
     case (score >= 0.72358):
       return 'B'
-      break;
     case (score >= 0.44716):
       return 'C'
-      break;
     default:
       return 'D'
-      break;
-
   }
 }
