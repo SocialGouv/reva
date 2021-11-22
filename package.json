@@ -20,7 +20,7 @@
     "test": "cypress run",
     "test:ci": "yarn start & wait-on --timeout 6000 http://localhost:3000 && npm run test",
     "db-migrate": "db-migrate",
-    "postinstall": "cp -r node_modules/tarteaucitronjs static/. && yarn db-migrate up -e prod"
+    "postinstall": "cp -r node_modules/tarteaucitronjs static/. && [[ ! -z \"$DATABASE_URL\" ]] && yarn db-migrate up -e prod || echo \"No migration\""
   },
   "lint-staged": {
     "*.{js,vue}": "eslint"
