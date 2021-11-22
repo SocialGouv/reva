@@ -39,7 +39,7 @@ export const calculateScore = (measures: any, measuresAnswers: Map<string, numbe
         if (!scoreValue) {
             scoresMap.set(questionMeasure.measureLabel, { ...questionMeasure })
         } else {
-            scoresMap.set(questionMeasure.measureLabel, { ...scoreValue, score: scoreValue.score + + questionMeasure.score }) 
+            scoresMap.set(questionMeasure.measureLabel, { ...scoreValue, score: scoreValue.score + questionMeasure.score }) 
         }
 
         return scoresMap
