@@ -23,6 +23,7 @@ module.exports = {
   testEnvironment: 'jsdom',
   testPathIgnorePatterns: [
     "/node_modules/",
-    "/.spec./"
+    // eslint-disable-next-line
+    "\.spec\."
   ],
 }

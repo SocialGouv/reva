@@ -25,3 +25,25 @@ and s.latest = true
 and q.id = ma.question_id
 and a.id = ma.answer_id
 order by q.order, a.order, m.label,  m.indicator;
+
+
+-- Repartion by Grades
+
+select 
+    CASE 
+      WHEN (ca.score->'grades'->>'obtainment')::float >= 0.89431  THEN 'A'
+      WHEN (ca.score->'grades'->>'obtainment')::float >= 0.72358 THEN 'B'
+      WHEN (ca.score->'grades'->>'obtainment')::float >= 0.44716  THEN 'C'
+      ELSE 'D'
+    END as obtainment, 
+    CASE 
+      WHEN (ca.score->'grades'->>'profile')::float >= 0.89431  THEN 'A'
+      WHEN (ca.score->'grades'->>'profile')::float >= 0.72358 THEN 'B'
+      WHEN (ca.score->'grades'->>'profile')::float >= 0.44716  THEN 'C'
+      ELSE 'D'
+    END  as profile, count(1) as total
+from candidate_answers ca
+where ca.score is not null
+group by obtainment, profile 
+order by total desc;
+-- order by obtainment asc, profile asc;
