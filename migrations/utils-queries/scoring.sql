@@ -47,3 +47,75 @@ where ca.score is not null
 group by obtainment, profile 
 order by total desc;
 -- order by obtainment asc, profile asc;
+
+
+
+-- Extract measures by candidate_answers
+
+
+drop table if exists score_tmp;
+
+select ca.id, measures."measureId", measures."mesureLabel", measures.score, measures.max
+into score_tmp
+from candidate_answers ca
+    , jsonb_to_recordset(ca.score->'scoresByMeasures') as measures("measureId" UUID, "mesureLabel" varchar(255), score float, max int)
+where ca.score is not null;
+
+
+select 
+ca.id, 
+ca.created_at,
+ca.candidate->>'firstname' as "firstname", 
+ca.candidate->>'lastname'as "lastname",
+ca.candidate->>'email', 
+concat('''', ca.candidate->>'phoneNumber'),
+CASE 
+      WHEN (ca.score->'grades'->>'obtainment')::float >= 0.89431  THEN 'A'
+      WHEN (ca.score->'grades'->>'obtainment')::float >= 0.72358 THEN 'B'
+      WHEN (ca.score->'grades'->>'obtainment')::float >= 0.44716  THEN 'C'
+      ELSE 'D'
+    END as obtainment, 
+    CASE 
+      WHEN (ca.score->'grades'->>'profile')::float >= 0.89431  THEN 'A'
+      WHEN (ca.score->'grades'->>'profile')::float >= 0.72358 THEN 'B'
+      WHEN (ca.score->'grades'->>'profile')::float >= 0.44716  THEN 'C'
+      ELSE 'D'
+    END  as profile,
+-- confiance."mesureLabel",
+confiance."score" as "confiance",
+confiance."max" as "confiance max",
+-- experience."mesureLabel",
+experience."score" as "experience",
+experience."max" as "experience max",
+-- motivation."mesureLabel",
+motivation."score" as "motivation intrinseque",
+motivation."max" as "motivation intrinseque max",
+-- aisance."mesureLabel",
+aisance."score" as "aisance numerique",
+aisance."max" as "aisance numerique max",
+-- dispo."mesureLabel",
+dispo."score" as "disponibilite",
+dispo."max" as "disponibilite max"
+from candidate_answers ca
+    , score_tmp confiance
+    , score_tmp experience
+    , score_tmp motivation
+    , score_tmp aisance
+    , score_tmp dispo
+where ca.score is not null
+-- confiance
+and ca.id = confiance.id
+and confiance."mesureLabel" = 'confiance'
+-- experience
+and ca.id = experience.id
+and experience."mesureLabel" = 'experience'
+-- motivation
+and ca.id = motivation.id
+and motivation."mesureLabel" = 'motivation_intrinseque'
+-- aisance
+and ca.id = aisance.id
+and aisance."mesureLabel" = 'aisance_numerique'
+-- dispo
+and ca.id = dispo.id
+and dispo."mesureLabel" = 'disponibilite'
+order by firstname, lastname, ca.created_at asc;
