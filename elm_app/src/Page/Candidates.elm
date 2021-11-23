@@ -371,7 +371,7 @@ viewProfile candidate =
                 [ div [ class "text-sm flex items-center justify-between" ]
                     [ h3
                         [ class "font-medium text-gray-500" ]
-                        [ text "Évènement" ]
+                        [ text "Évènements" ]
                     , a
                         [ dataTest "survey-invitation"
                         , class "py-2 text-blue-500 hover:text-blue-700"
