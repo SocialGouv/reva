@@ -14,13 +14,17 @@ type Status
 
 
 type alias Event msg =
-    { content : List (Html msg), status : Status }
+    { content : List (Html msg)
+    , dataTest : String
+    , status : Status
+    , timestamp : Int
+    }
 
 
 view : String -> List (Event msg) -> Html msg
 view id events =
     div
-        [ dataTest <| id ++ "-timeline", class "flow-root w-full mb-8 border p-6 rounded-md" ]
+        [ dataTest id, class "flow-root w-full mb-8 border p-6 rounded-md" ]
         [ ul
             [ attribute "role" "list"
             , class "-mb-8"
@@ -33,7 +37,8 @@ view id events =
 viewEvent : Event msg -> Html msg
 viewEvent event =
     li
-        [ css
+        [ dataTest event.dataTest
+        , css
             [ lastChild
                 [ descendants [ typeSelector ".divider" [ display none ] ] ]
             ]

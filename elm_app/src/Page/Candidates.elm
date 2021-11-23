@@ -47,12 +47,14 @@ type alias Grades =
 type alias SurveyEvent =
     { date : String
     , grades : Grades
+    , timestamp : Int
     }
 
 
 type alias StatusEvent =
     { date : String
     , status : Status
+    , timestamp : Int
     }
 
 
@@ -200,6 +202,10 @@ Vos réponses à ce questionnaire sont précieuses pour nous, afin d'évaluer vo
 viewProfile : Candidate -> Html msg
 viewProfile candidate =
     let
+        maxSafeInteger : Int
+        maxSafeInteger =
+            9007199254740991
+
         successSurveyEvent : SurveyEvent -> Timeline.Event msg
         successSurveyEvent survey =
             { content =
@@ -210,7 +216,9 @@ viewProfile candidate =
                     , Grade.view "Obtention" survey.grades.obtainment
                     ]
                 ]
+            , dataTest = "survey"
             , status = Timeline.Success survey.date
+            , timestamp = survey.timestamp
             }
 
         surveyHistory : List (Timeline.Event msg)
@@ -218,7 +226,9 @@ viewProfile candidate =
             case candidate.surveys of
                 [ submission ] ->
                     [ { content = [ text "En attente du deuxième passage" ]
+                      , dataTest = "survey-pending"
                       , status = Timeline.Pending
+                      , timestamp = maxSafeInteger
                       }
                     , successSurveyEvent submission
                     ]
@@ -229,7 +239,9 @@ viewProfile candidate =
         successStatusEvent : StatusEvent -> Timeline.Event msg
         successStatusEvent event =
             { content = [ text <| Status.toString event.status ]
+            , dataTest = "status"
             , status = Timeline.Success event.date
+            , timestamp = event.timestamp
             }
 
         statusHistory : List (Timeline.Event msg)
@@ -243,11 +255,18 @@ viewProfile candidate =
                 |> Maybe.map
                     (\next ->
                         { content = [ text next ]
+                        , dataTest = "status-pending"
                         , status = Timeline.Pending
+                        , timestamp = maxSafeInteger
                         }
                             :: events
                     )
                 |> Maybe.withDefault events
+
+        eventHistory =
+            (surveyHistory ++ statusHistory)
+                |> List.sortBy (\event -> event.timestamp)
+                |> List.reverse
 
         baseUrl =
             "https://reva.beta.gouv.fr"
@@ -349,7 +368,7 @@ viewProfile candidate =
                 [ div [ class "text-sm flex items-center justify-between" ]
                     [ h3
                         [ class "font-medium text-gray-500" ]
-                        [ text "Questionnaires" ]
+                        [ text "Évènement" ]
                     , a
                         [ dataTest "survey-invitation"
                         , class "py-2 text-blue-500 hover:text-blue-700"
@@ -358,20 +377,7 @@ viewProfile candidate =
                         ]
                         [ text "Inviter à passer à nouveau le questionnaire" ]
                     ]
-                , Timeline.view "survey" surveyHistory
-                , div [ class "text-sm flex items-center justify-between" ]
-                    [ h3
-                        [ class "font-medium text-gray-500" ]
-                        [ text "Statut" ]
-                    , a
-                        [ dataTest "survey-invitation"
-                        , class "py-2 text-blue-500 hover:text-blue-700"
-                        , href surveyEmailLink
-                        , target "_blank"
-                        ]
-                        [ text "Mettre à jour le statut" ]
-                    ]
-                , Timeline.view "status" statusHistory
+                , Timeline.view "survey-timeline" eventHistory
                 , dl
                     [ class "grid grid-cols-1 gap-x-4 gap-y-8 2xl:grid-cols-2" ]
                     [ candidate.phoneNumber
@@ -567,6 +573,7 @@ surveyDecoder =
     Decode.succeed SurveyEvent
         |> required "date" Decode.string
         |> optional "grades" gradeDecoder { obtainment = Grade.Unknown, profile = Grade.Unknown }
+        |> required "timestamp" Decode.int
 
 
 statusDecoder : Decoder StatusEvent
@@ -574,6 +581,7 @@ statusDecoder =
     Decode.succeed StatusEvent
         |> required "date" Decode.string
         |> required "name" (Decode.string |> Decode.map Status.fromString)
+        |> required "timestamp" Decode.int
 
 
 candidateDecoder : Decoder Candidate

@@ -204,7 +204,11 @@ update msg model =
             , Cmd.none
             )
 
-        ( GotCandidatesResponse _, LoggedIn _ _ ) ->
+        ( GotCandidatesResponse err, LoggedIn _ _ ) ->
+            let
+                _ =
+                    Debug.log "" err
+            in
             ( model, Cmd.none )
 
         ( GotLoginError error, NotLoggedIn state ) ->

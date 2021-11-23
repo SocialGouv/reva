@@ -42,7 +42,7 @@ toString status =
             "Reçu dans l'expérimentation"
 
         Pending ->
-            "Dossier soumis au jury, en attente des résultats"
+            "Dossier soumis au jury"
 
         AcceptedAt Partial ->
             "Reçu partiellement"
