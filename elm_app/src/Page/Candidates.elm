@@ -236,11 +236,11 @@ viewProfile candidate =
                 l ->
                     List.map successSurveyEvent l
 
-        successStatusEvent : StatusEvent -> Timeline.Event msg
-        successStatusEvent event =
+        statusEvent : StatusEvent -> Timeline.Event msg
+        statusEvent event =
             { content = [ text <| Status.toString event.status ]
             , dataTest = "status"
-            , status = Timeline.Success event.date
+            , status = Status.toTimelineStatus event.status event.date
             , timestamp = event.timestamp
             }
 
@@ -248,7 +248,7 @@ viewProfile candidate =
         statusHistory =
             let
                 events =
-                    List.map successStatusEvent candidate.status
+                    List.map statusEvent candidate.status
             in
             List.head candidate.status
                 |> Maybe.andThen (.status >> Status.toNextStepString)

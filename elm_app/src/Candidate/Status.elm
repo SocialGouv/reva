@@ -1,6 +1,7 @@
-module Candidate.Status exposing (Status(..), fromString, toNextStepString, toString)
+module Candidate.Status exposing (Status(..), fromString, toNextStepString, toString, toTimelineStatus)
 
 import Candidate.Grade exposing (Grade(..))
+import View.Timeline as Timeline
 
 
 type Status
@@ -58,6 +59,16 @@ toString status =
 
         Unknown ->
             "Statut introuvable"
+
+
+toTimelineStatus : Status -> (String -> Timeline.Status)
+toTimelineStatus status =
+    case status of
+        RejectedBy _ ->
+            Timeline.Failure
+
+        _ ->
+            Timeline.Success
 
 
 toNextStepString : Status -> Maybe String

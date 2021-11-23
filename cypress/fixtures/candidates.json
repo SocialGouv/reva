@@ -123,12 +123,12 @@
     "surveys": [
       {
         "date": "2 nov. 2021, 15:56",
-        "grades": { "obtainment": "D", "profile": "C" },
+        "grades": { "obtainment": "B", "profile": "A" },
         "timestamp": 3
       },
       {
         "date": "20 oct. 2021, 11:53",
-        "grades": { "obtainment": "B", "profile": "A" },
+        "grades": { "obtainment": "D", "profile": "C" },
         "timestamp": 1
       }
     ]

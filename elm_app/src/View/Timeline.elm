@@ -9,7 +9,8 @@ import View.Icons as Icons
 
 
 type Status
-    = Success String
+    = Failure String
+    | Success String
     | Pending
 
 
@@ -79,6 +80,9 @@ viewEvent event =
 statusToClass : Status -> String
 statusToClass status =
     case status of
+        Failure _ ->
+            "bg-red-500"
+
         Success _ ->
             "bg-green-500"
 
@@ -88,11 +92,18 @@ statusToClass status =
 
 statusToDate : Status -> Html msg
 statusToDate status =
-    case status of
-        Success date ->
+    let
+        dateTime date =
             div
                 [ class "text-right text-sm whitespace-nowrap text-gray-500" ]
                 [ time [] [ text date ] ]
+    in
+    case status of
+        Failure date ->
+            dateTime date
+
+        Success date ->
+            dateTime date
 
         Pending ->
             text ""
@@ -101,6 +112,9 @@ statusToDate status =
 statusToIcon : Status -> Html msg
 statusToIcon status =
     case status of
+        Failure _ ->
+            Icons.failure
+
         Success _ ->
             Icons.success
 
