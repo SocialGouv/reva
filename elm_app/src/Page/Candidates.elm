@@ -204,7 +204,7 @@ viewProfile candidate =
     let
         maxSafeInteger : Int
         maxSafeInteger =
-            9007199254740991
+            2147483647
 
         successSurveyEvent : SurveyEvent -> Timeline.Event msg
         successSurveyEvent survey =
@@ -217,7 +217,7 @@ viewProfile candidate =
                     ]
                 ]
             , dataTest = "survey"
-            , status = Timeline.Success survey.date
+            , status = Timeline.Commented survey.date
             , timestamp = survey.timestamp
             }
 
@@ -225,8 +225,8 @@ viewProfile candidate =
         surveyHistory =
             case ( isRejected candidate, candidate.surveys ) of
                 ( False, [ submission ] ) ->
-                    [ { content = [ text "En attente du deuxième passage" ]
-                      , dataTest = "pending-survey"
+                    [ { content = [ text "En attente d'un deuxième passage du questionnaire" ]
+                      , dataTest = "survey"
                       , status = Timeline.Pending
                       , timestamp = maxSafeInteger
                       }
@@ -248,14 +248,16 @@ viewProfile candidate =
         statusHistory =
             let
                 events =
-                    List.map statusEvent candidate.statusHistory
+                    candidate.statusHistory
+                        |> List.filter (.status >> Status.isVisible)
+                        |> List.map statusEvent
             in
             List.head candidate.statusHistory
                 |> Maybe.andThen (.status >> Status.toNextStepString)
                 |> Maybe.map
                     (\next ->
                         { content = [ text next ]
-                        , dataTest = "pending-status"
+                        , dataTest = "status"
                         , status = Timeline.Pending
                         , timestamp = maxSafeInteger - 1
                         }
@@ -264,7 +266,8 @@ viewProfile candidate =
                 |> Maybe.withDefault events
 
         eventHistory =
-            (surveyHistory ++ statusHistory)
+            statusHistory
+                ++ surveyHistory
                 |> List.sortBy (\event -> event.timestamp)
                 |> List.reverse
 

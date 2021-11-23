@@ -185,12 +185,22 @@
     },
     "status": [
       {
-        "name": "rejected_by_adviser",
+        "name": "rejected_by_jury",
+        "date": "30 nov. 2021, 10:13",
+        "timestamp": 7
+      },
+      {
+        "name": "pending",
+        "date": "14 nov. 2021, 10:13",
+        "timestamp": 6
+      },
+      {
+        "name": "reviewed",
         "date": "8 nov. 2021, 14:19",
         "timestamp": 4
       },
       {
-        "name": "estimated_negative",
+        "name": "estimated_uncertain",
         "date": "2 nov. 2021, 11:11",
         "timestamp": 3
       },
@@ -201,6 +211,11 @@
       }
     ],
     "surveys": [
+      {
+        "date": "10 nov. 2021, 17:23",
+        "grades": { "obtainment": "C", "profile": "D" },
+        "timestamp": 5
+      },
       {
         "date": "29 sept. 2021, 10:23",
         "grades": { "obtainment": "C", "profile": "D" },

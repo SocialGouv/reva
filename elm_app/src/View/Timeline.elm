@@ -9,9 +9,10 @@ import View.Icons as Icons
 
 
 type Status
-    = Failure String
-    | Success String
+    = Accepted String
+    | Commented String
     | Pending
+    | Rejected String
 
 
 type alias Event msg =
@@ -38,7 +39,7 @@ view id events =
 viewEvent : Event msg -> Html msg
 viewEvent event =
     li
-        [ dataTest event.dataTest
+        [ dataTest <| statusToString event.status ++ "-" ++ event.dataTest
         , css
             [ lastChild
                 [ descendants [ typeSelector ".divider" [ display none ] ] ]
@@ -80,14 +81,17 @@ viewEvent event =
 statusToClass : Status -> String
 statusToClass status =
     case status of
-        Failure _ ->
-            "bg-red-500"
-
-        Success _ ->
+        Accepted _ ->
             "bg-green-500"
+
+        Commented _ ->
+            "bg-blue-600"
 
         Pending ->
             "bg-gray-300"
+
+        Rejected _ ->
+            "bg-red-500"
 
 
 statusToDate : Status -> Html msg
@@ -99,24 +103,46 @@ statusToDate status =
                 [ time [] [ text date ] ]
     in
     case status of
-        Failure date ->
+        Accepted date ->
             dateTime date
 
-        Success date ->
+        Commented date ->
             dateTime date
 
         Pending ->
             text ""
 
+        Rejected date ->
+            dateTime date
+
 
 statusToIcon : Status -> Html msg
 statusToIcon status =
     case status of
-        Failure _ ->
-            Icons.failure
+        Accepted _ ->
+            Icons.accepted
 
-        Success _ ->
-            Icons.success
+        Commented _ ->
+            Icons.commented
 
         Pending ->
             Icons.pending
+
+        Rejected _ ->
+            Icons.rejected
+
+
+statusToString : Status -> String
+statusToString status =
+    case status of
+        Accepted _ ->
+            "accepted"
+
+        Commented _ ->
+            "commented"
+
+        Pending ->
+            "pending"
+
+        Rejected _ ->
+            "rejected"

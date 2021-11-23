@@ -1,4 +1,4 @@
-module View.Icons exposing (candidates, chevronLeft, close, dot, failure, filter, mail, menu, pending, search, signout, success, user, userLarge)
+module View.Icons exposing (accepted, candidates, chevronLeft, close, commented, dot, filter, mail, menu, pending, rejected, search, signout, user, userLarge)
 
 import Html.Styled exposing (Html)
 import Html.Styled.Attributes as Attr exposing (attribute)
@@ -87,13 +87,13 @@ dot =
 -- Timeline icons
 
 
-success : Html msg
-success =
+accepted : Html msg
+accepted =
     svg
         [ class "h-4 w-4 text-white"
         , viewBox "0 0 20 20"
         , fill "currentColor"
-        , Attr.attribute "aria-hidden" "true"
+        , attribute "aria-hidden" "true"
         ]
         [ Svg.path
             [ fillRule "evenodd"
@@ -104,18 +104,17 @@ success =
         ]
 
 
-failure : Html msg
-failure =
+commented : Html msg
+commented =
     svg
         [ class "h-4 w-4 text-white"
         , viewBox "0 0 20 20"
         , fill "currentColor"
-        , attribute "aria-hidden" "true"
         ]
         [ Svg.path
-            [ fillRule "evenodd"
-            , d "M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-            , clipRule "evenodd"
+            [ attribute "fillrule" "evenodd"
+            , d "M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+            , attribute "cliprule" "evenodd"
             ]
             []
         ]
@@ -127,8 +126,26 @@ pending =
         [ class "h-4 w-4 text-white"
         , viewBox "0 0 20 20"
         , fill "currentColor"
+        , attribute "aria-hidden" "true"
         ]
         [ Svg.path
             [ d "M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" ]
+            []
+        ]
+
+
+rejected : Html msg
+rejected =
+    svg
+        [ class "h-4 w-4 text-white"
+        , viewBox "0 0 20 20"
+        , fill "currentColor"
+        , attribute "aria-hidden" "true"
+        ]
+        [ Svg.path
+            [ fillRule "evenodd"
+            , d "M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+            , clipRule "evenodd"
+            ]
             []
         ]

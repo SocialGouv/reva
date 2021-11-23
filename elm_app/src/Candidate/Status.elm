@@ -1,4 +1,4 @@
-module Candidate.Status exposing (Status(..), fromString, toNextStepString, toString, toTimelineStatus)
+module Candidate.Status exposing (Status(..), fromString, isVisible, toNextStepString, toString, toTimelineStatus)
 
 import Candidate.Grade exposing (Grade(..))
 import View.Timeline as Timeline
@@ -28,6 +28,19 @@ type Rate
 type Board
     = Adviser
     | Jury
+
+
+isVisible : Status -> Bool
+isVisible status =
+    case status of
+        Estimated _ ->
+            False
+
+        Submitted ->
+            False
+
+        _ ->
+            True
 
 
 toString : Status -> String
@@ -65,10 +78,10 @@ toTimelineStatus : Status -> (String -> Timeline.Status)
 toTimelineStatus status =
     case status of
         RejectedBy _ ->
-            Timeline.Failure
+            Timeline.Rejected
 
         _ ->
-            Timeline.Success
+            Timeline.Accepted
 
 
 toNextStepString : Status -> Maybe String

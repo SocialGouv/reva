@@ -93,6 +93,7 @@ describe('List all candidates', () => {
       cy.get('@directoryItems').eq(3).click()
       cy.get('[data-test=pending-survey]').should('not.exist')
       cy.get('[data-test=pending-status]').should('not.exist')
+      cy.get('[data-test=rejected-status]').should('exist')
     })
 
     it('show a link to pass again the survey', function () {
