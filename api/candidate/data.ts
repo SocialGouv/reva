@@ -63,6 +63,7 @@ export const getCandidates = async (user: {
       id: r.diplome_id,
       label: r.diplome_label,
     },
+    metaSkill: [],
     status: [],
     surveys: r.survey_dates.map(createSurvey),
   }))

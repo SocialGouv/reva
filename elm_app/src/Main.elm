@@ -50,6 +50,7 @@ type Msg
     | UserClickedLink Browser.UrlRequest
     | UserLoggedOut
     | UserSelectedCandidate Candidate
+    | UserSelectedCandidateTab Candidates.Tab
     | UserAddedFilter String
     | GotLoginError String
       -- PROFILE
@@ -93,7 +94,8 @@ viewPage model =
         config =
             { onFilter = UserAddedFilter
             , onLogout = UserLoggedOut
-            , onSelect = UserSelectedCandidate
+            , onSelectCandidate = UserSelectedCandidate
+            , onSelectTab = UserSelectedCandidateTab
             }
     in
     case model.state of
@@ -157,6 +159,16 @@ update msg model =
             , Cmd.none
             )
 
+        ( UserSelectedCandidateTab tab, LoggedIn token (Home candidatesModel) ) ->
+            ( { model
+                | state =
+                    Candidates.selectCandidateTab candidatesModel tab
+                        |> Home
+                        |> LoggedIn token
+              }
+            , Cmd.none
+            )
+
         ( UserLoggedOut, LoggedIn _ _ ) ->
             ( model, removeToken () )
 
@@ -204,7 +216,11 @@ update msg model =
             , Cmd.none
             )
 
-        ( GotCandidatesResponse _, LoggedIn _ _ ) ->
+        ( GotCandidatesResponse err, LoggedIn _ _ ) ->
+            let
+                _ =
+                    Debug.log "" err
+            in
             ( model, Cmd.none )
 
         ( GotLoginError error, NotLoggedIn state ) ->

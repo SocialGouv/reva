@@ -1,15 +1,18 @@
 module Page.Candidates exposing
     ( Candidate
     , Model
+    , Tab(..)
     , addFilter
     , candidatesDecoder
     , init
     , receiveCandidates
     , selectCandidate
+    , selectCandidateTab
     , view
     )
 
 import Candidate.Grade as Grade exposing (Grade)
+import Candidate.MetaSkill exposing (MetaSkill)
 import Candidate.Status as Status exposing (Status(..))
 import Css exposing (height, px)
 import Html.Styled exposing (Html, a, article, aside, button, dd, div, dl, dt, h1, h2, h3, input, label, li, nav, node, p, span, text, ul)
@@ -23,12 +26,14 @@ import Url
 import Url.Builder
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
+import View.Navigation as Navigation
 import View.Timeline as Timeline
 
 
 type alias Model =
     { filter : Maybe String
     , selected : Maybe Candidate
+    , tab : Tab
     , state : State
     }
 
@@ -36,6 +41,12 @@ type alias Model =
 type State
     = Loading
     | Idle (List Candidate)
+
+
+type Tab
+    = Events
+    | Recognition
+    | Profil
 
 
 type alias Grades =
@@ -64,6 +75,7 @@ type alias Candidate =
     , email : String
     , firstname : String
     , lastname : String
+    , metaSkills : List MetaSkill
     , phoneNumber : String
     , statusHistory : List StatusEvent
     , surveys : List SurveyEvent
@@ -88,6 +100,7 @@ init =
     { filter = Nothing
     , selected = Nothing
     , state = Loading
+    , tab = Events
     }
 
 
@@ -99,6 +112,11 @@ receiveCandidates model candidates =
 selectCandidate : Model -> Candidate -> Model
 selectCandidate model candidate =
     { model | selected = Just candidate }
+
+
+selectCandidateTab : Model -> Tab -> Model
+selectCandidateTab model tab =
+    { model | tab = tab }
 
 
 addFilter : Model -> String -> Model
@@ -128,7 +146,8 @@ filterCandidate filter candidate =
 view :
     { a
         | onFilter : String -> msg
-        , onSelect : Candidate -> msg
+        , onSelectCandidate : Candidate -> msg
+        , onSelectTab : Tab -> msg
     }
     -> Model
     -> Html msg
@@ -148,7 +167,11 @@ view config model =
 
 
 viewContent :
-    { a | onFilter : String -> msg, onSelect : Candidate -> msg }
+    { a
+        | onFilter : String -> msg
+        , onSelectCandidate : Candidate -> msg
+        , onSelectTab : Tab -> msg
+    }
     -> Model
     -> List Candidate
     -> Html msg
@@ -177,7 +200,7 @@ viewContent config model candidates =
             ]
         , div
             [ class "flex-1 relative z-0 flex overflow-hidden" ]
-            [ Maybe.map viewProfile model.selected
+            [ Maybe.map (viewProfile config) model.selected
                 |> Maybe.withDefault (div [ class "h-full w-full bg-gray-500" ] [])
             , viewDirectoryPanel config candidates
             ]
@@ -199,8 +222,8 @@ Vos réponses à ce questionnaire sont précieuses pour nous, afin d'évaluer vo
 %5B Signature %5D"""
 
 
-viewProfile : Candidate -> Html msg
-viewProfile candidate =
+viewProfile : { a | onSelectTab : Tab -> msg } -> Candidate -> Html msg
+viewProfile config candidate =
     let
         maxSafeInteger : Int
         maxSafeInteger =
@@ -348,21 +371,13 @@ viewProfile candidate =
                     ]
                 ]
             , div
-                [ class "mt-0" ]
+                [ class "mt-4 border-b border-gray-200" ]
                 [ div
-                    [ class "border-b border-gray-200" ]
-                    [ div
-                        [ class "max-w-2xl mx-auto px-4 sm:px-6 lg:px-8" ]
-                        [ nav
-                            [ class "-mb-px flex space-x-8", attribute "aria-label" "Tabs" ]
-                            [ a
-                                [ href "#", class "border-indigo-500 text-gray-900 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm", attribute "aria-current" "page" ]
-                                [ text "Profil" ]
-
-                            -- , a
-                            --     [ href "#", class "text-gray-900 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm", attribute "aria-current" "page" ]
-                            --     [ text "Questionnaires" ]
-                            ]
+                    [ class "max-w-2xl mx-auto px-4 sm:px-6 lg:px-8" ]
+                    [ Navigation.view
+                        [ ( "Évènements", config.onSelectTab Events, True )
+                        , ( "Reconnaissance", config.onSelectTab Recognition, False )
+                        , ( "Profil", config.onSelectTab Profil, False )
                         ]
                     ]
                 ]
@@ -420,7 +435,7 @@ viewInfo label value =
 viewDirectoryPanel :
     { a
         | onFilter : String -> msg
-        , onSelect : Candidate -> msg
+        , onSelectCandidate : Candidate -> msg
     }
     -> List Candidate
     -> Html msg
@@ -472,7 +487,7 @@ viewDirectoryPanel config candidates =
         ]
 
 
-viewDirectory : { a | onSelect : Candidate -> msg } -> ( Candidate, List Candidate ) -> Html msg
+viewDirectory : { a | onSelectCandidate : Candidate -> msg } -> ( Candidate, List Candidate ) -> Html msg
 viewDirectory config ( firstCandidate, candidates ) =
     let
         groupName =
@@ -492,7 +507,7 @@ viewDirectory config ( firstCandidate, candidates ) =
         ]
 
 
-viewItem : { a | onSelect : Candidate -> msg } -> Candidate -> Html msg
+viewItem : { a | onSelectCandidate : Candidate -> msg } -> Candidate -> Html msg
 viewItem config candidate =
     li
         [ dataTest "directory-item" ]
@@ -503,7 +518,7 @@ viewItem config candidate =
             , div
                 [ class "flex-1 min-w-0" ]
                 [ a
-                    [ onClick (config.onSelect candidate)
+                    [ onClick (config.onSelectCandidate candidate)
                     , href "#"
                     , class "focus:outline-none"
                     ]
@@ -597,6 +612,14 @@ statusDecoder =
         |> required "timestamp" Decode.int
 
 
+metaSkillDecoder : Decoder MetaSkill
+metaSkillDecoder =
+    Decode.succeed MetaSkill
+        |> required "id" Decode.string
+        |> required "name" Decode.string
+        |> required "comment" Decode.string
+
+
 candidateDecoder : Decoder Candidate
 candidateDecoder =
     Decode.succeed Candidate
@@ -605,6 +628,7 @@ candidateDecoder =
         |> required "email" Decode.string
         |> required "firstname" Decode.string
         |> required "lastname" Decode.string
+        |> required "metaSkill" (Decode.list metaSkillDecoder)
         |> required "phoneNumber" Decode.string
         |> required "status" (Decode.list statusDecoder)
         |> required "surveys" (Decode.list surveyDecoder)
