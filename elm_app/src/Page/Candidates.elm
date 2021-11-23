@@ -65,7 +65,7 @@ type alias Candidate =
     , firstname : String
     , lastname : String
     , phoneNumber : String
-    , status : List StatusEvent
+    , statusHistory : List StatusEvent
     , surveys : List SurveyEvent
     }
 
@@ -223,17 +223,17 @@ viewProfile candidate =
 
         surveyHistory : List (Timeline.Event msg)
         surveyHistory =
-            case candidate.surveys of
-                [ submission ] ->
+            case ( isRejected candidate, candidate.surveys ) of
+                ( False, [ submission ] ) ->
                     [ { content = [ text "En attente du deuxième passage" ]
-                      , dataTest = "survey-pending"
+                      , dataTest = "pending-survey"
                       , status = Timeline.Pending
                       , timestamp = maxSafeInteger
                       }
                     , successSurveyEvent submission
                     ]
 
-                l ->
+                ( _, l ) ->
                     List.map successSurveyEvent l
 
         statusEvent : StatusEvent -> Timeline.Event msg
@@ -248,16 +248,16 @@ viewProfile candidate =
         statusHistory =
             let
                 events =
-                    List.map statusEvent candidate.status
+                    List.map statusEvent candidate.statusHistory
             in
-            List.head candidate.status
+            List.head candidate.statusHistory
                 |> Maybe.andThen (.status >> Status.toNextStepString)
                 |> Maybe.map
                     (\next ->
                         { content = [ text next ]
-                        , dataTest = "status-pending"
+                        , dataTest = "pending-status"
                         , status = Timeline.Pending
-                        , timestamp = maxSafeInteger
+                        , timestamp = maxSafeInteger - 1
                         }
                             :: events
                     )
@@ -540,6 +540,16 @@ maybeCityToString maybeCity =
 maybeDiplomeToString : Maybe Diplome -> String
 maybeDiplomeToString maybeDiplome =
     maybeDiplome |> Maybe.map (\diplome -> diplome.label) |> Maybe.withDefault ""
+
+
+isRejected : Candidate -> Bool
+isRejected candidate =
+    case List.head candidate.statusHistory |> Maybe.map .status of
+        Just (RejectedBy _) ->
+            True
+
+        _ ->
+            False
 
 
 

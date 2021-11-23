@@ -65,6 +65,36 @@ describe('List all candidates', () => {
       cy.get('@surveyDates').eq(1).contains('20 oct. 2021, 11:53')
     })
 
+    it('show a single pending survey event (one survey passed and reviewed)', function () {
+      cy.get('@directoryItems').eq(0).click()
+      cy.get('[data-test=pending-survey]').should('exist')
+      cy.get('[data-test=pending-status]').should('not.exist')
+    })
+
+    it('show two pending events (one survey passed and not reviewed)', function () {
+      cy.get('@directoryItems').eq(1).click()
+      cy.get('[data-test=pending-survey]').should('exist')
+      cy.get('[data-test=pending-status]').should('exist')
+    })
+
+    it('show a single pending status event (two survey passed and submitted to jury)', function () {
+      cy.get('@directoryItems').eq(2).click()
+      cy.get('[data-test=pending-survey]').should('not.exist')
+      cy.get('[data-test=pending-status]').should('exist')
+    })
+
+    it('show a single pending status event (two survey passed and submitted to jury)', function () {
+      cy.get('@directoryItems').eq(2).click()
+      cy.get('[data-test=pending-survey]').should('not.exist')
+      cy.get('[data-test=pending-status]').should('exist')
+    })
+
+    it('show no pending status event when rejected', function () {
+      cy.get('@directoryItems').eq(3).click()
+      cy.get('[data-test=pending-survey]').should('not.exist')
+      cy.get('[data-test=pending-status]').should('not.exist')
+    })
+
     it('show a link to pass again the survey', function () {
       const emailLink = `mailto:rory.williams@example.com?subject=[REVA] Je vous invite à passer à nouveau le questionnaire de l'expérimentation !&body=Bonjour Rory,\n%0A%0A\nDans le cadre de votre parcours VAE au sein de l'expérimentation REVA, je vous invite à remplir à nouveau le questionnaire avant la prochaine étape de votre accompagnement :\n%0A%0A\n%5B Description de la prochaine étape %5D\n%0A%0A\nhttps%3A%2F%2Freva.beta.gouv.fr%2Finscription%3Fdiplome%3D9bbc43a9-8b51-4feb-aab0-a1b2b49d27b2%26cohorte%3D84b3218a-a5bd-4e4b-b359-8562de9b04b7%26step%3Dwelcome\n%0A%0A\nVos réponses à ce questionnaire sont précieuses pour nous, afin d'évaluer votre perception du parcours expérimental auquel vous participez. Elles nous permettent d'améliorer et de faciliter la reconnaissance et la validation de votre expérience.\n%0A%0A\n%5B Signature %5D`
       cy.get('@directoryItems').eq(3).click()

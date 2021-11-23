@@ -81,7 +81,7 @@ toNextStepString status =
             Just "En attente d'une décision de recevabilité"
 
         Reviewed ->
-            Just "Accompagnement en cours"
+            Nothing
 
         Pending ->
             Just "En attente des résultats du jury"
