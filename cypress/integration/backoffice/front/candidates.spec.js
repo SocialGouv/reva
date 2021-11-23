@@ -57,9 +57,9 @@ describe('List all candidates', () => {
   })
 
   context('open candidate details', () => {
-    it('show all survey dates', function () {
+    it.only('show all survey dates', function () {
       cy.get('@directoryItems').eq(2).click()
-      cy.get('[data-test=survey] time').as('surveyDates')
+      cy.get('[data-test=commented-survey] time').as('surveyDates')
       cy.get('@surveyDates').should('have.length', 2)
       cy.get('@surveyDates').eq(0).contains('2 nov. 2021, 15:56')
       cy.get('@surveyDates').eq(1).contains('20 oct. 2021, 11:53')
@@ -77,13 +77,7 @@ describe('List all candidates', () => {
       cy.get('[data-test=pending-status]').should('exist')
     })
 
-    it('show a single pending status event (two survey passed and submitted to jury)', function () {
-      cy.get('@directoryItems').eq(2).click()
-      cy.get('[data-test=pending-survey]').should('not.exist')
-      cy.get('[data-test=pending-status]').should('exist')
-    })
-
-    it('show a single pending status event (two survey passed and submitted to jury)', function () {
+    it('show a single pending status event (two surveys passed and submitted to jury)', function () {
       cy.get('@directoryItems').eq(2).click()
       cy.get('[data-test=pending-survey]').should('not.exist')
       cy.get('[data-test=pending-status]').should('exist')
@@ -94,6 +88,14 @@ describe('List all candidates', () => {
       cy.get('[data-test=pending-survey]').should('not.exist')
       cy.get('[data-test=pending-status]').should('not.exist')
       cy.get('[data-test=rejected-status]').should('exist')
+    })
+
+    it('show two accepted status when rejected by jury', function () {
+      cy.get('@directoryItems').eq(4).click()
+      cy.get('[data-test=pending-survey]').should('not.exist')
+      cy.get('[data-test=pending-status]').should('not.exist')
+      cy.get('[data-test=rejected-status]').should('exist')
+      cy.get('[data-test=accepted-status]').should('have.length', 2)
     })
 
     it('show a link to pass again the survey', function () {
