@@ -55,10 +55,10 @@ order by total desc;
 
 drop table if exists score_tmp;
 
-select ca.id, measures."measureId", measures."mesureLabel", measures.score, measures.max
+select ca.id, measures."measureId", measures."measureLabel", measures.score, measures.max
 into score_tmp
 from candidate_answers ca
-    , jsonb_to_recordset(ca.score->'scoresByMeasures') as measures("measureId" UUID, "mesureLabel" varchar(255), score float, max int)
+    , jsonb_to_recordset(ca.score->'scoresByMeasures') as measures("measureId" UUID, "measureLabel" varchar(255), score float, max int)
 where ca.score is not null;
 
 
@@ -81,19 +81,19 @@ CASE
       WHEN (ca.score->'grades'->>'profile')::float >= 0.44716  THEN 'C'
       ELSE 'D'
     END  as profile,
--- confiance."mesureLabel",
+-- confiance."measureLabel",
 confiance."score" as "confiance",
 confiance."max" as "confiance max",
--- experience."mesureLabel",
+-- experience."measureLabel",
 experience."score" as "experience",
 experience."max" as "experience max",
--- motivation."mesureLabel",
+-- motivation."measureLabel",
 motivation."score" as "motivation intrinseque",
 motivation."max" as "motivation intrinseque max",
--- aisance."mesureLabel",
+-- aisance."measureLabel",
 aisance."score" as "aisance numerique",
 aisance."max" as "aisance numerique max",
--- dispo."mesureLabel",
+-- dispo."measureLabel",
 dispo."score" as "disponibilite",
 dispo."max" as "disponibilite max"
 from candidate_answers ca
@@ -105,17 +105,17 @@ from candidate_answers ca
 where ca.score is not null
 -- confiance
 and ca.id = confiance.id
-and confiance."mesureLabel" = 'confiance'
+and confiance."measureLabel" = 'confiance'
 -- experience
 and ca.id = experience.id
-and experience."mesureLabel" = 'experience'
+and experience."measureLabel" = 'experience'
 -- motivation
 and ca.id = motivation.id
-and motivation."mesureLabel" = 'motivation_intrinseque'
+and motivation."measureLabel" = 'motivation_intrinseque'
 -- aisance
 and ca.id = aisance.id
-and aisance."mesureLabel" = 'aisance_numerique'
+and aisance."measureLabel" = 'aisance_numerique'
 -- dispo
 and ca.id = dispo.id
-and dispo."mesureLabel" = 'disponibilite'
+and dispo."measureLabel" = 'disponibilite'
 order by firstname, lastname, ca.created_at asc;
