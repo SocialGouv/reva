@@ -57,7 +57,7 @@ describe('List all candidates', () => {
   })
 
   context('open candidate details', () => {
-    it.only('show all survey dates', function () {
+    it('show all survey dates', function () {
       cy.get('@directoryItems').eq(2).click()
       cy.get('[data-test=commented-survey] time').as('surveyDates')
       cy.get('@surveyDates').should('have.length', 2)
