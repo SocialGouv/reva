@@ -9,18 +9,24 @@ import View.Icons as Icons
 
 
 type Status
-    = Success String
+    = Accepted String
+    | Commented String
     | Pending
+    | Rejected String
 
 
 type alias Event msg =
-    { content : List (Html msg), status : Status }
+    { content : List (Html msg)
+    , dataTest : String
+    , status : Status
+    , timestamp : Int
+    }
 
 
-view : List (Event msg) -> Html msg
-view events =
+view : String -> List (Event msg) -> Html msg
+view id events =
     div
-        [ dataTest "timeline", class "flow-root w-full mb-8 border p-6 rounded-md" ]
+        [ dataTest id, class "flow-root w-full mb-8 border p-6 rounded-md" ]
         [ ul
             [ attribute "role" "list"
             , class "-mb-8"
@@ -33,7 +39,8 @@ view events =
 viewEvent : Event msg -> Html msg
 viewEvent event =
     li
-        [ css
+        [ dataTest <| statusToString event.status ++ "-" ++ event.dataTest
+        , css
             [ lastChild
                 [ descendants [ typeSelector ".divider" [ display none ] ] ]
             ]
@@ -74,30 +81,68 @@ viewEvent event =
 statusToClass : Status -> String
 statusToClass status =
     case status of
-        Success _ ->
+        Accepted _ ->
             "bg-green-500"
+
+        Commented _ ->
+            "bg-blue-600"
 
         Pending ->
             "bg-gray-300"
 
+        Rejected _ ->
+            "bg-red-500"
+
 
 statusToDate : Status -> Html msg
 statusToDate status =
-    case status of
-        Success date ->
+    let
+        dateTime date =
             div
                 [ class "text-right text-sm whitespace-nowrap text-gray-500" ]
                 [ time [] [ text date ] ]
+    in
+    case status of
+        Accepted date ->
+            dateTime date
+
+        Commented date ->
+            dateTime date
 
         Pending ->
             text ""
+
+        Rejected date ->
+            dateTime date
 
 
 statusToIcon : Status -> Html msg
 statusToIcon status =
     case status of
-        Success _ ->
-            Icons.success
+        Accepted _ ->
+            Icons.accepted
+
+        Commented _ ->
+            Icons.commented
 
         Pending ->
             Icons.pending
+
+        Rejected _ ->
+            Icons.rejected
+
+
+statusToString : Status -> String
+statusToString status =
+    case status of
+        Accepted _ ->
+            "accepted"
+
+        Commented _ ->
+            "commented"
+
+        Pending ->
+            "pending"
+
+        Rejected _ ->
+            "rejected"

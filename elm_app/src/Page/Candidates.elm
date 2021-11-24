@@ -10,6 +10,7 @@ module Page.Candidates exposing
     )
 
 import Candidate.Grade as Grade exposing (Grade)
+import Candidate.Status as Status exposing (Status(..))
 import Css exposing (height, px)
 import Html.Styled exposing (Html, a, article, aside, button, dd, div, dl, dt, h1, h2, h3, input, label, li, nav, node, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, css, for, href, id, name, placeholder, target, type_)
@@ -43,9 +44,17 @@ type alias Grades =
     }
 
 
-type alias Survey =
+type alias SurveyEvent =
     { date : String
     , grades : Grades
+    , timestamp : Int
+    }
+
+
+type alias StatusEvent =
+    { date : String
+    , status : Status
+    , timestamp : Int
     }
 
 
@@ -56,7 +65,8 @@ type alias Candidate =
     , firstname : String
     , lastname : String
     , phoneNumber : String
-    , surveys : List Survey
+    , statusHistory : List StatusEvent
+    , surveys : List SurveyEvent
     }
 
 
@@ -192,8 +202,12 @@ Vos réponses à ce questionnaire sont précieuses pour nous, afin d'évaluer vo
 viewProfile : Candidate -> Html msg
 viewProfile candidate =
     let
-        successEvent : Survey -> Timeline.Event msg
-        successEvent survey =
+        maxSafeInteger : Int
+        maxSafeInteger =
+            2147483647
+
+        successSurveyEvent : SurveyEvent -> Timeline.Event msg
+        successSurveyEvent survey =
             { content =
                 [ text "A répondu au questionnaire"
                 , div
@@ -202,21 +216,60 @@ viewProfile candidate =
                     , Grade.view "Obtention" survey.grades.obtainment
                     ]
                 ]
-            , status = Timeline.Success survey.date
+            , dataTest = "survey"
+            , status = Timeline.Commented survey.date
+            , timestamp = survey.timestamp
             }
 
         surveyHistory : List (Timeline.Event msg)
         surveyHistory =
-            case candidate.surveys of
-                [ submission ] ->
-                    [ { content = [ text "En attente du deuxième passage" ]
+            case ( isRejected candidate, candidate.surveys ) of
+                ( False, [ submission ] ) ->
+                    [ { content = [ text "En attente d'un deuxième passage du questionnaire" ]
+                      , dataTest = "survey"
                       , status = Timeline.Pending
+                      , timestamp = maxSafeInteger
                       }
-                    , successEvent submission
+                    , successSurveyEvent submission
                     ]
 
-                l ->
-                    List.map successEvent l
+                ( _, l ) ->
+                    List.map successSurveyEvent l
+
+        statusEvent : StatusEvent -> Timeline.Event msg
+        statusEvent event =
+            { content = [ text <| Status.toString event.status ]
+            , dataTest = "status"
+            , status = Status.toTimelineStatus event.status event.date
+            , timestamp = event.timestamp
+            }
+
+        statusHistory : List (Timeline.Event msg)
+        statusHistory =
+            let
+                events =
+                    candidate.statusHistory
+                        |> List.filter (.status >> Status.isVisible)
+                        |> List.map statusEvent
+            in
+            List.head candidate.statusHistory
+                |> Maybe.andThen (.status >> Status.toNextStepString)
+                |> Maybe.map
+                    (\next ->
+                        { content = [ text next ]
+                        , dataTest = "status"
+                        , status = Timeline.Pending
+                        , timestamp = maxSafeInteger - 1
+                        }
+                            :: events
+                    )
+                |> Maybe.withDefault events
+
+        eventHistory =
+            statusHistory
+                ++ surveyHistory
+                |> List.sortBy (\event -> event.timestamp)
+                |> List.reverse
 
         baseUrl =
             "https://reva.beta.gouv.fr"
@@ -318,7 +371,7 @@ viewProfile candidate =
                 [ div [ class "text-sm flex items-center justify-between" ]
                     [ h3
                         [ class "font-medium text-gray-500" ]
-                        [ text "Événements" ]
+                        [ text "Évènements" ]
                     , a
                         [ dataTest "survey-invitation"
                         , class "py-2 text-blue-500 hover:text-blue-700"
@@ -327,7 +380,7 @@ viewProfile candidate =
                         ]
                         [ text "Inviter à passer à nouveau le questionnaire" ]
                     ]
-                , Timeline.view surveyHistory
+                , Timeline.view "survey-timeline" eventHistory
                 , dl
                     [ class "grid grid-cols-1 gap-x-4 gap-y-8 2xl:grid-cols-2" ]
                     [ candidate.phoneNumber
@@ -492,6 +545,16 @@ maybeDiplomeToString maybeDiplome =
     maybeDiplome |> Maybe.map (\diplome -> diplome.label) |> Maybe.withDefault ""
 
 
+isRejected : Candidate -> Bool
+isRejected candidate =
+    case List.head candidate.statusHistory |> Maybe.map .status of
+        Just (RejectedBy _) ->
+            True
+
+        _ ->
+            False
+
+
 
 -- DECODER
 
@@ -518,11 +581,20 @@ gradeDecoder =
         |> required "profile" (Decode.string |> Decode.map Grade.fromString)
 
 
-surveyDecoder : Decoder Survey
+surveyDecoder : Decoder SurveyEvent
 surveyDecoder =
-    Decode.succeed Survey
+    Decode.succeed SurveyEvent
         |> required "date" Decode.string
         |> optional "grades" gradeDecoder { obtainment = Grade.Unknown, profile = Grade.Unknown }
+        |> required "timestamp" Decode.int
+
+
+statusDecoder : Decoder StatusEvent
+statusDecoder =
+    Decode.succeed StatusEvent
+        |> required "date" Decode.string
+        |> required "name" (Decode.string |> Decode.map Status.fromString)
+        |> required "timestamp" Decode.int
 
 
 candidateDecoder : Decoder Candidate
@@ -534,6 +606,7 @@ candidateDecoder =
         |> required "firstname" Decode.string
         |> required "lastname" Decode.string
         |> required "phoneNumber" Decode.string
+        |> required "status" (Decode.list statusDecoder)
         |> required "surveys" (Decode.list surveyDecoder)
 
 

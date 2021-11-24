@@ -14,6 +14,7 @@ function createSurvey(date: Date) {
   return {
     date: date.toLocaleDateString('fr-FR', dateOptions),
     grades: { obtainment: 'unknown', profile: 'unknown' },
+    timestamp: 0,
   }
 }
 
@@ -62,6 +63,7 @@ export const getCandidates = async (user: {
       id: r.diplome_id,
       label: r.diplome_label,
     },
+    status: [],
     surveys: r.survey_dates.map(createSurvey),
   }))
 }

@@ -18,7 +18,7 @@ view : String -> Grade -> Html msg
 view label grade =
     span
         [ dataTest "grade"
-        , class "mr-2 mt-2 inline-flex items-center px-3 py-0.5 rounded-full text-gray-600 text-sm border"
+        , class "mr-2 mt-2 inline-flex items-center px-3 py-0.5 rounded-full font-medium text-gray-900 text-sm border"
         ]
         [ div
             [ class "-ml-1 mr-1.5 h-2 w-2"

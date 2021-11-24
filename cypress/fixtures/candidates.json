@@ -18,10 +18,28 @@
       "label": "Lyon",
       "region": "Auvergne-Rhône-Alpes"
     },
+    "status": [
+      {
+        "name": "reviewed",
+        "date": "29 oct. 2021, 17:13",
+        "timestamp": 4
+      },
+      {
+        "name": "estimated_favorable",
+        "date": "16 oct. 2021, 11:13",
+        "timestamp": 3
+      },
+      {
+        "name": "submitted",
+        "date": "15 oct. 2021, 10:23",
+        "timestamp": 2
+      }
+    ],
     "surveys": [
       {
         "date": "15 oct. 2021, 10:23",
-        "grades": { "obtainment": "A", "profile": "B" }
+        "grades": { "obtainment": "A", "profile": "B" },
+        "timestamp": 1
       }
     ]
   },
@@ -40,10 +58,23 @@
       "label": "Nice",
       "region": "Provence-Alpes-Côte d'Azur"
     },
+    "status": [
+      {
+        "name": "estimated_favorable",
+        "date": "12 oct. 2021, 10:11",
+        "timestamp": 3
+      },
+      {
+        "name": "submitted",
+        "date": "10 oct. 2021, 12:27",
+        "timestamp": 2
+      }
+    ],
     "surveys": [
       {
         "date": "10 oct. 2021, 12:27",
-        "grades": { "obtainment": "A", "profile": "B" }
+        "grades": { "obtainment": "A", "profile": "B" },
+        "timestamp": 1
       }
     ]
   },
@@ -62,14 +93,38 @@
       "label": "Toulouse",
       "region": "Occitanie"
     },
-    "surveys": [
+    "status": [
       {
-        "date": "20 oct. 2021, 11:53",
-        "grades": { "obtainment": "B", "profile": "A" }
+        "name": "pending",
+        "date": "17 nov. 2021, 12:13",
+        "timestamp": 6
       },
       {
+        "name": "reviewed",
+        "date": "7 nov. 2021, 16:13",
+        "timestamp": 5
+      },
+      {
+        "name": "estimated_favorable",
+        "date": "4 nov. 2021, 10:11",
+        "timestamp": 4
+      },
+      {
+        "name": "submitted",
+        "date": "20 oct. 2021, 11:53",
+        "timestamp": 2
+      }
+    ],
+    "surveys": [
+      {
         "date": "2 nov. 2021, 15:56",
-        "grades": { "obtainment": "D", "profile": "C" }
+        "grades": { "obtainment": "B", "profile": "A" },
+        "timestamp": 3
+      },
+      {
+        "date": "20 oct. 2021, 11:53",
+        "grades": { "obtainment": "D", "profile": "C" },
+        "timestamp": 1
       }
     ]
   },
@@ -88,10 +143,28 @@
       "label": "Lyon",
       "region": "Auvergne-Rhône-Alpes"
     },
+    "status": [
+      {
+        "name": "rejected_by_adviser",
+        "date": "7 nov. 2021, 16:13",
+        "timestamp": 4
+      },
+      {
+        "name": "estimated_negative",
+        "date": "4 nov. 2021, 10:11",
+        "timestamp": 3
+      },
+      {
+        "name": "submitted",
+        "date": "2 nov. 2021, 15:23",
+        "timestamp": 2
+      }
+    ],
     "surveys": [
       {
         "date": "2 nov. 2021, 15:23",
-        "grades": { "obtainment": "unknown", "profile": "D" }
+        "grades": { "obtainment": "unknown", "profile": "D" },
+        "timestamp": 1
       }
     ]
   },
@@ -110,10 +183,43 @@
       "label": "Cergy",
       "region": "Île-de-France"
     },
+    "status": [
+      {
+        "name": "rejected_by_jury",
+        "date": "30 nov. 2021, 10:13",
+        "timestamp": 7
+      },
+      {
+        "name": "pending",
+        "date": "14 nov. 2021, 10:13",
+        "timestamp": 6
+      },
+      {
+        "name": "reviewed",
+        "date": "8 nov. 2021, 14:19",
+        "timestamp": 4
+      },
+      {
+        "name": "estimated_uncertain",
+        "date": "2 nov. 2021, 11:11",
+        "timestamp": 3
+      },
+      {
+        "name": "submitted",
+        "date": "29 sept. 2021, 10:23",
+        "timestamp": 2
+      }
+    ],
     "surveys": [
       {
+        "date": "10 nov. 2021, 17:23",
+        "grades": { "obtainment": "C", "profile": "D" },
+        "timestamp": 5
+      },
+      {
         "date": "29 sept. 2021, 10:23",
-        "grades": { "obtainment": "C", "profile": "D" }
+        "grades": { "obtainment": "C", "profile": "D" },
+        "timestamp": 1
       }
     ]
   }
