@@ -1,9 +1,9 @@
 module Api exposing (..)
 
+import Candidate exposing (Candidate)
 import Http
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Page.Candidates exposing (Candidate)
 
 
 login : (Result Http.Error String -> msg) -> { a | email : String, password : String } -> Cmd msg
@@ -24,7 +24,7 @@ fetchCandidates msg payload =
             ]
         , url = "/api/candidates"
         , body = Http.emptyBody
-        , expect = Http.expectJson msg Page.Candidates.candidatesDecoder
+        , expect = Http.expectJson msg (Decode.list Candidate.decoder)
         , timeout = Nothing
         , tracker = Nothing
         }

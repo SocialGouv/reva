@@ -3,14 +3,16 @@ port module Main exposing (main)
 import Api
 import Browser
 import Browser.Navigation as Nav
+import Candidate exposing (Candidate)
 import Html.Styled exposing (Html, div, toUnstyled)
 import Http
-import Page.Candidates as Candidates exposing (Candidate, Model)
+import Page.Candidates as Candidates exposing (Model)
 import Page.Login
 import Route exposing (Route(..))
 import Url exposing (Url)
 import Validate
 import View
+import View.Candidate
 
 
 type alias Flags =
@@ -50,7 +52,7 @@ type Msg
     | UserClickedLink Browser.UrlRequest
     | UserLoggedOut
     | UserSelectedCandidate Candidate
-    | UserSelectedCandidateTab Candidates.Tab
+    | UserSelectedCandidateTab View.Candidate.Tab
     | UserAddedFilter String
     | GotLoginError String
       -- PROFILE
@@ -217,10 +219,6 @@ update msg model =
             )
 
         ( GotCandidatesResponse err, LoggedIn _ _ ) ->
-            let
-                _ =
-                    Debug.log "" err
-            in
             ( model, Cmd.none )
 
         ( GotLoginError error, NotLoggedIn state ) ->
