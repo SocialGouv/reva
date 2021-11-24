@@ -15,6 +15,7 @@ import Html.Styled.Attributes exposing (action, attribute, class, for, href, id,
 import Html.Styled.Events exposing (onClick, onInput)
 import List.Extra
 import View.Candidate exposing (Tab(..))
+import View.Candidate.Recognition
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 
@@ -83,6 +84,7 @@ filterCandidate filter candidate =
 view :
     { a
         | onFilter : String -> msg
+        , onRecognitionStep : View.Candidate.Recognition.Step -> msg
         , onSelectCandidate : Candidate -> msg
         , onSelectTab : Tab -> msg
     }
@@ -106,6 +108,7 @@ view config model =
 viewContent :
     { a
         | onFilter : String -> msg
+        , onRecognitionStep : View.Candidate.Recognition.Step -> msg
         , onSelectCandidate : Candidate -> msg
         , onSelectTab : Tab -> msg
     }

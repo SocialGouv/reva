@@ -96,6 +96,7 @@ viewPage model =
         config =
             { onFilter = UserAddedFilter
             , onLogout = UserLoggedOut
+            , onRecognitionStep = \step -> UserSelectedCandidateTab (View.Candidate.Recognition step)
             , onSelectCandidate = UserSelectedCandidate
             , onSelectTab = UserSelectedCandidateTab
             }
