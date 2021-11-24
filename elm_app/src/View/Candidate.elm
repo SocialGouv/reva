@@ -85,9 +85,21 @@ layout config tab candidate =
                 [ div
                     [ class "max-w-2xl mx-auto px-4 sm:px-6 lg:px-8" ]
                     [ Navigation.view
-                        [ ( "Évènements", config.onSelectTab Events, tab == Events )
-                        , ( "Reconnaissance", config.onSelectTab Recognition, tab == Recognition )
-                        , ( "Profil", config.onSelectTab Profil, tab == Profil )
+                        [ { dataTest = "events"
+                          , name = "Évènements"
+                          , selected = tab == Events
+                          , toMsg = config.onSelectTab Events
+                          }
+                        , { dataTest = "recognition"
+                          , name = "Reconnaissance"
+                          , selected = tab == Recognition
+                          , toMsg = config.onSelectTab Recognition
+                          }
+                        , { dataTest = "profile"
+                          , name = "Profil"
+                          , selected = tab == Profil
+                          , toMsg = config.onSelectTab Profil
+                          }
                         ]
                     ]
                 ]
@@ -231,15 +243,17 @@ events candidate =
 profile : Candidate -> List (Html msg)
 profile candidate =
     let
-        viewInfo : String -> Html msg -> Html msg
-        viewInfo label value =
+        viewInfo : String -> String -> Html msg -> Html msg
+        viewInfo dataTestId label value =
             div
                 [ class "sm:col-span-1" ]
                 [ dt
                     [ class "text-sm font-medium text-gray-500" ]
                     [ text label ]
                 , dd
-                    [ class "mt-1 text-sm text-gray-900" ]
+                    [ dataTest dataTestId
+                    , class "mt-1 text-sm text-gray-900"
+                    ]
                     [ value ]
                 ]
     in
@@ -247,18 +261,18 @@ profile candidate =
         [ class "grid grid-cols-1 gap-x-4 gap-y-8 2xl:grid-cols-2" ]
         [ candidate.phoneNumber
             |> text
-            |> viewInfo "Téléphone"
+            |> viewInfo "phone-number" "Téléphone"
         , a
             [ class "text-blue-500 hover:text-blue-600 truncate"
             , href ("mailto:" ++ candidate.email)
             ]
             [ text candidate.email ]
-            |> viewInfo "Email"
+            |> viewInfo "email" "Email"
         , Candidate.maybeDiplomeToString candidate.diplome
             |> text
-            |> viewInfo "Diplôme"
+            |> viewInfo "diplome" "Diplôme"
         , Candidate.maybeCityToString candidate.city
             |> text
-            |> viewInfo "Ville"
+            |> viewInfo "city" "Ville"
         ]
     ]
