@@ -14,7 +14,7 @@ function createSurvey(date: Date) {
   return {
     date: date.toLocaleDateString('fr-FR', dateOptions),
     grades: { obtainment: 'unknown', profile: 'unknown' },
-    timestamp: 0,
+    timestamp: date.getTime(),
   }
 }
 
