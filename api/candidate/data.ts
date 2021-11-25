@@ -2,7 +2,7 @@ import { isAdmin } from '../auth/data'
 
 const pg = require('../pg')
 
-function createSurvey(survey: { grades: { obtainment: number, profile: number }, createdAt: Date }) {
+function createSurvey(survey: { grades: { obtainment: number, profile: number }, createdAt: string }) {
   const dateOptions: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'short',
@@ -11,13 +11,15 @@ function createSurvey(survey: { grades: { obtainment: number, profile: number },
     minute: '2-digit',
   }
 
+  const createdAtDate = new Date(survey.createdAt)
+
   return {
-    date: survey.createdAt.toLocaleDateString('fr-FR', dateOptions),
+    date: createdAtDate.toLocaleDateString('fr-FR', dateOptions),
     grades: survey.grades ? {
       obtainment: letterFromScore(survey.grades.obtainment),
       profile: letterFromScore(survey.grades.profile),
     } : { obtainment: 'unknown', profile: 'unknown' },
-    timestamp: survey.createdAt.getTime(),
+    timestamp: createdAtDate.getTime(),
   }
 }
 
