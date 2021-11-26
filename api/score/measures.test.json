@@ -1,0 +1,57 @@
+[
+    {
+        "id": "281e0153-1f64-4ee2-a4de-e33f9a18b383",
+        "label": "experience",
+        "factor": 5,
+        "indicator": "obtainment",
+        "max": 13,
+        "created_at": "2021-11-18T16:11:15.462Z",
+        "updated_at": "2021-11-18T16:11:15.462Z",
+        "createdAt": "2021-11-18T16:11:15.462Z",
+        "updatedAt": "2021-11-18T16:11:15.462Z"
+    },
+    {
+        "id": "b137f4c4-8f74-423b-9114-ff654886f8fa",
+        "label": "motivation_intrinseque",
+        "factor": 5,
+        "indicator": "profile",
+        "max": 25,
+        "created_at": "2021-11-18T16:11:15.462Z",
+        "updated_at": "2021-11-18T16:11:15.462Z",
+        "createdAt": "2021-11-18T16:11:15.462Z",
+        "updatedAt": "2021-11-18T16:11:15.462Z"
+    },
+    {
+        "id": "b8a1ccd9-9043-4a13-b979-2bfd873c7383",
+        "label": "confiance",
+        "factor": 2,
+        "indicator": "profile",
+        "max": 18,
+        "created_at": "2021-11-18T16:11:15.462Z",
+        "updated_at": "2021-11-18T16:11:15.462Z",
+        "createdAt": "2021-11-18T16:11:15.462Z",
+        "updatedAt": "2021-11-18T16:11:15.462Z"
+    },
+    {
+        "id": "a7661511-4d8b-4870-bc54-50e50095cf2e",
+        "label": "disponibilite",
+        "factor": 3,
+        "indicator": "obtainment",
+        "max": 5,
+        "created_at": "2021-11-18T16:11:15.462Z",
+        "updated_at": "2021-11-18T16:11:15.462Z",
+        "createdAt": "2021-11-18T16:11:15.462Z",
+        "updatedAt": "2021-11-18T16:11:15.462Z"
+    },
+    {
+        "id": "3cc6a504-8841-4e9a-af73-bce5f2bffe81",
+        "label": "aisance_numerique",
+        "factor": 1,
+        "indicator": "profile",
+        "max": 5,
+        "created_at": "2021-11-18T16:11:15.462Z",
+        "updated_at": "2021-11-18T16:11:15.462Z",
+        "createdAt": "2021-11-18T16:11:15.462Z",
+        "updatedAt": "2021-11-18T16:11:15.462Z"
+    }
+]
