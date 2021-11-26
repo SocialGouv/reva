@@ -92,20 +92,22 @@ export const getCandidateAnswers = async (user: {
 }) => {
   let query = `
   SELECT
-    c.id,
-    c.survey_id,
+    ca.id,
+    ca.survey_id,
     co.label as cohorte_label,
-    c.answers,
-    c.candidate, 
+    ca.answers,
+    json_build_object('email',u.email,'firstname',u.firstname, 'lastname', u.lastname, 'phoneNumber',u.phone) as candidate,
     ci.id as city_id, 
     ci.label as city_label, 
     ci.region as city_region, 
     di.id as diplome_id, 
     di.label as diplome_label, 
-    c.created_at as last_created_at
-  FROM candidate_answers c
-  INNER JOIN cities ci ON c.candidate->>'cohorte' = ci.id::text
-  INNER JOIN diplomes di ON c.candidate->>'diplome' = di.id::text
+    ca.created_at as last_created_at
+  FROM candidate_answers ca
+  INNER JOIN candidacies c ON c.id = ca.candidacy_id
+  INNER JOIN users u ON u.id = c.user_id
+  INNER JOIN cities ci ON ci.id = c.city_id
+  INNER JOIN diplomes di ON di.id = c.diplome_id
   INNER JOIN cohortes_diplomes_cities cdc ON ci.id = cdc.city_id AND di.id = cdc.diplome_id
   INNER JOIN cohortes co ON co.id = cdc.cohorte_id
   `
