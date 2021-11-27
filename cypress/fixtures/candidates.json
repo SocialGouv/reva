@@ -12,6 +12,7 @@
       "obtainment": "A",
       "profile": "B"
     },
+    "metaSkill": [],
     "phoneNumber": "0600000000",
     "city": {
       "id": "84b3218a-a5bd-4e4b-b359-8562de9b04b7",
@@ -52,6 +53,7 @@
     },
     "lastname": "O'Brienc",
     "firstname": "Lady Cassandra",
+    "metaSkill": [],
     "phoneNumber": "0600000000",
     "city": {
       "id": "84b3218a-a5bd-4e4b-b359-8562de9b04b7",
@@ -87,7 +89,8 @@
     },
     "lastname": "Pond",
     "firstname": "Amy",
-    "phoneNumber": "0600000000",
+    "metaSkill": [],
+    "phoneNumber": "0644332211",
     "city": {
       "id": "84b3218a-a5bd-4e4b-b359-8562de9b04b7",
       "label": "Toulouse",
@@ -137,6 +140,7 @@
     },
     "lastname": "Williams",
     "firstname": "Rory",
+    "metaSkill": [],
     "phoneNumber": "0600000000",
     "city": {
       "id": "84b3218a-a5bd-4e4b-b359-8562de9b04b7",
@@ -177,6 +181,7 @@
     },
     "lastname": "Smith",
     "firstname": "Mickey",
+    "metaSkill": [],
     "phoneNumber": "0600000000",
     "city": {
       "id": "84b3218a-a5bd-4e4b-b359-8562de9b04b7",

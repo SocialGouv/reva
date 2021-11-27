@@ -1,7 +1,7 @@
 module View.Icons exposing (accepted, candidates, chevronLeft, close, commented, dot, filter, mail, menu, pending, rejected, search, signout, user, userLarge)
 
 import Html.Styled exposing (Html)
-import Html.Styled.Attributes as Attr exposing (attribute)
+import Html.Styled.Attributes exposing (attribute)
 import Svg.Styled as Svg exposing (svg)
 import Svg.Styled.Attributes exposing (..)
 

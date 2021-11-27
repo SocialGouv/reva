@@ -3,14 +3,16 @@ port module Main exposing (main)
 import Api
 import Browser
 import Browser.Navigation as Nav
+import Candidate exposing (Candidate)
 import Html.Styled exposing (Html, div, toUnstyled)
 import Http
-import Page.Candidates as Candidates exposing (Candidate, Model)
+import Page.Candidates as Candidates exposing (Model)
 import Page.Login
 import Route exposing (Route(..))
 import Url exposing (Url)
 import Validate
 import View
+import View.Candidate
 
 
 type alias Flags =
@@ -50,6 +52,7 @@ type Msg
     | UserClickedLink Browser.UrlRequest
     | UserLoggedOut
     | UserSelectedCandidate Candidate
+    | UserSelectedCandidateTab View.Candidate.Tab
     | UserAddedFilter String
     | GotLoginError String
       -- PROFILE
@@ -93,7 +96,8 @@ viewPage model =
         config =
             { onFilter = UserAddedFilter
             , onLogout = UserLoggedOut
-            , onSelect = UserSelectedCandidate
+            , onSelectCandidate = UserSelectedCandidate
+            , onSelectTab = UserSelectedCandidateTab
             }
     in
     case model.state of
@@ -157,6 +161,16 @@ update msg model =
             , Cmd.none
             )
 
+        ( UserSelectedCandidateTab tab, LoggedIn token (Home candidatesModel) ) ->
+            ( { model
+                | state =
+                    Candidates.selectCandidateTab candidatesModel tab
+                        |> Home
+                        |> LoggedIn token
+              }
+            , Cmd.none
+            )
+
         ( UserLoggedOut, LoggedIn _ _ ) ->
             ( model, removeToken () )
 
@@ -204,7 +218,7 @@ update msg model =
             , Cmd.none
             )
 
-        ( GotCandidatesResponse _, LoggedIn _ _ ) ->
+        ( GotCandidatesResponse err, LoggedIn _ _ ) ->
             ( model, Cmd.none )
 
         ( GotLoginError error, NotLoggedIn state ) ->

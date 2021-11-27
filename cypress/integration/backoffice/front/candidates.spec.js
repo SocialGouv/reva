@@ -56,7 +56,24 @@ describe('List all candidates', () => {
     cy.get('@directoryItems').eq(1).contains('Amy Pond')
   })
 
-  context('open candidate details', () => {
+  context('open candidate profile', () => {
+    beforeEach(() => {
+      cy.get('@directoryItems').eq(2).click()
+      cy.get('button[data-test=profile]').click()
+    })
+
+    it('show all candidate info ', function () {
+      cy.get('dd[data-test=phone-number]').should('contain', '0644332211')
+      cy.get('dd[data-test=email]').should('contain', 'amy.pond@example.com')
+      cy.get('dd[data-test=diplome]').should(
+        'contain',
+        'TP Assistant⋅e de Vie aux Familles (TP ADVF)'
+      )
+      cy.get('dd[data-test=city]').should('contain', 'Toulouse, Occitanie')
+    })
+  })
+
+  context('open candidate events', () => {
     it('show all survey dates', function () {
       cy.get('@directoryItems').eq(2).click()
       cy.get('[data-test=commented-survey] time').as('surveyDates')

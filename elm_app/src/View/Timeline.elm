@@ -26,7 +26,7 @@ type alias Event msg =
 view : String -> List (Event msg) -> Html msg
 view id events =
     div
-        [ dataTest id, class "flow-root w-full mb-8 border p-6 rounded-md" ]
+        [ dataTest id, class "flow-root w-full mb-2 rounded-md border p-6" ]
         [ ul
             [ attribute "role" "list"
             , class "-mb-8"
@@ -99,7 +99,7 @@ statusToDate status =
     let
         dateTime date =
             div
-                [ class "text-right text-sm whitespace-nowrap text-gray-500" ]
+                [ class "text-right text-xs whitespace-nowrap text-gray-500" ]
                 [ time [] [ text date ] ]
     in
     case status of
