@@ -15,7 +15,7 @@ view _ =
         ]
     , p
         [ class "mt-2" ]
-        [ text "Pour chaque méta-compétence, vous ajouterez du contexte et chargerez les éventuels fichiers de preuves. A l'issu de ce processus, vous pourrez générer un livret de reconnaissance."
+        [ text "Pour chaque méta-compétence, vous ajouterez du contexte et chargerez les éventuels fichiers de preuves. A l'issue de ce processus, vous pourrez générer un livret de reconnaissance."
         ]
     , p
         [ class "mt-2" ]
