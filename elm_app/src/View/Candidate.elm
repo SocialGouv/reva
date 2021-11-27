@@ -147,8 +147,8 @@ events candidate =
                 [ text "A répondu au questionnaire"
                 , div
                     [ dataTest "grades", class "flex items-center" ]
-                    [ Grade.view "Profil" survey.grades.profile
-                    , Grade.view "Obtention" survey.grades.obtainment
+                    [ Grade.view "Obtention" survey.grades.obtainment
+                    , Grade.view "Profil" survey.grades.profile
                     ]
                 ]
             , dataTest = "survey"

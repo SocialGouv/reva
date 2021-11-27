@@ -16,10 +16,11 @@
     "lint:js": "eslint --ext \".js,.ts,.vue\" .",
     "prepare": "husky install",
     "lint": "yarn lint:js",
+    "tu": "jest",
     "test": "cypress run",
     "test:ci": "yarn start & wait-on --timeout 6000 http://localhost:3000 && npm run test",
     "db-migrate": "db-migrate",
-    "postinstall": "cp -r node_modules/tarteaucitronjs static/."
+    "postinstall": "cp -r node_modules/tarteaucitronjs static/. && [[ ! -z \"$DATABASE_URL\" ]] && yarn db-migrate up -e prod || echo \"No migration\""
   },
   "lint-staged": {
     "*.{js,vue}": "eslint"
@@ -38,6 +39,7 @@
     "body-parser": "^1.19.0",
     "canvas-confetti": "^1.4.0",
     "core-js": "^3.15.1",
+    "csv-parser": "^3.0.0",
     "db-migrate": "^0.11.12",
     "db-migrate-pg": "^1.2.2",
     "elm": "^0.19.1-5",
@@ -66,6 +68,7 @@
     "@nuxtjs/eslint-config-typescript": "^6.0.1",
     "@nuxtjs/eslint-module": "^3.0.2",
     "@nuxtjs/tailwindcss": "^4.2.0",
+    "@types/jest": "^27.0.2",
     "@vue/test-utils": "^1.2.1",
     "babel-core": "7.0.0-bridge.0",
     "chokidar-cli": "^3.0.0",
@@ -76,9 +79,11 @@
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-vue": "^7.12.1",
     "husky": "^6.0.0",
+    "jest": "^27.3.1",
     "lint-staged": "^10.5.4",
     "postcss": "^8.3.6",
     "prettier": "^2.3.2",
+    "ts-jest": "^27.0.7",
     "vue-jest": "^3.0.4"
   }
 }
