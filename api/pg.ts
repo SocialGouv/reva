@@ -8,4 +8,5 @@ const pool = new Pool({
 
 module.exports = {
   query: (text: string, params: any) => pool.query(text, params),
+  client: () => pool.connect()
 }
