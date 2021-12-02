@@ -6,8 +6,8 @@ export const saveUser = async (user: any) => {
   // try {
   // await pg.query('BEGIN')
   const result = await pg.query(
-    'INSERT INTO users(id, email, firstname, lastname, password) VALUES (uuid_generate_v4(), $1, $2, $3, $4) RETURNING id;',
-    [user.email, user.firstname, user.lastname, user.password]
+    'INSERT INTO users(id, email, firstname, lastname, password, phone) VALUES (uuid_generate_v4(), $1, $2, $3, $4, $5) RETURNING id;',
+    [user.email, user.firstname, user.lastname, user.password, user.phoneNumber]
   )
 
   const userId = result.rows[0].id
@@ -24,7 +24,7 @@ export const saveUser = async (user: any) => {
     )
   )
 
-  return Promise.all(
+  await Promise.all(
     user.roles.filter(isAllowedRole).map((role: string) =>
       pg.query(
         `INSERT INTO users_roles(user_id, role_id) 
@@ -33,6 +33,8 @@ export const saveUser = async (user: any) => {
       )
     )
   )
+
+  return userId
 
   //   // return pg.query('COMMIT')
   // } catch (e) {

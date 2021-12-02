@@ -2,15 +2,15 @@ import { isAdmin } from '../auth/data'
 
 const pg = require('../pg')
 
-function createSurvey(survey: { grades: { obtainment: number, profile: number }, createdAt: string }) {
-  const dateOptions: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-  }
+const dateOptions: Intl.DateTimeFormatOptions = {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: '2-digit',
+}
 
+function createSurvey(survey: { grades: { obtainment: number, profile: number }, createdAt: string }) {
   const createdAtDate = new Date(survey.createdAt)
 
   return {
@@ -30,7 +30,18 @@ export const getCandidates = async (user: {
 }) => {
 
   let query = `
+    SELECT 
+      cs.candidacy_id,
+      ARRAY_AGG(json_build_object('status',cs.status,'createdAt',cs.created_at)) as statuses
+    FROM candidacies_statuses cs
+    GROUP BY cs.candidacy_id    
+  `
+
+  const { rows: candidaciesStatuses } = await pg.query(query, [])
+
+  query = `
     SELECT
+      c.id,
       u.email,
       u.firstname,
       u.lastname,
@@ -40,7 +51,7 @@ export const getCandidates = async (user: {
       ci.label as city_label, 
       ci.region as city_region,
       di.id as diplome_id, 
-      di.label as diplome_label, 
+      di.label as diplome_label,
       ARRAY_AGG(json_build_object('grades',ca.score->'grades','createdAt',ca.created_at) ORDER BY ca.created_at DESC) as survey_dates
       FROM candidacies c
       INNER JOIN users u ON u.id = c.user_id
@@ -58,7 +69,7 @@ export const getCandidates = async (user: {
 
   query = `
     ${query}
-    GROUP BY u.email, u.firstname, u.lastname, u.phone, cohorte_id, ci.id, ci.label, ci.region, di.id, di.label
+    GROUP BY c.id, u.email, u.firstname, u.lastname, u.phone, cohorte_id, ci.id, ci.label, ci.region, di.id, di.label
     ORDER BY u.lastname
     `
 
@@ -80,7 +91,17 @@ export const getCandidates = async (user: {
       label: r.diplome_label,
     },
     metaSkill: [],
-    status: [],
+    statuses: candidaciesStatuses.filter((candidacyStatuses: any) => candidacyStatuses.candidacy_id === r.id)
+      .flatMap((cs: any) => cs.statuses)
+      .map((cs: any) => {
+        const createdAtDate = new Date(cs.createdAt)
+
+        return {
+          name: cs.status,
+          date: createdAtDate.toLocaleDateString('fr-FR', dateOptions),
+          timestamp: createdAtDate.getTime(),
+        }
+      }),
     surveys: r.survey_dates.map(createSurvey),
   }))
 }
