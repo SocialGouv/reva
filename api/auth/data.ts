@@ -3,45 +3,47 @@ const pg = require('../pg')
 const ALLOWED_ROLES = ['admin']
 
 export const saveUser = async (user: any) => {
-  // try {
-  // await pg.query('BEGIN')
-  const result = await pg.query(
-    'INSERT INTO users(id, email, firstname, lastname, password, phone) VALUES (uuid_generate_v4(), $1, $2, $3, $4, $5) RETURNING id;',
-    [user.email, user.firstname, user.lastname, user.password, user.phoneNumber]
-  )
 
-  const userId = result.rows[0].id
+  const client = await pg.client()
 
-  await Promise.all(
-    user.cohortes.map((cohorte: string) =>
-      pg.query(
-        `INSERT INTO users_cohortes(user_id, cohorte_id) 
+  try {
+    await client.query('BEGIN')
+    const result = await client.query(
+      'INSERT INTO users(id, email, firstname, lastname, password, phone) VALUES (uuid_generate_v4(), $1, $2, $3, $4, $5) RETURNING id;',
+      [user.email, user.firstname, user.lastname, user.password, user.phoneNumber]
+    )
+
+    const userId = result.rows[0].id
+
+    await Promise.all(
+      user.cohortes.map((cohorte: string) =>
+        client.query(
+          `INSERT INTO users_cohortes(user_id, cohorte_id) 
           SELECT $1, co.id
           FROM cohortes co
           WHERE co.label = $2;`,
-        [userId, cohorte]
+          [userId, cohorte]
+        )
       )
     )
-  )
 
-  await Promise.all(
-    user.roles.filter(isAllowedRole).map((role: string) =>
-      pg.query(
-        `INSERT INTO users_roles(user_id, role_id) 
+    await Promise.all(
+      user.roles.filter(isAllowedRole).map((role: string) =>
+        client.query(
+          `INSERT INTO users_roles(user_id, role_id) 
           VALUES ($1, $2);`,
-        [userId, role]
+          [userId, role]
+        )
       )
     )
-  )
 
-  return userId
 
-  //   // return pg.query('COMMIT')
-  // } catch (e) {
-  //   // console.log(e)
-  //   // await pg.query('ROLLBACK')
-  //   throw e
-  // }
+    await client.query('COMMIT')
+    return userId
+  } catch (e) {
+    await client.query('ROLLBACK')
+    throw e
+  }
 }
 
 export const getUsers = async () => {

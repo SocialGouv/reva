@@ -85,7 +85,7 @@ export const saveCandidateSurvey = async (survey: any) => {
       [survey.surveyId, candidacyId, survey.answers, survey.score]
     )
 
-    return await client.query(`COMMIT`)
+    return client.query(`COMMIT`)
 
   } catch (e) {
     await client.query(`ROLLBACK`)
