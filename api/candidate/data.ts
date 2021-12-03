@@ -2,15 +2,15 @@ import { isAdmin } from '../auth/data'
 
 const pg = require('../pg')
 
-function createSurvey(survey: { grades: { obtainment: number, profile: number }, createdAt: string }) {
-  const dateOptions: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-  }
+const dateOptions: Intl.DateTimeFormatOptions = {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: '2-digit',
+}
 
+function createSurvey(survey: { grades: { obtainment: number, profile: number }, createdAt: string }) {
   const createdAtDate = new Date(survey.createdAt)
 
   return {
@@ -28,18 +28,36 @@ export const getCandidates = async (user: {
   // eslint-disable-next-line camelcase
   roles: { role_id: string }[]
 }) => {
+
   let query = `
-  SELECT 
-    c.candidate, 
-    ci.id as city_id, 
-    ci.label as city_label, 
-    ci.region as city_region, 
-    di.id as diplome_id, 
-    di.label as diplome_label, 
-    ARRAY_AGG(json_build_object('grades',c.score->'grades','createdAt',c.created_at) ORDER BY c.created_at DESC) as survey_dates
-  FROM candidate_answers c
-  INNER JOIN cities ci ON c.candidate->>'cohorte' = ci.id::text
-  INNER JOIN diplomes di ON c.candidate->>'diplome' = di.id::text
+    SELECT 
+      cs.candidacy_id,
+      ARRAY_AGG(json_build_object('status',cs.status,'createdAt',cs.created_at)) as statuses
+    FROM candidacies_statuses cs
+    GROUP BY cs.candidacy_id    
+  `
+
+  const { rows: candidaciesStatuses } = await pg.query(query, [])
+
+  query = `
+    SELECT
+      c.id,
+      u.email,
+      u.firstname,
+      u.lastname,
+      u.phone,
+      c.cohorte_id,
+      ci.id as city_id, 
+      ci.label as city_label, 
+      ci.region as city_region,
+      di.id as diplome_id, 
+      di.label as diplome_label,
+      ARRAY_AGG(json_build_object('grades',ca.score->'grades','createdAt',ca.created_at) ORDER BY ca.created_at DESC) as survey_dates
+      FROM candidacies c
+      INNER JOIN users u ON u.id = c.user_id
+      INNER JOIN candidate_answers ca ON ca.candidacy_id = c.id
+      INNER JOIN cities ci ON ci.id = c.city_id
+      INNER JOIN diplomes di ON di.id = c.diplome_id
   `
   const parameters = []
   if (!isAdmin(user.roles.map((r) => r.role_id))) {
@@ -51,14 +69,18 @@ export const getCandidates = async (user: {
 
   query = `
     ${query}
-    GROUP BY c.candidate, ci.id, ci.label, ci.region, di.id, di.label
-    ORDER BY c.candidate->>'lastname'
+    GROUP BY c.id, u.email, u.firstname, u.lastname, u.phone, cohorte_id, ci.id, ci.label, ci.region, di.id, di.label
+    ORDER BY u.lastname
     `
 
   const { rows } = await pg.query(query, parameters)
 
   return rows.map((r: any) => ({
-    ...r.candidate,
+    email: r.email,
+    firstname: r.firstname,
+    lastname: r.lastname,
+    phoneNumber: r.phone || '',
+    cohorte: r.cohorte_id,
     city: {
       id: r.city_id,
       label: r.city_label,
@@ -69,7 +91,17 @@ export const getCandidates = async (user: {
       label: r.diplome_label,
     },
     metaSkill: [],
-    status: [],
+    statuses: candidaciesStatuses.filter((candidacyStatuses: any) => candidacyStatuses.candidacy_id === r.id)
+      .flatMap((cs: any) => cs.statuses)
+      .map((cs: any) => {
+        const createdAtDate = new Date(cs.createdAt)
+
+        return {
+          name: cs.status,
+          date: createdAtDate.toLocaleDateString('fr-FR', dateOptions),
+          timestamp: createdAtDate.getTime(),
+        }
+      }),
     surveys: r.survey_dates.map(createSurvey),
   }))
 }
@@ -81,20 +113,22 @@ export const getCandidateAnswers = async (user: {
 }) => {
   let query = `
   SELECT
-    c.id,
-    c.survey_id,
+    ca.id,
+    ca.survey_id,
     co.label as cohorte_label,
-    c.answers,
-    c.candidate, 
+    ca.answers,
+    json_build_object('email',u.email,'firstname',u.firstname, 'lastname', u.lastname, 'phoneNumber',u.phone) as candidate,
     ci.id as city_id, 
     ci.label as city_label, 
     ci.region as city_region, 
     di.id as diplome_id, 
     di.label as diplome_label, 
-    c.created_at as last_created_at
-  FROM candidate_answers c
-  INNER JOIN cities ci ON c.candidate->>'cohorte' = ci.id::text
-  INNER JOIN diplomes di ON c.candidate->>'diplome' = di.id::text
+    ca.created_at as last_created_at
+  FROM candidate_answers ca
+  INNER JOIN candidacies c ON c.id = ca.candidacy_id
+  INNER JOIN users u ON u.id = c.user_id
+  INNER JOIN cities ci ON ci.id = c.city_id
+  INNER JOIN diplomes di ON di.id = c.diplome_id
   INNER JOIN cohortes_diplomes_cities cdc ON ci.id = cdc.city_id AND di.id = cdc.diplome_id
   INNER JOIN cohortes co ON co.id = cdc.cohorte_id
   `

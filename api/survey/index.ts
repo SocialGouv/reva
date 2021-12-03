@@ -17,17 +17,17 @@ surveyRouter.get('/surveys/latest', async (_req: any, res: any) => {
 
 surveyRouter.post('/surveys/:id/candidates', async (req: any, res: any) => {
   const schema = yup.object().shape({
-    surveyId: yup.string().required(),
+    surveyId: yup.string().trim().required(),
     answers: yup.object().required(),
     candidate: yup
       .object()
       .required()
       .shape({
-        email: yup.string().email().required(),
-        firstname: yup.string().required(),
-        lastname: yup.string().required(),
-        diplome: yup.string().required(),
-        cohorte: yup.string().required(),
+        email: yup.string().email().trim().lowercase().required(),
+        firstname: yup.string().trim().required(),
+        lastname: yup.string().trim().required(),
+        diplome: yup.string().trim().required(),
+        cohorte: yup.string().trim().required(),
         phoneNumber: yup
           .string()
           .matches(/^[0-9]{10}$/, 'Numéro de téléphone invalide.'),
@@ -40,15 +40,15 @@ surveyRouter.post('/surveys/:id/candidates', async (req: any, res: any) => {
     res.status(500).send('Bad format')
   } else {
     try {
-
+      const candidateSurvey = schema.cast(req.body)
       const measures = await getMeasures()
       const measuresAnswers = await getMeasuresAnswers()
       const measuresMap = generateMeasuresAnswersMap(measuresAnswers)
-
-      const score = calculateScore(measures, measuresMap, req.body)
-      await saveCandidateSurvey({ ...req.body, score })
+      const score = calculateScore(measures, measuresMap, candidateSurvey)
+      await saveCandidateSurvey({ ...candidateSurvey, score })
       res.status(200).send()
     } catch (e) {
+      console.log(e)
       res.status(500).send('An error occured while saving survey')
     }
   }

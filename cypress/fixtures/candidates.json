@@ -19,7 +19,7 @@
       "label": "Lyon",
       "region": "Auvergne-Rhône-Alpes"
     },
-    "status": [
+    "statuses": [
       {
         "name": "reviewed",
         "date": "29 oct. 2021, 17:13",
@@ -60,7 +60,7 @@
       "label": "Nice",
       "region": "Provence-Alpes-Côte d'Azur"
     },
-    "status": [
+    "statuses": [
       {
         "name": "estimated_favorable",
         "date": "12 oct. 2021, 10:11",
@@ -96,7 +96,7 @@
       "label": "Toulouse",
       "region": "Occitanie"
     },
-    "status": [
+    "statuses": [
       {
         "name": "pending",
         "date": "17 nov. 2021, 12:13",
@@ -147,7 +147,7 @@
       "label": "Lyon",
       "region": "Auvergne-Rhône-Alpes"
     },
-    "status": [
+    "statuses": [
       {
         "name": "rejected_by_adviser",
         "date": "7 nov. 2021, 16:13",
@@ -188,7 +188,7 @@
       "label": "Cergy",
       "region": "Île-de-France"
     },
-    "status": [
+    "statuses": [
       {
         "name": "rejected_by_jury",
         "date": "30 nov. 2021, 10:13",

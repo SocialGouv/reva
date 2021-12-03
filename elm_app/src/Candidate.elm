@@ -133,5 +133,5 @@ decoder =
         |> required "lastname" Decode.string
         |> required "metaSkill" (Decode.list metaSkillDecoder)
         |> required "phoneNumber" Decode.string
-        |> required "status" (Decode.list statusDecoder)
+        |> required "statuses" (Decode.list statusDecoder)
         |> required "surveys" (Decode.list surveyDecoder)
