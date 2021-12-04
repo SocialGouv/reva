@@ -217,8 +217,7 @@ contextualization config _ skill =
                         ]
                         [ text "Contexte et détails (optionnel)" ]
                     , div
-                        [ class "mt-2"
-                        ]
+                        [ class "mt-2" ]
                         [ textarea
                             [ rows 4
                             , name "context"

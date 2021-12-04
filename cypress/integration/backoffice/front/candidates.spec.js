@@ -75,6 +75,7 @@ describe('List all candidates', () => {
 
   context('open recognition module', () => {
     beforeEach(() => {
+      cy.get('@directoryItems').eq(1).click()
       cy.get('button[data-test=recognition]').click()
     })
 

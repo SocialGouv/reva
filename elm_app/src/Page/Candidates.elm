@@ -44,7 +44,7 @@ init =
 
 receiveCandidates : Model -> List Candidate -> Model
 receiveCandidates model candidates =
-    { model | state = Idle candidates, selected = List.head candidates }
+    { model | state = Idle candidates }
 
 
 selectCandidate : Model -> Candidate -> Model
