@@ -73,6 +73,35 @@ describe('List all candidates', () => {
     })
   })
 
+  context('open recognition module', () => {
+    beforeEach(() => {
+      cy.get('button[data-test=recognition]').click()
+    })
+
+    it('start a recognition', function () {
+      cy.get('button[data-test=start-recognition]').click()
+      cy.get('button[data-test=skill-1]').click()
+      cy.get('button[data-test=confirm-recognition]').click()
+    })
+
+    it('can close recognition module', function () {
+      cy.get('div[data-test=popup').should('not.exist')
+      cy.get('button[data-test=start-recognition]').click()
+      cy.get('div[data-test=popup').should('exist')
+
+      // click close button
+      cy.get('button[data-test=close-popup]').click()
+      cy.get('div[data-test=popup').should('not.exist')
+
+      cy.get('button[data-test=start-recognition]').click()
+      cy.get('div[data-test=popup').should('exist')
+
+      // click outside the popup
+      cy.get('div[data-test=close-popup]').click({ force: true })
+      cy.get('div[data-test=popup').should('not.exist')
+    })
+  })
+
   context('open candidate events', () => {
     it('show all survey dates', function () {
       cy.get('@directoryItems').eq(2).click()

@@ -44,7 +44,7 @@ init =
 
 receiveCandidates : Model -> List Candidate -> Model
 receiveCandidates model candidates =
-    { model | state = Idle candidates }
+    { model | state = Idle candidates, selected = List.head candidates }
 
 
 selectCandidate : Model -> Candidate -> Model
@@ -140,9 +140,9 @@ viewContent config model candidates =
             ]
         , div
             [ class "flex-1 relative z-0 flex overflow-hidden" ]
-            [ Maybe.map (View.Candidate.layout config model.tab) model.selected
+            [ viewDirectoryPanel config candidates
+            , Maybe.map (View.Candidate.layout config model.tab) model.selected
                 |> Maybe.withDefault (div [ class "h-full w-full bg-gray-500" ] [])
-            , viewDirectoryPanel config candidates
             ]
         ]
 

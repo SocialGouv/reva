@@ -32,7 +32,9 @@ layout :
     -> Html msg
 layout config tab candidate =
     node "main"
-        [ dataTest "profile", class "flex-1 relative z-0 overflow-y-auto focus:outline-none xl:order-last" ]
+        [ dataTest "profile"
+        , class "flex-1 relative z-10 overflow-y-auto focus:outline-none xl:order-last"
+        ]
         [ nav
             [ class "flex items-start px-4 py-3 sm:px-6 lg:px-8 md:hidden", attribute "aria-label" "Breadcrumb" ]
             [ a

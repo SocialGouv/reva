@@ -2,6 +2,7 @@ port module Main exposing (main)
 
 import Api
 import Browser
+import Browser.Dom
 import Browser.Navigation as Nav
 import Candidate exposing (Candidate)
 import Html.Styled exposing (Html, div, toUnstyled)
@@ -9,10 +10,12 @@ import Http
 import Page.Candidates as Candidates exposing (Model)
 import Page.Login
 import Route exposing (Route(..))
+import Task
 import Url exposing (Url)
 import Validate
 import View
 import View.Candidate
+import View.Candidate.Recognition
 
 
 type alias Flags =
@@ -62,6 +65,7 @@ type Msg
     | GotLoginSubmit
     | GotLoginResponse (Result Http.Error String)
     | GotCandidatesResponse (Result Http.Error (List Candidate))
+    | NoOp
 
 
 main : Program Flags Model Msg
@@ -169,7 +173,16 @@ update msg model =
                         |> Home
                         |> LoggedIn token
               }
-            , Cmd.none
+            , case tab of
+                View.Candidate.Recognition (View.Candidate.Recognition.Contextualization _) ->
+                    Browser.Dom.focus "context"
+                        |> Task.attempt (\_ -> NoOp)
+
+                View.Candidate.Recognition _ ->
+                    Cmd.none
+
+                _ ->
+                    Cmd.none
             )
 
         ( UserLoggedOut, LoggedIn _ _ ) ->
