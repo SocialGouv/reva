@@ -113,7 +113,7 @@ introduction config _ =
         ]
     , p
         [ class "mt-2" ]
-        [ text "D'ici la mise à disposition du module de reconnaissance, vous pouvez nous poser vos questions via le chat en bas à droite de cette page." ]
+        [ text "D'ici la mise à disposition du module de reconnaissance, vous pouvez nous poser vos questions via le chat en bas à droite de cette page ou tester notre démo." ]
     , actionFooter
         { dataTest = "start-recognition"
         , text = "Démarrer la démonstration"
@@ -243,9 +243,24 @@ contextualization config _ skill =
 confirmation : { a | onRecognitionStep : Step -> msg } -> Candidate -> List (Html msg)
 confirmation config _ =
     popup
-        { title = "Confirmation"
-        , content = []
+        { title = "Compétence reconnue"
         , onClose = config.onRecognitionStep Introduction
+        , content =
+            [ alert "Mode de démonstration, aucune action n'a été enregistrée."
+            , div [ class "h-40" ] []
+            , actionFooter
+                { dataTest = "close-recognition"
+                , text = "Terminer"
+                , toMsg = config.onRecognitionStep Introduction
+                }
+            , button
+                [ dataTest "restart-recognition"
+                , onClick <| config.onRecognitionStep Selection
+                , type_ "button"
+                , class "text-base hover:text-blue-700 text-blue-600 mt-4 px-8 py-5 w-full"
+                ]
+                [ text "Reconnaître une autre compétence" ]
+            ]
         }
 
 
@@ -290,11 +305,18 @@ popup config =
                         ]
                         [ text "Fermer" ]
                     ]
-                , div [ class "flex flex-col items-center mt-16 pt-6 px-8 overflow-y-scroll" ] config.content
+                , div [ class "flex flex-col w-full items-center mt-16 pt-6 px-8 overflow-y-scroll" ] config.content
                 ]
             ]
         ]
     ]
+
+
+alert : String -> Html msg
+alert s =
+    div
+        [ class "w-full rounded-lg px-8 py-4 font-semibold bg-yellow-100 text-yellow-800" ]
+        [ text s ]
 
 
 groupByCategory : List MetaSkillReference -> List ( MetaSkillReference, List MetaSkillReference )

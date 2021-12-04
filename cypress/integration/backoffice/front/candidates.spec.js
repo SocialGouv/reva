@@ -82,6 +82,7 @@ describe('List all candidates', () => {
       cy.get('button[data-test=start-recognition]').click()
       cy.get('button[data-test=skill-1]').click()
       cy.get('button[data-test=confirm-recognition]').click()
+      cy.get('button[data-test=restart-recognition]').click()
     })
 
     it('can close recognition module', function () {
