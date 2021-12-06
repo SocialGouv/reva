@@ -8,10 +8,10 @@
   "private": true,
   "scripts": {
     "elm:watch": "chokidar 'elm_app/src/**/!(Main).elm' -c 'touch elm_app/src/Main.elm'",
-    "dev": "concurrently -n \"elm,nuxt\" -c \"blue,green\" -k \"yarn elm:watch\" \"yarn nuxt\"",
+    "dev": "yarn db-migrate up && concurrently -n \"elm,nuxt\" -c \"blue,green\" -k \"yarn elm:watch\" \"yarn nuxt\"",
     "dev_old": "nuxt",
     "build": "nuxt build",
-    "start": "nuxt start --port $PORT",
+    "start": "yarn db-migrate up -e prod && nuxt start --port $PORT",
     "generate": "nuxt generate",
     "lint:js": "eslint --ext \".js,.ts,.vue\" .",
     "prepare": "husky install",
@@ -20,7 +20,7 @@
     "test": "cypress run",
     "test:ci": "yarn start & wait-on --timeout 6000 http://localhost:3000 && npm run test",
     "db-migrate": "db-migrate",
-    "postinstall": "cp -r node_modules/tarteaucitronjs static/. && [[ ! -z \"$DATABASE_URL\" ]] && yarn db-migrate up -e prod || echo \"No migration\""
+    "postinstall": "cp -r node_modules/tarteaucitronjs static/."
   },
   "lint-staged": {
     "*.{js,vue}": "eslint"
