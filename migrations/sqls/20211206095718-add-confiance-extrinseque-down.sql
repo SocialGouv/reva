@@ -4,5 +4,5 @@ DELETE FROM measures WHERE label = 'confiance_extrinseque';
 
 
 UPDATE measures 
-SET max = 18
-WHERE label = 'confiance';
+SET max = 18, label = 'confiance'
+WHERE label = 'confiance_intrinseque';

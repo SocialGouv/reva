@@ -13,5 +13,5 @@ WHERE measures.label = 'confiance_extrinseque';
 
 
 UPDATE measures 
-SET max = 13
+SET max = 13, label ='confiance_intrinseque'
 WHERE label = 'confiance';
