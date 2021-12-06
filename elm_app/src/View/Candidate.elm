@@ -137,10 +137,6 @@ Vos réponses à ce questionnaire sont précieuses pour nous, afin d'évaluer vo
 events : Candidate -> List (Html msg)
 events candidate =
     let
-        maxSafeInteger : Int
-        maxSafeInteger =
-            2147483647
-
         successSurveyEvent : SurveyEvent -> Timeline.Event msg
         successSurveyEvent survey =
             { content =
@@ -158,18 +154,7 @@ events candidate =
 
         surveyHistory : List (Timeline.Event msg)
         surveyHistory =
-            case ( Candidate.isRejected candidate, candidate.surveys ) of
-                ( False, [ submission ] ) ->
-                    [ { content = [ text "En attente d'un deuxième passage du questionnaire" ]
-                      , dataTest = "survey"
-                      , status = Timeline.Pending
-                      , timestamp = maxSafeInteger
-                      }
-                    , successSurveyEvent submission
-                    ]
-
-                ( _, l ) ->
-                    List.map successSurveyEvent l
+            List.map successSurveyEvent candidate.surveys
 
         statusEvent : StatusEvent -> Timeline.Event msg
         statusEvent event =
@@ -181,30 +166,44 @@ events candidate =
 
         statusHistory : List (Timeline.Event msg)
         statusHistory =
-            let
-                statusEvents =
-                    candidate.statusHistory
-                        |> List.filter (.status >> Status.isVisible)
-                        |> List.map statusEvent
-            in
-            List.head candidate.statusHistory
+            candidate.statusHistory
+                |> List.filter (.status >> Status.isVisible)
+                |> List.map statusEvent
+
+        maybePrependStatusPending statuses history =
+            List.head statuses
                 |> Maybe.andThen (.status >> Status.toNextStepString)
                 |> Maybe.map
                     (\next ->
                         { content = [ text next ]
                         , dataTest = "status"
                         , status = Timeline.Pending
-                        , timestamp = maxSafeInteger - 1
+                        , timestamp = 0
                         }
-                            :: statusEvents
+                            :: history
                     )
-                |> Maybe.withDefault statusEvents
+                |> Maybe.withDefault history
+
+        maybePrependSecondSurveyRequired candidate_ history =
+            case ( Candidate.isRejected candidate_, candidate_.surveys ) of
+                ( False, [ submission ] ) ->
+                    { content = [ text "En attente d'un deuxième passage du questionnaire" ]
+                    , dataTest = "survey"
+                    , status = Timeline.Pending
+                    , timestamp = 0
+                    }
+                        :: history
+
+                ( _, l ) ->
+                    history
 
         eventHistory =
             statusHistory
                 ++ surveyHistory
                 |> List.sortBy (\event -> event.timestamp)
                 |> List.reverse
+                |> maybePrependStatusPending candidate.statusHistory
+                |> maybePrependSecondSurveyRequired candidate
 
         baseUrl =
             "https://reva.beta.gouv.fr"
