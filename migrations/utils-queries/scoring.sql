@@ -67,7 +67,7 @@ ca.id,
 ca.created_at,
 ca.candidate->>'firstname' as "firstname", 
 ca.candidate->>'lastname'as "lastname",
-ca.candidate->>'email', 
+ca.candidate->>'email' as "email", 
 concat('''', ca.candidate->>'phoneNumber'),
 CASE 
       WHEN (ca.score->'grades'->>'obtainment')::float >= 0.89431  THEN 'A'
@@ -75,29 +75,40 @@ CASE
       WHEN (ca.score->'grades'->>'obtainment')::float >= 0.44716  THEN 'C'
       ELSE 'D'
     END as obtainment, 
-    CASE 
+'',
+CASE 
       WHEN (ca.score->'grades'->>'profile')::float >= 0.89431  THEN 'A'
       WHEN (ca.score->'grades'->>'profile')::float >= 0.72358 THEN 'B'
       WHEN (ca.score->'grades'->>'profile')::float >= 0.44716  THEN 'C'
       ELSE 'D'
     END  as profile,
--- confiance."measureLabel",
-confiance."score" as "confiance",
-confiance."max" as "confiance max",
--- experience."measureLabel",
-experience."score" as "experience",
-experience."max" as "experience max",
 -- motivation."measureLabel",
 motivation."score" as "motivation intrinseque",
 motivation."max" as "motivation intrinseque max",
+-- confiance."measureLabel",
+confiance."score" as "confiance",
+confiance."max" as "confiance max",
+-- confiance_extrinseque."measureLabel",
+confiance_extrinseque."score" as "confiance_extrinseque",
+confiance_extrinseque."max" as "confiance_extrinseque max",
 -- aisance."measureLabel",
 aisance."score" as "aisance numerique",
 aisance."max" as "aisance numerique max",
+CASE 
+      WHEN (ca.score->'grades'->>'obtainment')::float >= 0.89431  THEN 'A'
+      WHEN (ca.score->'grades'->>'obtainment')::float >= 0.72358 THEN 'B'
+      WHEN (ca.score->'grades'->>'obtainment')::float >= 0.44716  THEN 'C'
+      ELSE 'D'
+    END as obtainment, 
+-- experience."measureLabel",
+experience."score" as "experience",
+experience."max" as "experience max",
 -- dispo."measureLabel",
 dispo."score" as "disponibilite",
 dispo."max" as "disponibilite max"
 from candidate_answers ca
     , score_tmp confiance
+    , score_tmp confiance_extrinseque
     , score_tmp experience
     , score_tmp motivation
     , score_tmp aisance
@@ -106,6 +117,9 @@ where ca.score is not null
 -- confiance
 and ca.id = confiance.id
 and confiance."measureLabel" = 'confiance'
+-- confiance_extrinseque
+and ca.id = confiance_extrinseque.id
+and confiance_extrinseque."measureLabel" = 'confiance_extrinseque'
 -- experience
 and ca.id = experience.id
 and experience."measureLabel" = 'experience'
@@ -118,4 +132,4 @@ and aisance."measureLabel" = 'aisance_numerique'
 -- dispo
 and ca.id = dispo.id
 and dispo."measureLabel" = 'disponibilite'
-order by firstname, lastname, ca.created_at asc;
+order by email, firstname, lastname, ca.created_at asc;
