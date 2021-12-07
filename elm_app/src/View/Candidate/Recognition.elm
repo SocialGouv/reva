@@ -166,7 +166,7 @@ contextualization config _ skill =
             "Décrivez au moins une situation pendant laquelle la compétence s'est illustrée"
     in
     popup
-        { title = "Décrivez les mises en situation"
+        { title = "Décrivez une situation"
         , onClose = config.onRecognitionStep Introduction
         , content =
             [ div
