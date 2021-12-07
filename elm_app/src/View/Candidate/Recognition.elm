@@ -169,37 +169,19 @@ contextualization config _ skill =
         { title = "Décrivez une situation"
         , onClose = config.onRecognitionStep Introduction
         , content =
-            [ div
-                [ class "flex flex-col w-1/2 items-center"
-                , class "rounded-lg px-6 py-5 bg-blue-50 my-8"
-                ]
-                [ div
-                    [ class "text-left w-full" ]
-                    [ title4 [ text skill.category ]
-                    , p
-                        [ class "mt-2"
-                        , class "text-base text-gray-800"
-                        ]
-                        [ text skill.name ]
+            [ viewSkill skill
+                [ label
+                    [ for "situation", class "sr-only" ]
+                    [ text commentPlaceholder ]
+                , textarea
+                    [ rows 4
+                    , name "situation"
+                    , id "situation"
+                    , placeholder commentPlaceholder
+                    , class "shadow-base block w-full border-gray-300 rounded-md my-2 "
+                    , class "focus:ring-indigo-500 focus:border-indigo-500"
                     ]
-                , div
-                    [ class "text-left w-full mt-3" ]
-                    [ label
-                        [ for "comment", class "sr-only" ]
-                        [ text commentPlaceholder ]
-                    , div
-                        [ class "my-2" ]
-                        [ textarea
-                            [ rows 4
-                            , name "context"
-                            , id "context"
-                            , placeholder commentPlaceholder
-                            , class "shadow-base block w-full border-gray-300 rounded-md"
-                            , class "focus:ring-indigo-500 focus:border-indigo-500"
-                            ]
-                            []
-                        ]
-                    ]
+                    []
                 ]
             , actionFooter
                 { dataTest = "confirm-recognition"
@@ -238,6 +220,23 @@ addSkillButton config =
         , class "text-base hover:text-blue-700 text-blue-600 mt-4 px-8 py-5 w-full"
         ]
         [ text "Reconnaître une autre compétence" ]
+
+
+viewSkill : MetaSkillReference -> List (Html msg) -> Html msg
+viewSkill skill situation =
+    div
+        [ class "max-w-md rounded-lg px-6 py-5 bg-blue-50 my-8" ]
+        [ div
+            [ class "text-left w-full" ]
+            [ title4 [ text skill.category ]
+            , p
+                [ class "mt-2"
+                , class "text-base text-gray-800"
+                ]
+                [ text skill.name ]
+            ]
+        , div [ class "text-left w-full mt-3" ] situation
+        ]
 
 
 
