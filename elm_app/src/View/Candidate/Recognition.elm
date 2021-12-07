@@ -237,6 +237,7 @@ contextualization config _ skill =
                 , text = "Reconnaître"
                 , toMsg = config.onRecognitionStep Confirmation
                 }
+            , addSkillButton config
             ]
         }
 
@@ -254,15 +255,20 @@ confirmation config _ =
                 , text = "Terminer"
                 , toMsg = config.onRecognitionStep Introduction
                 }
-            , button
-                [ dataTest "restart-recognition"
-                , onClick <| config.onRecognitionStep Selection
-                , type_ "button"
-                , class "text-base hover:text-blue-700 text-blue-600 mt-4 px-8 py-5 w-full"
-                ]
-                [ text "Reconnaître une autre compétence" ]
+            , addSkillButton config
             ]
         }
+
+
+addSkillButton : { a | onRecognitionStep : Step -> msg } -> Html msg
+addSkillButton config =
+    button
+        [ dataTest "restart-recognition"
+        , onClick <| config.onRecognitionStep Selection
+        , type_ "button"
+        , class "text-base hover:text-blue-700 text-blue-600 mt-4 px-8 py-5 w-full"
+        ]
+        [ text "Reconnaître une autre compétence" ]
 
 
 
