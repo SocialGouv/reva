@@ -178,9 +178,6 @@ update msg model =
                     Browser.Dom.focus "context"
                         |> Task.attempt (\_ -> NoOp)
 
-                View.Candidate.Recognition _ ->
-                    Cmd.none
-
                 _ ->
                     Cmd.none
             )
