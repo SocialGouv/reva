@@ -20,7 +20,6 @@ type alias MetaSkillReference =
     { id : String
     , category : String
     , name : String
-    , selected : Bool
     }
 
 
@@ -80,7 +79,6 @@ predefinedMetaSkills =
                 { id = skill.id
                 , category = skill.category
                 , name = skill.name
-                , selected = False
                 }
             )
 
@@ -125,15 +123,6 @@ introduction config _ =
 selection : { a | onRecognitionStep : Step -> msg } -> Candidate -> List (Html msg)
 selection config _ =
     let
-        viewSkillButton : MetaSkillReference -> Html msg
-        viewSkillButton skill =
-            viewSkill
-                [ dataTest <| "skill-" ++ skill.id
-                , type_ "button"
-                , onClick <| config.onRecognitionStep (Contextualization skill)
-                ]
-                skill
-
         viewSkills ( firstSkill, nextSkills ) =
             div
                 [ class "flex flex-col items-center mb-4" ]
@@ -143,6 +132,20 @@ selection config _ =
                         [ class "grid grid-cols-1 gap-6 justify-items-center sm:grid-cols-2 lg:grid-cols-3"
                         , class "bg-gray-100 p-8 rounded-lg mb-4"
                         ]
+                ]
+
+        viewSkillButton skill =
+            button
+                [ dataTest <| "skill-" ++ skill.id
+                , type_ "button"
+                , onClick <| config.onRecognitionStep (Contextualization skill)
+                , class "flex"
+                , class "relative block h-48 text-left text-base"
+                , class "text-gray-700 p-5 rounded-lg"
+                , class "group bg-white transition-shadow shadow hover:shadow-lg hover:text-gray-800"
+                ]
+                [ div [ class "ml-1" ] [ text skill.name ]
+                , div [ class "absolute bottom-4 right-4" ] [ Icons.add ]
                 ]
     in
     popup
@@ -154,40 +157,6 @@ selection config _ =
                 |> div []
             ]
         }
-
-
-viewSkill : List (Attribute msg) -> MetaSkillReference -> Html msg
-viewSkill attributes skill =
-    let
-        el =
-            if skill.selected then
-                div
-
-            else
-                button
-    in
-    el
-        ([ class "flex"
-         , class "relative block h-48 text-left text-base"
-         , class "text-gray-700 p-5 rounded-lg"
-         , class <|
-            if skill.selected then
-                "bg-gray-100"
-
-            else
-                "group bg-white transition-shadow shadow hover:shadow-lg hover:text-gray-800"
-         ]
-            ++ attributes
-        )
-        [ div [ class "ml-1" ] [ text skill.name ]
-        , div [ class "absolute bottom-4 right-4" ]
-            [ if skill.selected then
-                Icons.checked
-
-              else
-                Icons.add
-            ]
-        ]
 
 
 contextualization : { a | onRecognitionStep : Step -> msg } -> Candidate -> MetaSkillReference -> List (Html msg)
