@@ -1,4 +1,4 @@
-module View.Icons exposing (accepted, candidates, chevronLeft, close, commented, dot, filter, mail, menu, pending, rejected, search, signout, user, userLarge)
+module View.Icons exposing (accepted, add, candidates, checked, chevronLeft, close, commented, dot, filter, mail, menu, pending, rejected, search, signout, user, userLarge)
 
 import Html.Styled exposing (Html)
 import Html.Styled.Attributes exposing (attribute)
@@ -68,6 +68,39 @@ userLarge : Html msg
 userLarge =
     svg [ class "h-24 w-24", viewBox "0 0 20 20", fill "currentColor" ]
         [ Svg.path [ fillRule "evenodd", d "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z", clipRule "evenodd" ] [] ]
+
+
+checked : Html msg
+checked =
+    svg
+        [ class "h-6 w-6 text-blue-600"
+        , viewBox "0 0 20 20"
+        , fill "currentColor"
+        , attribute "aria-hidden" "true"
+        ]
+        [ Svg.path
+            [ fillRule "evenodd"
+            , d "M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+            , clipRule "evenodd"
+            ]
+            []
+        ]
+
+
+add : Html msg
+add =
+    svg
+        [ class "h-6 w-6 group-hover:text-blue-800 text-blue-500"
+        , viewBox "0 0 20 20"
+        , fill "currentColor"
+        ]
+        [ Svg.path
+            [ fillRule "evenodd"
+            , d "M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+            , clipRule "evenodd"
+            ]
+            []
+        ]
 
 
 

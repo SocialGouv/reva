@@ -18,14 +18,23 @@ import View.Timeline as Timeline
 
 type Tab
     = Events
-    | Recognition
+    | Recognition View.Candidate.Recognition.Step
     | Profil
 
 
-layout : { a | onSelectTab : Tab -> msg } -> Tab -> Candidate -> Html msg
+layout :
+    { a
+        | onSelectTab : Tab -> msg
+        , onRecognitionStep : View.Candidate.Recognition.Step -> msg
+    }
+    -> Tab
+    -> Candidate
+    -> Html msg
 layout config tab candidate =
     node "main"
-        [ dataTest "profile", class "flex-1 relative z-0 overflow-y-auto focus:outline-none xl:order-last" ]
+        [ dataTest "profile"
+        , class "flex-1 relative z-10 overflow-y-auto focus:outline-none xl:order-last"
+        ]
         [ nav
             [ class "flex items-start px-4 py-3 sm:px-6 lg:px-8 md:hidden", attribute "aria-label" "Breadcrumb" ]
             [ a
@@ -92,8 +101,8 @@ layout config tab candidate =
                           }
                         , { dataTest = "recognition"
                           , name = "Reconnaissance"
-                          , selected = tab == Recognition
-                          , toMsg = config.onSelectTab Recognition
+                          , selected = isRecognitionTab tab
+                          , toMsg = config.onSelectTab <| Recognition View.Candidate.Recognition.Introduction
                           }
                         , { dataTest = "profile"
                           , name = "Profil"
@@ -113,8 +122,8 @@ layout config tab candidate =
                     Profil ->
                         profile candidate
 
-                    Recognition ->
-                        View.Candidate.Recognition.view candidate
+                    Recognition step ->
+                        View.Candidate.Recognition.view config step candidate
             ]
         ]
 
@@ -275,3 +284,17 @@ profile candidate =
             |> viewInfo "city" "Ville"
         ]
     ]
+
+
+
+-- HELPERS
+
+
+isRecognitionTab : Tab -> Bool
+isRecognitionTab tab =
+    case tab of
+        Recognition _ ->
+            True
+
+        _ ->
+            False

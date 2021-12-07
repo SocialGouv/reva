@@ -15,6 +15,7 @@ import Html.Styled.Attributes exposing (action, attribute, class, for, href, id,
 import Html.Styled.Events exposing (onClick, onInput)
 import List.Extra
 import View.Candidate exposing (Tab(..))
+import View.Candidate.Recognition
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 
@@ -83,6 +84,7 @@ filterCandidate filter candidate =
 view :
     { a
         | onFilter : String -> msg
+        , onRecognitionStep : View.Candidate.Recognition.Step -> msg
         , onSelectCandidate : Candidate -> msg
         , onSelectTab : Tab -> msg
     }
@@ -106,6 +108,7 @@ view config model =
 viewContent :
     { a
         | onFilter : String -> msg
+        , onRecognitionStep : View.Candidate.Recognition.Step -> msg
         , onSelectCandidate : Candidate -> msg
         , onSelectTab : Tab -> msg
     }
@@ -137,9 +140,9 @@ viewContent config model candidates =
             ]
         , div
             [ class "flex-1 relative z-0 flex overflow-hidden" ]
-            [ Maybe.map (View.Candidate.layout config model.tab) model.selected
+            [ viewDirectoryPanel config candidates
+            , Maybe.map (View.Candidate.layout config model.tab) model.selected
                 |> Maybe.withDefault (div [ class "h-full w-full bg-gray-500" ] [])
-            , viewDirectoryPanel config candidates
             ]
         ]
 
