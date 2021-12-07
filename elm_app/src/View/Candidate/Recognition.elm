@@ -1,7 +1,7 @@
 module View.Candidate.Recognition exposing (Step(..), view)
 
 import Candidate exposing (Candidate)
-import Html.Styled exposing (Attribute, Html, button, div, h3, h4, h5, input, label, p, span, text, textarea)
+import Html.Styled exposing (Attribute, Html, button, div, h3, h4, label, p, text, textarea)
 import Html.Styled.Attributes exposing (attribute, class, for, id, name, placeholder, rows, type_)
 import Html.Styled.Events exposing (onClick)
 import List.Extra
@@ -197,7 +197,7 @@ contextualization config _ skill =
             "Décrivez au moins une situation pendant laquelle la compétence s'est illustrée"
     in
     popup
-        { title = "Décrivez une situation"
+        { title = "Décrivez les mises en situation"
         , onClose = config.onRecognitionStep Introduction
         , content =
             [ div
