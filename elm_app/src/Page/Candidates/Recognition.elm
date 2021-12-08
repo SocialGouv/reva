@@ -129,12 +129,17 @@ introduction _ =
         [ text "Pour chaque méta-compétence, vous ajouterez du contexte et chargerez les éventuels fichiers de preuves. A l'issue de ce processus, vous pourrez générer un livret de reconnaissance."
         ]
     , p
-        [ class "mt-2" ]
+        [ class "mt-2 mb-4" ]
         [ text "D'ici la mise à disposition du module de reconnaissance, vous pouvez nous poser vos questions via le chat en bas à droite de cette page ou tester notre démo." ]
     , actionFooter
         { dataTest = "start-recognition"
         , text = "Démarrer la démonstration"
         , toMsg = UserNavigateTo Selection
+        }
+    , secondaryActionFooter
+        { dataTest = "review-recognition"
+        , text = "Voir les compétences reconnues"
+        , toMsg = UserNavigateTo Review
         }
     ]
 
@@ -204,7 +209,8 @@ contextualization skill =
                             [ for "situation", class "sr-only" ]
                             [ text commentPlaceholder ]
                         , textarea
-                            [ onInput (UserUpdatedSkillComment skill)
+                            [ dataTest "situation"
+                            , onInput (UserUpdatedSkillComment skill)
                             , required True
                             , minlength 25
                             , rows 4
@@ -249,7 +255,7 @@ review candidate maybeSkill =
                 skill
     in
     popup
-        { title = "Livret de compétences"
+        { title = "Compétences reconnues"
         , onClose = UserNavigateTo Introduction
         , content =
             [ case maybeSkill of
@@ -280,7 +286,8 @@ review candidate maybeSkill =
 viewSkill : List (Html Msg) -> MetaSkill -> Html Msg
 viewSkill situation skill =
     div
-        [ class "max-w-md rounded-lg px-6 py-5 bg-white"
+        [ dataTest "candidate-skill"
+        , class "max-w-md rounded-lg px-6 py-5 bg-white"
         , class "border border-gray-300"
         ]
         [ div

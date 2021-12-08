@@ -74,16 +74,39 @@ describe('List all candidates', () => {
   })
 
   context('open recognition module', () => {
+    const loremIpsum =
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ut mauris elementum, eleifend lectus eget, finibus massa.'
+
     beforeEach(() => {
       cy.get('@directoryItems').eq(1).click()
       cy.get('button[data-test=recognition]').click()
     })
 
-    it('start a recognition', function () {
+    it('recognize two skills', function () {
+      cy.get('button[data-test=start-recognition]').click()
+
+      cy.get('button[data-test=skill-1]').click()
+      cy.get('textarea[data-test=situation]').type(loremIpsum)
+      cy.get('button[data-test=confirm-recognition]').click()
+      cy.get('div[data-test=candidate-skill]').should('have.length', 1)
+      cy.get('button[data-test=restart-recognition]').click()
+
+      cy.get('button[data-test=skill-4]').click()
+      cy.get('textarea[data-test=situation]').type(loremIpsum)
+      cy.get('button[data-test=confirm-recognition]').click()
+      cy.get('div[data-test=candidate-skill]').should('have.length', 2)
+
+      cy.get('button[data-test=close-popup]').click()
+      cy.get('button[data-test=review-recognition]').click()
+      cy.get('div[data-test=candidate-skill]').should('have.length', 2)
+    })
+
+    it('require a comment to be added after selection', function () {
       cy.get('button[data-test=start-recognition]').click()
       cy.get('button[data-test=skill-1]').click()
       cy.get('button[data-test=confirm-recognition]').click()
-      cy.get('button[data-test=restart-recognition]').click()
+      // Invalid form, we still have the button
+      cy.get('button[data-test=confirm-recognition]').should('exist')
     })
 
     it('can close recognition module', function () {
