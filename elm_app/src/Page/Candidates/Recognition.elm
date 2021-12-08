@@ -1,11 +1,12 @@
 module Page.Candidates.Recognition exposing (Model, Msg, Step(..), init, update, view)
 
+import Actions
 import Browser.Dom
 import Candidate exposing (Candidate)
 import Candidate.MetaSkill exposing (MetaSkill)
-import Html.Styled exposing (Html, button, div, h3, h4, label, p, text, textarea)
-import Html.Styled.Attributes exposing (attribute, class, for, id, name, placeholder, rows, type_)
-import Html.Styled.Events exposing (onClick)
+import Html.Styled exposing (Html, button, div, form, h3, h4, label, p, text, textarea)
+import Html.Styled.Attributes exposing (attribute, class, for, id, minlength, name, placeholder, required, rows, type_)
+import Html.Styled.Events exposing (onClick, onInput, onSubmit)
 import List.Extra
 import Task
 import View.Helpers exposing (dataTest)
@@ -22,7 +23,8 @@ type Step
     = Introduction
     | Selection
     | Contextualization MetaSkill
-    | Confirmation
+    | Confirmation MetaSkill
+    | Review
 
 
 type alias Model =
@@ -107,10 +109,13 @@ view model candidate =
                 selection candidate
 
             Contextualization skill ->
-                contextualization candidate skill
+                contextualization skill
 
-            Confirmation ->
-                confirmation candidate
+            Confirmation skill ->
+                review candidate (Just skill)
+
+            Review ->
+                review candidate Nothing
 
 
 introduction : Candidate -> List (Html Msg)
@@ -139,13 +144,10 @@ selection _ =
     let
         viewSkills ( firstSkill, nextSkills ) =
             div
-                [ class "flex flex-col items-center mb-4" ]
+                [ class "flex flex-col items-center my-4 px-6" ]
                 [ title4 [ text firstSkill.category ]
                 , List.map viewSkillButton (firstSkill :: nextSkills)
-                    |> div
-                        [ class "grid grid-cols-1 gap-6 justify-items-center sm:grid-cols-2 lg:grid-cols-3"
-                        , class "bg-gray-100 p-8 rounded-lg mb-4"
-                        ]
+                    |> viewSkillGrid
                 ]
 
         viewSkillButton skill =
@@ -161,9 +163,9 @@ selection _ =
                             , comment = ""
                             }
                 , class "flex"
-                , class "relative block h-48 text-left text-base"
-                , class "text-gray-700 p-5 rounded-lg"
-                , class "group bg-white transition-shadow shadow hover:shadow-lg hover:text-gray-800"
+                , class "relative block h-48 text-left text-base leading-snug"
+                , class "text-gray-600 p-5 rounded-lg"
+                , class "group border bg-white transition-shadow shadow-sm hover:shadow-lg hover:text-gray-800"
                 ]
                 [ div [ class "ml-1" ] [ text skill.name ]
                 , div [ class "absolute bottom-4 right-4" ] [ Icons.add ]
@@ -180,8 +182,8 @@ selection _ =
         }
 
 
-contextualization : Candidate -> MetaSkill -> List (Html Msg)
-contextualization _ skill =
+contextualization : MetaSkill -> List (Html Msg)
+contextualization skill =
     let
         commentPlaceholder =
             "Décrivez au moins une situation pendant laquelle la compétence s'est illustrée"
@@ -190,69 +192,108 @@ contextualization _ skill =
         { title = "Décrivez une situation"
         , onClose = UserNavigateTo Introduction
         , content =
-            [ viewSkill skill
-                [ label
-                    [ for "situation", class "sr-only" ]
-                    [ text commentPlaceholder ]
-                , textarea
-                    [ rows 4
-                    , name "situation"
-                    , id "situation"
-                    , placeholder commentPlaceholder
-                    , class "shadow-base block w-full border-gray-300 rounded-md my-2 "
-                    , class "focus:ring-indigo-500 focus:border-indigo-500"
-                    ]
-                    []
+            [ div
+                [ class "flex justify-center items-center"
+                , class "py-24 bg-gray-50 w-full mb-8"
                 ]
-            , actionFooter
-                { dataTest = "confirm-recognition"
-                , text = "Reconnaître"
-                , toMsg = UserNavigateTo Confirmation
+                [ viewSkill
+                    [ form
+                        [ onSubmit <| UserNavigateTo (Confirmation skill) ]
+                        [ label
+                            [ for "situation", class "sr-only" ]
+                            [ text commentPlaceholder ]
+                        , textarea
+                            [ onInput (UserUpdatedSkillComment skill)
+                            , required True
+                            , minlength 25
+                            , rows 4
+                            , name "situation"
+                            , id "situation"
+                            , placeholder commentPlaceholder
+                            , class "block w-full border-gray-300 rounded-md mt-2 "
+                            , class "focus:ring-indigo-500 focus:border-indigo-500"
+                            ]
+                            []
+                        , button
+                            [ dataTest "confirm-recognition"
+                            , type_ "submit"
+                            , class "mt-4 w-full rounded bg-blue-600"
+                            , class "hover:bg-blue-700 text-white px-8 py-3"
+                            ]
+                            [ text "Reconnaître" ]
+                        ]
+                    ]
+                    skill
+                ]
+            , secondaryActionFooter
+                { dataTest = "restart-recognition"
+                , text = "← Sélectionner une autre compétence"
+                , toMsg = UserNavigateTo Selection
                 }
-            , addSkillButton
             ]
         }
 
 
-confirmation : Candidate -> List (Html Msg)
-confirmation _ =
+review : Candidate -> Maybe MetaSkill -> List (Html Msg)
+review candidate maybeSkill =
+    let
+        viewSkillWithComment skill =
+            viewSkill
+                [ div
+                    [ class "text-gray-600"
+                    , class "bg-gray-100 w-full rounded-md px-3 py-2 mt-2"
+                    ]
+                    [ text skill.comment ]
+                ]
+                skill
+    in
     popup
-        { title = "Compétence reconnue"
+        { title = "Livret de compétences"
         , onClose = UserNavigateTo Introduction
         , content =
-            [ alert "Mode de démonstration, aucune action n'a été enregistrée."
-            , div [ class "h-40" ] []
-            , actionFooter
-                { dataTest = "close-recognition"
-                , text = "Terminer"
-                , toMsg = UserNavigateTo Introduction
-                }
-            , addSkillButton
+            [ case maybeSkill of
+                Just skill ->
+                    alert <|
+                        "Mode de démonstration, la compétence \""
+                            ++ skill.name
+                            ++ "\" n'a\u{00A0}pas\u{00A0}été\u{00A0}enregistrée."
+
+                Nothing ->
+                    text ""
+            , div
+                [ class "h-full px-6 overflow-y-scroll" ]
+                [ viewSkillGrid <|
+                    List.map
+                        viewSkillWithComment
+                        candidate.metaSkills
+                ]
+            , div
+                [ class "flex justify-end items-center bg-gray-50 h-40 w-full border-t px-8" ]
+                [ secondaryActionFooter
+                    { dataTest = "close-recognition"
+                    , text = "Terminer"
+                    , toMsg = UserNavigateTo Introduction
+                    }
+                , actionFooter
+                    { dataTest = "restart-recognition"
+                    , text = "Reconnaître une autre compétence"
+                    , toMsg = UserNavigateTo Selection
+                    }
+                ]
             ]
         }
 
 
-addSkillButton : Html Msg
-addSkillButton =
-    button
-        [ dataTest "restart-recognition"
-        , onClick (UserNavigateTo Selection)
-        , type_ "button"
-        , class "text-base hover:text-blue-700 text-blue-600 mt-4 px-8 py-5 w-full"
-        ]
-        [ text "Reconnaître une autre compétence" ]
-
-
-viewSkill : MetaSkill -> List (Html Msg) -> Html Msg
-viewSkill skill situation =
+viewSkill : List (Html Msg) -> MetaSkill -> Html Msg
+viewSkill situation skill =
     div
-        [ class "max-w-md rounded-lg px-6 py-5 bg-blue-50 my-8" ]
+        [ class "max-w-md rounded-lg px-6 py-5 border bg-white" ]
         [ div
             [ class "text-left w-full" ]
             [ title4 [ text skill.category ]
             , p
                 [ class "mt-2"
-                , class "text-base text-gray-800"
+                , class "text-base text-gray-800 leading-snug"
                 ]
                 [ text skill.name ]
             ]
@@ -260,36 +301,57 @@ viewSkill skill situation =
         ]
 
 
+viewSkillGrid : List (Html msg) -> Html msg
+viewSkillGrid =
+    div
+        [ class "grid grid-cols-1 gap-6 justify-items-center sm:grid-cols-2 lg:grid-cols-3"
+        , class "bg-gray-50 p-6 rounded-lg mb-4"
+        ]
+
+
 
 -- UPDATE
 
 
-update : Model -> Msg -> ( Model, Cmd Msg )
-update model msg =
+update : Candidate -> Model -> Msg -> ( Model, Cmd Msg, List Actions.Action )
+update candidate model msg =
     case msg of
+        UserNavigateTo (Contextualization skill) ->
+            ( { model | step = Contextualization skill }
+            , Browser.Dom.focus "situation"
+                |> Task.attempt (\_ -> NoOp)
+            , []
+            )
+
+        UserNavigateTo (Confirmation skill) ->
+            ( { model | step = Confirmation skill }
+            , Cmd.none
+            , [ Actions.UpdateCandidate
+                    { candidate
+                        | metaSkills = skill :: candidate.metaSkills
+                    }
+              ]
+            )
+
         UserNavigateTo step ->
             ( { model | step = step }
-            , case step of
-                Contextualization _ ->
-                    Browser.Dom.focus "situation"
-                        |> Task.attempt (\_ -> NoOp)
-
-                _ ->
-                    Cmd.none
+            , Cmd.none
+            , []
             )
 
         UserUpdatedSkillComment skill comment ->
             ( { model | step = Contextualization { skill | comment = comment } }
             , Cmd.none
+            , []
             )
 
         NoOp ->
-            ( model, Cmd.none )
+            ( model, Cmd.none, [] )
 
 
 init : Model
 init =
-    { step = Introduction }
+    { step = Selection }
 
 
 
@@ -333,7 +395,9 @@ popup config =
                         ]
                         [ text "Fermer" ]
                     ]
-                , div [ class "flex flex-col w-full items-center mt-16 pt-6 px-8 overflow-y-scroll" ] config.content
+                , div
+                    [ class "flex flex-col w-full h-full items-center mt-10 pt-6 overflow-y-scroll" ]
+                    config.content
                 ]
             ]
         ]
@@ -343,7 +407,9 @@ popup config =
 alert : String -> Html msg
 alert s =
     div
-        [ class "w-full rounded-lg px-8 py-4 font-semibold bg-yellow-100 text-yellow-800" ]
+        [ class "my-8"
+        , class "rounded-lg px-8 py-4 font-semibold bg-yellow-100 text-yellow-800 mx-6"
+        ]
         [ text s ]
 
 
@@ -370,12 +436,24 @@ title4 content =
 actionFooter : { a | dataTest : String, text : String, toMsg : msg } -> Html msg
 actionFooter config =
     div
-        [ class "text-base flex items-center justify-start mt-4" ]
+        [ class "text-base flex items-center justify-start" ]
         [ button
             [ dataTest config.dataTest
             , onClick config.toMsg
             , type_ "button"
-            , class "rounded bg-blue-600 hover:bg-blue-700 text-white px-8 py-3"
+            , class "max-w-sm rounded bg-blue-600"
+            , class "hover:bg-blue-700 text-white px-8 py-3"
             ]
             [ text config.text ]
         ]
+
+
+secondaryActionFooter : { a | dataTest : String, text : String, toMsg : msg } -> Html msg
+secondaryActionFooter config =
+    button
+        [ dataTest config.dataTest
+        , onClick config.toMsg
+        , type_ "button"
+        , class "text-base hover:text-blue-700 text-blue-600 mx-4 px-8 py-3"
+        ]
+        [ text config.text ]

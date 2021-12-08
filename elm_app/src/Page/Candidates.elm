@@ -7,6 +7,7 @@ module Page.Candidates exposing
     , view
     )
 
+import Actions
 import Candidate exposing (Candidate)
 import Candidate.Status exposing (Status(..))
 import Html.Styled as Html exposing (Html, a, aside, button, div, h2, h3, input, label, li, nav, p, span, text, ul)
@@ -44,13 +45,13 @@ init =
     { filter = Nothing
     , selected = Nothing
     , state = Loading
-    , tab = View.Candidate.Events
+    , tab = View.Candidate.Recognition Recognition.init
     }
 
 
 receiveCandidates : Model -> List Candidate -> Model
 receiveCandidates model candidates =
-    { model | state = Idle candidates, selected = Nothing }
+    { model | state = Idle candidates, selected = List.head candidates }
 
 
 filterCandidate : String -> Candidate -> Bool
@@ -259,13 +260,16 @@ update msg model =
     in
     case msg of
         GotRecognitionMsg recoMsg ->
-            case model.tab of
-                Recognition recoModel ->
+            case ( model.tab, model.selected ) of
+                ( Recognition recoModel, Just candidate ) ->
                     let
-                        ( newRecoModel, recoCmd ) =
-                            Recognition.update recoModel recoMsg
+                        ( newRecoModel, recoCmd, actions ) =
+                            Recognition.update candidate recoModel recoMsg
+
+                        newModel =
+                            { model | tab = Recognition newRecoModel }
                     in
-                    ( { model | tab = Recognition newRecoModel }
+                    ( List.foldl applyAction newModel actions
                     , Cmd.map GotRecognitionMsg recoCmd
                     )
 
@@ -280,6 +284,13 @@ update msg model =
 
         UserSelectedCandidateTab tab ->
             ( { model | tab = tab }, Cmd.none )
+
+
+applyAction : Actions.Action -> Model -> Model
+applyAction action model =
+    case action of
+        Actions.UpdateCandidate candidate ->
+            { model | selected = Just candidate }
 
 
 
