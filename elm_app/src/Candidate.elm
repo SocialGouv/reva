@@ -119,6 +119,7 @@ metaSkillDecoder : Decoder MetaSkill
 metaSkillDecoder =
     Decode.succeed MetaSkill
         |> required "id" Decode.string
+        |> required "category" Decode.string
         |> required "name" Decode.string
         |> required "comment" Decode.string
 

@@ -1,7 +1,8 @@
 module View.Candidate.Recognition exposing (Step(..), view)
 
 import Candidate exposing (Candidate)
-import Html.Styled exposing (Attribute, Html, button, div, h3, h4, label, p, text, textarea)
+import Candidate.MetaSkill exposing (MetaSkill)
+import Html.Styled exposing (Html, button, div, h3, h4, label, p, text, textarea)
 import Html.Styled.Attributes exposing (attribute, class, for, id, name, placeholder, rows, type_)
 import Html.Styled.Events exposing (onClick)
 import List.Extra
@@ -12,7 +13,7 @@ import View.Icons as Icons
 type Step
     = Introduction
     | Selection
-    | Contextualization MetaSkillReference
+    | Contextualization MetaSkill
     | Confirmation
 
 
@@ -138,7 +139,14 @@ selection config _ =
             button
                 [ dataTest <| "skill-" ++ skill.id
                 , type_ "button"
-                , onClick <| config.onRecognitionStep (Contextualization skill)
+                , onClick <|
+                    config.onRecognitionStep <|
+                        Contextualization
+                            { id = skill.id
+                            , category = skill.category
+                            , name = skill.name
+                            , comment = ""
+                            }
                 , class "flex"
                 , class "relative block h-48 text-left text-base"
                 , class "text-gray-700 p-5 rounded-lg"
@@ -159,7 +167,7 @@ selection config _ =
         }
 
 
-contextualization : { a | onRecognitionStep : Step -> msg } -> Candidate -> MetaSkillReference -> List (Html msg)
+contextualization : { a | onRecognitionStep : Step -> msg } -> Candidate -> MetaSkill -> List (Html msg)
 contextualization config _ skill =
     let
         commentPlaceholder =
@@ -222,7 +230,7 @@ addSkillButton config =
         [ text "Reconnaître une autre compétence" ]
 
 
-viewSkill : MetaSkillReference -> List (Html msg) -> Html msg
+viewSkill : MetaSkill -> List (Html msg) -> Html msg
 viewSkill skill situation =
     div
         [ class "max-w-md rounded-lg px-6 py-5 bg-blue-50 my-8" ]
