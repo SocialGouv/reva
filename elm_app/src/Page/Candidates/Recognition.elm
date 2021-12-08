@@ -428,10 +428,15 @@ title4 content =
         content
 
 
+footerWrapper : List (Html msg) -> Html msg
+footerWrapper =
+    div
+        [ class "border-t w-full flex items-center justify-center h-28" ]
+
+
 actionFooter : { a | dataTest : String, text : String, toMsg : msg } -> Html msg
 actionFooter config =
-    div
-        [ class "flex items-center justify-center h-28" ]
+    footerWrapper
         [ button
             [ dataTest config.dataTest
             , onClick config.toMsg
@@ -445,8 +450,7 @@ actionFooter config =
 
 secondaryActionFooter : { a | dataTest : String, text : String, toMsg : msg } -> Html msg
 secondaryActionFooter config =
-    div
-        [ class "flex items-center justify-center h-28" ]
+    footerWrapper
         [ button
             [ dataTest config.dataTest
             , onClick config.toMsg
