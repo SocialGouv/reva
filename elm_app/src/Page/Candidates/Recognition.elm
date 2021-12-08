@@ -268,7 +268,7 @@ review candidate maybeSkill =
                 Nothing ->
                     text ""
             , div
-                [ class "flex-grow bg-gray-100 overflow-y-scroll" ]
+                [ class "flex-grow bg-gray-100 w-full overflow-y-scroll" ]
                 [ viewSkillGrid <|
                     List.map
                         viewSkillWithComment
