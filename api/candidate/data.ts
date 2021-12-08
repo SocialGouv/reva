@@ -69,7 +69,7 @@ export const getCandidates = async (user: {
 
   query = `
     ${query}
-    GROUP BY c.id, u.email, u.firstname, u.lastname, u.phone, cohorte_id, ci.id, ci.label, ci.region, di.id, di.label
+    GROUP BY c.id, u.email, u.firstname, u.lastname, u.phone, c.cohorte_id, ci.id, ci.label, ci.region, di.id, di.label
     ORDER BY u.lastname
     `
 
