@@ -346,7 +346,7 @@ update candidate model msg =
 
 init : Model
 init =
-    { step = Selection }
+    { step = Introduction }
 
 
 

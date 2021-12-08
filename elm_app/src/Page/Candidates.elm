@@ -45,13 +45,13 @@ init =
     { filter = Nothing
     , selected = Nothing
     , state = Loading
-    , tab = View.Candidate.Recognition Recognition.init
+    , tab = View.Candidate.Events
     }
 
 
 receiveCandidates : Model -> List Candidate -> Model
 receiveCandidates model candidates =
-    { model | state = Idle candidates, selected = List.head candidates }
+    { model | state = Idle candidates }
 
 
 filterCandidate : String -> Candidate -> Bool
