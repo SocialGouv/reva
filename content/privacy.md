@@ -70,7 +70,7 @@ Cette mission d’intérêt public est notamment mise en œuvre en application d
 
 Ce traitement est nécessaire au respect d'une obligation légale à laquelle le responsable de traitement est soumis au sens de l'article 6-c du Règlement (UE) 2016/679 du Parlement européen et du Conseil du 27 avril 2016 relatif à la protection des personnes physiques à l'égard du traitement des données à caractère personnel et à la libre circulation de ces données.
 
-L'obligation légale est posée par la loi LCEN n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique et par les articles 1 et 3 du décret n°2011-219 du 25 février 2011.
+L'obligation légale est posée par la loi LCEN n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique et par l’article 1 du décret n°2021-1363 du 20 octobre 2021 portant injonction au regard de la menace grave et actuelle contre la sécurité nationale, de conservation pour une durée d’un an de certaines catégories de données de connexion.
 
 
 6. Cookies
@@ -121,7 +121,7 @@ Ce consentement de la personne concernée pour une ou plusieurs finalités spéc
   <tr>
    <td>Données d’hébergeur
    </td>
-   <td><strong>1 an</strong>, conformément au décret n°2011-219 du 25 février 2011.
+   <td><strong>1 an</strong>, conformément au décret n°2021-1363 du 20 octobre 2021.
    </td>
   </tr>
   <tr>
