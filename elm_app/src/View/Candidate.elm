@@ -23,14 +23,12 @@ type Tab
 
 
 layout :
-    { a
-        | onSelectTab : Tab -> msg
-        , onRecognitionStep : View.Candidate.Recognition.Step -> msg
-    }
-    -> Tab
+    { a | onSelectTab : Tab -> msg }
     -> Candidate
+    -> Tab
+    -> List (Html msg)
     -> Html msg
-layout config tab candidate =
+layout config candidate tab tabContent =
     node "main"
         [ dataTest "profile"
         , class "flex-1 relative z-10 overflow-y-auto focus:outline-none xl:order-last"
@@ -114,16 +112,7 @@ layout config tab candidate =
                 ]
             , div
                 [ class "my-6 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-sm text-gray-700" ]
-              <|
-                case tab of
-                    Events ->
-                        events candidate
-
-                    Profil ->
-                        profile candidate
-
-                    Recognition step ->
-                        View.Candidate.Recognition.view config step candidate
+                tabContent
             ]
         ]
 

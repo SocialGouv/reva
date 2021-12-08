@@ -30,16 +30,6 @@ type Msg
     | NoOp
 
 
-
-{--
-      , onRecognitionStep = \step -> UserSelectedCandidateTab (View.Candidate.Recognition step)
-            , onSelectCandidate = UserSelectedCandidate
-            , onSelectTab = UserSelectedCandidateTab
-            , onUpdateSkillComment = UserUpdatedSkillComment
-
--}
-
-
 type alias Model =
     { filter : Maybe String
     , selected : Maybe Candidate
@@ -134,17 +124,34 @@ viewContent model candidates =
         , div
             [ class "flex-1 relative z-0 flex overflow-hidden" ]
             [ viewDirectoryPanel candidates
-            , Maybe.map
-                (View.Candidate.layout
-                    { onRecognitionStep = \step -> UserSelectedCandidateTab (View.Candidate.Recognition step)
-                    , onSelectTab = UserSelectedCandidateTab
-                    }
-                    model.tab
-                )
-                model.selected
+            , Maybe.map (viewCandidatePanel model) model.selected
                 |> Maybe.withDefault (div [ class "h-full w-full bg-gray-500" ] [])
             ]
         ]
+
+
+viewCandidatePanel : Model -> Candidate -> Html Msg
+viewCandidatePanel model candidate =
+    View.Candidate.layout
+        { onSelectTab = UserSelectedCandidateTab }
+        candidate
+        model.tab
+    <|
+        case model.tab of
+            Events ->
+                View.Candidate.events candidate
+
+            Profil ->
+                View.Candidate.profile candidate
+
+            Recognition step ->
+                View.Candidate.Recognition.view
+                    { onRecognitionStep =
+                        \recoStep ->
+                            UserSelectedCandidateTab (View.Candidate.Recognition recoStep)
+                    }
+                    step
+                    candidate
 
 
 viewDirectoryPanel :
