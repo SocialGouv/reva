@@ -7,27 +7,23 @@ module Page.Candidates exposing
     , view
     )
 
-import Browser.Dom
 import Candidate exposing (Candidate)
-import Candidate.MetaSkill exposing (MetaSkill)
 import Candidate.Status exposing (Status(..))
-import Html.Styled exposing (Html, a, aside, button, div, h2, h3, input, label, li, nav, p, span, text, ul)
+import Html.Styled as Html exposing (Html, a, aside, button, div, h2, h3, input, label, li, nav, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, for, href, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onClick, onInput)
 import List.Extra
-import Task
+import Page.Candidates.Recognition as Recognition
 import View.Candidate exposing (Tab(..))
-import View.Candidate.Recognition
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 
 
 type Msg
-    = UserAddedFilter String
+    = GotRecognitionMsg Recognition.Msg
+    | UserAddedFilter String
     | UserSelectedCandidate Candidate
     | UserSelectedCandidateTab View.Candidate.Tab
-    | UserUpdatedSkillComment MetaSkill String
-    | NoOp
 
 
 type alias Model =
@@ -144,19 +140,13 @@ viewCandidatePanel model candidate =
             Profil ->
                 View.Candidate.profile candidate
 
-            Recognition step ->
-                View.Candidate.Recognition.view
-                    { onRecognitionStep =
-                        \recoStep ->
-                            UserSelectedCandidateTab (View.Candidate.Recognition recoStep)
-                    }
-                    step
-                    candidate
+            Recognition recoModel ->
+                [ Html.map GotRecognitionMsg <|
+                    Recognition.view recoModel candidate
+                ]
 
 
-viewDirectoryPanel :
-    List Candidate
-    -> Html Msg
+viewDirectoryPanel : List Candidate -> Html Msg
 viewDirectoryPanel candidates =
     let
         candidatesByFirstLetter =
@@ -263,7 +253,25 @@ viewItem candidate =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
+    let
+        noChange =
+            ( model, Cmd.none )
+    in
     case msg of
+        GotRecognitionMsg recoMsg ->
+            case model.tab of
+                Recognition recoModel ->
+                    let
+                        ( newRecoModel, recoCmd ) =
+                            Recognition.update recoModel recoMsg
+                    in
+                    ( { model | tab = Recognition newRecoModel }
+                    , Cmd.map GotRecognitionMsg recoCmd
+                    )
+
+                _ ->
+                    noChange
+
         UserAddedFilter filter ->
             ( { model | filter = Just filter }, Cmd.none )
 
@@ -271,28 +279,7 @@ update msg model =
             ( { model | selected = Just candidate }, Cmd.none )
 
         UserSelectedCandidateTab tab ->
-            ( { model | tab = tab }
-            , case tab of
-                View.Candidate.Recognition (View.Candidate.Recognition.Contextualization _) ->
-                    Browser.Dom.focus "context"
-                        |> Task.attempt (\_ -> NoOp)
-
-                _ ->
-                    Cmd.none
-            )
-
-        UserUpdatedSkillComment skill comment ->
-            let
-                tab =
-                    View.Candidate.Recognition.Contextualization { skill | comment = comment }
-                        |> View.Candidate.Recognition
-            in
-            ( { model | tab = tab }
-            , Cmd.none
-            )
-
-        NoOp ->
-            ( model, Cmd.none )
+            ( { model | tab = tab }, Cmd.none )
 
 
 

@@ -1,13 +1,21 @@
-module View.Candidate.Recognition exposing (Step(..), view)
+module Page.Candidates.Recognition exposing (Model, Msg, Step(..), init, update, view)
 
+import Browser.Dom
 import Candidate exposing (Candidate)
 import Candidate.MetaSkill exposing (MetaSkill)
 import Html.Styled exposing (Html, button, div, h3, h4, label, p, text, textarea)
 import Html.Styled.Attributes exposing (attribute, class, for, id, name, placeholder, rows, type_)
 import Html.Styled.Events exposing (onClick)
 import List.Extra
+import Task
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
+
+
+type Msg
+    = UserUpdatedSkillComment MetaSkill String
+    | UserNavigateTo Step
+    | NoOp
 
 
 type Step
@@ -15,6 +23,10 @@ type Step
     | Selection
     | Contextualization MetaSkill
     | Confirmation
+
+
+type alias Model =
+    { step : Step }
 
 
 type alias MetaSkillReference =
@@ -84,24 +96,25 @@ predefinedMetaSkills =
             )
 
 
-view : { a | onRecognitionStep : Step -> msg } -> Step -> Candidate -> List (Html msg)
-view config step candidate =
-    case step of
-        Introduction ->
-            introduction config candidate
+view : Model -> Candidate -> Html Msg
+view model candidate =
+    div [] <|
+        case model.step of
+            Introduction ->
+                introduction candidate
 
-        Selection ->
-            selection config candidate
+            Selection ->
+                selection candidate
 
-        Contextualization skill ->
-            contextualization config candidate skill
+            Contextualization skill ->
+                contextualization candidate skill
 
-        Confirmation ->
-            confirmation config candidate
+            Confirmation ->
+                confirmation candidate
 
 
-introduction : { a | onRecognitionStep : Step -> msg } -> Candidate -> List (Html msg)
-introduction config _ =
+introduction : Candidate -> List (Html Msg)
+introduction _ =
     [ title3 "Reconnaissance de méta-compétences"
     , p []
         [ text "Bientôt, vous pourrez démarrer ici une démarche de reconnaissance. Accompagné du candidat, vous sélectionnerez une ou plusieurs méta-compétences à reconnaître."
@@ -116,13 +129,13 @@ introduction config _ =
     , actionFooter
         { dataTest = "start-recognition"
         , text = "Démarrer la démonstration"
-        , toMsg = config.onRecognitionStep Selection
+        , toMsg = UserNavigateTo Selection
         }
     ]
 
 
-selection : { a | onRecognitionStep : Step -> msg } -> Candidate -> List (Html msg)
-selection config _ =
+selection : Candidate -> List (Html Msg)
+selection _ =
     let
         viewSkills ( firstSkill, nextSkills ) =
             div
@@ -140,7 +153,7 @@ selection config _ =
                 [ dataTest <| "skill-" ++ skill.id
                 , type_ "button"
                 , onClick <|
-                    config.onRecognitionStep <|
+                    UserNavigateTo <|
                         Contextualization
                             { id = skill.id
                             , category = skill.category
@@ -158,7 +171,7 @@ selection config _ =
     in
     popup
         { title = "Sélectionnez une compétence"
-        , onClose = config.onRecognitionStep Introduction
+        , onClose = UserNavigateTo Introduction
         , content =
             [ groupByCategory predefinedMetaSkills
                 |> List.map viewSkills
@@ -167,15 +180,15 @@ selection config _ =
         }
 
 
-contextualization : { a | onRecognitionStep : Step -> msg } -> Candidate -> MetaSkill -> List (Html msg)
-contextualization config _ skill =
+contextualization : Candidate -> MetaSkill -> List (Html Msg)
+contextualization _ skill =
     let
         commentPlaceholder =
             "Décrivez au moins une situation pendant laquelle la compétence s'est illustrée"
     in
     popup
         { title = "Décrivez une situation"
-        , onClose = config.onRecognitionStep Introduction
+        , onClose = UserNavigateTo Introduction
         , content =
             [ viewSkill skill
                 [ label
@@ -194,43 +207,43 @@ contextualization config _ skill =
             , actionFooter
                 { dataTest = "confirm-recognition"
                 , text = "Reconnaître"
-                , toMsg = config.onRecognitionStep Confirmation
+                , toMsg = UserNavigateTo Confirmation
                 }
-            , addSkillButton config
+            , addSkillButton
             ]
         }
 
 
-confirmation : { a | onRecognitionStep : Step -> msg } -> Candidate -> List (Html msg)
-confirmation config _ =
+confirmation : Candidate -> List (Html Msg)
+confirmation _ =
     popup
         { title = "Compétence reconnue"
-        , onClose = config.onRecognitionStep Introduction
+        , onClose = UserNavigateTo Introduction
         , content =
             [ alert "Mode de démonstration, aucune action n'a été enregistrée."
             , div [ class "h-40" ] []
             , actionFooter
                 { dataTest = "close-recognition"
                 , text = "Terminer"
-                , toMsg = config.onRecognitionStep Introduction
+                , toMsg = UserNavigateTo Introduction
                 }
-            , addSkillButton config
+            , addSkillButton
             ]
         }
 
 
-addSkillButton : { a | onRecognitionStep : Step -> msg } -> Html msg
-addSkillButton config =
+addSkillButton : Html Msg
+addSkillButton =
     button
         [ dataTest "restart-recognition"
-        , onClick <| config.onRecognitionStep Selection
+        , onClick (UserNavigateTo Selection)
         , type_ "button"
         , class "text-base hover:text-blue-700 text-blue-600 mt-4 px-8 py-5 w-full"
         ]
         [ text "Reconnaître une autre compétence" ]
 
 
-viewSkill : MetaSkill -> List (Html msg) -> Html msg
+viewSkill : MetaSkill -> List (Html Msg) -> Html Msg
 viewSkill skill situation =
     div
         [ class "max-w-md rounded-lg px-6 py-5 bg-blue-50 my-8" ]
@@ -245,6 +258,38 @@ viewSkill skill situation =
             ]
         , div [ class "text-left w-full mt-3" ] situation
         ]
+
+
+
+-- UPDATE
+
+
+update : Model -> Msg -> ( Model, Cmd Msg )
+update model msg =
+    case msg of
+        UserNavigateTo step ->
+            ( { model | step = step }
+            , case step of
+                Contextualization _ ->
+                    Browser.Dom.focus "situation"
+                        |> Task.attempt (\_ -> NoOp)
+
+                _ ->
+                    Cmd.none
+            )
+
+        UserUpdatedSkillComment skill comment ->
+            ( { model | step = Contextualization { skill | comment = comment } }
+            , Cmd.none
+            )
+
+        NoOp ->
+            ( model, Cmd.none )
+
+
+init : Model
+init =
+    { step = Introduction }
 
 
 

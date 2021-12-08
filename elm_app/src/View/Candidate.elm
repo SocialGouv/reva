@@ -6,10 +6,10 @@ import Candidate.Status as Status exposing (Status(..))
 import Css exposing (height, px)
 import Html.Styled exposing (Html, a, article, dd, div, dl, dt, h1, nav, node, span, text)
 import Html.Styled.Attributes exposing (attribute, class, css, href, target)
+import Page.Candidates.Recognition
 import String.Interpolate exposing (interpolate)
 import Url
 import Url.Builder
-import View.Candidate.Recognition
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 import View.Navigation as Navigation
@@ -18,7 +18,7 @@ import View.Timeline as Timeline
 
 type Tab
     = Events
-    | Recognition View.Candidate.Recognition.Step
+    | Recognition Page.Candidates.Recognition.Model
     | Profil
 
 
@@ -100,7 +100,7 @@ layout config candidate tab tabContent =
                         , { dataTest = "recognition"
                           , name = "Reconnaissance"
                           , selected = isRecognitionTab tab
-                          , toMsg = config.onSelectTab <| Recognition View.Candidate.Recognition.Introduction
+                          , toMsg = config.onSelectTab <| Recognition Page.Candidates.Recognition.init
                           }
                         , { dataTest = "profile"
                           , name = "Profil"
