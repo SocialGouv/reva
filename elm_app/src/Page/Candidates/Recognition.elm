@@ -142,14 +142,6 @@ introduction _ =
 selection : Candidate -> List (Html Msg)
 selection _ =
     let
-        viewSkills ( firstSkill, nextSkills ) =
-            div
-                [ class "flex flex-col items-center my-4 px-6" ]
-                [ title4 [ text firstSkill.category ]
-                , List.map viewSkillButton (firstSkill :: nextSkills)
-                    |> viewSkillGrid
-                ]
-
         viewSkillButton skill =
             button
                 [ dataTest <| "skill-" ++ skill.id
@@ -163,12 +155,21 @@ selection _ =
                             , comment = ""
                             }
                 , class "flex"
-                , class "relative block h-48 text-left text-base leading-snug"
-                , class "text-gray-600 p-5 rounded-lg"
-                , class "group border bg-white transition-shadow shadow-sm hover:shadow-lg hover:text-gray-800"
+                , class "relative block h-40 text-left text-base leading-snug"
+                , class "text-gray-800 p-5 rounded-lg"
+                , class "group border border-gray-300 bg-white transition-shadow shadow-sm"
+                , class "hover:border-gray-400"
                 ]
                 [ div [ class "ml-1" ] [ text skill.name ]
                 , div [ class "absolute bottom-4 right-4" ] [ Icons.add ]
+                ]
+
+        viewSkills ( firstSkill, nextSkills ) =
+            div
+                [ class "my-12" ]
+                [ title4 [ text firstSkill.category ]
+                , List.map viewSkillButton (firstSkill :: nextSkills)
+                    |> viewSkillGrid
                 ]
     in
     popup
@@ -194,7 +195,7 @@ contextualization skill =
         , content =
             [ div
                 [ class "flex justify-center items-center"
-                , class "py-24 bg-gray-50 w-full mb-8"
+                , class "py-24 bg-gray-100 w-full flex-grow"
                 ]
                 [ viewSkill
                     [ form
@@ -210,7 +211,7 @@ contextualization skill =
                             , name "situation"
                             , id "situation"
                             , placeholder commentPlaceholder
-                            , class "block w-full border-gray-300 rounded-md mt-2 "
+                            , class "block w-full border-gray-300 rounded-md mt-4 mb-1 "
                             , class "focus:ring-indigo-500 focus:border-indigo-500"
                             ]
                             []
@@ -261,25 +262,17 @@ review candidate maybeSkill =
                 Nothing ->
                     text ""
             , div
-                [ class "h-full px-6 overflow-y-scroll" ]
+                [ class "flex-grow bg-gray-100 overflow-y-scroll" ]
                 [ viewSkillGrid <|
                     List.map
                         viewSkillWithComment
                         candidate.metaSkills
                 ]
-            , div
-                [ class "flex justify-end items-center bg-gray-50 h-40 w-full border-t px-8" ]
-                [ secondaryActionFooter
-                    { dataTest = "close-recognition"
-                    , text = "Terminer"
-                    , toMsg = UserNavigateTo Introduction
-                    }
-                , actionFooter
-                    { dataTest = "restart-recognition"
-                    , text = "Reconnaître une autre compétence"
-                    , toMsg = UserNavigateTo Selection
-                    }
-                ]
+            , actionFooter
+                { dataTest = "restart-recognition"
+                , text = "Reconnaître une autre compétence"
+                , toMsg = UserNavigateTo Selection
+                }
             ]
         }
 
@@ -287,7 +280,9 @@ review candidate maybeSkill =
 viewSkill : List (Html Msg) -> MetaSkill -> Html Msg
 viewSkill situation skill =
     div
-        [ class "max-w-md rounded-lg px-6 py-5 border bg-white" ]
+        [ class "max-w-md rounded-lg px-6 py-5 bg-white"
+        , class "border border-gray-300"
+        ]
         [ div
             [ class "text-left w-full" ]
             [ title4 [ text skill.category ]
@@ -304,8 +299,8 @@ viewSkill situation skill =
 viewSkillGrid : List (Html msg) -> Html msg
 viewSkillGrid =
     div
-        [ class "grid grid-cols-1 gap-6 justify-items-center sm:grid-cols-2 lg:grid-cols-3"
-        , class "bg-gray-50 p-6 rounded-lg mb-4"
+        [ class "grid grid-cols-1 gap-4 justify-items-center sm:grid-cols-2 lg:grid-cols-3"
+        , class "bg-gray-100 p-10 mb-4"
         ]
 
 
@@ -368,7 +363,7 @@ popup config =
         , attribute "aria-modal" "true"
         ]
         [ div
-            [ class "flex items-end justify-center h-screen w-screen py-12 px-48" ]
+            [ class "flex items-end justify-center h-screen w-screen py-12 px-8" ]
             [ div
                 [ dataTest "close-popup"
                 , class "fixed inset-0 bg-gray-400"
@@ -376,12 +371,12 @@ popup config =
                 ]
                 []
             , div
-                [ class "relative bg-white max-w-5xl rounded-lg overflow-hidden shadow-xl transform transition-all"
+                [ class "relative bg-white max-w-6xl rounded-lg overflow-hidden shadow-xl transform transition-all"
                 , class "flex flex-col items-center text-center"
                 , class "sm:align-middle sm:w-full sm:h-full"
                 ]
                 [ div
-                    [ class "absolute top-0 w-full bg-white pt-4"
+                    [ class "relative w-full bg-white pt-4"
                     , class "border-b"
                     ]
                     [ title3 config.title
@@ -396,7 +391,7 @@ popup config =
                         [ text "Fermer" ]
                     ]
                 , div
-                    [ class "flex flex-col w-full h-full items-center mt-10 pt-6 overflow-y-scroll" ]
+                    [ class "flex flex-col w-full h-full items-center overflow-y-scroll" ]
                     config.content
                 ]
             ]
@@ -436,7 +431,7 @@ title4 content =
 actionFooter : { a | dataTest : String, text : String, toMsg : msg } -> Html msg
 actionFooter config =
     div
-        [ class "text-base flex items-center justify-start" ]
+        [ class "flex items-center justify-center h-28" ]
         [ button
             [ dataTest config.dataTest
             , onClick config.toMsg
@@ -450,10 +445,13 @@ actionFooter config =
 
 secondaryActionFooter : { a | dataTest : String, text : String, toMsg : msg } -> Html msg
 secondaryActionFooter config =
-    button
-        [ dataTest config.dataTest
-        , onClick config.toMsg
-        , type_ "button"
-        , class "text-base hover:text-blue-700 text-blue-600 mx-4 px-8 py-3"
+    div
+        [ class "flex items-center justify-center h-28" ]
+        [ button
+            [ dataTest config.dataTest
+            , onClick config.toMsg
+            , type_ "button"
+            , class "text-base hover:text-blue-700 text-blue-600 mx-4 px-8"
+            ]
+            [ text config.text ]
         ]
-        [ text config.text ]
