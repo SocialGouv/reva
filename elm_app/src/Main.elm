@@ -2,20 +2,16 @@ port module Main exposing (main)
 
 import Api
 import Browser
-import Browser.Dom
 import Browser.Navigation as Nav
 import Candidate exposing (Candidate)
-import Html.Styled exposing (Html, div, toUnstyled)
+import Html.Styled as Html exposing (Html, div, toUnstyled)
 import Http
 import Page.Candidates as Candidates exposing (Model)
 import Page.Login
 import Route exposing (Route(..))
-import Task
 import Url exposing (Url)
 import Validate
 import View
-import View.Candidate
-import View.Candidate.Recognition
 
 
 type alias Flags =
@@ -54,9 +50,7 @@ type Msg
       BrowserChangedUrl Url
     | UserClickedLink Browser.UrlRequest
     | UserLoggedOut
-    | UserSelectedCandidate Candidate
-    | UserSelectedCandidateTab View.Candidate.Tab
-    | UserAddedFilter String
+    | GotCandidatesMsg Candidates.Msg
     | GotLoginError String
       -- PROFILE
     | GotProfileResponse (Result Http.Error ())
@@ -65,7 +59,6 @@ type Msg
     | GotLoginSubmit
     | GotLoginResponse (Result Http.Error String)
     | GotCandidatesResponse (Result Http.Error (List Candidate))
-    | NoOp
 
 
 main : Program Flags Model Msg
@@ -96,15 +89,6 @@ view model =
 
 viewPage : Model -> Html Msg
 viewPage model =
-    let
-        config =
-            { onFilter = UserAddedFilter
-            , onLogout = UserLoggedOut
-            , onRecognitionStep = \step -> UserSelectedCandidateTab (View.Candidate.Recognition step)
-            , onSelectCandidate = UserSelectedCandidate
-            , onSelectTab = UserSelectedCandidateTab
-            }
-    in
     case model.state of
         NotLoggedIn loginModel ->
             Page.Login.view
@@ -114,8 +98,11 @@ viewPage model =
                 loginModel
 
         LoggedIn _ (Home candidateModel) ->
-            Candidates.view config candidateModel
-                |> View.layout config
+            Candidates.view candidateModel
+                |> Html.map GotCandidatesMsg
+                |> View.layout
+                    { onLogout = UserLoggedOut
+                    }
 
         _ ->
             div [] []
@@ -146,42 +133,6 @@ update msg model =
                     , Nav.load url
                     )
 
-        ( UserAddedFilter filter, LoggedIn token (Home candidatesModel) ) ->
-            ( { model
-                | state =
-                    Candidates.addFilter candidatesModel filter
-                        |> Home
-                        |> LoggedIn token
-              }
-            , Cmd.none
-            )
-
-        ( UserSelectedCandidate candidate, LoggedIn token (Home candidatesModel) ) ->
-            ( { model
-                | state =
-                    Candidates.selectCandidate candidatesModel candidate
-                        |> Home
-                        |> LoggedIn token
-              }
-            , Cmd.none
-            )
-
-        ( UserSelectedCandidateTab tab, LoggedIn token (Home candidatesModel) ) ->
-            ( { model
-                | state =
-                    Candidates.selectCandidateTab candidatesModel tab
-                        |> Home
-                        |> LoggedIn token
-              }
-            , case tab of
-                View.Candidate.Recognition (View.Candidate.Recognition.Contextualization _) ->
-                    Browser.Dom.focus "context"
-                        |> Task.attempt (\_ -> NoOp)
-
-                _ ->
-                    Cmd.none
-            )
-
         ( UserLoggedOut, LoggedIn _ _ ) ->
             ( model, removeToken () )
 
@@ -207,6 +158,15 @@ update msg model =
                 , Api.fetchCandidates GotCandidatesResponse { token = token }
                 , Nav.pushUrl model.key (Route.fromRoute model.baseUrl Route.Home)
                 ]
+            )
+
+        ( GotCandidatesMsg candidatesMsg, LoggedIn token (Home candidatesModel) ) ->
+            let
+                ( newCandidatesModel, candidatesCmd ) =
+                    Candidates.update candidatesMsg candidatesModel
+            in
+            ( { model | state = LoggedIn token (Home newCandidatesModel) }
+            , Cmd.map GotCandidatesMsg candidatesCmd
             )
 
         ( GotCandidatesResponse (Ok candidates), LoggedIn token (Home candidatesModel) ) ->

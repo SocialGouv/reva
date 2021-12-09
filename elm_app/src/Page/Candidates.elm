@@ -1,23 +1,30 @@
 module Page.Candidates exposing
     ( Model
-    , addFilter
+    , Msg
     , init
     , receiveCandidates
-    , selectCandidate
-    , selectCandidateTab
+    , update
     , view
     )
 
+import Actions
 import Candidate exposing (Candidate)
 import Candidate.Status exposing (Status(..))
-import Html.Styled exposing (Html, a, aside, button, div, h2, h3, input, label, li, nav, p, span, text, ul)
+import Html.Styled as Html exposing (Html, a, aside, button, div, h2, h3, input, label, li, nav, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, for, href, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onClick, onInput)
 import List.Extra
+import Page.Candidates.Recognition as Recognition
 import View.Candidate exposing (Tab(..))
-import View.Candidate.Recognition
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
+
+
+type Msg
+    = GotRecognitionMsg Recognition.Msg
+    | UserAddedFilter String
+    | UserSelectedCandidate Candidate
+    | UserSelectedCandidateTab View.Candidate.Tab
 
 
 type alias Model =
@@ -38,28 +45,13 @@ init =
     { filter = Nothing
     , selected = Nothing
     , state = Loading
-    , tab = Events
+    , tab = View.Candidate.Events
     }
 
 
 receiveCandidates : Model -> List Candidate -> Model
 receiveCandidates model candidates =
     { model | state = Idle candidates }
-
-
-selectCandidate : Model -> Candidate -> Model
-selectCandidate model candidate =
-    { model | selected = Just candidate }
-
-
-selectCandidateTab : Model -> Tab -> Model
-selectCandidateTab model tab =
-    { model | tab = tab }
-
-
-addFilter : Model -> String -> Model
-addFilter model filter =
-    { model | filter = Just filter }
 
 
 filterCandidate : String -> Candidate -> Bool
@@ -82,15 +74,9 @@ filterCandidate filter candidate =
 
 
 view :
-    { a
-        | onFilter : String -> msg
-        , onRecognitionStep : View.Candidate.Recognition.Step -> msg
-        , onSelectCandidate : Candidate -> msg
-        , onSelectTab : Tab -> msg
-    }
-    -> Model
-    -> Html msg
-view config model =
+    Model
+    -> Html Msg
+view model =
     case model.state of
         Loading ->
             div [] [ text "loading" ]
@@ -98,24 +84,18 @@ view config model =
         Idle candidates ->
             case model.filter of
                 Nothing ->
-                    viewContent config model candidates
+                    viewContent model candidates
 
                 Just filter ->
                     List.filter (filterCandidate filter) candidates
-                        |> viewContent config model
+                        |> viewContent model
 
 
 viewContent :
-    { a
-        | onFilter : String -> msg
-        , onRecognitionStep : View.Candidate.Recognition.Step -> msg
-        , onSelectCandidate : Candidate -> msg
-        , onSelectTab : Tab -> msg
-    }
-    -> Model
+    Model
     -> List Candidate
-    -> Html msg
-viewContent config model candidates =
+    -> Html Msg
+viewContent model candidates =
     div
         [ class "flex flex-col min-w-0 flex-1 overflow-hidden" ]
         [ div
@@ -140,21 +120,35 @@ viewContent config model candidates =
             ]
         , div
             [ class "flex-1 relative z-0 flex overflow-hidden" ]
-            [ viewDirectoryPanel config candidates
-            , Maybe.map (View.Candidate.layout config model.tab) model.selected
+            [ viewDirectoryPanel candidates
+            , Maybe.map (viewCandidatePanel model) model.selected
                 |> Maybe.withDefault (div [ class "h-full w-full bg-gray-500" ] [])
             ]
         ]
 
 
-viewDirectoryPanel :
-    { a
-        | onFilter : String -> msg
-        , onSelectCandidate : Candidate -> msg
-    }
-    -> List Candidate
-    -> Html msg
-viewDirectoryPanel config candidates =
+viewCandidatePanel : Model -> Candidate -> Html Msg
+viewCandidatePanel model candidate =
+    View.Candidate.layout
+        { onSelectTab = UserSelectedCandidateTab }
+        candidate
+        model.tab
+    <|
+        case model.tab of
+            Events ->
+                View.Candidate.events candidate
+
+            Profil ->
+                View.Candidate.profile candidate
+
+            Recognition recoModel ->
+                [ Html.map GotRecognitionMsg <|
+                    Recognition.view recoModel candidate
+                ]
+
+
+viewDirectoryPanel : List Candidate -> Html Msg
+viewDirectoryPanel candidates =
     let
         candidatesByFirstLetter =
             List.Extra.groupWhile
@@ -190,20 +184,20 @@ viewDirectoryPanel config candidates =
                             , id "search"
                             , class "focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
                             , placeholder "Rechercher"
-                            , onInput config.onFilter
+                            , onInput UserAddedFilter
                             ]
                             []
                         ]
                     ]
                 ]
             ]
-        , List.map (viewDirectory config) candidatesByFirstLetter
+        , List.map viewDirectory candidatesByFirstLetter
             |> nav [ dataTest "directory", class "flex-1 min-h-0 overflow-y-auto", attribute "aria-label" "Candidats" ]
         ]
 
 
-viewDirectory : { a | onSelectCandidate : Candidate -> msg } -> ( Candidate, List Candidate ) -> Html msg
-viewDirectory config ( firstCandidate, candidates ) =
+viewDirectory : ( Candidate, List Candidate ) -> Html Msg
+viewDirectory ( firstCandidate, candidates ) =
     let
         groupName =
             candidateFirstLetter firstCandidate
@@ -217,13 +211,13 @@ viewDirectory config ( firstCandidate, candidates ) =
             , class "z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500"
             ]
             [ h3 [] [ text groupName ] ]
-        , List.map (viewItem config) (firstCandidate :: candidates)
+        , List.map viewItem (firstCandidate :: candidates)
             |> ul [ attribute "role" "list", class "relative z-0 divide-y divide-gray-200" ]
         ]
 
 
-viewItem : { a | onSelectCandidate : Candidate -> msg } -> Candidate -> Html msg
-viewItem config candidate =
+viewItem : Candidate -> Html Msg
+viewItem candidate =
     li
         [ dataTest "directory-item" ]
         [ div
@@ -233,7 +227,7 @@ viewItem config candidate =
             , div
                 [ class "flex-1 min-w-0" ]
                 [ a
-                    [ onClick (config.onSelectCandidate candidate)
+                    [ onClick (UserSelectedCandidate candidate)
                     , href "#"
                     , class "focus:outline-none"
                     ]
@@ -252,6 +246,51 @@ viewItem config candidate =
                 ]
             ]
         ]
+
+
+
+-- UPDATE
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    let
+        noChange =
+            ( model, Cmd.none )
+    in
+    case msg of
+        GotRecognitionMsg recoMsg ->
+            case ( model.tab, model.selected ) of
+                ( Recognition recoModel, Just candidate ) ->
+                    let
+                        ( newRecoModel, recoCmd, actions ) =
+                            Recognition.update candidate recoModel recoMsg
+
+                        newModel =
+                            { model | tab = Recognition newRecoModel }
+                    in
+                    ( List.foldl applyAction newModel actions
+                    , Cmd.map GotRecognitionMsg recoCmd
+                    )
+
+                _ ->
+                    noChange
+
+        UserAddedFilter filter ->
+            ( { model | filter = Just filter }, Cmd.none )
+
+        UserSelectedCandidate candidate ->
+            ( { model | selected = Just candidate }, Cmd.none )
+
+        UserSelectedCandidateTab tab ->
+            ( { model | tab = tab }, Cmd.none )
+
+
+applyAction : Actions.Action -> Model -> Model
+applyAction action model =
+    case action of
+        Actions.UpdateCandidate candidate ->
+            { model | selected = Just candidate }
 
 
 

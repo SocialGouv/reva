@@ -90,7 +90,7 @@ checked =
 add : Html msg
 add =
     svg
-        [ class "h-6 w-6 group-hover:text-blue-800 text-blue-500"
+        [ class "h-6 w-6 group-hover:text-blue-800 text-blue-600"
         , viewBox "0 0 20 20"
         , fill "currentColor"
         ]
