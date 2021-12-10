@@ -10,6 +10,19 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   minute: '2-digit',
 }
 
+const letterFromScore = (score: number) => {
+  switch (true) {
+    case (score >= 0.89431):
+      return 'A'
+    case (score >= 0.72358):
+      return 'B'
+    case (score >= 0.44716):
+      return 'C'
+    default:
+      return 'D'
+  }
+}
+
 function createSurvey(survey: { grades: { obtainment: number, profile: number }, createdAt: string }) {
   const createdAtDate = new Date(survey.createdAt)
 
@@ -145,15 +158,54 @@ export const getCandidateAnswers = async (user: {
 }
 
 
-const letterFromScore = (score: number) => {
-  switch (true) {
-    case (score >= 0.89431):
-      return 'A'
-    case (score >= 0.72358):
-      return 'B'
-    case (score >= 0.44716):
-      return 'C'
-    default:
-      return 'D'
-  }
+export const getCandidacySkills = async (candidacyId: string) => {
+  const query = `
+  SELECT 
+    *
+  FROM skills s
+  WHERE s.candidacy_id = $1;
+  `
+
+  const { rows } = await pg.query(query, [candidacyId])
+  return rows
 }
+
+export const saveCandidacySkill = async ({ candidacyId, skill }: any) => {
+  const query = `
+  INSERT INTO skills (label, situation, type, categorie, candidacy_id)
+  VALUES ($1, $2, $3, $4, $5)
+  RETURNING id;
+  `
+
+  const { rows } = await pg.query(query, [
+    skill.label,
+    skill.situation,
+    skill.type,
+    skill.categorie,
+    candidacyId])
+
+  return { ...skill, id: rows[0].id }
+}
+
+export const updateCandidacySkill = async (skill: any) => {
+  const query = `
+  UPDATE skills 
+  SET situation = $1, label = $2
+  WHERE id = $3;
+  `
+
+  await pg.query(query, [skill.situation, skill.label, skill.id])
+  return skill
+}
+
+export const deleteCandidacySkill = async (id: string) => {
+  const query = `
+  DELETE FROM skills 
+  WHERE id = $1;
+  `
+
+  return pg.query(query, [id])
+}
+
+
+
