@@ -279,6 +279,16 @@ Certaines des données sont envoyées à des sous-traitants pour réaliser certa
    <td><a href="https://scalingo.com/fr/data-processing-agreement">https://scalingo.com/fr/data-processing-agreement</a> 
    </td>
   </tr>
+  <tr>
+   <td>Tenzing
+   </td>
+   <td>France
+   </td>
+   <td>Conseil en stratégie, analyse des données et écriture du rapport de mission
+   </td>
+   <td> 
+   </td>
+  </tr>
 </table>
 
 
