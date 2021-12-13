@@ -15,6 +15,7 @@ import View.Icons as Icons
 
 type Msg
     = UserUpdatedSkillComment MetaSkill String
+    | UserUpdatedNewSkill MetaSkill String
     | UserNavigateTo Step
     | NoOp
 
@@ -22,6 +23,7 @@ type Msg
 type Step
     = Introduction
     | Selection
+    | CreateMetaSkill MetaSkill
     | Contextualization MetaSkill
     | Confirmation MetaSkill
     | Review
@@ -108,6 +110,9 @@ view model candidate =
             Selection ->
                 selection candidate
 
+            CreateMetaSkill skill ->
+                createMetaSkill skill
+
             Contextualization skill ->
                 contextualization skill
 
@@ -181,9 +186,75 @@ selection _ =
         { title = "Sélectionnez une compétence"
         , onClose = UserNavigateTo Introduction
         , content =
-            [ groupByCategory predefinedMetaSkills
+            [ div [ class "my-6" ]
+                [ button
+                    [ dataTest "create-skill"
+                    , class "mt-4 w-full rounded bg-blue-600"
+                    , class "hover:bg-blue-700 text-white px-8 py-3"
+                    , onClick <|
+                        UserNavigateTo <|
+                            CreateMetaSkill
+                                { id = ""
+                                , category = ""
+                                , name = ""
+                                , comment = ""
+                                }
+                    ]
+                    [ text "Créer une compétence" ]
+                ]
+            , groupByCategory predefinedMetaSkills
                 |> List.map viewSkills
                 |> div []
+            ]
+        }
+
+
+createMetaSkill : MetaSkill -> List (Html Msg)
+createMetaSkill skill =
+    let
+        namePlaceHolder =
+            "Décrivez la compétence que vous souhaitez créer"
+    in
+    popup
+        { title = "Décrivez votre compétence"
+        , onClose = UserNavigateTo Introduction
+        , content =
+            [ div
+                [ class "flex justify-center items-center"
+                , class "py-24 bg-gray-100 w-full flex-grow"
+                ]
+                [ form
+                    [ class "max-w-md w-full rounded-lg px-6 py-5 bg-white", onSubmit <| UserNavigateTo (Contextualization skill) ]
+                    [ label
+                        [ for "name", class "sr-only" ]
+                        [ text namePlaceHolder ]
+                    , textarea
+                        [ dataTest "name"
+                        , onInput (UserUpdatedNewSkill skill)
+                        , required True
+                        , minlength 25
+                        , rows 4
+                        , name "name"
+                        , id "name"
+                        , placeholder namePlaceHolder
+                        , class "block w-full border-gray-300 rounded-md mt-4 mb-1 "
+                        , class "focus:ring-indigo-500 focus:border-indigo-500"
+                        ]
+                        []
+                    , button
+                        [ dataTest "confirm-recognition"
+                        , type_ "submit"
+                        , class "mt-4 w-full rounded bg-blue-600"
+                        , class "hover:bg-blue-700 text-white px-8 py-3"
+                        ]
+                        [ text "Valider" ]
+                    ]
+                ]
+            , secondaryActionFooter
+                { dataTest = "restart-recognition"
+                , text = "← Sélectionner une autre compétence"
+                , toMsg = UserNavigateTo Selection
+                }
             ]
         }
 
@@ -287,13 +358,12 @@ viewSkill : List (Html Msg) -> MetaSkill -> Html Msg
 viewSkill situation skill =
     div
         [ dataTest "candidate-skill"
-        , class "max-w-md rounded-lg px-6 py-5 bg-white"
+        , class "max-w-md w-full rounded-lg px-6 py-5 bg-white"
         , class "border border-gray-300"
         ]
         [ div
             [ class "text-left w-full" ]
-            [ title4 [ text skill.category ]
-            , p
+            [ p
                 [ class "mt-2"
                 , class "text-base text-gray-800 leading-snug"
                 ]
@@ -318,6 +388,13 @@ viewSkillGrid =
 update : Candidate -> Model -> Msg -> ( Model, Cmd Msg, List Actions.Action )
 update candidate model msg =
     case msg of
+        UserNavigateTo (CreateMetaSkill skill) ->
+            ( { model | step = CreateMetaSkill skill }
+            , Browser.Dom.focus "label"
+                |> Task.attempt (\_ -> NoOp)
+            , []
+            )
+
         UserNavigateTo (Contextualization skill) ->
             ( { model | step = Contextualization skill }
             , Browser.Dom.focus "situation"
@@ -337,6 +414,12 @@ update candidate model msg =
 
         UserNavigateTo step ->
             ( { model | step = step }
+            , Cmd.none
+            , []
+            )
+
+        UserUpdatedNewSkill skill name ->
+            ( { model | step = CreateMetaSkill { skill | name = name } }
             , Cmd.none
             , []
             )
