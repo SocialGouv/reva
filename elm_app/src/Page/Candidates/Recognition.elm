@@ -241,7 +241,7 @@ createMetaSkill skill =
                 , class "py-24 bg-gray-100 w-full flex-grow"
                 ]
                 [ form
-                    [ class "text-left max-w-md w-full rounded-lg px-6 py-5 bg-white", onSubmit <| UserNavigateTo (Contextualization skill) ]
+                    [ class "max-w-md w-full rounded-lg px-6 py-5 bg-white", onSubmit <| UserNavigateTo (Contextualization skill) ]
                     [ label
                         [ for "description", class "sr-only" ]
                         [ text "Description de la compétence" ]
