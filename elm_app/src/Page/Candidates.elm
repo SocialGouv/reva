@@ -45,7 +45,7 @@ init =
     { filter = Nothing
     , selected = Nothing
     , state = Loading
-    , tab = View.Candidate.Events
+    , tab = View.Candidate.Recognition Recognition.init
     }
 
 
