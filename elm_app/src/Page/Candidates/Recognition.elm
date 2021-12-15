@@ -4,7 +4,7 @@ import Actions
 import Browser.Dom
 import Candidate exposing (Candidate)
 import Candidate.MetaSkill exposing (MetaSkill)
-import Html.Styled exposing (Html, button, div, form, h3, h4, label, p, text, textarea)
+import Html.Styled exposing (Html, button, div, form, h3, h4, label, p, span, text, textarea)
 import Html.Styled.Attributes exposing (attribute, class, for, id, minlength, name, placeholder, required, rows, type_)
 import Html.Styled.Events exposing (onClick, onInput, onSubmit)
 import List.Extra
@@ -134,18 +134,21 @@ introduction _ =
         [ text "Pour chaque méta-compétence, vous ajouterez du contexte et chargerez les éventuels fichiers de preuves. A l'issue de ce processus, vous pourrez générer un livret de reconnaissance."
         ]
     , p
-        [ class "mt-2 mb-4" ]
+        [ class "mt-2 mb-5" ]
         [ text "D'ici la mise à disposition du module de reconnaissance, vous pouvez nous poser vos questions via le chat en bas à droite de cette page ou tester notre démo." ]
-    , actionFooter
-        { dataTest = "start-recognition"
-        , text = "Démarrer la démonstration"
-        , toMsg = UserNavigateTo Selection
-        }
-    , secondaryActionFooter
-        { dataTest = "review-recognition"
-        , text = "Voir les compétences reconnues"
-        , toMsg = UserNavigateTo Review
-        }
+    , div
+        [ class "border-t py-6" ]
+        [ actionButton
+            { dataTest = "start-recognition"
+            , text = "Démarrer la démonstration"
+            , toMsg = UserNavigateTo Selection
+            }
+        , secondaryButton
+            { dataTest = "review-recognition"
+            , text = "Voir les compétences reconnues"
+            , toMsg = UserNavigateTo Review
+            }
+        ]
     ]
 
 
@@ -183,15 +186,33 @@ selection _ =
                 ]
     in
     popup
-        { title = "Sélectionnez une compétence"
+        { title = "Ajouter une compétence"
         , onClose = UserNavigateTo Introduction
         , content =
-            [ div [ class "my-6" ]
-                [ button
-                    [ dataTest "create-skill"
-                    , class "mt-4 w-full rounded bg-blue-600"
-                    , class "hover:bg-blue-700 text-white px-8 py-3"
-                    , onClick <|
+            [ groupByCategory predefinedMetaSkills
+                |> List.map viewSkills
+                |> div []
+            ]
+        , footer =
+            [ div
+                []
+                [ div
+                    [ class "relative mb-4" ]
+                    [ div
+                        [ class "absolute inset-0 flex items-center" ]
+                        [ div [ class "w-full border-t border-gray-300" ] [] ]
+                    , div
+                        [ class "relative flex justify-center text-sm" ]
+                        [ span
+                            [ class "px-2 bg-white text-gray-500"
+                            ]
+                            [ text "ou" ]
+                        ]
+                    ]
+                , actionButton
+                    { dataTest = "create-skill"
+                    , text = "Saisir une compétence personnalisée"
+                    , toMsg =
                         UserNavigateTo <|
                             CreateMetaSkill
                                 { id = ""
@@ -199,12 +220,8 @@ selection _ =
                                 , name = ""
                                 , comment = ""
                                 }
-                    ]
-                    [ text "Créer une compétence" ]
+                    }
                 ]
-            , groupByCategory predefinedMetaSkills
-                |> List.map viewSkills
-                |> div []
             ]
         }
 
@@ -213,10 +230,10 @@ createMetaSkill : MetaSkill -> List (Html Msg)
 createMetaSkill skill =
     let
         namePlaceHolder =
-            "Décrivez la compétence que vous souhaitez créer"
+            "J'ai progressé et je sais travailler en équipe (gestion du temps, collaboration, contribution aux objectifs du groupe)"
     in
     popup
-        { title = "Décrivez votre compétence"
+        { title = "Décrire la compétence"
         , onClose = UserNavigateTo Introduction
         , content =
             [ div
@@ -224,35 +241,40 @@ createMetaSkill skill =
                 , class "py-24 bg-gray-100 w-full flex-grow"
                 ]
                 [ form
-                    [ class "max-w-md w-full rounded-lg px-6 py-5 bg-white", onSubmit <| UserNavigateTo (Contextualization skill) ]
+                    [ class "max-w-md w-full rounded-lg px-6 py-5 bg-white"
+                    , class "border border-gray-300"
+                    , onSubmit <| UserNavigateTo (Contextualization skill)
+                    ]
                     [ label
-                        [ for "name", class "sr-only" ]
-                        [ text namePlaceHolder ]
+                        [ for "description", class "sr-only" ]
+                        [ text "Description de la compétence" ]
                     , textarea
-                        [ dataTest "name"
+                        [ dataTest "description"
                         , onInput (UserUpdatedNewSkill skill)
                         , required True
                         , minlength 25
                         , rows 4
-                        , name "name"
-                        , id "name"
+                        , name "description"
+                        , id "description"
                         , placeholder namePlaceHolder
-                        , class "block w-full border-gray-300 rounded-md mt-4 mb-1 "
+                        , class "block w-full border-gray-300 rounded-md mt-2 mb-1"
                         , class "focus:ring-indigo-500 focus:border-indigo-500"
                         ]
                         []
                     , button
-                        [ dataTest "confirm-recognition"
+                        [ dataTest "save-description"
                         , type_ "submit"
                         , class "mt-4 w-full rounded bg-blue-600"
                         , class "hover:bg-blue-700 text-white px-8 py-3"
                         ]
-                        [ text "Valider" ]
+                        [ text "Continuer" ]
                     ]
                 ]
-            , secondaryActionFooter
+            ]
+        , footer =
+            [ secondaryButton
                 { dataTest = "restart-recognition"
-                , text = "← Sélectionner une autre compétence"
+                , text = "← Retour"
                 , toMsg = UserNavigateTo Selection
                 }
             ]
@@ -263,10 +285,10 @@ contextualization : MetaSkill -> List (Html Msg)
 contextualization skill =
     let
         commentPlaceholder =
-            "Décrivez au moins une situation pendant laquelle la compétence s'est illustrée"
+            "Présenter au moins une situation pendant laquelle la compétence s'est illustrée"
     in
     popup
-        { title = "Décrivez une situation"
+        { title = "Présenter une situation"
         , onClose = UserNavigateTo Introduction
         , content =
             [ div
@@ -303,9 +325,11 @@ contextualization skill =
                     ]
                     skill
                 ]
-            , secondaryActionFooter
+            ]
+        , footer =
+            [ secondaryButton
                 { dataTest = "restart-recognition"
-                , text = "← Sélectionner une autre compétence"
+                , text = "← Retour"
                 , toMsg = UserNavigateTo Selection
                 }
             ]
@@ -345,9 +369,11 @@ review candidate maybeSkill =
                         viewSkillWithComment
                         candidate.metaSkills
                 ]
-            , actionFooter
+            ]
+        , footer =
+            [ actionButton
                 { dataTest = "restart-recognition"
-                , text = "Reconnaître une autre compétence"
+                , text = "Ajouter une autre compétence"
                 , toMsg = UserNavigateTo Selection
                 }
             ]
@@ -364,9 +390,7 @@ viewSkill situation skill =
         [ div
             [ class "text-left w-full" ]
             [ p
-                [ class "mt-2"
-                , class "text-base text-gray-800 leading-snug"
-                ]
+                [ class "text-base text-gray-800 leading-snug" ]
                 [ text skill.name ]
             ]
         , div [ class "text-left w-full mt-3" ] situation
@@ -390,7 +414,7 @@ update candidate model msg =
     case msg of
         UserNavigateTo (CreateMetaSkill skill) ->
             ( { model | step = CreateMetaSkill skill }
-            , Browser.Dom.focus "label"
+            , Browser.Dom.focus "description"
                 |> Task.attempt (\_ -> NoOp)
             , []
             )
@@ -443,7 +467,7 @@ init =
 -- HELPERS
 
 
-popup : { a | title : String, onClose : msg, content : List (Html msg) } -> List (Html msg)
+popup : { a | title : String, onClose : msg, content : List (Html msg), footer : List (Html msg) } -> List (Html msg)
 popup config =
     [ div
         [ dataTest "popup"
@@ -483,6 +507,9 @@ popup config =
                 , div
                     [ class "flex flex-col w-full h-full items-center overflow-y-scroll" ]
                     config.content
+                , div
+                    [ class "border-t w-full flex flex-col items-center justify-center py-8" ]
+                    config.footer
                 ]
             ]
         ]
@@ -518,34 +545,24 @@ title4 content =
         content
 
 
-footerWrapper : List (Html msg) -> Html msg
-footerWrapper =
-    div
-        [ class "border-t w-full flex items-center justify-center h-28" ]
-
-
-actionFooter : { a | dataTest : String, text : String, toMsg : msg } -> Html msg
-actionFooter config =
-    footerWrapper
-        [ button
-            [ dataTest config.dataTest
-            , onClick config.toMsg
-            , type_ "button"
-            , class "max-w-sm rounded bg-blue-600"
-            , class "hover:bg-blue-700 text-white px-8 py-3"
-            ]
-            [ text config.text ]
+actionButton : { a | dataTest : String, text : String, toMsg : msg } -> Html msg
+actionButton config =
+    button
+        [ dataTest config.dataTest
+        , onClick config.toMsg
+        , type_ "button"
+        , class "max-w-sm rounded bg-blue-600"
+        , class "hover:bg-blue-700 text-white px-8 py-3"
         ]
+        [ text config.text ]
 
 
-secondaryActionFooter : { a | dataTest : String, text : String, toMsg : msg } -> Html msg
-secondaryActionFooter config =
-    footerWrapper
-        [ button
-            [ dataTest config.dataTest
-            , onClick config.toMsg
-            , type_ "button"
-            , class "text-base hover:text-blue-700 text-blue-600 mx-4 px-8"
-            ]
-            [ text config.text ]
+secondaryButton : { a | dataTest : String, text : String, toMsg : msg } -> Html msg
+secondaryButton config =
+    button
+        [ dataTest config.dataTest
+        , onClick config.toMsg
+        , type_ "button"
+        , class "text-base hover:text-blue-700 text-blue-600 mx-4 px-8"
         ]
+        [ text config.text ]

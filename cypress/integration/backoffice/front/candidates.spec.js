@@ -76,6 +76,7 @@ describe('List all candidates', () => {
   context('open recognition module', () => {
     const loremIpsum =
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ut mauris elementum, eleifend lectus eget, finibus massa.'
+    const customSkill = 'This is my custom skill description'
 
     beforeEach(() => {
       cy.get('@directoryItems').eq(1).click()
@@ -99,6 +100,23 @@ describe('List all candidates', () => {
       cy.get('button[data-test=close-popup]').click()
       cy.get('button[data-test=review-recognition]').click()
       cy.get('div[data-test=candidate-skill]').should('have.length', 2)
+    })
+
+    it('recognize a custom skill', function () {
+      cy.get('button[data-test=start-recognition]').click()
+
+      cy.get('button[data-test=create-skill]').click()
+
+      cy.get('textarea[data-test=description]').type(customSkill)
+      cy.get('button[data-test=save-description]').click()
+
+      cy.get('textarea[data-test=situation]').type(loremIpsum)
+      cy.get('button[data-test=confirm-recognition]').click()
+
+      cy.get('div[data-test=candidate-skill]').should('have.length', 1)
+      cy.get('div[data-test=candidate-skill]')
+        .eq(0)
+        .should('contain', customSkill)
     })
 
     it('require a comment to be added after selection', function () {
