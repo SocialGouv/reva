@@ -4,8 +4,8 @@ import Actions
 import Browser.Dom
 import Candidate exposing (Candidate)
 import Candidate.MetaSkill exposing (MetaSkill)
-import Html.Styled exposing (Html, button, div, form, h3, h4, h5, label, li, p, span, text, textarea, ul)
-import Html.Styled.Attributes exposing (attribute, class, for, id, minlength, name, placeholder, required, rows, type_)
+import Html.Styled exposing (Html, button, details, div, form, h3, h4, h5, label, li, p, span, summary, table, tbody, td, text, textarea, th, thead, tr, ul)
+import Html.Styled.Attributes exposing (attribute, class, for, id, minlength, name, placeholder, required, rows, scope, type_)
 import Html.Styled.Events exposing (onClick, onInput, onSubmit)
 import List.Extra
 import Task
@@ -204,10 +204,10 @@ selection _ =
                             , comment = ""
                             }
                 , class "flex"
-                , class "relative block h-40 text-left text-base leading-snug"
-                , class "text-gray-800 p-5 rounded-lg"
-                , class "group border border-gray-300 bg-white transition-shadow shadow-sm"
-                , class "hover:border-gray-400"
+                , class "relative block h-40 text-left leading-snug"
+                , class "text-gray-700 p-4 rounded-lg"
+                , class "group border-2 border-white bg-white transition-border shadow"
+                , class "hover:border-blue-500"
                 ]
                 [ div [ class "ml-1" ] [ text skill.name ]
                 , div [ class "absolute bottom-4 right-4" ] [ Icons.add ]
@@ -390,8 +390,80 @@ review candidate =
         candidate.metaSkills
 
 
+type RecognitionTableMode
+    = Simplified
+    | Complete
+
+
+reviewTable : RecognitionTableMode -> Candidate -> Html Msg
+reviewTable mode candidate =
+    let
+        tableHead s =
+            th
+                [ scope "col", class "px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" ]
+                [ text s ]
+
+        tableBody =
+            tbody [ class "bg-white divide-y divide-gray-200" ]
+
+        tableData s =
+            td
+                [ class "px-6 py-4 text-sm font-medium text-gray-900" ]
+                [ text s ]
+
+        viewData skill =
+            case mode of
+                Complete ->
+                    [ tableData skill.name
+                    , tableData skill.comment
+                    ]
+
+                Simplified ->
+                    [ tableData skill.name ]
+    in
+    div
+        [ class "m-10 shadow overflow-hidden border-gray-200 rounded-lg" ]
+        [ table
+            [ class "min-w-full text-left divide-y divide-gray-200" ]
+            [ thead
+                [ class "bg-gray-50" ]
+                [ tr
+                    []
+                  <|
+                    case mode of
+                        Complete ->
+                            [ tableHead "Compétences"
+                            , tableHead "Situations"
+                            ]
+
+                        Simplified ->
+                            [ tableHead "Compétences" ]
+                ]
+            , tableBody <|
+                List.map
+                    (viewData >> tr [])
+                    candidate.metaSkills
+            ]
+        ]
+
+
 reviewFullScreen : Candidate -> Maybe MetaSkill -> List (Html Msg)
 reviewFullScreen candidate maybeSkill =
+    let
+        detailsView : { a | attribute : String, title : String, content : Html msg } -> Html msg
+        detailsView config =
+            details
+                [ class "mb-0.25 border bg-gray-100 overflow-hidden"
+                , attribute config.attribute ""
+                ]
+                [ summary
+                    [ class "text-left font-semibold text-gray-600 hover:text-blue-500"
+                    , class "p-4 cursor-pointer bg-white"
+                    ]
+                    [ text config.title ]
+                , config.content
+                ]
+    in
     popup
         { title = "Compétences reconnues"
         , onClose = UserNavigateTo Introduction
@@ -406,8 +478,23 @@ reviewFullScreen candidate maybeSkill =
                 Nothing ->
                     text ""
             , div
-                [ class "flex-grow bg-gray-100 w-full overflow-y-scroll" ]
-                [ viewSkillGrid <| review candidate ]
+                [ class "flex-grow w-full bg-gray-200 p-5 overflow-y-scroll" ]
+                [ detailsView
+                    { attribute = "closed"
+                    , title = "Tableau exportable"
+                    , content = reviewTable Complete candidate
+                    }
+                , detailsView
+                    { attribute = "closed"
+                    , title = "Tableau exportable (simplifié)"
+                    , content = reviewTable Simplified candidate
+                    }
+                , detailsView
+                    { attribute = "open"
+                    , title = "Grille"
+                    , content = viewSkillGrid <| review candidate
+                    }
+                ]
             ]
         , footer =
             [ actionButton
@@ -423,13 +510,12 @@ viewSkill : List (Html Msg) -> MetaSkill -> Html Msg
 viewSkill situation skill =
     div
         [ dataTest "candidate-skill"
-        , class "max-w-md w-full rounded-lg px-6 py-5 bg-white"
-        , class "border border-gray-300"
+        , class "max-w-md w-full shadow rounded-lg px-6 py-5 bg-white"
         ]
         [ div
             [ class "text-left w-full" ]
             [ p
-                [ class "text-base text-gray-800 leading-snug" ]
+                [ class "text-base font-medium text-gray-700 leading-snug" ]
                 [ text skill.name ]
             ]
         , div [ class "text-left w-full mt-3" ] situation
@@ -440,7 +526,7 @@ viewSkillGrid : List (Html msg) -> Html msg
 viewSkillGrid =
     div
         [ class "grid grid-cols-1 gap-4 justify-items-center sm:grid-cols-2 lg:grid-cols-3"
-        , class "bg-gray-100 p-10 mb-4"
+        , class "bg-gray-100 p-10"
         ]
 
 
