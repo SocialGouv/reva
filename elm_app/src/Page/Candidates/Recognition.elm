@@ -4,7 +4,7 @@ import Actions
 import Browser.Dom
 import Candidate exposing (Candidate)
 import Candidate.MetaSkill exposing (MetaSkill)
-import Html.Styled exposing (Html, button, div, form, h3, h4, label, p, span, text, textarea)
+import Html.Styled exposing (Html, button, div, form, h3, h4, h5, label, li, p, span, text, textarea, ul)
 import Html.Styled.Attributes exposing (attribute, class, for, id, minlength, name, placeholder, required, rows, type_)
 import Html.Styled.Events exposing (onClick, onInput, onSubmit)
 import List.Extra
@@ -117,38 +117,74 @@ view model candidate =
                 contextualization skill
 
             Confirmation skill ->
-                review candidate (Just skill)
+                reviewFullScreen candidate (Just skill)
 
             Review ->
-                review candidate Nothing
+                reviewFullScreen candidate Nothing
 
 
 introduction : Candidate -> List (Html Msg)
-introduction _ =
-    [ title3 "Reconnaissance de méta-compétences"
-    , p []
-        [ text "Bientôt, vous pourrez démarrer ici une démarche de reconnaissance. Accompagné du candidat, vous sélectionnerez une ou plusieurs méta-compétences à reconnaître."
-        ]
-    , p
-        [ class "mt-2" ]
-        [ text "Pour chaque méta-compétence, vous ajouterez du contexte et chargerez les éventuels fichiers de preuves. A l'issue de ce processus, vous pourrez générer un livret de reconnaissance."
-        ]
-    , p
-        [ class "mt-2 mb-5" ]
-        [ text "D'ici la mise à disposition du module de reconnaissance, vous pouvez nous poser vos questions via le chat en bas à droite de cette page ou tester notre démo." ]
+introduction candidate =
+    let
+        skillCount =
+            List.length candidate.metaSkills
+    in
+    [ title4 [ text "Reconnaître des compétences transversales développées lors de l'accompagnement VAE" ]
+    , if not (List.isEmpty candidate.metaSkills) then
+        div
+            [ class "mb-4 bg-gray-100 rounded-lg px-4 pb-4 pt-3" ]
+            [ title5
+                [ text <| String.fromInt skillCount
+                , if skillCount == 1 then
+                    text " compétence reconnue"
+
+                  else
+                    text " compétences reconnues"
+                ]
+            , div
+                [ class "flex items-center justify-between"
+                ]
+                [ actionButton
+                    { dataTest = "start-recognition"
+                    , text = "Ajouter une autre compétence"
+                    , toMsg = UserNavigateTo Selection
+                    }
+                , secondaryActionButton
+                    { dataTest = "review-recognition"
+                    , text = "Voir les compétences reconnues"
+                    , toMsg = UserNavigateTo Review
+                    }
+                ]
+            ]
+
+      else
+        text ""
     , div
-        [ class "border-t py-6" ]
-        [ actionButton
+        [ class "mt-4" ]
+        [ p []
+            [ text "Bienvenue dans l’espace reconnaissance ! Et merci de votre engagement dans cette nouvelle aventure !" ]
+        , p
+            [ class "mt-2" ]
+            [ text "Vous avez, avec la personne que vous accompagnez, co-défini les compétences transversales à reconnaître et vous allez désormais les saisir dans cet espace REVA."
+            ]
+        , ul
+            [ class "mt-2 pl-4 list-disc" ]
+            [ li [ class "mt-2" ] [ text "Si des compétences proposées dans la bibliothèque vous conviennent à tous les deux, vous allez ajouter le(s) compétence(s) choisies et préciser pour chacune, dans quelle situation la compétence s’est exprimée et expliquer ce qui s’est passé." ]
+            , li [ class "mt-2" ] [ text "Si vous ne trouvez pas dans cette bibliothèque une ou des compétence(s) co-définies avec la personne, vous avez la possibilité de la/les créer. Dans ce cas, vous saisissez l’intitulé de la compétence en commençant toujours par « j’ai progressé et je sais... » et préciser pour chacune, dans quelle situation la compétence s’est exprimée et expliquer ce qui s’est passé." ]
+            ]
+        , p
+            [ class "mt-2 mb-5" ]
+            [ text "N'hésitez pas à nous poser vos questions via le chat en bas à droite de cette page." ]
+        ]
+    , if List.isEmpty candidate.metaSkills then
+        actionButton
             { dataTest = "start-recognition"
-            , text = "Démarrer la démonstration"
+            , text = "Commencer"
             , toMsg = UserNavigateTo Selection
             }
-        , secondaryButton
-            { dataTest = "review-recognition"
-            , text = "Voir les compétences reconnues"
-            , toMsg = UserNavigateTo Review
-            }
-        ]
+
+      else
+        text ""
     ]
 
 
@@ -336,8 +372,8 @@ contextualization skill =
         }
 
 
-review : Candidate -> Maybe MetaSkill -> List (Html Msg)
-review candidate maybeSkill =
+review : Candidate -> List (Html Msg)
+review candidate =
     let
         viewSkillWithComment skill =
             viewSkill
@@ -349,6 +385,13 @@ review candidate maybeSkill =
                 ]
                 skill
     in
+    List.map
+        viewSkillWithComment
+        candidate.metaSkills
+
+
+reviewFullScreen : Candidate -> Maybe MetaSkill -> List (Html Msg)
+reviewFullScreen candidate maybeSkill =
     popup
         { title = "Compétences reconnues"
         , onClose = UserNavigateTo Introduction
@@ -364,11 +407,7 @@ review candidate maybeSkill =
                     text ""
             , div
                 [ class "flex-grow bg-gray-100 w-full overflow-y-scroll" ]
-                [ viewSkillGrid <|
-                    List.map
-                        viewSkillWithComment
-                        candidate.metaSkills
-                ]
+                [ viewSkillGrid <| review candidate ]
             ]
         , footer =
             [ actionButton
@@ -541,7 +580,14 @@ title3 s =
 title4 : List (Html msg) -> Html msg
 title4 content =
     h4
-        [ class "font-semibold text-gray-700 text-lg mb-2 mr-2" ]
+        [ class "font-semibold leading-tight  text-gray-700 text-lg mb-4 mr-2" ]
+        content
+
+
+title5 : List (Html msg) -> Html msg
+title5 content =
+    h5
+        [ class "font-semibold leading-tight text-gray-500 text-base mb-3" ]
         content
 
 
@@ -551,8 +597,20 @@ actionButton config =
         [ dataTest config.dataTest
         , onClick config.toMsg
         , type_ "button"
-        , class "max-w-sm rounded bg-blue-600"
-        , class "hover:bg-blue-700 text-white px-8 py-3"
+        , class "flex-1 rounded bg-blue-600"
+        , class "hover:bg-blue-700 text-white px-4 py-3"
+        ]
+        [ text config.text ]
+
+
+secondaryActionButton : { a | dataTest : String, text : String, toMsg : msg } -> Html msg
+secondaryActionButton config =
+    button
+        [ dataTest config.dataTest
+        , onClick config.toMsg
+        , type_ "button"
+        , class "flex-1 rounded bg-white border"
+        , class "hover:border-gray-300 font-medium text-blue-600 px-4 py-3 ml-4"
         ]
         [ text config.text ]
 
@@ -563,6 +621,6 @@ secondaryButton config =
         [ dataTest config.dataTest
         , onClick config.toMsg
         , type_ "button"
-        , class "text-base hover:text-blue-700 text-blue-600 mx-4 px-8"
+        , class "hover:text-blue-700 text-blue-600 mx-4 px-8"
         ]
         [ text config.text ]
