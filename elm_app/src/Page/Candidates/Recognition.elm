@@ -169,7 +169,7 @@ introduction candidate =
             ]
         , ul
             [ class "mt-2 pl-4 list-disc" ]
-            [ li [ class "mt-2" ] [ text "Si des compétences proposées dans la bibliothèque vous conviennent à tous les deux, vous allez cocher le(s) compétence(s) choisies et préciser pour chacune, dans quelle situation la compétence s’est exprimée et expliquer ce qui s’est passé." ]
+            [ li [ class "mt-2" ] [ text "Si des compétences proposées dans la bibliothèque vous conviennent à tous les deux, vous allez ajouter le(s) compétence(s) choisies et préciser pour chacune, dans quelle situation la compétence s’est exprimée et expliquer ce qui s’est passé." ]
             , li [ class "mt-2" ] [ text "Si vous ne trouvez pas dans cette bibliothèque une ou des compétence(s) co-définies avec la personne, vous avez la possibilité de la/les créer. Dans ce cas, vous saisissez l’intitulé de la compétence en commençant toujours par « j’ai progressé et je sais... » et préciser pour chacune, dans quelle situation la compétence s’est exprimée et expliquer ce qui s’est passé." ]
             ]
         , p
