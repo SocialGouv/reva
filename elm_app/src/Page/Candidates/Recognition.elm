@@ -21,7 +21,11 @@ type Msg
     | UserUpdatedNewSkill MetaSkill String
     | UserNavigateTo Step
     | UserSubmittedNewSkill MetaSkill
+    | UserAskedToDeleteSkill MetaSkill
+    | UserDeletedSkill
     | GotSkillResponse (WebData MetaSkill)
+    | GotCancelSkillToDelete
+    | GotSkillDeletedResponse (WebData MetaSkill)
     | NoOp
 
 
@@ -31,7 +35,7 @@ type Step
     | CreateMetaSkill MetaSkill
     | Contextualization MetaSkill (Maybe String)
     | Confirmation MetaSkill
-    | Review
+    | Review (Maybe MetaSkill) (Maybe String)
 
 
 type alias Model =
@@ -129,10 +133,10 @@ view model candidate =
                         contextualization skill maybeError
 
                     Confirmation skill ->
-                        reviewFullScreen skills (Just skill)
+                        reviewFullScreen skills (Just skill) Nothing Nothing
 
-                    Review ->
-                        reviewFullScreen skills Nothing
+                    Review maybeSkillToDelete maybeError ->
+                        reviewFullScreen skills Nothing maybeSkillToDelete maybeError
 
         _ ->
             div [] [ text "Chargement" ]
@@ -167,7 +171,7 @@ introduction candidate skills =
                 , secondaryActionButton
                     { dataTest = "review-recognition"
                     , text = "Voir les compétences reconnues"
-                    , toMsg = UserNavigateTo Review
+                    , toMsg = UserNavigateTo <| Review Nothing Nothing
                     }
                 ]
             ]
@@ -353,33 +357,36 @@ contextualization skill maybeError =
                     |> Maybe.map (\error -> div [ class "max-w-md w-full px-6" ] [ errorAlert error ])
                     |> Maybe.withDefault (text "")
                 , viewSkill
-                    [ form
-                        [ onSubmit <| UserSubmittedNewSkill skill ]
-                        [ label
-                            [ for "situation", class "sr-only" ]
-                            [ text commentPlaceholder ]
-                        , textarea
-                            [ dataTest "situation"
-                            , onInput (UserUpdatedSkillComment skill)
-                            , required True
-                            , minlength 25
-                            , rows 4
-                            , name "situation"
-                            , id "situation"
-                            , placeholder commentPlaceholder
-                            , class "block w-full border-gray-300 rounded-md mt-4 mb-1 "
-                            , class "focus:ring-indigo-500 focus:border-indigo-500"
+                    { situation =
+                        [ form
+                            [ onSubmit <| UserSubmittedNewSkill skill ]
+                            [ label
+                                [ for "situation", class "sr-only" ]
+                                [ text commentPlaceholder ]
+                            , textarea
+                                [ dataTest "situation"
+                                , onInput (UserUpdatedSkillComment skill)
+                                , required True
+                                , minlength 25
+                                , rows 4
+                                , name "situation"
+                                , id "situation"
+                                , placeholder commentPlaceholder
+                                , class "block w-full border-gray-300 rounded-md mt-4 mb-1 "
+                                , class "focus:ring-indigo-500 focus:border-indigo-500"
+                                ]
+                                []
+                            , button
+                                [ dataTest "confirm-recognition"
+                                , type_ "submit"
+                                , class "mt-4 w-full rounded bg-blue-600"
+                                , class "hover:bg-blue-700 text-white px-8 py-3"
+                                ]
+                                [ text "Reconnaître" ]
                             ]
-                            []
-                        , button
-                            [ dataTest "confirm-recognition"
-                            , type_ "submit"
-                            , class "mt-4 w-full rounded bg-blue-600"
-                            , class "hover:bg-blue-700 text-white px-8 py-3"
-                            ]
-                            [ text "Reconnaître" ]
                         ]
-                    ]
+                    , footer = []
+                    }
                     skill
                 ]
             ]
@@ -393,17 +400,38 @@ contextualization skill maybeError =
         }
 
 
-review : List MetaSkill -> List (Html Msg)
-review skills =
+review : List MetaSkill -> Maybe MetaSkill -> List (Html Msg)
+review skills maybeSkillToDelete =
     let
+        trashSkill skillToDelete =
+            [ div [ class "py-1 text-red-600 cursor-pointer", onClick <| UserAskedToDeleteSkill skillToDelete ] [ Icons.trash ] ]
+
         viewSkillWithComment skill =
             viewSkill
-                [ div
-                    [ class "text-gray-600"
-                    , class "bg-gray-100 w-full rounded-md px-3 py-2 mt-2"
+                { situation =
+                    [ div
+                        [ class "text-gray-600"
+                        , class "bg-gray-100 w-full rounded-md px-3 py-2 mt-2"
+                        ]
+                        [ text skill.comment ]
                     ]
-                    [ text skill.comment ]
-                ]
+                , footer =
+                    [ div [ class "flex justify-end items-center mt-5" ]
+                        (maybeSkillToDelete
+                            |> Maybe.map
+                                (\skillToDelete ->
+                                    if skillToDelete == skill then
+                                        [ button [ onClick GotCancelSkillToDelete ] [ text "Annuler" ]
+                                        , button [ class "ml-2 px-3 py-1 rounded bg-red-500 font-medium text-white", onClick UserDeletedSkill ] [ text "Confirmer" ]
+                                        ]
+
+                                    else
+                                        trashSkill skill
+                                )
+                            |> Maybe.withDefault (trashSkill skill)
+                        )
+                    ]
+                }
                 skill
     in
     List.map
@@ -468,8 +496,8 @@ reviewTable mode skills =
         ]
 
 
-reviewFullScreen : List MetaSkill -> Maybe MetaSkill -> List (Html Msg)
-reviewFullScreen skills maybeSkill =
+reviewFullScreen : List MetaSkill -> Maybe MetaSkill -> Maybe MetaSkill -> Maybe String -> List (Html Msg)
+reviewFullScreen skills maybeSkill maybeSkillToDelete maybeError =
     let
         detailsView : { a | attribute : String, title : String, content : Html msg } -> Html msg
         detailsView config =
@@ -498,6 +526,12 @@ reviewFullScreen skills maybeSkill =
 
                 Nothing ->
                     text ""
+            , case maybeError of
+                Just error ->
+                    errorAlert error
+
+                Nothing ->
+                    text ""
             , div
                 [ class "flex-grow w-full bg-gray-200 p-5 overflow-y-scroll" ]
                 [ detailsView
@@ -513,7 +547,7 @@ reviewFullScreen skills maybeSkill =
                 , detailsView
                     { attribute = "open"
                     , title = "Présentation en vignettes"
-                    , content = viewSkillGrid <| review skills
+                    , content = viewSkillGrid <| review skills maybeSkillToDelete
                     }
                 ]
             ]
@@ -527,19 +561,22 @@ reviewFullScreen skills maybeSkill =
         }
 
 
-viewSkill : List (Html Msg) -> MetaSkill -> Html Msg
-viewSkill situation skill =
+viewSkill : { situation : List (Html Msg), footer : List (Html Msg) } -> MetaSkill -> Html Msg
+viewSkill config skill =
     div
         [ dataTest "candidate-skill"
-        , class "max-w-md w-full shadow rounded-lg px-6 py-5 bg-white"
+        , class "flex flex-col max-w-md w-full shadow rounded-lg px-6 py-5 bg-white"
         ]
-        [ div
-            [ class "text-left w-full" ]
-            [ p
-                [ class "text-base font-medium text-gray-700 leading-snug" ]
-                [ text skill.label ]
+        [ div [ class "flex-1" ]
+            [ div
+                [ class "text-left w-full" ]
+                [ p
+                    [ class "text-base font-medium text-gray-700 leading-snug" ]
+                    [ text skill.label ]
+                ]
+            , div [ class "text-left w-full mt-3" ] config.situation
             ]
-        , div [ class "text-left w-full mt-3" ] situation
+        , div [ class "flex-none" ] config.footer
         ]
 
 
@@ -602,6 +639,18 @@ update candidate model msg =
             , []
             )
 
+        ( UserAskedToDeleteSkill skillToDelete, Confirmation _ ) ->
+            ( { model | step = Review (Just skillToDelete) Nothing }, Cmd.none, [] )
+
+        ( UserAskedToDeleteSkill skillToDelete, Review _ _ ) ->
+            ( { model | step = Review (Just skillToDelete) Nothing }, Cmd.none, [] )
+
+        ( UserDeletedSkill, Review (Just skill) _ ) ->
+            ( model
+            , Api.deleteSkill GotSkillDeletedResponse { token = model.token, candicadyId = candidate.candidacyId, skill = skill }
+            , []
+            )
+
         ( GotSkillResponse (RemoteData.Success skill), Contextualization _ _ ) ->
             ( { model | step = Confirmation skill }
             , Cmd.none
@@ -613,7 +662,26 @@ update candidate model msg =
             )
 
         ( GotSkillResponse (RemoteData.Failure error), Contextualization skill _ ) ->
-            ( { model | step = Contextualization skill (Just "Une erreur est survenue lors de l'enregistrement de la compétence") }, Cmd.none, [] )
+            ( { model | step = Contextualization skill (Just ("Une erreur est survenue lors de l'enregistrement de la compétence \"" ++ skill.label ++ "\"")) }, Cmd.none, [] )
+
+        ( GotCancelSkillToDelete, Review _ _ ) ->
+            ( { model | step = Review Nothing Nothing }, Cmd.none, [] )
+
+        ( GotSkillDeletedResponse (RemoteData.Success skillDeleted), Review _ _ ) ->
+            ( { model | step = Review Nothing Nothing }
+            , Cmd.none
+            , [ Actions.UpdateCandidate
+                    { candidate
+                        | metaSkills = RemoteData.map (List.filter (\skill -> skill /= skillDeleted)) candidate.metaSkills
+                    }
+              ]
+            )
+
+        ( GotSkillDeletedResponse (RemoteData.Failure _), Review (Just skill) _ ) ->
+            ( { model | step = Review Nothing (Just ("Une erreur est survenue lors de la suppression de la compétence \"" ++ skill.label ++ "\"")) }
+            , Cmd.none
+            , []
+            )
 
         _ ->
             ( model, Cmd.none, [] )

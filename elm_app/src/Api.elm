@@ -1,4 +1,4 @@
-module Api exposing (Token, createSkill, fetchCandidates, fetchSkills, login, stringToToken, tokenToString)
+module Api exposing (Token, createSkill, deleteSkill, fetchCandidates, fetchSkills, login, stringToToken, tokenToString)
 
 import Candidate exposing (Candidate)
 import Candidate.MetaSkill exposing (MetaSkill)
@@ -65,6 +65,22 @@ createSkill msg payload =
         , body = Http.jsonBody <| Candidate.encodeMetaSkill payload.skill
         , expect =
             Http.expectJson (RemoteData.fromResult >> msg) Candidate.metaSkillDecoder
+        , timeout = Nothing
+        , tracker = Nothing
+        }
+
+
+deleteSkill : (WebData MetaSkill -> msg) -> { a | candicadyId : String, skill : MetaSkill, token : Token } -> Cmd msg
+deleteSkill msg payload =
+    Http.request
+        { method = "DELETE"
+        , headers =
+            [ Http.header "Authorization" ("Bearer " ++ tokenToString payload.token)
+            ]
+        , url = "/api/candidacies/" ++ payload.candicadyId ++ "/skills/" ++ payload.skill.id
+        , body = Http.emptyBody
+        , expect =
+            Http.expectWhatever (RemoteData.fromResult >> RemoteData.map (\_ -> payload.skill) >> msg)
         , timeout = Nothing
         , tracker = Nothing
         }
