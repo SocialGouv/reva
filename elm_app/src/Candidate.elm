@@ -1,10 +1,12 @@
-module Candidate exposing (Candidate, City, Diplome, StatusEvent, SurveyEvent, decoder, isRejected, maybeCityToString, maybeDiplomeToString)
+module Candidate exposing (Candidate, City, Diplome, StatusEvent, SurveyEvent, decoder, encodeMetaSkill, isRejected, maybeCityToString, maybeDiplomeToString, metaSkillDecoder, metaSkillsDecoder)
 
 import Candidate.Grade as Grade exposing (Grade)
 import Candidate.MetaSkill exposing (MetaSkill)
 import Candidate.Status as Status exposing (Status(..))
 import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline exposing (optional, required)
+import Json.Encode as Encode
+import RemoteData exposing (WebData)
 
 
 type alias Diplome =
@@ -14,12 +16,13 @@ type alias Diplome =
 
 
 type alias Candidate =
-    { city : Maybe City
+    { candidacyId : String
+    , city : Maybe City
     , diplome : Maybe Diplome
     , email : String
     , firstname : String
     , lastname : String
-    , metaSkills : List MetaSkill
+    , metaSkills : WebData (List MetaSkill)
     , phoneNumber : String
     , statusHistory : List StatusEvent
     , surveys : List SurveyEvent
@@ -120,19 +123,40 @@ metaSkillDecoder =
     Decode.succeed MetaSkill
         |> required "id" Decode.string
         |> required "category" Decode.string
-        |> required "name" Decode.string
+        |> required "label" Decode.string
         |> required "comment" Decode.string
+        |> required "type" Decode.string
+
+
+metaSkillsDecoder : Decoder (List MetaSkill)
+metaSkillsDecoder =
+    Decode.list metaSkillDecoder
 
 
 decoder : Decoder Candidate
 decoder =
     Decode.succeed Candidate
+        |> required "candidacyId" Decode.string
         |> optional "city" (Decode.maybe cityDecoder) Nothing
         |> optional "diplome" (Decode.maybe diplomeDecoder) Nothing
         |> required "email" Decode.string
         |> required "firstname" Decode.string
         |> required "lastname" Decode.string
-        |> required "metaSkill" (Decode.list metaSkillDecoder)
+        |> required "metaSkill" (Decode.succeed RemoteData.NotAsked)
         |> required "phoneNumber" Decode.string
         |> required "statuses" (Decode.list statusDecoder)
         |> required "surveys" (Decode.list surveyDecoder)
+
+
+
+-- ENCODER
+
+
+encodeMetaSkill : MetaSkill -> Encode.Value
+encodeMetaSkill skill =
+    Encode.object
+        [ ( "label", Encode.string skill.label )
+        , ( "category", Encode.string skill.category )
+        , ( "comment", Encode.string skill.comment )
+        , ( "type", Encode.string skill.type_ )
+        ]
