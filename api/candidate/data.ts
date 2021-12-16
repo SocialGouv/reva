@@ -199,7 +199,7 @@ export const updateCandidacySkill = async (skill: any) => {
   return skill
 }
 
-export const deleteCandidacySkill = async (id: string) => {
+export const deleteCandidacySkill = (id: string) => {
   const query = `
   DELETE FROM skills 
   WHERE id = $1;

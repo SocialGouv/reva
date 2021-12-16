@@ -17,10 +17,10 @@ export const isAdminMiddleware = (req: any, res: any, next: any) => {
   next()
 }
 
-export const isAllowedToRead = (req: any, res: any, next: any) => {
+export const isAllowedToRead = (_req: any, _res: any, next: any) => {
   next()
 }
-export const isAllowedToWrite = (req: any, res: any, next: any) => {
+export const isAllowedToWrite = (_req: any, _res: any, next: any) => {
   next()
 }
 
