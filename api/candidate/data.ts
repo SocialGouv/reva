@@ -89,6 +89,7 @@ export const getCandidates = async (user: {
   const { rows } = await pg.query(query, parameters)
 
   return rows.map((r: any) => ({
+    candidacyId: r.id,
     email: r.email,
     firstname: r.firstname,
     lastname: r.lastname,
@@ -172,16 +173,16 @@ export const getCandidacySkills = async (candidacyId: string) => {
 
 export const saveCandidacySkill = async ({ candidacyId, skill }: any) => {
   const query = `
-  INSERT INTO skills (label, situation, type, categorie, candidacy_id)
+  INSERT INTO skills (label, comment, type, category, candidacy_id)
   VALUES ($1, $2, $3, $4, $5)
   RETURNING id;
   `
 
   const { rows } = await pg.query(query, [
     skill.label,
-    skill.situation,
+    skill.comment,
     skill.type,
-    skill.categorie,
+    skill.category,
     candidacyId])
 
   return { ...skill, id: rows[0].id }
@@ -190,11 +191,11 @@ export const saveCandidacySkill = async ({ candidacyId, skill }: any) => {
 export const updateCandidacySkill = async (skill: any) => {
   const query = `
   UPDATE skills 
-  SET situation = $1, label = $2
+  SET comment = $1, label = $2
   WHERE id = $3;
   `
 
-  await pg.query(query, [skill.situation, skill.label, skill.id])
+  await pg.query(query, [skill.comment, skill.label, skill.id])
   return skill
 }
 

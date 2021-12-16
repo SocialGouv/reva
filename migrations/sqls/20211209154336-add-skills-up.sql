@@ -11,9 +11,9 @@ CREATE TYPE skill_types AS ENUM (
 CREATE TABLE skills (  
   id UUID DEFAULT uuid_generate_v4(),
   label text NOT NULL,
-  situation text NOT NULL,
+  comment text NOT NULL,
   type skill_types NOT NULL,
-  categorie varchar(255) NOT NULL,
+  category varchar(255) NOT NULL,
   candidacy_id UUID,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
