@@ -1,7 +1,21 @@
-import { isAdminMiddleware, isAllowedToRead, isAllowedToWrite } from '../auth'
+import { isAdminMiddleware } from '../auth'
 import { jwtMiddleware } from '../auth/jwt'
 import { getSurveys } from '../survey/data'
-import { deleteCandidacySkill, getCandidacySkills, getCandidateAnswers, getCandidates, saveCandidacySkill, updateCandidacySkill } from './data'
+import { deleteCandidacySkill, getCandidacySkills, getCandidateAnswers, getCandidates, saveCandidacySkill, updateCandidacySkill, canManageCandidacy } from './data'
+
+
+const canManageCandidacyMiddleware = async (req: any, res: any, next: any) => {
+  const user = req.user
+  const candidacyId = req.params.candidacyId
+  const allow = await canManageCandidacy(user, candidacyId)
+
+  if (allow) {
+    next()
+  } else {
+    res.status(403).send()
+  }
+}
+
 
 const candidateRouter = require('express').Router()
 
@@ -90,7 +104,8 @@ candidateRouter.get(
 
 candidateRouter.get(
   '/candidacies/:candidacyId/skills',
-  isAllowedToRead,
+  jwtMiddleware,
+  canManageCandidacyMiddleware,
   async (req: any, res: any) => {
     try {
       const candidacyId = req.params.candidacyId
@@ -104,7 +119,8 @@ candidateRouter.get(
 
 candidateRouter.post(
   '/candidacies/:candidacyId/skills',
-  isAllowedToWrite,
+  jwtMiddleware,
+  canManageCandidacyMiddleware,
   async (req: any, res: any) => {
     try {
       const candidacyId = req.params.candidacyId
@@ -120,7 +136,8 @@ candidateRouter.post(
 )
 candidateRouter.put(
   '/candidacies/:candidacyId/skills/:skillId',
-  isAllowedToWrite,
+  jwtMiddleware,
+  canManageCandidacyMiddleware,
   async (req: any, res: any) => {
     try {
       const skillId = req.params.skillId
@@ -136,7 +153,8 @@ candidateRouter.put(
 
 candidateRouter.delete(
   '/candidacies/:candidacyId/skills/:skillId',
-  isAllowedToWrite,
+  jwtMiddleware,
+  canManageCandidacyMiddleware,
   async (req: any, res: any) => {
     try {
       await deleteCandidacySkill(req.params.skillId)

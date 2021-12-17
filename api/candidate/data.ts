@@ -157,6 +157,35 @@ export const getCandidateAnswers = async (user: {
   return rows
 }
 
+export const canManageCandidacy = async (user: {
+  id: string
+  // eslint-disable-next-line camelcase
+  roles: { role_id: string }[]
+}, candidacyId: string) => {
+  let query = `
+  SELECT 
+    c.id
+  FROM candidacies c
+  INNER JOIN cities ci ON ci.id = c.city_id
+  INNER JOIN diplomes di ON di.id = c.diplome_id
+  INNER JOIN cohortes_diplomes_cities cdc ON ci.id = cdc.city_id AND di.id = cdc.diplome_id
+  INNER JOIN cohortes co ON co.id = cdc.cohorte_id
+  `
+  const parameters = [candidacyId]
+
+  if (!isAdmin(user.roles.map((r) => r.role_id))) {
+    query = `${query} 
+    INNER JOIN users_cohortes uc ON uc.cohorte_id = cdc.cohorte_id AND uc.user_id = $2`
+    parameters.push(user.id)
+  }
+
+  query = `${query}
+  WHERE c.id = $1`
+
+  const { rows } = await pg.query(query, parameters)
+  return rows.length > 0
+} 
+
 
 export const getCandidacySkills = async (candidacyId: string) => {
   const query = `
