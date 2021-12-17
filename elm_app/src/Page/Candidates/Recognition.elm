@@ -404,7 +404,7 @@ review : List MetaSkill -> Maybe MetaSkill -> List (Html Msg)
 review skills maybeSkillToDelete =
     let
         trashSkill skillToDelete =
-            [ div [ class "py-1 text-red-600 cursor-pointer", onClick <| UserAskedToDeleteSkill skillToDelete ] [ Icons.trash ] ]
+            [ div [ dataTest "delete-skill", class "py-1 text-red-600 cursor-pointer", onClick <| UserAskedToDeleteSkill skillToDelete ] [ Icons.trash ] ]
 
         viewSkillWithComment skill =
             viewSkill
@@ -421,8 +421,8 @@ review skills maybeSkillToDelete =
                             |> Maybe.map
                                 (\skillToDelete ->
                                     if skillToDelete == skill then
-                                        [ button [ onClick GotCancelSkillToDelete ] [ text "Annuler" ]
-                                        , button [ class "ml-2 px-3 py-1 rounded bg-red-500 font-medium text-white", onClick UserDeletedSkill ] [ text "Confirmer" ]
+                                        [ button [ dataTest "cancel-delete-skill", onClick GotCancelSkillToDelete ] [ text "Annuler" ]
+                                        , button [ dataTest "confirm-delete-skill", class "ml-2 px-3 py-1 rounded bg-red-500 font-medium text-white", onClick UserDeletedSkill ] [ text "Confirmer" ]
                                         ]
 
                                     else
@@ -764,7 +764,8 @@ alert level s =
                     "bg-red-100 text-red-800"
     in
     div
-        [ class "my-8"
+        [ dataTest "alert"
+        , class "my-8"
         , class "rounded-lg px-8 py-4 font-semibold mx-6"
         , class colors
         ]

@@ -1,1 +1,9 @@
-[]
+[
+    {
+      "label": "Je sais respecter les règles de vivre ensemble (ponctualité, assiduité, écoute, respect, bienveillance)....",
+      "category": "Travail en équipe", 
+      "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ut mauris elementum, eleifend lectus eget, finibus massa.....", 
+      "type": "custom", 
+      "id": "ea0285e9-97c2-4c5d-b19c-5efc1184fc00"
+    }
+]
