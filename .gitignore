@@ -90,3 +90,7 @@ sw.*
 # Vim swap files
 *.swp
 elm-stuff
+
+# Cypress
+cypress/screenshots/
+cypress/videos/
