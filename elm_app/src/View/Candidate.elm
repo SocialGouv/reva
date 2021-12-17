@@ -1,5 +1,6 @@
 module View.Candidate exposing (Tab(..), events, layout, profile)
 
+import Api exposing (Token)
 import Candidate exposing (Candidate, StatusEvent, SurveyEvent)
 import Candidate.Grade as Grade
 import Candidate.Status as Status exposing (Status(..))
@@ -23,7 +24,7 @@ type Tab
 
 
 layout :
-    { a | onSelectTab : Tab -> msg }
+    { a | token : Token, onSelectTab : Tab -> msg }
     -> Candidate
     -> Tab
     -> List (Html msg)
@@ -100,7 +101,7 @@ layout config candidate tab tabContent =
                         , { dataTest = "recognition"
                           , name = "Reconnaissance"
                           , selected = isRecognitionTab tab
-                          , toMsg = config.onSelectTab <| Recognition Page.Candidates.Recognition.init
+                          , toMsg = config.onSelectTab <| Recognition <| Page.Candidates.Recognition.init config.token
                           }
                         , { dataTest = "profile"
                           , name = "Profil"

@@ -1,6 +1,6 @@
 const pg = require('../pg')
 
-const ALLOWED_ROLES = ['admin']
+const ALLOWED_ROLES = ['admin', 'certifier', 'companion', 'candidate']
 
 export const saveUser = async (user: any) => {
 

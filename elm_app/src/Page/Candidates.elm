@@ -8,13 +8,16 @@ module Page.Candidates exposing
     )
 
 import Actions
+import Api exposing (Token)
 import Candidate exposing (Candidate)
+import Candidate.MetaSkill exposing (MetaSkill)
 import Candidate.Status exposing (Status(..))
 import Html.Styled as Html exposing (Html, a, aside, button, div, h2, h3, input, label, li, nav, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, for, href, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onClick, onInput)
 import List.Extra
 import Page.Candidates.Recognition as Recognition
+import RemoteData exposing (WebData)
 import View.Candidate exposing (Tab(..))
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
@@ -22,13 +25,15 @@ import View.Icons as Icons
 
 type Msg
     = GotRecognitionMsg Recognition.Msg
+    | GotSkillsResponse (WebData (List MetaSkill))
     | UserAddedFilter String
     | UserSelectedCandidate Candidate
     | UserSelectedCandidateTab View.Candidate.Tab
 
 
 type alias Model =
-    { filter : Maybe String
+    { token : Token
+    , filter : Maybe String
     , selected : Maybe Candidate
     , tab : Tab
     , state : State
@@ -40,9 +45,10 @@ type State
     | Idle (List Candidate)
 
 
-init : Model
-init =
-    { filter = Nothing
+init : Token -> Model
+init token =
+    { token = token
+    , filter = Nothing
     , selected = Nothing
     , state = Loading
     , tab = View.Candidate.Events
@@ -130,7 +136,7 @@ viewContent model candidates =
 viewCandidatePanel : Model -> Candidate -> Html Msg
 viewCandidatePanel model candidate =
     View.Candidate.layout
-        { onSelectTab = UserSelectedCandidateTab }
+        { token = model.token, onSelectTab = UserSelectedCandidateTab }
         candidate
         model.tab
     <|
@@ -276,11 +282,16 @@ update msg model =
                 _ ->
                     noChange
 
+        GotSkillsResponse skills ->
+            ( { model | selected = Maybe.map (\candidate -> { candidate | metaSkills = skills }) model.selected }, Cmd.none )
+
         UserAddedFilter filter ->
             ( { model | filter = Just filter }, Cmd.none )
 
         UserSelectedCandidate candidate ->
-            ( { model | selected = Just candidate }, Cmd.none )
+            ( { model | selected = Just candidate }
+            , Api.fetchSkills GotSkillsResponse { token = model.token, candicadyId = candidate.candidacyId }
+            )
 
         UserSelectedCandidateTab tab ->
             ( { model | tab = tab }, Cmd.none )

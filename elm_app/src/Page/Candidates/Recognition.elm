@@ -1,13 +1,16 @@
 module Page.Candidates.Recognition exposing (Model, Msg, Step(..), init, update, view)
 
 import Actions
+import Api exposing (Token)
 import Browser.Dom
 import Candidate exposing (Candidate)
 import Candidate.MetaSkill exposing (MetaSkill)
 import Html.Styled exposing (Html, button, details, div, form, h3, h4, h5, label, li, p, span, summary, table, tbody, td, text, textarea, th, thead, tr, ul)
 import Html.Styled.Attributes exposing (attribute, class, for, id, minlength, name, placeholder, required, rows, scope, type_)
 import Html.Styled.Events exposing (onClick, onInput, onSubmit)
+import Json.Decode exposing (maybe)
 import List.Extra
+import RemoteData exposing (WebData)
 import Task
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
@@ -17,6 +20,12 @@ type Msg
     = UserUpdatedSkillComment MetaSkill String
     | UserUpdatedNewSkill MetaSkill String
     | UserNavigateTo Step
+    | UserSubmittedNewSkill MetaSkill
+    | UserAskedToDeleteSkill MetaSkill
+    | UserDeletedSkill
+    | GotSkillResponse (WebData MetaSkill)
+    | GotCancelSkillToDelete
+    | GotSkillDeletedResponse (WebData MetaSkill)
     | NoOp
 
 
@@ -24,19 +33,21 @@ type Step
     = Introduction
     | Selection
     | CreateMetaSkill MetaSkill
-    | Contextualization MetaSkill
+    | Contextualization MetaSkill (Maybe String)
     | Confirmation MetaSkill
-    | Review
+    | Review (Maybe MetaSkill) (Maybe String)
 
 
 type alias Model =
-    { step : Step }
+    { token : Token
+    , step : Step
+    }
 
 
 type alias MetaSkillReference =
     { id : String
     , category : String
-    , name : String
+    , label : String
     }
 
 
@@ -44,93 +55,101 @@ predefinedMetaSkills : List MetaSkillReference
 predefinedMetaSkills =
     [ { id = "1"
       , category = "Travail en équipe"
-      , name = "J'ai progressé et je sais travailler en équipe (gestion du temps, collaboration, contribution aux objectifs du groupe)"
+      , label = "Je sais travailler en équipe (gestion du temps, collaboration, contribution aux objectifs du groupe)"
       }
     , { id = "2"
       , category = "Travail en équipe"
-      , name = "J'ai progressé et je sais respecter les règles de vivre ensemble (ponctualité, assiduité, écoute, respect, bienveillance)"
+      , label = "Je sais respecter les règles de vivre ensemble (ponctualité, assiduité, écoute, respect, bienveillance)"
       }
     , { id = "3"
       , category = "Posture professionnelle"
-      , name = "J'ai progressé et je sais adopter une posture professionnelle (ponctualité, respect des délais, savoir communiquer, rigueur )"
+      , label = "Je sais adopter une posture professionnelle (ponctualité, respect des délais, savoir communiquer, rigueur )"
       }
     , { id = "4"
       , category = "Posture professionnelle"
-      , name = "J'ai progressé et je sais organiser mon travail en fonction des priorités et des échéances fixées"
+      , label = "Je sais organiser mon travail en fonction des priorités et des échéances fixées"
       }
     , { id = "5"
       , category = "Posture professionnelle"
-      , name = "J'ai progressé et je sais prendre des initiatives dans le cadre professionnel"
+      , label = "Je sais prendre des initiatives dans le cadre professionnel"
       }
     , { id = "6"
       , category = "Posture professionnelle"
-      , name = "J'ai progressé et je sais faire faire preuve d'autonomie (organiser mon activité et prendre des initiatives)"
+      , label = "Je sais faire faire preuve d'autonomie (organiser mon activité et prendre des initiatives)"
       }
     , { id = "7"
       , category = "Posture professionnelle"
-      , name = "J'ai progressé et je sais faciliter l'apprentissage des autres (je sais motiver les autres, les aider)"
+      , label = "Je sais faciliter l'apprentissage des autres (je sais motiver les autres, les aider)"
       }
     , { id = "8"
       , category = "Posture professionnelle"
-      , name = "J'ai progressé et je sais analyser avec recul ma pratique professionnelle, me remettre en question"
+      , label = "Je sais analyser avec recul ma pratique professionnelle, me remettre en question"
       }
     , { id = "9"
       , category = "Compétences informatiques"
-      , name = "J'ai progressé et je sais utiliser les fonctions de base d'un ordinateur (traitement de texte,\nmessagerie électronique, recherche d'informations sur Internet)"
+      , label = "Je sais utiliser les fonctions de base d'un ordinateur (traitement de texte,\nmessagerie électronique, recherche d'informations sur Internet)"
       }
     , { id = "10"
       , category = "Communication orale"
-      , name = "J'ai progressé et je sais exposer une idée à l'oral de facon compréhensible"
+      , label = "Je sais exposer une idée à l'oral de facon compréhensible"
       }
     , { id = "11"
       , category = "Communication orale"
-      , name = "J'ai progressé et je sais écouter, prendre en compte ce que dit l'autre"
+      , label = "Je sais écouter, prendre en compte ce que dit l'autre"
       }
     , { id = "12"
       , category = "Communication écrite"
-      , name = "J'ai progressé et je sais exposer une idée à l'écrit de facon compréhensible, en respectant les règles d'orthographe, de grammaire"
+      , label = "Je sais exposer une idée à l'écrit de facon compréhensible, en respectant les règles d'orthographe, de grammaire"
       }
     ]
         |> List.map
             (\skill ->
                 { id = skill.id
                 , category = skill.category
-                , name = skill.name
+                , label = skill.label
                 }
             )
 
 
 view : Model -> Candidate -> Html Msg
 view model candidate =
-    div [] <|
-        case model.step of
-            Introduction ->
-                introduction candidate
+    case candidate.metaSkills of
+        RemoteData.Failure _ ->
+            div [] [ text "Erreur lors du chargement des compétences du candidat" ]
 
-            Selection ->
-                selection candidate
+        RemoteData.Success skills ->
+            div [] <|
+                case model.step of
+                    Introduction ->
+                        introduction candidate skills
 
-            CreateMetaSkill skill ->
-                createMetaSkill skill
+                    Selection ->
+                        selection candidate
 
-            Contextualization skill ->
-                contextualization skill
+                    CreateMetaSkill skill ->
+                        createMetaSkill skill
 
-            Confirmation skill ->
-                reviewFullScreen candidate (Just skill)
+                    Contextualization skill maybeError ->
+                        contextualization skill maybeError
 
-            Review ->
-                reviewFullScreen candidate Nothing
+                    Confirmation skill ->
+                        reviewFullScreen skills (Just skill) Nothing Nothing
+
+                    Review maybeSkillToDelete maybeError ->
+                        reviewFullScreen skills Nothing maybeSkillToDelete maybeError
+
+        _ ->
+            div [] [ text "Chargement" ]
 
 
-introduction : Candidate -> List (Html Msg)
-introduction candidate =
+introduction : Candidate -> List MetaSkill -> List (Html Msg)
+introduction candidate skills =
     let
         skillCount =
-            List.length candidate.metaSkills
+            List.length skills
     in
     [ title4 [ text "Reconnaître des compétences transversales développées lors de l'accompagnement VAE" ]
-    , if not (List.isEmpty candidate.metaSkills) then
+    , if not (List.isEmpty skills) then
         div
             [ class "mb-4 bg-gray-100 rounded-lg px-4 pb-4 pt-3" ]
             [ title5
@@ -152,7 +171,7 @@ introduction candidate =
                 , secondaryActionButton
                     { dataTest = "review-recognition"
                     , text = "Voir les compétences reconnues"
-                    , toMsg = UserNavigateTo Review
+                    , toMsg = UserNavigateTo <| Review Nothing Nothing
                     }
                 ]
             ]
@@ -176,7 +195,7 @@ introduction candidate =
             [ class "mt-2 mb-5" ]
             [ text "N'hésitez pas à nous poser vos questions via le chat en bas à droite de cette page." ]
         ]
-    , if List.isEmpty candidate.metaSkills then
+    , if List.isEmpty skills then
         actionButton
             { dataTest = "start-recognition"
             , text = "Commencer"
@@ -200,16 +219,18 @@ selection _ =
                         Contextualization
                             { id = skill.id
                             , category = skill.category
-                            , name = skill.name
+                            , label = skill.label
                             , comment = ""
+                            , type_ = "official"
                             }
+                            Nothing
                 , class "flex"
                 , class "relative block h-40 text-left leading-snug"
                 , class "text-gray-700 p-4 rounded-lg"
                 , class "group border-2 border-white bg-white transition-border shadow"
                 , class "hover:border-blue-500"
                 ]
-                [ div [ class "ml-1" ] [ text skill.name ]
+                [ div [ class "ml-1" ] [ text skill.label ]
                 , div [ class "absolute bottom-4 right-4" ] [ Icons.add ]
                 ]
 
@@ -253,8 +274,9 @@ selection _ =
                             CreateMetaSkill
                                 { id = ""
                                 , category = ""
-                                , name = ""
+                                , label = ""
                                 , comment = ""
+                                , type_ = "custom"
                                 }
                     }
                 ]
@@ -266,7 +288,7 @@ createMetaSkill : MetaSkill -> List (Html Msg)
 createMetaSkill skill =
     let
         namePlaceHolder =
-            "J'ai progressé et je sais travailler en équipe (gestion du temps, collaboration, contribution aux objectifs du groupe)"
+            "Je sais travailler en équipe (gestion du temps, collaboration, contribution aux objectifs du groupe)"
     in
     popup
         { title = "Décrire la compétence"
@@ -279,7 +301,7 @@ createMetaSkill skill =
                 [ form
                     [ class "max-w-md w-full rounded-lg px-6 py-5 bg-white"
                     , class "border border-gray-300"
-                    , onSubmit <| UserNavigateTo (Contextualization skill)
+                    , onSubmit <| UserNavigateTo (Contextualization skill Nothing)
                     ]
                     [ label
                         [ for "description", class "sr-only" ]
@@ -317,8 +339,8 @@ createMetaSkill skill =
         }
 
 
-contextualization : MetaSkill -> List (Html Msg)
-contextualization skill =
+contextualization : MetaSkill -> Maybe String -> List (Html Msg)
+contextualization skill maybeError =
     let
         commentPlaceholder =
             "Présenter au moins une situation pendant laquelle la compétence s'est illustrée"
@@ -328,37 +350,43 @@ contextualization skill =
         , onClose = UserNavigateTo Introduction
         , content =
             [ div
-                [ class "flex justify-center items-center"
+                [ class "flex flex-col justify-center items-center"
                 , class "py-24 bg-gray-100 w-full flex-grow"
                 ]
-                [ viewSkill
-                    [ form
-                        [ onSubmit <| UserNavigateTo (Confirmation skill) ]
-                        [ label
-                            [ for "situation", class "sr-only" ]
-                            [ text commentPlaceholder ]
-                        , textarea
-                            [ dataTest "situation"
-                            , onInput (UserUpdatedSkillComment skill)
-                            , required True
-                            , minlength 25
-                            , rows 4
-                            , name "situation"
-                            , id "situation"
-                            , placeholder commentPlaceholder
-                            , class "block w-full border-gray-300 rounded-md mt-4 mb-1 "
-                            , class "focus:ring-indigo-500 focus:border-indigo-500"
+                [ maybeError
+                    |> Maybe.map (\error -> div [ class "max-w-md w-full px-6" ] [ errorAlert error ])
+                    |> Maybe.withDefault (text "")
+                , viewSkill
+                    { situation =
+                        [ form
+                            [ onSubmit <| UserSubmittedNewSkill skill ]
+                            [ label
+                                [ for "situation", class "sr-only" ]
+                                [ text commentPlaceholder ]
+                            , textarea
+                                [ dataTest "situation"
+                                , onInput (UserUpdatedSkillComment skill)
+                                , required True
+                                , minlength 25
+                                , rows 4
+                                , name "situation"
+                                , id "situation"
+                                , placeholder commentPlaceholder
+                                , class "block w-full border-gray-300 rounded-md mt-4 mb-1 "
+                                , class "focus:ring-indigo-500 focus:border-indigo-500"
+                                ]
+                                []
+                            , button
+                                [ dataTest "confirm-recognition"
+                                , type_ "submit"
+                                , class "mt-4 w-full rounded bg-blue-600"
+                                , class "hover:bg-blue-700 text-white px-8 py-3"
+                                ]
+                                [ text "Reconnaître" ]
                             ]
-                            []
-                        , button
-                            [ dataTest "confirm-recognition"
-                            , type_ "submit"
-                            , class "mt-4 w-full rounded bg-blue-600"
-                            , class "hover:bg-blue-700 text-white px-8 py-3"
-                            ]
-                            [ text "Reconnaître" ]
                         ]
-                    ]
+                    , footer = []
+                    }
                     skill
                 ]
             ]
@@ -372,22 +400,43 @@ contextualization skill =
         }
 
 
-review : Candidate -> List (Html Msg)
-review candidate =
+review : List MetaSkill -> Maybe MetaSkill -> List (Html Msg)
+review skills maybeSkillToDelete =
     let
+        trashSkill skillToDelete =
+            [ div [ dataTest "delete-skill", class "py-1 text-red-600 cursor-pointer", onClick <| UserAskedToDeleteSkill skillToDelete ] [ Icons.trash ] ]
+
         viewSkillWithComment skill =
             viewSkill
-                [ div
-                    [ class "text-gray-600"
-                    , class "bg-gray-100 w-full rounded-md px-3 py-2 mt-2"
+                { situation =
+                    [ div
+                        [ class "text-gray-600"
+                        , class "bg-gray-100 w-full rounded-md px-3 py-2 mt-2"
+                        ]
+                        [ text skill.comment ]
                     ]
-                    [ text skill.comment ]
-                ]
+                , footer =
+                    [ div [ class "flex justify-end items-center mt-5" ]
+                        (maybeSkillToDelete
+                            |> Maybe.map
+                                (\skillToDelete ->
+                                    if skillToDelete == skill then
+                                        [ button [ dataTest "cancel-delete-skill", onClick GotCancelSkillToDelete ] [ text "Annuler" ]
+                                        , button [ dataTest "confirm-delete-skill", class "ml-2 px-3 py-1 rounded bg-red-500 font-medium text-white", onClick UserDeletedSkill ] [ text "Confirmer" ]
+                                        ]
+
+                                    else
+                                        trashSkill skill
+                                )
+                            |> Maybe.withDefault (trashSkill skill)
+                        )
+                    ]
+                }
                 skill
     in
     List.map
         viewSkillWithComment
-        candidate.metaSkills
+        skills
 
 
 type RecognitionTableMode
@@ -395,8 +444,8 @@ type RecognitionTableMode
     | Complete
 
 
-reviewTable : RecognitionTableMode -> Candidate -> Html Msg
-reviewTable mode candidate =
+reviewTable : RecognitionTableMode -> List MetaSkill -> Html Msg
+reviewTable mode skills =
     let
         tableHead s =
             th
@@ -414,12 +463,12 @@ reviewTable mode candidate =
         viewData skill =
             case mode of
                 Complete ->
-                    [ tableData skill.name
+                    [ tableData skill.label
                     , tableData skill.comment
                     ]
 
                 Simplified ->
-                    [ tableData skill.name ]
+                    [ tableData skill.label ]
     in
     div
         [ class "m-10 shadow overflow-hidden border-gray-200 rounded-lg" ]
@@ -442,13 +491,13 @@ reviewTable mode candidate =
             , tableBody <|
                 List.map
                     (viewData >> tr [])
-                    candidate.metaSkills
+                    skills
             ]
         ]
 
 
-reviewFullScreen : Candidate -> Maybe MetaSkill -> List (Html Msg)
-reviewFullScreen candidate maybeSkill =
+reviewFullScreen : List MetaSkill -> Maybe MetaSkill -> Maybe MetaSkill -> Maybe String -> List (Html Msg)
+reviewFullScreen skills maybeSkill maybeSkillToDelete maybeError =
     let
         detailsView : { a | attribute : String, title : String, content : Html msg } -> Html msg
         detailsView config =
@@ -470,10 +519,16 @@ reviewFullScreen candidate maybeSkill =
         , content =
             [ case maybeSkill of
                 Just skill ->
-                    alert <|
-                        "Mode de démonstration, la compétence \""
-                            ++ skill.name
-                            ++ "\" n'a\u{00A0}pas\u{00A0}été\u{00A0}enregistrée."
+                    successAlert <|
+                        "La compétence \""
+                            ++ skill.label
+                            ++ "\" a\u{00A0}été\u{00A0}enregistrée."
+
+                Nothing ->
+                    text ""
+            , case maybeError of
+                Just error ->
+                    errorAlert error
 
                 Nothing ->
                     text ""
@@ -481,18 +536,18 @@ reviewFullScreen candidate maybeSkill =
                 [ class "flex-grow w-full bg-gray-200 p-5 overflow-y-scroll" ]
                 [ detailsView
                     { attribute = "closed"
-                    , title = "Tableau exportable"
-                    , content = reviewTable Complete candidate
+                    , title = "Liste à copier/coller"
+                    , content = reviewTable Complete skills
                     }
                 , detailsView
                     { attribute = "closed"
-                    , title = "Tableau exportable (simplifié)"
-                    , content = reviewTable Simplified candidate
+                    , title = "Liste simplifiée à copier/coller"
+                    , content = reviewTable Simplified skills
                     }
                 , detailsView
                     { attribute = "open"
-                    , title = "Grille"
-                    , content = viewSkillGrid <| review candidate
+                    , title = "Présentation en vignettes"
+                    , content = viewSkillGrid <| review skills maybeSkillToDelete
                     }
                 ]
             ]
@@ -506,19 +561,22 @@ reviewFullScreen candidate maybeSkill =
         }
 
 
-viewSkill : List (Html Msg) -> MetaSkill -> Html Msg
-viewSkill situation skill =
+viewSkill : { situation : List (Html Msg), footer : List (Html Msg) } -> MetaSkill -> Html Msg
+viewSkill config skill =
     div
         [ dataTest "candidate-skill"
-        , class "max-w-md w-full shadow rounded-lg px-6 py-5 bg-white"
+        , class "flex flex-col max-w-md w-full shadow rounded-lg px-6 py-5 bg-white"
         ]
-        [ div
-            [ class "text-left w-full" ]
-            [ p
-                [ class "text-base font-medium text-gray-700 leading-snug" ]
-                [ text skill.name ]
+        [ div [ class "flex-1" ]
+            [ div
+                [ class "text-left w-full" ]
+                [ p
+                    [ class "text-base font-medium text-gray-700 leading-snug" ]
+                    [ text skill.label ]
+                ]
+            , div [ class "text-left w-full mt-3" ] config.situation
             ]
-        , div [ class "text-left w-full mt-3" ] situation
+        , div [ class "flex-none" ] config.footer
         ]
 
 
@@ -536,56 +594,104 @@ viewSkillGrid =
 
 update : Candidate -> Model -> Msg -> ( Model, Cmd Msg, List Actions.Action )
 update candidate model msg =
-    case msg of
-        UserNavigateTo (CreateMetaSkill skill) ->
+    case ( msg, model.step ) of
+        ( UserNavigateTo (CreateMetaSkill skill), _ ) ->
             ( { model | step = CreateMetaSkill skill }
             , Browser.Dom.focus "description"
                 |> Task.attempt (\_ -> NoOp)
             , []
             )
 
-        UserNavigateTo (Contextualization skill) ->
-            ( { model | step = Contextualization skill }
+        ( UserNavigateTo (Contextualization skill maybeError), _ ) ->
+            ( { model | step = Contextualization skill maybeError }
             , Browser.Dom.focus "situation"
                 |> Task.attempt (\_ -> NoOp)
             , []
             )
 
-        UserNavigateTo (Confirmation skill) ->
+        ( UserNavigateTo (Confirmation skill), _ ) ->
             ( { model | step = Confirmation skill }
-            , Cmd.none
-            , [ Actions.UpdateCandidate
-                    { candidate
-                        | metaSkills = skill :: candidate.metaSkills
-                    }
-              ]
+            , Api.createSkill GotSkillResponse { token = model.token, candicadyId = candidate.candidacyId, skill = skill }
+            , []
             )
 
-        UserNavigateTo step ->
+        ( UserNavigateTo step, _ ) ->
             ( { model | step = step }
             , Cmd.none
             , []
             )
 
-        UserUpdatedNewSkill skill name ->
-            ( { model | step = CreateMetaSkill { skill | name = name } }
+        ( UserUpdatedNewSkill _ label, CreateMetaSkill skill ) ->
+            ( { model | step = CreateMetaSkill { skill | label = label } }
             , Cmd.none
             , []
             )
 
-        UserUpdatedSkillComment skill comment ->
-            ( { model | step = Contextualization { skill | comment = comment } }
+        ( UserUpdatedSkillComment _ comment, Contextualization skill _ ) ->
+            ( { model | step = Contextualization { skill | comment = comment } Nothing }
             , Cmd.none
             , []
             )
 
-        NoOp ->
+        ( UserSubmittedNewSkill skill, Contextualization _ _ ) ->
+            ( model
+            , Api.createSkill GotSkillResponse { token = model.token, candicadyId = candidate.candidacyId, skill = skill }
+            , []
+            )
+
+        ( UserAskedToDeleteSkill skillToDelete, Confirmation _ ) ->
+            ( { model | step = Review (Just skillToDelete) Nothing }, Cmd.none, [] )
+
+        ( UserAskedToDeleteSkill skillToDelete, Review _ _ ) ->
+            ( { model | step = Review (Just skillToDelete) Nothing }, Cmd.none, [] )
+
+        ( UserDeletedSkill, Review (Just skill) _ ) ->
+            ( model
+            , Api.deleteSkill GotSkillDeletedResponse { token = model.token, candicadyId = candidate.candidacyId, skill = skill }
+            , []
+            )
+
+        ( GotSkillResponse (RemoteData.Success skill), Contextualization _ _ ) ->
+            ( { model | step = Confirmation skill }
+            , Cmd.none
+            , [ Actions.UpdateCandidate
+                    { candidate
+                        | metaSkills = RemoteData.map (\skills -> skill :: skills) candidate.metaSkills
+                    }
+              ]
+            )
+
+        ( GotSkillResponse (RemoteData.Failure error), Contextualization skill _ ) ->
+            ( { model | step = Contextualization skill (Just ("Une erreur est survenue lors de l'enregistrement de la compétence \"" ++ skill.label ++ "\"")) }, Cmd.none, [] )
+
+        ( GotCancelSkillToDelete, Review _ _ ) ->
+            ( { model | step = Review Nothing Nothing }, Cmd.none, [] )
+
+        ( GotSkillDeletedResponse (RemoteData.Success skillDeleted), Review _ _ ) ->
+            ( { model | step = Review Nothing Nothing }
+            , Cmd.none
+            , [ Actions.UpdateCandidate
+                    { candidate
+                        | metaSkills = RemoteData.map (List.filter (\skill -> skill /= skillDeleted)) candidate.metaSkills
+                    }
+              ]
+            )
+
+        ( GotSkillDeletedResponse (RemoteData.Failure _), Review (Just skill) _ ) ->
+            ( { model | step = Review Nothing (Just ("Une erreur est survenue lors de la suppression de la compétence \"" ++ skill.label ++ "\"")) }
+            , Cmd.none
+            , []
+            )
+
+        _ ->
             ( model, Cmd.none, [] )
 
 
-init : Model
-init =
-    { step = Introduction }
+init : Token -> Model
+init token =
+    { token = token
+    , step = Introduction
+    }
 
 
 
@@ -641,13 +747,39 @@ popup config =
     ]
 
 
-alert : String -> Html msg
-alert s =
+type AlertLevel
+    = Success
+    | Error
+
+
+alert : AlertLevel -> String -> Html msg
+alert level s =
+    let
+        colors =
+            case level of
+                Success ->
+                    "bg-green-100 text-green-800"
+
+                Error ->
+                    "bg-red-100 text-red-800"
+    in
     div
-        [ class "my-8"
-        , class "rounded-lg px-8 py-4 font-semibold bg-yellow-100 text-yellow-800 mx-6"
+        [ dataTest "alert"
+        , class "my-8"
+        , class "rounded-lg px-8 py-4 font-semibold mx-6"
+        , class colors
         ]
         [ text s ]
+
+
+successAlert : String -> Html msg
+successAlert =
+    alert Success
+
+
+errorAlert : String -> Html msg
+errorAlert =
+    alert Error
 
 
 groupByCategory : List MetaSkillReference -> List ( MetaSkillReference, List MetaSkillReference )

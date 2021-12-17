@@ -10,6 +10,19 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   minute: '2-digit',
 }
 
+const letterFromScore = (score: number) => {
+  switch (true) {
+    case (score >= 0.89431):
+      return 'A'
+    case (score >= 0.72358):
+      return 'B'
+    case (score >= 0.44716):
+      return 'C'
+    default:
+      return 'D'
+  }
+}
+
 function createSurvey(survey: { grades: { obtainment: number, profile: number }, createdAt: string }) {
   const createdAtDate = new Date(survey.createdAt)
 
@@ -76,6 +89,7 @@ export const getCandidates = async (user: {
   const { rows } = await pg.query(query, parameters)
 
   return rows.map((r: any) => ({
+    candidacyId: r.id,
     email: r.email,
     firstname: r.firstname,
     lastname: r.lastname,
@@ -90,7 +104,6 @@ export const getCandidates = async (user: {
       id: r.diplome_id,
       label: r.diplome_label,
     },
-    metaSkill: [],
     statuses: candidaciesStatuses.filter((candidacyStatuses: any) => candidacyStatuses.candidacy_id === r.id)
       .flatMap((cs: any) => cs.statuses)
       .map((cs: any) => {
@@ -144,16 +157,84 @@ export const getCandidateAnswers = async (user: {
   return rows
 }
 
+export const canManageCandidacy = async (user: {
+  id: string
+  // eslint-disable-next-line camelcase
+  roles: { role_id: string }[]
+}, candidacyId: string) => {
+  let query = `
+  SELECT 
+    c.id
+  FROM candidacies c
+  INNER JOIN cities ci ON ci.id = c.city_id
+  INNER JOIN diplomes di ON di.id = c.diplome_id
+  INNER JOIN cohortes_diplomes_cities cdc ON ci.id = cdc.city_id AND di.id = cdc.diplome_id
+  INNER JOIN cohortes co ON co.id = cdc.cohorte_id
+  `
+  const parameters = [candidacyId]
 
-const letterFromScore = (score: number) => {
-  switch (true) {
-    case (score >= 0.89431):
-      return 'A'
-    case (score >= 0.72358):
-      return 'B'
-    case (score >= 0.44716):
-      return 'C'
-    default:
-      return 'D'
+  if (!isAdmin(user.roles.map((r) => r.role_id))) {
+    query = `${query} 
+    INNER JOIN users_cohortes uc ON uc.cohorte_id = cdc.cohorte_id AND uc.user_id = $2`
+    parameters.push(user.id)
   }
+
+  query = `${query}
+  WHERE c.id = $1`
+
+  const { rows } = await pg.query(query, parameters)
+  return rows.length > 0
+} 
+
+
+export const getCandidacySkills = async (candidacyId: string) => {
+  const query = `
+  SELECT 
+    *
+  FROM skills s
+  WHERE s.candidacy_id = $1;
+  `
+
+  const { rows } = await pg.query(query, [candidacyId])
+  return rows
 }
+
+export const saveCandidacySkill = async ({ candidacyId, skill }: any) => {
+  const query = `
+  INSERT INTO skills (label, comment, type, category, candidacy_id)
+  VALUES ($1, $2, $3, $4, $5)
+  RETURNING id;
+  `
+
+  const { rows } = await pg.query(query, [
+    skill.label,
+    skill.comment,
+    skill.type,
+    skill.category,
+    candidacyId])
+
+  return { ...skill, id: rows[0].id }
+}
+
+export const updateCandidacySkill = async (skill: any) => {
+  const query = `
+  UPDATE skills 
+  SET comment = $1, label = $2
+  WHERE id = $3;
+  `
+
+  await pg.query(query, [skill.comment, skill.label, skill.id])
+  return skill
+}
+
+export const deleteCandidacySkill = (id: string) => {
+  const query = `
+  DELETE FROM skills 
+  WHERE id = $1;
+  `
+
+  return pg.query(query, [id])
+}
+
+
+

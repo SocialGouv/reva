@@ -6,6 +6,9 @@ describe('List all candidates', () => {
     cy.intercept('/api/candidates', { fixture: 'candidates.json' }).as(
       'candidates'
     )
+    cy.intercept('GET', '/api/candidacies/*/skills', { fixture: 'skills.json' }).as(
+      'skills'
+    )
     cy.visit('/app/')
     cy.wait('@candidates')
     cy.get('[data-test=directory-item]').as('directoryItems')
@@ -59,6 +62,7 @@ describe('List all candidates', () => {
   context('open candidate profile', () => {
     beforeEach(() => {
       cy.get('@directoryItems').eq(2).click()
+      cy.wait('@skills')
       cy.get('button[data-test=profile]').click()
     })
 
@@ -80,29 +84,54 @@ describe('List all candidates', () => {
 
     beforeEach(() => {
       cy.get('@directoryItems').eq(1).click()
+      cy.wait('@skills')
       cy.get('button[data-test=recognition]').click()
     })
 
     it('recognize two skills', function () {
+      cy.intercept('POST', '/api/candidacies/*/skills', {
+        body: {
+          label: "Je sais respecter les règles de vivre ensemble (ponctualité, assiduité, écoute, respect, bienveillance)",
+          category: "Travail en équipe", 
+          comment: loremIpsum, 
+          type: "official", 
+          id: "ea0285e9-97c2-4c5d-b19c-5efc1184fc13"
+        },
+      }).as(
+        'create_skill'
+      )
+
       cy.get('button[data-test=start-recognition]').click()
 
       cy.get('button[data-test=skill-1]').click()
       cy.get('textarea[data-test=situation]').type(loremIpsum)
       cy.get('button[data-test=confirm-recognition]').click()
-      cy.get('div[data-test=candidate-skill]').should('have.length', 1)
+      cy.get('div[data-test=candidate-skill]').should('have.length', 2)
       cy.get('button[data-test=restart-recognition]').click()
 
       cy.get('button[data-test=skill-4]').click()
       cy.get('textarea[data-test=situation]').type(loremIpsum)
       cy.get('button[data-test=confirm-recognition]').click()
-      cy.get('div[data-test=candidate-skill]').should('have.length', 2)
+      cy.wait('@create_skill')
+      cy.get('div[data-test=candidate-skill]').should('have.length', 3)
 
       cy.get('button[data-test=close-popup]').click()
       cy.get('button[data-test=review-recognition]').click()
-      cy.get('div[data-test=candidate-skill]').should('have.length', 2)
+      cy.get('div[data-test=candidate-skill]').should('have.length', 3)
     })
 
     it('recognize a custom skill', function () {
+      cy.intercept('POST', '/api/candidacies/*/skills', {
+        body: {
+          label: customSkill,
+          category: "Travail en équipe", 
+          comment: loremIpsum, 
+          type: "custom", 
+          id: "ea0285e9-97c2-4c5d-b19c-5efc1184fc13"
+        },
+      }).as(
+        'create_skill'
+      )
       cy.get('button[data-test=start-recognition]').click()
 
       cy.get('button[data-test=create-skill]').click()
@@ -113,11 +142,50 @@ describe('List all candidates', () => {
       cy.get('textarea[data-test=situation]').type(loremIpsum)
       cy.get('button[data-test=confirm-recognition]').click()
 
-      cy.get('div[data-test=candidate-skill]').should('have.length', 1)
+      cy.get('div[data-test=candidate-skill]').should('have.length', 2)
       cy.get('div[data-test=candidate-skill]')
         .eq(0)
         .should('contain', customSkill)
     })
+
+    context('delete skill', () => {
+      it('ask to confirm delete skill', function () {
+        cy.get('button[data-test=review-recognition]').click()
+        cy.get('div[data-test=delete-skill]').should('have.length', 1)
+        cy.get('div[data-test=delete-skill]').click()
+        cy.get('button[data-test=cancel-delete-skill]').should('have.length', 1)
+        cy.get('button[data-test=confirm-delete-skill]').should('have.length', 1)
+      })
+      it('cancel delete skill', function () {
+        cy.get('button[data-test=review-recognition]').click()
+        cy.get('div[data-test=delete-skill]').click()
+        cy.get('button[data-test=cancel-delete-skill]').click()
+        cy.get('div[data-test=delete-skill]').should('have.length', 1)
+      })
+      it('confirm delete skill', function () {
+        cy.intercept('DELETE', '/api/candidacies/*/skills/*', { statusCode: 201 }).as(
+          'delete_skill'
+        )
+        cy.get('button[data-test=review-recognition]').click()
+        cy.get('div[data-test=delete-skill]').click()
+        cy.get('button[data-test=confirm-delete-skill]').click()
+        cy.wait("@delete_skill")
+        cy.get('div[data-test=alert]').should('have.length', 0)
+        cy.get('div[data-test=candidate-skill]').should('have.length', 0)
+      })
+      it('delete skill failed', function () {
+        cy.intercept('DELETE', '/api/candidacies/*/skills/*', { statusCode: 500 }).as(
+          'delete_skill_failed'
+        )
+        cy.get('button[data-test=review-recognition]').click()
+        cy.get('div[data-test=delete-skill]').click()
+        cy.get('button[data-test=confirm-delete-skill]').click()
+        cy.wait("@delete_skill_failed")
+        cy.get('div[data-test=alert]').should('have.length', 1)
+        cy.get('div[data-test=candidate-skill]').should('have.length', 1)
+      })
+    })
+
 
     it('require a comment to be added after selection', function () {
       cy.get('button[data-test=start-recognition]').click()

@@ -1,7 +1,21 @@
 import { isAdminMiddleware } from '../auth'
 import { jwtMiddleware } from '../auth/jwt'
 import { getSurveys } from '../survey/data'
-import { getCandidateAnswers, getCandidates } from './data'
+import { deleteCandidacySkill, getCandidacySkills, getCandidateAnswers, getCandidates, saveCandidacySkill, updateCandidacySkill, canManageCandidacy } from './data'
+
+
+const canManageCandidacyMiddleware = async (req: any, res: any, next: any) => {
+  const user = req.user
+  const candidacyId = req.params.candidacyId
+  const allow = await canManageCandidacy(user, candidacyId)
+
+  if (allow) {
+    next()
+  } else {
+    res.status(403).send()
+  }
+}
+
 
 const candidateRouter = require('express').Router()
 
@@ -85,6 +99,69 @@ candidateRouter.get(
     })
 
     res.json(flattenCandidatesAnswers)
+  }
+)
+
+candidateRouter.get(
+  '/candidacies/:candidacyId/skills',
+  jwtMiddleware,
+  canManageCandidacyMiddleware,
+  async (req: any, res: any) => {
+    try {
+      const candidacyId = req.params.candidacyId
+      const skills = await getCandidacySkills(candidacyId)
+      res.status(200).send(skills)
+    } catch (e) {
+      res.status(500).send()
+    }
+  }
+)
+
+candidateRouter.post(
+  '/candidacies/:candidacyId/skills',
+  jwtMiddleware,
+  canManageCandidacyMiddleware,
+  async (req: any, res: any) => {
+    try {
+      const candidacyId = req.params.candidacyId
+      const skill = req.body
+      const createdSkill = await saveCandidacySkill({ candidacyId, skill })
+      res.status(201).json(createdSkill)
+    } catch (e) {
+      console.log(e)
+      res.status(500).send()
+    }
+
+  }
+)
+candidateRouter.put(
+  '/candidacies/:candidacyId/skills/:skillId',
+  jwtMiddleware,
+  canManageCandidacyMiddleware,
+  async (req: any, res: any) => {
+    try {
+      const skillId = req.params.skillId
+      const skill = req.body
+      const updatedSkill = await updateCandidacySkill({ ...skill, id: skillId })
+      res.status(201).json(updatedSkill)
+    } catch (e) {
+      res.status(500).send()
+    }
+
+  }
+)
+
+candidateRouter.delete(
+  '/candidacies/:candidacyId/skills/:skillId',
+  jwtMiddleware,
+  canManageCandidacyMiddleware,
+  async (req: any, res: any) => {
+    try {
+      await deleteCandidacySkill(req.params.skillId)
+      res.status(201).send()      
+    } catch (e) {
+      res.status(500).send()
+    }
   }
 )
 

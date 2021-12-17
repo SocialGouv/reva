@@ -1,6 +1,6 @@
 port module Main exposing (main)
 
-import Api
+import Api exposing (Token)
 import Browser
 import Browser.Navigation as Nav
 import Candidate exposing (Candidate)
@@ -22,10 +22,6 @@ type alias Flags =
 
 
 -- MODEL
-
-
-type Token
-    = Token String
 
 
 type alias Model =
@@ -53,11 +49,11 @@ type Msg
     | GotCandidatesMsg Candidates.Msg
     | GotLoginError String
       -- PROFILE
-    | GotProfileResponse (Result Http.Error ())
+      --| GotProfileResponse (Result Http.Error ())
       -- LOGIN
     | GotLoginUpdate Page.Login.Model
     | GotLoginSubmit
-    | GotLoginResponse (Result Http.Error String)
+    | GotLoginResponse (Result Http.Error Token)
     | GotCandidatesResponse (Result Http.Error (List Candidate))
 
 
@@ -148,10 +144,10 @@ update msg model =
                     ( { model | state = Page.Login.withErrors loginModel errors |> NotLoggedIn }, Cmd.none )
 
         ( GotLoginResponse (Ok token), NotLoggedIn loginModel ) ->
-            ( { model | state = LoggedIn (Token token) (Home Candidates.init) }
+            ( { model | state = LoggedIn token (Home <| Candidates.init token) }
             , Cmd.batch
                 [ if loginModel.form.rememberMe then
-                    storeToken token
+                    storeToken (Api.tokenToString token)
 
                   else
                     Cmd.none
@@ -182,7 +178,7 @@ update msg model =
         ( GotCandidatesResponse (Ok candidates), LoggedIn token Loading ) ->
             ( { model
                 | state =
-                    Candidates.receiveCandidates Candidates.init candidates
+                    Candidates.receiveCandidates (Candidates.init token) candidates
                         |> Home
                         |> LoggedIn token
               }
@@ -230,7 +226,7 @@ init flags _ key =
         state =
             case flags.token of
                 Just token ->
-                    LoggedIn (Token token) Loading
+                    LoggedIn (Api.stringToToken token) Loading
 
                 Nothing ->
                     NotLoggedIn Page.Login.init
@@ -243,7 +239,7 @@ init flags _ key =
         NotLoggedIn _ ->
             Nav.pushUrl key (Route.fromRoute flags.baseUrl Route.Login)
 
-        LoggedIn (Token token) _ ->
+        LoggedIn token _ ->
             Api.fetchCandidates (GotCandidatesResponse |> withAuthHandle) { token = token }
     )
 
