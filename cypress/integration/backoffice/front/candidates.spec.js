@@ -148,7 +148,7 @@ describe('List all candidates', () => {
         .should('contain', customSkill)
     })
 
-    context.only('delete skill', () => {
+    context('delete skill', () => {
       it('ask to confirm delete skill', function () {
         cy.get('button[data-test=review-recognition]').click()
         cy.get('div[data-test=delete-skill]').should('have.length', 1)
@@ -163,25 +163,26 @@ describe('List all candidates', () => {
         cy.get('div[data-test=delete-skill]').should('have.length', 1)
       })
       it('confirm delete skill', function () {
-        cy.intercept('DELETE', '/api/candidacies/*/skills/*').as(
+        cy.intercept('DELETE', '/api/candidacies/*/skills/*', { statusCode: 201 }).as(
           'delete_skill'
         )
         cy.get('button[data-test=review-recognition]').click()
         cy.get('div[data-test=delete-skill]').click()
         cy.get('button[data-test=confirm-delete-skill]').click()
         cy.wait("@delete_skill")
+        cy.get('div[data-test=alert]').should('have.length', 0)
         cy.get('div[data-test=candidate-skill]').should('have.length', 0)
       })
       it('delete skill failed', function () {
         cy.intercept('DELETE', '/api/candidacies/*/skills/*', { statusCode: 500 }).as(
-          'delete_skill'
+          'delete_skill_failed'
         )
         cy.get('button[data-test=review-recognition]').click()
         cy.get('div[data-test=delete-skill]').click()
         cy.get('button[data-test=confirm-delete-skill]').click()
-        cy.wait("@delete_skill")
-        cy.get('div[data-test=candidate-skill]').should('have.length', 1)
+        cy.wait("@delete_skill_failed")
         cy.get('div[data-test=alert]').should('have.length', 1)
+        cy.get('div[data-test=candidate-skill]').should('have.length', 1)
       })
     })
 
