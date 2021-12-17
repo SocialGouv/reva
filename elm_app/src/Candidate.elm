@@ -4,7 +4,7 @@ import Candidate.Grade as Grade exposing (Grade)
 import Candidate.MetaSkill exposing (MetaSkill)
 import Candidate.Status as Status exposing (Status(..))
 import Json.Decode as Decode exposing (Decoder)
-import Json.Decode.Pipeline exposing (optional, required)
+import Json.Decode.Pipeline exposing (hardcoded, optional, required)
 import Json.Encode as Encode
 import RemoteData exposing (WebData)
 
@@ -142,7 +142,7 @@ decoder =
         |> required "email" Decode.string
         |> required "firstname" Decode.string
         |> required "lastname" Decode.string
-        |> required "metaSkill" (Decode.succeed RemoteData.NotAsked)
+        |> hardcoded RemoteData.NotAsked
         |> required "phoneNumber" Decode.string
         |> required "statuses" (Decode.list statusDecoder)
         |> required "surveys" (Decode.list surveyDecoder)

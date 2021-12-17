@@ -1,5 +1,6 @@
 [
   {
+    "candidacyId": "84b3218a-a5bd-4e4b-b359-8562de9b04b1",
     "email": "clara.oswald@example.com",
     "cohorte": "84b3218a-a5bd-4e4b-b359-8562de9b04b7",
     "diplome": {
@@ -12,7 +13,6 @@
       "obtainment": "A",
       "profile": "B"
     },
-    "metaSkill": [],
     "phoneNumber": "0600000000",
     "city": {
       "id": "84b3218a-a5bd-4e4b-b359-8562de9b04b7",
@@ -45,6 +45,7 @@
     ]
   },
   {
+    "candidacyId": "84b3218a-a5bd-4e4b-b359-8562de9b04b2",
     "email": "lady.cassandra.o-brienc@example.com",
     "cohorte": "84b3218a-a5bd-4e4b-b359-8562de9b04b7",
     "diplome": {
@@ -53,7 +54,6 @@
     },
     "lastname": "O'Brienc",
     "firstname": "Lady Cassandra",
-    "metaSkill": [],
     "phoneNumber": "0600000000",
     "city": {
       "id": "84b3218a-a5bd-4e4b-b359-8562de9b04b7",
@@ -81,6 +81,7 @@
     ]
   },
   {
+    "candidacyId": "84b3218a-a5bd-4e4b-b359-8562de9b04b3",
     "email": "amy.pond@example.com",
     "cohorte": "84b3218a-a5bd-4e4b-b359-8562de9b04b7",
     "diplome": {
@@ -89,7 +90,6 @@
     },
     "lastname": "Pond",
     "firstname": "Amy",
-    "metaSkill": [],
     "phoneNumber": "0644332211",
     "city": {
       "id": "84b3218a-a5bd-4e4b-b359-8562de9b04b7",
@@ -132,6 +132,7 @@
     ]
   },
   {
+    "candidacyId": "84b3218a-a5bd-4e4b-b359-8562de9b04b4",
     "email": "rory.williams@example.com",
     "cohorte": "84b3218a-a5bd-4e4b-b359-8562de9b04b7",
     "diplome": {
@@ -140,7 +141,6 @@
     },
     "lastname": "Williams",
     "firstname": "Rory",
-    "metaSkill": [],
     "phoneNumber": "0600000000",
     "city": {
       "id": "84b3218a-a5bd-4e4b-b359-8562de9b04b7",
@@ -173,6 +173,7 @@
     ]
   },
   {
+    "candidacyId": "84b3218a-a5bd-4e4b-b359-8562de9b04b5",
     "email": "mickey.smith@example.com",
     "cohorte": "84b3218a-a5bd-4e4b-b359-8562de9b04b7",
     "diplome": {
@@ -181,7 +182,6 @@
     },
     "lastname": "Smith",
     "firstname": "Mickey",
-    "metaSkill": [],
     "phoneNumber": "0600000000",
     "city": {
       "id": "84b3218a-a5bd-4e4b-b359-8562de9b04b7",

@@ -104,7 +104,6 @@ export const getCandidates = async (user: {
       id: r.diplome_id,
       label: r.diplome_label,
     },
-    metaSkill: [],
     statuses: candidaciesStatuses.filter((candidacyStatuses: any) => candidacyStatuses.candidacy_id === r.id)
       .flatMap((cs: any) => cs.statuses)
       .map((cs: any) => {
