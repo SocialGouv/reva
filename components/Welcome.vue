@@ -2,7 +2,8 @@
   <div
     class="
       w-full
-      max-w-x
+      max-w-7xl
+      mx-auto
       py-4
       px-4
       flex flex-1
@@ -12,50 +13,40 @@
     "
   >
     <div v-if="isLoadingQuestions">Chargement...</div>
-    <div v-else class="text-gray-800">
-      <h1 class="py-3">
-        Bienvenue dans <span class="font-medium text-gray-900">REVA</span>,
-      </h1>
-
+    <div v-else class="text-gray-800 text-sm">
       <p class="mt-2">
-        Dans le but d'améliorer notre questionnaire, nous souhaiterions avoir
-        votre avis sur la pertinence des questions que nous allons vous poser :
+        Nous menons une expérimentation autour de la Validation des Acquis de
+        l'Expérience. Notre seul et unique objectif est de simplifier la
+        démarche de VAE. Dans cette optique, nous allons vous demander de
+        répondre à une série de questions portant essentiellement sur vous-même
+        et sur la manière dont vous percevez la VAE.
       </p>
 
-      <label class="relative mt-6 flex cursor-pointer focus:outline-none">
-        <input
-          v-model="displayEnquete"
-          type="checkbox"
-          name="displayEnquete"
-          value="1"
-          class="
-            h-4
-            w-4
-            mt-0.5
-            cursor-pointer
-            text-indigo-600
-            border-gray-300
-            focus:ring-indigo-500
-            text-sm
-          "
-          aria-labelledby="displayEnquete-label"
-          aria-describedby="displayEnquete-description"
-        />
-        <div class="ml-3 flex flex-col">
-          <!-- Checked: "text-indigo-900", Not Checked: "text-gray-900" -->
-          <span id="displayEnquete-label" class="block text-sm">
-            Je souhaite vous aider en donnant mon avis
-          </span>
-          <!-- Checked: "text-indigo-700", Not Checked: "text-gray-500" -->
-          <!-- <span id="displayEnquete-description" class="block text-sm text-gray-500">
-                  J'ai exercé un métier en partie ou similaire au diplôme
-                </span> -->
-        </div>
-      </label>
-      <div class="flex justify-center items-center mt-8">
+      <p class="mt-2">
+        Il n'y a pas de bonne ou de mauvaise réponse. Répondez le plus
+        sincèrement et spontanément possible.
+      </p>
+
+      <p class="mt-2">
+        Les réponses à ce questionnaire seront traitées statistiquement et
+        utilisées uniquement pour établir votre profil de réponse. Votre
+        accompagnateur VAE est susceptible d'avoir accès à vos réponses
+        uniquement dans le but d'établir un lien entre les différentes étapes de
+        l'accompagnement et votre engagement dans la démarche.
+      </p>
+
+      <p class="mt-6">
+        En répondant à ce questionnaire, vous confirmez avoir lu et accepté les
+        conditions de participation.
+      </p>
+
+      <div class="flex flex-col justify-center items-center mt-6">
         <Button :disabled="!!error || isLoadingQuestions" @click="onStart">
-          Commencer
+          Répondre
         </Button>
+        <nuxt-link to="/" class="hover:text-gray-600 underline mt-4">
+          Retour à l'accueil
+        </nuxt-link>
       </div>
     </div>
 
