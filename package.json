@@ -56,7 +56,7 @@
     "sass-loader": "10.1.1",
     "tarteaucitronjs": "^1.9.4",
     "wait-on": "^6.0.0",
-    "xstate": "^4.23.4",
+    "xstate": "^4.27.0",
     "xstate-vue2": "^0.2.1",
     "yup": "^0.32.9"
   },

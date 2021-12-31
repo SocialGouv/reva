@@ -15287,10 +15287,10 @@ xstate-vue2@^0.2.1:
   resolved "https://registry.npmjs.org/xstate-vue2/-/xstate-vue2-0.2.1.tgz"
   integrity sha512-x/XiTtrbg5F1n+GpnKDvPbiOh2EXdUufHgJzvaSsy9FXHSWkkz8/fL1ck0gXPKkCv9suNdouJWeE67sTML7KFw==
 
-xstate@^4.23.4:
-  version "4.23.4"
-  resolved "https://registry.npmjs.org/xstate/-/xstate-4.23.4.tgz"
-  integrity sha512-lWaUvyrd0HGhosyKnf8i9wBlszVaS+/uIs0EfnuPYNsZIh1BW9ed4bZ64P57wVYk2uln7v3u+Mv98FC+r8xrxQ==
+xstate@^4.27.0:
+  version "4.27.0"
+  resolved "https://registry.yarnpkg.com/xstate/-/xstate-4.27.0.tgz#f3c918ac4229bd5e6dec2231e991ba55c6bfa559"
+  integrity sha512-ohOwDM9tViC/zSSmY9261CHblDPqiaAk5vyjVbi69uJv9fGWMzlm0VDQwM2OvC61GKfXVBeuWSMkL7LPUsTpfA==
 
 xtend@^4.0.0, xtend@^4.0.2, xtend@~4.0.1:
   version "4.0.2"
