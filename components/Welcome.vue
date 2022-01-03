@@ -36,8 +36,8 @@
       </p>
 
       <p class="mt-6">
-        En répondant à ce questionnaire, vous confirmez avoir lu et accepté les
-        conditions de participation.
+        En répondant à ce questionnaire, vous confirmez avoir lu et accepté ces
+        conditions.
       </p>
 
       <div class="flex flex-col justify-center items-center mt-6">
