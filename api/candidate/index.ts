@@ -1,7 +1,7 @@
 import { isAdminMiddleware } from '../auth'
 import { jwtMiddleware } from '../auth/jwt'
 import { getSurveys } from '../survey/data'
-import { deleteCandidacySkill, getCandidacySkills, getCandidateAnswers, getCandidates, saveCandidacySkill, updateCandidacySkill, canManageCandidacy } from './data'
+import { deleteCandidacySkill, getCandidacySkills, getCandidateAnswers, getCandidates, saveCandidacySkill, updateCandidacySkill, canManageCandidacy, letterFromScore } from './data'
 
 
 const canManageCandidacyMiddleware = async (req: any, res: any, next: any) => {
@@ -59,8 +59,16 @@ candidateRouter.get(
         candidatureId: candidateAnswers.id,
         surveyId: candidateAnswers.survey_id,
         email: candidateAnswers.candidate.email,
-        cohorte: candidateAnswers.cohorte_label
-      } 
+        cohorte: candidateAnswers.cohorte_label,
+        score: {
+          grades: candidateAnswers.score?.grades && {
+            ...candidateAnswers.score.grades,
+            profileLetter: letterFromScore(candidateAnswers.score.grades.profile),
+            obtainmentLetter: letterFromScore(candidateAnswers.score.grades.obtainment)
+          },
+          scoresByMeasures: candidateAnswers.score?.scoresByMeasures
+        }
+      }
 
       return Object.entries(candidateAnswers.answers)
         .reduce((memo: any, [key, questionAnswer]: any) => {
@@ -90,12 +98,12 @@ candidateRouter.get(
           }
 
           return {
-            ...memo, 
-            [`question${currentQuestionOrder}`]: answer, 
-            [`satisfaction${currentQuestionOrder}`]: satisfactionAnswer, 
+            ...memo,
+            [`question${currentQuestionOrder}`]: answer,
+            [`satisfaction${currentQuestionOrder}`]: satisfactionAnswer,
             [`satisfactionDetail${currentQuestionOrder}`]: satisfactionDetail
           }
-        }, candidateInfos)  
+        }, candidateInfos)
     })
 
     res.json(flattenCandidatesAnswers)
@@ -158,7 +166,7 @@ candidateRouter.delete(
   async (req: any, res: any) => {
     try {
       await deleteCandidacySkill(req.params.skillId)
-      res.status(201).send()      
+      res.status(201).send()
     } catch (e) {
       res.status(500).send()
     }

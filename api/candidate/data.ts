@@ -10,7 +10,7 @@ const dateOptions: Intl.DateTimeFormatOptions = {
   minute: '2-digit',
 }
 
-const letterFromScore = (score: number) => {
+export const letterFromScore = (score: number) => {
   switch (true) {
     case (score >= 0.89431):
       return 'A'
@@ -136,6 +136,7 @@ export const getCandidateAnswers = async (user: {
     ci.region as city_region, 
     di.id as diplome_id, 
     di.label as diplome_label, 
+    ca.score,
     ca.created_at as last_created_at
   FROM candidate_answers ca
   INNER JOIN candidacies c ON c.id = ca.candidacy_id
@@ -184,7 +185,7 @@ export const canManageCandidacy = async (user: {
 
   const { rows } = await pg.query(query, parameters)
   return rows.length > 0
-} 
+}
 
 
 export const getCandidacySkills = async (candidacyId: string) => {
