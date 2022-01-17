@@ -84,7 +84,7 @@
                               focus:ring-offset-2
                               focus:ring-indigo-500
                             "
-                            >Je suis intéressé</a
+                            >Je suis intéressé(e)</a
                           >
                         </div>
                       </div>
