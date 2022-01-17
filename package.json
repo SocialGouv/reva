@@ -39,7 +39,7 @@
     "argon2": "^0.28.2",
     "body-parser": "^1.19.0",
     "canvas-confetti": "^1.4.0",
-    "core-js": "^3.15.1",
+    "core-js": "^3.20.3",
     "csv-parser": "^3.0.0",
     "db-migrate": "^0.11.12",
     "db-migrate-pg": "^1.2.2",
