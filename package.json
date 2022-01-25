@@ -1,0 +1,15 @@
+{
+  "name": "reva",
+  "version": "1.0.0",
+  "description": "",
+  "engines": {
+    "npm": "8",
+    "node": "16"
+  },
+  "workspaces": [
+    "packages/reva-api",
+    "packages/reva-website",
+    "packages/reva-app",
+    "packages/reva-mobile"
+  ]
+}
