@@ -81,50 +81,14 @@ Ce consentement de la personne concernée pour une ou plusieurs finalités spéc
 
 ## Durée de conservation
 
-<table>
-  <tr>
-   <td><strong>Types de données</strong>
-   </td>
-   <td><strong>Durée de conservation</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>Données de contact
-   </td>
-   <td>Jusqu’à 3 mois après l’obtention du diplôme, la ou le cas échéant 2 ans après la dernière mise en relation avec la personne concernée.
-   </td>
-  </tr>
-  <tr>
-   <td>Données relatives aux questionnaires
-   </td>
-   <td>Jusqu’à 3 mois après l’obtention du diplôme ou le cas échéant 2 ans après la dernière mise en relation avec la personne concernée.
-   </td>
-  </tr>
-  <tr>
-   <td>Données relatives aux entretiens et tests réalisés par l’organisme certificateur ou accompagnateur
-   </td>
-   <td>Jusqu’à 3 mois après l’obtention du diplôme ou le cas échéant 2 ans après la dernière mise en relation avec la personne concernée.
-   </td>
-  </tr>
-  <tr>
-   <td>Données relatives aux résultats de l’expérimentation
-   </td>
-   <td>Jusqu’à 3 mois après l’obtention du diplôme ou le cas échéant 2 ans après la dernière mise en relation avec la personne concernée.
-   </td>
-  </tr>
-  <tr>
-   <td>Données d’hébergeur
-   </td>
-   <td><strong>1 an</strong>, conformément au décret n°2021-1363 du 20 octobre 2021.
-   </td>
-  </tr>
-  <tr>
-   <td>Cookies
-   </td>
-   <td><strong>Dès le retrait du consentement ou dans un délai de 13 mois</strong>, conformément aux recommandations de la CNIL.
-   </td>
-  </tr>
-</table>
+| Types de données                                                                                   | Durée de conservation                                                                                                                  |
+| -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Données de contact                                                                                 | Jusqu’à 3 mois après l’obtention du diplôme, la ou le cas échéant 2 ans après la dernière mise en relation avec la personne concernée. |
+| Données relatives aux questionnaires                                                               | Jusqu’à 3 mois après l’obtention du diplôme ou le cas échéant 2 ans après la dernière mise en relation avec la personne concernée.     |
+| Données relatives aux entretiens et tests réalisés par l’organisme certificateur ou accompagnateur | Jusqu’à 3 mois après l’obtention du diplôme ou le cas échéant 2 ans après la dernière mise en relation avec la personne concernée.     |
+| Données relatives aux résultats de l’expérimentation                                               | Jusqu’à 3 mois après l’obtention du diplôme ou le cas échéant 2 ans après la dernière mise en relation avec la personne concernée.     |
+| Données d’hébergeur                                                                                | **1 an**, conformément au décret n°2021-1363 du 20 octobre 2021.                                                                       |
+| Cookies                                                                                            | **Dès le retrait du consentement ou dans un délai de 13 mois**, conformément aux recommandations de la CNIL.                           |
 
 ## Droit des personnes concernées
 
@@ -146,87 +110,27 @@ Le responsable de traitement s’engage à répondre dans un délai raisonnable 
 
 Le responsable de traitement s’engage à ce que les données à caractères personnels soient traitées par les seules personnes autorisées. Les données sont transmises dans le cadre de leurs missions d’intérêt public aux organismes certificateurs ou accompagnateurs.
 
-<table>
-  <tr>
-   <td><strong>Organismes certificateurs</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>Ministère de l’agriculture
-   </td>
-  </tr>
-  <tr>
-   <td>Les 2 Rives
-   </td>
-  </tr>
-  <tr>
-   <td>Domus Vi
-   </td>
-  </tr>
-  <tr>
-   <td>PE Lille Vaucanson
-   </td>
-  </tr>
-  <tr>
-   <td>Agence PE Verriers Mulhouse
-   </td>
-  </tr>
-  <tr>
-   <td>LEAP Harol
-   </td>
-  </tr>
-  <tr>
-   <td>DAVA - Dispositif Académique de Validation des Acquis
-   </td>
-  </tr>
-  <tr>
-   <td>ASP - Agence de Services et de Paiement
-   </td>
-  </tr>
-  <tr>
-   <td>Ministère des solidarités et de la santé</td>
-  </tr>
-  <tr>
-    <td>
-Direction Générale de la Cohésion Sociale (DGCS)
-   </td>
-  </tr>
-  <tr>
-   <td>IPERIA
-   </td>
-  </tr>
-  <tr>
-   <td>Ministère de l'Éducation Nationale (EducNat)
-   </td>
-  </tr>
-  <tr>
-   <td>FEPEM | Branche Particulier-Employeur
-   </td>
-  </tr>
-  <tr>
-   <td>Croix Rouge
-   </td>
-  </tr>
-  <tr>
-   <td>AFPA
-   </td>
-  </tr>
-  <tr>
-   <td>CROFF Consulting
-   </td>
-  </tr>
-  <tr>
-   <td>Ministère du Travail</td>
-  </tr>
-  <tr>
-    <td>Directions régionales de l’économie, de l’emploi, du travail et des solidarités (DREETS)
-   </td>
-  </tr>
-  <tr>
-   <td>CNEAP
-   </td>
-  </tr>
-</table>
+| Organismes certificateurs                                                                |
+| ---------------------------------------------------------------------------------------- |
+| Ministère de l’agriculture                                                               |
+| Les 2 Rives                                                                              |
+| Domus Vi                                                                                 |
+| PE Lille Vaucanson                                                                       |
+| Agence PE Verriers Mulhouse                                                              |
+| LEAP Harol                                                                               |
+| DAVA - Dispositif Académique de Validation des Acquis                                    |
+| ASP - Agence de Services et de Paiement                                                  |
+| Ministère des solidarités et de la santé                                                 |
+| Direction Générale de la Cohésion Sociale (DGCS)                                         |
+| IPERIA                                                                                   |
+| Ministère de l'Éducation Nationale (EducNat)                                             |
+| FEPEM \| Branche Particulier-Employeur                                                   |
+| Croix Rouge                                                                              |
+| AFPA                                                                                     |
+| CROFF Consulting                                                                         |
+| Ministère du Travail                                                                     |
+| Directions régionales de l’économie, de l’emploi, du travail et des solidarités (DREETS) |
+| CNEAP                                                                                    |
 
 **Sécurité et confidentialité des données**
 
@@ -248,38 +152,10 @@ Les mesures techniques et organisationnelles de sécurité adoptées pour assure
 
 Certaines des données sont envoyées à des sous-traitants pour réaliser certaines missions. Le responsable de traitement s'est assuré de la mise en œuvre par ses sous-traitants de garanties adéquates et du respect de conditions strictes de confidentialité, d’usage et de protection des données.
 
-<table>
-  <tr>
-   <td><strong>Partenaire</strong>
-   </td>
-   <td><strong>Pays destinataire</strong>
-   </td>
-   <td><strong>Traitement réalisé</strong>
-   </td>
-   <td><strong>Garanties</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>Scalingo
-   </td>
-   <td>France
-   </td>
-   <td>Hébergement SecNumCloud
-   </td>
-   <td><a href="https://scalingo.com/fr/data-processing-agreement">https://scalingo.com/fr/data-processing-agreement</a> 
-   </td>
-  </tr>
-  <tr>
-   <td>Tenzing
-   </td>
-   <td>France
-   </td>
-   <td>Conseil en stratégie, analyse des données et écriture du rapport de mission
-   </td>
-   <td> 
-   </td>
-  </tr>
-</table>
+| Partenaire | Pays destinataire | Traitement réalisé                                                          | Garanties                                                                                              |
+| ---------- | ----------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Scalingo   | France            | Hébergement SecNumCloud                                                     | [https://scalingo.com/fr/data-processing-agreement](https://scalingo.com/fr/data-processing-agreement) |
+| Tenzing    | France            | Conseil en stratégie, analyse des données et écriture du rapport de mission |                                                                                                        |
 
 ## Cookies et traceurs
 
