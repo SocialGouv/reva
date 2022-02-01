@@ -1,4 +1,4 @@
-module Page.MentionsLegales exposing (Data, Model, Msg, page)
+module Page.CGU exposing (Data, Model, Msg, page)
 
 import DataSource exposing (DataSource)
 import DataSource.File
@@ -36,13 +36,13 @@ page =
 
 data : DataSource Data
 data =
-    DataSource.File.rawFile "content/MentionsLegales.md"
+    DataSource.File.rawFile "content/CGU.md"
         |> DataSource.map View.Markdown.toHtml
 
 
 pageTitle : String
 pageTitle =
-    "REVA - Mentions Légales"
+    "REVA - Conditions Générales d'Utilisation"
 
 
 head :
@@ -58,7 +58,7 @@ head _ =
             , dimensions = Nothing
             , mimeType = Nothing
             }
-        , description = "Les mentions légales"
+        , description = "Les conditions générales d'utilisation de la plateforme REVA"
         , locale = Nothing
         , title = pageTitle
         }
