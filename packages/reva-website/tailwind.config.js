@@ -6,7 +6,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Inter", ...defaultTheme.fontFamily.sans],
+        sans: ["Marianne", ...defaultTheme.fontFamily.sans],
       },
       typography: (theme) => ({
         DEFAULT: {
@@ -19,6 +19,9 @@ module.exports = {
             },
             "code::after": {
               content: '""',
+            },
+            strong: {
+              fontWeight: "700",
             },
           },
         },
