@@ -4,5 +4,6 @@ dist
 .elm-pages
 elm-stuff
 node_modules
+infra/elastic/elasticsearch/nodes
 packages/reva-website/public/style.css
 .parcel-cache

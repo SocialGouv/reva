@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "dotenv": "^16.0.0",
+    "elastic-apm-node": "^3.27.0",
     "fastify": "^3.27.0",
     "fastify-env": "^2.1.1",
     "fastify-http-proxy": "^6.2.1",
