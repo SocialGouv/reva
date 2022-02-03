@@ -6,6 +6,10 @@
     "npm": "8",
     "node": "16"
   },
+  "scripts": {
+    "build": "./build.sh",
+    "start": "npm run start --workspace=reva-api"
+  },
   "workspaces": [
     "packages/reva-api",
     "packages/reva-website",

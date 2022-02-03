@@ -1,4 +1,5 @@
 dist
+.env
 .DS_Store
 .elm-pages
 elm-stuff

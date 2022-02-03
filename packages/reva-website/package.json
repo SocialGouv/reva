@@ -1,9 +1,10 @@
 {
   "name": "reva-website",
+  "version": "1.0.0",
   "scripts": {
     "postinstall": "elm-tooling install",
     "start": "concurrently npm:dev:*",
-    "build": "npm run build:css && npm run build:elm",
+    "build": "npm run build:css && npm run build:elm && cp -R ./dist ../reva-api/dist/website",
     "dev:elm": "elm-pages dev",
     "build:elm": "elm-pages build",
     "dev:css": "npm run css -- --watch",
