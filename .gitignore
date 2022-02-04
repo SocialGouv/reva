@@ -5,3 +5,4 @@ dist
 elm-stuff
 node_modules
 packages/reva-website/public/style.css
+.parcel-cache

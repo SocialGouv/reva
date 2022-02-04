@@ -1,0 +1,15 @@
+{
+  "appId": "com.example.app",
+  "appName": "reva-mobile",
+  "bundledWebRuntime": false,
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "server": {
+    "url": "http://192.168.1.124:4321",
+    "cleartext": true
+  }
+}
