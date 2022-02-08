@@ -4,3 +4,5 @@ node_modules/
 *.map
 .DS_Store
 .sourcemaps
+style.css
+!css/style.css

@@ -8,6 +8,8 @@ import dotenv from 'dotenv';
 dotenv.config({ path: path.join(process.cwd(), '..', '..', '.env') });
 
 const server = fastify({ logger: true });
+const WEBSITE_ROUTE_PATH = '/';
+const APP_ROUTE_PATH = '/app';
 
 const schema = `
   type Query {
@@ -23,23 +25,34 @@ const resolvers = {
 
 if (process.env.NODE_ENV === 'production') {
   server.register(fastifyStatic, {
-    root: path.join(__dirname, 'website')
+    root: path.join(__dirname, 'website'),
+    prefix: WEBSITE_ROUTE_PATH
   });
 
-  // server.register(fastifyStatic, {
-  //   root: path.join(__dirname, 'app'),
-  //   prefix: '/app'
-  // });
+  server.register(fastifyStatic, {
+    root: path.join(__dirname, 'app'),
+    prefix: APP_ROUTE_PATH,
+    decorateReply: false
+  }); 
+
+  // Deal with not found
+  server.setNotFoundHandler((req, res) => {
+    if (req.url.startsWith(APP_ROUTE_PATH)) {
+      res.sendFile('index.html', path.join(__dirname, 'app'));
+    } else {
+      res.sendFile('index.html', path.join(__dirname, 'website'));
+    }
+  });
 
 } else {
   server.register(proxy, {
     upstream: 'http://localhost:1234',
-    prefix: '/'
+    prefix: WEBSITE_ROUTE_PATH
   });
 
   server.register(proxy, {
-    upstream: 'http://localhost:1235',
-    prefix: '/app'
+    upstream: 'http://localhost:1235/app',
+    prefix: APP_ROUTE_PATH
   });
 }
 

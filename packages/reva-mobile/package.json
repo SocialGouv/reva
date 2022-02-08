@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently npm:dev:*",
-    "dev:elm": "parcel index.html --host 0.0.0.0 --port 4321",
+    "dev": "concurrently npm:dev:*",
+    "dev:elm": "parcel index.html --host 0.0.0.0 --port 1236",
     "dev:css": "npm run css -- --watch",
     "build:css": "NODE_ENV=production npm run css -- --minify",
     "css": "npx tailwindcss -i ./css/style.css -o ./style.css",
