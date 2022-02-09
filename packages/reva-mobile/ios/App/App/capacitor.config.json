@@ -1,7 +1,7 @@
 {
-	"appId": "com.example.app",
+	"appId": "fr.gouv.beta.reva-mobile",
 	"appName": "reva-mobile",
-	"bundledWebRuntime": false,
+	"bundledWebRuntime": true,
 	"webDir": "dist",
 	"plugins": {
 		"SplashScreen": {

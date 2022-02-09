@@ -4,7 +4,10 @@ node_modules/
 *.map
 .DS_Store
 .sourcemaps
+capacitor.config.json
 style.css
 !css/style.css
 dist
 elm-stuff
+.parcel-cache
+.env

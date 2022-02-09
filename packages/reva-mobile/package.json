@@ -2,12 +2,15 @@
   "name": "reva-mobile",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "dev": "concurrently npm:dev:*",
+    "dev": "npm run config:live && concurrently npm:dev:*",
+    "config:live": "rimraf capacitor.config.json && node config.live.js && npx cap sync",
+    "config:bundle": "rimraf capacitor.config.json && cp capacitor.config.bundle.json capacitor.config.json",
     "dev:elm": "parcel index.html --host 0.0.0.0 --port 1236",
     "dev:css": "npm run css -- --watch",
+    "build": "npm run config:bundle && npm run build:css && npm run build:elm && npx cap sync",
     "build:css": "NODE_ENV=production npm run css -- --minify",
+    "build:elm": "parcel build index.html",
     "css": "npx tailwindcss -i ./css/style.css -o ./style.css",
     "postinstall": "npm run css"
   },
@@ -17,14 +20,16 @@
     "@capacitor/camera": "latest",
     "@capacitor/core": "latest",
     "@capacitor/ios": "^3.4.0",
-    "@capacitor/splash-screen": "^1.2.1",
-    "concurrently": "^7.0.0",
-    "parcel": "^2.2.1",
-    "tailwindcss": "^3.0.18"
+    "@capacitor/splash-screen": "^1.2.1"
   },
   "devDependencies": {
     "@capacitor/cli": "latest",
     "@parcel/transformer-elm": "^2.2.1",
-    "@parcel/transformer-typescript-tsc": "^2.2.1"
+    "@parcel/transformer-typescript-tsc": "^2.2.1",
+    "concurrently": "^7.0.0",
+    "dotenv": "^16.0.0",
+    "parcel": "^2.2.1",
+    "rimraf": "^3.0.2",
+    "tailwindcss": "^3.0.18"
   }
 }
