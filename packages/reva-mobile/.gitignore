@@ -6,3 +6,5 @@ node_modules/
 .sourcemaps
 style.css
 !css/style.css
+dist
+elm-stuff

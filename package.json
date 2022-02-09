@@ -15,7 +15,8 @@
     "packages/reva-api",
     "packages/reva-website",
     "packages/reva-app",
-    "packages/reva-mobile"
+    "packages/reva-mobile",
+    "packages/reva-book"
   ],
   "devDependencies": {
     "@parcel/transformer-elm": "^2.2.1",

@@ -2,7 +2,7 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 const colors = require("tailwindcss/colors");
 
 module.exports = {
-  content: ["./src/**/*.elm", "../reva-book/src/**/*.elm"],
+  content: ["./src/**/*.elm"],
   theme: {
     extend: {
       colors: {

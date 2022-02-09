@@ -2,6 +2,7 @@ module Main exposing (main)
 
 import Browser
 import Browser.Navigation as Nav
+import Components.Atoms.Button
 import Data
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (attribute, class, disabled, href)
@@ -98,7 +99,11 @@ viewHome model =
     [ h1 [] [ text "Elm Batteries Included" ]
     , p
         [ class "max-w-2xl text-xl mb-4" ]
-        [ text project.description ]
+        [ text project.description
+        , Components.Atoms.Button.newArgs "Hello"
+            |> Components.Atoms.Button.withDisabled True
+            |> Components.Atoms.Button.view
+        ]
     , ul
         [ class "text-xl" ]
         [ li [] [ a [ href "/demo" ] [ text "Try the demo ›" ] ]
