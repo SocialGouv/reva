@@ -4,7 +4,27 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "concurrently npm:dev:*",
+    "dev:elm": "parcel index.html --host 0.0.0.0 --port 1236",
+    "dev:css": "npm run css -- --watch",
+    "build:css": "NODE_ENV=production npm run css -- --minify",
+    "css": "npx tailwindcss -i ./css/style.css -o ./style.css",
+    "postinstall": "npm run css"
   },
-  "keywords": []
+  "keywords": [],
+  "dependencies": {
+    "@capacitor/android": "^3.4.0",
+    "@capacitor/camera": "latest",
+    "@capacitor/core": "latest",
+    "@capacitor/ios": "^3.4.0",
+    "@capacitor/splash-screen": "^1.2.1",
+    "concurrently": "^7.0.0",
+    "parcel": "^2.2.1",
+    "tailwindcss": "^3.0.18"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "latest",
+    "@parcel/transformer-elm": "^2.2.1",
+    "@parcel/transformer-typescript-tsc": "^2.2.1"
+  }
 }

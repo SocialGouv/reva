@@ -1,6 +1,8 @@
 dist
+.env
 .DS_Store
 .elm-pages
 elm-stuff
 node_modules
 packages/reva-website/public/style.css
+.parcel-cache

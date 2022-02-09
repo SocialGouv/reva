@@ -1,0 +1,103 @@
+@import url('https://rsms.me/inter/inter.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+    @apply h-full
+}
+
+body {
+    @apply antialiased;
+    @apply font-sans text-gray-800;
+    text-rendering: optimizelegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+  @apply font-bold text-4xl text-gray-800;
+  @apply mb-4;
+}
+
+h2 {
+  @apply font-semibold text-3xl text-gray-900;
+}
+
+h1 + h2 {
+  @apply mt-3;
+}
+
+h3 {
+  @apply mt-6;
+  @apply border-t-4 border-gray-300 pt-1;
+  @apply font-bold text-xl text-gray-800;
+}
+
+h2 + h3 {
+  @apply mt-2;
+}
+
+h4 {
+  @apply mt-2;
+  @apply font-semibold text-lg text-gray-800;
+}
+
+button {
+  @apply bg-indigo-600 rounded shadow;
+  @apply border-4 border-transparent;
+  @apply px-4 py-2;
+  @apply font-semibold text-white;
+}
+
+button:hover:not(:disabled) {
+    @apply bg-indigo-700;
+}
+button:disabled {
+    @apply bg-indigo-400;
+}
+button:focus {
+    @apply outline-none border-4 border-blue-300;
+}
+
+a {
+    @apply text-blue-600 font-semibold;
+}
+
+a:hover {
+    @apply text-blue-800;
+}
+
+.bg-transition {
+    transition: background-color ease-out 200ms;
+}
+
+.btn {
+    @apply bg-blue-100 rounded px-4 py-2;
+}
+
+pre {
+    @apply bg-gray-100 mb-4 p-3 rounded;
+}
+
+code {
+    @apply bg-gray-100 text-gray-700 text-sm rounded;
+    padding: 0.2rem 0.4rem;
+}
+
+.content {
+    @apply text-gray-700;
+    @apply leading-relaxed;
+}
+
+.content ol,
+.content ul {
+    @apply pl-4;
+    list-style: disc inside;
+}
+
+.content ul ul,
+.content ol ul {
+    list-style-type: circle;
+}
+

@@ -1,0 +1,10 @@
+.idea/
+node_modules/
+.vscode/
+*.map
+.DS_Store
+.sourcemaps
+style.css
+!css/style.css
+dist
+elm-stuff
