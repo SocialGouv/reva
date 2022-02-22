@@ -12,22 +12,16 @@ export default {
       { name: 'format-detection', content: 'telephone=no' },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
-    script: [{ src: '/tarteaucitronjs/tarteaucitron.js', mode: 'client' }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ['./assets/main.scss'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-    {
-      src: '~/plugins/tarteaucitron.js',
-      mode: 'client',
-    },
-    {
-      src: '~/plugins/crisp.js',
-      mode: 'client',
-    },
+  plugins: [{
+    src: '~/plugins/crisp.js',
+    mode: 'client',
+  },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -105,8 +99,6 @@ export default {
   },
   publicRuntimeConfig: {
     crispWebsiteId: process.env.CRISP_WEBSITE_ID,
-    hotjarId: process.env.HOTJAR_ID,
-    hotjarVersion: process.env.HOTJAR_VERSION,
   },
   tailwindcss: {
     config: {
