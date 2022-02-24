@@ -12,7 +12,7 @@ const apm = require('elastic-apm-node').start({
 
   // Set the service environment
   environment: process.env.NODE_ENV || 'dev'
-})
+});
 
 import fastify from 'fastify';
 import mercurius from 'mercurius';
@@ -62,7 +62,7 @@ if (process.env.NODE_ENV === 'production') {
 
 } else {
   server.register(proxy, {
-    upstream: 'http://localhost:1234',
+    upstream: 'http://localhost:3000',
     prefix: WEBSITE_ROUTE_PATH
   });
 

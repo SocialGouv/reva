@@ -1,0 +1,6 @@
+{
+	"appId": "fr.gouv.beta.reva",
+	"appName": "reva-app",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}
