@@ -14,15 +14,9 @@
   "workspaces": [
     "packages/reva-api",
     "packages/reva-website",
-    "packages/reva-app",
-    "packages/reva-mobile",
-    "packages/reva-book"
+    "packages/reva-app"
   ],
   "devDependencies": {
-    "@parcel/transformer-elm": "^2.2.1",
-    "concurrently": "^7.0.0",
-    "elm": "^0.19.1-5",
-    "elm-format": "^0.8.5",
-    "reva-mobile": "file:packages/reva-mobile"
+    "concurrently": "^7.0.0"
   }
 }

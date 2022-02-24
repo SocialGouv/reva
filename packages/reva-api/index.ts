@@ -1,3 +1,19 @@
+const apm = require('elastic-apm-node').start({
+
+  // Override the service name from package.json
+  // Allowed characters: a-z, A-Z, 0-9, -, _, and space
+  serviceName: `reva-api`,
+
+  // Use if APM Server requires a secret token
+  secretToken: process.env.ES_APM_SERVER_TOKEN || '',
+
+  // Set the custom APM Server URL (default: http://localhost:8200)
+  serverUrl: process.env.ES_APM_SERVER_URL || 'http://localhost:8200',
+
+  // Set the service environment
+  environment: process.env.NODE_ENV || 'dev'
+});
+
 import fastify from 'fastify';
 import mercurius from 'mercurius';
 import path from 'path';
@@ -46,12 +62,12 @@ if (process.env.NODE_ENV === 'production') {
 
 } else {
   server.register(proxy, {
-    upstream: 'http://localhost:1234',
+    upstream: 'http://localhost:3000',
     prefix: WEBSITE_ROUTE_PATH
   });
 
   server.register(proxy, {
-    upstream: 'http://localhost:1235/app',
+    upstream: 'http://localhost:3001/app',
     prefix: APP_ROUTE_PATH
   });
 }
