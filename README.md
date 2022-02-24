@@ -49,5 +49,5 @@ Then click the Run button to launch the app in the mobile simulator.
 ### Run Storybook
 
 ```bash
-npm run storybook
+npm run storybook -w reva-app
 ```
