@@ -37,8 +37,8 @@ export const Button = ({
   const modeClass = primary ? "bg-blue-500 text-white" : "shadow text-gray-900";
   let sizeClasses = {
     small: "text-sm px-2 py-1",
-    medium: "text-base px-3 py-1",
-    large: "text-lg px-4 py-2",
+    medium: "text-base py-4 w-full",
+    large: "text-lg py-5 w-full",
   };
 
   return (

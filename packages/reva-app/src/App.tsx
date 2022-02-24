@@ -5,10 +5,8 @@ import { Button } from "./stories/Button";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <Button label="Candidater" onClick={() => {}} primary />
-      </header>
+    <div className="App flex items-center justify-center p-8 h-screen bg-gray-800">
+      <Button label="Candidater" onClick={() => {}} primary />
     </div>
   );
 }
