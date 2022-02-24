@@ -6,7 +6,7 @@
 npm install
 ```
 
-It will install node modules both in `packages/reva-app` and `packages/reva-website`
+It will install node modules in both `packages/reva-app` and `packages/reva-website`
 
 For the mobile app, create a `.env` file:
 
@@ -40,3 +40,9 @@ npx cap open android
 ```
 
 Then click the Run button to launch the app in the mobile simulator.
+
+### Run Storybook
+
+```
+npm run storybook
+```
