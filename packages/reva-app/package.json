@@ -40,6 +40,7 @@
     "build:mobile": "PUBLIC_URL=/ npm run build && npx cap sync",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "lint-staged": "lint-staged",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public"
   },
@@ -58,6 +59,17 @@
           "import/no-anonymous-default-export": "off"
         }
       }
+    ]
+  },
+  "importSort": {
+    ".js, .ts, .jsx, .tsx": {
+      "style": "module",
+      "parser": "typescript"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
     ]
   },
   "browserslist": {
@@ -83,6 +95,10 @@
     "@storybook/preset-create-react-app": "^4.0.1",
     "@storybook/react": "^6.4.19",
     "@storybook/testing-library": "^0.0.9",
+    "import-sort-style-module": "^6.0.0",
+    "lint-staged": "^12.3.4",
+    "prettier": "^2.5.1",
+    "prettier-plugin-import-sort": "^0.0.7",
     "tailwindcss": "^3.0.23",
     "webpack": "^5.69.1"
   }
