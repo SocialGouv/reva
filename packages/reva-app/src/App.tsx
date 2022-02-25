@@ -1,14 +1,11 @@
 import React from "react";
 import logo from "./logo.svg";
-import "./App.css";
 import { Button } from "./stories/Button";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <Button label="Candidater" onClick={() => {}} primary />
-      </header>
+    <div className="App flex flex-col items-center justify-center p-10 h-screen bg-slate-900">
+      <Button label="Candidater" onClick={() => {}} primary />
     </div>
   );
 }
