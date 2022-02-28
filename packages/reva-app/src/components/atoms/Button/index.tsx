@@ -1,5 +1,3 @@
-import React from "react";
-
 interface ButtonProps {
   /**
    * Is this the principal call to action on the page?
