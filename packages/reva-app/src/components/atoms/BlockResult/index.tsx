@@ -13,7 +13,7 @@ interface BlockResult {
 export const BlockResult = ({ label, title, ...props }: BlockResult) => {
   return (
     <div
-      className="relative overflow-hidden flex flex-col h-[270px] mt-6 mb-10 pt-6 pb-4 px-8 rounded-2xl shadow-2xl bg-slate-900 text-white"
+      className="relative overflow-hidden flex flex-col h-[270px] mt-6 mb-10 pt-4 px-6 rounded-2xl shadow-2xl bg-slate-900 text-white"
       {...props}
     >
       {" "}
