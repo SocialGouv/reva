@@ -21,16 +21,24 @@ function App() {
         <div className="grow overflow-auto px-8">
           <ResultSection title="Métiers">
             {[
-              { title: "Product Designer" },
-              { title: "UX Designer" },
-              { title: "Ui Designer" },
-              { title: "UX Researcher" },
+              { key: "1", title: "Product Designer" },
+              { key: "2", title: "UX Designer" },
+              { key: "3", title: "Ui Designer" },
+              { key: "4", title: "UX Researcher" },
             ].map(TextResult)}
           </ResultSection>
           <ResultSection title="Diplômes">
             {[
-              { label: "N104c", title: "Assistante de vie aux familles" },
-              { label: "N104c", title: "Assistante de vie aux familles" },
+              {
+                key: "1",
+                label: "N104c",
+                title: "Assistante de vie aux familles",
+              },
+              {
+                key: "2",
+                label: "N104c",
+                title: "Assistante de vie aux familles",
+              },
             ].map(BlockResult)}
           </ResultSection>
         </div>
