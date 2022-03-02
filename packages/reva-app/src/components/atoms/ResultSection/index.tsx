@@ -7,21 +7,18 @@ interface ResultSectionProps<Data> {
    * Custom class
    */
   className?: string;
-  results: Array<Data>;
-  renderResult: (item: Data) => Element;
+  children: JSX.Element[];
 }
 
 export const ResultSection = ({
+  children,
   className = "",
   title,
-  renderResult,
-  results,
-  ...props
 }: ResultSectionProps<any>) => {
   return (
-    <section className={`my-4 py-4 ${className}`} {...props}>
-      <div>{title}</div>
-      {results.map(renderResult)}
+    <section className={`my-4 py-4 ${className}`}>
+      <div className="text-lg text-slate-600">{title}</div>
+      {children}
     </section>
   );
 };

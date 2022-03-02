@@ -14,11 +14,24 @@ function App() {
           placeholder="Métier, compétence"
           className="mb-10"
         />
-        <ResultSection
-          title="Métiers"
-          results={["Product Design", "UX Designer"]}
-          renderResult={(item) => <span className="font-bold">{item}</span>}
-        ></ResultSection>
+        <ResultSection title="Métiers">
+          {[
+            "Product Designer",
+            "UX Designer",
+            "Ui Designer",
+            "UX Researcher",
+          ].map((item) => (
+            <div className="my-4 font-bold text-2xl text-slate-900">{item}</div>
+          ))}
+        </ResultSection>
+        <ResultSection title="Diplômes">
+          {[
+            "Assistante de vie aux familles",
+            "Assistante de vie aux familles",
+          ].map((item) => (
+            <div className="font-bold">{item}</div>
+          ))}
+        </ResultSection>
       </div>
     </div>
   );
