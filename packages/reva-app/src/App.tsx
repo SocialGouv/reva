@@ -2,6 +2,7 @@ import React from "react";
 import logo from "./logo.svg";
 import { Button } from "./components/atoms/Button";
 import { Input } from "./components/atoms/Input";
+import { ResultSection } from "./components/atoms/ResultSection";
 
 function App() {
   return (
@@ -13,7 +14,11 @@ function App() {
           placeholder="Métier, compétence"
           className="mb-10"
         />
-        <Button label="Candidater" onClick={() => {}} primary />
+        <ResultSection
+          title="Métiers"
+          results={["Product Design", "UX Designer"]}
+          renderResult={(item) => <span className="font-bold">{item}</span>}
+        ></ResultSection>
       </div>
     </div>
   );
