@@ -16,8 +16,8 @@ export const ResultSection = ({
   title,
 }: ResultSectionProps<any>) => {
   return (
-    <section className={`my-4 py-4 ${className}`}>
-      <div className="text-lg text-slate-600">{title}</div>
+    <section className={`mb-2 py-4 ${className}`}>
+      <div className="-mb-1 text-lg text-slate-600">{title}</div>
       {children}
     </section>
   );

@@ -8,28 +8,32 @@ import { BlockResult } from "./components/atoms/BlockResult";
 
 function App() {
   return (
-    <div className="App flex flex-col items-center justify-center h-screen bg-white bg-gray-400">
-      <div className="max-w-lg w-full bg-white h-screen p-8">
-        <Input
-          name="search"
-          type="search"
-          placeholder="Métier, compétence"
-          className="mb-4"
-        />
-        <ResultSection title="Métiers">
-          {[
-            { title: "Product Designer" },
-            { title: "UX Designer" },
-            { title: "Ui Designer" },
-            { title: "UX Researcher" },
-          ].map(TextResult)}
-        </ResultSection>
-        <ResultSection title="Diplômes">
-          {[
-            { label: "N104c", title: "Assistante de vie aux familles" },
-            { label: "N104c", title: "Assistante de vie aux familles" },
-          ].map(BlockResult)}
-        </ResultSection>
+    <div className="App flex flex-col items-center justify-center h-screen bg-gray-400">
+      <div className="flex flex-col max-w-lg w-full h-screen bg-white pt-8">
+        <div className="px-8">
+          <Input
+            name="search"
+            type="search"
+            placeholder="Métier, compétence"
+            className="mb-4"
+          />
+        </div>
+        <div className="grow overflow-auto px-8">
+          <ResultSection title="Métiers">
+            {[
+              { title: "Product Designer" },
+              { title: "UX Designer" },
+              { title: "Ui Designer" },
+              { title: "UX Researcher" },
+            ].map(TextResult)}
+          </ResultSection>
+          <ResultSection title="Diplômes">
+            {[
+              { label: "N104c", title: "Assistante de vie aux familles" },
+              { label: "N104c", title: "Assistante de vie aux familles" },
+            ].map(BlockResult)}
+          </ResultSection>
+        </div>
       </div>
     </div>
   );

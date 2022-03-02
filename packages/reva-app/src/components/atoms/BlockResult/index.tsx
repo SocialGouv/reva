@@ -10,7 +10,7 @@ interface BlockResult {
  */
 export const BlockResult = ({ label, title }: BlockResult) => {
   return (
-    <div className="h-64 my-4 p-8 rounded-2xl bg-slate-900 text-white">
+    <div className="h-[270px] mt-6 mb-10 p-8 rounded-2xl shadow-2xl bg-slate-900 text-white">
       <span className="font-bold">{label}</span>
       <TextResult title={title} color="light" />
     </div>
