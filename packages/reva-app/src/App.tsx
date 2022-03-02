@@ -3,6 +3,8 @@ import logo from "./logo.svg";
 import { Button } from "./components/atoms/Button";
 import { Input } from "./components/atoms/Input";
 import { ResultSection } from "./components/atoms/ResultSection";
+import { TextResult } from "./components/atoms/TextResult";
+import { BlockResult } from "./components/atoms/BlockResult";
 
 function App() {
   return (
@@ -12,25 +14,21 @@ function App() {
           name="search"
           type="search"
           placeholder="Métier, compétence"
-          className="mb-10"
+          className="mb-4"
         />
         <ResultSection title="Métiers">
           {[
-            "Product Designer",
-            "UX Designer",
-            "Ui Designer",
-            "UX Researcher",
-          ].map((item) => (
-            <div className="my-4 font-bold text-2xl text-slate-900">{item}</div>
-          ))}
+            { title: "Product Designer" },
+            { title: "UX Designer" },
+            { title: "Ui Designer" },
+            { title: "UX Researcher" },
+          ].map(TextResult)}
         </ResultSection>
         <ResultSection title="Diplômes">
           {[
-            "Assistante de vie aux familles",
-            "Assistante de vie aux familles",
-          ].map((item) => (
-            <div className="font-bold">{item}</div>
-          ))}
+            { label: "N104c", title: "Assistante de vie aux familles" },
+            { label: "N104c", title: "Assistante de vie aux familles" },
+          ].map(BlockResult)}
         </ResultSection>
       </div>
     </div>

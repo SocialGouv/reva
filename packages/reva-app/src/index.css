@@ -30,6 +30,14 @@
 @font-face {
   font-family: "Marianne";
   src: local("Marianne"),
+    url("/public/fonts/Marianne/Marianne-Medium.woff") format("woff"),
+    url("/public/fonts/Marianne/Marianne-Medium.woff2") format("woff2");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Marianne";
+  src: local("Marianne"),
     url("/public/fonts/Marianne/Marianne-Regular.woff") format("woff"),
     url("/public/fonts/Marianne/Marianne-Regular.woff2") format("woff2");
   font-weight: 400;
