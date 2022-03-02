@@ -1,4 +1,4 @@
-interface ResultSectionProps<Data> {
+interface ResultSectionProps {
   /**
    * Section name
    */
@@ -14,7 +14,7 @@ export const ResultSection = ({
   children,
   className = "",
   title,
-}: ResultSectionProps<any>) => {
+}: ResultSectionProps) => {
   return (
     <section className={`mb-2 py-4 ${className}`}>
       <div className="-mb-1 text-lg text-slate-600">{title}</div>
