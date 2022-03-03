@@ -37,6 +37,7 @@ export const Button = ({
   ...props
 }: ButtonProps) => {
   const modeClass = primary ? "bg-blue-600 text-white" : "shadow text-gray-900";
+
   let sizeClasses = {
     small: "text-sm px-2 py-1",
     medium: "text-base py-4 w-full",
