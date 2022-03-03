@@ -45,11 +45,11 @@ export const Card = ({
 
   return (
     <div
+      onClick={() => (size === "small" ? setSize("large") : {})}
       className={`overflow-hidden flex flex-col mb-10 pt-4 px-6 shadow-2xl bg-slate-900 text-white ${
         size === "large" ? "" : "mt-6 rounded-2xl"
       }`}
       style={{ ...cardSizeStyle, ...cardPositionStyle }}
-      onClick={() => setSize("large")}
       {...props}
     >
       <img
@@ -58,7 +58,13 @@ export const Card = ({
         src={certificateImg}
       />
       {size === "large" ? (
-        <div className="text-right">←</div>
+        <button
+          type="button"
+          onClick={() => setSize("small")}
+          className="text-right text-lg mt-8 p-2"
+        >
+          ←
+        </button>
       ) : (
         <div className="text-right font-bold grow">{label}</div>
       )}
