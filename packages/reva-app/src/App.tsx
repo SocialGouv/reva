@@ -1,7 +1,9 @@
 import { Input } from "./components/atoms/Input";
 import { Results } from "./components/organisms/Results";
 import { TextResult } from "./components/atoms/TextResult";
-import { BlockResult } from "./components/molecules/BlockResult";
+import { Card } from "./components/organisms/Card";
+import { loremIpsum } from "./components/atoms/LoremIpsum";
+import { Button } from "./components/atoms/Button";
 
 function App() {
   return (
@@ -28,15 +30,17 @@ function App() {
             {[
               {
                 key: "1",
+                description: loremIpsum,
                 label: "N104c",
                 title: "Licence Professionnelle Métiers du design",
               },
               {
                 key: "2",
+                description: loremIpsum,
                 label: "N304c",
                 title: "MASTER Ergonomie",
               },
-            ].map(BlockResult)}
+            ].map(Card)}
           </Results>
         </div>
       </div>
