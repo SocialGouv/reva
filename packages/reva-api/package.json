@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon -w . ./index.ts",
+    "dev": "nodemon -e ts,json,graphql -w . ./index.ts",
     "build": "rimraf -f ./dist && tsc -p tsconfig.json",
     "start": "node dist/index.js",
     "test": "jest --runInBand --testRegex='.*.test.ts$'"
@@ -27,14 +27,16 @@
     }
   },
   "dependencies": {
+    "@graphql-tools/load-files": "^6.5.3",
+    "@graphql-tools/merge": "^8.2.3",
+    "@graphql-tools/schema": "^8.3.2",
     "dotenv": "^16.0.0",
     "elastic-apm-node": "^3.27.0",
     "fastify": "^3.27.0",
     "fastify-env": "^2.1.1",
     "fastify-http-proxy": "^6.2.1",
     "fastify-static": "^4.5.0",
-    "graphql": "^15.8.0",
-    "mercurius": "^9.1.0"
+    "mercurius": "^9.3.3"
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.2",

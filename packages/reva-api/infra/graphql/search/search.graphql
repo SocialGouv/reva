@@ -1,0 +1,22 @@
+type Certification {
+  id: ID!
+  title: String!
+  description: String!
+}
+
+type Profession {
+  id: ID!
+  title: String!
+  description: String!
+}
+
+type SearchCertificationsAndProfessionsResult {
+  certifications: [Certification!]!
+  professions: [Profession!]!
+}
+
+type Query {
+  searchCertificationsAndProfessions(
+    query: String
+  ): SearchCertificationsAndProfessionsResult
+}

@@ -1,9 +1,13 @@
-interface Certification {
+export interface Certification {
   id: string;
+  title: string;
+  description: string;
 }
 
-interface Profession {
+export interface Profession {
   id: string;
+  title: string;
+  description: string;
 }
 
 interface Params {
@@ -22,12 +26,16 @@ interface SearchResult {
 
 export const searchCertificationsAndProfessions =
   (deps: Dependencies) =>
-  async ({ query }: Params): Promise<SearchResult> => {
-    const certifications = await deps.findCertificationsByQuery({ query });
-    const professions = await deps.findProfessionsByQuery({ query });
+    async ({ query }: Params): Promise<SearchResult> => {
+      const [certifications, professions] = await Promise.all(
+        [
+          deps.findCertificationsByQuery({ query }),
+          deps.findProfessionsByQuery({ query })
+        ]
+      );
 
-    return {
-      certifications,
-      professions,
+      return {
+        certifications,
+        professions,
+      };
     };
-  };
