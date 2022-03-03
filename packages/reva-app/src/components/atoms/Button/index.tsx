@@ -1,5 +1,9 @@
 interface ButtonProps {
   /**
+   * Custom class
+   */
+  className?: string;
+  /**
    * Is this the principal call to action on the page?
    */
   primary?: boolean;
@@ -25,6 +29,7 @@ interface ButtonProps {
  * Primary UI component for user interaction
  */
 export const Button = ({
+  className = "",
   primary = false,
   size = "medium",
   backgroundColor,
@@ -41,7 +46,7 @@ export const Button = ({
   return (
     <button
       type="button"
-      className={`rounded ${modeClass} ${sizeClasses[size]}`}
+      className={`rounded ${modeClass} ${sizeClasses[size]} ${className}`}
       style={{ backgroundColor }}
       {...props}
     >

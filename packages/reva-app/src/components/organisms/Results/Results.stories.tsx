@@ -1,8 +1,9 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { BlockResult } from "../../molecules/BlockResult";
+import { Card } from "../../organisms/Card";
 import { TextResult } from "../../atoms/TextResult";
 
 import { Results } from "./index";
+import { loremIpsum } from "../../atoms/LoremIpsum";
 
 export default {
   title: "Organisms/Results",
@@ -32,15 +33,17 @@ const BlockTemplate: ComponentStory<typeof Results> = (args) => (
     {[
       {
         key: "1",
+        description: loremIpsum,
         label: "N104c",
         title: "Licence Professionnelle Métiers du design",
       },
       {
         key: "2",
+        description: loremIpsum,
         label: "N304c",
         title: "MASTER Ergonomie",
       },
-    ].map(BlockResult)}
+    ].map(Card)}
   </Results>
 );
 
