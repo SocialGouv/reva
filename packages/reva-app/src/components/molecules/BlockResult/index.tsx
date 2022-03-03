@@ -1,4 +1,4 @@
-import { TextResult } from "../TextResult";
+import { TextResult } from "../../atoms/TextResult";
 import certificateImg from "./certificate.png";
 
 interface BlockResult {

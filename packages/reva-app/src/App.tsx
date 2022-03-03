@@ -1,10 +1,7 @@
-import React from "react";
-import logo from "./logo.svg";
-import { Button } from "./components/atoms/Button";
 import { Input } from "./components/atoms/Input";
-import { ResultSection } from "./components/atoms/ResultSection";
+import { Results } from "./components/organisms/Results";
 import { TextResult } from "./components/atoms/TextResult";
-import { BlockResult } from "./components/atoms/BlockResult";
+import { BlockResult } from "./components/molecules/BlockResult";
 
 function App() {
   return (
@@ -19,15 +16,15 @@ function App() {
           />
         </div>
         <div className="grow overflow-auto px-8">
-          <ResultSection title="Métiers">
+          <Results title="Métiers">
             {[
               { key: "1", title: "Product Designer" },
               { key: "2", title: "UX Designer" },
               { key: "3", title: "Ui Designer" },
               { key: "4", title: "UX Researcher" },
             ].map(TextResult)}
-          </ResultSection>
-          <ResultSection title="Diplômes">
+          </Results>
+          <Results title="Diplômes">
             {[
               {
                 key: "1",
@@ -40,7 +37,7 @@ function App() {
                 title: "MASTER Ergonomie",
               },
             ].map(BlockResult)}
-          </ResultSection>
+          </Results>
         </div>
       </div>
     </div>
