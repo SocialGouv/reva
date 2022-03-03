@@ -1,3 +1,4 @@
+import { CSSProperties, useState } from "react";
 import { Button } from "../../atoms/Button";
 import { TextResult } from "../../atoms/TextResult";
 import certificateImg from "./certificate.png";
@@ -17,14 +18,26 @@ export const Card = ({
   description,
   label,
   title,
-  size = "small",
+
   ...props
 }: Card) => {
-  const cardSizeStyle = {
-    height: size === "small" ? "270px" : size === "medium" ? "553px" : "100%",
+  const [size, setSize] = useState(props.size || "small");
+
+  const cardSizeStyle: CSSProperties = {
+    height: size === "small" ? "270px" : size === "medium" ? "553px" : "100vh",
   };
 
-  const backgroundStyle = {
+  const cardPositionStyle: CSSProperties =
+    size == "large"
+      ? {
+          position: "absolute",
+          top: "0",
+          left: "0",
+          zIndex: 2,
+        }
+      : { position: "relative" };
+
+  const backgroundStyle: CSSProperties = {
     top: size === "large" ? "auto" : "15px",
     bottom: size === "large" ? "145px" : "auto",
     width: size === "small" ? "174px" : size === "medium" ? "240px" : "176px",
@@ -32,10 +45,11 @@ export const Card = ({
 
   return (
     <div
-      className={`relative overflow-hidden flex flex-col mt-6 mb-10 pt-4 px-6 shadow-2xl bg-slate-900 text-white ${
-        size === "large" ? "" : "rounded-2xl"
+      className={`overflow-hidden flex flex-col mb-10 pt-4 px-6 shadow-2xl bg-slate-900 text-white ${
+        size === "large" ? "" : "mt-6 rounded-2xl"
       }`}
-      style={cardSizeStyle}
+      style={{ ...cardSizeStyle, ...cardPositionStyle }}
+      onClick={() => setSize("large")}
       {...props}
     >
       <img

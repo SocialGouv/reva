@@ -8,7 +8,7 @@ import { Button } from "./components/atoms/Button";
 function App() {
   return (
     <div className="App flex flex-col items-center justify-center h-screen bg-gray-400">
-      <div className="flex flex-col max-w-lg w-full h-screen bg-white pt-16 lg:pt-8">
+      <div className="relative flex flex-col max-w-lg w-full h-screen bg-white pt-16 lg:pt-8">
         <div className="px-8">
           <Input
             name="search"
