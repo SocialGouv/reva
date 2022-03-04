@@ -10,7 +10,7 @@ export const TextResult = ({ color = "dark", title, ...props }: TextResult) => {
   const colorClass =
     color === "dark" ? "font-bold text-slate-900" : "font-medium text-white";
   return (
-    <div className={`my-4 text-2xl ${colorClass}`} {...props}>
+    <div className={`text-2xl ${colorClass}`} {...props}>
       {title}
     </div>
   );

@@ -42,13 +42,14 @@ export const Card = ({
           position: "absolute",
           top: "0",
           left: "0",
+          right: "0",
         }
       : { position: "relative" };
 
   const backgroundStyle: CSSProperties = {
     top: isLarge ? "auto" : "15px",
     bottom: isLarge ? "145px" : "auto",
-    width: isSmall ? "174px" : isMedium ? "240px" : "176px",
+    width: isSmall ? "150px" : isMedium ? "240px" : "174px",
   };
 
   const openSpring = {
@@ -70,29 +71,23 @@ export const Card = ({
     borderRadius: "0px",
   };
 
-  const ease = { type: "ease", duration: 3 };
+  const ease = { type: "ease", duration: 0.8 };
 
   const descriptionHeight = 200;
 
   const descriptionParagraph = (
     <motion.div
-      className="h-[100px] overflow-auto"
-      style={{ height: `${descriptionHeight}px` }}
-      initial={{
-        marginTop: 0,
-        marginBottom: `-${descriptionHeight}px`,
-        opacity: 0,
-      }}
-      animate={{
-        marginTop: isLarge ? "-12px" : 0,
-        marginBottom: isLarge ? 0 : `-${descriptionHeight}px`,
-        opacity: 1,
-      }}
+      className={`w-full" ${isLarge ? "pr-10" : "mt-[112px]"}`}
       layout="position"
       transition={ease}
     >
-      <div className="mb-4 font-bold"> {label}</div>
-      <p className="text-slate-500 overflow-auto text-sm leading-relaxed">
+      <div className="flex items-end h-24">
+        <TextResult title={title} color="light" />
+      </div>
+      <div className={`mt-1 mb-4 font-bold ${isSmall && "opacity-0"}`}>
+        {label}
+      </div>
+      <p className="overflow-auto text-slate-500 overflow-auto text-sm leading-relaxed">
         {description}
       </p>
     </motion.div>
@@ -114,7 +109,7 @@ export const Card = ({
       <motion.div
         initial={isLarge ? fromStyle : toStyle}
         animate={isLarge ? toStyle : fromStyle}
-        className={`overflow-hidden flex flex-col pt-4 px-8 shadow-2xl bg-slate-900 text-white ${
+        className={`overflow-hidden flex flex-col pt-4 pl-6 pr-2 shadow-2xl bg-slate-900 text-white ${
           isLarge ? "rounded-none" : "rounded-2xl"
         }`}
         layout
@@ -152,13 +147,6 @@ export const Card = ({
             {label}
           </motion.div>
         )}{" "}
-        <motion.div
-          layout="position"
-          transition={ease}
-          className={isLarge ? "pr-16" : ""}
-        >
-          <TextResult title={title} color="light" />
-        </motion.div>
         {descriptionParagraph}
         <div
           className={`absolute bottom-0 ${
