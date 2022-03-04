@@ -9,7 +9,7 @@ function App() {
   return (
     <div className="App flex flex-col items-center justify-center h-screen bg-gray-400">
       <div className="relative flex flex-col max-w-lg w-full h-screen bg-white">
-        <div className="grow overflow-auto">
+        <motion.div layoutScroll className="grow overflow-auto">
           <div className="sticky z-10 top-0 px-8 pt-16 pb-1 lg:pt-8 bg-white">
             <Input
               name="search"
@@ -50,7 +50,7 @@ function App() {
               ].map(Card)}
             </Results>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
