@@ -1,21 +1,31 @@
+import { PrismaClient } from "@prisma/client";
 import { Profession } from "../../../domains/search";
 
-export const findProfessionsByQuery = ({ query }: { query: string; }): Promise<Profession[]> => {
-  return Promise.resolve([
-    {
-      id: "uuid_prof_1",
-      title: "profession 1",
-      description: "description profession 1"
-    },
-    {
-      id: "uuid_prof_2",
-      title: "profession 2",
-      description: "description profession 2"
-    },
-    {
-      id: "uuid_prof_3",
-      title: "profession 3",
-      description: "description profession 3"
+export const searchProfessionsByQuery = async ({ query }: { query: string; }): Promise<Profession[]> => {
+  
+  const client = new PrismaClient();
+
+  const professions = await client.$queryRaw`
+        SELECT profession_search.id AS id,
+        ts_rank(
+          profession_search.document, plainto_tsquery(unaccent(${query}))
+        ) AS rank,
+        profession.title,
+        profession.description
+        FROM profession_search
+        INNER JOIN profession ON profession.id = profession_search.id
+        WHERE profession_search.document @@ plainto_tsquery(unaccent(${query}))
+        OR profession_search.slug % ${query}
+        ORDER BY rank DESC
+        LIMIT 5;
+  ` as Profession[]
+
+
+  return professions.map(profession => {
+    return {
+      id: profession.id,
+      title : profession.title,
+      description: profession.description
     }
-  ]);
+  });
 };

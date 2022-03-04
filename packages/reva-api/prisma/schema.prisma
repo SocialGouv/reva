@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Certification {
+  id          String   @id @default(uuid())
+  title       String   @db.VarChar(255)
+  slug        String
+  description String?
+  isActive    Boolean  @default(true) @map("is_active")
+  rncpId      String   @map("rncp_id") @db.VarChar(255)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+
+  @@map("certification")
+}
+
+model Profession {
+  id          String   @id @default(uuid())
+  title       String   @db.VarChar(255)
+  slug        String
+  description String?
+  romeId      Int      @map("rome_id")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+
+  @@map("profession")
+}

@@ -1,14 +1,14 @@
 import { searchCertificationsAndProfessions } from "../../../domains/search";
-import { findCertificationsByQuery } from "../../database/postgres/certifications";
-import { findProfessionsByQuery } from "../../database/postgres/professions";
+import { searchCertificationsByQuery } from "../../database/postgres/certifications";
+import { searchProfessionsByQuery } from "../../database/postgres/professions";
 
 
 export const resolvers = {
   Query: {
     searchCertificationsAndProfessions: async (_: any, { query }: { query: string; }) => {
       const result = await searchCertificationsAndProfessions({
-        findCertificationsByQuery,
-        findProfessionsByQuery
+        searchCertificationsByQuery,
+        searchProfessionsByQuery
       })({ query });
 
       return result;
