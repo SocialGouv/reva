@@ -2,7 +2,7 @@ import { CSSProperties, useState } from "react";
 import { Button } from "../../atoms/Button";
 import { TextResult } from "../../atoms/TextResult";
 import certificateImg from "./certificate.png";
-import { motion, useMotionValue } from "framer-motion";
+import { motion, useMotionValue, AnimatePresence } from "framer-motion";
 
 interface Card {
   key: string;
@@ -55,13 +55,11 @@ export const Card = ({
     type: "spring",
     stiffness: 200,
     damping: 30,
-    duration: 2,
   };
   const closeSpring = {
     type: "spring",
-    stiffness: 300,
+    stiffness: 500,
     damping: 35,
-    duration: 2,
   };
 
   const fromStyle = {
@@ -72,13 +70,51 @@ export const Card = ({
     borderRadius: "0px",
   };
 
-  const ease = { type: "ease", duration: 0.2 };
+  const ease = { type: "ease", duration: 3 };
+
+  const descriptionHeight = 200;
+
+  const descriptionParagraph = (
+    <motion.div
+      className="h-[100px] overflow-auto"
+      style={{ height: `${descriptionHeight}px` }}
+      initial={{
+        marginTop: 0,
+        marginBottom: `-${descriptionHeight}px`,
+        opacity: 0,
+      }}
+      animate={{
+        marginTop: isLarge ? "-12px" : 0,
+        marginBottom: isLarge ? 0 : `-${descriptionHeight}px`,
+        opacity: 1,
+      }}
+      layout="position"
+      transition={ease}
+    >
+      <div className="mb-4 font-bold"> {label}</div>
+      <p className="text-slate-500 overflow-auto text-sm leading-relaxed">
+        {description}
+      </p>
+    </motion.div>
+  );
+
+  const candidateButton = (
+    <motion.div
+      className="absolute bottom-0 inset-x-0 p-8"
+      exit={{ bottom: "-100px" }}
+      transition={ease}
+      layout="position"
+    >
+      <Button label="Candidater" className="w-full" primary size="medium" />
+    </motion.div>
+  );
+
   return (
     <li key={key} className="mt-6 mb-10" style={{ height: smallHeight }}>
       <motion.div
         initial={isLarge ? fromStyle : toStyle}
         animate={isLarge ? toStyle : fromStyle}
-        className={`overflow-hidden flex flex-col pt-4 px-6 shadow-2xl bg-slate-900 text-white ${
+        className={`overflow-hidden flex flex-col pt-4 px-8 shadow-2xl bg-slate-900 text-white ${
           isLarge ? "rounded-none" : "rounded-2xl"
         }`}
         layout
@@ -109,49 +145,38 @@ export const Card = ({
           </motion.div>
         ) : (
           <motion.div
-            layout
+            layout="position"
             transition={ease}
             className="text-right font-bold grow"
           >
             {label}
           </motion.div>
         )}{" "}
-        <motion.div layout="position" transition={ease}>
+        <motion.div
+          layout="position"
+          transition={ease}
+          className={isLarge ? "pr-16" : ""}
+        >
           <TextResult title={title} color="light" />
         </motion.div>
-        {isLarge ? (
-          <motion.div layout="position" transition={ease}>
-            <div className="-mt-4 mb-4 font-bold">{label}</div>
-          </motion.div>
-        ) : (
-          <></>
-        )}
-        {isSmall ? (
-          <></>
-        ) : (
-          <p
-            className={`text-slate-500 text-sm leading-relaxed mb-6 ${
-              isLarge ? "grow min-h-[380px]" : ""
-            }`}
-          >
-            {description}
-          </p>
-        )}
-        {
-          <motion.div layout="position" transition={ease}>
-            {isLarge ? (
-              <Button
-                className="mb-6"
-                label="Candidater"
-                primary
-                size="medium"
-              />
-            ) : (
-              <></>
-            )}
-          </motion.div>
-        }
+        {descriptionParagraph}
+        <div
+          className={`absolute bottom-0 ${
+            isSmall ? "inset-x-[-32px]" : "inset-x-0"
+          }`}
+        >
+          <AnimatePresence>{isLarge && candidateButton}</AnimatePresence>
+        </div>
       </motion.div>
     </li>
   );
 };
+
+/**
+ *      <motion.div
+            className={`${isLarge ? "mb-8" : "-mb-12"}`}
+            layout="position"
+            transition={ease}
+          >
+          </motion.div>
+*/

@@ -1,3 +1,5 @@
+import { motion, useMotionValue, AnimatePresence } from "framer-motion";
+
 interface ButtonProps {
   /**
    * Custom class
@@ -40,14 +42,14 @@ export const Button = ({
 
   let sizeClasses = {
     small: "text-sm px-2 py-1",
-    medium: "text-base py-4 w-full",
-    large: "text-lg py-5 w-full",
+    medium: "text-base py-4",
+    large: "text-lg py-5",
   };
-
+  const ease = { type: "ease", duration: 2 };
   return (
     <button
       type="button"
-      className={`rounded ${modeClass} ${sizeClasses[size]} ${className}`}
+      className={`rounded w-full ${modeClass} ${sizeClasses[size]} ${className}`}
       style={{ backgroundColor }}
       {...props}
     >
