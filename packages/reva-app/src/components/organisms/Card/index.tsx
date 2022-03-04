@@ -63,28 +63,26 @@ export const Card = ({
     damping: 35,
   };
 
-  const fromStyle = {
-    borderRadius: "24px",
+  const transition = {
+    type: "spring",
+    duration: 0.6,
+    bounce: 0.2,
   };
-
-  const toStyle = {
-    borderRadius: "0px",
-  };
-
-  const ease = { type: "ease", duration: 0.8 };
-
-  const descriptionHeight = 200;
 
   const descriptionParagraph = (
     <motion.div
-      className={`w-full" ${isLarge ? "pr-10" : "mt-[112px]"}`}
+      className={`w-full" ${isLarge ? "pr-16" : "mt-[156px]"}`}
       layout="position"
-      transition={ease}
+      transition={transition}
     >
-      <div className="flex items-end h-24">
+      <div className="flex items-end h-20">
         <TextResult title={title} color="light" />
       </div>
-      <div className={`mt-1 mb-4 font-bold ${isSmall && "opacity-0"}`}>
+      <div
+        className={`transition-opacity mt-1 mb-4 font-bold ${
+          isSmall && "opacity-0"
+        }`}
+      >
         {label}
       </div>
       <p className="overflow-auto text-slate-500 overflow-auto text-sm leading-relaxed">
@@ -97,25 +95,33 @@ export const Card = ({
     <motion.div
       className="absolute bottom-0 inset-x-0 p-8"
       exit={{ bottom: "-100px" }}
-      transition={ease}
+      transition={transition}
       layout="position"
     >
       <Button label="Candidater" className="w-full" primary size="medium" />
     </motion.div>
   );
 
+  const fromStyle = {
+    borderRadius: "24px",
+  };
+
+  const toStyle = {
+    borderRadius: "0px",
+  };
+
   return (
-    <li key={key} className="mt-6 mb-10" style={{ height: smallHeight }}>
+    <li key={key} style={{ height: smallHeight }}>
       <motion.div
-        initial={isLarge ? fromStyle : toStyle}
+        initial={isLarge ? fromStyle : false}
         animate={isLarge ? toStyle : fromStyle}
-        className={`overflow-hidden flex flex-col pt-4 pl-6 pr-2 shadow-2xl bg-slate-900 text-white ${
+        className={`overflow-hidden flex flex-col items-end pt-4 pl-6 pr-2 shadow-2xl bg-slate-900 text-white ${
           isLarge ? "rounded-none" : "rounded-2xl"
         }`}
         layout
-        transition={ease}
+        transition={transition}
         layoutDependency={size}
-        onAnimationStart={() => (isLarge ? zIndex.set(20) : {})}
+        onAnimationStart={() => (isLarge ? zIndex.set(20) : zIndex.set(0))}
         onAnimationComplete={() => (isSmall ? zIndex.set(0) : {})}
         onClick={() => (isSmall ? setSize("large") : {})}
         style={{ zIndex, ...cardSizeStyle, ...cardPositionStyle }}
@@ -123,30 +129,33 @@ export const Card = ({
       >
         <motion.img
           layout
-          transition={ease}
+          transition={transition}
           className="absolute left-[-43px]"
           style={backgroundStyle}
           src={certificateImg}
         />
-        {isLarge ? (
-          <motion.div transition={ease} layout="position">
+        {isLarge && (
+          <motion.div transition={transition} layout="position">
             <button
               type="button"
               onClick={() => setSize("small")}
-              className="w-full text-right text-lg mt-8 p-2"
+              className="w-full text-right text-lg mt-8 p-4"
             >
               ←
             </button>
           </motion.div>
-        ) : (
-          <motion.div
-            layout="position"
-            transition={ease}
-            className="text-right font-bold grow"
-          >
-            {label}
-          </motion.div>
-        )}{" "}
+        )}
+
+        <motion.div
+          layout="position"
+          transition={transition}
+          className={`transition-opacity absolute top-4 right-4 text-right font-bold grow ${
+            isLarge && "opacity-0"
+          }`}
+        >
+          {label}
+        </motion.div>
+
         {descriptionParagraph}
         <div
           className={`absolute bottom-0 ${
@@ -159,12 +168,3 @@ export const Card = ({
     </li>
   );
 };
-
-/**
- *      <motion.div
-            className={`${isLarge ? "mb-8" : "-mb-12"}`}
-            layout="position"
-            transition={ease}
-          >
-          </motion.div>
-*/

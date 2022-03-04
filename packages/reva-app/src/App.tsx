@@ -27,7 +27,7 @@ function App() {
                 { key: "4", title: "UX Researcher" },
               ].map(TextResult)}
             </Results>
-            <Results title="Diplômes">
+            <Results title="Diplômes" listClassName="mt-4 space-y-8">
               {[
                 {
                   key: "1",
