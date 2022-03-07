@@ -3,6 +3,13 @@ import { Button } from "../../atoms/Button";
 import { TextResult } from "../../atoms/TextResult";
 import certificateImg from "./certificate.png";
 import { motion, useMotionValue, AnimatePresence } from "framer-motion";
+import {
+  heightConfig,
+  rounded2xl,
+  roundedNone,
+  transitionOut,
+  transitionIn,
+} from "./view";
 
 interface Card {
   key: string;
@@ -28,18 +35,7 @@ export const Card = ({
   const isReduced = isSmall || isMedium;
 
   const zIndex = useMotionValue(isFullscreen ? 20 : 0);
-
-  const heightConfig = {
-    small: "270px",
-    medium: "553px",
-    large: "100vh",
-  };
-
-  const transition = {
-    type: "spring",
-    duration: isReduced ? 0.6 : 0.8,
-    bounce: isReduced ? 0.1 : 0.2,
-  };
+  const transition = isReduced ? transitionOut : transitionIn;
 
   const descriptionParagraph = (
     <motion.div
@@ -75,16 +71,6 @@ export const Card = ({
       <Button label="Candidater" className="w-full" primary size="medium" />
     </motion.div>
   );
-
-  const rounded2xl = {
-    borderRadius: "24px",
-    t: 0,
-  };
-
-  const roundedNone = {
-    borderRadius: "0px",
-    t: 1,
-  };
 
   return (
     <li
