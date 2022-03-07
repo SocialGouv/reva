@@ -1,4 +1,4 @@
-import { CSSProperties, useState } from "react";
+import { useState } from "react";
 import { Button } from "../../atoms/Button";
 import { TextResult } from "../../atoms/TextResult";
 import certificateImg from "./certificate.png";
@@ -8,70 +8,44 @@ interface Card {
   key: string;
   description: string;
   label: string;
-  size?: "small" | "medium" | "large";
+  initialSize?: "small" | "medium" | "large";
   title: string;
 }
 
-/**
- * Primary UI component for user interaction
- */
 export const Card = ({
   description,
   key,
   label,
   title,
-
+  initialSize = "small",
   ...props
 }: Card) => {
-  const [size, setSize] = useState(props.size || "small");
+  const [size, setSize] = useState(initialSize);
 
   const isSmall = size === "small";
   const isMedium = size === "medium";
-  const isLarge = size === "large";
+  const isFullscreen = size === "large";
+  const isReduced = isSmall || isMedium;
 
-  const zIndex = useMotionValue(isLarge ? 20 : 0);
+  const zIndex = useMotionValue(isFullscreen ? 20 : 0);
 
-  const smallHeight = "270px";
-  const cardSizeStyle: CSSProperties = {
-    height: isSmall ? smallHeight : size === "medium" ? "553px" : "100vh",
-  };
-
-  const cardPositionStyle: CSSProperties =
-    size == "large"
-      ? {
-          position: "absolute",
-          top: "0",
-          left: "0",
-          right: "0",
-        }
-      : { position: "relative" };
-
-  const backgroundStyle: CSSProperties = {
-    top: isLarge ? "auto" : "15px",
-    bottom: isLarge ? "145px" : "auto",
-    width: isSmall ? "150px" : isMedium ? "240px" : "174px",
-  };
-
-  const openSpring = {
-    type: "spring",
-    stiffness: 200,
-    damping: 30,
-  };
-  const closeSpring = {
-    type: "spring",
-    stiffness: 500,
-    damping: 35,
+  const heightConfig = {
+    small: "270px",
+    medium: "553px",
+    large: "100vh",
   };
 
   const transition = {
     type: "spring",
-    duration: 0.6,
-    bounce: 0.2,
+    duration: isReduced ? 0.6 : 0.8,
+    bounce: isReduced ? 0.1 : 0.2,
   };
 
   const descriptionParagraph = (
     <motion.div
-      className={`w-full" ${isLarge ? "pr-16" : "mt-[156px]"}`}
+      className={`w-full" ${
+        isFullscreen ? "pr-16" : isMedium ? "mt-[250px]" : "mt-[156px]"
+      }`}
       layout="position"
       transition={transition}
     >
@@ -80,7 +54,7 @@ export const Card = ({
       </div>
       <div
         className={`transition-opacity mt-1 mb-4 font-bold ${
-          isSmall && "opacity-0"
+          isReduced && "opacity-0"
         }`}
       >
         {label}
@@ -102,43 +76,68 @@ export const Card = ({
     </motion.div>
   );
 
-  const fromStyle = {
+  const rounded2xl = {
     borderRadius: "24px",
+    t: 0,
   };
 
-  const toStyle = {
+  const roundedNone = {
     borderRadius: "0px",
+    t: 1,
   };
 
   return (
-    <li key={key} style={{ height: smallHeight }}>
+    <li
+      key={key}
+      style={{
+        height:
+          initialSize === "small"
+            ? heightConfig["small"]
+            : heightConfig["medium"],
+      }}
+    >
       <motion.div
-        initial={isLarge ? fromStyle : false}
-        animate={isLarge ? toStyle : fromStyle}
+        initial={isFullscreen ? rounded2xl : false}
+        animate={isFullscreen ? roundedNone : rounded2xl}
         className={`overflow-hidden flex flex-col items-end pt-4 pl-6 pr-2 shadow-2xl bg-slate-900 text-white ${
-          isLarge ? "rounded-none" : "rounded-2xl"
+          isFullscreen ? "rounded-none" : "rounded-2xl"
         }`}
         layout
         transition={transition}
         layoutDependency={size}
-        onAnimationStart={() => (isLarge ? zIndex.set(20) : zIndex.set(0))}
-        onAnimationComplete={() => (isSmall ? zIndex.set(0) : {})}
-        onClick={() => (isSmall ? setSize("large") : {})}
-        style={{ zIndex, ...cardSizeStyle, ...cardPositionStyle }}
+        onAnimationStart={() => isFullscreen && zIndex.set(20)}
+        onAnimationComplete={() => isReduced && zIndex.set(0)}
+        onClick={() => (isReduced ? setSize("large") : {})}
+        style={{
+          zIndex,
+          height: heightConfig[size],
+          ...(isFullscreen
+            ? {
+                position: "absolute",
+                top: "0",
+                left: "0",
+                right: "0",
+              }
+            : { position: "relative" }),
+        }}
         {...props}
       >
         <motion.img
           layout
           transition={transition}
           className="absolute left-[-43px]"
-          style={backgroundStyle}
+          style={{
+            top: isFullscreen ? "auto" : "15px",
+            bottom: isFullscreen ? "145px" : "auto",
+            width: isSmall ? "150px" : isMedium ? "240px" : "174px",
+          }}
           src={certificateImg}
         />
-        {isLarge && (
+        {isFullscreen && (
           <motion.div transition={transition} layout="position">
             <button
               type="button"
-              onClick={() => setSize("small")}
+              onClick={() => setSize(initialSize)}
               className="w-full text-right text-lg mt-8 p-4"
             >
               ←
@@ -150,7 +149,7 @@ export const Card = ({
           layout="position"
           transition={transition}
           className={`transition-opacity absolute top-4 right-4 text-right font-bold grow ${
-            isLarge && "opacity-0"
+            isFullscreen && "opacity-0"
           }`}
         >
           {label}
@@ -159,10 +158,10 @@ export const Card = ({
         {descriptionParagraph}
         <div
           className={`absolute bottom-0 ${
-            isSmall ? "inset-x-[-32px]" : "inset-x-0"
+            isReduced ? "inset-x-[-32px]" : "inset-x-0"
           }`}
         >
-          <AnimatePresence>{isLarge && candidateButton}</AnimatePresence>
+          <AnimatePresence>{isFullscreen && candidateButton}</AnimatePresence>
         </div>
       </motion.div>
     </li>
