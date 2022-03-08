@@ -14,10 +14,10 @@ export default {
 const TextTemplate: ComponentStory<typeof Results> = (args) => (
   <Results title="Métiers">
     {[
-      { key: "1", title: "Product Designer" },
-      { key: "2", title: "UX Designer" },
-      { key: "3", title: "Ui Designer" },
-      { key: "4", title: "UX Researcher" },
+      { id: "1", title: "Product Designer" },
+      { id: "2", title: "UX Designer" },
+      { id: "3", title: "Ui Designer" },
+      { id: "4", title: "UX Researcher" },
     ].map(TextResult)}
   </Results>
 );
@@ -32,13 +32,13 @@ const BlockTemplate: ComponentStory<typeof Results> = (args) => (
   <Results title="Diplômes">
     {[
       {
-        key: "1",
+        id: "1",
         description: loremIpsum,
         label: "N104c",
         title: "Licence Professionnelle Métiers du design",
       },
       {
-        key: "2",
+        id: "2",
         description: loremIpsum,
         label: "N304c",
         title: "MASTER Ergonomie",

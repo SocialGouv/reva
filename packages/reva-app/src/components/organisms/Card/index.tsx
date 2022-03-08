@@ -12,7 +12,7 @@ import {
 } from "./view";
 
 interface Card {
-  key: string;
+  id: string;
   description: string;
   label: string;
   initialSize?: "small" | "medium" | "large";
@@ -21,7 +21,7 @@ interface Card {
 
 export const Card = ({
   description,
-  key,
+  id,
   label,
   title,
   initialSize = "small",
@@ -74,18 +74,15 @@ export const Card = ({
 
   return (
     <li
-      key={key}
       style={{
         height:
-          initialSize === "small"
-            ? heightConfig["small"]
-            : heightConfig["medium"],
+          initialSize === "small" ? heightConfig.small : heightConfig.medium,
       }}
     >
       <motion.div
         initial={isFullscreen ? rounded2xl : false}
         animate={isFullscreen ? roundedNone : rounded2xl}
-        className={`overflow-hidden flex flex-col items-end pt-4 pl-6 pr-2 shadow-2xl bg-slate-900 text-white ${
+        className={`cursor-pointer overflow-hidden flex flex-col items-end pt-4 pl-6 pr-2 shadow-2xl bg-slate-900 text-white ${
           isFullscreen ? "rounded-none" : "rounded-2xl"
         }`}
         layout
