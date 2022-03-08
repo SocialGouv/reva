@@ -11,9 +11,11 @@ export const searchProfessionsByQuery = async ({ query }: { query: string; }): P
           profession_search.document, plainto_tsquery(unaccent(${query}))
         ) AS rank,
         profession.title,
-        profession.description
+        profession.description,
+        rome.code as codeRome
         FROM profession_search
         INNER JOIN profession ON profession.id = profession_search.id
+        INNER JOIN rome ON rome.id = profession.rome_id
         WHERE profession_search.document @@ plainto_tsquery(unaccent(${query}))
         OR profession_search.slug % ${query}
         ORDER BY rank DESC
@@ -25,7 +27,8 @@ export const searchProfessionsByQuery = async ({ query }: { query: string; }): P
     return {
       id: profession.id,
       title : profession.title,
-      description: profession.description
+      description: profession.description,
+      codeRome: profession.codeRome
     }
   });
 };

@@ -8,26 +8,42 @@ datasource db {
 }
 
 model Certification {
-  id          String   @id @default(uuid())
-  title       String   @db.VarChar(255)
+  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
+  title       String    @db.VarChar(255)
   slug        String
   description String?
-  isActive    Boolean  @default(true) @map("is_active")
-  rncpId      String   @map("rncp_id") @db.VarChar(255)
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt   DateTime? @updatedAt @map("updated_at")
+  isActive    Boolean   @default(true) @map("is_active")
+  rncpId      String    @map("rncp_id") @db.VarChar(255)
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
 
   @@map("certification")
 }
 
 model Profession {
-  id          String   @id @default(uuid())
-  title       String   @db.VarChar(255)
+  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
+  title       String    @db.VarChar(255)
   slug        String
   description String?
-  romeId      Int      @map("rome_id")
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt   DateTime? @updatedAt @map("updated_at")
+  romeId      String    @db.Uuid @map("rome_id")
+  rome Rome? @relation(fields: [romeId], references: [id])
+
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
 
   @@map("profession")
+}
+
+model Rome {
+  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
+  code        String    @db.VarChar(255)
+  label       String    @db.VarChar(255)
+  slug        String    @db.VarChar(255)
+  url         String    @db.VarChar(255)
+  profession  Profession[]
+  isActive    Boolean   @default(false) @map("is_active")
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+
+  @@map("rome")
 }

@@ -2,12 +2,14 @@ export interface Certification {
   id: string;
   title: string;
   description: string | null;
+  codeRncp: string;
 }
 
 export interface Profession {
   id: string;
   title: string;
   description: string | null;
+  codeRome: string;
 }
 
 interface Params {
