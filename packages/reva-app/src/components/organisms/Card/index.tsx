@@ -12,11 +12,13 @@ import {
   transitionOut,
 } from "./view";
 
+export type CardSize = "small" | "medium" | "large";
+
 interface Card {
   id: string;
   description: string;
   label: string;
-  initialSize?: "small" | "medium" | "large";
+  initialSize?: CardSize;
   title: string;
 }
 
@@ -84,7 +86,7 @@ export const Card = ({
         initial={isFullscreen ? rounded2xl : false}
         animate={isFullscreen ? roundedNone : rounded2xl}
         className={`cursor-pointer overflow-hidden flex flex-col items-end pt-4 px-6 shadow-2xl bg-slate-900 text-white ${
-          isFullscreen ? "rounded-none" : "rounded-2xl"
+          isFullscreen ? "rounded-none" : "rounded-3xl"
         }`}
         layout
         transition={transition}

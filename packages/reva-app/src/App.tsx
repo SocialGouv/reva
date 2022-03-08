@@ -1,21 +1,22 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Header } from "./components/atoms/Header";
 import { loremIpsum, loremIpsumShort } from "./components/atoms/LoremIpsum";
 import { TextResult } from "./components/atoms/TextResult";
-import { Card } from "./components/organisms/Card";
+import { Card, CardSize } from "./components/organisms/Card";
+import { CardSkeleton } from "./components/organisms/CardSkeleton";
 import { Results } from "./components/organisms/Results";
 
 function App() {
-  const jobs = [
-    { id: "job-1", title: "Product Designer" },
-    { id: "job-2", title: "UX Designer" },
-    { id: "job-3", title: "Ui Designer" },
-    { id: "job-4", title: "UX Researcher" },
-  ];
+  interface Certificate {
+    id: string;
+    description: string;
+    label: string;
+    title: string;
+  }
 
-  const certificates = [
+  const certificateFixtures: Certificate[] = [
     {
       id: "1",
       description: loremIpsum,
@@ -61,12 +62,32 @@ function App() {
     },
   ];
 
+  const emptyCertificates: Certificate[] = [];
+  const [certificates, setCertificates] = useState(emptyCertificates);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setCertificates(certificateFixtures);
+    }, 1000);
+  });
+
   const initialPage = {
     type: "results",
-    context: { job: jobs[0] },
   };
 
   const [page, setPage] = useState(initialPage);
+
+  function certificateResults(initialSize: CardSize) {
+    return certificates.length
+      ? certificates.map((certificate) => (
+          <Card
+            initialSize={initialSize}
+            key={certificate.id}
+            {...certificate}
+          />
+        ))
+      : Array(5).fill(<CardSkeleton size={initialSize} />);
+  }
 
   const resultsPage = (
     <>
@@ -78,9 +99,7 @@ function App() {
       </div>
       <div className="px-8">
         <Results title="Diplômes" listClassName="mt-4 space-y-8">
-          {certificates.map((certificate) => (
-            <Card key={certificate.id} {...certificate} />
-          ))}
+          {certificateResults("small")}
         </Results>
       </div>
     </>
@@ -89,7 +108,7 @@ function App() {
   const certificatesPage = (
     <div className="px-8">
       <div className="mt-4 flex items-center justify-between">
-        <TextResult title={page.context.job.title} />
+        <TextResult title="Product Designer" />
         <button
           type="button"
           onClick={() => setPage(initialPage)}
@@ -99,9 +118,7 @@ function App() {
         </button>
       </div>
       <Results title="Diplômes" listClassName="mt-4 space-y-8">
-        {certificates.map((certificate) => (
-          <Card key={certificate.id} initialSize="medium" {...certificate} />
-        ))}
+        {certificateResults("medium")}
       </Results>
     </div>
   );
