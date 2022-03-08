@@ -47,7 +47,7 @@ function App() {
     <>
       <div className="px-8 py-16 pb-8 lg:pt-8 bg-white">
         <Header label="Bienvenue" />
-        <p className="mt-8 pr-6 text-slate-600 leading-loose text-lg">
+        <p className="mt-10 pr-6 text-slate-600 leading-loose text-lg">
           {loremIpsumShort}
         </p>
       </div>
