@@ -16,7 +16,11 @@ export const TextResult = ({
   const colorClass =
     color === "dark" ? "font-bold text-slate-900" : "font-medium text-white";
   return (
-    <div onClick={onClick} className={`text-2xl ${colorClass}`} {...props}>
+    <div
+      onClick={onClick}
+      className={`cursor-pointer text-2xl ${colorClass}`}
+      {...props}
+    >
       {title}
     </div>
   );

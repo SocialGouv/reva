@@ -15,7 +15,7 @@ const Template: ComponentStory<typeof Card> = (args) => <Card {...args} />;
 export const Small = Template.bind({});
 
 Small.args = {
-  key: "1",
+  id: "1",
   description: loremIpsum,
   label: "N104c",
   title: "Licence Professionnelle Métiers du design",
