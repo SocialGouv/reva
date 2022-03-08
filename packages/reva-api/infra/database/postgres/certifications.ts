@@ -14,7 +14,7 @@ export const searchCertificationsByQuery = async ({ query }: { query: string; })
         ) AS rank,
         certification.title,
         certification.description,
-        certification.rcnp_id as codeRncp
+        certification.rncp_id as codeRncp
         FROM certification_search
         INNER JOIN certification ON certification.id = certification_search.id
         WHERE certification_search.document @@ plainto_tsquery(unaccent(${query}))
