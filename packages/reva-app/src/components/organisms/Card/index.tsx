@@ -1,14 +1,15 @@
+import { AnimatePresence, motion, useMotionValue } from "framer-motion";
 import { useState } from "react";
+
 import { Button } from "../../atoms/Button";
 import { TextResult } from "../../atoms/TextResult";
 import certificateImg from "./certificate.png";
-import { motion, useMotionValue, AnimatePresence } from "framer-motion";
 import {
   heightConfig,
   rounded2xl,
   roundedNone,
-  transitionOut,
   transitionIn,
+  transitionOut,
 } from "./view";
 
 interface Card {
@@ -82,7 +83,7 @@ export const Card = ({
       <motion.div
         initial={isFullscreen ? rounded2xl : false}
         animate={isFullscreen ? roundedNone : rounded2xl}
-        className={`cursor-pointer overflow-hidden flex flex-col items-end pt-4 pl-6 pr-2 shadow-2xl bg-slate-900 text-white ${
+        className={`cursor-pointer overflow-hidden flex flex-col items-end pt-4 px-6 shadow-2xl bg-slate-900 text-white ${
           isFullscreen ? "rounded-none" : "rounded-2xl"
         }`}
         layout
@@ -112,7 +113,7 @@ export const Card = ({
           style={{
             top: isFullscreen ? "auto" : "15px",
             bottom: isFullscreen ? "145px" : "auto",
-            width: isSmall ? "150px" : isMedium ? "240px" : "174px",
+            width: isSmall ? "120px" : isMedium ? "240px" : "174px",
           }}
           src={certificateImg}
         />
