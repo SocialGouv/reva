@@ -1,5 +1,5 @@
 import { CardSize } from "../Card";
-import { heightConfig } from "./view";
+import { heightConfig } from "../Card/view";
 
 interface CardSkeleton {
   size?: CardSize;
