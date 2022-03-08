@@ -74,7 +74,6 @@ export const Card = ({
 
   return (
     <li
-      key={id}
       style={{
         height:
           initialSize === "small" ? heightConfig.small : heightConfig.medium,

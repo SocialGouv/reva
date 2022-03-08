@@ -56,6 +56,7 @@ function App() {
         <Results title="Métiers">
           {jobs.map((job) => (
             <TextResult
+              key={job.id}
               onClick={() =>
                 setPage({ type: "certificates", context: { job } })
               }
@@ -64,7 +65,9 @@ function App() {
           ))}
         </Results>
         <Results title="Diplômes" listClassName="mt-4 space-y-8">
-          {certificates.map(Card)}
+          {certificates.map((certificate) => (
+            <Card key={certificate.id} {...certificate} />
+          ))}
         </Results>
       </div>
     </>
@@ -84,7 +87,7 @@ function App() {
       </div>
       <Results title="Diplômes" listClassName="mt-4 space-y-8">
         {certificates.map((certificate) => (
-          <Card initialSize="medium" {...certificate} />
+          <Card key={certificate.id} initialSize="medium" {...certificate} />
         ))}
       </Results>
     </div>
