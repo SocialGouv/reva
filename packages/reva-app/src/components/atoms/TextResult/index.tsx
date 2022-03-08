@@ -15,10 +15,11 @@ export const TextResult = ({
 }: TextResult) => {
   const colorClass =
     color === "dark" ? "font-bold text-slate-900" : "font-medium text-white";
+  const fontSizeClass = title.length > 65 ? "text-xl" : "text-2xl";
   return (
     <div
       onClick={onClick}
-      className={`cursor-pointer text-2xl ${colorClass}`}
+      className={`cursor-pointer ${fontSizeClass} ${colorClass}`}
       {...props}
     >
       {title}

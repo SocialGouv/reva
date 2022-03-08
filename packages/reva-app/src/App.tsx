@@ -20,19 +20,44 @@ function App() {
       id: "1",
       description: loremIpsum,
       label: "N104c",
-      title: "Licence Professionnelle Métiers du design",
+      title: "Agent.e de Service Médico-Social (ASMS)",
     },
     {
       id: "2",
       description: loremIpsum,
       label: "N304c",
-      title: "MASTER Ergonomie",
+      title: "Assistant.e De Vie aux Familles (ADVF)",
     },
     {
       id: "3",
       description: loremIpsum,
       label: "N304c",
-      title: "MASTER Ergonomie",
+      title: "Accompagnant.e éducatif et social (DEAES)",
+    },
+    {
+      id: "4",
+      description: loremIpsum,
+      label: "N304c",
+      title:
+        "Conducteur.trice accompagnateur.trice de personnes à mobilité réduite (CaPmr)",
+    },
+    {
+      id: "5",
+      description: loremIpsum,
+      label: "N304c",
+      title: "Employé.e familial polyvalent.e",
+    },
+    {
+      id: "6",
+      description: loremIpsum,
+      label: "N304c",
+      title: "Assistant.e de vie dépendance",
+    },
+    {
+      id: "7",
+      description: loremIpsum,
+      label: "N304c",
+      title: "Accompagnant.e en gérontologie",
     },
   ];
 
