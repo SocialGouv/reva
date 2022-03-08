@@ -1,10 +1,11 @@
-import { Input } from "./components/atoms/Input";
-import { Results } from "./components/organisms/Results";
-import { TextResult } from "./components/atoms/TextResult";
-import { Card } from "./components/organisms/Card";
-import { loremIpsum } from "./components/atoms/LoremIpsum";
 import { motion } from "framer-motion";
 import { useState } from "react";
+
+import { Header } from "./components/atoms/Header";
+import { loremIpsum, loremIpsumShort } from "./components/atoms/LoremIpsum";
+import { TextResult } from "./components/atoms/TextResult";
+import { Card } from "./components/organisms/Card";
+import { Results } from "./components/organisms/Results";
 
 function App() {
   const jobs = [
@@ -44,26 +45,13 @@ function App() {
 
   const resultsPage = (
     <>
-      <div className="sticky z-10 top-0 px-8 pt-16 pb-1 lg:pt-8 bg-white">
-        <Input
-          name="search"
-          type="search"
-          placeholder="Métier, compétence"
-          className="mb-4"
-        />
+      <div className="px-8 py-16 pb-8 lg:pt-8 bg-white">
+        <Header label="Bienvenue" />
+        <p className="mt-10 pr-6 text-slate-600 leading-loose text-lg">
+          {loremIpsumShort}
+        </p>
       </div>
       <div className="px-8">
-        <Results title="Métiers">
-          {jobs.map((job) => (
-            <TextResult
-              key={job.id}
-              onClick={() =>
-                setPage({ type: "certificates", context: { job } })
-              }
-              {...job}
-            />
-          ))}
-        </Results>
         <Results title="Diplômes" listClassName="mt-4 space-y-8">
           {certificates.map((certificate) => (
             <Card key={certificate.id} {...certificate} />
