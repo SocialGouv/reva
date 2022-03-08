@@ -16,7 +16,30 @@ cp packages/reva-app/.env.example packages/reva-app/.env
 
 Then set your local ip in this `.env` file.
 
+### Api
+
+Dans le fichier `.env` à la racine du projet, ajouter la ligne
+
+```
+DATABASE_URL=postgresql://reva:password@localhost:5444/reva?schema=public
+```
+
+Ajouter cette même ligne dans le fichier `./packages/reva-api/.env`
+
+Aller dans le dossier `./packages/reva-api/` et exécuter :
+
+```
+npx prisma migrate dev
+npx prisma generate
+```
+
 ## Run
+
+### Run web api
+
+```bash
+npm run dev -w reva-api
+```
 
 ### Run web app
 
