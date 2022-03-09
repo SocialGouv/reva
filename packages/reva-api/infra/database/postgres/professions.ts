@@ -10,7 +10,7 @@ export const searchProfessionsByQuery = async ({ query }: { query: string; }): P
         ts_rank(
           profession_search.document, plainto_tsquery(unaccent(${query}))
         ) AS rank,
-        profession.title,
+        profession.label,
         profession.description,
         rome.code as codeRome
         FROM profession_search
@@ -26,7 +26,7 @@ export const searchProfessionsByQuery = async ({ query }: { query: string; }): P
   return professions.map(profession => {
     return {
       id: profession.id,
-      title : profession.title,
+      label : profession.label,
       description: profession.description,
       codeRome: profession.codeRome
     }

@@ -9,12 +9,12 @@ datasource db {
 
 model Certification {
   id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  title       String    @db.VarChar(255)
+  label       String    @db.VarChar(255)
   slug        String
   description String?
   isActive    Boolean   @default(true) @map("is_active")
-  rncpId      String    @map("rncp_id") @db.VarChar(255)
-  rome        RomesOnCertifications[]
+  rncpId      String    @unique @map("rncp_id") @db.VarChar(255)
+  romes       RomesOnCertifications[]
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
 
@@ -23,7 +23,7 @@ model Certification {
 
 model Profession {
   id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  title       String    @db.VarChar(255)
+  label       String    @db.VarChar(255)
   slug        String
   description String?
   romeId      String    @db.Uuid @map("rome_id")
@@ -37,12 +37,12 @@ model Profession {
 
 model Rome {
   id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  code        String    @db.VarChar(255)
+  code        String    @unique @db.VarChar(255)
   label       String    @db.VarChar(255)
   slug        String    @db.VarChar(255)
   url         String    @db.VarChar(255)
   profession  Profession[]
-  certification RomesOnCertifications[]
+  certifications RomesOnCertifications[]
   isActive    Boolean   @default(false) @map("is_active")
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")

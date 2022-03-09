@@ -7,7 +7,8 @@
     "dev": "nodemon -e ts,json,graphql -w . ./index.ts",
     "build": "rimraf -f ./dist && tsc -p tsconfig.json",
     "start": "node dist/index.js",
-    "test": "jest --runInBand --testRegex='.*.test.ts$'"
+    "test": "jest --runInBand --testRegex='.*.test.ts$'",
+    "seed": "ts-node prisma/seed.ts"
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",

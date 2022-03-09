@@ -1,12 +1,12 @@
 type Certification {
   id: ID!
-  title: String!
+  label: String!
   description: String!
 }
 
 type Profession {
   id: ID!
-  title: String!
+  label: String!
   description: String!
 }
 
