@@ -2,6 +2,7 @@ import { AnimatePresence, motion, useMotionValue } from "framer-motion";
 import { useState } from "react";
 
 import { Button } from "../../atoms/Button";
+import { Add } from "../../atoms/Icons";
 import { TextResult } from "../../atoms/TextResult";
 import certificateImg from "./certificate.png";
 import {
@@ -134,11 +135,16 @@ export const Card = ({
         <motion.div
           layout="position"
           transition={transition}
-          className={`transition-opacity absolute top-4 right-4 text-right font-bold grow ${
-            isFullscreen && "opacity-0"
+          className={`transition-opacity absolute top-5 right-6 text-right font-bold grow ${
+            isFullscreen && "pointer-events-none opacity-0"
           }`}
         >
           {label}
+          <div className="mt-4 rounded-full flex items-center justify-center h-[46px] w-[46px] bg-blue-500">
+            <div className="w-[18px]">
+              <Add />
+            </div>
+          </div>
         </motion.div>
 
         {descriptionParagraph}
