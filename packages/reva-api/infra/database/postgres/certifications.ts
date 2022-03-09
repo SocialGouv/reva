@@ -1,13 +1,16 @@
 import type { Certification } from "../../../domains/search";
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from "@prisma/client";
 
-export const searchCertificationsByQuery = async ({ query }: { query: string; }): Promise<Certification[]> => {
-
+export const searchCertificationsByQuery = async ({
+  query,
+}: {
+  query: string;
+}): Promise<Certification[]> => {
   const client = new PrismaClient();
 
-  console.log(query)
+  console.log(query);
 
-  const certifications = await client.$queryRaw`
+  const certifications = (await client.$queryRaw`
     SELECT certification_search.id AS id,
         ts_rank(
           certification_search.document, plainto_tsquery(unaccent(${query}))
@@ -17,19 +20,19 @@ export const searchCertificationsByQuery = async ({ query }: { query: string; })
         certification.rncp_id as codeRncp
         FROM certification_search
         INNER JOIN certification ON certification.id = certification_search.id
-        WHERE certification_search.document @@ plainto_tsquery(unaccent(${query}))
-        OR certification_search.slug % ${query}
+        WHERE certification.is_active = true
+        AND (certification_search.document @@ plainto_tsquery(unaccent(${query}))
+                OR certification_search.slug % ${query})
         ORDER BY rank DESC
         LIMIT 5;
-  ` as Certification[]
+  `) as Certification[];
 
-
-  return certifications.map(certification => {
+  return certifications.map((certification) => {
     return {
       id: certification.id,
-      title : certification.title,
+      title: certification.title,
       description: certification.description,
-      codeRncp: certification.codeRncp
-    }
+      codeRncp: certification.codeRncp,
+    };
   });
 };

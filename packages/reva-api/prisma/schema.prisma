@@ -14,6 +14,7 @@ model Certification {
   description String?
   isActive    Boolean   @default(true) @map("is_active")
   rncpId      String    @map("rncp_id") @db.VarChar(255)
+  rome        RomesOnCertifications[]
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
 
@@ -41,9 +42,23 @@ model Rome {
   slug        String    @db.VarChar(255)
   url         String    @db.VarChar(255)
   profession  Profession[]
+  certification RomesOnCertifications[]
   isActive    Boolean   @default(false) @map("is_active")
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
 
   @@map("rome")
+}
+
+
+model RomesOnCertifications {
+  certification       Certification @relation(fields: [certificationId], references: [id])
+  certificationId     String        @db.Uuid  @map("certification_id")
+  rome                Rome          @relation(fields: [romeId], references: [id])
+  romeId              String        @db.Uuid  @map("rome_id")
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+
+  @@id([certificationId, romeId])
+  @@map("rome_certification")
 }
