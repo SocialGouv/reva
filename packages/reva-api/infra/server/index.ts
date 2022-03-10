@@ -19,6 +19,7 @@ const apm = require("elastic-apm-node").start({
 
 import fastify from "fastify";
 import mercurius from "mercurius";
+import cors from "fastify-cors";
 import proxy from "fastify-http-proxy";
 import fastifyStatic from "fastify-static";
 import { graphqlConfiguration } from "../graphql";
@@ -57,6 +58,9 @@ if (process.env.NODE_ENV === "production") {
     upstream: "http://localhost:3001/app",
     prefix: APP_ROUTE_PATH,
   });
+  server.register(cors, { 
+    origin: true// put your options here
+  })
 }
 
 

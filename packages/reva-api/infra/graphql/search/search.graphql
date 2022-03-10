@@ -2,6 +2,7 @@ type Certification {
   id: ID!
   label: String!
   description: String!
+  codeRncp: String!
 }
 
 type Profession {

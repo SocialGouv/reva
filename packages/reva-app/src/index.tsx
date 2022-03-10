@@ -1,13 +1,29 @@
+import "./index.css";
+
+import {
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  gql,
+  useQuery,
+} from "@apollo/client";
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
+
 import App from "./App";
-import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+
+const client = new ApolloClient({
+  uri: process.env.REACT_APP_API_GRAPHQL,
+  cache: new InMemoryCache(),
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

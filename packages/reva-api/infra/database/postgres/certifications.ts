@@ -17,12 +17,12 @@ export const searchCertificationsByQuery = async ({
         ) AS rank,
         certification.label,
         certification.description,
-        certification.rncp_id as codeRncp
+        certification.rncp_id as "codeRncp"
         FROM certification_search
         INNER JOIN certification ON certification.id = certification_search.id
         WHERE certification.is_active = true
         ORDER BY rank DESC
-        LIMIT 5;
+        LIMIT 15;
   `) as Certification[];
 
   return certifications.map((certification) => {
