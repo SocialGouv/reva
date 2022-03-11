@@ -1,9 +1,9 @@
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
 async function main() {
   await prisma.certification.upsert({
-    where: { rncpId: '25467'},
+    where: { rncpId: '25467' },
     update: {},
     create: {
       label: `Diplôme d'État d'accompagnant éducatif et social`,
@@ -12,10 +12,10 @@ async function main() {
       rncpId: '25467',
       isActive: true
     }
-  })
+  });
   
   await prisma.certification.upsert({
-    where: { rncpId: '13905'},
+    where: { rncpId: '13905' },
     update: {},
     create: {
       label: `Services aux personnes et aux territoires`,
@@ -24,10 +24,10 @@ async function main() {
       rncpId: '13905',
       isActive: true
     }
-  })
+  });
   
   await prisma.certification.upsert({
-    where: { rncpId: '32004'},
+    where: { rncpId: '32004' },
     update: {},
     create: {
       label: `Technicien d'équipement d'aide à la personne`,
@@ -36,10 +36,10 @@ async function main() {
       rncpId: '32004',
       isActive: true
     }
-  })
+  });
   
   await prisma.certification.upsert({
-    where: { rncpId: '34690'},
+    where: { rncpId: '34690' },
     update: {},
     create: {
       label: `Assistant de vie dépendance`,
@@ -48,10 +48,10 @@ async function main() {
       rncpId: '34690',
       isActive: true
     }
-  })
+  });
   
   await prisma.certification.upsert({
-    where: { rncpId: '34692'},
+    where: { rncpId: '34692' },
     update: {},
     create: {
       label: `Employé familial`,
@@ -60,10 +60,10 @@ async function main() {
       rncpId: '34692',
       isActive: true
     }
-  })
+  });
   
   await prisma.certification.upsert({
-    where: { rncpId: '17163'},
+    where: { rncpId: '17163' },
     update: {},
     create: {
       label: `Conducteur-e accompagnateur-e de personnes à mobilité réduite`,
@@ -72,10 +72,10 @@ async function main() {
       rncpId: '17163',
       isActive: true
     }
-  })
+  });
   
   await prisma.certification.upsert({
-    where: { rncpId: '5983'},
+    where: { rncpId: '5983' },
     update: {},
     create: {
       label: `Surveillant - visiteur de nuit en secteur social et médico-social`,
@@ -84,10 +84,10 @@ async function main() {
       rncpId: '5983',
       isActive: true
     }
-  })
+  });
   
   await prisma.certification.upsert({
-    where: { rncpId: '35028'},
+    where: { rncpId: '35028' },
     update: {},
     create: {
       label: `Agent de service médico-social`,
@@ -96,10 +96,10 @@ async function main() {
       rncpId: '35028',
       isActive: true
     }
-  })
+  });
   
   await prisma.certification.upsert({
-    where: { rncpId: '16197'},
+    where: { rncpId: '16197' },
     update: {},
     create: {
       label: `Responsable de secteur - services à la personne`,
@@ -108,10 +108,10 @@ async function main() {
       rncpId: '16197',
       isActive: true
     }
-  })
+  });
   
   await prisma.certification.upsert({
-    where: { rncpId: '35506'},
+    where: { rncpId: '35506' },
     update: {},
     create: {
       label: `Assistant de vie aux familles`,
@@ -120,10 +120,10 @@ async function main() {
       rncpId: '35506',
       isActive: true
     }
-  })
+  });
   
   await prisma.certification.upsert({
-    where: { rncpId: '35830'},
+    where: { rncpId: '35830' },
     update: {},
     create: {
       label: `Aide-Soignant`,
@@ -132,15 +132,23 @@ async function main() {
       rncpId: '35830',
       isActive: true
     }
-  })
+  });
+
+  await prisma.$queryRaw`
+    REFRESH MATERIALIZED VIEW certification_search;
+  `;
+
+  await prisma.$queryRaw`
+    REFRESH MATERIALIZED VIEW profession_search;
+  `;
 
 }
 
 main()
   .catch((e) => {
-    console.error(e)
-    process.exit(1)
+    console.error(e);
+    process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect()
+    await prisma.$disconnect();
   })
