@@ -29,13 +29,18 @@ const WEBSITE_ROUTE_PATH = "/";
 const APP_ROUTE_PATH = "/app";
 
 if (process.env.NODE_ENV === "production") {
+
+  const DIST_FOLDER = path.join(__dirname, "..", "..");
+  const APP_FOLDER = path.join(DIST_FOLDER, "app");
+  const WEBSITE_FOLDER = path.join(DIST_FOLDER, "website");
+
   server.register(fastifyStatic, {
-    root: path.join(__dirname, "website"),
+    root: WEBSITE_FOLDER,
     prefix: WEBSITE_ROUTE_PATH,
   });
 
   server.register(fastifyStatic, {
-    root: path.join(__dirname, "app"),
+    root: APP_FOLDER,
     prefix: APP_ROUTE_PATH,
     decorateReply: false,
   });
@@ -43,10 +48,14 @@ if (process.env.NODE_ENV === "production") {
   // Deal with not found
   server.setNotFoundHandler((req, res) => {
     if (req.url.startsWith(APP_ROUTE_PATH)) {
-      res.sendFile("index.html", path.join(__dirname, "app"));
+      res.sendFile("index.html", APP_FOLDER);
     } else {
-      res.sendFile("index.html", path.join(__dirname, "website"));
+      res.sendFile("index.html", WEBSITE_FOLDER);
     }
+  });
+
+  server.register(cors, { 
+    origin: (process.env.CORS_ORIGIN || "").split(",") // put your options here
   });
 } else {
   server.register(proxy, {
@@ -60,7 +69,7 @@ if (process.env.NODE_ENV === "production") {
   });
   server.register(cors, { 
     origin: true// put your options here
-  })
+  });
 }
 
 

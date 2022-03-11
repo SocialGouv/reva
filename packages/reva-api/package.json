@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon -e ts,json,graphql -w . ./index.ts",
-    "build": "rimraf -f ./dist && tsc -p tsconfig.json",
+    "build": "npm run build:ts && npm run build:graphql",
+    "build:ts": "rimraf -f ./dist && tsc -p tsconfig.json",
+    "build:graphql": "rsync -R ./infra/graphql/**/*.graphql  ./dist",
     "start": "node dist/index.js",
     "test": "jest --runInBand --testRegex='.*.test.ts$'",
     "seed": "ts-node prisma/seed.ts"
