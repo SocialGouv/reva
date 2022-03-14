@@ -1,3 +1,4 @@
+import { Capacitor } from "@capacitor/core";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
@@ -35,7 +36,9 @@ function App() {
             {...certificate}
           />
         ))
-      : Array(5).fill(<CardSkeleton size={initialSize} />);
+      : [1, 2, 3, 4, 5].map((i) => (
+          <CardSkeleton key={`skeleton-${i}`} size={initialSize} />
+        ));
   }
 
   const resultsPage = (
@@ -73,7 +76,12 @@ function App() {
   );
 
   return (
-    <div className="App flex flex-col items-center justify-center h-screen bg-gray-400">
+    <div className="App relative flex flex-col items-center justify-center h-screen bg-gray-400">
+      {Capacitor.isNativePlatform() ? (
+        <div className="absolute z-10 h-12 top-0 inset-x-0 backdrop-blur-md bg-white/50"></div>
+      ) : (
+        <></>
+      )}
       <div className="relative flex flex-col max-w-lg w-full h-screen bg-white">
         <motion.div layoutScroll className="grow overflow-auto">
           {page.type === "results" ? resultsPage : certificatesPage}

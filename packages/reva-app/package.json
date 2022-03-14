@@ -7,6 +7,7 @@
     "@capacitor/cli": "^3.4.1",
     "@capacitor/core": "^3.4.1",
     "@capacitor/ios": "^3.4.1",
+    "@capacitor/status-bar": "^1.0.8",
     "@tailwindcss/forms": "^0.4.0",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^11.2.7",
