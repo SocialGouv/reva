@@ -2,66 +2,15 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 import { Header } from "./components/atoms/Header";
-import { loremIpsum, loremIpsumShort } from "./components/atoms/LoremIpsum";
+import { loremIpsumShort } from "./components/atoms/LoremIpsum";
 import { TextResult } from "./components/atoms/TextResult";
 import { Card, CardSize } from "./components/organisms/Card";
 import { CardSkeleton } from "./components/organisms/CardSkeleton";
 import { Results } from "./components/organisms/Results";
+import { certificateFixtures } from "./fixtures/certificates";
+import { Certificate } from "./interface";
 
 function App() {
-  interface Certificate {
-    id: string;
-    description: string;
-    label: string;
-    title: string;
-  }
-
-  const certificateFixtures: Certificate[] = [
-    {
-      id: "1",
-      description: loremIpsum,
-      label: "N104c",
-      title: "Agent.e de Service Médico-Social (ASMS)",
-    },
-    {
-      id: "2",
-      description: loremIpsum,
-      label: "N304c",
-      title: "Assistant.e De Vie aux Familles (ADVF)",
-    },
-    {
-      id: "3",
-      description: loremIpsum,
-      label: "N304c",
-      title: "Accompagnant.e éducatif et social (DEAES)",
-    },
-    {
-      id: "4",
-      description: loremIpsum,
-      label: "N304c",
-      title:
-        "Conducteur.trice accompagnateur.trice de personnes à mobilité réduite (CaPmr)",
-    },
-    {
-      id: "5",
-      description: loremIpsum,
-      label: "N304c",
-      title: "Employé.e familial polyvalent.e",
-    },
-    {
-      id: "6",
-      description: loremIpsum,
-      label: "N304c",
-      title: "Assistant.e de vie dépendance",
-    },
-    {
-      id: "7",
-      description: loremIpsum,
-      label: "N304c",
-      title: "Accompagnant.e en gérontologie",
-    },
-  ];
-
   const emptyCertificates: Certificate[] = [];
   const [certificates, setCertificates] = useState(emptyCertificates);
 
