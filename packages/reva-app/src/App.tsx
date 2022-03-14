@@ -36,7 +36,9 @@ function App() {
             {...certificate}
           />
         ))
-      : Array(5).fill(<CardSkeleton size={initialSize} />);
+      : [1, 2, 3, 4, 5].map((i) => (
+          <CardSkeleton key={`skeleton-${i}`} size={initialSize} />
+        ));
   }
 
   const resultsPage = (

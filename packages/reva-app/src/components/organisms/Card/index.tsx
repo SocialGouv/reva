@@ -1,5 +1,7 @@
+import { Capacitor } from "@capacitor/core";
+import { StatusBar } from "@capacitor/status-bar";
 import { AnimatePresence, motion, useMotionValue } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "../../atoms/Button";
 import { Add, Back } from "../../atoms/Icons";
@@ -40,6 +42,17 @@ export const Card = ({
 
   const zIndex = useMotionValue(isFullscreen ? 20 : 0);
   const transition = isReduced ? transitionOut : transitionIn;
+
+  useEffect(() => {
+    async function setStatusBarVisibility() {
+      if (isFullscreen) {
+        await StatusBar.hide();
+      } else {
+        await StatusBar.show();
+      }
+    }
+    Capacitor.isNativePlatform() && setStatusBarVisibility();
+  }, [isFullscreen]);
 
   const descriptionParagraph = (
     <motion.div
