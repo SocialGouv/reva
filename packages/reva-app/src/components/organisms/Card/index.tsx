@@ -2,7 +2,7 @@ import { AnimatePresence, motion, useMotionValue } from "framer-motion";
 import { useState } from "react";
 
 import { Button } from "../../atoms/Button";
-import { Add } from "../../atoms/Icons";
+import { Add, Back } from "../../atoms/Icons";
 import { TextResult } from "../../atoms/TextResult";
 import certificateImg from "./certificate.png";
 import {
@@ -127,7 +127,9 @@ export const Card = ({
               onClick={() => setSize(initialSize)}
               className="w-full text-right text-lg mt-8 p-4"
             >
-              ←
+              <div className="w-[22px]">
+                <Back />
+              </div>
             </button>
           </motion.div>
         )}
