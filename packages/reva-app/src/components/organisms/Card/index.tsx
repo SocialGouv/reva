@@ -116,7 +116,7 @@ export const Card = ({
           style={{
             top: isFullscreen ? "auto" : "15px",
             bottom: isFullscreen ? "145px" : "auto",
-            width: isSmall ? "120px" : isMedium ? "240px" : "174px",
+            width: isSmall ? "115px" : isMedium ? "240px" : "174px",
           }}
           src={certificateImg}
         />
