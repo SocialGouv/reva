@@ -84,16 +84,55 @@ function App() {
       label: "17163",
       title: "Conducteur-e accompagnateur-e de personnes à mobilité réduite",
     },
+    {
+      id: "12",
+      description: loremIpsum,
+      label: "35993",
+      title: "Responsable coordonnateur service au domicile",
+    },
+    {
+      id: "13",
+      description: loremIpsum,
+      label: "34691",
+      title: "Assistant maternel / garde d'enfants",
+    },
+    {
+      id: "14",
+      description: loremIpsum,
+      label: "4500",
+      title: "Assistant familial",
+    },
+    {
+      id: "15",
+      description: loremIpsum,
+      label: "35832",
+      title: "Auxiliaire de puériculture",
+    },
+    {
+      id: "16",
+      description: loremIpsum,
+      label: "4503",
+      title: "Technicien de l'intervention sociale et familiale",
+    },
+    {
+      id: "17",
+      description: loremIpsum,
+      label: "2514",
+      title:
+        "Certificat d'aptitude aux fonctions d'encadrement et de responsable d'unité d'intervention sociale",
+    },
   ];
 
   const emptyCertificates: Certificate[] = [];
-  const [certificates, setCertificates] = useState(emptyCertificates);
+  /**const [certificates, setCertificates] = useState(emptyCertificates);
 
   useEffect(() => {
     setTimeout(() => {
       setCertificates(certificateFixtures);
     }, 1000);
-  });
+  });*/
+
+  const certificates = certificateFixtures;
 
   const initialPage = {
     type: "results",
