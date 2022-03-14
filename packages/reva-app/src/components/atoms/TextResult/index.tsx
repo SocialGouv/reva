@@ -1,24 +1,31 @@
 type Color = "dark" | "light";
+type Size = "small" | "large";
 
 interface TextResult {
   color?: Color;
   onClick?: () => void;
   key?: string;
+  size?: string;
   title: string;
 }
 
 export const TextResult = ({
   color = "dark",
+  size = "small",
   title,
   onClick,
   ...props
 }: TextResult) => {
   const colorClass =
     color === "dark" ? "font-bold text-slate-900" : "font-medium text-white";
+
+  const sizeClass = size === "small" ? "text-2xl" : "text-3xl";
+
   return (
     <div
       onClick={onClick}
-      className={`cursor-pointer text-2xl leading-tight ${colorClass}`}
+      className={`cursor-pointer rounded ${colorClass} ${sizeClass}`}
+      style={{ lineHeight: "1.1" }}
       {...props}
     >
       {title}

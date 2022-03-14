@@ -54,28 +54,64 @@ export const Card = ({
     Capacitor.isNativePlatform() && setStatusBarVisibility();
   }, [isFullscreen]);
 
-  const descriptionParagraph = (
-    <motion.div
-      className={`w-full" ${
-        isFullscreen ? "pr-16" : isMedium ? "mt-[250px]" : "mt-[156px]"
-      }`}
-      layout="position"
+  const decorativeImg = (
+    <motion.img
+      layout
       transition={transition}
+      className="pointer-events-none"
+      style={
+        isFullscreen
+          ? {
+              position: "relative",
+              marginLeft: "-70px",
+              width: "174px",
+            }
+          : {
+              position: "absolute",
+              left: "-43px",
+              top: "12px",
+              width: isSmall ? "106px" : "240px",
+            }
+      }
+      src={certificateImg}
+    />
+  );
+
+  const descriptionParagraph = (
+    <div
+      style={
+        isFullscreen
+          ? {
+              overflowX: "hidden",
+              overflowY: "auto",
+              height: "calc(100vh - 216px)",
+            }
+          : {}
+      }
     >
-      <div className="flex items-end h-20">
-        <TextResult title={title} color="light" />
-      </div>
-      <div
-        className={`transition-opacity mt-1 mb-4 font-bold ${
-          isReduced && "opacity-0"
+      <motion.div
+        className={`w-full px-6 ${
+          isFullscreen ? "mb-4 pr-20" : isMedium ? "mt-[250px]" : "mt-[168px]"
         }`}
+        layout="position"
+        transition={transition}
       >
-        {label}
-      </div>
-      <p className="overflow-auto text-slate-500 overflow-auto text-sm leading-relaxed">
-        {description}
-      </p>
-    </motion.div>
+        <div className={isSmall ? "flex items-end h-20" : ""}>
+          <TextResult title={title} color="light" />
+        </div>
+        <div
+          className={`transition-opacity mt-1 mb-4 font-bold ${
+            isReduced && "opacity-0"
+          }`}
+        >
+          {label}
+        </div>
+        <p className="overflow-auto text-slate-500 overflow-auto text-sm leading-relaxed">
+          {description}
+        </p>
+      </motion.div>
+      {decorativeImg}
+    </div>
   );
 
   const candidateButton = (
@@ -99,7 +135,7 @@ export const Card = ({
       <motion.div
         initial={isFullscreen ? rounded2xl : false}
         animate={isFullscreen ? roundedNone : rounded2xl}
-        className={`cursor-pointer overflow-hidden flex flex-col items-end pt-4 px-6 shadow-2xl bg-slate-900 text-white ${
+        className={`cursor-pointer overflow-hidden shadow-2xl bg-slate-900 text-white ${
           isFullscreen ? "rounded-none" : "rounded-3xl"
         }`}
         layout
@@ -122,23 +158,12 @@ export const Card = ({
         }}
         {...props}
       >
-        <motion.img
-          layout
-          transition={transition}
-          className="absolute left-[-43px]"
-          style={{
-            top: isFullscreen ? "auto" : "15px",
-            bottom: isFullscreen ? "145px" : "auto",
-            width: isSmall ? "115px" : isMedium ? "240px" : "174px",
-          }}
-          src={certificateImg}
-        />
         {isFullscreen && (
           <motion.div transition={transition} layout="position">
             <button
               type="button"
               onClick={() => setSize(initialSize)}
-              className="w-full text-right text-lg mt-8 p-4"
+              className="flex items-center justify-end w-full pt-6 px-8 h-24"
             >
               <div className="w-[22px]">
                 <Back />
@@ -163,6 +188,7 @@ export const Card = ({
         </motion.div>
 
         {descriptionParagraph}
+
         <div
           className={`absolute bottom-0 ${
             isReduced ? "inset-x-[-32px]" : "inset-x-0"
