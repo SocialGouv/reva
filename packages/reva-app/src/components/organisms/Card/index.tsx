@@ -1,11 +1,9 @@
-import { Capacitor } from "@capacitor/core";
-import { StatusBar } from "@capacitor/status-bar";
-import { AnimatePresence, motion, useMotionValue } from "framer-motion";
-import { useEffect, useState } from "react";
+import { motion, useMotionValue } from "framer-motion";
+import { useState } from "react";
 
-import { Button } from "../../atoms/Button";
-import { Add, Back } from "../../atoms/Icons";
+import { Add } from "../../atoms/Icons";
 import { TextResult } from "../../atoms/TextResult";
+import { BackButton } from "../../molecules/BackButton";
 import certificateImg from "./certificate.png";
 import {
   heightConfig,
@@ -21,6 +19,8 @@ interface Card {
   id: string;
   description: string;
   label: string;
+  onClose?: () => void;
+  onOpen?: () => void;
   initialSize?: CardSize;
   title: string;
 }
@@ -29,6 +29,8 @@ export const Card = ({
   description,
   id,
   label,
+  onClose = () => {},
+  onOpen = () => {},
   title,
   initialSize = "small",
   ...props
@@ -42,17 +44,6 @@ export const Card = ({
 
   const zIndex = useMotionValue(isFullscreen ? 20 : 0);
   const transition = isReduced ? transitionOut : transitionIn;
-
-  useEffect(() => {
-    async function setStatusBarVisibility() {
-      if (isFullscreen) {
-        await StatusBar.hide();
-      } else {
-        await StatusBar.show();
-      }
-    }
-    Capacitor.isNativePlatform() && setStatusBarVisibility();
-  }, [isFullscreen]);
 
   const decorativeImg = (
     <motion.img
@@ -114,17 +105,6 @@ export const Card = ({
     </div>
   );
 
-  const candidateButton = (
-    <motion.div
-      className="absolute bottom-0 inset-x-0 p-8"
-      exit={{ bottom: "-100px" }}
-      transition={transition}
-      layout="position"
-    >
-      <Button label="Candidater" className="w-full" primary size="medium" />
-    </motion.div>
-  );
-
   return (
     <li
       style={{
@@ -143,7 +123,8 @@ export const Card = ({
         layoutDependency={size}
         onAnimationStart={() => isFullscreen && zIndex.set(20)}
         onAnimationComplete={() => isReduced && zIndex.set(0)}
-        onClick={() => (isReduced ? setSize("large") : {})}
+        onClick={() => (isReduced ? (setSize("large"), onOpen()) : {})}
+        whileTap={{ scale: isReduced ? 0.95 : 1 }}
         style={{
           zIndex,
           height: heightConfig[size],
@@ -160,15 +141,13 @@ export const Card = ({
       >
         {isFullscreen && (
           <motion.div transition={transition} layout="position">
-            <button
-              type="button"
-              onClick={() => setSize(initialSize)}
-              className="flex items-center justify-end w-full pt-6 px-8 h-24"
-            >
-              <div className="w-[22px]">
-                <Back />
-              </div>
-            </button>
+            <BackButton
+              color="light"
+              onClick={() => {
+                setSize(initialSize);
+                onClose();
+              }}
+            />
           </motion.div>
         )}
 
@@ -188,14 +167,6 @@ export const Card = ({
         </motion.div>
 
         {descriptionParagraph}
-
-        <div
-          className={`absolute bottom-0 ${
-            isReduced ? "inset-x-[-32px]" : "inset-x-0"
-          }`}
-        >
-          <AnimatePresence>{isFullscreen && candidateButton}</AnimatePresence>
-        </div>
       </motion.div>
     </li>
   );

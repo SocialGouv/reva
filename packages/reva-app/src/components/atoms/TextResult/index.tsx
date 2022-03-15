@@ -5,7 +5,7 @@ interface TextResult {
   color?: Color;
   onClick?: () => void;
   key?: string;
-  size?: string;
+  size?: Size;
   title: string;
 }
 
