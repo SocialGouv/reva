@@ -19,6 +19,7 @@ interface Card {
   id: string;
   description: string;
   label: string;
+  isOpen?: boolean;
   onClose?: () => void;
   onOpen?: () => void;
   initialSize?: CardSize;
@@ -29,13 +30,14 @@ export const Card = ({
   description,
   id,
   label,
+  isOpen = false,
   onClose = () => {},
   onOpen = () => {},
   title,
   initialSize = "small",
   ...props
 }: Card) => {
-  const [size, setSize] = useState(initialSize);
+  const [size, setSize] = useState(isOpen ? "large" : initialSize);
 
   const isSmall = size === "small";
   const isMedium = size === "medium";
@@ -144,7 +146,7 @@ export const Card = ({
             <BackButton
               color="light"
               onClick={() => {
-                setSize(initialSize);
+                setSize("small");
                 onClose();
               }}
             />

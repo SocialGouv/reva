@@ -11,19 +11,26 @@ import { loremIpsumShort } from "./components/atoms/LoremIpsum";
 import { TextResult } from "./components/atoms/TextResult";
 import { BackButton } from "./components/molecules/BackButton";
 import { Card, CardSize } from "./components/organisms/Card";
-import { transitionIn, transitionOut } from "./components/organisms/Card/view";
+import { transitionIn } from "./components/organisms/Card/view";
 import { CardSkeleton } from "./components/organisms/CardSkeleton";
 import { Results } from "./components/organisms/Results";
 import { certificateFixtures } from "./fixtures/certificates";
 import { Certificate } from "./interface";
 
 type Page = "show-results" | "load-submission";
+type Direction = "previous" | "next";
+type Navigation = { direction: Direction; page: Page };
 
 function App() {
   const emptyCertificates: Certificate[] = [];
   const [certificates, setCertificates] = useState(emptyCertificates);
   const initialPage = "show-results";
-  const [page, setPage] = useState<Page>(initialPage);
+  const initialNavigation: Navigation = {
+    direction: "next",
+    page: initialPage,
+  };
+  const [navigation, setNavigation] = useState<Navigation>(initialNavigation);
+
   const [maybeCurrentCertificate, setCurrentCertificate] =
     useState<Maybe<string>>(Nothing);
 
@@ -35,20 +42,26 @@ function App() {
 
   useEffect(() => {
     async function setStatusBarVisibility() {
-      if (page == "show-results" && maybeCurrentCertificate.isJust()) {
+      if (
+        navigation.page == "show-results" &&
+        maybeCurrentCertificate.isJust()
+      ) {
         await StatusBar.hide();
       } else {
         await StatusBar.show();
       }
     }
     Capacitor.isNativePlatform() && setStatusBarVisibility();
-  }, [page, maybeCurrentCertificate]);
+  }, [navigation.page, maybeCurrentCertificate]);
 
   function certificateResults(initialSize: CardSize) {
     return certificates.length
       ? certificates.map((certificate) => (
           <Card
             initialSize={initialSize}
+            isOpen={maybeCurrentCertificate
+              .map((id) => id === certificate.id)
+              .orDefault(false)}
             onOpen={() => setCurrentCertificate(Just(certificate.id))}
             onClose={() => setCurrentCertificate(Nothing)}
             key={certificate.id}
@@ -60,9 +73,21 @@ function App() {
         ));
   }
 
+  const visible = { y: 0, scale: 1, opacity: 1 };
   const buttonVariants = {
-    hidden: { y: 120, scale: 0.98, opacity: 1 },
-    visible: { y: 0, scale: 1, opacity: 1 },
+    hidden: (page: Page) =>
+      page === "show-results" ? { y: 120, scale: 0.98, opacity: 1 } : visible,
+    visible,
+  };
+
+  const pageVariants = {
+    enter: (direction: Direction) => ({
+      x: direction === "previous" ? -100 : "100%",
+    }),
+    visible: { x: 0 },
+    exit: (direction: Direction) => ({
+      x: direction === "previous" ? "100%" : -100,
+    }),
   };
 
   function candidateButton(maybeCurrentCertificate: Maybe<string>) {
@@ -70,8 +95,9 @@ function App() {
     return (
       <motion.div
         className="absolute bottom-0 z-50 inset-x-0 p-8 bg-slate-900"
+        custom={navigation.page}
         variants={buttonVariants}
-        initial="hidden"
+        initial={false}
         exit="hidden"
         transition={
           isVisible
@@ -82,7 +108,9 @@ function App() {
         layout="position"
       >
         <Button
-          onClick={() => setPage("load-submission")}
+          onClick={() =>
+            setNavigation({ page: "load-submission", direction: "next" })
+          }
           label="Candidater"
           className="w-full"
           primary
@@ -92,21 +120,34 @@ function App() {
     );
   }
 
+  const pageTransition = { ease: "circOut", duration: 0.3 };
+
   const resultsPage = (
-    <>
-      <div className="px-8 py-16 pb-8 lg:pt-8 bg-white">
-        <Header label="Bienvenue" />
-        <p className="mt-10 pr-6 text-slate-600 leading-loose text-lg">
-          {loremIpsumShort}
-        </p>
-      </div>
-      <div className="px-8">
-        <Results title="Diplômes" listClassName="mt-4 space-y-8">
-          {certificateResults("small")}
-        </Results>
-        {candidateButton(maybeCurrentCertificate)}
-      </div>
-    </>
+    <motion.div
+      key="show-results"
+      custom={navigation.direction}
+      variants={pageVariants}
+      initial="enter"
+      animate="visible"
+      exit="exit"
+      transition={pageTransition}
+      className="absolute z-40 inset-0 bg-white"
+    >
+      <motion.div layoutScroll className="h-full overflow-auto">
+        <div className="px-8 py-16 pb-8 lg:pt-8 bg-white">
+          <Header label="Bienvenue" />
+          <p className="mt-10 pr-6 text-slate-600 leading-loose text-lg">
+            {loremIpsumShort}
+          </p>
+        </div>
+        <div className="px-8">
+          <Results title="Diplômes" listClassName="mt-4 space-y-8">
+            {certificateResults("small")}
+          </Results>
+        </div>
+      </motion.div>
+      {candidateButton(maybeCurrentCertificate)}
+    </motion.div>
   );
 
   const certificatesPage = (
@@ -115,7 +156,9 @@ function App() {
         <TextResult title="Product Designer" />
         <button
           type="button"
-          onClick={() => setPage(initialPage)}
+          onClick={() =>
+            setNavigation({ page: initialPage, direction: "previous" })
+          }
           className="text-right text-lg p-6"
         >
           ←
@@ -128,11 +171,21 @@ function App() {
   );
 
   const loadingSubmissionPage = (
-    <div className="flex flex-col text-center bg-gray-100 h-full pt-8">
+    <motion.div
+      key="load-submission"
+      custom={navigation.direction}
+      variants={pageVariants}
+      initial="enter"
+      animate="visible"
+      exit="exit"
+      transition={pageTransition}
+      layoutScroll
+      className="absolute z-50 inset-0 flex flex-col text-center bg-gray-100 h-full pt-8"
+    >
       <BackButton
-        onClick={() => (
-          setCurrentCertificate(Nothing), setPage("show-results")
-        )}
+        onClick={() =>
+          setNavigation({ page: "show-results", direction: "previous" })
+        }
       />
       <div className="grow flex flex-col items-center justify-center">
         <Header label="Création de votre candidature" size="small" />
@@ -140,7 +193,7 @@ function App() {
           <Loader />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 
   return (
@@ -151,13 +204,13 @@ function App() {
         <></>
       )}
       <div className="relative flex flex-col max-w-lg w-full h-screen bg-white overflow-hidden">
-        <motion.div layoutScroll className="grow overflow-auto">
-          {page === "show-results"
+        <AnimatePresence custom={navigation.direction} initial={false}>
+          {navigation.page === "show-results"
             ? resultsPage
-            : page === "load-submission"
+            : navigation.page === "load-submission"
             ? loadingSubmissionPage
             : certificatesPage}
-        </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );
