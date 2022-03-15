@@ -1,4 +1,8 @@
-import { loremIpsum } from "../components/atoms/LoremIpsum";
+import {
+  loremIpsum,
+  loremIpsumLong,
+  loremIpsumVeryLong,
+} from "../components/atoms/LoremIpsum";
 import { Certificate } from "../interface";
 
 export const certificateFixtures: Certificate[] = [
@@ -82,13 +86,13 @@ export const certificateFixtures: Certificate[] = [
   },
   {
     id: "14",
-    description: loremIpsum,
+    description: loremIpsumLong,
     label: "4503",
     title: "Technicien de l'intervention sociale et familiale",
   },
   {
     id: "15",
-    description: loremIpsum,
+    description: loremIpsumVeryLong,
     label: "2514",
     title:
       "Certificat d'aptitude aux fonctions d'encadrement et de responsable d'unité d'intervention sociale",
