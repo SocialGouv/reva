@@ -1,6 +1,6 @@
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { loremIpsum } from "../../atoms/LoremIpsum";
+import { ComponentMeta, ComponentStory } from "@storybook/react";
 
+import { loremIpsum } from "../../atoms/LoremIpsum";
 import { Card } from "./index";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
@@ -16,9 +16,9 @@ export const Small = Template.bind({});
 
 Small.args = {
   id: "1",
-  description: loremIpsum,
   label: "N104c",
   title: "Licence Professionnelle Métiers du design",
+  summary: loremIpsum,
 };
 
 export const Medium = Template.bind({});

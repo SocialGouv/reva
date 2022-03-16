@@ -8,11 +8,14 @@ module.exports = {
       animation: {
         "spin-slow": "spin 3s linear infinite",
       },
-      colors: { blue: { 600: "#0078f3" }, slate: { 900: "#21203d" } },
+      colors: {
+        blue: { 600: "#0078f3" },
+        slate: { 400: "#908eac", 900: "#19182f" },
+      },
       fontFamily: {
         sans: ["Marianne", ...defaultTheme.fontFamily.sans],
       },
     },
   },
-  plugins: [require("@tailwindcss/forms")],
+  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],
 };

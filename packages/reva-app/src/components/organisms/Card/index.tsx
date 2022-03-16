@@ -17,22 +17,25 @@ export type CardSize = "small" | "medium" | "large";
 
 interface Card {
   id: string;
-  description: string;
+  summary: string;
   label: string;
   isOpen?: boolean;
   onClose?: () => void;
+  onLearnMore?: () => void;
   onOpen?: () => void;
   initialSize?: CardSize;
   title: string;
 }
 
 export const Card = ({
-  description,
+  summary,
   id,
   label,
   isOpen = false,
   onClose = () => {},
+  onLearnMore = () => {},
   onOpen = () => {},
+
   title,
   initialSize = "small",
   ...props
@@ -70,7 +73,7 @@ export const Card = ({
     />
   );
 
-  const descriptionParagraph = (
+  const summaryParagraph = (
     <div
       style={
         isFullscreen
@@ -99,9 +102,12 @@ export const Card = ({
         >
           {label}
         </div>
-        <p className="overflow-auto text-slate-500 overflow-auto text-sm leading-relaxed">
-          {description}
+        <p className="overflow-auto text-slate-400 overflow-auto text-base leading-normal">
+          {summary}
         </p>
+        <a className="block text-blue-500 py-4 underline" onClick={onLearnMore}>
+          Lire tous les détails
+        </a>
       </motion.div>
       {decorativeImg}
     </div>
@@ -142,7 +148,11 @@ export const Card = ({
         {...props}
       >
         {isFullscreen && (
-          <motion.div transition={transition} layout="position">
+          <motion.div
+            className="mt-6"
+            transition={transition}
+            layout="position"
+          >
             <BackButton
               color="light"
               onClick={() => {
@@ -168,7 +178,7 @@ export const Card = ({
           </div>
         </motion.div>
 
-        {descriptionParagraph}
+        {summaryParagraph}
       </motion.div>
     </li>
   );

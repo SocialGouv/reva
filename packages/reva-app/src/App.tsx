@@ -1,6 +1,7 @@
 import { Capacitor } from "@capacitor/core";
 import { StatusBar } from "@capacitor/status-bar";
 import { AnimatePresence, motion } from "framer-motion";
+import parse from "html-react-parser";
 import { Just, Maybe, Nothing } from "purify-ts/Maybe";
 import { useEffect, useState } from "react";
 
@@ -8,7 +9,6 @@ import { Button } from "./components/atoms/Button";
 import { Header } from "./components/atoms/Header";
 import { Loader } from "./components/atoms/Icons";
 import { loremIpsumShort } from "./components/atoms/LoremIpsum";
-import { TextResult } from "./components/atoms/TextResult";
 import { BackButton } from "./components/molecules/BackButton";
 import { Card, CardSize } from "./components/organisms/Card";
 import { transitionIn } from "./components/organisms/Card/view";
@@ -16,7 +16,7 @@ import { CardSkeleton } from "./components/organisms/CardSkeleton";
 import { Results } from "./components/organisms/Results";
 import { buttonVariants, pageTransition, pageVariants } from "./config";
 import { certificateFixtures } from "./fixtures/certificates";
-import { Certificate, Navigation } from "./interface";
+import { Certificate, Navigation, Page } from "./interface";
 
 function App() {
   const emptyCertificates: Certificate[] = [];
@@ -27,6 +27,14 @@ function App() {
     page: initialPage,
   };
   const [navigation, setNavigation] = useState<Navigation>(initialNavigation);
+
+  function setNavigationNext(nextPage: Page) {
+    setNavigation({ direction: "next", page: nextPage });
+  }
+
+  function setNavigationPrevious(previousPage: Page) {
+    setNavigation({ direction: "previous", page: previousPage });
+  }
 
   const [maybeCurrentCertificate, setCurrentCertificate] =
     useState<Maybe<Certificate>>(Nothing);
@@ -40,7 +48,9 @@ function App() {
   useEffect(() => {
     async function setStatusBarVisibility() {
       if (
-        navigation.page == "show-results" &&
+        ["show-results", "show-certificate-details"].includes(
+          navigation.page
+        ) &&
         maybeCurrentCertificate.isJust()
       ) {
         await StatusBar.hide();
@@ -62,6 +72,7 @@ function App() {
               )
               .orDefault(false)}
             onOpen={() => setCurrentCertificate(Just(certificate))}
+            onLearnMore={() => setNavigationNext("show-certificate-details")}
             onClose={() => setCurrentCertificate(Nothing)}
             key={certificate.id}
             {...certificate}
@@ -90,9 +101,7 @@ function App() {
         layout="position"
       >
         <Button
-          onClick={() =>
-            setNavigation({ page: "load-submission", direction: "next" })
-          }
+          onClick={() => setNavigationNext("load-submission")}
           label="Candidater"
           className="w-full"
           primary
@@ -101,6 +110,8 @@ function App() {
       </motion.div>
     );
   }
+
+  /** Pages */
 
   const resultsPage = (
     <motion.div
@@ -130,24 +141,38 @@ function App() {
     </motion.div>
   );
 
-  const certificatesPage = (
-    <div className="px-8">
-      <div className="mt-4 flex items-center justify-between">
-        <TextResult title="Product Designer" />
-        <button
-          type="button"
-          onClick={() =>
-            setNavigation({ page: initialPage, direction: "previous" })
-          }
-          className="text-right text-lg p-6"
-        >
-          ←
-        </button>
+  const certificateDetailsPage = (
+    <motion.div
+      key="show-certificate-details"
+      custom={navigation.direction}
+      variants={pageVariants}
+      initial="enter"
+      animate="visible"
+      exit="exit"
+      transition={pageTransition}
+      layoutScroll
+      className="absolute flex flex-col z-50 inset-0 bg-slate-900 h-full pt-6"
+    >
+      <BackButton
+        color="light"
+        onClick={() => setNavigationPrevious("show-results")}
+      />
+      <div className="grow overflow-y-scroll">
+        <div className="prose prose-invert prose-h2:my-1 mt-8 text-slate-400 text-base leading-normal px-8 pb-8">
+          {maybeCurrentCertificate.mapOrDefault(
+            (certificate) => parse(certificate.description),
+            <></>
+          )}
+          <Button
+            onClick={() => setNavigationNext("load-submission")}
+            label="Candidater"
+            className="mt-8 w-full"
+            primary
+            size="medium"
+          />
+        </div>
       </div>
-      <Results title="Diplômes" listClassName="mt-4 space-y-8">
-        {certificateResults("medium")}
-      </Results>
-    </div>
+    </motion.div>
   );
 
   const loadSubmissionPage = (
@@ -160,13 +185,9 @@ function App() {
       exit="exit"
       transition={pageTransition}
       layoutScroll
-      className="absolute z-50 inset-0 flex flex-col text-center bg-gray-100 h-full pt-8"
+      className="absolute z-50 inset-0 flex flex-col text-center bg-gray-100 h-full pt-6"
     >
-      <BackButton
-        onClick={() =>
-          setNavigation({ page: "show-results", direction: "previous" })
-        }
-      />
+      <BackButton onClick={() => setNavigationPrevious("show-results")} />
       <div className="grow flex flex-col items-center justify-center">
         <Header label="Création de votre candidature" size="small" />
         <div className="mt-8 w-8">
@@ -179,7 +200,11 @@ function App() {
   return (
     <div className="App relative flex flex-col items-center justify-center h-screen bg-gray-400">
       {Capacitor.isNativePlatform() ? (
-        <div className="absolute z-10 h-12 top-0 inset-x-0 backdrop-blur-md bg-white/50"></div>
+        <div
+          className={`transition-opacity duration-200 ${
+            maybeCurrentCertificate.isJust() ? "opacity-0" : "opacity-1"
+          } absolute z-50 h-12 top-0 inset-x-0 backdrop-blur-md bg-white/50`}
+        ></div>
       ) : (
         <></>
       )}
@@ -189,7 +214,7 @@ function App() {
             ? resultsPage
             : navigation.page === "load-submission"
             ? loadSubmissionPage
-            : certificatesPage}
+            : certificateDetailsPage}
         </AnimatePresence>
       </div>
     </div>
