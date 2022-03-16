@@ -48,7 +48,9 @@ function App() {
   useEffect(() => {
     async function setStatusBarVisibility() {
       if (
-        navigation.page == "show-results" &&
+        ["show-results", "show-certificate-details"].includes(
+          navigation.page
+        ) &&
         maybeCurrentCertificate.isJust()
       ) {
         await StatusBar.hide();
@@ -156,11 +158,18 @@ function App() {
         onClick={() => setNavigationPrevious("show-results")}
       />
       <div className="grow overflow-y-scroll">
-        <div className="prose prose-invert prose-h2:my-1 mt-8 text-slate-400 text-base leading-normal px-8 pb-12">
+        <div className="prose prose-invert prose-h2:my-1 mt-8 text-slate-400 text-base leading-normal px-8 pb-8">
           {maybeCurrentCertificate.mapOrDefault(
             (certificate) => parse(certificate.description),
             <></>
           )}
+          <Button
+            onClick={() => setNavigationNext("load-submission")}
+            label="Candidater"
+            className="mt-8 w-full"
+            primary
+            size="medium"
+          />
         </div>
       </div>
     </motion.div>
