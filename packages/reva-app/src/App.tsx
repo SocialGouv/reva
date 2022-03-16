@@ -200,7 +200,11 @@ function App() {
   return (
     <div className="App relative flex flex-col items-center justify-center h-screen bg-gray-400">
       {Capacitor.isNativePlatform() ? (
-        <div className="absolute z-10 h-12 top-0 inset-x-0 backdrop-blur-md bg-white/50"></div>
+        <div
+          className={`transition-opacity duration-200 ${
+            maybeCurrentCertificate.isJust() ? "opacity-0" : "opacity-1"
+          } absolute z-50 h-12 top-0 inset-x-0 backdrop-blur-md bg-white/50`}
+        ></div>
       ) : (
         <></>
       )}
