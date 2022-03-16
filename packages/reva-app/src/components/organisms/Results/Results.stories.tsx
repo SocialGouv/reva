@@ -33,13 +33,13 @@ const BlockTemplate: ComponentStory<typeof Results> = (args) => (
     {[
       {
         id: "1",
-        description: loremIpsum,
+        summary: loremIpsum,
         label: "N104c",
         title: "Licence Professionnelle Métiers du design",
       },
       {
         id: "2",
-        description: loremIpsum,
+        summary: loremIpsum,
         label: "N304c",
         title: "MASTER Ergonomie",
       },
