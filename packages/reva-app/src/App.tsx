@@ -14,7 +14,7 @@ import { Card, CardSize } from "./components/organisms/Card";
 import { transitionIn } from "./components/organisms/Card/view";
 import { CardSkeleton } from "./components/organisms/CardSkeleton";
 import { Results } from "./components/organisms/Results";
-import { buttonVariants, pageVariants } from "./config";
+import { buttonVariants, pageTransition, pageVariants } from "./config";
 import { certificateFixtures } from "./fixtures/certificates";
 import { Certificate, Navigation } from "./interface";
 
@@ -29,13 +29,13 @@ function App() {
   const [navigation, setNavigation] = useState<Navigation>(initialNavigation);
 
   const [maybeCurrentCertificate, setCurrentCertificate] =
-    useState<Maybe<string>>(Nothing);
+    useState<Maybe<Certificate>>(Nothing);
 
   useEffect(() => {
     setTimeout(() => {
       setCertificates(certificateFixtures);
     }, 1000);
-  });
+  }, []);
 
   useEffect(() => {
     async function setStatusBarVisibility() {
@@ -57,9 +57,11 @@ function App() {
           <Card
             initialSize={initialSize}
             isOpen={maybeCurrentCertificate
-              .map((id) => id === certificate.id)
+              .map(
+                (currentCertificate) => currentCertificate.id === certificate.id
+              )
               .orDefault(false)}
-            onOpen={() => setCurrentCertificate(Just(certificate.id))}
+            onOpen={() => setCurrentCertificate(Just(certificate))}
             onClose={() => setCurrentCertificate(Nothing)}
             key={certificate.id}
             {...certificate}
@@ -70,7 +72,7 @@ function App() {
         ));
   }
 
-  function candidateButton(maybeCurrentCertificate: Maybe<string>) {
+  function candidateButton(maybeCurrentCertificate: Maybe<Certificate>) {
     const isVisible = maybeCurrentCertificate.isJust();
     return (
       <motion.div
@@ -99,8 +101,6 @@ function App() {
       </motion.div>
     );
   }
-
-  const pageTransition = { ease: "circOut", duration: 0.3 };
 
   const resultsPage = (
     <motion.div
@@ -150,7 +150,7 @@ function App() {
     </div>
   );
 
-  const loadingSubmissionPage = (
+  const loadSubmissionPage = (
     <motion.div
       key="load-submission"
       custom={navigation.direction}
@@ -188,7 +188,7 @@ function App() {
           {navigation.page === "show-results"
             ? resultsPage
             : navigation.page === "load-submission"
-            ? loadingSubmissionPage
+            ? loadSubmissionPage
             : certificatesPage}
         </AnimatePresence>
       </div>
