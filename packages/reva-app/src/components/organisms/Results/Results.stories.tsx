@@ -1,9 +1,9 @@
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { Card } from "../../organisms/Card";
-import { TextResult } from "../../atoms/TextResult";
+import { ComponentMeta, ComponentStory } from "@storybook/react";
 
-import { Results } from "./index";
 import { loremIpsum } from "../../atoms/LoremIpsum";
+import { TextResult } from "../../atoms/TextResult";
+import { Card } from "../../organisms/Card";
+import { Results } from "./index";
 
 export default {
   title: "Organisms/Results",

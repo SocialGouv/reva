@@ -1,5 +1,5 @@
+import { ComponentMeta, ComponentStory } from "@storybook/react";
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import { Header } from "./index";
 
@@ -22,4 +22,10 @@ export const HeaderLight = Template.bind({});
 HeaderLight.args = {
   color: "light",
   label: "Header light",
+};
+
+export const HeaderDarkSmall = Template.bind({});
+HeaderDarkSmall.args = {
+  label: "Header dark small",
+  size: "small",
 };
