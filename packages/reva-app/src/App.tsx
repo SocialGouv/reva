@@ -14,12 +14,9 @@ import { Card, CardSize } from "./components/organisms/Card";
 import { transitionIn } from "./components/organisms/Card/view";
 import { CardSkeleton } from "./components/organisms/CardSkeleton";
 import { Results } from "./components/organisms/Results";
+import { buttonVariants, pageVariants } from "./config";
 import { certificateFixtures } from "./fixtures/certificates";
-import { Certificate } from "./interface";
-
-type Page = "show-results" | "load-submission";
-type Direction = "previous" | "next";
-type Navigation = { direction: Direction; page: Page };
+import { Certificate, Navigation } from "./interface";
 
 function App() {
   const emptyCertificates: Certificate[] = [];
@@ -72,23 +69,6 @@ function App() {
           <CardSkeleton key={`skeleton-${i}`} size={initialSize} />
         ));
   }
-
-  const visible = { y: 0, scale: 1, opacity: 1 };
-  const buttonVariants = {
-    hidden: (page: Page) =>
-      page === "show-results" ? { y: 120, scale: 0.98, opacity: 1 } : visible,
-    visible,
-  };
-
-  const pageVariants = {
-    enter: (direction: Direction) => ({
-      x: direction === "previous" ? -100 : "100%",
-    }),
-    visible: { x: 0 },
-    exit: (direction: Direction) => ({
-      x: direction === "previous" ? "100%" : -100,
-    }),
-  };
 
   function candidateButton(maybeCurrentCertificate: Maybe<string>) {
     const isVisible = maybeCurrentCertificate.isJust();
