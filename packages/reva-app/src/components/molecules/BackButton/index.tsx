@@ -14,7 +14,7 @@ export const BackButton = ({ color = "dark", onClick }: BackButton) => {
     <button
       type="button"
       onClick={onClick}
-      className={`flex items-center justify-end w-full pt-6 px-8 h-24 ${colorClass}`}
+      className={`shrink-0 flex items-center justify-end w-full pt-6 px-8 h-24 ${colorClass}`}
     >
       <div className="w-[22px]">
         <Back />
