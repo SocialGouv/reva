@@ -14,7 +14,7 @@ const apm = require("elastic-apm-node").start({
   serverUrl: process.env.ES_APM_SERVER_URL || "http://localhost:8200",
 
   // Set the service environment
-  environment: process.env.NODE_ENV || "dev",
+  environment: process.env.APP_ENV || "dev",
 });
 
 import fastify from "fastify";
