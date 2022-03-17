@@ -1,7 +1,7 @@
 type Certification {
   id: ID!
   label: String!
-  description: String!
+  summary: String!
   acronym: String!
   level: Int!
   activities: String

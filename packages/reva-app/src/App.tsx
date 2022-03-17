@@ -1,3 +1,4 @@
+import { gql, useQuery } from "@apollo/client";
 import { Capacitor } from "@capacitor/core";
 import { StatusBar } from "@capacitor/status-bar";
 import { AnimatePresence, motion } from "framer-motion";
@@ -18,9 +19,23 @@ import { buttonVariants, pageTransition, pageVariants } from "./config";
 import { certificateFixtures } from "./fixtures/certificates";
 import { Certificate, Navigation, Page } from "./interface";
 
+const SEARCH_CERTIFICATIONS_AND_PROFESSIONS = gql`
+  query {
+    searchCertificationsAndProfessions(query: "") {
+      certifications {
+        id
+        label
+        summary
+        codeRncp
+      }
+    }
+  }
+`;
+
 function App() {
-  const emptyCertificates: Certificate[] = [];
-  const [certificates, setCertificates] = useState(emptyCertificates);
+  const { loading, error, data } = useQuery(
+    SEARCH_CERTIFICATIONS_AND_PROFESSIONS
+  );
   const initialPage = "show-results";
   const initialNavigation: Navigation = {
     direction: "next",
@@ -40,12 +55,6 @@ function App() {
     useState<Maybe<Certificate>>(Nothing);
 
   useEffect(() => {
-    setTimeout(() => {
-      setCertificates(certificateFixtures);
-    }, 1000);
-  }, []);
-
-  useEffect(() => {
     async function setStatusBarVisibility() {
       if (
         ["show-results", "show-certificate-details"].includes(
@@ -62,25 +71,31 @@ function App() {
   }, [navigation.page, maybeCurrentCertificate]);
 
   function certificateResults(initialSize: CardSize) {
-    return certificates.length
-      ? certificates.map((certificate) => (
-          <Card
-            initialSize={initialSize}
-            isOpen={maybeCurrentCertificate
-              .map(
-                (currentCertificate) => currentCertificate.id === certificate.id
-              )
-              .orDefault(false)}
-            onOpen={() => setCurrentCertificate(Just(certificate))}
-            onLearnMore={() => setNavigationNext("show-certificate-details")}
-            onClose={() => setCurrentCertificate(Nothing)}
-            key={certificate.id}
-            {...certificate}
-          />
-        ))
-      : [1, 2, 3, 4, 5].map((i) => (
+    return loading
+      ? [1, 2, 3, 4, 5].map((i) => (
           <CardSkeleton key={`skeleton-${i}`} size={initialSize} />
-        ));
+        ))
+      : data.searchCertificationsAndProfessions.certifications.map(
+          (certificate: any) => (
+            <Card
+              initialSize={initialSize}
+              isOpen={maybeCurrentCertificate
+                .map(
+                  (currentCertificate) =>
+                    currentCertificate.id === certificate.id
+                )
+                .orDefault(false)}
+              onOpen={() => setCurrentCertificate(Just(certificate))}
+              onLearnMore={() => setNavigationNext("show-certificate-details")}
+              onClose={() => setCurrentCertificate(Nothing)}
+              key={certificate.id}
+              id={certificate.id}
+              title={certificate.label}
+              label={certificate.codeRncp}
+              summary={certificate.summary}
+            />
+          )
+        );
   }
 
   function candidateButton(maybeCurrentCertificate: Maybe<Certificate>) {
@@ -160,7 +175,7 @@ function App() {
       <div className="grow overflow-y-scroll">
         <div className="prose prose-invert prose-h2:my-1 mt-8 text-slate-400 text-base leading-normal px-8 pb-8">
           {maybeCurrentCertificate.mapOrDefault(
-            (certificate) => parse(certificate.description),
+            (certificate) => parse(certificate.description || certificate.summary),
             <></>
           )}
           <Button

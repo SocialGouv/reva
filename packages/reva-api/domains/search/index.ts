@@ -1,7 +1,7 @@
 export interface Certification {
   id: string;
   label: string;
-  description: string | null;
+  summary: string | null;
   acronym: string | null;
   level: number;
   activities: string | null;

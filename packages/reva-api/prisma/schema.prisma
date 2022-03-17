@@ -17,7 +17,7 @@ model Certification {
   accessibleJobType String? @map("accessible_job_type")
   abilities   String?
   slug        String
-  description String?
+  summary String?
   isActive    Boolean   @default(true) @map("is_active")
   rncpId      String    @unique @map("rncp_id") @db.VarChar(255)
   romes       RomesOnCertifications[]

@@ -16,7 +16,7 @@ export const searchCertificationsByQuery = async ({
           certification_search.document, plainto_tsquery(unaccent(${query}))
         ) AS rank,
         certification.label,
-        certification.description,
+        certification.summary,
         certification.acronym,
         certification.level,
         certification.activities,
@@ -35,7 +35,7 @@ export const searchCertificationsByQuery = async ({
     return {
       id: certification.id,
       label: certification.label,
-      description: certification.description,
+      summary: certification.summary,
       acronym: certification.acronym,
       level: certification.level,
       activities: certification.activities,
