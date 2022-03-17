@@ -10,6 +10,12 @@ datasource db {
 model Certification {
   id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
   label       String    @db.VarChar(255)
+  acronym     String    @db.VarChar(255)
+  level       Int       
+  activities  String?
+  activityArea      String? @map("activity_area")
+  accessibleJobType String? @map("accessible_job_type")
+  abilities   String?
   slug        String
   description String?
   isActive    Boolean   @default(true) @map("is_active")

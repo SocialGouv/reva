@@ -2,6 +2,12 @@ type Certification {
   id: ID!
   label: String!
   description: String!
+  acronym: String!
+  level: Int!
+  activities: String
+  activityArea: String
+  accessibleJobType: String
+  abilities: String
   codeRncp: String!
 }
 

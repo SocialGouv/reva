@@ -15,7 +15,7 @@ import reportWebVitals from "./reportWebVitals";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
 const client = new ApolloClient({
-  uri: process.env.REACT_APP_API_GRAPHQL,
+  uri: process.env.REACT_APP_API_GRAPHQL || "http://localhost:8080/graphql",
   cache: new InMemoryCache(),
 });
 

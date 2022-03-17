@@ -1,145 +1,182 @@
 import { PrismaClient } from '@prisma/client';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as csv from 'fast-csv';
 const prisma = new PrismaClient();
 
+
+
 async function main() {
-  await prisma.certification.upsert({
-    where: { rncpId: '25467' },
-    update: {},
-    create: {
-      label: `Diplôme d'État d'accompagnant éducatif et social`,
-      slug: `de-diplome-d-etat-d-accompagnant-educatif-et-social`,
-      description: `Soul-delay lights semiotics jeans hacker apophenia otaku tank-traps shrine cyber-marketing voodoo god hotdog skyscraper Chiba. Shanty town hotdog physical weathered fetishism rebar cardboard order-flow render-farm. A.I. render-farm pistol dead fetishism fluidity advert grenade drone otaku tanto vehicle assault kanji. Marketing advert semiotics DIY narrative alcohol-ware dolphin nano-paranoid bridge silent beef noodles math-augmented reality.`,
-      rncpId: '25467',
-      isActive: true
-    }
+  const inserts = new Promise((resolve, reject) => {
+    let promiseChain = Promise.resolve();
+    fs.createReadStream(path.resolve(__dirname, 'data-seed.csv'))
+      .pipe(csv.parse({ headers: true }))
+      .on('error', error => console.error(error))
+      .on('data', row => promiseChain = promiseChain.then(async () => {
+        await prisma.certification.upsert({
+          where: { rncpId: row.rncp_id },
+          update: {},
+          create: {
+            label: row.label,
+            slug: row.slug,
+            description: ``,
+            acronym: row.acronym,
+            level: Number.parseInt(row.level, 10),
+            activities: row.activities,
+            abilities: row.abilities,
+            accessibleJobType: row.accessible_job_type,
+            activityArea: row.activity_area,
+            rncpId: row.rncp_id,
+            isActive: true,
+          }
+        });
+
+      }))
+      .on('end', (rowCount: number) => {
+        promiseChain.then(() => resolve('done'));
+        console.log(`Parsed ${rowCount} rows`);
+      });
   });
   
-  await prisma.certification.upsert({
-    where: { rncpId: '13905' },
-    update: {},
-    create: {
-      label: `Services aux personnes et aux territoires`,
-      slug: `bac-pro-services-aux-personnes-et-aux-territoires`,
-      description: `Soul-delay lights semiotics jeans hacker apophenia otaku tank-traps shrine cyber-marketing voodoo god hotdog skyscraper Chiba. Shanty town hotdog physical weathered fetishism rebar cardboard order-flow render-farm. A.I. render-farm pistol dead fetishism fluidity advert grenade drone otaku tanto vehicle assault kanji. Marketing advert semiotics DIY narrative alcohol-ware dolphin nano-paranoid bridge silent beef noodles math-augmented reality.`,
-      rncpId: '13905',
-      isActive: true
-    }
-  });
-  
-  await prisma.certification.upsert({
-    where: { rncpId: '32004' },
-    update: {},
-    create: {
-      label: `Technicien d'équipement d'aide à la personne`,
-      slug: `tp-technicien-d-equipement-d-aide-a-la-personne`,
-      description: `Soul-delay lights semiotics jeans hacker apophenia otaku tank-traps shrine cyber-marketing voodoo god hotdog skyscraper Chiba. Shanty town hotdog physical weathered fetishism rebar cardboard order-flow render-farm. A.I. render-farm pistol dead fetishism fluidity advert grenade drone otaku tanto vehicle assault kanji. Marketing advert semiotics DIY narrative alcohol-ware dolphin nano-paranoid bridge silent beef noodles math-augmented reality.`,
-      rncpId: '32004',
-      isActive: true
-    }
-  });
-  
-  await prisma.certification.upsert({
-    where: { rncpId: '34690' },
-    update: {},
-    create: {
-      label: `Assistant de vie dépendance`,
-      slug: `diplome-assistant-de-vie-dependance`,
-      description: `Soul-delay lights semiotics jeans hacker apophenia otaku tank-traps shrine cyber-marketing voodoo god hotdog skyscraper Chiba. Shanty town hotdog physical weathered fetishism rebar cardboard order-flow render-farm. A.I. render-farm pistol dead fetishism fluidity advert grenade drone otaku tanto vehicle assault kanji. Marketing advert semiotics DIY narrative alcohol-ware dolphin nano-paranoid bridge silent beef noodles math-augmented reality.`,
-      rncpId: '34690',
-      isActive: true
-    }
-  });
-  
-  await prisma.certification.upsert({
-    where: { rncpId: '34692' },
-    update: {},
-    create: {
-      label: `Employé familial`,
-      slug: `diplome-employe-familial`,
-      description: `Soul-delay lights semiotics jeans hacker apophenia otaku tank-traps shrine cyber-marketing voodoo god hotdog skyscraper Chiba. Shanty town hotdog physical weathered fetishism rebar cardboard order-flow render-farm. A.I. render-farm pistol dead fetishism fluidity advert grenade drone otaku tanto vehicle assault kanji. Marketing advert semiotics DIY narrative alcohol-ware dolphin nano-paranoid bridge silent beef noodles math-augmented reality.`,
-      rncpId: '34692',
-      isActive: true
-    }
-  });
-  
-  await prisma.certification.upsert({
-    where: { rncpId: '17163' },
-    update: {},
-    create: {
-      label: `Conducteur-e accompagnateur-e de personnes à mobilité réduite`,
-      slug: `diplome-conducteur-e-accompagnateur-e-de-personnes-a-mobilite-reduite`,
-      description: `Soul-delay lights semiotics jeans hacker apophenia otaku tank-traps shrine cyber-marketing voodoo god hotdog skyscraper Chiba. Shanty town hotdog physical weathered fetishism rebar cardboard order-flow render-farm. A.I. render-farm pistol dead fetishism fluidity advert grenade drone otaku tanto vehicle assault kanji. Marketing advert semiotics DIY narrative alcohol-ware dolphin nano-paranoid bridge silent beef noodles math-augmented reality.`,
-      rncpId: '17163',
-      isActive: true
-    }
-  });
-  
-  await prisma.certification.upsert({
-    where: { rncpId: '5983' },
-    update: {},
-    create: {
-      label: `Surveillant - visiteur de nuit en secteur social et médico-social`,
-      slug: `diplome-surveillant-visiteur-de-nuit-en-secteur-social-et-medico-social`,
-      description: `Soul-delay lights semiotics jeans hacker apophenia otaku tank-traps shrine cyber-marketing voodoo god hotdog skyscraper Chiba. Shanty town hotdog physical weathered fetishism rebar cardboard order-flow render-farm. A.I. render-farm pistol dead fetishism fluidity advert grenade drone otaku tanto vehicle assault kanji. Marketing advert semiotics DIY narrative alcohol-ware dolphin nano-paranoid bridge silent beef noodles math-augmented reality.`,
-      rncpId: '5983',
-      isActive: true
-    }
-  });
-  
-  await prisma.certification.upsert({
-    where: { rncpId: '35028' },
-    update: {},
-    create: {
-      label: `Agent de service médico-social`,
-      slug: `tp-agent-de-service-medico-social`,
-      description: `Soul-delay lights semiotics jeans hacker apophenia otaku tank-traps shrine cyber-marketing voodoo god hotdog skyscraper Chiba. Shanty town hotdog physical weathered fetishism rebar cardboard order-flow render-farm. A.I. render-farm pistol dead fetishism fluidity advert grenade drone otaku tanto vehicle assault kanji. Marketing advert semiotics DIY narrative alcohol-ware dolphin nano-paranoid bridge silent beef noodles math-augmented reality.`,
-      rncpId: '35028',
-      isActive: true
-    }
-  });
-  
-  await prisma.certification.upsert({
-    where: { rncpId: '16197' },
-    update: {},
-    create: {
-      label: `Responsable de secteur - services à la personne`,
-      slug: `diplome-responsable-de-secteur-services-a-la-personne`,
-      description: `Soul-delay lights semiotics jeans hacker apophenia otaku tank-traps shrine cyber-marketing voodoo god hotdog skyscraper Chiba. Shanty town hotdog physical weathered fetishism rebar cardboard order-flow render-farm. A.I. render-farm pistol dead fetishism fluidity advert grenade drone otaku tanto vehicle assault kanji. Marketing advert semiotics DIY narrative alcohol-ware dolphin nano-paranoid bridge silent beef noodles math-augmented reality.`,
-      rncpId: '16197',
-      isActive: true
-    }
-  });
-  
-  await prisma.certification.upsert({
+  await inserts;
+
+  await prisma.certification.update({
     where: { rncpId: '35506' },
-    update: {},
-    create: {
-      label: `Assistant de vie aux familles`,
-      slug: `tp-assistant-de-vie-aux-familles`,
-      description: `Soul-delay lights semiotics jeans hacker apophenia otaku tank-traps shrine cyber-marketing voodoo god hotdog skyscraper Chiba. Shanty town hotdog physical weathered fetishism rebar cardboard order-flow render-farm. A.I. render-farm pistol dead fetishism fluidity advert grenade drone otaku tanto vehicle assault kanji. Marketing advert semiotics DIY narrative alcohol-ware dolphin nano-paranoid bridge silent beef noodles math-augmented reality.`,
-      rncpId: '35506',
-      isActive: true
-    }
-  });
-  
-  await prisma.certification.upsert({
-    where: { rncpId: '35830' },
-    update: {},
-    create: {
-      label: `Aide-Soignant`,
-      slug: `de-aide-soignant`,
-      description: `Soul-delay lights semiotics jeans hacker apophenia otaku tank-traps shrine cyber-marketing voodoo god hotdog skyscraper Chiba. Shanty town hotdog physical weathered fetishism rebar cardboard order-flow render-farm. A.I. render-farm pistol dead fetishism fluidity advert grenade drone otaku tanto vehicle assault kanji. Marketing advert semiotics DIY narrative alcohol-ware dolphin nano-paranoid bridge silent beef noodles math-augmented reality.`,
-      rncpId: '35830',
-      isActive: true
+    data: {
+      description: `L'assistant(e)  de  vie  aux  familles  (ADVF) contribue au bien être des personnes au sein de leur foyer en respectant leur dignité, leur intégrité, leur vie privée et leur sécurité. Pour permettre aux  personnes âgées ou malades, aux personnes en situation de handicap de maintenir leur autonomie et de continuer à vivre à domicile,  l'ADVF  les  aide  en  mettant  en  œuvre  les  gestes  et  techniques  appropriés  dans  le  respect  de l'intimité et l'écoute de la personne.`
     }
   });
 
-  await prisma.$queryRaw`
-    REFRESH MATERIALIZED VIEW certification_search;
+  await prisma.certification.update({
+    where: { rncpId: '35028' },
+    data: {
+      description: `L'emploi s'exerce sous la hiérarchie du responsable hôtelier, au sein d'une équipe pluriprofessionnelle. Selon les compétences mises en œuvre, l'emploi s'exerce sous la responsabilité partagée du responsable hôtelier et du responsable soignant.`
+    }
+  });
+
+
+  // TODO: REVIEW DESCRIPTION
+  await prisma.certification.update({
+    where: { rncpId: '5983' },
+    data: {
+      description: `Le surveillant - visiteur de nuit  exerce principalement au sein de  structures d'hébergement collectif accueillant des personnes âgées, des  personnes handicapées (adultes ou enfants), des personnes en situation  de précarité, des enfants en difficulté sociale et familiale.`
+    }
+  });
+
+  // TODO: REVIEW DESCRIPTION
+  await prisma.certification.update({
+    where: { rncpId: '25085' },
+    data: {
+      description: `Le titulaire du diplôme est un employé qualifié de niveau V, qui assure des activités de services aux personnes, qui se définissent comme l'ensemble des activités contribuant au mieux-être des personnes.`
+    }
+  });
+
+  // TODO: REVIEW DESCRIPTION
+  await prisma.certification.update({
+    where: { rncpId: '13905' },
+    data: {
+      description: `Le titulaire de ce diplôme offre des services de proximité aux personnes et aux territoires : services à destination des populations, services aux collectivités et aux entreprises ; services qui contribuent à l'attractivité et à la cohésion des territoires ruraux (services sociaux, prestations liées aux transports, aux loisirs, aux activités culturelles et sportives, au tourisme).`
+    }
+  });
+  
+  // TODO: REVIEW DESCRIPTION
+  await prisma.certification.update({
+    where: { rncpId: '17163' },
+    data: {
+      description: `Le conducteur accompagnateur accompagne les personnes à mobilité réduite du fait d'un handicap physique, mental, sensoriel ou intellectuel ou d'une forme de dépendance quelle qu'elle soit qui rend impossibles les déplacements sans accompagnement.`
+    }
+  });
+  
+  // TODO: REVIEW DESCRIPTION
+  await prisma.certification.update({
+    where: { rncpId: '34691' },
+    data: {
+      description: `L'Assistant maternel ou le Garde d'enfants prend en charge des enfants de la naissance à l'adolescence. Le mode de garde d'enfants chez un assistant maternel ou chez le particulier employeur est en France le premier mode de garde des enfants de moins de 3 ans, en dehors des gardes par la famille.`
+    }
+  });
+
+  
+  await prisma.certification.update({
+    where: { rncpId: '34692' },
+    data: {
+      description: `L'employé familial intervient au domicile des particuliers (en leur présence ou non) principalement pour l'entretien du cadre de vie, du linge et la préparation des repas. Il est amené à se déplacer aux différents domiciles des particuliers employeurs.`
+    }
+  });
+  
+  await prisma.certification.update({
+    where: { rncpId: '34690' },
+    data: {
+      description: `La mission de l'assistant de vie dépendance est d'accompagner des personnes dont l'autonomie est altérée dans la réalisation de leurs activités, pouvant aller des tâches courantes aux actes essentiels de la vie quotidienne.`
+    }
+  });
+  
+  await prisma.certification.update({
+    where: { rncpId: '34827' },
+    data: {
+      description: `L'éducateur de jeunes enfants est un professionnel du travail social et de l'éducation. Il exerce dans le cadre d'un mandat et de missions institutionnelles. Il accompagne des jeunes enfants, dans une démarche éducative et sociale globale en lien avec leur famille.`
+    }
+  });
+  
+  await prisma.certification.update({
+    where: { rncpId: '35830' },
+    data: {
+      description: `La certification mise en place par l'arrêté du 10 juin 2021 vise à répondre aux évolutions du  rôle de l'aide soignant. En tant que professionnel de santé, l'aide-soignant est habilité à dispenser des soins de la vie quotidienne ou des soins aigus pour préserver et restaurer la continuité de la vie.`
+    }
+  });
+
+  await prisma.certification.update({
+    where: { rncpId: '35832' },
+    data: {
+      description: `L'auxiliaire de puériculture réalise des activités d'éveil et des soins adaptés à l'évolution de l'état clinique visant au bien-être, à l'autonomie et au développement de l'enfant.`
+    }
+  });
+
+  await prisma.certification.update({
+    where: { rncpId: '4503' },
+    data: {
+      description: `Le technicien de l'intervention sociale et familiale effectue une intervention sociale préventive, éducative et réparatrice visant à favoriser l'autonomie des personnes et leur intégration dans leur environnement et à créer ou restaurer le lien social.`
+    }
+  });
+
+  await prisma.certification.update({
+    where: { rncpId: '2514' },
+    data: {
+      description: `Le certificat d'aptitude aux fonctions d'encadrement et de responsable d'unité d'intervention sociale atteste des compétences nécessaires pour animer une unité de travail dans le champ de l'intervention sociale et conduire son action dans le cadre du projet et des missions de l'employeur, ainsi que dans le cadre des politiques publiques.`
+    }
+  });
+
+  // await prisma.certification.update({
+  //   where: { rncpId: '35993' },
+  //   data: {
+  //     description: `Le responsable - coordonnateur services au domicile (RCSAD) assure l'interface entre les clients, les intervenants et la structure de services au domicile. Les activités du RCSAD varient en fonction de l'organisation de la structure, de la répartition des activités et des différents niveaux hiérarchiques.`
+  //   }
+  // });
+
+  // await prisma.certification.update({
+  //   where: { rncpId: '36004' },
+  //   data: {
+  //     description: `L'accompagnant éducatif et social réalise des interventions sociales au quotidien visant à accompagner la personne en situation de handicap ou touchée par un manque d'autonomie quelles qu'en soient l'origine ou la nature.`
+  //   }
+  // });
+
+  // await prisma.certification.update({
+  //   where: { rncpId: '35506' },
+  //   data: {
+  //     description: ``
+  //   }
+  // });
+
+  const count = await prisma.$queryRaw`
+    select count(1) from certification;
   `;
 
+  console.log(`${(count as any)[0].count} certifications inserted`);
+
   await prisma.$queryRaw`
-    REFRESH MATERIALIZED VIEW profession_search;
+    REFRESH MATERIALIZED VIEW certification_search WITH DATA;
+  `;
+  await prisma.$queryRaw`
+    REFRESH MATERIALIZED VIEW profession_search WITH DATA;
   `;
 
 }

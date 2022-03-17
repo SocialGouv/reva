@@ -17,6 +17,12 @@ export const searchCertificationsByQuery = async ({
         ) AS rank,
         certification.label,
         certification.description,
+        certification.acronym,
+        certification.level,
+        certification.activities,
+        certification.activity_area as "activityArea",
+        certification.accessible_job_type as "accessibleJobType",
+        certification.abilities,
         certification.rncp_id as "codeRncp"
         FROM certification_search
         INNER JOIN certification ON certification.id = certification_search.id
@@ -30,6 +36,12 @@ export const searchCertificationsByQuery = async ({
       id: certification.id,
       label: certification.label,
       description: certification.description,
+      acronym: certification.acronym,
+      level: certification.level,
+      activities: certification.activities,
+      activityArea: certification.activityArea,
+      accessibleJobType: certification.accessibleJobType,
+      abilities: certification.abilities,
       codeRncp: certification.codeRncp,
     };
   });

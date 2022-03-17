@@ -2,6 +2,12 @@ export interface Certification {
   id: string;
   label: string;
   description: string | null;
+  acronym: string | null;
+  level: number;
+  activities: string | null;
+  activityArea: string | null;
+  accessibleJobType: string | null;
+  abilities: string | null;
   codeRncp: string;
 }
 
