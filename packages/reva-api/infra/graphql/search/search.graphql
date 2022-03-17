@@ -1,12 +1,19 @@
 type Certification {
   id: ID!
-  title: String!
-  description: String!
+  label: String!
+  summary: String!
+  acronym: String!
+  level: Int!
+  activities: String
+  activityArea: String
+  accessibleJobType: String
+  abilities: String
+  codeRncp: String!
 }
 
 type Profession {
   id: ID!
-  title: String!
+  label: String!
   description: String!
 }
 

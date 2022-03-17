@@ -1,13 +1,19 @@
 export interface Certification {
   id: string;
-  title: string;
-  description: string | null;
+  label: string;
+  summary: string | null;
+  acronym: string | null;
+  level: number;
+  activities: string | null;
+  activityArea: string | null;
+  accessibleJobType: string | null;
+  abilities: string | null;
   codeRncp: string;
 }
 
 export interface Profession {
   id: string;
-  title: string;
+  label: string;
   description: string | null;
   codeRome: string;
 }

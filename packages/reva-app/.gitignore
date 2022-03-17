@@ -25,3 +25,4 @@ yarn-error.log*
 
 # capacitor
 capacitor.config.json
+ios/App/App/capacitor.config.json

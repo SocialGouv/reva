@@ -5,9 +5,17 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon -e ts,json,graphql -w . ./index.ts",
-    "build": "rimraf -f ./dist && tsc -p tsconfig.json",
-    "start": "node dist/index.js",
-    "test": "jest --runInBand --testRegex='.*.test.ts$'"
+    "build": "npm run prisma:generate && npm run build:ts && npm run build:graphql",
+    "build:ts": "rimraf -f ./dist && tsc -p tsconfig.json",
+    "build:graphql": "rsync -R ./infra/graphql/**/*.graphql  ./dist",
+    "start": "npm run prisma:migrate:deploy && npm run prisma:seed && node dist/index.js",
+    "test": "jest --runInBand --testRegex='.*.test.ts$'",
+    "prisma:generate": "prisma generate",
+    "prisma:seed": "prisma db seed",
+    "prisma:migrate:deploy": "prisma migrate deploy"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
@@ -33,7 +41,9 @@
     "@prisma/client": "^3.10.0",
     "dotenv": "^16.0.0",
     "elastic-apm-node": "^3.27.0",
+    "fast-csv": "^4.3.6",
     "fastify": "^3.27.0",
+    "fastify-cors": "^6.0.3",
     "fastify-env": "^2.1.1",
     "fastify-http-proxy": "^6.2.1",
     "fastify-static": "^4.5.0",

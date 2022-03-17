@@ -9,11 +9,18 @@ datasource db {
 
 model Certification {
   id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  title       String    @db.VarChar(255)
+  label       String    @db.VarChar(255)
+  acronym     String    @db.VarChar(255)
+  level       Int       
+  activities  String?
+  activityArea      String? @map("activity_area")
+  accessibleJobType String? @map("accessible_job_type")
+  abilities   String?
   slug        String
-  description String?
+  summary String?
   isActive    Boolean   @default(true) @map("is_active")
-  rncpId      String    @map("rncp_id") @db.VarChar(255)
+  rncpId      String    @unique @map("rncp_id") @db.VarChar(255)
+  romes       RomesOnCertifications[]
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
 
@@ -22,7 +29,7 @@ model Certification {
 
 model Profession {
   id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  title       String    @db.VarChar(255)
+  label       String    @db.VarChar(255)
   slug        String
   description String?
   romeId      String    @db.Uuid @map("rome_id")
@@ -36,14 +43,28 @@ model Profession {
 
 model Rome {
   id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  code        String    @db.VarChar(255)
+  code        String    @unique @db.VarChar(255)
   label       String    @db.VarChar(255)
   slug        String    @db.VarChar(255)
   url         String    @db.VarChar(255)
   profession  Profession[]
+  certifications RomesOnCertifications[]
   isActive    Boolean   @default(false) @map("is_active")
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
 
   @@map("rome")
+}
+
+
+model RomesOnCertifications {
+  certification       Certification @relation(fields: [certificationId], references: [id])
+  certificationId     String        @db.Uuid  @map("certification_id")
+  rome                Rome          @relation(fields: [romeId], references: [id])
+  romeId              String        @db.Uuid  @map("rome_id")
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+
+  @@id([certificationId, romeId])
+  @@map("rome_certification")
 }

@@ -1,35 +1,48 @@
 import type { Certification } from "../../../domains/search";
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from "@prisma/client";
 
-export const searchCertificationsByQuery = async ({ query }: { query: string; }): Promise<Certification[]> => {
-
+export const searchCertificationsByQuery = async ({
+  query,
+}: {
+  query: string;
+}): Promise<Certification[]> => {
   const client = new PrismaClient();
 
-  console.log(query)
+  console.log(query);
 
-  const certifications = await client.$queryRaw`
+  const certifications = (await client.$queryRaw`
     SELECT certification_search.id AS id,
         ts_rank(
           certification_search.document, plainto_tsquery(unaccent(${query}))
         ) AS rank,
-        certification.title,
-        certification.description,
-        certification.rncp_id as codeRncp
+        certification.label,
+        certification.summary,
+        certification.acronym,
+        certification.level,
+        certification.activities,
+        certification.activity_area as "activityArea",
+        certification.accessible_job_type as "accessibleJobType",
+        certification.abilities,
+        certification.rncp_id as "codeRncp"
         FROM certification_search
         INNER JOIN certification ON certification.id = certification_search.id
-        WHERE certification_search.document @@ plainto_tsquery(unaccent(${query}))
-        OR certification_search.slug % ${query}
+        WHERE certification.is_active = true
         ORDER BY rank DESC
-        LIMIT 5;
-  ` as Certification[]
+        LIMIT 15;
+  `) as Certification[];
 
-
-  return certifications.map(certification => {
+  return certifications.map((certification) => {
     return {
       id: certification.id,
-      title : certification.title,
-      description: certification.description,
-      codeRncp: certification.codeRncp
-    }
+      label: certification.label,
+      summary: certification.summary,
+      acronym: certification.acronym,
+      level: certification.level,
+      activities: certification.activities,
+      activityArea: certification.activityArea,
+      accessibleJobType: certification.accessibleJobType,
+      abilities: certification.abilities,
+      codeRncp: certification.codeRncp,
+    };
   });
 };
