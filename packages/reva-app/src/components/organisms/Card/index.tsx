@@ -6,6 +6,7 @@ import { TextResult } from "../../atoms/TextResult";
 import { BackButton } from "../../molecules/BackButton";
 import certificateImg from "./certificate.png";
 import {
+  SMALL_TITLE_LENGTH,
   heightConfig,
   rounded2xl,
   roundedNone,
@@ -66,7 +67,7 @@ export const Card = ({
               position: "absolute",
               left: "-43px",
               top: "12px",
-              width: isSmall ? "106px" : "240px",
+              width: isSmall ? "104px" : "240px",
             }
       }
       src={certificateImg}
@@ -87,24 +88,28 @@ export const Card = ({
     >
       <motion.div
         className={`w-full px-6 ${
-          isFullscreen ? "mb-4 pr-20" : isMedium ? "mt-[250px]" : "mt-[168px]"
+          isFullscreen ? "mb-4" : isMedium ? "mt-[250px]" : "mt-[168px]"
         }`}
         layout="position"
         transition={transition}
       >
         <div className={isSmall ? "flex items-end h-20" : ""}>
-          <TextResult title={title} color="light" />
+          <TextResult
+            size={isSmall ? "small" : "large"}
+            title={
+              isSmall && title.length > SMALL_TITLE_LENGTH
+                ? `${title.substring(0, SMALL_TITLE_LENGTH)}...`
+                : title
+            }
+            color="light"
+          />
         </div>
-        <div
-          className={`transition-opacity mt-1 mb-4 font-bold ${
-            isReduced && "opacity-0"
-          }`}
-        >
-          {label}
+        <div className={`transition-opacity ${isReduced && "opacity-0"}`}>
+          <div className="mt-1 mb-4 font-bold">{label}</div>
+          <p className="overflow-auto text-slate-400 text-base leading-normal transition-opacity">
+            {summary}
+          </p>{" "}
         </div>
-        <p className="overflow-auto text-slate-400 overflow-auto text-base leading-normal">
-          {summary}
-        </p>
         <a className="block text-blue-500 py-4 underline" onClick={onLearnMore}>
           Lire tous les détails
         </a>
