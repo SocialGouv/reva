@@ -16,7 +16,7 @@ import { transitionIn } from "./components/organisms/Card/view";
 import { CardSkeleton } from "./components/organisms/CardSkeleton";
 import { Results } from "./components/organisms/Results";
 import { buttonVariants, pageTransition, pageVariants } from "./config";
-import { certificateFixtures } from "./fixtures/certificates";
+import { certificateFixtures, demoDescription } from "./fixtures/certificates";
 import { Certificate, Navigation, Page } from "./interface";
 
 const SEARCH_CERTIFICATIONS_AND_PROFESSIONS = gql`
@@ -147,7 +147,10 @@ function App() {
           </p>
         </div>
         <div className="px-8">
-          <Results title="Diplômes" listClassName="mt-4 space-y-8">
+          <Results
+            title="Certifications disponibles"
+            listClassName="mt-4 space-y-8"
+          >
             {certificateResults("small")}
           </Results>
         </div>
@@ -175,7 +178,7 @@ function App() {
       <div className="grow overflow-y-scroll">
         <div className="prose prose-invert prose-h2:my-1 mt-8 text-slate-400 text-base leading-normal px-8 pb-8">
           {maybeCurrentCertificate.mapOrDefault(
-            (certificate) => parse(certificate.description || certificate.summary),
+            (certificate) => parse(certificate.description || demoDescription),
             <></>
           )}
           <Button

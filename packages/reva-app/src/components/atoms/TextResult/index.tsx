@@ -19,7 +19,7 @@ export const TextResult = ({
   const colorClass =
     color === "dark" ? "font-bold text-slate-900" : "font-medium text-white";
 
-  const sizeClass = size === "small" ? "text-2xl" : "text-3xl";
+  const sizeClass = size === "small" ? "text-2xl" : "text-3xl tracking-tight";
 
   return (
     <div
