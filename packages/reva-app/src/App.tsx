@@ -14,10 +14,11 @@ import { BackButton } from "./components/molecules/BackButton";
 import { Card, CardSize } from "./components/organisms/Card";
 import { transitionIn } from "./components/organisms/Card/view";
 import { CardSkeleton } from "./components/organisms/CardSkeleton";
+import { Navigation, Page } from "./components/organisms/Page";
 import { Results } from "./components/organisms/Results";
-import { buttonVariants, pageTransition, pageVariants } from "./config";
-import { certificateFixtures, demoDescription } from "./fixtures/certificates";
-import { Certificate, Navigation, Page } from "./interface";
+import { buttonVariants } from "./config";
+import { demoDescription } from "./fixtures/certificates";
+import { Certificate } from "./interface";
 
 const SEARCH_CERTIFICATIONS_AND_PROFESSIONS = gql`
   query {
@@ -129,16 +130,7 @@ function App() {
   /** Pages */
 
   const resultsPage = (
-    <motion.div
-      key="show-results"
-      custom={navigation.direction}
-      variants={pageVariants}
-      initial="enter"
-      animate="visible"
-      exit="exit"
-      transition={pageTransition}
-      className="absolute z-40 inset-0 bg-white"
-    >
+    <Page key="show-results" className="z-40 bg-white" navigation={navigation}>
       <motion.div layoutScroll className="h-full overflow-auto">
         <div className="px-8 py-16 pb-8 lg:pt-8 bg-white">
           <Header label="Bienvenue" />
@@ -156,20 +148,14 @@ function App() {
         </div>
       </motion.div>
       {candidateButton(maybeCurrentCertificate)}
-    </motion.div>
+    </Page>
   );
 
   const certificateDetailsPage = (
-    <motion.div
+    <Page
       key="show-certificate-details"
-      custom={navigation.direction}
-      variants={pageVariants}
-      initial="enter"
-      animate="visible"
-      exit="exit"
-      transition={pageTransition}
-      layoutScroll
-      className="absolute flex flex-col z-50 inset-0 bg-slate-900 h-full pt-6"
+      className="flex flex-col z-50 bg-slate-900 pt-6"
+      navigation={navigation}
     >
       <BackButton
         color="light"
@@ -190,20 +176,14 @@ function App() {
           />
         </div>
       </div>
-    </motion.div>
+    </Page>
   );
 
   const loadSubmissionPage = (
-    <motion.div
+    <Page
       key="load-submission"
-      custom={navigation.direction}
-      variants={pageVariants}
-      initial="enter"
-      animate="visible"
-      exit="exit"
-      transition={pageTransition}
-      layoutScroll
-      className="absolute z-50 inset-0 flex flex-col text-center bg-gray-100 h-full pt-6"
+      className="z-50 flex flex-col text-center bg-gray-100 pt-6"
+      navigation={navigation}
     >
       <BackButton onClick={() => setNavigationPrevious("show-results")} />
       <div className="grow flex flex-col items-center justify-center">
@@ -212,7 +192,7 @@ function App() {
           <Loader />
         </div>
       </div>
-    </motion.div>
+    </Page>
   );
 
   return (
