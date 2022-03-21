@@ -43,7 +43,16 @@ const BlockTemplate: ComponentStory<typeof Results> = (args) => (
         label: "N304c",
         title: "MASTER Ergonomie",
       },
-    ].map(Card)}
+    ].map((certificate) => (
+      <Card
+        initialSize="small"
+        key={certificate.id}
+        id={certificate.id}
+        title={certificate.label}
+        label={certificate.label}
+        summary={certificate.summary}
+      />
+    ))}
   </Results>
 );
 
