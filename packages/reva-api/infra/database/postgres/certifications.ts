@@ -1,16 +1,15 @@
 import type { Certification } from "../../../domains/search";
-import { PrismaClient } from "@prisma/client";
+import {prismaClient} from './client'
 
 export const searchCertificationsByQuery = async ({
   query,
 }: {
   query: string;
 }): Promise<Certification[]> => {
-  const client = new PrismaClient();
 
   console.log(query);
 
-  const certifications = (await client.$queryRaw`
+  const certifications = (await prismaClient.$queryRaw`
     SELECT certification_search.id AS id,
         ts_rank(
           certification_search.document, plainto_tsquery(unaccent(${query}))
