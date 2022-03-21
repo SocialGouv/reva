@@ -26,4 +26,5 @@ type Query {
   searchCertificationsAndProfessions(
     query: String
   ): SearchCertificationsAndProfessionsResult
+  getCertification(id: ID!): Certification
 }

@@ -1,17 +1,33 @@
+import { gql, useLazyQuery } from "@apollo/client";
 import { Capacitor } from "@capacitor/core";
 import { StatusBar } from "@capacitor/status-bar";
 import { AnimatePresence } from "framer-motion";
 import parse from "html-react-parser";
-import { Maybe, Nothing } from "purify-ts/Maybe";
+import { Just, Maybe, Nothing } from "purify-ts/Maybe";
 import { useEffect, useState } from "react";
 
 import { Button } from "./components/atoms/Button";
 import { BackButton } from "./components/molecules/BackButton";
 import { Navigation, Page } from "./components/organisms/Page";
-import { demoDescription } from "./fixtures/certificates";
 import { Certificate } from "./interface";
+import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
 import { ProjectHome } from "./pages/ProjectHome";
+
+const GET_CERTIFICATE = gql`
+  query Certification($id: ID!) {
+    getCertification(id: $id) {
+      id
+      label
+      summary
+      codeRncp
+      activities
+      abilities
+      activityArea
+      accessibleJobType
+    }
+  }
+`;
 
 function App() {
   const initialPage = "show-results";
@@ -21,6 +37,9 @@ function App() {
   };
   const [navigation, setNavigation] = useState<Navigation>(initialNavigation);
 
+  const [getCertification, { loading, error, data }] =
+    useLazyQuery(GET_CERTIFICATE);
+
   function setNavigationNext(nextPage: Page) {
     setNavigation({ direction: "next", page: nextPage });
   }
@@ -29,8 +48,21 @@ function App() {
     setNavigation({ direction: "previous", page: previousPage });
   }
 
-  const [maybeCurrentCertificate, setCurrentCertificate] =
+  const [maybeCurrentCertificate, setMaybeCurrentCertificate] =
     useState<Maybe<Certificate>>(Nothing);
+
+  const setCurrentCertificate = (maybeCertificate: Maybe<Certificate>) => {
+    setMaybeCurrentCertificate(maybeCertificate);
+    maybeCertificate.map((certificate) =>
+      getCertification({ variables: { id: certificate.id } })
+    );
+  };
+
+  useEffect(() => {
+    if (data) {
+      setMaybeCurrentCertificate(Just(data.getCertification));
+    }
+  }, [data]);
 
   useEffect(() => {
     async function setStatusBarVisibility() {
@@ -47,36 +79,6 @@ function App() {
     }
     Capacitor.isNativePlatform() && setStatusBarVisibility();
   }, [navigation.page, maybeCurrentCertificate]);
-
-  /** Pages */
-
-  const certificateDetailsPage = (
-    <Page
-      key="show-certificate-details"
-      className="flex flex-col z-50 bg-slate-900 pt-6"
-      navigation={navigation}
-    >
-      <BackButton
-        color="light"
-        onClick={() => setNavigationPrevious("show-results")}
-      />
-      <div className="grow overflow-y-scroll">
-        <div className="prose prose-invert prose-h2:my-1 mt-8 text-slate-400 text-base leading-normal px-8 pb-8">
-          {maybeCurrentCertificate.mapOrDefault(
-            (certificate) => parse(certificate.description || demoDescription),
-            <></>
-          )}
-          <Button
-            onClick={() => setNavigationNext("project-home")}
-            label="Candidater"
-            className="mt-8 w-full"
-            primary
-            size="medium"
-          />
-        </div>
-      </div>
-    </Page>
-  );
 
   const certificatesPage = (
     <Certificates
@@ -121,7 +123,20 @@ function App() {
                 projectHomePage,
                 certificatesPage
               )
-            : certificateDetailsPage}
+            :  (
+            maybeCurrentCertificate.mapOrDefault(
+              (certificate) => (
+                <CertificateDetails
+                  key="show-certificate-details"
+                  certificate={certificate}
+                  navigation={navigation}
+                  setNavigationNext={setNavigationNext}
+                  setNavigationPrevious={setNavigationPrevious}
+                />
+              ),
+              <></>
+            )
+          )}
         </AnimatePresence>
       </div>
     </div>

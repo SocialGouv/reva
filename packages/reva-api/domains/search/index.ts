@@ -22,7 +22,7 @@ interface Params {
   query: string;
 }
 
-interface Dependencies {
+interface SearchDependencies {
   searchCertificationsByQuery: (params: Params) => Promise<Certification[]>;
   searchProfessionsByQuery: (params: Params) => Promise<Profession[]>;
 }
@@ -33,7 +33,7 @@ interface SearchResult {
 }
 
 export const searchCertificationsAndProfessions =
-  (deps: Dependencies) =>
+  (deps: SearchDependencies) =>
     async ({ query }: Params): Promise<SearchResult> => {
       const [certifications, professions] = await Promise.all(
         [
@@ -47,3 +47,15 @@ export const searchCertificationsAndProfessions =
         professions,
       };
     };
+
+
+interface GetCertificationDependencies {
+  getCertificationById: (params: { id: string; }) => Promise<Certification | null>;
+}
+
+export const getCertification =
+  (deps: GetCertificationDependencies) =>
+    async ({ id }: { id: string; }): Promise<Certification | null> => {
+      return deps.getCertificationById({ id });
+    }
+

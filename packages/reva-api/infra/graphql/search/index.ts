@@ -1,5 +1,5 @@
-import { searchCertificationsAndProfessions } from "../../../domains/search";
-import { searchCertificationsByQuery } from "../../database/postgres/certifications";
+import { searchCertificationsAndProfessions, getCertification } from "../../../domains/search";
+import { searchCertificationsByQuery, getCertificationById } from "../../database/postgres/certifications";
 import { searchProfessionsByQuery } from "../../database/postgres/professions";
 
 
@@ -13,5 +13,10 @@ export const resolvers = {
 
       return result;
     },
+    getCertification: async (_: any, {id}: {id: string}) => {
+      const result = await getCertification({getCertificationById})({id});
+
+      return result
+    }
   },
 };

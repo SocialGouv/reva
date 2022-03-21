@@ -1,14 +1,11 @@
 import type { Certification } from "../../../domains/search";
-import {prismaClient} from './client'
+import { prismaClient } from './client';
 
 export const searchCertificationsByQuery = async ({
   query,
 }: {
   query: string;
 }): Promise<Certification[]> => {
-
-  console.log(query);
-
   const certifications = (await prismaClient.$queryRaw`
     SELECT certification_search.id AS id,
         ts_rank(
@@ -45,3 +42,20 @@ export const searchCertificationsByQuery = async ({
     };
   });
 };
+
+export const getCertificationById = async ({ id }: { id: string; }): Promise<Certification | null> => {
+  const certification = await prismaClient.certification.findUnique({
+    where: {
+      id
+    }
+  });
+
+  if (certification) {
+
+    return {
+      ...certification,
+      codeRncp: certification?.rncpId
+    };
+  }
+  return null;
+}

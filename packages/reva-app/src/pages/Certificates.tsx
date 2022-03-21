@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useLazyQuery, useQuery } from "@apollo/client";
 import { motion } from "framer-motion";
 import { Just, Maybe, Nothing } from "purify-ts";
 import { useEffect, useRef } from "react";
@@ -22,8 +22,8 @@ interface Certificates {
 }
 
 const SEARCH_CERTIFICATIONS_AND_PROFESSIONS = gql`
-  query {
-    searchCertificationsAndProfessions(query: "") {
+  query Certifications($query: String!) {
+    searchCertificationsAndProfessions(query: $query) {
       certifications {
         id
         label
@@ -41,7 +41,8 @@ export const Certificates = ({
   setNavigationNext,
 }: Certificates) => {
   const { loading, error, data } = useQuery(
-    SEARCH_CERTIFICATIONS_AND_PROFESSIONS
+    SEARCH_CERTIFICATIONS_AND_PROFESSIONS,
+    { variables: { query: "" } }
   );
 
   const resultsElement = useRef<HTMLDivElement | null>(null);
