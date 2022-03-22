@@ -1,11 +1,10 @@
-import { PrismaClient } from "@prisma/client";
+
 import { Profession } from "../../../domains/search";
+import { prismaClient } from "./client";
 
 export const searchProfessionsByQuery = async ({ query }: { query: string; }): Promise<Profession[]> => {
   
-  const client = new PrismaClient();
-
-  const professions = await client.$queryRaw`
+  const professions = await prismaClient.$queryRaw`
         SELECT profession_search.id AS id,
         ts_rank(
           profession_search.document, plainto_tsquery(unaccent(${query}))
