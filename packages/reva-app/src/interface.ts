@@ -1,7 +1,7 @@
 export interface Certificate {
   id: string;
   description: string;
-  label: string;
+  codeRncp: string;
   summary: string;
-  title: string;
+  label: string;
 }

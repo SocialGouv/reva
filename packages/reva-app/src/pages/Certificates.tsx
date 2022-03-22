@@ -56,7 +56,7 @@ export const Certificates = ({
     }
   }, []);
 
-  const CertificateCard = (certificate: any) => {
+  const CertificateCard = (certificate: Certificate) => {
     const isSelected = maybeCurrentCertificate
       .map((currentCertificate) => currentCertificate.id === certificate.id)
       .orDefault(false);
@@ -96,7 +96,7 @@ export const Certificates = ({
         layout="position"
       >
         <Button
-          onClick={() => setNavigationNext("load-submission")}
+          onClick={() => setNavigationNext("project-home")}
           label="Candidater"
           className="w-full"
           primary

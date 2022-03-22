@@ -10,6 +10,7 @@ module.exports = {
       },
       colors: {
         blue: { 600: "#0078f3" },
+        gray: { 450: "#8C8E97" },
         slate: { 400: "#908eac", 900: "#19182f" },
       },
       fontFamily: {
