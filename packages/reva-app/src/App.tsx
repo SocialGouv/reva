@@ -110,6 +110,7 @@ function App() {
         <AnimatePresence custom={navigation.direction} initial={false}>
           {navigation.page === "show-results" ? (
             <Certificates
+              key="show-results"
               maybeCurrentCertificate={maybeCurrentCertificate}
               navigation={navigation}
               setNavigationNext={setNavigationNext}
