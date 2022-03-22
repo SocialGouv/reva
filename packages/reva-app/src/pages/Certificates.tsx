@@ -107,7 +107,7 @@ export const Certificates = ({
   }
 
   return (
-    <Page key="show-results" className="z-40 bg-white" navigation={navigation}>
+    <Page className="z-40 bg-white" navigation={navigation}>
       <motion.div
         ref={resultsElement}
         layoutScroll
