@@ -6,13 +6,12 @@ import { Maybe, Nothing } from "purify-ts/Maybe";
 import { useEffect, useState } from "react";
 
 import { Button } from "./components/atoms/Button";
-import { Header } from "./components/atoms/Header";
-import { Loader } from "./components/atoms/Icons";
 import { BackButton } from "./components/molecules/BackButton";
 import { Navigation, Page } from "./components/organisms/Page";
 import { demoDescription } from "./fixtures/certificates";
 import { Certificate } from "./interface";
 import { Certificates } from "./pages/Certificates";
+import { ProjectHome } from "./pages/ProjectHome";
 
 function App() {
   const initialPage = "show-results";
@@ -68,7 +67,7 @@ function App() {
             <></>
           )}
           <Button
-            onClick={() => setNavigationNext("load-submission")}
+            onClick={() => setNavigationNext("project-home")}
             label="Candidater"
             className="mt-8 w-full"
             primary
@@ -79,20 +78,24 @@ function App() {
     </Page>
   );
 
-  const loadSubmissionPage = (
-    <Page
-      key="load-submission"
-      className="z-50 flex flex-col text-center bg-gray-100 pt-6"
+  const certificatesPage = (
+    <Certificates
+      key="show-results"
+      maybeCurrentCertificate={maybeCurrentCertificate}
       navigation={navigation}
-    >
-      <BackButton onClick={() => setNavigationPrevious("show-results")} />
-      <div className="grow flex flex-col items-center justify-center">
-        <Header label="Création de votre candidature" size="small" />
-        <div className="mt-8 w-8">
-          <Loader />
-        </div>
-      </div>
-    </Page>
+      setNavigationNext={setNavigationNext}
+      setCurrentCertificate={setCurrentCertificate}
+    />
+  );
+
+  const projectHomePage = (certificate: Certificate) => (
+    <ProjectHome
+      key="project-home"
+      certificate={certificate}
+      navigation={navigation}
+      setNavigationPrevious={setNavigationPrevious}
+      setNavigationNext={setNavigationNext}
+    />
   );
 
   return (
@@ -106,21 +109,19 @@ function App() {
       ) : (
         <></>
       )}
-      <div className="relative flex flex-col max-w-lg w-full h-screen bg-white overflow-hidden">
+      <div
+        className="relative flex flex-col w-full h-screen bg-white overflow-hidden"
+        style={{ maxWidth: "416px" }}
+      >
         <AnimatePresence custom={navigation.direction} initial={false}>
-          {navigation.page === "show-results" ? (
-            <Certificates
-              key="show-results"
-              maybeCurrentCertificate={maybeCurrentCertificate}
-              navigation={navigation}
-              setNavigationNext={setNavigationNext}
-              setCurrentCertificate={setCurrentCertificate}
-            />
-          ) : navigation.page === "load-submission" ? (
-            loadSubmissionPage
-          ) : (
-            certificateDetailsPage
-          )}
+          {navigation.page === "show-results"
+            ? certificatesPage
+            : navigation.page === "project-home"
+            ? maybeCurrentCertificate.mapOrDefault(
+                projectHomePage,
+                certificatesPage
+              )
+            : certificateDetailsPage}
         </AnimatePresence>
       </div>
     </div>

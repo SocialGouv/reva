@@ -146,7 +146,7 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
           onAnimationStart={() => isFullscreen && zIndex.set(20)}
           onAnimationComplete={() => isReduced && zIndex.set(0)}
           onClick={() => (isReduced ? (setSize("large"), onOpen()) : {})}
-          whileTap={{ scale: isReduced ? 0.95 : 1 }}
+          whileTap={{ scale: isReduced ? 0.92 : 1 }}
           style={{
             zIndex,
             height: heightConfig[size],

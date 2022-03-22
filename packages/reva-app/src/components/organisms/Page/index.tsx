@@ -1,15 +1,12 @@
 import { motion } from "framer-motion";
 
 interface PageConfig {
-  children: JSX.Element[];
+  children: JSX.Element | JSX.Element[];
   className: string;
   navigation: Navigation;
 }
 
-export type Page =
-  | "show-results"
-  | "show-certificate-details"
-  | "load-submission";
+export type Page = "show-results" | "show-certificate-details" | "project-home";
 
 export type Direction = "previous" | "next";
 
@@ -25,7 +22,7 @@ const pageVariants = {
   }),
 };
 
-const pageTransition = { ease: "easeOut", duration: 0.2 };
+const pageTransition = { ease: "circOut", duration: 0.35 };
 
 export const Page = ({ children, className, navigation }: PageConfig) => {
   return (
