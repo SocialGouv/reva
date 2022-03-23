@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">reva-app</string>
+    <string name="title_activity_main">reva-app</string>
+    <string name="package_name">fr.gouv.beta.reva</string>
+    <string name="custom_url_scheme">fr.gouv.beta.reva</string>
+</resources>

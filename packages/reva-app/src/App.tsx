@@ -1,6 +1,6 @@
 import { gql, useLazyQuery } from "@apollo/client";
 import { Capacitor } from "@capacitor/core";
-import { StatusBar } from "@capacitor/status-bar";
+import { StatusBar, Style } from "@capacitor/status-bar";
 import { AnimatePresence } from "framer-motion";
 import parse from "html-react-parser";
 import { Just, Maybe, Nothing } from "purify-ts/Maybe";
@@ -62,6 +62,14 @@ function App() {
       setMaybeCurrentCertificate(Just(data.getCertification));
     }
   }, [data]);
+
+  useEffect(() => {
+    async function setStatusBarOverlay() {
+      await StatusBar.setOverlaysWebView({ overlay: true });
+      await StatusBar.setStyle({ style: Style.Light });
+    }
+    Capacitor.getPlatform() === "android" && setStatusBarOverlay();
+  }, []);
 
   useEffect(() => {
     async function setStatusBarVisibility() {
