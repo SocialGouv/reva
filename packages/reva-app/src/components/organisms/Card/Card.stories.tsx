@@ -25,12 +25,12 @@ export const Medium = Template.bind({});
 
 Medium.args = {
   ...Small.args,
-  initialSize: "medium",
+  size: "medium",
 };
 
 export const Large = Template.bind({});
 
 Large.args = {
   ...Small.args,
-  initialSize: "large",
+  size: "large",
 };

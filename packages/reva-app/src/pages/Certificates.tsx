@@ -65,8 +65,7 @@ export const Certificates = ({
     return (
       <Card
         ref={isSelected ? currentCertificateElement : null}
-        initialSize="small"
-        isOpen={isSelected}
+        size="small"
         onOpen={() => setCurrentCertificate(Just(certificate))}
         onLearnMore={() => setNavigationNext("show-certificate-details")}
         onClose={() => setCurrentCertificate(Nothing)}

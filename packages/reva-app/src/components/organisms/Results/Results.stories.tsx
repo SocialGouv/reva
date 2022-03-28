@@ -45,7 +45,7 @@ const BlockTemplate: ComponentStory<typeof Results> = (args) => (
       },
     ].map((certificate) => (
       <Card
-        initialSize="small"
+        size="small"
         key={certificate.id}
         id={certificate.id}
         title={certificate.label}
