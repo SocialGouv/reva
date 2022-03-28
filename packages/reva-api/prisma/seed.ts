@@ -145,26 +145,26 @@ async function main() {
     }
   });
 
-  // await prisma.certification.update({
-  //   where: { rncpId: '35993' },
-  //   data: {
-  //     summary: `Le responsable - coordonnateur services au domicile (RCSAD) assure l'interface entre les clients, les intervenants et la structure de services au domicile. Les activités du RCSAD varient en fonction de l'organisation de la structure, de la répartition des activités et des différents niveaux hiérarchiques.`
-  //   }
-  // });
+  await prisma.certification.update({
+    where: { rncpId: '35993' },
+    data: {
+      summary: `Le responsable - coordonnateur services au domicile (RCSAD) assure l'interface entre les clients, les intervenants et la structure de services au domicile. Les activités du RCSAD varient en fonction de l'organisation de la structure, de la répartition des activités et des différents niveaux hiérarchiques.`
+    }
+  });
 
-  // await prisma.certification.update({
-  //   where: { rncpId: '36004' },
-  //   data: {
-  //     summary: `L'accompagnant éducatif et social réalise des interventions sociales au quotidien visant à accompagner la personne en situation de handicap ou touchée par un manque d'autonomie quelles qu'en soient l'origine ou la nature.`
-  //   }
-  // });
+  await prisma.certification.update({
+    where: { rncpId: '36004' },
+    data: {
+      summary: `L'accompagnant éducatif et social réalise des interventions sociales au quotidien visant à accompagner la personne en situation de handicap ou touchée par un manque d'autonomie quelles qu'en soient l'origine ou la nature.`
+    }
+  });
 
-  // await prisma.certification.update({
-  //   where: { rncpId: '35506' },
-  //   data: {
-  //     summary: ``
-  //   }
-  // });
+  await prisma.certification.update({
+    where: { rncpId: '35506' },
+    data: {
+      summary: `L'assistant(e)  de  vie  aux  familles  (ADVF) contribue au bien être des personnes au sein de leur foyer en respectant leur dignité, leur intégrité, leur vie privée et leur sécurité. Il (elle) assure la garde d'enfants vivant  à domicile.`
+    }
+  });
 
   const count = await prisma.$queryRaw`
     select count(1) from certification;
