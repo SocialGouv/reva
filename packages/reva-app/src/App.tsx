@@ -37,8 +37,7 @@ function App() {
   };
   const [navigation, setNavigation] = useState<Navigation>(initialNavigation);
 
-  const [getCertification, { loading, error, data }] =
-    useLazyQuery(GET_CERTIFICATE);
+  const [getCertification, { data }] = useLazyQuery(GET_CERTIFICATE);
 
   function setNavigationNext(nextPage: Page) {
     setNavigation({ direction: "next", page: nextPage });
@@ -123,20 +122,18 @@ function App() {
                 projectHomePage,
                 certificatesPage
               )
-            :  (
-            maybeCurrentCertificate.mapOrDefault(
-              (certificate) => (
-                <CertificateDetails
-                  key="show-certificate-details"
-                  certificate={certificate}
-                  navigation={navigation}
-                  setNavigationNext={setNavigationNext}
-                  setNavigationPrevious={setNavigationPrevious}
-                />
-              ),
-              <></>
-            )
-          )}
+            : maybeCurrentCertificate.mapOrDefault(
+                (certificate) => (
+                  <CertificateDetails
+                    key="show-certificate-details"
+                    certificate={certificate}
+                    navigation={navigation}
+                    setNavigationNext={setNavigationNext}
+                    setNavigationPrevious={setNavigationPrevious}
+                  />
+                ),
+                <></>
+              )}
         </AnimatePresence>
       </div>
     </div>
