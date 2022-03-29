@@ -22,8 +22,6 @@ interface Card {
   summary: string;
   label: string;
 
-  onClose?: () => void;
-  onLearnMore?: () => void;
   onOpen?: () => void;
   size?: CardSize;
   title: string;
@@ -31,19 +29,7 @@ interface Card {
 
 export const Card = React.forwardRef<HTMLLIElement, Card>(
   (
-    {
-      summary,
-      id,
-      label,
-
-      onClose = () => {},
-      onLearnMore = () => {},
-      onOpen = () => {},
-
-      title,
-      size = "small",
-      ...props
-    },
+    { summary, id, label, onOpen = () => {}, title, size = "small", ...props },
     ref
   ) => {
     const isSmall = size === "small";
@@ -84,12 +70,6 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
               color="light"
             />
           </div>
-          <a
-            className="block text-blue-500 py-4 underline"
-            onClick={onLearnMore}
-          >
-            Lire tous les détails
-          </a>
         </motion.div>
         {decorativeImg}
       </div>

@@ -8,6 +8,7 @@ import { Header } from "../components/atoms/Header";
 import { loremIpsumShort } from "../components/atoms/LoremIpsum";
 import { Card } from "../components/organisms/Card";
 import { transitionIn } from "../components/organisms/Card/view";
+import { CardFullscreen } from "../components/organisms/CardFullscreen";
 import { CardSkeleton } from "../components/organisms/CardSkeleton";
 import { Navigation, Page } from "../components/organisms/Page";
 import { Results } from "../components/organisms/Results";
@@ -62,13 +63,23 @@ export const Certificates = ({
       .map((currentCertificate) => currentCertificate.id === certificate.id)
       .orDefault(false);
 
-    return (
+    return maybeCurrentCertificate.mapOrDefault(
+      (currentCertificate) => (
+        <CardFullscreen
+          ref={isSelected ? currentCertificateElement : null}
+          onLearnMore={() => setNavigationNext("show-certificate-details")}
+          onClose={() => setCurrentCertificate(Nothing)}
+          key={certificate.id}
+          id={certificate.id}
+          title={certificate.label}
+          label={certificate.codeRncp}
+          summary={certificate.summary}
+        />
+      ),
       <Card
         ref={isSelected ? currentCertificateElement : null}
         size="small"
         onOpen={() => setCurrentCertificate(Just(certificate))}
-        onLearnMore={() => setNavigationNext("show-certificate-details")}
-        onClose={() => setCurrentCertificate(Nothing)}
         key={certificate.id}
         id={certificate.id}
         title={certificate.label}
