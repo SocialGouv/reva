@@ -1,7 +1,7 @@
 import { gql, useLazyQuery, useQuery } from "@apollo/client";
-import { motion } from "framer-motion";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { Just, Maybe, Nothing } from "purify-ts";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Button } from "../components/atoms/Button";
 import { Header } from "../components/atoms/Header";
@@ -46,9 +46,9 @@ export const Certificates = ({
     { variables: { query: "" } }
   );
 
-  const resultsElement = useRef<HTMLDivElement | null>(null);
-  const currentCertificateElement = useRef<HTMLLIElement | null>(null);
-
+  //const resultsElement = useRef<HTMLDivElement | null>(null);
+  // const currentCertificateElement = useRef<HTMLLIElement | null>(null);
+  /**
   useEffect(() => {
     if (resultsElement.current && currentCertificateElement.current) {
       resultsElement.current.scrollTo(
@@ -57,28 +57,18 @@ export const Certificates = ({
       );
     }
   }, []);
+*/
 
   const CertificateCard = (certificate: Certificate) => {
-    const isSelected = maybeCurrentCertificate
+    const isOpen = maybeCurrentCertificate
       .map((currentCertificate) => currentCertificate.id === certificate.id)
       .orDefault(false);
 
-    return maybeCurrentCertificate.mapOrDefault(
-      (currentCertificate) => (
-        <CardFullscreen
-          ref={isSelected ? currentCertificateElement : null}
-          onLearnMore={() => setNavigationNext("show-certificate-details")}
-          onClose={() => setCurrentCertificate(Nothing)}
-          key={certificate.id}
-          id={certificate.id}
-          title={certificate.label}
-          label={certificate.codeRncp}
-          summary={certificate.summary}
-        />
-      ),
+    return (
       <Card
-        ref={isSelected ? currentCertificateElement : null}
+        //ref={isSelected ? currentCertificateElement : null}
         size="small"
+        isOpen={isOpen}
         onOpen={() => setCurrentCertificate(Just(certificate))}
         key={certificate.id}
         id={certificate.id}
@@ -92,9 +82,9 @@ export const Certificates = ({
   function candidateButton(maybeCurrentCertificate: Maybe<Certificate>) {
     const isVisible = maybeCurrentCertificate.isJust();
     return (
-      <motion.div
+      <div
         className="absolute bottom-0 z-50 inset-x-0 p-8 bg-slate-900"
-        custom={navigation.page}
+        /** custom={navigation.page}
         variants={buttonVariants}
         initial={false}
         exit="hidden"
@@ -105,6 +95,7 @@ export const Certificates = ({
         }
         animate={isVisible ? "visible" : "hidden"}
         layout="position"
+        */
       >
         <Button
           onClick={() => setNavigationNext("project-home")}
@@ -113,15 +104,15 @@ export const Certificates = ({
           primary
           size="medium"
         />
-      </motion.div>
+      </div>
     );
   }
 
   return (
     <Page className="z-40 bg-white" navigation={navigation}>
       <motion.div
-        ref={resultsElement}
-        layoutScroll
+        //ref={resultsElement}
+        // layoutScroll={true}
         className="h-full overflow-y-auto"
       >
         <div className="px-8 py-16 pb-8 lg:pt-8 bg-white">
@@ -144,8 +135,28 @@ export const Certificates = ({
                 )}
           </Results>
         </div>
+        <AnimatePresence>
+          {maybeCurrentCertificate.mapOrDefault(
+            (currentCertificate) => (
+              <CardFullscreen
+                onLearnMore={() =>
+                  setNavigationNext("show-certificate-details")
+                }
+                onClose={() => setCurrentCertificate(Nothing)}
+                id={currentCertificate.id}
+                title={currentCertificate.label}
+                label={currentCertificate.codeRncp}
+                summary={currentCertificate.summary}
+              />
+            ),
+            <></>
+          )}
+        </AnimatePresence>
       </motion.div>
-      {candidateButton(maybeCurrentCertificate)}
+
+      {
+        //candidateButton(maybeCurrentCertificate)
+      }
     </Page>
   );
 };

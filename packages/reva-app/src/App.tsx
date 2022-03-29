@@ -49,9 +49,9 @@ function App() {
 
   const setCurrentCertificate = (maybeCertificate: Maybe<Certificate>) => {
     setMaybeCurrentCertificate(maybeCertificate);
-    maybeCertificate.map((certificate) =>
+    /**maybeCertificate.map((certificate) =>
       getCertification({ variables: { id: certificate.id } })
-    );
+    );*/
   };
 
   useEffect(() => {
@@ -68,6 +68,7 @@ function App() {
     Capacitor.getPlatform() === "android" && setStatusBarOverlay();
   }, []);
 
+  /**
   useEffect(() => {
     async function setStatusBarVisibility() {
       if (
@@ -83,6 +84,7 @@ function App() {
     }
     Capacitor.isNativePlatform() && setStatusBarVisibility();
   }, [navigation.page, maybeCurrentCertificate]);
+*/
 
   const certificatesPage = (
     <Certificates
@@ -106,7 +108,7 @@ function App() {
 
   return (
     <div className="App relative flex flex-col items-center justify-center h-screen bg-gray-400">
-      {Capacitor.isNativePlatform() ? (
+      {/**Capacitor.isNativePlatform() ? (
         <div
           className={`transition-opacity duration-200 ${
             maybeCurrentCertificate.isJust() ? "opacity-0" : "opacity-1"
@@ -114,7 +116,7 @@ function App() {
         ></div>
       ) : (
         <></>
-      )}
+      )*/}
       <div
         className="relative flex flex-col w-full h-screen bg-white overflow-hidden"
         style={{ maxWidth: "416px" }}

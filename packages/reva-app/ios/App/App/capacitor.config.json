@@ -4,7 +4,7 @@
 	"webDir": "build",
 	"bundledWebRuntime": false,
 	"server": {
-		"url": "http://192.168.1.16:3001",
+		"url": "http://localhost:3001",
 		"cleartext": true
 	}
 }
