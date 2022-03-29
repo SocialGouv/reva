@@ -34,7 +34,7 @@ export const Page = ({ children, className, navigation }: PageConfig) => {
       exit="exit"
       transition={pageTransition}
       layoutScroll
-      className={`absolute inset-0 ${className}`}
+      className={`will-change-transform absolute inset-0 ${className}`}
     >
       {children}
     </motion.div>

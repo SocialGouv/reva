@@ -2,12 +2,9 @@ import { gql, useLazyQuery } from "@apollo/client";
 import { Capacitor } from "@capacitor/core";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { AnimatePresence } from "framer-motion";
-import parse from "html-react-parser";
 import { Just, Maybe, Nothing } from "purify-ts/Maybe";
 import { useEffect, useState } from "react";
 
-import { Button } from "./components/atoms/Button";
-import { BackButton } from "./components/molecules/BackButton";
 import { Navigation, Page } from "./components/organisms/Page";
 import { Certificate } from "./interface";
 import { CertificateDetails } from "./pages/CertificateDetails";
@@ -52,9 +49,9 @@ function App() {
 
   const setCurrentCertificate = (maybeCertificate: Maybe<Certificate>) => {
     setMaybeCurrentCertificate(maybeCertificate);
-    maybeCertificate.map((certificate) =>
+    /**maybeCertificate.map((certificate) =>
       getCertification({ variables: { id: certificate.id } })
-    );
+    );*/
   };
 
   useEffect(() => {
