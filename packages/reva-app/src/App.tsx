@@ -27,7 +27,7 @@ const GET_CERTIFICATE = gql`
 `;
 
 function App() {
-  const initialPage = "show-results";
+  const initialPage = "search/results";
   const initialNavigation: Navigation = {
     direction: "next",
     page: initialPage,
@@ -126,10 +126,10 @@ function App() {
         style={{ maxWidth: "416px" }}
       >
         <AnimatePresence custom={navigation.direction} initial={false}>
-          {navigation.page === "show-results" ||
-          navigation.page === "show-certificate"
+          {navigation.page === "search/results" ||
+          navigation.page === "certificate/summary"
             ? certificatesPage
-            : navigation.page === "project-home"
+            : navigation.page === "project/home"
             ? maybeCurrentCertificate.mapOrDefault(
                 projectHomePage,
                 certificatesPage

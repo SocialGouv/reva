@@ -35,7 +35,7 @@ export const CertificateDetails = ({
     >
       <BackButton
         color="light"
-        onClick={() => setNavigationPrevious("show-results")}
+        onClick={() => setNavigationPrevious("search/results")}
       />
       <div className="grow overflow-y-scroll">
         <div className="prose prose-invert prose-h2:my-1 mt-8 text-slate-400 text-base leading-normal px-8 pb-8">
@@ -60,7 +60,7 @@ export const CertificateDetails = ({
             })}
 
           <Button
-            onClick={() => setNavigationNext("project-home")}
+            onClick={() => setNavigationNext("project/home")}
             label="Candidater"
             className="mt-8 w-full"
             primary

@@ -1,8 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
+import { Button } from "../components/atoms/Button";
 import { Header } from "../components/atoms/Header";
 import { Loader } from "../components/atoms/Icons";
+import { Title } from "../components/atoms/Title";
 import { BackButton } from "../components/molecules/BackButton";
 import certificateImg from "../components/organisms/Card/certificate.png";
 import { Navigation, Page } from "../components/organisms/Page";
@@ -56,13 +58,20 @@ export const ProjectHome = ({
         className="mt-10 flex flex-col px-8 py-6 rounded-xl bg-white shadow-sm"
         style={{ height: "414px" }}
       >
-        <h3 className="mt-4 text-xl text-slate-800 font-bold">Mon Projet</h3>
+        <Title label="Mon projet" />
         <p className="mt-4 text-sm text-gray-450 leading-loose">
           La prochaine étape consiste à définir votre projet (10 min). Vous
           pourrez vous faire accompagner par l'accompagnateur de votre choix.
         </p>
-        <div className="grow flex items-end mt-6 font-bold text-blue-600">
-          Bientôt disponible
+        <div className="grow flex items-end mt-6">
+          <div className="flex items-center">
+            <Button
+              size="small"
+              label="Compléter"
+              onClick={() => setNavigationNext("project/goals")}
+            />
+            <p className="ml-5 w-full text-sm text-gray-500">1 heure</p>
+          </div>
         </div>
       </div>
     </>
@@ -87,7 +96,9 @@ export const ProjectHome = ({
         src={certificateImg}
       />
       <div className="mt-12 text-center font-bold">REVA</div>
-      <BackButton onClick={() => setNavigationPrevious("show-results")} />
+      <BackButton
+        onClick={() => setNavigationPrevious("certificate/summary")}
+      />
       <div className="grow overflow-y-auto mt-8 px-8 pb-8">{homeContent}</div>
     </motion.div>
   );
