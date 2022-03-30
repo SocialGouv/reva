@@ -9,6 +9,7 @@ import { Navigation, Page } from "./components/organisms/Page";
 import { Certificate } from "./interface";
 import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
+import { ProjectGoals } from "./pages/ProjectGoals";
 import { ProjectHome } from "./pages/ProjectHome";
 
 const GET_CERTIFICATE = gql`
@@ -110,6 +111,18 @@ function App() {
     />
   );
 
+  const projectGoalsPage = (certificate: Certificate) => (
+    <ProjectGoals
+      key="project-goals"
+      certificate={certificate}
+      navigation={navigation}
+      setNavigationPrevious={setNavigationPrevious}
+      setNavigationNext={setNavigationNext}
+    />
+  );
+
+  console.log(navigation.page);
+
   return (
     <div className="App relative flex flex-col items-center justify-center h-screen bg-gray-400">
       {Capacitor.isNativePlatform() ? (
@@ -132,6 +145,11 @@ function App() {
             : navigation.page === "project/home"
             ? maybeCurrentCertificate.mapOrDefault(
                 projectHomePage,
+                certificatesPage
+              )
+            : navigation.page === "project/goals"
+            ? maybeCurrentCertificate.mapOrDefault(
+                projectGoalsPage,
                 certificatesPage
               )
             : maybeCurrentCertificate.mapOrDefault(

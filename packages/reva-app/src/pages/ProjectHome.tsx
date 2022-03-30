@@ -23,13 +23,17 @@ export const ProjectHome = ({
   setNavigationNext,
   setNavigationPrevious,
 }: ProjectHome) => {
-  const [homeLoaded, setHomeLoaded] = useState(false);
+  const [homeLoaded, setHomeLoaded] = useState(
+    navigation.direction === "previous"
+  );
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setHomeLoaded(true);
-    }, 2000);
-    return () => clearTimeout(timer);
+    if (navigation.direction === "next") {
+      const timer = setTimeout(() => {
+        setHomeLoaded(true);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   const loadingScreen = (
@@ -81,7 +85,7 @@ export const ProjectHome = ({
     <motion.div
       key="home-screen"
       className="flex flex-col h-full relative overflow-hidden"
-      initial={{ opacity: 0, y: 10 }}
+      initial={navigation.direction === "next" ? { opacity: 0, y: 10 } : false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
     >

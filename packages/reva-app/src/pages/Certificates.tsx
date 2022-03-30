@@ -68,7 +68,6 @@ export const Certificates = ({
         initialSize={
           isSelected && navigation.direction == "previous" ? "open" : "reduced"
         }
-        isOpen={isSelected}
         onOpen={() => (
           setNavigationNext("certificate/summary"),
           setCurrentCertificate(Just(certificate))
