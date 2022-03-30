@@ -107,7 +107,7 @@ export const Certificates = ({
           label="Candidater"
           className="w-full"
           primary
-          size="medium"
+          size="large"
         />
       </motion.div>
     );

@@ -45,14 +45,14 @@ export const Button = ({
   let sizeClasses = {
     tiny: "text-sm px-2 py-1",
     small: "text-sm px-5 h-[35px]",
-    medium: "text-base py-4",
-    large: "text-lg py-5",
+    medium: "text-base w-[190px] h-[45px]",
+    large: "text-lg h-[53px]",
   };
 
   return (
     <button
       type="button"
-      className={`rounded w-full flex justify-center items-center ${modeClass} ${sizeClasses[size]} ${className}`}
+      className={`rounded flex justify-center items-center ${modeClass} ${sizeClasses[size]} ${className}`}
       style={{ backgroundColor }}
       {...props}
     >
