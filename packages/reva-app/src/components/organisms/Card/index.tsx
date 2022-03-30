@@ -1,9 +1,4 @@
-import {
-  AnimatePresence,
-  LayoutGroup,
-  motion,
-  useMotionValue,
-} from "framer-motion";
+import { motion } from "framer-motion";
 import React from "react";
 import { useState } from "react";
 
@@ -14,13 +9,11 @@ import certificateImg from "./certificate.png";
 import {
   SMALL_TITLE_LENGTH,
   heightConfig,
-  rounded2xl,
-  roundedNone,
   transitionIn,
   transitionOut,
 } from "./view";
 
-export type CardSize = "small" | "medium" | "large";
+export type CardSize = "reduced" | "open";
 
 interface Card {
   id: string;
@@ -40,23 +33,19 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
       summary,
       id,
       label,
-      isOpen = false,
       onClose = () => {},
       onLearnMore = () => {},
       onOpen = () => {},
-
       title,
-      initialSize = "small",
+      initialSize = "reduced",
       ...props
     },
     ref
   ) => {
-    const [size, setSize] = useState(isOpen ? "large" : initialSize);
+    const [size, setSize] = useState<CardSize>(initialSize);
 
-    const isSmall = size === "small";
-    const isMedium = size === "medium";
-    const isFullscreen = size === "large";
-    const isReduced = isSmall || isMedium;
+    const isReduced = size === "reduced";
+    const isFullscreen = size === "open";
 
     const transition = isReduced ? transitionOut : transitionIn;
 
@@ -68,7 +57,7 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
     const fullscreenDetails = (
       <motion.div
         variants={fullScreenVariants}
-        initial={initialSize === "large" || isReduced ? false : "closed"}
+        initial={initialSize === "open" || isReduced ? false : "closed"}
         animate={isReduced ? "closed" : "open"}
         transition={transition}
         style={{
@@ -80,7 +69,7 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
           <BackButton
             color="light"
             onClick={() => {
-              setSize("small");
+              setSize("reduced");
               onClose();
             }}
           />
@@ -131,8 +120,8 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
           style={{
             left: "-43px",
             top: "12px",
-            height: isSmall ? "104px" : "240px",
-            width: isSmall ? "104px" : "240px",
+            height: isReduced ? "104px" : "240px",
+            width: isReduced ? "104px" : "240px",
           }}
           src={certificateImg}
         />
@@ -164,11 +153,11 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
           layout
           transition={transition}
           layoutDependency={size}
-          onClick={() => (isReduced ? (setSize("large"), onOpen()) : {})}
+          onClick={() => (isReduced ? (setSize("open"), onOpen()) : {})}
           whileTap={{ scale: isReduced ? 0.92 : 1 }}
           style={{
-            zIndex: isOpen ? 20 : 0,
-            height: heightConfig[size],
+            zIndex: isReduced ? 0 : 20,
+            height: isReduced ? heightConfig.small : heightConfig.large,
             ...(isFullscreen
               ? {
                   position: "absolute",

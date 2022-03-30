@@ -21,16 +21,9 @@ Small.args = {
   summary: loremIpsum,
 };
 
-export const Medium = Template.bind({});
-
-Medium.args = {
-  ...Small.args,
-  initialSize: "medium",
-};
-
 export const Large = Template.bind({});
 
 Large.args = {
   ...Small.args,
-  initialSize: "large",
+  initialSize: "open",
 };

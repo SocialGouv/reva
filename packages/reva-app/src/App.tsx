@@ -49,9 +49,13 @@ function App() {
 
   const setCurrentCertificate = (maybeCertificate: Maybe<Certificate>) => {
     setMaybeCurrentCertificate(maybeCertificate);
-    /**maybeCertificate.map((certificate) =>
-      getCertification({ variables: { id: certificate.id } })
-    );*/
+    setTimeout(
+      () =>
+        maybeCertificate.map((certificate) =>
+          getCertification({ variables: { id: certificate.id } })
+        ),
+      800
+    );
   };
 
   useEffect(() => {

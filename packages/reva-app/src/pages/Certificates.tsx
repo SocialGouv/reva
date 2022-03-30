@@ -66,7 +66,7 @@ export const Certificates = ({
       <Card
         ref={isSelected ? currentCertificateElement : null}
         initialSize={
-          isSelected && navigation.direction == "previous" ? "large" : "small"
+          isSelected && navigation.direction == "previous" ? "open" : "reduced"
         }
         isOpen={isSelected}
         onOpen={() => (
