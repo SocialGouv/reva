@@ -60,22 +60,23 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
 
     const transition = isReduced ? transitionOut : transitionIn;
 
+    const fullScreenVariants = {
+      open: { y: 0 },
+      closed: { y: 80 },
+    };
+
     const fullscreenDetails = (
-      <div
+      <motion.div
+        variants={fullScreenVariants}
+        initial={initialSize === "large" || isReduced ? false : "closed"}
+        animate={isReduced ? "closed" : "open"}
+        transition={transition}
         style={{
-          overflowX: "hidden",
-          overflowY: "auto",
-          height: "calc(100vh - 216px)",
+          height: "calc(100vh - 120px)",
         }}
-        className={`absolute inset-0 z-50  ${
-          isReduced ? "pointer-events-none opacity-0" : ""
-        }`}
+        className="overflow-x-hidden overflow-y-auto absolute inset-0 z-50"
       >
-        <motion.div
-          transition={{ duration: 0 }}
-          layout="position"
-          className="mt-6"
-        >
+        <div className="absolute top-6 z-50 w-full">
           <BackButton
             color="light"
             onClick={() => {
@@ -83,12 +84,8 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
               onClose();
             }}
           />
-        </motion.div>
-        <motion.div
-          layout="position"
-          transition={transition}
-          className={`w-full px-6 mb-4`}
-        >
+        </div>
+        <div className={`w-full px-6 mt-28 mb-4`}>
           <TextResult size="large" title={title} color="light" />
           <div>
             <div className="mt-1 mb-4 font-bold text-white">{label}</div>
@@ -102,7 +99,7 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
           >
             Lire tous les détails
           </a>
-        </motion.div>
+        </div>
         <img
           className="pointer-events-none"
           style={{
@@ -112,7 +109,7 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
           }}
           src={certificateImg}
         />
-      </div>
+      </motion.div>
     );
 
     const reducedInfo = (
@@ -157,8 +154,7 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
       <li
         ref={ref}
         style={{
-          height:
-            initialSize === "small" ? heightConfig.small : heightConfig.medium,
+          height: heightConfig.small,
         }}
       >
         <motion.div
@@ -186,7 +182,7 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
         >
           {isReduced && reducedInfo}
         </motion.div>
-        {fullscreenDetails}
+        {!isReduced && fullscreenDetails}
       </li>
     );
   }

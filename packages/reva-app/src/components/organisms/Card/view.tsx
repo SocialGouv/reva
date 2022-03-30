@@ -10,13 +10,13 @@ export const heightConfig = {
 
 export const transitionIn: Transition = {
   type: "spring",
-  duration: 0.4,
+  duration: 0.5,
   bounce: 0.2,
 };
 
 export const transitionOut: Transition = {
   type: "spring",
-  duration: 0.4,
+  duration: 0.2,
   bounce: 0.1,
 };
 

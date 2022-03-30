@@ -120,7 +120,8 @@ function App() {
         style={{ maxWidth: "416px" }}
       >
         <AnimatePresence custom={navigation.direction} initial={false}>
-          {navigation.page === "show-results"
+          {navigation.page === "show-results" ||
+          navigation.page === "show-certificate"
             ? certificatesPage
             : navigation.page === "project-home"
             ? maybeCurrentCertificate.mapOrDefault(

@@ -6,7 +6,11 @@ interface PageConfig {
   navigation: Navigation;
 }
 
-export type Page = "show-results" | "show-certificate-details" | "project-home";
+export type Page =
+  | "show-results"
+  | "show-certificate"
+  | "show-certificate-details"
+  | "project-home";
 
 export type Direction = "previous" | "next";
 
@@ -22,7 +26,7 @@ const pageVariants = {
   }),
 };
 
-const pageTransition = { ease: "circOut", duration: 0.35 };
+const pageTransition = { ease: "circOut", duration: 0.2 };
 
 export const Page = ({ children, className, navigation }: PageConfig) => {
   return (

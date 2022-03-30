@@ -65,11 +65,18 @@ export const Certificates = ({
     return (
       <Card
         ref={isSelected ? currentCertificateElement : null}
-        initialSize="small"
+        initialSize={
+          isSelected && navigation.direction == "previous" ? "large" : "small"
+        }
         isOpen={isSelected}
-        onOpen={() => setCurrentCertificate(Just(certificate))}
+        onOpen={() => (
+          setNavigationNext("show-certificate"),
+          setCurrentCertificate(Just(certificate))
+        )}
         onLearnMore={() => setNavigationNext("show-certificate-details")}
-        onClose={() => setCurrentCertificate(Nothing)}
+        onClose={() => (
+          setNavigationNext("show-results"), setCurrentCertificate(Nothing)
+        )}
         key={certificate.id}
         id={certificate.id}
         title={certificate.label}
