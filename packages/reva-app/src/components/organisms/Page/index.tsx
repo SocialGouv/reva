@@ -27,7 +27,7 @@ const pageVariants = {
   }),
 };
 
-const pageTransition = { ease: "circOut", duration: 0.2 };
+const pageTransition = { ease: "circOut", duration: 0.35 };
 
 export const Page = ({ children, className, navigation }: PageConfig) => {
   return (
