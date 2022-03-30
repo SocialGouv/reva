@@ -36,6 +36,8 @@ export const ProjectHome = ({
     }
   }, []);
 
+  const projectProgress = 35;
+
   const loadingScreen = (
     <motion.div
       key="loading-screen"
@@ -62,8 +64,19 @@ export const ProjectHome = ({
         className="mt-10 flex flex-col px-8 py-6 rounded-xl bg-white shadow-sm"
         style={{ height: "414px" }}
       >
-        <Title label="Mon projet" />
-        <p className="mt-4 text-sm text-gray-450 leading-loose">
+        <div className="flex items-end justify-between">
+          <Title label="Mon projet" />
+          <div className="font-semibold text-base text-slate-400">
+            {projectProgress}%
+          </div>
+        </div>
+        <div className="mt-2 w-full bg-slate-300 rounded-full h-[5px]">
+          <div
+            className="bg-blue-600 h-[5px] rounded-full"
+            style={{ width: `${projectProgress}%` }}
+          ></div>
+        </div>
+        <p className="mt-5 text-sm text-gray-450 leading-loose">
           La prochaine étape consiste à définir votre projet (10 min). Vous
           pourrez vous faire accompagner par l'accompagnateur de votre choix.
         </p>
@@ -94,12 +107,12 @@ export const ProjectHome = ({
         style={{
           position: "absolute",
           left: "-53px",
-          top: "99px",
+          top: "58px",
           width: "106px",
         }}
         src={certificateImg}
       />
-      <div className="mt-12 text-center font-bold">REVA</div>
+      <div className="mt-12 -mb-12 text-center font-bold">REVA</div>
       <BackButton
         onClick={() => setNavigationPrevious("certificate/summary")}
       />
