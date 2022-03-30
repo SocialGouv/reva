@@ -35,9 +35,12 @@ export const ProjectGoals = ({
   setNavigationPrevious,
 }: ProjectGoalsProps) => {
   return (
-    <Page className="z-[60] flex flex-col bg-white" navigation={navigation}>
+    <Page
+      className="z-[60] flex flex-col bg-white pt-6 pb-12"
+      navigation={navigation}
+    >
       <BackButton onClick={() => setNavigationPrevious("project/home")} />
-      <div className="h-full flex flex-col p-8">
+      <div className="h-full flex flex-col px-8">
         <Title label="Mon objectif" />
         <p className="text-slate-800 text-lg">Plusieurs choix possibles</p>
         {goalSet}
