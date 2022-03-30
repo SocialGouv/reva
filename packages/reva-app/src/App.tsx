@@ -49,6 +49,8 @@ function App() {
 
   const setCurrentCertificate = (maybeCertificate: Maybe<Certificate>) => {
     setMaybeCurrentCertificate(maybeCertificate);
+    // For performance reason, we delay the request after the transition
+    // TODO: remove the timeout and move this to a child component with cancellation support
     setTimeout(
       () =>
         maybeCertificate.map((certificate) =>

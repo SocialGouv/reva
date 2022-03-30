@@ -54,6 +54,7 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
       closed: { y: 80 },
     };
 
+    // TODO: move this to an external component
     const fullscreenDetails = (
       <motion.div
         variants={fullScreenVariants}
