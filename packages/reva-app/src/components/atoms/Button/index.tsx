@@ -1,4 +1,4 @@
-import { motion, useMotionValue, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion, useMotionValue } from "framer-motion";
 
 interface ButtonProps {
   /**
@@ -16,7 +16,7 @@ interface ButtonProps {
   /**
    * How large should the button be?
    */
-  size?: "small" | "medium" | "large";
+  size?: "tiny" | "small" | "medium" | "large";
   /**
    * Button contents
    */
@@ -38,18 +38,21 @@ export const Button = ({
   label,
   ...props
 }: ButtonProps) => {
-  const modeClass = primary ? "bg-blue-600 text-white" : "shadow text-gray-900";
+  const modeClass = primary
+    ? "bg-blue-600 text-white"
+    : "bg-slate-900 text-white";
 
   let sizeClasses = {
-    small: "text-sm px-2 py-1",
-    medium: "text-base py-4",
-    large: "text-lg py-5",
+    tiny: "text-sm px-2 py-1",
+    small: "text-sm px-5 h-[35px]",
+    medium: "text-base w-[190px] h-[45px]",
+    large: "text-lg h-[53px]",
   };
-  const ease = { type: "ease", duration: 2 };
+
   return (
     <button
       type="button"
-      className={`rounded w-full ${modeClass} ${sizeClasses[size]} ${className}`}
+      className={`rounded flex justify-center items-center ${modeClass} ${sizeClasses[size]} ${className}`}
       style={{ backgroundColor }}
       {...props}
     >

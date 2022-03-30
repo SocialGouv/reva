@@ -4,6 +4,6 @@ const visible = { y: 0, scale: 1, opacity: 1 };
 
 export const buttonVariants = {
   hidden: (page: Page) =>
-    page === "show-results" ? { y: 120, scale: 0.98, opacity: 1 } : visible,
+    page === "search/results" ? { y: 120, scale: 0.98, opacity: 1 } : visible,
   visible,
 };

@@ -7,10 +7,11 @@ interface PageConfig {
 }
 
 export type Page =
-  | "show-results"
-  | "show-certificate"
-  | "show-certificate-details"
-  | "project-home";
+  | "search/results"
+  | "certificate/summary"
+  | "certificate/details"
+  | "project/home"
+  | "project/goals";
 
 export type Direction = "previous" | "next";
 

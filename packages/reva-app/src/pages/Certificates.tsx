@@ -68,14 +68,13 @@ export const Certificates = ({
         initialSize={
           isSelected && navigation.direction == "previous" ? "open" : "reduced"
         }
-        isOpen={isSelected}
         onOpen={() => (
-          setNavigationNext("show-certificate"),
+          setNavigationNext("certificate/summary"),
           setCurrentCertificate(Just(certificate))
         )}
-        onLearnMore={() => setNavigationNext("show-certificate-details")}
+        onLearnMore={() => setNavigationNext("certificate/details")}
         onClose={() => (
-          setNavigationNext("show-results"), setCurrentCertificate(Nothing)
+          setNavigationNext("search/results"), setCurrentCertificate(Nothing)
         )}
         key={certificate.id}
         id={certificate.id}
@@ -104,11 +103,11 @@ export const Certificates = ({
         layout="position"
       >
         <Button
-          onClick={() => setNavigationNext("project-home")}
+          onClick={() => setNavigationNext("project/home")}
           label="Candidater"
           className="w-full"
           primary
-          size="medium"
+          size="large"
         />
       </motion.div>
     );
