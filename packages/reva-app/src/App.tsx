@@ -39,7 +39,7 @@ function App() {
   const windowSize = useWindowSize();
 
   const appSize =
-    windowSize.width > 540
+    windowSize.width > 640
       ? { width: 480, height: windowSize.height * 0.85 }
       : windowSize;
 
@@ -130,7 +130,7 @@ function App() {
   );
 
   return (
-    <div className="App relative flex flex-col items-center justify-center bg-slate-200 h-screen sm:px-20">
+    <div className="App relative sm:flex sm:flex-col sm:items-center sm:justify-center sm:bg-slate-200 sm:h-screen sm:px-20">
       {Capacitor.isNativePlatform() ? (
         <div
           className={`transition-opacity duration-200 ${
@@ -142,7 +142,7 @@ function App() {
       )}
 
       <div
-        className="sm:rounded-2xl sm:shadow-xl relative flex flex-col w-full bg-white overflow-hidden"
+        className="sm:rounded-2xl sm:z-[1] sm:shadow-xl relative flex flex-col w-full bg-white overflow-hidden"
         style={appSize}
       >
         <AnimatePresence custom={navigation.direction} initial={false}>
