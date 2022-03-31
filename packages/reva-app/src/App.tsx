@@ -11,6 +11,7 @@ import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
 import { ProjectGoals } from "./pages/ProjectGoals";
 import { ProjectHome } from "./pages/ProjectHome";
+import useWindowSize from "./utils/useWindowSize";
 
 const GET_CERTIFICATE = gql`
   query Certification($id: ID!) {
@@ -34,6 +35,13 @@ function App() {
     page: initialPage,
   };
   const [navigation, setNavigation] = useState<Navigation>(initialNavigation);
+
+  const windowSize = useWindowSize();
+
+  const appSize =
+    windowSize.width > 540
+      ? { width: 480, height: windowSize.height * 0.85 }
+      : windowSize;
 
   const [getCertification, { data }] = useLazyQuery(GET_CERTIFICATE);
 
@@ -121,10 +129,8 @@ function App() {
     />
   );
 
-  console.log(navigation.page);
-
   return (
-    <div className="App relative flex flex-col items-center justify-center h-screen bg-gray-400">
+    <div className="App relative flex flex-col items-center justify-center bg-slate-200 h-screen sm:px-20">
       {Capacitor.isNativePlatform() ? (
         <div
           className={`transition-opacity duration-200 ${
@@ -134,9 +140,10 @@ function App() {
       ) : (
         <></>
       )}
+
       <div
-        className="relative flex flex-col w-full h-screen bg-white overflow-hidden"
-        style={{ maxWidth: "416px" }}
+        className="sm:rounded-2xl sm:shadow-xl relative flex flex-col w-full bg-white overflow-hidden"
+        style={appSize}
       >
         <AnimatePresence custom={navigation.direction} initial={false}>
           {navigation.page === "search/results" ||

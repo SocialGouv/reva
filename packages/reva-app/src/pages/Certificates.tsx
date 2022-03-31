@@ -95,9 +95,7 @@ export const Certificates = ({
         initial={false}
         exit="hidden"
         transition={
-          isVisible
-            ? { ...transitionIn, delay: 0.1 }
-            : { ease: "easeOut", duration: 0.1 }
+          isVisible ? { ...transitionIn, delay: 0.1 } : { duration: 0 }
         }
         animate={isVisible ? "visible" : "hidden"}
         layout="position"
@@ -129,7 +127,7 @@ export const Certificates = ({
         <div className="px-8">
           <Results
             title="Certifications disponibles"
-            listClassName="mt-4 space-y-8"
+            listClassName="my-4 space-y-8"
           >
             {loading
               ? [1, 2, 3, 4, 5].map((i) => (

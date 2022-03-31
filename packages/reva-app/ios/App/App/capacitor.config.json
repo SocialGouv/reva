@@ -2,5 +2,9 @@
 	"appId": "fr.gouv.beta.reva",
 	"appName": "reva-app",
 	"webDir": "build",
-	"bundledWebRuntime": false
+	"bundledWebRuntime": false,
+	"server": {
+		"url": "http://localhost:3001",
+		"cleartext": true
+	}
 }
