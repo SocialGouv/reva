@@ -46,7 +46,7 @@ export const ProjectHome = ({
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="absolute flex flex-col bg-neutral-100 h-full"
     >
-      <div className="grow flex flex-col text-center items-center justify-center">
+      <div className="grow flex flex-col text-center items-center justify-center px-12">
         <Header label="Création de votre candidature" size="small" />
         <div className="mt-8 w-8">
           <Loader />
