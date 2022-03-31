@@ -5,11 +5,6 @@ import { AnimatePresence } from "framer-motion";
 import { Just, Maybe, Nothing } from "purify-ts/Maybe";
 import { useEffect, useState } from "react";
 
-import {
-  loremIpsum,
-  loremIpsumLong,
-  loremIpsumVeryLong,
-} from "./components/atoms/LoremIpsum";
 import { Navigation, Page } from "./components/organisms/Page";
 import { Certificate } from "./interface";
 import { CertificateDetails } from "./pages/CertificateDetails";
