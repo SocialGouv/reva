@@ -64,7 +64,7 @@ export const CertificateDetails = ({
             label="Candidater"
             className="mt-8 w-full"
             primary
-            size="medium"
+            size="large"
           />
         </div>
       </div>

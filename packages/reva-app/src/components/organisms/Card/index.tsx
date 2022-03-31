@@ -155,7 +155,7 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
           transition={transition}
           layoutDependency={size}
           onClick={() => (isReduced ? (setSize("open"), onOpen()) : {})}
-          whileTap={{ scale: isReduced ? 0.92 : 1 }}
+          whileTap={{ scale: isReduced ? 0.96 : 1 }}
           style={{
             zIndex: isReduced ? 0 : 20,
             height: isReduced ? heightConfig.small : heightConfig.large,

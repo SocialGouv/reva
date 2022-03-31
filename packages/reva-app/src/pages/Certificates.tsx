@@ -95,9 +95,7 @@ export const Certificates = ({
         initial={false}
         exit="hidden"
         transition={
-          isVisible
-            ? { ...transitionIn, delay: 0.1 }
-            : { ease: "easeOut", duration: 0.1 }
+          isVisible ? { ...transitionIn, delay: 0.1 } : { duration: 0 }
         }
         animate={isVisible ? "visible" : "hidden"}
         layout="position"
