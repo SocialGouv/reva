@@ -129,7 +129,7 @@ export const Certificates = ({
         <div className="px-8">
           <Results
             title="Certifications disponibles"
-            listClassName="mt-4 space-y-8"
+            listClassName="my-4 space-y-8"
           >
             {loading
               ? [1, 2, 3, 4, 5].map((i) => (

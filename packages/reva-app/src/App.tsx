@@ -135,55 +135,48 @@ function App() {
   );
 
   return (
-    <div className="App relative flex flex-col items-center justify-center bg-slate-200 h-screen px-20">
-      <div className="rounded-xl overflow-hidden shadow-2xl w-full flex items-center justify-between max-w-5xl">
-        {Capacitor.isNativePlatform() ? (
-          <div
-            className={`transition-opacity duration-200 ${
-              maybeCurrentCertificate.isJust() ? "opacity-0" : "opacity-1"
-            } absolute z-50 h-12 top-0 inset-x-0 backdrop-blur-md bg-white/50`}
-          ></div>
-        ) : (
-          <></>
-        )}
-        <div className="flex-1 bg-white text-4xl h-full w-full border-r">
-          <div className="py-12 pl-8 pr-24">
-            <h3 className="font-bold mb-8">REVA</h3>
-            <p className="text-gray-400 text-lg">Version de démonstration.</p>
-          </div>
-        </div>
+    <div className="App relative flex flex-col items-center justify-center bg-slate-200 h-screen sm:px-20">
+      {Capacitor.isNativePlatform() ? (
         <div
-          className="flex-1 shadow-xl relative flex flex-col w-full bg-white overflow-hidden"
-          style={appSize}
-        >
-          <AnimatePresence custom={navigation.direction} initial={false}>
-            {navigation.page === "search/results" ||
-            navigation.page === "certificate/summary"
-              ? certificatesPage
-              : navigation.page === "project/home"
-              ? maybeCurrentCertificate.mapOrDefault(
-                  projectHomePage,
-                  certificatesPage
-                )
-              : navigation.page === "project/goals"
-              ? maybeCurrentCertificate.mapOrDefault(
-                  projectGoalsPage,
-                  certificatesPage
-                )
-              : maybeCurrentCertificate.mapOrDefault(
-                  (certificate) => (
-                    <CertificateDetails
-                      key="show-certificate-details"
-                      certificate={certificate}
-                      navigation={navigation}
-                      setNavigationNext={setNavigationNext}
-                      setNavigationPrevious={setNavigationPrevious}
-                    />
-                  ),
-                  <></>
-                )}
-          </AnimatePresence>
-        </div>
+          className={`transition-opacity duration-200 ${
+            maybeCurrentCertificate.isJust() ? "opacity-0" : "opacity-1"
+          } absolute z-50 h-12 top-0 inset-x-0 backdrop-blur-md bg-white/50`}
+        ></div>
+      ) : (
+        <></>
+      )}
+
+      <div
+        className="sm:rounded-2xl sm:shadow-xl relative flex flex-col w-full bg-white overflow-hidden"
+        style={appSize}
+      >
+        <AnimatePresence custom={navigation.direction} initial={false}>
+          {navigation.page === "search/results" ||
+          navigation.page === "certificate/summary"
+            ? certificatesPage
+            : navigation.page === "project/home"
+            ? maybeCurrentCertificate.mapOrDefault(
+                projectHomePage,
+                certificatesPage
+              )
+            : navigation.page === "project/goals"
+            ? maybeCurrentCertificate.mapOrDefault(
+                projectGoalsPage,
+                certificatesPage
+              )
+            : maybeCurrentCertificate.mapOrDefault(
+                (certificate) => (
+                  <CertificateDetails
+                    key="show-certificate-details"
+                    certificate={certificate}
+                    navigation={navigation}
+                    setNavigationNext={setNavigationNext}
+                    setNavigationPrevious={setNavigationPrevious}
+                  />
+                ),
+                <></>
+              )}
+        </AnimatePresence>
       </div>
     </div>
   );
