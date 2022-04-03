@@ -3,19 +3,10 @@ import { motion } from "framer-motion";
 interface PageConfig {
   children: JSX.Element | JSX.Element[];
   className: string;
-  navigation: Navigation;
+  direction: Direction;
 }
 
-export type Page =
-  | "search/results"
-  | "certificate/summary"
-  | "certificate/details"
-  | "project/home"
-  | "project/goals";
-
 export type Direction = "previous" | "next";
-
-export type Navigation = { direction: Direction; page: Page };
 
 const pageVariants = {
   enter: (direction: Direction) => ({
@@ -29,10 +20,10 @@ const pageVariants = {
 
 const pageTransition = { ease: "circOut", duration: 0.35 };
 
-export const Page = ({ children, className, navigation }: PageConfig) => {
+export const Page = ({ children, className, direction }: PageConfig) => {
   return (
     <motion.div
-      custom={navigation.direction}
+      custom={direction}
       variants={pageVariants}
       initial="enter"
       animate="visible"

@@ -1,12 +1,19 @@
 import { gql, useLazyQuery } from "@apollo/client";
 import { Capacitor } from "@capacitor/core";
 import { StatusBar, Style } from "@capacitor/status-bar";
+import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
 import { Just, Maybe, Nothing } from "purify-ts/Maybe";
 import { useEffect, useState } from "react";
 
-import { Navigation, Page } from "./components/organisms/Page";
+import { Direction, Page } from "./components/organisms/Page";
 import { Certificate } from "./interface";
+import {
+  CertificateDetailsState,
+  ProjectGoalsState,
+  ProjectHomeState,
+  mainMachine,
+} from "./machines/main.machine";
 import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
 import { ProjectGoals } from "./pages/ProjectGoals";
@@ -29,12 +36,10 @@ const GET_CERTIFICATE = gql`
 `;
 
 function App() {
-  const initialPage = "search/results";
-  const initialNavigation: Navigation = {
-    direction: "next",
-    page: initialPage,
-  };
-  const [navigation, setNavigation] = useState<Navigation>(initialNavigation);
+  const [current, send, mainService] = useMachine(mainMachine);
+  // @ts-ignore
+  window.state = current;
+  const currentPage = current.context.currentPage;
 
   const windowSize = useWindowSize();
 
@@ -44,14 +49,6 @@ function App() {
       : windowSize;
 
   const [getCertification, { data }] = useLazyQuery(GET_CERTIFICATE);
-
-  function setNavigationNext(nextPage: Page) {
-    setNavigation({ direction: "next", page: nextPage });
-  }
-
-  function setNavigationPrevious(previousPage: Page) {
-    setNavigation({ direction: "previous", page: previousPage });
-  }
 
   const [maybeCurrentCertificate, setMaybeCurrentCertificate] =
     useState<Maybe<Certificate>>(Nothing);
@@ -85,47 +82,31 @@ function App() {
 
   useEffect(() => {
     async function setStatusBarVisibility() {
-      if (
-        ["show-results", "show-certificate-details"].includes(
-          navigation.page
-        ) &&
-        maybeCurrentCertificate.isJust()
-      ) {
+      if (current.context.showStatusBar) {
         await StatusBar.hide();
       } else {
         await StatusBar.show();
       }
     }
     Capacitor.isNativePlatform() && setStatusBarVisibility();
-  }, [navigation.page, maybeCurrentCertificate]);
+  }, [current.context.showStatusBar]);
 
   const certificatesPage = (
-    <Certificates
-      key="show-results"
-      maybeCurrentCertificate={maybeCurrentCertificate}
-      navigation={navigation}
-      setNavigationNext={setNavigationNext}
-      setCurrentCertificate={setCurrentCertificate}
-    />
+    <Certificates key="show-results" mainService={mainService} />
   );
 
   const projectHomePage = (certificate: Certificate) => (
-    <ProjectHome
-      key="project-home"
-      certificate={certificate}
-      navigation={navigation}
-      setNavigationPrevious={setNavigationPrevious}
-      setNavigationNext={setNavigationNext}
-    />
+    <ProjectHome key="project-home" mainService={mainService} />
   );
 
   const projectGoalsPage = (certificate: Certificate) => (
-    <ProjectGoals
-      key="project-goals"
-      certificate={certificate}
-      navigation={navigation}
-      setNavigationPrevious={setNavigationPrevious}
-      setNavigationNext={setNavigationNext}
+    <ProjectGoals key="project-goals" mainService={mainService} />
+  );
+
+  const certificateDetails = (certificate: Certificate) => (
+    <CertificateDetails
+      key="show-certificate-details"
+      mainService={mainService}
     />
   );
 
@@ -134,7 +115,7 @@ function App() {
       {Capacitor.isNativePlatform() ? (
         <div
           className={`transition-opacity duration-200 ${
-            maybeCurrentCertificate.isJust() ? "opacity-0" : "opacity-1"
+            current.matches("search/results") ? "opacity-1" : "opacity-0"
           } absolute z-50 h-12 top-0 inset-x-0 backdrop-blur-md bg-white/50`}
         ></div>
       ) : (
@@ -145,32 +126,25 @@ function App() {
         className="sm:rounded-2xl sm:z-[1] sm:shadow-xl relative flex flex-col w-full bg-white overflow-hidden"
         style={appSize}
       >
-        <AnimatePresence custom={navigation.direction} initial={false}>
-          {navigation.page === "search/results" ||
-          navigation.page === "certificate/summary"
-            ? certificatesPage
-            : navigation.page === "project/home"
-            ? maybeCurrentCertificate.mapOrDefault(
-                projectHomePage,
-                certificatesPage
-              )
-            : navigation.page === "project/goals"
-            ? maybeCurrentCertificate.mapOrDefault(
-                projectGoalsPage,
-                certificatesPage
-              )
-            : maybeCurrentCertificate.mapOrDefault(
-                (certificate) => (
-                  <CertificateDetails
-                    key="show-certificate-details"
-                    certificate={certificate}
-                    navigation={navigation}
-                    setNavigationNext={setNavigationNext}
-                    setNavigationPrevious={setNavigationPrevious}
-                  />
-                ),
-                <></>
-              )}
+        <AnimatePresence custom={current.context.direction} initial={false}>
+          {["search/results", "certificate/summary"].some(current.matches) &&
+            certificatesPage}
+
+          {current.matches("project/home") &&
+            projectHomePage(
+              (current.context.currentPage as ProjectHomeState).certification
+            )}
+
+          {current.matches("project/goals") &&
+            projectGoalsPage(
+              (current.context.currentPage as ProjectGoalsState).certification
+            )}
+
+          {current.matches("certificate/details") &&
+            certificateDetails(
+              (current.context.currentPage as CertificateDetailsState)
+                .certification
+            )}
         </AnimatePresence>
       </div>
     </div>

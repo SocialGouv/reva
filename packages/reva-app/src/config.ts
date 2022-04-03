@@ -1,4 +1,4 @@
-import { Page } from "./components/organisms/Page";
+import { Page } from "./machines/main.machine";
 
 const visible = { y: 0, scale: 1, opacity: 1 };
 

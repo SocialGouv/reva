@@ -1,7 +1,9 @@
 import { gql, useLazyQuery, useQuery } from "@apollo/client";
+import { useActor } from "@xstate/react";
 import { motion } from "framer-motion";
 import { Just, Maybe, Nothing } from "purify-ts";
 import { useEffect, useRef } from "react";
+import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { Header } from "../components/atoms/Header";
@@ -9,16 +11,18 @@ import { loremIpsumShort } from "../components/atoms/LoremIpsum";
 import { Card } from "../components/organisms/Card";
 import { transitionIn } from "../components/organisms/Card/view";
 import { CardSkeleton } from "../components/organisms/CardSkeleton";
-import { Navigation, Page } from "../components/organisms/Page";
+import { Direction, Page } from "../components/organisms/Page";
 import { Results } from "../components/organisms/Results";
 import { buttonVariants } from "../config";
-import { Certificate } from "../interface";
+import { Certificate, Certification } from "../interface";
+import {
+  CertificateSummaryState,
+  MainContext,
+  MainEvent,
+} from "../machines/main.machine";
 
 interface Certificates {
-  maybeCurrentCertificate: Maybe<Certificate>;
-  navigation: Navigation;
-  setNavigationNext: (page: Page) => void;
-  setCurrentCertificate: (certificate: Maybe<Certificate>) => void;
+  mainService: Interpreter<MainContext, any, MainEvent, any, any>;
 }
 
 const SEARCH_CERTIFICATIONS_AND_PROFESSIONS = gql`
@@ -34,16 +38,13 @@ const SEARCH_CERTIFICATIONS_AND_PROFESSIONS = gql`
   }
 `;
 
-export const Certificates = ({
-  maybeCurrentCertificate,
-  navigation,
-  setCurrentCertificate,
-  setNavigationNext,
-}: Certificates) => {
+export const Certificates = ({ mainService }: Certificates) => {
   const { loading, error, data } = useQuery(
     SEARCH_CERTIFICATIONS_AND_PROFESSIONS,
     { variables: { query: "" } }
   );
+
+  const [state, send] = useActor(mainService);
 
   const resultsElement = useRef<HTMLDivElement | null>(null);
   const currentCertificateElement = useRef<HTMLLIElement | null>(null);
@@ -57,40 +58,47 @@ export const Certificates = ({
     }
   }, []);
 
-  const CertificateCard = (certificate: Certificate) => {
-    const isSelected = maybeCurrentCertificate
-      .map((currentCertificate) => currentCertificate.id === certificate.id)
-      .orDefault(false);
+  const CertificateCard = (certification: Certification) => {
+    const isSelected =
+      state.matches("certificate/summary") &&
+      (state.context.currentPage as CertificateSummaryState).certification
+        .id === certification.id;
 
     return (
       <Card
         ref={isSelected ? currentCertificateElement : null}
         initialSize={
-          isSelected && navigation.direction == "previous" ? "open" : "reduced"
+          isSelected && state.context.direction === "previous"
+            ? "open"
+            : "reduced"
         }
-        onOpen={() => (
-          setNavigationNext("certificate/summary"),
-          setCurrentCertificate(Just(certificate))
-        )}
-        onLearnMore={() => setNavigationNext("certificate/details")}
-        onClose={() => (
-          setNavigationNext("search/results"), setCurrentCertificate(Nothing)
-        )}
-        key={certificate.id}
-        id={certificate.id}
-        title={certificate.label}
-        label={certificate.codeRncp}
-        summary={certificate.summary}
+        onOpen={() => send({ type: "SELECT_CERTIFICATION", certification })}
+        onLearnMore={() =>
+          send({ type: "SHOW_CERTIFICATION_DETAILS", certification })
+        }
+        onClose={
+          () => send("CLOSE_SELECTED_CERTIFICATION")
+          // () => closeCertification()
+          // setNavigationNext(), setCurrentCertificate(Nothing)
+          // setNavigationNext("search/results"), setCurrentCertificate(Nothing)
+        }
+        key={certification.id}
+        id={certification.id}
+        title={certification.label}
+        label={certification.codeRncp}
+        summary={certification.summary}
       />
     );
   };
 
-  function candidateButton(maybeCurrentCertificate: Maybe<Certificate>) {
-    const isVisible = maybeCurrentCertificate.isJust();
+  function candidateButton() {
+    const isVisible = state.matches("certificate/summary");
+    const certification = (state.context.currentPage as CertificateSummaryState)
+      .certification;
     return (
       <motion.div
         className="absolute bottom-0 z-50 inset-x-0 p-8 bg-slate-900"
-        custom={navigation.page}
+        custom={state.toStrings().join("")}
         variants={buttonVariants}
         initial={false}
         exit="hidden"
@@ -101,7 +109,12 @@ export const Certificates = ({
         layout="position"
       >
         <Button
-          onClick={() => setNavigationNext("project/home")}
+          onClick={() =>
+            send({
+              type: "CANDIDATE",
+              certification,
+            })
+          }
           label="Candidater"
           className="w-full"
           primary
@@ -112,7 +125,7 @@ export const Certificates = ({
   }
 
   return (
-    <Page className="z-40 bg-white" navigation={navigation}>
+    <Page className="z-40 bg-white" direction={state.context.direction}>
       <motion.div
         ref={resultsElement}
         layoutScroll
@@ -139,7 +152,7 @@ export const Certificates = ({
           </Results>
         </div>
       </motion.div>
-      {candidateButton(maybeCurrentCertificate)}
+      {candidateButton()}
     </Page>
   );
 };

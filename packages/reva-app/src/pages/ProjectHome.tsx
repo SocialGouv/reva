@@ -1,5 +1,7 @@
+import { useActor } from "@xstate/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { Header } from "../components/atoms/Header";
@@ -7,34 +9,24 @@ import { Loader } from "../components/atoms/Icons";
 import { Title } from "../components/atoms/Title";
 import { BackButton } from "../components/molecules/BackButton";
 import certificateImg from "../components/organisms/Card/certificate.png";
-import { Navigation, Page } from "../components/organisms/Page";
+import { Direction, Page } from "../components/organisms/Page";
 import { Certificate } from "../interface";
+import {
+  MainContext,
+  MainEvent,
+  ProjectHomeState,
+} from "../machines/main.machine";
 
 interface ProjectHome {
-  certificate: Certificate;
-  navigation: Navigation;
-  setNavigationNext: (page: Page) => void;
-  setNavigationPrevious: (page: Page) => void;
+  mainService: Interpreter<MainContext, any, MainEvent, any, any>;
 }
 
-export const ProjectHome = ({
-  certificate,
-  navigation,
-  setNavigationNext,
-  setNavigationPrevious,
-}: ProjectHome) => {
-  const [homeLoaded, setHomeLoaded] = useState(
-    navigation.direction === "previous"
-  );
+export const ProjectHome = ({ mainService }: ProjectHome) => {
+  const [state, send] = useActor(mainService);
 
-  useEffect(() => {
-    if (navigation.direction === "next") {
-      const timer = setTimeout(() => {
-        setHomeLoaded(true);
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, []);
+  const homeLoaded = !state.matches({ "project/home": "loading" });
+  const certificate = (state.context.currentPage as ProjectHomeState)
+    .certification;
 
   const projectProgress = 35;
 
@@ -85,7 +77,8 @@ export const ProjectHome = ({
             <Button
               size="small"
               label="Compléter"
-              onClick={() => setNavigationNext("project/goals")}
+              onClick={() => send("SHOW_GOALS")}
+              // onClick={() => setNavigationNext("project/goals")}
             />
             <p className="ml-5 w-full text-sm text-gray-500">1 heure</p>
           </div>
@@ -98,7 +91,9 @@ export const ProjectHome = ({
     <motion.div
       key="home-screen"
       className="flex flex-col h-full relative overflow-hidden"
-      initial={navigation.direction === "next" ? { opacity: 0, y: 10 } : false}
+      initial={
+        state.context.direction === "next" ? { opacity: 0, y: 10 } : false
+      }
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
     >
@@ -113,17 +108,19 @@ export const ProjectHome = ({
         src={certificateImg}
       />
       <div className="mt-12 -mb-12 text-center font-bold">REVA</div>
-      <BackButton
-        onClick={() => setNavigationPrevious("certificate/summary")}
-      />
+      <BackButton onClick={() => send("BACK")} />
       <div className="grow overflow-y-auto mt-8 px-8 pb-8">{homeContent}</div>
     </motion.div>
   );
 
   return (
-    <Page className="z-50 flex flex-col bg-neutral-100" navigation={navigation}>
+    <Page
+      className="z-50 flex flex-col bg-neutral-100"
+      direction={state.context.direction}
+    >
       <AnimatePresence>
-        {!homeLoaded && loadingScreen} {homeLoaded && homeScreen}
+        {!homeLoaded && loadingScreen}
+        {homeLoaded && homeScreen}
       </AnimatePresence>
     </Page>
   );
