@@ -7,13 +7,8 @@ import { Just, Maybe, Nothing } from "purify-ts/Maybe";
 import { useEffect, useState } from "react";
 
 import { Direction, Page } from "./components/organisms/Page";
-import { Certificate } from "./interface";
-import {
-  CertificateDetailsState,
-  ProjectGoalsState,
-  ProjectHomeState,
-  mainMachine,
-} from "./machines/main.machine";
+import { Certificate, Certification } from "./interface";
+import { mainMachine } from "./machines/main.machine";
 import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
 import { ProjectGoals } from "./pages/ProjectGoals";
@@ -39,7 +34,6 @@ function App() {
   const [current, send, mainService] = useMachine(mainMachine);
   // @ts-ignore
   window.state = current;
-  const currentPage = current.context.currentPage;
 
   const windowSize = useWindowSize();
 
@@ -49,28 +43,6 @@ function App() {
       : windowSize;
 
   const [getCertification, { data }] = useLazyQuery(GET_CERTIFICATE);
-
-  const [maybeCurrentCertificate, setMaybeCurrentCertificate] =
-    useState<Maybe<Certificate>>(Nothing);
-
-  const setCurrentCertificate = (maybeCertificate: Maybe<Certificate>) => {
-    setMaybeCurrentCertificate(maybeCertificate);
-    // For performance reason, we delay the request after the transition
-    // TODO: remove the timeout and move this to a child component with cancellation support
-    setTimeout(
-      () =>
-        maybeCertificate.map((certificate) =>
-          getCertification({ variables: { id: certificate.id } })
-        ),
-      800
-    );
-  };
-
-  useEffect(() => {
-    if (data) {
-      setMaybeCurrentCertificate(Just(data.getCertification));
-    }
-  }, [data]);
 
   useEffect(() => {
     async function setStatusBarOverlay() {
@@ -95,18 +67,23 @@ function App() {
     <Certificates key="show-results" mainService={mainService} />
   );
 
-  const projectHomePage = (certificate: Certificate) => (
-    <ProjectHome key="project-home" mainService={mainService} />
+  const projectHomePage = (certification: Certification) => (
+    <ProjectHome
+      key="project-home"
+      mainService={mainService}
+      certification={certification}
+    />
   );
 
-  const projectGoalsPage = (certificate: Certificate) => (
+  const projectGoalsPage = (certification: Certificate) => (
     <ProjectGoals key="project-goals" mainService={mainService} />
   );
 
-  const certificateDetails = (certificate: Certificate) => (
+  const certificateDetails = (certification: Certificate) => (
     <CertificateDetails
       key="show-certificate-details"
       mainService={mainService}
+      certification={certification}
     />
   );
 
@@ -115,7 +92,7 @@ function App() {
       {Capacitor.isNativePlatform() ? (
         <div
           className={`transition-opacity duration-200 ${
-            current.matches("search/results") ? "opacity-1" : "opacity-0"
+            current.matches("searchResults") ? "opacity-1" : "opacity-0"
           } absolute z-50 h-12 top-0 inset-x-0 backdrop-blur-md bg-white/50`}
         ></div>
       ) : (
@@ -127,24 +104,17 @@ function App() {
         style={appSize}
       >
         <AnimatePresence custom={current.context.direction} initial={false}>
-          {["search/results", "certificate/summary"].some(current.matches) &&
+          {["searchResults", "certificateSummary"].some(current.matches) &&
             certificatesPage}
 
-          {current.matches("project/home") &&
-            projectHomePage(
-              (current.context.currentPage as ProjectHomeState).certification
-            )}
+          {current.matches("projectHome") &&
+            projectHomePage(current.context.certification)}
 
-          {current.matches("project/goals") &&
-            projectGoalsPage(
-              (current.context.currentPage as ProjectGoalsState).certification
-            )}
+          {current.matches("projectGoals") &&
+            projectGoalsPage(current.context.certification)}
 
-          {current.matches("certificate/details") &&
-            certificateDetails(
-              (current.context.currentPage as CertificateDetailsState)
-                .certification
-            )}
+          {current.matches("certificateDetails") &&
+            certificateDetails(current.context.certification)}
         </AnimatePresence>
       </div>
     </div>

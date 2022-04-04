@@ -10,23 +10,18 @@ import { Title } from "../components/atoms/Title";
 import { BackButton } from "../components/molecules/BackButton";
 import certificateImg from "../components/organisms/Card/certificate.png";
 import { Direction, Page } from "../components/organisms/Page";
-import { Certificate } from "../interface";
-import {
-  MainContext,
-  MainEvent,
-  ProjectHomeState,
-} from "../machines/main.machine";
+import type { Certification } from "../interface";
+import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
 interface ProjectHome {
-  mainService: Interpreter<MainContext, any, MainEvent, any, any>;
+  certification: Certification;
+  mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
 
-export const ProjectHome = ({ mainService }: ProjectHome) => {
+export const ProjectHome = ({ certification, mainService }: ProjectHome) => {
   const [state, send] = useActor(mainService);
 
-  const homeLoaded = !state.matches({ "project/home": "loading" });
-  const certificate = (state.context.currentPage as ProjectHomeState)
-    .certification;
+  const homeLoaded = !state.matches({ projectHome: "loading" });
 
   const projectProgress = 35;
 
@@ -49,8 +44,8 @@ export const ProjectHome = ({ mainService }: ProjectHome) => {
 
   const homeContent = (
     <>
-      <Header color="dark" label={certificate.label} size="small" />
-      <div className="-mt-2 mb-2 font-bold">{certificate.codeRncp}</div>
+      <Header color="dark" label={certification.label} size="small" />
+      <div className="-mt-2 mb-2 font-bold">{certification.codeRncp}</div>
       <p className="text-sm text-gray-450">Démarré le 10 janvier 2022</p>
       <div
         className="mt-10 flex flex-col px-8 py-6 rounded-xl bg-white shadow-sm"

@@ -10,10 +10,10 @@ import { Title } from "../components/atoms/Title";
 import { BackButton } from "../components/molecules/BackButton";
 import { Direction, Page } from "../components/organisms/Page";
 import { Certificate } from "../interface";
-import { MainContext, MainEvent } from "../machines/main.machine";
+import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
 interface ProjectGoalsProps {
-  mainService: Interpreter<MainContext, any, MainEvent, any, any>;
+  mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
 
 const goalSet = (

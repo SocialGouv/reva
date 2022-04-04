@@ -15,14 +15,10 @@ import { Direction, Page } from "../components/organisms/Page";
 import { Results } from "../components/organisms/Results";
 import { buttonVariants } from "../config";
 import { Certificate, Certification } from "../interface";
-import {
-  CertificateSummaryState,
-  MainContext,
-  MainEvent,
-} from "../machines/main.machine";
+import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
 interface Certificates {
-  mainService: Interpreter<MainContext, any, MainEvent, any, any>;
+  mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
 
 const SEARCH_CERTIFICATIONS_AND_PROFESSIONS = gql`
@@ -60,9 +56,8 @@ export const Certificates = ({ mainService }: Certificates) => {
 
   const CertificateCard = (certification: Certification) => {
     const isSelected =
-      state.matches("certificate/summary") &&
-      (state.context.currentPage as CertificateSummaryState).certification
-        .id === certification.id;
+      state.matches("certificateSummary") &&
+      (state.context.certification as Certification).id === certification.id;
 
     return (
       <Card
@@ -92,9 +87,8 @@ export const Certificates = ({ mainService }: Certificates) => {
   };
 
   function candidateButton() {
-    const isVisible = state.matches("certificate/summary");
-    const certification = (state.context.currentPage as CertificateSummaryState)
-      .certification;
+    const isVisible = state.matches("certificateSummary");
+    const certification = state.context.certification as Certification;
     return (
       <motion.div
         className="absolute bottom-0 z-50 inset-x-0 p-8 bg-slate-900"

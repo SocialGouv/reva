@@ -2,54 +2,27 @@ import { assign, createMachine } from "xstate";
 
 import { Certification } from "../interface";
 
-const searchResultPage = "search/results";
-const certificateSummaryPage = "certificate/summary";
-const certificateDetailsPage = "certificate/details";
-const projectHomePage = "project/home";
-const projectGoalsPage = "project/goals";
+const searchResults = "searchResults";
+const certificateSummary = "certificateSummary";
+const certificateDetails = "certificateDetails";
+const projectHome = "projectHome";
+const projectGoals = "projectGoals";
 
-export type SearchResultState = { type: typeof searchResultPage };
-
-export type CertificateSummaryState = {
-  type: typeof certificateSummaryPage;
-  certification: Certification;
-};
-export type CertificateDetailsState = {
-  type: typeof certificateDetailsPage;
-  certification: Certification;
-};
-export type ProjectHomeState = {
-  type: typeof projectHomePage;
-  certification: Certification;
-};
-export type ProjectGoalsState = {
-  type: typeof projectGoalsPage;
-  certification: Certification;
-};
-
-export type Page =
-  | typeof searchResultPage
-  | typeof certificateSummaryPage
-  | typeof certificateDetailsPage
-  | typeof projectHomePage
-  | typeof projectGoalsPage;
-
-type PageState =
-  | SearchResultState
-  | CertificateSummaryState
-  | CertificateDetailsState
-  | ProjectHomeState
-  | ProjectGoalsState;
+export type State =
+  | typeof searchResults
+  | typeof certificateSummary
+  | typeof certificateDetails
+  | typeof projectHome
+  | typeof projectGoals;
 
 export interface MainContext {
-  certifications: any[];
-  currentPage: PageState;
+  certifications: Certification[];
   direction: "previous" | "next";
   showStatusBar: boolean;
+  certification?: Certification;
 }
 
 export type MainEvent =
-  | { type: "NAVIGATE"; page: Page }
   | { type: "SELECT_CERTIFICATION"; certification: Certification }
   | { type: "SHOW_CERTIFICATION_DETAILS"; certification: Certification }
   | { type: "CANDIDATE"; certification: Certification }
@@ -58,95 +31,90 @@ export type MainEvent =
   | { type: "BACK" }
   | { type: "LOADED" };
 
-export const mainMachine = createMachine<MainContext, MainEvent>({
+export type MainState =
+  | {
+      value: typeof searchResults;
+      context: MainContext & { certification: undefined };
+    }
+  | {
+      value:
+        | typeof certificateSummary
+        | typeof certificateDetails
+        | typeof projectHome
+        | typeof projectGoals;
+      context: MainContext & { certification: Certification };
+    };
+
+export const mainMachine = createMachine<MainContext, MainEvent, MainState>({
   id: "mainMachine",
   context: {
-    currentPage: {
-      type: "search/results",
-    },
     direction: "next",
     certifications: [],
     showStatusBar: false,
   },
-  initial: "search/results",
+  initial: searchResults,
   states: {
-    "search/results": {
+    searchResults: {
       on: {
-        NAVIGATE: {
-          target: "certificate/summary",
-        },
         SELECT_CERTIFICATION: {
-          target: "certificate/summary",
+          target: certificateSummary,
           actions: assign({
-            currentPage: (context, event) => {
-              return {
-                type: "certificate/summary",
-                certification: event.certification,
-              };
+            certification: (context, event) => {
+              return event.certification;
             },
           }),
         },
       },
     },
-    "certificate/summary": {
+    certificateSummary: {
       on: {
         CANDIDATE: {
-          target: "project/home",
+          target: projectHome,
           actions: assign({
-            currentPage: (context, event) => ({
-              type: "project/home",
-              certification: event.certification,
-            }),
+            certification: (context, event) => {
+              return event.certification;
+            },
             direction: (context, event) => "next",
           }),
         },
         SHOW_CERTIFICATION_DETAILS: {
-          target: "certificate/details",
+          target: certificateDetails,
           actions: assign({
-            currentPage: (context, event) => ({
-              type: "certificate/details",
-              certification: event.certification,
-            }),
+            certification: (context, event) => {
+              return event.certification;
+            },
             direction: (context, event) => "next",
           }),
         },
         CLOSE_SELECTED_CERTIFICATION: {
-          target: "search/results",
+          target: searchResults,
           actions: assign({
-            currentPage: (context, event) => ({
-              type: "search/results",
-            }),
             direction: (context, event) => "next",
           }),
         },
       },
     },
-    "certificate/details": {
+    certificateDetails: {
       on: {
         BACK: {
-          target: "certificate/summary",
+          target: certificateSummary,
           actions: assign({
-            currentPage: (context, event) => ({
-              type: "certificate/summary",
-              certification: (context.currentPage as CertificateDetailsState)
-                .certification,
-            }),
+            certification: (context, event) => context.certification,
             direction: (context, event) => "previous",
           }),
         },
         CANDIDATE: {
-          target: "project/home",
+          target: projectHome,
           actions: assign({
-            currentPage: (context, event) => ({
-              type: "project/home",
-              certification: event.certification,
-            }),
+            certification: (context, event) => {
+              return event.certification;
+            },
             direction: (context, event) => "next",
           }),
         },
       },
     },
-    "project/home": {
+    projectHome: {
       initial: "loading",
       states: {
         loading: {
@@ -159,22 +127,14 @@ export const mainMachine = createMachine<MainContext, MainEvent>({
             BACK: {
               target: "leave",
               actions: assign({
-                currentPage: (context, event) => ({
-                  type: "certificate/summary",
-                  certification: (context.currentPage as ProjectHomeState)
-                    .certification,
-                }),
+                certification: (context, event) => context.certification,
                 direction: (context, event) => "previous",
               }),
             },
             SHOW_GOALS: {
               target: "leave",
               actions: assign({
-                currentPage: (context, event) => ({
-                  type: "project/goals",
-                  certification: (context.currentPage as ProjectHomeState)
-                    .certification,
-                }),
+                certification: (context, event) => context.certification,
                 direction: (context, event) => "next",
               }),
             },
@@ -187,28 +147,24 @@ export const mainMachine = createMachine<MainContext, MainEvent>({
       onDone: [
         {
           cond: (context, event) => {
-            return context.currentPage.type === "certificate/summary";
+            return context.direction === "previous";
           },
-          target: "certificate/summary",
+          target: certificateSummary,
         },
         {
           cond: (context, event) => {
-            return context.currentPage.type === "project/goals";
+            return context.direction === "next";
           },
-          target: "project/goals",
+          target: projectGoals,
         },
       ],
     },
-    "project/goals": {
+    projectGoals: {
       on: {
         BACK: {
-          target: "project/home.ready",
+          target: "projectHome.ready",
           actions: assign({
-            currentPage: (context, event) => ({
-              type: "project/home",
-              certification: (context.currentPage as ProjectGoalsState)
-                .certification,
-            }),
+            certification: (context, event) => context.certification,
             direction: (context, event) => "previous",
           }),
         },
