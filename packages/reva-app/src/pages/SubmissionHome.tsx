@@ -13,15 +13,15 @@ import { Direction, Page } from "../components/organisms/Page";
 import type { Certification } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
-interface ProjectHome {
+interface SubmissionHome {
   certification: Certification;
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
 
-export const ProjectHome = ({ certification, mainService }: ProjectHome) => {
+export const ProjectHome = ({ certification, mainService }: SubmissionHome) => {
   const [state, send] = useActor(mainService);
 
-  const homeLoaded = !state.matches({ projectHome: "loading" });
+  const homeLoaded = !state.matches({ submissionHome: "loading" });
 
   const projectProgress = 35;
 

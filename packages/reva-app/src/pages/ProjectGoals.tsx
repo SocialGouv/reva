@@ -35,7 +35,7 @@ export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
       className="z-[60] flex flex-col bg-white pt-6 pb-12"
       direction={state.context.direction}
     >
-      {/*"project/home"*/}
+      {/*"submission/home"*/}
       <BackButton onClick={() => send("BACK")} />
       <div className="h-full flex flex-col px-8">
         <Title label="Mon objectif" />

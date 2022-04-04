@@ -9,6 +9,7 @@ const certificateSummary = "certificateSummary";
 const certificateDetails = "certificateDetails";
 const projectHome = "projectHome";
 const projectGoals = "projectGoals";
+const submissionHome = "submissionHome";
 
 export type State =
   | typeof loadingCertifications
@@ -17,7 +18,8 @@ export type State =
   | typeof certificateSummary
   | typeof certificateDetails
   | typeof projectHome
-  | typeof projectGoals;
+  | typeof projectGoals
+  | typeof submissionHome;
 
 export interface MainContext {
   error: string;
@@ -112,7 +114,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         },
         on: {
           CANDIDATE: {
-            target: projectHome,
+            target: submissionHome,
             actions: assign({
               certification: (context, event) => event.certification,
               direction: (context, event) => "next",
@@ -145,7 +147,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             }),
           },
           CANDIDATE: {
-            target: projectHome,
+            target: submissionHome,
             actions: assign({
               certification: (context, event) => {
                 return event.certification;
@@ -203,7 +205,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
       projectGoals: {
         on: {
           BACK: {
-            target: "projectHome.ready",
+            target: "submissionHome.ready",
             actions: assign({
               certification: (context, event) => context.certification,
               direction: (context, event) => "previous",

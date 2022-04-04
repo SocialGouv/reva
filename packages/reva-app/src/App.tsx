@@ -17,6 +17,7 @@ import {
   getCertification,
   searchCertifications,
 } from "./services/searchServices";
+import { SubmissionHome } from "./pages/SubmissionHome";
 import useWindowSize from "./utils/useWindowSize";
 
 function App() {
@@ -74,12 +75,8 @@ function App() {
     <Certificates key="show-results" mainService={mainService} />
   );
 
-  const projectHomePage = (certification: Certification) => (
-    <ProjectHome
-      key="project-home"
-      mainService={mainService}
-      certification={certification}
-    />
+  const submissionHomePage = (certificate: Certificate) => (
+    <SubmissionHome key="project-home" mainService={mainService} certification={certification} />
   );
 
   const projectGoalsPage = (certification: Certification) => (
@@ -118,14 +115,21 @@ function App() {
             "certificateSummary",
           ].some(current.matches) && certificatesPage}
 
-          {current.matches("projectHome") &&
-            projectHomePage(current.context.certification)}
+          {current.matches("submissionHome") &&
+            submissionHomePage(
+              (current.context.currentPage as SubmissionHomeState).certification
+            )}
 
           {current.matches("projectGoals") &&
-            projectGoalsPage(current.context.certification)}
+            projectGoalsPage(
+              (current.context.currentPage as ProjectGoalsState).certification
+            )}
 
           {current.matches("certificateDetails") &&
-            certificateDetails(current.context.certification)}
+            certificateDetails(
+              (current.context.currentPage as CertificateDetailsState)
+                .certification
+            )}
         </AnimatePresence>
       </div>
     </div>
