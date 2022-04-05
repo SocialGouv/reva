@@ -83,7 +83,11 @@ function App() {
     <ProjectGoals key="project-goals" mainService={mainService} />
   );
 
-  const certificateDetails = (certification: Certification) => (
+  const projectHomePage = (certification: Certificate) => (
+    <ProjectHome key="project-home" mainService={mainService} certification={certification} />
+  );
+
+  const certificateDetails = (certification: Certificate) => (
     <CertificateDetails
       key="show-certificate-details"
       mainService={mainService}
@@ -123,6 +127,11 @@ function App() {
           {current.matches("projectGoals") &&
             projectGoalsPage(
               (current.context.currentPage as ProjectGoalsState).certification
+            )}
+
+          {current.matches("projectHome") &&
+            projectHomePage(
+              (current.context.currentPage as ProjectHomeState).certification
             )}
 
           {current.matches("certificateDetails") &&

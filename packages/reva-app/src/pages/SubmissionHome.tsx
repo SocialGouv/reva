@@ -8,6 +8,7 @@ import { Header } from "../components/atoms/Header";
 import { Loader } from "../components/atoms/Icons";
 import { Title } from "../components/atoms/Title";
 import { BackButton } from "../components/molecules/BackButton";
+import { ProgressTitle } from "../components/molecules/ProgressTitle";
 import certificateImg from "../components/organisms/Card/certificate.png";
 import { Direction, Page } from "../components/organisms/Page";
 import type { Certification } from "../interface";
@@ -51,18 +52,7 @@ export const ProjectHome = ({ certification, mainService }: SubmissionHome) => {
         className="mt-10 flex flex-col px-8 py-6 rounded-xl bg-white shadow-sm"
         style={{ height: "414px" }}
       >
-        <div className="flex items-end justify-between">
-          <Title label="Mon projet" />
-          <div className="font-semibold text-base text-slate-400">
-            {projectProgress}%
-          </div>
-        </div>
-        <div className="mt-2 w-full bg-slate-300 rounded-full h-[5px]">
-          <div
-            className="bg-blue-600 h-[5px] rounded-full"
-            style={{ width: `${projectProgress}%` }}
-          ></div>
-        </div>
+        <ProgressTitle progress={projectProgress} title="Mon projet" />
         <p className="mt-5 text-sm text-gray-450 leading-loose">
           La prochaine étape consiste à définir votre projet (10 min). Vous
           pourrez vous faire accompagner par l'accompagnateur de votre choix.
@@ -72,10 +62,10 @@ export const ProjectHome = ({ certification, mainService }: SubmissionHome) => {
             <Button
               size="small"
               label="Compléter"
-              onClick={() => send("SHOW_GOALS")}
+              onClick={() => send("SHOW_PROJECT_HOME")}
               // onClick={() => setNavigationNext("project/goals")}
             />
-            <p className="ml-5 w-full text-sm text-gray-500">1 heure</p>
+            <p className="ml-5 w-full text-sm text-gray-500">10 min</p>
           </div>
         </div>
       </div>
@@ -104,7 +94,7 @@ export const ProjectHome = ({ certification, mainService }: SubmissionHome) => {
       />
       <div className="mt-12 -mb-12 text-center font-bold">REVA</div>
       <BackButton onClick={() => send("BACK")} />
-      <div className="grow overflow-y-auto mt-8 px-8 pb-8">{homeContent}</div>
+      <div className="grow overflow-y-auto mt-20 px-8 pb-8">{homeContent}</div>
     </motion.div>
   );
 

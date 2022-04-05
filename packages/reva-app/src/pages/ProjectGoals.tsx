@@ -19,12 +19,13 @@ interface ProjectGoalsProps {
 const goalSet = (
   <fieldset className="grow space-y-8">
     <legend className="sr-only">Objectif</legend>
-    <Checkbox label="Améliorer mon employabilité" name="c1" />
-    <Checkbox label="Être reconnu.e professionnellement" name="c2" />
+    <Checkbox label="Trouver plus facilement un emploi" name="c1" />
+    <Checkbox label="Être reconnu dans ma profession" name="c2" />
     <Checkbox label="Avoir un meilleur salaire" name="c3" />
     <Checkbox label="Me réorienter" name="c4" />
     <Checkbox label="Consolider mes acquis métier" name="c5" />
     <Checkbox label="Me redonner confiance en moi" name="c6" />
+    <Checkbox label="Autre" name="c7" />
   </fieldset>
 );
 
@@ -42,7 +43,11 @@ export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
         <p className="text-slate-800 text-lg">Plusieurs choix possibles</p>
         {goalSet}
         <div className="flex justify-center">
-          <Button size="medium" label="Valider" />
+          <Button
+            size="medium"
+            label="Valider"
+            onClick={() => send("SUBMIT")}
+          />
         </div>
       </div>
     </Page>

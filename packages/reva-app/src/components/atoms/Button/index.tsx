@@ -10,9 +10,11 @@ interface ButtonProps {
    */
   primary?: boolean;
   /**
-   * What background color to use
+   * What background class to use
    */
-  backgroundColor?: string;
+  backgroundClass?: string;
+
+  disabled?: boolean;
   /**
    * How large should the button be?
    */
@@ -32,28 +34,33 @@ interface ButtonProps {
  */
 export const Button = ({
   className = "",
+  disabled = false,
   primary = false,
   size = "medium",
-  backgroundColor,
   label,
   ...props
 }: ButtonProps) => {
   const modeClass = primary
     ? "bg-blue-600 text-white"
+    : className != ""
+    ? className
     : "bg-slate-900 text-white";
 
   let sizeClasses = {
-    tiny: "text-sm px-2 py-1",
+    tiny: "text-sm pb-1 px-4 h-[25px]",
     small: "text-sm px-5 h-[35px]",
     medium: "text-base w-[190px] h-[45px]",
-    large: "text-lg h-[53px]",
+    large: "text-lg h-[53px] w-full",
   };
 
   return (
     <button
       type="button"
-      className={`rounded flex justify-center items-center ${modeClass} ${sizeClasses[size]} ${className}`}
-      style={{ backgroundColor }}
+      className={`${
+        disabled ? "opacity-50 cursor-not-allowed" : ""
+      } rounded flex justify-center items-center ${modeClass} ${
+        sizeClasses[size]
+      }`}
       {...props}
     >
       {label}

@@ -32,11 +32,13 @@ export interface MainContext {
 export type MainEvent =
   | { type: "SELECT_CERTIFICATION"; certification: Certification }
   | { type: "SHOW_CERTIFICATION_DETAILS"; certification: Certification }
+  | { type: "SHOW_PROJECT_HOME"; certification: Certification }
   | { type: "CANDIDATE"; certification: Certification }
-  | { type: "SHOW_GOALS" }
+  | { type: "EDIT_GOALS" }
   | { type: "CLOSE_SELECTED_CERTIFICATION" }
   | { type: "BACK" }
-  | { type: "LOADED" };
+  | { type: "LOADED" }
+  | { type: "SUBMIT"; certification: Certification };
 
 export type MainState =
   | {
@@ -157,7 +159,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
           },
         },
       },
-      projectHome: {
+      submissionHome: {
         initial: "loading",
         states: {
           loading: {
@@ -174,7 +176,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
                   direction: (context, event) => "previous",
                 }),
               },
-              SHOW_GOALS: {
+              SHOW_PROJECT_HOME: {
                 target: "leave",
                 actions: assign({
                   certification: (context, event) => context.certification,
@@ -211,6 +213,19 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               direction: (context, event) => "previous",
             }),
           },
+        },
+        CLOSE_SELECTED_CERTIFICATION: {
+          target: "search/results",
+          actions: assign({
+            direction: (context, event) => "previous",
+          }),
+        },
+        EDIT_GOALS: {
+          target: "projectGoals",
+          actions: assign({
+            certification: (context, event) => context.certification,
+            direction: (context, event) => "next",
+          }),
         },
       },
     },

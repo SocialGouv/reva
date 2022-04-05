@@ -11,7 +11,8 @@ module.exports = {
       colors: {
         blue: { 600: "#0078f3" },
         gray: { 450: "#8C8E97" },
-        slate: { 400: "#908eac", 900: "#19182f" },
+        purple: { 100: "#F6E0FF", 800: "#89509F" },
+        slate: { 400: "#908eac", 900: "#21203D" },
       },
       fontFamily: {
         sans: ["Marianne", ...defaultTheme.fontFamily.sans],
