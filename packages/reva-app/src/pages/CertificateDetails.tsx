@@ -26,8 +26,6 @@ const section = ({ title, content }: { title: string; content: string }) => {
 export const CertificateDetails = ({ certification, mainService }: Props) => {
   const [state, send] = useActor(mainService);
 
-  console.log(state.context.direction);
-
   return (
     <Page
       className="flex flex-col z-50 bg-slate-900 pt-6"

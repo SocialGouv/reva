@@ -1,10 +1,15 @@
-import { gql, useLazyQuery } from "@apollo/client";
+import {
+  ApolloClient,
+  getApolloContext,
+  gql,
+  useLazyQuery,
+} from "@apollo/client";
 import { Capacitor } from "@capacitor/core";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
 import { Just, Maybe, Nothing } from "purify-ts/Maybe";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { Direction, Page } from "./components/organisms/Page";
 import { Certificate, Certification } from "./interface";
@@ -13,6 +18,10 @@ import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
 import { ProjectGoals } from "./pages/ProjectGoals";
 import { ProjectHome } from "./pages/ProjectHome";
+import {
+  getCertification,
+  searchCertifications,
+} from "./services/searchServices";
 import useWindowSize from "./utils/useWindowSize";
 
 const GET_CERTIFICATE = gql`
@@ -31,7 +40,24 @@ const GET_CERTIFICATE = gql`
 `;
 
 function App() {
-  const [current, send, mainService] = useMachine(mainMachine);
+  const { client } = useContext(getApolloContext());
+
+  const [current, send, mainService] = useMachine(
+    mainMachine.withConfig({
+      services: {
+        searchCertifications: (context, event) =>
+          searchCertifications(client as ApolloClient<object>)({ query: "" }),
+        getCertification: (context, event) => {
+          if (event.type !== "SELECT_CERTIFICATION") {
+            return Promise.reject("Impossible state");
+          }
+          return getCertification(client as ApolloClient<object>)({
+            id: event.certification.id,
+          });
+        },
+      },
+    })
+  );
   // @ts-ignore
   window.state = current;
 
@@ -41,8 +67,6 @@ function App() {
     windowSize.width > 640
       ? { width: 480, height: windowSize.height * 0.85 }
       : windowSize;
-
-  const [getCertification, { data }] = useLazyQuery(GET_CERTIFICATE);
 
   useEffect(() => {
     async function setStatusBarOverlay() {
@@ -104,8 +128,12 @@ function App() {
         style={appSize}
       >
         <AnimatePresence custom={current.context.direction} initial={false}>
-          {["searchResults", "certificateSummary"].some(current.matches) &&
-            certificatesPage}
+          {[
+            "loadingCertifications",
+            "searchResults",
+            "searchResultsError",
+            "certificateSummary",
+          ].some(current.matches) && certificatesPage}
 
           {current.matches("projectHome") &&
             projectHomePage(current.context.certification)}

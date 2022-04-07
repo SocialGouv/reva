@@ -21,25 +21,7 @@ interface Certificates {
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
 
-const SEARCH_CERTIFICATIONS_AND_PROFESSIONS = gql`
-  query Certifications($query: String!) {
-    searchCertificationsAndProfessions(query: $query) {
-      certifications {
-        id
-        label
-        summary
-        codeRncp
-      }
-    }
-  }
-`;
-
 export const Certificates = ({ mainService }: Certificates) => {
-  const { loading, error, data } = useQuery(
-    SEARCH_CERTIFICATIONS_AND_PROFESSIONS,
-    { variables: { query: "" } }
-  );
-
   const [state, send] = useActor(mainService);
 
   const resultsElement = useRef<HTMLDivElement | null>(null);
@@ -118,6 +100,28 @@ export const Certificates = ({ mainService }: Certificates) => {
     );
   }
 
+  const displayCards = () => {
+    if (["searchResultsError", "loadingCertifications"].some(state.matches)) {
+      return [1, 2, 3, 4, 5]
+        .map((i) => <CardSkeleton key={`skeleton-${i}`} size="small" />)
+        .concat(
+          <p key="error" className="text-red-600 mt-4 text-sm">
+            {state.context.error}
+          </p>
+        )
+        .reverse();
+    } else if (
+      // we test the state certificateSummary and certificateDetails to keep the animation from framer
+      ["searchResults", "certificateSummary", "certificateDetails"].some(
+        state.matches
+      )
+    ) {
+      return state.context.certifications.map(CertificateCard);
+    } else {
+      return [];
+    }
+  };
+
   return (
     <Page className="z-40 bg-white" direction={state.context.direction}>
       <motion.div
@@ -128,7 +132,7 @@ export const Certificates = ({ mainService }: Certificates) => {
         <div className="px-8 py-16 pb-8 lg:pt-8 bg-white">
           <Header label="Bienvenue" />
           <p className="mt-10 pr-6 text-slate-600 leading-loose text-lg">
-            {error || loremIpsumShort}
+            {loremIpsumShort}
           </p>
         </div>
         <div className="px-8">
@@ -136,13 +140,7 @@ export const Certificates = ({ mainService }: Certificates) => {
             title="Certifications disponibles"
             listClassName="my-4 space-y-8"
           >
-            {loading
-              ? [1, 2, 3, 4, 5].map((i) => (
-                  <CardSkeleton key={`skeleton-${i}`} size="small" />
-                ))
-              : data.searchCertificationsAndProfessions.certifications.map(
-                  CertificateCard
-                )}
+            {displayCards()}
           </Results>
         </div>
       </motion.div>
