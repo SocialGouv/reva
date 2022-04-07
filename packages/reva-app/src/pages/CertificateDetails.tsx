@@ -4,8 +4,7 @@ import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { BackButton } from "../components/molecules/BackButton";
-import { Direction, Page } from "../components/organisms/Page";
-import { demoDescription } from "../fixtures/certificates";
+import { Page } from "../components/organisms/Page";
 import { Certification } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
@@ -31,11 +30,7 @@ export const CertificateDetails = ({ certification, mainService }: Props) => {
       className="flex flex-col z-50 bg-slate-900 pt-6"
       direction={state.context.direction}
     >
-      <BackButton
-        color="light"
-        // onClick={() => setNavigationPrevious("search/results")}
-        onClick={() => send("BACK")}
-      />
+      <BackButton color="light" onClick={() => send("BACK")} />
       <div className="grow overflow-y-scroll">
         <div className="prose prose-invert prose-h2:my-1 mt-8 text-slate-400 text-base leading-normal px-8 pb-8">
           {certification.summary && <p>{certification.summary}</p>}

@@ -3,10 +3,8 @@ import { Capacitor } from "@capacitor/core";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
-import { Just, Maybe, Nothing } from "purify-ts/Maybe";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo } from "react";
 
-import { Direction, Page } from "./components/organisms/Page";
 import { Certification } from "./interface";
 import { mainMachine } from "./machines/main.machine";
 import { CertificateDetails } from "./pages/CertificateDetails";

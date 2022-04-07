@@ -1,15 +1,11 @@
 import { useActor } from "@xstate/react";
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { Checkbox } from "../components/atoms/Checkbox";
-import { Header } from "../components/atoms/Header";
 import { Title } from "../components/atoms/Title";
 import { BackButton } from "../components/molecules/BackButton";
-import { Direction, Page } from "../components/organisms/Page";
-import { Certification } from "../interface";
+import { Page } from "../components/organisms/Page";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
 interface ProjectGoalsProps {

@@ -1,16 +1,14 @@
 import { useActor } from "@xstate/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { Header } from "../components/atoms/Header";
 import { Loader } from "../components/atoms/Icons";
-import { Title } from "../components/atoms/Title";
 import { BackButton } from "../components/molecules/BackButton";
 import { ProgressTitle } from "../components/molecules/ProgressTitle";
 import certificateImg from "../components/organisms/Card/certificate.png";
-import { Direction, Page } from "../components/organisms/Page";
+import { Page } from "../components/organisms/Page";
 import type { Certification } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 

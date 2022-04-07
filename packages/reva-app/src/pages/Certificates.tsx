@@ -1,17 +1,14 @@
-import { gql, useLazyQuery, useQuery } from "@apollo/client";
 import { useActor } from "@xstate/react";
 import { motion } from "framer-motion";
-import { Just, Maybe, Nothing } from "purify-ts";
 import { useEffect, useRef } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { Header } from "../components/atoms/Header";
-import { loremIpsumShort } from "../components/atoms/LoremIpsum";
 import { Card } from "../components/organisms/Card";
 import { transitionIn } from "../components/organisms/Card/view";
 import { CardSkeleton } from "../components/organisms/CardSkeleton";
-import { Direction, Page } from "../components/organisms/Page";
+import { Page } from "../components/organisms/Page";
 import { Results } from "../components/organisms/Results";
 import { buttonVariants } from "../config";
 import { Certification } from "../interface";
@@ -53,12 +50,7 @@ export const Certificates = ({ mainService }: Certificates) => {
         onLearnMore={() =>
           send({ type: "SHOW_CERTIFICATION_DETAILS", certification })
         }
-        onClose={
-          () => send("CLOSE_SELECTED_CERTIFICATION")
-          // () => closeCertification()
-          // setNavigationNext(), setCurrentCertificate(Nothing)
-          // setNavigationNext("search/results"), setCurrentCertificate(Nothing)
-        }
+        onClose={() => send("CLOSE_SELECTED_CERTIFICATION")}
         key={certification.id}
         id={certification.id}
         title={certification.label}
