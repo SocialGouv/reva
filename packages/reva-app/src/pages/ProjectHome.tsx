@@ -12,7 +12,7 @@ import { BackButton } from "../components/molecules/BackButton";
 import { ProgressTitle } from "../components/molecules/ProgressTitle";
 import certificateImg from "../components/organisms/Card/certificate.png";
 import { Direction, Page } from "../components/organisms/Page";
-import { Certificate, Certification } from "../interface";
+import { Certification } from "../interface";
 import { MainContext, MainEvent } from "../machines/main.machine";
 
 interface ProjectHomeProps {

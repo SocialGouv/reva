@@ -208,7 +208,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
       projectGoals: {
         on: {
           BACK: {
-            target: "submissionHome.ready",
+            target: "projectHome",
             actions: assign({
               certification: (context, event) => context.certification,
               direction: (context, event) => "previous",

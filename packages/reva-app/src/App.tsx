@@ -75,7 +75,7 @@ function App() {
     <Certificates key="show-results" mainService={mainService} />
   );
 
-  const submissionHomePage = (certification: Certificate) => (
+  const submissionHomePage = (certification: Certification) => (
     <SubmissionHome
       key="project-home"
       mainService={mainService}
@@ -87,11 +87,15 @@ function App() {
     <ProjectGoals key="project-goals" mainService={mainService} />
   );
 
-  const projectHomePage = (certification: Certificate) => (
-    <ProjectHome key="project-home" mainService={mainService} certification={certification} />
+  const projectHomePage = (certification: Certification) => (
+    <ProjectHome
+      key="project-home"
+      mainService={mainService}
+      certification={certification}
+    />
   );
 
-  const certificateDetails = (certification: Certificate) => (
+  const certificateDetails = (certification: Certification) => (
     <CertificateDetails
       key="show-certificate-details"
       mainService={mainService}
@@ -116,13 +120,6 @@ function App() {
         style={appSize}
       >
         <AnimatePresence custom={current.context.direction} initial={false}>
-          {[
-            "loadingCertifications",
-            "searchResults",
-            "searchResultsError",
-            "certificateSummary",
-          ].some(current.matches) && certificatesPage}
-
           {[
             "loadingCertifications",
             "searchResults",
