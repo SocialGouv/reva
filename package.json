@@ -25,5 +25,8 @@
     "hooks": {
       "pre-commit": "npm run lint-staged -w reva-app"
     }
+  },
+  "dependencies": {
+    "@xstate/react": "^2.0.1"
   }
 }

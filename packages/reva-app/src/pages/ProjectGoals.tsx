@@ -1,19 +1,19 @@
+import { useActor } from "@xstate/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { Checkbox } from "../components/atoms/Checkbox";
 import { Header } from "../components/atoms/Header";
 import { Title } from "../components/atoms/Title";
 import { BackButton } from "../components/molecules/BackButton";
-import { Navigation, Page } from "../components/organisms/Page";
-import { Certificate } from "../interface";
+import { Direction, Page } from "../components/organisms/Page";
+import { Certification } from "../interface";
+import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
 interface ProjectGoalsProps {
-  certificate: Certificate;
-  navigation: Navigation;
-  setNavigationNext: (page: Page) => void;
-  setNavigationPrevious: (page: Page) => void;
+  mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
 
 const goalSet = (
@@ -28,18 +28,15 @@ const goalSet = (
   </fieldset>
 );
 
-export const ProjectGoals = ({
-  certificate,
-  navigation,
-  setNavigationNext,
-  setNavigationPrevious,
-}: ProjectGoalsProps) => {
+export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
+  const [state, send] = useActor(mainService);
   return (
     <Page
       className="z-[60] flex flex-col bg-white pt-6 pb-12"
-      navigation={navigation}
+      direction={state.context.direction}
     >
-      <BackButton onClick={() => setNavigationPrevious("project/home")} />
+      {/*"project/home"*/}
+      <BackButton onClick={() => send("BACK")} />
       <div className="h-full flex flex-col px-8">
         <Title label="Mon objectif" />
         <p className="text-slate-800 text-lg">Plusieurs choix possibles</p>

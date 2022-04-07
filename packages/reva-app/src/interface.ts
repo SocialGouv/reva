@@ -1,4 +1,4 @@
-export interface Certificate {
+export interface Certification {
   id: string;
   description: string;
   codeRncp: string;

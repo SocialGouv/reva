@@ -1,16 +1,17 @@
+import { useActor } from "@xstate/react";
 import parse from "html-react-parser";
+import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { BackButton } from "../components/molecules/BackButton";
-import { Navigation, Page } from "../components/organisms/Page";
+import { Direction, Page } from "../components/organisms/Page";
 import { demoDescription } from "../fixtures/certificates";
-import { Certificate } from "../interface";
+import { Certification } from "../interface";
+import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
 interface Props {
-  certificate: Certificate;
-  navigation: Navigation;
-  setNavigationNext: (page: Page) => void;
-  setNavigationPrevious: (page: Page) => void;
+  certification: Certification;
+  mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
 
 const section = ({ title, content }: { title: string; content: string }) => {
@@ -22,45 +23,48 @@ const section = ({ title, content }: { title: string; content: string }) => {
   );
 };
 
-export const CertificateDetails = ({
-  setNavigationPrevious,
-  setNavigationNext,
-  navigation,
-  certificate,
-}: Props) => {
+export const CertificateDetails = ({ certification, mainService }: Props) => {
+  const [state, send] = useActor(mainService);
+
   return (
     <Page
       className="flex flex-col z-50 bg-slate-900 pt-6"
-      navigation={navigation}
+      direction={state.context.direction}
     >
       <BackButton
         color="light"
-        onClick={() => setNavigationPrevious("search/results")}
+        // onClick={() => setNavigationPrevious("search/results")}
+        onClick={() => send("BACK")}
       />
       <div className="grow overflow-y-scroll">
         <div className="prose prose-invert prose-h2:my-1 mt-8 text-slate-400 text-base leading-normal px-8 pb-8">
-          {certificate.summary && <p>{certificate.summary}</p>}
+          {certification.summary && <p>{certification.summary}</p>}
 
-          {certificate.activities &&
-            section({ title: "Activités", content: certificate.activities })}
+          {certification.activities &&
+            section({ title: "Activités", content: certification.activities })}
 
-          {certificate.abilities &&
-            section({ title: "Compétences", content: certificate.abilities })}
+          {certification.abilities &&
+            section({ title: "Compétences", content: certification.abilities })}
 
-          {certificate.activityArea &&
+          {certification.activityArea &&
             section({
               title: "Secteurs d'activités",
-              content: certificate.activityArea,
+              content: certification.activityArea,
             })}
 
-          {certificate.accessibleJobType &&
+          {certification.accessibleJobType &&
             section({
               title: "Types d'emplois accessibles",
-              content: certificate.accessibleJobType,
+              content: certification.accessibleJobType,
             })}
 
           <Button
-            onClick={() => setNavigationNext("project/home")}
+            onClick={() =>
+              send({
+                type: "CANDIDATE",
+                certification,
+              })
+            }
             label="Candidater"
             className="mt-8 w-full"
             primary
