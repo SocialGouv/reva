@@ -4,7 +4,7 @@ import { StatusBar, Style } from "@capacitor/status-bar";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
 import { Just, Maybe, Nothing } from "purify-ts/Maybe";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 import { Direction, Page } from "./components/organisms/Page";
 import { Certification } from "./interface";
@@ -21,23 +21,26 @@ import useWindowSize from "./utils/useWindowSize";
 
 function App() {
   const { client } = useContext(getApolloContext());
-
-  const [current, send, mainService] = useMachine(
-    mainMachine.withConfig({
-      services: {
-        searchCertifications: (context, event) =>
-          searchCertifications(client as ApolloClient<object>)({ query: "" }),
-        getCertification: (context, event) => {
-          if (event.type !== "SELECT_CERTIFICATION") {
-            return Promise.reject("Impossible state");
-          }
-          return getCertification(client as ApolloClient<object>)({
-            id: event.certification.id,
-          });
+  const machine = useMemo(
+    () =>
+      mainMachine.withConfig({
+        services: {
+          searchCertifications: (context, event) =>
+            searchCertifications(client as ApolloClient<object>)({ query: "" }),
+          getCertification: (context, event) => {
+            if (event.type !== "SELECT_CERTIFICATION") {
+              return Promise.reject("Impossible state");
+            }
+            return getCertification(client as ApolloClient<object>)({
+              id: event.certification.id,
+            });
+          },
         },
-      },
-    })
+      }),
+    [client]
   );
+
+  const [current, send, mainService] = useMachine(machine);
   // @ts-ignore
   window.state = current;
 
