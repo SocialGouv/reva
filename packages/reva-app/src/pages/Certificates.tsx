@@ -14,7 +14,7 @@ import { CardSkeleton } from "../components/organisms/CardSkeleton";
 import { Direction, Page } from "../components/organisms/Page";
 import { Results } from "../components/organisms/Results";
 import { buttonVariants } from "../config";
-import { Certificate, Certification } from "../interface";
+import { Certification } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
 interface Certificates {

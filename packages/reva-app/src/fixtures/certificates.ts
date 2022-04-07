@@ -3,11 +3,11 @@ import {
   loremIpsumLong,
   loremIpsumVeryLong,
 } from "../components/atoms/LoremIpsum";
-import { Certificate } from "../interface";
+import { Certification } from "../interface";
 
 export const demoDescription = `<p>${loremIpsum}</p> <h2>Activité</h2><p>${loremIpsum}</p> <h2>Compétence</h2><p>${loremIpsum}</p> <h2>Secteurs d'activités</h2><p>${loremIpsum}</p> <h2>Types d'emplois accessibles</h2><p>${loremIpsum}</p>`;
 
-export const certificateFixtures: Certificate[] = [
+export const certificateFixtures: Certification[] = [
   {
     id: "1",
     description: demoDescription,

@@ -9,7 +9,7 @@ import { Header } from "../components/atoms/Header";
 import { Title } from "../components/atoms/Title";
 import { BackButton } from "../components/molecules/BackButton";
 import { Direction, Page } from "../components/organisms/Page";
-import { Certificate } from "../interface";
+import { Certification } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
 interface ProjectGoalsProps {

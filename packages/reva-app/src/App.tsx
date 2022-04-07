@@ -7,7 +7,7 @@ import { Just, Maybe, Nothing } from "purify-ts/Maybe";
 import { useContext, useEffect, useState } from "react";
 
 import { Direction, Page } from "./components/organisms/Page";
-import { Certificate, Certification } from "./interface";
+import { Certification } from "./interface";
 import { mainMachine } from "./machines/main.machine";
 import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
@@ -79,11 +79,11 @@ function App() {
     />
   );
 
-  const projectGoalsPage = (certification: Certificate) => (
+  const projectGoalsPage = (certification: Certification) => (
     <ProjectGoals key="project-goals" mainService={mainService} />
   );
 
-  const certificateDetails = (certification: Certificate) => (
+  const certificateDetails = (certification: Certification) => (
     <CertificateDetails
       key="show-certificate-details"
       mainService={mainService}

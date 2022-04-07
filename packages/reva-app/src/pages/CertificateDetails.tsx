@@ -6,11 +6,11 @@ import { Button } from "../components/atoms/Button";
 import { BackButton } from "../components/molecules/BackButton";
 import { Direction, Page } from "../components/organisms/Page";
 import { demoDescription } from "../fixtures/certificates";
-import { Certificate, Certification } from "../interface";
+import { Certification } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
 interface Props {
-  certification: Certificate;
+  certification: Certification;
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
 
