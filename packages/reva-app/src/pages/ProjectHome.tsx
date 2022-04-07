@@ -51,7 +51,7 @@ export const ProjectHome = ({
   );
 
   const homeContent = (
-    <div className="px-8">
+    <div className="px-8 overflow-y-auto pb-8">
       <ProgressTitle progress={projectProgress} size="large" title="Projet" />
       <div className="space-y-4">
         {editCertification}
@@ -79,7 +79,7 @@ export const ProjectHome = ({
 
   return (
     <Page
-      className="z-50 flex flex-col bg-white py-6"
+      className="z-50 flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
       <BackButton onClick={() => send("BACK")} />
