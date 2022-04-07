@@ -12,23 +12,21 @@ import { BackButton } from "../components/molecules/BackButton";
 import { ProgressTitle } from "../components/molecules/ProgressTitle";
 import certificateImg from "../components/organisms/Card/certificate.png";
 import { Direction, Page } from "../components/organisms/Page";
-import { Certificate } from "../interface";
-import {
-  MainContext,
-  MainEvent,
-  ProjectHomeState,
-} from "../machines/main.machine";
+import { Certificate, Certification } from "../interface";
+import { MainContext, MainEvent } from "../machines/main.machine";
 
 interface ProjectHomeProps {
+  certification: Certification;
   mainService: Interpreter<MainContext, any, MainEvent, any, any>;
 }
 
-export const ProjectHome = ({ mainService }: ProjectHomeProps) => {
+export const ProjectHome = ({
+  certification,
+  mainService,
+}: ProjectHomeProps) => {
   const [state, send] = useActor(mainService);
 
   const homeLoaded = !state.matches({ "submission/home": "loading" });
-  const certification = (state.context.currentPage as ProjectHomeState)
-    .certification;
 
   const projectProgress = 35;
 

@@ -13,11 +13,11 @@ import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
 import { ProjectGoals } from "./pages/ProjectGoals";
 import { ProjectHome } from "./pages/ProjectHome";
+import { SubmissionHome } from "./pages/SubmissionHome";
 import {
   getCertification,
   searchCertifications,
 } from "./services/searchServices";
-import { SubmissionHome } from "./pages/SubmissionHome";
 import useWindowSize from "./utils/useWindowSize";
 
 function App() {
@@ -75,8 +75,12 @@ function App() {
     <Certificates key="show-results" mainService={mainService} />
   );
 
-  const submissionHomePage = (certificate: Certificate) => (
-    <SubmissionHome key="project-home" mainService={mainService} certification={certification} />
+  const submissionHomePage = (certification: Certificate) => (
+    <SubmissionHome
+      key="project-home"
+      mainService={mainService}
+      certification={certification}
+    />
   );
 
   const projectGoalsPage = (certification: Certification) => (
@@ -119,26 +123,24 @@ function App() {
             "certificateSummary",
           ].some(current.matches) && certificatesPage}
 
-          {current.matches("submissionHome") &&
-            submissionHomePage(
-              (current.context.currentPage as SubmissionHomeState).certification
-            )}
-
-          {current.matches("projectGoals") &&
-            projectGoalsPage(
-              (current.context.currentPage as ProjectGoalsState).certification
-            )}
+          {[
+            "loadingCertifications",
+            "searchResults",
+            "searchResultsError",
+            "certificateSummary",
+          ].some(current.matches) && certificatesPage}
 
           {current.matches("projectHome") &&
-            projectHomePage(
-              (current.context.currentPage as ProjectHomeState).certification
-            )}
+            projectHomePage(current.context.certification)}
+
+          {current.matches("projectGoals") &&
+            projectGoalsPage(current.context.certification)}
 
           {current.matches("certificateDetails") &&
-            certificateDetails(
-              (current.context.currentPage as CertificateDetailsState)
-                .certification
-            )}
+            certificateDetails(current.context.certification)}
+
+          {current.matches("submissionHome") &&
+            submissionHomePage(current.context.certification)}
         </AnimatePresence>
       </div>
     </div>

@@ -19,7 +19,10 @@ interface SubmissionHome {
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
 
-export const ProjectHome = ({ certification, mainService }: SubmissionHome) => {
+export const SubmissionHome = ({
+  certification,
+  mainService,
+}: SubmissionHome) => {
   const [state, send] = useActor(mainService);
 
   const homeLoaded = !state.matches({ submissionHome: "loading" });
@@ -63,7 +66,6 @@ export const ProjectHome = ({ certification, mainService }: SubmissionHome) => {
               size="small"
               label="Compléter"
               onClick={() => send("SHOW_PROJECT_HOME")}
-              // onClick={() => setNavigationNext("project/goals")}
             />
             <p className="ml-5 w-full text-sm text-gray-500">10 min</p>
           </div>

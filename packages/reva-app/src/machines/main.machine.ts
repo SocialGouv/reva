@@ -50,7 +50,8 @@ export type MainState =
         | typeof certificateSummary
         | typeof certificateDetails
         | typeof projectHome
-        | typeof projectGoals;
+        | typeof projectGoals
+        | typeof submissionHome;
       context: MainContext & { certification: Certification };
     };
 
@@ -200,7 +201,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             cond: (context, event) => {
               return context.direction === "next";
             },
-            target: projectGoals,
+            target: projectHome,
           },
         ],
       },
@@ -213,19 +214,31 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               direction: (context, event) => "previous",
             }),
           },
+          SUBMIT: {
+            target: "projectHome",
+            actions: assign({
+              certification: (context, event) => context.certification,
+              direction: (context, event) => "previous",
+            }),
+          },
         },
-        CLOSE_SELECTED_CERTIFICATION: {
-          target: "search/results",
-          actions: assign({
-            direction: (context, event) => "previous",
-          }),
-        },
-        EDIT_GOALS: {
-          target: "projectGoals",
-          actions: assign({
-            certification: (context, event) => context.certification,
-            direction: (context, event) => "next",
-          }),
+      },
+      projectHome: {
+        on: {
+          BACK: {
+            target: "submissionHome.ready",
+            actions: assign({
+              certification: (context, event) => context.certification,
+              direction: (context, event) => "previous",
+            }),
+          },
+          EDIT_GOALS: {
+            target: "projectGoals",
+            actions: assign({
+              certification: (context, event) => context.certification,
+              direction: (context, event) => "next",
+            }),
+          },
         },
       },
     },
