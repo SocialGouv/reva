@@ -26,8 +26,6 @@ export const ProjectHome = ({
 }: ProjectHomeProps) => {
   const [state, send] = useActor(mainService);
 
-  const homeLoaded = !state.matches({ "submission/home": "loading" });
-
   const projectProgress = 35;
 
   const editCertification = (
@@ -86,7 +84,7 @@ export const ProjectHome = ({
 
   return (
     <Page
-      className="z-50 flex flex-col bg-neutral-white py-6"
+      className="z-50 flex flex-col bg-white py-6"
       direction={state.context.direction}
     >
       <BackButton onClick={() => send("BACK")} />

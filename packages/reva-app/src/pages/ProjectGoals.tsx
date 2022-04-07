@@ -17,7 +17,7 @@ interface ProjectGoalsProps {
 }
 
 const goalSet = (
-  <fieldset className="grow space-y-8">
+  <fieldset className="space-y-6">
     <legend className="sr-only">Objectif</legend>
     <Checkbox label="Trouver plus facilement un emploi" name="c1" />
     <Checkbox label="Être reconnu dans ma profession" name="c2" />
@@ -33,16 +33,17 @@ export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
   const [state, send] = useActor(mainService);
   return (
     <Page
-      className="z-[60] flex flex-col bg-white pt-6 pb-12"
+      className="z-[60] flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
-      {/*"submission/home"*/}
       <BackButton onClick={() => send("BACK")} />
-      <div className="h-full flex flex-col px-8">
-        <Title label="Mon objectif" />
-        <p className="text-slate-800 text-lg">Plusieurs choix possibles</p>
-        {goalSet}
-        <div className="flex justify-center">
+      <div className="h-full flex flex-col px-8 overflow-y-auto">
+        <div className="grow overflow-y-auto">
+          <Title label="Mon objectif" />
+          <p className="text-slate-800 text-lg">Plusieurs choix possibles</p>
+          {goalSet}
+        </div>
+        <div className="flex items-center justify-center h-24">
           <Button
             size="medium"
             label="Valider"

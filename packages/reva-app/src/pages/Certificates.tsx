@@ -132,12 +132,18 @@ export const Certificates = ({ mainService }: Certificates) => {
         <div className="px-8 py-16 pb-8 lg:pt-8 bg-white">
           <Header label="Bienvenue" />
           <p className="mt-10 pr-6 text-slate-600 leading-loose text-lg">
-            {loremIpsumShort}
+            REVA est une expérimentation beta.gouv visant à simplifier la
+            Validation des Acquis de l'Expérience (VAE). Sous l'impulsion du
+            Ministère du Travail, cette nouvelle expérimentation REVA propose à
+            3000 personnes, salariés du privé, aidants familiaux, demandeurs
+            d'emploi, ayant une expérience dans le secteur du service à la
+            personne, de la petite enfance ou de l'autonomie et de la santé
+            d’obtenir une certification dans ce domaine.
           </p>
         </div>
         <div className="px-8">
           <Results
-            title="Certifications disponibles"
+            title="Liste des certifications éligibles :"
             listClassName="my-4 space-y-8"
           >
             {displayCards()}

@@ -239,6 +239,12 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               direction: (context, event) => "next",
             }),
           },
+          CLOSE_SELECTED_CERTIFICATION: {
+            target: searchResults,
+            actions: assign({
+              direction: (context, event) => "previous",
+            }),
+          },
         },
       },
     },

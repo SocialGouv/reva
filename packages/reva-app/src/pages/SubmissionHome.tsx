@@ -57,8 +57,8 @@ export const SubmissionHome = ({
       >
         <ProgressTitle progress={projectProgress} title="Mon projet" />
         <p className="mt-5 text-sm text-gray-450 leading-loose">
-          La prochaine étape consiste à définir votre projet (10 min). Vous
-          pourrez vous faire accompagner par l'accompagnateur de votre choix.
+          Cette étape consiste à compléter et à transmettre votre projet, vous
+          serez ensuite recontacté sous 48h.
         </p>
         <div className="grow flex items-end mt-6">
           <div className="flex items-center">
