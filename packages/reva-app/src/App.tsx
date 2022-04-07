@@ -1,9 +1,4 @@
-import {
-  ApolloClient,
-  getApolloContext,
-  gql,
-  useLazyQuery,
-} from "@apollo/client";
+import { ApolloClient, getApolloContext } from "@apollo/client";
 import { Capacitor } from "@capacitor/core";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { useMachine } from "@xstate/react";
@@ -23,21 +18,6 @@ import {
   searchCertifications,
 } from "./services/searchServices";
 import useWindowSize from "./utils/useWindowSize";
-
-const GET_CERTIFICATE = gql`
-  query Certification($id: ID!) {
-    getCertification(id: $id) {
-      id
-      label
-      summary
-      codeRncp
-      activities
-      abilities
-      activityArea
-      accessibleJobType
-    }
-  }
-`;
 
 function App() {
   const { client } = useContext(getApolloContext());
