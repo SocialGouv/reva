@@ -20,7 +20,7 @@ const pageVariants = {
 
 const pageTransition: Transition = {
   ease: [0.58, 0, 0.17, 0.84],
-  duration: 0.4,
+  duration: 0.45,
 };
 
 export const Page = ({ children, className, direction }: PageConfig) => {

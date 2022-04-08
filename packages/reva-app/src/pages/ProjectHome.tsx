@@ -79,7 +79,7 @@ export const ProjectHome = ({
 
   return (
     <Page
-      className="z-50 flex flex-col bg-white pt-6"
+      className="z-[60] flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
       <BackButton onClick={() => send("BACK")} />
