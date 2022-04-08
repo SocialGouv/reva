@@ -1,122 +1,89 @@
 import { useActor } from "@xstate/react";
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
-import { Header } from "../components/atoms/Header";
-import { Loader } from "../components/atoms/Icons";
-import { Title } from "../components/atoms/Title";
+import { TextResult } from "../components/atoms/TextResult";
 import { BackButton } from "../components/molecules/BackButton";
+import { ProgressTitle } from "../components/molecules/ProgressTitle";
 import certificateImg from "../components/organisms/Card/certificate.png";
-import { Direction, Page } from "../components/organisms/Page";
-import type { Certification } from "../interface";
-import { MainContext, MainEvent, MainState } from "../machines/main.machine";
+import { Page } from "../components/organisms/Page";
+import { Certification } from "../interface";
+import { MainContext, MainEvent } from "../machines/main.machine";
 
-interface ProjectHome {
+interface ProjectHomeProps {
   certification: Certification;
-  mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
+  mainService: Interpreter<MainContext, any, MainEvent, any, any>;
 }
 
-export const ProjectHome = ({ certification, mainService }: ProjectHome) => {
+export const ProjectHome = ({
+  certification,
+  mainService,
+}: ProjectHomeProps) => {
   const [state, send] = useActor(mainService);
-
-  const homeLoaded = !state.matches({ projectHome: "loading" });
 
   const projectProgress = 35;
 
-  const loadingScreen = (
-    <motion.div
-      key="loading-screen"
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className="absolute flex flex-col bg-neutral-100 h-full"
-    >
-      <div className="grow flex flex-col text-center items-center justify-center px-12">
-        <Header label="Création de votre candidature" size="small" />
-        <div className="mt-8 w-8">
-          <Loader />
-        </div>
+  const editCertification = (
+    <div className="bg-slate-900 rounded-xl overflow-hidden mt-6">
+      <div className={`mt-5 mr-6 text-white text-right font-bold grow `}>
+        {certification.codeRncp}
       </div>
-    </motion.div>
-  );
-
-  const homeContent = (
-    <>
-      <Header color="dark" label={certification.label} size="small" />
-      <div className="-mt-2 mb-2 font-bold">{certification.codeRncp}</div>
-      <p className="text-sm text-gray-450">Démarré le 10 janvier 2022</p>
-      <div
-        className="mt-10 flex flex-col px-8 py-6 rounded-xl bg-white shadow-sm"
-        style={{ height: "414px" }}
-      >
-        <div className="flex items-end justify-between">
-          <Title label="Mon projet" />
-          <div className="font-semibold text-base text-slate-400">
-            {projectProgress}%
-          </div>
-        </div>
-        <div className="mt-2 w-full bg-slate-300 rounded-full h-[5px]">
-          <div
-            className="bg-blue-600 h-[5px] rounded-full"
-            style={{ width: `${projectProgress}%` }}
-          ></div>
-        </div>
-        <p className="mt-5 text-sm text-gray-450 leading-loose">
-          La prochaine étape consiste à définir votre projet (10 min). Vous
-          pourrez vous faire accompagner par l'accompagnateur de votre choix.
-        </p>
-        <div className="grow flex items-end mt-6">
-          <div className="flex items-center">
-            <Button
-              size="small"
-              label="Compléter"
-              onClick={() => send("SHOW_GOALS")}
-              // onClick={() => setNavigationNext("project/goals")}
-            />
-            <p className="ml-5 w-full text-sm text-gray-500">1 heure</p>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-
-  const homeScreen = (
-    <motion.div
-      key="home-screen"
-      className="flex flex-col h-full relative overflow-hidden"
-      initial={
-        state.context.direction === "next" ? { opacity: 0, y: 10 } : false
-      }
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
-    >
       <img
-        className="pointer-events-none"
+        className=""
         style={{
-          position: "absolute",
-          left: "-53px",
-          top: "58px",
-          width: "106px",
+          marginLeft: "-42px",
+          marginTop: "-28px",
+          height: "104px",
+          width: "104px",
         }}
         src={certificateImg}
       />
-      <div className="mt-12 -mb-12 text-center font-bold">REVA</div>
-      <BackButton onClick={() => send("BACK")} />
-      <div className="grow overflow-y-auto mt-8 px-8 pb-8">{homeContent}</div>
-    </motion.div>
+      <div className="px-8 pb-6">
+        <TextResult size="small" title={certification.label} color="light" />
+        <Button
+          size="tiny"
+          label="Modifier"
+          className="mt-4 text-slate-900 bg-white"
+          onClick={() => send("CLOSE_SELECTED_CERTIFICATION")}
+        />
+      </div>
+    </div>
+  );
+
+  const homeContent = (
+    <div className="px-8 overflow-y-auto pb-8">
+      <ProgressTitle progress={projectProgress} size="large" title="Projet" />
+      <div className="space-y-4">
+        {editCertification}
+        <div className="rounded-xl px-8 py-6 bg-purple-100">
+          <p className="font-bold text-purple-800 text-xl mb-4">Mon objectif</p>
+          <Button
+            size="tiny"
+            label="Choisir"
+            className="text-white bg-purple-800"
+            onClick={() => send("EDIT_GOALS")}
+          />
+        </div>
+        <div className="rounded-xl px-8 py-6 bg-slate-100">
+          <p className="font-bold text-slate-800 text-xl mb-4">
+            Mes experiences
+          </p>
+          <div className="flex text-sm text-slate-400">
+            <Button disabled={true} size="tiny" label="Ajouter" />
+            <div className="ml-2">(bientôt)</div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 
   return (
     <Page
-      className="z-50 flex flex-col bg-neutral-100"
+      className="z-50 flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
-      <AnimatePresence>
-        {!homeLoaded && loadingScreen}
-        {homeLoaded && homeScreen}
-      </AnimatePresence>
+      <BackButton onClick={() => send("BACK")} />
+      {homeContent}
     </Page>
   );
 };

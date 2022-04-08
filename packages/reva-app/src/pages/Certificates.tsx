@@ -1,17 +1,14 @@
-import { gql, useLazyQuery, useQuery } from "@apollo/client";
 import { useActor } from "@xstate/react";
 import { motion } from "framer-motion";
-import { Just, Maybe, Nothing } from "purify-ts";
 import { useEffect, useRef } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { Header } from "../components/atoms/Header";
-import { loremIpsumShort } from "../components/atoms/LoremIpsum";
 import { Card } from "../components/organisms/Card";
 import { transitionIn } from "../components/organisms/Card/view";
 import { CardSkeleton } from "../components/organisms/CardSkeleton";
-import { Direction, Page } from "../components/organisms/Page";
+import { Page } from "../components/organisms/Page";
 import { Results } from "../components/organisms/Results";
 import { buttonVariants } from "../config";
 import { Certification } from "../interface";
@@ -53,12 +50,7 @@ export const Certificates = ({ mainService }: Certificates) => {
         onLearnMore={() =>
           send({ type: "SHOW_CERTIFICATION_DETAILS", certification })
         }
-        onClose={
-          () => send("CLOSE_SELECTED_CERTIFICATION")
-          // () => closeCertification()
-          // setNavigationNext(), setCurrentCertificate(Nothing)
-          // setNavigationNext("search/results"), setCurrentCertificate(Nothing)
-        }
+        onClose={() => send("CLOSE_SELECTED_CERTIFICATION")}
         key={certification.id}
         id={certification.id}
         title={certification.label}
@@ -132,12 +124,18 @@ export const Certificates = ({ mainService }: Certificates) => {
         <div className="px-8 py-16 pb-8 lg:pt-8 bg-white">
           <Header label="Bienvenue" />
           <p className="mt-10 pr-6 text-slate-600 leading-loose text-lg">
-            {loremIpsumShort}
+            REVA est une expérimentation beta.gouv visant à simplifier la
+            Validation des Acquis de l'Expérience (VAE). Sous l'impulsion du
+            Ministère du Travail, cette nouvelle expérimentation REVA propose à
+            3000 personnes, salariés du privé, aidants familiaux, demandeurs
+            d'emploi, ayant une expérience dans le secteur du service à la
+            personne, de la petite enfance ou de l'autonomie et de la santé
+            d’obtenir une certification dans ce domaine.
           </p>
         </div>
         <div className="px-8">
           <Results
-            title="Certifications disponibles"
+            title="Liste des certifications éligibles :"
             listClassName="my-4 space-y-8"
           >
             {displayCards()}

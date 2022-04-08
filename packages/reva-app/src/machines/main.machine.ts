@@ -9,6 +9,7 @@ const certificateSummary = "certificateSummary";
 const certificateDetails = "certificateDetails";
 const projectHome = "projectHome";
 const projectGoals = "projectGoals";
+const submissionHome = "submissionHome";
 
 export type State =
   | typeof loadingCertifications
@@ -17,7 +18,8 @@ export type State =
   | typeof certificateSummary
   | typeof certificateDetails
   | typeof projectHome
-  | typeof projectGoals;
+  | typeof projectGoals
+  | typeof submissionHome;
 
 export interface MainContext {
   error: string;
@@ -30,11 +32,13 @@ export interface MainContext {
 export type MainEvent =
   | { type: "SELECT_CERTIFICATION"; certification: Certification }
   | { type: "SHOW_CERTIFICATION_DETAILS"; certification: Certification }
+  | { type: "SHOW_PROJECT_HOME"; certification: Certification }
   | { type: "CANDIDATE"; certification: Certification }
-  | { type: "SHOW_GOALS" }
+  | { type: "EDIT_GOALS" }
   | { type: "CLOSE_SELECTED_CERTIFICATION" }
   | { type: "BACK" }
-  | { type: "LOADED" };
+  | { type: "LOADED" }
+  | { type: "SUBMIT"; certification: Certification };
 
 export type MainState =
   | {
@@ -46,7 +50,8 @@ export type MainState =
         | typeof certificateSummary
         | typeof certificateDetails
         | typeof projectHome
-        | typeof projectGoals;
+        | typeof projectGoals
+        | typeof submissionHome;
       context: MainContext & { certification: Certification };
     };
 
@@ -112,7 +117,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         },
         on: {
           CANDIDATE: {
-            target: projectHome,
+            target: submissionHome,
             actions: assign({
               certification: (context, event) => event.certification,
               direction: (context, event) => "next",
@@ -145,7 +150,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             }),
           },
           CANDIDATE: {
-            target: projectHome,
+            target: submissionHome,
             actions: assign({
               certification: (context, event) => {
                 return event.certification;
@@ -155,7 +160,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
           },
         },
       },
-      projectHome: {
+      submissionHome: {
         initial: "loading",
         states: {
           loading: {
@@ -172,7 +177,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
                   direction: (context, event) => "previous",
                 }),
               },
-              SHOW_GOALS: {
+              SHOW_PROJECT_HOME: {
                 target: "leave",
                 actions: assign({
                   certification: (context, event) => context.certification,
@@ -196,16 +201,47 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             cond: (context, event) => {
               return context.direction === "next";
             },
-            target: projectGoals,
+            target: projectHome,
           },
         ],
       },
       projectGoals: {
         on: {
           BACK: {
-            target: "projectHome.ready",
+            target: "projectHome",
             actions: assign({
               certification: (context, event) => context.certification,
+              direction: (context, event) => "previous",
+            }),
+          },
+          SUBMIT: {
+            target: "projectHome",
+            actions: assign({
+              certification: (context, event) => context.certification,
+              direction: (context, event) => "previous",
+            }),
+          },
+        },
+      },
+      projectHome: {
+        on: {
+          BACK: {
+            target: "submissionHome.ready",
+            actions: assign({
+              certification: (context, event) => context.certification,
+              direction: (context, event) => "previous",
+            }),
+          },
+          EDIT_GOALS: {
+            target: "projectGoals",
+            actions: assign({
+              certification: (context, event) => context.certification,
+              direction: (context, event) => "next",
+            }),
+          },
+          CLOSE_SELECTED_CERTIFICATION: {
+            target: searchResults,
+            actions: assign({
               direction: (context, event) => "previous",
             }),
           },

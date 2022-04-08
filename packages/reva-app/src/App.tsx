@@ -3,16 +3,15 @@ import { Capacitor } from "@capacitor/core";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
-import { Just, Maybe, Nothing } from "purify-ts/Maybe";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo } from "react";
 
-import { Direction, Page } from "./components/organisms/Page";
 import { Certification } from "./interface";
 import { mainMachine } from "./machines/main.machine";
 import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
 import { ProjectGoals } from "./pages/ProjectGoals";
 import { ProjectHome } from "./pages/ProjectHome";
+import { SubmissionHome } from "./pages/SubmissionHome";
 import {
   getCertification,
   searchCertifications,
@@ -74,8 +73,8 @@ function App() {
     <Certificates key="show-results" mainService={mainService} />
   );
 
-  const projectHomePage = (certification: Certification) => (
-    <ProjectHome
+  const submissionHomePage = (certification: Certification) => (
+    <SubmissionHome
       key="project-home"
       mainService={mainService}
       certification={certification}
@@ -84,6 +83,14 @@ function App() {
 
   const projectGoalsPage = (certification: Certification) => (
     <ProjectGoals key="project-goals" mainService={mainService} />
+  );
+
+  const projectHomePage = (certification: Certification) => (
+    <ProjectHome
+      key="project-home"
+      mainService={mainService}
+      certification={certification}
+    />
   );
 
   const certificateDetails = (certification: Certification) => (
@@ -126,6 +133,9 @@ function App() {
 
           {current.matches("certificateDetails") &&
             certificateDetails(current.context.certification)}
+
+          {current.matches("submissionHome") &&
+            submissionHomePage(current.context.certification)}
         </AnimatePresence>
       </div>
     </div>
