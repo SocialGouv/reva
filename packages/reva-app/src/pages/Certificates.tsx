@@ -102,15 +102,8 @@ export const Certificates = ({ mainService }: Certificates) => {
           </p>
         )
         .reverse();
-    } else if (
-      // we test the state certificateSummary and certificateDetails to keep the animation from framer
-      ["searchResults", "certificateSummary", "certificateDetails"].some(
-        state.matches
-      )
-    ) {
-      return state.context.certifications.map(CertificateCard);
     } else {
-      return [];
+      return state.context.certifications.map(CertificateCard);
     }
   };
 

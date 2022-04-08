@@ -75,7 +75,7 @@ function App() {
 
   const submissionHomePage = (certification: Certification) => (
     <SubmissionHome
-      key="project-home"
+      key="submission-home"
       mainService={mainService}
       certification={certification}
     />
