@@ -13,7 +13,7 @@ interface ProjectGoalsProps {
 }
 
 const goalSet = (
-  <fieldset className="space-y-6">
+  <fieldset className="space-y-6 pl-1">
     <legend className="sr-only">Objectif</legend>
     <Checkbox label="Trouver plus facilement un emploi" name="c1" />
     <Checkbox label="Être reconnu dans ma profession" name="c2" />
@@ -39,7 +39,7 @@ export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
           <p className="text-slate-800 text-lg">Plusieurs choix possibles</p>
           {goalSet}
         </div>
-        <div className="flex items-center justify-center h-24">
+        <div className="flex justify-center h-24">
           <Button
             size="medium"
             label="Valider"
