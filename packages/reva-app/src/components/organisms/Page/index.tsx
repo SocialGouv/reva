@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { Transition, motion } from "framer-motion";
 
 interface PageConfig {
   children: JSX.Element | JSX.Element[];
@@ -14,11 +14,14 @@ const pageVariants = {
   }),
   visible: { x: 0 },
   exit: (direction: Direction) => ({
-    x: direction === "previous" ? "100%" : -100,
+    x: direction === "previous" ? "100%" : -140,
   }),
 };
 
-const pageTransition = { ease: "circOut", duration: 0.35 };
+const pageTransition: Transition = {
+  ease: [0.58, 0, 0.17, 0.84],
+  duration: 0.45,
+};
 
 export const Page = ({ children, className, direction }: PageConfig) => {
   return (
