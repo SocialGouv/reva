@@ -74,3 +74,9 @@ Then click the Run button to launch the app in the mobile simulator.
 ```bash
 npm run storybook -w reva-app
 ```
+
+### Générer les icones et splash screens mobile
+
+```bash
+npm run build:resources -w reva-app
+```

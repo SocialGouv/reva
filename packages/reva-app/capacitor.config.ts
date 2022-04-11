@@ -1,19 +1,31 @@
-import dotenv from 'dotenv';
-import { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from "@capacitor/cli";
+import dotenv from "dotenv";
 
 dotenv.config();
 
 const config: CapacitorConfig = {
-  appId: 'fr.gouv.beta.reva',
-  appName: 'reva-app',
-  webDir: 'build',
-  bundledWebRuntime: !!process.env.CAPACITOR_WEB_RUNTIME
+  appId: "fr.gouv.beta.reva",
+  appName: "reva-app",
+  webDir: "build",
+  bundledWebRuntime: !!process.env.CAPACITOR_WEB_RUNTIME,
+  plugins: {
+    SplashScreen: {
+      launchShowDuration: 3000,
+      launchAutoHide: true,
+      backgroundColor: "#21203D",
+      androidSplashResourceName: "splash",
+      androidScaleType: "CENTER_CROP",
+      showSpinner: false,
+      splashFullScreen: true,
+      splashImmersive: true,
+    },
+  },
 };
 
 if (!!process.env.CAPACITOR_LIVE_RELOAD) {
   config.server = {
     url: `http://${process.env.HOST_IP}:${process.env.PORT}`,
-    cleartext: true
+    cleartext: true,
   };
 }
 
