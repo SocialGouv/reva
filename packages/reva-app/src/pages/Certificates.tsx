@@ -93,18 +93,20 @@ export const Certificates = ({ mainService }: Certificates) => {
   }
 
   const displayCards = () => {
-    if (["searchResultsError", "loadingCertifications"].some(state.matches)) {
-      return [1, 2, 3, 4, 5]
-        .map((i) => <CardSkeleton key={`skeleton-${i}`} size="small" />)
-        .concat(
-          <p key="error" className="text-red-600 mt-4 text-sm">
-            {state.context.error}
-          </p>
-        )
-        .reverse();
-    } else {
-      return state.context.certifications.map(CertificateCard);
+    if (state.matches("searchResultsError")) {
+      return (
+        <p key="error" className="text-red-600 mt-4 text-sm">
+          {state.context.error}
+        </p>
+      );
     }
+    if (state.matches("loadingCertifications")) {
+      return [1, 2, 3, 4, 5].map((i) => (
+        <CardSkeleton key={`skeleton-${i}`} size="small" />
+      ));
+    }
+
+    return state.context.certifications.map(CertificateCard);
   };
 
   return (
@@ -117,13 +119,10 @@ export const Certificates = ({ mainService }: Certificates) => {
         <div className="px-8 py-16 pb-8 lg:pt-8 bg-white">
           <Header label="Bienvenue" />
           <p className="mt-10 pr-6 text-slate-600 leading-loose text-lg">
-            REVA est une expérimentation beta.gouv visant à simplifier la
-            Validation des Acquis de l'Expérience (VAE). Sous l'impulsion du
-            Ministère du Travail, cette nouvelle expérimentation REVA propose à
-            3000 personnes, salariés du privé, aidants familiaux, demandeurs
-            d'emploi, ayant une expérience dans le secteur du service à la
-            personne, de la petite enfance ou de l'autonomie et de la santé
-            d’obtenir une certification dans ce domaine.
+            REVA est une expérimentation visant à simplifier la Validation des
+            Acquis de l'Expérience (VAE). Vous avez une expérience dans les
+            secteurs de la dépendance et de la santé ? Choisissez votre diplôme
+            et laissez-vous accompagner !
           </p>
         </div>
         <div className="px-8">

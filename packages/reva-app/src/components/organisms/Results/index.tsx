@@ -1,6 +1,6 @@
 interface ResultsProps {
   className?: string;
-  children: JSX.Element[];
+  children: JSX.Element | JSX.Element[];
   title: string;
   listClassName?: string;
 }
