@@ -67,7 +67,7 @@ export const ProjectHome = ({
           </ul>
           <Button
             size="tiny"
-            label={state.context.goals.length > 0 ? "Editer" : "Choisir"}
+            label={selectedGoals.length > 0 ? "Modifier" : "Choisir"}
             className="text-white bg-purple-800"
             onClick={() => send("EDIT_GOALS")}
           />
