@@ -21,7 +21,8 @@ export const ProjectHome = ({
 }: ProjectHomeProps) => {
   const [state, send] = useActor(mainService);
 
-  const projectProgress = 35;
+  const selectedGoals = state.context.goals.filter((goal) => goal.checked);
+  const projectProgress = selectedGoals.length > 0 ? 70 : 35;
 
   const editCertification = (
     <div className="bg-slate-900 rounded-xl overflow-hidden mt-6">
@@ -55,11 +56,18 @@ export const ProjectHome = ({
       <ProgressTitle progress={projectProgress} size="large" title="Projet" />
       <div className="space-y-4">
         {editCertification}
-        <div className="rounded-xl px-8 py-6 bg-purple-100">
-          <p className="font-bold text-purple-800 text-xl mb-4">Mon objectif</p>
+        <div className="rounded-xl pl-8 pr-6 py-6 bg-purple-100 text-purple-800">
+          <p className="font-bold mb-2 text-xl">Mon objectif</p>
+          <ul className="mb-4 text-lg leading-tight">
+            {selectedGoals.map((goal) => (
+              <li className="mb-2" key={goal.id}>
+                {goal.label}
+              </li>
+            ))}
+          </ul>
           <Button
             size="tiny"
-            label="Choisir"
+            label={state.context.goals.length > 0 ? "Editer" : "Choisir"}
             className="text-white bg-purple-800"
             onClick={() => send("EDIT_GOALS")}
           />

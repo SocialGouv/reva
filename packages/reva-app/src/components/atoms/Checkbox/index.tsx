@@ -1,4 +1,5 @@
 interface CheckboxProps {
+  checked: boolean;
   /**
    * Checkbox name
    */
@@ -11,11 +12,14 @@ interface CheckboxProps {
    * Custom class
    */
   className?: string;
+  toggle: () => void;
 }
 
 export const Checkbox = ({
+  checked,
   name,
   label,
+  toggle,
   className = "",
   ...props
 }: CheckboxProps) => {
@@ -26,6 +30,8 @@ export const Checkbox = ({
           id={name}
           aria-describedby="comments-description"
           name={name}
+          defaultChecked={checked}
+          onClick={toggle}
           type="checkbox"
           className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
         />

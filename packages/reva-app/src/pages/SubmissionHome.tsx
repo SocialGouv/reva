@@ -25,7 +25,8 @@ export const SubmissionHome = ({
 
   const homeLoaded = !state.matches({ submissionHome: "loading" });
 
-  const projectProgress = 35;
+  const selectedGoals = state.context.goals.filter((goal) => goal.checked);
+  const projectProgress = selectedGoals.length > 0 ? 70 : 35;
 
   const loadingScreen = (
     <motion.div

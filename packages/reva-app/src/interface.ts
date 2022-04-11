@@ -9,3 +9,9 @@ export interface Certification {
   activityArea?: string;
   accessibleJobType?: string;
 }
+
+export interface Goal {
+  checked: boolean;
+  id: string;
+  label: string;
+}
