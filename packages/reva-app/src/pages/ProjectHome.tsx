@@ -9,6 +9,7 @@ import certificateImg from "../components/organisms/Card/certificate.png";
 import { Page } from "../components/organisms/Page";
 import { Certification } from "../interface";
 import { MainContext, MainEvent } from "../machines/main.machine";
+import { projectProgress } from "../utils/projectProgress";
 
 interface ProjectHomeProps {
   certification: Certification;
@@ -22,7 +23,6 @@ export const ProjectHome = ({
   const [state, send] = useActor(mainService);
 
   const selectedGoals = state.context.goals.filter((goal) => goal.checked);
-  const projectProgress = selectedGoals.length > 0 ? 70 : 35;
 
   const editCertification = (
     <div className="bg-slate-900 rounded-xl overflow-hidden mt-6">
@@ -53,7 +53,11 @@ export const ProjectHome = ({
 
   const homeContent = (
     <div className="px-8 overflow-y-auto pb-8">
-      <ProgressTitle progress={projectProgress} size="large" title="Projet" />
+      <ProgressTitle
+        progress={projectProgress(state.context)}
+        size="large"
+        title="Projet"
+      />
       <div className="space-y-4">
         {editCertification}
         <div className="rounded-xl pl-8 pr-6 py-6 bg-purple-100 text-purple-800">

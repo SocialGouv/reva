@@ -11,6 +11,7 @@ import certificateImg from "../components/organisms/Card/certificate.png";
 import { Page } from "../components/organisms/Page";
 import type { Certification } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
+import { projectProgress } from "../utils/projectProgress";
 
 interface SubmissionHome {
   certification: Certification;
@@ -24,9 +25,6 @@ export const SubmissionHome = ({
   const [state, send] = useActor(mainService);
 
   const homeLoaded = !state.matches({ submissionHome: "loading" });
-
-  const selectedGoals = state.context.goals.filter((goal) => goal.checked);
-  const projectProgress = selectedGoals.length > 0 ? 70 : 35;
 
   const loadingScreen = (
     <motion.div
@@ -54,7 +52,10 @@ export const SubmissionHome = ({
         className="mt-10 flex flex-col px-8 py-6 rounded-xl bg-white shadow-sm"
         style={{ height: "414px" }}
       >
-        <ProgressTitle progress={projectProgress} title="Mon projet" />
+        <ProgressTitle
+          progress={projectProgress(state.context)}
+          title="Mon projet"
+        />
         <p className="mt-5 text-sm text-gray-450 leading-loose">
           Cette étape consiste à compléter et à transmettre votre projet, vous
           serez ensuite recontacté sous 48h.
