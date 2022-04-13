@@ -6,6 +6,11 @@ interface InputProps {
    */
   type?: "search" | "text" | "date";
   /**
+   * Custom class
+   */
+  className?: string;
+  defaultValue?: string;
+  /**
    * Label name
    */
   label?: string;
@@ -17,15 +22,12 @@ interface InputProps {
    * Input placeholder
    */
   placeholder?: string;
-  /**
-   * Custom class
-   */
-  className?: string;
 }
 
 export const Input = ({
   type = "text",
   className = "",
+  defaultValue = "",
   label = "",
   name,
   placeholder = "",
@@ -40,7 +42,9 @@ export const Input = ({
       )}
       <input
         id={name}
+        defaultValue={defaultValue}
         name={name}
+        placeholder={placeholder}
         type={type}
         className={`${
           type === "search" ? "pl-6 pr-16" : "px-6"

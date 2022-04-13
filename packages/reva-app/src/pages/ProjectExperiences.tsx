@@ -3,9 +3,7 @@ import { useState } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
-import { Checkbox } from "../components/atoms/Checkbox";
 import { Input } from "../components/atoms/Input";
-import { Title } from "../components/atoms/Title";
 import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
@@ -17,7 +15,9 @@ interface ProjectExperiencesProps {
 type duration =
   | "lessThanOneYear"
   | "betweenOneAndThreeYears"
-  | "moreThanThreeYears";
+  | "moreThanThreeYears"
+  | "moreThanFiveYears"
+  | "moreThanTenYears";
 
 interface Experience {
   title: string;
@@ -30,7 +30,6 @@ export const ProjectExperiences = ({
   mainService,
 }: ProjectExperiencesProps) => {
   const [state, send] = useActor(mainService);
-  //const [goals, setGoals] = useState(state.context.experience);
 
   return (
     <Page
@@ -41,7 +40,13 @@ export const ProjectExperiences = ({
       <div className="h-full flex flex-col px-8 overflow-y-auto">
         <form className="space-y-8">
           <Input name="title" label="Intitulé du poste" />
-          <Input name="start-date" label="Date de début" type="date" />
+          <Input
+            name="start-date"
+            label="Date de début"
+            type="date"
+            defaultValue="2020-01-31"
+          />
+          <Button label="Ajouter" size="small" />
         </form>
       </div>
     </Page>

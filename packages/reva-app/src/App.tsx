@@ -123,25 +123,20 @@ function App() {
         style={appSize}
       >
         <AnimatePresence custom={current.context.direction} initial={false}>
-          {
-            projectExperiencesPage()
-            /**
-                    {[
-                      "loadingCertifications",
-                      "searchResults",
-                      "searchResultsError",
-                      "certificateSummary",
-                    ].some(current.matches) && certificatesPage}
-                    {current.matches("projectHome") &&
-                      projectHomePage(current.context.certification)}
-                    {current.matches("projectGoals") &&
-                      projectGoalsPage(current.context.certification)}
-                    {current.matches("certificateDetails") &&
-                      certificateDetails(current.context.certification)}
-                    {current.matches("submissionHome") &&
-                      submissionHomePage(current.context.certification)}
-                    */
-          }
+          {[
+            "loadingCertifications",
+            "searchResults",
+            "searchResultsError",
+            "certificateSummary",
+          ].some(current.matches) && certificatesPage}
+          {current.matches("projectHome") &&
+            projectHomePage(current.context.certification)}
+          {current.matches("projectGoals") &&
+            projectGoalsPage(current.context.certification)}
+          {current.matches("certificateDetails") &&
+            certificateDetails(current.context.certification)}
+          {current.matches("submissionHome") &&
+            submissionHomePage(current.context.certification)}
         </AnimatePresence>
       </div>
     </div>

@@ -1,5 +1,3 @@
-import { AnimatePresence, motion, useMotionValue } from "framer-motion";
-
 interface ButtonProps {
   /**
    * Custom class
@@ -48,7 +46,7 @@ export const Button = ({
 
   let sizeClasses = {
     tiny: "text-sm pb-1 px-4 h-[25px]",
-    small: "text-sm px-5 h-[35px]",
+    small: "text-sm px-6 h-[35px]",
     medium: "text-base w-[190px] h-[45px]",
     large: "text-lg h-[53px] w-full",
   };
