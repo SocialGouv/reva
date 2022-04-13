@@ -184,8 +184,7 @@
                   et de l'Insertion, ainsi que par le Haut Commissariat aux
                   Compétences. Il associe également le Ministère des Solidarités
                   et de la Santé, le Ministère de l'Agriculture et de
-                  l'Alimentation, de la branche professionnelle du Particulier
-                  Employeur et de la Croix Rouge.
+                  l'Alimentation et Iperia.
                 </dd>
               </div>
             </dl>

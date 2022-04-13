@@ -43,14 +43,7 @@
                 href="https://www.iperia.eu/"
                 class="font-bold"
               >
-                Branche professionnelle du Particulier Employeur
-              </a>
-              <a
-                target="_blank"
-                href="https://irfss-occitanie.croix-rouge.fr/"
-                class="font-bold"
-              >
-                Croix-Rouge
+                Iperia
               </a>
             </div>
           </div>
