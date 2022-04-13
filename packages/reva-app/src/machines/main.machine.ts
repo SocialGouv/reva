@@ -1,6 +1,6 @@
 import { assign, createMachine } from "xstate";
 
-import { Certification } from "../interface";
+import { Certification, Goal } from "../interface";
 
 const loadingCertifications = "loadingCertifications";
 const searchResults = "searchResults";
@@ -27,6 +27,7 @@ export interface MainContext {
   direction: "previous" | "next";
   showStatusBar: boolean;
   certification?: Certification;
+  goals: Goal[];
 }
 
 export type MainEvent =
@@ -38,7 +39,7 @@ export type MainEvent =
   | { type: "CLOSE_SELECTED_CERTIFICATION" }
   | { type: "BACK" }
   | { type: "LOADED" }
-  | { type: "SUBMIT"; certification: Certification };
+  | { type: "SUBMIT"; goals: Goal[] };
 
 export type MainState =
   | {
@@ -49,11 +50,23 @@ export type MainState =
       value:
         | typeof certificateSummary
         | typeof certificateDetails
-        | typeof projectHome
-        | typeof projectGoals
         | typeof submissionHome;
       context: MainContext & { certification: Certification };
+    }
+  | {
+      value: typeof projectHome | typeof projectGoals;
+      context: MainContext & { certification: Certification; goals: Goal[] };
     };
+
+const initialGoals = [
+  { id: "c1", checked: false, label: "Trouver plus facilement un emploi" },
+  { id: "c2", checked: false, label: "Être reconnu dans ma profession" },
+  { id: "c3", checked: false, label: "Avoir un meilleur salaire" },
+  { id: "c4", checked: false, label: "Me réorienter" },
+  { id: "c5", checked: false, label: "Consolider mes acquis métier" },
+  { id: "c6", checked: false, label: "Me redonner confiance en moi" },
+  { id: "c7", checked: false, label: "Autre" },
+];
 
 export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
   {
@@ -63,6 +76,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
       direction: "next",
       certifications: [],
       showStatusBar: false,
+      goals: initialGoals,
     },
     initial: loadingCertifications,
     states: {
@@ -219,6 +233,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             actions: assign({
               certification: (context, event) => context.certification,
               direction: (context, event) => "previous",
+              goals: (context, event) => event.goals,
             }),
           },
         },

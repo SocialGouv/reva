@@ -9,6 +9,7 @@ import certificateImg from "../components/organisms/Card/certificate.png";
 import { Page } from "../components/organisms/Page";
 import { Certification } from "../interface";
 import { MainContext, MainEvent } from "../machines/main.machine";
+import { projectProgress } from "../utils/projectProgress";
 
 interface ProjectHomeProps {
   certification: Certification;
@@ -21,7 +22,7 @@ export const ProjectHome = ({
 }: ProjectHomeProps) => {
   const [state, send] = useActor(mainService);
 
-  const projectProgress = 35;
+  const selectedGoals = state.context.goals.filter((goal) => goal.checked);
 
   const editCertification = (
     <div className="bg-slate-900 rounded-xl overflow-hidden mt-6">
@@ -52,14 +53,25 @@ export const ProjectHome = ({
 
   const homeContent = (
     <div className="px-8 overflow-y-auto pb-8">
-      <ProgressTitle progress={projectProgress} size="large" title="Projet" />
+      <ProgressTitle
+        progress={projectProgress(state.context)}
+        size="large"
+        title="Projet"
+      />
       <div className="space-y-4">
         {editCertification}
-        <div className="rounded-xl px-8 py-6 bg-purple-100">
-          <p className="font-bold text-purple-800 text-xl mb-4">Mon objectif</p>
+        <div className="rounded-xl pl-8 pr-6 py-6 bg-purple-100 text-purple-800">
+          <p className="font-bold mb-2 text-xl">Mon objectif</p>
+          <ul className="mb-4 text-lg leading-tight">
+            {selectedGoals.map((goal) => (
+              <li className="mb-2" key={goal.id}>
+                {goal.label}
+              </li>
+            ))}
+          </ul>
           <Button
             size="tiny"
-            label="Choisir"
+            label={selectedGoals.length > 0 ? "Modifier" : "Choisir"}
             className="text-white bg-purple-800"
             onClick={() => send("EDIT_GOALS")}
           />
