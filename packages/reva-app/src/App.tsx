@@ -129,12 +129,16 @@ function App() {
             "searchResultsError",
             "certificateSummary",
           ].some(current.matches) && certificatesPage}
+
           {current.matches("projectHome") &&
             projectHomePage(current.context.certification)}
+
           {current.matches("projectGoals") &&
             projectGoalsPage(current.context.certification)}
+
           {current.matches("certificateDetails") &&
             certificateDetails(current.context.certification)}
+
           {current.matches("submissionHome") &&
             submissionHomePage(current.context.certification)}
         </AnimatePresence>
