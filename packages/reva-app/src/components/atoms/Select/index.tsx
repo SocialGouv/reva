@@ -15,11 +15,11 @@ interface SelectProps {
    */
   label?: string;
   /**
-   * Input name
+   * Select name
    */
   name: string;
   /**
-   * Input placeholder
+   * Select options
    */
   options?: option[];
 }
@@ -45,7 +45,7 @@ export const Select = ({
         {...props}
       >
         <option value="" selected disabled hidden>
-          Selectionnez une option
+          Sélectionnez une option
         </option>
         {options.map((opt) => (
           <option value={opt.value}>{opt.label}</option>
