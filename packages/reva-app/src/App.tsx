@@ -9,6 +9,7 @@ import { Certification } from "./interface";
 import { mainMachine } from "./machines/main.machine";
 import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
+import { ProjectExperiences } from "./pages/ProjectExperiences";
 import { ProjectGoals } from "./pages/ProjectGoals";
 import { ProjectHome } from "./pages/ProjectHome";
 import { SubmissionHome } from "./pages/SubmissionHome";
@@ -83,6 +84,10 @@ function App() {
 
   const projectGoalsPage = (certification: Certification) => (
     <ProjectGoals key="project-goals" mainService={mainService} />
+  );
+
+  const projectExperiencesPage = () => (
+    <ProjectExperiences key="project-experiences" mainService={mainService} />
   );
 
   const projectHomePage = (certification: Certification) => (
