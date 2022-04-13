@@ -4,6 +4,7 @@ import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { Input } from "../components/atoms/Input";
+import { Select } from "../components/atoms/Select";
 import { Textarea } from "../components/atoms/Textarea";
 import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
@@ -27,6 +28,14 @@ interface Experience {
   duration: duration;
 }
 
+const durationOptions = [
+  { label: "Moins d'un an", value: "lessThanOneYear" },
+  { label: "Entre 1 et 3 ans", value: "betweenOneAndThreeYears" },
+  { label: "Plus de 3 ans", value: "moreThanThreeYears" },
+  { label: "Plus de 5 ans", value: "moreThanFiveYears" },
+  { label: "Plus de 10 ans", value: "moreThanTenYears" },
+];
+
 export const ProjectExperiences = ({
   mainService,
 }: ProjectExperiencesProps) => {
@@ -46,6 +55,11 @@ export const ProjectExperiences = ({
             label="Date de début"
             type="date"
             defaultValue="2020-01-31"
+          />
+          <Select
+            label="Combien de temps"
+            name="duration"
+            options={durationOptions}
           />
           <Textarea
             name="description"
