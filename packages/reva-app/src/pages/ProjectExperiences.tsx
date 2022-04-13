@@ -4,6 +4,7 @@ import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { Input } from "../components/atoms/Input";
+import { Textarea } from "../components/atoms/Textarea";
 import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
@@ -38,13 +39,19 @@ export const ProjectExperiences = ({
     >
       <BackButton onClick={() => send("BACK")} />
       <div className="h-full flex flex-col px-8 overflow-y-auto">
-        <form className="space-y-8">
+        <form className="mt-4 space-y-6">
           <Input name="title" label="Intitulé du poste" />
           <Input
             name="start-date"
             label="Date de début"
             type="date"
             defaultValue="2020-01-31"
+          />
+          <Textarea
+            name="description"
+            label="Description du poste"
+            rows={5}
+            defaultValue=""
           />
           <Button label="Ajouter" size="small" />
         </form>
