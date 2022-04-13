@@ -66,3 +66,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+input::-webkit-date-and-time-value {
+  text-align: left;
+}

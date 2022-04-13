@@ -7,7 +7,6 @@ import { Checkbox } from "../components/atoms/Checkbox";
 import { Title } from "../components/atoms/Title";
 import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
-import { Goal } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
 interface ProjectGoalsProps {
