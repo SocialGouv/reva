@@ -34,31 +34,33 @@ export const Input = ({
   ...props
 }: InputProps) => {
   return (
-    <div className={`relative w-full ${className}`}>
+    <div className={`w-full ${className}`}>
       {label !== "" && (
         <label className="block mb-2" htmlFor={name}>
           {label}
         </label>
       )}
-      <input
-        id={name}
-        defaultValue={defaultValue}
-        name={name}
-        placeholder={placeholder}
-        type={type}
-        className={`${
-          type === "search" ? "pl-6 pr-16" : "px-6"
-        } rounded-t flex items-center w-full h-16 border-0 bg-gray-100 border-b-[3px] border-gray-600 focus:ring-0 focus:border-blue-600 text-lg placeholder:text-gray-500
+      <div className="relative">
+        <input
+          id={name}
+          defaultValue={defaultValue}
+          name={name}
+          placeholder={placeholder}
+          type={type}
+          className={`${type === "search" ? "pl-6 pr-16" : "px-6"} ${
+            type !== "date" ? "w-full" : "w-[190px]"
+          } flex items-center h-16 border-0 bg-gray-100 border-b-[3px] border-gray-600 focus:ring-0 focus:border-blue-600 text-lg placeholder:text-gray-500
            `}
-        {...props}
-      />
-      {type === "search" ? (
-        <div className="absolute inset-y-0 right-0 pr-6 flex items-center pointer-events-none">
-          <SearchIcon className="h-5 w-5" aria-hidden="true" />
-        </div>
-      ) : (
-        <></>
-      )}
+          {...props}
+        />
+        {type === "search" ? (
+          <div className="absolute inset-y-0 right-0 pr-6 flex items-center pointer-events-none">
+            <SearchIcon className="h-5 w-5" aria-hidden="true" />
+          </div>
+        ) : (
+          <></>
+        )}
+      </div>
     </div>
   );
 };
