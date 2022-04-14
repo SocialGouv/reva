@@ -126,7 +126,7 @@ function App() {
           {
             // TODO: ajouter la page "Mes experiences"
             // Décommenter la ligne suivante pour tester "Ajouter une experience""
-            projectExperiencePage()
+            // projectExperiencePage()
           }
 
           {[
