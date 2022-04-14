@@ -69,7 +69,7 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
       direction={state.context.direction}
     >
       <BackButton onClick={() => send("BACK")} />
-      <div className="h-full flex flex-col px-8 overflow-y-auto">
+      <div className="h-full flex flex-col px-8 overflow-y-auto pb-[400px]">
         <form onSubmit={onSubmit} className="mt-4 space-y-6">
           <Input name="title" label="Intitulé du poste" required={true} />
           <Input
