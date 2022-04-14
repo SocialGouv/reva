@@ -9,7 +9,7 @@ import { Certification } from "./interface";
 import { mainMachine } from "./machines/main.machine";
 import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
-import { ProjectExperiences } from "./pages/ProjectExperiences";
+import { ProjectExperience } from "./pages/ProjectExperience";
 import { ProjectGoals } from "./pages/ProjectGoals";
 import { ProjectHome } from "./pages/ProjectHome";
 import { SubmissionHome } from "./pages/SubmissionHome";
@@ -86,8 +86,8 @@ function App() {
     <ProjectGoals key="project-goals" mainService={mainService} />
   );
 
-  const projectExperiencesPage = () => (
-    <ProjectExperiences key="project-experiences" mainService={mainService} />
+  const projectExperiencePage = () => (
+    <ProjectExperience key="project-experiences" mainService={mainService} />
   );
 
   const projectHomePage = (certification: Certification) => (
@@ -123,6 +123,12 @@ function App() {
         style={appSize}
       >
         <AnimatePresence custom={current.context.direction} initial={false}>
+          {
+            // TODO: ajouter la page "Mes experiences"
+            // Décommenter la ligne suivante pour tester "Ajouter une experience""
+            // projectExperiencePage()
+          }
+
           {[
             "loadingCertifications",
             "searchResults",

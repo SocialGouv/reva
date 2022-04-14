@@ -41,14 +41,17 @@ export const Select = ({
       <select
         id={name}
         name={name}
+        defaultValue="unknown"
         className="px-6 flex items-center w-full h-16 border-0 bg-gray-100 border-b-[3px] border-gray-600 focus:ring-0 focus:border-blue-600 text-lg"
         {...props}
       >
-        <option value="" selected disabled hidden>
+        <option key="0" value="unknown" disabled hidden>
           Sélectionnez une option
         </option>
-        {options.map((opt) => (
-          <option value={opt.value}>{opt.label}</option>
+        {options.map((opt, index) => (
+          <option key={index + 1} value={opt.value}>
+            {opt.label}
+          </option>
         ))}
       </select>
     </div>

@@ -10,11 +10,12 @@ import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
-interface ProjectExperiencesProps {
+interface ProjectExperienceProps {
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
 
 type duration =
+  | "unknown"
   | "lessThanOneYear"
   | "betweenOneAndThreeYears"
   | "moreThanThreeYears"
@@ -23,9 +24,20 @@ type duration =
 
 interface Experience {
   title: string;
-  date: Date;
+  startDate: Date;
   description: string;
   duration: duration;
+}
+
+interface FormElements extends HTMLFormControlsCollection {
+  title: HTMLInputElement;
+  startDate: HTMLInputElement;
+  duration: HTMLSelectElement;
+  description: HTMLTextAreaElement;
+}
+
+interface ExperienceFormElement extends HTMLFormElement {
+  readonly elements: FormElements;
 }
 
 const durationOptions = [
@@ -36,10 +48,20 @@ const durationOptions = [
   { label: "Plus de 10 ans", value: "moreThanTenYears" },
 ];
 
-export const ProjectExperiences = ({
-  mainService,
-}: ProjectExperiencesProps) => {
+export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
   const [state, send] = useActor(mainService);
+
+  const onSubmit = (event: React.SyntheticEvent<ExperienceFormElement>) => {
+    event.preventDefault();
+    const elements = event.currentTarget.elements;
+    const experience = {
+      title: elements.title.value,
+      startDate: elements.startDate.value,
+      description: elements.description.value,
+      duration: elements.duration.value,
+    };
+    console.log(experience);
+  };
 
   return (
     <Page
@@ -47,11 +69,11 @@ export const ProjectExperiences = ({
       direction={state.context.direction}
     >
       <BackButton onClick={() => send("BACK")} />
-      <div className="h-full flex flex-col px-8 overflow-y-auto">
-        <form className="mt-4 space-y-6">
-          <Input name="title" label="Intitulé du poste" />
+      <div className="h-full flex flex-col px-8 overflow-y-auto pb-[400px]">
+        <form onSubmit={onSubmit} className="mt-4 space-y-6">
+          <Input name="title" label="Intitulé du poste" required={true} />
           <Input
-            name="start-date"
+            name="startDate"
             label="Date de début"
             type="date"
             defaultValue="2020-01-31"
@@ -67,7 +89,7 @@ export const ProjectExperiences = ({
             rows={5}
             defaultValue=""
           />
-          <Button label="Ajouter" size="small" />
+          <Button type="submit" label="Ajouter" size="small" />
         </form>
       </div>
     </Page>
