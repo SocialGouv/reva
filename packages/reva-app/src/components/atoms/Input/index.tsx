@@ -47,9 +47,9 @@ export const Input = ({
           name={name}
           placeholder={placeholder}
           type={type}
-          className={`${
-            type === "search" ? "pl-6 pr-16" : "px-6"
-          } rounded-t flex items-center w-full h-16 border-0 bg-gray-100 border-b-[3px] border-gray-600 focus:ring-0 focus:border-blue-600 text-lg placeholder:text-gray-500
+          className={`${type === "search" ? "pl-6 pr-16" : "px-6"} ${
+            type !== "date" ? "w-full" : "w-[190px]"
+          } flex items-center h-16 border-0 bg-gray-100 border-b-[3px] border-gray-600 focus:ring-0 focus:border-blue-600 text-lg placeholder:text-gray-500
            `}
           {...props}
         />

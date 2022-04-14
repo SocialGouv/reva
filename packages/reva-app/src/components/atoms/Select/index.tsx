@@ -41,7 +41,7 @@ export const Select = ({
       <select
         id={name}
         name={name}
-        className="px-6 rounded-t flex items-center w-full h-16 border-0 bg-gray-100 border-b-[3px] border-gray-600 focus:ring-0 focus:border-blue-600 text-lg"
+        className="px-6 flex items-center w-full h-16 border-0 bg-gray-100 border-b-[3px] border-gray-600 focus:ring-0 focus:border-blue-600 text-lg"
         {...props}
       >
         <option value="" selected disabled hidden>
