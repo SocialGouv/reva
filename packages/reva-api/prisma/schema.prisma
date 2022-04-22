@@ -68,3 +68,97 @@ model RomesOnCertifications {
   @@id([certificationId, romeId])
   @@map("rome_certification")
 }
+
+model Companion {
+  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
+  name        String
+  street      String
+  city        String
+  zipCode     String
+  candidacies Candidacy[]
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  @@map("companion")
+}
+
+// model Candidate {
+//   id        String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
+//   socialSecurityNumber  String?    @unique @db.VarChar(15)
+//   firstname  String?    @db.VarChar(255)
+//   lastname  String?    @db.VarChar(255)
+//   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+//   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+//   @@map("candidate")
+// }
+
+model Candidacy {
+  id        String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
+  deviceId  String    @unique @db.VarChar(255)
+  keycloakSub String? @db.Uuid  @map("keycloak_sub") 
+  companion       Companion @relation(fields: [companionId], references: [id])
+  companionId     String        @db.Uuid  @map("companion_id")
+  candidacyStatuses CandidaciesStatus[]
+  goals CandicadiesOnGoals[]
+  experiences Experience[]
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  @@map("candidacy")
+}
+
+
+/// Candicadies statuses
+model CandidaciesStatus {
+  id        String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
+  candidacy       Candidacy @relation(fields: [candidacyId], references: [id])
+  candidacyId     String  @db.Uuid  @map("candidacy_id")
+  status          CandidacyStatus @default(PROJET)
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  @@map("candidacy_candidacy_status")
+}
+
+enum CandidacyStatus {
+  PROJET
+  VALIDATION
+  DOSSIER_PRO
+  CERTIFICATION
+}
+
+model Goal {
+  id        String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
+  label      String   @unique @db.VarChar(255)
+  needsAdditionalInformation Boolean @default(false) @map("needs_additional_information")
+  isActive    Boolean   @default(false) @map("is_active")
+  candidacies CandicadiesOnGoals[]
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  @@map("goal")
+}
+
+model CandicadiesOnGoals {
+  candidacy       Candidacy @relation(fields: [candidacyId], references: [id])
+  candidacyId     String        @db.Uuid  @map("candidacy_id")
+  goal                Goal          @relation(fields: [goalId], references: [id])
+  goalId              String        @db.Uuid  @map("goal_id")
+  additionalInformation    String    @map("additional_information")
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+
+  @@id([candidacyId, goalId])
+  @@map("candidacy_goal")
+}
+
+model Experience {
+  id        String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
+  label String
+  description String
+  duration    Int
+  startedAt   DateTime
+  candidacy       Candidacy @relation(fields: [candidacyId], references: [id])
+  candidacyId     String        @db.Uuid  @map("candidacy_id")
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  @@map("experience")
+}
+
+

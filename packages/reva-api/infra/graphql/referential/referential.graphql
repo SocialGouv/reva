@@ -1,0 +1,14 @@
+type Referential {
+  goals: [Goal!]!
+}
+
+type Goal {
+  id: ID!
+  label: String!
+  needsAdditionalInformation: Boolean!
+  isActive: Boolean!
+}
+
+type Query {
+  getReferential: Referential!
+}

@@ -179,6 +179,15 @@ async function main() {
     REFRESH MATERIALIZED VIEW profession_search WITH DATA;
   `;
 
+  await prisma.companion.create({
+    data: {
+      city: 'Paris',
+      name: 'Iperia',
+      street: '',
+      zipCode: ''
+    }
+  });
+
 }
 
 main()
