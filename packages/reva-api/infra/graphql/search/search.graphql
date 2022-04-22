@@ -1,3 +1,9 @@
+enum CertificationStatus {
+  INACTIVE
+  SOON
+  AVAILABLE
+}
+
 type Certification {
   id: ID!
   label: String!
@@ -9,6 +15,7 @@ type Certification {
   accessibleJobType: String
   abilities: String
   codeRncp: String!
+  status: CertificationStatus!
 }
 
 type Profession {

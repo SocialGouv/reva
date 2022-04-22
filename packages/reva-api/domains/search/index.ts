@@ -1,3 +1,12 @@
+export const CertificationStatus = {
+  INACTIVE: 'INACTIVE',
+  SOON: 'SOON',
+  AVAILABLE: 'AVAILABLE'
+};
+
+export type CertificationStatus = (typeof CertificationStatus)[keyof typeof CertificationStatus]
+
+
 export interface Certification {
   id: string;
   label: string;
@@ -9,6 +18,7 @@ export interface Certification {
   accessibleJobType: string | null;
   abilities: string | null;
   codeRncp: string;
+  status: CertificationStatus;
 }
 
 export interface Profession {

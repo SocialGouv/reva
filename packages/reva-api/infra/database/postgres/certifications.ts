@@ -19,10 +19,10 @@ export const searchCertificationsByQuery = async ({
         certification.activity_area as "activityArea",
         certification.accessible_job_type as "accessibleJobType",
         certification.abilities,
-        certification.rncp_id as "codeRncp"
+        certification.rncp_id as "codeRncp",
+        certification.status
         FROM certification_search
         INNER JOIN certification ON certification.id = certification_search.id
-        WHERE certification.is_active = true
         ORDER BY rank DESC
         LIMIT 15;
   `) as Certification[];
@@ -39,6 +39,7 @@ export const searchCertificationsByQuery = async ({
       accessibleJobType: certification.accessibleJobType,
       abilities: certification.abilities,
       codeRncp: certification.codeRncp,
+      status: certification.status,
     };
   });
 };
@@ -54,7 +55,7 @@ export const getCertificationById = async ({ id }: { id: string; }): Promise<Cer
 
     return {
       ...certification,
-      codeRncp: certification?.rncpId
+      codeRncp: certification.rncpId
     };
   }
   return null;

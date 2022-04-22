@@ -27,7 +27,7 @@ async function main() {
             accessibleJobType: row.accessible_job_type,
             activityArea: row.activity_area,
             rncpId: row.rncp_id,
-            isActive: true,
+            status: 'AVAILABLE',
           }
         });
 
@@ -44,7 +44,7 @@ async function main() {
     where: { rncpId: '35506' },
     data: {
       summary: `L'assistant(e)  de  vie  aux  familles  (ADVF) contribue au bien être des personnes au sein de leur foyer en respectant leur dignité, leur intégrité, leur vie privée et leur sécurité. Pour permettre aux  personnes âgées ou malades, aux personnes en situation de handicap de maintenir leur autonomie et de continuer à vivre à domicile,  l'ADVF  les  aide  en  mettant  en  œuvre  les  gestes  et  techniques  appropriés  dans  le  respect  de l'intimité et l'écoute de la personne.`
-    }
+    },
   });
 
   await prisma.certification.update({
@@ -132,9 +132,9 @@ async function main() {
   });
 
   await prisma.certification.update({
-    where: { rncpId: '4503' },
+    where: { rncpId: '35513' },
     data: {
-      summary: `Le technicien de l'intervention sociale et familiale effectue une intervention sociale préventive, éducative et réparatrice visant à favoriser l'autonomie des personnes et leur intégration dans leur environnement et à créer ou restaurer le lien social.`
+      summary: `Le Bachelor Universitaire de Technologie (BUT) « Carrières Sociales» parcours « Coordination et Gestion des Établissements et Services Sanitaires et Sociaux » concerne des métiers en lien avec la gestion, la coordination et l’encadrement d’équipe dans des structures et services sanitaires et sociaux mais également la gestion de projet, le suivi qualité, les parcours de santé-social.`
     }
   });
 

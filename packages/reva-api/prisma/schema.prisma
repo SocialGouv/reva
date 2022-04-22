@@ -7,6 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum CertificationStatus {
+  INACTIVE
+  SOON
+  AVAILABLE
+}
+
 model Certification {
   id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
   label       String    @db.VarChar(255)
@@ -18,7 +24,7 @@ model Certification {
   abilities   String?
   slug        String
   summary String?
-  isActive    Boolean   @default(true) @map("is_active")
+  status      CertificationStatus @default(INACTIVE)
   rncpId      String    @unique @map("rncp_id") @db.VarChar(255)
   romes       RomesOnCertifications[]
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
