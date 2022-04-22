@@ -1,0 +1,80 @@
+# QUERY
+
+type Candidacy {
+  deviceId: ID!
+  companionId: ID!
+  experiences: [Experience]!
+  goals: [CandidateGoal]!
+}
+
+type Experience {
+  id: ID
+  title: String!
+  startedAt: String!
+  duration: Int!
+  description: String!
+}
+
+type CandidateGoal {
+  goalId: ID!
+  additionalInformation: String
+}
+
+type Companion {
+  id: ID!
+  name: String!
+  street: String!
+  city: String!
+  zipCode: String!
+}
+
+type Query {
+  getCandidacy(deviceId: ID!): Candidacy
+  getCompanions: [Companion]!
+}
+
+# MUTATIONS
+
+input CandidacyInput {
+  deviceId: ID!
+  companionId: ID!
+  experiences: [ExperienceInput!]!
+  goals: [CandidateGoalInput!]!
+}
+
+input ExperienceInput {
+  title: String!
+  startedAt: String!
+  duration: Int!
+  description: String!
+}
+
+input CandidateGoalInput {
+  goalId: ID!
+  additionalInformation: String
+}
+
+type Mutation {
+  createCandidacy(candidacy: CandidacyInput!): Candidacy
+  addExperience(
+    deviceId: ID!
+    candidacyId: ID!
+    experience: ExperienceInput
+  ): Candidacy
+  updateExperience(
+    deviceId: ID!
+    candidacyId: ID!
+    experienceId: ID!
+    experience: ExperienceInput
+  ): Candidacy
+  removeExperience(
+    deviceId: ID!
+    candidacyId: ID!
+    experienceId: ID!
+  ): Candidacy
+  updateGoals(
+    deviceId: ID!
+    candidacyId: ID!
+    goals: [CandidateGoalInput!]!
+  ): Candidacy
+}

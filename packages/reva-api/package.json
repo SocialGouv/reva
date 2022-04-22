@@ -47,7 +47,8 @@
     "fastify-env": "^2.1.1",
     "fastify-http-proxy": "^6.2.1",
     "fastify-static": "^4.5.0",
-    "mercurius": "^9.3.3"
+    "mercurius": "^9.3.3",
+    "purify-ts": "^1.2.0"
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.2",

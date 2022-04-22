@@ -6,12 +6,14 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 // Resolvers
 
 import * as search from "./search";
+import * as candidacy from "./candidacy";
+import * as referential from "./referential";
 
 const typeDefs = loadFilesSync(path.join(__dirname, "."), {
   extensions: ["graphql"],
   recursive: true,
 });
-const resolvers = mergeResolvers([search.resolvers]);
+const resolvers = mergeResolvers([search.resolvers, candidacy.resolvers, referential.resolvers]);
 
 export const graphqlConfiguration = {
   schema: makeExecutableSchema({
