@@ -8,6 +8,7 @@ export interface Certification {
   abilities?: string;
   activityArea?: string;
   accessibleJobType?: string;
+  status: "AVAILABLE" | "SOON";
 }
 
 export interface Goal {

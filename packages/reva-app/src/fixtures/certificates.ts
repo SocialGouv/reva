@@ -14,6 +14,7 @@ export const certificateFixtures: Certification[] = [
     codeRncp: "5983",
     summary: loremIpsum,
     label: "Surveillant - visiteur de nuit en secteur social et médico-social",
+    status: "AVAILABLE",
   },
   {
     id: "2",
@@ -21,6 +22,7 @@ export const certificateFixtures: Certification[] = [
     codeRncp: "13905",
     summary: loremIpsum,
     label: "Services aux personnes et aux territoires",
+    status: "AVAILABLE",
   },
   {
     id: "3",
@@ -28,6 +30,7 @@ export const certificateFixtures: Certification[] = [
     codeRncp: "35028",
     summary: loremIpsum,
     label: "Agent de service médico-social",
+    status: "AVAILABLE",
   },
   {
     id: "4",
@@ -35,6 +38,7 @@ export const certificateFixtures: Certification[] = [
     codeRncp: "35830",
     summary: loremIpsum,
     label: "Aide-Soignant",
+    status: "AVAILABLE",
   },
   {
     id: "5",
@@ -42,6 +46,7 @@ export const certificateFixtures: Certification[] = [
     codeRncp: "34692",
     summary: loremIpsum,
     label: "Employé familial",
+    status: "AVAILABLE",
   },
   {
     id: "6",
@@ -49,6 +54,7 @@ export const certificateFixtures: Certification[] = [
     codeRncp: "35506",
     summary: loremIpsum,
     label: "Assistant de vie aux familles",
+    status: "AVAILABLE",
   },
   {
     id: "7",
@@ -56,6 +62,7 @@ export const certificateFixtures: Certification[] = [
     codeRncp: "34690",
     summary: loremIpsum,
     label: "Assistant de vie dépendance",
+    status: "AVAILABLE",
   },
   {
     id: "8",
@@ -63,6 +70,7 @@ export const certificateFixtures: Certification[] = [
     codeRncp: "25467",
     summary: loremIpsum,
     label: "Diplôme d'État d'accompagnant éducatif et social",
+    status: "AVAILABLE",
   },
   {
     id: "9",
@@ -70,6 +78,7 @@ export const certificateFixtures: Certification[] = [
     codeRncp: "17163",
     summary: loremIpsum,
     label: "Conducteur-e accompagnateur-e de personnes à mobilité réduite",
+    status: "AVAILABLE",
   },
   {
     id: "10",
@@ -77,6 +86,7 @@ export const certificateFixtures: Certification[] = [
     codeRncp: "35993",
     summary: loremIpsum,
     label: "Responsable coordonnateur service au domicile",
+    status: "AVAILABLE",
   },
   {
     id: "11",
@@ -84,6 +94,7 @@ export const certificateFixtures: Certification[] = [
     codeRncp: "34691",
     summary: loremIpsum,
     label: "Assistant maternel / garde d'enfants",
+    status: "AVAILABLE",
   },
   {
     id: "12",
@@ -91,6 +102,7 @@ export const certificateFixtures: Certification[] = [
     codeRncp: "4500",
     summary: loremIpsum,
     label: "Assistant familial",
+    status: "AVAILABLE",
   },
   {
     id: "13",
@@ -98,6 +110,7 @@ export const certificateFixtures: Certification[] = [
     codeRncp: "35832",
     summary: loremIpsum,
     label: "Auxiliaire de puériculture",
+    status: "AVAILABLE",
   },
   {
     id: "14",
@@ -105,6 +118,7 @@ export const certificateFixtures: Certification[] = [
     codeRncp: "4503",
     summary: loremIpsumLong,
     label: "Technicien de l'intervention sociale et familiale",
+    status: "AVAILABLE",
   },
   {
     id: "15",
@@ -113,5 +127,6 @@ export const certificateFixtures: Certification[] = [
     summary: loremIpsumVeryLong,
     label:
       "Certificat d'aptitude aux fonctions d'encadrement et de responsable d'unité d'intervention sociale",
+    status: "AVAILABLE",
   },
 ];

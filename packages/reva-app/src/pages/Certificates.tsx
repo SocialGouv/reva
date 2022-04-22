@@ -56,6 +56,7 @@ export const Certificates = ({ mainService }: Certificates) => {
         title={certification.label}
         label={certification.codeRncp}
         summary={certification.summary}
+        status={certification.status}
       />
     );
   };

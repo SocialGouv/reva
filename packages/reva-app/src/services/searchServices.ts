@@ -8,6 +8,7 @@ const SEARCH_CERTIFICATIONS_AND_PROFESSIONS = gql`
         label
         summary
         codeRncp
+        status
       }
     }
   }
@@ -32,6 +33,7 @@ const GET_CERTIFICATE = gql`
       abilities
       activityArea
       accessibleJobType
+      status
     }
   }
 `;

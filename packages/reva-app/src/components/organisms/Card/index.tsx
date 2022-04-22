@@ -15,10 +15,13 @@ import {
 
 export type CardSize = "reduced" | "open";
 
+export type CardStatus = "AVAILABLE" | "SOON";
+
 interface Card {
   id: string;
   summary: string;
   label: string;
+  status: CardStatus;
   isOpen?: boolean;
   onClose?: () => void;
   onLearnMore?: () => void;
@@ -37,6 +40,7 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
       onLearnMore = () => {},
       onOpen = () => {},
       title,
+      status,
       initialSize = "reduced",
       ...props
     },
@@ -127,15 +131,32 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
           src={certificateImg}
         />
         <motion.div layout className={"flex items-end h-full p-5"}>
-          <TextResult
-            size="small"
-            title={
-              title.length > SMALL_TITLE_LENGTH
-                ? `${title.substring(0, SMALL_TITLE_LENGTH)}...`
-                : title
-            }
-            color="light"
-          />
+          <div className="flex flex-col space-y-4">
+            <TextResult
+              size="small"
+              title={
+                title.length > SMALL_TITLE_LENGTH
+                  ? `${title.substring(0, SMALL_TITLE_LENGTH)}...`
+                  : title
+              }
+              color="light"
+            />
+            <div className="flex space-x-2 items-center text-xs uppercase font-medium">
+              <div
+                className={
+                  `h-2 w-2 rounded-full ` +
+                  (status == "AVAILABLE" ? "bg-green-500" : "bg-red-500")
+                }
+              ></div>
+              <div
+                className={
+                  status == "AVAILABLE" ? "text-white" : "text-gray-400"
+                }
+              >
+                {status == "AVAILABLE" ? "Disponible" : "Bientôt"}
+              </div>
+            </div>
+          </div>
         </motion.div>
       </>
     );
