@@ -1,5 +1,4 @@
 import { useActor } from "@xstate/react";
-import { useState } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
@@ -8,25 +7,11 @@ import { Select } from "../components/atoms/Select";
 import { Textarea } from "../components/atoms/Textarea";
 import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
+import { Experience, duration } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
 interface ProjectExperienceProps {
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
-}
-
-type duration =
-  | "unknown"
-  | "lessThanOneYear"
-  | "betweenOneAndThreeYears"
-  | "moreThanThreeYears"
-  | "moreThanFiveYears"
-  | "moreThanTenYears";
-
-interface Experience {
-  title: string;
-  startDate: Date;
-  description: string;
-  duration: duration;
 }
 
 interface FormElements extends HTMLFormControlsCollection {
@@ -40,7 +25,7 @@ interface ExperienceFormElement extends HTMLFormElement {
   readonly elements: FormElements;
 }
 
-const durationOptions = [
+const durationOptions: { label: string; value: duration }[] = [
   { label: "Moins d'un an", value: "lessThanOneYear" },
   { label: "Entre 1 et 3 ans", value: "betweenOneAndThreeYears" },
   { label: "Plus de 3 ans", value: "moreThanThreeYears" },
@@ -54,18 +39,21 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
   const onSubmit = (event: React.SyntheticEvent<ExperienceFormElement>) => {
     event.preventDefault();
     const elements = event.currentTarget.elements;
-    const experience = {
+    const experience: Experience = {
       title: elements.title.value,
-      startDate: elements.startDate.value,
+      startDate: new Date(elements.startDate.value),
       description: elements.description.value,
-      duration: elements.duration.value,
+      duration: elements.duration.value as duration,
     };
-    console.log(experience);
+    send({
+      type: "SUBMIT_EXPERIENCE",
+      experience,
+    });
   };
 
   return (
     <Page
-      className="z-[70] flex flex-col bg-white pt-6"
+      className="z-[80] flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
       <BackButton onClick={() => send("BACK")} />

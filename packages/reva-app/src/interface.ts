@@ -11,6 +11,21 @@ export interface Certification {
   status: "AVAILABLE" | "SOON";
 }
 
+export type duration =
+  | "unknown"
+  | "lessThanOneYear"
+  | "betweenOneAndThreeYears"
+  | "moreThanThreeYears"
+  | "moreThanFiveYears"
+  | "moreThanTenYears";
+
+export interface Experience {
+  title: string;
+  startDate: Date;
+  description: string;
+  duration: duration;
+}
+
 export interface Goal {
   checked: boolean;
   id: string;

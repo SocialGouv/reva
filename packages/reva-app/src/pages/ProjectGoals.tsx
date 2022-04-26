@@ -58,7 +58,7 @@ export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
             label="Valider"
             onClick={() =>
               send({
-                type: "SUBMIT",
+                type: "SUBMIT_GOALS",
                 goals,
               })
             }
