@@ -31,7 +31,7 @@ export interface MainContext {
   direction: "previous" | "next";
   showStatusBar: boolean;
   certification?: Certification;
-  experiences: Experience[];
+  experiences: { edited?: Experience; rest: Experience[] };
   goals: Goal[];
 }
 
@@ -42,6 +42,7 @@ export type MainEvent =
   | { type: "CANDIDATE"; certification: Certification }
   | { type: "ADD_EXPERIENCE" }
   | { type: "EDIT_EXPERIENCES" }
+  | { type: "EDIT_EXPERIENCE"; index: number }
   | { type: "EDIT_GOALS" }
   | { type: "CLOSE_SELECTED_CERTIFICATION" }
   | { type: "BACK" }
@@ -94,7 +95,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
       direction: "next",
       certifications: [],
       showStatusBar: false,
-      experiences: [],
+      experiences: { rest: [] },
       goals: initialGoals,
     },
     initial: loadingCertifications,
@@ -245,6 +246,11 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             actions: assign({
               certification: (context, event) => context.certification,
               direction: (context, event) => "previous",
+              experiences: (context, event) => ({
+                rest: context.experiences.edited
+                  ? [...context.experiences.rest, context.experiences.edited]
+                  : context.experiences.rest,
+              }),
             }),
           },
           SUBMIT_EXPERIENCE: {
@@ -252,10 +258,9 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             actions: assign({
               certification: (context, event) => context.certification,
               direction: (context, event) => "previous",
-              experiences: (context, event) => [
-                ...context.experiences,
-                event.experience,
-              ],
+              experiences: (context, event) => ({
+                rest: [...context.experiences.rest, event.experience],
+              }),
             }),
           },
         },
@@ -274,6 +279,19 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             actions: assign({
               certification: (context, event) => context.certification,
               direction: (context, event) => "next",
+            }),
+          },
+          EDIT_EXPERIENCE: {
+            target: "projectExperience",
+            actions: assign({
+              certification: (context, event) => context.certification,
+              direction: (context, event) => "next",
+              experiences: (context, event) => ({
+                edited: context.experiences.rest[event.index],
+                rest: context.experiences.rest.filter(
+                  (_, i) => i !== event.index
+                ),
+              }),
             }),
           },
           SUBMIT_EXPERIENCES: {

@@ -51,6 +51,8 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
     });
   };
 
+  const editedExperience = state.context.experiences.edited;
+
   return (
     <Page
       className="z-[80] flex flex-col bg-white pt-6"
@@ -59,25 +61,39 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
       <BackButton onClick={() => send("BACK")} />
       <div className="h-full flex flex-col px-8 overflow-y-auto pb-[400px]">
         <form onSubmit={onSubmit} className="mt-4 space-y-6">
-          <Input name="title" label="Intitulé du poste" required={true} />
+          <Input
+            name="title"
+            label="Intitulé du poste"
+            required={true}
+            defaultValue={editedExperience?.title}
+          />
           <Input
             name="startDate"
             label="Date de début"
             type="date"
-            defaultValue="2020-01-31"
+            defaultValue={
+              editedExperience
+                ? editedExperience.startDate.toISOString().slice(0, -14)
+                : "2020-01-31"
+            }
           />
           <Select
             label="Combien de temps"
             name="duration"
             options={durationOptions}
+            defaultValue={editedExperience?.duration}
           />
           <Textarea
             name="description"
             label="Description du poste"
             rows={5}
-            defaultValue=""
+            defaultValue={editedExperience?.description}
           />
-          <Button type="submit" label="Ajouter" size="small" />
+          <Button
+            type="submit"
+            label={editedExperience ? "Valider" : "Ajouter"}
+            size="small"
+          />
         </form>
       </div>
     </Page>

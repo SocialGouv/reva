@@ -71,3 +71,40 @@ export const Add = (props: SVGProps<SVGSVGElement>) => (
     </g>
   </svg>
 );
+
+export const Edit = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    className="stroke-current"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 48 48"
+    {...props}
+  >
+    <g transform="matrix(2,0,0,2,0,0)">
+      <path
+        style={semiboldLineStyle}
+        d="M22.19,1.81a3.638,3.638,0,0,0-5.169.035l-14.5,14.5L.75,23.25l6.905-1.771,14.5-14.5A3.638,3.638,0,0,0,22.19,1.81Z"
+      />
+      <line
+        style={semiboldLineStyle}
+        x1={16.606}
+        y1={2.26}
+        x2={21.74}
+        y2={7.394}
+      />
+      <line
+        style={semiboldLineStyle}
+        x1={14.512}
+        y1={4.354}
+        x2={19.646}
+        y2={9.488}
+      />
+      <line
+        style={semiboldLineStyle}
+        x1={2.521}
+        y1={16.345}
+        x2={7.66}
+        y2={21.474}
+      />
+    </g>
+  </svg>
+);
