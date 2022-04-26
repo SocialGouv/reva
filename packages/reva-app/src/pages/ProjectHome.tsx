@@ -5,7 +5,7 @@ import { Button } from "../components/atoms/Button";
 import { TextResult } from "../components/atoms/TextResult";
 import { BackButton } from "../components/molecules/BackButton";
 import { ProgressTitle } from "../components/molecules/ProgressTitle";
-import certificateImg from "../components/organisms/Card/certificate.png";
+import certificationImg from "../components/organisms/Card/certification.png";
 import { Page } from "../components/organisms/Page";
 import { Certification } from "../interface";
 import { MainContext, MainEvent } from "../machines/main.machine";
@@ -37,7 +37,7 @@ export const ProjectHome = ({
           height: "104px",
           width: "104px",
         }}
-        src={certificateImg}
+        src={certificationImg}
       />
       <div className="px-8 pb-6">
         <TextResult size="small" title={certification.label} color="light" />

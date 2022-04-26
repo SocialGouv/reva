@@ -7,7 +7,7 @@ import { Header } from "../components/atoms/Header";
 import { Loader } from "../components/atoms/Icons";
 import { BackButton } from "../components/molecules/BackButton";
 import { ProgressTitle } from "../components/molecules/ProgressTitle";
-import certificateImg from "../components/organisms/Card/certificate.png";
+import certificationImg from "../components/organisms/Card/certification.png";
 import { Page } from "../components/organisms/Page";
 import type { Certification } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
@@ -92,7 +92,7 @@ export const SubmissionHome = ({
           top: "58px",
           width: "106px",
         }}
-        src={certificateImg}
+        src={certificationImg}
       />
       <div className="mt-12 -mb-12 text-center font-bold">REVA</div>
       <BackButton onClick={() => send("BACK")} />

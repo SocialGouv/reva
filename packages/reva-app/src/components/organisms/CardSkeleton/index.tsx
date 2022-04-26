@@ -22,7 +22,7 @@ export const CardSkeleton = ({ size = "small" }: CardSkeleton) => {
         height: size === "small" ? heightConfig.small : heightConfig.medium,
       }}
     >
-      <div className="relative h-full rounded-3xl overflow-hidden pt-4 px-6 shadow-2xl bg-slate-900 text-white">
+      <div className="relative h-full rounded-2xl overflow-hidden pt-4 px-6 shadow-2xl bg-slate-900 text-white">
         <div className="animate-pulse w-full h-full flex flex-col items-end">
           <div
             className="rounded-full bg-slate-700 absolute left-[-43px]"
@@ -34,7 +34,7 @@ export const CardSkeleton = ({ size = "small" }: CardSkeleton) => {
             }}
           />
           <div className="rounded-full w-12 absolute top-6 right-4 bg-slate-700 h-4"></div>
-          <div className="grow w-full flex flex-col justify-end pb-2">
+          <div className="grow w-full flex flex-col justify-end pb-6">
             {titleSkeleton(190)}
             {titleSkeleton(250)}
           </div>

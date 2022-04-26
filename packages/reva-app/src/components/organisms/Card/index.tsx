@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Add } from "../../atoms/Icons";
 import { TextResult } from "../../atoms/TextResult";
 import { BackButton } from "../../molecules/BackButton";
-import certificateImg from "./certificate.png";
+import certificationImg from "./certification.png";
 import {
   SMALL_TITLE_LENGTH,
   heightConfig,
@@ -15,7 +15,10 @@ import {
 
 export type CardSize = "reduced" | "open";
 
-export type CardStatus = "AVAILABLE" | "SOON";
+export const STATUS_AVAILABLE = "AVAILABLE";
+export const STATUS_SOON = "SOON";
+
+export type CardStatus = typeof STATUS_AVAILABLE | typeof STATUS_SOON;
 
 interface Card {
   id: string;
@@ -29,6 +32,26 @@ interface Card {
   initialSize?: CardSize;
   title: string;
 }
+
+const CertificationStatus = (props: { status: CardStatus }) => {
+  return (
+    <div className="flex space-x-2 items-center text-xs uppercase font-medium">
+      <div
+        className={
+          `h-2 w-2 rounded-full ` +
+          (props.status == STATUS_AVAILABLE ? "bg-green-500" : "bg-red-500")
+        }
+      ></div>
+      <div
+        className={
+          props.status == STATUS_AVAILABLE ? "text-white" : "text-gray-400"
+        }
+      >
+        {props.status == STATUS_AVAILABLE ? "Disponible" : "Bientôt"}
+      </div>
+    </div>
+  );
+};
 
 export const Card = React.forwardRef<HTMLLIElement, Card>(
   (
@@ -101,7 +124,7 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
             height: "174px",
             width: "174px",
           }}
-          src={certificateImg}
+          src={certificationImg}
         />
       </motion.div>
     );
@@ -128,7 +151,7 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
             height: isReduced ? "104px" : "240px",
             width: isReduced ? "104px" : "240px",
           }}
-          src={certificateImg}
+          src={certificationImg}
         />
         <motion.div layout className={"flex items-end h-full p-5"}>
           <div className="flex flex-col space-y-4">
@@ -141,21 +164,7 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
               }
               color="light"
             />
-            <div className="flex space-x-2 items-center text-xs uppercase font-medium">
-              <div
-                className={
-                  `h-2 w-2 rounded-full ` +
-                  (status == "AVAILABLE" ? "bg-green-500" : "bg-red-500")
-                }
-              ></div>
-              <div
-                className={
-                  status == "AVAILABLE" ? "text-white" : "text-gray-400"
-                }
-              >
-                {status == "AVAILABLE" ? "Disponible" : "Bientôt"}
-              </div>
-            </div>
+            <CertificationStatus status={status} />
           </div>
         </motion.div>
       </>
