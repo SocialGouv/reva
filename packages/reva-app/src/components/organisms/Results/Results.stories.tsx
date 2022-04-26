@@ -2,7 +2,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 
 import { loremIpsum } from "../../atoms/LoremIpsum";
 import { TextResult } from "../../atoms/TextResult";
-import { Card } from "../../organisms/Card";
+import { Card, CardStatus } from "../../organisms/Card";
 import { Results } from "./index";
 
 export default {
@@ -36,12 +36,14 @@ const BlockTemplate: ComponentStory<typeof Results> = (args) => (
         summary: loremIpsum,
         label: "N104c",
         title: "Licence Professionnelle Métiers du design",
+        status: "AVAILABLE",
       },
       {
         id: "2",
         summary: loremIpsum,
         label: "N304c",
         title: "MASTER Ergonomie",
+        status: "SOON",
       },
     ].map((certificate) => (
       <Card
@@ -51,6 +53,7 @@ const BlockTemplate: ComponentStory<typeof Results> = (args) => (
         title={certificate.label}
         label={certificate.label}
         summary={certificate.summary}
+        status={certificate.status as CardStatus}
       />
     ))}
   </Results>
