@@ -8,6 +8,7 @@ import {
   Goal,
 } from "../interface";
 
+const checkSavedCertification = "checkSavedCertification";
 const loadingCertifications = "loadingCertifications";
 const searchResults = "searchResults";
 const searchResultsError = "searchResultsError";
@@ -21,6 +22,7 @@ const projectGoals = "projectGoals";
 const submissionHome = "submissionHome";
 
 export type State =
+  | typeof checkSavedCertification
   | typeof loadingCertifications
   | typeof searchResults
   | typeof searchResultsError
@@ -116,8 +118,39 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
       experiences: { rest: [] },
       goals: initialGoals,
     },
-    initial: loadingCertifications,
+    initial: checkSavedCertification,
     states: {
+      checkSavedCertification: {
+        invoke: {
+          src: "getLocalCandidacy",
+          onDone: [
+            {
+              cond: (_, event) => {
+                return event.data.isJust();
+              },
+              target: "submissionHome.ready",
+              actions: assign({
+                certification: (_, event) => {
+                  return event.data.extract().certification;
+                },
+              }),
+            },
+            {
+              cond: (_, event) => {
+                return event.data.isNothing();
+              },
+              target: loadingCertifications,
+            },
+          ],
+          onError: {
+            target: searchResultsError,
+            actions: assign({
+              error: (_, event) =>
+                "Une erreur est survenue lors de la récupération de votre candidature.",
+            }),
+          },
+        },
+      },
       loadingCertifications: {
         invoke: {
           src: "searchCertifications",
@@ -216,6 +249,16 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         initial: "loading",
         states: {
           loading: {
+            invoke: {
+              src: "saveLocalCandidacy",
+              onDone: {},
+              onError: {
+                actions: assign({
+                  error: (_, event) =>
+                    "Une erreur est survenue lors de la sauvegarde de la certification.",
+                }),
+              },
+            },
             after: {
               2000: { target: "ready" },
             },
@@ -415,6 +458,8 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
       searchCertifications: (context, event) =>
         Promise.reject("Not implemented"),
       getCertification: (context, event) => Promise.reject("Not implemented"),
+      saveLocalCandidacy: (context, event) => Promise.reject("Not implemented"),
+      getLocalCandidacy: (context, event) => Promise.reject("Not implemented"),
     },
   }
 );

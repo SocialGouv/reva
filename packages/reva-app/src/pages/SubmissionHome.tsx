@@ -96,8 +96,7 @@ export const SubmissionHome = ({
         src={certificationImg}
       />
       <div className="mt-12 -mb-12 text-center font-bold">REVA</div>
-      <BackButton onClick={() => send("BACK")} />
-      <div className="grow overflow-y-auto mt-20 px-8 pb-8">{homeContent}</div>
+      <div className="grow overflow-y-auto mt-36 px-8 pb-8">{homeContent}</div>
     </motion.div>
   );
 

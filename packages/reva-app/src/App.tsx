@@ -2,7 +2,9 @@ import { ApolloClient, getApolloContext } from "@apollo/client";
 import { Capacitor } from "@capacitor/core";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { useMachine } from "@xstate/react";
+import { SecureStoragePlugin } from "capacitor-secure-storage-plugin";
 import { AnimatePresence } from "framer-motion";
+import { Just, Nothing } from "purify-ts";
 import { useContext, useEffect, useMemo } from "react";
 
 import { Certification } from "./interface";
@@ -27,15 +29,67 @@ function App() {
     () =>
       mainMachine.withConfig({
         services: {
-          searchCertifications: (context, event) =>
+          searchCertifications: async (context, event) =>
             searchCertifications(client as ApolloClient<object>)({ query: "" }),
-          getCertification: (context, event) => {
+          getCertification: async (context, event) => {
             if (event.type !== "SELECT_CERTIFICATION") {
               return Promise.reject("Impossible state");
             }
             return getCertification(client as ApolloClient<object>)({
               id: event.certification.id,
             });
+          },
+          saveLocalCandidacy: async (context, event) => {
+            let candidacy = {};
+            const storageKeys = await SecureStoragePlugin.keys();
+
+            const storageKey = Capacitor.isNativePlatform()
+              ? "candidacy"
+              : "cap_sec_candidacy";
+            if (storageKeys.value.includes(storageKey)) {
+              const candidacyStore = await SecureStoragePlugin.get({
+                key: "candidacy",
+              });
+
+              candidacy = JSON.parse(candidacyStore.value);
+            }
+
+            console.log({
+              key: "candidacy",
+              value: JSON.stringify({
+                ...candidacy,
+                certification: context.certification,
+              }),
+            });
+
+            return SecureStoragePlugin.set({
+              key: "candidacy",
+              value: JSON.stringify({
+                ...candidacy,
+                certification: {
+                  id: context.certification?.id,
+                  label: context.certification?.label,
+                  codeRncp: context.certification?.codeRncp,
+                },
+              }),
+            });
+          },
+          getLocalCandidacy: async (context, event) => {
+            let candidacy = {};
+            const storageKeys = await SecureStoragePlugin.keys();
+
+            const storageKey = Capacitor.isNativePlatform()
+              ? "candidacy"
+              : "cap_sec_candidacy";
+            if (storageKeys.value.includes(storageKey)) {
+              const candidacyStore = await SecureStoragePlugin.get({
+                key: "candidacy",
+              });
+
+              return Just(JSON.parse(candidacyStore.value));
+            } else {
+              return Nothing;
+            }
           },
         },
       }),
