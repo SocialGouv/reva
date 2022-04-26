@@ -252,10 +252,10 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             actions: assign({
               certification: (context, event) => context.certification,
               direction: (context, event) => "previous",
-              experiences: (context, event) => (
-                console.log(...context.experiences),
-                [...context.experiences, event.experience]
-              ),
+              experiences: (context, event) => [
+                ...context.experiences,
+                event.experience,
+              ],
             }),
           },
         },
