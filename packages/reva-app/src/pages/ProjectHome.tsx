@@ -81,8 +81,11 @@ export const ProjectHome = ({
             Mes experiences
           </p>
           <div className="flex text-sm text-slate-400">
-            <Button disabled={true} size="tiny" label="Ajouter" />
-            <div className="ml-2">(bientôt)</div>
+            <Button
+              onClick={() => send("EDIT_EXPERIENCES")}
+              size="tiny"
+              label="Ajouter"
+            />
           </div>
         </div>
       </div>
