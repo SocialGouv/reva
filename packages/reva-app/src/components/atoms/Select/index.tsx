@@ -22,6 +22,10 @@ interface SelectProps {
    * Select options
    */
   options?: option[];
+  /**
+   * Selected value
+   */
+  defaultValue?: string;
 }
 
 export const Select = ({
@@ -29,6 +33,7 @@ export const Select = ({
   label = "",
   name,
   options = [],
+  defaultValue,
   ...props
 }: SelectProps) => {
   return (
@@ -41,7 +46,7 @@ export const Select = ({
       <select
         id={name}
         name={name}
-        defaultValue="unknown"
+        defaultValue={defaultValue || "unknown"}
         className="px-6 flex items-center w-full h-16 border-0 bg-gray-100 border-b-[3px] border-gray-600 focus:ring-0 focus:border-blue-600 text-lg"
         {...props}
       >

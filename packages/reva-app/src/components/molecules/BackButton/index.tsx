@@ -23,6 +23,7 @@ export const BackButton = ({
     >
       <div className="w-[22px]">
         <Back />
+        <span className="sr-only">Revenir</span>
       </div>
     </button>
   );

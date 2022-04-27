@@ -55,7 +55,7 @@ export const Input = ({
       <div className="relative">
         <input
           id={name}
-          defaultValue={defaultValue}
+          defaultValue={defaultValue || ""}
           name={name}
           maxLength={maxLength}
           minLength={minLength}
