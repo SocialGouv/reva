@@ -185,7 +185,7 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
           layout
           transition={transition}
           layoutDependency={size}
-          data-test={`certificates-select-${id}`}
+          data-test={`certification-select-${id}`}
           onClick={() => (isReduced ? (setSize("open"), onOpen()) : {})}
           whileTap={{ scale: isReduced ? 0.96 : 1 }}
           style={{

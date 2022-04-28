@@ -10,7 +10,7 @@ context("Experiences", () => {
 
   it("add an experience", function () {
     cy.get(
-      '[data-test="certificates-select-ce42ecf4-8277-4400-b9fe-6f9fb6045c11"]'
+      '[data-test="certification-select-ce42ecf4-8277-4400-b9fe-6f9fb6045c11"]'
     ).click();
     cy.get('[data-test="certification-submit"]').click();
     cy.get('[data-test="submission-home-show-project-home"]').click();
