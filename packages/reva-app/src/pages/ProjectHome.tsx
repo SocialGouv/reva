@@ -42,6 +42,7 @@ export const ProjectHome = ({
       <div className="px-8 pb-6">
         <TextResult size="small" title={certification.label} color="light" />
         <Button
+          data-test="project-home-close-selected-certification"
           size="tiny"
           label="Modifier"
           className="mt-4 text-slate-900 bg-white"
@@ -70,6 +71,7 @@ export const ProjectHome = ({
             ))}
           </ul>
           <Button
+            data-test="project-home-edit-goals"
             size="tiny"
             label={selectedGoals.length > 0 ? "Modifier" : "Choisir"}
             className="text-white bg-purple-800"
@@ -82,6 +84,7 @@ export const ProjectHome = ({
           </p>
           <div className="flex text-sm text-slate-400">
             <Button
+              data-test="project-home-edit-experiences"
               onClick={() => send("EDIT_EXPERIENCES")}
               size="tiny"
               label="Ajouter"

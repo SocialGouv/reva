@@ -3,6 +3,7 @@ interface ButtonProps {
    * Custom class
    */
   className?: string;
+
   /**
    * Button contents
    */

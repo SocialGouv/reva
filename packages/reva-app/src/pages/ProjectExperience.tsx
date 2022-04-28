@@ -90,6 +90,9 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
             defaultValue={editedExperience?.description}
           />
           <Button
+            data-test={`project-experience-${
+              editedExperience ? "save" : "add"
+            }`}
             type="submit"
             label={editedExperience ? "Valider" : "Ajouter"}
             size="small"
