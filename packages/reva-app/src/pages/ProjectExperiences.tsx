@@ -6,23 +6,23 @@ import { Add, Edit } from "../components/atoms/Icons";
 import { Title } from "../components/atoms/Title";
 import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
-import { Experience } from "../interface";
+import { Experience, duration } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
 interface ProjectExperiencesProps {
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
 
-interface FormElements extends HTMLFormControlsCollection {
-  title: HTMLInputElement;
-  startDate: HTMLInputElement;
-  duration: HTMLSelectElement;
-  description: HTMLTextAreaElement;
-}
-
-interface ExperienceFormElement extends HTMLFormElement {
-  readonly elements: FormElements;
-}
+const durationToString: {
+  [key in duration]: string;
+} = {
+  unknown: "inconnue",
+  lessThanOneYear: "de moins d'un an",
+  betweenOneAndThreeYears: "comprise entre 1 et 3 ans",
+  moreThanThreeYears: "de plus de 3 ans",
+  moreThanFiveYears: "de plus de 5 ans",
+  moreThanTenYears: "de plus de 10 ans",
+};
 
 export const ProjectExperiences = ({
   mainService,
@@ -41,14 +41,16 @@ export const ProjectExperiences = ({
     return (
       <li
         key={`experience-${index}`}
-        className="text-slate-800 rounded-lg bg-gray-100 h-64 py-2 px-8"
+        className="text-slate-800 rounded-lg bg-gray-100 h-64 py-2 px-8 space-y-4"
       >
         <div className="w-full flex items-center justify-between">
           <Title
             data-test="project-experience-title"
             label={experience.title}
           />
+
           <button
+            data-test={`project-experiences-edit-${index}`}
             type="button"
             onClick={() => send({ type: "EDIT_EXPERIENCE", index })}
             className="-mr-2 cursor-pointer pt-3 shrink-0 w-[24px]"
@@ -57,7 +59,16 @@ export const ProjectExperiences = ({
             <span className="sr-only">Modifier</span>
           </button>
         </div>
-        <p data-test="project-experience-description" className="italic py-4">
+        <p data-test="project-experience-start-date">
+          {`Démarrée en ${experience.startDate.toLocaleDateString("fr-FR", {
+            year: "numeric",
+            month: "long",
+          })}`}
+        </p>
+        <p data-test="project-experience-duration" className="font-semibold">
+          {`Durée d'expérience ${durationToString[experience.duration]}`}
+        </p>
+        <p data-test="project-experience-description" className="italic">
           "{experience.description}"
         </p>
       </li>
