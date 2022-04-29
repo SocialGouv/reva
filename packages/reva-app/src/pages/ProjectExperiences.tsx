@@ -6,23 +6,59 @@ import { Add, Edit } from "../components/atoms/Icons";
 import { Title } from "../components/atoms/Title";
 import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
-import { Experience } from "../interface";
+import { Experience, duration } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
 interface ProjectExperiencesProps {
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
 
-interface FormElements extends HTMLFormControlsCollection {
-  title: HTMLInputElement;
-  startDate: HTMLInputElement;
-  duration: HTMLSelectElement;
-  description: HTMLTextAreaElement;
-}
+const durationToString: {
+  [key in duration]: string;
+} = {
+  unknown: "inconnue",
+  lessThanOneYear: "de moins d'un an",
+  betweenOneAndThreeYears: "comprise entre 1 et 3 ans",
+  moreThanThreeYears: "de plus de 3 ans",
+  moreThanFiveYears: "de plus de 5 ans",
+  moreThanTenYears: "de plus de 10 ans",
+};
 
-interface ExperienceFormElement extends HTMLFormElement {
-  readonly elements: FormElements;
-}
+const ExperiencePreview = (
+  experience: Experience,
+  index: number,
+  save: () => void
+) => (
+  <li
+    key={`experience-${index}`}
+    className="text-slate-800 rounded-lg bg-gray-100 h-64 py-2 px-8 space-y-4"
+  >
+    <div className="w-full flex items-center justify-between">
+      <Title data-test="project-experience-title" label={experience.title} />
+      <button
+        data-test={`project-experiences-edit-${index}`}
+        type="button"
+        onClick={save}
+        className="-mr-2 cursor-pointer pt-3 shrink-0 w-[24px]"
+      >
+        <Edit />
+        <span className="sr-only">Modifier</span>
+      </button>
+    </div>
+    <p data-test="project-experience-start-date">
+      {`Démarrée en ${experience.startDate.toLocaleDateString("fr-FR", {
+        year: "numeric",
+        month: "long",
+      })}`}
+    </p>
+    <p data-test="project-experience-duration" className="font-semibold">
+      {`Durée d'expérience ${durationToString[experience.duration]}`}
+    </p>
+    <p data-test="project-experience-description" className="italic">
+      "{experience.description}"
+    </p>
+  </li>
+);
 
 export const ProjectExperiences = ({
   mainService,
@@ -37,33 +73,6 @@ export const ProjectExperiences = ({
     (e1, e2) => e2.startDate.getTime() - e1.startDate.getTime()
   );
 
-  function ExperiencePreview(experience: Experience, index: number) {
-    return (
-      <li
-        key={`experience-${index}`}
-        className="text-slate-800 rounded-lg bg-gray-100 h-64 py-2 px-8"
-      >
-        <div className="w-full flex items-center justify-between">
-          <Title
-            data-test="project-experience-title"
-            label={experience.title}
-          />
-          <button
-            type="button"
-            onClick={() => send({ type: "EDIT_EXPERIENCE", index })}
-            className="-mr-2 cursor-pointer pt-3 shrink-0 w-[24px]"
-          >
-            <Edit />
-            <span className="sr-only">Modifier</span>
-          </button>
-        </div>
-        <p data-test="project-experience-description" className="italic py-4">
-          "{experience.description}"
-        </p>
-      </li>
-    );
-  }
-
   return (
     <Page
       className="z-[70] h-full flex flex-col bg-white pt-6"
@@ -72,8 +81,12 @@ export const ProjectExperiences = ({
       <BackButton onClick={() => send("BACK")} />
       <div className="mt-2 grow overflow-y-auto w-full space-y-3 px-8">
         <Title size="small" label="Mes experiences professionnelles" />
-        <ul data-test="project-experiences-overview">
-          {sortedExperiences.map(ExperiencePreview)}
+        <ul data-test="project-experiences-overview" className="space-y-3">
+          {sortedExperiences.map((exp, index) =>
+            ExperiencePreview(exp, index, () =>
+              send({ type: "EDIT_EXPERIENCE", index })
+            )
+          )}
         </ul>
         <div
           onClick={() => send("ADD_EXPERIENCE")}
