@@ -1,6 +1,6 @@
 import { assign, createMachine } from "xstate";
 
-import { Certification, Experience, Goal } from "../interface";
+import { Certification, Experience, Experiences, Goal } from "../interface";
 
 const loadingCertifications = "loadingCertifications";
 const searchResults = "searchResults";
@@ -31,7 +31,7 @@ export interface MainContext {
   direction: "previous" | "next";
   showStatusBar: boolean;
   certification?: Certification;
-  experiences: { edited?: Experience; rest: Experience[] };
+  experiences: Experiences;
   goals: Goal[];
 }
 

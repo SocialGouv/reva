@@ -3,12 +3,14 @@ import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { TextResult } from "../components/atoms/TextResult";
+import { Title } from "../components/atoms/Title";
 import { BackButton } from "../components/molecules/BackButton";
 import { ProgressTitle } from "../components/molecules/ProgressTitle";
 import certificationImg from "../components/organisms/Card/certification.png";
 import { Page } from "../components/organisms/Page";
-import { Certification } from "../interface";
+import { Certification, Experience, duration } from "../interface";
 import { MainContext, MainEvent } from "../machines/main.machine";
+import { sortExperiences } from "../utils/experienceHelpers";
 import { projectProgress } from "../utils/projectProgress";
 
 interface ProjectHomeProps {
@@ -16,6 +18,23 @@ interface ProjectHomeProps {
   mainService: Interpreter<MainContext, any, MainEvent, any, any>;
 }
 
+const durationToString: {
+  [key in duration]: string;
+} = {
+  unknown: "Durée inconnue",
+  lessThanOneYear: "Moins d'un an",
+  betweenOneAndThreeYears: "Entre 1 et 3 ans",
+  moreThanThreeYears: "Plus de 3 ans",
+  moreThanFiveYears: "Plus de 5 ans",
+  moreThanTenYears: "Plus de 10 ans",
+};
+
+const ExperienceSummary = (experience: Experience) => (
+  <li className="shrink-0 h-[123px] w-[156px] flex flex-col justify-end rounded overflow-hidden bg-gray-50 px-4 py-3">
+    <p className="font-semibold">{durationToString[experience.duration]} </p>
+    <p>{experience.title} </p>
+  </li>
+);
 export const ProjectHome = ({
   certification,
   mainService,
@@ -82,6 +101,9 @@ export const ProjectHome = ({
           <p className="font-bold text-slate-800 text-xl mb-4">
             Mes experiences
           </p>
+          <ul className="mb-2 pb-2 flex space-x-3 overflow-x-auto">
+            {sortExperiences(state.context.experiences).map(ExperienceSummary)}
+          </ul>
           <div className="flex text-sm text-slate-400">
             <Button
               data-test="project-home-edit-experiences"

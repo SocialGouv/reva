@@ -8,6 +8,7 @@ import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
 import { Experience, duration } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
+import { sortExperiences } from "../utils/experienceHelpers";
 
 interface ProjectExperiencesProps {
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
@@ -65,14 +66,6 @@ export const ProjectExperiences = ({
 }: ProjectExperiencesProps) => {
   const [state, send] = useActor(mainService);
 
-  const allExperiences = state.context.experiences.edited
-    ? [...state.context.experiences.rest, state.context.experiences.edited]
-    : state.context.experiences.rest;
-
-  const sortedExperiences = allExperiences.sort(
-    (e1, e2) => e2.startDate.getTime() - e1.startDate.getTime()
-  );
-
   return (
     <Page
       className="z-[70] h-full flex flex-col bg-white pt-6"
@@ -82,7 +75,7 @@ export const ProjectExperiences = ({
       <div className="mt-2 grow overflow-y-auto w-full space-y-3 px-8">
         <Title size="small" label="Mes experiences professionnelles" />
         <ul data-test="project-experiences-overview" className="space-y-3">
-          {sortedExperiences.map((exp, index) =>
+          {sortExperiences(state.context.experiences).map((exp, index) =>
             ExperiencePreview(exp, index, () =>
               send({ type: "EDIT_EXPERIENCE", index })
             )
