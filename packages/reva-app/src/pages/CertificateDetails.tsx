@@ -54,6 +54,7 @@ export const CertificateDetails = ({ certification, mainService }: Props) => {
             })}
 
           <Button
+            data-test="certification-details-submit"
             onClick={() =>
               send({
                 type: "CANDIDATE",

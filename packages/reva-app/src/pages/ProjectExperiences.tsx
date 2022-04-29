@@ -39,12 +39,15 @@ export const ProjectExperiences = ({
 
   function ExperiencePreview(experience: Experience, index: number) {
     return (
-      <div
+      <li
         key={`experience-${index}`}
         className="text-slate-800 rounded-lg bg-gray-100 h-64 py-2 px-8"
       >
         <div className="w-full flex items-center justify-between">
-          <Title label={experience.title} />
+          <Title
+            data-test="project-experience-title"
+            label={experience.title}
+          />
           <button
             type="button"
             onClick={() => send({ type: "EDIT_EXPERIENCE", index })}
@@ -54,8 +57,10 @@ export const ProjectExperiences = ({
             <span className="sr-only">Modifier</span>
           </button>
         </div>
-        <p className="italic py-4">"{experience.description}"</p>
-      </div>
+        <p data-test="project-experience-description" className="italic py-4">
+          "{experience.description}"
+        </p>
+      </li>
     );
   }
 
@@ -67,12 +72,15 @@ export const ProjectExperiences = ({
       <BackButton onClick={() => send("BACK")} />
       <div className="mt-2 grow overflow-y-auto w-full space-y-3 px-8">
         <Title size="small" label="Mes experiences professionnelles" />
-        {sortedExperiences.map(ExperiencePreview)}
+        <ul data-test="project-experiences-overview">
+          {sortedExperiences.map(ExperiencePreview)}
+        </ul>
         <div
           onClick={() => send("ADD_EXPERIENCE")}
           className="mb-8 cursor-pointer flex items-center justify-center border rounded-lg border-dashed border-gray-300 p-4"
         >
           <button
+            data-test="project-experiences-add"
             type="button"
             className="rounded-full h-[46px] w-[46px] bg-gray-100 p-[14px]"
           >
@@ -83,6 +91,7 @@ export const ProjectExperiences = ({
       </div>
       <div className="bg-white flex justify-center pt-6 pb-12">
         <Button
+          data-test="project-experiences-submit"
           onClick={() => send("SUBMIT_EXPERIENCES")}
           type="submit"
           label="Valider"

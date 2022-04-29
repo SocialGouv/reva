@@ -15,7 +15,8 @@
   "workspaces": [
     "packages/reva-api",
     "packages/reva-website",
-    "packages/reva-app"
+    "packages/reva-app",
+    "packages/reva-tests"
   ],
   "devDependencies": {
     "concurrently": "^7.0.0",

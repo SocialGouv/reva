@@ -78,6 +78,7 @@ export const Certificates = ({ mainService }: Certificates) => {
         layout="position"
       >
         <Button
+          data-test="certification-submit"
           onClick={() =>
             send({
               type: "CANDIDATE",

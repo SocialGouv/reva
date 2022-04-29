@@ -63,6 +63,7 @@ export const SubmissionHome = ({
         <div className="grow flex items-end mt-6">
           <div className="flex items-center">
             <Button
+              data-test="submission-home-show-project-home"
               size="small"
               label="Compléter"
               onClick={() => send("SHOW_PROJECT_HOME")}

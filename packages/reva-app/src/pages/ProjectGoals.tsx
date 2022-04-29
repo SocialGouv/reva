@@ -54,6 +54,7 @@ export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
         </div>
         <div className="flex justify-center h-24">
           <Button
+            data-test="project-goals-submit-goals"
             size="medium"
             label="Valider"
             onClick={() =>
