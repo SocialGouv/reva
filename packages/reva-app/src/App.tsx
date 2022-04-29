@@ -17,6 +17,7 @@ import { ProjectExperiences } from "./pages/ProjectExperiences";
 import { ProjectGoals } from "./pages/ProjectGoals";
 import { ProjectHome } from "./pages/ProjectHome";
 import { SubmissionHome } from "./pages/SubmissionHome";
+import { saveLocalCandidacy } from "./services/localStorageServices";
 import {
   getCertification,
   searchCertifications,
@@ -39,41 +40,8 @@ function App() {
               id: event.certification.id,
             });
           },
-          saveLocalCandidacy: async (context, event) => {
-            let candidacy = {};
-            const storageKeys = await SecureStoragePlugin.keys();
-
-            const storageKey = Capacitor.isNativePlatform()
-              ? "candidacy"
-              : "cap_sec_candidacy";
-            if (storageKeys.value.includes(storageKey)) {
-              const candidacyStore = await SecureStoragePlugin.get({
-                key: "candidacy",
-              });
-
-              candidacy = JSON.parse(candidacyStore.value);
-            }
-
-            console.log({
-              key: "candidacy",
-              value: JSON.stringify({
-                ...candidacy,
-                certification: context.certification,
-              }),
-            });
-
-            return SecureStoragePlugin.set({
-              key: "candidacy",
-              value: JSON.stringify({
-                ...candidacy,
-                certification: {
-                  id: context.certification?.id,
-                  label: context.certification?.label,
-                  codeRncp: context.certification?.codeRncp,
-                },
-              }),
-            });
-          },
+          saveLocalCandidacy: async (context, event) =>
+            saveLocalCandidacy(context.certification),
           getLocalCandidacy: async (context, event) => {
             let candidacy = {};
             const storageKeys = await SecureStoragePlugin.keys();
@@ -86,7 +54,12 @@ function App() {
                 key: "candidacy",
               });
 
-              return Just(JSON.parse(candidacyStore.value));
+              const value = JSON.parse(candidacyStore.value);
+
+              return Just({
+                ...value,
+                candidacyCreatedAt: new Date(value.candidacyCreatedAt),
+              });
             } else {
               return Nothing;
             }
@@ -130,11 +103,15 @@ function App() {
     <Certificates key="show-results" mainService={mainService} />
   );
 
-  const submissionHomePage = (certification: Certification) => (
+  const submissionHomePage = (
+    certification: Certification,
+    candidacyCreatedAt: number
+  ) => (
     <SubmissionHome
       key="submission-home"
       mainService={mainService}
       certification={certification}
+      candidacyCreatedAt={candidacyCreatedAt}
     />
   );
 
@@ -220,7 +197,10 @@ function App() {
             certificateDetails(current.context.certification)}
 
           {current.matches("submissionHome") &&
-            submissionHomePage(current.context.certification)}
+            submissionHomePage(
+              current.context.certification,
+              current.context.candidacyCreatedAt
+            )}
         </AnimatePresence>
       </div>
     </div>

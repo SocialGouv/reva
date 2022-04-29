@@ -39,6 +39,7 @@ export interface MainContext {
   error: string;
   isProjectValidated?: boolean;
   certifications: Certification[];
+  candidacyCreatedAt?: number;
   contact?: Contact;
   direction: "previous" | "next";
   showStatusBar: boolean;
@@ -73,11 +74,15 @@ export type MainState =
       context: MainContext & { certification: undefined };
     }
   | {
-      value:
-        | typeof certificateSummary
-        | typeof certificateDetails
-        | typeof submissionHome;
+      value: typeof certificateSummary | typeof certificateDetails;
       context: MainContext & { certification: Certification };
+    }
+  | {
+      value: typeof submissionHome;
+      context: MainContext & {
+        certification: Certification;
+        candidacyCreatedAt: Date;
+      };
     }
   | {
       value:
@@ -132,6 +137,9 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               actions: assign({
                 certification: (_, event) => {
                   return event.data.extract().certification;
+                },
+                candidacyCreatedAt: (_, event) => {
+                  return event.data.extract().candidacyCreatedAt;
                 },
               }),
             },
@@ -251,7 +259,12 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
           loading: {
             invoke: {
               src: "saveLocalCandidacy",
-              onDone: {},
+              onDone: {
+                actions: assign({
+                  candidacyCreatedAt: (_, event) =>
+                    event.data.candidacyCreatedAt,
+                }),
+              },
               onError: {
                 actions: assign({
                   error: (_, event) =>
@@ -433,7 +446,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             }),
           },
           CLOSE_SELECTED_CERTIFICATION: {
-            target: searchResults,
+            target: loadingCertifications,
             actions: assign({
               direction: (context, event) => "previous",
             }),

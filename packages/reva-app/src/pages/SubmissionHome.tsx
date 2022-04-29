@@ -14,17 +14,22 @@ import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 import { projectProgress } from "../utils/projectProgress";
 
 interface SubmissionHome {
+  candidacyCreatedAt: number;
   certification: Certification;
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
 
 export const SubmissionHome = ({
+  candidacyCreatedAt,
   certification,
   mainService,
 }: SubmissionHome) => {
   const [state, send] = useActor(mainService);
 
   const homeLoaded = !state.matches({ submissionHome: "loading" });
+  const candidacyCreatedAtFormatted = new Date(
+    candidacyCreatedAt
+  ).toLocaleDateString("fr-FR");
 
   const loadingScreen = (
     <motion.div
@@ -47,7 +52,9 @@ export const SubmissionHome = ({
     <>
       <Header color="dark" label={certification.label} size="small" />
       <div className="-mt-2 mb-2 font-bold">{certification.codeRncp}</div>
-      <p className="text-sm text-gray-450">Démarré le 10 janvier 2022</p>
+      <p className="text-sm text-gray-450">
+        Démarré le {candidacyCreatedAtFormatted}
+      </p>
       <div
         className="mt-10 flex flex-col px-8 py-6 rounded-xl bg-white shadow-sm"
         style={{ height: "414px" }}
