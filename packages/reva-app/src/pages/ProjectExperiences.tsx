@@ -35,7 +35,6 @@ const ExperiencePreview = (
   >
     <div className="w-full flex items-center justify-between">
       <Title data-test="project-experience-title" label={experience.title} />
-
       <button
         data-test={`project-experiences-edit-${index}`}
         type="button"
