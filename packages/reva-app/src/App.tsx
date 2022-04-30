@@ -17,7 +17,12 @@ import { ProjectExperiences } from "./pages/ProjectExperiences";
 import { ProjectGoals } from "./pages/ProjectGoals";
 import { ProjectHome } from "./pages/ProjectHome";
 import { SubmissionHome } from "./pages/SubmissionHome";
-import { saveLocalCandidacy } from "./services/localStorageServices";
+import {
+  getLocalCandidacy,
+  saveCertification,
+  saveExperiences,
+  saveGoals,
+} from "./services/localStorageServices";
 import {
   getCertification,
   searchCertifications,
@@ -40,30 +45,21 @@ function App() {
               id: event.certification.id,
             });
           },
-          saveLocalCandidacy: async (context, event) =>
-            saveLocalCandidacy(context.certification),
-          getLocalCandidacy: async (context, event) => {
-            let candidacy = {};
-            const storageKeys = await SecureStoragePlugin.keys();
-
-            const storageKey = Capacitor.isNativePlatform()
-              ? "candidacy"
-              : "cap_sec_candidacy";
-            if (storageKeys.value.includes(storageKey)) {
-              const candidacyStore = await SecureStoragePlugin.get({
-                key: "candidacy",
-              });
-
-              const value = JSON.parse(candidacyStore.value);
-
-              return Just({
-                ...value,
-                candidacyCreatedAt: new Date(value.candidacyCreatedAt),
-              });
-            } else {
-              return Nothing;
+          saveCertification: async (context, event) =>
+            context.certification && saveCertification(context.certification),
+          saveExperiences: async (context, event) => {
+            if (event.type !== "SUBMIT_EXPERIENCES") {
+              return Promise.reject("Impossible state");
             }
+
+            return saveExperiences(context.experiences.rest);
           },
+          saveGoals: async (context, event) => {
+            console.log(event);
+            // @ts-ignore
+            return saveGoals(event.goals);
+          },
+          getLocalCandidacy: async (context, event) => getLocalCandidacy(),
         },
       }),
     [client]

@@ -41,3 +41,10 @@ export interface Goal {
   id: string;
   label: string;
 }
+
+export interface Candidacy {
+  certification: Certification;
+  experiences: Experience[];
+  goals: Goal[];
+  startDate: Date;
+}

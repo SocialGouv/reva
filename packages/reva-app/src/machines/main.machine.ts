@@ -17,8 +17,10 @@ const certificateDetails = "certificateDetails";
 const projectHome = "projectHome";
 const projectContact = "projectContact";
 const projectExperience = "projectExperience";
+const submittingExperiences = "submittingExperiences";
 const projectExperiences = "projectExperiences";
 const projectGoals = "projectGoals";
+const submittingGoals = "submittingGoals";
 const submissionHome = "submissionHome";
 
 export type State =
@@ -29,9 +31,11 @@ export type State =
   | typeof certificateSummary
   | typeof certificateDetails
   | typeof projectHome
+  | typeof submittingExperiences
   | typeof projectContact
   | typeof projectExperience
   | typeof projectExperiences
+  | typeof submittingGoals
   | typeof projectGoals
   | typeof submissionHome;
 
@@ -90,6 +94,8 @@ export type MainState =
         | typeof projectGoals
         | typeof projectContact
         | typeof projectExperience
+        | typeof submittingExperiences
+        | typeof submittingGoals
         | typeof projectExperiences;
 
       context: MainContext & {
@@ -137,6 +143,12 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               actions: assign({
                 certification: (_, event) => {
                   return event.data.extract().certification;
+                },
+                experiences: (_, event) => {
+                  return { rest: event.data.extract().experiences };
+                },
+                goals: (_, event) => {
+                  return event.data.extract().goals;
                 },
                 candidacyCreatedAt: (_, event) => {
                   return event.data.extract().candidacyCreatedAt;
@@ -258,7 +270,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         states: {
           loading: {
             invoke: {
-              src: "saveLocalCandidacy",
+              src: "saveCertification",
               onDone: {
                 actions: assign({
                   candidacyCreatedAt: (_, event) =>
@@ -388,10 +400,27 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             }),
           },
           SUBMIT_EXPERIENCES: {
-            target: "projectHome",
+            target: "submittingExperiences",
             actions: assign({
               certification: (context, event) => context.certification,
               direction: (context, event) => "previous",
+            }),
+          },
+        },
+      },
+      submittingExperiences: {
+        invoke: {
+          src: "saveExperiences",
+          onDone: {
+            target: projectHome,
+            actions: assign({
+              direction: (context, event) => "previous",
+            }),
+          },
+          onError: {
+            actions: assign({
+              error: (_, event) =>
+                "Une erreur est survenue lors de la sauvegarde de l'expérience.",
             }),
           },
         },
@@ -406,11 +435,24 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             }),
           },
           SUBMIT_GOALS: {
-            target: "projectHome",
+            target: "submittingGoals",
+          },
+        },
+      },
+      submittingGoals: {
+        invoke: {
+          src: "saveGoals",
+          onDone: {
+            target: projectHome,
             actions: assign({
-              certification: (context, event) => context.certification,
               direction: (context, event) => "previous",
-              goals: (context, event) => event.goals,
+              goals: (context, event) => event.data.goals,
+            }),
+          },
+          onError: {
+            actions: assign({
+              error: (_, event) =>
+                "Une erreur est survenue lors de la sauvegarde des objectifs.",
             }),
           },
         },
@@ -471,8 +513,10 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
       searchCertifications: (context, event) =>
         Promise.reject("Not implemented"),
       getCertification: (context, event) => Promise.reject("Not implemented"),
-      saveLocalCandidacy: (context, event) => Promise.reject("Not implemented"),
+      saveCertification: (context, event) => Promise.reject("Not implemented"),
       getLocalCandidacy: (context, event) => Promise.reject("Not implemented"),
+      saveExperiences: (context, event) => Promise.reject("Not implemented"),
+      saveGoals: (context, event) => Promise.reject("Not implemented"),
     },
   }
 );
