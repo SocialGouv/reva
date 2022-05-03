@@ -26,6 +26,11 @@ export interface Experience {
   duration: duration;
 }
 
+export interface Experiences {
+  edited?: Experience;
+  rest: Experience[];
+}
+
 export interface Goal {
   checked: boolean;
   id: string;

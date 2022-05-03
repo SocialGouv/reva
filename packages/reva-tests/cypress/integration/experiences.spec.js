@@ -73,6 +73,21 @@ context("Experiences", () => {
         );
       });
 
+    // We will split this to a separate test once the local storage is done
+
     cy.get('[data-test="project-experiences-submit"]').click();
+
+    cy.get('[data-test="project-home-experiences"] > li')
+      .eq(0)
+      .within(() => {
+        cy.get('[data-test="project-home-experience-duration"]').should(
+          "have.text",
+          "Plus de 5 ans"
+        );
+        cy.get('[data-test="project-home-experience-title"]').should(
+          "have.text",
+          experienceTitle2
+        );
+      });
   });
 });
