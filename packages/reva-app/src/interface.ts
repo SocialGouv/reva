@@ -11,6 +11,11 @@ export interface Certification {
   status: "AVAILABLE" | "SOON";
 }
 
+export interface Contact {
+  phone: string;
+  email: string;
+}
+
 export type duration =
   | "unknown"
   | "lessThanOneYear"

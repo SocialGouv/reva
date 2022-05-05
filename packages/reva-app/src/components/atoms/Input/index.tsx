@@ -4,7 +4,7 @@ interface InputProps {
   /**
    * What type of input is it?
    */
-  type?: "search" | "text" | "date";
+  type?: "search" | "text" | "date" | "email";
   /**
    * Custom class
    */
