@@ -108,3 +108,32 @@ export const Edit = (props: SVGProps<SVGSVGElement>) => (
     </g>
   </svg>
 );
+
+export const Locked = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    className="stroke-current"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 48 48"
+    {...props}
+  >
+    <g transform="matrix(2,0,0,2,0,0)">
+      <path
+        style={semiboldLineStyle}
+        d="M18.75 9.75H5.25C4.42157 9.75 3.75 10.4216 3.75 11.25V21.75C3.75 22.5784 4.42157 23.25 5.25 23.25H18.75C19.5784 23.25 20.25 22.5784 20.25 21.75V11.25C20.25 10.4216 19.5784 9.75 18.75 9.75Z"
+      />
+      <path
+        style={semiboldLineStyle}
+        d="M6.75 9.75V6C6.75 4.60761 7.30312 3.27226 8.28769 2.28769C9.27226 1.30312 10.6076 0.75 12 0.75C13.3924 0.75 14.7277 1.30312 15.7123 2.28769C16.6969 3.27226 17.25 4.60761 17.25 6V9.75"
+      />
+      <path
+        style={semiboldLineStyle}
+        d="M12 16.5C11.7929 16.5 11.625 16.3321 11.625 16.125C11.625 15.9179 11.7929 15.75 12 15.75"
+      />
+      <path
+        style={semiboldLineStyle}
+        d="M12 16.5C12.2071 16.5 12.375 16.3321 12.375 16.125C12.375 15.9179 12.2071 15.75 12 15.75"
+      />
+    </g>
+  </svg>
+);

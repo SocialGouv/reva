@@ -78,7 +78,7 @@ export const ProjectHome = ({
   );
 
   const homeContent = (
-    <div className="px-8 overflow-y-auto pb-8">
+    <div className="px-8 grow overflow-y-auto pb-8">
       <ProgressTitle
         progress={projectProgress(state.context)}
         size="large"
@@ -157,11 +157,21 @@ export const ProjectHome = ({
 
   return (
     <Page
-      className="z-[60] flex flex-col bg-white pt-6"
+      className="z-[60] h-full flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
       <BackButton onClick={() => send("BACK")} />
       {homeContent}
+      <div className="bg-white flex justify-center pt-6 pb-12">
+        <Button
+          data-test="project-experiences-submit"
+          locked={true}
+          onClick={() => send("SUBMIT_EXPERIENCES")}
+          type="submit"
+          label="Valider"
+          size="medium"
+        />
+      </div>
     </Page>
   );
 };
