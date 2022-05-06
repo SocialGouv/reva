@@ -1,6 +1,12 @@
 import { assign, createMachine } from "xstate";
 
-import { Certification, Experience, Experiences, Goal } from "../interface";
+import {
+  Certification,
+  Contact,
+  Experience,
+  Experiences,
+  Goal,
+} from "../interface";
 
 const loadingCertifications = "loadingCertifications";
 const searchResults = "searchResults";
@@ -8,6 +14,7 @@ const searchResultsError = "searchResultsError";
 const certificateSummary = "certificateSummary";
 const certificateDetails = "certificateDetails";
 const projectHome = "projectHome";
+const projectContact = "projectContact";
 const projectExperience = "projectExperience";
 const projectExperiences = "projectExperiences";
 const projectGoals = "projectGoals";
@@ -20,6 +27,7 @@ export type State =
   | typeof certificateSummary
   | typeof certificateDetails
   | typeof projectHome
+  | typeof projectContact
   | typeof projectExperience
   | typeof projectExperiences
   | typeof projectGoals
@@ -28,6 +36,7 @@ export type State =
 export interface MainContext {
   error: string;
   certifications: Certification[];
+  contact?: Contact;
   direction: "previous" | "next";
   showStatusBar: boolean;
   certification?: Certification;
@@ -40,6 +49,7 @@ export type MainEvent =
   | { type: "SHOW_CERTIFICATION_DETAILS"; certification: Certification }
   | { type: "SHOW_PROJECT_HOME"; certification: Certification }
   | { type: "CANDIDATE"; certification: Certification }
+  | { type: "EDIT_CONTACT" }
   | { type: "ADD_EXPERIENCE" }
   | { type: "EDIT_EXPERIENCES" }
   | { type: "EDIT_EXPERIENCE"; index: number }
@@ -47,6 +57,7 @@ export type MainEvent =
   | { type: "CLOSE_SELECTED_CERTIFICATION" }
   | { type: "BACK" }
   | { type: "LOADED" }
+  | { type: "SUBMIT_CONTACT"; contact: Contact }
   | { type: "SUBMIT_EXPERIENCE"; experience: Experience }
   | { type: "SUBMIT_EXPERIENCES" }
   | { type: "SUBMIT_GOALS"; goals: Goal[] };
@@ -67,11 +78,13 @@ export type MainState =
       value:
         | typeof projectHome
         | typeof projectGoals
+        | typeof projectContact
         | typeof projectExperience
         | typeof projectExperiences;
 
       context: MainContext & {
         certification: Certification;
+        contact: Contact;
         experiences: Experience[];
         goals: Goal[];
       };
@@ -239,6 +252,25 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
           },
         ],
       },
+      projectContact: {
+        on: {
+          BACK: {
+            target: "projectHome",
+            actions: assign({
+              certification: (context, event) => context.certification,
+              direction: (context, event) => "previous",
+            }),
+          },
+          SUBMIT_CONTACT: {
+            target: "projectHome",
+            actions: assign({
+              certification: (context, event) => context.certification,
+              direction: (context, event) => "previous",
+              contact: (context, event) => event.contact,
+            }),
+          },
+        },
+      },
       projectExperience: {
         on: {
           BACK: {
@@ -340,6 +372,13 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
           },
           EDIT_GOALS: {
             target: "projectGoals",
+            actions: assign({
+              certification: (context, event) => context.certification,
+              direction: (context, event) => "next",
+            }),
+          },
+          EDIT_CONTACT: {
+            target: "projectContact",
             actions: assign({
               certification: (context, event) => context.certification,
               direction: (context, event) => "next",

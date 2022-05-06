@@ -9,6 +9,7 @@ import { Certification } from "./interface";
 import { mainMachine } from "./machines/main.machine";
 import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
+import { ProjectContact } from "./pages/ProjectContact";
 import { ProjectExperience } from "./pages/ProjectExperience";
 import { ProjectExperiences } from "./pages/ProjectExperiences";
 import { ProjectGoals } from "./pages/ProjectGoals";
@@ -91,6 +92,10 @@ function App() {
     <ProjectExperience key="project-experience" mainService={mainService} />
   );
 
+  const projectContactPage = () => (
+    <ProjectContact key="project-experience" mainService={mainService} />
+  );
+
   const projectExperiencesPage = () => (
     <ProjectExperiences key="project-experiences" mainService={mainService} />
   );
@@ -137,6 +142,8 @@ function App() {
 
           {current.matches("projectHome") &&
             projectHomePage(current.context.certification)}
+
+          {current.matches("projectContact") && projectContactPage()}
 
           {current.matches("projectExperiences") && projectExperiencesPage()}
 

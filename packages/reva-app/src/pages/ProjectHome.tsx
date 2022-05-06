@@ -47,6 +47,8 @@ export const ProjectHome = ({
 
   const selectedGoals = state.context.goals.filter((goal) => goal.checked);
 
+  const sortedExperiences = sortExperiences(state.context.experiences);
+
   const editCertification = (
     <div className="bg-slate-900 rounded-xl overflow-hidden mt-6">
       <div className={`mt-5 mr-6 text-white text-right font-bold grow `}>
@@ -85,7 +87,7 @@ export const ProjectHome = ({
       <div className="space-y-4">
         {editCertification}
         <div className="rounded-xl pl-8 pr-6 py-6 bg-purple-100 text-purple-800">
-          <p className="font-bold mb-2 text-xl">Mon objectif</p>
+          <h4 className="font-bold mb-2 text-xl">Mon objectif</h4>
           <ul className="mb-4 text-lg leading-tight">
             {selectedGoals.map((goal) => (
               <li className="mb-2" key={goal.id}>
@@ -102,21 +104,50 @@ export const ProjectHome = ({
           />
         </div>
         <div className="rounded-xl px-8 py-6 bg-slate-100">
-          <p className="font-bold text-slate-800 text-xl mb-4">
+          <h4 className="font-bold text-slate-800 text-xl mb-4">
             Mes experiences
-          </p>
-          <ul
-            data-test="project-home-experiences"
-            className="mb-2 pb-2 flex space-x-3 overflow-x-auto"
-          >
-            {sortExperiences(state.context.experiences).map(ExperienceSummary)}
-          </ul>
-          <div className="flex text-sm text-slate-400">
+          </h4>
+          {sortedExperiences.length > 0 && (
+            <ul
+              data-test="project-home-experiences"
+              className="mb-2 pb-2 flex space-x-3 overflow-x-auto"
+            >
+              {sortedExperiences.map(ExperienceSummary)}
+            </ul>
+          )}
+          <div className="text-sm text-slate-400">
             <Button
               data-test="project-home-edit-experiences"
               onClick={() => send("EDIT_EXPERIENCES")}
               size="tiny"
-              label="Ajouter"
+              label={sortedExperiences.length > 0 ? "Modifier" : "Ajouter"}
+            />
+          </div>
+        </div>
+        <div className="rounded-xl px-8 py-6 bg-neutral-100">
+          <h4 className="font-bold text-slate-800 text-xl mb-4">Mon contact</h4>
+          {state.context.contact?.phone && (
+            <p data-test="project-home-contact-phone" className="mt-2">
+              {state.context.contact?.phone}
+            </p>
+          )}
+          {state.context.contact?.email && (
+            <p data-test="project-home-contact-email" className="mt-2">
+              {state.context.contact?.email}
+            </p>
+          )}
+          <div className="mt-4 text-sm text-slate-400">
+            <Button
+              data-test="project-home-edit-contact"
+              onClick={() => send("EDIT_CONTACT")}
+              size="tiny"
+              label={
+                state.context.contact &&
+                (state.context.contact?.phone != "" ||
+                  state.context.contact?.email != "")
+                  ? "Modifer"
+                  : "Ajouter"
+              }
             />
           </div>
         </div>
