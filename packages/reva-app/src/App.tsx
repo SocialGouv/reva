@@ -55,8 +55,10 @@ function App() {
             return saveExperiences(context.experiences.rest);
           },
           saveGoals: async (context, event) => {
-            console.log(event);
-            // @ts-ignore
+            if (event.type !== "SUBMIT_GOALS") {
+              return Promise.reject("Impossible state");
+            }
+
             return saveGoals(event.goals);
           },
           getLocalCandidacy: async (context, event) => getLocalCandidacy(),

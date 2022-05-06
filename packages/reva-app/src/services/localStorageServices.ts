@@ -4,8 +4,6 @@ import { Just, Nothing } from "purify-ts";
 
 import { Certification, Experience, Goal } from "../interface";
 
-const readCandidacy = () => {};
-
 const hasLocalCandidacy = async () => {
   const storageKeys = await SecureStoragePlugin.keys();
 
@@ -15,7 +13,7 @@ const hasLocalCandidacy = async () => {
   return storageKeys.value.includes(storageKey);
 };
 
-export const saveCertification = async (certification: Certification) => {
+const updateCandidacy = async (payload: any) => {
   let candidacy = {} as any;
 
   if (await hasLocalCandidacy()) {
@@ -26,73 +24,45 @@ export const saveCertification = async (certification: Certification) => {
     candidacy = JSON.parse(candidacyStore.value);
   }
 
-  const payload = {
-    ...candidacy,
-    candidacyCreatedAt: candidacy.candidacyCreatedAt || Date.now(),
+  await SecureStoragePlugin.set({
+    key: "candidacy",
+    value: JSON.stringify({
+      ...candidacy,
+      ...payload,
+      candidacyCreatedAt: candidacy.candidacyCreatedAt || Date.now(),
+    }),
+  });
+
+  return candidacy;
+};
+
+export const saveCertification = async (certification: Certification) => {
+  return await updateCandidacy({
     certification: {
       id: certification?.id,
       label: certification?.label,
       codeRncp: certification?.codeRncp,
     },
-  };
-
-  await SecureStoragePlugin.set({
-    key: "candidacy",
-    value: JSON.stringify(payload),
   });
-
-  return payload;
 };
 
 export const saveExperiences = async (experiences: Experience[]) => {
-  let candidacy = {} as any;
-
-  if (await hasLocalCandidacy()) {
-    const candidacyStore = await SecureStoragePlugin.get({
-      key: "candidacy",
-    });
-
-    candidacy = JSON.parse(candidacyStore.value);
-  }
-
-  const payload = {
-    ...candidacy,
-    experiences: experiences.map((exp: any) => ({
+  await updateCandidacy({
+    experiences: experiences.map((exp: Experience) => ({
       ...exp,
       startDate: exp.startDate.getTime(),
     })),
-  };
-
-  await SecureStoragePlugin.set({
-    key: "candidacy",
-    value: JSON.stringify(payload),
   });
 
-  return { experiences };
+  return Just({ experiences });
 };
 
 export const saveGoals = async (goals: Goal[]) => {
-  let candidacy = {} as any;
-
-  if (await hasLocalCandidacy()) {
-    const candidacyStore = await SecureStoragePlugin.get({
-      key: "candidacy",
-    });
-
-    candidacy = JSON.parse(candidacyStore.value);
-  }
-
-  const payload = {
-    ...candidacy,
+  await updateCandidacy({
     goals,
-  };
-
-  await SecureStoragePlugin.set({
-    key: "candidacy",
-    value: JSON.stringify(payload),
   });
 
-  return { goals };
+  return Just({ goals });
 };
 
 export const getLocalCandidacy = async () => {
@@ -103,10 +73,9 @@ export const getLocalCandidacy = async () => {
 
     const payload = JSON.parse(candidacyStore.value);
 
-    console.log(payload);
     return Just({
       ...payload,
-      experiences: payload.experiences.map((exp: any) => ({
+      experiences: (payload.experiences || []).map((exp: Experience) => ({
         ...exp,
         startDate: new Date(exp.startDate),
       })),

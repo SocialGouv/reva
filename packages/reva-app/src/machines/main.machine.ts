@@ -144,11 +144,17 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
                 certification: (_, event) => {
                   return event.data.extract().certification;
                 },
-                experiences: (_, event) => {
-                  return { rest: event.data.extract().experiences };
+                experiences: (context, event) => {
+                  return {
+                    rest: event.data
+                      .map((d: any) => d.experiences)
+                      .orDefault(() => context.experiences.rest),
+                  };
                 },
-                goals: (_, event) => {
-                  return event.data.extract().goals;
+                goals: (context, event) => {
+                  return event.data
+                    .map((d: any) => d.goals || context.goals)
+                    .orDefault(() => context.goals);
                 },
                 candidacyCreatedAt: (_, event) => {
                   return event.data.extract().candidacyCreatedAt;
@@ -165,8 +171,9 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
           onError: {
             target: searchResultsError,
             actions: assign({
-              error: (_, event) =>
-                "Une erreur est survenue lors de la récupération de votre candidature.",
+              error: (_, event) => {
+                return "Une erreur est survenue lors de la récupération de votre candidature.";
+              },
             }),
           },
         },
@@ -446,7 +453,11 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             target: projectHome,
             actions: assign({
               direction: (context, event) => "previous",
-              goals: (context, event) => event.data.goals,
+              goals: (context, event) => {
+                return event.data
+                  .map((d: any) => d.goals)
+                  .orDefault(() => context.goals);
+              },
             }),
           },
           onError: {

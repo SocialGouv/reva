@@ -38,8 +38,12 @@ type Query {
 input CandidacyInput {
   deviceId: ID!
   companionId: ID!
-  experiences: [ExperienceInput!]!
-  goals: [CandidateGoalInput!]!
+  certificationId: ID!
+}
+
+input CertificationChangeInput {
+  candidacyId: ID!
+  certificationId: ID!
 }
 
 input ExperienceInput {
@@ -55,7 +59,12 @@ input CandidateGoalInput {
 }
 
 type Mutation {
-  createCandidacy(candidacy: CandidacyInput!): Candidacy
+  candidacy_createCandidacy(candidacy: CandidacyInput!): Candidacy
+  candidacy_changeCertificate(
+    deviceId: ID!
+    candidacyId: ID!
+    certificationId: ID!
+  ): Candidacy
   addExperience(
     deviceId: ID!
     candidacyId: ID!
