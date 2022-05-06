@@ -184,7 +184,10 @@
                   et de l'Insertion, ainsi que par le Haut Commissariat aux
                   Compétences. Il associe également le Ministère des Solidarités
                   et de la Santé, le Ministère de l'Agriculture et de
-                  l'Alimentation et Iperia.
+                  l'Alimentation, le Ministère de l'Education Nationale, de la
+                  Jeunesse et des Sports, le Ministère de l'Enseignement
+                  Supérieur, de la Recherche et de l'Innovation, le CNEAP,
+                  Brigitte Croff Conseil et Iperia.
                 </dd>
               </div>
             </dl>

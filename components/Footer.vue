@@ -16,34 +16,72 @@
             <p class="text-gray-500 text-base">
               REVA - Reconnaître et valider l'expérience
             </p>
-            <div class="flex flex-col sm:flex-row sm:space-x-6">
-              <a
-                target="_blank"
-                href="https://travail-emploi.gouv.fr/"
-                class="font-bold"
-              >
-                Ministère du Travail, de l'Emploi et de l'Insertion
+            <div
+              class="
+                flex flex-col
+                justify-between
+                space-y-4
+                sm:flex-row sm:space-x-4 sm:space-y-0
+              "
+            >
+              <a target="_blank" href="https://travail-emploi.gouv.fr/">
+                <img
+                  class="w-28 h-auto"
+                  src="/illustrations/ministere-travail.png"
+                  alt="Ministère du Travail "
+                />
+              </a>
+              <a target="_blank" href="https://solidarites-sante.gouv.fr/">
+                <img
+                  class="w-28 h-auto"
+                  src="/illustrations/ministere-solidarite.png"
+                  alt="Ministère de la Cohésion sociale et santé"
+                />
+              </a>
+              <a target="_blank" href="https://www.education.gouv.fr/">
+                <img
+                  class="w-28 h-auto"
+                  src="/illustrations/ministere-education.png"
+                  alt="Ministère de l’Education Nationale"
+                />
               </a>
               <a
                 target="_blank"
-                href="https://solidarites-sante.gouv.fr/"
-                class="font-bold"
+                href="https://www.enseignementsup-recherche.gouv.fr/fr"
               >
-                Ministère des Solidarités et de la Santé
+                <img
+                  class="w-28 h-auto"
+                  src="/illustrations/ministere-enseignement-sup.png"
+                  alt="Ministère de l’Enseignement Supérieur"
+                />
               </a>
-              <a
-                target="_blank"
-                href="https://agriculture.gouv.fr/"
-                class="font-bold"
-              >
-                Ministère de l'Agriculture et de l'Alimentation
+              <a target="_blank" href="https://agriculture.gouv.fr/">
+                <img
+                  class="w-28 h-auto"
+                  src="/illustrations/ministere-agriculture.png"
+                  alt="Ministère de l’Agriculture"
+                />
               </a>
-              <a
-                target="_blank"
-                href="https://www.iperia.eu/"
-                class="font-bold"
-              >
-                Iperia
+              <a target="_blank" href="https://www.cneap.fr/">
+                <img
+                  class="w-28 h-auto"
+                  src="/illustrations/cneap.png"
+                  alt="CNEAP"
+                />
+              </a>
+              <a target="_blank" href="https://brigittecroffconseil.com/">
+                <img
+                  class="w-28 h-auto mt-2"
+                  src="/illustrations/b-croff.png"
+                  alt="Brigitte Croff"
+                />
+              </a>
+              <a target="_blank" href="https://www.iperia.eu/">
+                <img
+                  class="w-28 h-auto -mt-2"
+                  src="/illustrations/iperia.svg"
+                  alt="IPERIA"
+                />
               </a>
             </div>
           </div>
