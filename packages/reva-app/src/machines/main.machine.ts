@@ -60,7 +60,8 @@ export type MainEvent =
   | { type: "SUBMIT_CONTACT"; contact: Contact }
   | { type: "SUBMIT_EXPERIENCE"; experience: Experience }
   | { type: "SUBMIT_EXPERIENCES" }
-  | { type: "SUBMIT_GOALS"; goals: Goal[] };
+  | { type: "SUBMIT_GOALS"; goals: Goal[] }
+  | { type: "SUBMIT_PROJECT" };
 
 export type MainState =
   | {
@@ -389,6 +390,10 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             actions: assign({
               direction: (context, event) => "previous",
             }),
+          },
+          SUBMIT_PROJECT: {
+            target: "projectHome",
+            // TODO: handle project submission to API
           },
         },
       },
