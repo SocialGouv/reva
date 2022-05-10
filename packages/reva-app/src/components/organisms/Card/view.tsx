@@ -1,6 +1,6 @@
 import { Transition } from "framer-motion";
 
-export const SMALL_TITLE_LENGTH = 94;
+export const SMALL_TITLE_LENGTH = 76;
 
 export const heightConfig = {
   small: "270px",

@@ -1,5 +1,5 @@
 import { useActor } from "@xstate/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
@@ -41,12 +41,30 @@ const ExperienceSummary = (experience: Experience, index: number) => (
   </li>
 );
 
+const ProjectReady = () => (
+  <>
+    <h3 className="my-10 text-center font-bold text-xl">Tout est prêt !</h3>
+    <p className="text-red-800 leading-7 mb-10">
+      Lorsque le projet est validé, il engage un financement automatique proposé
+      dans le cadre de l'expérimentation à laquelle vous participez. Votre
+      engagement à poursuivre est nécessaire et vous engage personnellement.
+    </p>
+  </>
+);
+
 export const ProjectHome = ({
   certification,
   mainService,
 }: ProjectHomeProps) => {
   const [state, send] = useActor(mainService);
   const [isValidated, setIsValidated] = useState(false);
+  const homeElement = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (homeElement.current && isValidated) {
+      homeElement.current.scrollTo(0, 0);
+    }
+  }, [isValidated]);
 
   const selectedGoals = state.context.goals.filter((goal) => goal.checked);
 
@@ -89,8 +107,12 @@ export const ProjectHome = ({
   );
 
   const homeContent = (
-    <div className="px-8 grow overflow-y-auto pb-8">
-      <ProgressTitle progress={progress} size="large" title="Projet" />
+    <div ref={homeElement} className="px-8 grow overflow-y-auto pb-8">
+      {isValidated ? (
+        <ProjectReady />
+      ) : (
+        <ProgressTitle progress={progress} size="large" title="Projet" />
+      )}
       <div className="space-y-4">
         {editCertification}
         <div className="rounded-xl pl-8 pr-6 py-6 bg-purple-100 text-purple-800">
