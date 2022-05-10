@@ -41,7 +41,7 @@ const ExperienceSummary = (experience: Experience, index: number) => (
   </li>
 );
 
-const ProjectReady = () => (
+const SubmissionWarning = () => (
   <>
     <h3 className="my-10 text-center font-bold text-xl">Tout est prêt !</h3>
     <p className="text-red-800 leading-7 mb-10">
@@ -109,7 +109,7 @@ export const ProjectHome = ({
   const homeContent = (
     <div ref={homeElement} className="px-8 grow overflow-y-auto pb-8">
       {isValidated ? (
-        <ProjectReady />
+        <SubmissionWarning />
       ) : (
         <ProgressTitle progress={progress} size="large" title="Projet" />
       )}
