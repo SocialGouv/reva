@@ -1,4 +1,5 @@
 import { useActor } from "@xstate/react";
+import { useState } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
@@ -39,15 +40,25 @@ const ExperienceSummary = (experience: Experience, index: number) => (
     <p data-test="project-home-experience-title">{experience.title}</p>
   </li>
 );
+
 export const ProjectHome = ({
   certification,
   mainService,
 }: ProjectHomeProps) => {
   const [state, send] = useActor(mainService);
+  const [isValidated, setIsValidated] = useState(false);
 
   const selectedGoals = state.context.goals.filter((goal) => goal.checked);
 
   const sortedExperiences = sortExperiences(state.context.experiences);
+
+  const progress = projectProgress(state.context);
+  const projectButtonHandler = () =>
+    isValidated
+      ? send("SUBMIT_PROJECT")
+      : progress === 100
+      ? setIsValidated(true)
+      : {};
 
   const editCertification = (
     <div className="bg-slate-900 rounded-xl overflow-hidden mt-6">
@@ -78,12 +89,8 @@ export const ProjectHome = ({
   );
 
   const homeContent = (
-    <div className="px-8 overflow-y-auto pb-8">
-      <ProgressTitle
-        progress={projectProgress(state.context)}
-        size="large"
-        title="Projet"
-      />
+    <div className="px-8 grow overflow-y-auto pb-8">
+      <ProgressTitle progress={progress} size="large" title="Projet" />
       <div className="space-y-4">
         {editCertification}
         <div className="rounded-xl pl-8 pr-6 py-6 bg-purple-100 text-purple-800">
@@ -157,11 +164,25 @@ export const ProjectHome = ({
 
   return (
     <Page
-      className="z-[60] flex flex-col bg-white pt-6"
+      className="z-[60] h-full flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
       <BackButton onClick={() => send("BACK")} />
       {homeContent}
+      <div className="bg-white flex flex-col items-center pt-4 pb-1">
+        <Button
+          data-test="project-experiences-submit"
+          locked={progress !== 100}
+          onClick={projectButtonHandler}
+          type="submit"
+          label={isValidated ? "Transmettre" : "Valider"}
+          primary={isValidated}
+          size="medium"
+        />
+        <div className="mt-1 text-gray-400 h-10">
+          {isValidated && "Bientôt disponible"}
+        </div>
+      </div>
     </Page>
   );
 };

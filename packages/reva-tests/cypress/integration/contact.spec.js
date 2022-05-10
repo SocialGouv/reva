@@ -38,5 +38,7 @@ context("Contact", () => {
       "have.text",
       email
     );
+
+    cy.get('[data-test="progress-title-value"]').should("have.text", "50%");
   });
 });

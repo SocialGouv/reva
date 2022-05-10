@@ -1,3 +1,5 @@
+import { Locked } from "../Icons";
+
 interface ButtonProps {
   /**
    * Custom class
@@ -8,6 +10,10 @@ interface ButtonProps {
    * Button contents
    */
   label: string;
+  /**
+   * Is disabled with a locked style
+   */
+  locked?: boolean;
   /**
    * Optional click handler
    */
@@ -36,6 +42,7 @@ export const Button = ({
   className = "",
   disabled = false,
   label,
+  locked = false,
   primary = false,
   size = "medium",
   type = "button",
@@ -43,10 +50,12 @@ export const Button = ({
   ...props
 }: ButtonProps) => {
   const modeClass = primary
-    ? "bg-blue-600 text-white"
+    ? "font-medium bg-blue-600 text-white"
+    : locked == true
+    ? "font-normal bg-white text-gray-600 border border-[#A1A0BA]"
     : className != ""
     ? className
-    : "bg-slate-900 text-white";
+    : "font-medium bg-slate-900 text-white";
 
   let sizeClasses = {
     tiny: "text-sm pb-1 px-4 h-[25px]",
@@ -58,13 +67,19 @@ export const Button = ({
   return (
     <button
       type={type}
+      disabled={disabled || locked}
       className={`${
         disabled ? "opacity-50 cursor-not-allowed" : ""
-      } rounded font-medium flex justify-center items-center ${modeClass} ${
+      } rounded-md flex justify-center items-center ${modeClass} ${
         sizeClasses[size]
       }`}
       {...props}
     >
+      {locked && (
+        <span className="text-gray-400 w-[20px] h-[20px] -ml-[28px] mr-[8px]">
+          <Locked />
+        </span>
+      )}
       {label}
     </button>
   );

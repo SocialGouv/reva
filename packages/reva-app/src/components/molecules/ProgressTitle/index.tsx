@@ -13,7 +13,10 @@ export const ProgressTitle = ({ progress, size = "small", title }: Props) => {
     <>
       <div className="flex items-end justify-between">
         <Title label={title} size={size} />
-        <div className="font-semibold text-base text-slate-400">
+        <div
+          data-test="progress-title-value"
+          className="font-semibold text-base text-slate-400"
+        >
           {progress}%
         </div>
       </div>

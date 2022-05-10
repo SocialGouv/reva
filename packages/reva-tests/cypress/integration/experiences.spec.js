@@ -89,5 +89,7 @@ context("Experiences", () => {
           experienceTitle2
         );
       });
+
+    cy.get('[data-test="progress-title-value"]').should("have.text", "50%");
   });
 });
