@@ -1,5 +1,4 @@
 import { useActor } from "@xstate/react";
-import { useRef } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
@@ -59,7 +58,6 @@ export const ProjectHome = ({
   mainService,
 }: ProjectHomeProps) => {
   const [state, send] = useActor(mainService);
-  const homeElement = useRef<HTMLDivElement | null>(null);
 
   const selectedGoals = state.context.goals.filter((goal) => goal.checked);
 
@@ -104,10 +102,7 @@ export const ProjectHome = ({
   );
 
   const homeContent = (
-    <div
-      ref={homeElement}
-      className="px-8 scroll-smooth grow overflow-y-auto pb-8"
-    >
+    <div className="px-8 scroll-smooth grow overflow-y-auto pb-8">
       {isValidated ? (
         <SubmissionWarning />
       ) : (
