@@ -100,9 +100,16 @@ function App() {
     <ProjectExperiences key="project-experiences" mainService={mainService} />
   );
 
-  const projectHomePage = (certification: Certification) => (
+  const projectHomePage = ({
+    isValidated,
+    certification,
+  }: {
+    isValidated: boolean;
+    certification: Certification;
+  }) => (
     <ProjectHome
-      key="project-home"
+      key={`project-home${isValidated ? "-validated" : ""}}`}
+      isValidated={isValidated}
       mainService={mainService}
       certification={certification}
     />
@@ -141,7 +148,10 @@ function App() {
           ].some(current.matches) && certificatesPage}
 
           {current.matches("projectHome") &&
-            projectHomePage(current.context.certification)}
+            projectHomePage({
+              isValidated: current.context.isProjectValidated,
+              certification: current.context.certification,
+            })}
 
           {current.matches("projectContact") && projectContactPage()}
 
