@@ -16,24 +16,24 @@ const hasLocalCandidacy = async () => {
 const updateCandidacy = async (payload: any) => {
   let candidacy = {} as any;
 
-  if (await hasLocalCandidacy()) {
-    const candidacyStore = await SecureStoragePlugin.get({
-      key: "candidacy",
-    });
+  // if (await hasLocalCandidacy()) {
+  //   const candidacyStore = await SecureStoragePlugin.get({
+  //     key: "candidacy",
+  //   });
 
-    candidacy = JSON.parse(candidacyStore.value);
-  }
+  //   candidacy = JSON.parse(candidacyStore.value);
+  // }
 
-  await SecureStoragePlugin.set({
-    key: "candidacy",
-    value: JSON.stringify({
-      ...candidacy,
-      ...payload,
-      candidacyCreatedAt: candidacy.candidacyCreatedAt || Date.now(),
-    }),
-  });
+  // await SecureStoragePlugin.set({
+  //   key: "candidacy",
+  //   value: JSON.stringify({
+  //     ...candidacy,
+  //     ...payload,
+  //     candidacyCreatedAt: candidacy.candidacyCreatedAt || Date.now(),
+  //   }),
+  // });
 
-  return candidacy;
+  return { ...candidacy, ...payload };
 };
 
 export const saveCertification = async (certification: Certification) => {
@@ -47,41 +47,42 @@ export const saveCertification = async (certification: Certification) => {
 };
 
 export const saveExperiences = async (experiences: Experience[]) => {
-  await updateCandidacy({
-    experiences: experiences.map((exp: Experience) => ({
-      ...exp,
-      startDate: exp.startDate.getTime(),
-    })),
-  });
+  // await updateCandidacy({
+  //   experiences: experiences.map((exp: Experience) => ({
+  //     ...exp,
+  //     startDate: exp.startDate.getTime(),
+  //   })),
+  // });
 
   return Just({ experiences });
 };
 
 export const saveGoals = async (goals: Goal[]) => {
-  await updateCandidacy({
-    goals,
-  });
+  // await updateCandidacy({
+  //   goals,
+  // });
 
   return Just({ goals });
 };
 
 export const getLocalCandidacy = async () => {
-  if (await hasLocalCandidacy()) {
-    const candidacyStore = await SecureStoragePlugin.get({
-      key: "candidacy",
-    });
+  // if (await hasLocalCandidacy()) {
+  //   const candidacyStore = await SecureStoragePlugin.get({
+  //     key: "candidacy",
+  //   });
 
-    const payload = JSON.parse(candidacyStore.value);
+  //   const payload = JSON.parse(candidacyStore.value);
 
-    return Just({
-      ...payload,
-      experiences: (payload.experiences || []).map((exp: Experience) => ({
-        ...exp,
-        startDate: new Date(exp.startDate),
-      })),
-      candidacyCreatedAt: new Date(payload.candidacyCreatedAt),
-    });
-  } else {
-    return Nothing;
-  }
+  //   return Just({
+  //     ...payload,
+  //     experiences: (payload.experiences || []).map((exp: Experience) => ({
+  //       ...exp,
+  //       startDate: new Date(exp.startDate),
+  //     })),
+  //     candidacyCreatedAt: new Date(payload.candidacyCreatedAt),
+  //   });
+  // } else {
+  //   return Nothing;
+  // }
+  return Nothing;
 };

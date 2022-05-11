@@ -2,36 +2,15 @@ import { Experience, prisma } from '@prisma/client';
 import { Either, EitherAsync, Left, Maybe, Right } from 'purify-ts';
 import * as domain from '../../../domains/candidacy';
 import { prismaClient } from './client';
-
-
-const toDomainExperiences = (experiences: Experience[]): domain.Experience[] => {
-    return experiences.map(xp => {
-        return {
-            label: xp.label,
-            startedAt: xp.startedAt,
-            duration: xp.duration,
-            description: xp.description,
-        };
-    });
-};
+import { toDomainExperiences } from './experiences';
      
-export const insertCandidacy = async ({ candidacy }: { candidacy: domain.CandidacyInput; }): Promise<Either<string, domain.Candidacy>> => {
+export const insertCandidacy = async (params: { deviceId: string; certificationId: string }): Promise<Either<string, domain.Candidacy>> => {
     try {
 
         const newCandidacy = await prismaClient.candidacy.create({
             data: {
-                deviceId: candidacy.deviceId,
-                companionId: candidacy.companionId,
-                experiences: {
-                    createMany: {
-                        data: candidacy.experiences
-                    }
-                },
-                goals: {
-                    createMany: {
-                        data: candidacy.goals
-                    }
-                }
+                deviceId: params.deviceId,
+                certificationId: params.certificationId
             },
             include: {
                 experiences: true,
@@ -40,7 +19,10 @@ export const insertCandidacy = async ({ candidacy }: { candidacy: domain.Candida
         });
 
         return Right({ 
-            ...newCandidacy,
+            id: newCandidacy.id,
+            deviceId: newCandidacy.deviceId,
+            certificationId: newCandidacy.certificationId,
+            companionId: newCandidacy.companionId,
             experiences: toDomainExperiences(newCandidacy.experiences),
             goals: newCandidacy.goals
         });
@@ -76,9 +58,29 @@ export const getCandidacyFromDeviceId = async (deviceId: string) => {
             }
         });
 
+        console.log(candidacy)
+
         return Maybe.fromNullable(candidacy).toEither(`Candidacy with deviceId ${deviceId} not found`);
     } catch (e) {
         return Left(`error while retrieving the candidacy with id ${deviceId}`);
+    };
+};
+
+export const getCandidacyFromId = async (candidacyId: string) => {
+    try {
+        const candidacy = await prismaClient.candidacy.findUnique({
+            where: {
+                id: candidacyId
+            },
+            include: {
+                experiences: true,
+                goals: true
+            }
+        });
+
+        return Maybe.fromNullable(candidacy).toEither(`Candidacy with deviceId ${candidacyId} not found`);
+    } catch (e) {
+        return Left(`error while retrieving the candidacy with id ${candidacyId}`);
     };
 };
 

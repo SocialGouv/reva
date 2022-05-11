@@ -1,9 +1,18 @@
 import { Either, EitherAsync, Left } from "purify-ts";
 import { FunctionalCodeError, FunctionalError } from "../FunctionalError";
 
+export type Duration =
+    | "unknown"
+    | "lessThanOneYear"
+    | "betweenOneAndThreeYears"
+    | "moreThanThreeYears"
+    | "moreThanFiveYears"
+    | "moreThanTenYears";
+
 export interface CandidacyInput {
     deviceId: string;
-    companionId: string;
+    certificationId: string;
+    companionId: string | null;
     experiences: Experience[];
     goals: Goal[];
 }
@@ -12,16 +21,21 @@ export interface Candidacy extends CandidacyInput {
     id: string;
 }
 
-export interface Experience {
-    label: string;
+export interface ExperienceInput {
+    title: string;
     startedAt: Date;
-    duration: number;
+    duration: Duration;
     description: string;
+}
+
+
+export interface Experience extends ExperienceInput {
+    id: string;
 }
 
 export interface Goal {
     goalId: string;
-    additionalInformation: string;
+    additionalInformation: string | null;
 }
 
 export interface Companion {
@@ -29,25 +43,20 @@ export interface Companion {
 }
 
 interface CreateCandidacyDeps {
-    existsCompanion: (companionId: string) => Promise<Either<string, Companion>>;
-    createCandidacy: (params: { candidacy: CandidacyInput; }) => Promise<Either<string, Candidacy>>;
+    createCandidacy: (params: { deviceId: string; certificationId: string; }) => Promise<Either<string, Candidacy>>;
     getCandidacyFromDeviceId: (deviceId: string) => Promise<Either<string, Candidacy>>;
 }
 
-export const createCandidacy = (deps: CreateCandidacyDeps) => async (params: { candidacy: CandidacyInput; }): Promise<Either<FunctionalError, Candidacy>> => {
+export const createCandidacy = (deps: CreateCandidacyDeps) => async (params: { deviceId: string; certificationId: string; }): Promise<Either<FunctionalError, Candidacy>> => {
     const checkIfCandidacyAlreadyExists = 
-        EitherAsync.fromPromise(() => deps.getCandidacyFromDeviceId(params.candidacy.deviceId))
+        EitherAsync.fromPromise(() => deps.getCandidacyFromDeviceId(params.deviceId))
             .swap()
             .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_ALREADY_EXISTS, `Une candidature existe déjà pour cet appareil`));
-
-    const checkIfCompanionExist = EitherAsync.fromPromise(() => deps.existsCompanion(params.candidacy.companionId))
-        .mapLeft(() => new FunctionalError(FunctionalCodeError.COMPANION_NOT_FOUND, `Accompagnateur inexistant`));
 
     const createCandidacy = EitherAsync.fromPromise(() => deps.createCandidacy(params))
         .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_NOT_CREATED, `Erreur lors de la creation de la candidature`));
 
     return checkIfCandidacyAlreadyExists
-        .chain(() => checkIfCompanionExist)
         .chain(() => createCandidacy);
 };
 
@@ -68,8 +77,91 @@ export const getCompanions = (deps: GetCompanionsDeps) => async () =>
     EitherAsync.fromPromise(() => deps.getCompanions())
         .mapLeft(() => Left(new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, 'Erreur lors de la récupération des accompagnants'))).run();
 
-export const selectCompanion = (props: any) => (props: any) => {};
-export const getExperiences = (props: any) => (props: any) => {};
-export const addExperience = (props: any) => (props: any) => {};
-export const editExperience = (props: any) => (props: any) => {};
-export const addGoal = (props: any) => (props: any) => {}
+interface AddExperienceDeps {
+    createExperience: (params: {
+        candidacyId: string;
+        experience: ExperienceInput;
+    }) => Promise<Either<string, Experience>>;
+    getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
+}
+
+export const addExperience = (deps: AddExperienceDeps) => (params: {
+    candidacyId: string,
+    experience: ExperienceInput;
+}) => {
+    const checkIfCandidacyExists = 
+        EitherAsync.fromPromise(() => deps.getCandidacyFromId(params.candidacyId))
+            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvé`));
+
+    const createExperience = EitherAsync.fromPromise(() => deps.createExperience(params))
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.EXPERIENCE_NOT_CREATED, `Erreur lors de la creation de l'expérience`));
+
+
+    return checkIfCandidacyExists
+        .chain(() => createExperience);
+};
+
+
+interface UpdateExperienceDeps {
+    updateExperience: (params: {
+        candidacyId: string;
+        experienceId: string;
+        experience: ExperienceInput;
+    }) => Promise<Either<string, Experience>>;
+    getExperienceFromId: (id: string) => Promise<Either<string, Experience>>;
+    getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
+}
+
+
+export const updateExperience = (deps: UpdateExperienceDeps) => (params: {
+    candidacyId: string,
+    experienceId: string;
+    experience: ExperienceInput;
+}) => {
+    const checkIfCandidacyExists = 
+        EitherAsync.fromPromise(() => deps.getCandidacyFromId(params.candidacyId))
+            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvé`));
+
+    const checkIfExperienceExists = 
+        EitherAsync.fromPromise(() => deps.getExperienceFromId(params.experienceId))
+            .mapLeft(() => new FunctionalError(FunctionalCodeError.EXPERIENCE_DOES_NOT_EXIST, `Aucune expérience n'a été trouvé`));
+
+    const updateExperience = EitherAsync.fromPromise(() => deps.updateExperience(params))
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.EXPERIENCE_NOT_UPDATED, `Erreur lors de la mise à jour de l'expérience`));
+
+
+    return checkIfCandidacyExists
+        .chain(() => checkIfExperienceExists)
+        .chain(() => updateExperience);
+};
+
+
+interface UpdateGoalsDeps {
+    updateGoals: (params: {
+        candidacyId: string;
+        goals: Goal[];
+    }) => Promise<Either<string, number>>;
+    getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
+}
+
+
+export const updateGoals = (deps: UpdateGoalsDeps) => (params: {
+    candidacyId: string,
+    goals: Goal[];
+}) => {
+    const checkIfCandidacyExists = 
+        EitherAsync.fromPromise(() => deps.getCandidacyFromId(params.candidacyId))
+            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvé`));
+
+    const updateGoals = EitherAsync.fromPromise(() => deps.updateGoals(params))
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.GOALS_NOT_UPDATED, `Erreur lors de la mise à jour des objectifs`));
+
+
+    return checkIfCandidacyExists
+        .chain(() => updateGoals);
+};
+
+export const selectCompanion = (props: any) => (params: any) => {};
+export const getExperiences = (props: any) => (params: any) => {};
+export const editExperience = (props: any) => (params: any) => {};
+export const addGoal = (props: any) => (params: any) => {}

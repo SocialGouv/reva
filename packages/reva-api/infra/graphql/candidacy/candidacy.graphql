@@ -1,8 +1,19 @@
+enum Duration {
+  unknown
+  lessThanOneYear
+  betweenOneAndThreeYears
+  moreThanThreeYears
+  moreThanFiveYears
+  moreThanTenYears
+}
+
 # QUERY
 
 type Candidacy {
+  id: ID!
   deviceId: ID!
-  companionId: ID!
+  certificationId: ID!
+  companionId: ID
   experiences: [Experience]!
   goals: [CandidateGoal]!
 }
@@ -10,8 +21,8 @@ type Candidacy {
 type Experience {
   id: ID
   title: String!
-  startedAt: String!
-  duration: Int!
+  startedAt: Date!
+  duration: Duration!
   description: String!
 }
 
@@ -37,7 +48,6 @@ type Query {
 
 input CandidacyInput {
   deviceId: ID!
-  companionId: ID!
   certificationId: ID!
 }
 
@@ -48,8 +58,8 @@ input CertificationChangeInput {
 
 input ExperienceInput {
   title: String!
-  startedAt: String!
-  duration: Int!
+  startedAt: Date!
+  duration: Duration!
   description: String!
 }
 
@@ -65,25 +75,25 @@ type Mutation {
     candidacyId: ID!
     certificationId: ID!
   ): Candidacy
-  addExperience(
+  candidacy_addExperience(
     deviceId: ID!
     candidacyId: ID!
     experience: ExperienceInput
-  ): Candidacy
-  updateExperience(
+  ): Experience
+  candidacy_updateExperience(
     deviceId: ID!
     candidacyId: ID!
     experienceId: ID!
     experience: ExperienceInput
-  ): Candidacy
-  removeExperience(
+  ): Experience
+  candidacy_removeExperience(
     deviceId: ID!
     candidacyId: ID!
     experienceId: ID!
-  ): Candidacy
-  updateGoals(
+  ): Void
+  candidacy_updateGoals(
     deviceId: ID!
     candidacyId: ID!
     goals: [CandidateGoalInput!]!
-  ): Candidacy
+  ): Int!
 }
