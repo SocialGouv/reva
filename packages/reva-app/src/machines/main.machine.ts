@@ -35,6 +35,7 @@ export type State =
 
 export interface MainContext {
   error: string;
+  isProjectValidated?: boolean;
   certifications: Certification[];
   contact?: Contact;
   direction: "previous" | "next";
@@ -61,6 +62,7 @@ export type MainEvent =
   | { type: "SUBMIT_EXPERIENCE"; experience: Experience }
   | { type: "SUBMIT_EXPERIENCES" }
   | { type: "SUBMIT_GOALS"; goals: Goal[] }
+  | { type: "VALIDATE_PROJECT" }
   | { type: "SUBMIT_PROJECT" };
 
 export type MainState =
@@ -84,6 +86,7 @@ export type MainState =
         | typeof projectExperiences;
 
       context: MainContext & {
+        isProjectValidated: boolean;
         certification: Certification;
         contact: Contact;
         experiences: Experience[];
@@ -107,6 +110,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
     context: {
       error: "",
       direction: "next",
+      isProjectValidated: false,
       certifications: [],
       showStatusBar: false,
       experiences: { rest: [] },
@@ -389,6 +393,13 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             target: searchResults,
             actions: assign({
               direction: (context, event) => "previous",
+            }),
+          },
+          VALIDATE_PROJECT: {
+            target: "projectHome",
+            actions: assign({
+              isProjectValidated: (context, event) => true,
+              direction: (context, event) => "next",
             }),
           },
           SUBMIT_PROJECT: {
