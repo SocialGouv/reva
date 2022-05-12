@@ -60,8 +60,6 @@ export const getCandidacyFromDeviceId = async (deviceId: string) => {
             }
         });
 
-        console.log(candidacy)
-
         return Maybe.fromNullable(candidacy).toEither(`Candidacy with deviceId ${deviceId} not found`);
     } catch (e) {
         return Left(`error while retrieving the candidacy with id ${deviceId}`);

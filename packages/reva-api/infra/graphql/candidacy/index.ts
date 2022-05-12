@@ -9,7 +9,7 @@ export const resolvers = {
   Query: {
     getCandidacy: async (_: unknown, { deviceId }: { deviceId: string; }) => {
       const result = await getCandidacyFromDeviceId({ getCandidacyFromDeviceId: candidacyDb.getCandidacyFromDeviceId })({ deviceId });
-      return result.ifRight(data => console.log(data)).extract();
+      return result.extract();
     },
     getCompanions: async () => {
       const result = await getCompanions({ getCompanions: candidacyDb.getCompanions })();
