@@ -5,6 +5,7 @@ type Referential {
 type Goal {
   id: ID!
   label: String!
+  order: Int!
   needsAdditionalInformation: Boolean!
   isActive: Boolean!
 }
