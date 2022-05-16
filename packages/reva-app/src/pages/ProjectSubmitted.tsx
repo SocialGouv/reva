@@ -20,7 +20,7 @@ export const ProjectSubmitted = ({ mainService }: ProjectSubmittedProps) => {
     >
       <BackButton onClick={() => send("BACK")} />
       <div className="px-8">
-        <div className="flex flex-col items-center mt-8 rounded px-8 py-12 bg-slate-100 text-slate-800">
+        <div className="flex flex-col items-center mt-8 rounded-xl px-8 py-12 bg-slate-100 text-slate-800">
           <h2 className="w-full text-2xl mb-8 font-bold">C'est parti !</h2>
           <p className="leading-loose font-semibold mb-20">
             Votre candidature a été envoyée avec succès à votre accompagnateur.
