@@ -35,9 +35,10 @@ export type State =
   | typeof projectSubmitted
   | typeof submissionHome;
 
+type ProjectStatus = "draft" | "validated" | "submitted";
+
 export interface MainContext {
   error: string;
-  isProjectValidated?: boolean;
   certifications: Certification[];
   contact?: Contact;
   direction: "previous" | "next";
@@ -45,6 +46,7 @@ export interface MainContext {
   certification?: Certification;
   experiences: Experiences;
   goals: Goal[];
+  projectStatus?: ProjectStatus;
 }
 
 export type MainEvent =
@@ -89,11 +91,11 @@ export type MainState =
         | typeof projectExperiences;
 
       context: MainContext & {
-        isProjectValidated: boolean;
         certification: Certification;
         contact: Contact;
         experiences: Experience[];
         goals: Goal[];
+        projectStatus?: ProjectStatus;
       };
     };
 
@@ -113,11 +115,11 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
     context: {
       error: "",
       direction: "next",
-      isProjectValidated: false,
       certifications: [],
       showStatusBar: false,
       experiences: { rest: [] },
       goals: initialGoals,
+      projectStatus: "draft",
     },
     initial: loadingCertifications,
     states: {
@@ -401,13 +403,14 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
           VALIDATE_PROJECT: {
             target: "projectHome",
             actions: assign({
-              isProjectValidated: (context, event) => true,
+              projectStatus: (context, event) => "validated",
               direction: (context, event) => "next",
             }),
           },
           SUBMIT_PROJECT: {
             target: "projectSubmitted",
             actions: assign({
+              projectStatus: (context, event) => "submitted",
               direction: (context, event) => "next",
             }),
             // TODO: handle project submission to API

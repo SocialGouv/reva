@@ -1,5 +1,5 @@
 import { useActor } from "@xstate/react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, isDragActive, motion } from "framer-motion";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
@@ -18,59 +18,84 @@ interface SubmissionHome {
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
 
+const loadingScreen = (
+  <motion.div
+    key="loading-screen"
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -10 }}
+    transition={{ duration: 0.5, ease: "easeOut" }}
+    className="absolute flex flex-col bg-neutral-100 h-full"
+  >
+    <div className="grow flex flex-col text-center items-center justify-center px-10">
+      <Header label="Création de votre candidature" size="small" />
+      <div className="mt-8 w-8">
+        <Loader />
+      </div>
+    </div>
+  </motion.div>
+);
+
+const projectIntroduction = (submit: () => void) => (
+  <>
+    <p className="mt-5 text-sm text-gray-450 leading-loose">
+      Cette étape consiste à compléter et à transmettre votre projet, vous serez
+      ensuite recontacté sous 48h.
+    </p>
+    <div className="grow flex items-end mt-6">
+      <div className="flex items-center">
+        <Button
+          data-test="submission-home-show-project-home"
+          size="small"
+          label="Compléter"
+          onClick={submit}
+        />
+        <p className="ml-5 w-full text-sm text-gray-500">10 min</p>
+      </div>
+    </div>
+  </>
+);
+
+const cneapDetails = (
+  <>
+    <h4 className="mt-8 mb-2 font-bold text-lg">CNEAP</h4>
+    <p>
+      277 Rue Saint-Jacques
+      <br />
+      75240 Paris Cedex 05
+    </p>
+  </>
+);
+
 export const SubmissionHome = ({
   certification,
   mainService,
 }: SubmissionHome) => {
   const [state, send] = useActor(mainService);
 
-  const homeLoaded = !state.matches({ submissionHome: "loading" });
-
-  const loadingScreen = (
-    <motion.div
-      key="loading-screen"
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className="absolute flex flex-col bg-neutral-100 h-full"
-    >
-      <div className="grow flex flex-col text-center items-center justify-center px-10">
-        <Header label="Création de votre candidature" size="small" />
-        <div className="mt-8 w-8">
-          <Loader />
-        </div>
-      </div>
-    </motion.div>
-  );
+  const isHomeLoaded = !state.matches({ submissionHome: "loading" });
+  const isProjectDraft = state.context.projectStatus === "draft";
 
   const homeContent = (
     <>
       <Header color="dark" label={certification.label} size="small" />
       <div className="-mt-2 mb-2 font-bold">{certification.codeRncp}</div>
       <p className="text-sm text-gray-450">Démarré le 10 janvier 2022</p>
+      {!isProjectDraft && (
+        <p className="text-sm text-blue-500 font-medium">
+          En attente de réception
+        </p>
+      )}
       <div
         className="mt-10 flex flex-col px-8 py-6 rounded-xl bg-white shadow-sm"
         style={{ height: "414px" }}
       >
         <ProgressTitle
-          progress={projectProgress(state.context)}
-          title="Mon projet"
+          progress={isProjectDraft ? projectProgress(state.context) : 35}
+          title={isProjectDraft ? "Mon projet" : "Validation du projet"}
         />
-        <p className="mt-5 text-sm text-gray-450 leading-loose">
-          Cette étape consiste à compléter et à transmettre votre projet, vous
-          serez ensuite recontacté sous 48h.
-        </p>
-        <div className="grow flex items-end mt-6">
-          <div className="flex items-center">
-            <Button
-              data-test="submission-home-show-project-home"
-              size="small"
-              label="Compléter"
-              onClick={() => send("SHOW_PROJECT_HOME")}
-            />
-            <p className="ml-5 w-full text-sm text-gray-500">10 min</p>
-          </div>
-        </div>
+        {isProjectDraft
+          ? projectIntroduction(() => send("SHOW_PROJECT_HOME"))
+          : cneapDetails}
       </div>
     </>
   );
@@ -107,8 +132,8 @@ export const SubmissionHome = ({
       direction={state.context.direction}
     >
       <AnimatePresence>
-        {!homeLoaded && loadingScreen}
-        {homeLoaded && homeScreen}
+        {!isHomeLoaded && loadingScreen}
+        {isHomeLoaded && homeScreen}
       </AnimatePresence>
     </Page>
   );

@@ -154,7 +154,7 @@ function App() {
 
           {current.matches("projectHome") &&
             projectHomePage({
-              isValidated: current.context.isProjectValidated,
+              isValidated: current.context.projectStatus != "draft",
               certification: current.context.certification,
             })}
 

@@ -1,6 +1,7 @@
 import { useActor } from "@xstate/react";
 import { Interpreter } from "xstate";
 
+import { Button } from "../components/atoms/Button";
 import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
 import { MainContext, MainEvent } from "../machines/main.machine";
@@ -14,15 +15,19 @@ export const ProjectSubmitted = ({ mainService }: ProjectSubmittedProps) => {
 
   return (
     <Page
-      className="z-[70] h-full flex flex-col bg-white pt-6 px-8"
+      className="z-[70] h-full flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
       <BackButton onClick={() => send("BACK")} />
-
-      <div className="mt-8 rounded p-8 bg-slate-200">
-        <h2 className="text-xl mb-2 font-bold">C'est parti</h2>
-        Votre candidature a été envoyée avec succès à votre accompagnateur. Vous
-        allez être recontacté par votre accompagnateur.
+      <div className="px-8">
+        <div className="flex flex-col items-center mt-8 rounded px-8 py-12 bg-slate-100 text-slate-800">
+          <h2 className="w-full text-2xl mb-8 font-bold">C'est parti !</h2>
+          <p className="leading-loose font-semibold mb-20">
+            Votre candidature a été envoyée avec succès à votre accompagnateur.
+            Vous allez être recontacté par votre accompagnateur.
+          </p>
+          <Button onClick={() => send("BACK")} label="Ok" />
+        </div>
       </div>
     </Page>
   );
