@@ -32,6 +32,7 @@ interface ButtonProps {
    * How large should the button be?
    */
   size?: "tiny" | "small" | "medium" | "large";
+  tabIndex?: number;
   type?: "button" | "submit";
 }
 
@@ -45,6 +46,7 @@ export const Button = ({
   locked = false,
   primary = false,
   size = "medium",
+  tabIndex = 0,
   type = "button",
 
   ...props
@@ -73,6 +75,7 @@ export const Button = ({
       } rounded-md flex justify-center items-center ${modeClass} ${
         sizeClasses[size]
       }`}
+      tabIndex={tabIndex}
       {...props}
     >
       {locked && (

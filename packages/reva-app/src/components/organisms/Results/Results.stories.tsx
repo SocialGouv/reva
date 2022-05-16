@@ -50,6 +50,7 @@ const BlockTemplate: ComponentStory<typeof Results> = (args) => (
         initialSize="reduced"
         key={certificate.id}
         id={certificate.id}
+        isSelectable={true}
         title={certificate.label}
         label={certificate.label}
         summary={certificate.summary}
