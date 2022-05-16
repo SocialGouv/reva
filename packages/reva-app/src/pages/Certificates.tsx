@@ -52,6 +52,7 @@ export const Certificates = ({ mainService }: Certificates) => {
         }
         onClose={() => send("CLOSE_SELECTED_CERTIFICATION")}
         key={certification.id}
+        isSelectable={state.matches("searchResults")}
         id={certification.id}
         title={certification.label}
         label={certification.codeRncp}
@@ -66,7 +67,7 @@ export const Certificates = ({ mainService }: Certificates) => {
     const certification = state.context.certification as Certification;
     return (
       <motion.div
-        className="absolute bottom-0 z-50 inset-x-0 p-8 bg-slate-900"
+        className={`absolute bottom-0 z-50 inset-x-0 p-8 bg-slate-900`}
         custom={state.toStrings().join("")}
         variants={buttonVariants}
         initial={false}
@@ -79,6 +80,7 @@ export const Certificates = ({ mainService }: Certificates) => {
       >
         <Button
           data-test="certification-submit"
+          tabIndex={isVisible ? 0 : -1}
           onClick={() =>
             send({
               type: "CANDIDATE",
@@ -86,7 +88,6 @@ export const Certificates = ({ mainService }: Certificates) => {
             })
           }
           label="Candidater"
-          className="w-full"
           primary
           size="large"
         />
