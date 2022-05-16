@@ -9,7 +9,7 @@ export const resolvers = {
   Query: {
     getCandidacy: async (_: unknown, { deviceId }: { deviceId: string; }) => {
       const result = await getCandidacyFromDeviceId({ getCandidacyFromDeviceId: candidacyDb.getCandidacyFromDeviceId })({ deviceId });
-      return result.extract();
+      return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
     getCompanions: async () => {
       const result = await getCompanions({ getCompanions: candidacyDb.getCompanions })();

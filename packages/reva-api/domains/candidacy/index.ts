@@ -67,8 +67,9 @@ interface GetCandidacyDeps {
     getCandidacyFromDeviceId: (deviceId: string) => Promise<Either<string, Candidacy>>;
 }
 
-export const getCandidacyFromDeviceId = (deps: GetCandidacyDeps) => (params: { deviceId: string; }): Promise<Either<string, Candidacy>> => 
-    EitherAsync.fromPromise(() => deps.getCandidacyFromDeviceId(params.deviceId)).run();
+export const getCandidacyFromDeviceId = (deps: GetCandidacyDeps) => (params: { deviceId: string; }): Promise<Either<FunctionalError, Candidacy>> => 
+    EitherAsync.fromPromise(() => deps.getCandidacyFromDeviceId(params.deviceId))
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvé`)).run();
 
 
 interface GetCompanionsDeps {

@@ -72,8 +72,58 @@ export const SubmissionHome = ({
 }: SubmissionHome) => {
   const [state, send] = useActor(mainService);
 
+  const isHomeReady =
+    !state.matches({ submissionHome: "loading" }) &&
+    !state.matches({ submissionHome: "retry" });
   const isHomeLoaded = !state.matches({ submissionHome: "loading" });
   const isProjectDraft = state.context.projectStatus === "draft";
+
+  const loadingScreen = (
+    <motion.div
+      key="loading-screen"
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="absolute flex flex-col bg-neutral-100 h-full"
+    >
+      <div className="grow flex flex-col text-center items-center justify-center px-10">
+        <Header label="Création de votre candidature" size="small" />
+        <div className="mt-8 w-8">
+          <Loader />
+        </div>
+      </div>
+    </motion.div>
+  );
+
+  const retryErrorScreen = (
+    <motion.div
+      key="loading-screen"
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="absolute flex flex-col bg-neutral-100 h-full"
+    >
+      <div className="grow flex flex-col text-center items-center justify-center px-10">
+        <Header
+          label="Une erreur est survenue lors de la création de votre candidature"
+          size="small"
+        />
+        <div className="mt-8">
+          <Button
+            data-test="submission-home-retry-candidate"
+            size="small"
+            label="Réessayer"
+            onClick={() =>
+              send({
+                type: "CANDIDATE",
+                certification,
+              })
+            }
+          />
+        </div>
+      </div>
+    </motion.div>
+  );
 
   const homeContent = (
     <>
@@ -134,8 +184,9 @@ export const SubmissionHome = ({
       direction={state.context.direction}
     >
       <AnimatePresence>
-        {!isHomeLoaded && loadingScreen}
-        {isHomeLoaded && homeScreen}
+        {state.matches({ submissionHome: "loading" }) && loadingScreen}
+        {state.matches({ submissionHome: "retry" }) && retryErrorScreen}
+        {isHomeReady && homeScreen}
       </AnimatePresence>
     </Page>
   );

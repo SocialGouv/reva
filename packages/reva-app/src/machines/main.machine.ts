@@ -40,6 +40,7 @@ type ProjectStatus = "draft" | "validated" | "submitted";
 export interface MainContext {
   error: string;
   certifications: Certification[];
+  candidacyCreatedAt?: number;
   contact?: Contact;
   direction: "previous" | "next";
   showStatusBar: boolean;
@@ -221,8 +222,32 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         initial: "loading",
         states: {
           loading: {
-            after: {
-              2000: { target: "ready" },
+            invoke: {
+              src: "saveCertification",
+              onDone: {
+                target: "ready",
+                actions: assign({
+                  candidacyCreatedAt: (_, event) =>
+                    event.data.candidacyCreatedAt,
+                }),
+              },
+              onError: {
+                target: "retry",
+                actions: assign({
+                  error: (_, event) =>
+                    "Une erreur est survenue lors de la sauvegarde de la certification.",
+                  direction: (context, event) => "previous",
+                }),
+              },
+            },
+
+            // after: {
+            //   2000: { target: "ready" },
+            // },
+          },
+          retry: {
+            on: {
+              CANDIDATE: { target: "loading" },
             },
           },
           ready: {
@@ -435,6 +460,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
       searchCertifications: (context, event) =>
         Promise.reject("Not implemented"),
       getCertification: (context, event) => Promise.reject("Not implemented"),
+      saveCertification: (context, event) => Promise.reject("Not implemented"),
     },
   }
 );

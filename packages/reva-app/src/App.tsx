@@ -1,5 +1,6 @@
 import { ApolloClient, getApolloContext } from "@apollo/client";
 import { Capacitor } from "@capacitor/core";
+import { Device } from "@capacitor/device";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
@@ -16,6 +17,7 @@ import { ProjectGoals } from "./pages/ProjectGoals";
 import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectSubmitted } from "./pages/ProjectSubmitted";
 import { SubmissionHome } from "./pages/SubmissionHome";
+import { createCandidacyWithCertification } from "./services/candidacyServices";
 import {
   getCertification,
   searchCertifications,
@@ -36,6 +38,19 @@ function App() {
             }
             return getCertification(client as ApolloClient<object>)({
               id: event.certification.id,
+            });
+          },
+          saveCertification: async (context, event) => {
+            if (event.type !== "CANDIDATE" || !context.certification) {
+              return Promise.reject("Impossible state");
+            }
+            const deviceId = await Device.getId();
+
+            return createCandidacyWithCertification(
+              client as ApolloClient<object>
+            )({
+              deviceId: deviceId.uuid,
+              certificationId: event.certification.id,
             });
           },
         },
