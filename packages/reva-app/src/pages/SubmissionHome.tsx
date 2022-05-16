@@ -112,6 +112,8 @@ export const SubmissionHome = ({
     >
       <img
         className="pointer-events-none"
+        alt=""
+        role="presentation"
         style={{
           position: "absolute",
           left: "-53px",

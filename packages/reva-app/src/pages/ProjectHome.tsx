@@ -78,6 +78,8 @@ export const ProjectHome = ({
       </div>
       <img
         className=""
+        alt=""
+        role="presentation"
         style={{
           marginLeft: "-42px",
           marginTop: "-28px",
