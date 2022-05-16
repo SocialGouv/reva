@@ -19,6 +19,7 @@ import { ProjectHelp } from "./pages/ProjectHelp";
 import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectSubmitted } from "./pages/ProjectSubmitted";
 import { SubmissionHome } from "./pages/SubmissionHome";
+import { createCandidacyWithCertification } from "./services/candidacyServices";
 import {
   createCandidacyWithCertification,
   initializeApp,

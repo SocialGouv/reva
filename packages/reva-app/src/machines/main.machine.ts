@@ -285,20 +285,22 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
                 target: "ready",
                 actions: assign({
                   candidacyCreatedAt: (_, event) =>
-                    new Date(
-                      event.data.data.candidacy_createCandidacy.createdAt
-                    ),
+                    event.data.candidacyCreatedAt,
                 }),
               },
               onError: {
                 target: "retry",
                 actions: assign({
                   error: (_, event) =>
-                    "Une erreur est survenue lors de l'enregistrement de la certification.",
+                    "Une erreur est survenue lors de la sauvegarde de la certification.",
                   direction: (context, event) => "previous",
                 }),
               },
             },
+
+            // after: {
+            //   2000: { target: "ready" },
+            // },
           },
           retry: {
             on: {
