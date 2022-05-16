@@ -12,7 +12,7 @@ module.exports = {
         blue: { 600: "#0078f3" },
         gray: { 450: "#8C8E97" },
         purple: { 100: "#F6E0FF", 800: "#89509F" },
-        slate: { 400: "#908eac", 900: "#21203D" },
+        slate: { 100: "#f3f3fe", 400: "#908eac", 900: "#21203D" },
       },
       fontFamily: {
         sans: ["Marianne", ...defaultTheme.fontFamily.sans],

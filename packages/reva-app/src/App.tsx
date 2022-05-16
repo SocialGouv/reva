@@ -14,6 +14,7 @@ import { ProjectExperience } from "./pages/ProjectExperience";
 import { ProjectExperiences } from "./pages/ProjectExperiences";
 import { ProjectGoals } from "./pages/ProjectGoals";
 import { ProjectHome } from "./pages/ProjectHome";
+import { ProjectSubmitted } from "./pages/ProjectSubmitted";
 import { SubmissionHome } from "./pages/SubmissionHome";
 import {
   getCertification,
@@ -115,6 +116,10 @@ function App() {
     />
   );
 
+  const projectSubmittedPage = () => (
+    <ProjectSubmitted key="project-submitted" mainService={mainService} />
+  );
+
   const certificateDetails = (certification: Certification) => (
     <CertificateDetails
       key="show-certificate-details"
@@ -149,9 +154,11 @@ function App() {
 
           {current.matches("projectHome") &&
             projectHomePage({
-              isValidated: current.context.isProjectValidated,
+              isValidated: current.context.projectStatus != "draft",
               certification: current.context.certification,
             })}
+
+          {current.matches("projectSubmitted") && projectSubmittedPage()}
 
           {current.matches("projectContact") && projectContactPage()}
 

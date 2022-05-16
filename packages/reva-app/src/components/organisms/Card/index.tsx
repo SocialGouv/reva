@@ -120,6 +120,8 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
         </div>
         <img
           className="pointer-events-none"
+          alt=""
+          role="presentation"
           style={{
             marginLeft: "-70px",
             height: "174px",
@@ -146,6 +148,8 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
         <motion.img
           layout
           className="absolute pointer-events-none"
+          alt=""
+          role="presentation"
           style={{
             left: "-43px",
             top: "12px",

@@ -78,6 +78,8 @@ export const ProjectHome = ({
       </div>
       <img
         className=""
+        alt=""
+        role="presentation"
         style={{
           marginLeft: "-42px",
           marginTop: "-28px",
@@ -192,7 +194,7 @@ export const ProjectHome = ({
     >
       <BackButton onClick={() => send("BACK")} />
       {homeContent}
-      <div className="bg-white flex flex-col items-center pt-4 pb-1">
+      <div className="bg-white flex flex-col items-center pt-4 pb-12">
         <Button
           data-test="project-experiences-submit"
           locked={progress !== 100}
@@ -202,9 +204,6 @@ export const ProjectHome = ({
           primary={isValidated}
           size="medium"
         />
-        <div className="mt-1 text-gray-400 h-10">
-          {isValidated && "Bientôt disponible"}
-        </div>
       </div>
     </Page>
   );
