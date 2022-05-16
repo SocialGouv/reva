@@ -18,6 +18,7 @@ const projectContact = "projectContact";
 const projectExperience = "projectExperience";
 const projectExperiences = "projectExperiences";
 const projectGoals = "projectGoals";
+const projectSubmitted = "projectSubmitted";
 const submissionHome = "submissionHome";
 
 export type State =
@@ -31,6 +32,7 @@ export type State =
   | typeof projectExperience
   | typeof projectExperiences
   | typeof projectGoals
+  | typeof projectSubmitted
   | typeof submissionHome;
 
 export interface MainContext {
@@ -80,6 +82,7 @@ export type MainState =
   | {
       value:
         | typeof projectHome
+        | typeof projectSubmitted
         | typeof projectGoals
         | typeof projectContact
         | typeof projectExperience
@@ -403,8 +406,22 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             }),
           },
           SUBMIT_PROJECT: {
-            target: "projectHome",
+            target: "projectSubmitted",
+            actions: assign({
+              direction: (context, event) => "next",
+            }),
             // TODO: handle project submission to API
+          },
+        },
+      },
+      projectSubmitted: {
+        on: {
+          BACK: {
+            target: "submissionHome.ready",
+            actions: assign({
+              certification: (context, event) => context.certification,
+              direction: (context, event) => "previous",
+            }),
           },
         },
       },

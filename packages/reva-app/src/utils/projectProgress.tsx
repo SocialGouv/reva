@@ -28,6 +28,6 @@ export function projectProgress({
   ];
 
   const validated: number = validations.filter((e) => e === true).length;
-
-  return (100 * validated) / 4;
+  return 100;
+  //return (100 * validated) / 4;
 }
