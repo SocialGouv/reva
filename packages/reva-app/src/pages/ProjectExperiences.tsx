@@ -32,7 +32,7 @@ const ExperiencePreview = (
 ) => (
   <li
     key={`experience-${index}`}
-    className="text-slate-800 rounded-lg bg-gray-100 h-64 py-2 px-8 space-y-4"
+    className="text-slate-800 rounded-lg bg-gray-100 pt-2 pb-10 px-8 space-y-4"
   >
     <div className="w-full flex items-center justify-between">
       <Title
