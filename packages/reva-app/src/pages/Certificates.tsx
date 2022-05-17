@@ -52,6 +52,7 @@ export const Certificates = ({ mainService }: Certificates) => {
         }
         onClose={() => send("CLOSE_SELECTED_CERTIFICATION")}
         key={certification.id}
+        isSelectable={state.matches("searchResults")}
         id={certification.id}
         title={certification.label}
         label={certification.codeRncp}
@@ -77,19 +78,20 @@ export const Certificates = ({ mainService }: Certificates) => {
         animate={isVisible ? "visible" : "hidden"}
         layout="position"
       >
-        <Button
-          data-test="certification-submit"
-          onClick={() =>
-            send({
-              type: "CANDIDATE",
-              certification,
-            })
-          }
-          label="Candidater"
-          className="w-full"
-          primary
-          size="large"
-        />
+        {isVisible && (
+          <Button
+            data-test="certification-submit"
+            onClick={() =>
+              send({
+                type: "CANDIDATE",
+                certification,
+              })
+            }
+            label="Candidater"
+            primary
+            size="large"
+          />
+        )}
       </motion.div>
     );
   }

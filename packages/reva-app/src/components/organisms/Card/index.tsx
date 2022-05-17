@@ -25,7 +25,7 @@ interface Card {
   summary: string;
   label: string;
   status: CardStatus;
-  isOpen?: boolean;
+  isSelectable: boolean;
   onClose?: () => void;
   onLearnMore?: () => void;
   onOpen?: () => void;
@@ -58,6 +58,7 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
     {
       summary,
       id,
+      isSelectable,
       label,
       onClose = () => {},
       onLearnMore = () => {},
@@ -182,14 +183,15 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
           height: heightConfig.small,
         }}
       >
-        <motion.div
-          className={`cursor-pointer overflow-hidden bg-slate-900 text-white ${
+        <motion.button
+          className={`block text-left w-full cursor-pointer overflow-hidden bg-slate-900 text-white ${
             isReduced ? "rounded-2xl" : "rounded-none"
           }`}
           layout
           transition={transition}
           layoutDependency={size}
           data-test={`certification-select-${id}`}
+          tabIndex={isSelectable ? 0 : -1}
           onClick={() => (isReduced ? (setSize("open"), onOpen()) : {})}
           whileTap={{ scale: isReduced ? 0.96 : 1 }}
           style={{
@@ -207,7 +209,7 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
           {...props}
         >
           {isReduced && reducedInfo}
-        </motion.div>
+        </motion.button>
         {!isReduced && fullscreenDetails}
       </li>
     );
