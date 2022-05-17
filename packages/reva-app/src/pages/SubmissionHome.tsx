@@ -37,7 +37,7 @@ const loadingScreen = (
 
 const projectIntroduction = (submit: () => void) => (
   <>
-    <p className="mt-5 text-sm text-gray-450 leading-loose">
+    <p className="mt-5 text-sm text-gray-500 leading-loose">
       Cette étape consiste à compléter et à transmettre votre projet, vous serez
       ensuite recontacté sous 48h.
     </p>
@@ -79,7 +79,7 @@ export const SubmissionHome = ({
     <>
       <Header color="dark" label={certification.label} level={2} size="small" />
       <div className="-mt-2 mb-2 font-bold">{certification.codeRncp}</div>
-      <p className="text-sm text-gray-450">Démarré le 10 janvier 2022</p>
+      <p className="text-sm text-gray-500">Démarré le 10 janvier 2022</p>
       {!isProjectDraft && (
         <p className="text-sm text-blue-500 font-medium">
           En attente de réception

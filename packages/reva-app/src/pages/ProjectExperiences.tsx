@@ -35,7 +35,11 @@ const ExperiencePreview = (
     className="text-slate-800 rounded-lg bg-gray-100 h-64 py-2 px-8 space-y-4"
   >
     <div className="w-full flex items-center justify-between">
-      <Title data-test="project-experience-title" label={experience.title} />
+      <Title
+        data-test="project-experience-title"
+        label={experience.title}
+        level={2}
+      />
       <button
         data-test={`project-experiences-edit-${index}`}
         type="button"
