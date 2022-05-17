@@ -23,13 +23,14 @@ export const Checkbox = ({
   className = "",
   ...props
 }: CheckboxProps) => {
+  const labelName = `label-${name}`;
   return (
     <div className="relative flex items-start">
       <div className="flex items-center h-[26px]">
         <input
           id={name}
-          aria-describedby="comments-description"
           name={name}
+          aria-labelledby={labelName}
           defaultChecked={checked}
           onClick={toggle}
           type="checkbox"
@@ -37,7 +38,11 @@ export const Checkbox = ({
         />
       </div>
       <div className="ml-3 text-lg">
-        <label htmlFor={name} className="block text-slate-700 leading-snug">
+        <label
+          id={labelName}
+          htmlFor={name}
+          className="block text-slate-700 leading-snug"
+        >
           {label}
         </label>
       </div>
