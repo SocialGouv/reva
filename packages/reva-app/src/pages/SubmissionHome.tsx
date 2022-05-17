@@ -77,7 +77,7 @@ export const SubmissionHome = ({
 
   const homeContent = (
     <>
-      <Header color="dark" label={certification.label} size="small" />
+      <Header color="dark" label={certification.label} level={2} size="small" />
       <div className="-mt-2 mb-2 font-bold">{certification.codeRncp}</div>
       <p className="text-sm text-gray-450">Démarré le 10 janvier 2022</p>
       {!isProjectDraft && (
@@ -122,7 +122,7 @@ export const SubmissionHome = ({
         }}
         src={certificationImg}
       />
-      <div className="mt-12 -mb-12 text-center font-bold">REVA</div>
+      <h1 className="mt-12 -mb-12 text-center font-bold">REVA</h1>
       <BackButton onClick={() => send("BACK")} />
       <div className="grow overflow-y-auto mt-20 px-8 pb-8">{homeContent}</div>
     </motion.div>
