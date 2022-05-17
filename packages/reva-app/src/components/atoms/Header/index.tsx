@@ -1,9 +1,11 @@
 type Color = "dark" | "light";
 type Size = "small" | "large";
+type Level = 1 | 2;
 
 interface HeaderProps {
   color?: Color;
   label: string;
+  level?: Level;
   size?: Size;
 }
 
@@ -16,9 +18,13 @@ const fontClass = (size: Size) =>
 export const Header = ({
   color = "dark",
   size = "large",
+  level = 1,
   label = "",
-}: HeaderProps) => (
-  <h1 className={`${colorClass(color)} ${fontClass(size)} my-4 text-4xl`}>
-    {label}
-  </h1>
-);
+}: HeaderProps) => {
+  const className = `${colorClass(color)} ${fontClass(size)} my-4 text-4xl`;
+  return level === 1 ? (
+    <h1 className={className}>{label}</h1>
+  ) : (
+    <h2 className={className}>{label}</h2>
+  );
+};

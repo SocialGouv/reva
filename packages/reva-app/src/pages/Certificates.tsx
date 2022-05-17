@@ -63,7 +63,8 @@ export const Certificates = ({ mainService }: Certificates) => {
   };
 
   function candidateButton() {
-    const isVisible = state.matches("certificateSummary");
+    const isVisible =
+      state.matches("certificateSummary") || state.matches("submissionHome");
     const certification = state.context.certification as Certification;
     return (
       <motion.div

@@ -137,10 +137,14 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
       <>
         <motion.div
           layout="position"
+          aria-label={title}
           className={`absolute top-5 right-6 text-right font-bold grow `}
         >
           {label}
-          <div className="mt-4 rounded-full flex items-center justify-center h-[46px] w-[46px] bg-blue-500">
+          <div
+            aria-hidden="true"
+            className="mt-4 rounded-full flex items-center justify-center h-[46px] w-[46px] bg-blue-500"
+          >
             <div className="w-[18px]">
               <Add />
             </div>

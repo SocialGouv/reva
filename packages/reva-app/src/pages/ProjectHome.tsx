@@ -89,7 +89,12 @@ export const ProjectHome = ({
         src={certificationImg}
       />
       <div className="px-8 pb-6">
-        <TextResult size="small" title={certification.label} color="light" />
+        <h2
+          className="font-medium text-white text-2xl"
+          style={{ lineHeight: "1.1" }}
+        >
+          {certification.label}
+        </h2>
         {!isValidated && (
           <Button
             data-test="project-home-close-selected-certification"
@@ -113,7 +118,7 @@ export const ProjectHome = ({
       <div className="space-y-4">
         {editCertification}
         <div className="rounded-xl pl-8 pr-6 py-6 bg-purple-100 text-purple-800">
-          <h4 className="font-bold mb-2 text-xl">Mon objectif</h4>
+          <h2 className="font-bold mb-2 text-xl">Mon objectif</h2>
           <ul className="mb-4 text-lg leading-tight">
             {selectedGoals.map((goal) => (
               <li className="mb-2" key={goal.id}>
@@ -132,9 +137,9 @@ export const ProjectHome = ({
           )}
         </div>
         <div className="rounded-xl px-8 py-6 bg-slate-100">
-          <h4 className="font-bold text-slate-800 text-xl mb-4">
+          <h2 className="font-bold text-slate-800 text-xl mb-4">
             Mes experiences
-          </h4>
+          </h2>
           {sortedExperiences.length > 0 && (
             <ul
               data-test="project-home-experiences"
@@ -155,7 +160,7 @@ export const ProjectHome = ({
           </div>
         </div>
         <div className="rounded-xl px-8 py-6 bg-neutral-100">
-          <h4 className="font-bold text-slate-800 text-xl mb-4">Mon contact</h4>
+          <h2 className="font-bold text-slate-800 text-xl mb-4">Mon contact</h2>
           {state.context.contact?.phone && (
             <p data-test="project-home-contact-phone" className="mt-2">
               {state.context.contact?.phone}

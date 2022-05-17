@@ -15,7 +15,7 @@ export const ProgressTitle = ({ progress, size = "small", title }: Props) => {
         <Title label={title} size={size} />
         <div
           data-test="progress-title-value"
-          className="font-semibold text-base text-slate-400"
+          className="font-semibold text-base text-gray-500"
         >
           {progress}%
         </div>

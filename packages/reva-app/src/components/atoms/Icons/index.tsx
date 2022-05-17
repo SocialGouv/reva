@@ -47,6 +47,7 @@ export const Loader = (props: SVGProps<SVGSVGElement>) => (
 export const Back = (props: SVGProps<SVGSVGElement>) => (
   <svg
     className="stroke-current"
+    aria-hidden="true"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 48 48"
     {...props}
