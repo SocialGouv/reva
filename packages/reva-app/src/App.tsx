@@ -20,7 +20,7 @@ import { ProjectSubmitted } from "./pages/ProjectSubmitted";
 import { SubmissionHome } from "./pages/SubmissionHome";
 import {
   createCandidacyWithCertification,
-  getCandidacy,
+  initializeApp,
 } from "./services/candidacyServices";
 import {
   getCertification,
@@ -36,9 +36,9 @@ function App() {
         services: {
           searchCertifications: (context, event) =>
             searchCertifications(client as ApolloClient<object>)({ query: "" }),
-          getCandidacy: async (context, event) => {
+          initializeApp: async (context, event) => {
             const deviceId = await Device.getId();
-            return getCandidacy(client as ApolloClient<object>)({
+            return initializeApp(client as ApolloClient<object>)({
               deviceId: deviceId.uuid,
             });
           },

@@ -26,7 +26,7 @@ export const createCandidacyWithCertification =
       variables: { deviceId, certificationId },
     });
 
-const GET_CANDIDACY = gql`
+const INITIALIZE_APP = gql`
   query getCandidacy($deviceId: ID!) {
     getCandidacy(deviceId: $deviceId) {
       id
@@ -54,26 +54,44 @@ const GET_CANDIDACY = gql`
         additionalInformation
       }
     }
+
+    getReferential {
+      goals {
+        id
+        label
+        order
+      }
+    }
   }
 `;
 
-export const getCandidacy =
+export const initializeApp =
   (client: ApolloClient<object>) =>
   async ({ deviceId }: { deviceId: string }) => {
     const { data } = await client.query({
-      query: GET_CANDIDACY,
+      query: INITIALIZE_APP,
       variables: {
         deviceId,
       },
     });
+
+    const candidateGoals = data.getCandidacy.goals.map((g: any) => g.goalId);
+
+    const goals = data.getReferential.goals.map((g: any) => ({
+      ...g,
+      checked: candidateGoals.includes(g.id),
+    }));
 
     const experiences = data.getCandidacy.experiences.map((xp: any) => ({
       ...xp,
       startedAt: new Date(xp.startedAt),
     }));
     return {
-      ...data.getCandidacy,
-      createdAt: new Date(data.getCandidacy.createdAt),
-      experiences,
+      candidacy: {
+        ...data.getCandidacy,
+        createdAt: new Date(data.getCandidacy.createdAt),
+        experiences,
+        goals,
+      },
     };
   };

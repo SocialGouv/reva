@@ -8,7 +8,7 @@ import {
   Goal,
 } from "../interface";
 
-const loadingCandidacy = "loadingCandidacy";
+const loadingApplicationData = "loadingApplicationData";
 const loadingCertifications = "loadingCertifications";
 const searchResults = "searchResults";
 const searchResultsError = "searchResultsError";
@@ -24,7 +24,7 @@ const submissionHome = "submissionHome";
 const error = "error";
 
 export type State =
-  | typeof loadingCandidacy
+  | typeof loadingApplicationData
   | typeof loadingCertifications
   | typeof searchResults
   | typeof searchResultsError
@@ -78,7 +78,7 @@ export type MainState =
       value:
         | typeof searchResults
         | typeof loadingCertifications
-        | typeof loadingCandidacy;
+        | typeof loadingApplicationData;
       context: MainContext & { certification: undefined };
     }
   | {
@@ -111,16 +111,6 @@ export type MainState =
       };
     };
 
-const initialGoals = [
-  { id: "c1", checked: false, label: "Trouver plus facilement un emploi" },
-  { id: "c2", checked: false, label: "Être reconnu dans ma profession" },
-  { id: "c3", checked: false, label: "Avoir un meilleur salaire" },
-  { id: "c4", checked: false, label: "Me réorienter" },
-  { id: "c5", checked: false, label: "Consolider mes acquis métier" },
-  { id: "c6", checked: false, label: "Me redonner confiance en moi" },
-  { id: "c7", checked: false, label: "Autre" },
-];
-
 export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
   {
     id: "mainMachine",
@@ -130,28 +120,34 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
       certifications: [],
       showStatusBar: false,
       experiences: { rest: [] },
-      goals: initialGoals,
+      goals: [],
       projectStatus: "draft",
     },
-    initial: loadingCandidacy, // error, //
+    initial: loadingApplicationData, // error, //
     states: {
-      loadingCandidacy: {
+      loadingApplicationData: {
         invoke: {
-          src: "getCandidacy",
+          src: "initializeApp",
           onDone: {
             target: "submissionHome.ready",
             actions: assign({
               candidacyCreatedAt: (_, event) => {
-                return new Date(event.data.createdAt);
+                return new Date(event.data.candidacy.createdAt);
               },
               certification: (_, event) => {
-                return event.data.certification;
+                return event.data.candidacy.certification;
               },
               experiences: (_, event) => {
-                return { rest: event.data.experiences };
+                return { rest: event.data.candidacy.experiences };
               },
               goals: (_, event) => {
-                return event.data.goals || [];
+                return event.data.candidacy.goals;
+              },
+              contact: (_, event) => {
+                return {
+                  email: event.data.candidacy.email,
+                  phone: event.data.candidacy.phone,
+                };
               },
             }),
           },
@@ -514,7 +510,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         Promise.reject("Not implemented"),
       getCertification: (context, event) => Promise.reject("Not implemented"),
       saveCertification: (context, event) => Promise.reject("Not implemented"),
-      getCandidacy: (context, event) => Promise.reject("Not implemented"),
+      initializeApp: (context, event) => Promise.reject("Not implemented"),
     },
   }
 );
