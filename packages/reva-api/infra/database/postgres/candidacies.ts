@@ -26,7 +26,8 @@ export const insertCandidacy = async (params: { deviceId: string; certificationI
             experiences: toDomainExperiences(newCandidacy.experiences),
             goals: newCandidacy.goals,
             phone: newCandidacy.phone,
-            email: newCandidacy.email
+            email: newCandidacy.email,
+            createdAt: newCandidacy.createdAt
         });
     } catch (e) {
         console.log(e);
@@ -56,11 +57,12 @@ export const getCandidacyFromDeviceId = async (deviceId: string) => {
             },
             include: {
                 experiences: true,
-                goals: true
+                goals: true,
+                certification: true
             }
         });
 
-        return Maybe.fromNullable(candidacy).toEither(`Candidacy with deviceId ${deviceId} not found`);
+        return Maybe.fromNullable(candidacy).map(c => ({...c, certification: {...c.certification, codeRncp: c.certification.rncpId} })).toEither(`Candidacy with deviceId ${deviceId} not found`);
     } catch (e) {
         return Left(`error while retrieving the candidacy with id ${deviceId}`);
     };
@@ -119,7 +121,8 @@ export const updateContactOnCandidacy = async (params: {candidacyId: string, ema
             experiences: toDomainExperiences(newCandidacy.experiences),
             goals: newCandidacy.goals,
             email: newCandidacy.email,
-            phone: newCandidacy.phone
+            phone: newCandidacy.phone,
+            createdAt: newCandidacy.createdAt
         });
     } catch (e) {
         return Left(`error while updating contact on candidacy ${params.candidacyId}`);

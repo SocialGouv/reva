@@ -21,6 +21,7 @@ export interface CandidacyInput {
 
 export interface Candidacy extends CandidacyInput {
     id: string;
+    createdAt: Date;
 }
 
 export interface ExperienceInput {

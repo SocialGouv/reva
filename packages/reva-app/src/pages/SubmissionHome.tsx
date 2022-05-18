@@ -14,6 +14,7 @@ import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 import { projectProgress } from "../utils/projectProgress";
 
 interface SubmissionHome {
+  candidacyCreatedAt: Date;
   certification: Certification;
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
@@ -67,6 +68,7 @@ const cneapDetails = (
 );
 
 export const SubmissionHome = ({
+  candidacyCreatedAt,
   certification,
   mainService,
 }: SubmissionHome) => {
@@ -77,6 +79,9 @@ export const SubmissionHome = ({
     !state.matches({ submissionHome: "retry" });
   const isHomeLoaded = !state.matches({ submissionHome: "loading" });
   const isProjectDraft = state.context.projectStatus === "draft";
+
+  const candidacyCreatedAtFormatted =
+    candidacyCreatedAt?.toLocaleDateString("fr-FR");
 
   const loadingScreen = (
     <motion.div
@@ -104,10 +109,8 @@ export const SubmissionHome = ({
       className="absolute flex flex-col bg-neutral-100 h-full"
     >
       <div className="grow flex flex-col text-center items-center justify-center px-10">
-        <Header
-          label="Une erreur est survenue lors de la création de votre candidature"
-          size="small"
-        />
+        <Header label="Oups..." size="small" />
+        <p>{state.context.error}</p>
         <div className="mt-8">
           <Button
             data-test="submission-home-retry-candidate"
@@ -129,7 +132,9 @@ export const SubmissionHome = ({
     <>
       <Header color="dark" label={certification.label} level={2} size="small" />
       <div className="-mt-2 mb-2 font-bold">{certification.codeRncp}</div>
-      <p className="text-sm text-gray-500">Démarré le 10 janvier 2022</p>
+      <p className="text-sm text-gray-500">
+        Démarré le {candidacyCreatedAtFormatted}
+      </p>
       {!isProjectDraft && (
         <p className="text-sm text-blue-500 font-medium">
           En attente de réception
@@ -173,8 +178,7 @@ export const SubmissionHome = ({
         src={certificationImg}
       />
       <h1 className="mt-12 -mb-12 text-center font-bold">REVA</h1>
-      <BackButton onClick={() => send("BACK")} />
-      <div className="grow overflow-y-auto mt-20 px-8 pb-8">{homeContent}</div>
+      <div className="grow overflow-y-auto mt-36 px-8 pb-8">{homeContent}</div>
     </motion.div>
   );
 

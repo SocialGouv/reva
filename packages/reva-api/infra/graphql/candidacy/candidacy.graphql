@@ -14,10 +14,12 @@ type Candidacy {
   deviceId: ID!
   certificationId: ID!
   companionId: ID
+  certification: Certification!
   experiences: [Experience]!
   goals: [CandidateGoal]!
   phone: String
   email: String
+  createdAt: Date!
 }
 
 type Experience {

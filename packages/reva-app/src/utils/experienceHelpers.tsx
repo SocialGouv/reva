@@ -6,6 +6,6 @@ export function sortExperiences(experiences: Experiences) {
     : experiences.rest;
 
   return allExperiences.sort(
-    (e1, e2) => e2.startDate.getTime() - e1.startDate.getTime()
+    (e1, e2) => e2.startedAt.getTime() - e1.startedAt.getTime()
   );
 }

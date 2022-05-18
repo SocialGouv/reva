@@ -10,6 +10,7 @@ import { Certification } from "./interface";
 import { mainMachine } from "./machines/main.machine";
 import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
+import { Error } from "./pages/Error";
 import { ProjectContact } from "./pages/ProjectContact";
 import { ProjectExperience } from "./pages/ProjectExperience";
 import { ProjectExperiences } from "./pages/ProjectExperiences";
@@ -17,7 +18,10 @@ import { ProjectGoals } from "./pages/ProjectGoals";
 import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectSubmitted } from "./pages/ProjectSubmitted";
 import { SubmissionHome } from "./pages/SubmissionHome";
-import { createCandidacyWithCertification } from "./services/candidacyServices";
+import {
+  createCandidacyWithCertification,
+  getCandidacy,
+} from "./services/candidacyServices";
 import {
   getCertification,
   searchCertifications,
@@ -32,6 +36,12 @@ function App() {
         services: {
           searchCertifications: (context, event) =>
             searchCertifications(client as ApolloClient<object>)({ query: "" }),
+          getCandidacy: async (context, event) => {
+            const deviceId = await Device.getId();
+            return getCandidacy(client as ApolloClient<object>)({
+              deviceId: deviceId.uuid,
+            });
+          },
           getCertification: (context, event) => {
             if (event.type !== "SELECT_CERTIFICATION") {
               return Promise.reject("Impossible state");
@@ -92,11 +102,15 @@ function App() {
     <Certificates key="show-results" mainService={mainService} />
   );
 
-  const submissionHomePage = (certification: Certification) => (
+  const submissionHomePage = (
+    certification: Certification,
+    candidacyCreatedAt: Date
+  ) => (
     <SubmissionHome
       key="submission-home"
       mainService={mainService}
       certification={certification}
+      candidacyCreatedAt={candidacyCreatedAt}
     />
   );
 
@@ -134,6 +148,8 @@ function App() {
   const projectSubmittedPage = () => (
     <ProjectSubmitted key="project-submitted" mainService={mainService} />
   );
+
+  const errorPage = () => <Error key="error-page" mainService={mainService} />;
 
   const certificateDetails = (certification: Certification) => (
     <CertificateDetails
@@ -188,7 +204,12 @@ function App() {
             certificateDetails(current.context.certification)}
 
           {current.matches("submissionHome") &&
-            submissionHomePage(current.context.certification)}
+            submissionHomePage(
+              current.context.certification,
+              current.context.candidacyCreatedAt
+            )}
+
+          {current.matches("error") && errorPage()}
         </AnimatePresence>
       </div>
     </div>

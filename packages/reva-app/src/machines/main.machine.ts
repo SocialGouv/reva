@@ -8,6 +8,7 @@ import {
   Goal,
 } from "../interface";
 
+const loadingCandidacy = "loadingCandidacy";
 const loadingCertifications = "loadingCertifications";
 const searchResults = "searchResults";
 const searchResultsError = "searchResultsError";
@@ -20,8 +21,10 @@ const projectExperiences = "projectExperiences";
 const projectGoals = "projectGoals";
 const projectSubmitted = "projectSubmitted";
 const submissionHome = "submissionHome";
+const error = "error";
 
 export type State =
+  | typeof loadingCandidacy
   | typeof loadingCertifications
   | typeof searchResults
   | typeof searchResultsError
@@ -40,7 +43,7 @@ type ProjectStatus = "draft" | "validated" | "submitted";
 export interface MainContext {
   error: string;
   certifications: Certification[];
-  candidacyCreatedAt?: number;
+  candidacyCreatedAt?: Date;
   contact?: Contact;
   direction: "previous" | "next";
   showStatusBar: boolean;
@@ -72,15 +75,22 @@ export type MainEvent =
 
 export type MainState =
   | {
-      value: typeof searchResults | typeof loadingCertifications;
+      value:
+        | typeof searchResults
+        | typeof loadingCertifications
+        | typeof loadingCandidacy;
       context: MainContext & { certification: undefined };
     }
   | {
-      value:
-        | typeof certificateSummary
-        | typeof certificateDetails
-        | typeof submissionHome;
+      value: typeof certificateSummary | typeof certificateDetails;
       context: MainContext & { certification: Certification };
+    }
+  | {
+      value: typeof submissionHome;
+      context: MainContext & {
+        certification: Certification;
+        candidacyCreatedAt: Date;
+      };
     }
   | {
       value:
@@ -89,7 +99,8 @@ export type MainState =
         | typeof projectGoals
         | typeof projectContact
         | typeof projectExperience
-        | typeof projectExperiences;
+        | typeof projectExperiences
+        | typeof error;
 
       context: MainContext & {
         certification: Certification;
@@ -122,8 +133,47 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
       goals: initialGoals,
       projectStatus: "draft",
     },
-    initial: loadingCertifications,
+    initial: loadingCandidacy, // error, //
     states: {
+      loadingCandidacy: {
+        invoke: {
+          src: "getCandidacy",
+          onDone: {
+            target: "submissionHome.ready",
+            actions: assign({
+              candidacyCreatedAt: (_, event) => {
+                return new Date(event.data.createdAt);
+              },
+              certification: (_, event) => {
+                return event.data.certification;
+              },
+              experiences: (_, event) => {
+                return { rest: event.data.experiences };
+              },
+              goals: (_, event) => {
+                return event.data.goals || [];
+              },
+            }),
+          },
+          onError: [
+            {
+              cond: (context, event) =>
+                event.data.graphQLErrors[0]?.extensions.code ===
+                "CANDIDACY_DOES_NOT_EXIST",
+              target: loadingCertifications,
+            },
+            {
+              cond: (context, event) => true,
+              target: error,
+              actions: assign({
+                error: (_, event) => {
+                  return "Une erreur est survenue lors de la récupération de la candidature.";
+                },
+              }),
+            },
+          ],
+        },
+      },
       loadingCertifications: {
         invoke: {
           src: "searchCertifications",
@@ -144,6 +194,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
           },
         },
       },
+      error: {},
       searchResultsError: {},
       searchResults: {
         on: {
@@ -228,7 +279,9 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
                 target: "ready",
                 actions: assign({
                   candidacyCreatedAt: (_, event) =>
-                    event.data.candidacyCreatedAt,
+                    new Date(
+                      event.data.data.candidacy_createCandidacy.createdAt
+                    ),
                 }),
               },
               onError: {
@@ -461,6 +514,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         Promise.reject("Not implemented"),
       getCertification: (context, event) => Promise.reject("Not implemented"),
       saveCertification: (context, event) => Promise.reject("Not implemented"),
+      getCandidacy: (context, event) => Promise.reject("Not implemented"),
     },
   }
 );
