@@ -25,7 +25,6 @@ export const createCandidacyWithCertification =
       mutation: CREATE_CANDIDACY_WITH_CERTIFICATION,
       variables: { deviceId, certificationId },
     });
-
 const SAVE_GOALS = gql`
   mutation update_goals(
     $deviceId: ID!

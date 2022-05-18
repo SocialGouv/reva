@@ -285,7 +285,9 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
                 target: "ready",
                 actions: assign({
                   candidacyCreatedAt: (_, event) =>
-                    event.data.candidacyCreatedAt,
+                    new Date(
+                      event.data.data.candidacy_createCandidacy.createdAt
+                    ),
                 }),
               },
               onError: {
