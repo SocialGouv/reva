@@ -27,6 +27,7 @@ export const createCandidacyWithCertification =
       mutation: CREATE_CANDIDACY_WITH_CERTIFICATION,
       variables: { deviceId, certificationId },
     });
+
 const SAVE_GOALS = gql`
   mutation update_goals(
     $deviceId: ID!
@@ -143,35 +144,46 @@ export const updateExperience =
     return { ...newExperience, startedAt: new Date(newExperience.startedAt) };
   };
 
-const SAVE_GOALS = gql`
-  mutation update_goals(
+const UPDATE_CONTACT = gql`
+  mutation update_experience(
     $deviceId: ID!
     $candidacyId: ID!
-    $goals: [CandidateGoalInput!]!
+    $phone: String!
+    $email: String!
   ) {
-    candidacy_updateGoals(
-      deviceId: $deviceId
+    candidacy_updateContact(
       candidacyId: $candidacyId
-      goals: $goals
-    )
+      deviceId: $deviceId
+      phone: $phone
+      email: $email
+    ) {
+      id
+      email
+      phone
+    }
   }
 `;
 
-export const saveGoals =
+export const updateContact =
   (client: ApolloClient<object>) =>
   async ({
     deviceId,
     candidacyId,
-    goals,
+    phone,
+    email,
   }: {
     deviceId: string;
     candidacyId: string;
-    goals: { goalId: string }[];
-  }) =>
-    client.mutate({
-      mutation: SAVE_GOALS,
-      variables: { deviceId, candidacyId, goals },
+    phone: string;
+    email: string;
+  }) => {
+    const { data } = await client.mutate({
+      mutation: UPDATE_CONTACT,
+      variables: { deviceId, candidacyId, phone, email },
     });
+
+    return data.candidacy_updateContact;
+  };
 
 const INITIALIZE_APP = gql`
   query getCandidacy($deviceId: ID!) {

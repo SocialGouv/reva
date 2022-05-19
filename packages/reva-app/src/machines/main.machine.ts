@@ -347,22 +347,66 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         ],
       },
       projectContact: {
-        on: {
-          BACK: {
-            target: "projectHome",
-            actions: assign({
-              certification: (context, event) => context.certification,
-              direction: (context, event) => "previous",
-            }),
+        initial: "idle",
+        states: {
+          idle: {
+            on: {
+              BACK: {
+                target: "leave",
+                actions: assign({
+                  direction: (context, event) => "previous",
+                }),
+              },
+              SUBMIT_CONTACT: {
+                target: "submitting",
+                actions: assign({
+                  direction: (context, event) => "previous",
+                }),
+              },
+            },
           },
-          SUBMIT_CONTACT: {
-            target: "projectHome",
-            actions: assign({
-              certification: (context, event) => context.certification,
-              direction: (context, event) => "previous",
-              contact: (context, event) => event.contact,
-            }),
+          error: {
+            on: {
+              BACK: {
+                target: "leave",
+                actions: assign({
+                  direction: (context, event) => "previous",
+                }),
+              },
+              SUBMIT_CONTACT: {
+                target: "submitting",
+                actions: assign({
+                  direction: (context, event) => "previous",
+                }),
+              },
+            },
           },
+          submitting: {
+            invoke: {
+              src: "updateContact",
+              onDone: {
+                target: "leave",
+                actions: assign({
+                  direction: (context, event) => "previous",
+                  contact: (context, event) => event.data,
+                }),
+              },
+              onError: {
+                target: "error",
+                actions: assign({
+                  error: (_, event) =>
+                    "Une erreur est survenue lors de l'enregistrement de vos informations de contact.",
+                  direction: (context, event) => "previous",
+                }),
+              },
+            },
+          },
+          leave: {
+            type: "final",
+          },
+        },
+        onDone: {
+          target: projectHome,
         },
       },
       projectExperience: {

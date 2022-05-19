@@ -24,6 +24,7 @@ import {
   createCandidacyWithCertification,
   initializeApp,
   saveGoals,
+  updateContact,
   updateExperience,
 } from "./services/candidacyServices";
 import {
@@ -103,6 +104,19 @@ function App() {
                 experience: event.experience,
               });
             }
+          },
+          updateContact: async (context, event) => {
+            if (event.type !== "SUBMIT_CONTACT" || !context.candidacyId) {
+              return Promise.reject("Impossible state");
+            }
+
+            const deviceId = await Device.getId();
+            return updateContact(client as ApolloClient<object>)({
+              deviceId: deviceId.uuid,
+              candidacyId: context.candidacyId,
+              phone: event.contact.phone,
+              email: event.contact.email,
+            });
           },
         },
       }),
