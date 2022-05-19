@@ -366,29 +366,86 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         },
       },
       projectExperience: {
-        on: {
-          BACK: {
-            target: "projectExperiences",
-            actions: assign({
-              certification: (context, event) => context.certification,
-              direction: (context, event) => "previous",
-              experiences: (context, event) => ({
-                rest: context.experiences.edited
-                  ? [...context.experiences.rest, context.experiences.edited]
-                  : context.experiences.rest,
-              }),
-            }),
+        initial: "idle",
+        states: {
+          idle: {
+            on: {
+              BACK: {
+                target: "leave",
+                actions: assign({
+                  direction: (context, event) => "previous",
+                  experiences: (context, event) => ({
+                    rest: context.experiences.edited
+                      ? [
+                          ...context.experiences.rest,
+                          context.experiences.edited,
+                        ]
+                      : context.experiences.rest,
+                  }),
+                }),
+              },
+              SUBMIT_EXPERIENCE: {
+                target: "submitting",
+                actions: assign({
+                  direction: (context, event) => "previous",
+                }),
+              },
+            },
           },
-          SUBMIT_EXPERIENCE: {
-            target: "projectExperiences",
-            actions: assign({
-              certification: (context, event) => context.certification,
-              direction: (context, event) => "previous",
-              experiences: (context, event) => ({
-                rest: [...context.experiences.rest, event.experience],
-              }),
-            }),
+          error: {
+            on: {
+              BACK: {
+                target: "leave",
+                actions: assign({
+                  direction: (context, event) => "previous",
+                  experiences: (context, event) => ({
+                    rest: context.experiences.edited
+                      ? [
+                          ...context.experiences.rest,
+                          context.experiences.edited,
+                        ]
+                      : context.experiences.rest,
+                  }),
+                }),
+              },
+              SUBMIT_EXPERIENCE: {
+                target: "submitting",
+                actions: assign({
+                  direction: (context, event) => "previous",
+                }),
+              },
+            },
           },
+          submitting: {
+            invoke: {
+              src: "saveExperience",
+              onDone: {
+                target: "leave",
+                actions: assign({
+                  experiences: (context, event) => {
+                    return {
+                      rest: [...context.experiences.rest, event.data],
+                    };
+                  },
+                  direction: (context, event) => "previous",
+                }),
+              },
+              onError: {
+                target: "error",
+                actions: assign({
+                  error: (_, event) =>
+                    "Une erreur est survenue lors de l'enregistrement de votre expérience.",
+                  direction: (context, event) => "previous",
+                }),
+              },
+            },
+          },
+          leave: {
+            type: "final",
+          },
+        },
+        onDone: {
+          target: projectExperiences,
         },
       },
       projectExperiences: {
@@ -584,6 +641,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
       saveCertification: (context, event) => Promise.reject("Not implemented"),
       initializeApp: (context, event) => Promise.reject("Not implemented"),
       saveGoals: (context, event) => Promise.reject("Not implemented"),
+      saveExperience: (context, event) => Promise.reject("Not implemented"),
     },
   }
 );

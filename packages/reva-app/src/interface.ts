@@ -25,6 +25,7 @@ export type duration =
   | "moreThanTenYears";
 
 export interface Experience {
+  id?: string;
   title: string;
   startedAt: Date;
   description: string;
