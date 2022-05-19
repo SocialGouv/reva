@@ -21,6 +21,7 @@ import { SubmissionHome } from "./pages/SubmissionHome";
 import {
   createCandidacyWithCertification,
   initializeApp,
+  saveGoals,
 } from "./services/candidacyServices";
 import {
   getCertification,
@@ -62,6 +63,20 @@ function App() {
               deviceId: deviceId.uuid,
               certificationId: event.certification.id,
             });
+          },
+          saveGoals: async (context, event) => {
+            if (event.type !== "SUBMIT_GOALS" || !context.candidacyId) {
+              return Promise.reject("Impossible state");
+            }
+            const deviceId = await Device.getId();
+            await saveGoals(client as ApolloClient<object>)({
+              deviceId: deviceId.uuid,
+              candidacyId: context.candidacyId,
+              goals: event.goals
+                .filter((g) => g.checked)
+                .map((g) => ({ goalId: g.id })),
+            });
+            return event.goals;
           },
         },
       }),

@@ -52,11 +52,18 @@ export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
           <p className="text-slate-800 text-lg">Plusieurs choix possibles</p>
           {goalSet}
         </div>
+        {state.matches("projectGoals.error") && (
+          <p key="error" className="text-red-600 my-4 text-sm">
+            {state.context.error}
+          </p>
+        )}
+
         <div className="flex justify-center h-24">
           <Button
             data-test="project-goals-submit-goals"
             size="medium"
             label="Valider"
+            loading={state.matches("projectGoals.submitting")}
             onClick={() =>
               send({
                 type: "SUBMIT_GOALS",

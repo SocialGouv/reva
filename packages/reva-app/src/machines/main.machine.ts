@@ -42,6 +42,7 @@ type ProjectStatus = "draft" | "validated" | "submitted";
 
 export interface MainContext {
   error: string;
+  candidacyId?: string;
   certifications: Certification[];
   candidacyCreatedAt?: Date;
   contact?: Contact;
@@ -79,11 +80,17 @@ export type MainState =
         | typeof searchResults
         | typeof loadingCertifications
         | typeof loadingApplicationData;
-      context: MainContext & { certification: undefined };
+      context: MainContext & {
+        certification: undefined;
+        candidacyId: undefined;
+      };
     }
   | {
       value: typeof certificateSummary | typeof certificateDetails;
-      context: MainContext & { certification: Certification };
+      context: MainContext & {
+        certification: Certification;
+        candidacyId: undefined;
+      };
     }
   | {
       value: typeof submissionHome;
@@ -131,6 +138,9 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
           onDone: {
             target: "submissionHome.ready",
             actions: assign({
+              candidacyId: (_, event) => {
+                return event.data.candidacy.id;
+              },
               candidacyCreatedAt: (_, event) => {
                 return new Date(event.data.candidacy.createdAt);
               },
@@ -284,7 +294,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
                 target: "retry",
                 actions: assign({
                   error: (_, event) =>
-                    "Une erreur est survenue lors de la sauvegarde de la certification.",
+                    "Une erreur est survenue lors de l'enregistrement de la certification.",
                   direction: (context, event) => "previous",
                 }),
               },
@@ -420,22 +430,67 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         },
       },
       projectGoals: {
-        on: {
-          BACK: {
-            target: "projectHome",
-            actions: assign({
-              certification: (context, event) => context.certification,
-              direction: (context, event) => "previous",
-            }),
+        initial: "idle",
+        states: {
+          idle: {
+            on: {
+              BACK: {
+                target: "leave",
+                actions: assign({
+                  direction: (context, event) => "previous",
+                }),
+              },
+              SUBMIT_GOALS: {
+                target: "submitting",
+              },
+            },
           },
-          SUBMIT_GOALS: {
-            target: "projectHome",
-            actions: assign({
-              certification: (context, event) => context.certification,
-              direction: (context, event) => "previous",
-              goals: (context, event) => event.goals,
-            }),
+          error: {
+            on: {
+              BACK: {
+                target: "leave",
+                actions: assign({
+                  direction: (context, event) => "previous",
+                }),
+              },
+              SUBMIT_GOALS: {
+                target: "submitting",
+              },
+            },
           },
+          submitting: {
+            invoke: {
+              src: "saveGoals",
+              onDone: {
+                target: "leave",
+                actions: assign({
+                  goals: (context, event) => {
+                    return event.data;
+                  },
+                  direction: (context, event) => "previous",
+                }),
+              },
+              onError: {
+                target: "error",
+                actions: assign({
+                  error: (_, event) =>
+                    "Une erreur est survenue lors de l'enregistrement des objectifs.",
+                  direction: (context, event) => "previous",
+                }),
+              },
+            },
+            // actions: assign({
+            //   certification: (context, event) => context.certification,
+            //   direction: (context, event) => "previous",
+            //   goals: (context, event) => event.goals,
+            // }),
+          },
+          leave: {
+            type: "final",
+          },
+        },
+        onDone: {
+          target: "projectHome",
         },
       },
       projectHome: {
@@ -511,6 +566,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
       getCertification: (context, event) => Promise.reject("Not implemented"),
       saveCertification: (context, event) => Promise.reject("Not implemented"),
       initializeApp: (context, event) => Promise.reject("Not implemented"),
+      saveGoals: (context, event) => Promise.reject("Not implemented"),
     },
   }
 );

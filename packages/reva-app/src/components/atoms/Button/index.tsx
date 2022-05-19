@@ -1,4 +1,4 @@
-import { Locked } from "../Icons";
+import { Loader, Locked } from "../Icons";
 
 interface ButtonProps {
   /**
@@ -14,6 +14,10 @@ interface ButtonProps {
    * Is disabled with a locked style
    */
   locked?: boolean;
+  /**
+   * Is disabled with a loading style
+   */
+  loading?: boolean;
   /**
    * Optional click handler
    */
@@ -44,6 +48,7 @@ export const Button = ({
   disabled = false,
   label,
   locked = false,
+  loading = false,
   primary = false,
   size = "medium",
   tabIndex = 0,
@@ -53,7 +58,7 @@ export const Button = ({
 }: ButtonProps) => {
   const modeClass = primary
     ? "font-medium bg-blue-600 text-white"
-    : locked == true
+    : locked == true || loading == true
     ? "font-normal bg-white text-gray-600 border border-[#A1A0BA]"
     : className != ""
     ? className
@@ -69,7 +74,7 @@ export const Button = ({
   return (
     <button
       type={type}
-      disabled={disabled || locked}
+      disabled={disabled || locked || loading}
       className={`${
         disabled ? "opacity-50 cursor-not-allowed" : ""
       } rounded-md flex justify-center items-center ${modeClass} ${
@@ -81,6 +86,11 @@ export const Button = ({
       {locked && (
         <span className="text-gray-400 w-[20px] h-[20px] -ml-[28px] mr-[8px]">
           <Locked />
+        </span>
+      )}
+      {loading && (
+        <span className="text-gray-400 w-[20px] h-[20px] -ml-[28px] mr-[8px]">
+          <Loader />
         </span>
       )}
       {label}

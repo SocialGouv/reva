@@ -26,6 +26,36 @@ export const createCandidacyWithCertification =
       variables: { deviceId, certificationId },
     });
 
+const SAVE_GOALS = gql`
+  mutation update_goals(
+    $deviceId: ID!
+    $candidacyId: ID!
+    $goals: [CandidateGoalInput!]!
+  ) {
+    candidacy_updateGoals(
+      deviceId: $deviceId
+      candidacyId: $candidacyId
+      goals: $goals
+    )
+  }
+`;
+
+export const saveGoals =
+  (client: ApolloClient<object>) =>
+  async ({
+    deviceId,
+    candidacyId,
+    goals,
+  }: {
+    deviceId: string;
+    candidacyId: string;
+    goals: { goalId: string }[];
+  }) =>
+    client.mutate({
+      mutation: SAVE_GOALS,
+      variables: { deviceId, candidacyId, goals },
+    });
+
 const INITIALIZE_APP = gql`
   query getCandidacy($deviceId: ID!) {
     getCandidacy(deviceId: $deviceId) {
