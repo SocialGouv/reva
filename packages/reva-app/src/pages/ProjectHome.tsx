@@ -138,7 +138,7 @@ export const ProjectHome = ({
         </div>
         <div className="rounded-xl px-8 py-6 bg-slate-100">
           <h2 className="font-bold text-slate-800 text-xl mb-4">
-            Mes experiences
+            Mes expériences
           </h2>
           {sortedExperiences.length > 0 && (
             <ul

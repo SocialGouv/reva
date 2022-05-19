@@ -77,7 +77,7 @@ export const ProjectExperiences = ({
     >
       <BackButton onClick={() => send("BACK")} />
       <div className="mt-2 grow overflow-y-auto w-full space-y-3 px-8">
-        <Title size="small" label="Mes experiences professionnelles" />
+        <Title size="small" label="Mes expériences professionnelles" />
         <ul data-test="project-experiences-overview" className="space-y-3">
           {sortExperiences(state.context.experiences).map((exp, index) =>
             ExperiencePreview(exp, index, () =>
