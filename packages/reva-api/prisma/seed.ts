@@ -160,7 +160,7 @@ async function main() {
   await prisma.certification.update({
     where: { rncpId: '35993' },
     data: {
-      label: `Titre Professionnel Responsable coordonnateur service au domocile`,
+      label: `Titre Professionnel Responsable coordonnateur service au domicile`,
       summary: `Le responsable - coordonnateur services au domicile (RCSAD) assure l'interface entre les clients, les intervenants et la structure de services au domicile. Les activités du RCSAD varient en fonction de l'organisation de la structure, de la répartition des activités et des différents niveaux hiérarchiques.`
     }
   });
