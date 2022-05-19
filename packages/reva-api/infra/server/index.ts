@@ -34,10 +34,19 @@ if (process.env.NODE_ENV === "production") {
   const APP_FOLDER = path.join(DIST_FOLDER, "app");
   const WEBSITE_FOLDER = path.join(DIST_FOLDER, "website");
 
-  server.register(fastifyStatic, {
-    root: WEBSITE_FOLDER,
-    prefix: WEBSITE_ROUTE_PATH,
-  });
+
+  if (process.env.FRAMER_WEBSITE_URL) {
+    server.register(proxy, {
+      upstream: process.env.FRAMER_WEBSITE_URL,
+      prefix: WEBSITE_ROUTE_PATH,
+    });
+
+  } else {
+    server.register(fastifyStatic, {
+      root: WEBSITE_FOLDER,
+      prefix: WEBSITE_ROUTE_PATH,
+    });
+  }
 
   server.register(fastifyStatic, {
     root: APP_FOLDER,
@@ -50,7 +59,7 @@ if (process.env.NODE_ENV === "production") {
     if (req.url.startsWith(APP_ROUTE_PATH)) {
       res.sendFile("index.html", APP_FOLDER);
     } else {
-      res.sendFile("index.html", WEBSITE_FOLDER);
+      res.redirect(process.env.FRAMER_WEBSITE_URL || "/");
     }
   });
 
@@ -59,7 +68,7 @@ if (process.env.NODE_ENV === "production") {
   });
 } else {
   server.register(proxy, {
-    upstream: "http://localhost:3000",
+    upstream: process.env.FRAMER_WEBSITE_URL || "http://localhost:3000",
     prefix: WEBSITE_ROUTE_PATH,
   });
 
