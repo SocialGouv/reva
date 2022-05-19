@@ -16,7 +16,7 @@ interface ProjectExperienceProps {
 
 interface FormElements extends HTMLFormControlsCollection {
   title: HTMLInputElement;
-  startDate: HTMLInputElement;
+  startedAt: HTMLInputElement;
   duration: HTMLSelectElement;
   description: HTMLTextAreaElement;
 }
@@ -41,7 +41,7 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
     const elements = event.currentTarget.elements;
     const experience: Experience = {
       title: elements.title.value,
-      startDate: new Date(elements.startDate.value),
+      startedAt: new Date(elements.startedAt.value),
       description: elements.description.value,
       duration: elements.duration.value as duration,
     };
@@ -68,12 +68,12 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
             defaultValue={editedExperience?.title}
           />
           <Input
-            name="startDate"
+            name="startedAt"
             label="Date de début"
             type="date"
             defaultValue={
               editedExperience
-                ? editedExperience.startDate.toISOString().slice(0, -14)
+                ? editedExperience.startedAt.toISOString().slice(0, -14)
                 : "2020-01-31"
             }
           />

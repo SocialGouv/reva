@@ -26,7 +26,7 @@ export type duration =
 
 export interface Experience {
   title: string;
-  startDate: Date;
+  startedAt: Date;
   description: string;
   duration: duration;
 }

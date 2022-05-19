@@ -1,5 +1,6 @@
 import { ApolloClient, getApolloContext } from "@apollo/client";
 import { Capacitor } from "@capacitor/core";
+import { Device } from "@capacitor/device";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
@@ -9,6 +10,7 @@ import { Certification } from "./interface";
 import { mainMachine } from "./machines/main.machine";
 import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
+import { Error } from "./pages/Error";
 import { ProjectContact } from "./pages/ProjectContact";
 import { ProjectExperience } from "./pages/ProjectExperience";
 import { ProjectExperiences } from "./pages/ProjectExperiences";
@@ -16,6 +18,11 @@ import { ProjectGoals } from "./pages/ProjectGoals";
 import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectSubmitted } from "./pages/ProjectSubmitted";
 import { SubmissionHome } from "./pages/SubmissionHome";
+import {
+  createCandidacyWithCertification,
+  initializeApp,
+  saveGoals,
+} from "./services/candidacyServices";
 import {
   getCertification,
   searchCertifications,
@@ -30,6 +37,12 @@ function App() {
         services: {
           searchCertifications: (context, event) =>
             searchCertifications(client as ApolloClient<object>)({ query: "" }),
+          initializeApp: async (context, event) => {
+            const deviceId = await Device.getId();
+            return initializeApp(client as ApolloClient<object>)({
+              deviceId: deviceId.uuid,
+            });
+          },
           getCertification: (context, event) => {
             if (event.type !== "SELECT_CERTIFICATION") {
               return Promise.reject("Impossible state");
@@ -37,6 +50,33 @@ function App() {
             return getCertification(client as ApolloClient<object>)({
               id: event.certification.id,
             });
+          },
+          saveCertification: async (context, event) => {
+            if (event.type !== "CANDIDATE" || !context.certification) {
+              return Promise.reject("Impossible state");
+            }
+            const deviceId = await Device.getId();
+
+            return createCandidacyWithCertification(
+              client as ApolloClient<object>
+            )({
+              deviceId: deviceId.uuid,
+              certificationId: event.certification.id,
+            });
+          },
+          saveGoals: async (context, event) => {
+            if (event.type !== "SUBMIT_GOALS" || !context.candidacyId) {
+              return Promise.reject("Impossible state");
+            }
+            const deviceId = await Device.getId();
+            await saveGoals(client as ApolloClient<object>)({
+              deviceId: deviceId.uuid,
+              candidacyId: context.candidacyId,
+              goals: event.goals
+                .filter((g) => g.checked)
+                .map((g) => ({ goalId: g.id })),
+            });
+            return event.goals;
           },
         },
       }),
@@ -77,11 +117,15 @@ function App() {
     <Certificates key="show-results" mainService={mainService} />
   );
 
-  const submissionHomePage = (certification: Certification) => (
+  const submissionHomePage = (
+    certification: Certification,
+    candidacyCreatedAt: Date
+  ) => (
     <SubmissionHome
       key="submission-home"
       mainService={mainService}
       certification={certification}
+      candidacyCreatedAt={candidacyCreatedAt}
     />
   );
 
@@ -119,6 +163,8 @@ function App() {
   const projectSubmittedPage = () => (
     <ProjectSubmitted key="project-submitted" mainService={mainService} />
   );
+
+  const errorPage = () => <Error key="error-page" mainService={mainService} />;
 
   const certificateDetails = (certification: Certification) => (
     <CertificateDetails
@@ -173,7 +219,12 @@ function App() {
             certificateDetails(current.context.certification)}
 
           {current.matches("submissionHome") &&
-            submissionHomePage(current.context.certification)}
+            submissionHomePage(
+              current.context.certification,
+              current.context.candidacyCreatedAt
+            )}
+
+          {current.matches("error") && errorPage()}
         </AnimatePresence>
       </div>
     </div>

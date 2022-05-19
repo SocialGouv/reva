@@ -14,6 +14,7 @@ import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 import { projectProgress } from "../utils/projectProgress";
 
 interface SubmissionHome {
+  candidacyCreatedAt: Date;
   certification: Certification;
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
@@ -67,19 +68,73 @@ const cneapDetails = (
 );
 
 export const SubmissionHome = ({
+  candidacyCreatedAt,
   certification,
   mainService,
 }: SubmissionHome) => {
   const [state, send] = useActor(mainService);
 
+  const isHomeReady =
+    !state.matches({ submissionHome: "loading" }) &&
+    !state.matches({ submissionHome: "retry" });
   const isHomeLoaded = !state.matches({ submissionHome: "loading" });
   const isProjectDraft = state.context.projectStatus === "draft";
+
+  const candidacyCreatedAtFormatted =
+    candidacyCreatedAt?.toLocaleDateString("fr-FR");
+
+  const loadingScreen = (
+    <motion.div
+      key="loading-screen"
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="absolute flex flex-col bg-neutral-100 h-full"
+    >
+      <div className="grow flex flex-col text-center items-center justify-center px-10">
+        <Header label="Création de votre candidature" size="small" />
+        <div className="mt-8 w-8">
+          <Loader />
+        </div>
+      </div>
+    </motion.div>
+  );
+
+  const retryErrorScreen = (
+    <motion.div
+      key="loading-screen"
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="absolute flex flex-col bg-neutral-100 h-full"
+    >
+      <div className="grow flex flex-col text-center items-center justify-center px-10">
+        <Header label="Oups..." size="small" />
+        <p>{state.context.error}</p>
+        <div className="mt-8">
+          <Button
+            data-test="submission-home-retry-candidate"
+            size="small"
+            label="Réessayer"
+            onClick={() =>
+              send({
+                type: "CANDIDATE",
+                certification,
+              })
+            }
+          />
+        </div>
+      </div>
+    </motion.div>
+  );
 
   const homeContent = (
     <>
       <Header color="dark" label={certification.label} level={2} size="small" />
       <div className="-mt-2 mb-2 font-bold">{certification.codeRncp}</div>
-      <p className="text-sm text-gray-500">Démarré le 10 janvier 2022</p>
+      <p className="text-sm text-gray-500">
+        Démarré le {candidacyCreatedAtFormatted}
+      </p>
       {!isProjectDraft && (
         <p className="text-sm text-blue-500 font-medium">
           En attente de réception
@@ -123,8 +178,7 @@ export const SubmissionHome = ({
         src={certificationImg}
       />
       <h1 className="mt-12 -mb-12 text-center font-bold">REVA</h1>
-      <BackButton onClick={() => send("BACK")} />
-      <div className="grow overflow-y-auto mt-20 px-8 pb-8">{homeContent}</div>
+      <div className="grow overflow-y-auto mt-36 px-8 pb-8">{homeContent}</div>
     </motion.div>
   );
 
@@ -134,8 +188,9 @@ export const SubmissionHome = ({
       direction={state.context.direction}
     >
       <AnimatePresence>
-        {!isHomeLoaded && loadingScreen}
-        {isHomeLoaded && homeScreen}
+        {state.matches({ submissionHome: "loading" }) && loadingScreen}
+        {state.matches({ submissionHome: "retry" }) && retryErrorScreen}
+        {isHomeReady && homeScreen}
       </AnimatePresence>
     </Page>
   );

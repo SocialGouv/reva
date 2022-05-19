@@ -8,6 +8,7 @@ import {
   Goal,
 } from "../interface";
 
+const loadingApplicationData = "loadingApplicationData";
 const loadingCertifications = "loadingCertifications";
 const searchResults = "searchResults";
 const searchResultsError = "searchResultsError";
@@ -20,8 +21,10 @@ const projectExperiences = "projectExperiences";
 const projectGoals = "projectGoals";
 const projectSubmitted = "projectSubmitted";
 const submissionHome = "submissionHome";
+const error = "error";
 
 export type State =
+  | typeof loadingApplicationData
   | typeof loadingCertifications
   | typeof searchResults
   | typeof searchResultsError
@@ -39,7 +42,9 @@ type ProjectStatus = "draft" | "validated" | "submitted";
 
 export interface MainContext {
   error: string;
+  candidacyId?: string;
   certifications: Certification[];
+  candidacyCreatedAt?: Date;
   contact?: Contact;
   direction: "previous" | "next";
   showStatusBar: boolean;
@@ -71,15 +76,28 @@ export type MainEvent =
 
 export type MainState =
   | {
-      value: typeof searchResults | typeof loadingCertifications;
-      context: MainContext & { certification: undefined };
+      value:
+        | typeof searchResults
+        | typeof loadingCertifications
+        | typeof loadingApplicationData;
+      context: MainContext & {
+        certification: undefined;
+        candidacyId: undefined;
+      };
     }
   | {
-      value:
-        | typeof certificateSummary
-        | typeof certificateDetails
-        | typeof submissionHome;
-      context: MainContext & { certification: Certification };
+      value: typeof certificateSummary | typeof certificateDetails;
+      context: MainContext & {
+        certification: Certification;
+        candidacyId: undefined;
+      };
+    }
+  | {
+      value: typeof submissionHome;
+      context: MainContext & {
+        certification: Certification;
+        candidacyCreatedAt: Date;
+      };
     }
   | {
       value:
@@ -88,7 +106,8 @@ export type MainState =
         | typeof projectGoals
         | typeof projectContact
         | typeof projectExperience
-        | typeof projectExperiences;
+        | typeof projectExperiences
+        | typeof error;
 
       context: MainContext & {
         certification: Certification;
@@ -99,16 +118,6 @@ export type MainState =
       };
     };
 
-const initialGoals = [
-  { id: "c1", checked: false, label: "Trouver plus facilement un emploi" },
-  { id: "c2", checked: false, label: "Être reconnu dans ma profession" },
-  { id: "c3", checked: false, label: "Avoir un meilleur salaire" },
-  { id: "c4", checked: false, label: "Me réorienter" },
-  { id: "c5", checked: false, label: "Consolider mes acquis métier" },
-  { id: "c6", checked: false, label: "Me redonner confiance en moi" },
-  { id: "c7", checked: false, label: "Autre" },
-];
-
 export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
   {
     id: "mainMachine",
@@ -118,11 +127,59 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
       certifications: [],
       showStatusBar: false,
       experiences: { rest: [] },
-      goals: initialGoals,
+      goals: [],
       projectStatus: "draft",
     },
-    initial: loadingCertifications,
+    initial: loadingApplicationData,
     states: {
+      loadingApplicationData: {
+        invoke: {
+          src: "initializeApp",
+          onDone: {
+            target: "submissionHome.ready",
+            actions: assign({
+              candidacyId: (_, event) => {
+                return event.data.candidacy.id;
+              },
+              candidacyCreatedAt: (_, event) => {
+                return new Date(event.data.candidacy.createdAt);
+              },
+              certification: (_, event) => {
+                return event.data.candidacy.certification;
+              },
+              experiences: (_, event) => {
+                return { rest: event.data.candidacy.experiences };
+              },
+              goals: (_, event) => {
+                return event.data.candidacy.goals;
+              },
+              contact: (_, event) => {
+                return {
+                  email: event.data.candidacy.email,
+                  phone: event.data.candidacy.phone,
+                };
+              },
+            }),
+          },
+          onError: [
+            {
+              cond: (context, event) =>
+                event.data.graphQLErrors[0]?.extensions.code ===
+                "CANDIDACY_DOES_NOT_EXIST",
+              target: loadingCertifications,
+            },
+            {
+              cond: (context, event) => true,
+              target: error,
+              actions: assign({
+                error: (_, event) => {
+                  return "Une erreur est survenue lors de la récupération de la candidature.";
+                },
+              }),
+            },
+          ],
+        },
+      },
       loadingCertifications: {
         invoke: {
           src: "searchCertifications",
@@ -143,6 +200,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
           },
         },
       },
+      error: {},
       searchResultsError: {},
       searchResults: {
         on: {
@@ -183,9 +241,6 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
           SHOW_CERTIFICATION_DETAILS: {
             target: certificateDetails,
             actions: assign({
-              // certification: (context, event) => {
-              //   return event.certification;
-              // },
               direction: (context, event) => "next",
             }),
           },
@@ -221,8 +276,30 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         initial: "loading",
         states: {
           loading: {
-            after: {
-              2000: { target: "ready" },
+            invoke: {
+              src: "saveCertification",
+              onDone: {
+                target: "ready",
+                actions: assign({
+                  candidacyCreatedAt: (_, event) =>
+                    new Date(
+                      event.data.data.candidacy_createCandidacy.createdAt
+                    ),
+                }),
+              },
+              onError: {
+                target: "retry",
+                actions: assign({
+                  error: (_, event) =>
+                    "Une erreur est survenue lors de l'enregistrement de la certification.",
+                  direction: (context, event) => "previous",
+                }),
+              },
+            },
+          },
+          retry: {
+            on: {
+              CANDIDATE: { target: "loading" },
             },
           },
           ready: {
@@ -346,22 +423,62 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         },
       },
       projectGoals: {
-        on: {
-          BACK: {
-            target: "projectHome",
-            actions: assign({
-              certification: (context, event) => context.certification,
-              direction: (context, event) => "previous",
-            }),
+        initial: "idle",
+        states: {
+          idle: {
+            on: {
+              BACK: {
+                target: "leave",
+                actions: assign({
+                  direction: (context, event) => "previous",
+                }),
+              },
+              SUBMIT_GOALS: {
+                target: "submitting",
+              },
+            },
           },
-          SUBMIT_GOALS: {
-            target: "projectHome",
-            actions: assign({
-              certification: (context, event) => context.certification,
-              direction: (context, event) => "previous",
-              goals: (context, event) => event.goals,
-            }),
+          error: {
+            on: {
+              BACK: {
+                target: "leave",
+                actions: assign({
+                  direction: (context, event) => "previous",
+                }),
+              },
+              SUBMIT_GOALS: {
+                target: "submitting",
+              },
+            },
           },
+          submitting: {
+            invoke: {
+              src: "saveGoals",
+              onDone: {
+                target: "leave",
+                actions: assign({
+                  goals: (context, event) => {
+                    return event.data;
+                  },
+                  direction: (context, event) => "previous",
+                }),
+              },
+              onError: {
+                target: "error",
+                actions: assign({
+                  error: (_, event) =>
+                    "Une erreur est survenue lors de l'enregistrement des objectifs.",
+                  direction: (context, event) => "previous",
+                }),
+              },
+            },
+          },
+          leave: {
+            type: "final",
+          },
+        },
+        onDone: {
+          target: "projectHome",
         },
       },
       projectHome: {
@@ -435,6 +552,9 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
       searchCertifications: (context, event) =>
         Promise.reject("Not implemented"),
       getCertification: (context, event) => Promise.reject("Not implemented"),
+      saveCertification: (context, event) => Promise.reject("Not implemented"),
+      initializeApp: (context, event) => Promise.reject("Not implemented"),
+      saveGoals: (context, event) => Promise.reject("Not implemented"),
     },
   }
 );

@@ -51,7 +51,7 @@ const ExperiencePreview = (
       </button>
     </div>
     <p data-test="project-experience-start-date">
-      {`Démarrée en ${experience.startDate.toLocaleDateString("fr-FR", {
+      {`Démarrée en ${experience.startedAt.toLocaleDateString("fr-FR", {
         year: "numeric",
         month: "long",
       })}`}
