@@ -294,7 +294,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
                 target: "retry",
                 actions: assign({
                   error: (_, event) =>
-                    "Une erreur est survenue lors de la sauvegarde de la certification.",
+                    "Une erreur est survenue lors de l'enregistrement de la certification.",
                   direction: (context, event) => "previous",
                 }),
               },
@@ -490,6 +490,11 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
                 }),
               },
             },
+            // actions: assign({
+            //   certification: (context, event) => context.certification,
+            //   direction: (context, event) => "previous",
+            //   goals: (context, event) => event.goals,
+            // }),
           },
           leave: {
             type: "final",
