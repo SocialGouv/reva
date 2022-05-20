@@ -42,7 +42,7 @@
     "dotenv": "^16.0.0",
     "elastic-apm-node": "^3.27.0",
     "fast-csv": "4.3.6",
-    "fastify": "3.27.0",
+    "fastify": "3.27.2",
     "fastify-cors": "6.0.3",
     "fastify-env": "2.1.1",
     "fastify-http-proxy": "6.2.1",
