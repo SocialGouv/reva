@@ -1,6 +1,7 @@
 import { ApolloClient, getApolloContext } from "@apollo/client";
 import { Capacitor } from "@capacitor/core";
 import { Device } from "@capacitor/device";
+import { SplashScreen } from "@capacitor/splash-screen";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
@@ -104,6 +105,19 @@ function App() {
   }, []);
 
   useEffect(() => {
+    async function hideSplashscreen() {
+      if (
+        !["loadingApplicationData", "loadingCertifications"].some(
+          current.matches
+        )
+      ) {
+        await SplashScreen.hide();
+      }
+    }
+    Capacitor.isNativePlatform() && hideSplashscreen();
+  }, [current.value]);
+
+  useEffect(() => {
     async function setStatusBarVisibility() {
       if (current.context.showStatusBar) {
         await StatusBar.hide();
@@ -179,6 +193,47 @@ function App() {
     />
   );
 
+  const pageContent = (
+    <AnimatePresence custom={current.context.direction} initial={false}>
+      {[
+        "loadingCertifications",
+        "searchResults",
+        "searchResultsError",
+        "certificateSummary",
+      ].some(current.matches) && certificatesPage}
+
+      {current.matches("projectHome") &&
+        projectHomePage({
+          isValidated: current.context.projectStatus != "draft",
+          certification: current.context.certification,
+        })}
+
+      {current.matches("projectSubmitted") && projectSubmittedPage()}
+
+      {current.matches("projectContact") && projectContactPage()}
+
+      {current.matches("projectExperiences") && projectExperiencesPage()}
+
+      {current.matches("projectExperience") && projectExperiencePage()}
+
+      {current.matches("projectGoals") &&
+        projectGoalsPage(current.context.certification)}
+
+      {current.matches("projectHelp") && projectHelpPage()}
+
+      {current.matches("certificateDetails") &&
+        certificateDetails(current.context.certification)}
+
+      {current.matches("submissionHome") &&
+        submissionHomePage(
+          current.context.certification,
+          current.context.candidacyCreatedAt
+        )}
+
+      {current.matches("error") && errorPage()}
+    </AnimatePresence>
+  );
+
   return (
     <div className="App relative sm:flex sm:flex-col sm:items-center sm:justify-center sm:bg-slate-200 sm:h-screen sm:px-20">
       {Capacitor.isNativePlatform() ? (
@@ -195,44 +250,7 @@ function App() {
         className="sm:rounded-2xl sm:z-[1] sm:shadow-xl relative flex flex-col w-full bg-white overflow-hidden"
         style={appSize}
       >
-        <AnimatePresence custom={current.context.direction} initial={false}>
-          {[
-            "loadingCertifications",
-            "searchResults",
-            "searchResultsError",
-            "certificateSummary",
-          ].some(current.matches) && certificatesPage}
-
-          {current.matches("projectHome") &&
-            projectHomePage({
-              isValidated: current.context.projectStatus != "draft",
-              certification: current.context.certification,
-            })}
-
-          {current.matches("projectSubmitted") && projectSubmittedPage()}
-
-          {current.matches("projectContact") && projectContactPage()}
-
-          {current.matches("projectExperiences") && projectExperiencesPage()}
-
-          {current.matches("projectExperience") && projectExperiencePage()}
-
-          {current.matches("projectGoals") &&
-            projectGoalsPage(current.context.certification)}
-
-          {current.matches("projectHelp") && projectHelpPage()}
-
-          {current.matches("certificateDetails") &&
-            certificateDetails(current.context.certification)}
-
-          {current.matches("submissionHome") &&
-            submissionHomePage(
-              current.context.certification,
-              current.context.candidacyCreatedAt
-            )}
-
-          {current.matches("error") && errorPage()}
-        </AnimatePresence>
+        {!current.matches("loadingApplicationData") && pageContent}
       </div>
     </div>
   );
