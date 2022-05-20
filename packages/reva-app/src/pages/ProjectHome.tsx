@@ -64,6 +64,8 @@ export const ProjectHome = ({
   const sortedExperiences = sortExperiences(state.context.experiences);
 
   const progress = projectProgress(state.context);
+  const isProjectComplete = progress === 100;
+
   const projectButtonHandler = () =>
     isValidated
       ? send("SUBMIT_PROJECT")
@@ -194,6 +196,7 @@ export const ProjectHome = ({
 
   return (
     <Page
+      data-test="project-home"
       className="z-[60] h-full flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
@@ -201,8 +204,10 @@ export const ProjectHome = ({
       {homeContent}
       <div className="bg-white flex flex-col items-center pt-4 pb-12">
         <Button
-          data-test="project-experiences-submit"
-          locked={progress !== 100}
+          data-test={`project-home-${isValidated ? "submit" : "validate"}${
+            !isProjectComplete ? "-locked" : ""
+          }`}
+          locked={!isProjectComplete}
           onClick={projectButtonHandler}
           type="submit"
           label={isValidated ? "Transmettre" : "Valider"}
