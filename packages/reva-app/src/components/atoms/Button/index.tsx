@@ -74,7 +74,7 @@ export const Button = ({
   return (
     <button
       type={type}
-      disabled={disabled || locked || loading}
+      disabled={disabled || loading}
       className={`${
         disabled ? "opacity-50 cursor-not-allowed" : ""
       } rounded-md flex justify-center items-center ${modeClass} ${

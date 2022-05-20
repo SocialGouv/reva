@@ -69,7 +69,7 @@ export const ProjectHome = ({
       ? send("SUBMIT_PROJECT")
       : progress === 100
       ? send("VALIDATE_PROJECT")
-      : {};
+      : send("OPEN_HELP");
 
   const editCertification = (
     <div className="bg-slate-900 rounded-xl overflow-hidden mt-6">
