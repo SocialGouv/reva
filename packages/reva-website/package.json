@@ -6,7 +6,7 @@
     "dev": "PORT=3000 next dev",
     "next:build": "next build",
     "next:export": "next export",
-    "build": "npm run next:build && npm run next:export && cp -R ./out ../reva-api/dist/website",
+    "build--disable": "npm run next:build && npm run next:export && cp -R ./out ../reva-api/dist/website",
     "start": "next start",
     "lint": "next lint"
   },
