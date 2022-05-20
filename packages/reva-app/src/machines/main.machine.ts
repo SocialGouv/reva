@@ -1,5 +1,6 @@
 import { assign, createMachine } from "xstate";
 
+import { Direction } from "../components/organisms/Page";
 import {
   Certification,
   Contact,
@@ -47,7 +48,7 @@ export interface MainContext {
   certifications: Certification[];
   candidacyCreatedAt?: Date;
   contact?: Contact;
-  direction: "previous" | "next";
+  direction: Direction;
   showStatusBar: boolean;
   certification?: Certification;
   experiences: Experiences;
@@ -126,7 +127,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
     id: "mainMachine",
     context: {
       error: "",
-      direction: "next",
+      direction: "initial",
       certifications: [],
       showStatusBar: false,
       experiences: { rest: [] },

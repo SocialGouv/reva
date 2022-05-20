@@ -6,7 +6,7 @@ interface PageConfig {
   direction: Direction;
 }
 
-export type Direction = "previous" | "next";
+export type Direction = "initial" | "previous" | "next";
 
 const pageVariants = {
   enter: (direction: Direction) => ({
