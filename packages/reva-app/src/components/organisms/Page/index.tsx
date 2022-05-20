@@ -23,7 +23,12 @@ const pageTransition: Transition = {
   duration: 0.45,
 };
 
-export const Page = ({ children, className, direction }: PageConfig) => {
+export const Page = ({
+  children,
+  className,
+  direction,
+  ...props
+}: PageConfig) => {
   return (
     <motion.div
       custom={direction}
@@ -34,6 +39,7 @@ export const Page = ({ children, className, direction }: PageConfig) => {
       transition={pageTransition}
       layoutScroll
       className={`will-change-transform absolute inset-0 ${className}`}
+      {...props}
     >
       {children}
     </motion.div>

@@ -15,6 +15,7 @@ import { ProjectContact } from "./pages/ProjectContact";
 import { ProjectExperience } from "./pages/ProjectExperience";
 import { ProjectExperiences } from "./pages/ProjectExperiences";
 import { ProjectGoals } from "./pages/ProjectGoals";
+import { ProjectHelp } from "./pages/ProjectHelp";
 import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectSubmitted } from "./pages/ProjectSubmitted";
 import { SubmissionHome } from "./pages/SubmissionHome";
@@ -133,6 +134,10 @@ function App() {
     <ProjectGoals key="project-goals" mainService={mainService} />
   );
 
+  const projectHelpPage = () => (
+    <ProjectHelp key="project-help" mainService={mainService} />
+  );
+
   const projectExperiencePage = () => (
     <ProjectExperience key="project-experience" mainService={mainService} />
   );
@@ -214,6 +219,8 @@ function App() {
 
           {current.matches("projectGoals") &&
             projectGoalsPage(current.context.certification)}
+
+          {current.matches("projectHelp") && projectHelpPage()}
 
           {current.matches("certificateDetails") &&
             certificateDetails(current.context.certification)}

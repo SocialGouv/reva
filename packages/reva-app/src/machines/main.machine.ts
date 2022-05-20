@@ -19,6 +19,7 @@ const projectContact = "projectContact";
 const projectExperience = "projectExperience";
 const projectExperiences = "projectExperiences";
 const projectGoals = "projectGoals";
+const projectHelp = "projectHelp";
 const projectSubmitted = "projectSubmitted";
 const submissionHome = "submissionHome";
 const error = "error";
@@ -67,6 +68,7 @@ export type MainEvent =
   | { type: "CLOSE_SELECTED_CERTIFICATION" }
   | { type: "BACK" }
   | { type: "LOADED" }
+  | { type: "OPEN_HELP" }
   | { type: "SUBMIT_CONTACT"; contact: Contact }
   | { type: "SUBMIT_EXPERIENCE"; experience: Experience }
   | { type: "SUBMIT_EXPERIENCES" }
@@ -107,6 +109,7 @@ export type MainState =
         | typeof projectContact
         | typeof projectExperience
         | typeof projectExperiences
+        | typeof projectHelp
         | typeof error;
 
       context: MainContext & {
@@ -422,6 +425,17 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
           },
         },
       },
+      projectHelp: {
+        on: {
+          BACK: {
+            target: "projectHome",
+            actions: assign({
+              certification: (context, event) => context.certification,
+              direction: (context, event) => "previous",
+            }),
+          },
+        },
+      },
       projectGoals: {
         initial: "idle",
         states: {
@@ -515,6 +529,12 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             target: searchResults,
             actions: assign({
               direction: (context, event) => "previous",
+            }),
+          },
+          OPEN_HELP: {
+            target: "projectHelp",
+            actions: assign({
+              direction: (context, event) => "next",
             }),
           },
           VALIDATE_PROJECT: {

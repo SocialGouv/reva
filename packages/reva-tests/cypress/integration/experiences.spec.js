@@ -12,14 +12,14 @@ context("Experiences", () => {
 
   it("add and edit an experience", function () {
     cy.get(
-      '[data-test="certification-select-ce42ecf4-8277-4400-b9fe-6f9fb6045c11"]'
+      '[data-test="certification-select-87c7f384-70b0-4a6c-945c-6c4cc1e433c7"]'
     ).click();
     cy.get('[data-test="certification-submit"]').click();
     cy.get('[data-test="submission-home-show-project-home"]').click();
     cy.get('[data-test="project-home-edit-experiences"]').click();
     cy.get('[data-test="project-experiences-add"]').click();
     cy.get("#title").type(experienceTitle1);
-    cy.get("#startDate").type("2019-01-31");
+    cy.get("#startedAt").type("2019-01-31");
     cy.get("#duration").select("betweenOneAndThreeYears");
     cy.get("#description").type(experienceDescription1);
     cy.get('[data-test="project-experience-add"]').click();
@@ -46,7 +46,7 @@ context("Experiences", () => {
       });
 
     cy.get('[data-test="project-experiences-edit-0"]').click();
-    cy.get("#startDate").type("2017-03-31");
+    cy.get("#startedAt").type("2017-03-31");
     cy.get("#title").type(`{selectAll}${experienceTitle2}`);
     cy.get("#duration").select("moreThanFiveYears");
     cy.get("#description").type(`{selectAll}${experienceDescription2}`);
