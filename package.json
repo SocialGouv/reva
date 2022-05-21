@@ -14,7 +14,6 @@
   },
   "workspaces": [
     "packages/reva-api",
-    "packages/reva-website",
     "packages/reva-app",
     "packages/reva-tests"
   ],
