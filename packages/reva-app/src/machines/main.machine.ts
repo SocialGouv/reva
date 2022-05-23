@@ -299,10 +299,6 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
                 }),
               },
             },
-
-            // after: {
-            //   2000: { target: "ready" },
-            // },
           },
           retry: {
             on: {
@@ -591,11 +587,6 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
                 }),
               },
             },
-            // actions: assign({
-            //   certification: (context, event) => context.certification,
-            //   direction: (context, event) => "previous",
-            //   goals: (context, event) => event.goals,
-            // }),
           },
           leave: {
             type: "final",

@@ -91,9 +91,7 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
             defaultValue={editedExperience?.description}
           />
           {state.matches("projectExperience.error") && (
-            <p key="error" className="text-red-600 my-4 text-sm">
-              {state.context.error}
-            </p>
+            <p className="text-red-600 my-4 text-sm">{state.context.error}</p>
           )}
           <Button
             data-test={`project-experience-${
