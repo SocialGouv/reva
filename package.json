@@ -14,8 +14,7 @@
   },
   "workspaces": [
     "packages/reva-api",
-    "packages/reva-app",
-    "packages/reva-tests"
+    "packages/reva-app"
   ],
   "dependencies": {
     "husky": "^7.0.4"
