@@ -275,12 +275,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         on: {
           BACK: {
             target: certificateSummary,
-            actions: [
-              "navigatePrevious",
-              assign({
-                certification: (context, event) => context.certification,
-              }),
-            ],
+            actions: ["navigatePrevious"],
           },
           SUBMIT_CERTIFICATION: {
             target: submissionHome,
@@ -331,21 +326,11 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             on: {
               BACK: {
                 target: "leave",
-                actions: [
-                  "navigatePrevious",
-                  assign({
-                    certification: (context, event) => context.certification,
-                  }),
-                ],
+                actions: ["navigatePrevious"],
               },
               SHOW_PROJECT_HOME: {
                 target: "leave",
-                actions: [
-                  "navigateNext",
-                  assign({
-                    certification: (context, event) => context.certification,
-                  }),
-                ],
+                actions: ["navigateNext"],
               },
             },
           },
@@ -518,21 +503,11 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         on: {
           BACK: {
             target: "projectHome",
-            actions: [
-              "navigatePrevious",
-              assign({
-                certification: (context, event) => context.certification,
-              }),
-            ],
+            actions: ["navigatePrevious"],
           },
           ADD_EXPERIENCE: {
             target: "projectExperience",
-            actions: [
-              "navigateNext",
-              assign({
-                certification: (context, event) => context.certification,
-              }),
-            ],
+            actions: ["navigateNext"],
           },
           EDIT_EXPERIENCE: {
             target: "projectExperience",
@@ -549,12 +524,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
           },
           SUBMIT_EXPERIENCES: {
             target: "projectHome",
-            actions: [
-              "navigatePrevious",
-              assign({
-                certification: (context, event) => context.certification,
-              }),
-            ],
+            actions: ["navigatePrevious"],
           },
         },
       },
@@ -562,12 +532,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         on: {
           BACK: {
             target: "projectHome",
-            actions: [
-              "navigatePrevious",
-              assign({
-                certification: (context, event) => context.certification,
-              }),
-            ],
+            actions: ["navigatePrevious"],
           },
         },
       },
@@ -634,39 +599,19 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         on: {
           BACK: {
             target: "submissionHome.ready",
-            actions: [
-              "navigatePrevious",
-              assign({
-                certification: (context, event) => context.certification,
-              }),
-            ],
+            actions: ["navigatePrevious"],
           },
           EDIT_EXPERIENCES: {
             target: "projectExperiences",
-            actions: [
-              "navigateNext",
-              assign({
-                certification: (context, event) => context.certification,
-              }),
-            ],
+            actions: ["navigateNext"],
           },
           EDIT_GOALS: {
             target: "projectGoals",
-            actions: [
-              "navigateNext",
-              assign({
-                certification: (context, event) => context.certification,
-              }),
-            ],
+            actions: ["navigateNext"],
           },
           EDIT_CONTACT: {
             target: "projectContact",
-            actions: [
-              "navigateNext",
-              assign({
-                certification: (context, event) => context.certification,
-              }),
-            ],
+            actions: ["navigateNext"],
           },
           CLOSE_SELECTED_CERTIFICATION: {
             target: "searchResults",
@@ -696,12 +641,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         on: {
           BACK: {
             target: "submissionHome.ready",
-            actions: [
-              "navigatePrevious",
-              assign({
-                certification: (context, event) => context.certification,
-              }),
-            ],
+            actions: ["navigatePrevious"],
           },
         },
       },
