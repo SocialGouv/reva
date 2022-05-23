@@ -16,7 +16,8 @@ export function projectProgress({
 }: projectProgressProps) {
   const hasCertification: boolean = certification !== undefined;
   const hasContact: boolean =
-    contact !== undefined && (contact?.email !== "" || contact?.phone !== "");
+    contact !== undefined &&
+    (contact?.email !== null || contact?.phone !== null);
   const hasExperiences: boolean = sortExperiences(experiences).length > 0;
   const hasGoals: boolean = goals.filter((goal) => goal.checked).length > 0;
 

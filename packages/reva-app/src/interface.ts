@@ -12,8 +12,8 @@ export interface Certification {
 }
 
 export interface Contact {
-  phone: string;
-  email: string;
+  phone: null | string;
+  email: null | string;
 }
 
 export type duration =
