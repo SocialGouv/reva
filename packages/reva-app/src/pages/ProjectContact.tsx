@@ -66,6 +66,11 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             type="email"
             defaultValue={editedContact?.email}
           />
+          {state.matches("projectContact.error") && (
+            <p key="error" className="text-red-600 my-4 text-sm">
+              {state.context.error}
+            </p>
+          )}
           <Button
             data-test={`project-contact-${editedContact ? "save" : "add"}`}
             type="submit"

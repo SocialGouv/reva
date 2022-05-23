@@ -1,5 +1,7 @@
 import { ApolloClient, gql } from "@apollo/client";
 
+import { Experience } from "../interface";
+
 const CREATE_CANDIDACY_WITH_CERTIFICATION = gql`
   mutation create_candidacy($deviceId: ID!, $certificationId: ID!) {
     candidacy_createCandidacy(
@@ -55,6 +57,133 @@ export const saveGoals =
       mutation: SAVE_GOALS,
       variables: { deviceId, candidacyId, goals },
     });
+
+const ADD_EXPERIENCE = gql`
+  mutation add_experience(
+    $deviceId: ID!
+    $candidacyId: ID!
+    $experience: ExperienceInput
+  ) {
+    candidacy_addExperience(
+      candidacyId: $candidacyId
+      deviceId: $deviceId
+      experience: $experience
+    ) {
+      id
+      title
+      startedAt
+      duration
+      description
+    }
+  }
+`;
+
+export const addExperience =
+  (client: ApolloClient<object>) =>
+  async ({
+    deviceId,
+    candidacyId,
+    experience,
+  }: {
+    deviceId: string;
+    candidacyId: string;
+    experience: Experience;
+  }) => {
+    const { data } = await client.mutate({
+      mutation: ADD_EXPERIENCE,
+      variables: { deviceId, candidacyId, experience },
+    });
+
+    const newExperience = data.candidacy_addExperience;
+
+    return { ...newExperience, startedAt: new Date(newExperience.startedAt) };
+  };
+
+const UPDATE_EXPERIENCE = gql`
+  mutation update_experience(
+    $deviceId: ID!
+    $candidacyId: ID!
+    $experienceId: ID!
+    $experience: ExperienceInput
+  ) {
+    candidacy_updateExperience(
+      candidacyId: $candidacyId
+      deviceId: $deviceId
+      experienceId: $experienceId
+      experience: $experience
+    ) {
+      id
+      title
+      startedAt
+      duration
+      description
+    }
+  }
+`;
+
+export const updateExperience =
+  (client: ApolloClient<object>) =>
+  async ({
+    deviceId,
+    candidacyId,
+    experienceId,
+    experience,
+  }: {
+    deviceId: string;
+    candidacyId: string;
+    experienceId: string;
+    experience: Experience;
+  }) => {
+    const { data } = await client.mutate({
+      mutation: UPDATE_EXPERIENCE,
+      variables: { deviceId, candidacyId, experienceId, experience },
+    });
+
+    const newExperience = data.candidacy_updateExperience;
+
+    return { ...newExperience, startedAt: new Date(newExperience.startedAt) };
+  };
+
+const UPDATE_CONTACT = gql`
+  mutation update_experience(
+    $deviceId: ID!
+    $candidacyId: ID!
+    $phone: String!
+    $email: String!
+  ) {
+    candidacy_updateContact(
+      candidacyId: $candidacyId
+      deviceId: $deviceId
+      phone: $phone
+      email: $email
+    ) {
+      id
+      email
+      phone
+    }
+  }
+`;
+
+export const updateContact =
+  (client: ApolloClient<object>) =>
+  async ({
+    deviceId,
+    candidacyId,
+    phone,
+    email,
+  }: {
+    deviceId: string;
+    candidacyId: string;
+    phone: string;
+    email: string;
+  }) => {
+    const { data } = await client.mutate({
+      mutation: UPDATE_CONTACT,
+      variables: { deviceId, candidacyId, phone, email },
+    });
+
+    return data.candidacy_updateContact;
+  };
 
 const INITIALIZE_APP = gql`
   query getCandidacy($deviceId: ID!) {

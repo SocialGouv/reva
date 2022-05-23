@@ -21,9 +21,12 @@ import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectSubmitted } from "./pages/ProjectSubmitted";
 import { SubmissionHome } from "./pages/SubmissionHome";
 import {
+  addExperience,
   createCandidacyWithCertification,
   initializeApp,
   saveGoals,
+  updateContact,
+  updateExperience,
 } from "./services/candidacyServices";
 import {
   getCertification,
@@ -79,6 +82,42 @@ function App() {
                 .map((g) => ({ goalId: g.id })),
             });
             return event.goals;
+          },
+          saveExperience: async (context, event) => {
+            if (event.type !== "SUBMIT_EXPERIENCE" || !context.candidacyId) {
+              return Promise.reject("Impossible state");
+            }
+
+            const deviceId = await Device.getId();
+
+            if (!!event.experience.id) {
+              const { id, ...experienceContent } = event.experience;
+              return updateExperience(client as ApolloClient<object>)({
+                deviceId: deviceId.uuid,
+                candidacyId: context.candidacyId,
+                experienceId: event.experience.id,
+                experience: experienceContent,
+              });
+            } else {
+              return addExperience(client as ApolloClient<object>)({
+                deviceId: deviceId.uuid,
+                candidacyId: context.candidacyId,
+                experience: event.experience,
+              });
+            }
+          },
+          updateContact: async (context, event) => {
+            if (event.type !== "SUBMIT_CONTACT" || !context.candidacyId) {
+              return Promise.reject("Impossible state");
+            }
+
+            const deviceId = await Device.getId();
+            return updateContact(client as ApolloClient<object>)({
+              deviceId: deviceId.uuid,
+              candidacyId: context.candidacyId,
+              phone: event.contact.phone,
+              email: event.contact.email,
+            });
           },
         },
       }),

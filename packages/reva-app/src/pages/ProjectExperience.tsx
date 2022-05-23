@@ -40,6 +40,7 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
     event.preventDefault();
     const elements = event.currentTarget.elements;
     const experience: Experience = {
+      id: state.context.experiences.edited?.id,
       title: elements.title.value,
       startedAt: new Date(elements.startedAt.value),
       description: elements.description.value,
@@ -89,6 +90,9 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
             rows={5}
             defaultValue={editedExperience?.description}
           />
+          {state.matches("projectExperience.error") && (
+            <p className="text-red-600 my-4 text-sm">{state.context.error}</p>
+          )}
           <Button
             data-test={`project-experience-${
               editedExperience ? "save" : "add"
