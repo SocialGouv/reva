@@ -14,20 +14,17 @@
   },
   "workspaces": [
     "packages/reva-api",
-    "packages/reva-website",
-    "packages/reva-app",
-    "packages/reva-tests"
+    "packages/reva-app"
   ],
-  "devDependencies": {
-    "concurrently": "^7.0.0",
+  "dependencies": {
     "husky": "^7.0.4"
+  },
+  "devDependencies": {
+    "concurrently": "^7.0.0"
   },
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint-staged -w reva-app"
     }
-  },
-  "dependencies": {
-    "@xstate/react": "^2.0.1"
   }
 }
