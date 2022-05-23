@@ -101,7 +101,7 @@ export const SubmissionHome = ({
             label="Réessayer"
             onClick={() =>
               send({
-                type: "CANDIDATE",
+                type: "SUBMIT_CERTIFICATION",
                 certification,
               })
             }

@@ -57,7 +57,10 @@ function App() {
             });
           },
           saveCertification: async (context, event) => {
-            if (event.type !== "CANDIDATE" || !context.certification) {
+            if (
+              event.type !== "SUBMIT_CERTIFICATION" ||
+              !context.certification
+            ) {
               return Promise.reject("Impossible state");
             }
             const deviceId = await Device.getId();

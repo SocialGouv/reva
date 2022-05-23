@@ -2,8 +2,8 @@ import { useActor } from "@xstate/react";
 import parse from "html-react-parser";
 import { Interpreter } from "xstate";
 
-import { Button } from "../components/atoms/Button";
 import { BackButton } from "../components/molecules/BackButton";
+import { CandidateButton } from "../components/organisms/CandidateButton";
 import { Page } from "../components/organisms/Page";
 import { Certification } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
@@ -53,18 +53,10 @@ export const CertificateDetails = ({ certification, mainService }: Props) => {
               content: certification.accessibleJobType,
             })}
 
-          <Button
-            data-test="certification-details-submit"
-            onClick={() =>
-              send({
-                type: "CANDIDATE",
-                certification,
-              })
-            }
-            label="Candidater"
-            className="mt-8 w-full"
-            primary
-            size="large"
+          <CandidateButton
+            candidacyId={state.context.candidacyId}
+            certification={certification}
+            send={send}
           />
         </div>
       </div>

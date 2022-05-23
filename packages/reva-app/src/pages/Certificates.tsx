@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { Interpreter } from "xstate";
 
-import { Button } from "../components/atoms/Button";
 import { Header } from "../components/atoms/Header";
+import { CandidateButton } from "../components/organisms/CandidateButton";
 import { Card } from "../components/organisms/Card";
 import { transitionIn } from "../components/organisms/Card/view";
 import { CardSkeleton } from "../components/organisms/CardSkeleton";
@@ -80,17 +80,10 @@ export const Certificates = ({ mainService }: Certificates) => {
         layout="position"
       >
         {isVisible && (
-          <Button
-            data-test="certification-submit"
-            onClick={() =>
-              send({
-                type: "CANDIDATE",
-                certification,
-              })
-            }
-            label="Candidater"
-            primary
-            size="large"
+          <CandidateButton
+            candidacyId={state.context.candidacyId}
+            certification={certification}
+            send={send}
           />
         )}
       </motion.div>

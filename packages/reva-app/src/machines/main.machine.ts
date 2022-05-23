@@ -60,7 +60,6 @@ export type MainEvent =
   | { type: "SELECT_CERTIFICATION"; certification: Certification }
   | { type: "SHOW_CERTIFICATION_DETAILS"; certification: Certification }
   | { type: "SHOW_PROJECT_HOME"; certification: Certification }
-  | { type: "CANDIDATE"; certification: Certification }
   | { type: "EDIT_CONTACT" }
   | { type: "ADD_EXPERIENCE" }
   | { type: "EDIT_EXPERIENCES" }
@@ -70,6 +69,7 @@ export type MainEvent =
   | { type: "BACK" }
   | { type: "LOADED" }
   | { type: "OPEN_HELP" }
+  | { type: "SUBMIT_CERTIFICATION"; certification: Certification }
   | { type: "SUBMIT_CONTACT"; contact: Contact }
   | { type: "SUBMIT_EXPERIENCE"; experience: Experience }
   | { type: "SUBMIT_EXPERIENCES" }
@@ -92,12 +92,13 @@ export type MainState =
       value: typeof certificateSummary | typeof certificateDetails;
       context: MainContext & {
         certification: Certification;
-        candidacyId: undefined;
+        candidacyId: string;
       };
     }
   | {
       value: typeof submissionHome;
       context: MainContext & {
+        candidacyId: string;
         certification: Certification;
         candidacyCreatedAt: Date;
       };
@@ -114,6 +115,7 @@ export type MainState =
         | typeof error;
 
       context: MainContext & {
+        candidacyId: string;
         certification: Certification;
         contact: Contact;
         experiences: Experience[];
@@ -121,6 +123,10 @@ export type MainState =
         projectStatus?: ProjectStatus;
       };
     };
+
+const isNewCandidacy = (context: MainContext, event: MainEvent) => {
+  return context.candidacyId === undefined;
+};
 
 export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
   {
@@ -235,13 +241,24 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
           },
         },
         on: {
-          CANDIDATE: {
-            target: submissionHome,
-            actions: assign({
-              certification: (context, event) => event.certification,
-              direction: (context, event) => "next",
-            }),
-          },
+          SUBMIT_CERTIFICATION: [
+            {
+              target: "submissionHome",
+              actions: assign({
+                certification: (context, event) => event.certification,
+                direction: (context, event) => "next",
+              }),
+              cond: isNewCandidacy,
+            },
+            {
+              target: "submissionHome.ready",
+              actions: assign({
+                certification: (context, event) => event.certification,
+                direction: (context, event) => "next",
+              }),
+            },
+          ],
+
           SHOW_CERTIFICATION_DETAILS: {
             target: certificateDetails,
             actions: assign({
@@ -265,7 +282,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               direction: (context, event) => "previous",
             }),
           },
-          CANDIDATE: {
+          SUBMIT_CERTIFICATION: {
             target: submissionHome,
             actions: assign({
               certification: (context, event) => {
@@ -294,16 +311,18 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               onError: {
                 target: "retry",
                 actions: assign({
-                  error: (_, event) =>
-                    "Une erreur est survenue lors de l'enregistrement de la certification.",
-                  direction: (context, event) => "previous",
+                  error: (_, event) => {
+                    console.log(event);
+                    return "Une erreur est survenue lors de l'enregistrement de la certification.";
+                  },
+                  direction: (context, event) => "next",
                 }),
               },
             },
           },
           retry: {
             on: {
-              CANDIDATE: { target: "loading" },
+              SUBMIT_CERTIFICATION: { target: "loading" },
             },
           },
           ready: {
