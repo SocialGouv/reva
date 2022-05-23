@@ -244,10 +244,12 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
           SUBMIT_CERTIFICATION: [
             {
               target: "submissionHome",
-              actions: assign({
-                certification: (context, event) => event.certification,
-                direction: (context, event) => "next",
-              }),
+              actions: [
+                "navigateNext",
+                assign((context, event) => ({
+                  certification: event.certification,
+                })),
+              ],
               cond: isNewCandidacy,
             },
             {
@@ -261,15 +263,11 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
 
           SHOW_CERTIFICATION_DETAILS: {
             target: certificateDetails,
-            actions: assign({
-              direction: (context, event) => "next",
-            }),
+            actions: ["navigateNext"],
           },
           CLOSE_SELECTED_CERTIFICATION: {
             target: searchResults,
-            actions: assign({
-              direction: (context, event) => "next",
-            }),
+            actions: ["navigateNext"],
           },
         },
       },
@@ -277,10 +275,12 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         on: {
           BACK: {
             target: certificateSummary,
-            actions: assign({
-              certification: (context, event) => context.certification,
-              direction: (context, event) => "previous",
-            }),
+            actions: [
+              "navigatePrevious",
+              assign({
+                certification: (context, event) => context.certification,
+              }),
+            ],
           },
           SUBMIT_CERTIFICATION: {
             target: submissionHome,
@@ -331,17 +331,21 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             on: {
               BACK: {
                 target: "leave",
-                actions: assign({
-                  certification: (context, event) => context.certification,
-                  direction: (context, event) => "previous",
-                }),
+                actions: [
+                  "navigatePrevious",
+                  assign({
+                    certification: (context, event) => context.certification,
+                  }),
+                ],
               },
               SHOW_PROJECT_HOME: {
                 target: "leave",
-                actions: assign({
-                  certification: (context, event) => context.certification,
-                  direction: (context, event) => "next",
-                }),
+                actions: [
+                  "navigateNext",
+                  assign({
+                    certification: (context, event) => context.certification,
+                  }),
+                ],
               },
             },
           },
@@ -371,15 +375,11 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             on: {
               BACK: {
                 target: "leave",
-                actions: assign({
-                  direction: (context, event) => "previous",
-                }),
+                actions: ["navigatePrevious"],
               },
               SUBMIT_CONTACT: {
                 target: "submitting",
-                actions: assign({
-                  direction: (context, event) => "previous",
-                }),
+                actions: ["navigatePrevious"],
               },
             },
           },
@@ -387,15 +387,11 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             on: {
               BACK: {
                 target: "leave",
-                actions: assign({
-                  direction: (context, event) => "previous",
-                }),
+                actions: ["navigatePrevious"],
               },
               SUBMIT_CONTACT: {
                 target: "submitting",
-                actions: assign({
-                  direction: (context, event) => "previous",
-                }),
+                actions: ["navigatePrevious"],
               },
             },
           },
@@ -404,18 +400,22 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               src: "updateContact",
               onDone: {
                 target: "leave",
-                actions: assign({
-                  direction: (context, event) => "previous",
-                  contact: (context, event) => event.data,
-                }),
+                actions: [
+                  "navigatePrevious",
+                  assign({
+                    contact: (context, event) => event.data,
+                  }),
+                ],
               },
               onError: {
                 target: "error",
-                actions: assign({
-                  error: (_, event) =>
-                    "Une erreur est survenue lors de l'enregistrement de vos informations de contact.",
-                  direction: (context, event) => "previous",
-                }),
+                actions: [
+                  "navigatePrevious",
+                  assign({
+                    error: (_, event) =>
+                      "Une erreur est survenue lors de l'enregistrement de vos informations de contact.",
+                  }),
+                ],
               },
             },
           },
@@ -434,23 +434,23 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             on: {
               BACK: {
                 target: "leave",
-                actions: assign({
-                  direction: (context, event) => "previous",
-                  experiences: (context, event) => ({
-                    rest: context.experiences.edited
-                      ? [
-                          ...context.experiences.rest,
-                          context.experiences.edited,
-                        ]
-                      : context.experiences.rest,
+                actions: [
+                  "navigatePrevious",
+                  assign({
+                    experiences: (context, event) => ({
+                      rest: context.experiences.edited
+                        ? [
+                            ...context.experiences.rest,
+                            context.experiences.edited,
+                          ]
+                        : context.experiences.rest,
+                    }),
                   }),
-                }),
+                ],
               },
               SUBMIT_EXPERIENCE: {
                 target: "submitting",
-                actions: assign({
-                  direction: (context, event) => "previous",
-                }),
+                actions: ["navigatePrevious"],
               },
             },
           },
@@ -458,23 +458,23 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             on: {
               BACK: {
                 target: "leave",
-                actions: assign({
-                  direction: (context, event) => "previous",
-                  experiences: (context, event) => ({
-                    rest: context.experiences.edited
-                      ? [
-                          ...context.experiences.rest,
-                          context.experiences.edited,
-                        ]
-                      : context.experiences.rest,
+                actions: [
+                  "navigatePrevious",
+                  assign({
+                    experiences: (context, event) => ({
+                      rest: context.experiences.edited
+                        ? [
+                            ...context.experiences.rest,
+                            context.experiences.edited,
+                          ]
+                        : context.experiences.rest,
+                    }),
                   }),
-                }),
+                ],
               },
               SUBMIT_EXPERIENCE: {
                 target: "submitting",
-                actions: assign({
-                  direction: (context, event) => "previous",
-                }),
+                actions: ["navigatePrevious"],
               },
             },
           },
@@ -483,22 +483,26 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               src: "saveExperience",
               onDone: {
                 target: "leave",
-                actions: assign({
-                  experiences: (context, event) => {
-                    return {
-                      rest: [...context.experiences.rest, event.data],
-                    };
-                  },
-                  direction: (context, event) => "previous",
-                }),
+                actions: [
+                  "navigatePrevious",
+                  assign({
+                    experiences: (context, event) => {
+                      return {
+                        rest: [...context.experiences.rest, event.data],
+                      };
+                    },
+                  }),
+                ],
               },
               onError: {
                 target: "error",
-                actions: assign({
-                  error: (_, event) =>
-                    "Une erreur est survenue lors de l'enregistrement de votre expérience.",
-                  direction: (context, event) => "previous",
-                }),
+                actions: [
+                  "navigatePrevious",
+                  assign({
+                    error: (_, event) =>
+                      "Une erreur est survenue lors de l'enregistrement de votre expérience.",
+                  }),
+                ],
               },
             },
           },
@@ -514,17 +518,21 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         on: {
           BACK: {
             target: "projectHome",
-            actions: assign({
-              certification: (context, event) => context.certification,
-              direction: (context, event) => "previous",
-            }),
+            actions: [
+              "navigatePrevious",
+              assign({
+                certification: (context, event) => context.certification,
+              }),
+            ],
           },
           ADD_EXPERIENCE: {
             target: "projectExperience",
-            actions: assign({
-              certification: (context, event) => context.certification,
-              direction: (context, event) => "next",
-            }),
+            actions: [
+              "navigateNext",
+              assign({
+                certification: (context, event) => context.certification,
+              }),
+            ],
           },
           EDIT_EXPERIENCE: {
             target: "projectExperience",
@@ -541,10 +549,12 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
           },
           SUBMIT_EXPERIENCES: {
             target: "projectHome",
-            actions: assign({
-              certification: (context, event) => context.certification,
-              direction: (context, event) => "previous",
-            }),
+            actions: [
+              "navigatePrevious",
+              assign({
+                certification: (context, event) => context.certification,
+              }),
+            ],
           },
         },
       },
@@ -552,10 +562,12 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         on: {
           BACK: {
             target: "projectHome",
-            actions: assign({
-              certification: (context, event) => context.certification,
-              direction: (context, event) => "previous",
-            }),
+            actions: [
+              "navigatePrevious",
+              assign({
+                certification: (context, event) => context.certification,
+              }),
+            ],
           },
         },
       },
@@ -566,9 +578,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             on: {
               BACK: {
                 target: "leave",
-                actions: assign({
-                  direction: (context, event) => "previous",
-                }),
+                actions: ["navigatePrevious"],
               },
               SUBMIT_GOALS: {
                 target: "submitting",
@@ -579,9 +589,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             on: {
               BACK: {
                 target: "leave",
-                actions: assign({
-                  direction: (context, event) => "previous",
-                }),
+                actions: ["navigatePrevious"],
               },
               SUBMIT_GOALS: {
                 target: "submitting",
@@ -593,20 +601,24 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               src: "saveGoals",
               onDone: {
                 target: "leave",
-                actions: assign({
-                  goals: (context, event) => {
-                    return event.data;
-                  },
-                  direction: (context, event) => "previous",
-                }),
+                actions: [
+                  "navigatePrevious",
+                  assign({
+                    goals: (context, event) => {
+                      return event.data;
+                    },
+                  }),
+                ],
               },
               onError: {
                 target: "error",
-                actions: assign({
-                  error: (_, event) =>
-                    "Une erreur est survenue lors de l'enregistrement des objectifs.",
-                  direction: (context, event) => "previous",
-                }),
+                actions: [
+                  "navigatePrevious",
+                  assign({
+                    error: (_, event) =>
+                      "Une erreur est survenue lors de l'enregistrement des objectifs.",
+                  }),
+                ],
               },
             },
           },
@@ -622,43 +634,47 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         on: {
           BACK: {
             target: "submissionHome.ready",
-            actions: assign({
-              certification: (context, event) => context.certification,
-              direction: (context, event) => "previous",
-            }),
+            actions: [
+              "navigatePrevious",
+              assign({
+                certification: (context, event) => context.certification,
+              }),
+            ],
           },
           EDIT_EXPERIENCES: {
             target: "projectExperiences",
-            actions: assign({
-              certification: (context, event) => context.certification,
-              direction: (context, event) => "next",
-            }),
+            actions: [
+              "navigateNext",
+              assign({
+                certification: (context, event) => context.certification,
+              }),
+            ],
           },
           EDIT_GOALS: {
             target: "projectGoals",
-            actions: assign({
-              certification: (context, event) => context.certification,
-              direction: (context, event) => "next",
-            }),
+            actions: [
+              "navigateNext",
+              assign({
+                certification: (context, event) => context.certification,
+              }),
+            ],
           },
           EDIT_CONTACT: {
             target: "projectContact",
-            actions: assign({
-              certification: (context, event) => context.certification,
-              direction: (context, event) => "next",
-            }),
+            actions: [
+              "navigateNext",
+              assign({
+                certification: (context, event) => context.certification,
+              }),
+            ],
           },
           CLOSE_SELECTED_CERTIFICATION: {
-            target: searchResults,
-            actions: assign({
-              direction: (context, event) => "previous",
-            }),
+            target: "searchResults",
+            actions: ["navigatePrevious"],
           },
           OPEN_HELP: {
             target: "projectHelp",
-            actions: assign({
-              direction: (context, event) => "next",
-            }),
+            actions: ["navigateNext"],
           },
           VALIDATE_PROJECT: {
             target: "projectHome",
@@ -673,7 +689,6 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               projectStatus: (context, event) => "submitted",
               direction: (context, event) => "next",
             }),
-            // TODO: handle project submission to API
           },
         },
       },
@@ -681,16 +696,27 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         on: {
           BACK: {
             target: "submissionHome.ready",
-            actions: assign({
-              certification: (context, event) => context.certification,
-              direction: (context, event) => "previous",
-            }),
+            actions: [
+              "navigatePrevious",
+              assign({
+                certification: (context, event) => context.certification,
+              }),
+            ],
           },
         },
       },
     },
   },
   {
+    actions: {
+      // Page actions
+      navigateNext: assign((context, event) => ({
+        direction: "next",
+      })),
+      navigatePrevious: assign((context, event) => ({
+        direction: "previous",
+      })),
+    },
     services: {
       searchCertifications: (context, event) =>
         Promise.reject("Not implemented"),
