@@ -549,6 +549,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               },
               SUBMIT_GOALS: {
                 target: "submitting",
+                actions: ["navigatePrevious"],
               },
             },
           },
@@ -556,7 +557,6 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             on: {
               BACK: {
                 target: "leave",
-                actions: ["navigatePrevious"],
               },
               SUBMIT_GOALS: {
                 target: "submitting",
@@ -569,7 +569,6 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               onDone: {
                 target: "leave",
                 actions: [
-                  "navigatePrevious",
                   assign({
                     goals: (context, event) => {
                       return event.data;
