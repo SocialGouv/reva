@@ -149,8 +149,8 @@ const UPDATE_CONTACT = gql`
   mutation update_experience(
     $deviceId: ID!
     $candidacyId: ID!
-    $phone: String!
-    $email: String!
+    $phone: String
+    $email: String
   ) {
     candidacy_updateContact(
       candidacyId: $candidacyId
@@ -175,8 +175,8 @@ export const updateContact =
   }: {
     deviceId: string;
     candidacyId: string;
-    phone: string;
-    email: string;
+    phone: null | string;
+    email: null | string;
   }) => {
     const { data } = await client.mutate({
       mutation: UPDATE_CONTACT,

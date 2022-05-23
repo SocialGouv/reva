@@ -28,8 +28,8 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
     event.preventDefault();
     const elements = event.currentTarget.elements;
     const contact: Contact = {
-      phone: elements.phone.value,
-      email: elements.email.value,
+      phone: elements.phone.value || null,
+      email: elements.email.value || null,
     };
     send({
       type: "SUBMIT_CONTACT",
@@ -58,13 +58,14 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           <Input
             name="phone"
             label="Téléphone"
-            defaultValue={editedContact?.phone}
+            minLength={10}
+            defaultValue={editedContact?.phone || ""}
           />
           <Input
             name="email"
             label="Email"
             type="email"
-            defaultValue={editedContact?.email}
+            defaultValue={editedContact?.email || ""}
           />
           {state.matches("projectContact.error") && (
             <p key="error" className="text-red-600 my-4 text-sm">
