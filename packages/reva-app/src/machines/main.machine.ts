@@ -145,41 +145,55 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
       loadingApplicationData: {
         invoke: {
           src: "initializeApp",
-          onDone: {
-            target: "submissionHome.ready",
-            actions: assign({
-              candidacyId: (_, event) => {
-                return event.data.candidacy.id;
+          onDone: [
+            {
+              cond: (context, event) => {
+                return event.data.candidacy;
               },
-              candidacyCreatedAt: (_, event) => {
-                return new Date(event.data.candidacy.createdAt);
-              },
-              certification: (_, event) => {
-                return event.data.candidacy.certification;
-              },
-              experiences: (_, event) => {
-                return { rest: event.data.candidacy.experiences };
-              },
-              goals: (_, event) => {
-                return event.data.candidacy.goals;
-              },
-              contact: (_, event) => {
-                return {
-                  email: event.data.candidacy.email,
-                  phone: event.data.candidacy.phone,
-                };
-              },
-            }),
-          },
-          onError: [
+              target: "submissionHome.ready",
+              actions: assign({
+                candidacyId: (_, event) => {
+                  return event.data.candidacy.id;
+                },
+                candidacyCreatedAt: (_, event) => {
+                  return new Date(event.data.candidacy.createdAt);
+                },
+                certification: (_, event) => {
+                  return event.data.candidacy.certification;
+                },
+                experiences: (_, event) => {
+                  return { rest: event.data.candidacy.experiences };
+                },
+                goals: (_, event) => {
+                  return event.data.candidacy.goals;
+                },
+                contact: (_, event) => {
+                  return {
+                    email: event.data.candidacy.email,
+                    phone: event.data.candidacy.phone,
+                  };
+                },
+                projectStatus: (_, event) => {
+                  return event.data.candidacy.candidacyStatuses
+                    .map((s: { status: string }) => s.status)
+                    .includes("VALIDATION")
+                    ? "submitted"
+                    : "draft";
+                },
+              }),
+            },
             {
               cond: (context, event) =>
                 event.data.graphQLErrors[0]?.extensions.code ===
                 "CANDIDACY_DOES_NOT_EXIST",
               target: loadingCertifications,
+              actions: assign({
+                goals: (_, event) => event.data.referentials.goals,
+              }),
             },
+          ],
+          onError: [
             {
-              cond: (context, event) => true,
               target: error,
               actions: assign({
                 error: (_, event) => {
@@ -310,10 +324,8 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               onError: {
                 target: "retry",
                 actions: assign({
-                  error: (_, event) => {
-                    console.log(event);
-                    return "Une erreur est survenue lors de l'enregistrement de la certification.";
-                  },
+                  error: (_, event) =>
+                    "Une erreur est survenue lors de l'enregistrement de la certification.",
                   direction: (context, event) => "next",
                 }),
               },
@@ -374,11 +386,9 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             on: {
               BACK: {
                 target: "leave",
-                actions: ["navigatePrevious"],
               },
               SUBMIT_CONTACT: {
                 target: "submitting",
-                actions: ["navigatePrevious"],
               },
             },
           },
@@ -388,7 +398,6 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               onDone: {
                 target: "leave",
                 actions: [
-                  "navigatePrevious",
                   assign({
                     contact: (context, event) => event.data,
                   }),
@@ -397,7 +406,6 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               onError: {
                 target: "error",
                 actions: [
-                  "navigatePrevious",
                   assign({
                     error: (_, event) =>
                       "Une erreur est survenue lors de l'enregistrement de vos informations de contact.",
@@ -446,7 +454,6 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               BACK: {
                 target: "leave",
                 actions: [
-                  "navigatePrevious",
                   assign({
                     experiences: (context, event) => ({
                       rest: context.experiences.edited
@@ -461,7 +468,6 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               },
               SUBMIT_EXPERIENCE: {
                 target: "submitting",
-                actions: ["navigatePrevious"],
               },
             },
           },
@@ -471,7 +477,6 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               onDone: {
                 target: "leave",
                 actions: [
-                  "navigatePrevious",
                   assign({
                     experiences: (context, event) => {
                       return {
@@ -484,7 +489,6 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               onError: {
                 target: "error",
                 actions: [
-                  "navigatePrevious",
                   assign({
                     error: (_, event) =>
                       "Une erreur est survenue lors de l'enregistrement de votre expérience.",
@@ -579,7 +583,6 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               onError: {
                 target: "error",
                 actions: [
-                  "navigatePrevious",
                   assign({
                     error: (_, event) =>
                       "Une erreur est survenue lors de l'enregistrement des objectifs.",
@@ -597,11 +600,35 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         },
       },
       projectHome: {
+        initial: "idle",
         on: {
-          BACK: {
-            target: "submissionHome.ready",
-            actions: ["navigatePrevious"],
-          },
+          BACK: [
+            {
+              cond: (context) => {
+                return context.projectStatus === "draft";
+              },
+              target: "submissionHome.ready",
+              actions: [
+                "navigatePrevious",
+                assign({
+                  certification: (context, event) => context.certification,
+                }),
+              ],
+            },
+            {
+              cond: (context) => {
+                return context.projectStatus === "validated";
+              },
+              target: "projectHome",
+              actions: [
+                "navigatePrevious",
+                assign({
+                  certification: (context, event) => context.certification,
+                  projectStatus: (context, event) => "draft",
+                }),
+              ],
+            },
+          ],
           EDIT_EXPERIENCES: {
             target: "projectExperiences",
             actions: ["navigateNext"],
@@ -615,27 +642,60 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             actions: ["navigateNext"],
           },
           CLOSE_SELECTED_CERTIFICATION: {
-            target: "searchResults",
+            target: "loadingCertifications",
             actions: ["navigatePrevious"],
           },
           OPEN_HELP: {
             target: "projectHelp",
             actions: ["navigateNext"],
           },
-          VALIDATE_PROJECT: {
-            target: "projectHome",
-            actions: assign({
-              projectStatus: (context, event) => "validated",
-              direction: (context, event) => "next",
-            }),
+        },
+        states: {
+          idle: {
+            on: {
+              VALIDATE_PROJECT: {
+                target: "idle",
+                actions: assign({
+                  projectStatus: (context, event) => "validated",
+                  direction: (context, event) => "next",
+                }),
+              },
+              SUBMIT_PROJECT: {
+                target: "submitting",
+                actions: assign({
+                  direction: (context, event) => "next",
+                }),
+                // TODO: handle project submission to API
+              },
+            },
           },
-          SUBMIT_PROJECT: {
-            target: "projectSubmitted",
-            actions: assign({
-              projectStatus: (context, event) => "submitted",
-              direction: (context, event) => "next",
-            }),
+          error: {},
+          submitting: {
+            invoke: {
+              src: "submitCandidacy",
+              onDone: {
+                target: "leave",
+                actions: assign({
+                  projectStatus: (context, event) => "submitted",
+                  direction: (context, event) => "next",
+                }),
+              },
+              onError: {
+                target: "error",
+                actions: assign({
+                  error: (_, event) =>
+                    "Une erreur est survenue lors de la transmission de votre projet.",
+                  direction: (context, event) => "previous",
+                }),
+              },
+            },
           },
+          leave: {
+            type: "final",
+          },
+        },
+        onDone: {
+          target: projectSubmitted,
         },
       },
       projectSubmitted: {
@@ -666,6 +726,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
       initializeApp: (context, event) => Promise.reject("Not implemented"),
       saveGoals: (context, event) => Promise.reject("Not implemented"),
       saveExperience: (context, event) => Promise.reject("Not implemented"),
+      submitCandidacy: (context, event) => Promise.reject("Not implemented"),
     },
   }
 );

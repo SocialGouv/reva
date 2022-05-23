@@ -25,6 +25,7 @@ import {
   createCandidacyWithCertification,
   initializeApp,
   saveGoals,
+  submitCandidacy,
   updateContact,
   updateExperience,
 } from "./services/candidacyServices";
@@ -120,6 +121,17 @@ function App() {
               candidacyId: context.candidacyId,
               phone: event.contact.phone,
               email: event.contact.email,
+            });
+          },
+          submitCandidacy: async (context, event) => {
+            if (event.type !== "SUBMIT_PROJECT" || !context.candidacyId) {
+              return Promise.reject("Impossible state");
+            }
+
+            const deviceId = await Device.getId();
+            return submitCandidacy(client as ApolloClient<object>)({
+              deviceId: deviceId.uuid,
+              candidacyId: context.candidacyId,
             });
           },
         },

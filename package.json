@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "./build.sh",
-    "dev": "concurrently -n \"rev-api,reva-website,reva-app\" -c \"blue,green,cyan\" -k \"npm run dev -w reva-api\" \"npm run dev -w reva-website\" \"npm run dev -w reva-app\"",
+    "dev": "concurrently -n \"rev-api,reva-app\" -c \"blue,green,cyan\" -k \"npm run dev -w reva-api\" \"npm run dev -w reva-app\"",
     "start": "npm run start --workspace=reva-api",
     "prepare": "husky install"
   },

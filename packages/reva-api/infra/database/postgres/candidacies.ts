@@ -1,4 +1,4 @@
-import { Experience, prisma } from '@prisma/client';
+import { CandidacyStatus, Experience, prisma } from '@prisma/client';
 import { Either, EitherAsync, Left, Maybe, Right } from 'purify-ts';
 import * as domain from '../../../domains/candidacy';
 import { prismaClient } from './client';
@@ -10,11 +10,17 @@ export const insertCandidacy = async (params: { deviceId: string; certificationI
         const newCandidacy = await prismaClient.candidacy.create({
             data: {
                 deviceId: params.deviceId,
-                certificationId: params.certificationId
+                certificationId: params.certificationId,
+                candidacyStatuses: {
+                    create: {
+                        status: CandidacyStatus.PROJET
+                    }
+                }
             },
             include: {
                 experiences: true,
-                goals: true
+                goals: true,
+                candidacyStatuses: true
             }
         });
 
@@ -27,6 +33,7 @@ export const insertCandidacy = async (params: { deviceId: string; certificationI
             goals: newCandidacy.goals,
             phone: newCandidacy.phone,
             email: newCandidacy.email,
+            candidacyStatuses: newCandidacy.candidacyStatuses,
             createdAt: newCandidacy.createdAt
         });
     } catch (e) {
@@ -58,7 +65,8 @@ export const getCandidacyFromDeviceId = async (deviceId: string) => {
             include: {
                 experiences: true,
                 goals: true,
-                certification: true
+                certification: true,
+                candidacyStatuses: true
             }
         });
 
@@ -76,7 +84,8 @@ export const getCandidacyFromId = async (candidacyId: string) => {
             },
             include: {
                 experiences: true,
-                goals: true
+                goals: true,
+                candidacyStatuses: true
             }
         });
 
@@ -109,7 +118,8 @@ export const updateContactOnCandidacy = async (params: {candidacyId: string, ema
             },
             include: {
                 experiences: true,
-                goals: true
+                goals: true,
+                candidacyStatuses: true
             }
         });
 
@@ -122,9 +132,47 @@ export const updateContactOnCandidacy = async (params: {candidacyId: string, ema
             goals: newCandidacy.goals,
             email: newCandidacy.email,
             phone: newCandidacy.phone,
+            candidacyStatuses: newCandidacy.candidacyStatuses,
             createdAt: newCandidacy.createdAt
         });
     } catch (e) {
         return Left(`error while updating contact on candidacy ${params.candidacyId}`);
+    };
+}
+
+export const updateCandidacyStatus = async (params: {candidacyId: string, status: CandidacyStatus}) => {
+    try {
+        const newCandidacy = await prismaClient.candidacy.update({
+            where: {
+                id: params.candidacyId
+            },
+            data: {
+                candidacyStatuses: {
+                    create: {
+                        status: params.status
+                    }
+                }
+            },
+            include: {
+                experiences: true,
+                goals: true,
+                candidacyStatuses: true
+            }
+        });
+
+        return Right({ 
+            id: newCandidacy.id,
+            deviceId: newCandidacy.deviceId,
+            certificationId: newCandidacy.certificationId,
+            companionId: newCandidacy.companionId,
+            experiences: toDomainExperiences(newCandidacy.experiences),
+            goals: newCandidacy.goals,
+            email: newCandidacy.email,
+            phone: newCandidacy.phone,
+            candidacyStatuses: newCandidacy.candidacyStatuses,
+            createdAt: newCandidacy.createdAt
+        });
+    } catch (e) {
+        return Left(`error while updating status on candidacy ${params.candidacyId}`);
     };
 }

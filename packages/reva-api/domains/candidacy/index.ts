@@ -21,6 +21,13 @@ export interface CandidacyInput {
 
 export interface Candidacy extends CandidacyInput {
     id: string;
+    candidacyStatuses: CandidacyStatus[];
+    createdAt: Date;
+}
+
+export interface CandidacyStatus {
+    id: string;
+    status: string;
     createdAt: Date;
 }
 
@@ -194,8 +201,27 @@ export const updateContact = (deps: UpdateContactDeps) => (params: {
         .chain(() => updateContact);
 };
 
+interface SubmitCandidacyDeps {
+    updateCandidacyStatus: (params: {
+        candidacyId: string;
+        status: "VALIDATION";
+    }) => Promise<Either<string, Candidacy>>;
+    getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
+}
 
-export const selectCompanion = (props: any) => (params: any) => {};
-export const getExperiences = (props: any) => (params: any) => {};
-export const editExperience = (props: any) => (params: any) => {};
-export const addGoal = (props: any) => (params: any) => {}
+export const submitCandidacy = (deps: SubmitCandidacyDeps) => (params: {
+    candidacyId: string;
+}) => {
+    // TODO Check if a candidacy does not already exist with status VALIDATION
+    const checkIfCandidacyExists = 
+        EitherAsync.fromPromise(() => deps.getCandidacyFromId(params.candidacyId))
+            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvé`));
+
+    const updateContact = EitherAsync.fromPromise(() => deps.updateCandidacyStatus({candidacyId: params.candidacyId, status: "VALIDATION"}))
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.STATUS_NOT_UPDATED, `Erreur lors de la mise à jour du status`));
+
+
+    return checkIfCandidacyExists
+        .chain(() => updateContact);
+};
+

@@ -210,6 +210,7 @@ export const ProjectHome = ({
           locked={!isProjectComplete}
           onClick={projectButtonHandler}
           type="submit"
+          loading={state.matches("projectHome.submitting")}
           label={isValidated ? "Transmettre" : "Valider"}
           primary={isValidated}
           size="medium"
