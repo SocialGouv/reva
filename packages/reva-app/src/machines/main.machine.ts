@@ -253,11 +253,13 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               cond: isNewCandidacy,
             },
             {
-              target: "submissionHome.ready",
-              actions: assign({
-                certification: (context, event) => event.certification,
-                direction: (context, event) => "next",
-              }),
+              target: "projectHome",
+              actions: [
+                "navigateNext",
+                assign({
+                  certification: (context, event) => event.certification,
+                }),
+              ],
             },
           ],
 
