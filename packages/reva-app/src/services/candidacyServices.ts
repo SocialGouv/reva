@@ -7,6 +7,7 @@ const CREATE_CANDIDACY_WITH_CERTIFICATION = gql`
     candidacy_createCandidacy(
       candidacy: { deviceId: $deviceId, certificationId: $certificationId }
     ) {
+      id
       deviceId
       certificationId
       createdAt

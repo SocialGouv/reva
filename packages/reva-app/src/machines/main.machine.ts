@@ -302,6 +302,8 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               onDone: {
                 target: "ready",
                 actions: assign({
+                  candidacyId: (_, event) =>
+                    event.data.data.candidacy_createCandidacy.id,
                   candidacyCreatedAt: (_, event) =>
                     new Date(
                       event.data.data.candidacy_createCandidacy.createdAt
