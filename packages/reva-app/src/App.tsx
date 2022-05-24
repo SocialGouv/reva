@@ -84,8 +84,6 @@ function App() {
             }
             const deviceId = await Device.getId();
 
-            console.log("tests");
-
             return updateCertification(client as ApolloClient<object>)({
               deviceId: deviceId.uuid,
               candidacyId: context.candidacyId,
