@@ -72,7 +72,11 @@ function App() {
             )({
               deviceId: deviceId.uuid,
               certificationId: event.certification.id,
-            });
+            }).then(
+              (data) =>
+                // Add some fake waiting time to let the user read the creation message
+                new Promise((resolve) => setTimeout(() => resolve(data), 2000))
+            );
           },
           updateCertification: async (context, event) => {
             if (
