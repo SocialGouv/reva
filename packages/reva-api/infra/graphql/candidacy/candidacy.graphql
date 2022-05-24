@@ -19,7 +19,14 @@ type Candidacy {
   goals: [CandidateGoal]!
   phone: String
   email: String
+  candidacyStatuses: [CandidacyStatus]!
   createdAt: Date!
+}
+
+type CandidacyStatus {
+  id: ID!
+  status: String
+  createdAt: Date
 }
 
 type Experience {
@@ -74,6 +81,7 @@ input CandidateGoalInput {
 
 type Mutation {
   candidacy_createCandidacy(candidacy: CandidacyInput!): Candidacy
+  candidacy_submitCandidacy(deviceId: ID!, candidacyId: ID!): Candidacy
   candidacy_changeCertificate(
     deviceId: ID!
     candidacyId: ID!

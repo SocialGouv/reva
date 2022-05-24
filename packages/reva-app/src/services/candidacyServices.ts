@@ -146,7 +146,7 @@ export const updateExperience =
   };
 
 const UPDATE_CONTACT = gql`
-  mutation update_experience(
+  mutation update_contact(
     $deviceId: ID!
     $candidacyId: ID!
     $phone: String
@@ -186,6 +186,31 @@ export const updateContact =
     return data.candidacy_updateContact;
   };
 
+const SUBMIT_CANDIDACY = gql`
+  mutation submit_candidacy($deviceId: ID!, $candidacyId: ID!) {
+    candidacy_submitCandidacy(candidacyId: $candidacyId, deviceId: $deviceId) {
+      id
+    }
+  }
+`;
+
+export const submitCandidacy =
+  (client: ApolloClient<object>) =>
+  async ({
+    deviceId,
+    candidacyId,
+  }: {
+    deviceId: string;
+    candidacyId: string;
+  }) => {
+    const { data } = await client.mutate({
+      mutation: SUBMIT_CANDIDACY,
+      variables: { deviceId, candidacyId },
+    });
+
+    return data.candidacy_submitCandidacy;
+  };
+
 const INITIALIZE_APP = gql`
   query getCandidacy($deviceId: ID!) {
     getCandidacy(deviceId: $deviceId) {
@@ -213,6 +238,10 @@ const INITIALIZE_APP = gql`
         goalId
         additionalInformation
       }
+      candidacyStatuses {
+        id
+        status
+      }
     }
 
     getReferential {
@@ -228,30 +257,41 @@ const INITIALIZE_APP = gql`
 export const initializeApp =
   (client: ApolloClient<object>) =>
   async ({ deviceId }: { deviceId: string }) => {
-    const { data } = await client.query({
+    const { data, errors } = await client.query({
       query: INITIALIZE_APP,
+      // we set the error policy at "all" to get referentials even if getCandidacy fail
+      errorPolicy: "all",
       variables: {
         deviceId,
       },
     });
 
-    const candidateGoals = data.getCandidacy.goals.map((g: any) => g.goalId);
+    let candidacy = null;
+    if (data.getCandidacy) {
+      const candidateGoals = data.getCandidacy.goals.map((g: any) => g.goalId);
 
-    const goals = data.getReferential.goals.map((g: any) => ({
-      ...g,
-      checked: candidateGoals.includes(g.id),
-    }));
+      const goals = data.getReferential.goals.map((g: any) => ({
+        ...g,
+        checked: candidateGoals.includes(g.id),
+      }));
 
-    const experiences = data.getCandidacy.experiences.map((xp: any) => ({
-      ...xp,
-      startedAt: new Date(xp.startedAt),
-    }));
-    return {
-      candidacy: {
+      const experiences = data.getCandidacy.experiences.map((xp: any) => ({
+        ...xp,
+        startedAt: new Date(xp.startedAt),
+      }));
+      candidacy = {
         ...data.getCandidacy,
         createdAt: new Date(data.getCandidacy.createdAt),
         experiences,
         goals,
+      };
+    }
+
+    return {
+      candidacy,
+      referentials: {
+        goals: data.getReferential.goals,
       },
+      graphQLErrors: errors,
     };
   };

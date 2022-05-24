@@ -98,6 +98,7 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
               editedExperience ? "save" : "add"
             }`}
             type="submit"
+            loading={state.matches("projectExperience.submitting")}
             label={editedExperience ? "Valider" : "Ajouter"}
             size="small"
           />

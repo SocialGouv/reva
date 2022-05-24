@@ -75,6 +75,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           <Button
             data-test={`project-contact-${editedContact ? "save" : "add"}`}
             type="submit"
+            loading={state.matches("projectContact.submitting")}
             label={editedContact ? "Valider" : "Ajouter"}
             size="small"
           />
