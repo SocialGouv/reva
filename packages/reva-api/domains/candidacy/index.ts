@@ -225,3 +225,28 @@ export const submitCandidacy = (deps: SubmitCandidacyDeps) => (params: {
         .chain(() => updateContact);
 };
 
+interface UpdateCertificationDeps {
+    updateCertification: (params: {
+        candidacyId: string;
+        certificationId: string;
+    }) => Promise<Either<string, Candidacy>>;
+    getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
+}
+
+export const updateCertification = (deps: UpdateCertificationDeps) => (params: {
+    candidacyId: string;
+    certificationId: string;
+}) => {
+    // TODO Check mail format
+    const checkIfCandidacyExists = 
+        EitherAsync.fromPromise(() => deps.getCandidacyFromId(params.candidacyId))
+            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvé`));
+
+    const updateCertification = EitherAsync.fromPromise(() => deps.updateCertification(params))
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.GOALS_NOT_UPDATED, `Erreur lors de la mise à jour de la certification`));
+
+
+    return checkIfCandidacyExists
+        .chain(() => updateCertification);
+};
+

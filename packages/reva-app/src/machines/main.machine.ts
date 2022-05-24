@@ -255,28 +255,6 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
           },
         },
         on: {
-          SUBMIT_CERTIFICATION: [
-            {
-              target: "submissionHome",
-              actions: [
-                "navigateNext",
-                assign((context, event) => ({
-                  certification: event.certification,
-                })),
-              ],
-              cond: isNewCandidacy,
-            },
-            {
-              target: "projectHome",
-              actions: [
-                "navigateNext",
-                assign({
-                  certification: (context, event) => event.certification,
-                }),
-              ],
-            },
-          ],
-
           SHOW_CERTIFICATION_DETAILS: {
             target: certificateDetails,
             actions: ["navigateNext"],
@@ -286,6 +264,75 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             actions: ["navigateNext"],
           },
         },
+        initial: "idle",
+        states: {
+          idle: {
+            on: {
+              SUBMIT_CERTIFICATION: [
+                {
+                  target: "leave",
+                  actions: [
+                    "navigateNext",
+                    assign((context, event) => ({
+                      certification: event.certification,
+                    })),
+                  ],
+                  cond: isNewCandidacy,
+                },
+                {
+                  target: "submittingChange",
+                  actions: [
+                    "navigateNext",
+                    assign((context, event) => ({
+                      certification: event.certification,
+                    })),
+                  ],
+                },
+              ],
+            },
+          },
+          submittingChange: {
+            invoke: {
+              src: "updateCertification",
+              onDone: {
+                target: "leave",
+              },
+              onError: {
+                target: "retry",
+                actions: assign({
+                  error: (_, event) =>
+                    "Une erreur est survenue lors de la mise à jour de la certification.",
+                }),
+              },
+            },
+          },
+          retry: {
+            on: {
+              SUBMIT_CERTIFICATION: {
+                target: "leave",
+                actions: [
+                  "navigateNext",
+                  assign((context, event) => ({
+                    certification: event.certification,
+                  })),
+                ],
+                cond: isNewCandidacy,
+              },
+            },
+          },
+          leave: {
+            type: "final",
+          },
+        },
+        onDone: [
+          {
+            cond: (context, event) => context.candidacyId === undefined,
+            target: "submissionHome",
+          },
+          {
+            target: "projectHome",
+          },
+        ],
       },
       certificateDetails: {
         on: {
@@ -293,16 +340,76 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
             target: certificateSummary,
             actions: ["navigatePrevious"],
           },
-          SUBMIT_CERTIFICATION: {
-            target: submissionHome,
-            actions: assign({
-              certification: (context, event) => {
-                return event.certification;
+        },
+        initial: "idle",
+        states: {
+          idle: {
+            on: {
+              SUBMIT_CERTIFICATION: [
+                {
+                  target: "leave",
+                  actions: [
+                    "navigateNext",
+                    assign((context, event) => ({
+                      certification: event.certification,
+                    })),
+                  ],
+                  cond: isNewCandidacy,
+                },
+                {
+                  target: "submittingChange",
+                  actions: [
+                    "navigateNext",
+                    assign((context, event) => ({
+                      certification: event.certification,
+                    })),
+                  ],
+                },
+              ],
+            },
+          },
+          submittingChange: {
+            invoke: {
+              src: "updateCertification",
+              onDone: {
+                target: "leave",
               },
-              direction: (context, event) => "next",
-            }),
+              onError: {
+                target: "retry",
+                actions: assign({
+                  error: (_, event) =>
+                    "Une erreur est survenue lors de la mise à jour de la certification.",
+                }),
+              },
+            },
+          },
+          retry: {
+            on: {
+              SUBMIT_CERTIFICATION: {
+                target: "leave",
+                actions: [
+                  "navigateNext",
+                  assign((context, event) => ({
+                    certification: event.certification,
+                  })),
+                ],
+                cond: isNewCandidacy,
+              },
+            },
+          },
+          leave: {
+            type: "final",
           },
         },
+        onDone: [
+          {
+            cond: (context, event) => context.candidacyId === undefined,
+            target: "submissionHome",
+          },
+          {
+            target: "projectHome",
+          },
+        ],
       },
       submissionHome: {
         initial: "loading",
@@ -723,6 +830,8 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
         Promise.reject("Not implemented"),
       getCertification: (context, event) => Promise.reject("Not implemented"),
       saveCertification: (context, event) => Promise.reject("Not implemented"),
+      updateCertification: (context, event) =>
+        Promise.reject("Not implemented"),
       initializeApp: (context, event) => Promise.reject("Not implemented"),
       saveGoals: (context, event) => Promise.reject("Not implemented"),
       saveExperience: (context, event) => Promise.reject("Not implemented"),

@@ -26,6 +26,7 @@ import {
   initializeApp,
   saveGoals,
   submitCandidacy,
+  updateCertification,
   updateContact,
   updateExperience,
 } from "./services/candidacyServices";
@@ -70,6 +71,24 @@ function App() {
               client as ApolloClient<object>
             )({
               deviceId: deviceId.uuid,
+              certificationId: event.certification.id,
+            });
+          },
+          updateCertification: async (context, event) => {
+            if (
+              event.type !== "SUBMIT_CERTIFICATION" ||
+              !context.certification ||
+              !context.candidacyId
+            ) {
+              return Promise.reject("Impossible state");
+            }
+            const deviceId = await Device.getId();
+
+            console.log("tests");
+
+            return updateCertification(client as ApolloClient<object>)({
+              deviceId: deviceId.uuid,
+              candidacyId: context.candidacyId,
               certificationId: event.certification.id,
             });
           },
