@@ -15,7 +15,8 @@ describe("domain candidacy", () => {
           phone: '0600000000',
           email: 'john.doe@reva.beta.gouv.fr',
           createdAt: new Date(),
-          certificationId: '1234'
+          certificationId: '1234',
+          candidacyStatuses: []
         })),
       createCandidacy: () => Promise.resolve(Right(
         {
@@ -27,7 +28,8 @@ describe("domain candidacy", () => {
           phone: '0600000000',
           email: 'john.doe@reva.beta.gouv.fr',
           createdAt: new Date(),
-          certificationId: '1234'
+          certificationId: '1234',
+          candidacyStatuses: []
         }))
     });
 
@@ -75,6 +77,7 @@ describe("domain candidacy", () => {
           goals: [],
           phone: '0600000000',
           email: 'john.doe@reva.beta.gouv.fr',
+          candidacyStatuses: [],
           createdAt: new Date()
         }))
     });
@@ -93,6 +96,7 @@ describe("domain candidacy", () => {
         companionId: '456',
         experiences: [],
         goals: [],
+        candidacyStatuses: []
       }));
   });
 });
