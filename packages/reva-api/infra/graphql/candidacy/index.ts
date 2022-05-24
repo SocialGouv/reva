@@ -1,4 +1,4 @@
-import { addExperience, createCandidacy, getCandidacyFromDeviceId, getCompanions, submitCandidacy, updateContact, updateExperience, updateGoals } from "../../../domains/candidacy";
+import { addExperience, createCandidacy, getCandidacyFromDeviceId, getCompanions, submitCandidacy, updateCertification, updateContact, updateExperience, updateGoals } from "../../../domains/candidacy";
 import * as candidacyDb from "../../database/postgres/candidacies";
 import * as experienceDb from "../../database/postgres/experiences";
 import * as goalDb from "../../database/postgres/goals";
@@ -33,6 +33,17 @@ export const resolvers = {
         updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
       })({ candidacyId: payload.candidacyId });
+
+      return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
+    },
+    candidacy_updateCertification: async (_: unknown, payload: any) => { 
+      const result = await updateCertification({
+        updateCertification: candidacyDb.updateCertification,
+        getCandidacyFromId: candidacyDb.getCandidacyFromId,
+      })({
+        candidacyId: payload.candidacyId,
+        certificationId: payload.certificationId
+      });
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },

@@ -29,6 +29,38 @@ export const createCandidacyWithCertification =
       variables: { deviceId, certificationId },
     });
 
+const UPDATE_CERTIFICATION = gql`
+  mutation candidacy_updateCertification(
+    $deviceId: ID!
+    $candidacyId: ID!
+    $certificationId: ID!
+  ) {
+    candidacy_updateCertification(
+      deviceId: $deviceId
+      candidacyId: $candidacyId
+      certificationId: $certificationId
+    ) {
+      id
+    }
+  }
+`;
+
+export const updateCertification =
+  (client: ApolloClient<object>) =>
+  ({
+    deviceId,
+    candidacyId,
+    certificationId,
+  }: {
+    deviceId: string;
+    candidacyId: string;
+    certificationId: string;
+  }) =>
+    client.mutate({
+      mutation: UPDATE_CERTIFICATION,
+      variables: { deviceId, candidacyId, certificationId },
+    });
+
 const SAVE_GOALS = gql`
   mutation update_goals(
     $deviceId: ID!

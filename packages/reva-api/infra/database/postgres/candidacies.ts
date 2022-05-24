@@ -176,3 +176,40 @@ export const updateCandidacyStatus = async (params: {candidacyId: string, status
         return Left(`error while updating status on candidacy ${params.candidacyId}`);
     };
 }
+
+export const updateCertification = async (params: {candidacyId: string, certificationId: string}) => {
+    try {
+        const newCandidacy = await prismaClient.candidacy.update({
+            where: {
+                id: params.candidacyId
+            },
+            data: {
+                certification: {
+                    connect: {
+                        id: params.certificationId
+                    }
+                }
+            },
+            include: {
+                experiences: true,
+                goals: true,
+                candidacyStatuses: true
+            }
+        });
+
+        return Right({ 
+            id: newCandidacy.id,
+            deviceId: newCandidacy.deviceId,
+            certificationId: newCandidacy.certificationId,
+            companionId: newCandidacy.companionId,
+            experiences: toDomainExperiences(newCandidacy.experiences),
+            goals: newCandidacy.goals,
+            email: newCandidacy.email,
+            phone: newCandidacy.phone,
+            candidacyStatuses: newCandidacy.candidacyStatuses,
+            createdAt: newCandidacy.createdAt
+        });
+    } catch (e) {
+        return Left(`error while updating certification on candidacy ${params.candidacyId}`);
+    };
+}
