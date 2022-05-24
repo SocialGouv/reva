@@ -77,7 +77,7 @@ export const SubmissionHome = ({
   const isHomeReady =
     !state.matches({ submissionHome: "loading" }) &&
     !state.matches({ submissionHome: "retry" });
-  const isHomeLoaded = !state.matches({ submissionHome: "loading" });
+
   const isProjectDraft = state.context.projectStatus === "draft";
 
   const candidacyCreatedAtFormatted =
