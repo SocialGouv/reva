@@ -213,3 +213,46 @@ export const updateCertification = async (params: {candidacyId: string, certific
         return Left(`error while updating certification on candidacy ${params.candidacyId}`);
     };
 }
+
+export const deleteCandidacyFromPhone = async (phone: string) => {
+    try {
+
+        const {count } = await prismaClient.candidacy.deleteMany({
+            where: {
+                phone: phone
+            },
+        })
+
+        if (count === 0) {
+            return Right(`Candidature non trouvée.`);
+        } else {
+            return Right(`Candidature supprimée `);
+        }
+
+    }
+    catch(e) {
+        console.log(e)
+        return Left(`Candidature non supprimée, ${(e as any).message}`);
+    }
+
+}
+export const deleteCandidacyFromEmail = async (email: string) => {
+    try {
+
+        const {count } = await prismaClient.candidacy.deleteMany({
+            where: {
+                email: email
+            },
+        })
+
+        if (count === 0) {
+            return Right(`Candidature non trouvée.`);
+        } else {
+            return Right(`Candidature supprimée `);
+        }
+
+    }
+    catch(e) {
+        return Left(`Candidature non supprimée, ${(e as any).message}`);
+    }
+}
