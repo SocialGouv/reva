@@ -129,7 +129,7 @@ model Candidacy {
 /// Candicadies statuses
 model CandidaciesStatus {
   id        String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  candidacy       Candidacy @relation(fields: [candidacyId], references: [id])
+  candidacy       Candidacy @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
   candidacyId     String  @db.Uuid  @map("candidacy_id")
   status          CandidacyStatus @default(PROJET)
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")

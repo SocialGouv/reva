@@ -23,6 +23,7 @@ import cors from "fastify-cors";
 import proxy from "fastify-http-proxy";
 import fastifyStatic from "fastify-static";
 import { graphqlConfiguration } from "../graphql";
+import { deleteCandidacyFromEmail, deleteCandidacyFromPhone } from "../database/postgres/candidacies";
 
 const server = fastify({ logger: true });
 const WEBSITE_ROUTE_PATH = "/";
@@ -88,6 +89,25 @@ server.register(mercurius, graphqlConfiguration as any);
 server.get("/ping", async (request, reply) => {
   return "pong";
 });
+
+server.post("/admin/candidacies/delete", async (request, reply) => {
+  console.log(request.headers)
+  if (!process.env.ADMIN_TOKEN || request.headers['admin_token'] !== process.env.ADMIN_TOKEN) {
+    return reply.status(403).send("Not authorized");
+  }
+
+  const {email, phone} = request.query as any
+
+  console.log({email, phone})
+
+  if (email) {
+    await deleteCandidacyFromEmail(email)
+  }
+  if (phone) {
+    await deleteCandidacyFromPhone(phone)
+  }
+  reply.send("deleted")
+})
 
 server.listen(process.env.PORT || 8080, "0.0.0.0", (err, address) => {
   if (err) {
