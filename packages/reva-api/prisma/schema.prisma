@@ -159,7 +159,7 @@ model Goal {
 model CandicadiesOnGoals {
   candidacy       Candidacy @relation(fields: [candidacyId], references: [id])
   candidacyId     String        @db.Uuid  @map("candidacy_id")
-  goal                Goal          @relation(fields: [goalId], references: [id])
+  goal                Goal          @relation(fields: [goalId], references: [id], onDelete: Cascade)
   goalId              String        @db.Uuid  @map("goal_id")
   additionalInformation    String?    @map("additional_information")
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
@@ -175,7 +175,7 @@ model Experience {
   description String
   duration    ExperienceDuration
   startedAt   DateTime
-  candidacy       Candidacy @relation(fields: [candidacyId], references: [id])
+  candidacy       Candidacy @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
   candidacyId     String        @db.Uuid  @map("candidacy_id")
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
