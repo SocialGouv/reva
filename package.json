@@ -13,6 +13,7 @@
     "prepare": "husky install"
   },
   "workspaces": [
+    "packages/reva-admin",
     "packages/reva-api",
     "packages/reva-app"
   ],

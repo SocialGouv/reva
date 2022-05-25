@@ -47,6 +47,12 @@ npm run dev -w reva-api
 npm run dev -w reva-app
 ```
 
+### Run admin backoffice
+
+```bash
+npm run dev -w reva-admin
+```
+
 ### Run mobile app
 
 ```bash
