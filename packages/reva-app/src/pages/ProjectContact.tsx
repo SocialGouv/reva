@@ -45,7 +45,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
       direction={state.context.direction}
     >
       <BackButton onClick={() => send("BACK")} />
-      <div className="h-full flex flex-col px-8 overflow-y-auto py-12">
+      <div className="h-full flex flex-col px-8 overflow-y-auto pt-12 pb-[400px]">
         <p>
           Ces informations de contact permettront à votre accompagnateur de
           prendre contact avec vous pour discuter de votre projet.
