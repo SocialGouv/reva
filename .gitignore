@@ -5,4 +5,5 @@ dist
 elm-stuff
 node_modules
 packages/reva-website/public/style.css
+packages/reva-api/infra/graphql/generated-graphql-schema.graphql
 .parcel-cache

@@ -13,8 +13,8 @@
     "prepare": "husky install"
   },
   "workspaces": [
-    "packages/reva-admin",
     "packages/reva-api",
+    "packages/reva-admin",
     "packages/reva-app"
   ],
   "dependencies": {
