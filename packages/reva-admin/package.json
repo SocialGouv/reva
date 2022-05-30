@@ -6,7 +6,7 @@
     "dev": "concurrently npm:dev:*",
     "dev:elm": "parcel index.html --port 1235 --public-url /admin",
     "dev:css": "npm run css -- --watch",
-    "build": "npm run build:css && npm run build:elm && cp -R ./dist ../reva-api/dist/app",
+    "build:fail": "npm run build:css && npm run build:elm && cp -R ./dist ../reva-api/dist/app",
     "build:css": "NODE_ENV=production npm run css -- --minify",
     "build:elm": "parcel build index.html --public-url /admin",
     "css": "npx tailwindcss -i ./css/style.css -o ./dist/style.css",
