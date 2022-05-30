@@ -10,6 +10,7 @@
     "build:graphql": "rsync -R ./infra/graphql/**/*.graphql  ./dist && rsync -R ./infra/graphql/*.graphql  ./dist",
     "start": "npm run prisma:migrate:deploy && npm run prisma:seed && node dist/index.js",
     "test": "jest --runInBand --testRegex='.*.test.ts$'",
+    "graphql:generate": "ts-node ./infra/graphql/generate-graphql-schema.ts",
     "prisma:generate": "prisma generate",
     "prisma:seed": "prisma db seed",
     "prisma:migrate:deploy": "prisma migrate deploy"
