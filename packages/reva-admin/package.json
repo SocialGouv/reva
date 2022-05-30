@@ -6,18 +6,19 @@
     "dev": "concurrently npm:dev:*",
     "dev:elm": "parcel index.html --port 1235 --public-url /admin",
     "dev:css": "npm run css -- --watch",
-    "build:fail": "npm run build:css && npm run build:elm && cp -R ./dist ../reva-api/dist/app",
+    "build": "npm run build:css && npm run build:elm && cp -R ./dist ../reva-api/dist/admin",
     "build:css": "NODE_ENV=production npm run css -- --minify",
     "build:elm": "parcel build index.html --public-url /admin",
     "css": "npx tailwindcss -i ./css/style.css -o ./dist/style.css",
     "postinstall": "npm run css"
   },
   "keywords": [],
-  "dependencies": {},
   "devDependencies": {
+    "@dillonkearns/elm-graphql": "^4.2.4",
     "@parcel/transformer-elm": "^2.6.0",
-    "@parcel/transformer-typescript-tsc": "^2.6.0",
     "concurrently": "^7.2.1",
+    "elm": "^0.19.1-5",
+    "node-elm-compiler": "^5.0.3",
     "parcel": "^2.6.0",
     "tailwindcss": "^3.0.24"
   }

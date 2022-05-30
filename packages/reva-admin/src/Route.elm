@@ -41,7 +41,7 @@ fromRoute baseUrl route =
             baseUrl ++ "/"
 
         Login ->
-            Debug.log "" baseUrl ++ "/auth/login"
+            baseUrl ++ "/auth/login"
 
         NotFound ->
             baseUrl ++ "/not-found"
