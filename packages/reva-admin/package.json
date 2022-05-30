@@ -1,0 +1,24 @@
+{
+  "name": "reva-admin",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "concurrently npm:dev:*",
+    "dev:elm": "parcel index.html --port 1235 --public-url /admin",
+    "dev:css": "npm run css -- --watch",
+    "build": "npm run build:css && npm run build:elm && cp -R ./dist ../reva-api/dist/app",
+    "build:css": "NODE_ENV=production npm run css -- --minify",
+    "build:elm": "parcel build index.html --public-url /admin",
+    "css": "npx tailwindcss -i ./css/style.css -o ./dist/style.css",
+    "postinstall": "npm run css"
+  },
+  "keywords": [],
+  "dependencies": {},
+  "devDependencies": {
+    "@parcel/transformer-elm": "^2.6.0",
+    "@parcel/transformer-typescript-tsc": "^2.6.0",
+    "concurrently": "^7.2.1",
+    "parcel": "^2.6.0",
+    "tailwindcss": "^3.0.24"
+  }
+}
