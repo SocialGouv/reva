@@ -157,9 +157,9 @@ model Goal {
 }
 
 model CandicadiesOnGoals {
-  candidacy       Candidacy @relation(fields: [candidacyId], references: [id])
+  candidacy       Candidacy @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
   candidacyId     String        @db.Uuid  @map("candidacy_id")
-  goal                Goal          @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  goal                Goal          @relation(fields: [goalId], references: [id])
   goalId              String        @db.Uuid  @map("goal_id")
   additionalInformation    String?    @map("additional_information")
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
