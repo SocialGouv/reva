@@ -1,4 +1,4 @@
-import { Either, EitherAsync, Left } from "purify-ts";
+import { Either, EitherAsync, Left, Right } from "purify-ts";
 import { FunctionalCodeError, FunctionalError } from "../FunctionalError";
 
 export type Duration =
@@ -22,6 +22,12 @@ export interface CandidacyInput {
 export interface Candidacy extends CandidacyInput {
     id: string;
     candidacyStatuses: CandidacyStatus[];
+    createdAt: Date;
+}
+
+export interface CandidacySummary extends Omit<Candidacy, 'experiences' | 'goals' | 'candidacyStatuses'> {
+    id: string;
+    certification: any;
     createdAt: Date;
 }
 
@@ -249,4 +255,16 @@ export const updateCertification = (deps: UpdateCertificationDeps) => (params: {
     return checkIfCandidacyExists
         .chain(() => updateCertification);
 };
+
+interface GetCandidaciesDeps {
+    getCandidacies: () => Promise<Either<string, CandidacySummary[]>>;
+}
+
+export const getCandidacies = (deps: GetCandidaciesDeps) => (params : {
+    role: string
+}) => {
+    const candidacies = EitherAsync.fromPromise(() => deps.getCandidacies())
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.GOALS_NOT_UPDATED, `Erreur lors de la récupération des candidatures`));
+    return candidacies
+}
 

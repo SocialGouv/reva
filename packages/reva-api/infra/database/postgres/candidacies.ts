@@ -1,10 +1,26 @@
-import { CandidacyStatus, Experience, prisma } from '@prisma/client';
+import { CandicadiesOnGoals, CandidaciesStatus, Candidacy, CandidacyStatus, Experience, prisma } from '@prisma/client';
 import { Either, EitherAsync, Left, Maybe, Right } from 'purify-ts';
 import * as domain from '../../../domains/candidacy';
 import { prismaClient } from './client';
 import { toDomainExperiences } from './experiences';
      
-export const insertCandidacy = async (params: { deviceId: string; certificationId: string }): Promise<Either<string, domain.Candidacy>> => {
+
+const toDomainCandidacies = (candidacies: (Candidacy & {certification: any}) []): domain.CandidacySummary[] => {
+    return candidacies.map(candidacy => {
+        return {
+            id: candidacy.id,
+            deviceId: candidacy.deviceId,
+            certificationId: candidacy.certificationId,
+            certification: candidacy.certification,
+            companionId: candidacy.companionId,
+            email: candidacy.email,
+            phone: candidacy.phone,
+            createdAt: candidacy.createdAt
+        };
+    });
+};
+
+export const insertCandidacy = async (params: { deviceId: string; certificationId: string; }): Promise<Either<string, domain.Candidacy>> => {
     try {
 
         const newCandidacy = await prismaClient.candidacy.create({
@@ -70,7 +86,7 @@ export const getCandidacyFromDeviceId = async (deviceId: string) => {
             }
         });
 
-        return Maybe.fromNullable(candidacy).map(c => ({...c, certification: {...c.certification, codeRncp: c.certification.rncpId} })).toEither(`Candidacy with deviceId ${deviceId} not found`);
+        return Maybe.fromNullable(candidacy).map(c => ({ ...c, certification: { ...c.certification, codeRncp: c.certification.rncpId } })).toEither(`Candidacy with deviceId ${deviceId} not found`);
     } catch (e) {
         return Left(`error while retrieving the candidacy with id ${deviceId}`);
     };
@@ -103,10 +119,10 @@ export const getCompanions = async () => {
     } catch (e) {
         return Left(`error while retrieving companions`);
     };
-}
+};
 
 
-export const updateContactOnCandidacy = async (params: {candidacyId: string, email: string, phone : string}) => {
+export const updateContactOnCandidacy = async (params: { candidacyId: string, email: string, phone: string; }) => {
     try {
         const newCandidacy = await prismaClient.candidacy.update({
             where: {
@@ -138,9 +154,9 @@ export const updateContactOnCandidacy = async (params: {candidacyId: string, ema
     } catch (e) {
         return Left(`error while updating contact on candidacy ${params.candidacyId}`);
     };
-}
+};
 
-export const updateCandidacyStatus = async (params: {candidacyId: string, status: CandidacyStatus}) => {
+export const updateCandidacyStatus = async (params: { candidacyId: string, status: CandidacyStatus; }) => {
     try {
         const newCandidacy = await prismaClient.candidacy.update({
             where: {
@@ -175,9 +191,9 @@ export const updateCandidacyStatus = async (params: {candidacyId: string, status
     } catch (e) {
         return Left(`error while updating status on candidacy ${params.candidacyId}`);
     };
-}
+};
 
-export const updateCertification = async (params: {candidacyId: string, certificationId: string}) => {
+export const updateCertification = async (params: { candidacyId: string, certificationId: string; }) => {
     try {
         const newCandidacy = await prismaClient.candidacy.update({
             where: {
@@ -212,16 +228,16 @@ export const updateCertification = async (params: {candidacyId: string, certific
     } catch (e) {
         return Left(`error while updating certification on candidacy ${params.candidacyId}`);
     };
-}
+};
 
 export const deleteCandidacyFromPhone = async (phone: string) => {
     try {
 
-        const {count } = await prismaClient.candidacy.deleteMany({
+        const { count } = await prismaClient.candidacy.deleteMany({
             where: {
                 phone: phone
             },
-        })
+        });
 
         if (count === 0) {
             return Right(`Candidature non trouvée.`);
@@ -230,20 +246,20 @@ export const deleteCandidacyFromPhone = async (phone: string) => {
         }
 
     }
-    catch(e) {
-        console.log(e)
+    catch (e) {
+        console.log(e);
         return Left(`Candidature non supprimée, ${(e as any).message}`);
     }
+};
 
-}
 export const deleteCandidacyFromEmail = async (email: string) => {
     try {
 
-        const {count } = await prismaClient.candidacy.deleteMany({
+        const { count } = await prismaClient.candidacy.deleteMany({
             where: {
                 email: email
             },
-        })
+        });
 
         if (count === 0) {
             return Right(`Candidature non trouvée.`);
@@ -252,7 +268,22 @@ export const deleteCandidacyFromEmail = async (email: string) => {
         }
 
     }
-    catch(e) {
+    catch (e) {
         return Left(`Candidature non supprimée, ${(e as any).message}`);
+    }
+};
+
+export const getCandidacies = async () => {
+    try {
+        const candidacies = await prismaClient.candidacy.findMany({
+            include: {
+                certification: true
+            }
+        });
+
+        return Right(toDomainCandidacies(candidacies));
+    }
+    catch (e) {
+        return Left(`Erreur lors de la récupération des candidatures, ${(e as any).message}`);
     }
 }
