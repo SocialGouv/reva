@@ -23,6 +23,17 @@ type Candidacy {
   createdAt: Date!
 }
 
+type CandidacySummary {
+  id: ID!
+  deviceId: ID!
+  certificationId: ID!
+  companionId: ID
+  certification: Certification!
+  phone: String
+  email: String
+  createdAt: Date!
+}
+
 type CandidacyStatus {
   id: ID!
   status: String
@@ -52,6 +63,7 @@ type Companion {
 
 type Query {
   getCandidacy(deviceId: ID!): Candidacy
+  getCandidacies: [CandidacySummary]!
   getCompanions: [Companion]!
 }
 
