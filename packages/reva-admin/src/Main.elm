@@ -198,10 +198,6 @@ update msg model =
             ( { model | state = NotLoggedIn Page.Login.init }, Cmd.batch [ Nav.pushUrl model.key (Route.fromRoute model.baseUrl Route.Login) ] )
 
         ( GotCandidaciesResponse remoteOrganizations, _ ) ->
-            let
-                _ =
-                    Debug.log "" remoteOrganizations
-            in
             ( model, Cmd.none )
 
         _ ->
