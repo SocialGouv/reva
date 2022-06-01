@@ -1,10 +1,10 @@
 module View.Candidate exposing (Tab(..), events, layout, profile)
 
 import Api exposing (Token)
-import Candidate exposing (Candidate, StatusEvent, SurveyEvent)
 import Candidate.Grade as Grade
 import Candidate.Status as Status exposing (Status(..))
 import Css exposing (height, px)
+import Data.Candidate as Candidate exposing (Candidate, StatusEvent, SurveyEvent)
 import Html.Styled exposing (Html, a, article, dd, div, dl, dt, h1, nav, node, span, text)
 import Html.Styled.Attributes exposing (attribute, class, css, href, target)
 import Page.Candidates.Recognition

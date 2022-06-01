@@ -33,9 +33,9 @@ getCandidacy requiredArgs____ object____ =
 
 getCompanions :
     SelectionSet decodesTo Admin.Object.Companion
-    -> SelectionSet (List (Maybe decodesTo)) RootQuery
+    -> SelectionSet (List decodesTo) RootQuery
 getCompanions object____ =
-    Object.selectionForCompositeField "getCompanions" [] object____ (Basics.identity >> Decode.nullable >> Decode.list)
+    Object.selectionForCompositeField "getCompanions" [] object____ (Basics.identity >> Decode.list)
 
 
 getReferential :
@@ -75,3 +75,10 @@ getCertification :
     -> SelectionSet (Maybe decodesTo) RootQuery
 getCertification requiredArgs____ object____ =
     Object.selectionForCompositeField "getCertification" [ Argument.required "id" requiredArgs____.id (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+
+
+getCandidacies :
+    SelectionSet decodesTo Admin.Object.CandidacySummary
+    -> SelectionSet (List decodesTo) RootQuery
+getCandidacies object____ =
+    Object.selectionForCompositeField "getCandidacies" [] object____ (Basics.identity >> Decode.list)

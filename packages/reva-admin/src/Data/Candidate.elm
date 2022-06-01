@@ -1,4 +1,4 @@
-module Candidate exposing (Candidate, City, Diplome, StatusEvent, SurveyEvent, decoder, encodeMetaSkill, isRejected, maybeCityToString, maybeDiplomeToString, metaSkillDecoder, metaSkillsDecoder)
+module Data.Candidate exposing (Candidate, City, Diplome, StatusEvent, SurveyEvent, decoder, encodeMetaSkill, isRejected, maybeCityToString, maybeDiplomeToString, metaSkillDecoder, metaSkillsDecoder)
 
 import Candidate.Grade as Grade exposing (Grade)
 import Candidate.MetaSkill exposing (MetaSkill)

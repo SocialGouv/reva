@@ -13,6 +13,10 @@ type CandidacyStatus
     = CandidacyStatus
 
 
+type CandidacySummary
+    = CandidacySummary
+
+
 type CandidateGoal
     = CandidateGoal
 

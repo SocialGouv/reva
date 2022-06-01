@@ -1,6 +1,6 @@
 module Actions exposing (Action(..))
 
-import Candidate exposing (Candidate)
+import Data.Candidate exposing (Candidate)
 
 
 type Action
