@@ -31,13 +31,14 @@ type CandidacySummary {
   certification: Certification!
   phone: String
   email: String
+  lastStatus: CandidacyStatus!
   createdAt: Date!
 }
 
 type CandidacyStatus {
   id: ID!
-  status: String
-  createdAt: Date
+  status: String!
+  createdAt: Date!
 }
 
 type Experience {

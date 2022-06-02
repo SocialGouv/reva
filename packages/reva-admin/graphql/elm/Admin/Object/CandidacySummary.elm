@@ -59,3 +59,17 @@ email =
 createdAt : SelectionSet Admin.ScalarCodecs.Date Admin.Object.CandidacySummary
 createdAt =
     Object.selectionForField "ScalarCodecs.Date" "createdAt" [] (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder)
+
+
+candidacyStatuses :
+    SelectionSet decodesTo Admin.Object.CandidacyStatus
+    -> SelectionSet (List decodesTo) Admin.Object.CandidacySummary
+candidacyStatuses object____ =
+    Object.selectionForCompositeField "candidacyStatuses" [] object____ (Basics.identity >> Decode.list)
+
+
+lastStatus :
+    SelectionSet decodesTo Admin.Object.CandidacyStatus
+    -> SelectionSet decodesTo Admin.Object.CandidacySummary
+lastStatus object____ =
+    Object.selectionForCompositeField "lastStatus" [] object____ Basics.identity
