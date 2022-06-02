@@ -3,12 +3,14 @@ port module Main exposing (main)
 import Api exposing (Token)
 import Browser
 import Browser.Navigation as Nav
-import Data.Candidacies exposing (RemoteCandidacies)
+import Data.Candidacies exposing (Candidacies)
 import Data.Candidate exposing (Candidate)
 import Html.Styled as Html exposing (Html, div, toUnstyled)
 import Http
+import Page.Candidacies as Candidacies exposing (Model)
 import Page.Candidates as Candidates exposing (Model)
 import Page.Login
+import RemoteData exposing (RemoteData)
 import Request
 import Route exposing (Route(..))
 import Url exposing (Url)
@@ -39,7 +41,8 @@ type State
 
 
 type Page
-    = Home Candidates.Model
+    = Home Candidacies.Model
+    | Candidates Candidates.Model
     | Loading
 
 
@@ -49,6 +52,7 @@ type Msg
     | UserClickedLink Browser.UrlRequest
     | UserLoggedOut
     | GotCandidatesMsg Candidates.Msg
+    | GotCandidaciesMsg Candidacies.Msg
     | GotLoginError String
       -- PROFILE
       --| GotProfileResponse (Result Http.Error ())
@@ -57,7 +61,7 @@ type Msg
     | GotLoginSubmit
     | GotLoginResponse (Result Http.Error Token)
     | GotCandidatesResponse (Result Http.Error (List Candidate))
-    | GotCandidaciesResponse RemoteCandidacies
+    | GotCandidaciesResponse (RemoteData String Candidacies)
 
 
 main : Program Flags Model Msg
@@ -96,7 +100,14 @@ viewPage model =
                 }
                 loginModel
 
-        LoggedIn _ (Home candidateModel) ->
+        LoggedIn _ (Home candidaciesModel) ->
+            Candidacies.view candidaciesModel
+                |> Html.map GotCandidaciesMsg
+                |> View.layout
+                    { onLogout = UserLoggedOut
+                    }
+
+        LoggedIn _ (Candidates candidateModel) ->
             Candidates.view candidateModel
                 |> Html.map GotCandidatesMsg
                 |> View.layout
@@ -147,7 +158,7 @@ update msg model =
                     ( { model | state = Page.Login.withErrors loginModel errors |> NotLoggedIn }, Cmd.none )
 
         ( GotLoginResponse (Ok token), NotLoggedIn loginModel ) ->
-            ( { model | state = LoggedIn token (Home <| Candidates.init token) }
+            ( { model | state = LoggedIn token (Candidates <| Candidates.init token) }
             , Cmd.batch
                 [ if loginModel.form.rememberMe then
                     storeToken (Api.tokenToString token)
@@ -159,20 +170,20 @@ update msg model =
                 ]
             )
 
-        ( GotCandidatesMsg candidatesMsg, LoggedIn token (Home candidatesModel) ) ->
+        ( GotCandidatesMsg candidatesMsg, LoggedIn token (Candidates candidatesModel) ) ->
             let
                 ( newCandidatesModel, candidatesCmd ) =
                     Candidates.update candidatesMsg candidatesModel
             in
-            ( { model | state = LoggedIn token (Home newCandidatesModel) }
+            ( { model | state = LoggedIn token (Candidates newCandidatesModel) }
             , Cmd.map GotCandidatesMsg candidatesCmd
             )
 
-        ( GotCandidatesResponse (Ok candidates), LoggedIn token (Home candidatesModel) ) ->
+        ( GotCandidatesResponse (Ok candidates), LoggedIn token (Candidates candidatesModel) ) ->
             ( { model
                 | state =
                     Candidates.receiveCandidates candidatesModel candidates
-                        |> Home
+                        |> Candidates
                         |> LoggedIn token
               }
             , Cmd.none
@@ -182,7 +193,7 @@ update msg model =
             ( { model
                 | state =
                     Candidates.receiveCandidates (Candidates.init token) candidates
-                        |> Home
+                        |> Candidates
                         |> LoggedIn token
               }
             , Cmd.none
@@ -197,8 +208,15 @@ update msg model =
         ( GotLoginError _, _ ) ->
             ( { model | state = NotLoggedIn Page.Login.init }, Cmd.batch [ Nav.pushUrl model.key (Route.fromRoute model.baseUrl Route.Login) ] )
 
-        ( GotCandidaciesResponse remoteOrganizations, _ ) ->
-            ( model, Cmd.none )
+        ( GotCandidaciesResponse remoteCandidacies, LoggedIn token Loading ) ->
+            ( { model
+                | state =
+                    Candidacies.receiveRemoteCandidacies (Candidacies.init token) remoteCandidacies
+                        |> Home
+                        |> LoggedIn token
+              }
+            , Cmd.none
+            )
 
         _ ->
             ( model, Cmd.none )
@@ -230,8 +248,7 @@ init : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags _ key =
     let
         state =
-            Candidates.receiveCandidates Candidates.demoModel []
-                |> Home
+            Loading
                 |> LoggedIn (Api.stringToToken "")
 
         --case flags.token of
