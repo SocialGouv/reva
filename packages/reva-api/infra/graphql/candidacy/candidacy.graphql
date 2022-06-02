@@ -15,11 +15,11 @@ type Candidacy {
   certificationId: ID!
   companionId: ID
   certification: Certification!
-  experiences: [Experience]!
-  goals: [CandidateGoal]!
+  experiences: [Experience!]!
+  goals: [CandidateGoal!]!
   phone: String
   email: String
-  candidacyStatuses: [CandidacyStatus]!
+  candidacyStatuses: [CandidacyStatus!]!
   createdAt: Date!
 }
 
@@ -63,8 +63,8 @@ type Companion {
 
 type Query {
   getCandidacy(deviceId: ID!): Candidacy
-  getCandidacies: [CandidacySummary]!
-  getCompanions: [Companion]!
+  getCandidacies: [CandidacySummary!]!
+  getCompanions: [Companion!]!
 }
 
 # MUTATIONS

@@ -3,11 +3,13 @@ port module Main exposing (main)
 import Api exposing (Token)
 import Browser
 import Browser.Navigation as Nav
-import Candidate exposing (Candidate)
+import Data.Candidacies exposing (RemoteCandidacies)
+import Data.Candidate exposing (Candidate)
 import Html.Styled as Html exposing (Html, div, toUnstyled)
 import Http
 import Page.Candidates as Candidates exposing (Model)
 import Page.Login
+import Request
 import Route exposing (Route(..))
 import Url exposing (Url)
 import Validate
@@ -55,6 +57,7 @@ type Msg
     | GotLoginSubmit
     | GotLoginResponse (Result Http.Error Token)
     | GotCandidatesResponse (Result Http.Error (List Candidate))
+    | GotCandidaciesResponse RemoteCandidacies
 
 
 main : Program Flags Model Msg
@@ -194,6 +197,9 @@ update msg model =
         ( GotLoginError _, _ ) ->
             ( { model | state = NotLoggedIn Page.Login.init }, Cmd.batch [ Nav.pushUrl model.key (Route.fromRoute model.baseUrl Route.Login) ] )
 
+        ( GotCandidaciesResponse remoteOrganizations, _ ) ->
+            ( model, Cmd.none )
+
         _ ->
             ( model, Cmd.none )
 
@@ -243,8 +249,7 @@ init flags _ key =
             Nav.pushUrl key (Route.fromRoute flags.baseUrl Route.Login)
 
         LoggedIn token _ ->
-            -- Api.fetchCandidates (GotCandidatesResponse |> withAuthHandle) { token = token }
-            Cmd.none
+            Request.requestCandidacies "http://localhost:8080/graphql" GotCandidaciesResponse
     )
 
 

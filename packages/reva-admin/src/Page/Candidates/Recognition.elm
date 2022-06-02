@@ -3,8 +3,8 @@ module Page.Candidates.Recognition exposing (Model, Msg, Step(..), init, update,
 import Actions
 import Api exposing (Token)
 import Browser.Dom
-import Candidate exposing (Candidate)
 import Candidate.MetaSkill exposing (MetaSkill)
+import Data.Candidate exposing (Candidate)
 import Html.Styled exposing (Html, button, details, div, form, h3, h4, h5, label, li, p, span, summary, table, tbody, td, text, textarea, th, thead, tr, ul)
 import Html.Styled.Attributes exposing (attribute, class, for, id, minlength, name, placeholder, required, rows, scope, type_)
 import Html.Styled.Events exposing (onClick, onInput, onSubmit)

@@ -10,9 +10,9 @@ module Page.Candidates exposing
 
 import Actions
 import Api exposing (Token)
-import Candidate exposing (Candidate)
 import Candidate.MetaSkill exposing (MetaSkill)
 import Candidate.Status exposing (Status(..))
+import Data.Candidate as Candidate exposing (Candidate)
 import Html.Styled as Html exposing (Html, a, aside, button, div, h2, h3, input, label, li, nav, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, for, href, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onClick, onInput)

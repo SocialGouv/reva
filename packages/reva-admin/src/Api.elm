@@ -1,7 +1,7 @@
 module Api exposing (Token, createSkill, deleteSkill, fetchCandidates, fetchSkills, login, stringToToken, tokenToString)
 
-import Candidate exposing (Candidate)
 import Candidate.MetaSkill exposing (MetaSkill)
+import Data.Candidate as Candidate exposing (Candidate)
 import Http
 import Json.Decode as Decode
 import Json.Encode as Encode
