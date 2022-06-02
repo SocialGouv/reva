@@ -174,7 +174,7 @@ viewDirectoryPanel candidacies =
                 [ class "mt-1 text-sm text-gray-500" ]
                 [ text "Recherchez par nom de certification et information de contact (téléphone et email)" ]
             , div
-                [ class "mt-2 flex space-x-4", action "#" ]
+                [ class "my-2 flex space-x-4", action "#" ]
                 [ div
                     [ class "flex-1 min-w-0" ]
                     [ label
@@ -210,7 +210,7 @@ viewDirectory ( firstCandidacy, candidacies ) =
         [ dataTest "directory-group", class "relative" ]
         [ div
             [ dataTest "directory-group-name"
-            , class "z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500"
+            , class "z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-3 text-sm font-semibold text-gray-800"
             ]
             [ h3 [] [ text (Candidacy.statusToString firstCandidacy.lastStatus.status) ] ]
         , List.map viewItem (firstCandidacy :: candidacies)
@@ -237,7 +237,7 @@ viewItem candidacy =
                         [ class "absolute inset-0", attribute "aria-hidden" "true" ]
                         []
                     , p
-                        [ class "text-sm font-medium text-gray-900 space-x-4" ]
+                        [ class "text-sm font-medium text-blue-600 space-x-4" ]
                         [ text (candidacy.phone |> Maybe.withDefault "")
                         , text (candidacy.email |> Maybe.withDefault "")
                         ]
