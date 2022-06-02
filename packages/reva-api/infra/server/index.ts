@@ -2,6 +2,20 @@ import dotenv from "dotenv";
 import path from "path";
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
+const apm = require("elastic-apm-node").start({
+  // Override the service name from package.json
+  // Allowed characters: a-z, A-Z, 0-9, -, _, and space
+  serviceName: `reva-api`,
+
+  // Use if APM Server requires a secret token
+  secretToken: process.env.ES_APM_SERVER_TOKEN || "",
+
+  // Set the custom APM Server URL (default: http://localhost:8200)
+  serverUrl: process.env.ES_APM_SERVER_URL || "http://localhost:8200",
+
+  // Set the service environment
+  environment: process.env.APP_ENV || "dev",
+});
 
 import fastify from "fastify";
 import mercurius from "mercurius";
