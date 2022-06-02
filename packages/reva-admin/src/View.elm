@@ -40,10 +40,7 @@ mobileMenu config =
                 ]
             , div
                 [ class "flex-shrink-0 flex items-center px-4" ]
-                [ img
-                    [ class "h-8 w-auto", src "/illustrations/beta-gouv-logo-a3.png", alt "BetaGouv - Reva" ]
-                    []
-                , text "REVA"
+                [ text "REVA"
                 ]
             , div
                 [ class "mt-5 flex-1 h-0 overflow-y-auto" ]
@@ -75,10 +72,7 @@ sideMenu config =
         [ class "flex-1 flex flex-col flex-grow min-h-0 border-r border-gray-200 pt-5 bg-gray-100 overflow-y-auto" ]
         [ div
             [ class "flex flex-col items-center justify-center items-start flex-shrink-0 px-4" ]
-            [ img
-                [ class "h-4 w-auto", src "/illustrations/beta-gouv-logo-a3.png", alt "BetaGouv - Reva" ]
-                []
-            , span [ class "font-bold text-xs" ] [ text "REVA" ]
+            [ span [ class "font-bold text-xs" ] [ text "REVA" ]
             ]
         , div
             [ class "mt-5 flex-grow flex flex-col" ]

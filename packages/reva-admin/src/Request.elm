@@ -12,19 +12,61 @@ import Graphql.Http
 import Graphql.Operation
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
+import Json.Decode
 import RemoteData exposing (RemoteData)
 
 
-makeQueryRequest :
+makeQueryRequestToSimpleResult :
     String
-    -> (RemoteData (Graphql.Http.Error decodesTo) decodesTo -> msg)
+    -> (Result (List String) decodesTo -> msg)
     -> SelectionSet decodesTo Graphql.Operation.RootQuery
     -> Cmd msg
-makeQueryRequest endpointGraphql msg query =
+makeQueryRequestToSimpleResult endpointGraphql msg query =
     query
         |> Graphql.Http.queryRequest endpointGraphql
         --|> Graphql.Http.withCredentials
-        |> Graphql.Http.send (RemoteData.fromResult >> msg)
+        |> Graphql.Http.send (Result.mapError graphqlHttpErrorToString >> msg)
+
+
+simpleGraphqlHttpErrorToString : Graphql.Http.HttpError -> String
+simpleGraphqlHttpErrorToString httpError =
+    case httpError of
+        Graphql.Http.BadUrl url ->
+            "This URL is invalid:" ++ url
+
+        Graphql.Http.Timeout ->
+            "It took too long to get a response"
+
+        Graphql.Http.NetworkError ->
+            "The network is not available"
+
+        Graphql.Http.BadStatus metadata body ->
+            "The request failed with a "
+                ++ String.fromInt metadata.statusCode
+                ++ " status code and the following body response: "
+                ++ body
+
+        Graphql.Http.BadPayload err ->
+            "The payload was unexpected: "
+                ++ Json.Decode.errorToString err
+
+
+graphqlHttpErrorToString : Graphql.Http.Error a -> List String
+graphqlHttpErrorToString error =
+    case error of
+        Graphql.Http.HttpError httpError ->
+            [ simpleGraphqlHttpErrorToString httpError ]
+
+        Graphql.Http.GraphqlError _ errors ->
+            List.map
+                (\err -> err.message)
+                errors
+
+
+toRemote : Result (List String) a -> RemoteData String a
+toRemote r =
+    Result.mapError (String.join "\n") r
+        |> RemoteData.fromResult
 
 
 certificationSelection : SelectionSet Data.Certification.Certification Admin.Object.Certification
@@ -65,7 +107,7 @@ getCandidacies =
 
 requestCandidacies :
     String
-    -> (RemoteData (Graphql.Http.Error Data.Candidacies.Candidacies) Data.Candidacies.Candidacies -> msg)
+    -> (RemoteData String Data.Candidacies.Candidacies -> msg)
     -> Cmd msg
-requestCandidacies endpointGraphql msg =
-    makeQueryRequest endpointGraphql msg getCandidacies
+requestCandidacies endpointGraphql toMsg =
+    makeQueryRequestToSimpleResult endpointGraphql (toRemote >> toMsg) getCandidacies
