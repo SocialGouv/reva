@@ -39,10 +39,10 @@ statusToString : String -> String
 statusToString status =
     case status of
         "VALIDATION" ->
-            "Nouvelles candidatures"
+            "Candidatures soumises"
 
         "PROJET" ->
-            "Projets en cours d'édition par le candidat"
+            "Projet en cours d'édition"
 
         _ ->
             "Statut inconnu"
