@@ -41,7 +41,7 @@ type State
 
 
 type Page
-    = Home Candidacies.Model
+    = Candidacies Candidacies.Model
     | Candidates Candidates.Model
     | Loading
 
@@ -100,7 +100,7 @@ viewPage model =
                 }
                 loginModel
 
-        LoggedIn _ (Home candidaciesModel) ->
+        LoggedIn _ (Candidacies candidaciesModel) ->
             Candidacies.view candidaciesModel
                 |> Html.map GotCandidaciesMsg
                 |> View.layout
@@ -208,11 +208,21 @@ update msg model =
         ( GotLoginError _, _ ) ->
             ( { model | state = NotLoggedIn Page.Login.init }, Cmd.batch [ Nav.pushUrl model.key (Route.fromRoute model.baseUrl Route.Login) ] )
 
+        -- Candidacies
+        ( GotCandidaciesMsg candidaciesMsg, LoggedIn token (Candidacies candidaciesModel) ) ->
+            let
+                ( newCandidaciesModel, candidaciesCmd ) =
+                    Candidacies.update candidaciesMsg candidaciesModel
+            in
+            ( { model | state = LoggedIn token (Candidacies newCandidaciesModel) }
+            , Cmd.map GotCandidaciesMsg candidaciesCmd
+            )
+
         ( GotCandidaciesResponse remoteCandidacies, LoggedIn token Loading ) ->
             ( { model
                 | state =
                     Candidacies.receiveRemoteCandidacies (Candidacies.init token) remoteCandidacies
-                        |> Home
+                        |> Candidacies
                         |> LoggedIn token
               }
             , Cmd.none

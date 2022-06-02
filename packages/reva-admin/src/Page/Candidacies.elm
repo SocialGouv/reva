@@ -169,12 +169,12 @@ viewDirectoryPanel candidacies =
             [ class "px-6 pt-6 pb-4" ]
             [ h2
                 [ class "text-lg font-medium text-gray-900" ]
-                [ text "Candidats" ]
+                [ text "Candidatures" ]
             , p
-                [ class "mt-1 text-sm text-gray-600" ]
-                [ text "Rechercher par nom, diplôme, région..." ]
+                [ class "mt-1 text-sm text-gray-500" ]
+                [ text "Recherchez par nom de certification et information de contact (téléphone et email)" ]
             , div
-                [ class "mt-6 flex space-x-4", action "#" ]
+                [ class "mt-2 flex space-x-4", action "#" ]
                 [ div
                     [ class "flex-1 min-w-0" ]
                     [ label
