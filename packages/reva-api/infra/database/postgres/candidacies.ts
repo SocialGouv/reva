@@ -6,16 +6,15 @@ import { toDomainExperiences } from './experiences';
      
 
 const toDomainCandidacies = (candidacies: (Candidacy & {certification: any, candidacyStatuses:any}) []): domain.CandidacySummary[] => {
-    return candidacies.map(candidacy => {
-        const impossibleEmptyStatus = 
-                     {
-                                          id: '',
-                                          candidacyId: '',
-                                          status: '',
-                                          createdAt: new Date(),
-                                          updatedAt: null
-                                        };
-                                        
+    return candidacies.map((candidacy) => {
+        const impossibleEmptyStatus = {
+            id: '',
+            candidacyId: '',
+            status: '',
+            createdAt: new Date(),
+            updatedAt: null,
+        };
+
         return {
             id: candidacy.id,
             deviceId: candidacy.deviceId,
@@ -24,9 +23,9 @@ const toDomainCandidacies = (candidacies: (Candidacy & {certification: any, cand
             companionId: candidacy.companionId,
             email: candidacy.email,
             phone: candidacy.phone,
-            lastStatus: candidacy.candidacyStatuses.pop()
-             || impossibleEmptyStatus,
-            createdAt: candidacy.createdAt
+            lastStatus:
+                candidacy.candidacyStatuses.pop() || impossibleEmptyStatus,
+            createdAt: candidacy.createdAt,
         };
     });
 };
