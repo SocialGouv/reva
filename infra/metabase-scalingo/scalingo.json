@@ -1,0 +1,19 @@
+{
+  "name": "Metabase",
+  "description": "The simplest, fastest way to get business intelligence and analytics to everyone in your company.",
+  "website": "https://www.metabase.com/",
+  "repository": "https://github.com/Scalingo/metabase-scalingo",
+  "logo": "https://www.metabase.com/images/logo.svg",
+  "env": {
+    "BUILDPACK_URL": {
+      "description": "Buildpack used to deploy Metabase",
+      "value": "https://github.com/Scalingo/multi-buildpack.git",
+      "required": true
+    },
+    "MAX_METASPACE_SIZE": {
+      "description": "Control max memory available",
+      "value": "512m"
+    }
+  },
+  "addons": ["postgresql:postgresql-starter-512"]
+}
