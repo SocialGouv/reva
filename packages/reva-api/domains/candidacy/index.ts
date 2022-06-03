@@ -25,9 +25,10 @@ export interface Candidacy extends CandidacyInput {
     createdAt: Date;
 }
 
-export interface CandidacySummary extends Omit<Candidacy, 'experiences' | 'goals' | 'candidacyStatuses'> {
+export interface CandidacySummary extends Omit<Candidacy, 'experiences' | 'goals'| 'candidacyStatuses'> {
     id: string;
     certification: any;
+    lastStatus: CandidacyStatus;
     createdAt: Date;
 }
 

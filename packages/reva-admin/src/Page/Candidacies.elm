@@ -8,19 +8,14 @@ module Page.Candidacies exposing
     , view
     )
 
-import Actions
 import Admin.Object exposing (Candidacy)
 import Api exposing (Token)
-import Data.Candidacies exposing (Candidacies)
-import Data.Candidacy as Candidacy exposing (Candidacy)
-import Data.CandidacySummary exposing (CandidacySummary)
-import Graphql.Http exposing (Request)
+import Data.Candidacy as Candidacy exposing (Candidacy, CandidacySummary)
 import Html.Styled as Html exposing (Html, a, aside, button, div, h2, h3, input, label, li, nav, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, for, href, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onClick, onInput)
 import List.Extra
 import RemoteData exposing (RemoteData(..))
-import Request
 import String exposing (String)
 import View.Candidate exposing (Tab(..))
 import View.Helpers exposing (dataTest)
@@ -45,7 +40,7 @@ type alias Model =
     , filter : Maybe String
     , selected : SelectedCandidacy
     , tab : Tab
-    , state : RemoteData String Candidacies
+    , state : RemoteData String (List CandidacySummary)
     }
 
 
@@ -68,7 +63,7 @@ demoModel =
     { initialModel | state = RemoteData.NotAsked }
 
 
-receiveRemoteCandidacies : Model -> RemoteData String Candidacies -> Model
+receiveRemoteCandidacies : Model -> RemoteData String (List CandidacySummary) -> Model
 receiveRemoteCandidacies model remoteCandidacies =
     { model | state = remoteCandidacies }
 
@@ -104,18 +99,23 @@ view model =
             div [ class "text-red-500" ] [ text errors ]
 
         Success candidacies ->
+            let
+                sortedCandidacies =
+                    List.sortBy (.lastStatus >> .status) candidacies
+                        |> List.reverse
+            in
             case model.filter of
                 Nothing ->
-                    viewContent model candidacies
+                    viewContent model sortedCandidacies
 
                 Just filter ->
-                    List.filter (filterCandidacy filter) candidacies
+                    List.filter (filterCandidacy filter) sortedCandidacies
                         |> viewContent model
 
 
 viewContent :
     Model
-    -> List Candidacy
+    -> List CandidacySummary
     -> Html Msg
 viewContent model candidacies =
     div
@@ -155,12 +155,12 @@ viewCandidacyPanel model candidacy =
             div [] []
 
 
-viewDirectoryPanel : List Candidacy -> Html Msg
+viewDirectoryPanel : List CandidacySummary -> Html Msg
 viewDirectoryPanel candidacies =
     let
-        candidaciesByFirstLetter =
+        candidaciesByStatus =
             List.Extra.groupWhile
-                (\c1 c2 -> candidacyFirstLetter c1 == candidacyFirstLetter c2)
+                (\c1 c2 -> c1.lastStatus.status == c2.lastStatus.status)
                 candidacies
     in
     aside
@@ -174,7 +174,7 @@ viewDirectoryPanel candidacies =
                 [ class "mt-1 text-sm text-gray-500" ]
                 [ text "Recherchez par nom de certification et information de contact (téléphone et email)" ]
             , div
-                [ class "mt-2 flex space-x-4", action "#" ]
+                [ class "my-2 flex space-x-4", action "#" ]
                 [ div
                     [ class "flex-1 min-w-0" ]
                     [ label
@@ -199,26 +199,20 @@ viewDirectoryPanel candidacies =
                     ]
                 ]
             ]
-        , List.map viewDirectory candidaciesByFirstLetter
+        , List.map viewDirectory candidaciesByStatus
             |> nav [ dataTest "directory", class "flex-1 min-h-0 overflow-y-auto", attribute "aria-label" "Candidats" ]
         ]
 
 
-viewDirectory : ( Candidacy, List Candidacy ) -> Html Msg
+viewDirectory : ( CandidacySummary, List Candidacy.CandidacySummary ) -> Html Msg
 viewDirectory ( firstCandidacy, candidacies ) =
-    let
-        groupName =
-            candidacyFirstLetter firstCandidacy
-                |> String.fromChar
-                |> String.toUpper
-    in
     div
         [ dataTest "directory-group", class "relative" ]
         [ div
             [ dataTest "directory-group-name"
-            , class "z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500"
+            , class "z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-3 text-sm font-semibold text-gray-800"
             ]
-            [ h3 [] [ text groupName ] ]
+            [ h3 [] [ text (Candidacy.statusToString firstCandidacy.lastStatus.status) ] ]
         , List.map viewItem (firstCandidacy :: candidacies)
             |> ul [ attribute "role" "list", class "relative z-0 divide-y divide-gray-200" ]
         ]
@@ -243,7 +237,7 @@ viewItem candidacy =
                         [ class "absolute inset-0", attribute "aria-hidden" "true" ]
                         []
                     , p
-                        [ class "text-sm font-medium text-gray-900 space-x-4" ]
+                        [ class "text-sm font-medium text-blue-600 space-x-4" ]
                         [ text (candidacy.phone |> Maybe.withDefault "")
                         , text (candidacy.email |> Maybe.withDefault "")
                         ]

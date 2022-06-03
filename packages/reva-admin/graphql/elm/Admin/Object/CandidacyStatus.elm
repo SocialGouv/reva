@@ -24,11 +24,11 @@ id =
     Object.selectionForField "ScalarCodecs.Id" "id" [] (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
-status : SelectionSet (Maybe String) Admin.Object.CandidacyStatus
+status : SelectionSet String Admin.Object.CandidacyStatus
 status =
-    Object.selectionForField "(Maybe String)" "status" [] (Decode.string |> Decode.nullable)
+    Object.selectionForField "String" "status" [] Decode.string
 
 
-createdAt : SelectionSet (Maybe Admin.ScalarCodecs.Date) Admin.Object.CandidacyStatus
+createdAt : SelectionSet Admin.ScalarCodecs.Date Admin.Object.CandidacyStatus
 createdAt =
-    Object.selectionForField "(Maybe ScalarCodecs.Date)" "createdAt" [] (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder |> Decode.nullable)
+    Object.selectionForField "ScalarCodecs.Date" "createdAt" [] (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder)

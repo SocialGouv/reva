@@ -1,12 +1,12 @@
 module Request exposing (requestCandidacies)
 
 import Admin.Object
+import Admin.Object.CandidacyStatus
 import Admin.Object.CandidacySummary
 import Admin.Object.Certification
 import Admin.Query as Query
 import Admin.Scalar exposing (Date(..), Id(..))
-import Data.Candidacies
-import Data.CandidacySummary
+import Data.Candidacy
 import Data.Certification
 import Graphql.Http
 import Graphql.Operation
@@ -83,13 +83,20 @@ certificationSelection =
         |> with Admin.Object.Certification.abilities
 
 
+candidacyStatusSelection : SelectionSet Data.Candidacy.CandidacyStatus Admin.Object.CandidacyStatus
+candidacyStatusSelection =
+    SelectionSet.succeed Data.Candidacy.CandidacyStatus
+        |> with (SelectionSet.map (\(Date date) -> date) Admin.Object.CandidacyStatus.createdAt)
+        |> with Admin.Object.CandidacyStatus.status
+
+
 
 --  |> with Admin.Object.Certification.codeRncp
 
 
-candidacySummarySelection : SelectionSet Data.CandidacySummary.CandidacySummary Admin.Object.CandidacySummary
+candidacySummarySelection : SelectionSet Data.Candidacy.CandidacySummary Admin.Object.CandidacySummary
 candidacySummarySelection =
-    SelectionSet.succeed Data.CandidacySummary.CandidacySummary
+    SelectionSet.succeed Data.Candidacy.CandidacySummary
         |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.CandidacySummary.id)
         |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.CandidacySummary.deviceId)
         |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.CandidacySummary.certificationId)
@@ -97,17 +104,18 @@ candidacySummarySelection =
         |> with (Admin.Object.CandidacySummary.certification certificationSelection)
         |> with Admin.Object.CandidacySummary.phone
         |> with Admin.Object.CandidacySummary.email
+        |> with (Admin.Object.CandidacySummary.lastStatus candidacyStatusSelection)
         |> with (SelectionSet.map (\(Date date) -> date) Admin.Object.CandidacySummary.createdAt)
 
 
-getCandidacies : SelectionSet (List Data.CandidacySummary.CandidacySummary) Graphql.Operation.RootQuery
+getCandidacies : SelectionSet (List Data.Candidacy.CandidacySummary) Graphql.Operation.RootQuery
 getCandidacies =
     Query.getCandidacies candidacySummarySelection
 
 
 requestCandidacies :
     String
-    -> (RemoteData String Data.Candidacies.Candidacies -> msg)
+    -> (RemoteData String (List Data.Candidacy.CandidacySummary) -> msg)
     -> Cmd msg
 requestCandidacies endpointGraphql toMsg =
     makeQueryRequestToSimpleResult endpointGraphql (toRemote >> toMsg) getCandidacies

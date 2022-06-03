@@ -3,7 +3,7 @@ port module Main exposing (main)
 import Api exposing (Token)
 import Browser
 import Browser.Navigation as Nav
-import Data.Candidacies exposing (Candidacies)
+import Data.Candidacy exposing (CandidacySummary)
 import Data.Candidate exposing (Candidate)
 import Html.Styled as Html exposing (Html, div, toUnstyled)
 import Http
@@ -61,7 +61,7 @@ type Msg
     | GotLoginSubmit
     | GotLoginResponse (Result Http.Error Token)
     | GotCandidatesResponse (Result Http.Error (List Candidate))
-    | GotCandidaciesResponse (RemoteData String Candidacies)
+    | GotCandidaciesResponse (RemoteData String (List CandidacySummary))
 
 
 main : Program Flags Model Msg

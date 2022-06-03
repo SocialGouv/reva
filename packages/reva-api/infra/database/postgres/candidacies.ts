@@ -5,8 +5,16 @@ import { prismaClient } from './client';
 import { toDomainExperiences } from './experiences';
      
 
-const toDomainCandidacies = (candidacies: (Candidacy & {certification: any}) []): domain.CandidacySummary[] => {
-    return candidacies.map(candidacy => {
+const toDomainCandidacies = (candidacies: (Candidacy & {certification: any, candidacyStatuses:any}) []): domain.CandidacySummary[] => {
+    return candidacies.map((candidacy) => {
+        const impossibleEmptyStatus = {
+            id: '',
+            candidacyId: '',
+            status: '',
+            createdAt: new Date(),
+            updatedAt: null,
+        };
+
         return {
             id: candidacy.id,
             deviceId: candidacy.deviceId,
@@ -15,7 +23,9 @@ const toDomainCandidacies = (candidacies: (Candidacy & {certification: any}) [])
             companionId: candidacy.companionId,
             email: candidacy.email,
             phone: candidacy.phone,
-            createdAt: candidacy.createdAt
+            lastStatus:
+                candidacy.candidacyStatuses.pop() || impossibleEmptyStatus,
+            createdAt: candidacy.createdAt,
         };
     });
 };
@@ -277,7 +287,8 @@ export const getCandidacies = async () => {
     try {
         const candidacies = await prismaClient.candidacy.findMany({
             include: {
-                certification: true
+                certification: true,
+                candidacyStatuses: true
             }
         });
 
