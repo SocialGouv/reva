@@ -1,6 +1,7 @@
-module Request exposing (requestCandidacies)
+module Request exposing (requestCandidacies, requestCandidacy)
 
 import Admin.Object
+import Admin.Object.Candidacy
 import Admin.Object.CandidacyStatus
 import Admin.Object.CandidacySummary
 import Admin.Object.Certification
@@ -13,7 +14,7 @@ import Graphql.Operation
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import Json.Decode
-import RemoteData exposing (RemoteData)
+import RemoteData exposing (RemoteData(..))
 
 
 makeQueryRequestToSimpleResult :
@@ -108,9 +109,30 @@ candidacySummarySelection =
         |> with (SelectionSet.map (\(Date date) -> date) Admin.Object.CandidacySummary.createdAt)
 
 
+candidacySelection : SelectionSet Data.Candidacy.Candidacy Admin.Object.Candidacy
+candidacySelection =
+    SelectionSet.succeed Data.Candidacy.Candidacy
+        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.Candidacy.id)
+        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.Candidacy.deviceId)
+        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.Candidacy.certificationId)
+        |> with (SelectionSet.map (Maybe.map (\(Id id) -> id)) Admin.Object.Candidacy.companionId)
+        |> with (Admin.Object.Candidacy.certification certificationSelection)
+        |> with Admin.Object.Candidacy.phone
+        |> with Admin.Object.Candidacy.email
+        |> with (Admin.Object.Candidacy.candidacyStatuses candidacyStatusSelection)
+        |> with (SelectionSet.map (\(Date date) -> date) Admin.Object.Candidacy.createdAt)
+
+
 getCandidacies : SelectionSet (List Data.Candidacy.CandidacySummary) Graphql.Operation.RootQuery
 getCandidacies =
     Query.getCandidacies candidacySummarySelection
+
+
+getCandidacy : String -> SelectionSet (Maybe Data.Candidacy.Candidacy) Graphql.Operation.RootQuery
+getCandidacy candidacyId =
+    Query.getCandidacy
+        (Query.GetCandidacyRequiredArguments (Id candidacyId))
+        candidacySelection
 
 
 requestCandidacies :
@@ -119,3 +141,30 @@ requestCandidacies :
     -> Cmd msg
 requestCandidacies endpointGraphql toMsg =
     makeQueryRequestToSimpleResult endpointGraphql (toRemote >> toMsg) getCandidacies
+
+
+requestCandidacy :
+    String
+    -> (RemoteData String Data.Candidacy.Candidacy -> msg)
+    -> String
+    -> Cmd msg
+requestCandidacy endpointGraphql toMsg deviceId =
+    let
+        nothingToError remoteCandidacy =
+            case remoteCandidacy of
+                Success Nothing ->
+                    Failure "Cette candidature est introuvable"
+
+                Success (Just candidacy) ->
+                    Success candidacy
+
+                Failure e ->
+                    Failure e
+
+                NotAsked ->
+                    NotAsked
+
+                Loading ->
+                    Loading
+    in
+    makeQueryRequestToSimpleResult endpointGraphql (toRemote >> nothingToError >> toMsg) (getCandidacy deviceId)

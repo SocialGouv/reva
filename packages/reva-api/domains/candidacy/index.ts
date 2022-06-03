@@ -84,7 +84,7 @@ interface GetCandidacyDeps {
 
 export const getCandidacyFromDeviceId = (deps: GetCandidacyDeps) => (params: { deviceId: string; }): Promise<Either<FunctionalError, Candidacy>> => 
     EitherAsync.fromPromise(() => deps.getCandidacyFromDeviceId(params.deviceId))
-        .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvé`)).run();
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvée`)).run();
 
 
 interface GetCompanionsDeps {
@@ -109,7 +109,7 @@ export const addExperience = (deps: AddExperienceDeps) => (params: {
 }) => {
     const checkIfCandidacyExists = 
         EitherAsync.fromPromise(() => deps.getCandidacyFromId(params.candidacyId))
-            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvé`));
+            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvée`));
 
     const createExperience = EitherAsync.fromPromise(() => deps.createExperience(params))
         .mapLeft(() => new FunctionalError(FunctionalCodeError.EXPERIENCE_NOT_CREATED, `Erreur lors de la creation de l'expérience`));
@@ -138,7 +138,7 @@ export const updateExperience = (deps: UpdateExperienceDeps) => (params: {
 }) => {
     const checkIfCandidacyExists = 
         EitherAsync.fromPromise(() => deps.getCandidacyFromId(params.candidacyId))
-            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvé`));
+            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvée`));
 
     const checkIfExperienceExists = 
         EitherAsync.fromPromise(() => deps.getExperienceFromId(params.experienceId))
@@ -169,7 +169,7 @@ export const updateGoals = (deps: UpdateGoalsDeps) => (params: {
 }) => {
     const checkIfCandidacyExists = 
         EitherAsync.fromPromise(() => deps.getCandidacyFromId(params.candidacyId))
-            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvé`));
+            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvée`));
 
     const updateGoals = EitherAsync.fromPromise(() => deps.updateGoals(params))
         .mapLeft(() => new FunctionalError(FunctionalCodeError.GOALS_NOT_UPDATED, `Erreur lors de la mise à jour des objectifs`));
@@ -198,7 +198,7 @@ export const updateContact = (deps: UpdateContactDeps) => (params: {
     // TODO Check mail format
     const checkIfCandidacyExists = 
         EitherAsync.fromPromise(() => deps.getCandidacyFromId(params.candidacyId))
-            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvé`));
+            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvée`));
 
     const updateContact = EitherAsync.fromPromise(() => deps.updateContact(params))
         .mapLeft(() => new FunctionalError(FunctionalCodeError.GOALS_NOT_UPDATED, `Erreur lors de la mise à jour du contact`));
@@ -222,7 +222,7 @@ export const submitCandidacy = (deps: SubmitCandidacyDeps) => (params: {
     // TODO Check if a candidacy does not already exist with status VALIDATION
     const checkIfCandidacyExists = 
         EitherAsync.fromPromise(() => deps.getCandidacyFromId(params.candidacyId))
-            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvé`));
+            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvée`));
 
     const updateContact = EitherAsync.fromPromise(() => deps.updateCandidacyStatus({candidacyId: params.candidacyId, status: "VALIDATION"}))
         .mapLeft(() => new FunctionalError(FunctionalCodeError.STATUS_NOT_UPDATED, `Erreur lors de la mise à jour du status`));
@@ -247,7 +247,7 @@ export const updateCertification = (deps: UpdateCertificationDeps) => (params: {
     // TODO Check mail format
     const checkIfCandidacyExists = 
         EitherAsync.fromPromise(() => deps.getCandidacyFromId(params.candidacyId))
-            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvé`));
+            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvée`));
 
     const updateCertification = EitherAsync.fromPromise(() => deps.updateCertification(params))
         .mapLeft(() => new FunctionalError(FunctionalCodeError.GOALS_NOT_UPDATED, `Erreur lors de la mise à jour de la certification`));

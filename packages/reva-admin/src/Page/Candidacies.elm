@@ -16,29 +16,25 @@ import Html.Styled.Attributes exposing (action, attribute, class, for, href, id,
 import Html.Styled.Events exposing (onClick, onInput)
 import List.Extra
 import RemoteData exposing (RemoteData(..))
+import Request
 import String exposing (String)
+import View.Candidacy
 import View.Candidate exposing (Tab(..))
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 
 
 type Msg
-    = GotCandidacyResponse Candidacy
+    = GotCandidacyResponse (RemoteData String Candidacy)
     | UserAddedFilter String
     | UserSelectedCandidacy CandidacySummary
     | UserSelectedCandidacyTab View.Candidate.Tab
 
 
-type SelectedCandidacy
-    = LoadingSelection CandidacySummary
-    | LoadedSelection Candidacy
-    | CandidacyNotSelected
-
-
 type alias Model =
     { token : Token
     , filter : Maybe String
-    , selected : SelectedCandidacy
+    , selected : RemoteData String Candidacy
     , tab : Tab
     , state : RemoteData String (List CandidacySummary)
     }
@@ -48,7 +44,7 @@ init : Token -> Model
 init token =
     { token = token
     , filter = Nothing
-    , selected = CandidacyNotSelected
+    , selected = NotAsked
     , state = RemoteData.NotAsked
     , tab = View.Candidate.Events
     }
@@ -143,16 +139,25 @@ viewContent model candidacies =
         , div
             [ class "flex-1 relative z-0 flex overflow-hidden" ]
             [ viewDirectoryPanel candidacies
-            , div [ class "h-full w-full bg-gray-500" ] []
+            , viewCandidacyPanel model
             ]
         ]
 
 
-viewCandidacyPanel : Model -> Candidacy -> Html Msg
-viewCandidacyPanel model candidacy =
-    case model.tab of
-        _ ->
-            div [] []
+viewCandidacyPanel : Model -> Html Msg
+viewCandidacyPanel model =
+    case model.selected of
+        NotAsked ->
+            div [ class "h-full w-full bg-gray-500" ] []
+
+        Loading ->
+            div [ class "h-full w-full transition-colors bg-white p-4" ] [ text "..." ]
+
+        Failure err ->
+            div [ class "h-full w-full transition-colors bg-white text-red-600 p-4" ] [ text err ]
+
+        Success candidacy ->
+            View.Candidacy.view candidacy
 
 
 viewDirectoryPanel : List CandidacySummary -> Html Msg
@@ -260,16 +265,15 @@ update msg model =
             ( model, Cmd.none )
     in
     case msg of
-        GotCandidacyResponse candidacy ->
-            ( { model | selected = LoadedSelection candidacy }, Cmd.none )
+        GotCandidacyResponse remoteCandidacy ->
+            ( { model | selected = remoteCandidacy }, Cmd.none )
 
         UserAddedFilter filter ->
             ( { model | filter = Just filter }, Cmd.none )
 
         UserSelectedCandidacy candidacySummary ->
-            ( { model | selected = LoadingSelection candidacySummary }
-            , Cmd.none
-              -- TODO: fetch candidacy
+            ( { model | selected = Loading }
+            , Request.requestCandidacy "http://localhost:8080/graphql" GotCandidacyResponse candidacySummary.deviceId
             )
 
         UserSelectedCandidacyTab tab ->
