@@ -26,10 +26,12 @@ import View.Icons as Icons
 type Msg
     = GotCandidaciesResponse (RemoteData String (List CandidacySummary))
     | GotCandidacyResponse (RemoteData String Candidacy)
-    | GotCandidacyDeletionResponse (RemoteData String (Maybe String))
+    | GotCandidacyDeletionResponse (RemoteData String String)
+    | GotCandidacyArchivingResponse (RemoteData String Candidacy)
     | GotReferentialResponse (RemoteData String Referential)
     | UserAddedFilter String
     | UserSelectedCandidacy CandidacySummary
+    | UserArchivedCandidacy Candidacy
     | UserDeletedCandidacy Candidacy
     | UserSelectedCandidacyTab View.Candidate.Tab
 
@@ -178,6 +180,7 @@ viewCandidacyPanel model =
         Success candidacy ->
             View.Candidacy.view
                 { candidacy = candidacy
+                , archiveMsg = UserArchivedCandidacy
                 , deleteMsg = UserDeletedCandidacy
                 , referential = model.state.referential
                 }
@@ -303,6 +306,12 @@ update msg model =
         GotCandidacyDeletionResponse _ ->
             ( { model | selected = NotAsked }, Cmd.none )
 
+        GotCandidacyArchivingResponse (Failure err) ->
+            ( { model | selected = Failure err }, Cmd.none )
+
+        GotCandidacyArchivingResponse _ ->
+            ( { model | selected = NotAsked }, Cmd.none )
+
         GotReferentialResponse remoteReferentials ->
             ( { model | state = model.state |> withReferential remoteReferentials }
             , Cmd.none
@@ -316,9 +325,14 @@ update msg model =
             , Request.deleteCandidacy model.endpoint GotCandidacyDeletionResponse candidacy.id
             )
 
+        UserArchivedCandidacy candidacy ->
+            ( removeCandidacy model candidacy
+            , Request.archiveCandidacy model.endpoint GotCandidacyArchivingResponse candidacy.id
+            )
+
         UserSelectedCandidacy candidacySummary ->
             ( { model | selected = Loading }
-            , Request.requestCandidacy model.endpoint GotCandidacyResponse candidacySummary.deviceId
+            , Request.requestCandidacy model.endpoint GotCandidacyResponse candidacySummary.id
             )
 
         UserSelectedCandidacyTab tab ->

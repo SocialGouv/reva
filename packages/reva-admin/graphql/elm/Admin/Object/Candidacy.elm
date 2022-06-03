@@ -48,9 +48,9 @@ certification object____ =
 
 experiences :
     SelectionSet decodesTo Admin.Object.Experience
-    -> SelectionSet (List (Maybe decodesTo)) Admin.Object.Candidacy
+    -> SelectionSet (List decodesTo) Admin.Object.Candidacy
 experiences object____ =
-    Object.selectionForCompositeField "experiences" [] object____ (Basics.identity >> Decode.nullable >> Decode.list)
+    Object.selectionForCompositeField "experiences" [] object____ (Basics.identity >> Decode.list)
 
 
 goals :

@@ -172,12 +172,24 @@ candidacy_updateContact fillInOptionals____ requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_updateContact" (optionalArgs____ ++ [ Argument.required "deviceId" requiredArgs____.deviceId (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "candidacyId" requiredArgs____.candidacyId (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapEncoder .codecId) ]) object____ (Basics.identity >> Decode.nullable)
 
 
+type alias CandidacyArchiveByIdRequiredArguments =
+    { candidacyId : Admin.ScalarCodecs.Id }
+
+
+candidacy_archiveById :
+    CandidacyArchiveByIdRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet decodesTo RootMutation
+candidacy_archiveById requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_archiveById" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ Basics.identity
+
+
 type alias CandidacyDeleteByIdRequiredArguments =
     { candidacyId : Admin.ScalarCodecs.Id }
 
 
 candidacy_deleteById :
     CandidacyDeleteByIdRequiredArguments
-    -> SelectionSet (Maybe String) RootMutation
+    -> SelectionSet String RootMutation
 candidacy_deleteById requiredArgs____ =
-    Object.selectionForField "(Maybe String)" "candidacy_deleteById" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] (Decode.string |> Decode.nullable)
+    Object.selectionForField "String" "candidacy_deleteById" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] Decode.string

@@ -109,7 +109,7 @@ model Companion {
 
 model Candidacy {
   id        String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  deviceId  String    @unique @db.VarChar(255)
+  deviceId  String    @db.VarChar(255)
   keycloakSub String? @db.Uuid  @map("keycloak_sub") 
   companion       Companion? @relation(fields: [companionId], references: [id])
   companionId     String?        @db.Uuid  @map("companion_id")
@@ -132,12 +132,14 @@ model CandidaciesStatus {
   candidacy       Candidacy @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
   candidacyId     String  @db.Uuid  @map("candidacy_id")
   status          CandidacyStatus @default(PROJET)
+  isActive    Boolean   @default(false) @map("is_active")    
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
   @@map("candidacy_candidacy_status")
 }
 
 enum CandidacyStatus {
+  ARCHIVE
   PROJET
   VALIDATION
   DOSSIER_PRO

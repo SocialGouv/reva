@@ -51,5 +51,8 @@ statusToString status =
         "PROJET" ->
             "Projet en cours d'édition"
 
+        "ARCHIVE" ->
+            "Candidatures archivées"
+
         _ ->
             "Statut inconnu"

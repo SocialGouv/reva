@@ -1,4 +1,4 @@
-import { addExperience, createCandidacy, deleteCandidacy, getCandidacies, getCandidacyFromDeviceId, getCompanions, submitCandidacy, updateCertification, updateContact, updateExperience, updateGoals } from "../../../domains/candidacy";
+import { addExperience, archiveCandidacyFromId, createCandidacy, deleteCandidacy, getCandidacies, getCandidacyFromDeviceId, getCandidacyFromId, getCompanions, submitCandidacy, updateCertification, updateContact, updateExperience, updateGoals } from "../../../domains/candidacy";
 import * as candidacyDb from "../../database/postgres/candidacies";
 import * as experienceDb from "../../database/postgres/experiences";
 import * as goalDb from "../../database/postgres/goals";
@@ -7,8 +7,12 @@ import mercurius from "mercurius";
 
 export const resolvers = {
   Query: {
-    getCandidacy: async (_: unknown, { deviceId }: { deviceId: string; }) => {
+    getCandidacy: async (other: unknown, { deviceId }: { deviceId: string; }, context: any) => {
       const result = await getCandidacyFromDeviceId({ getCandidacyFromDeviceId: candidacyDb.getCandidacyFromDeviceId })({ deviceId });
+      return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
+    },
+    getCandidacyById: async (other: unknown, { id }: { id: string; }, context: any) => {
+      const result = await getCandidacyFromId({ getCandidacyFromId: candidacyDb.getCandidacyFromId })({ id });
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
     getCandidacies: async (_: unknown, params: { deviceId: string; }) => {
@@ -108,6 +112,16 @@ export const resolvers = {
     candidacy_deleteById: async (_: unknown, payload: any) => {
       const result = await deleteCandidacy({
         deleteCandidacyFromId: candidacyDb.deleteCandidacyFromId,
+      })({
+        candidacyId: payload.candidacyId
+      });
+
+      return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
+    },
+
+    candidacy_archiveById: async (_: unknown, payload: any) => {
+      const result = await archiveCandidacyFromId({
+        updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
       })({
         candidacyId: payload.candidacyId
       });
