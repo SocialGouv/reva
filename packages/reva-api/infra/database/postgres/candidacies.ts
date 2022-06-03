@@ -1,11 +1,11 @@
-import { CandicadiesOnGoals, CandidaciesStatus, Candidacy, CandidacyStatus, Experience, prisma } from '@prisma/client';
+import { CandicadiesOnGoals, CandidaciesStatus, Candidacy, CandidacyStatus, Certification, Experience, prisma } from '@prisma/client';
 import { Either, EitherAsync, Left, Maybe, Right } from 'purify-ts';
 import * as domain from '../../../domains/candidacy';
 import { prismaClient } from './client';
 import { toDomainExperiences } from './experiences';
      
 
-const toDomainCandidacies = (candidacies: (Candidacy & {certification: any, candidacyStatuses:any}) []): domain.CandidacySummary[] => {
+const toDomainCandidacies = (candidacies: (Candidacy & {certification: Certification, candidacyStatuses:any}) []): domain.CandidacySummary[] => {
     return candidacies.map((candidacy) => {
         const impossibleEmptyStatus = {
             id: '',
@@ -283,6 +283,27 @@ export const deleteCandidacyFromEmail = async (email: string) => {
     }
 };
 
+export const deleteCandidacyFromId = async (id: string) => {
+    try {
+
+        const { count } = await prismaClient.candidacy.deleteMany({
+            where: {
+                id: id
+            },
+        });
+
+        if (count === 0) {
+            return Right(`Candidature non trouvée.`);
+        } else {
+            return Right(`Candidature supprimée `);
+        }
+
+    }
+    catch (e) {
+        return Left(`Candidature non supprimée, ${(e as any).message}`);
+    }
+}
+    
 export const getCandidacies = async () => {
     try {
         const candidacies = await prismaClient.candidacy.findMany({

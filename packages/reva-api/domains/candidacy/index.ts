@@ -265,7 +265,20 @@ export const getCandidacies = (deps: GetCandidaciesDeps) => (params : {
     role: string
 }) => {
     const candidacies = EitherAsync.fromPromise(() => deps.getCandidacies())
-        .mapLeft(() => new FunctionalError(FunctionalCodeError.GOALS_NOT_UPDATED, `Erreur lors de la récupération des candidatures`));
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACIES_NOT_FOUND, `Erreur lors de la récupération des candidatures`));
     return candidacies
 }
 
+interface DeleteCandidacyDeps {
+    deleteCandidacyFromId: (
+        candidacyId: string
+    ) => Promise<Either<string, string>>;
+}
+
+export const deleteCandidacy = (deps: DeleteCandidacyDeps) => (params : {
+    candidacyId: string
+}) => {
+    const result = EitherAsync.fromPromise(() => deps.deleteCandidacyFromId(params.candidacyId))
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACIES_NOT_DELETE, `Erreur lors de la suppression de la candidature ${params.candidacyId}`));
+    return result
+}
