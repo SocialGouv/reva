@@ -1,5 +1,6 @@
-module Request exposing (requestCandidacies, requestCandidacy)
+module Request exposing (deleteCandidacy, requestCandidacies, requestCandidacy)
 
+import Admin.Mutation as Mutation
 import Admin.Object
 import Admin.Object.Candidacy
 import Admin.Object.CandidacyStatus
@@ -17,16 +18,34 @@ import Json.Decode
 import RemoteData exposing (RemoteData(..))
 
 
-makeQueryRequestToSimpleResult :
+toRemote : Result (List String) a -> RemoteData String a
+toRemote r =
+    Result.mapError (String.join "\n") r
+        |> RemoteData.fromResult
+
+
+makeQuery :
     String
-    -> (Result (List String) decodesTo -> msg)
+    -> (RemoteData String decodesTo -> msg)
     -> SelectionSet decodesTo Graphql.Operation.RootQuery
     -> Cmd msg
-makeQueryRequestToSimpleResult endpointGraphql msg query =
+makeQuery endpointGraphql msg query =
     query
         |> Graphql.Http.queryRequest endpointGraphql
         --|> Graphql.Http.withCredentials
-        |> Graphql.Http.send (Result.mapError graphqlHttpErrorToString >> msg)
+        |> Graphql.Http.send (Result.mapError graphqlHttpErrorToString >> toRemote >> msg)
+
+
+makeMutation :
+    String
+    -> (RemoteData String decodesTo -> msg)
+    -> SelectionSet decodesTo Graphql.Operation.RootMutation
+    -> Cmd msg
+makeMutation endpointGraphql msg query =
+    query
+        |> Graphql.Http.mutationRequest endpointGraphql
+        --|> Graphql.Http.withCredentials
+        |> Graphql.Http.send (Result.mapError graphqlHttpErrorToString >> toRemote >> msg)
 
 
 simpleGraphqlHttpErrorToString : Graphql.Http.HttpError -> String
@@ -62,12 +81,6 @@ graphqlHttpErrorToString error =
             List.map
                 (\err -> err.message)
                 errors
-
-
-toRemote : Result (List String) a -> RemoteData String a
-toRemote r =
-    Result.mapError (String.join "\n") r
-        |> RemoteData.fromResult
 
 
 certificationSelection : SelectionSet Data.Certification.Certification Admin.Object.Certification
@@ -140,7 +153,7 @@ requestCandidacies :
     -> (RemoteData String (List Data.Candidacy.CandidacySummary) -> msg)
     -> Cmd msg
 requestCandidacies endpointGraphql toMsg =
-    makeQueryRequestToSimpleResult endpointGraphql (toRemote >> toMsg) getCandidacies
+    makeQuery endpointGraphql toMsg getCandidacies
 
 
 requestCandidacy :
@@ -167,4 +180,15 @@ requestCandidacy endpointGraphql toMsg deviceId =
                 Loading ->
                     Loading
     in
-    makeQueryRequestToSimpleResult endpointGraphql (toRemote >> nothingToError >> toMsg) (getCandidacy deviceId)
+    makeQuery endpointGraphql (nothingToError >> toMsg) (getCandidacy deviceId)
+
+
+deleteCandidacy :
+    String
+    -> (RemoteData String (Maybe String) -> msg)
+    -> String
+    -> Cmd msg
+deleteCandidacy endpointGraphql toMsg candidacyId =
+    Mutation.CandidacyDeleteByIdRequiredArguments (Id candidacyId)
+        |> Mutation.candidacy_deleteById
+        |> makeMutation endpointGraphql toMsg
