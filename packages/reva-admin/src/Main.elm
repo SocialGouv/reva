@@ -34,7 +34,6 @@ type alias Model =
     { key : Nav.Key
     , baseUrl : String
     , endpoint : String
-    , referential : RemoteData String Referential
     , state : State
     }
 
@@ -65,8 +64,6 @@ type Msg
     | GotLoginSubmit
     | GotLoginResponse (Result Http.Error Token)
     | GotCandidatesResponse (Result Http.Error (List Candidate))
-    | GotCandidaciesResponse (RemoteData String (List CandidacySummary))
-    | GotReferentialResponse (RemoteData String Referential)
 
 
 main : Program Flags Model Msg
@@ -223,21 +220,6 @@ update msg model =
             , Cmd.map GotCandidaciesMsg candidaciesCmd
             )
 
-        ( GotCandidaciesResponse remoteCandidacies, LoggedIn token Loading ) ->
-            ( { model
-                | state =
-                    Candidacies.receiveRemoteCandidacies (Candidacies.init model.endpoint token) remoteCandidacies
-                        |> Candidacies
-                        |> LoggedIn token
-              }
-            , Cmd.none
-            )
-
-        ( GotReferentialResponse remoteReferential, LoggedIn token Loading ) ->
-            ( { model | referential = remoteReferential }
-            , Cmd.none
-            )
-
         _ ->
             ( model, Cmd.none )
 
@@ -265,31 +247,45 @@ withAuthHandle msg result =
 
 
 init : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
-init flags _ key =
+init flags url key =
+    case flags.token of
+        Just rawRoken ->
+            initWithToken (Api.stringToToken rawRoken) flags url key
+
+        Nothing ->
+            initWithoutToken flags url key
+
+
+initWithoutToken : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
+initWithoutToken flags _ key =
     let
         state =
-            case flags.token of
-                Just token ->
-                    LoggedIn (Api.stringToToken token) Loading
-
-                Nothing ->
-                    NotLoggedIn Page.Login.init
+            NotLoggedIn Page.Login.init
     in
     ( { key = key
       , baseUrl = flags.baseUrl
       , endpoint = flags.endpoint
-      , referential = NotAsked
       , state = state
       }
-    , case state of
-        NotLoggedIn _ ->
-            Nav.pushUrl key (Route.fromRoute flags.baseUrl Route.Login)
+    , Nav.pushUrl key (Route.fromRoute flags.baseUrl Route.Login)
+    )
 
-        LoggedIn token _ ->
-            Cmd.batch
-                [ Request.requestCandidacies flags.endpoint GotCandidaciesResponse
-                , Request.requestReferential flags.endpoint GotReferentialResponse
-                ]
+
+initWithToken : Token -> Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
+initWithToken token flags _ key =
+    let
+        ( candidaciesModel, candidaciesCmd ) =
+            Candidacies.init flags.endpoint token
+
+        state =
+            LoggedIn token (Candidacies candidaciesModel)
+    in
+    ( { key = key
+      , baseUrl = flags.baseUrl
+      , endpoint = flags.endpoint
+      , state = state
+      }
+    , Cmd.map GotCandidaciesMsg candidaciesCmd
     )
 
 
