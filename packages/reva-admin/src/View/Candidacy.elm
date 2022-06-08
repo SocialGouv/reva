@@ -1,17 +1,19 @@
 module View.Candidacy exposing (view)
 
 import Css exposing (height, px)
-import Data.Candidacy as Candidacy exposing (Candidacy)
-import Html.Styled exposing (Html, a, article, dd, div, dl, dt, h1, nav, node, span, text)
-import Html.Styled.Attributes exposing (attribute, class, css, href)
+import Data.Candidacy exposing (Candidacy)
+import Html.Styled exposing (Html, a, article, button, dd, div, dl, dt, h1, nav, node, span, text)
+import Html.Styled.Attributes exposing (attribute, class, css, href, type_)
+import Html.Styled.Events exposing (onClick)
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 
 
 view :
-    Candidacy
+    (Candidacy -> msg)
+    -> Candidacy
     -> Html msg
-view candidacy =
+view deleteMsg candidacy =
     node "main"
         [ dataTest "profile"
         , class "flex-1 relative z-10 overflow-y-auto focus:outline-none xl:order-last"
@@ -75,6 +77,14 @@ view candidacy =
                                     |> viewInfo "email" "Email"
                             )
                         |> Maybe.withDefault (text "")
+                    ]
+                , div [ class "border-t mt-8 pt-8" ]
+                    [ button
+                        [ type_ "button"
+                        , class "shadow text-xs border border-gray-300 hover:bg-gray-50 text-gray-600 px-2 py-1 rounded"
+                        , onClick (deleteMsg candidacy)
+                        ]
+                        [ text "Supprimer la candidature" ]
                     ]
                 ]
             ]

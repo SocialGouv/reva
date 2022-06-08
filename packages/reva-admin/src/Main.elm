@@ -19,7 +19,8 @@ import View
 
 
 type alias Flags =
-    { token : Maybe String
+    { endpoint : String
+    , token : Maybe String
     , baseUrl : String
     }
 
@@ -31,6 +32,7 @@ type alias Flags =
 type alias Model =
     { key : Nav.Key
     , baseUrl : String
+    , endpoint : String
     , state : State
     }
 
@@ -221,7 +223,7 @@ update msg model =
         ( GotCandidaciesResponse remoteCandidacies, LoggedIn token Loading ) ->
             ( { model
                 | state =
-                    Candidacies.receiveRemoteCandidacies (Candidacies.init token) remoteCandidacies
+                    Candidacies.receiveRemoteCandidacies (Candidacies.init model.endpoint token) remoteCandidacies
                         |> Candidacies
                         |> LoggedIn token
               }
@@ -258,17 +260,16 @@ init : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags _ key =
     let
         state =
-            Loading
-                |> LoggedIn (Api.stringToToken "")
+            case flags.token of
+                Just token ->
+                    LoggedIn (Api.stringToToken token) Loading
 
-        --case flags.token of
-        --    Just token ->
-        --        LoggedIn (Api.stringToToken token) Loading
-        --    Nothing ->
-        --        NotLoggedIn Page.Login.init
+                Nothing ->
+                    NotLoggedIn Page.Login.init
     in
     ( { key = key
       , baseUrl = flags.baseUrl
+      , endpoint = flags.endpoint
       , state = state
       }
     , case state of
@@ -276,7 +277,7 @@ init flags _ key =
             Nav.pushUrl key (Route.fromRoute flags.baseUrl Route.Login)
 
         LoggedIn token _ ->
-            Request.requestCandidacies "http://localhost:8080/graphql" GotCandidaciesResponse
+            Request.requestCandidacies flags.endpoint GotCandidaciesResponse
     )
 
 

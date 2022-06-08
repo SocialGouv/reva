@@ -26,13 +26,16 @@ import View.Icons as Icons
 
 type Msg
     = GotCandidacyResponse (RemoteData String Candidacy)
+    | GotCandidacyDeletionResponse (RemoteData String (Maybe String))
     | UserAddedFilter String
     | UserSelectedCandidacy CandidacySummary
+    | UserDeletedCandidacy Candidacy
     | UserSelectedCandidacyTab View.Candidate.Tab
 
 
 type alias Model =
-    { token : Token
+    { endpoint : String
+    , token : Token
     , filter : Maybe String
     , selected : RemoteData String Candidacy
     , tab : Tab
@@ -40,9 +43,10 @@ type alias Model =
     }
 
 
-init : Token -> Model
-init token =
-    { token = token
+init : String -> Token -> Model
+init endpoint token =
+    { endpoint = endpoint
+    , token = token
     , filter = Nothing
     , selected = NotAsked
     , state = RemoteData.NotAsked
@@ -54,7 +58,7 @@ demoModel : Model
 demoModel =
     let
         initialModel =
-            init (Api.stringToToken "")
+            init "" (Api.stringToToken "")
     in
     { initialModel | state = RemoteData.NotAsked }
 
@@ -157,7 +161,7 @@ viewCandidacyPanel model =
             div [ class "h-full w-full transition-colors bg-white text-red-600 p-4" ] [ text err ]
 
         Success candidacy ->
-            View.Candidacy.view candidacy
+            View.Candidacy.view UserDeletedCandidacy candidacy
 
 
 viewDirectoryPanel : List CandidacySummary -> Html Msg
@@ -242,9 +246,9 @@ viewItem candidacy =
                         [ class "absolute inset-0", attribute "aria-hidden" "true" ]
                         []
                     , p
-                        [ class "text-sm font-medium text-blue-600 space-x-4" ]
-                        [ text (candidacy.phone |> Maybe.withDefault "")
-                        , text (candidacy.email |> Maybe.withDefault "")
+                        [ class "flex text-sm font-medium text-blue-600 space-x-2" ]
+                        [ div [] [ text (candidacy.phone |> Maybe.withDefault "") ]
+                        , div [] [ text (candidacy.email |> Maybe.withDefault "") ]
                         ]
                     , p [ class "text-sm text-gray-500 truncate" ]
                         [ text candidacy.certification.label ]
@@ -260,20 +264,27 @@ viewItem candidacy =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    let
-        noChange =
-            ( model, Cmd.none )
-    in
     case msg of
         GotCandidacyResponse remoteCandidacy ->
             ( { model | selected = remoteCandidacy }, Cmd.none )
 
+        GotCandidacyDeletionResponse (Failure err) ->
+            ( { model | selected = Failure err }, Cmd.none )
+
+        GotCandidacyDeletionResponse _ ->
+            ( { model | selected = NotAsked }, Cmd.none )
+
         UserAddedFilter filter ->
             ( { model | filter = Just filter }, Cmd.none )
 
+        UserDeletedCandidacy candidacy ->
+            ( removeCandidacy model candidacy
+            , Request.deleteCandidacy model.endpoint GotCandidacyDeletionResponse candidacy.id
+            )
+
         UserSelectedCandidacy candidacySummary ->
             ( { model | selected = Loading }
-            , Request.requestCandidacy "http://localhost:8080/graphql" GotCandidacyResponse candidacySummary.deviceId
+            , Request.requestCandidacy model.endpoint GotCandidacyResponse candidacySummary.deviceId
             )
 
         UserSelectedCandidacyTab tab ->
@@ -284,8 +295,15 @@ update msg model =
 -- HELPERS
 
 
-candidacyFirstLetter : CandidacySummary -> Char
-candidacyFirstLetter candidacy =
-    String.uncons candidacy.certification.label
-        |> Maybe.map (\( firstLetter, _ ) -> Char.toLower firstLetter)
-        |> Maybe.withDefault ' '
+removeCandidacy : Model -> Candidacy -> Model
+removeCandidacy model candidacy =
+    case model.state of
+        Success candidacies ->
+            let
+                newCandidacies =
+                    List.filter (\c -> c.id /= candidacy.id) candidacies
+            in
+            { model | state = Success newCandidacies }
+
+        _ ->
+            model

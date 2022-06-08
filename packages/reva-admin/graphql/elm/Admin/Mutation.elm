@@ -170,3 +170,14 @@ candidacy_updateContact fillInOptionals____ requiredArgs____ object____ =
                 |> List.filterMap Basics.identity
     in
     Object.selectionForCompositeField "candidacy_updateContact" (optionalArgs____ ++ [ Argument.required "deviceId" requiredArgs____.deviceId (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "candidacyId" requiredArgs____.candidacyId (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapEncoder .codecId) ]) object____ (Basics.identity >> Decode.nullable)
+
+
+type alias CandidacyDeleteByIdRequiredArguments =
+    { candidacyId : Admin.ScalarCodecs.Id }
+
+
+candidacy_deleteById :
+    CandidacyDeleteByIdRequiredArguments
+    -> SelectionSet (Maybe String) RootMutation
+candidacy_deleteById requiredArgs____ =
+    Object.selectionForField "(Maybe String)" "candidacy_deleteById" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] (Decode.string |> Decode.nullable)
