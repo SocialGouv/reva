@@ -4,12 +4,12 @@
   "description": "",
   "scripts": {
     "dev": "concurrently npm:dev:*",
-    "dev:elm": "parcel index.html --port 1235 --public-url /admin",
+    "dev:elm": "vite",
     "dev:css": "npm run css -- --watch",
     "build": "npm run build:css && npm run build:elm && cp -R ./dist ../reva-api/dist/admin",
     "build:api": "elm-graphql --schema-file ../reva-api/infra/graphql/generated-graphql-schema.graphql --output graphql/elm --base Admin",
     "build:css": "NODE_ENV=production npm run css -- --minify",
-    "build:elm": "parcel build index.html --public-url /admin",
+    "build:elm": "vite build",
     "css": "npx tailwindcss -i ./css/style.css -o ./dist/style.css",
     "postinstall": "npm run css"
   },
@@ -21,6 +21,8 @@
     "elm": "^0.19.1-5",
     "node-elm-compiler": "^5.0.3",
     "parcel": "^2.6.0",
-    "tailwindcss": "^3.0.24"
+    "tailwindcss": "^3.0.24",
+    "vite": "^2.9.10",
+    "vite-plugin-elm": "^2.6.1"
   }
 }
