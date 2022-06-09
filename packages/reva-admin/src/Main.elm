@@ -5,12 +5,13 @@ import Browser
 import Browser.Navigation as Nav
 import Data.Candidacy exposing (CandidacySummary)
 import Data.Candidate exposing (Candidate)
+import Data.Referential exposing (Referential)
 import Html.Styled as Html exposing (Html, div, toUnstyled)
 import Http
 import Page.Candidacies as Candidacies exposing (Model)
 import Page.Candidates as Candidates exposing (Model)
 import Page.Login
-import RemoteData exposing (RemoteData)
+import RemoteData exposing (RemoteData(..))
 import Request
 import Route exposing (Route(..))
 import Url exposing (Url)
@@ -33,6 +34,7 @@ type alias Model =
     { key : Nav.Key
     , baseUrl : String
     , endpoint : String
+    , referential : RemoteData String Referential
     , state : State
     }
 
@@ -64,6 +66,7 @@ type Msg
     | GotLoginResponse (Result Http.Error Token)
     | GotCandidatesResponse (Result Http.Error (List Candidate))
     | GotCandidaciesResponse (RemoteData String (List CandidacySummary))
+    | GotReferentialResponse (RemoteData String Referential)
 
 
 main : Program Flags Model Msg
@@ -230,6 +233,11 @@ update msg model =
             , Cmd.none
             )
 
+        ( GotReferentialResponse remoteReferential, LoggedIn token Loading ) ->
+            ( { model | referential = remoteReferential }
+            , Cmd.none
+            )
+
         _ ->
             ( model, Cmd.none )
 
@@ -270,6 +278,7 @@ init flags _ key =
     ( { key = key
       , baseUrl = flags.baseUrl
       , endpoint = flags.endpoint
+      , referential = NotAsked
       , state = state
       }
     , case state of
@@ -277,7 +286,10 @@ init flags _ key =
             Nav.pushUrl key (Route.fromRoute flags.baseUrl Route.Login)
 
         LoggedIn token _ ->
-            Request.requestCandidacies flags.endpoint GotCandidaciesResponse
+            Cmd.batch
+                [ Request.requestCandidacies flags.endpoint GotCandidaciesResponse
+                , Request.requestReferential flags.endpoint GotReferentialResponse
+                ]
     )
 
 

@@ -1,15 +1,19 @@
-module Request exposing (deleteCandidacy, requestCandidacies, requestCandidacy)
+module Request exposing (deleteCandidacy, requestCandidacies, requestCandidacy, requestReferential)
 
 import Admin.Mutation as Mutation
 import Admin.Object
 import Admin.Object.Candidacy
 import Admin.Object.CandidacyStatus
 import Admin.Object.CandidacySummary
+import Admin.Object.CandidateGoal
 import Admin.Object.Certification
+import Admin.Object.Goal
+import Admin.Object.Referential
 import Admin.Query as Query
 import Admin.Scalar exposing (Date(..), Id(..))
 import Data.Candidacy
 import Data.Certification
+import Data.Referential
 import Graphql.Http
 import Graphql.Operation
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
@@ -97,6 +101,10 @@ certificationSelection =
         |> with Admin.Object.Certification.abilities
 
 
+
+-- CANDIDACY
+
+
 candidacyStatusSelection : SelectionSet Data.Candidacy.CandidacyStatus Admin.Object.CandidacyStatus
 candidacyStatusSelection =
     SelectionSet.succeed Data.Candidacy.CandidacyStatus
@@ -122,6 +130,13 @@ candidacySummarySelection =
         |> with (SelectionSet.map (\(Date date) -> date) Admin.Object.CandidacySummary.createdAt)
 
 
+candidacyGoalSelection : SelectionSet Data.Candidacy.CandidacyGoal Admin.Object.CandidateGoal
+candidacyGoalSelection =
+    SelectionSet.succeed Data.Candidacy.CandidacyGoal
+        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.CandidateGoal.goalId)
+        |> with Admin.Object.CandidateGoal.additionalInformation
+
+
 candidacySelection : SelectionSet Data.Candidacy.Candidacy Admin.Object.Candidacy
 candidacySelection =
     SelectionSet.succeed Data.Candidacy.Candidacy
@@ -130,22 +145,11 @@ candidacySelection =
         |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.Candidacy.certificationId)
         |> with (SelectionSet.map (Maybe.map (\(Id id) -> id)) Admin.Object.Candidacy.companionId)
         |> with (Admin.Object.Candidacy.certification certificationSelection)
+        |> with (Admin.Object.Candidacy.goals candidacyGoalSelection)
         |> with Admin.Object.Candidacy.phone
         |> with Admin.Object.Candidacy.email
         |> with (Admin.Object.Candidacy.candidacyStatuses candidacyStatusSelection)
         |> with (SelectionSet.map (\(Date date) -> date) Admin.Object.Candidacy.createdAt)
-
-
-getCandidacies : SelectionSet (List Data.Candidacy.CandidacySummary) Graphql.Operation.RootQuery
-getCandidacies =
-    Query.getCandidacies candidacySummarySelection
-
-
-getCandidacy : String -> SelectionSet (Maybe Data.Candidacy.Candidacy) Graphql.Operation.RootQuery
-getCandidacy candidacyId =
-    Query.getCandidacy
-        (Query.GetCandidacyRequiredArguments (Id candidacyId))
-        candidacySelection
 
 
 requestCandidacies :
@@ -153,7 +157,8 @@ requestCandidacies :
     -> (RemoteData String (List Data.Candidacy.CandidacySummary) -> msg)
     -> Cmd msg
 requestCandidacies endpointGraphql toMsg =
-    makeQuery endpointGraphql toMsg getCandidacies
+    Query.getCandidacies candidacySummarySelection
+        |> makeQuery endpointGraphql toMsg
 
 
 requestCandidacy :
@@ -179,8 +184,12 @@ requestCandidacy endpointGraphql toMsg deviceId =
 
                 Loading ->
                     Loading
+
+        candidacyRequiredArgs =
+            Query.GetCandidacyRequiredArguments (Id deviceId)
     in
-    makeQuery endpointGraphql (nothingToError >> toMsg) (getCandidacy deviceId)
+    Query.getCandidacy candidacyRequiredArgs candidacySelection
+        |> makeQuery endpointGraphql (nothingToError >> toMsg)
 
 
 deleteCandidacy :
@@ -192,3 +201,32 @@ deleteCandidacy endpointGraphql toMsg candidacyId =
     Mutation.CandidacyDeleteByIdRequiredArguments (Id candidacyId)
         |> Mutation.candidacy_deleteById
         |> makeMutation endpointGraphql toMsg
+
+
+
+-- REFERENTIAL
+
+
+referentialGoalSelection : SelectionSet Data.Referential.ReferentialGoal Admin.Object.Goal
+referentialGoalSelection =
+    SelectionSet.succeed Data.Referential.ReferentialGoal
+        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.Goal.id)
+        |> with Admin.Object.Goal.label
+        |> with Admin.Object.Goal.order
+        |> with Admin.Object.Goal.needsAdditionalInformation
+        |> with Admin.Object.Goal.isActive
+
+
+referentialSelection : SelectionSet Data.Referential.Referential Admin.Object.Referential
+referentialSelection =
+    SelectionSet.succeed Data.Referential.Referential
+        |> with (Admin.Object.Referential.goals referentialGoalSelection)
+
+
+requestReferential :
+    String
+    -> (RemoteData String Data.Referential.Referential -> msg)
+    -> Cmd msg
+requestReferential endpointGraphql toMsg =
+    Query.getReferential referentialSelection
+        |> makeQuery endpointGraphql toMsg

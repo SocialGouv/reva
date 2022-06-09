@@ -1,4 +1,4 @@
-module Data.Candidacy exposing (Candidacy, CandidacyStatus, CandidacySummary, statusToString)
+module Data.Candidacy exposing (Candidacy, CandidacyGoal, CandidacyStatus, CandidacySummary, statusToString)
 
 import Data.Certification exposing (Certification)
 
@@ -9,12 +9,19 @@ type alias CandidacyStatus =
     }
 
 
+type alias CandidacyGoal =
+    { goalId : String
+    , additionalInformation : Maybe String
+    }
+
+
 type alias Candidacy =
     { id : String
     , deviceId : String
     , certificationId : String
     , companionId : Maybe String
     , certification : Certification
+    , goals : List CandidacyGoal
     , phone : Maybe String
     , email : Maybe String
     , statuses : List CandidacyStatus
