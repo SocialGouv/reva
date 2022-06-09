@@ -28,11 +28,13 @@ import { deleteCandidacyFromEmail, deleteCandidacyFromPhone } from "../database/
 const server = fastify({ logger: true });
 const WEBSITE_ROUTE_PATH = "/";
 const APP_ROUTE_PATH = "/app";
+const ADMIN_ROUTE_PATH = "/admin";
 
 if (process.env.NODE_ENV === "production") {
 
   const DIST_FOLDER = path.join(__dirname, "..", "..");
   const APP_FOLDER = path.join(DIST_FOLDER, "app");
+  const ADMIN_FOLDER = path.join(DIST_FOLDER, "admin");
   const WEBSITE_FOLDER = path.join(DIST_FOLDER, "website");
 
 
@@ -55,10 +57,18 @@ if (process.env.NODE_ENV === "production") {
     decorateReply: false,
   });
 
+  server.register(fastifyStatic, {
+    root: ADMIN_FOLDER,
+    prefix: ADMIN_ROUTE_PATH,
+    decorateReply: false,
+  });
+
   // Deal with not found
   server.setNotFoundHandler((req, res) => {
     if (req.url.startsWith(APP_ROUTE_PATH)) {
       res.sendFile("index.html", APP_FOLDER);
+    } else if (req.url.startsWith(ADMIN_ROUTE_PATH)) {
+      res.sendFile("index.html", ADMIN_FOLDER);
     } else {
       res.redirect(process.env.FRAMER_WEBSITE_URL || "/");
     }
@@ -77,6 +87,12 @@ if (process.env.NODE_ENV === "production") {
     upstream: "http://localhost:3001/app",
     prefix: APP_ROUTE_PATH,
   });
+
+  server.register(proxy, {
+    upstream: "http://localhost:3000/admin",
+    prefix: ADMIN_ROUTE_PATH,
+  });
+
   server.register(cors, { 
     origin: true// put your options here
   });
@@ -91,23 +107,22 @@ server.get("/ping", async (request, reply) => {
 });
 
 server.post("/admin/candidacies/delete", async (request, reply) => {
-  console.log(request.headers)
   if (!process.env.ADMIN_TOKEN || request.headers['admin_token'] !== process.env.ADMIN_TOKEN) {
     return reply.status(403).send("Not authorized");
   }
 
-  const {email, phone} = request.query as any
+  const { email, phone } = request.query as any;
 
-  console.log({email, phone})
+  console.log({ email, phone });
 
   if (email) {
-    await deleteCandidacyFromEmail(email)
+    await deleteCandidacyFromEmail(email);
   }
   if (phone) {
-    await deleteCandidacyFromPhone(phone)
+    await deleteCandidacyFromPhone(phone);
   }
-  reply.send("deleted")
-})
+  reply.send("deleted");
+});
 
 server.listen(process.env.PORT || 8080, "0.0.0.0", (err, address) => {
   if (err) {
