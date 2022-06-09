@@ -13,7 +13,8 @@ import Admin.Query as Query
 import Admin.Scalar exposing (Date(..), Id(..))
 import Data.Candidacy
 import Data.Certification
-import Data.Referential
+import Data.Referential exposing (Referential)
+import Dict
 import Graphql.Http
 import Graphql.Operation
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
@@ -217,9 +218,18 @@ referentialGoalSelection =
         |> with Admin.Object.Goal.isActive
 
 
+toReferential : List Data.Referential.ReferentialGoal -> Data.Referential.Referential
+toReferential goals =
+    let
+        goalsDict =
+            List.map (\g -> ( g.id, g )) goals |> Dict.fromList
+    in
+    { goals = goalsDict }
+
+
 referentialSelection : SelectionSet Data.Referential.Referential Admin.Object.Referential
 referentialSelection =
-    SelectionSet.succeed Data.Referential.Referential
+    SelectionSet.succeed toReferential
         |> with (Admin.Object.Referential.goals referentialGoalSelection)
 
 

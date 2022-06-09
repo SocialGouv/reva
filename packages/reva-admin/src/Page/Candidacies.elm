@@ -170,7 +170,7 @@ viewCandidacyPanel model =
             div [ class "h-full w-full bg-gray-500" ] []
 
         Loading ->
-            div [ class "h-full w-full transition-colors bg-white p-4" ] [ text "..." ]
+            div [ class "h-full w-full transition-colors bg-gray-100 p-4" ] [ text "..." ]
 
         Failure err ->
             div [ class "h-full w-full transition-colors bg-white text-red-600 p-4" ] [ text err ]
@@ -192,7 +192,7 @@ viewDirectoryPanel candidacies =
                 candidacies
     in
     aside
-        [ class "hidden md:order-first md:flex md:flex-col flex-shrink-0 w-96 border-r border-gray-200" ]
+        [ class "hidden md:order-first md:flex md:flex-col flex-shrink-0 w-96 border-r-[40px] border-gray-400" ]
         [ div
             [ class "px-6 pt-6 pb-4" ]
             [ h2
@@ -248,6 +248,11 @@ viewDirectory ( firstCandidacy, candidacies ) =
 
 viewItem : CandidacySummary -> Html Msg
 viewItem candidacy =
+    let
+        displayMaybe maybeInfo =
+            Maybe.map (\s -> div [] [ text s ]) maybeInfo
+                |> Maybe.withDefault (text "")
+    in
     li
         [ dataTest "directory-item" ]
         [ div
@@ -266,8 +271,8 @@ viewItem candidacy =
                         []
                     , p
                         [ class "flex text-sm font-medium text-blue-600 space-x-2" ]
-                        [ div [] [ text (candidacy.phone |> Maybe.withDefault "") ]
-                        , div [] [ text (candidacy.email |> Maybe.withDefault "") ]
+                        [ displayMaybe candidacy.phone
+                        , displayMaybe candidacy.email
                         ]
                     , p [ class "text-sm text-gray-500 truncate" ]
                         [ text candidacy.certification.label ]
