@@ -10,7 +10,7 @@
     "build:api": "elm-graphql --schema-file ../reva-api/infra/graphql/generated-graphql-schema.graphql --output graphql/elm --base Admin",
     "build:css": "NODE_ENV=production npm run css -- --minify",
     "build:elm": "vite build",
-    "css": "npx tailwindcss -i ./css/style.css -o ./dist/style.css",
+    "css": "npx tailwindcss -i ./css/index.css -o ./dist/index.css",
     "postinstall": "npm run css"
   },
   "keywords": [],

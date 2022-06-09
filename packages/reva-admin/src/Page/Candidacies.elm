@@ -1,9 +1,7 @@
 module Page.Candidacies exposing
     ( Model
     , Msg
-    , demoModel
     , init
-    , receiveRemoteCandidacies
     , update
     , view
     )
@@ -11,6 +9,7 @@ module Page.Candidacies exposing
 import Admin.Object exposing (Candidacy)
 import Api exposing (Token)
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacySummary)
+import Data.Referential exposing (Referential)
 import Html.Styled as Html exposing (Html, a, aside, button, div, h2, h3, input, label, li, nav, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, for, href, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onClick, onInput)
@@ -25,12 +24,20 @@ import View.Icons as Icons
 
 
 type Msg
-    = GotCandidacyResponse (RemoteData String Candidacy)
+    = GotCandidaciesResponse (RemoteData String (List CandidacySummary))
+    | GotCandidacyResponse (RemoteData String Candidacy)
     | GotCandidacyDeletionResponse (RemoteData String (Maybe String))
+    | GotReferentialResponse (RemoteData String Referential)
     | UserAddedFilter String
     | UserSelectedCandidacy CandidacySummary
     | UserDeletedCandidacy Candidacy
     | UserSelectedCandidacyTab View.Candidate.Tab
+
+
+type alias State =
+    { candidacies : RemoteData String (List CandidacySummary)
+    , referential : RemoteData String Referential
+    }
 
 
 type alias Model =
@@ -38,34 +45,42 @@ type alias Model =
     , token : Token
     , filter : Maybe String
     , selected : RemoteData String Candidacy
+    , state : State
     , tab : Tab
-    , state : RemoteData String (List CandidacySummary)
     }
 
 
-init : String -> Token -> Model
+init : String -> Token -> ( Model, Cmd Msg )
 init endpoint token =
-    { endpoint = endpoint
-    , token = token
-    , filter = Nothing
-    , selected = NotAsked
-    , state = RemoteData.NotAsked
-    , tab = View.Candidate.Events
-    }
-
-
-demoModel : Model
-demoModel =
     let
-        initialModel =
-            init "" (Api.stringToToken "")
+        model =
+            { endpoint = endpoint
+            , token = token
+            , filter = Nothing
+            , selected = NotAsked
+            , state =
+                { candidacies = RemoteData.NotAsked
+                , referential = RemoteData.NotAsked
+                }
+            , tab = View.Candidate.Events
+            }
     in
-    { initialModel | state = RemoteData.NotAsked }
+    ( model
+    , Cmd.batch
+        [ Request.requestCandidacies endpoint GotCandidaciesResponse
+        , Request.requestReferential endpoint GotReferentialResponse
+        ]
+    )
 
 
-receiveRemoteCandidacies : Model -> RemoteData String (List CandidacySummary) -> Model
-receiveRemoteCandidacies model remoteCandidacies =
-    { model | state = remoteCandidacies }
+withCandidacies : RemoteData String (List CandidacySummary) -> State -> State
+withCandidacies candidacies state =
+    { state | candidacies = candidacies }
+
+
+withReferential : RemoteData String Referential -> State -> State
+withReferential referential state =
+    { state | referential = referential }
 
 
 filterCandidacy : String -> CandidacySummary -> Bool
@@ -88,7 +103,7 @@ view :
     Model
     -> Html Msg
 view model =
-    case model.state of
+    case model.state.candidacies of
         NotAsked ->
             div [] []
 
@@ -155,13 +170,17 @@ viewCandidacyPanel model =
             div [ class "h-full w-full bg-gray-500" ] []
 
         Loading ->
-            div [ class "h-full w-full transition-colors bg-white p-4" ] [ text "..." ]
+            div [ class "h-full w-full transition-colors bg-gray-100 p-4" ] [ text "..." ]
 
         Failure err ->
             div [ class "h-full w-full transition-colors bg-white text-red-600 p-4" ] [ text err ]
 
         Success candidacy ->
-            View.Candidacy.view UserDeletedCandidacy candidacy
+            View.Candidacy.view
+                { candidacy = candidacy
+                , deleteMsg = UserDeletedCandidacy
+                , referential = model.state.referential
+                }
 
 
 viewDirectoryPanel : List CandidacySummary -> Html Msg
@@ -173,7 +192,7 @@ viewDirectoryPanel candidacies =
                 candidacies
     in
     aside
-        [ class "hidden md:order-first md:flex md:flex-col flex-shrink-0 w-96 border-r border-gray-200" ]
+        [ class "hidden md:order-first md:flex md:flex-col flex-shrink-0 w-96 border-r-[40px] border-gray-400" ]
         [ div
             [ class "px-6 pt-6 pb-4" ]
             [ h2
@@ -229,6 +248,11 @@ viewDirectory ( firstCandidacy, candidacies ) =
 
 viewItem : CandidacySummary -> Html Msg
 viewItem candidacy =
+    let
+        displayMaybe maybeInfo =
+            Maybe.map (\s -> div [] [ text s ]) maybeInfo
+                |> Maybe.withDefault (text "")
+    in
     li
         [ dataTest "directory-item" ]
         [ div
@@ -247,8 +271,8 @@ viewItem candidacy =
                         []
                     , p
                         [ class "flex text-sm font-medium text-blue-600 space-x-2" ]
-                        [ div [] [ text (candidacy.phone |> Maybe.withDefault "") ]
-                        , div [] [ text (candidacy.email |> Maybe.withDefault "") ]
+                        [ displayMaybe candidacy.phone
+                        , displayMaybe candidacy.email
                         ]
                     , p [ class "text-sm text-gray-500 truncate" ]
                         [ text candidacy.certification.label ]
@@ -265,6 +289,11 @@ viewItem candidacy =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        GotCandidaciesResponse remoteCandidacies ->
+            ( { model | state = model.state |> withCandidacies remoteCandidacies }
+            , Cmd.none
+            )
+
         GotCandidacyResponse remoteCandidacy ->
             ( { model | selected = remoteCandidacy }, Cmd.none )
 
@@ -273,6 +302,11 @@ update msg model =
 
         GotCandidacyDeletionResponse _ ->
             ( { model | selected = NotAsked }, Cmd.none )
+
+        GotReferentialResponse remoteReferentials ->
+            ( { model | state = model.state |> withReferential remoteReferentials }
+            , Cmd.none
+            )
 
         UserAddedFilter filter ->
             ( { model | filter = Just filter }, Cmd.none )
@@ -297,13 +331,13 @@ update msg model =
 
 removeCandidacy : Model -> Candidacy -> Model
 removeCandidacy model candidacy =
-    case model.state of
+    case model.state.candidacies of
         Success candidacies ->
             let
                 newCandidacies =
                     List.filter (\c -> c.id /= candidacy.id) candidacies
             in
-            { model | state = Success newCandidacies }
+            { model | state = model.state |> withCandidacies (Success newCandidacies) }
 
         _ ->
             model

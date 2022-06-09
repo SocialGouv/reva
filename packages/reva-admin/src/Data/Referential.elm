@@ -1,5 +1,7 @@
 module Data.Referential exposing (Referential, ReferentialGoal)
 
+import Dict exposing (Dict)
+
 
 type alias ReferentialGoal =
     { id : String
@@ -11,5 +13,5 @@ type alias ReferentialGoal =
 
 
 type alias Referential =
-    { goals : List ReferentialGoal
+    { goals : Dict String ReferentialGoal
     }
