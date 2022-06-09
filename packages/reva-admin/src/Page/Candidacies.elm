@@ -176,7 +176,11 @@ viewCandidacyPanel model =
             div [ class "h-full w-full transition-colors bg-white text-red-600 p-4" ] [ text err ]
 
         Success candidacy ->
-            View.Candidacy.view UserDeletedCandidacy candidacy
+            View.Candidacy.view
+                { candidacy = candidacy
+                , deleteMsg = UserDeletedCandidacy
+                , referential = model.state.referential
+                }
 
 
 viewDirectoryPanel : List CandidacySummary -> Html Msg

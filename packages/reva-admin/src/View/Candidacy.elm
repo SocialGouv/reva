@@ -1,19 +1,24 @@
 module View.Candidacy exposing (view)
 
 import Css exposing (height, px)
-import Data.Candidacy exposing (Candidacy)
-import Html.Styled exposing (Html, a, article, button, dd, div, dl, dt, h1, nav, node, span, text)
+import Data.Candidacy exposing (Candidacy, CandidacyGoal)
+import Data.Referential exposing (Referential)
+import Html.Styled exposing (Html, a, article, button, dd, div, dl, dt, h1, h3, li, nav, node, p, span, text, ul)
 import Html.Styled.Attributes exposing (attribute, class, css, href, type_)
 import Html.Styled.Events exposing (onClick)
+import RemoteData exposing (RemoteData(..))
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 
 
 view :
-    (Candidacy -> msg)
-    -> Candidacy
+    { a
+        | candidacy : Candidacy
+        , deleteMsg : Candidacy -> msg
+        , referential : RemoteData String Referential
+    }
     -> Html msg
-view deleteMsg candidacy =
+view config =
     node "main"
         [ dataTest "profile"
         , class "flex-1 relative z-10 overflow-y-auto focus:outline-none xl:order-last"
@@ -54,19 +59,32 @@ view deleteMsg candidacy =
                         [ class "mt-3 min-w-0 flex-1" ]
                         [ h1
                             [ class "text-2xl font-bold text-gray-900 truncate" ]
-                            [ text candidacy.certification.label
+                            [ text config.candidacy.certification.label
                             ]
                         ]
                     ]
                 ]
             , div
                 [ class "my-6 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-sm text-gray-700" ]
-                [ dl
+                [ if List.isEmpty config.candidacy.goals then
+                    text ""
+
+                  else
+                    case config.referential of
+                        Success referential ->
+                            viewGoals referential config.candidacy.goals
+
+                        Failure err ->
+                            text err
+
+                        _ ->
+                            text "..."
+                , dl
                     [ class "grid grid-cols-1 gap-x-4 gap-y-8 2xl:grid-cols-2" ]
-                    [ candidacy.phone
+                    [ config.candidacy.phone
                         |> Maybe.map (text >> viewInfo "phone-number" "Téléphone")
                         |> Maybe.withDefault (text "")
-                    , candidacy.email
+                    , config.candidacy.email
                         |> Maybe.map
                             (\email ->
                                 a
@@ -82,7 +100,7 @@ view deleteMsg candidacy =
                     [ button
                         [ type_ "button"
                         , class "shadow text-xs border border-gray-300 hover:bg-gray-50 text-gray-600 px-2 py-1 rounded"
-                        , onClick (deleteMsg candidacy)
+                        , onClick (config.deleteMsg config.candidacy)
                         ]
                         [ text "Supprimer la candidature" ]
                     ]
@@ -104,3 +122,19 @@ viewInfo dataTestId label value =
             ]
             [ value ]
         ]
+
+
+viewGoals : Referential -> List CandidacyGoal -> Html msg
+viewGoals referential goals =
+    div [ class "text-purple-800" ]
+        [ h3 [ class "font-bold mb-2 text-lg" ] [ text "Objectif" ]
+        , ul
+            [ class "mb-4 rounded-lg px-5 py-4 bg-purple-100 leading-tight" ]
+          <|
+            List.map viewGoal goals
+        ]
+
+
+viewGoal : CandidacyGoal -> Html msg
+viewGoal goal =
+    li [] [ text goal.goalId ]
