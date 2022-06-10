@@ -24,13 +24,22 @@ export const ProjectHelp = ({ mainService }: ProjectHelpProps) => {
       <div className="absolute text-neutral-200 left-[-70px] top-[100px] w-[200px]">
         <Locked />
       </div>
-      <div className="relative overflow-y-auto flex flex-col items-center mt-8 rounded-xl px-8 py-12 text-slate-800">
-        <Title label="Bientôt" />
-        <p className="leading-loose mt-36">
-          Avant de valider votre projet, il faut le compléter. Dès que vous
-          aurez ajouté votre objectif et vos expériences, un expert du parcours
-          professionnel vérifiera avec vous que vos choix correspondent bien à
-          votre objectif.
+      <div className="relative overflow-y-auto flex flex-col mt-8 rounded-xl px-8 py-12 text-slate-800 leading-loose">
+        <div className="flex justify-center">
+          <Title label="Complétez votre projet" />
+        </div>
+        <p className="mt-36">
+          Pour pouvoir valider votre projet vous devez compléter les 3 rubriques
+          :
+        </p>
+        <ul className="my-4 pl-4 list-disc">
+          <li>Votre objectif</li>
+          <li>Vos expériences</li>
+          <li>Votre contact</li>
+        </ul>
+        <p>
+          Un accompagnateur expert prendra connaissance de votre demande sous
+          48h et vous proposera un rdv.
         </p>
       </div>
     </Page>
