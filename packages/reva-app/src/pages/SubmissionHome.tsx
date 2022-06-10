@@ -36,8 +36,9 @@ const loadingScreen = (
   </motion.div>
 );
 
-const projectIntroduction = (submit: () => void) => (
+const projectIntroduction = (progress: number, submit: () => void) => (
   <>
+    <ProgressTitle progress={progress} title="Mon projet" />
     <p className="mt-5 text-sm text-gray-500 leading-loose">
       Cette étape consiste à compléter et à transmettre votre projet, vous serez
       ensuite recontacté sous 48h.
@@ -56,14 +57,15 @@ const projectIntroduction = (submit: () => void) => (
   </>
 );
 
-const cneapDetails = (
+const candidacyStatus = (
   <>
-    <h4 className="mt-8 mb-2 font-bold text-lg">CNEAP</h4>
-    <p>
-      277 Rue Saint-Jacques
-      <br />
-      75240 Paris Cedex 05
-    </p>
+    <ProgressTitle
+      progress={35}
+      title={"Validation du projet"}
+      theme={"dark"}
+    />
+    <p className="mt-3">Status : transmis à un accompagnateur</p>
+    <p className="text-blue-500">Délai de réponse moyen 48h</p>
   </>
 );
 
@@ -120,20 +122,20 @@ export const SubmissionHome = ({
       </p>
       {!isProjectDraft && (
         <p className="text-sm text-blue-500 font-medium">
-          En attente de réception
+          En attente de contact
         </p>
       )}
       <div
-        className="mt-10 flex flex-col px-8 py-6 rounded-xl bg-white shadow-sm"
+        className={`mt-10 flex flex-col px-8 py-6 rounded-xl shadow-sm ${
+          isProjectDraft ? "bg-white" : "text-white bg-slate-900"
+        }`}
         style={{ height: "414px" }}
       >
-        <ProgressTitle
-          progress={isProjectDraft ? projectProgress(state.context) : 35}
-          title={isProjectDraft ? "Mon projet" : "Validation du projet"}
-        />
         {isProjectDraft
-          ? projectIntroduction(() => send("SHOW_PROJECT_HOME"))
-          : cneapDetails}
+          ? projectIntroduction(projectProgress(state.context), () =>
+              send("SHOW_PROJECT_HOME")
+            )
+          : candidacyStatus}
       </div>
     </>
   );
