@@ -32,3 +32,8 @@ status =
 createdAt : SelectionSet Admin.ScalarCodecs.Date Admin.Object.CandidacyStatus
 createdAt =
     Object.selectionForField "ScalarCodecs.Date" "createdAt" [] (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder)
+
+
+isActive : SelectionSet Bool Admin.Object.CandidacyStatus
+isActive =
+    Object.selectionForField "Bool" "isActive" [] Decode.bool

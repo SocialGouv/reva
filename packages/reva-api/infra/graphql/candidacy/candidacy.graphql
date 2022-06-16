@@ -38,6 +38,7 @@ type CandidacySummary {
 type CandidacyStatus {
   id: ID!
   status: String!
+  isActive: Boolean!
   createdAt: Date!
 }
 

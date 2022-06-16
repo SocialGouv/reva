@@ -309,6 +309,9 @@ update msg model =
         GotCandidacyArchivingResponse (Failure err) ->
             ( { model | selected = Failure err }, Cmd.none )
 
+        GotCandidacyArchivingResponse (Success candidacy) ->
+            ( archiveCandidacy model candidacy, Cmd.none )
+
         GotCandidacyArchivingResponse _ ->
             ( { model | selected = NotAsked }, Cmd.none )
 
@@ -326,7 +329,8 @@ update msg model =
             )
 
         UserArchivedCandidacy candidacy ->
-            ( removeCandidacy model candidacy
+            ( model
+              -- removeCandidacy model candidacy
             , Request.archiveCandidacy model.endpoint GotCandidacyArchivingResponse candidacy.id
             )
 
@@ -341,6 +345,28 @@ update msg model =
 
 
 -- HELPERS
+
+
+archiveCandidacy : Model -> Candidacy -> Model
+archiveCandidacy model candidacy =
+    case model.state.candidacies of
+        Success candidacies ->
+            let
+                newCandidacies =
+                    List.map
+                        (\c ->
+                            if c.id /= candidacy.id then
+                                c
+
+                            else
+                                Candidacy.toCandidacySummary candidacy
+                        )
+                        candidacies
+            in
+            { model | state = model.state |> withCandidacies (Success newCandidacies) }
+
+        _ ->
+            model
 
 
 removeCandidacy : Model -> Candidacy -> Model

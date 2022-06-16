@@ -111,6 +111,7 @@ candidacyStatusSelection =
     SelectionSet.succeed Data.Candidacy.CandidacyStatus
         |> with (SelectionSet.map (\(Date date) -> date) Admin.Object.CandidacyStatus.createdAt)
         |> with Admin.Object.CandidacyStatus.status
+        |> with Admin.Object.CandidacyStatus.isActive
 
 
 
