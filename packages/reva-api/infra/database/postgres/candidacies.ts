@@ -5,16 +5,8 @@ import { prismaClient } from './client';
 import { toDomainExperiences } from './experiences';
      
 
-const toDomainCandidacies = (candidacies: (Candidacy & {certification: Certification, candidacyStatuses:any}) []): domain.CandidacySummary[] => {
-    return candidacies.map((candidacy) => {
-        const impossibleEmptyStatus = {
-            id: '',
-            candidacyId: '',
-            status: '',
-            createdAt: new Date(),
-            updatedAt: null,
-        };
-
+const toDomainCandidacies = (candidacies: (Candidacy & {candidacyStatuses: CandidaciesStatus[], certification: Certification}) []): domain.CandidacySummary[] => {
+    return candidacies.map(candidacy => {
         return {
             id: candidacy.id,
             deviceId: candidacy.deviceId,
@@ -23,9 +15,8 @@ const toDomainCandidacies = (candidacies: (Candidacy & {certification: Certifica
             companionId: candidacy.companionId,
             email: candidacy.email,
             phone: candidacy.phone,
-            lastStatus:
-                candidacy.candidacyStatuses.pop() || impossibleEmptyStatus,
-            createdAt: candidacy.createdAt,
+            lastStatus: candidacy.candidacyStatuses[0],
+            createdAt: candidacy.createdAt
         };
     });
 };
@@ -39,7 +30,8 @@ export const insertCandidacy = async (params: { deviceId: string; certificationI
                 certificationId: params.certificationId,
                 candidacyStatuses: {
                     create: {
-                        status: CandidacyStatus.PROJET
+                        status: CandidacyStatus.PROJET,
+                        isActive: true
                     }
                 }
             },
@@ -84,9 +76,15 @@ export const getCompanionFromId = async (companionId: string): Promise<Either<st
 
 export const getCandidacyFromDeviceId = async (deviceId: string) => {
     try {
-        const candidacy = await prismaClient.candidacy.findUnique({
+        const candidacy = await prismaClient.candidacy.findFirst({
             where: {
-                deviceId
+                deviceId: deviceId,
+                candidacyStatuses: {
+                    none: {
+                        status: "ARCHIVE",
+                        isActive: true
+                    }
+                }
             },
             include: {
                 experiences: true,
@@ -111,11 +109,12 @@ export const getCandidacyFromId = async (candidacyId: string) => {
             include: {
                 experiences: true,
                 goals: true,
-                candidacyStatuses: true
+                candidacyStatuses: true,
+                certification: true
             }
         });
 
-        return Maybe.fromNullable(candidacy).toEither(`Candidacy with deviceId ${candidacyId} not found`);
+        return Maybe.fromNullable(candidacy).map(c => ({ ...c, certification: { ...c.certification, codeRncp: c.certification.rncpId } })).toEither(`Candidacy with deviceId ${candidacyId} not found`);
     } catch (e) {
         return Left(`error while retrieving the candidacy with id ${candidacyId}`);
     };
@@ -168,28 +167,41 @@ export const updateContactOnCandidacy = async (params: { candidacyId: string, em
 
 export const updateCandidacyStatus = async (params: { candidacyId: string, status: CandidacyStatus; }) => {
     try {
-        const newCandidacy = await prismaClient.candidacy.update({
-            where: {
-                id: params.candidacyId
-            },
-            data: {
-                candidacyStatuses: {
-                    create: {
-                        status: params.status
-                    }
+         const [, newCandidacy] = await prismaClient.$transaction([
+            prismaClient.candidaciesStatus.updateMany({
+                where: {
+                    candidacyId: params.candidacyId
+                },
+                data: {
+                    isActive: false
                 }
-            },
-            include: {
-                experiences: true,
-                goals: true,
-                candidacyStatuses: true
-            }
-        });
+            }),
+            prismaClient.candidacy.update({
+                where: {
+                    id: params.candidacyId
+                },
+                data: {
+                    candidacyStatuses: {
+                        create: {
+                            status: params.status,
+                            isActive: true
+                        }
+                    }
+                },
+                include: {
+                    experiences: true,
+                    goals: true,
+                    candidacyStatuses: true,
+                    certification: true
+                }
+            })
+        ]);
 
         return Right({ 
             id: newCandidacy.id,
             deviceId: newCandidacy.deviceId,
             certificationId: newCandidacy.certificationId,
+            certification: { ...newCandidacy.certification, codeRncp: newCandidacy.certification.rncpId },
             companionId: newCandidacy.companionId,
             experiences: toDomainExperiences(newCandidacy.experiences),
             goals: newCandidacy.goals,
@@ -288,7 +300,13 @@ export const deleteCandidacyFromId = async (id: string) => {
 
         const { count } = await prismaClient.candidacy.deleteMany({
             where: {
-                id: id
+                id: id,
+                candidacyStatuses: {
+                    some: {
+                        status: 'ARCHIVE',
+                        isActive: true
+                    }
+                }
             },
         });
 
@@ -302,14 +320,18 @@ export const deleteCandidacyFromId = async (id: string) => {
     catch (e) {
         return Left(`Candidature non supprimée, ${(e as any).message}`);
     }
-}
+};
     
 export const getCandidacies = async () => {
     try {
         const candidacies = await prismaClient.candidacy.findMany({
             include: {
-                certification: true,
-                candidacyStatuses: true
+                candidacyStatuses: {
+                    where: {
+                        isActive: true
+                    }
+                },
+                certification: true
             }
         });
 

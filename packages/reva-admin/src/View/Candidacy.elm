@@ -15,6 +15,7 @@ import View.Icons as Icons
 view :
     { a
         | candidacy : Candidacy
+        , archiveMsg : Candidacy -> msg
         , deleteMsg : Candidacy -> msg
         , referential : RemoteData String Referential
     }
@@ -76,9 +77,9 @@ view config =
                     , button
                         [ type_ "button"
                         , class "shadow text-xs border border-gray-300 hover:bg-gray-50 text-gray-600 px-2 py-1 rounded"
-                        , onClick (config.deleteMsg config.candidacy)
+                        , onClick (config.archiveMsg config.candidacy)
                         ]
-                        [ text "Supprimer la candidature" ]
+                        [ text "Archiver la candidature" ]
                     ]
                 ]
             ]

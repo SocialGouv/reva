@@ -1,4 +1,4 @@
-module Request exposing (deleteCandidacy, requestCandidacies, requestCandidacy, requestReferential)
+module Request exposing (archiveCandidacy, deleteCandidacy, requestCandidacies, requestCandidacy, requestReferential)
 
 import Admin.Mutation as Mutation
 import Admin.Object
@@ -111,6 +111,7 @@ candidacyStatusSelection =
     SelectionSet.succeed Data.Candidacy.CandidacyStatus
         |> with (SelectionSet.map (\(Date date) -> date) Admin.Object.CandidacyStatus.createdAt)
         |> with Admin.Object.CandidacyStatus.status
+        |> with Admin.Object.CandidacyStatus.isActive
 
 
 
@@ -167,7 +168,7 @@ requestCandidacy :
     -> (RemoteData String Data.Candidacy.Candidacy -> msg)
     -> String
     -> Cmd msg
-requestCandidacy endpointGraphql toMsg deviceId =
+requestCandidacy endpointGraphql toMsg id =
     let
         nothingToError remoteCandidacy =
             case remoteCandidacy of
@@ -187,20 +188,30 @@ requestCandidacy endpointGraphql toMsg deviceId =
                     Loading
 
         candidacyRequiredArgs =
-            Query.GetCandidacyRequiredArguments (Id deviceId)
+            Query.GetCandidacyByIdRequiredArguments (Id id)
     in
-    Query.getCandidacy candidacyRequiredArgs candidacySelection
+    Query.getCandidacyById candidacyRequiredArgs candidacySelection
         |> makeQuery endpointGraphql (nothingToError >> toMsg)
 
 
 deleteCandidacy :
     String
-    -> (RemoteData String (Maybe String) -> msg)
+    -> (RemoteData String String -> msg)
     -> String
     -> Cmd msg
 deleteCandidacy endpointGraphql toMsg candidacyId =
     Mutation.CandidacyDeleteByIdRequiredArguments (Id candidacyId)
         |> Mutation.candidacy_deleteById
+        |> makeMutation endpointGraphql toMsg
+
+
+archiveCandidacy :
+    String
+    -> (RemoteData String Data.Candidacy.Candidacy -> msg)
+    -> String
+    -> Cmd msg
+archiveCandidacy endpointGraphql toMsg candidacyId =
+    Mutation.candidacy_archiveById (Mutation.CandidacyArchiveByIdRequiredArguments (Id candidacyId)) candidacySelection
         |> makeMutation endpointGraphql toMsg
 
 

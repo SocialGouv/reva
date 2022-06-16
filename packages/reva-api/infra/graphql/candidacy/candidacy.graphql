@@ -38,6 +38,7 @@ type CandidacySummary {
 type CandidacyStatus {
   id: ID!
   status: String!
+  isActive: Boolean!
   createdAt: Date!
 }
 
@@ -64,6 +65,7 @@ type Companion {
 
 type Query {
   getCandidacy(deviceId: ID!): Candidacy
+  getCandidacyById(id: ID!): Candidacy
   getCandidacies: [CandidacySummary!]!
   getCompanions: [Companion!]!
 }
@@ -127,5 +129,6 @@ type Mutation {
     email: String
     phone: String
   ): Candidacy
-  candidacy_deleteById(candidacyId: ID!): String
+  candidacy_archiveById(candidacyId: ID!): Candidacy!
+  candidacy_deleteById(candidacyId: ID!): String!
 }

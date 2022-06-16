@@ -1,11 +1,13 @@
-module Data.Candidacy exposing (Candidacy, CandidacyGoal, CandidacyStatus, CandidacySummary, statusToString)
+module Data.Candidacy exposing (Candidacy, CandidacyGoal, CandidacyStatus, CandidacySummary, statusToString, toCandidacySummary)
 
+import Admin.Object.Candidacy exposing (certification)
 import Data.Certification exposing (Certification)
 
 
 type alias CandidacyStatus =
     { createdAt : String
     , status : String
+    , isActive : Bool
     }
 
 
@@ -51,5 +53,29 @@ statusToString status =
         "PROJET" ->
             "Projet en cours d'édition"
 
+        "ARCHIVE" ->
+            "Candidatures archivées"
+
         _ ->
             "Statut inconnu"
+
+
+toCandidacySummary : Candidacy -> CandidacySummary
+toCandidacySummary candidacy =
+    { id = candidacy.id
+    , deviceId = candidacy.deviceId
+    , certificationId = candidacy.certificationId
+    , companionId = candidacy.companionId
+    , certification = candidacy.certification
+    , phone = candidacy.phone
+    , email = candidacy.email
+    , lastStatus =
+        List.filter (\c -> c.isActive) candidacy.statuses
+            |> List.head
+            |> Maybe.withDefault
+                { createdAt = ""
+                , status = ""
+                , isActive = True
+                }
+    , createdAt = candidacy.createdAt
+    }

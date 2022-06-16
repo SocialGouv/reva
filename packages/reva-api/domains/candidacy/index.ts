@@ -78,12 +78,21 @@ export const createCandidacy = (deps: CreateCandidacyDeps) => async (params: { d
 };
 
 
-interface GetCandidacyDeps {
+interface GetCandidacyFromDeviceIdDeps {
     getCandidacyFromDeviceId: (deviceId: string) => Promise<Either<string, Candidacy>>;
 }
 
-export const getCandidacyFromDeviceId = (deps: GetCandidacyDeps) => (params: { deviceId: string; }): Promise<Either<FunctionalError, Candidacy>> => 
+export const getCandidacyFromDeviceId = (deps: GetCandidacyFromDeviceIdDeps) => (params: { deviceId: string; }): Promise<Either<FunctionalError, Candidacy>> => 
     EitherAsync.fromPromise(() => deps.getCandidacyFromDeviceId(params.deviceId))
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvée`)).run();
+
+
+interface GetCandidacyFromIdDeps {
+    getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
+}
+
+export const getCandidacyFromId = (deps: GetCandidacyFromIdDeps) => (params: { id: string; }): Promise<Either<FunctionalError, Candidacy>> => 
+    EitherAsync.fromPromise(() => deps.getCandidacyFromId(params.id))
         .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvée`)).run();
 
 
@@ -279,6 +288,25 @@ export const deleteCandidacy = (deps: DeleteCandidacyDeps) => (params : {
     candidacyId: string
 }) => {
     const result = EitherAsync.fromPromise(() => deps.deleteCandidacyFromId(params.candidacyId))
-        .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACIES_NOT_DELETE, `Erreur lors de la suppression de la candidature ${params.candidacyId}`));
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACIES_NOT_DELETED, `Erreur lors de la suppression de la candidature ${params.candidacyId}`));
+    return result
+}
+
+interface ArchiveCandidacyDeps {
+    updateCandidacyStatus: (params: {
+        candidacyId: string;
+        status: "ARCHIVE";
+    }) => Promise<Either<string, Candidacy>>;
+}
+
+export const archiveCandidacyFromId = (deps: ArchiveCandidacyDeps) => (params : {
+    candidacyId: string
+}) => {
+    const result = EitherAsync.fromPromise(() => deps.updateCandidacyStatus({
+        candidacyId: params.candidacyId,
+        status: "ARCHIVE"
+    }))
+    .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACIES_NOT_ARCHIVED, `Erreur lors de l'archivage de la candidature ${params.candidacyId}`));
+    
     return result
 }
