@@ -8,8 +8,8 @@ import Admin.InputObject
 import Admin.Interface
 import Admin.Object
 import Admin.Scalar
-import Admin.ScalarCodecs
 import Admin.Union
+import Data.Scalar
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
 import Graphql.Internal.Encode as Encode exposing (Value)
@@ -17,32 +17,6 @@ import Graphql.Operation exposing (RootMutation, RootQuery, RootSubscription)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode exposing (Decoder)
-
-
-type alias GetCandidacyRequiredArguments =
-    { deviceId : Admin.ScalarCodecs.Id }
-
-
-getCandidacy :
-    GetCandidacyRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Candidacy
-    -> SelectionSet (Maybe decodesTo) RootQuery
-getCandidacy requiredArgs____ object____ =
-    Object.selectionForCompositeField "getCandidacy" [ Argument.required "deviceId" requiredArgs____.deviceId (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
-
-
-getCandidacies :
-    SelectionSet decodesTo Admin.Object.CandidacySummary
-    -> SelectionSet (List decodesTo) RootQuery
-getCandidacies object____ =
-    Object.selectionForCompositeField "getCandidacies" [] object____ (Basics.identity >> Decode.list)
-
-
-getCompanions :
-    SelectionSet decodesTo Admin.Object.Companion
-    -> SelectionSet (List decodesTo) RootQuery
-getCompanions object____ =
-    Object.selectionForCompositeField "getCompanions" [] object____ (Basics.identity >> Decode.list)
 
 
 getReferential :
@@ -73,7 +47,7 @@ searchCertificationsAndProfessions fillInOptionals____ object____ =
 
 
 type alias GetCertificationRequiredArguments =
-    { id : Admin.ScalarCodecs.Id }
+    { id : Data.Scalar.Id }
 
 
 getCertification :
@@ -81,11 +55,23 @@ getCertification :
     -> SelectionSet decodesTo Admin.Object.Certification
     -> SelectionSet (Maybe decodesTo) RootQuery
 getCertification requiredArgs____ object____ =
-    Object.selectionForCompositeField "getCertification" [ Argument.required "id" requiredArgs____.id (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+    Object.selectionForCompositeField "getCertification" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+
+
+type alias GetCandidacyRequiredArguments =
+    { deviceId : Data.Scalar.Id }
+
+
+getCandidacy :
+    GetCandidacyRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet (Maybe decodesTo) RootQuery
+getCandidacy requiredArgs____ object____ =
+    Object.selectionForCompositeField "getCandidacy" [ Argument.required "deviceId" requiredArgs____.deviceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
 
 
 type alias GetCandidacyByIdRequiredArguments =
-    { id : Admin.ScalarCodecs.Id }
+    { id : Data.Scalar.Id }
 
 
 getCandidacyById :
@@ -93,4 +79,18 @@ getCandidacyById :
     -> SelectionSet decodesTo Admin.Object.Candidacy
     -> SelectionSet (Maybe decodesTo) RootQuery
 getCandidacyById requiredArgs____ object____ =
-    Object.selectionForCompositeField "getCandidacyById" [ Argument.required "id" requiredArgs____.id (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+    Object.selectionForCompositeField "getCandidacyById" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+
+
+getCandidacies :
+    SelectionSet decodesTo Admin.Object.CandidacySummary
+    -> SelectionSet (List decodesTo) RootQuery
+getCandidacies object____ =
+    Object.selectionForCompositeField "getCandidacies" [] object____ (Basics.identity >> Decode.list)
+
+
+getCompanions :
+    SelectionSet decodesTo Admin.Object.Companion
+    -> SelectionSet (List decodesTo) RootQuery
+getCompanions object____ =
+    Object.selectionForCompositeField "getCompanions" [] object____ (Basics.identity >> Decode.list)

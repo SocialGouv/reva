@@ -1,13 +1,14 @@
 module View.Candidacy exposing (view)
 
-import Css exposing (height, px)
-import Data.Candidacy exposing (Candidacy, CandidacyGoal)
+import Admin.Enum.Duration exposing (Duration(..))
+import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal)
 import Data.Referential exposing (Referential)
 import Dict
-import Html.Styled exposing (Html, a, article, button, dd, div, dl, dt, h1, h3, li, nav, node, p, span, text, ul)
+import Html.Styled exposing (Html, a, article, button, dd, div, dl, dt, h1, h3, h4, li, nav, node, p, span, text, ul)
 import Html.Styled.Attributes exposing (attribute, class, css, href, type_)
 import Html.Styled.Events exposing (onClick)
 import RemoteData exposing (RemoteData(..))
+import View.Date as Date
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 
@@ -74,6 +75,7 @@ view config =
 
                         _ ->
                             text "..."
+                    , viewExperiences config.candidacy.experiences
                     , button
                         [ type_ "button"
                         , class "shadow text-xs border border-gray-300 hover:bg-gray-50 text-gray-600 px-2 py-1 rounded"
@@ -98,10 +100,57 @@ viewInfo dataTestId label value =
         ]
 
 
+title : String -> Html msg
+title s =
+    h3 [ class "text-lg font-bold mb-2" ] [ text s ]
+
+
+viewGoal : Referential -> CandidacyGoal -> Html msg
+viewGoal referential candidacyGoal =
+    case Dict.get candidacyGoal.goalId referential.goals of
+        Just goal ->
+            li [] [ text goal.label ]
+
+        Nothing ->
+            text ""
+
+
+viewDuration : Duration -> Html msg
+viewDuration duration =
+    case duration of
+        Unknown ->
+            text "inconnue"
+
+        LessThanOneYear ->
+            text "de moins d'un an"
+
+        BetweenOneAndThreeYears ->
+            text "comprise entre 1 et 3 ans"
+
+        MoreThanThreeYears ->
+            text "de plus de 3 ans"
+
+        MoreThanFiveYears ->
+            text "de plus de 5 ans"
+
+        MoreThanTenYears ->
+            text "de plus de 10 ans"
+
+
+viewExperience : CandidacyExperience -> Html msg
+viewExperience experience =
+    div [ class "rounded-lg px-5 py-4 bg-gray-100 leading-tight" ]
+        [ h4 [ class "text-base font-semibold mb-2" ] [ text experience.title ]
+        , p [ class "font-bold my-4" ] [ text "Démarrée en ", Date.view experience.startedAt ]
+        , p [ class "font-bold my-4" ] [ text "Durée de l'experience ", viewDuration experience.duration ]
+        , p [ class "italic" ] [ text "\"", text experience.description, text "\"" ]
+        ]
+
+
 viewGoals : Referential -> List CandidacyGoal -> Html msg
 viewGoals referential candidacyGoals =
     div [ class "text-purple-800 my-6" ]
-        [ h3 [ class "font-bold mb-2" ] [ text "Mon objectif" ]
+        [ title "Mon objectif"
         , ul
             [ class "mb-4 rounded-lg px-5 py-4 bg-purple-100 leading-tight" ]
           <|
@@ -113,11 +162,9 @@ viewGoals referential candidacyGoals =
         ]
 
 
-viewGoal : Referential -> CandidacyGoal -> Html msg
-viewGoal referential candidacyGoal =
-    case Dict.get candidacyGoal.goalId referential.goals of
-        Just goal ->
-            li [] [ text goal.label ]
-
-        Nothing ->
-            text ""
+viewExperiences : List CandidacyExperience -> Html msg
+viewExperiences experiences =
+    div []
+        [ title "Mes experiences"
+        , div [ class "text-gray-900" ] <| List.map viewExperience experiences
+        ]

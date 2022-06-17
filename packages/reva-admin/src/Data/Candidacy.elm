@@ -1,11 +1,20 @@
-module Data.Candidacy exposing (Candidacy, CandidacyGoal, CandidacyStatus, CandidacySummary, statusToString, toCandidacySummary)
+module Data.Candidacy exposing
+    ( Candidacy
+    , CandidacyExperience
+    , CandidacyGoal
+    , CandidacyStatus
+    , CandidacySummary
+    , statusToString
+    , toCandidacySummary
+    )
 
-import Admin.Object.Candidacy exposing (certification)
+import Admin.Enum.Duration exposing (Duration)
 import Data.Certification exposing (Certification)
+import Time
 
 
 type alias CandidacyStatus =
-    { createdAt : String
+    { createdAt : Time.Posix
     , status : String
     , isActive : Bool
     }
@@ -17,6 +26,15 @@ type alias CandidacyGoal =
     }
 
 
+type alias CandidacyExperience =
+    { id : String
+    , title : String
+    , startedAt : Time.Posix
+    , duration : Duration
+    , description : String
+    }
+
+
 type alias Candidacy =
     { id : String
     , deviceId : String
@@ -24,10 +42,11 @@ type alias Candidacy =
     , companionId : Maybe String
     , certification : Certification
     , goals : List CandidacyGoal
+    , experiences : List CandidacyExperience
     , phone : Maybe String
     , email : Maybe String
     , statuses : List CandidacyStatus
-    , createdAt : String --TODO: Time.Posix
+    , createdAt : Time.Posix
     }
 
 
@@ -40,7 +59,7 @@ type alias CandidacySummary =
     , phone : Maybe String
     , email : Maybe String
     , lastStatus : CandidacyStatus
-    , createdAt : String --TODO: Time.Posix
+    , createdAt : Time.Posix
     }
 
 
@@ -73,7 +92,7 @@ toCandidacySummary candidacy =
         List.filter (\c -> c.isActive) candidacy.statuses
             |> List.head
             |> Maybe.withDefault
-                { createdAt = ""
+                { createdAt = Time.millisToPosix 0
                 , status = ""
                 , isActive = True
                 }

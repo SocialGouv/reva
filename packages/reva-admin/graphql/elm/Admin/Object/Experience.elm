@@ -9,8 +9,8 @@ import Admin.InputObject
 import Admin.Interface
 import Admin.Object
 import Admin.Scalar
-import Admin.ScalarCodecs
 import Admin.Union
+import Data.Scalar
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
 import Graphql.Internal.Encode as Encode exposing (Value)
@@ -20,9 +20,9 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
-id : SelectionSet (Maybe Admin.ScalarCodecs.Id) Admin.Object.Experience
+id : SelectionSet Data.Scalar.Id Admin.Object.Experience
 id =
-    Object.selectionForField "(Maybe ScalarCodecs.Id)" "id" [] (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder |> Decode.nullable)
+    Object.selectionForField "Data.Scalar.Id" "id" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
 title : SelectionSet String Admin.Object.Experience
@@ -30,9 +30,9 @@ title =
     Object.selectionForField "String" "title" [] Decode.string
 
 
-startedAt : SelectionSet Admin.ScalarCodecs.Date Admin.Object.Experience
+startedAt : SelectionSet Data.Scalar.Date Admin.Object.Experience
 startedAt =
-    Object.selectionForField "ScalarCodecs.Date" "startedAt" [] (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder)
+    Object.selectionForField "Data.Scalar.Date" "startedAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder)
 
 
 duration : SelectionSet Admin.Enum.Duration.Duration Admin.Object.Experience

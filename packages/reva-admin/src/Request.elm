@@ -7,6 +7,7 @@ import Admin.Object.CandidacyStatus
 import Admin.Object.CandidacySummary
 import Admin.Object.CandidateGoal
 import Admin.Object.Certification
+import Admin.Object.Experience
 import Admin.Object.Goal
 import Admin.Object.Referential
 import Admin.Query as Query
@@ -109,7 +110,7 @@ certificationSelection =
 candidacyStatusSelection : SelectionSet Data.Candidacy.CandidacyStatus Admin.Object.CandidacyStatus
 candidacyStatusSelection =
     SelectionSet.succeed Data.Candidacy.CandidacyStatus
-        |> with (SelectionSet.map (\(Date date) -> date) Admin.Object.CandidacyStatus.createdAt)
+        |> with Admin.Object.CandidacyStatus.createdAt
         |> with Admin.Object.CandidacyStatus.status
         |> with Admin.Object.CandidacyStatus.isActive
 
@@ -129,7 +130,7 @@ candidacySummarySelection =
         |> with Admin.Object.CandidacySummary.phone
         |> with Admin.Object.CandidacySummary.email
         |> with (Admin.Object.CandidacySummary.lastStatus candidacyStatusSelection)
-        |> with (SelectionSet.map (\(Date date) -> date) Admin.Object.CandidacySummary.createdAt)
+        |> with Admin.Object.CandidacySummary.createdAt
 
 
 candidacyGoalSelection : SelectionSet Data.Candidacy.CandidacyGoal Admin.Object.CandidateGoal
@@ -137,6 +138,16 @@ candidacyGoalSelection =
     SelectionSet.succeed Data.Candidacy.CandidacyGoal
         |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.CandidateGoal.goalId)
         |> with Admin.Object.CandidateGoal.additionalInformation
+
+
+candidacyExperienceSelection : SelectionSet Data.Candidacy.CandidacyExperience Admin.Object.Experience
+candidacyExperienceSelection =
+    SelectionSet.succeed Data.Candidacy.CandidacyExperience
+        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.Experience.id)
+        |> with Admin.Object.Experience.title
+        |> with Admin.Object.Experience.startedAt
+        |> with Admin.Object.Experience.duration
+        |> with Admin.Object.Experience.description
 
 
 candidacySelection : SelectionSet Data.Candidacy.Candidacy Admin.Object.Candidacy
@@ -148,10 +159,11 @@ candidacySelection =
         |> with (SelectionSet.map (Maybe.map (\(Id id) -> id)) Admin.Object.Candidacy.companionId)
         |> with (Admin.Object.Candidacy.certification certificationSelection)
         |> with (Admin.Object.Candidacy.goals candidacyGoalSelection)
+        |> with (Admin.Object.Candidacy.experiences candidacyExperienceSelection)
         |> with Admin.Object.Candidacy.phone
         |> with Admin.Object.Candidacy.email
         |> with (Admin.Object.Candidacy.candidacyStatuses candidacyStatusSelection)
-        |> with (SelectionSet.map (\(Date date) -> date) Admin.Object.Candidacy.createdAt)
+        |> with Admin.Object.Candidacy.createdAt
 
 
 requestCandidacies :

@@ -3,16 +3,13 @@ port module Main exposing (main)
 import Api exposing (Token)
 import Browser
 import Browser.Navigation as Nav
-import Data.Candidacy exposing (CandidacySummary)
 import Data.Candidate exposing (Candidate)
-import Data.Referential exposing (Referential)
 import Html.Styled as Html exposing (Html, div, toUnstyled)
 import Http
 import Page.Candidacies as Candidacies exposing (Model)
 import Page.Candidates as Candidates exposing (Model)
 import Page.Login
 import RemoteData exposing (RemoteData(..))
-import Request
 import Route exposing (Route(..))
 import Url exposing (Url)
 import Validate

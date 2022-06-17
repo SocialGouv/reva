@@ -4,7 +4,15 @@
 
 module Admin.VerifyScalarCodecs exposing (..)
 
+{-
+   This file is intended to be used to ensure that custom scalar decoder
+   files are valid. It is compiled using `elm make` by the CLI.
+-}
 
-placeholder : String
-placeholder =
-    ""
+import Admin.Scalar
+import Data.Scalar
+
+
+verify : Admin.Scalar.Codecs Data.Scalar.Date Data.Scalar.Id Data.Scalar.Void
+verify =
+    Data.Scalar.codecs
