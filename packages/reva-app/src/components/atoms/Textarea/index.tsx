@@ -17,7 +17,7 @@ interface TextareaProps {
   /**
    * onFocus callback
    */
-  onFocus: () => void;
+  onFocus?: () => void;
   /**
    * Input placeholder
    */
