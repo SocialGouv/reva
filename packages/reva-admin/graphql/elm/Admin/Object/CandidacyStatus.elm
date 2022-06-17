@@ -8,8 +8,8 @@ import Admin.InputObject
 import Admin.Interface
 import Admin.Object
 import Admin.Scalar
-import Admin.ScalarCodecs
 import Admin.Union
+import Data.Scalar
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
 import Graphql.Internal.Encode as Encode exposing (Value)
@@ -19,9 +19,9 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
-id : SelectionSet Admin.ScalarCodecs.Id Admin.Object.CandidacyStatus
+id : SelectionSet Data.Scalar.Id Admin.Object.CandidacyStatus
 id =
-    Object.selectionForField "ScalarCodecs.Id" "id" [] (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
+    Object.selectionForField "Data.Scalar.Id" "id" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
 status : SelectionSet String Admin.Object.CandidacyStatus
@@ -29,9 +29,9 @@ status =
     Object.selectionForField "String" "status" [] Decode.string
 
 
-createdAt : SelectionSet Admin.ScalarCodecs.Date Admin.Object.CandidacyStatus
+createdAt : SelectionSet Data.Scalar.Date Admin.Object.CandidacyStatus
 createdAt =
-    Object.selectionForField "ScalarCodecs.Date" "createdAt" [] (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder)
+    Object.selectionForField "Data.Scalar.Date" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder)
 
 
 isActive : SelectionSet Bool Admin.Object.CandidacyStatus

@@ -8,8 +8,8 @@ import Admin.InputObject
 import Admin.Interface
 import Admin.Object
 import Admin.Scalar
-import Admin.ScalarCodecs
 import Admin.Union
+import Data.Scalar
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
 import Graphql.Internal.Encode as Encode exposing (Value)
@@ -19,24 +19,24 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
-id : SelectionSet Admin.ScalarCodecs.Id Admin.Object.CandidacySummary
+id : SelectionSet Data.Scalar.Id Admin.Object.CandidacySummary
 id =
-    Object.selectionForField "ScalarCodecs.Id" "id" [] (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
+    Object.selectionForField "Data.Scalar.Id" "id" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
-deviceId : SelectionSet Admin.ScalarCodecs.Id Admin.Object.CandidacySummary
+deviceId : SelectionSet Data.Scalar.Id Admin.Object.CandidacySummary
 deviceId =
-    Object.selectionForField "ScalarCodecs.Id" "deviceId" [] (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
+    Object.selectionForField "Data.Scalar.Id" "deviceId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
-certificationId : SelectionSet Admin.ScalarCodecs.Id Admin.Object.CandidacySummary
+certificationId : SelectionSet Data.Scalar.Id Admin.Object.CandidacySummary
 certificationId =
-    Object.selectionForField "ScalarCodecs.Id" "certificationId" [] (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
+    Object.selectionForField "Data.Scalar.Id" "certificationId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
-companionId : SelectionSet (Maybe Admin.ScalarCodecs.Id) Admin.Object.CandidacySummary
+companionId : SelectionSet (Maybe Data.Scalar.Id) Admin.Object.CandidacySummary
 companionId =
-    Object.selectionForField "(Maybe ScalarCodecs.Id)" "companionId" [] (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder |> Decode.nullable)
+    Object.selectionForField "(Maybe Data.Scalar.Id)" "companionId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder |> Decode.nullable)
 
 
 certification :
@@ -63,6 +63,6 @@ lastStatus object____ =
     Object.selectionForCompositeField "lastStatus" [] object____ Basics.identity
 
 
-createdAt : SelectionSet Admin.ScalarCodecs.Date Admin.Object.CandidacySummary
+createdAt : SelectionSet Data.Scalar.Date Admin.Object.CandidacySummary
 createdAt =
-    Object.selectionForField "ScalarCodecs.Date" "createdAt" [] (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder)
+    Object.selectionForField "Data.Scalar.Date" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder)

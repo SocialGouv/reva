@@ -8,8 +8,8 @@ import Admin.Enum.Duration
 import Admin.Interface
 import Admin.Object
 import Admin.Scalar
-import Admin.ScalarCodecs
 import Admin.Union
+import Data.Scalar
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
 import Graphql.Internal.Encode as Encode exposing (Value)
@@ -26,16 +26,16 @@ buildCandidacyInput required____ =
 
 
 type alias CandidacyInputRequiredFields =
-    { deviceId : Admin.ScalarCodecs.Id
-    , certificationId : Admin.ScalarCodecs.Id
+    { deviceId : Data.Scalar.Id
+    , certificationId : Data.Scalar.Id
     }
 
 
 {-| Type for the CandidacyInput input object.
 -}
 type alias CandidacyInput =
-    { deviceId : Admin.ScalarCodecs.Id
-    , certificationId : Admin.ScalarCodecs.Id
+    { deviceId : Data.Scalar.Id
+    , certificationId : Data.Scalar.Id
     }
 
 
@@ -44,7 +44,7 @@ type alias CandidacyInput =
 encodeCandidacyInput : CandidacyInput -> Value
 encodeCandidacyInput input____ =
     Encode.maybeObject
-        [ ( "deviceId", (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.deviceId |> Just ), ( "certificationId", (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.certificationId |> Just ) ]
+        [ ( "deviceId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.deviceId |> Just ), ( "certificationId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.certificationId |> Just ) ]
 
 
 buildCandidateGoalInput :
@@ -61,7 +61,7 @@ buildCandidateGoalInput required____ fillOptionals____ =
 
 
 type alias CandidateGoalInputRequiredFields =
-    { goalId : Admin.ScalarCodecs.Id }
+    { goalId : Data.Scalar.Id }
 
 
 type alias CandidateGoalInputOptionalFields =
@@ -71,7 +71,7 @@ type alias CandidateGoalInputOptionalFields =
 {-| Type for the CandidateGoalInput input object.
 -}
 type alias CandidateGoalInput =
-    { goalId : Admin.ScalarCodecs.Id
+    { goalId : Data.Scalar.Id
     , additionalInformation : OptionalArgument String
     }
 
@@ -81,7 +81,7 @@ type alias CandidateGoalInput =
 encodeCandidateGoalInput : CandidateGoalInput -> Value
 encodeCandidateGoalInput input____ =
     Encode.maybeObject
-        [ ( "goalId", (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.goalId |> Just ), ( "additionalInformation", Encode.string |> Encode.optional input____.additionalInformation ) ]
+        [ ( "goalId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.goalId |> Just ), ( "additionalInformation", Encode.string |> Encode.optional input____.additionalInformation ) ]
 
 
 buildCertificationChangeInput :
@@ -92,16 +92,16 @@ buildCertificationChangeInput required____ =
 
 
 type alias CertificationChangeInputRequiredFields =
-    { candidacyId : Admin.ScalarCodecs.Id
-    , certificationId : Admin.ScalarCodecs.Id
+    { candidacyId : Data.Scalar.Id
+    , certificationId : Data.Scalar.Id
     }
 
 
 {-| Type for the CertificationChangeInput input object.
 -}
 type alias CertificationChangeInput =
-    { candidacyId : Admin.ScalarCodecs.Id
-    , certificationId : Admin.ScalarCodecs.Id
+    { candidacyId : Data.Scalar.Id
+    , certificationId : Data.Scalar.Id
     }
 
 
@@ -110,7 +110,7 @@ type alias CertificationChangeInput =
 encodeCertificationChangeInput : CertificationChangeInput -> Value
 encodeCertificationChangeInput input____ =
     Encode.maybeObject
-        [ ( "candidacyId", (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.candidacyId |> Just ), ( "certificationId", (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.certificationId |> Just ) ]
+        [ ( "candidacyId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.candidacyId |> Just ), ( "certificationId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.certificationId |> Just ) ]
 
 
 buildExperienceInput :
@@ -122,7 +122,7 @@ buildExperienceInput required____ =
 
 type alias ExperienceInputRequiredFields =
     { title : String
-    , startedAt : Admin.ScalarCodecs.Date
+    , startedAt : Data.Scalar.Date
     , duration : Admin.Enum.Duration.Duration
     , description : String
     }
@@ -132,7 +132,7 @@ type alias ExperienceInputRequiredFields =
 -}
 type alias ExperienceInput =
     { title : String
-    , startedAt : Admin.ScalarCodecs.Date
+    , startedAt : Data.Scalar.Date
     , duration : Admin.Enum.Duration.Duration
     , description : String
     }
@@ -143,4 +143,4 @@ type alias ExperienceInput =
 encodeExperienceInput : ExperienceInput -> Value
 encodeExperienceInput input____ =
     Encode.maybeObject
-        [ ( "title", Encode.string input____.title |> Just ), ( "startedAt", (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapEncoder .codecDate) input____.startedAt |> Just ), ( "duration", Encode.enum Admin.Enum.Duration.toString input____.duration |> Just ), ( "description", Encode.string input____.description |> Just ) ]
+        [ ( "title", Encode.string input____.title |> Just ), ( "startedAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDate) input____.startedAt |> Just ), ( "duration", Encode.enum Admin.Enum.Duration.toString input____.duration |> Just ), ( "description", Encode.string input____.description |> Just ) ]

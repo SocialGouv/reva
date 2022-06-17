@@ -8,8 +8,8 @@ import Admin.InputObject
 import Admin.Interface
 import Admin.Object
 import Admin.Scalar
-import Admin.ScalarCodecs
 import Admin.Union
+import Data.Scalar
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
 import Graphql.Internal.Encode as Encode exposing (Value)
@@ -19,9 +19,9 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
-goalId : SelectionSet Admin.ScalarCodecs.Id Admin.Object.CandidateGoal
+goalId : SelectionSet Data.Scalar.Id Admin.Object.CandidateGoal
 goalId =
-    Object.selectionForField "ScalarCodecs.Id" "goalId" [] (Admin.ScalarCodecs.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
+    Object.selectionForField "Data.Scalar.Id" "goalId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
 additionalInformation : SelectionSet (Maybe String) Admin.Object.CandidateGoal

@@ -43,7 +43,7 @@ type CandidacyStatus {
 }
 
 type Experience {
-  id: ID
+  id: ID!
   title: String!
   startedAt: Date!
   duration: Duration!
