@@ -8,9 +8,10 @@ module Page.Candidacies exposing
 
 import Admin.Object exposing (Candidacy)
 import Api exposing (Token)
+import Css exposing (content)
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacySummary)
 import Data.Referential exposing (Referential)
-import Html.Styled as Html exposing (Html, a, aside, button, div, h2, h3, input, label, li, nav, p, span, text, ul)
+import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, for, href, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onClick, onInput)
 import List.Extra
@@ -167,23 +168,52 @@ viewContent model candidacies =
 
 viewCandidacyPanel : Model -> Html Msg
 viewCandidacyPanel model =
-    case model.selected of
-        NotAsked ->
-            div [ class "h-full w-full bg-gray-500" ] []
+    let
+        loading extraClass =
+            div
+                [ class "animate-pulse rounded bg-gray-100 w-128"
+                , class extraClass
+                ]
+                []
+    in
+    viewCandidacyArticle <|
+        case model.selected of
+            NotAsked ->
+                []
 
-        Loading ->
-            div [ class "h-full w-full transition-colors bg-gray-100 p-4" ] [ text "..." ]
+            Loading ->
+                [ loading "mt-8 mb-20 w-96 h-8"
+                , div
+                    [ class "mx-8" ]
+                    [ loading "mb-2 w-48 h-6"
+                    , loading "mb-10 w-128 h-16"
+                    , loading "mb-2 w-48 h-6"
+                    , loading "w-128 h-64"
+                    ]
+                ]
 
-        Failure err ->
-            div [ class "h-full w-full transition-colors bg-white text-red-600 p-4" ] [ text err ]
+            Failure err ->
+                [ text err ]
 
-        Success candidacy ->
-            View.Candidacy.view
-                { candidacy = candidacy
-                , archiveMsg = UserArchivedCandidacy
-                , deleteMsg = UserDeletedCandidacy
-                , referential = model.state.referential
-                }
+            Success candidacy ->
+                View.Candidacy.view
+                    { candidacy = candidacy
+                    , archiveMsg = UserArchivedCandidacy
+                    , deleteMsg = UserDeletedCandidacy
+                    , referential = model.state.referential
+                    }
+
+
+viewCandidacyArticle : List (Html msg) -> Html msg
+viewCandidacyArticle content =
+    node "main"
+        [ dataTest "profile"
+        , class "flex-1 relative z-10 overflow-y-auto focus:outline-none xl:order-last bg-gray-100"
+        ]
+        [ article
+            [ class "max-w-2xl bg-white h-screen px-3 py-8 sm:px-6" ]
+            content
+        ]
 
 
 viewDirectoryPanel : List CandidacySummary -> Html Msg

@@ -20,72 +20,65 @@ view :
         , deleteMsg : Candidacy -> msg
         , referential : RemoteData String Referential
     }
-    -> Html msg
+    -> List (Html msg)
 view config =
-    node "main"
-        [ dataTest "profile"
-        , class "flex-1 relative z-10 overflow-y-auto focus:outline-none xl:order-last bg-gray-100"
-        ]
-        [ article
-            [ class "max-w-2xl bg-white h-screen px-3 sm:px-6" ]
-            [ nav
-                [ class "flex items-start px-4 py-3 sm:px-6 lg:px-8 md:hidden", attribute "aria-label" "Breadcrumb" ]
-                [ a
-                    [ href "#", class "inline-flex items-center space-x-3 text-sm font-medium text-gray-900" ]
-                    [ Icons.chevronLeft
-                    , span
-                        []
-                        [ text "Candidatures" ]
-                    ]
-                ]
-            , div
-                [ class "pt-8" ]
-                [ h1
-                    [ class "text-2xl font-medium text-gray-900 leading-none" ]
-                    [ text config.candidacy.certification.label
-                    ]
-                ]
-            , div
-                [ class "mt-2 mb-6 text-sm text-gray-700" ]
-                [ dl
-                    [ class "grid grid-cols-1 gap-x-4 gap-y-8 2xl:grid-cols-2" ]
-                    [ config.candidacy.phone
-                        |> Maybe.map (text >> viewInfo "phone-number" "Téléphone")
-                        |> Maybe.withDefault (text "")
-                    , config.candidacy.email
-                        |> Maybe.map
-                            (\email ->
-                                a
-                                    [ class "text-blue-500 hover:text-blue-600 truncate"
-                                    , href ("mailto:" ++ email)
-                                    ]
-                                    [ text email ]
-                                    |> viewInfo "email" "Email"
-                            )
-                        |> Maybe.withDefault (text "")
-                    ]
-                , div
-                    [ class "my-12 mx-8" ]
-                    [ case config.referential of
-                        Success referential ->
-                            viewGoals referential config.candidacy.goals
-
-                        Failure err ->
-                            text err
-
-                        _ ->
-                            text "..."
-                    , viewExperiences config.candidacy.experiences
-                    , button
-                        [ type_ "button"
-                        , class "shadow text-xs border border-gray-300 hover:bg-gray-50 text-gray-600 px-2 py-1 rounded"
-                        , onClick (config.archiveMsg config.candidacy)
-                        ]
-                        [ text "Archiver la candidature" ]
-                    ]
-                ]
+    [ nav
+        [ class "flex items-start px-4 pb-3 sm:px-6 lg:px-8 md:hidden", attribute "aria-label" "Breadcrumb" ]
+        [ a
+            [ href "#", class "inline-flex items-center space-x-3 text-sm font-medium text-gray-900" ]
+            [ Icons.chevronLeft
+            , span
+                []
+                [ text "Candidatures" ]
             ]
         ]
+    , div
+        [ class "pt-8" ]
+        [ h1
+            [ class "text-2xl font-medium text-gray-900 leading-none" ]
+            [ text config.candidacy.certification.label
+            ]
+        ]
+    , div
+        [ class "mt-2 mb-6 text-sm text-gray-700" ]
+        [ dl
+            [ class "grid grid-cols-1 gap-x-4 gap-y-8 2xl:grid-cols-2" ]
+            [ config.candidacy.phone
+                |> Maybe.map (text >> viewInfo "phone-number" "Téléphone")
+                |> Maybe.withDefault (text "")
+            , config.candidacy.email
+                |> Maybe.map
+                    (\email ->
+                        a
+                            [ class "text-blue-500 hover:text-blue-600 truncate"
+                            , href ("mailto:" ++ email)
+                            ]
+                            [ text email ]
+                            |> viewInfo "email" "Email"
+                    )
+                |> Maybe.withDefault (text "")
+            ]
+        , div
+            [ class "my-12 mx-8" ]
+            [ case config.referential of
+                Success referential ->
+                    viewGoals referential config.candidacy.goals
+
+                Failure err ->
+                    text err
+
+                _ ->
+                    text "..."
+            , viewExperiences config.candidacy.experiences
+            , button
+                [ type_ "button"
+                , class "shadow text-xs border border-gray-300 hover:bg-gray-50 text-gray-600 px-2 py-1 rounded"
+                , onClick (config.archiveMsg config.candidacy)
+                ]
+                [ text "Archiver la candidature" ]
+            ]
+        ]
+    ]
 
 
 viewInfo : String -> String -> Html msg -> Html msg
@@ -141,15 +134,15 @@ viewExperience : CandidacyExperience -> Html msg
 viewExperience experience =
     div [ class "rounded-lg px-5 py-4 bg-gray-100 leading-tight" ]
         [ h4 [ class "text-base font-semibold mb-2" ] [ text experience.title ]
-        , p [ class "font-bold my-4" ] [ text "Démarrée en ", Date.view experience.startedAt ]
-        , p [ class "font-bold my-4" ] [ text "Durée de l'experience ", viewDuration experience.duration ]
+        , p [ class "my-4" ] [ text "Démarrée en ", Date.view experience.startedAt ]
+        , p [ class "font-bold my-4" ] [ text "Durée d'expérience ", viewDuration experience.duration ]
         , p [ class "italic" ] [ text "\"", text experience.description, text "\"" ]
         ]
 
 
 viewGoals : Referential -> List CandidacyGoal -> Html msg
 viewGoals referential candidacyGoals =
-    div [ class "text-purple-800 my-6" ]
+    div [ class "text-purple-800 my-10" ]
         [ title "Mon objectif"
         , ul
             [ class "mb-4 rounded-lg px-5 py-4 bg-purple-100 leading-tight" ]
@@ -164,7 +157,7 @@ viewGoals referential candidacyGoals =
 
 viewExperiences : List CandidacyExperience -> Html msg
 viewExperiences experiences =
-    div []
-        [ title "Mes experiences"
-        , div [ class "text-gray-900" ] <| List.map viewExperience experiences
+    div [ class "text-gray-900 my-10" ]
+        [ title "Mes expériences"
+        , div [ class "space-y-4" ] <| List.map viewExperience experiences
         ]
