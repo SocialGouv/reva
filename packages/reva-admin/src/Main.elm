@@ -12,6 +12,7 @@ import Page.Candidacies as Candidacies exposing (Model)
 import Page.Candidates as Candidates exposing (Model)
 import Page.Loading
 import Page.Login
+import Page.Meetings as Meetings
 import RemoteData exposing (RemoteData(..))
 import Route exposing (Route(..))
 import Url exposing (Url)
@@ -49,6 +50,7 @@ type Page
     = Candidacies Candidacies.Model
     | Candidates Candidates.Model
     | Loading
+    | Meetings Meetings.Model
 
 
 type Msg
@@ -59,6 +61,7 @@ type Msg
     | GotCandidatesMsg Candidates.Msg
     | GotCandidaciesMsg Candidacies.Msg
     | GotLoginError String
+    | GotMeetingsMsg Meetings.Msg
       -- PROFILE
       --| GotProfileResponse (Result Http.Error ())
       -- LOGIN
@@ -108,21 +111,33 @@ viewPage model =
         NotLoggedIn _ _ ->
             Page.Loading.view
 
-        LoggedIn _ (Candidacies candidaciesModel) ->
-            Candidacies.view { baseUrl = model.baseUrl } candidaciesModel
+        LoggedIn _ page ->
+            viewLoggedPage model page
+                |> View.layout
+                    { onLogout = UserLoggedOut
+                    }
+
+
+viewLoggedPage : Model -> Page -> Html Msg
+viewLoggedPage model page =
+    let
+        config =
+            { baseUrl = model.baseUrl }
+    in
+    case page of
+        Candidacies candidaciesModel ->
+            Candidacies.view config candidaciesModel
                 |> Html.map GotCandidaciesMsg
-                |> View.layout
-                    { onLogout = UserLoggedOut
-                    }
 
-        LoggedIn _ (Candidates candidateModel) ->
-            Candidates.view candidateModel
+        Candidates candidatesModel ->
+            Candidates.view candidatesModel
                 |> Html.map GotCandidatesMsg
-                |> View.layout
-                    { onLogout = UserLoggedOut
-                    }
 
-        _ ->
+        Meetings meetingsModel ->
+            Meetings.view config meetingsModel
+                |> Html.map GotMeetingsMsg
+
+        Loading ->
             div [] []
 
 
