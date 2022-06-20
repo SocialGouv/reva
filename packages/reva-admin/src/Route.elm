@@ -1,16 +1,22 @@
 module Route exposing
     ( Route(..)
-    , fromRoute
     , fromUrl
+    , href
+    , toString
     )
 
+import Html.Styled exposing (Html)
+import Html.Styled.Attributes
 import Url
-import Url.Parser as Parser exposing ((</>), Parser, map, oneOf, s, top)
+import Url.Builder
+import Url.Parser as Parser exposing ((</>), Parser, map, oneOf, s, string, top)
 
 
 type Route
-    = Home
+    = Candidacy String
+    | Home
     | Login
+    | Meetings String
     | NotFound
 
 
@@ -20,6 +26,8 @@ parser baseUrl =
         </> oneOf
                 [ map Home top
                 , map Login (s "auth" </> s "login")
+                , map Candidacy (s "candidacy" </> string)
+                , map Meetings (s "candidacy" </> string </> s "meetings")
 
                 --  Add more routes like this:
                 --  , map Comment (s "user" </> string </> s "comment" </> int)
@@ -34,14 +42,25 @@ fromUrl baseUrl url =
         |> Maybe.withDefault NotFound
 
 
-fromRoute : String -> Route -> String
-fromRoute baseUrl route =
+href : String -> Route -> Html.Styled.Attribute msg
+href baseUrl route =
+    Html.Styled.Attributes.href <| toString baseUrl route
+
+
+toString : String -> Route -> String
+toString baseUrl route =
     case route of
+        Candidacy candiacyId ->
+            Url.Builder.absolute [ baseUrl, "candidacy", candiacyId ] []
+
         Home ->
-            baseUrl ++ "/"
+            Url.Builder.absolute [ baseUrl ] []
 
         Login ->
-            baseUrl ++ "/auth/login"
+            Url.Builder.absolute [ baseUrl, "auth", "login" ] []
+
+        Meetings candiacyId ->
+            Url.Builder.absolute [ baseUrl, "candidacy", candiacyId, "meetings" ] []
 
         NotFound ->
-            baseUrl ++ "/not-found"
+            Url.Builder.absolute [ baseUrl, "not-found" ] []
