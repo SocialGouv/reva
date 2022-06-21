@@ -1,4 +1,6 @@
+import { Capacitor } from "@capacitor/core";
 import { useActor } from "@xstate/react";
+import { MutableRefObject, useRef } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
@@ -53,6 +55,7 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
   };
 
   const editedExperience = state.context.experiences.edited;
+  const descriptionRef = useRef<HTMLDivElement>(null);
 
   return (
     <Page
@@ -85,8 +88,14 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
             defaultValue={editedExperience?.duration}
           />
           <Textarea
+            ref={descriptionRef}
             name="description"
             label="Description du poste"
+            onFocus={
+              Capacitor.getPlatform() === "android"
+                ? () => descriptionRef.current?.scrollIntoView()
+                : () => {}
+            }
             rows={5}
             defaultValue={editedExperience?.description}
           />

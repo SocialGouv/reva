@@ -1,4 +1,6 @@
+import { Capacitor } from "@capacitor/core";
 import { useActor } from "@xstate/react";
+import { RefObject, useRef } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
@@ -38,6 +40,12 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
   };
 
   const editedContact = state.context.contact;
+  const phoneRef = useRef<HTMLDivElement>(null);
+  const emailRef = useRef<HTMLDivElement>(null);
+  const scrollToInput = (ref: RefObject<HTMLDivElement>) =>
+    Capacitor.getPlatform() === "android"
+      ? () => ref.current?.scrollIntoView()
+      : () => {};
 
   return (
     <Page
@@ -56,14 +64,18 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
         </p>
         <form onSubmit={onSubmit} className="mt-4 space-y-6">
           <Input
+            ref={phoneRef}
             name="phone"
             label="Téléphone"
             minLength={10}
+            onFocus={scrollToInput(phoneRef)}
             defaultValue={editedContact?.phone || ""}
           />
           <Input
+            ref={emailRef}
             name="email"
             label="Email"
+            onFocus={scrollToInput(emailRef)}
             type="email"
             defaultValue={editedContact?.email || ""}
           />
