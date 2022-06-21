@@ -6,7 +6,7 @@
     "dev": "concurrently npm:dev:*",
     "dev:elm": "vite",
     "dev:css": "npm run css -- --watch",
-    "build": "npm run build:css && npm run build:elm && cp -R ./dist ../reva-api/dist/admin",
+    "build": "npm run build:css && npm run build:elm && cp ./silent-check-sso.html ../reva-api/dist/admin && cp -R ./dist ../reva-api/dist/admin",
     "build:api": "elm-graphql --schema-file ../reva-api/infra/graphql/generated-graphql-schema.graphql --scalar-codecs Data.Scalar --output graphql/elm --base Admin",
     "build:css": "NODE_ENV=production npm run css -- --minify",
     "build:elm": "vite build",
@@ -22,5 +22,8 @@
     "tailwindcss": "^3.0.24",
     "vite": "^2.9.10",
     "vite-plugin-elm": "^2.6.1"
+  },
+  "dependencies": {
+    "keycloak-js": "^18.0.1"
   }
 }

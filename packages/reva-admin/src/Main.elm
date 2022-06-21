@@ -6,8 +6,11 @@ import Browser.Navigation as Nav
 import Data.Candidate exposing (Candidate)
 import Html.Styled as Html exposing (Html, div, toUnstyled)
 import Http
+import Json.Decode as Decode exposing (..)
+import KeycloakConfiguration exposing (KeycloakConfiguration)
 import Page.Candidacies as Candidacies exposing (Model)
 import Page.Candidates as Candidates exposing (Model)
+import Page.Loading
 import Page.Login
 import RemoteData exposing (RemoteData(..))
 import Route exposing (Route(..))
@@ -18,8 +21,8 @@ import View
 
 type alias Flags =
     { endpoint : String
-    , token : Maybe String
     , baseUrl : String
+    , keycloakConfiguration : Decode.Value
     }
 
 
@@ -33,6 +36,7 @@ type alias Model =
     , endpoint : String
     , route : Route
     , state : State
+    , keycloakConfiguration : Maybe KeycloakConfiguration
     }
 
 
@@ -62,6 +66,8 @@ type Msg
     | GotLoginSubmit
     | GotLoginResponse (Result Http.Error Token)
     | GotCandidatesResponse (Result Http.Error (List Candidate))
+    | GotLoggedIn Token
+    | GotLoggedOut
 
 
 main : Program Flags Model Msg
@@ -86,6 +92,12 @@ view model =
     , body =
         [ viewPage model
             |> toUnstyled
+        , KeycloakConfiguration.iframeKeycloak
+            { onLoggedIn = GotLoggedIn
+            , onLoggedOut = GotLoggedOut
+            }
+            model.keycloakConfiguration
+            |> toUnstyled
         ]
     }
 
@@ -94,11 +106,12 @@ viewPage : Model -> Html Msg
 viewPage model =
     case model.state of
         NotLoggedIn loginModel ->
-            Page.Login.view
-                { onSubmit = GotLoginSubmit
-                , onUpdateModel = GotLoginUpdate
-                }
-                loginModel
+            --Page.Login.view
+            --    { onSubmit = GotLoginSubmit
+            --    , onUpdateModel = GotLoginUpdate
+            --    }
+            --    loginModel
+            Page.Loading.view
 
         LoggedIn _ (Candidacies candidaciesModel) ->
             Candidacies.view { baseUrl = model.baseUrl } candidaciesModel
@@ -217,6 +230,17 @@ update msg model =
             , Cmd.map GotCandidaciesMsg candidaciesCmd
             )
 
+        -- Auth
+        ( GotLoggedIn token, _ ) ->
+            let
+                ( candidaciesModel, candidaciesCmd ) =
+                    Candidacies.init model.endpoint Route.Home token
+
+                state =
+                    LoggedIn token (Candidacies candidaciesModel)
+            in
+            ( { model | state = state }, Cmd.batch [ Cmd.map GotCandidaciesMsg candidaciesCmd, Nav.pushUrl model.key (Route.toString model.baseUrl Route.Home) ] )
+
         _ ->
             ( model, Cmd.none )
 
@@ -245,12 +269,7 @@ withAuthHandle msg result =
 
 init : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
-    case flags.token of
-        Just rawRoken ->
-            initWithToken (Api.stringToToken rawRoken) flags url key
-
-        Nothing ->
-            initWithoutToken flags url key
+    initWithoutToken flags url key
 
 
 initWithoutToken : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
@@ -264,30 +283,12 @@ initWithoutToken flags url key =
       , endpoint = flags.endpoint
       , route = Route.fromUrl flags.baseUrl url
       , state = state
+      , keycloakConfiguration =
+            Decode.decodeValue KeycloakConfiguration.keycloakConfiguration flags.keycloakConfiguration
+                |> Result.map Just
+                |> Result.withDefault Nothing
       }
     , Nav.pushUrl key (Route.toString flags.baseUrl Route.Login)
-    )
-
-
-initWithToken : Token -> Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
-initWithToken token flags url key =
-    let
-        route =
-            Route.fromUrl flags.baseUrl url
-
-        ( candidaciesModel, candidaciesCmd ) =
-            Candidacies.init flags.endpoint route token
-
-        state =
-            LoggedIn token (Candidacies candidaciesModel)
-    in
-    ( { key = key
-      , baseUrl = flags.baseUrl
-      , endpoint = flags.endpoint
-      , route = route
-      , state = state
-      }
-    , Cmd.map GotCandidaciesMsg candidaciesCmd
     )
 
 
