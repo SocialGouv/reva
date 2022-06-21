@@ -31,6 +31,7 @@ type alias Model =
     { key : Nav.Key
     , baseUrl : String
     , endpoint : String
+    , route : Route
     , state : State
     }
 
@@ -100,7 +101,7 @@ viewPage model =
                 loginModel
 
         LoggedIn _ (Candidacies candidaciesModel) ->
-            Candidacies.view candidaciesModel
+            Candidacies.view { baseUrl = model.baseUrl } candidaciesModel
                 |> Html.map GotCandidaciesMsg
                 |> View.layout
                     { onLogout = UserLoggedOut
@@ -124,9 +125,8 @@ viewPage model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model.state ) of
-        ( BrowserChangedUrl _, _ ) ->
-            -- ( { model | route = Route.fromUrl "app" url }
-            ( model
+        ( BrowserChangedUrl url, _ ) ->
+            ( { model | route = Route.fromUrl model.baseUrl url }
             , Cmd.none
             )
 
@@ -165,7 +165,7 @@ update msg model =
                   else
                     Cmd.none
                 , Api.fetchCandidates GotCandidatesResponse { token = token }
-                , Nav.pushUrl model.key (Route.fromRoute model.baseUrl Route.Home)
+                , Nav.pushUrl model.key (Route.toString model.baseUrl Route.Home)
                 ]
             )
 
@@ -205,7 +205,7 @@ update msg model =
             ( { model | state = Page.Login.withErrors state [ ( Page.Login.Global, error ) ] |> NotLoggedIn }, Cmd.none )
 
         ( GotLoginError _, _ ) ->
-            ( { model | state = NotLoggedIn Page.Login.init }, Cmd.batch [ Nav.pushUrl model.key (Route.fromRoute model.baseUrl Route.Login) ] )
+            ( { model | state = NotLoggedIn Page.Login.init }, Cmd.batch [ Nav.pushUrl model.key (Route.toString model.baseUrl Route.Login) ] )
 
         -- Candidacies
         ( GotCandidaciesMsg candidaciesMsg, LoggedIn token (Candidacies candidaciesModel) ) ->
@@ -254,7 +254,7 @@ init flags url key =
 
 
 initWithoutToken : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
-initWithoutToken flags _ key =
+initWithoutToken flags url key =
     let
         state =
             NotLoggedIn Page.Login.init
@@ -262,17 +262,21 @@ initWithoutToken flags _ key =
     ( { key = key
       , baseUrl = flags.baseUrl
       , endpoint = flags.endpoint
+      , route = Route.fromUrl flags.baseUrl url
       , state = state
       }
-    , Nav.pushUrl key (Route.fromRoute flags.baseUrl Route.Login)
+    , Nav.pushUrl key (Route.toString flags.baseUrl Route.Login)
     )
 
 
 initWithToken : Token -> Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
-initWithToken token flags _ key =
+initWithToken token flags url key =
     let
+        route =
+            Route.fromUrl flags.baseUrl url
+
         ( candidaciesModel, candidaciesCmd ) =
-            Candidacies.init flags.endpoint token
+            Candidacies.init flags.endpoint route token
 
         state =
             LoggedIn token (Candidacies candidaciesModel)
@@ -280,6 +284,7 @@ initWithToken token flags _ key =
     ( { key = key
       , baseUrl = flags.baseUrl
       , endpoint = flags.endpoint
+      , route = route
       , state = state
       }
     , Cmd.map GotCandidaciesMsg candidaciesCmd

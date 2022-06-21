@@ -8,15 +8,15 @@ module Page.Candidacies exposing
 
 import Admin.Object exposing (Candidacy)
 import Api exposing (Token)
-import Css exposing (content)
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacySummary)
 import Data.Referential exposing (Referential)
 import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
-import Html.Styled.Attributes exposing (action, attribute, class, for, href, id, name, placeholder, type_)
+import Html.Styled.Attributes exposing (action, attribute, class, default, for, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onClick, onInput)
 import List.Extra
 import RemoteData exposing (RemoteData(..))
 import Request
+import Route exposing (Route)
 import String exposing (String)
 import View.Candidacy
 import View.Candidate exposing (Tab(..))
@@ -53,10 +53,10 @@ type alias Model =
     }
 
 
-init : String -> Token -> ( Model, Cmd Msg )
-init endpoint token =
+init : String -> Route -> Token -> ( Model, Cmd Msg )
+init endpoint route token =
     let
-        model =
+        defaultModel =
             { endpoint = endpoint
             , token = token
             , filter = Nothing
@@ -67,13 +67,24 @@ init endpoint token =
                 }
             , tab = View.Candidate.Events
             }
+
+        defaultCmd =
+            Cmd.batch
+                [ Request.requestCandidacies endpoint GotCandidaciesResponse
+                , Request.requestReferential endpoint GotReferentialResponse
+                ]
     in
-    ( model
-    , Cmd.batch
-        [ Request.requestCandidacies endpoint GotCandidaciesResponse
-        , Request.requestReferential endpoint GotReferentialResponse
-        ]
-    )
+    case route of
+        Route.Candidacy candidacyId ->
+            ( { defaultModel | selected = Loading }
+            , Cmd.batch
+                [ defaultCmd
+                , Request.requestCandidacy endpoint GotCandidacyResponse candidacyId
+                ]
+            )
+
+        _ ->
+            ( defaultModel, defaultCmd )
 
 
 withCandidacies : RemoteData String (List CandidacySummary) -> State -> State
@@ -103,9 +114,10 @@ filterCandidacy filter candidacySummary =
 
 
 view :
-    Model
+    { a | baseUrl : String }
+    -> Model
     -> Html Msg
-view model =
+view config model =
     case model.state.candidacies of
         NotAsked ->
             div [] []
@@ -124,18 +136,19 @@ view model =
             in
             case model.filter of
                 Nothing ->
-                    viewContent model sortedCandidacies
+                    viewContent config model sortedCandidacies
 
                 Just filter ->
                     List.filter (filterCandidacy filter) sortedCandidacies
-                        |> viewContent model
+                        |> viewContent config model
 
 
 viewContent :
-    Model
+    { a | baseUrl : String }
+    -> Model
     -> List CandidacySummary
     -> Html Msg
-viewContent model candidacies =
+viewContent config model candidacies =
     div
         [ class "flex flex-col min-w-0 flex-1 overflow-hidden" ]
         [ div
@@ -160,7 +173,7 @@ viewContent model candidacies =
             ]
         , div
             [ class "flex-1 relative z-0 flex overflow-hidden" ]
-            [ viewDirectoryPanel candidacies
+            [ viewDirectoryPanel config candidacies
             , viewCandidacyPanel model
             ]
         ]
@@ -216,8 +229,8 @@ viewCandidacyArticle content =
         ]
 
 
-viewDirectoryPanel : List CandidacySummary -> Html Msg
-viewDirectoryPanel candidacies =
+viewDirectoryPanel : { a | baseUrl : String } -> List CandidacySummary -> Html Msg
+viewDirectoryPanel config candidacies =
     let
         candidaciesByStatus =
             List.Extra.groupWhile
@@ -260,13 +273,13 @@ viewDirectoryPanel candidacies =
                     ]
                 ]
             ]
-        , List.map viewDirectory candidaciesByStatus
+        , List.map (viewDirectory config) candidaciesByStatus
             |> nav [ dataTest "directory", class "flex-1 min-h-0 overflow-y-auto", attribute "aria-label" "Candidats" ]
         ]
 
 
-viewDirectory : ( CandidacySummary, List Candidacy.CandidacySummary ) -> Html Msg
-viewDirectory ( firstCandidacy, candidacies ) =
+viewDirectory : { a | baseUrl : String } -> ( CandidacySummary, List Candidacy.CandidacySummary ) -> Html Msg
+viewDirectory config ( firstCandidacy, candidacies ) =
     div
         [ dataTest "directory-group", class "relative" ]
         [ div
@@ -274,13 +287,13 @@ viewDirectory ( firstCandidacy, candidacies ) =
             , class "z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-3 text-sm font-semibold text-gray-800"
             ]
             [ h3 [] [ text (Candidacy.statusToString firstCandidacy.lastStatus.status) ] ]
-        , List.map viewItem (firstCandidacy :: candidacies)
+        , List.map (viewItem config) (firstCandidacy :: candidacies)
             |> ul [ attribute "role" "list", class "relative z-0 divide-y divide-gray-200" ]
         ]
 
 
-viewItem : CandidacySummary -> Html Msg
-viewItem candidacy =
+viewItem : { a | baseUrl : String } -> CandidacySummary -> Html Msg
+viewItem config candidacy =
     let
         displayMaybe maybeInfo =
             Maybe.map (\s -> div [] [ text s ]) maybeInfo
@@ -296,7 +309,7 @@ viewItem candidacy =
                 [ class "flex-1 min-w-0" ]
                 [ a
                     [ onClick (UserSelectedCandidacy candidacy)
-                    , href "#"
+                    , Route.href config.baseUrl (Route.Candidacy candidacy.id)
                     , class "focus:outline-none"
                     ]
                     [ span
@@ -360,7 +373,6 @@ update msg model =
 
         UserArchivedCandidacy candidacy ->
             ( model
-              -- removeCandidacy model candidacy
             , Request.archiveCandidacy model.endpoint GotCandidacyArchivingResponse candidacy.id
             )
 
