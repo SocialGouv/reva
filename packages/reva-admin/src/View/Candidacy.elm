@@ -1,4 +1,4 @@
-module View.Candidacy exposing (view)
+module View.Candidacy exposing (Tab(..), view)
 
 import Admin.Enum.Duration exposing (Duration(..))
 import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal)
@@ -11,6 +11,11 @@ import RemoteData exposing (RemoteData(..))
 import View.Date as Date
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
+
+
+type Tab
+    = Meetings
+    | Profil
 
 
 view :

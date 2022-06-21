@@ -1,4 +1,4 @@
-module Page.Meetings exposing
+module Page.Candidacies.Meetings exposing
     ( Model
     , Msg
     , init

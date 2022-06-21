@@ -18,8 +18,7 @@ import RemoteData exposing (RemoteData(..))
 import Request
 import Route exposing (Route)
 import String exposing (String)
-import View.Candidacy
-import View.Candidate exposing (Tab(..))
+import View.Candidacy exposing (Tab(..))
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 
@@ -34,7 +33,6 @@ type Msg
     | UserSelectedCandidacy CandidacySummary
     | UserArchivedCandidacy Candidacy
     | UserDeletedCandidacy Candidacy
-    | UserSelectedCandidacyTab View.Candidate.Tab
 
 
 type alias State =
@@ -380,9 +378,6 @@ update msg model =
             ( { model | selected = Loading }
             , Request.requestCandidacy model.endpoint GotCandidacyResponse candidacySummary.id
             )
-
-        UserSelectedCandidacyTab tab ->
-            ( { model | tab = tab }, Cmd.none )
 
 
 
