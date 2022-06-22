@@ -33,16 +33,20 @@ class KeycloakElement extends HTMLElement {
       .then((authenticated) => {
         console.log(authenticated ? "authenticated" : "not authenticated");
         if (!authenticated) {
-          keycloak.login()
+          keycloak.login({
+            redirectUri: window.location.href
+          });
         } else {
           //@ts-ignore
-          this.dispatchEvent(new CustomEvent("loggedIn", { detail: {token: keycloak.token}}));
+          this.dispatchEvent(new CustomEvent("loggedIn", { detail: { token: keycloak.token } }));
         }
       });
 
-    keycloak.onAuthLogout = function() {
+    keycloak.onAuthLogout = function () {
       console.log("Logged out");
-      keycloak.login()
+      keycloak.login({
+        redirectUri: window.location.href
+      });
     };
   }
 }

@@ -41,7 +41,7 @@ type alias Model =
 
 
 type State
-    = NotLoggedIn Page.Login.Model
+    = NotLoggedIn Route Page.Login.Model
     | LoggedIn Token Page
 
 
@@ -105,7 +105,7 @@ view model =
 viewPage : Model -> Html Msg
 viewPage model =
     case model.state of
-        NotLoggedIn loginModel ->
+        NotLoggedIn _ _ ->
             --Page.Login.view
             --    { onSubmit = GotLoginSubmit
             --    , onUpdateModel = GotLoginUpdate
@@ -158,18 +158,18 @@ update msg model =
         ( UserLoggedOut, LoggedIn _ _ ) ->
             ( model, removeToken () )
 
-        ( GotLoginUpdate loginModel, NotLoggedIn _ ) ->
-            ( { model | state = NotLoggedIn loginModel }, Cmd.none )
+        ( GotLoginUpdate loginModel, NotLoggedIn route _ ) ->
+            ( { model | state = NotLoggedIn route loginModel }, Cmd.none )
 
-        ( GotLoginSubmit, NotLoggedIn loginModel ) ->
+        ( GotLoginSubmit, NotLoggedIn route loginModel ) ->
             case Page.Login.validateLogin loginModel of
                 Ok validateModel ->
                     ( model, Validate.fromValid validateModel |> Api.login (GotLoginResponse |> withAuthHandle) )
 
                 Err errors ->
-                    ( { model | state = Page.Login.withErrors loginModel errors |> NotLoggedIn }, Cmd.none )
+                    ( { model | state = Page.Login.withErrors loginModel errors |> NotLoggedIn route }, Cmd.none )
 
-        ( GotLoginResponse (Ok token), NotLoggedIn loginModel ) ->
+        ( GotLoginResponse (Ok token), NotLoggedIn _ loginModel ) ->
             ( { model | state = LoggedIn token (Candidates <| Candidates.init token) }
             , Cmd.batch
                 [ if loginModel.form.rememberMe then
@@ -214,11 +214,11 @@ update msg model =
         ( GotCandidatesResponse err, LoggedIn _ _ ) ->
             ( model, Cmd.none )
 
-        ( GotLoginError error, NotLoggedIn state ) ->
-            ( { model | state = Page.Login.withErrors state [ ( Page.Login.Global, error ) ] |> NotLoggedIn }, Cmd.none )
+        ( GotLoginError error, NotLoggedIn route state ) ->
+            ( { model | state = Page.Login.withErrors state [ ( Page.Login.Global, error ) ] |> NotLoggedIn route }, Cmd.none )
 
         ( GotLoginError _, _ ) ->
-            ( { model | state = NotLoggedIn Page.Login.init }, Cmd.batch [ Nav.pushUrl model.key (Route.toString model.baseUrl Route.Login) ] )
+            ( { model | state = NotLoggedIn model.route Page.Login.init }, Cmd.batch [ Nav.pushUrl model.key (Route.toString model.baseUrl Route.Login) ] )
 
         -- Candidacies
         ( GotCandidaciesMsg candidaciesMsg, LoggedIn token (Candidacies candidaciesModel) ) ->
@@ -231,15 +231,23 @@ update msg model =
             )
 
         -- Auth
-        ( GotLoggedIn token, _ ) ->
+        ( GotLoggedIn token, NotLoggedIn route _ ) ->
             let
+                redirectRoute =
+                    case route of
+                        Login ->
+                            Home
+
+                        _ ->
+                            route
+
                 ( candidaciesModel, candidaciesCmd ) =
-                    Candidacies.init model.endpoint Route.Home token
+                    Candidacies.init model.endpoint redirectRoute token
 
                 state =
                     LoggedIn token (Candidacies candidaciesModel)
             in
-            ( { model | state = state }, Cmd.batch [ Cmd.map GotCandidaciesMsg candidaciesCmd, Nav.pushUrl model.key (Route.toString model.baseUrl Route.Home) ] )
+            ( { model | state = state }, Cmd.batch [ Cmd.map GotCandidaciesMsg candidaciesCmd, Nav.pushUrl model.key (Route.toString model.baseUrl redirectRoute) ] )
 
         _ ->
             ( model, Cmd.none )
@@ -276,7 +284,7 @@ initWithoutToken : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
 initWithoutToken flags url key =
     let
         state =
-            NotLoggedIn Page.Login.init
+            NotLoggedIn (Route.fromUrl flags.baseUrl url) Page.Login.init
     in
     ( { key = key
       , baseUrl = flags.baseUrl
