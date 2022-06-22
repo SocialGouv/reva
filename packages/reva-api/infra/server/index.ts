@@ -2,20 +2,20 @@ import dotenv from "dotenv";
 import path from "path";
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
-// const apm = require("elastic-apm-node").start({
-//   // Override the service name from package.json
-//   // Allowed characters: a-z, A-Z, 0-9, -, _, and space
-//   serviceName: `reva-api`,
+const apm = require("elastic-apm-node").start({
+  // Override the service name from package.json
+  // Allowed characters: a-z, A-Z, 0-9, -, _, and space
+  serviceName: `reva-api`,
 
-//   // Use if APM Server requires a secret token
-//   secretToken: process.env.ES_APM_SERVER_TOKEN || "",
+  // Use if APM Server requires a secret token
+  secretToken: process.env.ES_APM_SERVER_TOKEN || "",
 
-//   // Set the custom APM Server URL (default: http://localhost:8200)
-//   serverUrl: process.env.ES_APM_SERVER_URL || "http://localhost:8200",
+  // Set the custom APM Server URL (default: http://localhost:8200)
+  serverUrl: process.env.ES_APM_SERVER_URL || "http://localhost:8200",
 
-//   // Set the service environment
-//   environment: process.env.APP_ENV || "dev",
-// });
+  // Set the service environment
+  environment: process.env.APP_ENV || "dev",
+});
 
 import fastify from "fastify";
 import mercurius, { MercuriusOptions } from "mercurius";
@@ -24,12 +24,6 @@ import proxy from "@fastify/http-proxy";
 import fastifyStatic from "@fastify/static";
 import keycloakPlugin from "./keycloak-plugin";
 
-// import fastifyKeycloak from "fastify-keycloak";
-// //@ts-ignore
-// import fastifyCookie from "@fastify/cookie";
-// import fastifySession from "@fastify/session";
-//@ts-ignore
-import Store from "@fastify/session/lib/store";
 import { graphqlConfiguration } from "../graphql";
 import { deleteCandidacyFromEmail, deleteCandidacyFromPhone } from "../database/postgres/candidacies";
 
@@ -45,7 +39,6 @@ if (process.env.NODE_ENV === "production") {
   const ADMIN_FOLDER = path.join(DIST_FOLDER, "admin");
   const WEBSITE_FOLDER = path.join(DIST_FOLDER, "website");
 
-
   if (process.env.FRAMER_WEBSITE_URL) {
     server.register(proxy, {
       upstream: process.env.FRAMER_WEBSITE_URL,
@@ -56,13 +49,14 @@ if (process.env.NODE_ENV === "production") {
     server.register(fastifyStatic, {
       root: WEBSITE_FOLDER,
       prefix: WEBSITE_ROUTE_PATH,
+      decorateReply: true,
     });
   }
 
   server.register(fastifyStatic, {
     root: APP_FOLDER,
     prefix: APP_ROUTE_PATH,
-    decorateReply: false,
+    decorateReply: process.env.FRAMER_WEBSITE_URL,
   });
 
   server.register(fastifyStatic, {
