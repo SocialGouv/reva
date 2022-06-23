@@ -36,6 +36,9 @@
     }
   },
   "dependencies": {
+    "@fastify/cors": "^8.0.0",
+    "@fastify/http-proxy": "^8.0.2",
+    "@fastify/static": "^6.4.0",
     "@graphql-tools/load-files": "^6.5.3",
     "@graphql-tools/merge": "^8.2.3",
     "@graphql-tools/schema": "^8.3.2",
@@ -43,12 +46,10 @@
     "dotenv": "^16.0.0",
     "elastic-apm-node": "^3.27.0",
     "fast-csv": "4.3.6",
-    "fastify": "3.27.2",
-    "fastify-cors": "6.0.3",
+    "fastify": "^4.0.3",
     "fastify-env": "2.1.1",
-    "fastify-http-proxy": "6.2.1",
-    "fastify-static": "4.5.0",
-    "mercurius": "9.3.3",
+    "keycloak-connect": "^18.0.1",
+    "mercurius": "^10.0.0",
     "purify-ts": "^1.2.0"
   },
   "devDependencies": {

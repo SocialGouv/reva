@@ -189,12 +189,12 @@ async function main() {
     }
   });
 
-  await prisma.certification.update({
-    where: { rncpId: '34827' },
-    data: {
-      status: 'INACTIVE',
-    }
-  });
+  // await prisma.certification.update({
+  //   where: { rncpId: '34827' },
+  //   data: {
+  //     status: 'INACTIVE',
+  //   }
+  // });
 
   const count = await prisma.$queryRaw`
     select count(1) from certification;

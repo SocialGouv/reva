@@ -54,7 +54,7 @@ toString baseUrl route =
             Url.Builder.absolute [ baseUrl, "candidacy", candiacyId ] []
 
         Home ->
-            Url.Builder.absolute [ baseUrl ] []
+            Url.Builder.absolute [ baseUrl, "" ] []
 
         Login ->
             Url.Builder.absolute [ baseUrl, "auth", "login" ] []
