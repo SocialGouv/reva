@@ -106,11 +106,6 @@ viewPage : Model -> Html Msg
 viewPage model =
     case model.state of
         NotLoggedIn _ _ ->
-            --Page.Login.view
-            --    { onSubmit = GotLoginSubmit
-            --    , onUpdateModel = GotLoginUpdate
-            --    }
-            --    loginModel
             Page.Loading.view
 
         LoggedIn _ (Candidacies candidaciesModel) ->

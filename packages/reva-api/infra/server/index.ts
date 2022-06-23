@@ -143,18 +143,6 @@ server.post("/admin/candidacies/delete", async (request, reply) => {
   reply.send("deleted");
 });
 
-
-// server.register(
-//   helmet,
-//   // Example disables the `contentSecurityPolicy` middleware but keeps the rest.
-//   { 
-//     contentSecurityPolicy: false,
-//     // contentSecurityPolicy: {
-//     //   directives: { frameAncestors: ["'none'"] }
-//     // },
-//   }
-// );
-
 const start = async () => {
   try {
     await server.listen({ 
