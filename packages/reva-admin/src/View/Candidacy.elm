@@ -1,7 +1,7 @@
 module View.Candidacy exposing (Tab(..), view)
 
 import Admin.Enum.Duration exposing (Duration(..))
-import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal)
+import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, CandidacyId)
 import Data.Referential exposing (Referential)
 import Dict
 import Html.Styled exposing (Html, a, article, button, dd, div, dl, dt, h1, h3, h4, li, nav, node, p, span, text, ul)
@@ -14,8 +14,8 @@ import View.Icons as Icons
 
 
 type Tab
-    = Meetings
-    | Profil
+    = Meetings CandidacyId
+    | Profil CandidacyId
 
 
 view :

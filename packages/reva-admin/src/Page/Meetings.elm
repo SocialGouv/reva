@@ -1,4 +1,4 @@
-module Page.Candidacies.Meetings exposing
+module Page.Meetings exposing
     ( Model
     , Msg
     , init
@@ -57,11 +57,7 @@ init endpoint token =
 
 view : { a | baseUrl : String } -> Model -> Html Msg
 view config model =
-    div []
-        [ h2
-            []
-            [ text "Rendez-vous" ]
-        ]
+    div [] []
 
 
 

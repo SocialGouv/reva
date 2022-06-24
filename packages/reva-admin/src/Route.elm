@@ -5,18 +5,19 @@ module Route exposing
     , toString
     )
 
+import Data.Candidacy exposing (candidacyIdFromString, candidacyIdToString)
 import Html.Styled exposing (Html)
 import Html.Styled.Attributes
 import Url
 import Url.Builder
 import Url.Parser as Parser exposing ((</>), Parser, map, oneOf, s, string, top)
+import View.Candidacy
 
 
 type Route
-    = Candidacy String
+    = Candidacy View.Candidacy.Tab
     | Home
     | Login
-    | Meetings String
     | NotFound
 
 
@@ -26,8 +27,12 @@ parser baseUrl =
         </> oneOf
                 [ map Home top
                 , map Login (s "auth" </> s "login")
-                , map Candidacy (s "candidacy" </> string)
-                , map Meetings (s "candidacy" </> string </> s "meetings")
+                , map
+                    (\id -> Candidacy <| View.Candidacy.Profil <| candidacyIdFromString id)
+                    (s "candidacy" </> string)
+                , map
+                    (\id -> Candidacy <| View.Candidacy.Profil <| candidacyIdFromString id)
+                    (s "candidacy" </> string </> s "meetings")
 
                 --  Add more routes like this:
                 --  , map Comment (s "user" </> string </> s "comment" </> int)
@@ -50,17 +55,17 @@ href baseUrl route =
 toString : String -> Route -> String
 toString baseUrl route =
     case route of
-        Candidacy candiacyId ->
-            Url.Builder.absolute [ baseUrl, "candidacy", candiacyId ] []
+        Candidacy (View.Candidacy.Profil candidacyId) ->
+            Url.Builder.absolute [ baseUrl, "candidacy", candidacyIdToString candidacyId ] []
+
+        Candidacy (View.Candidacy.Meetings candidacyId) ->
+            Url.Builder.absolute [ baseUrl, "candidacy", candidacyIdToString candidacyId, "meetings" ] []
 
         Home ->
             Url.Builder.absolute [ baseUrl, "" ] []
 
         Login ->
             Url.Builder.absolute [ baseUrl, "auth", "login" ] []
-
-        Meetings candiacyId ->
-            Url.Builder.absolute [ baseUrl, "candidacy", candiacyId, "meetings" ] []
 
         NotFound ->
             Url.Builder.absolute [ baseUrl, "not-found" ] []

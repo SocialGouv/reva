@@ -11,7 +11,7 @@ import Api exposing (Token)
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacySummary)
 import Data.Referential exposing (Referential)
 import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
-import Html.Styled.Attributes exposing (action, attribute, class, default, for, id, name, placeholder, type_)
+import Html.Styled.Attributes exposing (action, attribute, class, for, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onClick, onInput)
 import List.Extra
 import RemoteData exposing (RemoteData(..))
@@ -51,8 +51,8 @@ type alias Model =
     }
 
 
-init : String -> Route -> Token -> ( Model, Cmd Msg )
-init endpoint route token =
+init : String -> Tab -> Token -> ( Model, Cmd Msg )
+init endpoint tab token =
     let
         defaultModel =
             { endpoint = endpoint
@@ -63,7 +63,7 @@ init endpoint route token =
                 { candidacies = RemoteData.NotAsked
                 , referential = RemoteData.NotAsked
                 }
-            , tab = View.Candidate.Events
+            , tab = View.Candidacy.Profil
             }
 
         defaultCmd =
@@ -72,8 +72,8 @@ init endpoint route token =
                 , Request.requestReferential endpoint GotReferentialResponse
                 ]
     in
-    case route of
-        Route.Candidacy candidacyId ->
+    case tab of
+        View.Candidacy.Profil candidacyId ->
             ( { defaultModel | selected = Loading }
             , Cmd.batch
                 [ defaultCmd
@@ -307,7 +307,7 @@ viewItem config candidacy =
                 [ class "flex-1 min-w-0" ]
                 [ a
                     [ onClick (UserSelectedCandidacy candidacy)
-                    , Route.href config.baseUrl (Route.Candidacy candidacy.id)
+                    , Route.href config.baseUrl (Route.Candidacy Profil candidacy.id)
                     , class "focus:outline-none"
                     ]
                     [ span

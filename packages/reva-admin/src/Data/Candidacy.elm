@@ -2,15 +2,23 @@ module Data.Candidacy exposing
     ( Candidacy
     , CandidacyExperience
     , CandidacyGoal
+    , CandidacyId
     , CandidacyStatus
     , CandidacySummary
+    , candidacyIdFromString
+    , candidacyIdToString
     , statusToString
     , toCandidacySummary
     )
 
 import Admin.Enum.Duration exposing (Duration)
+import Admin.Object.Candidacy exposing (id)
 import Data.Certification exposing (Certification)
 import Time
+
+
+type CandidacyId
+    = CandidacyId String
 
 
 type alias CandidacyStatus =
@@ -36,7 +44,7 @@ type alias CandidacyExperience =
 
 
 type alias Candidacy =
-    { id : String
+    { id : CandidacyId
     , deviceId : String
     , certificationId : String
     , companionId : Maybe String
@@ -51,7 +59,7 @@ type alias Candidacy =
 
 
 type alias CandidacySummary =
-    { id : String
+    { id : CandidacyId
     , deviceId : String
     , certificationId : String
     , companionId : Maybe String
@@ -61,6 +69,16 @@ type alias CandidacySummary =
     , lastStatus : CandidacyStatus
     , createdAt : Time.Posix
     }
+
+
+candidacyIdToString : CandidacyId -> String
+candidacyIdToString (CandidacyId id) =
+    id
+
+
+candidacyIdFromString : String -> CandidacyId
+candidacyIdFromString id =
+    CandidacyId id
 
 
 statusToString : String -> String

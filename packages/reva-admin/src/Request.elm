@@ -14,7 +14,7 @@ import Admin.Query as Query
 import Admin.Scalar exposing (Date(..), Id(..))
 import Data.Candidacy
 import Data.Certification
-import Data.Referential exposing (Referential)
+import Data.Referential
 import Dict
 import Graphql.Http
 import Graphql.Operation
@@ -122,7 +122,7 @@ candidacyStatusSelection =
 candidacySummarySelection : SelectionSet Data.Candidacy.CandidacySummary Admin.Object.CandidacySummary
 candidacySummarySelection =
     SelectionSet.succeed Data.Candidacy.CandidacySummary
-        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.CandidacySummary.id)
+        |> with (SelectionSet.map (\(Id id) -> Data.Candidacy.candidacyIdFromString id) Admin.Object.CandidacySummary.id)
         |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.CandidacySummary.deviceId)
         |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.CandidacySummary.certificationId)
         |> with (SelectionSet.map (Maybe.map (\(Id id) -> id)) Admin.Object.CandidacySummary.companionId)
@@ -153,7 +153,7 @@ candidacyExperienceSelection =
 candidacySelection : SelectionSet Data.Candidacy.Candidacy Admin.Object.Candidacy
 candidacySelection =
     SelectionSet.succeed Data.Candidacy.Candidacy
-        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.Candidacy.id)
+        |> with (SelectionSet.map (\(Id id) -> Data.Candidacy.candidacyIdFromString id) Admin.Object.Candidacy.id)
         |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.Candidacy.deviceId)
         |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.Candidacy.certificationId)
         |> with (SelectionSet.map (Maybe.map (\(Id id) -> id)) Admin.Object.Candidacy.companionId)

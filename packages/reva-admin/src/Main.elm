@@ -49,7 +49,6 @@ type Page
     = Candidacies Candidacies.Model
     | Candidates Candidates.Model
     | Loading
-    | Meetings Meetings.Model
 
 
 type Msg
@@ -60,7 +59,6 @@ type Msg
     | GotCandidatesMsg Candidates.Msg
     | GotCandidaciesMsg Candidacies.Msg
     | GotLoginError String
-    | GotMeetingsMsg Meetings.Msg
       -- PROFILE
       --| GotProfileResponse (Result Http.Error ())
       -- LOGIN
@@ -131,10 +129,6 @@ viewLoggedPage model page =
         Candidates candidatesModel ->
             Candidates.view candidatesModel
                 |> Html.map GotCandidatesMsg
-
-        Meetings meetingsModel ->
-            Meetings.view config meetingsModel
-                |> Html.map GotMeetingsMsg
 
         Loading ->
             div [] []
