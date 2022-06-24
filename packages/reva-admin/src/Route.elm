@@ -23,15 +23,20 @@ type Route
 
 parser : String -> Parser (Route -> a) a
 parser baseUrl =
+    let
+        candidacyTab : String -> (Data.Candidacy.CandidacyId -> View.Candidacy.Tab) -> Route
+        candidacyTab rawId tab =
+            Candidacy <| tab <| candidacyIdFromString rawId
+    in
     s baseUrl
         </> oneOf
                 [ map Home top
                 , map Login (s "auth" </> s "login")
                 , map
-                    (\id -> Candidacy <| View.Candidacy.Profil <| candidacyIdFromString id)
+                    (\id -> candidacyTab id View.Candidacy.Profil)
                     (s "candidacy" </> string)
                 , map
-                    (\id -> Candidacy <| View.Candidacy.Profil <| candidacyIdFromString id)
+                    (\id -> candidacyTab id View.Candidacy.Meetings)
                     (s "candidacy" </> string </> s "meetings")
 
                 --  Add more routes like this:

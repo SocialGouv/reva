@@ -4,6 +4,7 @@ module Page.Candidacies exposing
     , init
     , initCandidacy
     , update
+    , updateTab
     , view
     )
 
@@ -15,6 +16,7 @@ import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h
 import Html.Styled.Attributes exposing (action, attribute, class, for, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onInput)
 import List.Extra
+import Page.Meetings
 import RemoteData exposing (RemoteData(..))
 import Request
 import Route
@@ -170,7 +172,12 @@ viewContent config model candidacies =
         , div
             [ class "flex-1 relative z-0 flex overflow-hidden" ]
             [ viewDirectoryPanel config candidacies
-            , viewCandidacyPanel model
+            , case Debug.log "" model.tab of
+                Meetings _ ->
+                    Page.Meetings.view
+
+                _ ->
+                    viewCandidacyPanel model
             ]
         ]
 
@@ -370,6 +377,11 @@ update msg model =
             ( model
             , Request.archiveCandidacy model.endpoint GotCandidacyArchivingResponse candidacy.id
             )
+
+
+updateTab : Tab -> Model -> ( Model, Cmd msg )
+updateTab tab model =
+    ( { model | tab = tab }, Cmd.none )
 
 
 

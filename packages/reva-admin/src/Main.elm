@@ -139,7 +139,11 @@ changeRouteTo route model =
         ( Candidacy View.Candidacy.Empty, _ ) ->
             noChange
 
-        ( Candidacy (View.Candidacy.Meetings _), _ ) ->
+        ( Candidacy (View.Candidacy.Meetings candidacyId), Candidacies candidaciesModel ) ->
+            Candidacies.updateTab (View.Candidacy.Meetings candidacyId) candidaciesModel
+                |> updateWith Candidacies GotCandidaciesMsg model
+
+        ( Candidacy (View.Candidacy.Meetings candidacyId), _ ) ->
             noChange
 
         ( Login, _ ) ->
@@ -304,7 +308,7 @@ initWithoutToken flags url key =
             { key = key
             , baseUrl = flags.baseUrl
             , endpoint = flags.endpoint
-            , page = NotLoggedIn (Route.fromUrl flags.baseUrl url) Page.Login.init
+            , page = NotLoggedIn (Debug.log "" (Route.fromUrl flags.baseUrl url)) Page.Login.init
             , keycloakConfiguration =
                 Decode.decodeValue KeycloakConfiguration.keycloakConfiguration flags.keycloakConfiguration
                     |> Result.map Just

@@ -8,14 +8,11 @@ module Page.Meetings exposing
 
 import Admin.Object exposing (Candidacy)
 import Api exposing (Token)
-import Data.Candidacy as Candidacy exposing (Candidacy, CandidacySummary)
-import Data.Referential exposing (Referential)
-import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
-import Html.Styled.Attributes exposing (action, attribute, class, for, href, id, name, placeholder, type_)
-import Html.Styled.Events exposing (onClick, onInput)
+import Data.Candidacy exposing (Candidacy)
+import Html.Styled as Html exposing (Html, div, h1, text)
+import Html.Styled.Attributes exposing (class)
 import RemoteData exposing (RemoteData(..))
 import String exposing (String)
-import View.Helpers exposing (dataTest)
 
 
 type Msg
@@ -55,9 +52,14 @@ init endpoint token =
 -- VIEW
 
 
-view : { a | baseUrl : String } -> Model -> Html Msg
-view config model =
-    div [] []
+view : Html msg
+view =
+    div []
+        [ h1
+            [ class "text-2xl font-medium text-gray-900 leading-none" ]
+            [ text "Rendez-vous"
+            ]
+        ]
 
 
 
