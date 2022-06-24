@@ -2,21 +2,22 @@ module Page.Candidacies exposing
     ( Model
     , Msg
     , init
+    , initCandidacy
     , update
     , view
     )
 
 import Admin.Object exposing (Candidacy)
 import Api exposing (Token)
-import Data.Candidacy as Candidacy exposing (Candidacy, CandidacySummary)
+import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Referential exposing (Referential)
 import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, for, id, name, placeholder, type_)
-import Html.Styled.Events exposing (onClick, onInput)
+import Html.Styled.Events exposing (onInput)
 import List.Extra
 import RemoteData exposing (RemoteData(..))
 import Request
-import Route exposing (Route)
+import Route
 import String exposing (String)
 import View.Candidacy exposing (Tab(..))
 import View.Helpers exposing (dataTest)
@@ -30,7 +31,6 @@ type Msg
     | GotCandidacyArchivingResponse (RemoteData String Candidacy)
     | GotReferentialResponse (RemoteData String Referential)
     | UserAddedFilter String
-    | UserSelectedCandidacy CandidacySummary
     | UserArchivedCandidacy Candidacy
     | UserDeletedCandidacy Candidacy
 
@@ -51,9 +51,10 @@ type alias Model =
     }
 
 
-init : String -> Tab -> Token -> ( Model, Cmd Msg )
-init endpoint tab token =
+init : String -> Token -> ( Model, Cmd Msg )
+init endpoint token =
     let
+        defaultModel : Model
         defaultModel =
             { endpoint = endpoint
             , token = token
@@ -63,7 +64,7 @@ init endpoint tab token =
                 { candidacies = RemoteData.NotAsked
                 , referential = RemoteData.NotAsked
                 }
-            , tab = View.Candidacy.Profil
+            , tab = View.Candidacy.Empty
             }
 
         defaultCmd =
@@ -72,17 +73,14 @@ init endpoint tab token =
                 , Request.requestReferential endpoint GotReferentialResponse
                 ]
     in
-    case tab of
-        View.Candidacy.Profil candidacyId ->
-            ( { defaultModel | selected = Loading }
-            , Cmd.batch
-                [ defaultCmd
-                , Request.requestCandidacy endpoint GotCandidacyResponse candidacyId
-                ]
-            )
+    ( defaultModel, defaultCmd )
 
-        _ ->
-            ( defaultModel, defaultCmd )
+
+initCandidacy : CandidacyId -> Model -> ( Model, Cmd Msg )
+initCandidacy candidacyId model =
+    ( { model | selected = Loading }
+    , Request.requestCandidacy model.endpoint GotCandidacyResponse candidacyId
+    )
 
 
 withCandidacies : RemoteData String (List CandidacySummary) -> State -> State
@@ -306,8 +304,7 @@ viewItem config candidacy =
             , div
                 [ class "flex-1 min-w-0" ]
                 [ a
-                    [ onClick (UserSelectedCandidacy candidacy)
-                    , Route.href config.baseUrl (Route.Candidacy Profil candidacy.id)
+                    [ Route.href config.baseUrl (Route.Candidacy <| Profil candidacy.id)
                     , class "focus:outline-none"
                     ]
                     [ span
@@ -372,11 +369,6 @@ update msg model =
         UserArchivedCandidacy candidacy ->
             ( model
             , Request.archiveCandidacy model.endpoint GotCandidacyArchivingResponse candidacy.id
-            )
-
-        UserSelectedCandidacy candidacySummary ->
-            ( { model | selected = Loading }
-            , Request.requestCandidacy model.endpoint GotCandidacyResponse candidacySummary.id
             )
 
 

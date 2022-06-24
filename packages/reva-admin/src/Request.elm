@@ -12,7 +12,7 @@ import Admin.Object.Goal
 import Admin.Object.Referential
 import Admin.Query as Query
 import Admin.Scalar exposing (Date(..), Id(..))
-import Data.Candidacy
+import Data.Candidacy exposing (CandidacyId)
 import Data.Certification
 import Data.Referential
 import Dict
@@ -178,7 +178,7 @@ requestCandidacies endpointGraphql toMsg =
 requestCandidacy :
     String
     -> (RemoteData String Data.Candidacy.Candidacy -> msg)
-    -> String
+    -> CandidacyId
     -> Cmd msg
 requestCandidacy endpointGraphql toMsg id =
     let
@@ -200,7 +200,7 @@ requestCandidacy endpointGraphql toMsg id =
                     Loading
 
         candidacyRequiredArgs =
-            Query.GetCandidacyByIdRequiredArguments (Id id)
+            Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString id)
     in
     Query.getCandidacyById candidacyRequiredArgs candidacySelection
         |> makeQuery endpointGraphql (nothingToError >> toMsg)
@@ -209,10 +209,10 @@ requestCandidacy endpointGraphql toMsg id =
 deleteCandidacy :
     String
     -> (RemoteData String String -> msg)
-    -> String
+    -> CandidacyId
     -> Cmd msg
 deleteCandidacy endpointGraphql toMsg candidacyId =
-    Mutation.CandidacyDeleteByIdRequiredArguments (Id candidacyId)
+    Mutation.CandidacyDeleteByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
         |> Mutation.candidacy_deleteById
         |> makeMutation endpointGraphql toMsg
 
@@ -220,10 +220,10 @@ deleteCandidacy endpointGraphql toMsg candidacyId =
 archiveCandidacy :
     String
     -> (RemoteData String Data.Candidacy.Candidacy -> msg)
-    -> String
+    -> CandidacyId
     -> Cmd msg
 archiveCandidacy endpointGraphql toMsg candidacyId =
-    Mutation.candidacy_archiveById (Mutation.CandidacyArchiveByIdRequiredArguments (Id candidacyId)) candidacySelection
+    Mutation.candidacy_archiveById (Mutation.CandidacyArchiveByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)) candidacySelection
         |> makeMutation endpointGraphql toMsg
 
 

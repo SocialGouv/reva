@@ -55,6 +55,9 @@ href baseUrl route =
 toString : String -> Route -> String
 toString baseUrl route =
     case route of
+        Candidacy View.Candidacy.Empty ->
+            Url.Builder.absolute [ baseUrl, "candidacies" ] []
+
         Candidacy (View.Candidacy.Profil candidacyId) ->
             Url.Builder.absolute [ baseUrl, "candidacy", candidacyIdToString candidacyId ] []
 
