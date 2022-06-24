@@ -129,21 +129,11 @@ changeRouteTo route model =
         ( Home, _ ) ->
             noChange
 
-        ( Candidacy (View.Candidacy.Profil candidacyId), Candidacies candidaciesModel ) ->
-            Candidacies.initCandidacy candidacyId candidaciesModel
+        ( Candidacy tab, Candidacies candidaciesModel ) ->
+            Candidacies.updateTab tab candidaciesModel
                 |> updateWith Candidacies GotCandidaciesMsg model
 
-        ( Candidacy (View.Candidacy.Profil candidacyId), _ ) ->
-            noChange
-
-        ( Candidacy View.Candidacy.Empty, _ ) ->
-            noChange
-
-        ( Candidacy (View.Candidacy.Meetings candidacyId), Candidacies candidaciesModel ) ->
-            Candidacies.updateTab (View.Candidacy.Meetings candidacyId) candidaciesModel
-                |> updateWith Candidacies GotCandidaciesMsg model
-
-        ( Candidacy (View.Candidacy.Meetings candidacyId), _ ) ->
+        ( Candidacy tab, _ ) ->
             noChange
 
         ( Login, _ ) ->

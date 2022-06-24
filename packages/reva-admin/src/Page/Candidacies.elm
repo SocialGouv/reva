@@ -2,7 +2,6 @@ module Page.Candidacies exposing
     ( Model
     , Msg
     , init
-    , initCandidacy
     , update
     , updateTab
     , view
@@ -172,7 +171,7 @@ viewContent config model candidacies =
         , div
             [ class "flex-1 relative z-0 flex overflow-hidden" ]
             [ viewDirectoryPanel config candidacies
-            , case Debug.log "" model.tab of
+            , case model.tab of
                 Meetings _ ->
                     Page.Meetings.view
 
@@ -379,9 +378,21 @@ update msg model =
             )
 
 
-updateTab : Tab -> Model -> ( Model, Cmd msg )
+updateTab : Tab -> Model -> ( Model, Cmd Msg )
 updateTab tab model =
-    ( { model | tab = tab }, Cmd.none )
+    let
+        newModel =
+            { model | tab = tab }
+    in
+    case tab of
+        View.Candidacy.Profil candidacyId ->
+            initCandidacy candidacyId newModel
+
+        View.Candidacy.Meetings candidacyId ->
+            ( newModel, Cmd.none )
+
+        View.Candidacy.Empty ->
+            ( newModel, Cmd.none )
 
 
 
