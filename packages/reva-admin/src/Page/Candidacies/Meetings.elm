@@ -55,12 +55,13 @@ init endpoint token =
 -- VIEW
 
 
-view : { a | baseUrl : String } -> Model -> Html Msg
-view config model =
+view : Html msg
+view =
     div []
         [ h2
-            []
-            [ text "Rendez-vous" ]
+            [ class "text-2xl font-medium text-gray-900 leading-none" ]
+            [ text "Rendez-vous"
+            ]
         ]
 
 

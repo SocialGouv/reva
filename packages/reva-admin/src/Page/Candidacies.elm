@@ -15,7 +15,7 @@ import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h
 import Html.Styled.Attributes exposing (action, attribute, class, for, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onInput)
 import List.Extra
-import Page.Meetings
+import Page.Candidacies.Meetings
 import RemoteData exposing (RemoteData(..))
 import Request
 import Route
@@ -173,7 +173,7 @@ viewContent config model candidacies =
             [ viewDirectoryPanel config candidacies
             , case model.tab of
                 Meetings _ ->
-                    Page.Meetings.view
+                    Page.Candidacies.Meetings.view
 
                 _ ->
                     viewCandidacyPanel model
