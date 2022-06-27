@@ -16,7 +16,7 @@ import RemoteData exposing (RemoteData(..))
 import Route exposing (Route(..))
 import Url exposing (Url)
 import Validate
-import View
+import View.Candidacy
 
 
 type alias Flags =
@@ -34,21 +34,16 @@ type alias Model =
     { key : Nav.Key
     , baseUrl : String
     , endpoint : String
-    , route : Route
-    , state : State
+    , page : Page
     , keycloakConfiguration : Maybe KeycloakConfiguration
     }
-
-
-type State
-    = NotLoggedIn Route Page.Login.Model
-    | LoggedIn Token Page
 
 
 type Page
     = Candidacies Candidacies.Model
     | Candidates Candidates.Model
-    | Loading
+    | Loading Token
+    | NotLoggedIn Route Page.Login.Model
 
 
 type Msg
@@ -104,25 +99,19 @@ view model =
 
 viewPage : Model -> Html Msg
 viewPage model =
-    case model.state of
+    case model.page of
         NotLoggedIn _ _ ->
             Page.Loading.view
 
-        LoggedIn _ (Candidacies candidaciesModel) ->
+        Candidacies candidaciesModel ->
             Candidacies.view { baseUrl = model.baseUrl } candidaciesModel
                 |> Html.map GotCandidaciesMsg
-                |> View.layout
-                    { onLogout = UserLoggedOut
-                    }
 
-        LoggedIn _ (Candidates candidateModel) ->
-            Candidates.view candidateModel
+        Candidates candidatesModel ->
+            Candidates.view candidatesModel
                 |> Html.map GotCandidatesMsg
-                |> View.layout
-                    { onLogout = UserLoggedOut
-                    }
 
-        _ ->
+        Loading _ ->
             div [] []
 
 
@@ -130,13 +119,35 @@ viewPage model =
 -- UPDATE
 
 
+changeRouteTo : Route -> Model -> ( Model, Cmd Msg )
+changeRouteTo route model =
+    let
+        noChange =
+            ( model, Cmd.none )
+    in
+    case ( route, model.page ) of
+        ( Home, _ ) ->
+            noChange
+
+        ( Candidacy tab, Candidacies candidaciesModel ) ->
+            Candidacies.updateTab tab candidaciesModel
+                |> updateWith Candidacies GotCandidaciesMsg model
+
+        ( Candidacy tab, _ ) ->
+            noChange
+
+        ( Login, _ ) ->
+            noChange
+
+        ( NotFound, _ ) ->
+            noChange
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case ( msg, model.state ) of
+    case ( msg, model.page ) of
         ( BrowserChangedUrl url, _ ) ->
-            ( { model | route = Route.fromUrl model.baseUrl url }
-            , Cmd.none
-            )
+            changeRouteTo (Route.fromUrl model.baseUrl url) model
 
         ( UserClickedLink urlRequest, _ ) ->
             case urlRequest of
@@ -150,11 +161,11 @@ update msg model =
                     , Nav.load url
                     )
 
-        ( UserLoggedOut, LoggedIn _ _ ) ->
+        ( UserLoggedOut, _ ) ->
             ( model, removeToken () )
 
         ( GotLoginUpdate loginModel, NotLoggedIn route _ ) ->
-            ( { model | state = NotLoggedIn route loginModel }, Cmd.none )
+            ( { model | page = NotLoggedIn route loginModel }, Cmd.none )
 
         ( GotLoginSubmit, NotLoggedIn route loginModel ) ->
             case Page.Login.validateLogin loginModel of
@@ -162,10 +173,10 @@ update msg model =
                     ( model, Validate.fromValid validateModel |> Api.login (GotLoginResponse |> withAuthHandle) )
 
                 Err errors ->
-                    ( { model | state = Page.Login.withErrors loginModel errors |> NotLoggedIn route }, Cmd.none )
+                    ( { model | page = Page.Login.withErrors loginModel errors |> NotLoggedIn route }, Cmd.none )
 
         ( GotLoginResponse (Ok token), NotLoggedIn _ loginModel ) ->
-            ( { model | state = LoggedIn token (Candidates <| Candidates.init token) }
+            ( { model | page = Candidates <| Candidates.init token }
             , Cmd.batch
                 [ if loginModel.form.rememberMe then
                     storeToken (Api.tokenToString token)
@@ -177,51 +188,46 @@ update msg model =
                 ]
             )
 
-        ( GotCandidatesMsg candidatesMsg, LoggedIn token (Candidates candidatesModel) ) ->
+        ( GotCandidatesMsg candidatesMsg, Candidates candidatesModel ) ->
             let
                 ( newCandidatesModel, candidatesCmd ) =
                     Candidates.update candidatesMsg candidatesModel
             in
-            ( { model | state = LoggedIn token (Candidates newCandidatesModel) }
+            ( { model | page = Candidates newCandidatesModel }
             , Cmd.map GotCandidatesMsg candidatesCmd
             )
 
-        ( GotCandidatesResponse (Ok candidates), LoggedIn token (Candidates candidatesModel) ) ->
+        ( GotCandidatesResponse (Ok candidates), Candidates candidatesModel ) ->
             ( { model
-                | state =
+                | page =
                     Candidates.receiveCandidates candidatesModel candidates
                         |> Candidates
-                        |> LoggedIn token
               }
             , Cmd.none
             )
 
-        ( GotCandidatesResponse (Ok candidates), LoggedIn token Loading ) ->
+        ( GotCandidatesResponse (Ok candidates), Loading token ) ->
             ( { model
-                | state =
+                | page =
                     Candidates.receiveCandidates (Candidates.init token) candidates
                         |> Candidates
-                        |> LoggedIn token
               }
             , Cmd.none
             )
 
-        ( GotCandidatesResponse err, LoggedIn _ _ ) ->
+        ( GotCandidatesResponse err, _ ) ->
             ( model, Cmd.none )
 
         ( GotLoginError error, NotLoggedIn route state ) ->
-            ( { model | state = Page.Login.withErrors state [ ( Page.Login.Global, error ) ] |> NotLoggedIn route }, Cmd.none )
-
-        ( GotLoginError _, _ ) ->
-            ( { model | state = NotLoggedIn model.route Page.Login.init }, Cmd.batch [ Nav.pushUrl model.key (Route.toString model.baseUrl Route.Login) ] )
+            ( { model | page = Page.Login.withErrors state [ ( Page.Login.Global, error ) ] |> NotLoggedIn route }, Cmd.none )
 
         -- Candidacies
-        ( GotCandidaciesMsg candidaciesMsg, LoggedIn token (Candidacies candidaciesModel) ) ->
+        ( GotCandidaciesMsg candidaciesMsg, Candidacies candidaciesModel ) ->
             let
                 ( newCandidaciesModel, candidaciesCmd ) =
                     Candidacies.update candidaciesMsg candidaciesModel
             in
-            ( { model | state = LoggedIn token (Candidacies newCandidaciesModel) }
+            ( { model | page = Candidacies newCandidaciesModel }
             , Cmd.map GotCandidaciesMsg candidaciesCmd
             )
 
@@ -237,15 +243,24 @@ update msg model =
                             route
 
                 ( candidaciesModel, candidaciesCmd ) =
-                    Candidacies.init model.endpoint redirectRoute token
-
-                state =
-                    LoggedIn token (Candidacies candidaciesModel)
+                    Candidacies.init model.endpoint token
             in
-            ( { model | state = state }, Cmd.batch [ Cmd.map GotCandidaciesMsg candidaciesCmd, Nav.pushUrl model.key (Route.toString model.baseUrl redirectRoute) ] )
+            ( { model | page = Candidacies candidaciesModel }
+            , Cmd.batch
+                [ Cmd.map GotCandidaciesMsg candidaciesCmd
+                , Nav.pushUrl model.key (Route.toString model.baseUrl redirectRoute)
+                ]
+            )
 
         _ ->
             ( model, Cmd.none )
+
+
+updateWith : (subModel -> Page) -> (subMsg -> Msg) -> Model -> ( subModel, Cmd subMsg ) -> ( Model, Cmd Msg )
+updateWith toModel toMsg model ( subModel, subCmd ) =
+    ( { model | page = toModel subModel }
+    , Cmd.map toMsg subCmd
+    )
 
 
 withAuthHandle : (Result Http.Error a -> Msg) -> Result Http.Error a -> Msg
@@ -278,19 +293,19 @@ init flags url key =
 initWithoutToken : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
 initWithoutToken flags url key =
     let
-        state =
-            NotLoggedIn (Route.fromUrl flags.baseUrl url) Page.Login.init
+        model : Model
+        model =
+            { key = key
+            , baseUrl = flags.baseUrl
+            , endpoint = flags.endpoint
+            , page = NotLoggedIn (Debug.log "" (Route.fromUrl flags.baseUrl url)) Page.Login.init
+            , keycloakConfiguration =
+                Decode.decodeValue KeycloakConfiguration.keycloakConfiguration flags.keycloakConfiguration
+                    |> Result.map Just
+                    |> Result.withDefault Nothing
+            }
     in
-    ( { key = key
-      , baseUrl = flags.baseUrl
-      , endpoint = flags.endpoint
-      , route = Route.fromUrl flags.baseUrl url
-      , state = state
-      , keycloakConfiguration =
-            Decode.decodeValue KeycloakConfiguration.keycloakConfiguration flags.keycloakConfiguration
-                |> Result.map Just
-                |> Result.withDefault Nothing
-      }
+    ( model
     , Nav.pushUrl key (Route.toString flags.baseUrl Route.Login)
     )
 
