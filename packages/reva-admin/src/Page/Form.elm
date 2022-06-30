@@ -1,5 +1,7 @@
-module Page.Candidacies.Meetings exposing
-    ( Model
+module Page.Form exposing
+    ( Data
+    , Element(..)
+    , Model
     , Msg
     , init
     , update
@@ -20,6 +22,31 @@ import View.Helpers exposing (dataTest)
 
 type Msg
     = NoOp
+
+
+type alias Data =
+    { id : String
+    , label : String
+    , value : Maybe String
+    }
+
+
+type alias SelectData =
+    { id : String
+    , data : List { id : String, label : String }
+    , selected : Maybe String
+    }
+
+
+type Element
+    = Checkbox Data
+    | Date Data
+    | Empty
+    | Input Data
+    | Number Data
+    | Textarea Data
+    | Select SelectData
+    | Submit String
 
 
 type alias State =

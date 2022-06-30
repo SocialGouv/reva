@@ -298,7 +298,7 @@ initWithoutToken flags url key =
             { key = key
             , baseUrl = flags.baseUrl
             , endpoint = flags.endpoint
-            , page = NotLoggedIn (Debug.log "" (Route.fromUrl flags.baseUrl url)) Page.Login.init
+            , page = NotLoggedIn (Route.fromUrl flags.baseUrl url) Page.Login.init
             , keycloakConfiguration =
                 Decode.decodeValue KeycloakConfiguration.keycloakConfiguration flags.keycloakConfiguration
                     |> Result.map Just

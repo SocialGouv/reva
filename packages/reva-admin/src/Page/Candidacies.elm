@@ -15,7 +15,7 @@ import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h
 import Html.Styled.Attributes exposing (action, attribute, class, for, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onInput)
 import List.Extra
-import Page.Candidacies.Meetings
+import Page.Form as Form
 import RemoteData exposing (RemoteData(..))
 import Request
 import Route
@@ -173,12 +173,60 @@ viewContent config model candidacies =
             [ viewDirectoryPanel config candidacies
             , case model.tab of
                 Meetings _ ->
-                    Page.Candidacies.Meetings.view
+                    meetingsForm
 
                 _ ->
                     viewCandidacyPanel model
             ]
         ]
+
+
+meetingsForm : Html Msg
+meetingsForm =
+    let
+        isOtherSelected =
+            True
+
+        specification =
+            [ Form.Select
+                { id = "typology"
+                , data =
+                    [ { id = "private", label = "Salarié du privé" }
+                    , { id = "public", label = "Salarié de la fonction publique hospitalière" }
+                    , { id = "unemployment", label = "Demandeur d’emploi" }
+                    , { id = "family-caregiver", label = "Aidants familiaux" }
+                    , { id = "other", label = "Autre" }
+                    ]
+                , selected = Just "private"
+                }
+            , if isOtherSelected then
+                Form.Input
+                    { id = "other-details"
+                    , label = ""
+                    , value = Nothing
+                    }
+
+              else
+                Form.Empty
+            , Form.Date
+                { id = "first-date"
+                , label = "Date du premier rendez-vous pédagogique"
+                , value = Nothing
+                }
+            , Form.Checkbox
+                { id = "first-date-done"
+                , label = "Le candidat a bien effectué le rendez-vous d'étude de faisabilité"
+                , value = Nothing
+                }
+            , Form.Number
+                { id = "meetings-count"
+                , label = "Nombre de rendez-vous réalisés avec le candidat"
+                , value = Nothing
+                }
+            , Form.Submit "Enregistrer"
+            ]
+    in
+    text ""
 
 
 viewCandidacyPanel : Model -> Html Msg
