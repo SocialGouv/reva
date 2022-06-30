@@ -177,6 +177,7 @@ viewElement formData ( elementId, element ) =
             text ""
 
 
+viewChoice : ( String, String ) -> Html msg
 viewChoice ( choiceId, choice ) =
     option [ id choiceId ] [ text choice ]
 
