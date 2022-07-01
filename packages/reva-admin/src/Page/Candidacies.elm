@@ -15,7 +15,7 @@ import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h
 import Html.Styled.Attributes exposing (action, attribute, class, for, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onInput)
 import List.Extra
-import Page.Candidacies.Meetings
+import Page.Form as Form exposing (Form)
 import RemoteData exposing (RemoteData(..))
 import Request
 import Route
@@ -30,6 +30,7 @@ type Msg
     | GotCandidacyResponse (RemoteData String Candidacy)
     | GotCandidacyDeletionResponse (RemoteData String String)
     | GotCandidacyArchivingResponse (RemoteData String Candidacy)
+    | GotFormMsg Form.Msg
     | GotReferentialResponse (RemoteData String Referential)
     | UserAddedFilter String
     | UserArchivedCandidacy Candidacy
@@ -46,6 +47,7 @@ type alias Model =
     { endpoint : String
     , token : Token
     , filter : Maybe String
+    , form : Form.Model
     , selected : RemoteData String Candidacy
     , state : State
     , tab : Tab
@@ -55,11 +57,15 @@ type alias Model =
 init : String -> Token -> ( Model, Cmd Msg )
 init endpoint token =
     let
+        ( formModel, formCmd ) =
+            Form.init endpoint token
+
         defaultModel : Model
         defaultModel =
             { endpoint = endpoint
             , token = token
             , filter = Nothing
+            , form = formModel
             , selected = NotAsked
             , state =
                 { candidacies = RemoteData.NotAsked
@@ -72,6 +78,7 @@ init endpoint token =
             Cmd.batch
                 [ Request.requestCandidacies endpoint GotCandidaciesResponse
                 , Request.requestReferential endpoint GotReferentialResponse
+                , Cmd.map GotFormMsg formCmd
                 ]
     in
     ( defaultModel, defaultCmd )
@@ -173,12 +180,31 @@ viewContent config model candidacies =
             [ viewDirectoryPanel config candidacies
             , case model.tab of
                 Meetings _ ->
-                    Page.Candidacies.Meetings.view
+                    Form.view model.form
+                        |> Html.map GotFormMsg
 
                 _ ->
                     viewCandidacyPanel model
             ]
         ]
+
+
+meetingsForm : Form
+meetingsForm =
+    [ ( "typology"
+      , Form.Select "Typologie"
+            [ ( "private", "Salarié du privé" )
+            , ( "public", "Salarié de la fonction publique hospitalière" )
+            , ( "unemployment", "Demandeur d’emploi" )
+            , ( "family-caregiver", "Aidants familiaux" )
+            , ( "other", "Autre" )
+            ]
+      )
+    , ( "other-details", Form.SelectOther "typology" "Autre typologie" )
+    , ( "first-date", Form.Date "Date du premier rendez-vous pédagogique" )
+    , ( "first-date-done", Form.Checkbox "Le candidat a bien effectué le rendez-vous d'étude de faisabilité" )
+    , ( "meetings-count", Form.Number "Nombre de rendez-vous réalisés avec le candidat" )
+    ]
 
 
 viewCandidacyPanel : Model -> Html Msg
@@ -359,6 +385,13 @@ update msg model =
         GotCandidacyArchivingResponse _ ->
             ( { model | selected = NotAsked }, Cmd.none )
 
+        GotFormMsg formMsg ->
+            let
+                ( formModel, formCmd ) =
+                    Form.update formMsg model.form
+            in
+            ( { model | form = formModel }, Cmd.map GotFormMsg formCmd )
+
         GotReferentialResponse remoteReferentials ->
             ( { model | state = model.state |> withReferential remoteReferentials }
             , Cmd.none
@@ -389,7 +422,11 @@ updateTab tab model =
             initCandidacy candidacyId newModel
 
         View.Candidacy.Meetings candidacyId ->
-            ( newModel, Cmd.none )
+            let
+                ( formModel, formCmd ) =
+                    Form.updateForm meetingsForm model.form
+            in
+            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
         View.Candidacy.Empty ->
             ( newModel, Cmd.none )
