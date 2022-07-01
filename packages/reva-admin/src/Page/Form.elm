@@ -23,7 +23,7 @@ import View.Helpers exposing (dataTest)
 
 
 type Msg
-    = NoOp
+    = ChangedElement String String
 
 
 type Element
@@ -33,7 +33,7 @@ type Element
     | Input String
     | Number String
     | Textarea String
-    | Select String (List ( String, String ))
+    | Select String (List String)
     | SelectOther String String
 
 
@@ -197,19 +197,29 @@ viewElement formData ( elementId, element ) =
         Select label choices ->
             select
                 [ id elementId
+                , onInput (ChangedElement elementId)
                 , class "mt-1 block w-64 pl-3 pr-10 py-2"
                 , class "text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                 ]
                 (List.map viewChoice choices)
                 |> withLabel label
 
-        SelectOther _ _ ->
-            text ""
+        SelectOther selectId label ->
+            case Dict.get selectId formData of
+                Just "Autre" ->
+                    inputView "text" "w-full"
+                        |> withLabel label
+
+                Just _ ->
+                    text ""
+
+                Nothing ->
+                    text ""
 
 
-viewChoice : ( String, String ) -> Html msg
-viewChoice ( choiceId, choice ) =
-    option [ id choiceId ] [ text choice ]
+viewChoice : String -> Html msg
+viewChoice choice =
+    option [] [ text choice ]
 
 
 
@@ -218,11 +228,30 @@ viewChoice ( choiceId, choice ) =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        NoOp ->
+    let
+        noChange =
             ( model, Cmd.none )
+    in
+    case msg of
+        ChangedElement elementId elementValue ->
+            case model.form of
+                NotAsked ->
+                    noChange
+
+                Failure ->
+                    noChange
+
+                Loading _ ->
+                    noChange
+
+                Loaded form formData ->
+                    let
+                        newFormData =
+                            Dict.insert elementId elementValue formData
+                    in
+                    ( { model | form = Loaded form newFormData }, Cmd.none )
 
 
 updateForm : Form -> Model -> ( Model, Cmd msg )
 updateForm form model =
-    ( { model | form = Loading form }, Cmd.none )
+    ( { model | form = Loaded form Dict.empty }, Cmd.none )
