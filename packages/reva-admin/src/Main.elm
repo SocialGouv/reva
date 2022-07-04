@@ -16,7 +16,6 @@ import RemoteData exposing (RemoteData(..))
 import Route exposing (Route(..))
 import Url exposing (Url)
 import Validate
-import View.Candidacy
 
 
 type alias Flags =
@@ -133,7 +132,7 @@ changeRouteTo route model =
             Candidacies.updateTab tab candidaciesModel
                 |> updateWith Candidacies GotCandidaciesMsg model
 
-        ( Candidacy tab, _ ) ->
+        ( Candidacy _, _ ) ->
             noChange
 
         ( Login, _ ) ->
@@ -243,7 +242,7 @@ update msg model =
                             route
 
                 ( candidaciesModel, candidaciesCmd ) =
-                    Candidacies.init model.endpoint token
+                    Candidacies.init model.baseUrl model.endpoint token
             in
             ( { model | page = Candidacies candidaciesModel }
             , Cmd.batch
