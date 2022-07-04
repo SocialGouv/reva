@@ -349,3 +349,22 @@ export const updateAppointmentInformations = (deps: UpdateAppointmentInformation
     
     return result;
 }
+
+interface TakeOverCandidacyDeps {
+    updateCandidacyStatus: (params: {
+        candidacyId: string;
+        status: "PRISE_EN_CHARGE";
+    }) => Promise<Either<string, Candidacy>>;
+}
+
+export const takeOverCandidacyFromId = (deps: TakeOverCandidacyDeps) => (params: {
+    candidacyId: string;
+}) => {
+    const result = EitherAsync.fromPromise(() => deps.updateCandidacyStatus({
+        candidacyId: params.candidacyId,
+        status: "PRISE_EN_CHARGE"
+    }))
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACIES_NOT_TAKEN_OVER, `Erreur lors de la prise en charge de la candidature ${params.candidacyId}`));
+    
+    return result;
+};

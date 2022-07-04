@@ -93,6 +93,9 @@ statusToString status =
         "ARCHIVE" ->
             "Candidatures archivées"
 
+        "PRISE_EN_CHARGE" ->
+            "Candidatures prises en charges"
+
         _ ->
             "Statut inconnu"
 
