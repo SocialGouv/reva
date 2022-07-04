@@ -193,11 +193,11 @@ meetingsForm : Form
 meetingsForm =
     [ ( "typology"
       , Form.Select "Typologie"
-            [ ( "private", "Salarié du privé" )
-            , ( "public", "Salarié de la fonction publique hospitalière" )
-            , ( "unemployment", "Demandeur d’emploi" )
-            , ( "family-caregiver", "Aidants familiaux" )
-            , ( "other", "Autre" )
+            [ "Salarié du privé"
+            , "Salarié de la fonction publique hospitalière"
+            , "Demandeur d’emploi"
+            , "Aidants familiaux"
+            , "Autre"
             ]
       )
     , ( "other-details", Form.SelectOther "typology" "Autre typologie" )

@@ -14,7 +14,7 @@ import Api exposing (Token)
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacySummary)
 import Data.Referential exposing (Referential)
 import Dict exposing (Dict)
-import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, option, p, select, span, text, ul)
+import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, option, p, select, span, text, textarea, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, for, href, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onClick, onInput)
 import RemoteData exposing (RemoteData(..))
@@ -23,7 +23,7 @@ import View.Helpers exposing (dataTest)
 
 
 type Msg
-    = NoOp
+    = ChangedElement String String
 
 
 type Element
@@ -33,7 +33,7 @@ type Element
     | Input String
     | Number String
     | Textarea String
-    | Select String (List ( String, String ))
+    | Select String (List String)
     | SelectOther String String
 
 
@@ -107,10 +107,22 @@ view model =
 
 viewForm : FormData -> Form -> Html Msg
 viewForm formData form =
-    div
-        [ class "mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6" ]
-    <|
-        List.map (viewElement formData) form
+    div []
+        [ div
+            [ class "mt-6 space-y-6" ]
+          <|
+            List.map (viewElement formData) form
+        , div
+            [ class "mt-8 border-t pb-4 flex justify-end" ]
+            [ button
+                [ dataTest "save-description"
+                , type_ "submit"
+                , class "text-center mt-4 rounded bg-blue-600"
+                , class "hover:bg-blue-700 text-white px-4 py-2"
+                ]
+                [ text "Enregistrer" ]
+            ]
+        ]
 
 
 viewElement : FormData -> ( String, Element ) -> Html Msg
@@ -119,67 +131,95 @@ viewElement formData ( elementId, element ) =
         data =
             Dict.get elementId formData
 
-        inputView =
+        inputView dataType extraClass =
             input
-                [ type_ "text"
+                [ type_ dataType
                 , name elementId
                 , id elementId
-                , class "flex-1 focus:ring-indigo-500 focus:border-indigo-500"
-                , class "mt-1 block w-full min-w-0 rounded sm:text-sm border-gray-300"
+                , class extraClass
+                , class "flex-1 focus:ring-blue-500 focus:border-blue-500"
+                , class "mt-1 block min-w-0 rounded sm:text-sm border-gray-300"
                 ]
                 []
 
+        textareaView =
+            textarea
+                [ name elementId
+                , id elementId
+                , class "shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                , class "block w-full sm:text-sm border-gray-300 rounded-md"
+                ]
+                []
+
+        labelView s =
+            label
+                [ for elementId
+                , class "block text-sm font-medium text-gray-700"
+                ]
+                [ text s ]
+
         withLabel s el =
             div
-                [ class "sm:col-span-4" ]
-                [ label
-                    [ for elementId
-                    , class "block text-sm font-medium text-gray-700"
-                    ]
-                    [ text s ]
+                []
+                [ labelView s
                 , el
                 ]
     in
     case element of
         Checkbox label ->
-            inputView
-                |> withLabel label
+            div
+                [ class "flex items-center h-5 w-full" ]
+                [ inputView
+                    "checkbox"
+                    "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded mr-2"
+                , labelView label
+                ]
 
         Date label ->
-            inputView
+            inputView "date" "w-36"
                 |> withLabel label
 
         Empty ->
             text ""
 
         Input label ->
-            inputView
+            inputView "text" "w-full"
                 |> withLabel label
 
         Number label ->
-            inputView
+            inputView "number" "w-16"
                 |> withLabel label
 
         Textarea label ->
-            inputView
+            textareaView
                 |> withLabel label
 
         Select label choices ->
             select
                 [ id elementId
-                , class "mt-1 block w-full pl-3 pr-10 py-2"
-                , class "text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                , onInput (ChangedElement elementId)
+                , class "mt-1 block w-64 pl-3 pr-10 py-2"
+                , class "text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                 ]
                 (List.map viewChoice choices)
                 |> withLabel label
 
-        SelectOther _ _ ->
-            text ""
+        SelectOther selectId label ->
+            case Dict.get selectId formData of
+                Just "Autre" ->
+                    inputView "text" "w-full"
+                        |> withLabel label
+
+                Just _ ->
+                    text ""
+
+                Nothing ->
+                    text ""
 
 
-viewChoice : ( String, String ) -> Html msg
-viewChoice ( choiceId, choice ) =
-    option [ id choiceId ] [ text choice ]
+viewChoice : String -> Html msg
+viewChoice choice =
+    option [] [ text choice ]
 
 
 
@@ -188,11 +228,30 @@ viewChoice ( choiceId, choice ) =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        NoOp ->
+    let
+        noChange =
             ( model, Cmd.none )
+    in
+    case msg of
+        ChangedElement elementId elementValue ->
+            case model.form of
+                NotAsked ->
+                    noChange
+
+                Failure ->
+                    noChange
+
+                Loading _ ->
+                    noChange
+
+                Loaded form formData ->
+                    let
+                        newFormData =
+                            Dict.insert elementId elementValue formData
+                    in
+                    ( { model | form = Loaded form newFormData }, Cmd.none )
 
 
 updateForm : Form -> Model -> ( Model, Cmd msg )
 updateForm form model =
-    ( { model | form = Loading form }, Cmd.none )
+    ( { model | form = Loaded form Dict.empty }, Cmd.none )
