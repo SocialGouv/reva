@@ -120,9 +120,9 @@ model Candidacy {
   experiences Experience[]
   typology CandidateTypology  @default(NON_SPECIFIE)
   typologyAdditional String? @map("typology_additional")
-  firstAppointmentAt   DateTime?  @db.Timestamptz(6) @map("first_appointment_at")
-  wasPresentAtAppointment Boolean? @map("was_present_at_appointment")
-  numberOfAppointment Int @default(0) @map("number_of_appointment")
+  firstAppointmentOccuredAt   DateTime?  @db.Timestamptz(6) @map("first_appointment_occured_at")
+  wasPresentAtFirstAppointment Boolean? @map("was_present_at_first_appointment")
+  appointmentCount Int @default(0) @map("appointment_count")
   phone   String?  @db.VarChar(255)
   email   String?  @db.VarChar(255)
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")

@@ -343,16 +343,16 @@ export const getCandidacies = async () => {
     }
 };
 
-export const updateCandidacyWithMeetingsInformation = async (params: {
+export const updateAppointmentInformations = async (params: {
     candidacyId: string;
     candidateTypologyInformations: {
         typology: CandidateTypology;
         additionalInformation: string;
     },
-    meetingInformations: {
-        firstAppointmentAt: Date;
-        numberOfAppointment: number;
-        wasPresentAtAppointment: boolean;
+    appointmentInformations: {
+        firstAppointmentOccuredAt: Date;
+        appointmentCount: number;
+        wasPresentAtFirstAppointment: boolean;
     },
 }) => {
     try {
@@ -363,9 +363,9 @@ export const updateCandidacyWithMeetingsInformation = async (params: {
             data: {
                 typology: params.candidateTypologyInformations.typology,
                 typologyAdditional: params.candidateTypologyInformations.additionalInformation,
-                firstAppointmentAt: params.meetingInformations.firstAppointmentAt,
-                numberOfAppointment: params.meetingInformations.numberOfAppointment,
-                wasPresentAtAppointment: params.meetingInformations.wasPresentAtAppointment
+                firstAppointmentOccuredAt: params.appointmentInformations.firstAppointmentOccuredAt,
+                appointmentCount: params.appointmentInformations.appointmentCount,
+                wasPresentAtFirstAppointment: params.appointmentInformations.wasPresentAtFirstAppointment
             },
             include: {
                 experiences: true,
@@ -385,9 +385,9 @@ export const updateCandidacyWithMeetingsInformation = async (params: {
             phone: candidacy.phone,
             typology: candidacy.typology,
             typologyAdditional: candidacy.typologyAdditional,
-            firstAppointmentAt: candidacy.firstAppointmentAt,
-            numberOfAppointment: candidacy.numberOfAppointment,
-            wasPresentAtAppointment: candidacy.wasPresentAtAppointment,
+            firstAppointmentOccuredAt: candidacy.firstAppointmentOccuredAt,
+            appointmentCount: candidacy.appointmentCount,
+            wasPresentAtFirstAppointment: candidacy.wasPresentAtFirstAppointment,
             candidacyStatuses: candidacy.candidacyStatuses,
             createdAt: candidacy.createdAt
         });

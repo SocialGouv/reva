@@ -319,33 +319,33 @@ export const archiveCandidacyFromId = (deps: ArchiveCandidacyDeps) => (params: {
     return result;
 };
 
-interface MeetingInformations {
-    firstAppointmentAt: Date;
-    numberOfAppointment: number;
-    wasPresentAtAppointment: boolean;
+interface AppointmentInformations {
+    firstAppointmentOccuredAt: Date;
+    appointmentCount: number;
+    wasPresentAtFirstAppointment: boolean;
 };
 
-interface SaveMeetingsInformation {
-    updateCandidacyWithMeetingsInformation: (params: {
+interface UpdateAppointmentInformations {
+    updateAppointmentInformations: (params: {
         candidacyId: string;
         candidateTypologyInformations: {
             typology: CandidateTypology;
             additionalInformation: string;
         },
-        meetingInformations: MeetingInformations;
+        appointmentInformations: AppointmentInformations;
     }) => Promise<Either<string, Candidacy>>;
 };
 
-export const saveMeetingsInformation = (deps: SaveMeetingsInformation) => (params: {
+export const updateAppointmentInformations = (deps: UpdateAppointmentInformations) => (params: {
     candidacyId: string;
     candidateTypologyInformations: {
         typology: CandidateTypology;
         additionalInformation: string;
     },
-    meetingInformations: MeetingInformations;
+    appointmentInformations: AppointmentInformations;
 }) => {
-    const result = EitherAsync.fromPromise(() => deps.updateCandidacyWithMeetingsInformation(params))
-        .mapLeft(() => new FunctionalError(FunctionalCodeError.MEETING_INFORMATIONS_NOT_SAVED, `Erreur lors de l'enregistrement des informations de rendez-vous de la candidature ${params.candidacyId}`));
+    const result = EitherAsync.fromPromise(() => deps.updateAppointmentInformations(params))
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.APPOINTMENT_INFORMATIONS_NOT_SAVED, `Erreur lors de l'enregistrement des informations de rendez-vous de la candidature ${params.candidacyId}`));
     
     return result;
 }
