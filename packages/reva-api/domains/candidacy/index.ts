@@ -9,6 +9,14 @@ export type Duration =
     | "moreThanFiveYears"
     | "moreThanTenYears";
 
+export type CandidateTypology =
+    | "NON_SPECIFIE"
+    | "SALARIE_PRIVE"
+    | "SALARIE_PUBLIC_HOSPITALIER"
+    | "DEMANDEUR_EMPLOI"
+    | "AIDANTS_FAMILIAUX"
+    | "AUTRE";
+
 export interface CandidacyInput {
     deviceId: string;
     certificationId: string;
@@ -25,7 +33,7 @@ export interface Candidacy extends CandidacyInput {
     createdAt: Date;
 }
 
-export interface CandidacySummary extends Omit<Candidacy, 'experiences' | 'goals'| 'candidacyStatuses'> {
+export interface CandidacySummary extends Omit<Candidacy, 'experiences' | 'goals' | 'candidacyStatuses'> {
     id: string;
     certification: any;
     lastStatus: CandidacyStatus;
@@ -233,7 +241,7 @@ export const submitCandidacy = (deps: SubmitCandidacyDeps) => (params: {
         EitherAsync.fromPromise(() => deps.getCandidacyFromId(params.candidacyId))
             .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvée`));
 
-    const updateContact = EitherAsync.fromPromise(() => deps.updateCandidacyStatus({candidacyId: params.candidacyId, status: "VALIDATION"}))
+    const updateContact = EitherAsync.fromPromise(() => deps.updateCandidacyStatus({ candidacyId: params.candidacyId, status: "VALIDATION" }))
         .mapLeft(() => new FunctionalError(FunctionalCodeError.STATUS_NOT_UPDATED, `Erreur lors de la mise à jour du status`));
 
 
@@ -270,13 +278,13 @@ interface GetCandidaciesDeps {
     getCandidacies: () => Promise<Either<string, CandidacySummary[]>>;
 }
 
-export const getCandidacies = (deps: GetCandidaciesDeps) => (params : {
-    role: string
+export const getCandidacies = (deps: GetCandidaciesDeps) => (params: {
+    role: string;
 }) => {
     const candidacies = EitherAsync.fromPromise(() => deps.getCandidacies())
         .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACIES_NOT_FOUND, `Erreur lors de la récupération des candidatures`));
-    return candidacies
-}
+    return candidacies;
+};
 
 interface DeleteCandidacyDeps {
     deleteCandidacyFromId: (
@@ -284,13 +292,13 @@ interface DeleteCandidacyDeps {
     ) => Promise<Either<string, string>>;
 }
 
-export const deleteCandidacy = (deps: DeleteCandidacyDeps) => (params : {
-    candidacyId: string
+export const deleteCandidacy = (deps: DeleteCandidacyDeps) => (params: {
+    candidacyId: string;
 }) => {
     const result = EitherAsync.fromPromise(() => deps.deleteCandidacyFromId(params.candidacyId))
         .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACIES_NOT_DELETED, `Erreur lors de la suppression de la candidature ${params.candidacyId}`));
-    return result
-}
+    return result;
+};
 
 interface ArchiveCandidacyDeps {
     updateCandidacyStatus: (params: {
@@ -299,14 +307,45 @@ interface ArchiveCandidacyDeps {
     }) => Promise<Either<string, Candidacy>>;
 }
 
-export const archiveCandidacyFromId = (deps: ArchiveCandidacyDeps) => (params : {
-    candidacyId: string
+export const archiveCandidacyFromId = (deps: ArchiveCandidacyDeps) => (params: {
+    candidacyId: string;
 }) => {
     const result = EitherAsync.fromPromise(() => deps.updateCandidacyStatus({
         candidacyId: params.candidacyId,
         status: "ARCHIVE"
     }))
-    .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACIES_NOT_ARCHIVED, `Erreur lors de l'archivage de la candidature ${params.candidacyId}`));
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACIES_NOT_ARCHIVED, `Erreur lors de l'archivage de la candidature ${params.candidacyId}`));
     
-    return result
+    return result;
+};
+
+interface MeetingInformations {
+    firstAppointmentAt: Date;
+    numberOfAppointment: number;
+    wasPresentAtAppointment: boolean;
+};
+
+interface SaveMeetingsInformation {
+    updateCandidacyWithMeetingsInformation: (params: {
+        candidacyId: string;
+        candidateTypologyInformations: {
+            typology: CandidateTypology;
+            additionalInformation: string;
+        },
+        meetingInformations: MeetingInformations;
+    }) => Promise<Either<string, Candidacy>>;
+};
+
+export const saveMeetingsInformation = (deps: SaveMeetingsInformation) => (params: {
+    candidacyId: string;
+    candidateTypologyInformations: {
+        typology: CandidateTypology;
+        additionalInformation: string;
+    },
+    meetingInformations: MeetingInformations;
+}) => {
+    const result = EitherAsync.fromPromise(() => deps.updateCandidacyWithMeetingsInformation(params))
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.MEETING_INFORMATIONS_NOT_SAVED, `Erreur lors de l'enregistrement des informations de rendez-vous de la candidature ${params.candidacyId}`));
+    
+    return result;
 }

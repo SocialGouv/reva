@@ -1,4 +1,4 @@
-import { addExperience, archiveCandidacyFromId, createCandidacy, deleteCandidacy, getCandidacies, getCandidacyFromDeviceId, getCandidacyFromId, getCompanions, submitCandidacy, updateCertification, updateContact, updateExperience, updateGoals } from "../../../domains/candidacy";
+import { addExperience, archiveCandidacyFromId, createCandidacy, deleteCandidacy, getCandidacies, getCandidacyFromDeviceId, getCandidacyFromId, getCompanions, saveMeetingsInformation, submitCandidacy, updateCertification, updateContact, updateExperience, updateGoals } from "../../../domains/candidacy";
 import * as candidacyDb from "../../database/postgres/candidacies";
 import * as experienceDb from "../../database/postgres/experiences";
 import * as goalDb from "../../database/postgres/goals";
@@ -127,6 +127,22 @@ export const resolvers = {
       });
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
-    }
+    },
+
+    candidacy_saveMeetingsInformation: async (_: unknown, payload: any) => {
+      const result = await saveMeetingsInformation({
+        updateCandidacyWithMeetingsInformation: candidacyDb.updateCandidacyWithMeetingsInformation,
+      })({
+        candidacyId: payload.candidacyId,
+        candidateTypologyInformations: payload.candidateTypologyInformations,
+        meetingInformations: payload.meetingInformations
+      });
+
+      return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
+    },
+
+    // candidacy_care: async (_: unknown, payload: any) => {
+      
+    // }
   }
 };

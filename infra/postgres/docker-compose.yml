@@ -1,8 +1,9 @@
 version: "3.1"
 
 services:
-  db:
+  dbreva:
     image: postgres
+    container_name: postgresql_reva
     restart: always
     environment:
       POSTGRES_DB: reva

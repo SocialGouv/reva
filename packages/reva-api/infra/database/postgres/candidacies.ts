@@ -1,24 +1,25 @@
-import { CandicadiesOnGoals, CandidaciesStatus, Candidacy, CandidacyStatus, Certification, Experience, prisma } from '@prisma/client';
+import { CandicadiesOnGoals, CandidaciesStatus, Candidacy, CandidacyStatus, CandidateTypology, Certification, Experience, prisma } from '@prisma/client';
 import { Either, EitherAsync, Left, Maybe, Right } from 'purify-ts';
 import * as domain from '../../../domains/candidacy';
 import { prismaClient } from './client';
 import { toDomainExperiences } from './experiences';
-     
+ 
 
-const toDomainCandidacies = (candidacies: (Candidacy & {candidacyStatuses: CandidaciesStatus[], certification: Certification}) []): domain.CandidacySummary[] => {
-    return candidacies.map(candidacy => {
-        return {
-            id: candidacy.id,
-            deviceId: candidacy.deviceId,
-            certificationId: candidacy.certificationId,
-            certification: candidacy.certification,
-            companionId: candidacy.companionId,
-            email: candidacy.email,
-            phone: candidacy.phone,
-            lastStatus: candidacy.candidacyStatuses[0],
-            createdAt: candidacy.createdAt
-        };
-    });
+
+const toDomainCandidacy = (candidacy: Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; }) => ({
+    id: candidacy.id,
+    deviceId: candidacy.deviceId,
+    certificationId: candidacy.certificationId,
+    certification: candidacy.certification,
+    companionId: candidacy.companionId,
+    email: candidacy.email,
+    phone: candidacy.phone,
+    lastStatus: candidacy.candidacyStatuses[0],
+    createdAt: candidacy.createdAt
+});    
+
+const toDomainCandidacies = (candidacies: (Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; })[]): domain.CandidacySummary[] => {
+    return candidacies.map(toDomainCandidacy);
 };
 
 export const insertCandidacy = async (params: { deviceId: string; certificationId: string; }): Promise<Either<string, domain.Candidacy>> => {
@@ -167,7 +168,7 @@ export const updateContactOnCandidacy = async (params: { candidacyId: string, em
 
 export const updateCandidacyStatus = async (params: { candidacyId: string, status: CandidacyStatus; }) => {
     try {
-         const [, newCandidacy] = await prismaClient.$transaction([
+        const [, newCandidacy] = await prismaClient.$transaction([
             prismaClient.candidaciesStatus.updateMany({
                 where: {
                     candidacyId: params.candidacyId
@@ -339,5 +340,59 @@ export const getCandidacies = async () => {
     }
     catch (e) {
         return Left(`Erreur lors de la récupération des candidatures, ${(e as any).message}`);
+    }
+};
+
+export const updateCandidacyWithMeetingsInformation = async (params: {
+    candidacyId: string;
+    candidateTypologyInformations: {
+        typology: CandidateTypology;
+        additionalInformation: string;
+    },
+    meetingInformations: {
+        firstAppointmentAt: Date;
+        numberOfAppointment: number;
+        wasPresentAtAppointment: boolean;
+    },
+}) => {
+    try {
+        const candidacy = await prismaClient.candidacy.update({
+            where: {
+                id: params.candidacyId
+            },
+            data: {
+                typology: params.candidateTypologyInformations.typology,
+                typologyAdditional: params.candidateTypologyInformations.additionalInformation,
+                firstAppointmentAt: params.meetingInformations.firstAppointmentAt,
+                numberOfAppointment: params.meetingInformations.numberOfAppointment,
+                wasPresentAtAppointment: params.meetingInformations.wasPresentAtAppointment
+            },
+            include: {
+                experiences: true,
+                goals: true,
+                candidacyStatuses: true
+            }
+        });
+
+        return Right({ 
+            id: candidacy.id,
+            deviceId: candidacy.deviceId,
+            certificationId: candidacy.certificationId,
+            companionId: candidacy.companionId,
+            experiences: toDomainExperiences(candidacy.experiences),
+            goals: candidacy.goals,
+            email: candidacy.email,
+            phone: candidacy.phone,
+            typology: candidacy.typology,
+            typologyAdditional: candidacy.typologyAdditional,
+            firstAppointmentAt: candidacy.firstAppointmentAt,
+            numberOfAppointment: candidacy.numberOfAppointment,
+            wasPresentAtAppointment: candidacy.wasPresentAtAppointment,
+            candidacyStatuses: candidacy.candidacyStatuses,
+            createdAt: candidacy.createdAt
+        });
+    }
+    catch (e) {
+        return Left(`Erreur lors de la mise à jour des informations de rendez de la candidature, ${(e as any).message}`);
     }
 }
