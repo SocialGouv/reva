@@ -7,6 +7,15 @@ enum Duration {
   moreThanTenYears
 }
 
+enum CandidateTypology {
+  NON_SPECIFIE
+  SALARIE_PRIVE
+  SALARIE_PUBLIC_HOSPITALIER
+  DEMANDEUR_EMPLOI
+  AIDANTS_FAMILIAUX
+  AUTRE
+}
+
 # QUERY
 
 type Candidacy {
@@ -19,6 +28,11 @@ type Candidacy {
   goals: [CandidateGoal!]!
   phone: String
   email: String
+  typology: CandidateTypology
+  typologyAdditional: String
+  firstAppointmentOccuredAt: Date
+  appointmentCount: Int
+  wasPresentAtFirstAppointment: Boolean
   candidacyStatuses: [CandidacyStatus!]!
   createdAt: Date!
 }
@@ -94,6 +108,17 @@ input CandidateGoalInput {
   additionalInformation: String
 }
 
+input CandidateTypologyInformationsInput {
+  typology: CandidateTypology!
+  additionalInformation: String
+}
+
+input AppointmentInformationsInput {
+  firstAppointmentOccuredAt: Date!
+  wasPresentAtFirstAppointment: Boolean!
+  appointmentCount: Int!
+}
+
 type Mutation {
   candidacy_createCandidacy(candidacy: CandidacyInput!): Candidacy
   candidacy_submitCandidacy(deviceId: ID!, candidacyId: ID!): Candidacy
@@ -131,4 +156,10 @@ type Mutation {
   ): Candidacy
   candidacy_archiveById(candidacyId: ID!): Candidacy!
   candidacy_deleteById(candidacyId: ID!): String!
+  candidacy_updateAppointmentInformations(
+    candidacyId: ID!
+    candidateTypologyInformations: CandidateTypologyInformationsInput!
+    appointmentInformations: AppointmentInformationsInput!
+  ): Candidacy!
+  candidacy_care(candidacyId: ID!): Void
 }

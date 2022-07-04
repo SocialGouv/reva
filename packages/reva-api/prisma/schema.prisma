@@ -118,6 +118,11 @@ model Candidacy {
   candidacyStatuses CandidaciesStatus[]
   goals CandicadiesOnGoals[]
   experiences Experience[]
+  typology CandidateTypology  @default(NON_SPECIFIE)
+  typologyAdditional String? @map("typology_additional")
+  firstAppointmentOccuredAt   DateTime?  @db.Timestamptz(6) @map("first_appointment_occured_at")
+  wasPresentAtFirstAppointment Boolean? @map("was_present_at_first_appointment")
+  appointmentCount Int @default(0) @map("appointment_count")
   phone   String?  @db.VarChar(255)
   email   String?  @db.VarChar(255)
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
@@ -142,6 +147,7 @@ enum CandidacyStatus {
   ARCHIVE
   PROJET
   VALIDATION
+  PRIS_EN_CHARGE
   DOSSIER_PRO
   CERTIFICATION
 }
@@ -184,4 +190,11 @@ model Experience {
   @@map("experience")
 }
 
-
+enum CandidateTypology {
+  NON_SPECIFIE
+  SALARIE_PRIVE
+  SALARIE_PUBLIC_HOSPITALIER
+  DEMANDEUR_EMPLOI
+  AIDANTS_FAMILIAUX
+  AUTRE
+}
