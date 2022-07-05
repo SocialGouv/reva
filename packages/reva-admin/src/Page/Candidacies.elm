@@ -232,7 +232,6 @@ meetingsForm =
         [ ( "typology"
           , Form.Select "Typologie"
                 [ "Salarié du privé"
-                , "Salarié de la fonction publique hospitalière"
                 , "Demandeur d’emploi"
                 , "Aidants familiaux"
                 , "Autre"
