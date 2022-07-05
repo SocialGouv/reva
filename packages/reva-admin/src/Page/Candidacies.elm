@@ -11,7 +11,7 @@ import Admin.Object exposing (Candidacy)
 import Api exposing (Token)
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Referential exposing (Referential)
-import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
+import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, h4, input, label, li, nav, node, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, for, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onInput)
 import List.Extra
@@ -44,7 +44,8 @@ type alias State =
 
 
 type alias Model =
-    { endpoint : String
+    { baseUrl : String
+    , endpoint : String
     , token : Token
     , filter : Maybe String
     , form : Form.Model
@@ -54,15 +55,16 @@ type alias Model =
     }
 
 
-init : String -> Token -> ( Model, Cmd Msg )
-init endpoint token =
+init : String -> String -> Token -> ( Model, Cmd Msg )
+init baseUrl endpoint token =
     let
         ( formModel, formCmd ) =
             Form.init endpoint token
 
         defaultModel : Model
         defaultModel =
-            { endpoint = endpoint
+            { baseUrl = baseUrl
+            , endpoint = endpoint
             , token = token
             , filter = Nothing
             , form = formModel
@@ -154,7 +156,7 @@ viewContent :
     -> Html Msg
 viewContent config model candidacies =
     div
-        [ class "flex flex-col min-w-0 flex-1 overflow-hidden" ]
+        [ class "flex min-w-0 overflow-hidden border-l-[40px] border-black" ]
         [ div
             [ class "sm:hidden" ]
             [ div
@@ -176,35 +178,72 @@ viewContent config model candidacies =
                 ]
             ]
         , div
-            [ class "flex-1 relative z-0 flex overflow-hidden" ]
-            [ viewDirectoryPanel config candidacies
-            , case model.tab of
-                Meetings _ ->
-                    Form.view model.form
-                        |> Html.map GotFormMsg
+            [ class "flex-1 relative z-0 flex overflow-hidden bg-gray-200" ]
+          <|
+            case model.tab of
+                Empty ->
+                    [ viewDirectoryPanel config candidacies ]
 
-                _ ->
-                    viewCandidacyPanel model
-            ]
+                Meetings candidacyId ->
+                    [ viewMain "meetings"
+                        [ a
+                            [ Route.href model.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId))
+                            , class "flex items-center text-gray-800 p-6"
+                            ]
+                            [ span [ class "text-3xl mr-4" ] [ text "← " ]
+                            , text "Retour"
+                            ]
+                        , Form.view model.form
+                            |> Html.map GotFormMsg
+                        ]
+                    ]
+
+                Profil candidacyId ->
+                    [ viewCandidacyPanel model
+                    , div
+                        [ class "p-4 m-5" ]
+                        [ h4
+                            [ class "text-lg font-medium mb-6" ]
+                            [ text "Prochaine étape" ]
+                        , a
+                            [ class "bg-gray-900 text-white"
+                            , class "block rounded"
+                            , class "text-center leading-tight px-2 py-3"
+                            , Route.href model.baseUrl <| Route.Candidacy (View.Candidacy.Meetings candidacyId)
+                            ]
+                            [ text "Rendez-vous" ]
+                        ]
+                    ]
+        ]
+
+
+viewMain : String -> List (Html msg) -> Html msg
+viewMain dataTestValue =
+    node "main"
+        [ dataTest dataTestValue
+        , class "relative z-10 overflow-y-auto focus:outline-none"
+        , class "h-screen w-2/3 max-w-2xl bg-white"
         ]
 
 
 meetingsForm : Form
 meetingsForm =
-    [ ( "typology"
-      , Form.Select "Typologie"
-            [ "Salarié du privé"
-            , "Salarié de la fonction publique hospitalière"
-            , "Demandeur d’emploi"
-            , "Aidants familiaux"
-            , "Autre"
-            ]
-      )
-    , ( "other-details", Form.SelectOther "typology" "Autre typologie" )
-    , ( "first-date", Form.Date "Date du premier rendez-vous pédagogique" )
-    , ( "first-date-done", Form.Checkbox "Le candidat a bien effectué le rendez-vous d'étude de faisabilité" )
-    , ( "meetings-count", Form.Number "Nombre de rendez-vous réalisés avec le candidat" )
-    ]
+    { elements =
+        [ ( "typology"
+          , Form.Select "Typologie"
+                [ "Salarié du privé"
+                , "Demandeur d’emploi"
+                , "Aidants familiaux"
+                , "Autre"
+                ]
+          )
+        , ( "typology-additional-info", Form.SelectOther "typology" "Autre typologie" )
+        , ( "first-appointment-occured-at", Form.Date "Date du premier rendez-vous pédagogique" )
+        , ( "was-present-at-first-appointment", Form.Checkbox "Le candidat a bien effectué le rendez-vous d'étude de faisabilité" )
+        , ( "appointment-count", Form.Number "Nombre de rendez-vous réalisés avec le candidat" )
+        ]
+    , title = "Rendez-vous pédagogique"
+    }
 
 
 viewCandidacyPanel : Model -> Html Msg
@@ -217,7 +256,7 @@ viewCandidacyPanel model =
                 ]
                 []
     in
-    viewCandidacyArticle <|
+    viewCandidacyArticle model.baseUrl <|
         case model.selected of
             NotAsked ->
                 []
@@ -245,14 +284,18 @@ viewCandidacyPanel model =
                     }
 
 
-viewCandidacyArticle : List (Html msg) -> Html msg
-viewCandidacyArticle content =
-    node "main"
-        [ dataTest "profile"
-        , class "flex-1 relative z-10 overflow-y-auto focus:outline-none xl:order-last bg-gray-100"
-        ]
-        [ article
-            [ class "max-w-2xl bg-white h-screen px-3 py-8 sm:px-6" ]
+viewCandidacyArticle : String -> List (Html msg) -> Html msg
+viewCandidacyArticle baseUrl content =
+    viewMain "profile"
+        [ a
+            [ Route.href baseUrl (Route.Candidacy View.Candidacy.Empty)
+            , class "flex items-center text-gray-800 p-6"
+            ]
+            [ span [ class "text-3xl mr-4" ] [ text "← " ]
+            , text "Toutes les candidatures"
+            ]
+        , article
+            [ class "px-3 sm:px-6" ]
             content
         ]
 
@@ -266,7 +309,10 @@ viewDirectoryPanel config candidacies =
                 candidacies
     in
     aside
-        [ class "hidden md:order-first md:flex md:flex-col flex-shrink-0 w-96 border-r-[40px] border-gray-400" ]
+        [ class "hidden md:order-first md:flex md:flex-col flex-shrink-0"
+        , class "w-2/3 max-w-2xl h-screen"
+        , class "bg-white"
+        ]
         [ div
             [ class "px-6 pt-6 pb-4" ]
             [ h2
@@ -302,7 +348,11 @@ viewDirectoryPanel config candidacies =
                 ]
             ]
         , List.map (viewDirectory config) candidaciesByStatus
-            |> nav [ dataTest "directory", class "flex-1 min-h-0 overflow-y-auto", attribute "aria-label" "Candidats" ]
+            |> nav
+                [ dataTest "directory"
+                , class "flex-1 min-h-0 overflow-y-auto"
+                , attribute "aria-label" "Candidats"
+                ]
         ]
 
 

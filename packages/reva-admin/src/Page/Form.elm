@@ -15,10 +15,13 @@ import Data.Candidacy as Candidacy exposing (Candidacy, CandidacySummary)
 import Data.Referential exposing (Referential)
 import Dict exposing (Dict)
 import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, option, p, select, span, text, textarea, ul)
-import Html.Styled.Attributes exposing (action, attribute, class, for, href, id, name, placeholder, type_)
+import Html.Styled.Attributes exposing (action, attribute, class, for, href, id, name, placeholder, type_, value)
 import Html.Styled.Events exposing (onClick, onInput)
 import RemoteData exposing (RemoteData(..))
+import Route
 import String exposing (String)
+import Time exposing (Month(..))
+import View.Candidacy
 import View.Helpers exposing (dataTest)
 
 
@@ -38,7 +41,9 @@ type Element
 
 
 type alias Form =
-    List ( String, Element )
+    { elements : List ( String, Element )
+    , title : String
+    }
 
 
 type alias FormData =
@@ -96,22 +101,20 @@ view model =
                 Failure ->
                     text "Une erreur est survenue"
     in
-    div [ class "p-12 h-screen" ]
-        [ h2
-            [ class "text-2xl font-medium text-gray-900 leading-none" ]
-            [ text "Rendez-vous"
-            ]
-        , content
-        ]
+    div [ class "bg-white h-full py-8 px-16" ]
+        [ content ]
 
 
 viewForm : FormData -> Form -> Html Msg
 viewForm formData form =
     div []
-        [ div
+        [ h2
+            [ class "text-2xl font-medium text-gray-900 leading-none" ]
+            [ text form.title ]
+        , div
             [ class "mt-6 space-y-6" ]
           <|
-            List.map (viewElement formData) form
+            List.map (viewElement formData) form.elements
         , div
             [ class "mt-8 border-t pb-4 flex justify-end" ]
             [ button
@@ -128,8 +131,9 @@ viewForm formData form =
 viewElement : FormData -> ( String, Element ) -> Html Msg
 viewElement formData ( elementId, element ) =
     let
-        data =
+        dataOrDefault =
             Dict.get elementId formData
+                |> Maybe.withDefault (defaultValue element)
 
         inputView dataType extraClass =
             input
@@ -137,8 +141,9 @@ viewElement formData ( elementId, element ) =
                 , name elementId
                 , id elementId
                 , class extraClass
-                , class "flex-1 focus:ring-blue-500 focus:border-blue-500"
+                , class "focus:ring-blue-500 focus:border-blue-500"
                 , class "mt-1 block min-w-0 rounded sm:text-sm border-gray-300"
+                , value dataOrDefault
                 ]
                 []
 
@@ -148,6 +153,7 @@ viewElement formData ( elementId, element ) =
                 , id elementId
                 , class "shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 , class "block w-full sm:text-sm border-gray-300 rounded-md"
+                , value dataOrDefault
                 ]
                 []
 
@@ -198,7 +204,7 @@ viewElement formData ( elementId, element ) =
             select
                 [ id elementId
                 , onInput (ChangedElement elementId)
-                , class "mt-1 block w-64 pl-3 pr-10 py-2"
+                , class "mt-1 block w-full pl-3 pr-10 py-2"
                 , class "text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                 ]
                 (List.map viewChoice choices)
@@ -215,6 +221,16 @@ viewElement formData ( elementId, element ) =
 
                 Nothing ->
                     text ""
+
+
+defaultValue : Element -> String
+defaultValue element =
+    case element of
+        Number _ ->
+            "0"
+
+        _ ->
+            ""
 
 
 viewChoice : String -> Html msg

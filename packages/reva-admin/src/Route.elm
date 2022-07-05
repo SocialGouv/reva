@@ -33,11 +33,14 @@ parser baseUrl =
                 [ map Home top
                 , map Login (s "auth" </> s "login")
                 , map
+                    (Candidacy View.Candidacy.Empty)
+                    (s "candidacies")
+                , map
                     (\id -> candidacyTab id View.Candidacy.Profil)
-                    (s "candidacy" </> string)
+                    (s "candidacies" </> string)
                 , map
                     (\id -> candidacyTab id View.Candidacy.Meetings)
-                    (s "candidacy" </> string </> s "meetings")
+                    (s "candidacies" </> string </> s "meetings")
 
                 --  Add more routes like this:
                 --  , map Comment (s "user" </> string </> s "comment" </> int)
@@ -64,10 +67,10 @@ toString baseUrl route =
             Url.Builder.absolute [ baseUrl, "candidacies" ] []
 
         Candidacy (View.Candidacy.Profil candidacyId) ->
-            Url.Builder.absolute [ baseUrl, "candidacy", candidacyIdToString candidacyId ] []
+            Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId ] []
 
         Candidacy (View.Candidacy.Meetings candidacyId) ->
-            Url.Builder.absolute [ baseUrl, "candidacy", candidacyIdToString candidacyId, "meetings" ] []
+            Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "meetings" ] []
 
         Home ->
             Url.Builder.absolute [ baseUrl, "" ] []
