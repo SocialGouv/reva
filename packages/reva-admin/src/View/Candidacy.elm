@@ -41,7 +41,7 @@ view config =
     , div
         [ class "pt-8" ]
         [ h1
-            [ class "text-2xl font-medium text-gray-900 leading-none" ]
+            [ class "text-3xl font-medium text-gray-900 leading-none" ]
             [ text config.candidacy.certification.label
             ]
         ]

@@ -101,7 +101,7 @@ view model =
                 Failure ->
                     text "Une erreur est survenue"
     in
-    div [ class "bg-white h-full p-12" ]
+    div [ class "bg-white h-full py-8 px-16" ]
         [ content ]
 
 

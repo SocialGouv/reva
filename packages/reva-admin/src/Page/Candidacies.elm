@@ -204,7 +204,7 @@ viewContent config model candidacies =
                         [ class "p-4 m-5" ]
                         [ h4
                             [ class "text-lg font-medium mb-6" ]
-                            [ text "Prochain étape" ]
+                            [ text "Prochaine étape" ]
                         , a
                             [ class "bg-gray-900 text-white"
                             , class "block rounded"
@@ -243,7 +243,7 @@ meetingsForm =
         , ( "was-present-at-first-appointment", Form.Checkbox "Le candidat a bien effectué le rendez-vous d'étude de faisabilité" )
         , ( "appointment-count", Form.Number "Nombre de rendez-vous réalisés avec le candidat" )
         ]
-    , title = "Rendez-vous"
+    , title = "Rendez-vous pédagogique"
     }
 
 
