@@ -4,6 +4,7 @@
 
 module Admin.InputObject exposing (..)
 
+import Admin.Enum.CandidateTypology
 import Admin.Enum.Duration
 import Admin.Interface
 import Admin.Object
@@ -16,6 +17,37 @@ import Graphql.Internal.Encode as Encode exposing (Value)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
+
+
+buildAppointmentInformationsInput :
+    AppointmentInformationsInputRequiredFields
+    -> AppointmentInformationsInput
+buildAppointmentInformationsInput required____ =
+    { firstAppointmentOccuredAt = required____.firstAppointmentOccuredAt, wasPresentAtFirstAppointment = required____.wasPresentAtFirstAppointment, appointmentCount = required____.appointmentCount }
+
+
+type alias AppointmentInformationsInputRequiredFields =
+    { firstAppointmentOccuredAt : Data.Scalar.Date
+    , wasPresentAtFirstAppointment : Bool
+    , appointmentCount : Int
+    }
+
+
+{-| Type for the AppointmentInformationsInput input object.
+-}
+type alias AppointmentInformationsInput =
+    { firstAppointmentOccuredAt : Data.Scalar.Date
+    , wasPresentAtFirstAppointment : Bool
+    , appointmentCount : Int
+    }
+
+
+{-| Encode a AppointmentInformationsInput into a value that can be used as an argument.
+-}
+encodeAppointmentInformationsInput : AppointmentInformationsInput -> Value
+encodeAppointmentInformationsInput input____ =
+    Encode.maybeObject
+        [ ( "firstAppointmentOccuredAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDate) input____.firstAppointmentOccuredAt |> Just ), ( "wasPresentAtFirstAppointment", Encode.bool input____.wasPresentAtFirstAppointment |> Just ), ( "appointmentCount", Encode.int input____.appointmentCount |> Just ) ]
 
 
 buildCandidacyInput :
@@ -82,6 +114,43 @@ encodeCandidateGoalInput : CandidateGoalInput -> Value
 encodeCandidateGoalInput input____ =
     Encode.maybeObject
         [ ( "goalId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.goalId |> Just ), ( "additionalInformation", Encode.string |> Encode.optional input____.additionalInformation ) ]
+
+
+buildCandidateTypologyInformationsInput :
+    CandidateTypologyInformationsInputRequiredFields
+    -> (CandidateTypologyInformationsInputOptionalFields -> CandidateTypologyInformationsInputOptionalFields)
+    -> CandidateTypologyInformationsInput
+buildCandidateTypologyInformationsInput required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { additionalInformation = Absent }
+    in
+    { typology = required____.typology, additionalInformation = optionals____.additionalInformation }
+
+
+type alias CandidateTypologyInformationsInputRequiredFields =
+    { typology : Admin.Enum.CandidateTypology.CandidateTypology }
+
+
+type alias CandidateTypologyInformationsInputOptionalFields =
+    { additionalInformation : OptionalArgument String }
+
+
+{-| Type for the CandidateTypologyInformationsInput input object.
+-}
+type alias CandidateTypologyInformationsInput =
+    { typology : Admin.Enum.CandidateTypology.CandidateTypology
+    , additionalInformation : OptionalArgument String
+    }
+
+
+{-| Encode a CandidateTypologyInformationsInput into a value that can be used as an argument.
+-}
+encodeCandidateTypologyInformationsInput : CandidateTypologyInformationsInput -> Value
+encodeCandidateTypologyInformationsInput input____ =
+    Encode.maybeObject
+        [ ( "typology", Encode.enum Admin.Enum.CandidateTypology.toString input____.typology |> Just ), ( "additionalInformation", Encode.string |> Encode.optional input____.additionalInformation ) ]
 
 
 buildCertificationChangeInput :

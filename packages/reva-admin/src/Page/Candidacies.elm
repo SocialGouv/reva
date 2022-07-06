@@ -30,6 +30,7 @@ type Msg
     | GotCandidacyResponse (RemoteData String Candidacy)
     | GotCandidacyDeletionResponse (RemoteData String String)
     | GotCandidacyArchivingResponse (RemoteData String Candidacy)
+    | GotCandidacyTakingOverResponse (RemoteData String Candidacy)
     | GotFormMsg Form.Msg
     | GotReferentialResponse (RemoteData String Referential)
     | UserAddedFilter String
@@ -380,9 +381,18 @@ update msg model =
             ( { model | selected = Failure err }, Cmd.none )
 
         GotCandidacyArchivingResponse (Success candidacy) ->
-            ( archiveCandidacy model candidacy, Cmd.none )
+            ( refreshCandidacy model candidacy, Cmd.none )
 
         GotCandidacyArchivingResponse _ ->
+            ( { model | selected = NotAsked }, Cmd.none )
+
+        GotCandidacyTakingOverResponse (Failure err) ->
+            ( { model | selected = Failure err }, Cmd.none )
+
+        GotCandidacyTakingOverResponse (Success candidacy) ->
+            ( refreshCandidacy model candidacy, Cmd.none )
+
+        GotCandidacyTakingOverResponse _ ->
             ( { model | selected = NotAsked }, Cmd.none )
 
         GotFormMsg formMsg ->
@@ -420,6 +430,7 @@ updateTab tab model =
     case tab of
         View.Candidacy.Profil candidacyId ->
             initCandidacy candidacyId newModel
+                |> withTakeOver candidacyId
 
         View.Candidacy.Meetings candidacyId ->
             let
@@ -427,17 +438,23 @@ updateTab tab model =
                     Form.updateForm meetingsForm model.form
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
+                |> withTakeOver candidacyId
 
         View.Candidacy.Empty ->
             ( newModel, Cmd.none )
+
+
+withTakeOver : CandidacyId -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+withTakeOver candidacyId ( model, cmds ) =
+    ( model, Cmd.batch [ cmds, Request.takeOverCandidacy model.endpoint GotCandidacyTakingOverResponse candidacyId ] )
 
 
 
 -- HELPERS
 
 
-archiveCandidacy : Model -> Candidacy -> Model
-archiveCandidacy model candidacy =
+refreshCandidacy : Model -> Candidacy -> Model
+refreshCandidacy model candidacy =
     case model.state.candidacies of
         Success candidacies ->
             let

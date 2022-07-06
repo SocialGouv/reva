@@ -19,6 +19,32 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode exposing (Decoder)
 
 
+type alias GetCandidacyRequiredArguments =
+    { deviceId : Data.Scalar.Id }
+
+
+getCandidacy :
+    GetCandidacyRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet (Maybe decodesTo) RootQuery
+getCandidacy requiredArgs____ object____ =
+    Object.selectionForCompositeField "getCandidacy" [ Argument.required "deviceId" requiredArgs____.deviceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+
+
+getCandidacies :
+    SelectionSet decodesTo Admin.Object.CandidacySummary
+    -> SelectionSet (List decodesTo) RootQuery
+getCandidacies object____ =
+    Object.selectionForCompositeField "getCandidacies" [] object____ (Basics.identity >> Decode.list)
+
+
+getCompanions :
+    SelectionSet decodesTo Admin.Object.Companion
+    -> SelectionSet (List decodesTo) RootQuery
+getCompanions object____ =
+    Object.selectionForCompositeField "getCompanions" [] object____ (Basics.identity >> Decode.list)
+
+
 getReferential :
     SelectionSet decodesTo Admin.Object.Referential
     -> SelectionSet decodesTo RootQuery
@@ -58,18 +84,6 @@ getCertification requiredArgs____ object____ =
     Object.selectionForCompositeField "getCertification" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
 
 
-type alias GetCandidacyRequiredArguments =
-    { deviceId : Data.Scalar.Id }
-
-
-getCandidacy :
-    GetCandidacyRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Candidacy
-    -> SelectionSet (Maybe decodesTo) RootQuery
-getCandidacy requiredArgs____ object____ =
-    Object.selectionForCompositeField "getCandidacy" [ Argument.required "deviceId" requiredArgs____.deviceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
-
-
 type alias GetCandidacyByIdRequiredArguments =
     { id : Data.Scalar.Id }
 
@@ -80,17 +94,3 @@ getCandidacyById :
     -> SelectionSet (Maybe decodesTo) RootQuery
 getCandidacyById requiredArgs____ object____ =
     Object.selectionForCompositeField "getCandidacyById" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
-
-
-getCandidacies :
-    SelectionSet decodesTo Admin.Object.CandidacySummary
-    -> SelectionSet (List decodesTo) RootQuery
-getCandidacies object____ =
-    Object.selectionForCompositeField "getCandidacies" [] object____ (Basics.identity >> Decode.list)
-
-
-getCompanions :
-    SelectionSet decodesTo Admin.Object.Companion
-    -> SelectionSet (List decodesTo) RootQuery
-getCompanions object____ =
-    Object.selectionForCompositeField "getCompanions" [] object____ (Basics.identity >> Decode.list)

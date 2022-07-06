@@ -193,3 +193,30 @@ candidacy_deleteById :
     -> SelectionSet String RootMutation
 candidacy_deleteById requiredArgs____ =
     Object.selectionForField "String" "candidacy_deleteById" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] Decode.string
+
+
+type alias CandidacyUpdateAppointmentInformationsRequiredArguments =
+    { candidacyId : Data.Scalar.Id
+    , candidateTypologyInformations : Admin.InputObject.CandidateTypologyInformationsInput
+    , appointmentInformations : Admin.InputObject.AppointmentInformationsInput
+    }
+
+
+candidacy_updateAppointmentInformations :
+    CandidacyUpdateAppointmentInformationsRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet decodesTo RootMutation
+candidacy_updateAppointmentInformations requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_updateAppointmentInformations" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "candidateTypologyInformations" requiredArgs____.candidateTypologyInformations Admin.InputObject.encodeCandidateTypologyInformationsInput, Argument.required "appointmentInformations" requiredArgs____.appointmentInformations Admin.InputObject.encodeAppointmentInformationsInput ] object____ Basics.identity
+
+
+type alias CandidacyTakeOverRequiredArguments =
+    { candidacyId : Data.Scalar.Id }
+
+
+candidacy_takeOver :
+    CandidacyTakeOverRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet decodesTo RootMutation
+candidacy_takeOver requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_takeOver" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ Basics.identity

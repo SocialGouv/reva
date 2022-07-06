@@ -143,6 +143,7 @@ export const resolvers = {
 
     candidacy_takeOver: async (_: unknown, payload: any) => {
       const result = await takeOverCandidacyFromId({
+        existsCandidacyWithActiveStatus: candidacyDb.existsCandidacyWithActiveStatus,
         updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
       })({
         candidacyId: payload.candidacyId
