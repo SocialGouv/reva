@@ -121,6 +121,26 @@ export const getCandidacyFromId = async (candidacyId: string) => {
     };
 };
 
+export const existsCandidacyWithActiveStatus = async (params: {candidacyId: string, status: CandidacyStatus}) => {
+    try {
+        const candidaciesCount = await prismaClient.candidacy.count({
+            where: {
+                id: params.candidacyId,
+                candidacyStatuses: {
+                    some: {
+                        status: params.status,
+                        isActive: true
+                    }
+                }
+            }
+        });
+
+        return Right(candidaciesCount === 1)
+    } catch (e) {
+        return Left(`error while retrieving the candidacy with id ${params.candidacyId}`);
+    };
+};
+
 export const getCompanions = async () => {
     try {
         const companions = await prismaClient.companion.findMany();
@@ -358,7 +378,7 @@ export const updateAppointmentInformations = async (params: {
     try {
         const candidacy = await prismaClient.candidacy.update({
             where: {
-                id: params.candidacyId
+                id: params.candidacyId,
             },
             data: {
                 typology: params.candidateTypologyInformations.typology,

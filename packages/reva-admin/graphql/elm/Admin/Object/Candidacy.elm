@@ -4,6 +4,7 @@
 
 module Admin.Object.Candidacy exposing (..)
 
+import Admin.Enum.CandidateTypology
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -80,3 +81,28 @@ candidacyStatuses object____ =
 createdAt : SelectionSet Data.Scalar.Date Admin.Object.Candidacy
 createdAt =
     Object.selectionForField "Data.Scalar.Date" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder)
+
+
+typology : SelectionSet (Maybe Admin.Enum.CandidateTypology.CandidateTypology) Admin.Object.Candidacy
+typology =
+    Object.selectionForField "(Maybe Enum.CandidateTypology.CandidateTypology)" "typology" [] (Admin.Enum.CandidateTypology.decoder |> Decode.nullable)
+
+
+typologyAdditional : SelectionSet (Maybe String) Admin.Object.Candidacy
+typologyAdditional =
+    Object.selectionForField "(Maybe String)" "typologyAdditional" [] (Decode.string |> Decode.nullable)
+
+
+firstAppointmentOccuredAt : SelectionSet (Maybe Data.Scalar.Date) Admin.Object.Candidacy
+firstAppointmentOccuredAt =
+    Object.selectionForField "(Maybe Data.Scalar.Date)" "firstAppointmentOccuredAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder |> Decode.nullable)
+
+
+appointmentCount : SelectionSet (Maybe Int) Admin.Object.Candidacy
+appointmentCount =
+    Object.selectionForField "(Maybe Int)" "appointmentCount" [] (Decode.int |> Decode.nullable)
+
+
+wasPresentAtFirstAppointment : SelectionSet (Maybe Bool) Admin.Object.Candidacy
+wasPresentAtFirstAppointment =
+    Object.selectionForField "(Maybe Bool)" "wasPresentAtFirstAppointment" [] (Decode.bool |> Decode.nullable)

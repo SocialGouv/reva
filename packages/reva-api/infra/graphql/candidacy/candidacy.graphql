@@ -161,5 +161,5 @@ type Mutation {
     candidateTypologyInformations: CandidateTypologyInformationsInput!
     appointmentInformations: AppointmentInformationsInput!
   ): Candidacy!
-  candidacy_care(candidacyId: ID!): Void
+  candidacy_takeOver(candidacyId: ID!): Candidacy!
 }

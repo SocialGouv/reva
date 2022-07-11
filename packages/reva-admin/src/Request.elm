@@ -1,4 +1,4 @@
-module Request exposing (archiveCandidacy, deleteCandidacy, requestCandidacies, requestCandidacy, requestReferential)
+module Request exposing (archiveCandidacy, deleteCandidacy, requestCandidacies, requestCandidacy, requestReferential, takeOverCandidacy)
 
 import Admin.Mutation as Mutation
 import Admin.Object
@@ -224,6 +224,16 @@ archiveCandidacy :
     -> Cmd msg
 archiveCandidacy endpointGraphql toMsg candidacyId =
     Mutation.candidacy_archiveById (Mutation.CandidacyArchiveByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)) candidacySelection
+        |> makeMutation endpointGraphql toMsg
+
+
+takeOverCandidacy :
+    String
+    -> (RemoteData String Data.Candidacy.Candidacy -> msg)
+    -> CandidacyId
+    -> Cmd msg
+takeOverCandidacy endpointGraphql toMsg candidacyId =
+    Mutation.candidacy_takeOver (Mutation.CandidacyTakeOverRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)) candidacySelection
         |> makeMutation endpointGraphql toMsg
 
 
