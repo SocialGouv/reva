@@ -9,10 +9,12 @@ module Page.Candidacies exposing
 
 import Admin.Object exposing (Candidacy)
 import Api exposing (Token)
+import Css exposing (display, lastChild, none)
+import Css.Global exposing (descendants, typeSelector)
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Referential exposing (Referential)
-import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, h4, input, label, li, nav, node, p, span, text, ul)
-import Html.Styled.Attributes exposing (action, attribute, class, for, id, name, placeholder, type_)
+import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, h4, input, label, li, nav, node, ol, p, span, text, ul)
+import Html.Styled.Attributes exposing (action, attribute, class, classList, css, for, href, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onInput)
 import List.Extra
 import Page.Form as Form exposing (Form)
@@ -179,7 +181,7 @@ viewContent config model candidacies =
                 ]
             ]
         , div
-            [ class "flex-1 relative z-0 flex overflow-hidden bg-gray-200" ]
+            [ class "flex-1 relative z-0 flex overflow-hidden bg-gray-100" ]
           <|
             case model.tab of
                 Empty ->
@@ -201,20 +203,109 @@ viewContent config model candidacies =
 
                 Profil candidacyId ->
                     [ viewCandidacyPanel model
+                    , viewNavigationTimeline model candidacyId
+                    ]
+        ]
+
+
+viewNavigationTimeline : Model -> CandidacyId -> Html msg
+viewNavigationTimeline model candidacyId =
+    let
+        textItem label =
+            div
+                [ class "flex items-center justify-between w-52" ]
+                [ span [ class "text-sm" ] [ text label ], span [ class "text-lg" ] [ text "→" ] ]
+
+        timelineElements =
+            [ { content =
+                    [ div
+                        [ class "h-32 flex items-end -mb-6" ]
+                        [ span [ class "text-lg font-medium" ] [ text "Prochaines étapes" ] ]
+                    ]
+              , navigation = Nothing
+              }
+            , { content =
+                    [ textItem "Rendez-vous pédagogique"
                     , div
-                        [ class "p-4 m-5" ]
-                        [ h4
-                            [ class "text-lg font-medium mb-6" ]
-                            [ text "Prochaine étape" ]
-                        , a
-                            [ class "bg-gray-900 text-white"
-                            , class "block rounded"
-                            , class "text-center leading-tight px-2 py-3"
-                            , Route.href model.baseUrl <| Route.Candidacy (View.Candidacy.Meetings candidacyId)
+                        []
+                        [ button
+                            [ class "bg-gray-900 text-white text-sm"
+                            , class "mt-1 w-auto rounded"
+                            , class "text-center px-4 py-1"
                             ]
-                            [ text "Rendez-vous" ]
+                            [ text "Mettre à jour" ]
                         ]
                     ]
+              , navigation = Just <| Route.href model.baseUrl <| Route.Candidacy (View.Candidacy.Meetings candidacyId)
+              }
+            , { content = [ textItem "Définition du parcours" ], navigation = Nothing }
+            , { content = [ textItem "Validation du parcours" ], navigation = Nothing }
+            , { content = [ textItem "Transmission du devis" ], navigation = Nothing }
+            , { content = [ textItem "Validation du projet" ], navigation = Nothing }
+            ]
+
+        timelineSize =
+            List.length timelineElements
+
+        currentStepIndex =
+            2
+
+        viewNavigationTimelineStep index element =
+            li
+                [ class "pb-8 relative"
+                ]
+                [ if index + 1 == timelineSize then
+                    text ""
+
+                  else
+                    div
+                        [ class "-ml-px absolute mt-0.5 top-2 left-2.5 w-0.5 h-full"
+                        , classList
+                            [ ( "bg-gray-300", index >= currentStepIndex )
+                            , ( "bg-blue-600", index < currentStepIndex )
+                            ]
+                        , attribute "aria-hidden" "true"
+                        ]
+                        []
+                , a
+                    [ Maybe.withDefault (class "") element.navigation
+                    , class "cursor-pointer relative flex items-start group"
+                    ]
+                    [ span
+                        [ class "mt-1.5 flex items-center" ]
+                        [ span
+                            [ class "relative z-10 w-5 h-5 flex items-center justify-center rounded-full"
+                            , class "border-2"
+                            , classList
+                                [ ( "border-gray-300", index > currentStepIndex )
+                                , ( "border-blue-600", index <= currentStepIndex )
+                                , ( "bg-gray-200 group-hover:bg-gray-300", index > currentStepIndex )
+                                , ( "bg-white group-hover:bg-blue-200", index == currentStepIndex )
+                                , ( "bg-blue-600 group-hover:bg-blue-400", index < currentStepIndex )
+                                ]
+                            ]
+                            [ if index == currentStepIndex then
+                                span [ class "bg-blue-600 w-2 h-2 rounded-full text-white" ] []
+
+                              else if index < currentStepIndex then
+                                span [ class "text-white text-xs font-bold" ] [ text "✓" ]
+
+                              else
+                                text ""
+                            ]
+                        ]
+                    , span [ class "ml-6 min-w-0 flex flex-col" ] element.content
+                    ]
+                ]
+    in
+    div
+        [ class "pl-12" ]
+        [ ol
+            [ attribute "role" "list"
+            , class "-mt-8"
+            ]
+          <|
+            List.indexedMap viewNavigationTimelineStep timelineElements
         ]
 
 
