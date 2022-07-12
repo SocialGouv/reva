@@ -11,7 +11,7 @@ import Admin.Object exposing (Candidacy)
 import Api exposing (Token)
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Referential exposing (Referential)
-import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, h4, input, label, li, nav, node, p, span, text, ul)
+import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, for, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onInput)
 import List.Extra
@@ -23,6 +23,7 @@ import String exposing (String)
 import View.Candidacy exposing (Tab(..))
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
+import View.Steps
 
 
 type Msg
@@ -179,7 +180,7 @@ viewContent config model candidacies =
                 ]
             ]
         , div
-            [ class "flex-1 relative z-0 flex overflow-hidden bg-gray-200" ]
+            [ class "flex-1 relative z-0 flex overflow-hidden bg-gray-100" ]
           <|
             case model.tab of
                 Empty ->
@@ -201,20 +202,45 @@ viewContent config model candidacies =
 
                 Profil candidacyId ->
                     [ viewCandidacyPanel model
-                    , div
-                        [ class "p-4 m-5" ]
-                        [ h4
-                            [ class "text-lg font-medium mb-6" ]
-                            [ text "Prochaine étape" ]
-                        , a
-                            [ class "bg-gray-900 text-white"
-                            , class "block rounded"
-                            , class "text-center leading-tight px-2 py-3"
-                            , Route.href model.baseUrl <| Route.Candidacy (View.Candidacy.Meetings candidacyId)
-                            ]
-                            [ text "Rendez-vous" ]
-                        ]
+                    , viewNavigationSteps model.baseUrl candidacyId
                     ]
+        ]
+
+
+viewNavigationSteps baseUrl candidacyId =
+    let
+        title =
+            [ div
+                [ class "h-32 flex items-end -mb-6" ]
+                [ span
+                    [ class "text-lg font-medium" ]
+                    [ text "Prochaines étapes" ]
+                ]
+            ]
+
+        appointmentView =
+            [ View.Steps.item "Rendez-vous pédagogique"
+            , div
+                []
+                [ button
+                    [ class "bg-gray-900 text-white text-sm"
+                    , class "mt-1 w-auto rounded"
+                    , class "text-center px-4 py-1"
+                    ]
+                    [ text "Mettre à jour" ]
+                ]
+            ]
+
+        appointmentLink =
+            Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Meetings candidacyId)
+    in
+    View.Steps.view
+        [ { content = title, navigation = Nothing }
+        , { content = appointmentView, navigation = appointmentLink }
+        , { content = [ View.Steps.item "Définition du parcours" ], navigation = Nothing }
+        , { content = [ View.Steps.item "Validation du parcours" ], navigation = Nothing }
+        , { content = [ View.Steps.item "Transmission du devis" ], navigation = Nothing }
+        , { content = [ View.Steps.item "Validation du projet" ], navigation = Nothing }
         ]
 
 
