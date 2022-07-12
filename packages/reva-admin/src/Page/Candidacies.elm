@@ -139,8 +139,7 @@ view config model =
         Success candidacies ->
             let
                 sortedCandidacies =
-                    List.sortBy (.lastStatus >> .status) candidacies
-                        |> List.reverse
+                    List.sortBy (.lastStatus >> .status >> Candidacy.statusToOrderPosition) candidacies
             in
             case model.filter of
                 Nothing ->
