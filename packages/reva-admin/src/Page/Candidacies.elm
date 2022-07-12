@@ -463,7 +463,7 @@ update msg model =
             ( { model | selected = NotAsked }, Cmd.none )
 
         GotCandidacyTakingOverResponse (Failure err) ->
-            ( { model | selected = Failure err }, Cmd.none )
+            ( model, Cmd.none )
 
         GotCandidacyTakingOverResponse (Success candidacy) ->
             ( refreshCandidacy model candidacy, Cmd.none )
