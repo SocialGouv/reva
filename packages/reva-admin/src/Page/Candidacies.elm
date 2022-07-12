@@ -139,8 +139,7 @@ view config model =
         Success candidacies ->
             let
                 sortedCandidacies =
-                    List.sortBy (.lastStatus >> .status) candidacies
-                        |> List.reverse
+                    List.sortBy (.lastStatus >> .status >> Candidacy.statusToOrderPosition) candidacies
             in
             case model.filter of
                 Nothing ->
@@ -463,7 +462,7 @@ update msg model =
             ( { model | selected = NotAsked }, Cmd.none )
 
         GotCandidacyTakingOverResponse (Failure err) ->
-            ( { model | selected = Failure err }, Cmd.none )
+            ( model, Cmd.none )
 
         GotCandidacyTakingOverResponse (Success candidacy) ->
             ( refreshCandidacy model candidacy, Cmd.none )

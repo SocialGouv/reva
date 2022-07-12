@@ -7,6 +7,7 @@ module Data.Candidacy exposing
     , CandidacySummary
     , candidacyIdFromString
     , candidacyIdToString
+    , statusToOrderPosition
     , statusToString
     , toCandidacySummary
     )
@@ -94,10 +95,29 @@ statusToString status =
             "Candidatures archivées"
 
         "PRISE_EN_CHARGE" ->
-            "Candidatures prises en charges"
+            "Candidatures prises en charge"
 
         _ ->
             "Statut inconnu"
+
+
+statusToOrderPosition : String -> Int
+statusToOrderPosition status =
+    case status of
+        "VALIDATION" ->
+            1
+
+        "PROJET" ->
+            3
+
+        "ARCHIVE" ->
+            4
+
+        "PRISE_EN_CHARGE" ->
+            2
+
+        _ ->
+            5
 
 
 toCandidacySummary : Candidacy -> CandidacySummary
