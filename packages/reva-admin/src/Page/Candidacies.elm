@@ -7,9 +7,11 @@ module Page.Candidacies exposing
     , view
     )
 
+import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
 import Admin.Object exposing (Candidacy)
 import Api exposing (Token)
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
+import Data.Form.Appointment exposing (candidateTypologyToString)
 import Data.Referential exposing (Referential)
 import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, for, id, name, placeholder, type_)
@@ -252,17 +254,19 @@ viewMain dataTestValue =
         ]
 
 
-meetingsForm : Form
-meetingsForm =
+appointmentFOrm : Form
+appointmentFOrm =
+    let
+        typologies =
+            [ SalariePrive
+            , DemandeurEmploi
+            , AidantsFamiliaux
+            , Autre
+            ]
+                |> List.map candidateTypologyToString
+    in
     { elements =
-        [ ( "typology"
-          , Form.Select "Typologie"
-                [ "Salarié du privé"
-                , "Demandeur d’emploi"
-                , "Aidants familiaux"
-                , "Autre"
-                ]
-          )
+        [ ( "typology", Form.Select "Typologie" typologies )
         , ( "typology-additional-info", Form.SelectOther "typology" "Autre typologie" )
         , ( "first-appointment-occured-at", Form.Date "Date du premier rendez-vous pédagogique" )
         , ( "was-present-at-first-appointment", Form.Checkbox "Le candidat a bien effectué le rendez-vous d'étude de faisabilité" )
@@ -510,7 +514,7 @@ updateTab tab model =
         View.Candidacy.Meetings candidacyId ->
             let
                 ( formModel, formCmd ) =
-                    Form.updateForm meetingsForm model.form
+                    Form.updateForm appointmentFOrm model.form
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
                 |> withTakeOver candidacyId

@@ -29,11 +29,11 @@ status =
     Object.selectionForField "String" "status" [] Decode.string
 
 
-createdAt : SelectionSet Data.Scalar.Date Admin.Object.CandidacyStatus
-createdAt =
-    Object.selectionForField "Data.Scalar.Date" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder)
-
-
 isActive : SelectionSet Bool Admin.Object.CandidacyStatus
 isActive =
     Object.selectionForField "Bool" "isActive" [] Decode.bool
+
+
+createdAt : SelectionSet Data.Scalar.Date Admin.Object.CandidacyStatus
+createdAt =
+    Object.selectionForField "Data.Scalar.Date" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder)

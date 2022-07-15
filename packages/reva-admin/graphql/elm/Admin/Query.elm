@@ -31,6 +31,18 @@ getCandidacy requiredArgs____ object____ =
     Object.selectionForCompositeField "getCandidacy" [ Argument.required "deviceId" requiredArgs____.deviceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
 
 
+type alias GetCandidacyByIdRequiredArguments =
+    { id : Data.Scalar.Id }
+
+
+getCandidacyById :
+    GetCandidacyByIdRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet (Maybe decodesTo) RootQuery
+getCandidacyById requiredArgs____ object____ =
+    Object.selectionForCompositeField "getCandidacyById" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+
+
 getCandidacies :
     SelectionSet decodesTo Admin.Object.CandidacySummary
     -> SelectionSet (List decodesTo) RootQuery
@@ -82,15 +94,3 @@ getCertification :
     -> SelectionSet (Maybe decodesTo) RootQuery
 getCertification requiredArgs____ object____ =
     Object.selectionForCompositeField "getCertification" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
-
-
-type alias GetCandidacyByIdRequiredArguments =
-    { id : Data.Scalar.Id }
-
-
-getCandidacyById :
-    GetCandidacyByIdRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Candidacy
-    -> SelectionSet (Maybe decodesTo) RootQuery
-getCandidacyById requiredArgs____ object____ =
-    Object.selectionForCompositeField "getCandidacyById" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)

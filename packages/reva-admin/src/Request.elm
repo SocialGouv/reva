@@ -1,5 +1,7 @@
 module Request exposing (archiveCandidacy, deleteCandidacy, requestCandidacies, requestCandidacy, requestReferential, takeOverCandidacy)
 
+import Admin.Enum.CandidateTypology exposing (CandidateTypology)
+import Admin.InputObject
 import Admin.Mutation as Mutation
 import Admin.Object
 import Admin.Object.Candidacy
@@ -14,8 +16,10 @@ import Admin.Query as Query
 import Admin.Scalar exposing (Date(..), Id(..))
 import Data.Candidacy exposing (CandidacyId)
 import Data.Certification
+import Data.Form.Appointment
 import Data.Referential
-import Dict
+import Data.Scalar
+import Dict exposing (Dict)
 import Graphql.Http
 import Graphql.Operation
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
@@ -101,6 +105,16 @@ certificationSelection =
         |> with Admin.Object.Certification.activityArea
         |> with Admin.Object.Certification.accessibleJobType
         |> with Admin.Object.Certification.abilities
+
+
+appointmentSelection : SelectionSet (Dict String String) Admin.Object.Candidacy
+appointmentSelection =
+    SelectionSet.succeed Data.Form.Appointment.appointment
+        |> with Admin.Object.Candidacy.typology
+        |> with Admin.Object.Candidacy.typologyAdditional
+        |> with Admin.Object.Candidacy.firstAppointmentOccuredAt
+        |> with Admin.Object.Candidacy.appointmentCount
+        |> with Admin.Object.Candidacy.wasPresentAtFirstAppointment
 
 
 
@@ -238,6 +252,15 @@ takeOverCandidacy endpointGraphql toMsg candidacyId =
 
 
 
+{--
+requestAppointnment :
+    String
+    -> (RemoteData String Data.Form.Appointment -> msg)
+    -> Cmd msg
+requestAppointnment endpointGraphql toMsg =
+    Query.getAppointnment appointmentSelection
+        |> makeQuery endpointGraphql toMsg
+-}
 -- REFERENTIAL
 
 

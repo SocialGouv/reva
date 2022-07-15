@@ -71,18 +71,6 @@ email =
     Object.selectionForField "(Maybe String)" "email" [] (Decode.string |> Decode.nullable)
 
 
-candidacyStatuses :
-    SelectionSet decodesTo Admin.Object.CandidacyStatus
-    -> SelectionSet (List decodesTo) Admin.Object.Candidacy
-candidacyStatuses object____ =
-    Object.selectionForCompositeField "candidacyStatuses" [] object____ (Basics.identity >> Decode.list)
-
-
-createdAt : SelectionSet Data.Scalar.Date Admin.Object.Candidacy
-createdAt =
-    Object.selectionForField "Data.Scalar.Date" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder)
-
-
 typology : SelectionSet (Maybe Admin.Enum.CandidateTypology.CandidateTypology) Admin.Object.Candidacy
 typology =
     Object.selectionForField "(Maybe Enum.CandidateTypology.CandidateTypology)" "typology" [] (Admin.Enum.CandidateTypology.decoder |> Decode.nullable)
@@ -106,3 +94,15 @@ appointmentCount =
 wasPresentAtFirstAppointment : SelectionSet (Maybe Bool) Admin.Object.Candidacy
 wasPresentAtFirstAppointment =
     Object.selectionForField "(Maybe Bool)" "wasPresentAtFirstAppointment" [] (Decode.bool |> Decode.nullable)
+
+
+candidacyStatuses :
+    SelectionSet decodesTo Admin.Object.CandidacyStatus
+    -> SelectionSet (List decodesTo) Admin.Object.Candidacy
+candidacyStatuses object____ =
+    Object.selectionForCompositeField "candidacyStatuses" [] object____ (Basics.identity >> Decode.list)
+
+
+createdAt : SelectionSet Data.Scalar.Date Admin.Object.Candidacy
+createdAt =
+    Object.selectionForField "Data.Scalar.Date" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder)
