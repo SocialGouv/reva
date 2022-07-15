@@ -270,7 +270,7 @@ appointmentFOrm =
     in
     { elements =
         [ ( keys.typology, Form.Select "Typologie" typologies )
-        , ( keys.typologyAdditional, Form.SelectOther "typology" "Autre typologie" )
+        , ( keys.additionalInformation, Form.SelectOther "typology" "Autre typologie" )
         , ( keys.firstAppointmentOccurredAt, Form.Date "Date du premier rendez-vous pédagogique" )
         , ( keys.wasPresentAtFirstAppointment, Form.Checkbox "Le candidat a bien effectué le rendez-vous d'étude de faisabilité" )
         , ( keys.appointmentCount, Form.Number "Nombre de rendez-vous réalisés avec le candidat" )

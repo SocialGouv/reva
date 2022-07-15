@@ -266,7 +266,7 @@ updateAppointment endpointGraphql candidacyId toMsg dict =
             Admin.InputObject.AppointmentInformationsInput
                 appointment.firstAppointmentOccurredAt
                 appointment.wasPresentAtFirstAppointment
-                appointment.count
+                appointment.appointmentCount
 
         appointmentRequiredArs =
             Mutation.CandidacyUpdateAppointmentInformationsRequiredArguments
