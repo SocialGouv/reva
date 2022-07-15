@@ -1,4 +1,4 @@
-module Data.Form.Appointment exposing (appointment, candidateTypologyToString, keys)
+module Data.Form.Appointment exposing (Appointment, appointment, candidateTypologyFromString, candidateTypologyToString, keys)
 
 import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
 import Data.Scalar
@@ -37,6 +37,7 @@ booleanToString b =
         ""
 
 
+candidateTypologyToString : CandidateTypology -> String
 candidateTypologyToString candidateTypology =
     case candidateTypology of
         NonSpecifie ->
@@ -56,3 +57,28 @@ candidateTypologyToString candidateTypology =
 
         Autre ->
             "Autre"
+
+
+candidateTypologyFromString : String -> CandidateTypology
+candidateTypologyFromString candidateTypology =
+    case candidateTypology of
+        "" ->
+            NonSpecifie
+
+        "Salarié du privé" ->
+            SalariePrive
+
+        "Salarié de la fonction publique hospitalière" ->
+            SalariePublicHospitalier
+
+        "Demandeur d’emploi" ->
+            DemandeurEmploi
+
+        "Aidants familiaux" ->
+            AidantsFamiliaux
+
+        "Autre" ->
+            Autre
+
+        _ ->
+            Autre

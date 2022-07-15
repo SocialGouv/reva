@@ -1,6 +1,6 @@
-module Request exposing (archiveCandidacy, deleteCandidacy, requestCandidacies, requestCandidacy, requestReferential, takeOverCandidacy)
+module Request exposing (archiveCandidacy, deleteCandidacy, requestAppointment, requestCandidacies, requestCandidacy, requestReferential, takeOverCandidacy)
 
-import Admin.Enum.CandidateTypology exposing (CandidateTypology)
+import Admin.Enum.CandidateTypology
 import Admin.InputObject
 import Admin.Mutation as Mutation
 import Admin.Object
@@ -196,28 +196,11 @@ requestCandidacy :
     -> Cmd msg
 requestCandidacy endpointGraphql toMsg id =
     let
-        nothingToError remoteCandidacy =
-            case remoteCandidacy of
-                Success Nothing ->
-                    Failure "Cette candidature est introuvable"
-
-                Success (Just candidacy) ->
-                    Success candidacy
-
-                Failure e ->
-                    Failure e
-
-                NotAsked ->
-                    NotAsked
-
-                Loading ->
-                    Loading
-
         candidacyRequiredArgs =
             Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString id)
     in
     Query.getCandidacyById candidacyRequiredArgs candidacySelection
-        |> makeQuery endpointGraphql (nothingToError >> toMsg)
+        |> makeQuery endpointGraphql (nothingToError "Cette candidature est introuvable" >> toMsg)
 
 
 deleteCandidacy :
@@ -251,16 +234,56 @@ takeOverCandidacy endpointGraphql toMsg candidacyId =
         |> makeMutation endpointGraphql toMsg
 
 
-
-{--
-requestAppointnment :
+requestAppointment :
     String
-    -> (RemoteData String Data.Form.Appointment -> msg)
+    -> (RemoteData String Data.Form.Appointment.Appointment -> msg)
+    -> CandidacyId
     -> Cmd msg
-requestAppointnment endpointGraphql toMsg =
-    Query.getAppointnment appointmentSelection
-        |> makeQuery endpointGraphql toMsg
--}
+requestAppointment endpointGraphql toMsg candidacyId =
+    let
+        appointmentRequiredArs =
+            Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
+    in
+    Query.getCandidacyById appointmentRequiredArs appointmentSelection
+        |> makeQuery endpointGraphql (nothingToError "Cette candidature est introuvable" >> toMsg)
+
+
+updateAppointment :
+    String
+    -> (RemoteData String (Dict String String) -> msg)
+    ->
+        { typology : Admin.Enum.CandidateTypology.CandidateTypology
+        , additionalInformation : String
+        , firstAppointmentOccurredAt : Data.Scalar.Date
+        , wasPresentAtFirstAppointment : Bool
+        , count : Int
+        , candidacyId : CandidacyId
+        }
+    -> Cmd msg
+updateAppointment endpointGraphql toMsg appointment =
+    let
+        typologyInformationInput =
+            Admin.InputObject.CandidateTypologyInformationsInput
+                appointment.typology
+                (Present appointment.additionalInformation)
+
+        appointmentInformation =
+            Admin.InputObject.AppointmentInformationsInput
+                appointment.firstAppointmentOccurredAt
+                appointment.wasPresentAtFirstAppointment
+                appointment.count
+
+        appointmentRequiredArs =
+            Mutation.CandidacyUpdateAppointmentInformationsRequiredArguments
+                (Id <| Data.Candidacy.candidacyIdToString appointment.candidacyId)
+                typologyInformationInput
+                appointmentInformation
+    in
+    Mutation.candidacy_updateAppointmentInformations appointmentRequiredArs appointmentSelection
+        |> makeMutation endpointGraphql toMsg
+
+
+
 -- REFERENTIAL
 
 
@@ -296,3 +319,26 @@ requestReferential :
 requestReferential endpointGraphql toMsg =
     Query.getReferential referentialSelection
         |> makeQuery endpointGraphql toMsg
+
+
+
+--- HELPERS
+
+
+nothingToError : String -> RemoteData String (Maybe a) -> RemoteData String a
+nothingToError failureMessage remoteData =
+    case remoteData of
+        Success Nothing ->
+            Failure failureMessage
+
+        Success (Just candidacy) ->
+            Success candidacy
+
+        Failure e ->
+            Failure e
+
+        NotAsked ->
+            NotAsked
+
+        Loading ->
+            Loading
