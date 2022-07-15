@@ -7,7 +7,7 @@
     "dev:elm": "vite",
     "dev:css": "npm run css -- --watch",
     "build": "npm run build:css && npm run build:elm && cp -R ./dist ../reva-api/dist/admin && cp ./silent-check-sso.html ../reva-api/dist/admin/silent-check-sso.html",
-    "build:api": "elm-graphql --schema-file ../reva-api/infra/graphql/generated-graphql-schema.graphql --scalar-codecs Data.Scalar --output graphql/elm --base Admin",
+    "build:api": "elm-graphql --schema-file ../reva-api/infra/generated-graphql-schema.graphql --scalar-codecs Data.Scalar --output graphql/elm --base Admin",
     "build:css": "NODE_ENV=production npm run css -- --minify",
     "build:elm": "vite build",
     "css": "npx tailwindcss -i ./css/index.css -o ./dist/index.css",
