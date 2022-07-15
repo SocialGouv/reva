@@ -13,9 +13,9 @@ import Api exposing (Token)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
 import Html.Styled as Html exposing (Html, button, div, h2, input, label, option, select, text, textarea)
-import Html.Styled.Attributes exposing (class, for, id, name, type_, value)
+import Html.Styled.Attributes exposing (checked, class, disabled, for, id, name, selected, type_, value)
 import Html.Styled.Events exposing (onCheck, onInput, onSubmit)
-import RemoteData exposing (RemoteData)
+import RemoteData exposing (RemoteData(..))
 import String exposing (String)
 import View.Helpers exposing (dataTest)
 
@@ -51,39 +51,34 @@ type alias FormData =
 type RemoteForm
     = NotAsked
     | Loading Form
-    | Loaded Form FormData
+    | Editing Form FormData
+    | Saving Form FormData
     | Failure
 
 
 type alias Model =
     { endpoint : String
-    , onSave : Dict String String -> Cmd Msg
+    , onSave : (RemoteData String () -> Msg) -> Dict String String -> Cmd Msg
     , token : Token
     , filter : Maybe String
     , form : RemoteForm
     }
 
 
-init :
-    { endpoint : String
-    , onSave : Dict String String -> Cmd Msg
-    , token : Token
-    , onLoad : Cmd Msg
-    }
-    -> ( Model, Cmd Msg )
-init config =
+init : String -> Token -> ( Model, Cmd msg )
+init endpoint token =
     let
         model : Model
         model =
-            { endpoint = config.endpoint
-            , onSave = config.onSave
-            , token = config.token
+            { endpoint = endpoint
+            , onSave = \_ _ -> Cmd.none
+            , token = token
             , filter = Nothing
             , form = NotAsked
             }
     in
     ( model
-    , config.onLoad
+    , Cmd.none
     )
 
 
@@ -94,16 +89,40 @@ init config =
 view : Model -> Html Msg
 view model =
     let
+        saveButton label =
+            button
+                [ dataTest "save-description"
+                , type_ "submit"
+                , class "text-center mt-4 rounded bg-blue-600"
+                , class "hover:bg-blue-700 text-white px-4 py-2"
+                ]
+                [ text label ]
+
+        disabledSaveButton label =
+            button
+                [ dataTest "save-description"
+                , disabled True
+                , type_ "submit"
+                , class "text-center mt-4 rounded bg-blue-400"
+                , class "text-white px-4 py-2"
+                ]
+                [ text label ]
+
         content =
             case model.form of
                 NotAsked ->
                     text ""
 
-                Loading form ->
-                    viewForm Dict.empty form
+                Loading _ ->
+                    text "..."
 
-                Loaded form formData ->
-                    viewForm formData form
+                Saving form formData ->
+                    viewForm formData form <|
+                        disabledSaveButton "Enregistrement..."
+
+                Editing form formData ->
+                    viewForm formData form <|
+                        saveButton "Enregistrer"
 
                 Failure ->
                     text "Une erreur est survenue"
@@ -112,8 +131,8 @@ view model =
         [ content ]
 
 
-viewForm : FormData -> Form -> Html Msg
-viewForm formData form =
+viewForm : FormData -> Form -> Html Msg -> Html Msg
+viewForm formData form saveButton =
     Html.form
         [ onSubmit UserClickedSave ]
         [ h2
@@ -125,13 +144,7 @@ viewForm formData form =
             List.map (viewElement formData) form.elements
         , div
             [ class "mt-8 border-t pb-4 flex justify-end" ]
-            [ button
-                [ dataTest "save-description"
-                , type_ "submit"
-                , class "text-center mt-4 rounded bg-blue-600"
-                , class "hover:bg-blue-700 text-white px-4 py-2"
-                ]
-                [ text "Enregistrer" ]
+            [ saveButton
             ]
         ]
 
@@ -164,7 +177,7 @@ viewElement formData ( elementId, element ) =
                 , onCheck (booleanToString >> UserChangedElement elementId)
                 , class "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded mr-2"
                 , class "mt-1 block min-w-0 rounded sm:text-sm border-gray-300"
-                , value dataOrDefault
+                , checked (dataOrDefault == "checked")
                 ]
                 []
 
@@ -227,7 +240,7 @@ viewElement formData ( elementId, element ) =
                 , class "mt-1 block w-full pl-3 pr-10 py-2"
                 , class "text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                 ]
-                (List.map viewChoice choices)
+                (List.map (viewChoice dataOrDefault) choices)
                 |> withLabel label
 
         SelectOther selectId label ->
@@ -253,9 +266,9 @@ defaultValue element =
             ""
 
 
-viewChoice : String -> Html msg
-viewChoice choice =
-    option [] [ text choice ]
+viewChoice : String -> String -> Html msg
+viewChoice currentValue choice =
+    option [ selected (choice == currentValue) ] [ text choice ]
 
 
 
@@ -269,23 +282,53 @@ update msg model =
             ( model, Cmd.none )
     in
     case ( msg, model.form ) of
-        ( UserChangedElement elementId elementValue, Loaded form formData ) ->
+        ( UserChangedElement elementId elementValue, Editing form formData ) ->
             let
                 newFormData =
                     Dict.insert elementId elementValue formData
             in
-            ( { model | form = Loaded form newFormData }, Cmd.none )
+            ( { model | form = Editing form newFormData }, Cmd.none )
 
         ( UserChangedElement _ _, _ ) ->
             noChange
 
-        ( UserClickedSave, Loaded _ formData ) ->
-            ( model, model.onSave formData )
+        ( UserClickedSave, Editing form formData ) ->
+            ( { model | form = Saving form formData }, model.onSave GotSaveResponse formData )
 
         ( UserClickedSave, _ ) ->
             noChange
 
+        ( GotLoadResponse (RemoteData.Success formData), Loading form ) ->
+            ( { model | form = Editing form formData }, Cmd.none )
 
-updateForm : Form -> Model -> ( Model, Cmd msg )
-updateForm form model =
-    ( { model | form = Loaded form Dict.empty }, Cmd.none )
+        ( GotLoadResponse (RemoteData.Failure _), Loading form ) ->
+            ( { model | form = Failure }, Cmd.none )
+
+        ( GotLoadResponse _, _ ) ->
+            noChange
+
+        ( GotSaveResponse (RemoteData.Success _), Saving form formData ) ->
+            ( { model | form = Editing form formData }, Cmd.none )
+
+        ( GotSaveResponse (RemoteData.Failure _), Editing _ _ ) ->
+            -- TODO: Handle save failure
+            noChange
+
+        ( GotSaveResponse _, _ ) ->
+            noChange
+
+
+updateForm :
+    { form : Form
+    , onLoad : (RemoteData String (Dict String String) -> Msg) -> Cmd Msg
+    , onSave : (RemoteData String () -> Msg) -> Dict String String -> Cmd Msg
+    }
+    -> Model
+    -> ( Model, Cmd Msg )
+updateForm config model =
+    ( { model
+        | form = Loading config.form
+        , onSave = config.onSave
+      }
+    , config.onLoad GotLoadResponse
+    )

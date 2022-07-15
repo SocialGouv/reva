@@ -63,12 +63,7 @@ init : String -> String -> Token -> ( Model, Cmd Msg )
 init baseUrl endpoint token =
     let
         ( formModel, formCmd ) =
-            Form.init
-                { endpoint = endpoint
-                , onSave = \_ -> Cmd.none
-                , onLoad = Cmd.none
-                , token = token
-                }
+            Form.init endpoint token
 
         defaultModel : Model
         defaultModel =
@@ -262,6 +257,9 @@ viewMain dataTestValue =
 appointmentFOrm : Form
 appointmentFOrm =
     let
+        keys =
+            Data.Form.Appointment.keys
+
         typologies =
             [ SalariePrive
             , DemandeurEmploi
@@ -271,11 +269,11 @@ appointmentFOrm =
                 |> List.map candidateTypologyToString
     in
     { elements =
-        [ ( "typology", Form.Select "Typologie" typologies )
-        , ( "typology-additional-info", Form.SelectOther "typology" "Autre typologie" )
-        , ( "first-appointment-occured-at", Form.Date "Date du premier rendez-vous pédagogique" )
-        , ( "was-present-at-first-appointment", Form.Checkbox "Le candidat a bien effectué le rendez-vous d'étude de faisabilité" )
-        , ( "appointment-count", Form.Number "Nombre de rendez-vous réalisés avec le candidat" )
+        [ ( keys.typology, Form.Select "Typologie" typologies )
+        , ( keys.typologyAdditional, Form.SelectOther "typology" "Autre typologie" )
+        , ( keys.firstAppointmentOccurredAt, Form.Date "Date du premier rendez-vous pédagogique" )
+        , ( keys.wasPresentAtFirstAppointment, Form.Checkbox "Le candidat a bien effectué le rendez-vous d'étude de faisabilité" )
+        , ( keys.appointmentCount, Form.Number "Nombre de rendez-vous réalisés avec le candidat" )
         ]
     , title = "Rendez-vous pédagogique"
     }
@@ -519,7 +517,12 @@ updateTab tab model =
         View.Candidacy.Meetings candidacyId ->
             let
                 ( formModel, formCmd ) =
-                    Form.updateForm appointmentFOrm model.form
+                    Form.updateForm
+                        { form = appointmentFOrm
+                        , onLoad = Request.requestAppointment model.endpoint candidacyId
+                        , onSave = Request.updateAppointment model.endpoint candidacyId
+                        }
+                        model.form
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
                 |> withTakeOver candidacyId

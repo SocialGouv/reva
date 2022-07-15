@@ -1,6 +1,5 @@
-module Request exposing (archiveCandidacy, deleteCandidacy, requestAppointment, requestCandidacies, requestCandidacy, requestReferential, takeOverCandidacy)
+module Request exposing (archiveCandidacy, deleteCandidacy, requestAppointment, requestCandidacies, requestCandidacy, requestReferential, takeOverCandidacy, updateAppointment)
 
-import Admin.Enum.CandidateTypology
 import Admin.InputObject
 import Admin.Mutation as Mutation
 import Admin.Object
@@ -18,7 +17,6 @@ import Data.Candidacy exposing (CandidacyId)
 import Data.Certification
 import Data.Form.Appointment
 import Data.Referential
-import Data.Scalar
 import Dict exposing (Dict)
 import Graphql.Http
 import Graphql.Operation
@@ -236,10 +234,10 @@ takeOverCandidacy endpointGraphql toMsg candidacyId =
 
 requestAppointment :
     String
-    -> (RemoteData String Data.Form.Appointment.Appointment -> msg)
     -> CandidacyId
+    -> (RemoteData String (Dict String String) -> msg)
     -> Cmd msg
-requestAppointment endpointGraphql toMsg candidacyId =
+requestAppointment endpointGraphql candidacyId toMsg =
     let
         appointmentRequiredArs =
             Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
@@ -250,18 +248,15 @@ requestAppointment endpointGraphql toMsg candidacyId =
 
 updateAppointment :
     String
-    -> (RemoteData String (Dict String String) -> msg)
-    ->
-        { typology : Admin.Enum.CandidateTypology.CandidateTypology
-        , additionalInformation : String
-        , firstAppointmentOccurredAt : Data.Scalar.Date
-        , wasPresentAtFirstAppointment : Bool
-        , count : Int
-        , candidacyId : CandidacyId
-        }
+    -> CandidacyId
+    -> (RemoteData String () -> msg)
+    -> Dict String String
     -> Cmd msg
-updateAppointment endpointGraphql toMsg appointment =
+updateAppointment endpointGraphql candidacyId toMsg dict =
     let
+        appointment =
+            Data.Form.Appointment.appointmentFromDict candidacyId dict
+
         typologyInformationInput =
             Admin.InputObject.CandidateTypologyInformationsInput
                 appointment.typology
@@ -279,7 +274,7 @@ updateAppointment endpointGraphql toMsg appointment =
                 typologyInformationInput
                 appointmentInformation
     in
-    Mutation.candidacy_updateAppointmentInformations appointmentRequiredArs appointmentSelection
+    Mutation.candidacy_updateAppointmentInformations appointmentRequiredArs SelectionSet.empty
         |> makeMutation endpointGraphql toMsg
 
 

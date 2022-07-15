@@ -1,29 +1,60 @@
-module Data.Form.Appointment exposing (Appointment, appointment, candidateTypologyFromString, candidateTypologyToString, keys)
+module Data.Form.Appointment exposing (Appointment, appointment, appointmentFromDict, candidateTypologyFromString, candidateTypologyToString, keys)
 
 import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
-import Data.Form.Helper exposing (booleanToString)
+import Data.Candidacy exposing (CandidacyId)
+import Data.Form.Helper exposing (booleanFromString, booleanToString)
 import Data.Scalar
 import Dict exposing (Dict)
+import Time
 
 
 type alias Appointment =
-    Dict String String
+    { candidacyId : CandidacyId
+    , typology : Admin.Enum.CandidateTypology.CandidateTypology
+    , additionalInformation : String
+    , firstAppointmentOccurredAt : Data.Scalar.Date
+    , count : Int
+    , wasPresentAtFirstAppointment : Bool
+    }
 
 
+keys :
+    { typology : String
+    , typologyAdditional : String
+    , firstAppointmentOccurredAt : String
+    , appointmentCount : String
+    , wasPresentAtFirstAppointment : String
+    }
 keys =
     { typology = "typology"
     , typologyAdditional = "typologyAdditional"
-    , firstAppointmentOccuredAt = "firstAppointmentOccurredAt"
+    , firstAppointmentOccurredAt = "firstAppointmentOccurredAt"
     , appointmentCount = "appointmentCount"
     , wasPresentAtFirstAppointment = "wasPresentAtFirstAppointment"
     }
 
 
-appointment : Maybe CandidateTypology -> Maybe String -> Maybe Data.Scalar.Date -> Maybe Int -> Maybe Bool -> Appointment
+appointmentFromDict : CandidacyId -> Dict String String -> Appointment
+appointmentFromDict candidacyId dict =
+    let
+        required field f default =
+            Dict.get (field keys) dict
+                |> Maybe.map f
+                |> Maybe.withDefault default
+    in
+    Appointment candidacyId
+        (required .typology candidateTypologyFromString NonSpecifie)
+        (required .typologyAdditional identity "")
+        (required .firstAppointmentOccurredAt (\_ -> Time.millisToPosix 0) (Time.millisToPosix 0))
+        (required .appointmentCount (String.toInt >> Maybe.withDefault 0) 0)
+        (required .wasPresentAtFirstAppointment booleanFromString False)
+
+
+appointment : Maybe CandidateTypology -> Maybe String -> Maybe Data.Scalar.Date -> Maybe Int -> Maybe Bool -> Dict String String
 appointment typology typologyAdditional firstAppointmentOccurredAt appointmentCount wasPresentAtFirstAppointment =
     [ ( keys.typology, Maybe.map candidateTypologyToString typology |> Maybe.withDefault "" )
     , ( keys.typologyAdditional, typologyAdditional |> Maybe.withDefault "" )
-    , ( keys.firstAppointmentOccuredAt, "TODO" )
+    , ( keys.firstAppointmentOccurredAt, "TODO" )
     , ( keys.appointmentCount, Maybe.map String.fromInt appointmentCount |> Maybe.withDefault "" )
     , ( keys.wasPresentAtFirstAppointment, Maybe.map booleanToString wasPresentAtFirstAppointment |> Maybe.withDefault "" )
     ]
