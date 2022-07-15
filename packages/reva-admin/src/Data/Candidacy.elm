@@ -13,7 +13,6 @@ module Data.Candidacy exposing
     )
 
 import Admin.Enum.Duration exposing (Duration)
-import Admin.Object.Candidacy exposing (id)
 import Data.Certification exposing (Certification)
 import Time
 

@@ -9,24 +9,22 @@ module Page.Form exposing
     , view
     )
 
-import Admin.Object exposing (Candidacy)
 import Api exposing (Token)
-import Data.Candidacy as Candidacy exposing (Candidacy, CandidacySummary)
-import Data.Referential exposing (Referential)
+import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
-import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, option, p, select, span, text, textarea, ul)
-import Html.Styled.Attributes exposing (action, attribute, class, for, href, id, name, placeholder, type_, value)
-import Html.Styled.Events exposing (onClick, onInput)
-import RemoteData exposing (RemoteData(..))
-import Route
+import Html.Styled as Html exposing (Html, button, div, h2, input, label, option, select, text, textarea)
+import Html.Styled.Attributes exposing (class, for, id, name, type_, value)
+import Html.Styled.Events exposing (onCheck, onInput, onSubmit)
+import RemoteData exposing (RemoteData)
 import String exposing (String)
-import Time exposing (Month(..))
-import View.Candidacy
 import View.Helpers exposing (dataTest)
 
 
 type Msg
-    = ChangedElement String String
+    = UserChangedElement String String
+    | UserClickedSave
+    | GotSaveResponse (RemoteData String ())
+    | GotLoadResponse (RemoteData String (Dict String String))
 
 
 type Element
@@ -59,24 +57,33 @@ type RemoteForm
 
 type alias Model =
     { endpoint : String
+    , onSave : Dict String String -> Cmd Msg
     , token : Token
     , filter : Maybe String
     , form : RemoteForm
     }
 
 
-init : String -> Token -> ( Model, Cmd Msg )
-init endpoint token =
+init :
+    { endpoint : String
+    , onSave : Dict String String -> Cmd Msg
+    , token : Token
+    , onLoad : Cmd Msg
+    }
+    -> ( Model, Cmd Msg )
+init config =
     let
+        model : Model
         model =
-            { endpoint = endpoint
-            , token = token
+            { endpoint = config.endpoint
+            , onSave = config.onSave
+            , token = config.token
             , filter = Nothing
             , form = NotAsked
             }
     in
     ( model
-    , Cmd.none
+    , config.onLoad
     )
 
 
@@ -107,7 +114,8 @@ view model =
 
 viewForm : FormData -> Form -> Html Msg
 viewForm formData form =
-    div []
+    Html.form
+        [ onSubmit UserClickedSave ]
         [ h2
             [ class "text-2xl font-medium text-gray-900 leading-none" ]
             [ text form.title ]
@@ -140,8 +148,21 @@ viewElement formData ( elementId, element ) =
                 [ type_ dataType
                 , name elementId
                 , id elementId
+                , onInput (UserChangedElement elementId)
                 , class extraClass
                 , class "focus:ring-blue-500 focus:border-blue-500"
+                , class "mt-1 block min-w-0 rounded sm:text-sm border-gray-300"
+                , value dataOrDefault
+                ]
+                []
+
+        checkboxView =
+            input
+                [ type_ "checkbox"
+                , name elementId
+                , id elementId
+                , onCheck (booleanToString >> UserChangedElement elementId)
+                , class "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded mr-2"
                 , class "mt-1 block min-w-0 rounded sm:text-sm border-gray-300"
                 , value dataOrDefault
                 ]
@@ -151,6 +172,7 @@ viewElement formData ( elementId, element ) =
             textarea
                 [ name elementId
                 , id elementId
+                , onInput (UserChangedElement elementId)
                 , class "shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 , class "block w-full sm:text-sm border-gray-300 rounded-md"
                 , value dataOrDefault
@@ -175,9 +197,7 @@ viewElement formData ( elementId, element ) =
         Checkbox label ->
             div
                 [ class "flex items-center h-5 w-full" ]
-                [ inputView
-                    "checkbox"
-                    "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded mr-2"
+                [ checkboxView
                 , labelView label
                 ]
 
@@ -203,7 +223,7 @@ viewElement formData ( elementId, element ) =
         Select label choices ->
             select
                 [ id elementId
-                , onInput (ChangedElement elementId)
+                , onInput (UserChangedElement elementId)
                 , class "mt-1 block w-full pl-3 pr-10 py-2"
                 , class "text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                 ]
@@ -248,24 +268,22 @@ update msg model =
         noChange =
             ( model, Cmd.none )
     in
-    case msg of
-        ChangedElement elementId elementValue ->
-            case model.form of
-                NotAsked ->
-                    noChange
+    case ( msg, model.form ) of
+        ( UserChangedElement elementId elementValue, Loaded form formData ) ->
+            let
+                newFormData =
+                    Dict.insert elementId elementValue formData
+            in
+            ( { model | form = Loaded form newFormData }, Cmd.none )
 
-                Failure ->
-                    noChange
+        ( UserChangedElement _ _, _ ) ->
+            noChange
 
-                Loading _ ->
-                    noChange
+        ( UserClickedSave, Loaded _ formData ) ->
+            ( model, model.onSave formData )
 
-                Loaded form formData ->
-                    let
-                        newFormData =
-                            Dict.insert elementId elementValue formData
-                    in
-                    ( { model | form = Loaded form newFormData }, Cmd.none )
+        ( UserClickedSave, _ ) ->
+            noChange
 
 
 updateForm : Form -> Model -> ( Model, Cmd msg )

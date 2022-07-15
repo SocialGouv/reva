@@ -63,7 +63,12 @@ init : String -> String -> Token -> ( Model, Cmd Msg )
 init baseUrl endpoint token =
     let
         ( formModel, formCmd ) =
-            Form.init endpoint token
+            Form.init
+                { endpoint = endpoint
+                , onSave = \_ -> Cmd.none
+                , onLoad = Cmd.none
+                , token = token
+                }
 
         defaultModel : Model
         defaultModel =

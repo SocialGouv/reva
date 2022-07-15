@@ -1,6 +1,7 @@
 module Data.Form.Appointment exposing (Appointment, appointment, candidateTypologyFromString, candidateTypologyToString, keys)
 
 import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
+import Data.Form.Helper exposing (booleanToString)
 import Data.Scalar
 import Dict exposing (Dict)
 
@@ -27,14 +28,6 @@ appointment typology typologyAdditional firstAppointmentOccurredAt appointmentCo
     , ( keys.wasPresentAtFirstAppointment, Maybe.map booleanToString wasPresentAtFirstAppointment |> Maybe.withDefault "" )
     ]
         |> Dict.fromList
-
-
-booleanToString b =
-    if b then
-        "checked"
-
-    else
-        ""
 
 
 candidateTypologyToString : CandidateTypology -> String
