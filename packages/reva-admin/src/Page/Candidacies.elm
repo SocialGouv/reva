@@ -10,6 +10,7 @@ module Page.Candidacies exposing
 import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
 import Admin.Object exposing (Candidacy)
 import Api exposing (Token)
+import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Form.Appointment exposing (candidateTypologyToString)
 import Data.Referential exposing (Referential)
@@ -49,6 +50,7 @@ type alias State =
 
 type alias Model =
     { baseUrl : String
+    , navKey : Nav.Key
     , endpoint : String
     , token : Token
     , filter : Maybe String
@@ -59,8 +61,8 @@ type alias Model =
     }
 
 
-init : String -> String -> Token -> ( Model, Cmd Msg )
-init baseUrl endpoint token =
+init : Nav.Key -> String -> String -> Token -> ( Model, Cmd Msg )
+init navKey baseUrl endpoint token =
     let
         ( formModel, formCmd ) =
             Form.init endpoint token
@@ -69,6 +71,7 @@ init baseUrl endpoint token =
         defaultModel =
             { baseUrl = baseUrl
             , endpoint = endpoint
+            , navKey = navKey
             , token = token
             , filter = Nothing
             , form = formModel
@@ -521,6 +524,10 @@ updateTab tab model =
                         { form = appointmentFOrm
                         , onLoad = Request.requestAppointment model.endpoint candidacyId
                         , onSave = Request.updateAppointment model.endpoint candidacyId
+                        , onRedirect =
+                            Nav.pushUrl
+                                model.navKey
+                                (Route.toString model.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
                         }
                         model.form
             in

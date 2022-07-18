@@ -242,7 +242,7 @@ update msg model =
                             route
 
                 ( candidaciesModel, candidaciesCmd ) =
-                    Candidacies.init model.baseUrl model.endpoint token
+                    Candidacies.init model.key model.baseUrl model.endpoint token
             in
             ( { model | page = Candidacies candidaciesModel }
             , Cmd.batch
