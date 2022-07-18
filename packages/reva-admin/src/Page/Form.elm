@@ -29,6 +29,7 @@ type Msg
 
 type Element
     = Checkbox String
+    | CheckboxList String (List String)
     | Date String
     | Empty
     | Input String
@@ -213,6 +214,15 @@ viewElement formData ( elementId, element ) =
             div
                 [ class "flex items-center h-5 w-full" ]
                 [ checkboxView
+                , labelView label
+                ]
+
+        CheckboxList label choices ->
+            -- TODO
+            div
+                [ class "flex items-center h-5 w-full" ]
+                -- TODO: display one checkbox for each choice
+                [ text <| String.join ", " choices
                 , labelView label
                 ]
 

@@ -13,6 +13,7 @@ import Api exposing (Token)
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Form.Appointment exposing (candidateTypologyToString)
+import Data.Form.Training
 import Data.Referential exposing (Referential)
 import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, for, id, name, placeholder, type_)
@@ -257,8 +258,8 @@ viewMain dataTestValue =
         ]
 
 
-appointmentFOrm : Form
-appointmentFOrm =
+appointmentForm : Form
+appointmentForm =
     let
         keys =
             Data.Form.Appointment.keys
@@ -279,6 +280,49 @@ appointmentFOrm =
         , ( keys.appointmentCount, Form.Number "Nombre de rendez-vous réalisés avec le candidat" )
         ]
     , title = "Rendez-vous pédagogique"
+    }
+
+
+trainingForm : Form
+trainingForm =
+    let
+        keys =
+            Data.Form.Training.keys
+
+        certifications =
+            -- TODO: get this referential from the certificates database
+            [ "Titre Professionnel Assistant maternel / Garde d'enfants"
+            , "Titre Professionnel Conducteur accompagnateur de personnes à mobilité réduite (CApmr)"
+            ]
+
+        mandatoryTrainings =
+            -- TODO: created a mandatory training referential in the database
+            [ "Attestation de Formation aux Gestes et Soins d’Urgence (AFGSU)"
+            , "Equipier de Première Intervention"
+            , "Sauveteur Secouriste du Travail (SST)"
+            , "Systèmes d’attaches"
+            ]
+
+        certificateSkills =
+            -- TODO: get the "bloc de compétence" for the selected certificate
+            []
+    in
+    { elements =
+        [ ( keys.certificates, Form.Select "Certifications" certifications )
+        , ( keys.mandatoryTrainings, Form.CheckboxList "Formations obligatoires" mandatoryTrainings )
+        , ( keys.basicSkill1, Form.Input "Savoir de base 1" )
+        , ( keys.basicSkill2, Form.Input "Savoir de base 2" )
+        , ( keys.basicSkill3, Form.Input "Savoir de base 3" )
+        , ( keys.certificateSkills, Form.CheckboxList "Blocs de compétence" certificateSkills )
+        , ( keys.digitalSkill1, Form.Input "Formation usage numérique 1" )
+        , ( keys.digitalSkill2, Form.Input "Formation usage numérique 2" )
+        , ( keys.digitalSkill3, Form.Input "Formation usage numérique 3" )
+        , ( keys.otherTraining, Form.Input "Autre formation complémentaire" )
+        , ( keys.individualHourCount, Form.Number "Nombre d'heures pour la prestation accompagnement méthodologique à la VAE (individuel)" )
+        , ( keys.collectiveHourCount, Form.Number "Nombre d'heures pour la prestation accompagnement méthodologique à la VAE (collectif)" )
+        , ( keys.additionalHourCount, Form.Number "Nombre d'heures pour la prestation compléments formatifs" )
+        ]
+    , title = "Parcours final et accompagnement proposé"
     }
 
 
@@ -521,7 +565,7 @@ updateTab tab model =
             let
                 ( formModel, formCmd ) =
                     Form.updateForm
-                        { form = appointmentFOrm
+                        { form = appointmentForm
                         , onLoad = Request.requestAppointment model.endpoint candidacyId
                         , onSave = Request.updateAppointment model.endpoint candidacyId
                         , onRedirect =
