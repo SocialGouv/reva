@@ -43,7 +43,7 @@ appointmentFromDict candidacyId dict =
     Appointment candidacyId
         (required .typology candidateTypologyFromString NonSpecifie)
         (required .additionalInformation identity "")
-        (required .firstAppointmentOccurredAt (\_ -> Time.millisToPosix 0) (Time.millisToPosix 0))
+        (required .firstAppointmentOccurredAt Helper.dateFromString Helper.defaultDate)
         (required .appointmentCount (String.toInt >> Maybe.withDefault 0) 0)
         (required .wasPresentAtFirstAppointment booleanFromString False)
 
@@ -52,7 +52,7 @@ appointment : Maybe CandidateTypology -> Maybe String -> Maybe Data.Scalar.Date 
 appointment typology typologyAdditional firstAppointmentOccurredAt appointmentCount wasPresentAtFirstAppointment =
     [ ( .typology, Maybe.map candidateTypologyToString typology )
     , ( .additionalInformation, typologyAdditional )
-    , ( .firstAppointmentOccurredAt, Nothing ) -- TODO
+    , ( .firstAppointmentOccurredAt, Maybe.map Helper.dateToString firstAppointmentOccurredAt )
     , ( .appointmentCount, Maybe.map String.fromInt appointmentCount )
     , ( .wasPresentAtFirstAppointment, Maybe.map booleanToString wasPresentAtFirstAppointment )
     ]

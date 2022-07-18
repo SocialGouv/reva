@@ -1,6 +1,8 @@
-module Data.Form.Helper exposing (booleanFromString, booleanToString, required, toDict)
+module Data.Form.Helper exposing (booleanFromString, booleanToString, dateFromString, dateToString, defaultDate, required, toDict)
 
+import Data.Scalar exposing (Date)
 import Dict
+import Time
 
 
 booleanToString : Bool -> String
@@ -20,6 +22,35 @@ booleanFromString b =
 
         _ ->
             False
+
+
+
+-- TODO
+
+
+dateFromString : String -> Date
+dateFromString date =
+    -- "1970-07-30"
+    case String.split "-" date of
+        [ a, b, c ] ->
+            defaultDate
+
+        _ ->
+            defaultDate
+
+
+
+-- TODO
+
+
+dateToString : Date -> String
+dateToString date =
+    "1970-07-30"
+
+
+defaultDate : Time.Posix
+defaultDate =
+    Time.millisToPosix 0
 
 
 required :
