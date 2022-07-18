@@ -58,6 +58,7 @@ type RemoteForm
 
 type alias Model =
     { endpoint : String
+    , onRedirect : Cmd Msg
     , onSave : (RemoteData String () -> Msg) -> Dict String String -> Cmd Msg
     , token : Token
     , filter : Maybe String
@@ -71,6 +72,7 @@ init endpoint token =
         model : Model
         model =
             { endpoint = endpoint
+            , onRedirect = Cmd.none
             , onSave = \_ _ -> Cmd.none
             , token = token
             , filter = Nothing
@@ -308,7 +310,7 @@ update msg model =
             noChange
 
         ( GotSaveResponse (RemoteData.Success _), Saving form formData ) ->
-            ( { model | form = Editing form formData }, Cmd.none )
+            ( { model | form = Editing form formData }, model.onRedirect )
 
         ( GotSaveResponse (RemoteData.Failure _), Editing _ _ ) ->
             -- TODO: Handle save failure
@@ -321,6 +323,7 @@ update msg model =
 updateForm :
     { form : Form
     , onLoad : (RemoteData String (Dict String String) -> Msg) -> Cmd Msg
+    , onRedirect : Cmd Msg
     , onSave : (RemoteData String () -> Msg) -> Dict String String -> Cmd Msg
     }
     -> Model
@@ -328,6 +331,7 @@ updateForm :
 updateForm config model =
     ( { model
         | form = Loading config.form
+        , onRedirect = config.onRedirect
         , onSave = config.onSave
       }
     , config.onLoad GotLoadResponse
