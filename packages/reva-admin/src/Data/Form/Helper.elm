@@ -1,4 +1,4 @@
-module Data.Form.Helper exposing (booleanFromString, booleanToString, required)
+module Data.Form.Helper exposing (booleanFromString, booleanToString, required, toDict)
 
 import Dict
 
@@ -33,3 +33,11 @@ required keys dict field f default =
     Dict.get (field keys) dict
         |> Maybe.map f
         |> Maybe.withDefault default
+
+
+toDict : a -> List ( a -> comparable, Maybe String ) -> Dict.Dict comparable String
+toDict keys data =
+    List.map
+        (\( f, value ) -> ( f keys, value |> Maybe.withDefault "" ))
+        data
+        |> Dict.fromList

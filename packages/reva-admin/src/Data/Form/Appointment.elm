@@ -50,13 +50,13 @@ appointmentFromDict candidacyId dict =
 
 appointment : Maybe CandidateTypology -> Maybe String -> Maybe Data.Scalar.Date -> Maybe Int -> Maybe Bool -> Dict String String
 appointment typology typologyAdditional firstAppointmentOccurredAt appointmentCount wasPresentAtFirstAppointment =
-    [ ( keys.typology, Maybe.map candidateTypologyToString typology |> Maybe.withDefault "" )
-    , ( keys.additionalInformation, typologyAdditional |> Maybe.withDefault "" )
-    , ( keys.firstAppointmentOccurredAt, "TODO" )
-    , ( keys.appointmentCount, Maybe.map String.fromInt appointmentCount |> Maybe.withDefault "" )
-    , ( keys.wasPresentAtFirstAppointment, Maybe.map booleanToString wasPresentAtFirstAppointment |> Maybe.withDefault "" )
+    [ ( .typology, Maybe.map candidateTypologyToString typology )
+    , ( .additionalInformation, typologyAdditional )
+    , ( .firstAppointmentOccurredAt, Nothing ) -- TODO
+    , ( .appointmentCount, Maybe.map String.fromInt appointmentCount )
+    , ( .wasPresentAtFirstAppointment, Maybe.map booleanToString wasPresentAtFirstAppointment )
     ]
-        |> Dict.fromList
+        |> Helper.toDict keys
 
 
 candidateTypologyToString : CandidateTypology -> String
