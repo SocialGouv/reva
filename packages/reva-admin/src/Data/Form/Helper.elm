@@ -26,6 +26,9 @@ booleanFromString b =
 
 
 -- TODO
+-- https://package.elm-lang.org/packages/rtfeldman/elm-iso8601-date-strings/latest/
+-- or https://package.elm-lang.org/packages/justinmimbs/date/latest/Date
+-- or directly save "1970-07-30" format in the database (esp. if we don't need the hour)
 
 
 dateFromString : String -> Date
