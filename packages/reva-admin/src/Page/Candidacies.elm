@@ -7,9 +7,11 @@ module Page.Candidacies exposing
     , view
     )
 
+import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
 import Admin.Object exposing (Candidacy)
 import Api exposing (Token)
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
+import Data.Form.Appointment exposing (candidateTypologyToString)
 import Data.Referential exposing (Referential)
 import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, for, id, name, placeholder, type_)
@@ -252,21 +254,26 @@ viewMain dataTestValue =
         ]
 
 
-meetingsForm : Form
-meetingsForm =
+appointmentFOrm : Form
+appointmentFOrm =
+    let
+        keys =
+            Data.Form.Appointment.keys
+
+        typologies =
+            [ SalariePrive
+            , DemandeurEmploi
+            , AidantsFamiliaux
+            , Autre
+            ]
+                |> List.map candidateTypologyToString
+    in
     { elements =
-        [ ( "typology"
-          , Form.Select "Typologie"
-                [ "Salarié du privé"
-                , "Demandeur d’emploi"
-                , "Aidants familiaux"
-                , "Autre"
-                ]
-          )
-        , ( "typology-additional-info", Form.SelectOther "typology" "Autre typologie" )
-        , ( "first-appointment-occured-at", Form.Date "Date du premier rendez-vous pédagogique" )
-        , ( "was-present-at-first-appointment", Form.Checkbox "Le candidat a bien effectué le rendez-vous d'étude de faisabilité" )
-        , ( "appointment-count", Form.Number "Nombre de rendez-vous réalisés avec le candidat" )
+        [ ( keys.typology, Form.Select "Typologie" typologies )
+        , ( keys.additionalInformation, Form.SelectOther "typology" "Autre typologie" )
+        , ( keys.firstAppointmentOccurredAt, Form.Date "Date du premier rendez-vous pédagogique" )
+        , ( keys.wasPresentAtFirstAppointment, Form.Checkbox "Le candidat a bien effectué le rendez-vous d'étude de faisabilité" )
+        , ( keys.appointmentCount, Form.Number "Nombre de rendez-vous réalisés avec le candidat" )
         ]
     , title = "Rendez-vous pédagogique"
     }
@@ -510,7 +517,12 @@ updateTab tab model =
         View.Candidacy.Meetings candidacyId ->
             let
                 ( formModel, formCmd ) =
-                    Form.updateForm meetingsForm model.form
+                    Form.updateForm
+                        { form = appointmentFOrm
+                        , onLoad = Request.requestAppointment model.endpoint candidacyId
+                        , onSave = Request.updateAppointment model.endpoint candidacyId
+                        }
+                        model.form
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
                 |> withTakeOver candidacyId

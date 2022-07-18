@@ -1,5 +1,6 @@
-module Request exposing (archiveCandidacy, deleteCandidacy, requestCandidacies, requestCandidacy, requestReferential, takeOverCandidacy)
+module Request exposing (archiveCandidacy, deleteCandidacy, requestAppointment, requestCandidacies, requestCandidacy, requestReferential, takeOverCandidacy, updateAppointment)
 
+import Admin.InputObject
 import Admin.Mutation as Mutation
 import Admin.Object
 import Admin.Object.Candidacy
@@ -14,8 +15,9 @@ import Admin.Query as Query
 import Admin.Scalar exposing (Date(..), Id(..))
 import Data.Candidacy exposing (CandidacyId)
 import Data.Certification
+import Data.Form.Appointment
 import Data.Referential
-import Dict
+import Dict exposing (Dict)
 import Graphql.Http
 import Graphql.Operation
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
@@ -103,6 +105,16 @@ certificationSelection =
         |> with Admin.Object.Certification.abilities
 
 
+appointmentSelection : SelectionSet (Dict String String) Admin.Object.Candidacy
+appointmentSelection =
+    SelectionSet.succeed Data.Form.Appointment.appointment
+        |> with Admin.Object.Candidacy.typology
+        |> with Admin.Object.Candidacy.typologyAdditional
+        |> with Admin.Object.Candidacy.firstAppointmentOccuredAt
+        |> with Admin.Object.Candidacy.appointmentCount
+        |> with Admin.Object.Candidacy.wasPresentAtFirstAppointment
+
+
 
 -- CANDIDACY
 
@@ -182,28 +194,11 @@ requestCandidacy :
     -> Cmd msg
 requestCandidacy endpointGraphql toMsg id =
     let
-        nothingToError remoteCandidacy =
-            case remoteCandidacy of
-                Success Nothing ->
-                    Failure "Cette candidature est introuvable"
-
-                Success (Just candidacy) ->
-                    Success candidacy
-
-                Failure e ->
-                    Failure e
-
-                NotAsked ->
-                    NotAsked
-
-                Loading ->
-                    Loading
-
         candidacyRequiredArgs =
             Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString id)
     in
     Query.getCandidacyById candidacyRequiredArgs candidacySelection
-        |> makeQuery endpointGraphql (nothingToError >> toMsg)
+        |> makeQuery endpointGraphql (nothingToError "Cette candidature est introuvable" >> toMsg)
 
 
 deleteCandidacy :
@@ -234,6 +229,52 @@ takeOverCandidacy :
     -> Cmd msg
 takeOverCandidacy endpointGraphql toMsg candidacyId =
     Mutation.candidacy_takeOver (Mutation.CandidacyTakeOverRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)) candidacySelection
+        |> makeMutation endpointGraphql toMsg
+
+
+requestAppointment :
+    String
+    -> CandidacyId
+    -> (RemoteData String (Dict String String) -> msg)
+    -> Cmd msg
+requestAppointment endpointGraphql candidacyId toMsg =
+    let
+        appointmentRequiredArs =
+            Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
+    in
+    Query.getCandidacyById appointmentRequiredArs appointmentSelection
+        |> makeQuery endpointGraphql (nothingToError "Cette candidature est introuvable" >> toMsg)
+
+
+updateAppointment :
+    String
+    -> CandidacyId
+    -> (RemoteData String () -> msg)
+    -> Dict String String
+    -> Cmd msg
+updateAppointment endpointGraphql candidacyId toMsg dict =
+    let
+        appointment =
+            Data.Form.Appointment.appointmentFromDict candidacyId dict
+
+        typologyInformationInput =
+            Admin.InputObject.CandidateTypologyInformationsInput
+                appointment.typology
+                (Present appointment.additionalInformation)
+
+        appointmentInformation =
+            Admin.InputObject.AppointmentInformationsInput
+                appointment.firstAppointmentOccurredAt
+                appointment.wasPresentAtFirstAppointment
+                appointment.appointmentCount
+
+        appointmentRequiredArs =
+            Mutation.CandidacyUpdateAppointmentInformationsRequiredArguments
+                (Id <| Data.Candidacy.candidacyIdToString appointment.candidacyId)
+                typologyInformationInput
+                appointmentInformation
+    in
+    Mutation.candidacy_updateAppointmentInformations appointmentRequiredArs SelectionSet.empty
         |> makeMutation endpointGraphql toMsg
 
 
@@ -273,3 +314,26 @@ requestReferential :
 requestReferential endpointGraphql toMsg =
     Query.getReferential referentialSelection
         |> makeQuery endpointGraphql toMsg
+
+
+
+--- HELPERS
+
+
+nothingToError : String -> RemoteData String (Maybe a) -> RemoteData String a
+nothingToError failureMessage remoteData =
+    case remoteData of
+        Success Nothing ->
+            Failure failureMessage
+
+        Success (Just candidacy) ->
+            Success candidacy
+
+        Failure e ->
+            Failure e
+
+        NotAsked ->
+            NotAsked
+
+        Loading ->
+            Loading
