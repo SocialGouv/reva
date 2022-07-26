@@ -1,4 +1,18 @@
-import { addExperience, archiveCandidacyFromId, createCandidacy, deleteCandidacy, getCandidacies, getCandidacyFromDeviceId, getCandidacyFromId, getCompanions, submitCandidacy, takeOverCandidacyFromId, updateAppointmentInformations, updateCertification, updateContact, updateExperience, updateGoals } from "../../../domains/candidacy";
+import { addExperienceToCandidacy } from "../../../domain/features/addExperienceToCandidacy";
+import { archiveCandidacy } from "../../../domain/features/archiveCandidacy";
+import { createCandidacy } from "../../../domain/features/createCandidacy";
+import { deleteCandidacy } from "../../../domain/features/deleteCandidacy";
+import { getCandidacy } from "../../../domain/features/getCandidacy";
+import { getCandidacySummaries } from "../../../domain/features/getCandidacies";
+import { getCompanions } from "../../../domain/features/getCompanions";
+import { getDeviceCandidacy } from "../../../domain/features/getDeviceCandidacy";
+import { submitCandidacy } from "../../../domain/features/submitCandidacy";
+import { takeOverCandidacy } from "../../../domain/features/takeOverCandidacy";
+import { updateAppointmentInformations } from "../../../domain/features/updateAppointmentInformations";
+import { updateCertificationOfCandidacy } from "../../../domain/features/updateCertificationOfCandidacy";
+import { updateContactOfCandidacy } from "../../../domain/features/updateContactOfCandidacy";
+import { updateExperienceOfCandidacy } from "../../../domain/features/updateExperienceOfCandidacy";
+import { updateGoalsOfCandidacy } from "../../../domain/features/updateGoalsOfCandidacy";
 import * as candidacyDb from "../../database/postgres/candidacies";
 import * as experienceDb from "../../database/postgres/experiences";
 import * as goalDb from "../../database/postgres/goals";
@@ -8,16 +22,16 @@ import mercurius from "mercurius";
 export const resolvers = {
   Query: {
     getCandidacy: async (other: unknown, { deviceId }: { deviceId: string; }, context: any) => {
-      const result = await getCandidacyFromDeviceId({ getCandidacyFromDeviceId: candidacyDb.getCandidacyFromDeviceId })({ deviceId });
+      const result = await getDeviceCandidacy({ getCandidacyFromDeviceId: candidacyDb.getCandidacyFromDeviceId })({ deviceId });
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
     getCandidacyById: async (other: unknown, { id }: { id: string; }, context: any) => {
-      const result = await getCandidacyFromId({ getCandidacyFromId: candidacyDb.getCandidacyFromId })({ id });
+      const result = await getCandidacy({ getCandidacyFromId: candidacyDb.getCandidacyFromId })({ id });
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
     getCandidacies: async (_: unknown, params: { deviceId: string; }) => {
-      const result = await getCandidacies({ 
-        getCandidacies: candidacyDb.getCandidacies 
+      const result = await getCandidacySummaries({ 
+        getCandidacySummaries: candidacyDb.getCandidacies 
       })({ role: "test" });
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
@@ -37,7 +51,7 @@ export const resolvers = {
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
-    candidacy_submitCandidacy: async (_: unknown, payload :  { deviceId: string; candidacyId: string; }) => {
+    candidacy_submitCandidacy: async (_: unknown, payload: { deviceId: string; candidacyId: string; }) => {
 
       const result = await submitCandidacy({
         updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
@@ -47,7 +61,7 @@ export const resolvers = {
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
     candidacy_updateCertification: async (_: unknown, payload: any) => { 
-      const result = await updateCertification({
+      const result = await updateCertificationOfCandidacy({
         updateCertification: candidacyDb.updateCertification,
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
       })({
@@ -58,7 +72,7 @@ export const resolvers = {
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
     candidacy_addExperience: async (_: unknown, payload: any) => {
-      const result = await addExperience({
+      const result = await addExperienceToCandidacy({
         createExperience: experienceDb.insertExperience,
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
       })({
@@ -69,7 +83,7 @@ export const resolvers = {
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
     candidacy_updateExperience: async (_: unknown, payload: any) => {
-      const result = await updateExperience({
+      const result = await updateExperienceOfCandidacy({
         updateExperience: experienceDb.updateExperience,
         getExperienceFromId: experienceDb.getExperienceFromId,
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
@@ -85,7 +99,7 @@ export const resolvers = {
 
 
     candidacy_updateGoals: async (_: unknown, payload: any) => { 
-      const result = await updateGoals({
+      const result = await updateGoalsOfCandidacy({
         updateGoals: goalDb.updateGoals,
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
       })({
@@ -97,7 +111,7 @@ export const resolvers = {
     },
 
     candidacy_updateContact: async (_: unknown, payload: any) => {
-      const result = await updateContact({
+      const result = await updateContactOfCandidacy({
         updateContact: candidacyDb.updateContactOnCandidacy,
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
       })({
@@ -120,7 +134,7 @@ export const resolvers = {
     },
 
     candidacy_archiveById: async (_: unknown, payload: any) => {
-      const result = await archiveCandidacyFromId({
+      const result = await archiveCandidacy({
         updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
       })({
         candidacyId: payload.candidacyId
@@ -142,7 +156,7 @@ export const resolvers = {
     },
 
     candidacy_takeOver: async (_: unknown, payload: any) => {
-      const result = await takeOverCandidacyFromId({
+      const result = await takeOverCandidacy({
         existsCandidacyWithActiveStatus: candidacyDb.existsCandidacyWithActiveStatus,
         updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
       })({

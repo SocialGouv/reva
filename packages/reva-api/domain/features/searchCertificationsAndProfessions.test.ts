@@ -1,4 +1,4 @@
-import { searchCertificationsAndProfessions } from "./index";
+import { searchCertificationsAndProfessions } from "./searchCertificationsAndProfessions";
 
 describe("domain search", () => {
   test("", async () => {

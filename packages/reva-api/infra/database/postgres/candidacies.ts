@@ -1,6 +1,6 @@
 import { CandicadiesOnGoals, CandidaciesStatus, Candidacy, CandidacyStatus, CandidateTypology, Certification, Experience, prisma } from '@prisma/client';
 import { Either, EitherAsync, Left, Maybe, Right } from 'purify-ts';
-import * as domain from '../../../domains/candidacy';
+import * as domain from '../../../domain/types/candidacy';
 import { prismaClient } from './client';
 import { toDomainExperiences } from './experiences';
  

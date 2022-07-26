@@ -1,4 +1,4 @@
-import type { Certification } from "../../../domains/search";
+import type { Certification } from "../../../domain/types/search";
 import { prismaClient } from './client';
 
 export const searchCertificationsByQuery = async ({
