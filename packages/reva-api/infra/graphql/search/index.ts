@@ -1,4 +1,6 @@
-import { searchCertificationsAndProfessions, getCertification } from "../../../domains/search";
+
+import { getCertification } from "../../../domain/features/getCertification";
+import { searchCertificationsAndProfessions } from "../../../domain/features/searchCertificationsAndProfessions";
 import { searchCertificationsByQuery, getCertificationById } from "../../database/postgres/certifications";
 import { searchProfessionsByQuery } from "../../database/postgres/professions";
 

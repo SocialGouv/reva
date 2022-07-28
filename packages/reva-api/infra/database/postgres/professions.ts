@@ -1,5 +1,4 @@
-
-import { Profession } from "../../../domains/search";
+import { Profession } from "../../../domain/types/search";
 import { prismaClient } from "./client";
 
 export const searchProfessionsByQuery = async ({ query }: { query: string; }): Promise<Profession[]> => {
@@ -19,15 +18,15 @@ export const searchProfessionsByQuery = async ({ query }: { query: string; }): P
         OR profession_search.slug % ${query}
         ORDER BY rank DESC
         LIMIT 5;
-  ` as Profession[]
+  ` as Profession[];
 
 
   return professions.map(profession => {
     return {
       id: profession.id,
-      label : profession.label,
+      label: profession.label,
       description: profession.description,
       codeRome: profession.codeRome
-    }
+    };
   });
 };

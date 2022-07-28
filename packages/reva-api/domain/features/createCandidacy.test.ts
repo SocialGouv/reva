@@ -1,6 +1,7 @@
 import { Left, Right } from "purify-ts";
-import { FunctionalCodeError, FunctionalError } from "../FunctionalError";
-import { CandidacyInput, createCandidacy } from "./index";
+import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
+// import { CandidacyInput, createCandidacy } from "./index";
+import { createCandidacy } from "./createCandidacy"
 
 describe("domain candidacy", () => {
   test("given an device with an existing candidacy, when createCandidacy is call, then an error CANDIDACY_ALREADY_EXISTS should occured", async () => {

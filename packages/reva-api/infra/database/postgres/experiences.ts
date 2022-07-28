@@ -1,6 +1,6 @@
 import { Experience } from "@prisma/client";
 import { Either, Left, Maybe, Right } from "purify-ts";
-import * as domain from '../../../domains/candidacy';
+import * as domain from '../../../domain/types/candidacy';
 import { prismaClient } from "./client";
 
 export const toDomainExperiences = (experiences: Experience[]): domain.Experience[] => {
