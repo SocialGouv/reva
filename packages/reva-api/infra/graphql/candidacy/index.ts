@@ -16,7 +16,9 @@ import { updateGoalsOfCandidacy } from "../../../domain/features/updateGoalsOfCa
 import * as candidacyDb from "../../database/postgres/candidacies";
 import * as experienceDb from "../../database/postgres/experiences";
 import * as goalDb from "../../database/postgres/goals";
+import * as trainingDb from "../../database/postgres/trainings";
 import mercurius from "mercurius";
+import { getTrainings } from "../../../domain/features/getTrainings";
 
 
 export const resolvers = {
@@ -37,6 +39,11 @@ export const resolvers = {
     },
     getCompanions: async () => {
       const result = await getCompanions({ getCompanions: candidacyDb.getCompanions })();
+
+      return result.extract();
+    },
+    getTrainings: async () => {
+      const result = await getTrainings({ getTrainings: trainingDb.getTrainings })();
 
       return result.extract();
     }

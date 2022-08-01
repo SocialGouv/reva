@@ -125,6 +125,7 @@ model Candidacy {
   appointmentCount Int @default(0) @map("appointment_count")
   phone   String?  @db.VarChar(255)
   email   String?  @db.VarChar(255)
+  trainings TrainingOnCandidacies[]
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
   @@map("candidacy")
@@ -197,4 +198,25 @@ enum CandidateTypology {
   DEMANDEUR_EMPLOI
   AIDANTS_FAMILIAUX
   AUTRE
+}
+
+model Training {
+  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
+  label        String    @unique @db.VarChar(255)
+  candidacies TrainingOnCandidacies[]
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  @@map("training")
+}
+
+model TrainingOnCandidacies {
+  training       Training @relation(fields: [trainingId], references: [id])
+  trainingId     String        @db.Uuid  @map("training_id")
+  candidacy      Candidacy          @relation(fields: [candidacyId], references: [id])
+  candidacyId              String        @db.Uuid  @map("candidacy_id")
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+
+  @@id([trainingId, candidacyId])
+  @@map("training_candidacy")
 }

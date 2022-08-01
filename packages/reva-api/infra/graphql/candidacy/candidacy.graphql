@@ -77,11 +77,17 @@ type Companion {
   zipCode: String!
 }
 
+type Training {
+  id: ID!
+  label: String!
+}
+
 type Query {
   getCandidacy(deviceId: ID!): Candidacy
   getCandidacyById(id: ID!): Candidacy
   getCandidacies: [CandidacySummary!]!
   getCompanions: [Companion!]!
+  getTrainings: [Training!]!
 }
 
 # MUTATIONS
