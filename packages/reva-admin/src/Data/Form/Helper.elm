@@ -1,7 +1,9 @@
 module Data.Form.Helper exposing (booleanFromString, booleanToString, dateFromString, dateToString, defaultDate, required, toDict)
 
 import Data.Scalar exposing (Date)
+import Date
 import Dict
+import Iso8601
 import Time
 
 
@@ -24,22 +26,12 @@ booleanFromString b =
             False
 
 
-
--- TODO
--- https://package.elm-lang.org/packages/rtfeldman/elm-iso8601-date-strings/latest/
--- or https://package.elm-lang.org/packages/justinmimbs/date/latest/Date
--- or directly save "1970-07-30" format in the database (esp. if we don't need the hour)
-
-
-dateFromString : String -> Date
+dateFromString : String -> Maybe Date
 dateFromString date =
-    -- "1970-07-30"
-    case String.split "-" date of
-        [ a, b, c ] ->
-            defaultDate
-
-        _ ->
-            defaultDate
+    Iso8601.toTime date
+        |> Result.map Just
+        |> Result.withDefault Nothing
+        |> Debug.log "string to date"
 
 
 
@@ -48,7 +40,9 @@ dateFromString date =
 
 dateToString : Date -> String
 dateToString date =
-    "1970-07-30"
+    Date.fromPosix Time.utc date
+        |> Date.toIsoString
+        |> Debug.log "date to string"
 
 
 defaultDate : Time.Posix
