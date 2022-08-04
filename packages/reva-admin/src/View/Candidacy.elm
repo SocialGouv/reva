@@ -17,6 +17,7 @@ type Tab
     = Empty
     | Meetings CandidacyId
     | Profil CandidacyId
+    | Training CandidacyId
 
 
 view :
