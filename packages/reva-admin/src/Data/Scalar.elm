@@ -22,7 +22,7 @@ codecs : Admin.Scalar.Codecs Date Id Void
 codecs =
     Admin.Scalar.defineCodecs
         { codecDate =
-            { encoder = Time.posixToMillis >> String.fromInt >> Encode.string
+            { encoder = Time.posixToMillis >> Encode.int
             , decoder = Decode.int |> Decode.map Time.millisToPosix
             }
         , codecId = defaultCodecs.codecId

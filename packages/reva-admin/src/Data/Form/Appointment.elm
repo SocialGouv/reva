@@ -12,7 +12,7 @@ type alias Appointment =
     { candidacyId : CandidacyId
     , typology : Admin.Enum.CandidateTypology.CandidateTypology
     , additionalInformation : String
-    , firstAppointmentOccurredAt : Data.Scalar.Date
+    , firstAppointmentOccurredAt : Maybe Data.Scalar.Date
     , appointmentCount : Int
     , wasPresentAtFirstAppointment : Bool
     }
@@ -43,7 +43,7 @@ appointmentFromDict candidacyId dict =
     Appointment candidacyId
         (required .typology candidateTypologyFromString NonSpecifie)
         (required .additionalInformation identity "")
-        (required .firstAppointmentOccurredAt Helper.dateFromString Helper.defaultDate)
+        (required .firstAppointmentOccurredAt Helper.dateFromString Nothing)
         (required .appointmentCount (String.toInt >> Maybe.withDefault 0) 0)
         (required .wasPresentAtFirstAppointment booleanFromString False)
 

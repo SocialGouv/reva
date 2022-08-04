@@ -264,7 +264,7 @@ updateAppointment endpointGraphql candidacyId toMsg dict =
 
         appointmentInformation =
             Admin.InputObject.AppointmentInformationsInput
-                appointment.firstAppointmentOccurredAt
+                (Maybe.map Present appointment.firstAppointmentOccurredAt |> Maybe.withDefault Absent)
                 appointment.wasPresentAtFirstAppointment
                 appointment.appointmentCount
 

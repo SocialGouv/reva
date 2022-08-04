@@ -1,7 +1,9 @@
 module Data.Form.Helper exposing (booleanFromString, booleanToString, dateFromString, dateToString, defaultDate, required, toDict)
 
 import Data.Scalar exposing (Date)
+import Date
 import Dict
+import Iso8601
 import Time
 
 
@@ -24,28 +26,17 @@ booleanFromString b =
             False
 
 
-
--- TODO
-
-
-dateFromString : String -> Date
+dateFromString : String -> Maybe Date
 dateFromString date =
-    -- "1970-07-30"
-    case String.split "-" date of
-        [ a, b, c ] ->
-            defaultDate
-
-        _ ->
-            defaultDate
-
-
-
--- TODO
+    Iso8601.toTime date
+        |> Result.map Just
+        |> Result.withDefault Nothing
 
 
 dateToString : Date -> String
 dateToString date =
-    "1970-07-30"
+    Date.fromPosix Time.utc date
+        |> Date.toIsoString
 
 
 defaultDate : Time.Posix
