@@ -48,6 +48,7 @@
     "fast-csv": "4.3.6",
     "fastify": "^4.0.3",
     "fastify-env": "2.1.1",
+    "graphql-scalars": "^1.17.0",
     "keycloak-connect": "^18.0.1",
     "mercurius": "^10.0.0",
     "purify-ts": "^1.2.0"
