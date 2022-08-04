@@ -31,18 +31,12 @@ dateFromString date =
     Iso8601.toTime date
         |> Result.map Just
         |> Result.withDefault Nothing
-        |> Debug.log "string to date"
-
-
-
--- TODO
 
 
 dateToString : Date -> String
 dateToString date =
     Date.fromPosix Time.utc date
         |> Date.toIsoString
-        |> Debug.log "date to string"
 
 
 defaultDate : Time.Posix
