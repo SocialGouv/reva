@@ -302,10 +302,6 @@ trainingForm =
             , "Sauveteur Secouriste du Travail (SST)"
             , "Systèmes d’attaches"
             ]
-
-        certificateSkills =
-            -- TODO: get the "bloc de compétence" for the selected certificate
-            []
     in
     { elements =
         [ ( keys.certificates, Form.Select "Certifications" certifications )
@@ -313,7 +309,10 @@ trainingForm =
         , ( keys.basicSkill1, Form.Input "Savoir de base 1" )
         , ( keys.basicSkill2, Form.Input "Savoir de base 2" )
         , ( keys.basicSkill3, Form.Input "Savoir de base 3" )
-        , ( keys.certificateSkills, Form.CheckboxList "Blocs de compétence" certificateSkills )
+        , ( keys.certificateSkills1, Form.Input "Bloc de compétence 1" )
+        , ( keys.certificateSkills2, Form.Input "Bloc de compétence 2" )
+        , ( keys.certificateSkills3, Form.Input "Bloc de compétence 3" )
+        , ( keys.certificateSkills4, Form.Input "Bloc de compétence 4" )
         , ( keys.digitalSkill1, Form.Input "Formation usage numérique 1" )
         , ( keys.digitalSkill2, Form.Input "Formation usage numérique 2" )
         , ( keys.digitalSkill3, Form.Input "Formation usage numérique 3" )

@@ -7,7 +7,10 @@ keys :
     , basicSkill1 : String
     , basicSkill2 : String
     , basicSkill3 : String
-    , certificateSkills : String
+    , certificateSkills1 : String
+    , certificateSkills2 : String
+    , certificateSkills3 : String
+    , certificateSkills4 : String
     , digitalSkill1 : String
     , digitalSkill2 : String
     , digitalSkill3 : String
@@ -22,7 +25,10 @@ keys =
     , basicSkill1 = "basicSkill1"
     , basicSkill2 = "basicSkill2"
     , basicSkill3 = "basicSkill3"
-    , certificateSkills = "certificateSkills"
+    , certificateSkills1 = "certificateSkills1"
+    , certificateSkills2 = "certificateSkills2"
+    , certificateSkills3 = "certificateSkills3"
+    , certificateSkills4 = "certificateSkills4"
     , digitalSkill1 = "digitalSkill1"
     , digitalSkill2 = "digitalSkill2"
     , digitalSkill3 = "digitalSkill3"
