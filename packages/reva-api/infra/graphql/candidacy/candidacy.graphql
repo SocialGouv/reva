@@ -30,11 +30,11 @@ type Candidacy {
   email: String
   typology: CandidateTypology
   typologyAdditional: String
-  firstAppointmentOccuredAt: Date
+  firstAppointmentOccuredAt: Timestamp
   appointmentCount: Int
   wasPresentAtFirstAppointment: Boolean
   candidacyStatuses: [CandidacyStatus!]!
-  createdAt: Date!
+  createdAt: Timestamp!
 }
 
 type CandidacySummary {
@@ -46,20 +46,20 @@ type CandidacySummary {
   phone: String
   email: String
   lastStatus: CandidacyStatus!
-  createdAt: Date!
+  createdAt: Timestamp!
 }
 
 type CandidacyStatus {
   id: ID!
   status: String!
   isActive: Boolean!
-  createdAt: Date!
+  createdAt: Timestamp!
 }
 
 type Experience {
   id: ID!
   title: String!
-  startedAt: Date!
+  startedAt: Timestamp!
   duration: Duration!
   description: String!
 }
@@ -98,7 +98,7 @@ input CertificationChangeInput {
 
 input ExperienceInput {
   title: String!
-  startedAt: Date!
+  startedAt: Timestamp!
   duration: Duration!
   description: String!
 }
@@ -114,7 +114,7 @@ input CandidateTypologyInformationsInput {
 }
 
 input AppointmentInformationsInput {
-  firstAppointmentOccuredAt: Date!
+  firstAppointmentOccuredAt: Timestamp!
   wasPresentAtFirstAppointment: Boolean!
   appointmentCount: Int!
 }
