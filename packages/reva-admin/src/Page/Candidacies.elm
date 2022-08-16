@@ -311,21 +311,16 @@ trainingForm =
     in
     { elements =
         [ ( keys.certificates, Form.Select "Certification visée" certifications )
+        , ( keys.individualHourCount, Form.Number "Nombre d'heure d'accompagnement individuel" )
+        , ( keys.collectiveHourCount, Form.Number "Nombre d'heure d'accompagnement collectif" )
+        , ( keys.additionalHourCount, Form.Number "Nombre d'heures de formations complémentaires" )
         , ( keys.mandatoryTrainings, Form.CheckboxList "Formations obligatoires" mandatoryTrainings )
         , ( keys.basicSkill1, Form.Input "Savoir de base 1" )
         , ( keys.basicSkill2, Form.Input "Savoir de base 2" )
         , ( keys.basicSkill3, Form.Input "Savoir de base 3" )
-        , ( keys.certificateSkills1, Form.Input "Bloc de compétence 1" )
-        , ( keys.certificateSkills2, Form.Input "Bloc de compétence 2" )
-        , ( keys.certificateSkills3, Form.Input "Bloc de compétence 3" )
-        , ( keys.certificateSkills4, Form.Input "Bloc de compétence 4" )
-        , ( keys.digitalSkill1, Form.Input "Formation usage numérique 1" )
-        , ( keys.digitalSkill2, Form.Input "Formation usage numérique 2" )
-        , ( keys.digitalSkill3, Form.Input "Formation usage numérique 3" )
-        , ( keys.otherTraining, Form.Input "Autre formation complémentaire" )
-        , ( keys.individualHourCount, Form.Number "Nombre d'heures pour la prestation accompagnement méthodologique à la VAE (individuel)" )
-        , ( keys.collectiveHourCount, Form.Number "Nombre d'heures pour la prestation accompagnement méthodologique à la VAE (collectif)" )
-        , ( keys.additionalHourCount, Form.Number "Nombre d'heures pour la prestation compléments formatifs" )
+        , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" )
+        , ( keys.digitalSkill, Form.Checkbox "Formation usage numérique" )
+        , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" )
         ]
     , title = "Définition du parcours"
     }
