@@ -47,3 +47,7 @@ type Referential
 
 type SearchCertificationsAndProfessionsResult
     = SearchCertificationsAndProfessionsResult
+
+
+type Training
+    = Training

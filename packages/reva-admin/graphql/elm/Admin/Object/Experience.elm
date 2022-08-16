@@ -30,9 +30,9 @@ title =
     Object.selectionForField "String" "title" [] Decode.string
 
 
-startedAt : SelectionSet Data.Scalar.Date Admin.Object.Experience
+startedAt : SelectionSet Data.Scalar.Timestamp Admin.Object.Experience
 startedAt =
-    Object.selectionForField "Data.Scalar.Date" "startedAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder)
+    Object.selectionForField "Data.Scalar.Timestamp" "startedAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
 
 
 duration : SelectionSet Admin.Enum.Duration.Duration Admin.Object.Experience

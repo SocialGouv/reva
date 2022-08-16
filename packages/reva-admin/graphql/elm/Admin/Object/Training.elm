@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module Admin.Object.CandidacyStatus exposing (..)
+module Admin.Object.Training exposing (..)
 
 import Admin.InputObject
 import Admin.Interface
@@ -19,21 +19,11 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
-id : SelectionSet Data.Scalar.Id Admin.Object.CandidacyStatus
+id : SelectionSet Data.Scalar.Id Admin.Object.Training
 id =
     Object.selectionForField "Data.Scalar.Id" "id" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
-status : SelectionSet String Admin.Object.CandidacyStatus
-status =
-    Object.selectionForField "String" "status" [] Decode.string
-
-
-isActive : SelectionSet Bool Admin.Object.CandidacyStatus
-isActive =
-    Object.selectionForField "Bool" "isActive" [] Decode.bool
-
-
-createdAt : SelectionSet Data.Scalar.Timestamp Admin.Object.CandidacyStatus
-createdAt =
-    Object.selectionForField "Data.Scalar.Timestamp" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
+label : SelectionSet String Admin.Object.Training
+label =
+    Object.selectionForField "String" "label" [] Decode.string

@@ -13,6 +13,6 @@ import Admin.Scalar
 import Data.Scalar
 
 
-verify : Admin.Scalar.Codecs Data.Scalar.Date Data.Scalar.Id Data.Scalar.Void
+verify : Admin.Scalar.Codecs Data.Scalar.Id Data.Scalar.Timestamp Data.Scalar.Void
 verify =
     Data.Scalar.codecs

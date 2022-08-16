@@ -63,6 +63,6 @@ lastStatus object____ =
     Object.selectionForCompositeField "lastStatus" [] object____ Basics.identity
 
 
-createdAt : SelectionSet Data.Scalar.Date Admin.Object.CandidacySummary
+createdAt : SelectionSet Data.Scalar.Timestamp Admin.Object.CandidacySummary
 createdAt =
-    Object.selectionForField "Data.Scalar.Date" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder)
+    Object.selectionForField "Data.Scalar.Timestamp" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)

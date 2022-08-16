@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module Admin.Scalar exposing (Codecs, Date(..), Id(..), Void(..), defaultCodecs, defineCodecs, unwrapCodecs, unwrapEncoder)
+module Admin.Scalar exposing (Codecs, Id(..), Timestamp(..), Void(..), defaultCodecs, defineCodecs, unwrapCodecs, unwrapEncoder)
 
 import Graphql.Codec exposing (Codec)
 import Graphql.Internal.Builder.Object as Object
@@ -11,12 +11,12 @@ import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
 
 
-type Date
-    = Date String
-
-
 type Id
     = Id String
+
+
+type Timestamp
+    = Timestamp String
 
 
 type Void
@@ -24,20 +24,20 @@ type Void
 
 
 defineCodecs :
-    { codecDate : Codec valueDate
-    , codecId : Codec valueId
+    { codecId : Codec valueId
+    , codecTimestamp : Codec valueTimestamp
     , codecVoid : Codec valueVoid
     }
-    -> Codecs valueDate valueId valueVoid
+    -> Codecs valueId valueTimestamp valueVoid
 defineCodecs definitions =
     Codecs definitions
 
 
 unwrapCodecs :
-    Codecs valueDate valueId valueVoid
+    Codecs valueId valueTimestamp valueVoid
     ->
-        { codecDate : Codec valueDate
-        , codecId : Codec valueId
+        { codecId : Codec valueId
+        , codecTimestamp : Codec valueTimestamp
         , codecVoid : Codec valueVoid
         }
 unwrapCodecs (Codecs unwrappedCodecs) =
@@ -45,34 +45,34 @@ unwrapCodecs (Codecs unwrappedCodecs) =
 
 
 unwrapEncoder :
-    (RawCodecs valueDate valueId valueVoid -> Codec getterValue)
-    -> Codecs valueDate valueId valueVoid
+    (RawCodecs valueId valueTimestamp valueVoid -> Codec getterValue)
+    -> Codecs valueId valueTimestamp valueVoid
     -> getterValue
     -> Graphql.Internal.Encode.Value
 unwrapEncoder getter (Codecs unwrappedCodecs) =
     (unwrappedCodecs |> getter |> .encoder) >> Graphql.Internal.Encode.fromJson
 
 
-type Codecs valueDate valueId valueVoid
-    = Codecs (RawCodecs valueDate valueId valueVoid)
+type Codecs valueId valueTimestamp valueVoid
+    = Codecs (RawCodecs valueId valueTimestamp valueVoid)
 
 
-type alias RawCodecs valueDate valueId valueVoid =
-    { codecDate : Codec valueDate
-    , codecId : Codec valueId
+type alias RawCodecs valueId valueTimestamp valueVoid =
+    { codecId : Codec valueId
+    , codecTimestamp : Codec valueTimestamp
     , codecVoid : Codec valueVoid
     }
 
 
-defaultCodecs : RawCodecs Date Id Void
+defaultCodecs : RawCodecs Id Timestamp Void
 defaultCodecs =
-    { codecDate =
-        { encoder = \(Date raw) -> Encode.string raw
-        , decoder = Object.scalarDecoder |> Decode.map Date
-        }
-    , codecId =
+    { codecId =
         { encoder = \(Id raw) -> Encode.string raw
         , decoder = Object.scalarDecoder |> Decode.map Id
+        }
+    , codecTimestamp =
+        { encoder = \(Timestamp raw) -> Encode.string raw
+        , decoder = Object.scalarDecoder |> Decode.map Timestamp
         }
     , codecVoid =
         { encoder = \(Void raw) -> Encode.string raw

@@ -57,11 +57,25 @@ getCompanions object____ =
     Object.selectionForCompositeField "getCompanions" [] object____ (Basics.identity >> Decode.list)
 
 
+getTrainings :
+    SelectionSet decodesTo Admin.Object.Training
+    -> SelectionSet (List decodesTo) RootQuery
+getTrainings object____ =
+    Object.selectionForCompositeField "getTrainings" [] object____ (Basics.identity >> Decode.list)
+
+
 getReferential :
     SelectionSet decodesTo Admin.Object.Referential
     -> SelectionSet decodesTo RootQuery
 getReferential object____ =
     Object.selectionForCompositeField "getReferential" [] object____ Basics.identity
+
+
+getCertifications :
+    SelectionSet decodesTo Admin.Object.Certification
+    -> SelectionSet (List decodesTo) RootQuery
+getCertifications object____ =
+    Object.selectionForCompositeField "getCertifications" [] object____ (Basics.identity >> Decode.list)
 
 
 type alias SearchCertificationsAndProfessionsOptionalArguments =
