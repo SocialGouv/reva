@@ -303,14 +303,14 @@ trainingForm =
 
         mandatoryTrainings =
             -- TODO: created a mandatory training referential in the database
-            [ "Attestation de Formation aux Gestes et Soins d’Urgence (AFGSU)"
-            , "Equipier de Première Intervention"
-            , "Sauveteur Secouriste du Travail (SST)"
-            , "Systèmes d’attaches"
+            [ ( "t1", "Attestation de Formation aux Gestes et Soins d’Urgence (AFGSU)" )
+            , ( "t2", "Equipier de Première Intervention" )
+            , ( "t3", "Sauveteur Secouriste du Travail (SST)" )
+            , ( "t4", "Systèmes d’attaches" )
             ]
     in
     { elements =
-        [ ( keys.certificates, Form.Select "Certifications" certifications )
+        [ ( keys.certificates, Form.Select "Certification visée" certifications )
         , ( keys.mandatoryTrainings, Form.CheckboxList "Formations obligatoires" mandatoryTrainings )
         , ( keys.basicSkill1, Form.Input "Savoir de base 1" )
         , ( keys.basicSkill2, Form.Input "Savoir de base 2" )
@@ -327,7 +327,7 @@ trainingForm =
         , ( keys.collectiveHourCount, Form.Number "Nombre d'heures pour la prestation accompagnement méthodologique à la VAE (collectif)" )
         , ( keys.additionalHourCount, Form.Number "Nombre d'heures pour la prestation compléments formatifs" )
         ]
-    , title = "Parcours final et accompagnement proposé"
+    , title = "Définition du parcours"
     }
 
 

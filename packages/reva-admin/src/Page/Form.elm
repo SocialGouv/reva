@@ -12,7 +12,7 @@ module Page.Form exposing
 import Api exposing (Token)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
-import Html.Styled as Html exposing (Html, button, div, h2, input, label, option, select, text, textarea)
+import Html.Styled as Html exposing (Html, button, div, fieldset, h2, input, label, legend, option, select, text, textarea)
 import Html.Styled.Attributes exposing (checked, class, disabled, for, id, name, selected, step, type_, value)
 import Html.Styled.Events exposing (onCheck, onInput, onSubmit)
 import RemoteData exposing (RemoteData(..))
@@ -29,7 +29,7 @@ type Msg
 
 type Element
     = Checkbox String
-    | CheckboxList String (List String)
+    | CheckboxList String (List ( String, String ))
     | Date String
     | Empty
     | Input String
@@ -139,10 +139,10 @@ viewForm formData form saveButton =
     Html.form
         [ onSubmit UserClickedSave ]
         [ h2
-            [ class "text-2xl font-medium text-gray-900 leading-none" ]
+            [ class "text-4xl font-medium text-gray-900 leading-none mb-12" ]
             [ text form.title ]
         , div
-            [ class "mt-6 space-y-6" ]
+            [ class "mt-6 space-y-10" ]
           <|
             List.map (viewElement formData) form.elements
         , div
@@ -167,7 +167,7 @@ viewElement formData ( elementId, element ) =
                 , onInput (UserChangedElement elementId)
                 , class extraClass
                 , class "focus:ring-blue-500 focus:border-blue-500"
-                , class "mt-1 block min-w-0 rounded sm:text-sm border-gray-300"
+                , class "block min-w-0 rounded sm:text-sm border-gray-300"
                 , value dataOrDefault
                 ]
                 []
@@ -178,7 +178,7 @@ viewElement formData ( elementId, element ) =
                 , name elementId
                 , id elementId
                 , onCheck (booleanToString >> UserChangedElement elementId)
-                , class "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded mr-2"
+                , class "focus:ring-blue-500 h-4 w-4 text-blue-600 border-slate-400 rounded mr-4"
                 , class "mt-1 block min-w-0 rounded sm:text-sm border-gray-300"
                 , checked (dataOrDefault == "checked")
                 ]
@@ -195,36 +195,52 @@ viewElement formData ( elementId, element ) =
                 ]
                 []
 
-        labelView s =
+        labelView extraClass s =
             label
                 [ for elementId
-                , class "block text-sm font-medium text-gray-700"
+                , class "block"
+                , class extraClass
                 ]
                 [ text s ]
+
+        withLegend s el =
+            fieldset
+                []
+                [ legend [ class "text-lg font-semibold text-gray-900 mt-8 mb-4" ] [ text s ]
+                , el
+                ]
 
         withLabel s el =
             div
                 []
-                [ labelView s
+                [ labelView "text-lg font-semibold text-gray-900 mb-4" s
                 , el
                 ]
     in
     case element of
         Checkbox label ->
             div
-                [ class "flex items-center h-5 w-full" ]
+                [ class "flex items-start h-8 w-full" ]
                 [ checkboxView
-                , labelView label
+                , labelView "text-base" label
                 ]
 
         CheckboxList label choices ->
-            -- TODO
+            let
+                choicesView =
+                    List.map
+                        (\( choiceId, choice ) ->
+                            viewElement formData ( choiceId, Checkbox choice )
+                        )
+                        choices
+            in
             div
-                [ class "flex items-center h-5 w-full" ]
-                -- TODO: display one checkbox for each choice
-                [ text <| String.join ", " choices
-                , labelView label
+                [ name elementId
+                , id elementId
+                , class "mt-1"
                 ]
+                choicesView
+                |> withLegend label
 
         Date label ->
             inputView "date" "w-36"

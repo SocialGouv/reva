@@ -21,7 +21,7 @@ keys :
     }
 keys =
     { certificates = "certificates"
-    , mandatoryTrainings = "mandatory"
+    , mandatoryTrainings = "mandatory-training"
     , basicSkill1 = "basicSkill1"
     , basicSkill2 = "basicSkill2"
     , basicSkill3 = "basicSkill3"
