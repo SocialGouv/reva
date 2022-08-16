@@ -12,4 +12,5 @@ type Goal {
 
 type Query {
   getReferential: Referential!
+  getCertifications: [Certification!]!
 }

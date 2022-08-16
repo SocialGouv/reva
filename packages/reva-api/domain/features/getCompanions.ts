@@ -8,4 +8,4 @@ interface GetCompanionsDeps {
 
 export const getCompanions = (deps: GetCompanionsDeps) => async () => 
     EitherAsync.fromPromise(() => deps.getCompanions())
-        .mapLeft(() => Left(new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, 'Erreur lors de la récupération des accompagnants'))).run();
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, 'Erreur lors de la récupération des accompagnants'));
