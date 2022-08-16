@@ -38,9 +38,10 @@ export const resolvers = {
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
     getCompanions: async () => {
-      const result = await getCompanions({ getCompanions: candidacyDb.getCompanions })();
+      // const result = await getCompanions({ getCompanions: candidacyDb.getCompanions })();
 
-      return result.extract();
+      // return result.extract();
+      return [];
     },
     getTrainings: async () => {
       const result = await getTrainings({ getTrainings: trainingDb.getTrainings })();
@@ -49,12 +50,12 @@ export const resolvers = {
     }
   },
   Mutation: {
-    candidacy_createCandidacy: async (_: unknown, { candidacy }: { candidacy: { deviceId: string; certificationId: string; }; }) => {
+    candidacy_createCandidacy: async (_: unknown, { candidacy }: { candidacy: { deviceId: string; certificationId: string; regionId: string; }; }) => {
 
       const result = await createCandidacy({
         createCandidacy: candidacyDb.insertCandidacy,
         getCandidacyFromDeviceId: candidacyDb.getCandidacyFromDeviceId,
-      })({ deviceId: candidacy.deviceId, certificationId: candidacy.certificationId });
+      })({ deviceId: candidacy.deviceId, certificationId: candidacy.certificationId, regionId: candidacy.regionId });
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
@@ -73,7 +74,8 @@ export const resolvers = {
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
       })({
         candidacyId: payload.candidacyId,
-        certificationId: payload.certificationId
+        certificationId: payload.certificationId,
+        regionId: payload.regionId
       });
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();

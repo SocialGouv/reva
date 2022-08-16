@@ -1,5 +1,5 @@
-import { CandicadiesOnGoals, CandidaciesStatus, Candidacy, CandidacyStatus, CandidateTypology, Certification, Experience, prisma } from '@prisma/client';
-import { Either, EitherAsync, Left, Maybe, Right } from 'purify-ts';
+import { CandidaciesStatus, Candidacy, CandidacyStatus, CandidateTypology, Certification } from '@prisma/client';
+import { Either, Left, Maybe, Right } from 'purify-ts';
 import * as domain from '../../../domain/types/candidacy';
 import { prismaClient } from './client';
 import { toDomainExperiences } from './experiences';
@@ -9,9 +9,8 @@ import { toDomainExperiences } from './experiences';
 const toDomainCandidacy = (candidacy: Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; }) => ({
     id: candidacy.id,
     deviceId: candidacy.deviceId,
-    certificationId: candidacy.certificationId,
     certification: candidacy.certification,
-    companionId: candidacy.companionId,
+    // companionId: candidacy.companionId,
     email: candidacy.email,
     phone: candidacy.phone,
     lastStatus: candidacy.candidacyStatuses[0],
@@ -22,13 +21,24 @@ const toDomainCandidacies = (candidacies: (Candidacy & { candidacyStatuses: Cand
     return candidacies.map(toDomainCandidacy);
 };
 
-export const insertCandidacy = async (params: { deviceId: string; certificationId: string; }): Promise<Either<string, domain.Candidacy>> => {
+export const insertCandidacy = async (params: { deviceId: string; certificationId: string; regionId: string; }): Promise<Either<string, domain.Candidacy>> => {
     try {
+
+        // TODO : remove me when regionId is set in front
+        const region = await prismaClient.region.findFirst();
 
         const newCandidacy = await prismaClient.candidacy.create({
             data: {
                 deviceId: params.deviceId,
-                certificationId: params.certificationId,
+                certificationsAndRegions: {
+                    create: {
+                        certificationId: params.certificationId,
+                        // TODO : remove `region?.id ||` when regionId is set in front
+                        regionId: region?.id || params.regionId,
+                        author: 'candidate',
+                        isActive: true
+                    }
+                },
                 candidacyStatuses: {
                     create: {
                         status: CandidacyStatus.PROJET,
@@ -39,15 +49,25 @@ export const insertCandidacy = async (params: { deviceId: string; certificationI
             include: {
                 experiences: true,
                 goals: true,
-                candidacyStatuses: true
+                candidacyStatuses: true,
+                certificationsAndRegions: {
+                    select: {
+                        certification: true,
+                        region: true
+                    },
+                    where: {
+                        isActive: true
+                    }
+                },
             }
         });
 
         return Right({ 
             id: newCandidacy.id,
             deviceId: newCandidacy.deviceId,
-            certificationId: newCandidacy.certificationId,
-            companionId: newCandidacy.companionId,
+            regionId: newCandidacy.certificationsAndRegions[0].region.id,
+            certificationId: newCandidacy.certificationsAndRegions[0].certification.id,
+            certification: newCandidacy.certificationsAndRegions[0].certification,
             experiences: toDomainExperiences(newCandidacy.experiences),
             goals: newCandidacy.goals,
             phone: newCandidacy.phone,
@@ -56,23 +76,8 @@ export const insertCandidacy = async (params: { deviceId: string; certificationI
             createdAt: newCandidacy.createdAt
         });
     } catch (e) {
-        console.log(e);
         return Left("error while creating candidacy");
     }
-};
-
-export const getCompanionFromId = async (companionId: string): Promise<Either<string, domain.Companion>> => {
-    try {
-        const companion = await prismaClient.companion.findFirst({
-            where: {
-                id: companionId
-            }
-        });
-
-        return Maybe.fromNullable(companion).toEither(`Companion with id ${companionId} not found`);
-    } catch (e) {
-        return Left(`error while retrieving the companion with id ${companionId}`);
-    };
 };
 
 export const getCandidacyFromDeviceId = async (deviceId: string) => {
@@ -90,12 +95,22 @@ export const getCandidacyFromDeviceId = async (deviceId: string) => {
             include: {
                 experiences: true,
                 goals: true,
-                certification: true,
                 candidacyStatuses: true
             }
         });
 
-        return Maybe.fromNullable(candidacy).map(c => ({ ...c, certification: { ...c.certification, codeRncp: c.certification.rncpId } })).toEither(`Candidacy with deviceId ${deviceId} not found`);
+        const certificationAndRegion = await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
+            where: {
+                candidacyId: candidacy?.id,
+                isActive: true
+            },
+            include: {
+                certification: true,
+                region: true
+            }
+        });
+
+        return Maybe.fromNullable(candidacy).map(c => ({ ...c, certificationId:certificationAndRegion?.certification.id, certification: { ...certificationAndRegion?.certification, codeRncp: certificationAndRegion?.certification?.rncpId } })).toEither(`Candidacy with deviceId ${deviceId} not found`);
     } catch (e) {
         return Left(`error while retrieving the candidacy with id ${deviceId}`);
     };
@@ -110,18 +125,28 @@ export const getCandidacyFromId = async (candidacyId: string) => {
             include: {
                 experiences: true,
                 goals: true,
-                candidacyStatuses: true,
-                certification: true
+                candidacyStatuses: true
             }
         });
 
-        return Maybe.fromNullable(candidacy).map(c => ({ ...c, certification: { ...c.certification, codeRncp: c.certification.rncpId } })).toEither(`Candidacy with deviceId ${candidacyId} not found`);
+        const certificationAndRegion = await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
+            where: {
+                candidacyId: candidacy?.id,
+                isActive: true
+            },
+            include: {
+                certification: true,
+                region: true
+            }
+        });
+
+        return Maybe.fromNullable(candidacy).map(c => ({ ...c, certificationId:certificationAndRegion?.certification.id, certification: { ...certificationAndRegion?.certification, codeRncp: certificationAndRegion?.certification.rncpId } })).toEither(`Candidacy with deviceId ${candidacyId} not found`);
     } catch (e) {
         return Left(`error while retrieving the candidacy with id ${candidacyId}`);
     };
 };
 
-export const existsCandidacyWithActiveStatus = async (params: {candidacyId: string, status: CandidacyStatus}) => {
+export const existsCandidacyWithActiveStatus = async (params: { candidacyId: string, status: CandidacyStatus; }) => {
     try {
         const candidaciesCount = await prismaClient.candidacy.count({
             where: {
@@ -135,21 +160,21 @@ export const existsCandidacyWithActiveStatus = async (params: {candidacyId: stri
             }
         });
 
-        return Right(candidaciesCount === 1)
+        return Right(candidaciesCount === 1);
     } catch (e) {
         return Left(`error while retrieving the candidacy with id ${params.candidacyId}`);
     };
 };
 
-export const getCompanions = async () => {
-    try {
-        const companions = await prismaClient.companion.findMany();
+// export const getCompanions = async () => {
+//     try {
+//         const companions = await prismaClient.companion.findMany();
 
-        return Right(companions);
-    } catch (e) {
-        return Left(`error while retrieving companions`);
-    };
-};
+//         return Right(companions);
+//     } catch (e) {
+//         return Left(`error while retrieving companions`);
+//     };
+// };
 
 
 export const updateContactOnCandidacy = async (params: { candidacyId: string, email: string, phone: string; }) => {
@@ -169,11 +194,22 @@ export const updateContactOnCandidacy = async (params: { candidacyId: string, em
             }
         });
 
+        const certificationAndRegion = await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
+            where: {
+                candidacyId: params.candidacyId,
+                isActive: true
+            },
+            select: {
+                certification: true
+            }
+        });
+
+
         return Right({ 
             id: newCandidacy.id,
             deviceId: newCandidacy.deviceId,
-            certificationId: newCandidacy.certificationId,
-            companionId: newCandidacy.companionId,
+            certification: certificationAndRegion?.certification,
+            // companionId: newCandidacy.companionId,
             experiences: toDomainExperiences(newCandidacy.experiences),
             goals: newCandidacy.goals,
             email: newCandidacy.email,
@@ -188,7 +224,7 @@ export const updateContactOnCandidacy = async (params: { candidacyId: string, em
 
 export const updateCandidacyStatus = async (params: { candidacyId: string, status: CandidacyStatus; }) => {
     try {
-        const [, newCandidacy] = await prismaClient.$transaction([
+        const [, newCandidacy, certificationAndRegion] = await prismaClient.$transaction([
             prismaClient.candidaciesStatus.updateMany({
                 where: {
                     candidacyId: params.candidacyId
@@ -213,7 +249,16 @@ export const updateCandidacyStatus = async (params: { candidacyId: string, statu
                     experiences: true,
                     goals: true,
                     candidacyStatuses: true,
-                    certification: true
+                }
+            }),
+            prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
+                where: {
+                    candidacyId: params.candidacyId,
+                    isActive: true
+                },
+                include: {
+                    certification: true,
+                    region: true
                 }
             })
         ]);
@@ -221,9 +266,9 @@ export const updateCandidacyStatus = async (params: { candidacyId: string, statu
         return Right({ 
             id: newCandidacy.id,
             deviceId: newCandidacy.deviceId,
-            certificationId: newCandidacy.certificationId,
-            certification: { ...newCandidacy.certification, codeRncp: newCandidacy.certification.rncpId },
-            companionId: newCandidacy.companionId,
+            certificationId: certificationAndRegion?.certificationId,
+            certification: { ...certificationAndRegion?.certification, codeRncp: certificationAndRegion?.certification.rncpId },
+            // companionId: newCandidacy.companionId,
             experiences: toDomainExperiences(newCandidacy.experiences),
             goals: newCandidacy.goals,
             email: newCandidacy.email,
@@ -236,31 +281,60 @@ export const updateCandidacyStatus = async (params: { candidacyId: string, statu
     };
 };
 
-export const updateCertification = async (params: { candidacyId: string, certificationId: string; }) => {
+export const updateCertification = async (params: { candidacyId: string, certificationId: string; regionId: string; author: string; }) => {
     try {
-        const newCandidacy = await prismaClient.candidacy.update({
-            where: {
-                id: params.candidacyId
-            },
-            data: {
-                certification: {
-                    connect: {
-                        id: params.certificationId
-                    }
+
+        // TODO : remove me when regionId is set in front
+        const region = await prismaClient.region.findFirst();
+
+        const [,newCandidacy, certificationAndRegion] = await prismaClient.$transaction([
+            prismaClient.candidaciesOnRegionsAndCertifications.updateMany({
+                data: {
+                    isActive: false
+                },
+                where: {
+                    candidacyId: params.candidacyId,
+                    isActive: true
                 }
-            },
-            include: {
-                experiences: true,
-                goals: true,
-                candidacyStatuses: true
-            }
-        });
+            }),
+            prismaClient.candidacy.update({
+                where: {
+                    id: params.candidacyId
+                },
+                data: {
+                    certificationsAndRegions: {
+                        create: {
+                            certificationId: params.certificationId,
+                            regionId: region?.id || params.regionId,
+                            author: params.author,
+                            isActive: true
+                        }
+                    }
+                },
+                include: {
+                    experiences: true,
+                    goals: true,
+                    candidacyStatuses: true
+                }
+            }),
+
+            prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
+                where: {
+                    candidacyId: params.candidacyId,
+                    isActive: true
+                }, 
+                select: {
+                    certification: true,
+                    region: true,
+                }
+            })
+        ]);
 
         return Right({ 
             id: newCandidacy.id,
             deviceId: newCandidacy.deviceId,
-            certificationId: newCandidacy.certificationId,
-            companionId: newCandidacy.companionId,
+            certification: certificationAndRegion?.certification,
+            // companionId: newCandidacy.companionId,
             experiences: toDomainExperiences(newCandidacy.experiences),
             goals: newCandidacy.goals,
             email: newCandidacy.email,
@@ -290,7 +364,6 @@ export const deleteCandidacyFromPhone = async (phone: string) => {
 
     }
     catch (e) {
-        console.log(e);
         return Left(`Candidature non supprimée, ${(e as any).message}`);
     }
 };
@@ -352,11 +425,20 @@ export const getCandidacies = async () => {
                         isActive: true
                     }
                 },
-                certification: true
+                certificationsAndRegions: {
+                    select: {
+                        certification: true
+                    },
+                    where: {
+                        isActive: true
+                    }
+                }
             }
         });
 
-        return Right(toDomainCandidacies(candidacies));
+
+
+        return Right(toDomainCandidacies(candidacies.map(c => ({...c, certification: c.certificationsAndRegions[0].certification}))));
     }
     catch (e) {
         return Left(`Erreur lors de la récupération des candidatures, ${(e as any).message}`);
@@ -394,11 +476,21 @@ export const updateAppointmentInformations = async (params: {
             }
         });
 
+        const candidaciesOnRegionsAndCertifications = await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
+                where: {
+                    candidacyId: params.candidacyId,
+                    isActive: true
+                },
+                select: {
+                    certification: true
+                }
+            })
+
         return Right({ 
             id: candidacy.id,
             deviceId: candidacy.deviceId,
-            certificationId: candidacy.certificationId,
-            companionId: candidacy.companionId,
+            certification: candidaciesOnRegionsAndCertifications?.certification,
+            // companionId: candidacy.companionId,
             experiences: toDomainExperiences(candidacy.experiences),
             goals: candidacy.goals,
             email: candidacy.email,

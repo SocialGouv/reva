@@ -1,5 +1,6 @@
 import fp from 'fastify-plugin';
 import Keycloak from 'keycloak-connect';
+import KcAdminClient from '@keycloak/keycloak-admin-client';
 
 async function keycloakPlugin(app: any, opts: any, next: any) {
 
@@ -33,6 +34,27 @@ async function keycloakPlugin(app: any, opts: any, next: any) {
   );
 
   app.decorate('keycloak', keycloak);
+
+  const kcAdminClient = new KcAdminClient({
+    baseUrl: process.env.VITE_KEYCLOAK_URL,
+    realmName: process.env.VITE_KEYCLOAK_REALM
+  });
+
+  try {
+    await kcAdminClient.auth({
+      username: process.env.KEYCLOAK_USER,
+      password: process.env.KEYCLOAK_PASSWORD,
+      grantType: 'password',
+      clientId: process.env.KEYCLOAK_CLIENTID || 'reva-app',
+    });
+
+  } catch (e) {
+    console.log(e);  
+  }
+  
+  app.decorate('keycloakAdmin', kcAdminClient);
+
+
   const middlewares = keycloak.middleware(middleware);
 
   for (let x = 0; x < middlewares.length; x++) {

@@ -1,0 +1,3 @@
+type Mutation {
+  account_createAccount: Void
+}

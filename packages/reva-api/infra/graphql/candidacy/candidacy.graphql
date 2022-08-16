@@ -22,6 +22,7 @@ type Candidacy {
   id: ID!
   deviceId: ID!
   certificationId: ID!
+  regionId: ID!
   companionId: ID
   certification: Certification!
   experiences: [Experience!]!
@@ -95,6 +96,7 @@ type Query {
 input CandidacyInput {
   deviceId: ID!
   certificationId: ID!
+  regionId: ID!
 }
 
 input CertificationChangeInput {
@@ -132,6 +134,7 @@ type Mutation {
     deviceId: ID!
     candidacyId: ID!
     certificationId: ID!
+    regionId: ID!
   ): Candidacy
   candidacy_addExperience(
     deviceId: ID!

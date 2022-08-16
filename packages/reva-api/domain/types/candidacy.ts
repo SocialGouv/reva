@@ -1,15 +1,20 @@
-export interface CandidacyInput {
+interface CandidacyAbstract {
     deviceId: string;
-    certificationId: string;
-    companionId: string | null;
+
+    // companionId: string | null;
     experiences: Experience[];
     goals: Goal[];
     phone: string | null;
     email: string | null;
 }
 
-export interface Candidacy extends CandidacyInput {
+export interface CandidacyInput extends CandidacyAbstract {
+    certificationId: string;
+}
+
+export interface Candidacy extends CandidacyAbstract {
     id: string;
+    certification: any;
     candidacyStatuses: CandidacyStatus[];
     createdAt: Date;
 }
@@ -69,3 +74,9 @@ export interface AppointmentInformations {
     appointmentCount: number;
     wasPresentAtFirstAppointment: boolean;
 };
+
+export interface Region {
+    id: string;
+    code: string;
+    label: string;
+}

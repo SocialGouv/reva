@@ -72,6 +72,8 @@ function App() {
             )({
               deviceId: deviceId.uuid,
               certificationId: event.certification.id,
+              // TODO: get rgion id
+              regionId: "id",
             }).then(
               (data) =>
                 // Add some fake waiting time to let the user read the creation message
@@ -92,6 +94,8 @@ function App() {
               deviceId: deviceId.uuid,
               candidacyId: context.candidacyId,
               certificationId: event.certification.id,
+              // TODO: get rgion id
+              regionId: "id",
             });
           },
           saveGoals: async (context, event) => {
