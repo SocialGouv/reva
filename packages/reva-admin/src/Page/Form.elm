@@ -13,7 +13,7 @@ import Api exposing (Token)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
 import Html.Styled as Html exposing (Html, button, div, h2, input, label, option, select, text, textarea)
-import Html.Styled.Attributes exposing (checked, class, disabled, for, id, name, selected, type_, value)
+import Html.Styled.Attributes exposing (checked, class, disabled, for, id, name, selected, step, type_, value)
 import Html.Styled.Events exposing (onCheck, onInput, onSubmit)
 import RemoteData exposing (RemoteData(..))
 import String exposing (String)
@@ -238,7 +238,7 @@ viewElement formData ( elementId, element ) =
                 |> withLabel label
 
         Number label ->
-            inputView "number" "w-16"
+            inputView "number" "w-20"
                 |> withLabel label
 
         Textarea label ->

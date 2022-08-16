@@ -162,6 +162,20 @@ viewContent :
     -> List CandidacySummary
     -> Html Msg
 viewContent config model candidacies =
+    let
+        viewForm name candidacyId =
+            viewMain name
+                [ a
+                    [ Route.href model.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId))
+                    , class "flex items-center text-gray-800 p-6"
+                    ]
+                    [ span [ class "text-3xl mr-4" ] [ text "← " ]
+                    , text "Retour"
+                    ]
+                , Form.view model.form
+                    |> Html.map GotFormMsg
+                ]
+    in
     div
         [ class "flex min-w-0 overflow-hidden border-l-[40px] border-black" ]
         [ div
@@ -192,23 +206,15 @@ viewContent config model candidacies =
                     [ viewDirectoryPanel config candidacies ]
 
                 Meetings candidacyId ->
-                    [ viewMain "meetings"
-                        [ a
-                            [ Route.href model.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId))
-                            , class "flex items-center text-gray-800 p-6"
-                            ]
-                            [ span [ class "text-3xl mr-4" ] [ text "← " ]
-                            , text "Retour"
-                            ]
-                        , Form.view model.form
-                            |> Html.map GotFormMsg
-                        ]
-                    ]
+                    [ viewForm "meetings" candidacyId ]
 
                 Profil candidacyId ->
                     [ viewCandidacyPanel model
                     , viewNavigationSteps model.baseUrl candidacyId
                     ]
+
+                Training candidacyId ->
+                    [ viewForm "training" candidacyId ]
         ]
 
 
@@ -565,6 +571,23 @@ updateTab tab model =
                 ( formModel, formCmd ) =
                     Form.updateForm
                         { form = appointmentForm
+                        , onLoad = Request.requestAppointment model.endpoint candidacyId
+                        , onSave = Request.updateAppointment model.endpoint candidacyId
+                        , onRedirect =
+                            Nav.pushUrl
+                                model.navKey
+                                (Route.toString model.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                        }
+                        model.form
+            in
+            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
+                |> withTakeOver candidacyId
+
+        View.Candidacy.Training candidacyId ->
+            let
+                ( formModel, formCmd ) =
+                    Form.updateForm
+                        { form = trainingForm
                         , onLoad = Request.requestAppointment model.endpoint candidacyId
                         , onSave = Request.updateAppointment model.endpoint candidacyId
                         , onRedirect =
