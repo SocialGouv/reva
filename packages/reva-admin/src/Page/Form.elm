@@ -227,11 +227,9 @@ viewElement formData ( elementId, element ) =
 
         CheckboxList label choices ->
             let
-                choicesView =
+                viewChoices =
                     List.map
-                        (\( choiceId, choice ) ->
-                            viewElement formData ( choiceId, Checkbox choice )
-                        )
+                        (\( choiceId, choice ) -> viewElement formData ( choiceId, Checkbox choice ))
                         choices
             in
             div
@@ -239,7 +237,7 @@ viewElement formData ( elementId, element ) =
                 , id elementId
                 , class "mt-1"
                 ]
-                choicesView
+                viewChoices
                 |> withLegend label
 
         Date label ->
