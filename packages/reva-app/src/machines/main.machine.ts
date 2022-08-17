@@ -57,6 +57,7 @@ export interface MainContext {
 }
 
 export type MainEvent =
+  | { type: "SELECT_REGION"; certification: Certification }
   | { type: "SELECT_CERTIFICATION"; certification: Certification }
   | { type: "SHOW_CERTIFICATION_DETAILS"; certification: Certification }
   | { type: "SHOW_PROJECT_HOME"; certification: Certification }
@@ -237,6 +238,7 @@ export const mainMachine = createMachine<MainContext, MainEvent, MainState>(
               error: (context, event) => "",
             }),
           },
+          SELECT_REGION: {},
         },
       },
       certificateSummary: {

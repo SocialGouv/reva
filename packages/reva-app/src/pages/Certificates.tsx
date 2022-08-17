@@ -1,9 +1,10 @@
 import { useActor } from "@xstate/react";
 import { motion } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Interpreter } from "xstate";
 
 import { Header } from "../components/atoms/Header";
+import { Select } from "../components/atoms/Select";
 import { CandidateButton } from "../components/organisms/CandidateButton";
 import { Card } from "../components/organisms/Card";
 import { transitionIn } from "../components/organisms/Card/view";
@@ -14,15 +15,17 @@ import { buttonVariants } from "../config";
 import { Certification } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
-interface Certificates {
+interface Props {
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
 
-export const Certificates = ({ mainService }: Certificates) => {
+export const Certificates = ({ mainService }: Props) => {
   const [state, send] = useActor(mainService);
 
   const resultsElement = useRef<HTMLDivElement | null>(null);
   const currentCertificateElement = useRef<HTMLLIElement | null>(null);
+
+  const [chosenRegion, setChosenRegion] = useState<string | null>(null);
 
   useEffect(() => {
     if (resultsElement.current && currentCertificateElement.current) {
@@ -122,15 +125,33 @@ export const Certificates = ({ mainService }: Certificates) => {
             secteurs de la dépendance et de la santé ? Choisissez votre diplôme
             et laissez-vous accompagner !
           </p>
+          <form className="mt-4 space-y-6">
+            <Select
+              name="select_region"
+              className="my-8"
+              placeholder="Ma Région"
+              options={[
+                { label: "IDF", value: "idf" },
+                { label: "Normandie", value: "normandie" },
+              ]}
+              onChangeHandler={(e) => {
+                const el = e.target as HTMLOptionElement;
+                setChosenRegion(el.value);
+                console.log(el.value);
+              }}
+            />
+          </form>
         </div>
-        <div className="px-8">
-          <Results
-            title="Liste des certifications éligibles :"
-            listClassName="my-4 space-y-8"
-          >
-            {displayCards()}
-          </Results>
-        </div>
+        {!!chosenRegion && (
+          <div className="px-8">
+            <Results
+              title="Liste des certifications éligibles :"
+              listClassName="my-4 space-y-8"
+            >
+              {displayCards()}
+            </Results>
+          </div>
+        )}
       </motion.div>
       {candidateButton()}
     </Page>
