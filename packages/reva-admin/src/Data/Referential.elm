@@ -1,5 +1,6 @@
-module Data.Referential exposing (Referential, ReferentialGoal)
+module Data.Referential exposing (Referential, ReferentialGoal, ReferentialGoals, ReferentialTraining)
 
+import Data.Certification exposing (CertificationSummary)
 import Dict exposing (Dict)
 
 
@@ -12,6 +13,18 @@ type alias ReferentialGoal =
     }
 
 
+type alias ReferentialGoals =
+    { goals : Dict String ReferentialGoal }
+
+
+type alias ReferentialTraining =
+    { id : String
+    , label : String
+    }
+
+
 type alias Referential =
-    { goals : Dict String ReferentialGoal
+    { certifications : List CertificationSummary
+    , goals : Dict String ReferentialGoal
+    , training : List ReferentialTraining
     }

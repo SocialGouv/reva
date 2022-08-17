@@ -1,4 +1,14 @@
-module Request exposing (archiveCandidacy, deleteCandidacy, requestAppointment, requestCandidacies, requestCandidacy, requestReferential, takeOverCandidacy, updateAppointment)
+module Request exposing
+    ( archiveCandidacy
+    , deleteCandidacy
+    , requestAppointment
+    , requestCandidacies
+    , requestCandidacy
+    , requestCertifications
+    , requestReferential
+    , takeOverCandidacy
+    , updateAppointment
+    )
 
 import Admin.InputObject
 import Admin.Mutation as Mutation
@@ -11,8 +21,9 @@ import Admin.Object.Certification
 import Admin.Object.Experience
 import Admin.Object.Goal
 import Admin.Object.Referential
+import Admin.Object.Training
 import Admin.Query as Query
-import Admin.Scalar exposing (Date(..), Id(..))
+import Admin.Scalar exposing (Id(..), Timestamp(..))
 import Data.Candidacy exposing (CandidacyId)
 import Data.Certification
 import Data.Form.Appointment
@@ -91,10 +102,14 @@ graphqlHttpErrorToString error =
                 errors
 
 
+
+-- CERTIFICATIONS
+
+
 certificationSelection : SelectionSet Data.Certification.Certification Admin.Object.Certification
 certificationSelection =
     SelectionSet.succeed Data.Certification.Certification
-        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.Certification.id)
+        |> with Admin.Object.Certification.id
         |> with Admin.Object.Certification.label
         |> with Admin.Object.Certification.summary
         |> with Admin.Object.Certification.acronym
@@ -105,14 +120,20 @@ certificationSelection =
         |> with Admin.Object.Certification.abilities
 
 
-appointmentSelection : SelectionSet (Dict String String) Admin.Object.Candidacy
-appointmentSelection =
-    SelectionSet.succeed Data.Form.Appointment.appointment
-        |> with Admin.Object.Candidacy.typology
-        |> with Admin.Object.Candidacy.typologyAdditional
-        |> with Admin.Object.Candidacy.firstAppointmentOccuredAt
-        |> with Admin.Object.Candidacy.appointmentCount
-        |> with Admin.Object.Candidacy.wasPresentAtFirstAppointment
+certificationSummarySelection : SelectionSet Data.Certification.CertificationSummary Admin.Object.Certification
+certificationSummarySelection =
+    SelectionSet.succeed Data.Certification.CertificationSummary
+        |> with Admin.Object.Certification.id
+        |> with Admin.Object.Certification.label
+
+
+requestCertifications :
+    String
+    -> (RemoteData String (List Data.Certification.CertificationSummary) -> msg)
+    -> Cmd msg
+requestCertifications endpointGraphql toMsg =
+    Query.getCertifications certificationSummarySelection
+        |> makeQuery endpointGraphql toMsg
 
 
 
@@ -125,10 +146,6 @@ candidacyStatusSelection =
         |> with Admin.Object.CandidacyStatus.createdAt
         |> with Admin.Object.CandidacyStatus.status
         |> with Admin.Object.CandidacyStatus.isActive
-
-
-
---  |> with Admin.Object.Certification.codeRncp
 
 
 candidacySummarySelection : SelectionSet Data.Candidacy.CandidacySummary Admin.Object.CandidacySummary
@@ -232,6 +249,20 @@ takeOverCandidacy endpointGraphql toMsg candidacyId =
         |> makeMutation endpointGraphql toMsg
 
 
+
+-- APPOINTMENT
+
+
+appointmentSelection : SelectionSet (Dict String String) Admin.Object.Candidacy
+appointmentSelection =
+    SelectionSet.succeed Data.Form.Appointment.appointment
+        |> with Admin.Object.Candidacy.typology
+        |> with Admin.Object.Candidacy.typologyAdditional
+        |> with Admin.Object.Candidacy.firstAppointmentOccuredAt
+        |> with Admin.Object.Candidacy.appointmentCount
+        |> with Admin.Object.Candidacy.wasPresentAtFirstAppointment
+
+
 requestAppointment :
     String
     -> CandidacyId
@@ -292,8 +323,14 @@ referentialGoalSelection =
         |> with Admin.Object.Goal.isActive
 
 
-toReferential : List Data.Referential.ReferentialGoal -> Data.Referential.Referential
-toReferential goals =
+trainingsSelection =
+    SelectionSet.succeed Data.Referential.ReferentialTraining
+        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.Training.id)
+        |> with Admin.Object.Training.label
+
+
+toGoals : List Data.Referential.ReferentialGoal -> Data.Referential.ReferentialGoals
+toGoals goals =
     let
         goalsDict =
             List.map (\g -> ( g.id, g )) goals |> Dict.fromList
@@ -301,10 +338,29 @@ toReferential goals =
     { goals = goalsDict }
 
 
-referentialSelection : SelectionSet Data.Referential.Referential Admin.Object.Referential
-referentialSelection =
-    SelectionSet.succeed toReferential
+goalsSelection : SelectionSet Data.Referential.ReferentialGoals Admin.Object.Referential
+goalsSelection =
+    SelectionSet.succeed toGoals
         |> with (Admin.Object.Referential.goals referentialGoalSelection)
+
+
+requestGoals :
+    String
+    -> (RemoteData String Data.Referential.ReferentialGoals -> msg)
+    -> Cmd msg
+requestGoals endpointGraphql toMsg =
+    Query.getReferential goalsSelection
+        |> makeQuery endpointGraphql toMsg
+
+
+referentialSelection =
+    SelectionSet.succeed
+        (\certifications referentialGoals trainings ->
+            Data.Referential.Referential certifications referentialGoals.goals trainings
+        )
+        |> with (Query.getCertifications certificationSummarySelection)
+        |> with (Query.getReferential goalsSelection)
+        |> with (Query.getTrainings trainingsSelection)
 
 
 requestReferential :
@@ -312,8 +368,7 @@ requestReferential :
     -> (RemoteData String Data.Referential.Referential -> msg)
     -> Cmd msg
 requestReferential endpointGraphql toMsg =
-    Query.getReferential referentialSelection
-        |> makeQuery endpointGraphql toMsg
+    makeQuery endpointGraphql toMsg referentialSelection
 
 
 
