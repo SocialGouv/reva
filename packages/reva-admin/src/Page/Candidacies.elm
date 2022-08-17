@@ -13,6 +13,7 @@ import Api exposing (Token)
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Form.Appointment exposing (candidateTypologyToString)
+import Data.Form.Training
 import Data.Referential exposing (Referential)
 import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, for, id, name, placeholder, type_)
@@ -161,6 +162,20 @@ viewContent :
     -> List CandidacySummary
     -> Html Msg
 viewContent config model candidacies =
+    let
+        viewForm name candidacyId =
+            viewMain name
+                [ a
+                    [ Route.href model.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId))
+                    , class "flex items-center text-gray-800 p-6"
+                    ]
+                    [ span [ class "text-3xl mr-4" ] [ text "← " ]
+                    , text "Retour"
+                    ]
+                , Form.view model.form
+                    |> Html.map GotFormMsg
+                ]
+    in
     div
         [ class "flex min-w-0 overflow-hidden border-l-[40px] border-black" ]
         [ div
@@ -191,23 +206,15 @@ viewContent config model candidacies =
                     [ viewDirectoryPanel config candidacies ]
 
                 Meetings candidacyId ->
-                    [ viewMain "meetings"
-                        [ a
-                            [ Route.href model.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId))
-                            , class "flex items-center text-gray-800 p-6"
-                            ]
-                            [ span [ class "text-3xl mr-4" ] [ text "← " ]
-                            , text "Retour"
-                            ]
-                        , Form.view model.form
-                            |> Html.map GotFormMsg
-                        ]
-                    ]
+                    [ viewForm "meetings" candidacyId ]
 
                 Profil candidacyId ->
                     [ viewCandidacyPanel model
                     , viewNavigationSteps model.baseUrl candidacyId
                     ]
+
+                Training candidacyId ->
+                    [ viewForm "training" candidacyId ]
         ]
 
 
@@ -257,8 +264,8 @@ viewMain dataTestValue =
         ]
 
 
-appointmentFOrm : Form
-appointmentFOrm =
+appointmentForm : Form
+appointmentForm =
     let
         keys =
             Data.Form.Appointment.keys
@@ -279,6 +286,43 @@ appointmentFOrm =
         , ( keys.appointmentCount, Form.Number "Nombre de rendez-vous réalisés avec le candidat" )
         ]
     , title = "Rendez-vous pédagogique"
+    }
+
+
+trainingForm : Form
+trainingForm =
+    let
+        keys =
+            Data.Form.Training.keys
+
+        certifications =
+            -- TODO: get this referential from the certificates database
+            [ "Titre Professionnel Assistant maternel / Garde d'enfants"
+            , "Titre Professionnel Conducteur accompagnateur de personnes à mobilité réduite (CApmr)"
+            ]
+
+        mandatoryTrainings =
+            -- TODO: created a mandatory training referential in the database
+            [ ( "t1", "Attestation de Formation aux Gestes et Soins d’Urgence (AFGSU)" )
+            , ( "t2", "Equipier de Première Intervention" )
+            , ( "t3", "Sauveteur Secouriste du Travail (SST)" )
+            , ( "t4", "Systèmes d’attaches" )
+            ]
+    in
+    { elements =
+        [ ( keys.certificates, Form.Select "Certification visée" certifications )
+        , ( keys.individualHourCount, Form.Number "Nombre d'heure d'accompagnement individuel" )
+        , ( keys.collectiveHourCount, Form.Number "Nombre d'heure d'accompagnement collectif" )
+        , ( keys.additionalHourCount, Form.Number "Nombre d'heures de formations complémentaires" )
+        , ( keys.mandatoryTrainings, Form.CheckboxList "Formations obligatoires" mandatoryTrainings )
+        , ( keys.basicSkill1, Form.Input "Savoir de base 1" )
+        , ( keys.basicSkill2, Form.Input "Savoir de base 2" )
+        , ( keys.basicSkill3, Form.Input "Savoir de base 3" )
+        , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" )
+        , ( keys.digitalSkill, Form.Checkbox "Formation usage numérique" )
+        , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" )
+        ]
+    , title = "Définition du parcours"
     }
 
 
@@ -521,7 +565,24 @@ updateTab tab model =
             let
                 ( formModel, formCmd ) =
                     Form.updateForm
-                        { form = appointmentFOrm
+                        { form = appointmentForm
+                        , onLoad = Request.requestAppointment model.endpoint candidacyId
+                        , onSave = Request.updateAppointment model.endpoint candidacyId
+                        , onRedirect =
+                            Nav.pushUrl
+                                model.navKey
+                                (Route.toString model.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                        }
+                        model.form
+            in
+            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
+                |> withTakeOver candidacyId
+
+        View.Candidacy.Training candidacyId ->
+            let
+                ( formModel, formCmd ) =
+                    Form.updateForm
+                        { form = trainingForm
                         , onLoad = Request.requestAppointment model.endpoint candidacyId
                         , onSave = Request.updateAppointment model.endpoint candidacyId
                         , onRedirect =
