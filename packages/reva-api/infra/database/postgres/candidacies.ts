@@ -9,6 +9,7 @@ import { toDomainExperiences } from './experiences';
 const toDomainCandidacy = (candidacy: Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; }) => ({
     id: candidacy.id,
     deviceId: candidacy.deviceId,
+    certificationId: candidacy.certification.id,
     certification: candidacy.certification,
     // companionId: candidacy.companionId,
     email: candidacy.email,
