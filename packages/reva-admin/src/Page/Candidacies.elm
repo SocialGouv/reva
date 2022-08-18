@@ -55,7 +55,7 @@ type alias Model =
     , endpoint : String
     , token : Token
     , filter : Maybe String
-    , form : Form.Model
+    , form : Form.Model Referential
     , selected : RemoteData String Candidacy
     , state : State
     , tab : Tab
@@ -172,7 +172,7 @@ viewContent config model candidacies =
                     [ span [ class "text-3xl mr-4" ] [ text "← " ]
                     , text "Retour"
                     ]
-                , Form.view model.form
+                , Form.view model.state.referential model.form
                     |> Html.map GotFormMsg
                 ]
     in
@@ -264,7 +264,7 @@ viewMain dataTestValue =
         ]
 
 
-appointmentForm : Form
+appointmentForm : Form Referential
 appointmentForm =
     let
         keys =
@@ -279,49 +279,46 @@ appointmentForm =
                 |> List.map candidateTypologyToString
     in
     { elements =
-        [ ( keys.typology, Form.Select "Typologie" typologies )
-        , ( keys.additionalInformation, Form.SelectOther "typology" "Autre typologie" )
-        , ( keys.firstAppointmentOccurredAt, Form.Date "Date du premier rendez-vous pédagogique" )
-        , ( keys.wasPresentAtFirstAppointment, Form.Checkbox "Le candidat a bien effectué le rendez-vous d'étude de faisabilité" )
-        , ( keys.appointmentCount, Form.Number "Nombre de rendez-vous réalisés avec le candidat" )
-        ]
+        \referential ->
+            [ ( keys.typology, Form.Select "Typologie" typologies )
+            , ( keys.additionalInformation, Form.SelectOther "typology" "Autre typologie" )
+            , ( keys.firstAppointmentOccurredAt, Form.Date "Date du premier rendez-vous pédagogique" )
+            , ( keys.wasPresentAtFirstAppointment, Form.Checkbox "Le candidat a bien effectué le rendez-vous d'étude de faisabilité" )
+            , ( keys.appointmentCount, Form.Number "Nombre de rendez-vous réalisés avec le candidat" )
+            ]
     , title = "Rendez-vous pédagogique"
     }
 
 
-trainingForm : Form
+trainingForm : Form Referential
 trainingForm =
     let
         keys =
             Data.Form.Training.keys
 
-        certifications =
+        certifications referential =
             -- TODO: get this referential from the certificates database
             [ "Titre Professionnel Assistant maternel / Garde d'enfants"
             , "Titre Professionnel Conducteur accompagnateur de personnes à mobilité réduite (CApmr)"
             ]
 
-        mandatoryTrainings =
-            -- TODO: created a mandatory training referential in the database
-            [ ( "t1", "Attestation de Formation aux Gestes et Soins d’Urgence (AFGSU)" )
-            , ( "t2", "Equipier de Première Intervention" )
-            , ( "t3", "Sauveteur Secouriste du Travail (SST)" )
-            , ( "t4", "Systèmes d’attaches" )
-            ]
+        mandatoryTrainings referential =
+            List.map (\training -> ( training.id, training.label )) referential.training
     in
     { elements =
-        [ ( keys.certificates, Form.Select "Certification visée" certifications )
-        , ( keys.individualHourCount, Form.Number "Nombre d'heure d'accompagnement individuel" )
-        , ( keys.collectiveHourCount, Form.Number "Nombre d'heure d'accompagnement collectif" )
-        , ( keys.additionalHourCount, Form.Number "Nombre d'heures de formations complémentaires" )
-        , ( keys.mandatoryTrainings, Form.CheckboxList "Formations obligatoires" mandatoryTrainings )
-        , ( keys.basicSkill1, Form.Input "Savoir de base 1" )
-        , ( keys.basicSkill2, Form.Input "Savoir de base 2" )
-        , ( keys.basicSkill3, Form.Input "Savoir de base 3" )
-        , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" )
-        , ( keys.digitalSkill, Form.Checkbox "Formation usage numérique" )
-        , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" )
-        ]
+        \referential ->
+            [ ( keys.certificates, Form.Select "Certification visée" <| certifications referential )
+            , ( keys.individualHourCount, Form.Number "Nombre d'heure d'accompagnement individuel" )
+            , ( keys.collectiveHourCount, Form.Number "Nombre d'heure d'accompagnement collectif" )
+            , ( keys.additionalHourCount, Form.Number "Nombre d'heures de formations complémentaires" )
+            , ( keys.mandatoryTrainings, Form.CheckboxList "Formations obligatoires" <| mandatoryTrainings referential )
+            , ( keys.basicSkill1, Form.Input "Savoir de base 1" )
+            , ( keys.basicSkill2, Form.Input "Savoir de base 2" )
+            , ( keys.basicSkill3, Form.Input "Savoir de base 3" )
+            , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" )
+            , ( keys.digitalSkill, Form.Checkbox "Formation usage numérique" )
+            , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" )
+            ]
     , title = "Définition du parcours"
     }
 
@@ -576,7 +573,6 @@ updateTab tab model =
                         model.form
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
-                |> withTakeOver candidacyId
 
         View.Candidacy.Training candidacyId ->
             let
@@ -593,7 +589,6 @@ updateTab tab model =
                         model.form
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
-                |> withTakeOver candidacyId
 
         View.Candidacy.Empty ->
             ( newModel, Cmd.none )

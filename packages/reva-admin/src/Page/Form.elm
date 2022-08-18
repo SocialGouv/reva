@@ -39,8 +39,8 @@ type Element
     | SelectOther String String
 
 
-type alias Form =
-    { elements : List ( String, Element )
+type alias Form referential =
+    { elements : referential -> List ( String, Element )
     , title : String
     }
 
@@ -49,28 +49,28 @@ type alias FormData =
     Dict String String
 
 
-type RemoteForm
+type RemoteForm referential
     = NotAsked
-    | Loading Form
-    | Editing Form FormData
-    | Saving Form FormData
+    | Loading (Form referential)
+    | Editing (Form referential) FormData
+    | Saving (Form referential) FormData
     | Failure
 
 
-type alias Model =
+type alias Model referential =
     { endpoint : String
     , onRedirect : Cmd Msg
     , onSave : (RemoteData String () -> Msg) -> Dict String String -> Cmd Msg
     , token : Token
     , filter : Maybe String
-    , form : RemoteForm
+    , form : RemoteForm referential
     }
 
 
-init : String -> Token -> ( Model, Cmd msg )
+init : String -> Token -> ( Model referential, Cmd msg )
 init endpoint token =
     let
-        model : Model
+        model : Model referential
         model =
             { endpoint = endpoint
             , onRedirect = Cmd.none
@@ -89,8 +89,8 @@ init endpoint token =
 -- VIEW
 
 
-view : Model -> Html Msg
-view model =
+view : RemoteData String referential -> Model referential -> Html Msg
+view remoteReferential model =
     let
         saveButton label =
             button
@@ -112,30 +112,39 @@ view model =
                 [ text label ]
 
         content =
-            case model.form of
-                NotAsked ->
+            case ( remoteReferential, model.form ) of
+                ( RemoteData.NotAsked, _ ) ->
                     text ""
 
-                Loading _ ->
+                ( _, NotAsked ) ->
+                    text ""
+
+                ( RemoteData.Loading, _ ) ->
                     text "..."
 
-                Saving form formData ->
-                    viewForm formData form <|
+                ( _, Loading _ ) ->
+                    text "..."
+
+                ( RemoteData.Success referential, Saving form formData ) ->
+                    viewForm referential formData form <|
                         disabledSaveButton "Enregistrement..."
 
-                Editing form formData ->
-                    viewForm formData form <|
+                ( RemoteData.Success referential, Editing form formData ) ->
+                    viewForm referential formData form <|
                         saveButton "Enregistrer"
 
-                Failure ->
+                ( _, Failure ) ->
                     text "Une erreur est survenue"
+
+                ( RemoteData.Failure err, _ ) ->
+                    text err
     in
     div [ class "bg-white h-full py-8 px-16" ]
         [ content ]
 
 
-viewForm : FormData -> Form -> Html Msg -> Html Msg
-viewForm formData form saveButton =
+viewForm : referential -> FormData -> Form referential -> Html Msg -> Html Msg
+viewForm referential formData form saveButton =
     Html.form
         [ onSubmit UserClickedSave ]
         [ h2
@@ -144,7 +153,8 @@ viewForm formData form saveButton =
         , div
             [ class "mt-6 space-y-10" ]
           <|
-            List.map (viewElement formData) form.elements
+            List.map (viewElement formData) <|
+                form.elements referential
         , div
             [ class "mt-8 border-t pb-4 flex justify-end" ]
             [ saveButton
@@ -301,7 +311,7 @@ viewChoice currentValue choice =
 -- UPDATE
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : Msg -> Model referential -> ( Model referential, Cmd Msg )
 update msg model =
     let
         noChange =
@@ -345,13 +355,13 @@ update msg model =
 
 
 updateForm :
-    { form : Form
+    { form : Form referential
     , onLoad : (RemoteData String (Dict String String) -> Msg) -> Cmd Msg
     , onRedirect : Cmd Msg
     , onSave : (RemoteData String () -> Msg) -> Dict String String -> Cmd Msg
     }
-    -> Model
-    -> ( Model, Cmd Msg )
+    -> Model referential
+    -> ( Model referential, Cmd Msg )
 updateForm config model =
     ( { model
         | form = Loading config.form
