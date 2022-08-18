@@ -12,6 +12,7 @@ import Admin.Object exposing (Candidacy)
 import Api exposing (Token)
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
+import Data.Certification
 import Data.Form.Appointment exposing (candidateTypologyToString)
 import Data.Form.Training
 import Data.Referential exposing (Referential)
@@ -277,6 +278,7 @@ appointmentForm =
             , Autre
             ]
                 |> List.map candidateTypologyToString
+                |> List.indexedMap (\index el -> ( String.fromInt index, el ))
     in
     { elements =
         \referential ->
@@ -297,17 +299,14 @@ trainingForm =
             Data.Form.Training.keys
 
         certifications referential =
-            -- TODO: get this referential from the certificates database
-            [ "Titre Professionnel Assistant maternel / Garde d'enfants"
-            , "Titre Professionnel Conducteur accompagnateur de personnes à mobilité réduite (CApmr)"
-            ]
+            List.map (\certification -> ( Data.Certification.idToString certification.id, certification.label )) referential.certifications
 
         mandatoryTrainings referential =
             List.map (\training -> ( training.id, training.label )) referential.training
     in
     { elements =
         \referential ->
-            [ ( keys.certificates, Form.Select "Certification visée" <| certifications referential )
+            [ ( keys.certificate, Form.Select "Certification visée" <| certifications referential )
             , ( keys.individualHourCount, Form.Number "Nombre d'heure d'accompagnement individuel" )
             , ( keys.collectiveHourCount, Form.Number "Nombre d'heure d'accompagnement collectif" )
             , ( keys.additionalHourCount, Form.Number "Nombre d'heures de formations complémentaires" )

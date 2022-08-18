@@ -1,5 +1,6 @@
-module Data.Certification exposing (Certification, CertificationSummary)
+module Data.Certification exposing (Certification, CertificationSummary, idToString)
 
+import Admin.Scalar exposing (Id(..))
 import Data.Scalar
 
 
@@ -22,3 +23,8 @@ type alias CertificationSummary =
     { id : Data.Scalar.Id
     , label : String
     }
+
+
+idToString : Id -> String
+idToString (Id id) =
+    id

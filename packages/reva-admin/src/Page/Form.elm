@@ -35,7 +35,7 @@ type Element
     | Input String
     | Number String
     | Textarea String
-    | Select String (List String)
+    | Select String (List ( String, String ))
     | SelectOther String String
 
 
@@ -302,9 +302,11 @@ defaultValue element =
             ""
 
 
-viewChoice : String -> String -> Html msg
-viewChoice currentValue choice =
-    option [ selected (choice == currentValue) ] [ text choice ]
+viewChoice : String -> ( String, String ) -> Html msg
+viewChoice currentChoiceId ( choiceId, choice ) =
+    option
+        [ selected (choiceId == currentChoiceId), value choiceId ]
+        [ text choice ]
 
 
 
@@ -335,7 +337,7 @@ update msg model =
             noChange
 
         ( GotLoadResponse (RemoteData.Success formData), Loading form ) ->
-            ( { model | form = Editing form formData }, Cmd.none )
+            ( { model | form = Editing form (Debug.log "" <| formData) }, Cmd.none )
 
         ( GotLoadResponse (RemoteData.Failure _), Loading form ) ->
             ( { model | form = Failure }, Cmd.none )
