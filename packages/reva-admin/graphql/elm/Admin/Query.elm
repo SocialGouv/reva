@@ -78,6 +78,13 @@ getCertifications object____ =
     Object.selectionForCompositeField "getCertifications" [] object____ (Basics.identity >> Decode.list)
 
 
+getRegions :
+    SelectionSet decodesTo Admin.Object.Region
+    -> SelectionSet (List decodesTo) RootQuery
+getRegions object____ =
+    Object.selectionForCompositeField "getRegions" [] object____ (Basics.identity >> Decode.list)
+
+
 type alias SearchCertificationsAndProfessionsOptionalArguments =
     { query : OptionalArgument String }
 

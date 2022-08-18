@@ -63,12 +63,13 @@ buildCandidacyInput :
     CandidacyInputRequiredFields
     -> CandidacyInput
 buildCandidacyInput required____ =
-    { deviceId = required____.deviceId, certificationId = required____.certificationId }
+    { deviceId = required____.deviceId, certificationId = required____.certificationId, regionId = required____.regionId }
 
 
 type alias CandidacyInputRequiredFields =
     { deviceId : Data.Scalar.Id
     , certificationId : Data.Scalar.Id
+    , regionId : Data.Scalar.Id
     }
 
 
@@ -77,6 +78,7 @@ type alias CandidacyInputRequiredFields =
 type alias CandidacyInput =
     { deviceId : Data.Scalar.Id
     , certificationId : Data.Scalar.Id
+    , regionId : Data.Scalar.Id
     }
 
 
@@ -85,7 +87,7 @@ type alias CandidacyInput =
 encodeCandidacyInput : CandidacyInput -> Value
 encodeCandidacyInput input____ =
     Encode.maybeObject
-        [ ( "deviceId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.deviceId |> Just ), ( "certificationId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.certificationId |> Just ) ]
+        [ ( "deviceId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.deviceId |> Just ), ( "certificationId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.certificationId |> Just ), ( "regionId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.regionId |> Just ) ]
 
 
 buildCandidateGoalInput :

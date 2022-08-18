@@ -35,6 +35,11 @@ certificationId =
     Object.selectionForField "Data.Scalar.Id" "certificationId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
+regionId : SelectionSet Data.Scalar.Id Admin.Object.Candidacy
+regionId =
+    Object.selectionForField "Data.Scalar.Id" "regionId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
+
+
 companionId : SelectionSet (Maybe Data.Scalar.Id) Admin.Object.Candidacy
 companionId =
     Object.selectionForField "(Maybe Data.Scalar.Id)" "companionId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder |> Decode.nullable)
