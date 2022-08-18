@@ -45,5 +45,13 @@ type Referential
     = Referential
 
 
+type Region
+    = Region
+
+
 type SearchCertificationsAndProfessionsResult
     = SearchCertificationsAndProfessionsResult
+
+
+type Training
+    = Training

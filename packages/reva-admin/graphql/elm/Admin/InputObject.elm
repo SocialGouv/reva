@@ -39,13 +39,13 @@ type alias AppointmentInformationsInputRequiredFields =
 
 
 type alias AppointmentInformationsInputOptionalFields =
-    { firstAppointmentOccuredAt : OptionalArgument Data.Scalar.Date }
+    { firstAppointmentOccuredAt : OptionalArgument Data.Scalar.Timestamp }
 
 
 {-| Type for the AppointmentInformationsInput input object.
 -}
 type alias AppointmentInformationsInput =
-    { firstAppointmentOccuredAt : OptionalArgument Data.Scalar.Date
+    { firstAppointmentOccuredAt : OptionalArgument Data.Scalar.Timestamp
     , wasPresentAtFirstAppointment : Bool
     , appointmentCount : Int
     }
@@ -56,19 +56,20 @@ type alias AppointmentInformationsInput =
 encodeAppointmentInformationsInput : AppointmentInformationsInput -> Value
 encodeAppointmentInformationsInput input____ =
     Encode.maybeObject
-        [ ( "firstAppointmentOccuredAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDate) |> Encode.optional input____.firstAppointmentOccuredAt ), ( "wasPresentAtFirstAppointment", Encode.bool input____.wasPresentAtFirstAppointment |> Just ), ( "appointmentCount", Encode.int input____.appointmentCount |> Just ) ]
+        [ ( "firstAppointmentOccuredAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) |> Encode.optional input____.firstAppointmentOccuredAt ), ( "wasPresentAtFirstAppointment", Encode.bool input____.wasPresentAtFirstAppointment |> Just ), ( "appointmentCount", Encode.int input____.appointmentCount |> Just ) ]
 
 
 buildCandidacyInput :
     CandidacyInputRequiredFields
     -> CandidacyInput
 buildCandidacyInput required____ =
-    { deviceId = required____.deviceId, certificationId = required____.certificationId }
+    { deviceId = required____.deviceId, certificationId = required____.certificationId, regionId = required____.regionId }
 
 
 type alias CandidacyInputRequiredFields =
     { deviceId : Data.Scalar.Id
     , certificationId : Data.Scalar.Id
+    , regionId : Data.Scalar.Id
     }
 
 
@@ -77,6 +78,7 @@ type alias CandidacyInputRequiredFields =
 type alias CandidacyInput =
     { deviceId : Data.Scalar.Id
     , certificationId : Data.Scalar.Id
+    , regionId : Data.Scalar.Id
     }
 
 
@@ -85,7 +87,7 @@ type alias CandidacyInput =
 encodeCandidacyInput : CandidacyInput -> Value
 encodeCandidacyInput input____ =
     Encode.maybeObject
-        [ ( "deviceId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.deviceId |> Just ), ( "certificationId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.certificationId |> Just ) ]
+        [ ( "deviceId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.deviceId |> Just ), ( "certificationId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.certificationId |> Just ), ( "regionId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.regionId |> Just ) ]
 
 
 buildCandidateGoalInput :
@@ -200,7 +202,7 @@ buildExperienceInput required____ =
 
 type alias ExperienceInputRequiredFields =
     { title : String
-    , startedAt : Data.Scalar.Date
+    , startedAt : Data.Scalar.Timestamp
     , duration : Admin.Enum.Duration.Duration
     , description : String
     }
@@ -210,7 +212,7 @@ type alias ExperienceInputRequiredFields =
 -}
 type alias ExperienceInput =
     { title : String
-    , startedAt : Data.Scalar.Date
+    , startedAt : Data.Scalar.Timestamp
     , duration : Admin.Enum.Duration.Duration
     , description : String
     }
@@ -221,4 +223,4 @@ type alias ExperienceInput =
 encodeExperienceInput : ExperienceInput -> Value
 encodeExperienceInput input____ =
     Encode.maybeObject
-        [ ( "title", Encode.string input____.title |> Just ), ( "startedAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDate) input____.startedAt |> Just ), ( "duration", Encode.enum Admin.Enum.Duration.toString input____.duration |> Just ), ( "description", Encode.string input____.description |> Just ) ]
+        [ ( "title", Encode.string input____.title |> Just ), ( "startedAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) input____.startedAt |> Just ), ( "duration", Encode.enum Admin.Enum.Duration.toString input____.duration |> Just ), ( "description", Encode.string input____.description |> Just ) ]

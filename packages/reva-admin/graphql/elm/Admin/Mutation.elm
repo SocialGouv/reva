@@ -19,6 +19,11 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode exposing (Decoder)
 
 
+account_createAccount : SelectionSet (Maybe Data.Scalar.Void) RootMutation
+account_createAccount =
+    Object.selectionForField "(Maybe Data.Scalar.Void)" "account_createAccount" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecVoid |> .decoder |> Decode.nullable)
+
+
 type alias CandidacyCreateCandidacyRequiredArguments =
     { candidacy : Admin.InputObject.CandidacyInput }
 
@@ -49,6 +54,7 @@ type alias CandidacyUpdateCertificationRequiredArguments =
     { deviceId : Data.Scalar.Id
     , candidacyId : Data.Scalar.Id
     , certificationId : Data.Scalar.Id
+    , regionId : Data.Scalar.Id
     }
 
 
@@ -57,7 +63,7 @@ candidacy_updateCertification :
     -> SelectionSet decodesTo Admin.Object.Candidacy
     -> SelectionSet (Maybe decodesTo) RootMutation
 candidacy_updateCertification requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidacy_updateCertification" [ Argument.required "deviceId" requiredArgs____.deviceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "certificationId" requiredArgs____.certificationId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+    Object.selectionForCompositeField "candidacy_updateCertification" [ Argument.required "deviceId" requiredArgs____.deviceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "certificationId" requiredArgs____.certificationId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "regionId" requiredArgs____.regionId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
 
 
 type alias CandidacyAddExperienceOptionalArguments =

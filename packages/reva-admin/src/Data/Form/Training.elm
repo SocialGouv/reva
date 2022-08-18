@@ -2,7 +2,7 @@ module Data.Form.Training exposing (keys)
 
 
 keys :
-    { certificates : String
+    { certificate : String
     , mandatoryTrainings : String
     , basicSkill1 : String
     , basicSkill2 : String
@@ -15,7 +15,7 @@ keys :
     , additionalHourCount : String
     }
 keys =
-    { certificates = "certificates"
+    { certificate = "certificate"
     , mandatoryTrainings = "mandatory-training"
     , basicSkill1 = "basicSkill1"
     , basicSkill2 = "basicSkill2"

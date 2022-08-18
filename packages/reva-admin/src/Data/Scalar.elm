@@ -1,4 +1,4 @@
-module Data.Scalar exposing (Date, Id, Void, codecs)
+module Data.Scalar exposing (Id, Timestamp, Void, codecs)
 
 import Admin.Scalar exposing (defaultCodecs)
 import Json.Decode as Decode
@@ -6,7 +6,7 @@ import Json.Encode as Encode
 import Time
 
 
-type alias Date =
+type alias Timestamp =
     Time.Posix
 
 
@@ -18,10 +18,10 @@ type alias Void =
     Admin.Scalar.Void
 
 
-codecs : Admin.Scalar.Codecs Date Id Void
+codecs : Admin.Scalar.Codecs Id Timestamp Void
 codecs =
     Admin.Scalar.defineCodecs
-        { codecDate =
+        { codecTimestamp =
             { encoder = Time.posixToMillis >> Encode.int
             , decoder = Decode.int |> Decode.map Time.millisToPosix
             }

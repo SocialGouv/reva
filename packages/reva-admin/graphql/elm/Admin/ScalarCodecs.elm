@@ -8,22 +8,22 @@ import Admin.Scalar exposing (defaultCodecs)
 import Json.Decode as Decode exposing (Decoder)
 
 
-type alias Date =
-    Admin.Scalar.Date
-
-
 type alias Id =
     Admin.Scalar.Id
+
+
+type alias Timestamp =
+    Admin.Scalar.Timestamp
 
 
 type alias Void =
     Admin.Scalar.Void
 
 
-codecs : Admin.Scalar.Codecs Date Id Void
+codecs : Admin.Scalar.Codecs Id Timestamp Void
 codecs =
     Admin.Scalar.defineCodecs
-        { codecDate = defaultCodecs.codecDate
-        , codecId = defaultCodecs.codecId
+        { codecId = defaultCodecs.codecId
+        , codecTimestamp = defaultCodecs.codecTimestamp
         , codecVoid = defaultCodecs.codecVoid
         }

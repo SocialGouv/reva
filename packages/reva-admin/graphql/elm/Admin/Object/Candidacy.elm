@@ -35,6 +35,11 @@ certificationId =
     Object.selectionForField "Data.Scalar.Id" "certificationId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
+regionId : SelectionSet Data.Scalar.Id Admin.Object.Candidacy
+regionId =
+    Object.selectionForField "Data.Scalar.Id" "regionId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
+
+
 companionId : SelectionSet (Maybe Data.Scalar.Id) Admin.Object.Candidacy
 companionId =
     Object.selectionForField "(Maybe Data.Scalar.Id)" "companionId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder |> Decode.nullable)
@@ -81,9 +86,9 @@ typologyAdditional =
     Object.selectionForField "(Maybe String)" "typologyAdditional" [] (Decode.string |> Decode.nullable)
 
 
-firstAppointmentOccuredAt : SelectionSet (Maybe Data.Scalar.Date) Admin.Object.Candidacy
+firstAppointmentOccuredAt : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.Candidacy
 firstAppointmentOccuredAt =
-    Object.selectionForField "(Maybe Data.Scalar.Date)" "firstAppointmentOccuredAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder |> Decode.nullable)
+    Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "firstAppointmentOccuredAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)
 
 
 appointmentCount : SelectionSet (Maybe Int) Admin.Object.Candidacy
@@ -103,6 +108,6 @@ candidacyStatuses object____ =
     Object.selectionForCompositeField "candidacyStatuses" [] object____ (Basics.identity >> Decode.list)
 
 
-createdAt : SelectionSet Data.Scalar.Date Admin.Object.Candidacy
+createdAt : SelectionSet Data.Scalar.Timestamp Admin.Object.Candidacy
 createdAt =
-    Object.selectionForField "Data.Scalar.Date" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDate |> .decoder)
+    Object.selectionForField "Data.Scalar.Timestamp" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)

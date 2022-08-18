@@ -1,6 +1,6 @@
 module Data.Form.Helper exposing (booleanFromString, booleanToString, dateFromString, dateToString, defaultDate, required, toDict)
 
-import Data.Scalar exposing (Date)
+import Data.Scalar exposing (Timestamp)
 import Date
 import Dict
 import Iso8601
@@ -26,14 +26,14 @@ booleanFromString b =
             False
 
 
-dateFromString : String -> Maybe Date
+dateFromString : String -> Maybe Timestamp
 dateFromString date =
     Iso8601.toTime date
         |> Result.map Just
         |> Result.withDefault Nothing
 
 
-dateToString : Date -> String
+dateToString : Timestamp -> String
 dateToString date =
     Date.fromPosix Time.utc date
         |> Date.toIsoString
