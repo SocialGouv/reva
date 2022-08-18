@@ -10,7 +10,8 @@ describe("domain candidacy", () => {
         {
           id: '123',
           deviceId: '12',
-          companionId: '456',
+          regionId: '456',
+          certification: {},
           experiences: [],
           goals: [],
           phone: '0600000000',
@@ -23,7 +24,8 @@ describe("domain candidacy", () => {
         {
           id: '123',
           deviceId: '12',
-          companionId: '456',
+          regionId: '456',
+          certification: {},
           experiences: [],
           goals: [],
           phone: '0600000000',
@@ -37,7 +39,8 @@ describe("domain candidacy", () => {
 
     const result = await createCandidacyWithDeps({
       deviceId: '12',
-      certificationId: '1234'
+      certificationId: '1234',
+      regionId: '56'
     });
 
     expect(result.extract()).toBeInstanceOf(FunctionalError);
@@ -56,7 +59,8 @@ describe("domain candidacy", () => {
 
     const result = await createCandidacyWithDeps({
       deviceId: '12',
-      certificationId: '1234'
+      certificationId: '1234',
+      regionId: '56'
     });
 
     expect(result.extract()).toBeInstanceOf(FunctionalError);
@@ -73,7 +77,8 @@ describe("domain candidacy", () => {
         {
           ...params,
           id: '123',
-          companionId: '456',
+          regionId: '456',
+          certification: {},
           experiences: [],
           goals: [],
           phone: '0600000000',
@@ -86,7 +91,8 @@ describe("domain candidacy", () => {
 
     const result = await createCandidacyWithDeps({
       deviceId: '12',
-      certificationId: '1234'
+      certificationId: '1234',
+      regionId: '56'
     });
 
     expect(result.extract()).not.toBeInstanceOf(FunctionalError);
@@ -94,7 +100,8 @@ describe("domain candidacy", () => {
       expect.objectContaining({
         id: '123',
         deviceId: '12',
-        companionId: '456',
+        regionId: '456',
+        certification: {},
         experiences: [],
         goals: [],
         candidacyStatuses: []
