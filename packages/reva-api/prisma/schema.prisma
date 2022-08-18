@@ -36,7 +36,9 @@ model Certification {
   status      CertificationStatus @default(INACTIVE)
   rncpId      String    @unique @map("rncp_id") @db.VarChar(255)
   romes       RomesOnCertifications[]
-  candidacies Candidacy[]
+  // candidacies Candidacy[]
+  candidaciesAndRegions CandidaciesOnRegionsAndCertifications[]
+  organismsAndRegions OrganismsOnRegionsAndCertifications[]
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
 
@@ -85,39 +87,17 @@ model RomesOnCertifications {
   @@map("rome_certification")
 }
 
-model Companion {
-  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  name        String    @unique @db.VarChar(255)
-  street      String
-  city        String
-  zipCode     String
-  candidacies Candidacy[]
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
-  @@map("companion")
-}
-
-// model Candidate {
-//   id        String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-//   socialSecurityNumber  String?    @unique @db.VarChar(15)
-//   firstname  String?    @db.VarChar(255)
-//   lastname  String?    @db.VarChar(255)
-//   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-//   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
-//   @@map("candidate")
-// }
 
 model Candidacy {
   id        String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
   deviceId  String    @db.VarChar(255)
   keycloakSub String? @db.Uuid  @map("keycloak_sub") 
-  companion       Companion? @relation(fields: [companionId], references: [id])
-  companionId     String?        @db.Uuid  @map("companion_id")
-  certification       Certification @relation(fields: [certificationId], references: [id])
-  certificationId     String        @db.Uuid  @map("certification_id")
+  organism       Organism? @relation(fields: [organismId], references: [id])
+  organismId     String?        @db.Uuid  @map("organism_id")
   candidacyStatuses CandidaciesStatus[]
   goals CandicadiesOnGoals[]
   experiences Experience[]
+  certificationsAndRegions CandidaciesOnRegionsAndCertifications[]
   typology CandidateTypology  @default(NON_SPECIFIE)
   typologyAdditional String? @map("typology_additional")
   firstAppointmentOccuredAt   DateTime?  @db.Timestamptz(6) @map("first_appointment_occured_at")
@@ -199,6 +179,61 @@ enum CandidateTypology {
   AIDANTS_FAMILIAUX
   AUTRE
 }
+
+model Region {
+  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
+  label       String   @unique @db.VarChar(255)
+  code        String    @unique @db.VarChar(3)
+  candidaciesAndCertifications CandidaciesOnRegionsAndCertifications[]
+  organismsAndCertifications OrganismsOnRegionsAndCertifications[]
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  @@map("region")
+}
+
+model CandidaciesOnRegionsAndCertifications {
+  id        String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
+  candidacy       Candidacy @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
+  candidacyId     String        @db.Uuid  @map("candidacy_id")
+  region                Region          @relation(fields: [regionId], references: [id])
+  regionId              String        @db.Uuid  @map("region_id")
+  certification                Certification          @relation(fields: [certificationId], references: [id])
+  certificationId              String        @db.Uuid  @map("certification_id")
+  isActive    Boolean   @default(false) @map("is_active")
+  author      String    @db.VarChar(255)
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+
+  // @@unique([candidacyId, regionId, certificationId])
+  @@map("candidacy_region_certification")
+}
+
+model Account {
+  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()")) 
+  @@map("account")
+}
+
+model Organism {
+  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()")) 
+  candidacies Candidacy[]
+  regionsAndCertifications OrganismsOnRegionsAndCertifications[]
+  @@map("organism")
+}
+
+model OrganismsOnRegionsAndCertifications {
+  organism       Organism @relation(fields: [organismId], references: [id], onDelete: Cascade)
+  organismId     String        @db.Uuid  @map("organism_id")
+  region                Region          @relation(fields: [regionId], references: [id])
+  regionId              String        @db.Uuid  @map("region_id")
+  certification                Certification          @relation(fields: [certificationId], references: [id])
+  certificationId              String        @db.Uuid  @map("certification_id")
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+
+  @@id([organismId, regionId, certificationId])
+  @@map("organism_region_certification")
+}
+
 
 model Training {
   id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))

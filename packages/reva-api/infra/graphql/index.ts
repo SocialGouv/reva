@@ -10,13 +10,16 @@ import { VoidTypeDefinition, VoidResolver, TimestampTypeDefinition, TimestampRes
 import * as search from "./search";
 import * as candidacy from "./candidacy";
 import * as referential from "./referential";
+import * as account from "./account";
 
 const typeDefs = loadFilesSync(path.join(__dirname, "."), {
   extensions: ["graphql"],
   recursive: true,
 });
 
-const resolvers = mergeResolvers([search.resolvers, candidacy.resolvers, referential.resolvers]);
+const resolvers = mergeResolvers([search.resolvers, candidacy.resolvers, referential.resolvers
+  , account.resolvers
+]);
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;
 

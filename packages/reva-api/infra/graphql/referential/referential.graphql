@@ -10,7 +10,14 @@ type Goal {
   isActive: Boolean!
 }
 
+type Region {
+  id: ID!
+  code: String!
+  label: String!
+}
+
 type Query {
   getReferential: Referential!
   getCertifications: [Certification!]!
+  getRegions: [Region!]!
 }

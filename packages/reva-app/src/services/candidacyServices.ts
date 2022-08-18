@@ -3,13 +3,22 @@ import { ApolloClient, gql } from "@apollo/client";
 import { Experience } from "../interface";
 
 const CREATE_CANDIDACY_WITH_CERTIFICATION = gql`
-  mutation create_candidacy($deviceId: ID!, $certificationId: ID!) {
+  mutation create_candidacy(
+    $deviceId: ID!
+    $certificationId: ID!
+    $regionId: ID!
+  ) {
     candidacy_createCandidacy(
-      candidacy: { deviceId: $deviceId, certificationId: $certificationId }
+      candidacy: {
+        deviceId: $deviceId
+        certificationId: $certificationId
+        regionId: $regionId
+      }
     ) {
       id
       deviceId
       certificationId
+      regionId
       createdAt
     }
   }
@@ -20,13 +29,15 @@ export const createCandidacyWithCertification =
   ({
     deviceId,
     certificationId,
+    regionId,
   }: {
     deviceId: string;
     certificationId: string;
+    regionId: string;
   }) =>
     client.mutate({
       mutation: CREATE_CANDIDACY_WITH_CERTIFICATION,
-      variables: { deviceId, certificationId },
+      variables: { deviceId, certificationId, regionId },
     });
 
 const UPDATE_CERTIFICATION = gql`
@@ -34,11 +45,13 @@ const UPDATE_CERTIFICATION = gql`
     $deviceId: ID!
     $candidacyId: ID!
     $certificationId: ID!
+    $regionId: ID!
   ) {
     candidacy_updateCertification(
       deviceId: $deviceId
       candidacyId: $candidacyId
       certificationId: $certificationId
+      regionId: $regionId
     ) {
       id
     }
@@ -51,14 +64,16 @@ export const updateCertification =
     deviceId,
     candidacyId,
     certificationId,
+    regionId,
   }: {
     deviceId: string;
     candidacyId: string;
     certificationId: string;
+    regionId: string;
   }) =>
     client.mutate({
       mutation: UPDATE_CERTIFICATION,
-      variables: { deviceId, candidacyId, certificationId },
+      variables: { deviceId, candidacyId, certificationId, regionId },
     });
 
 const SAVE_GOALS = gql`
