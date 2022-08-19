@@ -125,32 +125,29 @@ export const Certificates = ({ mainService }: Props) => {
             secteurs de la dépendance et de la santé ? Choisissez votre diplôme
             et laissez-vous accompagner !
           </p>
-          <form className="mt-4 space-y-6">
-            <Select
-              name="select_region"
-              className="my-8"
-              placeholder="Ma Région"
-              options={[
-                { label: "IDF", value: "idf" },
-                { label: "Normandie", value: "normandie" },
-              ]}
-              onChangeHandler={(e) => {
-                const el = e.target as HTMLOptionElement;
-                setChosenRegion(el.value);
-                console.log(el.value);
-              }}
-            />
-          </form>
+          <Select
+            name="select_region"
+            className="my-8"
+            placeholder="Ma Région"
+            options={[
+              { label: "IDF", value: "idf" },
+              { label: "Normandie", value: "normandie" },
+            ]}
+            onChangeHandler={(e) => {
+              const el = e.target as HTMLOptionElement;
+              setChosenRegion(el.value);
+            }}
+          />
         </div>
         {!!chosenRegion && (
-          <div className="px-8">
+          <motion.div initial={{ y: 100 }} animate={{ y: 0 }} className="px-8">
             <Results
               title="Liste des certifications éligibles :"
               listClassName="my-4 space-y-8"
             >
               {displayCards()}
             </Results>
-          </div>
+          </motion.div>
         )}
       </motion.div>
       {candidateButton()}
