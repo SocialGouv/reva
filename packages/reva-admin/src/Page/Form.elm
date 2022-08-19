@@ -156,7 +156,7 @@ viewForm referential formData form saveButton =
             List.map (viewElement formData) <|
                 form.elements referential
         , div
-            [ class "mt-8 border-t pb-4 flex justify-end" ]
+            [ class "mt-8 pb-4 flex justify-end" ]
             [ saveButton
             ]
         ]

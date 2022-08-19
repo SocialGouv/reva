@@ -102,7 +102,7 @@ viewInfo dataTestId label value =
 
 title : String -> Html msg
 title s =
-    h3 [ class "text-lg font-bold mb-2" ] [ text s ]
+    h3 [ class "text-xl font-bold mb-2" ] [ text s ]
 
 
 viewGoal : Referential -> CandidacyGoal -> Html msg
@@ -139,8 +139,8 @@ viewDuration duration =
 
 viewExperience : CandidacyExperience -> Html msg
 viewExperience experience =
-    div [ class "rounded-lg px-5 py-4 bg-gray-100 leading-tight" ]
-        [ h4 [ class "text-base font-semibold mb-2" ] [ text experience.title ]
+    div [ class "rounded-lg px-5 py-4 bg-gray-100 text-base leading-tight" ]
+        [ h4 [ class "font-semibold mb-2" ] [ text experience.title ]
         , p [ class "my-4" ] [ text "Démarrée en ", Date.view experience.startedAt ]
         , p [ class "font-bold my-4" ] [ text "Durée d'expérience ", viewDuration experience.duration ]
         , p [ class "italic" ] [ text "\"", text experience.description, text "\"" ]
@@ -152,7 +152,9 @@ viewGoals referential candidacyGoals =
     div [ class "text-purple-800 my-10" ]
         [ title "Mon objectif"
         , ul
-            [ class "mb-4 rounded-lg px-5 py-4 bg-purple-100 leading-tight" ]
+            [ class "mb-4 rounded-lg px-5 py-4 bg-purple-100 leading-tight"
+            , class "text-lg"
+            ]
           <|
             if List.isEmpty candidacyGoals then
                 [ li [ class "italic opacity-50" ] [ text "Non renseigné" ] ]
