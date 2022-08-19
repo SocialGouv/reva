@@ -169,6 +169,15 @@ viewElement formData ( elementId, element ) =
             Dict.get elementId formData
                 |> Maybe.withDefault (defaultValue element)
 
+        inputStyle =
+            String.join " "
+                [ "border-b-[3px] border-0 border-b-gray-900"
+                , "focus:ring-blue-500 focus:ring-0 focus:border-blue-600"
+                , "text-xl placeholder:text-gray-500"
+                , "block bg-gray-100 pl-8"
+                ]
+                |> class
+
         inputView dataType extraClass =
             input
                 [ type_ dataType
@@ -176,8 +185,8 @@ viewElement formData ( elementId, element ) =
                 , id elementId
                 , onInput (UserChangedElement elementId)
                 , class extraClass
-                , class "focus:ring-blue-500 focus:border-blue-500"
-                , class "block min-w-0 rounded sm:text-sm border-gray-300"
+                , class "min-w-0 h-[85px] pr-4"
+                , inputStyle
                 , value dataOrDefault
                 ]
                 []
@@ -199,8 +208,8 @@ viewElement formData ( elementId, element ) =
                 [ name elementId
                 , id elementId
                 , onInput (UserChangedElement elementId)
-                , class "shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                , class "block w-full sm:text-sm border-gray-300 rounded-md"
+                , class "w-full pr-8 h-[150px]"
+                , inputStyle
                 , value dataOrDefault
                 ]
                 []
@@ -251,7 +260,7 @@ viewElement formData ( elementId, element ) =
                 |> withLegend label
 
         Date label ->
-            inputView "date" "w-36"
+            inputView "date" "w-60"
                 |> withLabel label
 
         Empty ->
@@ -262,7 +271,7 @@ viewElement formData ( elementId, element ) =
                 |> withLabel label
 
         Number label ->
-            inputView "number" "w-20"
+            inputView "number" "w-40"
                 |> withLabel label
 
         Textarea label ->
@@ -273,8 +282,8 @@ viewElement formData ( elementId, element ) =
             select
                 [ id elementId
                 , onInput (UserChangedElement elementId)
-                , class "mt-1 block w-full pl-3 pr-10 py-2"
-                , class "text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                , class "mt-1 block w-full h-[85px] pr-10"
+                , inputStyle
                 ]
                 (List.map (viewChoice dataOrDefault) choices)
                 |> withLabel label
@@ -337,7 +346,7 @@ update msg model =
             noChange
 
         ( GotLoadResponse (RemoteData.Success formData), Loading form ) ->
-            ( { model | form = Editing form (Debug.log "" <| formData) }, Cmd.none )
+            ( { model | form = Editing form formData }, Cmd.none )
 
         ( GotLoadResponse (RemoteData.Failure _), Loading form ) ->
             ( { model | form = Failure }, Cmd.none )

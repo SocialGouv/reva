@@ -261,7 +261,7 @@ viewMain dataTestValue =
     node "main"
         [ dataTest dataTestValue
         , class "relative z-10 overflow-y-auto focus:outline-none"
-        , class "h-screen w-2/3 max-w-2xl bg-white"
+        , class "h-screen w-2/3 max-w-3xl bg-white"
         ]
 
 
@@ -277,8 +277,7 @@ appointmentForm =
             , AidantsFamiliaux
             , Autre
             ]
-                |> List.map candidateTypologyToString
-                |> List.indexedMap (\index el -> ( String.fromInt index, el ))
+                |> List.map (\el -> ( candidateTypologyToString el, candidateTypologyToString el ))
     in
     { elements =
         \referential ->
@@ -386,7 +385,7 @@ viewDirectoryPanel config candidacies =
     in
     aside
         [ class "hidden md:order-first md:flex md:flex-col flex-shrink-0"
-        , class "w-2/3 max-w-2xl h-screen"
+        , class "w-2/3 max-w-3xl h-screen"
         , class "bg-white"
         ]
         [ div
