@@ -337,7 +337,7 @@ update msg model =
             noChange
 
         ( GotLoadResponse (RemoteData.Success formData), Loading form ) ->
-            ( { model | form = Editing form (Debug.log "" <| formData) }, Cmd.none )
+            ( { model | form = Editing form formData }, Cmd.none )
 
         ( GotLoadResponse (RemoteData.Failure _), Loading form ) ->
             ( { model | form = Failure }, Cmd.none )
