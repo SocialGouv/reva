@@ -224,9 +224,9 @@ viewNavigationSteps baseUrl candidacyId =
     let
         title =
             [ div
-                [ class "h-32 flex items-end -mb-6" ]
+                [ class "h-32 flex items-end -mb-12" ]
                 [ span
-                    [ class "text-lg font-medium" ]
+                    [ class "text-2xl font-medium" ]
                     [ text "Prochaines étapes" ]
                 ]
             ]
@@ -236,9 +236,9 @@ viewNavigationSteps baseUrl candidacyId =
             , div
                 []
                 [ button
-                    [ class "bg-gray-900 text-white text-sm"
-                    , class "mt-1 w-auto rounded"
-                    , class "text-center px-4 py-1"
+                    [ class "bg-slate-900 text-white text-base"
+                    , class "mt-2 w-auto rounded"
+                    , class "text-center px-8 py-1"
                     ]
                     [ text buttonLabel ]
                 ]
@@ -253,9 +253,10 @@ viewNavigationSteps baseUrl candidacyId =
     View.Steps.view
         [ { content = title, navigation = Nothing }
         , { content = expandedView "Rendez-vous pédagogique" "Mettre à jour", navigation = appointmentLink }
-        , { content = expandedView "Rendez-vous pédagogique" "Compléter", navigation = trainingLink }
+        , { content = expandedView "Définition du parcours" "Compléter", navigation = trainingLink }
         , { content = [ View.Steps.item "Validation du parcours" ], navigation = Nothing }
-        , { content = [ View.Steps.item "Transmission du devis" ], navigation = Nothing }
+        , { content = [ View.Steps.item "Gestion de la recevabilité" ], navigation = Nothing }
+        , { content = [ View.Steps.item "Demande de prise en charge" ], navigation = Nothing }
         , { content = [ View.Steps.item "Validation du projet" ], navigation = Nothing }
         ]
 

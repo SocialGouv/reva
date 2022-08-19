@@ -20,7 +20,7 @@ view timelineElements =
 
         viewNavigationTimelineStep index element =
             li
-                [ class "pb-8 relative" ]
+                [ class "pb-14 relative" ]
                 [ if index + 1 == timelineSize then
                     text ""
 
@@ -79,5 +79,5 @@ view timelineElements =
 item : String -> Html msg
 item label =
     div
-        [ class "flex items-center justify-between w-52" ]
-        [ span [ class "text-sm" ] [ text label ], span [ class "text-lg" ] [ text "→" ] ]
+        [ class "flex items-center justify-between w-60" ]
+        [ span [ class "text-base" ] [ text label ], span [ class "text-lg" ] [ text "→" ] ]
