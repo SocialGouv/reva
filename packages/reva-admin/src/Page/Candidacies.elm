@@ -219,6 +219,7 @@ viewContent config model candidacies =
         ]
 
 
+viewNavigationSteps : String -> CandidacyId -> Html msg
 viewNavigationSteps baseUrl candidacyId =
     let
         title =
@@ -230,8 +231,8 @@ viewNavigationSteps baseUrl candidacyId =
                 ]
             ]
 
-        appointmentView =
-            [ View.Steps.item "Rendez-vous pédagogique"
+        expandedView stepTitle buttonLabel =
+            [ View.Steps.item stepTitle
             , div
                 []
                 [ button
@@ -239,17 +240,20 @@ viewNavigationSteps baseUrl candidacyId =
                     , class "mt-1 w-auto rounded"
                     , class "text-center px-4 py-1"
                     ]
-                    [ text "Mettre à jour" ]
+                    [ text buttonLabel ]
                 ]
             ]
 
         appointmentLink =
             Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Meetings candidacyId)
+
+        trainingLink =
+            Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Training candidacyId)
     in
     View.Steps.view
         [ { content = title, navigation = Nothing }
-        , { content = appointmentView, navigation = appointmentLink }
-        , { content = [ View.Steps.item "Définition du parcours" ], navigation = Nothing }
+        , { content = expandedView "Rendez-vous pédagogique" "Mettre à jour", navigation = appointmentLink }
+        , { content = expandedView "Rendez-vous pédagogique" "Compléter", navigation = trainingLink }
         , { content = [ View.Steps.item "Validation du parcours" ], navigation = Nothing }
         , { content = [ View.Steps.item "Transmission du devis" ], navigation = Nothing }
         , { content = [ View.Steps.item "Validation du projet" ], navigation = Nothing }
