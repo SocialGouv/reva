@@ -1,3 +1,5 @@
 scalar Timestamp
 
 scalar Void
+
+scalar UUID

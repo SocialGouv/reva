@@ -6,6 +6,7 @@ import { getCandidacy } from "../../../domain/features/getCandidacy";
 import { getCandidacySummaries } from "../../../domain/features/getCandidacies";
 import { getCompanions } from "../../../domain/features/getCompanions";
 import { getDeviceCandidacy } from "../../../domain/features/getDeviceCandidacy";
+import { getOrganismsForCandidacy } from "../../../domain/features/getOrganismsForCandidacy";
 import { submitCandidacy } from "../../../domain/features/submitCandidacy";
 import { takeOverCandidacy } from "../../../domain/features/takeOverCandidacy";
 import { updateAppointmentInformations } from "../../../domain/features/updateAppointmentInformations";
@@ -14,11 +15,13 @@ import { updateContactOfCandidacy } from "../../../domain/features/updateContact
 import { updateExperienceOfCandidacy } from "../../../domain/features/updateExperienceOfCandidacy";
 import { updateGoalsOfCandidacy } from "../../../domain/features/updateGoalsOfCandidacy";
 import * as candidacyDb from "../../database/postgres/candidacies";
+import * as organismDb from "../../database/postgres/organisms";
 import * as experienceDb from "../../database/postgres/experiences";
 import * as goalDb from "../../database/postgres/goals";
 import * as trainingDb from "../../database/postgres/trainings";
 import mercurius from "mercurius";
 import { getTrainings } from "../../../domain/features/getTrainings";
+import { selectOrganismForCandidacy } from "../../../domain/features/selectOrganismForCandidacy";
 
 
 export const resolvers = {
@@ -37,16 +40,17 @@ export const resolvers = {
       })({ role: "test" });
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
-    getCompanions: async () => {
-      // const result = await getCompanions({ getCompanions: candidacyDb.getCompanions })();
-
-      // return result.extract();
-      return [];
-    },
     getTrainings: async () => {
       const result = await getTrainings({ getTrainings: trainingDb.getTrainings })();
 
       return result.extract();
+    },
+    getOrganismsForCandidacy: async (_: unknown, params: { candidacyId: string; }) => {
+      const result = await getOrganismsForCandidacy({
+        getOrganisms: organismDb.getOrganisms
+      })({candidacyId: params.candidacyId})
+
+      return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     }
   },
   Mutation: {
@@ -171,6 +175,18 @@ export const resolvers = {
       })({
         candidacyId: payload.candidacyId
       });
+
+      return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
+    },
+
+    candidacy_selectOrganism: async (_: unknown, payload: any) => {
+      const result = await selectOrganismForCandidacy({
+        updateOrganism: candidacyDb.updateOrganism,
+        getCandidacyFromId: candidacyDb.getCandidacyFromId,
+      })({
+        candidacyId: payload.candidacyId,
+        organismId: payload.organismId
+      })
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     }

@@ -3,7 +3,7 @@ import { loadFilesSync } from "@graphql-tools/load-files";
 import { mergeTypeDefs, mergeResolvers } from "@graphql-tools/merge";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { GraphQLScalarType } from "graphql";
-import { VoidTypeDefinition, VoidResolver, TimestampTypeDefinition, TimestampResolver } from 'graphql-scalars';
+import { VoidTypeDefinition, VoidResolver, TimestampTypeDefinition, TimestampResolver, UUIDResolver, UUIDDefinition } from 'graphql-scalars';
 
 // Resolvers
 
@@ -22,12 +22,14 @@ const resolvers = mergeResolvers([search.resolvers, candidacy.resolvers, referen
 ]);
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;
+resolvers.UUID = UUIDResolver
 
 export const graphqlConfiguration = {
   schema: makeExecutableSchema({
     typeDefs: mergeTypeDefs([...typeDefs
       , TimestampTypeDefinition
       , VoidTypeDefinition
+      , UUIDDefinition
     ]),
     resolvers,
   }),

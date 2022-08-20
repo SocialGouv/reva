@@ -62,7 +62,7 @@ export const getCertificationById = async ({ id }: { id: string; }): Promise<Cer
   return null;
 };
 
-export const getCertifications = async (): Promise<Either<string, Certification[]>> => {
+export const getCertifications = async ({regionId}: {regionId: string}): Promise<Either<string, Certification[]>> => {
   try {
     const certifications = (await prismaClient.$queryRaw`
     SELECT certification_search.id AS id,
@@ -78,6 +78,8 @@ export const getCertifications = async (): Promise<Either<string, Certification[
         certification.status
         FROM certification_search
         INNER JOIN certification ON certification.id = certification_search.id
+        INNER JOIN organism_region_certification ON organism_region_certification.certification_id = certification.id
+        WHERE organism_region_certification.region_id = ${regionId}
         ORDER BY label DESC;
   `) as Certification[];
 

@@ -17,10 +17,10 @@ export const resolvers = {
         goals: goals
       };
     },
-    getCertifications: async (_: any, _payload: any) => {
+    getCertifications: async (_: any, payload: any) => {
       const result = await getCertifications({
         getCertifications:  certificationsDb.getCertifications
-      })();
+      })({regionId: payload.regionId});
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
