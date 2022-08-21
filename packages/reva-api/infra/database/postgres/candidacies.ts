@@ -24,18 +24,13 @@ const toDomainCandidacies = (candidacies: (Candidacy & { candidacyStatuses: Cand
 
 export const insertCandidacy = async (params: { deviceId: string; certificationId: string; regionId: string; }): Promise<Either<string, domain.Candidacy>> => {
     try {
-
-        // TODO : remove me when regionId is set in front
-        const region = await prismaClient.region.findFirst();
-
         const newCandidacy = await prismaClient.candidacy.create({
             data: {
                 deviceId: params.deviceId,
                 certificationsAndRegions: {
                     create: {
                         certificationId: params.certificationId,
-                        // TODO : remove `region?.id ||` when regionId is set in front
-                        regionId: region?.id || params.regionId,
+                        regionId: params.regionId,
                         author: 'candidate',
                         isActive: true
                     }

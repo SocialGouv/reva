@@ -264,7 +264,7 @@ const INITIALIZE_APP = gql`
       id
       deviceId
       certificationId
-      companionId
+      organismId
       email
       phone
       createdAt
