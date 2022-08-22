@@ -7,3 +7,4 @@ node_modules
 packages/reva-website/public/style.css
 packages/reva-api/infra/generated-graphql-schema.graphql
 .parcel-cache
+.vscode

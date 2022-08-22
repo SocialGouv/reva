@@ -1,6 +1,6 @@
-import { SearchIcon } from "../Icons";
+import { SyntheticEvent } from "react";
 
-type option = {
+export type option = {
   label: string;
   value: string;
 };
@@ -26,6 +26,14 @@ interface SelectProps {
    * Selected value
    */
   defaultValue?: string;
+  /**
+   * Placeholder
+   **/
+  placeholder?: string;
+  /**
+   * Event handler
+   */
+  onChangeHandler?: (event: SyntheticEvent) => void;
 }
 
 export const Select = ({
@@ -34,7 +42,8 @@ export const Select = ({
   name,
   options = [],
   defaultValue,
-  ...props
+  placeholder = "Sélectionnez une option",
+  onChangeHandler,
 }: SelectProps) => {
   return (
     <div className={`w-full ${className}`}>
@@ -48,13 +57,13 @@ export const Select = ({
         name={name}
         defaultValue={defaultValue || "unknown"}
         className="px-6 flex items-center w-full h-16 border-0 bg-gray-100 border-b-[3px] border-gray-600 focus:ring-0 focus:border-blue-600 text-lg"
-        {...props}
+        onChange={onChangeHandler}
       >
         <option key="0" value="unknown" disabled hidden>
-          Sélectionnez une option
+          {placeholder}
         </option>
-        {options.map((opt, index) => (
-          <option key={index + 1} value={opt.value}>
+        {options.map((opt) => (
+          <option key={opt.label} value={opt.value}>
             {opt.label}
           </option>
         ))}

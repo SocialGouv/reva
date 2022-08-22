@@ -42,3 +42,8 @@ export interface Goal {
   id: string;
   label: string;
 }
+
+export interface Regions {
+  code: string;
+  label: string;
+}
