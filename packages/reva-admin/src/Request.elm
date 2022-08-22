@@ -4,7 +4,6 @@ module Request exposing
     , requestAppointment
     , requestCandidacies
     , requestCandidacy
-    , requestCertifications
     , requestReferential
     , takeOverCandidacy
     , updateAppointment
@@ -125,15 +124,6 @@ certificationSummarySelection =
     SelectionSet.succeed Data.Certification.CertificationSummary
         |> with Admin.Object.Certification.id
         |> with Admin.Object.Certification.label
-
-
-requestCertifications :
-    String
-    -> (RemoteData String (List Data.Certification.CertificationSummary) -> msg)
-    -> Cmd msg
-requestCertifications endpointGraphql toMsg =
-    Query.getCertifications certificationSummarySelection
-        |> makeQuery endpointGraphql toMsg
 
 
 
@@ -356,14 +346,14 @@ requestGoals endpointGraphql toMsg =
 referentialSelection : SelectionSet Data.Referential.Referential Graphql.Operation.RootQuery
 referentialSelection =
     let
-        certificationRequiredArguments =
-            Query.GetCertificationsRequiredArguments (Uuid "")
+        certificationsRequiredArguments =
+            Query.GetCertificationsRequiredArguments (Uuid "3c56e421-6437-46c4-81ea-544089c1ff41")
     in
     SelectionSet.succeed
         (\certifications referentialGoals trainings ->
             Data.Referential.Referential certifications referentialGoals.goals trainings
         )
-        |> with (Query.getCertifications certificationRequiredArguments certificationSummarySelection)
+        |> with (Query.getCertifications certificationsRequiredArguments certificationSummarySelection)
         |> with (Query.getReferential goalsSelection)
         |> with (Query.getTrainings trainingsSelection)
 
