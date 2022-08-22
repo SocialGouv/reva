@@ -139,7 +139,12 @@ export const Certificates = ({ mainService }: Props) => {
             options={selectsOptionsRegions}
             onChangeHandler={(e) => {
               const el = e.target as HTMLOptionElement;
-              setChosenRegion(el.value);
+              const regionCode = el.value;
+              setChosenRegion(regionCode);
+              send({
+                type: "SELECT_REGION",
+                regionId: regionCode,
+              });
             }}
           />
         </div>

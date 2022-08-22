@@ -1,15 +1,13 @@
 import { ApolloClient, gql } from "@apollo/client";
 
-const SEARCH_CERTIFICATIONS_AND_PROFESSIONS = gql`
-  query Certifications($query: String!) {
-    searchCertificationsAndProfessions(query: $query) {
-      certifications {
-        id
-        label
-        summary
-        codeRncp
-        status
-      }
+const SEARCH_CERTIFICATIONS_FOR_REGION = gql`
+  query Certifications($query: UUID!) {
+    getCertifications(regionId: $query) {
+      id
+      label
+      summary
+      codeRncp
+      status
     }
   }
 `;
@@ -18,7 +16,7 @@ export const searchCertifications =
   (client: ApolloClient<object>) =>
   ({ query }: { query: string }) =>
     client.query({
-      query: SEARCH_CERTIFICATIONS_AND_PROFESSIONS,
+      query: SEARCH_CERTIFICATIONS_FOR_REGION,
       variables: { query },
     });
 

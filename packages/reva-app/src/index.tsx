@@ -1,12 +1,7 @@
 import "./index.css";
 
-import {
-  ApolloClient,
-  ApolloProvider,
-  InMemoryCache,
-  gql,
-  useQuery,
-} from "@apollo/client";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+// import { inspect } from "@xstate/inspect";
 import React from "react";
 import ReactDOM from "react-dom";
 
@@ -18,6 +13,9 @@ const client = new ApolloClient({
   uri: process.env.REACT_APP_API_GRAPHQL || "http://localhost:8080/graphql",
   cache: new InMemoryCache(),
 });
+
+//// Uncomment to debug XState
+// inspect({ iframe: false });
 
 ReactDOM.render(
   <React.StrictMode>

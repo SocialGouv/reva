@@ -178,6 +178,13 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
       </>
     );
 
+    const clickHandler = () => {
+      if (isReduced) {
+        setSize("open");
+        onOpen();
+      }
+    };
+
     return (
       <li ref={ref}>
         <motion.button
@@ -187,7 +194,7 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
           layoutDependency={size}
           data-test={`certification-select-${id}`}
           tabIndex={isSelectable ? 0 : -1}
-          onClick={() => (isReduced ? (setSize("open"), onOpen()) : {})}
+          onClick={clickHandler}
           whileTap={{ scale: isReduced ? 0.96 : 1 }}
           {...props}
         >
