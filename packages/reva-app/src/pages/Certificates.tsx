@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Interpreter } from "xstate";
 
 import { Header } from "../components/atoms/Header";
-import { Select } from "../components/atoms/Select";
+import { Select, option } from "../components/atoms/Select";
 import { CandidateButton } from "../components/organisms/CandidateButton";
 import { Card } from "../components/organisms/Card";
 import { transitionIn } from "../components/organisms/Card/view";
@@ -35,6 +35,13 @@ export const Certificates = ({ mainService }: Props) => {
       );
     }
   }, []);
+
+  const selectsOptionsRegions: option[] = state.context.regions
+    .map((r) => ({
+      label: r.label,
+      value: r.code,
+    }))
+    .sort((a, b) => new Intl.Collator("fr").compare(a.label, b.label));
 
   const CertificateCard = (certification: Certification) => {
     const isSelected =
@@ -129,10 +136,7 @@ export const Certificates = ({ mainService }: Props) => {
             name="select_region"
             className="my-8"
             placeholder="Ma Région"
-            options={[
-              { label: "IDF", value: "idf" },
-              { label: "Normandie", value: "normandie" },
-            ]}
+            options={selectsOptionsRegions}
             onChangeHandler={(e) => {
               const el = e.target as HTMLOptionElement;
               setChosenRegion(el.value);

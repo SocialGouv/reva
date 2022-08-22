@@ -7,6 +7,7 @@ import {
   Experience,
   Experiences,
   Goal,
+  Regions,
 } from "../interface";
 
 const loadingApplicationData = "loadingApplicationData";
@@ -54,6 +55,7 @@ export interface MainContext {
   experiences: Experiences;
   goals: Goal[];
   projectStatus?: ProjectStatus;
+  regions: Regions[];
 }
 
 export type MainEvent =
@@ -122,6 +124,7 @@ export type MainState =
         experiences: Experience[];
         goals: Goal[];
         projectStatus?: ProjectStatus;
+        regions: string[];
       };
     };
 
@@ -141,6 +144,7 @@ export const mainMachine =
         experiences: { rest: [] },
         goals: [],
         projectStatus: "draft",
+        regions: [],
       },
       initial: "loadingApplicationData",
       id: "mainMachine",
@@ -188,6 +192,7 @@ export const mainMachine =
               {
                 actions: assign({
                   goals: (_, event) => event.data.referentials.goals,
+                  regions: (_, event) => event.data.regions,
                 }),
                 cond: (_context, event) =>
                   event.data.graphQLErrors[0]?.extensions.code ===
@@ -853,21 +858,6 @@ export const mainMachine =
         navigatePrevious: assign((_context, _event) => ({
           direction: "previous",
         })),
-      },
-      services: {
-        searchCertifications: (_context, _event) =>
-          Promise.reject("Not implemented"),
-        getCertification: (_context, _event) =>
-          Promise.reject("Not implemented"),
-        saveCertification: (_context, _event) =>
-          Promise.reject("Not implemented"),
-        updateCertification: (_context, _event) =>
-          Promise.reject("Not implemented"),
-        initializeApp: (_context, _event) => Promise.reject("Not implemented"),
-        saveGoals: (_context, _event) => Promise.reject("Not implemented"),
-        saveExperience: (_context, _event) => Promise.reject("Not implemented"),
-        submitCandidacy: (_context, _event) =>
-          Promise.reject("Not implemented"),
       },
     }
   );

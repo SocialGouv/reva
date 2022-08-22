@@ -1,6 +1,6 @@
 import { SyntheticEvent } from "react";
 
-type option = {
+export type option = {
   label: string;
   value: string;
 };

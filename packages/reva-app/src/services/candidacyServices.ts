@@ -298,6 +298,11 @@ const INITIALIZE_APP = gql`
         order
       }
     }
+
+    getRegions {
+      code
+      label
+    }
   }
 `;
 
@@ -339,6 +344,7 @@ export const initializeApp =
       referentials: {
         goals: data.getReferential.goals,
       },
+      regions: data.getRegions,
       graphQLErrors: errors,
     };
   };
