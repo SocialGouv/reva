@@ -47,7 +47,7 @@ type alias Candidacy =
     { id : CandidacyId
     , deviceId : String
     , certificationId : String
-    , companionId : Maybe String
+    , organismId : Maybe String
     , certification : Certification
     , goals : List CandidacyGoal
     , experiences : List CandidacyExperience
@@ -62,7 +62,7 @@ type alias CandidacySummary =
     { id : CandidacyId
     , deviceId : String
     , certificationId : String
-    , companionId : Maybe String
+    , organismId : Maybe String
     , certification : Certification
     , phone : Maybe String
     , email : Maybe String
@@ -124,7 +124,7 @@ toCandidacySummary candidacy =
     { id = candidacy.id
     , deviceId = candidacy.deviceId
     , certificationId = candidacy.certificationId
-    , companionId = candidacy.companionId
+    , organismId = candidacy.organismId
     , certification = candidacy.certification
     , phone = candidacy.phone
     , email = candidacy.email
