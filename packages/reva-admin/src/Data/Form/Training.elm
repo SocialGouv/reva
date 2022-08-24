@@ -55,7 +55,7 @@ fromDict mandatoryTrainings dict =
             Helper.decode keys dict
     in
     Training
-        (decode.selection mandatoryTrainings)
+        (decode.list mandatoryTrainings)
         (decode.string .basicSkill1 "")
         (decode.string .basicSkill2 "")
         (decode.string .basicSkill3 "")

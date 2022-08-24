@@ -112,7 +112,7 @@ decode :
         , date : (a -> String) -> Maybe Timestamp -> Maybe Timestamp
         , generic : (a -> String) -> (String -> data) -> data -> data
         , int : (a -> String) -> Int -> Int
-        , selection : List { b | id : String } -> List String
+        , list : List { b | id : String } -> List String
         , string : (a -> String) -> String -> String
         }
 decode keys dict =
@@ -120,7 +120,7 @@ decode keys dict =
     , date = date keys dict
     , generic = generic keys dict
     , int = int keys dict
-    , selection = selection dict
+    , list = selection dict
     , string = string keys dict
     }
 
