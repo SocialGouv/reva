@@ -20,9 +20,9 @@ import String exposing (String)
 import View.Helpers exposing (dataTest)
 
 
-type Msg
+type Msg referential
     = UserChangedElement String String
-    | UserClickedSave
+    | UserClickedSave referential
     | GotSaveResponse (RemoteData String ())
     | GotLoadResponse (RemoteData String (Dict String String))
 
@@ -59,8 +59,8 @@ type RemoteForm referential
 
 type alias Model referential =
     { endpoint : String
-    , onRedirect : Cmd Msg
-    , onSave : (RemoteData String () -> Msg) -> Dict String String -> Cmd Msg
+    , onRedirect : Cmd (Msg referential)
+    , onSave : (RemoteData String () -> Msg referential) -> referential -> Dict String String -> Cmd (Msg referential)
     , token : Token
     , filter : Maybe String
     , form : RemoteForm referential
@@ -74,7 +74,7 @@ init endpoint token =
         model =
             { endpoint = endpoint
             , onRedirect = Cmd.none
-            , onSave = \_ _ -> Cmd.none
+            , onSave = \_ _ _ -> Cmd.none
             , token = token
             , filter = Nothing
             , form = NotAsked
@@ -89,7 +89,7 @@ init endpoint token =
 -- VIEW
 
 
-view : RemoteData String referential -> Model referential -> Html Msg
+view : RemoteData String referential -> Model referential -> Html (Msg referential)
 view remoteReferential model =
     let
         saveButton label =
@@ -143,10 +143,10 @@ view remoteReferential model =
         [ content ]
 
 
-viewForm : referential -> FormData -> Form referential -> Html Msg -> Html Msg
+viewForm : referential -> FormData -> Form referential -> Html (Msg referential) -> Html (Msg referential)
 viewForm referential formData form saveButton =
     Html.form
-        [ onSubmit UserClickedSave ]
+        [ onSubmit (UserClickedSave referential) ]
         [ h2
             [ class "text-4xl font-medium text-gray-900 leading-none mb-12" ]
             [ text form.title ]
@@ -162,7 +162,7 @@ viewForm referential formData form saveButton =
         ]
 
 
-viewElement : FormData -> ( String, Element ) -> Html Msg
+viewElement : FormData -> ( String, Element ) -> Html (Msg referential)
 viewElement formData ( elementId, element ) =
     let
         dataOrDefault =
@@ -322,7 +322,7 @@ viewChoice currentChoiceId ( choiceId, choice ) =
 -- UPDATE
 
 
-update : Msg -> Model referential -> ( Model referential, Cmd Msg )
+update : Msg referential -> Model referential -> ( Model referential, Cmd (Msg referential) )
 update msg model =
     let
         noChange =
@@ -339,10 +339,10 @@ update msg model =
         ( UserChangedElement _ _, _ ) ->
             noChange
 
-        ( UserClickedSave, Editing form formData ) ->
-            ( { model | form = Saving form formData }, model.onSave GotSaveResponse formData )
+        ( UserClickedSave referential, Editing form formData ) ->
+            ( { model | form = Saving form formData }, model.onSave GotSaveResponse referential formData )
 
-        ( UserClickedSave, _ ) ->
+        ( UserClickedSave _, _ ) ->
             noChange
 
         ( GotLoadResponse (RemoteData.Success formData), Loading form ) ->
@@ -367,12 +367,12 @@ update msg model =
 
 updateForm :
     { form : Form referential
-    , onLoad : (RemoteData String (Dict String String) -> Msg) -> Cmd Msg
-    , onRedirect : Cmd Msg
-    , onSave : (RemoteData String () -> Msg) -> Dict String String -> Cmd Msg
+    , onLoad : (RemoteData String (Dict String String) -> Msg referential) -> Cmd (Msg referential)
+    , onRedirect : Cmd (Msg referential)
+    , onSave : (RemoteData String () -> Msg referential) -> referential -> Dict String String -> Cmd (Msg referential)
     }
     -> Model referential
-    -> ( Model referential, Cmd Msg )
+    -> ( Model referential, Cmd (Msg referential) )
 updateForm config model =
     ( { model
         | form = Loading config.form

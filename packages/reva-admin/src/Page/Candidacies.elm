@@ -37,7 +37,7 @@ type Msg
     | GotCandidacyDeletionResponse (RemoteData String String)
     | GotCandidacyArchivingResponse (RemoteData String Candidacy)
     | GotCandidacyTakingOverResponse (RemoteData String Candidacy)
-    | GotFormMsg Form.Msg
+    | GotFormMsg (Form.Msg Referential)
     | GotReferentialResponse (RemoteData String Referential)
     | UserAddedFilter String
     | UserArchivedCandidacy Candidacy
@@ -563,7 +563,9 @@ updateTab tab model =
                     Form.updateForm
                         { form = appointmentForm
                         , onLoad = Request.requestAppointment model.endpoint candidacyId
-                        , onSave = Request.updateAppointment model.endpoint candidacyId
+                        , onSave =
+                            \formMsg _ formData ->
+                                Request.updateAppointment model.endpoint candidacyId formMsg formData
                         , onRedirect =
                             Nav.pushUrl
                                 model.navKey
@@ -579,7 +581,7 @@ updateTab tab model =
                     Form.updateForm
                         { form = trainingForm
                         , onLoad = Request.requestAppointment model.endpoint candidacyId
-                        , onSave = Request.updateAppointment model.endpoint candidacyId
+                        , onSave = Request.updateTrainings model.endpoint candidacyId
                         , onRedirect =
                             Nav.pushUrl
                                 model.navKey
