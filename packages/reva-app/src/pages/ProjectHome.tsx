@@ -207,7 +207,7 @@ export const ProjectHome = ({
             {state.context.organism?.address}
           </p>
         )}
-        {state.context.organism?.city && state.context.organism?.zip && (
+        {state.context.organism?.zip && state.context.organism?.city && (
           <p data-test="project-home-organism-address">
             {state.context.organism?.zip} {state.context.organism?.city}
           </p>
@@ -243,7 +243,9 @@ export const ProjectHome = ({
         {editGoals}
         {editExperiences}
         {editContact}
-        {editOrganism}
+        {
+          //editOrganism
+        }
       </div>
     </div>
   );
