@@ -201,7 +201,7 @@ export const ProjectHome = ({
           {state.context.organism?.label}
         </h3>
       )}
-      <div className="text-gray-600 leading-relaxed">
+      <address className="text-gray-600 leading-relaxed">
         {state.context.organism?.address && (
           <p data-test="project-home-organism-address">
             {state.context.organism?.address}
@@ -217,7 +217,7 @@ export const ProjectHome = ({
             {state.context.organism?.email}
           </p>
         )}
-      </div>
+      </address>
       <div className="mt-4 text-sm text-slate-400">
         {!isValidated && (
           <Button
