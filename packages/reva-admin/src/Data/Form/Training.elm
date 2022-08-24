@@ -7,7 +7,7 @@ import Dict exposing (Dict)
 
 
 type alias Training =
-    { mandatoryTrainings : List MandatoryTraining
+    { mandatoryTrainingIds : List String
     , basicSkill1 : String
     , basicSkill2 : String
     , basicSkill3 : String
@@ -51,17 +51,17 @@ keys =
 fromDict : List MandatoryTraining -> Dict String String -> Training
 fromDict mandatoryTrainings dict =
     let
-        parse =
-            Helper.parse keys dict
+        decode =
+            Helper.decode keys dict
     in
     Training
-        []
-        (parse.string .basicSkill1 "")
-        (parse.string .basicSkill2 "")
-        (parse.string .basicSkill3 "")
-        (parse.string .certificateSkills "")
-        (parse.bool .digitalSkill False)
-        (parse.string .otherTraining "")
-        (parse.int .individualHourCount 0)
-        (parse.int .collectiveHourCount 0)
-        (parse.int .additionalHourCount 0)
+        (decode.selection mandatoryTrainings)
+        (decode.string .basicSkill1 "")
+        (decode.string .basicSkill2 "")
+        (decode.string .basicSkill3 "")
+        (decode.string .certificateSkills "")
+        (decode.bool .digitalSkill False)
+        (decode.string .otherTraining "")
+        (decode.int .individualHourCount 0)
+        (decode.int .collectiveHourCount 0)
+        (decode.int .additionalHourCount 0)

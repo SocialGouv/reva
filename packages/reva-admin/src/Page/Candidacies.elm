@@ -12,7 +12,6 @@ import Admin.Object exposing (Candidacy)
 import Api exposing (Token)
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
-import Data.Certification
 import Data.Form.Appointment exposing (candidateTypologyToString)
 import Data.Form.Training
 import Data.Referential exposing (Referential)

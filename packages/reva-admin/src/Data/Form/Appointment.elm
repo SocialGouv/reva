@@ -37,15 +37,15 @@ keys =
 appointmentFromDict : CandidacyId -> Dict String String -> Appointment
 appointmentFromDict candidacyId dict =
     let
-        parse =
-            Helper.parse keys dict
+        decode =
+            Helper.decode keys dict
     in
     Appointment candidacyId
-        (parse.generic .typology candidateTypologyFromString NonSpecifie)
-        (parse.string .additionalInformation "")
-        (parse.date .firstAppointmentOccurredAt Nothing)
-        (parse.int .appointmentCount 0)
-        (parse.bool .wasPresentAtFirstAppointment False)
+        (decode.generic .typology candidateTypologyFromString NonSpecifie)
+        (decode.string .additionalInformation "")
+        (decode.date .firstAppointmentOccurredAt Nothing)
+        (decode.int .appointmentCount 0)
+        (decode.bool .wasPresentAtFirstAppointment False)
 
 
 appointment : Maybe CandidateTypology -> Maybe String -> Maybe Data.Scalar.Timestamp -> Maybe Int -> Maybe Bool -> Dict String String

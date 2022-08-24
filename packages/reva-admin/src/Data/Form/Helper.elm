@@ -3,9 +3,9 @@ module Data.Form.Helper exposing
     , booleanToString
     , dateFromString
     , dateToString
+    , decode
     , defaultDate
     , generic
-    , parse
     , toDict
     )
 
@@ -86,7 +86,25 @@ string keys dict key default =
     generic keys dict key identity default
 
 
-parse :
+selection : Dict.Dict String String -> List { a | id : String } -> List String
+selection dict referential =
+    let
+        isSelected item value =
+            if value == "checked" then
+                Just item.id
+
+            else
+                Nothing
+    in
+    List.filterMap
+        (\item ->
+            Dict.get item.id dict
+                |> Maybe.andThen (isSelected item)
+        )
+        referential
+
+
+decode :
     a
     -> Dict.Dict String String
     ->
@@ -94,13 +112,15 @@ parse :
         , date : (a -> String) -> Maybe Timestamp -> Maybe Timestamp
         , generic : (a -> String) -> (String -> data) -> data -> data
         , int : (a -> String) -> Int -> Int
+        , selection : List { b | id : String } -> List String
         , string : (a -> String) -> String -> String
         }
-parse keys dict =
+decode keys dict =
     { bool = bool keys dict
     , date = date keys dict
     , generic = generic keys dict
     , int = int keys dict
+    , selection = selection dict
     , string = string keys dict
     }
 

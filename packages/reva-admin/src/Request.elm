@@ -302,7 +302,7 @@ updateAppointment endpointGraphql candidacyId toMsg dict =
 
 
 
--- TRAINING
+-- TRAININGS
 
 
 updateTrainings :
