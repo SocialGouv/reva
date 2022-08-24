@@ -48,3 +48,12 @@ export interface Regions {
   code: string;
   label: string;
 }
+
+export interface Organism {
+  id: string;
+  address: string;
+  city: string;
+  email: string;
+  label: string;
+  zip: string;
+}
