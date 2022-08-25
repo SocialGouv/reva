@@ -1,4 +1,4 @@
-import { assign, createMachine } from "xstate";
+import { DoneInvokeEvent, assign, createMachine } from "xstate";
 
 import { Direction } from "../components/organisms/Page";
 import {
@@ -188,20 +188,17 @@ export const mainMachine =
                       ? "submitted"
                       : "draft";
                   },
+                  regions: (_, event) => event.data.regions,
                 }),
-                cond: (_context, event) => {
-                  return event.data.candidacy;
-                },
-                target: "#mainMachine.submissionHome.ready",
+                cond: "isAlreadyCandidate",
+                target: "submissionHome.ready",
               },
               {
                 actions: assign({
                   goals: (_, event) => event.data.referentials.goals,
                   regions: (_, event) => event.data.regions,
                 }),
-                cond: (_context, event) =>
-                  event.data.graphQLErrors[0]?.extensions.code ===
-                  "CANDIDACY_DOES_NOT_EXIST",
+                cond: "isNotACandidate",
                 target: "applicationDataLoaded",
               },
             ],
@@ -249,7 +246,14 @@ export const mainMachine =
             ],
           },
         },
-        searchResultsError: {},
+        searchResultsError: {
+          on: {
+            SELECT_REGION: {
+              actions: "selectingRegion",
+              target: "loadingCertifications",
+            },
+          },
+        },
         searchResults: {
           on: {
             SELECT_CERTIFICATION: {
@@ -885,6 +889,19 @@ export const mainMachine =
           },
           error: (_context, _event) => "",
         }),
+      },
+      guards: {
+        isAlreadyCandidate: (_context, event) => {
+          const typedEvent = event as DoneInvokeEvent<any>;
+          return !!typedEvent.data.candidacy;
+        },
+        isNotACandidate: (_context, event) => {
+          const typedEvent = event as DoneInvokeEvent<any>;
+          return (
+            typedEvent.data.graphQLErrors[0]?.extensions.code ===
+            "CANDIDACY_DOES_NOT_EXIST"
+          );
+        },
       },
     }
   );
