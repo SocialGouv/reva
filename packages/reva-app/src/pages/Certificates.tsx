@@ -76,7 +76,8 @@ export const Certificates = ({ mainService }: Props) => {
     const isVisible =
       state.matches("certificateSummary") || state.matches("submissionHome");
     const certification = state.context.certification as Certification;
-    return (
+
+    return isVisible ? (
       <motion.div
         className="absolute bottom-0 z-50 inset-x-0 p-8 bg-slate-900"
         custom={state.toStrings().join("")}
@@ -89,14 +90,14 @@ export const Certificates = ({ mainService }: Props) => {
         animate={isVisible ? "visible" : "hidden"}
         layout="position"
       >
-        {isVisible && (
-          <CandidateButton
-            candidacyId={state.context.candidacyId}
-            certification={certification}
-            send={send}
-          />
-        )}
+        <CandidateButton
+          candidacyId={state.context.candidacyId}
+          certification={certification}
+          send={send}
+        />
       </motion.div>
+    ) : (
+      <></>
     );
   }
 
