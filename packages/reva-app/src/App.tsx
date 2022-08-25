@@ -18,6 +18,7 @@ import { ProjectExperiences } from "./pages/ProjectExperiences";
 import { ProjectGoals } from "./pages/ProjectGoals";
 import { ProjectHelp } from "./pages/ProjectHelp";
 import { ProjectHome } from "./pages/ProjectHome";
+import { ProjectOrganisms } from "./pages/ProjectOrganisms";
 import { ProjectSubmitted } from "./pages/ProjectSubmitted";
 import { SubmissionHome } from "./pages/SubmissionHome";
 import {
@@ -233,7 +234,7 @@ function App() {
   );
 
   const projectContactPage = () => (
-    <ProjectContact key="project-experience" mainService={mainService} />
+    <ProjectOrganisms key="project-experience" mainService={mainService} />
   );
 
   const projectExperiencesPage = () => (
