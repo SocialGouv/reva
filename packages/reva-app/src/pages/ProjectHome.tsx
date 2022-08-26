@@ -72,7 +72,7 @@ export const ProjectHome = ({
       ? send("VALIDATE_PROJECT")
       : send("OPEN_HELP");
 
-  const editCertification = (
+  const EditCertification = () => (
     <div className="bg-slate-900 rounded-xl overflow-hidden mt-6">
       <div className={`mt-5 mr-6 text-white text-right font-bold grow `}>
         {certification.codeRncp}
@@ -109,7 +109,118 @@ export const ProjectHome = ({
     </div>
   );
 
-  const homeContent = (
+  const EditGoals = () => (
+    <div className="rounded-xl pl-8 pr-6 py-6 bg-purple-100 text-purple-800">
+      <h2 className="font-bold mb-2 text-xl">Mon objectif</h2>
+      <ul className="mb-4 text-lg leading-tight">
+        {selectedGoals.map((goal) => (
+          <li className="mb-2" key={goal.id}>
+            {goal.label}
+          </li>
+        ))}
+      </ul>
+      {!isValidated && (
+        <Button
+          data-test="project-home-edit-goals"
+          size="tiny"
+          label={selectedGoals.length > 0 ? "Modifier" : "Choisir"}
+          className="text-white bg-purple-800"
+          onClick={() => send("EDIT_GOALS")}
+        />
+      )}
+    </div>
+  );
+
+  const EditExperiences = () => (
+    <div className="rounded-xl px-8 py-6 bg-slate-100">
+      <h2 className="font-bold text-slate-800 text-xl mb-4">Mes expériences</h2>
+      {sortedExperiences.length > 0 && (
+        <ul
+          data-test="project-home-experiences"
+          className="mb-2 pb-2 flex space-x-3 overflow-x-auto"
+        >
+          {sortedExperiences.map(ExperienceSummary)}
+        </ul>
+      )}
+      <div className="text-sm text-slate-400">
+        {!isValidated && (
+          <Button
+            data-test="project-home-edit-experiences"
+            onClick={() => send("EDIT_EXPERIENCES")}
+            size="tiny"
+            label={sortedExperiences.length > 0 ? "Modifier" : "Ajouter"}
+          />
+        )}
+      </div>
+    </div>
+  );
+
+  const EditContact = () => (
+    <div className="rounded-xl px-8 py-6 bg-neutral-100">
+      <h2 className="font-bold text-slate-800 text-xl mb-4">Mon contact</h2>
+      {state.context.contact?.phone && (
+        <p data-test="project-home-contact-phone" className="mt-2">
+          {state.context.contact?.phone}
+        </p>
+      )}
+      {state.context.contact?.email && (
+        <p data-test="project-home-contact-email" className="mt-2">
+          {state.context.contact?.email}
+        </p>
+      )}
+      <div className="mt-4 text-sm text-slate-400">
+        {!isValidated && (
+          <Button
+            data-test="project-home-edit-contact"
+            onClick={() => send("EDIT_CONTACT")}
+            size="tiny"
+            label={
+              state.context.contact &&
+              (state.context.contact?.phone != "" ||
+                state.context.contact?.email != "")
+                ? "Modifer"
+                : "Ajouter"
+            }
+          />
+        )}
+      </div>
+    </div>
+  );
+
+  const EditOrganism = () => (
+    <div className="rounded-xl px-8 py-6 bg-neutral-100">
+      <h2 className="font-bold text-slate-800 text-xl mb-4">
+        Mon accompagnateur
+      </h2>
+      {state.context.organism?.label && (
+        <h3
+          data-test="project-home-organism-label"
+          className="font-bold text-slate-800 text-xl mb-4"
+        >
+          {state.context.organism?.label}
+        </h3>
+      )}
+      <address className="text-gray-600 leading-relaxed">
+        {state.context.organism?.address && (
+          <p data-test="project-home-organism-address">
+            {state.context.organism?.address}
+          </p>
+        )}
+        {state.context.organism?.zip && state.context.organism?.city && (
+          <p data-test="project-home-organism-address">
+            {state.context.organism?.zip} {state.context.organism?.city}
+          </p>
+        )}
+        {state.context.organism?.email && (
+          <p data-test="project-home-organism-email">
+            {state.context.organism?.email}
+          </p>
+        )}
+      </address>
+    </div>
+  );
+
+  const HomeContent = () => (
     <div className="px-8 scroll-smooth grow overflow-y-auto pb-8">
       {isValidated ? (
         <SubmissionWarning />
@@ -117,78 +228,11 @@ export const ProjectHome = ({
         <ProgressTitle progress={progress} size="large" title="Projet" />
       )}
       <div className="space-y-4">
-        {editCertification}
-        <div className="rounded-xl pl-8 pr-6 py-6 bg-purple-100 text-purple-800">
-          <h2 className="font-bold mb-2 text-xl">Mon objectif</h2>
-          <ul className="mb-4 text-lg leading-tight">
-            {selectedGoals.map((goal) => (
-              <li className="mb-2" key={goal.id}>
-                {goal.label}
-              </li>
-            ))}
-          </ul>
-          {!isValidated && (
-            <Button
-              data-test="project-home-edit-goals"
-              size="tiny"
-              label={selectedGoals.length > 0 ? "Modifier" : "Choisir"}
-              className="text-white bg-purple-800"
-              onClick={() => send("EDIT_GOALS")}
-            />
-          )}
-        </div>
-        <div className="rounded-xl px-8 py-6 bg-slate-100">
-          <h2 className="font-bold text-slate-800 text-xl mb-4">
-            Mes expériences
-          </h2>
-          {sortedExperiences.length > 0 && (
-            <ul
-              data-test="project-home-experiences"
-              className="mb-2 pb-2 flex space-x-3 overflow-x-auto"
-            >
-              {sortedExperiences.map(ExperienceSummary)}
-            </ul>
-          )}
-          <div className="text-sm text-slate-400">
-            {!isValidated && (
-              <Button
-                data-test="project-home-edit-experiences"
-                onClick={() => send("EDIT_EXPERIENCES")}
-                size="tiny"
-                label={sortedExperiences.length > 0 ? "Modifier" : "Ajouter"}
-              />
-            )}
-          </div>
-        </div>
-        <div className="rounded-xl px-8 py-6 bg-neutral-100">
-          <h2 className="font-bold text-slate-800 text-xl mb-4">Mon contact</h2>
-          {state.context.contact?.phone && (
-            <p data-test="project-home-contact-phone" className="mt-2">
-              {state.context.contact?.phone}
-            </p>
-          )}
-          {state.context.contact?.email && (
-            <p data-test="project-home-contact-email" className="mt-2">
-              {state.context.contact?.email}
-            </p>
-          )}
-          <div className="mt-4 text-sm text-slate-400">
-            {!isValidated && (
-              <Button
-                data-test="project-home-edit-contact"
-                onClick={() => send("EDIT_CONTACT")}
-                size="tiny"
-                label={
-                  state.context.contact &&
-                  (state.context.contact?.phone != "" ||
-                    state.context.contact?.email != "")
-                    ? "Modifer"
-                    : "Ajouter"
-                }
-              />
-            )}
-          </div>
-        </div>
+        <EditCertification />
+        <EditGoals />
+        <EditExperiences />
+        <EditContact />
+        <EditOrganism />
       </div>
     </div>
   );
@@ -200,7 +244,7 @@ export const ProjectHome = ({
       direction={state.context.direction}
     >
       <BackButton onClick={() => send("BACK")} />
-      {homeContent}
+      <HomeContent />
       <div className="bg-white flex flex-col items-center pt-4 pb-12">
         <Button
           data-test={`project-home-${isValidated ? "submit" : "validate"}${

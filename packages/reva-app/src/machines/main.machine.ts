@@ -7,6 +7,7 @@ import {
   Experience,
   Experiences,
   Goal,
+  Organism,
   Regions as Region,
 } from "../interface";
 
@@ -54,6 +55,7 @@ export interface MainContext {
   certification?: Certification;
   experiences: Experiences;
   goals: Goal[];
+  organism: Organism; // TODO: move organism to projectHome scope
   projectStatus?: ProjectStatus;
   regions: Region[];
   selectedRegion: Region | undefined;
@@ -147,6 +149,14 @@ export const mainMachine =
         showStatusBar: false,
         experiences: { rest: [] },
         goals: [],
+        organism: {
+          id: "id",
+          address: "2, rue Hippolyte Bayard",
+          city: "Beauvais",
+          email: "stephane.pottier@apradis.eu",
+          label: "CNEAP Hauts de France / Apradis",
+          zip: "60 000",
+        },
         projectStatus: "draft",
         regions: [],
         selectedRegion: undefined,
