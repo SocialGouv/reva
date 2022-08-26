@@ -215,8 +215,19 @@ model Account {
 
 model Organism {
   id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()")) 
+  label String  @unique @db.VarChar(255)
+  adress  String
+  cp  String   @db.VarChar(5)
+  city  String @db.VarChar(255)
+  contactAdministratif String @unique @db.VarChar(255) @map("contact_administratif")
+  contactCommercialName String @map("contact_commercial_name")
+  contactCommercialEmail  String @map("contact_commercial_email")
+  siret String
+  isActive    Boolean   @default(false) @map("is_active")
   candidacies Candidacy[]
   regionsAndCertifications OrganismsOnRegionsAndCertifications[]
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
   @@map("organism")
 }
 

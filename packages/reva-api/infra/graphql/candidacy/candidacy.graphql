@@ -23,7 +23,7 @@ type Candidacy {
   deviceId: ID!
   certificationId: ID!
   regionId: ID!
-  companionId: ID
+  organismId: UUID
   certification: Certification!
   experiences: [Experience!]!
   goals: [CandidateGoal!]!
@@ -42,7 +42,7 @@ type CandidacySummary {
   id: ID!
   deviceId: ID!
   certificationId: ID!
-  companionId: ID
+  organismId: ID
   certification: Certification!
   phone: String
   email: String
@@ -70,12 +70,12 @@ type CandidateGoal {
   additionalInformation: String
 }
 
-type Companion {
-  id: ID!
-  name: String!
-  street: String!
+type Organism {
+  id: UUID!
+  label: String!
+  adress: String!
+  cp: String!
   city: String!
-  zipCode: String!
 }
 
 type Training {
@@ -87,8 +87,8 @@ type Query {
   getCandidacy(deviceId: ID!): Candidacy
   getCandidacyById(id: ID!): Candidacy
   getCandidacies: [CandidacySummary!]!
-  getCompanions: [Companion!]!
   getTrainings: [Training!]!
+  getOrganismsForCandidacy(candidacyId: UUID!): [Organism!]!
 }
 
 # MUTATIONS
@@ -171,4 +171,5 @@ type Mutation {
     appointmentInformations: AppointmentInformationsInput!
   ): Candidacy!
   candidacy_takeOver(candidacyId: ID!): Candidacy!
+  candidacy_selectOrganism(candidacyId: UUID!, organismId: UUID!): Candidacy
 }

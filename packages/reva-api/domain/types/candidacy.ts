@@ -80,3 +80,11 @@ export interface Region {
     code: string;
     label: string;
 }
+
+export interface Organism {
+    id: string;
+    label: string;
+    adress: string;
+    cp: string;
+    city: string;
+}

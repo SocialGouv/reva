@@ -103,7 +103,7 @@ async function main() {
     data: {
       label: `Titre Assistant de vie dépendance`,
       summary: `La mission de l'assistant de vie dépendance est d'accompagner des personnes dont l'autonomie est altérée dans la réalisation de leurs activités, pouvant aller des tâches courantes aux actes essentiels de la vie quotidienne.`,
-      status: 'INACTIVE',
+      status: 'AVAILABLE',
     }
   });
 
@@ -113,7 +113,7 @@ async function main() {
     data: {
       label: `Titre Professionnel Assistant maternel / Garde d'enfants`,
       summary: `L'Assistant maternel ou le Garde d'enfants prend en charge des enfants de la naissance à l'adolescence. Le mode de garde d'enfants chez un assistant maternel ou chez le particulier employeur est en France le premier mode de garde des enfants de moins de 3 ans, en dehors des gardes par la famille.`,
-      status: 'INACTIVE',
+      status: 'AVAILABLE',
     }
   });
 
@@ -122,7 +122,7 @@ async function main() {
     data: {
       label: `Titre Professionnel Employé familial`,
       summary: `L'employé familial intervient au domicile des particuliers (en leur présence ou non) principalement pour l'entretien du cadre de vie, du linge et la préparation des repas. Il est amené à se déplacer aux différents domiciles des particuliers employeurs.`,
-      status: 'INACTIVE',
+      status: 'AVAILABLE',
     }
   });
 
@@ -131,7 +131,7 @@ async function main() {
     data: {
       label: `Titre Professionnel Agent de service médico-social`,
       summary: `L'emploi s'exerce sous la hiérarchie du responsable hôtelier, au sein d'une équipe pluriprofessionnelle. Selon les compétences mises en œuvre, l'emploi s'exerce sous la responsabilité partagée du responsable hôtelier et du responsable soignant.`,
-      status: 'INACTIVE',
+      status: 'AVAILABLE',
     }
   });
 
@@ -140,7 +140,7 @@ async function main() {
     data: {
       label: `Titre Professionnel Assistant de vie aux familles`,
       summary: `L'assistant(e)  de  vie  aux  familles  (ADVF) contribue au bien être des personnes au sein de leur foyer en respectant leur dignité, leur intégrité, leur vie privée et leur sécurité. Il (elle) assure la garde d'enfants vivant  à domicile.`,
-      status: 'INACTIVE',
+      status: 'AVAILABLE',
     }
   });
 
@@ -176,7 +176,7 @@ async function main() {
     data: {
       label: `Titre Professionnel Responsable coordonnateur service au domicile`,
       summary: `Le responsable - coordonnateur services au domicile (RCSAD) assure l'interface entre les clients, les intervenants et la structure de services au domicile. Les activités du RCSAD varient en fonction de l'organisation de la structure, de la répartition des activités et des différents niveaux hiérarchiques.`,
-      status: 'INACTIVE',
+      status: 'AVAILABLE',
     }
   });
 

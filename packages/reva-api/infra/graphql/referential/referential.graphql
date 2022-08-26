@@ -18,6 +18,6 @@ type Region {
 
 type Query {
   getReferential: Referential!
-  getCertifications: [Certification!]!
+  getCertifications(regionId: UUID!): [Certification!]!
   getRegions: [Region!]!
 }
