@@ -149,14 +149,14 @@ export const Certificates = ({ mainService }: Props) => {
           />
         </div>
         {!!chosenRegion && (
-          <motion.div initial={{ y: 100 }} animate={{ y: 0 }} className="px-8">
+          <div className="px-8">
             <Results
               title="Liste des certifications éligibles :"
               listClassName="my-4 space-y-8"
             >
               {displayCards()}
             </Results>
-          </motion.div>
+          </div>
         )}
       </motion.div>
       {candidateButton()}
