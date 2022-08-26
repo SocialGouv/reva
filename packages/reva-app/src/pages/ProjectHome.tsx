@@ -2,7 +2,6 @@ import { useActor } from "@xstate/react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
-import { TextResult } from "../components/atoms/TextResult";
 import { BackButton } from "../components/molecules/BackButton";
 import { ProgressTitle } from "../components/molecules/ProgressTitle";
 import certificationImg from "../components/organisms/Card/certification.png";
@@ -73,7 +72,7 @@ export const ProjectHome = ({
       ? send("VALIDATE_PROJECT")
       : send("OPEN_HELP");
 
-  const editCertification = (
+  const EditCertification = () => (
     <div className="bg-slate-900 rounded-xl overflow-hidden mt-6">
       <div className={`mt-5 mr-6 text-white text-right font-bold grow `}>
         {certification.codeRncp}
@@ -110,7 +109,7 @@ export const ProjectHome = ({
     </div>
   );
 
-  const editGoals = (
+  const EditGoals = () => (
     <div className="rounded-xl pl-8 pr-6 py-6 bg-purple-100 text-purple-800">
       <h2 className="font-bold mb-2 text-xl">Mon objectif</h2>
       <ul className="mb-4 text-lg leading-tight">
@@ -132,7 +131,7 @@ export const ProjectHome = ({
     </div>
   );
 
-  const editExperiences = (
+  const EditExperiences = () => (
     <div className="rounded-xl px-8 py-6 bg-slate-100">
       <h2 className="font-bold text-slate-800 text-xl mb-4">Mes expériences</h2>
       {sortedExperiences.length > 0 && (
@@ -156,7 +155,7 @@ export const ProjectHome = ({
     </div>
   );
 
-  const editContact = (
+  const EditContact = () => (
     <div className="rounded-xl px-8 py-6 bg-neutral-100">
       <h2 className="font-bold text-slate-800 text-xl mb-4">Mon contact</h2>
       {state.context.contact?.phone && (
@@ -188,7 +187,7 @@ export const ProjectHome = ({
     </div>
   );
 
-  const editOrganism = (
+  const EditOrganism = () => (
     <div className="rounded-xl px-8 py-6 bg-neutral-100">
       <h2 className="font-bold text-slate-800 text-xl mb-4">
         Mon accompagnateur
@@ -232,7 +231,7 @@ export const ProjectHome = ({
     </div>
   );
 
-  const homeContent = (
+  const HomeContent = () => (
     <div className="px-8 scroll-smooth grow overflow-y-auto pb-8">
       {isValidated ? (
         <SubmissionWarning />
@@ -240,13 +239,11 @@ export const ProjectHome = ({
         <ProgressTitle progress={progress} size="large" title="Projet" />
       )}
       <div className="space-y-4">
-        {editCertification}
-        {editGoals}
-        {editExperiences}
-        {editContact}
-        {
-          //editOrganism
-        }
+        <EditCertification />
+        <EditGoals />
+        <EditExperiences />
+        <EditContact />
+        <EditOrganism />
       </div>
     </div>
   );
@@ -258,7 +255,7 @@ export const ProjectHome = ({
       direction={state.context.direction}
     >
       <BackButton onClick={() => send("BACK")} />
-      {homeContent}
+      <HomeContent />
       <div className="bg-white flex flex-col items-center pt-4 pb-12">
         <Button
           data-test={`project-home-${isValidated ? "submit" : "validate"}${
