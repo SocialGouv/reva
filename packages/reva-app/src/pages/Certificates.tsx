@@ -122,7 +122,7 @@ export const Certificates = ({ mainService }: Props) => {
       <motion.div
         ref={resultsElement}
         layoutScroll
-        className="h-full overflow-y-auto"
+        className="h-full overflow-y-auto pb-12"
       >
         <div className="px-8 pt-16 lg:pt-8 bg-white">
           <Header label="Bienvenue" />

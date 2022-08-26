@@ -892,9 +892,9 @@ export const mainMachine =
           selectedRegion: (context, event) => {
             const typedEvent = event as SelectRegion;
             const selectedRegionCode = typedEvent.regionId;
-            const region = context.regions
-              .filter((r) => r.code === selectedRegionCode)
-              .at(0);
+            const region = context.regions.filter(
+              (r) => r.code === selectedRegionCode
+            )[0];
             return region;
           },
           error: (_context, _event) => "",
