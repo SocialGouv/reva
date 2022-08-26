@@ -25,16 +25,16 @@ type Certification
     = Certification
 
 
-type Companion
-    = Companion
-
-
 type Experience
     = Experience
 
 
 type Goal
     = Goal
+
+
+type Organism
+    = Organism
 
 
 type Profession

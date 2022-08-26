@@ -50,18 +50,23 @@ getCandidacies object____ =
     Object.selectionForCompositeField "getCandidacies" [] object____ (Basics.identity >> Decode.list)
 
 
-getCompanions :
-    SelectionSet decodesTo Admin.Object.Companion
-    -> SelectionSet (List decodesTo) RootQuery
-getCompanions object____ =
-    Object.selectionForCompositeField "getCompanions" [] object____ (Basics.identity >> Decode.list)
-
-
 getTrainings :
     SelectionSet decodesTo Admin.Object.Training
     -> SelectionSet (List decodesTo) RootQuery
 getTrainings object____ =
     Object.selectionForCompositeField "getTrainings" [] object____ (Basics.identity >> Decode.list)
+
+
+type alias GetOrganismsForCandidacyRequiredArguments =
+    { candidacyId : Data.Scalar.Uuid }
+
+
+getOrganismsForCandidacy :
+    GetOrganismsForCandidacyRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Organism
+    -> SelectionSet (List decodesTo) RootQuery
+getOrganismsForCandidacy requiredArgs____ object____ =
+    Object.selectionForCompositeField "getOrganismsForCandidacy" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.list)
 
 
 getReferential :
@@ -71,11 +76,16 @@ getReferential object____ =
     Object.selectionForCompositeField "getReferential" [] object____ Basics.identity
 
 
+type alias GetCertificationsRequiredArguments =
+    { regionId : Data.Scalar.Uuid }
+
+
 getCertifications :
-    SelectionSet decodesTo Admin.Object.Certification
+    GetCertificationsRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Certification
     -> SelectionSet (List decodesTo) RootQuery
-getCertifications object____ =
-    Object.selectionForCompositeField "getCertifications" [] object____ (Basics.identity >> Decode.list)
+getCertifications requiredArgs____ object____ =
+    Object.selectionForCompositeField "getCertifications" [ Argument.required "regionId" requiredArgs____.regionId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.list)
 
 
 getRegions :

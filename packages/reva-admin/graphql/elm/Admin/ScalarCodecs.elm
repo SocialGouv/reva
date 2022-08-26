@@ -16,14 +16,19 @@ type alias Timestamp =
     Admin.Scalar.Timestamp
 
 
+type alias Uuid =
+    Admin.Scalar.Uuid
+
+
 type alias Void =
     Admin.Scalar.Void
 
 
-codecs : Admin.Scalar.Codecs Id Timestamp Void
+codecs : Admin.Scalar.Codecs Id Timestamp Uuid Void
 codecs =
     Admin.Scalar.defineCodecs
         { codecId = defaultCodecs.codecId
         , codecTimestamp = defaultCodecs.codecTimestamp
+        , codecUuid = defaultCodecs.codecUuid
         , codecVoid = defaultCodecs.codecVoid
         }

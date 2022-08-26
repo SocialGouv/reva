@@ -302,16 +302,12 @@ trainingForm =
         keys =
             Data.Form.Training.keys
 
-        certifications referential =
-            List.map (\certification -> ( Data.Certification.idToString certification.id, certification.label )) referential.certifications
-
         mandatoryTrainings referential =
             List.map (\training -> ( training.id, training.label )) referential.training
     in
     { elements =
         \referential ->
-            [ ( keys.certificate, Form.Select "Certification visée" <| certifications referential )
-            , ( keys.individualHourCount, Form.Number "Nombre d'heure d'accompagnement individuel" )
+            [ ( keys.individualHourCount, Form.Number "Nombre d'heure d'accompagnement individuel" )
             , ( keys.collectiveHourCount, Form.Number "Nombre d'heure d'accompagnement collectif" )
             , ( keys.additionalHourCount, Form.Number "Nombre d'heures de formations complémentaires" )
             , ( keys.mandatoryTrainings, Form.CheckboxList "Formations obligatoires" <| mandatoryTrainings referential )

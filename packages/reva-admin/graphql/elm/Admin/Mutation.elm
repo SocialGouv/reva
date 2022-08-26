@@ -226,3 +226,17 @@ candidacy_takeOver :
     -> SelectionSet decodesTo RootMutation
 candidacy_takeOver requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_takeOver" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ Basics.identity
+
+
+type alias CandidacySelectOrganismRequiredArguments =
+    { candidacyId : Data.Scalar.Uuid
+    , organismId : Data.Scalar.Uuid
+    }
+
+
+candidacy_selectOrganism :
+    CandidacySelectOrganismRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet (Maybe decodesTo) RootMutation
+candidacy_selectOrganism requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_selectOrganism" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "organismId" requiredArgs____.organismId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.nullable)
