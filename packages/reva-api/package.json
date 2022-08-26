@@ -13,6 +13,7 @@
     "graphql:generate": "ts-node ./infra/generate-graphql-schema.ts",
     "prisma:generate": "prisma generate",
     "prisma:seed": "prisma db seed",
+    "prisma:reset": "prisma migrate reset",
     "prisma:private-seed": "ts-node prisma/private-seed.ts",
     "prisma:migrate:deploy": "prisma migrate deploy"
   },

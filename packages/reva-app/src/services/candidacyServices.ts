@@ -300,6 +300,7 @@ const INITIALIZE_APP = gql`
     }
 
     getRegions {
+      id
       code
       label
     }

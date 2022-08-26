@@ -42,8 +42,11 @@ function App() {
     () =>
       mainMachine.withConfig({
         services: {
-          searchCertifications: (context, event) =>
-            searchCertifications(client as ApolloClient<object>)({ query: "" }),
+          searchCertifications: (context, event) => {
+            return searchCertifications(client as ApolloClient<object>)({
+              query: context.selectedRegion?.id || "",
+            });
+          },
           initializeApp: async (context, event) => {
             const deviceId = await Device.getId();
             return initializeApp(client as ApolloClient<object>)({
@@ -72,11 +75,10 @@ function App() {
             )({
               deviceId: deviceId.uuid,
               certificationId: event.certification.id,
-              // TODO: get rgion id
-              regionId: "id",
+              regionId: context.selectedRegion?.id || "",
             }).then(
               (data) =>
-                // Add some fake waiting time to let the user read the creation message
+                //TODO: maybe use an XState Delay ?
                 new Promise((resolve) => setTimeout(() => resolve(data), 2000))
             );
           },
@@ -94,8 +96,7 @@ function App() {
               deviceId: deviceId.uuid,
               candidacyId: context.candidacyId,
               certificationId: event.certification.id,
-              // TODO: get rgion id
-              regionId: "id",
+              regionId: context.selectedRegion?.id || "",
             });
           },
           saveGoals: async (context, event) => {
@@ -164,7 +165,7 @@ function App() {
     [client]
   );
 
-  const [current, send, mainService] = useMachine(machine);
+  const [current, send, mainService] = useMachine(machine, { devTools: true });
   // @ts-ignore
   window.state = current;
 
@@ -279,6 +280,7 @@ function App() {
         "searchResults",
         "searchResultsError",
         "certificateSummary",
+        "applicationDataLoaded",
       ].some(current.matches) && certificatesPage}
 
       {current.matches("projectHome") &&
