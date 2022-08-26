@@ -2,7 +2,6 @@ import { useActor } from "@xstate/react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
-import { TextResult } from "../components/atoms/TextResult";
 import { BackButton } from "../components/molecules/BackButton";
 import { ProgressTitle } from "../components/molecules/ProgressTitle";
 import certificationImg from "../components/organisms/Card/certification.png";
