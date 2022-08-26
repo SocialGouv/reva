@@ -124,7 +124,7 @@ export const Certificates = ({ mainService }: Props) => {
         layoutScroll
         className="h-full overflow-y-auto"
       >
-        <div className="px-8 py-16 pb-8 lg:pt-8 bg-white">
+        <div className="px-8 pt-16 lg:pt-8 bg-white">
           <Header label="Bienvenue" />
           <p className="mt-10 pr-6 text-slate-600 leading-loose text-lg">
             REVA est une expérimentation visant à simplifier la Validation des
@@ -134,7 +134,7 @@ export const Certificates = ({ mainService }: Props) => {
           </p>
           <Select
             name="select_region"
-            className="my-8"
+            className="mt-8 mb-4"
             placeholder="Ma Région"
             options={selectsOptionsRegions}
             onChangeHandler={(e) => {
@@ -151,8 +151,8 @@ export const Certificates = ({ mainService }: Props) => {
         {!!chosenRegion && (
           <div className="px-8">
             <Results
-              title="Liste des certifications éligibles :"
-              listClassName="my-4 space-y-8"
+              title={`Diplômes disponibles dans cette région`}
+              listClassName="mb-4 space-y-8"
             >
               {displayCards()}
             </Results>

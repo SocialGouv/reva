@@ -186,11 +186,7 @@ function App() {
 
   useEffect(() => {
     async function hideSplashscreen() {
-      if (
-        !["loadingApplicationData", "loadingCertifications"].some(
-          current.matches
-        )
-      ) {
+      if (current.value != "loadingApplicationData") {
         await SplashScreen.hide();
       }
     }
