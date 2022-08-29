@@ -217,22 +217,15 @@ export const ProjectHome = ({
           </p>
         )}
       </address>
-    </div>
-  );
-
-  const HomeContent = () => (
-    <div className="px-8 scroll-smooth grow overflow-y-auto pb-8">
-      {isValidated ? (
-        <SubmissionWarning />
-      ) : (
-        <ProgressTitle progress={progress} size="large" title="Projet" />
-      )}
-      <div className="space-y-4">
-        <EditCertification />
-        <EditGoals />
-        <EditExperiences />
-        <EditContact />
-        <EditOrganism />
+      <div className="mt-4 text-sm text-slate-400">
+        {!isValidated && (
+          <Button
+            data-test="project-home-edit-contact"
+            onClick={() => send("EDIT_ORGANISM")}
+            size="tiny"
+            label={state.context.organism ? "Modifer" : "Ajouter"}
+          />
+        )}
       </div>
     </div>
   );
@@ -244,7 +237,20 @@ export const ProjectHome = ({
       direction={state.context.direction}
     >
       <BackButton onClick={() => send("BACK")} />
-      <HomeContent />
+      <div className="px-8 grow overflow-y-auto pb-8">
+        {isValidated ? (
+          <SubmissionWarning />
+        ) : (
+          <ProgressTitle progress={progress} size="large" title="Projet" />
+        )}
+        <div className="space-y-4">
+          <EditCertification />
+          <EditGoals />
+          <EditExperiences />
+          <EditContact />
+          <EditOrganism />
+        </div>
+      </div>
       <div className="bg-white flex flex-col items-center pt-4 pb-12">
         <Button
           data-test={`project-home-${isValidated ? "submit" : "validate"}${
