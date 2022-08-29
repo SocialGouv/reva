@@ -238,7 +238,7 @@ function App() {
   );
 
   const projectContactPage = () => (
-    <ProjectOrganisms key="project-experience" mainService={mainService} />
+    <ProjectContact key="project-contact" mainService={mainService} />
   );
 
   const projectExperiencesPage = () => (

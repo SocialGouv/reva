@@ -289,6 +289,7 @@ const INITIALIZE_APP = gql`
         id
         status
       }
+      regionId
     }
 
     getReferential {
