@@ -217,11 +217,27 @@ export const ProjectHome = ({
           </p>
         )}
       </address>
+      <div className="mt-4 text-sm text-slate-400">
+        {!isValidated && (
+          <Button
+            data-test="project-home-edit-contact"
+            onClick={() => send("EDIT_ORGANISM")}
+            size="tiny"
+            label={
+              state.context.contact &&
+              (state.context.contact?.phone != "" ||
+                state.context.contact?.email != "")
+                ? "Modifer"
+                : "Ajouter"
+            }
+          />
+        )}
+      </div>
     </div>
   );
 
   const HomeContent = () => (
-    <div className="px-8 scroll-smooth grow overflow-y-auto pb-8">
+    <div className="px-8 grow overflow-y-auto pb-8">
       {isValidated ? (
         <SubmissionWarning />
       ) : (

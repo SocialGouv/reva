@@ -225,6 +225,10 @@ function App() {
     <ProjectGoals key="project-goals" mainService={mainService} />
   );
 
+  const projectOrganismsPage = (certification: Certification) => (
+    <ProjectOrganisms key="project-organism" mainService={mainService} />
+  );
+
   const projectHelpPage = () => (
     <ProjectHelp key="project-help" mainService={mainService} />
   );
@@ -298,6 +302,9 @@ function App() {
         projectGoalsPage(current.context.certification)}
 
       {current.matches("projectHelp") && projectHelpPage()}
+
+      {current.matches("projectOrganism") &&
+        projectOrganismsPage(current.context.certification)}
 
       {current.matches("certificateDetails") &&
         certificateDetails(current.context.certification)}

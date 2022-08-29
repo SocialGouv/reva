@@ -22,6 +22,7 @@ const projectContact = "projectContact";
 const projectExperience = "projectExperience";
 const projectExperiences = "projectExperiences";
 const projectGoals = "projectGoals";
+const projectOrganism = "projectOrganism";
 const projectHelp = "projectHelp";
 const projectSubmitted = "projectSubmitted";
 const submissionHome = "submissionHome";
@@ -39,6 +40,7 @@ export type State =
   | typeof projectExperience
   | typeof projectExperiences
   | typeof projectGoals
+  | typeof projectOrganism
   | typeof projectSubmitted
   | typeof submissionHome;
 
@@ -55,7 +57,7 @@ export interface MainContext {
   certification?: Certification;
   experiences: Experiences;
   goals: Goal[];
-  organism: undefined | Organism; // TODO: move organism to projectHome scope
+  organism?: Organism;
   projectStatus?: ProjectStatus;
   regions: Region[];
   selectedRegion: Region | undefined;
@@ -73,6 +75,7 @@ export type MainEvent =
   | { type: "EDIT_EXPERIENCES" }
   | { type: "EDIT_EXPERIENCE"; index: number }
   | { type: "EDIT_GOALS" }
+  | { type: "EDIT_ORGANISM" }
   | { type: "CLOSE_SELECTED_CERTIFICATION" }
   | { type: "BACK" }
   | { type: "LOADED" }
@@ -82,6 +85,7 @@ export type MainEvent =
   | { type: "SUBMIT_EXPERIENCE"; experience: Experience }
   | { type: "SUBMIT_EXPERIENCES" }
   | { type: "SUBMIT_GOALS"; goals: Goal[] }
+  | { type: "SUBMIT_ORGANISM"; organism: Organism }
   | { type: "VALIDATE_PROJECT" }
   | { type: "SUBMIT_PROJECT" };
 
@@ -120,6 +124,7 @@ export type MainState =
         | typeof projectExperience
         | typeof projectExperiences
         | typeof projectHelp
+        | typeof projectOrganism
         | typeof error;
 
       context: MainContext & {
@@ -128,6 +133,7 @@ export type MainState =
         contact: Contact;
         experiences: Experience[];
         goals: Goal[];
+        organism: Organism;
         projectStatus?: ProjectStatus;
         regions: string[];
         selectedRegion: string;
@@ -149,7 +155,14 @@ export const mainMachine =
         showStatusBar: false,
         experiences: { rest: [] },
         goals: [],
-        organism: undefined,
+        organism: {
+          id: "id",
+          address: "2, rue Hippolyte Bayard",
+          city: "Beauvais",
+          email: "stephane.pottier@apradis.eu",
+          label: "CNEAP Hauts de France / Apradis",
+          zip: "60 000",
+        },
         projectStatus: "draft",
         regions: [],
         selectedRegion: undefined,
@@ -184,6 +197,9 @@ export const mainMachine =
                       phone: event.data.candidacy.phone,
                     };
                   },
+                  organism: (_, event) => {
+                    return event.data.candidacy.organism;
+                  },
                   projectStatus: (_, event) => {
                     return event.data.candidacy.candidacyStatuses
                       .map((s: { status: string }) => s.status)
@@ -192,6 +208,9 @@ export const mainMachine =
                       : "draft";
                   },
                   regions: (_, event) => event.data.regions,
+                  selectedRegion: (_, event) => {
+                    return event.data.candidacy.region;
+                  },
                 }),
                 cond: "isAlreadyCandidate",
                 target: "submissionHome.ready",
@@ -700,6 +719,61 @@ export const mainMachine =
             },
           },
         },
+        projectOrganism: {
+          initial: "idle",
+          states: {
+            idle: {
+              on: {
+                BACK: {
+                  actions: "navigatePrevious",
+                  target: "leave",
+                },
+                SUBMIT_ORGANISM: {
+                  actions: "navigatePrevious",
+                  target: "submitting",
+                },
+              },
+            },
+            error: {
+              on: {
+                BACK: {
+                  target: "leave",
+                },
+                SUBMIT_ORGANISM: {
+                  target: "submitting",
+                },
+              },
+            },
+            submitting: {
+              invoke: {
+                src: "updateOrganism",
+                onDone: [
+                  {
+                    actions: assign({
+                      organism: (_context, event) => event.data,
+                    }),
+                    target: "leave",
+                  },
+                ],
+                onError: [
+                  {
+                    actions: assign({
+                      error: (_, _event) =>
+                        "Une erreur est survenue lors de l'enregistrement de l'accompagnateur.",
+                    }),
+                    target: "error",
+                  },
+                ],
+              },
+            },
+            leave: {
+              type: "final",
+            },
+          },
+          onDone: {
+            target: "projectHome",
+          },
+        },
         projectGoals: {
           initial: "idle",
           states: {
@@ -847,6 +921,10 @@ export const mainMachine =
             EDIT_CONTACT: {
               actions: "navigateNext",
               target: "projectContact",
+            },
+            EDIT_ORGANISM: {
+              actions: "navigateNext",
+              target: "projectOrganism",
             },
             CLOSE_SELECTED_CERTIFICATION: {
               actions: "navigatePrevious",

@@ -114,6 +114,7 @@
     "@types/react-dom": "^16.9.14",
     "@xstate/inspect": "^0.7.0",
     "autoprefixer": "^10.4.2",
+    "esbuild": "^0.15.5",
     "eslint-plugin-react-hooks": "^4.3.0",
     "framer-motion": "^6.2.8",
     "import-sort-style-module": "^6.0.0",
