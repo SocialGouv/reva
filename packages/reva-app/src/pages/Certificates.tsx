@@ -148,7 +148,7 @@ export const Certificates = ({ mainService }: Props) => {
             }}
           />
         </div>
-        {!!chosenRegion && (
+        {(!!chosenRegion || !!state.context.selectedRegion) && (
           <div className="px-8">
             <Results
               title={`Diplômes disponibles dans cette région`}
