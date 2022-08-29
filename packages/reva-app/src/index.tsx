@@ -1,7 +1,7 @@
 import "./index.css";
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { inspect } from "@xstate/inspect";
+// import { inspect } from "@xstate/inspect";
 import React from "react";
 import ReactDOM from "react-dom";
 
@@ -15,7 +15,7 @@ const client = new ApolloClient({
 });
 
 //// Uncomment to debug XState
-inspect({ iframe: false });
+// inspect({ iframe: false });
 
 ReactDOM.render(
   <React.StrictMode>
