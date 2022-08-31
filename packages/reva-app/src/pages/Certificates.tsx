@@ -143,7 +143,7 @@ export const Certificates = ({ mainService }: Props) => {
               setChosenRegion(regionCode);
               send({
                 type: "SELECT_REGION",
-                regionId: regionCode,
+                regionCode: regionCode,
               });
             }}
           />
