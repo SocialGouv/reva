@@ -1,7 +1,7 @@
 import { RadioGroup } from "@headlessui/react";
 import { useActor } from "@xstate/react";
 import classNames from "classnames";
-import { useState } from "react";
+import { FC, useState } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
@@ -83,11 +83,11 @@ function Organisms() {
   );
 }
 
-interface ProjectOrganismsProps {
+interface Props {
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
 
-export const ProjectOrganisms = ({ mainService }: ProjectOrganismsProps) => {
+export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
   const [state, send] = useActor(mainService);
 
   return (
