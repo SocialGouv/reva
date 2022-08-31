@@ -1,5 +1,6 @@
 import { RadioGroup } from "@headlessui/react";
 import { useActor } from "@xstate/react";
+import classNames from "classnames";
 import { useState } from "react";
 import { Interpreter } from "xstate";
 
@@ -8,7 +9,6 @@ import { Title } from "../components/atoms/Title";
 import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
-import { classNames } from "../utils/classNames";
 
 const organisms = [
   {
