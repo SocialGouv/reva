@@ -61,27 +61,21 @@ function Organisms() {
               )
             }
           >
-            {({ active, checked }) => (
-              <>
-                <RadioGroup.Label as="h3" className="font-bold text-slate-800">
-                  {organism.label}
-                </RadioGroup.Label>
-                <RadioGroup.Description
-                  as="address"
-                  className="text-gray-700 not-italic leading-relaxed"
-                >
-                  <p data-test="project-home-organism-address">
-                    {organism.address}
-                  </p>
-                  <p data-test="project-home-organism-address">
-                    {organism.zip} {organism.city}
-                  </p>
-                  <p data-test="project-home-organism-email">
-                    {organism.email}
-                  </p>
-                </RadioGroup.Description>
-              </>
-            )}
+            <RadioGroup.Label as="h3" className="font-bold text-slate-800">
+              {organism.label}
+            </RadioGroup.Label>
+            <RadioGroup.Description
+              as="address"
+              className="text-gray-700 not-italic leading-relaxed"
+            >
+              <p data-test="project-home-organism-address">
+                {organism.address}
+              </p>
+              <p data-test="project-home-organism-address">
+                {organism.zip} {organism.city}
+              </p>
+              <p data-test="project-home-organism-email">{organism.email}</p>
+            </RadioGroup.Description>
           </RadioGroup.Option>
         ))}
       </div>
