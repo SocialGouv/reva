@@ -3,10 +3,12 @@ import { useActor } from "@xstate/react";
 import { useState } from "react";
 import { Interpreter } from "xstate";
 
+import { Button } from "../components/atoms/Button";
 import { Title } from "../components/atoms/Title";
 import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
+import { classNames } from "../utils/classNames";
 
 const organisms = [
   {
@@ -35,25 +37,25 @@ const organisms = [
   },
 ];
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
-function Organism() {
+function Organisms() {
   const [selected, setSelected] = useState(organisms[0]);
 
   return (
     <RadioGroup value={selected} onChange={setSelected}>
-      <RadioGroup.Label className="sr-only"> Server size </RadioGroup.Label>
+      <RadioGroup.Label className="sr-only">Accompagnateur</RadioGroup.Label>
       <div className="space-y-4">
         {organisms.map((organism) => (
           <RadioGroup.Option
             key={organism.id}
             value={organism}
-            className={({ checked, active }) =>
+            className={({ active, checked }) =>
               classNames(
-                active ? "border-slate-500 ring-2 ring-slate-500" : "",
-                "relative block cursor-pointer border border-transparent bg-slate-100 focus:outline-none",
+                active
+                  ? "ring-2 ring-indigo-500"
+                  : checked
+                  ? "ring-2 ring-slate-500"
+                  : "",
+                "relative block cursor-pointer bg-slate-100 focus:outline-none",
                 "block rounded-lg px-6 py-4",
                 "text-lg"
               )
@@ -71,24 +73,13 @@ function Organism() {
                   <p data-test="project-home-organism-address">
                     {organism.address}
                   </p>
-
                   <p data-test="project-home-organism-address">
                     {organism.zip} {organism.city}
                   </p>
-
                   <p data-test="project-home-organism-email">
                     {organism.email}
                   </p>
                 </RadioGroup.Description>
-
-                <span
-                  className={classNames(
-                    active ? "border" : "border-2",
-                    checked ? "border-slate-500" : "border-transparent",
-                    "pointer-events-none absolute -inset-px rounded-lg"
-                  )}
-                  aria-hidden="true"
-                />
               </>
             )}
           </RadioGroup.Option>
@@ -111,16 +102,27 @@ export const ProjectOrganisms = ({ mainService }: ProjectOrganismsProps) => {
       direction={state.context.direction}
     >
       <BackButton onClick={() => send("BACK")} />
-      <div className="h-full flex flex-col px-8 overflow-y-auto pt-12 pb-[400px]">
-        {state.context.selectedRegion && (
-          <Title
-            label={`Accompagnateurs disponibles pour la région ${state.context.selectedRegion?.label}`}
+      <div className="h-full flex flex-col overflow-y-auto">
+        <div className="grow overflow-y-auto px-8 pb-8">
+          {state.context.selectedRegion && (
+            <Title
+              label={`Accompagnateurs disponibles pour la région ${state.context.selectedRegion?.label}`}
+            />
+          )}
+          <p className="my-4">
+            Choisissez l'accompagnateur qui vous aidera à construire ce projet.
+          </p>
+          <Organisms />
+        </div>
+        <div className="flex justify-center pt-8 pb-16">
+          <Button
+            data-test="project-goals-submit-goals"
+            size="medium"
+            label="OK"
+            loading={state.matches("projectOrganism.submitting")}
+            onClick={() => {}}
           />
-        )}
-        <p className="my-4">
-          Choisissez l'accompagnateur qui vous aidera à construire ce projet.
-        </p>
-        <Organism />
+        </div>
       </div>
     </Page>
   );
