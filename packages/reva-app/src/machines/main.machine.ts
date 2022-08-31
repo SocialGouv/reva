@@ -8,7 +8,7 @@ import {
   Experiences,
   Goal,
   Organism,
-  Regions as Region,
+  Region,
 } from "../interface";
 
 const loadingApplicationData = "loadingApplicationData";
@@ -60,10 +60,10 @@ export interface MainContext {
   organism?: Organism;
   projectStatus?: ProjectStatus;
   regions: Region[];
-  selectedRegion: Region | undefined;
+  selectedRegion?: Region;
 }
 
-type SelectRegion = { type: "SELECT_REGION"; regionId: string };
+type SelectRegion = { type: "SELECT_REGION"; regionCode: string };
 
 export type MainEvent =
   | SelectRegion
@@ -135,8 +135,8 @@ export type MainState =
         goals: Goal[];
         organism: Organism;
         projectStatus?: ProjectStatus;
-        regions: string[];
-        selectedRegion: string;
+        regions: Region[];
+        selectedRegion?: Region;
       };
     };
 
@@ -168,51 +168,53 @@ export const mainMachine =
             src: "initializeApp",
             onDone: [
               {
-                actions: assign({
-                  candidacyId: (_, event) => {
-                    return event.data.candidacy.id;
-                  },
-                  candidacyCreatedAt: (_, event) => {
-                    return new Date(event.data.candidacy.createdAt);
-                  },
-                  certification: (_, event) => {
-                    return event.data.candidacy.certification;
-                  },
-                  experiences: (_, event) => {
-                    return { rest: event.data.candidacy.experiences };
-                  },
-                  goals: (_, event) => {
-                    return event.data.candidacy.goals;
-                  },
-                  contact: (_, event) => {
-                    return {
-                      email: event.data.candidacy.email,
-                      phone: event.data.candidacy.phone,
-                    };
-                  },
-                  organism: (_, event) => {
-                    return event.data.candidacy.organism;
-                  },
-                  projectStatus: (_, event) => {
-                    return event.data.candidacy.candidacyStatuses
-                      .map((s: { status: string }) => s.status)
-                      .includes("VALIDATION")
-                      ? "submitted"
-                      : "draft";
-                  },
-                  regions: (_, event) => event.data.regions,
-                  selectedRegion: (_, event) => {
-                    return event.data.candidacy.region;
-                  },
-                }),
+                actions: [
+                  assign({
+                    candidacyId: (_, event) => {
+                      return event.data.candidacy.id;
+                    },
+                    candidacyCreatedAt: (_, event) => {
+                      return new Date(event.data.candidacy.createdAt);
+                    },
+                    certification: (_, event) => {
+                      return event.data.candidacy.certification;
+                    },
+                    experiences: (_, event) => {
+                      return { rest: event.data.candidacy.experiences };
+                    },
+                    goals: (_, event) => {
+                      return event.data.candidacy.goals;
+                    },
+                    contact: (_, event) => {
+                      return {
+                        email: event.data.candidacy.email,
+                        phone: event.data.candidacy.phone,
+                      };
+                    },
+                    organism: (_, event) => {
+                      return event.data.candidacy.organism;
+                    },
+                    projectStatus: (_, event) => {
+                      return event.data.candidacy.candidacyStatuses
+                        .map((s: { status: string }) => s.status)
+                        .includes("VALIDATION")
+                        ? "submitted"
+                        : "draft";
+                    },
+                    regions: (_, event) => event.data.regions,
+                  }),
+                  "loadRegion",
+                ],
                 cond: "isAlreadyCandidate",
                 target: "submissionHome.ready",
               },
               {
-                actions: assign({
-                  goals: (_, event) => event.data.referentials.goals,
-                  regions: (_, event) => event.data.regions,
-                }),
+                actions: [
+                  assign({
+                    goals: (_, event) => event.data.referentials.goals,
+                    regions: (_, event) => event.data.regions,
+                  }),
+                ],
                 cond: "isNotACandidate",
                 target: "applicationDataLoaded",
               },
@@ -955,13 +957,20 @@ export const mainMachine =
         selectingRegion: assign({
           selectedRegion: (context, event) => {
             const typedEvent = event as SelectRegion;
-            const selectedRegionCode = typedEvent.regionId;
-            const region = context.regions.filter(
-              (r) => r.code === selectedRegionCode
-            )[0];
-            return region;
+            return context.regions.find(
+              (region: Region) => region.code === typedEvent.regionCode
+            );
           },
           error: (_context, _event) => "",
+        }),
+        loadRegion: assign({
+          selectedRegion: (_, event) => {
+            const typedEvent = event as DoneInvokeEvent<any>;
+            return typedEvent.data.regions.find(
+              (region: Region) =>
+                region.id == typedEvent.data.candidacy.regionId
+            );
+          },
         }),
       },
       guards: {

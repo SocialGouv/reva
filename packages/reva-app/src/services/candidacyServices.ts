@@ -338,6 +338,7 @@ export const initializeApp =
         createdAt: new Date(data.getCandidacy.createdAt),
         experiences,
         goals,
+        regionId: data.getCandidacy.regionId,
       };
     }
 
