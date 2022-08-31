@@ -109,14 +109,14 @@ export const ProjectOrganisms = ({ mainService }: ProjectOrganismsProps) => {
               label={`Accompagnateurs disponibles pour la région ${state.context.selectedRegion?.label}`}
             />
           )}
-          <p className="my-4">
+          <p className="mt-4 mb-12">
             Choisissez l'accompagnateur qui vous aidera à construire ce projet.
           </p>
           <Organisms />
         </div>
         <div className="flex justify-center pt-8 pb-16">
           <Button
-            data-test="project-goals-submit-goals"
+            data-test="project-organisms-submit-organism"
             size="medium"
             label="OK"
             loading={state.matches("projectOrganism.submitting")}
