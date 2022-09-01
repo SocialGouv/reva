@@ -2,7 +2,7 @@ import { RadioGroup } from "@headlessui/react";
 import { useActor } from "@xstate/react";
 import classNames from "classnames";
 import { FC, useState } from "react";
-import { Interpreter } from "xstate";
+import { Interpreter, State } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { Title } from "../components/atoms/Title";
@@ -10,41 +10,21 @@ import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
-const organisms = [
-  {
-    id: "id1",
-    address: "2, rue Hippolyte Bayard",
-    city: "Beauvais",
-    email: "stephane.pottier@apradis.eu",
-    label: "CNEAP 1 Hauts de France / Apradis",
-    zip: "60 000",
-  },
-  {
-    id: "id2",
-    address: "2, rue Hippolyte Bayard",
-    city: "Beauvais",
-    email: "stephane.pottier@apradis.eu",
-    label: "CNEAP 2 Hauts de France / Apradis",
-    zip: "60 000",
-  },
-  {
-    id: "id3",
-    address: "2, rue Hippolyte Bayard",
-    city: "Beauvais",
-    email: "stephane.pottier@apradis.eu",
-    label: "CNEAP 3 Hauts de France / Apradis",
-    zip: "60 000",
-  },
-];
+interface PropsOrganisms {
+  xstate: State<MainContext, MainEvent, any, MainState, any>;
+}
 
-function Organisms() {
-  const [selected, setSelected] = useState(organisms[0]);
+//TODO: extract in its own file
+const Organisms: FC<PropsOrganisms> = ({ xstate }) => {
+  const currentOrganisms = xstate.context.organisms || [];
+  const [selected, setSelected] = useState(currentOrganisms[0]);
+  if (!currentOrganisms) return <p>chargement des organismes...</p>;
 
   return (
     <RadioGroup value={selected} onChange={setSelected}>
       <RadioGroup.Label className="sr-only">Accompagnateur</RadioGroup.Label>
       <div className="space-y-4">
-        {organisms.map((organism) => (
+        {currentOrganisms.map((organism) => (
           <RadioGroup.Option
             key={organism.id}
             value={organism}
@@ -81,7 +61,7 @@ function Organisms() {
       </div>
     </RadioGroup>
   );
-}
+};
 
 interface Props {
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
@@ -106,7 +86,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
           <p className="mt-4 mb-12">
             Choisissez l'accompagnateur qui vous aidera à construire ce projet.
           </p>
-          <Organisms />
+          <Organisms xstate={state} />
         </div>
         <div className="flex justify-center pt-8 pb-16">
           <Button
