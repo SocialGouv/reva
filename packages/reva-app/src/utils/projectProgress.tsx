@@ -1,4 +1,10 @@
-import { Certification, Contact, Experiences, Goal } from "../interface";
+import {
+  Certification,
+  Contact,
+  Experiences,
+  Goal,
+  Organism,
+} from "../interface";
 import { sortExperiences } from "./experienceHelpers";
 
 interface projectProgressProps {
@@ -6,6 +12,7 @@ interface projectProgressProps {
   contact?: Contact;
   experiences: Experiences;
   goals: Goal[];
+  organism?: Organism;
 }
 
 export function projectProgress({
@@ -13,6 +20,7 @@ export function projectProgress({
   contact,
   experiences,
   goals,
+  organism,
 }: projectProgressProps) {
   const hasCertification: boolean = certification !== undefined;
   const hasContact: boolean =
@@ -20,15 +28,17 @@ export function projectProgress({
     (contact?.email !== null || contact?.phone !== null);
   const hasExperiences: boolean = sortExperiences(experiences).length > 0;
   const hasGoals: boolean = goals.filter((goal) => goal.checked).length > 0;
+  const hasOrganism: boolean = organism !== undefined;
 
   const validations: boolean[] = [
     hasCertification,
     hasContact,
     hasExperiences,
     hasGoals,
+    hasOrganism,
   ];
 
   const validated: number = validations.filter((e) => e === true).length;
 
-  return (100 * validated) / 4;
+  return (100 * validated) / validations.length;
 }

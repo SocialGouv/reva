@@ -1,11 +1,10 @@
 import { useActor } from "@xstate/react";
-import { AnimatePresence, isDragActive, motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { Header } from "../components/atoms/Header";
 import { Loader } from "../components/atoms/Icons";
-import { BackButton } from "../components/molecules/BackButton";
 import { ProgressTitle } from "../components/molecules/ProgressTitle";
 import certificationImg from "../components/organisms/Card/certification.png";
 import { Page } from "../components/organisms/Page";
