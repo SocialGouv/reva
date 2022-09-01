@@ -8,6 +8,7 @@ import {
   Experiences,
   Goal,
   Organism,
+  OrganismForCandidacy,
   Region,
 } from "../interface";
 
@@ -86,7 +87,7 @@ export type MainEvent =
   | { type: "SUBMIT_EXPERIENCE"; experience: Experience }
   | { type: "SUBMIT_EXPERIENCES" }
   | { type: "SUBMIT_GOALS"; goals: Goal[] }
-  | { type: "SUBMIT_ORGANISM"; organism: Organism }
+  | { type: "SUBMIT_ORGANISM"; organism: OrganismForCandidacy }
   | { type: "VALIDATE_PROJECT" }
   | { type: "SUBMIT_PROJECT" };
 
@@ -753,7 +754,12 @@ export const mainMachine =
                   target: "leave",
                 },
                 SUBMIT_ORGANISM: {
-                  actions: "navigatePrevious",
+                  actions: assign({
+                    organism: (context, event) =>
+                      context.organisms?.filter(
+                        (o) => o.id === event.organism?.selectedOrganism
+                      )[0],
+                  }),
                   target: "submitting",
                 },
               },
@@ -770,20 +776,16 @@ export const mainMachine =
             },
             submitting: {
               invoke: {
-                src: "updateOrganism",
+                src: "setOrganismsForCandidacy",
                 onDone: [
                   {
-                    actions: assign({
-                      organism: (_context, event) => event.data,
-                    }),
                     target: "leave",
                   },
                 ],
                 onError: [
                   {
                     actions: assign({
-                      error: (_, _event) =>
-                        "Une erreur est survenue lors de l'enregistrement de l'accompagnateur.",
+                      error: (_, event) => event.data,
                     }),
                     target: "error",
                   },
