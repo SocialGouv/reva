@@ -64,8 +64,13 @@ function App() {
             });
           },
           getOrganisms: async (context, _event) => {
+            if (!context.candidacyId)
+              return Promise.reject(
+                "unavailable candidacyId in XState context"
+              );
+
             return getOrganismsForCandidacy(client as ApolloClient<object>)({
-              query: context.candidacyId || "",
+              query: context.candidacyId,
             });
           },
           saveCertification: async (context, event) => {
