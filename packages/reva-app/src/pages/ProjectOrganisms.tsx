@@ -12,13 +12,13 @@ import { Organism } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
 interface PropsOrganisms {
-  selectedOrganisms?: Organism[];
+  availableOrganisms?: Organism[];
   setOrganismId: Dispatch<SetStateAction<string>>;
 }
 
 //TODO: extract in its own file
 const Organisms: FC<PropsOrganisms> = ({
-  selectedOrganisms,
+  availableOrganisms: selectedOrganisms,
   setOrganismId: setOrganism,
 }) => {
   const organisms = selectedOrganisms || [];
@@ -78,7 +78,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
   const { direction, selectedRegion, organisms, candidacyId } = state.context;
   const [selectedOrganism, setSelectedOrganism] = useState("");
 
-  if (!candidacyId) return <p>no candidacyId</p>;
+  if (!candidacyId) return <p>Aucun Id de candidat trouvé</p>;
 
   return (
     <Page className="z-[80] flex flex-col bg-white pt-6" direction={direction}>
@@ -94,7 +94,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
             Choisissez l'accompagnateur qui vous aidera à construire ce projet.
           </p>
           <Organisms
-            selectedOrganisms={organisms}
+            availableOrganisms={organisms}
             setOrganismId={setSelectedOrganism}
           />
         </div>
