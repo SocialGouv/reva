@@ -31,6 +31,7 @@ import {
   updateContact,
   updateExperience,
 } from "./services/candidacyServices";
+import { getOrganismsForCandidacy } from "./services/organismServices";
 import {
   getCertification,
   searchCertifications,
@@ -60,6 +61,16 @@ function App() {
             }
             return getCertification(client as ApolloClient<object>)({
               id: event.certification.id,
+            });
+          },
+          getOrganisms: async (context, _event) => {
+            if (!context.candidacyId)
+              return Promise.reject(
+                "unavailable candidacyId in XState context"
+              );
+
+            return getOrganismsForCandidacy(client as ApolloClient<object>)({
+              query: context.candidacyId,
             });
           },
           saveCertification: async (context, event) => {

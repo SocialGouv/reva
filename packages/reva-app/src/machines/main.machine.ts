@@ -61,6 +61,7 @@ export interface MainContext {
   projectStatus?: ProjectStatus;
   regions: Region[];
   selectedRegion?: Region;
+  organisms: Organism[] | undefined;
 }
 
 type SelectRegion = { type: "SELECT_REGION"; regionCode: string };
@@ -137,6 +138,7 @@ export type MainState =
         projectStatus?: ProjectStatus;
         regions: Region[];
         selectedRegion?: Region;
+        organisms: Organism[];
       };
     };
 
@@ -159,6 +161,7 @@ export const mainMachine =
         projectStatus: "draft",
         regions: [],
         selectedRegion: undefined,
+        organisms: undefined,
       },
       initial: "loadingApplicationData",
       id: "mainMachine",
@@ -715,6 +718,32 @@ export const mainMachine =
           },
         },
         projectOrganism: {
+          invoke: {
+            src: "getOrganisms",
+            onDone: [
+              {
+                actions: assign({
+                  organisms: (_, event) =>
+                    event.data.data.getOrganismsForCandidacy.map(
+                      (organism: any) => ({
+                        id: organism.id,
+                        address: organism.adress,
+                        city: organism.city,
+                        email: organism.contactAdministratif,
+                        label: organism.label,
+                      })
+                    ),
+                }),
+              },
+            ],
+            onError: [
+              {
+                actions: assign({
+                  error: (_, event) => event.data.toString(),
+                }),
+              },
+            ],
+          },
           initial: "idle",
           states: {
             idle: {
