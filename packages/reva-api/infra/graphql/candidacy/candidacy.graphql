@@ -23,7 +23,9 @@ type Candidacy {
   deviceId: ID!
   certificationId: ID!
   regionId: ID!
+  region: Region!
   organismId: UUID
+  organism: Organism
   certification: Certification!
   experiences: [Experience!]!
   goals: [CandidateGoal!]!

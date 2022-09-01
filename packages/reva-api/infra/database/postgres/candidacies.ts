@@ -3,7 +3,6 @@ import { Either, Left, Maybe, Right } from 'purify-ts';
 import * as domain from '../../../domain/types/candidacy';
 import { prismaClient } from './client';
 import { toDomainExperiences } from './experiences';
-import { getOrganisms } from './organisms';
  
 
 
@@ -63,6 +62,7 @@ export const insertCandidacy = async (params: { deviceId: string; certificationI
             id: newCandidacy.id,
             deviceId: newCandidacy.deviceId,
             regionId: newCandidacy.certificationsAndRegions[0].region.id,
+            region: newCandidacy.certificationsAndRegions[0].region,
             certificationId: newCandidacy.certificationsAndRegions[0].certification.id,
             certification: newCandidacy.certificationsAndRegions[0].certification,
             experiences: toDomainExperiences(newCandidacy.experiences),
@@ -92,7 +92,8 @@ export const getCandidacyFromDeviceId = async (deviceId: string) => {
             include: {
                 experiences: true,
                 goals: true,
-                candidacyStatuses: true
+                candidacyStatuses: true,
+                organism: true
             }
         });
 
@@ -107,17 +108,11 @@ export const getCandidacyFromDeviceId = async (deviceId: string) => {
             }
         });
 
-        let organism: Either<string, domain.Organism[]>;
-        if (candidacy?.id) {
-            organism = await getOrganisms( {candidacyId:candidacy?.id}
-            )
-        }
-
         if (!certificationAndRegion) {
             return Left(`error while retrieving the certification and region the device id ${deviceId}`);    
         }
 
-        return Maybe.fromNullable(candidacy).map(c => ({ ...c, regionId: certificationAndRegion.region.id || '', certificationId:certificationAndRegion.certification.id, certification: { ...certificationAndRegion.certification, codeRncp: certificationAndRegion.certification.rncpId }, organism })).toEither(`Candidacy with deviceId ${deviceId} not found`);
+        return Maybe.fromNullable(candidacy).map(c => ({ ...c, regionId: certificationAndRegion.region.id, region: certificationAndRegion.region, certificationId:certificationAndRegion.certification.id, certification: { ...certificationAndRegion.certification, codeRncp: certificationAndRegion.certification.rncpId } })).toEither(`Candidacy with deviceId ${deviceId} not found`);
     } catch (e) {
         return Left(`error while retrieving the candidacy with id ${deviceId}`);
     };
@@ -151,7 +146,7 @@ export const getCandidacyFromId = async (candidacyId: string) => {
             return Left(`error while retrieving the certification and region the candidacy id ${candidacyId}`);    
         }
 
-        return Maybe.fromNullable(candidacy).map(c => ({ ...c, regionId: certificationAndRegion.region.id, certificationId:certificationAndRegion.certification.id, certification: { ...certificationAndRegion.certification, codeRncp: certificationAndRegion.certification.rncpId } })).toEither(`Candidacy with deviceId ${candidacyId} not found`);
+        return Maybe.fromNullable(candidacy).map(c => ({ ...c, regionId: certificationAndRegion.region.id, region: certificationAndRegion.region, certificationId:certificationAndRegion.certification.id, certification: { ...certificationAndRegion.certification, codeRncp: certificationAndRegion.certification.rncpId } })).toEither(`Candidacy with deviceId ${candidacyId} not found`);
     } catch (e) {
         return Left(`error while retrieving the candidacy with id ${candidacyId}`);
     };
@@ -225,6 +220,7 @@ export const updateContactOnCandidacy = async (params: { candidacyId: string, em
             id: newCandidacy.id,
             deviceId: newCandidacy.deviceId,
             regionId: certificationAndRegion.region.id,
+            region: certificationAndRegion.region,
             certificationId: certificationAndRegion.certification.id,
             certification: certificationAndRegion.certification,
             organismId: newCandidacy.organismId,
@@ -290,6 +286,7 @@ export const updateCandidacyStatus = async (params: { candidacyId: string, statu
             id: newCandidacy.id,
             deviceId: newCandidacy.deviceId,
             regionId: certificationAndRegion.region.id,
+            region: certificationAndRegion.region,
             certificationId: certificationAndRegion.certificationId,
             certification: { ...certificationAndRegion.certification, codeRncp: certificationAndRegion.certification.rncpId },
             organismId: newCandidacy.organismId,
@@ -363,6 +360,7 @@ export const updateCertification = async (params: { candidacyId: string, certifi
             id: newCandidacy.id,
             deviceId: newCandidacy.deviceId,
             regionId: certificationAndRegion.region.id,
+            region: certificationAndRegion.region,
             certificationId: certificationAndRegion.certification.id,
             certification: certificationAndRegion.certification,
             organismId: newCandidacy.organismId,
@@ -527,6 +525,7 @@ export const updateAppointmentInformations = async (params: {
             id: candidacy.id,
             deviceId: candidacy.deviceId,
             regionId: candidaciesOnRegionsAndCertifications.region.id,
+            region: candidaciesOnRegionsAndCertifications.region,
             certificationId: candidaciesOnRegionsAndCertifications.certification.id,
             certification: candidaciesOnRegionsAndCertifications.certification,
             organismId: candidacy.organismId,
@@ -583,6 +582,7 @@ export const updateOrganism = async (params: { candidacyId: string, organismId: 
             id: newCandidacy.id,
             deviceId: newCandidacy.deviceId,
             regionId: certificationAndRegion.region.id,
+            region: certificationAndRegion.region,
             certificationId: certificationAndRegion.certification.id,
             certification: certificationAndRegion.certification,
             organismId: newCandidacy.organismId,
