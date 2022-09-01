@@ -1,4 +1,4 @@
-label,adress,cp,city,contact_administratif,contact_commercial_name,contact_commercial_email,siret,is_active
+label,address,zip,city,contact_administrative_email,contact_commercial_name,contact_commercial_email,siret,is_active
 CNEAP,"cneap, adress",75001,PARIS,cneap@reva.incubateur.net,,cneap@reva.incubateur.net,82422000000000,1
 IPERIA,"iperia, adress",75002,PARIS,iperia@reva.incubateur.net,,iperia@reva.incubateur.net,82422000000001,1
 AFPA,"afpa, adress",75003,PARIS,afpa@reva.incubateur.net,,afpa@reva.incubateur.net,82422000000002,1
