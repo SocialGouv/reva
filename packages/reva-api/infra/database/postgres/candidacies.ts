@@ -3,6 +3,7 @@ import { Either, Left, Maybe, Right } from 'purify-ts';
 import * as domain from '../../../domain/types/candidacy';
 import { prismaClient } from './client';
 import { toDomainExperiences } from './experiences';
+import { getOrganisms } from './organisms';
  
 
 
@@ -106,11 +107,17 @@ export const getCandidacyFromDeviceId = async (deviceId: string) => {
             }
         });
 
+        let organism: Either<string, domain.Organism[]>;
+        if (candidacy?.id) {
+            organism = await getOrganisms( {candidacyId:candidacy?.id}
+            )
+        }
+
         if (!certificationAndRegion) {
             return Left(`error while retrieving the certification and region the device id ${deviceId}`);    
         }
 
-        return Maybe.fromNullable(candidacy).map(c => ({ ...c, regionId: certificationAndRegion.region.id || '', certificationId:certificationAndRegion.certification.id, certification: { ...certificationAndRegion.certification, codeRncp: certificationAndRegion.certification.rncpId } })).toEither(`Candidacy with deviceId ${deviceId} not found`);
+        return Maybe.fromNullable(candidacy).map(c => ({ ...c, regionId: certificationAndRegion.region.id || '', certificationId:certificationAndRegion.certification.id, certification: { ...certificationAndRegion.certification, codeRncp: certificationAndRegion.certification.rncpId }, organism })).toEither(`Candidacy with deviceId ${deviceId} not found`);
     } catch (e) {
         return Left(`error while retrieving the candidacy with id ${deviceId}`);
     };
