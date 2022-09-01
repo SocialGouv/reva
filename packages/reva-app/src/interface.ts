@@ -57,3 +57,8 @@ export interface Organism {
   label: string;
   zip: string;
 }
+
+export interface OrganismForCandidacy {
+  candidacyId: string;
+  selectedOrganism: string;
+}

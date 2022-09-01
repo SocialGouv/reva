@@ -28,7 +28,6 @@ const SET_ORGANISMS_FOR_CANDIDACY = gql`
       organismId: $organismId
     ) {
       id
-      candidacyId
       organismId
       regionId
       createdAt

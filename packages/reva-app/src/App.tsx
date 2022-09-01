@@ -31,7 +31,10 @@ import {
   updateContact,
   updateExperience,
 } from "./services/candidacyServices";
-import { getOrganismsForCandidacy } from "./services/organismServices";
+import {
+  getOrganismsForCandidacy,
+  setOrganismsForCandidacy,
+} from "./services/organismServices";
 import {
   getCertification,
   searchCertifications,
@@ -109,6 +112,17 @@ function App() {
               candidacyId: context.candidacyId,
               certificationId: event.certification.id,
               regionId: context.selectedRegion?.id || "",
+            });
+          },
+          setOrganismsForCandidacy: async (context, _event) => {
+            if (!context.candidacyId || !context.organism?.id)
+              return Promise.reject(
+                "unavailable candidacyId or organism in XState context"
+              );
+
+            setOrganismsForCandidacy(client as ApolloClient<object>)({
+              candidacyId: context.candidacyId,
+              organismId: context.organism.id,
             });
           },
           saveGoals: async (context, event) => {
