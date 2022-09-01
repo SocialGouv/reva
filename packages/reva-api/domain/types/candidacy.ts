@@ -85,7 +85,8 @@ export interface Region {
 export interface Organism {
     id: string;
     label: string;
-    adress: string;
-    cp: string;
+    address: string;
+    zip: string;
     city: string;
+    contactAdministrativeEmail: string;
 }

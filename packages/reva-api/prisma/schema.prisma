@@ -216,10 +216,10 @@ model Account {
 model Organism {
   id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()")) 
   label String  @unique @db.VarChar(255)
-  adress  String
-  cp  String   @db.VarChar(5)
+  address  String
+  zip  String   @db.VarChar(5)
   city  String @db.VarChar(255)
-  contactAdministratif String @unique @db.VarChar(255) @map("contact_administratif")
+  contactAdministrativeEmail String @unique @db.VarChar(255) @map("contact_administrative_email")
   contactCommercialName String @map("contact_commercial_name")
   contactCommercialEmail  String @map("contact_commercial_email")
   siret String

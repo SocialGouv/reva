@@ -73,8 +73,8 @@ type CandidateGoal {
 type Organism {
   id: UUID!
   label: String!
-  adress: String!
-  cp: String!
+  address: String!
+  zip: String!
   city: String!
   contactAdministratif: String!
 }
