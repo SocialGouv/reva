@@ -63,10 +63,10 @@ async function main() {
           update: {},
           create: {
             label: row.label.trim(),
-            adress: row.adress.trim(),
-            cp: row.cp.trim().replace(' ', ''),
+            address: row.address.trim(),
+            zip: row.zip.trim().replace(' ', ''),
             city: row.city.trim(),
-            contactAdministratif: row.contact_administratif.trim(),
+            contactAdministrativeEmail: row.contact_administrative_email.trim(),
             contactCommercialName: row.contact_commercial_name.trim(),
             contactCommercialEmail: row.contact_commercial_email.trim(),
             siret: row.siret.trim().replace(' ', ''),

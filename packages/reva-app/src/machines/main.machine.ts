@@ -728,9 +728,9 @@ export const mainMachine =
                     event.data.data.getOrganismsForCandidacy.map(
                       (organism: any) => ({
                         id: organism.id,
-                        address: organism.adress,
+                        address: organism.address,
                         city: organism.city,
-                        email: organism.contactAdministratif,
+                        email: organism.contactAdministrativeEmail,
                         label: organism.label,
                       })
                     ),
