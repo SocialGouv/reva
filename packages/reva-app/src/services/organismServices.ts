@@ -5,10 +5,10 @@ const GET_ORGANISMS_FOR_CANDIDACY = gql`
     getOrganismsForCandidacy(candidacyId: $query) {
       id
       label
-      adress
-      cp
+      address
+      zip
       city
-      contactAdministratif
+      contactAdministrativeEmail
     }
   }
 `;

@@ -76,7 +76,7 @@ type Organism {
   address: String!
   zip: String!
   city: String!
-  contactAdministratif: String!
+  contactAdministrativeEmail: String!
 }
 
 type Training {
