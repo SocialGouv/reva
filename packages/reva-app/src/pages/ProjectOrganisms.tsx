@@ -91,7 +91,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
     organism?.id || ""
   );
 
-  const organismsLoaded = organisms && organisms.length > 0;
+  const isOrganismsLoaded = organisms && organisms.length > 0;
 
   if (!candidacyId) return <p>Aucun Id de candidat trouvé</p>;
 
@@ -119,10 +119,10 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
             data-test="project-organisms-submit-organism"
             size="medium"
             label="OK"
-            disabled={!organismsLoaded}
+            disabled={!isOrganismsLoaded}
             loading={state.matches("projectOrganism.submitting")}
             onClick={() => {
-              if (organismsLoaded) {
+              if (isOrganismsLoaded) {
                 send({
                   type: "SUBMIT_ORGANISM",
                   organism: {
