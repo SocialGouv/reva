@@ -211,9 +211,9 @@ export const ProjectHome = ({
             {state.context.organism?.zip} {state.context.organism?.city}
           </p>
         )}
-        {state.context.organism?.email && (
+        {state.context.organism?.contactAdministrativeEmail && (
           <p data-test="project-home-organism-email">
-            {state.context.organism?.email}
+            {state.context.organism?.contactAdministrativeEmail}
           </p>
         )}
       </address>
