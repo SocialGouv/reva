@@ -754,12 +754,15 @@ export const mainMachine =
                   target: "leave",
                 },
                 SUBMIT_ORGANISM: {
-                  actions: assign({
-                    organism: (context, event) =>
-                      context.organisms?.filter(
-                        (o) => o.id === event.organism?.selectedOrganism
-                      )[0],
-                  }),
+                  actions: [
+                    "navigatePrevious",
+                    assign({
+                      organism: (context, event) =>
+                        context.organisms?.filter(
+                          (o) => o.id === event.organism?.selectedOrganism
+                        )[0],
+                    }),
+                  ],
                   target: "submitting",
                 },
               },
