@@ -13,16 +13,19 @@ import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
 interface PropsOrganisms {
   availableOrganisms?: Organism[];
+  currentOrganismId?: string;
   setOrganismId: Dispatch<SetStateAction<string>>;
 }
 
 //TODO: extract in its own file
 const Organisms: FC<PropsOrganisms> = ({
   availableOrganisms,
+  currentOrganismId,
   setOrganismId,
 }) => {
   const organisms = availableOrganisms || [];
-  const [selectedOrganismId, setSelectedOrganismId] = useState(organisms[0]);
+  const [selectedOrganismId, setSelectedOrganismId] =
+    useState(currentOrganismId);
 
   if (!organisms) return <p>chargement des organismes...</p>;
 
@@ -79,7 +82,8 @@ interface Props {
 
 export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
   const [state, send] = useActor(mainService);
-  const { direction, selectedRegion, organisms, candidacyId } = state.context;
+  const { direction, selectedRegion, organisms, organism, candidacyId } =
+    state.context;
   const [selectedOrganismId, setSelectedOrganismId] = useState("");
 
   if (!candidacyId) return <p>Aucun Id de candidat trouvé</p>;
@@ -99,6 +103,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
           </p>
           <Organisms
             availableOrganisms={organisms}
+            currentOrganismId={organism?.id}
             setOrganismId={setSelectedOrganismId}
           />
         </div>
