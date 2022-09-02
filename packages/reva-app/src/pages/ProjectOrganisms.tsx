@@ -1,7 +1,7 @@
 import { RadioGroup } from "@headlessui/react";
 import { useActor } from "@xstate/react";
 import classNames from "classnames";
-import { Dispatch, FC, SetStateAction, SyntheticEvent, useState } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
@@ -64,7 +64,9 @@ const Organisms: FC<PropsOrganisms> = ({
               <p data-test="project-home-organism-address">
                 {organism.zip} {organism.city}
               </p>
-              <p data-test="project-home-organism-email">{organism.email}</p>
+              <p data-test="project-home-organism-email">
+                {organism.contactAdministrativeEmail}
+              </p>
             </RadioGroup.Description>
           </RadioGroup.Option>
         ))}

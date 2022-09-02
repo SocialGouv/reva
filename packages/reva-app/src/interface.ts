@@ -53,7 +53,7 @@ export interface Organism {
   id: string;
   address: string;
   city: string;
-  email: string;
+  contactAdministrativeEmail: string;
   label: string;
   zip: string;
 }

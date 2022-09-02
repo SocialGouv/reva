@@ -725,15 +725,7 @@ export const mainMachine =
               {
                 actions: assign({
                   organisms: (_, event) =>
-                    event.data.data.getOrganismsForCandidacy.map(
-                      (organism: any) => ({
-                        id: organism.id,
-                        address: organism.address,
-                        city: organism.city,
-                        email: organism.contactAdministrativeEmail,
-                        label: organism.label,
-                      })
-                    ),
+                    event.data.data.getOrganismsForCandidacy,
                 }),
               },
             ],
