@@ -9,3 +9,4 @@ packages/reva-api/infra/generated-graphql-schema.graphql
 .parcel-cache
 .vscode
 **/private
+**/coverage
