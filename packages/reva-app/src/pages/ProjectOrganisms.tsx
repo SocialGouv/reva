@@ -14,23 +14,24 @@ import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 interface PropsOrganisms {
   availableOrganisms?: Organism[];
   setOrganismId: Dispatch<SetStateAction<string>>;
+  alreadySelectedOrganismId: string;
 }
 
 //TODO: extract in its own file
 const Organisms: FC<PropsOrganisms> = ({
   availableOrganisms,
   setOrganismId,
+  alreadySelectedOrganismId,
 }) => {
   const organisms = availableOrganisms || [];
-  const [selectedOrganismId, setSelectedOrganismId] = useState(organisms[0]);
+  const [selectedOrganismId, setSelectedOrganismId] = useState(
+    alreadySelectedOrganismId || organisms[0]?.id
+  );
 
   if (!organisms) return <p>chargement des organismes...</p>;
 
   return (
-    <RadioGroup
-      value={selectedOrganismId || organisms[0]?.id}
-      onChange={setSelectedOrganismId}
-    >
+    <RadioGroup value={selectedOrganismId} onChange={setSelectedOrganismId}>
       <RadioGroup.Label className="sr-only">Accompagnateur</RadioGroup.Label>
       <div className="space-y-4">
         {organisms.map((organism) => (
@@ -79,8 +80,11 @@ interface Props {
 
 export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
   const [state, send] = useActor(mainService);
-  const { direction, selectedRegion, organisms, candidacyId } = state.context;
-  const [selectedOrganismId, setSelectedOrganismId] = useState("");
+  const { direction, selectedRegion, organism, organisms, candidacyId } =
+    state.context;
+  const [selectedOrganismId, setSelectedOrganismId] = useState(
+    organism?.id || ""
+  );
 
   if (!candidacyId) return <p>Aucun Id de candidat trouvé</p>;
 
@@ -98,6 +102,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
             Choisissez l'accompagnateur qui vous aidera à construire ce projet.
           </p>
           <Organisms
+            alreadySelectedOrganismId={selectedOrganismId}
             availableOrganisms={organisms}
             setOrganismId={setSelectedOrganismId}
           />
