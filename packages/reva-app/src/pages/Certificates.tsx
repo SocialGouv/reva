@@ -25,7 +25,9 @@ export const Certificates = ({ mainService }: Props) => {
   const resultsElement = useRef<HTMLDivElement | null>(null);
   const currentCertificateElement = useRef<HTMLLIElement | null>(null);
 
-  const [chosenRegion, setChosenRegion] = useState<string | null>(null);
+  const [chosenRegionCode, setChosenRegionCode] = useState(
+    state.context.selectedRegion?.code
+  );
 
   useEffect(() => {
     if (resultsElement.current && currentCertificateElement.current) {
@@ -135,12 +137,13 @@ export const Certificates = ({ mainService }: Props) => {
           <Select
             name="select_region"
             className="mt-8 mb-4"
+            defaultValue={chosenRegionCode}
             placeholder="Ma Région"
             options={selectsOptionsRegions}
             onChangeHandler={(e) => {
               const el = e.target as HTMLOptionElement;
               const regionCode = el.value;
-              setChosenRegion(regionCode);
+              setChosenRegionCode(regionCode);
               send({
                 type: "SELECT_REGION",
                 regionCode: regionCode,
@@ -148,7 +151,7 @@ export const Certificates = ({ mainService }: Props) => {
             }}
           />
         </div>
-        {(!!chosenRegion || !!state.context.selectedRegion) && (
+        {(!!chosenRegionCode || !!state.context.selectedRegion) && (
           <div className="px-8">
             <Results
               title={`Diplômes disponibles dans cette région`}
