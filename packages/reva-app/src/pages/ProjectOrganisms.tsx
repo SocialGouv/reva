@@ -18,21 +18,25 @@ interface PropsOrganisms {
 
 //TODO: extract in its own file
 const Organisms: FC<PropsOrganisms> = ({
-  availableOrganisms: selectedOrganisms,
-  setOrganismId: setOrganism,
+  availableOrganisms,
+  setOrganismId,
 }) => {
-  const organisms = selectedOrganisms || [];
-  const [selected, setSelected] = useState(organisms[0]);
+  const organisms = availableOrganisms || [];
+  const [selectedOrganismId, setSelectedOrganismId] = useState(organisms[0]);
+
   if (!organisms) return <p>chargement des organismes...</p>;
 
   return (
-    <RadioGroup value={selected} onChange={setSelected}>
+    <RadioGroup
+      value={selectedOrganismId || organisms[0]?.id}
+      onChange={setSelectedOrganismId}
+    >
       <RadioGroup.Label className="sr-only">Accompagnateur</RadioGroup.Label>
       <div className="space-y-4">
         {organisms.map((organism) => (
           <RadioGroup.Option
             key={organism.id}
-            value={organism}
+            value={organism.id}
             className={({ active, checked }) =>
               classNames(
                 active
@@ -45,7 +49,7 @@ const Organisms: FC<PropsOrganisms> = ({
                 "text-lg"
               )
             }
-            onClick={() => setOrganism(organism.id)}
+            onClick={() => setOrganismId(organism.id)}
           >
             <RadioGroup.Label as="h3" className="font-bold text-slate-800">
               {organism.label}
@@ -76,7 +80,7 @@ interface Props {
 export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
   const [state, send] = useActor(mainService);
   const { direction, selectedRegion, organisms, candidacyId } = state.context;
-  const [selectedOrganism, setSelectedOrganism] = useState("");
+  const [selectedOrganismId, setSelectedOrganismId] = useState("");
 
   if (!candidacyId) return <p>Aucun Id de candidat trouvé</p>;
 
@@ -95,7 +99,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
           </p>
           <Organisms
             availableOrganisms={organisms}
-            setOrganismId={setSelectedOrganism}
+            setOrganismId={setSelectedOrganismId}
           />
         </div>
         <div className="flex justify-center pt-8 pb-16">
@@ -107,7 +111,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
             onClick={() =>
               send({
                 type: "SUBMIT_ORGANISM",
-                organism: { candidacyId, selectedOrganism },
+                organism: { candidacyId, selectedOrganismId },
               })
             }
           />

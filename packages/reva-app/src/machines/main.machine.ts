@@ -758,9 +758,9 @@ export const mainMachine =
                     "navigatePrevious",
                     assign({
                       organism: (context, event) =>
-                        context.organisms?.filter(
-                          (o) => o.id === event.organism?.selectedOrganism
-                        )[0],
+                        context.organisms?.find(
+                          (o) => o.id === event.organism?.selectedOrganismId
+                        ),
                     }),
                   ],
                   target: "submitting",

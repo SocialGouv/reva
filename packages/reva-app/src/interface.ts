@@ -60,5 +60,5 @@ export interface Organism {
 
 export interface OrganismForCandidacy {
   candidacyId: string;
-  selectedOrganism: string;
+  selectedOrganismId: string;
 }
