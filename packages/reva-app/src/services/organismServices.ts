@@ -19,6 +19,7 @@ export const getOrganismsForCandidacy =
     client.query({
       query: GET_ORGANISMS_FOR_CANDIDACY,
       variables: { query },
+      fetchPolicy: "no-cache",
     });
 
 const SET_ORGANISMS_FOR_CANDIDACY = gql`
