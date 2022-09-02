@@ -264,7 +264,14 @@ const INITIALIZE_APP = gql`
       id
       deviceId
       certificationId
-      organismId
+      organism {
+        id
+        label
+        address
+        zip
+        city
+        contactAdministrativeEmail
+      }
       email
       phone
       createdAt
