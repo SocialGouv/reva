@@ -321,12 +321,16 @@ export const mainMachine =
               on: {
                 SUBMIT_CERTIFICATION: [
                   {
-                    actions: ["submitCertification"],
+                    actions: ["navigateNext", "submitCertification"],
                     cond: isNewCandidacy,
                     target: "leave",
                   },
                   {
-                    actions: ["submitCertification", "resetOrganisms"],
+                    actions: [
+                      "navigateNext",
+                      "submitCertification",
+                      "resetOrganisms",
+                    ],
                     target: "submittingChange",
                   },
                 ],
@@ -354,7 +358,11 @@ export const mainMachine =
             retry: {
               on: {
                 SUBMIT_CERTIFICATION: {
-                  actions: ["submitCertification", "resetOrganisms"],
+                  actions: [
+                    "navigateNext",
+                    "submitCertification",
+                    "resetOrganisms",
+                  ],
                   cond: isNewCandidacy,
                   target: "leave",
                 },
@@ -391,12 +399,16 @@ export const mainMachine =
               on: {
                 SUBMIT_CERTIFICATION: [
                   {
-                    actions: ["submitCertification"],
+                    actions: ["navigateNext", "submitCertification"],
                     cond: isNewCandidacy,
                     target: "leave",
                   },
                   {
-                    actions: ["submitCertification", "resetOrganisms"],
+                    actions: [
+                      "navigateNext",
+                      "submitCertification",
+                      "resetOrganisms",
+                    ],
                     target: "submittingChange",
                   },
                 ],
@@ -424,7 +436,11 @@ export const mainMachine =
             retry: {
               on: {
                 SUBMIT_CERTIFICATION: {
-                  actions: ["submitCertification", "resetOrganisms"],
+                  actions: [
+                    "navigateNext",
+                    "submitCertification",
+                    "resetOrganisms",
+                  ],
                   cond: isNewCandidacy,
                   target: "leave",
                 },
