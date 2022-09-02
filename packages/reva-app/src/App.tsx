@@ -120,7 +120,7 @@ function App() {
                 "unavailable candidacyId or organism in XState context"
               );
 
-            setOrganismsForCandidacy(client as ApolloClient<object>)({
+            return setOrganismsForCandidacy(client as ApolloClient<object>)({
               candidacyId: context.candidacyId,
               organismId: context.organism.id,
             });
