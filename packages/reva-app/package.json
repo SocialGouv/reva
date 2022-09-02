@@ -4,12 +4,11 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.5.10",
-    "@capacitor/android": "^3.4.3",
-    "@capacitor/core": "^3.4.1",
-    "@capacitor/device": "^1.1.2",
-    "@capacitor/ios": "^3.4.1",
-    "@capacitor/splash-screen": "^1.2.2",
-    "@capacitor/status-bar": "^1.0.8",
+    "@capacitor/android": "^4.0.0",
+    "@capacitor/device": "^4.0.0",
+    "@capacitor/ios": "^4.0.0",
+    "@capacitor/splash-screen": "^4.0.0",
+    "@capacitor/status-bar": "^4.0.0",
     "@headlessui/react": "^1.6.6",
     "@tailwindcss/forms": "^0.4.0",
     "@tailwindcss/typography": "^0.5.2",
@@ -94,7 +93,8 @@
     ]
   },
   "devDependencies": {
-    "@capacitor/cli": "^4.1.0",
+    "@capacitor/cli": "^4.0.0",
+    "@capacitor/core": "^4.0.0",
     "@storybook/addon-actions": "^6.4.19",
     "@storybook/addon-docs": "^6.4.19",
     "@storybook/addon-essentials": "^6.4.19",
