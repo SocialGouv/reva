@@ -25,13 +25,16 @@ const Organisms: FC<PropsOrganisms> = ({
 }) => {
   const organisms = availableOrganisms || [];
   const [selectedOrganismId, setSelectedOrganismId] = useState(
-    alreadySelectedOrganismId || organisms[0]?.id
+    alreadySelectedOrganismId
   );
 
   if (!organisms) return <p>chargement des organismes...</p>;
 
   return (
-    <RadioGroup value={selectedOrganismId} onChange={setSelectedOrganismId}>
+    <RadioGroup
+      value={selectedOrganismId || organisms[0]?.id}
+      onChange={setSelectedOrganismId}
+    >
       <RadioGroup.Label className="sr-only">Accompagnateur</RadioGroup.Label>
       <div className="space-y-4">
         {organisms.map((organism) => (
@@ -88,6 +91,8 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
     organism?.id || ""
   );
 
+  const organismsLoaded = organisms && organisms.length > 0;
+
   if (!candidacyId) return <p>Aucun Id de candidat trouvé</p>;
 
   return (
@@ -114,13 +119,19 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
             data-test="project-organisms-submit-organism"
             size="medium"
             label="OK"
+            disabled={!organismsLoaded}
             loading={state.matches("projectOrganism.submitting")}
-            onClick={() =>
-              send({
-                type: "SUBMIT_ORGANISM",
-                organism: { candidacyId, selectedOrganismId },
-              })
-            }
+            onClick={() => {
+              if (organismsLoaded) {
+                send({
+                  type: "SUBMIT_ORGANISM",
+                  organism: {
+                    candidacyId,
+                    selectedOrganismId: selectedOrganismId || organisms[0]?.id,
+                  },
+                });
+              }
+            }}
           />
         </div>
       </div>
