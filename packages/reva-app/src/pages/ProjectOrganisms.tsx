@@ -1,7 +1,7 @@
 import { RadioGroup } from "@headlessui/react";
 import { useActor } from "@xstate/react";
 import classNames from "classnames";
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
@@ -24,9 +24,11 @@ const Organisms: FC<PropsOrganisms> = ({
   alreadySelectedOrganismId,
 }) => {
   const organisms = availableOrganisms || [];
-  const [selectedOrganismId, setSelectedOrganismId] = useState(
-    alreadySelectedOrganismId || organisms[0]?.id
-  );
+  const [selectedOrganismId, setSelectedOrganismId] = useState("");
+
+  useEffect(() => {
+    setSelectedOrganismId(alreadySelectedOrganismId);
+  }, [alreadySelectedOrganismId]);
 
   if (!organisms) return <p>chargement des organismes...</p>;
 
@@ -84,9 +86,16 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
   const [state, send] = useActor(mainService);
   const { direction, selectedRegion, organism, organisms, candidacyId } =
     state.context;
+
   const [selectedOrganismId, setSelectedOrganismId] = useState(
     organism?.id || ""
   );
+
+  useEffect(() => {
+    if (!!organisms && !!organisms.length && selectedOrganismId === "") {
+      setSelectedOrganismId(organisms[0].id);
+    }
+  }, [organisms, selectedOrganismId]);
 
   if (!candidacyId) return <p>Aucun Id de candidat trouvé</p>;
 
