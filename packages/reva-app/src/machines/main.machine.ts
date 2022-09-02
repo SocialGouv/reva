@@ -66,10 +66,14 @@ export interface MainContext {
 }
 
 type SelectRegion = { type: "SELECT_REGION"; regionCode: string };
+type SelectCertification = {
+  type: "SELECT_CERTIFICATION";
+  certification: Certification;
+};
 
 export type MainEvent =
   | SelectRegion
-  | { type: "SELECT_CERTIFICATION"; certification: Certification }
+  | SelectCertification
   | { type: "SHOW_CERTIFICATION_DETAILS"; certification: Certification }
   | { type: "SHOW_PROJECT_HOME"; certification: Certification }
   | { type: "EDIT_CONTACT" }
@@ -317,22 +321,12 @@ export const mainMachine =
               on: {
                 SUBMIT_CERTIFICATION: [
                   {
-                    actions: [
-                      "navigateNext",
-                      assign((_context, event) => ({
-                        certification: event.certification,
-                      })),
-                    ],
+                    actions: ["submitCertification"],
                     cond: isNewCandidacy,
                     target: "leave",
                   },
                   {
-                    actions: [
-                      "navigateNext",
-                      assign((_context, event) => ({
-                        certification: event.certification,
-                      })),
-                    ],
+                    actions: ["submitCertification", "resetOrganisms"],
                     target: "submittingChange",
                   },
                 ],
@@ -360,12 +354,7 @@ export const mainMachine =
             retry: {
               on: {
                 SUBMIT_CERTIFICATION: {
-                  actions: [
-                    "navigateNext",
-                    assign((_context, event) => ({
-                      certification: event.certification,
-                    })),
-                  ],
+                  actions: ["submitCertification", "resetOrganisms"],
                   cond: isNewCandidacy,
                   target: "leave",
                 },
@@ -402,22 +391,12 @@ export const mainMachine =
               on: {
                 SUBMIT_CERTIFICATION: [
                   {
-                    actions: [
-                      "navigateNext",
-                      assign((_context, event) => ({
-                        certification: event.certification,
-                      })),
-                    ],
+                    actions: ["submitCertification"],
                     cond: isNewCandidacy,
                     target: "leave",
                   },
                   {
-                    actions: [
-                      "navigateNext",
-                      assign((_context, event) => ({
-                        certification: event.certification,
-                      })),
-                    ],
+                    actions: ["submitCertification", "resetOrganisms"],
                     target: "submittingChange",
                   },
                 ],
@@ -445,12 +424,7 @@ export const mainMachine =
             retry: {
               on: {
                 SUBMIT_CERTIFICATION: {
-                  actions: [
-                    "navigateNext",
-                    assign((_context, event) => ({
-                      certification: event.certification,
-                    })),
-                  ],
+                  actions: ["submitCertification", "resetOrganisms"],
                   cond: isNewCandidacy,
                   target: "leave",
                 },
@@ -981,12 +955,24 @@ export const mainMachine =
     },
     {
       actions: {
-        // Page actions
+        loadRegion: assign({
+          selectedRegion: (_, event) => {
+            const typedEvent = event as DoneInvokeEvent<any>;
+            return typedEvent.data.regions.find(
+              (region: Region) =>
+                region.id === typedEvent.data.candidacy.regionId
+            );
+          },
+        }),
         navigateNext: assign((_context, _event) => ({
           direction: "next",
         })),
         navigatePrevious: assign((_context, _event) => ({
           direction: "previous",
+        })),
+        resetOrganisms: assign((_context, _event) => ({
+          organism: undefined,
+          organisms: undefined,
         })),
         selectingRegion: assign({
           selectedRegion: (context, event) => {
@@ -997,13 +983,10 @@ export const mainMachine =
           },
           error: (_context, _event) => "",
         }),
-        loadRegion: assign({
-          selectedRegion: (_, event) => {
-            const typedEvent = event as DoneInvokeEvent<any>;
-            return typedEvent.data.regions.find(
-              (region: Region) =>
-                region.id == typedEvent.data.candidacy.regionId
-            );
+        submitCertification: assign({
+          certification: (_context, event) => {
+            const typedEvent = event as SelectCertification;
+            return typedEvent.certification;
           },
         }),
       },
