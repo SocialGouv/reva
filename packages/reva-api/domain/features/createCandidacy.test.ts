@@ -43,7 +43,8 @@ describe("domain candidacy", () => {
             code: "",
             label: ""
           }
-        }))
+        })),
+      notifyTeam: async (candidacyId: string) => console.log(`notify`)
     });
 
 
@@ -63,7 +64,8 @@ describe("domain candidacy", () => {
   test("given an device without any candidacy, when createCandidacy is call and an error occurs, then an error CANDIDACY_NOT_CREATED should occured", async () => {
     const createCandidacyWithDeps = createCandidacy({
       getCandidacyFromDeviceId: (id: string) => Promise.resolve(Left('Not found')),
-      createCandidacy: () => Promise.resolve(Left('Error while saving'))
+      createCandidacy: () => Promise.resolve(Left('Error while saving')),
+      notifyTeam: async (candidacyId: string) => console.log(`notify`)
     });
 
 
@@ -100,7 +102,8 @@ describe("domain candidacy", () => {
             code: "",
             label: ""
           }
-        }))
+        })),
+      notifyTeam: async (candidacyId: string) => console.log(`notify`)
     });
 
 
