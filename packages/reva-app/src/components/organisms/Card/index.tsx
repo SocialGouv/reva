@@ -15,7 +15,7 @@ export const STATUS_SOON = "SOON";
 
 export type CardStatus = typeof STATUS_AVAILABLE | typeof STATUS_SOON;
 
-interface Card {
+interface CardProps {
   id: string;
   summary: string;
   label: string;
@@ -34,21 +34,21 @@ const CertificationStatus = (props: { status: CardStatus }) => {
       <div
         className={
           `h-2 w-2 rounded-full ` +
-          (props.status == STATUS_AVAILABLE ? "bg-green-500" : "bg-red-500")
+          (props.status === STATUS_AVAILABLE ? "bg-green-500" : "bg-red-500")
         }
       ></div>
       <div
         className={
-          props.status == STATUS_AVAILABLE ? "text-white" : "text-gray-400"
+          props.status === STATUS_AVAILABLE ? "text-white" : "text-gray-400"
         }
       >
-        {props.status == STATUS_AVAILABLE ? "Disponible" : "Bientôt"}
+        {props.status === STATUS_AVAILABLE ? "Disponible" : "Bientôt"}
       </div>
     </div>
   );
 };
 
-export const Card = React.forwardRef<HTMLLIElement, Card>(
+export const Card = React.forwardRef<HTMLLIElement, CardProps>(
   (
     {
       summary,
@@ -114,13 +114,13 @@ export const Card = React.forwardRef<HTMLLIElement, Card>(
                 {summary}
               </p>{" "}
             </div>
-            <a
+            <button
               data-test="certification-learn-more"
               className="block text-blue-500 py-4 underline"
               onClick={onLearnMore}
             >
               Lire tous les détails
-            </a>
+            </button>
           </div>
           <img
             className="pointer-events-none"

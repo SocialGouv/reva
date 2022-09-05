@@ -1,7 +1,7 @@
 type Color = "dark" | "light";
 type Size = "small" | "large";
 
-interface TextResult {
+interface TextResultProps {
   color?: Color;
   onClick?: () => void;
   key?: string;
@@ -15,7 +15,7 @@ export const TextResult = ({
   title,
   onClick,
   ...props
-}: TextResult) => {
+}: TextResultProps) => {
   const colorClass =
     color === "dark" ? "font-bold text-slate-900" : "font-medium text-white";
 

@@ -1,5 +1,5 @@
 import { Certification } from "../../../interface";
-import { MainEvent, State } from "../../../machines/main.machine";
+import { MainEvent } from "../../../machines/main.machine";
 import { Button } from "../../atoms/Button";
 
 interface PageConfig {

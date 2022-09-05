@@ -1,6 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 
-import { loremIpsum } from "../../atoms/LoremIpsum";
 import { CardSkeleton } from "./index";
 
 export default {

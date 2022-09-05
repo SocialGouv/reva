@@ -12,7 +12,7 @@ import type { Certification } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 import { projectProgress } from "../utils/projectProgress";
 
-interface SubmissionHome {
+interface SubmissionHomeProps {
   candidacyCreatedAt: Date;
   certification: Certification;
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
@@ -72,7 +72,7 @@ export const SubmissionHome = ({
   candidacyCreatedAt,
   certification,
   mainService,
-}: SubmissionHome) => {
+}: SubmissionHomeProps) => {
   const [state, send] = useActor(mainService);
 
   const isHomeReady =

@@ -2,7 +2,7 @@ import { Back } from "../../atoms/Icons";
 
 type Color = "dark" | "light";
 
-interface BackButton {
+interface BackButtonProps {
   color?: Color;
   className?: string;
   onClick: () => void;
@@ -12,7 +12,7 @@ export const BackButton = ({
   className = "",
   color = "dark",
   onClick,
-}: BackButton) => {
+}: BackButtonProps) => {
   const colorClass = color === "dark" ? "text-slate-900" : "text-white";
 
   return (
