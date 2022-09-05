@@ -2,7 +2,7 @@ import { Either, Left, Right } from "purify-ts";
 import * as domain from '../../../domain/types/candidacy';
 import { prismaClient } from "./client";
 
-export const getOrganisms = async (params: { candidacyId: string; }): Promise<Either<string, domain.Organism[]>> => {
+export const getAAPOrganisms = async (params: { candidacyId: string; }): Promise<Either<string, domain.Organism[]>> => {
     try {
 
         const candidacy = await prismaClient.candidacy.findFirst({
@@ -31,7 +31,8 @@ export const getOrganisms = async (params: { candidacyId: string; }): Promise<Ei
                 regionsAndCertifications: {
                     some: {
                         certificationId: candidacy.certificationsAndRegions[0].certificationId,
-                        regionId: candidacy.certificationsAndRegions[0].regionId
+                        regionId: candidacy.certificationsAndRegions[0].regionId,
+                        isArchitect: true
                     }
                 }
             }

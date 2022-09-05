@@ -3,13 +3,13 @@ import { Organism } from "../types/candidacy";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
 interface GetOrganismsDeps {
-    getOrganisms: (params: {candidacyId: string}) => Promise<Either<string, Organism[]>>;
+    getAAPOrganisms: (params: {candidacyId: string}) => Promise<Either<string, Organism[]>>;
 }
 
-export const getOrganismsForCandidacy = (deps: GetOrganismsDeps) => (params: {
+export const getAAPOrganismsForCandidacy = (deps: GetOrganismsDeps) => (params: {
     candidacyId: string;
 }) => {
-    const candidacies = EitherAsync.fromPromise(() => deps.getOrganisms(params))
-        .mapLeft(() => new FunctionalError(FunctionalCodeError.ORGANISMS_NOT_FOUND, `Erreur lors de la récupération des organismes de la candidature`));
+    const candidacies = EitherAsync.fromPromise(() => deps.getAAPOrganisms(params))
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.AAP_ORGANISMS_NOT_FOUND, `Erreur lors de la récupération des organismes AAP de la candidature`));
     return candidacies;
 };

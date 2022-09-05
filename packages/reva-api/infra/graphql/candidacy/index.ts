@@ -6,7 +6,7 @@ import { getCandidacy } from "../../../domain/features/getCandidacy";
 import { getCandidacySummaries } from "../../../domain/features/getCandidacies";
 import { getCompanions } from "../../../domain/features/getCompanions";
 import { getDeviceCandidacy } from "../../../domain/features/getDeviceCandidacy";
-import { getOrganismsForCandidacy } from "../../../domain/features/getOrganismsForCandidacy";
+import { getAAPOrganismsForCandidacy } from "../../../domain/features/getOrganismsForCandidacy";
 import { submitCandidacy } from "../../../domain/features/submitCandidacy";
 import { takeOverCandidacy } from "../../../domain/features/takeOverCandidacy";
 import { updateAppointmentInformations } from "../../../domain/features/updateAppointmentInformations";
@@ -46,8 +46,8 @@ export const resolvers = {
       return result.extract();
     },
     getOrganismsForCandidacy: async (_: unknown, params: { candidacyId: string; }) => {
-      const result = await getOrganismsForCandidacy({
-        getOrganisms: organismDb.getOrganisms
+      const result = await getAAPOrganismsForCandidacy({
+        getAAPOrganisms: organismDb.getAAPOrganisms
       })({candidacyId: params.candidacyId})
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
