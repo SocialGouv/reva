@@ -102,11 +102,12 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
         <div className="grow overflow-y-auto px-8 pb-8">
           {selectedRegion && (
             <Title
-              label={`Accompagnateurs disponibles pour la région ${selectedRegion?.label}`}
+              label={`Architectes de parcours disponibles pour la région ${selectedRegion?.label}`}
             />
           )}
           <p className="mt-4 mb-12">
-            Choisissez l'accompagnateur qui vous aidera à construire ce projet.
+            Choisissez l'architecte de parcours qui vous aidera à construire ce
+            projet.
           </p>
           <Organisms
             alreadySelectedOrganismId={selectedOrganismId}

@@ -55,8 +55,8 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
       <BackButton onClick={() => send("BACK")} />
       <div className="h-full flex flex-col px-8 overflow-y-auto pt-12 pb-[400px]">
         <p>
-          Ces informations de contact permettront à votre accompagnateur de
-          prendre contact avec vous pour discuter de votre projet.
+          Ces informations de contact permettront à votre architecte de parcours
+          de prendre contact avec vous pour discuter de votre projet.
         </p>
         <p className="my-4 font-semibold">
           Choisissez le moyen de contact par lequel vous préférez être
