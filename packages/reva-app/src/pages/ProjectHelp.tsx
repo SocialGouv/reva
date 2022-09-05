@@ -38,7 +38,7 @@ export const ProjectHelp = ({ mainService }: ProjectHelpProps) => {
           <li>Votre contact</li>
         </ul>
         <p>
-          Un accompagnateur expert prendra connaissance de votre demande sous
+          Un architecte de parcours prendra connaissance de votre demande sous
           48h et vous proposera un rdv.
         </p>
       </div>

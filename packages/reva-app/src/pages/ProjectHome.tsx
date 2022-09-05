@@ -190,7 +190,7 @@ export const ProjectHome = ({
   const EditOrganism = () => (
     <div className="rounded-xl px-8 py-6 bg-neutral-100">
       <h2 className="font-bold text-slate-800 text-xl mb-4">
-        Mon accompagnateur
+        Mon architecte de parcours
       </h2>
       {state.context.organism?.label && (
         <h3

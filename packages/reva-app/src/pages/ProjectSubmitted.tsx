@@ -23,8 +23,9 @@ export const ProjectSubmitted = ({ mainService }: ProjectSubmittedProps) => {
         <div className="flex flex-col items-center mt-8 rounded-xl px-8 py-12 bg-slate-100 text-slate-800">
           <h2 className="w-full text-2xl mb-8 font-bold">C'est parti !</h2>
           <p className="leading-loose font-semibold mb-12">
-            Votre candidature a été envoyée avec succès à votre accompagnateur.
-            Vous allez être recontacté par votre accompagnateur.
+            Votre candidature a été envoyée avec succès à votre architecte de
+            parcours. Vous allez être recontacté par votre architecte de
+            parcours.
           </p>
           <Button onClick={() => send("BACK")} label="Ok" />
         </div>
