@@ -23,7 +23,7 @@ export const ProgressTitle = ({
         <div
           data-test="progress-title-value"
           className={`font-semibold text-base ${
-            theme == "dark" ? "text-white" : "text-gray-500"
+            theme === "dark" ? "text-white" : "text-gray-500"
           }`}
         >
           {progress}%
@@ -31,12 +31,12 @@ export const ProgressTitle = ({
       </div>
       <div
         className={`mt-2 w-full rounded-full h-[5px] ${
-          theme == "dark" ? "bg-gray-900" : "bg-slate-300"
+          theme === "dark" ? "bg-gray-900" : "bg-slate-300"
         }`}
       >
         <div
           className={`${
-            size == "small" ? "bg-blue-600" : "bg-slate-900"
+            size === "small" ? "bg-blue-600" : "bg-slate-900"
           } h-[5px] rounded-full`}
           style={{ width: `${progress}%` }}
         ></div>

@@ -191,7 +191,7 @@ function App() {
     [client]
   );
 
-  const [current, send, mainService] = useMachine(machine, { devTools: true });
+  const [current, , mainService] = useMachine(machine, { devTools: true });
   // @ts-ignore
   window.state = current;
 
@@ -212,7 +212,7 @@ function App() {
 
   useEffect(() => {
     async function hideSplashscreen() {
-      if (current.value != "loadingApplicationData") {
+      if (current.value !== "loadingApplicationData") {
         await SplashScreen.hide();
       }
     }
@@ -311,7 +311,7 @@ function App() {
 
       {current.matches("projectHome") &&
         projectHomePage({
-          isValidated: current.context.projectStatus != "draft",
+          isValidated: current.context.projectStatus !== "draft",
           certification: current.context.certification,
         })}
 

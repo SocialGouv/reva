@@ -13,7 +13,7 @@ const colorClass = (color: Color) =>
   color === "dark" ? "text-slate-900" : "text-white";
 
 const fontClass = (size: Size) =>
-  size == "small" ? "font-medium" : "font-bold";
+  size === "small" ? "font-medium" : "font-bold";
 
 export const Header = ({
   color = "dark",

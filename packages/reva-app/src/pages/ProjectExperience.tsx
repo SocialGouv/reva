@@ -1,6 +1,6 @@
 import { Capacitor } from "@capacitor/core";
 import { useActor } from "@xstate/react";
-import { MutableRefObject, useRef } from "react";
+import { useRef } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";

@@ -20,7 +20,7 @@ export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
   const toggle = (toggleIndex: number) => {
     setGoals(
       goals.map((goal, index) =>
-        index == toggleIndex ? { ...goal, checked: !goal.checked } : goal
+        index === toggleIndex ? { ...goal, checked: !goal.checked } : goal
       )
     );
   };

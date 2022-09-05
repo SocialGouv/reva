@@ -1,10 +1,10 @@
 import { heightConfig } from "../Card/view";
 
-interface CardSkeleton {
+interface CardSkeletonProps {
   size?: "small" | "medium" | "large";
 }
 
-export const CardSkeleton = ({ size = "small" }: CardSkeleton) => {
+export const CardSkeleton = ({ size = "small" }: CardSkeletonProps) => {
   const isSmall = size === "small";
   const isMedium = size === "medium";
   const isFullscreen = size === "large";

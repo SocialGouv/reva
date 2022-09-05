@@ -58,9 +58,9 @@ export const Button = ({
 }: ButtonProps) => {
   const modeClass = primary
     ? "font-medium bg-blue-600 text-white"
-    : locked == true || loading == true
+    : locked === true || loading === true
     ? "font-normal bg-white text-gray-600 border border-[#A1A0BA]"
-    : className != ""
+    : className !== ""
     ? className
     : "font-medium bg-slate-900 text-white";
 

@@ -17,8 +17,8 @@ export const Title = ({
   ...props
 }: TitleProps) => {
   const className = `mt-4 font-bold ${
-    size == "small" ? "text-xl" : "text-2xl"
-  } ${theme == "dark" ? "text-white" : "text-slate-800"}`;
+    size === "small" ? "text-xl" : "text-2xl"
+  } ${theme === "dark" ? "text-white" : "text-slate-800"}`;
   return level === 1 ? (
     <h1 className={className} {...props}>
       {label}

@@ -176,8 +176,8 @@ export const ProjectHome = ({
             size="tiny"
             label={
               state.context.contact &&
-              (state.context.contact?.phone != "" ||
-                state.context.contact?.email != "")
+              (state.context.contact?.phone !== "" ||
+                state.context.contact?.email !== "")
                 ? "Modifer"
                 : "Ajouter"
             }
