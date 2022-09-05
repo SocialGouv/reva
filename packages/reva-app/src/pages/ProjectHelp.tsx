@@ -29,13 +29,14 @@ export const ProjectHelp = ({ mainService }: ProjectHelpProps) => {
           <Title label="Complétez votre projet" />
         </div>
         <p className="mt-36">
-          Pour pouvoir valider votre projet vous devez compléter les 3 rubriques
+          Pour pouvoir valider votre projet vous devez compléter les 4 rubriques
           :
         </p>
         <ul className="my-4 pl-4 list-disc">
           <li>Votre objectif</li>
           <li>Vos expériences</li>
           <li>Votre contact</li>
+          <li>Votre architecte de parcours</li>
         </ul>
         <p>
           Un architecte de parcours prendra connaissance de votre demande sous
