@@ -22,6 +22,7 @@ import * as trainingDb from "../../database/postgres/trainings";
 import mercurius from "mercurius";
 import { getTrainings } from "../../../domain/features/getTrainings";
 import { selectOrganismForCandidacy } from "../../../domain/features/selectOrganismForCandidacy";
+import { notifyNewCandidacy } from "../../mattermost";
 
 
 export const resolvers = {
@@ -59,6 +60,7 @@ export const resolvers = {
       const result = await createCandidacy({
         createCandidacy: candidacyDb.insertCandidacy,
         getCandidacyFromDeviceId: candidacyDb.getCandidacyFromDeviceId,
+        notifyTeam: notifyNewCandidacy
       })({ deviceId: candidacy.deviceId, certificationId: candidacy.certificationId, regionId: candidacy.regionId });
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
