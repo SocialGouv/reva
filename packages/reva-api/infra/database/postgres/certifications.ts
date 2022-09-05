@@ -80,6 +80,7 @@ export const getCertifications = async ({regionId}: {regionId: string}): Promise
         INNER JOIN certification ON certification.id = certification_search.id
         INNER JOIN organism_region_certification ON organism_region_certification.certification_id = certification.id
         WHERE organism_region_certification.region_id = ${regionId}
+        AND organism_region_certification.is_architect = true
         ORDER BY id, label DESC;
   `) as Certification[];
 

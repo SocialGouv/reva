@@ -85,14 +85,8 @@ async function main() {
 
   const organisms = await prisma.organism.findMany();
 
-  const organismsMap = organisms.reduce((acc, region) => {
-    acc.set(region.label, region);
-    return acc;
-  }, new Map());
-
-
   // Link region organism and certification
-  const insertRelationship = () => new Promise(async (resolve, reject) => {
+  const insertRelationship = () => new Promise((resolve, reject) => {
     const relationshipFilePath = path.resolve(__dirname, 'private', 'data-organisms-certifications-regions.csv');
     const relationshipFileExists = fs.existsSync(relationshipFilePath);
 
@@ -125,6 +119,7 @@ async function main() {
                 }
               }
             });
+            
             if (!existingResult) {
               await prisma.organismsOnRegionsAndCertifications.create({
                 data: {
@@ -142,7 +137,19 @@ async function main() {
                     connect: {
                       label: row.organism
                     }
-                  }
+                  },
+                  isArchitect: row.is_architect === 'Oui',
+                  isCompanion: row.is_companion === 'Oui',
+                }
+              });
+            } else {
+              await prisma.organismsOnRegionsAndCertifications.update({
+                where: {
+                  id: existingResult.id
+                },
+                data: {
+                  isArchitect: row.is_architect === 'Oui',
+                  isCompanion: row.is_companion === 'Oui',
                 }
               });
             }
@@ -163,6 +170,7 @@ async function main() {
               }
             }
           });
+          
           if (!existingResult) {
             await prisma.organismsOnRegionsAndCertifications.create({
               data: {
@@ -180,10 +188,22 @@ async function main() {
                   connect: {
                     label: row.organism
                   }
-                }
+                },
+                isArchitect: row.is_architect === 'Oui',
+                isCompanion: row.is_companion === 'Oui',
               }
             });
-          }
+          } else {
+              await prisma.organismsOnRegionsAndCertifications.updateMany({
+                where: {
+                  id: existingResult.id
+                },
+                data: {
+                  isArchitect: row.is_architect === 'Oui',
+                  isCompanion: row.is_companion === 'Oui',
+                }
+              });
+            }
         }
       }))
       .on('end', (rowCount: number) => {
