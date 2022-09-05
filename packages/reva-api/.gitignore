@@ -2,3 +2,4 @@
 ./coverage
 ./infra/graphql/generated-graphql-schema.graphql
 ./prisma/private
+./prisma/*.tar
