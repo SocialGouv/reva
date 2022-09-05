@@ -6,6 +6,7 @@ import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 interface CreateCandidacyDeps {
     createCandidacy: (params: { deviceId: string; certificationId: string; regionId: string; }) => Promise<Either<string, Candidacy>>;
     getCandidacyFromDeviceId: (deviceId: string) => Promise<Either<string, Candidacy>>;
+    notifyTeam: (candidacyId: string) => Promise<void>;
 }
 
 export const createCandidacy = (deps: CreateCandidacyDeps) => async (params: { deviceId: string; certificationId: string; regionId: string; }): Promise<Either<FunctionalError, Candidacy>> => {
@@ -18,5 +19,6 @@ export const createCandidacy = (deps: CreateCandidacyDeps) => async (params: { d
         .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_NOT_CREATED, `Erreur lors de la creation de la candidature`));
 
     return checkIfCandidacyAlreadyExists
-        .chain(() => createCandidacy);
+        .chain(() => createCandidacy)
+        .ifRight(async (candidacy: any) => deps.notifyTeam(candidacy.id));
 };
