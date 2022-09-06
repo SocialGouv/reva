@@ -153,7 +153,16 @@ export const Certificates = ({ mainService }: Props) => {
           />
         </div>
         {(!!chosenRegionCode || !!state.context.selectedRegion) && (
-          <div className="px-8">
+          <div
+            data-test={`certificates${
+              state.matches("loadingCertifications")
+                ? "-loading"
+                : state.matches("searchResultsError")
+                ? "-error"
+                : ""
+            }`}
+            className="px-8"
+          >
             <Results
               title={`Diplômes disponibles dans cette région`}
               listClassName="mb-4 space-y-8"
