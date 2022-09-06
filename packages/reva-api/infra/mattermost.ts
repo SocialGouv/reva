@@ -1,6 +1,10 @@
 import https from 'https';
 
 export const notifyNewCandidacy = async (candidacyId: string) => new Promise<any>((resolve, reject) => {
+    if (!process.env.MATTERMOST_HOSTNAME) {
+      return 
+    }
+
     const data = JSON.stringify({
       text: `Environnement: ${process.env.APP_ENV || 'dev'} | :tada: Nouvelle candidature ${process.env.BASE_URL}/admin/candidacies/${candidacyId} :tada:`
     })
