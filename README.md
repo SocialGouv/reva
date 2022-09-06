@@ -86,3 +86,17 @@ npm run storybook -w reva-app
 ```bash
 npm run build:resources -w reva-app
 ```
+
+### Tests
+
+Open Cypress UI :
+
+```
+npm run cypress:open -w reva-tests
+```
+
+Run all tests :
+
+```
+npm run cypress -w reva-tests
+```

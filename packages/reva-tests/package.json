@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "cypress": "npx cypress",
+    "cypress": "npx cypress run",
     "cypress:open": "npx cypress open"
   },
   "importSort": {

@@ -220,7 +220,7 @@ export const ProjectHome = ({
       <div className="mt-4 text-sm text-slate-400">
         {!isValidated && (
           <Button
-            data-test="project-home-edit-contact"
+            data-test="project-home-edit-organism"
             onClick={() => send("EDIT_ORGANISM")}
             size="tiny"
             label={state.context.organism ? "Modifer" : "Ajouter"}
