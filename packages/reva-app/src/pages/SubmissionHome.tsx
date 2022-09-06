@@ -161,7 +161,7 @@ export const SubmissionHome = ({
         }}
         src={certificationImg}
       />
-      <h1 className="mt-12 -mb-12 text-center font-bold">REVA</h1>
+      <h1 className="mt-12 -mb-12 text-center font-bold">Reva</h1>
       <div className="grow overflow-y-auto mt-36 px-8 pb-8">{homeContent}</div>
     </motion.div>
   );
