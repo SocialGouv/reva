@@ -12,7 +12,6 @@ import Admin.Object exposing (Candidacy)
 import Api exposing (Token)
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
-import Data.Certification
 import Data.Form.Appointment exposing (candidateTypologyToString)
 import Data.Form.Training
 import Data.Referential exposing (Referential)
@@ -37,7 +36,7 @@ type Msg
     | GotCandidacyDeletionResponse (RemoteData String String)
     | GotCandidacyArchivingResponse (RemoteData String Candidacy)
     | GotCandidacyTakingOverResponse (RemoteData String Candidacy)
-    | GotFormMsg Form.Msg
+    | GotFormMsg (Form.Msg Referential)
     | GotReferentialResponse (RemoteData String Referential)
     | UserAddedFilter String
     | UserArchivedCandidacy Candidacy
@@ -317,6 +316,7 @@ trainingForm =
             , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" )
             , ( keys.digitalSkill, Form.Checkbox "Formation usage numérique" )
             , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" )
+            , ( keys.consent, Form.Checkbox "Le candidat valide ce parcours et s'engage à poursuivre l'expérimentation" )
             ]
     , title = "Définition du parcours"
     }
@@ -563,7 +563,9 @@ updateTab tab model =
                     Form.updateForm
                         { form = appointmentForm
                         , onLoad = Request.requestAppointment model.endpoint candidacyId
-                        , onSave = Request.updateAppointment model.endpoint candidacyId
+                        , onSave =
+                            \formMsg _ formData ->
+                                Request.updateAppointment model.endpoint candidacyId formMsg formData
                         , onRedirect =
                             Nav.pushUrl
                                 model.navKey
@@ -579,7 +581,7 @@ updateTab tab model =
                     Form.updateForm
                         { form = trainingForm
                         , onLoad = Request.requestAppointment model.endpoint candidacyId
-                        , onSave = Request.updateAppointment model.endpoint candidacyId
+                        , onSave = Request.updateTrainings model.endpoint candidacyId
                         , onRedirect =
                             Nav.pushUrl
                                 model.navKey

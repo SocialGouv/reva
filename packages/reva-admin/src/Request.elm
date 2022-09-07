@@ -7,6 +7,7 @@ module Request exposing
     , requestReferential
     , takeOverCandidacy
     , updateAppointment
+    , updateTrainings
     )
 
 import Admin.InputObject
@@ -26,6 +27,7 @@ import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Data.Candidacy exposing (CandidacyId)
 import Data.Certification
 import Data.Form.Appointment
+import Data.Form.Training
 import Data.Referential
 import Dict exposing (Dict)
 import Graphql.Http
@@ -300,6 +302,25 @@ updateAppointment endpointGraphql candidacyId toMsg dict =
 
 
 
+-- TRAININGS
+
+
+updateTrainings :
+    String
+    -> CandidacyId
+    -> (RemoteData String () -> msg)
+    -> Data.Referential.Referential
+    -> Dict String String
+    -> Cmd msg
+updateTrainings endpointGraphql candidacyId toMsg referential dict =
+    let
+        trainings =
+            Data.Form.Training.fromDict referential.training dict
+    in
+    Cmd.none
+
+
+
 -- REFERENTIAL
 
 
@@ -313,8 +334,9 @@ referentialGoalSelection =
         |> with Admin.Object.Goal.isActive
 
 
+trainingsSelection : SelectionSet Data.Referential.MandatoryTraining Admin.Object.Training
 trainingsSelection =
-    SelectionSet.succeed Data.Referential.ReferentialTraining
+    SelectionSet.succeed Data.Referential.MandatoryTraining
         |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.Training.id)
         |> with Admin.Object.Training.label
 
