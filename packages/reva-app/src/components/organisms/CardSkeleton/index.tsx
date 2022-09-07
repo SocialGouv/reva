@@ -22,7 +22,10 @@ export const CardSkeleton = ({ size = "small" }: CardSkeletonProps) => {
         height: size === "small" ? heightConfig.small : heightConfig.medium,
       }}
     >
-      <div className="relative h-full rounded-2xl overflow-hidden pt-4 px-6 shadow-2xl bg-slate-900 text-white">
+      <div
+        data-type="card-skeleton"
+        className="relative h-full rounded-2xl overflow-hidden pt-4 px-6 shadow-2xl bg-slate-900 text-white"
+      >
         <div className="animate-pulse w-full h-full flex flex-col items-end">
           <div
             className="rounded-full bg-slate-700 absolute left-[-43px]"

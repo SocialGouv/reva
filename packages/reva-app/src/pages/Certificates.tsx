@@ -137,6 +137,7 @@ export const Certificates = ({ mainService }: Props) => {
           <Select
             name="select_region"
             className="mt-8 mb-4"
+            data-test="certificates-select-region"
             defaultValue={chosenRegionCode}
             placeholder="Ma Région"
             options={selectsOptionsRegions}

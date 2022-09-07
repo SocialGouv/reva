@@ -11,9 +11,8 @@ context("Experiences", () => {
   });
 
   it("add and edit an experience", function () {
-    cy.get(
-      '[data-test="certification-select-87c7f384-70b0-4a6c-945c-6c4cc1e433c7"]'
-    ).click();
+    cy.get("#select_region").select("11");
+    cy.get('[data-test="results"] [data-type="card"]').eq(4).click();
     cy.get('[data-test="certification-submit"]').click();
     cy.get('[data-test="submission-home-show-project-home"]').click();
     cy.get('[data-test="project-home-edit-experiences"]').click();
@@ -90,6 +89,6 @@ context("Experiences", () => {
         );
       });
 
-    cy.get('[data-test="progress-title-value"]').should("have.text", "50%");
+    cy.get('[data-test="progress-title-value"]').should("have.text", "40%");
   });
 });
