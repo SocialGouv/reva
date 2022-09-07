@@ -1,0 +1,39 @@
+name: Cypress Staging
+
+on:
+  push:
+    branches: ["master", "e2e/**"]
+  pull_request:
+    branches: ["master"]
+    paths:
+      - "**.js"
+      - "**.ts"
+      - "**.tsx"
+
+jobs:
+  cypress:
+    runs-on: ubuntu-latest
+    environment: production
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: Checkout Reva repo
+        uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - name: Install npm packages & run end-to-end tests
+        env:
+          CYPRESS_BASE_URL: ${{secrets.CYPRESS_BASE_URL}}
+        run: |
+          echo "triggers => event:$GITHUB_EVENT_NAME ref:$GITHUB_REF_TYPE url:$CYPRESS_BASE_URL"
+          npm ci
+          npm run e2e
+      - name: Remove node_modules of reva-tests
+        run: rm -rf node_modules
+        working-directory: packages/reva-tests

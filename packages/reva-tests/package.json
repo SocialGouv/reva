@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "cypress": "npx cypress run",
-    "cypress:open": "npx cypress open"
+    "cypress": "npm ci && cypress run",
+    "cypress:open": "cypress open"
   },
   "importSort": {
     ".js, .ts, .jsx, .tsx": {

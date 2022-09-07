@@ -10,6 +10,7 @@
     "build": "./build.sh",
     "dev": "concurrently -n \"rev-api,reva-app,reva-admin\" -c \"blue,green,cyan\" -k \"npm run dev -w reva-api\" \"npm run dev -w reva-app\" \"npm run dev -w reva-admin\"",
     "start": "npm run start --workspace=reva-api",
+    "e2e": "cd packages/reva-tests && npm run cypress",
     "prepare": "husky install"
   },
   "workspaces": [

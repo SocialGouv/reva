@@ -5,7 +5,7 @@ const phone2 = "06-01-02-03-05";
 
 context("Contact", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:3001");
+    cy.visit("/");
   });
 
   it("add and edit an experience", function () {
