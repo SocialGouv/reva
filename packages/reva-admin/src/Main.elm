@@ -53,13 +53,7 @@ type Msg
     | GotCandidatesMsg Candidates.Msg
     | GotCandidaciesMsg Candidacies.Msg
     | GotLoginError String
-      -- PROFILE
-      --| GotProfileResponse (Result Http.Error ())
-      -- LOGIN
     | GotLoginUpdate Page.Login.Model
-    | GotLoginSubmit
-    | GotLoginResponse (Result Http.Error Token)
-    | GotCandidatesResponse (Result Http.Error (List Candidate))
     | GotLoggedIn Token
     | GotLoggedOut
 
@@ -166,27 +160,6 @@ update msg model =
         ( GotLoginUpdate loginModel, NotLoggedIn route _ ) ->
             ( { model | page = NotLoggedIn route loginModel }, Cmd.none )
 
-        ( GotLoginSubmit, NotLoggedIn route loginModel ) ->
-            case Page.Login.validateLogin loginModel of
-                Ok validateModel ->
-                    ( model, Validate.fromValid validateModel |> Api.login (GotLoginResponse |> withAuthHandle) )
-
-                Err errors ->
-                    ( { model | page = Page.Login.withErrors loginModel errors |> NotLoggedIn route }, Cmd.none )
-
-        ( GotLoginResponse (Ok token), NotLoggedIn _ loginModel ) ->
-            ( { model | page = Candidates <| Candidates.init token }
-            , Cmd.batch
-                [ if loginModel.form.rememberMe then
-                    storeToken (Api.tokenToString token)
-
-                  else
-                    Cmd.none
-                , Api.fetchCandidates GotCandidatesResponse { token = token }
-                , Nav.pushUrl model.key (Route.toString model.baseUrl Route.Home)
-                ]
-            )
-
         ( GotCandidatesMsg candidatesMsg, Candidates candidatesModel ) ->
             let
                 ( newCandidatesModel, candidatesCmd ) =
@@ -195,27 +168,6 @@ update msg model =
             ( { model | page = Candidates newCandidatesModel }
             , Cmd.map GotCandidatesMsg candidatesCmd
             )
-
-        ( GotCandidatesResponse (Ok candidates), Candidates candidatesModel ) ->
-            ( { model
-                | page =
-                    Candidates.receiveCandidates candidatesModel candidates
-                        |> Candidates
-              }
-            , Cmd.none
-            )
-
-        ( GotCandidatesResponse (Ok candidates), Loading token ) ->
-            ( { model
-                | page =
-                    Candidates.receiveCandidates (Candidates.init token) candidates
-                        |> Candidates
-              }
-            , Cmd.none
-            )
-
-        ( GotCandidatesResponse err, _ ) ->
-            ( model, Cmd.none )
 
         ( GotLoginError error, NotLoggedIn route state ) ->
             ( { model | page = Page.Login.withErrors state [ ( Page.Login.Global, error ) ] |> NotLoggedIn route }, Cmd.none )
