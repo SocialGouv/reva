@@ -32,6 +32,7 @@ keys :
     , individualHourCount : String
     , collectiveHourCount : String
     , additionalHourCount : String
+    , consent : String
     }
 keys =
     { certificate = "certificate"
@@ -45,6 +46,7 @@ keys =
     , individualHourCount = "individualHourCount"
     , collectiveHourCount = "collectiveHourCount"
     , additionalHourCount = "additionalHourCount"
+    , consent = "consent"
     }
 
 

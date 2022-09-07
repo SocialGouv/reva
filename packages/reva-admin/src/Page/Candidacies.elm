@@ -316,6 +316,7 @@ trainingForm =
             , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" )
             , ( keys.digitalSkill, Form.Checkbox "Formation usage numérique" )
             , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" )
+            , ( keys.consent, Form.Checkbox "Le candidat valide ce parcours et s'engage à poursuivre l'expérimentation" )
             ]
     , title = "Définition du parcours"
     }
