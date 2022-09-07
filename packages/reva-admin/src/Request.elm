@@ -24,6 +24,7 @@ import Admin.Object.Referential
 import Admin.Object.Training
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
+import Api exposing (Token)
 import Data.Candidacy exposing (CandidacyId)
 import Data.Certification
 import Data.Form.Appointment
@@ -44,28 +45,34 @@ toRemote r =
         |> RemoteData.fromResult
 
 
+makeAuthRequest token msg request =
+    request
+        |> Graphql.Http.withHeader "authorization" ("Bearer " ++ Api.tokenToString token)
+        |> Graphql.Http.send (Result.mapError graphqlHttpErrorToString >> toRemote >> msg)
+
+
 makeQuery :
     String
+    -> Token
     -> (RemoteData String decodesTo -> msg)
     -> SelectionSet decodesTo Graphql.Operation.RootQuery
     -> Cmd msg
-makeQuery endpointGraphql msg query =
+makeQuery endpointGraphql token msg query =
     query
         |> Graphql.Http.queryRequest endpointGraphql
-        --|> Graphql.Http.withCredentials
-        |> Graphql.Http.send (Result.mapError graphqlHttpErrorToString >> toRemote >> msg)
+        |> makeAuthRequest token msg
 
 
 makeMutation :
     String
+    -> Token
     -> (RemoteData String decodesTo -> msg)
     -> SelectionSet decodesTo Graphql.Operation.RootMutation
     -> Cmd msg
-makeMutation endpointGraphql msg query =
+makeMutation endpointGraphql token msg query =
     query
         |> Graphql.Http.mutationRequest endpointGraphql
-        --|> Graphql.Http.withCredentials
-        |> Graphql.Http.send (Result.mapError graphqlHttpErrorToString >> toRemote >> msg)
+        |> makeAuthRequest token msg
 
 
 simpleGraphqlHttpErrorToString : Graphql.Http.HttpError -> String
@@ -189,56 +196,61 @@ candidacySelection =
 
 requestCandidacies :
     String
+    -> Token
     -> (RemoteData String (List Data.Candidacy.CandidacySummary) -> msg)
     -> Cmd msg
-requestCandidacies endpointGraphql toMsg =
+requestCandidacies endpointGraphql token toMsg =
     Query.getCandidacies candidacySummarySelection
-        |> makeQuery endpointGraphql toMsg
+        |> makeQuery endpointGraphql token toMsg
 
 
 requestCandidacy :
     String
+    -> Token
     -> (RemoteData String Data.Candidacy.Candidacy -> msg)
     -> CandidacyId
     -> Cmd msg
-requestCandidacy endpointGraphql toMsg id =
+requestCandidacy endpointGraphql token toMsg id =
     let
         candidacyRequiredArgs =
             Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString id)
     in
     Query.getCandidacyById candidacyRequiredArgs candidacySelection
-        |> makeQuery endpointGraphql (nothingToError "Cette candidature est introuvable" >> toMsg)
+        |> makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
 
 
 deleteCandidacy :
     String
+    -> Token
     -> (RemoteData String String -> msg)
     -> CandidacyId
     -> Cmd msg
-deleteCandidacy endpointGraphql toMsg candidacyId =
+deleteCandidacy endpointGraphql token toMsg candidacyId =
     Mutation.CandidacyDeleteByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
         |> Mutation.candidacy_deleteById
-        |> makeMutation endpointGraphql toMsg
+        |> makeMutation endpointGraphql token toMsg
 
 
 archiveCandidacy :
     String
+    -> Token
     -> (RemoteData String Data.Candidacy.Candidacy -> msg)
     -> CandidacyId
     -> Cmd msg
-archiveCandidacy endpointGraphql toMsg candidacyId =
+archiveCandidacy endpointGraphql token toMsg candidacyId =
     Mutation.candidacy_archiveById (Mutation.CandidacyArchiveByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)) candidacySelection
-        |> makeMutation endpointGraphql toMsg
+        |> makeMutation endpointGraphql token toMsg
 
 
 takeOverCandidacy :
     String
+    -> Token
     -> (RemoteData String Data.Candidacy.Candidacy -> msg)
     -> CandidacyId
     -> Cmd msg
-takeOverCandidacy endpointGraphql toMsg candidacyId =
+takeOverCandidacy endpointGraphql token toMsg candidacyId =
     Mutation.candidacy_takeOver (Mutation.CandidacyTakeOverRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)) candidacySelection
-        |> makeMutation endpointGraphql toMsg
+        |> makeMutation endpointGraphql token toMsg
 
 
 
@@ -257,25 +269,27 @@ appointmentSelection =
 
 requestAppointment :
     String
+    -> Token
     -> CandidacyId
     -> (RemoteData String (Dict String String) -> msg)
     -> Cmd msg
-requestAppointment endpointGraphql candidacyId toMsg =
+requestAppointment endpointGraphql token candidacyId toMsg =
     let
         appointmentRequiredArs =
             Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
     in
     Query.getCandidacyById appointmentRequiredArs appointmentSelection
-        |> makeQuery endpointGraphql (nothingToError "Cette candidature est introuvable" >> toMsg)
+        |> makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
 
 
 updateAppointment :
     String
+    -> Token
     -> CandidacyId
     -> (RemoteData String () -> msg)
     -> Dict String String
     -> Cmd msg
-updateAppointment endpointGraphql candidacyId toMsg dict =
+updateAppointment endpointGraphql token candidacyId toMsg dict =
     let
         appointment =
             Data.Form.Appointment.appointmentFromDict candidacyId dict
@@ -298,7 +312,7 @@ updateAppointment endpointGraphql candidacyId toMsg dict =
                 appointmentInformation
     in
     Mutation.candidacy_updateAppointmentInformations appointmentRequiredArs SelectionSet.empty
-        |> makeMutation endpointGraphql toMsg
+        |> makeMutation endpointGraphql token toMsg
 
 
 
@@ -307,12 +321,13 @@ updateAppointment endpointGraphql candidacyId toMsg dict =
 
 updateTrainings :
     String
+    -> Token
     -> CandidacyId
     -> (RemoteData String () -> msg)
     -> Data.Referential.Referential
     -> Dict String String
     -> Cmd msg
-updateTrainings endpointGraphql candidacyId toMsg referential dict =
+updateTrainings endpointGraphql token candidacyId toMsg referential dict =
     let
         trainings =
             Data.Form.Training.fromDict referential.training dict
@@ -358,11 +373,12 @@ goalsSelection =
 
 requestGoals :
     String
+    -> Token
     -> (RemoteData String Data.Referential.ReferentialGoals -> msg)
     -> Cmd msg
-requestGoals endpointGraphql toMsg =
+requestGoals endpointGraphql token toMsg =
     Query.getReferential goalsSelection
-        |> makeQuery endpointGraphql toMsg
+        |> makeQuery endpointGraphql token toMsg
 
 
 referentialSelection : SelectionSet Data.Referential.Referential Graphql.Operation.RootQuery
@@ -382,10 +398,11 @@ referentialSelection =
 
 requestReferential :
     String
+    -> Token
     -> (RemoteData String Data.Referential.Referential -> msg)
     -> Cmd msg
-requestReferential endpointGraphql toMsg =
-    makeQuery endpointGraphql toMsg referentialSelection
+requestReferential endpointGraphql token toMsg =
+    makeQuery endpointGraphql token toMsg referentialSelection
 
 
 
