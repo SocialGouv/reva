@@ -5,10 +5,7 @@ context("Project", () => {
 
   it("attempt to validate project", function () {
     cy.get("#select_region").select("11");
-    cy.get('[data-test="certificates"] [data-test="results"]')
-      .children()
-      .eq(4)
-      .click();
+    cy.get('[data-test="results"] [data-type="card"]').eq(4).click();
     cy.get('[data-test="certification-submit"]').click();
     cy.get('[data-test="submission-home-show-project-home"]').click();
     cy.get('[data-test="project-home-validate-locked"]').click();

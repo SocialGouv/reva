@@ -192,6 +192,7 @@ export const Card = React.forwardRef<HTMLLIElement, CardProps>(
           layout
           transition={transition}
           layoutDependency={size}
+          data-type="card"
           data-test={`certification-select-${id}`}
           tabIndex={isSelectable ? 0 : -1}
           onClick={clickHandler}
