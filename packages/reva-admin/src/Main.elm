@@ -53,7 +53,6 @@ type Msg
     | GotCandidatesMsg Candidates.Msg
     | GotCandidaciesMsg Candidacies.Msg
     | GotLoginError String
-    | GotLoginUpdate Page.Login.Model
     | GotLoggedIn Token
     | GotLoggedOut
 
@@ -156,9 +155,6 @@ update msg model =
 
         ( UserLoggedOut, _ ) ->
             ( model, removeToken () )
-
-        ( GotLoginUpdate loginModel, NotLoggedIn route _ ) ->
-            ( { model | page = NotLoggedIn route loginModel }, Cmd.none )
 
         ( GotCandidatesMsg candidatesMsg, Candidates candidatesModel ) ->
             let
