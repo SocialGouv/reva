@@ -3,7 +3,6 @@ port module Main exposing (main)
 import Api exposing (Token)
 import Browser
 import Browser.Navigation as Nav
-import Data.Candidate exposing (Candidate)
 import Html.Styled as Html exposing (Html, div, toUnstyled)
 import Http
 import Json.Decode as Decode exposing (..)
@@ -11,11 +10,8 @@ import KeycloakConfiguration exposing (KeycloakConfiguration)
 import Page.Candidacies as Candidacies exposing (Model)
 import Page.Candidates as Candidates exposing (Model)
 import Page.Loading
-import Page.Login
-import RemoteData exposing (RemoteData(..))
 import Route exposing (Route(..))
 import Url exposing (Url)
-import Validate
 
 
 type alias Flags =
@@ -42,7 +38,7 @@ type Page
     = Candidacies Candidacies.Model
     | Candidates Candidates.Model
     | Loading Token
-    | NotLoggedIn Route Page.Login.Model
+    | NotLoggedIn Route
 
 
 type Msg
@@ -92,7 +88,7 @@ view model =
 viewPage : Model -> Html Msg
 viewPage model =
     case model.page of
-        NotLoggedIn _ _ ->
+        NotLoggedIn _ ->
             Page.Loading.view
 
         Candidacies candidaciesModel ->
@@ -165,9 +161,6 @@ update msg model =
             , Cmd.map GotCandidatesMsg candidatesCmd
             )
 
-        ( GotLoginError error, NotLoggedIn route state ) ->
-            ( { model | page = Page.Login.withErrors state [ ( Page.Login.Global, error ) ] |> NotLoggedIn route }, Cmd.none )
-
         -- Candidacies
         ( GotCandidaciesMsg candidaciesMsg, Candidacies candidaciesModel ) ->
             let
@@ -179,7 +172,7 @@ update msg model =
             )
 
         -- Auth
-        ( GotLoggedIn token, NotLoggedIn route _ ) ->
+        ( GotLoggedIn token, NotLoggedIn route ) ->
             let
                 redirectRoute =
                     case route of
@@ -245,7 +238,7 @@ initWithoutToken flags url key =
             { key = key
             , baseUrl = flags.baseUrl
             , endpoint = flags.endpoint
-            , page = NotLoggedIn (Route.fromUrl flags.baseUrl url) Page.Login.init
+            , page = NotLoggedIn (Route.fromUrl flags.baseUrl url)
             , keycloakConfiguration =
                 Decode.decodeValue KeycloakConfiguration.keycloakConfiguration flags.keycloakConfiguration
                     |> Result.map Just
