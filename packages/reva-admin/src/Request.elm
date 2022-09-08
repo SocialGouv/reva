@@ -394,11 +394,10 @@ referentialSelection =
             ]
     in
     SelectionSet.succeed
-        (\basicSkills certifications referentialGoals trainings ->
-            Data.Referential.Referential basicSkillsFixtures certifications referentialGoals.goals trainings
+        (\basicSkills referentialGoals trainings ->
+            Data.Referential.Referential basicSkillsFixtures referentialGoals.goals trainings
         )
         |> with (Query.getTrainings trainingsSelection)
-        |> with (Query.getCertifications certificationsRequiredArguments certificationSummarySelection)
         |> with (Query.getReferential goalsSelection)
         |> with (Query.getTrainings trainingsSelection)
 
