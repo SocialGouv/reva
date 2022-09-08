@@ -16,7 +16,7 @@ view timelineElements =
             List.length timelineElements
 
         currentStepIndex =
-            2
+            1
 
         viewNavigationTimelineStep index element =
             li

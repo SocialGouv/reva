@@ -330,7 +330,7 @@ updateTrainings :
 updateTrainings endpointGraphql token candidacyId toMsg referential dict =
     let
         trainings =
-            Data.Form.Training.fromDict referential.training dict
+            Data.Form.Training.fromDict referential.basicSkills referential.mandatoryTrainings dict
     in
     Cmd.none
 
@@ -384,14 +384,17 @@ requestGoals endpointGraphql token toMsg =
 referentialSelection : SelectionSet Data.Referential.Referential Graphql.Operation.RootQuery
 referentialSelection =
     let
-        certificationsRequiredArguments =
-            Query.GetCertificationsRequiredArguments (Uuid "3c56e421-6437-46c4-81ea-544089c1ff41")
+        basicSkillsFixtures =
+            [ { id = "1", label = "Usage et communication numérique" }
+            , { id = "2", label = "Utilisation des règles de base de calcul et du raisonnement mathématique" }
+            , { id = "3", label = "Communication en français" }
+            ]
     in
     SelectionSet.succeed
-        (\certifications referentialGoals trainings ->
-            Data.Referential.Referential certifications referentialGoals.goals trainings
+        (\basicSkills referentialGoals trainings ->
+            Data.Referential.Referential basicSkillsFixtures referentialGoals.goals trainings
         )
-        |> with (Query.getCertifications certificationsRequiredArguments certificationSummarySelection)
+        |> with (Query.getTrainings trainingsSelection)
         |> with (Query.getReferential goalsSelection)
         |> with (Query.getTrainings trainingsSelection)
 

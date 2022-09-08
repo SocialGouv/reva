@@ -13,6 +13,7 @@ import Api exposing (Token)
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Form.Appointment exposing (candidateTypologyToString)
+import Data.Form.Helper
 import Data.Form.Training
 import Data.Referential exposing (Referential)
 import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
@@ -251,7 +252,7 @@ viewNavigationSteps baseUrl candidacyId =
     in
     View.Steps.view
         [ { content = title, navigation = Nothing }
-        , { content = expandedView "Rendez-vous pédagogique" "Mettre à jour", navigation = appointmentLink }
+        , { content = expandedView "Rendez-vous pédagogique" "Compléter", navigation = appointmentLink }
         , { content = expandedView "Définition du parcours" "Compléter", navigation = trainingLink }
         , { content = [ View.Steps.item "Validation du parcours" ], navigation = Nothing }
         , { content = [ View.Steps.item "Gestion de la recevabilité" ], navigation = Nothing }
@@ -300,21 +301,21 @@ trainingForm =
     let
         keys =
             Data.Form.Training.keys
-
-        mandatoryTrainings referential =
-            List.map (\training -> ( training.id, training.label )) referential.training
     in
     { elements =
         \referential ->
             [ ( keys.individualHourCount, Form.Number "Nombre d'heure d'accompagnement individuel" )
             , ( keys.collectiveHourCount, Form.Number "Nombre d'heure d'accompagnement collectif" )
             , ( keys.additionalHourCount, Form.Number "Nombre d'heures de formations complémentaires" )
-            , ( keys.mandatoryTrainings, Form.CheckboxList "Formations obligatoires" <| mandatoryTrainings referential )
-            , ( keys.basicSkill1, Form.Input "Savoir de base 1" )
-            , ( keys.basicSkill2, Form.Input "Savoir de base 2" )
-            , ( keys.basicSkill3, Form.Input "Savoir de base 3" )
+            , ( keys.mandatoryTrainings
+              , Form.CheckboxList "Formations obligatoires" <|
+                    Data.Form.Helper.toIdList referential.mandatoryTrainings
+              )
+            , ( keys.basicSkills
+              , Form.CheckboxList "Savoirs de base" <|
+                    Data.Form.Helper.toIdList referential.basicSkills
+              )
             , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" )
-            , ( keys.digitalSkill, Form.Checkbox "Formation usage numérique" )
             , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" )
             , ( keys.consent, Form.Checkbox "Le candidat valide ce parcours et s'engage à poursuivre l'expérimentation" )
             ]
