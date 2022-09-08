@@ -384,9 +384,6 @@ requestGoals endpointGraphql token toMsg =
 referentialSelection : SelectionSet Data.Referential.Referential Graphql.Operation.RootQuery
 referentialSelection =
     let
-        certificationsRequiredArguments =
-            Query.GetCertificationsRequiredArguments (Uuid "3c56e421-6437-46c4-81ea-544089c1ff41")
-
         basicSkillsFixtures =
             [ { id = "1", label = "Usage et communication numérique" }
             , { id = "2", label = "Utilisation des règles de base de calcul et du raisonnement mathématique" }
