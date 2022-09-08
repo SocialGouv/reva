@@ -1,18 +1,14 @@
 module Data.Form.Training exposing (fromDict, keys)
 
-import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
 import Data.Form.Helper as Helper
-import Data.Referential exposing (MandatoryTraining)
+import Data.Referential exposing (BasicSkill, MandatoryTraining)
 import Dict exposing (Dict)
 
 
 type alias Training =
     { mandatoryTrainingIds : List String
-    , basicSkill1 : String
-    , basicSkill2 : String
-    , basicSkill3 : String
+    , basicSkills : List String
     , certificateSkills : String
-    , digitalSkill : Bool
     , otherTraining : String
     , individualHourCount : Int
     , collectiveHourCount : Int
@@ -23,11 +19,8 @@ type alias Training =
 keys :
     { certificate : String
     , mandatoryTrainings : String
-    , basicSkill1 : String
-    , basicSkill2 : String
-    , basicSkill3 : String
+    , basicSkills : String
     , certificateSkills : String
-    , digitalSkill : String
     , otherTraining : String
     , individualHourCount : String
     , collectiveHourCount : String
@@ -37,11 +30,8 @@ keys :
 keys =
     { certificate = "certificate"
     , mandatoryTrainings = "mandatory-training"
-    , basicSkill1 = "basicSkill1"
-    , basicSkill2 = "basicSkill2"
-    , basicSkill3 = "basicSkill3"
+    , basicSkills = "basicSkills"
     , certificateSkills = "certificateSkills"
-    , digitalSkill = "digitalSkill"
     , otherTraining = "otherTraining"
     , individualHourCount = "individualHourCount"
     , collectiveHourCount = "collectiveHourCount"
@@ -50,19 +40,16 @@ keys =
     }
 
 
-fromDict : List MandatoryTraining -> Dict String String -> Training
-fromDict mandatoryTrainings dict =
+fromDict : List BasicSkill -> List MandatoryTraining -> Dict String String -> Training
+fromDict basicSkills mandatoryTrainings dict =
     let
         decode =
             Helper.decode keys dict
     in
     Training
         (decode.list mandatoryTrainings)
-        (decode.string .basicSkill1 "")
-        (decode.string .basicSkill2 "")
-        (decode.string .basicSkill3 "")
+        (decode.list basicSkills)
         (decode.string .certificateSkills "")
-        (decode.bool .digitalSkill False)
         (decode.string .otherTraining "")
         (decode.int .individualHourCount 0)
         (decode.int .collectiveHourCount 0)

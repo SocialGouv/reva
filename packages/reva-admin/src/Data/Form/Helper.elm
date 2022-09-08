@@ -7,7 +7,7 @@ module Data.Form.Helper exposing
     , defaultDate
     , generic
     , toDict
-    )
+    , toIdList)
 
 import Data.Scalar exposing (Timestamp)
 import Date
@@ -131,3 +131,8 @@ toDict keys data =
         (\( f, value ) -> ( f keys, value |> Maybe.withDefault "" ))
         data
         |> Dict.fromList
+
+
+toIdList : List { a | id : String, label : String } -> List (String, String)
+toIdList l =
+    List.map (\e -> ( e.id, e.label )) l
