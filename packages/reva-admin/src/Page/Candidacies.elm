@@ -252,7 +252,7 @@ viewNavigationSteps baseUrl candidacyId =
     in
     View.Steps.view
         [ { content = title, navigation = Nothing }
-        , { content = expandedView "Rendez-vous pédagogique" "Mettre à jour", navigation = appointmentLink }
+        , { content = expandedView "Rendez-vous pédagogique" "Compléter", navigation = appointmentLink }
         , { content = expandedView "Définition du parcours" "Compléter", navigation = trainingLink }
         , { content = [ View.Steps.item "Validation du parcours" ], navigation = Nothing }
         , { content = [ View.Steps.item "Gestion de la recevabilité" ], navigation = Nothing }
