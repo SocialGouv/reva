@@ -86,8 +86,8 @@ init navKey baseUrl endpoint token =
 
         defaultCmd =
             Cmd.batch
-                [ Request.requestCandidacies endpoint GotCandidaciesResponse
-                , Request.requestReferential endpoint GotReferentialResponse
+                [ Request.requestCandidacies endpoint token GotCandidaciesResponse
+                , Request.requestReferential endpoint token GotReferentialResponse
                 , Cmd.map GotFormMsg formCmd
                 ]
     in
@@ -97,7 +97,7 @@ init navKey baseUrl endpoint token =
 initCandidacy : CandidacyId -> Model -> ( Model, Cmd Msg )
 initCandidacy candidacyId model =
     ( { model | selected = Loading }
-    , Request.requestCandidacy model.endpoint GotCandidacyResponse candidacyId
+    , Request.requestCandidacy model.endpoint model.token GotCandidacyResponse candidacyId
     )
 
 
@@ -537,12 +537,12 @@ update msg model =
 
         UserDeletedCandidacy candidacy ->
             ( removeCandidacy model candidacy
-            , Request.deleteCandidacy model.endpoint GotCandidacyDeletionResponse candidacy.id
+            , Request.deleteCandidacy model.endpoint model.token GotCandidacyDeletionResponse candidacy.id
             )
 
         UserArchivedCandidacy candidacy ->
             ( model
-            , Request.archiveCandidacy model.endpoint GotCandidacyArchivingResponse candidacy.id
+            , Request.archiveCandidacy model.endpoint model.token GotCandidacyArchivingResponse candidacy.id
             )
 
 
@@ -562,10 +562,10 @@ updateTab tab model =
                 ( formModel, formCmd ) =
                     Form.updateForm
                         { form = appointmentForm
-                        , onLoad = Request.requestAppointment model.endpoint candidacyId
+                        , onLoad = Request.requestAppointment model.endpoint model.token candidacyId
                         , onSave =
                             \formMsg _ formData ->
-                                Request.updateAppointment model.endpoint candidacyId formMsg formData
+                                Request.updateAppointment model.endpoint model.token candidacyId formMsg formData
                         , onRedirect =
                             Nav.pushUrl
                                 model.navKey
@@ -580,8 +580,8 @@ updateTab tab model =
                 ( formModel, formCmd ) =
                     Form.updateForm
                         { form = trainingForm
-                        , onLoad = Request.requestAppointment model.endpoint candidacyId
-                        , onSave = Request.updateTrainings model.endpoint candidacyId
+                        , onLoad = Request.requestAppointment model.endpoint model.token candidacyId
+                        , onSave = Request.updateTrainings model.endpoint model.token candidacyId
                         , onRedirect =
                             Nav.pushUrl
                                 model.navKey
@@ -597,7 +597,7 @@ updateTab tab model =
 
 withTakeOver : CandidacyId -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 withTakeOver candidacyId ( model, cmds ) =
-    ( model, Cmd.batch [ cmds, Request.takeOverCandidacy model.endpoint GotCandidacyTakingOverResponse candidacyId ] )
+    ( model, Cmd.batch [ cmds, Request.takeOverCandidacy model.endpoint model.token GotCandidacyTakingOverResponse candidacyId ] )
 
 
 

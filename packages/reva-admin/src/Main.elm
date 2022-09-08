@@ -3,7 +3,6 @@ port module Main exposing (main)
 import Api exposing (Token)
 import Browser
 import Browser.Navigation as Nav
-import Data.Candidate exposing (Candidate)
 import Html.Styled as Html exposing (Html, div, toUnstyled)
 import Http
 import Json.Decode as Decode exposing (..)
@@ -11,11 +10,8 @@ import KeycloakConfiguration exposing (KeycloakConfiguration)
 import Page.Candidacies as Candidacies exposing (Model)
 import Page.Candidates as Candidates exposing (Model)
 import Page.Loading
-import Page.Login
-import RemoteData exposing (RemoteData(..))
 import Route exposing (Route(..))
 import Url exposing (Url)
-import Validate
 
 
 type alias Flags =
@@ -42,7 +38,7 @@ type Page
     = Candidacies Candidacies.Model
     | Candidates Candidates.Model
     | Loading Token
-    | NotLoggedIn Route Page.Login.Model
+    | NotLoggedIn Route
 
 
 type Msg
@@ -53,13 +49,6 @@ type Msg
     | GotCandidatesMsg Candidates.Msg
     | GotCandidaciesMsg Candidacies.Msg
     | GotLoginError String
-      -- PROFILE
-      --| GotProfileResponse (Result Http.Error ())
-      -- LOGIN
-    | GotLoginUpdate Page.Login.Model
-    | GotLoginSubmit
-    | GotLoginResponse (Result Http.Error Token)
-    | GotCandidatesResponse (Result Http.Error (List Candidate))
     | GotLoggedIn Token
     | GotLoggedOut
 
@@ -99,7 +88,7 @@ view model =
 viewPage : Model -> Html Msg
 viewPage model =
     case model.page of
-        NotLoggedIn _ _ ->
+        NotLoggedIn _ ->
             Page.Loading.view
 
         Candidacies candidaciesModel ->
@@ -163,30 +152,6 @@ update msg model =
         ( UserLoggedOut, _ ) ->
             ( model, removeToken () )
 
-        ( GotLoginUpdate loginModel, NotLoggedIn route _ ) ->
-            ( { model | page = NotLoggedIn route loginModel }, Cmd.none )
-
-        ( GotLoginSubmit, NotLoggedIn route loginModel ) ->
-            case Page.Login.validateLogin loginModel of
-                Ok validateModel ->
-                    ( model, Validate.fromValid validateModel |> Api.login (GotLoginResponse |> withAuthHandle) )
-
-                Err errors ->
-                    ( { model | page = Page.Login.withErrors loginModel errors |> NotLoggedIn route }, Cmd.none )
-
-        ( GotLoginResponse (Ok token), NotLoggedIn _ loginModel ) ->
-            ( { model | page = Candidates <| Candidates.init token }
-            , Cmd.batch
-                [ if loginModel.form.rememberMe then
-                    storeToken (Api.tokenToString token)
-
-                  else
-                    Cmd.none
-                , Api.fetchCandidates GotCandidatesResponse { token = token }
-                , Nav.pushUrl model.key (Route.toString model.baseUrl Route.Home)
-                ]
-            )
-
         ( GotCandidatesMsg candidatesMsg, Candidates candidatesModel ) ->
             let
                 ( newCandidatesModel, candidatesCmd ) =
@@ -195,30 +160,6 @@ update msg model =
             ( { model | page = Candidates newCandidatesModel }
             , Cmd.map GotCandidatesMsg candidatesCmd
             )
-
-        ( GotCandidatesResponse (Ok candidates), Candidates candidatesModel ) ->
-            ( { model
-                | page =
-                    Candidates.receiveCandidates candidatesModel candidates
-                        |> Candidates
-              }
-            , Cmd.none
-            )
-
-        ( GotCandidatesResponse (Ok candidates), Loading token ) ->
-            ( { model
-                | page =
-                    Candidates.receiveCandidates (Candidates.init token) candidates
-                        |> Candidates
-              }
-            , Cmd.none
-            )
-
-        ( GotCandidatesResponse err, _ ) ->
-            ( model, Cmd.none )
-
-        ( GotLoginError error, NotLoggedIn route state ) ->
-            ( { model | page = Page.Login.withErrors state [ ( Page.Login.Global, error ) ] |> NotLoggedIn route }, Cmd.none )
 
         -- Candidacies
         ( GotCandidaciesMsg candidaciesMsg, Candidacies candidaciesModel ) ->
@@ -231,7 +172,7 @@ update msg model =
             )
 
         -- Auth
-        ( GotLoggedIn token, NotLoggedIn route _ ) ->
+        ( GotLoggedIn token, NotLoggedIn route ) ->
             let
                 redirectRoute =
                     case route of
@@ -297,7 +238,7 @@ initWithoutToken flags url key =
             { key = key
             , baseUrl = flags.baseUrl
             , endpoint = flags.endpoint
-            , page = NotLoggedIn (Route.fromUrl flags.baseUrl url) Page.Login.init
+            , page = NotLoggedIn (Route.fromUrl flags.baseUrl url)
             , keycloakConfiguration =
                 Decode.decodeValue KeycloakConfiguration.keycloakConfiguration flags.keycloakConfiguration
                     |> Result.map Just
