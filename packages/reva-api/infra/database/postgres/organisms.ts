@@ -1,4 +1,4 @@
-import { Either, Left, Right } from "purify-ts";
+import { Either, Left, Maybe, Right } from "purify-ts";
 import * as domain from '../../../domain/types/candidacy';
 import { prismaClient } from "./client";
 
@@ -43,3 +43,17 @@ export const getAAPOrganisms = async (params: { candidacyId: string; }): Promise
         return Left(`error while retrieving organisms`);
     };
 };
+
+export const getOrganismById = async (organismId: string) : Promise<Either<string, Maybe<domain.Organism>>> => {
+    try {
+        const organism = await prismaClient.organism.findFirst({
+            where: {
+                id: organismId
+            }
+        })
+
+        return Right(Maybe.fromNullable(organism))
+    } catch(e) {
+        return Left(`error while retrieving organism ${organismId}`);
+    }
+}

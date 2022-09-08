@@ -23,6 +23,8 @@ import mercurius from "mercurius";
 import { getTrainings } from "../../../domain/features/getTrainings";
 import { selectOrganismForCandidacy } from "../../../domain/features/selectOrganismForCandidacy";
 import { notifyNewCandidacy } from "../../mattermost";
+import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
+import Keycloak from 'keycloak-connect';
 
 
 export const resolvers = {
@@ -35,10 +37,12 @@ export const resolvers = {
       const result = await getCandidacy({ getCandidacyFromId: candidacyDb.getCandidacyFromId })({ id });
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
-    getCandidacies: async (_: unknown, params: { deviceId: string; }) => {
-      const result = await getCandidacySummaries({ 
-        getCandidacySummaries: candidacyDb.getCandidacies 
-      })({ role: "test" });
+    getCandidacies: async (_: unknown, params: { deviceId: string; }, context: { reply: any, app: { auth: any, userInfo: any, keycloak: Keycloak.Keycloak, getKeycloakAdmin: () => KeycloakAdminClient; }; }) => {
+      const result = await getCandidacySummaries({
+        hasRole: context.app.auth.hasRole,
+        getCandidacySummaries: candidacyDb.getCandidacies,
+        getCandidacySummariesForUser: candidacyDb.getCandidaciesForUser
+      })({ IAMId: context.app.userInfo?.sub });
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
     getTrainings: async () => {

@@ -465,7 +465,41 @@ export const getCandidacies = async () => {
             }
         });
 
+        return Right(toDomainCandidacySummaries(candidacies.map(c => ({...c, certification: c.certificationsAndRegions[0].certification}))));
+    }
+    catch (e) {
+        return Left(`Erreur lors de la récupération des candidatures, ${(e as any).message}`);
+    }
+};
 
+export const getCandidaciesForUser = async (keycloakId: string) => {
+    try {
+        const candidacies = await prismaClient.candidacy.findMany({
+            where: {
+                organism: {
+                    accounts: {
+                        some: {
+                            keycloakId: keycloakId
+                        }
+                    }
+                }
+            },
+            include: {
+                candidacyStatuses: {
+                    where: {
+                        isActive: true
+                    }
+                },
+                certificationsAndRegions: {
+                    select: {
+                        certification: true
+                    },
+                    where: {
+                        isActive: true
+                    }
+                }
+            }
+        });
 
         return Right(toDomainCandidacySummaries(candidacies.map(c => ({...c, certification: c.certificationsAndRegions[0].certification}))));
     }

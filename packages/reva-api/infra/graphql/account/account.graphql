@@ -1,3 +1,17 @@
+enum AccountGroup {
+  admin
+  organism
+}
+
+input AccountInput {
+  email: String!
+  username: String!
+  firstname: String
+  lastname: String
+  group: AccountGroup!
+  organismId: UUID
+}
+
 type Mutation {
-  account_createAccount: Void
+  account_createAccount(account: AccountInput): Void
 }

@@ -4,7 +4,7 @@ import keycloakElement from "./custom-elements/keycloak";
 import Keycloak from "keycloak-js";
 
 customElements.define(keycloakElement.name, keycloakElement.clazz);
-    
+
 const app = Elm.Main.init({
    flags: {
       // @ts-ignore
@@ -13,7 +13,7 @@ const app = Elm.Main.init({
       keycloakConfiguration: {
          realm: import.meta.env.VITE_KEYCLOAK_REALM || "REVA",
          url: import.meta.env.VITE_KEYCLOAK_URL || "http://localhost:8888/auth/",
-         clientId: import.meta.env.VITE_KEYCLOAK_CLIENT_ID || "reva-app",
+         clientId: import.meta.env.VITE_KEYCLOAK_CLIENT_ID || "reva-admin",
       }
    }
 });

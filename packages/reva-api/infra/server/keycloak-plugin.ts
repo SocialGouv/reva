@@ -1,6 +1,9 @@
 import fp from 'fastify-plugin';
 import Keycloak from 'keycloak-connect';
 import KcAdminClient from '@keycloak/keycloak-admin-client';
+import { userInfo } from 'os';
+
+const hasRole = (roles: string[]) => (role: string) => roles.includes(role)
 
 async function keycloakPlugin(app: any, opts: any, next: any) {
 
@@ -33,33 +36,58 @@ async function keycloakPlugin(app: any, opts: any, next: any) {
     config
   );
 
+  app.decorate('auth', {
+    hasRole: (role: string) => {
+      return app.userInfo?.realm_access?.roles.includes(role)
+    }
+  })
+
   app.decorate('keycloak', keycloak);
+  app.addHook('onRequest', async (req: any, res: any) => {
+    app.userInfo = undefined;
+    if (!req.headers.authorization) {
+      return;
+    }
+
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    const [, token] = req.headers.authorization.split("Bearer ")
+    if (token) {
+      try {
+        app.userInfo = await keycloak.grantManager.userInfo(token)
+      }
+      catch(e) {
+        console.log(e)
+      }
+    }
+  })
 
   const kcAdminClient = new KcAdminClient({
-    baseUrl: process.env.VITE_KEYCLOAK_URL,
-    realmName: process.env.VITE_KEYCLOAK_REALM
+    baseUrl: process.env.KEYCLOAK_ADMIN_URL,
+    realmName: process.env.KEYCLOAK_ADMIN_REALM
   });
 
-  try {
-    await kcAdminClient.auth({
-      username: process.env.KEYCLOAK_USER,
-      password: process.env.KEYCLOAK_PASSWORD,
-      grantType: 'password',
-      clientId: process.env.KEYCLOAK_CLIENTID || 'reva-app',
-    });
-
-  } catch (e) {
-    console.log(e);  
+  const getKeycloakAdmin = async () => {
+    try {
+      await kcAdminClient.auth({
+        grantType: 'client_credentials',
+        clientId: process.env.KEYCLOAK_ADMIN_CLIENTID || 'admin-cli',
+        clientSecret: process.env.KEYCLOAK_ADMIN_CLIENT_SECRET,
+      });
+    } catch (e) {
+      console.log(e);  
+    } 
+      
+    return kcAdminClient;
   }
   
-  app.decorate('keycloakAdmin', kcAdminClient);
+  app.decorate('getKeycloakAdmin', getKeycloakAdmin);
 
 
-  const middlewares = keycloak.middleware(middleware);
+  // const middlewares = keycloak.middleware(middleware);
 
-  for (let x = 0; x < middlewares.length; x++) {
-    app.addHook('onRequest', middlewares[x]);
-  }
+  // for (let x = 0; x < middlewares.length; x++) {
+  //   app.addHook('onRequest', middlewares[x]);
+  // }
 
   next();
 }
