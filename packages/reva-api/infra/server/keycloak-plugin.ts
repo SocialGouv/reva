@@ -82,13 +82,6 @@ async function keycloakPlugin(app: any, opts: any, next: any) {
   
   app.decorate('getKeycloakAdmin', getKeycloakAdmin);
 
-
-  // const middlewares = keycloak.middleware(middleware);
-
-  // for (let x = 0; x < middlewares.length; x++) {
-  //   app.addHook('onRequest', middlewares[x]);
-  // }
-
   next();
 }
 

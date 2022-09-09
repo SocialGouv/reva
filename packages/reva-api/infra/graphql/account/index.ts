@@ -4,6 +4,7 @@ import Keycloak from 'keycloak-connect';
 import mercurius from "mercurius";
 import { Either, Just, Left, Maybe, Nothing, Right } from "purify-ts";
 import { createAccount } from "../../../domain/features/createAccount";
+import { FunctionalCodeError, FunctionalError } from "../../../domain/types/functionalError";
 import * as accountsDb from "../../database/postgres/accounts";
 import * as organismsDb from "../../database/postgres/organisms";
 
@@ -12,6 +13,7 @@ const getAccountInIAM = (keycloakAdmin: KeycloakAdminClient) => async (params: {
   try {
     const [userByEmail] = await keycloakAdmin.users.find({
       email: params.email,
+      exact: true,
       realm: process.env.KEYCLOAK_ADMIN_REALM_REVA
     });
 
@@ -21,6 +23,7 @@ const getAccountInIAM = (keycloakAdmin: KeycloakAdminClient) => async (params: {
 
     const [userByUsername] = await keycloakAdmin.users.find({
       username: params.username,
+      exact: true,
       realm: process.env.KEYCLOAK_ADMIN_REALM_REVA
     });
 
@@ -75,7 +78,12 @@ export const resolvers = {
         group: string;
         organismId?: string;
       };
-    }, { app }: { app: { keycloak: Keycloak.Keycloak, getKeycloakAdmin: () => KeycloakAdminClient; }; }) => { 
+    }, { app }: { app: { auth: any; keycloak: Keycloak.Keycloak, getKeycloakAdmin: () => KeycloakAdminClient; }; }) => { 
+
+      if (!app.auth.hasRole("admin")) {
+        return Left(new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, "Not authorized")).mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
+      }
+
       const keycloakAdmin = await app.getKeycloakAdmin();
       
       const result = await createAccount({
@@ -86,8 +94,6 @@ export const resolvers = {
       })(params.account);
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
-
-
     },
    
   },

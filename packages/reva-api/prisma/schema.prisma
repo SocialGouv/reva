@@ -213,7 +213,7 @@ model Account {
   firstname String? @db.VarChar(255)
   lastname String? @db.VarChar(255)
   organism Organism?  @relation(fields: [organismId], references: [id])
-  organismId     String   @db.Uuid  @map("organism_id")
+  organismId     String?   @db.Uuid  @map("organism_id")
   keycloakId String @db.Uuid @unique  @map("keycloak_id") 
   @@map("account")
 }

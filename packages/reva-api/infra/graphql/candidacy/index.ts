@@ -53,7 +53,7 @@ export const resolvers = {
     getOrganismsForCandidacy: async (_: unknown, params: { candidacyId: string; }) => {
       const result = await getAAPOrganismsForCandidacy({
         getAAPOrganisms: organismDb.getAAPOrganisms
-      })({candidacyId: params.candidacyId})
+      })({ candidacyId: params.candidacyId });
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     }
@@ -174,8 +174,9 @@ export const resolvers = {
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
 
-    candidacy_takeOver: async (_: unknown, payload: any) => {
+    candidacy_takeOver: async (_: unknown, payload: any, context: { app: { auth: any; }; }) => {
       const result = await takeOverCandidacy({
+        hasRole: context.app.auth.hasRole,
         existsCandidacyWithActiveStatus: candidacyDb.existsCandidacyWithActiveStatus,
         updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
       })({
@@ -192,7 +193,7 @@ export const resolvers = {
       })({
         candidacyId: payload.candidacyId,
         organismId: payload.organismId
-      })
+      });
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     }

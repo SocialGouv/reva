@@ -3,6 +3,15 @@ enum AccountGroup {
   organism
 }
 
+type Account {
+  id: UUID!
+  keycloakId: String!
+  email: String!
+  firstname: String
+  lastname: String
+  organismId: String
+}
+
 input AccountInput {
   email: String!
   username: String!
@@ -13,5 +22,5 @@ input AccountInput {
 }
 
 type Mutation {
-  account_createAccount(account: AccountInput): Void
+  account_createAccount(account: AccountInput): Account!
 }
