@@ -127,7 +127,9 @@ export const getCandidacyFromId = async (candidacyId: string) => {
             include: {
                 experiences: true,
                 goals: true,
-                candidacyStatuses: true
+                candidacyStatuses: true,
+                basicSkills: true,
+                trainings: true
             }
         });
 
@@ -173,7 +175,7 @@ export const existsCandidacyWithActiveStatus = async (params: { candidacyId: str
 };
 
 // export const getCompanions = async () => {
-//     try {
+//     try {x
 //         const companions = await prismaClient.companion.findMany();
 
 //         return Right(companions);

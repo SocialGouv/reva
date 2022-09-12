@@ -37,6 +37,14 @@ type Candidacy {
   appointmentCount: Int
   wasPresentAtFirstAppointment: Boolean
   candidacyStatuses: [CandidacyStatus!]!
+  certificateSkills: String
+  otherTraining: String
+  individualHourCount: Int
+  collectiveHourCount: Int
+  additionalHourCount: Int
+  validatedByCandidate: Boolean
+  basicSkillIds: [UUID!]!
+  mandatoryTrainingIds: [UUID!]!
   createdAt: Timestamp!
 }
 

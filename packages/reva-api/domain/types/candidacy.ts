@@ -19,6 +19,8 @@ export interface Candidacy extends CandidacyAbstract {
     regionId: string;
     region: Region; 
     candidacyStatuses: CandidacyStatus[];
+    // basicSkills: BasicSkill[];
+    // trainings: Training[];
     createdAt: Date;
 }
 
@@ -93,6 +95,11 @@ export interface Organism {
 }
 
 export interface BasicSkill {
+    id: string;
+    label: string;
+}
+
+export interface Training {
     id: string;
     label: string;
 }

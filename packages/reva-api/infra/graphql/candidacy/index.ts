@@ -38,7 +38,21 @@ export const resolvers = {
     },
     getCandidacyById: async (other: unknown, { id }: { id: string; }, context: any) => {
       const result = await getCandidacy({ getCandidacyFromId: candidacyDb.getCandidacyFromId })({ id });
-      return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
+      return result
+        .map(c => ({
+            ...c,
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            basicSkillIds: c.basicSkills.reduce((memo,bs) => {
+                return [...memo, bs.basicSkillId]
+            }, []),
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            mandatoryTrainingIds: c.trainings.reduce((memo,t) => {
+                return [...memo, t.trainingId]
+            }, [])
+        }))
+        .mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
     getCandidacies: async (_: unknown, params: { deviceId: string; }, context: { reply: any, app: { auth: any, userInfo: any, keycloak: Keycloak.Keycloak, getKeycloakAdmin: () => KeycloakAdminClient; }; }) => {
       const result = await getCandidacySummaries({
