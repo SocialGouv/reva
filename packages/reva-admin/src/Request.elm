@@ -345,7 +345,7 @@ requestTrainings endpointGraphql token candidacyId toMsg =
         trainingRequiredArs =
             Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
     in
-    Query.getCandidacyById trainingRequiredArs appointmentSelection
+    Query.getCandidacyById trainingRequiredArs trainingSelection
         |> makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
 
 

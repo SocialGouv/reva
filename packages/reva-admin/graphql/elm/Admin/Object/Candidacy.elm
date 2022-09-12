@@ -122,11 +122,6 @@ candidacyStatuses object____ =
     Object.selectionForCompositeField "candidacyStatuses" [] object____ (Basics.identity >> Decode.list)
 
 
-createdAt : SelectionSet Data.Scalar.Timestamp Admin.Object.Candidacy
-createdAt =
-    Object.selectionForField "Data.Scalar.Timestamp" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
-
-
 certificateSkills : SelectionSet (Maybe String) Admin.Object.Candidacy
 certificateSkills =
     Object.selectionForField "(Maybe String)" "certificateSkills" [] (Decode.string |> Decode.nullable)
@@ -165,3 +160,8 @@ basicSkillIds =
 mandatoryTrainingIds : SelectionSet (List Data.Scalar.Uuid) Admin.Object.Candidacy
 mandatoryTrainingIds =
     Object.selectionForField "(List Data.Scalar.Uuid)" "mandatoryTrainingIds" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecUuid |> .decoder |> Decode.list)
+
+
+createdAt : SelectionSet Data.Scalar.Timestamp Admin.Object.Candidacy
+createdAt =
+    Object.selectionForField "Data.Scalar.Timestamp" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
