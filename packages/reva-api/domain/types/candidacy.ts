@@ -91,3 +91,8 @@ export interface Organism {
     city: string;
     contactAdministrativeEmail: string;
 }
+
+export interface BasicSkill {
+    id: string;
+    label: string;
+}

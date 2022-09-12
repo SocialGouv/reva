@@ -19,12 +19,14 @@ import * as organismDb from "../../database/postgres/organisms";
 import * as experienceDb from "../../database/postgres/experiences";
 import * as goalDb from "../../database/postgres/goals";
 import * as trainingDb from "../../database/postgres/trainings";
+import * as basicSkillDb from "../../database/postgres/basicSkills";
 import mercurius from "mercurius";
 import { getTrainings } from "../../../domain/features/getTrainings";
 import { selectOrganismForCandidacy } from "../../../domain/features/selectOrganismForCandidacy";
 import { notifyNewCandidacy } from "../../mattermost";
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import Keycloak from 'keycloak-connect';
+import { getBasicSkills } from "../../../domain/features/getBasicSkills";
 
 
 export const resolvers = {
@@ -56,6 +58,11 @@ export const resolvers = {
       })({ candidacyId: params.candidacyId });
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
+    },
+    getBasicSkills: async () => {
+      const result = await getBasicSkills({ getBasicSkills: basicSkillDb.getBasicSkills })();
+
+      return result.extract();
     }
   },
   Mutation: {

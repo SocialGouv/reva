@@ -86,12 +86,18 @@ type Training {
   label: String!
 }
 
+type BasicSkill {
+  id: UUID!
+  label: String!
+}
+
 type Query {
   getCandidacy(deviceId: ID!): Candidacy
   getCandidacyById(id: ID!): Candidacy
   getCandidacies: [CandidacySummary!]!
   getTrainings: [Training!]!
   getOrganismsForCandidacy(candidacyId: UUID!): [Organism!]!
+  getBasicSkills: [BasicSkill!]!
 }
 
 # MUTATIONS

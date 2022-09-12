@@ -105,6 +105,7 @@ model Candidacy {
   phone   String?  @db.VarChar(255)
   email   String?  @db.VarChar(255)
   trainings TrainingOnCandidacies[]
+  basicSkills BasicSkillOnCandidacies[]
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
   @@map("candidacy")
@@ -273,4 +274,26 @@ model TrainingOnCandidacies {
 
   @@id([trainingId, candidacyId])
   @@map("training_candidacy")
+}
+
+model BasicSkill {
+  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
+  label       String    @unique @db.VarChar(255)
+  candidacies BasicSkillOnCandidacies[]
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+
+  @@map("basic_skill")
+}
+
+model BasicSkillOnCandidacies {
+  basicSkill       BasicSkill @relation(fields: [basicSkillId], references: [id])
+  basicSkillId     String        @db.Uuid  @map("basic_skill_id")
+  candidacy      Candidacy          @relation(fields: [candidacyId], references: [id])
+  candidacyId              String        @db.Uuid  @map("candidacy_id")
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+
+  @@id([basicSkillId, candidacyId])
+  @@map("basic_skill_candidacy")
 }
