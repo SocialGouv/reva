@@ -1,14 +1,16 @@
-module Data.Form.Training exposing (fromDict, keys)
+module Data.Form.Training exposing (fromDict, keys, training)
 
-import Data.Form.Helper as Helper
+import Admin.Scalar exposing (Uuid)
+import Data.Form.Helper as Helper exposing (booleanToString, toIdList, uuidToCheckedList)
 import Data.Referential exposing (BasicSkill, MandatoryTraining)
 import Dict exposing (Dict)
 
 
 type alias Training =
     { mandatoryTrainingIds : List String
-    , basicSkills : List String
+    , basicSkillsIds : List String
     , certificateSkills : String
+    , consent : Bool
     , otherTraining : String
     , individualHourCount : Int
     , collectiveHourCount : Int
@@ -50,7 +52,39 @@ fromDict basicSkills mandatoryTrainings dict =
         (decode.list mandatoryTrainings)
         (decode.list basicSkills)
         (decode.string .certificateSkills "")
+        (decode.bool .consent False)
         (decode.string .otherTraining "")
         (decode.int .individualHourCount 0)
         (decode.int .collectiveHourCount 0)
         (decode.int .additionalHourCount 0)
+
+
+training :
+    List Uuid
+    -> List Uuid
+    -> Maybe String
+    -> Maybe Bool
+    -> Maybe String
+    -> Maybe Int
+    -> Maybe Int
+    -> Maybe Int
+    -> Dict String String
+training mandatoryTrainings basicSkills certificateSkills consent otherTraining individualHourCount collectiveHourCount additionalHourCount =
+    let
+        mandatoryTrainingsIds =
+            uuidToCheckedList mandatoryTrainings
+
+        basicSkillsIds =
+            uuidToCheckedList basicSkills
+
+        otherTrainings =
+            [ ( .certificateSkills, certificateSkills )
+            , ( .consent, Maybe.map booleanToString consent )
+            , ( .otherTraining, otherTraining )
+            , ( .individualHourCount, Maybe.map String.fromInt individualHourCount )
+            , ( .collectiveHourCount, Maybe.map String.fromInt collectiveHourCount )
+            , ( .additionalHourCount, Maybe.map String.fromInt additionalHourCount )
+            ]
+                |> Helper.keysToCheckedList keys
+    in
+    Dict.fromList (mandatoryTrainingsIds ++ basicSkillsIds ++ otherTrainings)

@@ -69,6 +69,13 @@ getOrganismsForCandidacy requiredArgs____ object____ =
     Object.selectionForCompositeField "getOrganismsForCandidacy" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.list)
 
 
+getBasicSkills :
+    SelectionSet decodesTo Admin.Object.BasicSkill
+    -> SelectionSet (List decodesTo) RootQuery
+getBasicSkills object____ =
+    Object.selectionForCompositeField "getBasicSkills" [] object____ (Basics.identity >> Decode.list)
+
+
 getReferential :
     SelectionSet decodesTo Admin.Object.Referential
     -> SelectionSet decodesTo RootQuery

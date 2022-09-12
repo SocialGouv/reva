@@ -4,6 +4,7 @@
 
 module Admin.InputObject exposing (..)
 
+import Admin.Enum.AccountGroup
 import Admin.Enum.CandidateTypology
 import Admin.Enum.Duration
 import Admin.Interface
@@ -17,6 +18,53 @@ import Graphql.Internal.Encode as Encode exposing (Value)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
+
+
+buildAccountInput :
+    AccountInputRequiredFields
+    -> (AccountInputOptionalFields -> AccountInputOptionalFields)
+    -> AccountInput
+buildAccountInput required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { firstname = Absent, lastname = Absent, organismId = Absent }
+    in
+    { email = required____.email, username = required____.username, firstname = optionals____.firstname, lastname = optionals____.lastname, group = required____.group, organismId = optionals____.organismId }
+
+
+type alias AccountInputRequiredFields =
+    { email : String
+    , username : String
+    , group : Admin.Enum.AccountGroup.AccountGroup
+    }
+
+
+type alias AccountInputOptionalFields =
+    { firstname : OptionalArgument String
+    , lastname : OptionalArgument String
+    , organismId : OptionalArgument Data.Scalar.Uuid
+    }
+
+
+{-| Type for the AccountInput input object.
+-}
+type alias AccountInput =
+    { email : String
+    , username : String
+    , firstname : OptionalArgument String
+    , lastname : OptionalArgument String
+    , group : Admin.Enum.AccountGroup.AccountGroup
+    , organismId : OptionalArgument Data.Scalar.Uuid
+    }
+
+
+{-| Encode a AccountInput into a value that can be used as an argument.
+-}
+encodeAccountInput : AccountInput -> Value
+encodeAccountInput input____ =
+    Encode.maybeObject
+        [ ( "email", Encode.string input____.email |> Just ), ( "username", Encode.string input____.username |> Just ), ( "firstname", Encode.string |> Encode.optional input____.firstname ), ( "lastname", Encode.string |> Encode.optional input____.lastname ), ( "group", Encode.enum Admin.Enum.AccountGroup.toString input____.group |> Just ), ( "organismId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.organismId ) ]
 
 
 buildAppointmentInformationsInput :
@@ -224,3 +272,44 @@ encodeExperienceInput : ExperienceInput -> Value
 encodeExperienceInput input____ =
     Encode.maybeObject
         [ ( "title", Encode.string input____.title |> Just ), ( "startedAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) input____.startedAt |> Just ), ( "duration", Encode.enum Admin.Enum.Duration.toString input____.duration |> Just ), ( "description", Encode.string input____.description |> Just ) ]
+
+
+buildTrainingInput :
+    TrainingInputRequiredFields
+    -> TrainingInput
+buildTrainingInput required____ =
+    { certificateSkills = required____.certificateSkills, otherTraining = required____.otherTraining, individualHourCount = required____.individualHourCount, collectiveHourCount = required____.collectiveHourCount, additionalHourCount = required____.additionalHourCount, validatedByCandidate = required____.validatedByCandidate, basicSkillIds = required____.basicSkillIds, mandatoryTrainingIds = required____.mandatoryTrainingIds }
+
+
+type alias TrainingInputRequiredFields =
+    { certificateSkills : String
+    , otherTraining : String
+    , individualHourCount : Int
+    , collectiveHourCount : Int
+    , additionalHourCount : Int
+    , validatedByCandidate : Bool
+    , basicSkillIds : List Data.Scalar.Uuid
+    , mandatoryTrainingIds : List Data.Scalar.Uuid
+    }
+
+
+{-| Type for the TrainingInput input object.
+-}
+type alias TrainingInput =
+    { certificateSkills : String
+    , otherTraining : String
+    , individualHourCount : Int
+    , collectiveHourCount : Int
+    , additionalHourCount : Int
+    , validatedByCandidate : Bool
+    , basicSkillIds : List Data.Scalar.Uuid
+    , mandatoryTrainingIds : List Data.Scalar.Uuid
+    }
+
+
+{-| Encode a TrainingInput into a value that can be used as an argument.
+-}
+encodeTrainingInput : TrainingInput -> Value
+encodeTrainingInput input____ =
+    Encode.maybeObject
+        [ ( "certificateSkills", Encode.string input____.certificateSkills |> Just ), ( "otherTraining", Encode.string input____.otherTraining |> Just ), ( "individualHourCount", Encode.int input____.individualHourCount |> Just ), ( "collectiveHourCount", Encode.int input____.collectiveHourCount |> Just ), ( "additionalHourCount", Encode.int input____.additionalHourCount |> Just ), ( "validatedByCandidate", Encode.bool input____.validatedByCandidate |> Just ), ( "basicSkillIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.basicSkillIds |> Just ), ( "mandatoryTrainingIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.mandatoryTrainingIds |> Just ) ]

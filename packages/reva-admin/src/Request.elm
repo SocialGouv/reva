@@ -5,6 +5,7 @@ module Request exposing
     , requestCandidacies
     , requestCandidacy
     , requestReferential
+    , requestTrainings
     , takeOverCandidacy
     , updateAppointment
     , updateTrainings
@@ -13,6 +14,7 @@ module Request exposing
 import Admin.InputObject
 import Admin.Mutation as Mutation
 import Admin.Object
+import Admin.Object.BasicSkill
 import Admin.Object.Candidacy
 import Admin.Object.CandidacyStatus
 import Admin.Object.CandidacySummary
@@ -319,6 +321,34 @@ updateAppointment endpointGraphql token candidacyId toMsg dict =
 -- TRAININGS
 
 
+trainingSelection : SelectionSet (Dict String String) Admin.Object.Candidacy
+trainingSelection =
+    SelectionSet.succeed Data.Form.Training.training
+        |> with Admin.Object.Candidacy.mandatoryTrainingIds
+        |> with Admin.Object.Candidacy.basicSkillIds
+        |> with Admin.Object.Candidacy.certificateSkills
+        |> with Admin.Object.Candidacy.validatedByCandidate
+        |> with Admin.Object.Candidacy.otherTraining
+        |> with Admin.Object.Candidacy.individualHourCount
+        |> with Admin.Object.Candidacy.collectiveHourCount
+        |> with Admin.Object.Candidacy.additionalHourCount
+
+
+requestTrainings :
+    String
+    -> Token
+    -> CandidacyId
+    -> (RemoteData String (Dict String String) -> msg)
+    -> Cmd msg
+requestTrainings endpointGraphql token candidacyId toMsg =
+    let
+        trainingRequiredArs =
+            Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
+    in
+    Query.getCandidacyById trainingRequiredArs trainingSelection
+        |> makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
+
+
 updateTrainings :
     String
     -> Token
@@ -329,14 +359,38 @@ updateTrainings :
     -> Cmd msg
 updateTrainings endpointGraphql token candidacyId toMsg referential dict =
     let
-        trainings =
+        training =
             Data.Form.Training.fromDict referential.basicSkills referential.mandatoryTrainings dict
+
+        trainingInformation =
+            Admin.InputObject.TrainingInput
+                training.certificateSkills
+                training.otherTraining
+                training.individualHourCount
+                training.collectiveHourCount
+                training.additionalHourCount
+                training.consent
+                (List.map Uuid training.basicSkillsIds)
+                (List.map Uuid training.mandatoryTrainingIds)
+
+        trainingRequiredArgs =
+            Mutation.CandidacySubmitTrainingFormRequiredArguments
+                (Uuid <| Data.Candidacy.candidacyIdToString candidacyId)
+                trainingInformation
     in
-    Cmd.none
+    Mutation.candidacy_submitTrainingForm trainingRequiredArgs SelectionSet.empty
+        |> makeMutation endpointGraphql token toMsg
 
 
 
 -- REFERENTIAL
+
+
+basicSkillSelection : SelectionSet Data.Referential.BasicSkill Admin.Object.BasicSkill
+basicSkillSelection =
+    SelectionSet.succeed Data.Referential.BasicSkill
+        |> with (SelectionSet.map (\(Uuid id) -> id) Admin.Object.BasicSkill.id)
+        |> with Admin.Object.BasicSkill.label
 
 
 referentialGoalSelection : SelectionSet Data.Referential.ReferentialGoal Admin.Object.Goal
@@ -383,18 +437,11 @@ requestGoals endpointGraphql token toMsg =
 
 referentialSelection : SelectionSet Data.Referential.Referential Graphql.Operation.RootQuery
 referentialSelection =
-    let
-        basicSkillsFixtures =
-            [ { id = "1", label = "Usage et communication numérique" }
-            , { id = "2", label = "Utilisation des règles de base de calcul et du raisonnement mathématique" }
-            , { id = "3", label = "Communication en français" }
-            ]
-    in
     SelectionSet.succeed
         (\basicSkills referentialGoals trainings ->
-            Data.Referential.Referential basicSkillsFixtures referentialGoals.goals trainings
+            Data.Referential.Referential basicSkills referentialGoals.goals trainings
         )
-        |> with (Query.getTrainings trainingsSelection)
+        |> with (Query.getBasicSkills basicSkillSelection)
         |> with (Query.getReferential goalsSelection)
         |> with (Query.getTrainings trainingsSelection)
 

@@ -5,6 +5,14 @@
 module Admin.Object exposing (..)
 
 
+type Account
+    = Account
+
+
+type BasicSkill
+    = BasicSkill
+
+
 type Candidacy
     = Candidacy
 

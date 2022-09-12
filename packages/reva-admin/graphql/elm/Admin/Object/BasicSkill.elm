@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module Admin.Object.Organism exposing (..)
+module Admin.Object.BasicSkill exposing (..)
 
 import Admin.InputObject
 import Admin.Interface
@@ -19,31 +19,11 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
-id : SelectionSet Data.Scalar.Uuid Admin.Object.Organism
+id : SelectionSet Data.Scalar.Uuid Admin.Object.BasicSkill
 id =
     Object.selectionForField "Data.Scalar.Uuid" "id" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecUuid |> .decoder)
 
 
-label : SelectionSet String Admin.Object.Organism
+label : SelectionSet String Admin.Object.BasicSkill
 label =
     Object.selectionForField "String" "label" [] Decode.string
-
-
-address : SelectionSet String Admin.Object.Organism
-address =
-    Object.selectionForField "String" "address" [] Decode.string
-
-
-zip : SelectionSet String Admin.Object.Organism
-zip =
-    Object.selectionForField "String" "zip" [] Decode.string
-
-
-city : SelectionSet String Admin.Object.Organism
-city =
-    Object.selectionForField "String" "city" [] Decode.string
-
-
-contactAdministrativeEmail : SelectionSet String Admin.Object.Organism
-contactAdministrativeEmail =
-    Object.selectionForField "String" "contactAdministrativeEmail" [] Decode.string

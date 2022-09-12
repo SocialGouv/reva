@@ -6,9 +6,13 @@ module Data.Form.Helper exposing
     , decode
     , defaultDate
     , generic
+    , keysToCheckedList
     , toDict
-    , toIdList)
+    , toIdList
+    , uuidToCheckedList
+    )
 
+import Admin.Scalar exposing (Uuid(..))
 import Data.Scalar exposing (Timestamp)
 import Date
 import Dict
@@ -125,14 +129,24 @@ decode keys dict =
     }
 
 
-toDict : a -> List ( a -> comparable, Maybe String ) -> Dict.Dict comparable String
-toDict keys data =
+keysToCheckedList : a -> List ( a -> b, Maybe String ) -> List ( b, String )
+keysToCheckedList keys data =
     List.map
         (\( f, value ) -> ( f keys, value |> Maybe.withDefault "" ))
         data
-        |> Dict.fromList
 
 
-toIdList : List { a | id : String, label : String } -> List (String, String)
+uuidToCheckedList : List Uuid -> List ( String, String )
+uuidToCheckedList l =
+    List.map (\(Uuid id) -> ( id, "checked" )) l
+
+
+toIdList : List { a | id : String, label : String } -> List ( String, String )
 toIdList l =
     List.map (\e -> ( e.id, e.label )) l
+
+
+toDict : a -> List ( a -> comparable, Maybe String ) -> Dict.Dict comparable String
+toDict keys data =
+    keysToCheckedList keys data
+        |> Dict.fromList
