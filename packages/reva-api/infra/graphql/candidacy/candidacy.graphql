@@ -136,6 +136,16 @@ input AppointmentInformationsInput {
   appointmentCount: Int!
 }
 
+input TrainingInput {
+  certificateSkills: String!
+  otherTraining: String!
+  individualHourCount: Int!
+  collectiveHourCount: Int!
+  additionalHourCount: Int!
+  validatedByCandidate: Boolean!
+  basicSkillIds: [UUID!]!
+}
+
 type Mutation {
   candidacy_createCandidacy(candidacy: CandidacyInput!): Candidacy
   candidacy_submitCandidacy(deviceId: ID!, candidacyId: ID!): Candidacy
@@ -180,5 +190,9 @@ type Mutation {
     appointmentInformations: AppointmentInformationsInput!
   ): Candidacy!
   candidacy_takeOver(candidacyId: ID!): Candidacy!
-  candidacy_selectOrganism(candidacyId: UUID!, organismId: UUID!): Candidacy
+  candidacy_selectOrganism(candidacyId: UUID!, organismId: UUID!): Candidacy!
+  candidacy_submitTrainingForm(
+    candidacyId: UUID!
+    training: TrainingInput!
+  ): Candidacy!
 }

@@ -112,7 +112,7 @@ export const getCandidacyFromDeviceId = async (deviceId: string) => {
             return Left(`error while retrieving the certification and region the device id ${deviceId}`);    
         }
 
-        return Maybe.fromNullable(candidacy).map(c => ({ ...c, regionId: certificationAndRegion.region.id, region: certificationAndRegion.region, certificationId:certificationAndRegion.certification.id, certification: { ...certificationAndRegion.certification, codeRncp: certificationAndRegion.certification.rncpId } })).toEither(`Candidacy with deviceId ${deviceId} not found`);
+        return Maybe.fromNullable(candidacy).map(c => ({ ...c, regionId: certificationAndRegion.region.id, region: certificationAndRegion.region, certificationId: certificationAndRegion.certification.id, certification: { ...certificationAndRegion.certification, codeRncp: certificationAndRegion.certification.rncpId } })).toEither(`Candidacy with deviceId ${deviceId} not found`);
     } catch (e) {
         return Left(`error while retrieving the candidacy with id ${deviceId}`);
     };
@@ -146,7 +146,7 @@ export const getCandidacyFromId = async (candidacyId: string) => {
             return Left(`error while retrieving the certification and region the candidacy id ${candidacyId}`);    
         }
 
-        return Maybe.fromNullable(candidacy).map(c => ({ ...c, regionId: certificationAndRegion.region.id, region: certificationAndRegion.region, certificationId:certificationAndRegion.certification.id, certification: { ...certificationAndRegion.certification, codeRncp: certificationAndRegion.certification.rncpId } })).toEither(`Candidacy with deviceId ${candidacyId} not found`);
+        return Maybe.fromNullable(candidacy).map(c => ({ ...c, regionId: certificationAndRegion.region.id, region: certificationAndRegion.region, certificationId: certificationAndRegion.certification.id, certification: { ...certificationAndRegion.certification, codeRncp: certificationAndRegion.certification.rncpId } })).toEither(`Candidacy with deviceId ${candidacyId} not found`);
     } catch (e) {
         return Left(`error while retrieving the candidacy with id ${candidacyId}`);
     };
@@ -308,7 +308,7 @@ export const updateCertification = async (params: { candidacyId: string, certifi
         // TODO : remove me when regionId is set in front
         const region = await prismaClient.region.findFirst();
 
-        const [,newCandidacy, certificationAndRegion] = await prismaClient.$transaction([
+        const [, newCandidacy, certificationAndRegion] = await prismaClient.$transaction([
             prismaClient.candidaciesOnRegionsAndCertifications.updateMany({
                 data: {
                     isActive: false
@@ -465,7 +465,7 @@ export const getCandidacies = async () => {
             }
         });
 
-        return Right(toDomainCandidacySummaries(candidacies.map(c => ({...c, certification: c.certificationsAndRegions[0].certification}))));
+        return Right(toDomainCandidacySummaries(candidacies.map(c => ({ ...c, certification: c.certificationsAndRegions[0].certification }))));
     }
     catch (e) {
         return Left(`Erreur lors de la récupération des candidatures, ${(e as any).message}`);
@@ -501,7 +501,7 @@ export const getCandidaciesForUser = async (keycloakId: string) => {
             }
         });
 
-        return Right(toDomainCandidacySummaries(candidacies.map(c => ({...c, certification: c.certificationsAndRegions[0].certification}))));
+        return Right(toDomainCandidacySummaries(candidacies.map(c => ({ ...c, certification: c.certificationsAndRegions[0].certification }))));
     }
     catch (e) {
         return Left(`Erreur lors de la récupération des candidatures, ${(e as any).message}`);
@@ -540,15 +540,15 @@ export const updateAppointmentInformations = async (params: {
         });
 
         const candidaciesOnRegionsAndCertifications = await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
-                where: {
-                    candidacyId: params.candidacyId,
-                    isActive: true
-                },
-                select: {
-                    certification: true,
-                    region: true,
-                }
-            })
+            where: {
+                candidacyId: params.candidacyId,
+                isActive: true
+            },
+            select: {
+                certification: true,
+                region: true,
+            }
+        });
 
 
         if (!candidaciesOnRegionsAndCertifications) {
@@ -579,7 +579,7 @@ export const updateAppointmentInformations = async (params: {
     catch (e) {
         return Left(`Erreur lors de la mise à jour des informations de rendez de la candidature, ${(e as any).message}`);
     }
-}
+};
 
 export const updateOrganism = async (params: { candidacyId: string, organismId: string; }) => {
     try {
@@ -631,3 +631,84 @@ export const updateOrganism = async (params: { candidacyId: string, organismId: 
         return Left(`error while updating contact on candidacy ${params.candidacyId}`);
     };
 };
+
+export const updateTrainingInformations = async (params: {
+    candidacyId: string;
+    training: {
+        basicSkillIds: string[];
+        certificateSkills: string;
+        otherTraining: string;
+        individualHourCount: number;
+        collectiveHourCount: number;
+        additionalHourCount: number;
+        validatedByCandidate: boolean;
+    };
+}) => {
+    try {
+
+        const [, , newCandidacy] = await prismaClient.$transaction([
+            prismaClient.basicSkillOnCandidacies.deleteMany({
+                where: {
+                    candidacyId: params.candidacyId
+                }
+            }),
+            prismaClient.basicSkillOnCandidacies.createMany({
+                data: params.training.basicSkillIds.map(id => ({
+                    candidacyId: params.candidacyId,
+                    basicSkillId: id
+                }))
+            }),
+            prismaClient.candidacy.update({
+                where: {
+                    id: params.candidacyId
+                },
+                data: {
+                    certificateSkills: params.training.certificateSkills,
+                    otherTraining: params.training.otherTraining,
+                    individualHourCount: params.training.individualHourCount,
+                    collectiveHourCount: params.training.collectiveHourCount,
+                    additionalHourCount: params.training.additionalHourCount,
+                    validatedByCandidate: params.training.validatedByCandidate
+                },
+                include: {
+                    experiences: true,
+                    goals: true,
+                    candidacyStatuses: true
+                }
+            })
+        ]);
+
+        const certificationAndRegion = await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
+            where: {
+                candidacyId: params.candidacyId,
+                isActive: true
+            },
+            select: {
+                certification: true,
+                region: true,
+            }
+        });
+
+        if (!certificationAndRegion) {
+            return Left(`error while retrieving the certification and region the candidacy id ${params.candidacyId}`);    
+        }
+
+        return Right({ 
+            id: newCandidacy.id,
+            deviceId: newCandidacy.deviceId,
+            regionId: certificationAndRegion.region.id,
+            region: certificationAndRegion.region,
+            certificationId: certificationAndRegion.certification.id,
+            certification: certificationAndRegion.certification,
+            organismId: newCandidacy.organismId,
+            experiences: toDomainExperiences(newCandidacy.experiences),
+            goals: newCandidacy.goals,
+            email: newCandidacy.email,
+            phone: newCandidacy.phone,
+            candidacyStatuses: newCandidacy.candidacyStatuses,
+            createdAt: newCandidacy.createdAt
+        });;
+    } catch (e) {
+        return Left(`error while updating training informations on candidacy ${params.candidacyId}`);
+    }
+}

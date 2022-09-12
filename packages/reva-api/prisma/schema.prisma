@@ -106,6 +106,12 @@ model Candidacy {
   email   String?  @db.VarChar(255)
   trainings TrainingOnCandidacies[]
   basicSkills BasicSkillOnCandidacies[]
+  certificateSkills   String? @map("certificate_skills")
+  otherTraining   String? @map("other_training")
+  individualHourCount   Int? @map("individual_hour_count")
+  collectiveHourCount   Int? @map("collective_hour_count")
+  additionalHourCount   Int? @map("additional_hour_count")
+  validatedByCandidate Boolean? @map("validated_by_candidate")
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
   @@map("candidacy")
