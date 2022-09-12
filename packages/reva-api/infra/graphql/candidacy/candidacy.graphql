@@ -198,10 +198,6 @@ type Mutation {
     candidateTypologyInformations: CandidateTypologyInformationsInput!
     appointmentInformations: AppointmentInformationsInput!
   ): Candidacy!
-  candidacy_updateTrainingInformations(
-    candidacyId: ID!
-    basicSkills: [ID!]!
-  ): Candidacy!
   candidacy_takeOver(candidacyId: ID!): Candidacy!
   candidacy_selectOrganism(candidacyId: UUID!, organismId: UUID!): Candidacy!
   candidacy_submitTrainingForm(
