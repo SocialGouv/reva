@@ -14,6 +14,7 @@ module Request exposing
 import Admin.InputObject
 import Admin.Mutation as Mutation
 import Admin.Object
+import Admin.Object.BasicSkill
 import Admin.Object.Candidacy
 import Admin.Object.CandidacyStatus
 import Admin.Object.CandidacySummary
@@ -355,6 +356,13 @@ updateTrainings endpointGraphql token candidacyId toMsg referential dict =
 -- REFERENTIAL
 
 
+basicSkillSelection : SelectionSet Data.Referential.BasicSkill Admin.Object.BasicSkill
+basicSkillSelection =
+    SelectionSet.succeed Data.Referential.BasicSkill
+        |> with (SelectionSet.map (\(Uuid id) -> id) Admin.Object.BasicSkill.id)
+        |> with Admin.Object.BasicSkill.label
+
+
 referentialGoalSelection : SelectionSet Data.Referential.ReferentialGoal Admin.Object.Goal
 referentialGoalSelection =
     SelectionSet.succeed Data.Referential.ReferentialGoal
@@ -410,7 +418,7 @@ referentialSelection =
         (\basicSkills referentialGoals trainings ->
             Data.Referential.Referential basicSkillsFixtures referentialGoals.goals trainings
         )
-        |> with (Query.getTrainings trainingsSelection)
+        |> with (Query.getBasicSkills basicSkillSelection)
         |> with (Query.getReferential goalsSelection)
         |> with (Query.getTrainings trainingsSelection)
 
