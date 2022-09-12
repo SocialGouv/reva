@@ -19,12 +19,15 @@ import * as organismDb from "../../database/postgres/organisms";
 import * as experienceDb from "../../database/postgres/experiences";
 import * as goalDb from "../../database/postgres/goals";
 import * as trainingDb from "../../database/postgres/trainings";
+import * as basicSkillDb from "../../database/postgres/basicSkills";
 import mercurius from "mercurius";
 import { getTrainings } from "../../../domain/features/getTrainings";
 import { selectOrganismForCandidacy } from "../../../domain/features/selectOrganismForCandidacy";
 import { notifyNewCandidacy } from "../../mattermost";
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import Keycloak from 'keycloak-connect';
+import { getBasicSkills } from "../../../domain/features/getBasicSkills";
+import { submitTraining } from "../../../domain/features/submitTrainingForm";
 
 
 export const resolvers = {
@@ -35,7 +38,21 @@ export const resolvers = {
     },
     getCandidacyById: async (other: unknown, { id }: { id: string; }, context: any) => {
       const result = await getCandidacy({ getCandidacyFromId: candidacyDb.getCandidacyFromId })({ id });
-      return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
+      return result
+        .map(c => ({
+            ...c,
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            basicSkillIds: c.basicSkills.reduce((memo,bs) => {
+                return [...memo, bs.basicSkillId]
+            }, []),
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            mandatoryTrainingIds: c.trainings.reduce((memo,t) => {
+                return [...memo, t.trainingId]
+            }, [])
+        }))
+        .mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
     getCandidacies: async (_: unknown, params: { deviceId: string; }, context: { reply: any, app: { auth: any, userInfo: any, keycloak: Keycloak.Keycloak, getKeycloakAdmin: () => KeycloakAdminClient; }; }) => {
       const result = await getCandidacySummaries({
@@ -56,6 +73,11 @@ export const resolvers = {
       })({ candidacyId: params.candidacyId });
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
+    },
+    getBasicSkills: async () => {
+      const result = await getBasicSkills({ getBasicSkills: basicSkillDb.getBasicSkills })();
+
+      return result.extract();
     }
   },
   Mutation: {
@@ -193,6 +215,18 @@ export const resolvers = {
       })({
         candidacyId: payload.candidacyId,
         organismId: payload.organismId
+      });
+
+      return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
+    },
+    candidacy_submitTrainingForm: async (_: unknown, payload: any, context: { app: { auth: any; }; } ) => {
+      const result = await submitTraining({
+        hasRole: context.app.auth.hasRole,
+        getCandidacyFromId: candidacyDb.getCandidacyFromId,
+        updateTrainingInformations: candidacyDb.updateTrainingInformations
+      })({
+        candidacyId: payload.candidacyId,
+        training: payload.training
       });
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();

@@ -419,14 +419,27 @@ async function main() {
 
   await Promise.all(regions.map(async (region) => {
     await prisma.region.upsert({
-          where: { code: region.code },
-          update: {},
-          create: {
-            label: region.label,
-            code: region.code,
-          }
-        });
+      where: { code: region.code },
+      update: {},
+      create: {
+        label: region.label,
+        code: region.code,
+      }
+    });
   }));
+
+
+  const basicSkillCount = await prisma.basicSkill.count();
+
+  if (basicSkillCount === 0) {
+    await prisma.basicSkill.createMany({
+      data: [
+        { label: "Usage et communication numérique" },
+        { label: "Utilisation des règles de base de calcul et du raisonnement mathématique" },
+        { label: "Communication en français" },
+      ]
+    }); 
+  }
 
 
 }
