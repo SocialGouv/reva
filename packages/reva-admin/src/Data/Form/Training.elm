@@ -7,8 +7,9 @@ import Dict exposing (Dict)
 
 type alias Training =
     { mandatoryTrainingIds : List String
-    , basicSkills : List String
+    , basicSkillsIds : List String
     , certificateSkills : String
+    , consent : Bool
     , otherTraining : String
     , individualHourCount : Int
     , collectiveHourCount : Int
@@ -50,6 +51,7 @@ fromDict basicSkills mandatoryTrainings dict =
         (decode.list mandatoryTrainings)
         (decode.list basicSkills)
         (decode.string .certificateSkills "")
+        (decode.bool .consent False)
         (decode.string .otherTraining "")
         (decode.int .individualHourCount 0)
         (decode.int .collectiveHourCount 0)

@@ -40,9 +40,23 @@ regionId =
     Object.selectionForField "Data.Scalar.Id" "regionId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
+region :
+    SelectionSet decodesTo Admin.Object.Region
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+region object____ =
+    Object.selectionForCompositeField "region" [] object____ Basics.identity
+
+
 organismId : SelectionSet (Maybe Data.Scalar.Uuid) Admin.Object.Candidacy
 organismId =
     Object.selectionForField "(Maybe Data.Scalar.Uuid)" "organismId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecUuid |> .decoder |> Decode.nullable)
+
+
+organism :
+    SelectionSet decodesTo Admin.Object.Organism
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
+organism object____ =
+    Object.selectionForCompositeField "organism" [] object____ (Basics.identity >> Decode.nullable)
 
 
 certification :

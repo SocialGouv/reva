@@ -5,6 +5,7 @@ module Request exposing
     , requestCandidacies
     , requestCandidacy
     , requestReferential
+    , requestTrainings
     , takeOverCandidacy
     , updateAppointment
     , updateTrainings
@@ -317,6 +318,21 @@ updateAppointment endpointGraphql token candidacyId toMsg dict =
 
 
 -- TRAININGS
+
+
+requestTrainings :
+    String
+    -> Token
+    -> CandidacyId
+    -> (RemoteData String (Dict String String) -> msg)
+    -> Cmd msg
+requestTrainings endpointGraphql token candidacyId toMsg =
+    let
+        appointmentRequiredArs =
+            Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
+    in
+    Query.getCandidacyById appointmentRequiredArs appointmentSelection
+        |> makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
 
 
 updateTrainings :

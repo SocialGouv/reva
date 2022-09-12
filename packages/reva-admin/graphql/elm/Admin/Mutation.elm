@@ -19,9 +19,24 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode exposing (Decoder)
 
 
-account_createAccount : SelectionSet (Maybe Data.Scalar.Void) RootMutation
-account_createAccount =
-    Object.selectionForField "(Maybe Data.Scalar.Void)" "account_createAccount" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecVoid |> .decoder |> Decode.nullable)
+type alias AccountCreateAccountOptionalArguments =
+    { account : OptionalArgument Admin.InputObject.AccountInput }
+
+
+account_createAccount :
+    (AccountCreateAccountOptionalArguments -> AccountCreateAccountOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.Account
+    -> SelectionSet decodesTo RootMutation
+account_createAccount fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { account = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "account" filledInOptionals____.account Admin.InputObject.encodeAccountInput ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "account_createAccount" optionalArgs____ object____ Basics.identity
 
 
 type alias CandidacyCreateCandidacyRequiredArguments =
@@ -214,6 +229,20 @@ candidacy_updateAppointmentInformations :
     -> SelectionSet decodesTo RootMutation
 candidacy_updateAppointmentInformations requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_updateAppointmentInformations" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "candidateTypologyInformations" requiredArgs____.candidateTypologyInformations Admin.InputObject.encodeCandidateTypologyInformationsInput, Argument.required "appointmentInformations" requiredArgs____.appointmentInformations Admin.InputObject.encodeAppointmentInformationsInput ] object____ Basics.identity
+
+
+type alias CandidacyUpdateTrainingInformationsRequiredArguments =
+    { candidacyId : Data.Scalar.Id
+    , basicSkills : List Data.Scalar.Id
+    }
+
+
+candidacy_updateTrainingInformations :
+    CandidacyUpdateTrainingInformationsRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet decodesTo RootMutation
+candidacy_updateTrainingInformations requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_updateTrainingInformations" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "basicSkills" requiredArgs____.basicSkills ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.list) ] object____ Basics.identity
 
 
 type alias CandidacyTakeOverRequiredArguments =
