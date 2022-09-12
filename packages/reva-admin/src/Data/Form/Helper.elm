@@ -9,8 +9,10 @@ module Data.Form.Helper exposing
     , toDict
     , toIdList
     , toKeyList
+    , uuidsToIdList
     )
 
+import Admin.Scalar exposing (Uuid(..))
 import Data.Scalar exposing (Timestamp)
 import Date
 import Dict
@@ -132,6 +134,11 @@ toKeyList keys data =
     List.map
         (\( f, value ) -> ( f keys, value |> Maybe.withDefault "" ))
         data
+
+
+uuidsToIdList : List Uuid -> List ( String, String )
+uuidsToIdList l =
+    List.map (\(Uuid id) -> ( id, "checked" )) l
 
 
 toIdList : List { a | id : String, label : String } -> List ( String, String )

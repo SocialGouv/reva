@@ -321,6 +321,19 @@ updateAppointment endpointGraphql token candidacyId toMsg dict =
 -- TRAININGS
 
 
+trainingSelection : SelectionSet (Dict String String) Admin.Object.Candidacy
+trainingSelection =
+    SelectionSet.succeed Data.Form.Training.training
+        |> with Admin.Object.Candidacy.mandatoryTrainingIds
+        |> with Admin.Object.Candidacy.basicSkillIds
+        |> with Admin.Object.Candidacy.certificateSkills
+        |> with Admin.Object.Candidacy.validatedByCandidate
+        |> with Admin.Object.Candidacy.otherTraining
+        |> with Admin.Object.Candidacy.individualHourCount
+        |> with Admin.Object.Candidacy.collectiveHourCount
+        |> with Admin.Object.Candidacy.additionalHourCount
+
+
 requestTrainings :
     String
     -> Token

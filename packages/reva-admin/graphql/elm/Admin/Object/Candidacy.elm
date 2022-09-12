@@ -127,34 +127,34 @@ createdAt =
     Object.selectionForField "Data.Scalar.Timestamp" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
 
 
-certificateSkills : SelectionSet String Admin.Object.Candidacy
+certificateSkills : SelectionSet (Maybe String) Admin.Object.Candidacy
 certificateSkills =
-    Object.selectionForField "String" "certificateSkills" [] Decode.string
+    Object.selectionForField "(Maybe String)" "certificateSkills" [] (Decode.string |> Decode.nullable)
 
 
-otherTraining : SelectionSet String Admin.Object.Candidacy
+otherTraining : SelectionSet (Maybe String) Admin.Object.Candidacy
 otherTraining =
-    Object.selectionForField "String" "otherTraining" [] Decode.string
+    Object.selectionForField "(Maybe String)" "otherTraining" [] (Decode.string |> Decode.nullable)
 
 
-individualHourCount : SelectionSet Int Admin.Object.Candidacy
+individualHourCount : SelectionSet (Maybe Int) Admin.Object.Candidacy
 individualHourCount =
-    Object.selectionForField "Int" "individualHourCount" [] Decode.int
+    Object.selectionForField "(Maybe Int)" "individualHourCount" [] (Decode.int |> Decode.nullable)
 
 
-collectiveHourCount : SelectionSet Int Admin.Object.Candidacy
+collectiveHourCount : SelectionSet (Maybe Int) Admin.Object.Candidacy
 collectiveHourCount =
-    Object.selectionForField "Int" "collectiveHourCount" [] Decode.int
+    Object.selectionForField "(Maybe Int)" "collectiveHourCount" [] (Decode.int |> Decode.nullable)
 
 
-additionalHourCount : SelectionSet Int Admin.Object.Candidacy
+additionalHourCount : SelectionSet (Maybe Int) Admin.Object.Candidacy
 additionalHourCount =
-    Object.selectionForField "Int" "additionalHourCount" [] Decode.int
+    Object.selectionForField "(Maybe Int)" "additionalHourCount" [] (Decode.int |> Decode.nullable)
 
 
-validatedByCandidate : SelectionSet Bool Admin.Object.Candidacy
+validatedByCandidate : SelectionSet (Maybe Bool) Admin.Object.Candidacy
 validatedByCandidate =
-    Object.selectionForField "Bool" "validatedByCandidate" [] Decode.bool
+    Object.selectionForField "(Maybe Bool)" "validatedByCandidate" [] (Decode.bool |> Decode.nullable)
 
 
 basicSkillIds : SelectionSet (List Data.Scalar.Uuid) Admin.Object.Candidacy
