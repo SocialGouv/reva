@@ -274,26 +274,42 @@ encodeExperienceInput input____ =
         [ ( "title", Encode.string input____.title |> Just ), ( "startedAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) input____.startedAt |> Just ), ( "duration", Encode.enum Admin.Enum.Duration.toString input____.duration |> Just ), ( "description", Encode.string input____.description |> Just ) ]
 
 
-buildTrainingInformationsInput :
-    TrainingInformationsInputRequiredFields
-    -> TrainingInformationsInput
-buildTrainingInformationsInput required____ =
-    { basicSkills = required____.basicSkills }
+buildTrainingInput :
+    TrainingInputRequiredFields
+    -> TrainingInput
+buildTrainingInput required____ =
+    { certificateSkills = required____.certificateSkills, otherTraining = required____.otherTraining, individualHourCount = required____.individualHourCount, collectiveHourCount = required____.collectiveHourCount, additionalHourCount = required____.additionalHourCount, validatedByCandidate = required____.validatedByCandidate, basicSkillIds = required____.basicSkillIds, mandatoryTrainingIds = required____.mandatoryTrainingIds }
 
 
-type alias TrainingInformationsInputRequiredFields =
-    { basicSkills : List Data.Scalar.Id }
+type alias TrainingInputRequiredFields =
+    { certificateSkills : String
+    , otherTraining : String
+    , individualHourCount : Int
+    , collectiveHourCount : Int
+    , additionalHourCount : Int
+    , validatedByCandidate : Bool
+    , basicSkillIds : List Data.Scalar.Uuid
+    , mandatoryTrainingIds : List Data.Scalar.Uuid
+    }
 
 
-{-| Type for the TrainingInformationsInput input object.
+{-| Type for the TrainingInput input object.
 -}
-type alias TrainingInformationsInput =
-    { basicSkills : List Data.Scalar.Id }
+type alias TrainingInput =
+    { certificateSkills : String
+    , otherTraining : String
+    , individualHourCount : Int
+    , collectiveHourCount : Int
+    , additionalHourCount : Int
+    , validatedByCandidate : Bool
+    , basicSkillIds : List Data.Scalar.Uuid
+    , mandatoryTrainingIds : List Data.Scalar.Uuid
+    }
 
 
-{-| Encode a TrainingInformationsInput into a value that can be used as an argument.
+{-| Encode a TrainingInput into a value that can be used as an argument.
 -}
-encodeTrainingInformationsInput : TrainingInformationsInput -> Value
-encodeTrainingInformationsInput input____ =
+encodeTrainingInput : TrainingInput -> Value
+encodeTrainingInput input____ =
     Encode.maybeObject
-        [ ( "basicSkills", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.list) input____.basicSkills |> Just ) ]
+        [ ( "certificateSkills", Encode.string input____.certificateSkills |> Just ), ( "otherTraining", Encode.string input____.otherTraining |> Just ), ( "individualHourCount", Encode.int input____.individualHourCount |> Just ), ( "collectiveHourCount", Encode.int input____.collectiveHourCount |> Just ), ( "additionalHourCount", Encode.int input____.additionalHourCount |> Just ), ( "validatedByCandidate", Encode.bool input____.validatedByCandidate |> Just ), ( "basicSkillIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.basicSkillIds |> Just ), ( "mandatoryTrainingIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.mandatoryTrainingIds |> Just ) ]

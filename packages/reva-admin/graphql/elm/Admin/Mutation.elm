@@ -266,6 +266,20 @@ type alias CandidacySelectOrganismRequiredArguments =
 candidacy_selectOrganism :
     CandidacySelectOrganismRequiredArguments
     -> SelectionSet decodesTo Admin.Object.Candidacy
-    -> SelectionSet (Maybe decodesTo) RootMutation
+    -> SelectionSet decodesTo RootMutation
 candidacy_selectOrganism requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidacy_selectOrganism" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "organismId" requiredArgs____.organismId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.nullable)
+    Object.selectionForCompositeField "candidacy_selectOrganism" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "organismId" requiredArgs____.organismId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ Basics.identity
+
+
+type alias CandidacySubmitTrainingFormRequiredArguments =
+    { candidacyId : Data.Scalar.Uuid
+    , training : Admin.InputObject.TrainingInput
+    }
+
+
+candidacy_submitTrainingForm :
+    CandidacySubmitTrainingFormRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet decodesTo RootMutation
+candidacy_submitTrainingForm requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_submitTrainingForm" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "training" requiredArgs____.training Admin.InputObject.encodeTrainingInput ] object____ Basics.identity
