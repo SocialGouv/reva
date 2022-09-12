@@ -9,6 +9,10 @@ type Account
     = Account
 
 
+type BasicSkill
+    = BasicSkill
+
+
 type Candidacy
     = Candidacy
 
