@@ -7,7 +7,9 @@ module Data.Form.Helper exposing
     , defaultDate
     , generic
     , toDict
-    , toIdList)
+    , toIdList
+    , toKeyList
+    )
 
 import Data.Scalar exposing (Timestamp)
 import Date
@@ -125,14 +127,19 @@ decode keys dict =
     }
 
 
-toDict : a -> List ( a -> comparable, Maybe String ) -> Dict.Dict comparable String
-toDict keys data =
+toKeyList : a -> List ( a -> b, Maybe String ) -> List ( b, String )
+toKeyList keys data =
     List.map
         (\( f, value ) -> ( f keys, value |> Maybe.withDefault "" ))
         data
-        |> Dict.fromList
 
 
-toIdList : List { a | id : String, label : String } -> List (String, String)
+toIdList : List { a | id : String, label : String } -> List ( String, String )
 toIdList l =
     List.map (\e -> ( e.id, e.label )) l
+
+
+toDict : a -> List ( a -> comparable, Maybe String ) -> Dict.Dict comparable String
+toDict keys data =
+    toKeyList keys data
+        |> Dict.fromList

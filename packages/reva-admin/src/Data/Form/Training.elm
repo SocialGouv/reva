@@ -1,6 +1,6 @@
-module Data.Form.Training exposing (fromDict, keys)
+module Data.Form.Training exposing (fromDict, keys, training)
 
-import Data.Form.Helper as Helper
+import Data.Form.Helper as Helper exposing (booleanToString, toIdList)
 import Data.Referential exposing (BasicSkill, MandatoryTraining)
 import Dict exposing (Dict)
 
@@ -56,3 +56,34 @@ fromDict basicSkills mandatoryTrainings dict =
         (decode.int .individualHourCount 0)
         (decode.int .collectiveHourCount 0)
         (decode.int .additionalHourCount 0)
+
+
+training :
+    List { a | id : String, label : String }
+    -> List { b | id : String, label : String }
+    -> Maybe String
+    -> Maybe Bool
+    -> Maybe String
+    -> Maybe Int
+    -> Maybe Int
+    -> Maybe Int
+    -> Dict String String
+training mandatoryTrainings basicSkills certificateSkills consent otherTraining individualHourCount collectiveHourCount additionalHourCount =
+    let
+        mandatoryTrainingsIds =
+            toIdList mandatoryTrainings
+
+        basicSkillsIds =
+            toIdList basicSkills
+
+        otherTrainings =
+            [ ( .certificateSkills, certificateSkills )
+            , ( .consent, Maybe.map booleanToString consent )
+            , ( .otherTraining, otherTraining )
+            , ( .individualHourCount, Maybe.map String.fromInt individualHourCount )
+            , ( .collectiveHourCount, Maybe.map String.fromInt collectiveHourCount )
+            , ( .additionalHourCount, Maybe.map String.fromInt additionalHourCount )
+            ]
+                |> Helper.toDict keys
+    in
+    Dict.fromList (mandatoryTrainingsIds ++ basicSkillsIds)

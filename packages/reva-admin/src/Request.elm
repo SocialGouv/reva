@@ -329,10 +329,10 @@ requestTrainings :
     -> Cmd msg
 requestTrainings endpointGraphql token candidacyId toMsg =
     let
-        appointmentRequiredArs =
+        trainingRequiredArs =
             Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
     in
-    Query.getCandidacyById appointmentRequiredArs appointmentSelection
+    Query.getCandidacyById trainingRequiredArs appointmentSelection
         |> makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
 
 
@@ -407,16 +407,9 @@ requestGoals endpointGraphql token toMsg =
 
 referentialSelection : SelectionSet Data.Referential.Referential Graphql.Operation.RootQuery
 referentialSelection =
-    let
-        basicSkillsFixtures =
-            [ { id = "1", label = "Usage et communication numérique" }
-            , { id = "2", label = "Utilisation des règles de base de calcul et du raisonnement mathématique" }
-            , { id = "3", label = "Communication en français" }
-            ]
-    in
     SelectionSet.succeed
         (\basicSkills referentialGoals trainings ->
-            Data.Referential.Referential basicSkillsFixtures referentialGoals.goals trainings
+            Data.Referential.Referential basicSkills referentialGoals.goals trainings
         )
         |> with (Query.getBasicSkills basicSkillSelection)
         |> with (Query.getReferential goalsSelection)
