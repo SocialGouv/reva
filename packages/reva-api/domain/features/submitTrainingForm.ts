@@ -7,6 +7,7 @@ interface SubmitTrainingDeps {
         candidacyId: string;
         training: {
             basicSkillIds: string[];
+            mandatoryTrainingIds: string[];
             certificateSkills: string;
             otherTraining: string;
             individualHourCount: number;
@@ -23,6 +24,7 @@ export const submitTraining = (deps: SubmitTrainingDeps) => (params: {
     candidacyId: string;
     training: {
         basicSkillIds: string[];
+        mandatoryTrainingIds: string[];
         certificateSkills: string;
         otherTraining: string;
         individualHourCount: number;

@@ -636,6 +636,7 @@ export const updateTrainingInformations = async (params: {
     candidacyId: string;
     training: {
         basicSkillIds: string[];
+        mandatoryTrainingIds: string[];
         certificateSkills: string;
         otherTraining: string;
         individualHourCount: number;
@@ -646,7 +647,7 @@ export const updateTrainingInformations = async (params: {
 }) => {
     try {
 
-        const [, , newCandidacy] = await prismaClient.$transaction([
+        const [, , , , newCandidacy] = await prismaClient.$transaction([
             prismaClient.basicSkillOnCandidacies.deleteMany({
                 where: {
                     candidacyId: params.candidacyId
@@ -656,6 +657,17 @@ export const updateTrainingInformations = async (params: {
                 data: params.training.basicSkillIds.map(id => ({
                     candidacyId: params.candidacyId,
                     basicSkillId: id
+                }))
+            }),
+            prismaClient.trainingOnCandidacies.deleteMany({
+                where: {
+                    candidacyId: params.candidacyId
+                }
+            }),
+            prismaClient.trainingOnCandidacies.createMany({
+                data: params.training.mandatoryTrainingIds.map(id => ({
+                    candidacyId: params.candidacyId,
+                    trainingId: id
                 }))
             }),
             prismaClient.candidacy.update({
