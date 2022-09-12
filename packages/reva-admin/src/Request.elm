@@ -346,10 +346,27 @@ updateTrainings :
     -> Cmd msg
 updateTrainings endpointGraphql token candidacyId toMsg referential dict =
     let
-        trainings =
+        training =
             Data.Form.Training.fromDict referential.basicSkills referential.mandatoryTrainings dict
+
+        trainingInformation =
+            Admin.InputObject.TrainingInput
+                training.certificateSkills
+                training.otherTraining
+                training.individualHourCount
+                training.collectiveHourCount
+                training.additionalHourCount
+                training.consent
+                (List.map Uuid training.basicSkillsIds)
+                (List.map Uuid training.mandatoryTrainingIds)
+
+        trainingRequiredArgs =
+            Mutation.CandidacySubmitTrainingFormRequiredArguments
+                (Uuid <| Data.Candidacy.candidacyIdToString candidacyId)
+                trainingInformation
     in
-    Cmd.none
+    Mutation.candidacy_submitTrainingForm trainingRequiredArgs SelectionSet.empty
+        |> makeMutation endpointGraphql token toMsg
 
 
 
