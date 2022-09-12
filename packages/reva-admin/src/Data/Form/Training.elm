@@ -1,7 +1,7 @@
 module Data.Form.Training exposing (fromDict, keys, training)
 
 import Admin.Scalar exposing (Uuid)
-import Data.Form.Helper as Helper exposing (booleanToString, toIdList, uuidsToIdList)
+import Data.Form.Helper as Helper exposing (booleanToString, toIdList, uuidToCheckedList)
 import Data.Referential exposing (BasicSkill, MandatoryTraining)
 import Dict exposing (Dict)
 
@@ -72,10 +72,10 @@ training :
 training mandatoryTrainings basicSkills certificateSkills consent otherTraining individualHourCount collectiveHourCount additionalHourCount =
     let
         mandatoryTrainingsIds =
-            uuidsToIdList mandatoryTrainings
+            uuidToCheckedList mandatoryTrainings
 
         basicSkillsIds =
-            uuidsToIdList basicSkills
+            uuidToCheckedList basicSkills
 
         otherTrainings =
             [ ( .certificateSkills, certificateSkills )
@@ -85,6 +85,6 @@ training mandatoryTrainings basicSkills certificateSkills consent otherTraining 
             , ( .collectiveHourCount, Maybe.map String.fromInt collectiveHourCount )
             , ( .additionalHourCount, Maybe.map String.fromInt additionalHourCount )
             ]
-                |> Helper.toKeyList keys
+                |> Helper.keysToCheckedList keys
     in
     Dict.fromList (mandatoryTrainingsIds ++ basicSkillsIds ++ otherTrainings)
