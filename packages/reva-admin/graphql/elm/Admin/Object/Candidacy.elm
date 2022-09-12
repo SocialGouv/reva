@@ -125,3 +125,43 @@ candidacyStatuses object____ =
 createdAt : SelectionSet Data.Scalar.Timestamp Admin.Object.Candidacy
 createdAt =
     Object.selectionForField "Data.Scalar.Timestamp" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
+
+
+certificateSkills : SelectionSet String Admin.Object.Candidacy
+certificateSkills =
+    Object.selectionForField "String" "certificateSkills" [] Decode.string
+
+
+otherTraining : SelectionSet String Admin.Object.Candidacy
+otherTraining =
+    Object.selectionForField "String" "otherTraining" [] Decode.string
+
+
+individualHourCount : SelectionSet Int Admin.Object.Candidacy
+individualHourCount =
+    Object.selectionForField "Int" "individualHourCount" [] Decode.int
+
+
+collectiveHourCount : SelectionSet Int Admin.Object.Candidacy
+collectiveHourCount =
+    Object.selectionForField "Int" "collectiveHourCount" [] Decode.int
+
+
+additionalHourCount : SelectionSet Int Admin.Object.Candidacy
+additionalHourCount =
+    Object.selectionForField "Int" "additionalHourCount" [] Decode.int
+
+
+validatedByCandidate : SelectionSet Bool Admin.Object.Candidacy
+validatedByCandidate =
+    Object.selectionForField "Bool" "validatedByCandidate" [] Decode.bool
+
+
+basicSkillIds : SelectionSet (List Data.Scalar.Uuid) Admin.Object.Candidacy
+basicSkillIds =
+    Object.selectionForField "(List Data.Scalar.Uuid)" "basicSkillIds" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecUuid |> .decoder |> Decode.list)
+
+
+mandatoryTrainingIds : SelectionSet (List Data.Scalar.Uuid) Admin.Object.Candidacy
+mandatoryTrainingIds =
+    Object.selectionForField "(List Data.Scalar.Uuid)" "mandatoryTrainingIds" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecUuid |> .decoder |> Decode.list)
