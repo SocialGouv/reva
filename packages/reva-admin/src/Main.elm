@@ -49,6 +49,7 @@ type Msg
     | GotCandidaciesMsg Candidacies.Msg
     | GotLoginError String
     | GotLoggedIn Token
+    | GotTokenRefreshed Token
     | GotLoggedOut
 
 
@@ -77,6 +78,7 @@ view model =
         , KeycloakConfiguration.iframeKeycloak
             { onLoggedIn = GotLoggedIn
             , onLoggedOut = GotLoggedOut
+            , onTokenRefreshed = GotTokenRefreshed
             }
             model.keycloakConfiguration
             |> toUnstyled
@@ -197,6 +199,12 @@ update msg model =
                 ]
             )
 
+        ( GotTokenRefreshed token, _ ) ->
+            ( model
+                |> withTokenRefreshed token
+            , Cmd.none
+            )
+
         _ ->
             ( model, Cmd.none )
 
@@ -206,6 +214,19 @@ updateWith toModel toMsg model ( subModel, subCmd ) =
     ( { model | page = toModel subModel }
     , Cmd.map toMsg subCmd
     )
+
+
+withTokenRefreshed : Token -> Model -> Model
+withTokenRefreshed token ({ context } as model) =
+    let
+        newContext =
+            { context | token = token }
+    in
+    { model | context = newContext }
+
+
+
+--model
 
 
 withAuthHandle : (Result Http.Error a -> Msg) -> Result Http.Error a -> Msg

@@ -42,7 +42,7 @@ getEncodedKeycloakConfiguration maybeKeycloakConfiguration =
 --Api.tokenToString token
 
 
-iframeKeycloak : { onLoggedIn : Token -> msg, onLoggedOut : msg } -> Maybe KeycloakConfiguration -> Html msg
+iframeKeycloak : { onLoggedIn : Token -> msg, onLoggedOut : msg, onTokenRefreshed : Token -> msg } -> Maybe KeycloakConfiguration -> Html msg
 iframeKeycloak events maybeKeycloakConfiguration =
     node "keycloak-element"
         [ class "block h-full w-full py-5 px-6 tracking-wide"
@@ -52,6 +52,10 @@ iframeKeycloak events maybeKeycloakConfiguration =
             |> Decode.map Api.stringToToken
             |> Decode.map events.onLoggedIn
             |> on "loggedIn"
+        , Decode.at [ "detail", "token" ] Decode.string
+            |> Decode.map Api.stringToToken
+            |> Decode.map events.onTokenRefreshed
+            |> on "tokenRefreshed"
         , on "loggedOut" <|
             Decode.succeed events.onLoggedOut
         ]

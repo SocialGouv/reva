@@ -42,6 +42,14 @@ class KeycloakElement extends HTMLElement {
         }
       });
 
+    keycloak.onAuthRefreshSuccess = async () => {
+      console.log("Token refresh success");
+      this.dispatchEvent(new CustomEvent("tokenRefreshed", { detail: { token: keycloak.token } }));
+    };
+    keycloak.onTokenExpired = async () => {
+      console.log("Token expired");
+      await keycloak.updateToken(5);
+    };
     keycloak.onAuthLogout = function () {
       console.log("Logged out");
       keycloak.login({
