@@ -1,4 +1,4 @@
-module Api exposing (Token, createSkill, deleteSkill, fetchCandidates, fetchSkills, login, stringToToken, tokenToString)
+module Api exposing (Token, anonymous, createSkill, deleteSkill, fetchCandidates, fetchSkills, login, stringToToken, tokenToString)
 
 import Candidate.MetaSkill exposing (MetaSkill)
 import Data.Candidate as Candidate exposing (Candidate)
@@ -20,6 +20,11 @@ tokenToString (Token token) =
 stringToToken : String -> Token
 stringToToken token =
     Token token
+
+
+anonymous : Token
+anonymous =
+    Token "anonymous"
 
 
 login : (Result Http.Error Token -> msg) -> { a | email : String, password : String } -> Cmd msg

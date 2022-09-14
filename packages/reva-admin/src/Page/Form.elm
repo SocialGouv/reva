@@ -10,6 +10,7 @@ module Page.Form exposing
     )
 
 import Api exposing (Token)
+import Data.Context exposing (Context)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
 import Html.Styled as Html exposing (Html, button, div, fieldset, h2, input, label, legend, option, select, text, textarea)
@@ -58,24 +59,20 @@ type RemoteForm referential
 
 
 type alias Model referential =
-    { endpoint : String
-    , onRedirect : Cmd (Msg referential)
+    { onRedirect : Cmd (Msg referential)
     , onSave : String -> Token -> (RemoteData String () -> Msg referential) -> referential -> Dict String String -> Cmd (Msg referential)
-    , token : Token
     , filter : Maybe String
     , form : RemoteForm referential
     }
 
 
-init : String -> Token -> ( Model referential, Cmd msg )
-init endpoint token =
+init : ( Model referential, Cmd msg )
+init =
     let
         model : Model referential
         model =
-            { endpoint = endpoint
-            , onRedirect = Cmd.none
+            { onRedirect = Cmd.none
             , onSave = \_ _ _ _ _ -> Cmd.none
-            , token = token
             , filter = Nothing
             , form = NotAsked
             }
@@ -322,8 +319,8 @@ viewChoice currentChoiceId ( choiceId, choice ) =
 -- UPDATE
 
 
-update : Msg referential -> Model referential -> ( Model referential, Cmd (Msg referential) )
-update msg model =
+update : Context -> Msg referential -> Model referential -> ( Model referential, Cmd (Msg referential) )
+update context msg model =
     let
         noChange =
             ( model, Cmd.none )
@@ -340,7 +337,7 @@ update msg model =
             noChange
 
         ( UserClickedSave referential, Editing form formData ) ->
-            ( { model | form = Saving form formData }, model.onSave model.endpoint model.token GotSaveResponse referential formData )
+            ( { model | form = Saving form formData }, model.onSave context.endpoint context.token GotSaveResponse referential formData )
 
         ( UserClickedSave _, _ ) ->
             noChange
@@ -366,18 +363,20 @@ update msg model =
 
 
 updateForm :
-    { form : Form referential
-    , onLoad : String -> Token -> (RemoteData String (Dict String String) -> Msg referential) -> Cmd (Msg referential)
-    , onRedirect : Cmd (Msg referential)
-    , onSave : String -> Token -> (RemoteData String () -> Msg referential) -> referential -> Dict String String -> Cmd (Msg referential)
-    }
+    Context
+    ->
+        { form : Form referential
+        , onLoad : String -> Token -> (RemoteData String (Dict String String) -> Msg referential) -> Cmd (Msg referential)
+        , onRedirect : Cmd (Msg referential)
+        , onSave : String -> Token -> (RemoteData String () -> Msg referential) -> referential -> Dict String String -> Cmd (Msg referential)
+        }
     -> Model referential
     -> ( Model referential, Cmd (Msg referential) )
-updateForm config model =
+updateForm context config model =
     ( { model
         | form = Loading config.form
         , onRedirect = config.onRedirect
         , onSave = config.onSave
       }
-    , config.onLoad model.endpoint model.token GotLoadResponse
+    , config.onLoad context.endpoint context.token GotLoadResponse
     )
