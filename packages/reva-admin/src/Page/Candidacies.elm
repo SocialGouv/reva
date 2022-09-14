@@ -563,10 +563,8 @@ updateTab tab model =
                 ( formModel, formCmd ) =
                     Form.updateForm
                         { form = appointmentForm
-                        , onLoad = Request.requestAppointment model.endpoint model.token candidacyId
-                        , onSave =
-                            \formMsg _ formData ->
-                                Request.updateAppointment model.endpoint model.token candidacyId formMsg formData
+                        , onLoad = Request.requestAppointment candidacyId
+                        , onSave = Request.updateAppointment candidacyId
                         , onRedirect =
                             Nav.pushUrl
                                 model.navKey
@@ -581,8 +579,8 @@ updateTab tab model =
                 ( formModel, formCmd ) =
                     Form.updateForm
                         { form = trainingForm
-                        , onLoad = Request.requestTrainings model.endpoint model.token candidacyId
-                        , onSave = Request.updateTrainings model.endpoint model.token candidacyId
+                        , onLoad = Request.requestTrainings candidacyId
+                        , onSave = Request.updateTrainings candidacyId
                         , onRedirect =
                             Nav.pushUrl
                                 model.navKey

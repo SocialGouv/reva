@@ -270,12 +270,12 @@ appointmentSelection =
 
 
 requestAppointment :
-    String
+    CandidacyId
+    -> String
     -> Token
-    -> CandidacyId
     -> (RemoteData String (Dict String String) -> msg)
     -> Cmd msg
-requestAppointment endpointGraphql token candidacyId toMsg =
+requestAppointment candidacyId endpointGraphql token toMsg =
     let
         appointmentRequiredArs =
             Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
@@ -285,13 +285,14 @@ requestAppointment endpointGraphql token candidacyId toMsg =
 
 
 updateAppointment :
-    String
+    CandidacyId
+    -> String
     -> Token
-    -> CandidacyId
     -> (RemoteData String () -> msg)
+    -> Data.Referential.Referential
     -> Dict String String
     -> Cmd msg
-updateAppointment endpointGraphql token candidacyId toMsg dict =
+updateAppointment candidacyId endpointGraphql token toMsg referential dict =
     let
         appointment =
             Data.Form.Appointment.appointmentFromDict candidacyId dict
@@ -335,12 +336,12 @@ trainingSelection =
 
 
 requestTrainings :
-    String
+    CandidacyId
+    -> String
     -> Token
-    -> CandidacyId
     -> (RemoteData String (Dict String String) -> msg)
     -> Cmd msg
-requestTrainings endpointGraphql token candidacyId toMsg =
+requestTrainings candidacyId endpointGraphql token toMsg =
     let
         trainingRequiredArs =
             Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
@@ -350,14 +351,14 @@ requestTrainings endpointGraphql token candidacyId toMsg =
 
 
 updateTrainings :
-    String
+    CandidacyId
+    -> String
     -> Token
-    -> CandidacyId
     -> (RemoteData String () -> msg)
     -> Data.Referential.Referential
     -> Dict String String
     -> Cmd msg
-updateTrainings endpointGraphql token candidacyId toMsg referential dict =
+updateTrainings candidacyId endpointGraphql token toMsg referential dict =
     let
         training =
             Data.Form.Training.fromDict referential.basicSkills referential.mandatoryTrainings dict
@@ -423,16 +424,6 @@ goalsSelection : SelectionSet Data.Referential.ReferentialGoals Admin.Object.Ref
 goalsSelection =
     SelectionSet.succeed toGoals
         |> with (Admin.Object.Referential.goals referentialGoalSelection)
-
-
-requestGoals :
-    String
-    -> Token
-    -> (RemoteData String Data.Referential.ReferentialGoals -> msg)
-    -> Cmd msg
-requestGoals endpointGraphql token toMsg =
-    Query.getReferential goalsSelection
-        |> makeQuery endpointGraphql token toMsg
 
 
 referentialSelection : SelectionSet Data.Referential.Referential Graphql.Operation.RootQuery

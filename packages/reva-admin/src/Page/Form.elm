@@ -13,7 +13,7 @@ import Api exposing (Token)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
 import Html.Styled as Html exposing (Html, button, div, fieldset, h2, input, label, legend, option, select, text, textarea)
-import Html.Styled.Attributes exposing (checked, class, disabled, for, id, name, selected, step, type_, value)
+import Html.Styled.Attributes exposing (checked, class, disabled, for, id, name, placeholder, selected, step, type_, value)
 import Html.Styled.Events exposing (onCheck, onInput, onSubmit)
 import RemoteData exposing (RemoteData(..))
 import String exposing (String)
@@ -60,7 +60,7 @@ type RemoteForm referential
 type alias Model referential =
     { endpoint : String
     , onRedirect : Cmd (Msg referential)
-    , onSave : (RemoteData String () -> Msg referential) -> referential -> Dict String String -> Cmd (Msg referential)
+    , onSave : String -> Token -> (RemoteData String () -> Msg referential) -> referential -> Dict String String -> Cmd (Msg referential)
     , token : Token
     , filter : Maybe String
     , form : RemoteForm referential
@@ -74,7 +74,7 @@ init endpoint token =
         model =
             { endpoint = endpoint
             , onRedirect = Cmd.none
-            , onSave = \_ _ _ -> Cmd.none
+            , onSave = \_ _ _ _ _ -> Cmd.none
             , token = token
             , filter = Nothing
             , form = NotAsked
@@ -340,7 +340,7 @@ update msg model =
             noChange
 
         ( UserClickedSave referential, Editing form formData ) ->
-            ( { model | form = Saving form formData }, model.onSave GotSaveResponse referential formData )
+            ( { model | form = Saving form formData }, model.onSave model.endpoint model.token GotSaveResponse referential formData )
 
         ( UserClickedSave _, _ ) ->
             noChange
@@ -367,9 +367,9 @@ update msg model =
 
 updateForm :
     { form : Form referential
-    , onLoad : (RemoteData String (Dict String String) -> Msg referential) -> Cmd (Msg referential)
+    , onLoad : String -> Token -> (RemoteData String (Dict String String) -> Msg referential) -> Cmd (Msg referential)
     , onRedirect : Cmd (Msg referential)
-    , onSave : (RemoteData String () -> Msg referential) -> referential -> Dict String String -> Cmd (Msg referential)
+    , onSave : String -> Token -> (RemoteData String () -> Msg referential) -> referential -> Dict String String -> Cmd (Msg referential)
     }
     -> Model referential
     -> ( Model referential, Cmd (Msg referential) )
@@ -379,5 +379,5 @@ updateForm config model =
         , onRedirect = config.onRedirect
         , onSave = config.onSave
       }
-    , config.onLoad GotLoadResponse
+    , config.onLoad model.endpoint model.token GotLoadResponse
     )
