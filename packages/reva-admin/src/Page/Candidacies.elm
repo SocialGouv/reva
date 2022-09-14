@@ -12,6 +12,7 @@ import Admin.Object exposing (Candidacy)
 import Api exposing (Token)
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
+import Data.Context exposing (Context)
 import Data.Form.Appointment exposing (candidateTypologyToString)
 import Data.Form.Helper
 import Data.Form.Training
@@ -51,11 +52,7 @@ type alias State =
 
 
 type alias Model =
-    { baseUrl : String
-    , navKey : Nav.Key
-    , endpoint : String
-    , token : Token
-    , filter : Maybe String
+    { filter : Maybe String
     , form : Form.Model Referential
     , selected : RemoteData String Candidacy
     , state : State
@@ -63,19 +60,15 @@ type alias Model =
     }
 
 
-init : Nav.Key -> String -> String -> Token -> ( Model, Cmd Msg )
-init navKey baseUrl endpoint token =
+init : Context -> ( Model, Cmd Msg )
+init context =
     let
         ( formModel, formCmd ) =
-            Form.init endpoint token
+            Form.init
 
         defaultModel : Model
         defaultModel =
-            { baseUrl = baseUrl
-            , endpoint = endpoint
-            , navKey = navKey
-            , token = token
-            , filter = Nothing
+            { filter = Nothing
             , form = formModel
             , selected = NotAsked
             , state =
@@ -87,18 +80,18 @@ init navKey baseUrl endpoint token =
 
         defaultCmd =
             Cmd.batch
-                [ Request.requestCandidacies endpoint token GotCandidaciesResponse
-                , Request.requestReferential endpoint token GotReferentialResponse
+                [ Request.requestCandidacies context.endpoint context.token GotCandidaciesResponse
+                , Request.requestReferential context.endpoint context.token GotReferentialResponse
                 , Cmd.map GotFormMsg formCmd
                 ]
     in
     ( defaultModel, defaultCmd )
 
 
-initCandidacy : CandidacyId -> Model -> ( Model, Cmd Msg )
-initCandidacy candidacyId model =
+initCandidacy : Context -> CandidacyId -> Model -> ( Model, Cmd Msg )
+initCandidacy context candidacyId model =
     ( { model | selected = Loading }
-    , Request.requestCandidacy model.endpoint model.token GotCandidacyResponse candidacyId
+    , Request.requestCandidacy context.endpoint context.token GotCandidacyResponse candidacyId
     )
 
 
@@ -129,10 +122,10 @@ filterCandidacy filter candidacySummary =
 
 
 view :
-    { a | baseUrl : String }
+    Context
     -> Model
     -> Html Msg
-view config model =
+view context model =
     case model.state.candidacies of
         NotAsked ->
             div [] []
@@ -150,24 +143,24 @@ view config model =
             in
             case model.filter of
                 Nothing ->
-                    viewContent config model sortedCandidacies
+                    viewContent context model sortedCandidacies
 
                 Just filter ->
                     List.filter (filterCandidacy filter) sortedCandidacies
-                        |> viewContent config model
+                        |> viewContent context model
 
 
 viewContent :
-    { a | baseUrl : String }
+    Context
     -> Model
     -> List CandidacySummary
     -> Html Msg
-viewContent config model candidacies =
+viewContent context model candidacies =
     let
         viewForm name candidacyId =
             viewMain name
                 [ a
-                    [ Route.href model.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId))
+                    [ Route.href context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId))
                     , class "flex items-center text-gray-800 p-6"
                     ]
                     [ span [ class "text-3xl mr-4" ] [ text "← " ]
@@ -204,14 +197,14 @@ viewContent config model candidacies =
           <|
             case model.tab of
                 Empty ->
-                    [ viewDirectoryPanel config candidacies ]
+                    [ viewDirectoryPanel context candidacies ]
 
                 Meetings candidacyId ->
                     [ viewForm "meetings" candidacyId ]
 
                 Profil candidacyId ->
-                    [ viewCandidacyPanel model
-                    , viewNavigationSteps model.baseUrl candidacyId
+                    [ viewCandidacyPanel context model
+                    , viewNavigationSteps context.baseUrl candidacyId
                     ]
 
                 Training candidacyId ->
@@ -323,8 +316,8 @@ trainingForm =
     }
 
 
-viewCandidacyPanel : Model -> Html Msg
-viewCandidacyPanel model =
+viewCandidacyPanel : Context -> Model -> Html Msg
+viewCandidacyPanel context model =
     let
         loading extraClass =
             div
@@ -333,7 +326,7 @@ viewCandidacyPanel model =
                 ]
                 []
     in
-    viewCandidacyArticle model.baseUrl <|
+    viewCandidacyArticle context.baseUrl <|
         case model.selected of
             NotAsked ->
                 []
@@ -486,8 +479,8 @@ viewItem config candidacy =
 -- UPDATE
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
+update : Context -> Msg -> Model -> ( Model, Cmd Msg )
+update context msg model =
     case msg of
         GotCandidaciesResponse remoteCandidacies ->
             ( { model | state = model.state |> withCandidacies remoteCandidacies }
@@ -524,7 +517,7 @@ update msg model =
         GotFormMsg formMsg ->
             let
                 ( formModel, formCmd ) =
-                    Form.update formMsg model.form
+                    Form.update context formMsg model.form
             in
             ( { model | form = formModel }, Cmd.map GotFormMsg formCmd )
 
@@ -538,39 +531,37 @@ update msg model =
 
         UserDeletedCandidacy candidacy ->
             ( removeCandidacy model candidacy
-            , Request.deleteCandidacy model.endpoint model.token GotCandidacyDeletionResponse candidacy.id
+            , Request.deleteCandidacy context.endpoint context.token GotCandidacyDeletionResponse candidacy.id
             )
 
         UserArchivedCandidacy candidacy ->
             ( model
-            , Request.archiveCandidacy model.endpoint model.token GotCandidacyArchivingResponse candidacy.id
+            , Request.archiveCandidacy context.endpoint context.token GotCandidacyArchivingResponse candidacy.id
             )
 
 
-updateTab : Tab -> Model -> ( Model, Cmd Msg )
-updateTab tab model =
+updateTab : Context -> Tab -> Model -> ( Model, Cmd Msg )
+updateTab context tab model =
     let
         newModel =
             { model | tab = tab }
     in
     case tab of
         View.Candidacy.Profil candidacyId ->
-            initCandidacy candidacyId newModel
-                |> withTakeOver candidacyId
+            initCandidacy context candidacyId newModel
+                |> withTakeOver context candidacyId
 
         View.Candidacy.Meetings candidacyId ->
             let
                 ( formModel, formCmd ) =
-                    Form.updateForm
+                    Form.updateForm context
                         { form = appointmentForm
-                        , onLoad = Request.requestAppointment model.endpoint model.token candidacyId
-                        , onSave =
-                            \formMsg _ formData ->
-                                Request.updateAppointment model.endpoint model.token candidacyId formMsg formData
+                        , onLoad = Request.requestAppointment candidacyId
+                        , onSave = Request.updateAppointment candidacyId
                         , onRedirect =
                             Nav.pushUrl
-                                model.navKey
-                                (Route.toString model.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                                context.navKey
+                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
                         }
                         model.form
             in
@@ -579,14 +570,14 @@ updateTab tab model =
         View.Candidacy.Training candidacyId ->
             let
                 ( formModel, formCmd ) =
-                    Form.updateForm
+                    Form.updateForm context
                         { form = trainingForm
-                        , onLoad = Request.requestTrainings model.endpoint model.token candidacyId
-                        , onSave = Request.updateTrainings model.endpoint model.token candidacyId
+                        , onLoad = Request.requestTrainings candidacyId
+                        , onSave = Request.updateTrainings candidacyId
                         , onRedirect =
                             Nav.pushUrl
-                                model.navKey
-                                (Route.toString model.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                                context.navKey
+                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
                         }
                         model.form
             in
@@ -596,9 +587,9 @@ updateTab tab model =
             ( newModel, Cmd.none )
 
 
-withTakeOver : CandidacyId -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
-withTakeOver candidacyId ( model, cmds ) =
-    ( model, Cmd.batch [ cmds, Request.takeOverCandidacy model.endpoint model.token GotCandidacyTakingOverResponse candidacyId ] )
+withTakeOver : Context -> CandidacyId -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+withTakeOver context candidacyId ( model, cmds ) =
+    ( model, Cmd.batch [ cmds, Request.takeOverCandidacy context.endpoint context.token GotCandidacyTakingOverResponse candidacyId ] )
 
 
 

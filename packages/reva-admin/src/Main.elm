@@ -3,6 +3,7 @@ port module Main exposing (main)
 import Api exposing (Token)
 import Browser
 import Browser.Navigation as Nav
+import Data.Context exposing (Context)
 import Html.Styled as Html exposing (Html, div, toUnstyled)
 import Http
 import Json.Decode as Decode exposing (..)
@@ -26,9 +27,7 @@ type alias Flags =
 
 
 type alias Model =
-    { key : Nav.Key
-    , baseUrl : String
-    , endpoint : String
+    { context : Context
     , page : Page
     , keycloakConfiguration : Maybe KeycloakConfiguration
     }
@@ -92,7 +91,7 @@ viewPage model =
             Page.Loading.view
 
         Candidacies candidaciesModel ->
-            Candidacies.view { baseUrl = model.baseUrl } candidaciesModel
+            Candidacies.view model.context candidaciesModel
                 |> Html.map GotCandidaciesMsg
 
         Candidates candidatesModel ->
@@ -107,8 +106,8 @@ viewPage model =
 -- UPDATE
 
 
-changeRouteTo : Route -> Model -> ( Model, Cmd Msg )
-changeRouteTo route model =
+changeRouteTo : Context -> Route -> Model -> ( Model, Cmd Msg )
+changeRouteTo context route model =
     let
         noChange =
             ( model, Cmd.none )
@@ -118,7 +117,7 @@ changeRouteTo route model =
             noChange
 
         ( Candidacy tab, Candidacies candidaciesModel ) ->
-            Candidacies.updateTab tab candidaciesModel
+            Candidacies.updateTab context tab candidaciesModel
                 |> updateWith Candidacies GotCandidaciesMsg model
 
         ( Candidacy _, _ ) ->
@@ -135,13 +134,13 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model.page ) of
         ( BrowserChangedUrl url, _ ) ->
-            changeRouteTo (Route.fromUrl model.baseUrl url) model
+            changeRouteTo model.context (Route.fromUrl model.context.baseUrl url) model
 
         ( UserClickedLink urlRequest, _ ) ->
             case urlRequest of
                 Browser.Internal url ->
                     ( model
-                    , Nav.pushUrl model.key (Url.toString url)
+                    , Nav.pushUrl model.context.navKey (Url.toString url)
                     )
 
                 Browser.External url ->
@@ -165,7 +164,7 @@ update msg model =
         ( GotCandidaciesMsg candidaciesMsg, Candidacies candidaciesModel ) ->
             let
                 ( newCandidaciesModel, candidaciesCmd ) =
-                    Candidacies.update candidaciesMsg candidaciesModel
+                    Candidacies.update model.context candidaciesMsg candidaciesModel
             in
             ( { model | page = Candidacies newCandidaciesModel }
             , Cmd.map GotCandidaciesMsg candidaciesCmd
@@ -174,6 +173,12 @@ update msg model =
         -- Auth
         ( GotLoggedIn token, NotLoggedIn route ) ->
             let
+                context =
+                    model.context
+
+                newContext =
+                    { context | token = token }
+
                 redirectRoute =
                     case route of
                         Login ->
@@ -183,12 +188,12 @@ update msg model =
                             route
 
                 ( candidaciesModel, candidaciesCmd ) =
-                    Candidacies.init model.key model.baseUrl model.endpoint token
+                    Candidacies.init newContext
             in
-            ( { model | page = Candidacies candidaciesModel }
+            ( { model | context = newContext, page = Candidacies candidaciesModel }
             , Cmd.batch
                 [ Cmd.map GotCandidaciesMsg candidaciesCmd
-                , Nav.pushUrl model.key (Route.toString model.baseUrl redirectRoute)
+                , Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl redirectRoute)
                 ]
             )
 
@@ -235,9 +240,12 @@ initWithoutToken flags url key =
     let
         model : Model
         model =
-            { key = key
-            , baseUrl = flags.baseUrl
-            , endpoint = flags.endpoint
+            { context =
+                Context
+                    flags.baseUrl
+                    flags.endpoint
+                    key
+                    Api.anonymous
             , page = NotLoggedIn (Route.fromUrl flags.baseUrl url)
             , keycloakConfiguration =
                 Decode.decodeValue KeycloakConfiguration.keycloakConfiguration flags.keycloakConfiguration
