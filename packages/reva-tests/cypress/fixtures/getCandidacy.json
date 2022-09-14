@@ -1,0 +1,173 @@
+{
+  "data": {
+    "getCandidacy": null,
+    "getReferential": {
+      "goals": [
+        {
+          "id": "3b923c99-72da-4384-91f4-c570e057ae10",
+          "label": "Trouver plus facilement un emploi",
+          "order": 1,
+          "__typename": "Goal"
+        },
+        {
+          "id": "d442c81a-4fdd-4779-b305-62f54f512702",
+          "label": "Être reconnu dans ma profession",
+          "order": 2,
+          "__typename": "Goal"
+        },
+        {
+          "id": "01a41a4f-d465-4ee5-84c6-9a172c43729e",
+          "label": "Avoir un meilleur salaire",
+          "order": 3,
+          "__typename": "Goal"
+        },
+        {
+          "id": "80fcfc28-235f-458f-8107-20f53ad1f4f8",
+          "label": "Me réorienter",
+          "order": 4,
+          "__typename": "Goal"
+        },
+        {
+          "id": "524df845-b1bc-4113-95a2-8f11d79d3b41",
+          "label": "Consolider mes acquis métier",
+          "order": 5,
+          "__typename": "Goal"
+        },
+        {
+          "id": "d613b7dd-2324-4d0a-8449-4e3a4d66a00a",
+          "label": "Me redonner confiance en moi",
+          "order": 6,
+          "__typename": "Goal"
+        },
+        {
+          "id": "3dfe76fa-31d2-4bbb-acc8-7c371b75a259",
+          "label": "Autre",
+          "order": 7,
+          "__typename": "Goal"
+        }
+      ],
+      "__typename": "Referential"
+    },
+    "getRegions": [
+      {
+        "id": "6efccc21-e193-4de4-8e0e-02a715511cdd",
+        "code": "24",
+        "label": "Centre-Val de Loire",
+        "__typename": "Region"
+      },
+      {
+        "id": "049c87b5-72ed-4fb1-94d5-7008bf3b1bbd",
+        "code": "32",
+        "label": "Hauts-de-France",
+        "__typename": "Region"
+      },
+      {
+        "id": "51fb0e87-11b0-4837-975f-cd0a90573610",
+        "code": "28",
+        "label": "Normandie",
+        "__typename": "Region"
+      },
+      {
+        "id": "05fb00dd-0054-489e-b4d6-af3717fa82e4",
+        "code": "27",
+        "label": "Bourgogne-Franche-Comté",
+        "__typename": "Region"
+      },
+      {
+        "id": "8e01622b-5fb0-4c10-aa5b-7f384fa0cba8",
+        "code": "11",
+        "label": "Île-de-France",
+        "__typename": "Region"
+      },
+      {
+        "id": "b802d660-cd05-4440-a6a8-8c959c0f9d16",
+        "code": "52",
+        "label": "Pays de la Loire",
+        "__typename": "Region"
+      },
+      {
+        "id": "297f6de5-6ac9-4a8a-b82e-0046a481b1a2",
+        "code": "44",
+        "label": "Grand Est",
+        "__typename": "Region"
+      },
+      {
+        "id": "e672b580-3c88-4831-b0af-006baeafe217",
+        "code": "53",
+        "label": "Bretagne",
+        "__typename": "Region"
+      },
+      {
+        "id": "3a660991-da53-4e19-a91a-32db82c704f4",
+        "code": "93",
+        "label": "Provence-Alpes-Côte d'Azur",
+        "__typename": "Region"
+      },
+      {
+        "id": "bb08a095-9a80-4c04-b882-72adbb7edc1d",
+        "code": "84",
+        "label": "Auvergne-Rhône-Alpes",
+        "__typename": "Region"
+      },
+      {
+        "id": "207a1086-7a32-438f-a98e-83fc3dbb41e2",
+        "code": "76",
+        "label": "Occitanie",
+        "__typename": "Region"
+      },
+      {
+        "id": "0e5ef478-ed5d-48d2-ad25-cacda67f6501",
+        "code": "94",
+        "label": "Corse",
+        "__typename": "Region"
+      },
+      {
+        "id": "04d94613-b65b-4811-8193-65ec2be85f88",
+        "code": "01",
+        "label": "Guadeloupe",
+        "__typename": "Region"
+      },
+      {
+        "id": "2c94192a-c002-49c5-be00-9ecf5c276342",
+        "code": "03",
+        "label": "Guyane",
+        "__typename": "Region"
+      },
+      {
+        "id": "3b949879-b084-4cd2-a6e9-f11361080bdf",
+        "code": "02",
+        "label": "Martinique",
+        "__typename": "Region"
+      },
+      {
+        "id": "231458b6-b2eb-4fa9-963e-e96f588cd70d",
+        "code": "75",
+        "label": "Nouvelle-Aquitaine",
+        "__typename": "Region"
+      },
+      {
+        "id": "c8a2fd1d-110c-4675-ad4d-3bd98510cc4a",
+        "code": "04",
+        "label": "La Réunion",
+        "__typename": "Region"
+      },
+      {
+        "id": "692fc187-3ec1-4255-a601-579717590948",
+        "code": "06",
+        "label": "Mayotte",
+        "__typename": "Region"
+      }
+    ]
+  },
+  "errors": [
+    {
+      "message": "Aucune candidature n'a été trouvée",
+      "locations": [{ "line": 2, "column": 3 }],
+      "path": ["getCandidacy"],
+      "extensions": {
+        "code": "CANDIDACY_DOES_NOT_EXIST",
+        "message": "Aucune candidature n'a été trouvée"
+      }
+    }
+  ]
+}

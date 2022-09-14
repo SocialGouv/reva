@@ -1,0 +1,70 @@
+{
+  "data": {
+    "getCertifications": [
+      {
+        "id": "004a5f67-f338-4aac-b0ca-ce7272aeb326",
+        "label": "Titre Assistant de vie dépendance",
+        "summary": "La mission de l'assistant de vie dépendance est d'accompagner des personnes dont l'autonomie est altérée dans la réalisation de leurs activités, pouvant aller des tâches courantes aux actes essentiels de la vie quotidienne.",
+        "codeRncp": "34690",
+        "status": "AVAILABLE",
+        "__typename": "Certification"
+      },
+      {
+        "id": "007a4a26-bf01-494d-8913-1f60fe3693be",
+        "label": "Titre Professionnel Agent de service médico-social",
+        "summary": "L'emploi s'exerce sous la hiérarchie du responsable hôtelier, au sein d'une équipe pluriprofessionnelle. Selon les compétences mises en œuvre, l'emploi s'exerce sous la responsabilité partagée du responsable hôtelier et du responsable soignant.",
+        "codeRncp": "35028",
+        "status": "AVAILABLE",
+        "__typename": "Certification"
+      },
+      {
+        "id": "55194b2f-a926-4d4b-88fa-69e8479ff306",
+        "label": "Titre Professionnel Assistant maternel / Garde d'enfants",
+        "summary": "L'Assistant maternel ou le Garde d'enfants prend en charge des enfants de la naissance à l'adolescence. Le mode de garde d'enfants chez un assistant maternel ou chez le particulier employeur est en France le premier mode de garde des enfants de moins de 3 ans, en dehors des gardes par la famille.",
+        "codeRncp": "34691",
+        "status": "AVAILABLE",
+        "__typename": "Certification"
+      },
+      {
+        "id": "74771ee2-a74f-4f9a-bc23-ebe15ea5afa2",
+        "label": "Titre Professionnel Responsable coordonnateur service au domicile",
+        "summary": "Le responsable - coordonnateur services au domicile (RCSAD) assure l'interface entre les clients, les intervenants et la structure de services au domicile. Les activités du RCSAD varient en fonction de l'organisation de la structure, de la répartition des activités et des différents niveaux hiérarchiques.",
+        "codeRncp": "35993",
+        "status": "AVAILABLE",
+        "__typename": "Certification"
+      },
+      {
+        "id": "80ccc97d-7d94-475f-8b88-8d86aca92945",
+        "label": "Titre Professionnel Conducteur accompagnateur de personnes à mobilité réduite (CApmr)",
+        "summary": "Le conducteur accompagnateur accompagne les personnes à mobilité réduite du fait d'un handicap physique, mental, sensoriel ou intellectuel ou d'une forme de dépendance quelle qu'elle soit qui rend impossibles les déplacements sans accompagnement.",
+        "codeRncp": "17163",
+        "status": "AVAILABLE",
+        "__typename": "Certification"
+      },
+      {
+        "id": "a6176310-b649-45f7-b554-e531c6c99a58",
+        "label": "Titre Professionnel Assistant de vie aux familles",
+        "summary": "L'assistant(e)  de  vie  aux  familles  (ADVF) contribue au bien être des personnes au sein de leur foyer en respectant leur dignité, leur intégrité, leur vie privée et leur sécurité. Il (elle) assure la garde d'enfants vivant  à domicile.",
+        "codeRncp": "35506",
+        "status": "AVAILABLE",
+        "__typename": "Certification"
+      },
+      {
+        "id": "e1a50381-fcc9-49e0-8eba-1f4364db7c69",
+        "label": "Titre Professionnel Employé familial",
+        "summary": "L'employé familial intervient au domicile des particuliers (en leur présence ou non) principalement pour l'entretien du cadre de vie, du linge et la préparation des repas. Il est amené à se déplacer aux différents domiciles des particuliers employeurs.",
+        "codeRncp": "34692",
+        "status": "AVAILABLE",
+        "__typename": "Certification"
+      },
+      {
+        "id": "f05191c7-3bbc-4ac9-9e6a-ccc26d56a9b3",
+        "label": "Titre Professionnel Surveillant - Veilleur de nuit en secteur social et médico-social",
+        "summary": "Le surveillant - visiteur de nuit  exerce principalement au sein de  structures d'hébergement collectif accueillant des personnes âgées, des  personnes handicapées (adultes ou enfants), des personnes en situation  de précarité, des enfants en difficulté sociale et familiale.",
+        "codeRncp": "5983",
+        "status": "AVAILABLE",
+        "__typename": "Certification"
+      }
+    ]
+  }
+}
