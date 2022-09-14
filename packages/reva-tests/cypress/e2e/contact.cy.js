@@ -5,16 +5,26 @@ const phone2 = "06-01-02-03-05";
 
 context("Contact", () => {
   beforeEach(() => {
-    cy.visit("/");
   });
 
   it("add and edit an experience", function () {
-    cy.get("#select_region").select("11");
+    cy.intercept('/graphql', { fixture: 'getCandidacy' }).as('getCandidacy')
+    cy.visit("/");
+
+    cy.intercept('/graphql', { fixture: 'getCertifications' }).as('getCertifications')
+    cy.get("#select_region").select("11")
+
+    cy.intercept('/graphql', { fixture: 'getCertification' }).as('getCertification')
     cy.get('[data-test="results"] [data-type="card"]').eq(4).click();
+
+    cy.intercept('/graphql', { fixture: 'createCandidacy' }).as('createCandidacy')
     cy.get('[data-test="certification-submit"]').click();
+
     cy.get('[data-test="submission-home-show-project-home"]').click();
     cy.get('[data-test="project-home-edit-contact"]').click();
     cy.get("#phone").type(phone1);
+
+    cy.intercept('/graphql', { fixture: 'update_contact' }).as('update_contact')
     cy.get('[data-test="project-contact-add"]').click();
 
     cy.get('[data-test="project-home-contact-phone"]').should(

@@ -3,7 +3,7 @@ context("Project", () => {
     cy.intercept('/graphql', { fixture: 'getCandidacy' }).as('getCandidacy')
     cy.visit("/");
 
-    cy.intercept('/graphql', { fixture: 'certifications' }).as('certifications')
+    cy.intercept('/graphql', { fixture: 'getCertifications' }).as('getCertifications')
     cy.get("#select_region").select("11");
 
     cy.intercept('/graphql', { fixture: 'getCertification' }).as('getCertification')
