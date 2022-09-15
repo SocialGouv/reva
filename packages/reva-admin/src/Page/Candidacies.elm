@@ -188,6 +188,10 @@ viewContent context model candidacies =
             Training candidacyId ->
                 [ viewForm "training" candidacyId ]
 
+            TrainingSent candidacyId ->
+                [ text "Envoyé avec succès" ]
+        ]
+
 
 viewNavigationSteps : String -> CandidacyId -> Html msg
 viewNavigationSteps baseUrl candidacyId =
@@ -235,8 +239,7 @@ viewMain : String -> List (Html msg) -> Html msg
 viewMain dataTestValue =
     node "main"
         [ dataTest dataTestValue
-        , class "relative z-10 focus:outline-none"
-        , class "w-2/3 max-w-3xl bg-white"
+
         ]
 
 
@@ -554,11 +557,14 @@ updateTab context tab model =
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
-                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.TrainingSent candidacyId)))
                         }
                         model.form
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
+
+        View.Candidacy.TrainingSent candidacyId ->
+            ( newModel, Cmd.none )
 
         View.Candidacy.Empty ->
             ( newModel, Cmd.none )

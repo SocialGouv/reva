@@ -80,6 +80,9 @@ toString baseUrl route =
         Candidacy (View.Candidacy.Training candidacyId) ->
             Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "training" ] []
 
+        Candidacy (View.Candidacy.TrainingSent candidacyId) ->
+            Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "training", "confirmation" ] []
+
         Home ->
             Url.Builder.absolute [ baseUrl, "" ] []
 
