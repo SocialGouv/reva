@@ -4,7 +4,8 @@ import Api exposing (Token)
 import Browser
 import Browser.Navigation as Nav
 import Data.Context exposing (Context)
-import Html.Styled as Html exposing (Html, div, text, toUnstyled)
+import Html.Styled as Html exposing (Html, a, div, img, text, toUnstyled)
+import Html.Styled.Attributes exposing (class, src)
 import Http
 import Json.Decode as Decode exposing (..)
 import KeycloakConfiguration exposing (KeycloakConfiguration)
@@ -74,18 +75,34 @@ view : Model -> Browser.Document Msg
 view model =
     { title = "REVA"
     , body =
-        [ viewPage model
-            |> toUnstyled
-        , KeycloakConfiguration.iframeKeycloak
-            { onLoggedIn = GotLoggedIn
-            , onLoggedOut = GotLoggedOut
-            , onTokenRefreshed = GotTokenRefreshed
-            }
-            model.keycloakConfiguration
-            (model.page == LoggingOut)
+        [ div
+            []
+            [ viewHeader model
+            , viewPage model
+            , KeycloakConfiguration.iframeKeycloak
+                { onLoggedIn = GotLoggedIn
+                , onLoggedOut = GotLoggedOut
+                , onTokenRefreshed = GotTokenRefreshed
+                }
+                model.keycloakConfiguration
+                (model.page == LoggingOut)
+            ]
             |> toUnstyled
         ]
     }
+
+
+viewHeader model =
+    div
+        [ class "flex justify-between p-6 w-full"
+        , class "text-gray-900 font-medium"
+        , class "border-b border-gray-200"
+        ]
+        [ img [ class "w-[73px]", src "/public/logo.png" ] []
+        , a
+            [ Route.href model.context.baseUrl Logout ]
+            [ text "Se déconnecter" ]
+        ]
 
 
 viewPage : Model -> Html Msg
