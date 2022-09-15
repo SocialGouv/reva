@@ -45,7 +45,7 @@ getEncodedKeycloakConfiguration maybeKeycloakConfiguration =
 iframeKeycloak : { onLoggedIn : Token -> msg, onLoggedOut : msg, onTokenRefreshed : Token -> msg } -> Maybe KeycloakConfiguration -> Bool -> Html msg
 iframeKeycloak events maybeKeycloakConfiguration isLoggingOut =
     node "keycloak-element"
-        [ class "block h-full w-full py-5 px-6 tracking-wide"
+        [ class "block h-0 w-0"
         , id "keycloak-element"
         , property "configuration" <| getEncodedKeycloakConfiguration maybeKeycloakConfiguration
         , Decode.at [ "detail", "token" ] Decode.string

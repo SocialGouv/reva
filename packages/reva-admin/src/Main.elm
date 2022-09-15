@@ -76,7 +76,7 @@ view model =
     { title = "REVA"
     , body =
         [ div
-            []
+            [ class "min-h-screen flex flex-col" ]
             [ viewHeader model
             , viewPage model
             , KeycloakConfiguration.iframeKeycloak
@@ -95,7 +95,8 @@ view model =
 viewHeader : Model -> Html msg
 viewHeader model =
     div
-        [ class "flex justify-between p-6 w-full"
+        [ class "sticky top-0 z-40 bg-white"
+        , class "flex justify-between p-6 w-full"
         , class "text-gray-900 font-medium"
         , class "border-b border-gray-200"
         ]
