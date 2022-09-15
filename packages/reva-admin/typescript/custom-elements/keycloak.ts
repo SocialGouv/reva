@@ -1,10 +1,21 @@
 import Keycloak from "keycloak-js";
 
 class KeycloakElement extends HTMLElement {
+
+  static get observedAttributes() { return ['logout']; }
+
   private _configuration: any;
+  private _keycloak: Keycloak | undefined;
+
   constructor() {
     super();
     this._configuration = {};
+  }
+
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    if (name === "logout" && oldValue !== newValue && newValue !== null) {
+      this._keycloak?.logout();
+    }
   }
 
   get configuration() {
@@ -16,7 +27,9 @@ class KeycloakElement extends HTMLElement {
   }
 
   connectedCallback() {
-    const keycloak = Keycloak(this._configuration);
+    this._keycloak = Keycloak(this._configuration);
+    const keycloak = this._keycloak;
+
     // debug purpose
     // @ts-ignore
     window.keycloak = keycloak;

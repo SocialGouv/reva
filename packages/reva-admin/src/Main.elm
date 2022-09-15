@@ -4,7 +4,8 @@ import Api exposing (Token)
 import Browser
 import Browser.Navigation as Nav
 import Data.Context exposing (Context)
-import Html.Styled as Html exposing (Html, div, toUnstyled)
+import Html.Styled as Html exposing (Html, a, div, img, text, toUnstyled)
+import Html.Styled.Attributes exposing (class, src)
 import Http
 import Json.Decode as Decode exposing (..)
 import KeycloakConfiguration exposing (KeycloakConfiguration)
@@ -37,6 +38,7 @@ type Page
     = Candidacies Candidacies.Model
     | Candidates Candidates.Model
     | Loading Token
+    | LoggingOut
     | NotLoggedIn Route
 
 
@@ -73,17 +75,35 @@ view : Model -> Browser.Document Msg
 view model =
     { title = "REVA"
     , body =
-        [ viewPage model
-            |> toUnstyled
-        , KeycloakConfiguration.iframeKeycloak
-            { onLoggedIn = GotLoggedIn
-            , onLoggedOut = GotLoggedOut
-            , onTokenRefreshed = GotTokenRefreshed
-            }
-            model.keycloakConfiguration
+        [ div
+            []
+            [ viewHeader model
+            , viewPage model
+            , KeycloakConfiguration.iframeKeycloak
+                { onLoggedIn = GotLoggedIn
+                , onLoggedOut = GotLoggedOut
+                , onTokenRefreshed = GotTokenRefreshed
+                }
+                model.keycloakConfiguration
+                (model.page == LoggingOut)
+            ]
             |> toUnstyled
         ]
     }
+
+
+viewHeader : Model -> Html msg
+viewHeader model =
+    div
+        [ class "flex justify-between p-6 w-full"
+        , class "text-gray-900 font-medium"
+        , class "border-b border-gray-200"
+        ]
+        [ img [ class "w-[73px]", src "/public/logo.png" ] []
+        , a
+            [ Route.href model.context.baseUrl Logout ]
+            [ text "Se déconnecter" ]
+        ]
 
 
 viewPage : Model -> Html Msg
@@ -102,6 +122,9 @@ viewPage model =
 
         Loading _ ->
             div [] []
+
+        LoggingOut ->
+            text "Déconnexion en cours..."
 
 
 
@@ -127,6 +150,9 @@ changeRouteTo context route model =
 
         ( Login, _ ) ->
             noChange
+
+        ( Logout, _ ) ->
+            ( { model | page = LoggingOut }, Cmd.none )
 
         ( NotFound, _ ) ->
             noChange

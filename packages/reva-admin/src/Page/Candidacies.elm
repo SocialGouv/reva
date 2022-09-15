@@ -171,7 +171,7 @@ viewContent context model candidacies =
                 ]
     in
     div
-        [ class "flex min-w-0 overflow-hidden border-l-[40px] border-black" ]
+        [ class "flex min-w-0 overflow-hidden border-l-[73px] border-black" ]
         [ div
             [ class "sm:hidden" ]
             [ div
@@ -384,9 +384,9 @@ viewDirectoryPanel config candidacies =
         , class "bg-white"
         ]
         [ div
-            [ class "px-6 pt-6 pb-4" ]
+            [ class "px-6 pt-8 pb-4" ]
             [ h2
-                [ class "text-lg font-medium text-gray-900" ]
+                [ class "text-lg font-semibold text-gray-900 mb-8" ]
                 [ text "Candidatures" ]
             , p
                 [ class "mt-1 text-sm text-gray-500" ]
