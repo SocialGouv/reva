@@ -92,6 +92,7 @@ view model =
     }
 
 
+viewHeader : Model -> Html msg
 viewHeader model =
     div
         [ class "flex justify-between p-6 w-full"
