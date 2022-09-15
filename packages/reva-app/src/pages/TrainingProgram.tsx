@@ -36,7 +36,7 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
       direction={state.context.direction}
     >
       <div className="px-4 pb-8 flex flex-col">
-        <h1 className="text-white text-4xl font-extrabold my-8">
+        <h1 className="text-white	text-3xl font-extrabold mb-8">
           Votre parcours personnalisé
         </h1>
 
@@ -54,7 +54,7 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
           <DescriptionSimple
             term="Nombre d'heures d'accompagnement individuel"
             detail={`${individualHourCount}h`}
-          ></DescriptionSimple>
+          />
 
           <DescriptionSimple
             term="Nombre d'heures d'accompagnement collectif"
