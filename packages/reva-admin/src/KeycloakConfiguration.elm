@@ -2,7 +2,7 @@ module KeycloakConfiguration exposing (KeycloakConfiguration, iframeKeycloak, ke
 
 import Api exposing (Token)
 import Html.Styled exposing (Html, node)
-import Html.Styled.Attributes exposing (class, id, property)
+import Html.Styled.Attributes exposing (attribute, class, id, property)
 import Html.Styled.Events exposing (on)
 import Json.Decode as Decode exposing (Decoder, succeed)
 import Json.Decode.Pipeline exposing (required)
@@ -42,8 +42,8 @@ getEncodedKeycloakConfiguration maybeKeycloakConfiguration =
 --Api.tokenToString token
 
 
-iframeKeycloak : { onLoggedIn : Token -> msg, onLoggedOut : msg, onTokenRefreshed : Token -> msg } -> Maybe KeycloakConfiguration -> Html msg
-iframeKeycloak events maybeKeycloakConfiguration =
+iframeKeycloak : { onLoggedIn : Token -> msg, onLoggedOut : msg, onTokenRefreshed : Token -> msg } -> Maybe KeycloakConfiguration -> Bool -> Html msg
+iframeKeycloak events maybeKeycloakConfiguration isLoggingOut =
     node "keycloak-element"
         [ class "block h-full w-full py-5 px-6 tracking-wide"
         , id "keycloak-element"
@@ -58,5 +58,10 @@ iframeKeycloak events maybeKeycloakConfiguration =
             |> on "tokenRefreshed"
         , on "loggedOut" <|
             Decode.succeed events.onLoggedOut
+        , if isLoggingOut then
+            attribute "logout" ""
+
+          else
+            class ""
         ]
         []

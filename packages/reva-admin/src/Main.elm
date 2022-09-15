@@ -4,7 +4,7 @@ import Api exposing (Token)
 import Browser
 import Browser.Navigation as Nav
 import Data.Context exposing (Context)
-import Html.Styled as Html exposing (Html, div, toUnstyled)
+import Html.Styled as Html exposing (Html, div, text, toUnstyled)
 import Http
 import Json.Decode as Decode exposing (..)
 import KeycloakConfiguration exposing (KeycloakConfiguration)
@@ -37,6 +37,7 @@ type Page
     = Candidacies Candidacies.Model
     | Candidates Candidates.Model
     | Loading Token
+    | LoggingOut
     | NotLoggedIn Route
 
 
@@ -81,6 +82,7 @@ view model =
             , onTokenRefreshed = GotTokenRefreshed
             }
             model.keycloakConfiguration
+            (model.page == LoggingOut)
             |> toUnstyled
         ]
     }
@@ -102,6 +104,9 @@ viewPage model =
 
         Loading _ ->
             div [] []
+
+        LoggingOut ->
+            text "Déconnexion en cours..."
 
 
 
@@ -127,6 +132,9 @@ changeRouteTo context route model =
 
         ( Login, _ ) ->
             noChange
+
+        ( Logout, _ ) ->
+            ( { model | page = LoggingOut }, Cmd.none )
 
         ( NotFound, _ ) ->
             noChange

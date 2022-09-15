@@ -18,6 +18,7 @@ type Route
     = Candidacy View.Candidacy.Tab
     | Home
     | Login
+    | Logout
     | NotFound
 
 
@@ -32,6 +33,7 @@ parser baseUrl =
         </> oneOf
                 [ map Home top
                 , map Login (s "auth" </> s "login")
+                , map Logout (s "auth" </> s "logout")
                 , map
                     (Candidacy View.Candidacy.Empty)
                     (s "candidacies")
@@ -83,6 +85,9 @@ toString baseUrl route =
 
         Login ->
             Url.Builder.absolute [ baseUrl, "auth", "login" ] []
+
+        Logout ->
+            Url.Builder.absolute [ baseUrl, "auth", "logout" ] []
 
         NotFound ->
             Url.Builder.absolute [ baseUrl, "not-found" ] []
