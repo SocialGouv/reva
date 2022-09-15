@@ -171,45 +171,22 @@ viewContent context model candidacies =
                 ]
     in
     div
-        [ class "flex min-w-0 overflow-hidden border-l-[73px] border-black" ]
-        [ div
-            [ class "sm:hidden" ]
-            [ div
-                [ class "flex items-center justify-between bg-gray-50 border-b border-gray-200 px-4 py-1.5" ]
-                [ div
-                    []
-                    [-- Logo here
-                    ]
-                , div
-                    []
-                    [ button
-                        [ type_ "button", class "-mr-3 h-12 w-12 inline-flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-600" ]
-                        [ span
-                            [ class "sr-only" ]
-                            [ text "Open sidebar" ]
-                        , Icons.menu
-                        ]
-                    ]
+        [ class "grow flex h-full min-w-0 border-l-[73px] border-black bg-gray-100" ]
+    <|
+        case model.tab of
+            Empty ->
+                [ viewDirectoryPanel context candidacies ]
+
+            Meetings candidacyId ->
+                [ viewForm "meetings" candidacyId ]
+
+            Profil candidacyId ->
+                [ viewCandidacyPanel context model
+                , viewNavigationSteps context.baseUrl candidacyId
                 ]
-            ]
-        , div
-            [ class "flex-1 relative z-0 flex overflow-hidden bg-gray-100" ]
-          <|
-            case model.tab of
-                Empty ->
-                    [ viewDirectoryPanel context candidacies ]
 
-                Meetings candidacyId ->
-                    [ viewForm "meetings" candidacyId ]
-
-                Profil candidacyId ->
-                    [ viewCandidacyPanel context model
-                    , viewNavigationSteps context.baseUrl candidacyId
-                    ]
-
-                Training candidacyId ->
-                    [ viewForm "training" candidacyId ]
-        ]
+            Training candidacyId ->
+                [ viewForm "training" candidacyId ]
 
 
 viewNavigationSteps : String -> CandidacyId -> Html msg
@@ -258,8 +235,8 @@ viewMain : String -> List (Html msg) -> Html msg
 viewMain dataTestValue =
     node "main"
         [ dataTest dataTestValue
-        , class "relative z-10 overflow-y-auto focus:outline-none"
-        , class "h-screen w-2/3 max-w-3xl bg-white"
+        , class "relative z-10 focus:outline-none"
+        , class "w-2/3 max-w-3xl bg-white"
         ]
 
 
@@ -420,7 +397,7 @@ viewDirectoryPanel config candidacies =
         , List.map (viewDirectory config) candidaciesByStatus
             |> nav
                 [ dataTest "directory"
-                , class "flex-1 min-h-0 overflow-y-auto"
+                , class "min-h-0 overflow-y-auto"
                 , attribute "aria-label" "Candidats"
                 ]
         ]

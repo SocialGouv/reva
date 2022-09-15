@@ -136,7 +136,7 @@ view remoteReferential model =
                 ( RemoteData.Failure err, _ ) ->
                     text err
     in
-    div [ class "bg-white h-full py-8 px-16" ]
+    div [ class "bg-white py-8 px-16" ]
         [ content ]
 
 
