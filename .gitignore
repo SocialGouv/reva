@@ -10,3 +10,4 @@ packages/reva-api/infra/generated-graphql-schema.graphql
 .vscode
 **/private
 **/coverage
+**/storybook-static

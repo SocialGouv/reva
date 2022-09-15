@@ -9,6 +9,7 @@ import { useContext, useEffect, useMemo } from "react";
 
 import { Certification } from "./interface";
 import { mainMachine } from "./machines/main.machine";
+import { CandidatePath } from "./pages/CandidatePath";
 import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
 import { Error } from "./pages/Error";
@@ -334,11 +335,18 @@ function App() {
       {current.matches("certificateDetails") &&
         certificateDetails(current.context.certification)}
 
-      {current.matches("submissionHome") &&
+      {/* {current.matches("submissionHome") &&
         submissionHomePage(
           current.context.certification,
           current.context.candidacyCreatedAt
-        )}
+        )} */}
+
+      {current.matches("submissionHome") && (
+        <CandidatePath
+          mainService={mainService}
+          organism="CNEAP Hauts de France"
+        />
+      )}
 
       {current.matches("error") && errorPage()}
     </AnimatePresence>
