@@ -15,6 +15,7 @@ import Page.Loading
 import Route exposing (Route(..))
 import Url exposing (Url)
 import Url.Builder
+import View
 
 
 type alias Flags =
@@ -101,7 +102,7 @@ viewHeader model =
         , class "text-gray-900 font-medium"
         , class "border-b border-gray-200"
         ]
-        [ img [ class "w-[73px]", src <| Url.Builder.absolute [ model.context.baseUrl, "logo.png" ] [] ] []
+        [ View.image [ class "w-[73px]" ] model.context.baseUrl "logo.png"
         , a
             [ Route.href model.context.baseUrl Logout ]
             [ text "Se déconnecter" ]

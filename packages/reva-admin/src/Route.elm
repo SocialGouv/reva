@@ -46,6 +46,9 @@ parser baseUrl =
                 , map
                     (\id -> candidacyTab id View.Candidacy.Training)
                     (s "candidacies" </> string </> s "training")
+                , map
+                    (\id -> candidacyTab id View.Candidacy.TrainingSent)
+                    (s "candidacies" </> string </> s "training" </> s "confirmation")
 
                 --  Add more routes like this:
                 --  , map Comment (s "user" </> string </> s "comment" </> int)

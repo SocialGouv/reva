@@ -1,12 +1,13 @@
-module View exposing (layout)
+module View exposing (image, layout, primaryButton, primaryLink, skeleton, title)
 
-import Html.Styled exposing (Html, a, button, div, img, nav, span, text)
-import Html.Styled.Attributes exposing (alt, attribute, class, href, src, type_)
+import Html.Styled as Html exposing (Html, a, button, div, h2, img, nav, span, text)
+import Html.Styled.Attributes exposing (attribute, class, href, src, type_)
 import Html.Styled.Events exposing (onClick)
+import Url.Builder
 import View.Icons as Icons
 
 
-layout : { a | onLogout : msg } -> Html msg -> Html.Styled.Html msg
+layout : { a | onLogout : msg } -> Html msg -> Html msg
 layout config content =
     div
         [ class "bg-gray-white h-screen flex antialiased" ]
@@ -91,3 +92,47 @@ sideMenu config =
                 ]
             ]
         ]
+
+
+title : String -> Html msg
+title s =
+    h2
+        [ class "text-4xl font-medium text-gray-900 leading-none"
+        , class "mt-6 mb-12"
+        ]
+        [ text s ]
+
+
+image : List (Html.Attribute msg) -> String -> String -> Html msg
+image attributes baseUrl imgName =
+    img ((src <| Url.Builder.absolute [ baseUrl, imgName ] []) :: attributes) []
+
+
+primaryElement : (List (Html.Attribute msg) -> List (Html a) -> b) -> List (Html.Attribute msg) -> String -> b
+primaryElement el attributes label =
+    el
+        ([ class "text-center mt-4 rounded bg-blue-600"
+         , class "hover:bg-blue-700 text-white px-6 py-2"
+         ]
+            ++ attributes
+        )
+        [ text label ]
+
+
+primaryButton : List (Html.Attribute msg) -> String -> Html msg
+primaryButton =
+    primaryElement button
+
+
+primaryLink : List (Html.Attribute msg) -> String -> Html msg
+primaryLink =
+    primaryElement a
+
+
+skeleton : String -> Html msg
+skeleton extraClass =
+    div
+        [ class "animate-pulse rounded bg-gray-100"
+        , class extraClass
+        ]
+        []
