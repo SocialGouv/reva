@@ -254,7 +254,7 @@ viewTrainingSent context candidacyId =
         [ View.image [ class "w-[60px]" ] context.baseUrl "confirmation.png"
         , p
             [ class "mt-6 mb-24" ]
-            [ text "Le parcours personnalisé a bien été enregistré. Veuillez proposer au candidat de le consulter et de l'approuver sur son espace personnel." ]
+            [ text "Le parcours personnalisé a bien été enregistré." ]
         , View.primaryLink
             [ Route.href context.baseUrl (Route.Candidacy <| Profil candidacyId) ]
             "Retour à la candidature"
