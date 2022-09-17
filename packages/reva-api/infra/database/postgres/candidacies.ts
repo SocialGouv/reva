@@ -306,10 +306,6 @@ export const updateCandidacyStatus = async (params: { candidacyId: string, statu
 
 export const updateCertification = async (params: { candidacyId: string, certificationId: string; regionId: string; author: string; }) => {
     try {
-
-        // TODO : remove me when regionId is set in front
-        const region = await prismaClient.region.findFirst();
-
         const [, newCandidacy, certificationAndRegion] = await prismaClient.$transaction([
             prismaClient.candidaciesOnRegionsAndCertifications.updateMany({
                 data: {
@@ -328,7 +324,7 @@ export const updateCertification = async (params: { candidacyId: string, certifi
                     certificationsAndRegions: {
                         create: {
                             certificationId: params.certificationId,
-                            regionId: region?.id || params.regionId,
+                            regionId: params.regionId,
                             author: params.author,
                             isActive: true
                         }
