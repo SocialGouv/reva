@@ -99,8 +99,9 @@ async function main() {
       .pipe(csv.parse({ headers: true }))
       .on('error', error => console.error(error))
       .on('data', row => promiseChain = promiseChain.then(async () => {
-        console.log(row);
-        if (!certificationsMap.get(row.certification)) {
+        
+        const currentCertification = row.certification.trim()
+        if (!certificationsMap.get(currentCertification)) {
           return;
         }
 
@@ -109,7 +110,7 @@ async function main() {
             const existingResult = await prisma.organismsOnRegionsAndCertifications.findFirst({
               where: {
                 certification: {
-                  rncpId: certificationsMap.get(row.certification),
+                  rncpId: certificationsMap.get(currentCertification),
                 },
                 region: {
                   id: region.id,
@@ -125,7 +126,7 @@ async function main() {
                 data: {
                   certification: {
                     connect: {
-                      rncpId: certificationsMap.get(row.certification),
+                      rncpId: certificationsMap.get(currentCertification),
                     }
                   },
                   region: {
@@ -160,7 +161,7 @@ async function main() {
           const existingResult = await prisma.organismsOnRegionsAndCertifications.findFirst({
             where: {
               certification: {
-                rncpId: certificationsMap.get(row.certification),
+                rncpId: certificationsMap.get(currentCertification),
               },
               region: {
                 id: regionsMap.get(row.region).id,
@@ -176,7 +177,7 @@ async function main() {
               data: {
                 certification: {
                   connect: {
-                    rncpId: certificationsMap.get(row.certification),
+                    rncpId: certificationsMap.get(currentCertification),
                   }
                 },
                 region: {
