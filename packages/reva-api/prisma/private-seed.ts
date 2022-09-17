@@ -60,7 +60,16 @@ async function main() {
       .on('data', row => promiseChain = promiseChain.then(async () => {
         await prisma.organism.upsert({
           where: { label: row.label.trim() },
-          update: {},
+          update: {
+            label: row.label.trim(),
+            address: row.address.trim(),
+            zip: row.zip.trim().replace(' ', ''),
+            city: row.city.trim(),
+            contactAdministrativeEmail: row.contact_administrative_email.trim(),
+            contactCommercialName: row.contact_commercial_name.trim(),
+            contactCommercialEmail: row.contact_commercial_email.trim(),
+            siret: row.siret.trim().replace(' ', ''),
+          },
           create: {
             label: row.label.trim(),
             address: row.address.trim(),
@@ -101,6 +110,7 @@ async function main() {
       .on('data', row => promiseChain = promiseChain.then(async () => {
         
         const currentCertification = row.certification.trim()
+        const currentOrganismLabel = row.organism.trim()
         if (!certificationsMap.get(currentCertification)) {
           return;
         }
@@ -116,7 +126,7 @@ async function main() {
                   id: region.id,
                 },
                 organism: {
-                  label: row.organism
+                  label: currentOrganismLabel
                 }
               }
             });
@@ -136,7 +146,7 @@ async function main() {
                   },
                   organism: {
                     connect: {
-                      label: row.organism
+                      label: currentOrganismLabel
                     }
                   },
                   isArchitect: row.is_architect === 'Oui',
@@ -167,7 +177,7 @@ async function main() {
                 id: regionsMap.get(row.region).id,
               },
               organism: {
-                label: row.organism
+                label: currentOrganismLabel
               }
             }
           });
@@ -187,7 +197,7 @@ async function main() {
                 },
                 organism: {
                   connect: {
-                    label: row.organism
+                    label: currentOrganismLabel
                   }
                 },
                 isArchitect: row.is_architect === 'Oui',
