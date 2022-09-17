@@ -34,7 +34,8 @@ export const getAAPOrganisms = async (params: { candidacyId: string; }): Promise
                         regionId: candidacy.certificationsAndRegions[0].regionId,
                         isArchitect: true
                     }
-                }
+                },
+                isActive: true
             }
         })
 
