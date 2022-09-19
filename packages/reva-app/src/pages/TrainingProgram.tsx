@@ -47,43 +47,55 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
         />
 
         <dl>
-          <Description
-            term="Diplome visé"
-            detail={certification?.label || ""}
-          />
+          <Description term="Diplome visé">
+            {certification?.label || ""}
+          </Description>
 
-          <Description
-            term="Nombre d'heures d'accompagnement individuel"
-            detail={`${individualHourCount}h`}
-          />
+          <Description term="Nombre d'heures d'accompagnement individuel">
+            {`${individualHourCount}h`}
+          </Description>
 
-          <Description
-            term="Nombre d'heures d'accompagnement collectif"
-            detail={`${collectiveHourCount}h`}
-          />
+          <Description term="Nombre d'heures d'accompagnement collectif">
+            {`${collectiveHourCount}h`}
+          </Description>
 
-          <Description
-            term="Nombre d'heures de formation"
-            detail={`${additionalHourCount}h`}
-          />
+          <Description term="Nombre d'heures de formation">
+            {`${additionalHourCount}h`}
+          </Description>
 
-          <Description
-            term="Formations obligatoires"
-            detail={[
-              "Intitulé de formation",
-              "Intitulé de formation",
-              "Intitulé de formation",
-            ]}
-          />
+          <Description term="Formations obligatoires">
+            {
+              <ul>
+                {[
+                  "Intitulé de formation",
+                  "Intitulé de formation",
+                  "Intitulé de formation",
+                ].map((x, i) => (
+                  <li key={i}>{x}</li>
+                ))}
+              </ul>
+            }
+          </Description>
 
-          <Description term="Savoirs de base" detail="20h" />
+          <Description term="Savoirs de base">
+            {
+              <ul>
+                {[
+                  "Intitulé de formation",
+                  "Intitulé de formation",
+                  "Intitulé de formation",
+                ].map((x, i) => (
+                  <li key={i}>{x}</li>
+                ))}
+              </ul>
+            }
+          </Description>
 
-          <Description
-            term="Bloc de compétences métiers"
-            detail={certificateSkills}
-          />
+          <Description term="Bloc de compétences métiers">
+            {certificateSkills}
+          </Description>
 
-          <Description term="Autre" detail={otherTraining} />
+          <Description term="Autre">{otherTraining}</Description>
         </dl>
 
         <button

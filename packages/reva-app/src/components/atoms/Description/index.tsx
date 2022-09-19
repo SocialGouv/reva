@@ -10,22 +10,11 @@ const Detail: FC = ({ children }) => (
 
 interface Props {
   term: string;
-  detail: string | string[];
 }
 
-export const Description: FC<Props> = ({ term, detail }) => (
+export const Description: FC<Props> = ({ term, children }) => (
   <>
     <Term>{term}</Term>
-    <Detail>
-      {typeof detail === "string" ? (
-        detail
-      ) : (
-        <ul>
-          {detail.map((t, i) => (
-            <li key={i}>{t}</li>
-          ))}
-        </ul>
-      )}
-    </Detail>
+    <Detail>{children}</Detail>
   </>
 );
