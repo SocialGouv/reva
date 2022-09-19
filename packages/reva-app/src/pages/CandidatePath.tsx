@@ -3,7 +3,7 @@ import { FC } from "react";
 import { Interpreter } from "xstate";
 
 import { CardBasic } from "../components/atoms/CardBasic";
-import { LabelAndText } from "../components/atoms/LabelAndText";
+import { Description } from "../components/atoms/Description";
 import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
@@ -19,23 +19,24 @@ export const CandidatePath: FC<Props> = ({
 }) => {
   const [state, send] = useActor(mainService);
 
-  if (!state.context.training) return <></>
+  if (!state.context.trainingProgram) return <></>;
   
     const {
-      training: {
-        appointmentCount,
+      trainingProgram: {
         individualHourCount,
         collectiveHourCount,
         additionalHourCount,
         certificateSkills,
         otherTraining,
-        validatedByCandidate,
       },
-      certification
+      certification,
     } = state.context;
   
   return (
-    <Page className="z-50 bg-slate-900 p-6 overflow-y-scroll" direction={state.context.direction}>
+    <Page
+      className="z-50 bg-slate-900 p-6 overflow-y-scroll"
+      direction={state.context.direction}
+    >
       <BackButton color="light" onClick={() => send("BACK")} />
 
       <div className="px-8 pb-8 flex flex-col">
@@ -46,43 +47,42 @@ export const CandidatePath: FC<Props> = ({
 
         <CardBasic title="Mon accompagnateur" text={organism} />
 
-        <LabelAndText
-          label="Diplome visé"
-          text={certification?.label || ""}
-        />
+        <dl>
+          <Description term="Diplome visé" detail={certification?.label || ""} />
 
-        <LabelAndText
-          label="Nombre d'heures d'accompagnement individuel"
-          text={`${individualHourCount}h`}
-        />
+          <Description
+            term="Nombre d'heures d'accompagnement individuel"
+            detail={`${individualHourCount}h`}
+          />
 
-        <LabelAndText
-          label="Nombre d'heures d'accompagnement collectif"
-          text={`${collectiveHourCount}h`}
-        />
+          <Description
+            term="Nombre d'heures d'accompagnement collectif"
+            detail={`${collectiveHourCount}h`}
+          />
 
-        <LabelAndText
-          label="Nombre d'heures de formation"
-          text={`${additionalHourCount}h`}
-        />
+          <Description
+            term="Nombre d'heures de formation"
+            detail={`${additionalHourCount}h`}
+          />
 
-        <LabelAndText
-          label="Formations obligatoires"
-          text={[
-            "Intitulé de formation",
-            "Intitulé de formation",
-            "Intitulé de formation",
-          ]}
-        />
+          <Description
+            term="Formations obligatoires"
+            detail={[
+              "Intitulé de formation",
+              "Intitulé de formation",
+              "Intitulé de formation",
+            ]}
+          />
 
-        <LabelAndText label="Savoirs de base" text="20h" />
+          <Description term="Savoirs de base" detail="20h" />
 
-        <LabelAndText
-          label="Bloc de compétences métiers"
-          text={certificateSkills}
-        />
+          <Description
+            term="Bloc de compétences métiers"
+            detail={certificateSkills}
+          />
 
-        <LabelAndText label="Autre" text={otherTraining} />
+          <Description term="Autre" detail={otherTraining} />
+        </dl>
 
         <button
           className="bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded"

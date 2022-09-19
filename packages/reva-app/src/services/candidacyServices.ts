@@ -358,7 +358,7 @@ export const initializeApp =
         validatedByCandidate,
       } = data.getCandidacy;
 
-      const training = {
+      const trainingProgram = {
         appointmentCount,
         certificateSkills,
         otherTraining,
@@ -374,7 +374,7 @@ export const initializeApp =
         experiences,
         goals,
         regionId: data.getCandidacy.regionId,
-        training
+        trainingProgram,
       };
     }
 

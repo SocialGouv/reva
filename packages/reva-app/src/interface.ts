@@ -63,7 +63,7 @@ export interface OrganismForCandidacy {
   selectedOrganismId: string;
 }
 
-export interface Training {
+export interface TrainingProgram {
   appointmentCount: number;
   individualHourCount: number;
   collectiveHourCount: number;

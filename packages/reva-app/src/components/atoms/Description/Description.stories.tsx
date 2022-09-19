@@ -1,30 +1,30 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 
-import { LabelAndText } from ".";
+import { Description } from ".";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
   title: "Atoms/LabelAndText",
-  component: LabelAndText,
-} as ComponentMeta<typeof LabelAndText>;
+  component: Description,
+} as ComponentMeta<typeof Description>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof LabelAndText> = (args) => (
-  <LabelAndText {...args} />
+const Template: ComponentStory<typeof Description> = (args) => (
+  <Description {...args} />
 );
 
 export const Basic = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Basic.args = {
-  label: "Diplome visé",
-  text: "Assistant",
+  term: "Diplome visé",
+  detail: "Assistant",
 };
 
 export const Multiple = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Multiple.args = {
-  label: "Diplome visé",
-  text: [
+  term: "Diplome visé",
+  detail: [
     "Intitulé de formation",
     "Intitulé de formation",
     "Intitulé de formation",
