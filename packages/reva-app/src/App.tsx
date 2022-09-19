@@ -9,7 +9,6 @@ import { useContext, useEffect, useMemo } from "react";
 
 import { Certification } from "./interface";
 import { mainMachine } from "./machines/main.machine";
-import { CandidatePath } from "./pages/CandidatePath";
 import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
 import { Error } from "./pages/Error";
@@ -22,6 +21,7 @@ import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectOrganisms } from "./pages/ProjectOrganisms";
 import { ProjectSubmitted } from "./pages/ProjectSubmitted";
 import { SubmissionHome } from "./pages/SubmissionHome";
+import { TrainingProgram } from "./pages/TrainingProgram";
 import {
   addExperience,
   createCandidacyWithCertification,
@@ -342,10 +342,7 @@ function App() {
         )} */}
 
       {current.matches("submissionHome") && (
-        <CandidatePath
-          mainService={mainService}
-          organism="CNEAP Hauts de France"
-        />
+        <TrainingProgram mainService={mainService} />
       )}
 
       {current.matches("error") && errorPage()}
