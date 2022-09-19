@@ -55,7 +55,7 @@ const createAccountInIAM = (keycloakAdmin: KeycloakAdminClient) => async (accoun
       id,
       clientId: process.env.KEYCLOAK_ADMIN_CLIENTID_REVA,
       actions: [RequiredActionAlias.UPDATE_PASSWORD],
-      lifespan: 12*60*60, // 12 hours
+      lifespan: 4*24*60*60, // 4 days
       realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
     })
 
