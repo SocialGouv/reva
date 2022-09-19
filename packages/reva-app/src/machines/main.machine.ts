@@ -10,6 +10,7 @@ import {
   Organism,
   OrganismForCandidacy,
   Region,
+  Training,
 } from "../interface";
 
 const loadingApplicationData = "loadingApplicationData";
@@ -63,6 +64,7 @@ export interface MainContext {
   regions: Region[];
   selectedRegion?: Region;
   organisms: Organism[] | undefined;
+  training: Training | undefined;
 }
 
 type SelectRegion = { type: "SELECT_REGION"; regionCode: string };
@@ -167,6 +169,7 @@ export const mainMachine =
         regions: [],
         selectedRegion: undefined,
         organisms: undefined,
+        training: undefined,
       },
       initial: "loadingApplicationData",
       id: "mainMachine",
@@ -210,6 +213,9 @@ export const mainMachine =
                         : "draft";
                     },
                     regions: (_, event) => event.data.regions,
+                    training: (_, event) => {
+                      return event.data.candidacy.training;
+                    },
                   }),
                   "loadRegion",
                 ],

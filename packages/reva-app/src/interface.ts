@@ -62,3 +62,13 @@ export interface OrganismForCandidacy {
   candidacyId: string;
   selectedOrganismId: string;
 }
+
+export interface Training {
+  appointmentCount: number;
+  individualHourCount: number;
+  collectiveHourCount: number;
+  additionalHourCount: number;
+  validatedByCandidate: boolean;
+  certificateSkills: string;
+  otherTraining: string;
+}

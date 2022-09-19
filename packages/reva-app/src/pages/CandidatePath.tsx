@@ -19,8 +19,23 @@ export const CandidatePath: FC<Props> = ({
 }) => {
   const [state, send] = useActor(mainService);
 
+  if (!state.context.training) return <></>
+  
+    const {
+      training: {
+        appointmentCount,
+        individualHourCount,
+        collectiveHourCount,
+        additionalHourCount,
+        certificateSkills,
+        otherTraining,
+        validatedByCandidate,
+      },
+      certification
+    } = state.context;
+  
   return (
-    <Page className="z-50 bg-slate-900 p-6" direction={state.context.direction}>
+    <Page className="z-50 bg-slate-900 p-6 overflow-y-scroll" direction={state.context.direction}>
       <BackButton color="light" onClick={() => send("BACK")} />
 
       <div className="px-8 pb-8 flex flex-col">
@@ -31,19 +46,25 @@ export const CandidatePath: FC<Props> = ({
 
         <CardBasic title="Mon accompagnateur" text={organism} />
 
-        <LabelAndText label="Diplome visé" text="Assistant" />
+        <LabelAndText
+          label="Diplome visé"
+          text={certification?.label || ""}
+        />
 
         <LabelAndText
           label="Nombre d'heures d'accompagnement individuel"
-          text="20h"
+          text={`${individualHourCount}h`}
         />
 
         <LabelAndText
           label="Nombre d'heures d'accompagnement collectif"
-          text="20h"
+          text={`${collectiveHourCount}h`}
         />
 
-        <LabelAndText label="Nombre d'heures de formation" text="20h" />
+        <LabelAndText
+          label="Nombre d'heures de formation"
+          text={`${additionalHourCount}h`}
+        />
 
         <LabelAndText
           label="Formations obligatoires"
@@ -56,11 +77,12 @@ export const CandidatePath: FC<Props> = ({
 
         <LabelAndText label="Savoirs de base" text="20h" />
 
-        <LabelAndText label="Bloc de compétences métiers" text="20h" />
+        <LabelAndText
+          label="Bloc de compétences métiers"
+          text={certificateSkills}
+        />
 
-        <LabelAndText label="Formation usage du numérique" text="20h" />
-
-        <LabelAndText label="Autre" text="20h" />
+        <LabelAndText label="Autre" text={otherTraining} />
 
         <button
           className="bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded"

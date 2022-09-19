@@ -297,6 +297,13 @@ const INITIALIZE_APP = gql`
         status
       }
       regionId
+      appointmentCount
+      certificateSkills
+      otherTraining
+      individualHourCount
+      collectiveHourCount
+      additionalHourCount
+      validatedByCandidate
     }
 
     getReferential {
@@ -340,12 +347,34 @@ export const initializeApp =
         ...xp,
         startedAt: new Date(xp.startedAt),
       }));
+
+      const {
+        appointmentCount,
+        certificateSkills,
+        otherTraining,
+        individualHourCount,
+        collectiveHourCount,
+        additionalHourCount,
+        validatedByCandidate,
+      } = data.getCandidacy;
+
+      const training = {
+        appointmentCount,
+        certificateSkills,
+        otherTraining,
+        individualHourCount,
+        collectiveHourCount,
+        additionalHourCount,
+        validatedByCandidate,
+      };
+
       candidacy = {
         ...data.getCandidacy,
         createdAt: new Date(data.getCandidacy.createdAt),
         experiences,
         goals,
         regionId: data.getCandidacy.regionId,
+        training
       };
     }
 
