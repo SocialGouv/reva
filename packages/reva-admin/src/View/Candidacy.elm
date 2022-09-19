@@ -173,7 +173,13 @@ viewOrganism maybeOrganism =
         Just organism ->
             div [ class "text-gray-900 my-10" ]
                 [ title "Mon architecte de parcours"
-                , div [ class "space-y-4 bg-slate-100" ] [ text organism.label ]
+                , div
+                    [ class "rounded-lg px-5 py-4 bg-slate-100"
+                    , class "text-lg text-slate-900"
+                    ]
+                    [ p [] [ text organism.label ]
+                    , p [] [ text organism.contactAdministrativeEmail ]
+                    ]
                 ]
 
         Nothing ->
