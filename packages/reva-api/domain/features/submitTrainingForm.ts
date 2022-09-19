@@ -1,4 +1,4 @@
-import { Either, EitherAsync, Left } from "purify-ts";
+import { Either, EitherAsync, Left, Right } from "purify-ts";
 import { Candidacy } from "../types/candidacy";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
@@ -17,7 +17,14 @@ interface SubmitTrainingDeps {
         };
     }) => Promise<Either<string, Candidacy>>;
     hasRole: (role: string) => boolean;
-    getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
+    existsCandidacyWithActiveStatus: (params: {
+        candidacyId: string;
+        status: "PRISE_EN_CHARGE";
+    }) => Promise<Either<string, boolean>>;
+    updateCandidacyStatus: (params: {
+        candidacyId: string;
+        status: "PARCOURS_ENVOYE";
+    }) => Promise<Either<string, Candidacy>>;
 }
 
 export const submitTraining = (deps: SubmitTrainingDeps) => (params: {
@@ -38,14 +45,30 @@ export const submitTraining = (deps: SubmitTrainingDeps) => (params: {
             .mapLeft((error: string) => new FunctionalError(FunctionalCodeError.NOT_AUTHORIZED, error));
     }
 
-    const checkIfCandidacyExists = 
-        EitherAsync.fromPromise(() => deps.getCandidacyFromId(params.candidacyId))
-            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, `Aucune candidature n'a été trouvée`));
+    const existsCandidacyInValidation = EitherAsync.fromPromise(() => deps.existsCandidacyWithActiveStatus({
+        candidacyId: params.candidacyId,
+        status: "PRISE_EN_CHARGE"
+    })).chain((existsCandidacy) => {
+        if (!existsCandidacy) {
+            return EitherAsync.liftEither(Left(`Le parcours candidat ${params.candidacyId} ne peut être envoyé car la candidature n'est pas au statut prise en charge.`));
+        }
+        return EitherAsync.liftEither(Right(existsCandidacy));
+    })
+        .mapLeft((error: string) => new FunctionalError(FunctionalCodeError.TRAINING_FORM_NOT_SUBMITTED, error));
 
     const updateTrainingInformations = EitherAsync.fromPromise(() => deps.updateTrainingInformations(params))
-        .mapLeft(() => new FunctionalError(FunctionalCodeError.STATUS_NOT_UPDATED, `Erreur lors de la mise à jour du parcours candidat`));
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.TRAINING_FORM_NOT_SUBMITTED, `Erreur lors de la mise à jour du parcours candidat`));
 
+    const updateCandidacy = EitherAsync.fromPromise(() => deps.updateCandidacyStatus({
+        candidacyId: params.candidacyId,
+        status: "PARCOURS_ENVOYE"
+    }))
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.TRAINING_FORM_NOT_SUBMITTED, `Erreur lors du changement de status de la candidature ${params.candidacyId}`));
+    
 
-    return checkIfCandidacyExists
-        .chain(() => updateTrainingInformations);
+    // const updateCandidacyStatus = 
+
+    return existsCandidacyInValidation
+        .chain(() => updateTrainingInformations)
+        .chain(() => updateCandidacy);
 };

@@ -222,8 +222,9 @@ export const resolvers = {
     candidacy_submitTrainingForm: async (_: unknown, payload: any, context: { app: { auth: any; }; } ) => {
       const result = await submitTraining({
         hasRole: context.app.auth.hasRole,
-        getCandidacyFromId: candidacyDb.getCandidacyFromId,
-        updateTrainingInformations: candidacyDb.updateTrainingInformations
+        updateTrainingInformations: candidacyDb.updateTrainingInformations,
+        existsCandidacyWithActiveStatus: candidacyDb.existsCandidacyWithActiveStatus,
+        updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
       })({
         candidacyId: payload.candidacyId,
         training: payload.training
