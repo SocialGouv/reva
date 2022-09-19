@@ -13,11 +13,12 @@ import Api exposing (Token)
 import Data.Context exposing (Context)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
-import Html.Styled as Html exposing (Html, button, div, fieldset, h2, input, label, legend, option, select, text, textarea)
-import Html.Styled.Attributes exposing (checked, class, disabled, for, id, name, placeholder, selected, step, type_, value)
+import Html.Styled as Html exposing (Html, button, div, fieldset, input, label, legend, option, select, text, textarea)
+import Html.Styled.Attributes exposing (checked, class, disabled, for, id, name, selected, type_, value)
 import Html.Styled.Events exposing (onCheck, onInput, onSubmit)
 import RemoteData exposing (RemoteData(..))
 import String exposing (String)
+import View
 import View.Helpers exposing (dataTest)
 
 
@@ -42,6 +43,7 @@ type Element
 
 type alias Form referential =
     { elements : referential -> List ( String, Element )
+    , saveLabel : String
     , title : String
     }
 
@@ -90,13 +92,11 @@ view : RemoteData String referential -> Model referential -> Html (Msg referenti
 view remoteReferential model =
     let
         saveButton label =
-            button
+            View.primaryButton
                 [ dataTest "save-description"
                 , type_ "submit"
-                , class "text-center mt-4 rounded bg-blue-600"
-                , class "hover:bg-blue-700 text-white px-4 py-2"
                 ]
-                [ text label ]
+                label
 
         disabledSaveButton label =
             button
@@ -104,49 +104,49 @@ view remoteReferential model =
                 , disabled True
                 , type_ "submit"
                 , class "text-center mt-4 rounded bg-blue-400"
-                , class "text-white px-4 py-2"
+                , class "text-white px-12 py-2"
                 ]
                 [ text label ]
 
-        content =
-            case ( remoteReferential, model.form ) of
-                ( RemoteData.NotAsked, _ ) ->
-                    text ""
-
-                ( _, NotAsked ) ->
-                    text ""
-
-                ( RemoteData.Loading, _ ) ->
-                    text "..."
-
-                ( _, Loading _ ) ->
-                    text "..."
-
-                ( RemoteData.Success referential, Saving form formData ) ->
-                    viewForm referential formData form <|
-                        disabledSaveButton "Enregistrement..."
-
-                ( RemoteData.Success referential, Editing form formData ) ->
-                    viewForm referential formData form <|
-                        saveButton "Enregistrer"
-
-                ( _, Failure ) ->
-                    text "Une erreur est survenue"
-
-                ( RemoteData.Failure err, _ ) ->
-                    text err
+        skeleton =
+            div []
+                [ View.skeleton "mt-8 h-8 w-96"
+                , View.skeleton "mt-12 h-4 w-96"
+                ]
     in
-    div [ class "bg-white py-8 px-16" ]
-        [ content ]
+    case ( remoteReferential, model.form ) of
+        ( RemoteData.NotAsked, _ ) ->
+            text ""
+
+        ( _, NotAsked ) ->
+            text ""
+
+        ( RemoteData.Loading, _ ) ->
+            skeleton
+
+        ( _, Loading _ ) ->
+            skeleton
+
+        ( RemoteData.Success referential, Saving form formData ) ->
+            viewForm referential formData form <|
+                disabledSaveButton "..."
+
+        ( RemoteData.Success referential, Editing form formData ) ->
+            viewForm referential formData form <|
+                saveButton form.saveLabel
+
+        ( _, Failure ) ->
+            text "Une erreur est survenue"
+
+        ( RemoteData.Failure err, _ ) ->
+            text err
 
 
 viewForm : referential -> FormData -> Form referential -> Html (Msg referential) -> Html (Msg referential)
 viewForm referential formData form saveButton =
     Html.form
         [ onSubmit (UserClickedSave referential) ]
-        [ h2
-            [ class "text-4xl font-medium text-gray-900 leading-none mb-12" ]
-            [ text form.title ]
+        [ View.title form.title
         , div
             [ class "mt-6 space-y-10" ]
           <|

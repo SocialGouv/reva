@@ -26,6 +26,7 @@ import RemoteData exposing (RemoteData(..))
 import Request
 import Route
 import String exposing (String)
+import View
 import View.Candidacy exposing (Tab(..))
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
@@ -161,9 +162,9 @@ viewContent context model candidacies =
             viewMain name
                 [ a
                     [ Route.href context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId))
-                    , class "flex items-center text-gray-800 p-6"
+                    , class "flex items-center text-gray-800"
                     ]
-                    [ span [ class "text-3xl mr-4" ] [ text "← " ]
+                    [ span [ class "text-[36px] mr-4" ] [ text "← " ]
                     , text "Retour"
                     ]
                 , Form.view model.state.referential model.form
@@ -186,7 +187,14 @@ viewContent context model candidacies =
                 ]
 
             Training candidacyId ->
-                [ viewForm "training" candidacyId ]
+                [ viewForm "training" candidacyId
+                , viewNavigationSteps context.baseUrl candidacyId
+                ]
+
+            TrainingSent candidacyId ->
+                [ viewMain "training-sent" (viewTrainingSent context candidacyId)
+                , viewNavigationSteps context.baseUrl candidacyId
+                ]
 
 
 viewNavigationSteps : String -> CandidacyId -> Html msg
@@ -234,10 +242,24 @@ viewNavigationSteps baseUrl candidacyId =
 viewMain : String -> List (Html msg) -> Html msg
 viewMain dataTestValue =
     node "main"
-        [ dataTest dataTestValue
-        , class "relative z-10 focus:outline-none"
-        , class "w-2/3 max-w-3xl bg-white"
+        [ class "bg-white w-[762px] px-8 pt-8 pb-24"
+        , dataTest dataTestValue
         ]
+
+
+viewTrainingSent : Context -> CandidacyId -> List (Html msg)
+viewTrainingSent context candidacyId =
+    [ View.title "Confirmation"
+    , div [ class "flex flex-col items-center w-full p-10" ]
+        [ View.image [ class "w-[60px]" ] context.baseUrl "confirmation.png"
+        , p
+            [ class "mt-6 mb-24" ]
+            [ text "Le parcours personnalisé a bien été enregistré." ]
+        , View.primaryLink
+            [ Route.href context.baseUrl (Route.Candidacy <| Profil candidacyId) ]
+            "Retour à la candidature"
+        ]
+    ]
 
 
 appointmentForm : Form Referential
@@ -262,6 +284,7 @@ appointmentForm =
             , ( keys.wasPresentAtFirstAppointment, Form.Checkbox "Le candidat a bien effectué le rendez-vous d'étude de faisabilité" )
             , ( keys.appointmentCount, Form.Number "Nombre de rendez-vous réalisés avec le candidat" )
             ]
+    , saveLabel = "Enregistrer"
     , title = "Rendez-vous pédagogique"
     }
 
@@ -289,33 +312,26 @@ trainingForm =
             , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" )
             , ( keys.consent, Form.Checkbox "Le candidat valide ce parcours et s'engage à poursuivre l'expérimentation" )
             ]
+    , saveLabel = "Envoyer le parcours"
     , title = "Définition du parcours"
     }
 
 
 viewCandidacyPanel : Context -> Model -> Html Msg
 viewCandidacyPanel context model =
-    let
-        loading extraClass =
-            div
-                [ class "animate-pulse rounded bg-gray-100 w-128"
-                , class extraClass
-                ]
-                []
-    in
     viewCandidacyArticle context.baseUrl <|
         case model.selected of
             NotAsked ->
                 []
 
             Loading ->
-                [ loading "mt-8 mb-20 w-96 h-8"
+                [ View.skeleton "mt-8 mb-20 w-96 h-8"
                 , div
                     [ class "mx-8" ]
-                    [ loading "mb-2 w-48 h-6"
-                    , loading "mb-10 w-128 h-16"
-                    , loading "mb-2 w-48 h-6"
-                    , loading "w-128 h-64"
+                    [ View.skeleton "mb-2 w-48 h-6"
+                    , View.skeleton "mb-10 w-128 h-16"
+                    , View.skeleton "mb-2 w-48 h-6"
+                    , View.skeleton "w-128 h-64"
                     ]
                 ]
 
@@ -554,11 +570,14 @@ updateTab context tab model =
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
-                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.TrainingSent candidacyId)))
                         }
                         model.form
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
+
+        View.Candidacy.TrainingSent candidacyId ->
+            ( newModel, Cmd.none )
 
         View.Candidacy.Empty ->
             ( newModel, Cmd.none )
