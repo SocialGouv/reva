@@ -129,7 +129,8 @@ export const getCandidacyFromId = async (candidacyId: string) => {
                 goals: true,
                 candidacyStatuses: true,
                 basicSkills: true,
-                trainings: true
+                trainings: true,
+                organism: true
             }
         });
 
