@@ -2,6 +2,7 @@ module View.Candidacy exposing (Tab(..), view)
 
 import Admin.Enum.Duration exposing (Duration(..))
 import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, CandidacyId)
+import Data.Organism exposing (Organism)
 import Data.Referential exposing (Referential)
 import Dict
 import Html.Styled exposing (Html, a, button, dd, div, dl, dt, h1, h3, h4, li, nav, node, p, span, text, ul)
@@ -77,6 +78,7 @@ view config =
 
                 _ ->
                     text "..."
+            , viewOrganism config.candidacy.organism
             , viewExperiences config.candidacy.experiences
             , button
                 [ type_ "button"
@@ -163,6 +165,19 @@ viewGoals referential candidacyGoals =
             else
                 List.map (viewGoal referential) candidacyGoals
         ]
+
+
+viewOrganism : Maybe Organism -> Html msg
+viewOrganism maybeOrganism =
+    case maybeOrganism of
+        Just organism ->
+            div [ class "text-gray-900 my-10" ]
+                [ title "Mon architecte de parcours"
+                , div [ class "space-y-4 bg-slate-100" ] [ text organism.label ]
+                ]
+
+        Nothing ->
+            text ""
 
 
 viewExperiences : List CandidacyExperience -> Html msg
