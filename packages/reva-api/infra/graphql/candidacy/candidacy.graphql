@@ -44,7 +44,9 @@ type Candidacy {
   additionalHourCount: Int
   validatedByCandidate: Boolean
   basicSkillIds: [UUID!]!
+  basicSkills: [BasicSkill!]!
   mandatoryTrainingIds: [UUID!]!
+  mandatoryTrainings: [Training!]!
   createdAt: Timestamp!
 }
 

@@ -28,30 +28,46 @@ import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import Keycloak from 'keycloak-connect';
 import { getBasicSkills } from "../../../domain/features/getBasicSkills";
 import { submitTraining } from "../../../domain/features/submitTrainingForm";
+import { Candidacy } from "../../../domain/types/candidacy";
 
+const withBasicSkills = (c: Candidacy) => ({
+  ...c,
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  basicSkillIds: c.basicSkills.reduce((memo, bs) => {
+    return [...memo, bs.basicSkill.id];
+  }, []),
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  basicSkills: c.basicSkills.map(bs => bs.basicSkill),
+});
+
+const withMandatoryTrainings = (c: Candidacy) => ({
+  ...c,
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  mandatoryTrainingIds: c.trainings.reduce((memo, t) => {
+    return [...memo, t.training.id];
+  }, []),
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  mandatoryTrainings: c.trainings.map(t => t.training)
+});
 
 export const resolvers = {
   Query: {
     getCandidacy: async (other: unknown, { deviceId }: { deviceId: string; }, context: any) => {
       const result = await getDeviceCandidacy({ getCandidacyFromDeviceId: candidacyDb.getCandidacyFromDeviceId })({ deviceId });
-      return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
+      return result
+        .map(withBasicSkills)
+        .map(withMandatoryTrainings)
+        .mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
     getCandidacyById: async (other: unknown, { id }: { id: string; }, context: any) => {
       const result = await getCandidacy({ getCandidacyFromId: candidacyDb.getCandidacyFromId })({ id });
       return result
-        .map(c => ({
-            ...c,
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            basicSkillIds: c.basicSkills.reduce((memo,bs) => {
-                return [...memo, bs.basicSkillId]
-            }, []),
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            mandatoryTrainingIds: c.trainings.reduce((memo,t) => {
-                return [...memo, t.trainingId]
-            }, [])
-        }))
+        .map(withBasicSkills)
+        .map(withMandatoryTrainings)
         .mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
     getCandidacies: async (_: unknown, params: { deviceId: string; }, context: { reply: any, app: { auth: any, userInfo: any, keycloak: Keycloak.Keycloak, getKeycloakAdmin: () => KeycloakAdminClient; }; }) => {
@@ -219,7 +235,7 @@ export const resolvers = {
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
-    candidacy_submitTrainingForm: async (_: unknown, payload: any, context: { app: { auth: any; }; } ) => {
+    candidacy_submitTrainingForm: async (_: unknown, payload: any, context: { app: { auth: any; }; }) => {
       const result = await submitTraining({
         hasRole: context.app.auth.hasRole,
         updateTrainingInformations: candidacyDb.updateTrainingInformations,
