@@ -159,7 +159,7 @@ viewForm referential maybeError formData form saveButton =
         , case maybeError of
             Just error ->
                 div
-                    [ class "fixed z-50 top-0 inset-x-0"
+                    [ class "fixed z-50 top-0 inset-x-0 pointer-events-none"
                     , class "w-full flex justify-center"
                     ]
                     [ p
