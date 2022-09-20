@@ -88,15 +88,19 @@ simpleGraphqlHttpErrorToString httpError =
         errorsDecoder =
             Json.Decode.field "errors" (Json.Decode.list messageDecoder)
 
-        defaultErrorMsg =
-            "Une erreur inattendue s'est produite."
+        defaultErrorMsg code =
+            String.concat
+                [ "Une erreur inattendue s'est produite (code "
+                , code
+                , ")"
+                ]
     in
     case httpError of
         Graphql.Http.BadUrl url ->
-            defaultErrorMsg
+            defaultErrorMsg "021"
 
         Graphql.Http.Timeout ->
-            defaultErrorMsg
+            defaultErrorMsg "042"
 
         Graphql.Http.NetworkError ->
             "Veuillez vérifier votre connexion internet puis réessayer."
@@ -107,15 +111,10 @@ simpleGraphqlHttpErrorToString httpError =
                     String.join " " message
 
                 Err _ ->
-                    String.concat
-                        [ defaultErrorMsg
-                        , " (code"
-                        , String.fromInt metadata.statusCode
-                        , ")"
-                        ]
+                    defaultErrorMsg <| String.fromInt metadata.statusCode
 
-        Graphql.Http.BadPayload err ->
-            defaultErrorMsg
+        Graphql.Http.BadPayload _ ->
+            defaultErrorMsg "084"
 
 
 graphqlHttpErrorToString : Graphql.Http.Error a -> List String
