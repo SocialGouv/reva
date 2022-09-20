@@ -14,6 +14,7 @@ module Data.Candidacy exposing
 
 import Admin.Enum.Duration exposing (Duration)
 import Data.Certification exposing (Certification)
+import Data.Organism exposing (Organism, OrganismId)
 import Time
 
 
@@ -47,7 +48,7 @@ type alias Candidacy =
     { id : CandidacyId
     , deviceId : String
     , certificationId : String
-    , organismId : Maybe String
+    , organism : Maybe Organism
     , certification : Certification
     , goals : List CandidacyGoal
     , experiences : List CandidacyExperience
@@ -62,7 +63,6 @@ type alias CandidacySummary =
     { id : CandidacyId
     , deviceId : String
     , certificationId : String
-    , organismId : Maybe String
     , certification : Certification
     , phone : Maybe String
     , email : Maybe String
@@ -124,7 +124,6 @@ toCandidacySummary candidacy =
     { id = candidacy.id
     , deviceId = candidacy.deviceId
     , certificationId = candidacy.certificationId
-    , organismId = candidacy.organismId
     , certification = candidacy.certification
     , phone = candidacy.phone
     , email = candidacy.email
