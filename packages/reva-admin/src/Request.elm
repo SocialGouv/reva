@@ -81,25 +81,41 @@ makeMutation endpointGraphql token msg query =
 
 simpleGraphqlHttpErrorToString : Graphql.Http.HttpError -> String
 simpleGraphqlHttpErrorToString httpError =
+    let
+        messageDecoder =
+            Json.Decode.field "message" Json.Decode.string
+
+        errorsDecoder =
+            Json.Decode.field "errors" (Json.Decode.list messageDecoder)
+
+        defaultErrorMsg =
+            "Une erreur inattendue s'est produite."
+    in
     case httpError of
         Graphql.Http.BadUrl url ->
-            "This URL is invalid:" ++ url
+            defaultErrorMsg
 
         Graphql.Http.Timeout ->
-            "It took too long to get a response"
+            defaultErrorMsg
 
         Graphql.Http.NetworkError ->
-            "The network is not available"
+            "Veuillez vérifier votre connexion internet puis réessayer."
 
         Graphql.Http.BadStatus metadata body ->
-            "The request failed with a "
-                ++ String.fromInt metadata.statusCode
-                ++ " status code and the following body response: "
-                ++ body
+            case Json.Decode.decodeString errorsDecoder body of
+                Ok message ->
+                    String.join " " message
+
+                Err _ ->
+                    String.concat
+                        [ defaultErrorMsg
+                        , " (code"
+                        , String.fromInt metadata.statusCode
+                        , ")"
+                        ]
 
         Graphql.Http.BadPayload err ->
-            "The payload was unexpected: "
-                ++ Json.Decode.errorToString err
+            defaultErrorMsg
 
 
 graphqlHttpErrorToString : Graphql.Http.Error a -> List String

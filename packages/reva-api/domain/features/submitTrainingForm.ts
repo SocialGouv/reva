@@ -50,7 +50,7 @@ export const submitTraining = (deps: SubmitTrainingDeps) => (params: {
         status: "PRISE_EN_CHARGE"
     })).chain((existsCandidacy) => {
         if (!existsCandidacy) {
-            return EitherAsync.liftEither(Left(`Le parcours candidat ${params.candidacyId} ne peut être envoyé car la candidature n'est pas au statut prise en charge.`));
+            return EitherAsync.liftEither(Left(`Ce parcours ne peut pas être envoyé car la candidature n'est pas encore prise en charge.`));
         }
         return EitherAsync.liftEither(Right(existsCandidacy));
     })

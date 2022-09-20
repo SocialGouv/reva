@@ -163,7 +163,7 @@ viewForm referential maybeError formData form saveButton =
                     , class "w-full flex justify-center"
                     ]
                     [ p
-                        [ class "max-w-xl mt-10 px-6 py-4"
+                        [ class "max-w-2xl mt-10 px-6 py-4"
                         , class "rounded bg-white border border-red-400"
                         , class "text-center text-sm font-medium text-red-600"
                         ]
