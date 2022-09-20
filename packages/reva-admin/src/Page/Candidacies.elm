@@ -9,7 +9,6 @@ module Page.Candidacies exposing
 
 import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
 import Admin.Object exposing (Candidacy)
-import Api exposing (Token)
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Context exposing (Context)
