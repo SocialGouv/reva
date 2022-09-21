@@ -28,6 +28,7 @@ const projectOrganism = "projectOrganism";
 const projectHelp = "projectHelp";
 const projectSubmitted = "projectSubmitted";
 const submissionHome = "submissionHome";
+const trainingProgramSummary = "trainingProgramSummary";
 const error = "error";
 
 export type State =
@@ -44,7 +45,8 @@ export type State =
   | typeof projectGoals
   | typeof projectOrganism
   | typeof projectSubmitted
-  | typeof submissionHome;
+  | typeof submissionHome
+  | typeof trainingProgramSummary;
 
 type ProjectStatus = "draft" | "validated" | "submitted";
 
@@ -116,6 +118,13 @@ export type MainState =
       };
     }
   | {
+      value: typeof trainingProgramSummary;
+      context: MainContext & {
+        certification: Certification;
+        trainingProgram: TrainingProgram;
+      };
+    }
+  | {
       value: typeof submissionHome;
       context: MainContext & {
         candidacyId: string;
@@ -178,6 +187,23 @@ export const mainMachine =
           invoke: {
             src: "initializeApp",
             onDone: [
+              {
+                actions: [
+                  assign({
+                    certification: (_, event) => {
+                      return event.data.candidacy.certification;
+                    },
+                    organism: (_, event) => {
+                      return event.data.candidacy.organism;
+                    },
+                    trainingProgram: (_, event) => {
+                      return event.data.candidacy.trainingProgram;
+                    },
+                  }),
+                ],
+                cond: "isSubmittedTrainingProgram",
+                target: "trainingProgramSummary",
+              },
               {
                 actions: [
                   assign({
@@ -541,6 +567,7 @@ export const mainMachine =
             },
           ],
         },
+        trainingProgramSummary: {},
         projectContact: {
           initial: "idle",
           states: {
@@ -1015,6 +1042,14 @@ export const mainMachine =
             typedEvent.data.graphQLErrors[0]?.extensions.code ===
             "CANDIDACY_DOES_NOT_EXIST"
           );
+        },
+        isSubmittedTrainingProgram: (_context, event) => {
+          const typedEvent = event as DoneInvokeEvent<any>;
+          const statusParcoursEnvoye =
+            typedEvent.data.candidacy?.candidacyStatuses?.filter(
+              (s: any) => s.status === "PARCOURS_ENVOYE" && s.isActive
+            );
+          return !!statusParcoursEnvoye && !!statusParcoursEnvoye[0];
         },
       },
     }

@@ -4,7 +4,6 @@ import { Interpreter } from "xstate";
 
 import { CardBasic } from "../components/atoms/CardBasic";
 import { Description } from "../components/atoms/Description";
-import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
@@ -13,7 +12,7 @@ interface Props {
 }
 
 export const TrainingProgram: FC<Props> = ({ mainService }) => {
-  const [state, send] = useActor(mainService);
+  const [state] = useActor(mainService);
 
   if (!state.context.trainingProgram) return <></>;
 
@@ -33,8 +32,6 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
       className="z-50 bg-slate-900 p-6 overflow-y-scroll"
       direction={state.context.direction}
     >
-      <BackButton color="light" onClick={() => send("BACK")} />
-
       <div className="px-8 pb-8 flex flex-col">
         <h1 className="text-white	text-3xl font-bold mb-16">
           Votre parcours

@@ -295,6 +295,7 @@ const INITIALIZE_APP = gql`
       candidacyStatuses {
         id
         status
+        isActive
       }
       regionId
       appointmentCount

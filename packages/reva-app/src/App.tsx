@@ -335,13 +335,13 @@ function App() {
       {current.matches("certificateDetails") &&
         certificateDetails(current.context.certification)}
 
-      {/* {current.matches("submissionHome") &&
+      {current.matches("submissionHome") &&
         submissionHomePage(
           current.context.certification,
           current.context.candidacyCreatedAt
-        )} */}
+        )}
 
-      {current.matches("submissionHome") && (
+      {current.matches("trainingProgramSummary") && (
         <TrainingProgram mainService={mainService} />
       )}
 
