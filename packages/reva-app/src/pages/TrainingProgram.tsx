@@ -2,6 +2,7 @@ import { useActor } from "@xstate/react";
 import { FC, useState } from "react";
 import { Interpreter } from "xstate";
 
+import { Button } from "../components/atoms/Button";
 import { CardBasic } from "../components/atoms/CardBasic";
 import { DescriptionMultiLine } from "../components/molecules/DescriptionMultiLine";
 import { DescriptionSimple } from "../components/molecules/DescriptionSimple";
@@ -96,7 +97,8 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
             accompagnateur.
           </label>
         </div>
-        <button
+
+        <Button
           className="bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded"
           data-test="submit-confirm-path"
           disabled={!checkedCondition}
@@ -106,9 +108,8 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
             //   type: "SUBMIT_CONFIRM_PATH",
             // })
           }
-        >
-          Je confirme
-        </button>
+          label="Je confirme"
+        />
       </div>
     </Page>
   );
