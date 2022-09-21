@@ -4,6 +4,31 @@ import * as domain from '../../../domain/types/candidacy';
 import { prismaClient } from './client';
 import { toDomainExperiences } from './experiences';
  
+const candidacyIncludes = {
+    experiences: true,
+    goals: true,
+    candidacyStatuses: true,
+    certificationsAndRegions: {
+        select: {
+            certification: true,
+            region: true
+        },
+        where: {
+            isActive: true
+        }
+    },
+    organism: true,
+    basicSkills: {
+        select: {
+            basicSkill: true
+        }
+    },
+    trainings: {
+        select: {
+            training: true
+        }
+    },
+};
 
 
 const toDomainCandidacySummary = (candidacy: Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; }) => ({
@@ -42,20 +67,7 @@ export const insertCandidacy = async (params: { deviceId: string; certificationI
                     }
                 }
             },
-            include: {
-                experiences: true,
-                goals: true,
-                candidacyStatuses: true,
-                certificationsAndRegions: {
-                    select: {
-                        certification: true,
-                        region: true
-                    },
-                    where: {
-                        isActive: true
-                    }
-                },
-            }
+            include: candidacyIncludes
         });
 
         return Right({ 
@@ -89,12 +101,7 @@ export const getCandidacyFromDeviceId = async (deviceId: string) => {
                     }
                 }
             },
-            include: {
-                experiences: true,
-                goals: true,
-                candidacyStatuses: true,
-                organism: true
-            }
+            include: candidacyIncludes
         });
 
         const certificationAndRegion = await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
@@ -104,7 +111,7 @@ export const getCandidacyFromDeviceId = async (deviceId: string) => {
             },
             include: {
                 certification: true,
-                region: true
+                region: true,
             }
         });
 
@@ -124,14 +131,7 @@ export const getCandidacyFromId = async (candidacyId: string) => {
             where: {
                 id: candidacyId
             },
-            include: {
-                experiences: true,
-                goals: true,
-                candidacyStatuses: true,
-                basicSkills: true,
-                trainings: true,
-                organism: true
-            }
+            include: candidacyIncludes
         });
 
         const certificationAndRegion = await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
@@ -196,11 +196,7 @@ export const updateContactOnCandidacy = async (params: { candidacyId: string, em
                 phone: params.phone,
                 email: params.email
             },
-            include: {
-                experiences: true,
-                goals: true,
-                candidacyStatuses: true
-            }
+            include: candidacyIncludes
         });
 
         const certificationAndRegion = await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
@@ -262,11 +258,7 @@ export const updateCandidacyStatus = async (params: { candidacyId: string, statu
                         }
                     }
                 },
-                include: {
-                    experiences: true,
-                    goals: true,
-                    candidacyStatuses: true,
-                }
+                include: candidacyIncludes
             }),
             prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
                 where: {
@@ -331,11 +323,7 @@ export const updateCertification = async (params: { candidacyId: string, certifi
                         }
                     }
                 },
-                include: {
-                    experiences: true,
-                    goals: true,
-                    candidacyStatuses: true
-                }
+                include: candidacyIncludes
             }),
 
             prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
@@ -531,11 +519,7 @@ export const updateAppointmentInformations = async (params: {
                 appointmentCount: params.appointmentInformations.appointmentCount,
                 wasPresentAtFirstAppointment: params.appointmentInformations.wasPresentAtFirstAppointment
             },
-            include: {
-                experiences: true,
-                goals: true,
-                candidacyStatuses: true
-            }
+            include: candidacyIncludes
         });
 
         const candidaciesOnRegionsAndCertifications = await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
@@ -589,11 +573,7 @@ export const updateOrganism = async (params: { candidacyId: string, organismId: 
             data: {
                 organismId: params.organismId,
             },
-            include: {
-                experiences: true,
-                goals: true,
-                candidacyStatuses: true
-            }
+            include: candidacyIncludes
         });
 
         const certificationAndRegion = await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
@@ -681,11 +661,7 @@ export const updateTrainingInformations = async (params: {
                     additionalHourCount: params.training.additionalHourCount,
                     validatedByCandidate: params.training.validatedByCandidate
                 },
-                include: {
-                    experiences: true,
-                    goals: true,
-                    candidacyStatuses: true
-                }
+                include: candidacyIncludes
             })
         ]);
 
