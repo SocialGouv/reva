@@ -97,7 +97,8 @@ export type MainEvent =
   | { type: "SUBMIT_GOALS"; goals: Goal[] }
   | { type: "SUBMIT_ORGANISM"; organism: OrganismForCandidacy }
   | { type: "VALIDATE_PROJECT" }
-  | { type: "SUBMIT_PROJECT" };
+  | { type: "SUBMIT_PROJECT" }
+  | { type: "SUBMIT_TRAINING_PROGRAM" };
 
 export type MainState =
   | {
@@ -567,7 +568,13 @@ export const mainMachine =
             },
           ],
         },
-        trainingProgramSummary: {},
+        trainingProgramSummary: {
+          on: {
+            SUBMIT_TRAINING_PROGRAM: {
+              target: "submissionHome.ready",
+            },
+          },
+        },
         projectContact: {
           initial: "idle",
           states: {

@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const TrainingProgram: FC<Props> = ({ mainService }) => {
-  const [state] = useActor(mainService);
+  const [state, send] = useActor(mainService);
   const [checkedCondition, setCheckedCondition] = useState(false);
 
   if (!state.context.trainingProgram) return <></>;
@@ -100,13 +100,12 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
 
         <Button
           className="bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded"
-          data-test="submit-confirm-path"
+          data-test="submit-trainin"
           disabled={!checkedCondition}
-          onClick={
-            () => alert("SUBMIT_CONFIRM_PATH")
-            // send({
-            //   type: "SUBMIT_CONFIRM_PATH",
-            // })
+          onClick={() =>
+            send({
+              type: "SUBMIT_TRAINING_PROGRAM",
+            })
           }
           label="Je confirme"
         />
