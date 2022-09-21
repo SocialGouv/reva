@@ -18,10 +18,12 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
 
   const {
     trainingProgram: {
-      individualHourCount,
-      collectiveHourCount,
       additionalHourCount,
+      basicSkills,
       certificateSkills,
+      collectiveHourCount,
+      individualHourCount,
+      mandatoryTrainings,
       otherTraining,
     },
     certification,
@@ -63,12 +65,8 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
           <Description term="Formations obligatoires">
             {
               <ul>
-                {[
-                  "Intitulé de formation",
-                  "Intitulé de formation",
-                  "Intitulé de formation",
-                ].map((x, i) => (
-                  <li key={i}>{x}</li>
+                {mandatoryTrainings?.map((m, i) => (
+                  <li key={i}>{m}</li>
                 ))}
               </ul>
             }
@@ -77,12 +75,8 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
           <Description term="Savoirs de base">
             {
               <ul>
-                {[
-                  "Intitulé de formation",
-                  "Intitulé de formation",
-                  "Intitulé de formation",
-                ].map((x, i) => (
-                  <li key={i}>{x}</li>
+                {basicSkills?.map((b, i) => (
+                  <li key={i}>{b}</li>
                 ))}
               </ul>
             }

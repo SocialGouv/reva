@@ -64,11 +64,13 @@ export interface OrganismForCandidacy {
 }
 
 export interface TrainingProgram {
-  appointmentCount: number;
-  individualHourCount: number;
-  collectiveHourCount: number;
   additionalHourCount: number;
-  validatedByCandidate: boolean;
+  appointmentCount: number;
+  basicSkills: string[];
   certificateSkills: string;
+  collectiveHourCount: number;
+  individualHourCount: number;
+  mandatoryTrainings: string[];
   otherTraining: string;
+  validatedByCandidate: boolean;
 }
