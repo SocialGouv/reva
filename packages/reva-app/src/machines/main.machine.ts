@@ -1046,10 +1046,10 @@ export const mainMachine =
         isSubmittedTrainingProgram: (_context, event) => {
           const typedEvent = event as DoneInvokeEvent<any>;
           const statusParcoursEnvoye =
-            typedEvent.data.candidacy?.candidacyStatuses?.filter(
+            typedEvent.data.candidacy?.candidacyStatuses?.find(
               (s: any) => s.status === "PARCOURS_ENVOYE" && s.isActive
             );
-          return !!statusParcoursEnvoye && !!statusParcoursEnvoye[0];
+          return !!statusParcoursEnvoye;
         },
       },
     }
