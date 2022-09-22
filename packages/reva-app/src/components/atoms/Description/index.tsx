@@ -5,7 +5,7 @@ const Term: FC = ({ children }) => (
 );
 
 const Detail: FC = ({ children }) => (
-  <dd className="text-white font-medium mb-4">{children}</dd>
+  <dd className="text-white text-lg font-semibold mb-4">{children}</dd>
 );
 
 interface Props {
