@@ -10,6 +10,7 @@ import {
   Organism,
   OrganismForCandidacy,
   Region,
+  TrainingProgram,
 } from "../interface";
 
 const loadingApplicationData = "loadingApplicationData";
@@ -27,6 +28,7 @@ const projectOrganism = "projectOrganism";
 const projectHelp = "projectHelp";
 const projectSubmitted = "projectSubmitted";
 const submissionHome = "submissionHome";
+const trainingProgramSummary = "trainingProgramSummary";
 const error = "error";
 
 export type State =
@@ -43,7 +45,8 @@ export type State =
   | typeof projectGoals
   | typeof projectOrganism
   | typeof projectSubmitted
-  | typeof submissionHome;
+  | typeof submissionHome
+  | typeof trainingProgramSummary;
 
 type ProjectStatus = "draft" | "validated" | "submitted";
 
@@ -63,6 +66,7 @@ export interface MainContext {
   regions: Region[];
   selectedRegion?: Region;
   organisms: Organism[] | undefined;
+  trainingProgram: TrainingProgram | undefined;
 }
 
 type SelectRegion = { type: "SELECT_REGION"; regionCode: string };
@@ -111,6 +115,13 @@ export type MainState =
       context: MainContext & {
         certification: Certification;
         candidacyId: string;
+      };
+    }
+  | {
+      value: typeof trainingProgramSummary;
+      context: MainContext & {
+        certification: Certification;
+        trainingProgram: TrainingProgram;
       };
     }
   | {
@@ -167,6 +178,7 @@ export const mainMachine =
         regions: [],
         selectedRegion: undefined,
         organisms: undefined,
+        trainingProgram: undefined,
       },
       initial: "loadingApplicationData",
       id: "mainMachine",
@@ -175,6 +187,23 @@ export const mainMachine =
           invoke: {
             src: "initializeApp",
             onDone: [
+              {
+                actions: [
+                  assign({
+                    certification: (_, event) => {
+                      return event.data.candidacy.certification;
+                    },
+                    organism: (_, event) => {
+                      return event.data.candidacy.organism;
+                    },
+                    trainingProgram: (_, event) => {
+                      return event.data.candidacy.trainingProgram;
+                    },
+                  }),
+                ],
+                cond: "isSubmittedTrainingProgram",
+                target: "trainingProgramSummary",
+              },
               {
                 actions: [
                   assign({
@@ -210,6 +239,9 @@ export const mainMachine =
                         : "draft";
                     },
                     regions: (_, event) => event.data.regions,
+                    trainingProgram: (_, event) => {
+                      return event.data.candidacy.trainingProgram;
+                    },
                   }),
                   "loadRegion",
                 ],
@@ -535,6 +567,7 @@ export const mainMachine =
             },
           ],
         },
+        trainingProgramSummary: {},
         projectContact: {
           initial: "idle",
           states: {
@@ -1009,6 +1042,14 @@ export const mainMachine =
             typedEvent.data.graphQLErrors[0]?.extensions.code ===
             "CANDIDACY_DOES_NOT_EXIST"
           );
+        },
+        isSubmittedTrainingProgram: (_context, event) => {
+          const typedEvent = event as DoneInvokeEvent<any>;
+          const statusParcoursEnvoye =
+            typedEvent.data.candidacy?.candidacyStatuses?.find(
+              (s: any) => s.status === "PARCOURS_ENVOYE" && s.isActive
+            );
+          return !!statusParcoursEnvoye;
         },
       },
     }

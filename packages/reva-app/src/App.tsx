@@ -21,6 +21,7 @@ import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectOrganisms } from "./pages/ProjectOrganisms";
 import { ProjectSubmitted } from "./pages/ProjectSubmitted";
 import { SubmissionHome } from "./pages/SubmissionHome";
+import { TrainingProgram } from "./pages/TrainingProgram";
 import {
   addExperience,
   createCandidacyWithCertification,
@@ -339,6 +340,10 @@ function App() {
           current.context.certification,
           current.context.candidacyCreatedAt
         )}
+
+      {current.matches("trainingProgramSummary") && (
+        <TrainingProgram mainService={mainService} />
+      )}
 
       {current.matches("error") && errorPage()}
     </AnimatePresence>
