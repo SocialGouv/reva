@@ -397,3 +397,23 @@ export const initializeApp =
       graphQLErrors: errors,
     };
   };
+
+const CONFIRM_TRAINING_FORM = gql`
+  mutation candidacy_confirmTrainingForm($candidacyId: UUID!) {
+    candidacy_confirmTrainingForm(candidacy: { candidacyId: $candidacyId }) {
+      id
+      deviceId
+      certificationId
+      regionId
+      createdAt
+    }
+  }
+`;
+
+export const confirmTrainingForm =
+  (client: ApolloClient<object>) =>
+  ({ candidacyId }: { candidacyId: string }) =>
+    client.mutate({
+      mutation: CONFIRM_TRAINING_FORM,
+      variables: { candidacyId },
+    });

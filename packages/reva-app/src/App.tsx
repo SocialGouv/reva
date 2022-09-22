@@ -24,6 +24,7 @@ import { SubmissionHome } from "./pages/SubmissionHome";
 import { TrainingProgram } from "./pages/TrainingProgram";
 import {
   addExperience,
+  confirmTrainingForm,
   createCandidacyWithCertification,
   initializeApp,
   saveGoals,
@@ -184,6 +185,18 @@ function App() {
             const deviceId = await Device.getId();
             return submitCandidacy(client as ApolloClient<object>)({
               deviceId: deviceId.uuid,
+              candidacyId: context.candidacyId,
+            });
+          },
+          confirmTrainingForm: async (context, event) => {
+            if (
+              event.type !== "SUBMIT_TRAINING_PROGRAM" ||
+              !context.candidacyId
+            ) {
+              return Promise.reject("Impossible state");
+            }
+
+            return confirmTrainingForm(client as ApolloClient<object>)({
               candidacyId: context.candidacyId,
             });
           },

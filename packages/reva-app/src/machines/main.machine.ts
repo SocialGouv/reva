@@ -203,7 +203,7 @@ export const mainMachine =
                   }),
                 ],
                 cond: "isSubmittedTrainingProgram",
-                target: "trainingProgramSummary",
+                target: "trainingProgramSummary.idle",
               },
               {
                 actions: [
@@ -569,10 +569,17 @@ export const mainMachine =
           ],
         },
         trainingProgramSummary: {
-          on: {
-            SUBMIT_TRAINING_PROGRAM: {
-              target: "submissionHome.ready",
+          states: {
+            idle: {
+              on: {
+                SUBMIT_TRAINING_PROGRAM: {
+                  target: "submitting",
+                },
+              },
             },
+            submitting: {
+              
+            }
           },
         },
         projectContact: {
