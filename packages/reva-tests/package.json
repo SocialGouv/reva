@@ -3,8 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "cypress": "npx cypress run",
-    "cypress:open": "npx cypress open"
+    "cypress": "cypress run",
+    "cypress:open": "cypress open --e2e --browser electron",
+    "cypress:ci": "cypress run --config baseUrl=http://localhost:8080/app/",
+    "server": "cd ../.. && npm run start:server:only -w reva-api",
+    "test:ci": "start-server-and-test server http://localhost:8080 cypress:ci"
   },
   "importSort": {
     ".js, .ts, .jsx, .tsx": {
@@ -16,6 +19,7 @@
     "cypress": "^10.7.0",
     "import-sort-style-module": "^6.0.0",
     "prettier": "^2.6.2",
-    "prettier-plugin-import-sort": "^0.0.7"
+    "prettier-plugin-import-sort": "^0.0.7",
+    "start-server-and-test": "^1.14.0"
   }
 }

@@ -1,6 +1,6 @@
 context("Project", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:3001");
+    cy.visit("/");
   });
 
   it("attempt to validate project", function () {

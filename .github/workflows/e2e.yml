@@ -1,0 +1,26 @@
+name: Cypress tests
+on: [push]
+env:
+  FRAMER_WEBSITE_URL: https://reva.incubateur.net
+  REACT_APP_API_GRAPHQL: https://reva.incubateur.net/graphql
+  # On la definie uniquement pour que le serveur start...
+  DATABASE_URL: postgresql://reva:password@localhost:5444/reva?schema=public
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: npm install
+      - run: cd packages/reva-tests && npm install
+      - run: npm run build
+      # On met le NODE_ENV ici car si on le met en global, ca install pas les devDeps
+      - run: cd packages/reva-tests && NODE_ENV=production npm run test:ci

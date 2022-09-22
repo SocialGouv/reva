@@ -7,7 +7,7 @@ const experienceDescription2 =
 
 context("Experiences", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:3001");
+    cy.visit("/");
   });
 
   it("add and edit an experience", function () {
