@@ -1,34 +1,10 @@
-# name: Build and test
-# on: push
-# jobs:
-#   cypress:
-#     runs-on: ubuntu-latest
-#     container:
-#       image: cypress/base:16.16.0
-#       options: --user 1001
-#     steps:
-#       - name: Use Node.js
-#         uses: actions/setup-node@v2
-#         with:
-#           node-version: "16"
-
-#       - run: node -v
-#       - run: npm -v
-#       - run: apt install rsync -y
-
-#       - name: Checkout
-#         uses: actions/checkout@v2
-#       - name: Install dependencies
-#         run: npm install
-#       - name: Build dependencies
-#         run: npm run build
-#       - name: Run test
-#         run: cd packages/reva-tests && npm install && npm run test:ci
-#         env:
-#           TERM: xterm
-
-name: With server
+name: Cypress tests
 on: [push]
+env:
+  FRAMER_WEBSITE_URL: https://reva.incubateur.net
+  REACT_APP_API_GRAPHQL: https://reva.incubateur.net/graphql
+  # On la definie uniquement pour que le serveur start...
+  DATABASE_URL: postgresql://reva:password@localhost:5444/reva?schema=public
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
@@ -43,10 +19,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-      - run: npm ci
-      - run: REACT_APP_API_GRAPHQL=https://reva.incubateur.net/graphql npm run build
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        with:
-          start: NODE_ENV=production npm run start:server:only -w reva-api
-          command: cd packages/reva-tests && npm run cypress:ci
+      - run: npm install
+      - run: cd packages/reva-tests && npm install
+      - run: npm run build
+      # On met le NODE_ENV ici car si on le met en global, ca install pas les devDeps
+      - run: cd packages/reva-tests && NODE_ENV=production npm run test:ci
