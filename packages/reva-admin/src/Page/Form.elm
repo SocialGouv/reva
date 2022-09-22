@@ -13,7 +13,7 @@ import Api exposing (Token)
 import Data.Context exposing (Context)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
-import Html.Styled as Html exposing (Html, button, div, fieldset, input, label, legend, option, select, text, textarea)
+import Html.Styled as Html exposing (Html, button, div, fieldset, input, label, legend, option, p, select, text, textarea)
 import Html.Styled.Attributes exposing (checked, class, disabled, for, id, name, selected, type_, value)
 import Html.Styled.Events exposing (onCheck, onInput, onSubmit)
 import RemoteData exposing (RemoteData(..))
@@ -55,7 +55,7 @@ type alias FormData =
 type RemoteForm referential
     = NotAsked
     | Loading (Form referential)
-    | Editing (Form referential) FormData
+    | Editing (Maybe String) (Form referential) FormData
     | Saving (Form referential) FormData
     | Failure
 
@@ -128,11 +128,11 @@ view remoteReferential model =
             skeleton
 
         ( RemoteData.Success referential, Saving form formData ) ->
-            viewForm referential formData form <|
+            viewForm referential Nothing formData form <|
                 disabledSaveButton "..."
 
-        ( RemoteData.Success referential, Editing form formData ) ->
-            viewForm referential formData form <|
+        ( RemoteData.Success referential, Editing error form formData ) ->
+            viewForm referential error formData form <|
                 saveButton form.saveLabel
 
         ( _, Failure ) ->
@@ -142,8 +142,8 @@ view remoteReferential model =
             text err
 
 
-viewForm : referential -> FormData -> Form referential -> Html (Msg referential) -> Html (Msg referential)
-viewForm referential formData form saveButton =
+viewForm : referential -> Maybe String -> FormData -> Form referential -> Html (Msg referential) -> Html (Msg referential)
+viewForm referential maybeError formData form saveButton =
     Html.form
         [ onSubmit (UserClickedSave referential) ]
         [ View.title form.title
@@ -156,6 +156,22 @@ viewForm referential formData form saveButton =
             [ class "mt-8 pb-4 flex justify-end" ]
             [ saveButton
             ]
+        , case maybeError of
+            Just error ->
+                div
+                    [ class "fixed z-50 top-0 inset-x-0 pointer-events-none"
+                    , class "w-full flex justify-center"
+                    ]
+                    [ p
+                        [ class "max-w-2xl mt-10 px-6 py-4"
+                        , class "rounded bg-white border border-red-400"
+                        , class "text-center text-sm font-medium text-red-600"
+                        ]
+                        [ text error ]
+                    ]
+
+            Nothing ->
+                text ""
         ]
 
 
@@ -326,24 +342,24 @@ update context msg model =
             ( model, Cmd.none )
     in
     case ( msg, model.form ) of
-        ( UserChangedElement elementId elementValue, Editing form formData ) ->
+        ( UserChangedElement elementId elementValue, Editing error form formData ) ->
             let
                 newFormData =
                     Dict.insert elementId elementValue formData
             in
-            ( { model | form = Editing form newFormData }, Cmd.none )
+            ( { model | form = Editing Nothing form newFormData }, Cmd.none )
 
         ( UserChangedElement _ _, _ ) ->
             noChange
 
-        ( UserClickedSave referential, Editing form formData ) ->
+        ( UserClickedSave referential, Editing error form formData ) ->
             ( { model | form = Saving form formData }, model.onSave context.endpoint context.token GotSaveResponse referential formData )
 
         ( UserClickedSave _, _ ) ->
             noChange
 
         ( GotLoadResponse (RemoteData.Success formData), Loading form ) ->
-            ( { model | form = Editing form formData }, Cmd.none )
+            ( { model | form = Editing Nothing form formData }, Cmd.none )
 
         ( GotLoadResponse (RemoteData.Failure _), Loading form ) ->
             ( { model | form = Failure }, Cmd.none )
@@ -351,12 +367,12 @@ update context msg model =
         ( GotLoadResponse _, _ ) ->
             noChange
 
-        ( GotSaveResponse (RemoteData.Success _), Saving form formData ) ->
-            ( { model | form = Editing form formData }, model.onRedirect )
+        ( GotSaveResponse (RemoteData.Success _), Saving _ _ ) ->
+            ( model, model.onRedirect )
 
-        ( GotSaveResponse (RemoteData.Failure _), Editing _ _ ) ->
+        ( GotSaveResponse (RemoteData.Failure error), Saving form formData ) ->
             -- TODO: Handle save failure
-            noChange
+            ( { model | form = Editing (Just error) form formData }, Cmd.none )
 
         ( GotSaveResponse _, _ ) ->
             noChange
