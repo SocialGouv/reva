@@ -29,6 +29,7 @@ import Keycloak from 'keycloak-connect';
 import { getBasicSkills } from "../../../domain/features/getBasicSkills";
 import { submitTraining } from "../../../domain/features/submitTrainingForm";
 import { Candidacy } from "../../../domain/types/candidacy";
+import { confirmTrainingFormByCandidate } from "../../../domain/features/validateTrainingFormByCandidate";
 
 const withBasicSkills = (c: Candidacy) => ({
   ...c,
@@ -247,6 +248,16 @@ export const resolvers = {
       });
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
-    }
+    },
+    candidacy_confirmTrainingForm: async (_: unknown, { candidacyId }: { candidacyId: string; }) => {
+      const result = await confirmTrainingFormByCandidate({
+        existsCandidacyWithActiveStatus: candidacyDb.existsCandidacyWithActiveStatus,
+        updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
+      })({
+        candidacyId: candidacyId
+      });
+
+      return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
+    } 
   }
 };
