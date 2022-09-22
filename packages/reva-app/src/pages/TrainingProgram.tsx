@@ -3,7 +3,8 @@ import { FC } from "react";
 import { Interpreter } from "xstate";
 
 import { CardBasic } from "../components/atoms/CardBasic";
-import { Description } from "../components/atoms/Description";
+import { DescriptionMultiLine } from "../components/molecules/DescriptionMultiLine";
+import { DescriptionSimple } from "../components/molecules/DescriptionSimple";
 import { Page } from "../components/organisms/Page";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
@@ -36,8 +37,7 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
     >
       <div className="px-8 pb-8 flex flex-col">
         <h1 className="text-white	text-3xl font-bold mb-16">
-          Votre parcours
-          <br /> personnalisé
+          Votre parcours personnalisé
         </h1>
 
         <CardBasic
@@ -46,47 +46,39 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
         />
 
         <dl>
-          <Description term="Diplome visé">
-            {certification?.label || ""}
-          </Description>
+          <DescriptionSimple
+            term="Diplome visé"
+            detail={certification?.label}
+          />
 
-          <Description term="Nombre d'heures d'accompagnement individuel">
-            {`${individualHourCount}h`}
-          </Description>
+          <DescriptionSimple
+            term="Nombre d'heures d'accompagnement individuel"
+            detail={`${individualHourCount}h`}
+          ></DescriptionSimple>
 
-          <Description term="Nombre d'heures d'accompagnement collectif">
-            {`${collectiveHourCount}h`}
-          </Description>
+          <DescriptionSimple
+            term="Nombre d'heures d'accompagnement collectif"
+            detail={`${collectiveHourCount}h`}
+          />
 
-          <Description term="Nombre d'heures de formation">
-            {`${additionalHourCount}h`}
-          </Description>
+          <DescriptionSimple
+            term="Nombre d'heures de formation"
+            detail={`${additionalHourCount}h`}
+          />
 
-          <Description term="Formations obligatoires">
-            {
-              <ul>
-                {mandatoryTrainings?.map((m, i) => (
-                  <li key={i}>{m}</li>
-                ))}
-              </ul>
-            }
-          </Description>
+          <DescriptionMultiLine
+            term="Formations obligatoires"
+            details={mandatoryTrainings}
+          />
 
-          <Description term="Savoirs de base">
-            {
-              <ul>
-                {basicSkills?.map((b, i) => (
-                  <li key={i}>{b}</li>
-                ))}
-              </ul>
-            }
-          </Description>
+          <DescriptionMultiLine term="Savoirs de base" details={basicSkills} />
 
-          <Description term="Bloc de compétences métiers">
-            {certificateSkills}
-          </Description>
+          <DescriptionSimple
+            term="Bloc de compétences métiers"
+            detail={certificateSkills}
+          />
 
-          <Description term="Autre">{otherTraining}</Description>
+          <DescriptionSimple term="Autre" detail={otherTraining} />
         </dl>
 
         <button

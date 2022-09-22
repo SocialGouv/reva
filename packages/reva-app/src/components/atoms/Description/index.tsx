@@ -12,9 +12,12 @@ interface Props {
   term: string;
 }
 
-export const Description: FC<Props> = ({ term, children }) => (
-  <>
-    <Term>{term}</Term>
-    <Detail>{children}</Detail>
-  </>
-);
+export const Description: FC<Props> = ({ term, children }) =>
+  !!children ? (
+    <>
+      <Term>{term}</Term>
+      <Detail>{children}</Detail>
+    </>
+  ) : (
+    <></>
+  );
