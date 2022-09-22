@@ -4,6 +4,7 @@ import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { CardBasic } from "../components/atoms/CardBasic";
+import { Checkbox } from "../components/atoms/Checkbox";
 import { DescriptionMultiLine } from "../components/molecules/DescriptionMultiLine";
 import { DescriptionSimple } from "../components/molecules/DescriptionSimple";
 import { Page } from "../components/organisms/Page";
@@ -81,22 +82,20 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
           <DescriptionSimple term="Autre" detail={otherTraining} />
         </dl>
 
-        <div className="my-8">
-          <input
-            type="checkbox"
-            id="accept-conditions"
-            className="checked:bg-blue-500"
-            onClick={() => setCheckedCondition(!checkedCondition)}
-          />
-          <label htmlFor="accept-conditions" className="ml-4 text-slate-400">
-            J'ai bien compris qu'il s'agissait des étapes et prestations
+        <Checkbox
+          checked={false}
+          label="J'ai bien compris qu'il s'agissait des étapes et prestations
             nécessaires pour que j'obtienne mon diplôme et je m'engage à les
             suivre ou informer mon accompagnateur de tout abandon dans les 48h.
             J'accepte que les résultats de mon étude personnalisée ainsi que le
             résultat à ma session de jury me soient transmis ainsi qu'à mon
-            accompagnateur.
-          </label>
-        </div>
+            accompagnateur."
+          name="accept-conditions2"
+          toggle={() => setCheckedCondition(!checkedCondition)}
+          theme="dark"
+          className="my-8"
+          size="small"
+        />
 
         <Button
           className="bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded"
