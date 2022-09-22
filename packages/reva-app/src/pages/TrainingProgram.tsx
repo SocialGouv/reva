@@ -35,8 +35,8 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
       className="z-50 bg-slate-900 p-6 overflow-y-scroll"
       direction={state.context.direction}
     >
-      <div className="px-8 pb-8 flex flex-col">
-        <h1 className="text-white	text-3xl font-bold mb-16">
+      <div className="px-4 pb-8 flex flex-col">
+        <h1 className="text-white	text-3xl font-extrabold mb-8">
           Votre parcours personnalisé
         </h1>
 
