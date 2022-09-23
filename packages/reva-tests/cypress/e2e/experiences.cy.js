@@ -1,19 +1,24 @@
-const experienceTitle1 = "Assistante de vie aux familles";
-const experienceTitle2 = "Auxiliaire de vie sociale";
+const experienceTitle1 = "Experience 1";
+const experienceTitle2 = "Experience 2";
 
-const experienceDescription1 = "Organiser et préparer";
-const experienceDescription2 =
-  "Organiser et préparer les tâches de planification des membres de la famille";
+const experienceDescription1 = "Description 1";
+const experienceDescription2 = "Description 2";
+
+import { setDeviceId } from "../utils/device";
+import { stubQuery } from "../utils/graphql";
 
 context("Experiences", () => {
   beforeEach(() => {
-    cy.visit("/");
+    setDeviceId();
   });
 
   it("add and edit an experience", function () {
-    cy.get("#select_region").select("11");
-    cy.get('[data-test="results"] [data-type="card"]').eq(4).click();
-    cy.get('[data-test="certification-submit"]').click();
+    cy.intercept("POST", "/graphql", (req) => {
+      stubQuery(req, "getCandidacy", "candidacy1.json");
+      stubQuery(req, "add_experience", "added-experience1.json");
+      stubQuery(req, "update_experience", "updated-experience2.json");
+    });
+    cy.visit("/");
     cy.get('[data-test="submission-home-show-project-home"]').click();
     cy.get('[data-test="project-home-edit-experiences"]').click();
     cy.get('[data-test="project-experiences-add"]').click();
