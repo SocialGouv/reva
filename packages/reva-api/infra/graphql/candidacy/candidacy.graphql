@@ -16,6 +16,24 @@ enum CandidateTypology {
   AUTRE
 }
 
+enum CandidateVulnerabilityIndicator {
+  DEMANDEUR_EMPLOI_SUP_12M
+  MINIMA_SOCIAUX
+  RQTH
+  VIDE
+}
+
+enum CandidateDegree {
+  N1_SANS
+  N2_CLEA
+  N3_CAP_BEP
+  N4_BAC
+  N5_BAC_2
+  N6_BAC_3_4
+  N7_BAC_5
+  N8_BAC_8
+}
+
 # QUERY
 
 type Candidacy {

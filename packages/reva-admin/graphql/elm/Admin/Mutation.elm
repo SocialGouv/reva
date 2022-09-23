@@ -231,20 +231,6 @@ candidacy_updateAppointmentInformations requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_updateAppointmentInformations" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "candidateTypologyInformations" requiredArgs____.candidateTypologyInformations Admin.InputObject.encodeCandidateTypologyInformationsInput, Argument.required "appointmentInformations" requiredArgs____.appointmentInformations Admin.InputObject.encodeAppointmentInformationsInput ] object____ Basics.identity
 
 
-type alias CandidacyUpdateTrainingInformationsRequiredArguments =
-    { candidacyId : Data.Scalar.Id
-    , basicSkills : List Data.Scalar.Id
-    }
-
-
-candidacy_updateTrainingInformations :
-    CandidacyUpdateTrainingInformationsRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Candidacy
-    -> SelectionSet decodesTo RootMutation
-candidacy_updateTrainingInformations requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidacy_updateTrainingInformations" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "basicSkills" requiredArgs____.basicSkills ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.list) ] object____ Basics.identity
-
-
 type alias CandidacyTakeOverRequiredArguments =
     { candidacyId : Data.Scalar.Id }
 

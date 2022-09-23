@@ -157,9 +157,23 @@ basicSkillIds =
     Object.selectionForField "(List Data.Scalar.Uuid)" "basicSkillIds" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecUuid |> .decoder |> Decode.list)
 
 
+basicSkills :
+    SelectionSet decodesTo Admin.Object.BasicSkill
+    -> SelectionSet (List decodesTo) Admin.Object.Candidacy
+basicSkills object____ =
+    Object.selectionForCompositeField "basicSkills" [] object____ (Basics.identity >> Decode.list)
+
+
 mandatoryTrainingIds : SelectionSet (List Data.Scalar.Uuid) Admin.Object.Candidacy
 mandatoryTrainingIds =
     Object.selectionForField "(List Data.Scalar.Uuid)" "mandatoryTrainingIds" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecUuid |> .decoder |> Decode.list)
+
+
+mandatoryTrainings :
+    SelectionSet decodesTo Admin.Object.Training
+    -> SelectionSet (List decodesTo) Admin.Object.Candidacy
+mandatoryTrainings object____ =
+    Object.selectionForCompositeField "mandatoryTrainings" [] object____ (Basics.identity >> Decode.list)
 
 
 createdAt : SelectionSet Data.Scalar.Timestamp Admin.Object.Candidacy
