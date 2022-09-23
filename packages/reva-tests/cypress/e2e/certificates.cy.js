@@ -5,6 +5,7 @@ context("Certificates", () => {
     cy.intercept("POST", "/graphql", (req) => {
       stubQuery(req, "getCandidacy", "referencial.json");
       stubQuery(req, "Certifications", "certifications.json");
+      stubQuery(req, "Certification", "certification1.json");
       stubMutation(req, "create_candidacy", "created-candidacy1.json");
     });
     cy.visit("/");

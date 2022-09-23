@@ -1,12 +1,16 @@
+import { setDeviceId } from "../utils/device";
+import { stubQuery } from "../utils/graphql";
+
 context("Project", () => {
   beforeEach(() => {
-    cy.visit("/");
+    setDeviceId();
   });
 
   it("attempt to validate project", function () {
-    cy.get("#select_region").select("11");
-    cy.get('[data-test="results"] [data-type="card"]').eq(4).click();
-    cy.get('[data-test="certification-submit"]').click();
+    cy.intercept("POST", "/graphql", (req) => {
+      stubQuery(req, "getCandidacy", "candidacy1.json");
+    });
+    cy.visit("/");
     cy.get('[data-test="submission-home-show-project-home"]').click();
     cy.get('[data-test="project-home-validate-locked"]').click();
     cy.get('[data-test="project-help"]').should("exist");
