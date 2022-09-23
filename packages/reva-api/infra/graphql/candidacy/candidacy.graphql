@@ -206,4 +206,5 @@ type Mutation {
     candidacyId: UUID!
     training: TrainingInput!
   ): Candidacy!
+  candidacy_confirmTrainingForm(candidacyId: UUID!): Candidacy!
 }

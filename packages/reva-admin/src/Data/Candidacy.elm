@@ -96,6 +96,12 @@ statusToString status =
         "PRISE_EN_CHARGE" ->
             "Candidatures prises en charge"
 
+        "PARCOURS_ENVOYE" ->
+            "Parcours envoyé"
+
+        "PARCOURS_CONFIRME" ->
+            "Parcours confirmé par le candidat"
+
         _ ->
             "Statut inconnu"
 
@@ -107,16 +113,22 @@ statusToOrderPosition status =
             1
 
         "PROJET" ->
-            3
+            5
 
         "ARCHIVE" ->
-            4
+            6
 
         "PRISE_EN_CHARGE" ->
             2
 
+        "PARCOURS_ENVOYE" ->
+            4
+
+        "PARCOURS_CONFIRME" ->
+            3
+
         _ ->
-            5
+            10
 
 
 toCandidacySummary : Candidacy -> CandidacySummary
