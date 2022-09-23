@@ -19,6 +19,8 @@ context("Experiences", () => {
       stubQuery(req, "update_experience", "updated-experience2.json");
     });
     cy.visit("/");
+    cy.wait("@getCandidacy");
+
     cy.get('[data-test="submission-home-show-project-home"]').click();
     cy.get('[data-test="project-home-edit-experiences"]').click();
     cy.get('[data-test="project-experiences-add"]').click();
@@ -26,7 +28,9 @@ context("Experiences", () => {
     cy.get("#startedAt").type("2019-01-31");
     cy.get("#duration").select("betweenOneAndThreeYears");
     cy.get("#description").type(experienceDescription1);
+
     cy.get('[data-test="project-experience-add"]').click();
+    cy.wait("@add_experience");
 
     cy.get('[data-test="project-experiences-overview"] > li')
       .eq(0)
@@ -80,6 +84,7 @@ context("Experiences", () => {
     // We will split this to a separate test once the local storage is done
 
     cy.get('[data-test="project-experiences-submit"]').click();
+    cy.wait("@update_experience");
 
     cy.get('[data-test="project-home-experiences"] > li')
       .eq(0)

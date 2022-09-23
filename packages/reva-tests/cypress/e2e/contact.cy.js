@@ -18,9 +18,11 @@ context("Contact", () => {
     });
     cy.visit("/");
     cy.wait("@getCandidacy");
+
     cy.get('[data-test="submission-home-show-project-home"]').click();
     cy.get('[data-test="project-home-edit-contact"]').click();
     cy.get("#phone").type(phone1);
+
     cy.get('[data-test="project-contact-save"]').click();
     cy.wait("@update_contact");
 
@@ -44,6 +46,7 @@ context("Contact", () => {
     cy.get("#email").type(email);
 
     cy.get('[data-test="project-contact-save"]').click();
+    cy.wait("@update_contact");
 
     cy.get('[data-test="project-home-contact-phone"]').should(
       "have.text",
