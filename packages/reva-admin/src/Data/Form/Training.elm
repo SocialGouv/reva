@@ -1,5 +1,7 @@
-module Data.Form.Training exposing (fromDict, keys, training)
+module Data.Form.Training exposing (degreeToString, fromDict, keys, training, vulnerabilityIndicatorToString)
 
+import Admin.Enum.CandidateDegree exposing (CandidateDegree(..))
+import Admin.Enum.CandidateVulnerabilityIndicator exposing (CandidateVulnerabilityIndicator(..))
 import Admin.Scalar exposing (Uuid)
 import Data.Form.Helper as Helper exposing (booleanToString, toIdList, uuidToCheckedList)
 import Data.Referential exposing (BasicSkill, MandatoryTraining)
@@ -19,26 +21,30 @@ type alias Training =
 
 
 keys :
-    { certificate : String
-    , mandatoryTrainings : String
+    { additionalHourCount : String
     , basicSkills : String
+    , certificate : String
     , certificateSkills : String
-    , otherTraining : String
-    , individualHourCount : String
     , collectiveHourCount : String
-    , additionalHourCount : String
     , consent : String
+    , individualHourCount : String
+    , highestDegree : String
+    , mandatoryTrainings : String
+    , otherTraining : String
+    , vulnerabilityIndicator : String
     }
 keys =
-    { certificate = "certificate"
-    , mandatoryTrainings = "mandatory-training"
+    { additionalHourCount = "additionalHourCount"
     , basicSkills = "basicSkills"
+    , certificate = "certificate"
     , certificateSkills = "certificateSkills"
-    , otherTraining = "otherTraining"
-    , individualHourCount = "individualHourCount"
     , collectiveHourCount = "collectiveHourCount"
-    , additionalHourCount = "additionalHourCount"
     , consent = "consent"
+    , individualHourCount = "individualHourCount"
+    , highestDegree = "highestDegree"
+    , mandatoryTrainings = "mandatoryTraining"
+    , otherTraining = "otherTraining"
+    , vulnerabilityIndicator = "vulnerabilityIndicator"
     }
 
 
@@ -88,3 +94,47 @@ training mandatoryTrainings basicSkills certificateSkills consent otherTraining 
                 |> Helper.keysToCheckedList keys
     in
     Dict.fromList (mandatoryTrainingsIds ++ basicSkillsIds ++ otherTrainings)
+
+
+vulnerabilityIndicatorToString : CandidateVulnerabilityIndicator -> String
+vulnerabilityIndicatorToString indicator =
+    case indicator of
+        DemandeurEmploiSup12m ->
+            "Demandeur d'emploi >12m"
+
+        MinimaSociaux ->
+            "Bénéficiaire de minima sociaux"
+
+        Rqth ->
+            "RQTH"
+
+        Vide ->
+            "Vide"
+
+
+degreeToString : CandidateDegree -> String
+degreeToString degree =
+    case degree of
+        N1Sans ->
+            "Niveau 1 : Sans qualification (hors Cléa)"
+
+        N2Clea ->
+            "Niveau 2 : Cléa"
+
+        N3CapBep ->
+            "Niveau 3 : CAP, BEP"
+
+        N4Bac ->
+            "Niveau 4 : Baccalauréat"
+
+        N5Bac2 ->
+            "Niveau 5 : Bac + 2 (DEUG, BTS, DUT, DEUST)"
+
+        N6Bac34 ->
+            "Niveau 6 : Bac + 3 (Licence, Licence LMD, licence professionnelle) et Bac + 4 (Maîtrise)"
+
+        N7Bac5 ->
+            "Niveau 7 : Bac + 5 (Master, DEA, DESS, diplôme d'ingénieur)"
+
+        N8Bac8 ->
+            "Niveau 8 : Bac + 8 (Doctorat, habilitation à diriger des recherches)"

@@ -7,7 +7,9 @@ module Page.Candidacies exposing
     , view
     )
 
+import Admin.Enum.CandidateDegree as CandidateDegree
 import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
+import Admin.Enum.CandidateVulnerabilityIndicator as CandidateVulnerabilityIndicator
 import Admin.Object exposing (Candidacy)
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
@@ -293,10 +295,30 @@ trainingForm =
     let
         keys =
             Data.Form.Training.keys
+
+        degrees =
+            CandidateDegree.list
+                |> List.map
+                    (\d ->
+                        ( CandidateDegree.toString d
+                        , Data.Form.Training.degreeToString d
+                        )
+                    )
+
+        vulnerabilityIndicators =
+            CandidateVulnerabilityIndicator.list
+                |> List.map
+                    (\i ->
+                        ( CandidateVulnerabilityIndicator.toString i
+                        , Data.Form.Training.vulnerabilityIndicatorToString i
+                        )
+                    )
     in
     { elements =
         \referential ->
-            [ ( keys.individualHourCount, Form.Number "Nombre d'heure d'accompagnement individuel" )
+            [ ( keys.highestDegree, Form.Select "Plus haut niveau de diplôme obtenu" degrees )
+            , ( keys.vulnerabilityIndicator, Form.Select "Indicateur public fragile" vulnerabilityIndicators )
+            , ( keys.individualHourCount, Form.Number "Nombre d'heure d'accompagnement individuel" )
             , ( keys.collectiveHourCount, Form.Number "Nombre d'heure d'accompagnement collectif" )
             , ( keys.additionalHourCount, Form.Number "Nombre d'heures de formations complémentaires" )
             , ( keys.mandatoryTrainings
