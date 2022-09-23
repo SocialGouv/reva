@@ -1,0 +1,64 @@
+{
+  "data": {
+    "getCandidacy": {
+      "id": "candidacy1",
+      "deviceId": "device1",
+      "certificationId": "certificate1",
+      "organism": null,
+      "email": null,
+      "phone": null,
+      "createdAt": 1663936489315,
+      "certification": {
+        "id": "certificate1",
+        "codeRncp": "34691",
+        "label": "Titre 1",
+        "summary": "résumé 1"
+      },
+      "experiences": [],
+      "goals": [],
+      "candidacyStatuses": [
+        {
+          "status": "PROJET",
+          "isActive": true
+        }
+      ],
+      "regionId": "region1",
+      "appointmentCount": 0,
+      "certificateSkills": null,
+      "otherTraining": null,
+      "individualHourCount": null,
+      "collectiveHourCount": null,
+      "additionalHourCount": null,
+      "validatedByCandidate": null,
+      "basicSkills": [],
+      "mandatoryTrainings": []
+    },
+    "getReferential": {
+      "goals": [
+        {
+          "id": "goal1",
+          "label": "Goal 1",
+          "order": 1
+        },
+        {
+          "id": "goal2",
+          "label": "Goal 2",
+          "order": 2
+        }
+      ],
+      "__typename": "Referential"
+    },
+    "getRegions": [
+      {
+        "id": "region1",
+        "code": "1",
+        "label": "Région 1"
+      },
+      {
+        "id": "region2",
+        "code": "2",
+        "label": "Région 2"
+      }
+    ]
+  }
+}
