@@ -1039,8 +1039,9 @@ export const mainMachine =
         isNotACandidate: (_context, event) => {
           const typedEvent = event as DoneInvokeEvent<any>;
           return (
-            typedEvent.data.graphQLErrors[0]?.extensions.code ===
-            "CANDIDACY_DOES_NOT_EXIST"
+            typedEvent.data.candidacy === null ||
+            typedEvent.data.graphQLErrors?.[0]?.extensions.code ===
+              "CANDIDACY_DOES_NOT_EXIST"
           );
         },
         isSubmittedTrainingProgram: (_context, event) => {

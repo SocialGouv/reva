@@ -6,7 +6,7 @@
       "certificationId": "certificate1",
       "organism": null,
       "email": null,
-      "phone": null,
+      "phone": "06-01-02-03-04",
       "createdAt": 1663936489315,
       "certification": {
         "id": "certificate1",
@@ -45,8 +45,7 @@
           "label": "Goal 2",
           "order": 2
         }
-      ],
-      "__typename": "Referential"
+      ]
     },
     "getRegions": [
       {
