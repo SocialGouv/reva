@@ -1,76 +1,48 @@
 {
   "data": {
     "getCandidacy": {
-      "id": "6b6eba54-2fc4-4b56-829c-7ff10a5f32a5",
-      "deviceId": "9972bfb4-d211-4d02-bc31-f604194c929e",
-      "certificationId": "2ba8bc02-38c6-4dd2-8e71-89e37429bf6e",
+      "id": "11111111-1111-1111-1111-111111111111",
       "organism": {
-        "id": "e2f979b9-7409-4c57-877e-4b84e7e1bc28",
-        "label": "IPERIA",
-        "address": "60, avenue de Quakenbrück",
-        "zip": "61004",
-        "city": "ALENCON",
-        "contactAdministrativeEmail": "reva2@iperia.eu",
-        "__typename": "Organism"
+        "label": "organism"
       },
-      "email": "expe@example.com",
-      "phone": null,
-      "createdAt": 1664187431325,
       "certification": {
-        "id": "2ba8bc02-38c6-4dd2-8e71-89e37429bf6e",
-        "codeRncp": "34692",
-        "label": "Titre Professionnel Employé familial",
-        "summary": "L'employé familial intervient au domicile des particuliers (en leur présence ou non) principalement pour l'entretien du cadre de vie, du linge et la préparation des repas. Il est amené à se déplacer aux différents domiciles des particuliers employeurs.",
-        "__typename": "Certification"
+        "label": "certification label"
       },
       "experiences": [
         {
-          "id": "a17a561c-f197-4425-a081-7d69cc311f2f",
-          "title": "expé 1",
-          "startedAt": 1643587200000,
-          "duration": "lessThanOneYear",
-          "description": "expé 1 expé 1 expé 1 expé 1 expé 1 expé 1 expé 1 expé 1 expé 1 expé 1 expé 1 expé 1 expé 1 expé 1 expé 1 expé 1 expé 1 expé 1 expé 1 expé 1 expé 1 expé 1 ",
-          "__typename": "Experience"
+          "title": "expé title",
+          "description": "expé description"
         }
       ],
       "goals": [
         {
-          "goalId": "8545e8a2-2034-4d44-85ab-515df72cd9a4",
-          "additionalInformation": null,
-          "__typename": "CandidateGoal"
+          "additionalInformation": null
         },
         {
-          "goalId": "8640eddd-03d7-40f3-b840-fbf5f16f0a9e",
-          "additionalInformation": null,
-          "__typename": "CandidateGoal"
+          "additionalInformation": null
         }
       ],
       "candidacyStatuses": [
         {
           "status": "PROJET",
-          "isActive": false,
-          "__typename": "CandidacyStatus"
+          "isActive": false
         },
         {
           "status": "PRISE_EN_CHARGE",
-          "isActive": false,
-          "__typename": "CandidacyStatus"
+          "isActive": false
         },
         {
           "status": "PARCOURS_ENVOYE",
-          "isActive": true,
-          "__typename": "CandidacyStatus"
+          "isActive": true
         }
       ],
-      "regionId": "463a5e2f-b8de-4a3b-a80d-9ad214795689",
       "appointmentCount": 0,
-      "certificateSkills": "=> Blocs de compétences métier",
-      "otherTraining": "=> Autres actions de formations complémentaires",
+      "certificateSkills": "Blocs de compétences métier",
+      "otherTraining": "Autres actions de formations complémentaires",
       "individualHourCount": 1,
       "collectiveHourCount": null,
       "validatedByCandidate": false,
-      "basicSkills": null,
-      "__typename": "Candidacy"
+      "basicSkills": null
     },
     "getReferential": {
       "goals": [
