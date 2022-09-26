@@ -96,18 +96,19 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
           className="my-8"
           size="small"
         />
-
-        <Button
-          className="bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded"
-          data-test="submit-trainin"
-          disabled={!checkedCondition}
-          onClick={() =>
-            send({
-              type: "SUBMIT_TRAINING_PROGRAM",
-            })
-          }
-          label="Je confirme"
-        />
+        <div className="flex flex-col items-center">
+          <Button
+            className="bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded"
+            data-test="submit-trainin"
+            disabled={!checkedCondition}
+            onClick={() =>
+              send({
+                type: "SUBMIT_TRAINING_PROGRAM",
+              })
+            }
+            label="Je confirme"
+          />
+        </div>
       </div>
     </Page>
   );

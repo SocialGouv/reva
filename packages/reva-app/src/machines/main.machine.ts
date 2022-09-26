@@ -585,7 +585,7 @@ export const mainMachine =
                 src: "confirmTrainingForm",
                 onDone: [
                   {
-                    target: "leave",
+                    target: "#mainMachine.projectHome.idle",
                   },
                 ],
                 onError: [
@@ -594,9 +594,6 @@ export const mainMachine =
                   },
                 ],
               },
-            },
-            leave: {
-              type: "final",
             },
           },
         },
