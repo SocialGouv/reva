@@ -109,7 +109,12 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
                 type: "SUBMIT_TRAINING_PROGRAM",
               })
             }
-            label="Je confirme"
+            label={
+              state.matches("trainingProgramSummary.leave")
+                ? "Confirmé"
+                : "Je confirme"
+            }
+            loading={state.matches("trainingProgramSummary.loading")}
           />
         </div>
         {state.context.error ? (
