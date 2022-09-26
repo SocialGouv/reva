@@ -8,9 +8,9 @@ context("Training Program", () => {
             });
             cy.visit("/");
             cy.wait("@getCandidacy");
-            cy.get('dl').should("exist").should('have.length', 1)
-            cy.get('dl > dt').should("exist").should('have.length', 8)
-            cy.get('dl > dd').should("exist").should('have.length', 8)
+            cy.get('dl').should('have.length', 1)
+            cy.get('dl > dt').should('have.length', 8)
+            cy.get('dl > dd').should('have.length', 8)
 
         });
 
@@ -20,9 +20,9 @@ context("Training Program", () => {
             });
             cy.visit("/");
             cy.wait("@getCandidacy");
-            cy.get('dl').should("exist").should('have.length', 1)
-            cy.get('dl > dt').should("exist").should('have.length', 4)
-            cy.get('dl > dd').should("exist").should('have.length', 4)
+            cy.get('dl').should('have.length', 1)
+            cy.get('dl > dt').should('have.length', 4)
+            cy.get('dl > dd').should('have.length', 4)
 
         });
     })
@@ -37,14 +37,14 @@ context("Training Program", () => {
             cy.wait("@getCandidacy");
 
             const checkbox = cy.get('[data-test="checkbox-accept-conditions"]');
-            checkbox.should("exist").not('be.checked');
-            cy.get('[data-test="label-accept-conditions"]').should("exist");
+            checkbox.not('be.checked');
+            cy.get('[data-test="label-accept-conditions"]');
 
             const confirmBtn = cy.get('[data-test="submit-training"]');
-            confirmBtn.should("exist").should('be.disabled');
+            confirmBtn.should('be.disabled');
 
             checkbox.check()
-            confirmBtn.should("exist").should('be.enabled');
+            confirmBtn.should('be.enabled');
             confirmBtn.click()
         });
     })
