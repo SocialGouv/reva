@@ -8,9 +8,9 @@ context("Training Program", () => {
             });
             cy.visit("/");
             cy.wait("@getCandidacy");
-            cy.get('dl').should('have.length', 1)
-            cy.get('dl > dt').should('have.length', 8)
-            cy.get('dl > dd').should('have.length', 8)
+            cy.get('[data-test="description-list"]').should('have.length', 1)
+            cy.get('[data-test="description-term"]').should('have.length', 8)
+            cy.get('[data-test="description-details"]').should('have.length', 8)
 
         });
 
@@ -20,9 +20,9 @@ context("Training Program", () => {
             });
             cy.visit("/");
             cy.wait("@getCandidacy");
-            cy.get('dl').should('have.length', 1)
-            cy.get('dl > dt').should('have.length', 4)
-            cy.get('dl > dd').should('have.length', 4)
+            cy.get('[data-test="description-list"]').should('have.length', 1)
+            cy.get('[data-test="description-term"]').should('have.length', 4)
+            cy.get('[data-test="description-details"]').should('have.length', 4)
 
         });
     })

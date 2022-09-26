@@ -46,7 +46,7 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
           title="Mon accompagnateur"
           text={state.context.organism?.label}
         />
-        <dl>
+        <dl data-test="description-list">
           <DescriptionSimple
             term="Diplome visé"
             detail={certification?.label}
