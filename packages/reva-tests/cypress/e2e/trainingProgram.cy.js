@@ -4,7 +4,7 @@ context("Training Program", () => {
     describe('Testing Descriptions', () => {
         it("display all fields", () => {
             cy.intercept("POST", "/graphql", (req) => {
-                stubQuery(req, "getCandidacy", "getCandidacy3.json");
+                stubQuery(req, "getCandidacy", "candidacy3.json");
             });
             cy.visit("/");
             cy.wait("@getCandidacy");
@@ -16,7 +16,7 @@ context("Training Program", () => {
 
         it("don't display missing fields", () => {
             cy.intercept("POST", "/graphql", (req) => {
-                stubQuery(req, "getCandidacy", "getCandidacy3_missingFields.json");
+                stubQuery(req, "getCandidacy", "candidacy3_missingFields.json");
             });
             cy.visit("/");
             cy.wait("@getCandidacy");
@@ -31,21 +31,16 @@ context("Training Program", () => {
     describe('Testing Checkbox logic', () => {
         it("validates checked condition and its mechanics", () => {
             cy.intercept("POST", "/graphql", (req) => {
-                stubQuery(req, "getCandidacy", "getCandidacy3.json");
+                stubQuery(req, "getCandidacy", "candidacy3.json");
             });
             cy.visit("/");
             cy.wait("@getCandidacy");
 
-            const checkbox = cy.get('[data-test="checkbox-accept-conditions"]');
-            checkbox.not('be.checked');
-            cy.get('[data-test="label-accept-conditions"]');
-
-            const confirmBtn = cy.get('[data-test="submit-training"]');
-            confirmBtn.should('be.disabled');
-
-            checkbox.check()
-            confirmBtn.should('be.enabled');
-            confirmBtn.click()
+            cy.get('[data-test="checkbox-accept-conditions"]').as('$checkbox').not('be.checked');
+            cy.get('[data-test="label-accept-conditions"]').should("exist");
+            cy.get('[data-test="submit-training"]').as('$submit').should('be.disabled');
+            cy.get('@$checkbox').check()
+            cy.get('@$submit').should('be.enabled').click()
         });
     })
 });
