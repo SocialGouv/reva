@@ -7,6 +7,7 @@ module Data.Candidacy exposing
     , CandidacySummary
     , candidacyIdFromString
     , candidacyIdToString
+    , lastStatus
     , statusToOrderPosition
     , statusToString
     , toCandidacySummary
@@ -139,13 +140,17 @@ toCandidacySummary candidacy =
     , certification = candidacy.certification
     , phone = candidacy.phone
     , email = candidacy.email
-    , lastStatus =
-        List.filter (\c -> c.isActive) candidacy.statuses
-            |> List.head
-            |> Maybe.withDefault
-                { createdAt = Time.millisToPosix 0
-                , status = ""
-                , isActive = True
-                }
+    , lastStatus = lastStatus candidacy.statuses
     , createdAt = candidacy.createdAt
     }
+
+
+lastStatus : List CandidacyStatus -> CandidacyStatus
+lastStatus statuses =
+    List.filter (\status -> status.isActive) statuses
+        |> List.head
+        |> Maybe.withDefault
+            { createdAt = Time.millisToPosix 0
+            , status = ""
+            , isActive = True
+            }
