@@ -38,6 +38,7 @@ export const Checkbox = ({
         <input
           id={name}
           name={name}
+          data-test={`checkbox-${name}`}
           aria-labelledby={labelName}
           defaultChecked={checked}
           onClick={toggle}
@@ -50,6 +51,7 @@ export const Checkbox = ({
       >
         <label
           id={labelName}
+          data-test={`label-${name}`}
           htmlFor={name}
           className={classNames(
             "block",

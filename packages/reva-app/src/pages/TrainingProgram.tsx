@@ -90,7 +90,7 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
             J'accepte que les résultats de mon étude personnalisée ainsi que le
             résultat à ma session de jury me soient transmis ainsi qu'à mon
             accompagnateur."
-          name="accept-conditions2"
+          name="accept-conditions"
           toggle={() => setCheckedCondition(!checkedCondition)}
           theme="dark"
           className="my-8"
@@ -99,7 +99,7 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
         <div className="flex flex-col items-center">
           <Button
             className="bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded"
-            data-test="submit-trainin"
+            data-test="submit-training"
             disabled={!checkedCondition}
             onClick={() =>
               send({
