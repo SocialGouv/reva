@@ -400,7 +400,7 @@ export const initializeApp =
 
 const CONFIRM_TRAINING_FORM = gql`
   mutation candidacy_confirmTrainingForm($candidacyId: UUID!) {
-    candidacy_confirmTrainingForm(candidacy: { candidacyId: $candidacyId }) {
+    candidacy_confirmTrainingForm(candidacyId: $candidacyId) {
       id
       deviceId
       certificationId

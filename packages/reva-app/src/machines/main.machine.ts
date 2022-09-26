@@ -191,6 +191,9 @@ export const mainMachine =
               {
                 actions: [
                   assign({
+                    candidacyId: (_, event) => {
+                      return event.data.candidacy.id;
+                    },
                     certification: (_, event) => {
                       return event.data.candidacy.certification;
                     },
@@ -578,8 +581,23 @@ export const mainMachine =
               },
             },
             submitting: {
-              
-            }
+              invoke: {
+                src: "confirmTrainingForm",
+                onDone: [
+                  {
+                    target: "leave",
+                  },
+                ],
+                onError: [
+                  {
+                    target: "idle",
+                  },
+                ],
+              },
+            },
+            leave: {
+              type: "final",
+            },
           },
         },
         projectContact: {
