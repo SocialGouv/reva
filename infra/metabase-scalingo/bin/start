@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+
+set -e
+
+# NOTE: The canonical source for this file is in the metabase/metabase repository.
+# Please update it there then copy to the metabase/metabase-deploy repository.
+
+# Translate various Heroku environment variables to Metabase equivalents
+
+if [ "$PORT" ]; then
+    export MB_JETTY_PORT="$PORT"
+fi
+
+# Heroku Postgres
+if [ "$DATABASE_URL" ]; then
+    if [[ $DATABASE_URL == *"?"* ]]; then
+        # if DATABASE_URL already has a query string don't mess with it
+        export MB_DB_CONNECTION_URI="$DATABASE_URL"
+    else
+        # otherwise add the SSL parameters to ensure upgraded databases work on Heroku
+        export MB_DB_CONNECTION_URI="$DATABASE_URL?ssl=true&sslmode=require&sslfactory=org.postgresql.ssl.NonValidatingFactory"
+    fi
+fi
+
+# Mailgun (Heroku)
+if [ "$MAILGUN_SMTP_LOGIN" ]; then
+    export MB_EMAIL_SMTP_HOST="$MAILGUN_SMTP_SERVER"
+    export MB_EMAIL_SMTP_PORT="$MAILGUN_SMTP_PORT"
+    export MB_EMAIL_SMTP_USERNAME="$MAILGUN_SMTP_LOGIN"
+    export MB_EMAIL_SMTP_PASSWORD="$MAILGUN_SMTP_PASSWORD"
+fi
+
+# SendGrid (Heroku)
+if [ "$SENDGRID_USERNAME" ]; then
+    export MB_EMAIL_SMTP_HOST="smtp.sendgrid.net"
+    export MB_EMAIL_SMTP_PORT="587"
+    export MB_EMAIL_SMTP_USERNAME="$SENDGRID_USERNAME"
+    export MB_EMAIL_SMTP_PASSWORD="$SENDGRID_PASSWORD"
+    export MB_EMAIL_SMTP_SECURITY="tls"
+fi
+
+# Mandrill (Heroku)
+if [ "$MANDRILL_USERNAME" ]; then
+    export MB_EMAIL_SMTP_HOST="smtp.mandrillapp.com"
+    export MB_EMAIL_SMTP_PORT="587"
+    export MB_EMAIL_SMTP_USERNAME="$MANDRILL_USERNAME"
+    export MB_EMAIL_SMTP_PASSWORD="$MANDRILL_APIKEY"
+fi
+
+# Postmark (Heroku)
+# NOTE: requires configuring sender signature for "from" address
+if [ "$POSTMARK_API_TOKEN" ]; then
+    export MB_EMAIL_SMTP_HOST="$POSTMARK_SMTP_SERVER"
+    export MB_EMAIL_SMTP_PORT="25"
+    export MB_EMAIL_SMTP_USERNAME="$POSTMARK_API_TOKEN"
+    export MB_EMAIL_SMTP_PASSWORD="$POSTMARK_API_TOKEN"
+    export MB_EMAIL_SMTP_SECURITY="tls"
+fi
+
+# SparkPost (Heroku)
+# NOTE: requires additional configuration
+if [ "$SPARKPOST_SMTP_USERNAME" ]; then
+    export MB_EMAIL_SMTP_HOST="$SPARKPOST_SMTP_HOST"
+    export MB_EMAIL_SMTP_PORT="$SPARKPOST_SMTP_PORT"
+    export MB_EMAIL_SMTP_USERNAME="$SPARKPOST_SMTP_USERNAME"
+    export MB_EMAIL_SMTP_PASSWORD="$SPARKPOST_SMTP_PASSWORD"
+fi
+
+# AWS Elastic Beanstalk w/ RDS
+if [ ! -z "$RDS_HOSTNAME" ]; then
+    # EEK: this is a bit fragile.  if user picks a non-standard port for their db we are screwed :(
+    if [ "$RDS_PORT" == "3306" ]; then
+        export MB_DB_TYPE=mysql
+    else
+        export MB_DB_TYPE=postgres
+    fi
+
+    export MB_DB_DBNAME=$RDS_DB_NAME
+    export MB_DB_USER=$RDS_USERNAME
+    export MB_DB_PASS=$RDS_PASSWORD
+    export MB_DB_HOST=$RDS_HOSTNAME
+    export MB_DB_PORT=$RDS_PORT
+fi
+
+# Determine whether we're on Heroku on a free, hobby, 1x dyno or 2x dyno
+#
+# We set $HEROKU in the Procfile, so we know we're on Heroku when started from the
+# Procfile.
+#
+# We need to override the $JAVA_OPTS and give it a slightly lower memory limit
+# because Heroku tends to think we can use more memory than we actually can.
+
+if [ -n "$HEROKU" ]; then
+    echo "  -> Heroku detected"
+    MAX_METASPACE_SIZE=${MAX_METASPACE_SIZE:-512m}
+    # Set a few other options to minimize memory usage as much as possible.
+    JAVA_OPTS+=" -XX:+UnlockExperimentalVMOptions"
+    JAVA_OPTS+=" -XX:+UseContainerSupport"                 # Tell the JVM to use container info to set heap limit
+    JAVA_OPTS+=" -XX:-UseGCOverheadLimit"                  # Disable limit to amount of time spent in GC. Better slow than not working at all
+    JAVA_OPTS+=" -XX:+UseCompressedOops"                   # Use 32-bit pointers. Reduces memory usage
+    JAVA_OPTS+=" -XX:+UseCompressedClassPointers"          # Same as above. See also http://blog.leneghan.com/2012/03/reducing-java-memory-usage-and-garbage.html
+    JAVA_OPTS+=" -XX:MaxMetaspaceSize=$MAX_METASPACE_SIZE" # Set a hard limit for the Metaspace (classes and other stuff), don't let it get any bigger
+    JAVA_OPTS+=" -Xverify:none"                            # Skip bytecode verification, the Heroku buildpack comes from us so it's already verified. Speed up launch slightly
+    JAVA_OPTS+=" -XX:+UseG1GC"                             # G1GC seems to use slightly less memory in my testing...
+    JAVA_OPTS+=" -XX:+UseStringDeduplication"              # Especially when used in combination with string deduplication
+fi
+
+# Other Java options
+JAVA_OPTS+=" -server"                  # Run in server mode. This is the default for 64-bit JVM
+JAVA_OPTS+=" -Djava.awt.headless=true" # don't try to start AWT. Not sure this does anything but better safe than wasting memory
+JAVA_OPTS+=" -Dfile.encoding=UTF-8"    # Use UTF-8
+
+exec java $JAVA_OPTS -jar ./target/uberjar/metabase.jar
