@@ -54,17 +54,20 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
 
           <DescriptionSimple
             term="Nombre d'heures d'accompagnement individuel"
-            detail={`${individualHourCount}h`}
+            detail={individualHourCount}
+            suffix="h"
           />
 
           <DescriptionSimple
             term="Nombre d'heures d'accompagnement collectif"
-            detail={`${collectiveHourCount}h`}
+            detail={collectiveHourCount}
+            suffix="h"
           />
 
           <DescriptionSimple
             term="Nombre d'heures de formation"
-            detail={`${additionalHourCount}h`}
+            detail={additionalHourCount}
+            suffix="h"
           />
 
           <DescriptionMultiLine
