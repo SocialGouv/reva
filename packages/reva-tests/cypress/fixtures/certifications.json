@@ -1,0 +1,20 @@
+{
+  "data": {
+    "getCertifications": [
+      {
+        "id": "c1",
+        "label": "Titre 1",
+        "summary": "résumé 1",
+        "codeRncp": "34691",
+        "status": "AVAILABLE"
+      },
+      {
+        "id": "c2",
+        "label": "Titre 2",
+        "summary": "résumé 2",
+        "codeRncp": "34692",
+        "status": "AVAILABLE"
+      }
+    ]
+  }
+}

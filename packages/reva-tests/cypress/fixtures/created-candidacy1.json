@@ -1,0 +1,11 @@
+{
+  "data": {
+    "candidacy_createCandidacy": {
+      "id": "candidacy1",
+      "deviceId": "device1",
+      "certificationId": "certificate1",
+      "regionId": "region1",
+      "createdAt": 1663936489315
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "data": {
+    "candidacy_updateContact": {
+      "id": "device1",
+      "email": null,
+      "phone": "06-01-02-03-04"
+    }
+  }
+}

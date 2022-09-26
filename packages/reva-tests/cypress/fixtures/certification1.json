@@ -1,0 +1,15 @@
+{
+  "data": {
+    "getCertification": {
+      "id": "id1",
+      "label": "Titre 1",
+      "summary": "Résumé 1",
+      "codeRncp": "34691",
+      "activities": "<ul><li>Item1</li><li>Item2</li></ul>",
+      "abilities": "<p>Abilities</p>",
+      "activityArea": "<p>Activity</p>",
+      "accessibleJobType": "<p>Type</p>",
+      "status": "AVAILABLE"
+    }
+  }
+}
