@@ -83,7 +83,7 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
         </dl>
 
         <Checkbox
-          checked={false}
+          checked={checkedCondition}
           label="J'ai bien compris qu'il s'agissait des étapes et prestations
             nécessaires pour que j'obtienne mon diplôme et je m'engage à les
             suivre ou informer mon accompagnateur de tout abandon dans les 48h.
