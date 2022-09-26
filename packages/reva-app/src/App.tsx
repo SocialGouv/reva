@@ -195,7 +195,6 @@ function App() {
             ) {
               return Promise.reject("Impossible state");
             }
-
             return confirmTrainingForm(client as ApolloClient<object>)({
               candidacyId: context.candidacyId,
             });

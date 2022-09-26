@@ -576,24 +576,38 @@ export const mainMachine =
             idle: {
               on: {
                 SUBMIT_TRAINING_PROGRAM: {
-                  target: "submitting",
+                  target: "loading",
                 },
               },
             },
-            submitting: {
+            loading: {
               invoke: {
                 src: "confirmTrainingForm",
                 onDone: [
                   {
-                    target: "#mainMachine.projectHome.idle",
+                    target: "leave",
                   },
                 ],
                 onError: [
                   {
-                    target: "idle",
+                    actions: assign({
+                      error: (_, _event) =>
+                        "Une erreur est survenue lors de la soumission du parcours.",
+                    }),
+                    target: "retry",
                   },
                 ],
               },
+            },
+            retry: {
+              on: {
+                SUBMIT_TRAINING_PROGRAM: {
+                  target: "loading",
+                },
+              },
+            },
+            leave: {
+              type: "final",
             },
           },
         },

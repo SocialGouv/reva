@@ -112,6 +112,13 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
             label="Je confirme"
           />
         </div>
+        {state.context.error ? (
+          <p key="error" className="text-red-600 mt-4 text-sm">
+            {state.context.error}
+          </p>
+        ) : (
+          <></>
+        )}
       </div>
     </Page>
   );
