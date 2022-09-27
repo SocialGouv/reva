@@ -4,7 +4,7 @@ context("Training Program", () => {
     describe('Testing Descriptions', () => {
         it("display all fields", () => {
             cy.intercept("POST", "/graphql", (req) => {
-                stubQuery(req, "getCandidacy", "candidacy3.json");
+                stubQuery(req, "getCandidacy", "candidacy2.json");
             });
             cy.visit("/");
             cy.wait("@getCandidacy");
@@ -16,7 +16,7 @@ context("Training Program", () => {
 
         it("don't display missing fields", () => {
             cy.intercept("POST", "/graphql", (req) => {
-                stubQuery(req, "getCandidacy", "candidacy3_missingFields.json");
+                stubQuery(req, "getCandidacy", "candidacy2_missingFields.json");
             });
             cy.visit("/");
             cy.wait("@getCandidacy");
@@ -31,7 +31,7 @@ context("Training Program", () => {
     describe('Testing Checkbox logic', () => {
         it("validates checked condition and its mechanics", () => {
             cy.intercept("POST", "/graphql", (req) => {
-                stubQuery(req, "getCandidacy", "candidacy3.json");
+                stubQuery(req, "getCandidacy", "candidacy2.json");
                 stubQuery(req, "candidacy_confirmTrainingForm", "confirm-training-form.json",);
             });
             cy.visit("/");
