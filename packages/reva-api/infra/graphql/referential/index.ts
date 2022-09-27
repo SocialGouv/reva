@@ -4,6 +4,7 @@ import * as certificationsDb from "../../database/postgres/certifications";
 import * as regionsDb from "../../database/postgres/regions";
 import mercurius from "mercurius";
 import { getRegions } from "../../../domain/features/getRegions";
+import { getDegrees } from "../../../domain/features/getDegrees";
 
 export const resolvers = {
   Query: {
@@ -27,6 +28,13 @@ export const resolvers = {
     getRegions: async (_: any, _payload: any) => {
       const result = await getRegions({
         getRegions:  regionsDb.getRegions
+      })();
+
+      return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
+    },
+    getDegrees: async (_: any, _payload: any) => {
+      const result = await getDegrees({
+        getDegrees:  degreesDb.getDegrees
       })();
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();

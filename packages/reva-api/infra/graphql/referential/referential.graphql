@@ -16,8 +16,16 @@ type Region {
   label: String!
 }
 
+type Degree {
+  id: ID!
+  code: String!
+  label: String!
+  level: Int!
+}
+
 type Query {
   getReferential: Referential!
   getCertifications(regionId: UUID!): [Certification!]!
   getRegions: [Region!]!
+  getDegrees: [Degree!]!
 }

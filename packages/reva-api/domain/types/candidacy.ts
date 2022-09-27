@@ -103,3 +103,10 @@ export interface Training {
     id: string;
     label: string;
 }
+
+export interface Degree {
+    id: string;
+    code: string;
+    label: string;
+    level: number;
+}

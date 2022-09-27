@@ -112,6 +112,10 @@ model Candidacy {
   collectiveHourCount   Int? @map("collective_hour_count")
   additionalHourCount   Int? @map("additional_hour_count")
   validatedByCandidate Boolean? @map("validated_by_candidate")
+  degree       Degree? @relation(fields: [degreeId], references: [id])
+  degreeId     String?        @db.Uuid  @map("degree_id")
+  vulnerabilityIndicator       VulnerabilityIndicator? @relation(fields: [vulnerabilityIndicatorId], references: [id])
+  vulnerabilityIndicatorId     String?        @db.Uuid  @map("vulnerability_indicator_id")
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
   @@map("candidacy")
@@ -303,4 +307,28 @@ model BasicSkillOnCandidacies {
 
   @@id([basicSkillId, candidacyId])
   @@map("basic_skill_candidacy")
+}
+
+model Degree {
+  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
+  code        String    @unique @db.VarChar(255) 
+  label       String    @unique @db.VarChar(255) 
+  longLabel   String    @unique @db.VarChar(255) @map("long_label")
+  level       Int
+  candidacies Candidacy[]
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+
+  @@map("degree")
+
+}
+
+model VulnerabilityIndicator {
+  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
+  label       String    @unique @db.VarChar(255) 
+  candidacies Candidacy[]
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+
+  @@map("vulnerability_indicator")
 }
