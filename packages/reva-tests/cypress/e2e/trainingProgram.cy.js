@@ -32,6 +32,7 @@ context("Training Program", () => {
         it("validates checked condition and its mechanics", () => {
             cy.intercept("POST", "/graphql", (req) => {
                 stubQuery(req, "getCandidacy", "candidacy3.json");
+                stubQuery(req, "candidacy_confirmTrainingForm", "confirm-training-form.json",);
             });
             cy.visit("/");
             cy.wait("@getCandidacy");
@@ -41,6 +42,8 @@ context("Training Program", () => {
             cy.get('[data-test="submit-training"]').as('$submit').should('be.disabled');
             cy.get('@$checkbox').check()
             cy.get('@$submit').should('be.enabled').click()
+            cy.wait("@candidacy_confirmTrainingForm");
+
         });
     })
 });
