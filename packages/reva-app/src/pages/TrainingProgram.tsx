@@ -48,7 +48,7 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
         />
         <dl data-test="description-list">
           <DescriptionSimple
-            term="Diplome visé"
+            term="Diplôme visé"
             detail={certification?.label}
           />
 
