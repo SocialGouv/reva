@@ -17,6 +17,7 @@ interface Props {
 export const TrainingProgram: FC<Props> = ({ mainService }) => {
   const [state, send] = useActor(mainService);
   const [checkedCondition, setCheckedCondition] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   if (!state.context.trainingProgram) return <></>;
 
@@ -98,24 +99,26 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
           theme="dark"
           className="my-8"
           size="small"
+          disabled={submitted}
         />
         <div className="flex flex-col items-center">
-          <Button
-            className="bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded"
-            data-test="submit-training"
-            disabled={!checkedCondition}
-            onClick={() =>
-              send({
-                type: "SUBMIT_TRAINING_PROGRAM",
-              })
-            }
-            label={
-              state.matches("trainingProgramSummary.leave")
-                ? "Confirmé"
-                : "Je confirme"
-            }
-            loading={state.matches("trainingProgramSummary.loading")}
-          />
+          {state.matches("trainingProgramSummary.leave") ? (
+            <span className="text-white text-lg">Confirmé</span>
+          ) : (
+            <Button
+              className="bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded"
+              data-test="submit-training"
+              disabled={!checkedCondition}
+              onClick={() => {
+                setSubmitted(true);
+                send({
+                  type: "SUBMIT_TRAINING_PROGRAM",
+                });
+              }}
+              label="Je confirme"
+              loading={state.matches("trainingProgramSummary.loading")}
+            />
+          )}
         </div>
         {state.context.error ? (
           <p key="error" className="text-red-600 mt-4 text-sm">

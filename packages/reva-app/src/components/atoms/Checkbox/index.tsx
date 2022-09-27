@@ -17,6 +17,7 @@ interface CheckboxProps {
    */
   className?: string;
   size?: Size;
+  disabled?: boolean;
   theme?: Theme;
   toggle: () => void;
 }
@@ -26,6 +27,7 @@ export const Checkbox = ({
   name,
   label,
   size = "large",
+  disabled = false,
   toggle,
   theme = "light",
   className = "",
@@ -40,6 +42,7 @@ export const Checkbox = ({
           name={name}
           data-test={`checkbox-${name}`}
           aria-labelledby={labelName}
+          disabled={disabled}
           defaultChecked={checked}
           onClick={toggle}
           type="checkbox"
