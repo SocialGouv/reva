@@ -8,7 +8,12 @@ interface Props {
   theme: "dark" | "light";
 }
 
-export const PageCard: FC<Props> = ({ progress, title, theme, children }) => {
+export const ProgressCard: FC<Props> = ({
+  progress,
+  title,
+  theme,
+  children,
+}) => {
   return (
     <div
       className="mt-10 flex flex-col px-8 py-6 rounded-xl shadow-sm bg-white"

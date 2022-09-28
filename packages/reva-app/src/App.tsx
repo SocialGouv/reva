@@ -7,11 +7,6 @@ import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
 import { useContext, useEffect, useMemo } from "react";
 
-import { Button } from "./components/atoms/Button";
-import { Title } from "./components/atoms/Title";
-import { PageCard } from "./components/molecules/PageCard";
-import { PageHeaders } from "./components/molecules/PageHeaders";
-import { ProgressPage } from "./components/organisms/ProgressPage";
 import { Certification } from "./interface";
 import { mainMachine } from "./machines/main.machine";
 import { CertificateDetails } from "./pages/CertificateDetails";
@@ -25,6 +20,7 @@ import { ProjectHelp } from "./pages/ProjectHelp";
 import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectOrganisms } from "./pages/ProjectOrganisms";
 import { ProjectSubmitted } from "./pages/ProjectSubmitted";
+import { ReviewTrainingProgram } from "./pages/ReviewTrainingProgram";
 import { SubmissionHome } from "./pages/SubmissionHome";
 import { TrainingProgram } from "./pages/TrainingProgram";
 import {
@@ -365,47 +361,12 @@ function App() {
       )}
 
       {current.matches("trainingProgramConfirmed") && (
-        <ProgressPage direction={current.context.direction}>
-          <PageHeaders
-            codeRncp={current.context.certification.codeRncp}
-            title={current.context.certification.label}
-            startDated={new Date(2022, 0, 10)}
-          />
-          <PageCard progress={100} title="Projet validé" theme="light">
-            <section className="mt-7">
-              <Title
-                label="Mon parcours personnalisé"
-                size={"small"}
-                theme={"light"}
-              />
-              <div className="mt-3">Consultez de nouveau votre parcours</div>
-              <div className="mt-3">
-                <Button label="Voir mon parcours" size="tiny" />
-              </div>
-            </section>
-
-            <section className="mt-7">
-              <Title
-                label="Mon architecte de parcours"
-                size={"small"}
-                theme={"light"}
-              />
-              <div className="text-md font-medium">
-                {current.context.organism.label}
-              </div>
-              <address className="mt-1 text-gray-600">
-                <div>{current.context.organism.address}</div>
-                <div>
-                  <span>{current.context.organism.zip}</span>
-                  <span className="ml-2">{current.context.organism.city}</span>
-                </div>
-              </address>
-              <div className="mt-1 text-gray-600">
-                {current.context.organism.contactAdministrativeEmail}
-              </div>
-            </section>
-          </PageCard>
-        </ProgressPage>
+        <ReviewTrainingProgram
+          certification={current.context.certification}
+          date={new Date(2022, 0, 10)}
+          direction={current.context.direction}
+          organism={current.context.organism}
+        />
       )}
 
       {current.matches("error") && errorPage()}

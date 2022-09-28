@@ -1,14 +1,23 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { FC } from "react";
 
+import { PageHeaders } from "../../../components/molecules/PageHeaders";
 import certificationImg from "../../../components/organisms/Card/certification.png";
+import { Certification } from "../../../interface";
 import { Page } from "../Page";
 
 interface Props {
+  certification: Certification;
+  date: Date;
   direction: "initial" | "next" | "previous";
 }
 
-export const ProgressPage: FC<Props> = ({ direction, children }) => {
+export const PageWithBackground: FC<Props> = ({
+  certification,
+  date,
+  direction,
+  children,
+}) => {
   return (
     <Page className="z-50 flex flex-col bg-neutral-100" direction={direction}>
       <AnimatePresence>
@@ -32,7 +41,14 @@ export const ProgressPage: FC<Props> = ({ direction, children }) => {
             src={certificationImg}
           />
           <h1 className="mt-12 -mb-12 text-center font-bold">Reva</h1>
-          <div className="grow overflow-y-auto mt-36 px-8 pb-8">{children}</div>
+          <div className="grow overflow-y-auto mt-36 px-8 pb-8">
+            <PageHeaders
+              codeRncp={certification.codeRncp}
+              title={certification.label}
+              startDated={date}
+            />
+            {children}
+          </div>
         </motion.div>
       </AnimatePresence>
     </Page>
