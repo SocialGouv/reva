@@ -621,6 +621,15 @@ export const mainMachine =
                 src: "confirmTrainingForm",
                 onDone: [
                   {
+                    actions: [
+                      assign({
+                        candidacyCreatedAt: (_, event) => {
+                          return new Date(
+                            event.data.data.candidacy_confirmTrainingForm.createdAt
+                          );
+                        },
+                      }),
+                    ],
                     target: "#mainMachine.trainingProgramConfirmed",
                   },
                 ],
