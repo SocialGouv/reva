@@ -18,9 +18,9 @@ export const PageHeaders: FC<Props> = ({
       <Header color="dark" label={label} level={2} size="small" />
       <div className="-mt-2 mb-2 font-bold">{codeRncp}</div>
       {!!candidacyCreatedAt ? (
-        <p className="text-sm text-gray-400">
+        <div className="text-sm text-gray-400" data-test="created-at-date">
           Démarré le {candidacyCreatedAt.toLocaleDateString("fr-FR")}
-        </p>
+        </div>
       ) : (
         <></>
       )}
