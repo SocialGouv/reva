@@ -7,6 +7,8 @@ import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
 import { useContext, useEffect, useMemo } from "react";
 
+import { Button } from "./components/atoms/Button";
+import { Title } from "./components/atoms/Title";
 import { PageCard } from "./components/molecules/PageCard";
 import { PageHeaders } from "./components/molecules/PageHeaders";
 import { ProgressPage } from "./components/organisms/ProgressPage";
@@ -362,15 +364,46 @@ function App() {
         <TrainingProgram mainService={mainService} />
       )}
 
-      {current.matches("validatedTrainingPogram") && (
+      {current.matches("trainingProgramConfirmed") && (
         <ProgressPage direction={current.context.direction}>
           <PageHeaders
-            codeRncp="N104c"
-            title="***Assistant/assistante de vie aux familles***"
+            codeRncp={current.context.certification.codeRncp}
+            title={current.context.certification.label}
             startDated={new Date(2022, 0, 10)}
           />
           <PageCard progress={100} title="Projet validé" theme="light">
-            Mon parcours perso etc..
+            <section className="mt-7">
+              <Title
+                label="Mon parcours personnalisé"
+                size={"small"}
+                theme={"light"}
+              />
+              <div className="mt-3">Consultez de nouveau votre parcours</div>
+              <div className="mt-3">
+                <Button label="Voir mon parcours" size="tiny" />
+              </div>
+            </section>
+
+            <section className="mt-7">
+              <Title
+                label="Mon accompagnateur"
+                size={"small"}
+                theme={"light"}
+              />
+              <div className="text-md font-medium">
+                {current.context.organism.label}
+              </div>
+              <address className="mt-1 text-gray-600">
+                <div>{current.context.organism.address}</div>
+                <div>
+                  <span>{current.context.organism.zip}</span>
+                  <span className="ml-2">{current.context.organism.city}</span>
+                </div>
+              </address>
+              <div className="mt-1 text-gray-600">
+                {current.context.organism.contactAdministrativeEmail}
+              </div>
+            </section>
           </PageCard>
         </ProgressPage>
       )}

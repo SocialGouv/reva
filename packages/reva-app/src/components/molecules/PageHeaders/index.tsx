@@ -17,7 +17,7 @@ export const PageHeaders: FC<Props> = ({
     <>
       <Header color="dark" label={label} level={2} size="small" />
       <div className="-mt-2 mb-2 font-bold">{codeRncp}</div>
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-gray-400">
         Démarré le {startDated.toLocaleDateString("fr-FR")}
       </p>
     </>

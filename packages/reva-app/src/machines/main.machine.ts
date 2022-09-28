@@ -30,7 +30,7 @@ const projectHelp = "projectHelp";
 const projectSubmitted = "projectSubmitted";
 const submissionHome = "submissionHome";
 const trainingProgramSummary = "trainingProgramSummary";
-const validatedTrainingPogram = "validatedTrainingPogram";
+const trainingProgramConfirmed = "trainingProgramConfirmed";
 const error = "error";
 
 export type State =
@@ -49,7 +49,7 @@ export type State =
   | typeof projectSubmitted
   | typeof submissionHome
   | typeof trainingProgramSummary
-  | typeof validatedTrainingPogram;
+  | typeof trainingProgramConfirmed;
 
 export interface MainContext {
   error: string;
@@ -127,7 +127,7 @@ export type MainState =
       };
     }
   | {
-      value: typeof validatedTrainingPogram;
+      value: typeof trainingProgramConfirmed;
       context: MainContext & {
         certification: Certification;
         organism: Organism;
@@ -215,8 +215,28 @@ export const mainMachine =
                     },
                   }),
                 ],
-                cond: "isSubmittedTrainingProgram",
+                cond: "isTrainingProgramSubmitted",
                 target: "trainingProgramSummary.idle",
+              },
+              {
+                actions: [
+                  assign({
+                    candidacyId: (_, event) => {
+                      return event.data.candidacy.id;
+                    },
+                    certification: (_, event) => {
+                      return event.data.candidacy.certification;
+                    },
+                    organism: (_, event) => {
+                      return event.data.candidacy.organism;
+                    },
+                    trainingProgram: (_, event) => {
+                      return event.data.candidacy.trainingProgram;
+                    },
+                  }),
+                ],
+                cond: "isTrainingProgramConfirmed",
+                target: "trainingProgramConfirmed",
               },
               {
                 actions: [
@@ -597,7 +617,7 @@ export const mainMachine =
                 src: "confirmTrainingForm",
                 onDone: [
                   {
-                    target: "leave",
+                    target: "#mainMachine.trainingProgramConfirmed",
                   },
                 ],
                 onError: [
@@ -623,6 +643,7 @@ export const mainMachine =
             },
           },
         },
+        trainingProgramConfirmed: {},
         projectContact: {
           initial: "idle",
           states: {
@@ -1102,12 +1123,17 @@ export const mainMachine =
               "CANDIDACY_DOES_NOT_EXIST"
           );
         },
-        isSubmittedTrainingProgram: (_context, event) => {
+        isTrainingProgramSubmitted: (_context, event) => {
           const typedEvent = event as DoneInvokeEvent<any>;
           const isSubmitted = ["PARCOURS_ENVOYE", "PARCOURS_CONFIRME"].includes(
             typedEvent.data.candidacy?.candidacyStatus
           );
           return !!isSubmitted;
+        },
+        isTrainingProgramConfirmed: (_context, event) => {
+          const typedEvent = event as DoneInvokeEvent<any>;
+          const isConfirmed = typedEvent.data.candidacy?.candidacyStatus === "PARCOURS_CONFIRME";
+          return !!isConfirmed;
         },
       },
     }
