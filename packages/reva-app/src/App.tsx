@@ -386,7 +386,7 @@ function App() {
 
             <section className="mt-7">
               <Title
-                label="Mon accompagnateur"
+                label="Mon architecte de parcours"
                 size={"small"}
                 theme={"light"}
               />
