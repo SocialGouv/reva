@@ -30,6 +30,7 @@ const projectHelp = "projectHelp";
 const projectSubmitted = "projectSubmitted";
 const submissionHome = "submissionHome";
 const trainingProgramSummary = "trainingProgramSummary";
+const validatedTrainingPogram = "validatedTrainingPogram";
 const error = "error";
 
 export type State =
@@ -47,7 +48,8 @@ export type State =
   | typeof projectOrganism
   | typeof projectSubmitted
   | typeof submissionHome
-  | typeof trainingProgramSummary;
+  | typeof trainingProgramSummary
+  | typeof validatedTrainingPogram;
 
 export interface MainContext {
   error: string;
@@ -122,6 +124,13 @@ export type MainState =
       context: MainContext & {
         certification: Certification;
         trainingProgram: TrainingProgram;
+      };
+    }
+  | {
+      value: typeof validatedTrainingPogram;
+      context: MainContext & {
+        certification: Certification;
+        organism: Organism;
       };
     }
   | {

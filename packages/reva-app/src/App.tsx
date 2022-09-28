@@ -7,6 +7,9 @@ import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
 import { useContext, useEffect, useMemo } from "react";
 
+import { PageCard } from "./components/molecules/PageCard";
+import { PageHeaders } from "./components/molecules/PageHeaders";
+import { ProgressPage } from "./components/organisms/ProgressPage";
 import { Certification } from "./interface";
 import { mainMachine } from "./machines/main.machine";
 import { CertificateDetails } from "./pages/CertificateDetails";
@@ -357,6 +360,19 @@ function App() {
 
       {current.matches("trainingProgramSummary") && (
         <TrainingProgram mainService={mainService} />
+      )}
+
+      {current.matches("validatedTrainingPogram") && (
+        <ProgressPage direction={current.context.direction}>
+          <PageHeaders
+            codeRncp="N104c"
+            title="***Assistant/assistante de vie aux familles***"
+            startDated={new Date(2022, 0, 10)}
+          />
+          <PageCard progress={100} title="Projet validé" theme="light">
+            Mon parcours perso etc..
+          </PageCard>
+        </ProgressPage>
       )}
 
       {current.matches("error") && errorPage()}
