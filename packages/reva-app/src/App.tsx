@@ -363,7 +363,7 @@ function App() {
       {current.matches("trainingProgramConfirmed") && (
         <ReviewTrainingProgram
           certification={current.context.certification}
-          date={new Date(2022, 0, 10)}
+          candidacyCreatedAt={current.context.candidacyCreatedAt}
           direction={current.context.direction}
           organism={current.context.organism}
         />

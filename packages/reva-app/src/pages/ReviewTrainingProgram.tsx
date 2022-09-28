@@ -9,21 +9,21 @@ import { Certification, Organism } from "../interface";
 
 interface Props {
   certification: Certification;
-  date: Date;
+  candidacyCreatedAt?: Date;
   direction: Direction;
   organism: Organism;
 }
 
 export const ReviewTrainingProgram: FC<Props> = ({
   certification,
-  date,
+  candidacyCreatedAt,
   direction,
   organism,
 }) => {
   return (
     <PageWithBackground
       certification={certification}
-      date={date}
+      candidacyCreatedAt={candidacyCreatedAt}
       direction={direction}
     >
       <ProgressCard progress={100} title="Projet validé" theme="light">

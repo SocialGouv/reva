@@ -122,6 +122,7 @@ export type MainState =
   | {
       value: typeof trainingProgramSummary;
       context: MainContext & {
+        candidacyCreatedAt: Date;
         certification: Certification;
         trainingProgram: TrainingProgram;
       };
@@ -221,6 +222,9 @@ export const mainMachine =
               {
                 actions: [
                   assign({
+                    candidacyCreatedAt: (_, event) => {
+                      return new Date(event.data.candidacy.createdAt);
+                    },
                     candidacyId: (_, event) => {
                       return event.data.candidacy.id;
                     },

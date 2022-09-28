@@ -8,13 +8,13 @@ import { Page } from "../Page";
 
 interface Props {
   certification: Certification;
-  date: Date;
+  candidacyCreatedAt?: Date;
   direction: "initial" | "next" | "previous";
 }
 
 export const PageWithBackground: FC<Props> = ({
   certification,
-  date,
+  candidacyCreatedAt,
   direction,
   children,
 }) => {
@@ -45,7 +45,7 @@ export const PageWithBackground: FC<Props> = ({
             <PageHeaders
               codeRncp={certification.codeRncp}
               title={certification.label}
-              startDated={date}
+              candidacyCreatedAt={candidacyCreatedAt}
             />
             {children}
           </div>
