@@ -1,4 +1,6 @@
+import { useActor } from "@xstate/react";
 import { FC } from "react";
+import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { Title } from "../components/atoms/Title";
@@ -6,12 +8,14 @@ import { ProgressCard } from "../components/molecules/ProgressCard";
 import { Direction } from "../components/organisms/Page";
 import { PageWithBackground } from "../components/organisms/PageWithBackground";
 import { Certification, Organism } from "../interface";
+import { MainContext, MainEvent } from "../machines/main.machine";
 
 interface Props {
   certification: Certification;
   candidacyCreatedAt?: Date;
   direction: Direction;
   organism: Organism;
+  mainService: Interpreter<MainContext, any, MainEvent, any, any>;
 }
 
 export const ReviewTrainingProgram: FC<Props> = ({
@@ -19,7 +23,9 @@ export const ReviewTrainingProgram: FC<Props> = ({
   candidacyCreatedAt,
   direction,
   organism,
+  mainService,
 }) => {
+  const [, send] = useActor(mainService);
   return (
     <PageWithBackground
       certification={certification}
@@ -39,6 +45,7 @@ export const ReviewTrainingProgram: FC<Props> = ({
               label="Voir mon parcours"
               size="tiny"
               data-test="review-button"
+              onClick={() => send("RETURN_TO_TRAINING_PROGRAM_SUMMARY")}
             />
           </div>
         </section>

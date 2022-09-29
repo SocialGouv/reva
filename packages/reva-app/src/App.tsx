@@ -366,6 +366,7 @@ function App() {
           candidacyCreatedAt={current.context.candidacyCreatedAt}
           direction={current.context.direction}
           organism={current.context.organism}
+          mainService={mainService}
         />
       )}
 

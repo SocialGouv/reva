@@ -99,6 +99,7 @@ export type MainEvent =
   | { type: "SUBMIT_ORGANISM"; organism: OrganismForCandidacy }
   | { type: "VALIDATE_PROJECT" }
   | { type: "SUBMIT_PROJECT" }
+  | { type: "RETURN_TO_TRAINING_PROGRAM_SUMMARY" }
   | { type: "SUBMIT_TRAINING_PROGRAM" };
 
 export type MainState =
@@ -614,6 +615,9 @@ export const mainMachine =
                 SUBMIT_TRAINING_PROGRAM: {
                   target: "loading",
                 },
+                BACK: {
+                  target: "#mainMachine.trainingProgramConfirmed",
+                },
               },
             },
             loading: {
@@ -656,7 +660,13 @@ export const mainMachine =
             },
           },
         },
-        trainingProgramConfirmed: {},
+        trainingProgramConfirmed: {
+          on: {
+            RETURN_TO_TRAINING_PROGRAM_SUMMARY: {
+              target: "trainingProgramSummary.idle",
+            },
+          },
+        },
         projectContact: {
           initial: "idle",
           states: {

@@ -5,6 +5,7 @@ import { Interpreter } from "xstate";
 import { Button } from "../components/atoms/Button";
 import { CardBasic } from "../components/atoms/CardBasic";
 import { Checkbox } from "../components/atoms/Checkbox";
+import { BackButton } from "../components/molecules/BackButton";
 import { DescriptionMultiLine } from "../components/molecules/DescriptionMultiLine";
 import { DescriptionSimple } from "../components/molecules/DescriptionSimple";
 import { Page } from "../components/organisms/Page";
@@ -39,6 +40,8 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
       className="z-50 bg-slate-900 p-6 overflow-y-scroll"
       direction={state.context.direction}
     >
+      <BackButton color="light" onClick={() => send("BACK")} />
+
       <div className="px-4 pb-8 flex flex-col">
         <h1 className="text-white text-3xl font-extrabold mb-8">
           Votre parcours personnalisé
