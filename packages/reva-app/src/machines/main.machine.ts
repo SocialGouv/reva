@@ -97,7 +97,8 @@ export type MainEvent =
   | { type: "SUBMIT_GOALS"; goals: Goal[] }
   | { type: "SUBMIT_ORGANISM"; organism: OrganismForCandidacy }
   | { type: "VALIDATE_PROJECT" }
-  | { type: "SUBMIT_PROJECT" };
+  | { type: "SUBMIT_PROJECT" }
+  | { type: "SUBMIT_TRAINING_PROGRAM" };
 
 export type MainState =
   | {
@@ -190,6 +191,9 @@ export const mainMachine =
               {
                 actions: [
                   assign({
+                    candidacyId: (_, event) => {
+                      return event.data.candidacy.id;
+                    },
                     certification: (_, event) => {
                       return event.data.candidacy.certification;
                     },
@@ -202,7 +206,7 @@ export const mainMachine =
                   }),
                 ],
                 cond: "isSubmittedTrainingProgram",
-                target: "trainingProgramSummary",
+                target: "trainingProgramSummary.idle",
               },
               {
                 actions: [
@@ -567,7 +571,46 @@ export const mainMachine =
             },
           ],
         },
-        trainingProgramSummary: {},
+        trainingProgramSummary: {
+          states: {
+            idle: {
+              on: {
+                SUBMIT_TRAINING_PROGRAM: {
+                  target: "loading",
+                },
+              },
+            },
+            loading: {
+              invoke: {
+                src: "confirmTrainingForm",
+                onDone: [
+                  {
+                    target: "leave",
+                  },
+                ],
+                onError: [
+                  {
+                    actions: assign({
+                      error: (_, _event) =>
+                        "Une erreur est survenue lors de la soumission du parcours.",
+                    }),
+                    target: "retry",
+                  },
+                ],
+              },
+            },
+            retry: {
+              on: {
+                SUBMIT_TRAINING_PROGRAM: {
+                  target: "loading",
+                },
+              },
+            },
+            leave: {
+              type: "final",
+            },
+          },
+        },
         projectContact: {
           initial: "idle",
           states: {

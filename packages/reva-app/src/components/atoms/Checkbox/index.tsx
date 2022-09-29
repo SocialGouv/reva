@@ -1,3 +1,7 @@
+import classNames from "classnames";
+
+type Size = "small" | "large";
+type Theme = "dark" | "light";
 interface CheckboxProps {
   checked: boolean;
   /**
@@ -12,6 +16,9 @@ interface CheckboxProps {
    * Custom class
    */
   className?: string;
+  size?: Size;
+  disabled?: boolean;
+  theme?: Theme;
   toggle: () => void;
 }
 
@@ -19,29 +26,41 @@ export const Checkbox = ({
   checked,
   name,
   label,
+  size = "large",
+  disabled = false,
   toggle,
+  theme = "light",
   className = "",
   ...props
 }: CheckboxProps) => {
   const labelName = `label-${name}`;
   return (
-    <div className="relative flex items-start">
+    <div className={`relative flex items-start ${className}`}>
       <div className="flex items-center h-[26px]">
         <input
           id={name}
           name={name}
+          data-test={`checkbox-${name}`}
           aria-labelledby={labelName}
+          disabled={disabled}
           defaultChecked={checked}
           onClick={toggle}
           type="checkbox"
           className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
         />
       </div>
-      <div className="ml-3 text-lg">
+      <div
+        className={classNames("ml-3", size === "large" ? "text-lg" : "text-md")}
+      >
         <label
           id={labelName}
+          data-test={`label-${name}`}
           htmlFor={name}
-          className="block text-slate-700 leading-snug"
+          className={classNames(
+            "block",
+            "leading-snug",
+            theme === "light" ? "text-slate-700" : "text-slate-400"
+          )}
         >
           {label}
         </label>

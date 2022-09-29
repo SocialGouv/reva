@@ -1,8 +1,10 @@
 import { useActor } from "@xstate/react";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Interpreter } from "xstate";
 
+import { Button } from "../components/atoms/Button";
 import { CardBasic } from "../components/atoms/CardBasic";
+import { Checkbox } from "../components/atoms/Checkbox";
 import { DescriptionMultiLine } from "../components/molecules/DescriptionMultiLine";
 import { DescriptionSimple } from "../components/molecules/DescriptionSimple";
 import { Page } from "../components/organisms/Page";
@@ -13,7 +15,9 @@ interface Props {
 }
 
 export const TrainingProgram: FC<Props> = ({ mainService }) => {
-  const [state] = useActor(mainService);
+  const [state, send] = useActor(mainService);
+  const [checkedCondition, setCheckedCondition] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   if (!state.context.trainingProgram) return <></>;
 
@@ -36,34 +40,35 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
       direction={state.context.direction}
     >
       <div className="px-4 pb-8 flex flex-col">
-        <h1 className="text-white text-4xl font-extrabold my-8">
+        <h1 className="text-white text-3xl font-extrabold mb-8">
           Votre parcours personnalisé
         </h1>
-
         <CardBasic
           title="Mon accompagnateur"
           text={state.context.organism?.label}
         />
-
-        <dl>
+        <dl data-test="description-list" className="mt-4">
           <DescriptionSimple
-            term="Diplome visé"
+            term="Diplôme visé"
             detail={certification?.label}
           />
 
           <DescriptionSimple
             term="Nombre d'heures d'accompagnement individuel"
-            detail={`${individualHourCount}h`}
-          ></DescriptionSimple>
+            detail={individualHourCount}
+            suffix="h"
+          />
 
           <DescriptionSimple
             term="Nombre d'heures d'accompagnement collectif"
-            detail={`${collectiveHourCount}h`}
+            detail={collectiveHourCount}
+            suffix="h"
           />
 
           <DescriptionSimple
             term="Nombre d'heures de formation"
-            detail={`${additionalHourCount}h`}
+            detail={additionalHourCount}
+            suffix="h"
           />
 
           <DescriptionMultiLine
@@ -81,18 +86,47 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
           <DescriptionSimple term="Autre" detail={otherTraining} />
         </dl>
 
-        <button
-          className="bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded"
-          data-test="submit-confirm-path"
-          onClick={
-            () => alert("SUBMIT_CONFIRM_PATH")
-            // send({
-            //   type: "SUBMIT_CONFIRM_PATH",
-            // })
-          }
-        >
-          Je confirme
-        </button>
+        <Checkbox
+          checked={checkedCondition}
+          label="J'ai bien compris qu'il s'agissait des étapes et prestations
+            nécessaires pour que j'obtienne mon diplôme et je m'engage à les
+            suivre ou informer mon accompagnateur de tout abandon dans les 48h.
+            J'accepte que les résultats de mon étude personnalisée ainsi que le
+            résultat à ma session de jury me soient transmis ainsi qu'à mon
+            accompagnateur."
+          name="accept-conditions"
+          toggle={() => setCheckedCondition(!checkedCondition)}
+          theme="dark"
+          className="my-8"
+          size="small"
+          disabled={submitted}
+        />
+        <div className="flex flex-col items-center">
+          {state.matches("trainingProgramSummary.leave") ? (
+            <span className="text-white text-lg">Confirmé</span>
+          ) : (
+            <Button
+              className="bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded"
+              data-test="submit-training"
+              disabled={!checkedCondition}
+              onClick={() => {
+                setSubmitted(true);
+                send({
+                  type: "SUBMIT_TRAINING_PROGRAM",
+                });
+              }}
+              label="Je confirme"
+              loading={state.matches("trainingProgramSummary.loading")}
+            />
+          )}
+        </div>
+        {state.context.error ? (
+          <p key="error" className="text-red-600 mt-4 text-sm">
+            {state.context.error}
+          </p>
+        ) : (
+          <></>
+        )}
       </div>
     </Page>
   );
