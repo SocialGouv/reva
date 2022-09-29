@@ -4,6 +4,7 @@ const SEARCH_CERTIFICATIONS_FOR_REGION = gql`
   query Certifications($query: UUID!) {
     getCertifications(regionId: $query) {
       id
+      acronym
       label
       summary
       codeRncp
