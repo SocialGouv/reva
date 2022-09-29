@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import { useState } from "react";
 
-import { Add } from "../../atoms/Icons";
+import { ButtonRound } from "../../atoms/ButtonRound";
 import { TextResult } from "../../atoms/TextResult";
 import { BackButton } from "../../molecules/BackButton";
 import certificationImg from "./certification.png";
@@ -147,14 +147,7 @@ export const Card = React.forwardRef<HTMLLIElement, CardProps>(
           }`}
         >
           {label}
-          <div
-            aria-hidden="true"
-            className="mt-4 rounded-full flex items-center justify-center h-[46px] w-[46px] bg-blue-500"
-          >
-            <div className="w-[18px]">
-              <Add />
-            </div>
-          </div>
+          <ButtonRound bgColor="bg-white" />
         </motion.div>
         <motion.img
           layout
@@ -163,7 +156,7 @@ export const Card = React.forwardRef<HTMLLIElement, CardProps>(
           role="presentation"
           style={{
             left: "-43px",
-            top: "12px",
+            top: "50px",
             height: "104px",
             width: "104px",
           }}
