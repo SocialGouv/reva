@@ -27,7 +27,7 @@ export const ReviewTrainingProgram: FC<Props> = ({
       direction={direction}
     >
       <ProgressCard progress={100} title="Projet validé" theme="light">
-        <section className="mt-7" data-test="review-training-form">
+        <section className="mt-2" data-test="review-training-form">
           <Title
             label="Mon parcours personnalisé"
             size={"small"}
@@ -43,14 +43,14 @@ export const ReviewTrainingProgram: FC<Props> = ({
           </div>
         </section>
 
-        <section className="mt-7" data-test="ap-organism">
+        <section className="mt-2" data-test="ap-organism">
           <Title
             label="Mon architecte de parcours"
             size={"small"}
             theme={"light"}
           />
           <div className="text-md font-medium">{organism.label}</div>
-          <address className="mt-1 text-gray-600">
+          <address className="mt-1 text-gray-600 not-italic">
             <div>{organism.address}</div>
             <div>
               <span>{organism.zip}</span>
