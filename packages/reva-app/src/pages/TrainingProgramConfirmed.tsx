@@ -18,7 +18,7 @@ interface Props {
   mainService: Interpreter<MainContext, any, MainEvent, any, any>;
 }
 
-export const ReviewTrainingProgram: FC<Props> = ({
+export const TrainingProgramConfirmed: FC<Props> = ({
   certification,
   candidacyCreatedAt,
   direction,

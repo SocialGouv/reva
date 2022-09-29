@@ -15,7 +15,7 @@ interface Props {
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
 
-export const TrainingProgram: FC<Props> = ({ mainService }) => {
+export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
   const [state, send] = useActor(mainService);
   const [checkedCondition, setCheckedCondition] = useState(false);
   const [submitted, setSubmitted] = useState(false);

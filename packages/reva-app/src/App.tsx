@@ -20,9 +20,9 @@ import { ProjectHelp } from "./pages/ProjectHelp";
 import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectOrganisms } from "./pages/ProjectOrganisms";
 import { ProjectSubmitted } from "./pages/ProjectSubmitted";
-import { ReviewTrainingProgram } from "./pages/ReviewTrainingProgram";
 import { SubmissionHome } from "./pages/SubmissionHome";
-import { TrainingProgram } from "./pages/TrainingProgram";
+import { TrainingProgramConfirmed } from "./pages/TrainingProgramConfirmed";
+import { TrainingProgramSummary } from "./pages/TrainingProgramSummary";
 import {
   addExperience,
   confirmTrainingForm,
@@ -357,11 +357,11 @@ function App() {
         )}
 
       {current.matches("trainingProgramSummary") && (
-        <TrainingProgram mainService={mainService} />
+        <TrainingProgramSummary mainService={mainService} />
       )}
 
       {current.matches("trainingProgramConfirmed") && (
-        <ReviewTrainingProgram
+        <TrainingProgramConfirmed
           certification={current.context.certification}
           candidacyCreatedAt={current.context.candidacyCreatedAt}
           direction={current.context.direction}
