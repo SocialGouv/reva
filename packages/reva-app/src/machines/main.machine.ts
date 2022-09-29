@@ -615,8 +615,15 @@ export const mainMachine =
                 SUBMIT_TRAINING_PROGRAM: {
                   target: "loading",
                 },
+              },
+            },
+            comeBack: {
+              on: {
                 BACK: {
                   target: "#mainMachine.trainingProgramConfirmed",
+                  actions: assign({
+                    direction: (_context, _event) => "previous",
+                  }),
                 },
               },
             },
@@ -663,7 +670,10 @@ export const mainMachine =
         trainingProgramConfirmed: {
           on: {
             RETURN_TO_TRAINING_PROGRAM_SUMMARY: {
-              target: "trainingProgramSummary.idle",
+              target: "trainingProgramSummary.comeBack",
+              actions: assign({
+                direction: (_context, _event) => "next",
+              }),
             },
           },
         },
