@@ -357,11 +357,15 @@ function App() {
         )}
 
       {current.matches("trainingProgramSummary") && (
-        <TrainingProgramSummary mainService={mainService} />
+        <TrainingProgramSummary
+          key="training-program-summary"
+          mainService={mainService}
+        />
       )}
 
       {current.matches("trainingProgramConfirmed") && (
         <TrainingProgramConfirmed
+          key="training-program-confirmed"
           certification={current.context.certification}
           candidacyCreatedAt={current.context.candidacyCreatedAt}
           direction={current.context.direction}

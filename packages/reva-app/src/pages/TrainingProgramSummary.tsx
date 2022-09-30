@@ -37,7 +37,7 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
 
   return (
     <Page
-      className="z-50 bg-slate-900 p-6 overflow-y-scroll"
+      className="z-[60] bg-slate-900 p-6 overflow-y-scroll"
       direction={state.context.direction}
     >
       {state.matches("trainingProgramSummary.comeBack") ? (
