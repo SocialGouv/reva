@@ -56,15 +56,15 @@ export const TrainingProgramConfirmed: FC<Props> = ({
             size={"small"}
             theme={"light"}
           />
-          <div className="text-md font-medium">{organism.label}</div>
-          <address className="mt-1 text-gray-600 not-italic">
+          <div className="font-medium text-slate-800">{organism.label}</div>
+          <address className="mt-1 text-gray-500 not-italic">
             <div>{organism.address}</div>
             <div>
               <span>{organism.zip}</span>
               <span className="ml-2">{organism.city}</span>
             </div>
           </address>
-          <div className="mt-1 text-gray-600">
+          <div className="my-1 text-gray-500">
             {organism.contactAdministrativeEmail}
           </div>
         </section>

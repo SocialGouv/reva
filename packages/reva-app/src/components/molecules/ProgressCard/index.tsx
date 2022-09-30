@@ -15,10 +15,7 @@ export const ProgressCard: FC<Props> = ({
   children,
 }) => {
   return (
-    <div
-      className="mt-6 flex flex-col px-8 py-6 rounded-xl shadow-sm bg-white"
-      style={{ height: "414px" }}
-    >
+    <div className="mt-6 flex flex-col px-8 py-6 rounded-xl shadow-sm bg-white">
       <section data-test="progress-100">
         <ProgressTitle progress={progress} title={title} theme={theme} />
       </section>

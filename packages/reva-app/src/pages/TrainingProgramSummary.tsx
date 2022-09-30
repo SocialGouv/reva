@@ -47,7 +47,7 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
       )}
 
       <div className="px-4 pb-8 flex flex-col">
-        <h1 className="text-white text-3xl font-extrabold mb-8">
+        <h1 className="text-white text-4xl font-extrabold mb-10">
           Votre parcours personnalisé
         </h1>
         <CardBasic
@@ -96,7 +96,7 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
         {state.matches("trainingProgramSummary.comeBack") ? (
           <div className="flex flex-col items-center mt-8">
             <Button
-              className="bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded"
+              className="bg-white text-gray-800"
               data-test="submit-training"
               onClick={() => {
                 send({
@@ -125,7 +125,7 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
             />
             <div className="flex flex-col items-center">
               <Button
-                className="bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded"
+                className="bg-white text-gray-800"
                 data-test="submit-training"
                 disabled={!checkedCondition}
                 onClick={() => {
