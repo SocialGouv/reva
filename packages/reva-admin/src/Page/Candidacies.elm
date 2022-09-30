@@ -8,7 +8,6 @@ module Page.Candidacies exposing
     )
 
 import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
-import Admin.Object exposing (Candidacy)
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Context exposing (Context)
@@ -538,12 +537,12 @@ updateTab context tab model =
         newModel =
             { model | tab = tab }
     in
-    case tab of
-        View.Candidacy.Profil candidacyId ->
+    case ( tab, model.selected ) of
+        ( View.Candidacy.Profil candidacyId, _ ) ->
             initCandidacy context candidacyId newModel
                 |> withTakeOver context candidacyId
 
-        View.Candidacy.Meetings candidacyId ->
+        ( View.Candidacy.Meetings candidacyId, _ ) ->
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
@@ -554,14 +553,16 @@ updateTab context tab model =
                             Nav.pushUrl
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                        , status = Form.Editable
                         }
                         model.form
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        View.Candidacy.Training candidacyId ->
+        ( View.Candidacy.Training candidacyId, Success candidacy ) ->
             let
                 ( formModel, formCmd ) =
+                    -- PAGE BLANCHE SI ACCES DIRECT!!
                     Form.updateForm context
                         { form = trainingForm
                         , onLoad = Request.requestTrainings candidacyId
@@ -570,15 +571,29 @@ updateTab context tab model =
                             Nav.pushUrl
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.TrainingSent candidacyId)))
+                        , status =
+                            if
+                                ((Candidacy.lastStatus candidacy.statuses |> .status)
+                                    |> Candidacy.statusToOrderPosition
+                                )
+                                    >= Candidacy.statusToOrderPosition "PARCOURS_ENVOYE"
+                            then
+                                Form.ReadOnly
+
+                            else
+                                Form.Editable
                         }
                         model.form
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        View.Candidacy.TrainingSent candidacyId ->
+        ( View.Candidacy.Training _, _ ) ->
             ( newModel, Cmd.none )
 
-        View.Candidacy.Empty ->
+        ( View.Candidacy.TrainingSent candidacyId, _ ) ->
+            ( newModel, Cmd.none )
+
+        ( View.Candidacy.Empty, _ ) ->
             ( newModel, Cmd.none )
 
 

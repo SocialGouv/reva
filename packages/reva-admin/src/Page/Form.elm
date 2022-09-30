@@ -3,6 +3,7 @@ module Page.Form exposing
     , Form
     , Model
     , Msg
+    , Status(..)
     , init
     , update
     , updateForm
@@ -81,7 +82,7 @@ init =
             { onRedirect = Cmd.none
             , onSave = \_ _ _ _ _ -> Cmd.none
             , form = NotAsked
-            , status = Editable
+            , status = ReadOnly
             }
     in
     ( model
@@ -360,6 +361,9 @@ viewReadOnlyElement formData ( elementId, element ) =
             [ termView s
             , el
             ]
+
+        defaultView label =
+            dataView |> withTerm label
     in
     case element of
         Checkbox label ->
@@ -387,19 +391,19 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> withTerm label
 
         Date label ->
-            dataView |> withTerm label
+            defaultView label
 
         Empty ->
             []
 
         Input label ->
-            dataView |> withTerm label
+            defaultView label
 
         Number label ->
-            dataView |> withTerm label
+            defaultView label
 
         Textarea label ->
-            dataView |> withTerm label
+            defaultView label
 
         Select label choices ->
             List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices
@@ -410,8 +414,7 @@ viewReadOnlyElement formData ( elementId, element ) =
         SelectOther selectId label ->
             case Dict.get selectId formData of
                 Just "Autre" ->
-                    dataView
-                        |> withTerm label
+                    defaultView label
 
                 Just _ ->
                     []
@@ -491,6 +494,7 @@ updateForm :
         , onLoad : String -> Token -> (RemoteData String (Dict String String) -> Msg referential) -> Cmd (Msg referential)
         , onRedirect : Cmd (Msg referential)
         , onSave : String -> Token -> (RemoteData String () -> Msg referential) -> referential -> Dict String String -> Cmd (Msg referential)
+        , status : Status
         }
     -> Model referential
     -> ( Model referential, Cmd (Msg referential) )
@@ -499,6 +503,7 @@ updateForm context config model =
         | form = Loading config.form
         , onRedirect = config.onRedirect
         , onSave = config.onSave
+        , status = config.status
       }
     , config.onLoad context.endpoint context.token GotLoadResponse
     )
