@@ -103,3 +103,15 @@ export interface Training {
     id: string;
     label: string;
 }
+
+export interface Degree {
+    id: string;
+    code: string;
+    label: string;
+    level: number;
+}
+
+export interface VulnerabilityIndicator {
+    id: string;
+    label: string;
+}
