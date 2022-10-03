@@ -1158,14 +1158,14 @@ export const mainMachine =
         },
         isTrainingProgramSubmitted: (_context, event) => {
           const typedEvent = event as DoneInvokeEvent<any>;
-          const isSubmitted = ["PARCOURS_ENVOYE", "PARCOURS_CONFIRME"].includes(
-            typedEvent.data.candidacy?.candidacyStatus
-          );
+          const isSubmitted =
+            typedEvent.data.candidacy?.candidacyStatus === "PARCOURS_ENVOYE";
           return !!isSubmitted;
         },
         isTrainingProgramConfirmed: (_context, event) => {
           const typedEvent = event as DoneInvokeEvent<any>;
-          const isConfirmed = typedEvent.data.candidacy?.candidacyStatus === "PARCOURS_CONFIRME";
+          const isConfirmed =
+            typedEvent.data.candidacy?.candidacyStatus === "PARCOURS_CONFIRME";
           return !!isConfirmed;
         },
       },
