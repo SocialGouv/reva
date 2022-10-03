@@ -1,6 +1,6 @@
 import { ApolloClient, gql } from "@apollo/client";
 
-import { Experience } from "../interface";
+import { Experience, candidacyStatus } from "../interface";
 
 const CREATE_CANDIDACY_WITH_CERTIFICATION = gql`
   mutation create_candidacy(
@@ -380,6 +380,9 @@ export const initializeApp =
 
       candidacy = {
         ...data.getCandidacy,
+        candidacyStatus: data.getCandidacy.candidacyStatuses?.find(
+          (s: { isActive: string; status: candidacyStatus }) => s.isActive
+        ).status,
         createdAt: new Date(data.getCandidacy.createdAt),
         experiences,
         goals,

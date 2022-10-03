@@ -11,6 +11,7 @@ import {
   OrganismForCandidacy,
   Region,
   TrainingProgram,
+  candidacyStatus,
 } from "../interface";
 
 const loadingApplicationData = "loadingApplicationData";
@@ -48,13 +49,12 @@ export type State =
   | typeof submissionHome
   | typeof trainingProgramSummary;
 
-type ProjectStatus = "draft" | "validated" | "submitted";
-
 export interface MainContext {
   error: string;
   candidacyId?: string;
   certifications: Certification[];
   candidacyCreatedAt?: Date;
+  candidacyStatus: candidacyStatus;
   contact?: Contact;
   direction: Direction;
   showStatusBar: boolean;
@@ -62,7 +62,6 @@ export interface MainContext {
   experiences: Experiences;
   goals: Goal[];
   organism?: Organism;
-  projectStatus?: ProjectStatus;
   regions: Region[];
   selectedRegion?: Region;
   organisms: Organism[] | undefined;
@@ -152,7 +151,6 @@ export type MainState =
         experiences: Experience[];
         goals: Goal[];
         organism: Organism;
-        projectStatus?: ProjectStatus;
         regions: Region[];
         selectedRegion?: Region;
         organisms: Organism[];
@@ -171,11 +169,11 @@ export const mainMachine =
         error: "",
         direction: "initial",
         certifications: [],
+        candidacyStatus: "CANDIDATURE_VIDE",
         showStatusBar: false,
         experiences: { rest: [] },
         goals: [],
         organism: undefined,
-        projectStatus: "draft",
         regions: [],
         selectedRegion: undefined,
         organisms: undefined,
@@ -193,6 +191,9 @@ export const mainMachine =
                   assign({
                     candidacyId: (_, event) => {
                       return event.data.candidacy.id;
+                    },
+                    candidacyStatus: (_, event) => {
+                      return event.data.candidacy.candidacyStatus;
                     },
                     certification: (_, event) => {
                       return event.data.candidacy.certification;
@@ -217,6 +218,9 @@ export const mainMachine =
                     candidacyCreatedAt: (_, event) => {
                       return new Date(event.data.candidacy.createdAt);
                     },
+                    candidacyStatus: (_, event) => {
+                      return event.data.candidacy.candidacyStatus;
+                    },
                     certification: (_, event) => {
                       return event.data.candidacy.certification;
                     },
@@ -234,13 +238,6 @@ export const mainMachine =
                     },
                     organism: (_, event) => {
                       return event.data.candidacy.organism;
-                    },
-                    projectStatus: (_, event) => {
-                      return event.data.candidacy.candidacyStatuses
-                        .map((s: { status: string }) => s.status)
-                        .includes("VALIDATION")
-                        ? "submitted"
-                        : "draft";
                     },
                     regions: (_, event) => event.data.regions,
                     trainingProgram: (_, event) => {
@@ -357,7 +354,13 @@ export const mainMachine =
               on: {
                 SUBMIT_CERTIFICATION: [
                   {
-                    actions: ["navigateNext", "submitCertification"],
+                    actions: [
+                      "navigateNext",
+                      "submitCertification",
+                      assign({
+                        candidacyStatus: (_context, _event) => "PROJET",
+                      }),
+                    ],
                     cond: isNewCandidacy,
                     target: "leave",
                   },
@@ -924,10 +927,13 @@ export const mainMachine =
             idle: {
               on: {
                 VALIDATE_PROJECT: {
-                  actions: assign({
-                    projectStatus: (_context, _event) => "validated",
-                    direction: (_context, _event) => "next",
-                  }),
+                  actions: [
+                    "navigateNext",
+                    assign({
+                      candidacyStatus: (_context, _event) =>
+                        "CANDIDATURE_VALIDEE",
+                    }),
+                  ],
                   target: "idle",
                   internal: false,
                 },
@@ -946,7 +952,7 @@ export const mainMachine =
                 onDone: [
                   {
                     actions: assign({
-                      projectStatus: (_context, _event) => "submitted",
+                      candidacyStatus: (_context, _event) => "VALIDATION",
                       direction: (_context, _event) => "next",
                     }),
                     target: "leave",
@@ -978,7 +984,7 @@ export const mainMachine =
                   }),
                 ],
                 cond: (context) => {
-                  return context.projectStatus === "draft";
+                  return context.candidacyStatus === "PROJET";
                 },
                 target: "#mainMachine.submissionHome.ready",
               },
@@ -987,11 +993,11 @@ export const mainMachine =
                   "navigatePrevious",
                   assign({
                     certification: (context, _event) => context.certification,
-                    projectStatus: (_context, _event) => "draft",
+                    candidacyStatus: (_context, _event) => "PROJET",
                   }),
                 ],
                 cond: (context) => {
-                  return context.projectStatus === "validated";
+                  return context.candidacyStatus === "CANDIDATURE_VALIDEE";
                 },
                 target: "projectHome",
                 internal: false,
@@ -1089,11 +1095,10 @@ export const mainMachine =
         },
         isSubmittedTrainingProgram: (_context, event) => {
           const typedEvent = event as DoneInvokeEvent<any>;
-          const statusParcoursEnvoye =
-            typedEvent.data.candidacy?.candidacyStatuses?.find(
-              (s: any) => s.status === "PARCOURS_ENVOYE" && s.isActive
-            );
-          return !!statusParcoursEnvoye;
+          const isSubmitted = ["PARCOURS_ENVOYE", "PARCOURS_CONFIRME"].includes(
+            typedEvent.data.candidacy?.candidacyStatus
+          );
+          return !!isSubmitted;
         },
       },
     }
