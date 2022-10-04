@@ -20,7 +20,9 @@ export const BackButton = ({
       data-test="button-back"
       type="button"
       onClick={onClick}
-      className={`${className} shrink-0 flex items-center justify-end w-full pt-6 px-8 h-18 mt-6 ${colorClass}`}
+      className={`${className} shrink-0 flex items-center w-full rounded py-4 pl-4 h-18 ml-5 max-w-sm ${
+        color === "dark" ? "hover:bg-gray-100" : "hover:bg-slate-700"
+      } ${colorClass}`}
     >
       <div className="w-[22px]">
         <Back />
