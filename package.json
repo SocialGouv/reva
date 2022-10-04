@@ -7,9 +7,9 @@
     "node": "16"
   },
   "scripts": {
-    "build": "npm run build -w reva-app",
+    "build": "npm run build -w reva-app -w reva-api",
     "dev": "concurrently -n \"rev-api,reva-app,reva-admin\" -c \"blue,green,cyan\" -k \"npm run dev -w reva-api\" \"npm run dev -w reva-app\" \"npm run dev -w reva-admin\"",
-    "start": "echo 0",
+    "start": "npm run start --workspace=reva-api",
     "prepare": "husky install"
   },
   "workspaces": [
