@@ -7,8 +7,9 @@ module Data.Candidacy exposing
     , CandidacySummary
     , candidacyIdFromString
     , candidacyIdToString
+    , isStatusAbove
     , lastStatus
-    , statusToOrderPosition
+    , statusToDirectoryPosition
     , statusToString
     , toCandidacySummary
     )
@@ -107,8 +108,8 @@ statusToString status =
             "Statut inconnu"
 
 
-statusToOrderPosition : String -> Int
-statusToOrderPosition status =
+statusToDirectoryPosition : String -> Int
+statusToDirectoryPosition status =
     case status of
         "VALIDATION" ->
             1
@@ -127,6 +128,34 @@ statusToOrderPosition status =
 
         "PARCOURS_CONFIRME" ->
             3
+
+        _ ->
+            10
+
+
+statusToProgressPosition : String -> Int
+statusToProgressPosition status =
+    case status of
+        "ARCHIVE" ->
+            0
+
+        "PROJET" ->
+            -- aka CANDIDATURE_INCOMPLETE
+            1
+
+        "VALIDATION" ->
+            -- aka CANDIDATURE_SOUMISE
+            2
+
+        "PRISE_EN_CHARGE" ->
+            -- aka CANDIDATURE_PRISE_EN_CHARGE
+            3
+
+        "PARCOURS_ENVOYE" ->
+            4
+
+        "PARCOURS_CONFIRME" ->
+            5
 
         _ ->
             10
@@ -154,3 +183,13 @@ lastStatus statuses =
             , status = ""
             , isActive = True
             }
+
+
+isStatusAbove : Candidacy -> String -> Bool
+isStatusAbove candidacy status =
+    let
+        currentStatusPosition =
+            (lastStatus >> .status) candidacy.statuses
+                |> statusToProgressPosition
+    in
+    Debug.log "" currentStatusPosition >= statusToProgressPosition status

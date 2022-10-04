@@ -138,7 +138,7 @@ view context model =
         Success candidacies ->
             let
                 sortedCandidacies =
-                    List.sortBy (.lastStatus >> .status >> Candidacy.statusToOrderPosition) candidacies
+                    List.sortBy (.lastStatus >> .status >> Candidacy.statusToDirectoryPosition) candidacies
             in
             case model.filter of
                 Nothing ->
@@ -572,12 +572,7 @@ updateTab context tab model =
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.TrainingSent candidacyId)))
                         , status =
-                            if
-                                ((Candidacy.lastStatus candidacy.statuses |> .status)
-                                    |> Candidacy.statusToOrderPosition
-                                )
-                                    >= Candidacy.statusToOrderPosition "PARCOURS_ENVOYE"
-                            then
+                            if Candidacy.isStatusAbove candidacy "PARCOURS_ENVOYE" then
                                 Form.ReadOnly
 
                             else
