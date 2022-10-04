@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon -e ts,json,graphql -w . ./index.ts",
     "debug": "nodemon -e ts,json,graphql -w . --exec node --inspect-brk -r ts-node/register ./index.ts",
-    "build": "npm run prisma:generate && npm run build:ts && npm run build:graphql",
+    "build": "npm run build:ts",
     "build:ts": "rimraf -f ./dist && tsc -p tsconfig.json",
     "build:graphql": "rsync -R ./infra/graphql/**/*.graphql ./dist ",
     "start": "node dist/index.js",
