@@ -79,7 +79,7 @@ export const SubmissionHome = ({
     !state.matches({ submissionHome: "loading" }) &&
     !state.matches({ submissionHome: "retry" });
 
-  const isProjectDraft = state.context.projectStatus === "draft";
+  const isProjectDraft = state.context.candidacyStatus === "PROJET";
 
   const candidacyCreatedAtFormatted =
     candidacyCreatedAt?.toLocaleDateString("fr-FR");

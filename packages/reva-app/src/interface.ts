@@ -24,6 +24,16 @@ export type duration =
   | "moreThanFiveYears"
   | "moreThanTenYears";
 
+export type candidacyStatus =
+  | "CANDIDATURE_VIDE"
+  | "CANDIDATURE_VALIDEE"
+  | "ARCHIVE"
+  | "PROJET" // TODO: migrate to CANDIDATURE_INCOMPLETE
+  | "VALIDATION" // TODO: migrate to CANDIDATURE_SOUMISE
+  | "PRISE_EN_CHARGE" // TODO: migrate to CANDIDATURE_PRISE_EN_CHARGE
+  | "PARCOURS_ENVOYE"
+  | "PARCOURS_CONFIRME";
+
 export interface Experience {
   id?: string;
   title: string;

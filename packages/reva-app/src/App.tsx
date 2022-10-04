@@ -324,7 +324,9 @@ function App() {
 
       {current.matches("projectHome") &&
         projectHomePage({
-          isValidated: current.context.projectStatus !== "draft",
+          isValidated: ["CANDIDATURE_VALIDEE", "VALIDATION"].includes(
+            current.context.candidacyStatus
+          ),
           certification: current.context.certification,
         })}
 

@@ -233,7 +233,9 @@ export const ProjectHome = ({
   return (
     <Page
       data-test="project-home"
-      className="z-[60] h-full flex flex-col bg-white pt-6"
+      className={`z-[${
+        isValidated ? 70 : 60
+      }] h-full flex flex-col bg-white pt-6`}
       direction={state.context.direction}
     >
       <BackButton onClick={() => send("BACK")} />
