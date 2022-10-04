@@ -36,7 +36,7 @@
   "scripts": {
     "dev": "react-scripts start",
     "dev:mobile": "CAPACITOR_LIVE_RELOAD=1 npx cap sync && PUBLIC_URL=/ react-scripts start",
-    "build": "REACT_APP_API_GRAPHQL=https://reva.incubateur.net/graphql PUBLIC_URL=/ react-scripts build && cp -R ./build ../reva-api/dist/app",
+    "build": "REACT_APP_API_GRAPHQL=https://reva.incubateur.net/graphql PUBLIC_URL=/ react-scripts build && mkdir ../reva-api/dist && cp -R ./build ../reva-api/dist/app",
     "build:mobile": "REACT_APP_API_GRAPHQL=https://reva.beta.gouv.fr/graphql PUBLIC_URL=/ npm run build && npx cap sync",
     "build:resources": "cordova-res ios --skip-config --copy && cordova-res android --skip-config --copy && npx cap sync",
     "test": "react-scripts test",
