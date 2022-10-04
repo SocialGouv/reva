@@ -99,7 +99,7 @@ export type MainEvent =
   | { type: "SUBMIT_ORGANISM"; organism: OrganismForCandidacy }
   | { type: "VALIDATE_PROJECT" }
   | { type: "SUBMIT_PROJECT" }
-  | { type: "RETURN_TO_TRAINING_PROGRAM_SUMMARY" }
+  | { type: "OPEN_TRAINING_PROGRAM_SUMMARY" }
   | { type: "SUBMIT_TRAINING_PROGRAM" };
 
 export type MainState =
@@ -228,6 +228,9 @@ export const mainMachine =
                     },
                     candidacyId: (_, event) => {
                       return event.data.candidacy.id;
+                    },
+                    candidacyStatus: (_, event) => {
+                      return event.data.candidacy.candidacyStatus;
                     },
                     certification: (_, event) => {
                       return event.data.candidacy.certification;
@@ -609,16 +612,13 @@ export const mainMachine =
           ],
         },
         trainingProgramSummary: {
+          initial: "idle",
           states: {
             idle: {
               on: {
                 SUBMIT_TRAINING_PROGRAM: {
                   target: "loading",
                 },
-              },
-            },
-            comeBack: {
-              on: {
                 BACK: {
                   target: "#mainMachine.trainingProgramConfirmed",
                   actions: assign({
@@ -633,12 +633,15 @@ export const mainMachine =
                 onDone: [
                   {
                     actions: [
+                      "navigatePrevious",
                       assign({
                         candidacyCreatedAt: (_, event) => {
                           return new Date(
                             event.data.data.candidacy_confirmTrainingForm.createdAt
                           );
                         },
+                        candidacyStatus: (_context, _event) =>
+                          "PARCOURS_CONFIRME",
                       }),
                     ],
                     target: "#mainMachine.trainingProgramConfirmed",
@@ -669,8 +672,8 @@ export const mainMachine =
         },
         trainingProgramConfirmed: {
           on: {
-            RETURN_TO_TRAINING_PROGRAM_SUMMARY: {
-              target: "trainingProgramSummary.comeBack",
+            OPEN_TRAINING_PROGRAM_SUMMARY: {
+              target: "trainingProgramSummary",
               actions: assign({
                 direction: (_context, _event) => "next",
               }),

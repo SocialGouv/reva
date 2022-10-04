@@ -19,6 +19,8 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
   const [state, send] = useActor(mainService);
   const [checkedCondition, setCheckedCondition] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const isTrainingConfirmed =
+    state.context.candidacyStatus === "PARCOURS_CONFIRME";
 
   if (!state.context.trainingProgram) return <></>;
 
@@ -40,11 +42,13 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
       className="z-[60] bg-slate-900 p-6 overflow-y-scroll"
       direction={state.context.direction}
     >
-      {state.matches("trainingProgramSummary.comeBack") ? (
-        <BackButton color="light" onClick={() => send("BACK")} />
-      ) : (
-        <></>
-      )}
+      <div className="h-12">
+        {isTrainingConfirmed ? (
+          <BackButton color="light" onClick={() => send("BACK")} />
+        ) : (
+          <></>
+        )}
+      </div>
 
       <div className="px-4 pb-8 flex flex-col">
         <h1 className="text-white text-4xl font-extrabold mb-10">
@@ -92,9 +96,23 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
 
           <DescriptionSimple term="Autre" detail={otherTraining} />
         </dl>
-
-        {state.matches("trainingProgramSummary.comeBack") ? (
-          <div className="flex flex-col items-center mt-8">
+        <Checkbox
+          checked={isTrainingConfirmed || checkedCondition}
+          label="J'ai bien compris qu'il s'agissait des étapes et prestations
+                  nécessaires pour que j'obtienne mon diplôme et je m'engage à les
+                  suivre ou informer mon accompagnateur de tout abandon dans les 48h.
+                  J'accepte que les résultats de mon étude personnalisée ainsi que le
+                  résultat à ma session de jury me soient transmis ainsi qu'à mon
+                  accompagnateur."
+          name="accept-conditions"
+          toggle={() => setCheckedCondition(!checkedCondition)}
+          theme="dark"
+          className="my-8"
+          size="small"
+          disabled={isTrainingConfirmed || submitted}
+        />
+        <div className="flex flex-col items-center">
+          {isTrainingConfirmed ? (
             <Button
               className="bg-white text-gray-800"
               data-test="submit-training"
@@ -105,41 +123,22 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
               }}
               label="Fermer"
             />
-          </div>
-        ) : (
-          <>
-            <Checkbox
-              checked={checkedCondition}
-              label="J'ai bien compris qu'il s'agissait des étapes et prestations
-                  nécessaires pour que j'obtienne mon diplôme et je m'engage à les
-                  suivre ou informer mon accompagnateur de tout abandon dans les 48h.
-                  J'accepte que les résultats de mon étude personnalisée ainsi que le
-                  résultat à ma session de jury me soient transmis ainsi qu'à mon
-                  accompagnateur."
-              name="accept-conditions"
-              toggle={() => setCheckedCondition(!checkedCondition)}
-              theme="dark"
-              className="my-8"
-              size="small"
-              disabled={submitted}
+          ) : (
+            <Button
+              className="bg-white text-gray-800"
+              data-test="submit-training"
+              disabled={!checkedCondition}
+              onClick={() => {
+                setSubmitted(true);
+                send({
+                  type: "SUBMIT_TRAINING_PROGRAM",
+                });
+              }}
+              label="Je confirme"
+              loading={state.matches("trainingProgramSummary.loading")}
             />
-            <div className="flex flex-col items-center">
-              <Button
-                className="bg-white text-gray-800"
-                data-test="submit-training"
-                disabled={!checkedCondition}
-                onClick={() => {
-                  setSubmitted(true);
-                  send({
-                    type: "SUBMIT_TRAINING_PROGRAM",
-                  });
-                }}
-                label="Je confirme"
-                loading={state.matches("trainingProgramSummary.loading")}
-              />
-            </div>
-          </>
-        )}
+          )}
+        </div>
         {state.context.error ? (
           <p key="error" className="text-red-600 mt-4 text-sm">
             {state.context.error}

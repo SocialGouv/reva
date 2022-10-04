@@ -45,7 +45,7 @@ export const TrainingProgramConfirmed: FC<Props> = ({
               label="Voir mon parcours"
               size="tiny"
               data-test="review-button"
-              onClick={() => send("RETURN_TO_TRAINING_PROGRAM_SUMMARY")}
+              onClick={() => send("OPEN_TRAINING_PROGRAM_SUMMARY")}
             />
           </div>
         </section>
