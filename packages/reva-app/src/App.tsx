@@ -21,7 +21,8 @@ import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectOrganisms } from "./pages/ProjectOrganisms";
 import { ProjectSubmitted } from "./pages/ProjectSubmitted";
 import { SubmissionHome } from "./pages/SubmissionHome";
-import { TrainingProgram } from "./pages/TrainingProgram";
+import { TrainingProgramConfirmed } from "./pages/TrainingProgramConfirmed";
+import { TrainingProgramSummary } from "./pages/TrainingProgramSummary";
 import {
   addExperience,
   confirmTrainingForm,
@@ -356,7 +357,21 @@ function App() {
         )}
 
       {current.matches("trainingProgramSummary") && (
-        <TrainingProgram mainService={mainService} />
+        <TrainingProgramSummary
+          key="training-program-summary"
+          mainService={mainService}
+        />
+      )}
+
+      {current.matches("trainingProgramConfirmed") && (
+        <TrainingProgramConfirmed
+          key="training-program-confirmed"
+          certification={current.context.certification}
+          candidacyCreatedAt={current.context.candidacyCreatedAt}
+          direction={current.context.direction}
+          organism={current.context.organism}
+          mainService={mainService}
+        />
       )}
 
       {current.matches("error") && errorPage()}

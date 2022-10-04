@@ -30,6 +30,7 @@ const projectHelp = "projectHelp";
 const projectSubmitted = "projectSubmitted";
 const submissionHome = "submissionHome";
 const trainingProgramSummary = "trainingProgramSummary";
+const trainingProgramConfirmed = "trainingProgramConfirmed";
 const error = "error";
 
 export type State =
@@ -47,7 +48,8 @@ export type State =
   | typeof projectOrganism
   | typeof projectSubmitted
   | typeof submissionHome
-  | typeof trainingProgramSummary;
+  | typeof trainingProgramSummary
+  | typeof trainingProgramConfirmed;
 
 export interface MainContext {
   error: string;
@@ -97,6 +99,7 @@ export type MainEvent =
   | { type: "SUBMIT_ORGANISM"; organism: OrganismForCandidacy }
   | { type: "VALIDATE_PROJECT" }
   | { type: "SUBMIT_PROJECT" }
+  | { type: "OPEN_TRAINING_PROGRAM_SUMMARY" }
   | { type: "SUBMIT_TRAINING_PROGRAM" };
 
 export type MainState =
@@ -120,8 +123,16 @@ export type MainState =
   | {
       value: typeof trainingProgramSummary;
       context: MainContext & {
+        candidacyCreatedAt: Date;
         certification: Certification;
         trainingProgram: TrainingProgram;
+      };
+    }
+  | {
+      value: typeof trainingProgramConfirmed;
+      context: MainContext & {
+        certification: Certification;
+        organism: Organism;
       };
     }
   | {
@@ -206,8 +217,34 @@ export const mainMachine =
                     },
                   }),
                 ],
-                cond: "isSubmittedTrainingProgram",
+                cond: "isTrainingProgramSubmitted",
                 target: "trainingProgramSummary.idle",
+              },
+              {
+                actions: [
+                  assign({
+                    candidacyCreatedAt: (_, event) => {
+                      return new Date(event.data.candidacy.createdAt);
+                    },
+                    candidacyId: (_, event) => {
+                      return event.data.candidacy.id;
+                    },
+                    candidacyStatus: (_, event) => {
+                      return event.data.candidacy.candidacyStatus;
+                    },
+                    certification: (_, event) => {
+                      return event.data.candidacy.certification;
+                    },
+                    organism: (_, event) => {
+                      return event.data.candidacy.organism;
+                    },
+                    trainingProgram: (_, event) => {
+                      return event.data.candidacy.trainingProgram;
+                    },
+                  }),
+                ],
+                cond: "isTrainingProgramConfirmed",
+                target: "trainingProgramConfirmed",
               },
               {
                 actions: [
@@ -575,11 +612,18 @@ export const mainMachine =
           ],
         },
         trainingProgramSummary: {
+          initial: "idle",
           states: {
             idle: {
               on: {
                 SUBMIT_TRAINING_PROGRAM: {
                   target: "loading",
+                },
+                BACK: {
+                  target: "#mainMachine.trainingProgramConfirmed",
+                  actions: assign({
+                    direction: (_context, _event) => "previous",
+                  }),
                 },
               },
             },
@@ -588,7 +632,19 @@ export const mainMachine =
                 src: "confirmTrainingForm",
                 onDone: [
                   {
-                    target: "leave",
+                    actions: [
+                      "navigatePrevious",
+                      assign({
+                        candidacyCreatedAt: (_, event) => {
+                          return new Date(
+                            event.data.data.candidacy_confirmTrainingForm.createdAt
+                          );
+                        },
+                        candidacyStatus: (_context, _event) =>
+                          "PARCOURS_CONFIRME",
+                      }),
+                    ],
+                    target: "#mainMachine.trainingProgramConfirmed",
                   },
                 ],
                 onError: [
@@ -611,6 +667,16 @@ export const mainMachine =
             },
             leave: {
               type: "final",
+            },
+          },
+        },
+        trainingProgramConfirmed: {
+          on: {
+            OPEN_TRAINING_PROGRAM_SUMMARY: {
+              target: "trainingProgramSummary",
+              actions: assign({
+                direction: (_context, _event) => "next",
+              }),
             },
           },
         },
@@ -1093,12 +1159,17 @@ export const mainMachine =
               "CANDIDACY_DOES_NOT_EXIST"
           );
         },
-        isSubmittedTrainingProgram: (_context, event) => {
+        isTrainingProgramSubmitted: (_context, event) => {
           const typedEvent = event as DoneInvokeEvent<any>;
-          const isSubmitted = ["PARCOURS_ENVOYE", "PARCOURS_CONFIRME"].includes(
-            typedEvent.data.candidacy?.candidacyStatus
-          );
+          const isSubmitted =
+            typedEvent.data.candidacy?.candidacyStatus === "PARCOURS_ENVOYE";
           return !!isSubmitted;
+        },
+        isTrainingProgramConfirmed: (_context, event) => {
+          const typedEvent = event as DoneInvokeEvent<any>;
+          const isConfirmed =
+            typedEvent.data.candidacy?.candidacyStatus === "PARCOURS_CONFIRME";
+          return !!isConfirmed;
         },
       },
     }

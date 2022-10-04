@@ -5,6 +5,7 @@ import { Interpreter } from "xstate";
 import { Button } from "../components/atoms/Button";
 import { CardBasic } from "../components/atoms/CardBasic";
 import { Checkbox } from "../components/atoms/Checkbox";
+import { BackButton } from "../components/molecules/BackButton";
 import { DescriptionMultiLine } from "../components/molecules/DescriptionMultiLine";
 import { DescriptionSimple } from "../components/molecules/DescriptionSimple";
 import { Page } from "../components/organisms/Page";
@@ -14,10 +15,12 @@ interface Props {
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
 
-export const TrainingProgram: FC<Props> = ({ mainService }) => {
+export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
   const [state, send] = useActor(mainService);
   const [checkedCondition, setCheckedCondition] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const isTrainingConfirmed =
+    state.context.candidacyStatus === "PARCOURS_CONFIRME";
 
   if (!state.context.trainingProgram) return <></>;
 
@@ -36,11 +39,19 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
 
   return (
     <Page
-      className="z-50 bg-slate-900 p-6 overflow-y-scroll"
+      className="z-[60] bg-slate-900 p-6 overflow-y-scroll"
       direction={state.context.direction}
     >
+      <div className="h-12">
+        {isTrainingConfirmed ? (
+          <BackButton color="light" onClick={() => send("BACK")} />
+        ) : (
+          <></>
+        )}
+      </div>
+
       <div className="px-4 pb-8 flex flex-col">
-        <h1 className="text-white text-3xl font-extrabold mb-8">
+        <h1 className="text-white text-4xl font-extrabold mb-10">
           Votre parcours personnalisé
         </h1>
         <CardBasic
@@ -85,28 +96,36 @@ export const TrainingProgram: FC<Props> = ({ mainService }) => {
 
           <DescriptionSimple term="Autre" detail={otherTraining} />
         </dl>
-
         <Checkbox
-          checked={checkedCondition}
+          checked={isTrainingConfirmed || checkedCondition}
           label="J'ai bien compris qu'il s'agissait des étapes et prestations
-            nécessaires pour que j'obtienne mon diplôme et je m'engage à les
-            suivre ou informer mon accompagnateur de tout abandon dans les 48h.
-            J'accepte que les résultats de mon étude personnalisée ainsi que le
-            résultat à ma session de jury me soient transmis ainsi qu'à mon
-            accompagnateur."
+                  nécessaires pour que j'obtienne mon diplôme et je m'engage à les
+                  suivre ou informer mon accompagnateur de tout abandon dans les 48h.
+                  J'accepte que les résultats de mon étude personnalisée ainsi que le
+                  résultat à ma session de jury me soient transmis ainsi qu'à mon
+                  accompagnateur."
           name="accept-conditions"
           toggle={() => setCheckedCondition(!checkedCondition)}
           theme="dark"
           className="my-8"
           size="small"
-          disabled={submitted}
+          disabled={isTrainingConfirmed || submitted}
         />
         <div className="flex flex-col items-center">
-          {state.matches("trainingProgramSummary.leave") ? (
-            <span className="text-white text-lg">Confirmé</span>
+          {isTrainingConfirmed ? (
+            <Button
+              className="bg-white text-gray-800"
+              data-test="submit-training"
+              onClick={() => {
+                send({
+                  type: "BACK",
+                });
+              }}
+              label="Fermer"
+            />
           ) : (
             <Button
-              className="bg-gray-200 text-gray-600 font-bold py-2 px-4 rounded"
+              className="bg-white text-gray-800"
               data-test="submit-training"
               disabled={!checkedCondition}
               onClick={() => {

@@ -405,6 +405,7 @@ const CONFIRM_TRAINING_FORM = gql`
   mutation candidacy_confirmTrainingForm($candidacyId: UUID!) {
     candidacy_confirmTrainingForm(candidacyId: $candidacyId) {
       id
+      createdAt
     }
   }
 `;
