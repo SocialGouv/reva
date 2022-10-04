@@ -10,6 +10,7 @@ module Data.Candidacy exposing
     , isStatusAbove
     , lastStatus
     , statusToDirectoryPosition
+    , statusToProgressPosition
     , statusToString
     , toCandidacySummary
     )
@@ -137,25 +138,25 @@ statusToProgressPosition : String -> Int
 statusToProgressPosition status =
     case status of
         "ARCHIVE" ->
-            0
+            -1
 
         "PROJET" ->
             -- aka CANDIDATURE_INCOMPLETE
-            1
+            0
 
         "VALIDATION" ->
             -- aka CANDIDATURE_SOUMISE
-            2
+            1
 
         "PRISE_EN_CHARGE" ->
             -- aka CANDIDATURE_PRISE_EN_CHARGE
-            3
+            1
 
         "PARCOURS_ENVOYE" ->
-            4
+            3
 
         "PARCOURS_CONFIRME" ->
-            5
+            3
 
         _ ->
             10
@@ -192,4 +193,4 @@ isStatusAbove candidacy status =
             (lastStatus >> .status) candidacy.statuses
                 |> statusToProgressPosition
     in
-    Debug.log "" currentStatusPosition >= statusToProgressPosition status
+    currentStatusPosition >= statusToProgressPosition status

@@ -168,6 +168,14 @@ viewContent context model candidacies =
                 , Form.view model.state.referential model.form
                     |> Html.map GotFormMsg
                 ]
+
+        maybeNavigationSteps =
+            case model.selected of
+                Success candidacy ->
+                    viewNavigationSteps context.baseUrl candidacy
+
+                _ ->
+                    text ""
     in
     div
         [ class "grow flex h-full min-w-0 border-l-[73px] border-black bg-gray-100" ]
@@ -181,23 +189,25 @@ viewContent context model candidacies =
 
             Profil candidacyId ->
                 [ viewCandidacyPanel context model
-                , viewNavigationSteps context.baseUrl candidacyId
+                , maybeNavigationSteps
                 ]
 
             Training candidacyId ->
                 [ viewForm "training" candidacyId
-                , viewNavigationSteps context.baseUrl candidacyId
                 ]
 
             TrainingSent candidacyId ->
                 [ viewMain "training-sent" (viewTrainingSent context candidacyId)
-                , viewNavigationSteps context.baseUrl candidacyId
+                , maybeNavigationSteps
                 ]
 
 
-viewNavigationSteps : String -> CandidacyId -> Html msg
-viewNavigationSteps baseUrl candidacyId =
+viewNavigationSteps : String -> Candidacy -> Html msg
+viewNavigationSteps baseUrl candidacy =
     let
+        candidacyStatus =
+            (Candidacy.lastStatus >> .status) candidacy.statuses
+
         title =
             [ div
                 [ class "h-32 flex items-end -mb-12" ]
@@ -207,7 +217,7 @@ viewNavigationSteps baseUrl candidacyId =
                 ]
             ]
 
-        expandedView stepTitle buttonLabel =
+        expandedView stepTitle status =
             [ View.Steps.item stepTitle
             , div
                 []
@@ -216,20 +226,25 @@ viewNavigationSteps baseUrl candidacyId =
                     , class "mt-2 w-auto rounded"
                     , class "text-center px-8 py-1"
                     ]
-                    [ text buttonLabel ]
+                    [ if Candidacy.isStatusAbove candidacy status then
+                        text "Voir"
+
+                      else
+                        text "Compléter"
+                    ]
                 ]
             ]
 
         appointmentLink =
-            Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Meetings candidacyId)
+            Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Meetings candidacy.id)
 
         trainingLink =
-            Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Training candidacyId)
+            Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Training candidacy.id)
     in
-    View.Steps.view
+    View.Steps.view (Candidacy.statusToProgressPosition candidacyStatus)
         [ { content = title, navigation = Nothing }
-        , { content = expandedView "Rendez-vous pédagogique" "Compléter", navigation = appointmentLink }
-        , { content = expandedView "Définition du parcours" "Compléter", navigation = trainingLink }
+        , { content = expandedView "Rendez-vous pédagogique" "PARCOURS_ENVOYE", navigation = appointmentLink }
+        , { content = expandedView "Définition du parcours" "PARCOURS_ENVOYE", navigation = trainingLink }
         , { content = [ View.Steps.item "Validation du parcours" ], navigation = Nothing }
         , { content = [ View.Steps.item "Gestion de la recevabilité" ], navigation = Nothing }
         , { content = [ View.Steps.item "Demande de prise en charge" ], navigation = Nothing }
@@ -479,7 +494,8 @@ update context msg model =
             )
 
         GotCandidacyResponse remoteCandidacy ->
-            ( { model | selected = remoteCandidacy }, Cmd.none )
+            { model | selected = remoteCandidacy }
+                |> updateTab context model.tab
 
         GotCandidacyDeletionResponse (Failure err) ->
             ( { model | selected = Failure err }, Cmd.none )
@@ -538,7 +554,7 @@ updateTab context tab model =
             { model | tab = tab }
     in
     case ( tab, model.selected ) of
-        ( View.Candidacy.Profil candidacyId, _ ) ->
+        ( View.Candidacy.Profil candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
                 |> withTakeOver context candidacyId
 
@@ -562,7 +578,6 @@ updateTab context tab model =
         ( View.Candidacy.Training candidacyId, Success candidacy ) ->
             let
                 ( formModel, formCmd ) =
-                    -- PAGE BLANCHE SI ACCES DIRECT!!
                     Form.updateForm context
                         { form = trainingForm
                         , onLoad = Request.requestTrainings candidacyId
@@ -582,14 +597,20 @@ updateTab context tab model =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
+        ( View.Candidacy.Training candidacyId, NotAsked ) ->
+            initCandidacy context candidacyId newModel
+
         ( View.Candidacy.Training _, _ ) ->
             ( newModel, Cmd.none )
 
-        ( View.Candidacy.TrainingSent candidacyId, _ ) ->
+        ( View.Candidacy.TrainingSent _, _ ) ->
+            ( newModel, Cmd.none )
+
+        ( View.Candidacy.Profil _, _ ) ->
             ( newModel, Cmd.none )
 
         ( View.Candidacy.Empty, _ ) ->
-            ( newModel, Cmd.none )
+            ( { newModel | selected = NotAsked }, Cmd.none )
 
 
 withTakeOver : Context -> CandidacyId -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )

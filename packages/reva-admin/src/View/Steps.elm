@@ -5,18 +5,17 @@ import Html.Styled.Attributes exposing (attribute, class, classList)
 
 
 view :
-    List
-        { navigation : Maybe (Html.Attribute msg)
-        , content : List (Html msg)
-        }
+    Int
+    ->
+        List
+            { navigation : Maybe (Html.Attribute msg)
+            , content : List (Html msg)
+            }
     -> Html msg
-view timelineElements =
+view currentStepIndex timelineElements =
     let
         timelineSize =
             List.length timelineElements
-
-        currentStepIndex =
-            2
 
         viewNavigationTimelineStep index element =
             li
