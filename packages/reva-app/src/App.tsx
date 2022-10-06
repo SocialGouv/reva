@@ -7,6 +7,7 @@ import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
 import { useContext, useEffect, useMemo } from "react";
 
+import { Footer } from "./components/organisms/Footer";
 import { Certification } from "./interface";
 import { mainMachine } from "./machines/main.machine";
 import { CertificateDetails } from "./pages/CertificateDetails";
@@ -213,7 +214,7 @@ function App() {
 
   const appSize =
     windowSize.width > 640
-      ? { width: 720, height: windowSize.height }
+      ? { width: 580, height: windowSize.height - 110 }
       : windowSize;
 
   useEffect(() => {
@@ -379,23 +380,27 @@ function App() {
   );
 
   return (
-    <div className="App relative sm:flex sm:flex-col sm:bg-gray-400 sm:h-screen">
-      {Capacitor.isNativePlatform() ? (
-        <div
-          className={`transition-opacity duration-200 ${
-            current.matches("searchResults") ? "opacity-1" : "opacity-0"
-          } absolute z-50 h-12 top-0 inset-x-0 backdrop-blur-md bg-white/50`}
-        ></div>
-      ) : (
-        <></>
-      )}
-
-      <div
-        className="sm:z-[1] relative flex flex-col w-full bg-white overflow-hidden"
-        style={appSize}
-      >
-        {!current.matches("loadingApplicationData") && pageContent}
+    <div className="h-screen flex flex-col">
+      <div className="flex-grow sm:flex sm:flex-col sm:items-center sm:justify-center">
+        <div className="App relative sm:px-20">
+          {Capacitor.isNativePlatform() ? (
+            <div
+              className={`transition-opacity duration-200 ${
+                current.matches("searchResults") ? "opacity-1" : "opacity-0"
+              } absolute z-50 h-12 top-0 inset-x-0 backdrop-blur-md bg-white/50`}
+            ></div>
+          ) : (
+            <></>
+          )}
+          <div
+            className="sm:rounded-lg sm:shadow-lg sm:z-[1] relative flex flex-col w-full bg-white overflow-hidden"
+            style={appSize}
+          >
+            {!current.matches("loadingApplicationData") && pageContent}
+          </div>
+        </div>
       </div>
+      <Footer />
     </div>
   );
 }
