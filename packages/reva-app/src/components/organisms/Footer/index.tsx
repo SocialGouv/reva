@@ -23,7 +23,7 @@ export const Footer = () => (
     </div>
     <div className="fixed bottom-0 left-0 hidden sm:block p-6">
       <a href="/">
-        <img className="h-6" src={logoImg} />
+        <img alt="Reva" className="h-6" src={logoImg} />
       </a>
     </div>
   </footer>
