@@ -3,6 +3,7 @@ module Page.Form exposing
     , Form
     , Model
     , Msg
+    , Status(..)
     , init
     , update
     , updateForm
@@ -13,8 +14,8 @@ import Api exposing (Token)
 import Data.Context exposing (Context)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
-import Html.Styled as Html exposing (Html, button, div, fieldset, input, label, legend, option, p, select, text, textarea)
-import Html.Styled.Attributes exposing (checked, class, disabled, for, id, name, selected, type_, value)
+import Html.Styled as Html exposing (Html, button, dd, div, dt, fieldset, input, label, legend, li, option, p, select, span, text, textarea, ul)
+import Html.Styled.Attributes exposing (checked, class, classList, disabled, for, id, name, selected, type_, value)
 import Html.Styled.Events exposing (onCheck, onInput, onSubmit)
 import RemoteData exposing (RemoteData(..))
 import String exposing (String)
@@ -60,11 +61,16 @@ type RemoteForm referential
     | Failure
 
 
+type Status
+    = Editable
+    | ReadOnly
+
+
 type alias Model referential =
     { onRedirect : Cmd (Msg referential)
     , onSave : String -> Token -> (RemoteData String () -> Msg referential) -> referential -> Dict String String -> Cmd (Msg referential)
-    , filter : Maybe String
     , form : RemoteForm referential
+    , status : Status
     }
 
 
@@ -75,8 +81,8 @@ init =
         model =
             { onRedirect = Cmd.none
             , onSave = \_ _ _ _ _ -> Cmd.none
-            , filter = Nothing
             , form = NotAsked
+            , status = ReadOnly
             }
     in
     ( model
@@ -128,11 +134,11 @@ view remoteReferential model =
             skeleton
 
         ( RemoteData.Success referential, Saving form formData ) ->
-            viewForm referential Nothing formData form <|
+            viewForm referential model.status Nothing formData form <|
                 disabledSaveButton "..."
 
         ( RemoteData.Success referential, Editing error form formData ) ->
-            viewForm referential error formData form <|
+            viewForm referential model.status error formData form <|
                 saveButton form.saveLabel
 
         ( _, Failure ) ->
@@ -142,20 +148,36 @@ view remoteReferential model =
             text err
 
 
-viewForm : referential -> Maybe String -> FormData -> Form referential -> Html (Msg referential) -> Html (Msg referential)
-viewForm referential maybeError formData form saveButton =
+viewForm : referential -> Status -> Maybe String -> FormData -> Form referential -> Html (Msg referential) -> Html (Msg referential)
+viewForm referential status maybeError formData form saveButton =
+    let
+        viewElement =
+            case status of
+                Editable ->
+                    viewEditableElement
+
+                ReadOnly ->
+                    viewReadOnlyElement
+    in
     Html.form
         [ onSubmit (UserClickedSave referential) ]
         [ View.title form.title
         , div
-            [ class "mt-6 space-y-10" ]
-          <|
-            List.map (viewElement formData) <|
-                form.elements referential
-        , div
-            [ class "mt-8 pb-4 flex justify-end" ]
-            [ saveButton
+            [ classList [ ( "space-y-10", status == Editable ) ]
+            , class "mt-6"
             ]
+            (List.map (viewElement formData) (form.elements referential)
+                |> List.concat
+            )
+        , case status of
+            Editable ->
+                div
+                    [ class "mt-8 pb-4 flex justify-end" ]
+                    [ saveButton
+                    ]
+
+            ReadOnly ->
+                text ""
         , case maybeError of
             Just error ->
                 div
@@ -175,8 +197,8 @@ viewForm referential maybeError formData form saveButton =
         ]
 
 
-viewElement : FormData -> ( String, Element ) -> Html (Msg referential)
-viewElement formData ( elementId, element ) =
+viewEditableElement : FormData -> ( String, Element ) -> List (Html (Msg referential))
+viewEditableElement formData ( elementId, element ) =
     let
         dataOrDefault =
             Dict.get elementId formData
@@ -243,41 +265,42 @@ viewElement formData ( elementId, element ) =
                 ]
 
         withLabel s el =
-            div
-                []
-                [ labelView "text-lg font-semibold text-gray-900 mb-4" s
-                , el
-                ]
+            [ labelView "text-lg font-semibold text-gray-900 mb-4" s
+            , el
+            ]
     in
     case element of
         Checkbox label ->
-            div
+            [ div
                 [ class "flex items-start h-8 w-full" ]
                 [ checkboxView
                 , labelView "text-base" label
                 ]
+            ]
 
         CheckboxList label choices ->
             let
                 viewChoices =
                     List.map
-                        (\( choiceId, choice ) -> viewElement formData ( choiceId, Checkbox choice ))
+                        (\( choiceId, choice ) -> viewEditableElement formData ( choiceId, Checkbox choice ))
                         choices
+                        |> List.concat
             in
-            div
+            [ div
                 [ name elementId
                 , id elementId
                 , class "mt-1"
                 ]
                 viewChoices
                 |> withLegend label
+            ]
 
         Date label ->
             inputView "date" "w-60"
                 |> withLabel label
 
         Empty ->
-            text ""
+            []
 
         Input label ->
             inputView "text" "w-full"
@@ -308,10 +331,96 @@ viewElement formData ( elementId, element ) =
                         |> withLabel label
 
                 Just _ ->
-                    text ""
+                    []
 
                 Nothing ->
-                    text ""
+                    []
+
+
+viewReadOnlyElement : FormData -> ( String, Element ) -> List (Html (Msg referential))
+viewReadOnlyElement formData ( elementId, element ) =
+    let
+        dataOrDefault =
+            Dict.get elementId formData
+                |> Maybe.withDefault (defaultValue element)
+
+        dataClass =
+            "text-lg font-semibold text-gray-800"
+
+        dataView =
+            dd
+                [ class dataClass ]
+                [ text dataOrDefault ]
+
+        termView s =
+            dt
+                [ class "text-base text-gray-600 mt-8" ]
+                [ text s ]
+
+        withTerm s el =
+            [ termView s
+            , el
+            ]
+
+        defaultView label =
+            dataView |> withTerm label
+    in
+    case element of
+        Checkbox label ->
+            if dataOrDefault == "checked" then
+                [ text label ]
+
+            else
+                []
+
+        CheckboxList label choices ->
+            let
+                viewChoices =
+                    List.map
+                        (\( choiceId, choice ) -> li [] <| viewReadOnlyElement formData ( choiceId, Checkbox choice ))
+                        choices
+            in
+            dd
+                [ class dataClass ]
+                [ ul
+                    [ name elementId
+                    , id elementId
+                    ]
+                    viewChoices
+                ]
+                |> withTerm label
+
+        Date label ->
+            defaultView label
+
+        Empty ->
+            []
+
+        Input label ->
+            defaultView label
+
+        Number label ->
+            defaultView label
+
+        Textarea label ->
+            defaultView label
+
+        Select label choices ->
+            List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices
+                |> List.head
+                |> Maybe.map (\( _, choice ) -> text choice |> withTerm label)
+                |> Maybe.withDefault []
+
+        SelectOther selectId label ->
+            case Dict.get selectId formData of
+                Just "Autre" ->
+                    defaultView label
+
+                Just _ ->
+                    []
+
+                Nothing ->
+                    []
 
 
 defaultValue : Element -> String
@@ -385,6 +494,7 @@ updateForm :
         , onLoad : String -> Token -> (RemoteData String (Dict String String) -> Msg referential) -> Cmd (Msg referential)
         , onRedirect : Cmd (Msg referential)
         , onSave : String -> Token -> (RemoteData String () -> Msg referential) -> referential -> Dict String String -> Cmd (Msg referential)
+        , status : Status
         }
     -> Model referential
     -> ( Model referential, Cmd (Msg referential) )
@@ -393,6 +503,7 @@ updateForm context config model =
         | form = Loading config.form
         , onRedirect = config.onRedirect
         , onSave = config.onSave
+        , status = config.status
       }
     , config.onLoad context.endpoint context.token GotLoadResponse
     )

@@ -8,7 +8,6 @@ module Page.Candidacies exposing
     )
 
 import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
-import Admin.Object exposing (Candidacy)
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Context exposing (Context)
@@ -139,7 +138,7 @@ view context model =
         Success candidacies ->
             let
                 sortedCandidacies =
-                    List.sortBy (.lastStatus >> .status >> Candidacy.statusToOrderPosition) candidacies
+                    List.sortBy (.lastStatus >> .status >> Candidacy.statusToDirectoryPosition) candidacies
             in
             case model.filter of
                 Nothing ->
@@ -169,6 +168,14 @@ viewContent context model candidacies =
                 , Form.view model.state.referential model.form
                     |> Html.map GotFormMsg
                 ]
+
+        maybeNavigationSteps =
+            case model.selected of
+                Success candidacy ->
+                    viewNavigationSteps context.baseUrl candidacy
+
+                _ ->
+                    text ""
     in
     div
         [ class "grow flex h-full min-w-0 border-l-[73px] border-black bg-gray-100" ]
@@ -178,27 +185,32 @@ viewContent context model candidacies =
                 [ viewDirectoryPanel context candidacies ]
 
             Meetings candidacyId ->
-                [ viewForm "meetings" candidacyId ]
+                [ viewForm "meetings" candidacyId
+                , maybeNavigationSteps
+                ]
 
-            Profil candidacyId ->
+            Profil _ ->
                 [ viewCandidacyPanel context model
-                , viewNavigationSteps context.baseUrl candidacyId
+                , maybeNavigationSteps
                 ]
 
             Training candidacyId ->
                 [ viewForm "training" candidacyId
-                , viewNavigationSteps context.baseUrl candidacyId
+                , maybeNavigationSteps
                 ]
 
             TrainingSent candidacyId ->
                 [ viewMain "training-sent" (viewTrainingSent context candidacyId)
-                , viewNavigationSteps context.baseUrl candidacyId
+                , maybeNavigationSteps
                 ]
 
 
-viewNavigationSteps : String -> CandidacyId -> Html msg
-viewNavigationSteps baseUrl candidacyId =
+viewNavigationSteps : String -> Candidacy -> Html msg
+viewNavigationSteps baseUrl candidacy =
     let
+        candidacyStatus =
+            (Candidacy.lastStatus >> .status) candidacy.statuses
+
         title =
             [ div
                 [ class "h-32 flex items-end -mb-12" ]
@@ -208,8 +220,8 @@ viewNavigationSteps baseUrl candidacyId =
                 ]
             ]
 
-        expandedView stepTitle buttonLabel =
-            [ View.Steps.item stepTitle
+        expandedView stepTitle status =
+            [ View.Steps.link stepTitle
             , div
                 []
                 [ button
@@ -217,24 +229,26 @@ viewNavigationSteps baseUrl candidacyId =
                     , class "mt-2 w-auto rounded"
                     , class "text-center px-8 py-1"
                     ]
-                    [ text buttonLabel ]
+                    [ if Candidacy.isStatusAbove candidacy status then
+                        text "Voir"
+
+                      else
+                        text "Compléter"
+                    ]
                 ]
             ]
 
         appointmentLink =
-            Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Meetings candidacyId)
+            Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Meetings candidacy.id)
 
         trainingLink =
-            Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Training candidacyId)
+            Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Training candidacy.id)
     in
-    View.Steps.view
+    View.Steps.view (Candidacy.statusToProgressPosition candidacyStatus)
         [ { content = title, navigation = Nothing }
-        , { content = expandedView "Rendez-vous pédagogique" "Compléter", navigation = appointmentLink }
-        , { content = expandedView "Définition du parcours" "Compléter", navigation = trainingLink }
-        , { content = [ View.Steps.item "Validation du parcours" ], navigation = Nothing }
-        , { content = [ View.Steps.item "Gestion de la recevabilité" ], navigation = Nothing }
-        , { content = [ View.Steps.item "Demande de prise en charge" ], navigation = Nothing }
-        , { content = [ View.Steps.item "Validation du projet" ], navigation = Nothing }
+        , { content = expandedView "Rendez-vous pédagogique" "PARCOURS_ENVOYE", navigation = appointmentLink }
+        , { content = expandedView "Définition du parcours" "PARCOURS_ENVOYE", navigation = trainingLink }
+        , { content = [ View.Steps.info "Validation du parcours" ], navigation = Nothing }
         ]
 
 
@@ -480,7 +494,8 @@ update context msg model =
             )
 
         GotCandidacyResponse remoteCandidacy ->
-            ( { model | selected = remoteCandidacy }, Cmd.none )
+            { model | selected = remoteCandidacy }
+                |> updateTab context model.tab
 
         GotCandidacyDeletionResponse (Failure err) ->
             ( { model | selected = Failure err }, Cmd.none )
@@ -538,12 +553,12 @@ updateTab context tab model =
         newModel =
             { model | tab = tab }
     in
-    case tab of
-        View.Candidacy.Profil candidacyId ->
+    case ( tab, model.selected ) of
+        ( View.Candidacy.Profil candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
                 |> withTakeOver context candidacyId
 
-        View.Candidacy.Meetings candidacyId ->
+        ( View.Candidacy.Meetings candidacyId, _ ) ->
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
@@ -554,12 +569,13 @@ updateTab context tab model =
                             Nav.pushUrl
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                        , status = Form.Editable
                         }
                         model.form
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        View.Candidacy.Training candidacyId ->
+        ( View.Candidacy.Training candidacyId, Success candidacy ) ->
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
@@ -570,16 +586,31 @@ updateTab context tab model =
                             Nav.pushUrl
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.TrainingSent candidacyId)))
+                        , status =
+                            if Candidacy.isStatusAbove candidacy "PARCOURS_ENVOYE" then
+                                Form.ReadOnly
+
+                            else
+                                Form.Editable
                         }
                         model.form
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        View.Candidacy.TrainingSent candidacyId ->
+        ( View.Candidacy.Training candidacyId, NotAsked ) ->
+            initCandidacy context candidacyId newModel
+
+        ( View.Candidacy.Training _, _ ) ->
             ( newModel, Cmd.none )
 
-        View.Candidacy.Empty ->
+        ( View.Candidacy.TrainingSent _, _ ) ->
             ( newModel, Cmd.none )
+
+        ( View.Candidacy.Profil _, _ ) ->
+            ( newModel, Cmd.none )
+
+        ( View.Candidacy.Empty, _ ) ->
+            ( { newModel | selected = NotAsked }, Cmd.none )
 
 
 withTakeOver : Context -> CandidacyId -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )

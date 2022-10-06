@@ -7,7 +7,10 @@ module Data.Candidacy exposing
     , CandidacySummary
     , candidacyIdFromString
     , candidacyIdToString
-    , statusToOrderPosition
+    , isStatusAbove
+    , lastStatus
+    , statusToDirectoryPosition
+    , statusToProgressPosition
     , statusToString
     , toCandidacySummary
     )
@@ -106,8 +109,8 @@ statusToString status =
             "Statut inconnu"
 
 
-statusToOrderPosition : String -> Int
-statusToOrderPosition status =
+statusToDirectoryPosition : String -> Int
+statusToDirectoryPosition status =
     case status of
         "VALIDATION" ->
             1
@@ -131,6 +134,34 @@ statusToOrderPosition status =
             10
 
 
+statusToProgressPosition : String -> Int
+statusToProgressPosition status =
+    case status of
+        "ARCHIVE" ->
+            -1
+
+        "PROJET" ->
+            -- aka CANDIDATURE_INCOMPLETE
+            0
+
+        "VALIDATION" ->
+            -- aka CANDIDATURE_SOUMISE
+            1
+
+        "PRISE_EN_CHARGE" ->
+            -- aka CANDIDATURE_PRISE_EN_CHARGE
+            1
+
+        "PARCOURS_ENVOYE" ->
+            3
+
+        "PARCOURS_CONFIRME" ->
+            4
+
+        _ ->
+            10
+
+
 toCandidacySummary : Candidacy -> CandidacySummary
 toCandidacySummary candidacy =
     { id = candidacy.id
@@ -139,13 +170,27 @@ toCandidacySummary candidacy =
     , certification = candidacy.certification
     , phone = candidacy.phone
     , email = candidacy.email
-    , lastStatus =
-        List.filter (\c -> c.isActive) candidacy.statuses
-            |> List.head
-            |> Maybe.withDefault
-                { createdAt = Time.millisToPosix 0
-                , status = ""
-                , isActive = True
-                }
+    , lastStatus = lastStatus candidacy.statuses
     , createdAt = candidacy.createdAt
     }
+
+
+lastStatus : List CandidacyStatus -> CandidacyStatus
+lastStatus statuses =
+    List.filter (\status -> status.isActive) statuses
+        |> List.head
+        |> Maybe.withDefault
+            { createdAt = Time.millisToPosix 0
+            , status = ""
+            , isActive = True
+            }
+
+
+isStatusAbove : Candidacy -> String -> Bool
+isStatusAbove candidacy status =
+    let
+        currentStatusPosition =
+            (lastStatus >> .status) candidacy.statuses
+                |> statusToProgressPosition
+    in
+    currentStatusPosition >= statusToProgressPosition status
