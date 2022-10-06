@@ -185,15 +185,18 @@ viewContent context model candidacies =
                 [ viewDirectoryPanel context candidacies ]
 
             Meetings candidacyId ->
-                [ viewForm "meetings" candidacyId ]
+                [ viewForm "meetings" candidacyId
+                , maybeNavigationSteps
+                ]
 
-            Profil candidacyId ->
+            Profil _ ->
                 [ viewCandidacyPanel context model
                 , maybeNavigationSteps
                 ]
 
             Training candidacyId ->
                 [ viewForm "training" candidacyId
+                , maybeNavigationSteps
                 ]
 
             TrainingSent candidacyId ->
