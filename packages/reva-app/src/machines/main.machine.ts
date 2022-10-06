@@ -250,6 +250,9 @@ export const mainMachine =
                 actions: [
                   assign({
                     candidacyId: (_, event) => {
+                      console.log("hi");
+
+                      console.log(event.data);
                       return event.data.candidacy.id;
                     },
                     candidacyCreatedAt: (_, event) => {
@@ -262,7 +265,9 @@ export const mainMachine =
                       return event.data.candidacy.certification;
                     },
                     experiences: (_, event) => {
-                      return { rest: event.data.candidacy.experiences };
+                      return {
+                        rest: event.data.candidacy.experiences,
+                      };
                     },
                     goals: (_, event) => {
                       return event.data.candidacy.goals;
@@ -276,7 +281,7 @@ export const mainMachine =
                     organism: (_, event) => {
                       return event.data.candidacy.organism;
                     },
-                    regions: (_, event) => event.data.regions,
+                    regions: (_, event) => event.data.candidacy.regions,
                     trainingProgram: (_, event) => {
                       return event.data.candidacy.trainingProgram;
                     },
@@ -284,7 +289,7 @@ export const mainMachine =
                   "loadRegion",
                 ],
                 cond: "isAlreadyCandidate",
-                target: "submissionHome.ready",
+                target: "projectHome",
               },
               {
                 actions: [
@@ -1149,7 +1154,7 @@ export const mainMachine =
       guards: {
         isAlreadyCandidate: (_context, event) => {
           const typedEvent = event as DoneInvokeEvent<any>;
-          return !!typedEvent.data.candidacy;
+          return true; //!!typedEvent.data.candidacy;
         },
         isNotACandidate: (_context, event) => {
           const typedEvent = event as DoneInvokeEvent<any>;

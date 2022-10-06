@@ -26,9 +26,9 @@ import { TrainingProgramConfirmed } from "./pages/TrainingProgramConfirmed";
 import { TrainingProgramSummary } from "./pages/TrainingProgramSummary";
 import {
   addExperience,
+  confirmRegistration,
   confirmTrainingForm,
   createCandidacyWithCertification,
-  initializeApp,
   saveGoals,
   submitCandidacy,
   updateCertification,
@@ -57,9 +57,8 @@ function App() {
             });
           },
           initializeApp: async (context, event) => {
-            const deviceId = await Device.getId();
-            return initializeApp(client as ApolloClient<object>)({
-              deviceId: deviceId.uuid,
+            return confirmRegistration(client as ApolloClient<object>)({
+              token: "abc",
             });
           },
           getCertification: (context, event) => {

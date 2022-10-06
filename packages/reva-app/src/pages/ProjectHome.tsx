@@ -75,32 +75,36 @@ export const ProjectHome = ({
   const EditCertification = () => (
     <div className="bg-slate-900 rounded-xl overflow-hidden mt-6">
       <div className={`mt-5 mr-6 text-white text-right font-bold grow `}>
-        {certification.codeRncp}
+        {certification?.codeRncp}
       </div>
-      <img
-        className=""
-        alt=""
-        role="presentation"
-        style={{
-          marginLeft: "-42px",
-          marginTop: "-28px",
-          height: "104px",
-          width: "104px",
-        }}
-        src={certificationImg}
-      />
+      {certification && (
+        <img
+          className=""
+          alt=""
+          role="presentation"
+          style={{
+            marginLeft: "-42px",
+            marginTop: "-28px",
+            height: "104px",
+            width: "104px",
+          }}
+          src={certificationImg}
+        />
+      )}
       <div className="px-8 pb-6">
         <h2
-          className="font-medium text-white text-2xl"
+          className={`font-medium text-white ${
+            certification ? "text-2xl" : "mt-6 text-xl"
+          }`}
           style={{ lineHeight: "1.1" }}
         >
-          {certification.label}
+          {certification?.label || "Mon diplôme"}
         </h2>
         {!isValidated && (
           <Button
             data-test="project-home-close-selected-certification"
             size="tiny"
-            label="Modifier"
+            label={certification ? "Modifier" : "Choisir"}
             className="mt-4 text-slate-900 bg-white"
             onClick={() => send("CLOSE_SELECTED_CERTIFICATION")}
           />

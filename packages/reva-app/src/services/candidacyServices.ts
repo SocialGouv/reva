@@ -258,12 +258,7 @@ export const submitCandidacy =
     return data.candidacy_submitCandidacy;
   };
 
-const INITIALIZE_APP = gql`
-  query getCandidacy($deviceId: ID!) {
-    getCandidacy(deviceId: $deviceId) {
-      id
-      deviceId
-      certificationId
+const CANDIDACY_SELECTION = `
       organism {
         id
         label
@@ -309,6 +304,15 @@ const INITIALIZE_APP = gql`
       }
       mandatoryTrainings {
         label
+      }`;
+
+const CONFIRM_REGISTRATION = gql`
+  mutation candidate_confirmRegistration($token: String!) {
+    candidate: candidate_confirmRegistration(token: $token) {
+      token
+      candidacy {
+        id
+        ${CANDIDACY_SELECTION}
       }
     }
 
@@ -328,79 +332,83 @@ const INITIALIZE_APP = gql`
   }
 `;
 
-export const initializeApp =
+export const confirmRegistration =
   (client: ApolloClient<object>) =>
-  async ({ deviceId }: { deviceId: string }) => {
-    const { data, errors } = await client.query({
-      query: INITIALIZE_APP,
+  async ({ token }: { token: string }) => {
+    const { data, errors } = await client.mutate({
+      mutation: CONFIRM_REGISTRATION,
       // we set the error policy at "all" to get referentials even if getCandidacy fail
       errorPolicy: "all",
-      variables: {
-        deviceId,
-      },
+      variables: { token },
     });
 
-    let candidacy = null;
-    if (data.getCandidacy) {
-      const candidateGoals = data.getCandidacy.goals.map((g: any) => g.goalId);
-
-      const goals = data.getReferential.goals.map((g: any) => ({
-        ...g,
-        checked: candidateGoals.includes(g.id),
-      }));
-
-      const experiences = data.getCandidacy.experiences.map((xp: any) => ({
-        ...xp,
-        startedAt: new Date(xp.startedAt),
-      }));
-
-      const {
-        additionalHourCount,
-        appointmentCount,
-        basicSkills,
-        certificateSkills,
-        collectiveHourCount,
-        individualHourCount,
-        mandatoryTrainings,
-        otherTraining,
-        validatedByCandidate,
-      } = data.getCandidacy;
-
-      const trainingProgram = {
-        additionalHourCount,
-        appointmentCount,
-        basicSkills: basicSkills?.map((b: any) => b.label),
-        certificateSkills,
-        collectiveHourCount,
-        individualHourCount,
-        mandatoryTrainings: mandatoryTrainings?.map((m: any) => m.label),
-        otherTraining,
-        validatedByCandidate,
-      };
-
-      candidacy = {
-        ...data.getCandidacy,
-        candidacyStatus: data.getCandidacy.candidacyStatuses?.find(
-          (s: { isActive: string; status: candidacyStatus }) => s.isActive
-        ).status,
-        createdAt: new Date(data.getCandidacy.createdAt),
-        experiences,
-        goals,
-        regionId: data.getCandidacy.regionId,
-        trainingProgram,
-      };
-    }
-
-    return {
-      candidacy,
-      referentials: {
-        goals: data.getReferential.goals,
-      },
-      regions: data.getRegions,
-      graphQLErrors: errors,
-    };
+    return initializeApp(data, errors);
   };
 
+function initializeApp(
+  { candidate, getReferential, getRegions }: any,
+  errors: any
+) {
+  let candidacy = candidate.candidacy;
+  if (candidate.candidacy) {
+    const candidateGoals = candidacy.goals.map((g: any) => g.goalId);
+
+    const goals = getReferential.goals.map((g: any) => ({
+      ...g,
+      checked: candidateGoals.includes(g.id),
+    }));
+
+    const experiences = candidacy.experiences.map((xp: any) => ({
+      ...xp,
+      startedAt: new Date(xp.startedAt),
+    }));
+
+    const {
+      additionalHourCount,
+      appointmentCount,
+      basicSkills,
+      certificateSkills,
+      collectiveHourCount,
+      individualHourCount,
+      mandatoryTrainings,
+      otherTraining,
+      validatedByCandidate,
+    } = candidacy;
+
+    const trainingProgram = {
+      additionalHourCount,
+      appointmentCount,
+      basicSkills: basicSkills?.map((b: any) => b.label),
+      certificateSkills,
+      collectiveHourCount,
+      individualHourCount,
+      mandatoryTrainings: mandatoryTrainings?.map((m: any) => m.label),
+      otherTraining,
+      validatedByCandidate,
+    };
+
+    candidacy = {
+      ...candidacy,
+      candidacyStatus: candidacy.candidacyStatuses?.find(
+        (s: { isActive: string; status: candidacyStatus }) => s.isActive
+      ).status,
+      createdAt: new Date(candidacy.createdAt),
+      experiences,
+      goals,
+      regionId: candidacy.regionId,
+      trainingProgram,
+    };
+  }
+  console.log(getRegions);
+  return {
+    candidacy,
+    referentials: {
+      goals: getReferential.goals,
+    },
+    regions: getRegions,
+    graphQLErrors: errors,
+  };
+}
 const CONFIRM_TRAINING_FORM = gql`
   mutation candidacy_confirmTrainingForm($candidacyId: UUID!) {
     candidacy_confirmTrainingForm(candidacyId: $candidacyId) {
