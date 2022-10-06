@@ -65,6 +65,9 @@ body {
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #edefff;
+  background: -webkit-linear-gradient(to top right, #edefff, #decbcc);
+  background: linear-gradient(to top right, #edefff, #decbcc);
 }
 
 input::-webkit-date-and-time-value {
