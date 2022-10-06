@@ -12,19 +12,17 @@ export const Footer = () => (
   <footer>
     <div className="w-full hidden sm:flex items-end justify-center text-gray-600 text-sm pb-6">
       <div className="space-x-2">
-        <Link href="https://reva.incubateur.net/">Site Reva</Link>
+        <Link href="/">Site Reva</Link>
         <Divider />
-        <Link href="https://reva.incubateur.net/mentions-l%C3%A9gale">
-          Mentions légales
-        </Link>
+        <Link href="/mentions-l%C3%A9gale">Mentions légales</Link>
         <Divider />
-        <Link href="https://reva.incubateur.net/politique-de-confidentialit%C3%A9">
+        <Link href="/politique-de-confidentialit%C3%A9">
           Données personnelles
         </Link>
       </div>
     </div>
     <div className="fixed bottom-0 left-0 hidden sm:block p-6">
-      <a href="https://reva.incubateur.net/">
+      <a href="/">
         <img className="h-6" src={logoImg} />
       </a>
     </div>
