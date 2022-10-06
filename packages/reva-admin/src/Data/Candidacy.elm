@@ -156,7 +156,7 @@ statusToProgressPosition status =
             3
 
         "PARCOURS_CONFIRME" ->
-            3
+            4
 
         _ ->
             10

@@ -218,7 +218,7 @@ viewNavigationSteps baseUrl candidacy =
             ]
 
         expandedView stepTitle status =
-            [ View.Steps.item stepTitle
+            [ View.Steps.link stepTitle
             , div
                 []
                 [ button
@@ -245,10 +245,7 @@ viewNavigationSteps baseUrl candidacy =
         [ { content = title, navigation = Nothing }
         , { content = expandedView "Rendez-vous pédagogique" "PARCOURS_ENVOYE", navigation = appointmentLink }
         , { content = expandedView "Définition du parcours" "PARCOURS_ENVOYE", navigation = trainingLink }
-        , { content = [ View.Steps.item "Validation du parcours" ], navigation = Nothing }
-        , { content = [ View.Steps.item "Gestion de la recevabilité" ], navigation = Nothing }
-        , { content = [ View.Steps.item "Demande de prise en charge" ], navigation = Nothing }
-        , { content = [ View.Steps.item "Validation du projet" ], navigation = Nothing }
+        , { content = [ View.Steps.info "Validation du parcours" ], navigation = Nothing }
         ]
 
 

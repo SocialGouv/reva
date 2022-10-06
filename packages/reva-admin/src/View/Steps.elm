@@ -1,4 +1,4 @@
-module View.Steps exposing (item, view)
+module View.Steps exposing (info, link, view)
 
 import Html.Styled as Html exposing (Html, a, div, label, li, ol, span, text)
 import Html.Styled.Attributes exposing (attribute, class, classList)
@@ -17,6 +17,17 @@ view currentStepIndex timelineElements =
         timelineSize =
             List.length timelineElements
 
+        maybeLink element =
+            case element.navigation of
+                Nothing ->
+                    div [ class "relative flex items-start group" ]
+
+                Just navigation ->
+                    a
+                        [ navigation
+                        , class "cursor-pointer relative flex items-start group"
+                        ]
+
         viewNavigationTimelineStep index element =
             li
                 [ class "pb-14 relative" ]
@@ -33,10 +44,7 @@ view currentStepIndex timelineElements =
                         , attribute "aria-hidden" "true"
                         ]
                         []
-                , a
-                    [ Maybe.withDefault (class "") element.navigation
-                    , class "cursor-pointer relative flex items-start group"
-                    ]
+                , maybeLink element
                     [ span
                         [ class "mt-1.5 flex items-center" ]
                         [ span
@@ -75,8 +83,21 @@ view currentStepIndex timelineElements =
         ]
 
 
-item : String -> Html msg
-item label =
+linkHelper : String -> Html msg -> Html msg
+linkHelper label extraContent =
     div
         [ class "flex items-center justify-between w-60" ]
-        [ span [ class "text-base" ] [ text label ], span [ class "text-lg" ] [ text "→" ] ]
+        [ span [ class "text-base" ] [ text label ]
+        , extraContent
+        ]
+
+
+link : String -> Html msg
+link label =
+    linkHelper label <|
+        span [ class "text-lg" ] [ text "→" ]
+
+
+info : String -> Html msg
+info label =
+    linkHelper label (text "")
