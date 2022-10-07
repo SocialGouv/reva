@@ -1216,7 +1216,7 @@ export const mainMachine =
       guards: {
         isAlreadyCandidate: (_context, event) => {
           const typedEvent = event as DoneInvokeEvent<any>;
-          return true; //!!typedEvent.data.candidacy;
+          return !!typedEvent.data.candidacy;
         },
         isNotACandidate: (_context, event) => {
           const typedEvent = event as DoneInvokeEvent<any>;
