@@ -127,13 +127,6 @@ export const Certificates = ({ mainService }: Props) => {
         className="h-full overflow-y-auto pb-12"
       >
         <div className="px-8 pt-16 lg:pt-8 bg-white">
-          <Header label="Bienvenue" />
-          <p className="mt-10 pr-6 text-slate-600 leading-loose text-lg">
-            Reva est une expérimentation visant à simplifier la Validation des
-            Acquis de l'Expérience (VAE). Vous avez une expérience dans les
-            secteurs de la dépendance et de la santé ? Choisissez votre diplôme
-            et laissez-vous accompagner !
-          </p>
           <Select
             name="select_region"
             className="mt-8 mb-4"

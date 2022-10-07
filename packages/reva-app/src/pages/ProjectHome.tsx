@@ -297,8 +297,15 @@ export const ProjectHome = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
     >
-      <BackButton onClick={() => send("BACK")} />
-      <div className="px-8 grow overflow-y-auto pb-8">
+      <div className="px-8 grow overflow-y-auto py-8">
+        <h1 className="text-center font-bold text-lg">Reva</h1>
+        <Header label="Bienvenue" />
+        <p className="my-4 pr-6 text-slate-600 text-lg">
+          Reva est une expérimentation visant à simplifier la Validation des
+          Acquis de l'Expérience (VAE). Vous avez une expérience dans les
+          secteurs de la dépendance et de la santé ? Choisissez votre diplôme et
+          laissez-vous accompagner !
+        </p>
         {isValidated ? (
           <SubmissionWarning />
         ) : (
@@ -312,7 +319,7 @@ export const ProjectHome = ({
           <EditOrganism />
         </div>
       </div>
-      <div className="bg-white flex flex-col items-center pt-4 pb-12">
+      <div className="bg-white flex flex-col items-center pt-4 pb-12 sm:pb-4">
         <Button
           data-test={`project-home-${isValidated ? "submit" : "validate"}${
             !isProjectComplete ? "-locked" : ""
