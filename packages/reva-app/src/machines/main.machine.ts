@@ -190,7 +190,7 @@ export const mainMachine =
         organisms: undefined,
         trainingProgram: undefined,
       },
-      initial: "loadingApplicationData",
+      initial: "projectHome",
       id: "mainMachine",
       states: {
         loadingApplicationData: {
@@ -247,47 +247,7 @@ export const mainMachine =
                 target: "trainingProgramConfirmed",
               },
               {
-                actions: [
-                  assign({
-                    candidacyId: (_, event) => {
-                      console.log("hi");
-
-                      console.log(event.data);
-                      return event.data.candidacy.id;
-                    },
-                    candidacyCreatedAt: (_, event) => {
-                      return new Date(event.data.candidacy.createdAt);
-                    },
-                    candidacyStatus: (_, event) => {
-                      return event.data.candidacy.candidacyStatus;
-                    },
-                    certification: (_, event) => {
-                      return event.data.candidacy.certification;
-                    },
-                    experiences: (_, event) => {
-                      return {
-                        rest: event.data.candidacy.experiences,
-                      };
-                    },
-                    goals: (_, event) => {
-                      return event.data.candidacy.goals;
-                    },
-                    contact: (_, event) => {
-                      return {
-                        email: event.data.candidacy.email,
-                        phone: event.data.candidacy.phone,
-                      };
-                    },
-                    organism: (_, event) => {
-                      return event.data.candidacy.organism;
-                    },
-                    regions: (_, event) => event.data.candidacy.regions,
-                    trainingProgram: (_, event) => {
-                      return event.data.candidacy.trainingProgram;
-                    },
-                  }),
-                  "loadRegion",
-                ],
+                actions: [],
                 cond: "isAlreadyCandidate",
                 target: "projectHome",
               },
@@ -993,9 +953,36 @@ export const mainMachine =
           },
         },
         projectHome: {
-          initial: "idle",
+          initial: "loading",
           states: {
-            idle: {
+            loading: {
+              invoke: {
+                src: "initializeApp",
+                onDone: [
+                  {
+                    actions: ["loadCandidacy", "loadRegion"],
+                    target: "ready",
+                  },
+                ],
+                onError: [
+                  {
+                    actions: assign({
+                      error: (_, _event) => "Une erreur est survenue.",
+                      direction: (_context, _event) => "next",
+                    }),
+                    target: "retry",
+                  },
+                ],
+              },
+            },
+            retry: {
+              on: {
+                SUBMIT_CERTIFICATION: {
+                  target: "loading",
+                },
+              },
+            },
+            ready: {
               on: {
                 VALIDATE_PROJECT: {
                   actions: [
@@ -1005,7 +992,7 @@ export const mainMachine =
                         "CANDIDATURE_VALIDEE",
                     }),
                   ],
-                  target: "idle",
+                  target: "ready",
                   internal: false,
                 },
                 SUBMIT_PROJECT: {
@@ -1116,6 +1103,26 @@ export const mainMachine =
     },
     {
       actions: {
+        loadCandidacy: assign((_, rawEvent) => {
+          const event = rawEvent as DoneInvokeEvent<any>;
+          return {
+            candidacyId: event.data.candidacy.id,
+            candidacyCreatedAt: new Date(event.data.candidacy.createdAt),
+            candidacyStatus: event.data.candidacy.candidacyStatus,
+            certification: event.data.candidacy.certification,
+            experiences: {
+              rest: event.data.candidacy.experiences,
+            },
+            goals: event.data.candidacy.goals,
+            contact: {
+              email: event.data.candidacy.email,
+              phone: event.data.candidacy.phone,
+            },
+            organism: event.data.candidacy.organism,
+            regions: event.data.candidacy.regions,
+            trainingProgram: event.data.candidacy.trainingProgram,
+          };
+        }),
         loadRegion: assign({
           selectedRegion: (_, event) => {
             const typedEvent = event as DoneInvokeEvent<any>;

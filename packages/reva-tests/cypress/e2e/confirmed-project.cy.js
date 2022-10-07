@@ -8,15 +8,15 @@ context("Project", () => {
 
   it("attempt to validate project", function () {
     cy.intercept("POST", "/graphql", (req) => {
+      req.on("response", (res) => {
+        res.setThrottle(1000);
+      });
       stubQuery(req, "candidate_confirmRegistration", "candidate-logged.json");
     });
     cy.visit("/confirmation");
+    cy.get('[data-test="project-home-loading"]');
     cy.wait("@candidate_confirmRegistration");
 
-    cy.get('[data-test="submission-home-show-project-home"]').click();
-    cy.get('[data-test="project-home-validate-locked"]').click();
-    cy.get('[data-test="project-help"]').should("exist");
-    cy.get('[data-test="project-help"] > [data-test="button-back"]').click();
-    cy.get('[data-test="project-home"]').should("exist");
+    cy.get('[data-test="project-home-ready"]');
   });
 });

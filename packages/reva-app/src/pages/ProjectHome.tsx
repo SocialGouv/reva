@@ -1,7 +1,10 @@
 import { useActor } from "@xstate/react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
+import { Header } from "../components/atoms/Header";
+import { Loader } from "../components/atoms/Icons";
 import { BackButton } from "../components/molecules/BackButton";
 import { ProgressTitle } from "../components/molecules/ProgressTitle";
 import certificationImg from "../components/organisms/Card/certification.png";
@@ -59,6 +62,10 @@ export const ProjectHome = ({
   const [state, send] = useActor(mainService);
 
   const selectedGoals = state.context.goals.filter((goal) => goal.checked);
+
+  const isHomeReady =
+    !state.matches({ projectHome: "loading" }) &&
+    !state.matches({ projectHome: "retry" });
 
   const sortedExperiences = sortExperiences(state.context.experiences);
 
@@ -234,13 +241,61 @@ export const ProjectHome = ({
     </div>
   );
 
-  return (
-    <Page
-      data-test="project-home"
-      className={`z-[${
-        isValidated ? 70 : 60
-      }] h-full flex flex-col bg-white pt-6`}
-      direction={state.context.direction}
+  const retryErrorScreen = (
+    <motion.div
+      data-test="project-home-error"
+      key="project-home-error"
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="absolute w-full flex flex-col bg-neutral-100 h-full"
+    >
+      <div className="grow flex flex-col text-center items-center justify-center px-10">
+        <Header label="Oups..." size="small" />
+        <p>{state.context.error}</p>
+        <div className="mt-8">
+          <Button
+            data-test="submission-home-retry-candidate"
+            size="small"
+            label="Réessayer"
+            onClick={() =>
+              send({
+                type: "SUBMIT_CERTIFICATION",
+                certification,
+              })
+            }
+          />
+        </div>
+      </div>
+    </motion.div>
+  );
+
+  const loadingScreen = (
+    <motion.div
+      data-test="project-home-loading"
+      key="project-home-loading"
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="absolute w-full h-full flex flex-col bg-neutral-100"
+    >
+      <div className="grow flex flex-col text-center items-center justify-center px-10">
+        <Header label="Création de votre compte" size="small" />
+        <div className="mt-8 w-8">
+          <Loader />
+        </div>
+      </div>
+    </motion.div>
+  );
+
+  const homeScreen = (
+    <motion.div
+      data-test="project-home-ready"
+      key="project-home-ready"
+      className="flex flex-col w-full h-full relative overflow-hidden"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
     >
       <BackButton onClick={() => send("BACK")} />
       <div className="px-8 grow overflow-y-auto pb-8">
@@ -271,6 +326,19 @@ export const ProjectHome = ({
           size="medium"
         />
       </div>
+    </motion.div>
+  );
+
+  return (
+    <Page
+      className={`z-[${isValidated ? 70 : 60}] h-full flex flex-col bg-white`}
+      direction={state.context.direction}
+    >
+      <AnimatePresence>
+        {state.matches({ projectHome: "loading" }) && loadingScreen}
+        {state.matches({ projectHome: "retry" }) && retryErrorScreen}
+        {isHomeReady && homeScreen}
+      </AnimatePresence>
     </Page>
   );
 };
