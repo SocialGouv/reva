@@ -312,6 +312,10 @@ export const mainMachine =
               actions: "selectingRegion",
               target: "loadingCertifications",
             },
+            BACK: {
+              actions: "navigatePrevious",
+              target: "#mainMachine.projectHome.ready",
+            },
           },
         },
         searchResults: {
@@ -1081,10 +1085,17 @@ export const mainMachine =
               actions: "navigateNext",
               target: "projectOrganism",
             },
-            CLOSE_SELECTED_CERTIFICATION: {
-              actions: "navigateNext",
-              target: "loadingCertifications",
-            },
+            CLOSE_SELECTED_CERTIFICATION: [
+              {
+                actions: "navigateNext",
+                target: "loadingCertifications",
+                cond: "isRegionSelected",
+              },
+              {
+                actions: "navigateNext",
+                target: "searchResults",
+              },
+            ],
             OPEN_HELP: {
               actions: "navigateNext",
               target: "projectHelp",
@@ -1168,6 +1179,9 @@ export const mainMachine =
             typedEvent.data.graphQLErrors?.[0]?.extensions.code ===
               "CANDIDACY_DOES_NOT_EXIST"
           );
+        },
+        isRegionSelected: (context, _event) => {
+          return !!context.selectedRegion;
         },
         isTrainingProgramSubmitted: (_context, event) => {
           const typedEvent = event as DoneInvokeEvent<any>;

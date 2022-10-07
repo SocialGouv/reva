@@ -292,7 +292,9 @@ export const ProjectHome = ({
       data-test="project-home-ready"
       key="project-home-ready"
       className="flex flex-col w-full h-full relative overflow-hidden"
-      initial={{ opacity: 0, y: 10 }}
+      initial={
+        state.context.direction === "previous" ? false : { opacity: 0, y: 10 }
+      }
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
     >

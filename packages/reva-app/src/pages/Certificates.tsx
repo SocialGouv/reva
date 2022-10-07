@@ -81,7 +81,9 @@ export const Certificates = ({ mainService }: Props) => {
     const certification = state.context.certification as Certification;
     return (
       <motion.div
-        className="absolute bottom-0 z-50 inset-x-0 p-8 bg-slate-900"
+        className={`absolute bottom-0 z-50 inset-x-0 p-8 ${
+          isVisible ? "bg-slate-900" : "transparent"
+        }`}
         custom={state.toStrings().join("")}
         variants={buttonVariants}
         initial={false}
