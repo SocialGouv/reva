@@ -190,7 +190,7 @@ export const mainMachine =
         organisms: undefined,
         trainingProgram: undefined,
       },
-      initial: "projectHome",
+      initial: "projectHomeLoading",
       id: "mainMachine",
       states: {
         loadingApplicationData: {
@@ -314,7 +314,7 @@ export const mainMachine =
             },
             BACK: {
               actions: "navigatePrevious",
-              target: "#mainMachine.projectHome.ready",
+              target: "#mainMachine.projectHome",
             },
           },
         },
@@ -960,8 +960,11 @@ export const mainMachine =
             target: "projectHome",
           },
         },
+        projectHomeLoading: {
+          always: [{ target: "projectHome.loading" }],
+        },
         projectHome: {
-          initial: "loading",
+          initial: "ready",
           states: {
             loading: {
               invoke: {
