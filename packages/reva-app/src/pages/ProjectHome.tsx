@@ -5,7 +5,6 @@ import { Interpreter } from "xstate";
 import { Button } from "../components/atoms/Button";
 import { Header } from "../components/atoms/Header";
 import { Loader } from "../components/atoms/Icons";
-import { BackButton } from "../components/molecules/BackButton";
 import { ProgressTitle } from "../components/molecules/ProgressTitle";
 import certificationImg from "../components/organisms/Card/certification.png";
 import { Page } from "../components/organisms/Page";
@@ -60,7 +59,7 @@ export const ProjectHome = ({
   mainService,
 }: ProjectHomeProps) => {
   const [state, send] = useActor(mainService);
-
+  console.log(state);
   const selectedGoals = state.context.goals.filter((goal) => goal.checked);
 
   const isHomeReady =
@@ -109,7 +108,7 @@ export const ProjectHome = ({
         </h2>
         {!isValidated && (
           <Button
-            data-test="project-home-close-selected-certification"
+            data-test="project-home-select-certification"
             size="tiny"
             label={certification ? "Modifier" : "Choisir"}
             className="mt-4 text-slate-900 bg-white"
@@ -338,7 +337,7 @@ export const ProjectHome = ({
 
   return (
     <Page
-      className={`z-[${isValidated ? 70 : 60}] h-full flex flex-col bg-white`}
+      className={`z-[${isValidated ? 70 : 20}] h-full flex flex-col bg-white`}
       direction={state.context.direction}
     >
       <AnimatePresence>

@@ -5,6 +5,7 @@ import { Interpreter } from "xstate";
 
 import { Header } from "../components/atoms/Header";
 import { Select, option } from "../components/atoms/Select";
+import { BackButton } from "../components/molecules/BackButton";
 import { CandidateButton } from "../components/organisms/CandidateButton";
 import { Card } from "../components/organisms/Card";
 import { transitionIn } from "../components/organisms/Card/view";
@@ -120,13 +121,19 @@ export const Certificates = ({ mainService }: Props) => {
   };
 
   return (
-    <Page className="z-40 bg-white" direction={state.context.direction}>
+    <Page
+      data-test="certificates"
+      className="z-40 bg-white"
+      direction={state.context.direction}
+    >
       <motion.div
         ref={resultsElement}
         layoutScroll
-        className="h-full overflow-y-auto pb-12"
+        className="h-full overflow-y-auto pb-12 pt-6"
       >
-        <div className="px-8 pt-16 lg:pt-8 bg-white">
+        <BackButton onClick={() => send("BACK")} />
+        <div className="px-8 pt-16 sm:pt-4 bg-white">
+          <Header label="Choisir mon diplôme" />
           <Select
             name="select_region"
             className="mt-8 mb-4"

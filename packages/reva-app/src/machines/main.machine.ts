@@ -329,6 +329,10 @@ export const mainMachine =
               actions: "selectingRegion",
               target: "loadingCertifications",
             },
+            BACK: {
+              actions: "navigatePrevious",
+              target: "#mainMachine.projectHome.ready",
+            },
           },
         },
         certificateSummary: {
@@ -960,7 +964,7 @@ export const mainMachine =
                 src: "initializeApp",
                 onDone: [
                   {
-                    actions: ["loadCandidacy", "loadRegion"],
+                    actions: ["loadCandidacy"],
                     target: "ready",
                   },
                 ],
@@ -1078,7 +1082,7 @@ export const mainMachine =
               target: "projectOrganism",
             },
             CLOSE_SELECTED_CERTIFICATION: {
-              actions: "navigatePrevious",
+              actions: "navigateNext",
               target: "loadingCertifications",
             },
             OPEN_HELP: {
@@ -1119,18 +1123,12 @@ export const mainMachine =
               phone: event.data.candidacy.phone,
             },
             organism: event.data.candidacy.organism,
-            regions: event.data.candidacy.regions,
+            regions: event.data.regions,
+            selectedRegion: event.data.regions.find(
+              (region: Region) => region.id === event.data.candidacy.regionId
+            ),
             trainingProgram: event.data.candidacy.trainingProgram,
           };
-        }),
-        loadRegion: assign({
-          selectedRegion: (_, event) => {
-            const typedEvent = event as DoneInvokeEvent<any>;
-            return typedEvent.data.regions.find(
-              (region: Region) =>
-                region.id === typedEvent.data.candidacy.regionId
-            );
-          },
         }),
         navigateNext: assign((_context, _event) => ({
           direction: "next",

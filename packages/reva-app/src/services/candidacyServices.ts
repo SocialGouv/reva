@@ -399,7 +399,7 @@ function initializeApp(
       trainingProgram,
     };
   }
-  console.log(getRegions);
+
   return {
     candidacy,
     referentials: {
@@ -409,6 +409,7 @@ function initializeApp(
     graphQLErrors: errors,
   };
 }
+
 const CONFIRM_TRAINING_FORM = gql`
   mutation candidacy_confirmTrainingForm($candidacyId: UUID!) {
     candidacy_confirmTrainingForm(candidacyId: $candidacyId) {
