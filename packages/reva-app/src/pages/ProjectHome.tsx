@@ -63,6 +63,7 @@ export const ProjectHome = ({
   const selectedGoals = state.context.goals.filter((goal) => goal.checked);
 
   const isHomeReady =
+    !state.matches({ projectHome: "fakeLoading" }) &&
     !state.matches({ projectHome: "loading" }) &&
     !state.matches({ projectHome: "retry" });
 
@@ -343,7 +344,9 @@ export const ProjectHome = ({
       direction={state.context.direction}
     >
       <AnimatePresence>
-        {state.matches({ projectHome: "loading" }) && loadingScreen}
+        {(state.matches({ projectHome: "loading" }) ||
+          state.matches({ projectHome: "fakeLoading" })) &&
+          loadingScreen}
         {state.matches({ projectHome: "retry" }) && retryErrorScreen}
         {isHomeReady && homeScreen}
       </AnimatePresence>

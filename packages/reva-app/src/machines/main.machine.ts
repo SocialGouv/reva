@@ -977,13 +977,22 @@ export const mainMachine =
                 ],
                 onError: [
                   {
+                    actions: ["loadFakeCandidacy"],
+                    target: "fakeLoading",
+                  } /**
+                  {
                     actions: assign({
                       error: (_, _event) => "Une erreur est survenue.",
                       direction: (_context, _event) => "next",
                     }),
                     target: "retry",
-                  },
+                  },*/,
                 ],
+              },
+            },
+            fakeLoading: {
+              after: {
+                1000: { target: "ready" },
               },
             },
             retry: {
@@ -1142,6 +1151,40 @@ export const mainMachine =
               (region: Region) => region.id === event.data.candidacy.regionId
             ),
             trainingProgram: event.data.candidacy.trainingProgram,
+          };
+        }),
+        loadFakeCandidacy: assign((_context, _event) => {
+          return {
+            candidacyId: "candidacy1",
+            candidacyCreatedAt: new Date(),
+            candidacyStatus: "PROJET",
+            experiences: { rest: [] },
+            goals: [
+              {
+                id: "goal1",
+                checked: false,
+                label: "Goal 1",
+                order: 1,
+              },
+              {
+                id: "goal2",
+                checked: false,
+                label: "Goal 2",
+                order: 2,
+              },
+            ],
+            regions: [
+              {
+                id: "region1",
+                code: "1",
+                label: "Région 1",
+              },
+              {
+                id: "region2",
+                code: "2",
+                label: "Région 2",
+              },
+            ],
           };
         }),
         navigateNext: assign((_context, _event) => ({
