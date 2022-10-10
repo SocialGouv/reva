@@ -8,7 +8,7 @@ context("Project", () => {
 
   it("attempt to validate project", function () {
     cy.intercept("POST", "/graphql", (req) => {
-      stubQuery(req, "candidate_confirmRegistration", "candidate-logged.json");
+      stubQuery(req, "candidate_confirmRegistration", "candidate1.json");
     });
     cy.visit("/confirmation");
     cy.get('[data-test="project-home-loading"]');

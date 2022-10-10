@@ -39,7 +39,7 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
 
   return (
     <Page
-      className="z-[60] bg-slate-900 p-6 overflow-y-scroll"
+      className="z-[90] bg-slate-900 py-6 overflow-y-scroll"
       direction={state.context.direction}
     >
       <div className="h-12">
@@ -50,7 +50,7 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
         )}
       </div>
 
-      <div className="px-4 pb-8 flex flex-col">
+      <div className="px-10 py-6 flex flex-col">
         <h1 className="text-white text-4xl font-extrabold mb-10">
           Votre parcours personnalisé
         </h1>

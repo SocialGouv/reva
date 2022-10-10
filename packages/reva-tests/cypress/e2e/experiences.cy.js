@@ -14,7 +14,7 @@ context("Experiences", () => {
 
   it("add and edit an experience", function () {
     cy.intercept("POST", "/graphql", (req) => {
-      stubQuery(req, "candidate_confirmRegistration", "candidate-logged.json");
+      stubQuery(req, "candidate_confirmRegistration", "candidate1.json");
       stubQuery(req, "add_experience", "added-experience1.json");
       stubQuery(req, "update_experience", "updated-experience2.json");
     });

@@ -13,7 +13,7 @@ context("Contact", () => {
 
   it("add a contact", function () {
     cy.intercept("POST", "/graphql", (req) => {
-      stubQuery(req, "candidate_confirmRegistration", "candidate-logged.json");
+      stubQuery(req, "candidate_confirmRegistration", "candidate1.json");
       stubQuery(req, "update_contact", "contact1.json");
     });
     cy.visit("/confirmation");
@@ -33,7 +33,7 @@ context("Contact", () => {
 
   it("edit a contact and add an email", function () {
     cy.intercept("POST", "/graphql", (req) => {
-      stubQuery(req, "candidate_confirmRegistration", "candidate-logged.json");
+      stubQuery(req, "candidate_confirmRegistration", "candidate1.json");
       stubQuery(req, "update_contact", "contact2.json");
     });
     cy.visit("/confirmation");

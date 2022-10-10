@@ -941,6 +941,17 @@ export const mainMachine =
                 onDone: [
                   {
                     actions: ["loadCandidacy"],
+                    cond: "isTrainingProgramSubmitted",
+                    target: "#mainMachine.trainingProgramSummary.idle",
+                  },
+
+                  {
+                    actions: ["loadCandidacy"],
+                    cond: "isTrainingProgramConfirmed",
+                    target: "#mainMachine.trainingProgramConfirmed",
+                  },
+                  {
+                    actions: ["loadCandidacy"],
                     target: "ready",
                   },
                 ],
