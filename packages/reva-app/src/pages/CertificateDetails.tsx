@@ -2,8 +2,8 @@ import { useActor } from "@xstate/react";
 import parse from "html-react-parser";
 import { Interpreter } from "xstate";
 
+import { Button } from "../components/atoms/Button";
 import { BackButton } from "../components/molecules/BackButton";
-import { CandidateButton } from "../components/organisms/CandidateButton";
 import { Page } from "../components/organisms/Page";
 import { Certification } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
@@ -27,7 +27,7 @@ export const CertificateDetails = ({ certification, mainService }: Props) => {
 
   return (
     <Page
-      className="flex flex-col z-50 bg-slate-900 pt-6"
+      className="flex flex-col z-[80] bg-slate-900 pt-6"
       direction={state.context.direction}
     >
       <BackButton color="light" onClick={() => send("BACK")} />
@@ -53,10 +53,18 @@ export const CertificateDetails = ({ certification, mainService }: Props) => {
               content: certification.accessibleJobType,
             })}
 
-          <CandidateButton
-            candidacyId={state.context.candidacyId}
-            certification={certification}
-            send={send}
+          <Button
+            data-test="certification-save"
+            onClick={() =>
+              send({
+                type: "SUBMIT_CERTIFICATION",
+                certification,
+              })
+            }
+            loading={state.matches({ certificateDetails: "submittingChange" })}
+            label={"Valider"}
+            primary
+            size="large"
           />
         </div>
       </div>

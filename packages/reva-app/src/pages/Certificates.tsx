@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Interpreter } from "xstate";
 
+import { Button } from "../components/atoms/Button";
 import { Header } from "../components/atoms/Header";
 import { Select, option } from "../components/atoms/Select";
 import { BackButton } from "../components/molecules/BackButton";
-import { CandidateButton } from "../components/organisms/CandidateButton";
 import { Card } from "../components/organisms/Card";
 import { transitionIn } from "../components/organisms/Card/view";
 import { CardSkeleton } from "../components/organisms/CardSkeleton";
@@ -51,6 +51,8 @@ export const Certificates = ({ mainService }: Props) => {
       state.matches("certificateSummary") &&
       (state.context.certification as Certification).id === certification.id;
 
+    console.log((state.context.certification as Certification)?.id);
+
     return (
       <Card
         ref={isSelected ? currentCertificateElement : null}
@@ -76,8 +78,7 @@ export const Certificates = ({ mainService }: Props) => {
   };
 
   function candidateButton() {
-    const isVisible =
-      state.matches("certificateSummary") || state.matches("submissionHome");
+    const isVisible = state.matches("certificateSummary");
     const certification = state.context.certification as Certification;
     return (
       <motion.div
@@ -95,10 +96,18 @@ export const Certificates = ({ mainService }: Props) => {
         layout="position"
       >
         {isVisible && (
-          <CandidateButton
-            candidacyId={state.context.candidacyId}
-            certification={certification}
-            send={send}
+          <Button
+            data-test="certification-save"
+            onClick={() =>
+              send({
+                type: "SUBMIT_CERTIFICATION",
+                certification,
+              })
+            }
+            loading={state.matches({ certificateSummary: "submittingChange" })}
+            label={"Valider"}
+            primary
+            size="large"
           />
         )}
       </motion.div>
@@ -125,7 +134,7 @@ export const Certificates = ({ mainService }: Props) => {
   return (
     <Page
       data-test="certificates"
-      className="z-40 bg-white"
+      className="z-[80] bg-white"
       direction={state.context.direction}
     >
       <motion.div

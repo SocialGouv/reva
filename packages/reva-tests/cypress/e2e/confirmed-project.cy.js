@@ -8,9 +8,6 @@ context("Project", () => {
 
   it("attempt to validate project", function () {
     cy.intercept("POST", "/graphql", (req) => {
-      req.on("response", (res) => {
-        res.setThrottle(1000);
-      });
       stubQuery(req, "candidate_confirmRegistration", "candidate-logged.json");
     });
     cy.visit("/confirmation");

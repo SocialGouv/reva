@@ -59,7 +59,7 @@ export const ProjectHome = ({
   mainService,
 }: ProjectHomeProps) => {
   const [state, send] = useActor(mainService);
-  console.log(state);
+
   const selectedGoals = state.context.goals.filter((goal) => goal.checked);
 
   const isHomeReady =
@@ -100,6 +100,7 @@ export const ProjectHome = ({
       )}
       <div className="px-8 pb-6">
         <h2
+          data-test="certification-label"
           className={`font-medium text-white ${
             certification ? "text-2xl" : "mt-6 text-xl"
           }`}
@@ -300,7 +301,7 @@ export const ProjectHome = ({
       transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
     >
       <div className="px-8 grow overflow-y-auto py-8">
-        <h1 className="text-center font-bold text-lg">Reva</h1>
+        <h1 className="text-center font-bold text-lg text-slate-900">Reva</h1>
         <Header label="Bienvenue" />
         <p className="my-4 pr-6 text-slate-600 text-lg">
           Reva est une expérimentation visant à simplifier la Validation des
@@ -340,7 +341,9 @@ export const ProjectHome = ({
 
   return (
     <Page
-      className={`z-[${isValidated ? 70 : 20}] h-full flex flex-col bg-white`}
+      className={`${
+        isValidated ? "z-20" : "z-[70]"
+      } h-full flex flex-col bg-white`}
       direction={state.context.direction}
     >
       <AnimatePresence>
