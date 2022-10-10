@@ -4,14 +4,9 @@ const experienceTitle2 = "Experience 2";
 const experienceDescription1 = "Description 1";
 const experienceDescription2 = "Description 2";
 
-import { setDeviceId } from "../utils/device";
 import { stubQuery } from "../utils/graphql";
 
 context("Experiences", () => {
-  beforeEach(() => {
-    setDeviceId();
-  });
-
   it("add and edit an experience", function () {
     cy.intercept("POST", "/graphql", (req) => {
       stubQuery(req, "candidate_confirmRegistration", "candidate1.json");

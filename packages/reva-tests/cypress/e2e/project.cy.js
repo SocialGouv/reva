@@ -1,11 +1,6 @@
-import { setDeviceId } from "../utils/device";
 import { stubQuery } from "../utils/graphql";
 
 context("Project", () => {
-  beforeEach(() => {
-    setDeviceId();
-  });
-
   it("attempt to validate project", function () {
     cy.intercept("POST", "/graphql", (req) => {
       stubQuery(req, "candidate_confirmRegistration", "candidate1.json");

@@ -1,4 +1,3 @@
-import { setDeviceId } from "../utils/device";
 import { stubQuery } from "../utils/graphql";
 
 const email = "email@example.com";
@@ -7,10 +6,6 @@ const phone1 = "06-01-02-03-04";
 const phone2 = "06-01-02-03-05";
 
 context("Contact", () => {
-  beforeEach(() => {
-    setDeviceId();
-  });
-
   it("add a contact", function () {
     cy.intercept("POST", "/graphql", (req) => {
       stubQuery(req, "candidate_confirmRegistration", "candidate1.json");
