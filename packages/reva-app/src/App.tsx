@@ -3,7 +3,7 @@ import { Capacitor } from "@capacitor/core";
 import { Device } from "@capacitor/device";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useMemo } from "react";
 
 import { Footer } from "./components/organisms/Footer";
 import { Certification } from "./interface";
