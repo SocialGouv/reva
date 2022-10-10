@@ -14,7 +14,6 @@ import {
   candidacyStatus,
 } from "../interface";
 
-const loadingApplicationData = "loadingApplicationData";
 const loadingCertifications = "loadingCertifications";
 const searchResults = "searchResults";
 const searchResultsError = "searchResultsError";
@@ -34,7 +33,6 @@ const trainingProgramConfirmed = "trainingProgramConfirmed";
 const error = "error";
 
 export type State =
-  | typeof loadingApplicationData
   | typeof loadingCertifications
   | typeof searchResults
   | typeof searchResultsError
@@ -104,10 +102,7 @@ export type MainEvent =
 
 export type MainState =
   | {
-      value:
-        | typeof searchResults
-        | typeof loadingCertifications
-        | typeof loadingApplicationData;
+      value: typeof searchResults | typeof loadingCertifications;
       context: MainContext & {
         certification: undefined;
         candidacyId: undefined;
@@ -189,95 +184,6 @@ export const mainMachine =
       initial: "projectHomeLoading",
       id: "mainMachine",
       states: {
-        loadingApplicationData: {
-          invoke: {
-            src: "initializeApp",
-            onDone: [
-              {
-                actions: [
-                  assign({
-                    candidacyId: (_, event) => {
-                      return event.data.candidacy.id;
-                    },
-                    candidacyStatus: (_, event) => {
-                      return event.data.candidacy.candidacyStatus;
-                    },
-                    certification: (_, event) => {
-                      return event.data.candidacy.certification;
-                    },
-                    organism: (_, event) => {
-                      return event.data.candidacy.organism;
-                    },
-                    trainingProgram: (_, event) => {
-                      return event.data.candidacy.trainingProgram;
-                    },
-                  }),
-                ],
-                cond: "isTrainingProgramSubmitted",
-                target: "trainingProgramSummary.idle",
-              },
-              {
-                actions: [
-                  assign({
-                    candidacyCreatedAt: (_, event) => {
-                      return new Date(event.data.candidacy.createdAt);
-                    },
-                    candidacyId: (_, event) => {
-                      return event.data.candidacy.id;
-                    },
-                    candidacyStatus: (_, event) => {
-                      return event.data.candidacy.candidacyStatus;
-                    },
-                    certification: (_, event) => {
-                      return event.data.candidacy.certification;
-                    },
-                    organism: (_, event) => {
-                      return event.data.candidacy.organism;
-                    },
-                    trainingProgram: (_, event) => {
-                      return event.data.candidacy.trainingProgram;
-                    },
-                  }),
-                ],
-                cond: "isTrainingProgramConfirmed",
-                target: "trainingProgramConfirmed",
-              },
-              {
-                actions: [],
-                cond: "isAlreadyCandidate",
-                target: "projectHome",
-              },
-              {
-                actions: [
-                  assign({
-                    goals: (_, event) => event.data.referentials.goals,
-                    regions: (_, event) => event.data.regions,
-                  }),
-                ],
-                cond: "isNotACandidate",
-                target: "applicationDataLoaded",
-              },
-            ],
-            onError: [
-              {
-                actions: assign({
-                  error: (_, _event) => {
-                    return "Une erreur est survenue lors de la récupération de la candidature.";
-                  },
-                }),
-                target: "error",
-              },
-            ],
-          },
-        },
-        applicationDataLoaded: {
-          on: {
-            SELECT_REGION: {
-              actions: "selectingRegion",
-              target: "loadingCertifications",
-            },
-          },
-        },
         loadingCertifications: {
           invoke: {
             src: "searchCertifications",

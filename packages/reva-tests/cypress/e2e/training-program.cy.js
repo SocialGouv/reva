@@ -68,14 +68,12 @@ context("Training Program", () => {
       cy.wait("@candidate_confirmRegistration");
 
       cy.get('[data-test="checkbox-accept-conditions"]')
-        .as("$checkbox")
-        .not("be.checked");
+      .not("be.checked");
       cy.get('[data-test="label-accept-conditions"]').should("exist");
       cy.get('[data-test="submit-training"]')
-        .as("$submit")
-        .should("be.disabled");
-      cy.get("@$checkbox").check();
-      cy.get("@$submit").should("be.enabled").click();
+      .should("be.disabled");
+      cy.get('[data-test="checkbox-accept-conditions"]').check();
+      cy.get('[data-test="submit-training"]').should("be.enabled").click();
       cy.wait("@candidacy_confirmTrainingForm");
     });
   });

@@ -17,7 +17,7 @@ export const ProjectHelp = ({ mainService }: ProjectHelpProps) => {
   return (
     <Page
       data-test="project-help"
-      className="z-[70] overflow-hidden h-full flex flex-col bg-white pt-6"
+      className="z-[80] overflow-hidden h-full flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
       <BackButton onClick={() => send("BACK")} />
