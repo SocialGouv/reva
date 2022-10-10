@@ -14,14 +14,13 @@ context("Experiences", () => {
 
   it("add and edit an experience", function () {
     cy.intercept("POST", "/graphql", (req) => {
-      stubQuery(req, "getCandidacy", "candidacy1.json");
+      stubQuery(req, "candidate_confirmRegistration", "candidate-logged.json");
       stubQuery(req, "add_experience", "added-experience1.json");
       stubQuery(req, "update_experience", "updated-experience2.json");
     });
-    cy.visit("/");
-    cy.wait("@getCandidacy");
+    cy.visit("/confirmation");
+    cy.wait("@candidate_confirmRegistration");
 
-    cy.get('[data-test="submission-home-show-project-home"]').click();
     cy.get('[data-test="project-home-edit-experiences"]').click();
     cy.get('[data-test="project-experiences-add"]').click();
     cy.get("#title").type(experienceTitle1);
