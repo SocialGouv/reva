@@ -91,6 +91,7 @@ export type MainEvent =
   | { type: "OPEN_HELP" }
   | { type: "SUBMIT_CERTIFICATION"; certification: Certification }
   | { type: "SUBMIT_CONTACT"; contact: Contact }
+  | { type: "UPDATE_CONTACT"; contact: Contact }
   | { type: "SUBMIT_EXPERIENCE"; experience: Experience }
   | { type: "SUBMIT_EXPERIENCES" }
   | { type: "SUBMIT_GOALS"; goals: Goal[] }
@@ -541,6 +542,10 @@ export const mainMachine =
                   actions: "navigatePrevious",
                   target: "submitting",
                 },
+                UPDATE_CONTACT: {
+                  actions: "navigatePrevious",
+                  target: "updating",
+                },
               },
             },
             error: {
@@ -551,9 +556,34 @@ export const mainMachine =
                 SUBMIT_CONTACT: {
                   target: "submitting",
                 },
+                UPDATE_CONTACT: {
+                  target: "updating",
+                },
               },
             },
             submitting: {
+              invoke: {
+                src: "askForRegistration",
+                onDone: [
+                  {
+                    actions: assign({
+                      contact: (_context, event) => event.data,
+                    }),
+                    target: "leave",
+                  },
+                ],
+                onError: [
+                  {
+                    actions: assign({
+                      error: (_, _event) =>
+                        "Une erreur est survenue lors de la demande de création d'un compte.",
+                    }),
+                    target: "error",
+                  },
+                ],
+              },
+            },
+            updating: {
               invoke: {
                 src: "updateContact",
                 onDone: [

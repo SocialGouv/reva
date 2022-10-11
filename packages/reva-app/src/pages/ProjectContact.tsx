@@ -27,6 +27,7 @@ interface ContactFormElement extends HTMLFormElement {
 export const ProjectContact = ({ mainService }: ProjectContactProps) => {
   const [state, send] = useActor(mainService);
 
+  const hasCandidacy = !!state.context.candidacyId;
   const onSubmit = (event: React.SyntheticEvent<ContactFormElement>) => {
     event.preventDefault();
     const elements = event.currentTarget.elements;
@@ -37,12 +38,10 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
       email: elements.email.value || null,
     };
     send({
-      type: "SUBMIT_CONTACT",
+      type: hasCandidacy ? "UPDATE_CONTACT" : "SUBMIT_CONTACT",
       contact,
     });
   };
-
-  const hasCandidacy = !!state.context.candidacyId;
   const editedContact = state.context.contact;
   const firstnameRef = useRef<HTMLDivElement>(null);
   const lastnameRef = useRef<HTMLDivElement>(null);

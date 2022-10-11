@@ -23,6 +23,7 @@ import { SubmissionHome } from "./pages/SubmissionHome";
 import { TrainingProgramConfirmed } from "./pages/TrainingProgramConfirmed";
 import { TrainingProgramSummary } from "./pages/TrainingProgramSummary";
 import {
+  askForRegistration,
   addExperience,
   confirmRegistration,
   confirmTrainingForm,
@@ -163,8 +164,20 @@ function App() {
               });
             }
           },
+          askForRegistration: async (context, event) => {
+            if (event.type !== "SUBMIT_CONTACT") {
+              return Promise.reject("Impossible state");
+            }
+
+            return askForRegistration(client as ApolloClient<object>)({
+              firstname: event.contact.firstname,
+              lastname: event.contact.lastname,
+              phone: event.contact.phone,
+              email: event.contact.email,
+            });
+          },
           updateContact: async (context, event) => {
-            if (event.type !== "SUBMIT_CONTACT" || !context.candidacyId) {
+            if (event.type !== "UPDATE_CONTACT" || !context.candidacyId) {
               return Promise.reject("Impossible state");
             }
 
@@ -374,3 +387,5 @@ function App() {
 }
 
 export default App;
+
+
