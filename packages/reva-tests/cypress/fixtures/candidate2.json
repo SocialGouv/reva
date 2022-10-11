@@ -1,0 +1,85 @@
+{
+  "data": {
+    "candidate": {
+      "token": "abc",
+      "candidacy": {
+        "id": "candidacy3",
+        "organism": {
+          "id": "o1",
+          "label": "Accompagnateur 1",
+          "address": "1 rue de l'exemple",
+          "zip": "75000",
+          "city": "Paris",
+          "contactAdministrativeEmail": "contact@example.com"
+        },
+        "createdAt": 1664376421912,
+        "certification": {
+          "id": "c1",
+          "label": "Titre 1",
+          "summary": "résumé 1",
+          "codeRncp": "34691",
+          "status": "AVAILABLE"
+        },
+        "email": null,
+        "phone": "0643202050",
+        "experiences": [
+          {
+            "id": "e1",
+            "title": "Experience 1",
+            "startedAt": 1580428800000,
+            "duration": "unknown",
+            "description": "description 1"
+          }
+        ],
+        "goals": [
+          {
+            "goalId": "goal1",
+            "additionalInformation": null
+          }
+        ],
+        "candidacyStatuses": [
+          {
+            "status": "PROJET",
+            "isActive": true
+          }
+        ],
+        "regionId": "region1",
+        "appointmentCount": 0,
+        "certificateSkills": null,
+        "otherTraining": null,
+        "individualHourCount": null,
+        "collectiveHourCount": null,
+        "additionalHourCount": null,
+        "validatedByCandidate": false,
+        "basicSkills": [],
+        "mandatoryTrainings": []
+      }
+    },
+    "getReferential": {
+      "goals": [
+        {
+          "id": "goal1",
+          "label": "Goal 1",
+          "order": 1
+        },
+        {
+          "id": "goal2",
+          "label": "Goal 2",
+          "order": 2
+        }
+      ]
+    },
+    "getRegions": [
+      {
+        "id": "region1",
+        "code": "1",
+        "label": "Région 1"
+      },
+      {
+        "id": "region2",
+        "code": "2",
+        "label": "Région 2"
+      }
+    ]
+  }
+}

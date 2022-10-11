@@ -13,4 +13,22 @@ context("Project", () => {
     cy.get('[data-test="project-help"] > [data-test="button-back"]').click();
     cy.get('[data-test="project-home-ready"]').should("exist");
   });
+
+  it.only("confirm registration", function () {
+    cy.intercept("POST", "/graphql", (req) => {
+      stubQuery(req, "candidate_confirmRegistration", "candidate2.json");
+      stubQuery(req, "submit_candidacy", "candidate2.json");
+    });
+    cy.visit("/confirmation");
+    cy.get('[data-test="project-home-loading"]');
+    cy.wait("@candidate_confirmRegistration");
+    cy.wait(500);
+    cy.get('[data-test="project-home-ready"]');
+    cy.get('[data-test="project-home-validate"]').click();
+
+    cy.get('[data-test="project-home-validated"]');
+    cy.wait(500);
+    cy.get('[data-test="project-home-submit"]').click();
+    cy.wait("@submit_candidacy");
+  });
 });

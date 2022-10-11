@@ -291,24 +291,30 @@ export const ProjectHome = ({
 
   const homeScreen = (
     <motion.div
-      data-test="project-home-ready"
+      data-test={`project-home-${isValidated ? "validated" : "ready"}`}
       key="project-home-ready"
       className="flex flex-col w-full h-full relative overflow-hidden"
       initial={
-        state.context.direction === "previous" ? false : { opacity: 0, y: 10 }
+        state.context.direction === "previous" || isValidated
+          ? false
+          : { opacity: 0, y: 10 }
       }
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
     >
       <div className="px-8 grow overflow-y-auto py-8">
         <h1 className="text-center font-bold text-lg text-slate-900">Reva</h1>
-        <Header label="Bienvenue" />
-        <p className="my-4 pr-6 text-slate-600 text-lg">
-          Reva est une expérimentation visant à simplifier la Validation des
-          Acquis de l'Expérience (VAE). Vous avez une expérience dans les
-          secteurs de la dépendance et de la santé ? Choisissez votre diplôme et
-          laissez-vous accompagner !
-        </p>
+        {!isValidated && (
+          <>
+            <Header label="Bienvenue" />
+            <p className="my-4 pr-6 text-slate-600 text-lg">
+              Reva est une expérimentation visant à simplifier la Validation des
+              Acquis de l'Expérience (VAE). Vous avez une expérience dans les
+              secteurs de la dépendance et de la santé ? Choisissez votre
+              diplôme et laissez-vous accompagner !
+            </p>
+          </>
+        )}
         {isValidated ? (
           <SubmissionWarning />
         ) : (
@@ -342,7 +348,7 @@ export const ProjectHome = ({
   return (
     <Page
       className={`${
-        isValidated ? "z-20" : "z-[70]"
+        isValidated ? "z-[80]" : "z-[70]"
       } h-full flex flex-col bg-white`}
       direction={state.context.direction}
     >

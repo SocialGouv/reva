@@ -262,7 +262,7 @@ function App() {
     certification: Certification;
   }) => (
     <ProjectHome
-      key={`project-home${isValidated ? "-validated" : ""}}`}
+      key={`project-home-${isValidated ? "validated" : "ready"}}`}
       isValidated={isValidated}
       mainService={mainService}
       certification={certification}
