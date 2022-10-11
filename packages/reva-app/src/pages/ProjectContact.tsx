@@ -39,6 +39,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
     });
   };
 
+  const hasCandidacy = !!state.context.candidacyId;
   const editedContact = state.context.contact;
   const phoneRef = useRef<HTMLDivElement>(null);
   const emailRef = useRef<HTMLDivElement>(null);
@@ -52,17 +53,43 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
       className="z-[80] flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
-      <BackButton onClick={() => send("BACK")} />
-      <div className="h-full flex flex-col px-8 overflow-y-auto pt-12 pb-[400px]">
-        <p>
+      {hasCandidacy ? (
+        <BackButton onClick={() => send("BACK")} />
+      ) : (
+        <h1 className="mt-12 mb-4 text-center font-bold">Reva</h1>
+      )}
+      <div className="h-full flex flex-col px-12 overflow-y-auto pt-4 pb-[400px] text-lg">
+        {hasCandidacy ? (
+          <></>
+        ) : (
+          <>
+            <p>Bonjour 🤝,</p>
+            <p className="my-6 font-bold">
+              Votre parcours est unique, tout comme vous.
+            </p>
+          </>
+        )}
+        <p className="mb-10">
           Ces informations de contact permettront à votre architecte de parcours
-          de prendre contact avec vous pour discuter de votre projet.
+          de vous contacter afin de discuter de votre projet.
         </p>
-        <p className="my-4 font-semibold">
-          Choisissez le moyen de contact par lequel vous préférez être
-          recontacté.e.
-        </p>
-        <form onSubmit={onSubmit} className="mt-4 space-y-6">
+        <form onSubmit={onSubmit} className="space-y-6">
+          <Input
+            ref={phoneRef}
+            name="firstname"
+            label="Prénom"
+            minLength={10}
+            onFocus={scrollToInput(phoneRef)}
+            defaultValue={editedContact?.phone || ""}
+          />
+          <Input
+            ref={phoneRef}
+            name="lastname"
+            label="Nom"
+            minLength={10}
+            onFocus={scrollToInput(phoneRef)}
+            defaultValue={editedContact?.phone || ""}
+          />
           <Input
             ref={phoneRef}
             name="phone"
@@ -88,10 +115,17 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             data-test={`project-contact-${editedContact ? "save" : "add"}`}
             type="submit"
             loading={state.matches("projectContact.submitting")}
-            label={editedContact ? "Valider" : "Ajouter"}
+            label={hasCandidacy ? "Valider" : "Commencer"}
             size="small"
           />
         </form>
+        {!hasCandidacy && (
+          <div className="border-t border-gray-200 mt-8 pt-6">
+            <a href="#" className="text-gray-500 underline">
+              J'ai déjà une candidature
+            </a>
+          </div>
+        )}
       </div>
     </Page>
   );

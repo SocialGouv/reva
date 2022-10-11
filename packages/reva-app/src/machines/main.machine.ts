@@ -181,7 +181,7 @@ export const mainMachine =
         organisms: undefined,
         trainingProgram: undefined,
       },
-      initial: "projectHomeLoading",
+      initial: "projectContact",
       id: "mainMachine",
       states: {
         loadingCertifications: {
