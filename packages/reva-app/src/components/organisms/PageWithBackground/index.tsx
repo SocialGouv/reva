@@ -19,7 +19,7 @@ export const PageWithBackground: FC<Props> = ({
   children,
 }) => {
   return (
-    <Page className="z-50 flex flex-col bg-neutral-100" direction={direction}>
+    <Page className="z-[80] flex flex-col bg-neutral-100" direction={direction}>
       <AnimatePresence>
         <motion.div
           key="home-screen"

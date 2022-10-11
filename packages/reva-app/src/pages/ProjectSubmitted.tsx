@@ -15,7 +15,7 @@ export const ProjectSubmitted = ({ mainService }: ProjectSubmittedProps) => {
 
   return (
     <Page
-      className="z-[70] h-full flex flex-col bg-white pt-6"
+      className="z-[80] h-full flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
       <BackButton onClick={() => send("BACK")} />

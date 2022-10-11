@@ -3,9 +3,10 @@ import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Interpreter } from "xstate";
 
+import { Button } from "../components/atoms/Button";
 import { Header } from "../components/atoms/Header";
 import { Select, option } from "../components/atoms/Select";
-import { CandidateButton } from "../components/organisms/CandidateButton";
+import { BackButton } from "../components/molecules/BackButton";
 import { Card } from "../components/organisms/Card";
 import { transitionIn } from "../components/organisms/Card/view";
 import { CardSkeleton } from "../components/organisms/CardSkeleton";
@@ -50,6 +51,8 @@ export const Certificates = ({ mainService }: Props) => {
       state.matches("certificateSummary") &&
       (state.context.certification as Certification).id === certification.id;
 
+    console.log((state.context.certification as Certification)?.id);
+
     return (
       <Card
         ref={isSelected ? currentCertificateElement : null}
@@ -75,12 +78,13 @@ export const Certificates = ({ mainService }: Props) => {
   };
 
   function candidateButton() {
-    const isVisible =
-      state.matches("certificateSummary") || state.matches("submissionHome");
+    const isVisible = state.matches("certificateSummary");
     const certification = state.context.certification as Certification;
     return (
       <motion.div
-        className="absolute bottom-0 z-50 inset-x-0 p-8 bg-slate-900"
+        className={`absolute bottom-0 z-50 inset-x-0 p-8 ${
+          isVisible ? "bg-slate-900" : "transparent"
+        }`}
         custom={state.toStrings().join("")}
         variants={buttonVariants}
         initial={false}
@@ -92,10 +96,18 @@ export const Certificates = ({ mainService }: Props) => {
         layout="position"
       >
         {isVisible && (
-          <CandidateButton
-            candidacyId={state.context.candidacyId}
-            certification={certification}
-            send={send}
+          <Button
+            data-test="certification-save"
+            onClick={() =>
+              send({
+                type: "SUBMIT_CERTIFICATION",
+                certification,
+              })
+            }
+            loading={state.matches({ certificateSummary: "submittingChange" })}
+            label={"Valider"}
+            primary
+            size="large"
           />
         )}
       </motion.div>
@@ -120,20 +132,19 @@ export const Certificates = ({ mainService }: Props) => {
   };
 
   return (
-    <Page className="z-40 bg-white" direction={state.context.direction}>
+    <Page
+      data-test="certificates"
+      className="z-[80] bg-white"
+      direction={state.context.direction}
+    >
       <motion.div
         ref={resultsElement}
         layoutScroll
-        className="h-full overflow-y-auto pb-12"
+        className="h-full overflow-y-auto pb-12 pt-6"
       >
-        <div className="px-8 pt-16 lg:pt-8 bg-white">
-          <Header label="Bienvenue" />
-          <p className="mt-10 pr-6 text-slate-600 leading-loose text-lg">
-            Reva est une expérimentation visant à simplifier la Validation des
-            Acquis de l'Expérience (VAE). Vous avez une expérience dans les
-            secteurs de la dépendance et de la santé ? Choisissez votre diplôme
-            et laissez-vous accompagner !
-          </p>
+        <BackButton onClick={() => send("BACK")} />
+        <div className="px-8 pt-16 sm:pt-4 bg-white">
+          <Header label="Choisir mon diplôme" />
           <Select
             name="select_region"
             className="mt-8 mb-4"

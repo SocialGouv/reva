@@ -4,24 +4,18 @@ const experienceTitle2 = "Experience 2";
 const experienceDescription1 = "Description 1";
 const experienceDescription2 = "Description 2";
 
-import { setDeviceId } from "../utils/device";
 import { stubQuery } from "../utils/graphql";
 
 context("Experiences", () => {
-  beforeEach(() => {
-    setDeviceId();
-  });
-
   it("add and edit an experience", function () {
     cy.intercept("POST", "/graphql", (req) => {
-      stubQuery(req, "getCandidacy", "candidacy1.json");
+      stubQuery(req, "candidate_confirmRegistration", "candidate1.json");
       stubQuery(req, "add_experience", "added-experience1.json");
       stubQuery(req, "update_experience", "updated-experience2.json");
     });
-    cy.visit("/");
-    cy.wait("@getCandidacy");
+    cy.visit("/confirmation");
+    cy.wait("@candidate_confirmRegistration");
 
-    cy.get('[data-test="submission-home-show-project-home"]').click();
     cy.get('[data-test="project-home-edit-experiences"]').click();
     cy.get('[data-test="project-experiences-add"]').click();
     cy.get("#title").type(experienceTitle1);

@@ -1,8 +1,10 @@
 import { useActor } from "@xstate/react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
-import { BackButton } from "../components/molecules/BackButton";
+import { Header } from "../components/atoms/Header";
+import { Loader } from "../components/atoms/Icons";
 import { ProgressTitle } from "../components/molecules/ProgressTitle";
 import certificationImg from "../components/organisms/Card/certification.png";
 import { Page } from "../components/organisms/Page";
@@ -60,6 +62,11 @@ export const ProjectHome = ({
 
   const selectedGoals = state.context.goals.filter((goal) => goal.checked);
 
+  const isHomeReady =
+    !state.matches({ projectHome: "fakeLoading" }) &&
+    !state.matches({ projectHome: "loading" }) &&
+    !state.matches({ projectHome: "retry" });
+
   const sortedExperiences = sortExperiences(state.context.experiences);
 
   const progress = projectProgress(state.context);
@@ -75,32 +82,37 @@ export const ProjectHome = ({
   const EditCertification = () => (
     <div className="bg-slate-900 rounded-xl overflow-hidden mt-6">
       <div className={`mt-5 mr-6 text-white text-right font-bold grow `}>
-        {certification.codeRncp}
+        {certification?.codeRncp}
       </div>
-      <img
-        className=""
-        alt=""
-        role="presentation"
-        style={{
-          marginLeft: "-42px",
-          marginTop: "-28px",
-          height: "104px",
-          width: "104px",
-        }}
-        src={certificationImg}
-      />
+      {certification && (
+        <img
+          className=""
+          alt=""
+          role="presentation"
+          style={{
+            marginLeft: "-42px",
+            marginTop: "-28px",
+            height: "104px",
+            width: "104px",
+          }}
+          src={certificationImg}
+        />
+      )}
       <div className="px-8 pb-6">
         <h2
-          className="font-medium text-white text-2xl"
+          data-test="certification-label"
+          className={`font-medium text-white ${
+            certification ? "text-2xl" : "mt-6 text-xl"
+          }`}
           style={{ lineHeight: "1.1" }}
         >
-          {certification.label}
+          {certification?.label || "Mon diplôme"}
         </h2>
         {!isValidated && (
           <Button
-            data-test="project-home-close-selected-certification"
+            data-test="project-home-select-certification"
             size="tiny"
-            label="Modifier"
+            label={certification ? "Modifier" : "Choisir"}
             className="mt-4 text-slate-900 bg-white"
             onClick={() => send("CLOSE_SELECTED_CERTIFICATION")}
           />
@@ -230,16 +242,79 @@ export const ProjectHome = ({
     </div>
   );
 
-  return (
-    <Page
-      data-test="project-home"
-      className={`z-[${
-        isValidated ? 70 : 60
-      }] h-full flex flex-col bg-white pt-6`}
-      direction={state.context.direction}
+  const retryErrorScreen = (
+    <motion.div
+      data-test="project-home-error"
+      key="project-home-error"
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="absolute w-full flex flex-col bg-neutral-100 h-full"
     >
-      <BackButton onClick={() => send("BACK")} />
-      <div className="px-8 grow overflow-y-auto pb-8">
+      <div className="grow flex flex-col text-center items-center justify-center px-10">
+        <Header label="Oups..." size="small" />
+        <p>{state.context.error}</p>
+        <div className="mt-8">
+          <Button
+            data-test="submission-home-retry-candidate"
+            size="small"
+            label="Réessayer"
+            onClick={() =>
+              send({
+                type: "SUBMIT_CERTIFICATION",
+                certification,
+              })
+            }
+          />
+        </div>
+      </div>
+    </motion.div>
+  );
+
+  const loadingScreen = (
+    <motion.div
+      data-test="project-home-loading"
+      key="project-home-loading"
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="absolute w-full h-full flex flex-col bg-neutral-100"
+    >
+      <div className="grow flex flex-col text-center items-center justify-center px-10">
+        <Header label="Création de votre compte" size="small" />
+        <div className="mt-8 w-8">
+          <Loader />
+        </div>
+      </div>
+    </motion.div>
+  );
+
+  const homeScreen = (
+    <motion.div
+      data-test={`project-home-${isValidated ? "validated" : "ready"}`}
+      key="project-home-ready"
+      className="flex flex-col w-full h-full relative overflow-hidden"
+      initial={
+        state.context.direction === "previous" || isValidated
+          ? false
+          : { opacity: 0, y: 10 }
+      }
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
+    >
+      <div className="px-8 grow overflow-y-auto py-8">
+        <h1 className="text-center font-bold text-lg text-slate-900">Reva</h1>
+        {!isValidated && (
+          <>
+            <Header label="Bienvenue" />
+            <p className="my-4 pr-6 text-slate-600 text-lg">
+              Reva est une expérimentation visant à simplifier la Validation des
+              Acquis de l'Expérience (VAE). Vous avez une expérience dans les
+              secteurs de la dépendance et de la santé ? Choisissez votre
+              diplôme et laissez-vous accompagner !
+            </p>
+          </>
+        )}
         {isValidated ? (
           <SubmissionWarning />
         ) : (
@@ -253,7 +328,7 @@ export const ProjectHome = ({
           <EditOrganism />
         </div>
       </div>
-      <div className="bg-white flex flex-col items-center pt-4 pb-12">
+      <div className="bg-white flex flex-col items-center pt-4 pb-12 sm:pb-4">
         <Button
           data-test={`project-home-${isValidated ? "submit" : "validate"}${
             !isProjectComplete ? "-locked" : ""
@@ -267,6 +342,23 @@ export const ProjectHome = ({
           size="medium"
         />
       </div>
+    </motion.div>
+  );
+
+  return (
+    <Page
+      className={`${
+        isValidated ? "z-[80]" : "z-[70]"
+      } h-full flex flex-col bg-white`}
+      direction={state.context.direction}
+    >
+      <AnimatePresence>
+        {(state.matches({ projectHome: "loading" }) ||
+          state.matches({ projectHome: "fakeLoading" })) &&
+          loadingScreen}
+        {state.matches({ projectHome: "retry" }) && retryErrorScreen}
+        {isHomeReady && homeScreen}
+      </AnimatePresence>
     </Page>
   );
 };

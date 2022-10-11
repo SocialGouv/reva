@@ -42,7 +42,7 @@ export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
 
   return (
     <Page
-      className="z-[70] flex flex-col bg-white pt-6"
+      className="z-[80] flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
       <BackButton onClick={() => send("BACK")} />

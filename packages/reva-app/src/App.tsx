@@ -1,11 +1,9 @@
 import { ApolloClient, getApolloContext } from "@apollo/client";
 import { Capacitor } from "@capacitor/core";
 import { Device } from "@capacitor/device";
-import { SplashScreen } from "@capacitor/splash-screen";
-import { StatusBar, Style } from "@capacitor/status-bar";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useMemo } from "react";
 
 import { Footer } from "./components/organisms/Footer";
 import { Certification } from "./interface";
@@ -26,9 +24,9 @@ import { TrainingProgramConfirmed } from "./pages/TrainingProgramConfirmed";
 import { TrainingProgramSummary } from "./pages/TrainingProgramSummary";
 import {
   addExperience,
+  confirmRegistration,
   confirmTrainingForm,
   createCandidacyWithCertification,
-  initializeApp,
   saveGoals,
   submitCandidacy,
   updateCertification,
@@ -57,9 +55,8 @@ function App() {
             });
           },
           initializeApp: async (context, event) => {
-            const deviceId = await Device.getId();
-            return initializeApp(client as ApolloClient<object>)({
-              deviceId: deviceId.uuid,
+            return confirmRegistration(client as ApolloClient<object>)({
+              token: "abc",
             });
           },
           getCertification: (context, event) => {
@@ -217,34 +214,6 @@ function App() {
       ? { width: 580, height: windowSize.height - 110 }
       : windowSize;
 
-  useEffect(() => {
-    async function setStatusBarOverlay() {
-      await StatusBar.setOverlaysWebView({ overlay: true });
-      await StatusBar.setStyle({ style: Style.Light });
-    }
-    Capacitor.getPlatform() === "android" && setStatusBarOverlay();
-  }, []);
-
-  useEffect(() => {
-    async function hideSplashscreen() {
-      if (current.value !== "loadingApplicationData") {
-        await SplashScreen.hide();
-      }
-    }
-    Capacitor.isNativePlatform() && hideSplashscreen();
-  }, [current.value]);
-
-  useEffect(() => {
-    async function setStatusBarVisibility() {
-      if (current.context.showStatusBar) {
-        await StatusBar.hide();
-      } else {
-        await StatusBar.show();
-      }
-    }
-    Capacitor.isNativePlatform() && setStatusBarVisibility();
-  }, [current.context.showStatusBar]);
-
   const certificatesPage = (
     <Certificates key="show-results" mainService={mainService} />
   );
@@ -293,7 +262,7 @@ function App() {
     certification: Certification;
   }) => (
     <ProjectHome
-      key={`project-home${isValidated ? "-validated" : ""}}`}
+      key={`project-home-${isValidated ? "validated" : "ready"}}`}
       isValidated={isValidated}
       mainService={mainService}
       certification={certification}
@@ -321,7 +290,6 @@ function App() {
         "searchResults",
         "searchResultsError",
         "certificateSummary",
-        "applicationDataLoaded",
       ].some(current.matches) && certificatesPage}
 
       {current.matches("projectHome") &&
@@ -396,7 +364,7 @@ function App() {
             className="sm:rounded-lg sm:shadow-lg sm:z-[1] relative flex flex-col w-full bg-white overflow-hidden"
             style={appSize}
           >
-            {!current.matches("loadingApplicationData") && pageContent}
+            {pageContent}
           </div>
         </div>
       </div>

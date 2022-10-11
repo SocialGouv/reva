@@ -1,4 +1,3 @@
-import { setDeviceId } from "../utils/device";
 import { stubQuery } from "../utils/graphql";
 
 const email = "email@example.com";
@@ -7,19 +6,14 @@ const phone1 = "06-01-02-03-04";
 const phone2 = "06-01-02-03-05";
 
 context("Contact", () => {
-  beforeEach(() => {
-    setDeviceId();
-  });
-
   it("add a contact", function () {
     cy.intercept("POST", "/graphql", (req) => {
-      stubQuery(req, "getCandidacy", "candidacy1.json");
+      stubQuery(req, "candidate_confirmRegistration", "candidate1.json");
       stubQuery(req, "update_contact", "contact1.json");
     });
-    cy.visit("/");
-    cy.wait("@getCandidacy");
+    cy.visit("/confirmation");
+    cy.wait("@candidate_confirmRegistration");
 
-    cy.get('[data-test="submission-home-show-project-home"]').click();
     cy.get('[data-test="project-home-edit-contact"]').click();
     cy.get("#phone").type(phone1);
 
@@ -34,12 +28,12 @@ context("Contact", () => {
 
   it("edit a contact and add an email", function () {
     cy.intercept("POST", "/graphql", (req) => {
-      stubQuery(req, "getCandidacy", "candidacy1-with-contact1.json");
+      stubQuery(req, "candidate_confirmRegistration", "candidate1.json");
       stubQuery(req, "update_contact", "contact2.json");
     });
-    cy.visit("/");
-    cy.wait("@getCandidacy");
-    cy.get('[data-test="submission-home-show-project-home"]').click();
+    cy.visit("/confirmation");
+    cy.wait("@candidate_confirmRegistration");
+
     cy.get('[data-test="project-home-edit-contact"]').click();
 
     cy.get("#phone").type(`{selectAll}${phone2}`);
