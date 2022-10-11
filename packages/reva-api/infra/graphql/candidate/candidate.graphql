@@ -1,0 +1,17 @@
+type CandidateLogged {
+  token: String!
+  candidacy: Candidacy!
+}
+
+input CandidateInput {
+  email: String!
+  phone: String!
+  firstname: String!
+  lastname: String!
+}
+
+type Mutation {
+  candidate_askForRegistration(candidate: CandidateInput!): String!
+  candidate_confirmRegistration(token: String!): CandidateLogged!
+  candidate_login(token: String!): CandidateLogged!
+}
