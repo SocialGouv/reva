@@ -1041,9 +1041,20 @@ export const mainMachine =
         }),
         loadFakeCandidacy: assign((_context, _event) => {
           return {
-            candidacyId: "candidacy1",
+            candidacyId: "1ba56a5a-2e62-4357-8fa4-267e426bfba8",
+            certification: {
+              id: "0df82044-afac-4f23-a98c-d8c22eeb48f2",
+              codeRncp: "34691",
+              description: "",
+              status: "AVAILABLE",
+              label:
+                "Titre à finalité professionnelle Assistant maternel / Garde d'enfants",
+              summary:
+                "L'Assistant maternel ou le Garde d'enfants prend en charge des enfants de la naissance à l'adolescence. Le mode de garde d'enfants chez un assistant maternel ou chez le particulier employeur est en France le premier mode de garde des enfants de moins de 3 ans, en dehors des gardes par la famille.",
+            },
             candidacyCreatedAt: new Date(),
             candidacyStatus: "PROJET",
+            regionId: "afb6d7a5-baef-4365-bf3d-568f3a32675a",
             experiences: { rest: [] },
             goals: [
               {
