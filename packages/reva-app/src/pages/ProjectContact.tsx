@@ -78,14 +78,14 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             ref={firstnameRef}
             name="firstname"
             label="Prénom"
-            minLength={10}
+            required
             defaultValue={editedContact?.phone || ""}
           />
           <Input
             ref={lastnameRef}
             name="lastname"
             label="Nom"
-            minLength={10}
+            required
             defaultValue={editedContact?.phone || ""}
           />
           <Input
@@ -93,6 +93,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             name="phone"
             label="Téléphone"
             minLength={10}
+            required
             defaultValue={editedContact?.phone || ""}
           />
           <Input
@@ -100,6 +101,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             name="email"
             label="Email"
             type="email"
+            required
             defaultValue={editedContact?.email || ""}
           />
           {state.matches("projectContact.error") && (
