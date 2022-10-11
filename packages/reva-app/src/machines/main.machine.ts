@@ -1028,6 +1028,8 @@ export const mainMachine =
             },
             goals: event.data.candidacy.goals,
             contact: {
+              firstname: event.data.candidacy.firstname,
+              lastname: event.data.candidacy.lastname,
               email: event.data.candidacy.email,
               phone: event.data.candidacy.phone,
             },
