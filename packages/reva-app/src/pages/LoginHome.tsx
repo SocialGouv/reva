@@ -66,7 +66,7 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
               {state.context.error}
             </p>
           )}
-          <div className="py-6">
+          <div className="pt-6">
             <Button
               data-test={`login-home-submit`}
               type="submit"
@@ -74,6 +74,14 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
               label={"Envoyer"}
               size="medium"
             />
+          </div>
+          <div className="border-t border-gray-200 pt-6">
+            <button
+              onClick={() => send("BACK")}
+              className="text-gray-500 underline"
+            >
+              Je n'ai pas de candidature
+            </button>
           </div>
         </form>
       </div>
