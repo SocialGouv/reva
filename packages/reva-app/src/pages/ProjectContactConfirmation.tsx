@@ -12,7 +12,7 @@ interface ProjectContactConfirmationProps {
 export const ProjectContactConfirmation = ({
   mainService,
 }: ProjectContactConfirmationProps) => {
-  const [state, _send] = useActor(mainService);
+  const [state] = useActor(mainService);
 
   return (
     <Page
