@@ -192,6 +192,22 @@ export const updateExperience =
     return { ...newExperience, startedAt: new Date(newExperience.startedAt) };
   };
 
+const ASK_FOR_LOGIN = gql`
+  mutation candidate_askForLogin($email: String) {
+    candidate_askForLogin(email: $email)
+  }
+`;
+
+export const askForLogin =
+  (client: ApolloClient<object>) => async (login: { email: string }) => {
+    const { data } = await client.mutate({
+      mutation: ASK_FOR_LOGIN,
+      variables: login,
+    });
+
+    return data.candidate_askForLogin;
+  };
+
 const ASK_FOR_REGISTRATION = gql`
   mutation candidate_askForRegistration($candidate: CandidateInput!) {
     candidate_askForRegistration(candidate: $candidate)
