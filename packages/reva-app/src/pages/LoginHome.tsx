@@ -49,8 +49,8 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
       </h1>
       <div className="h-full flex flex-col px-12 overflow-y-auto pt-4 pb-[400px] text-lg">
         <p className="my-6 mb-10">
-          Veuillez renseigner votre adresse email. Nous vous enverrons un lien
-          pour vous connecter.
+          Pour la sécurité de vos données. merci de renseigner votre email, un
+          lien vous sera envové afin de retrouver votre candidature.
         </p>
         <form onSubmit={onSubmit} className="space-y-6">
           <Input

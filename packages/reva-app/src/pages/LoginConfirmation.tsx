@@ -25,7 +25,7 @@ export const LoginConfirmation = ({ mainService }: LoginConfirmationProps) => {
         <Header label="Merci !" />
         <p className="mt-4">
           Un email vous a été envoyé, il contient un lien qui vous permettra de
-          reprendre l'édition de votre parcours.
+          retrouver votre candidature.
         </p>
       </div>
     </Page>
