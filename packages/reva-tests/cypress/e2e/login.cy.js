@@ -11,8 +11,6 @@ context("Login", () => {
 
     cy.get('[data-test="project-contact-login"]').click();
 
-    cy.get('[data-test="login-home"]');
-
     cy.get('[data-test="login-home"] #email').type(email);
 
     cy.get('[data-test="login-home-submit"]').click();
