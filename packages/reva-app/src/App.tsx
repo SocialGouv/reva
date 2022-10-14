@@ -11,6 +11,8 @@ import { mainMachine } from "./machines/main.machine";
 import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
 import { Error } from "./pages/Error";
+import { LoginConfirmation } from "./pages/LoginConfirmation";
+import { LoginHome } from "./pages/LoginHome";
 import { ProjectContact } from "./pages/ProjectContact";
 import { ProjectContactConfirmation } from "./pages/ProjectContactConfirmation";
 import { ProjectExperience } from "./pages/ProjectExperience";
@@ -25,6 +27,7 @@ import { TrainingProgramConfirmed } from "./pages/TrainingProgramConfirmed";
 import { TrainingProgramSummary } from "./pages/TrainingProgramSummary";
 import {
   addExperience,
+  askForLogin,
   askForRegistration,
   confirmRegistration,
   confirmTrainingForm,
@@ -165,6 +168,13 @@ function App() {
               });
             }
           },
+          askForLogin: async (context, event) => {
+            if (event.type !== "SUBMIT_LOGIN") {
+              return Promise.reject("Impossible state");
+            }
+
+            return askForLogin(client as ApolloClient<object>)(event.login);
+          },
           askForRegistration: async (context, event) => {
             if (event.type !== "SUBMIT_CONTACT") {
               return Promise.reject("Impossible state");
@@ -257,6 +267,14 @@ function App() {
     <ProjectExperience key="project-experience" mainService={mainService} />
   );
 
+  const loginHomePage = () => (
+    <LoginHome key="login-home" mainService={mainService} />
+  );
+
+  const loginConfirmationPage = () => (
+    <LoginConfirmation key="login-confirmation" mainService={mainService} />
+  );
+
   const projectContactPage = () => (
     <ProjectContact key="project-contact" mainService={mainService} />
   );
@@ -309,6 +327,9 @@ function App() {
         "searchResultsError",
         "certificateSummary",
       ].some(current.matches) && certificatesPage}
+
+      {current.matches("loginHome") && loginHomePage()}
+      {current.matches("loginConfirmation") && loginConfirmationPage()}
 
       {current.matches("projectHome") &&
         projectHomePage({

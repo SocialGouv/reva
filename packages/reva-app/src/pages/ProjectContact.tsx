@@ -107,7 +107,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             placeholder="votre@email.fr"
             defaultValue={editedContact?.email || ""}
           />
-          {state.matches("projectContact.error") && (
+          {state.context.error && (
             <p key="error" className="text-red-600 my-4 text-sm">
               {state.context.error}
             </p>
@@ -124,9 +124,13 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
         </form>
         {!hasCandidacy && (
           <div className="border-t border-gray-200 pt-6">
-            <a href="login" className="text-gray-500 underline">
+            <button
+              data-test="project-contact-login"
+              onClick={() => send("LOGIN")}
+              className="text-gray-500 underline"
+            >
               J'ai déjà une candidature
-            </a>
+            </button>
           </div>
         )}
       </div>

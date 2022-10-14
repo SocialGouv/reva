@@ -19,6 +19,8 @@ const searchResults = "searchResults";
 const searchResultsError = "searchResultsError";
 const certificateSummary = "certificateSummary";
 const certificateDetails = "certificateDetails";
+const loginHome = "loginHome";
+const loginConfirmation = "loginConfirmation";
 const projectHome = "projectHome";
 const projectContact = "projectContact";
 const projectContactConfirmation = "projectContactConfirmation";
@@ -39,6 +41,8 @@ export type State =
   | typeof searchResultsError
   | typeof certificateSummary
   | typeof certificateDetails
+  | typeof loginHome
+  | typeof loginConfirmation
   | typeof projectHome
   | typeof projectContact
   | typeof projectExperience
@@ -89,6 +93,8 @@ export type MainEvent =
   | { type: "CLOSE_SELECTED_CERTIFICATION" }
   | { type: "BACK" }
   | { type: "LOADED" }
+  | { type: "LOGIN" }
+  | { type: "SUBMIT_LOGIN"; login: { email: string } }
   | { type: "OPEN_HELP" }
   | { type: "SUBMIT_CERTIFICATION"; certification: Certification }
   | { type: "SUBMIT_CONTACT"; contact: Contact }
@@ -142,6 +148,8 @@ export type MainState =
     }
   | {
       value:
+        | typeof loginHome
+        | typeof loginConfirmation
         | typeof projectHome
         | typeof projectSubmitted
         | typeof projectGoals
@@ -190,6 +198,52 @@ export const mainMachine =
         : "projectContact",
       id: "mainMachine",
       states: {
+        loginHome: {
+          initial: "idle",
+          states: {
+            idle: {
+              on: {
+                BACK: {
+                  actions: ["resetError", "navigatePrevious"],
+                  target: "#mainMachine.projectContact",
+                },
+                SUBMIT_LOGIN: {
+                  actions: "navigatePrevious",
+                  target: "submitting",
+                },
+              },
+            },
+            submitting: {
+              invoke: {
+                src: "askForLogin",
+                onDone: [
+                  {
+                    target: "leave",
+                  },
+                ],
+                onError: [
+                  {
+                    actions: assign({
+                      error: (_, _event) =>
+                        "Une erreur est survenue lors de la demande d'un lien d'authentification.",
+                    }),
+                    target: "idle",
+                  },
+                ],
+              },
+            },
+            leave: {
+              type: "final",
+            },
+          },
+          onDone: [
+            {
+              actions: ["resetError", "navigateNext"],
+              target: "loginConfirmation",
+            },
+          ],
+        },
+        loginConfirmation: {},
         loadingCertifications: {
           invoke: {
             src: "searchCertifications",
@@ -551,18 +605,9 @@ export const mainMachine =
                   actions: "navigatePrevious",
                   target: "updating",
                 },
-              },
-            },
-            error: {
-              on: {
-                BACK: {
-                  target: "leave",
-                },
-                SUBMIT_CONTACT: {
-                  target: "submitting",
-                },
-                UPDATE_CONTACT: {
-                  target: "updating",
+                LOGIN: {
+                  actions: ["resetError", "navigateNext"],
+                  target: "#mainMachine.loginHome",
                 },
               },
             },
@@ -583,7 +628,7 @@ export const mainMachine =
                       error: (_, _event) =>
                         "Une erreur est survenue lors de la demande de création d'un compte.",
                     }),
-                    target: "error",
+                    target: "idle",
                   },
                 ],
               },
@@ -605,7 +650,7 @@ export const mainMachine =
                       error: (_, _event) =>
                         "Une erreur est survenue lors de l'enregistrement de vos informations de contact.",
                     }),
-                    target: "error",
+                    target: "idle",
                   },
                 ],
               },
@@ -616,12 +661,12 @@ export const mainMachine =
           },
           onDone: [
             {
-              actions: "navigatePrevious",
+              actions: ["resetError", "navigatePrevious"],
               target: "projectHome",
               cond: "hasCandidacy",
             },
             {
-              actions: "navigateNext",
+              actions: ["resetError", "navigateNext"],
               target: "projectContactConfirmation",
             },
           ],
@@ -1135,6 +1180,9 @@ export const mainMachine =
         })),
         navigatePrevious: assign((_context, _event) => ({
           direction: "previous",
+        })),
+        resetError: assign((_context, _event) => ({
+          error: undefined,
         })),
         resetOrganisms: assign((_context, _event) => ({
           organism: undefined,
