@@ -27,7 +27,7 @@ context("Contact", () => {
     cy.get('[data-test="project-contact-confirmation"]');
   });
 
-  it.only("retrieve contact info from registration", function () {
+  it("retrieve contact info from registration", function () {
     cy.intercept("POST", "/graphql", (req) => {
       stubQuery(req, "candidate_confirmRegistration", "candidate1.json");
       stubQuery(req, "update_contact", "contact2.json");

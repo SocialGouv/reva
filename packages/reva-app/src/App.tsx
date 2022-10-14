@@ -170,12 +170,9 @@ function App() {
               return Promise.reject("Impossible state");
             }
 
-            return askForRegistration(client as ApolloClient<object>)({
-              firstname: event.contact.firstname,
-              lastname: event.contact.lastname,
-              phone: event.contact.phone,
-              email: event.contact.email,
-            });
+            return askForRegistration(client as ApolloClient<object>)(
+              event.contact
+            );
           },
           updateContact: async (context, event) => {
             if (event.type !== "UPDATE_CONTACT" || !context.candidacyId) {
