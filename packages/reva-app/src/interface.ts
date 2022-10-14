@@ -12,6 +12,8 @@ export interface Certification {
 }
 
 export interface Contact {
+  firstname: null | string;
+  lastname: null | string;
   phone: null | string;
   email: null | string;
 }

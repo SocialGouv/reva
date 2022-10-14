@@ -21,6 +21,7 @@ const certificateSummary = "certificateSummary";
 const certificateDetails = "certificateDetails";
 const projectHome = "projectHome";
 const projectContact = "projectContact";
+const projectContactConfirmation = "projectContactConfirmation";
 const projectExperience = "projectExperience";
 const projectExperiences = "projectExperiences";
 const projectGoals = "projectGoals";
@@ -91,6 +92,7 @@ export type MainEvent =
   | { type: "OPEN_HELP" }
   | { type: "SUBMIT_CERTIFICATION"; certification: Certification }
   | { type: "SUBMIT_CONTACT"; contact: Contact }
+  | { type: "UPDATE_CONTACT"; contact: Contact }
   | { type: "SUBMIT_EXPERIENCE"; experience: Experience }
   | { type: "SUBMIT_EXPERIENCES" }
   | { type: "SUBMIT_GOALS"; goals: Goal[] }
@@ -144,6 +146,7 @@ export type MainState =
         | typeof projectSubmitted
         | typeof projectGoals
         | typeof projectContact
+        | typeof projectContactConfirmation
         | typeof projectExperience
         | typeof projectExperiences
         | typeof projectHelp
@@ -181,7 +184,10 @@ export const mainMachine =
         organisms: undefined,
         trainingProgram: undefined,
       },
-      initial: "projectHomeLoading",
+      // TODO remove this hack when url handler is done
+      initial: window.location.pathname.endsWith("confirm-registration")
+        ? "projectHomeLoading"
+        : "projectContact",
       id: "mainMachine",
       states: {
         loadingCertifications: {
@@ -541,6 +547,10 @@ export const mainMachine =
                   actions: "navigatePrevious",
                   target: "submitting",
                 },
+                UPDATE_CONTACT: {
+                  actions: "navigatePrevious",
+                  target: "updating",
+                },
               },
             },
             error: {
@@ -551,9 +561,34 @@ export const mainMachine =
                 SUBMIT_CONTACT: {
                   target: "submitting",
                 },
+                UPDATE_CONTACT: {
+                  target: "updating",
+                },
               },
             },
             submitting: {
+              invoke: {
+                src: "askForRegistration",
+                onDone: [
+                  {
+                    actions: assign({
+                      contact: (_context, event) => event.data,
+                    }),
+                    target: "leave",
+                  },
+                ],
+                onError: [
+                  {
+                    actions: assign({
+                      error: (_, _event) =>
+                        "Une erreur est survenue lors de la demande de création d'un compte.",
+                    }),
+                    target: "error",
+                  },
+                ],
+              },
+            },
+            updating: {
               invoke: {
                 src: "updateContact",
                 onDone: [
@@ -579,10 +614,19 @@ export const mainMachine =
               type: "final",
             },
           },
-          onDone: {
-            target: "projectHome",
-          },
+          onDone: [
+            {
+              actions: "navigatePrevious",
+              target: "projectHome",
+              cond: "hasCandidacy",
+            },
+            {
+              actions: "navigateNext",
+              target: "projectContactConfirmation",
+            },
+          ],
         },
+        projectContactConfirmation: {},
         projectExperience: {
           initial: "idle",
           states: {
@@ -1028,6 +1072,8 @@ export const mainMachine =
             },
             goals: event.data.candidacy.goals,
             contact: {
+              firstname: event.data.candidacy.firstname,
+              lastname: event.data.candidacy.lastname,
               email: event.data.candidacy.email,
               phone: event.data.candidacy.phone,
             },
@@ -1111,17 +1157,8 @@ export const mainMachine =
         }),
       },
       guards: {
-        isAlreadyCandidate: (_context, event) => {
-          const typedEvent = event as DoneInvokeEvent<any>;
-          return !!typedEvent.data.candidacy;
-        },
-        isNotACandidate: (_context, event) => {
-          const typedEvent = event as DoneInvokeEvent<any>;
-          return (
-            typedEvent.data.candidacy === null ||
-            typedEvent.data.graphQLErrors?.[0]?.extensions.code ===
-              "CANDIDACY_DOES_NOT_EXIST"
-          );
+        hasCandidacy: (context, _event) => {
+          return !!context.candidacyId;
         },
         isRegionSelected: (context, _event) => {
           return !!context.selectedRegion;

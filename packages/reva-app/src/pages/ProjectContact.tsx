@@ -1,6 +1,5 @@
-import { Capacitor } from "@capacitor/core";
 import { useActor } from "@xstate/react";
-import { RefObject, useRef } from "react";
+import { useRef } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
@@ -15,6 +14,8 @@ interface ProjectContactProps {
 }
 
 interface FormElements extends HTMLFormControlsCollection {
+  firstname: HTMLInputElement;
+  lastname: HTMLInputElement;
   phone: HTMLInputElement;
   email: HTMLInputElement;
 }
@@ -26,57 +27,84 @@ interface ContactFormElement extends HTMLFormElement {
 export const ProjectContact = ({ mainService }: ProjectContactProps) => {
   const [state, send] = useActor(mainService);
 
+  const hasCandidacy = !!state.context.candidacyId;
   const onSubmit = (event: React.SyntheticEvent<ContactFormElement>) => {
     event.preventDefault();
     const elements = event.currentTarget.elements;
     const contact: Contact = {
+      firstname: elements.firstname.value || null,
+      lastname: elements.lastname.value || null,
       phone: elements.phone.value || null,
       email: elements.email.value || null,
     };
     send({
-      type: "SUBMIT_CONTACT",
+      type: hasCandidacy ? "UPDATE_CONTACT" : "SUBMIT_CONTACT",
       contact,
     });
   };
-
   const editedContact = state.context.contact;
+  const firstnameRef = useRef<HTMLDivElement>(null);
+  const lastnameRef = useRef<HTMLDivElement>(null);
   const phoneRef = useRef<HTMLDivElement>(null);
   const emailRef = useRef<HTMLDivElement>(null);
-  const scrollToInput = (ref: RefObject<HTMLDivElement>) =>
-    Capacitor.getPlatform() === "android"
-      ? () => ref.current?.scrollIntoView()
-      : () => {};
 
   return (
     <Page
       className="z-[80] flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
-      <BackButton onClick={() => send("BACK")} />
-      <div className="h-full flex flex-col px-8 overflow-y-auto pt-12 pb-[400px]">
-        <p>
+      {hasCandidacy ? (
+        <BackButton onClick={() => send("BACK")} />
+      ) : (
+        <h1 className="mt-12 mb-4 text-center font-bold text-lg text-slate-900">
+          Reva
+        </h1>
+      )}
+      <div className="h-full flex flex-col px-12 overflow-y-auto pt-4 pb-[400px] text-lg">
+        {hasCandidacy ? (
+          <></>
+        ) : (
+          <>
+            <p>Bonjour 🤝,</p>
+            <p className="my-6 font-bold">
+              Votre parcours est unique, tout comme vous.
+            </p>
+          </>
+        )}
+        <p className="mb-10">
           Ces informations de contact permettront à votre architecte de parcours
-          de prendre contact avec vous pour discuter de votre projet.
+          de vous contacter afin de discuter de votre projet.
         </p>
-        <p className="my-4 font-semibold">
-          Choisissez le moyen de contact par lequel vous préférez être
-          recontacté.e.
-        </p>
-        <form onSubmit={onSubmit} className="mt-4 space-y-6">
+        <form onSubmit={onSubmit} className="space-y-6">
+          <Input
+            ref={firstnameRef}
+            name="firstname"
+            label="Prénom"
+            required
+            defaultValue={editedContact?.firstname || ""}
+          />
+          <Input
+            ref={lastnameRef}
+            name="lastname"
+            label="Nom"
+            required
+            defaultValue={editedContact?.lastname || ""}
+          />
           <Input
             ref={phoneRef}
             name="phone"
             label="Téléphone"
             minLength={10}
-            onFocus={scrollToInput(phoneRef)}
+            required
             defaultValue={editedContact?.phone || ""}
           />
           <Input
             ref={emailRef}
             name="email"
             label="Email"
-            onFocus={scrollToInput(emailRef)}
             type="email"
+            required
+            placeholder="votre@email.fr"
             defaultValue={editedContact?.email || ""}
           />
           {state.matches("projectContact.error") && (
@@ -84,14 +112,23 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
               {state.context.error}
             </p>
           )}
-          <Button
-            data-test={`project-contact-${editedContact ? "save" : "add"}`}
-            type="submit"
-            loading={state.matches("projectContact.submitting")}
-            label={editedContact ? "Valider" : "Ajouter"}
-            size="small"
-          />
+          <div className="py-6">
+            <Button
+              data-test={`project-contact-${editedContact ? "save" : "add"}`}
+              type="submit"
+              loading={state.matches("projectContact.submitting")}
+              label={hasCandidacy ? "Valider" : "Commencer"}
+              size="medium"
+            />
+          </div>
         </form>
+        {!hasCandidacy && (
+          <div className="border-t border-gray-200 pt-6">
+            <a href="login" className="text-gray-500 underline">
+              J'ai déjà une candidature
+            </a>
+          </div>
+        )}
       </div>
     </Page>
   );

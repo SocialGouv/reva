@@ -12,6 +12,7 @@ import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
 import { Error } from "./pages/Error";
 import { ProjectContact } from "./pages/ProjectContact";
+import { ProjectContactConfirmation } from "./pages/ProjectContactConfirmation";
 import { ProjectExperience } from "./pages/ProjectExperience";
 import { ProjectExperiences } from "./pages/ProjectExperiences";
 import { ProjectGoals } from "./pages/ProjectGoals";
@@ -24,6 +25,7 @@ import { TrainingProgramConfirmed } from "./pages/TrainingProgramConfirmed";
 import { TrainingProgramSummary } from "./pages/TrainingProgramSummary";
 import {
   addExperience,
+  askForRegistration,
   confirmRegistration,
   confirmTrainingForm,
   createCandidacyWithCertification,
@@ -163,8 +165,17 @@ function App() {
               });
             }
           },
+          askForRegistration: async (context, event) => {
+            if (event.type !== "SUBMIT_CONTACT") {
+              return Promise.reject("Impossible state");
+            }
+
+            return askForRegistration(client as ApolloClient<object>)(
+              event.contact
+            );
+          },
           updateContact: async (context, event) => {
-            if (event.type !== "SUBMIT_CONTACT" || !context.candidacyId) {
+            if (event.type !== "UPDATE_CONTACT" || !context.candidacyId) {
               return Promise.reject("Impossible state");
             }
 
@@ -250,6 +261,13 @@ function App() {
     <ProjectContact key="project-contact" mainService={mainService} />
   );
 
+  const projectContactConfirmationPage = () => (
+    <ProjectContactConfirmation
+      key="project-contact-confirmation"
+      mainService={mainService}
+    />
+  );
+
   const projectExperiencesPage = () => (
     <ProjectExperiences key="project-experiences" mainService={mainService} />
   );
@@ -303,6 +321,8 @@ function App() {
       {current.matches("projectSubmitted") && projectSubmittedPage()}
 
       {current.matches("projectContact") && projectContactPage()}
+      {current.matches("projectContactConfirmation") &&
+        projectContactConfirmationPage()}
 
       {current.matches("projectExperiences") && projectExperiencesPage()}
 

@@ -59,7 +59,7 @@ export const Input = React.forwardRef(
     return (
       <div ref={ref} className={`w-full ${className}`}>
         {label !== "" && (
-          <label className="block mb-2" htmlFor={name}>
+          <label className="text-base block mb-2" htmlFor={name}>
             {label}
           </label>
         )}

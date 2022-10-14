@@ -5,7 +5,7 @@ context("Project", () => {
     cy.intercept("POST", "/graphql", (req) => {
       stubQuery(req, "candidate_confirmRegistration", "candidate1.json");
     });
-    cy.visit("/confirmation");
+    cy.visit("/confirm-registration");
     cy.wait("@candidate_confirmRegistration");
 
     cy.get('[data-test="project-home-validate-locked"]').click();
@@ -19,7 +19,7 @@ context("Project", () => {
       stubQuery(req, "candidate_confirmRegistration", "candidate2.json");
       stubQuery(req, "submit_candidacy", "candidate2.json");
     });
-    cy.visit("/confirmation");
+    cy.visit("/confirm-registration");
     cy.get('[data-test="project-home-loading"]');
     cy.wait("@candidate_confirmRegistration");
     cy.wait(500);
