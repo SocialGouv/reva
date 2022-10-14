@@ -12,6 +12,7 @@ import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
 import { Error } from "./pages/Error";
 import { ProjectContact } from "./pages/ProjectContact";
+import { ProjectContactConfirmation } from "./pages/ProjectContactConfirmation";
 import { ProjectExperience } from "./pages/ProjectExperience";
 import { ProjectExperiences } from "./pages/ProjectExperiences";
 import { ProjectGoals } from "./pages/ProjectGoals";
@@ -23,8 +24,8 @@ import { SubmissionHome } from "./pages/SubmissionHome";
 import { TrainingProgramConfirmed } from "./pages/TrainingProgramConfirmed";
 import { TrainingProgramSummary } from "./pages/TrainingProgramSummary";
 import {
-  askForRegistration,
   addExperience,
+  askForRegistration,
   confirmRegistration,
   confirmTrainingForm,
   createCandidacyWithCertification,
@@ -263,6 +264,13 @@ function App() {
     <ProjectContact key="project-contact" mainService={mainService} />
   );
 
+  const projectContactConfirmationPage = () => (
+    <ProjectContactConfirmation
+      key="project-contact-confirmation"
+      mainService={mainService}
+    />
+  );
+
   const projectExperiencesPage = () => (
     <ProjectExperiences key="project-experiences" mainService={mainService} />
   );
@@ -316,6 +324,8 @@ function App() {
       {current.matches("projectSubmitted") && projectSubmittedPage()}
 
       {current.matches("projectContact") && projectContactPage()}
+      {current.matches("projectContactConfirmation") &&
+        projectContactConfirmationPage()}
 
       {current.matches("projectExperiences") && projectExperiencesPage()}
 

@@ -22,7 +22,8 @@ export function projectProgress({
   goals,
   organism,
 }: projectProgressProps) {
-  const hasCertification: boolean = certification !== undefined;
+  const hasCertification: boolean =
+    certification !== undefined && certification !== null;
   const hasContact: boolean =
     contact !== undefined &&
     (contact?.email !== null || contact?.phone !== null);
@@ -37,7 +38,6 @@ export function projectProgress({
     hasGoals,
     hasOrganism,
   ];
-
   const validated: number = validations.filter((e) => e === true).length;
 
   return (100 * validated) / validations.length;

@@ -21,6 +21,7 @@ const certificateSummary = "certificateSummary";
 const certificateDetails = "certificateDetails";
 const projectHome = "projectHome";
 const projectContact = "projectContact";
+const projectContactConfirmation = "projectContactConfirmation";
 const projectExperience = "projectExperience";
 const projectExperiences = "projectExperiences";
 const projectGoals = "projectGoals";
@@ -145,6 +146,7 @@ export type MainState =
         | typeof projectSubmitted
         | typeof projectGoals
         | typeof projectContact
+        | typeof projectContactConfirmation
         | typeof projectExperience
         | typeof projectExperiences
         | typeof projectHelp
@@ -182,7 +184,10 @@ export const mainMachine =
         organisms: undefined,
         trainingProgram: undefined,
       },
-      initial: "projectContact",
+      // TODO remove this hack when url handler is done
+      initial: window.location.pathname.endsWith("confirm-registration")
+        ? "projectHomeLoading"
+        : "projectContact",
       id: "mainMachine",
       states: {
         loadingCertifications: {
@@ -609,10 +614,19 @@ export const mainMachine =
               type: "final",
             },
           },
-          onDone: {
-            target: "projectHome",
-          },
+          onDone: [
+            {
+              actions: "navigatePrevious",
+              target: "projectHome",
+              cond: "hasCandidacy",
+            },
+            {
+              actions: "navigateNext",
+              target: "projectContactConfirmation",
+            },
+          ],
         },
+        projectContactConfirmation: {},
         projectExperience: {
           initial: "idle",
           states: {
@@ -1143,17 +1157,8 @@ export const mainMachine =
         }),
       },
       guards: {
-        isAlreadyCandidate: (_context, event) => {
-          const typedEvent = event as DoneInvokeEvent<any>;
-          return !!typedEvent.data.candidacy;
-        },
-        isNotACandidate: (_context, event) => {
-          const typedEvent = event as DoneInvokeEvent<any>;
-          return (
-            typedEvent.data.candidacy === null ||
-            typedEvent.data.graphQLErrors?.[0]?.extensions.code ===
-              "CANDIDACY_DOES_NOT_EXIST"
-          );
+        hasCandidacy: (context, _event) => {
+          return !!context.candidacyId;
         },
         isRegionSelected: (context, _event) => {
           return !!context.selectedRegion;

@@ -56,7 +56,9 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
       {hasCandidacy ? (
         <BackButton onClick={() => send("BACK")} />
       ) : (
-        <h1 className="mt-12 mb-4 text-center font-bold">Reva</h1>
+        <h1 className="mt-12 mb-4 text-center font-bold text-lg text-slate-900">
+          Reva
+        </h1>
       )}
       <div className="h-full flex flex-col px-12 overflow-y-auto pt-4 pb-[400px] text-lg">
         {hasCandidacy ? (
@@ -79,14 +81,14 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             name="firstname"
             label="Prénom"
             required
-            defaultValue={editedContact?.phone || ""}
+            defaultValue={editedContact?.firstname || ""}
           />
           <Input
             ref={lastnameRef}
             name="lastname"
             label="Nom"
             required
-            defaultValue={editedContact?.phone || ""}
+            defaultValue={editedContact?.lastname || ""}
           />
           <Input
             ref={phoneRef}
@@ -102,6 +104,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             label="Email"
             type="email"
             required
+            placeholder="votre@email.fr"
             defaultValue={editedContact?.email || ""}
           />
           {state.matches("projectContact.error") && (

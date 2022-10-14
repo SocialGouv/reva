@@ -10,7 +10,7 @@ context("Training Program", () => {
           "candidate2-training-confirmed.json"
         );
       });
-      cy.visit("/confirmation");
+      cy.visit("/confirm-registration");
       cy.wait("@candidate_confirmRegistration");
 
       cy.get('[data-test="progress-title-value"]').should("have.text", "100%");
@@ -37,7 +37,7 @@ context("Training Program", () => {
           "candidate2-missing-training-fields.json"
         );
       });
-      cy.visit("/confirmation");
+      cy.visit("/confirm-registration");
       cy.wait("@candidate_confirmRegistration");
       cy.get('[data-test="review-button"]').click();
     });
@@ -64,14 +64,12 @@ context("Training Program", () => {
           "confirm-training-form.json"
         );
       });
-      cy.visit("/confirmation");
+      cy.visit("/confirm-registration");
       cy.wait("@candidate_confirmRegistration");
 
-      cy.get('[data-test="checkbox-accept-conditions"]')
-      .not("be.checked");
+      cy.get('[data-test="checkbox-accept-conditions"]').not("be.checked");
       cy.get('[data-test="label-accept-conditions"]').should("exist");
-      cy.get('[data-test="submit-training"]')
-      .should("be.disabled");
+      cy.get('[data-test="submit-training"]').should("be.disabled");
       cy.get('[data-test="checkbox-accept-conditions"]').check();
       cy.get('[data-test="submit-training"]').should("be.enabled").click();
       cy.wait("@candidacy_confirmTrainingForm");
