@@ -1,5 +1,5 @@
 import { useActor } from "@xstate/react";
-import { RefObject, useRef } from "react";
+import { useRef } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
@@ -124,7 +124,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
         </form>
         {!hasCandidacy && (
           <div className="border-t border-gray-200 pt-6">
-            <a href="#" className="text-gray-500 underline">
+            <a href="login" className="text-gray-500 underline">
               J'ai déjà une candidature
             </a>
           </div>
