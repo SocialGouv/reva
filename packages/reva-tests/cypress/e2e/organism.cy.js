@@ -26,6 +26,7 @@ context("Candidacy with region certification selected", () => {
     cy.get('[data-test="progress-title-value"]').should("have.text", "40%");
 
     cy.get('[data-test="project-home-edit-organism').click();
+    cy.wait("@getOrganismsForCandidacy");
 
     cy.get('[data-test="project-organisms-organism-o1"]').within(() => {
       cy.get('[data-test="project-organisms-organism-label"]').should(
@@ -76,6 +77,7 @@ context("Candidacy with region certification selected", () => {
     cy.wait("@candidate_confirmRegistration");
 
     cy.get('[data-test="project-home-edit-organism').click();
+    cy.wait("@getOrganismsForCandidacy");
 
     cy.get('[data-test="project-organisms-submit-organism').click();
     cy.wait("@candidacy_selectOrganism");
