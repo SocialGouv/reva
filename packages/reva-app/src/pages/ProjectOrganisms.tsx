@@ -39,6 +39,7 @@ const Organisms: FC<PropsOrganisms> = ({
       <div className="space-y-4">
         {organisms.map((organism) => (
           <RadioGroup.Option
+            data-test={`project-organisms-organism-${organism.id}`}
             key={organism.id}
             value={organism.id}
             className={({ active, checked }) =>
@@ -55,20 +56,24 @@ const Organisms: FC<PropsOrganisms> = ({
             }
             onClick={() => setOrganismId(organism.id)}
           >
-            <RadioGroup.Label as="h3" className="font-bold text-slate-800">
+            <RadioGroup.Label
+              as="h3"
+              data-test="project-organisms-organism-label"
+              className="font-bold text-slate-800"
+            >
               {organism.label}
             </RadioGroup.Label>
             <RadioGroup.Description
               as="address"
               className="text-gray-700 not-italic leading-relaxed"
             >
-              <p data-test="project-home-organism-address">
+              <p data-test="project-organisms-organism-address">
                 {organism.address}
               </p>
-              <p data-test="project-home-organism-address">
+              <p data-test="project-organisms-organism-zip-city">
                 {organism.zip} {organism.city}
               </p>
-              <p data-test="project-home-organism-email">
+              <p data-test="project-organisms-organism-email">
                 {organism.contactAdministrativeEmail}
               </p>
             </RadioGroup.Description>

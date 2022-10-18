@@ -40,7 +40,7 @@ import {
 } from "./services/candidacyServices";
 import {
   getOrganismsForCandidacy,
-  setOrganismsForCandidacy,
+  selectOrganismForCandidacy,
 } from "./services/organismServices";
 import {
   getCertification,
@@ -126,7 +126,7 @@ function App() {
                 "unavailable candidacyId or organism in XState context"
               );
 
-            return setOrganismsForCandidacy(client as ApolloClient<object>)({
+            return selectOrganismForCandidacy(client as ApolloClient<object>)({
               candidacyId: context.candidacyId,
               organismId: context.organism.id,
             });

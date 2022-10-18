@@ -22,8 +22,8 @@ export const getOrganismsForCandidacy =
       fetchPolicy: "no-cache",
     });
 
-const SET_ORGANISMS_FOR_CANDIDACY = gql`
-  mutation setOrganismsForCandidacy($candidacyId: UUID!, $organismId: UUID!) {
+const SELECT_ORGANISM_FOR_CANDIDACY = gql`
+  mutation candidacy_selectOrganism($candidacyId: UUID!, $organismId: UUID!) {
     candidacy_selectOrganism(
       candidacyId: $candidacyId
       organismId: $organismId
@@ -36,10 +36,10 @@ const SET_ORGANISMS_FOR_CANDIDACY = gql`
   }
 `;
 
-export const setOrganismsForCandidacy =
+export const selectOrganismForCandidacy =
   (client: ApolloClient<object>) =>
   ({ candidacyId, organismId }: { candidacyId: string; organismId: string }) =>
     client.mutate({
-      mutation: SET_ORGANISMS_FOR_CANDIDACY,
+      mutation: SELECT_ORGANISM_FOR_CANDIDACY,
       variables: { candidacyId, organismId },
     });

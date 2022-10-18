@@ -22,14 +22,14 @@ export function projectProgress({
   goals,
   organism,
 }: projectProgressProps) {
-  const hasCertification: boolean =
-    certification !== undefined && certification !== null;
+  // Not using strict equality on purpose: `== null` matches null and undefined
+  const hasCertification: boolean = certification != null;
   const hasContact: boolean =
     contact !== undefined &&
     (contact?.email !== null || contact?.phone !== null);
   const hasExperiences: boolean = sortExperiences(experiences).length > 0;
   const hasGoals: boolean = goals.filter((goal) => goal.checked).length > 0;
-  const hasOrganism: boolean = organism !== undefined && organism !== null;
+  const hasOrganism: boolean = organism != null;
 
   const validations: boolean[] = [
     hasCertification,
