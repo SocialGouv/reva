@@ -24,7 +24,7 @@ export const ProjectHelp = ({ mainService }: ProjectHelpProps) => {
       <div className="absolute text-neutral-200 left-[-70px] top-[100px] w-[200px]">
         <Locked />
       </div>
-      <div className="relative overflow-y-auto flex flex-col mt-8 rounded-xl px-8 py-12 text-slate-800 leading-loose">
+      <div className="relative overflow-y-auto flex flex-col mt-8 rounded-xl p-12 text-slate-800 leading-loose">
         <div className="flex justify-center">
           <Title label="Complétez votre projet" />
         </div>

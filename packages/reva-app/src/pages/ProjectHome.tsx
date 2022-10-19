@@ -219,7 +219,7 @@ export const ProjectHome = ({
           </p>
         )}
         {state.context.organism?.zip && state.context.organism?.city && (
-          <p data-test="project-home-organism-address">
+          <p data-test="project-home-organism-zip-city">
             {state.context.organism?.zip} {state.context.organism?.city}
           </p>
         )}
@@ -235,6 +235,7 @@ export const ProjectHome = ({
             data-test="project-home-edit-organism"
             onClick={() => send("EDIT_ORGANISM")}
             size="tiny"
+            disabled={state.context.certification == null}
             label={state.context.organism ? "Modifer" : "Ajouter"}
           />
         )}
@@ -302,7 +303,7 @@ export const ProjectHome = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
     >
-      <div className="px-8 grow overflow-y-auto py-8">
+      <div className="px-12 grow overflow-y-auto py-8">
         <h1 className="text-center font-bold text-lg text-slate-900">Reva</h1>
         {!isValidated && (
           <>

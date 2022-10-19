@@ -41,7 +41,7 @@ export const PageWithBackground: FC<Props> = ({
             src={certificationImg}
           />
           <h1 className="mt-12 -mb-12 text-center font-bold">Reva</h1>
-          <div className="grow overflow-y-auto mt-36 px-8 pb-8">
+          <div className="grow overflow-y-auto mt-36 px-12 pb-8">
             <PageHeaders
               codeRncp={certification.codeRncp}
               title={certification.label}

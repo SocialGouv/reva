@@ -27,12 +27,12 @@ export const CertificateDetails = ({ certification, mainService }: Props) => {
 
   return (
     <Page
-      className="flex flex-col z-[80] bg-slate-900 pt-6"
+      className="flex flex-col z-[90] bg-slate-900 pt-6"
       direction={state.context.direction}
     >
       <BackButton color="light" onClick={() => send("BACK")} />
       <div className="grow overflow-y-scroll">
-        <div className="prose prose-invert prose-h2:my-1 mt-8 text-slate-400 text-base leading-normal px-8 pb-8">
+        <div className="prose prose-invert prose-h2:my-1 mt-8 text-slate-400 text-base leading-normal px-12 pb-8">
           {certification.summary && <p>{certification.summary}</p>}
 
           {certification.activities &&

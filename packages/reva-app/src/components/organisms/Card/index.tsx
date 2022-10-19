@@ -106,7 +106,7 @@ export const Card = React.forwardRef<HTMLLIElement, CardProps>(
               }}
             />
           </div>
-          <div className={`w-full px-6 mt-28 mb-4`}>
+          <div className={`w-full px-12 mt-28 mb-4`}>
             <TextResult size="large" title={title} color="light" />
             <div>
               <div className="mt-1 mb-4 font-bold text-white">{label}</div>

@@ -51,8 +51,6 @@ export const Certificates = ({ mainService }: Props) => {
       state.matches("certificateSummary") &&
       (state.context.certification as Certification).id === certification.id;
 
-    console.log((state.context.certification as Certification)?.id);
-
     return (
       <Card
         ref={isSelected ? currentCertificateElement : null}
@@ -82,7 +80,7 @@ export const Certificates = ({ mainService }: Props) => {
     const certification = state.context.certification as Certification;
     return (
       <motion.div
-        className={`absolute bottom-0 z-50 inset-x-0 p-8 ${
+        className={`absolute bottom-0 z-50 inset-x-0 p-12 ${
           isVisible ? "bg-slate-900" : "transparent"
         }`}
         custom={state.toStrings().join("")}
@@ -143,7 +141,7 @@ export const Certificates = ({ mainService }: Props) => {
         className="h-full overflow-y-auto pb-12 pt-6"
       >
         <BackButton onClick={() => send("BACK")} />
-        <div className="px-8 pt-16 sm:pt-4 bg-white">
+        <div className="px-12 pt-16 sm:pt-4 bg-white">
           <Header label="Choisir mon diplôme" />
           <Select
             name="select_region"
@@ -164,7 +162,7 @@ export const Certificates = ({ mainService }: Props) => {
           />
         </div>
         {(!!chosenRegionCode || !!state.context.selectedRegion) && (
-          <div className="px-8">
+          <div className="px-12">
             <Results
               title={`Diplômes disponibles dans cette région`}
               listClassName="mb-4 space-y-8"

@@ -50,7 +50,7 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
         )}
       </div>
 
-      <div className="px-10 py-6 flex flex-col">
+      <div className="px-12 py-6 flex flex-col">
         <h1 className="text-white text-4xl font-extrabold mb-10">
           Votre parcours personnalisé
         </h1>
