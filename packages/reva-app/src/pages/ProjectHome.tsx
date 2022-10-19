@@ -303,7 +303,7 @@ export const ProjectHome = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
     >
-      <div className="px-8 grow overflow-y-auto py-8">
+      <div className="px-12 grow overflow-y-auto py-8">
         <h1 className="text-center font-bold text-lg text-slate-900">Reva</h1>
         {!isValidated && (
           <>

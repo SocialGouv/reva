@@ -46,7 +46,7 @@ export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
       direction={state.context.direction}
     >
       <BackButton onClick={() => send("BACK")} />
-      <div className="h-full flex flex-col px-8 overflow-y-auto">
+      <div className="h-full flex flex-col px-12 overflow-y-auto">
         <div className="grow overflow-y-auto">
           <Title label="Mon objectif" />
           <p className="text-slate-800 text-lg">Plusieurs choix possibles</p>
