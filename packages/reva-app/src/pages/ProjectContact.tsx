@@ -73,8 +73,8 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             data-test="project-contact-invalid-token"
             className="mb-6 text-red-500 font-semibold"
           >
-            Ce lien d'accès est arrivé à expiration. Veuillez soumettre à nouvau
-            ce formulaire.
+            Votre lien d'accès est arrivé à expiration. Veuillez soumettre à
+            nouvau ce formulaire.
           </p>
         ) : (
           <>

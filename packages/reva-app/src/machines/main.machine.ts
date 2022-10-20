@@ -1139,48 +1139,6 @@ export const mainMachine =
             trainingProgram: event.data.candidacy.trainingProgram,
           };
         }),
-        loadFakeCandidacy: assign((_context, _event) => {
-          return {
-            candidacyId: "1ba56a5a-2e62-4357-8fa4-267e426bfba8",
-            certification: undefined,
-            candidacyCreatedAt: new Date(),
-            candidacyStatus: "PROJET",
-            contact: {
-              firstname: "John",
-              lastname: "Doe",
-              email: "email@example.com",
-              phone: "0601020304",
-            },
-            regionId: "afb6d7a5-baef-4365-bf3d-568f3a32675a",
-            experiences: { rest: [] },
-            goals: [
-              {
-                id: "goal1",
-                checked: false,
-                label: "Goal 1",
-                order: 1,
-              },
-              {
-                id: "goal2",
-                checked: false,
-                label: "Goal 2",
-                order: 2,
-              },
-            ],
-            regions: [
-              {
-                id: "region1",
-                code: "1",
-                label: "Région 1",
-              },
-              {
-                id: "region2",
-                code: "2",
-                label: "Région 2",
-              },
-            ],
-          };
-        }),
         navigateNext: assign((_context, _event) => ({
           direction: "next",
         })),
