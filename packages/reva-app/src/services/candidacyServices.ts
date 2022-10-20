@@ -377,36 +377,6 @@ const GET_REFERENTIAL = gql`
 export const confirmRegistration =
   (client: ApolloClient<object>) =>
   async ({ token }: { token: string }) => {
-    /**
-    console.log("here");
-    try {
-      const { data, errors } = await client.mutate({
-        mutation: CONFIRM_REGISTRATION,
-        variables: { token },
-        errorPolicy: "all",
-      });
-      console.log(data);
-
-      console.log(errors);
-    } catch (e) {
-      console.log("error:");
-      console.log(e);
-    }
-
-    try {
-      const { data, errors } = await client.query({
-        query: GET_REFERENTIAL,
-        // we set the error policy at "all" to get referentials even if getCandidacy fail
-        errorPolicy: "all",
-      });
-      console.log(data);
-
-      console.log(errors);
-    } catch (e) {
-      console.log("error:");
-      console.log(e);
-    }*/
-
     const registrationMutation = client.mutate({
       mutation: CONFIRM_REGISTRATION,
       variables: { token },
