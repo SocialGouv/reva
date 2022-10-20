@@ -7,7 +7,12 @@ import { Input } from "../components/atoms/Input";
 import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
 import { Contact } from "../interface";
-import { MainContext, MainEvent, MainState } from "../machines/main.machine";
+import {
+  INVALID_TOKEN_ERROR,
+  MainContext,
+  MainEvent,
+  MainState,
+} from "../machines/main.machine";
 
 interface ProjectContactProps {
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
@@ -63,6 +68,14 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
       <div className="h-full flex flex-col px-12 overflow-y-auto pt-4 pb-[400px] text-lg">
         {hasCandidacy ? (
           <></>
+        ) : state.context.error === INVALID_TOKEN_ERROR ? (
+          <p
+            data-test="project-contact-invalid-token"
+            className="mb-6 text-red-500 font-semibold"
+          >
+            Ce lien d'accès est arrivé à expiration. Veuillez soumettre à nouvau
+            ce formulaire.
+          </p>
         ) : (
           <>
             <p>Bonjour 🤝,</p>
@@ -107,7 +120,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             placeholder="votre@email.fr"
             defaultValue={editedContact?.email || ""}
           />
-          {state.context.error && (
+          {state.context.error && state.context.error !== INVALID_TOKEN_ERROR && (
             <p key="error" className="text-red-600 my-4 text-sm">
               {state.context.error}
             </p>

@@ -54,6 +54,8 @@ export type State =
   | typeof trainingProgramSummary
   | typeof trainingProgramConfirmed;
 
+export const INVALID_TOKEN_ERROR = "INVALID_TOKEN_ERROR";
+
 export interface MainContext {
   error: string;
   candidacyId?: string;
@@ -943,7 +945,6 @@ export const mainMachine =
                     cond: "isTrainingProgramSubmitted",
                     target: "#mainMachine.trainingProgramSummary.idle",
                   },
-
                   {
                     actions: ["loadCandidacy"],
                     cond: "isTrainingProgramConfirmed",
@@ -956,16 +957,20 @@ export const mainMachine =
                 ],
                 onError: [
                   {
-                    actions: ["loadFakeCandidacy"],
-                    target: "fakeLoading",
-                  } /**
+                    actions: assign({
+                      error: (_, _event) => INVALID_TOKEN_ERROR,
+                      direction: (_context, _event) => "next",
+                    }),
+                    target: "#mainMachine.projectContact.idle",
+                    cond: "hasTokenExpired",
+                  },
                   {
                     actions: assign({
                       error: (_, _event) => "Une erreur est survenue.",
                       direction: (_context, _event) => "next",
                     }),
                     target: "retry",
-                  },*/,
+                  },
                 ],
               },
             },
@@ -1223,6 +1228,13 @@ export const mainMachine =
           const isConfirmed =
             typedEvent.data.candidacy?.candidacyStatus === "PARCOURS_CONFIRME";
           return !!isConfirmed;
+        },
+        hasTokenExpired: (_context, event) => {
+          const typedEvent = event as DoneInvokeEvent<any>;
+          return (
+            typedEvent.data.graphQLErrors[0]?.extensions.code ===
+            "CANDIDATE_INVALID_TOKEN"
+          );
         },
       },
     }

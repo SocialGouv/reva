@@ -1,17 +1,19 @@
-import { stubQuery } from "../utils/graphql";
+import { stubMutation, stubQuery } from "../utils/graphql";
 
 context("Training Program", () => {
   describe("Testing descriptions", () => {
     beforeEach(() => {
       cy.intercept("POST", "/graphql", (req) => {
-        stubQuery(
+        stubMutation(
           req,
           "candidate_confirmRegistration",
           "candidate2-training-confirmed.json"
         );
+        stubQuery(req, "getReferential", "referential.json");
       });
       cy.visit("/login?token=abc");
       cy.wait("@candidate_confirmRegistration");
+      cy.wait("@getReferential");
 
       cy.get('[data-test="progress-title-value"]').should("have.text", "100%");
       cy.get('[data-test="progress-100"]').should("exist");

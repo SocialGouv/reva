@@ -1,0 +1,30 @@
+{
+  "data": {
+    "getReferential": {
+      "goals": [
+        {
+          "id": "goal1",
+          "label": "Goal 1",
+          "order": 1
+        },
+        {
+          "id": "goal2",
+          "label": "Goal 2",
+          "order": 2
+        }
+      ]
+    },
+    "getRegions": [
+      {
+        "id": "region1",
+        "code": "1",
+        "label": "Région 1"
+      },
+      {
+        "id": "region2",
+        "code": "2",
+        "label": "Région 2"
+      }
+    ]
+  }
+}
