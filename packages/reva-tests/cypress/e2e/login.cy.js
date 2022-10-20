@@ -1,4 +1,4 @@
-import { stubQuery } from "../utils/graphql";
+import { stubMutation, stubQuery } from "../utils/graphql";
 
 const email = "email@example.com";
 
@@ -17,5 +17,17 @@ context("Login", () => {
     cy.wait("@candidate_askForLogin");
 
     cy.get('[data-test="login-confirmation"]');
+  });
+
+  it("use an expired token", function () {
+    cy.intercept("POST", "/graphql", (req) => {
+      stubMutation(req, "candidate_confirmRegistration", "login-expired.json");
+      stubQuery(req, "getReferential", "referential.json");
+    });
+    cy.visit("/login?token=abc");
+    cy.wait("@candidate_confirmRegistration");
+    cy.wait("@getReferential");
+
+    cy.get('[data-test="project-contact-invalid-token"]');
   });
 });

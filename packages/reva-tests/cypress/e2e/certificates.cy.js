@@ -3,7 +3,8 @@ import { stubMutation, stubQuery } from "../utils/graphql";
 context("Certificates", () => {
   beforeEach(() => {
     cy.intercept("POST", "/graphql", (req) => {
-      stubQuery(req, "candidate_confirmRegistration", "candidate1.json");
+      stubMutation(req, "candidate_confirmRegistration", "candidate1.json");
+      stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "Certifications", "certifications.json");
       stubQuery(req, "Certification", "certification-c2.json");
       stubMutation(
@@ -15,6 +16,8 @@ context("Certificates", () => {
 
     cy.visit("/login?token=abc");
     cy.wait("@candidate_confirmRegistration");
+    cy.wait("@getReferential");
+
     cy.get('[data-test="project-home-select-certification"]').click();
     cy.get("#select_region").select("2");
     cy.wait("@Certifications");

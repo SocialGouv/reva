@@ -1,4 +1,4 @@
-import { stubQuery } from "../utils/graphql";
+import { stubMutation, stubQuery } from "../utils/graphql";
 
 const firstname = "John";
 const lastname = "Doe";
@@ -29,11 +29,13 @@ context("Contact", () => {
 
   it("retrieve contact info from registration", function () {
     cy.intercept("POST", "/graphql", (req) => {
-      stubQuery(req, "candidate_confirmRegistration", "candidate1.json");
+      stubMutation(req, "candidate_confirmRegistration", "candidate1.json");
+      stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "update_contact", "contact2.json");
     });
     cy.visit("/login?token=abc");
     cy.wait("@candidate_confirmRegistration");
+    cy.wait("@getReferential");
 
     cy.get('[data-test="progress-title-value"]').should("have.text", "20%");
 
@@ -50,11 +52,13 @@ context("Contact", () => {
 
   it("update email and phone", function () {
     cy.intercept("POST", "/graphql", (req) => {
-      stubQuery(req, "candidate_confirmRegistration", "candidate1.json");
+      stubMutation(req, "candidate_confirmRegistration", "candidate1.json");
+      stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "update_contact", "contact.json");
     });
     cy.visit("/login?token=abc");
     cy.wait("@candidate_confirmRegistration");
+    cy.wait("@getReferential");
 
     cy.get('[data-test="project-home-edit-contact"]').click();
 

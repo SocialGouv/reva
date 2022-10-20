@@ -1,0 +1,19 @@
+{
+  "errors": [
+    {
+      "message": "error",
+      "locations": [
+        {
+          "line": 6,
+          "column": 3
+        }
+      ],
+      "path": ["candidate_confirmRegistration"],
+      "extensions": {
+        "code": "CANDIDATE_INVALID_TOKEN",
+        "message": "error"
+      }
+    }
+  ],
+  "data": null
+}

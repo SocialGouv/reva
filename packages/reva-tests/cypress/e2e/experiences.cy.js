@@ -4,17 +4,19 @@ const experienceTitle2 = "Experience 2";
 const experienceDescription1 = "Description 1";
 const experienceDescription2 = "Description 2";
 
-import { stubQuery } from "../utils/graphql";
+import { stubMutation, stubQuery } from "../utils/graphql";
 
 context("Experiences", () => {
   it("add and edit an experience", function () {
     cy.intercept("POST", "/graphql", (req) => {
-      stubQuery(req, "candidate_confirmRegistration", "candidate1.json");
+      stubMutation(req, "candidate_confirmRegistration", "candidate1.json");
+      stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "add_experience", "added-experience1.json");
       stubQuery(req, "update_experience", "updated-experience2.json");
     });
     cy.visit("/login?token=abc");
     cy.wait("@candidate_confirmRegistration");
+    cy.wait("@getReferential");
 
     cy.get('[data-test="project-home-edit-experiences"]').click();
     cy.get('[data-test="project-experiences-add"]').click();

@@ -353,7 +353,11 @@ const CONFIRM_REGISTRATION = gql`
         ${CANDIDACY_SELECTION}
       }
     }
+  }
+`;
 
+const GET_REFERENTIAL = gql`
+  query getReferential {
     getReferential {
       goals {
         id
@@ -373,20 +377,28 @@ const CONFIRM_REGISTRATION = gql`
 export const confirmRegistration =
   (client: ApolloClient<object>) =>
   async ({ token }: { token: string }) => {
-    const { data, errors } = await client.mutate({
+    const registrationMutation = client.mutate({
       mutation: CONFIRM_REGISTRATION,
-      // we set the error policy at "all" to get referentials even if getCandidacy fail
-      errorPolicy: "all",
       variables: { token },
     });
 
-    return initializeApp(data, errors);
+    const referentialQuery = client.query({
+      query: GET_REFERENTIAL,
+    });
+
+    const [
+      {
+        data: { candidate },
+      },
+      {
+        data: { getReferential, getRegions },
+      },
+    ] = await Promise.all([registrationMutation, referentialQuery]);
+
+    return initializeApp({ candidate, getReferential, getRegions });
   };
 
-function initializeApp(
-  { candidate, getReferential, getRegions }: any,
-  errors: any
-) {
+function initializeApp({ candidate, getReferential, getRegions }: any) {
   let candidacy = candidate.candidacy;
   if (candidate.candidacy) {
     const candidateGoals = candidacy.goals.map((g: any) => g.goalId);
@@ -444,7 +456,6 @@ function initializeApp(
       goals: getReferential.goals,
     },
     regions: getRegions,
-    graphQLErrors: errors,
   };
 }
 

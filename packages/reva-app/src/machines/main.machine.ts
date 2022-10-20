@@ -54,6 +54,8 @@ export type State =
   | typeof trainingProgramSummary
   | typeof trainingProgramConfirmed;
 
+export const INVALID_TOKEN_ERROR = "INVALID_TOKEN_ERROR";
+
 export interface MainContext {
   error: string;
   candidacyId?: string;
@@ -943,7 +945,6 @@ export const mainMachine =
                     cond: "isTrainingProgramSubmitted",
                     target: "#mainMachine.trainingProgramSummary.idle",
                   },
-
                   {
                     actions: ["loadCandidacy"],
                     cond: "isTrainingProgramConfirmed",
@@ -956,16 +957,20 @@ export const mainMachine =
                 ],
                 onError: [
                   {
-                    actions: ["loadFakeCandidacy"],
-                    target: "fakeLoading",
-                  } /**
+                    actions: assign({
+                      error: (_, _event) => INVALID_TOKEN_ERROR,
+                      direction: (_context, _event) => "next",
+                    }),
+                    target: "#mainMachine.projectContact.idle",
+                    cond: "isTokenInvalid",
+                  },
                   {
                     actions: assign({
                       error: (_, _event) => "Une erreur est survenue.",
                       direction: (_context, _event) => "next",
                     }),
                     target: "retry",
-                  },*/,
+                  },
                 ],
               },
             },
@@ -1134,48 +1139,6 @@ export const mainMachine =
             trainingProgram: event.data.candidacy.trainingProgram,
           };
         }),
-        loadFakeCandidacy: assign((_context, _event) => {
-          return {
-            candidacyId: "1ba56a5a-2e62-4357-8fa4-267e426bfba8",
-            certification: undefined,
-            candidacyCreatedAt: new Date(),
-            candidacyStatus: "PROJET",
-            contact: {
-              firstname: "John",
-              lastname: "Doe",
-              email: "email@example.com",
-              phone: "0601020304",
-            },
-            regionId: "afb6d7a5-baef-4365-bf3d-568f3a32675a",
-            experiences: { rest: [] },
-            goals: [
-              {
-                id: "goal1",
-                checked: false,
-                label: "Goal 1",
-                order: 1,
-              },
-              {
-                id: "goal2",
-                checked: false,
-                label: "Goal 2",
-                order: 2,
-              },
-            ],
-            regions: [
-              {
-                id: "region1",
-                code: "1",
-                label: "Région 1",
-              },
-              {
-                id: "region2",
-                code: "2",
-                label: "Région 2",
-              },
-            ],
-          };
-        }),
         navigateNext: assign((_context, _event) => ({
           direction: "next",
         })),
@@ -1223,6 +1186,13 @@ export const mainMachine =
           const isConfirmed =
             typedEvent.data.candidacy?.candidacyStatus === "PARCOURS_CONFIRME";
           return !!isConfirmed;
+        },
+        isTokenInvalid: (_context, event) => {
+          const typedEvent = event as DoneInvokeEvent<any>;
+          return (
+            typedEvent.data.graphQLErrors[0]?.extensions.code ===
+            "CANDIDATE_INVALID_TOKEN"
+          );
         },
       },
     }
