@@ -32,7 +32,7 @@ context("Contact", () => {
       stubQuery(req, "candidate_confirmRegistration", "candidate1.json");
       stubQuery(req, "update_contact", "contact2.json");
     });
-    cy.visit("/confirm-registration");
+    cy.visit("/login");
     cy.wait("@candidate_confirmRegistration");
 
     cy.get('[data-test="progress-title-value"]').should("have.text", "20%");
@@ -53,7 +53,7 @@ context("Contact", () => {
       stubQuery(req, "candidate_confirmRegistration", "candidate1.json");
       stubQuery(req, "update_contact", "contact.json");
     });
-    cy.visit("/confirm-registration");
+    cy.visit("/login");
     cy.wait("@candidate_confirmRegistration");
 
     cy.get('[data-test="project-home-edit-contact"]').click();

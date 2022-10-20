@@ -13,7 +13,7 @@ context("Certificates", () => {
       );
     });
 
-    cy.visit("/confirm-registration");
+    cy.visit("/login");
     cy.wait("@candidate_confirmRegistration");
     cy.get('[data-test="project-home-select-certification"]').click();
     cy.get("#select_region").select("2");
