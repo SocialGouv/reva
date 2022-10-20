@@ -962,7 +962,7 @@ export const mainMachine =
                       direction: (_context, _event) => "next",
                     }),
                     target: "#mainMachine.projectContact.idle",
-                    cond: "hasTokenExpired",
+                    cond: "isTokenInvalid",
                   },
                   {
                     actions: assign({
@@ -1187,7 +1187,7 @@ export const mainMachine =
             typedEvent.data.candidacy?.candidacyStatus === "PARCOURS_CONFIRME";
           return !!isConfirmed;
         },
-        hasTokenExpired: (_context, event) => {
+        isTokenInvalid: (_context, event) => {
           const typedEvent = event as DoneInvokeEvent<any>;
           return (
             typedEvent.data.graphQLErrors[0]?.extensions.code ===
