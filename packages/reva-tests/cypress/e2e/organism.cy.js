@@ -5,7 +5,7 @@ context("Empty candidacy", () => {
     cy.intercept("POST", "/graphql", (req) => {
       stubQuery(req, "candidate_confirmRegistration", "candidate1.json");
     });
-    cy.visit("/login");
+    cy.visit("/login?token=abc");
     cy.wait("@candidate_confirmRegistration");
 
     cy.get('[data-test="progress-title-value"]').should("have.text", "20%");
@@ -20,7 +20,7 @@ context("Candidacy with region certification selected", () => {
       stubQuery(req, "candidate_confirmRegistration", "candidate3.json");
       stubQuery(req, "getOrganismsForCandidacy", "organism.json");
     });
-    cy.visit("/login");
+    cy.visit("/login?token=abc");
     cy.wait("@candidate_confirmRegistration");
 
     cy.get('[data-test="progress-title-value"]').should("have.text", "40%");
@@ -73,7 +73,7 @@ context("Candidacy with region certification selected", () => {
       stubQuery(req, "getOrganismsForCandidacy", "organism.json");
       stubMutation(req, "candidacy_selectOrganism", "selected-organism.json");
     });
-    cy.visit("/login");
+    cy.visit("/login?token=abc");
     cy.wait("@candidate_confirmRegistration");
 
     cy.get('[data-test="project-home-edit-organism').click();

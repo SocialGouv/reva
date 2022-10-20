@@ -13,7 +13,7 @@ context("Experiences", () => {
       stubQuery(req, "add_experience", "added-experience1.json");
       stubQuery(req, "update_experience", "updated-experience2.json");
     });
-    cy.visit("/login");
+    cy.visit("/login?token=abc");
     cy.wait("@candidate_confirmRegistration");
 
     cy.get('[data-test="project-home-edit-experiences"]').click();
