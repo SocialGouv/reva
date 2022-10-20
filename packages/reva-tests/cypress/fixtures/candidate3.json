@@ -1,38 +1,43 @@
 {
   "data": {
-    "candidate": {
+    "candidateLogged": {
       "token": "abc",
-      "candidacy": {
-        "id": "c3",
-        "organism": null,
-        "createdAt": 1664376421912,
-        "certification": {
-          "id": "c1",
-          "label": "Titre 1",
-          "summary": "résumé 1",
-          "codeRncp": "34691",
-          "status": "AVAILABLE"
-        },
-        "email": null,
-        "phone": "0643202050",
-        "experiences": [],
-        "goals": [],
-        "candidacyStatuses": [
-          {
-            "status": "PROJET",
-            "isActive": true
-          }
-        ],
-        "regionId": "region1",
-        "appointmentCount": 0,
-        "certificateSkills": null,
-        "otherTraining": null,
-        "individualHourCount": null,
-        "collectiveHourCount": null,
-        "additionalHourCount": null,
-        "validatedByCandidate": false,
-        "basicSkills": [],
-        "mandatoryTrainings": []
+      "candidate": {
+        "firstname": "John",
+        "lastname": "Doe",
+        "email": "email@example.com",
+        "phone": "06-01-02-03-04",
+        "candidacy": {
+          "id": "c3",
+          "organism": null,
+          "createdAt": 1664376421912,
+          "certification": {
+            "id": "c1",
+            "label": "Titre 1",
+            "summary": "résumé 1",
+            "codeRncp": "34691",
+            "status": "AVAILABLE"
+          },
+
+          "experiences": [],
+          "goals": [],
+          "candidacyStatuses": [
+            {
+              "status": "PROJET",
+              "isActive": true
+            }
+          ],
+          "regionId": "region1",
+          "appointmentCount": 0,
+          "certificateSkills": null,
+          "otherTraining": null,
+          "individualHourCount": null,
+          "collectiveHourCount": null,
+          "additionalHourCount": null,
+          "validatedByCandidate": false,
+          "basicSkills": [],
+          "mandatoryTrainings": []
+        }
       }
     },
     "getReferential": {

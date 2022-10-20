@@ -346,7 +346,7 @@ const CANDIDACY_SELECTION = `
 
 const CONFIRM_REGISTRATION = gql`
   mutation candidate_confirmRegistration($token: String!) {
-    candidate: candidate_confirmRegistration(token: $token) {
+    candidateLogged: candidate_confirmRegistration(token: $token) {
       token
       candidacy {
         id
@@ -388,19 +388,19 @@ export const confirmRegistration =
 
     const [
       {
-        data: { candidate },
+        data: { candidateLogged },
       },
       {
         data: { getReferential, getRegions },
       },
     ] = await Promise.all([registrationMutation, referentialQuery]);
 
-    return initializeApp({ candidate, getReferential, getRegions });
+    return initializeApp({ candidateLogged, getReferential, getRegions });
   };
 
-function initializeApp({ candidate, getReferential, getRegions }: any) {
-  let candidacy = candidate.candidacy;
-  if (candidate.candidacy) {
+function initializeApp({ candidateLogged, getReferential, getRegions }: any) {
+  let candidacy = candidateLogged.candidate?.candidacy;
+  if (candidacy) {
     const candidateGoals = candidacy.goals.map((g: any) => g.goalId);
 
     const goals = getReferential.goals.map((g: any) => ({
@@ -438,6 +438,7 @@ function initializeApp({ candidate, getReferential, getRegions }: any) {
     };
 
     candidacy = {
+      ...candidateLogged.candidate,
       ...candidacy,
       candidacyStatus: candidacy.candidacyStatuses?.find(
         (s: { isActive: string; status: candidacyStatus }) => s.isActive

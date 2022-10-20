@@ -1,70 +1,74 @@
 {
   "data": {
-    "candidate": {
+    "candidateLogged": {
       "token": "abc",
-      "candidacy": {
-        "id": "c2",
-        "organism": {
-          "id": "o1",
-          "label": "Accompagnateur 1",
-          "address": "1 rue de l'exemple",
-          "zip": "75000",
-          "city": "Paris",
-          "contactAdministrativeEmail": "contact@example.com"
-        },
-        "createdAt": 1664376421912,
-        "certification": {
-          "id": "c1",
-          "label": "Titre 1",
-          "summary": "résumé 1",
-          "codeRncp": "34691",
-          "status": "AVAILABLE"
-        },
-        "email": null,
-        "phone": "0643202050",
-        "experiences": [
-          {
-            "id": "e1",
-            "title": "Experience 1",
-            "startedAt": 1580428800000,
-            "duration": "unknown",
-            "description": "description 1"
-          }
-        ],
-        "goals": [
-          {
-            "goalId": "goal1",
-            "additionalInformation": null
-          }
-        ],
-        "candidacyStatuses": [
-          {
-            "status": "PROJET",
-            "isActive": false
+      "candidate": {
+        "firstname": "John",
+        "lastname": "Doe",
+        "email": "email@example.com",
+        "phone": "06-01-02-03-04",
+        "candidacy": {
+          "id": "c2",
+          "organism": {
+            "id": "o1",
+            "label": "Accompagnateur 1",
+            "address": "1 rue de l'exemple",
+            "zip": "75000",
+            "city": "Paris",
+            "contactAdministrativeEmail": "contact@example.com"
           },
-          {
-            "status": "PRISE_EN_CHARGE",
-            "isActive": false
+          "createdAt": 1664376421912,
+          "certification": {
+            "id": "c1",
+            "label": "Titre 1",
+            "summary": "résumé 1",
+            "codeRncp": "34691",
+            "status": "AVAILABLE"
           },
-          {
-            "status": "PARCOURS_ENVOYE",
-            "isActive": false
-          },
-          {
-            "status": "PARCOURS_CONFIRME",
-            "isActive": true
-          }
-        ],
-        "regionId": "region1",
-        "appointmentCount": 0,
-        "additionalHourCount": null,
-        "mandatoryTrainings": [],
-        "certificateSkills": "Blocs de compétences métier",
-        "otherTraining": "Autres actions de formations complémentaires",
-        "individualHourCount": 1,
-        "collectiveHourCount": null,
-        "validatedByCandidate": false,
-        "basicSkills": null
+          "experiences": [
+            {
+              "id": "e1",
+              "title": "Experience 1",
+              "startedAt": 1580428800000,
+              "duration": "unknown",
+              "description": "description 1"
+            }
+          ],
+          "goals": [
+            {
+              "goalId": "goal1",
+              "additionalInformation": null
+            }
+          ],
+          "candidacyStatuses": [
+            {
+              "status": "PROJET",
+              "isActive": false
+            },
+            {
+              "status": "PRISE_EN_CHARGE",
+              "isActive": false
+            },
+            {
+              "status": "PARCOURS_ENVOYE",
+              "isActive": false
+            },
+            {
+              "status": "PARCOURS_CONFIRME",
+              "isActive": true
+            }
+          ],
+          "regionId": "region1",
+          "appointmentCount": 0,
+          "additionalHourCount": null,
+          "mandatoryTrainings": [],
+          "certificateSkills": "Blocs de compétences métier",
+          "otherTraining": "Autres actions de formations complémentaires",
+          "individualHourCount": 1,
+          "collectiveHourCount": null,
+          "validatedByCandidate": false,
+          "basicSkills": null
+        }
       }
     },
     "getReferential": {
