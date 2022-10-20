@@ -10,7 +10,7 @@ context("Training Program", () => {
           "candidate2-training-confirmed.json"
         );
       });
-      cy.visit("/confirm-registration");
+      cy.visit("/login?token=abc");
       cy.wait("@candidate_confirmRegistration");
 
       cy.get('[data-test="progress-title-value"]').should("have.text", "100%");
@@ -37,7 +37,7 @@ context("Training Program", () => {
           "candidate2-missing-training-fields.json"
         );
       });
-      cy.visit("/confirm-registration");
+      cy.visit("/login?token=abc");
       cy.wait("@candidate_confirmRegistration");
       cy.get('[data-test="review-button"]').click();
     });
@@ -64,7 +64,7 @@ context("Training Program", () => {
           "confirm-training-form.json"
         );
       });
-      cy.visit("/confirm-registration");
+      cy.visit("/login?token=abc");
       cy.wait("@candidate_confirmRegistration");
 
       cy.get('[data-test="checkbox-accept-conditions"]').not("be.checked");

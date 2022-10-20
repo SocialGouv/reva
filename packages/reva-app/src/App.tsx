@@ -54,17 +54,17 @@ function App() {
     () =>
       mainMachine.withConfig({
         services: {
-          searchCertifications: (context, event) => {
+          searchCertifications: (context, _event) => {
             return searchCertifications(client as ApolloClient<object>)({
               query: context.selectedRegion?.id || "",
             });
           },
-          initializeApp: async (context, event) => {
+          initializeApp: async (_context, _event, { data }) => {
             return confirmRegistration(client as ApolloClient<object>)({
-              token: "abc",
+              token: data.loginToken,
             });
           },
-          getCertification: (context, event) => {
+          getCertification: (_context, event) => {
             if (event.type !== "SELECT_CERTIFICATION") {
               return Promise.reject("Impossible state");
             }

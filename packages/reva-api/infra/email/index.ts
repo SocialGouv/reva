@@ -26,7 +26,7 @@ export const sendRegistrationEmail = async (email: string, token: string) => {
         <mj-text font-size="14px" font-family="helvetica" >
           <strong>Commencez</strong> dès maintenant votre parcours VAE REVA en cliquant sur le bouton ci-dessous.
         </mj-text>
-        <mj-button border-radius="4px" font-family="Helvetica" background-color="#1E293B" color="white" href="${process.env.BASE_URL}/app/confirm-registration?token=${token}">
+        <mj-button border-radius="4px" font-family="Helvetica" background-color="#1E293B" color="white" href="${process.env.BASE_URL}/app/login?token=${token}">
           Démarrer mon parcours
          </mj-button>
       </mj-column>
@@ -38,7 +38,7 @@ export const sendRegistrationEmail = async (email: string, token: string) => {
   const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
   const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail(); // SendSmtpEmail | Values to send a transactional email
-  const url = `${process.env.BASE_URL}/app/confirm-registration?token=${token}`;
+  const url = `${process.env.BASE_URL}/app/login?token=${token}`;
   sendSmtpEmail.sender = { email: 'hello@reva.beta.gouv.fr' };
   sendSmtpEmail.to = [{ email }];
   sendSmtpEmail.subject = 'Votre accès à votre parcours VAE - REVA';
