@@ -10,17 +10,17 @@ export const hasOperationName = (req, operationName) => {
 };
 
 // Alias query if operationName matches
-export const stubQuery = (req, operationName, fixture) => {
+export const stubQuery = (req, operationName, fixture, statusCode = 200) => {
   if (hasOperationName(req, operationName)) {
     req.alias = operationName;
-    fixture && req.reply({ fixture });
+    fixture && req.reply({ statusCode, fixture });
   }
 };
 
 // Alias mutation if operationName matches
-export const stubMutation = (req, operationName, fixture) => {
+export const stubMutation = (req, operationName, fixture, statusCode = 200) => {
   if (hasOperationName(req, operationName)) {
     req.alias = operationName;
-    fixture && req.reply({ fixture });
+    fixture && req.reply({ statusCode, fixture });
   }
 };
