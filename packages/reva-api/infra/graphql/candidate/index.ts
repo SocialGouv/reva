@@ -16,10 +16,10 @@ import { askForLogin } from "../../../domain/features/candidateAskForLogin";
 
 const generateJwt = (data: unknown, expiresIn: number = 15 * 60) => {
   const dataStr = JSON.stringify(data);
-  const cryptedData = CryptoJS.AES.encrypt(dataStr, process.env.JWT_PRIVATE_KEY || 'secret');
+  const cryptedData = CryptoJS.AES.encrypt(dataStr, process.env.DATA_ENCRYPT_PRIVATE_KEY || 'secret');
   return jwt.sign({
     data: cryptedData.toString()
-  }, process.env.DATA_ENCRYPT_PRIVATE_KEY || 'secret', { expiresIn });
+  }, process.env.JWT_PRIVATE_KEY || 'secret', { expiresIn });
 };
 
 
