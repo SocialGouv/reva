@@ -1,6 +1,5 @@
 import { ApolloClient, getApolloContext } from "@apollo/client";
 import { Capacitor } from "@capacitor/core";
-import { Device } from "@capacitor/device";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
 import { useContext, useMemo } from "react";
@@ -89,12 +88,10 @@ function App() {
             ) {
               return Promise.reject("Impossible state");
             }
-            const deviceId = await Device.getId();
 
             return createCandidacyWithCertification(
               client as ApolloClient<object>
             )({
-              deviceId: deviceId.uuid,
               certificationId: event.certification.id,
               regionId: context.selectedRegion?.id || "",
             }).then(
@@ -111,10 +108,8 @@ function App() {
             ) {
               return Promise.reject("Impossible state");
             }
-            const deviceId = await Device.getId();
 
             return updateCertification(client as ApolloClient<object>)({
-              deviceId: deviceId.uuid,
               candidacyId: context.candidacyId,
               certificationId: event.certification.id,
               regionId: context.selectedRegion?.id || "",
@@ -135,9 +130,8 @@ function App() {
             if (event.type !== "SUBMIT_GOALS" || !context.candidacyId) {
               return Promise.reject("Impossible state");
             }
-            const deviceId = await Device.getId();
+
             await saveGoals(client as ApolloClient<object>)({
-              deviceId: deviceId.uuid,
               candidacyId: context.candidacyId,
               goals: event.goals
                 .filter((g) => g.checked)
@@ -150,19 +144,15 @@ function App() {
               return Promise.reject("Impossible state");
             }
 
-            const deviceId = await Device.getId();
-
             if (!!event.experience.id) {
               const { id, ...experienceContent } = event.experience;
               return updateExperience(client as ApolloClient<object>)({
-                deviceId: deviceId.uuid,
                 candidacyId: context.candidacyId,
                 experienceId: event.experience.id,
                 experience: experienceContent,
               });
             } else {
               return addExperience(client as ApolloClient<object>)({
-                deviceId: deviceId.uuid,
                 candidacyId: context.candidacyId,
                 experience: event.experience,
               });
@@ -188,10 +178,7 @@ function App() {
             if (event.type !== "UPDATE_CONTACT" || !context.candidacyId) {
               return Promise.reject("Impossible state");
             }
-
-            const deviceId = await Device.getId();
             return updateContact(client as ApolloClient<object>)({
-              deviceId: deviceId.uuid,
               candidacyId: context.candidacyId,
               phone: event.contact.phone,
               email: event.contact.email,
@@ -202,9 +189,7 @@ function App() {
               return Promise.reject("Impossible state");
             }
 
-            const deviceId = await Device.getId();
             return submitCandidacy(client as ApolloClient<object>)({
-              deviceId: deviceId.uuid,
               candidacyId: context.candidacyId,
             });
           },

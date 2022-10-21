@@ -3,20 +3,11 @@ import { ApolloClient, gql } from "@apollo/client";
 import { Experience, candidacyStatus } from "../interface";
 
 const CREATE_CANDIDACY_WITH_CERTIFICATION = gql`
-  mutation create_candidacy(
-    $deviceId: ID!
-    $certificationId: ID!
-    $regionId: ID!
-  ) {
+  mutation create_candidacy($certificationId: ID!, $regionId: ID!) {
     candidacy_createCandidacy(
-      candidacy: {
-        deviceId: $deviceId
-        certificationId: $certificationId
-        regionId: $regionId
-      }
+      candidacy: { certificationId: $certificationId, regionId: $regionId }
     ) {
       id
-      deviceId
       certificationId
       regionId
       createdAt
@@ -27,28 +18,24 @@ const CREATE_CANDIDACY_WITH_CERTIFICATION = gql`
 export const createCandidacyWithCertification =
   (client: ApolloClient<object>) =>
   ({
-    deviceId,
     certificationId,
     regionId,
   }: {
-    deviceId: string;
     certificationId: string;
     regionId: string;
   }) =>
     client.mutate({
       mutation: CREATE_CANDIDACY_WITH_CERTIFICATION,
-      variables: { deviceId, certificationId, regionId },
+      variables: { certificationId, regionId },
     });
 
 const UPDATE_CERTIFICATION = gql`
   mutation candidacy_updateCertification(
-    $deviceId: ID!
     $candidacyId: ID!
     $certificationId: ID!
     $regionId: ID!
   ) {
     candidacy_updateCertification(
-      deviceId: $deviceId
       candidacyId: $candidacyId
       certificationId: $certificationId
       regionId: $regionId
@@ -61,60 +48,43 @@ const UPDATE_CERTIFICATION = gql`
 export const updateCertification =
   (client: ApolloClient<object>) =>
   ({
-    deviceId,
     candidacyId,
     certificationId,
     regionId,
   }: {
-    deviceId: string;
     candidacyId: string;
     certificationId: string;
     regionId: string;
   }) =>
     client.mutate({
       mutation: UPDATE_CERTIFICATION,
-      variables: { deviceId, candidacyId, certificationId, regionId },
+      variables: { candidacyId, certificationId, regionId },
     });
 
 const SAVE_GOALS = gql`
-  mutation update_goals(
-    $deviceId: ID!
-    $candidacyId: ID!
-    $goals: [CandidateGoalInput!]!
-  ) {
-    candidacy_updateGoals(
-      deviceId: $deviceId
-      candidacyId: $candidacyId
-      goals: $goals
-    )
+  mutation update_goals($candidacyId: ID!, $goals: [CandidateGoalInput!]!) {
+    candidacy_updateGoals(candidacyId: $candidacyId, goals: $goals)
   }
 `;
 
 export const saveGoals =
   (client: ApolloClient<object>) =>
   async ({
-    deviceId,
     candidacyId,
     goals,
   }: {
-    deviceId: string;
     candidacyId: string;
     goals: { goalId: string }[];
   }) =>
     client.mutate({
       mutation: SAVE_GOALS,
-      variables: { deviceId, candidacyId, goals },
+      variables: { candidacyId, goals },
     });
 
 const ADD_EXPERIENCE = gql`
-  mutation add_experience(
-    $deviceId: ID!
-    $candidacyId: ID!
-    $experience: ExperienceInput
-  ) {
+  mutation add_experience($candidacyId: ID!, $experience: ExperienceInput) {
     candidacy_addExperience(
       candidacyId: $candidacyId
-      deviceId: $deviceId
       experience: $experience
     ) {
       id
@@ -129,17 +99,15 @@ const ADD_EXPERIENCE = gql`
 export const addExperience =
   (client: ApolloClient<object>) =>
   async ({
-    deviceId,
     candidacyId,
     experience,
   }: {
-    deviceId: string;
     candidacyId: string;
     experience: Experience;
   }) => {
     const { data } = await client.mutate({
       mutation: ADD_EXPERIENCE,
-      variables: { deviceId, candidacyId, experience },
+      variables: { candidacyId, experience },
     });
 
     const newExperience = data.candidacy_addExperience;
@@ -149,14 +117,12 @@ export const addExperience =
 
 const UPDATE_EXPERIENCE = gql`
   mutation update_experience(
-    $deviceId: ID!
     $candidacyId: ID!
     $experienceId: ID!
     $experience: ExperienceInput
   ) {
     candidacy_updateExperience(
       candidacyId: $candidacyId
-      deviceId: $deviceId
       experienceId: $experienceId
       experience: $experience
     ) {
@@ -172,19 +138,17 @@ const UPDATE_EXPERIENCE = gql`
 export const updateExperience =
   (client: ApolloClient<object>) =>
   async ({
-    deviceId,
     candidacyId,
     experienceId,
     experience,
   }: {
-    deviceId: string;
     candidacyId: string;
     experienceId: string;
     experience: Experience;
   }) => {
     const { data } = await client.mutate({
       mutation: UPDATE_EXPERIENCE,
-      variables: { deviceId, candidacyId, experienceId, experience },
+      variables: { candidacyId, experienceId, experience },
     });
 
     const newExperience = data.candidacy_updateExperience;
@@ -231,15 +195,9 @@ export const askForRegistration =
   };
 
 const UPDATE_CONTACT = gql`
-  mutation update_contact(
-    $deviceId: ID!
-    $candidacyId: ID!
-    $phone: String
-    $email: String
-  ) {
+  mutation update_contact($candidacyId: ID!, $phone: String, $email: String) {
     candidacy_updateContact(
       candidacyId: $candidacyId
-      deviceId: $deviceId
       phone: $phone
       email: $email
     ) {
@@ -253,27 +211,25 @@ const UPDATE_CONTACT = gql`
 export const updateContact =
   (client: ApolloClient<object>) =>
   async ({
-    deviceId,
     candidacyId,
     phone,
     email,
   }: {
-    deviceId: string;
     candidacyId: string;
     phone: null | string;
     email: null | string;
   }) => {
     const { data } = await client.mutate({
       mutation: UPDATE_CONTACT,
-      variables: { deviceId, candidacyId, phone, email },
+      variables: { candidacyId, phone, email },
     });
 
     return data.candidacy_updateContact;
   };
 
 const SUBMIT_CANDIDACY = gql`
-  mutation submit_candidacy($deviceId: ID!, $candidacyId: ID!) {
-    candidacy_submitCandidacy(candidacyId: $candidacyId, deviceId: $deviceId) {
+  mutation submit_candidacy($candidacyId: ID!) {
+    candidacy_submitCandidacy(candidacyId: $candidacyId) {
       id
     }
   }
@@ -281,16 +237,10 @@ const SUBMIT_CANDIDACY = gql`
 
 export const submitCandidacy =
   (client: ApolloClient<object>) =>
-  async ({
-    deviceId,
-    candidacyId,
-  }: {
-    deviceId: string;
-    candidacyId: string;
-  }) => {
+  async ({ candidacyId }: { candidacyId: string }) => {
     const { data } = await client.mutate({
       mutation: SUBMIT_CANDIDACY,
-      variables: { deviceId, candidacyId },
+      variables: { candidacyId },
     });
 
     return data.candidacy_submitCandidacy;
