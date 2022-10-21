@@ -282,7 +282,7 @@ export const ProjectHome = ({
       className="absolute w-full h-full flex flex-col bg-neutral-100"
     >
       <div className="grow flex flex-col text-center items-center justify-center px-10">
-        <Header label="Création de votre compte" size="small" />
+        <Header label="Connexion en cours" size="small" />
         <div className="mt-8 w-8">
           <Loader />
         </div>
