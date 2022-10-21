@@ -1,38 +1,45 @@
 import { Either, EitherAsync, Maybe, Right } from "purify-ts";
 import { IAMAccount } from "../types/account";
+import { Candidacy } from "../types/candidacy";
 import { Candidate, CandidateAuthenticationInput, CandidateRegistrationInput } from "../types/candidate";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
-interface ConfirmRegistrationDeps {
-    extractCandidateFromToken: (token: string) => Promise<Either<string, CandidateAuthenticationInput>>;
+interface CommonDeps {
     getCandidateIdFromIAM: (email: string) => Promise<Either<string, Maybe<IAMAccount>>>;
+    generateIAMToken: (id: string) => any;
+}
+
+interface ConfirmRegistrationDeps extends CommonDeps {
+    extractCandidateFromToken: (token: string) => Promise<Either<string, CandidateAuthenticationInput>>;
     createCandidateInIAM: (params: { 
         email: string,
         firstname: string;
         lastname: string;
     }) => Promise<Either<string, string>>;
     createCandidateWithCandidacy: any;
+}
 
-    generateIAMToken: (id: string) => any;
+interface ConfirmLoginDeps extends CommonDeps {
+    extractEmailFromToken: (token: string) => Promise<Either<string, string>>;
+    getCandidateWithCandidacy: (candidateAccount: IAMAccount) => Promise<Either<string, Candidate>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface CandidateAuthenticationDeps extends ConfirmRegistrationDeps {}
+interface CandidateAuthenticationDeps extends ConfirmRegistrationDeps, ConfirmLoginDeps {}
 
 export const candidateAuthentication = (deps: CandidateAuthenticationDeps) => async (params: any) => {
     return EitherAsync.fromPromise(() => deps.extractCandidateFromToken(params.token))
         .mapLeft(error => new FunctionalError(FunctionalCodeError.CANDIDATE_INVALID_TOKEN, error))
         .chain(async (candidateAuthenticationInput: CandidateAuthenticationInput) => {
             if (candidateAuthenticationInput.action === "registration") {
-                return confirmRegistration(deps)({ candidate: candidateAuthenticationInput })
+                return confirmRegistration(deps)({ candidate: candidateAuthenticationInput });
             } else if (candidateAuthenticationInput.action === "login") {
-                // TODO
-                return Right({})
+                return loginCandidate(deps)({ email: candidateAuthenticationInput.email });
             } else {
                 throw new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, `Action non reconnue`);
             }
         });
-}
+};
 
 const confirmRegistration = (deps: ConfirmRegistrationDeps) => async (params: { candidate: CandidateRegistrationInput; }) => {
     const maybeCandidateInIAM = EitherAsync.fromPromise(() => deps.getCandidateIdFromIAM(params.candidate.email))
@@ -64,9 +71,9 @@ const confirmRegistration = (deps: ConfirmRegistrationDeps) => async (params: { 
     const generateIAMToken = (candidate: any) => EitherAsync.fromPromise(async () => {
         return (await deps.generateIAMToken(candidate.keycloakId))
             .map((token: string) => ({
-                            token,
-                            candidate: {...candidate, candidacy: candidate.candidacies[0]}
-                        }));
+                token,
+                candidate: { ...candidate, candidacy: candidate.candidacies[0] }
+            }));
     })
         .mapLeft(() => new FunctionalError(FunctionalCodeError.IAM_TOKEN_NOT_GENERATED, `Erreur lors de la génération de l'access token`));
 
@@ -74,7 +81,36 @@ const confirmRegistration = (deps: ConfirmRegistrationDeps) => async (params: { 
         .chain(createCandidateInIAM)
         .chain(createCandidateWithCandidacy)
         .chain(generateIAMToken);
+};
+
+
+const loginCandidate = (deps: ConfirmLoginDeps) => async (params: { email: string; }) => {
+    const maybeCandidateInIAM = EitherAsync.fromPromise(() => deps.getCandidateIdFromIAM(params.email))
+        .mapLeft(error => new FunctionalError(FunctionalCodeError.ACCOUNT_IN_IAM_NOT_FOUND, error))
+        .chain(async (maybeAccount: Maybe<IAMAccount>) => {
+            if (maybeAccount.isNothing()) {
+                throw new FunctionalError(FunctionalCodeError.ACCOUNT_IN_IAM_NOT_FOUND, `Candidat non trouvé`);
+            }
+
+            return Right(maybeAccount.extract() as IAMAccount);
+        });
+
+    const getCandidateWithCandidacy = (candidateAccount: IAMAccount) => EitherAsync.fromPromise(() => {
+        return deps.getCandidateWithCandidacy(candidateAccount);
+    })
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDATE_NOT_FOUND, `Candidat avec candidature non trouvé`));
+
+    const generateIAMToken = (candidate: any) => EitherAsync.fromPromise(async () => {
+        return (await deps.generateIAMToken(candidate.keycloakId))
+            .map((token: string) => ({
+                token,
+                candidate: { ...candidate, candidacy: candidate.candidacies[0] }
+            }));
+    })
+        .mapLeft(() => new FunctionalError(FunctionalCodeError.IAM_TOKEN_NOT_GENERATED, `Erreur lors de la génération de l'access token`));
+
+    return maybeCandidateInIAM
+        .chain(getCandidateWithCandidacy)
+        .chain(generateIAMToken);
 }
-
-
 

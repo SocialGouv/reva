@@ -258,6 +258,6 @@ export const resolvers = {
       });
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
-    } 
+    }
   }
 };

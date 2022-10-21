@@ -21,6 +21,6 @@ input CandidateInput {
 
 type Mutation {
   candidate_askForRegistration(candidate: CandidateInput!): String!
-  candidate_confirmRegistration(token: String!): CandidateLogged!
+  candidate_askForLogin(email: String!): String!
   candidate_login(token: String!): CandidateLogged!
 }

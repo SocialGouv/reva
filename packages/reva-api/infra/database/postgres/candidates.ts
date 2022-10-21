@@ -1,7 +1,9 @@
 import { prismaClient } from './client';
-import { Left, Right } from "purify-ts";
+import { Left, Maybe, Right } from "purify-ts";
 import { candidacyIncludes } from './candidacies';
-import { Candidacy, CandidacyStatus } from '@prisma/client';
+import { CandidacyStatus } from '@prisma/client';
+import { IAMAccount } from '../../../domain/types/account';
+import { Candidacy } from '../../../domain/types/candidacy';
 
 
 const withBasicSkills = (c: Candidacy) => ({
@@ -64,3 +66,47 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
         return Left(`error while creating candidate ${candidate.email} with candidacy with keycloakId ${candidate.keycloakId}`);
     }
 };
+
+export const getCandidateWithCandidacyFromKeycloakId = async (candidateAccount: IAMAccount) => {
+    try {
+        const candidate = await prismaClient.candidate.findFirst({
+            where: {
+                keycloakId: candidateAccount.id,
+                candidacies: {
+                    some: {
+                        candidacyStatuses: {
+                            none: {
+                                status: "ARCHIVE",
+                                isActive: true
+                            }
+                        }    
+                    }
+                }
+            },
+            include: {
+                candidacies: {
+                    include: candidacyIncludes
+                },
+            }
+        });
+
+        const certificationAndRegion = await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
+            where: {
+                candidacyId: candidate?.candidacies[0].id,
+                isActive: true
+            },
+            include: {
+                certification: true,
+                region: true,
+            }
+        });
+
+        return Maybe.fromNullable(candidate)
+            .map(c => ({ ...c, 
+                candidacies: c.candidacies.map(candidacy => withBasicSkills(withMandatoryTrainings({ ...candidacy, regionId: certificationAndRegion?.region.id, region: certificationAndRegion?.region, certificationId: certificationAndRegion?.certification.id, certification: { ...certificationAndRegion?.certification, codeRncp: certificationAndRegion?.certification.rncpId } }))) }))
+            .toEither(`Candidate not found`);
+    } catch (e) {
+        return Left(`error while retrieving the candidate`);
+    };
+};
+
