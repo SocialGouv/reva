@@ -233,7 +233,11 @@ function App() {
   const appSize =
     windowSize.width > 640
       ? { width: 580, height: windowSize.height - 110 }
-      : windowSize;
+      : // On mobile, this height prevents the fixed "candidate" button to be hidden behind Safari bar
+      ["certificateSummary", "certificateDetails"].some(current.matches)
+      ? windowSize
+      : // But on the other pages, it's better to keep 100vh (touching an input moves the view up)
+        { width: windowSize.width, height: "100vh" };
 
   const certificatesPage = (
     <Certificates key="show-results" mainService={mainService} />
