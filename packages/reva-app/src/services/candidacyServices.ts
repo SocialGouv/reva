@@ -297,6 +297,7 @@ export const submitCandidacy =
   };
 
 const CANDIDACY_SELECTION = `
+      id
       organism {
         id
         label
@@ -347,7 +348,6 @@ const CONFIRM_REGISTRATION = gql`
     candidateLogged: candidate_confirmRegistration(token: $token) {
       token
       candidate {
-        id
         firstname
         lastname
         email
