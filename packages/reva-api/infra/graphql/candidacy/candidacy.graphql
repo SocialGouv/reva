@@ -53,9 +53,9 @@ type Candidacy {
 type CandidacySummary {
   id: ID!
   deviceId: ID!
-  certificationId: ID!
+  certificationId: ID
   organismId: ID
-  certification: Certification!
+  certification: Certification
   phone: String
   email: String
   lastStatus: CandidacyStatus!

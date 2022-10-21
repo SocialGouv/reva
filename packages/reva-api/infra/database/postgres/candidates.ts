@@ -102,8 +102,19 @@ export const getCandidateWithCandidacyFromKeycloakId = async (candidateAccount: 
         });
 
         return Maybe.fromNullable(candidate)
-            .map(c => ({ ...c, 
-                candidacies: c.candidacies.map(candidacy => withBasicSkills(withMandatoryTrainings({ ...candidacy, regionId: certificationAndRegion?.region.id, region: certificationAndRegion?.region, certificationId: certificationAndRegion?.certification.id, certification: { ...certificationAndRegion?.certification, codeRncp: certificationAndRegion?.certification.rncpId } }))) }))
+            .map(c => ({
+                ...c, 
+                candidacies: c.candidacies.map(candidacy => withBasicSkills(withMandatoryTrainings({ 
+                    ...candidacy, 
+                    regionId: certificationAndRegion?.region.id, 
+                    region: certificationAndRegion?.region, 
+                    certificationId: certificationAndRegion?.certification.id, 
+                    certification: certificationAndRegion?.certification && {
+                        ...certificationAndRegion?.certification, 
+                        codeRncp: certificationAndRegion?.certification.rncpId
+                    }
+                })))
+            }))
             .toEither(`Candidate not found`);
     } catch (e) {
         return Left(`error while retrieving the candidate`);

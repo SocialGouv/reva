@@ -29,9 +29,9 @@ deviceId =
     Object.selectionForField "Data.Scalar.Id" "deviceId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
-certificationId : SelectionSet Data.Scalar.Id Admin.Object.CandidacySummary
+certificationId : SelectionSet (Maybe Data.Scalar.Id) Admin.Object.CandidacySummary
 certificationId =
-    Object.selectionForField "Data.Scalar.Id" "certificationId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
+    Object.selectionForField "(Maybe Data.Scalar.Id)" "certificationId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder |> Decode.nullable)
 
 
 organismId : SelectionSet (Maybe Data.Scalar.Id) Admin.Object.CandidacySummary
@@ -41,9 +41,9 @@ organismId =
 
 certification :
     SelectionSet decodesTo Admin.Object.Certification
-    -> SelectionSet decodesTo Admin.Object.CandidacySummary
+    -> SelectionSet (Maybe decodesTo) Admin.Object.CandidacySummary
 certification object____ =
-    Object.selectionForCompositeField "certification" [] object____ Basics.identity
+    Object.selectionForCompositeField "certification" [] object____ (Basics.identity >> Decode.nullable)
 
 
 phone : SelectionSet (Maybe String) Admin.Object.CandidacySummary

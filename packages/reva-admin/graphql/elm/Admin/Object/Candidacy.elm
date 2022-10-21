@@ -25,26 +25,26 @@ id =
     Object.selectionForField "Data.Scalar.Id" "id" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
-deviceId : SelectionSet Data.Scalar.Id Admin.Object.Candidacy
+deviceId : SelectionSet (Maybe Data.Scalar.Id) Admin.Object.Candidacy
 deviceId =
-    Object.selectionForField "Data.Scalar.Id" "deviceId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
+    Object.selectionForField "(Maybe Data.Scalar.Id)" "deviceId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder |> Decode.nullable)
 
 
-certificationId : SelectionSet Data.Scalar.Id Admin.Object.Candidacy
+certificationId : SelectionSet (Maybe Data.Scalar.Id) Admin.Object.Candidacy
 certificationId =
-    Object.selectionForField "Data.Scalar.Id" "certificationId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
+    Object.selectionForField "(Maybe Data.Scalar.Id)" "certificationId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder |> Decode.nullable)
 
 
-regionId : SelectionSet Data.Scalar.Id Admin.Object.Candidacy
+regionId : SelectionSet (Maybe Data.Scalar.Id) Admin.Object.Candidacy
 regionId =
-    Object.selectionForField "Data.Scalar.Id" "regionId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
+    Object.selectionForField "(Maybe Data.Scalar.Id)" "regionId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder |> Decode.nullable)
 
 
 region :
     SelectionSet decodesTo Admin.Object.Region
-    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
 region object____ =
-    Object.selectionForCompositeField "region" [] object____ Basics.identity
+    Object.selectionForCompositeField "region" [] object____ (Basics.identity >> Decode.nullable)
 
 
 organismId : SelectionSet (Maybe Data.Scalar.Uuid) Admin.Object.Candidacy
@@ -61,9 +61,9 @@ organism object____ =
 
 certification :
     SelectionSet decodesTo Admin.Object.Certification
-    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
 certification object____ =
-    Object.selectionForCompositeField "certification" [] object____ Basics.identity
+    Object.selectionForCompositeField "certification" [] object____ (Basics.identity >> Decode.nullable)
 
 
 experiences :
@@ -157,9 +157,23 @@ basicSkillIds =
     Object.selectionForField "(List Data.Scalar.Uuid)" "basicSkillIds" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecUuid |> .decoder |> Decode.list)
 
 
+basicSkills :
+    SelectionSet decodesTo Admin.Object.BasicSkill
+    -> SelectionSet (List decodesTo) Admin.Object.Candidacy
+basicSkills object____ =
+    Object.selectionForCompositeField "basicSkills" [] object____ (Basics.identity >> Decode.list)
+
+
 mandatoryTrainingIds : SelectionSet (List Data.Scalar.Uuid) Admin.Object.Candidacy
 mandatoryTrainingIds =
     Object.selectionForField "(List Data.Scalar.Uuid)" "mandatoryTrainingIds" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecUuid |> .decoder |> Decode.list)
+
+
+mandatoryTrainings :
+    SelectionSet decodesTo Admin.Object.Training
+    -> SelectionSet (List decodesTo) Admin.Object.Candidacy
+mandatoryTrainings object____ =
+    Object.selectionForCompositeField "mandatoryTrainings" [] object____ (Basics.identity >> Decode.list)
 
 
 createdAt : SelectionSet Data.Scalar.Timestamp Admin.Object.Candidacy

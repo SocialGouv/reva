@@ -175,6 +175,39 @@ encodeCandidateGoalInput input____ =
         [ ( "goalId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.goalId |> Just ), ( "additionalInformation", Encode.string |> Encode.optional input____.additionalInformation ) ]
 
 
+buildCandidateInput :
+    CandidateInputRequiredFields
+    -> CandidateInput
+buildCandidateInput required____ =
+    { email = required____.email, phone = required____.phone, firstname = required____.firstname, lastname = required____.lastname }
+
+
+type alias CandidateInputRequiredFields =
+    { email : String
+    , phone : String
+    , firstname : String
+    , lastname : String
+    }
+
+
+{-| Type for the CandidateInput input object.
+-}
+type alias CandidateInput =
+    { email : String
+    , phone : String
+    , firstname : String
+    , lastname : String
+    }
+
+
+{-| Encode a CandidateInput into a value that can be used as an argument.
+-}
+encodeCandidateInput : CandidateInput -> Value
+encodeCandidateInput input____ =
+    Encode.maybeObject
+        [ ( "email", Encode.string input____.email |> Just ), ( "phone", Encode.string input____.phone |> Just ), ( "firstname", Encode.string input____.firstname |> Just ), ( "lastname", Encode.string input____.lastname |> Just ) ]
+
+
 buildCandidateTypologyInformationsInput :
     CandidateTypologyInformationsInputRequiredFields
     -> (CandidateTypologyInformationsInputOptionalFields -> CandidateTypologyInformationsInputOptionalFields)
