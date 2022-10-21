@@ -1193,8 +1193,8 @@ export const mainMachine =
         isTokenInvalid: (_context, event) => {
           const typedEvent = event as DoneInvokeEvent<any>;
           return (
-            typedEvent.data.graphQLErrors[0]?.extensions.code ===
-            "CANDIDATE_INVALID_TOKEN"
+            typedEvent.data.networkError?.result?.errors?.[0]?.extensions
+              ?.code === "CANDIDATE_INVALID_TOKEN"
           );
         },
       },
