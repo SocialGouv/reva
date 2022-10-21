@@ -151,9 +151,9 @@ model Candidate {
   id        String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
   keycloakId String @db.Uuid @unique  @map("keycloak_id") 
   email     String @unique @db.VarChar(255)
-  firstname String? @db.VarChar(255)
-  lastname  String? @db.VarChar(255)
-  phone     String? @db.VarChar(255)
+  firstname String @db.VarChar(255)
+  lastname  String @db.VarChar(255)
+  phone     String @db.VarChar(255)
   candidacies Candidacy[]
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")

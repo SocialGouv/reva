@@ -193,7 +193,7 @@ export const updateExperience =
   };
 
 const ASK_FOR_LOGIN = gql`
-  mutation candidate_askForLogin($email: String) {
+  mutation candidate_askForLogin($email: String!) {
     candidate_askForLogin(email: $email)
   }
 `;
@@ -344,8 +344,8 @@ const CANDIDACY_SELECTION = `
       }`;
 
 const CONFIRM_REGISTRATION = gql`
-  mutation candidate_confirmRegistration($token: String!) {
-    candidateLogged: candidate_confirmRegistration(token: $token) {
+  mutation candidate_login($token: String!) {
+    candidateLogged: candidate_login(token: $token) {
       token
       candidate {
         firstname

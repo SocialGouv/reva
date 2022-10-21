@@ -16,6 +16,7 @@ export interface CandidateRegistrationInput {
 }
 
 export interface CandidateLoginInput {
+    email: string;
     action: "login";
 }
 

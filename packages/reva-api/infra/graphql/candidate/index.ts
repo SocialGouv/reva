@@ -10,15 +10,16 @@ import * as organismsDb from "../../database/postgres/organisms";
 import * as candidatesDb from "../../database/postgres/candidates";
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import CryptoJS from "crypto-js";
-import { sendRegistrationEmail } from "../../email";
+import { sendLoginEmail, sendRegistrationEmail } from "../../email";
 import { candidateAuthentication } from "../../../domain/features/candidateAuthentication";
+import { askForLogin } from "../../../domain/features/candidateAskForLogin";
 
 const generateJwt = (data: unknown, expiresIn: number = 15 * 60) => {
   const dataStr = JSON.stringify(data);
-  const cryptedData = CryptoJS.AES.encrypt(dataStr, process.env.DATA_ENCRYPT_PRIVATE_KEY || 'secret');
+  const cryptedData = CryptoJS.AES.encrypt(dataStr, process.env.JWT_PRIVATE_KEY || 'secret');
   return jwt.sign({
     data: cryptedData.toString()
-  }, process.env.JWT_PRIVATE_KEY || 'secret', { expiresIn });
+  }, process.env.DATA_ENCRYPT_PRIVATE_KEY || 'secret', { expiresIn });
 };
 
 
@@ -159,7 +160,7 @@ export const resolvers = {
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
-    candidate_confirmRegistration: async (_: any, params: {
+    candidate_login: async (_: any, params: {
       token: string;
     }, { app }: { app: { auth: any; keycloak: Keycloak.Keycloak, getKeycloakAdmin: () => KeycloakAdminClient; }; }) => { 
       const keycloakAdmin = await app.getKeycloakAdmin();
@@ -168,15 +169,21 @@ export const resolvers = {
         createCandidateInIAM: createCandidateAccountInIAM(keycloakAdmin),
         createCandidateWithCandidacy: candidatesDb.createCandidateWithCandidacy,
         extractCandidateFromToken: async () => getJWTContent(params.token),
+        extractEmailFromToken: async () => getJWTContent(params.token),
         getCandidateIdFromIAM: getCandidateAccountInIAM(keycloakAdmin),
-        generateIAMToken: generateIAMToken(keycloakAdmin)
+        generateIAMToken: generateIAMToken(keycloakAdmin),
+        getCandidateWithCandidacy: candidatesDb.getCandidateWithCandidacyFromKeycloakId
       })(params);
       
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
-    candidate_login: async () => {
-      return null;
+    candidate_askForLogin: async (_: unknown, params: { email: string } ) => {
+      const result = await askForLogin({
+        generateJWTForLogin: async (data: unknown) => Right(generateJwt(data)),
+        sendLoginEmail: async (data) => sendLoginEmail(data.email, data.token),
+      })(params.email);
+
+      return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     }
-   
   },
 };

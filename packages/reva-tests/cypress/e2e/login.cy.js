@@ -21,16 +21,11 @@ context("Login", () => {
 
   it("use an expired token", function () {
     cy.intercept("POST", "/graphql", (req) => {
-      stubMutation(
-        req,
-        "candidate_confirmRegistration",
-        "login-expired.json",
-        500
-      );
+      stubMutation(req, "candidate_login", "login-expired.json", 500);
       stubQuery(req, "getReferential", "referential.json");
     });
     cy.visit("/login?token=abc");
-    cy.wait("@candidate_confirmRegistration");
+    cy.wait("@candidate_login");
     cy.wait("@getReferential");
 
     cy.get('[data-test="project-contact-invalid-token"]');

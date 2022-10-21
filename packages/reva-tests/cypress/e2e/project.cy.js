@@ -3,11 +3,11 @@ import { stubMutation, stubQuery } from "../utils/graphql";
 context("Project", () => {
   it("attempt to validate project", function () {
     cy.intercept("POST", "/graphql", (req) => {
-      stubMutation(req, "candidate_confirmRegistration", "candidate1.json");
+      stubMutation(req, "candidate_login", "candidate1.json");
       stubQuery(req, "getReferential", "referential.json");
     });
     cy.visit("/login?token=abc");
-    cy.wait("@candidate_confirmRegistration");
+    cy.wait("@candidate_login");
     cy.wait("@getReferential");
 
     cy.get('[data-test="project-home-validate-locked"]').click();
@@ -18,13 +18,13 @@ context("Project", () => {
 
   it("confirm registration", function () {
     cy.intercept("POST", "/graphql", (req) => {
-      stubMutation(req, "candidate_confirmRegistration", "candidate2.json");
+      stubMutation(req, "candidate_login", "candidate2.json");
       stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "submit_candidacy", "submitted-candidacy.json");
     });
     cy.visit("/login?token=abc");
     cy.get('[data-test="project-home-loading"]');
-    cy.wait("@candidate_confirmRegistration");
+    cy.wait("@candidate_login");
     cy.wait("@getReferential");
 
     cy.wait(500);

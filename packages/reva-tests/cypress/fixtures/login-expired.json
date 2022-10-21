@@ -8,7 +8,7 @@
           "column": 3
         }
       ],
-      "path": ["candidate_confirmRegistration"],
+      "path": ["candidate_login"],
       "extensions": {
         "code": "CANDIDATE_INVALID_TOKEN",
         "message": "error"
