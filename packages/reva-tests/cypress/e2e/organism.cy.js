@@ -3,11 +3,11 @@ import { stubMutation, stubQuery } from "../utils/graphql";
 context("Empty candidacy", () => {
   it("prevent organism selection", function () {
     cy.intercept("POST", "/graphql", (req) => {
-      stubMutation(req, "candidate_confirmRegistration", "candidate1.json");
+      stubMutation(req, "candidate_login", "candidate1.json");
       stubQuery(req, "getReferential", "referential.json");
     });
     cy.visit("/login?token=abc");
-    cy.wait("@candidate_confirmRegistration");
+    cy.wait("@candidate_login");
     cy.wait("@getReferential");
 
     cy.get('[data-test="progress-title-value"]').should("have.text", "20%");
@@ -19,12 +19,12 @@ context("Empty candidacy", () => {
 context("Candidacy with region certification selected", () => {
   it("list all available organisms", function () {
     cy.intercept("POST", "/graphql", (req) => {
-      stubQuery(req, "candidate_confirmRegistration", "candidate3.json");
+      stubMutation(req, "candidate_login", "candidate3.json");
       stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "getOrganismsForCandidacy", "organism.json");
     });
     cy.visit("/login?token=abc");
-    cy.wait("@candidate_confirmRegistration");
+    cy.wait("@candidate_login");
     cy.wait("@getReferential");
 
     cy.get('[data-test="progress-title-value"]').should("have.text", "40%");
@@ -73,12 +73,13 @@ context("Candidacy with region certification selected", () => {
 
   it("submit default first organism", function () {
     cy.intercept("POST", "/graphql", (req) => {
-      stubQuery(req, "candidate_confirmRegistration", "candidate3.json");
+      stubMutation(req, "candidate_login", "candidate3.json");
+      stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "getOrganismsForCandidacy", "organism.json");
       stubMutation(req, "candidacy_selectOrganism", "selected-organism.json");
     });
     cy.visit("/login?token=abc");
-    cy.wait("@candidate_confirmRegistration");
+    cy.wait("@candidate_login");
 
     cy.get('[data-test="project-home-edit-organism').click();
     cy.wait("@getOrganismsForCandidacy");

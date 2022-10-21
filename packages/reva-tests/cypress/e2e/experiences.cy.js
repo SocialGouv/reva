@@ -9,13 +9,13 @@ import { stubMutation, stubQuery } from "../utils/graphql";
 context("Experiences", () => {
   it("add and edit an experience", function () {
     cy.intercept("POST", "/graphql", (req) => {
-      stubMutation(req, "candidate_confirmRegistration", "candidate1.json");
+      stubMutation(req, "candidate_login", "candidate1.json");
       stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "add_experience", "added-experience1.json");
       stubQuery(req, "update_experience", "updated-experience2.json");
     });
     cy.visit("/login?token=abc");
-    cy.wait("@candidate_confirmRegistration");
+    cy.wait("@candidate_login");
     cy.wait("@getReferential");
 
     cy.get('[data-test="project-home-edit-experiences"]').click();

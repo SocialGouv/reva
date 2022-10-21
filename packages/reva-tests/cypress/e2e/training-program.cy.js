@@ -6,13 +6,13 @@ context("Training Program", () => {
       cy.intercept("POST", "/graphql", (req) => {
         stubMutation(
           req,
-          "candidate_confirmRegistration",
+          "candidate_login",
           "candidate2-training-confirmed.json"
         );
         stubQuery(req, "getReferential", "referential.json");
       });
       cy.visit("/login?token=abc");
-      cy.wait("@candidate_confirmRegistration");
+      cy.wait("@candidate_login");
       cy.wait("@getReferential");
 
       cy.get('[data-test="progress-title-value"]').should("have.text", "100%");
@@ -35,12 +35,14 @@ context("Training Program", () => {
       cy.intercept("POST", "/graphql", (req) => {
         stubQuery(
           req,
-          "candidate_confirmRegistration",
+          "candidate_login",
           "candidate2-missing-training-fields.json"
         );
+        stubQuery(req, "getReferential", "referential.json");
       });
       cy.visit("/login?token=abc");
-      cy.wait("@candidate_confirmRegistration");
+      cy.wait("@candidate_login");
+      cy.wait("@getReferential");
       cy.get('[data-test="review-button"]').click();
     });
 
@@ -54,12 +56,8 @@ context("Training Program", () => {
   describe("Testing Checkbox logic", () => {
     it("validates checked condition and its mechanics", () => {
       cy.intercept("POST", "/graphql", (req) => {
-        stubQuery(
-          req,
-          "candidate_confirmRegistration",
-          "candidate2-training-sent.json"
-        );
-
+        stubMutation(req, "candidate_login", "candidate2-training-sent.json");
+        stubQuery(req, "getReferential", "referential.json");
         stubQuery(
           req,
           "candidacy_confirmTrainingForm",
@@ -67,7 +65,8 @@ context("Training Program", () => {
         );
       });
       cy.visit("/login?token=abc");
-      cy.wait("@candidate_confirmRegistration");
+      cy.wait("@candidate_login");
+      cy.wait("@getReferential");
 
       cy.get('[data-test="checkbox-accept-conditions"]').not("be.checked");
       cy.get('[data-test="label-accept-conditions"]').should("exist");
