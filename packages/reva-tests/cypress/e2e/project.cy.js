@@ -20,7 +20,7 @@ context("Project", () => {
     cy.intercept("POST", "/graphql", (req) => {
       stubMutation(req, "candidate_confirmRegistration", "candidate2.json");
       stubQuery(req, "getReferential", "referential.json");
-      stubQuery(req, "submit_candidacy", "candidate2.json");
+      stubQuery(req, "submit_candidacy", "submitted-candidacy.json");
     });
     cy.visit("/login?token=abc");
     cy.get('[data-test="project-home-loading"]');
