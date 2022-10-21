@@ -305,8 +305,6 @@ const CANDIDACY_SELECTION = `
         city
         contactAdministrativeEmail
       }
-      email
-      phone
       createdAt
       certification {
         id
@@ -348,9 +346,13 @@ const CONFIRM_REGISTRATION = gql`
   mutation candidate_confirmRegistration($token: String!) {
     candidateLogged: candidate_confirmRegistration(token: $token) {
       token
-      candidacy {
+      candidate {
         id
-        ${CANDIDACY_SELECTION}
+        firstname
+        lastname
+        email
+        phone
+        candidacy { ${CANDIDACY_SELECTION} }
       }
     }
   }
