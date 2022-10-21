@@ -3,15 +3,14 @@
     "candidateLogged": {
       "token": "abc",
       "candidate": {
-        "id": "c1",
         "firstname": "John",
         "lastname": "Doe",
         "email": "email@example.com",
         "phone": "06-01-02-03-04",
         "candidacy": {
+          "id": "c1",
           "certificationId": null,
           "organism": null,
-
           "createdAt": null,
           "certification": null,
           "experiences": [],
