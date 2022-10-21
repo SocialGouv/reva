@@ -14,10 +14,10 @@ export interface CandidacyInput extends CandidacyAbstract {
 
 export interface Candidacy extends CandidacyAbstract {
     id: string;
-    certificationId: string;
-    certification: any;
-    regionId: string;
-    region: Region; 
+    certificationId?: string;
+    certification?: any;
+    regionId?: string;
+    region?: Region; 
     candidacyStatuses: CandidacyStatus[];
     // basicSkills: BasicSkill[];
     // trainings: Training[];

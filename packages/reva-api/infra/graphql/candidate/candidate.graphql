@@ -1,5 +1,14 @@
 type CandidateLogged {
   token: String!
+  candidate: Candidate!
+}
+
+type Candidate {
+  id: String!
+  firstname: String!
+  lastname: String!
+  email: String!
+  phone: String!
   candidacy: Candidacy!
 }
 

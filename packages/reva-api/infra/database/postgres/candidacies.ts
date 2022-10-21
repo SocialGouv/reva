@@ -4,7 +4,7 @@ import * as domain from '../../../domain/types/candidacy';
 import { prismaClient } from './client';
 import { toDomainExperiences } from './experiences';
  
-const candidacyIncludes = {
+export const candidacyIncludes = {
     experiences: true,
     goals: true,
     candidacyStatuses: true,
@@ -145,11 +145,16 @@ export const getCandidacyFromId = async (candidacyId: string) => {
             }
         });
 
-        if (!certificationAndRegion) {
-            return Left(`error while retrieving the certification and region the candidacy id ${candidacyId}`);    
-        }
-
-        return Maybe.fromNullable(candidacy).map(c => ({ ...c, regionId: certificationAndRegion.region.id, region: certificationAndRegion.region, certificationId: certificationAndRegion.certification.id, certification: { ...certificationAndRegion.certification, codeRncp: certificationAndRegion.certification.rncpId } })).toEither(`Candidacy with deviceId ${candidacyId} not found`);
+        return Maybe.fromNullable(candidacy).map(c => ({ 
+            ...c, 
+            regionId: certificationAndRegion?.region.id, 
+            region: certificationAndRegion?.region, 
+            certificationId: certificationAndRegion?.certification.id, 
+            certification: { 
+                ...certificationAndRegion?.certification, 
+                codeRncp: certificationAndRegion?.certification.rncpId 
+            } 
+        })).toEither(`Candidacy with deviceId ${candidacyId} not found`);
     } catch (e) {
         return Left(`error while retrieving the candidacy with id ${candidacyId}`);
     };
@@ -273,17 +278,13 @@ export const updateCandidacyStatus = async (params: { candidacyId: string, statu
         ]);
 
 
-        if (!certificationAndRegion) {
-            return Left(`error while retrieving the certification and region the candidacy id ${params.candidacyId}`);    
-        }
-
         return Right({ 
             id: newCandidacy.id,
             deviceId: newCandidacy.deviceId,
-            regionId: certificationAndRegion.region.id,
-            region: certificationAndRegion.region,
-            certificationId: certificationAndRegion.certificationId,
-            certification: { ...certificationAndRegion.certification, codeRncp: certificationAndRegion.certification.rncpId },
+            regionId: certificationAndRegion?.region.id,
+            region: certificationAndRegion?.region,
+            certificationId: certificationAndRegion?.certificationId,
+            certification: { ...certificationAndRegion?.certification, codeRncp: certificationAndRegion?.certification.rncpId },
             organismId: newCandidacy.organismId,
             experiences: toDomainExperiences(newCandidacy.experiences),
             goals: newCandidacy.goals,
@@ -339,17 +340,13 @@ export const updateCertification = async (params: { candidacyId: string, certifi
         ]);
 
 
-        if (!certificationAndRegion) {
-            return Left(`error while retrieving the certification and region the candidacy id ${params.candidacyId}`);    
-        }
-
         return Right({ 
             id: newCandidacy.id,
             deviceId: newCandidacy.deviceId,
-            regionId: certificationAndRegion.region.id,
-            region: certificationAndRegion.region,
-            certificationId: certificationAndRegion.certification.id,
-            certification: certificationAndRegion.certification,
+            regionId: certificationAndRegion?.region.id,
+            region: certificationAndRegion?.region,
+            certificationId: certificationAndRegion?.certification.id,
+            certification: certificationAndRegion?.certification,
             organismId: newCandidacy.organismId,
             experiences: toDomainExperiences(newCandidacy.experiences),
             goals: newCandidacy.goals,
@@ -533,18 +530,13 @@ export const updateAppointmentInformations = async (params: {
             }
         });
 
-
-        if (!candidaciesOnRegionsAndCertifications) {
-            return Left(`error while retrieving the certification and region the candidacy id ${params.candidacyId}`);    
-        }
-
         return Right({ 
             id: candidacy.id,
             deviceId: candidacy.deviceId,
-            regionId: candidaciesOnRegionsAndCertifications.region.id,
-            region: candidaciesOnRegionsAndCertifications.region,
-            certificationId: candidaciesOnRegionsAndCertifications.certification.id,
-            certification: candidaciesOnRegionsAndCertifications.certification,
+            regionId: candidaciesOnRegionsAndCertifications?.region.id,
+            region: candidaciesOnRegionsAndCertifications?.region,
+            certificationId: candidaciesOnRegionsAndCertifications?.certification.id,
+            certification: candidaciesOnRegionsAndCertifications?.certification,
             organismId: candidacy.organismId,
             experiences: toDomainExperiences(candidacy.experiences),
             goals: candidacy.goals,
@@ -587,17 +579,13 @@ export const updateOrganism = async (params: { candidacyId: string, organismId: 
             }
         });
 
-        if (!certificationAndRegion) {
-            return Left(`error while retrieving the certification and region the candidacy id ${params.candidacyId}`);    
-        }
-
         return Right({ 
             id: newCandidacy.id,
             deviceId: newCandidacy.deviceId,
-            regionId: certificationAndRegion.region.id,
-            region: certificationAndRegion.region,
-            certificationId: certificationAndRegion.certification.id,
-            certification: certificationAndRegion.certification,
+            regionId: certificationAndRegion?.region.id,
+            region: certificationAndRegion?.region,
+            certificationId: certificationAndRegion?.certification.id,
+            certification: certificationAndRegion?.certification,
             organismId: newCandidacy.organismId,
             experiences: toDomainExperiences(newCandidacy.experiences),
             goals: newCandidacy.goals,
@@ -676,17 +664,13 @@ export const updateTrainingInformations = async (params: {
             }
         });
 
-        if (!certificationAndRegion) {
-            return Left(`error while retrieving the certification and region the candidacy id ${params.candidacyId}`);    
-        }
-
         return Right({ 
             id: newCandidacy.id,
             deviceId: newCandidacy.deviceId,
-            regionId: certificationAndRegion.region.id,
-            region: certificationAndRegion.region,
-            certificationId: certificationAndRegion.certification.id,
-            certification: certificationAndRegion.certification,
+            regionId: certificationAndRegion?.region.id,
+            region: certificationAndRegion?.region,
+            certificationId: certificationAndRegion?.certification.id,
+            certification: certificationAndRegion?.certification,
             organismId: newCandidacy.organismId,
             experiences: toDomainExperiences(newCandidacy.experiences),
             goals: newCandidacy.goals,

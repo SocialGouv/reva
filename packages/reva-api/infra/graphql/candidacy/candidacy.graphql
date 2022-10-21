@@ -20,13 +20,13 @@ enum CandidateTypology {
 
 type Candidacy {
   id: ID!
-  deviceId: ID!
-  certificationId: ID!
-  regionId: ID!
-  region: Region!
+  deviceId: ID
+  certificationId: ID
+  regionId: ID
+  region: Region
   organismId: UUID
   organism: Organism
-  certification: Certification!
+  certification: Certification
   experiences: [Experience!]!
   goals: [CandidateGoal!]!
   phone: String

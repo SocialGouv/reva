@@ -1,5 +1,5 @@
-import { Either, EitherAsync, Maybe, Right } from "purify-ts";
-import { Candidate } from "../types/candidate";
+import { Either, EitherAsync, Right } from "purify-ts";
+import { CandidateRegistrationInput } from "../types/candidate";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
 interface CandidateInput {
@@ -10,13 +10,13 @@ interface CandidateInput {
 }
 
 interface AskForRegistrationDeps {
-    generateJWTForRegistration: (params: CandidateInput) => Promise<Either<string, string>>;
+    generateJWTForRegistration: (params: CandidateRegistrationInput) => Promise<Either<string, string>>;
     sendRegistrationEmail: (params: { email: string; token: string; }) => Promise<Either<string, string>>;
 }
 
 export const askForRegistration = (deps: AskForRegistrationDeps) => async (params: CandidateInput) => {
 
-    const generateJWTForRegistration = EitherAsync.fromPromise(() => deps.generateJWTForRegistration(params))
+    const generateJWTForRegistration = EitherAsync.fromPromise(() => deps.generateJWTForRegistration({...params, action: "registration"}))
         .mapLeft(error => new FunctionalError(FunctionalCodeError.CANDIDATE_JWT_GENERATION_ERROR, error));
 
     const sendRegistrationEmail = (params: { email: string; token: string; }) => 
