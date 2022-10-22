@@ -136,7 +136,10 @@ const generateIAMToken = (keycloakAdmin: KeycloakAdminClient) => async (userId: 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const accessToken = grant?.access_token?.token;
-    return Right({accessToken, refreshToken})
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const idToken = grant?.id_token?.token;
+    return Right({accessToken, refreshToken, idToken})
 
   } catch (e) {
     return Left(`Error while generating IAM token`)

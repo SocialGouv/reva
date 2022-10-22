@@ -349,6 +349,7 @@ const CONFIRM_REGISTRATION = gql`
       tokens {
         accessToken
         refreshToken
+        idToken
       }
       candidate {
         firstname

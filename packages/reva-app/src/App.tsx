@@ -53,7 +53,7 @@ function App() {
   const { client } = useContext(getApolloContext());
   //@ts-ignore
   const { authenticated, token, setTokens } = useKeycloakContext();
-  console.log({ authenticated, token });
+
   const machine = useMemo(
     () =>
       mainMachine.withConfig({
@@ -330,12 +330,7 @@ function App() {
       certification={certification}
     />
   );
-  console.log(
-    "===============",
-    current.context.candidacyStatus,
-    current.context.direction,
-    current.toStrings()
-  );
+
   const pageContent = (
     <AnimatePresence custom={current.context.direction} initial={false}>
       {[
