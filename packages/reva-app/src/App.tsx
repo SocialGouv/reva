@@ -6,6 +6,7 @@ import { AnimatePresence } from "framer-motion";
 import { useContext, useMemo } from "react";
 
 import { Footer } from "./components/organisms/Footer";
+import { useKeycloakContext } from "./contexts/keycloakContext";
 import { Certification } from "./interface";
 import { mainMachine } from "./machines/main.machine";
 import { CertificateDetails } from "./pages/CertificateDetails";
@@ -50,6 +51,9 @@ import useWindowSize from "./utils/useWindowSize";
 
 function App() {
   const { client } = useContext(getApolloContext());
+  //@ts-ignore
+  const { authenticated, token, setTokens } = useKeycloakContext();
+  console.log({ authenticated, token });
   const machine = useMemo(
     () =>
       mainMachine.withConfig({
@@ -60,9 +64,13 @@ function App() {
             });
           },
           initializeApp: async (_context, _event, { data }) => {
-            return confirmRegistration(client as ApolloClient<object>)({
+            const { tokens, ...rest } = await confirmRegistration(
+              client as ApolloClient<object>
+            )({
               token: data.loginToken,
             });
+            setTokens(tokens);
+            return rest;
           },
           getCertification: (_context, event) => {
             if (event.type !== "SELECT_CERTIFICATION") {
@@ -322,7 +330,12 @@ function App() {
       certification={certification}
     />
   );
-
+  console.log(
+    "===============",
+    current.context.candidacyStatus,
+    current.context.direction,
+    current.toStrings()
+  );
   const pageContent = (
     <AnimatePresence custom={current.context.direction} initial={false}>
       {[

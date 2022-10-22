@@ -70,8 +70,8 @@ const confirmRegistration = (deps: ConfirmRegistrationDeps) => async (params: { 
 
     const generateIAMToken = (candidate: any) => EitherAsync.fromPromise(async () => {
         return (await deps.generateIAMToken(candidate.keycloakId))
-            .map((token: string) => ({
-                token,
+            .map((tokens: {accessToken: string, refreshToken: string}) => ({
+                tokens,
                 candidate: { ...candidate, candidacy: candidate.candidacies[0] }
             }));
     })
@@ -102,8 +102,8 @@ const loginCandidate = (deps: ConfirmLoginDeps) => async (params: { email: strin
 
     const generateIAMToken = (candidate: any) => EitherAsync.fromPromise(async () => {
         return (await deps.generateIAMToken(candidate.keycloakId))
-            .map((token: string) => ({
-                token,
+            .map((tokens: {accessToken: string, refreshToken: string}) => ({
+                tokens,
                 candidate: { ...candidate, candidacy: candidate.candidacies[0] }
             }));
     })

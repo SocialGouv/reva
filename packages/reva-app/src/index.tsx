@@ -6,6 +6,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import App from "./App";
+import { Keycloak } from "./contexts/keycloakContext";
+import { KeycloakProvider } from "./contexts/keycloakContext";
+import { initKeycloak } from "./keycloak";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
@@ -17,10 +20,20 @@ const client = new ApolloClient({
 //// Uncomment to debug XState
 // inspect({ iframe: false });
 
+// initKeycloak();
+
+const keycloakInstance = Keycloak({
+  clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID as string,
+  realm: process.env.REACT_APP_KEYCLOAK_REALM as string,
+  url: process.env.REACT_APP_KEYCLOAK_URL as string,
+});
+
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <App />
+      <KeycloakProvider keycloakInstance={keycloakInstance}>
+        <App />
+      </KeycloakProvider>
     </ApolloProvider>
   </React.StrictMode>,
   document.getElementById("root")

@@ -146,7 +146,8 @@ export const SubmissionHome = ({
       key="home-screen"
       className="flex flex-col h-full relative overflow-hidden"
       initial={
-        state.context.direction === "next" ? { opacity: 0, y: 10 } : false
+        // state.context.direction === "next" ? { opacity: 0, y: 10 } : false
+        { opacity: 0, y: 0 }
       }
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}

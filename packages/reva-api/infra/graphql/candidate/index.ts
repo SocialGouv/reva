@@ -122,7 +122,7 @@ const generateIAMToken = (keycloakAdmin: KeycloakAdminClient) => async (userId: 
     const _keycloak = new Keycloak({}, {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      clientId: process.env.KEYCLOAK_ADMIN_CLIENTID as string,
+      clientId: process.env.KEYCLOAK_APP_REALM_REVA as string,
       serverUrl: process.env.KEYCLOAK_ADMIN_URL as string,
       realm: process.env.KEYCLOAK_APP_REALM_REVA as string,
       credentials: {
@@ -132,9 +132,11 @@ const generateIAMToken = (keycloakAdmin: KeycloakAdminClient) => async (userId: 
     const grant = await _keycloak.grantManager.obtainDirectly(user.username as string, randomPassword);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
+    const refreshToken = grant?.refresh_token?.token;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const accessToken = grant?.access_token?.token;
-
-    return Right(accessToken)
+    return Right({accessToken, refreshToken})
 
   } catch (e) {
     return Left(`Error while generating IAM token`)

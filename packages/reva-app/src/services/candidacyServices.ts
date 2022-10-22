@@ -346,7 +346,10 @@ const CANDIDACY_SELECTION = `
 const CONFIRM_REGISTRATION = gql`
   mutation candidate_login($token: String!) {
     candidateLogged: candidate_login(token: $token) {
-      token
+      tokens {
+        accessToken
+        refreshToken
+      }
       candidate {
         firstname
         lastname
@@ -454,6 +457,7 @@ function initializeApp({ candidateLogged, getReferential, getRegions }: any) {
   }
 
   return {
+    tokens: candidateLogged.tokens,
     candidacy,
     referentials: {
       goals: getReferential.goals,
