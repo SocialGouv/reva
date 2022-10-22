@@ -1,0 +1,68 @@
+{
+  "data": {
+    "candidateLogged": {
+      "token": "abc",
+      "candidate": {
+        "firstname": "John",
+        "lastname": "Doe",
+        "email": "email@example.com",
+        "phone": "06-01-02-03-04",
+        "candidacy": {
+          "id": "c2",
+          "organism": {
+            "id": "o1",
+            "label": "Accompagnateur 1",
+            "address": "1 rue de l'exemple",
+            "zip": "75000",
+            "city": "Paris",
+            "contactAdministrativeEmail": "contact@example.com"
+          },
+          "createdAt": 1664376421912,
+          "certification": {
+            "id": "c1",
+            "label": "Titre 1",
+            "summary": "résumé 1",
+            "codeRncp": "34691",
+            "status": "AVAILABLE"
+          },
+
+          "experiences": [
+            {
+              "id": "e1",
+              "title": "Experience 1",
+              "startedAt": 1580428800000,
+              "duration": "unknown",
+              "description": "description 1"
+            }
+          ],
+          "goals": [
+            {
+              "goalId": "goal1",
+              "additionalInformation": null
+            }
+          ],
+          "candidacyStatuses": [
+            {
+              "status": "PROJET",
+              "isActive": false
+            },
+            {
+              "status": "VALIDATION",
+              "isActive": true
+            }
+          ],
+          "regionId": "region1",
+          "appointmentCount": 0,
+          "certificateSkills": "Blocs de compétences métier",
+          "otherTraining": null,
+          "individualHourCount": null,
+          "collectiveHourCount": null,
+          "additionalHourCount": null,
+          "validatedByCandidate": null,
+          "basicSkills": [],
+          "mandatoryTrainings": []
+        }
+      }
+    }
+  }
+}

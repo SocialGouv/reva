@@ -63,7 +63,9 @@ const candidacyStatus = (
       title={"Validation du projet"}
       theme={"dark"}
     />
-    <p className="mt-3">Statut : transmis à un architecte de parcours</p>
+    <p data-test="submission-home-project-submitted" className="mt-3">
+      Statut : transmis à un architecte de parcours
+    </p>
     <p className="text-blue-500">Délai de réponse moyen 48h</p>
   </>
 );

@@ -65,7 +65,8 @@ export const ProjectHome = ({
   const isHomeReady =
     !state.matches({ projectHome: "fakeLoading" }) &&
     !state.matches({ projectHome: "loading" }) &&
-    !state.matches({ projectHome: "retry" });
+    !state.matches({ projectHome: "retry" }) &&
+    !state.matches("submissionHome");
 
   const sortedExperiences = sortExperiences(state.context.experiences);
 

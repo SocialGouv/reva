@@ -954,6 +954,11 @@ export const mainMachine =
                     target: "#mainMachine.trainingProgramConfirmed",
                   },
                   {
+                    actions: ["loadCandidacy", "navigatePrevious"],
+                    cond: "isProjectSubmitted",
+                    target: "#mainMachine.submissionHome.ready",
+                  },
+                  {
                     actions: ["loadCandidacy"],
                     target: "ready",
                   },
@@ -1189,6 +1194,12 @@ export const mainMachine =
           const isConfirmed =
             typedEvent.data.candidacy?.candidacyStatus === "PARCOURS_CONFIRME";
           return !!isConfirmed;
+        },
+        isProjectSubmitted: (_context, event) => {
+          const typedEvent = event as DoneInvokeEvent<any>;
+          return ["CANDIDATURE_VALIDEE", "VALIDATION"].includes(
+            typedEvent.data.candidacy?.candidacyStatus
+          );
         },
         isTokenInvalid: (_context, event) => {
           const typedEvent = event as DoneInvokeEvent<any>;
