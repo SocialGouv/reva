@@ -48,6 +48,7 @@ const getCandidateAccountInIAM = (keycloakAdmin: KeycloakAdminClient) => async (
     return Right(Maybe.fromNullable(userByEmail));
   }
   catch (e) {
+    console.log(e)
     return Left(`An error occured while retrieving ${email} on IAM`);
   }
 };
