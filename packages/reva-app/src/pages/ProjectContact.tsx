@@ -142,7 +142,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
               onClick={() => send("LOGIN")}
               className="text-gray-500 underline"
             >
-              J'ai déjà une candidature
+              J'ai déjà un compte
             </button>
           </div>
         )}
