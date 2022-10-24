@@ -58,8 +58,10 @@ export const KeycloakProvider = ({
           idToken: tokens.idToken,
         };
       }
+
       try {
         const authenticated = await keycloakInstance.init(config);
+
         keycloakInstance.onAuthSuccess = async () => {
           console.log("Auth success");
         };
