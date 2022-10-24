@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Reva",
+  "name": "Reva - l'expérimentation de la VAE",
   "icons": [
     {
       "src": "favicon.ico",
