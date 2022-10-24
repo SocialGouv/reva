@@ -1,5 +1,11 @@
+type Tokens {
+  accessToken: String!
+  refreshToken: String!
+  idToken: String!
+}
+
 type CandidateLogged {
-  token: String!
+  tokens: Tokens!
   candidate: Candidate!
 }
 
@@ -10,6 +16,10 @@ type Candidate {
   email: String!
   phone: String!
   candidacy: Candidacy!
+}
+
+type Query {
+  candidate_getCandidateWithCandidacy: Candidate!
 }
 
 input CandidateInput {

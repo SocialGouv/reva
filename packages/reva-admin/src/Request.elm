@@ -185,8 +185,7 @@ candidacySummarySelection : SelectionSet Data.Candidacy.CandidacySummary Admin.O
 candidacySummarySelection =
     SelectionSet.succeed Data.Candidacy.CandidacySummary
         |> with (SelectionSet.map (\(Id id) -> Data.Candidacy.candidacyIdFromString id) Admin.Object.CandidacySummary.id)
-        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.CandidacySummary.deviceId)
-        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.CandidacySummary.certificationId)
+        |> with (SelectionSet.map (Maybe.map (\(Id id) -> id)) Admin.Object.CandidacySummary.certificationId)
         |> with (Admin.Object.CandidacySummary.certification certificationSelection)
         |> with Admin.Object.CandidacySummary.phone
         |> with Admin.Object.CandidacySummary.email
@@ -215,8 +214,7 @@ candidacySelection : SelectionSet Data.Candidacy.Candidacy Admin.Object.Candidac
 candidacySelection =
     SelectionSet.succeed Data.Candidacy.Candidacy
         |> with (SelectionSet.map (\(Id id) -> Data.Candidacy.candidacyIdFromString id) Admin.Object.Candidacy.id)
-        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.Candidacy.deviceId)
-        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.Candidacy.certificationId)
+        |> with (SelectionSet.map (Maybe.map (\(Id id) -> id)) Admin.Object.Candidacy.certificationId)
         |> with (Admin.Object.Candidacy.organism organismSelection)
         |> with (Admin.Object.Candidacy.certification certificationSelection)
         |> with (Admin.Object.Candidacy.goals candidacyGoalSelection)

@@ -31,47 +31,117 @@ const withMandatoryTrainings = (c: Candidacy) => ({
 });
 
 export const createCandidateWithCandidacy = async (candidate: any) => {
-
     try {
-        const newCandidate = await prismaClient.candidate.create({
+
+        // Create account
+        const createdCandidate = await prismaClient.candidate.create({
             data: {
                 email: candidate.email,
                 firstname: candidate.firstname,
                 lastname: candidate.lastname,
                 phone: candidate.phone,
-                keycloakId: candidate.keycloakId,
-                candidacies: {
-                    create: {
-                        deviceId: candidate.email,
-                        candidacyStatuses: {
-                            create: {
-                                status: CandidacyStatus.PROJET,
-                                isActive: true
-                            }
-                        }
-                    }
-                }
+                keycloakId: candidate.keycloakId
+            }
+        });
+
+        // Update existing candidacy with this id
+        const update = await prismaClient.candidacy.updateMany({
+            data: {
+                candidateId: createdCandidate.id
             },
-            include: {
-                candidacies: {
-                    include: candidacyIncludes
+            where: {
+                email: candidate.email.trim()
+            }
+        });
+
+        // Check if an existing candidacy is active
+        const candidacy = await prismaClient.candidacy.findFirst({
+            where: {
+                candidateId: createdCandidate.id,
+                candidacyStatuses: {
+                    none: {
+                        status: "ARCHIVE",
+                        isActive: true
+                    }
                 }
             }
         });
 
-        return Right(newCandidate)
-            .map(c => ({ ...c, candidacies: c.candidacies.map(candidacy => withBasicSkills(withMandatoryTrainings(candidacy))) }));
+        let newCandidate = null;
+        if (!candidacy) {
+            newCandidate = await prismaClient.candidate.update({
+                data: {
+                    candidacies: {
+                        create: {
+                            deviceId: candidate.email,
+                            candidacyStatuses: {
+                                create: {
+                                    status: CandidacyStatus.PROJET,
+                                    isActive: true
+                                }
+                            }
+                        }
+                    }
+                },
+                where: {
+                    id: createdCandidate.id
+                },
+                include: {
+                    candidacies: {
+                        include: candidacyIncludes
+                    }
+                }
+            });
+        } else {
+            newCandidate = await prismaClient.candidate.findFirst({
+                where: {
+                    id: createdCandidate.id
+                },
+                include: {
+                    candidacies: {
+                        include: candidacyIncludes
+                    }
+                }
+            });
+        }
+
+        const certificationAndRegion = await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
+            where: {
+                candidacyId: newCandidate?.candidacies[0].id,
+                isActive: true
+            },
+            include: {
+                certification: true,
+                region: true,
+            }
+        });
+
+        return Maybe.fromNullable(newCandidate)
+            .map(c => ({
+                ...c, candidacies: c.candidacies.map(candidacy => withBasicSkills(withMandatoryTrainings({ 
+                    ...candidacy, 
+                    regionId: certificationAndRegion?.region.id, 
+                    region: certificationAndRegion?.region, 
+                    certificationId: certificationAndRegion?.certification.id, 
+                    certification: certificationAndRegion?.certification && {
+                        ...certificationAndRegion?.certification, 
+                        codeRncp: certificationAndRegion?.certification.rncpId
+                    }
+                })))
+            }))
+            .toEither(`Candidate not found`);
 
     } catch (e) {
+        console.log(e);
         return Left(`error while creating candidate ${candidate.email} with candidacy with keycloakId ${candidate.keycloakId}`);
     }
 };
 
-export const getCandidateWithCandidacyFromKeycloakId = async (candidateAccount: IAMAccount) => {
+export const getCandidateWithCandidacyFromKeycloakId = async (keycloakId: string) => {
     try {
         const candidate = await prismaClient.candidate.findFirst({
             where: {
-                keycloakId: candidateAccount.id,
+                keycloakId: keycloakId,
                 candidacies: {
                     some: {
                         candidacyStatuses: {
@@ -102,8 +172,19 @@ export const getCandidateWithCandidacyFromKeycloakId = async (candidateAccount: 
         });
 
         return Maybe.fromNullable(candidate)
-            .map(c => ({ ...c, 
-                candidacies: c.candidacies.map(candidacy => withBasicSkills(withMandatoryTrainings({ ...candidacy, regionId: certificationAndRegion?.region.id, region: certificationAndRegion?.region, certificationId: certificationAndRegion?.certification.id, certification: { ...certificationAndRegion?.certification, codeRncp: certificationAndRegion?.certification.rncpId } }))) }))
+            .map(c => ({
+                ...c, 
+                candidacies: c.candidacies.map(candidacy => withBasicSkills(withMandatoryTrainings({ 
+                    ...candidacy, 
+                    regionId: certificationAndRegion?.region.id, 
+                    region: certificationAndRegion?.region, 
+                    certificationId: certificationAndRegion?.certification.id, 
+                    certification: certificationAndRegion?.certification && {
+                        ...certificationAndRegion?.certification, 
+                        codeRncp: certificationAndRegion?.certification.rncpId
+                    }
+                })))
+            }))
             .toEither(`Candidate not found`);
     } catch (e) {
         return Left(`error while retrieving the candidate`);

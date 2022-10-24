@@ -6,6 +6,7 @@ import { AnimatePresence } from "framer-motion";
 import { useContext, useMemo } from "react";
 
 import { Footer } from "./components/organisms/Footer";
+import { useKeycloakContext } from "./contexts/keycloakContext";
 import { Certification } from "./interface";
 import { mainMachine } from "./machines/main.machine";
 import { CertificateDetails } from "./pages/CertificateDetails";
@@ -32,6 +33,7 @@ import {
   confirmRegistration,
   confirmTrainingForm,
   createCandidacyWithCertification,
+  getCandidateWithCandidacy,
   saveGoals,
   submitCandidacy,
   updateCertification,
@@ -50,9 +52,12 @@ import useWindowSize from "./utils/useWindowSize";
 
 function App() {
   const { client } = useContext(getApolloContext());
+  //@ts-ignore
+  const { authenticated, token, setTokens } = useKeycloakContext();
+
   const machine = useMemo(
     () =>
-      mainMachine.withConfig({
+      mainMachine(authenticated).withConfig({
         services: {
           searchCertifications: (context, _event) => {
             return searchCertifications(client as ApolloClient<object>)({
@@ -60,9 +65,20 @@ function App() {
             });
           },
           initializeApp: async (_context, _event, { data }) => {
-            return confirmRegistration(client as ApolloClient<object>)({
-              token: data.loginToken,
-            });
+            if (authenticated) {
+              const data = await getCandidateWithCandidacy(
+                client as ApolloClient<object>
+              )({ token });
+              return data;
+            } else {
+              const { tokens, ...rest } = await confirmRegistration(
+                client as ApolloClient<object>
+              )({
+                token: data.loginToken,
+              });
+              setTokens(tokens);
+              return rest;
+            }
           },
           getCertification: (_context, event) => {
             if (event.type !== "SELECT_CERTIFICATION") {
@@ -221,6 +237,7 @@ function App() {
           },
         },
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [client]
   );
 

@@ -16,7 +16,7 @@ import Data.Form.Helper
 import Data.Form.Training
 import Data.Referential exposing (Referential)
 import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
-import Html.Styled.Attributes exposing (action, attribute, class, for, id, name, placeholder, type_)
+import Html.Styled.Attributes exposing (action, attribute, class, classList, for, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onInput)
 import List.Extra
 import Page.Form as Form exposing (Form)
@@ -111,7 +111,7 @@ filterCandidacy filter candidacySummary =
             String.toLower s
                 |> String.contains (String.toLower filter)
     in
-    match (candidacySummary.certification.label ++ " " ++ candidacySummary.certification.acronym)
+    (Maybe.map (\certification -> match (certification.label ++ " " ++ certification.acronym)) candidacySummary.certification |> Maybe.withDefault False)
         || (Maybe.map match candidacySummary.phone |> Maybe.withDefault False)
         || (Maybe.map match candidacySummary.email |> Maybe.withDefault False)
 
@@ -473,8 +473,11 @@ viewItem config candidacy =
                         [ displayMaybe candidacy.phone
                         , displayMaybe candidacy.email
                         ]
-                    , p [ class "text-sm text-gray-500 truncate" ]
-                        [ text candidacy.certification.label ]
+                    , p
+                        [ class "text-sm text-gray-500 truncate"
+                        , classList [ ( "italic", candidacy.certification == Nothing ) ]
+                        ]
+                        [ Maybe.map .label candidacy.certification |> Maybe.withDefault "Certification non sélectionnée" |> text ]
                     ]
                 ]
             ]

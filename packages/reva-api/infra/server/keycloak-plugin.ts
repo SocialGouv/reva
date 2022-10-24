@@ -3,7 +3,7 @@ import Keycloak from 'keycloak-connect';
 import KcAdminClient from '@keycloak/keycloak-admin-client';
 import { userInfo } from 'os';
 
-const hasRole = (roles: string[]) => (role: string) => roles.includes(role)
+const hasRole = (roles: string[]) => (role: string) => roles.includes(role);
 
 async function keycloakPlugin(app: any, opts: any, next: any) {
 
@@ -36,51 +36,29 @@ async function keycloakPlugin(app: any, opts: any, next: any) {
     config
   );
 
-  app.decorate('auth', {
-    hasRole: (role: string) => {
-      return app.userInfo?.realm_access?.roles.includes(role)
-    }
-  })
-
-  app.decorate('keycloak', keycloak);
   app.addHook('onRequest', async (req: any, res: any) => {
-    app.userInfo = undefined;
     if (!req.headers.authorization) {
       return;
     }
 
     // eslint-disable-next-line no-unsafe-optional-chaining
-    const [, token] = req.headers.authorization.split("Bearer ")
+    const [, token] = req.headers.authorization.split("Bearer ");
     if (token) {
       try {
-        app.userInfo = await keycloak.grantManager.userInfo(token)
+        const userInfo = await keycloak.grantManager.userInfo(token) as any;
+        app.auth = {
+          hasRole: (role: string) => {
+            return userInfo?.realm_access?.roles.includes(role);
+          },
+          token,
+          userInfo
+        };
       }
-      catch(e) {
-        console.log(e)
+      catch (e) {
+        console.log(e);
       }
     }
-  })
-
-  const kcAdminClient = new KcAdminClient({
-    baseUrl: process.env.KEYCLOAK_ADMIN_URL,
-    realmName: process.env.KEYCLOAK_ADMIN_REALM
   });
-
-  const getKeycloakAdmin = async () => {
-    try {
-      await kcAdminClient.auth({
-        grantType: 'client_credentials',
-        clientId: process.env.KEYCLOAK_ADMIN_CLIENTID || 'admin-cli',
-        clientSecret: process.env.KEYCLOAK_ADMIN_CLIENT_SECRET,
-      });
-    } catch (e) {
-      console.log(e);  
-    } 
-      
-    return kcAdminClient;
-  }
-  
-  app.decorate('getKeycloakAdmin', getKeycloakAdmin);
 
   next();
 }

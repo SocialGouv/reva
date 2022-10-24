@@ -181,7 +181,7 @@ export const ProjectHome = ({
           {state.context.contact?.email}
         </p>
       )}
-      <div className="mt-4 text-sm text-slate-400">
+      {/*<div className="mt-4 text-sm text-slate-400">
         {!isValidated && (
           <Button
             data-test="project-home-edit-contact"
@@ -196,7 +196,7 @@ export const ProjectHome = ({
             }
           />
         )}
-      </div>
+      </div>*/}
     </div>
   );
 
@@ -278,7 +278,7 @@ export const ProjectHome = ({
       data-test="project-home-loading"
       key="project-home-loading"
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
+      exit={{ opacity: 0, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="absolute w-full h-full flex flex-col bg-neutral-100"
     >

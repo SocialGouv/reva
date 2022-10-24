@@ -13,6 +13,7 @@ import CryptoJS from "crypto-js";
 import { sendLoginEmail, sendRegistrationEmail } from "../../email";
 import { candidateAuthentication } from "../../../domain/features/candidateAuthentication";
 import { askForLogin } from "../../../domain/features/candidateAskForLogin";
+import { getCandidateWithCandidacy } from "../../../domain/features/candidateGetCandidateWithCandidacy";
 
 const generateJwt = (data: unknown, expiresIn: number = 15 * 60) => {
   const dataStr = JSON.stringify(data);
@@ -41,7 +42,7 @@ const getCandidateAccountInIAM = (keycloakAdmin: KeycloakAdminClient) => async (
     const [userByEmail] = await keycloakAdmin.users.find({
       email,
       exact: true,
-      realm: process.env.KEYCLOAK_APP_REALM_REVA
+      realm: process.env.KEYCLOAK_APP_REALM
     });
 
     return Right(Maybe.fromNullable(userByEmail));
@@ -85,7 +86,7 @@ const createCandidateAccountInIAM = (keycloakAdmin: KeycloakAdminClient) => asyn
       // groups: ['candidate'],
       emailVerified: true,
       enabled: true,
-      realm: process.env.KEYCLOAK_APP_REALM_REVA
+      realm: process.env.KEYCLOAK_APP_REALM
     });
 
     return Right(id);
@@ -100,7 +101,7 @@ const generateIAMToken = (keycloakAdmin: KeycloakAdminClient) => async (userId: 
 
   const user = await keycloakAdmin.users.findOne({
     id: userId,
-    realm: process.env.KEYCLOAK_APP_REALM_REVA as string
+    realm: process.env.KEYCLOAK_APP_REALM as string
   })
 
   if (!user) {
@@ -109,7 +110,7 @@ const generateIAMToken = (keycloakAdmin: KeycloakAdminClient) => async (userId: 
 
   try {
     await keycloakAdmin.users.resetPassword({
-      realm: process.env.KEYCLOAK_APP_REALM_REVA,
+      realm: process.env.KEYCLOAK_APP_REALM,
       id: userId,
       credential: {
         temporary: false,
@@ -122,9 +123,9 @@ const generateIAMToken = (keycloakAdmin: KeycloakAdminClient) => async (userId: 
     const _keycloak = new Keycloak({}, {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      clientId: process.env.KEYCLOAK_ADMIN_CLIENTID as string,
+      clientId: process.env.KEYCLOAK_APP_REVA_APP as string,
       serverUrl: process.env.KEYCLOAK_ADMIN_URL as string,
-      realm: process.env.KEYCLOAK_APP_REALM_REVA as string,
+      realm: process.env.KEYCLOAK_APP_REALM as string,
       credentials: {
         secret: process.env.KEYCLOAK_APP_ADMIN_CLIENT_SECRET
       }
@@ -132,9 +133,14 @@ const generateIAMToken = (keycloakAdmin: KeycloakAdminClient) => async (userId: 
     const grant = await _keycloak.grantManager.obtainDirectly(user.username as string, randomPassword);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
+    const refreshToken = grant?.refresh_token?.token;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const accessToken = grant?.access_token?.token;
-
-    return Right(accessToken)
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const idToken = grant?.id_token?.token;
+    return Right({accessToken, refreshToken, idToken})
 
   } catch (e) {
     return Left(`Error while generating IAM token`)
@@ -143,6 +149,15 @@ const generateIAMToken = (keycloakAdmin: KeycloakAdminClient) => async (userId: 
 };
 
 export const resolvers = {
+  Query: {
+    candidate_getCandidateWithCandidacy: async (_: any, params: any, { app }: { app: { auth: any; keycloak: Keycloak.Keycloak, getKeycloakAdmin: () => KeycloakAdminClient; }; }) => { 
+      const result = await getCandidateWithCandidacy({
+        getCandidateWithCandidacy: candidatesDb.getCandidateWithCandidacyFromKeycloakId
+      })({ keycloakId: app.auth.userInfo?.sub })
+
+      return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
+    }
+  },
   Mutation: {
     candidate_askForRegistration: async (_: any, params: {
       candidate: {
@@ -151,8 +166,7 @@ export const resolvers = {
         firstname: string;
         lastname: string;
       };
-    }, { app }: { app: { auth: any; keycloak: Keycloak.Keycloak, getKeycloakAdmin: () => KeycloakAdminClient; }; }) => { 
-
+    }) => { 
       const result = await askForRegistration({
         generateJWTForRegistration: async (data: unknown) => Right(generateJwt(data)),
         sendRegistrationEmail: async (data) => sendRegistrationEmail(data.email, data.token),

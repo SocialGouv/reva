@@ -25,12 +25,24 @@ type CandidacySummary
     = CandidacySummary
 
 
+type Candidate
+    = Candidate
+
+
 type CandidateGoal
     = CandidateGoal
 
 
+type CandidateLogged
+    = CandidateLogged
+
+
 type Certification
     = Certification
+
+
+type Degree
+    = Degree
 
 
 type Experience
@@ -63,3 +75,7 @@ type SearchCertificationsAndProfessionsResult
 
 type Training
     = Training
+
+
+type VulnerabilityIndicator
+    = VulnerabilityIndicator

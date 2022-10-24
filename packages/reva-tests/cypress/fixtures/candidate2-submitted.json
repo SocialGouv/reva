@@ -1,7 +1,11 @@
 {
   "data": {
     "candidateLogged": {
-      "token": "abc",
+      "tokens": {
+        "accessToken": "abc",
+        "refreshToken": "def",
+        "idToken": "ghi"
+      },
       "candidate": {
         "firstname": "John",
         "lastname": "Doe",

@@ -9,7 +9,7 @@ const email2 = "email2@example.com";
 const phone1 = "06-01-02-03-04";
 const phone2 = "06-01-02-03-05";
 
-context("Contact", () => {
+context.skip("Contact", () => {
   it("add a contact", function () {
     cy.intercept("POST", "/graphql", (req) => {
       stubQuery(req, "candidate_askForRegistration", "registration.json");

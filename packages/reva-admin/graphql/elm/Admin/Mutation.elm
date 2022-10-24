@@ -231,20 +231,6 @@ candidacy_updateAppointmentInformations requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_updateAppointmentInformations" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "candidateTypologyInformations" requiredArgs____.candidateTypologyInformations Admin.InputObject.encodeCandidateTypologyInformationsInput, Argument.required "appointmentInformations" requiredArgs____.appointmentInformations Admin.InputObject.encodeAppointmentInformationsInput ] object____ Basics.identity
 
 
-type alias CandidacyUpdateTrainingInformationsRequiredArguments =
-    { candidacyId : Data.Scalar.Id
-    , basicSkills : List Data.Scalar.Id
-    }
-
-
-candidacy_updateTrainingInformations :
-    CandidacyUpdateTrainingInformationsRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Candidacy
-    -> SelectionSet decodesTo RootMutation
-candidacy_updateTrainingInformations requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidacy_updateTrainingInformations" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "basicSkills" requiredArgs____.basicSkills ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.list) ] object____ Basics.identity
-
-
 type alias CandidacyTakeOverRequiredArguments =
     { candidacyId : Data.Scalar.Id }
 
@@ -283,3 +269,49 @@ candidacy_submitTrainingForm :
     -> SelectionSet decodesTo RootMutation
 candidacy_submitTrainingForm requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_submitTrainingForm" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "training" requiredArgs____.training Admin.InputObject.encodeTrainingInput ] object____ Basics.identity
+
+
+type alias CandidacyConfirmTrainingFormRequiredArguments =
+    { candidacyId : Data.Scalar.Uuid }
+
+
+candidacy_confirmTrainingForm :
+    CandidacyConfirmTrainingFormRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet decodesTo RootMutation
+candidacy_confirmTrainingForm requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_confirmTrainingForm" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ Basics.identity
+
+
+type alias CandidateAskForRegistrationRequiredArguments =
+    { candidate : Admin.InputObject.CandidateInput }
+
+
+candidate_askForRegistration :
+    CandidateAskForRegistrationRequiredArguments
+    -> SelectionSet String RootMutation
+candidate_askForRegistration requiredArgs____ =
+    Object.selectionForField "String" "candidate_askForRegistration" [ Argument.required "candidate" requiredArgs____.candidate Admin.InputObject.encodeCandidateInput ] Decode.string
+
+
+type alias CandidateAskForLoginRequiredArguments =
+    { email : String }
+
+
+candidate_askForLogin :
+    CandidateAskForLoginRequiredArguments
+    -> SelectionSet String RootMutation
+candidate_askForLogin requiredArgs____ =
+    Object.selectionForField "String" "candidate_askForLogin" [ Argument.required "email" requiredArgs____.email Encode.string ] Decode.string
+
+
+type alias CandidateLoginRequiredArguments =
+    { token : String }
+
+
+candidate_login :
+    CandidateLoginRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.CandidateLogged
+    -> SelectionSet decodesTo RootMutation
+candidate_login requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidate_login" [ Argument.required "token" requiredArgs____.token Encode.string ] object____ Basics.identity

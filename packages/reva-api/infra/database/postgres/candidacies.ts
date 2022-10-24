@@ -35,7 +35,7 @@ const toDomainCandidacySummary = (candidacy: Candidacy & { candidacyStatuses: Ca
     id: candidacy.id,
     deviceId: candidacy.deviceId,
     organismId: candidacy.organismId,
-    certificationId: candidacy.certification.id,
+    certificationId: candidacy.certification?.id,
     certification: candidacy.certification,
     email: candidacy.email,
     phone: candidacy.phone,
@@ -150,7 +150,7 @@ export const getCandidacyFromId = async (candidacyId: string) => {
             regionId: certificationAndRegion?.region.id, 
             region: certificationAndRegion?.region, 
             certificationId: certificationAndRegion?.certification.id, 
-            certification: { 
+            certification: certificationAndRegion && { 
                 ...certificationAndRegion?.certification, 
                 codeRncp: certificationAndRegion?.certification.rncpId 
             } 
@@ -215,18 +215,13 @@ export const updateContactOnCandidacy = async (params: { candidacyId: string, em
             }
         });
 
-        if (!certificationAndRegion) {
-            return Left(`error while retrieving the certification and region the candidacy id ${params.candidacyId}`);    
-        }
-
-
         return Right({ 
             id: newCandidacy.id,
             deviceId: newCandidacy.deviceId,
-            regionId: certificationAndRegion.region.id,
-            region: certificationAndRegion.region,
-            certificationId: certificationAndRegion.certification.id,
-            certification: certificationAndRegion.certification,
+            regionId: certificationAndRegion?.region.id,
+            region: certificationAndRegion?.region,
+            certificationId: certificationAndRegion?.certification.id,
+            certification: certificationAndRegion?.certification,
             organismId: newCandidacy.organismId,
             experiences: toDomainExperiences(newCandidacy.experiences),
             goals: newCandidacy.goals,
@@ -449,9 +444,10 @@ export const getCandidacies = async () => {
             }
         });
 
-        return Right(toDomainCandidacySummaries(candidacies.map(c => ({ ...c, certification: c.certificationsAndRegions[0].certification }))));
+        return Right(toDomainCandidacySummaries(candidacies.map(c => ({ ...c, certification: c.certificationsAndRegions[0]?.certification }))));
     }
     catch (e) {
+        console.log('error', e)
         return Left(`Erreur lors de la récupération des candidatures, ${(e as any).message}`);
     }
 };
@@ -485,9 +481,10 @@ export const getCandidaciesForUser = async (keycloakId: string) => {
             }
         });
 
-        return Right(toDomainCandidacySummaries(candidacies.map(c => ({ ...c, certification: c.certificationsAndRegions[0].certification }))));
+        return Right(toDomainCandidacySummaries(candidacies.map(c => ({ ...c, certification: c.certificationsAndRegions[0]?.certification }))));
     }
     catch (e) {
+        console.log(e)
         return Left(`Erreur lors de la récupération des candidatures, ${(e as any).message}`);
     }
 };

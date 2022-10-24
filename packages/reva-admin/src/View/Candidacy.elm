@@ -6,7 +6,7 @@ import Data.Organism exposing (Organism)
 import Data.Referential exposing (Referential)
 import Dict
 import Html.Styled exposing (Html, a, button, dd, div, dl, dt, h1, h3, h4, li, nav, node, p, span, text, ul)
-import Html.Styled.Attributes exposing (attribute, class, css, href, type_)
+import Html.Styled.Attributes exposing (attribute, class, classList, css, href, type_)
 import Html.Styled.Events exposing (onClick)
 import RemoteData exposing (RemoteData(..))
 import View.Date as Date
@@ -44,8 +44,10 @@ view config =
     , div
         [ class "pt-8" ]
         [ h1
-            [ class "text-3xl font-medium text-gray-900 leading-none" ]
-            [ text config.candidacy.certification.label
+            [ class "text-3xl font-medium text-gray-900 leading-none"
+            , classList [ ( "italic", config.candidacy.certification == Nothing ) ]
+            ]
+            [ Maybe.map .label config.candidacy.certification |> Maybe.withDefault "Certification non sélectionnée" |> text
             ]
         ]
     , div

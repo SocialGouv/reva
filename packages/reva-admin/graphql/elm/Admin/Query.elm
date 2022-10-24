@@ -102,6 +102,20 @@ getRegions object____ =
     Object.selectionForCompositeField "getRegions" [] object____ (Basics.identity >> Decode.list)
 
 
+getDegrees :
+    SelectionSet decodesTo Admin.Object.Degree
+    -> SelectionSet (List decodesTo) RootQuery
+getDegrees object____ =
+    Object.selectionForCompositeField "getDegrees" [] object____ (Basics.identity >> Decode.list)
+
+
+getVulnerabilityIndicators :
+    SelectionSet decodesTo Admin.Object.VulnerabilityIndicator
+    -> SelectionSet (List decodesTo) RootQuery
+getVulnerabilityIndicators object____ =
+    Object.selectionForCompositeField "getVulnerabilityIndicators" [] object____ (Basics.identity >> Decode.list)
+
+
 type alias SearchCertificationsAndProfessionsOptionalArguments =
     { query : OptionalArgument String }
 

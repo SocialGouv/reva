@@ -346,7 +346,11 @@ const CANDIDACY_SELECTION = `
 const CONFIRM_REGISTRATION = gql`
   mutation candidate_login($token: String!) {
     candidateLogged: candidate_login(token: $token) {
-      token
+      tokens {
+        accessToken
+        refreshToken
+        idToken
+      }
       candidate {
         firstname
         lastname
@@ -400,8 +404,66 @@ export const confirmRegistration =
     return initializeApp({ candidateLogged, getReferential, getRegions });
   };
 
+const GET_CANDIDATE_WITH_CANDIDACY = gql`
+  query candidate_getCandidateWithCandidacy {
+    candidate: candidate_getCandidateWithCandidacy {
+      firstname
+      lastname
+      email
+      phone
+      candidacy { ${CANDIDACY_SELECTION} }
+
+    }
+
+    getReferential {
+      goals {
+        id
+        label
+        order
+      }
+    }
+
+    getRegions {
+      id
+      code
+      label
+    }
+  }
+`;
+
+export const getCandidateWithCandidacy =
+  (client: ApolloClient<object>) => async (params: { token: string }) => {
+    const { data } = await client.query({
+      context: {
+        headers: {
+          authorization: `Bearer ${params.token}`,
+        },
+      },
+      query: GET_CANDIDATE_WITH_CANDIDACY,
+    });
+
+    return {
+      candidacy: formatCandidacy(data.candidate, data.getReferential),
+      referentials: {
+        goals: data.getReferential.goals,
+      },
+      regions: data.getRegions,
+    };
+  };
+
 function initializeApp({ candidateLogged, getReferential, getRegions }: any) {
-  let candidacy = candidateLogged.candidate?.candidacy;
+  return {
+    tokens: candidateLogged.tokens,
+    candidacy: formatCandidacy(candidateLogged.candidate, getReferential),
+    referentials: {
+      goals: getReferential.goals,
+    },
+    regions: getRegions,
+  };
+}
+
+function formatCandidacy(candidate: any, getReferential: any) {
+  let candidacy = candidate?.candidacy;
   if (candidacy) {
     const candidateGoals = candidacy.goals.map((g: any) => g.goalId);
 
@@ -440,7 +502,7 @@ function initializeApp({ candidateLogged, getReferential, getRegions }: any) {
     };
 
     candidacy = {
-      ...candidateLogged.candidate,
+      ...candidate,
       ...candidacy,
       candidacyStatus: candidacy.candidacyStatuses?.find(
         (s: { isActive: string; status: candidacyStatus }) => s.isActive
@@ -453,13 +515,7 @@ function initializeApp({ candidateLogged, getReferential, getRegions }: any) {
     };
   }
 
-  return {
-    candidacy,
-    referentials: {
-      goals: getReferential.goals,
-    },
-    regions: getRegions,
-  };
+  return candidacy;
 }
 
 const CONFIRM_TRAINING_FORM = gql`
