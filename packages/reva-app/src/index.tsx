@@ -20,9 +20,11 @@ const client = new ApolloClient({
 // inspect({ iframe: false });
 
 const keycloakInstance = Keycloak({
-  clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID as string,
-  realm: process.env.REACT_APP_KEYCLOAK_REALM as string,
-  url: process.env.REACT_APP_KEYCLOAK_URL as string,
+  clientId: (process.env.REACT_APP_KEYCLOAK_CLIENT_ID as string) || "reva-app",
+  realm: (process.env.REACT_APP_KEYCLOAK_REALM as string) || "reva-app",
+  url:
+    (process.env.REACT_APP_KEYCLOAK_URL as string) ||
+    "https://auth.reva.incubateur.net/",
 });
 
 ReactDOM.render(
