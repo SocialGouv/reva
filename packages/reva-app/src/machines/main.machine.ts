@@ -1201,9 +1201,11 @@ export const mainMachine =
           },
           isProjectSubmitted: (_context, event) => {
             const typedEvent = event as DoneInvokeEvent<any>;
-            return ["CANDIDATURE_VALIDEE", "VALIDATION"].includes(
-              typedEvent.data.candidacy?.candidacyStatus
-            );
+            return [
+              "CANDIDATURE_VALIDEE",
+              "VALIDATION",
+              "PRISE_EN_CHARGE",
+            ].includes(typedEvent.data.candidacy?.candidacyStatus);
           },
           isTokenInvalid: (_context, event) => {
             const typedEvent = event as DoneInvokeEvent<any>;
