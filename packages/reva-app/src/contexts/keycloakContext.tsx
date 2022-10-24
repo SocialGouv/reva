@@ -45,7 +45,7 @@ export const KeycloakProvider = ({
         onLoad: "check-sso",
         //@ts-ignore
         promiseType: "native",
-        silentCheckSsoRedirectUri: `http://localhost:3001/app/silent-check-sso.html`,
+        silentCheckSsoRedirectUri: `${window.location.origin}/app/silent-check-sso.html`,
         // iframeTarget: this,
         checkLoginIframe: false,
       };
