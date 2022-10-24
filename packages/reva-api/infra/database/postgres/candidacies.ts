@@ -263,7 +263,10 @@ export const updateCandidacyStatus = async (params: { candidacyId: string, statu
                         }
                     }
                 },
-                include: candidacyIncludes
+                include: {
+                    ...candidacyIncludes,
+                    candidate: true
+                }
             }),
             prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
                 where: {
@@ -288,8 +291,8 @@ export const updateCandidacyStatus = async (params: { candidacyId: string, statu
             organismId: newCandidacy.organismId,
             experiences: toDomainExperiences(newCandidacy.experiences),
             goals: newCandidacy.goals,
-            email: newCandidacy.email,
-            phone: newCandidacy.phone,
+            phone: newCandidacy.candidate?.phone || newCandidacy.phone,
+            email: newCandidacy.candidate?.email || newCandidacy.email,
             candidacyStatuses: newCandidacy.candidacyStatuses,
             createdAt: newCandidacy.createdAt
         });
@@ -324,7 +327,10 @@ export const updateCertification = async (params: { candidacyId: string, certifi
                         }
                     }
                 },
-                include: candidacyIncludes
+                include: {
+                    ...candidacyIncludes,
+                    candidate: true
+                }
             }),
 
             prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
@@ -350,8 +356,8 @@ export const updateCertification = async (params: { candidacyId: string, certifi
             organismId: newCandidacy.organismId,
             experiences: toDomainExperiences(newCandidacy.experiences),
             goals: newCandidacy.goals,
-            email: newCandidacy.email,
-            phone: newCandidacy.phone,
+            phone: newCandidacy.candidate?.phone || newCandidacy.phone,
+            email: newCandidacy.candidate?.email || newCandidacy.email,
             candidacyStatuses: newCandidacy.candidacyStatuses,
             createdAt: newCandidacy.createdAt
         });
@@ -445,14 +451,20 @@ export const getCandidacies = async () => {
                     where: {
                         isActive: true
                     }
-                }
+                },
+                candidate: true
             }
         });
 
-        return Right(toDomainCandidacySummaries(candidacies.map(c => ({ ...c, certification: c.certificationsAndRegions[0]?.certification }))));
+        return Right(toDomainCandidacySummaries(candidacies.map(c => ({
+            ...c, 
+            certification: c.certificationsAndRegions[0]?.certification,
+            phone: c.candidate?.phone || c.phone,
+            email: c.candidate?.email || c.email,
+        }))));
     }
     catch (e) {
-        console.log('error', e)
+        console.log('error', e);
         return Left(`Erreur lors de la récupération des candidatures, ${(e as any).message}`);
     }
 };
@@ -482,14 +494,20 @@ export const getCandidaciesForUser = async (keycloakId: string) => {
                     where: {
                         isActive: true
                     }
-                }
+                },
+                candidate: true
             }
         });
 
-        return Right(toDomainCandidacySummaries(candidacies.map(c => ({ ...c, certification: c.certificationsAndRegions[0]?.certification }))));
+        return Right(toDomainCandidacySummaries(candidacies.map(c => ({
+            ...c, 
+            certification: c.certificationsAndRegions[0]?.certification,
+            phone: c.candidate?.phone || c.phone,
+            email: c.candidate?.email || c.email,
+        }))));
     }
     catch (e) {
-        console.log(e)
+        console.log(e);
         return Left(`Erreur lors de la récupération des candidatures, ${(e as any).message}`);
     }
 };
@@ -518,7 +536,10 @@ export const updateAppointmentInformations = async (params: {
                 appointmentCount: params.appointmentInformations.appointmentCount,
                 wasPresentAtFirstAppointment: params.appointmentInformations.wasPresentAtFirstAppointment
             },
-            include: candidacyIncludes
+            include: {
+                ...candidacyIncludes,
+                candidate: true
+            }
         });
 
         const candidaciesOnRegionsAndCertifications = await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
@@ -542,8 +563,8 @@ export const updateAppointmentInformations = async (params: {
             organismId: candidacy.organismId,
             experiences: toDomainExperiences(candidacy.experiences),
             goals: candidacy.goals,
-            email: candidacy.email,
-            phone: candidacy.phone,
+            phone: candidacy.candidate?.phone || candidacy.phone,
+            email: candidacy.candidate?.email || candidacy.email,
             typology: candidacy.typology,
             typologyAdditional: candidacy.typologyAdditional,
             firstAppointmentOccuredAt: candidacy.firstAppointmentOccuredAt,
@@ -567,7 +588,10 @@ export const updateOrganism = async (params: { candidacyId: string, organismId: 
             data: {
                 organismId: params.organismId,
             },
-            include: candidacyIncludes
+            include: {
+                ...candidacyIncludes,
+                candidate: true
+            }
         });
 
         const certificationAndRegion = await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
@@ -591,8 +615,8 @@ export const updateOrganism = async (params: { candidacyId: string, organismId: 
             organismId: newCandidacy.organismId,
             experiences: toDomainExperiences(newCandidacy.experiences),
             goals: newCandidacy.goals,
-            email: newCandidacy.email,
-            phone: newCandidacy.phone,
+            phone: newCandidacy.candidate?.phone || newCandidacy.phone,
+            email: newCandidacy.candidate?.email || newCandidacy.email,
             candidacyStatuses: newCandidacy.candidacyStatuses,
             createdAt: newCandidacy.createdAt
         });
@@ -651,7 +675,10 @@ export const updateTrainingInformations = async (params: {
                     additionalHourCount: params.training.additionalHourCount,
                     validatedByCandidate: params.training.validatedByCandidate
                 },
-                include: candidacyIncludes
+                include: {
+                    ...candidacyIncludes,
+                    candidate: true
+                }
             })
         ]);
 
@@ -676,8 +703,8 @@ export const updateTrainingInformations = async (params: {
             organismId: newCandidacy.organismId,
             experiences: toDomainExperiences(newCandidacy.experiences),
             goals: newCandidacy.goals,
-            email: newCandidacy.email,
-            phone: newCandidacy.phone,
+            phone: newCandidacy.candidate?.phone || newCandidacy.phone,
+            email: newCandidacy.candidate?.email || newCandidacy.email,
             candidacyStatuses: newCandidacy.candidacyStatuses,
             createdAt: newCandidacy.createdAt
         });;
