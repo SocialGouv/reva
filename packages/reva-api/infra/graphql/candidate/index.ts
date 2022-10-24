@@ -42,7 +42,7 @@ const getCandidateAccountInIAM = (keycloakAdmin: KeycloakAdminClient) => async (
     const [userByEmail] = await keycloakAdmin.users.find({
       email,
       exact: true,
-      realm: process.env.KEYCLOAK_APP_REALM_REVA
+      realm: process.env.KEYCLOAK_APP_REALM
     });
 
     return Right(Maybe.fromNullable(userByEmail));
@@ -86,7 +86,7 @@ const createCandidateAccountInIAM = (keycloakAdmin: KeycloakAdminClient) => asyn
       // groups: ['candidate'],
       emailVerified: true,
       enabled: true,
-      realm: process.env.KEYCLOAK_APP_REALM_REVA
+      realm: process.env.KEYCLOAK_APP_REALM
     });
 
     return Right(id);
@@ -101,7 +101,7 @@ const generateIAMToken = (keycloakAdmin: KeycloakAdminClient) => async (userId: 
 
   const user = await keycloakAdmin.users.findOne({
     id: userId,
-    realm: process.env.KEYCLOAK_APP_REALM_REVA as string
+    realm: process.env.KEYCLOAK_APP_REALM as string
   })
 
   if (!user) {
@@ -110,7 +110,7 @@ const generateIAMToken = (keycloakAdmin: KeycloakAdminClient) => async (userId: 
 
   try {
     await keycloakAdmin.users.resetPassword({
-      realm: process.env.KEYCLOAK_APP_REALM_REVA,
+      realm: process.env.KEYCLOAK_APP_REALM,
       id: userId,
       credential: {
         temporary: false,
@@ -123,9 +123,9 @@ const generateIAMToken = (keycloakAdmin: KeycloakAdminClient) => async (userId: 
     const _keycloak = new Keycloak({}, {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      clientId: process.env.KEYCLOAK_APP_REALM_REVA as string,
+      clientId: process.env.KEYCLOAK_APP_REVA_APP as string,
       serverUrl: process.env.KEYCLOAK_ADMIN_URL as string,
-      realm: process.env.KEYCLOAK_APP_REALM_REVA as string,
+      realm: process.env.KEYCLOAK_APP_REALM as string,
       credentials: {
         secret: process.env.KEYCLOAK_APP_ADMIN_CLIENT_SECRET
       }

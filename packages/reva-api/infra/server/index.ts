@@ -110,7 +110,7 @@ if (process.env.NODE_ENV === "production") {
 
 server.register(keycloakPlugin, {
   config: {
-    clientId: process.env.KEYCLOAK_ADMIN_CLIENTID_REVA || "reva-app",
+    clientId: process.env.KEYCLOAK_ADMIN_CLIENTID_REVA || "reva-admin",
     bearerOnly: true,
     serverUrl: process.env.KEYCLOAK_ADMIN_URL || "http://localhost:8888/auth/",
     realm: process.env.KEYCLOAK_ADMIN_REALM_REVA || "reva",
@@ -121,12 +121,12 @@ server.register(keycloakPlugin, {
 
 server.register(keycloakPlugin, {
   config: {
-    clientId:  process.env.KEYCLOAK_REVA_REALM_REVA_APP || "reva-app",
+    clientId:  process.env.KEYCLOAK_APP_REVA_APP || "reva-app",
     bearerOnly: true,
     serverUrl: process.env.KEYCLOAK_ADMIN_URL || "http://localhost:8888/auth/",
-    realm: process.env.KEYCLOAK_REVA_REALM || "reva-app",
+    realm: process.env.KEYCLOAK_APP_REALM || "reva-app",
     realmPublicKey:
-      process.env.KEYCLOAK_REVA_REALM_REVA_APP_PUBLIC_KEY || ""
+      process.env.KEYCLOAK_APP_REALM_REVA_APP_PUBLIC_KEY || ""
   }
 });
 
