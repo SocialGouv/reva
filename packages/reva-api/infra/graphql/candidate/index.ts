@@ -92,6 +92,7 @@ const createCandidateAccountInIAM = (keycloakAdmin: KeycloakAdminClient) => asyn
     return Right(id);
   }
   catch (e) {
+    console.log(e)
     return Left(`An error occured while creating user with ${account.email} on IAM`);
   }
 };
