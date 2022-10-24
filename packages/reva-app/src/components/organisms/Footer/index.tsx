@@ -14,6 +14,8 @@ export const Footer = () => (
       <div className="space-x-2">
         <Link href="/">Site Reva</Link>
         <Divider />
+        <Link href="/cgu">CGU</Link>
+        <Divider />
         <Link href="/mentions-l%C3%A9gale">Mentions légales</Link>
         <Divider />
         <Link href="/politique-de-confidentialit%C3%A9">
