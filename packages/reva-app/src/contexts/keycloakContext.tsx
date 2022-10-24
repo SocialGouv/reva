@@ -19,7 +19,6 @@ export const Keycloak = (config: {
   realm: string;
   url: string;
 }) => {
-  console.log(config);
   const keycloak = new _Keycloak(config);
   //@ts-ignore
   window.keycloak = keycloak;
@@ -32,6 +31,7 @@ export const KeycloakProvider = ({
 }: KeycloakProviderProps) => {
   const [authenticated, setAuthenticated] = useState(false);
   const [token, setToken] = useState<string | undefined>(undefined);
+  const [ready, setReady] = useState<boolean>(false);
   const [tokens, setTokens] = useState(() => {
     const tokens_ = localStorage.getItem(storageKey);
     return tokens_ && JSON.parse(tokens_);
@@ -40,9 +40,6 @@ export const KeycloakProvider = ({
   useEffect(() => {
     localStorage.setItem(storageKey, JSON.stringify(tokens));
     const initKeycloak = async (tokens: any) => {
-      if (!tokens) {
-        return;
-      }
       let config: any = {
         enableLogging: process.env.NODE_ENV !== "production",
         onLoad: "check-sso",
@@ -86,9 +83,12 @@ export const KeycloakProvider = ({
         };
 
         if (authenticated) {
+          await keycloakInstance.updateToken(60000);
           setAuthenticated(authenticated);
           setToken(keycloakInstance.token);
         }
+
+        setReady(true);
       } catch (e) {
         console.log("Error keycloak", e);
       }
@@ -104,7 +104,7 @@ export const KeycloakProvider = ({
         setTokens,
       }}
     >
-      {children}
+      {ready && children}
     </KeycloakContext.Provider>
   );
 };

@@ -25,6 +25,7 @@ import cors from "@fastify/cors";
 import proxy from "@fastify/http-proxy";
 import fastifyStatic from "@fastify/static";
 import keycloakPlugin from "./keycloak-plugin";
+import keycloakAdminPlugin from "./keycloak-admin-plugin";
 
 import { graphqlConfiguration } from "../graphql";
 import { deleteCandidacyFromEmail, deleteCandidacyFromPhone } from "../database/postgres/candidacies";
@@ -112,11 +113,24 @@ server.register(keycloakPlugin, {
     clientId: process.env.KEYCLOAK_ADMIN_CLIENTID_REVA || "reva-app",
     bearerOnly: true,
     serverUrl: process.env.KEYCLOAK_ADMIN_URL || "http://localhost:8888/auth/",
-    realm: process.env.KEYCLOAK_ADMIN_REALM_REVA || "REVA",
+    realm: process.env.KEYCLOAK_ADMIN_REALM_REVA || "reva",
     realmPublicKey:
       process.env.KEYCLOAK_ADMIN_REALM_REVA_PUBLIC_KEY || ""
   }
 });
+
+server.register(keycloakPlugin, {
+  config: {
+    clientId:  process.env.KEYCLOAK_REVA_REALM_REVA_APP || "reva-app",
+    bearerOnly: true,
+    serverUrl: process.env.KEYCLOAK_ADMIN_URL || "http://localhost:8888/auth/",
+    realm: process.env.KEYCLOAK_REVA_REALM || "reva-app",
+    realmPublicKey:
+      process.env.KEYCLOAK_REVA_REALM_REVA_APP_PUBLIC_KEY || ""
+  }
+});
+
+server.register(keycloakAdminPlugin);
 
 // Start GRAPHQL server
 server.register(mercurius, graphqlConfiguration as MercuriusOptions);

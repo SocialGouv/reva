@@ -67,11 +67,11 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
     }
 };
 
-export const getCandidateWithCandidacyFromKeycloakId = async (candidateAccount: IAMAccount) => {
+export const getCandidateWithCandidacyFromKeycloakId = async (keycloakId: string) => {
     try {
         const candidate = await prismaClient.candidate.findFirst({
             where: {
-                keycloakId: candidateAccount.id,
+                keycloakId: keycloakId,
                 candidacies: {
                     some: {
                         candidacyStatuses: {

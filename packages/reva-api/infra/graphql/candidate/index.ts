@@ -13,6 +13,7 @@ import CryptoJS from "crypto-js";
 import { sendLoginEmail, sendRegistrationEmail } from "../../email";
 import { candidateAuthentication } from "../../../domain/features/candidateAuthentication";
 import { askForLogin } from "../../../domain/features/candidateAskForLogin";
+import { getCandidateWithCandidacy } from "../../../domain/features/candidateGetCandidateWithCandidacy";
 
 const generateJwt = (data: unknown, expiresIn: number = 15 * 60) => {
   const dataStr = JSON.stringify(data);
@@ -148,6 +149,15 @@ const generateIAMToken = (keycloakAdmin: KeycloakAdminClient) => async (userId: 
 };
 
 export const resolvers = {
+  Query: {
+    candidate_getCandidateWithCandidacy: async (_: any, params: any, { app }: { app: { auth: any; keycloak: Keycloak.Keycloak, getKeycloakAdmin: () => KeycloakAdminClient; }; }) => { 
+      const result = await getCandidateWithCandidacy({
+        getCandidateWithCandidacy: candidatesDb.getCandidateWithCandidacyFromKeycloakId
+      })({ keycloakId: app.auth.userInfo?.sub })
+
+      return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
+    }
+  },
   Mutation: {
     candidate_askForRegistration: async (_: any, params: {
       candidate: {
@@ -156,8 +166,7 @@ export const resolvers = {
         firstname: string;
         lastname: string;
       };
-    }, { app }: { app: { auth: any; keycloak: Keycloak.Keycloak, getKeycloakAdmin: () => KeycloakAdminClient; }; }) => { 
-
+    }) => { 
       const result = await askForRegistration({
         generateJWTForRegistration: async (data: unknown) => Right(generateJwt(data)),
         sendRegistrationEmail: async (data) => sendRegistrationEmail(data.email, data.token),

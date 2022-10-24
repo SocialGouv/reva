@@ -33,6 +33,7 @@ import {
   confirmRegistration,
   confirmTrainingForm,
   createCandidacyWithCertification,
+  getCandidateWithCandidacy,
   saveGoals,
   submitCandidacy,
   updateCertification,
@@ -56,7 +57,7 @@ function App() {
 
   const machine = useMemo(
     () =>
-      mainMachine.withConfig({
+      mainMachine(authenticated).withConfig({
         services: {
           searchCertifications: (context, _event) => {
             return searchCertifications(client as ApolloClient<object>)({
@@ -64,13 +65,20 @@ function App() {
             });
           },
           initializeApp: async (_context, _event, { data }) => {
-            const { tokens, ...rest } = await confirmRegistration(
-              client as ApolloClient<object>
-            )({
-              token: data.loginToken,
-            });
-            setTokens(tokens);
-            return rest;
+            if (authenticated) {
+              const data = await getCandidateWithCandidacy(
+                client as ApolloClient<object>
+              )({ token });
+              return data;
+            } else {
+              const { tokens, ...rest } = await confirmRegistration(
+                client as ApolloClient<object>
+              )({
+                token: data.loginToken,
+              });
+              setTokens(tokens);
+              return rest;
+            }
           },
           getCertification: (_context, event) => {
             if (event.type !== "SELECT_CERTIFICATION") {

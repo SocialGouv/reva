@@ -18,6 +18,10 @@ type Candidate {
   candidacy: Candidacy!
 }
 
+type Query {
+  candidate_getCandidateWithCandidacy: Candidate!
+}
+
 input CandidateInput {
   email: String!
   phone: String!

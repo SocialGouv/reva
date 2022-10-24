@@ -21,7 +21,7 @@ interface ConfirmRegistrationDeps extends CommonDeps {
 
 interface ConfirmLoginDeps extends CommonDeps {
     extractEmailFromToken: (token: string) => Promise<Either<string, string>>;
-    getCandidateWithCandidacy: (candidateAccount: IAMAccount) => Promise<Either<string, Candidate>>;
+    getCandidateWithCandidacy: (keycloakId: string) => Promise<Either<string, Candidate>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -96,7 +96,7 @@ const loginCandidate = (deps: ConfirmLoginDeps) => async (params: { email: strin
         });
 
     const getCandidateWithCandidacy = (candidateAccount: IAMAccount) => EitherAsync.fromPromise(() => {
-        return deps.getCandidateWithCandidacy(candidateAccount);
+        return deps.getCandidateWithCandidacy(candidateAccount.id);
     })
         .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDATE_NOT_FOUND, `Candidat avec candidature non trouvé`));
 
