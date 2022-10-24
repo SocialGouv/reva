@@ -94,7 +94,7 @@ export const KeycloakProvider = ({
       }
     };
     initKeycloak(tokens);
-  }, [tokens]);
+  }, [tokens, keycloakInstance]);
 
   return (
     <KeycloakContext.Provider
