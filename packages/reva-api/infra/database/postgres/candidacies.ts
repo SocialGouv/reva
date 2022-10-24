@@ -131,7 +131,10 @@ export const getCandidacyFromId = async (candidacyId: string) => {
             where: {
                 id: candidacyId
             },
-            include: candidacyIncludes
+            include: {
+                ...candidacyIncludes,
+                candidate: true
+            }
         });
 
         const certificationAndRegion = await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
@@ -147,6 +150,8 @@ export const getCandidacyFromId = async (candidacyId: string) => {
 
         return Maybe.fromNullable(candidacy).map(c => ({ 
             ...c, 
+            phone: c.candidate?.phone || c.phone,
+            email: c.candidate?.email || c.email,
             regionId: certificationAndRegion?.region.id, 
             region: certificationAndRegion?.region, 
             certificationId: certificationAndRegion?.certification.id, 
