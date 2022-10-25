@@ -243,7 +243,7 @@ viewEditableElement formData ( elementId, element ) =
                 [ name elementId
                 , id elementId
                 , onInput (UserChangedElement elementId)
-                , class "w-full pr-8 h-[150px]"
+                , class "w-full p-8 h-[150px]"
                 , inputStyle
                 , value dataOrDefault
                 ]

@@ -399,7 +399,7 @@ updateTrainings candidacyId endpointGraphql token toMsg referential dict =
                 training.individualHourCount
                 training.collectiveHourCount
                 training.additionalHourCount
-                training.consent
+                True
                 (List.map Uuid training.basicSkillsIds)
                 (List.map Uuid training.mandatoryTrainingIds)
 
