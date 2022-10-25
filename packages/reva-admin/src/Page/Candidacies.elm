@@ -114,6 +114,7 @@ filterCandidacy filter candidacySummary =
     (Maybe.map (\certification -> match (certification.label ++ " " ++ certification.acronym)) candidacySummary.certification |> Maybe.withDefault False)
         || (Maybe.map match candidacySummary.phone |> Maybe.withDefault False)
         || (Maybe.map match candidacySummary.email |> Maybe.withDefault False)
+        || (Maybe.map match (Maybe.map .label candidacySummary.organism) |> Maybe.withDefault False)
 
 
 
@@ -468,6 +469,16 @@ viewItem config candidacy =
                     [ span
                         [ class "absolute inset-0", attribute "aria-hidden" "true" ]
                         []
+                    , div
+                        [ class "bg-yellow-200" ]
+                        [ text <|
+                            case candidacy.organism of
+                                Just organism ->
+                                    organism.label
+
+                                Nothing ->
+                                    ""
+                        ]
                     , p
                         [ class "flex text-sm font-medium text-blue-600 space-x-2" ]
                         [ displayMaybe candidacy.phone

@@ -55,6 +55,7 @@ type CandidacySummary {
   deviceId: ID!
   certificationId: ID
   organismId: ID
+  organism: Organism
   certification: Certification
   phone: String
   email: String

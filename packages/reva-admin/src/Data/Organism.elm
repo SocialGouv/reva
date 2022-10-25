@@ -1,4 +1,4 @@
-module Data.Organism exposing (Organism, OrganismId, organismIdFromUuid, organismIdToString)
+module Data.Organism exposing (Organism, OrganismId, organismIdFromString, organismIdFromUuid, organismIdToString)
 
 import Admin.Scalar exposing (Uuid(..))
 
@@ -19,6 +19,11 @@ type alias Organism =
 
 organismIdFromUuid : Uuid -> OrganismId
 organismIdFromUuid (Uuid id) =
+    OrganismId id
+
+
+organismIdFromString : String -> OrganismId
+organismIdFromString id =
     OrganismId id
 
 

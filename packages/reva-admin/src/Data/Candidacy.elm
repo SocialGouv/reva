@@ -65,6 +65,7 @@ type alias CandidacySummary =
     { id : CandidacyId
     , certificationId : Maybe String
     , certification : Maybe Certification
+    , organism : Maybe Organism
     , phone : Maybe String
     , email : Maybe String
     , lastStatus : CandidacyStatus
@@ -165,6 +166,7 @@ toCandidacySummary candidacy =
     { id = candidacy.id
     , certificationId = candidacy.certificationId
     , certification = candidacy.certification
+    , organism = candidacy.organism
     , phone = candidacy.phone
     , email = candidacy.email
     , lastStatus = lastStatus candidacy.statuses

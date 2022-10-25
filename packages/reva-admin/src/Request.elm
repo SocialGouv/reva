@@ -32,7 +32,7 @@ import Data.Candidacy exposing (CandidacyId)
 import Data.Certification
 import Data.Form.Appointment
 import Data.Form.Training
-import Data.Organism
+import Data.Organism exposing (Organism, OrganismId)
 import Data.Referential
 import Dict exposing (Dict)
 import Graphql.Http
@@ -187,6 +187,7 @@ candidacySummarySelection =
         |> with (SelectionSet.map (\(Id id) -> Data.Candidacy.candidacyIdFromString id) Admin.Object.CandidacySummary.id)
         |> with (SelectionSet.map (Maybe.map (\(Id id) -> id)) Admin.Object.CandidacySummary.certificationId)
         |> with (Admin.Object.CandidacySummary.certification certificationSelection)
+        |> with (Admin.Object.CandidacySummary.organism organismSelection)
         |> with Admin.Object.CandidacySummary.phone
         |> with Admin.Object.CandidacySummary.email
         |> with (Admin.Object.CandidacySummary.lastStatus candidacyStatusSelection)

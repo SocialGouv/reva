@@ -39,6 +39,13 @@ organismId =
     Object.selectionForField "(Maybe Data.Scalar.Id)" "organismId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder |> Decode.nullable)
 
 
+organism :
+    SelectionSet decodesTo Admin.Object.Organism
+    -> SelectionSet (Maybe decodesTo) Admin.Object.CandidacySummary
+organism object____ =
+    Object.selectionForCompositeField "organism" [] object____ (Basics.identity >> Decode.nullable)
+
+
 certification :
     SelectionSet decodesTo Admin.Object.Certification
     -> SelectionSet (Maybe decodesTo) Admin.Object.CandidacySummary

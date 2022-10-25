@@ -19,9 +19,11 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
-token : SelectionSet String Admin.Object.CandidateLogged
-token =
-    Object.selectionForField "String" "token" [] Decode.string
+tokens :
+    SelectionSet decodesTo Admin.Object.Tokens
+    -> SelectionSet decodesTo Admin.Object.CandidateLogged
+tokens object____ =
+    Object.selectionForCompositeField "tokens" [] object____ Basics.identity
 
 
 candidate :
