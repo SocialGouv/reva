@@ -470,6 +470,10 @@ export const getCandidacies = async () => {
 };
 
 export const getCandidaciesForUser = async (keycloakId: string) => {
+    if (!keycloakId) {
+        return Left(`Erreur lors de la récupération des candidatures, identifiant null`);
+    }
+    
     try {
         const candidacies = await prismaClient.candidacy.findMany({
             where: {
