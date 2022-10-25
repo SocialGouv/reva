@@ -16,7 +16,9 @@ export const Footer = () => (
   <footer>
     <div className="w-full hidden sm:flex items-end justify-center text-gray-600 text-sm pb-6">
       <div className="space-x-2">
-        <Link href="/">Site Reva</Link>
+        <Link href="/" target="_blank">
+          Site Reva
+        </Link>
         <Divider />
         <Link href="/cgu" target="_blank">
           CGU
