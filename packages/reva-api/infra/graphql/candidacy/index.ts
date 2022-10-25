@@ -76,7 +76,7 @@ export const resolvers = {
         hasRole: context.app.auth.hasRole,
         getCandidacySummaries: candidacyDb.getCandidacies,
         getCandidacySummariesForUser: candidacyDb.getCandidaciesForUser
-      })({ IAMId: context.app.userInfo?.sub });
+      })({ IAMId: context.app.auth.userInfo?.sub });
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
     getTrainings: async () => {
