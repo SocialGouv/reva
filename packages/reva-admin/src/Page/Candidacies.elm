@@ -323,7 +323,6 @@ trainingForm =
               )
             , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" )
             , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" )
-            , ( keys.consent, Form.Checkbox "Le candidat valide ce parcours et s'engage à poursuivre l'expérimentation" )
             ]
     , saveLabel = "Envoyer le parcours"
     , title = "Définition du parcours"
