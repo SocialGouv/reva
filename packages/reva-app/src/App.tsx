@@ -250,11 +250,11 @@ function App() {
   const appSize =
     windowSize.width > 640
       ? { width: 580, height: windowSize.height - 110 }
-      : // On mobile, this height prevents the fixed "candidate" button to be hidden behind Safari bar
-      ["certificateSummary", "certificateDetails"].some(current.matches)
-      ? windowSize
-      : // But on the other pages, it's better to keep 100vh (touching an input moves the view up)
-        { width: windowSize.width, height: "100vh" };
+      : // On mobile, for form pages it's better to keep 100vh (touching an input moves the view up)
+      ["loginHome", "projectExperience", "projectContact"].some(current.matches)
+      ? { width: windowSize.width, height: "100vh" }
+      : // Otherwise we use this height to prevent buttons fixed at the bottom to be hidden behind Safari bar
+        windowSize;
 
   const certificatesPage = (
     <Certificates key="show-results" mainService={mainService} />
