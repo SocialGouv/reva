@@ -104,19 +104,6 @@ withReferential referential state =
     { state | referential = referential }
 
 
-filterCandidacy : String -> CandidacySummary -> Bool
-filterCandidacy filter candidacySummary =
-    let
-        match s =
-            String.toLower s
-                |> String.contains (String.toLower filter)
-    in
-    (Maybe.map (\certification -> match (certification.label ++ " " ++ certification.acronym)) candidacySummary.certification |> Maybe.withDefault False)
-        || (Maybe.map match candidacySummary.phone |> Maybe.withDefault False)
-        || (Maybe.map match candidacySummary.email |> Maybe.withDefault False)
-        || (Maybe.map match (Maybe.map .label candidacySummary.organism) |> Maybe.withDefault False)
-
-
 
 -- VIEW
 
@@ -146,7 +133,7 @@ view context model =
                     viewContent context model sortedCandidacies
 
                 Just filter ->
-                    List.filter (filterCandidacy filter) sortedCandidacies
+                    List.filter (Candidacy.filterByWords filter) sortedCandidacies
                         |> viewContent context model
 
 

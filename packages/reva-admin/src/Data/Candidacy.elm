@@ -7,6 +7,7 @@ module Data.Candidacy exposing
     , CandidacySummary
     , candidacyIdFromString
     , candidacyIdToString
+    , filterByWords
     , isStatusAbove
     , lastStatus
     , statusToDirectoryPosition
@@ -193,3 +194,34 @@ isStatusAbove candidacy status =
                 |> statusToProgressPosition
     in
     currentStatusPosition >= statusToProgressPosition status
+
+
+filterByWord : String -> CandidacySummary -> Bool
+filterByWord word candidacySummary =
+    let
+        match s =
+            String.toLower s
+                |> String.contains (String.toLower word)
+    in
+    (Maybe.map (\certification -> match (certification.label ++ " " ++ certification.acronym)) candidacySummary.certification |> Maybe.withDefault False)
+        || (Maybe.map match candidacySummary.phone |> Maybe.withDefault False)
+        || (Maybe.map match candidacySummary.email |> Maybe.withDefault False)
+        || (Maybe.map match (Maybe.map .label candidacySummary.organism) |> Maybe.withDefault False)
+
+
+filterByWords : String -> CandidacySummary -> Bool
+filterByWords words candidacySummary =
+    let
+        matchAll predicate list =
+            case list of
+                [] ->
+                    True
+
+                first :: rest ->
+                    if predicate first then
+                        matchAll predicate rest
+
+                    else
+                        False
+    in
+    matchAll (\word -> filterByWord word candidacySummary) (String.split " " words)
