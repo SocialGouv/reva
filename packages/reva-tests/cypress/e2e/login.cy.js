@@ -7,9 +7,7 @@ context("Login", () => {
     cy.intercept("POST", "/graphql", (req) => {
       stubQuery(req, "candidate_askForLogin", "login.json");
     });
-    cy.visit("/");
-
-    cy.get('[data-test="project-contact-login"]').click();
+    cy.visit("/app/login");
 
     cy.get('[data-test="login-home"] #email').type(email);
 
@@ -17,6 +15,17 @@ context("Login", () => {
     cy.wait("@candidate_askForLogin");
 
     cy.get('[data-test="login-confirmation"]');
+  });
+
+  it("access login page from contact page", function () {
+    cy.intercept("POST", "/graphql", (req) => {
+      stubQuery(req, "candidate_askForLogin", "login.json");
+    });
+    cy.visit("/");
+
+    cy.get('[data-test="project-contact-login"]').click();
+
+    cy.get('[data-test="login-home"]');
   });
 
   it("use an expired token", function () {
