@@ -18,13 +18,8 @@ context("Login", () => {
   });
 
   it("access login page from contact page", function () {
-    cy.intercept("POST", "/graphql", (req) => {
-      stubQuery(req, "candidate_askForLogin", "login.json");
-    });
     cy.visit("/");
-
     cy.get('[data-test="project-contact-login"]').click();
-
     cy.get('[data-test="login-home"]');
   });
 
