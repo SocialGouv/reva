@@ -1157,9 +1157,7 @@ export const mainMachine =
               trainingProgram: event.data.candidacy.trainingProgram,
             };
           }),
-          navigateHome: (_context, _event) => {
-            navigateHome();
-          },
+          navigateHome,
           navigateNext: assign((_context, _event) => ({
             direction: "next",
           })),
