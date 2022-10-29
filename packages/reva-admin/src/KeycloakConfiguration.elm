@@ -38,8 +38,11 @@ getEncodedKeycloakConfiguration maybeKeycloakConfiguration =
                 ]
 
 
-
---Api.tokenToString token
+tokenDecoder : Decoder Token
+tokenDecoder =
+    Decode.map2 Api.initToken
+        (Decode.field "isAdmin" Decode.bool)
+        (Decode.field "token" Decode.string)
 
 
 iframeKeycloak : { onLoggedIn : Token -> msg, onLoggedOut : msg, onTokenRefreshed : Token -> msg } -> Maybe KeycloakConfiguration -> Bool -> Html msg
@@ -48,12 +51,10 @@ iframeKeycloak events maybeKeycloakConfiguration isLoggingOut =
         [ class "block h-0 w-0"
         , id "keycloak-element"
         , property "configuration" <| getEncodedKeycloakConfiguration maybeKeycloakConfiguration
-        , Decode.at [ "detail", "token" ] Decode.string
-            |> Decode.map Api.stringToToken
+        , Decode.field "detail" tokenDecoder
             |> Decode.map events.onLoggedIn
             |> on "loggedIn"
-        , Decode.at [ "detail", "token" ] Decode.string
-            |> Decode.map Api.stringToToken
+        , Decode.field "detail" tokenDecoder
             |> Decode.map events.onTokenRefreshed
             |> on "tokenRefreshed"
         , on "loggedOut" <|
