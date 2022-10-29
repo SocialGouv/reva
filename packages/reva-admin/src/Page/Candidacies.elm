@@ -8,12 +8,14 @@ module Page.Candidacies exposing
     )
 
 import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
+import Api exposing (Token)
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Context exposing (Context)
 import Data.Form.Appointment exposing (candidateTypologyToString)
 import Data.Form.Helper
 import Data.Form.Training
+import Data.Organism exposing (Organism)
 import Data.Referential exposing (Referential)
 import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, classList, for, id, name, placeholder, type_)
@@ -364,8 +366,8 @@ viewCandidacyArticle baseUrl content =
         ]
 
 
-viewDirectoryPanel : { a | baseUrl : String } -> List CandidacySummary -> Html Msg
-viewDirectoryPanel config candidacies =
+viewDirectoryPanel : Context -> List CandidacySummary -> Html Msg
+viewDirectoryPanel context candidacies =
     let
         candidaciesByStatus =
             List.Extra.groupWhile
@@ -374,13 +376,13 @@ viewDirectoryPanel config candidacies =
     in
     aside
         [ class "hidden md:order-first md:flex md:flex-col flex-shrink-0"
-        , class "w-2/3 max-w-3xl h-screen"
+        , class "w-full max-w-6xl h-screen"
         , class "bg-white"
         ]
         [ div
             [ class "px-6 pt-8 pb-4" ]
             [ h2
-                [ class "text-lg font-semibold text-gray-900 mb-8" ]
+                [ class "text-2xl font-semibold text-gray-900 mb-4" ]
                 [ text "Candidatures" ]
             , p
                 [ class "mt-1 text-sm text-gray-500" ]
@@ -411,7 +413,7 @@ viewDirectoryPanel config candidacies =
                     ]
                 ]
             ]
-        , List.map (viewDirectory config) candidaciesByStatus
+        , List.map (viewDirectory context) candidaciesByStatus
             |> nav
                 [ dataTest "directory"
                 , class "min-h-0 overflow-y-auto"
@@ -420,8 +422,8 @@ viewDirectoryPanel config candidacies =
         ]
 
 
-viewDirectory : { a | baseUrl : String } -> ( CandidacySummary, List Candidacy.CandidacySummary ) -> Html Msg
-viewDirectory config ( firstCandidacy, candidacies ) =
+viewDirectory : Context -> ( CandidacySummary, List Candidacy.CandidacySummary ) -> Html Msg
+viewDirectory context ( firstCandidacy, candidacies ) =
     div
         [ dataTest "directory-group", class "relative" ]
         [ div
@@ -429,13 +431,13 @@ viewDirectory config ( firstCandidacy, candidacies ) =
             , class "z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-3 text-sm font-semibold text-gray-800"
             ]
             [ h3 [] [ text (Candidacy.statusToString firstCandidacy.lastStatus.status) ] ]
-        , List.map (viewItem config) (firstCandidacy :: candidacies)
+        , List.map (viewItem context) (firstCandidacy :: candidacies)
             |> ul [ attribute "role" "list", class "relative z-0 divide-y divide-gray-200" ]
         ]
 
 
-viewItem : { a | baseUrl : String } -> CandidacySummary -> Html Msg
-viewItem config candidacy =
+viewItem : Context -> CandidacySummary -> Html Msg
+viewItem context candidacy =
     let
         displayMaybe maybeInfo =
             Maybe.map (\s -> div [] [ text s ]) maybeInfo
@@ -444,35 +446,34 @@ viewItem config candidacy =
     li
         [ dataTest "directory-item" ]
         [ div
-            [ class "relative px-6 py-5 flex items-center space-x-3 hover:bg-gray-50 focus-within:ring-1 focus-within:ring-inset focus-within:ring-indigo-500" ]
+            [ class "relative px-6 py-5 flex items-center space-x-6 hover:bg-gray-50 focus-within:ring-1 focus-within:ring-inset focus-within:ring-indigo-500" ]
             [ div [ class "flex-shrink-0 text-gray-400" ]
                 [ Icons.user ]
             , div
                 [ class "flex-1 min-w-0" ]
                 [ a
-                    [ Route.href config.baseUrl (Route.Candidacy <| Profil candidacy.id)
+                    [ Route.href context.baseUrl (Route.Candidacy <| Profil candidacy.id)
                     , class "focus:outline-none"
                     ]
                     [ span
                         [ class "absolute inset-0", attribute "aria-hidden" "true" ]
                         []
                     , div
-                        [ class "bg-yellow-200" ]
-                        [ text <|
-                            case candidacy.organism of
-                                Just organism ->
-                                    organism.label
+                        [ class "flex items-center justify-between mb-2" ]
+                        [ p
+                            [ class "flex text-sm font-medium text-blue-600 space-x-2" ]
+                            [ displayMaybe candidacy.phone
+                            , displayMaybe candidacy.email
+                            ]
+                        , case ( Api.hasAdminToken context.token, candidacy.organism ) of
+                            ( True, Just organism ) ->
+                                viewOrganism organism
 
-                                Nothing ->
-                                    ""
+                            _ ->
+                                text ""
                         ]
                     , p
-                        [ class "flex text-sm font-medium text-blue-600 space-x-2" ]
-                        [ displayMaybe candidacy.phone
-                        , displayMaybe candidacy.email
-                        ]
-                    , p
-                        [ class "text-sm text-gray-500 truncate"
+                        [ class "text-sm text-gray-600 truncate"
                         , classList [ ( "italic", candidacy.certification == Nothing ) ]
                         ]
                         [ Maybe.map .label candidacy.certification |> Maybe.withDefault "Certification non sélectionnée" |> text ]
@@ -480,6 +481,14 @@ viewItem config candidacy =
                 ]
             ]
         ]
+
+
+viewOrganism : Organism -> Html msg
+viewOrganism organism =
+    span
+        [ class "text-xs text-gray-500"
+        ]
+        [ text organism.label ]
 
 
 
