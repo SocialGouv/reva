@@ -467,7 +467,9 @@ viewItem context candidacy =
                             ]
                         , case ( Api.hasAdminToken context.token, candidacy.organism ) of
                             ( True, Just organism ) ->
-                                viewOrganism organism
+                                span
+                                    [ class "text-xs text-gray-500" ]
+                                    [ text organism.label ]
 
                             _ ->
                                 text ""
@@ -481,14 +483,6 @@ viewItem context candidacy =
                 ]
             ]
         ]
-
-
-viewOrganism : Organism -> Html msg
-viewOrganism organism =
-    span
-        [ class "text-xs text-gray-500"
-        ]
-        [ text organism.label ]
 
 
 
