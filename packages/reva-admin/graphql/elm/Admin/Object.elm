@@ -73,6 +73,10 @@ type SearchCertificationsAndProfessionsResult
     = SearchCertificationsAndProfessionsResult
 
 
+type Tokens
+    = Tokens
+
+
 type Training
     = Training
 

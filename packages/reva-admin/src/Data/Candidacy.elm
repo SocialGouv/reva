@@ -7,6 +7,7 @@ module Data.Candidacy exposing
     , CandidacySummary
     , candidacyIdFromString
     , candidacyIdToString
+    , filterByWords
     , isStatusAbove
     , lastStatus
     , statusToDirectoryPosition
@@ -65,6 +66,7 @@ type alias CandidacySummary =
     { id : CandidacyId
     , certificationId : Maybe String
     , certification : Maybe Certification
+    , organism : Maybe Organism
     , phone : Maybe String
     , email : Maybe String
     , lastStatus : CandidacyStatus
@@ -165,6 +167,7 @@ toCandidacySummary candidacy =
     { id = candidacy.id
     , certificationId = candidacy.certificationId
     , certification = candidacy.certification
+    , organism = candidacy.organism
     , phone = candidacy.phone
     , email = candidacy.email
     , lastStatus = lastStatus candidacy.statuses
@@ -191,3 +194,34 @@ isStatusAbove candidacy status =
                 |> statusToProgressPosition
     in
     currentStatusPosition >= statusToProgressPosition status
+
+
+filterByWord : String -> CandidacySummary -> Bool
+filterByWord word candidacySummary =
+    let
+        match s =
+            String.toLower s
+                |> String.contains (String.toLower word)
+    in
+    (Maybe.map (\certification -> match (certification.label ++ " " ++ certification.acronym)) candidacySummary.certification |> Maybe.withDefault False)
+        || (Maybe.map match candidacySummary.phone |> Maybe.withDefault False)
+        || (Maybe.map match candidacySummary.email |> Maybe.withDefault False)
+        || (Maybe.map match (Maybe.map .label candidacySummary.organism) |> Maybe.withDefault False)
+
+
+filterByWords : String -> CandidacySummary -> Bool
+filterByWords words candidacySummary =
+    let
+        matchAll predicate list =
+            case list of
+                [] ->
+                    True
+
+                first :: rest ->
+                    if predicate first then
+                        matchAll predicate rest
+
+                    else
+                        False
+    in
+    matchAll (\word -> filterByWord word candidacySummary) (String.split " " words)

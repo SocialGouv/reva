@@ -1,4 +1,4 @@
-import { CandidaciesStatus, Candidacy, CandidacyStatus, CandidateTypology, Certification } from '@prisma/client';
+import { CandidaciesStatus, Candidacy, CandidacyStatus, CandidateTypology, Certification, Organism } from '@prisma/client';
 import { Either, Left, Maybe, Right } from 'purify-ts';
 import * as domain from '../../../domain/types/candidacy';
 import { prismaClient } from './client';
@@ -31,10 +31,11 @@ export const candidacyIncludes = {
 };
 
 
-const toDomainCandidacySummary = (candidacy: Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; }) => ({
+const toDomainCandidacySummary = (candidacy: Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; organism: Organism | null }) => ({
     id: candidacy.id,
     deviceId: candidacy.deviceId,
     organismId: candidacy.organismId,
+    organism: candidacy.organism,
     certificationId: candidacy.certification?.id,
     certification: candidacy.certification,
     email: candidacy.email,
@@ -43,7 +44,7 @@ const toDomainCandidacySummary = (candidacy: Candidacy & { candidacyStatuses: Ca
     createdAt: candidacy.createdAt
 });    
 
-const toDomainCandidacySummaries = (candidacies: (Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; })[]): domain.CandidacySummary[] => {
+const toDomainCandidacySummaries = (candidacies: (Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; organism: Organism | null })[]): domain.CandidacySummary[] => {
     return candidacies.map(toDomainCandidacySummary);
 };
 
@@ -452,7 +453,8 @@ export const getCandidacies = async () => {
                         isActive: true
                     }
                 },
-                candidate: true
+                candidate: true,
+                organism: true
             }
         });
 
@@ -499,7 +501,8 @@ export const getCandidaciesForUser = async (keycloakId: string) => {
                         isActive: true
                     }
                 },
-                candidate: true
+                candidate: true,
+                organism: true
             }
         });
 
