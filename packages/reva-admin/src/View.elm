@@ -1,22 +1,10 @@
-module View exposing (image, layout, primaryButton, primaryLink, skeleton, title)
+module View exposing (image, primaryButton, primaryLink, skeleton, title)
 
 import Html.Styled as Html exposing (Html, a, button, div, h2, img, nav, span, text)
 import Html.Styled.Attributes exposing (attribute, class, href, src, type_)
 import Html.Styled.Events exposing (onClick)
 import Url.Builder
 import View.Icons as Icons
-
-
-layout : { a | onLogout : msg } -> Html msg -> Html msg
-layout config content =
-    div
-        [ class "bg-gray-white h-screen flex antialiased" ]
-        [ mobileMenu config
-        , div
-            [ class "hidden sm:flex lg:flex-shrink-0" ]
-            [ div [ class "flex flex-col sm:w-14" ] [ sideMenu config ] ]
-        , content
-        ]
 
 
 mobileMenu : { a | onLogout : msg } -> Html msg
