@@ -1,6 +1,7 @@
 module View.Candidacy exposing (Tab(..), view)
 
 import Admin.Enum.Duration exposing (Duration(..))
+import Api
 import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, CandidacyId)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Referential)
@@ -28,6 +29,7 @@ view :
         , archiveMsg : Candidacy -> msg
         , deleteMsg : Candidacy -> msg
         , referential : RemoteData String Referential
+        , token : Api.Token
     }
     -> List (Html msg)
 view config =
@@ -80,7 +82,11 @@ view config =
 
                 _ ->
                     text "..."
-            , viewOrganism config.candidacy.organism
+            , if Api.hasAdminToken config.token then
+                viewOrganism config.candidacy.organism
+
+              else
+                text ""
             , viewExperiences config.candidacy.experiences
             , button
                 [ type_ "button"

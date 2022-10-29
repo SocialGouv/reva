@@ -1,8 +1,9 @@
 import Keycloak from "keycloak-js";
 
 class KeycloakElement extends HTMLElement {
-
-  static get observedAttributes() { return ['logout']; }
+  static get observedAttributes() {
+    return ["logout"];
+  }
 
   private _configuration: any;
   private _keycloak: Keycloak | undefined;
@@ -41,23 +42,37 @@ class KeycloakElement extends HTMLElement {
         promiseType: "native",
         silentCheckSsoRedirectUri: `${window.location.origin}/admin/silent-check-sso.html`,
         iframeTarget: this,
-        checkLoginIframe: true
+        checkLoginIframe: true,
       })
       .then((authenticated) => {
         console.log(authenticated ? "authenticated" : "not authenticated");
         if (!authenticated) {
           keycloak.login({
-            redirectUri: window.location.href
+            redirectUri: window.location.href,
           });
         } else {
           //@ts-ignore
-          this.dispatchEvent(new CustomEvent("loggedIn", { detail: { token: keycloak.token } }));
+          this.dispatchEvent(
+            new CustomEvent("loggedIn", {
+              detail: {
+                isAdmin: keycloak.hasResourceRole("admin"),
+                token: keycloak.token,
+              },
+            })
+          );
         }
       });
 
     keycloak.onAuthRefreshSuccess = async () => {
       console.log("Token refresh success");
-      this.dispatchEvent(new CustomEvent("tokenRefreshed", { detail: { token: keycloak.token } }));
+      this.dispatchEvent(
+        new CustomEvent("tokenRefreshed", {
+          detail: {
+            isAdmin: keycloak.hasResourceRole("admin"),
+            token: keycloak.token,
+          },
+        })
+      );
     };
     keycloak.onTokenExpired = async () => {
       console.log("Token expired");
@@ -66,7 +81,7 @@ class KeycloakElement extends HTMLElement {
     keycloak.onAuthLogout = function () {
       console.log("Logged out");
       keycloak.login({
-        redirectUri: window.location.href
+        redirectUri: window.location.href,
       });
     };
   }
@@ -74,5 +89,5 @@ class KeycloakElement extends HTMLElement {
 
 export default {
   name: "keycloak-element",
-  clazz: KeycloakElement
+  clazz: KeycloakElement,
 };

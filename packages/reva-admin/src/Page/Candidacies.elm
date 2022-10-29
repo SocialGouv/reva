@@ -356,6 +356,7 @@ viewCandidacyPanel context model =
                     , archiveMsg = UserArchivedCandidacy
                     , deleteMsg = UserDeletedCandidacy
                     , referential = model.state.referential
+                    , token = context.token
                     }
 
 

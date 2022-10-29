@@ -1,20 +1,25 @@
-module Api exposing (Token, anonymous, stringToToken, tokenToString)
+module Api exposing (Token, anonymous, hasAdminToken, initToken, tokenToString)
 
 
 type Token
-    = Token String
+    = Token Bool String
 
 
 tokenToString : Token -> String
-tokenToString (Token token) =
+tokenToString (Token _ token) =
     token
 
 
-stringToToken : String -> Token
-stringToToken token =
-    Token token
+hasAdminToken : Token -> Bool
+hasAdminToken (Token isAdmin _) =
+    isAdmin
+
+
+initToken : Bool -> String -> Token
+initToken isAdmin token =
+    Token isAdmin token
 
 
 anonymous : Token
 anonymous =
-    Token "anonymous"
+    Token False "anonymous"
