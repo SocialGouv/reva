@@ -1,10 +1,8 @@
-module Api exposing (Token, anonymous, createSkill, deleteSkill, fetchCandidates, fetchSkills, login, stringToToken, tokenToString)
+module Api exposing (Token, anonymous, createSkill, deleteSkill, fetchSkills, initToken, tokenToString)
 
 import Candidate.MetaSkill exposing (MetaSkill)
 import Data.Candidate as Candidate exposing (Candidate)
 import Http
-import Json.Decode as Decode
-import Json.Encode as Encode
 import RemoteData exposing (WebData)
 
 
@@ -25,34 +23,6 @@ stringToToken token =
 anonymous : Token
 anonymous =
     Token "anonymous"
-
-
-login : (Result Http.Error Token -> msg) -> { a | email : String, password : String } -> Cmd msg
-login msg payload =
-    Http.post
-        { url = "/api/auth/login"
-        , body = Http.jsonBody (Encode.object [ ( "email", Encode.string payload.email ), ( "password", Encode.string payload.password ) ])
-        , expect =
-            Http.expectJson msg
-                (Decode.at [ "token" ] Decode.string
-                    |> Decode.andThen (\token -> Decode.succeed (Token token))
-                )
-        }
-
-
-fetchCandidates : (Result Http.Error (List Candidate) -> msg) -> { a | token : Token } -> Cmd msg
-fetchCandidates msg payload =
-    Http.request
-        { method = "GET"
-        , headers =
-            [ Http.header "Authorization" ("Bearer " ++ tokenToString payload.token)
-            ]
-        , url = "/api/candidates"
-        , body = Http.emptyBody
-        , expect = Http.expectJson msg (Decode.list Candidate.decoder)
-        , timeout = Nothing
-        , tracker = Nothing
-        }
 
 
 
