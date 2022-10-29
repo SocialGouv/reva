@@ -4,17 +4,14 @@ import Api exposing (Token)
 import Browser
 import Browser.Navigation as Nav
 import Data.Context exposing (Context)
-import Html.Styled as Html exposing (Html, a, div, img, text, toUnstyled)
-import Html.Styled.Attributes exposing (class, src)
-import Http
+import Html.Styled as Html exposing (Html, a, div, text, toUnstyled)
+import Html.Styled.Attributes exposing (class)
 import Json.Decode as Decode exposing (..)
 import KeycloakConfiguration exposing (KeycloakConfiguration)
 import Page.Candidacies as Candidacies exposing (Model)
-import Page.Candidates as Candidates exposing (Model)
 import Page.Loading
 import Route exposing (Route(..))
 import Url exposing (Url)
-import Url.Builder
 import View
 
 
@@ -38,7 +35,6 @@ type alias Model =
 
 type Page
     = Candidacies Candidacies.Model
-    | Candidates Candidates.Model
     | Loading Token
     | LoggingOut
     | NotLoggedIn Route
@@ -49,9 +45,7 @@ type Msg
       BrowserChangedUrl Url
     | UserClickedLink Browser.UrlRequest
     | UserLoggedOut
-    | GotCandidatesMsg Candidates.Msg
     | GotCandidaciesMsg Candidacies.Msg
-    | GotLoginError String
     | GotLoggedIn Token
     | GotTokenRefreshed Token
     | GotLoggedOut
@@ -119,10 +113,6 @@ viewPage model =
             Candidacies.view model.context candidaciesModel
                 |> Html.map GotCandidaciesMsg
 
-        Candidates candidatesModel ->
-            Candidates.view candidatesModel
-                |> Html.map GotCandidatesMsg
-
         Loading _ ->
             div [] []
 
@@ -181,15 +171,6 @@ update msg model =
 
         ( UserLoggedOut, _ ) ->
             ( model, removeToken () )
-
-        ( GotCandidatesMsg candidatesMsg, Candidates candidatesModel ) ->
-            let
-                ( newCandidatesModel, candidatesCmd ) =
-                    Candidates.update candidatesMsg candidatesModel
-            in
-            ( { model | page = Candidates newCandidatesModel }
-            , Cmd.map GotCandidatesMsg candidatesCmd
-            )
 
         -- Candidacies
         ( GotCandidaciesMsg candidaciesMsg, Candidacies candidaciesModel ) ->
@@ -254,32 +235,6 @@ withTokenRefreshed token ({ context } as model) =
     { model | context = newContext }
 
 
-
---model
-
-
-withAuthHandle : (Result Http.Error a -> Msg) -> Result Http.Error a -> Msg
-withAuthHandle msg result =
-    case result of
-        Ok _ ->
-            msg result
-
-        Err (Http.BadStatus 400) ->
-            GotLoginError "Vos identifiants sont incorrects"
-
-        Err (Http.BadStatus 401) ->
-            GotLoginError "Vos identifiants sont incorrects"
-
-        Err (Http.BadStatus 403) ->
-            GotLoginError "Vous n'êtes pas autorisé à vous connecter"
-
-        Err Http.NetworkError ->
-            GotLoginError "Une erreur réseau est survenue, veuillez réitérer"
-
-        _ ->
-            GotLoginError "Une erreur technique est survenue, si le problème veuillez contacter votre correspondant REVA."
-
-
 init : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
     initWithoutToken flags url key
@@ -315,9 +270,6 @@ subscriptions _ =
 
 
 -- PORT
-
-
-port storeToken : String -> Cmd msg
 
 
 port removeToken : () -> Cmd msg
