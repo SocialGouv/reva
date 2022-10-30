@@ -386,7 +386,12 @@ viewDirectoryPanel context candidacies =
                 [ text "Candidatures" ]
             , p
                 [ class "mt-1 text-sm text-gray-500" ]
-                [ text "Recherchez par nom de certification et information de contact (téléphone et email)" ]
+                [ if Api.hasAdminToken context.token then
+                    text "Recherchez par architecte de parcours, certification et information de contact"
+
+                  else
+                    text "Recherchez par certification et information de contact"
+                ]
             , div
                 [ class "my-2 flex space-x-4", action "#" ]
                 [ div
