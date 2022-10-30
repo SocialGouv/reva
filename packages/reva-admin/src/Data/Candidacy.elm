@@ -55,6 +55,8 @@ type alias Candidacy =
     , certification : Maybe Certification
     , goals : List CandidacyGoal
     , experiences : List CandidacyExperience
+    , firstname : Maybe String
+    , lastname : Maybe String
     , phone : Maybe String
     , email : Maybe String
     , statuses : List CandidacyStatus
@@ -67,6 +69,8 @@ type alias CandidacySummary =
     , certificationId : Maybe String
     , certification : Maybe Certification
     , organism : Maybe Organism
+    , firstname : Maybe String
+    , lastname : Maybe String
     , phone : Maybe String
     , email : Maybe String
     , lastStatus : CandidacyStatus
@@ -168,6 +172,8 @@ toCandidacySummary candidacy =
     , certificationId = candidacy.certificationId
     , certification = candidacy.certification
     , organism = candidacy.organism
+    , firstname = candidacy.firstname
+    , lastname = candidacy.lastname
     , phone = candidacy.phone
     , email = candidacy.email
     , lastStatus = lastStatus candidacy.statuses

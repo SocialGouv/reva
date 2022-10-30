@@ -188,6 +188,8 @@ candidacySummarySelection =
         |> with (SelectionSet.map (Maybe.map (\(Id id) -> id)) Admin.Object.CandidacySummary.certificationId)
         |> with (Admin.Object.CandidacySummary.certification certificationSelection)
         |> with (Admin.Object.CandidacySummary.organism organismSelection)
+        |> with Admin.Object.CandidacySummary.firstname
+        |> with Admin.Object.CandidacySummary.lastname
         |> with Admin.Object.CandidacySummary.phone
         |> with Admin.Object.CandidacySummary.email
         |> with (Admin.Object.CandidacySummary.lastStatus candidacyStatusSelection)
@@ -220,6 +222,8 @@ candidacySelection =
         |> with (Admin.Object.Candidacy.certification certificationSelection)
         |> with (Admin.Object.Candidacy.goals candidacyGoalSelection)
         |> with (Admin.Object.Candidacy.experiences candidacyExperienceSelection)
+        |> with Admin.Object.Candidacy.firstname
+        |> with Admin.Object.Candidacy.lastname
         |> with Admin.Object.Candidacy.phone
         |> with Admin.Object.Candidacy.email
         |> with (Admin.Object.Candidacy.candidacyStatuses candidacyStatusSelection)

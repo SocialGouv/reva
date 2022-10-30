@@ -31,20 +31,22 @@ export const candidacyIncludes = {
 };
 
 
-const toDomainCandidacySummary = (candidacy: Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; organism: Organism | null }) => ({
+const toDomainCandidacySummary = (candidacy: Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; organism: Organism | null; firstname: string | undefined, lastname: string | undefined }) => ({
     id: candidacy.id,
     deviceId: candidacy.deviceId,
     organismId: candidacy.organismId,
     organism: candidacy.organism,
     certificationId: candidacy.certification?.id,
     certification: candidacy.certification,
+    firstname: candidacy.firstname,
+    lastname: candidacy.lastname,
     email: candidacy.email,
     phone: candidacy.phone,
     lastStatus: candidacy.candidacyStatuses[0],
     createdAt: candidacy.createdAt
 });    
 
-const toDomainCandidacySummaries = (candidacies: (Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; organism: Organism | null })[]): domain.CandidacySummary[] => {
+const toDomainCandidacySummaries = (candidacies: (Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; organism: Organism | null; firstname: string | undefined, lastname: string | undefined })[]): domain.CandidacySummary[] => {
     return candidacies.map(toDomainCandidacySummary);
 };
 
@@ -146,11 +148,13 @@ export const getCandidacyFromId = async (candidacyId: string) => {
             include: {
                 certification: true,
                 region: true
-            }
+            } 
         });
 
         return Maybe.fromNullable(candidacy).map(c => ({ 
             ...c, 
+            firstname: c.candidate?.firstname,
+            lastname: c.candidate?.lastname,
             phone: c.candidate?.phone || c.phone,
             email: c.candidate?.email || c.email,
             regionId: certificationAndRegion?.region.id, 
@@ -461,6 +465,8 @@ export const getCandidacies = async () => {
         return Right(toDomainCandidacySummaries(candidacies.map(c => ({
             ...c, 
             certification: c.certificationsAndRegions[0]?.certification,
+            firstname: c.candidate?.firstname,
+            lastname: c.candidate?.lastname,
             phone: c.candidate?.phone || c.phone,
             email: c.candidate?.email || c.email,
         }))));
@@ -509,6 +515,8 @@ export const getCandidaciesForUser = async (keycloakId: string) => {
         return Right(toDomainCandidacySummaries(candidacies.map(c => ({
             ...c, 
             certification: c.certificationsAndRegions[0]?.certification,
+            firstname: c.candidate?.firstname,
+            lastname: c.candidate?.lastname,
             phone: c.candidate?.phone || c.phone,
             email: c.candidate?.email || c.email,
         }))));
