@@ -208,12 +208,15 @@ filterByWord word candidacySummary =
         match s =
             String.toLower s
                 |> String.contains (String.toLower word)
+
+        maybeMatch field =
+            Maybe.map match (field candidacySummary) |> Maybe.withDefault False
     in
     (Maybe.map (\certification -> match (certification.label ++ " " ++ certification.acronym)) candidacySummary.certification |> Maybe.withDefault False)
-        || (Maybe.map match candidacySummary.firstname |> Maybe.withDefault False)
-        || (Maybe.map match candidacySummary.lastname |> Maybe.withDefault False)
-        || (Maybe.map match candidacySummary.phone |> Maybe.withDefault False)
-        || (Maybe.map match candidacySummary.email |> Maybe.withDefault False)
+        || maybeMatch .firstname
+        || maybeMatch .lastname
+        || maybeMatch .phone
+        || maybeMatch .email
         || (Maybe.map match (Maybe.map .label candidacySummary.organism) |> Maybe.withDefault False)
 
 
