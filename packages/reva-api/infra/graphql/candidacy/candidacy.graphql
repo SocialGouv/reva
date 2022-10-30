@@ -29,6 +29,8 @@ type Candidacy {
   certification: Certification
   experiences: [Experience!]!
   goals: [CandidateGoal!]!
+  firstname: String
+  lastname: String
   phone: String
   email: String
   typology: CandidateTypology
@@ -57,6 +59,8 @@ type CandidacySummary {
   organismId: ID
   organism: Organism
   certification: Certification
+  firstname: String
+  lastname: String
   phone: String
   email: String
   lastStatus: CandidacyStatus!

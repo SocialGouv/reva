@@ -55,6 +55,8 @@ type alias Candidacy =
     , certification : Maybe Certification
     , goals : List CandidacyGoal
     , experiences : List CandidacyExperience
+    , firstname : Maybe String
+    , lastname : Maybe String
     , phone : Maybe String
     , email : Maybe String
     , statuses : List CandidacyStatus
@@ -67,6 +69,8 @@ type alias CandidacySummary =
     , certificationId : Maybe String
     , certification : Maybe Certification
     , organism : Maybe Organism
+    , firstname : Maybe String
+    , lastname : Maybe String
     , phone : Maybe String
     , email : Maybe String
     , lastStatus : CandidacyStatus
@@ -168,6 +172,8 @@ toCandidacySummary candidacy =
     , certificationId = candidacy.certificationId
     , certification = candidacy.certification
     , organism = candidacy.organism
+    , firstname = candidacy.firstname
+    , lastname = candidacy.lastname
     , phone = candidacy.phone
     , email = candidacy.email
     , lastStatus = lastStatus candidacy.statuses
@@ -202,10 +208,15 @@ filterByWord word candidacySummary =
         match s =
             String.toLower s
                 |> String.contains (String.toLower word)
+
+        maybeMatch field =
+            Maybe.map match (field candidacySummary) |> Maybe.withDefault False
     in
     (Maybe.map (\certification -> match (certification.label ++ " " ++ certification.acronym)) candidacySummary.certification |> Maybe.withDefault False)
-        || (Maybe.map match candidacySummary.phone |> Maybe.withDefault False)
-        || (Maybe.map match candidacySummary.email |> Maybe.withDefault False)
+        || maybeMatch .firstname
+        || maybeMatch .lastname
+        || maybeMatch .phone
+        || maybeMatch .email
         || (Maybe.map match (Maybe.map .label candidacySummary.organism) |> Maybe.withDefault False)
 
 

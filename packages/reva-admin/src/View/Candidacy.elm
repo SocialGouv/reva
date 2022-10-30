@@ -55,8 +55,16 @@ view config =
     , div
         [ class "mt-2 mb-6 text-sm text-gray-700" ]
         [ dl
-            [ class "grid grid-cols-1 gap-x-4 gap-y-8 2xl:grid-cols-2" ]
-            [ config.candidacy.phone
+            [ class "grid grid-cols-2 gap-x-4" ]
+            [ case ( config.candidacy.firstname, config.candidacy.lastname ) of
+                ( Just firstname, Just lastname ) ->
+                    viewInfo "first-name lastname"
+                        "Prénom Nom"
+                        (text <| firstname ++ " " ++ lastname)
+
+                _ ->
+                    text ""
+            , config.candidacy.phone
                 |> Maybe.map (text >> viewInfo "phone-number" "Téléphone")
                 |> Maybe.withDefault (text "")
             , config.candidacy.email

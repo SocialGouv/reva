@@ -80,6 +80,16 @@ goals object____ =
     Object.selectionForCompositeField "goals" [] object____ (Basics.identity >> Decode.list)
 
 
+firstname : SelectionSet (Maybe String) Admin.Object.Candidacy
+firstname =
+    Object.selectionForField "(Maybe String)" "firstname" [] (Decode.string |> Decode.nullable)
+
+
+lastname : SelectionSet (Maybe String) Admin.Object.Candidacy
+lastname =
+    Object.selectionForField "(Maybe String)" "lastname" [] (Decode.string |> Decode.nullable)
+
+
 phone : SelectionSet (Maybe String) Admin.Object.Candidacy
 phone =
     Object.selectionForField "(Maybe String)" "phone" [] (Decode.string |> Decode.nullable)

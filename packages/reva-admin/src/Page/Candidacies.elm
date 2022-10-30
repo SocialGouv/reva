@@ -386,7 +386,12 @@ viewDirectoryPanel context candidacies =
                 [ text "Candidatures" ]
             , p
                 [ class "mt-1 text-sm text-gray-500" ]
-                [ text "Recherchez par nom de certification et information de contact (téléphone et email)" ]
+                [ if Api.hasAdminToken context.token then
+                    text "Recherchez par architecte de parcours, certification et information de contact"
+
+                  else
+                    text "Recherchez par certification et information de contact"
+                ]
             , div
                 [ class "my-2 flex space-x-4", action "#" ]
                 [ div
@@ -458,27 +463,39 @@ viewItem context candidacy =
                     [ span
                         [ class "absolute inset-0", attribute "aria-hidden" "true" ]
                         []
+                    , p
+                        [ class "flex justify-between" ]
+                        [ div
+                            [ class "flex font-semibold text-blue-600 space-x-2" ]
+                          <|
+                            case ( candidacy.firstname, candidacy.lastname ) of
+                                ( Just firstname, Just lastname ) ->
+                                    [ text firstname, text " ", text lastname ]
+
+                                _ ->
+                                    [ displayMaybe candidacy.phone
+                                    , displayMaybe candidacy.email
+                                    ]
+                        ]
                     , div
-                        [ class "flex items-center justify-between mb-2" ]
+                        [ class "flex items-end justify-between" ]
                         [ p
-                            [ class "flex text-sm font-medium text-blue-600 space-x-2" ]
-                            [ displayMaybe candidacy.phone
-                            , displayMaybe candidacy.email
+                            [ class "text-sm text-gray-600 truncate"
+                            , classList [ ( "italic", candidacy.certification == Nothing ) ]
+                            ]
+                            [ Maybe.map .label candidacy.certification
+                                |> Maybe.withDefault "Certification non sélectionnée"
+                                |> text
                             ]
                         , case ( Api.hasAdminToken context.token, candidacy.organism ) of
                             ( True, Just organism ) ->
-                                span
-                                    [ class "text-xs text-gray-500" ]
+                                div
+                                    [ class "text-xs whitespace-nowrap text-gray-600" ]
                                     [ text organism.label ]
 
                             _ ->
                                 text ""
                         ]
-                    , p
-                        [ class "text-sm text-gray-600 truncate"
-                        , classList [ ( "italic", candidacy.certification == Nothing ) ]
-                        ]
-                        [ Maybe.map .label candidacy.certification |> Maybe.withDefault "Certification non sélectionnée" |> text ]
                     ]
                 ]
             ]
