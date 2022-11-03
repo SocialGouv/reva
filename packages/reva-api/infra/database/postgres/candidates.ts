@@ -88,6 +88,16 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
                 },
                 include: {
                     candidacies: {
+                        where: {
+                            candidacyStatuses: {
+                                none: {
+                                    
+                                    status: 'ARCHIVE',
+                                    isActive: true
+
+                                }
+                            }
+                        },
                         include: candidacyIncludes
                     }
                 }
@@ -99,6 +109,16 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
                 },
                 include: {
                     candidacies: {
+                        where: {
+                            candidacyStatuses: {
+                                none: {
+                                    
+                                    status: 'ARCHIVE',
+                                    isActive: true
+
+                                }
+                            }
+                        },
                         include: candidacyIncludes
                     }
                 }
@@ -139,7 +159,7 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
 
 export const getCandidateWithCandidacyFromKeycloakId = async (keycloakId: string) => {
     try {
-        const candidate = await prismaClient.candidate.findFirst({
+        let candidate = await prismaClient.candidate.findFirst({
             where: {
                 keycloakId: keycloakId,
                 candidacies: {
@@ -155,10 +175,56 @@ export const getCandidateWithCandidacyFromKeycloakId = async (keycloakId: string
             },
             include: {
                 candidacies: {
+                    where: {
+                        candidacyStatuses: {
+                            none: {
+                                    
+                                status: 'ARCHIVE',
+                                isActive: true
+
+                            }
+                        }
+                    },
                     include: candidacyIncludes
                 },
             }
         });
+
+        if (!candidate) {
+            candidate = await prismaClient.candidate.update({
+                where: {
+                    keycloakId: keycloakId,
+                },
+                data: {
+                    candidacies: {
+                        create: {
+                            deviceId: keycloakId,
+                            candidacyStatuses: {
+                                create: {
+                                    status: CandidacyStatus.PROJET,
+                                    isActive: true
+                                }
+                            }
+                        }
+                    }
+                },
+                include: {
+                    candidacies: {
+                        where: {
+                            candidacyStatuses: {
+                                none: {
+                                    
+                                    status: 'ARCHIVE',
+                                    isActive: true
+
+                                }
+                            }
+                        },
+                        include: candidacyIncludes
+                    },
+                }
+            });
+        }
 
         const certificationAndRegion = await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
             where: {
