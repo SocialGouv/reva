@@ -28,6 +28,7 @@ import Route
 import String exposing (String)
 import View
 import View.Candidacy exposing (Tab(..))
+import View.Date
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 import View.Steps
@@ -477,20 +478,31 @@ viewItem context candidacy =
                                     , displayMaybe candidacy.email
                                     ]
                         ]
+                    , p
+                        [ class "text-gray-700 truncate"
+                        , classList [ ( "italic", candidacy.certification == Nothing ) ]
+                        ]
+                        [ Maybe.map .label candidacy.certification
+                            |> Maybe.withDefault "Certification non sélectionnée"
+                            |> text
+                        ]
                     , div
                         [ class "flex items-end justify-between" ]
                         [ p
-                            [ class "text-sm text-gray-600 truncate"
-                            , classList [ ( "italic", candidacy.certification == Nothing ) ]
-                            ]
-                            [ Maybe.map .label candidacy.certification
-                                |> Maybe.withDefault "Certification non sélectionnée"
-                                |> text
-                            ]
+                            [ class "text-sm text-gray-500" ]
+                          <|
+                            case candidacy.sentAt of
+                                Just sentAt ->
+                                    [ text "Candidature envoyée le "
+                                    , text <| View.Date.toString sentAt
+                                    ]
+
+                                Nothing ->
+                                    []
                         , case ( Api.hasAdminToken context.token, candidacy.organism ) of
                             ( True, Just organism ) ->
                                 div
-                                    [ class "text-xs whitespace-nowrap text-gray-600" ]
+                                    [ class "text-xs whitespace-nowrap text-gray-500" ]
                                     [ text organism.label ]
 
                             _ ->

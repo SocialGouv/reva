@@ -65,6 +65,7 @@ type CandidacySummary {
   email: String
   lastStatus: CandidacyStatus!
   createdAt: Timestamp!
+  sentAt: Timestamp
 }
 
 type CandidacyStatus {
