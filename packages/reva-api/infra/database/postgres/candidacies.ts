@@ -36,7 +36,7 @@ const toDomainCandidacySummary = (candidacy: Candidacy & { candidacyStatuses: Ca
     const statuses = candidacy.candidacyStatuses;
     const lastStatus = statuses.filter((status => status.isActive))[0];
     const sentStatus = statuses.filter((status => status.status == 'VALIDATION'))?.[0];
-    const sentAt = sentStatus?.updatedAt || sentStatus?.createdAt;
+    const sentAt = sentStatus?.createdAt;
     
     return {
         id: candidacy.id,
