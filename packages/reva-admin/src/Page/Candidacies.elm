@@ -28,7 +28,6 @@ import Route
 import String exposing (String)
 import View
 import View.Candidacy exposing (Tab(..))
-import View.Date
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 import View.Steps
@@ -246,7 +245,7 @@ viewNavigationSteps baseUrl candidacy =
 viewMain : String -> List (Html msg) -> Html msg
 viewMain dataTestValue =
     node "main"
-        [ class "bg-white w-[762px] px-8 pt-8 pb-24"
+        [ class "bg-white w-[762px] px-2 pt-2 pb-24"
         , dataTest dataTestValue
         ]
 
@@ -362,7 +361,7 @@ viewCandidacyArticle baseUrl content =
             , text "Toutes les candidatures"
             ]
         , article
-            [ class "px-3 sm:px-6" ]
+            [ class "px-16" ]
             content
         ]
 
@@ -381,7 +380,7 @@ viewDirectoryPanel context candidacies =
         , class "bg-white"
         ]
         [ div
-            [ class "px-6 pt-10 pb-4" ]
+            [ class "px-10 pt-10 pb-4" ]
             [ h2
                 [ class "text-3xl font-black text-slate-800 mb-6" ]
                 [ text "Candidatures" ]
@@ -438,7 +437,7 @@ viewDirectory context ( firstCandidacy, candidacies ) =
         [ div
             [ dataTest "directory-group-name"
             , class "z-10 sticky top-0 text-xl font-semibold text-slate-700"
-            , class "bg-white px-6 py-3"
+            , class "bg-white px-10 py-3"
             ]
             [ h3 [] [ text (Candidacy.statusToString firstCandidacy.lastStatus.status) ] ]
         , List.map (viewItem context) (firstCandidacy :: candidacies)
@@ -456,13 +455,10 @@ viewItem context candidacy =
     li
         [ dataTest "directory-item" ]
         [ div
-            [ class "relative px-6 py-4 flex items-center space-x-6 hover:bg-gray-50"
+            [ class "relative px-10 py-4 flex items-center space-x-6 hover:bg-gray-50"
             , class "focus-within:ring-1 focus-within:ring-inset focus-within:ring-indigo-500"
             ]
             [ div
-                [ class "flex-shrink-0 text-gray-400" ]
-                [ Icons.user ]
-            , div
                 [ class "flex-1 min-w-0" ]
                 [ a
                     [ Route.href context.baseUrl (Route.Candidacy <| Profil candidacy.id)
@@ -480,9 +476,12 @@ viewItem context candidacy =
                             |> text
                         ]
                     , p
-                        [ class "flex justify-between" ]
+                        [ class "flex items-center space-x-1" ]
                         [ div
-                            [ class "flex font-medium text-gray-700 space-x-2" ]
+                            [ class "flex-shrink-0 text-gray-400" ]
+                            [ Icons.user ]
+                        , div
+                            [ class "flex text-gray-700 space-x-2" ]
                           <|
                             case ( candidacy.firstname, candidacy.lastname ) of
                                 ( Just firstname, Just lastname ) ->
@@ -495,19 +494,9 @@ viewItem context candidacy =
                         ]
                     , div
                         [ class "flex items-end justify-between"
-                        , class "font-medium text-gray-500"
+                        , class "text-gray-500"
                         ]
-                        [ div
-                            []
-                          <|
-                            case candidacy.sentAt of
-                                Just sentAt ->
-                                    [ text "Candidature envoyée le "
-                                    , text <| View.Date.toString sentAt
-                                    ]
-
-                                Nothing ->
-                                    []
+                        [ View.Candidacy.viewSentAt candidacy.sentAt
                         , case ( Api.hasAdminToken context.token, candidacy.organism ) of
                             ( True, Just organism ) ->
                                 div

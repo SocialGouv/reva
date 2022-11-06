@@ -10,6 +10,7 @@ module Data.Candidacy exposing
     , filterByWords
     , isStatusAbove
     , lastStatus
+    , sentDate
     , statusToDirectoryPosition
     , statusToProgressPosition
     , statusToString
