@@ -465,9 +465,17 @@ viewItem context candidacy =
                         [ class "absolute inset-0", attribute "aria-hidden" "true" ]
                         []
                     , p
+                        [ class "text-blue-600 font-medium truncate"
+                        , classList [ ( "italic", candidacy.certification == Nothing ) ]
+                        ]
+                        [ Maybe.map .label candidacy.certification
+                            |> Maybe.withDefault "Certification non sélectionnée"
+                            |> text
+                        ]
+                    , p
                         [ class "flex justify-between" ]
                         [ div
-                            [ class "flex font-semibold text-blue-600 space-x-2" ]
+                            [ class "flex text-gray-800 space-x-2" ]
                           <|
                             case ( candidacy.firstname, candidacy.lastname ) of
                                 ( Just firstname, Just lastname ) ->
@@ -477,14 +485,6 @@ viewItem context candidacy =
                                     [ displayMaybe candidacy.phone
                                     , displayMaybe candidacy.email
                                     ]
-                        ]
-                    , p
-                        [ class "text-gray-700 truncate"
-                        , classList [ ( "italic", candidacy.certification == Nothing ) ]
-                        ]
-                        [ Maybe.map .label candidacy.certification
-                            |> Maybe.withDefault "Certification non sélectionnée"
-                            |> text
                         ]
                     , div
                         [ class "flex items-end justify-between" ]
