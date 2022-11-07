@@ -1,4 +1,4 @@
-module View.Candidacy exposing (Tab(..), view)
+module View.Candidacy exposing (Tab(..), view, viewSentAt)
 
 import Admin.Enum.Duration exposing (Duration(..))
 import Api
@@ -6,11 +6,12 @@ import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, C
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Referential)
 import Dict
-import Html.Styled exposing (Html, a, button, dd, div, dl, dt, h1, h3, h4, li, nav, node, p, span, text, ul)
+import Html.Styled exposing (Html, a, button, dd, div, dl, dt, h1, h3, h4, li, nav, p, span, text, ul)
 import Html.Styled.Attributes exposing (attribute, class, classList, css, href, type_)
 import Html.Styled.Events exposing (onClick)
 import RemoteData exposing (RemoteData(..))
-import View.Date as Date
+import Time exposing (Posix)
+import View.Date
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 
@@ -44,43 +45,58 @@ view config =
             ]
         ]
     , div
-        [ class "pt-8" ]
-        [ h1
-            [ class "text-3xl font-medium text-gray-900 leading-none"
-            , classList [ ( "italic", config.candidacy.certification == Nothing ) ]
-            ]
-            [ Maybe.map .label config.candidacy.certification |> Maybe.withDefault "Certification non sélectionnée" |> text
-            ]
-        ]
-    , div
-        [ class "mt-2 mb-6 text-sm text-gray-700" ]
+        [ class "mt-4 mb-8 text-gray-700" ]
         [ dl
-            [ class "grid grid-cols-2 gap-x-4" ]
+            []
             [ case ( config.candidacy.firstname, config.candidacy.lastname ) of
                 ( Just firstname, Just lastname ) ->
-                    viewInfo "first-name lastname"
+                    viewInfo
+                        "firstname lastname"
                         "Prénom Nom"
-                        (text <| firstname ++ " " ++ lastname)
+                    <|
+                        div
+                            [ class "text-3xl font-bold text-slate-800 mb-10" ]
+                            [ text <| firstname ++ " " ++ lastname
+                            ]
 
                 _ ->
                     text ""
-            , config.candidacy.phone
-                |> Maybe.map (text >> viewInfo "phone-number" "Téléphone")
-                |> Maybe.withDefault (text "")
-            , config.candidacy.email
-                |> Maybe.map
-                    (\email ->
-                        a
-                            [ class "text-blue-500 hover:text-blue-600 truncate"
-                            , href ("mailto:" ++ email)
-                            ]
-                            [ text email ]
-                            |> viewInfo "email" "Email"
-                    )
-                |> Maybe.withDefault (text "")
+            , viewInfo
+                "certification-label"
+                "certification"
+              <|
+                div
+                    [ class "text-xl font-bold leading-none text-slate-700 mb-5"
+                    , classList [ ( "italic", config.candidacy.certification == Nothing ) ]
+                    ]
+                    [ Maybe.map .label config.candidacy.certification
+                        |> Maybe.withDefault "Certification non sélectionnée"
+                        |> text
+                    ]
+            , div
+                [ class "bg-gray-100 rounded-lg px-5 py-4"
+                , class "leading-relaxed text-gray-500"
+                ]
+                [ viewInfo "sent-at" "Date de candidature" <|
+                    viewSentAt (Data.Candidacy.sentDate config.candidacy.statuses)
+                , config.candidacy.phone
+                    |> Maybe.map (text >> viewInfo "phone-number" "Téléphone")
+                    |> Maybe.withDefault (text "")
+                , config.candidacy.email
+                    |> Maybe.map
+                        (\email ->
+                            a
+                                [ class "text-blue-500 hover:text-blue-600 truncate"
+                                , href ("mailto:" ++ email)
+                                ]
+                                [ text email ]
+                                |> viewInfo "email" "Email"
+                        )
+                    |> Maybe.withDefault (text "")
+                ]
             ]
         , div
-            [ class "my-12 mx-8" ]
+            [ class "my-12" ]
             [ case config.referential of
                 Success referential ->
                     viewGoals referential config.candidacy.goals
@@ -109,12 +125,10 @@ view config =
 
 viewInfo : String -> String -> Html msg -> Html msg
 viewInfo dataTestId label value =
-    div
-        [ class "sm:col-span-1" ]
-        [ dd
-            [ dataTest dataTestId
-            , class "mt-1 text-sm text-gray-900"
-            ]
+    div []
+        [ dt [ class "hidden" ] [ text label ]
+        , dd
+            [ dataTest dataTestId ]
             [ value ]
         ]
 
@@ -160,7 +174,7 @@ viewExperience : CandidacyExperience -> Html msg
 viewExperience experience =
     div [ class "rounded-lg px-5 py-4 bg-gray-100 text-base leading-tight" ]
         [ h4 [ class "font-semibold mb-2" ] [ text experience.title ]
-        , p [ class "my-4" ] [ text "Démarrée en ", Date.view experience.startedAt ]
+        , p [ class "my-4" ] [ text "Démarrée en ", text <| View.Date.toString experience.startedAt ]
         , p [ class "font-bold my-4" ] [ text "Durée d'expérience ", viewDuration experience.duration ]
         , p [ class "italic" ] [ text "\"", text experience.description, text "\"" ]
         ]
@@ -208,3 +222,18 @@ viewExperiences experiences =
         [ title "Mes expériences"
         , div [ class "space-y-4" ] <| List.map viewExperience experiences
         ]
+
+
+viewSentAt : Maybe Posix -> Html msg
+viewSentAt sentAt =
+    div
+        []
+    <|
+        case sentAt of
+            Just date ->
+                [ text "Candidature envoyée le "
+                , text <| View.Date.toString date
+                ]
+
+            Nothing ->
+                []

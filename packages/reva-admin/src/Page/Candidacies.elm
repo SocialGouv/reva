@@ -245,7 +245,7 @@ viewNavigationSteps baseUrl candidacy =
 viewMain : String -> List (Html msg) -> Html msg
 viewMain dataTestValue =
     node "main"
-        [ class "bg-white w-[762px] px-8 pt-8 pb-24"
+        [ class "bg-white w-[762px] px-2 pt-2 pb-24"
         , dataTest dataTestValue
         ]
 
@@ -361,7 +361,7 @@ viewCandidacyArticle baseUrl content =
             , text "Toutes les candidatures"
             ]
         , article
-            [ class "px-3 sm:px-6" ]
+            [ class "px-16" ]
             content
         ]
 
@@ -376,16 +376,16 @@ viewDirectoryPanel context candidacies =
     in
     aside
         [ class "hidden md:order-first md:flex md:flex-col flex-shrink-0"
-        , class "w-full max-w-6xl h-screen"
+        , class "w-full w-[762px] h-screen"
         , class "bg-white"
         ]
         [ div
-            [ class "px-6 pt-8 pb-4" ]
+            [ class "px-10 pt-10 pb-4" ]
             [ h2
-                [ class "text-2xl font-semibold text-gray-900 mb-4" ]
+                [ class "text-3xl font-black text-slate-800 mb-6" ]
                 [ text "Candidatures" ]
             , p
-                [ class "mt-1 text-sm text-gray-500" ]
+                [ class "text-base text-gray-500" ]
                 [ if Api.hasAdminToken context.token then
                     text "Recherchez par architecte de parcours, certification et information de contact"
 
@@ -402,14 +402,17 @@ viewDirectoryPanel context candidacies =
                     , div
                         [ class "relative rounded-md shadow-sm" ]
                         [ div
-                            [ class "absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" ]
+                            [ class "absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none" ]
                             [ Icons.search
                             ]
                         , input
                             [ type_ "search"
                             , name "search"
                             , id "search"
-                            , class "focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
+                            , class "block w-full pl-6 pr-12 py-5 bg-gray-100"
+                            , class "border-b-[3px] border-0 border-b-gray-800"
+                            , class "focus:ring-blue-500 focus:ring-0 focus:border-blue-600"
+                            , class "text-xl placeholder:text-gray-400"
                             , placeholder "Rechercher"
                             , onInput UserAddedFilter
                             ]
@@ -430,14 +433,15 @@ viewDirectoryPanel context candidacies =
 viewDirectory : Context -> ( CandidacySummary, List Candidacy.CandidacySummary ) -> Html Msg
 viewDirectory context ( firstCandidacy, candidacies ) =
     div
-        [ dataTest "directory-group", class "relative" ]
+        [ dataTest "directory-group", class "relative mb-2" ]
         [ div
             [ dataTest "directory-group-name"
-            , class "z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-3 text-sm font-semibold text-gray-800"
+            , class "z-10 sticky top-0 text-xl font-semibold text-slate-700"
+            , class "bg-white px-10 py-3"
             ]
             [ h3 [] [ text (Candidacy.statusToString firstCandidacy.lastStatus.status) ] ]
         , List.map (viewItem context) (firstCandidacy :: candidacies)
-            |> ul [ attribute "role" "list", class "relative z-0 divide-y divide-gray-200" ]
+            |> ul [ attribute "role" "list", class "text-lg relative z-0" ]
         ]
 
 
@@ -451,10 +455,10 @@ viewItem context candidacy =
     li
         [ dataTest "directory-item" ]
         [ div
-            [ class "relative px-6 py-5 flex items-center space-x-6 hover:bg-gray-50 focus-within:ring-1 focus-within:ring-inset focus-within:ring-indigo-500" ]
-            [ div [ class "flex-shrink-0 text-gray-400" ]
-                [ Icons.user ]
-            , div
+            [ class "relative px-10 py-4 flex items-center space-x-6 hover:bg-gray-50"
+            , class "focus-within:ring-1 focus-within:ring-inset focus-within:ring-indigo-500"
+            ]
+            [ div
                 [ class "flex-1 min-w-0" ]
                 [ a
                     [ Route.href context.baseUrl (Route.Candidacy <| Profil candidacy.id)
@@ -464,9 +468,20 @@ viewItem context candidacy =
                         [ class "absolute inset-0", attribute "aria-hidden" "true" ]
                         []
                     , p
-                        [ class "flex justify-between" ]
+                        [ class "text-blue-600 font-medium truncate"
+                        , classList [ ( "italic", candidacy.certification == Nothing ) ]
+                        ]
+                        [ Maybe.map .label candidacy.certification
+                            |> Maybe.withDefault "Certification non sélectionnée"
+                            |> text
+                        ]
+                    , p
+                        [ class "flex items-center space-x-1" ]
                         [ div
-                            [ class "flex font-semibold text-blue-600 space-x-2" ]
+                            [ class "flex-shrink-0 text-gray-400" ]
+                            [ Icons.user ]
+                        , div
+                            [ class "flex text-gray-700 space-x-2" ]
                           <|
                             case ( candidacy.firstname, candidacy.lastname ) of
                                 ( Just firstname, Just lastname ) ->
@@ -478,19 +493,14 @@ viewItem context candidacy =
                                     ]
                         ]
                     , div
-                        [ class "flex items-end justify-between" ]
-                        [ p
-                            [ class "text-sm text-gray-600 truncate"
-                            , classList [ ( "italic", candidacy.certification == Nothing ) ]
-                            ]
-                            [ Maybe.map .label candidacy.certification
-                                |> Maybe.withDefault "Certification non sélectionnée"
-                                |> text
-                            ]
+                        [ class "flex items-end justify-between"
+                        , class "text-gray-500"
+                        ]
+                        [ View.Candidacy.viewSentAt candidacy.sentAt
                         , case ( Api.hasAdminToken context.token, candidacy.organism ) of
                             ( True, Just organism ) ->
                                 div
-                                    [ class "text-xs whitespace-nowrap text-gray-600" ]
+                                    [ class "text-sm whitespace-nowrap" ]
                                     [ text organism.label ]
 
                             _ ->

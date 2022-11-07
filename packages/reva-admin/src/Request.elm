@@ -194,6 +194,7 @@ candidacySummarySelection =
         |> with Admin.Object.CandidacySummary.email
         |> with (Admin.Object.CandidacySummary.lastStatus candidacyStatusSelection)
         |> with Admin.Object.CandidacySummary.createdAt
+        |> with Admin.Object.CandidacySummary.sentAt
 
 
 candidacyGoalSelection : SelectionSet Data.Candidacy.CandidacyGoal Admin.Object.CandidateGoal

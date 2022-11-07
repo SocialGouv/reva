@@ -10,6 +10,7 @@ module Data.Candidacy exposing
     , filterByWords
     , isStatusAbove
     , lastStatus
+    , sentDate
     , statusToDirectoryPosition
     , statusToProgressPosition
     , statusToString
@@ -20,6 +21,7 @@ import Admin.Enum.Duration exposing (Duration)
 import Data.Certification exposing (Certification)
 import Data.Organism exposing (Organism, OrganismId)
 import Time
+import View.Date
 
 
 type CandidacyId
@@ -75,6 +77,7 @@ type alias CandidacySummary =
     , email : Maybe String
     , lastStatus : CandidacyStatus
     , createdAt : Time.Posix
+    , sentAt : Maybe Time.Posix
     }
 
 
@@ -92,7 +95,7 @@ statusToString : String -> String
 statusToString status =
     case status of
         "VALIDATION" ->
-            "Candidatures soumises"
+            "Candidatures envoyées"
 
         "PROJET" ->
             "Projet en cours d'édition"
@@ -178,6 +181,7 @@ toCandidacySummary candidacy =
     , email = candidacy.email
     , lastStatus = lastStatus candidacy.statuses
     , createdAt = candidacy.createdAt
+    , sentAt = sentDate candidacy.statuses
     }
 
 
@@ -190,6 +194,13 @@ lastStatus statuses =
             , status = ""
             , isActive = True
             }
+
+
+sentDate : List CandidacyStatus -> Maybe Time.Posix
+sentDate statuses =
+    List.filter (.status >> (==) "VALIDATION") statuses
+        |> List.head
+        |> Maybe.map .createdAt
 
 
 isStatusAbove : Candidacy -> String -> Bool

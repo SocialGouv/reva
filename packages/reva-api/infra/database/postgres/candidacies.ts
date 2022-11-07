@@ -31,20 +31,29 @@ export const candidacyIncludes = {
 };
 
 
-const toDomainCandidacySummary = (candidacy: Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; organism: Organism | null; firstname: string | undefined, lastname: string | undefined }) => ({
-    id: candidacy.id,
-    deviceId: candidacy.deviceId,
-    organismId: candidacy.organismId,
-    organism: candidacy.organism,
-    certificationId: candidacy.certification?.id,
-    certification: candidacy.certification,
-    firstname: candidacy.firstname,
-    lastname: candidacy.lastname,
-    email: candidacy.email,
-    phone: candidacy.phone,
-    lastStatus: candidacy.candidacyStatuses[0],
-    createdAt: candidacy.createdAt
-});    
+const toDomainCandidacySummary = (candidacy: Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; organism: Organism | null; firstname: string | undefined, lastname: string | undefined }) => {
+
+    const statuses = candidacy.candidacyStatuses;
+    const lastStatus = statuses.filter((status => status.isActive))[0];
+    const sentStatus = statuses.filter((status => status.status == 'VALIDATION'))?.[0];
+    const sentAt = sentStatus?.createdAt;
+    
+    return {
+        id: candidacy.id,
+        deviceId: candidacy.deviceId,
+        organismId: candidacy.organismId,
+        organism: candidacy.organism,
+        certificationId: candidacy.certification?.id,
+        certification: candidacy.certification,
+        firstname: candidacy.firstname,
+        lastname: candidacy.lastname,
+        email: candidacy.email,
+        phone: candidacy.phone,
+        lastStatus,
+        createdAt: candidacy.createdAt,
+        sentAt
+    };
+};    
 
 const toDomainCandidacySummaries = (candidacies: (Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; organism: Organism | null; firstname: string | undefined, lastname: string | undefined })[]): domain.CandidacySummary[] => {
     return candidacies.map(toDomainCandidacySummary);
@@ -444,11 +453,7 @@ export const getCandidacies = async () => {
     try {
         const candidacies = await prismaClient.candidacy.findMany({
             include: {
-                candidacyStatuses: {
-                    where: {
-                        isActive: true
-                    }
-                },
+                candidacyStatuses: true,
                 certificationsAndRegions: {
                     select: {
                         certification: true
@@ -494,11 +499,7 @@ export const getCandidaciesForUser = async (keycloakId: string) => {
                 }
             },
             include: {
-                candidacyStatuses: {
-                    where: {
-                        isActive: true
-                    }
-                },
+                candidacyStatuses: true,
                 certificationsAndRegions: {
                     select: {
                         certification: true

@@ -1,11 +1,10 @@
-module View.Date exposing (view)
+module View.Date exposing (toString)
 
-import Html.Styled exposing (Html, span, text)
 import Time exposing (Month(..), Posix)
 
 
-view : Posix -> Html msg
-view date =
+toString : Posix -> String
+toString date =
     let
         month =
             case Time.toMonth Time.utc date of
@@ -45,9 +44,8 @@ view date =
                 Dec ->
                     "décembre"
     in
-    span
-        []
-        [ text month
-        , text " "
-        , text <| String.fromInt <| Time.toYear Time.utc date
+    String.join " "
+        [ String.fromInt <| Time.toDay Time.utc date
+        , month
+        , String.fromInt <| Time.toYear Time.utc date
         ]
