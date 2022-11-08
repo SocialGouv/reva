@@ -13,7 +13,7 @@ context("Certificates", () => {
       headers: {
         Location: `${
           Cypress.config().baseUrl
-        }/app/silent-check-sso.html#error=login_required&state=6a5b9f5c-c131-421c-86e0-5b1d6d5bf44b`,
+        }silent-check-sso.html#error=login_required&state=6a5b9f5c-c131-421c-86e0-5b1d6d5bf44b`,
       },
       statusCode: 302,
     });
