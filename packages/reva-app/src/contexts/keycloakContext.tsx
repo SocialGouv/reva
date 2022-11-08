@@ -87,10 +87,14 @@ export const KeycloakProvider = ({
           setAuthenticated(authenticated);
           setToken(keycloakInstance.token);
         }
-      } catch (e) {
+
+        setReady(true);
+      } catch (e: any) {
         console.log("Error keycloak", e);
+        if (e.error === "login_required") {
+          setReady(true);
+        }
       }
-      setReady(true);
     };
     initKeycloak(tokens);
   }, [tokens, keycloakInstance]);
