@@ -6,7 +6,7 @@ context("Submission", () => {
       stubMutation(req, "candidate_login", "candidate2-submitted.json");
       stubQuery(req, "getReferential", "referential.json");
     });
-    cy.visit("/login?token=abc");
+    cy.login();
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
 
@@ -18,7 +18,7 @@ context("Submission", () => {
       stubMutation(req, "candidate_login", "candidate2-taken-over.json");
       stubQuery(req, "getReferential", "referential.json");
     });
-    cy.visit("/login?token=abc");
+    cy.login();
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
 

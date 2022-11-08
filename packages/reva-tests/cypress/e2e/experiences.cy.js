@@ -14,7 +14,7 @@ context("Experiences", () => {
       stubQuery(req, "add_experience", "added-experience1.json");
       stubQuery(req, "update_experience", "updated-experience2.json");
     });
-    cy.visit("/login?token=abc");
+    cy.login();
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
 

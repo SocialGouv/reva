@@ -33,7 +33,7 @@ context.skip("Contact", () => {
       stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "update_contact", "contact2.json");
     });
-    cy.visit("/login?token=abc");
+    cy.login();
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
 
@@ -56,7 +56,7 @@ context.skip("Contact", () => {
       stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "update_contact", "contact.json");
     });
-    cy.visit("/login?token=abc");
+    cy.login();
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
 

@@ -89,8 +89,11 @@ export const KeycloakProvider = ({
         }
 
         setReady(true);
-      } catch (e) {
+      } catch (e: any) {
         console.log("Error keycloak", e);
+        if (e.error === "login_required") {
+          setReady(true);
+        }
       }
     };
     initKeycloak(tokens);

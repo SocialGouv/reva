@@ -14,7 +14,7 @@ context("Certificates", () => {
       );
     });
 
-    cy.visit("/login?token=abc");
+    cy.login();
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
 
