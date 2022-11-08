@@ -11,7 +11,7 @@ context("Training Program", () => {
         );
         stubQuery(req, "getReferential", "referential.json");
       });
-      cy.visit("/login?token=abc");
+      cy.login();
       cy.wait("@candidate_login");
       cy.wait("@getReferential");
 
@@ -40,7 +40,7 @@ context("Training Program", () => {
         );
         stubQuery(req, "getReferential", "referential.json");
       });
-      cy.visit("/login?token=abc");
+      cy.login();
       cy.wait("@candidate_login");
       cy.wait("@getReferential");
       cy.get('[data-test="review-button"]').click();
@@ -64,7 +64,7 @@ context("Training Program", () => {
           "confirm-training-form.json"
         );
       });
-      cy.visit("/login?token=abc");
+      cy.login();
       cy.wait("@candidate_login");
       cy.wait("@getReferential");
 

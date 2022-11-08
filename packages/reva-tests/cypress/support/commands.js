@@ -1,25 +1,26 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+Cypress.Commands.add("auth", () => {
+  cy.intercept(
+    "**/realms/reva-app/protocol/openid-connect/3p-cookies/step1.html",
+    {
+      fixture: "auth-step1.html",
+    }
+  );
+
+  cy.intercept("GET", "**/realms/reva-app/protocol/openid-connect/auth*", {
+    headers: {
+      Location: `${
+        Cypress.config().baseUrl
+      }silent-check-sso.html#error=login_required&state=6a5b9f5c-c131-421c-86e0-5b1d6d5bf44b`,
+    },
+    statusCode: 302,
+  });
+});
+
+Cypress.Commands.add("login", (config = { token: "abc" }) => {
+  cy.auth();
+  if (config.token) {
+    cy.visit(`/login?token=${config.token}`);
+  } else {
+    cy.visit(`/login`);
+  }
+});

@@ -6,7 +6,7 @@ context("Empty candidacy", () => {
       stubMutation(req, "candidate_login", "candidate1.json");
       stubQuery(req, "getReferential", "referential.json");
     });
-    cy.visit("/login?token=abc");
+    cy.login();
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
 
@@ -23,7 +23,7 @@ context("Candidacy with region certification selected", () => {
       stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "getOrganismsForCandidacy", "organism.json");
     });
-    cy.visit("/login?token=abc");
+    cy.login();
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
 
@@ -78,7 +78,7 @@ context("Candidacy with region certification selected", () => {
       stubQuery(req, "getOrganismsForCandidacy", "organism.json");
       stubMutation(req, "candidacy_selectOrganism", "selected-organism.json");
     });
-    cy.visit("/login?token=abc");
+    cy.login();
     cy.wait("@candidate_login");
 
     cy.get('[data-test="project-home-edit-organism').click();

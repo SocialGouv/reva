@@ -7,7 +7,7 @@ context("Login", () => {
     cy.intercept("POST", "/graphql", (req) => {
       stubQuery(req, "candidate_askForLogin", "login.json");
     });
-    cy.visit("/app/login");
+    cy.login({ token: null });
 
     cy.get('[data-test="login-home"] #email').type(email);
 
@@ -18,6 +18,7 @@ context("Login", () => {
   });
 
   it("access login page from contact page", function () {
+    cy.auth();
     cy.visit("/");
     cy.get('[data-test="project-contact-login"]').click();
     cy.get('[data-test="login-home"]');
@@ -28,7 +29,7 @@ context("Login", () => {
       stubMutation(req, "candidate_login", "login-expired.json", 500);
       stubQuery(req, "getReferential", "referential.json");
     });
-    cy.visit("/login?token=abc");
+    cy.login();
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
 

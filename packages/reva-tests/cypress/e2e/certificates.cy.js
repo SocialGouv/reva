@@ -2,22 +2,6 @@ import { stubMutation, stubQuery } from "../utils/graphql";
 
 context("Certificates", () => {
   beforeEach(() => {
-    cy.intercept(
-      "**/realms/reva-app/protocol/openid-connect/3p-cookies/step1.html",
-      {
-        fixture: "auth-step1.html",
-      }
-    );
-
-    cy.intercept("GET", "**/realms/reva-app/protocol/openid-connect/auth*", {
-      headers: {
-        Location: `${
-          Cypress.config().baseUrl
-        }silent-check-sso.html#error=login_required&state=6a5b9f5c-c131-421c-86e0-5b1d6d5bf44b`,
-      },
-      statusCode: 302,
-    });
-
     cy.intercept("POST", "/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate1.json");
       stubQuery(req, "getReferential", "referential.json");
@@ -30,7 +14,7 @@ context("Certificates", () => {
       );
     });
 
-    cy.visit("/login?token=abc");
+    cy.login();
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
 
