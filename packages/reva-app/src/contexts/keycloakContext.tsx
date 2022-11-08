@@ -87,11 +87,10 @@ export const KeycloakProvider = ({
           setAuthenticated(authenticated);
           setToken(keycloakInstance.token);
         }
-
-        setReady(true);
       } catch (e) {
         console.log("Error keycloak", e);
       }
+      setReady(true);
     };
     initKeycloak(tokens);
   }, [tokens, keycloakInstance]);
