@@ -17,7 +17,6 @@ interface PropsOrganisms {
   alreadySelectedOrganismId: string;
 }
 
-//TODO: extract in its own file
 const Organisms: FC<PropsOrganisms> = ({
   availableOrganisms,
   setOrganismId,
@@ -30,14 +29,22 @@ const Organisms: FC<PropsOrganisms> = ({
 
   if (!organisms) return <p>chargement des organismes...</p>;
 
+  const shuffledOrganisms = organisms
+    .map((organism) => ({ ...organism, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map((organism) => {
+      const { sort, ...rest } = organism;
+      return rest;
+    });
+
   return (
     <RadioGroup
-      value={selectedOrganismId || organisms[0]?.id}
+      value={selectedOrganismId || shuffledOrganisms[0]?.id}
       onChange={setSelectedOrganismId}
     >
       <RadioGroup.Label className="sr-only">Accompagnateur</RadioGroup.Label>
       <div className="space-y-4">
-        {organisms.map((organism) => (
+        {shuffledOrganisms.map((organism) => (
           <RadioGroup.Option
             data-test={`project-organisms-organism-${organism.id}`}
             key={organism.id}
