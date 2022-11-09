@@ -16,11 +16,11 @@ Cypress.Commands.add("auth", () => {
   });
 });
 
-Cypress.Commands.add("login", (config = { token: "abc" }) => {
+Cypress.Commands.add("login", (config = { token: "abc" }, options) => {
   cy.auth();
   if (config.token) {
-    cy.visit(`/login?token=${config.token}`);
+    cy.visit(`/login?token=${config.token}`, options);
   } else {
-    cy.visit(`/login`);
+    cy.visit(`/login`, options);
   }
 });
