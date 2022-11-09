@@ -462,18 +462,7 @@ export const mainMachine =
               },
             ],
           },
-          submissionHome: {
-            on: {
-              BACK: {
-                actions: "navigatePrevious",
-                target: "certificateSummary",
-              },
-              SHOW_PROJECT_HOME: {
-                actions: "navigateNext",
-                target: "projectHome",
-              },
-            },
-          },
+          submissionHome: {},
           trainingProgramSummary: {
             initial: "idle",
             states: {
@@ -903,7 +892,7 @@ export const mainMachine =
                       target: "#mainMachine.trainingProgramConfirmed",
                     },
                     {
-                      actions: ["loadCandidacy", "navigatePrevious"],
+                      actions: ["loadCandidacy", "navigateNext"],
                       cond: "isProjectSubmitted",
                       target: "#mainMachine.submissionHome",
                     },
@@ -994,34 +983,6 @@ export const mainMachine =
               },
             },
             on: {
-              BACK: [
-                {
-                  actions: [
-                    "navigatePrevious",
-                    assign({
-                      certification: (context, _event) => context.certification,
-                    }),
-                  ],
-                  cond: (context) => {
-                    return context.candidacyStatus === "PROJET";
-                  },
-                  target: "#mainMachine.submissionHome",
-                },
-                {
-                  actions: [
-                    "navigatePrevious",
-                    assign({
-                      certification: (context, _event) => context.certification,
-                      candidacyStatus: (_context, _event) => "PROJET",
-                    }),
-                  ],
-                  cond: (context) => {
-                    return context.candidacyStatus === "CANDIDATURE_VALIDEE";
-                  },
-                  target: "projectHome",
-                  internal: false,
-                },
-              ],
               EDIT_EXPERIENCES: {
                 actions: "navigateNext",
                 target: "projectExperiences",
@@ -1061,7 +1022,7 @@ export const mainMachine =
           projectSubmitted: {
             on: {
               BACK: {
-                actions: "navigatePrevious",
+                actions: "navigateNext",
                 target: "#mainMachine.submissionHome",
               },
             },
