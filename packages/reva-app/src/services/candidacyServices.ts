@@ -2,44 +2,6 @@ import { ApolloClient, gql } from "@apollo/client";
 
 import { Experience, candidacyStatus } from "../interface";
 
-const CREATE_CANDIDACY_WITH_CERTIFICATION = gql`
-  mutation create_candidacy(
-    $deviceId: ID!
-    $certificationId: ID!
-    $regionId: ID!
-  ) {
-    candidacy_createCandidacy(
-      candidacy: {
-        deviceId: $deviceId
-        certificationId: $certificationId
-        regionId: $regionId
-      }
-    ) {
-      id
-      deviceId
-      certificationId
-      regionId
-      createdAt
-    }
-  }
-`;
-
-export const createCandidacyWithCertification =
-  (client: ApolloClient<object>) =>
-  ({
-    deviceId,
-    certificationId,
-    regionId,
-  }: {
-    deviceId: string;
-    certificationId: string;
-    regionId: string;
-  }) =>
-    client.mutate({
-      mutation: CREATE_CANDIDACY_WITH_CERTIFICATION,
-      variables: { deviceId, certificationId, regionId },
-    });
-
 const UPDATE_CERTIFICATION = gql`
   mutation candidacy_updateCertification(
     $deviceId: ID!
