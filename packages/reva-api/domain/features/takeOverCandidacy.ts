@@ -23,6 +23,11 @@ export const takeOverCandidacy = (deps: TakeOverCandidacyDeps) => (params: {
             .mapLeft((error: string) => new FunctionalError(FunctionalCodeError.CANDIDACIES_NOT_TAKEN_OVER, error));
     }
 
+    if (!deps.hasRole("manage_candidacy")) {
+        return EitherAsync.liftEither(Left(`Vous n'êtes pas autorisé à prendre en charge cette candidature.`))
+            .mapLeft((error: string) => new FunctionalError(FunctionalCodeError.NOT_AUTHORIZED, error));
+    }
+
     const existsCandidacyInValidation = EitherAsync.fromPromise(() => deps.existsCandidacyWithActiveStatus({
         candidacyId: params.candidacyId,
         status: "VALIDATION"
