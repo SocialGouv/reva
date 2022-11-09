@@ -78,7 +78,16 @@ context("Candidacy with region certification selected", () => {
       stubQuery(req, "getOrganismsForCandidacy", "organism.json");
       stubMutation(req, "candidacy_selectOrganism", "selected-organism.json");
     });
-    cy.login();
+
+    cy.login(
+      { token: "abc" },
+      {
+        onBeforeLoad(win) {
+          cy.stub(win.Math, "random").returns(0);
+        },
+      }
+    );
+
     cy.wait("@candidate_login");
 
     cy.get('[data-test="project-home-edit-organism').click();
