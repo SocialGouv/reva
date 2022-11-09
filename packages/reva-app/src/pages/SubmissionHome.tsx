@@ -1,60 +1,18 @@
 import { useActor } from "@xstate/react";
-import { AnimatePresence, motion } from "framer-motion";
 import { Interpreter } from "xstate";
 
-import { Button } from "../components/atoms/Button";
 import { Header } from "../components/atoms/Header";
-import { Loader } from "../components/atoms/Icons";
 import { ProgressTitle } from "../components/molecules/ProgressTitle";
 import certificationImg from "../components/organisms/Card/certification.png";
 import { Page } from "../components/organisms/Page";
 import type { Certification } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
-import { projectProgress } from "../utils/projectProgress";
 
 interface SubmissionHomeProps {
   candidacyCreatedAt: Date;
   certification: Certification;
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
 }
-
-const loadingScreen = (
-  <motion.div
-    key="loading-screen"
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -10 }}
-    transition={{ duration: 0.5, ease: "easeOut" }}
-    className="absolute flex flex-col bg-neutral-100 h-full"
-  >
-    <div className="grow flex flex-col text-center items-center justify-center px-10">
-      <Header label="Création de votre candidature" size="small" />
-      <div className="mt-8 w-8">
-        <Loader />
-      </div>
-    </div>
-  </motion.div>
-);
-
-const projectIntroduction = (progress: number, submit: () => void) => (
-  <>
-    <ProgressTitle progress={progress} title="Mon projet" />
-    <p className="mt-5 text-sm text-gray-500 leading-loose">
-      Cette étape consiste à compléter et à transmettre votre projet, vous serez
-      ensuite recontacté sous 48h.
-    </p>
-    <div className="grow flex items-end mt-6">
-      <div className="flex items-center">
-        <Button
-          data-test="submission-home-show-project-home"
-          size="small"
-          label="Compléter"
-          onClick={submit}
-        />
-        <p className="ml-5 w-full text-sm text-gray-500">10 min</p>
-      </div>
-    </div>
-  </>
-);
 
 const CandidacyStatus = () => (
   <>
@@ -75,38 +33,10 @@ export const SubmissionHome = ({
   certification,
   mainService,
 }: SubmissionHomeProps) => {
-  const [state, send] = useActor(mainService);
+  const [state] = useActor(mainService);
 
   const candidacyCreatedAtFormatted =
     candidacyCreatedAt?.toLocaleDateString("fr-FR");
-
-  const retryErrorScreen = (
-    <motion.div
-      key="loading-screen"
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className="absolute flex flex-col bg-neutral-100 h-full"
-    >
-      <div className="grow flex flex-col text-center items-center justify-center px-10">
-        <Header label="Oups..." size="small" />
-        <p>{state.context.error}</p>
-        <div className="mt-8">
-          <Button
-            data-test="submission-home-retry-candidate"
-            size="small"
-            label="Réessayer"
-            onClick={() =>
-              send({
-                type: "SUBMIT_CERTIFICATION",
-                certification,
-              })
-            }
-          />
-        </div>
-      </div>
-    </motion.div>
-  );
 
   const homeContent = (
     <>
