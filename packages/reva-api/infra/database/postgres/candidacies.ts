@@ -452,6 +452,7 @@ export const deleteCandidacyFromId = async (id: string) => {
 export const getCandidacies = async () => {
     try {
         const candidacies = await prismaClient.candidacy.findMany({
+            orderBy: [{ updatedAt: 'desc' }],
             include: {
                 candidacyStatuses: true,
                 certificationsAndRegions: {
@@ -489,6 +490,7 @@ export const getCandidaciesForUser = async (keycloakId: string) => {
     
     try {
         const candidacies = await prismaClient.candidacy.findMany({
+            orderBy: [{ updatedAt: 'desc' }],
             where: {
                 organism: {
                     accounts: {
