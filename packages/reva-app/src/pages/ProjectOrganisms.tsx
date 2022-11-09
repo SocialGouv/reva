@@ -92,7 +92,7 @@ interface Props {
 
 export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
   const [state, send] = useActor(mainService);
-  const { direction, selectedRegion, organism, organisms, candidacyId } =
+  const { direction, selectedDepartment, organism, organisms, candidacyId } =
     state.context;
   const [selectedOrganismId, setSelectedOrganismId] = useState(
     organism?.id || ""
@@ -107,9 +107,9 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
       <BackButton onClick={() => send("BACK")} />
       <div className="h-full flex flex-col overflow-y-auto">
         <div className="grow overflow-y-auto px-12 pb-8">
-          {selectedRegion && (
+          {selectedDepartment && (
             <Title
-              label={`Architectes de parcours disponibles pour la région ${selectedRegion?.label}`}
+              label={`Architectes de parcours disponibles pour la région ${selectedDepartment?.label}`}
             />
           )}
           <p className="mt-4 mb-12">

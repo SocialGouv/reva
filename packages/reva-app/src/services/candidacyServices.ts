@@ -7,13 +7,13 @@ const UPDATE_CERTIFICATION = gql`
     $deviceId: ID!
     $candidacyId: ID!
     $certificationId: ID!
-    $regionId: ID!
+    $departmentId: ID!
   ) {
     candidacy_updateCertification(
       deviceId: $deviceId
       candidacyId: $candidacyId
       certificationId: $certificationId
-      regionId: $regionId
+      departmentId: $departmentId
     ) {
       id
     }
@@ -26,16 +26,16 @@ export const updateCertification =
     deviceId,
     candidacyId,
     certificationId,
-    regionId,
+    departmentId,
   }: {
     deviceId: string;
     candidacyId: string;
     certificationId: string;
-    regionId: string;
+    departmentId: string;
   }) =>
     client.mutate({
       mutation: UPDATE_CERTIFICATION,
-      variables: { deviceId, candidacyId, certificationId, regionId },
+      variables: { deviceId, candidacyId, certificationId, departmentId },
     });
 
 const SAVE_GOALS = gql`
@@ -290,7 +290,7 @@ const CANDIDACY_SELECTION = `
         status
         isActive
       }
-      regionId
+      departmentId
       appointmentCount
       certificateSkills
       otherTraining
@@ -334,7 +334,7 @@ const GET_REFERENTIAL = gql`
       }
     }
 
-    getRegions {
+    getDepartments {
       id
       code
       label
@@ -359,11 +359,11 @@ export const confirmRegistration =
         data: { candidateLogged },
       },
       {
-        data: { getReferential, getRegions },
+        data: { getReferential, getDepartments },
       },
     ] = await Promise.all([registrationMutation, referentialQuery]);
 
-    return initializeApp({ candidateLogged, getReferential, getRegions });
+    return initializeApp({ candidateLogged, getReferential, getDepartments });
   };
 
 const GET_CANDIDATE_WITH_CANDIDACY = gql`
@@ -385,7 +385,7 @@ const GET_CANDIDATE_WITH_CANDIDACY = gql`
       }
     }
 
-    getRegions {
+    getDepartments {
       id
       code
       label
@@ -409,18 +409,22 @@ export const getCandidateWithCandidacy =
       referentials: {
         goals: data.getReferential.goals,
       },
-      regions: data.getRegions,
+      departments: data.getDepartments,
     };
   };
 
-function initializeApp({ candidateLogged, getReferential, getRegions }: any) {
+function initializeApp({
+  candidateLogged,
+  getReferential,
+  getDepartments,
+}: any) {
   return {
     tokens: candidateLogged.tokens,
     candidacy: formatCandidacy(candidateLogged.candidate, getReferential),
     referentials: {
       goals: getReferential.goals,
     },
-    regions: getRegions,
+    departments: getDepartments,
   };
 }
 
@@ -472,7 +476,7 @@ function formatCandidacy(candidate: any, getReferential: any) {
       createdAt: new Date(candidacy.createdAt),
       experiences,
       goals,
-      regionId: candidacy.regionId,
+      departmentId: candidacy.departmentId,
       trainingProgram,
     };
   }

@@ -4,12 +4,12 @@ import { Direction } from "../components/organisms/Page";
 import {
   Certification,
   Contact,
+  Department,
   Experience,
   Experiences,
   Goal,
   Organism,
   OrganismForCandidacy,
-  Region,
   TrainingProgram,
   candidacyStatus,
 } from "../interface";
@@ -69,20 +69,20 @@ export interface MainContext {
   experiences: Experiences;
   goals: Goal[];
   organism?: Organism;
-  regions: Region[];
-  selectedRegion?: Region;
+  departments: Department[];
+  selectedDepartment?: Department;
   organisms: Organism[] | undefined;
   trainingProgram: TrainingProgram | undefined;
 }
 
-type SelectRegion = { type: "SELECT_REGION"; regionCode: string };
+type selectedDepartment = { type: "SELECT_DEPARTMENT"; departmentCode: string };
 type SelectCertification = {
   type: "SELECT_CERTIFICATION";
   certification: Certification;
 };
 
 export type MainEvent =
-  | SelectRegion
+  | selectedDepartment
   | SelectCertification
   | { type: "SHOW_CERTIFICATION_DETAILS"; certification: Certification }
   | { type: "SHOW_PROJECT_HOME"; certification: Certification }
@@ -170,8 +170,8 @@ export type MainState =
         experiences: Experience[];
         goals: Goal[];
         organism: Organism;
-        regions: Region[];
-        selectedRegion?: Region;
+        departments: Department[];
+        selectedDepartment?: Department;
         organisms: Organism[];
       };
     };
@@ -195,8 +195,8 @@ export const mainMachine =
           experiences: { rest: [] },
           goals: [],
           organism: undefined,
-          regions: [],
-          selectedRegion: undefined,
+          departments: [],
+          selectedDepartment: undefined,
           organisms: undefined,
           trainingProgram: undefined,
         },
@@ -258,7 +258,7 @@ export const mainMachine =
           loadingCertifications: {
             invoke: {
               src: "searchCertifications",
-              id: "searching-region-certification",
+              id: "searching-department-certification",
               onDone: [
                 {
                   actions: assign({
@@ -281,8 +281,8 @@ export const mainMachine =
           },
           searchResultsError: {
             on: {
-              SELECT_REGION: {
-                actions: "selectingRegion",
+              SELECT_DEPARTMENT: {
+                actions: "selectingDepartment",
                 target: "loadingCertifications",
               },
               BACK: {
@@ -302,8 +302,8 @@ export const mainMachine =
                 }),
                 target: "certificateSummary",
               },
-              SELECT_REGION: {
-                actions: "selectingRegion",
+              SELECT_DEPARTMENT: {
+                actions: "selectingDepartment",
                 target: "loadingCertifications",
               },
               BACK: {
@@ -1003,7 +1003,7 @@ export const mainMachine =
                 {
                   actions: "navigateNext",
                   target: "loadingCertifications",
-                  cond: "isRegionSelected",
+                  cond: "isDepartmentSelected",
                 },
                 {
                   actions: "navigateNext",
@@ -1050,9 +1050,10 @@ export const mainMachine =
                 phone: event.data.candidacy.phone,
               },
               organism: event.data.candidacy.organism,
-              regions: event.data.regions,
-              selectedRegion: event.data.regions.find(
-                (region: Region) => region.id === event.data.candidacy.regionId
+              departments: event.data.departments,
+              selectedDepartment: event.data.departments.find(
+                (department: Department) =>
+                  department.id === event.data.candidacy.departmentId
               ),
               trainingProgram: event.data.candidacy.trainingProgram,
             };
@@ -1071,11 +1072,12 @@ export const mainMachine =
             organism: undefined,
             organisms: undefined,
           })),
-          selectingRegion: assign({
-            selectedRegion: (context, event) => {
-              const typedEvent = event as SelectRegion;
-              return context.regions.find(
-                (region: Region) => region.code === typedEvent.regionCode
+          selectingDepartment: assign({
+            selectedDepartment: (context, event) => {
+              const typedEvent = event as selectedDepartment;
+              return context.departments.find(
+                (department: Department) =>
+                  department.code === typedEvent.departmentCode
               );
             },
             error: (_context, _event) => "",
@@ -1091,8 +1093,8 @@ export const mainMachine =
           hasCandidacy: (context, _event) => {
             return !!context.candidacyId;
           },
-          isRegionSelected: (context, _event) => {
-            return !!context.selectedRegion;
+          isDepartmentSelected: (context, _event) => {
+            return !!context.selectedDepartment;
           },
           isTrainingProgramSubmitted: (_context, event) => {
             const typedEvent = event as DoneInvokeEvent<any>;

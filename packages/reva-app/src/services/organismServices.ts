@@ -30,7 +30,7 @@ const SELECT_ORGANISM_FOR_CANDIDACY = gql`
     ) {
       id
       organismId
-      regionId
+      departmentId
       createdAt
     }
   }

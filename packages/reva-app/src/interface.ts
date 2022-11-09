@@ -55,7 +55,7 @@ export interface Goal {
   label: string;
 }
 
-export interface Region {
+export interface Department {
   id: string;
   code: string;
   label: string;

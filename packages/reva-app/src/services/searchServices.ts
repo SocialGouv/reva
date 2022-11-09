@@ -1,8 +1,8 @@
 import { ApolloClient, gql } from "@apollo/client";
 
-const SEARCH_CERTIFICATIONS_FOR_REGION = gql`
+const SEARCH_CERTIFICATIONS_FOR_DEPARTMENT = gql`
   query Certifications($query: UUID!) {
-    getCertifications(regionId: $query) {
+    getCertifications(departmentId: $query) {
       id
       label
       summary
@@ -16,7 +16,7 @@ export const searchCertifications =
   (client: ApolloClient<object>) =>
   ({ query }: { query: string }) =>
     client.query({
-      query: SEARCH_CERTIFICATIONS_FOR_REGION,
+      query: SEARCH_CERTIFICATIONS_FOR_DEPARTMENT,
       variables: { query },
     });
 

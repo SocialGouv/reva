@@ -60,7 +60,7 @@ function App() {
         services: {
           searchCertifications: (context, _event) => {
             return searchCertifications(client as ApolloClient<object>)({
-              query: context.selectedRegion?.id || "",
+              query: context.selectedDepartment?.id || "",
             });
           },
           initializeApp: async (_context, _event, { data }) => {
@@ -111,7 +111,7 @@ function App() {
               deviceId: deviceId.uuid,
               candidacyId: context.candidacyId,
               certificationId: event.certification.id,
-              regionId: context.selectedRegion?.id || "",
+              departmentId: context.selectedDepartment?.id || "",
             });
           },
           setOrganismsForCandidacy: async (context, _event) => {
