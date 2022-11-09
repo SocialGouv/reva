@@ -30,13 +30,7 @@ const Organisms: FC<PropsOrganisms> = ({
   if (!organisms) return <p>chargement des organismes...</p>;
 
   const shuffledOrganisms = organisms
-    .map((organism) => ({ ...organism, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map((organism) => {
-      const { sort, ...rest } = organism;
-      return rest;
-    });
-
+    .sort(() => 0.5 - Math.random());
   return (
     <RadioGroup
       value={selectedOrganismId || shuffledOrganisms[0]?.id}
