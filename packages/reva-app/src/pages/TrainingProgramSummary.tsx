@@ -98,7 +98,7 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
         </dl>
         <Checkbox
           checked={isTrainingConfirmed || checkedCondition}
-          label="J'ai bien compris qu'il s'agissait des étapes et prestations nécessaires pour que j'obtienne mon diplôme et je m'engage à les suivre ou informer mon accompagnateur de tout abandon dans les 48h.  J’ai bien compris que mon accord allait déclencher une demande de prise en charge financière de mon parcours. J'accepte que les résultats de mon étude personnalisée ainsi que le résultat à ma session de jury me soient transmis ainsi qu'à mon accompagnateur."
+          label="J'ai bien compris qu'il s'agissait des étapes et prestations nécessaires pour que j'obtienne mon diplôme et je m'engage à les suivre ou informer mon accompagnateur de tout abandon dans les 48h. J’ai bien compris que mon accord allait déclencher une demande de prise en charge financière de mon parcours. J'accepte que les résultats de mon étude personnalisée ainsi que le résultat à ma session de jury me soient transmis ainsi qu'à mon accompagnateur."
           name="accept-conditions"
           toggle={() => setCheckedCondition(!checkedCondition)}
           theme="dark"
