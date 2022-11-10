@@ -1,7 +1,7 @@
 import { RadioGroup } from "@headlessui/react";
 import { useActor } from "@xstate/react";
 import classNames from "classnames";
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
@@ -18,19 +18,22 @@ interface PropsOrganisms {
 }
 
 const Organisms: FC<PropsOrganisms> = ({
-  availableOrganisms,
+  availableOrganisms = [],
   setOrganismId,
   alreadySelectedOrganismId,
 }) => {
-  const organisms = availableOrganisms || [];
+  const [shuffledOrganisms, setShuffledOrganisms] =
+    useState(availableOrganisms);
   const [selectedOrganismId, setSelectedOrganismId] = useState(
     alreadySelectedOrganismId
   );
 
-  if (!organisms) return <p>chargement des organismes...</p>;
+  useEffect(() => {
+    setShuffledOrganisms(availableOrganisms.sort(() => 0.5 - Math.random()));
+  }, [availableOrganisms]);
 
-  const shuffledOrganisms = organisms
-    .sort(() => 0.5 - Math.random());
+  if (!availableOrganisms) return <p>chargement des organismes...</p>;
+
   return (
     <RadioGroup
       value={selectedOrganismId || shuffledOrganisms[0]?.id}
