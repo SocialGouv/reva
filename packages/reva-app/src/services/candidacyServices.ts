@@ -290,7 +290,6 @@ const CANDIDACY_SELECTION = `
         status
         isActive
       }
-      departmentId
       appointmentCount
       certificateSkills
       otherTraining
@@ -476,7 +475,6 @@ function formatCandidacy(candidate: any, getReferential: any) {
       createdAt: new Date(candidacy.createdAt),
       experiences,
       goals,
-      departmentId: candidacy.departmentId,
       trainingProgram,
     };
   }

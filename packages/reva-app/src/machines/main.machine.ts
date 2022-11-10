@@ -1053,7 +1053,7 @@ export const mainMachine =
               departments: event.data.departments,
               selectedDepartment: event.data.departments.find(
                 (department: Department) =>
-                  department.id === event.data.candidacy.departmentId
+                  department.id === event.data.candidacy.department?.id
               ),
               trainingProgram: event.data.candidacy.trainingProgram,
             };
