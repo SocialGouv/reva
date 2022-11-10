@@ -16,6 +16,12 @@ type Region {
   label: String!
 }
 
+type Department {
+  id: ID!
+  code: String!
+  label: String!
+}
+
 type Degree {
   id: ID!
   code: String!
@@ -31,8 +37,9 @@ type VulnerabilityIndicator {
 
 type Query {
   getReferential: Referential!
-  getCertifications(regionId: UUID!): [Certification!]!
+  getCertifications(departmentId: UUID!): [Certification!]!
   getRegions: [Region!]!
+  getDepartments: [Department!]!
   getDegrees: [Degree!]!
   getVulnerabilityIndicators: [VulnerabilityIndicator!]!
 }

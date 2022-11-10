@@ -24,6 +24,7 @@ type Candidacy {
   certificationId: ID
   regionId: ID
   region: Region
+  department: Department
   organismId: UUID
   organism: Organism
   certification: Certification
@@ -170,7 +171,7 @@ type Mutation {
     deviceId: ID!
     candidacyId: ID!
     certificationId: ID!
-    regionId: ID!
+    departmentId: ID!
   ): Candidacy
   candidacy_addExperience(
     deviceId: ID!

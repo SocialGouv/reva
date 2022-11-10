@@ -118,6 +118,8 @@ model Candidacy {
   vulnerabilityIndicatorId     String?        @db.Uuid  @map("vulnerability_indicator_id")
   candidate   Candidate? @relation(fields: [candidateId], references: [id], onDelete: Cascade)
   candidateId String?   @db.Uuid  @map("candidate_id")
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  departmentId String?   @db.Uuid  @map("department_id")
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
   @@map("candidacy")
@@ -213,9 +215,22 @@ model Region {
   code        String    @unique @db.VarChar(3)
   candidaciesAndCertifications CandidaciesOnRegionsAndCertifications[]
   organismsAndCertifications OrganismsOnRegionsAndCertifications[]
+  departments Department[]
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
   @@map("region")
+}
+
+model Department {
+  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
+  label       String   @unique @db.VarChar(255)
+  code        String    @unique @db.VarChar(3)
+  region                Region          @relation(fields: [regionId], references: [id])
+  regionId              String        @db.Uuid  @map("region_id")
+  candidacies Candidacy[]
+  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
+  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  @@map("department")
 }
 
 model CandidaciesOnRegionsAndCertifications {
