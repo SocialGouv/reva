@@ -290,6 +290,9 @@ const CANDIDACY_SELECTION = `
         status
         isActive
       }
+      department {
+        id
+      }
       appointmentCount
       certificateSkills
       otherTraining
