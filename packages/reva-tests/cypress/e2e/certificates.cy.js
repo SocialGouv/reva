@@ -19,14 +19,14 @@ context("Certificates", () => {
     cy.wait("@getReferential");
 
     cy.get('[data-test="project-home-select-certification"]').click();
-    cy.get("#select_region").select("2");
+    cy.get("#select_department").select("2");
     cy.wait("@Certifications");
 
     cy.get('[data-test="certification-select-c2"]').click();
     cy.wait("@Certification");
   });
 
-  it("select region and submit certificate via summary", function () {
+  it("select department and submit certificate via summary", function () {
     cy.get('[data-test="certification-save"]').click();
     cy.wait("@candidacy_updateCertification");
 
@@ -34,7 +34,7 @@ context("Certificates", () => {
     cy.get('[data-test="certification-label"]').should("contain", "Titre 2");
   });
 
-  it("select region and submit certificate via details", function () {
+  it("select department and submit certificate via details", function () {
     cy.get('[data-test="certification-learn-more"]').click();
 
     cy.get('[data-test="certification-save"]').click();

@@ -144,7 +144,7 @@ export const Certificates = ({ mainService }: Props) => {
         <div className="px-12 pt-16 sm:pt-4 bg-white">
           <Header label="Choisir mon diplôme" />
           <Select
-            name="SELECT_DEPARTMENT"
+            name="select_department"
             className="mt-8 mb-4"
             data-test="certificates-select-department"
             defaultValue={chosenDepartmentCode}
