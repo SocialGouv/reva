@@ -18,6 +18,7 @@ module Data.Candidacy exposing
     )
 
 import Admin.Enum.Duration exposing (Duration)
+import Admin.Object.Candidacy exposing (department)
 import Data.Certification exposing (Certification)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department)
@@ -231,6 +232,7 @@ filterByWord word candidacySummary =
         || maybeMatch .lastname
         || maybeMatch .phone
         || maybeMatch .email
+        || (Maybe.map match (Maybe.map .label candidacySummary.department) |> Maybe.withDefault False)
         || (Maybe.map match (Maybe.map .label candidacySummary.organism) |> Maybe.withDefault False)
 
 
