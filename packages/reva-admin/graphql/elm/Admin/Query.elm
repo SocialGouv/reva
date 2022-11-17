@@ -83,6 +83,18 @@ candidate_getCandidateWithCandidacy object____ =
     Object.selectionForCompositeField "candidate_getCandidateWithCandidacy" [] object____ Basics.identity
 
 
+type alias CandidateGetCandidateByEmailRequiredArguments =
+    { email : String }
+
+
+candidate_getCandidateByEmail :
+    CandidateGetCandidateByEmailRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidate
+    -> SelectionSet (Maybe decodesTo) RootQuery
+candidate_getCandidateByEmail requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidate_getCandidateByEmail" [ Argument.required "email" requiredArgs____.email Encode.string ] object____ (Basics.identity >> Decode.nullable)
+
+
 getReferential :
     SelectionSet decodesTo Admin.Object.Referential
     -> SelectionSet decodesTo RootQuery

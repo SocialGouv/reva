@@ -21,11 +21,13 @@ import Admin.Object.CandidacySummary
 import Admin.Object.CandidateGoal
 import Admin.Object.Certification
 import Admin.Object.Department
+import Admin.Object.Degree
 import Admin.Object.Experience
 import Admin.Object.Goal
 import Admin.Object.Organism
 import Admin.Object.Referential
 import Admin.Object.Training
+import Admin.Object.VulnerabilityIndicator
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api exposing (Token)
@@ -303,6 +305,55 @@ takeOverCandidacy :
 takeOverCandidacy endpointGraphql token toMsg candidacyId =
     Mutation.candidacy_takeOver (Mutation.CandidacyTakeOverRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)) candidacySelection
         |> makeMutation endpointGraphql token toMsg
+
+
+
+-- CANDIDATE
+
+
+degreeSelection : SelectionSet Data.Candidate.Degree Admin.Object.Degree
+degreeSelection =
+    SelectionSet.succeed Data.Candidate.Degree
+        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.Degree.id)
+        |> with Admin.Object.Degree.code
+        |> with Admin.Object.Degree.label
+        |> with Admin.Object.Degree.longLabel
+        |> with Admin.Object.Degree.level
+
+
+vulnerabilityIndicatorSelection : SelectionSet Data.Candidate.VulnerabilityIndicator Admin.Object.VulnerabilityIndicator
+vulnerabilityIndicatorSelection =
+    SelectionSet.succeed Data.Candidate.VulnerabilityIndicator
+        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.VulnerabilityIndicator.id)
+        |> with Admin.Object.VulnerabilityIndicator.label
+
+
+candidateSelection : SelectionSet Data.Candidate.Candidate Admin.Object.Candidate
+candidateSelection =
+    SelectionSet.succeed Data.Candidate.Candidate
+        |> with Admin.Object.Candidate.id
+        |> with Admin.Object.Candidate.firstname
+        |> with Admin.Object.Candidate.firstname2
+        |> with Admin.Object.Candidate.firstname3
+        |> with Admin.Object.Candidate.gender
+        |> with (Admin.Object.Candidate.highestDegree degreeSelection)
+        |> with Admin.Object.Candidate.lastname
+        |> with (Admin.Object.Candidate.vulnerabilityIndicator vulnerabilityIndicatorSelection)
+
+
+requestCandidate :
+    String
+    -> Token
+    -> (RemoteData String Data.Candidate.Candidate -> msg)
+    -> CandidateId
+    -> Cmd msg
+requestCandidate endpointGraphql token toMsg id =
+    let
+        candidacyRequiredArgs =
+            Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString id)
+    in
+    Query.getCandidacyById candidacyRequiredArgs candidacySelection
+        |> makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
 
 
 
