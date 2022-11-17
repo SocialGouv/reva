@@ -480,7 +480,7 @@ viewItem context candidacy =
                         [ div [ class "flex items-center space-x-12" ]
                             [ div [ class "flex items-center space-x-2" ]
                                 [ div
-                                    [ class "flex-shrink-0 text-gray-400" ]
+                                    [ class "flex-shrink-0 text-gray-600" ]
                                     [ Icons.user ]
                                 , div
                                     [ class "flex text-gray-700 space-x-2" ]
@@ -498,7 +498,7 @@ viewItem context candidacy =
                                 Just department ->
                                     div [ class "flex items-center space-x-2" ]
                                         [ div
-                                            [ class "flex-shrink-0 text-gray-400" ]
+                                            [ class "flex-shrink-0 text-gray-600 pt-1" ]
                                             [ Icons.location ]
                                         , div [ class "flex text-gray-700 space-x-2" ]
                                             [ text department.label

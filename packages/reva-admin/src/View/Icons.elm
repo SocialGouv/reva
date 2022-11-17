@@ -61,12 +61,12 @@ mail =
 user : Html msg
 user =
     svg
-        [ class "h-6 w-6", viewBox "0 0 24 24", fill "currentColor" ]
+        [ class "h-6 w-6", viewBox "0 0 24 24", stroke "currentColor" ]
         [ Svg.circle
-            [ cx "12", cy "6", r "5.25", fill "none", stroke "#000000", strokeLinecap "round", strokeLinejoin "round", strokeWidth "1.5px" ]
+            [ cx "12", cy "6", r "5.25", fill "none", strokeLinecap "round", strokeLinejoin "round", strokeWidth "1.5px" ]
             []
         , Svg.path
-            [ d "M2.25,23.25a9.75,9.75,0,0,1,19.5,0", fill "none", stroke "#000000", strokeLinecap "round", strokeLinejoin "round", strokeWidth "1.5px" ]
+            [ d "M2.25,23.25a9.75,9.75,0,0,1,19.5,0", fill "none", strokeLinecap "round", strokeLinejoin "round", strokeWidth "1.5px" ]
             []
         ]
 
@@ -210,11 +210,11 @@ rejected =
 location : Html msg
 location =
     svg
-        [ class "h-6 w-6", viewBox "0 0 24 24", fill "currentColor" ]
+        [ class "h-6 w-6", viewBox "0 0 24 24", stroke "currentColor" ]
         [ Svg.path
-            [ d "M19.75,8.25c0,4.221-2.933,6.649-5.131,9-1.316,1.408-2.369,6-2.369,6S11.2,18.661,9.887,17.257c-2.2-2.35-5.137-4.782-5.137-9.007a7.5,7.5,0,0,1,15,0Z", fill "none", stroke "#000000", strokeLinecap "round", strokeLinejoin "round", strokeWidth "1.5px" ]
+            [ d "M19.75,8.25c0,4.221-2.933,6.649-5.131,9-1.316,1.408-2.369,6-2.369,6S11.2,18.661,9.887,17.257c-2.2-2.35-5.137-4.782-5.137-9.007a7.5,7.5,0,0,1,15,0Z", fill "none", strokeLinecap "round", strokeLinejoin "round", strokeWidth "1.5px" ]
             []
         , Svg.circle
-            [ cx "12.25", cy "8.25", r "3", fill "none", stroke "#000000", strokeLinecap "round", strokeLinejoin "round", strokeWidth "1.5px" ]
+            [ cx "12.25", cy "8.25", r "3", fill "none", strokeLinecap "round", strokeLinejoin "round", strokeWidth "1.5px" ]
             []
         ]
