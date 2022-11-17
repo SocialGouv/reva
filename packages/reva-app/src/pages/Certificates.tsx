@@ -148,7 +148,7 @@ export const Certificates = ({ mainService }: Props) => {
             className="mt-8 mb-4"
             data-test="certificates-select-department"
             defaultValue={chosenDepartmentCode}
-            placeholder="Ma Région"
+            placeholder="Mon département"
             options={selectsOptionsDepartments}
             onChangeHandler={(e) => {
               const el = e.target as HTMLOptionElement;
@@ -164,7 +164,7 @@ export const Certificates = ({ mainService }: Props) => {
         {(!!chosenDepartmentCode || !!state.context.selectedDepartment) && (
           <div className="px-12">
             <Results
-              title={`Diplômes disponibles dans cette région`}
+              title={`Diplômes disponibles dans ce département`}
               listClassName="mb-4 space-y-8"
             >
               {displayCards()}

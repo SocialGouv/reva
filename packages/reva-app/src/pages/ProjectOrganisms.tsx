@@ -109,7 +109,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
         <div className="grow overflow-y-auto px-12 pb-8">
           {selectedDepartment && (
             <Title
-              label={`Architectes de parcours disponibles pour la région ${selectedDepartment?.label}`}
+              label={`Architectes de parcours disponibles pour le département ${selectedDepartment?.label}`}
             />
           )}
           <p className="mt-4 mb-12">
