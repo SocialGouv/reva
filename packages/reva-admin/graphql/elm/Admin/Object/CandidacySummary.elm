@@ -53,6 +53,13 @@ certification object____ =
     Object.selectionForCompositeField "certification" [] object____ (Basics.identity >> Decode.nullable)
 
 
+department :
+    SelectionSet decodesTo Admin.Object.Department
+    -> SelectionSet (Maybe decodesTo) Admin.Object.CandidacySummary
+department object____ =
+    Object.selectionForCompositeField "department" [] object____ (Basics.identity >> Decode.nullable)
+
+
 firstname : SelectionSet (Maybe String) Admin.Object.CandidacySummary
 firstname =
     Object.selectionForField "(Maybe String)" "firstname" [] (Decode.string |> Decode.nullable)

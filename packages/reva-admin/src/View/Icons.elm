@@ -1,4 +1,4 @@
-module View.Icons exposing (accepted, add, candidates, checked, chevronLeft, close, commented, dot, filter, mail, menu, pending, rejected, search, signout, trash, user, userLarge)
+module View.Icons exposing (accepted, add, candidates, checked, chevronLeft, close, commented, dot, filter, location, mail, menu, pending, rejected, search, signout, trash, user, userLarge)
 
 import Html.Styled exposing (Html)
 import Html.Styled.Attributes exposing (attribute)
@@ -190,5 +190,21 @@ rejected =
             , d "M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
             , clipRule "evenodd"
             ]
+            []
+        ]
+
+
+location : Html msg
+location =
+    svg
+        [ class "h-8 w-8", viewBox "0 0 24 24", fill "currentColor" ]
+        [ Svg.circle
+            [ cx "12", cy "7", r "3.5", fill "none", stroke "#000000", strokeLinecap "round", strokeLinejoin "round" ]
+            []
+        , Svg.path
+            [ d "M12,.5a6.856,6.856,0,0,1,6.855,6.856c0,3.215-4.942,11.185-6.434,13.517a.5.5,0,0,1-.842,0c-1.492-2.332-6.434-10.3-6.434-13.517A6.855,6.855,0,0,1,12,.5Z", fill "none", stroke "#000000", strokeLinecap "round", strokeLinejoin "round" ]
+            []
+        , Svg.path
+            [ d "M17,19.7c3.848.324,6.5,1.009,6.5,1.8,0,1.105-5.148,2-11.5,2S.5,22.605.5,21.5c0-.79,2.635-1.473,6.458-1.8", fill "none", stroke "#000000", strokeLinecap "round", strokeLinejoin "round" ]
             []
         ]

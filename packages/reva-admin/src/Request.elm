@@ -20,6 +20,7 @@ import Admin.Object.CandidacyStatus
 import Admin.Object.CandidacySummary
 import Admin.Object.CandidateGoal
 import Admin.Object.Certification
+import Admin.Object.Department
 import Admin.Object.Experience
 import Admin.Object.Goal
 import Admin.Object.Organism
@@ -155,6 +156,18 @@ certificationSummarySelection =
 
 
 
+-- DEPARTMENT
+
+
+departmentSelection : SelectionSet Data.Referential.Department Admin.Object.Department
+departmentSelection =
+    SelectionSet.succeed Data.Referential.Department
+        |> with Admin.Object.Department.id
+        |> with Admin.Object.Department.code
+        |> with Admin.Object.Department.label
+
+
+
 -- ORGANISM
 
 
@@ -187,6 +200,7 @@ candidacySummarySelection =
         |> with (SelectionSet.map (\(Id id) -> Data.Candidacy.candidacyIdFromString id) Admin.Object.CandidacySummary.id)
         |> with (SelectionSet.map (Maybe.map (\(Id id) -> id)) Admin.Object.CandidacySummary.certificationId)
         |> with (Admin.Object.CandidacySummary.certification certificationSelection)
+        |> with (Admin.Object.CandidacySummary.department departmentSelection)
         |> with (Admin.Object.CandidacySummary.organism organismSelection)
         |> with Admin.Object.CandidacySummary.firstname
         |> with Admin.Object.CandidacySummary.lastname
@@ -221,6 +235,7 @@ candidacySelection =
         |> with (SelectionSet.map (Maybe.map (\(Id id) -> id)) Admin.Object.Candidacy.certificationId)
         |> with (Admin.Object.Candidacy.organism organismSelection)
         |> with (Admin.Object.Candidacy.certification certificationSelection)
+        |> with (Admin.Object.Candidacy.department departmentSelection)
         |> with (Admin.Object.Candidacy.goals candidacyGoalSelection)
         |> with (Admin.Object.Candidacy.experiences candidacyExperienceSelection)
         |> with Admin.Object.Candidacy.firstname

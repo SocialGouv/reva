@@ -60,6 +60,7 @@ type CandidacySummary {
   organismId: ID
   organism: Organism
   certification: Certification
+  department: Department
   firstname: String
   lastname: String
   phone: String
