@@ -476,9 +476,9 @@ viewItem context candidacy =
                             |> text
                         ]
                     , p
-                        [ class "flex " ]
-                        [ div [ class "flex items-center space-x-8" ]
-                            [ div [ class "flex items-center space-x-1" ]
+                        [ class "flex" ]
+                        [ div [ class "flex items-center space-x-12" ]
+                            [ div [ class "flex items-center space-x-2" ]
                                 [ div
                                     [ class "flex-shrink-0 text-gray-400" ]
                                     [ Icons.user ]
@@ -496,7 +496,7 @@ viewItem context candidacy =
                                 ]
                             , case candidacy.department of
                                 Just department ->
-                                    div [ class "flex items-center space-x-1" ]
+                                    div [ class "flex items-center space-x-2" ]
                                         [ div
                                             [ class "flex-shrink-0 text-gray-400" ]
                                             [ Icons.location ]
