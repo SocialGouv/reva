@@ -462,75 +462,7 @@ export const mainMachine =
               },
             ],
           },
-          submissionHome: {
-            initial: "loading",
-            states: {
-              loading: {
-                invoke: {
-                  src: "saveCertification",
-                  onDone: [
-                    {
-                      actions: assign({
-                        candidacyId: (_, event) =>
-                          event.data.data.candidacy_createCandidacy.id,
-                        candidacyCreatedAt: (_, event) =>
-                          new Date(
-                            event.data.data.candidacy_createCandidacy.createdAt
-                          ),
-                      }),
-                      target: "ready",
-                    },
-                  ],
-                  onError: [
-                    {
-                      actions: assign({
-                        error: (_, _event) =>
-                          "Une erreur est survenue lors de l'enregistrement de la certification.",
-                        direction: (_context, _event) => "next",
-                      }),
-                      target: "retry",
-                    },
-                  ],
-                },
-              },
-              retry: {
-                on: {
-                  SUBMIT_CERTIFICATION: {
-                    target: "loading",
-                  },
-                },
-              },
-              ready: {
-                on: {
-                  BACK: {
-                    actions: "navigatePrevious",
-                    target: "leave",
-                  },
-                  SHOW_PROJECT_HOME: {
-                    actions: "navigateNext",
-                    target: "leave",
-                  },
-                },
-              },
-              leave: {
-                type: "final",
-              },
-            },
-            onDone: [
-              {
-                cond: (context, _event) => {
-                  return context.direction === "previous";
-                },
-                target: "certificateSummary",
-              },
-              {
-                cond: (context, _event) => {
-                  return context.direction === "next";
-                },
-                target: "projectHome",
-              },
-            ],
-          },
+          submissionHome: {},
           trainingProgramSummary: {
             initial: "idle",
             states: {
@@ -960,9 +892,9 @@ export const mainMachine =
                       target: "#mainMachine.trainingProgramConfirmed",
                     },
                     {
-                      actions: ["loadCandidacy", "navigatePrevious"],
+                      actions: ["loadCandidacy", "navigateNext"],
                       cond: "isProjectSubmitted",
-                      target: "#mainMachine.submissionHome.ready",
+                      target: "#mainMachine.submissionHome",
                     },
                     {
                       actions: ["loadCandidacy"],
@@ -1051,34 +983,6 @@ export const mainMachine =
               },
             },
             on: {
-              BACK: [
-                {
-                  actions: [
-                    "navigatePrevious",
-                    assign({
-                      certification: (context, _event) => context.certification,
-                    }),
-                  ],
-                  cond: (context) => {
-                    return context.candidacyStatus === "PROJET";
-                  },
-                  target: "#mainMachine.submissionHome.ready",
-                },
-                {
-                  actions: [
-                    "navigatePrevious",
-                    assign({
-                      certification: (context, _event) => context.certification,
-                      candidacyStatus: (_context, _event) => "PROJET",
-                    }),
-                  ],
-                  cond: (context) => {
-                    return context.candidacyStatus === "CANDIDATURE_VALIDEE";
-                  },
-                  target: "projectHome",
-                  internal: false,
-                },
-              ],
               EDIT_EXPERIENCES: {
                 actions: "navigateNext",
                 target: "projectExperiences",
@@ -1118,8 +1022,8 @@ export const mainMachine =
           projectSubmitted: {
             on: {
               BACK: {
-                actions: "navigatePrevious",
-                target: "#mainMachine.submissionHome.ready",
+                actions: "navigateNext",
+                target: "#mainMachine.submissionHome",
               },
             },
           },

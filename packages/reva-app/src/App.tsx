@@ -32,7 +32,6 @@ import {
   askForRegistration,
   confirmRegistration,
   confirmTrainingForm,
-  createCandidacyWithCertification,
   getCandidateWithCandidacy,
   saveGoals,
   submitCandidacy,
@@ -97,27 +96,6 @@ function App() {
             return getOrganismsForCandidacy(client as ApolloClient<object>)({
               query: context.candidacyId,
             });
-          },
-          saveCertification: async (context, event) => {
-            if (
-              event.type !== "SUBMIT_CERTIFICATION" ||
-              !context.certification
-            ) {
-              return Promise.reject("Impossible state");
-            }
-            const deviceId = await Device.getId();
-
-            return createCandidacyWithCertification(
-              client as ApolloClient<object>
-            )({
-              deviceId: deviceId.uuid,
-              certificationId: event.certification.id,
-              regionId: context.selectedRegion?.id || "",
-            }).then(
-              (data) =>
-                //TODO: maybe use an XState Delay ?
-                new Promise((resolve) => setTimeout(() => resolve(data), 2000))
-            );
           },
           updateCertification: async (context, event) => {
             if (
