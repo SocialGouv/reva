@@ -1,5 +1,6 @@
-module Data.Referential exposing (BasicSkill, MandatoryTraining, Referential, ReferentialGoal, ReferentialGoals)
+module Data.Referential exposing (BasicSkill, Department, MandatoryTraining, Referential, ReferentialGoal, ReferentialGoals)
 
+import Data.Scalar
 import Dict exposing (Dict)
 
 
@@ -32,4 +33,11 @@ type alias Referential =
     { basicSkills : List BasicSkill
     , goals : Dict String ReferentialGoal
     , mandatoryTrainings : List MandatoryTraining
+    }
+
+
+type alias Department =
+    { id : Data.Scalar.Id
+    , code : String
+    , label : String
     }

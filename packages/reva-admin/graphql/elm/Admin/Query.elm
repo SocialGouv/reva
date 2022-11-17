@@ -91,7 +91,7 @@ getReferential object____ =
 
 
 type alias GetCertificationsRequiredArguments =
-    { regionId : Data.Scalar.Uuid }
+    { departmentId : Data.Scalar.Uuid }
 
 
 getCertifications :
@@ -99,7 +99,7 @@ getCertifications :
     -> SelectionSet decodesTo Admin.Object.Certification
     -> SelectionSet (List decodesTo) RootQuery
 getCertifications requiredArgs____ object____ =
-    Object.selectionForCompositeField "getCertifications" [ Argument.required "regionId" requiredArgs____.regionId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.list)
+    Object.selectionForCompositeField "getCertifications" [ Argument.required "departmentId" requiredArgs____.departmentId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.list)
 
 
 getRegions :
@@ -107,6 +107,13 @@ getRegions :
     -> SelectionSet (List decodesTo) RootQuery
 getRegions object____ =
     Object.selectionForCompositeField "getRegions" [] object____ (Basics.identity >> Decode.list)
+
+
+getDepartments :
+    SelectionSet decodesTo Admin.Object.Department
+    -> SelectionSet (List decodesTo) RootQuery
+getDepartments object____ =
+    Object.selectionForCompositeField "getDepartments" [] object____ (Basics.identity >> Decode.list)
 
 
 getDegrees :

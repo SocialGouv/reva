@@ -3,7 +3,7 @@
     "candidacy_selectOrganism": {
       "id": "c1",
       "organismId": "o1",
-      "regionId": "region1",
+      "departmentId": "department1",
       "createdAt": 1666101304602
     }
   }

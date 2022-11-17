@@ -476,21 +476,42 @@ viewItem context candidacy =
                             |> text
                         ]
                     , p
-                        [ class "flex items-center space-x-1" ]
-                        [ div
-                            [ class "flex-shrink-0 text-gray-400" ]
-                            [ Icons.user ]
-                        , div
-                            [ class "flex text-gray-700 space-x-2" ]
-                          <|
-                            case ( candidacy.firstname, candidacy.lastname ) of
-                                ( Just firstname, Just lastname ) ->
-                                    [ text firstname, text " ", text lastname ]
+                        [ class "flex" ]
+                        [ div [ class "flex items-center space-x-12" ]
+                            [ div [ class "flex items-center space-x-2" ]
+                                [ div
+                                    [ class "flex-shrink-0 text-gray-600" ]
+                                    [ Icons.user ]
+                                , div
+                                    [ class "flex text-gray-700 space-x-2" ]
+                                  <|
+                                    case ( candidacy.firstname, candidacy.lastname ) of
+                                        ( Just firstname, Just lastname ) ->
+                                            [ text firstname, text " ", text lastname ]
+
+                                        _ ->
+                                            [ displayMaybe candidacy.phone
+                                            , displayMaybe candidacy.email
+                                            ]
+                                ]
+                            , case candidacy.department of
+                                Just department ->
+                                    div [ class "flex items-center space-x-2" ]
+                                        [ div
+                                            [ class "flex-shrink-0 text-gray-600 pt-1" ]
+                                            [ Icons.location ]
+                                        , div
+                                            [ class "flex text-gray-700 space-x-2" ]
+                                            [ text department.label
+                                            , text " ("
+                                            , text department.code
+                                            , text ")"
+                                            ]
+                                        ]
 
                                 _ ->
-                                    [ displayMaybe candidacy.phone
-                                    , displayMaybe candidacy.email
-                                    ]
+                                    div [] []
+                            ]
                         ]
                     , div
                         [ class "flex items-end justify-between"

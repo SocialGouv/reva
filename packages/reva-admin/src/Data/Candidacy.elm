@@ -18,10 +18,11 @@ module Data.Candidacy exposing
     )
 
 import Admin.Enum.Duration exposing (Duration)
+import Admin.Object.Candidacy exposing (department)
 import Data.Certification exposing (Certification)
-import Data.Organism exposing (Organism, OrganismId)
+import Data.Organism exposing (Organism)
+import Data.Referential exposing (Department)
 import Time
-import View.Date
 
 
 type CandidacyId
@@ -55,6 +56,7 @@ type alias Candidacy =
     , certificationId : Maybe String
     , organism : Maybe Organism
     , certification : Maybe Certification
+    , department : Maybe Department
     , goals : List CandidacyGoal
     , experiences : List CandidacyExperience
     , firstname : Maybe String
@@ -70,6 +72,7 @@ type alias CandidacySummary =
     { id : CandidacyId
     , certificationId : Maybe String
     , certification : Maybe Certification
+    , department : Maybe Department
     , organism : Maybe Organism
     , firstname : Maybe String
     , lastname : Maybe String
@@ -174,6 +177,7 @@ toCandidacySummary candidacy =
     { id = candidacy.id
     , certificationId = candidacy.certificationId
     , certification = candidacy.certification
+    , department = candidacy.department
     , organism = candidacy.organism
     , firstname = candidacy.firstname
     , lastname = candidacy.lastname
@@ -228,6 +232,7 @@ filterByWord word candidacySummary =
         || maybeMatch .lastname
         || maybeMatch .phone
         || maybeMatch .email
+        || (Maybe.map match (Maybe.map .label candidacySummary.department) |> Maybe.withDefault False)
         || (Maybe.map match (Maybe.map .label candidacySummary.organism) |> Maybe.withDefault False)
 
 

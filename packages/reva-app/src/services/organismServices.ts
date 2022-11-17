@@ -29,9 +29,6 @@ const SELECT_ORGANISM_FOR_CANDIDACY = gql`
       organismId: $organismId
     ) {
       id
-      organismId
-      regionId
-      createdAt
     }
   }
 `;

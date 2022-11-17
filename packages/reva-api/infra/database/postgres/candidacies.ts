@@ -1,4 +1,4 @@
-import { CandidaciesStatus, Candidacy, CandidacyStatus, CandidateTypology, Certification, Organism } from '@prisma/client';
+import { CandidaciesStatus, Candidacy, CandidacyStatus, CandidateTypology, Certification, Department, Organism } from '@prisma/client';
 import { Either, Left, Maybe, Right } from 'purify-ts';
 import * as domain from '../../../domain/types/candidacy';
 import { prismaClient } from './client';
@@ -8,6 +8,7 @@ export const candidacyIncludes = {
     experiences: true,
     goals: true,
     candidacyStatuses: true,
+    department: true,
     certificationsAndRegions: {
         select: {
             certification: true,
@@ -31,7 +32,7 @@ export const candidacyIncludes = {
 };
 
 
-const toDomainCandidacySummary = (candidacy: Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; organism: Organism | null; firstname: string | undefined, lastname: string | undefined }) => {
+const toDomainCandidacySummary = (candidacy: Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; organism: Organism | null; firstname: string | undefined, lastname: string | undefined; department: Department | null; }) => {
 
     const statuses = candidacy.candidacyStatuses;
     const lastStatus = statuses.filter((status => status.isActive))[0];
@@ -50,12 +51,13 @@ const toDomainCandidacySummary = (candidacy: Candidacy & { candidacyStatuses: Ca
         email: candidacy.email,
         phone: candidacy.phone,
         lastStatus,
+        department: candidacy.department,
         createdAt: candidacy.createdAt,
         sentAt
     };
 };    
 
-const toDomainCandidacySummaries = (candidacies: (Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; organism: Organism | null; firstname: string | undefined, lastname: string | undefined })[]): domain.CandidacySummary[] => {
+const toDomainCandidacySummaries = (candidacies: (Candidacy & { candidacyStatuses: CandidaciesStatus[], certification: Certification; organism: Organism | null; firstname: string | undefined, lastname: string | undefined; department: Department | null; })[]): domain.CandidacySummary[] => {
     return candidacies.map(toDomainCandidacySummary);
 };
 
@@ -87,6 +89,7 @@ export const insertCandidacy = async (params: { deviceId: string; certificationI
             deviceId: newCandidacy.deviceId,
             regionId: newCandidacy.certificationsAndRegions[0].region.id,
             region: newCandidacy.certificationsAndRegions[0].region,
+            department: newCandidacy.department,
             certificationId: newCandidacy.certificationsAndRegions[0].certification.id,
             certification: newCandidacy.certificationsAndRegions[0].certification,
             experiences: toDomainExperiences(newCandidacy.experiences),
@@ -239,6 +242,7 @@ export const updateContactOnCandidacy = async (params: { candidacyId: string, em
             deviceId: newCandidacy.deviceId,
             regionId: certificationAndRegion?.region.id,
             region: certificationAndRegion?.region,
+            department: newCandidacy.department,
             certificationId: certificationAndRegion?.certification.id,
             certification: certificationAndRegion?.certification,
             organismId: newCandidacy.organismId,
@@ -300,6 +304,7 @@ export const updateCandidacyStatus = async (params: { candidacyId: string, statu
             deviceId: newCandidacy.deviceId,
             regionId: certificationAndRegion?.region.id,
             region: certificationAndRegion?.region,
+            department: newCandidacy.department,
             certificationId: certificationAndRegion?.certificationId,
             certification: { ...certificationAndRegion?.certification, codeRncp: certificationAndRegion?.certification.rncpId },
             organismId: newCandidacy.organismId,
@@ -315,8 +320,18 @@ export const updateCandidacyStatus = async (params: { candidacyId: string, statu
     };
 };
 
-export const updateCertification = async (params: { candidacyId: string, certificationId: string; regionId: string; author: string; }) => {
+export const updateCertification = async (params: { candidacyId: string, certificationId: string; departmentId: string; author: string; }) => {
     try {
+        const department = await prismaClient.department.findFirst({
+            where: {
+                id: params.departmentId
+            }
+        });
+
+        if (!department) {
+            return Left(`department not found ${params.departmentId}`);
+        }
+
         const [, newCandidacy, certificationAndRegion] = await prismaClient.$transaction([
             prismaClient.candidaciesOnRegionsAndCertifications.updateMany({
                 data: {
@@ -332,10 +347,15 @@ export const updateCertification = async (params: { candidacyId: string, certifi
                     id: params.candidacyId
                 },
                 data: {
+                    department: {
+                        connect: {
+                            id: department.id
+                        }
+                    },
                     certificationsAndRegions: {
                         create: {
                             certificationId: params.certificationId,
-                            regionId: params.regionId,
+                            regionId: department.regionId,
                             author: params.author,
                             isActive: true
                         }
@@ -365,6 +385,7 @@ export const updateCertification = async (params: { candidacyId: string, certifi
             deviceId: newCandidacy.deviceId,
             regionId: certificationAndRegion?.region.id,
             region: certificationAndRegion?.region,
+            department: newCandidacy.department,
             certificationId: certificationAndRegion?.certification.id,
             certification: certificationAndRegion?.certification,
             organismId: newCandidacy.organismId,
@@ -464,12 +485,14 @@ export const getCandidacies = async () => {
                     }
                 },
                 candidate: true,
-                organism: true
+                organism: true,
+                department: true,
             }
         });
 
         return Right(toDomainCandidacySummaries(candidacies.map(c => ({
             ...c, 
+            department: c.department,
             certification: c.certificationsAndRegions[0]?.certification,
             firstname: c.candidate?.firstname,
             lastname: c.candidate?.lastname,
@@ -511,12 +534,14 @@ export const getCandidaciesForUser = async (keycloakId: string) => {
                     }
                 },
                 candidate: true,
-                organism: true
+                organism: true,
+                department: true,
             }
         });
 
         return Right(toDomainCandidacySummaries(candidacies.map(c => ({
             ...c, 
+            department: c.department,
             certification: c.certificationsAndRegions[0]?.certification,
             firstname: c.candidate?.firstname,
             lastname: c.candidate?.lastname,
@@ -576,6 +601,7 @@ export const updateAppointmentInformations = async (params: {
             deviceId: candidacy.deviceId,
             regionId: candidaciesOnRegionsAndCertifications?.region.id,
             region: candidaciesOnRegionsAndCertifications?.region,
+            department: candidacy.department,
             certificationId: candidaciesOnRegionsAndCertifications?.certification.id,
             certification: candidaciesOnRegionsAndCertifications?.certification,
             organismId: candidacy.organismId,
@@ -628,6 +654,7 @@ export const updateOrganism = async (params: { candidacyId: string, organismId: 
             deviceId: newCandidacy.deviceId,
             regionId: certificationAndRegion?.region.id,
             region: certificationAndRegion?.region,
+            department: newCandidacy.department,
             certificationId: certificationAndRegion?.certification.id,
             certification: certificationAndRegion?.certification,
             organismId: newCandidacy.organismId,
@@ -716,6 +743,7 @@ export const updateTrainingInformations = async (params: {
             deviceId: newCandidacy.deviceId,
             regionId: certificationAndRegion?.region.id,
             region: certificationAndRegion?.region,
+            department: newCandidacy.department,
             certificationId: certificationAndRegion?.certification.id,
             certification: certificationAndRegion?.certification,
             organismId: newCandidacy.organismId,

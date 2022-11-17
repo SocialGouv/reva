@@ -6,7 +6,7 @@ interface UpdateCertificationOfCandidacyDeps {
     updateCertification: (params: {
         candidacyId: string;
         certificationId: string;
-        regionId: string;
+        departmentId: string;
         author: string;
     }) => Promise<Either<string, Candidacy>>;
     getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
@@ -15,7 +15,7 @@ interface UpdateCertificationOfCandidacyDeps {
 export const updateCertificationOfCandidacy = (deps: UpdateCertificationOfCandidacyDeps) => (params: {
     candidacyId: string;
     certificationId: string;
-    regionId: string;
+    departmentId: string;
 }) => {
     // TODO Check mail format
     const checkIfCandidacyExists = 

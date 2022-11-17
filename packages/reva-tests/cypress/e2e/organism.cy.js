@@ -16,7 +16,7 @@ context("Empty candidacy", () => {
   });
 });
 
-context("Candidacy with region certification selected", () => {
+context("Candidacy with department certification selected", () => {
   it("list all available organisms", function () {
     cy.intercept("POST", "/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate3.json");

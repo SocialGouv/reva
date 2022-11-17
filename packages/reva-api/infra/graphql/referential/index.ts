@@ -1,10 +1,11 @@
 import { getCertifications } from "../../../domain/features/getCertifications";
 import * as goalsDb from "../../database/postgres/goals";
 import * as certificationsDb from "../../database/postgres/certifications";
-import * as regionsDb from "../../database/postgres/regions";
+import * as locationsDb from "../../database/postgres/locations";
 import * as degreesDb from "../../database/postgres/degrees";
 import * as vulnerabilityIndicatorsDb from "../../database/postgres/vulnerabilityIndicators";
 import mercurius from "mercurius";
+import { getDepartments } from "../../../domain/features/getDepartments";
 import { getRegions } from "../../../domain/features/getRegions";
 import { getDegrees } from "../../../domain/features/getDegrees";
 import { getVulnerabilityIndicators } from "../../../domain/features/getVulnerabilityIndicators";
@@ -24,13 +25,20 @@ export const resolvers = {
     getCertifications: async (_: any, payload: any) => {
       const result = await getCertifications({
         getCertifications:  certificationsDb.getCertifications
-      })({regionId: payload.regionId});
+      })({departmentId: payload.departmentId});
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
     getRegions: async (_: any, _payload: any) => {
       const result = await getRegions({
-        getRegions:  regionsDb.getRegions
+        getRegions:  locationsDb.getRegions
+      })();
+
+      return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
+    },
+    getDepartments: async (_: any, _payload: any) => {
+      const result = await getDepartments({
+        getDepartments:  locationsDb.getDepartments
       })();
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();

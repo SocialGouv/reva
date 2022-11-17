@@ -98,13 +98,13 @@ export const resolvers = {
     }
   },
   Mutation: {
-    candidacy_createCandidacy: async (_: unknown, { candidacy }: { candidacy: { deviceId: string; certificationId: string; regionId: string; }; }) => {
+    candidacy_createCandidacy: async (_: unknown, { candidacy }: { candidacy: { deviceId: string; certificationId: string; regionId: string; departmentId: string }; }) => {
 
       const result = await createCandidacy({
         createCandidacy: candidacyDb.insertCandidacy,
         getCandidacyFromDeviceId: candidacyDb.getCandidacyFromDeviceId,
         notifyTeam: notifyNewCandidacy
-      })({ deviceId: candidacy.deviceId, certificationId: candidacy.certificationId, regionId: candidacy.regionId });
+      })({ deviceId: candidacy.deviceId, certificationId: candidacy.certificationId, regionId: candidacy.regionId, departmentId: candidacy.departmentId });
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
@@ -124,7 +124,7 @@ export const resolvers = {
       })({
         candidacyId: payload.candidacyId,
         certificationId: payload.certificationId,
-        regionId: payload.regionId
+        departmentId: payload.departmentId
       });
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();

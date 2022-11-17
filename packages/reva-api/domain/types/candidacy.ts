@@ -18,6 +18,7 @@ export interface Candidacy extends CandidacyAbstract {
     certification?: any;
     regionId?: string;
     region?: Region; 
+    department: Department | null;
     candidacyStatuses: CandidacyStatus[];
     // basicSkills: BasicSkill[];
     // trainings: Training[];
@@ -80,6 +81,12 @@ export interface AppointmentInformations {
 };
 
 export interface Region {
+    id: string;
+    code: string;
+    label: string;
+}
+
+export interface Department {
     id: string;
     code: string;
     label: string;

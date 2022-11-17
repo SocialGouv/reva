@@ -62,7 +62,7 @@ export const getCertificationById = async ({ id }: { id: string; }): Promise<Cer
   return null;
 };
 
-export const getCertifications = async ({regionId}: {regionId: string}): Promise<Either<string, Certification[]>> => {
+export const getCertifications = async ({departmentId}: {departmentId: string}): Promise<Either<string, Certification[]>> => {
   try {
     const certifications = (await prismaClient.$queryRaw`
     SELECT DISTINCT ON (id) certification_search.id,
@@ -80,7 +80,9 @@ export const getCertifications = async ({regionId}: {regionId: string}): Promise
         INNER JOIN certification ON certification.id = certification_search.id
         INNER JOIN organism_region_certification ON organism_region_certification.certification_id = certification.id
         INNER JOIN organism ON organism.id = organism_region_certification.organism_id
-        WHERE organism_region_certification.region_id = ${regionId}
+        INNER JOIN region ON region.id = organism_region_certification.region_id
+        INNER JOIN department ON department.region_id = region.id
+        WHERE department.id = ${departmentId}
         AND organism_region_certification.is_architect = true
         AND organism.is_active = true
         ORDER BY id, label DESC;

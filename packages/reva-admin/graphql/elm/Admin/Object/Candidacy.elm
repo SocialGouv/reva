@@ -47,6 +47,13 @@ region object____ =
     Object.selectionForCompositeField "region" [] object____ (Basics.identity >> Decode.nullable)
 
 
+department :
+    SelectionSet decodesTo Admin.Object.Department
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
+department object____ =
+    Object.selectionForCompositeField "department" [] object____ (Basics.identity >> Decode.nullable)
+
+
 organismId : SelectionSet (Maybe Data.Scalar.Uuid) Admin.Object.Candidacy
 organismId =
     Object.selectionForField "(Maybe Data.Scalar.Uuid)" "organismId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecUuid |> .decoder |> Decode.nullable)

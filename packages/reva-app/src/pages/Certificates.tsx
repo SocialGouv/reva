@@ -26,8 +26,8 @@ export const Certificates = ({ mainService }: Props) => {
   const resultsElement = useRef<HTMLDivElement | null>(null);
   const currentCertificateElement = useRef<HTMLLIElement | null>(null);
 
-  const [chosenRegionCode, setChosenRegionCode] = useState(
-    state.context.selectedRegion?.code
+  const [chosenDepartmentCode, setChosenDepartmentCode] = useState(
+    state.context.selectedDepartment?.code
   );
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export const Certificates = ({ mainService }: Props) => {
     }
   }, []);
 
-  const selectsOptionsRegions: option[] = state.context.regions
+  const selectsOptionsDepartments: option[] = state.context.departments
     .map((r) => ({
       label: r.label,
       value: r.code,
@@ -144,27 +144,27 @@ export const Certificates = ({ mainService }: Props) => {
         <div className="px-12 pt-16 sm:pt-4 bg-white">
           <Header label="Choisir mon diplôme" />
           <Select
-            name="select_region"
+            name="select_department"
             className="mt-8 mb-4"
-            data-test="certificates-select-region"
-            defaultValue={chosenRegionCode}
-            placeholder="Ma Région"
-            options={selectsOptionsRegions}
+            data-test="certificates-select-department"
+            defaultValue={chosenDepartmentCode}
+            placeholder="Mon département"
+            options={selectsOptionsDepartments}
             onChangeHandler={(e) => {
               const el = e.target as HTMLOptionElement;
-              const regionCode = el.value;
-              setChosenRegionCode(regionCode);
+              const departmentCode = el.value;
+              setChosenDepartmentCode(departmentCode);
               send({
-                type: "SELECT_REGION",
-                regionCode: regionCode,
+                type: "SELECT_DEPARTMENT",
+                departmentCode,
               });
             }}
           />
         </div>
-        {(!!chosenRegionCode || !!state.context.selectedRegion) && (
+        {(!!chosenDepartmentCode || !!state.context.selectedDepartment) && (
           <div className="px-12">
             <Results
-              title={`Diplômes disponibles dans cette région`}
+              title={`Diplômes disponibles dans ce département`}
               listClassName="mb-4 space-y-8"
             >
               {displayCards()}

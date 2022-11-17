@@ -19,7 +19,7 @@ describe("domain candidacy", () => {
           createdAt: new Date(),
           certificationId: '1234',
           candidacyStatuses: [],
-          region: {
+          department: {
             id: "",
             code: "",
             label: ""
@@ -38,7 +38,7 @@ describe("domain candidacy", () => {
           createdAt: new Date(),
           certificationId: '1234',
           candidacyStatuses: [],
-          region: {
+          department: {
             id: "",
             code: "",
             label: ""
@@ -51,7 +51,8 @@ describe("domain candidacy", () => {
     const result = await createCandidacyWithDeps({
       deviceId: '12',
       certificationId: '1234',
-      regionId: '56'
+      regionId: '56',
+      departmentId: '12'
     });
 
     expect(result.extract()).toBeInstanceOf(FunctionalError);
@@ -72,7 +73,8 @@ describe("domain candidacy", () => {
     const result = await createCandidacyWithDeps({
       deviceId: '12',
       certificationId: '1234',
-      regionId: '56'
+      regionId: '56',
+      departmentId: '12'
     });
 
     expect(result.extract()).toBeInstanceOf(FunctionalError);
@@ -97,7 +99,7 @@ describe("domain candidacy", () => {
           email: 'john.doe@reva.beta.gouv.fr',
           candidacyStatuses: [],
           createdAt: new Date(),
-          region: {
+          department: {
             id: "",
             code: "",
             label: ""
@@ -110,7 +112,8 @@ describe("domain candidacy", () => {
     const result = await createCandidacyWithDeps({
       deviceId: '12',
       certificationId: '1234',
-      regionId: '56'
+      regionId: '56',
+      departmentId: '12'
     });
 
     expect(result.extract()).not.toBeInstanceOf(FunctionalError);
