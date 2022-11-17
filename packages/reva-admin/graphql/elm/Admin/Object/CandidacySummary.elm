@@ -80,11 +80,11 @@ lastStatus object____ =
     Object.selectionForCompositeField "lastStatus" [] object____ Basics.identity
 
 
-sentAt : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.CandidacySummary
-sentAt =
-    Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "sentAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)
-
-
 createdAt : SelectionSet Data.Scalar.Timestamp Admin.Object.CandidacySummary
 createdAt =
     Object.selectionForField "Data.Scalar.Timestamp" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
+
+
+sentAt : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.CandidacySummary
+sentAt =
+    Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "sentAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)

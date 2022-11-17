@@ -45,6 +45,10 @@ type Degree
     = Degree
 
 
+type Department
+    = Department
+
+
 type Experience
     = Experience
 
