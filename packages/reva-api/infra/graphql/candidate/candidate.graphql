@@ -1,3 +1,9 @@
+enum Gender {
+  man
+  undisclosed
+  woman
+}
+
 type Tokens {
   accessToken: String!
   refreshToken: String!
@@ -11,11 +17,16 @@ type CandidateLogged {
 
 type Candidate {
   id: String!
+  gender: Gender
   firstname: String!
+  firstname2: String
+  firstname3: String
   lastname: String!
   email: String!
   phone: String!
   candidacy: Candidacy!
+  highestDegree: Degree
+  vulnerabilityIndicator: VulnerabilityIndicator
 }
 
 type Query {

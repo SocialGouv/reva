@@ -112,10 +112,6 @@ model Candidacy {
   collectiveHourCount   Int? @map("collective_hour_count")
   additionalHourCount   Int? @map("additional_hour_count")
   validatedByCandidate Boolean? @map("validated_by_candidate")
-  degree       Degree? @relation(fields: [degreeId], references: [id])
-  degreeId     String?        @db.Uuid  @map("degree_id")
-  vulnerabilityIndicator       VulnerabilityIndicator? @relation(fields: [vulnerabilityIndicatorId], references: [id])
-  vulnerabilityIndicatorId     String?        @db.Uuid  @map("vulnerability_indicator_id")
   candidate   Candidate? @relation(fields: [candidateId], references: [id], onDelete: Cascade)
   candidateId String?   @db.Uuid  @map("candidate_id")
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
@@ -147,13 +143,26 @@ enum CandidacyStatus {
   CERTIFICATION
 }
 
+enum Gender {
+  man
+  undisclosed
+  woman
+}
+
 model Candidate {
   id        String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
   keycloakId String @db.Uuid @unique  @map("keycloak_id") 
+  gender    Gender?
   email     String @unique @db.VarChar(255)
   firstname String @db.VarChar(255)
+  firstname2 String? @db.VarChar(255)
+  firstname3 String? @db.VarChar(255)
   lastname  String @db.VarChar(255)
   phone     String @db.VarChar(255)
+  highestDegree     Degree? @relation(fields: [highestDegreeId], references: [id])
+  highestDegreeId     String?        @db.Uuid  @map("highest_degree_id")
+  vulnerabilityIndicator       VulnerabilityIndicator? @relation(fields: [vulnerabilityIndicatorId], references: [id])
+  vulnerabilityIndicatorId    String?        @db.Uuid  @map("vulnerability_indicator_id")
   candidacies Candidacy[]
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
@@ -331,7 +340,7 @@ model Degree {
   label       String    @unique @db.VarChar(255) 
   longLabel   String    @unique @db.VarChar(255) @map("long_label")
   level       Int
-  candidacies Candidacy[]
+  candidates Candidate[]
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
 
@@ -342,7 +351,7 @@ model Degree {
 model VulnerabilityIndicator {
   id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
   label       String    @unique @db.VarChar(255) 
-  candidacies Candidacy[]
+  candidates Candidate[]
   createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
   updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
 

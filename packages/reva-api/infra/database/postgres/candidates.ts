@@ -187,6 +187,8 @@ export const getCandidateWithCandidacyFromKeycloakId = async (keycloakId: string
                     },
                     include: candidacyIncludes
                 },
+                highestDegree: true,
+                vulnerabilityIndicator: true
             }
         });
 
@@ -222,6 +224,8 @@ export const getCandidateWithCandidacyFromKeycloakId = async (keycloakId: string
                         },
                         include: candidacyIncludes
                     },
+                    highestDegree: true,
+                    vulnerabilityIndicator: true
                 }
             });
         }
