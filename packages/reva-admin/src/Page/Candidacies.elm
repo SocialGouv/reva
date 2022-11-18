@@ -26,6 +26,7 @@ import RemoteData exposing (RemoteData(..))
 import Request
 import Route
 import String exposing (String)
+import Time
 import View
 import View.Candidacy exposing (Tab(..))
 import View.Helpers exposing (dataTest)
@@ -126,16 +127,12 @@ view context model =
             div [ class "text-red-500" ] [ text errors ]
 
         Success candidacies ->
-            let
-                sortedCandidacies =
-                    List.sortBy (.lastStatus >> .status >> Candidacy.statusToDirectoryPosition) candidacies
-            in
             case model.filter of
                 Nothing ->
-                    viewContent context model sortedCandidacies
+                    viewContent context model candidacies
 
                 Just filter ->
-                    List.filter (Candidacy.filterByWords filter) sortedCandidacies
+                    List.filter (Candidacy.filterByWords filter) candidacies
                         |> viewContent context model
 
 
@@ -369,10 +366,12 @@ viewCandidacyArticle baseUrl content =
 viewDirectoryPanel : Context -> List CandidacySummary -> Html Msg
 viewDirectoryPanel context candidacies =
     let
+        candidaciesByStatus : List ( CandidacySummary, List CandidacySummary )
         candidaciesByStatus =
-            List.Extra.groupWhile
-                (\c1 c2 -> c1.lastStatus.status == c2.lastStatus.status)
-                candidacies
+            candidacies
+                |> List.sortBy (.sentAt >> Maybe.map Time.posixToMillis >> Maybe.withDefault 0 >> (*) -1)
+                |> List.Extra.gatherWith (\c1 c2 -> c1.lastStatus.status == c2.lastStatus.status)
+                |> List.sortBy (\( c, _ ) -> Candidacy.statusToDirectoryPosition c.lastStatus.status)
     in
     aside
         [ class "hidden md:order-first md:flex md:flex-col flex-shrink-0"
