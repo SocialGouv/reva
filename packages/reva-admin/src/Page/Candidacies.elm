@@ -437,8 +437,17 @@ viewDirectory context ( firstCandidacy, candidacies ) =
             [ dataTest "directory-group-name"
             , class "z-10 sticky top-0 text-xl font-semibold text-slate-700"
             , class "bg-white px-10 py-3"
+            , class "flex justify-between"
             ]
-            [ h3 [] [ text (Candidacy.statusToString firstCandidacy.lastStatus.status) ] ]
+            [ h3 [] [ text (Candidacy.statusToString firstCandidacy.lastStatus.status) ]
+            , div
+                [ class "flex items-center justify-center"
+                , class "rounded-full px-2 h-6 bg-gray-200"
+                , class "text-sm text-gray-600"
+                ]
+                -- + 1 to count the firstCandidacy not included in the group
+                [ text <| String.fromInt (List.length candidacies + 1) ]
+            ]
         , List.map (viewItem context) (firstCandidacy :: candidacies)
             |> ul [ attribute "role" "list", class "text-lg relative z-0" ]
         ]
