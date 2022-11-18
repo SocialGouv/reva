@@ -14,6 +14,9 @@ import { sendLoginEmail, sendRegistrationEmail } from "../../email";
 import { candidateAuthentication } from "../../../domain/features/candidateAuthentication";
 import { askForLogin } from "../../../domain/features/candidateAskForLogin";
 import { getCandidateWithCandidacy } from "../../../domain/features/candidateGetCandidateWithCandidacy";
+import { Candidate } from "@prisma/client";
+import { getCandidateByEmail } from "../../../domain/features/getCandidateByEmail";
+import { updateCandidate } from "../../../domain/features/updateCandidate";
 
 const generateJwt = (data: unknown, expiresIn: number = 15 * 60) => {
   const dataStr = JSON.stringify(data);
@@ -57,22 +60,22 @@ const alpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const integers = "0123456789";
 const exCharacters = "!@#$%^&*_-=+";
 const createPassword = (length: number, hasNumbers: boolean, hasSymbols: boolean) => {
-    let chars = alpha;
-    if (hasNumbers) {
-        chars += integers;
-    }
-    if (hasSymbols) {
-        chars += exCharacters;
-    }
-    return generatePassword(length, chars);
+  let chars = alpha;
+  if (hasNumbers) {
+    chars += integers;
+  }
+  if (hasSymbols) {
+    chars += exCharacters;
+  }
+  return generatePassword(length, chars);
 };
 
 const generatePassword = (length: number, chars: string) => {
-    let password = "";
-    for (let i = 0; i < length; i++) {
-        password += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return password;
+  let password = "";
+  for (let i = 0; i < length; i++) {
+    password += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return password;
 };
 
 const createCandidateAccountInIAM = (keycloakAdmin: KeycloakAdminClient) => async (account: {
@@ -142,7 +145,7 @@ const generateIAMToken = (keycloakAdmin: KeycloakAdminClient) => async (userId: 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const idToken = grant?.id_token?.token;
-    return Right({accessToken, refreshToken, idToken})
+    return Right({ accessToken, refreshToken, idToken })
 
   } catch (e) {
     return Left(`Error while generating IAM token`)
@@ -158,9 +161,23 @@ export const resolvers = {
       })({ keycloakId: auth.userInfo?.sub })
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
+    },
+    candidate_getCandidateByEmail: async (_: any, { email }: { email: string }) => { 
+      const result = await getCandidateByEmail({
+        getCandidateByEmail: candidatesDb.getCandidateByEmail
+      })({ email })
+
+      return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     }
   },
   Mutation: {
+    candidate_updateCandidate: async (_: any, { candidate }: { candidate: Candidate }) => {
+      const result = await updateCandidate({
+        updateCandidate: candidatesDb.updateCandidate,
+      })(candidate);
+
+      return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
+    },
     candidate_askForRegistration: async (_: any, params: {
       candidate: {
         email: string,
@@ -193,7 +210,7 @@ export const resolvers = {
       
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
-    candidate_askForLogin: async (_: unknown, params: { email: string } ) => {
+    candidate_askForLogin: async (_: unknown, params: { email: string }) => {
       const result = await askForLogin({
         generateJWTForLogin: async (data: unknown) => Right(generateJwt(data)),
         sendLoginEmail: async (data) => sendLoginEmail(data.email, data.token),

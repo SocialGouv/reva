@@ -31,6 +31,7 @@ type Candidate {
 
 type Query {
   candidate_getCandidateWithCandidacy: Candidate!
+  candidate_getCandidateByEmail(email: String!): Candidate!
 }
 
 input CandidateInput {
@@ -40,8 +41,22 @@ input CandidateInput {
   lastname: String!
 }
 
+input FullCandidateInput {
+  id: String!
+  gender: Gender
+  firstname: String!
+  firstname2: String
+  firstname3: String
+  lastname: String!
+  email: String!
+  phone: String!
+  highestDegreeId: String
+  vulnerabilityIndicatorId: String
+}
+
 type Mutation {
   candidate_askForRegistration(candidate: CandidateInput!): String!
   candidate_askForLogin(email: String!): String!
   candidate_login(token: String!): CandidateLogged!
+  candidate_updateCandidate(candidate: FullCandidateInput!): Candidate!
 }

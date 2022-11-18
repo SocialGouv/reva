@@ -1,8 +1,7 @@
 import { prismaClient } from './client';
 import { Left, Maybe, Right } from "purify-ts";
 import { candidacyIncludes } from './candidacies';
-import { CandidacyStatus } from '@prisma/client';
-import { IAMAccount } from '../../../domain/types/account';
+import { CandidacyStatus, Candidate } from '@prisma/client';
 import { Candidacy } from '../../../domain/types/candidacy';
 
 
@@ -258,6 +257,43 @@ export const getCandidateWithCandidacyFromKeycloakId = async (keycloakId: string
             .toEither(`Candidate not found`);
     } catch (e) {
         return Left(`error while retrieving the candidate`);
+    };
+};
+
+
+export const getCandidateByEmail = async (email: string) => {
+    try {
+        const candidate = await prismaClient.candidate.findFirst({
+            where: {
+                email,
+            },
+            include: {
+                highestDegree: true,
+                vulnerabilityIndicator: true
+            }
+        });
+        return Maybe.fromNullable(candidate).toEither(`Candidate not found`);
+    } catch (e) {
+        return Left(`error while retrieving the candidate`);
+    };
+};
+
+
+export const updateCandidate = async (candidate: Candidate) => {
+    try {
+        const newCandidate = await prismaClient.candidate.update({
+            where: {
+                email: candidate.email
+            },
+            data: candidate,
+            include: {
+                highestDegree:true,
+                vulnerabilityIndicator:true
+            }
+        });
+        return Right(newCandidate);
+    } catch (e) {
+        return Left(`error while updating candidate ${candidate.email}`);
     };
 };
 
