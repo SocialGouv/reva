@@ -1,4 +1,3 @@
-
 import { Candidate } from "@prisma/client";
 import { Either, EitherAsync } from "purify-ts";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
