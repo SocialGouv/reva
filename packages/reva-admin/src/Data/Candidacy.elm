@@ -18,7 +18,6 @@ module Data.Candidacy exposing
     )
 
 import Admin.Enum.Duration exposing (Duration)
-import Admin.Object.Candidacy exposing (department)
 import Data.Certification exposing (Certification)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department)
