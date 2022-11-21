@@ -16,7 +16,7 @@ type CandidateLogged {
 }
 
 type Candidate {
-  id: String!
+  id: UUID!
   gender: Gender
   firstname: String!
   firstname2: String
@@ -42,14 +42,13 @@ input CandidateInput {
 }
 
 input FullCandidateInput {
-  id: String!
   gender: Gender
-  firstname: String!
+  firstname: String
   firstname2: String
   firstname3: String
-  lastname: String!
-  email: String!
-  phone: String!
+  lastname: String
+  email: String
+  phone: String
   highestDegreeId: String
   vulnerabilityIndicatorId: String
 }
@@ -58,5 +57,8 @@ type Mutation {
   candidate_askForRegistration(candidate: CandidateInput!): String!
   candidate_askForLogin(email: String!): String!
   candidate_login(token: String!): CandidateLogged!
-  candidate_updateCandidate(candidate: FullCandidateInput!): Candidate!
+  candidate_updateCandidate(
+    id: UUID!
+    candidate: FullCandidateInput!
+  ): Candidate!
 }

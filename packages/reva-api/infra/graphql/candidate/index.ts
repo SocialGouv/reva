@@ -172,11 +172,11 @@ export const resolvers = {
     }
   },
   Mutation: {
-    candidate_updateCandidate: async (_: any, { candidate }: { candidate: Candidate }, context: { app: { auth: any }; }) => {
+    candidate_updateCandidate: async (_: any, { id, candidate }: { id: string, candidate: Candidate }, context: { app: { auth: any }; }) => {
       const result = await updateCandidate({
         hasRole: context.app.auth.hasRole,
         updateCandidate: candidatesDb.updateCandidate,
-      })(candidate);
+      })(id, candidate);
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },

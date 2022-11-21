@@ -279,11 +279,11 @@ export const getCandidateByEmail = async (email: string) => {
 };
 
 
-export const updateCandidate = async (candidate: Candidate) => {
+export const updateCandidate = async (id: string, candidate: Candidate) => {
     try {
         const newCandidate = await prismaClient.candidate.update({
             where: {
-                email: candidate.email
+                id
             },
             data: candidate,
             include: {
