@@ -1,4 +1,4 @@
-module Data.Referential exposing (BasicSkill, Department, MandatoryTraining, Referential, ReferentialGoal, ReferentialGoals)
+module Data.Referential exposing (BasicSkill, Department, MandatoryTraining, Referential, ReferentialGoal, ReferentialGoals, departmentToString)
 
 import Data.Scalar
 import Dict exposing (Dict)
@@ -41,3 +41,8 @@ type alias Department =
     , code : String
     , label : String
     }
+
+
+departmentToString : Department -> String
+departmentToString department =
+    department.label ++ " (" ++ department.code ++ ")"
