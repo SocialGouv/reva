@@ -79,9 +79,16 @@ view config =
                 ]
                 [ viewInfo "sent-at" "Date de candidature" <|
                     viewSentAt (Data.Candidacy.sentDate config.candidacy.statuses)
-                , config.candidacy.phone
-                    |> Maybe.map (text >> viewInfo "phone-number" "Téléphone")
-                    |> Maybe.withDefault (text "")
+                , div [ class "flex space-x-2" ]
+                    [ config.candidacy.department
+                        |> Maybe.map (\dept -> dept.label ++ " (" ++ dept.code ++ ")")
+                        |> Maybe.map (text >> viewInfo "department" "Département")
+                        |> Maybe.map (\content -> div [ class "flex space-x-2" ] [ content, div [] [ text "-" ] ])
+                        |> Maybe.withDefault (text "")
+                    , config.candidacy.phone
+                        |> Maybe.map (text >> viewInfo "phone-number" "Téléphone")
+                        |> Maybe.withDefault (text "")
+                    ]
                 , config.candidacy.email
                     |> Maybe.map
                         (\email ->
