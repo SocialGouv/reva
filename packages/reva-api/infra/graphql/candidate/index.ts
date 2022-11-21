@@ -152,10 +152,10 @@ const generateIAMToken = (keycloakAdmin: KeycloakAdminClient) => async (userId: 
 
 export const resolvers = {
   Query: {
-    candidate_getCandidateWithCandidacy: async (_: any, params: any, { app }: { app: { auth: any; keycloak: Keycloak.Keycloak, getKeycloakAdmin: () => KeycloakAdminClient; }; }) => { 
+    candidate_getCandidateWithCandidacy: async (_: any, params: any, { auth }: {  auth: any }) => { 
       const result = await getCandidateWithCandidacy({
         getCandidateWithCandidacy: candidatesDb.getCandidateWithCandidacyFromKeycloakId
-      })({ keycloakId: app.auth.userInfo?.sub })
+      })({ keycloakId: auth.userInfo?.sub })
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     }
@@ -178,7 +178,7 @@ export const resolvers = {
     },
     candidate_login: async (_: any, params: {
       token: string;
-    }, { app }: { app: { auth: any; keycloak: Keycloak.Keycloak, getKeycloakAdmin: () => KeycloakAdminClient; }; }) => { 
+    }, { app }: { app: { keycloak: Keycloak.Keycloak, getKeycloakAdmin: () => KeycloakAdminClient; }; }) => { 
       const keycloakAdmin = await app.getKeycloakAdmin();
       
       const result = await candidateAuthentication({

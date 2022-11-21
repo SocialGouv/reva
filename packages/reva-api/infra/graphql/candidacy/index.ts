@@ -71,12 +71,13 @@ export const resolvers = {
         .map(withMandatoryTrainings)
         .mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
-    getCandidacies: async (_: unknown, params: { deviceId: string; }, context: { reply: any, app: { auth: any, userInfo: any, keycloak: Keycloak.Keycloak, getKeycloakAdmin: () => KeycloakAdminClient; }; }) => {
+    getCandidacies: async (_: unknown, params: { deviceId: string; }, context: { reply: any, auth: any, app: { keycloak: Keycloak.Keycloak, getKeycloakAdmin: () => KeycloakAdminClient; }; }) => {
+      
       const result = await getCandidacySummaries({
-        hasRole: context.app.auth.hasRole,
+        hasRole: context.auth.hasRole,
         getCandidacySummaries: candidacyDb.getCandidacies,
         getCandidacySummariesForUser: candidacyDb.getCandidaciesForUser
-      })({ IAMId: context.app.auth.userInfo?.sub });
+      })({ IAMId: context.auth.userInfo?.sub });
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
     getTrainings: async () => {
@@ -213,9 +214,9 @@ export const resolvers = {
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
 
-    candidacy_takeOver: async (_: unknown, payload: any, context: { app: { auth: any; }; }) => {
+    candidacy_takeOver: async (_: unknown, payload: any, context: { auth: any;  }) => {
       const result = await takeOverCandidacy({
-        hasRole: context.app.auth.hasRole,
+        hasRole: context.auth.hasRole,
         existsCandidacyWithActiveStatus: candidacyDb.existsCandidacyWithActiveStatus,
         updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
       })({
@@ -236,9 +237,9 @@ export const resolvers = {
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
-    candidacy_submitTrainingForm: async (_: unknown, payload: any, context: { app: { auth: any; }; }) => {
+    candidacy_submitTrainingForm: async (_: unknown, payload: any, context: {  auth: any; }) => {
       const result = await submitTraining({
-        hasRole: context.app.auth.hasRole,
+        hasRole: context.auth.hasRole,
         updateTrainingInformations: candidacyDb.updateTrainingInformations,
         existsCandidacyWithActiveStatus: candidacyDb.existsCandidacyWithActiveStatus,
         updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
