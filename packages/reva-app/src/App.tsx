@@ -340,6 +340,8 @@ function App() {
 
       {current.matches("projectSubmitted") && projectSubmittedPage()}
 
+      {current.matches("candidacyDismissed") && <CandidacyDismissed />}
+
       {current.matches("projectContact") && projectContactPage()}
       {current.matches("projectContactConfirmation") &&
         projectContactConfirmationPage()}
