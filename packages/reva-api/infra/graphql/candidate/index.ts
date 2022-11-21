@@ -162,8 +162,9 @@ export const resolvers = {
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
-    candidate_getCandidateByEmail: async (_: any, { email }: { email: string }) => { 
+    candidate_getCandidateByEmail: async (_: any, { email }: { email: string }, context: { app: { auth: any }; }) => { 
       const result = await getCandidateByEmail({
+        hasRole: context.app.auth.hasRole,
         getCandidateByEmail: candidatesDb.getCandidateByEmail
       })({ email })
 
@@ -171,8 +172,9 @@ export const resolvers = {
     }
   },
   Mutation: {
-    candidate_updateCandidate: async (_: any, { candidate }: { candidate: Candidate }) => {
+    candidate_updateCandidate: async (_: any, { candidate }: { candidate: Candidate }, context: { app: { auth: any }; }) => {
       const result = await updateCandidate({
+        hasRole: context.app.auth.hasRole,
         updateCandidate: candidatesDb.updateCandidate,
       })(candidate);
 
