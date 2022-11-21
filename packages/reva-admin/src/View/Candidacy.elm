@@ -4,7 +4,7 @@ import Admin.Enum.Duration exposing (Duration(..))
 import Api
 import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, CandidacyId)
 import Data.Organism exposing (Organism)
-import Data.Referential exposing (Referential)
+import Data.Referential exposing (Department, Referential)
 import Dict
 import Html.Styled exposing (Html, a, button, dd, div, dl, dt, h1, h3, h4, li, nav, p, span, text, ul)
 import Html.Styled.Attributes exposing (attribute, class, classList, css, href, type_)
@@ -80,11 +80,7 @@ view config =
                 [ viewInfo "sent-at" "Date de candidature" <|
                     viewSentAt (Data.Candidacy.sentDate config.candidacy.statuses)
                 , div [ class "flex space-x-2" ]
-                    [ config.candidacy.department
-                        |> Maybe.map (\dept -> dept.label ++ " (" ++ dept.code ++ ")")
-                        |> Maybe.map (text >> viewInfo "department" "Département")
-                        |> Maybe.map (\content -> div [ class "flex space-x-2" ] [ content, div [] [ text "-" ] ])
-                        |> Maybe.withDefault (text "")
+                    [ viewDepartment config.candidacy.department
                     , config.candidacy.phone
                         |> Maybe.map (text >> viewInfo "phone-number" "Téléphone")
                         |> Maybe.withDefault (text "")
@@ -143,6 +139,15 @@ viewInfo dataTestId label value =
 title : String -> Html msg
 title s =
     h3 [ class "text-xl font-bold mb-2" ] [ text s ]
+
+
+viewDepartment : Maybe Department -> Html msg
+viewDepartment maybeDepartment =
+    maybeDepartment
+        |> Maybe.map (\dept -> dept.label ++ " (" ++ dept.code ++ ")")
+        |> Maybe.map (text >> viewInfo "department" "Département")
+        |> Maybe.map (\content -> div [ class "flex space-x-2" ] [ content, div [] [ text "-" ] ])
+        |> Maybe.withDefault (text "")
 
 
 viewGoal : Referential -> CandidacyGoal -> Html msg
