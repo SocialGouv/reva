@@ -501,7 +501,7 @@ viewItem context candidacy =
                                             [ class "flex-shrink-0 text-gray-600 pt-1" ]
                                             [ Icons.location ]
                                         , div
-                                            [ class "flex text-gray-700 space-x-2" ]
+                                            []
                                             [ Data.Referential.departmentToString department |> text
                                             ]
                                         ]
