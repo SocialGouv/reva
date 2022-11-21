@@ -49,8 +49,8 @@ input FullCandidateInput {
   lastname: String
   email: String
   phone: String
-  highestDegreeId: String
-  vulnerabilityIndicatorId: String
+  highestDegreeId: UUID
+  vulnerabilityIndicatorId: UUID
 }
 
 type Mutation {
