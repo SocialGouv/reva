@@ -2,7 +2,6 @@ import * as path from "path";
 import { loadFilesSync } from "@graphql-tools/load-files";
 import { mergeTypeDefs, mergeResolvers } from "@graphql-tools/merge";
 import { makeExecutableSchema } from "@graphql-tools/schema";
-import { GraphQLScalarType } from "graphql";
 import { VoidTypeDefinition, VoidResolver, TimestampTypeDefinition, TimestampResolver, UUIDResolver, UUIDDefinition } from 'graphql-scalars';
 
 // Resolvers
@@ -38,5 +37,8 @@ export const graphqlConfiguration = {
     ]),
     resolvers,
   }),
+  context: (request: { auth: any }) => {
+    return {auth: request.auth}
+  },
   graphiql: !!process.env.GRAPHIQL,
 };

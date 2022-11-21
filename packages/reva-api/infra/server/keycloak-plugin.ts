@@ -46,7 +46,7 @@ async function keycloakPlugin(app: any, opts: any, next: any) {
     if (token) {
       try {
         const userInfo = await keycloak.grantManager.userInfo(token) as any;
-        app.auth = {
+        req.auth = {
           hasRole: (role: string) => {
             return userInfo?.realm_access?.roles.includes(role);
           },
