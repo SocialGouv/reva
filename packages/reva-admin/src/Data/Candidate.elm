@@ -1,6 +1,6 @@
-module Data.Candidate exposing (Candidate, Degree, DegreeId, VulnerabilityIndicator, VulnerabilityIndicatorId, degreeIdFromString, degreeIdToString)
+module Data.Candidate exposing (Candidate, Degree, DegreeId, VulnerabilityIndicator, VulnerabilityIndicatorId, degreeIdFromString, degreeIdToString, genderFromString, genderToString)
 
-import Admin.Enum.Gender exposing (Gender)
+import Admin.Enum.Gender exposing (Gender(..))
 
 
 type alias Degree =
@@ -28,3 +28,32 @@ type alias Candidate =
     , lastname : String
     , vulnerabilityIndicator : Maybe VulnerabilityIndicator
     }
+
+
+genderToString : Gender -> String
+genderToString gender =
+    case gender of
+        Man ->
+            "Homme"
+
+        Undisclosed ->
+            "Non précisé"
+
+        Woman ->
+            "Femme"
+
+
+genderFromString : String -> Gender
+genderFromString gender =
+    case gender of
+        "Homme" ->
+            Man
+
+        "Non précisé" ->
+            Undisclosed
+
+        "Femme" ->
+            Woman
+
+        _ ->
+            Undisclosed

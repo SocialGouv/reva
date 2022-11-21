@@ -85,6 +85,6 @@ training mandatoryTrainings basicSkills certificateSkills consent otherTraining 
             , ( .collectiveHourCount, Maybe.map String.fromInt collectiveHourCount )
             , ( .additionalHourCount, Maybe.map String.fromInt additionalHourCount )
             ]
-                |> Helper.keysToCheckedList keys
+                |> Helper.toKeyedList keys
     in
     Dict.fromList (mandatoryTrainingsIds ++ basicSkillsIds ++ otherTrainings)

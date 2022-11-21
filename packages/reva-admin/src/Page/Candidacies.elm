@@ -8,11 +8,13 @@ module Page.Candidacies exposing
     )
 
 import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
+import Admin.Enum.Gender exposing (Gender(..))
 import Api exposing (Token)
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Context exposing (Context)
 import Data.Form.Appointment exposing (candidateTypologyToString)
+import Data.Form.Candidate
 import Data.Form.Helper
 import Data.Form.Training
 import Data.Organism exposing (Organism)
@@ -300,6 +302,42 @@ trainingForm =
             [ ( keys.individualHourCount, Form.Number "Nombre d'heure d'accompagnement individuel" )
             , ( keys.collectiveHourCount, Form.Number "Nombre d'heure d'accompagnement collectif" )
             , ( keys.additionalHourCount, Form.Number "Nombre d'heures de formations complémentaires" )
+            , ( keys.mandatoryTrainings
+              , Form.CheckboxList "Formations obligatoires" <|
+                    Data.Form.Helper.toIdList referential.mandatoryTrainings
+              )
+            , ( keys.basicSkills
+              , Form.CheckboxList "Savoirs de base" <|
+                    Data.Form.Helper.toIdList referential.basicSkills
+              )
+            , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" )
+            , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" )
+            ]
+    , saveLabel = "Envoyer le parcours"
+    , title = "Définition du parcours"
+    }
+
+
+candidateInfoForm : Form Referential
+candidateInfoForm =
+    let
+        keys =
+            Data.Form.Candidate.keys
+
+        genders =
+            [ Man
+            , Woman
+            , Undisclosed
+            ]
+                |> List.map (\el -> ( Data.Candidate.genderToString el, Data.Candidate.genderToString el ))
+    in
+    { elements =
+        \referential ->
+            [ ( keys.lastname, Form.Input "Nom" )
+            , ( keys.firstname, Form.Input "Prénom" )
+            , ( keys.firstname2, Form.Input "Prénom 2" )
+            , ( keys.firstname2, Form.Input "Prénom 3" )
+            , ( keys.gender, Form.Select "Nombre d'heures de formations complémentaires" )
             , ( keys.mandatoryTrainings
               , Form.CheckboxList "Formations obligatoires" <|
                     Data.Form.Helper.toIdList referential.mandatoryTrainings

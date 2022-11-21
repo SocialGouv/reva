@@ -4,11 +4,11 @@ module Data.Form.Helper exposing
     , dateFromString
     , dateToString
     , decode
-    , defaultDate
     , generic
-    , keysToCheckedList
+    , maybe
     , toDict
     , toIdList
+    , toKeyedList
     , uuidToCheckedList
     )
 
@@ -52,9 +52,13 @@ dateToString time =
         |> Date.toIsoString
 
 
-defaultDate : Time.Posix
-defaultDate =
-    Time.millisToPosix 0
+maybe :
+    keys
+    -> Dict.Dict String String
+    -> (keys -> String)
+    -> Maybe String
+maybe keys dict field =
+    Dict.get (field keys) dict
 
 
 generic :
@@ -65,7 +69,7 @@ generic :
     -> data
     -> data
 generic keys dict field f default =
-    Dict.get (field keys) dict
+    maybe keys dict field
         |> Maybe.map f
         |> Maybe.withDefault default
 
@@ -118,6 +122,7 @@ decode :
         , int : (a -> String) -> Int -> Int
         , list : List { b | id : String } -> List String
         , string : (a -> String) -> String -> String
+        , maybe : { string : (a -> String) -> Maybe String }
         }
 decode keys dict =
     { bool = bool keys dict
@@ -126,11 +131,12 @@ decode keys dict =
     , int = int keys dict
     , list = selection dict
     , string = string keys dict
+    , maybe = { string = maybe keys dict }
     }
 
 
-keysToCheckedList : a -> List ( a -> b, Maybe String ) -> List ( b, String )
-keysToCheckedList keys data =
+toKeyedList : a -> List ( a -> String, Maybe String ) -> List ( String, String )
+toKeyedList keys data =
     List.map
         (\( f, value ) -> ( f keys, value |> Maybe.withDefault "" ))
         data
@@ -148,5 +154,5 @@ toIdList l =
 
 toDict : a -> List ( a -> comparable, Maybe String ) -> Dict.Dict comparable String
 toDict keys data =
-    keysToCheckedList keys data
+    toKeyedList keys data
         |> Dict.fromList

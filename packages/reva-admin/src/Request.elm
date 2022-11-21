@@ -18,10 +18,11 @@ import Admin.Object.BasicSkill
 import Admin.Object.Candidacy
 import Admin.Object.CandidacyStatus
 import Admin.Object.CandidacySummary
+import Admin.Object.Candidate
 import Admin.Object.CandidateGoal
 import Admin.Object.Certification
-import Admin.Object.Department
 import Admin.Object.Degree
+import Admin.Object.Department
 import Admin.Object.Experience
 import Admin.Object.Goal
 import Admin.Object.Organism
@@ -32,6 +33,7 @@ import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api exposing (Token)
 import Data.Candidacy exposing (CandidacyId)
+import Data.Candidate
 import Data.Certification
 import Data.Form.Appointment
 import Data.Form.Training
@@ -331,7 +333,7 @@ vulnerabilityIndicatorSelection =
 candidateSelection : SelectionSet Data.Candidate.Candidate Admin.Object.Candidate
 candidateSelection =
     SelectionSet.succeed Data.Candidate.Candidate
-        |> with Admin.Object.Candidate.id
+        |> with (SelectionSet.map (\(Uuid id) -> id) Admin.Object.Candidate.id)
         |> with Admin.Object.Candidate.firstname
         |> with Admin.Object.Candidate.firstname2
         |> with Admin.Object.Candidate.firstname3
@@ -341,19 +343,19 @@ candidateSelection =
         |> with (Admin.Object.Candidate.vulnerabilityIndicator vulnerabilityIndicatorSelection)
 
 
-requestCandidate :
+requestCandidateByEmail :
     String
     -> Token
     -> (RemoteData String Data.Candidate.Candidate -> msg)
-    -> CandidateId
+    -> String
     -> Cmd msg
-requestCandidate endpointGraphql token toMsg id =
+requestCandidateByEmail endpointGraphql token toMsg email =
     let
-        candidacyRequiredArgs =
-            Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString id)
+        candidateRequiredArgs =
+            Query.CandidateGetCandidateByEmailRequiredArguments email
     in
-    Query.getCandidacyById candidacyRequiredArgs candidacySelection
-        |> makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
+    Query.candidate_getCandidateByEmail candidateRequiredArgs candidateSelection
+        |> makeQuery endpointGraphql token (nothingToError "Ce candidat est introuvable" >> toMsg)
 
 
 
