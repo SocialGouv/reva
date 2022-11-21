@@ -144,7 +144,7 @@ title s =
 viewDepartment : Maybe Department -> Html msg
 viewDepartment maybeDepartment =
     maybeDepartment
-        |> Maybe.map (\dept -> dept.label ++ " (" ++ dept.code ++ ")")
+        |> Maybe.map Data.Referential.departmentToString
         |> Maybe.map (text >> viewInfo "department" "Département")
         |> Maybe.map (\content -> div [ class "flex space-x-2" ] [ content, div [] [ text "-" ] ])
         |> Maybe.withDefault (text "")
