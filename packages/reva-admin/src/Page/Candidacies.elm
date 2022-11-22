@@ -346,8 +346,8 @@ candidateInfoForm =
             , ( keys.firstname3, Form.Input "Prénom 3" )
             , ( keys.gender, Form.Select "Genre" genders )
             ]
-    , saveLabel = "Envoyer le parcours"
-    , title = "Définition du parcours"
+    , saveLabel = "Enregistrer"
+    , title = "Demande de prise en charge"
     }
 
 
