@@ -4,11 +4,11 @@ import { Device } from "@capacitor/device";
 import { useMachine } from "@xstate/react";
 import { AnimatePresence } from "framer-motion";
 import { useContext, useMemo } from "react";
-
 import { Footer } from "./components/organisms/Footer";
 import { useKeycloakContext } from "./contexts/keycloakContext";
 import { Certification } from "./interface";
 import { mainMachine } from "./machines/main.machine";
+import { CandidacyDismissed } from "./pages/CandidacyDismissed";
 import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
 import { Error } from "./pages/Error";
@@ -37,17 +37,18 @@ import {
   submitCandidacy,
   updateCertification,
   updateContact,
-  updateExperience,
+  updateExperience
 } from "./services/candidacyServices";
 import {
   getOrganismsForCandidacy,
-  selectOrganismForCandidacy,
+  selectOrganismForCandidacy
 } from "./services/organismServices";
 import {
   getCertification,
-  searchCertifications,
+  searchCertifications
 } from "./services/searchServices";
 import useWindowSize from "./utils/useWindowSize";
+
 
 function App() {
   const { client } = useContext(getApolloContext());
@@ -340,7 +341,7 @@ function App() {
 
       {current.matches("projectSubmitted") && projectSubmittedPage()}
 
-      {current.matches("candidacyDismissed") && <CandidacyDismissed />}
+      {current.matches("candidacyDismissed") && <CandidacyDismissed firstname={current.context.contact?.firstname||""} email={current.context.contact?.email||""}/>}
 
       {current.matches("projectContact") && projectContactPage()}
       {current.matches("projectContactConfirmation") &&
