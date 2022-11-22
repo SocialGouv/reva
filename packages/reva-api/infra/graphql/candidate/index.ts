@@ -155,16 +155,16 @@ const generateIAMToken = (keycloakAdmin: KeycloakAdminClient) => async (userId: 
 
 export const resolvers = {
   Query: {
-    candidate_getCandidateWithCandidacy: async (_: any, params: any, { auth }: {  auth: any }) => { 
+    candidate_getCandidateWithCandidacy: async (_: any, params: any, { auth }: { auth: any }) => { 
       const result = await getCandidateWithCandidacy({
         getCandidateWithCandidacy: candidatesDb.getCandidateWithCandidacyFromKeycloakId
       })({ keycloakId: auth.userInfo?.sub })
 
       return result.mapLeft(error => new mercurius.ErrorWithProps(error.message, error)).extract();
     },
-    candidate_getCandidateByEmail: async (_: any, { email }: { email: string }, context: { app: { auth: any }; }) => { 
+    candidate_getCandidateByEmail: async (_: any, { email }: { email: string }, context: { auth: any }) => { 
       const result = await getCandidateByEmail({
-        hasRole: context.app.auth.hasRole,
+        hasRole: context.auth.hasRole,
         getCandidateByEmail: candidatesDb.getCandidateByEmail
       })({ email })
 
@@ -172,9 +172,9 @@ export const resolvers = {
     }
   },
   Mutation: {
-    candidate_updateCandidate: async (_: any, { id, candidate }: { id: string, candidate: Candidate }, context: { app: { auth: any }; }) => {
+    candidate_updateCandidate: async (_: any, { id, candidate }: { id: string, candidate: Candidate }, context: { auth: any }) => {
       const result = await updateCandidate({
-        hasRole: context.app.auth.hasRole,
+        hasRole: context.auth.hasRole,
         updateCandidate: candidatesDb.updateCandidate,
       })(id, candidate);
 
