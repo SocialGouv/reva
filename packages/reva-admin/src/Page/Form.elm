@@ -160,7 +160,7 @@ viewForm referential status maybeError formData form saveButton =
                     viewReadOnlyElement
     in
     Html.form
-        [ class "px-16"
+        [ class "px-16 mt-10"
         , onSubmit (UserClickedSave referential)
         ]
         [ View.title form.title
@@ -169,7 +169,7 @@ viewForm referential status maybeError formData form saveButton =
             , class "mt-6"
             ]
             (List.map (viewElement formData) (form.elements referential)
-                |> List.concat
+                |> List.map (div [])
             )
         , case status of
             Editable ->
@@ -259,15 +259,18 @@ viewEditableElement formData ( elementId, element ) =
                 ]
                 [ text s ]
 
+        labelStyle =
+            "text-lg font-normal text-slate-700 mb-2"
+
         withLegend s el =
             fieldset
                 []
-                [ legend [ class "text-lg font-semibold text-gray-900 mt-8 mb-4" ] [ text s ]
+                [ legend [ class labelStyle ] [ text s ]
                 , el
                 ]
 
         withLabel s el =
-            [ labelView "text-lg font-semibold text-gray-900 mb-4" s
+            [ labelView labelStyle s
             , el
             ]
     in
