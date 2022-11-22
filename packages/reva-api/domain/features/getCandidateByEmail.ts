@@ -10,7 +10,7 @@ interface GetCandidateByEmailDeps {
 export const getCandidateByEmail = (deps: GetCandidateByEmailDeps) => (params: { email: string; }) => {
     if (deps.hasRole("admin") || deps.hasRole("manage_candidacy")) {
         return EitherAsync.fromPromise(() => deps.getCandidateByEmail(params.email))
-            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDATE_NOT_FOUND, `Aucun candidat n'a été trouvée`));
+            .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDATE_NOT_FOUND, `Aucun candidat n'a été trouvé`));
     } else {
         return Right([]);
     }
