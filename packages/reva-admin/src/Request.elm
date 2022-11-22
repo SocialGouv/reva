@@ -4,10 +4,12 @@ module Request exposing
     , requestAppointment
     , requestCandidacies
     , requestCandidacy
+    , requestCandidateByEmail
     , requestReferential
     , requestTrainings
     , takeOverCandidacy
     , updateAppointment
+    , updateCandidate
     , updateTrainings
     )
 
@@ -36,6 +38,7 @@ import Data.Candidacy exposing (CandidacyId)
 import Data.Candidate
 import Data.Certification
 import Data.Form.Appointment
+import Data.Form.Candidate
 import Data.Form.Training
 import Data.Organism exposing (Organism, OrganismId)
 import Data.Referential
@@ -323,6 +326,12 @@ degreeSelection =
         |> with Admin.Object.Degree.level
 
 
+degreeIdSelection : SelectionSet String Admin.Object.Degree
+degreeIdSelection =
+    SelectionSet.succeed identity
+        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.Degree.id)
+
+
 vulnerabilityIndicatorSelection : SelectionSet Data.Candidate.VulnerabilityIndicator Admin.Object.VulnerabilityIndicator
 vulnerabilityIndicatorSelection =
     SelectionSet.succeed Data.Candidate.VulnerabilityIndicator
@@ -330,32 +339,71 @@ vulnerabilityIndicatorSelection =
         |> with Admin.Object.VulnerabilityIndicator.label
 
 
-candidateSelection : SelectionSet Data.Candidate.Candidate Admin.Object.Candidate
+vulnerabilityIndicatorIdSelection : SelectionSet String Admin.Object.VulnerabilityIndicator
+vulnerabilityIndicatorIdSelection =
+    SelectionSet.succeed identity
+        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.VulnerabilityIndicator.id)
+
+
+candidateSelection : SelectionSet (Dict String String) Admin.Object.Candidate
 candidateSelection =
-    SelectionSet.succeed Data.Candidate.Candidate
+    SelectionSet.succeed Data.Form.Candidate.candidate
         |> with (SelectionSet.map (\(Uuid id) -> id) Admin.Object.Candidate.id)
         |> with Admin.Object.Candidate.firstname
         |> with Admin.Object.Candidate.firstname2
         |> with Admin.Object.Candidate.firstname3
         |> with Admin.Object.Candidate.gender
-        |> with (Admin.Object.Candidate.highestDegree degreeSelection)
+        |> with (Admin.Object.Candidate.highestDegree degreeIdSelection)
         |> with Admin.Object.Candidate.lastname
-        |> with (Admin.Object.Candidate.vulnerabilityIndicator vulnerabilityIndicatorSelection)
+        |> with (Admin.Object.Candidate.vulnerabilityIndicator vulnerabilityIndicatorIdSelection)
 
 
 requestCandidateByEmail :
     String
-    -> Token
-    -> (RemoteData String Data.Candidate.Candidate -> msg)
     -> String
+    -> Token
+    -> (RemoteData String (Dict String String) -> msg)
     -> Cmd msg
-requestCandidateByEmail endpointGraphql token toMsg email =
+requestCandidateByEmail email endpointGraphql token toMsg =
     let
         candidateRequiredArgs =
             Query.CandidateGetCandidateByEmailRequiredArguments email
     in
     Query.candidate_getCandidateByEmail candidateRequiredArgs candidateSelection
         |> makeQuery endpointGraphql token (nothingToError "Ce candidat est introuvable" >> toMsg)
+
+
+updateCandidate :
+    String
+    -> Token
+    -> (RemoteData String () -> msg)
+    -> Data.Referential.Referential
+    -> Dict String String
+    -> Cmd msg
+updateCandidate endpointGraphql token toMsg referential dict =
+    let
+        candidate =
+            Data.Form.Candidate.fromDict dict
+
+        candidateInput =
+            Admin.InputObject.FullCandidateInput
+                (Present candidate.gender)
+                (Present candidate.firstname)
+                (maybeToOptional candidate.firstname2)
+                (maybeToOptional candidate.firstname2)
+                (Present candidate.lastname)
+                Absent
+                Absent
+                (Present <| Uuid candidate.highestDegreeId)
+                (Present <| Uuid candidate.vulnerabilityIndicatorId)
+
+        candidateRequiredArg =
+            Mutation.CandidateUpdateCandidateRequiredArguments
+                (Uuid <| candidate.id)
+                candidateInput
+    in
+    Mutation.candidate_updateCandidate candidateRequiredArg SelectionSet.empty
+        |> makeMutation endpointGraphql token toMsg
 
 
 
@@ -407,7 +455,7 @@ updateAppointment candidacyId endpointGraphql token toMsg referential dict =
 
         appointmentInformation =
             Admin.InputObject.AppointmentInformationsInput
-                (Maybe.map Present appointment.firstAppointmentOccurredAt |> Maybe.withDefault Absent)
+                (maybeToOptional appointment.firstAppointmentOccurredAt)
                 appointment.wasPresentAtFirstAppointment
                 appointment.appointmentCount
 
@@ -419,6 +467,12 @@ updateAppointment candidacyId endpointGraphql token toMsg referential dict =
     in
     Mutation.candidacy_updateAppointmentInformations appointmentRequiredArs SelectionSet.empty
         |> makeMutation endpointGraphql token toMsg
+
+
+maybeToOptional : Maybe a -> OptionalArgument a
+maybeToOptional arg =
+    Maybe.map Present arg
+        |> Maybe.withDefault Absent
 
 
 

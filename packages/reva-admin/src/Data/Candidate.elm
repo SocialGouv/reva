@@ -1,4 +1,4 @@
-module Data.Candidate exposing (Candidate, Degree, DegreeId, VulnerabilityIndicator, VulnerabilityIndicatorId, degreeIdFromString, degreeIdToString, genderFromString, genderToString)
+module Data.Candidate exposing (Candidate, Degree, VulnerabilityIndicator, genderFromString, genderToString)
 
 import Admin.Enum.Gender exposing (Gender(..))
 

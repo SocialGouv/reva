@@ -7,7 +7,8 @@ import Dict exposing (Dict)
 
 
 type alias CandidateInput =
-    { firstname : String
+    { id : String
+    , firstname : String
     , firstname2 : Maybe String
     , firstname3 : Maybe String
     , gender : Gender
@@ -18,7 +19,8 @@ type alias CandidateInput =
 
 
 keys :
-    { firstname : String
+    { id : String
+    , firstname : String
     , firstname2 : String
     , firstname3 : String
     , gender : String
@@ -27,7 +29,8 @@ keys :
     , vulnerabilityIndicator : String
     }
 keys =
-    { firstname = "firstname"
+    { id = "id"
+    , firstname = "firstname"
     , firstname2 = "firstname2"
     , firstname3 = "firstname3"
     , gender = "gender"
@@ -44,6 +47,7 @@ fromDict dict =
             Helper.decode keys dict
     in
     CandidateInput
+        (decode.string .id "")
         (decode.string .firstname "")
         (decode.maybe.string .firstname2)
         (decode.maybe.string .firstname3)
@@ -55,6 +59,7 @@ fromDict dict =
 
 candidate :
     String
+    -> String
     -> Maybe String
     -> Maybe String
     -> Maybe Gender
@@ -62,8 +67,9 @@ candidate :
     -> String
     -> Maybe String
     -> Dict String String
-candidate firstname firstname2 firstname3 gender highestDegreeId lastname vulnerabilityIndicatorId =
-    [ ( .firstname, Just firstname )
+candidate id firstname firstname2 firstname3 gender highestDegreeId lastname vulnerabilityIndicatorId =
+    [ ( .id, Just id )
+    , ( .firstname, Just firstname )
     , ( .firstname2, firstname2 )
     , ( .firstname3, firstname3 )
     , ( .gender, Maybe.map genderToString gender )

@@ -152,7 +152,7 @@ toIdList l =
     List.map (\e -> ( e.id, e.label )) l
 
 
-toDict : a -> List ( a -> comparable, Maybe String ) -> Dict.Dict comparable String
+toDict : a -> List ( a -> String, Maybe String ) -> Dict.Dict String String
 toDict keys data =
     toKeyedList keys data
         |> Dict.fromList

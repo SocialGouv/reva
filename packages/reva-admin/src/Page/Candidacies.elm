@@ -12,6 +12,7 @@ import Admin.Enum.Gender exposing (Gender(..))
 import Api exposing (Token)
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
+import Data.Candidate
 import Data.Context exposing (Context)
 import Data.Form.Appointment exposing (candidateTypologyToString)
 import Data.Form.Candidate
@@ -150,8 +151,9 @@ viewContent context model candidacies =
                 [ a
                     [ Route.href context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId))
                     , class "flex items-center text-gray-800"
+                    , class "mt-6 ml-6"
                     ]
-                    [ span [ class "text-[36px] mr-4" ] [ text "← " ]
+                    [ span [ class "text-3xl mr-4" ] [ text "← " ]
                     , text "Retour"
                     ]
                 , Form.view model.state.referential model.form
@@ -172,6 +174,11 @@ viewContent context model candidacies =
         case model.tab of
             Empty ->
                 [ viewDirectoryPanel context candidacies ]
+
+            CandidateInfo candidacyId ->
+                [ viewForm "candidate" candidacyId
+                , maybeNavigationSteps
+                ]
 
             Meetings candidacyId ->
                 [ viewForm "meetings" candidacyId
@@ -325,9 +332,9 @@ candidateInfoForm =
             Data.Form.Candidate.keys
 
         genders =
-            [ Man
+            [ Undisclosed
+            , Man
             , Woman
-            , Undisclosed
             ]
                 |> List.map (\el -> ( Data.Candidate.genderToString el, Data.Candidate.genderToString el ))
     in
@@ -336,18 +343,8 @@ candidateInfoForm =
             [ ( keys.lastname, Form.Input "Nom" )
             , ( keys.firstname, Form.Input "Prénom" )
             , ( keys.firstname2, Form.Input "Prénom 2" )
-            , ( keys.firstname2, Form.Input "Prénom 3" )
-            , ( keys.gender, Form.Select "Nombre d'heures de formations complémentaires" )
-            , ( keys.mandatoryTrainings
-              , Form.CheckboxList "Formations obligatoires" <|
-                    Data.Form.Helper.toIdList referential.mandatoryTrainings
-              )
-            , ( keys.basicSkills
-              , Form.CheckboxList "Savoirs de base" <|
-                    Data.Form.Helper.toIdList referential.basicSkills
-              )
-            , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" )
-            , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" )
+            , ( keys.firstname3, Form.Input "Prénom 3" )
+            , ( keys.gender, Form.Select "Genre" genders )
             ]
     , saveLabel = "Envoyer le parcours"
     , title = "Définition du parcours"
@@ -692,13 +689,42 @@ updateTab context tab model =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
+        ( View.Candidacy.CandidateInfo candidacyId, Success candidacy ) ->
+            let
+                ( formModel, formCmd ) =
+                    Form.updateForm context
+                        { form = candidateInfoForm
+                        , onLoad =
+                            case candidacy.email of
+                                Just email ->
+                                    Request.requestCandidateByEmail email
+
+                                Nothing ->
+                                    \_ _ _ -> Cmd.none
+                        , onSave = Request.updateCandidate
+                        , onRedirect =
+                            Nav.pushUrl
+                                context.navKey
+                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                        , status = Form.Editable
+                        }
+                        model.form
+            in
+            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
+
         ( View.Candidacy.Training candidacyId, NotAsked ) ->
+            initCandidacy context candidacyId newModel
+
+        ( View.Candidacy.CandidateInfo candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
 
         ( View.Candidacy.Training _, _ ) ->
             ( newModel, Cmd.none )
 
         ( View.Candidacy.TrainingSent _, _ ) ->
+            ( newModel, Cmd.none )
+
+        ( View.Candidacy.CandidateInfo _, _ ) ->
             ( newModel, Cmd.none )
 
         ( View.Candidacy.Profil _, _ ) ->
