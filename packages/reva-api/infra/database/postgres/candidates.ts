@@ -4,6 +4,10 @@ import { candidacyIncludes } from './candidacies';
 import { CandidacyStatus, Candidate } from '@prisma/client';
 import { Candidacy } from '../../../domain/types/candidacy';
 
+const candidateIncludes = {
+    highestDegree: true,
+    vulnerabilityIndicator: true
+}
 
 const withBasicSkills = (c: Candidacy) => ({
     ...c,
@@ -267,10 +271,7 @@ export const getCandidateByEmail = async (email: string) => {
             where: {
                 email,
             },
-            include: {
-                highestDegree: true,
-                vulnerabilityIndicator: true
-            }
+            include: candidateIncludes
         });
         return Maybe.fromNullable(candidate).toEither(`Candidate not found`);
     } catch (e) {
@@ -286,10 +287,7 @@ export const updateCandidate = async (id: string, candidate: Candidate) => {
                 id
             },
             data: candidate,
-            include: {
-                highestDegree:true,
-                vulnerabilityIndicator:true
-            }
+            include: candidateIncludes
         });
         return Right(newCandidate);
     } catch (e) {
