@@ -39,6 +39,12 @@
       "@typescript-eslint/no-var-requires": "off"
     }
   },
+  "importSort": {
+    ".js, .ts, .jsx, .tsx": {
+      "style": "module",
+      "parser": "typescript"
+    }
+  },
   "dependencies": {
     "@fastify/cors": "^8.0.0",
     "@fastify/http-proxy": "^8.0.2",
@@ -74,9 +80,11 @@
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.4.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "import-sort-style-module": "^6.0.0",
     "jest": "^27.5.1",
     "nodemon": "^2.0.19",
     "prettier": "^2.5.1",
+    "prettier-plugin-import-sort": "^0.0.7",
     "prisma": "^3.15.2",
     "rimraf": "^3.0.2",
     "ts-jest": "^27.1.3",
