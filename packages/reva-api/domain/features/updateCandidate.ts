@@ -1,5 +1,5 @@
 import { Candidate } from "@prisma/client";
-import { Either, EitherAsync, Right } from "purify-ts";
+import { Either, EitherAsync, Left } from "purify-ts";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
 interface UpdateCandidate {
@@ -12,6 +12,6 @@ export const updateCandidate = (deps: UpdateCandidate) => (id: string, candidate
         return EitherAsync.fromPromise(() => deps.updateCandidate(id, candidate))
             .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDATE_NOT_SAVED, `Erreur lors de l'enregistrement du candidat ${candidate.email}`));
     } else {
-        return Right([]);
+        return Left(new FunctionalError(FunctionalCodeError.NOT_AUTHORIZED, `Vous n'êtes pas autorisé à modifier ce candidat`));
     }
 }

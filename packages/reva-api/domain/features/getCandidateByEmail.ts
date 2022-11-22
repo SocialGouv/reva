@@ -1,5 +1,5 @@
 import { Candidate } from "@prisma/client";
-import { Either, EitherAsync, Right } from "purify-ts";
+import { Either, EitherAsync, Left } from "purify-ts";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
 interface GetCandidateByEmailDeps {
@@ -12,6 +12,6 @@ export const getCandidateByEmail = (deps: GetCandidateByEmailDeps) => (params: {
         return EitherAsync.fromPromise(() => deps.getCandidateByEmail(params.email))
             .mapLeft(() => new FunctionalError(FunctionalCodeError.CANDIDATE_NOT_FOUND, `Aucun candidat n'a été trouvé`));
     } else {
-        return Right([]);
+        return Left(new FunctionalError(FunctionalCodeError.NOT_AUTHORIZED, `Vous n'êtes pas autorisé à accéder à ce candidat`));
     }
 }
