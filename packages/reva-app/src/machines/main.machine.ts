@@ -1,7 +1,8 @@
-import { assign, createMachine, DoneInvokeEvent } from "xstate";
+import { DoneInvokeEvent, assign, createMachine } from "xstate";
+
 import { Direction } from "../components/organisms/Page";
 import {
-  candidacyStatus, Certification,
+  Certification,
   Contact,
   Department,
   Experience,
@@ -9,9 +10,9 @@ import {
   Goal,
   Organism,
   OrganismForCandidacy,
-  TrainingProgram
+  TrainingProgram,
+  candidacyStatus
 } from "../interface";
-
 
 const candidacyDismissed = "candidacyDismissed";
 const certificateDetails = "certificateDetails";
@@ -1116,9 +1117,7 @@ export const mainMachine = (authenticated: boolean) =>
         },
         isCandidacyDismissed: (_context, event) => {
           const typedEvent = event as DoneInvokeEvent<any>;
-          // TODO: demander le candidacyStatus qui va bien
-          // return typedEvent.data.candidacy?.candidacyStatus === "ARCHIVE";
-          return true;
+          return typedEvent.data.candidacy?.candidacyStatus === "ARCHIVE";
         },
         isTrainingProgramConfirmed: (_context, event) => {
           const typedEvent = event as DoneInvokeEvent<any>;
