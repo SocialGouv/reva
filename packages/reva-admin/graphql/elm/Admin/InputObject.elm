@@ -7,6 +7,7 @@ module Admin.InputObject exposing (..)
 import Admin.Enum.AccountGroup
 import Admin.Enum.CandidateTypology
 import Admin.Enum.Duration
+import Admin.Enum.Gender
 import Admin.Interface
 import Admin.Object
 import Admin.Scalar
@@ -305,6 +306,54 @@ encodeExperienceInput : ExperienceInput -> Value
 encodeExperienceInput input____ =
     Encode.maybeObject
         [ ( "title", Encode.string input____.title |> Just ), ( "startedAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) input____.startedAt |> Just ), ( "duration", Encode.enum Admin.Enum.Duration.toString input____.duration |> Just ), ( "description", Encode.string input____.description |> Just ) ]
+
+
+buildFullCandidateInput :
+    (FullCandidateInputOptionalFields -> FullCandidateInputOptionalFields)
+    -> FullCandidateInput
+buildFullCandidateInput fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { gender = Absent, firstname = Absent, firstname2 = Absent, firstname3 = Absent, lastname = Absent, email = Absent, phone = Absent, highestDegreeId = Absent, vulnerabilityIndicatorId = Absent }
+    in
+    { gender = optionals____.gender, firstname = optionals____.firstname, firstname2 = optionals____.firstname2, firstname3 = optionals____.firstname3, lastname = optionals____.lastname, email = optionals____.email, phone = optionals____.phone, highestDegreeId = optionals____.highestDegreeId, vulnerabilityIndicatorId = optionals____.vulnerabilityIndicatorId }
+
+
+type alias FullCandidateInputOptionalFields =
+    { gender : OptionalArgument Admin.Enum.Gender.Gender
+    , firstname : OptionalArgument String
+    , firstname2 : OptionalArgument String
+    , firstname3 : OptionalArgument String
+    , lastname : OptionalArgument String
+    , email : OptionalArgument String
+    , phone : OptionalArgument String
+    , highestDegreeId : OptionalArgument Data.Scalar.Uuid
+    , vulnerabilityIndicatorId : OptionalArgument Data.Scalar.Uuid
+    }
+
+
+{-| Type for the FullCandidateInput input object.
+-}
+type alias FullCandidateInput =
+    { gender : OptionalArgument Admin.Enum.Gender.Gender
+    , firstname : OptionalArgument String
+    , firstname2 : OptionalArgument String
+    , firstname3 : OptionalArgument String
+    , lastname : OptionalArgument String
+    , email : OptionalArgument String
+    , phone : OptionalArgument String
+    , highestDegreeId : OptionalArgument Data.Scalar.Uuid
+    , vulnerabilityIndicatorId : OptionalArgument Data.Scalar.Uuid
+    }
+
+
+{-| Encode a FullCandidateInput into a value that can be used as an argument.
+-}
+encodeFullCandidateInput : FullCandidateInput -> Value
+encodeFullCandidateInput input____ =
+    Encode.maybeObject
+        [ ( "gender", Encode.enum Admin.Enum.Gender.toString |> Encode.optional input____.gender ), ( "firstname", Encode.string |> Encode.optional input____.firstname ), ( "firstname2", Encode.string |> Encode.optional input____.firstname2 ), ( "firstname3", Encode.string |> Encode.optional input____.firstname3 ), ( "lastname", Encode.string |> Encode.optional input____.lastname ), ( "email", Encode.string |> Encode.optional input____.email ), ( "phone", Encode.string |> Encode.optional input____.phone ), ( "highestDegreeId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.highestDegreeId ), ( "vulnerabilityIndicatorId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.vulnerabilityIndicatorId ) ]
 
 
 buildTrainingInput :

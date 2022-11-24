@@ -4,6 +4,7 @@
 
 module Admin.Object.Candidate exposing (..)
 
+import Admin.Enum.Gender
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -19,14 +20,29 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
-id : SelectionSet String Admin.Object.Candidate
+id : SelectionSet Data.Scalar.Uuid Admin.Object.Candidate
 id =
-    Object.selectionForField "String" "id" [] Decode.string
+    Object.selectionForField "Data.Scalar.Uuid" "id" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecUuid |> .decoder)
+
+
+gender : SelectionSet (Maybe Admin.Enum.Gender.Gender) Admin.Object.Candidate
+gender =
+    Object.selectionForField "(Maybe Enum.Gender.Gender)" "gender" [] (Admin.Enum.Gender.decoder |> Decode.nullable)
 
 
 firstname : SelectionSet String Admin.Object.Candidate
 firstname =
     Object.selectionForField "String" "firstname" [] Decode.string
+
+
+firstname2 : SelectionSet (Maybe String) Admin.Object.Candidate
+firstname2 =
+    Object.selectionForField "(Maybe String)" "firstname2" [] (Decode.string |> Decode.nullable)
+
+
+firstname3 : SelectionSet (Maybe String) Admin.Object.Candidate
+firstname3 =
+    Object.selectionForField "(Maybe String)" "firstname3" [] (Decode.string |> Decode.nullable)
 
 
 lastname : SelectionSet String Admin.Object.Candidate
@@ -49,3 +65,17 @@ candidacy :
     -> SelectionSet decodesTo Admin.Object.Candidate
 candidacy object____ =
     Object.selectionForCompositeField "candidacy" [] object____ Basics.identity
+
+
+highestDegree :
+    SelectionSet decodesTo Admin.Object.Degree
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidate
+highestDegree object____ =
+    Object.selectionForCompositeField "highestDegree" [] object____ (Basics.identity >> Decode.nullable)
+
+
+vulnerabilityIndicator :
+    SelectionSet decodesTo Admin.Object.VulnerabilityIndicator
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidate
+vulnerabilityIndicator object____ =
+    Object.selectionForCompositeField "vulnerabilityIndicator" [] object____ (Basics.identity >> Decode.nullable)

@@ -115,7 +115,7 @@ view remoteReferential model =
                 [ text label ]
 
         skeleton =
-            div []
+            div [ class "ml-16 mt-10" ]
                 [ View.skeleton "mt-8 h-8 w-96"
                 , View.skeleton "mt-12 h-4 w-96"
                 ]
@@ -160,14 +160,16 @@ viewForm referential status maybeError formData form saveButton =
                     viewReadOnlyElement
     in
     Html.form
-        [ onSubmit (UserClickedSave referential) ]
+        [ class "px-16 mt-10"
+        , onSubmit (UserClickedSave referential)
+        ]
         [ View.title form.title
         , div
             [ classList [ ( "space-y-10", status == Editable ) ]
             , class "mt-6"
             ]
             (List.map (viewElement formData) (form.elements referential)
-                |> List.concat
+                |> List.map (div [])
             )
         , case status of
             Editable ->
@@ -257,15 +259,18 @@ viewEditableElement formData ( elementId, element ) =
                 ]
                 [ text s ]
 
+        labelStyle =
+            "text-lg font-normal text-slate-700 mb-2"
+
         withLegend s el =
             fieldset
                 []
-                [ legend [ class "text-lg font-semibold text-gray-900 mt-8 mb-4" ] [ text s ]
+                [ legend [ class labelStyle ] [ text s ]
                 , el
                 ]
 
         withLabel s el =
-            [ labelView "text-lg font-semibold text-gray-900 mb-4" s
+            [ labelView labelStyle s
             , el
             ]
     in
