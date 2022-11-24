@@ -390,7 +390,7 @@ updateCandidate endpointGraphql token toMsg referential dict =
                 (Present candidate.gender)
                 (Present candidate.firstname)
                 (maybeToOptional candidate.firstname2)
-                (maybeToOptional candidate.firstname2)
+                (maybeToOptional candidate.firstname3)
                 (Present candidate.lastname)
                 Absent
                 Absent
@@ -591,7 +591,9 @@ referentialSelection =
         )
         |> with (Query.getBasicSkills basicSkillSelection)
         |> with (Query.getReferential goalsSelection)
+        |> with (Query.getDegrees degreeSelection)
         |> with (Query.getTrainings trainingsSelection)
+        |> with (Query.getVulnerabilityIndicators vulnerabilityIndicatorSelection)
 
 
 requestReferential :

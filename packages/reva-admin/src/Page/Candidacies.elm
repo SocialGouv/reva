@@ -258,15 +258,18 @@ viewMain dataTestValue =
 
 viewTrainingSent : Context -> CandidacyId -> List (Html msg)
 viewTrainingSent context candidacyId =
-    [ View.title "Confirmation"
-    , div [ class "flex flex-col items-center w-full p-10" ]
-        [ View.image [ class "w-[60px]" ] context.baseUrl "confirmation.png"
-        , p
-            [ class "mt-6 mb-24" ]
-            [ text "Le parcours personnalisé a bien été enregistré." ]
-        , View.primaryLink
-            [ Route.href context.baseUrl (Route.Candidacy <| Profil candidacyId) ]
-            "Retour à la candidature"
+    [ div
+        [ class "mt-12 px-20" ]
+        [ View.title "Confirmation"
+        , div [ class "flex flex-col items-center w-full p-10" ]
+            [ View.image [ class "w-[60px]" ] context.baseUrl "confirmation.png"
+            , p
+                [ class "mt-6 mb-24" ]
+                [ text "Le parcours personnalisé a bien été envoyé." ]
+            , View.primaryLink
+                [ Route.href context.baseUrl (Route.Candidacy <| Profil candidacyId) ]
+                "Retour à la candidature"
+            ]
         ]
     ]
 
@@ -331,6 +334,15 @@ candidateInfoForm =
         keys =
             Data.Form.Candidate.keys
 
+        degrees referential =
+            referential.degrees
+                |> List.map (\d -> { id = d.id, label = d.longLabel })
+                |> Data.Form.Helper.toIdList
+
+        vulnerabilityIndicators referential =
+            referential.vulnerabilityIndicators
+                |> Data.Form.Helper.toIdList
+
         genders =
             [ Undisclosed
             , Man
@@ -345,6 +357,8 @@ candidateInfoForm =
             , ( keys.firstname2, Form.Input "Prénom 2" )
             , ( keys.firstname3, Form.Input "Prénom 3" )
             , ( keys.gender, Form.Select "Genre" genders )
+            , ( keys.highestDegree, Form.Select "Plus haut niveau de diplôme obtenu" (degrees referential) )
+            , ( keys.vulnerabilityIndicator, Form.Select "Indicateur public fragile" (vulnerabilityIndicators referential) )
             ]
     , saveLabel = "Enregistrer"
     , title = "Demande de prise en charge"
