@@ -45,7 +45,7 @@ export const batchFundingRequest = async () => {
       port: parseInt(process.env.SFTP_PORT || "2222", 10),
       username: process.env.SFTP_USERNAME || "demo",
       password: process.env.SFTP_PASSWORD || "demo",
-      debug: logger.debug,
+      debug: console.log,
     });
 
     const inoutStream = new Transform({

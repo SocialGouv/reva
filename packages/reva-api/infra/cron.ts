@@ -1,7 +1,12 @@
+import path from "path";
+
 import cron from "cron";
+import dotenv from "dotenv";
 import pino from "pino";
 
 import { batchFundingRequest } from "./batch/fundingRequest";
+
+dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
 const logger = pino();
 
