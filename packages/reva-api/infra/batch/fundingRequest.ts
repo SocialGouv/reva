@@ -38,12 +38,14 @@ export const batchFundingRequest = async () => {
     // TODO: Do some stuff here
 
     // Create Stream, Writable AND Readable
+    logger.info(`SFTP ${process.env.SFTP_HOST}:${process.env.SFTP_PORT}`);
     const sftp = new Client();
     await sftp.connect({
       host: process.env.SFTP_HOST || "127.0.0.1",
       port: parseInt(process.env.SFTP_PORT || "2222", 10),
       username: process.env.SFTP_USERNAME || "demo",
       password: process.env.SFTP_PASSWORD || "demo",
+      debug: logger.debug,
     });
 
     const inoutStream = new Transform({
