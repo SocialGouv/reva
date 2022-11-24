@@ -11,6 +11,7 @@ module Page.Form exposing
     )
 
 import Api exposing (Token)
+import Browser.Dom
 import Data.Context exposing (Context)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
@@ -19,6 +20,7 @@ import Html.Styled.Attributes exposing (checked, class, classList, disabled, for
 import Html.Styled.Events exposing (onCheck, onInput, onSubmit)
 import RemoteData exposing (RemoteData(..))
 import String exposing (String)
+import Task
 import View
 import View.Helpers exposing (dataTest)
 
@@ -28,6 +30,7 @@ type Msg referential
     | UserClickedSave referential
     | GotSaveResponse (RemoteData String ())
     | GotLoadResponse (RemoteData String (Dict String String))
+    | NoOp
 
 
 type Element
@@ -482,13 +485,21 @@ update context msg model =
             noChange
 
         ( GotSaveResponse (RemoteData.Success _), Saving _ _ ) ->
-            ( model, model.onRedirect )
+            ( model
+            , Cmd.batch
+                [ Task.perform (\_ -> NoOp) (Browser.Dom.setViewport 0 0)
+                , model.onRedirect
+                ]
+            )
 
         ( GotSaveResponse (RemoteData.Failure error), Saving form formData ) ->
             -- TODO: Handle save failure
             ( { model | form = Editing (Just error) form formData }, Cmd.none )
 
         ( GotSaveResponse _, _ ) ->
+            noChange
+
+        ( NoOp, _ ) ->
             noChange
 
 
