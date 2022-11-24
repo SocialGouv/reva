@@ -18,7 +18,7 @@
     "prisma:reset": "prisma migrate reset",
     "prisma:private-seed": "ts-node prisma/private-seed.ts",
     "prisma:migrate:deploy": "prisma migrate deploy",
-    "cron": "npx ts-node --esm infra/cron.ts",
+    "cron": "npx ts-node --transpileOnly --esm infra/cron.ts",
     "lint-staged": "lint-staged",
     "lint-all": "prettier --write \"{domain,infra}/**/*.{ts,md}\""
   },
