@@ -13,11 +13,20 @@ interface UpdateCandidate {
 
 export const updateCandidate =
   (deps: UpdateCandidate) => (id: string, candidate: Candidate) => {
-    if (!candidate.highestDegreeId || !candidate.vulnerabilityIndicatorId) {
+    if (!candidate.highestDegreeId) {
       return Left(
         new FunctionalError(
           FunctionalCodeError.CANDIDATE_NOT_SAVED,
-          `Veuillez sélectionner un diplôme et indicateur de public fragile`
+          `Veuillez sélectionner un diplôme.`
+        )
+      );
+    }
+
+    if (!candidate.vulnerabilityIndicatorId) {
+      return Left(
+        new FunctionalError(
+          FunctionalCodeError.CANDIDATE_NOT_SAVED,
+          `Veuillez sélectionner un indicateur de public fragile.`
         )
       );
     }
