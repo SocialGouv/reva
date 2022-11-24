@@ -331,6 +331,15 @@ candidateInfoForm =
         keys =
             Data.Form.Candidate.keys
 
+        degrees referential =
+            referential.degrees
+                |> List.map (\d -> { id = d.id, label = d.longLabel })
+                |> Data.Form.Helper.toIdList
+
+        vulnerabilityIndicators referential =
+            referential.vulnerabilityIndicators
+                |> Data.Form.Helper.toIdList
+
         genders =
             [ Undisclosed
             , Man
@@ -345,6 +354,8 @@ candidateInfoForm =
             , ( keys.firstname2, Form.Input "Prénom 2" )
             , ( keys.firstname3, Form.Input "Prénom 3" )
             , ( keys.gender, Form.Select "Genre" genders )
+            , ( keys.highestDegree, Form.Select "Plus haut niveau de diplôme obtenu" (degrees referential) )
+            , ( keys.vulnerabilityIndicator, Form.Select "Indicateur public fragile" (vulnerabilityIndicators referential) )
             ]
     , saveLabel = "Enregistrer"
     , title = "Demande de prise en charge"

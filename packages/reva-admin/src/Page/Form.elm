@@ -301,7 +301,7 @@ viewEditableElement formData ( elementId, element ) =
             ]
 
         Date label ->
-            inputView "date" "w-60"
+            inputView "date" "w-60 flex items-center"
                 |> withLabel label
 
         Empty ->
