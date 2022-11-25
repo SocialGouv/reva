@@ -332,7 +332,7 @@ viewEditableElement formData ( elementId, element ) =
 
         Section title ->
             [ h2
-                [ class "w-[620px] mt-4 mb-8"
+                [ class "w-[620px] mt-2 mb-4"
                 , class "text-xl font-semibold uppercase text-slate-900"
                 ]
                 [ text title ]
