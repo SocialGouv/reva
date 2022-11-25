@@ -356,6 +356,77 @@ encodeFullCandidateInput input____ =
         [ ( "gender", Encode.enum Admin.Enum.Gender.toString |> Encode.optional input____.gender ), ( "firstname", Encode.string |> Encode.optional input____.firstname ), ( "firstname2", Encode.string |> Encode.optional input____.firstname2 ), ( "firstname3", Encode.string |> Encode.optional input____.firstname3 ), ( "lastname", Encode.string |> Encode.optional input____.lastname ), ( "email", Encode.string |> Encode.optional input____.email ), ( "phone", Encode.string |> Encode.optional input____.phone ), ( "highestDegreeId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.highestDegreeId ), ( "vulnerabilityIndicatorId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.vulnerabilityIndicatorId ) ]
 
 
+buildFundingRequestInput :
+    FundingRequestInputRequiredFields
+    -> FundingRequestInput
+buildFundingRequestInput required____ =
+    { companionId = required____.companionId, diagnosisHourCount = required____.diagnosisHourCount, diagnosisCost = required____.diagnosisCost, postExamHourCount = required____.postExamHourCount, postExamCost = required____.postExamCost, individualHourCount = required____.individualHourCount, individualCost = required____.individualCost, collectiveHourCount = required____.collectiveHourCount, collectiveCost = required____.collectiveCost, additionalHourCount = required____.additionalHourCount, additionalCost = required____.additionalCost, basicSkillsIds = required____.basicSkillsIds, basicSkillsHourCount = required____.basicSkillsHourCount, basicSkillsCost = required____.basicSkillsCost, mandatoryTrainingsIds = required____.mandatoryTrainingsIds, certificateSkills = required____.certificateSkills, certificateSkillsHourCount = required____.certificateSkillsHourCount, certificateSkillsCost = required____.certificateSkillsCost, otherTraining = required____.otherTraining, otherTrainingHourCount = required____.otherTrainingHourCount, otherTrainingCost = required____.otherTrainingCost, examHourCount = required____.examHourCount, examCost = required____.examCost }
+
+
+type alias FundingRequestInputRequiredFields =
+    { companionId : Data.Scalar.Uuid
+    , diagnosisHourCount : Int
+    , diagnosisCost : Int
+    , postExamHourCount : Int
+    , postExamCost : Int
+    , individualHourCount : Int
+    , individualCost : Int
+    , collectiveHourCount : Int
+    , collectiveCost : Int
+    , additionalHourCount : Int
+    , additionalCost : Int
+    , basicSkillsIds : List Data.Scalar.Uuid
+    , basicSkillsHourCount : Int
+    , basicSkillsCost : Int
+    , mandatoryTrainingsIds : List Data.Scalar.Uuid
+    , certificateSkills : String
+    , certificateSkillsHourCount : Int
+    , certificateSkillsCost : Int
+    , otherTraining : String
+    , otherTrainingHourCount : Int
+    , otherTrainingCost : Int
+    , examHourCount : Int
+    , examCost : Int
+    }
+
+
+{-| Type for the FundingRequestInput input object.
+-}
+type alias FundingRequestInput =
+    { companionId : Data.Scalar.Uuid
+    , diagnosisHourCount : Int
+    , diagnosisCost : Int
+    , postExamHourCount : Int
+    , postExamCost : Int
+    , individualHourCount : Int
+    , individualCost : Int
+    , collectiveHourCount : Int
+    , collectiveCost : Int
+    , additionalHourCount : Int
+    , additionalCost : Int
+    , basicSkillsIds : List Data.Scalar.Uuid
+    , basicSkillsHourCount : Int
+    , basicSkillsCost : Int
+    , mandatoryTrainingsIds : List Data.Scalar.Uuid
+    , certificateSkills : String
+    , certificateSkillsHourCount : Int
+    , certificateSkillsCost : Int
+    , otherTraining : String
+    , otherTrainingHourCount : Int
+    , otherTrainingCost : Int
+    , examHourCount : Int
+    , examCost : Int
+    }
+
+
+{-| Encode a FundingRequestInput into a value that can be used as an argument.
+-}
+encodeFundingRequestInput : FundingRequestInput -> Value
+encodeFundingRequestInput input____ =
+    Encode.maybeObject
+        [ ( "companionId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) input____.companionId |> Just ), ( "diagnosisHourCount", Encode.int input____.diagnosisHourCount |> Just ), ( "diagnosisCost", Encode.int input____.diagnosisCost |> Just ), ( "postExamHourCount", Encode.int input____.postExamHourCount |> Just ), ( "postExamCost", Encode.int input____.postExamCost |> Just ), ( "individualHourCount", Encode.int input____.individualHourCount |> Just ), ( "individualCost", Encode.int input____.individualCost |> Just ), ( "collectiveHourCount", Encode.int input____.collectiveHourCount |> Just ), ( "collectiveCost", Encode.int input____.collectiveCost |> Just ), ( "additionalHourCount", Encode.int input____.additionalHourCount |> Just ), ( "additionalCost", Encode.int input____.additionalCost |> Just ), ( "basicSkillsIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.basicSkillsIds |> Just ), ( "basicSkillsHourCount", Encode.int input____.basicSkillsHourCount |> Just ), ( "basicSkillsCost", Encode.int input____.basicSkillsCost |> Just ), ( "mandatoryTrainingsIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.mandatoryTrainingsIds |> Just ), ( "certificateSkills", Encode.string input____.certificateSkills |> Just ), ( "certificateSkillsHourCount", Encode.int input____.certificateSkillsHourCount |> Just ), ( "certificateSkillsCost", Encode.int input____.certificateSkillsCost |> Just ), ( "otherTraining", Encode.string input____.otherTraining |> Just ), ( "otherTrainingHourCount", Encode.int input____.otherTrainingHourCount |> Just ), ( "otherTrainingCost", Encode.int input____.otherTrainingCost |> Just ), ( "examHourCount", Encode.int input____.examHourCount |> Just ), ( "examCost", Encode.int input____.examCost |> Just ) ]
+
+
 buildTrainingInput :
     TrainingInputRequiredFields
     -> TrainingInput

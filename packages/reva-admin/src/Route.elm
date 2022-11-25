@@ -44,6 +44,9 @@ parser baseUrl =
                     (\id -> candidacyTab id View.Candidacy.CandidateInfo)
                     (s "candidacies" </> string </> s "candidate")
                 , map
+                    (\id -> candidacyTab id View.Candidacy.FundingRequest)
+                    (s "candidacies" </> string </> s "funding")
+                , map
                     (\id -> candidacyTab id View.Candidacy.Meetings)
                     (s "candidacies" </> string </> s "meetings")
                 , map
@@ -85,6 +88,9 @@ toString baseUrl route =
 
         Candidacy (View.Candidacy.Meetings candidacyId) ->
             Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "meetings" ] []
+
+        Candidacy (View.Candidacy.FundingRequest candidacyId) ->
+            Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "funding" ] []
 
         Candidacy (View.Candidacy.Training candidacyId) ->
             Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "training" ] []
