@@ -15,6 +15,43 @@ type CandidateLogged {
   candidate: Candidate!
 }
 
+type FundingRequest {
+  id: UUID!
+  companionId: UUID!
+
+  diagnosisHourCount: Int!
+  diagnosisCost: Int!
+
+  postExamHourCount: Int!
+  postExamCost: Int!
+
+  individualHourCount: Int!
+  individualCost: Int!
+
+  collectiveHourCount: Int!
+  collectiveCost: Int!
+
+  additionalHourCount: Int!
+  additionalCost: Int!
+
+  basicSkills: [BasicSkill!]!
+  basicSkillsHourCount: Int!
+  basicSkillsCost: Int!
+
+  mandatoryTrainings: [Training!]!
+
+  certificateSkills: String!
+  certificateSkillsHourCount: Int!
+  certificateSkillsCost: Int!
+
+  otherTraining: String!
+  otherTrainingHourCount: Int!
+  otherTrainingCost: Int!
+
+  examHourCount: Int!
+  examCost: Int!
+}
+
 type Candidate {
   id: UUID!
   gender: Gender
@@ -32,6 +69,7 @@ type Candidate {
 type Query {
   candidate_getCandidateWithCandidacy: Candidate!
   candidate_getCandidateByEmail(email: String!): Candidate
+  candidate_getFundingRequest(candidateId: UUID!): FundingRequest
 }
 
 input CandidateInput {
@@ -53,10 +91,50 @@ input FullCandidateInput {
   vulnerabilityIndicatorId: UUID
 }
 
+input FundingRequestInput {
+  companionId: UUID!
+
+  diagnosisHourCount: Int!
+  diagnosisCost: Int!
+
+  postExamHourCount: Int!
+  postExamCost: Int!
+
+  individualHourCount: Int!
+  individualCost: Int!
+
+  collectiveHourCount: Int!
+  collectiveCost: Int!
+
+  additionalHourCount: Int!
+  additionalCost: Int!
+
+  basicSkillsIds: [UUID!]!
+  basicSkillsHourCount: Int!
+  basicSkillsCost: Int!
+
+  mandatoryTrainingsIds: [UUID!]!
+
+  certificateSkills: String!
+  certificateSkillsHourCount: Int!
+  certificateSkillsCost: Int!
+
+  otherTraining: String!
+  otherTrainingHourCount: Int!
+  otherTrainingCost: Int!
+
+  examHourCount: Int!
+  examCost: Int!
+}
+
 type Mutation {
   candidate_askForRegistration(candidate: CandidateInput!): String!
   candidate_askForLogin(email: String!): String!
   candidate_login(token: String!): CandidateLogged!
+  candidate_createFundingRequest(
+    candidateId: UUID!
+    fundingRequest: FundingRequestInput!
+  ): Candidate!
   candidate_updateCandidate(
     id: UUID!
     candidate: FullCandidateInput!
