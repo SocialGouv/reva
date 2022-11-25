@@ -15,7 +15,7 @@ import Browser.Dom
 import Data.Context exposing (Context)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
-import Html.Styled as Html exposing (Html, button, dd, div, dt, fieldset, input, label, legend, li, option, p, select, span, text, textarea, ul)
+import Html.Styled as Html exposing (Html, button, dd, div, dt, fieldset, h2, h3, input, label, legend, li, option, p, select, span, text, textarea, ul)
 import Html.Styled.Attributes exposing (checked, class, classList, disabled, for, id, name, property, required, selected, type_, value)
 import Html.Styled.Events exposing (onCheck, onInput, onSubmit)
 import RemoteData exposing (RemoteData(..))
@@ -38,11 +38,13 @@ type Element
     | CheckboxList String (List ( String, String ))
     | Date String
     | Empty
+    | Heading String
     | Input String
     | Number String
     | Textarea String
     | Select String (List ( String, String ))
     | SelectOther String String
+    | Section String
 
 
 type alias Form referential =
@@ -163,16 +165,14 @@ viewForm referential status maybeError formData form saveButton =
                     viewReadOnlyElement
     in
     Html.form
-        [ class "px-16 mt-10"
+        [ class "pl-16 pr-4 mt-10"
         , onSubmit (UserClickedSave referential)
         ]
         [ View.title form.title
         , div
-            [ classList [ ( "space-y-10", status == Editable ) ]
-            , class "mt-6"
-            ]
+            [ class "mt-6 flex flex-wrap" ]
             (List.map (viewElement formData) (form.elements referential)
-                |> List.map (div [])
+                |> List.map (div [ class "mr-8" ])
             )
         , case status of
             Editable ->
@@ -214,7 +214,7 @@ viewEditableElement formData ( elementId, element ) =
                 [ "border-b-[3px] border-0 border-b-gray-900"
                 , "focus:ring-blue-500 focus:ring-0 focus:border-blue-600"
                 , "text-xl placeholder:text-gray-500"
-                , "block bg-gray-100 pl-8"
+                , "block bg-gray-100 pl-8 mb-8"
                 ]
                 |> class
 
@@ -248,7 +248,7 @@ viewEditableElement formData ( elementId, element ) =
                 [ name elementId
                 , id elementId
                 , onInput (UserChangedElement elementId)
-                , class "w-full p-8 h-[150px]"
+                , class "w-[420px] h-[150px] p-8 mb-8"
                 , inputStyle
                 , value dataOrDefault
                 ]
@@ -297,7 +297,7 @@ viewEditableElement formData ( elementId, element ) =
             [ div
                 [ name elementId
                 , id elementId
-                , class "mt-1"
+                , class "mt-1 mb-8"
                 ]
                 viewChoices
                 |> withLegend label
@@ -309,6 +309,14 @@ viewEditableElement formData ( elementId, element ) =
 
         Empty ->
             []
+
+        Heading title ->
+            [ h3
+                [ class "w-[620px] mb-2"
+                , class "text-xl font-semibold text-slate-500"
+                ]
+                [ text title ]
+            ]
 
         Input label ->
             inputView "text" "w-full"
@@ -322,11 +330,19 @@ viewEditableElement formData ( elementId, element ) =
             textareaView
                 |> withLabel label
 
+        Section title ->
+            [ h2
+                [ class "w-[620px] mt-4 mb-8"
+                , class "text-xl font-semibold uppercase text-slate-900"
+                ]
+                [ text title ]
+            ]
+
         Select label choices ->
             select
                 [ id elementId
                 , onInput (UserChangedElement elementId)
-                , class "mt-1 block w-full h-[85px] pr-10"
+                , class "mt-1 block w-[420px] h-[85px] pr-10"
                 , inputStyle
                 , required True
                 ]
@@ -412,6 +428,9 @@ viewReadOnlyElement formData ( elementId, element ) =
         Empty ->
             []
 
+        Heading title ->
+            [ h3 [ class "text-xl text-slate-800" ] [ text title ] ]
+
         Input label ->
             defaultView label
 
@@ -420,6 +439,9 @@ viewReadOnlyElement formData ( elementId, element ) =
 
         Textarea label ->
             defaultView label
+
+        Section title ->
+            [ h2 [ class "text-2xl text-gray-900" ] [ text title ] ]
 
         Select label choices ->
             List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices

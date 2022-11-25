@@ -299,8 +299,8 @@ appointmentForm =
             [ ( keys.typology, Form.Select "Typologie" typologies )
             , ( keys.additionalInformation, Form.SelectOther "typology" "Autre typologie" )
             , ( keys.firstAppointmentOccurredAt, Form.Date "Date du premier rendez-vous pédagogique" )
-            , ( keys.wasPresentAtFirstAppointment, Form.Checkbox "Le candidat a bien effectué le rendez-vous d'étude de faisabilité" )
             , ( keys.appointmentCount, Form.Number "Nombre de rendez-vous réalisés avec le candidat" )
+            , ( keys.wasPresentAtFirstAppointment, Form.Checkbox "Le candidat a bien effectué le rendez-vous d'étude de faisabilité" )
             ]
     , saveLabel = "Enregistrer"
     , title = "Rendez-vous pédagogique"
@@ -382,10 +382,14 @@ fundingRequestForm =
     in
     { elements =
         \referential ->
-            [ ( keys.diagnosisHourCount, Form.Number "Entretien(s) de faisabilité - Nombre d'heures" )
-            , ( keys.diagnosisCost, Form.Number "Entretien(s) de faisabilité - Coût horaire" )
-            , ( keys.postExamHourCount, Form.Number "Entretien post jury - Nombre d'heures" )
-            , ( keys.postExamCost, Form.Number "Entretien post jury - Coût horaire" )
+            [ ( "organism", Form.Section "Accompagnement architecte de parcours" )
+            , ( "diagnosis", Form.Heading "Entretien(s) de faisabilité" )
+            , ( keys.diagnosisHourCount, Form.Number "Nombre d'heures" )
+            , ( keys.diagnosisCost, Form.Number "Coût horaire" )
+            , ( "post-exam", Form.Heading "Entretien post jury" )
+            , ( keys.postExamHourCount, Form.Number "Nombre d'heures" )
+            , ( keys.postExamCost, Form.Number "Coût horaire" )
+            , ( "companion", Form.Section "Accompagnement méthodologique" )
             , ( keys.companion, Form.Select "Accompagnateur choisi par le candidat" companions )
             ]
     , saveLabel = "Enregistrer"
