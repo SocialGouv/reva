@@ -15,12 +15,12 @@ type alias FundingRequestInput =
     , individualCost : Int
     , collectiveHourCount : Int
     , collectiveCost : Int
-    , additionalHourCount : Int
-    , additionalCost : Int
     , basicSkillsIds : List String
     , basicSkillsHourCount : Int
     , basicSkillsCost : Int
     , mandatoryTrainingsIds : List String
+    , mandatoryTrainingsHourCount : Int
+    , mandatoryTrainingsCost : Int
     , certificateSkills : String
     , certificateSkillsHourCount : Int
     , certificateSkillsCost : Int
@@ -42,12 +42,12 @@ keys :
     , individualCost : String
     , collectiveHourCount : String
     , collectiveCost : String
-    , additionalHourCount : String
-    , additionalCost : String
     , basicSkillsIds : String
     , basicSkillsHourCount : String
     , basicSkillsCost : String
     , mandatoryTrainingsIds : String
+    , mandatoryTrainingsHourCount : String
+    , mandatoryTrainingsCost : String
     , certificateSkills : String
     , certificateSkillsHourCount : String
     , certificateSkillsCost : String
@@ -67,12 +67,12 @@ keys =
     , individualCost = "individualCost"
     , collectiveHourCount = "collectiveHourCount"
     , collectiveCost = "collectiveCost"
-    , additionalHourCount = "additionalHourCount"
-    , additionalCost = "additionalCost"
     , basicSkillsIds = "basicSkillsIds"
     , basicSkillsHourCount = "basicSkillsHourCount"
     , basicSkillsCost = "basicSkillsCost"
     , mandatoryTrainingsIds = "mandatoryTrainingsIds"
+    , mandatoryTrainingsHourCount = "mandatoryTrainingsHourCount"
+    , mandatoryTrainingsCost = "mandatoryTrainingsCost"
     , certificateSkills = "certificateSkills"
     , certificateSkillsHourCount = "certificateSkillsHourCount"
     , certificateSkillsCost = "certificateSkillsCost"
@@ -100,12 +100,12 @@ fromDict basicSkills mandatoryTrainings dict =
         (decode.int .individualCost 0)
         (decode.int .collectiveHourCount 0)
         (decode.int .collectiveCost 0)
-        (decode.int .additionalHourCount 0)
-        (decode.int .additionalCost 0)
         (decode.list basicSkills)
         (decode.int .basicSkillsHourCount 0)
         (decode.int .basicSkillsCost 0)
         (decode.list mandatoryTrainings)
+        (decode.int .mandatoryTrainingsHourCount 0)
+        (decode.int .mandatoryTrainingsCost 0)
         (decode.string .certificateSkills "")
         (decode.int .certificateSkillsHourCount 0)
         (decode.int .certificateSkillsCost 0)
@@ -116,8 +116,8 @@ fromDict basicSkills mandatoryTrainings dict =
         (decode.int .examCost 0)
 
 
-fundingRequest : String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> p -> String -> String -> String -> String -> String -> Dict String String
-fundingRequest companion diagnosisHourCount diagnosisCost postExamHourCount postExamCost individualHourCount individualCost collectiveHourCount collectiveCost additionalHourCount additionalCost basicSkillsHourCount basicSkillsCost certificateSkills certificateSkillsHourCount certificateSkillsCost otherTraining otherTrainingHourCount otherTrainingCost examHourCount examCost =
+fundingRequest : String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> Dict String String
+fundingRequest companion diagnosisHourCount diagnosisCost postExamHourCount postExamCost individualHourCount individualCost collectiveHourCount collectiveCost basicSkillsHourCount basicSkillsCost mandatoryTrainingsHourCount mandatoryTrainingsCost certificateSkills certificateSkillsHourCount certificateSkillsCost otherTraining otherTrainingHourCount otherTrainingCost examHourCount examCost =
     [ ( .companion, Just companion )
     , ( .diagnosisHourCount, Just diagnosisHourCount )
     , ( .diagnosisCost, Just diagnosisCost )
@@ -127,14 +127,14 @@ fundingRequest companion diagnosisHourCount diagnosisCost postExamHourCount post
     , ( .individualCost, Just individualCost )
     , ( .collectiveHourCount, Just collectiveHourCount )
     , ( .collectiveCost, Just collectiveCost )
-    , ( .additionalHourCount, Just additionalHourCount )
-    , ( .additionalCost, Just additionalCost )
     , ( .basicSkillsHourCount, Just basicSkillsHourCount )
     , ( .basicSkillsCost, Just basicSkillsCost )
+    , ( .mandatoryTrainingsHourCount, Just mandatoryTrainingsHourCount )
+    , ( .mandatoryTrainingsCost, Just mandatoryTrainingsCost )
     , ( .certificateSkills, Just certificateSkills )
     , ( .certificateSkillsHourCount, Just certificateSkillsHourCount )
+    , ( .certificateSkillsCost, Just certificateSkillsCost )
     , ( .otherTraining, Just otherTraining )
-    , ( .additionalCost, Just additionalCost )
     , ( .otherTrainingHourCount, Just otherTrainingHourCount )
     , ( .otherTrainingCost, Just otherTrainingCost )
     , ( .examHourCount, Just examHourCount )

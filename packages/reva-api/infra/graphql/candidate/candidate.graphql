@@ -31,14 +31,13 @@ type FundingRequest {
   collectiveHourCount: Int!
   collectiveCost: Int!
 
-  additionalHourCount: Int!
-  additionalCost: Int!
-
   basicSkills: [BasicSkill!]!
   basicSkillsHourCount: Int!
   basicSkillsCost: Int!
 
   mandatoryTrainings: [Training!]!
+  mandatoryTrainingsHourCount: Int!
+  mandatoryTrainingsCost: Int!
 
   certificateSkills: String!
   certificateSkillsHourCount: Int!

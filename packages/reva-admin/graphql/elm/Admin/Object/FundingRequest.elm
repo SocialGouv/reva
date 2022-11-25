@@ -69,16 +69,6 @@ collectiveCost =
     Object.selectionForField "Int" "collectiveCost" [] Decode.int
 
 
-additionalHourCount : SelectionSet Int Admin.Object.FundingRequest
-additionalHourCount =
-    Object.selectionForField "Int" "additionalHourCount" [] Decode.int
-
-
-additionalCost : SelectionSet Int Admin.Object.FundingRequest
-additionalCost =
-    Object.selectionForField "Int" "additionalCost" [] Decode.int
-
-
 basicSkills :
     SelectionSet decodesTo Admin.Object.BasicSkill
     -> SelectionSet (List decodesTo) Admin.Object.FundingRequest
@@ -101,6 +91,16 @@ mandatoryTrainings :
     -> SelectionSet (List decodesTo) Admin.Object.FundingRequest
 mandatoryTrainings object____ =
     Object.selectionForCompositeField "mandatoryTrainings" [] object____ (Basics.identity >> Decode.list)
+
+
+mandatoryTrainingsHourCount : SelectionSet Int Admin.Object.FundingRequest
+mandatoryTrainingsHourCount =
+    Object.selectionForField "Int" "mandatoryTrainingsHourCount" [] Decode.int
+
+
+mandatoryTrainingsCost : SelectionSet Int Admin.Object.FundingRequest
+mandatoryTrainingsCost =
+    Object.selectionForField "Int" "mandatoryTrainingsCost" [] Decode.int
 
 
 certificateSkills : SelectionSet String Admin.Object.FundingRequest
