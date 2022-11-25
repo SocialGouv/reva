@@ -137,8 +137,8 @@ decode keys dict =
 
 toKeyedList : a -> List ( a -> String, Maybe String ) -> List ( String, String )
 toKeyedList keys data =
-    List.map
-        (\( f, value ) -> ( f keys, value |> Maybe.withDefault "" ))
+    List.filterMap
+        (\( f, maybeValue ) -> Maybe.map (\value -> ( f keys, value )) maybeValue)
         data
 
 

@@ -394,8 +394,8 @@ updateCandidate endpointGraphql token toMsg referential dict =
                 (Present candidate.lastname)
                 Absent
                 Absent
-                (Present <| Uuid candidate.highestDegreeId)
-                (Present <| Uuid candidate.vulnerabilityIndicatorId)
+                (maybeToOptional <| Maybe.map Uuid candidate.highestDegreeId)
+                (maybeToOptional <| Maybe.map Uuid candidate.vulnerabilityIndicatorId)
 
         candidateRequiredArg =
             Mutation.CandidateUpdateCandidateRequiredArguments

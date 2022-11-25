@@ -16,7 +16,7 @@ import Data.Context exposing (Context)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
 import Html.Styled as Html exposing (Html, button, dd, div, dt, fieldset, input, label, legend, li, option, p, select, span, text, textarea, ul)
-import Html.Styled.Attributes exposing (checked, class, classList, disabled, for, id, name, selected, type_, value)
+import Html.Styled.Attributes exposing (checked, class, classList, disabled, for, id, name, property, required, selected, type_, value)
 import Html.Styled.Events exposing (onCheck, onInput, onSubmit)
 import RemoteData exposing (RemoteData(..))
 import String exposing (String)
@@ -328,8 +328,16 @@ viewEditableElement formData ( elementId, element ) =
                 , onInput (UserChangedElement elementId)
                 , class "mt-1 block w-full h-[85px] pr-10"
                 , inputStyle
+                , required True
                 ]
-                (List.map (viewChoice dataOrDefault) choices)
+                (option
+                    [ disabled True
+                    , selected (dataOrDefault == "")
+                    , value ""
+                    ]
+                    [ text "Sélectionner" ]
+                    :: List.map (viewChoice dataOrDefault) choices
+                )
                 |> withLabel label
 
         SelectOther selectId label ->

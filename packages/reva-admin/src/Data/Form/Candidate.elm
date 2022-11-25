@@ -12,9 +12,9 @@ type alias CandidateInput =
     , firstname2 : Maybe String
     , firstname3 : Maybe String
     , gender : Gender
-    , highestDegreeId : String
+    , highestDegreeId : Maybe String
     , lastname : String
-    , vulnerabilityIndicatorId : String
+    , vulnerabilityIndicatorId : Maybe String
     }
 
 
@@ -52,9 +52,9 @@ fromDict dict =
         (decode.maybe.string .firstname2)
         (decode.maybe.string .firstname3)
         (decode.generic .gender genderFromString Undisclosed)
-        (decode.string .highestDegree "")
+        (decode.maybe.string .highestDegree)
         (decode.string .lastname "")
-        (decode.string .vulnerabilityIndicator "")
+        (decode.maybe.string .vulnerabilityIndicator)
 
 
 candidate :
