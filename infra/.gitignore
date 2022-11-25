@@ -1,1 +1,2 @@
 elastic/elasticsearch/nodes/
+./sftp/data/Imports/*.csv
