@@ -9,7 +9,7 @@ import { deleteCandidacy } from "../../../domain/features/deleteCandidacy";
 import { getBasicSkills } from "../../../domain/features/getBasicSkills";
 import { getCandidacySummaries } from "../../../domain/features/getCandidacies";
 import { getCandidacy } from "../../../domain/features/getCandidacy";
-import { getCompanions } from "../../../domain/features/getCompanions";
+import { getCompanionsForCandidacy } from "../../../domain/features/getCompanionsForCandidacy";
 import { getDeviceCandidacy } from "../../../domain/features/getDeviceCandidacy";
 import { getAAPOrganismsForCandidacy } from "../../../domain/features/getOrganismsForCandidacy";
 import { getTrainings } from "../../../domain/features/getTrainings";
@@ -132,6 +132,18 @@ export const resolvers = {
       })();
 
       return result.extract();
+    },
+    getCompanionsForCandidacy: async (
+      _: unknown,
+      params: { candidacyId: string }
+    ) => {
+      const result = await getCompanionsForCandidacy({
+        getCompanionsForCandidacy: organismDb.getCompanionOrganisms,
+      })({ candidacyId: params.candidacyId });
+
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
     },
   },
   Mutation: {

@@ -115,6 +115,7 @@ type Query {
   getCandidacies: [CandidacySummary!]!
   getTrainings: [Training!]!
   getOrganismsForCandidacy(candidacyId: UUID!): [Organism!]!
+  getCompanionsForCandidacy(candidacyId: UUID!): [Organism!]!
   getBasicSkills: [BasicSkill!]!
 }
 

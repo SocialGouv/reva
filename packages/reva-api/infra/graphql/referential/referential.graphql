@@ -36,7 +36,6 @@ type VulnerabilityIndicator {
 }
 
 type Query {
-  getCompanions: [Organism!]!
   getReferential: Referential!
   getCertifications(departmentId: UUID!): [Certification!]!
   getRegions: [Region!]!
