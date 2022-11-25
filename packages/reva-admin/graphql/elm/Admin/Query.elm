@@ -95,6 +95,25 @@ candidate_getCandidateByEmail requiredArgs____ object____ =
     Object.selectionForCompositeField "candidate_getCandidateByEmail" [ Argument.required "email" requiredArgs____.email Encode.string ] object____ (Basics.identity >> Decode.nullable)
 
 
+type alias CandidateGetFundingRequestRequiredArguments =
+    { candidateId : Data.Scalar.Uuid }
+
+
+candidate_getFundingRequest :
+    CandidateGetFundingRequestRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.FundingRequest
+    -> SelectionSet (Maybe decodesTo) RootQuery
+candidate_getFundingRequest requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidate_getFundingRequest" [ Argument.required "candidateId" requiredArgs____.candidateId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.nullable)
+
+
+getCompanions :
+    SelectionSet decodesTo Admin.Object.Organism
+    -> SelectionSet (List decodesTo) RootQuery
+getCompanions object____ =
+    Object.selectionForCompositeField "getCompanions" [] object____ (Basics.identity >> Decode.list)
+
+
 getReferential :
     SelectionSet decodesTo Admin.Object.Referential
     -> SelectionSet decodesTo RootQuery

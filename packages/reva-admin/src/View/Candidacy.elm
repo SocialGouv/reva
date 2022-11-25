@@ -6,8 +6,8 @@ import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, C
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department, Referential)
 import Dict
-import Html.Styled exposing (Html, a, button, dd, div, dl, dt, h1, h3, h4, li, nav, p, span, text, ul)
-import Html.Styled.Attributes exposing (attribute, class, classList, css, href, type_)
+import Html.Styled exposing (Html, a, button, dd, div, dl, dt, h3, h4, li, nav, p, span, text, ul)
+import Html.Styled.Attributes exposing (attribute, class, classList, href, type_)
 import Html.Styled.Events exposing (onClick)
 import RemoteData exposing (RemoteData(..))
 import Time exposing (Posix)
@@ -23,6 +23,7 @@ type Tab
     | Profil CandidacyId
     | Training CandidacyId
     | TrainingSent CandidacyId
+    | FundingRequest CandidacyId
 
 
 view :

@@ -53,6 +53,10 @@ type Experience
     = Experience
 
 
+type FundingRequest
+    = FundingRequest
+
+
 type Goal
     = Goal
 

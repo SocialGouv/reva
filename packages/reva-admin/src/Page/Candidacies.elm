@@ -16,6 +16,7 @@ import Data.Candidate
 import Data.Context exposing (Context)
 import Data.Form.Appointment exposing (candidateTypologyToString)
 import Data.Form.Candidate
+import Data.Form.FundingRequest
 import Data.Form.Helper
 import Data.Form.Training
 import Data.Organism exposing (Organism)
@@ -177,6 +178,11 @@ viewContent context model candidacies =
 
             CandidateInfo candidacyId ->
                 [ viewForm "candidate" candidacyId
+                , maybeNavigationSteps
+                ]
+
+            FundingRequest candidacyId ->
+                [ viewForm "funding" candidacyId
                 , maybeNavigationSteps
                 ]
 
@@ -361,7 +367,29 @@ candidateInfoForm =
             , ( keys.vulnerabilityIndicator, Form.Select "Indicateur public fragile" (vulnerabilityIndicators referential) )
             ]
     , saveLabel = "Enregistrer"
-    , title = "Demande de prise en charge"
+    , title = "Demande de prise en charge 1/2"
+    }
+
+
+fundingRequestForm : Form Referential
+fundingRequestForm =
+    let
+        keys =
+            Data.Form.FundingRequest.keys
+
+        companions =
+            []
+    in
+    { elements =
+        \referential ->
+            [ ( keys.diagnosisHourCount, Form.Number "Entretien(s) de faisabilité - Nombre d'heures" )
+            , ( keys.diagnosisCost, Form.Number "Entretien(s) de faisabilité - Coût horaire" )
+            , ( keys.postExamHourCount, Form.Number "Entretien post jury - Nombre d'heures" )
+            , ( keys.postExamCost, Form.Number "Entretien post jury - Coût horaire" )
+            , ( keys.companion, Form.Select "Accompagnateur choisi par le candidat" companions )
+            ]
+    , saveLabel = "Enregistrer"
+    , title = "Demande de prise en charge 2/2"
     }
 
 
@@ -618,7 +646,7 @@ update context msg model =
         GotCandidacyArchivingResponse _ ->
             ( { model | selected = NotAsked }, Cmd.none )
 
-        GotCandidacyTakingOverResponse (Failure err) ->
+        GotCandidacyTakingOverResponse (Failure _) ->
             ( model, Cmd.none )
 
         GotCandidacyTakingOverResponse (Success candidacy) ->
@@ -681,6 +709,23 @@ updateTab context tab model =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
+        ( View.Candidacy.FundingRequest candidacyId, _ ) ->
+            let
+                ( formModel, formCmd ) =
+                    Form.updateForm context
+                        { form = fundingRequestForm
+                        , onLoad = Request.requestAppointment candidacyId -- TODO
+                        , onSave = Request.updateAppointment candidacyId -- TODO
+                        , onRedirect =
+                            Nav.pushUrl
+                                context.navKey
+                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                        , status = Form.Editable
+                        }
+                        model.form
+            in
+            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
+
         ( View.Candidacy.Training candidacyId, Success candidacy ) ->
             let
                 ( formModel, formCmd ) =
@@ -719,7 +764,7 @@ updateTab context tab model =
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
-                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.FundingRequest candidacyId)))
                         , status = Form.Editable
                         }
                         model.form
