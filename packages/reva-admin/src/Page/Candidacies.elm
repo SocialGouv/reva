@@ -714,8 +714,8 @@ updateTab context tab model =
                 ( formModel, formCmd ) =
                     Form.updateForm context
                         { form = fundingRequestForm
-                        , onLoad = Request.requestAppointment candidacyId
-                        , onSave = Request.updateAppointment candidacyId
+                        , onLoad = Request.requestAppointment candidacyId -- TODO
+                        , onSave = Request.updateAppointment candidacyId -- TODO
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
@@ -764,7 +764,7 @@ updateTab context tab model =
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
-                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.FundingRequest candidacyId)))
                         , status = Form.Editable
                         }
                         model.form
