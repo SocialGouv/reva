@@ -367,7 +367,7 @@ candidateInfoForm =
             , ( keys.vulnerabilityIndicator, Form.Select "Indicateur public fragile" (vulnerabilityIndicators referential) )
             ]
     , saveLabel = "Suivant"
-    , title = "1 - Information candidat"
+    , title = "1 - Informations candidat"
     }
 
 
@@ -417,7 +417,7 @@ fundingRequestForm =
             , ( keys.certificateSkillsHourCount, Form.Number "Nombre d'heures" )
             , ( keys.certificateSkillsCost, Form.Number "Coût horaire" )
             , ( "mandatory", Form.Heading "Autres actions de formations complémentaires" )
-            , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" )
+            , ( keys.otherTraining, Form.Textarea "" )
             , ( keys.otherTrainingHourCount, Form.Number "Nombre d'heures total actes formatifs" )
             , ( "mandatory", Form.Heading "Prestation jury" )
             , ( keys.postExamHourCount, Form.Number "Nombre d'heures" )
