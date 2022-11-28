@@ -26,7 +26,6 @@ type alias FundingRequestInput =
     , certificateSkillsCost : Int
     , otherTraining : String
     , otherTrainingHourCount : Int
-    , otherTrainingCost : Int
     , examHourCount : Int
     , examCost : Int
     }
@@ -109,13 +108,12 @@ fromDict basicSkills mandatoryTrainings dict =
         (decode.int .certificateSkillsCost 0)
         (decode.string .otherTraining "")
         (decode.int .otherTrainingHourCount 0)
-        (decode.int .otherTrainingCost 0)
         (decode.int .examHourCount 0)
         (decode.int .examCost 0)
 
 
-fundingRequest : String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> Dict String String
-fundingRequest companion diagnosisHourCount diagnosisCost postExamHourCount postExamCost individualHourCount individualCost collectiveHourCount collectiveCost basicSkillsHourCount basicSkillsCost mandatoryTrainingsHourCount mandatoryTrainingsCost certificateSkills certificateSkillsHourCount certificateSkillsCost otherTraining otherTrainingHourCount otherTrainingCost examHourCount examCost =
+fundingRequest : String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> Dict String String
+fundingRequest companion diagnosisHourCount diagnosisCost postExamHourCount postExamCost individualHourCount individualCost collectiveHourCount collectiveCost basicSkillsHourCount basicSkillsCost mandatoryTrainingsHourCount mandatoryTrainingsCost certificateSkills certificateSkillsHourCount certificateSkillsCost otherTraining otherTrainingHourCount examHourCount examCost =
     [ ( .companion, Just companion )
     , ( .diagnosisHourCount, Just diagnosisHourCount )
     , ( .diagnosisCost, Just diagnosisCost )
@@ -134,7 +132,6 @@ fundingRequest companion diagnosisHourCount diagnosisCost postExamHourCount post
     , ( .certificateSkillsCost, Just certificateSkillsCost )
     , ( .otherTraining, Just otherTraining )
     , ( .otherTrainingHourCount, Just otherTrainingHourCount )
-    , ( .otherTrainingCost, Just otherTrainingCost )
     , ( .examHourCount, Just examHourCount )
     , ( .examCost, Just examCost )
     ]

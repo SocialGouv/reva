@@ -315,8 +315,8 @@ trainingForm =
     in
     { elements =
         \referential ->
-            [ ( keys.individualHourCount, Form.Number "Nombre d'heure d'accompagnement individuel" )
-            , ( keys.collectiveHourCount, Form.Number "Nombre d'heure d'accompagnement collectif" )
+            [ ( keys.individualHourCount, Form.Number "Nombre d'heures d'accompagnement individuel" )
+            , ( keys.collectiveHourCount, Form.Number "Nombre d'heures d'accompagnement collectif" )
             , ( keys.additionalHourCount, Form.Number "Nombre d'heures de formations complémentaires" )
             , ( keys.mandatoryTrainings
               , Form.CheckboxList "Formations obligatoires" <|
@@ -367,7 +367,7 @@ candidateInfoForm =
             , ( keys.vulnerabilityIndicator, Form.Select "Indicateur public fragile" (vulnerabilityIndicators referential) )
             ]
     , saveLabel = "Suivant"
-    , title = "Demande de prise en charge 1/2"
+    , title = "1 - Information candidat"
     }
 
 
@@ -405,7 +405,7 @@ fundingRequestForm =
               )
             , ( keys.mandatoryTrainingsHourCount, Form.Number "Nombre d'heures" )
             , ( keys.mandatoryTrainingsCost, Form.Number "Coût horaire" )
-            , ( "mandatory", Form.Heading "Formations savoirs de base" )
+            , ( "basic-skills", Form.Heading "Formations savoirs de base" )
             , ( keys.basicSkills
               , Form.CheckboxList "" <|
                     Data.Form.Helper.toIdList referential.basicSkills
@@ -413,18 +413,18 @@ fundingRequestForm =
             , ( keys.basicSkillsHourCount, Form.Number "Nombre d'heures" )
             , ( keys.basicSkillsCost, Form.Number "Coût horaire" )
             , ( "skills", Form.Heading "Bloc de compétences certifiant" )
-            , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" )
+            , ( keys.certificateSkills, Form.Textarea "" )
             , ( keys.certificateSkillsHourCount, Form.Number "Nombre d'heures" )
             , ( keys.certificateSkillsCost, Form.Number "Coût horaire" )
             , ( "mandatory", Form.Heading "Autres actions de formations complémentaires" )
             , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" )
-            , ( keys.otherTrainingHourCount, Form.Textarea "Autres actions de formations complémentaires" )
+            , ( keys.otherTrainingHourCount, Form.Number "Nombre d'heures total actes formatifs" )
             , ( "mandatory", Form.Heading "Prestation jury" )
             , ( keys.postExamHourCount, Form.Number "Nombre d'heures" )
             , ( keys.postExamCost, Form.Number "Coût horaire" )
             ]
     , saveLabel = "Enregistrer"
-    , title = "Demande de prise en charge 2/2"
+    , title = "2 - Parcours personnalisé"
     }
 
 

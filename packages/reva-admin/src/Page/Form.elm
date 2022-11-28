@@ -248,7 +248,7 @@ viewEditableElement formData ( elementId, element ) =
                 [ name elementId
                 , id elementId
                 , onInput (UserChangedElement elementId)
-                , class "w-[420px] h-[150px] p-8 mb-8"
+                , class "w-[520px] h-[150px] p-8 mb-8"
                 , inputStyle
                 , value dataOrDefault
                 ]
@@ -342,7 +342,7 @@ viewEditableElement formData ( elementId, element ) =
             select
                 [ id elementId
                 , onInput (UserChangedElement elementId)
-                , class "mt-1 block w-[420px] h-[85px] pr-10"
+                , class "mt-1 block w-[520px] h-[85px] pr-10"
                 , inputStyle
                 , required True
                 ]
