@@ -53,7 +53,6 @@ keys :
     , certificateSkillsCost : String
     , otherTraining : String
     , otherTrainingHourCount : String
-    , otherTrainingCost : String
     , examHourCount : String
     , examCost : String
     }
@@ -78,7 +77,6 @@ keys =
     , certificateSkillsCost = "certificateSkillsCost"
     , otherTraining = "otherTraining"
     , otherTrainingHourCount = "otherTrainingHourCount"
-    , otherTrainingCost = "otherTrainingCost"
     , examHourCount = "examHourCount"
     , examCost = "examCost"
     }

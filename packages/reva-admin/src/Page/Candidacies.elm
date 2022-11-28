@@ -412,6 +412,16 @@ fundingRequestForm =
               )
             , ( keys.basicSkillsHourCount, Form.Number "Nombre d'heures" )
             , ( keys.basicSkillsCost, Form.Number "Coût horaire" )
+            , ( "skills", Form.Heading "Bloc de compétences certifiant" )
+            , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" )
+            , ( keys.certificateSkillsHourCount, Form.Number "Nombre d'heures" )
+            , ( keys.certificateSkillsCost, Form.Number "Coût horaire" )
+            , ( "mandatory", Form.Heading "Autres actions de formations complémentaires" )
+            , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" )
+            , ( keys.otherTrainingHourCount, Form.Textarea "Autres actions de formations complémentaires" )
+            , ( "mandatory", Form.Heading "Prestation jury" )
+            , ( keys.postExamHourCount, Form.Number "Nombre d'heures" )
+            , ( keys.postExamCost, Form.Number "Coût horaire" )
             ]
     , saveLabel = "Enregistrer"
     , title = "Demande de prise en charge 2/2"
