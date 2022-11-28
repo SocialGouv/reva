@@ -15,10 +15,10 @@ type alias FundingRequestInput =
     , individualCost : Int
     , collectiveHourCount : Int
     , collectiveCost : Int
-    , basicSkillsIds : List String
+    , basicSkills : List String
     , basicSkillsHourCount : Int
     , basicSkillsCost : Int
-    , mandatoryTrainingsIds : List String
+    , mandatoryTrainings : List String
     , mandatoryTrainingsHourCount : Int
     , mandatoryTrainingsCost : Int
     , certificateSkills : String
@@ -42,10 +42,10 @@ keys :
     , individualCost : String
     , collectiveHourCount : String
     , collectiveCost : String
-    , basicSkillsIds : String
+    , basicSkills : String
     , basicSkillsHourCount : String
     , basicSkillsCost : String
-    , mandatoryTrainingsIds : String
+    , mandatoryTrainings : String
     , mandatoryTrainingsHourCount : String
     , mandatoryTrainingsCost : String
     , certificateSkills : String
@@ -67,10 +67,10 @@ keys =
     , individualCost = "individualCost"
     , collectiveHourCount = "collectiveHourCount"
     , collectiveCost = "collectiveCost"
-    , basicSkillsIds = "basicSkillsIds"
+    , basicSkills = "basicSkills"
     , basicSkillsHourCount = "basicSkillsHourCount"
     , basicSkillsCost = "basicSkillsCost"
-    , mandatoryTrainingsIds = "mandatoryTrainingsIds"
+    , mandatoryTrainings = "mandatoryTrainings"
     , mandatoryTrainingsHourCount = "mandatoryTrainingsHourCount"
     , mandatoryTrainingsCost = "mandatoryTrainingsCost"
     , certificateSkills = "certificateSkills"

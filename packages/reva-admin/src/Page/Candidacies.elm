@@ -366,7 +366,7 @@ candidateInfoForm =
             , ( keys.highestDegree, Form.Select "Plus haut niveau de diplôme obtenu" (degrees referential) )
             , ( keys.vulnerabilityIndicator, Form.Select "Indicateur public fragile" (vulnerabilityIndicators referential) )
             ]
-    , saveLabel = "Enregistrer"
+    , saveLabel = "Suivant"
     , title = "Demande de prise en charge 1/2"
     }
 
@@ -391,6 +391,27 @@ fundingRequestForm =
             , ( keys.postExamCost, Form.Number "Coût horaire" )
             , ( "companion", Form.Section "Accompagnement méthodologique" )
             , ( keys.companion, Form.Select "Accompagnateur choisi par le candidat" companions )
+            , ( "individual", Form.Heading "Accompagnement individuel" )
+            , ( keys.individualHourCount, Form.Number "Nombre d'heures" )
+            , ( keys.individualCost, Form.Number "Coût horaire" )
+            , ( "collective", Form.Heading "Accompagnement collectif" )
+            , ( keys.collectiveHourCount, Form.Number "Nombre d'heures" )
+            , ( keys.collectiveCost, Form.Number "Coût horaire" )
+            , ( "training", Form.Section "Actes formatifs" )
+            , ( "mandatory", Form.Heading "Formations obligatoires" )
+            , ( keys.mandatoryTrainings
+              , Form.CheckboxList "" <|
+                    Data.Form.Helper.toIdList referential.mandatoryTrainings
+              )
+            , ( keys.mandatoryTrainingsHourCount, Form.Number "Nombre d'heures" )
+            , ( keys.mandatoryTrainingsCost, Form.Number "Coût horaire" )
+            , ( "mandatory", Form.Heading "Formations savoirs de base" )
+            , ( keys.basicSkills
+              , Form.CheckboxList "" <|
+                    Data.Form.Helper.toIdList referential.basicSkills
+              )
+            , ( keys.basicSkillsHourCount, Form.Number "Nombre d'heures" )
+            , ( keys.basicSkillsCost, Form.Number "Coût horaire" )
             ]
     , saveLabel = "Enregistrer"
     , title = "Demande de prise en charge 2/2"
