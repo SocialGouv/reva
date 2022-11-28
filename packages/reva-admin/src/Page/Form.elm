@@ -39,6 +39,7 @@ type Element
     | Date String
     | Empty
     | Heading String
+    | Info String String
     | Input String
     | Number String
     | Textarea String
@@ -330,6 +331,14 @@ viewEditableElement formData ( elementId, element ) =
             textareaView
                 |> withLabel label
 
+        Info label value ->
+            p
+                [ class "rounded-lg bg-slate-100 mb-8"
+                , class "px-8 py-6 text-lg"
+                ]
+                [ text value ]
+                |> withLabel label
+
         Section title ->
             [ h2
                 [ class "w-[620px] mt-2 mb-4"
@@ -430,6 +439,10 @@ viewReadOnlyElement formData ( elementId, element ) =
 
         Heading title ->
             [ h3 [ class "text-xl text-slate-800" ] [ text title ] ]
+
+        Info label value ->
+            p [] [ text value ]
+                |> withTerm label
 
         Input label ->
             defaultView label

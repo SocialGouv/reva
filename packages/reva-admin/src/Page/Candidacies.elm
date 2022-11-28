@@ -13,6 +13,7 @@ import Api exposing (Token)
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Candidate
+import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
 import Data.Form.Appointment exposing (candidateTypologyToString)
 import Data.Form.Candidate
@@ -371,18 +372,28 @@ candidateInfoForm =
     }
 
 
-fundingRequestForm : Form Referential
-fundingRequestForm =
+fundingRequestForm : Maybe Certification -> Form Referential
+fundingRequestForm maybeCertification =
     let
         keys =
             Data.Form.FundingRequest.keys
 
         companions =
             []
+
+        certificateField =
+            case maybeCertification of
+                Just certification ->
+                    ( "certification", Form.Info "" certification.label )
+
+                Nothing ->
+                    ( "certification", Form.Empty )
     in
     { elements =
         \referential ->
-            [ ( "organism", Form.Section "Accompagnement architecte de parcours" )
+            [ ( "selected-certification", Form.Section "Certification choisie par le candidat" )
+            , certificateField
+            , ( "organism", Form.Section "Accompagnement architecte de parcours" )
             , ( "diagnosis", Form.Heading "Entretien(s) de faisabilité" )
             , ( keys.diagnosisHourCount, Form.Number "Nombre d'heures" )
             , ( keys.diagnosisCost, Form.Number "Coût horaire" )
@@ -713,11 +724,11 @@ updateTab context tab model =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        ( View.Candidacy.FundingRequest candidacyId, _ ) ->
+        ( View.Candidacy.FundingRequest candidacyId, Success candidacy ) ->
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
-                        { form = fundingRequestForm
+                        { form = fundingRequestForm candidacy.certification
                         , onLoad = Request.requestAppointment candidacyId -- TODO
                         , onSave = Request.updateAppointment candidacyId -- TODO
                         , onRedirect =
@@ -781,6 +792,9 @@ updateTab context tab model =
         ( View.Candidacy.CandidateInfo candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
 
+        ( View.Candidacy.FundingRequest candidacyId, NotAsked ) ->
+            initCandidacy context candidacyId newModel
+
         ( View.Candidacy.Training _, _ ) ->
             ( newModel, Cmd.none )
 
@@ -788,6 +802,9 @@ updateTab context tab model =
             ( newModel, Cmd.none )
 
         ( View.Candidacy.CandidateInfo _, _ ) ->
+            ( newModel, Cmd.none )
+
+        ( View.Candidacy.FundingRequest candidacyId, _ ) ->
             ( newModel, Cmd.none )
 
         ( View.Candidacy.Profil _, _ ) ->
