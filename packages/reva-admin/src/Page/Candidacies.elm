@@ -43,9 +43,9 @@ type Msg
     = GotCandidaciesResponse (RemoteData String (List CandidacySummary))
     | GotCandidacyResponse (RemoteData String Candidacy)
     | GotCandidacyDeletionResponse (RemoteData String String)
-    | GotCandidacyArchivingResponse (RemoteData String Candidacy)
-    | GotCandidacyTakingOverResponse (RemoteData String Candidacy)
-    | GotFormMsg (Form.Msg Referential)
+    | GotCandidacyArchivingResponse (RemoteData String ())
+    | GotCandidacyTakingOverResponse (RemoteData String ())
+    | GotFormMsg (Form.Msg ( Candidacy, Referential ))
     | GotReferentialResponse (RemoteData String Referential)
     | UserAddedFilter String
     | UserArchivedCandidacy Candidacy
@@ -60,7 +60,7 @@ type alias State =
 
 type alias Model =
     { filter : Maybe String
-    , form : Form.Model Referential
+    , form : Form.Model ( Candidacy, Referential )
     , selected : RemoteData String Candidacy
     , state : State
     , tab : Tab
@@ -158,7 +158,7 @@ viewContent context model candidacies =
                     [ span [ class "text-3xl mr-4" ] [ text "← " ]
                     , text "Retour"
                     ]
-                , Form.view model.state.referential model.form
+                , Form.view (RemoteData.map2 (\c r -> ( c, r )) model.selected model.state.referential) model.form
                     |> Html.map GotFormMsg
                 ]
 
@@ -281,7 +281,7 @@ viewTrainingSent context candidacyId =
     ]
 
 
-appointmentForm : Form Referential
+appointmentForm : Form ( Candidacy, Referential )
 appointmentForm =
     let
         keys =
@@ -296,7 +296,7 @@ appointmentForm =
                 |> List.map (\el -> ( candidateTypologyToString el, candidateTypologyToString el ))
     in
     { elements =
-        \referential ->
+        \( candidacy, referential ) ->
             [ ( keys.typology, Form.Select "Typologie" typologies )
             , ( keys.additionalInformation, Form.SelectOther "typology" "Autre typologie" )
             , ( keys.firstAppointmentOccurredAt, Form.Date "Date du premier rendez-vous pédagogique" )
@@ -308,14 +308,14 @@ appointmentForm =
     }
 
 
-trainingForm : Form Referential
+trainingForm : Form ( Candidacy, Referential )
 trainingForm =
     let
         keys =
             Data.Form.Training.keys
     in
     { elements =
-        \referential ->
+        \( candidacy, referential ) ->
             [ ( keys.individualHourCount, Form.Number "Nombre d'heures d'accompagnement individuel" )
             , ( keys.collectiveHourCount, Form.Number "Nombre d'heures d'accompagnement collectif" )
             , ( keys.additionalHourCount, Form.Number "Nombre d'heures de formations complémentaires" )
@@ -335,7 +335,7 @@ trainingForm =
     }
 
 
-candidateInfoForm : Form Referential
+candidateInfoForm : Form ( Candidacy, Referential )
 candidateInfoForm =
     let
         keys =
@@ -358,7 +358,7 @@ candidateInfoForm =
                 |> List.map (\el -> ( Data.Candidate.genderToString el, Data.Candidate.genderToString el ))
     in
     { elements =
-        \referential ->
+        \( candidacy, referential ) ->
             [ ( keys.lastname, Form.Input "Nom" )
             , ( keys.firstname, Form.Input "Prénom" )
             , ( keys.firstname2, Form.Input "Prénom 2" )
@@ -372,14 +372,16 @@ candidateInfoForm =
     }
 
 
-fundingRequestForm : Maybe Certification -> Form Referential
+fundingRequestForm : Maybe Certification -> Form ( Candidacy, Referential )
 fundingRequestForm maybeCertification =
     let
         keys =
             Data.Form.FundingRequest.keys
 
-        companions =
-            []
+        availableCompanions : Candidacy -> List ( String, String )
+        availableCompanions candidacy =
+            candidacy.availableCompanions
+                |> Data.Form.Helper.toIdList
 
         certificateField =
             case maybeCertification of
@@ -390,7 +392,7 @@ fundingRequestForm maybeCertification =
                     ( "certification", Form.Empty )
     in
     { elements =
-        \referential ->
+        \( candidacy, referential ) ->
             [ ( "selected-certification", Form.Section "Certification choisie par le candidat" )
             , certificateField
             , ( "organism", Form.Section "Accompagnement architecte de parcours" )
@@ -401,7 +403,7 @@ fundingRequestForm maybeCertification =
             , ( keys.postExamHourCount, Form.Number "Nombre d'heures" )
             , ( keys.postExamCost, Form.Number "Coût horaire" )
             , ( "companion", Form.Section "Accompagnement méthodologique" )
-            , ( keys.companion, Form.Select "Accompagnateur choisi par le candidat" companions )
+            , ( keys.companion, Form.Select "Accompagnateur choisi par le candidat" (availableCompanions candidacy) )
             , ( "individual", Form.Heading "Accompagnement individuel" )
             , ( keys.individualHourCount, Form.Number "Nombre d'heures" )
             , ( keys.individualCost, Form.Number "Coût horaire" )
@@ -683,20 +685,8 @@ update context msg model =
         GotCandidacyDeletionResponse _ ->
             ( { model | selected = NotAsked }, Cmd.none )
 
-        GotCandidacyArchivingResponse (Failure err) ->
-            ( { model | selected = Failure err }, Cmd.none )
-
-        GotCandidacyArchivingResponse (Success candidacy) ->
-            ( refreshCandidacy model candidacy, Cmd.none )
-
         GotCandidacyArchivingResponse _ ->
             ( { model | selected = NotAsked }, Cmd.none )
-
-        GotCandidacyTakingOverResponse (Failure _) ->
-            ( model, Cmd.none )
-
-        GotCandidacyTakingOverResponse (Success candidacy) ->
-            ( refreshCandidacy model candidacy, Cmd.none )
 
         GotCandidacyTakingOverResponse _ ->
             ( { model | selected = NotAsked }, Cmd.none )

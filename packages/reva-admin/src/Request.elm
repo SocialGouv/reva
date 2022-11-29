@@ -40,7 +40,7 @@ import Data.Certification
 import Data.Form.Appointment
 import Data.Form.Candidate
 import Data.Form.Training
-import Data.Organism exposing (Organism, OrganismId)
+import Data.Organism exposing (Organism)
 import Data.Referential
 import Dict exposing (Dict)
 import Graphql.Http
@@ -181,7 +181,7 @@ departmentSelection =
 organismSelection : SelectionSet Data.Organism.Organism Admin.Object.Organism
 organismSelection =
     SelectionSet.succeed Data.Organism.Organism
-        |> with (SelectionSet.map Data.Organism.organismIdFromUuid Admin.Object.Organism.id)
+        |> with (SelectionSet.map (\(Uuid id) -> id) Admin.Object.Organism.id)
         |> with Admin.Object.Organism.label
         |> with Admin.Object.Organism.address
         |> with Admin.Object.Organism.zip
@@ -235,22 +235,39 @@ candidacyExperienceSelection =
         |> with Admin.Object.Experience.description
 
 
-candidacySelection : SelectionSet Data.Candidacy.Candidacy Admin.Object.Candidacy
-candidacySelection =
-    SelectionSet.succeed Data.Candidacy.Candidacy
-        |> with (SelectionSet.map (\(Id id) -> Data.Candidacy.candidacyIdFromString id) Admin.Object.Candidacy.id)
-        |> with (SelectionSet.map (Maybe.map (\(Id id) -> id)) Admin.Object.Candidacy.certificationId)
-        |> with (Admin.Object.Candidacy.organism organismSelection)
-        |> with (Admin.Object.Candidacy.certification certificationSelection)
-        |> with (Admin.Object.Candidacy.department departmentSelection)
-        |> with (Admin.Object.Candidacy.goals candidacyGoalSelection)
-        |> with (Admin.Object.Candidacy.experiences candidacyExperienceSelection)
-        |> with Admin.Object.Candidacy.firstname
-        |> with Admin.Object.Candidacy.lastname
-        |> with Admin.Object.Candidacy.phone
-        |> with Admin.Object.Candidacy.email
-        |> with (Admin.Object.Candidacy.candidacyStatuses candidacyStatusSelection)
-        |> with Admin.Object.Candidacy.createdAt
+candidacySelection : String -> SelectionSet (Maybe Data.Candidacy.Candidacy) Graphql.Operation.RootQuery
+candidacySelection id =
+    let
+        candidacyRequiredArgs =
+            Query.GetCandidacyByIdRequiredArguments (Id id)
+
+        getCompanionsRequiredArg =
+            Query.GetCompanionsForCandidacyRequiredArguments (Uuid id)
+
+        candidacySelectionWithoutCompanions =
+            SelectionSet.succeed Data.Candidacy.Candidacy
+                |> with (SelectionSet.map (\(Id candidacyId) -> Data.Candidacy.candidacyIdFromString candidacyId) Admin.Object.Candidacy.id)
+                |> with (SelectionSet.succeed [])
+                |> with (SelectionSet.map (Maybe.map (\(Id certificationId) -> certificationId)) Admin.Object.Candidacy.certificationId)
+                |> with (Admin.Object.Candidacy.organism organismSelection)
+                |> with (Admin.Object.Candidacy.certification certificationSelection)
+                |> with (Admin.Object.Candidacy.department departmentSelection)
+                |> with (Admin.Object.Candidacy.goals candidacyGoalSelection)
+                |> with (Admin.Object.Candidacy.experiences candidacyExperienceSelection)
+                |> with Admin.Object.Candidacy.firstname
+                |> with Admin.Object.Candidacy.lastname
+                |> with Admin.Object.Candidacy.phone
+                |> with Admin.Object.Candidacy.email
+                |> with (Admin.Object.Candidacy.candidacyStatuses candidacyStatusSelection)
+                |> with Admin.Object.Candidacy.createdAt
+    in
+    SelectionSet.succeed
+        (\maybeCandidacy companions ->
+            maybeCandidacy
+                |> Maybe.map (\candidacy -> { candidacy | availableCompanions = companions })
+        )
+        |> with (Query.getCandidacyById candidacyRequiredArgs candidacySelectionWithoutCompanions)
+        |> with (Query.getCompanionsForCandidacy getCompanionsRequiredArg organismSelection)
 
 
 requestCandidacies :
@@ -269,12 +286,12 @@ requestCandidacy :
     -> (RemoteData String Data.Candidacy.Candidacy -> msg)
     -> CandidacyId
     -> Cmd msg
-requestCandidacy endpointGraphql token toMsg id =
+requestCandidacy endpointGraphql token toMsg candidacyId =
     let
-        candidacyRequiredArgs =
-            Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString id)
+        id =
+            Data.Candidacy.candidacyIdToString candidacyId
     in
-    Query.getCandidacyById candidacyRequiredArgs candidacySelection
+    candidacySelection id
         |> makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
 
 
@@ -293,22 +310,30 @@ deleteCandidacy endpointGraphql token toMsg candidacyId =
 archiveCandidacy :
     String
     -> Token
-    -> (RemoteData String Data.Candidacy.Candidacy -> msg)
+    -> (RemoteData String () -> msg)
     -> CandidacyId
     -> Cmd msg
 archiveCandidacy endpointGraphql token toMsg candidacyId =
-    Mutation.candidacy_archiveById (Mutation.CandidacyArchiveByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)) candidacySelection
+    let
+        id =
+            Data.Candidacy.candidacyIdToString candidacyId
+    in
+    Mutation.candidacy_archiveById (Mutation.CandidacyArchiveByIdRequiredArguments (Id id)) (SelectionSet.succeed ())
         |> makeMutation endpointGraphql token toMsg
 
 
 takeOverCandidacy :
     String
     -> Token
-    -> (RemoteData String Data.Candidacy.Candidacy -> msg)
+    -> (RemoteData String () -> msg)
     -> CandidacyId
     -> Cmd msg
 takeOverCandidacy endpointGraphql token toMsg candidacyId =
-    Mutation.candidacy_takeOver (Mutation.CandidacyTakeOverRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)) candidacySelection
+    let
+        id =
+            Data.Candidacy.candidacyIdToString candidacyId
+    in
+    Mutation.candidacy_takeOver (Mutation.CandidacyTakeOverRequiredArguments (Id id)) (SelectionSet.succeed ())
         |> makeMutation endpointGraphql token toMsg
 
 
@@ -377,10 +402,10 @@ updateCandidate :
     String
     -> Token
     -> (RemoteData String () -> msg)
-    -> Data.Referential.Referential
+    -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
     -> Dict String String
     -> Cmd msg
-updateCandidate endpointGraphql token toMsg referential dict =
+updateCandidate endpointGraphql token toMsg _ dict =
     let
         candidate =
             Data.Form.Candidate.fromDict dict
@@ -440,10 +465,10 @@ updateAppointment :
     -> String
     -> Token
     -> (RemoteData String () -> msg)
-    -> Data.Referential.Referential
+    -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
     -> Dict String String
     -> Cmd msg
-updateAppointment candidacyId endpointGraphql token toMsg referential dict =
+updateAppointment candidacyId endpointGraphql token toMsg _ dict =
     let
         appointment =
             Data.Form.Appointment.appointmentFromDict candidacyId dict
@@ -512,10 +537,10 @@ updateTrainings :
     -> String
     -> Token
     -> (RemoteData String () -> msg)
-    -> Data.Referential.Referential
+    -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
     -> Dict String String
     -> Cmd msg
-updateTrainings candidacyId endpointGraphql token toMsg referential dict =
+updateTrainings candidacyId endpointGraphql token toMsg ( _, referential ) dict =
     let
         training =
             Data.Form.Training.fromDict referential.basicSkills referential.mandatoryTrainings dict
