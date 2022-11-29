@@ -223,22 +223,24 @@ viewNavigationSteps baseUrl candidacy =
                 ]
             ]
 
-        expandedView stepTitle status =
-            [ View.Steps.link stepTitle
-            , div
+        completeButton =
+            div
                 []
                 [ button
                     [ class "bg-slate-900 text-white text-base"
                     , class "mt-2 w-auto rounded"
                     , class "text-center px-8 py-1"
                     ]
-                    [ if Candidacy.isStatusAbove candidacy status then
-                        text "Voir"
-
-                      else
-                        text "Compléter"
-                    ]
+                    [ text "Compléter" ]
                 ]
+
+        expandedView stepTitle status =
+            [ View.Steps.link stepTitle
+            , if candidacyStatus == status then
+                completeButton
+
+              else
+                text ""
             ]
 
         appointmentLink =
@@ -246,12 +248,16 @@ viewNavigationSteps baseUrl candidacy =
 
         trainingLink =
             Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Training candidacy.id)
+
+        candidateInfoLink =
+            Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.CandidateInfo candidacy.id)
     in
     View.Steps.view (Candidacy.statusToProgressPosition candidacyStatus)
         [ { content = title, navigation = Nothing }
-        , { content = expandedView "Rendez-vous pédagogique" "PARCOURS_ENVOYE", navigation = appointmentLink }
-        , { content = expandedView "Définition du parcours" "PARCOURS_ENVOYE", navigation = trainingLink }
+        , { content = expandedView "Rendez-vous pédagogique" "PRISE_EN_CHARGE", navigation = appointmentLink }
+        , { content = expandedView "Définition du parcours" "PRISE_EN_CHARGE", navigation = trainingLink }
         , { content = [ View.Steps.info "Validation du parcours" ], navigation = Nothing }
+        , { content = expandedView "Demande de prise en charge" "PARCOURS_CONFIRME", navigation = candidateInfoLink }
         ]
 
 

@@ -7,8 +7,10 @@ module Data.Candidacy exposing
     , CandidacySummary
     , candidacyIdFromString
     , candidacyIdToString
+    , currentStatusPosition
     , filterByWords
     , isStatusAbove
+    , isStatusEqual
     , lastStatus
     , sentDate
     , statusToDirectoryPosition
@@ -208,14 +210,20 @@ sentDate statuses =
         |> Maybe.map .createdAt
 
 
+currentStatusPosition : Candidacy -> Int
+currentStatusPosition candidacy =
+    (lastStatus >> .status) candidacy.statuses
+        |> statusToProgressPosition
+
+
 isStatusAbove : Candidacy -> String -> Bool
 isStatusAbove candidacy status =
-    let
-        currentStatusPosition =
-            (lastStatus >> .status) candidacy.statuses
-                |> statusToProgressPosition
-    in
-    currentStatusPosition >= statusToProgressPosition status
+    currentStatusPosition candidacy >= statusToProgressPosition status
+
+
+isStatusEqual : Candidacy -> String -> Bool
+isStatusEqual candidacy status =
+    currentStatusPosition candidacy == statusToProgressPosition status
 
 
 filterByWord : String -> CandidacySummary -> Bool
