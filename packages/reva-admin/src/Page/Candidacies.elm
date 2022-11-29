@@ -158,7 +158,7 @@ viewContent context model candidacies =
                     [ span [ class "text-3xl mr-4" ] [ text "← " ]
                     , text "Retour"
                     ]
-                , Form.view (RemoteData.map2 (\c r -> ( c, r )) model.selected model.state.referential) model.form
+                , Form.view (RemoteData.map2 Tuple.pair model.selected model.state.referential) model.form
                     |> Html.map GotFormMsg
                 ]
 
