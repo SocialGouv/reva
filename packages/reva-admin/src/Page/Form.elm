@@ -248,7 +248,7 @@ viewEditableElement formData ( elementId, element ) =
                 [ name elementId
                 , id elementId
                 , onInput (UserChangedElement elementId)
-                , class "w-[420px] h-[150px] p-8 mb-8"
+                , class "w-[520px] h-[150px] p-8 mb-8"
                 , inputStyle
                 , value dataOrDefault
                 ]
@@ -263,7 +263,7 @@ viewEditableElement formData ( elementId, element ) =
                 [ text s ]
 
         labelStyle =
-            "text-lg font-normal text-slate-700 mb-2"
+            "text-lg font-medium text-slate-900 mb-2"
 
         withLegend s el =
             fieldset
@@ -282,7 +282,7 @@ viewEditableElement formData ( elementId, element ) =
             [ div
                 [ class "flex items-start h-8 w-full" ]
                 [ checkboxView
-                , labelView "text-base" label
+                , labelView "text-base text-slate-700" label
                 ]
             ]
 
@@ -297,7 +297,7 @@ viewEditableElement formData ( elementId, element ) =
             [ div
                 [ name elementId
                 , id elementId
-                , class "mt-1 mb-8"
+                , class "mt-1 mb-4"
                 ]
                 viewChoices
                 |> withLegend label
@@ -342,7 +342,7 @@ viewEditableElement formData ( elementId, element ) =
             select
                 [ id elementId
                 , onInput (UserChangedElement elementId)
-                , class "mt-1 block w-[420px] h-[85px] pr-10"
+                , class "mt-1 block w-[520px] h-[85px] pr-10"
                 , inputStyle
                 , required True
                 ]
