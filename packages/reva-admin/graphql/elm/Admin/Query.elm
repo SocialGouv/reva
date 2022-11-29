@@ -69,6 +69,18 @@ getOrganismsForCandidacy requiredArgs____ object____ =
     Object.selectionForCompositeField "getOrganismsForCandidacy" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.list)
 
 
+type alias GetCompanionsForCandidacyRequiredArguments =
+    { candidacyId : Data.Scalar.Uuid }
+
+
+getCompanionsForCandidacy :
+    GetCompanionsForCandidacyRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Organism
+    -> SelectionSet (List decodesTo) RootQuery
+getCompanionsForCandidacy requiredArgs____ object____ =
+    Object.selectionForCompositeField "getCompanionsForCandidacy" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.list)
+
+
 getBasicSkills :
     SelectionSet decodesTo Admin.Object.BasicSkill
     -> SelectionSet (List decodesTo) RootQuery
@@ -105,13 +117,6 @@ candidate_getFundingRequest :
     -> SelectionSet (Maybe decodesTo) RootQuery
 candidate_getFundingRequest requiredArgs____ object____ =
     Object.selectionForCompositeField "candidate_getFundingRequest" [ Argument.required "candidateId" requiredArgs____.candidateId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.nullable)
-
-
-getCompanions :
-    SelectionSet decodesTo Admin.Object.Organism
-    -> SelectionSet (List decodesTo) RootQuery
-getCompanions object____ =
-    Object.selectionForCompositeField "getCompanions" [] object____ (Basics.identity >> Decode.list)
 
 
 getReferential :

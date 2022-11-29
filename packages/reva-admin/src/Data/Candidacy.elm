@@ -21,6 +21,7 @@ import Admin.Enum.Duration exposing (Duration)
 import Data.Certification exposing (Certification)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department)
+import RemoteData exposing (RemoteData)
 import Time
 
 
@@ -52,6 +53,7 @@ type alias CandidacyExperience =
 
 type alias Candidacy =
     { id : CandidacyId
+    , availableCompanions : List Organism
     , certificationId : Maybe String
     , organism : Maybe Organism
     , certification : Maybe Certification
