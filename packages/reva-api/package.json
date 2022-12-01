@@ -17,7 +17,9 @@
     "prisma:seed": "prisma db seed",
     "prisma:reset": "prisma migrate reset",
     "prisma:private-seed": "ts-node prisma/private-seed.ts",
-    "prisma:migrate:deploy": "prisma migrate deploy"
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "lint-staged": "lint-staged",
+    "lint-all": "prettier --write \"{domain,infra}/**/*.{ts,md}\""
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
@@ -44,6 +46,14 @@
       "style": "module",
       "parser": "typescript"
     }
+  },
+  "lint-staged": {
+    "domain/**/*.{ts,md}": [
+      "prettier --write"
+    ],
+    "infra/**/*.{ts,md}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@fastify/cors": "^8.0.0",
@@ -82,6 +92,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "import-sort-style-module": "^6.0.0",
     "jest": "^27.5.1",
+    "lint-staged": "^13.0.4",
     "nodemon": "^2.0.19",
     "prettier": "^2.5.1",
     "prettier-plugin-import-sort": "^0.0.7",

@@ -1,24 +1,28 @@
-
 import { getCertification } from "../../../domain/features/getCertification";
 import { searchCertificationsAndProfessions } from "../../../domain/features/searchCertificationsAndProfessions";
-import { searchCertificationsByQuery, getCertificationById } from "../../database/postgres/certifications";
+import {
+  getCertificationById,
+  searchCertificationsByQuery,
+} from "../../database/postgres/certifications";
 import { searchProfessionsByQuery } from "../../database/postgres/professions";
-
 
 export const resolvers = {
   Query: {
-    searchCertificationsAndProfessions: async (_: any, { query }: { query: string; }) => {
+    searchCertificationsAndProfessions: async (
+      _: any,
+      { query }: { query: string }
+    ) => {
       const result = await searchCertificationsAndProfessions({
         searchCertificationsByQuery,
-        searchProfessionsByQuery
+        searchProfessionsByQuery,
       })({ query });
 
       return result;
     },
-    getCertification: async (_: any, {id}: {id: string}) => {
-      const result = await getCertification({getCertificationById})({id});
+    getCertification: async (_: any, { id }: { id: string }) => {
+      const result = await getCertification({ getCertificationById })({ id });
 
-      return result
-    }
+      return result;
+    },
   },
 };

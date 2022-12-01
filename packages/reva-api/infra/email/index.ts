@@ -1,18 +1,17 @@
-import mjml2html from 'mjml';
-import { Left, Right } from 'purify-ts';
-
+import mjml2html from "mjml";
+import { Left, Right } from "purify-ts";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import SibApiV3Sdk from 'sib-api-v3-sdk';
-
+import SibApiV3Sdk from "sib-api-v3-sdk";
 
 const defaultClient = SibApiV3Sdk.ApiClient.instance;
 // Configure API key authorization: api-key
-const apiKey = defaultClient.authentications['api-key'];
-apiKey.apiKey = process.env.SENDINBLUE_API_KEY || 'secret';
+const apiKey = defaultClient.authentications["api-key"];
+apiKey.apiKey = process.env.SENDINBLUE_API_KEY || "secret";
 
 export const sendRegistrationEmail = async (email: string, token: string) => {
-  const htmlContent = (url: string) => mjml2html(`
+  const htmlContent = (url: string) =>
+    mjml2html(`
 <mjml>
   <mj-body>
     <mj-section>
@@ -36,12 +35,11 @@ export const sendRegistrationEmail = async (email: string, token: string) => {
 `);
 
   return sendEmail(email, token, htmlContent);
-  
 };
 
-
 export const sendLoginEmail = async (email: string, token: string) => {
-  const htmlContent = (url: string) => mjml2html(`
+  const htmlContent = (url: string) =>
+    mjml2html(`
 <mjml>
   <mj-body>
     <mj-section>
@@ -65,31 +63,34 @@ export const sendLoginEmail = async (email: string, token: string) => {
 `);
 
   return sendEmail(email, token, htmlContent);
-  
 };
 
-const sendEmail = async (email: string, token: string, htmlContent: (url: string) => { html: string; }) => {
+const sendEmail = async (
+  email: string,
+  token: string,
+  htmlContent: (url: string) => { html: string }
+) => {
   const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
   const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail(); // SendSmtpEmail | Values to send a transactional email
   const url = `${process.env.BASE_URL}/app/login?token=${token}`;
-  sendSmtpEmail.sender = { email: 'hello@reva.beta.gouv.fr' };
+  sendSmtpEmail.sender = { email: "hello@reva.beta.gouv.fr" };
   sendSmtpEmail.to = [{ email }];
-  sendSmtpEmail.subject = 'Votre accès à votre parcours VAE - REVA';
+  sendSmtpEmail.subject = "Votre accès à votre parcours VAE - REVA";
   sendSmtpEmail.htmlContent = htmlContent(url).html;
-  sendSmtpEmail.tags = [process.env.APP_ENV || 'development'];
+  sendSmtpEmail.tags = [process.env.APP_ENV || "development"];
 
-  if (process.env.NODE_ENV !== 'production') {
-    console.log('======= EMAIL URL =======');
+  if (process.env.NODE_ENV !== "production") {
+    console.log("======= EMAIL URL =======");
     console.log(url);
-    console.log('=========================');
-    return Right('result');
+    console.log("=========================");
+    return Right("result");
   }
   try {
     const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
     return Right(`email sent to ${email}`);
   } catch (e) {
-    console.log('error', e);
-    return Left('error');
+    console.log("error", e);
+    return Left("error");
   }
-}
+};

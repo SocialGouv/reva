@@ -1,12 +1,13 @@
-import { Left, Right } from 'purify-ts';
-import { prismaClient } from './client';
+import { Left, Right } from "purify-ts";
+
+import { prismaClient } from "./client";
 
 export const getTrainings = async () => {
-    try {
-        const trainings = await prismaClient.training.findMany();
+  try {
+    const trainings = await prismaClient.training.findMany();
 
-        return Right(trainings);
-    } catch (e) {
-        return Left(`error while retrieving trainings`);
-    };
+    return Right(trainings);
+  } catch (e) {
+    return Left(`error while retrieving trainings`);
+  }
 };

@@ -1,6 +1,7 @@
 import { Either, Left, Right } from "purify-ts";
+
 import type { Certification } from "../../../domain/types/search";
-import { prismaClient } from './client';
+import { prismaClient } from "./client";
 
 export const searchCertificationsByQuery = async ({
   query,
@@ -45,24 +46,31 @@ export const searchCertificationsByQuery = async ({
   });
 };
 
-export const getCertificationById = async ({ id }: { id: string; }): Promise<Certification | null> => {
+export const getCertificationById = async ({
+  id,
+}: {
+  id: string;
+}): Promise<Certification | null> => {
   const certification = await prismaClient.certification.findUnique({
     where: {
-      id
-    }
+      id,
+    },
   });
 
   if (certification) {
-
     return {
       ...certification,
-      codeRncp: certification.rncpId
+      codeRncp: certification.rncpId,
     };
   }
   return null;
 };
 
-export const getCertifications = async ({departmentId}: {departmentId: string}): Promise<Either<string, Certification[]>> => {
+export const getCertifications = async ({
+  departmentId,
+}: {
+  departmentId: string;
+}): Promise<Either<string, Certification[]>> => {
   try {
     const certifications = (await prismaClient.$queryRaw`
     SELECT DISTINCT ON (id) certification_search.id,
@@ -88,24 +96,24 @@ export const getCertifications = async ({departmentId}: {departmentId: string}):
         ORDER BY id, label DESC;
   `) as Certification[];
 
-    return Right(certifications.map((certification) => {
-      return {
-        id: certification.id,
-        label: certification.label,
-        summary: certification.summary,
-        acronym: certification.acronym,
-        level: certification.level,
-        activities: certification.activities,
-        activityArea: certification.activityArea,
-        accessibleJobType: certification.accessibleJobType,
-        abilities: certification.abilities,
-        codeRncp: certification.codeRncp,
-        status: certification.status,
-      };
-    }));
-  }
-  catch (e) {
+    return Right(
+      certifications.map((certification) => {
+        return {
+          id: certification.id,
+          label: certification.label,
+          summary: certification.summary,
+          acronym: certification.acronym,
+          level: certification.level,
+          activities: certification.activities,
+          activityArea: certification.activityArea,
+          accessibleJobType: certification.accessibleJobType,
+          abilities: certification.abilities,
+          codeRncp: certification.codeRncp,
+          status: certification.status,
+        };
+      })
+    );
+  } catch (e) {
     return Left(`error while retrieving certificates`);
   }
 };
-
