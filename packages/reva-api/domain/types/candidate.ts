@@ -23,3 +23,26 @@ export interface CandidateLoginInput {
 export type CandidateAuthenticationInput =
   | CandidateRegistrationInput
   | CandidateLoginInput;
+
+export interface TrainingForm {
+  individualHourCount: number;
+  collectiveHourCount: number;
+  basicSkills: any;
+  trainings: any;
+  otherTraining: string;
+}
+
+export interface FundingRequest {
+  id: string;
+  candidacyId: string;
+  individualHourCount: number;
+  collectiveHourCount: number;
+  basicSkills: any;
+  trainings: any;
+  otherTraining: string;
+}
+
+export interface FundingRequestInformations {
+  training: TrainingForm;
+  fundingRequest: FundingRequest | null;
+}

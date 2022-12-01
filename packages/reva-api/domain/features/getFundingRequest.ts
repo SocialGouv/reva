@@ -1,30 +1,8 @@
 import { Either, EitherAsync, Left } from "purify-ts";
 
 import { Candidacy } from "../types/candidacy";
+import { FundingRequest, FundingRequestInformations } from "../types/candidate";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
-
-interface TrainingForm {
-  individualHourCount: number;
-  collectiveHourCount: number;
-  basicSkills: any;
-  trainings: any;
-  otherTraining: string;
-}
-
-interface FundingRequest {
-  id: string;
-  candidacyId: string;
-  individualHourCount: number;
-  collectiveHourCount: number;
-  basicSkills: any;
-  trainings: any;
-  otherTraining: string;
-}
-
-interface FundingRequestInformations {
-  training: TrainingForm;
-  fundingRequest: FundingRequest | null;
-}
 
 interface GetFundingRequestDeps {
   hasRole: (role: string) => boolean;

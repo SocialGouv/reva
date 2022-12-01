@@ -10,6 +10,7 @@ import { askForLogin } from "../../../domain/features/candidateAskForLogin";
 import { askForRegistration } from "../../../domain/features/candidateAskForRegistration";
 import { candidateAuthentication } from "../../../domain/features/candidateAuthentication";
 import { getCandidateWithCandidacy } from "../../../domain/features/candidateGetCandidateWithCandidacy";
+import { createFundingRequest } from "../../../domain/features/createFundingRequest";
 import { getCandidateByEmail } from "../../../domain/features/getCandidateByEmail";
 import { getFundingRequest } from "../../../domain/features/getFundingRequest";
 import { updateCandidate } from "../../../domain/features/updateCandidate";
@@ -315,9 +316,15 @@ export const resolvers = {
     },
     candidate_createFundingRequest: async (
       _: unknown,
-      params: { candidacyId: string }
+      params: { candidacyId: string; fundingRequest: any },
+      context: { auth: any }
     ) => {
-      // const result = await createFundingRequest
+      const result = await createFundingRequest({
+        createFundingRequest: fundingRequestsDb.createFundingRequest,
+        existsCandidacyWithActiveStatuses:
+          candidaciesDb.existsCandidacyWithActiveStatus,
+        hasRole: context.auth.hasRole,
+      })(params);
       return null;
     },
   },

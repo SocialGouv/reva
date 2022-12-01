@@ -64,10 +64,8 @@ export const createFundingRequest = async (params: {
         collectiveCost: params.fundingRequest.collectiveCost,
         additionalHourCount: params.fundingRequest.additionalHourCount,
         additionalCost: params.fundingRequest.additionalCost,
-        // basicSkillsIds: params.fundingRequest.basicSkillsIds,
         basicSkillsHourCount: params.fundingRequest.basicSkillsHourCount,
         basicSkillsCost: params.fundingRequest.basicSkillsCost,
-        // mandatoryTrainingsIds: params.fundingRequest.mandatoryTrainingsIds,
         certificateSkills: params.fundingRequest.certificateSkills,
         certificateSkillsHourCount:
           params.fundingRequest.certificateSkillsHourCount,
