@@ -418,7 +418,7 @@ fundingRequestForm maybeCertification =
             , ( keys.collectiveCost, Form.Number "Coût horaire" )
             , ( "training", Form.Section "Actes formatifs" )
             , ( "mandatory", Form.Heading "Formations obligatoires" )
-            , ( keys.mandatoryTrainingsIds
+            , ( keys.mandatoryTrainingIds
               , Form.CheckboxList "" <|
                     Data.Form.Helper.toIdList referential.mandatoryTrainings
               )

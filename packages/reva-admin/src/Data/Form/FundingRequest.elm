@@ -36,7 +36,7 @@ type alias FundingRequestInput =
     , basicSkillsIds : List String
     , basicSkillsHourCount : Int
     , basicSkillsCost : Int
-    , mandatoryTrainingsIds : List String
+    , mandatoryTrainingIds : List String
     , mandatoryTrainingsHourCount : Int
     , mandatoryTrainingsCost : Int
     , certificateSkills : String
@@ -62,7 +62,7 @@ keys :
     , basicSkillsIds : String
     , basicSkillsHourCount : String
     , basicSkillsCost : String
-    , mandatoryTrainingsIds : String
+    , mandatoryTrainingIds : String
     , mandatoryTrainingsHourCount : String
     , mandatoryTrainingsCost : String
     , certificateSkills : String
@@ -86,7 +86,7 @@ keys =
     , basicSkillsIds = "basicSkillsIds"
     , basicSkillsHourCount = "basicSkillsHourCount"
     , basicSkillsCost = "basicSkillsCost"
-    , mandatoryTrainingsIds = "mandatoryTrainingsIds"
+    , mandatoryTrainingIds = "mandatoryTrainingIds"
     , mandatoryTrainingsHourCount = "mandatoryTrainingsHourCount"
     , mandatoryTrainingsCost = "mandatoryTrainingsCost"
     , certificateSkills = "certificateSkills"
@@ -100,7 +100,7 @@ keys =
 
 
 fromDict : List BasicSkill -> List MandatoryTraining -> Dict String String -> FundingRequestInput
-fromDict basicSkillsIds mandatoryTrainingsIds dict =
+fromDict basicSkillsIds mandatoryTrainingIds dict =
     let
         decode =
             Helper.decode keys dict
@@ -118,7 +118,7 @@ fromDict basicSkillsIds mandatoryTrainingsIds dict =
         (decode.list basicSkillsIds)
         (decode.int .basicSkillsHourCount 0)
         (decode.int .basicSkillsCost 0)
-        (decode.list mandatoryTrainingsIds)
+        (decode.list mandatoryTrainingIds)
         (decode.int .mandatoryTrainingsHourCount 0)
         (decode.int .mandatoryTrainingsCost 0)
         (decode.string .certificateSkills "")
@@ -163,18 +163,27 @@ fundingRequest funding =
         |> Helper.toDict keys
 
 
-defaultFundingRequest : List String -> List String -> String -> String -> Dict String String
-defaultFundingRequest mandatoryTrainingsIds basicSkillsIds certificateSkills otherTraining =
+defaultFundingRequest : TrainingForm -> Dict String String
+defaultFundingRequest training =
+    let
+        string key =
+            Just <| key training
+
+        int key =
+            Just <| String.fromInt <| key training
+    in
     let
         mandatoryTrainingsChecked =
-            Helper.toCheckedList mandatoryTrainingsIds
+            Helper.toCheckedList training.mandatoryTrainingIds
 
         basicSkillsChecked =
-            Helper.toCheckedList basicSkillsIds
+            Helper.toCheckedList training.basicSkillsIds
 
         otherTrainings =
-            [ ( .certificateSkills, Just certificateSkills )
-            , ( .otherTraining, Just otherTraining )
+            [ ( .individualHourCount, int .individualHourCount )
+            , ( .collectiveHourCount, int .collectiveHourCount )
+            , ( .certificateSkills, string .certificateSkills )
+            , ( .otherTraining, string .otherTraining )
             ]
                 |> Helper.toKeyedList keys
     in
@@ -188,8 +197,4 @@ fundingRequestInformations maybeFundingRequest training =
             fundingRequest funding
 
         Nothing ->
-            defaultFundingRequest
-                training.mandatoryTrainingIds
-                training.basicSkillsIds
-                training.certificateSkills
-                training.otherTraining
+            defaultFundingRequest training
