@@ -1,5 +1,4 @@
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
-import { RequiredActionAlias } from "@keycloak/keycloak-admin-client/lib/defs/requiredActionProviderRepresentation";
 import { Candidate } from "@prisma/client";
 import CryptoJS from "crypto-js";
 import jwt, { JwtPayload } from "jsonwebtoken";
@@ -14,15 +13,9 @@ import { getCandidateWithCandidacy } from "../../../domain/features/candidateGet
 import { getCandidateByEmail } from "../../../domain/features/getCandidateByEmail";
 import { getFundingRequest } from "../../../domain/features/getFundingRequest";
 import { updateCandidate } from "../../../domain/features/updateCandidate";
-import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "../../../domain/types/functionalError";
-import * as accountsDb from "../../database/postgres/accounts";
 import * as candidaciesDb from "../../database/postgres/candidacies";
 import * as candidatesDb from "../../database/postgres/candidates";
 import * as fundingRequestsDb from "../../database/postgres/fundingRequests";
-import * as organismsDb from "../../database/postgres/organisms";
 import { sendLoginEmail, sendRegistrationEmail } from "../../email";
 
 const generateJwt = (data: unknown, expiresIn: number = 15 * 60) => {
@@ -225,6 +218,19 @@ export const resolvers = {
       })({ candidacyId: params.candidacyId });
 
       return result
+        .map((fundingRequestInformations: any) => {
+          return {
+            fundingRequest: fundingRequestInformations.fundingRequest && {
+              ...fundingRequestInformations.fundingRequest,
+              mandatoryTrainings:
+                fundingRequestInformations.fundingRequest?.trainings,
+            },
+            training: {
+              ...fundingRequestInformations.training,
+              mandatoryTrainings: fundingRequestInformations.training.trainings,
+            },
+          };
+        })
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },

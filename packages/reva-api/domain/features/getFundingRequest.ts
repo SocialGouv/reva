@@ -64,7 +64,6 @@ export const getFundingRequest =
       EitherAsync.fromPromise(() =>
         deps.getFundingRequestFromCandidacyId(params)
       )
-        .ifLeft(() => console.log("left"))
         .map((fundingRequest: FundingRequest | null) => {
           console.log(candidacy);
           return {
@@ -76,6 +75,7 @@ export const getFundingRequest =
               trainings: fundingRequest.trainings.map((t: any) => t.training),
             },
             training: {
+              certificateSkills: candidacy.certificateSkills,
               individualHourCount: candidacy.individualHourCount,
               collectiveHourCount: candidacy.collectiveHourCount,
               otherTraining: candidacy.otherTraining,
