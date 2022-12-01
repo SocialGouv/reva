@@ -1,12 +1,30 @@
-module Data.Form.FundingRequest exposing (FundingRequestInput, fromDict, fundingRequest, keys)
+module Data.Form.FundingRequest exposing (FundingRequestInformations, FundingRequestInput, TrainingForm, fromDict, fundingRequest, fundingRequestInformations, keys)
 
-import Data.Form.Helper as Helper
+import Admin.Scalar exposing (Uuid)
+import Data.Form.Helper as Helper exposing (uuidToCheckedList)
+import Data.Form.Training exposing (Training)
 import Data.Referential exposing (BasicSkill, MandatoryTraining)
 import Dict exposing (Dict)
 
 
+type alias TrainingForm =
+    { mandatoryTrainingIds : List String
+    , basicSkillsIds : List String
+    , certificateSkills : String
+    , otherTraining : String
+    , individualHourCount : Int
+    , collectiveHourCount : Int
+    }
+
+
+type alias FundingRequestInformations =
+    { fundingRequest : FundingRequestInput
+    , training : Training
+    }
+
+
 type alias FundingRequestInput =
-    { companion : String
+    { companionId : String
     , diagnosisHourCount : Int
     , diagnosisCost : Int
     , postExamHourCount : Int
@@ -15,10 +33,10 @@ type alias FundingRequestInput =
     , individualCost : Int
     , collectiveHourCount : Int
     , collectiveCost : Int
-    , basicSkills : List String
+    , basicSkillsIds : List String
     , basicSkillsHourCount : Int
     , basicSkillsCost : Int
-    , mandatoryTrainings : List String
+    , mandatoryTrainingsIds : List String
     , mandatoryTrainingsHourCount : Int
     , mandatoryTrainingsCost : Int
     , certificateSkills : String
@@ -32,7 +50,7 @@ type alias FundingRequestInput =
 
 
 keys :
-    { companion : String
+    { companionId : String
     , diagnosisHourCount : String
     , diagnosisCost : String
     , postExamHourCount : String
@@ -41,10 +59,10 @@ keys :
     , individualCost : String
     , collectiveHourCount : String
     , collectiveCost : String
-    , basicSkills : String
+    , basicSkillsIds : String
     , basicSkillsHourCount : String
     , basicSkillsCost : String
-    , mandatoryTrainings : String
+    , mandatoryTrainingsIds : String
     , mandatoryTrainingsHourCount : String
     , mandatoryTrainingsCost : String
     , certificateSkills : String
@@ -56,7 +74,7 @@ keys :
     , examCost : String
     }
 keys =
-    { companion = "companion"
+    { companionId = "companionId"
     , diagnosisHourCount = "diagnosisHourCount"
     , diagnosisCost = "diagnosisCost"
     , postExamHourCount = "postExamHourCount"
@@ -65,10 +83,10 @@ keys =
     , individualCost = "individualCost"
     , collectiveHourCount = "collectiveHourCount"
     , collectiveCost = "collectiveCost"
-    , basicSkills = "basicSkills"
+    , basicSkillsIds = "basicSkillsIds"
     , basicSkillsHourCount = "basicSkillsHourCount"
     , basicSkillsCost = "basicSkillsCost"
-    , mandatoryTrainings = "mandatoryTrainings"
+    , mandatoryTrainingsIds = "mandatoryTrainingsIds"
     , mandatoryTrainingsHourCount = "mandatoryTrainingsHourCount"
     , mandatoryTrainingsCost = "mandatoryTrainingsCost"
     , certificateSkills = "certificateSkills"
@@ -82,13 +100,13 @@ keys =
 
 
 fromDict : List BasicSkill -> List MandatoryTraining -> Dict String String -> FundingRequestInput
-fromDict basicSkills mandatoryTrainings dict =
+fromDict basicSkillsIds mandatoryTrainingsIds dict =
     let
         decode =
             Helper.decode keys dict
     in
     FundingRequestInput
-        (decode.string .companion "")
+        (decode.string .companionId "")
         (decode.int .diagnosisHourCount 0)
         (decode.int .diagnosisCost 0)
         (decode.int .postExamHourCount 0)
@@ -97,10 +115,10 @@ fromDict basicSkills mandatoryTrainings dict =
         (decode.int .individualCost 0)
         (decode.int .collectiveHourCount 0)
         (decode.int .collectiveCost 0)
-        (decode.list basicSkills)
+        (decode.list basicSkillsIds)
         (decode.int .basicSkillsHourCount 0)
         (decode.int .basicSkillsCost 0)
-        (decode.list mandatoryTrainings)
+        (decode.list mandatoryTrainingsIds)
         (decode.int .mandatoryTrainingsHourCount 0)
         (decode.int .mandatoryTrainingsCost 0)
         (decode.string .certificateSkills "")
@@ -112,27 +130,66 @@ fromDict basicSkills mandatoryTrainings dict =
         (decode.int .examCost 0)
 
 
-fundingRequest : String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> String -> Dict String String
-fundingRequest companion diagnosisHourCount diagnosisCost postExamHourCount postExamCost individualHourCount individualCost collectiveHourCount collectiveCost basicSkillsHourCount basicSkillsCost mandatoryTrainingsHourCount mandatoryTrainingsCost certificateSkills certificateSkillsHourCount certificateSkillsCost otherTraining otherTrainingHourCount examHourCount examCost =
-    [ ( .companion, Just companion )
-    , ( .diagnosisHourCount, Just diagnosisHourCount )
-    , ( .diagnosisCost, Just diagnosisCost )
-    , ( .postExamHourCount, Just postExamHourCount )
-    , ( .postExamCost, Just postExamCost )
-    , ( .individualHourCount, Just individualHourCount )
-    , ( .individualCost, Just individualCost )
-    , ( .collectiveHourCount, Just collectiveHourCount )
-    , ( .collectiveCost, Just collectiveCost )
-    , ( .basicSkillsHourCount, Just basicSkillsHourCount )
-    , ( .basicSkillsCost, Just basicSkillsCost )
-    , ( .mandatoryTrainingsHourCount, Just mandatoryTrainingsHourCount )
-    , ( .mandatoryTrainingsCost, Just mandatoryTrainingsCost )
-    , ( .certificateSkills, Just certificateSkills )
-    , ( .certificateSkillsHourCount, Just certificateSkillsHourCount )
-    , ( .certificateSkillsCost, Just certificateSkillsCost )
-    , ( .otherTraining, Just otherTraining )
-    , ( .otherTrainingHourCount, Just otherTrainingHourCount )
-    , ( .examHourCount, Just examHourCount )
-    , ( .examCost, Just examCost )
+fundingRequest : FundingRequestInput -> Dict String String
+fundingRequest funding =
+    let
+        string key =
+            Just <| key funding
+
+        int key =
+            Just <| String.fromInt <| key funding
+    in
+    [ ( .companionId, string .companionId )
+    , ( .diagnosisHourCount, int .diagnosisHourCount )
+    , ( .diagnosisCost, int .diagnosisCost )
+    , ( .postExamHourCount, int .postExamHourCount )
+    , ( .postExamCost, int .postExamCost )
+    , ( .individualHourCount, int .individualHourCount )
+    , ( .individualCost, int .individualCost )
+    , ( .collectiveHourCount, int .collectiveHourCount )
+    , ( .collectiveCost, int .collectiveCost )
+    , ( .basicSkillsHourCount, int .basicSkillsHourCount )
+    , ( .basicSkillsCost, int .basicSkillsCost )
+    , ( .mandatoryTrainingsHourCount, int .mandatoryTrainingsHourCount )
+    , ( .mandatoryTrainingsCost, int .mandatoryTrainingsCost )
+    , ( .certificateSkills, string .certificateSkills )
+    , ( .certificateSkillsHourCount, int .certificateSkillsHourCount )
+    , ( .certificateSkillsCost, int .certificateSkillsCost )
+    , ( .otherTraining, string .otherTraining )
+    , ( .otherTrainingHourCount, int .otherTrainingHourCount )
+    , ( .examHourCount, int .examHourCount )
+    , ( .examCost, int .examCost )
     ]
         |> Helper.toDict keys
+
+
+defaultFundingRequest : List String -> List String -> String -> String -> Dict String String
+defaultFundingRequest mandatoryTrainingsIds basicSkillsIds certificateSkills otherTraining =
+    let
+        mandatoryTrainingsChecked =
+            Helper.toCheckedList mandatoryTrainingsIds
+
+        basicSkillsChecked =
+            Helper.toCheckedList basicSkillsIds
+
+        otherTrainings =
+            [ ( .certificateSkills, Just certificateSkills )
+            , ( .otherTraining, Just otherTraining )
+            ]
+                |> Helper.toKeyedList keys
+    in
+    Dict.fromList (mandatoryTrainingsChecked ++ basicSkillsChecked ++ otherTrainings)
+
+
+fundingRequestInformations : Maybe FundingRequestInput -> TrainingForm -> Dict String String
+fundingRequestInformations maybeFundingRequest training =
+    case maybeFundingRequest of
+        Just funding ->
+            fundingRequest funding
+
+        Nothing ->
+            defaultFundingRequest
+                training.mandatoryTrainingIds
+                training.basicSkillsIds
+                training.certificateSkills
+                training.otherTraining

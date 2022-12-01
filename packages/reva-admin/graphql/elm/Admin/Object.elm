@@ -57,6 +57,10 @@ type FundingRequest
     = FundingRequest
 
 
+type FundingRequestInformations
+    = FundingRequestInformations
+
+
 type Goal
     = Goal
 
@@ -87,6 +91,10 @@ type Tokens
 
 type Training
     = Training
+
+
+type TrainingForm
+    = TrainingForm
 
 
 type VulnerabilityIndicator

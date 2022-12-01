@@ -318,7 +318,7 @@ candidate_login requiredArgs____ object____ =
 
 
 type alias CandidateCreateFundingRequestRequiredArguments =
-    { candidateId : Data.Scalar.Uuid
+    { candidacyId : Data.Scalar.Uuid
     , fundingRequest : Admin.InputObject.FundingRequestInput
     }
 
@@ -328,7 +328,7 @@ candidate_createFundingRequest :
     -> SelectionSet decodesTo Admin.Object.Candidate
     -> SelectionSet decodesTo RootMutation
 candidate_createFundingRequest requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidate_createFundingRequest" [ Argument.required "candidateId" requiredArgs____.candidateId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "fundingRequest" requiredArgs____.fundingRequest Admin.InputObject.encodeFundingRequestInput ] object____ Basics.identity
+    Object.selectionForCompositeField "candidate_createFundingRequest" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "fundingRequest" requiredArgs____.fundingRequest Admin.InputObject.encodeFundingRequestInput ] object____ Basics.identity
 
 
 type alias CandidateUpdateCandidateRequiredArguments =

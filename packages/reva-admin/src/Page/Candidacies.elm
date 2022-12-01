@@ -409,7 +409,7 @@ fundingRequestForm maybeCertification =
             , ( keys.postExamHourCount, Form.Number "Nombre d'heures" )
             , ( keys.postExamCost, Form.Number "Coût horaire" )
             , ( "companion", Form.Section "Accompagnement méthodologique" )
-            , ( keys.companion, Form.Select "Accompagnateur choisi par le candidat" (availableCompanions candidacy) )
+            , ( keys.companionId, Form.Select "Accompagnateur choisi par le candidat" (availableCompanions candidacy) )
             , ( "individual", Form.Heading "Accompagnement individuel" )
             , ( keys.individualHourCount, Form.Number "Nombre d'heures" )
             , ( keys.individualCost, Form.Number "Coût horaire" )
@@ -418,14 +418,14 @@ fundingRequestForm maybeCertification =
             , ( keys.collectiveCost, Form.Number "Coût horaire" )
             , ( "training", Form.Section "Actes formatifs" )
             , ( "mandatory", Form.Heading "Formations obligatoires" )
-            , ( keys.mandatoryTrainings
+            , ( keys.mandatoryTrainingsIds
               , Form.CheckboxList "" <|
                     Data.Form.Helper.toIdList referential.mandatoryTrainings
               )
             , ( keys.mandatoryTrainingsHourCount, Form.Number "Nombre d'heures" )
             , ( keys.mandatoryTrainingsCost, Form.Number "Coût horaire" )
             , ( "basic-skills", Form.Heading "Formations savoirs de base" )
-            , ( keys.basicSkills
+            , ( keys.basicSkillsIds
               , Form.CheckboxList "" <|
                     Data.Form.Helper.toIdList referential.basicSkills
               )
