@@ -756,7 +756,7 @@ updateTab context tab model =
                 ( formModel, formCmd ) =
                     Form.updateForm context
                         { form = fundingRequestForm candidacy.certification
-                        , onLoad = Request.requestAppointment candidacyId -- TODO
+                        , onLoad = Request.requestFundingInformations candidacyId -- TODO
                         , onSave = Request.updateAppointment candidacyId -- TODO
                         , onRedirect =
                             Nav.pushUrl

@@ -5,6 +5,7 @@ module Request exposing
     , requestCandidacies
     , requestCandidacy
     , requestCandidateByEmail
+    , requestFundingInformations
     , requestReferential
     , requestTrainings
     , takeOverCandidacy
