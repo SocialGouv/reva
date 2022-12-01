@@ -16,16 +16,14 @@ interface SearchResult {
 
 export const searchCertificationsAndProfessions =
   (deps: SearchDependencies) =>
-    async ({ query }: Params): Promise<SearchResult> => {
-      const [certifications, professions] = await Promise.all(
-        [
-          deps.searchCertificationsByQuery({ query }),
-          deps.searchProfessionsByQuery({ query })
-        ]
-      );
+  async ({ query }: Params): Promise<SearchResult> => {
+    const [certifications, professions] = await Promise.all([
+      deps.searchCertificationsByQuery({ query }),
+      deps.searchProfessionsByQuery({ query }),
+    ]);
 
-      return {
-        certifications,
-        professions,
-      };
+    return {
+      certifications,
+      professions,
     };
+  };

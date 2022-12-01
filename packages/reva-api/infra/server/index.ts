@@ -1,5 +1,19 @@
-import dotenv from "dotenv";
 import path from "path";
+
+import cors from "@fastify/cors";
+import proxy from "@fastify/http-proxy";
+import fastifyStatic from "@fastify/static";
+import dotenv from "dotenv";
+import fastify from "fastify";
+import mercurius, { MercuriusOptions } from "mercurius";
+
+import {
+  deleteCandidacyFromEmail,
+  deleteCandidacyFromPhone,
+} from "../database/postgres/candidacies";
+import { graphqlConfiguration } from "../graphql";
+import keycloakAdminPlugin from "./keycloak-admin-plugin";
+import keycloakPlugin from "./keycloak-plugin";
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
 if (process.env.ES_APM_SERVER_URL) {
@@ -19,24 +33,12 @@ if (process.env.ES_APM_SERVER_URL) {
   });
 }
 
-import fastify from "fastify";
-import mercurius, { MercuriusOptions } from "mercurius";
-import cors from "@fastify/cors";
-import proxy from "@fastify/http-proxy";
-import fastifyStatic from "@fastify/static";
-import keycloakPlugin from "./keycloak-plugin";
-import keycloakAdminPlugin from "./keycloak-admin-plugin";
-
-import { graphqlConfiguration } from "../graphql";
-import { deleteCandidacyFromEmail, deleteCandidacyFromPhone } from "../database/postgres/candidacies";
-
 const server = fastify({ logger: true });
 const WEBSITE_ROUTE_PATH = "/";
 const APP_ROUTE_PATH = "/app";
 const ADMIN_ROUTE_PATH = "/admin";
 
 if (process.env.NODE_ENV === "production") {
-
   const DIST_FOLDER = path.join(__dirname, "..", "..");
   const APP_FOLDER = path.join(DIST_FOLDER, "app");
   const ADMIN_FOLDER = path.join(DIST_FOLDER, "admin");
@@ -47,7 +49,6 @@ if (process.env.NODE_ENV === "production") {
       upstream: process.env.FRAMER_WEBSITE_URL,
       prefix: WEBSITE_ROUTE_PATH,
     });
-
   } else {
     server.register(fastifyStatic, {
       root: WEBSITE_FOLDER,
@@ -83,8 +84,8 @@ if (process.env.NODE_ENV === "production") {
     }
   });
 
-  server.register(cors, { 
-    origin: (process.env.CORS_ORIGIN || "").split(",") // put your options here
+  server.register(cors, {
+    origin: (process.env.CORS_ORIGIN || "").split(","), // put your options here
   });
 } else {
   server.register(proxy, {
@@ -102,11 +103,10 @@ if (process.env.NODE_ENV === "production") {
     prefix: ADMIN_ROUTE_PATH,
   });
 
-  server.register(cors, { 
-    origin: true// put your options here
+  server.register(cors, {
+    origin: true, // put your options here
   });
 }
-
 
 server.register(keycloakPlugin, {
   config: {
@@ -114,20 +114,18 @@ server.register(keycloakPlugin, {
     bearerOnly: true,
     serverUrl: process.env.KEYCLOAK_ADMIN_URL || "http://localhost:8888/auth/",
     realm: process.env.KEYCLOAK_ADMIN_REALM_REVA || "reva",
-    realmPublicKey:
-      process.env.KEYCLOAK_ADMIN_REALM_REVA_PUBLIC_KEY || ""
-  }
+    realmPublicKey: process.env.KEYCLOAK_ADMIN_REALM_REVA_PUBLIC_KEY || "",
+  },
 });
 
 server.register(keycloakPlugin, {
   config: {
-    clientId:  process.env.KEYCLOAK_APP_REVA_APP || "reva-app",
+    clientId: process.env.KEYCLOAK_APP_REVA_APP || "reva-app",
     bearerOnly: true,
     serverUrl: process.env.KEYCLOAK_ADMIN_URL || "http://localhost:8888/auth/",
     realm: process.env.KEYCLOAK_APP_REALM || "reva-app",
-    realmPublicKey:
-      process.env.KEYCLOAK_APP_REALM_REVA_APP_PUBLIC_KEY || ""
-  }
+    realmPublicKey: process.env.KEYCLOAK_APP_REALM_REVA_APP_PUBLIC_KEY || "",
+  },
 });
 
 server.register(keycloakAdminPlugin);
@@ -142,7 +140,10 @@ server.get("/ping", async function (request, reply) {
 });
 
 server.post("/admin/candidacies/delete", async (request, reply) => {
-  if (!process.env.ADMIN_TOKEN || request.headers['admin_token'] !== process.env.ADMIN_TOKEN) {
+  if (
+    !process.env.ADMIN_TOKEN ||
+    request.headers["admin_token"] !== process.env.ADMIN_TOKEN
+  ) {
     return reply.status(403).send("Not authorized");
   }
 
@@ -161,11 +162,13 @@ server.post("/admin/candidacies/delete", async (request, reply) => {
 
 const start = async () => {
   try {
-    await server.listen({ 
-      port: (process.env.PORT || 8080) as number, 
-      host: "0.0.0.0"
+    await server.listen({
+      port: (process.env.PORT || 8080) as number,
+      host: "0.0.0.0",
     });
-    console.log(`Server listening on ${process.env.PORT} in ${process.env.NODE_ENV}`);
+    console.log(
+      `Server listening on ${process.env.PORT} in ${process.env.NODE_ENV}`
+    );
   } catch (err) {
     server.log.error(err);
     process.exit(1);
