@@ -1,4 +1,4 @@
-import { Either, EitherAsync } from "purify-ts";
+import { Either, EitherAsync, Left } from "purify-ts";
 
 import { Candidacy } from "../types/candidacy";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
@@ -27,6 +27,7 @@ interface FundingRequestInformations {
 }
 
 interface GetFundingRequestDeps {
+  hasRole: (role: string) => boolean;
   getFundingRequestFromCandidacyId: (params: {
     candidacyId: string;
   }) => Promise<Either<string, FundingRequest | null>>;
@@ -37,9 +38,18 @@ interface GetFundingRequestDeps {
 
 export const getFundingRequest =
   (deps: GetFundingRequestDeps) =>
-  (params: {
+  async (params: {
     candidacyId: string;
-  }): EitherAsync<FunctionalError, FundingRequestInformations> => {
+  }): Promise<Either<FunctionalError, FundingRequestInformations>> => {
+    if (!deps.hasRole("admin") && !deps.hasRole("manage-candidacy")) {
+      return Left(
+        new FunctionalError(
+          FunctionalCodeError.NOT_AUTHORIZED,
+          `Vous n'avez pas accès à la demande de financement de cette candidature`
+        )
+      );
+    }
+
     const getCandidacy = EitherAsync.fromPromise(() =>
       deps.getCandidacyFromId(params.candidacyId)
     ).mapLeft(

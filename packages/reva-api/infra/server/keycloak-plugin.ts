@@ -37,6 +37,7 @@ async function keycloakPlugin(app: any, opts: any, next: any) {
   );
 
   app.addHook("onRequest", async (req: any, res: any) => {
+    req.auth = { hasRole: () => false };
     if (!req.headers.authorization) {
       return;
     }

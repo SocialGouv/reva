@@ -215,9 +215,11 @@ export const resolvers = {
     },
     candidate_getFundingRequest: async (
       _: unknown,
-      params: { candidacyId: string }
+      params: { candidacyId: string },
+      context: { auth: any }
     ) => {
       const result = await getFundingRequest({
+        hasRole: context.auth.hasRole,
         getCandidacyFromId: candidaciesDb.getCandidacyFromId,
         getFundingRequestFromCandidacyId: fundingRequestsDb.getFundingRequest,
       })({ candidacyId: params.candidacyId });
