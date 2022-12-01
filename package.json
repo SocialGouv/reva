@@ -27,7 +27,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint-staged -w reva-app"
+      "pre-commit": "npm run lint-staged --workspaces --if-present"
     }
   }
 }

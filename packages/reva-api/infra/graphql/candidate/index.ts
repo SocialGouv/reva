@@ -12,13 +12,16 @@ import { askForRegistration } from "../../../domain/features/candidateAskForRegi
 import { candidateAuthentication } from "../../../domain/features/candidateAuthentication";
 import { getCandidateWithCandidacy } from "../../../domain/features/candidateGetCandidateWithCandidacy";
 import { getCandidateByEmail } from "../../../domain/features/getCandidateByEmail";
+import { getFundingRequest } from "../../../domain/features/getFundingRequest";
 import { updateCandidate } from "../../../domain/features/updateCandidate";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../domain/types/functionalError";
 import * as accountsDb from "../../database/postgres/accounts";
+import * as candidaciesDb from "../../database/postgres/candidacies";
 import * as candidatesDb from "../../database/postgres/candidates";
+import * as fundingRequestsDb from "../../database/postgres/fundingRequests";
 import * as organismsDb from "../../database/postgres/organisms";
 import { sendLoginEmail, sendRegistrationEmail } from "../../email";
 
@@ -210,6 +213,19 @@ export const resolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
+    candidate_getFundingRequest: async (
+      _: unknown,
+      params: { candidacyId: string }
+    ) => {
+      const result = await getFundingRequest({
+        getCandidacyFromId: candidaciesDb.getCandidacyFromId,
+        getFundingRequestFromCandidacyId: fundingRequestsDb.getFundingRequest,
+      })({ candidacyId: params.candidacyId });
+
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
   },
   Mutation: {
     candidate_updateCandidate: async (
@@ -288,6 +304,13 @@ export const resolvers = {
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
+    },
+    candidate_createFundingRequest: async (
+      _: unknown,
+      params: { candidacyId: string }
+    ) => {
+      // const result = await createFundingRequest
+      return null;
     },
   },
 };
