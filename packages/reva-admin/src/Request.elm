@@ -1,5 +1,6 @@
 module Request exposing
     ( archiveCandidacy
+    , createFundingRequest
     , deleteCandidacy
     , requestAppointment
     , requestCandidacies
@@ -491,6 +492,53 @@ requestFundingInformations candidacyId endpointGraphql token toMsg =
     in
     Query.candidate_getFundingRequest fundingInfoRequiredArg fundingRequestInformationsSelection
         |> makeQuery endpointGraphql token toMsg
+
+
+createFundingRequest :
+    CandidacyId
+    -> String
+    -> Token
+    -> (RemoteData String () -> msg)
+    -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
+    -> Dict String String
+    -> Cmd msg
+createFundingRequest candidacyId endpointGraphql token toMsg ( _, referential ) dict =
+    let
+        funding =
+            Data.Form.FundingRequest.fromDict referential.basicSkills referential.mandatoryTrainings dict
+
+        fundingInput =
+            Admin.InputObject.FundingRequestInput
+                (Uuid funding.companionId)
+                funding.diagnosisHourCount
+                funding.diagnosisCost
+                funding.postExamHourCount
+                funding.postExamCost
+                funding.individualHourCount
+                funding.individualCost
+                funding.collectiveHourCount
+                funding.collectiveCost
+                (List.map Uuid funding.basicSkillsIds)
+                funding.basicSkillsHourCount
+                funding.basicSkillsCost
+                (List.map Uuid funding.mandatoryTrainingIds)
+                funding.mandatoryTrainingsHourCount
+                funding.mandatoryTrainingsCost
+                funding.certificateSkills
+                funding.certificateSkillsHourCount
+                funding.certificateSkillsCost
+                funding.otherTraining
+                funding.otherTrainingHourCount
+                funding.examHourCount
+                funding.examCost
+
+        fundingRequiredArg =
+            Mutation.CandidateCreateFundingRequestRequiredArguments
+                (Uuid <| Data.Candidacy.candidacyIdToString candidacyId)
+                fundingInput
+    in
+    Mutation.candidate_createFundingRequest fundingRequiredArg SelectionSet.empty
+        |> makeMutation endpointGraphql token toMsg
 
 
 
