@@ -325,7 +325,7 @@ type alias CandidateCreateFundingRequestRequiredArguments =
 
 candidate_createFundingRequest :
     CandidateCreateFundingRequestRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Candidate
+    -> SelectionSet decodesTo Admin.Object.FundingRequest
     -> SelectionSet decodesTo RootMutation
 candidate_createFundingRequest requiredArgs____ object____ =
     Object.selectionForCompositeField "candidate_createFundingRequest" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "fundingRequest" requiredArgs____.fundingRequest Admin.InputObject.encodeFundingRequestInput ] object____ Basics.identity
