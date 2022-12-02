@@ -439,8 +439,8 @@ fundingRequestForm maybeCertification =
             , ( keys.otherTraining, Form.Textarea "" )
             , ( keys.otherTrainingHourCount, Form.Number "Nombre d'heures total actes formatifs" )
             , ( "mandatory", Form.Heading "Prestation jury" )
-            , ( keys.postExamHourCount, Form.Number "Nombre d'heures" )
-            , ( keys.postExamCost, Form.Number "Coût horaire" )
+            , ( keys.examHourCount, Form.Number "Nombre d'heures" )
+            , ( keys.examCost, Form.Number "Coût horaire" )
             ]
     , saveLabel = "Enregistrer"
     , title = "2 - Parcours personnalisé"
