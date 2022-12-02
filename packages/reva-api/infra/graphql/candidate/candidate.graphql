@@ -15,9 +15,23 @@ type CandidateLogged {
   candidate: Candidate!
 }
 
+type FundingRequestInformations {
+  training: TrainingForm!
+  fundingRequest: FundingRequest
+}
+
+type TrainingForm {
+  individualHourCount: Int!
+  certificateSkills: String!
+  collectiveHourCount: Int!
+  basicSkills: [BasicSkill!]!
+  mandatoryTrainings: [Training!]!
+  otherTraining: String!
+}
+
 type FundingRequest {
   id: UUID!
-  companionId: UUID!
+  companion: Organism!
 
   diagnosisHourCount: Int!
   diagnosisCost: Int!
@@ -45,7 +59,6 @@ type FundingRequest {
 
   otherTraining: String!
   otherTrainingHourCount: Int!
-  otherTrainingCost: Int!
 
   examHourCount: Int!
   examCost: Int!
@@ -68,7 +81,7 @@ type Candidate {
 type Query {
   candidate_getCandidateWithCandidacy: Candidate!
   candidate_getCandidateByEmail(email: String!): Candidate
-  candidate_getFundingRequest(candidateId: UUID!): FundingRequest
+  candidate_getFundingRequest(candidacyId: UUID!): FundingRequestInformations!
 }
 
 input CandidateInput {
@@ -105,14 +118,13 @@ input FundingRequestInput {
   collectiveHourCount: Int!
   collectiveCost: Int!
 
-  additionalHourCount: Int!
-  additionalCost: Int!
-
   basicSkillsIds: [UUID!]!
   basicSkillsHourCount: Int!
   basicSkillsCost: Int!
 
   mandatoryTrainingsIds: [UUID!]!
+  mandatoryTrainingsHourCount: Int!
+  mandatoryTrainingsCost: Int!
 
   certificateSkills: String!
   certificateSkillsHourCount: Int!
@@ -120,7 +132,6 @@ input FundingRequestInput {
 
   otherTraining: String!
   otherTrainingHourCount: Int!
-  otherTrainingCost: Int!
 
   examHourCount: Int!
   examCost: Int!
@@ -131,9 +142,9 @@ type Mutation {
   candidate_askForLogin(email: String!): String!
   candidate_login(token: String!): CandidateLogged!
   candidate_createFundingRequest(
-    candidateId: UUID!
+    candidacyId: UUID!
     fundingRequest: FundingRequestInput!
-  ): Candidate!
+  ): FundingRequest!
   candidate_updateCandidate(
     id: UUID!
     candidate: FullCandidateInput!
