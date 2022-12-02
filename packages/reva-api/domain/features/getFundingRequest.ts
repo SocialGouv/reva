@@ -43,14 +43,15 @@ export const getFundingRequest =
         deps.getFundingRequestFromCandidacyId(params)
       )
         .map((fundingRequest: FundingRequest | null) => {
-          console.log(candidacy);
           return {
             fundingRequest: fundingRequest && {
               ...fundingRequest,
               basicSkills: fundingRequest.basicSkills.map(
                 (b: any) => b.basicSkill
               ),
-              trainings: fundingRequest.trainings.map((t: any) => t.training),
+              mandatoryTrainings: fundingRequest.mandatoryTrainings.map(
+                (t: any) => t.training
+              ),
             },
             training: {
               certificateSkills: candidacy.certificateSkills,
@@ -58,7 +59,9 @@ export const getFundingRequest =
               collectiveHourCount: candidacy.collectiveHourCount,
               otherTraining: candidacy.otherTraining,
               basicSkills: candidacy.basicSkills.map((b: any) => b.basicSkill),
-              trainings: candidacy.trainings.map((t: any) => t.training),
+              mandatoryTrainings: candidacy.trainings.map(
+                (t: any) => t.training
+              ),
             },
           };
         })

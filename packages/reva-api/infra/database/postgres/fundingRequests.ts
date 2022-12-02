@@ -1,3 +1,9 @@
+import {
+  BasicSkillOnFundingRequests,
+  FundingRequest,
+  Organism,
+  TrainingOnFundingRequests,
+} from "@prisma/client";
 import { Left, Maybe, Right } from "purify-ts";
 
 import { prismaClient } from "./client";
@@ -9,8 +15,16 @@ export const getFundingRequest = async (params: { candidacyId: string }) => {
         candidacyId: params.candidacyId,
       },
       include: {
-        basicSkills: true,
-        trainings: true,
+        basicSkills: {
+          select: {
+            basicSkill: true,
+          },
+        },
+        mandatoryTrainings: {
+          select: {
+            training: true,
+          },
+        },
         companion: true,
       },
     });
@@ -33,18 +47,17 @@ export const createFundingRequest = async (params: {
     individualCost: number;
     collectiveHourCount: number;
     collectiveCost: number;
-    additionalHourCount: number;
-    additionalCost: number;
     basicSkillsIds: string[];
     basicSkillsHourCount: number;
     basicSkillsCost: number;
     mandatoryTrainingsIds: string[];
+    mandatoryTrainingsHourCount: number;
+    mandatoryTrainingsCost: number;
     certificateSkills: string;
     certificateSkillsHourCount: number;
     certificateSkillsCost: number;
     otherTraining: string;
     otherTrainingHourCount: number;
-    otherTrainingCost: number;
     examHourCount: number;
     examCost: number;
   };
@@ -62,8 +75,9 @@ export const createFundingRequest = async (params: {
         individualCost: params.fundingRequest.individualCost,
         collectiveHourCount: params.fundingRequest.collectiveHourCount,
         collectiveCost: params.fundingRequest.collectiveCost,
-        additionalHourCount: params.fundingRequest.additionalHourCount,
-        additionalCost: params.fundingRequest.additionalCost,
+        mandatoryTrainingsHourCount:
+          params.fundingRequest.mandatoryTrainingsHourCount,
+        mandatoryTrainingsCost: params.fundingRequest.mandatoryTrainingsCost,
         basicSkillsHourCount: params.fundingRequest.basicSkillsHourCount,
         basicSkillsCost: params.fundingRequest.basicSkillsCost,
         certificateSkills: params.fundingRequest.certificateSkills,
@@ -72,7 +86,6 @@ export const createFundingRequest = async (params: {
         certificateSkillsCost: params.fundingRequest.certificateSkillsCost,
         otherTraining: params.fundingRequest.otherTraining,
         otherTrainingHourCount: params.fundingRequest.otherTrainingHourCount,
-        otherTrainingCost: params.fundingRequest.otherTrainingCost,
         examHourCount: params.fundingRequest.examHourCount,
         examCost: params.fundingRequest.examCost,
       },
@@ -98,14 +111,28 @@ export const createFundingRequest = async (params: {
         id: newFundingRequest.id,
       },
       include: {
-        basicSkills: true,
+        basicSkills: {
+          select: {
+            basicSkill: true,
+          },
+        },
+        mandatoryTrainings: {
+          select: {
+            training: true,
+          },
+        },
         companion: true,
-        trainings: true,
       },
     });
 
-    return Right(fundingRequest);
+    return Right(
+      fundingRequest as FundingRequest & {
+        basicSkills: any;
+        mandatoryTrainings: any;
+      }
+    );
   } catch (e) {
+    console.log(e);
     return Left("error while creating funding request");
   }
 };

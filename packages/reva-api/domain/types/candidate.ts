@@ -28,7 +28,7 @@ export interface TrainingForm {
   individualHourCount: number;
   collectiveHourCount: number;
   basicSkills: any;
-  trainings: any;
+  mandatoryTrainings: any;
   otherTraining: string;
 }
 
@@ -38,7 +38,7 @@ export interface FundingRequest {
   individualHourCount: number;
   collectiveHourCount: number;
   basicSkills: any;
-  trainings: any;
+  mandatoryTrainings: any;
   otherTraining: string;
 }
 

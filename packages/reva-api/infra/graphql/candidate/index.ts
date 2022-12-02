@@ -221,14 +221,11 @@ export const resolvers = {
       return result
         .map((fundingRequestInformations: any) => {
           return {
-            fundingRequest: fundingRequestInformations.fundingRequest && {
-              ...fundingRequestInformations.fundingRequest,
-              mandatoryTrainings:
-                fundingRequestInformations.fundingRequest?.trainings,
-            },
+            fundingRequest: fundingRequestInformations.fundingRequest,
             training: {
               ...fundingRequestInformations.training,
-              mandatoryTrainings: fundingRequestInformations.training.trainings,
+              mandatoryTrainings:
+                fundingRequestInformations.training.mandatoryTrainings,
             },
           };
         })
@@ -322,10 +319,13 @@ export const resolvers = {
       const result = await createFundingRequest({
         createFundingRequest: fundingRequestsDb.createFundingRequest,
         existsCandidacyWithActiveStatuses:
-          candidaciesDb.existsCandidacyWithActiveStatus,
+          candidaciesDb.existsCandidacyWithActiveStatuses,
         hasRole: context.auth.hasRole,
       })(params);
-      return null;
+
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
     },
   },
 };
