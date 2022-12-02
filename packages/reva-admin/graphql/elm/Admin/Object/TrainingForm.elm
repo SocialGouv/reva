@@ -24,6 +24,11 @@ individualHourCount =
     Object.selectionForField "Int" "individualHourCount" [] Decode.int
 
 
+certificateSkills : SelectionSet String Admin.Object.TrainingForm
+certificateSkills =
+    Object.selectionForField "String" "certificateSkills" [] Decode.string
+
+
 collectiveHourCount : SelectionSet Int Admin.Object.TrainingForm
 collectiveHourCount =
     Object.selectionForField "Int" "collectiveHourCount" [] Decode.int
@@ -41,11 +46,6 @@ mandatoryTrainings :
     -> SelectionSet (List decodesTo) Admin.Object.TrainingForm
 mandatoryTrainings object____ =
     Object.selectionForCompositeField "mandatoryTrainings" [] object____ (Basics.identity >> Decode.list)
-
-
-certificateSkills : SelectionSet String Admin.Object.TrainingForm
-certificateSkills =
-    Object.selectionForField "String" "certificateSkills" [] Decode.string
 
 
 otherTraining : SelectionSet String Admin.Object.TrainingForm
