@@ -265,7 +265,7 @@ viewNavigationSteps baseUrl candidacy =
 viewMain : String -> List (Html msg) -> Html msg
 viewMain dataTestValue =
     node "main"
-        [ class "bg-white w-[762px] px-2 pt-2 pb-24"
+        [ class "bg-white w-[780px] px-2 pt-2 pb-24"
         , dataTest dataTestValue
         ]
 
@@ -539,7 +539,7 @@ viewDirectoryPanel context candidacies =
     in
     aside
         [ class "hidden md:order-first md:flex md:flex-col flex-shrink-0"
-        , class "w-full w-[762px] h-screen"
+        , class "w-full w-[780px] h-screen"
         , class "bg-white"
         ]
         [ div
