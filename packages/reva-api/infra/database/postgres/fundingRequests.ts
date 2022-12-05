@@ -6,6 +6,7 @@ import {
 } from "@prisma/client";
 import { Left, Maybe, Right } from "purify-ts";
 
+import { updateCandidacyStatus } from "./candidacies";
 import { prismaClient } from "./client";
 
 export const getFundingRequest = async (params: { candidacyId: string }) => {
@@ -105,6 +106,11 @@ export const createFundingRequest = async (params: {
         })),
       }),
     ]);
+
+    await updateCandidacyStatus({
+      candidacyId: params.candidacyId,
+      status: "DEMANDE_FINANCEMENT_ENVOYE",
+    });
 
     const fundingRequest = await prismaClient.fundingRequest.findFirst({
       where: {
