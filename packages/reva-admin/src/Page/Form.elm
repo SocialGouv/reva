@@ -49,7 +49,7 @@ type Element
 
 
 type alias Form referential =
-    { elements : referential -> List ( String, Element )
+    { elements : FormData -> referential -> List ( String, Element )
     , saveLabel : String
     , title : String
     }
@@ -172,7 +172,7 @@ viewForm referential status maybeError formData form saveButton =
         [ View.title form.title
         , div
             [ class "mt-6 flex flex-wrap" ]
-            (List.map (viewElement formData) (form.elements referential)
+            (List.map (viewElement formData) (form.elements formData referential)
                 |> List.map (div [ class "mr-8" ])
             )
         , case status of
@@ -333,7 +333,7 @@ viewEditableElement formData ( elementId, element ) =
 
         Info label value ->
             p
-                [ class "rounded-lg bg-slate-100 mb-8"
+                [ class "rounded bg-slate-100 text-slate-800 mb-8"
                 , class "px-8 py-6 text-lg"
                 ]
                 [ text value ]
