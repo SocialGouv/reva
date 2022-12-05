@@ -258,7 +258,11 @@ viewNavigationSteps baseUrl candidacy =
                 View.Candidacy.CandidateInfo
 
         candidateInfoLink =
-            Just <| Route.href baseUrl <| Route.Candidacy (fundingView candidacy.id)
+            if Candidacy.isStatusAbove candidacy "PARCOURS_CONFIRME" then
+                Just <| Route.href baseUrl <| Route.Candidacy (fundingView candidacy.id)
+
+            else
+                Nothing
     in
     View.Steps.view (Candidacy.statusToProgressPosition candidacyStatus)
         [ { content = title, navigation = Nothing }
