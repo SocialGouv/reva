@@ -321,6 +321,7 @@ export const resolvers = {
         existsCandidacyWithActiveStatuses:
           candidaciesDb.existsCandidacyWithActiveStatuses,
         hasRole: context.auth.hasRole,
+        getCandidateByCandidacyId: candidatesDb.getCandidateByCandidacyId,
       })(params);
 
       return result

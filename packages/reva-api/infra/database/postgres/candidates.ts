@@ -284,6 +284,23 @@ export const getCandidateByEmail = async (email: string) => {
   }
 };
 
+export const getCandidateByCandidacyId = async (id: string) => {
+  try {
+    const candidate = await prismaClient.candidate.findFirst({
+      where: {
+        candidacies: {
+          some: {
+            id,
+          },
+        },
+      },
+      include: candidateIncludes,
+    });
+    return Maybe.fromNullable(candidate).toEither(`Candidate not found`);
+  } catch (e) {
+    return Left(`error while retrieving the candidate`);
+  }
+};
 export const updateCandidate = async (id: string, candidate: Candidate) => {
   try {
     const newCandidate = await prismaClient.candidate.update({
