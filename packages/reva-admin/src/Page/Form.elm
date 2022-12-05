@@ -264,7 +264,7 @@ viewEditableElement formData ( elementId, element ) =
             [ div
                 [ class "flex items-start h-8 w-full" ]
                 [ checkboxView [] elementId dataOrDefault
-                , labelView elementId "text-base text-slate-700" label
+                , labelView elementId "text-base text-slate-800" label
                 ]
             ]
 
