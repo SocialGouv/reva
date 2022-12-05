@@ -22,6 +22,7 @@ import Data.Form.Helper
 import Data.Form.Training
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Referential)
+import Dict exposing (Dict)
 import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, classList, for, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onInput)
@@ -302,7 +303,7 @@ appointmentForm =
                 |> List.map (\el -> ( candidateTypologyToString el, candidateTypologyToString el ))
     in
     { elements =
-        \( candidacy, referential ) ->
+        \_ _ ->
             [ ( keys.typology, Form.Select "Typologie" typologies )
             , ( keys.additionalInformation, Form.SelectOther "typology" "Autre typologie" )
             , ( keys.firstAppointmentOccurredAt, Form.Date "Date du premier rendez-vous pédagogique" )
@@ -321,7 +322,7 @@ trainingForm =
             Data.Form.Training.keys
     in
     { elements =
-        \( candidacy, referential ) ->
+        \_ ( _, referential ) ->
             [ ( keys.individualHourCount, Form.Number "Nombre d'heures d'accompagnement individuel" )
             , ( keys.collectiveHourCount, Form.Number "Nombre d'heures d'accompagnement collectif" )
             , ( keys.additionalHourCount, Form.Number "Nombre d'heures de formations complémentaires" )
@@ -364,7 +365,7 @@ candidateInfoForm =
                 |> List.map (\el -> ( Data.Candidate.genderToString el, Data.Candidate.genderToString el ))
     in
     { elements =
-        \( candidacy, referential ) ->
+        \_ ( _, referential ) ->
             [ ( keys.lastname, Form.Input "Nom" )
             , ( keys.firstname, Form.Input "Prénom" )
             , ( keys.firstname2, Form.Input "Prénom 2" )
@@ -398,7 +399,7 @@ fundingRequestForm maybeCertification =
                     ( "certification", Form.Empty )
     in
     { elements =
-        \( candidacy, referential ) ->
+        \formData ( candidacy, referential ) ->
             [ ( "selected-certification", Form.Section "Certification choisie par le candidat" )
             , certificateField
             , ( "organism", Form.Section "Accompagnement architecte de parcours" )
@@ -435,16 +436,46 @@ fundingRequestForm maybeCertification =
             , ( keys.certificateSkills, Form.Textarea "" )
             , ( keys.certificateSkillsHourCount, Form.Number "Nombre d'heures" )
             , ( keys.certificateSkillsCost, Form.Number "Coût horaire" )
-            , ( "mandatory", Form.Heading "Autres actions de formations complémentaires" )
+            , ( "other", Form.Heading "Autres actions de formations complémentaires" )
             , ( keys.otherTraining, Form.Textarea "" )
             , ( keys.otherTrainingHourCount, Form.Number "Nombre d'heures total actes formatifs" )
-            , ( "mandatory", Form.Heading "Prestation jury" )
-            , ( keys.postExamHourCount, Form.Number "Nombre d'heures" )
-            , ( keys.postExamCost, Form.Number "Coût horaire" )
+            , ( "jury", Form.Heading "Prestation jury" )
+            , ( keys.examHourCount, Form.Number "Nombre d'heures" )
+            , ( keys.examCost, Form.Number "Coût horaire" )
+            , ( "total", Form.Section "Total" )
+            , ( "totalCost"
+              , Form.Info "Coût total de la demande de prise en charge" <|
+                    String.concat
+                        [ String.fromInt (totalFundingRequestCost formData)
+                        , "€"
+                        ]
+              )
             ]
     , saveLabel = "Enregistrer"
     , title = "2 - Parcours personnalisé"
     }
+
+
+totalFundingRequestCost : Dict String String -> Int
+totalFundingRequestCost formData =
+    let
+        keys =
+            Data.Form.FundingRequest.keys
+
+        decode =
+            Data.Form.Helper.decode keys formData
+
+        int f =
+            decode.int f 0
+    in
+    (int .diagnosisHourCount * int .diagnosisCost)
+        + (int .postExamHourCount * int .postExamCost)
+        + (int .individualHourCount * int .individualCost)
+        + (int .collectiveHourCount * int .collectiveCost)
+        + (int .mandatoryTrainingsHourCount * int .mandatoryTrainingsCost)
+        + (int .basicSkillsHourCount * int .basicSkillsCost)
+        + (int .certificateSkillsHourCount * int .certificateSkillsCost)
+        + (int .examHourCount * int .examCost)
 
 
 viewCandidacyPanel : Context -> Model -> Html Msg
