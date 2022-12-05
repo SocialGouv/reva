@@ -6,6 +6,7 @@ module Data.Form.Helper exposing
     , decode
     , generic
     , maybe
+    , toCheckedList
     , toDict
     , toIdList
     , toKeyedList
@@ -145,6 +146,11 @@ toKeyedList keys data =
 uuidToCheckedList : List Uuid -> List ( String, String )
 uuidToCheckedList l =
     List.map (\(Uuid id) -> ( id, "checked" )) l
+
+
+toCheckedList : List String -> List ( String, String )
+toCheckedList l =
+    List.map (\id -> ( id, "checked" )) l
 
 
 toIdList : List { a | id : String, label : String } -> List ( String, String )

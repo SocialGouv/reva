@@ -24,9 +24,11 @@ id =
     Object.selectionForField "Data.Scalar.Uuid" "id" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecUuid |> .decoder)
 
 
-companionId : SelectionSet Data.Scalar.Uuid Admin.Object.FundingRequest
-companionId =
-    Object.selectionForField "Data.Scalar.Uuid" "companionId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecUuid |> .decoder)
+companion :
+    SelectionSet decodesTo Admin.Object.Organism
+    -> SelectionSet decodesTo Admin.Object.FundingRequest
+companion object____ =
+    Object.selectionForCompositeField "companion" [] object____ Basics.identity
 
 
 diagnosisHourCount : SelectionSet Int Admin.Object.FundingRequest
@@ -126,11 +128,6 @@ otherTraining =
 otherTrainingHourCount : SelectionSet Int Admin.Object.FundingRequest
 otherTrainingHourCount =
     Object.selectionForField "Int" "otherTrainingHourCount" [] Decode.int
-
-
-otherTrainingCost : SelectionSet Int Admin.Object.FundingRequest
-otherTrainingCost =
-    Object.selectionForField "Int" "otherTrainingCost" [] Decode.int
 
 
 examHourCount : SelectionSet Int Admin.Object.FundingRequest
