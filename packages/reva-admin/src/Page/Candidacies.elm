@@ -250,8 +250,15 @@ viewNavigationSteps baseUrl candidacy =
         trainingLink =
             Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Training candidacy.id)
 
+        fundingView =
+            if candidacyStatus == "DEMANDE_FINANCEMENT_ENVOYE" then
+                View.Candidacy.FundingRequest
+
+            else
+                View.Candidacy.CandidateInfo
+
         candidateInfoLink =
-            Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.CandidateInfo candidacy.id)
+            Just <| Route.href baseUrl <| Route.Candidacy (fundingView candidacy.id)
     in
     View.Steps.view (Candidacy.statusToProgressPosition candidacyStatus)
         [ { content = title, navigation = Nothing }
