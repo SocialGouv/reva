@@ -42,10 +42,11 @@ type Element
     | Info String String
     | Input String
     | Number String
-    | Textarea String
+    | ReadOnlyElement Element
     | Select String (List ( String, String ))
     | SelectOther String String
     | Section String
+    | Textarea String
 
 
 type alias Form referential =
@@ -232,18 +233,6 @@ viewEditableElement formData ( elementId, element ) =
                 ]
                 []
 
-        checkboxView =
-            input
-                [ type_ "checkbox"
-                , name elementId
-                , id elementId
-                , onCheck (booleanToString >> UserChangedElement elementId)
-                , class "focus:ring-blue-500 h-4 w-4 text-blue-600 border-slate-400 rounded mr-4"
-                , class "mt-1 block min-w-0 rounded sm:text-sm border-gray-300"
-                , checked (dataOrDefault == "checked")
-                ]
-                []
-
         textareaView =
             textarea
                 [ name elementId
@@ -254,14 +243,6 @@ viewEditableElement formData ( elementId, element ) =
                 , value dataOrDefault
                 ]
                 []
-
-        labelView extraClass s =
-            label
-                [ for elementId
-                , class "block"
-                , class extraClass
-                ]
-                [ text s ]
 
         labelStyle =
             "text-lg font-medium text-slate-900 mb-2"
@@ -274,7 +255,7 @@ viewEditableElement formData ( elementId, element ) =
                 ]
 
         withLabel s el =
-            [ labelView labelStyle s
+            [ labelView elementId labelStyle s
             , el
             ]
     in
@@ -282,8 +263,8 @@ viewEditableElement formData ( elementId, element ) =
         Checkbox label ->
             [ div
                 [ class "flex items-start h-8 w-full" ]
-                [ checkboxView
-                , labelView "text-base text-slate-700" label
+                [ checkboxView [] elementId dataOrDefault
+                , labelView elementId "text-base text-slate-700" label
                 ]
             ]
 
@@ -339,6 +320,9 @@ viewEditableElement formData ( elementId, element ) =
                 [ text value ]
                 |> withLabel label
 
+        ReadOnlyElement readOnlyElement ->
+            viewReadOnlyElement formData ( elementId, readOnlyElement )
+
         Section title ->
             [ h2
                 [ class "w-[620px] mt-2 mb-4"
@@ -386,7 +370,7 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> Maybe.withDefault (defaultValue element)
 
         dataClass =
-            "text-lg font-semibold text-gray-800"
+            "text-lg font-medium leading-snug text-gray-800 mb-8 mt-2"
 
         dataView =
             dd
@@ -395,7 +379,7 @@ viewReadOnlyElement formData ( elementId, element ) =
 
         termView s =
             dt
-                [ class "text-base text-gray-600 mt-8" ]
+                [ class "text-base text-gray-600" ]
                 [ text s ]
 
         withTerm s el =
@@ -408,11 +392,14 @@ viewReadOnlyElement formData ( elementId, element ) =
     in
     case element of
         Checkbox label ->
-            if dataOrDefault == "checked" then
-                [ text label ]
-
-            else
-                []
+            [ div
+                [ class "flex items-start h-8 w-full"
+                , classList [ ( "text-gray-500", dataOrDefault /= "checked" ) ]
+                ]
+                [ checkboxView [ disabled True ] elementId dataOrDefault
+                , labelView elementId "text-base font-normal" label
+                ]
+            ]
 
         CheckboxList label choices ->
             let
@@ -422,7 +409,9 @@ viewReadOnlyElement formData ( elementId, element ) =
                         choices
             in
             dd
-                [ class dataClass ]
+                [ class "mt-2"
+                , class dataClass
+                ]
                 [ ul
                     [ name elementId
                     , id elementId
@@ -453,6 +442,9 @@ viewReadOnlyElement formData ( elementId, element ) =
         Textarea label ->
             defaultView label
 
+        ReadOnlyElement readOnlyElement ->
+            viewReadOnlyElement formData ( elementId, readOnlyElement )
+
         Section title ->
             [ h2 [ class "text-2xl text-gray-900" ] [ text title ] ]
 
@@ -472,6 +464,35 @@ viewReadOnlyElement formData ( elementId, element ) =
 
                 Nothing ->
                     []
+
+
+labelView : String -> String -> String -> Html msg
+labelView elementId extraClass s =
+    label
+        [ for elementId
+        , class "block"
+        , class extraClass
+        ]
+        [ text s ]
+
+
+checkboxView : List (Html.Attribute (Msg referential)) -> String -> String -> Html (Msg referential)
+checkboxView extraAttributes elementId dataOrDefault =
+    input
+        (extraAttributes
+            ++ [ type_ "checkbox"
+               , name elementId
+               , id elementId
+               , onCheck (booleanToString >> UserChangedElement elementId)
+               , class "focus:ring-blue-500 h-4 w-4 text-blue-600 border-slate-400 rounded mr-4"
+               , class "mt-1 block min-w-0 rounded sm:text-sm border-gray-300"
+               , class "checked:disabled:border-gray-600 checked:disabled:bg-gray-600"
+               , class "disabled:hover:not-allowed"
+               , class "disabled:text-gray-400 disabled:border-slate-200 disabled:bg-gray-100"
+               , checked (dataOrDefault == "checked")
+               ]
+        )
+        []
 
 
 defaultValue : Element -> String

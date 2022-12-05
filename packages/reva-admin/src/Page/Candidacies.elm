@@ -420,8 +420,10 @@ fundingRequestForm maybeCertification =
             , ( "training", Form.Section "Actes formatifs" )
             , ( "mandatory", Form.Heading "Formations obligatoires" )
             , ( keys.mandatoryTrainingIds
-              , Form.CheckboxList "" <|
-                    Data.Form.Helper.toIdList referential.mandatoryTrainings
+              , Form.ReadOnlyElement
+                    (Form.CheckboxList "" <|
+                        Data.Form.Helper.toIdList referential.mandatoryTrainings
+                    )
               )
             , ( keys.mandatoryTrainingsHourCount, Form.Number "Nombre d'heures" )
             , ( keys.mandatoryTrainingsCost, Form.Number "Coût horaire" )
