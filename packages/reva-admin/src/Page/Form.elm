@@ -372,14 +372,14 @@ viewReadOnlyElement formData ( elementId, element ) =
         dataClass =
             "text-lg font-medium leading-snug text-gray-800 mb-8 mt-2"
 
-        dataView =
+        dataView d =
             dd
                 [ class dataClass ]
-                [ text dataOrDefault ]
+                [ text d ]
 
         termView s =
             dt
-                [ class "text-base text-gray-600" ]
+                [ class "text-base text-gray-600 mt-8 w-[280px]" ]
                 [ text s ]
 
         withTerm s el =
@@ -388,7 +388,7 @@ viewReadOnlyElement formData ( elementId, element ) =
             ]
 
         defaultView label =
-            dataView |> withTerm label
+            dataView dataOrDefault |> withTerm label
     in
     case element of
         Checkbox label ->
@@ -451,7 +451,7 @@ viewReadOnlyElement formData ( elementId, element ) =
         Select label choices ->
             List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices
                 |> List.head
-                |> Maybe.map (\( _, choice ) -> text choice |> withTerm label)
+                |> Maybe.map (\( _, choice ) -> dataView choice |> withTerm label)
                 |> Maybe.withDefault []
 
         SelectOther selectId label ->

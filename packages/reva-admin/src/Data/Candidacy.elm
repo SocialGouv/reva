@@ -9,8 +9,10 @@ module Data.Candidacy exposing
     , candidacyIdToString
     , currentStatusPosition
     , filterByWords
+    , isFundingRequestSent
     , isStatusAbove
     , isStatusEqual
+    , isTrainingSent
     , lastStatus
     , sentDate
     , statusToDirectoryPosition
@@ -118,6 +120,12 @@ statusToString status =
         "PARCOURS_CONFIRME" ->
             "Parcours confirmé par le candidat"
 
+        "DEMANDE_FINANCEMENT_ENVOYE" ->
+            "Demande de financement envoyée"
+
+        "ABANDON" ->
+            "Candidature abandonnée"
+
         _ ->
             "Statut inconnu"
 
@@ -129,10 +137,10 @@ statusToDirectoryPosition status =
             1
 
         "PROJET" ->
-            5
+            6
 
         "ARCHIVE" ->
-            6
+            7
 
         "PRISE_EN_CHARGE" ->
             2
@@ -142,6 +150,12 @@ statusToDirectoryPosition status =
 
         "PARCOURS_CONFIRME" ->
             3
+
+        "DEMANDE_FINANCEMENT_ENVOYE" ->
+            5
+
+        "ABANDON" ->
+            7
 
         _ ->
             10
@@ -170,6 +184,12 @@ statusToProgressPosition status =
 
         "PARCOURS_CONFIRME" ->
             4
+
+        "DEMANDE_FINANCEMENT_ENVOYE" ->
+            5
+
+        "ABANDON" ->
+            6
 
         _ ->
             10
@@ -224,6 +244,16 @@ isStatusAbove candidacy status =
 isStatusEqual : Candidacy -> String -> Bool
 isStatusEqual candidacy status =
     currentStatusPosition candidacy == statusToProgressPosition status
+
+
+isFundingRequestSent : Candidacy -> Bool
+isFundingRequestSent candidacy =
+    isStatusAbove candidacy "DEMANDE_FINANCEMENT_ENVOYE"
+
+
+isTrainingSent : Candidacy -> Bool
+isTrainingSent candidacy =
+    isStatusAbove candidacy "PARCOURS_ENVOYE"
 
 
 filterByWord : String -> CandidacySummary -> Bool

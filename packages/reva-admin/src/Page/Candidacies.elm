@@ -795,7 +795,12 @@ updateTab context tab model =
                             Nav.pushUrl
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
-                        , status = Form.Editable
+                        , status =
+                            if Candidacy.isFundingRequestSent candidacy then
+                                Form.ReadOnly
+
+                            else
+                                Form.Editable
                         }
                         model.form
             in
@@ -813,7 +818,7 @@ updateTab context tab model =
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.TrainingSent candidacyId)))
                         , status =
-                            if Candidacy.isStatusAbove candidacy "PARCOURS_ENVOYE" then
+                            if Candidacy.isTrainingSent candidacy then
                                 Form.ReadOnly
 
                             else
@@ -840,7 +845,12 @@ updateTab context tab model =
                             Nav.pushUrl
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.FundingRequest candidacyId)))
-                        , status = Form.Editable
+                        , status =
+                            if Candidacy.isFundingRequestSent candidacy then
+                                Form.ReadOnly
+
+                            else
+                                Form.Editable
                         }
                         model.form
             in
