@@ -1,5 +1,4 @@
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
-import { RequiredActionAlias } from "@keycloak/keycloak-admin-client/lib/defs/requiredActionProviderRepresentation";
 import { Candidate } from "@prisma/client";
 import CryptoJS from "crypto-js";
 import jwt, { JwtPayload } from "jsonwebtoken";
@@ -11,15 +10,13 @@ import { askForLogin } from "../../../domain/features/candidateAskForLogin";
 import { askForRegistration } from "../../../domain/features/candidateAskForRegistration";
 import { candidateAuthentication } from "../../../domain/features/candidateAuthentication";
 import { getCandidateWithCandidacy } from "../../../domain/features/candidateGetCandidateWithCandidacy";
+import { createFundingRequest } from "../../../domain/features/createFundingRequest";
 import { getCandidateByEmail } from "../../../domain/features/getCandidateByEmail";
+import { getFundingRequest } from "../../../domain/features/getFundingRequest";
 import { updateCandidate } from "../../../domain/features/updateCandidate";
-import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "../../../domain/types/functionalError";
-import * as accountsDb from "../../database/postgres/accounts";
+import * as candidaciesDb from "../../database/postgres/candidacies";
 import * as candidatesDb from "../../database/postgres/candidates";
-import * as organismsDb from "../../database/postgres/organisms";
+import * as fundingRequestsDb from "../../database/postgres/fundingRequests";
 import { sendLoginEmail, sendRegistrationEmail } from "../../email";
 
 const generateJwt = (data: unknown, expiresIn: number = 15 * 60) => {
@@ -210,6 +207,31 @@ export const resolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
+    candidate_getFundingRequest: async (
+      _: unknown,
+      params: { candidacyId: string },
+      context: { auth: any }
+    ) => {
+      const result = await getFundingRequest({
+        hasRole: context.auth.hasRole,
+        getCandidacyFromId: candidaciesDb.getCandidacyFromId,
+        getFundingRequestFromCandidacyId: fundingRequestsDb.getFundingRequest,
+      })({ candidacyId: params.candidacyId });
+
+      return result
+        .map((fundingRequestInformations: any) => {
+          return {
+            fundingRequest: fundingRequestInformations.fundingRequest,
+            training: {
+              ...fundingRequestInformations.training,
+              mandatoryTrainings:
+                fundingRequestInformations.training.mandatoryTrainings,
+            },
+          };
+        })
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
   },
   Mutation: {
     candidate_updateCandidate: async (
@@ -284,6 +306,22 @@ export const resolvers = {
         generateJWTForLogin: async (data: unknown) => Right(generateJwt(data)),
         sendLoginEmail: async (data) => sendLoginEmail(data.email, data.token),
       })(params.email);
+
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
+    candidate_createFundingRequest: async (
+      _: unknown,
+      params: { candidacyId: string; fundingRequest: any },
+      context: { auth: any }
+    ) => {
+      const result = await createFundingRequest({
+        createFundingRequest: fundingRequestsDb.createFundingRequest,
+        existsCandidacyWithActiveStatuses:
+          candidaciesDb.existsCandidacyWithActiveStatuses,
+        hasRole: context.auth.hasRole,
+      })(params);
 
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))

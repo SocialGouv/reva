@@ -256,6 +256,33 @@ export const existsCandidacyWithActiveStatus = async (params: {
   }
 };
 
+export const existsCandidacyWithActiveStatuses = async (params: {
+  candidacyId: string;
+  statuses: CandidacyStatus[];
+}) => {
+  try {
+    const candidaciesCount = await prismaClient.candidacy.count({
+      where: {
+        id: params.candidacyId,
+        candidacyStatuses: {
+          some: {
+            status: {
+              in: params.statuses,
+            },
+            isActive: true,
+          },
+        },
+      },
+    });
+
+    return Right(candidaciesCount === 1);
+  } catch (e) {
+    return Left(
+      `error while retrieving the candidacy with id ${params.candidacyId}`
+    );
+  }
+};
+
 // export const getCompanions = async () => {
 //     try {x
 //         const companions = await prismaClient.companion.findMany();
@@ -570,7 +597,6 @@ export const getCandidacies = async () => {
       )
     );
   } catch (e) {
-    console.log("error", e);
     return Left(
       `Erreur lors de la récupération des candidatures, ${(e as any).message}`
     );
@@ -626,7 +652,6 @@ export const getCandidaciesForUser = async (keycloakId: string) => {
       )
     );
   } catch (e) {
-    console.log(e);
     return Left(
       `Erreur lors de la récupération des candidatures, ${(e as any).message}`
     );

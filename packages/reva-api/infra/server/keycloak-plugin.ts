@@ -37,26 +37,25 @@ async function keycloakPlugin(app: any, opts: any, next: any) {
   );
 
   app.addHook("onRequest", async (req: any, res: any) => {
-    if (!req.headers.authorization) {
-      return;
-    }
-
-    // eslint-disable-next-line no-unsafe-optional-chaining
-    const [, token] = req.headers.authorization.split("Bearer ");
-    if (token) {
-      try {
-        const userInfo = (await keycloak.grantManager.userInfo(token)) as any;
-        req.auth = {
-          hasRole: (role: string) => {
-            return userInfo?.realm_access?.roles.includes(role);
-          },
-          token,
-          userInfo,
-        };
-      } catch (e) {
-        console.log(e);
+    if (req.headers.authorization) {
+      // eslint-disable-next-line no-unsafe-optional-chaining
+      const [, token] = req.headers.authorization.split("Bearer ");
+      if (token) {
+        try {
+          const userInfo = (await keycloak.grantManager.userInfo(token)) as any;
+          req.auth = {
+            hasRole: (role: string) => {
+              return userInfo?.realm_access?.roles.includes(role);
+            },
+            token,
+            userInfo,
+          };
+        } catch (e) {
+          console.log(e);
+        }
       }
     }
+    req.auth = req.auth || { hasRole: () => false };
   });
 
   next();

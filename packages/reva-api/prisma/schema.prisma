@@ -23,114 +23,114 @@ enum ExperienceDuration {
 }
 
 model Certification {
-  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  label       String    @db.VarChar(255)
-  acronym     String    @db.VarChar(255)
-  level       Int       
-  activities  String?
-  activityArea      String? @map("activity_area")
-  accessibleJobType String? @map("accessible_job_type")
-  abilities   String?
-  slug        String
-  summary String?
-  status      CertificationStatus @default(INACTIVE)
-  rncpId      String    @unique @map("rncp_id") @db.VarChar(255)
-  romes       RomesOnCertifications[]
+  id                    String                                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                 String                                  @db.VarChar(255)
+  acronym               String                                  @db.VarChar(255)
+  level                 Int
+  activities            String?
+  activityArea          String?                                 @map("activity_area")
+  accessibleJobType     String?                                 @map("accessible_job_type")
+  abilities             String?
+  slug                  String
+  summary               String?
+  status                CertificationStatus                     @default(INACTIVE)
+  rncpId                String                                  @unique @map("rncp_id") @db.VarChar(255)
+  romes                 RomesOnCertifications[]
   // candidacies Candidacy[]
   candidaciesAndRegions CandidaciesOnRegionsAndCertifications[]
-  organismsAndRegions OrganismsOnRegionsAndCertifications[]
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  organismsAndRegions   OrganismsOnRegionsAndCertifications[]
+  createdAt             DateTime                                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime?                               @map("updated_at") @db.Timestamptz(6)
 
   @@map("certification")
 }
 
 model Profession {
-  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  label       String    @db.VarChar(255)
+  id          String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label       String  @db.VarChar(255)
   slug        String
   description String?
-  romeId      String    @db.Uuid @map("rome_id")
-  rome Rome? @relation(fields: [romeId], references: [id])
+  romeId      String  @map("rome_id") @db.Uuid
+  rome        Rome?   @relation(fields: [romeId], references: [id])
 
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime? @map("updated_at") @db.Timestamptz(6)
 
   @@map("profession")
 }
 
 model Rome {
-  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  code        String    @unique @db.VarChar(255)
-  label       String    @db.VarChar(255)
-  slug        String    @db.VarChar(255)
-  url         String    @db.VarChar(255)
-  profession  Profession[]
+  id             String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  code           String                  @unique @db.VarChar(255)
+  label          String                  @db.VarChar(255)
+  slug           String                  @db.VarChar(255)
+  url            String                  @db.VarChar(255)
+  profession     Profession[]
   certifications RomesOnCertifications[]
-  isActive    Boolean   @default(false) @map("is_active")
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  isActive       Boolean                 @default(false) @map("is_active")
+  createdAt      DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime?               @map("updated_at") @db.Timestamptz(6)
 
   @@map("rome")
 }
 
-
 model RomesOnCertifications {
-  certification       Certification @relation(fields: [certificationId], references: [id])
-  certificationId     String        @db.Uuid  @map("certification_id")
-  rome                Rome          @relation(fields: [romeId], references: [id])
-  romeId              String        @db.Uuid  @map("rome_id")
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  certification   Certification @relation(fields: [certificationId], references: [id])
+  certificationId String        @map("certification_id") @db.Uuid
+  rome            Rome          @relation(fields: [romeId], references: [id])
+  romeId          String        @map("rome_id") @db.Uuid
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime?     @map("updated_at") @db.Timestamptz(6)
 
   @@id([certificationId, romeId])
   @@map("rome_certification")
 }
 
-
 model Candidacy {
-  id        String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  deviceId  String    @db.VarChar(255)
-  organism       Organism? @relation(fields: [organismId], references: [id])
-  organismId     String?        @db.Uuid  @map("organism_id")
-  candidacyStatuses CandidaciesStatus[]
-  goals CandicadiesOnGoals[]
-  experiences Experience[]
-  certificationsAndRegions CandidaciesOnRegionsAndCertifications[]
-  typology CandidateTypology  @default(NON_SPECIFIE)
-  typologyAdditional String? @map("typology_additional")
-  firstAppointmentOccuredAt   DateTime?  @db.Timestamptz(6) @map("first_appointment_occured_at")
-  wasPresentAtFirstAppointment Boolean? @map("was_present_at_first_appointment")
-  appointmentCount Int @default(0) @map("appointment_count")
-  phone   String?  @db.VarChar(255)
-  email   String?  @db.VarChar(255)
-  trainings TrainingOnCandidacies[]
-  basicSkills BasicSkillOnCandidacies[]
-  certificateSkills   String? @map("certificate_skills")
-  otherTraining   String? @map("other_training")
-  individualHourCount   Int? @map("individual_hour_count")
-  collectiveHourCount   Int? @map("collective_hour_count")
-  additionalHourCount   Int? @map("additional_hour_count")
-  validatedByCandidate Boolean? @map("validated_by_candidate")
-  candidate   Candidate? @relation(fields: [candidateId], references: [id], onDelete: Cascade)
-  candidateId String?   @db.Uuid  @map("candidate_id")
-  department   Department? @relation(fields: [departmentId], references: [id], onDelete: Cascade)
-  departmentId String?   @db.Uuid  @map("department_id")
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  id                           String                                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  deviceId                     String                                  @db.VarChar(255)
+  organism                     Organism?                               @relation(fields: [organismId], references: [id])
+  organismId                   String?                                 @map("organism_id") @db.Uuid
+  candidacyStatuses            CandidaciesStatus[]
+  goals                        CandicadiesOnGoals[]
+  experiences                  Experience[]
+  certificationsAndRegions     CandidaciesOnRegionsAndCertifications[]
+  typology                     CandidateTypology                       @default(NON_SPECIFIE)
+  typologyAdditional           String?                                 @map("typology_additional")
+  firstAppointmentOccuredAt    DateTime?                               @map("first_appointment_occured_at") @db.Timestamptz(6)
+  wasPresentAtFirstAppointment Boolean?                                @map("was_present_at_first_appointment")
+  appointmentCount             Int                                     @default(0) @map("appointment_count")
+  phone                        String?                                 @db.VarChar(255)
+  email                        String?                                 @db.VarChar(255)
+  trainings                    TrainingOnCandidacies[]
+  basicSkills                  BasicSkillOnCandidacies[]
+  certificateSkills            String?                                 @map("certificate_skills")
+  otherTraining                String?                                 @map("other_training")
+  individualHourCount          Int?                                    @map("individual_hour_count")
+  collectiveHourCount          Int?                                    @map("collective_hour_count")
+  additionalHourCount          Int?                                    @map("additional_hour_count")
+  validatedByCandidate         Boolean?                                @map("validated_by_candidate")
+  candidate                    Candidate?                              @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  candidateId                  String?                                 @map("candidate_id") @db.Uuid
+  department                   Department?                             @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  departmentId                 String?                                 @map("department_id") @db.Uuid
+  createdAt                    DateTime                                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                    DateTime?                               @map("updated_at") @db.Timestamptz(6)
+  FundingRequest               FundingRequest[]
+
   @@map("candidacy")
 }
 
-
 /// Candicadies statuses
 model CandidaciesStatus {
-  id        String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  candidacy       Candidacy @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
-  candidacyId     String  @db.Uuid  @map("candidacy_id")
-  status          CandidacyStatus @default(PROJET)
-  isActive    Boolean   @default(false) @map("is_active")    
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  id          String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy   Candidacy       @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
+  candidacyId String          @map("candidacy_id") @db.Uuid
+  status      CandidacyStatus @default(PROJET)
+  isActive    Boolean         @default(false) @map("is_active")
+  createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime?       @map("updated_at") @db.Timestamptz(6)
+
   @@map("candidacy_candidacy_status")
 }
 
@@ -141,6 +141,8 @@ enum CandidacyStatus {
   PRISE_EN_CHARGE
   PARCOURS_ENVOYE
   PARCOURS_CONFIRME
+  DEMANDE_FINANCEMENT_ENVOYE
+  ABANDON
   DOSSIER_PRO
   CERTIFICATION
 }
@@ -152,60 +154,63 @@ enum Gender {
 }
 
 model Candidate {
-  id        String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  keycloakId String @db.Uuid @unique  @map("keycloak_id") 
-  gender    Gender?
-  email     String @unique @db.VarChar(255)
-  firstname String @db.VarChar(255)
-  firstname2 String? @db.VarChar(255)
-  firstname3 String? @db.VarChar(255)
-  lastname  String @db.VarChar(255)
-  phone     String @db.VarChar(255)
-  highestDegree     Degree? @relation(fields: [highestDegreeId], references: [id])
-  highestDegreeId     String?        @db.Uuid  @map("highest_degree_id")
-  vulnerabilityIndicator       VulnerabilityIndicator? @relation(fields: [vulnerabilityIndicatorId], references: [id])
-  vulnerabilityIndicatorId    String?        @db.Uuid  @map("vulnerability_indicator_id")
-  candidacies Candidacy[]
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  id                       String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  keycloakId               String                  @unique @map("keycloak_id") @db.Uuid
+  gender                   Gender?
+  email                    String                  @unique @db.VarChar(255)
+  firstname                String                  @db.VarChar(255)
+  firstname2               String?                 @db.VarChar(255)
+  firstname3               String?                 @db.VarChar(255)
+  lastname                 String                  @db.VarChar(255)
+  phone                    String                  @db.VarChar(255)
+  highestDegree            Degree?                 @relation(fields: [highestDegreeId], references: [id])
+  highestDegreeId          String?                 @map("highest_degree_id") @db.Uuid
+  vulnerabilityIndicator   VulnerabilityIndicator? @relation(fields: [vulnerabilityIndicatorId], references: [id])
+  vulnerabilityIndicatorId String?                 @map("vulnerability_indicator_id") @db.Uuid
+  candidacies              Candidacy[]
+  createdAt                DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                DateTime?               @map("updated_at") @db.Timestamptz(6)
+
   @@map("candidate")
 }
 
 model Goal {
-  id        String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  label      String   @unique @db.VarChar(255)
-  needsAdditionalInformation Boolean @default(false) @map("needs_additional_information")
-  isActive    Boolean   @default(false) @map("is_active")
-  candidacies CandicadiesOnGoals[]
-  order       Int
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  id                         String               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                      String               @unique @db.VarChar(255)
+  needsAdditionalInformation Boolean              @default(false) @map("needs_additional_information")
+  isActive                   Boolean              @default(false) @map("is_active")
+  candidacies                CandicadiesOnGoals[]
+  order                      Int
+  createdAt                  DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                  DateTime?            @map("updated_at") @db.Timestamptz(6)
+
   @@map("goal")
 }
 
 model CandicadiesOnGoals {
-  candidacy       Candidacy @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
-  candidacyId     String        @db.Uuid  @map("candidacy_id")
-  goal                Goal          @relation(fields: [goalId], references: [id])
-  goalId              String        @db.Uuid  @map("goal_id")
-  additionalInformation    String?    @map("additional_information")
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  candidacy             Candidacy @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
+  candidacyId           String    @map("candidacy_id") @db.Uuid
+  goal                  Goal      @relation(fields: [goalId], references: [id])
+  goalId                String    @map("goal_id") @db.Uuid
+  additionalInformation String?   @map("additional_information")
+  createdAt             DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime? @map("updated_at") @db.Timestamptz(6)
 
   @@id([candidacyId, goalId])
   @@map("candidacy_goal")
 }
 
 model Experience {
-  id        String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  title String
+  id          String             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title       String
   description String
   duration    ExperienceDuration
   startedAt   DateTime
-  candidacy       Candidacy @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
-  candidacyId     String        @db.Uuid  @map("candidacy_id")
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  candidacy   Candidacy          @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
+  candidacyId String             @map("candidacy_id") @db.Uuid
+  createdAt   DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime?          @map("updated_at") @db.Timestamptz(6)
+
   @@map("experience")
 }
 
@@ -219,156 +224,218 @@ enum CandidateTypology {
 }
 
 model Region {
-  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  label       String   @unique @db.VarChar(255)
-  code        String    @unique @db.VarChar(3)
+  id                           String                                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                        String                                  @unique @db.VarChar(255)
+  code                         String                                  @unique @db.VarChar(3)
   candidaciesAndCertifications CandidaciesOnRegionsAndCertifications[]
-  organismsAndCertifications OrganismsOnRegionsAndCertifications[]
-  departments Department[]
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  organismsAndCertifications   OrganismsOnRegionsAndCertifications[]
+  departments                  Department[]
+  createdAt                    DateTime                                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                    DateTime?                               @map("updated_at") @db.Timestamptz(6)
+
   @@map("region")
 }
 
 model Department {
-  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  label       String   @unique @db.VarChar(255)
-  code        String    @unique @db.VarChar(3)
-  region                Region          @relation(fields: [regionId], references: [id])
-  regionId              String        @db.Uuid  @map("region_id")
+  id          String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label       String      @unique @db.VarChar(255)
+  code        String      @unique @db.VarChar(3)
+  region      Region      @relation(fields: [regionId], references: [id])
+  regionId    String      @map("region_id") @db.Uuid
   candidacies Candidacy[]
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime?   @map("updated_at") @db.Timestamptz(6)
+
   @@map("department")
 }
 
 model CandidaciesOnRegionsAndCertifications {
-  id        String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  candidacy       Candidacy @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
-  candidacyId     String        @db.Uuid  @map("candidacy_id")
-  region                Region          @relation(fields: [regionId], references: [id])
-  regionId              String        @db.Uuid  @map("region_id")
-  certification                Certification          @relation(fields: [certificationId], references: [id])
-  certificationId              String        @db.Uuid  @map("certification_id")
-  isActive    Boolean   @default(false) @map("is_active")
-  author      String    @db.VarChar(255)
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  id              String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy       Candidacy     @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
+  candidacyId     String        @map("candidacy_id") @db.Uuid
+  region          Region        @relation(fields: [regionId], references: [id])
+  regionId        String        @map("region_id") @db.Uuid
+  certification   Certification @relation(fields: [certificationId], references: [id])
+  certificationId String        @map("certification_id") @db.Uuid
+  isActive        Boolean       @default(false) @map("is_active")
+  author          String        @db.VarChar(255)
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime?     @map("updated_at") @db.Timestamptz(6)
 
   // @@unique([candidacyId, regionId, certificationId])
   @@map("candidacy_region_certification")
 }
 
 model Account {
-  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  email String @db.VarChar(255) @unique
-  firstname String? @db.VarChar(255)
-  lastname String? @db.VarChar(255)
-  organism Organism?  @relation(fields: [organismId], references: [id])
-  organismId     String?   @db.Uuid  @map("organism_id")
-  keycloakId String @db.Uuid @unique  @map("keycloak_id") 
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  email      String    @unique @db.VarChar(255)
+  firstname  String?   @db.VarChar(255)
+  lastname   String?   @db.VarChar(255)
+  organism   Organism? @relation(fields: [organismId], references: [id])
+  organismId String?   @map("organism_id") @db.Uuid
+  keycloakId String    @unique @map("keycloak_id") @db.Uuid
+
   @@map("account")
 }
 
 model Organism {
-  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()")) 
-  label String  @unique @db.VarChar(255)
-  address  String
-  zip  String   @db.VarChar(5)
-  city  String @db.VarChar(255)
-  contactAdministrativeEmail String @unique @db.VarChar(255) @map("contact_administrative_email")
-  contactCommercialName String @map("contact_commercial_name")
-  contactCommercialEmail  String @map("contact_commercial_email")
-  siret String
-  isActive    Boolean   @default(false) @map("is_active")
-  candidacies Candidacy[]
-  accounts Account[]
-  regionsAndCertifications OrganismsOnRegionsAndCertifications[]
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  id                         String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                      String                                @unique @db.VarChar(255)
+  address                    String
+  zip                        String                                @db.VarChar(5)
+  city                       String                                @db.VarChar(255)
+  contactAdministrativeEmail String                                @unique @map("contact_administrative_email") @db.VarChar(255)
+  contactCommercialName      String                                @map("contact_commercial_name")
+  contactCommercialEmail     String                                @map("contact_commercial_email")
+  siret                      String
+  isActive                   Boolean                               @default(false) @map("is_active")
+  candidacies                Candidacy[]
+  accounts                   Account[]
+  regionsAndCertifications   OrganismsOnRegionsAndCertifications[]
+  createdAt                  DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                  DateTime?                             @map("updated_at") @db.Timestamptz(6)
+  FundingRequest             FundingRequest[]
+
   @@map("organism")
 }
 
 model OrganismsOnRegionsAndCertifications {
-  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()")) 
-  organism       Organism @relation(fields: [organismId], references: [id], onDelete: Cascade)
-  organismId     String        @db.Uuid  @map("organism_id")
-  region                Region          @relation(fields: [regionId], references: [id])
-  regionId              String        @db.Uuid  @map("region_id")
-  isArchitect           Boolean @default(false) @map("is_architect")
-  isCompanion           Boolean @default(false) @map("is_companion")
-  certification                Certification          @relation(fields: [certificationId], references: [id])
-  certificationId              String        @db.Uuid  @map("certification_id")
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  id              String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  organism        Organism      @relation(fields: [organismId], references: [id], onDelete: Cascade)
+  organismId      String        @map("organism_id") @db.Uuid
+  region          Region        @relation(fields: [regionId], references: [id])
+  regionId        String        @map("region_id") @db.Uuid
+  isArchitect     Boolean       @default(false) @map("is_architect")
+  isCompanion     Boolean       @default(false) @map("is_companion")
+  certification   Certification @relation(fields: [certificationId], references: [id])
+  certificationId String        @map("certification_id") @db.Uuid
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime?     @map("updated_at") @db.Timestamptz(6)
+
   @@unique([organismId, regionId, certificationId])
   @@map("organism_region_certification")
 }
 
-
 model Training {
-  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  label        String    @unique @db.VarChar(255)
-  candidacies TrainingOnCandidacies[]
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  id                        String                      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                     String                      @unique @db.VarChar(255)
+  candidacies               TrainingOnCandidacies[]
+  createdAt                 DateTime                    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                 DateTime?                   @map("updated_at") @db.Timestamptz(6)
+  trainingOnFundingRequests TrainingOnFundingRequests[]
+
   @@map("training")
 }
 
 model TrainingOnCandidacies {
-  training       Training @relation(fields: [trainingId], references: [id])
-  trainingId     String        @db.Uuid  @map("training_id")
-  candidacy      Candidacy          @relation(fields: [candidacyId], references: [id])
-  candidacyId              String        @db.Uuid  @map("candidacy_id")
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  training    Training  @relation(fields: [trainingId], references: [id])
+  trainingId  String    @map("training_id") @db.Uuid
+  candidacy   Candidacy @relation(fields: [candidacyId], references: [id])
+  candidacyId String    @map("candidacy_id") @db.Uuid
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime? @map("updated_at") @db.Timestamptz(6)
 
   @@id([trainingId, candidacyId])
   @@map("training_candidacy")
 }
 
 model BasicSkill {
-  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  label       String    @unique @db.VarChar(255)
-  candidacies BasicSkillOnCandidacies[]
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  id                          String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                       String                        @unique @db.VarChar(255)
+  candidacies                 BasicSkillOnCandidacies[]
+  createdAt                   DateTime                      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                   DateTime?                     @map("updated_at") @db.Timestamptz(6)
+  basicSkillOnFundingRequests BasicSkillOnFundingRequests[]
 
   @@map("basic_skill")
 }
 
 model BasicSkillOnCandidacies {
-  basicSkill       BasicSkill @relation(fields: [basicSkillId], references: [id])
-  basicSkillId     String        @db.Uuid  @map("basic_skill_id")
-  candidacy      Candidacy          @relation(fields: [candidacyId], references: [id])
-  candidacyId              String        @db.Uuid  @map("candidacy_id")
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  basicSkill   BasicSkill @relation(fields: [basicSkillId], references: [id])
+  basicSkillId String     @map("basic_skill_id") @db.Uuid
+  candidacy    Candidacy  @relation(fields: [candidacyId], references: [id])
+  candidacyId  String     @map("candidacy_id") @db.Uuid
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime?  @map("updated_at") @db.Timestamptz(6)
 
   @@id([basicSkillId, candidacyId])
   @@map("basic_skill_candidacy")
 }
 
 model Degree {
-  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  code        String    @unique @db.VarChar(255) 
-  label       String    @unique @db.VarChar(255) 
-  longLabel   String    @unique @db.VarChar(255) @map("long_label")
-  level       Int
+  id         String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  code       String      @unique @db.VarChar(255)
+  label      String      @unique @db.VarChar(255)
+  longLabel  String      @unique @map("long_label") @db.VarChar(255)
+  level      Int
   candidates Candidate[]
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  createdAt  DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime?   @map("updated_at") @db.Timestamptz(6)
 
   @@map("degree")
-
 }
 
 model VulnerabilityIndicator {
-  id          String    @id @db.Uuid @default(dbgenerated("uuid_generate_v4()"))
-  label       String    @unique @db.VarChar(255) 
+  id         String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label      String      @unique @db.VarChar(255)
   candidates Candidate[]
-  createdAt   DateTime  @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt   DateTime? @db.Timestamptz(6) @map("updated_at")
+  createdAt  DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime?   @map("updated_at") @db.Timestamptz(6)
 
   @@map("vulnerability_indicator")
+}
+
+model FundingRequest {
+  id                          String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy                   Candidacy                     @relation(fields: [candidacyId], references: [id])
+  candidacyId                 String                        @unique @map("candidacy_id") @db.Uuid
+  companion                   Organism                      @relation(fields: [companionId], references: [id], onDelete: Cascade)
+  companionId                 String                        @map("companion_id") @db.Uuid
+  diagnosisHourCount          Int                           @map("diagnosis_hour_count")
+  diagnosisCost               Int                           @map("diagnosis_cost")
+  postExamHourCount           Int                           @map("post_exam_hour_count")
+  postExamCost                Int                           @map("post_exam_cost")
+  individualHourCount         Int                           @map("individual_hour_count")
+  individualCost              Int                           @map("individual_cost")
+  collectiveHourCount         Int                           @map("collective_hour_count")
+  collectiveCost              Int                           @map("collective_cost")
+  basicSkills                 BasicSkillOnFundingRequests[]
+  basicSkillsHourCount        Int                           @map("basic_skills_hour_count")
+  basicSkillsCost             Int                           @map("basic_skills_cost")
+  mandatoryTrainings          TrainingOnFundingRequests[]
+  mandatoryTrainingsHourCount Int                           @map("mandatory_training_hour_count")
+  mandatoryTrainingsCost      Int                           @map("mandatory_training_cost")
+  certificateSkills           String                        @map("certificate_skills")
+  certificateSkillsHourCount  Int                           @map("certificate_skills_hour_count")
+  certificateSkillsCost       Int                           @map("certificate_skills_cost")
+  otherTraining               String                        @map("other_training")
+  otherTrainingHourCount      Int                           @map("other_training_hour_count")
+  examHourCount               Int                           @map("exam_hour_count")
+  examCost                    Int                           @map("exam_cost")
+
+  @@map("funding_request")
+}
+
+model BasicSkillOnFundingRequests {
+  basicSkill       BasicSkill     @relation(fields: [basicSkillId], references: [id])
+  basicSkillId     String         @map("basic_skill_id") @db.Uuid
+  fundingRequest   FundingRequest @relation(fields: [fundingRequestId], references: [id])
+  fundingRequestId String         @map("funding_request_id") @db.Uuid
+  createdAt        DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime?      @map("updated_at") @db.Timestamptz(6)
+
+  @@id([basicSkillId, fundingRequestId])
+  @@map("basic_skill_funding_request")
+}
+
+model TrainingOnFundingRequests {
+  training         Training       @relation(fields: [trainingId], references: [id])
+  trainingId       String         @map("training_id") @db.Uuid
+  fundingRequest   FundingRequest @relation(fields: [fundingRequestId], references: [id])
+  fundingRequestId String         @map("funding_request_id") @db.Uuid
+  createdAt        DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime?      @map("updated_at") @db.Timestamptz(6)
+
+  @@id([trainingId, fundingRequestId])
+  @@map("training_funding_request")
 }

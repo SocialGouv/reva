@@ -22,6 +22,8 @@ export interface Candidacy extends CandidacyAbstract {
   candidacyStatuses: CandidacyStatus[];
   // basicSkills: BasicSkill[];
   // trainings: Training[];
+  //   individualHourCount: number | null;
+  //   collectiveHourCount: number | null;
   createdAt: Date;
 }
 
