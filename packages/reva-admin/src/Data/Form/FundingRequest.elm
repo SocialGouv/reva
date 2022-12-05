@@ -138,29 +138,38 @@ fundingRequest funding =
 
         int key =
             Just <| String.fromInt <| key funding
+
+        mandatoryTrainingsChecked =
+            Helper.toCheckedList funding.mandatoryTrainingIds
+
+        basicSkillsChecked =
+            Helper.toCheckedList funding.basicSkillsIds
+
+        fundingList =
+            [ ( .companionId, string .companionId )
+            , ( .diagnosisHourCount, int .diagnosisHourCount )
+            , ( .diagnosisCost, int .diagnosisCost )
+            , ( .postExamHourCount, int .postExamHourCount )
+            , ( .postExamCost, int .postExamCost )
+            , ( .individualHourCount, int .individualHourCount )
+            , ( .individualCost, int .individualCost )
+            , ( .collectiveHourCount, int .collectiveHourCount )
+            , ( .collectiveCost, int .collectiveCost )
+            , ( .basicSkillsHourCount, int .basicSkillsHourCount )
+            , ( .basicSkillsCost, int .basicSkillsCost )
+            , ( .mandatoryTrainingsHourCount, int .mandatoryTrainingsHourCount )
+            , ( .mandatoryTrainingsCost, int .mandatoryTrainingsCost )
+            , ( .certificateSkills, string .certificateSkills )
+            , ( .certificateSkillsHourCount, int .certificateSkillsHourCount )
+            , ( .certificateSkillsCost, int .certificateSkillsCost )
+            , ( .otherTraining, string .otherTraining )
+            , ( .otherTrainingHourCount, int .otherTrainingHourCount )
+            , ( .examHourCount, int .examHourCount )
+            , ( .examCost, int .examCost )
+            ]
+                |> Helper.toKeyedList keys
     in
-    [ ( .companionId, string .companionId )
-    , ( .diagnosisHourCount, int .diagnosisHourCount )
-    , ( .diagnosisCost, int .diagnosisCost )
-    , ( .postExamHourCount, int .postExamHourCount )
-    , ( .postExamCost, int .postExamCost )
-    , ( .individualHourCount, int .individualHourCount )
-    , ( .individualCost, int .individualCost )
-    , ( .collectiveHourCount, int .collectiveHourCount )
-    , ( .collectiveCost, int .collectiveCost )
-    , ( .basicSkillsHourCount, int .basicSkillsHourCount )
-    , ( .basicSkillsCost, int .basicSkillsCost )
-    , ( .mandatoryTrainingsHourCount, int .mandatoryTrainingsHourCount )
-    , ( .mandatoryTrainingsCost, int .mandatoryTrainingsCost )
-    , ( .certificateSkills, string .certificateSkills )
-    , ( .certificateSkillsHourCount, int .certificateSkillsHourCount )
-    , ( .certificateSkillsCost, int .certificateSkillsCost )
-    , ( .otherTraining, string .otherTraining )
-    , ( .otherTrainingHourCount, int .otherTrainingHourCount )
-    , ( .examHourCount, int .examHourCount )
-    , ( .examCost, int .examCost )
-    ]
-        |> Helper.toDict keys
+    Dict.fromList (mandatoryTrainingsChecked ++ basicSkillsChecked ++ fundingList)
 
 
 defaultFundingRequest : TrainingForm -> Dict String String
