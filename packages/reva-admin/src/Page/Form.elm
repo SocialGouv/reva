@@ -370,16 +370,16 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> Maybe.withDefault (defaultValue element)
 
         dataClass =
-            "text-lg font-medium leading-snug text-gray-800 mb-8 mt-2"
+            "bg-gray-100 py-2 px-4 min-h-[40px] text-lg font-medium leading-snug text-gray-800 mt-1 mb-2"
 
-        dataView =
+        dataView d =
             dd
                 [ class dataClass ]
-                [ text dataOrDefault ]
+                [ text d ]
 
         termView s =
             dt
-                [ class "text-base text-gray-600" ]
+                [ class "text-base text-gray-600 mt-2 w-[280px]" ]
                 [ text s ]
 
         withTerm s el =
@@ -388,7 +388,7 @@ viewReadOnlyElement formData ( elementId, element ) =
             ]
 
         defaultView label =
-            dataView |> withTerm label
+            dataView dataOrDefault |> withTerm label
     in
     case element of
         Checkbox label ->
@@ -408,16 +408,12 @@ viewReadOnlyElement formData ( elementId, element ) =
                         (\( choiceId, choice ) -> li [] <| viewReadOnlyElement formData ( choiceId, Checkbox choice ))
                         choices
             in
-            dd
-                [ class "mt-2"
-                , class dataClass
+            ul
+                [ class "mt-2 mb-4"
+                , name elementId
+                , id elementId
                 ]
-                [ ul
-                    [ name elementId
-                    , id elementId
-                    ]
-                    viewChoices
-                ]
+                viewChoices
                 |> withTerm label
 
         Date label ->
@@ -427,7 +423,10 @@ viewReadOnlyElement formData ( elementId, element ) =
             []
 
         Heading title ->
-            [ h3 [ class "text-xl text-slate-800" ] [ text title ] ]
+            [ h3
+                [ class "w-[620px] text-xl text-slate-800 mt-4" ]
+                [ text title ]
+            ]
 
         Info label value ->
             p [] [ text value ]
@@ -440,18 +439,18 @@ viewReadOnlyElement formData ( elementId, element ) =
             defaultView label
 
         Textarea label ->
-            defaultView label
+            [ div [ class "w-[620px]" ] <| defaultView label ]
 
         ReadOnlyElement readOnlyElement ->
             viewReadOnlyElement formData ( elementId, readOnlyElement )
 
         Section title ->
-            [ h2 [ class "text-2xl text-gray-900" ] [ text title ] ]
+            [ h2 [ class "text-2xl text-gray-900 mt-8 w-[620px]" ] [ text title ] ]
 
         Select label choices ->
             List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices
                 |> List.head
-                |> Maybe.map (\( _, choice ) -> text choice |> withTerm label)
+                |> Maybe.map (\( _, choice ) -> dataView choice |> withTerm label)
                 |> Maybe.withDefault []
 
         SelectOther selectId label ->

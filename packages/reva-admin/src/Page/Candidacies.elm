@@ -250,8 +250,19 @@ viewNavigationSteps baseUrl candidacy =
         trainingLink =
             Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Training candidacy.id)
 
+        fundingView =
+            if candidacyStatus == "DEMANDE_FINANCEMENT_ENVOYE" then
+                View.Candidacy.FundingRequest
+
+            else
+                View.Candidacy.CandidateInfo
+
         candidateInfoLink =
-            Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.CandidateInfo candidacy.id)
+            if Candidacy.isStatusAbove candidacy "PARCOURS_CONFIRME" then
+                Just <| Route.href baseUrl <| Route.Candidacy (fundingView candidacy.id)
+
+            else
+                Nothing
     in
     View.Steps.view (Candidacy.statusToProgressPosition candidacyStatus)
         [ { content = title, navigation = Nothing }
@@ -265,7 +276,7 @@ viewNavigationSteps baseUrl candidacy =
 viewMain : String -> List (Html msg) -> Html msg
 viewMain dataTestValue =
     node "main"
-        [ class "bg-white w-[762px] px-2 pt-2 pb-24"
+        [ class "bg-white w-[780px] px-2 pt-2 pb-24"
         , dataTest dataTestValue
         ]
 
@@ -539,7 +550,7 @@ viewDirectoryPanel context candidacies =
     in
     aside
         [ class "hidden md:order-first md:flex md:flex-col flex-shrink-0"
-        , class "w-full w-[762px] h-screen"
+        , class "w-full w-[780px] h-screen"
         , class "bg-white"
         ]
         [ div
@@ -795,7 +806,12 @@ updateTab context tab model =
                             Nav.pushUrl
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
-                        , status = Form.Editable
+                        , status =
+                            if Candidacy.isFundingRequestSent candidacy then
+                                Form.ReadOnly
+
+                            else
+                                Form.Editable
                         }
                         model.form
             in
@@ -813,7 +829,7 @@ updateTab context tab model =
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.TrainingSent candidacyId)))
                         , status =
-                            if Candidacy.isStatusAbove candidacy "PARCOURS_ENVOYE" then
+                            if Candidacy.isTrainingSent candidacy then
                                 Form.ReadOnly
 
                             else
@@ -840,7 +856,12 @@ updateTab context tab model =
                             Nav.pushUrl
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.FundingRequest candidacyId)))
-                        , status = Form.Editable
+                        , status =
+                            if Candidacy.isFundingRequestSent candidacy then
+                                Form.ReadOnly
+
+                            else
+                                Form.Editable
                         }
                         model.form
             in
