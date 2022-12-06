@@ -110,10 +110,7 @@ const validateFundingRequest =
       );
     }
 
-    if (
-      isCandidateBacNonFragile &&
-      !isLower20(fundingRequest.basicSkillsCost)
-    ) {
+    if (!isLower20(fundingRequest.basicSkillsCost)) {
       errors.push(
         "Le coût horaire demandé pour la prestation Compléments formatifs Savoir de base doit être compris entre 0 et 20 euros."
       );
