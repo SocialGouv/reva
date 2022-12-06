@@ -450,10 +450,9 @@ fundingRequestForm maybeCertification =
             , ( "training", Form.Section "Actes formatifs" )
             , ( "mandatory", Form.Heading "Formations obligatoires" )
             , ( keys.mandatoryTrainingIds
-              , Form.ReadOnlyElement
-                    (Form.CheckboxList "" <|
+              , Form.ReadOnlyElement <|
+                    Form.CheckboxList "" <|
                         Data.Form.Helper.toIdList referential.mandatoryTrainings
-                    )
               )
             , ( keys.mandatoryTrainingsHourCount
               , maybeReadOnlyTraining candidacy referential <| Form.Number "Nombre d'heures"
@@ -463,8 +462,9 @@ fundingRequestForm maybeCertification =
               )
             , ( "basic-skills", Form.Heading "Formations savoirs de base" )
             , ( keys.basicSkillsIds
-              , Form.CheckboxList "" <|
-                    Data.Form.Helper.toIdList referential.basicSkills
+              , Form.ReadOnlyElement <|
+                    Form.CheckboxList "" <|
+                        Data.Form.Helper.toIdList referential.basicSkills
               )
             , ( keys.basicSkillsHourCount
               , maybeReadOnlyTraining candidacy referential <| Form.Number "Nombre d'heures"
@@ -473,7 +473,7 @@ fundingRequestForm maybeCertification =
               , maybeReadOnlyTraining candidacy referential <| Form.Number "Coût horaire"
               )
             , ( "skills", Form.Heading "Bloc de compétences certifiant" )
-            , ( keys.certificateSkills, Form.Textarea "" )
+            , ( keys.certificateSkills, Form.ReadOnlyElement <| Form.Textarea "" )
             , ( keys.certificateSkillsHourCount
               , maybeReadOnlyTraining candidacy referential <| Form.Number "Nombre d'heures"
               )
@@ -481,7 +481,7 @@ fundingRequestForm maybeCertification =
               , maybeReadOnlyTraining candidacy referential <| Form.Number "Coût horaire"
               )
             , ( "other", Form.Heading "Autres actions de formations complémentaires" )
-            , ( keys.otherTraining, Form.Textarea "" )
+            , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" )
             , ( keys.otherTrainingHourCount, Form.Number "Nombre d'heures total actes formatifs" )
             , ( "jury", Form.Heading "Prestation jury" )
             , ( keys.examHourCount, Form.Number "Nombre d'heures" )
