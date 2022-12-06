@@ -401,6 +401,7 @@ fundingRequestForm maybeCertification =
             candidacy.availableCompanions
                 |> Data.Form.Helper.toIdList
 
+        certificateField : ( String, Form.Element )
         certificateField =
             case maybeCertification of
                 Just certification ->
@@ -408,6 +409,18 @@ fundingRequestForm maybeCertification =
 
                 Nothing ->
                     ( "certification", Form.Empty )
+
+        maybeReadOnlyTraining : Candidacy -> Referential -> Form.Element -> Form.Element
+        maybeReadOnlyTraining candidacy referential formElement =
+            if
+                candidacy.candidate
+                    |> Maybe.map (hasAccessTrainingFunding referential)
+                    |> Maybe.withDefault False
+            then
+                formElement
+
+            else
+                Form.ReadOnlyElement formElement
     in
     { elements =
         \formData ( candidacy, referential ) ->
@@ -436,19 +449,31 @@ fundingRequestForm maybeCertification =
                         Data.Form.Helper.toIdList referential.mandatoryTrainings
                     )
               )
-            , ( keys.mandatoryTrainingsHourCount, Form.Number "Nombre d'heures" )
-            , ( keys.mandatoryTrainingsCost, Form.Number "Coût horaire" )
+            , ( keys.mandatoryTrainingsHourCount
+              , maybeReadOnlyTraining candidacy referential <| Form.Number "Nombre d'heures"
+              )
+            , ( keys.mandatoryTrainingsCost
+              , maybeReadOnlyTraining candidacy referential <| Form.Number "Coût horaire"
+              )
             , ( "basic-skills", Form.Heading "Formations savoirs de base" )
             , ( keys.basicSkillsIds
               , Form.CheckboxList "" <|
                     Data.Form.Helper.toIdList referential.basicSkills
               )
-            , ( keys.basicSkillsHourCount, Form.Number "Nombre d'heures" )
-            , ( keys.basicSkillsCost, Form.Number "Coût horaire" )
+            , ( keys.basicSkillsHourCount
+              , maybeReadOnlyTraining candidacy referential <| Form.Number "Nombre d'heures"
+              )
+            , ( keys.basicSkillsCost
+              , maybeReadOnlyTraining candidacy referential <| Form.Number "Coût horaire"
+              )
             , ( "skills", Form.Heading "Bloc de compétences certifiant" )
             , ( keys.certificateSkills, Form.Textarea "" )
-            , ( keys.certificateSkillsHourCount, Form.Number "Nombre d'heures" )
-            , ( keys.certificateSkillsCost, Form.Number "Coût horaire" )
+            , ( keys.certificateSkillsHourCount
+              , maybeReadOnlyTraining candidacy referential <| Form.Number "Nombre d'heures"
+              )
+            , ( keys.certificateSkillsCost
+              , maybeReadOnlyTraining candidacy referential <| Form.Number "Coût horaire"
+              )
             , ( "other", Form.Heading "Autres actions de formations complémentaires" )
             , ( keys.otherTraining, Form.Textarea "" )
             , ( keys.otherTrainingHourCount, Form.Number "Nombre d'heures total actes formatifs" )
@@ -467,6 +492,20 @@ fundingRequestForm maybeCertification =
     , saveLabel = "Enregistrer"
     , title = "2 - Parcours personnalisé"
     }
+
+
+hasAccessTrainingFunding : Referential -> Data.Candidate.Candidate -> Bool
+hasAccessTrainingFunding referential candidate =
+    let
+        maybeBac =
+            List.Extra.find (\d -> d.code == "N4_BAC") referential.degrees
+    in
+    case ( candidate.highestDegree, candidate.vulnerabilityIndicator, maybeBac ) of
+        ( Just highestDegree, Just vulnerabilityIndicator, Just bac ) ->
+            highestDegree.level <= bac.level || vulnerabilityIndicator.label /= "Vide"
+
+        _ ->
+            False
 
 
 totalFundingRequestCost : Dict String String -> Int

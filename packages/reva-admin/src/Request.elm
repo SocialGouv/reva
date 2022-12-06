@@ -254,6 +254,7 @@ candidacySelection id =
             SelectionSet.succeed Data.Candidacy.Candidacy
                 |> with (SelectionSet.map (\(Id candidacyId) -> Data.Candidacy.candidacyIdFromString candidacyId) Admin.Object.Candidacy.id)
                 |> with (SelectionSet.succeed [])
+                |> with (Admin.Object.Candidacy.candidate candidateSelection)
                 |> with (SelectionSet.map (Maybe.map (\(Id certificationId) -> certificationId)) Admin.Object.Candidacy.certificationId)
                 |> with (Admin.Object.Candidacy.organism organismSelection)
                 |> with (Admin.Object.Candidacy.certification certificationSelection)
@@ -376,8 +377,8 @@ vulnerabilityIndicatorIdSelection =
         |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.VulnerabilityIndicator.id)
 
 
-candidateSelection : SelectionSet (Dict String String) Admin.Object.Candidate
-candidateSelection =
+candidateFormSelection : SelectionSet (Dict String String) Admin.Object.Candidate
+candidateFormSelection =
     SelectionSet.succeed Data.Form.Candidate.candidate
         |> with (SelectionSet.map (\(Uuid id) -> id) Admin.Object.Candidate.id)
         |> with Admin.Object.Candidate.firstname
@@ -389,6 +390,20 @@ candidateSelection =
         |> with (Admin.Object.Candidate.vulnerabilityIndicator vulnerabilityIndicatorIdSelection)
 
 
+candidateSelection : SelectionSet Data.Candidate.Candidate Admin.Object.Candidate
+candidateSelection =
+    SelectionSet.succeed Data.Candidate.Candidate
+        |> with (SelectionSet.map (\(Uuid id) -> id) Admin.Object.Candidate.id)
+        |> with Admin.Object.Candidate.firstname
+        |> with Admin.Object.Candidate.firstname2
+        |> with Admin.Object.Candidate.firstname3
+        |> with Admin.Object.Candidate.gender
+        |> with (Admin.Object.Candidate.highestDegree degreeSelection)
+        |> with Admin.Object.Candidate.lastname
+        |> with (Admin.Object.Candidate.vulnerabilityIndicator vulnerabilityIndicatorSelection)
+
+
+fundingRequestSelection : SelectionSet Data.Form.FundingRequest.FundingRequestInput Admin.Object.FundingRequest
 fundingRequestSelection =
     SelectionSet.succeed Data.Form.FundingRequest.FundingRequestInput
         |> with
@@ -442,7 +457,7 @@ requestCandidateByEmail email endpointGraphql token toMsg =
         candidateRequiredArgs =
             Query.CandidateGetCandidateByEmailRequiredArguments email
     in
-    Query.candidate_getCandidateByEmail candidateRequiredArgs candidateSelection
+    Query.candidate_getCandidateByEmail candidateRequiredArgs candidateFormSelection
         |> makeQuery endpointGraphql token (nothingToError "Ce candidat est introuvable" >> toMsg)
 
 

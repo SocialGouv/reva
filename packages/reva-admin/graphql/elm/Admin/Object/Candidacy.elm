@@ -30,6 +30,13 @@ deviceId =
     Object.selectionForField "(Maybe Data.Scalar.Id)" "deviceId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder |> Decode.nullable)
 
 
+candidate :
+    SelectionSet decodesTo Admin.Object.Candidate
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
+candidate object____ =
+    Object.selectionForCompositeField "candidate" [] object____ (Basics.identity >> Decode.nullable)
+
+
 certificationId : SelectionSet (Maybe Data.Scalar.Id) Admin.Object.Candidacy
 certificationId =
     Object.selectionForField "(Maybe Data.Scalar.Id)" "certificationId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder |> Decode.nullable)

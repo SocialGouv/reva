@@ -194,7 +194,12 @@ export const getCandidacyFromId = async (candidacyId: string) => {
       },
       include: {
         ...candidacyIncludes,
-        candidate: true,
+        candidate: {
+          include: {
+            highestDegree: true,
+            vulnerabilityIndicator: true,
+          },
+        },
       },
     });
 
