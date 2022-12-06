@@ -140,10 +140,7 @@ const validateFundingRequest =
       );
     }
 
-    if (
-      isCandidateBacNonFragile &&
-      !isLower20(fundingRequest.certificateSkillsCost)
-    ) {
+    if (!isLower20(fundingRequest.certificateSkillsCost)) {
       errors.push(
         "Le coût horaire demandé pour la prestation Jury doit être compris entre 0 et 20 euros."
       );
