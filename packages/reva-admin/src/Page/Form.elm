@@ -321,7 +321,7 @@ viewEditableElement formData ( elementId, element ) =
                 |> withLabel label
 
         ReadOnlyElement readOnlyElement ->
-            viewReadOnlyElement formData ( elementId, readOnlyElement )
+            [ div [ class "mb-8" ] <| viewReadOnlyElement formData ( elementId, readOnlyElement ) ]
 
         Section title ->
             [ h2

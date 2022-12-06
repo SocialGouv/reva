@@ -22,6 +22,7 @@ module Data.Candidacy exposing
     )
 
 import Admin.Enum.Duration exposing (Duration)
+import Data.Candidate exposing (Candidate)
 import Data.Certification exposing (Certification)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department)
@@ -58,6 +59,7 @@ type alias CandidacyExperience =
 type alias Candidacy =
     { id : CandidacyId
     , availableCompanions : List Organism
+    , candidate : Maybe Candidate
     , certificationId : Maybe String
     , organism : Maybe Organism
     , certification : Maybe Certification

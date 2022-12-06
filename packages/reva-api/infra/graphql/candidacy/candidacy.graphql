@@ -21,6 +21,7 @@ enum CandidateTypology {
 type Candidacy {
   id: ID!
   deviceId: ID
+  candidate: Candidate
   certificationId: ID
   regionId: ID
   region: Region
