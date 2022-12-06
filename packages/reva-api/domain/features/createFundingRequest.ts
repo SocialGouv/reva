@@ -43,6 +43,7 @@ const validateFundingRequest =
       fundingRequest.basicSkillsHourCount = 0;
       fundingRequest.basicSkillsCost = 0;
       fundingRequest.certificateSkillsCost = 0;
+      fundingRequest.certificateSkillsHourCount = 0;
     }
 
     if (
