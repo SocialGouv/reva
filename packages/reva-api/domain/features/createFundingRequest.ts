@@ -1,4 +1,4 @@
-import { Either, EitherAsync, Left, Right } from "purify-ts";
+import { Either, EitherAsync, Left, Right, number } from "purify-ts";
 
 import { Candidate, FundingRequest } from "../types/candidate";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
@@ -18,127 +18,147 @@ interface CreateFundingRequestDeps {
 
 const candidateBacNonFragile = (candidate: any) =>
   candidate.highestDegree.level >= 4 &&
-  candidate.vulnerabilityIndicator.label !== "Vide";
+  candidate.vulnerabilityIndicator.label === "Vide";
+
+const isBetween = (low: number, high: number) => (value: number) =>
+  low <= value && value <= high;
+
+const isLower2 = isBetween(0, 2);
+const isLower4 = isBetween(0, 4);
+const isLower15 = isBetween(0, 15);
+const isLower20 = isBetween(0, 20);
+const isLower30 = isBetween(0, 30);
+const isLower70 = isBetween(0, 70);
+const isLower78 = isBetween(0, 78);
 
 const validateFundingRequest =
   (candidate: Candidate) => (fundingRequest: FundingRequest) => {
     const errors = [];
-    if (
-      candidateBacNonFragile(candidate) &&
-      fundingRequest.diagnosisHourCount > 2
-    ) {
-      errors.push(
-        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique ne peut être supérieur à 2."
-      );
-    } else if (fundingRequest.diagnosisHourCount > 4) {
-      errors.push(
-        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique ne peut être supérieur à 4."
-      );
-    }
 
-    if (fundingRequest.diagnosisCost > 70) {
-      errors.push(
-        "Le coût horaire demandé pour la prestation de l'Architecte de Parcours Diagnostique ne peut être supérieur à 70 euros."
-      );
-    }
+    const isCandidateBacNonFragile = candidateBacNonFragile(candidate);
 
-    if (fundingRequest.postExamCost > 70) {
-      errors.push(
-        "Le coût horaire demandé pour la prestation de l'Architecte de Parcours Post Jury ne peut être supérieur à 70 euros."
-      );
-    }
-
-    if (fundingRequest.postExamCost > 70) {
-      errors.push(
-        "Le coût horaire demandé pour la prestation de l'Architecte de Parcours Post Jury ne peut être supérieur à 70 euros."
-      );
+    if (isCandidateBacNonFragile) {
+      fundingRequest.mandatoryTrainingsHourCount = 0;
+      fundingRequest.mandatoryTrainingsCost = 0;
+      fundingRequest.basicSkillsHourCount = 0;
+      fundingRequest.basicSkillsCost = 0;
+      fundingRequest.certificateSkillsCost = 0;
     }
 
     if (
-      candidateBacNonFragile(candidate) &&
-      fundingRequest.individualHourCount > 15
+      isCandidateBacNonFragile &&
+      !isLower2(fundingRequest.diagnosisHourCount)
     ) {
       errors.push(
-        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique ne peut être supérieur à 15."
+        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 0 et 2h."
       );
-    } else if (fundingRequest.individualHourCount > 30) {
+    } else if (!isLower4(fundingRequest.diagnosisHourCount)) {
       errors.push(
-        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique ne peut être supérieur à 30."
+        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 0 et 4h."
+      );
+    }
+
+    if (!isLower70(fundingRequest.diagnosisCost)) {
+      errors.push(
+        "Le coût horaire demandé pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 0 et 70 euros."
+      );
+    }
+
+    if (!isLower70(fundingRequest.postExamCost)) {
+      errors.push(
+        "Le coût horaire demandé pour la prestation de l'Architecte de Parcours Post Jury doit être compris entre 0 et 70 euros."
+      );
+    }
+
+    if (!isLower70(fundingRequest.postExamCost)) {
+      errors.push(
+        "Le coût horaire demandé pour la prestation de l'Architecte de Parcours Post Jury doit être compris entre 0 et 70 euros."
       );
     }
 
     if (
-      candidateBacNonFragile(candidate) &&
-      fundingRequest.individualCost > 70
+      isCandidateBacNonFragile &&
+      !isLower15(fundingRequest.individualHourCount)
     ) {
       errors.push(
-        "Le coût horaire demandé pour la prestation d'Accompagnement méthodologique à la VAE (individuel) ne peut être supérieur à 70 euros."
+        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 0 et 15h."
+      );
+    } else if (!isLower30(fundingRequest.individualHourCount)) {
+      errors.push(
+        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 0 et 30h."
       );
     }
 
     if (
-      candidateBacNonFragile(candidate) &&
-      fundingRequest.collectiveHourCount > 15
+      isCandidateBacNonFragile &&
+      !isLower70(fundingRequest.individualHourCount)
     ) {
       errors.push(
-        "Le nombre d'heures demandées pour la prestation d'Accompagnement méthodologique à la VAE (collectif) ne peut être supérieur à 15."
-      );
-    } else if (fundingRequest.collectiveHourCount > 30) {
-      errors.push(
-        "Le nombre d'heures demandées pour la prestation d'Accompagnement méthodologique à la VAE (collectif) ne peut être supérieur à 30."
+        "Le coût horaire demandé pour la prestation d'Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 70 euros."
       );
     }
 
     if (
-      candidateBacNonFragile(candidate) &&
-      fundingRequest.collectiveCost > 70
+      isCandidateBacNonFragile &&
+      !isLower15(fundingRequest.collectiveHourCount)
     ) {
       errors.push(
-        "Le coût horaire demandé pour la prestation d'Accompagnement méthodologique à la VAE (individuel) ne peut être supérieur à 70 euros."
+        "Le nombre d'heures demandées pour la prestation d'Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 15h."
+      );
+    } else if (!isLower30(fundingRequest.collectiveHourCount)) {
+      errors.push(
+        "Le nombre d'heures demandées pour la prestation d'Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 30h."
+      );
+    }
+
+    if (isCandidateBacNonFragile && !isLower70(fundingRequest.collectiveCost)) {
+      errors.push(
+        "Le coût horaire demandé pour la prestation d'Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 70 euros."
       );
     }
 
     if (
-      candidateBacNonFragile(candidate) &&
-      fundingRequest.basicSkillsCost > 20
+      isCandidateBacNonFragile &&
+      !isLower20(fundingRequest.basicSkillsCost)
     ) {
       errors.push(
-        "Le coût horaire demandé pour la prestation Compléments formatifs Savoir de base ne peut être supérieur à 20 euros."
+        "Le coût horaire demandé pour la prestation Compléments formatifs Savoir de base doit être compris entre 0 et 20 euros."
       );
     }
 
     if (
-      candidateBacNonFragile(candidate) &&
-      fundingRequest.certificateSkillsCost > 20
+      isCandidateBacNonFragile &&
+      !isLower20(fundingRequest.certificateSkillsCost)
     ) {
       errors.push(
-        "Le coût horaire demandé pour la prestation Compléments formatifs Bloc de Compétences ne peut être supérieur à 20 euros."
+        "Le coût horaire demandé pour la prestation Compléments formatifs Bloc de Compétences doit être compris entre 0 et 20 euros."
       );
     }
 
     if (
-      fundingRequest.mandatoryTrainingsHourCount +
-        fundingRequest.basicSkillsHourCount +
-        fundingRequest.certificateSkillsHourCount >
-      78
+      !isLower78(
+        fundingRequest.mandatoryTrainingsHourCount +
+          fundingRequest.basicSkillsHourCount +
+          fundingRequest.certificateSkillsHourCount
+      )
     ) {
       errors.push(
-        "Le nombre d'heures total prescrit pour les actes formatifs ne peut être supérieur à 78."
+        "Le nombre d'heures total prescrit pour les actes formatifs doit être compris entre 0 et 78h."
       );
     }
 
-    if (fundingRequest.examHourCount > 2) {
+    if (!isLower2(fundingRequest.examHourCount)) {
       errors.push(
-        "Le nombre d'heures demandé pour la prestation Jury ne peut être supérieur à 2."
+        "Le nombre d'heures demandé pour la prestation Jury doit être compris entre 0 et 2h."
       );
     }
 
     if (
-      candidateBacNonFragile(candidate) &&
-      fundingRequest.certificateSkillsCost > 20
+      isCandidateBacNonFragile &&
+      !isLower20(fundingRequest.certificateSkillsCost)
     ) {
       errors.push(
-        "Le coût horaire demandé pour la prestation Jury ne peut être supérieur à 20 euros."
+        "Le coût horaire demandé pour la prestation Jury doit être compris entre 0 et 20 euros."
       );
     }
 

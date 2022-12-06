@@ -33,6 +33,7 @@ export interface TrainingForm {
 }
 
 export interface FundingRequest {
+  mandatoryTrainingsCost: number;
   diagnosisHourCount: number;
   diagnosisCost: number;
   postExamCost: number;
