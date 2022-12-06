@@ -2,6 +2,7 @@ module Page.Candidacies exposing
     ( Model
     , Msg
     , init
+    , resetSelected
     , update
     , updateTab
     , view
@@ -101,6 +102,11 @@ initCandidacy context candidacyId model =
     ( { model | selected = Loading }
     , Request.requestCandidacy context.endpoint context.token GotCandidacyResponse candidacyId
     )
+
+
+resetSelected : Model -> Model
+resetSelected model =
+    { model | selected = NotAsked }
 
 
 withCandidacies : RemoteData String (List CandidacySummary) -> State -> State
