@@ -1,11 +1,12 @@
 import { Either, EitherAsync, Left } from "purify-ts";
 
+import { Role } from "../types/account";
 import { Candidacy } from "../types/candidacy";
 import { FundingRequest, FundingRequestInformations } from "../types/candidate";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
 interface GetFundingRequestDeps {
-  hasRole: (role: string) => boolean;
+  hasRole: (role: Role) => boolean;
   getFundingRequestFromCandidacyId: (params: {
     candidacyId: string;
   }) => Promise<Either<string, FundingRequest | null>>;

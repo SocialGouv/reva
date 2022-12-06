@@ -1,10 +1,11 @@
 import { Candidate } from "@prisma/client";
 import { Either, EitherAsync, Left } from "purify-ts";
 
+import { Role } from "../types/account";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
 interface UpdateCandidate {
-  hasRole: (role: string) => boolean;
+  hasRole: (role: Role) => boolean;
   updateCandidate: (
     id: string,
     candidate: Candidate

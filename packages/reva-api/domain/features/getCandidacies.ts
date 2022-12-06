@@ -1,10 +1,11 @@
 import { Either, EitherAsync, Right } from "purify-ts";
 
+import { Role } from "../types/account";
 import { CandidacySummary } from "../types/candidacy";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
 interface GetCandidacySummariesDeps {
-  hasRole: (role: string) => boolean;
+  hasRole: (role: Role) => boolean;
   getCandidacySummaries: () => Promise<Either<string, CandidacySummary[]>>;
   getCandidacySummariesForUser: (
     IAMId: string

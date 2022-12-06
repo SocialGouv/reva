@@ -1,5 +1,6 @@
 import { Either, EitherAsync, Left, Right, number } from "purify-ts";
 
+import { Role } from "../types/account";
 import { Candidate, FundingRequest } from "../types/candidate";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
@@ -9,7 +10,7 @@ interface CreateFundingRequestDeps {
     fundingRequest: any;
   }) => Promise<Either<string, FundingRequest>>;
   getCandidateByCandidacyId: (id: string) => Promise<Either<string, Candidate>>;
-  hasRole: (role: string) => boolean;
+  hasRole: (role: Role) => boolean;
   existsCandidacyWithActiveStatuses: (params: {
     candidacyId: string;
     statuses: ["PARCOURS_CONFIRME", "ABANDON"];
