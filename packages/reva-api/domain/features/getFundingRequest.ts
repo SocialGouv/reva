@@ -19,7 +19,7 @@ export const getFundingRequest =
   async (params: {
     candidacyId: string;
   }): Promise<Either<FunctionalError, FundingRequestInformations>> => {
-    if (!deps.hasRole("admin") && !deps.hasRole("manage-candidacy")) {
+    if (!deps.hasRole("admin") && !deps.hasRole("manage_candidacy")) {
       return Left(
         new FunctionalError(
           FunctionalCodeError.NOT_AUTHORIZED,
