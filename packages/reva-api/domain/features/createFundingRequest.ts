@@ -85,10 +85,7 @@ const validateFundingRequest =
       );
     }
 
-    if (
-      isCandidateBacNonFragile &&
-      !isLower70(fundingRequest.individualHourCount)
-    ) {
+    if (isCandidateBacNonFragile && !isLower70(fundingRequest.individualCost)) {
       errors.push(
         "Le coût horaire demandé pour la prestation d'Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 70 euros."
       );
