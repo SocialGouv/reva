@@ -17,7 +17,7 @@ interface CreateFundingRequestDeps {
 }
 
 const candidateBacNonFragile = (candidate: any) =>
-  candidate.highestDegree.level >= 4 &&
+  candidate.highestDegree.level > 4 &&
   candidate.vulnerabilityIndicator.label === "Vide";
 
 const isBetween = (low: number, high: number) => (value: number) =>
