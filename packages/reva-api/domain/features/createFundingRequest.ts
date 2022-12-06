@@ -71,12 +71,6 @@ const validateFundingRequest =
       );
     }
 
-    if (!isLower70(fundingRequest.postExamCost)) {
-      errors.push(
-        "Le coût horaire demandé pour la prestation de l'Architecte de Parcours Post Jury doit être compris entre 0 et 70 euros."
-      );
-    }
-
     if (
       isCandidateBacNonFragile &&
       !isLower15(fundingRequest.individualHourCount)
