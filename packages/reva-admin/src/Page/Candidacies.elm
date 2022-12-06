@@ -451,8 +451,11 @@ fundingRequestForm maybeCertification =
             , ( keys.certificateSkillsCost, Form.Number "Coût horaire" )
             , ( "other", Form.Heading "Autres actions de formations complémentaires" )
             , ( keys.otherTraining, Form.Textarea "" )
-            , ( keys.otherTrainingHourCount, Form.Number "Nombre d'heures total actes formatifs" )
-            , ( "jury", Form.Heading "Prestation jury" )
+            , ( keys.otherTrainingHourCount
+              , Form.Info "Nombre d'heures total actes formatifs" <|
+                    String.fromInt (totalTrainingHourCount formData)
+              )
+            , ( "jury", Form.Section "Prestation jury" )
             , ( keys.examHourCount, Form.Number "Nombre d'heures" )
             , ( keys.examCost, Form.Number "Coût horaire" )
             , ( "total", Form.Section "Total" )
@@ -467,6 +470,23 @@ fundingRequestForm maybeCertification =
     , saveLabel = "Enregistrer"
     , title = "2 - Parcours personnalisé"
     }
+
+
+totalTrainingHourCount : Dict String String -> Int
+totalTrainingHourCount formData =
+    let
+        keys =
+            Data.Form.FundingRequest.keys
+
+        decode =
+            Data.Form.Helper.decode keys formData
+
+        int f =
+            decode.int f 0
+    in
+    int .mandatoryTrainingsHourCount
+        + int .basicSkillsHourCount
+        + int .certificateSkillsHourCount
 
 
 totalFundingRequestCost : Dict String String -> Int
