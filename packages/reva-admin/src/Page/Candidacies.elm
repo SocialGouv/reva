@@ -482,7 +482,10 @@ fundingRequestForm maybeCertification =
               )
             , ( "other", Form.Heading "Autres actions de formations complémentaires" )
             , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" )
-            , ( keys.otherTrainingHourCount, Form.Number "Nombre d'heures total actes formatifs" )
+            , ( keys.otherTrainingHourCount
+              , Form.Info "Nombre d'heures total actes formatifs" <|
+                    String.fromInt (totalTrainingHourCount formData)
+              )
             , ( "jury", Form.Heading "Prestation jury" )
             , ( keys.examHourCount, Form.Number "Nombre d'heures" )
             , ( keys.examCost, Form.Number "Coût horaire" )
@@ -512,6 +515,23 @@ hasAccessTrainingFunding referential candidate =
 
         _ ->
             False
+
+
+totalTrainingHourCount : Dict String String -> Int
+totalTrainingHourCount formData =
+    let
+        keys =
+            Data.Form.FundingRequest.keys
+
+        decode =
+            Data.Form.Helper.decode keys formData
+
+        int f =
+            decode.int f 0
+    in
+    int .mandatoryTrainingsHourCount
+        + int .basicSkillsHourCount
+        + int .certificateSkillsHourCount
 
 
 totalFundingRequestCost : Dict String String -> Int
