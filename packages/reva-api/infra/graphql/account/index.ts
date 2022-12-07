@@ -95,17 +95,16 @@ export const resolvers = {
           organismId?: string;
         };
       },
-      {
-        app,
-      }: {
+      context: {
+        reply: any;
+        auth: any;
         app: {
-          auth: any;
           keycloak: Keycloak.Keycloak;
           getKeycloakAdmin: () => KeycloakAdminClient;
         };
       }
     ) => {
-      if (!app.auth.hasRole("admin")) {
+      if (!context.auth.hasRole("admin")) {
         return Left(
           new FunctionalError(
             FunctionalCodeError.TECHNICAL_ERROR,
@@ -118,7 +117,7 @@ export const resolvers = {
           .extract();
       }
 
-      const keycloakAdmin = await app.getKeycloakAdmin();
+      const keycloakAdmin = await context.app.getKeycloakAdmin();
 
       const result = await createAccount({
         createAccountInIAM: createAccountInIAM(keycloakAdmin),
