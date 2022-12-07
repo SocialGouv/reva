@@ -86,7 +86,7 @@ title : String -> Html msg
 title s =
     h2
         [ class "text-4xl font-medium text-gray-900 leading-none"
-        , class "mt-6 mb-12"
+        , class "mt-6 mb-10"
         ]
         [ text s ]
 

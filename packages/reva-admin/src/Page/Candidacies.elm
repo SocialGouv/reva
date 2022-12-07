@@ -383,7 +383,8 @@ candidateInfoForm =
     in
     { elements =
         \_ ( _, referential ) ->
-            [ ( keys.lastname, Form.Input "Nom" )
+            [ ( "heading", Form.Heading "1 - Informations candidat" )
+            , ( keys.lastname, Form.Input "Nom" )
             , ( keys.firstname, Form.Input "Prénom" )
             , ( keys.firstname2, Form.Input "Prénom 2" )
             , ( keys.firstname3, Form.Input "Prénom 3" )
@@ -392,7 +393,7 @@ candidateInfoForm =
             , ( keys.vulnerabilityIndicator, Form.Select "Indicateur public fragile" (vulnerabilityIndicators referential) )
             ]
     , saveLabel = "Suivant"
-    , title = "1 - Informations candidat"
+    , title = "Demande de prise en charge"
     }
 
 
@@ -430,25 +431,26 @@ fundingRequestForm maybeCertification =
     in
     { elements =
         \formData ( candidacy, referential ) ->
-            [ ( "selected-certification", Form.Section "Certification choisie par le candidat" )
+            [ ( "heading", Form.Heading "2 - Parcours personnalisé" )
+            , ( "selected-certification", Form.Section "Certification choisie par le candidat" )
             , certificateField
             , ( "organism", Form.Section "Accompagnement architecte de parcours" )
-            , ( "diagnosis", Form.Heading "Entretien(s) de faisabilité" )
+            , ( "diagnosis", Form.Title "Entretien(s) de faisabilité" )
             , ( keys.diagnosisHourCount, Form.Number "Nombre d'heures" )
             , ( keys.diagnosisCost, Form.Number "Coût horaire" )
-            , ( "post-exam", Form.Heading "Entretien post jury" )
+            , ( "post-exam", Form.Title "Entretien post jury" )
             , ( keys.postExamHourCount, Form.Number "Nombre d'heures" )
             , ( keys.postExamCost, Form.Number "Coût horaire" )
             , ( "companion", Form.Section "Accompagnement méthodologique" )
             , ( keys.companionId, Form.Select "Accompagnateur choisi par le candidat" (availableCompanions candidacy) )
-            , ( "individual", Form.Heading "Accompagnement individuel" )
+            , ( "individual", Form.Title "Accompagnement individuel" )
             , ( keys.individualHourCount, Form.Number "Nombre d'heures" )
             , ( keys.individualCost, Form.Number "Coût horaire" )
-            , ( "collective", Form.Heading "Accompagnement collectif" )
+            , ( "collective", Form.Title "Accompagnement collectif" )
             , ( keys.collectiveHourCount, Form.Number "Nombre d'heures" )
             , ( keys.collectiveCost, Form.Number "Coût horaire" )
             , ( "training", Form.Section "Actes formatifs" )
-            , ( "mandatory", Form.Heading "Formations obligatoires" )
+            , ( "mandatory", Form.Title "Formations obligatoires" )
             , ( keys.mandatoryTrainingIds
               , Form.ReadOnlyElement <|
                     Form.CheckboxList "" <|
@@ -460,7 +462,7 @@ fundingRequestForm maybeCertification =
             , ( keys.mandatoryTrainingsCost
               , maybeReadOnlyTraining candidacy referential <| Form.Number "Coût horaire"
               )
-            , ( "basic-skills", Form.Heading "Formations savoirs de base" )
+            , ( "basic-skills", Form.Title "Formations savoirs de base" )
             , ( keys.basicSkillsIds
               , Form.ReadOnlyElement <|
                     Form.CheckboxList "" <|
@@ -472,7 +474,7 @@ fundingRequestForm maybeCertification =
             , ( keys.basicSkillsCost
               , maybeReadOnlyTraining candidacy referential <| Form.Number "Coût horaire"
               )
-            , ( "skills", Form.Heading "Bloc de compétences certifiant" )
+            , ( "skills", Form.Title "Bloc de compétences certifiant" )
             , ( keys.certificateSkills, Form.ReadOnlyElement <| Form.Textarea "" )
             , ( keys.certificateSkillsHourCount
               , maybeReadOnlyTraining candidacy referential <| Form.Number "Nombre d'heures"
@@ -480,13 +482,13 @@ fundingRequestForm maybeCertification =
             , ( keys.certificateSkillsCost
               , maybeReadOnlyTraining candidacy referential <| Form.Number "Coût horaire"
               )
-            , ( "other", Form.Heading "Autres actions de formations complémentaires" )
+            , ( "other", Form.Title "Autres actions de formations complémentaires" )
             , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" )
             , ( keys.otherTrainingHourCount
               , Form.Info "Nombre d'heures total actes formatifs" <|
                     String.fromInt (totalTrainingHourCount formData)
               )
-            , ( "jury", Form.Heading "Prestation jury" )
+            , ( "jury", Form.Title "Prestation jury" )
             , ( keys.examHourCount, Form.Number "Nombre d'heures" )
             , ( keys.examCost, Form.Number "Coût horaire" )
             , ( "total", Form.Section "Total" )
@@ -499,7 +501,7 @@ fundingRequestForm maybeCertification =
               )
             ]
     , saveLabel = "Enregistrer"
-    , title = "2 - Parcours personnalisé"
+    , title = "Demande de prise en charge"
     }
 
 
