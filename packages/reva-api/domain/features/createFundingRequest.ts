@@ -29,10 +29,11 @@ const isLower4 = isBetween(0, 4);
 const isLower15 = isBetween(0, 15);
 const isLower20 = isBetween(0, 20);
 const isLower30 = isBetween(0, 30);
+const isLower35 = isBetween(0, 35);
 const isLower70 = isBetween(0, 70);
 const isLower78 = isBetween(0, 78);
 
-const validateFundingRequest =
+export const validateFundingRequest =
   (candidate: Candidate) => (fundingRequest: FundingRequest) => {
     const errors = [];
 
@@ -77,11 +78,11 @@ const validateFundingRequest =
       !isLower15(fundingRequest.individualHourCount)
     ) {
       errors.push(
-        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 0 et 15h."
+        "Le nombre d'heures demandé pour la prestation Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 15h."
       );
     } else if (!isLower30(fundingRequest.individualHourCount)) {
       errors.push(
-        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 0 et 30h."
+        "Le nombre d'heures demandé pour la prestation Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 30h."
       );
     }
 
@@ -104,21 +105,15 @@ const validateFundingRequest =
       );
     }
 
-    if (isCandidateBacNonFragile && !isLower70(fundingRequest.collectiveCost)) {
+    if (!isLower35(fundingRequest.collectiveCost)) {
       errors.push(
-        "Le coût horaire demandé pour la prestation d'Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 70 euros."
+        "Le coût horaire demandé pour la prestation Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 35 euros."
       );
     }
 
     if (!isLower20(fundingRequest.basicSkillsCost)) {
       errors.push(
-        "Le coût horaire demandé pour la prestation Compléments formatifs Savoir de base doit être compris entre 0 et 20 euros."
-      );
-    }
-
-    if (!isLower20(fundingRequest.certificateSkillsCost)) {
-      errors.push(
-        "Le coût horaire demandé pour la prestation Compléments formatifs Bloc de Compétences doit être compris entre 0 et 20 euros."
+        "Le coût horaire demandé pour la prestation Compléments formatifs Savoirs de base doit être compris entre 0 et 20 euros."
       );
     }
 
@@ -139,10 +134,21 @@ const validateFundingRequest =
         "Le nombre d'heures demandé pour la prestation Jury doit être compris entre 0 et 2h."
       );
     }
+    if (!isLower20(fundingRequest.examCost)) {
+      errors.push(
+        "Le coût horaire demandé pour la prestation Jury doit être compris entre 0 et 20 euros."
+      );
+    }
+
+    if (!isLower20(fundingRequest.mandatoryTrainingsCost)) {
+      errors.push(
+        "Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 20 euros."
+      );
+    }
 
     if (!isLower20(fundingRequest.certificateSkillsCost)) {
       errors.push(
-        "Le coût horaire demandé pour la prestation Jury doit être compris entre 0 et 20 euros."
+        "Le coût horaire demandé pour la prestation Compléments formatifs Blocs de compétences doit être compris entre 0 et 20 euros."
       );
     }
 
@@ -155,6 +161,18 @@ const validateFundingRequest =
         )
       );
     } else {
+      fundingRequest.totalCost =
+        fundingRequest.basicSkillsCost * fundingRequest.basicSkillsHourCount +
+        fundingRequest.certificateSkillsCost *
+          fundingRequest.certificateSkillsHourCount +
+        fundingRequest.collectiveCost * fundingRequest.collectiveHourCount +
+        fundingRequest.diagnosisCost * fundingRequest.diagnosisHourCount +
+        fundingRequest.examCost * fundingRequest.examHourCount +
+        fundingRequest.individualCost * fundingRequest.individualHourCount +
+        fundingRequest.mandatoryTrainingsCost *
+          fundingRequest.mandatoryTrainingsHourCount +
+        fundingRequest.postExamCost * fundingRequest.postExamHourCount;
+
       return Right(fundingRequest);
     }
   };

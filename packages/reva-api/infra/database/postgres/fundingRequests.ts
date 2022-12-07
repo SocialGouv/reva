@@ -64,10 +64,6 @@ export const createFundingRequest = async (params: {
   };
 }) => {
   try {
-    const tot = true;
-    if (tot) {
-      throw new Error("ahahahah");
-    }
     const newFundingRequest = await prismaClient.fundingRequest.create({
       data: {
         candidacyId: params.candidacyId,
