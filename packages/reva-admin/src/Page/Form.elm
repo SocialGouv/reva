@@ -15,7 +15,7 @@ import Browser.Dom
 import Data.Context exposing (Context)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
-import Html.Styled as Html exposing (Html, button, dd, div, dt, fieldset, h2, h3, input, label, legend, li, option, p, select, span, text, textarea, ul)
+import Html.Styled as Html exposing (Html, button, dd, div, dt, fieldset, h2, h3, h4, h5, input, label, legend, li, option, p, select, span, text, textarea, ul)
 import Html.Styled.Attributes exposing (checked, class, classList, disabled, for, id, name, property, required, selected, type_, value)
 import Html.Styled.Events exposing (onCheck, onInput, onSubmit)
 import RemoteData exposing (RemoteData(..))
@@ -46,6 +46,7 @@ type Element
     | Select String (List ( String, String ))
     | SelectOther String String
     | Section String
+    | Title String
     | Textarea String
 
 
@@ -294,6 +295,14 @@ viewEditableElement formData ( elementId, element ) =
 
         Heading title ->
             [ h3
+                [ class "w-[620px] -mt-4 mb-8"
+                , class "text-2xl font-semibold uppercase text-blue-600"
+                ]
+                [ text title ]
+            ]
+
+        Title title ->
+            [ h5
                 [ class "w-[620px] mb-2"
                 , class "text-xl font-semibold text-slate-500"
                 ]
@@ -324,7 +333,7 @@ viewEditableElement formData ( elementId, element ) =
             [ div [ class "mb-8" ] <| viewReadOnlyElement formData ( elementId, readOnlyElement ) ]
 
         Section title ->
-            [ h2
+            [ h4
                 [ class "w-[620px] mt-2 mb-4"
                 , class "text-xl font-semibold uppercase text-slate-900"
                 ]
@@ -424,6 +433,14 @@ viewReadOnlyElement formData ( elementId, element ) =
 
         Heading title ->
             [ h3
+                [ class "w-[620px] -mt-4 mb-2"
+                , class "text-2xl font-semibold uppercase text-blue-600"
+                ]
+                [ text title ]
+            ]
+
+        Title title ->
+            [ h5
                 [ class "w-[620px] text-xl text-slate-800 mt-4" ]
                 [ text title ]
             ]
@@ -445,7 +462,7 @@ viewReadOnlyElement formData ( elementId, element ) =
             viewReadOnlyElement formData ( elementId, readOnlyElement )
 
         Section title ->
-            [ h2 [ class "text-2xl text-gray-900 mt-8 w-[620px]" ] [ text title ] ]
+            [ h4 [ class "text-2xl text-gray-900 mt-8 w-[620px]" ] [ text title ] ]
 
         Select label choices ->
             List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices
