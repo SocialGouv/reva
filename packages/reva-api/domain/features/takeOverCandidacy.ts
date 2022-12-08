@@ -1,10 +1,11 @@
 import { Either, EitherAsync, Left, Right } from "purify-ts";
 
+import { Role } from "../types/account";
 import { Candidacy } from "../types/candidacy";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
 interface TakeOverCandidacyDeps {
-  hasRole: (role: string) => boolean;
+  hasRole: (role: Role) => boolean;
   existsCandidacyWithActiveStatus: (params: {
     candidacyId: string;
     status: "VALIDATION";

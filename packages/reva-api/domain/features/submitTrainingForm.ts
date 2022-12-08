@@ -1,5 +1,6 @@
 import { Either, EitherAsync, Left, Right } from "purify-ts";
 
+import { Role } from "../types/account";
 import { Candidacy } from "../types/candidacy";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
@@ -17,7 +18,7 @@ interface SubmitTrainingDeps {
       validatedByCandidate: boolean;
     };
   }) => Promise<Either<string, Candidacy>>;
-  hasRole: (role: string) => boolean;
+  hasRole: (role: Role) => boolean;
   existsCandidacyWithActiveStatus: (params: {
     candidacyId: string;
     status: "PRISE_EN_CHARGE";

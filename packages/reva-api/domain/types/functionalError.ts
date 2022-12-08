@@ -41,8 +41,14 @@ export enum FunctionalCodeError {
 export class FunctionalError {
   code: FunctionalCodeError;
   message: string;
-  constructor(code: FunctionalCodeError, message: string) {
+  errors: string[];
+  constructor(
+    code: FunctionalCodeError,
+    message: string,
+    errors: string[] = []
+  ) {
     this.code = code;
     this.message = message;
+    this.errors = errors;
   }
 }

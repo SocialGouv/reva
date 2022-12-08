@@ -33,13 +33,29 @@ export interface TrainingForm {
 }
 
 export interface FundingRequest {
-  id: string;
-  candidacyId: string;
-  individualHourCount: number;
-  collectiveHourCount: number;
   basicSkills: any;
+  basicSkillsCost: number;
+  basicSkillsHourCount: number;
+  candidacyId: string;
+  certificateSkills: string;
+  certificateSkillsCost: number;
+  certificateSkillsHourCount: number;
+  collectiveCost: number;
+  collectiveHourCount: number;
+  diagnosisCost: number;
+  diagnosisHourCount: number;
+  examCost: number;
+  examHourCount: number;
+  id: string;
+  individualCost: number;
+  individualHourCount: number;
   mandatoryTrainings: any;
+  mandatoryTrainingsCost: number;
+  mandatoryTrainingsHourCount: number;
   otherTraining: string;
+  postExamCost: number;
+  postExamHourCount: number;
+  totalCost?: number;
 }
 
 export interface FundingRequestInformations {

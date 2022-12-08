@@ -50,4 +50,24 @@ export const graphqlConfiguration = {
     return { auth: request.auth };
   },
   graphiql: !!process.env.GRAPHIQL,
+  errorFormatter: (result: any) => {
+    const statusCode = result.errors[0].originalError.statusCode || 400;
+    let errors = result.errors;
+
+    if (result.errors[0].extensions?.errors?.length) {
+      errors =
+        result.errors[0].extensions.errors.map((error: string) => ({
+          message: error,
+          path: result.errors[0].path,
+          location: result.errors[0].location,
+        })) || [];
+    }
+
+    return {
+      statusCode,
+      response: {
+        errors,
+      },
+    };
+  },
 };
