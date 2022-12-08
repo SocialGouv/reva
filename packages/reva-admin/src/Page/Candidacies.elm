@@ -435,16 +435,26 @@ fundingRequestForm maybeCertification =
 
         withCheckedRequired : List { a | id : String } -> Dict String String -> Form.Element -> Form.Element
         withCheckedRequired ids dict formElement =
+            withRequired (List.length (checked ids dict) /= 0) formElement
+
+        hasCertificateSkills : Dict String String -> Bool
+        hasCertificateSkills dict =
+            Dict.get keys.certificateSkills dict
+                |> Maybe.map ((/=) "")
+                |> Maybe.withDefault False
+
+        withRequired : Bool -> Form.Element -> Form.Element
+        withRequired condition formElement =
             case formElement of
                 Form.ReadOnlyElement _ ->
                     formElement
 
                 _ ->
-                    if List.length (checked ids dict) == 0 then
-                        Form.ReadOnlyElement formElement
+                    if condition then
+                        formElement
 
                     else
-                        formElement
+                        Form.ReadOnlyElement formElement
     in
     { elements =
         \formData ( candidacy, referential ) ->
@@ -504,10 +514,12 @@ fundingRequestForm maybeCertification =
             , ( keys.certificateSkillsHourCount
               , Form.Number "Nombre d'heures"
                     |> maybeReadOnlyTraining candidacy referential
+                    |> withRequired (hasCertificateSkills formData)
               )
             , ( keys.certificateSkillsCost
               , Form.Number "Coût horaire"
                     |> maybeReadOnlyTraining candidacy referential
+                    |> withRequired (hasCertificateSkills formData)
               )
             , ( "other", Form.Title "Autres actions de formations complémentaires" )
             , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" )
