@@ -6,6 +6,7 @@ module Data.Form.Helper exposing
     , decode
     , generic
     , maybe
+    , selection
     , toCheckedList
     , toDict
     , toIdList
