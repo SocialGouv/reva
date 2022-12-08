@@ -41,6 +41,7 @@ const getOrganisms = async (params: {
     const candidacy = await prismaClient.candidacy.findFirst({
       where: {
         id: params.candidacyId,
+        certificationsAndRegions: { some: {} },
       },
       include: {
         certificationsAndRegions: {
