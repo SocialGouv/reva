@@ -428,6 +428,23 @@ fundingRequestForm maybeCertification =
 
             else
                 Form.ReadOnlyElement formElement
+
+        checked : List { a | id : String } -> Dict String String -> List String
+        checked ids dict =
+            Data.Form.Helper.selection dict ids
+
+        withCheckedRequired : List { a | id : String } -> Dict String String -> Form.Element -> Form.Element
+        withCheckedRequired ids dict formElement =
+            case formElement of
+                Form.ReadOnlyElement _ ->
+                    formElement
+
+                _ ->
+                    if List.length (checked ids dict) == 0 then
+                        Form.ReadOnlyElement formElement
+
+                    else
+                        formElement
     in
     { elements =
         \formData ( candidacy, referential ) ->
@@ -457,10 +474,14 @@ fundingRequestForm maybeCertification =
                         Data.Form.Helper.toIdList referential.mandatoryTrainings
               )
             , ( keys.mandatoryTrainingsHourCount
-              , maybeReadOnlyTraining candidacy referential <| Form.Number "Nombre d'heures"
+              , Form.Number "Nombre d'heures"
+                    |> maybeReadOnlyTraining candidacy referential
+                    |> withCheckedRequired referential.mandatoryTrainings formData
               )
             , ( keys.mandatoryTrainingsCost
-              , maybeReadOnlyTraining candidacy referential <| Form.Number "Coût horaire"
+              , Form.Number "Coût horaire"
+                    |> maybeReadOnlyTraining candidacy referential
+                    |> withCheckedRequired referential.mandatoryTrainings formData
               )
             , ( "basic-skills", Form.Title "Formations savoirs de base" )
             , ( keys.basicSkillsIds
@@ -469,18 +490,24 @@ fundingRequestForm maybeCertification =
                         Data.Form.Helper.toIdList referential.basicSkills
               )
             , ( keys.basicSkillsHourCount
-              , maybeReadOnlyTraining candidacy referential <| Form.Number "Nombre d'heures"
+              , Form.Number "Nombre d'heures"
+                    |> maybeReadOnlyTraining candidacy referential
+                    |> withCheckedRequired referential.basicSkills formData
               )
             , ( keys.basicSkillsCost
-              , maybeReadOnlyTraining candidacy referential <| Form.Number "Coût horaire"
+              , Form.Number "Coût horaire"
+                    |> maybeReadOnlyTraining candidacy referential
+                    |> withCheckedRequired referential.basicSkills formData
               )
             , ( "skills", Form.Title "Bloc de compétences certifiant" )
             , ( keys.certificateSkills, Form.ReadOnlyElement <| Form.Textarea "" )
             , ( keys.certificateSkillsHourCount
-              , maybeReadOnlyTraining candidacy referential <| Form.Number "Nombre d'heures"
+              , Form.Number "Nombre d'heures"
+                    |> maybeReadOnlyTraining candidacy referential
               )
             , ( keys.certificateSkillsCost
-              , maybeReadOnlyTraining candidacy referential <| Form.Number "Coût horaire"
+              , Form.Number "Coût horaire"
+                    |> maybeReadOnlyTraining candidacy referential
               )
             , ( "other", Form.Title "Autres actions de formations complémentaires" )
             , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" )

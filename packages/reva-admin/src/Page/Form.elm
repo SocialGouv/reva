@@ -15,13 +15,14 @@ import Browser.Dom
 import Data.Context exposing (Context)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
-import Html.Styled as Html exposing (Html, button, dd, div, dt, fieldset, h2, h3, h4, h5, input, label, legend, li, option, p, select, span, text, textarea, ul)
+import Html.Styled as Html exposing (Html, button, dd, div, dt, fieldset, input, label, legend, li, option, p, select, text, textarea, ul)
 import Html.Styled.Attributes exposing (checked, class, classList, disabled, for, id, name, property, required, selected, type_, value)
 import Html.Styled.Events exposing (onCheck, onInput, onSubmit)
 import RemoteData exposing (RemoteData(..))
 import String exposing (String)
 import Task
 import View
+import View.Heading
 import View.Helpers exposing (dataTest)
 
 
@@ -247,9 +248,6 @@ viewEditableElement formData ( elementId, element ) =
                 ]
                 []
 
-        labelStyle =
-            "text-lg font-medium text-slate-900 mb-2"
-
         withLegend s el =
             fieldset
                 []
@@ -296,20 +294,10 @@ viewEditableElement formData ( elementId, element ) =
             []
 
         Heading title ->
-            [ h3
-                [ class "w-[620px] -mt-4 mb-8"
-                , class "text-2xl font-semibold uppercase text-blue-600"
-                ]
-                [ text title ]
-            ]
+            [ View.Heading.h3 title ]
 
         Title title ->
-            [ h5
-                [ class "w-[620px] mb-2"
-                , class "text-xl font-semibold text-slate-500"
-                ]
-                [ text title ]
-            ]
+            [ View.Heading.h5 title ]
 
         Input label ->
             inputView "text" "w-full"
@@ -324,23 +312,14 @@ viewEditableElement formData ( elementId, element ) =
                 |> withLabel label
 
         Info label value ->
-            p
-                [ class "rounded bg-slate-100 text-slate-800 mb-8"
-                , class "px-8 py-6 text-lg"
-                ]
-                [ text value ]
+            info value
                 |> withLabel label
 
         ReadOnlyElement readOnlyElement ->
             [ div [ class "mb-8" ] <| viewReadOnlyElement formData ( elementId, readOnlyElement ) ]
 
         Section title ->
-            [ h4
-                [ class "w-[620px] mt-2 mb-4"
-                , class "text-xl font-semibold uppercase text-slate-900"
-                ]
-                [ text title ]
-            ]
+            [ View.Heading.h4 title ]
 
         Select label choices ->
             select
@@ -381,7 +360,7 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> Maybe.withDefault (defaultValue element)
 
         dataClass =
-            "bg-gray-100 py-2 px-4 min-h-[40px] text-lg font-medium leading-snug text-gray-800 mt-1 mb-2"
+            "min-h-[40px] bg-gray-100 px-6 py-5 text-lg font-medium leading-snug text-gray-500 mt-1 mb-4"
 
         dataView d =
             dd
@@ -390,7 +369,9 @@ viewReadOnlyElement formData ( elementId, element ) =
 
         termView s =
             dt
-                [ class "text-base text-gray-600 mt-2 w-[280px]" ]
+                [ class labelStyle
+                , class "w-[280px]"
+                ]
                 [ text s ]
 
         withTerm s el =
@@ -434,28 +415,20 @@ viewReadOnlyElement formData ( elementId, element ) =
             []
 
         Heading title ->
-            [ h3
-                [ class "w-[620px] -mt-4 mb-2"
-                , class "text-2xl font-semibold uppercase text-blue-600"
-                ]
-                [ text title ]
-            ]
+            [ View.Heading.h3 title ]
 
         Title title ->
-            [ h5
-                [ class "w-[620px] text-xl text-slate-800 mt-4" ]
-                [ text title ]
-            ]
+            [ View.Heading.h5 title ]
 
         Info label value ->
-            p [] [ text value ]
+            info value
                 |> withTerm label
 
         Input label ->
             defaultView label
 
         Number label ->
-            defaultView label
+            [ div [ class "w-40" ] <| defaultView label ]
 
         Textarea label ->
             [ div [ class "w-[620px]" ] <| defaultView label ]
@@ -464,7 +437,7 @@ viewReadOnlyElement formData ( elementId, element ) =
             viewReadOnlyElement formData ( elementId, readOnlyElement )
 
         Section title ->
-            [ h4 [ class "text-2xl text-gray-900 mt-8 w-[620px]" ] [ text title ] ]
+            [ View.Heading.h4 title ]
 
         Select label choices ->
             List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices
@@ -482,6 +455,20 @@ viewReadOnlyElement formData ( elementId, element ) =
 
                 Nothing ->
                     []
+
+
+info : String -> Html msg
+info value =
+    p
+        [ class "rounded bg-slate-100 text-slate-800 mb-8"
+        , class "px-8 py-6 text-lg"
+        ]
+        [ text value ]
+
+
+labelStyle : String
+labelStyle =
+    "text-lg font-medium text-slate-900 mb-2"
 
 
 labelView : String -> String -> String -> Html msg
