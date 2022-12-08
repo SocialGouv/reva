@@ -369,9 +369,7 @@ viewReadOnlyElement formData ( elementId, element ) =
 
         termView s =
             dt
-                [ class labelStyle
-                , class "w-[280px]"
-                ]
+                [ class labelStyle ]
                 [ text s ]
 
         withTerm s el =
@@ -428,7 +426,7 @@ viewReadOnlyElement formData ( elementId, element ) =
             defaultView label
 
         Number label ->
-            [ div [ class "w-40" ] <| defaultView label ]
+            div [ class "w-40" ] [ dataView dataOrDefault ] |> withTerm label
 
         Textarea label ->
             [ div [ class "w-[620px]" ] <| defaultView label ]
