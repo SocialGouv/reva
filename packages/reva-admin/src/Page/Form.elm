@@ -426,7 +426,7 @@ viewReadOnlyElement formData ( elementId, element ) =
             defaultView label
 
         Number label ->
-            defaultView label
+            [ div [ class "w-40" ] <| defaultView label ]
 
         Textarea label ->
             [ div [ class "w-[620px]" ] <| defaultView label ]
