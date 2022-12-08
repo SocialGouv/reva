@@ -1,9 +1,9 @@
-module Data.Form.FundingRequest exposing (FundingRequestInformations, FundingRequestInput, TrainingForm, fromDict, fundingRequest, fundingRequestInformations, keys)
+module Data.Form.FundingRequest exposing (FundingRequestInformations, FundingRequestInput, TrainingForm, fromDict, fundingRequest, fundingRequestInformations, keys, validate)
 
-import Admin.Scalar exposing (Uuid)
-import Data.Form.Helper as Helper exposing (uuidToCheckedList)
+import Data.Candidacy exposing (Candidacy)
+import Data.Form.Helper as Helper
 import Data.Form.Training exposing (Training)
-import Data.Referential exposing (BasicSkill, MandatoryTraining)
+import Data.Referential exposing (BasicSkill, MandatoryTraining, Referential)
 import Dict exposing (Dict)
 
 
@@ -97,6 +97,20 @@ keys =
     , examHourCount = "examHourCount"
     , examCost = "examCost"
     }
+
+
+validate : ( Candidacy, Referential ) -> Dict String String -> Result String ()
+validate _ dict =
+    let
+        decode =
+            Helper.decode keys dict
+    in
+    case decode.maybe.string .companionId of
+        Nothing ->
+            Err "Veuillez sélectionner un accompagnateur"
+
+        Just _ ->
+            Ok ()
 
 
 fromDict : List BasicSkill -> List MandatoryTraining -> Dict String String -> FundingRequestInput

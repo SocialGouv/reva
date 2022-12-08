@@ -856,6 +856,7 @@ updateTab context tab model =
                             Nav.pushUrl
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                        , onValidate = \_ _ -> Ok ()
                         , status = Form.Editable
                         }
                         model.form
@@ -873,6 +874,7 @@ updateTab context tab model =
                             Nav.pushUrl
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                        , onValidate = Data.Form.FundingRequest.validate
                         , status =
                             if Candidacy.isFundingRequestSent candidacy then
                                 Form.ReadOnly
@@ -895,6 +897,7 @@ updateTab context tab model =
                             Nav.pushUrl
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.TrainingSent candidacyId)))
+                        , onValidate = \_ _ -> Ok ()
                         , status =
                             if Candidacy.isTrainingSent candidacy then
                                 Form.ReadOnly
@@ -923,6 +926,7 @@ updateTab context tab model =
                             Nav.pushUrl
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.FundingRequest candidacyId)))
+                        , onValidate = \_ _ -> Ok ()
                         , status =
                             if Candidacy.isFundingRequestSent candidacy then
                                 Form.ReadOnly
