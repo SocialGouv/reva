@@ -77,6 +77,7 @@ type Status
 type alias Model referential =
     { onRedirect : Cmd (Msg referential)
     , onSave : String -> Token -> (RemoteData String () -> Msg referential) -> referential -> Dict String String -> Cmd (Msg referential)
+    , onValidate : referential -> Dict String String -> Result String ()
     , form : RemoteForm referential
     , status : Status
     }
@@ -89,6 +90,7 @@ init =
         model =
             { onRedirect = Cmd.none
             , onSave = \_ _ _ _ _ -> Cmd.none
+            , onValidate = \_ _ -> Ok ()
             , form = NotAsked
             , status = ReadOnly
             }
@@ -549,8 +551,15 @@ update context msg model =
         ( UserChangedElement _ _, _ ) ->
             noChange
 
-        ( UserClickedSave referential, Editing error form formData ) ->
-            ( { model | form = Saving form formData }, model.onSave context.endpoint context.token GotSaveResponse referential formData )
+        ( UserClickedSave referential, Editing _ form formData ) ->
+            case model.onValidate referential formData of
+                Err error ->
+                    ( { model | form = Editing (Just error) form formData }, Cmd.none )
+
+                Ok () ->
+                    ( { model | form = Saving form formData }
+                    , model.onSave context.endpoint context.token GotSaveResponse referential formData
+                    )
 
         ( UserClickedSave _, _ ) ->
             noChange
@@ -590,6 +599,7 @@ updateForm :
         , onLoad : String -> Token -> (RemoteData String (Dict String String) -> Msg referential) -> Cmd (Msg referential)
         , onRedirect : Cmd (Msg referential)
         , onSave : String -> Token -> (RemoteData String () -> Msg referential) -> referential -> Dict String String -> Cmd (Msg referential)
+        , onValidate : referential -> Dict String String -> Result String ()
         , status : Status
         }
     -> Model referential
@@ -599,6 +609,7 @@ updateForm context config model =
         | form = Loading config.form
         , onRedirect = config.onRedirect
         , onSave = config.onSave
+        , onValidate = config.onValidate
         , status = config.status
       }
     , config.onLoad context.endpoint context.token GotLoadResponse
