@@ -48,6 +48,21 @@ export const validateFundingRequest =
       fundingRequest.certificateSkillsHourCount = 0;
     }
 
+    if (!fundingRequest.mandatoryTrainings.length) {
+      fundingRequest.mandatoryTrainingsHourCount = 0;
+      fundingRequest.mandatoryTrainingsCost = 0;
+    }
+
+    if (!fundingRequest.basicSkills.length) {
+      fundingRequest.basicSkillsCost = 0;
+      fundingRequest.basicSkillsHourCount = 0;
+    }
+
+    if (!fundingRequest.certificateSkills?.trim().length) {
+      fundingRequest.certificateSkillsCost = 0;
+      fundingRequest.certificateSkillsHourCount = 0;
+    }
+
     if (
       isCandidateBacNonFragile &&
       !isLower2(fundingRequest.diagnosisHourCount)

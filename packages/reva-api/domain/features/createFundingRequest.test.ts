@@ -32,8 +32,17 @@ const defaultBacSupFragileCandidate: any = {
 const defaultValidFundingRequest: FundingRequest = {
   id: "1234567",
   candidacyId: "123",
-  basicSkills: [],
-  mandatoryTrainings: [],
+  basicSkills: [
+    {
+      id: "333",
+    },
+  ],
+  mandatoryTrainings: [
+    {
+      id: "444",
+    },
+  ],
+  certificateSkills: "RCNP12 RCNP34",
   otherTraining: "other training",
   basicSkillsCost: 20,
   basicSkillsHourCount: 1,
@@ -682,6 +691,159 @@ describe("funding request", () => {
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
       expect((result.extract() as FundingRequest).totalCost).toEqual(1945);
+    });
+  });
+
+  describe("rules on mandatoryTrainings", () => {
+    test("should set mandatory informations to 0 when mandatoryTrainings is empty", () => {
+      const fundingRequest = {
+        ...defaultValidFundingRequest,
+        mandatoryTrainings: [],
+        mandatoryTrainingsCost: 20,
+        mandatoryTrainingsHourCount: 2,
+      };
+      const result = validateCandidateBacNonFragile(fundingRequest);
+      expect(result.isRight()).toEqual(true);
+      expect(
+        (result.extract() as FundingRequest).mandatoryTrainingsCost
+      ).toEqual(0);
+      expect(
+        (result.extract() as FundingRequest).mandatoryTrainingsHourCount
+      ).toEqual(0);
+    });
+
+    test("should keep mandatory informations when mandatoryTrainings is not empty", () => {
+      const fundingRequest = {
+        ...defaultValidFundingRequest,
+        mandatoryTrainings: [{ id: 123 }],
+        mandatoryTrainingsCost: 20,
+        mandatoryTrainingsHourCount: 2,
+      };
+      const result = validateCandidateBacNonFragile(fundingRequest);
+      expect(result.isRight()).toEqual(true);
+      expect(
+        (result.extract() as FundingRequest).mandatoryTrainingsCost
+      ).toEqual(20);
+      expect(
+        (result.extract() as FundingRequest).mandatoryTrainingsHourCount
+      ).toEqual(2);
+    });
+  });
+
+  describe("rules on basicSkills", () => {
+    test("should set basicSkills informations to 0 when basicSkills is empty", () => {
+      const fundingRequest = {
+        ...defaultValidFundingRequest,
+        basicSkills: [],
+        basicSkillsCost: 20,
+        basicSkillsHourCount: 2,
+      };
+      const result = validateCandidateBacNonFragile(fundingRequest);
+      expect(result.isRight()).toEqual(true);
+      expect((result.extract() as FundingRequest).basicSkillsCost).toEqual(0);
+      expect((result.extract() as FundingRequest).basicSkillsHourCount).toEqual(
+        0
+      );
+    });
+
+    test("should keep mandatory informations when mandatoryTrainings is not empty", () => {
+      const fundingRequest = {
+        ...defaultValidFundingRequest,
+        basicSkills: [{ id: 123 }],
+        basicSkillsCost: 20,
+        basicSkillsHourCount: 2,
+      };
+      const result = validateCandidateBacNonFragile(fundingRequest);
+      expect(result.isRight()).toEqual(true);
+      expect((result.extract() as FundingRequest).basicSkillsCost).toEqual(20);
+      expect((result.extract() as FundingRequest).basicSkillsHourCount).toEqual(
+        2
+      );
+    });
+  });
+
+  describe("rules on basicSkills", () => {
+    test("should set basicSkills informations to 0 when basicSkills is empty", () => {
+      const fundingRequest = {
+        ...defaultValidFundingRequest,
+        basicSkills: [],
+        basicSkillsCost: 20,
+        basicSkillsHourCount: 2,
+      };
+      const result = validateCandidateBacNonFragile(fundingRequest);
+      expect(result.isRight()).toEqual(true);
+      expect((result.extract() as FundingRequest).basicSkillsCost).toEqual(0);
+      expect((result.extract() as FundingRequest).basicSkillsHourCount).toEqual(
+        0
+      );
+    });
+
+    test("should keep mandatory informations when mandatoryTrainings is not empty", () => {
+      const fundingRequest = {
+        ...defaultValidFundingRequest,
+        basicSkills: [{ id: 123 }],
+        basicSkillsCost: 20,
+        basicSkillsHourCount: 2,
+      };
+      const result = validateCandidateBacNonFragile(fundingRequest);
+      expect(result.isRight()).toEqual(true);
+      expect((result.extract() as FundingRequest).basicSkillsCost).toEqual(20);
+      expect((result.extract() as FundingRequest).basicSkillsHourCount).toEqual(
+        2
+      );
+    });
+  });
+
+  describe("rules on certificateSkills", () => {
+    test("should set certificateSkills informations to 0 when certificateSkills is empty", () => {
+      const fundingRequest = {
+        ...defaultValidFundingRequest,
+        certificateSkills: "",
+        certificateSkillsCost: 20,
+        certificateSkillsHourCount: 2,
+      };
+      const result = validateCandidateBacNonFragile(fundingRequest);
+      expect(result.isRight()).toEqual(true);
+      expect(
+        (result.extract() as FundingRequest).certificateSkillsCost
+      ).toEqual(0);
+      expect(
+        (result.extract() as FundingRequest).certificateSkillsHourCount
+      ).toEqual(0);
+    });
+
+    test("should set certificateSkills informations to 0 when certificateSkills is blank", () => {
+      const fundingRequest = {
+        ...defaultValidFundingRequest,
+        certificateSkills: "     ",
+        certificateSkillsCost: 20,
+        certificateSkillsHourCount: 2,
+      };
+      const result = validateCandidateBacNonFragile(fundingRequest);
+      expect(result.isRight()).toEqual(true);
+      expect(
+        (result.extract() as FundingRequest).certificateSkillsCost
+      ).toEqual(0);
+      expect(
+        (result.extract() as FundingRequest).certificateSkillsHourCount
+      ).toEqual(0);
+    });
+
+    test("should keep certificateSkills informations when certificateSkills is not empty", () => {
+      const fundingRequest = {
+        ...defaultValidFundingRequest,
+        certificateSkills: "RNCP123",
+        certificateSkillsCost: 20,
+        certificateSkillsHourCount: 2,
+      };
+      const result = validateCandidateBacNonFragile(fundingRequest);
+      expect(result.isRight()).toEqual(true);
+      expect(
+        (result.extract() as FundingRequest).certificateSkillsCost
+      ).toEqual(20);
+      expect(
+        (result.extract() as FundingRequest).certificateSkillsHourCount
+      ).toEqual(2);
     });
   });
 });

@@ -37,6 +37,7 @@ export interface FundingRequest {
   basicSkillsCost: number;
   basicSkillsHourCount: number;
   candidacyId: string;
+  certificateSkills: string;
   certificateSkillsCost: number;
   certificateSkillsHourCount: number;
   collectiveCost: number;
