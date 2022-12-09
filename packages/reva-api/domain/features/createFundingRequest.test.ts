@@ -215,12 +215,36 @@ describe("funding request", () => {
   });
 
   describe("rules on individualCost", () => {
-    test("should return an error when individualCost > 70", () => {
+    test("should return an error when individualCost > 70 for a candidate >bac and non fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
         individualCost: 71,
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
+      expect(result.isLeft()).toEqual(true);
+      expect((result.extract() as FunctionalError).errors).toContain(
+        "Le coût horaire demandé pour la prestation d'Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 70 euros."
+      );
+    });
+
+    test("should return an error when individualCost > 70 for a candidate <=bac and non fragile", () => {
+      const fundingRequest = {
+        ...defaultValidFundingRequest,
+        individualCost: 71,
+      };
+      const result = validateCandidateBacNonFragile(fundingRequest);
+      expect(result.isLeft()).toEqual(true);
+      expect((result.extract() as FunctionalError).errors).toContain(
+        "Le coût horaire demandé pour la prestation d'Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 70 euros."
+      );
+    });
+
+    test("should return an error when individualCost > 70 for a candidate >bac and fragile", () => {
+      const fundingRequest = {
+        ...defaultValidFundingRequest,
+        individualCost: 71,
+      };
+      const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
       expect((result.extract() as FunctionalError).errors).toContain(
         "Le coût horaire demandé pour la prestation d'Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 70 euros."
