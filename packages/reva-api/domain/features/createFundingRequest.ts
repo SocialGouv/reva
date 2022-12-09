@@ -7,6 +7,8 @@ import {
   FundingRequestBatch,
   FundingRequestBatchContent,
   FundingRequestInput,
+  Gender,
+  VulnerabilityIndicator,
 } from "../types/candidate";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
@@ -276,6 +278,36 @@ export const createFundingRequest =
           )
       );
 
+    const getIndPublicFragile = (v?: VulnerabilityIndicator | null) => {
+      const vulnerabilityLabel = v?.label || "Vide";
+      switch (vulnerabilityLabel) {
+        case "Demandeur d'emploi >12m":
+          return "1";
+        case "RQTH":
+          return "2";
+        case "Bénéficiaire de minima sociaux":
+          return "3";
+        case "Vide":
+          return "0";
+        default:
+          throw new Error("Unknown vulnerability label");
+      }
+    };
+
+    const getGenreCandidat = (gender?: Gender | null) => {
+      const nonNullGender = gender || "undisclosed";
+      switch (nonNullGender) {
+        case "undisclosed":
+          return "0";
+        case "man":
+          return "1";
+        case "woman":
+          return "2";
+        default:
+          throw new Error("Unknown gender");
+      }
+    };
+
     const createFundingRequestBatch = async (fr: FundingRequest) =>
       EitherAsync.fromPromise(() =>
         deps.getCandidateByCandidacyId(fr.candidacyId)
@@ -288,11 +320,13 @@ export const createFundingRequest =
             CertificationVisée: "?????",
             NomCandidat: candidate.lastname,
             PrenomCandidat1: candidate.firstname,
-            PrenomCandidat2: "?????",
-            PrenomCandidat3: "?????",
-            GenreCandidat: "0",
+            PrenomCandidat2: candidate.firstname2 || "",
+            PrenomCandidat3: candidate.firstname3 || "",
+            GenreCandidat: getGenreCandidat(candidate.gender),
             NiveauObtenuCandidat: "?????",
-            IndPublicFragile: "0",
+            IndPublicFragile: getIndPublicFragile(
+              candidate.vulnerabilityIndicator
+            ),
             NbHeureDemAPDiag: fr.diagnosisHourCount,
             CoutHeureDemAPDiag: fr.diagnosisCost,
             NbHeureDemAPPostJury: fr.postExamHourCount,

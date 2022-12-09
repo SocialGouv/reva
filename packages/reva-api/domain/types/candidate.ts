@@ -1,9 +1,19 @@
+export interface VulnerabilityIndicator {
+  id: string;
+  label: string;
+}
 export interface Candidate {
   firstname: string;
+  firstname2?: string | null;
+  firstname3?: string | null;
   lastname: string;
   email: string;
   phone: string;
+  vulnerabilityIndicator?: VulnerabilityIndicator | null;
+  gender?: Gender | null;
 }
+
+export type Gender = "undisclosed" | "man" | "woman";
 
 export type CANDIDATE_LOGIN_ACTION = "registration" | "login";
 
