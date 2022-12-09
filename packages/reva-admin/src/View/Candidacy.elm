@@ -1,7 +1,7 @@
 module View.Candidacy exposing (Tab(..), view, viewSentAt)
 
 import Admin.Enum.Duration exposing (Duration(..))
-import Api
+import Api.Token
 import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, CandidacyId)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department, Referential)
@@ -32,7 +32,7 @@ view :
         , archiveMsg : Candidacy -> msg
         , deleteMsg : Candidacy -> msg
         , referential : RemoteData String Referential
-        , token : Api.Token
+        , token : Api.Token.Token
     }
     -> List (Html msg)
 view config =
@@ -111,7 +111,7 @@ view config =
 
                 _ ->
                     text "..."
-            , if Api.hasAdminToken config.token then
+            , if Api.Token.isAdmin config.token then
                 viewOrganism config.candidacy.organism
 
               else

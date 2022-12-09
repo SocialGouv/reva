@@ -10,7 +10,7 @@ module Page.Form exposing
     , view
     )
 
-import Api exposing (Token)
+import Api.Token exposing (Token)
 import Browser.Dom
 import Data.Context exposing (Context)
 import Data.Form.Helper exposing (booleanToString)

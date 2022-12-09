@@ -1,6 +1,6 @@
 module Data.Context exposing (Context)
 
-import Api exposing (Token)
+import Api.Token exposing (Token)
 import Browser.Navigation
 
 
