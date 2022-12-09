@@ -1,9 +1,11 @@
-import { Either, EitherAsync, Left, Right, number } from "purify-ts";
+import { Either, EitherAsync, Left, Right } from "purify-ts";
 
 import { Role } from "../types/account";
 import {
   Candidate,
   FundingRequest,
+  FundingRequestBatch,
+  FundingRequestBatchContent,
   FundingRequestInput,
 } from "../types/candidate";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
@@ -14,6 +16,10 @@ interface CreateFundingRequestDeps {
     fundingRequest: any;
   }) => Promise<Either<string, FundingRequest>>;
   getCandidateByCandidacyId: (id: string) => Promise<Either<string, Candidate>>;
+  createFundingRequestBatch: (params: {
+    fundingRequestId: string;
+    content: object;
+  }) => Promise<Either<string, FundingRequestBatch>>;
   hasRole: (role: Role) => boolean;
   existsCandidacyWithActiveStatuses: (params: {
     candidacyId: string;
@@ -270,8 +276,61 @@ export const createFundingRequest =
           )
       );
 
+    const createFundingRequestBatch = async (fr: FundingRequest) =>
+      EitherAsync.fromPromise(() =>
+        deps.getCandidateByCandidacyId(fr.candidacyId)
+      )
+        .map((candidate) => {
+          const batchContent: FundingRequestBatchContent = {
+            NumAction: "?????",
+            NomAP: "?????",
+            SiretAP: "?????",
+            CertificationVisée: "?????",
+            NomCandidat: candidate.lastname,
+            PrenomCandidat1: candidate.firstname,
+            PrenomCandidat2: "?????",
+            PrenomCandidat3: "?????",
+            GenreCandidat: "0",
+            NiveauObtenuCandidat: "?????",
+            IndPublicFragile: "0",
+            NbHeureDemAPDiag: fr.diagnosisHourCount,
+            CoutHeureDemAPDiag: fr.diagnosisCost,
+            NbHeureDemAPPostJury: fr.postExamHourCount,
+            CoutHeureDemAPPostJury: fr.postExamCost,
+            AccompagnateurCandidat: fr.companionId,
+            NbHeureDemAccVAEInd: fr.individualHourCount,
+            CoutHeureDemAccVAEInd: fr.individualCost,
+            NbHeureDemAccVAEColl: fr.collectiveHourCount,
+            CoutHeureDemAccVAEColl: fr.collectiveCost,
+            ActeFormatifComplémentaire_FormationObligatoire: "?????",
+            NbHeureDemComplFormObligatoire: fr.mandatoryTrainingsHourCount,
+            CoutHeureDemComplFormObligatoire: fr.mandatoryTrainingsCost,
+            ActeFormatifComplémentaire_SavoirsDeBase: "?????",
+            NbHeureDemComplFormSavoirsDeBase: fr.basicSkillsHourCount,
+            CoutHeureDemComplFormSavoirsDeBase: fr.basicSkillsCost,
+            ActeFormatifComplémentaire_BlocDeCompetencesCertifiant: "?????",
+            NbHeureDemComplFormBlocDeCompetencesCertifiant:
+              fr.certificateSkillsHourCount,
+            CoutHeureDemComplFormBlocDeCompetencesCertifiant:
+              fr.certificateSkillsCost,
+            ActeFormatifComplémentaire_Autre: fr.otherTraining,
+            NbHeureDemTotalActesFormatifs: fr.otherTrainingHourCount,
+            NbHeureDemJury: fr.examHourCount,
+            CoutHeureJury: fr.examCost,
+            CoutTotalDemande: fr.totalCost || 0,
+          };
+          return batchContent;
+        })
+        .chain((batchContent) =>
+          deps.createFundingRequestBatch({
+            fundingRequestId: fr.id,
+            content: batchContent,
+          })
+        );
+
     return existsCandidacyInRequiredStatuses
       .chain(() => getCandidateByCandidacyId)
       .chain(checkRules)
-      .chain(() => createFundingRequest);
+      .chain(() => createFundingRequest)
+      .ifRight(createFundingRequestBatch);
   };

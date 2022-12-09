@@ -55,7 +55,9 @@ export interface FundingRequest {
   otherTraining: string;
   postExamCost: number;
   postExamHourCount: number;
+  otherTrainingHourCount: number;
   totalCost?: number;
+  companionId: string;
 }
 
 export interface FundingRequestInput extends FundingRequest {
@@ -66,4 +68,48 @@ export interface FundingRequestInput extends FundingRequest {
 export interface FundingRequestInformations {
   training: TrainingForm;
   fundingRequest: FundingRequest | null;
+}
+
+export interface FundingRequestBatch {
+  fundingRequestId: string;
+  sent: boolean;
+  batchFileName?: string;
+  content?: FundingRequestBatchContent;
+}
+
+export interface FundingRequestBatchContent {
+  NumAction: string;
+  NomAP: string;
+  SiretAP: string;
+  CertificationVisée: string;
+  NomCandidat: string;
+  PrenomCandidat1: string;
+  PrenomCandidat2: string;
+  PrenomCandidat3: string;
+  GenreCandidat: "0" | "1" | "2";
+  NiveauObtenuCandidat: string;
+  IndPublicFragile: "0" | "1" | "2" | "3";
+  NbHeureDemAPDiag: number;
+  CoutHeureDemAPDiag: number;
+  NbHeureDemAPPostJury: number;
+  CoutHeureDemAPPostJury: number;
+  AccompagnateurCandidat: string;
+  NbHeureDemAccVAEInd: number;
+  CoutHeureDemAccVAEInd: number;
+  NbHeureDemAccVAEColl: number;
+  CoutHeureDemAccVAEColl: number;
+  ActeFormatifComplémentaire_FormationObligatoire: string;
+  NbHeureDemComplFormObligatoire: number;
+  CoutHeureDemComplFormObligatoire: number;
+  ActeFormatifComplémentaire_SavoirsDeBase: string;
+  NbHeureDemComplFormSavoirsDeBase: number;
+  CoutHeureDemComplFormSavoirsDeBase: number;
+  ActeFormatifComplémentaire_BlocDeCompetencesCertifiant: string;
+  NbHeureDemComplFormBlocDeCompetencesCertifiant: number;
+  CoutHeureDemComplFormBlocDeCompetencesCertifiant: number;
+  ActeFormatifComplémentaire_Autre: string;
+  NbHeureDemTotalActesFormatifs: number;
+  NbHeureDemJury: number;
+  CoutHeureJury: number;
+  CoutTotalDemande: number;
 }

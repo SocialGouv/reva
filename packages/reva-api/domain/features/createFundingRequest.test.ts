@@ -62,6 +62,8 @@ const defaultValidFundingRequest: FundingRequestInput = {
   mandatoryTrainingsHourCount: 1,
   postExamCost: 70,
   postExamHourCount: 1,
+  otherTrainingHourCount: 0,
+  companionId: "1234",
 };
 
 const validateCandidateBacSupNonFragile = validateFundingRequest(

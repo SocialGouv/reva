@@ -4,7 +4,7 @@ import CryptoJS from "crypto-js";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
-import { Either, Just, Left, Maybe, Nothing, Right } from "purify-ts";
+import { Either, Left, Maybe, Right } from "purify-ts";
 
 import { askForLogin } from "../../../domain/features/candidateAskForLogin";
 import { askForRegistration } from "../../../domain/features/candidateAskForRegistration";
@@ -16,6 +16,7 @@ import { getFundingRequest } from "../../../domain/features/getFundingRequest";
 import { updateCandidate } from "../../../domain/features/updateCandidate";
 import * as candidaciesDb from "../../database/postgres/candidacies";
 import * as candidatesDb from "../../database/postgres/candidates";
+import * as fundingRequestBatchesDb from "../../database/postgres/fundingRequestBatches";
 import * as fundingRequestsDb from "../../database/postgres/fundingRequests";
 import { sendLoginEmail, sendRegistrationEmail } from "../../email";
 
@@ -318,6 +319,8 @@ export const resolvers = {
     ) => {
       const result = await createFundingRequest({
         createFundingRequest: fundingRequestsDb.createFundingRequest,
+        createFundingRequestBatch:
+          fundingRequestBatchesDb.createFundingRequestBatch,
         existsCandidacyWithActiveStatuses:
           candidaciesDb.existsCandidacyWithActiveStatuses,
         hasRole: context.auth.hasRole,

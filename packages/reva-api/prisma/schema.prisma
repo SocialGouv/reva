@@ -435,6 +435,7 @@ model FundingRequest {
   otherTrainingHourCount      Int                           @map("other_training_hour_count")
   examHourCount               Int                           @map("exam_hour_count")
   examCost                    Int                           @map("exam_cost")
+  fundingRequestBatch         FundingRequestBatch?
 
   @@map("funding_request")
 }
@@ -461,4 +462,15 @@ model TrainingOnFundingRequests {
 
   @@id([trainingId, fundingRequestId])
   @@map("training_funding_request")
+}
+
+model FundingRequestBatch {
+  id               String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  fundingRequest   FundingRequest @relation(fields: [fundingRequestId], references: [id])
+  fundingRequestId String         @unique @map("funding_request_id") @db.Uuid
+  sent             Boolean        @default(false)
+  batchFileName    String?        @map("batch_file_name")
+  content          Json
+
+  @@map("funding_request_batch")
 }
