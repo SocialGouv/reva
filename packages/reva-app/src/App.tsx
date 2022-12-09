@@ -56,7 +56,8 @@ function App() {
   const { authenticated, token, setTokens } = useKeycloakContext();
 
   useEffect(() => {
-    Crisp.configure(process.env.REACT_APP_CRISP_ID as string);
+    const crispId = process.env.REACT_APP_CRISP_ID;
+    crispId && Crisp.configure(crispId);
   }, []);
 
   const machine = useMemo(
