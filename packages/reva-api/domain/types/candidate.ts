@@ -58,6 +58,11 @@ export interface FundingRequest {
   totalCost?: number;
 }
 
+export interface FundingRequestInput extends FundingRequest {
+  mandatoryTrainingsIds: string[];
+  basicSkillsIds: string[];
+}
+
 export interface FundingRequestInformations {
   training: TrainingForm;
   fundingRequest: FundingRequest | null;

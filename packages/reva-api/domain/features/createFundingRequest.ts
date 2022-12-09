@@ -1,7 +1,11 @@
 import { Either, EitherAsync, Left, Right, number } from "purify-ts";
 
 import { Role } from "../types/account";
-import { Candidate, FundingRequest } from "../types/candidate";
+import {
+  Candidate,
+  FundingRequest,
+  FundingRequestInput,
+} from "../types/candidate";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
 interface CreateFundingRequestDeps {
@@ -34,7 +38,7 @@ const isLower70 = isBetween(0, 70);
 const isLower78 = isBetween(0, 78);
 
 export const validateFundingRequest =
-  (candidate: Candidate) => (fundingRequest: FundingRequest) => {
+  (candidate: Candidate) => (fundingRequest: FundingRequestInput) => {
     const errors = [];
 
     const isCandidateBacNonFragile = candidateBacNonFragile(candidate);
@@ -48,12 +52,12 @@ export const validateFundingRequest =
       fundingRequest.certificateSkillsHourCount = 0;
     }
 
-    if (!fundingRequest.mandatoryTrainings.length) {
+    if (!fundingRequest.mandatoryTrainingsIds.length) {
       fundingRequest.mandatoryTrainingsHourCount = 0;
       fundingRequest.mandatoryTrainingsCost = 0;
     }
 
-    if (!fundingRequest.basicSkills.length) {
+    if (!fundingRequest.basicSkillsIds.length) {
       fundingRequest.basicSkillsCost = 0;
       fundingRequest.basicSkillsHourCount = 0;
     }

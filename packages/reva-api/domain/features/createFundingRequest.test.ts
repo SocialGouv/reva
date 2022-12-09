@@ -1,4 +1,4 @@
-import { FundingRequest } from "../types/candidate";
+import { FundingRequest, FundingRequestInput } from "../types/candidate";
 import { FunctionalError } from "../types/functionalError";
 import { validateFundingRequest } from "./createFundingRequest";
 
@@ -29,7 +29,7 @@ const defaultBacSupFragileCandidate: any = {
   },
 };
 
-const defaultValidFundingRequest: FundingRequest = {
+const defaultValidFundingRequest: FundingRequestInput = {
   id: "1234567",
   candidacyId: "123",
   basicSkills: [
@@ -37,11 +37,13 @@ const defaultValidFundingRequest: FundingRequest = {
       id: "333",
     },
   ],
+  basicSkillsIds: ["333"],
   mandatoryTrainings: [
     {
       id: "444",
     },
   ],
+  mandatoryTrainingsIds: ["444"],
   certificateSkills: "RCNP12 RCNP34",
   otherTraining: "other training",
   basicSkillsCost: 20,
@@ -699,6 +701,7 @@ describe("funding request", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
         mandatoryTrainings: [],
+        mandatoryTrainingsIds: [],
         mandatoryTrainingsCost: 20,
         mandatoryTrainingsHourCount: 2,
       };
@@ -715,7 +718,8 @@ describe("funding request", () => {
     test("should keep mandatory informations when mandatoryTrainings is not empty", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        mandatoryTrainings: [{ id: 123 }],
+        mandatoryTrainings: [{ id: "123" }],
+        mandatoryTrainingsIds: ["123"],
         mandatoryTrainingsCost: 20,
         mandatoryTrainingsHourCount: 2,
       };
@@ -735,6 +739,7 @@ describe("funding request", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
         basicSkills: [],
+        basicSkillsIds: [],
         basicSkillsCost: 20,
         basicSkillsHourCount: 2,
       };
@@ -746,42 +751,11 @@ describe("funding request", () => {
       );
     });
 
-    test("should keep mandatory informations when mandatoryTrainings is not empty", () => {
+    test("should keep basicSkills informations when basicSkills is not empty", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        basicSkills: [{ id: 123 }],
-        basicSkillsCost: 20,
-        basicSkillsHourCount: 2,
-      };
-      const result = validateCandidateBacNonFragile(fundingRequest);
-      expect(result.isRight()).toEqual(true);
-      expect((result.extract() as FundingRequest).basicSkillsCost).toEqual(20);
-      expect((result.extract() as FundingRequest).basicSkillsHourCount).toEqual(
-        2
-      );
-    });
-  });
-
-  describe("rules on basicSkills", () => {
-    test("should set basicSkills informations to 0 when basicSkills is empty", () => {
-      const fundingRequest = {
-        ...defaultValidFundingRequest,
-        basicSkills: [],
-        basicSkillsCost: 20,
-        basicSkillsHourCount: 2,
-      };
-      const result = validateCandidateBacNonFragile(fundingRequest);
-      expect(result.isRight()).toEqual(true);
-      expect((result.extract() as FundingRequest).basicSkillsCost).toEqual(0);
-      expect((result.extract() as FundingRequest).basicSkillsHourCount).toEqual(
-        0
-      );
-    });
-
-    test("should keep mandatory informations when mandatoryTrainings is not empty", () => {
-      const fundingRequest = {
-        ...defaultValidFundingRequest,
-        basicSkills: [{ id: 123 }],
+        basicSkills: [{ id: "123" }],
+        basicSkillsIds: ["123"],
         basicSkillsCost: 20,
         basicSkillsHourCount: 2,
       };
