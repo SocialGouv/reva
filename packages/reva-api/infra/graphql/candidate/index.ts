@@ -323,6 +323,7 @@ export const resolvers = {
           fundingRequestBatchesDb.createFundingRequestBatch,
         existsCandidacyWithActiveStatuses:
           candidaciesDb.existsCandidacyWithActiveStatuses,
+        getCandidacyFromId: candidaciesDb.getCandidacyFromId,
         hasRole: context.auth.hasRole,
         getCandidateByCandidacyId: candidatesDb.getCandidateByCandidacyId,
       })(params);

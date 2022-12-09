@@ -1,6 +1,7 @@
 import { Either, EitherAsync, Left, Right } from "purify-ts";
 
 import { Role } from "../types/account";
+import { Candidacy } from "../types/candidacy";
 import {
   Candidate,
   FundingRequest,
@@ -18,6 +19,7 @@ interface CreateFundingRequestDeps {
     fundingRequest: any;
   }) => Promise<Either<string, FundingRequest>>;
   getCandidateByCandidacyId: (id: string) => Promise<Either<string, Candidate>>;
+  getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
   createFundingRequestBatch: (params: {
     fundingRequestId: string;
     content: object;
@@ -312,12 +314,18 @@ export const createFundingRequest =
       EitherAsync.fromPromise(() =>
         deps.getCandidateByCandidacyId(fr.candidacyId)
       )
-        .map((candidate) => {
+        .map((candidate) =>
+          EitherAsync.fromPromise(() =>
+            deps.getCandidacyFromId(fr.candidacyId)
+          ).map((candidacy) => ({ candidate, candidacy }))
+        )
+        .join()
+        .map(({ candidate, candidacy }) => {
           const batchContent: FundingRequestBatchContent = {
             NumAction: "?????",
-            NomAP: "?????",
-            SiretAP: "?????",
-            CertificationVisée: "?????",
+            NomAP: candidacy?.organism?.label || "",
+            SiretAP: candidacy?.organism?.siret || "",
+            CertificationVisée: candidacy.certification.rncpId,
             NomCandidat: candidate.lastname,
             PrenomCandidat1: candidate.firstname,
             PrenomCandidat2: candidate.firstname2 || "",
