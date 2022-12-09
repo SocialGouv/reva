@@ -1,0 +1,16 @@
+version: "3.1"
+
+services:
+  ftpspreva:
+    image: bfren/ftps
+    container_name: ftps_reva
+    restart: always
+    environment:
+      FTPS_USER: reva
+      FTPS_PASS: password
+      FTPS_EXTERNAL_IP: 172.17.0.1
+    volumes:
+      - ./data:/files:rw,z
+    ports:
+      - "2121:21"
+      - "18700-18710:18700-18710"

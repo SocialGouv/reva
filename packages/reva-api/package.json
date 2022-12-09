@@ -72,6 +72,7 @@
     "fast-csv": "^4.3.6",
     "fastify": "^4.0.3",
     "fastify-env": "2.1.1",
+    "ftp-ts": "^1.1.0",
     "graphql-scalars": "^1.17.0",
     "jsonwebtoken": "^8.5.1",
     "keycloak-connect": "^18.0.1",
@@ -79,8 +80,7 @@
     "mjml": "^4.13.0",
     "pino": "^8.7.0",
     "purify-ts": "^1.2.0",
-    "sib-api-v3-sdk": "^8.4.2",
-    "ssh2-sftp-client": "^9.0.4"
+    "sib-api-v3-sdk": "^8.4.2"
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.3",

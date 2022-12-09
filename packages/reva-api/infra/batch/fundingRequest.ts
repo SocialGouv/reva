@@ -1,50 +1,48 @@
 import { Transform } from "stream";
 
-// import { Feature } from "@prisma/client";
+import { Feature } from "@prisma/client";
 import * as csv from "fast-csv";
+import Client from "ftp-ts";
 import pino from "pino";
-import Client from "ssh2-sftp-client";
 
-// import { prismaClient } from "../database/postgres/client";
+import { prismaClient } from "../database/postgres/client";
 
 const BATCH_KEY = "batch.demande-financement";
 const logger = pino();
 
-// const isFeatureActive = (feature: Feature | null) =>
-//   feature && feature.isActive;
+const isFeatureActive = (feature: Feature | null) =>
+  feature && feature.isActive;
 
 export const batchFundingRequest = async () => {
   try {
     // Check if the feature is active
-    // const fundingRequestFeature = await prismaClient.feature.findFirst({
-    //   where: {
-    //     key: BATCH_KEY,
-    //   },
-    // });
+    const fundingRequestFeature = await prismaClient.feature.findFirst({
+      where: {
+        key: BATCH_KEY,
+      },
+    });
 
-    // if (!isFeatureActive(fundingRequestFeature)) {
-    //   logger.info(`Le batch ${BATCH_KEY} est inactif.`);
-    //   return;
-    // }
+    if (!isFeatureActive(fundingRequestFeature)) {
+      logger.info(`Le batch ${BATCH_KEY} est inactif.`);
+      return;
+    }
 
     // Start the execution
-    // const batchExecution = await prismaClient.batchExecution.create({
-    //   data: {
-    //     key: BATCH_KEY,
-    //     startedAt: new Date(Date.now()),
-    //   },
-    // });
-
-    // TODO: Do some stuff here
+    const batchExecution = await prismaClient.batchExecution.create({
+      data: {
+        key: BATCH_KEY,
+        startedAt: new Date(Date.now()),
+      },
+    });
 
     // Create Stream, Writable AND Readable
-    logger.info(`SFTP ${process.env.SFTP_HOST}:${process.env.SFTP_PORT}`);
-    const sftp = new Client();
-    await sftp.connect({
-      host: process.env.SFTP_HOST || "127.0.0.1",
-      port: parseInt(process.env.SFTP_PORT || "2222", 10),
-      username: process.env.SFTP_USERNAME || "demo",
-      password: process.env.SFTP_PASSWORD || "demo",
+    logger.info(`FTPS ${process.env.FTPS_HOST}:${process.env.FTPS_PORT}`);
+    const connexion = await Client.connect({
+      host: process.env.FTPS_HOST || "127.0.0.1",
+      port: parseInt(process.env.FTPS_PORT || "2121", 10),
+      user: process.env.FTPS_USERNAME || "reva",
+      password: process.env.FTPS_PASSWORD || "password",
+      secure: true,
       debug: console.log,
     });
 
@@ -100,27 +98,25 @@ export const batchFundingRequest = async () => {
 
     const fileDate = new Date().toLocaleDateString("sv").split("-").join("");
 
-    await sftp.put(inoutStream, `Imports/DAF-${fileDate}.test.csv`);
+    await connexion.put(inoutStream, `import/DAF-${fileDate}.test.csv`);
     logger.info("open put stream done");
-    await sftp.end();
-
-    // const ws = sftp.createWriteStream("/home/demo/sftp/Imports/test.csv");
+    await connexion.end();
 
     // Finish the execution
-    // await prismaClient.batchExecution.update({
-    //   where: {
-    //     id: batchExecution.id,
-    //   },
-    //   data: {
-    //     finishedAt: new Date(Date.now()),
-    //   },
-    // });
+    await prismaClient.batchExecution.update({
+      where: {
+        id: batchExecution.id,
+      },
+      data: {
+        finishedAt: new Date(Date.now()),
+      },
+    });
   } catch (e: any) {
-    logger.error(e.message);
     logger.error(
       `Une erreur est survenue lors de l'exécution du batch ${BATCH_KEY}`,
       e
     );
+    logger.error(e.message);
   } finally {
     logger.info(`Batch ${BATCH_KEY} terminé`);
   }
