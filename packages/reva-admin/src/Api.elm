@@ -38,6 +38,7 @@ import Admin.Object.TrainingForm
 import Admin.Object.VulnerabilityIndicator
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
+import Api.Auth as Auth
 import Api.Token exposing (Token)
 import Data.Candidacy exposing (CandidacyId)
 import Data.Candidate
@@ -49,98 +50,10 @@ import Data.Form.Training
 import Data.Organism exposing (Organism)
 import Data.Referential
 import Dict exposing (Dict)
-import Graphql.Http
 import Graphql.Operation
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
-import Json.Decode
 import RemoteData exposing (RemoteData(..))
-
-
-toRemote : Result (List String) a -> RemoteData String a
-toRemote r =
-    Result.mapError (String.join "\n") r
-        |> RemoteData.fromResult
-
-
-makeAuthRequest token msg request =
-    request
-        |> Graphql.Http.withHeader "authorization" ("Bearer " ++ Api.Token.toString token)
-        |> Graphql.Http.send (Result.mapError graphqlHttpErrorToString >> toRemote >> msg)
-
-
-makeQuery :
-    String
-    -> Token
-    -> (RemoteData String decodesTo -> msg)
-    -> SelectionSet decodesTo Graphql.Operation.RootQuery
-    -> Cmd msg
-makeQuery endpointGraphql token msg query =
-    query
-        |> Graphql.Http.queryRequest endpointGraphql
-        |> makeAuthRequest token msg
-
-
-makeMutation :
-    String
-    -> Token
-    -> (RemoteData String decodesTo -> msg)
-    -> SelectionSet decodesTo Graphql.Operation.RootMutation
-    -> Cmd msg
-makeMutation endpointGraphql token msg query =
-    query
-        |> Graphql.Http.mutationRequest endpointGraphql
-        |> makeAuthRequest token msg
-
-
-simpleGraphqlHttpErrorToString : Graphql.Http.HttpError -> String
-simpleGraphqlHttpErrorToString httpError =
-    let
-        messageDecoder =
-            Json.Decode.field "message" Json.Decode.string
-
-        errorsDecoder =
-            Json.Decode.field "errors" (Json.Decode.list messageDecoder)
-
-        defaultErrorMsg code =
-            String.concat
-                [ "Une erreur inattendue s'est produite (code "
-                , code
-                , ")"
-                ]
-    in
-    case httpError of
-        Graphql.Http.BadUrl url ->
-            defaultErrorMsg "021"
-
-        Graphql.Http.Timeout ->
-            defaultErrorMsg "042"
-
-        Graphql.Http.NetworkError ->
-            "Veuillez vérifier votre connexion internet puis réessayer."
-
-        Graphql.Http.BadStatus metadata body ->
-            case Json.Decode.decodeString errorsDecoder body of
-                Ok message ->
-                    String.join " " message
-
-                Err _ ->
-                    defaultErrorMsg <| String.fromInt metadata.statusCode
-
-        Graphql.Http.BadPayload _ ->
-            defaultErrorMsg "084"
-
-
-graphqlHttpErrorToString : Graphql.Http.Error a -> List String
-graphqlHttpErrorToString error =
-    case error of
-        Graphql.Http.HttpError httpError ->
-            [ simpleGraphqlHttpErrorToString httpError ]
-
-        Graphql.Http.GraphqlError _ errors ->
-            List.map
-                (\err -> err.message)
-                errors
 
 
 
@@ -284,7 +197,7 @@ requestCandidacies :
     -> Cmd msg
 requestCandidacies endpointGraphql token toMsg =
     Query.getCandidacies candidacySummarySelection
-        |> makeQuery endpointGraphql token toMsg
+        |> Auth.makeQuery endpointGraphql token toMsg
 
 
 requestCandidacy :
@@ -299,7 +212,7 @@ requestCandidacy endpointGraphql token toMsg candidacyId =
             Data.Candidacy.candidacyIdToString candidacyId
     in
     candidacySelection id
-        |> makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
+        |> Auth.makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
 
 
 deleteCandidacy :
@@ -311,7 +224,7 @@ deleteCandidacy :
 deleteCandidacy endpointGraphql token toMsg candidacyId =
     Mutation.CandidacyDeleteByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
         |> Mutation.candidacy_deleteById
-        |> makeMutation endpointGraphql token toMsg
+        |> Auth.makeMutation endpointGraphql token toMsg
 
 
 archiveCandidacy :
@@ -326,7 +239,7 @@ archiveCandidacy endpointGraphql token toMsg candidacyId =
             Data.Candidacy.candidacyIdToString candidacyId
     in
     Mutation.candidacy_archiveById (Mutation.CandidacyArchiveByIdRequiredArguments (Id id)) (SelectionSet.succeed ())
-        |> makeMutation endpointGraphql token toMsg
+        |> Auth.makeMutation endpointGraphql token toMsg
 
 
 takeOverCandidacy :
@@ -341,7 +254,7 @@ takeOverCandidacy endpointGraphql token toMsg candidacyId =
             Data.Candidacy.candidacyIdToString candidacyId
     in
     Mutation.candidacy_takeOver (Mutation.CandidacyTakeOverRequiredArguments (Id id)) (SelectionSet.succeed ())
-        |> makeMutation endpointGraphql token toMsg
+        |> Auth.makeMutation endpointGraphql token toMsg
 
 
 
@@ -458,7 +371,7 @@ requestCandidateByEmail email endpointGraphql token toMsg =
             Query.CandidateGetCandidateByEmailRequiredArguments email
     in
     Query.candidate_getCandidateByEmail candidateRequiredArgs candidateFormSelection
-        |> makeQuery endpointGraphql token (nothingToError "Ce candidat est introuvable" >> toMsg)
+        |> Auth.makeQuery endpointGraphql token (nothingToError "Ce candidat est introuvable" >> toMsg)
 
 
 updateCandidate :
@@ -491,7 +404,7 @@ updateCandidate endpointGraphql token toMsg _ dict =
                 candidateInput
     in
     Mutation.candidate_updateCandidate candidateRequiredArg SelectionSet.empty
-        |> makeMutation endpointGraphql token toMsg
+        |> Auth.makeMutation endpointGraphql token toMsg
 
 
 requestFundingInformations :
@@ -506,7 +419,7 @@ requestFundingInformations candidacyId endpointGraphql token toMsg =
             Query.CandidateGetFundingRequestRequiredArguments (Uuid <| Data.Candidacy.candidacyIdToString candidacyId)
     in
     Query.candidate_getFundingRequest fundingInfoRequiredArg fundingRequestInformationsSelection
-        |> makeQuery endpointGraphql token toMsg
+        |> Auth.makeQuery endpointGraphql token toMsg
 
 
 createFundingRequest :
@@ -553,7 +466,7 @@ createFundingRequest candidacyId endpointGraphql token toMsg ( _, referential ) 
                 fundingInput
     in
     Mutation.candidate_createFundingRequest fundingRequiredArg SelectionSet.empty
-        |> makeMutation endpointGraphql token toMsg
+        |> Auth.makeMutation endpointGraphql token toMsg
 
 
 
@@ -582,7 +495,7 @@ requestAppointment candidacyId endpointGraphql token toMsg =
             Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
     in
     Query.getCandidacyById appointmentRequiredArs appointmentSelection
-        |> makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
+        |> Auth.makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
 
 
 updateAppointment :
@@ -616,7 +529,7 @@ updateAppointment candidacyId endpointGraphql token toMsg _ dict =
                 appointmentInformation
     in
     Mutation.candidacy_updateAppointmentInformations appointmentRequiredArs SelectionSet.empty
-        |> makeMutation endpointGraphql token toMsg
+        |> Auth.makeMutation endpointGraphql token toMsg
 
 
 maybeToOptional : Maybe a -> OptionalArgument a
@@ -671,7 +584,7 @@ requestTrainings candidacyId endpointGraphql token toMsg =
             Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
     in
     Query.getCandidacyById trainingRequiredArs trainingSelection
-        |> makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
+        |> Auth.makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
 
 
 updateTrainings :
@@ -704,7 +617,7 @@ updateTrainings candidacyId endpointGraphql token toMsg ( _, referential ) dict 
                 trainingInformation
     in
     Mutation.candidacy_submitTrainingForm trainingRequiredArgs SelectionSet.empty
-        |> makeMutation endpointGraphql token toMsg
+        |> Auth.makeMutation endpointGraphql token toMsg
 
 
 
@@ -769,7 +682,7 @@ requestReferential :
     -> (RemoteData String Data.Referential.Referential -> msg)
     -> Cmd msg
 requestReferential endpointGraphql token toMsg =
-    makeQuery endpointGraphql token toMsg referentialSelection
+    Auth.makeQuery endpointGraphql token toMsg referentialSelection
 
 
 
