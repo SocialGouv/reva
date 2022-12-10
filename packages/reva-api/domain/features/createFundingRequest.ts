@@ -1,7 +1,7 @@
 import { Either, EitherAsync, Left, Right } from "purify-ts";
 
 import { Role } from "../types/account";
-import { Candidacy } from "../types/candidacy";
+import { Candidacy, Degree } from "../types/candidacy";
 import {
   Candidate,
   FundingRequest,
@@ -280,6 +280,48 @@ export const createFundingRequest =
           )
       );
 
+    const createFundingRequestBatch = async (fundingRequest: FundingRequest) =>
+      EitherAsync.fromPromise(() =>
+        deps.getCandidateByCandidacyId(fundingRequest.candidacyId)
+      )
+        .map((candidate) =>
+          EitherAsync.fromPromise(() =>
+            deps.getCandidacyFromId(fundingRequest.candidacyId)
+          ).map((candidacy) => ({ fundingRequest, candidate, candidacy }))
+        )
+        .join()
+        .map(mapFundingRequestBatch)
+        .chain((batchContent) =>
+          deps.createFundingRequestBatch({
+            fundingRequestId: fundingRequest.id,
+            content: batchContent,
+          })
+        )
+        .mapLeft(
+          () =>
+            new FunctionalError(
+              FunctionalCodeError.FUNDING_REQUEST_NOT_POSSIBLE,
+              `Erreur lors de la creation du bach de la demande de financement`
+            )
+        );
+
+    return existsCandidacyInRequiredStatuses
+      .chain(() => getCandidateByCandidacyId)
+      .chain(checkRules)
+      .chain(() => createFundingRequest)
+      .ifRight(createFundingRequestBatch);
+  };
+
+const mapFundingRequestBatch = ({
+  fundingRequest,
+  candidate,
+  candidacy,
+}: {
+  fundingRequest: FundingRequest;
+  candidate: Candidate;
+  candidacy: Candidacy;
+}) => {
+  {
     const getIndPublicFragile = (v?: VulnerabilityIndicator | null) => {
       const vulnerabilityLabel = v?.label || "Vide";
       switch (vulnerabilityLabel) {
@@ -310,69 +352,107 @@ export const createFundingRequest =
       }
     };
 
-    const createFundingRequestBatch = async (fr: FundingRequest) =>
-      EitherAsync.fromPromise(() =>
-        deps.getCandidateByCandidacyId(fr.candidacyId)
-      )
-        .map((candidate) =>
-          EitherAsync.fromPromise(() =>
-            deps.getCandidacyFromId(fr.candidacyId)
-          ).map((candidacy) => ({ candidate, candidacy }))
-        )
-        .join()
-        .map(({ candidate, candidacy }) => {
-          const batchContent: FundingRequestBatchContent = {
-            NumAction: "?????",
-            NomAP: candidacy?.organism?.label || "",
-            SiretAP: candidacy?.organism?.siret || "",
-            CertificationVisée: candidacy.certification.rncpId,
-            NomCandidat: candidate.lastname,
-            PrenomCandidat1: candidate.firstname,
-            PrenomCandidat2: candidate.firstname2 || "",
-            PrenomCandidat3: candidate.firstname3 || "",
-            GenreCandidat: getGenreCandidat(candidate.gender),
-            NiveauObtenuCandidat: "?????",
-            IndPublicFragile: getIndPublicFragile(
-              candidate.vulnerabilityIndicator
-            ),
-            NbHeureDemAPDiag: fr.diagnosisHourCount,
-            CoutHeureDemAPDiag: fr.diagnosisCost,
-            NbHeureDemAPPostJury: fr.postExamHourCount,
-            CoutHeureDemAPPostJury: fr.postExamCost,
-            AccompagnateurCandidat: fr.companionId,
-            NbHeureDemAccVAEInd: fr.individualHourCount,
-            CoutHeureDemAccVAEInd: fr.individualCost,
-            NbHeureDemAccVAEColl: fr.collectiveHourCount,
-            CoutHeureDemAccVAEColl: fr.collectiveCost,
-            ActeFormatifComplémentaire_FormationObligatoire: "?????",
-            NbHeureDemComplFormObligatoire: fr.mandatoryTrainingsHourCount,
-            CoutHeureDemComplFormObligatoire: fr.mandatoryTrainingsCost,
-            ActeFormatifComplémentaire_SavoirsDeBase: "?????",
-            NbHeureDemComplFormSavoirsDeBase: fr.basicSkillsHourCount,
-            CoutHeureDemComplFormSavoirsDeBase: fr.basicSkillsCost,
-            ActeFormatifComplémentaire_BlocDeCompetencesCertifiant: "?????",
-            NbHeureDemComplFormBlocDeCompetencesCertifiant:
-              fr.certificateSkillsHourCount,
-            CoutHeureDemComplFormBlocDeCompetencesCertifiant:
-              fr.certificateSkillsCost,
-            ActeFormatifComplémentaire_Autre: fr.otherTraining,
-            NbHeureDemTotalActesFormatifs: fr.otherTrainingHourCount,
-            NbHeureDemJury: fr.examHourCount,
-            CoutHeureJury: fr.examCost,
-            CoutTotalDemande: fr.totalCost || 0,
-          };
-          return batchContent;
-        })
-        .chain((batchContent) =>
-          deps.createFundingRequestBatch({
-            fundingRequestId: fr.id,
-            content: batchContent,
-          })
-        );
+    const getNiveauObtenuCandidat = (degree?: Degree | null) => {
+      const code = degree?.code || "N1_SANS";
 
-    return existsCandidacyInRequiredStatuses
-      .chain(() => getCandidateByCandidacyId)
-      .chain(checkRules)
-      .chain(() => createFundingRequest)
-      .ifRight(createFundingRequestBatch);
-  };
+      switch (code) {
+        case "N1_SANS":
+          return "1";
+        case "N2_CLEA":
+          return "2";
+        case "N3_CAP_BEP":
+          return "3";
+        case "N4_BAC":
+          return "4";
+        case "N5_BAC_2":
+          return "5";
+        case "N6_BAC_3_4":
+          return "6";
+        case "N7_BAC_5":
+          return "7";
+        case "N8_BAC_8":
+          return "8";
+        default:
+          throw new Error("Unknown degree code");
+      }
+    };
+
+    const getActeFormatifComplémentaire_SavoirsDeBase = (
+      basicSkill: { label: string }[]
+    ) =>
+      basicSkill.map((b) => {
+        switch (b.label) {
+          case "Communication en français":
+            return "0";
+          case "Utilisation des règles de base de calcul et du raisonnement mathématique":
+            return "1";
+          case "Usage et communication numérique":
+            return "2";
+        }
+      });
+
+    const getActeFormatifComplémentaire_FormationObligatoire = (
+      mandatoryTrainings: { label: string }[]
+    ) =>
+      mandatoryTrainings.map((m) => {
+        switch (m.label) {
+          case "Attestation de Formation aux Gestes et Soins d’Urgence (AFGSU)":
+            return "0";
+          case "Equipier de Première Intervention":
+            return "1";
+          case "Sauveteur Secouriste du Travail (SST)":
+            return "2";
+          case "Systèmes d’attaches":
+            return "3";
+        }
+      });
+
+    const batchContent: FundingRequestBatchContent = {
+      NumAction: "?????",
+      NomAP: candidacy?.organism?.label || "",
+      SiretAP: candidacy?.organism?.siret || "",
+      CertificationVisée: candidacy.certification.rncpId,
+      NomCandidat: candidate.lastname,
+      PrenomCandidat1: candidate.firstname,
+      PrenomCandidat2: candidate.firstname2 || "",
+      PrenomCandidat3: candidate.firstname3 || "",
+      GenreCandidat: getGenreCandidat(candidate.gender),
+      NiveauObtenuCandidat: getNiveauObtenuCandidat(candidate.highestDegree),
+      IndPublicFragile: getIndPublicFragile(candidate.vulnerabilityIndicator),
+      NbHeureDemAPDiag: fundingRequest.diagnosisHourCount,
+      CoutHeureDemAPDiag: fundingRequest.diagnosisCost,
+      NbHeureDemAPPostJury: fundingRequest.postExamHourCount,
+      CoutHeureDemAPPostJury: fundingRequest.postExamCost,
+      AccompagnateurCandidat: fundingRequest.companionId, // needs review
+      NbHeureDemAccVAEInd: fundingRequest.individualHourCount,
+      CoutHeureDemAccVAEInd: fundingRequest.individualCost,
+      NbHeureDemAccVAEColl: fundingRequest.collectiveHourCount,
+      CoutHeureDemAccVAEColl: fundingRequest.collectiveCost,
+      ActeFormatifComplémentaire_FormationObligatoire:
+        getActeFormatifComplémentaire_FormationObligatoire(
+          fundingRequest.mandatoryTrainings
+        ).join(","), // needs review
+      NbHeureDemComplFormObligatoire:
+        fundingRequest.mandatoryTrainingsHourCount,
+      CoutHeureDemComplFormObligatoire: fundingRequest.mandatoryTrainingsCost,
+      ActeFormatifComplémentaire_SavoirsDeBase:
+        getActeFormatifComplémentaire_SavoirsDeBase(
+          fundingRequest.basicSkills
+        ).join(","), // needs review
+      NbHeureDemComplFormSavoirsDeBase: fundingRequest.basicSkillsHourCount,
+      CoutHeureDemComplFormSavoirsDeBase: fundingRequest.basicSkillsCost,
+      ActeFormatifComplémentaire_BlocDeCompetencesCertifiant:
+        fundingRequest.certificateSkills, // needs review
+      NbHeureDemComplFormBlocDeCompetencesCertifiant:
+        fundingRequest.certificateSkillsHourCount,
+      CoutHeureDemComplFormBlocDeCompetencesCertifiant:
+        fundingRequest.certificateSkillsCost,
+      ActeFormatifComplémentaire_Autre: fundingRequest.otherTraining,
+      NbHeureDemTotalActesFormatifs: fundingRequest.otherTrainingHourCount,
+      NbHeureDemJury: fundingRequest.examHourCount,
+      CoutHeureJury: fundingRequest.examCost,
+      CoutTotalDemande: fundingRequest.totalCost || 0,
+    };
+    return batchContent;
+  }
+};

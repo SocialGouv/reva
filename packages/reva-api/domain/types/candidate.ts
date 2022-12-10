@@ -1,3 +1,5 @@
+import { Degree } from "./candidacy";
+
 export interface VulnerabilityIndicator {
   id: string;
   label: string;
@@ -11,6 +13,7 @@ export interface Candidate {
   phone: string;
   vulnerabilityIndicator?: VulnerabilityIndicator | null;
   gender?: Gender | null;
+  highestDegree?: Degree | null;
 }
 
 export type Gender = "undisclosed" | "man" | "woman";
