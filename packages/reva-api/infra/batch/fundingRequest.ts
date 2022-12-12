@@ -111,7 +111,7 @@ export const batchFundingRequest = async () => {
         finishedAt: new Date(Date.now()),
       },
     });
-  } catch (e: any) {
+  } catch (e: Error) {
     logger.error(
       `Une erreur est survenue lors de l'exécution du batch ${BATCH_KEY}`,
       e

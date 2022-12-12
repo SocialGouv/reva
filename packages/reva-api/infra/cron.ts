@@ -11,7 +11,7 @@ dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 const logger = pino();
 
 const fundingRequest = new cron.CronJob({
-  cronTime: "*/1 * * * *",
+  cronTime: process.env.BATCH_FUNDING_REQUEST_CRONTIME || "*/5 * * * *",
   onTick: async function () {
     const now = new Date();
     logger.info("Batch fundingRequest ticked");
