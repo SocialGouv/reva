@@ -845,7 +845,7 @@ update context msg model =
             ( { model | selected = NotAsked }, Cmd.none )
 
         GotCandidacyTakingOverResponse _ ->
-            ( { model | selected = NotAsked }, Cmd.none )
+            ( model, Cmd.none )
 
         GotFormMsg formMsg ->
             let
@@ -884,7 +884,7 @@ updateTab context tab model =
             initCandidacy context candidacyId newModel
                 |> withTakeOver context candidacyId
 
-        ( View.Candidacy.Meetings candidacyId, _ ) ->
+        ( View.Candidacy.Meetings candidacyId, Success _ ) ->
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
@@ -977,6 +977,9 @@ updateTab context tab model =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
+        ( View.Candidacy.Meetings candidacyId, NotAsked ) ->
+            initCandidacy context candidacyId newModel
+
         ( View.Candidacy.Training candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
 
@@ -985,6 +988,9 @@ updateTab context tab model =
 
         ( View.Candidacy.FundingRequest candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
+
+        ( View.Candidacy.Meetings _, _ ) ->
+            ( newModel, Cmd.none )
 
         ( View.Candidacy.Training _, _ ) ->
             ( newModel, Cmd.none )
