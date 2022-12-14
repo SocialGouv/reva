@@ -1,4 +1,4 @@
-import { Transform } from "stream";
+import { Readable, Transform } from "stream";
 
 import { Feature } from "@prisma/client";
 import * as csv from "fast-csv";
@@ -12,6 +12,28 @@ const logger = pino();
 
 const isFeatureActive = (feature: Feature | null) =>
   feature && feature.isActive;
+
+const generateFundingRequestBatchCsvStream = async () => {
+  const RECORDS_PER_FETCH = 10;
+  let skip = 0;
+  const fundingRequestBatchesWaitingToBeSentStream = new Readable({
+    objectMode: true,
+    async read() {
+      const results = await prismaClient.fundingRequestBatch.findMany({
+        where: { sent: false },
+        skip,
+        take: RECORDS_PER_FETCH,
+      });
+
+      results.map((frb) => this.push(frb.content));
+      skip += RECORDS_PER_FETCH;
+    },
+  });
+
+  return fundingRequestBatchesWaitingToBeSentStream.pipe(
+    csv.format({ headers: true })
+  );
+};
 
 export const batchFundingRequest = async () => {
   try {
