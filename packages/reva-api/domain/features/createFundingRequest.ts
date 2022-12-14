@@ -259,19 +259,23 @@ export const createFundingRequest =
         validateFundingRequest(candidate)(params.fundingRequest)
       );
 
-    const createFundingRequest = (fundingRequest: any) =>
+    const createFundingRequest = (inputFundingRequest: any) =>
       EitherAsync.fromPromise(() =>
-        deps.createFundingRequest({ ...params, fundingRequest })
+        deps.createFundingRequest({
+          ...params,
+          fundingRequest: inputFundingRequest,
+        })
       )
-        .map((fundingRequest: FundingRequest) => {
+        .map((savedFundingRequest: FundingRequest) => {
           return {
-            ...fundingRequest,
-            basicSkills: fundingRequest?.basicSkills.map(
+            ...savedFundingRequest,
+            basicSkills: savedFundingRequest?.basicSkills.map(
               (b: any) => b.basicSkill
             ),
-            mandatoryTrainings: fundingRequest?.mandatoryTrainings.map(
+            mandatoryTrainings: savedFundingRequest?.mandatoryTrainings.map(
               (t: any) => t.training
             ),
+            totalCost: inputFundingRequest?.totalCost,
           };
         })
         .mapLeft(
