@@ -281,43 +281,61 @@ export const createFundingRequest =
           )
       );
 
-    const createFundingRequestBatch = async (fundingRequest: FundingRequest) =>
-      EitherAsync.fromPromise(() =>
-        deps.getCandidateByCandidacyId(fundingRequest.candidacyId)
-      )
-        .map((candidate) =>
-          EitherAsync.fromPromise(() =>
-            deps.getCandidacyFromId(fundingRequest.candidacyId)
-          ).map((candidacy) => ({ fundingRequest, candidate, candidacy }))
-        )
-        .join()
-        .map((args) =>
-          EitherAsync.fromPromise(() => deps.getNextNumAction()).map(
-            (numAction) => ({ ...args, numAction })
-          )
-        )
-        .join()
-        .map(mapFundingRequestBatch)
-        .chain((batchContent) =>
-          deps.createFundingRequestBatch({
-            fundingRequestId: fundingRequest.id,
-            content: batchContent,
-          })
-        )
-        .mapLeft(
-          () =>
-            new FunctionalError(
-              FunctionalCodeError.FUNDING_REQUEST_NOT_POSSIBLE,
-              `Erreur lors de la creation du bach de la demande de financement`
-            )
-        );
-
     return existsCandidacyInRequiredStatuses
       .chain(() => getCandidateByCandidacyId)
       .chain(checkRules)
       .chain(() => createFundingRequest)
-      .ifRight(createFundingRequestBatch);
+      .ifRight(
+        createFundingRequestBatch({
+          createFundingRequestBatch: deps.createFundingRequestBatch,
+          getCandidacyFromId: deps.getCandidacyFromId,
+          getCandidateByCandidacyId: deps.getCandidateByCandidacyId,
+          getNextNumAction: deps.getNextNumAction,
+        })
+      );
   };
+
+interface CreateFundingRequestBatchDeps {
+  getCandidateByCandidacyId: (id: string) => Promise<Either<string, Candidate>>;
+  getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
+  createFundingRequestBatch: (params: {
+    fundingRequestId: string;
+    content: object;
+  }) => Promise<Either<string, FundingRequestBatch>>;
+  getNextNumAction: () => Promise<Either<string, string>>;
+}
+
+export const createFundingRequestBatch =
+  (deps: CreateFundingRequestBatchDeps) => (fundingRequest: FundingRequest) =>
+    EitherAsync.fromPromise(() =>
+      deps.getCandidateByCandidacyId(fundingRequest.candidacyId)
+    )
+      .map((candidate) =>
+        EitherAsync.fromPromise(() =>
+          deps.getCandidacyFromId(fundingRequest.candidacyId)
+        ).map((candidacy) => ({ fundingRequest, candidate, candidacy }))
+      )
+      .join()
+      .map((args) =>
+        EitherAsync.fromPromise(() => deps.getNextNumAction()).map(
+          (numAction) => ({ ...args, numAction })
+        )
+      )
+      .join()
+      .map(mapFundingRequestBatch)
+      .chain((batchContent) =>
+        deps.createFundingRequestBatch({
+          fundingRequestId: fundingRequest.id,
+          content: batchContent,
+        })
+      )
+      .mapLeft(
+        () =>
+          new FunctionalError(
+            FunctionalCodeError.FUNDING_REQUEST_NOT_POSSIBLE,
+            `Erreur lors de la creation du bach de la demande de financement`
+          )
+      );
 
 const mapFundingRequestBatch = ({
   fundingRequest,
