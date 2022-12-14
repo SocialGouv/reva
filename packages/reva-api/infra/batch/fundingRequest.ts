@@ -1,4 +1,4 @@
-import { Readable, Transform } from "stream";
+import { Readable } from "stream";
 
 import { Feature } from "@prisma/client";
 import * as csv from "fast-csv";
@@ -14,14 +14,16 @@ const logger = pino();
 const isFeatureActive = (feature: Feature | null) =>
   feature && feature.isActive;
 
-const generateFundingRequestBatchCsvStream = async () => {
+const generateFundingRequestBatchCsvStream = async (
+  itemsToSendIds: string[]
+) => {
   const RECORDS_PER_FETCH = 10;
   let skip = 0;
   const fundingRequestBatchesWaitingToBeSentStream = new Readable({
     objectMode: true,
     async read() {
       const results = await prismaClient.fundingRequestBatch.findMany({
-        where: { sent: false },
+        where: { id: { in: itemsToSendIds } },
         skip,
         take: RECORDS_PER_FETCH,
       });
@@ -50,13 +52,6 @@ export const batchFundingRequest = async () => {
       return;
     }
 
-    const inoutStream = new Transform({
-      transform(chunk, encoding, callback) {
-        this.push(chunk);
-        callback();
-      },
-    });
-
     // Start the execution
     const batchExecution = await prismaClient.batchExecution.create({
       data: {
@@ -65,54 +60,28 @@ export const batchFundingRequest = async () => {
       },
     });
 
-    // TODO Generate CSV Stream
-    const csvStream = csv.format({ headers: true });
+    const itemsToSendIds = (
+      await prismaClient.fundingRequestBatch.findMany({
+        where: { sent: false },
+        select: { id: true },
+      })
+    ).map((v) => v.id);
 
-    csvStream.pipe(inoutStream).on("end", () => logger.info("csv done"));
-
-    csvStream.write({
-      NumAction: "1",
-      NomAP: "",
-      SiretAP: "",
-      CertificationVisée: "",
-      NomCandidat: "",
-      PrenomCandidat1: "",
-      PrenomCandidat2: "",
-      PrenomCandidat3: "",
-      GenreCandidat: "",
-      NiveauObtenuCandidat: "",
-      IndPublicFragile: "",
-      NbHeureDemAPDiag: "",
-      CoutHeureDemAPDiag: "",
-      NbHeureDemAPPostJury: "",
-      CoutHeureDemAPPostJury: "",
-      AccompagnateurCandidat: "",
-      NbHeureDemAccVAEInd: "",
-      CoutHeureDemAccVAEInd: "",
-      NbHeureDemAccVAEColl: "",
-      CoutHeureDemAccVAEColl: "",
-      ActeFormatifComplémentaire_FormationObligatoire: "",
-      NbHeureDemComplFormObligatoire: "",
-      CoutHeureDemComplFormObligatoire: "",
-      ActeFormatifComplémentaire_SavoirsDeBase: "",
-      NbHeureDemComplFormSavoirsDeBase: "",
-      CoutHeureDemComplFormSavoirsDeBase: "",
-      ActeFormatifComplémentaire_BlocDeCompetencesCertifiant: "",
-      NbHeureDemComplFormBlocDeCompetencesCertifiant: "",
-      CoutHeureDemComplFormBlocDeCompetencesCertifiant: "",
-      ActeFormatifComplémentaire_Autre: "",
-      NombreHeureTotalActesFormatifs: "",
-      NbHeureDemJury: "",
-      CoutHeureJury: "",
-      CoutTotalDemande: "1",
-    });
-    csvStream.end();
-
-    // End Generate CSV Stream
+    const batchReadableStream = await generateFundingRequestBatchCsvStream(
+      itemsToSendIds
+    );
 
     const fileDate = new Date().toLocaleDateString("sv").split("-").join("");
     const fileName = `DAF-${fileDate}.csv`;
-    sendFundingRequestsStream({ fileName, readableStream: inoutStream });
+    sendFundingRequestsStream({
+      fileName,
+      readableStream: batchReadableStream,
+    });
+
+    await prismaClient.fundingRequestBatch.updateMany({
+      where: { id: { in: itemsToSendIds } },
+      data: { sent: true },
+    });
 
     // Finish the execution
     await prismaClient.batchExecution.update({
@@ -123,7 +92,7 @@ export const batchFundingRequest = async () => {
         finishedAt: new Date(Date.now()),
       },
     });
-  } catch (e: Error) {
+  } catch (e: any) {
     logger.error(
       `Une erreur est survenue lors de l'exécution du batch ${BATCH_KEY}`,
       e
