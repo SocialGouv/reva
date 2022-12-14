@@ -1,4 +1,4 @@
-import { Degree } from "./candidacy";
+import { Degree, Organism } from "./candidacy";
 
 export interface VulnerabilityIndicator {
   id: string;
@@ -70,7 +70,7 @@ export interface FundingRequest {
   postExamHourCount: number;
   otherTrainingHourCount: number;
   totalCost?: number;
-  companionId: string;
+  companion?: Organism;
 }
 
 export interface FundingRequestInput extends FundingRequest {

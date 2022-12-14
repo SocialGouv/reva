@@ -432,7 +432,7 @@ const mapFundingRequestBatch = ({
       CoutHeureDemAPDiag: fundingRequest.diagnosisCost,
       NbHeureDemAPPostJury: fundingRequest.postExamHourCount,
       CoutHeureDemAPPostJury: fundingRequest.postExamCost,
-      AccompagnateurCandidat: fundingRequest.companionId, //needs review
+      AccompagnateurCandidat: fundingRequest?.companion?.siret || "",
       NbHeureDemAccVAEInd: fundingRequest.individualHourCount,
       CoutHeureDemAccVAEInd: fundingRequest.individualCost,
       NbHeureDemAccVAEColl: fundingRequest.collectiveHourCount,

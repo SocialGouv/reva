@@ -1,3 +1,4 @@
+import { Organism } from "../types/candidacy";
 import { FundingRequest, FundingRequestInput } from "../types/candidate";
 import { FunctionalError } from "../types/functionalError";
 import { validateFundingRequest } from "./createFundingRequest";
@@ -63,7 +64,7 @@ const defaultValidFundingRequest: FundingRequestInput = {
   postExamCost: 70,
   postExamHourCount: 1,
   otherTrainingHourCount: 0,
-  companionId: "1234",
+  companion: { siret: "1234" } as Organism,
 };
 
 const validateCandidateBacSupNonFragile = validateFundingRequest(
