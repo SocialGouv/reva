@@ -259,32 +259,33 @@ export const createFundingRequest =
         validateFundingRequest(candidate)(params.fundingRequest)
       );
 
-    const createFundingRequest = EitherAsync.fromPromise(() =>
-      deps.createFundingRequest(params)
-    )
-      .map((fundingRequest: FundingRequest) => {
-        return {
-          ...fundingRequest,
-          basicSkills: fundingRequest?.basicSkills.map(
-            (b: any) => b.basicSkill
-          ),
-          mandatoryTrainings: fundingRequest?.mandatoryTrainings.map(
-            (t: any) => t.training
-          ),
-        };
-      })
-      .mapLeft(
-        () =>
-          new FunctionalError(
-            FunctionalCodeError.FUNDING_REQUEST_NOT_POSSIBLE,
-            `Erreur lors de la creation de la demande de financement`
-          )
-      );
+    const createFundingRequest = (fundingRequest: any) =>
+      EitherAsync.fromPromise(() =>
+        deps.createFundingRequest({ ...params, fundingRequest })
+      )
+        .map((fundingRequest: FundingRequest) => {
+          return {
+            ...fundingRequest,
+            basicSkills: fundingRequest?.basicSkills.map(
+              (b: any) => b.basicSkill
+            ),
+            mandatoryTrainings: fundingRequest?.mandatoryTrainings.map(
+              (t: any) => t.training
+            ),
+          };
+        })
+        .mapLeft(
+          () =>
+            new FunctionalError(
+              FunctionalCodeError.FUNDING_REQUEST_NOT_POSSIBLE,
+              `Erreur lors de la creation de la demande de financement`
+            )
+        );
 
     return existsCandidacyInRequiredStatuses
       .chain(() => getCandidateByCandidacyId)
       .chain(checkRules)
-      .chain(() => createFundingRequest)
+      .chain(createFundingRequest)
       .ifRight(
         createFundingRequestBatch({
           createFundingRequestBatch: deps.createFundingRequestBatch,

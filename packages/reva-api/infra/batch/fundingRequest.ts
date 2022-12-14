@@ -6,6 +6,7 @@ import Client from "ftp-ts";
 import pino from "pino";
 
 import { prismaClient } from "../database/postgres/client";
+import * as mattermost from "../mattermost";
 
 const BATCH_KEY = "batch.demande-financement";
 const logger = pino();
@@ -49,6 +50,13 @@ export const batchFundingRequest = async () => {
       return;
     }
 
+    const inoutStream = new Transform({
+      transform(chunk, encoding, callback) {
+        this.push(chunk);
+        callback();
+      },
+    });
+
     // Start the execution
     const batchExecution = await prismaClient.batchExecution.create({
       data: {
@@ -57,31 +65,13 @@ export const batchFundingRequest = async () => {
       },
     });
 
-    // Create Stream, Writable AND Readable
-    logger.info(`FTPS ${process.env.FTPS_HOST}:${process.env.FTPS_PORT}`);
-    const connexion = await Client.connect({
-      host: process.env.FTPS_HOST || "127.0.0.1",
-      port: parseInt(process.env.FTPS_PORT || "2121", 10),
-      user: process.env.FTPS_USERNAME || "reva",
-      password: process.env.FTPS_PASSWORD || "password",
-      secure: true,
-      debug: console.log,
-    });
-
-    const inoutStream = new Transform({
-      transform(chunk, encoding, callback) {
-        this.push(chunk);
-        callback();
-      },
-    });
-    logger.info("open put stream");
-
+    // TODO Generate CSV Stream
     const csvStream = csv.format({ headers: true });
 
     csvStream.pipe(inoutStream).on("end", () => logger.info("csv done"));
 
     csvStream.write({
-      NumAction: "",
+      NumAction: "1",
       NomAP: "",
       SiretAP: "",
       CertificationVisée: "",
@@ -114,15 +104,15 @@ export const batchFundingRequest = async () => {
       NombreHeureTotalActesFormatifs: "",
       NbHeureDemJury: "",
       CoutHeureJury: "",
-      CoutTotalDemande: "",
+      CoutTotalDemande: "1",
     });
     csvStream.end();
 
-    const fileDate = new Date().toLocaleDateString("sv").split("-").join("");
+    // End Generate CSV Stream
 
-    await connexion.put(inoutStream, `import/DAF-${fileDate}.test.csv`);
-    logger.info("open put stream done");
-    await connexion.end();
+    const fileDate = new Date().toLocaleDateString("sv").split("-").join("");
+    const fileName = `DAF-${fileDate}.csv`;
+    sendFundingRequestsStream({ fileName, readableStream: inoutStream });
 
     // Finish the execution
     await prismaClient.batchExecution.update({
@@ -143,3 +133,52 @@ export const batchFundingRequest = async () => {
     logger.info(`Batch ${BATCH_KEY} terminé`);
   }
 };
+
+async function sendFundingRequestsStream(params: {
+  fileName: string;
+  readableStream: NodeJS.ReadableStream;
+}) {
+  if (process.env.BATCH_FUNDING_REQUEST_TARGET === "ftps") {
+    await sendStreamToFTPS(params);
+  } else {
+    await sendStreamToMattermost(params);
+  }
+}
+
+async function sendStreamToFTPS(params: {
+  fileName: string;
+  readableStream: NodeJS.ReadableStream;
+}) {
+  logger.info(`FTPS ${process.env.FTPS_HOST}:${process.env.FTPS_PORT}`);
+  const connexion = await Client.connect({
+    host: process.env.FTPS_HOST || "127.0.0.1",
+    port: parseInt(process.env.FTPS_PORT || "2121", 10),
+    user: process.env.FTPS_USERNAME || "reva",
+    password: process.env.FTPS_PASSWORD || "password",
+    secure: true,
+    debug: console.log,
+  });
+  await connexion.put(params.readableStream, `import/${params.fileName}`);
+  logger.info("Stream sent");
+  connexion.end();
+}
+
+async function sendStreamToMattermost(params: {
+  fileName: string;
+  readableStream: NodeJS.ReadableStream;
+}) {
+  const rows: string[][] = [];
+  params.readableStream
+    .on("data", (chunk) => {
+      const [_, ...row] = Buffer.from(chunk).toString("utf8").split(",");
+      rows.push(row);
+    })
+    .on("end", () => {
+      const [headers, ...contentRows] = rows;
+      mattermost.sendDataTable({
+        title: `Demande de financement - ${params.fileName}`,
+        headers,
+        rows: contentRows,
+      });
+    });
+}
