@@ -24,6 +24,7 @@ interface CreateFundingRequestDeps {
     fundingRequestId: string;
     content: object;
   }) => Promise<Either<string, FundingRequestBatch>>;
+  getNextNumAction: () => Promise<Either<string, string>>;
   hasRole: (role: Role) => boolean;
   existsCandidacyWithActiveStatuses: (params: {
     candidacyId: string;
@@ -290,6 +291,12 @@ export const createFundingRequest =
           ).map((candidacy) => ({ fundingRequest, candidate, candidacy }))
         )
         .join()
+        .map((args) =>
+          EitherAsync.fromPromise(() => deps.getNextNumAction()).map(
+            (numAction) => ({ ...args, numAction })
+          )
+        )
+        .join()
         .map(mapFundingRequestBatch)
         .chain((batchContent) =>
           deps.createFundingRequestBatch({
@@ -316,10 +323,12 @@ const mapFundingRequestBatch = ({
   fundingRequest,
   candidate,
   candidacy,
+  numAction,
 }: {
   fundingRequest: FundingRequest;
   candidate: Candidate;
   candidacy: Candidacy;
+  numAction: string;
 }) => {
   {
     const getIndPublicFragile = (v?: VulnerabilityIndicator | null) => {
@@ -408,7 +417,7 @@ const mapFundingRequestBatch = ({
       });
 
     const batchContent: FundingRequestBatchContent = {
-      NumAction: "?????",
+      NumAction: numAction,
       NomAP: candidacy?.organism?.label || "",
       SiretAP: candidacy?.organism?.siret || "",
       CertificationVisée: candidacy.certification.rncpId,
@@ -423,7 +432,7 @@ const mapFundingRequestBatch = ({
       CoutHeureDemAPDiag: fundingRequest.diagnosisCost,
       NbHeureDemAPPostJury: fundingRequest.postExamHourCount,
       CoutHeureDemAPPostJury: fundingRequest.postExamCost,
-      AccompagnateurCandidat: fundingRequest.companionId, // needs review
+      AccompagnateurCandidat: fundingRequest.companionId, //needs review
       NbHeureDemAccVAEInd: fundingRequest.individualHourCount,
       CoutHeureDemAccVAEInd: fundingRequest.individualCost,
       NbHeureDemAccVAEColl: fundingRequest.collectiveHourCount,
@@ -431,18 +440,18 @@ const mapFundingRequestBatch = ({
       ActeFormatifComplémentaire_FormationObligatoire:
         getActeFormatifComplémentaire_FormationObligatoire(
           fundingRequest.mandatoryTrainings
-        ).join(","), // needs review
+        ).join(","),
       NbHeureDemComplFormObligatoire:
         fundingRequest.mandatoryTrainingsHourCount,
       CoutHeureDemComplFormObligatoire: fundingRequest.mandatoryTrainingsCost,
       ActeFormatifComplémentaire_SavoirsDeBase:
         getActeFormatifComplémentaire_SavoirsDeBase(
           fundingRequest.basicSkills
-        ).join(","), // needs review
+        ).join(","),
       NbHeureDemComplFormSavoirsDeBase: fundingRequest.basicSkillsHourCount,
       CoutHeureDemComplFormSavoirsDeBase: fundingRequest.basicSkillsCost,
       ActeFormatifComplémentaire_BlocDeCompetencesCertifiant:
-        fundingRequest.certificateSkills, // needs review
+        fundingRequest.certificateSkills,
       NbHeureDemComplFormBlocDeCompetencesCertifiant:
         fundingRequest.certificateSkillsHourCount,
       CoutHeureDemComplFormBlocDeCompetencesCertifiant:
@@ -451,7 +460,7 @@ const mapFundingRequestBatch = ({
       NbHeureDemTotalActesFormatifs: fundingRequest.otherTrainingHourCount,
       NbHeureDemJury: fundingRequest.examHourCount,
       CoutHeureJury: fundingRequest.examCost,
-      CoutTotalDemande: fundingRequest.totalCost || 0,
+      CoutTotalDemande: fundingRequest.totalCost || 0, // total cost is always 0 in initial funding request, should take the output of the checkRules method instead
     };
     return batchContent;
   }

@@ -321,6 +321,7 @@ export const resolvers = {
         createFundingRequest: fundingRequestsDb.createFundingRequest,
         createFundingRequestBatch:
           fundingRequestBatchesDb.createFundingRequestBatch,
+        getNextNumAction: fundingRequestBatchesDb.getNextNumAction,
         existsCandidacyWithActiveStatuses:
           candidaciesDb.existsCandidacyWithActiveStatuses,
         getCandidacyFromId: candidaciesDb.getCandidacyFromId,
