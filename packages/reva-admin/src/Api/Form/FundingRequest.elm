@@ -128,6 +128,7 @@ selection =
             )
         |> with Admin.Object.FundingRequest.mandatoryTrainingsHourCount
         |> with Admin.Object.FundingRequest.mandatoryTrainingsCost
+        |> with Admin.Object.FundingRequest.numAction
         |> with Admin.Object.FundingRequest.certificateSkills
         |> with Admin.Object.FundingRequest.certificateSkillsHourCount
         |> with Admin.Object.FundingRequest.certificateSkillsCost

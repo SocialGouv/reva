@@ -39,6 +39,7 @@ type alias FundingRequestInput =
     , mandatoryTrainingIds : List String
     , mandatoryTrainingsHourCount : Int
     , mandatoryTrainingsCost : Int
+    , numAction : Maybe String
     , certificateSkills : String
     , certificateSkillsHourCount : Int
     , certificateSkillsCost : Int
@@ -65,6 +66,7 @@ keys :
     , mandatoryTrainingIds : String
     , mandatoryTrainingsHourCount : String
     , mandatoryTrainingsCost : String
+    , numAction : String
     , certificateSkills : String
     , certificateSkillsHourCount : String
     , certificateSkillsCost : String
@@ -89,6 +91,7 @@ keys =
     , mandatoryTrainingIds = "mandatoryTrainingIds"
     , mandatoryTrainingsHourCount = "mandatoryTrainingsHourCount"
     , mandatoryTrainingsCost = "mandatoryTrainingsCost"
+    , numAction = "numAction"
     , certificateSkills = "certificateSkills"
     , certificateSkillsHourCount = "certificateSkillsHourCount"
     , certificateSkillsCost = "certificateSkillsCost"
@@ -135,6 +138,7 @@ fromDict basicSkillsIds mandatoryTrainingIds dict =
         (decode.list mandatoryTrainingIds)
         (decode.int .mandatoryTrainingsHourCount 0)
         (decode.int .mandatoryTrainingsCost 0)
+        (decode.maybe.string .numAction)
         (decode.string .certificateSkills "")
         (decode.int .certificateSkillsHourCount 0)
         (decode.int .certificateSkillsCost 0)
@@ -173,6 +177,7 @@ fundingRequest funding =
             , ( .basicSkillsCost, int .basicSkillsCost )
             , ( .mandatoryTrainingsHourCount, int .mandatoryTrainingsHourCount )
             , ( .mandatoryTrainingsCost, int .mandatoryTrainingsCost )
+            , ( .numAction, funding.numAction )
             , ( .certificateSkills, string .certificateSkills )
             , ( .certificateSkillsHourCount, int .certificateSkillsHourCount )
             , ( .certificateSkillsCost, int .certificateSkillsCost )
