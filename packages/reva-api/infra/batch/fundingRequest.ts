@@ -1,8 +1,8 @@
 import { Readable } from "stream";
 
 import { Feature } from "@prisma/client";
+import * as ftp from "basic-ftp";
 import * as csv from "fast-csv";
-import Client from "ftp-ts";
 import pino from "pino";
 
 import { prismaClient } from "../database/postgres/client";
@@ -105,28 +105,31 @@ export const batchFundingRequest = async () => {
 
 async function sendFundingRequestsStream(params: {
   fileName: string;
-  readableStream: NodeJS.ReadableStream;
+  readableStream: Readable;
 }) {
-  let connexion = null;
+  const client = new ftp.Client();
+
   try {
     logger.info(`FTPS ${process.env.FTPS_HOST}:${process.env.FTPS_PORT}`);
-    connexion = await Client.connect({
+
+    client.ftp.verbose = true;
+    await client.access({
       host: process.env.FTPS_HOST || "127.0.0.1",
       port: parseInt(process.env.FTPS_PORT || "2121", 10),
       user: process.env.FTPS_USERNAME || "reva",
       password: process.env.FTPS_PASSWORD || "password",
       secure: true,
-      debug: console.log,
     });
+
     logger.info("Before sending stream");
-    await connexion.put(params.readableStream, `import/${params.fileName}`);
+    await client.uploadFrom(params.readableStream, `import/${params.fileName}`);
     logger.info("Stream sent");
   } catch (e: unknown) {
     logger.error(e);
   } finally {
-    if (connexion) {
-      logger.info("Closing ftp connection");
-      connexion.end();
+    if (!client.closed) {
+      logger.info("Closing FTP connection");
+      client.close();
     }
   }
 }
