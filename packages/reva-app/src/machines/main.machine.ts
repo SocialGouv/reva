@@ -885,6 +885,7 @@ export const mainMachine =
                   data: { loginToken },
                   onDone: [
                     {
+                      actions: ["loadCandidacy"],
                       cond: "isProjectDroppedOut",
                       target: "#mainMachine.projectDroppedOut",
                     },
