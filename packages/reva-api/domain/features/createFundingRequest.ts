@@ -465,7 +465,7 @@ const mapFundingRequestBatch = ({
       NbHeureDemTotalActesFormatifs: fundingRequest.otherTrainingHourCount,
       NbHeureDemJury: fundingRequest.examHourCount,
       CoutHeureJury: fundingRequest.examCost,
-      CoutTotalDemande: fundingRequest.totalCost || 0, // total cost is always 0 in initial funding request, should take the output of the checkRules method instead
+      CoutTotalDemande: fundingRequest.totalCost || 0,
     };
     return batchContent;
   }
