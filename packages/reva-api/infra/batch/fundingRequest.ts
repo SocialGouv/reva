@@ -27,14 +27,15 @@ const generateFundingRequestBatchCsvStream = async (
         take: RECORDS_PER_FETCH,
       });
 
-      results.map((frb) => this.push(frb.content));
+      results.length
+        ? results.map((frb) => this.push(frb.content))
+        : this.push(null);
       skip += RECORDS_PER_FETCH;
     },
   });
 
-  return fundingRequestBatchesWaitingToBeSentStream.pipe(
-    csv.format({ headers: true })
-  );
+  const csvStream = csv.format({ headers: true });
+  return fundingRequestBatchesWaitingToBeSentStream.pipe(csvStream);
 };
 
 export const batchFundingRequest = async () => {
@@ -117,12 +118,14 @@ async function sendFundingRequestsStream(params: {
       secure: true,
       debug: console.log,
     });
+    logger.info("Before sending stream");
     await connexion.put(params.readableStream, `import/${params.fileName}`);
     logger.info("Stream sent");
   } catch (e: unknown) {
     logger.error(e);
   } finally {
     if (connexion) {
+      logger.info("Closing ftp connection");
       connexion.end();
     }
   }
