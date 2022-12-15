@@ -31,9 +31,7 @@ export const ProjectDroppedOut = ({mainService, candidateName, candidateEmail, s
         Nous vous informons que vous ne pourrez pas candidater à nouveau dans le cadre de cette expérimentation.
       </p>
       <p>
-        Vous avez une question ?
-        &nbsp;
-        <EmailLink email={supportEmail}/>
+        Vous avez une question ? <EmailLink email={supportEmail}/>
       </p>
     </Page>
   );

@@ -7,7 +7,7 @@ import { useContext, useMemo } from "react";
 
 import { Footer } from "./components/organisms/Footer";
 import { useKeycloakContext } from "./contexts/keycloakContext";
-import { Certification } from "./interface";
+import { Certification, Contact } from "./interface";
 import { mainMachine } from "./machines/main.machine";
 import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
@@ -309,9 +309,18 @@ function App() {
     <ProjectSubmitted key="project-submitted" mainService={mainService} />
   );
 
-  const projectDroppedOutPage = () => (
-    <ProjectDroppedOut mainService={mainService} candidateEmail="michel@gmail.com" candidateName="Michel" supportEmail="support@reva.beta.gouv.fr"/>
-  );
+  const projectDroppedOutPage = (contact: Contact) => {
+    const firstname = contact?.firstname ?? "";
+    const lastname = contact?.lastname ?? "";
+    const fullName = `${firstname} ${lastname}`;
+    return (
+      <ProjectDroppedOut mainService={mainService}
+        candidateEmail={contact?.email ?? ""}
+        candidateName={fullName}
+        supportEmail="support@reva.beta.gouv.fr"
+      />
+    );
+  };
 
   const errorPage = () => <Error key="error-page" mainService={mainService} />;
 
@@ -361,7 +370,7 @@ function App() {
       {current.matches("projectOrganism") &&
         projectOrganismsPage(current.context.certification)}
 
-      {current.matches("projectDroppedOut") && projectDroppedOutPage()}
+      {current.matches("projectDroppedOut") && projectDroppedOutPage(current.context.contact)}
 
       {current.matches("certificateDetails") &&
         certificateDetails(current.context.certification)}
