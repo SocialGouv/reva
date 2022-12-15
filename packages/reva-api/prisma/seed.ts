@@ -60,7 +60,7 @@ async function main() {
   await prisma.certification.update({
     where: { rncpId: '5983' },
     data: {
-      label: `Titre à finalité professionnelle Surveillant - Veilleur de nuit en secteur social et médico-social`,
+      label: `Titre à finalité professionnelle Surveillant - Visiteur de nuit en secteur social et médico-social`,
       summary: `Le surveillant - visiteur de nuit  exerce principalement au sein de  structures d'hébergement collectif accueillant des personnes âgées, des  personnes handicapées (adultes ou enfants), des personnes en situation  de précarité, des enfants en difficulté sociale et familiale.`,
     }
   });
