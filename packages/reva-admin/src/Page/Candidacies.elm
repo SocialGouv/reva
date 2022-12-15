@@ -539,7 +539,7 @@ fundingRequestForm maybeCertification =
                         ]
               )
             ]
-    , saveLabel = "Enregistrer"
+    , saveLabel = "Envoyer"
     , title = "Demande de prise en charge"
     }
 
@@ -720,7 +720,7 @@ viewDirectory context ( firstCandidacy, candidacies ) =
             , class "bg-white px-10 py-3"
             , class "flex justify-between"
             ]
-            [ h3 [] [ text (Candidacy.statusToString firstCandidacy.lastStatus.status) ]
+            [ h3 [] [ text (Candidacy.statusToCategoryString firstCandidacy.lastStatus.status) ]
             , div
                 [ class "flex items-center justify-center"
                 , class "rounded-full px-2 h-6 bg-gray-200"
