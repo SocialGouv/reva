@@ -156,6 +156,7 @@ export type MainState =
         | typeof loginConfirmation
         | typeof projectHome
         | typeof projectSubmitted
+        | typeof projectDroppedOut
         | typeof projectGoals
         | typeof projectContact
         | typeof projectContactConfirmation
@@ -1126,13 +1127,12 @@ export const mainMachine =
               "PRISE_EN_CHARGE",
             ].includes(typedEvent.data.candidacy?.candidacyStatus);
           },
-          isProjectDroppedOut: (_context, _event) => {
-            // const typedEvent = event as DoneInvokeEvent<any>;
-            // const isDroppedOut =
-            //   typedEvent.data.candidacy?.candidacyStatus ===
-            //   "ABANDON";
-            // return !!isDroppedOut;
-            return true;
+          isProjectDroppedOut: (_context, event) => {
+            const typedEvent = event as DoneInvokeEvent<any>;
+            const isDroppedOut =
+              typedEvent.data.candidacy?.candidacyStatus ===
+              "ABANDON";
+            return !!isDroppedOut;
           },
           isTokenInvalid: (_context, event) => {
             const typedEvent = event as DoneInvokeEvent<any>;
