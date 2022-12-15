@@ -6,7 +6,6 @@ import Client from "ftp-ts";
 import pino from "pino";
 
 import { prismaClient } from "../database/postgres/client";
-import * as mattermost from "../mattermost";
 
 const BATCH_KEY = "batch.demande-financement";
 const logger = pino();
@@ -107,47 +106,24 @@ async function sendFundingRequestsStream(params: {
   fileName: string;
   readableStream: NodeJS.ReadableStream;
 }) {
-  if (process.env.BATCH_FUNDING_REQUEST_TARGET === "ftps") {
-    await sendStreamToFTPS(params);
-  } else {
-    await sendStreamToMattermost(params);
-  }
-}
-
-async function sendStreamToFTPS(params: {
-  fileName: string;
-  readableStream: NodeJS.ReadableStream;
-}) {
-  logger.info(`FTPS ${process.env.FTPS_HOST}:${process.env.FTPS_PORT}`);
-  const connexion = await Client.connect({
-    host: process.env.FTPS_HOST || "127.0.0.1",
-    port: parseInt(process.env.FTPS_PORT || "2121", 10),
-    user: process.env.FTPS_USERNAME || "reva",
-    password: process.env.FTPS_PASSWORD || "password",
-    secure: true,
-    debug: console.log,
-  });
-  await connexion.put(params.readableStream, `import/${params.fileName}`);
-  logger.info("Stream sent");
-  connexion.end();
-}
-
-async function sendStreamToMattermost(params: {
-  fileName: string;
-  readableStream: NodeJS.ReadableStream;
-}) {
-  const rows: string[][] = [];
-  params.readableStream
-    .on("data", (chunk) => {
-      const [_, ...row] = Buffer.from(chunk).toString("utf8").split(",");
-      rows.push(row);
-    })
-    .on("end", () => {
-      const [headers, ...contentRows] = rows;
-      mattermost.sendDataTable({
-        title: `Demande de financement - ${params.fileName}`,
-        headers,
-        rows: contentRows,
-      });
+  let connexion = null;
+  try {
+    logger.info(`FTPS ${process.env.FTPS_HOST}:${process.env.FTPS_PORT}`);
+    connexion = await Client.connect({
+      host: process.env.FTPS_HOST || "127.0.0.1",
+      port: parseInt(process.env.FTPS_PORT || "2121", 10),
+      user: process.env.FTPS_USERNAME || "reva",
+      password: process.env.FTPS_PASSWORD || "password",
+      secure: true,
+      debug: console.log,
     });
+    await connexion.put(params.readableStream, `import/${params.fileName}`);
+    logger.info("Stream sent");
+  } catch (e: unknown) {
+    logger.error(e);
+  } finally {
+    if (connexion) {
+      connexion.end();
+    }
+  }
 }
