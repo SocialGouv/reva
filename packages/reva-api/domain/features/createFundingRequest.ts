@@ -324,7 +324,7 @@ export const createFundingRequest =
       .ifRight(createFundingRequestBatch);
   };
 
-const mapFundingRequestBatch = ({
+export const mapFundingRequestBatch = ({
   fundingRequest,
   candidate,
   candidacy,
