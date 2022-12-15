@@ -310,8 +310,8 @@ viewTrainingSent context candidacyId =
     ]
 
 
-appointmentForm : Form ( Candidacy, Referential )
-appointmentForm =
+appointmentForm : Dict String String -> ( Candidacy, Referential ) -> Form
+appointmentForm _ _ =
     let
         keys =
             Data.Form.Appointment.keys
@@ -325,57 +325,55 @@ appointmentForm =
                 |> List.map (\el -> ( candidateTypologyToString el, candidateTypologyToString el ))
     in
     { elements =
-        \_ _ ->
-            [ ( keys.typology, Form.Select "Typologie" typologies )
-            , ( keys.additionalInformation, Form.SelectOther "typology" "Autre typologie" )
-            , ( keys.firstAppointmentOccurredAt, Form.Date "Date du premier rendez-vous pédagogique" )
-            , ( keys.appointmentCount, Form.Number "Nombre de rendez-vous réalisés avec le candidat" )
-            , ( keys.wasPresentAtFirstAppointment, Form.Checkbox "Le candidat a bien effectué le rendez-vous d'étude de faisabilité" )
-            ]
+        [ ( keys.typology, Form.Select "Typologie" typologies )
+        , ( keys.additionalInformation, Form.SelectOther "typology" "Autre typologie" )
+        , ( keys.firstAppointmentOccurredAt, Form.Date "Date du premier rendez-vous pédagogique" )
+        , ( keys.appointmentCount, Form.Number "Nombre de rendez-vous réalisés avec le candidat" )
+        , ( keys.wasPresentAtFirstAppointment, Form.Checkbox "Le candidat a bien effectué le rendez-vous d'étude de faisabilité" )
+        ]
     , saveLabel = "Enregistrer"
     , title = "Rendez-vous pédagogique"
     }
 
 
-trainingForm : Form ( Candidacy, Referential )
-trainingForm =
+trainingForm : Dict String String -> ( Candidacy, Referential ) -> Form
+trainingForm _ ( _, referential ) =
     let
         keys =
             Data.Form.Training.keys
     in
     { elements =
-        \_ ( _, referential ) ->
-            [ ( keys.individualHourCount, Form.Number "Nombre d'heures d'accompagnement individuel" )
-            , ( keys.collectiveHourCount, Form.Number "Nombre d'heures d'accompagnement collectif" )
-            , ( keys.additionalHourCount, Form.Number "Nombre d'heures de formations complémentaires" )
-            , ( keys.mandatoryTrainings
-              , Form.CheckboxList "Formations obligatoires" <|
-                    Data.Form.Helper.toIdList referential.mandatoryTrainings
-              )
-            , ( keys.basicSkills
-              , Form.CheckboxList "Savoirs de base" <|
-                    Data.Form.Helper.toIdList referential.basicSkills
-              )
-            , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" )
-            , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" )
-            ]
+        [ ( keys.individualHourCount, Form.Number "Nombre d'heures d'accompagnement individuel" )
+        , ( keys.collectiveHourCount, Form.Number "Nombre d'heures d'accompagnement collectif" )
+        , ( keys.additionalHourCount, Form.Number "Nombre d'heures de formations complémentaires" )
+        , ( keys.mandatoryTrainings
+          , Form.CheckboxList "Formations obligatoires" <|
+                Data.Form.Helper.toIdList referential.mandatoryTrainings
+          )
+        , ( keys.basicSkills
+          , Form.CheckboxList "Savoirs de base" <|
+                Data.Form.Helper.toIdList referential.basicSkills
+          )
+        , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" )
+        , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" )
+        ]
     , saveLabel = "Envoyer le parcours"
     , title = "Définition du parcours"
     }
 
 
-candidateInfoForm : Form ( Candidacy, Referential )
-candidateInfoForm =
+candidateInfoForm : Dict String String -> ( Candidacy, Referential ) -> Form
+candidateInfoForm _ ( _, referential ) =
     let
         keys =
             Data.Form.Candidate.keys
 
-        degrees referential =
+        degrees =
             referential.degrees
                 |> List.map (\d -> { id = d.id, label = d.longLabel })
                 |> Data.Form.Helper.toIdList
 
-        vulnerabilityIndicators referential =
+        vulnerabilityIndicators =
             referential.vulnerabilityIndicators
                 |> Data.Form.Helper.toIdList
 
@@ -387,29 +385,28 @@ candidateInfoForm =
                 |> List.map (\el -> ( Data.Candidate.genderToString el, Data.Candidate.genderToString el ))
     in
     { elements =
-        \_ ( _, referential ) ->
-            [ ( "heading", Form.Heading "1 - Informations candidat" )
-            , ( keys.lastname, Form.Input "Nom" )
-            , ( keys.firstname, Form.Input "Prénom" )
-            , ( keys.firstname2, Form.Input "Prénom 2" )
-            , ( keys.firstname3, Form.Input "Prénom 3" )
-            , ( keys.gender, Form.Select "Genre" genders )
-            , ( keys.highestDegree, Form.Select "Plus haut niveau de diplôme obtenu" (degrees referential) )
-            , ( keys.vulnerabilityIndicator, Form.Select "Indicateur public fragile" (vulnerabilityIndicators referential) )
-            ]
+        [ ( "heading", Form.Heading "1 - Informations candidat" )
+        , ( keys.lastname, Form.Input "Nom" )
+        , ( keys.firstname, Form.Input "Prénom" )
+        , ( keys.firstname2, Form.Input "Prénom 2" )
+        , ( keys.firstname3, Form.Input "Prénom 3" )
+        , ( keys.gender, Form.Select "Genre" genders )
+        , ( keys.highestDegree, Form.Select "Plus haut niveau de diplôme obtenu" degrees )
+        , ( keys.vulnerabilityIndicator, Form.Select "Indicateur public fragile" vulnerabilityIndicators )
+        ]
     , saveLabel = "Suivant"
     , title = "Demande de prise en charge"
     }
 
 
-fundingRequestForm : Maybe Certification -> Form ( Candidacy, Referential )
-fundingRequestForm maybeCertification =
+fundingRequestForm : Maybe Certification -> Dict String String -> ( Candidacy, Referential ) -> Form
+fundingRequestForm maybeCertification formData ( candidacy, referential ) =
     let
         keys =
             Data.Form.FundingRequest.keys
 
-        availableCompanions : Candidacy -> List ( String, String )
-        availableCompanions candidacy =
+        availableCompanions : List ( String, String )
+        availableCompanions =
             candidacy.availableCompanions
                 |> Data.Form.Helper.toIdList
 
@@ -422,8 +419,8 @@ fundingRequestForm maybeCertification =
                 Nothing ->
                     ( "certification", Form.Empty )
 
-        maybeReadOnlyTraining : Candidacy -> Referential -> Form.Element -> Form.Element
-        maybeReadOnlyTraining candidacy referential formElement =
+        maybeReadOnlyTraining : Form.Element -> Form.Element
+        maybeReadOnlyTraining formElement =
             if
                 candidacy.candidate
                     |> Maybe.map (hasAccessTrainingFunding referential)
@@ -462,88 +459,87 @@ fundingRequestForm maybeCertification =
                         Form.ReadOnlyElement formElement
     in
     { elements =
-        \formData ( candidacy, referential ) ->
-            [ ( "heading", Form.Heading "2 - Parcours personnalisé" )
-            , ( "selected-certification", Form.Section "Certification choisie par le candidat" )
-            , certificateField
-            , ( "organism", Form.Section "Accompagnement architecte de parcours" )
-            , ( "diagnosis", Form.Title "Entretien(s) de faisabilité" )
-            , ( keys.diagnosisHourCount, Form.Number "Nombre d'heures" )
-            , ( keys.diagnosisCost, Form.Number "Coût horaire" )
-            , ( "post-exam", Form.Title "Entretien post jury" )
-            , ( keys.postExamHourCount, Form.Number "Nombre d'heures" )
-            , ( keys.postExamCost, Form.Number "Coût horaire" )
-            , ( "companion", Form.Section "Accompagnement méthodologique" )
-            , ( keys.companionId, Form.Select "Accompagnateur choisi par le candidat" (availableCompanions candidacy) )
-            , ( "individual", Form.Title "Accompagnement individuel" )
-            , ( keys.individualHourCount, Form.Number "Nombre d'heures" )
-            , ( keys.individualCost, Form.Number "Coût horaire" )
-            , ( "collective", Form.Title "Accompagnement collectif" )
-            , ( keys.collectiveHourCount, Form.Number "Nombre d'heures" )
-            , ( keys.collectiveCost, Form.Number "Coût horaire" )
-            , ( "training", Form.Section "Actes formatifs" )
-            , ( "mandatory", Form.Title "Formations obligatoires" )
-            , ( keys.mandatoryTrainingIds
-              , Form.ReadOnlyElement <|
-                    Form.CheckboxList "" <|
-                        Data.Form.Helper.toIdList referential.mandatoryTrainings
-              )
-            , ( keys.mandatoryTrainingsHourCount
-              , Form.Number "Nombre d'heures"
-                    |> maybeReadOnlyTraining candidacy referential
-                    |> withCheckedRequired referential.mandatoryTrainings formData
-              )
-            , ( keys.mandatoryTrainingsCost
-              , Form.Number "Coût horaire"
-                    |> maybeReadOnlyTraining candidacy referential
-                    |> withCheckedRequired referential.mandatoryTrainings formData
-              )
-            , ( "basic-skills", Form.Title "Formations savoirs de base" )
-            , ( keys.basicSkillsIds
-              , Form.ReadOnlyElement <|
-                    Form.CheckboxList "" <|
-                        Data.Form.Helper.toIdList referential.basicSkills
-              )
-            , ( keys.basicSkillsHourCount
-              , Form.Number "Nombre d'heures"
-                    |> maybeReadOnlyTraining candidacy referential
-                    |> withCheckedRequired referential.basicSkills formData
-              )
-            , ( keys.basicSkillsCost
-              , Form.Number "Coût horaire"
-                    |> maybeReadOnlyTraining candidacy referential
-                    |> withCheckedRequired referential.basicSkills formData
-              )
-            , ( "skills", Form.Title "Bloc de compétences certifiant" )
-            , ( keys.certificateSkills, Form.ReadOnlyElement <| Form.Textarea "" )
-            , ( keys.certificateSkillsHourCount
-              , Form.Number "Nombre d'heures"
-                    |> maybeReadOnlyTraining candidacy referential
-                    |> withRequired (hasCertificateSkills formData)
-              )
-            , ( keys.certificateSkillsCost
-              , Form.Number "Coût horaire"
-                    |> maybeReadOnlyTraining candidacy referential
-                    |> withRequired (hasCertificateSkills formData)
-              )
-            , ( "other", Form.Title "Autres actions de formations complémentaires" )
-            , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" )
-            , ( keys.otherTrainingHourCount
-              , Form.Info "Nombre d'heures total actes formatifs" <|
-                    String.fromInt (totalTrainingHourCount formData)
-              )
-            , ( "jury", Form.Title "Prestation jury" )
-            , ( keys.examHourCount, Form.Number "Nombre d'heures" )
-            , ( keys.examCost, Form.Number "Coût horaire" )
-            , ( "total", Form.Section "Total" )
-            , ( "totalCost"
-              , Form.Info "Coût total de la demande de prise en charge" <|
-                    String.concat
-                        [ String.fromInt (totalFundingRequestCost formData)
-                        , "€"
-                        ]
-              )
-            ]
+        [ ( "heading", Form.Heading "2 - Parcours personnalisé" )
+        , ( "selected-certification", Form.Section "Certification choisie par le candidat" )
+        , certificateField
+        , ( "organism", Form.Section "Accompagnement architecte de parcours" )
+        , ( "diagnosis", Form.Title "Entretien(s) de faisabilité" )
+        , ( keys.diagnosisHourCount, Form.Number "Nombre d'heures" )
+        , ( keys.diagnosisCost, Form.Number "Coût horaire" )
+        , ( "post-exam", Form.Title "Entretien post jury" )
+        , ( keys.postExamHourCount, Form.Number "Nombre d'heures" )
+        , ( keys.postExamCost, Form.Number "Coût horaire" )
+        , ( "companion", Form.Section "Accompagnement méthodologique" )
+        , ( keys.companionId, Form.Select "Accompagnateur choisi par le candidat" availableCompanions )
+        , ( "individual", Form.Title "Accompagnement individuel" )
+        , ( keys.individualHourCount, Form.Number "Nombre d'heures" )
+        , ( keys.individualCost, Form.Number "Coût horaire" )
+        , ( "collective", Form.Title "Accompagnement collectif" )
+        , ( keys.collectiveHourCount, Form.Number "Nombre d'heures" )
+        , ( keys.collectiveCost, Form.Number "Coût horaire" )
+        , ( "training", Form.Section "Actes formatifs" )
+        , ( "mandatory", Form.Title "Formations obligatoires" )
+        , ( keys.mandatoryTrainingIds
+          , Form.ReadOnlyElement <|
+                Form.CheckboxList "" <|
+                    Data.Form.Helper.toIdList referential.mandatoryTrainings
+          )
+        , ( keys.mandatoryTrainingsHourCount
+          , Form.Number "Nombre d'heures"
+                |> maybeReadOnlyTraining
+                |> withCheckedRequired referential.mandatoryTrainings formData
+          )
+        , ( keys.mandatoryTrainingsCost
+          , Form.Number "Coût horaire"
+                |> maybeReadOnlyTraining
+                |> withCheckedRequired referential.mandatoryTrainings formData
+          )
+        , ( "basic-skills", Form.Title "Formations savoirs de base" )
+        , ( keys.basicSkillsIds
+          , Form.ReadOnlyElement <|
+                Form.CheckboxList "" <|
+                    Data.Form.Helper.toIdList referential.basicSkills
+          )
+        , ( keys.basicSkillsHourCount
+          , Form.Number "Nombre d'heures"
+                |> maybeReadOnlyTraining
+                |> withCheckedRequired referential.basicSkills formData
+          )
+        , ( keys.basicSkillsCost
+          , Form.Number "Coût horaire"
+                |> maybeReadOnlyTraining
+                |> withCheckedRequired referential.basicSkills formData
+          )
+        , ( "skills", Form.Title "Bloc de compétences certifiant" )
+        , ( keys.certificateSkills, Form.ReadOnlyElement <| Form.Textarea "" )
+        , ( keys.certificateSkillsHourCount
+          , Form.Number "Nombre d'heures"
+                |> maybeReadOnlyTraining
+                |> withRequired (hasCertificateSkills formData)
+          )
+        , ( keys.certificateSkillsCost
+          , Form.Number "Coût horaire"
+                |> maybeReadOnlyTraining
+                |> withRequired (hasCertificateSkills formData)
+          )
+        , ( "other", Form.Title "Autres actions de formations complémentaires" )
+        , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" )
+        , ( keys.otherTrainingHourCount
+          , Form.Info "Nombre d'heures total actes formatifs" <|
+                String.fromInt (totalTrainingHourCount formData)
+          )
+        , ( "jury", Form.Title "Prestation jury" )
+        , ( keys.examHourCount, Form.Number "Nombre d'heures" )
+        , ( keys.examCost, Form.Number "Coût horaire" )
+        , ( "total", Form.Section "Total" )
+        , ( "totalCost"
+          , Form.Info "Coût total de la demande de prise en charge" <|
+                String.concat
+                    [ String.fromInt (totalFundingRequestCost formData)
+                    , "€"
+                    ]
+          )
+        ]
     , saveLabel = "Envoyer"
     , title = "Demande de prise en charge"
     }
