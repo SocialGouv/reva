@@ -2,8 +2,9 @@ import { ApolloClient, getApolloContext } from "@apollo/client";
 import { Capacitor } from "@capacitor/core";
 import { Device } from "@capacitor/device";
 import { useMachine } from "@xstate/react";
+import { Crisp } from "crisp-sdk-web";
 import { AnimatePresence } from "framer-motion";
-import { useContext, useMemo } from "react";
+import { useContext, useEffect, useMemo } from "react";
 
 import { Footer } from "./components/organisms/Footer";
 import { useKeycloakContext } from "./contexts/keycloakContext";
@@ -53,6 +54,11 @@ function App() {
   const { client } = useContext(getApolloContext());
   //@ts-ignore
   const { authenticated, token, setTokens } = useKeycloakContext();
+
+  useEffect(() => {
+    const crispId = process.env.REACT_APP_CRISP_ID;
+    crispId && Crisp.configure(crispId);
+  }, []);
 
   const machine = useMemo(
     () =>
