@@ -1,7 +1,7 @@
 import "./index.css";
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { inspect } from "@xstate/inspect";
+// import { inspect } from "@xstate/inspect";
 import React from "react";
 import ReactDOM from "react-dom";
 
@@ -18,7 +18,7 @@ const client = new ApolloClient({
 
 
 //// Uncomment to debug XState
-inspect({ iframe: false });
+// inspect({ iframe: false });
 
 const keycloakInstance = Keycloak({
   clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID as string,
