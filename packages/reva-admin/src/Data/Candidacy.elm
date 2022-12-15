@@ -15,9 +15,9 @@ module Data.Candidacy exposing
     , isTrainingSent
     , lastStatus
     , sentDate
+    , statusToCategoryString
     , statusToDirectoryPosition
     , statusToProgressPosition
-    , statusToString
     , toCandidacySummary
     )
 
@@ -101,14 +101,14 @@ candidacyIdFromString id =
     CandidacyId id
 
 
-statusToString : String -> String
-statusToString status =
+statusToCategoryString : String -> String
+statusToCategoryString status =
     case status of
         "VALIDATION" ->
             "Candidatures envoyées"
 
         "PROJET" ->
-            "Projet en cours d'édition"
+            "Projets en cours d'édition"
 
         "ARCHIVE" ->
             "Candidatures archivées"
@@ -117,16 +117,16 @@ statusToString status =
             "Candidatures prises en charge"
 
         "PARCOURS_ENVOYE" ->
-            "Parcours envoyé"
+            "Parcours envoyés"
 
         "PARCOURS_CONFIRME" ->
-            "Parcours confirmé par le candidat"
+            "Parcours confirmés par le candidat"
 
         "DEMANDE_FINANCEMENT_ENVOYE" ->
-            "Demande de financement envoyée"
+            "Demandes de financement envoyées"
 
         "ABANDON" ->
-            "Candidature abandonnée"
+            "Candidatures abandonnées"
 
         _ ->
             "Statut inconnu"
