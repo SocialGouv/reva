@@ -10,7 +10,13 @@ module Page.Candidacies exposing
 
 import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
 import Admin.Enum.Gender exposing (Gender(..))
-import Api exposing (Token)
+import Api.Candidacy
+import Api.Form.Appointment
+import Api.Form.Candidate
+import Api.Form.FundingRequest
+import Api.Form.Training
+import Api.Referential
+import Api.Token exposing (Token)
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Candidate
@@ -30,7 +36,6 @@ import Html.Styled.Events exposing (onInput)
 import List.Extra
 import Page.Form as Form exposing (Form)
 import RemoteData exposing (RemoteData(..))
-import Request
 import Route
 import String exposing (String)
 import Time
@@ -89,8 +94,8 @@ init context =
 
         defaultCmd =
             Cmd.batch
-                [ Request.requestCandidacies context.endpoint context.token GotCandidaciesResponse
-                , Request.requestReferential context.endpoint context.token GotReferentialResponse
+                [ Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse
+                , Api.Referential.get context.endpoint context.token GotReferentialResponse
                 , Cmd.map GotFormMsg formCmd
                 ]
     in
@@ -100,7 +105,7 @@ init context =
 initCandidacy : Context -> CandidacyId -> Model -> ( Model, Cmd Msg )
 initCandidacy context candidacyId model =
     ( { model | selected = Loading }
-    , Request.requestCandidacy context.endpoint context.token GotCandidacyResponse candidacyId
+    , Api.Candidacy.get context.endpoint context.token GotCandidacyResponse candidacyId
     )
 
 
@@ -666,7 +671,7 @@ viewDirectoryPanel context candidacies =
                 [ text "Candidatures" ]
             , p
                 [ class "text-base text-gray-500" ]
-                [ if Api.hasAdminToken context.token then
+                [ if Api.Token.isAdmin context.token then
                     text "Recherchez par architecte de parcours, certification et information de contact"
 
                   else
@@ -804,7 +809,7 @@ viewItem context candidacy =
                         , class "text-gray-500"
                         ]
                         [ View.Candidacy.viewSentAt candidacy.sentAt
-                        , case ( Api.hasAdminToken context.token, candidacy.organism ) of
+                        , case ( Api.Token.isAdmin context.token, candidacy.organism ) of
                             ( True, Just organism ) ->
                                 div
                                     [ class "text-sm whitespace-nowrap" ]
@@ -864,12 +869,12 @@ update context msg model =
 
         UserDeletedCandidacy candidacy ->
             ( removeCandidacy model candidacy
-            , Request.deleteCandidacy context.endpoint context.token GotCandidacyDeletionResponse candidacy.id
+            , Api.Candidacy.delete context.endpoint context.token GotCandidacyDeletionResponse candidacy.id
             )
 
         UserArchivedCandidacy candidacy ->
             ( model
-            , Request.archiveCandidacy context.endpoint context.token GotCandidacyArchivingResponse candidacy.id
+            , Api.Candidacy.archive context.endpoint context.token GotCandidacyArchivingResponse candidacy.id
             )
 
 
@@ -889,8 +894,8 @@ updateTab context tab model =
                 ( formModel, formCmd ) =
                     Form.updateForm context
                         { form = appointmentForm
-                        , onLoad = Request.requestAppointment candidacyId
-                        , onSave = Request.updateAppointment candidacyId
+                        , onLoad = Api.Form.Appointment.get candidacyId
+                        , onSave = Api.Form.Appointment.update candidacyId
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
@@ -907,8 +912,8 @@ updateTab context tab model =
                 ( formModel, formCmd ) =
                     Form.updateForm context
                         { form = fundingRequestForm candidacy.certification
-                        , onLoad = Request.requestFundingInformations candidacyId
-                        , onSave = Request.createFundingRequest candidacyId
+                        , onLoad = Api.Form.FundingRequest.get candidacyId
+                        , onSave = Api.Form.FundingRequest.create candidacyId
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
@@ -930,8 +935,8 @@ updateTab context tab model =
                 ( formModel, formCmd ) =
                     Form.updateForm context
                         { form = trainingForm
-                        , onLoad = Request.requestTrainings candidacyId
-                        , onSave = Request.updateTrainings candidacyId
+                        , onLoad = Api.Form.Training.get candidacyId
+                        , onSave = Api.Form.Training.update candidacyId
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
@@ -956,11 +961,11 @@ updateTab context tab model =
                         , onLoad =
                             case candidacy.email of
                                 Just email ->
-                                    Request.requestCandidateByEmail email
+                                    Api.Form.Candidate.get email
 
                                 Nothing ->
                                     \_ _ _ -> Cmd.none
-                        , onSave = Request.updateCandidate
+                        , onSave = Api.Form.Candidate.update
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
@@ -1013,7 +1018,7 @@ updateTab context tab model =
 
 withTakeOver : Context -> CandidacyId -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 withTakeOver context candidacyId ( model, cmds ) =
-    ( model, Cmd.batch [ cmds, Request.takeOverCandidacy context.endpoint context.token GotCandidacyTakingOverResponse candidacyId ] )
+    ( model, Cmd.batch [ cmds, Api.Candidacy.takeOver context.endpoint context.token GotCandidacyTakingOverResponse candidacyId ] )
 
 
 

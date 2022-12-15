@@ -1,6 +1,6 @@
 module KeycloakConfiguration exposing (KeycloakConfiguration, iframeKeycloak, keycloakConfiguration)
 
-import Api exposing (Token)
+import Api.Token exposing (Token)
 import Html.Styled exposing (Html, node)
 import Html.Styled.Attributes exposing (attribute, class, id, property)
 import Html.Styled.Events exposing (on)
@@ -40,7 +40,7 @@ getEncodedKeycloakConfiguration maybeKeycloakConfiguration =
 
 tokenDecoder : Decoder Token
 tokenDecoder =
-    Decode.map2 Api.initToken
+    Decode.map2 Api.Token.init
         (Decode.field "isAdmin" Decode.bool)
         (Decode.field "token" Decode.string)
 

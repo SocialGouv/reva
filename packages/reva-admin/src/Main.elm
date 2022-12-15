@@ -1,6 +1,6 @@
 port module Main exposing (main)
 
-import Api exposing (Token)
+import Api.Token exposing (Token)
 import Browser
 import Browser.Navigation as Nav
 import Data.Context exposing (Context)
@@ -251,7 +251,7 @@ initWithoutToken flags url key =
                     flags.baseUrl
                     flags.endpoint
                     key
-                    Api.anonymous
+                    Api.Token.anonymous
             , page = NotLoggedIn (Route.fromUrl flags.baseUrl url)
             , keycloakConfiguration =
                 Decode.decodeValue KeycloakConfiguration.keycloakConfiguration flags.keycloakConfiguration
