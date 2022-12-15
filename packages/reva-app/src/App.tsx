@@ -23,6 +23,7 @@ import { ProjectHelp } from "./pages/ProjectHelp";
 import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectOrganisms } from "./pages/ProjectOrganisms";
 import { ProjectSubmitted } from "./pages/ProjectSubmitted";
+import { ProjectDroppedOut } from "./pages/ProjectDroppedOut";
 import { SubmissionHome } from "./pages/SubmissionHome";
 import { TrainingProgramConfirmed } from "./pages/TrainingProgramConfirmed";
 import { TrainingProgramSummary } from "./pages/TrainingProgramSummary";
@@ -308,6 +309,10 @@ function App() {
     <ProjectSubmitted key="project-submitted" mainService={mainService} />
   );
 
+  const projectDroppedOutPage = () => (
+    <ProjectDroppedOut mainService={mainService} />
+  );
+
   const errorPage = () => <Error key="error-page" mainService={mainService} />;
 
   const certificateDetails = (certification: Certification) => (
@@ -355,6 +360,8 @@ function App() {
 
       {current.matches("projectOrganism") &&
         projectOrganismsPage(current.context.certification)}
+
+      {current.matches("projectDroppedOut") && projectDroppedOutPage()}
 
       {current.matches("certificateDetails") &&
         certificateDetails(current.context.certification)}

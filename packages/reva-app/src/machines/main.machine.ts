@@ -30,6 +30,7 @@ const projectGoals = "projectGoals";
 const projectOrganism = "projectOrganism";
 const projectHelp = "projectHelp";
 const projectSubmitted = "projectSubmitted";
+const projectDroppedOut = "projectDroppedOut";
 const submissionHome = "submissionHome";
 const trainingProgramSummary = "trainingProgramSummary";
 const trainingProgramConfirmed = "trainingProgramConfirmed";
@@ -50,6 +51,7 @@ export type State =
   | typeof projectGoals
   | typeof projectOrganism
   | typeof projectSubmitted
+  | typeof projectDroppedOut
   | typeof submissionHome
   | typeof trainingProgramSummary
   | typeof trainingProgramConfirmed;
@@ -882,6 +884,10 @@ export const mainMachine =
                   data: { loginToken },
                   onDone: [
                     {
+                      cond: "isProjectDroppedOut",
+                      target: "#mainMachine.projectDroppedOut",
+                    },
+                    {
                       actions: ["loadCandidacy"],
                       cond: "isTrainingProgramSubmitted",
                       target: "#mainMachine.trainingProgramSummary.idle",
@@ -1027,6 +1033,9 @@ export const mainMachine =
               },
             },
           },
+          projectDroppedOut: {
+            type: "final",
+          },
           error: {},
         },
       },
@@ -1116,6 +1125,14 @@ export const mainMachine =
               "VALIDATION",
               "PRISE_EN_CHARGE",
             ].includes(typedEvent.data.candidacy?.candidacyStatus);
+          },
+          isProjectDroppedOut: (_context, _event) => {
+            // const typedEvent = event as DoneInvokeEvent<any>;
+            // const isDroppedOut =
+            //   typedEvent.data.candidacy?.candidacyStatus ===
+            //   "ABANDON";
+            // return !!isDroppedOut;
+            return true;
           },
           isTokenInvalid: (_context, event) => {
             const typedEvent = event as DoneInvokeEvent<any>;
