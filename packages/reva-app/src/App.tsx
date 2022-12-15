@@ -310,7 +310,7 @@ function App() {
   );
 
   const projectDroppedOutPage = () => (
-    <ProjectDroppedOut mainService={mainService} />
+    <ProjectDroppedOut mainService={mainService} candidateEmail="michel@gmail.com" candidateName="Michel" supportEmail="support@reva.beta.gouv.fr"/>
   );
 
   const errorPage = () => <Error key="error-page" mainService={mainService} />;
