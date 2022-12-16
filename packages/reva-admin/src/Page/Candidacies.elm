@@ -402,6 +402,14 @@ candidateInfoForm _ ( _, referential ) =
 fundingRequestForm : Maybe Certification -> Dict String String -> ( Candidacy, Referential ) -> Form
 fundingRequestForm maybeCertification formData ( candidacy, referential ) =
     let
+        baseTitle =
+            "Demande de prise en charge"
+
+        title =
+            Dict.get keys.numAction formData
+                |> Maybe.map (\numAction -> baseTitle ++ " " ++ numAction)
+                |> Maybe.withDefault baseTitle
+
         keys =
             Data.Form.FundingRequest.keys
 
@@ -431,17 +439,17 @@ fundingRequestForm maybeCertification formData ( candidacy, referential ) =
             else
                 Form.ReadOnlyElement formElement
 
-        checked : List { a | id : String } -> Dict String String -> List String
-        checked ids dict =
-            Data.Form.Helper.selection dict ids
+        checked : List { a | id : String } -> List String
+        checked ids =
+            Data.Form.Helper.selection formData ids
 
-        withCheckedRequired : List { a | id : String } -> Dict String String -> Form.Element -> Form.Element
-        withCheckedRequired ids dict formElement =
-            withRequired (List.length (checked ids dict) /= 0) formElement
+        withCheckedRequired : List { a | id : String } -> Form.Element -> Form.Element
+        withCheckedRequired ids formElement =
+            withRequired (List.length (checked ids) /= 0) formElement
 
-        hasCertificateSkills : Dict String String -> Bool
-        hasCertificateSkills dict =
-            Dict.get keys.certificateSkills dict
+        hasCertificateSkills : Bool
+        hasCertificateSkills =
+            Dict.get keys.certificateSkills formData
                 |> Maybe.map ((/=) "")
                 |> Maybe.withDefault False
 
@@ -487,12 +495,12 @@ fundingRequestForm maybeCertification formData ( candidacy, referential ) =
         , ( keys.mandatoryTrainingsHourCount
           , Form.Number "Nombre d'heures"
                 |> maybeReadOnlyTraining
-                |> withCheckedRequired referential.mandatoryTrainings formData
+                |> withCheckedRequired referential.mandatoryTrainings
           )
         , ( keys.mandatoryTrainingsCost
           , Form.Number "Coût horaire"
                 |> maybeReadOnlyTraining
-                |> withCheckedRequired referential.mandatoryTrainings formData
+                |> withCheckedRequired referential.mandatoryTrainings
           )
         , ( "basic-skills", Form.Title "Formations savoirs de base" )
         , ( keys.basicSkillsIds
@@ -503,24 +511,24 @@ fundingRequestForm maybeCertification formData ( candidacy, referential ) =
         , ( keys.basicSkillsHourCount
           , Form.Number "Nombre d'heures"
                 |> maybeReadOnlyTraining
-                |> withCheckedRequired referential.basicSkills formData
+                |> withCheckedRequired referential.basicSkills
           )
         , ( keys.basicSkillsCost
           , Form.Number "Coût horaire"
                 |> maybeReadOnlyTraining
-                |> withCheckedRequired referential.basicSkills formData
+                |> withCheckedRequired referential.basicSkills
           )
         , ( "skills", Form.Title "Bloc de compétences certifiant" )
         , ( keys.certificateSkills, Form.ReadOnlyElement <| Form.Textarea "" )
         , ( keys.certificateSkillsHourCount
           , Form.Number "Nombre d'heures"
                 |> maybeReadOnlyTraining
-                |> withRequired (hasCertificateSkills formData)
+                |> withRequired hasCertificateSkills
           )
         , ( keys.certificateSkillsCost
           , Form.Number "Coût horaire"
                 |> maybeReadOnlyTraining
-                |> withRequired (hasCertificateSkills formData)
+                |> withRequired hasCertificateSkills
           )
         , ( "other", Form.Title "Autres actions de formations complémentaires" )
         , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" )
@@ -541,7 +549,7 @@ fundingRequestForm maybeCertification formData ( candidacy, referential ) =
           )
         ]
     , saveLabel = "Envoyer"
-    , title = "Demande de prise en charge"
+    , title = title
     }
 
 
