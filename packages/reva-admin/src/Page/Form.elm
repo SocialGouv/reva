@@ -51,11 +51,15 @@ type Element
     | Textarea String
 
 
-type alias Form referential =
-    { elements : FormData -> referential -> List ( String, Element )
+type alias Form =
+    { elements : List ( String, Element )
     , saveLabel : String
     , title : String
     }
+
+
+type alias FormBuilder referential =
+    FormData -> referential -> Form
 
 
 type alias FormData =
@@ -64,9 +68,9 @@ type alias FormData =
 
 type RemoteForm referential
     = NotAsked
-    | Loading (Form referential)
-    | Editing (Maybe String) (Form referential) FormData
-    | Saving (Form referential) FormData
+    | Loading (FormBuilder referential)
+    | Editing (Maybe String) (FormBuilder referential) FormData
+    | Saving (FormBuilder referential) FormData
     | Failure
 
 
@@ -148,8 +152,12 @@ view remoteReferential model =
             viewForm referential model.status Nothing formData form <|
                 disabledSaveButton "..."
 
-        ( RemoteData.Success referential, Editing error form formData ) ->
-            viewForm referential model.status error formData form <|
+        ( RemoteData.Success referential, Editing error formBuilder formData ) ->
+            let
+                form =
+                    formBuilder formData referential
+            in
+            viewForm referential model.status error formData formBuilder <|
                 saveButton form.saveLabel
 
         ( _, Failure ) ->
@@ -159,7 +167,7 @@ view remoteReferential model =
             text err
 
 
-viewForm : referential -> Status -> Maybe String -> FormData -> Form referential -> Html (Msg referential) -> Html (Msg referential)
+viewForm : referential -> Status -> Maybe String -> FormData -> FormBuilder referential -> Html (Msg referential) -> Html (Msg referential)
 viewForm referential status maybeError formData form saveButton =
     let
         viewElement =
@@ -169,15 +177,18 @@ viewForm referential status maybeError formData form saveButton =
 
                 ReadOnly ->
                     viewReadOnlyElement
+
+        currentForm =
+            form formData referential
     in
     Html.form
         [ class "pl-16 pr-4 mt-10"
         , onSubmit (UserClickedSave referential)
         ]
-        [ View.title form.title
+        [ View.title currentForm.title
         , div
             [ class "mt-6 flex flex-wrap" ]
-            (List.map (viewElement formData) (form.elements formData referential)
+            (List.map (viewElement formData) currentForm.elements
                 |> List.map (div [ class "mr-8" ])
             )
         , case status of
@@ -580,7 +591,7 @@ update context msg model =
 updateForm :
     Context
     ->
-        { form : Form referential
+        { form : FormData -> referential -> Form
         , onLoad : String -> Token -> (RemoteData String (Dict String String) -> Msg referential) -> Cmd (Msg referential)
         , onRedirect : Cmd (Msg referential)
         , onSave : String -> Token -> (RemoteData String () -> Msg referential) -> referential -> Dict String String -> Cmd (Msg referential)

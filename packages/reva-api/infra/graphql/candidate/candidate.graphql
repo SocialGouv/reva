@@ -31,6 +31,8 @@ type TrainingForm {
 
 type FundingRequest {
   id: UUID!
+  numAction: String
+
   companion: Organism!
 
   diagnosisHourCount: Int!

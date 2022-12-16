@@ -24,6 +24,11 @@ id =
     Object.selectionForField "Data.Scalar.Uuid" "id" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecUuid |> .decoder)
 
 
+numAction : SelectionSet (Maybe String) Admin.Object.FundingRequest
+numAction =
+    Object.selectionForField "(Maybe String)" "numAction" [] (Decode.string |> Decode.nullable)
+
+
 companion :
     SelectionSet decodesTo Admin.Object.Organism
     -> SelectionSet decodesTo Admin.Object.FundingRequest
