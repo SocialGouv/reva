@@ -269,7 +269,7 @@ viewNavigationSteps baseUrl candidacy =
                 View.Candidacy.CandidateInfo
 
         candidateInfoLink =
-            if Candidacy.isStatusAbove candidacy "PARCOURS_CONFIRME" then
+            if Candidacy.isStatusEqualOrAbove candidacy "PARCOURS_CONFIRME" then
                 Just <| Route.href baseUrl <| Route.Candidacy (fundingView candidacy.id)
 
             else
@@ -547,7 +547,7 @@ fundingRequestForm maybeCertification formData ( candidacy, referential ) =
                     , "€"
                     ]
           )
-        , if Candidacy.isStatusAbove candidacy "DEMANDE_FINANCEMENT_ENVOYE" then
+        , if Candidacy.isStatusEqualOrAbove candidacy "DEMANDE_FINANCEMENT_ENVOYE" then
             ( "", Form.Empty )
 
           else
