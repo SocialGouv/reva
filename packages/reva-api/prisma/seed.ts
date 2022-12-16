@@ -270,10 +270,10 @@ async function main() {
 
 
   await prisma.goal.upsert({
-    where: { 
+    where: {
       label: "Trouver plus facilement un emploi"
-    }, 
-    update: {}, 
+    },
+    update: {},
     create: {
       label: "Trouver plus facilement un emploi",
       order: 1,
@@ -281,10 +281,10 @@ async function main() {
     }
   });
   await prisma.goal.upsert({
-    where: { 
+    where: {
       label: "Être reconnu dans ma profession"
-    }, 
-    update: {}, 
+    },
+    update: {},
     create: {
       label: "Être reconnu dans ma profession",
       order: 2,
@@ -292,10 +292,10 @@ async function main() {
     }
   });
   await prisma.goal.upsert({
-    where: { 
+    where: {
       label: "Avoir un meilleur salaire"
-    }, 
-    update: {}, 
+    },
+    update: {},
     create: {
       label: "Avoir un meilleur salaire",
       order: 3,
@@ -303,10 +303,10 @@ async function main() {
     }
   });
   await prisma.goal.upsert({
-    where: { 
+    where: {
       label: "Me réorienter"
-    }, 
-    update: {}, 
+    },
+    update: {},
     create: {
       label: "Me réorienter",
       order: 4,
@@ -314,10 +314,10 @@ async function main() {
     }
   });
   await prisma.goal.upsert({
-    where: { 
+    where: {
       label: "Consolider mes acquis métier"
-    }, 
-    update: {}, 
+    },
+    update: {},
     create: {
       label: "Consolider mes acquis métier",
       order: 5,
@@ -325,10 +325,10 @@ async function main() {
     }
   });
   await prisma.goal.upsert({
-    where: { 
+    where: {
       label: "Me redonner confiance en moi"
-    }, 
-    update: {}, 
+    },
+    update: {},
     create: {
       label: "Me redonner confiance en moi",
       order: 6,
@@ -336,10 +336,10 @@ async function main() {
     }
   });
   await prisma.goal.upsert({
-    where: { 
+    where: {
       label: "Autre"
-    }, 
-    update: {}, 
+    },
+    update: {},
     create: {
       label: "Autre",
       order: 7,
@@ -504,7 +504,7 @@ async function main() {
         { label: "Utilisation des règles de base de calcul et du raisonnement mathématique" },
         { label: "Communication en français" },
       ]
-    }); 
+    });
   }
 
   const degreesCount = await prisma.degree.count();
@@ -521,7 +521,7 @@ async function main() {
         { code: "N7_BAC_5", label: "Niveau 7 : Bac + 5", longLabel: "Niveau 7 : Bac + 5 (Master, DEA, DESS, diplôme d'ingénieur)", level: 7 },
         { code: "N8_BAC_8", label: "Niveau 8 : Bac + 8", longLabel: "Niveau 8 : Bac + 8 (Doctorat, habilitation à diriger des recherches)", level: 8 },
       ]
-    }); 
+    });
   }
 
   const vulnerabilityIndicatorsCount = await prisma.vulnerabilityIndicator.count();
@@ -534,7 +534,29 @@ async function main() {
         { label: "RQTH" },
         { label: "Vide" },
       ]
-    }); 
+    });
+  }
+
+  const dropOutReasonCount = await prisma.dropOutReason.count();
+
+  if (dropOutReasonCount === 0) {
+    await prisma.dropOutReason.createMany({
+      data: [
+        { label: "Reprise d’emploi" },
+        { label: "Entrée en formation" },
+        { label: "Découragement" },
+        { label: "Raisons personnelles(santé, famille)" },
+        { label: "Changement de projet" },
+        { label: "Manque de temps" },
+        { label: "Pas / plus intéressé" },
+        { label: "Le parcours REVA / VAE ne répond pas à mes objectifs" },
+        { label: "Rémunération non obtenue" },
+        { label: "Financement non obtenu" },
+        { label: "Avis architecte de parcours défavorable" },
+        { label: "Report du projet à plus tard" },
+        { label: "Autre" },
+      ]
+    });
   }
 }
 
