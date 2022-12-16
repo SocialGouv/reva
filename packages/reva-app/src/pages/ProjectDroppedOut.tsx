@@ -13,7 +13,7 @@ interface ProjectDroppedOutProps {
   supportEmail: string;
 }
 
-export const ProjectDroppedOut = ({mainService, candidateName, candidateEmail, supportEmail}: ProjectDroppedOutProps) => {
+export const ProjectDroppedOut = ({ mainService, candidateName, candidateEmail, supportEmail }: ProjectDroppedOutProps) => {
   const [state] = useActor(mainService);
 
   return (
@@ -31,11 +31,11 @@ export const ProjectDroppedOut = ({mainService, candidateName, candidateEmail, s
         </p>
 
         <p className="mt-8">
-          Nous avons enregistré l'interruption de votre parcours.<br/>
+          Nous avons enregistré l'interruption de votre parcours.<br />
           Nous vous informons que vous ne pourrez pas candidater à nouveau dans le cadre de cette expérimentation.
         </p>
         <p className="mt-8">
-          Vous avez une question ? <EmailLink email={supportEmail}/>
+          Vous avez une question ? <EmailLink email={supportEmail} />
         </p>
       </div>
     </Page>

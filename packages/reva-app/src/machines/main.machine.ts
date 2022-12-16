@@ -114,70 +114,70 @@ export type MainEvent =
 
 export type MainState =
   | {
-      value: typeof searchResults | typeof loadingCertifications;
-      context: MainContext & {
-        certification: undefined;
-        candidacyId: undefined;
-      };
-    }
-  | {
-      value: typeof certificateSummary | typeof certificateDetails;
-      context: MainContext & {
-        certification: Certification;
-        candidacyId: string;
-      };
-    }
-  | {
-      value: typeof trainingProgramSummary;
-      context: MainContext & {
-        candidacyCreatedAt: Date;
-        certification: Certification;
-        trainingProgram: TrainingProgram;
-      };
-    }
-  | {
-      value: typeof trainingProgramConfirmed;
-      context: MainContext & {
-        certification: Certification;
-        organism: Organism;
-      };
-    }
-  | {
-      value: typeof submissionHome;
-      context: MainContext & {
-        candidacyId: string;
-        certification: Certification;
-        candidacyCreatedAt: Date;
-      };
-    }
-  | {
-      value:
-        | typeof loginHome
-        | typeof loginConfirmation
-        | typeof projectHome
-        | typeof projectSubmitted
-        | typeof projectDroppedOut
-        | typeof projectGoals
-        | typeof projectContact
-        | typeof projectContactConfirmation
-        | typeof projectExperience
-        | typeof projectExperiences
-        | typeof projectHelp
-        | typeof projectOrganism
-        | typeof error;
-
-      context: MainContext & {
-        candidacyId: string;
-        certification: Certification;
-        contact: Contact;
-        experiences: Experience[];
-        goals: Goal[];
-        organism: Organism;
-        departments: Department[];
-        selectedDepartment?: Department;
-        organisms: Organism[];
-      };
+    value: typeof searchResults | typeof loadingCertifications;
+    context: MainContext & {
+      certification: undefined;
+      candidacyId: undefined;
     };
+  }
+  | {
+    value: typeof certificateSummary | typeof certificateDetails;
+    context: MainContext & {
+      certification: Certification;
+      candidacyId: string;
+    };
+  }
+  | {
+    value: typeof trainingProgramSummary;
+    context: MainContext & {
+      candidacyCreatedAt: Date;
+      certification: Certification;
+      trainingProgram: TrainingProgram;
+    };
+  }
+  | {
+    value: typeof trainingProgramConfirmed;
+    context: MainContext & {
+      certification: Certification;
+      organism: Organism;
+    };
+  }
+  | {
+    value: typeof submissionHome;
+    context: MainContext & {
+      candidacyId: string;
+      certification: Certification;
+      candidacyCreatedAt: Date;
+    };
+  }
+  | {
+    value:
+    | typeof loginHome
+    | typeof loginConfirmation
+    | typeof projectHome
+    | typeof projectSubmitted
+    | typeof projectDroppedOut
+    | typeof projectGoals
+    | typeof projectContact
+    | typeof projectContactConfirmation
+    | typeof projectExperience
+    | typeof projectExperiences
+    | typeof projectHelp
+    | typeof projectOrganism
+    | typeof error;
+
+    context: MainContext & {
+      candidacyId: string;
+      certification: Certification;
+      contact: Contact;
+      experiences: Experience[];
+      goals: Goal[];
+      organism: Organism;
+      departments: Department[];
+      selectedDepartment?: Department;
+      organisms: Organism[];
+    };
+  };
 
 const isLogin = window.location.pathname.endsWith("login");
 const loginToken =
@@ -208,8 +208,8 @@ export const mainMachine =
           loginToken || authenticated
             ? "projectHomeLoading"
             : isLogin
-            ? "loginHome"
-            : "projectContact",
+              ? "loginHome"
+              : "projectContact",
         id: "mainMachine",
         states: {
           loginHome: {
@@ -631,9 +631,9 @@ export const mainMachine =
                         experiences: (context, _event) => ({
                           rest: context.experiences.edited
                             ? [
-                                ...context.experiences.rest,
-                                context.experiences.edited,
-                              ]
+                              ...context.experiences.rest,
+                              context.experiences.edited,
+                            ]
                             : context.experiences.rest,
                         }),
                       }),
@@ -653,9 +653,9 @@ export const mainMachine =
                       experiences: (context, _event) => ({
                         rest: context.experiences.edited
                           ? [
-                              ...context.experiences.rest,
-                              context.experiences.edited,
-                            ]
+                            ...context.experiences.rest,
+                            context.experiences.edited,
+                          ]
                           : context.experiences.rest,
                       }),
                     }),
