@@ -58,6 +58,7 @@ keys :
     , postExamCost : String
     , individualHourCount : String
     , individualCost : String
+    , isFormConfirmed : String
     , collectiveHourCount : String
     , collectiveCost : String
     , basicSkillsIds : String
@@ -83,6 +84,7 @@ keys =
     , postExamCost = "postExamCost"
     , individualHourCount = "individualHourCount"
     , individualCost = "individualCost"
+    , isFormConfirmed = "isFormConfirmed"
     , collectiveHourCount = "collectiveHourCount"
     , collectiveCost = "collectiveCost"
     , basicSkillsIds = "basicSkillsIds"
@@ -107,13 +109,24 @@ validate _ dict =
     let
         decode =
             Helper.decode keys dict
-    in
-    case decode.maybe.string .companionId of
-        Nothing ->
-            Err "Veuillez sélectionner un accompagnateur"
 
-        Just _ ->
-            Ok ()
+        companionValidation () =
+            case decode.maybe.string .companionId of
+                Nothing ->
+                    Err "Veuillez sélectionner un accompagnateur"
+
+                Just _ ->
+                    Ok ()
+
+        confirmationValidation () =
+            if decode.bool .isFormConfirmed False then
+                Ok ()
+
+            else
+                Err "Veuillez confirmer le montant de la prise en charge avant son envoi définitif"
+    in
+    companionValidation ()
+        |> Result.andThen confirmationValidation
 
 
 fromDict : List BasicSkill -> List MandatoryTraining -> Dict String String -> FundingRequestInput

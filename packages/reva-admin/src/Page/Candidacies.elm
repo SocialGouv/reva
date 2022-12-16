@@ -269,7 +269,7 @@ viewNavigationSteps baseUrl candidacy =
                 View.Candidacy.CandidateInfo
 
         candidateInfoLink =
-            if Candidacy.isStatusAbove candidacy "PARCOURS_CONFIRME" then
+            if Candidacy.isStatusEqualOrAbove candidacy "PARCOURS_CONFIRME" then
                 Just <| Route.href baseUrl <| Route.Candidacy (fundingView candidacy.id)
 
             else
@@ -547,6 +547,11 @@ fundingRequestForm maybeCertification formData ( candidacy, referential ) =
                     , "€"
                     ]
           )
+        , if Candidacy.isStatusEqualOrAbove candidacy "DEMANDE_FINANCEMENT_ENVOYE" then
+            ( "", Form.Empty )
+
+          else
+            ( keys.isFormConfirmed, Form.Checkbox "Je confirme ce montant de prise en charge. Je ne pourrai pas éditer cette demande de prise en charge après son envoi." )
         ]
     , saveLabel = "Envoyer"
     , title = title

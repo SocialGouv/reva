@@ -10,8 +10,8 @@ module Data.Candidacy exposing
     , currentStatusPosition
     , filterByWords
     , isFundingRequestSent
-    , isStatusAbove
     , isStatusEqual
+    , isStatusEqualOrAbove
     , isTrainingSent
     , lastStatus
     , sentDate
@@ -238,8 +238,8 @@ currentStatusPosition candidacy =
         |> statusToProgressPosition
 
 
-isStatusAbove : Candidacy -> String -> Bool
-isStatusAbove candidacy status =
+isStatusEqualOrAbove : Candidacy -> String -> Bool
+isStatusEqualOrAbove candidacy status =
     currentStatusPosition candidacy >= statusToProgressPosition status
 
 
@@ -250,12 +250,12 @@ isStatusEqual candidacy status =
 
 isFundingRequestSent : Candidacy -> Bool
 isFundingRequestSent candidacy =
-    isStatusAbove candidacy "DEMANDE_FINANCEMENT_ENVOYE"
+    isStatusEqualOrAbove candidacy "DEMANDE_FINANCEMENT_ENVOYE"
 
 
 isTrainingSent : Candidacy -> Bool
 isTrainingSent candidacy =
-    isStatusAbove candidacy "PARCOURS_ENVOYE"
+    isStatusEqualOrAbove candidacy "PARCOURS_ENVOYE"
 
 
 filterByWord : String -> CandidacySummary -> Bool
