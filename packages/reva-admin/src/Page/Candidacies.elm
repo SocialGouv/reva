@@ -547,7 +547,11 @@ fundingRequestForm maybeCertification formData ( candidacy, referential ) =
                     , "€"
                     ]
           )
-        , ( keys.isFormConfirmed, Form.Checkbox "Je confirme ce montant de prise en charge. Je ne pourrai pas éditer cette demande de prise en charge après son envoi." )
+        , if Candidacy.isStatusAbove candidacy "DEMANDE_FINANCEMENT_ENVOYE" then
+            ( "", Form.Empty )
+
+          else
+            ( keys.isFormConfirmed, Form.Checkbox "Je confirme ce montant de prise en charge. Je ne pourrai pas éditer cette demande de prise en charge après son envoi." )
         ]
     , saveLabel = "Envoyer"
     , title = title
