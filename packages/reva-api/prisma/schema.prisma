@@ -385,6 +385,29 @@ model VulnerabilityIndicator {
   @@map("vulnerability_indicator")
 }
 
+model Feature {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  key         String    @unique @db.VarChar(255)
+  label       String    @db.VarChar(255)
+  description String?
+  isActive    Boolean   @default(false) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime? @map("updated_at") @db.Timestamptz(6)
+
+  @@map("features")
+}
+
+model BatchExecution {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  key        String    @db.VarChar(255)
+  startedAt  DateTime  @map("started_at") @db.Timestamptz(6)
+  finishedAt DateTime? @map("finished_at") @db.Timestamptz(6)
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime? @map("updated_at") @db.Timestamptz(6)
+
+  @@map("batch_execution")
+}
+
 model FundingRequest {
   id                          String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   candidacy                   Candidacy                     @relation(fields: [candidacyId], references: [id])
@@ -412,6 +435,7 @@ model FundingRequest {
   otherTrainingHourCount      Int                           @map("other_training_hour_count")
   examHourCount               Int                           @map("exam_hour_count")
   examCost                    Int                           @map("exam_cost")
+  fundingRequestBatch         FundingRequestBatch?
 
   @@map("funding_request")
 }
@@ -438,4 +462,14 @@ model TrainingOnFundingRequests {
 
   @@id([trainingId, fundingRequestId])
   @@map("training_funding_request")
+}
+
+model FundingRequestBatch {
+  id               String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  fundingRequest   FundingRequest @relation(fields: [fundingRequestId], references: [id])
+  fundingRequestId String         @unique @map("funding_request_id") @db.Uuid
+  sent             Boolean        @default(false)
+  content          Json
+
+  @@map("funding_request_batch")
 }

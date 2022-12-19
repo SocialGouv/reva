@@ -1,10 +1,15 @@
-import { Either, EitherAsync, Left, Right, number } from "purify-ts";
+import { Either, EitherAsync, Left, Right } from "purify-ts";
 
 import { Role } from "../types/account";
+import { Candidacy, Degree } from "../types/candidacy";
 import {
   Candidate,
   FundingRequest,
+  FundingRequestBatch,
+  FundingRequestBatchContent,
   FundingRequestInput,
+  Gender,
+  VulnerabilityIndicator,
 } from "../types/candidate";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
@@ -14,6 +19,12 @@ interface CreateFundingRequestDeps {
     fundingRequest: any;
   }) => Promise<Either<string, FundingRequest>>;
   getCandidateByCandidacyId: (id: string) => Promise<Either<string, Candidate>>;
+  getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
+  createFundingRequestBatch: (params: {
+    fundingRequestId: string;
+    content: object;
+  }) => Promise<Either<string, FundingRequestBatch>>;
+  getNextNumAction: () => Promise<Either<string, string>>;
   hasRole: (role: Role) => boolean;
   existsCandidacyWithActiveStatuses: (params: {
     candidacyId: string;
@@ -248,30 +259,214 @@ export const createFundingRequest =
         validateFundingRequest(candidate)(params.fundingRequest)
       );
 
-    const createFundingRequest = EitherAsync.fromPromise(() =>
-      deps.createFundingRequest(params)
-    )
-      .map((fundingRequest: FundingRequest) => {
-        return {
-          ...fundingRequest,
-          basicSkills: fundingRequest?.basicSkills.map(
-            (b: any) => b.basicSkill
-          ),
-          mandatoryTrainings: fundingRequest?.mandatoryTrainings.map(
-            (t: any) => t.training
-          ),
-        };
-      })
-      .mapLeft(
-        () =>
-          new FunctionalError(
-            FunctionalCodeError.FUNDING_REQUEST_NOT_POSSIBLE,
-            `Erreur lors de la creation de la demande de financement`
+    const createFundingRequest = (inputFundingRequest: any) =>
+      EitherAsync.fromPromise(() =>
+        deps.createFundingRequest({
+          ...params,
+          fundingRequest: inputFundingRequest,
+        })
+      )
+        .map((savedFundingRequest: FundingRequest) => {
+          return {
+            ...savedFundingRequest,
+            basicSkills: savedFundingRequest?.basicSkills.map(
+              (b: any) => b.basicSkill
+            ),
+            mandatoryTrainings: savedFundingRequest?.mandatoryTrainings.map(
+              (t: any) => t.training
+            ),
+            totalCost: inputFundingRequest?.totalCost,
+          };
+        })
+        .mapLeft(
+          () =>
+            new FunctionalError(
+              FunctionalCodeError.FUNDING_REQUEST_NOT_POSSIBLE,
+              `Erreur lors de la creation de la demande de financement`
+            )
+        );
+
+    const createFundingRequestBatch = async (fundingRequest: FundingRequest) =>
+      EitherAsync.fromPromise(() =>
+        deps.getCandidateByCandidacyId(fundingRequest.candidacyId)
+      )
+        .map((candidate) =>
+          EitherAsync.fromPromise(() =>
+            deps.getCandidacyFromId(fundingRequest.candidacyId)
+          ).map((candidacy) => ({ fundingRequest, candidate, candidacy }))
+        )
+        .join()
+        .map((args) =>
+          EitherAsync.fromPromise(() => deps.getNextNumAction()).map(
+            (numAction) => ({ ...args, numAction })
           )
-      );
+        )
+        .join()
+        .map(mapFundingRequestBatch)
+        .chain((batchContent) =>
+          deps.createFundingRequestBatch({
+            fundingRequestId: fundingRequest.id,
+            content: batchContent,
+          })
+        )
+        .mapLeft(
+          () =>
+            new FunctionalError(
+              FunctionalCodeError.FUNDING_REQUEST_NOT_POSSIBLE,
+              `Erreur lors de la creation du bach de la demande de financement`
+            )
+        );
 
     return existsCandidacyInRequiredStatuses
       .chain(() => getCandidateByCandidacyId)
       .chain(checkRules)
-      .chain(() => createFundingRequest);
+      .chain(createFundingRequest)
+      .ifRight(createFundingRequestBatch);
   };
+
+export const mapFundingRequestBatch = ({
+  fundingRequest,
+  candidate,
+  candidacy,
+  numAction,
+}: {
+  fundingRequest: FundingRequest;
+  candidate: Candidate;
+  candidacy: Candidacy;
+  numAction: string;
+}) => {
+  {
+    const getIndPublicFragile = (v?: VulnerabilityIndicator | null) => {
+      const vulnerabilityLabel = v?.label || "Vide";
+      switch (vulnerabilityLabel) {
+        case "Demandeur d'emploi >12m":
+          return "1";
+        case "RQTH":
+          return "2";
+        case "Bénéficiaire de minima sociaux":
+          return "3";
+        case "Vide":
+          return "0";
+        default:
+          throw new Error("Unknown vulnerability label");
+      }
+    };
+
+    const getGenreCandidat = (gender?: Gender | null) => {
+      const nonNullGender = gender || "undisclosed";
+      switch (nonNullGender) {
+        case "undisclosed":
+          return "0";
+        case "man":
+          return "1";
+        case "woman":
+          return "2";
+        default:
+          throw new Error("Unknown gender");
+      }
+    };
+
+    const getNiveauObtenuCandidat = (degree?: Degree | null) => {
+      const code = degree?.code || "N1_SANS";
+
+      switch (code) {
+        case "N1_SANS":
+          return "1";
+        case "N2_CLEA":
+          return "2";
+        case "N3_CAP_BEP":
+          return "3";
+        case "N4_BAC":
+          return "4";
+        case "N5_BAC_2":
+          return "5";
+        case "N6_BAC_3_4":
+          return "6";
+        case "N7_BAC_5":
+          return "7";
+        case "N8_BAC_8":
+          return "8";
+        default:
+          throw new Error("Unknown degree code");
+      }
+    };
+
+    const getActeFormatifComplémentaire_SavoirsDeBase = (
+      basicSkill: { label: string }[]
+    ) =>
+      basicSkill.map((b) => {
+        switch (b.label) {
+          case "Communication en français":
+            return "0";
+          case "Utilisation des règles de base de calcul et du raisonnement mathématique":
+            return "1";
+          case "Usage et communication numérique":
+            return "2";
+        }
+      });
+
+    const getActeFormatifComplémentaire_FormationObligatoire = (
+      mandatoryTrainings: { label: string }[]
+    ) =>
+      mandatoryTrainings.map((m) => {
+        switch (m.label) {
+          case "Attestation de Formation aux Gestes et Soins d’Urgence (AFGSU)":
+            return "0";
+          case "Equipier de Première Intervention":
+            return "1";
+          case "Sauveteur Secouriste du Travail (SST)":
+            return "2";
+          case "Systèmes d’attaches":
+            return "3";
+        }
+      });
+
+    const batchContent: FundingRequestBatchContent = {
+      NumAction: numAction,
+      NomAP: candidacy?.organism?.label || "",
+      SiretAP: candidacy?.organism?.siret || "",
+      CertificationVisée: candidacy.certification.rncpId,
+      NomCandidat: candidate.lastname,
+      PrenomCandidat1: candidate.firstname,
+      PrenomCandidat2: candidate.firstname2 || "",
+      PrenomCandidat3: candidate.firstname3 || "",
+      GenreCandidat: getGenreCandidat(candidate.gender),
+      NiveauObtenuCandidat: getNiveauObtenuCandidat(candidate.highestDegree),
+      IndPublicFragile: getIndPublicFragile(candidate.vulnerabilityIndicator),
+      NbHeureDemAPDiag: fundingRequest.diagnosisHourCount,
+      CoutHeureDemAPDiag: fundingRequest.diagnosisCost,
+      NbHeureDemAPPostJury: fundingRequest.postExamHourCount,
+      CoutHeureDemAPPostJury: fundingRequest.postExamCost,
+      AccompagnateurCandidat: fundingRequest?.companion?.siret || "",
+      NbHeureDemAccVAEInd: fundingRequest.individualHourCount,
+      CoutHeureDemAccVAEInd: fundingRequest.individualCost,
+      NbHeureDemAccVAEColl: fundingRequest.collectiveHourCount,
+      CoutHeureDemAccVAEColl: fundingRequest.collectiveCost,
+      ActeFormatifComplémentaire_FormationObligatoire:
+        getActeFormatifComplémentaire_FormationObligatoire(
+          fundingRequest.mandatoryTrainings
+        ).join(","),
+      NbHeureDemComplFormObligatoire:
+        fundingRequest.mandatoryTrainingsHourCount,
+      CoutHeureDemComplFormObligatoire: fundingRequest.mandatoryTrainingsCost,
+      ActeFormatifComplémentaire_SavoirsDeBase:
+        getActeFormatifComplémentaire_SavoirsDeBase(
+          fundingRequest.basicSkills
+        ).join(","),
+      NbHeureDemComplFormSavoirsDeBase: fundingRequest.basicSkillsHourCount,
+      CoutHeureDemComplFormSavoirsDeBase: fundingRequest.basicSkillsCost,
+      ActeFormatifComplémentaire_BlocDeCompetencesCertifiant:
+        fundingRequest.certificateSkills,
+      NbHeureDemComplFormBlocDeCompetencesCertifiant:
+        fundingRequest.certificateSkillsHourCount,
+      CoutHeureDemComplFormBlocDeCompetencesCertifiant:
+        fundingRequest.certificateSkillsCost,
+      ActeFormatifComplémentaire_Autre: fundingRequest.otherTraining,
+      NbHeureDemTotalActesFormatifs: fundingRequest.otherTrainingHourCount,
+      NbHeureDemJury: fundingRequest.examHourCount,
+      CoutHeureJury: fundingRequest.examCost,
+      CoutTotalDemande: fundingRequest.totalCost || 0,
+    };
+    return batchContent;
+  }
+};

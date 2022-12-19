@@ -16,6 +16,7 @@ export interface Candidacy extends CandidacyAbstract {
   id: string;
   certificationId?: string;
   certification?: any;
+  organism?: Organism | null;
   regionId?: string;
   region?: Region;
   department: Department | null;
@@ -103,6 +104,7 @@ export interface Organism {
   address: string;
   zip: string;
   city: string;
+  siret: string;
   contactAdministrativeEmail: string;
 }
 
