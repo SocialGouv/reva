@@ -46,6 +46,11 @@ const withBasicSkills = (c: Candidacy) => ({
   basicSkills: c.basicSkills.map((bs) => bs.basicSkill),
 });
 
+const withDropOutReason = (c: Candidacy) => ({
+  ...c,
+  dropOutReason: Array.isArray(c.dropOutReason) ? c.dropOutReason[0] : null,
+});
+
 const withMandatoryTrainings = (c: Candidacy) => ({
   ...c,
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -71,6 +76,7 @@ export const resolvers = {
       return result
         .map(withBasicSkills)
         .map(withMandatoryTrainings)
+        .map(withDropOutReason)
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
@@ -85,6 +91,7 @@ export const resolvers = {
       return result
         .map(withBasicSkills)
         .map(withMandatoryTrainings)
+        .map(withDropOutReason)
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },

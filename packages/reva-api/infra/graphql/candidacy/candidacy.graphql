@@ -183,6 +183,12 @@ input DropOutInput {
   otherReasonContent: String
 }
 
+input DropOutInput {
+  dropOutDate: Timestamp!
+  dropOutReasonId: UUID!
+  otherReasonContent: String
+}
+
 type Mutation {
   candidacy_createCandidacy(candidacy: CandidacyInput!): Candidacy
   candidacy_submitCandidacy(deviceId: ID!, candidacyId: ID!): Candidacy
