@@ -12,7 +12,7 @@ export interface CandidacyInput extends CandidacyAbstract {
   certificationId: string;
 }
 
-export interface DropOutReasonOnCandidacy {
+export interface DropOutReasonOnCandidacies {
   dropOutReason: DropOutReason;
   dropOutDate: Date;
   otherReasonContent?: string;
@@ -32,7 +32,7 @@ export interface Candidacy extends CandidacyAbstract {
   // trainings: Training[];
   //   individualHourCount: number | null;
   //   collectiveHourCount: number | null;
-  dropOutReason?: DropOutReasonOnCandidacy;
+  dropOutReason?: DropOutReasonOnCandidacies[];
   createdAt: Date;
 }
 

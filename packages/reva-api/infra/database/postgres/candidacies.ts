@@ -38,6 +38,11 @@ export const candidacyIncludes = {
       training: true,
     },
   },
+  dropOutReason: {
+    include: {
+      dropOutReason: true,
+    },
+  },
 };
 
 const toDomainCandidacySummary = (
