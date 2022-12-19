@@ -18,16 +18,6 @@ type alias CandidateInput =
     }
 
 
-keys :
-    { id : String
-    , firstname : String
-    , firstname2 : String
-    , firstname3 : String
-    , gender : String
-    , highestDegree : String
-    , lastname : String
-    , vulnerabilityIndicator : String
-    }
 keys =
     { id = "id"
     , firstname = "firstname"

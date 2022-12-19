@@ -18,17 +18,6 @@ type alias Training =
     }
 
 
-keys :
-    { certificate : String
-    , mandatoryTrainings : String
-    , basicSkills : String
-    , certificateSkills : String
-    , otherTraining : String
-    , individualHourCount : String
-    , collectiveHourCount : String
-    , additionalHourCount : String
-    , consent : String
-    }
 keys =
     { certificate = "certificate"
     , mandatoryTrainings = "mandatory-training"

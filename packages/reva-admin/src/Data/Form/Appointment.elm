@@ -18,13 +18,6 @@ type alias Appointment =
     }
 
 
-keys :
-    { typology : String
-    , additionalInformation : String
-    , firstAppointmentOccurredAt : String
-    , appointmentCount : String
-    , wasPresentAtFirstAppointment : String
-    }
 keys =
     { typology = "typology"
     , additionalInformation = "additionalInformation"
