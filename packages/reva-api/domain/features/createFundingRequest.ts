@@ -182,6 +182,7 @@ export const validateFundingRequest =
     }
 
     if (errors.length) {
+      console.log(errors);
       return Left(
         new FunctionalError(
           FunctionalCodeError.FUNDING_REQUEST_NOT_POSSIBLE,
@@ -453,7 +454,10 @@ export const mapFundingRequestBatch = ({
       CoutHeureDemComplFormBlocDeCompetencesCertifiant:
         fundingRequest.certificateSkillsCost,
       ActeFormatifComplémentaire_Autre: fundingRequest.otherTraining,
-      NbHeureDemTotalActesFormatifs: fundingRequest.otherTrainingHourCount,
+      NbHeureDemTotalActesFormatifs:
+        fundingRequest.mandatoryTrainingsHourCount +
+        fundingRequest.basicSkillsHourCount +
+        fundingRequest.certificateSkillsHourCount,
       NbHeureDemJury: fundingRequest.examHourCount,
       CoutHeureJury: fundingRequest.examCost,
       CoutTotalDemande: fundingRequest.totalCost || 0,

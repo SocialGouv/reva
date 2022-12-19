@@ -68,7 +68,6 @@ export interface FundingRequest {
   otherTraining: string;
   postExamCost: number;
   postExamHourCount: number;
-  otherTrainingHourCount: number;
   totalCost?: number;
   companion?: Organism;
   numAction: string;
