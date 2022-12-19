@@ -50,32 +50,6 @@ type alias FundingRequestInput =
     }
 
 
-keys :
-    { companionId : String
-    , diagnosisHourCount : String
-    , diagnosisCost : String
-    , postExamHourCount : String
-    , postExamCost : String
-    , individualHourCount : String
-    , individualCost : String
-    , isFormConfirmed : String
-    , collectiveHourCount : String
-    , collectiveCost : String
-    , basicSkillsIds : String
-    , basicSkillsHourCount : String
-    , basicSkillsCost : String
-    , mandatoryTrainingIds : String
-    , mandatoryTrainingsHourCount : String
-    , mandatoryTrainingsCost : String
-    , numAction : String
-    , certificateSkills : String
-    , certificateSkillsHourCount : String
-    , certificateSkillsCost : String
-    , otherTraining : String
-    , otherTrainingHourCount : String
-    , examHourCount : String
-    , examCost : String
-    }
 keys =
     { companionId = "companionId"
     , diagnosisHourCount = "diagnosisHourCount"
