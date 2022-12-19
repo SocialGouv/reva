@@ -24,7 +24,6 @@ interface CreateFundingRequestDeps {
     fundingRequestId: string;
     content: object;
   }) => Promise<Either<string, FundingRequestBatch>>;
-  getNextNumAction: () => Promise<Either<string, string>>;
   hasRole: (role: Role) => boolean;
   existsCandidacyWithActiveStatuses: (params: {
     candidacyId: string;
@@ -183,6 +182,7 @@ export const validateFundingRequest =
     }
 
     if (errors.length) {
+      console.log(errors);
       return Left(
         new FunctionalError(
           FunctionalCodeError.FUNDING_REQUEST_NOT_POSSIBLE,
@@ -296,12 +296,6 @@ export const createFundingRequest =
           ).map((candidacy) => ({ fundingRequest, candidate, candidacy }))
         )
         .join()
-        .map((args) =>
-          EitherAsync.fromPromise(() => deps.getNextNumAction()).map(
-            (numAction) => ({ ...args, numAction })
-          )
-        )
-        .join()
         .map(mapFundingRequestBatch)
         .chain((batchContent) =>
           deps.createFundingRequestBatch({
@@ -328,12 +322,10 @@ export const mapFundingRequestBatch = ({
   fundingRequest,
   candidate,
   candidacy,
-  numAction,
 }: {
   fundingRequest: FundingRequest;
   candidate: Candidate;
   candidacy: Candidacy;
-  numAction: string;
 }) => {
   {
     const getIndPublicFragile = (v?: VulnerabilityIndicator | null) => {
@@ -422,7 +414,7 @@ export const mapFundingRequestBatch = ({
       });
 
     const batchContent: FundingRequestBatchContent = {
-      NumAction: numAction,
+      NumAction: fundingRequest.numAction,
       NomAP: candidacy?.organism?.label || "",
       SiretAP: candidacy?.organism?.siret || "",
       CertificationVisée: candidacy.certification.rncpId,
@@ -462,7 +454,10 @@ export const mapFundingRequestBatch = ({
       CoutHeureDemComplFormBlocDeCompetencesCertifiant:
         fundingRequest.certificateSkillsCost,
       ActeFormatifComplémentaire_Autre: fundingRequest.otherTraining,
-      NbHeureDemTotalActesFormatifs: fundingRequest.otherTrainingHourCount,
+      NbHeureDemTotalActesFormatifs:
+        fundingRequest.mandatoryTrainingsHourCount +
+        fundingRequest.basicSkillsHourCount +
+        fundingRequest.certificateSkillsHourCount,
       NbHeureDemJury: fundingRequest.examHourCount,
       CoutHeureJury: fundingRequest.examCost,
       CoutTotalDemande: fundingRequest.totalCost || 0,

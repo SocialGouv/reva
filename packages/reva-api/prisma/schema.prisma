@@ -432,10 +432,10 @@ model FundingRequest {
   certificateSkillsHourCount  Int                           @map("certificate_skills_hour_count")
   certificateSkillsCost       Int                           @map("certificate_skills_cost")
   otherTraining               String                        @map("other_training")
-  otherTrainingHourCount      Int                           @map("other_training_hour_count")
   examHourCount               Int                           @map("exam_hour_count")
   examCost                    Int                           @map("exam_cost")
   fundingRequestBatch         FundingRequestBatch?
+  numAction                   String                        @default("TO_MIGRATE") @map("num_action")
 
   @@map("funding_request")
 }

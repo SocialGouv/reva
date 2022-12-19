@@ -46,9 +46,9 @@ const defaultValidFundingRequest: FundingRequestInput = {
   mandatoryTrainingsHourCount: 1,
   postExamCost: 70,
   postExamHourCount: 1,
-  otherTrainingHourCount: 5,
   totalCost: 1885,
   companion: { siret: "1234" } as Organism,
+  numAction: "reva_20221115_00000001",
 };
 
 const defaultCandidate = {
@@ -79,7 +79,6 @@ describe("funding request batch", () => {
       };
       const result = mapFundingRequestBatch({
         fundingRequest,
-        numAction: "reva_01012022_00000001",
         candidate: defaultCandidate as Candidate,
         candidacy: defaultCandidacy as Candidacy,
       });
@@ -108,11 +107,11 @@ describe("funding request batch", () => {
         NbHeureDemComplFormObligatoire: 1,
         NbHeureDemComplFormSavoirsDeBase: 1,
         NbHeureDemJury: 2,
-        NbHeureDemTotalActesFormatifs: 5,
+        NbHeureDemTotalActesFormatifs: 3,
         NiveauObtenuCandidat: "5",
         NomAP: "labelAp",
         NomCandidat: "Michelovitch",
-        NumAction: "reva_01012022_00000001",
+        NumAction: "reva_20221115_00000001",
         PrenomCandidat1: "Michel",
         PrenomCandidat2: "Michel2",
         PrenomCandidat3: "Michel3",

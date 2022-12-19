@@ -130,11 +130,6 @@ otherTraining =
     Object.selectionForField "String" "otherTraining" [] Decode.string
 
 
-otherTrainingHourCount : SelectionSet Int Admin.Object.FundingRequest
-otherTrainingHourCount =
-    Object.selectionForField "Int" "otherTrainingHourCount" [] Decode.int
-
-
 examHourCount : SelectionSet Int Admin.Object.FundingRequest
 examHourCount =
     Object.selectionForField "Int" "examHourCount" [] Decode.int

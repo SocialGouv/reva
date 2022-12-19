@@ -60,7 +60,6 @@ type FundingRequest {
   certificateSkillsCost: Int!
 
   otherTraining: String!
-  otherTrainingHourCount: Int!
 
   examHourCount: Int!
   examCost: Int!
@@ -133,7 +132,6 @@ input FundingRequestInput {
   certificateSkillsCost: Int!
 
   otherTraining: String!
-  otherTrainingHourCount: Int!
 
   examHourCount: Int!
   examCost: Int!

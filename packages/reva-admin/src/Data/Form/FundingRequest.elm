@@ -44,7 +44,6 @@ type alias FundingRequestInput =
     , certificateSkillsHourCount : Int
     , certificateSkillsCost : Int
     , otherTraining : String
-    , totalTrainingHourCount : Int
     , examHourCount : Int
     , examCost : Int
     }
@@ -130,7 +129,6 @@ fromDict basicSkillsIds mandatoryTrainingIds dict =
         (decode.int .certificateSkillsHourCount 0)
         (decode.int .certificateSkillsCost 0)
         (decode.string .otherTraining "")
-        (decode.int .totalTrainingHourCount 0)
         (decode.int .examHourCount 0)
         (decode.int .examCost 0)
 
@@ -169,7 +167,6 @@ fundingRequest funding =
             , ( .certificateSkillsHourCount, int .certificateSkillsHourCount )
             , ( .certificateSkillsCost, int .certificateSkillsCost )
             , ( .otherTraining, string .otherTraining )
-            , ( .totalTrainingHourCount, int .totalTrainingHourCount )
             , ( .examHourCount, int .examHourCount )
             , ( .examCost, int .examCost )
             ]
