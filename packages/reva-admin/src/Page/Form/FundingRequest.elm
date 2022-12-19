@@ -171,6 +171,59 @@ form maybeCertification formData ( candidacy, referential ) =
     }
 
 
+droppedOutForm : Maybe Certification -> Dict String String -> ( Candidacy, Referential ) -> Form
+droppedOutForm maybeCertification formData ( candidacy, referential ) =
+    let
+        baseTitle =
+            "Demande de prise en charge"
+
+        title =
+            Dict.get keys.numAction formData
+                |> Maybe.map (\numAction -> baseTitle ++ " " ++ numAction)
+                |> Maybe.withDefault baseTitle
+
+        keys =
+            Data.Form.FundingRequest.keys
+
+        certificateField : ( String, Form.Element )
+        certificateField =
+            case maybeCertification of
+                Just certification ->
+                    ( "certification", Form.Info "" certification.label )
+
+                Nothing ->
+                    ( "certification", Form.Empty )
+    in
+    { elements =
+        [ ( "heading", Form.Heading "2 - Parcours personnalisé" )
+        , ( "selected-certification", Form.Section "Certification choisie par le candidat" )
+        , certificateField
+        , ( "organism", Form.Section "Accompagnement architecte de parcours" )
+        , ( "diagnosis", Form.Title "Entretien(s) de faisabilité" )
+        , ( keys.diagnosisHourCount, Form.Number "Nombre d'heures" )
+        , ( keys.diagnosisCost, Form.Number "Coût horaire" )
+        , ( "post-exam", Form.Title "Entretien post jury" )
+        , ( keys.postExamHourCount, Form.Number "Nombre d'heures" )
+        , ( keys.postExamCost, Form.Number "Coût horaire" )
+        , ( "total", Form.Section "Total" )
+        , ( "totalCost"
+          , Form.Info "Coût total de la demande de prise en charge" <|
+                String.concat
+                    [ String.fromInt (totalFundingRequestCost formData)
+                    , "€"
+                    ]
+          )
+        , if Candidacy.isStatusEqualOrAbove candidacy "DEMANDE_FINANCEMENT_ENVOYE" then
+            ( "", Form.Empty )
+
+          else
+            ( keys.isFormConfirmed, Form.Checkbox "Je confirme ce montant de prise en charge. Je ne pourrai pas éditer cette demande de prise en charge après son envoi." )
+        ]
+    , saveLabel = "Envoyer"
+    , title = title
+    }
+
+
 hasAccessTrainingFunding : Referential -> Data.Candidate.Candidate -> Bool
 hasAccessTrainingFunding referential candidate =
     let

@@ -615,7 +615,7 @@ updateTab context tab model =
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
-                        { form = Page.Form.FundingRequest.form candidacy.certification
+                        { form = Page.Form.FundingRequest.droppedOutForm candidacy.certification
                         , onLoad = Api.Form.FundingRequest.get candidacyId
                         , onSave = Api.Form.FundingRequest.create candidacyId
                         , onRedirect =
