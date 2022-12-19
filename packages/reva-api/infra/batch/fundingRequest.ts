@@ -119,6 +119,9 @@ async function sendFundingRequestsStream(params: {
       user: process.env.FTPS_USERNAME || "reva",
       password: process.env.FTPS_PASSWORD || "password",
       secure: true,
+      secureOptions: {
+        rejectUnauthorized: process.env.FTPS_ALLOW_UNAUTHORIZED_CERT !== "true",
+      },
     });
 
     logger.info("Before sending stream");
