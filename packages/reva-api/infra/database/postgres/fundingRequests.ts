@@ -1,13 +1,12 @@
-import {
-  BasicSkillOnFundingRequests,
-  FundingRequest,
-  Organism,
-  TrainingOnFundingRequests,
-} from "@prisma/client";
-import { Left, Maybe, Right } from "purify-ts";
+import { FundingRequest } from "@prisma/client";
+import { format } from "date-fns";
+import pino from "pino";
+import { Left, Right } from "purify-ts";
 
 import { updateCandidacyStatus } from "./candidacies";
 import { prismaClient } from "./client";
+
+const logger = pino();
 
 export const getFundingRequest = async (params: { candidacyId: string }) => {
   try {
@@ -66,6 +65,7 @@ export const createFundingRequest = async (params: {
   try {
     const newFundingRequest = await prismaClient.fundingRequest.create({
       data: {
+        numAction: await getNextNumAction(),
         candidacyId: params.candidacyId,
         companionId: params.fundingRequest.companionId,
         diagnosisHourCount: params.fundingRequest.diagnosisHourCount,
@@ -138,7 +138,17 @@ export const createFundingRequest = async (params: {
       }
     );
   } catch (e) {
-    console.log(e);
+    logger.error(e);
     return Left("error while creating funding request");
   }
+};
+
+const getNextNumAction = async () => {
+  const nextValQueryResult =
+    (await prismaClient.$queryRaw`Select nextval('funding_request_num_action_sequence')`) as {
+      nextval: number;
+    }[];
+  return `reva_${format(new Date(), "yyyyMMdd")}_${nextValQueryResult[0].nextval
+    .toString()
+    .padStart(5, "0")}`;
 };
