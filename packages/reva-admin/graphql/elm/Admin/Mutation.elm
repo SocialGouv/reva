@@ -283,6 +283,20 @@ candidacy_confirmTrainingForm requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_confirmTrainingForm" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ Basics.identity
 
 
+type alias CandidacyDropOutRequiredArguments =
+    { candidacyId : Data.Scalar.Uuid
+    , dropOut : Admin.InputObject.DropOutInput
+    }
+
+
+candidacy_dropOut :
+    CandidacyDropOutRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet decodesTo RootMutation
+candidacy_dropOut requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_dropOut" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "dropOut" requiredArgs____.dropOut Admin.InputObject.encodeDropOutInput ] object____ Basics.identity
+
+
 type alias CandidateAskForRegistrationRequiredArguments =
     { candidate : Admin.InputObject.CandidateInput }
 

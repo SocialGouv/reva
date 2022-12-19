@@ -275,6 +275,46 @@ encodeCertificationChangeInput input____ =
         [ ( "candidacyId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.candidacyId |> Just ), ( "certificationId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.certificationId |> Just ) ]
 
 
+buildDropOutInput :
+    DropOutInputRequiredFields
+    -> (DropOutInputOptionalFields -> DropOutInputOptionalFields)
+    -> DropOutInput
+buildDropOutInput required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { otherReasonContent = Absent }
+    in
+    { dropOutDate = required____.dropOutDate, dropOutReasonId = required____.dropOutReasonId, otherReasonContent = optionals____.otherReasonContent }
+
+
+type alias DropOutInputRequiredFields =
+    { dropOutDate : Data.Scalar.Timestamp
+    , dropOutReasonId : Data.Scalar.Uuid
+    }
+
+
+type alias DropOutInputOptionalFields =
+    { otherReasonContent : OptionalArgument String }
+
+
+{-| Type for the DropOutInput input object.
+-}
+type alias DropOutInput =
+    { dropOutDate : Data.Scalar.Timestamp
+    , dropOutReasonId : Data.Scalar.Uuid
+    , otherReasonContent : OptionalArgument String
+    }
+
+
+{-| Encode a DropOutInput into a value that can be used as an argument.
+-}
+encodeDropOutInput : DropOutInput -> Value
+encodeDropOutInput input____ =
+    Encode.maybeObject
+        [ ( "dropOutDate", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) input____.dropOutDate |> Just ), ( "dropOutReasonId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) input____.dropOutReasonId |> Just ), ( "otherReasonContent", Encode.string |> Encode.optional input____.otherReasonContent ) ]
+
+
 buildExperienceInput :
     ExperienceInputRequiredFields
     -> ExperienceInput

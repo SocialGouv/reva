@@ -166,6 +166,13 @@ getVulnerabilityIndicators object____ =
     Object.selectionForCompositeField "getVulnerabilityIndicators" [] object____ (Basics.identity >> Decode.list)
 
 
+getDropOutReasons :
+    SelectionSet decodesTo Admin.Object.DropOutReason
+    -> SelectionSet (List decodesTo) RootQuery
+getDropOutReasons object____ =
+    Object.selectionForCompositeField "getDropOutReasons" [] object____ (Basics.identity >> Decode.list)
+
+
 type alias SearchCertificationsAndProfessionsOptionalArguments =
     { query : OptionalArgument String }
 

@@ -49,6 +49,14 @@ type Department
     = Department
 
 
+type DropOutReason
+    = DropOutReason
+
+
+type DropOutReasonOnCandidacy
+    = DropOutReasonOnCandidacy
+
+
 type Experience
     = Experience
 
