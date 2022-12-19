@@ -55,7 +55,7 @@ create candidacyId endpointGraphql token toMsg ( _, referential ) dict =
                 funding.certificateSkillsHourCount
                 funding.certificateSkillsCost
                 funding.otherTraining
-                funding.otherTrainingHourCount
+                funding.totalTrainingHourCount
                 funding.examHourCount
                 funding.examCost
 
