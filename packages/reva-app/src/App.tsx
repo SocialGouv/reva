@@ -16,6 +16,7 @@ import { LoginConfirmation } from "./pages/LoginConfirmation";
 import { LoginHome } from "./pages/LoginHome";
 import { ProjectContact } from "./pages/ProjectContact";
 import { ProjectContactConfirmation } from "./pages/ProjectContactConfirmation";
+import { ProjectDroppedOut } from "./pages/ProjectDroppedOut";
 import { ProjectExperience } from "./pages/ProjectExperience";
 import { ProjectExperiences } from "./pages/ProjectExperiences";
 import { ProjectGoals } from "./pages/ProjectGoals";
@@ -23,7 +24,6 @@ import { ProjectHelp } from "./pages/ProjectHelp";
 import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectOrganisms } from "./pages/ProjectOrganisms";
 import { ProjectSubmitted } from "./pages/ProjectSubmitted";
-import { ProjectDroppedOut } from "./pages/ProjectDroppedOut";
 import { SubmissionHome } from "./pages/SubmissionHome";
 import { TrainingProgramConfirmed } from "./pages/TrainingProgramConfirmed";
 import { TrainingProgramSummary } from "./pages/TrainingProgramSummary";
@@ -314,7 +314,8 @@ function App() {
     const lastname = contact?.lastname ?? "";
     const fullName = `${firstname} ${lastname}`;
     return (
-      <ProjectDroppedOut mainService={mainService}
+      <ProjectDroppedOut
+        mainService={mainService}
         candidateEmail={contact?.email ?? ""}
         candidateName={fullName}
         supportEmail="support@reva.beta.gouv.fr"
@@ -370,7 +371,8 @@ function App() {
       {current.matches("projectOrganism") &&
         projectOrganismsPage(current.context.certification)}
 
-      {current.matches("projectDroppedOut") && projectDroppedOutPage(current.context.contact)}
+      {current.matches("projectDroppedOut") &&
+        projectDroppedOutPage(current.context.contact)}
 
       {current.matches("certificateDetails") &&
         certificateDetails(current.context.certification)}
