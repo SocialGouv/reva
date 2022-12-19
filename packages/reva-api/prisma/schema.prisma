@@ -436,6 +436,7 @@ model FundingRequest {
   examHourCount               Int                           @map("exam_hour_count")
   examCost                    Int                           @map("exam_cost")
   fundingRequestBatch         FundingRequestBatch?
+  numAction                   String                        @default("TO_MIGRATE") @map("num_action")
 
   @@map("funding_request")
 }

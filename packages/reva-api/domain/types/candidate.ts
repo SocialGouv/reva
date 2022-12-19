@@ -71,6 +71,7 @@ export interface FundingRequest {
   otherTrainingHourCount: number;
   totalCost?: number;
   companion?: Organism;
+  numAction: string;
 }
 
 export interface FundingRequestInput extends FundingRequest {
