@@ -46,7 +46,6 @@ const defaultValidFundingRequest: FundingRequestInput = {
   mandatoryTrainingsHourCount: 1,
   postExamCost: 70,
   postExamHourCount: 1,
-  otherTrainingHourCount: 5,
   totalCost: 1885,
   companion: { siret: "1234" } as Organism,
 };
@@ -108,7 +107,7 @@ describe("funding request batch", () => {
         NbHeureDemComplFormObligatoire: 1,
         NbHeureDemComplFormSavoirsDeBase: 1,
         NbHeureDemJury: 2,
-        NbHeureDemTotalActesFormatifs: 5,
+        NbHeureDemTotalActesFormatifs: 3,
         NiveauObtenuCandidat: "5",
         NomAP: "labelAp",
         NomCandidat: "Michelovitch",

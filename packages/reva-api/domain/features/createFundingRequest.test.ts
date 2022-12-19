@@ -63,7 +63,6 @@ const defaultValidFundingRequest: FundingRequestInput = {
   mandatoryTrainingsHourCount: 1,
   postExamCost: 70,
   postExamHourCount: 1,
-  otherTrainingHourCount: 0,
   companion: { siret: "1234" } as Organism,
 };
 
