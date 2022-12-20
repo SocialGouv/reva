@@ -89,7 +89,6 @@ describe("funding request batch", () => {
         candidacy: defaultCandidacy as Candidacy,
       });
       expect(result).toMatchObject({
-        AccompagnateurCandidat: "1234",
         ActeFormatifComplémentaire_Autre: "other training",
         ActeFormatifComplémentaire_BlocDeCompetencesCertifiant: "RCNP12 RCNP34",
         ActeFormatifComplémentaire_FormationObligatoire: "0,1,2,3",
@@ -103,7 +102,6 @@ describe("funding request batch", () => {
         CoutHeureDemComplFormObligatoire: 20,
         CoutHeureDemComplFormSavoirsDeBase: 20,
         CoutHeureJury: 20,
-        GenreCandidat: "1",
         IndPublicFragile: "1",
         NbHeureDemAPDiag: 2,
         NbHeureDemAPPostJury: 1,
@@ -115,14 +113,12 @@ describe("funding request batch", () => {
         NbHeureDemJury: 2,
         NbHeureDemTotalActesFormatifs: 3,
         NiveauObtenuCandidat: "5",
-        NomAP: "labelAp",
         NomCandidat: "Michelovitch",
         NumAction: "reva_20221115_00000001",
         PrenomCandidat1: "Michel",
         PrenomCandidat2: "Michel2",
         PrenomCandidat3: "Michel3",
         SiretAP: "siretAp",
-        CoutTotalDemande: 1885,
       });
     });
   });
