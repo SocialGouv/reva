@@ -8,7 +8,7 @@ import { useContext, useEffect, useMemo } from "react";
 
 import { Footer } from "./components/organisms/Footer";
 import { useKeycloakContext } from "./contexts/keycloakContext";
-import { Certification } from "./interface";
+import { Certification, Contact } from "./interface";
 import { mainMachine } from "./machines/main.machine";
 import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
@@ -17,6 +17,7 @@ import { LoginConfirmation } from "./pages/LoginConfirmation";
 import { LoginHome } from "./pages/LoginHome";
 import { ProjectContact } from "./pages/ProjectContact";
 import { ProjectContactConfirmation } from "./pages/ProjectContactConfirmation";
+import { ProjectDroppedOut } from "./pages/ProjectDroppedOut";
 import { ProjectExperience } from "./pages/ProjectExperience";
 import { ProjectExperiences } from "./pages/ProjectExperiences";
 import { ProjectGoals } from "./pages/ProjectGoals";
@@ -314,6 +315,20 @@ function App() {
     <ProjectSubmitted key="project-submitted" mainService={mainService} />
   );
 
+  const projectDroppedOutPage = (contact: Contact) => {
+    const firstname = contact?.firstname ?? "";
+    const lastname = contact?.lastname ?? "";
+    const fullName = `${firstname} ${lastname}`;
+    return (
+      <ProjectDroppedOut
+        mainService={mainService}
+        candidateEmail={contact?.email ?? ""}
+        candidateName={fullName}
+        supportEmail="support@reva.beta.gouv.fr"
+      />
+    );
+  };
+
   const errorPage = () => <Error key="error-page" mainService={mainService} />;
 
   const certificateDetails = (certification: Certification) => (
@@ -361,6 +376,9 @@ function App() {
 
       {current.matches("projectOrganism") &&
         projectOrganismsPage(current.context.certification)}
+
+      {current.matches("projectDroppedOut") &&
+        projectDroppedOutPage(current.context.contact)}
 
       {current.matches("certificateDetails") &&
         certificateDetails(current.context.certification)}
