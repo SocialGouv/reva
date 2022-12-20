@@ -34,7 +34,7 @@ const generateFundingRequestBatchCsvStream = async (
     },
   });
 
-  const csvStream = csv.format({ headers: true });
+  const csvStream = csv.format({ headers: true, delimiter: ";" });
   return fundingRequestBatchesWaitingToBeSentStream.pipe(csvStream);
 };
 
