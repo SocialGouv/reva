@@ -92,21 +92,18 @@ export interface FundingRequestBatch {
 
 export interface FundingRequestBatchContent {
   NumAction: string;
-  NomAP: string;
   SiretAP: string;
   CertificationVisée: string;
   NomCandidat: string;
   PrenomCandidat1: string;
   PrenomCandidat2: string;
   PrenomCandidat3: string;
-  GenreCandidat: "0" | "1" | "2";
   NiveauObtenuCandidat: string;
   IndPublicFragile: "0" | "1" | "2" | "3";
   NbHeureDemAPDiag: number;
   CoutHeureDemAPDiag: number;
   NbHeureDemAPPostJury: number;
   CoutHeureDemAPPostJury: number;
-  AccompagnateurCandidat: string;
   NbHeureDemAccVAEInd: number;
   CoutHeureDemAccVAEInd: number;
   NbHeureDemAccVAEColl: number;
@@ -124,5 +121,4 @@ export interface FundingRequestBatchContent {
   NbHeureDemTotalActesFormatifs: number;
   NbHeureDemJury: number;
   CoutHeureJury: number;
-  CoutTotalDemande: number;
 }

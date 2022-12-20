@@ -8,7 +8,6 @@ import {
   FundingRequestBatch,
   FundingRequestBatchContent,
   FundingRequestInput,
-  Gender,
   VulnerabilityIndicator,
 } from "../types/candidate";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
@@ -344,20 +343,6 @@ export const mapFundingRequestBatch = ({
       }
     };
 
-    const getGenreCandidat = (gender?: Gender | null) => {
-      const nonNullGender = gender || "undisclosed";
-      switch (nonNullGender) {
-        case "undisclosed":
-          return "0";
-        case "man":
-          return "1";
-        case "woman":
-          return "2";
-        default:
-          throw new Error("Unknown gender");
-      }
-    };
-
     const getNiveauObtenuCandidat = (degree?: Degree | null) => {
       const code = degree?.code || "N1_SANS";
 
@@ -394,6 +379,8 @@ export const mapFundingRequestBatch = ({
             return "1";
           case "Usage et communication numérique":
             return "2";
+          default:
+            throw new Error(`Unknown basic skill label: ${b.label}`);
         }
       });
 
@@ -402,34 +389,33 @@ export const mapFundingRequestBatch = ({
     ) =>
       mandatoryTrainings.map((m) => {
         switch (m.label) {
-          case "Attestation de Formation aux Gestes et Soins d’Urgence (AFGSU)":
+          case "Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU)":
             return "0";
           case "Equipier de Première Intervention":
             return "1";
           case "Sauveteur Secouriste du Travail (SST)":
             return "2";
-          case "Systèmes d’attaches":
+          case "Systèmes d'attaches":
             return "3";
+          default:
+            throw new Error(`Unknown mandatory training label: ${m.label}`);
         }
       });
 
     const batchContent: FundingRequestBatchContent = {
       NumAction: fundingRequest.numAction,
-      NomAP: candidacy?.organism?.label || "",
       SiretAP: candidacy?.organism?.siret || "",
       CertificationVisée: candidacy.certification.rncpId,
       NomCandidat: candidate.lastname,
       PrenomCandidat1: candidate.firstname,
       PrenomCandidat2: candidate.firstname2 || "",
       PrenomCandidat3: candidate.firstname3 || "",
-      GenreCandidat: getGenreCandidat(candidate.gender),
       NiveauObtenuCandidat: getNiveauObtenuCandidat(candidate.highestDegree),
       IndPublicFragile: getIndPublicFragile(candidate.vulnerabilityIndicator),
       NbHeureDemAPDiag: fundingRequest.diagnosisHourCount,
       CoutHeureDemAPDiag: fundingRequest.diagnosisCost,
       NbHeureDemAPPostJury: fundingRequest.postExamHourCount,
       CoutHeureDemAPPostJury: fundingRequest.postExamCost,
-      AccompagnateurCandidat: fundingRequest?.companion?.siret || "",
       NbHeureDemAccVAEInd: fundingRequest.individualHourCount,
       CoutHeureDemAccVAEInd: fundingRequest.individualCost,
       NbHeureDemAccVAEColl: fundingRequest.collectiveHourCount,
@@ -460,7 +446,6 @@ export const mapFundingRequestBatch = ({
         fundingRequest.certificateSkillsHourCount,
       NbHeureDemJury: fundingRequest.examHourCount,
       CoutHeureJury: fundingRequest.examCost,
-      CoutTotalDemande: fundingRequest.totalCost || 0,
     };
     return batchContent;
   }
