@@ -18,6 +18,7 @@ import View.Icons as Icons
 
 type Tab
     = CandidateInfo CandidacyId
+    | DropOut CandidacyId
     | Empty
     | Meetings CandidacyId
     | Profil CandidacyId

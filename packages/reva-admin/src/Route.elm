@@ -44,6 +44,9 @@ parser baseUrl =
                     (\id -> candidacyTab id View.Candidacy.CandidateInfo)
                     (s "candidacies" </> string </> s "candidate")
                 , map
+                    (\id -> candidacyTab id View.Candidacy.DropOut)
+                    (s "candidacies" </> string </> s "drop-out")
+                , map
                     (\id -> candidacyTab id View.Candidacy.FundingRequest)
                     (s "candidacies" </> string </> s "funding")
                 , map
@@ -85,6 +88,9 @@ toString baseUrl route =
 
         Candidacy (View.Candidacy.CandidateInfo candidacyId) ->
             Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "candidate" ] []
+
+        Candidacy (View.Candidacy.DropOut candidacyId) ->
+            Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "drop-out" ] []
 
         Candidacy (View.Candidacy.Profil candidacyId) ->
             Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId ] []
