@@ -387,7 +387,7 @@ export const resolvers = {
         dropOut: {
           dropOutReasonId: string;
           dropOutDate: Date;
-          otherReasonContent?: string;
+          otherReasonContent: string | null;
         };
       }
       // _context
