@@ -25,6 +25,7 @@ export interface Candidacy extends CandidacyAbstract {
   // trainings: Training[];
   //   individualHourCount: number | null;
   //   collectiveHourCount: number | null;
+  candidacyDropOut?: CandidacyDropOut;
   createdAt: Date;
 }
 
@@ -128,4 +129,17 @@ export interface Degree {
 export interface VulnerabilityIndicator {
   id: string;
   label: string;
+}
+
+export interface DropOutReason {
+  id: string;
+  label: string;
+}
+
+export interface CandidacyDropOut {
+  id: string;
+  status: CandidacyStatus;
+  dropOutReason: DropOutReason;
+  dropOutDate: Date;
+  otherReasonContent?: string;
 }
