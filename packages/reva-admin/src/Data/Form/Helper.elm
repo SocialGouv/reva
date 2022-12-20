@@ -81,8 +81,14 @@ bool keys dict key default =
     generic keys dict key booleanFromString default
 
 
-date : keys -> Dict.Dict String String -> (keys -> String) -> Maybe Timestamp -> Maybe Timestamp
+date : keys -> Dict.Dict String String -> (keys -> String) -> Timestamp -> Timestamp
 date keys dict key default =
+    generic keys dict key dateFromString (Just default)
+        |> Maybe.withDefault default
+
+
+maybeDate : keys -> Dict.Dict String String -> (keys -> String) -> Maybe Timestamp -> Maybe Timestamp
+maybeDate keys dict key default =
     generic keys dict key dateFromString default
 
 
@@ -119,12 +125,12 @@ decode :
     -> Dict.Dict String String
     ->
         { bool : (a -> String) -> Bool -> Bool
-        , date : (a -> String) -> Maybe Timestamp -> Maybe Timestamp
+        , date : (a -> String) -> Timestamp -> Timestamp
         , generic : (a -> String) -> (String -> data) -> data -> data
         , int : (a -> String) -> Int -> Int
         , list : List { b | id : String } -> List String
         , string : (a -> String) -> String -> String
-        , maybe : { string : (a -> String) -> Maybe String }
+        , maybe : { date : (a -> String) -> Maybe Timestamp -> Maybe Timestamp, string : (a -> String) -> Maybe String }
         }
 decode keys dict =
     { bool = bool keys dict
@@ -133,7 +139,10 @@ decode keys dict =
     , int = int keys dict
     , list = selection dict
     , string = string keys dict
-    , maybe = { string = maybe keys dict }
+    , maybe =
+        { date = maybeDate keys dict
+        , string = maybe keys dict
+        }
     }
 
 
