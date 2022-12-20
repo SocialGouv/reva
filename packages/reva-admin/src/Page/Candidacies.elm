@@ -29,6 +29,7 @@ import List.Extra
 import Page.Form as Form exposing (Form)
 import Page.Form.Appointment
 import Page.Form.Candidate
+import Page.Form.DropOut
 import Page.Form.FundingRequest
 import Page.Form.Training
 import RemoteData exposing (RemoteData(..))
@@ -187,6 +188,11 @@ viewContent context model candidacies =
 
             CandidateInfo candidacyId ->
                 [ viewForm "candidate" candidacyId
+                , maybeNavigationSteps
+                ]
+
+            DropOut candidacyId ->
+                [ viewForm "drop-out" candidacyId
                 , maybeNavigationSteps
                 ]
 
@@ -589,6 +595,24 @@ updateTab context tab model =
             { model | tab = tab }
     in
     case ( tab, model.selected ) of
+        ( View.Candidacy.DropOut candidacyId, Success _ ) ->
+            let
+                ( formModel, formCmd ) =
+                    Form.updateForm context
+                        { form = Page.Form.DropOut.form
+                        , onLoad = Api.Form.Appointment.get candidacyId -- TODO: replace with dropOut API
+                        , onSave = Api.Form.Appointment.update candidacyId -- TODO: replace with dropOut API
+                        , onRedirect =
+                            Nav.pushUrl
+                                context.navKey
+                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                        , onValidate = \_ _ -> Ok ()
+                        , status = Form.Editable
+                        }
+                        model.form
+            in
+            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
+
         ( View.Candidacy.Profil candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
                 |> withTakeOver context candidacyId
@@ -686,6 +710,9 @@ updateTab context tab model =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
+        ( View.Candidacy.DropOut candidacyId, NotAsked ) ->
+            initCandidacy context candidacyId newModel
+
         ( View.Candidacy.Meetings candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
 
@@ -697,6 +724,9 @@ updateTab context tab model =
 
         ( View.Candidacy.FundingRequest candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
+
+        ( View.Candidacy.DropOut _, _ ) ->
+            ( newModel, Cmd.none )
 
         ( View.Candidacy.Meetings _, _ ) ->
             ( newModel, Cmd.none )
