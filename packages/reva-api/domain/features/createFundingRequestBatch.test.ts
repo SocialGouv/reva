@@ -6,28 +6,34 @@ const defaultValidFundingRequest: FundingRequestInput = {
   id: "1234567",
   candidacyId: "123",
   basicSkills: [
+    { id: "111", label: "Communication en français" },
     {
-      id: "333",
+      id: "222",
       label:
         "Utilisation des règles de base de calcul et du raisonnement mathématique",
     },
     {
-      id: "444",
+      id: "333",
       label: "Usage et communication numérique",
     },
   ],
-  basicSkillsIds: ["333", "444"],
+  basicSkillsIds: ["111", "222", "333"],
   mandatoryTrainings: [
     {
-      id: "444",
+      id: "111",
+      label: "Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU)",
+    },
+    {
+      id: "222",
       label: "Equipier de Première Intervention",
     },
     {
-      id: "555",
+      id: "333",
       label: "Sauveteur Secouriste du Travail (SST)",
     },
+    { id: "444", label: "Systèmes d'attaches" },
   ],
-  mandatoryTrainingsIds: ["444", "555"],
+  mandatoryTrainingsIds: ["111", "222", "333", "444"],
   certificateSkills: "RCNP12 RCNP34",
   otherTraining: "other training",
   basicSkillsCost: 20,
@@ -86,8 +92,8 @@ describe("funding request batch", () => {
         AccompagnateurCandidat: "1234",
         ActeFormatifComplémentaire_Autre: "other training",
         ActeFormatifComplémentaire_BlocDeCompetencesCertifiant: "RCNP12 RCNP34",
-        ActeFormatifComplémentaire_FormationObligatoire: "1,2",
-        ActeFormatifComplémentaire_SavoirsDeBase: "1,2",
+        ActeFormatifComplémentaire_FormationObligatoire: "0,1,2,3",
+        ActeFormatifComplémentaire_SavoirsDeBase: "0,1,2",
         CertificationVisée: "rncpId",
         CoutHeureDemAPDiag: 70,
         CoutHeureDemAPPostJury: 70,

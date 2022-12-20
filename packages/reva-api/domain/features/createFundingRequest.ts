@@ -394,6 +394,8 @@ export const mapFundingRequestBatch = ({
             return "1";
           case "Usage et communication numérique":
             return "2";
+          default:
+            throw new Error(`Unknown basic skill label: ${b.label}`);
         }
       });
 
@@ -402,14 +404,16 @@ export const mapFundingRequestBatch = ({
     ) =>
       mandatoryTrainings.map((m) => {
         switch (m.label) {
-          case "Attestation de Formation aux Gestes et Soins d’Urgence (AFGSU)":
+          case "Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU)":
             return "0";
           case "Equipier de Première Intervention":
             return "1";
           case "Sauveteur Secouriste du Travail (SST)":
             return "2";
-          case "Systèmes d’attaches":
+          case "Systèmes d'attaches":
             return "3";
+          default:
+            throw new Error(`Unknown mandatory training label: ${m.label}`);
         }
       });
 
