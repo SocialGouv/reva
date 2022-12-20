@@ -31,6 +31,7 @@ import * as goalDb from "../../database/postgres/goals";
 import * as organismDb from "../../database/postgres/organisms";
 import * as trainingDb from "../../database/postgres/trainings";
 import { notifyNewCandidacy } from "../../mattermost";
+import { dropOutCandidacy } from "./mutation/drop-out";
 
 const withBasicSkills = (c: Candidacy) => ({
   ...c,
@@ -380,42 +381,6 @@ export const resolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
-    candidacy_dropOut: async (
-      _: unknown,
-      payload: {
-        candidacyId: string;
-        dropOut: {
-          dropOutReasonId: string;
-          dropOutDate: Date;
-          otherReasonContent: string | null;
-        };
-      }
-      // _context
-    ) => {
-      console.log("dropout", {
-        candidacyId: payload.candidacyId,
-        dropOut: payload.dropOut,
-      });
-      // TODO : do the mutation
-      return Promise.resolve(
-        {
-          id: payload.candidacyId,
-        } // new Candidacy()
-      );
-      // const result = await takeOverCandidacy({
-      //   hasRole: context.auth.hasRole,
-      //   existsCandidacyWithActiveStatus:
-      //     candidacyDb.existsCandidacyWithActiveStatus,
-      //   updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
-      // })({
-      //   candidacyId: payload.candidacyId,
-      // });
-
-      // return result
-      //   .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-      //   .extract();
-
-      return null;
-    },
+    candidacy_dropOut: dropOutCandidacy,
   },
 };
