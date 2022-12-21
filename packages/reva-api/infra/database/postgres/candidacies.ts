@@ -64,6 +64,7 @@ const toDomainCandidacySummary = (
     organism: candidacy.organism,
     certificationId: candidacy.certification?.id,
     certification: candidacy.certification,
+    isCertificationPartial: candidacy.isCertificationPartial,
     firstname: candidacy.firstname,
     lastname: candidacy.lastname,
     email: candidacy.email,
@@ -124,6 +125,7 @@ export const insertCandidacy = async (params: {
       certificationId:
         newCandidacy.certificationsAndRegions[0].certification.id,
       certification: newCandidacy.certificationsAndRegions[0].certification,
+      isCertificationPartial: false,
       experiences: toDomainExperiences(newCandidacy.experiences),
       goals: newCandidacy.goals,
       phone: newCandidacy.phone,

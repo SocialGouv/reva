@@ -117,6 +117,7 @@ model Candidacy {
   createdAt                    DateTime                                @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                    DateTime?                               @map("updated_at") @db.Timestamptz(6)
   FundingRequest               FundingRequest[]
+  isCertificationPartial       Boolean                                 @default(false) @map("is_certification_partial")
 
   @@map("candidacy")
 }

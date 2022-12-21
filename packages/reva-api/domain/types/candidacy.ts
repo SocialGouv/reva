@@ -16,6 +16,7 @@ export interface Candidacy extends CandidacyAbstract {
   id: string;
   certificationId?: string;
   certification?: any;
+  isCertificationPartial?: boolean;
   organism?: Organism | null;
   regionId?: string;
   region?: Region;
