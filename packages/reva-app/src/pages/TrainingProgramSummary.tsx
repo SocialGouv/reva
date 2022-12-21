@@ -5,6 +5,7 @@ import { Interpreter } from "xstate";
 import { Button } from "../components/atoms/Button";
 import { CardBasic } from "../components/atoms/CardBasic";
 import { Checkbox } from "../components/atoms/Checkbox";
+import { Description } from "../components/atoms/Description";
 import { BackButton } from "../components/molecules/BackButton";
 import { DescriptionMultiLine } from "../components/molecules/DescriptionMultiLine";
 import { DescriptionSimple } from "../components/molecules/DescriptionSimple";
@@ -35,6 +36,7 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
       otherTraining,
     },
     certification,
+    isCertificationPartial,
   } = state.context;
 
   return (
@@ -59,10 +61,14 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
           text={state.context.organism?.label}
         />
         <dl data-test="description-list" className="mt-4">
-          <DescriptionSimple
-            term="Diplôme visé"
-            detail={certification?.label}
-          />
+          <Description term="Diplôme visé">
+            <div>{certification?.label}</div>
+            {isCertificationPartial && (
+              <div className="text-gray-400 text-sm italic">
+                Certification visée partiellement
+              </div>
+            )}
+          </Description>
 
           <DescriptionSimple
             term="Nombre d'heures d'accompagnement individuel"

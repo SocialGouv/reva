@@ -275,6 +275,7 @@ const CANDIDACY_SELECTION = `
         label
         summary
       }
+      isCertificationPartial
       experiences {
         id
         title

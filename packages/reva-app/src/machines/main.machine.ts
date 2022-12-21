@@ -68,6 +68,7 @@ export interface MainContext {
   direction: Direction;
   showStatusBar: boolean;
   certification?: Certification;
+  isCertificationPartial: boolean;
   experiences: Experiences;
   goals: Goal[];
   organism?: Organism;
@@ -132,6 +133,7 @@ export type MainState =
       context: MainContext & {
         candidacyCreatedAt: Date;
         certification: Certification;
+        isCertificationPartial: boolean;
         trainingProgram: TrainingProgram;
       };
     }
@@ -202,6 +204,7 @@ export const mainMachine =
           selectedDepartment: undefined,
           organisms: undefined,
           trainingProgram: undefined,
+          isCertificationPartial: false,
         },
         // TODO remove this hack when url handler is done
         initial:
@@ -1050,6 +1053,8 @@ export const mainMachine =
               candidacyCreatedAt: new Date(event.data.candidacy.createdAt),
               candidacyStatus: event.data.candidacy.candidacyStatus,
               certification: event.data.candidacy.certification,
+              isCertificationPartial:
+                event.data.candidacy.isCertificationPartial,
               experiences: {
                 rest: event.data.candidacy.experiences,
               },
