@@ -15,6 +15,7 @@ type alias Training =
     , individualHourCount : Int
     , collectiveHourCount : Int
     , additionalHourCount : Int
+    , isCertificationPartial : Bool
     }
 
 
@@ -28,6 +29,7 @@ keys =
     , collectiveHourCount = "collectiveHourCount"
     , additionalHourCount = "additionalHourCount"
     , consent = "consent"
+    , isCertificationPartial = "isCertificationPartial"
     }
 
 
@@ -46,6 +48,7 @@ fromDict basicSkills mandatoryTrainings dict =
         (decode.int .individualHourCount 0)
         (decode.int .collectiveHourCount 0)
         (decode.int .additionalHourCount 0)
+        (decode.bool .isCertificationPartial False)
 
 
 training :

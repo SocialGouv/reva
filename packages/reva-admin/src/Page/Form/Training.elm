@@ -29,6 +29,7 @@ form _ ( _, referential ) =
           )
         , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" )
         , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" )
+        , ( keys.isCertificationPartial, Form.Checkbox "Le candidat a un objectif de certification partielle." )
         ]
     , saveLabel = "Envoyer le parcours"
     , title = "Définition du parcours"
