@@ -60,8 +60,9 @@ training :
     -> Maybe Int
     -> Maybe Int
     -> Maybe Int
+    -> Bool
     -> Dict String String
-training mandatoryTrainings basicSkills certificateSkills consent otherTraining individualHourCount collectiveHourCount additionalHourCount =
+training mandatoryTrainings basicSkills certificateSkills consent otherTraining individualHourCount collectiveHourCount additionalHourCount isCertificationPartial =
     let
         mandatoryTrainingsIds =
             uuidToCheckedList mandatoryTrainings
@@ -76,6 +77,7 @@ training mandatoryTrainings basicSkills certificateSkills consent otherTraining 
             , ( .individualHourCount, Maybe.map String.fromInt individualHourCount )
             , ( .collectiveHourCount, Maybe.map String.fromInt collectiveHourCount )
             , ( .additionalHourCount, Maybe.map String.fromInt additionalHourCount )
+            , ( .isCertificationPartial, Just <| booleanToString isCertificationPartial )
             ]
                 |> Helper.toKeyedList keys
     in

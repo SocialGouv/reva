@@ -76,3 +76,4 @@ selection =
         |> with Admin.Object.Candidacy.individualHourCount
         |> with Admin.Object.Candidacy.collectiveHourCount
         |> with Admin.Object.Candidacy.additionalHourCount
+        |> with Admin.Object.Candidacy.isCertificationPartial
