@@ -235,6 +235,6 @@ type Mutation {
   candidacy_confirmTrainingForm(candidacyId: UUID!): Candidacy!
   candidacy_dropOut(
     candidacyId: UUID!
-    dropOut: DropOutInput!
+    dropOutReason: DropOutInput!
   ): Candidacy!
 }

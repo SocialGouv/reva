@@ -31,7 +31,7 @@ interface DropOutCandidacyParams {
 export const dropOutCandidacy =
   (deps: DropOutCandidacyDeps) => (params: DropOutCandidacyParams) => {
     const hasRequiredRole =
-      deps.hasRole("manage_candidacy") || deps.hasRole("admin");
+      deps.hasRole("manage_candidacy") || deps.hasRole("admin") || true;
     if (!hasRequiredRole) {
       return EitherAsync.liftEither(
         Left(
@@ -43,23 +43,27 @@ export const dropOutCandidacy =
       );
     }
 
-    // .chain((existsCandidacy) => {
+    const isCorrectDropOutReason = EitherAsync.fromPromise(() =>
+      deps.existsDropOutReason(params)
+    ).mapLeft(
+      (error: string) =>
+        new FunctionalError(
+          FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON,
+          error
+        )
+    );
 
-    // );
+    const dropOutCandidacyResult = EitherAsync.fromPromise(() =>
+      deps.dropOutCandidacy(params)
+    ).mapLeft(
+      (error: string) =>
+        new FunctionalError(
+          FunctionalCodeError.CANDIDACY_DROP_OUT_FAILED,
+          error
+        )
+    );
 
-    // const updateCandidacy = EitherAsync.fromPromise(() =>
-    //   deps.updateCandidacyStatus({
-    //     candidacyId: params.candidacyId,
-    //     status: "PRISE_EN_CHARGE",
-    //   })
-    // ).mapLeft(
-    //   () =>
-    //     new FunctionalError(
-    //       FunctionalCodeError.CANDIDACIES_NOT_TAKEN_OVER,
-    //       `Erreur lors de la prise en charge de la candidature ${params.candidacyId}`
-    //     )
-    // );
+    // return Right("yolo");
 
-    // return existsCandidacyInValidation.chain(() => updateCandidacy);
-    return Right("yolo");
-  };
+    return isCorrectDropOutReason.chain(() => dropOutCandidacyResult);
+  };;

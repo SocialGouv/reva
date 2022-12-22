@@ -394,10 +394,10 @@ export const resolvers = {
       },
       context: { auth: any }
     ) => {
-      // console.log("dropout", {
-      //   candidacyId: payload.candidacyId,
-      //   dropOutReason: payload.dropOutReason,
-      // });
+      console.log("dropout", {
+        candidacyId: payload.candidacyId,
+        dropOutReason: payload.dropOutReason,
+      });
 
       const dropOutDate: string =
         payload.dropOutReason.dropOutDate?.toString() ??
@@ -417,12 +417,6 @@ export const resolvers = {
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
-
-      // return Promise.resolve(
-      //   {
-      //     id: payload.candidacyId,
-      //   } // new Candidacy()
-      // );
     },
   },
 };
