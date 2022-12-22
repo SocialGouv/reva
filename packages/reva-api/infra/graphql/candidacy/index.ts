@@ -6,6 +6,7 @@ import { addExperienceToCandidacy } from "../../../domain/features/addExperience
 import { archiveCandidacy } from "../../../domain/features/archiveCandidacy";
 import { createCandidacy } from "../../../domain/features/createCandidacy";
 import { deleteCandidacy } from "../../../domain/features/deleteCandidacy";
+import { dropOutCandidacy } from "../../../domain/features/dropOutCandidacy";
 import { getBasicSkills } from "../../../domain/features/getBasicSkills";
 import { getCandidacySummaries } from "../../../domain/features/getCandidacies";
 import { getCandidacy } from "../../../domain/features/getCandidacy";
@@ -26,12 +27,12 @@ import { confirmTrainingFormByCandidate } from "../../../domain/features/validat
 import { Candidacy } from "../../../domain/types/candidacy";
 import * as basicSkillDb from "../../database/postgres/basicSkills";
 import * as candidacyDb from "../../database/postgres/candidacies";
+import * as dropOutDb from "../../database/postgres/dropOutReasons";
 import * as experienceDb from "../../database/postgres/experiences";
 import * as goalDb from "../../database/postgres/goals";
 import * as organismDb from "../../database/postgres/organisms";
 import * as trainingDb from "../../database/postgres/trainings";
 import { notifyNewCandidacy } from "../../mattermost";
-import { dropOutCandidacy } from "./mutation/drop-out";
 
 const withBasicSkills = (c: Candidacy) => ({
   ...c,
@@ -45,7 +46,7 @@ const withBasicSkills = (c: Candidacy) => ({
   basicSkills: c.basicSkills.map((bs) => bs.basicSkill),
 });
 
-const withDropOutReason = (c: Candidacy) => ({
+const withDropOutReason = (c: Candidacy): Candidacy => ({
   ...c,
   dropOutReason: Array.isArray(c.dropOutReason) ? c.dropOutReason[0] : null,
 });
@@ -68,7 +69,7 @@ export const resolvers = {
       other: unknown,
       { deviceId }: { deviceId: string },
       context: any
-    ) => {
+    ): Promise<mercurius.ErrorWithProps | Candidacy> => {
       const result = await getDeviceCandidacy({
         getCandidacyFromDeviceId: candidacyDb.getCandidacyFromDeviceId,
       })({ deviceId });
@@ -381,6 +382,47 @@ export const resolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
-    candidacy_dropOut: dropOutCandidacy,
+    candidacy_dropOut: async (
+      _: unknown,
+      payload: {
+        candidacyId: string;
+        dropOutReason: {
+          dropOutReasonId: string;
+          dropOutDate?: number;
+          otherReasonContent?: string;
+        };
+      },
+      context: { auth: any }
+    ) => {
+      // console.log("dropout", {
+      //   candidacyId: payload.candidacyId,
+      //   dropOutReason: payload.dropOutReason,
+      // });
+
+      const dropOutDate: string =
+        payload.dropOutReason.dropOutDate?.toString() ??
+        new Date().getTime().toString();
+
+      const result = await dropOutCandidacy({
+        existsDropOutReason: dropOutDb.existsDropOutReason,
+        dropOutCandidacy: dropOutDb.dropOutCandidacy,
+        hasRole: context.auth.hasRole,
+      })({
+        candidacyId: payload.candidacyId,
+        dropOutReasonId: payload.dropOutReason.dropOutReasonId,
+        otherReasonContent: payload.dropOutReason.otherReasonContent,
+        dropOutDate,
+      });
+
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+
+      // return Promise.resolve(
+      //   {
+      //     id: payload.candidacyId,
+      //   } // new Candidacy()
+      // );
+    },
   },
 };

@@ -1,92 +1,65 @@
-// import { Either, EitherAsync, Left, Right } from "purify-ts";
+import { Either, EitherAsync, Left, Right } from "purify-ts";
 
-// import { Role } from "../types/account";
-// import { Candidacy } from "../types/candidacy";
-// import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
+import { Role } from "../types/account";
+import { Candidacy } from "../types/candidacy";
+import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
-// interface TakeOverCandidacyDeps {
-//   hasRole: (role: Role) => boolean;
-//   existsCandidacyWithActiveStatus: (params: {
-//     candidacyId: string;
-//     status: "VALIDATION";
-//   }) => Promise<Either<string, boolean>>;
-//   updateCandidacyStatus: (params: {
-//     candidacyId: string;
-//     status: "PRISE_EN_CHARGE";
-//   }) => Promise<Either<string, Candidacy>>;
-// }
+// Check rights
+// - role is admin or AP
+// - current status is not abandon
+// - (candidacy is related to AP)
 
-// TODO:
-// - Vérifications des droits:
-//   - rôle
-//   - lien à la candidature
-//   - cohérence du statut actuel
-// - Transaction:
-//   - Créer et lier le record Reason
-//   - Modifier le statut
-// - Renvoyer la candidacy modifiée
+interface DropOutCandidacyDeps {
+  existsDropOutReason: (params: {
+    dropOutReasonId: string;
+  }) => Promise<Either<string, boolean>>;
+  dropOutCandidacy: (params: {
+    candidacyId: string;
+    dropOutReasonId: string;
+    dropOutDate: string;
+    otherReasonContent?: string;
+  }) => Promise<Either<string, Candidacy>>;
+  hasRole: (role: Role) => boolean;
+}
 
-// export const dropOutCandidacy =
-//   (deps: dropOutCandidacyDeps) => (params: { candidacyId: string }) => {
-//     if (deps.hasRole("admin")) {
-//       return EitherAsync.liftEither(
-//         Left(
-//           `La candidature ${params.candidacyId} ne peut être prise en charge par un admin`
-//         )
-//       ).mapLeft(
-//         (error: string) =>
-//           new FunctionalError(
-//             FunctionalCodeError.CANDIDACIES_NOT_TAKEN_OVER,
-//             error
-//           )
-//       );
-//     }
+interface DropOutCandidacyParams {
+  candidacyId: string;
+  dropOutReasonId: string;
+  dropOutDate: string;
+  otherReasonContent?: string;
+}
+export const dropOutCandidacy =
+  (deps: DropOutCandidacyDeps) => (params: DropOutCandidacyParams) => {
+    const hasRequiredRole =
+      deps.hasRole("manage_candidacy") || deps.hasRole("admin");
+    if (!hasRequiredRole) {
+      return EitherAsync.liftEither(
+        Left(
+          `Vous n'êtes pas autorisé à déclarer l'abandon de cette candidature.`
+        )
+      ).mapLeft(
+        (error: string) =>
+          new FunctionalError(FunctionalCodeError.NOT_AUTHORIZED, error)
+      );
+    }
 
-//     if (!deps.hasRole("manage_candidacy")) {
-//       return EitherAsync.liftEither(
-//         Left(`Vous n'êtes pas autorisé à prendre en charge cette candidature.`)
-//       ).mapLeft(
-//         (error: string) =>
-//           new FunctionalError(FunctionalCodeError.NOT_AUTHORIZED, error)
-//       );
-//     }
+    // .chain((existsCandidacy) => {
 
-//     const existsCandidacyInValidation = EitherAsync.fromPromise(() =>
-//       deps.existsCandidacyWithActiveStatus({
-//         candidacyId: params.candidacyId,
-//         status: "VALIDATION",
-//       })
-//     )
-//       .chain((existsCandidacy) => {
-//         if (!existsCandidacy) {
-//           return EitherAsync.liftEither(
-//             Left(
-//               `La candidature ${params.candidacyId} ne peut être prise en charge`
-//             )
-//           );
-//         }
-//         return EitherAsync.liftEither(Right(existsCandidacy));
-//       })
-//       .mapLeft(
-//         (error: string) =>
-//           new FunctionalError(
-//             FunctionalCodeError.CANDIDACIES_NOT_TAKEN_OVER,
-//             error
-//           )
-//       );
+    // );
 
-//     const updateCandidacy = EitherAsync.fromPromise(() =>
-//       deps.updateCandidacyStatus({
-//         candidacyId: params.candidacyId,
-//         status: "PRISE_EN_CHARGE",
-//       })
-//     ).mapLeft(
-//       () =>
-//         new FunctionalError(
-//           FunctionalCodeError.CANDIDACIES_NOT_TAKEN_OVER,
-//           `Erreur lors de la prise en charge de la candidature ${params.candidacyId}`
-//         )
-//     );
+    // const updateCandidacy = EitherAsync.fromPromise(() =>
+    //   deps.updateCandidacyStatus({
+    //     candidacyId: params.candidacyId,
+    //     status: "PRISE_EN_CHARGE",
+    //   })
+    // ).mapLeft(
+    //   () =>
+    //     new FunctionalError(
+    //       FunctionalCodeError.CANDIDACIES_NOT_TAKEN_OVER,
+    //       `Erreur lors de la prise en charge de la candidature ${params.candidacyId}`
+    //     )
+    // );
 
-//     return existsCandidacyInValidation.chain(() => updateCandidacy);
-//   };
+    // return existsCandidacyInValidation.chain(() => updateCandidacy);
+    return Right("yolo");
+  };

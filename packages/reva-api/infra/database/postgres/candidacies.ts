@@ -75,6 +75,7 @@ const toDomainCandidacySummary = (
     email: candidacy.email,
     phone: candidacy.phone,
     lastStatus,
+    dropOutReason: null,
     department: candidacy.department,
     createdAt: candidacy.createdAt,
     sentAt,
@@ -93,6 +94,9 @@ const toDomainCandidacySummaries = (
 ): domain.CandidacySummary[] => {
   return candidacies.map(toDomainCandidacySummary);
 };
+
+export const toSingleDropOutReason = (dropOutReason: unknown) =>
+  Array.isArray(dropOutReason) ? dropOutReason[0] : null;
 
 export const insertCandidacy = async (params: {
   deviceId: string;
@@ -136,6 +140,7 @@ export const insertCandidacy = async (params: {
       phone: newCandidacy.phone,
       email: newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
+      dropOutReason: null,
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
@@ -143,7 +148,9 @@ export const insertCandidacy = async (params: {
   }
 };
 
-export const getCandidacyFromDeviceId = async (deviceId: string) => {
+export const getCandidacyFromDeviceId = async (
+  deviceId: string
+): Promise<Either<string, domain.Candidacy>> => {
   try {
     const candidacy = await prismaClient.candidacy.findFirst({
       where: {
@@ -186,6 +193,7 @@ export const getCandidacyFromDeviceId = async (deviceId: string) => {
           ...certificationAndRegion.certification,
           codeRncp: certificationAndRegion.certification.rncpId,
         },
+        dropOutReason: toSingleDropOutReason(c.dropOutReason),
       }))
       .toEither(`Candidacy with deviceId ${deviceId} not found`);
   } catch (e) {
@@ -193,7 +201,9 @@ export const getCandidacyFromDeviceId = async (deviceId: string) => {
   }
 };
 
-export const getCandidacyFromId = async (candidacyId: string) => {
+export const getCandidacyFromId = async (
+  candidacyId: string
+): Promise<Either<string, domain.Candidacy>> => {
   try {
     const candidacy = await prismaClient.candidacy.findUnique({
       where: {
@@ -236,6 +246,7 @@ export const getCandidacyFromId = async (candidacyId: string) => {
           ...certificationAndRegion?.certification,
           codeRncp: certificationAndRegion?.certification.rncpId,
         },
+        dropOutReason: toSingleDropOutReason(c.dropOutReason),
       }))
       .toEither(`Candidacy with deviceId ${candidacyId} not found`);
   } catch (e) {
@@ -309,7 +320,7 @@ export const updateContactOnCandidacy = async (params: {
   candidacyId: string;
   email: string;
   phone: string;
-}) => {
+}): Promise<Either<string, domain.Candidacy>> => {
   try {
     const newCandidacy = await prismaClient.candidacy.update({
       where: {
@@ -348,6 +359,7 @@ export const updateContactOnCandidacy = async (params: {
       email: newCandidacy.email,
       phone: newCandidacy.phone,
       candidacyStatuses: newCandidacy.candidacyStatuses,
+      dropOutReason: toSingleDropOutReason(newCandidacy.dropOutReason),
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
@@ -360,7 +372,7 @@ export const updateContactOnCandidacy = async (params: {
 export const updateCandidacyStatus = async (params: {
   candidacyId: string;
   status: CandidacyStatus;
-}) => {
+}): Promise<Either<string, domain.Candidacy>> => {
   try {
     const [, newCandidacy, certificationAndRegion] =
       await prismaClient.$transaction([
@@ -418,6 +430,7 @@ export const updateCandidacyStatus = async (params: {
       phone: newCandidacy.candidate?.phone || newCandidacy.phone,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
+      dropOutReason: toSingleDropOutReason(newCandidacy.dropOutReason),
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
@@ -506,6 +519,7 @@ export const updateCertification = async (params: {
       phone: newCandidacy.candidate?.phone || newCandidacy.phone,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
+      dropOutReason: toSingleDropOutReason(newCandidacy.dropOutReason),
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
@@ -733,6 +747,7 @@ export const updateAppointmentInformations = async (params: {
       firstAppointmentOccuredAt: candidacy.firstAppointmentOccuredAt,
       appointmentCount: candidacy.appointmentCount,
       wasPresentAtFirstAppointment: candidacy.wasPresentAtFirstAppointment,
+      dropOutReason: toSingleDropOutReason(candidacy.dropOutReason),
       candidacyStatuses: candidacy.candidacyStatuses,
       createdAt: candidacy.createdAt,
     });
@@ -789,6 +804,7 @@ export const updateOrganism = async (params: {
       phone: newCandidacy.candidate?.phone || newCandidacy.phone,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
+      dropOutReason: toSingleDropOutReason(newCandidacy.dropOutReason),
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
@@ -882,6 +898,7 @@ export const updateTrainingInformations = async (params: {
       phone: newCandidacy.candidate?.phone || newCandidacy.phone,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
+      dropOutReason: toSingleDropOutReason(newCandidacy.dropOutReason),
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
