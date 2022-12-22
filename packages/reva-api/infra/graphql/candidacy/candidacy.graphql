@@ -166,6 +166,7 @@ input TrainingInput {
   validatedByCandidate: Boolean!
   basicSkillIds: [UUID!]!
   mandatoryTrainingIds: [UUID!]!
+  isCertificationPartial: Boolean!
 }
 
 type Mutation {

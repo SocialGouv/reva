@@ -16,6 +16,7 @@ interface SubmitTrainingDeps {
       collectiveHourCount: number;
       additionalHourCount: number;
       validatedByCandidate: boolean;
+      isCertificationPartial: boolean;
     };
   }) => Promise<Either<string, Candidacy>>;
   hasRole: (role: Role) => boolean;
@@ -42,6 +43,7 @@ export const submitTraining =
       collectiveHourCount: number;
       additionalHourCount: number;
       validatedByCandidate: boolean;
+      isCertificationPartial: boolean;
     };
   }) => {
     if (!deps.hasRole("manage_candidacy")) {
