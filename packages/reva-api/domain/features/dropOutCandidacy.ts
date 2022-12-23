@@ -16,7 +16,7 @@ interface DropOutCandidacyDeps {
   dropOutCandidacy: (params: {
     candidacyId: string;
     dropOutReasonId: string;
-    dropOutDate: string;
+    dropOutDate: Date;
     otherReasonContent?: string;
   }) => Promise<Either<string, Candidacy>>;
   hasRole: (role: Role) => boolean;
@@ -25,7 +25,7 @@ interface DropOutCandidacyDeps {
 interface DropOutCandidacyParams {
   candidacyId: string;
   dropOutReasonId: string;
-  dropOutDate: string;
+  dropOutDate: Date;
   otherReasonContent?: string;
 }
 export const dropOutCandidacy =

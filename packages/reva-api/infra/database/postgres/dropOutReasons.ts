@@ -36,7 +36,7 @@ export const existsDropOutReason = async ({
 interface DropOutCandidacyParams {
   candidacyId: string;
   dropOutReasonId: string;
-  dropOutDate: string;
+  dropOutDate: Date;
   otherReasonContent?: string;
 }
 

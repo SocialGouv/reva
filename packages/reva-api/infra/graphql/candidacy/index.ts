@@ -399,9 +399,9 @@ export const resolvers = {
         dropOutReason: payload.dropOutReason,
       });
 
-      const dropOutDate: string =
-        payload.dropOutReason.dropOutDate?.toString() ??
-        new Date().getTime().toString();
+      const dropOutDate: Date = payload.dropOutReason.dropOutDate
+        ? new Date()
+        : new Date();
 
       const result = await dropOutCandidacy({
         existsDropOutReason: dropOutDb.existsDropOutReason,
