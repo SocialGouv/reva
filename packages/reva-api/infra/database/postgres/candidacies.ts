@@ -248,7 +248,7 @@ export const getCandidacyFromId = async (
         },
         dropOutReason: toSingleDropOutReason(c.dropOutReason),
       }))
-      .toEither(`Candidacy with deviceId ${candidacyId} not found`);
+      .toEither(`Candidacy ${candidacyId} not found`);
   } catch (e) {
     return Left(`error while retrieving the candidacy with id ${candidacyId}`);
   }
