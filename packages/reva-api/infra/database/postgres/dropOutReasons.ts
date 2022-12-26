@@ -37,13 +37,13 @@ export const getDropOutReasonById = async (params: {
 interface DropOutCandidacyParams {
   candidacyId: string;
   dropOutReasonId: string;
-  dropOutDate: Date;
+  droppedOutAt: Date;
   otherReasonContent?: string;
 }
 
 export const dropOutCandidacy = async ({
   candidacyId,
-  dropOutDate,
+  droppedOutAt,
   dropOutReasonId,
   otherReasonContent,
 }: DropOutCandidacyParams): Promise<Either<string, domain.Candidacy>> => {
@@ -71,7 +71,7 @@ export const dropOutCandidacy = async ({
       prismaClient.dropOutReasonOnCandidacies.create({
         data: {
           candidacyId,
-          dropOutDate: dropOutDate ?? "",
+          droppedOutAt: droppedOutAt ?? "",
           status: candidacyStatus,
           dropOutReasonId,
           otherReasonContent,

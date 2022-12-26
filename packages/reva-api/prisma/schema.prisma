@@ -492,7 +492,7 @@ model DropOutReasonOnCandidacies {
   dropOutReason      DropOutReason   @relation(fields: [dropOutReasonId], references: [id])
   dropOutReasonId    String          @map("drop_out_reason_id") @db.Uuid
   status             CandidacyStatus
-  dropOutDate        DateTime        @map("drop_out_date")
+  droppedOutAt       DateTime        @map("dropped_out_at")
   otherReasonContent String?         @map("other_reason_content")
   createdAt          DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt          DateTime?       @map("updated_at") @db.Timestamptz(6)

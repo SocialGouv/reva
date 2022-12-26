@@ -58,7 +58,7 @@ type Candidacy {
 
 type DropOutReasonOnCandidacy {
   dropOutReason: DropOutReason
-  dropOutDate: Timestamp
+  droppedOutAt: Timestamp
   otherReasonContent: String
   status: String
 }
@@ -178,7 +178,7 @@ input TrainingInput {
 }
 
 input DropOutInput {
-  dropOutDate: Timestamp!
+  droppedOutAt: Timestamp!
   dropOutReasonId: UUID!
   otherReasonContent: String
 }

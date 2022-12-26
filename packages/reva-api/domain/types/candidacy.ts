@@ -13,7 +13,7 @@ export interface CandidacyInput extends CandidacyAbstract {
 }
 
 export interface DropOutReasonOnCandidacies {
-  dropOutDate: Date;
+  droppedOutAt: Date;
   status: string;
   dropOutReason: DropOutReason;
   otherReasonContent: string | null;

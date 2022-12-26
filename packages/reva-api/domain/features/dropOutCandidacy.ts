@@ -20,7 +20,7 @@ interface DropOutCandidacyDeps {
 interface DropOutCandidacyParams {
   candidacyId: string;
   dropOutReasonId: string;
-  dropOutDate: Date;
+  droppedOutAt: Date;
   otherReasonContent?: string;
 }
 

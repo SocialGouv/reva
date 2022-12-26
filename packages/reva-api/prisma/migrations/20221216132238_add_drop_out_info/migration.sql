@@ -13,7 +13,7 @@ CREATE TABLE "drop_out_reason_on_candidacies" (
     "candidacy_id" UUID NOT NULL,
     "drop_out_reason_id" UUID NOT NULL,
     "status" "CandidacyStatus" NOT NULL,
-    "drop_out_date" TIMESTAMP(3) NOT NULL,
+    "dropped_out_at" TIMESTAMP(3) NOT NULL,
     "other_reason_content" TEXT,
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(6),

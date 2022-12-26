@@ -66,7 +66,7 @@ const dropOutReasonWithRightRole = dropOutCandidacy({
           { id: "laal123", createdAt: new Date(), status: "ABANDON" },
         ],
         dropOutReason: {
-          dropOutDate: new Date(),
+          droppedOutAt: new Date(),
           dropOutReason: { id: params.dropOutReasonId, label: "" },
           status: "COOL",
           otherReasonContent: null,
@@ -79,7 +79,7 @@ describe("drop out candidacy", () => {
   test("should fail with CANDIDACY_NOT_FOUND", async () => {
     const result = await dropOutReasonWithRightRole({
       candidacyId: "wr0ng1d",
-      dropOutDate: new Date(),
+      droppedOutAt: new Date(),
       dropOutReasonId: dropOutReasonTable[0].id,
     });
     expect(result.isLeft()).toEqual(true);
@@ -90,7 +90,7 @@ describe("drop out candidacy", () => {
   test("should fail with CANDIDACY_ALREADY_DROPPED_OUT", async () => {
     const result = await dropOutReasonWithRightRole({
       candidacyId: candidacy2.id,
-      dropOutDate: new Date(),
+      droppedOutAt: new Date(),
       dropOutReasonId: dropOutReasonTable[0].id,
     });
     expect(result.isLeft()).toEqual(true);
@@ -101,7 +101,7 @@ describe("drop out candidacy", () => {
   test("should fail with CANDIDACY_INVALID_DROP_OUT_REASON error code", async () => {
     const result = await dropOutReasonWithRightRole({
       candidacyId: candidacy1.id,
-      dropOutDate: new Date(),
+      droppedOutAt: new Date(),
       dropOutReasonId: "wr0ng1d",
     });
     expect(result.isLeft()).toEqual(true);
@@ -113,7 +113,7 @@ describe("drop out candidacy", () => {
   test("should return updated status", async () => {
     const result = await dropOutReasonWithRightRole({
       candidacyId: candidacy1.id,
-      dropOutDate: new Date(),
+      droppedOutAt: new Date(),
       dropOutReasonId: dropOutReasonTable[0].id,
     });
     expect(result.isRight()).toBe(true);
@@ -125,7 +125,7 @@ describe("drop out candidacy", () => {
   test("should return candidacy with drop out reason", async () => {
     const result = await dropOutReasonWithRightRole({
       candidacyId: candidacy1.id,
-      dropOutDate: new Date(),
+      droppedOutAt: new Date(),
       dropOutReasonId: dropOutReasonTable[1].id,
     });
     expect(result.isRight()).toBe(true);
