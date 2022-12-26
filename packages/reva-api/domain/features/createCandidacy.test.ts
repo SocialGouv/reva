@@ -26,6 +26,7 @@ describe("domain candidacy", () => {
               code: "",
               label: "",
             },
+            dropOutReason: null,
           })
         ),
       createCandidacy: () =>
@@ -47,6 +48,7 @@ describe("domain candidacy", () => {
               code: "",
               label: "",
             },
+            dropOutReason: null,
           })
         ),
       notifyTeam: async (candidacyId: string) => console.log(`notify`),
@@ -115,6 +117,7 @@ describe("domain candidacy", () => {
               code: "",
               label: "",
             },
+            dropOutReason: null,
           })
         ),
       notifyTeam: async (candidacyId: string) => console.log(`notify`),
