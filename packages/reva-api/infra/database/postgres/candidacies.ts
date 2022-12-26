@@ -118,6 +118,9 @@ export const insertCandidacy = async (params: {
             isActive: true,
           },
         },
+        admissibility: {
+          create: {},
+        },
       },
       include: candidacyIncludes,
     });

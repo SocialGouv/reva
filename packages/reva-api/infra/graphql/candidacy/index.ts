@@ -7,6 +7,7 @@ import { archiveCandidacy } from "../../../domain/features/archiveCandidacy";
 import { createCandidacy } from "../../../domain/features/createCandidacy";
 import { deleteCandidacy } from "../../../domain/features/deleteCandidacy";
 import { dropOutCandidacy } from "../../../domain/features/dropOutCandidacy";
+import { getAdmissibility } from "../../../domain/features/getAdmissibility";
 import { getBasicSkills } from "../../../domain/features/getBasicSkills";
 import { getCandidacySummaries } from "../../../domain/features/getCandidacies";
 import { getCandidacy } from "../../../domain/features/getCandidacy";
@@ -18,13 +19,16 @@ import { selectOrganismForCandidacy } from "../../../domain/features/selectOrgan
 import { submitCandidacy } from "../../../domain/features/submitCandidacy";
 import { submitTraining } from "../../../domain/features/submitTrainingForm";
 import { takeOverCandidacy } from "../../../domain/features/takeOverCandidacy";
+import { updateAdmissibility } from "../../../domain/features/updateAdmissibility";
 import { updateAppointmentInformations } from "../../../domain/features/updateAppointmentInformations";
 import { updateCertificationOfCandidacy } from "../../../domain/features/updateCertificationOfCandidacy";
 import { updateContactOfCandidacy } from "../../../domain/features/updateContactOfCandidacy";
 import { updateExperienceOfCandidacy } from "../../../domain/features/updateExperienceOfCandidacy";
 import { updateGoalsOfCandidacy } from "../../../domain/features/updateGoalsOfCandidacy";
 import { confirmTrainingFormByCandidate } from "../../../domain/features/validateTrainingFormByCandidate";
-import { Candidacy } from "../../../domain/types/candidacy";
+import { Role } from "../../../domain/types/account";
+import { Admissibility, Candidacy } from "../../../domain/types/candidacy";
+import * as admissibilityDb from "../../database/postgres/admissibility";
 import * as basicSkillDb from "../../database/postgres/basicSkills";
 import * as candidacyDb from "../../database/postgres/candidacies";
 import * as dropOutDb from "../../database/postgres/dropOutReasons";
@@ -59,6 +63,23 @@ const withMandatoryTrainings = (c: Candidacy) => ({
 });
 
 export const resolvers = {
+  Candidacy: {
+    admissibility: async (
+      parent: Candidacy,
+      _: unknown,
+      context: { auth: { hasRole: (role: Role) => boolean } }
+    ) => {
+      const result = await getAdmissibility({
+        hasRole: context.auth.hasRole,
+        getAdmissibilityFromCandidacyId:
+          admissibilityDb.getAdmissibilityFromCandidacyId,
+      })({ candidacyId: parent.id });
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .map((v) => v.extractNullable())
+        .extract();
+    },
+  },
   Query: {
     getCandidacy: async (
       other: unknown,
@@ -401,6 +422,28 @@ export const resolvers = {
         dropOutReasonId: payload.dropOut.dropOutReasonId,
         otherReasonContent: payload.dropOut.otherReasonContent,
         droppedOutAt,
+      });
+
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
+    candidacy_updateAdmissibility: async (
+      _: unknown,
+      {
+        candidacyId,
+        admissibility,
+      }: { candidacyId: string; admissibility: Admissibility },
+      context: { auth: { hasRole: (role: Role) => boolean } }
+    ) => {
+      const result = await updateAdmissibility({
+        hasRole: context.auth.hasRole,
+        getAdmissibilityFromCandidacyId:
+          admissibilityDb.getAdmissibilityFromCandidacyId,
+        updateAdmissibility: admissibilityDb.updateAdmissibility,
+      })({
+        candidacyId,
+        admissibility,
       });
 
       return result
