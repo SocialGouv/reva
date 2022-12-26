@@ -34,22 +34,6 @@ export const getDropOutReasonById = async (params: {
   }
 };
 
-
-// export const existsDropOutReason = async ({
-//   dropOutReasonId,
-// }: {
-//   dropOutReasonId: string;
-// }): Promise<Either<string, boolean>> => {
-//   try {
-//     const dropOutReason = await prismaClient.dropOutReason.findUnique({
-//       where: { id: dropOutReasonId },
-//     });
-//     return Right(Boolean(dropOutReason));
-//   } catch (e) {
-//     return Left(`error while retrieving drop out reasons`);
-//   }
-// };
-
 interface DropOutCandidacyParams {
   candidacyId: string;
   dropOutReasonId: string;

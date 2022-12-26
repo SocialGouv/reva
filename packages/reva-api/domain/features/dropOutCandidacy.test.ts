@@ -58,7 +58,21 @@ const dropOutReasonWithRightRole = dropOutCandidacy({
   getDropOutReasonById: ({ dropOutReasonId }) =>
     Promise.resolve(Right(getDropOutReasonById(dropOutReasonId))),
   hasRole: () => true,
-  dropOutCandidacy: () => Promise.resolve(Right(candidacy1)),
+  dropOutCandidacy: (params) =>
+    Promise.resolve(
+      Right({
+        ...(getCandidacyById(params.candidacyId).extract() as Candidacy),
+        candidacyStatuses: [
+          { id: "laal123", createdAt: new Date(), status: "ABANDON" },
+        ],
+        dropOutReason: {
+          dropOutDate: new Date(),
+          dropOutReason: { id: params.dropOutReasonId, label: "" },
+          status: "COOL",
+          otherReasonContent: null,
+        },
+      })
+    ),
 });
 
 describe("drop out candidacy", () => {
@@ -96,7 +110,7 @@ describe("drop out candidacy", () => {
     );
   });
 
-  test.skip("should return updated status", async () => {
+  test("should return updated status", async () => {
     const result = await dropOutReasonWithRightRole({
       candidacyId: candidacy1.id,
       dropOutDate: new Date(),
@@ -108,7 +122,7 @@ describe("drop out candidacy", () => {
     expect(candidacy.candidacyStatuses[0].status).toBe("ABANDON");
   });
 
-  test.skip("should return candidacy with drop out reason", async () => {
+  test("should return candidacy with drop out reason", async () => {
     const result = await dropOutReasonWithRightRole({
       candidacyId: candidacy1.id,
       dropOutDate: new Date(),

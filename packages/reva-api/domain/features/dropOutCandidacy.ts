@@ -1,13 +1,8 @@
-import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
+import { Either, EitherAsync, Left, Maybe } from "purify-ts";
 
-import { existsCandidacyWithActiveStatuses } from "../../infra/database/postgres/candidacies";
 import { Role } from "../types/account";
 import { Candidacy, DropOutReason } from "../types/candidacy";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
-
-// Check rights
-// - current status is not abandon
-// - (candidacy is related to AP)
 
 interface DropOutCandidacyDeps {
   getCandidacyFromId: (
@@ -53,14 +48,6 @@ export const dropOutCandidacy =
           `Aucune candidature n'a été trouvée`
         )
     );
-    // .chain(async (maybeCandidacy: Maybe<Candidacy>) => {
-    //   return maybeCandidacy.toEither(
-    //     new FunctionalError(
-    //       FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-    //       `La candidature n'existe pas`
-    //     )
-    //   );
-    // });
 
     const checkIfCandidacyIsNotAbandonned = (candidacy: Candidacy) => {
       const canDropOut = !candidacy.candidacyStatuses.some(
