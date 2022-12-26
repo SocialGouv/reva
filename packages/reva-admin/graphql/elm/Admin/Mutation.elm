@@ -283,6 +283,20 @@ candidacy_confirmTrainingForm requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_confirmTrainingForm" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ Basics.identity
 
 
+type alias CandidacyUpdateAdmissibilityRequiredArguments =
+    { candidacyId : Data.Scalar.Uuid
+    , admissibility : Admin.InputObject.AdmissibilityInput
+    }
+
+
+candidacy_updateAdmissibility :
+    CandidacyUpdateAdmissibilityRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Admissibility
+    -> SelectionSet decodesTo RootMutation
+candidacy_updateAdmissibility requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_updateAdmissibility" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "admissibility" requiredArgs____.admissibility Admin.InputObject.encodeAdmissibilityInput ] object____ Basics.identity
+
+
 type alias CandidateAskForRegistrationRequiredArguments =
     { candidate : Admin.InputObject.CandidateInput }
 

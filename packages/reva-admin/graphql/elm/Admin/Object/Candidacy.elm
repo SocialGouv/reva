@@ -208,3 +208,10 @@ mandatoryTrainings object____ =
 createdAt : SelectionSet Data.Scalar.Timestamp Admin.Object.Candidacy
 createdAt =
     Object.selectionForField "Data.Scalar.Timestamp" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
+
+
+admissibility :
+    SelectionSet decodesTo Admin.Object.Admissibility
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+admissibility object____ =
+    Object.selectionForCompositeField "admissibility" [] object____ Basics.identity

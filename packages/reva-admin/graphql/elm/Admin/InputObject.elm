@@ -5,6 +5,7 @@
 module Admin.InputObject exposing (..)
 
 import Admin.Enum.AccountGroup
+import Admin.Enum.AdmissibilityStatus
 import Admin.Enum.CandidateTypology
 import Admin.Enum.Duration
 import Admin.Enum.Gender
@@ -66,6 +67,50 @@ encodeAccountInput : AccountInput -> Value
 encodeAccountInput input____ =
     Encode.maybeObject
         [ ( "email", Encode.string input____.email |> Just ), ( "username", Encode.string input____.username |> Just ), ( "firstname", Encode.string |> Encode.optional input____.firstname ), ( "lastname", Encode.string |> Encode.optional input____.lastname ), ( "group", Encode.enum Admin.Enum.AccountGroup.toString input____.group |> Just ), ( "organismId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.organismId ) ]
+
+
+buildAdmissibilityInput :
+    AdmissibilityInputRequiredFields
+    -> (AdmissibilityInputOptionalFields -> AdmissibilityInputOptionalFields)
+    -> AdmissibilityInput
+buildAdmissibilityInput required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { reportSentAt = Absent, certifierRespondedAt = Absent, responseAvailableToCandidateAt = Absent, status = Absent }
+    in
+    { isCandidateAlreadyAdmissible = required____.isCandidateAlreadyAdmissible, reportSentAt = optionals____.reportSentAt, certifierRespondedAt = optionals____.certifierRespondedAt, responseAvailableToCandidateAt = optionals____.responseAvailableToCandidateAt, status = optionals____.status }
+
+
+type alias AdmissibilityInputRequiredFields =
+    { isCandidateAlreadyAdmissible : Bool }
+
+
+type alias AdmissibilityInputOptionalFields =
+    { reportSentAt : OptionalArgument Data.Scalar.Timestamp
+    , certifierRespondedAt : OptionalArgument Data.Scalar.Timestamp
+    , responseAvailableToCandidateAt : OptionalArgument Data.Scalar.Timestamp
+    , status : OptionalArgument Admin.Enum.AdmissibilityStatus.AdmissibilityStatus
+    }
+
+
+{-| Type for the AdmissibilityInput input object.
+-}
+type alias AdmissibilityInput =
+    { isCandidateAlreadyAdmissible : Bool
+    , reportSentAt : OptionalArgument Data.Scalar.Timestamp
+    , certifierRespondedAt : OptionalArgument Data.Scalar.Timestamp
+    , responseAvailableToCandidateAt : OptionalArgument Data.Scalar.Timestamp
+    , status : OptionalArgument Admin.Enum.AdmissibilityStatus.AdmissibilityStatus
+    }
+
+
+{-| Encode a AdmissibilityInput into a value that can be used as an argument.
+-}
+encodeAdmissibilityInput : AdmissibilityInput -> Value
+encodeAdmissibilityInput input____ =
+    Encode.maybeObject
+        [ ( "isCandidateAlreadyAdmissible", Encode.bool input____.isCandidateAlreadyAdmissible |> Just ), ( "reportSentAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) |> Encode.optional input____.reportSentAt ), ( "certifierRespondedAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) |> Encode.optional input____.certifierRespondedAt ), ( "responseAvailableToCandidateAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) |> Encode.optional input____.responseAvailableToCandidateAt ), ( "status", Encode.enum Admin.Enum.AdmissibilityStatus.toString |> Encode.optional input____.status ) ]
 
 
 buildAppointmentInformationsInput :
