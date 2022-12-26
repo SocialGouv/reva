@@ -1,5 +1,5 @@
 import { CandidacyStatus } from "@prisma/client";
-import { Either, Left, Right } from "purify-ts";
+import { Either, Left, Maybe, Right } from "purify-ts";
 
 import * as domain from "../../../domain/types/candidacy";
 import { toSingleDropOutReason } from "./candidacies";
@@ -18,20 +18,37 @@ export const getDropOutReasons = async (): Promise<
   }
 };
 
-export const existsDropOutReason = async ({
-  dropOutReasonId,
-}: {
+export const getDropOutReasonById = async (params: {
   dropOutReasonId: string;
-}): Promise<Either<string, boolean>> => {
+}): Promise<Either<string, Maybe<domain.DropOutReason>>> => {
   try {
     const dropOutReason = await prismaClient.dropOutReason.findUnique({
-      where: { id: dropOutReasonId },
+      where: {
+        id: params.dropOutReasonId,
+      },
     });
-    return Right(Boolean(dropOutReason));
+
+    return Right(Maybe.fromNullable(dropOutReason));
   } catch (e) {
-    return Left(`error while retrieving drop out reasons`);
+    return Left(`error while retrieving drop out reason`);
   }
 };
+
+
+// export const existsDropOutReason = async ({
+//   dropOutReasonId,
+// }: {
+//   dropOutReasonId: string;
+// }): Promise<Either<string, boolean>> => {
+//   try {
+//     const dropOutReason = await prismaClient.dropOutReason.findUnique({
+//       where: { id: dropOutReasonId },
+//     });
+//     return Right(Boolean(dropOutReason));
+//   } catch (e) {
+//     return Left(`error while retrieving drop out reasons`);
+//   }
+// };
 
 interface DropOutCandidacyParams {
   candidacyId: string;

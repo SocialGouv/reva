@@ -1,25 +1,25 @@
-import { Either, EitherAsync, Left, Right } from "purify-ts";
+import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
+import { existsCandidacyWithActiveStatuses } from "../../infra/database/postgres/candidacies";
 import { Role } from "../types/account";
-import { Candidacy } from "../types/candidacy";
+import { Candidacy, DropOutReason } from "../types/candidacy";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
 // Check rights
-// - role is admin or AP
 // - current status is not abandon
 // - (candidacy is related to AP)
 
 interface DropOutCandidacyDeps {
-  existsDropOutReason: (params: {
+  getCandidacyFromId: (
+    candidacyId: string
+  ) => Promise<Either<string, Candidacy>>;
+  getDropOutReasonById: (params: {
     dropOutReasonId: string;
-  }) => Promise<Either<string, boolean>>;
-  dropOutCandidacy: (params: {
-    candidacyId: string;
-    dropOutReasonId: string;
-    dropOutDate: Date;
-    otherReasonContent?: string;
-  }) => Promise<Either<string, Candidacy>>;
+  }) => Promise<Either<string, Maybe<DropOutReason>>>;
   hasRole: (role: Role) => boolean;
+  dropOutCandidacy: (
+    params: DropOutCandidacyParams
+  ) => Promise<Either<string, Candidacy>>;
 }
 
 interface DropOutCandidacyParams {
@@ -28,6 +28,7 @@ interface DropOutCandidacyParams {
   dropOutDate: Date;
   otherReasonContent?: string;
 }
+
 export const dropOutCandidacy =
   (deps: DropOutCandidacyDeps) => (params: DropOutCandidacyParams) => {
     const hasRequiredRole =
@@ -43,15 +44,56 @@ export const dropOutCandidacy =
       );
     }
 
-    const isCorrectDropOutReason = EitherAsync.fromPromise(() =>
-      deps.existsDropOutReason(params)
+    const checkIfCandidacyExists = EitherAsync.fromPromise(() =>
+      deps.getCandidacyFromId(params.candidacyId)
     ).mapLeft(
-      (error: string) =>
+      () =>
         new FunctionalError(
-          FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON,
-          error
+          FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
+          `Aucune candidature n'a été trouvée`
         )
     );
+    // .chain(async (maybeCandidacy: Maybe<Candidacy>) => {
+    //   return maybeCandidacy.toEither(
+    //     new FunctionalError(
+    //       FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
+    //       `La candidature n'existe pas`
+    //     )
+    //   );
+    // });
+
+    const checkIfCandidacyIsNotAbandonned = (candidacy: Candidacy) => {
+      const canDropOut = !candidacy.candidacyStatuses.some(
+        (s) => s.status === "ABANDON"
+      );
+      return Promise.resolve(
+        Maybe.fromFalsy(canDropOut).toEither(
+          new FunctionalError(
+            FunctionalCodeError.CANDIDACY_ALREADY_DROPPED_OUT,
+            `La candidature est déjà abandonnée`
+          )
+        )
+      );
+    };
+
+    const checkIfDropOutReasonExists = EitherAsync.fromPromise(() =>
+      deps.getDropOutReasonById(params)
+    )
+      .mapLeft(
+        (error: string) =>
+          new FunctionalError(
+            FunctionalCodeError.CANDIDACY_DROP_OUT_FAILED,
+            error
+          )
+      )
+      .chain(async (maybeDropOutReason: Maybe<DropOutReason>) => {
+        return maybeDropOutReason.toEither(
+          new FunctionalError(
+            FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON,
+            `La raison d'abandon n'est pas valide`
+          )
+        );
+      });
 
     const dropOutCandidacyResult = EitherAsync.fromPromise(() =>
       deps.dropOutCandidacy(params)
@@ -63,7 +105,8 @@ export const dropOutCandidacy =
         )
     );
 
-    // return Right("yolo");
-
-    return isCorrectDropOutReason.chain(() => dropOutCandidacyResult);
-  };;
+    return checkIfCandidacyExists
+      .chain(checkIfCandidacyIsNotAbandonned)
+      .chain(() => checkIfDropOutReasonExists)
+      .chain(() => dropOutCandidacyResult);
+  };

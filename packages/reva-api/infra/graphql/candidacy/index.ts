@@ -387,17 +387,13 @@ export const resolvers = {
       },
       context: { auth: any }
     ) => {
-      console.log("dropout", {
-        candidacyId: payload.candidacyId,
-        dropOutReason: payload.dropOutReason,
-      });
-
       const dropOutDate: Date = payload.dropOutReason.dropOutDate
-        ? new Date()
+        ? new Date(payload.dropOutReason.dropOutDate)
         : new Date();
 
       const result = await dropOutCandidacy({
-        existsDropOutReason: dropOutDb.existsDropOutReason,
+        getCandidacyFromId: candidacyDb.getCandidacyFromId,
+        getDropOutReasonById: dropOutDb.getDropOutReasonById,
         dropOutCandidacy: dropOutDb.dropOutCandidacy,
         hasRole: context.auth.hasRole,
       })({
