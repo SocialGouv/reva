@@ -71,7 +71,7 @@ export const dropOutCandidacy = async ({
       prismaClient.dropOutReasonOnCandidacies.create({
         data: {
           candidacyId,
-          droppedOutAt: droppedOutAt ?? "",
+          droppedOutAt,
           status: candidacyStatus,
           dropOutReasonId,
           otherReasonContent,
