@@ -80,6 +80,11 @@ certification object____ =
     Object.selectionForCompositeField "certification" [] object____ (Basics.identity >> Decode.nullable)
 
 
+isCertificationPartial : SelectionSet Bool Admin.Object.Candidacy
+isCertificationPartial =
+    Object.selectionForField "Bool" "isCertificationPartial" [] Decode.bool
+
+
 experiences :
     SelectionSet decodesTo Admin.Object.Experience
     -> SelectionSet (List decodesTo) Admin.Object.Candidacy

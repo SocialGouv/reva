@@ -15,6 +15,7 @@ type alias Training =
     , individualHourCount : Int
     , collectiveHourCount : Int
     , additionalHourCount : Int
+    , isCertificationPartial : Bool
     }
 
 
@@ -28,6 +29,7 @@ keys =
     , collectiveHourCount = "collectiveHourCount"
     , additionalHourCount = "additionalHourCount"
     , consent = "consent"
+    , isCertificationPartial = "isCertificationPartial"
     }
 
 
@@ -46,6 +48,7 @@ fromDict basicSkills mandatoryTrainings dict =
         (decode.int .individualHourCount 0)
         (decode.int .collectiveHourCount 0)
         (decode.int .additionalHourCount 0)
+        (decode.bool .isCertificationPartial False)
 
 
 training :
@@ -57,8 +60,9 @@ training :
     -> Maybe Int
     -> Maybe Int
     -> Maybe Int
+    -> Bool
     -> Dict String String
-training mandatoryTrainings basicSkills certificateSkills consent otherTraining individualHourCount collectiveHourCount additionalHourCount =
+training mandatoryTrainings basicSkills certificateSkills consent otherTraining individualHourCount collectiveHourCount additionalHourCount isCertificationPartial =
     let
         mandatoryTrainingsIds =
             uuidToCheckedList mandatoryTrainings
@@ -73,6 +77,7 @@ training mandatoryTrainings basicSkills certificateSkills consent otherTraining 
             , ( .individualHourCount, Maybe.map String.fromInt individualHourCount )
             , ( .collectiveHourCount, Maybe.map String.fromInt collectiveHourCount )
             , ( .additionalHourCount, Maybe.map String.fromInt additionalHourCount )
+            , ( .isCertificationPartial, Just <| booleanToString isCertificationPartial )
             ]
                 |> Helper.toKeyedList keys
     in

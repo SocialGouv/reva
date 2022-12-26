@@ -427,7 +427,7 @@ buildTrainingInput :
     TrainingInputRequiredFields
     -> TrainingInput
 buildTrainingInput required____ =
-    { certificateSkills = required____.certificateSkills, otherTraining = required____.otherTraining, individualHourCount = required____.individualHourCount, collectiveHourCount = required____.collectiveHourCount, additionalHourCount = required____.additionalHourCount, validatedByCandidate = required____.validatedByCandidate, basicSkillIds = required____.basicSkillIds, mandatoryTrainingIds = required____.mandatoryTrainingIds }
+    { certificateSkills = required____.certificateSkills, otherTraining = required____.otherTraining, individualHourCount = required____.individualHourCount, collectiveHourCount = required____.collectiveHourCount, additionalHourCount = required____.additionalHourCount, validatedByCandidate = required____.validatedByCandidate, basicSkillIds = required____.basicSkillIds, mandatoryTrainingIds = required____.mandatoryTrainingIds, isCertificationPartial = required____.isCertificationPartial }
 
 
 type alias TrainingInputRequiredFields =
@@ -439,6 +439,7 @@ type alias TrainingInputRequiredFields =
     , validatedByCandidate : Bool
     , basicSkillIds : List Data.Scalar.Uuid
     , mandatoryTrainingIds : List Data.Scalar.Uuid
+    , isCertificationPartial : Bool
     }
 
 
@@ -453,6 +454,7 @@ type alias TrainingInput =
     , validatedByCandidate : Bool
     , basicSkillIds : List Data.Scalar.Uuid
     , mandatoryTrainingIds : List Data.Scalar.Uuid
+    , isCertificationPartial : Bool
     }
 
 
@@ -461,4 +463,4 @@ type alias TrainingInput =
 encodeTrainingInput : TrainingInput -> Value
 encodeTrainingInput input____ =
     Encode.maybeObject
-        [ ( "certificateSkills", Encode.string input____.certificateSkills |> Just ), ( "otherTraining", Encode.string input____.otherTraining |> Just ), ( "individualHourCount", Encode.int input____.individualHourCount |> Just ), ( "collectiveHourCount", Encode.int input____.collectiveHourCount |> Just ), ( "additionalHourCount", Encode.int input____.additionalHourCount |> Just ), ( "validatedByCandidate", Encode.bool input____.validatedByCandidate |> Just ), ( "basicSkillIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.basicSkillIds |> Just ), ( "mandatoryTrainingIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.mandatoryTrainingIds |> Just ) ]
+        [ ( "certificateSkills", Encode.string input____.certificateSkills |> Just ), ( "otherTraining", Encode.string input____.otherTraining |> Just ), ( "individualHourCount", Encode.int input____.individualHourCount |> Just ), ( "collectiveHourCount", Encode.int input____.collectiveHourCount |> Just ), ( "additionalHourCount", Encode.int input____.additionalHourCount |> Just ), ( "validatedByCandidate", Encode.bool input____.validatedByCandidate |> Just ), ( "basicSkillIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.basicSkillIds |> Just ), ( "mandatoryTrainingIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.mandatoryTrainingIds |> Just ), ( "isCertificationPartial", Encode.bool input____.isCertificationPartial |> Just ) ]

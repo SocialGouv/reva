@@ -29,6 +29,7 @@ type Candidacy {
   organismId: UUID
   organism: Organism
   certification: Certification
+  isCertificationPartial: Boolean!
   experiences: [Experience!]!
   goals: [CandidateGoal!]!
   firstname: String
@@ -165,6 +166,7 @@ input TrainingInput {
   validatedByCandidate: Boolean!
   basicSkillIds: [UUID!]!
   mandatoryTrainingIds: [UUID!]!
+  isCertificationPartial: Boolean!
 }
 
 type Mutation {

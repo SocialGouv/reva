@@ -55,6 +55,7 @@ update candidacyId endpointGraphql token toMsg ( _, referential ) dict =
                 True
                 (List.map Uuid training.basicSkillsIds)
                 (List.map Uuid training.mandatoryTrainingIds)
+                training.isCertificationPartial
 
         trainingRequiredArgs =
             Mutation.CandidacySubmitTrainingFormRequiredArguments
@@ -76,3 +77,4 @@ selection =
         |> with Admin.Object.Candidacy.individualHourCount
         |> with Admin.Object.Candidacy.collectiveHourCount
         |> with Admin.Object.Candidacy.additionalHourCount
+        |> with Admin.Object.Candidacy.isCertificationPartial
