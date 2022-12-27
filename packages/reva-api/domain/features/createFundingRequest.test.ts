@@ -1,7 +1,17 @@
-import { Organism } from "../types/candidacy";
-import { FundingRequest, FundingRequestInput } from "../types/candidate";
+import { Left, Right } from "purify-ts";
+
+import { Candidacy, Organism } from "../types/candidacy";
+import {
+  Candidate,
+  FundingRequest,
+  FundingRequestBatch,
+  FundingRequestInput,
+} from "../types/candidate";
 import { FunctionalError } from "../types/functionalError";
-import { validateFundingRequest } from "./createFundingRequest";
+import {
+  createFundingRequest,
+  validateFundingRequest,
+} from "./createFundingRequest";
 
 const defaultBacSupNonFragileCandidate: any = {
   highestDegree: {
@@ -36,12 +46,14 @@ const defaultValidFundingRequest: FundingRequestInput = {
   basicSkills: [
     {
       id: "333",
+      label: "Communication en français",
     },
   ],
   basicSkillsIds: ["333"],
   mandatoryTrainings: [
     {
       id: "444",
+      label: "Systèmes d'attaches",
     },
   ],
   mandatoryTrainingsIds: ["444"],
@@ -846,5 +858,96 @@ describe("funding request", () => {
         (result.extract() as FundingRequest).certificateSkillsHourCount
       ).toEqual(2);
     });
+  });
+
+  describe("tests on feature code", () => {
+    it("should not throw an error if everything is ok", async () => {
+      const cfr = createFundingRequest({
+        createFundingRequest: (params: {
+          candidacyId: string;
+          fundingRequest: FundingRequest;
+        }) =>
+          Promise.resolve(
+            Right({
+              ...params.fundingRequest,
+              basicSkills: params.fundingRequest.basicSkills.map((b: any) => ({
+                basicSkill: b,
+              })),
+              mandatoryTrainings: params.fundingRequest.mandatoryTrainings.map(
+                (m: any) => ({
+                  training: m,
+                })
+              ),
+            })
+          ),
+        existsCandidacyWithActiveStatuses: () => Promise.resolve(Right(true)),
+        hasRole: () => true,
+        getCandidacyFromId: () =>
+          Promise.resolve(
+            Right({ certification: { rncpId: "1234" } } as Candidacy)
+          ),
+        getCandidateByCandidacyId: () =>
+          Promise.resolve(
+            Right({
+              highestDegree: { level: 4 },
+              vulnerabilityIndicator: { label: "Vide" },
+            } as Candidate)
+          ),
+        createFundingRequestBatch: () =>
+          Promise.resolve(Right({} as FundingRequestBatch)),
+      });
+      const result = await cfr({
+        candidacyId: "1234",
+        fundingRequest: defaultValidFundingRequest,
+      });
+      expect(result.isRight()).toEqual(true);
+    }),
+      it("should throw error if createFundingRequestBatch fails", async () => {
+        const cfr = createFundingRequest({
+          createFundingRequest: (params: {
+            candidacyId: string;
+            fundingRequest: FundingRequest;
+          }) =>
+            Promise.resolve(
+              Right({
+                ...params.fundingRequest,
+                basicSkills: params.fundingRequest.basicSkills.map(
+                  (b: any) => ({
+                    basicSkill: b,
+                  })
+                ),
+                mandatoryTrainings:
+                  params.fundingRequest.mandatoryTrainings.map((m: any) => ({
+                    training: m,
+                  })),
+              })
+            ),
+          existsCandidacyWithActiveStatuses: () => Promise.resolve(Right(true)),
+          hasRole: () => true,
+          getCandidacyFromId: () =>
+            Promise.resolve(
+              Right({ certification: { rncpId: "1234" } } as Candidacy)
+            ),
+          getCandidateByCandidacyId: () =>
+            Promise.resolve(
+              Right({
+                highestDegree: { level: 4 },
+                vulnerabilityIndicator: { label: "Vide" },
+              } as Candidate)
+            ),
+          createFundingRequestBatch: () => Promise.resolve(Left("Error")),
+        });
+        const result = await cfr({
+          candidacyId: "1234",
+          fundingRequest: defaultValidFundingRequest,
+        });
+        expect(result.isLeft()).toEqual(true);
+        expect(result.extract()).toEqual({
+          code: "FUNDING_REQUEST_NOT_POSSIBLE",
+          errors: [],
+          message:
+            "Erreur lors de la creation du bach de la demande de financement",
+        });
+      });
   });
 });

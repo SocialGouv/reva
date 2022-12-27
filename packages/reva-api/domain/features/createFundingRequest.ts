@@ -1,3 +1,4 @@
+import pino from "pino";
 import { Either, EitherAsync, Left, Right } from "purify-ts";
 
 import { Role } from "../types/account";
@@ -29,6 +30,8 @@ interface CreateFundingRequestDeps {
     statuses: ["PARCOURS_CONFIRME", "ABANDON"];
   }) => Promise<Either<string, boolean>>;
 }
+
+const logger = pino();
 
 const candidateBacNonFragile = (candidate: any) =>
   candidate.highestDegree.level > 4 &&
@@ -302,19 +305,20 @@ export const createFundingRequest =
             content: batchContent,
           })
         )
-        .mapLeft(
-          () =>
-            new FunctionalError(
-              FunctionalCodeError.FUNDING_REQUEST_NOT_POSSIBLE,
-              `Erreur lors de la creation du bach de la demande de financement`
-            )
-        );
+        .map(() => fundingRequest)
+        .mapLeft((e) => {
+          logger.error(e);
+          return new FunctionalError(
+            FunctionalCodeError.FUNDING_REQUEST_NOT_POSSIBLE,
+            `Erreur lors de la creation du bach de la demande de financement`
+          );
+        });
 
     return existsCandidacyInRequiredStatuses
       .chain(() => getCandidateByCandidacyId)
       .chain(checkRules)
       .chain(createFundingRequest)
-      .ifRight(createFundingRequestBatch);
+      .chain(createFundingRequestBatch);
   };
 
 export const mapFundingRequestBatch = ({
