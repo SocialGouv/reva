@@ -52,11 +52,11 @@ type Candidacy {
   basicSkills: [BasicSkill!]!
   mandatoryTrainingIds: [UUID!]!
   mandatoryTrainings: [Training!]!
-  dropOutReason: DropOutReasonOnCandidacy
+  candidacyDropOut: CandidacyDropOut
   createdAt: Timestamp!
 }
 
-type DropOutReasonOnCandidacy {
+type CandidacyDropOut {
   dropOutReason: DropOutReason!
   droppedOutAt: Timestamp!
   otherReasonContent: String

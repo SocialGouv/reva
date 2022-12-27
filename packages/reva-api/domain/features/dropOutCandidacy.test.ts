@@ -1,5 +1,5 @@
 import { DropOutReason } from "@prisma/client";
-import { Either, EitherAsync, Maybe, Right } from "purify-ts";
+import { Either, Maybe, Right } from "purify-ts";
 
 import { Candidacy } from "../types/candidacy";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
@@ -23,7 +23,6 @@ const blankCandidacy: Candidacy = {
   createdAt: new Date(),
   department: null,
   deviceId: "",
-  dropOutReason: null,
   email: null,
   experiences: [],
   goals: [],
@@ -65,7 +64,7 @@ const dropOutReasonWithRightRole = dropOutCandidacy({
         candidacyStatuses: [
           { id: "laal123", createdAt: new Date(), status: "ABANDON" },
         ],
-        dropOutReason: {
+        candidacyDropOut: {
           droppedOutAt: new Date(),
           dropOutReason: { id: params.dropOutReasonId, label: "" },
           status: "COOL",
@@ -130,8 +129,8 @@ describe("drop out candidacy", () => {
     });
     expect(result.isRight()).toBe(true);
     const candidacy = result.extract() as Candidacy;
-    expect(candidacy.dropOutReason).not.toBeNull();
-    expect(candidacy.dropOutReason?.dropOutReason.id).toEqual(
+    expect(candidacy.candidacyDropOut).not.toBeNull();
+    expect(candidacy.candidacyDropOut?.dropOutReason.id).toEqual(
       dropOutReasonTable[1].id
     );
   });

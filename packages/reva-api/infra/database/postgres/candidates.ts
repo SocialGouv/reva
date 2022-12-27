@@ -2,7 +2,7 @@ import { CandidacyStatus, Candidate } from "@prisma/client";
 import { Left, Maybe, Right } from "purify-ts";
 
 import { Candidacy } from "../../../domain/types/candidacy";
-import { candidacyIncludes, toSingleDropOutReason } from "./candidacies";
+import { candidacyIncludes } from "./candidacies";
 import { prismaClient } from "./client";
 
 const candidateIncludes = {
@@ -150,7 +150,6 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
                 ...certificationAndRegion?.certification,
                 codeRncp: certificationAndRegion?.certification.rncpId,
               },
-              dropOutReason: toSingleDropOutReason(candidacy.dropOutReason),
             })
           )
         ),
@@ -261,7 +260,6 @@ export const getCandidateWithCandidacyFromKeycloakId = async (
                 ...certificationAndRegion?.certification,
                 codeRncp: certificationAndRegion?.certification.rncpId,
               },
-              dropOutReason: toSingleDropOutReason(candidacy.dropOutReason),
             })
           )
         ),

@@ -1,7 +1,6 @@
 import { Left, Right } from "purify-ts";
 
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
-// import { CandidacyInput, createCandidacy } from "./index";
 import { createCandidacy } from "./createCandidacy";
 
 describe("domain candidacy", () => {
@@ -26,7 +25,6 @@ describe("domain candidacy", () => {
               code: "",
               label: "",
             },
-            dropOutReason: null,
           })
         ),
       createCandidacy: () =>
@@ -48,7 +46,6 @@ describe("domain candidacy", () => {
               code: "",
               label: "",
             },
-            dropOutReason: null,
           })
         ),
       notifyTeam: async (candidacyId: string) => console.log(`notify`),
@@ -117,7 +114,6 @@ describe("domain candidacy", () => {
               code: "",
               label: "",
             },
-            dropOutReason: null,
           })
         ),
       notifyTeam: async (candidacyId: string) => console.log(`notify`),

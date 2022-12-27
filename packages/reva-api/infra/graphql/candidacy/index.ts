@@ -394,7 +394,7 @@ export const resolvers = {
       const result = await dropOutCandidacy({
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
         getDropOutReasonById: dropOutDb.getDropOutReasonById,
-        dropOutCandidacy: dropOutDb.dropOutCandidacy,
+        dropOutCandidacy: candidacyDb.dropOutCandidacy,
         hasRole: context.auth.hasRole,
       })({
         candidacyId: payload.candidacyId,

@@ -114,7 +114,7 @@ model Candidacy {
   candidateId                  String?                                 @map("candidate_id") @db.Uuid
   department                   Department?                             @relation(fields: [departmentId], references: [id], onDelete: Cascade)
   departmentId                 String?                                 @map("department_id") @db.Uuid
-  dropOutReason                DropOutReasonOnCandidacies[]
+  candidacyDropOut             CandidacyDropOut?                       @relation()
   createdAt                    DateTime                                @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                    DateTime?                               @map("updated_at") @db.Timestamptz(6)
   FundingRequest               FundingRequest[]
@@ -479,16 +479,15 @@ model FundingRequestBatch {
 model DropOutReason {
   id            String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   label         String                       @unique @db.VarChar(255)
-  dropOutReasonOnCandidacies DropOutReasonOnCandidacies[]
+  candidacies   CandidacyDropOut[]           @relation()
   createdAt     DateTime                     @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt     DateTime?                    @map("updated_at") @db.Timestamptz(6)
-
   @@map("drop_out_reason")
 }
 
-model DropOutReasonOnCandidacies {
+model CandidacyDropOut {
   candidacy          Candidacy       @relation(fields: [candidacyId], references: [id])
-  candidacyId        String          @map("candidacy_id") @db.Uuid
+  candidacyId        String          @map("candidacy_id") @db.Uuid @unique
   dropOutReason      DropOutReason   @relation(fields: [dropOutReasonId], references: [id])
   dropOutReasonId    String          @map("drop_out_reason_id") @db.Uuid
   status             CandidacyStatus
@@ -497,6 +496,6 @@ model DropOutReasonOnCandidacies {
   createdAt          DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt          DateTime?       @map("updated_at") @db.Timestamptz(6)
 
-  @@id([candidacyId, dropOutReasonId])
-  @@map("drop_out_reason_on_candidacies")
+  @@id([candidacyId])
+  @@map("candidacy_drop_out")
 }

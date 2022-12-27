@@ -1,10 +1,7 @@
-import { CandidacyStatus } from "@prisma/client";
 import { Either, Left, Maybe, Right } from "purify-ts";
 
 import * as domain from "../../../domain/types/candidacy";
-import { toSingleDropOutReason } from "./candidacies";
 import { prismaClient } from "./client";
-import { toDomainExperiences } from "./experiences";
 
 export const getDropOutReasons = async (): Promise<
   Either<string, domain.DropOutReason[]>
@@ -31,89 +28,5 @@ export const getDropOutReasonById = async (params: {
     return Right(Maybe.fromNullable(dropOutReason));
   } catch (e) {
     return Left(`error while retrieving drop out reason`);
-  }
-};
-
-interface DropOutCandidacyParams {
-  candidacyId: string;
-  dropOutReasonId: string;
-  droppedOutAt: Date;
-  otherReasonContent?: string;
-}
-
-export const dropOutCandidacy = async ({
-  candidacyId,
-  droppedOutAt,
-  dropOutReasonId,
-  otherReasonContent,
-}: DropOutCandidacyParams): Promise<Either<string, domain.Candidacy>> => {
-  let candidacyStatus: CandidacyStatus;
-
-  try {
-    const candidacy = await prismaClient.candidacy.findUnique({
-      where: {
-        id: candidacyId,
-      },
-      include: {
-        candidacyStatuses: true,
-      },
-    });
-    if (candidacy === null) {
-      return Left(`could not find candidacy ${candidacyId}`);
-    }
-    candidacyStatus = candidacy.candidacyStatuses[0].status;
-  } catch (e) {
-    return Left(`error while getting candidacy`);
-  }
-
-  try {
-    const [, , newCandidacy] = await prismaClient.$transaction([
-      prismaClient.dropOutReasonOnCandidacies.create({
-        data: {
-          candidacyId,
-          droppedOutAt,
-          status: candidacyStatus,
-          dropOutReasonId,
-          otherReasonContent,
-        },
-      }),
-      prismaClient.candidaciesStatus.updateMany({
-        where: {
-          candidacyId: candidacyId,
-        },
-        data: {
-          isActive: false,
-        },
-      }),
-      prismaClient.candidacy.update({
-        where: {
-          id: candidacyId,
-        },
-        data: {
-          candidacyStatuses: {
-            create: {
-              status: CandidacyStatus.ABANDON,
-              isActive: true,
-            },
-          },
-        },
-        include: {
-          dropOutReason: true,
-          candidacyStatuses: true,
-          department: true,
-          experiences: true,
-          goals: true,
-        },
-      }),
-    ]);
-    return Right({
-      ...newCandidacy,
-      experiences: toDomainExperiences(newCandidacy.experiences),
-      dropOutReason: toSingleDropOutReason(newCandidacy.dropOutReason),
-    });
-  } catch (e: any) {
-    return Left(
-      `error while creating dropping out candidacy ${candidacyId}: ${e.message}`
-    );
   }
 };

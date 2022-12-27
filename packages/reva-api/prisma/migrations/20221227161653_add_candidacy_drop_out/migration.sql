@@ -9,7 +9,7 @@ CREATE TABLE "drop_out_reason" (
 );
 
 -- CreateTable
-CREATE TABLE "drop_out_reason_on_candidacies" (
+CREATE TABLE "candidacy_drop_out" (
     "candidacy_id" UUID NOT NULL,
     "drop_out_reason_id" UUID NOT NULL,
     "status" "CandidacyStatus" NOT NULL,
@@ -18,14 +18,17 @@ CREATE TABLE "drop_out_reason_on_candidacies" (
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(6),
 
-    CONSTRAINT "drop_out_reason_on_candidacies_pkey" PRIMARY KEY ("candidacy_id","drop_out_reason_id")
+    CONSTRAINT "candidacy_drop_out_pkey" PRIMARY KEY ("candidacy_id")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "drop_out_reason_label_key" ON "drop_out_reason"("label");
 
--- AddForeignKey
-ALTER TABLE "drop_out_reason_on_candidacies" ADD CONSTRAINT "drop_out_reason_on_candidacies_candidacy_id_fkey" FOREIGN KEY ("candidacy_id") REFERENCES "candidacy"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+-- CreateIndex
+CREATE UNIQUE INDEX "candidacy_drop_out_candidacy_id_key" ON "candidacy_drop_out"("candidacy_id");
 
 -- AddForeignKey
-ALTER TABLE "drop_out_reason_on_candidacies" ADD CONSTRAINT "drop_out_reason_on_candidacies_drop_out_reason_id_fkey" FOREIGN KEY ("drop_out_reason_id") REFERENCES "drop_out_reason"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "candidacy_drop_out" ADD CONSTRAINT "candidacy_drop_out_candidacy_id_fkey" FOREIGN KEY ("candidacy_id") REFERENCES "candidacy"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "candidacy_drop_out" ADD CONSTRAINT "candidacy_drop_out_drop_out_reason_id_fkey" FOREIGN KEY ("drop_out_reason_id") REFERENCES "drop_out_reason"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
