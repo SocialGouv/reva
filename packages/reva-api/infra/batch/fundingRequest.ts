@@ -72,7 +72,7 @@ export const batchFundingRequest = async () => {
     );
 
     const fileDate = new Date().toLocaleDateString("sv").split("-").join("");
-    const fileName = `DAF-${fileDate}.csv`;
+    const fileName = `DAF_${fileDate}.csv`;
     await sendFundingRequestsStream({
       fileName,
       readableStream: batchReadableStream,
