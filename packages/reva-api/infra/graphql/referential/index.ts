@@ -3,6 +3,7 @@ import mercurius from "mercurius";
 import { getCertifications } from "../../../domain/features/getCertifications";
 import { getDegrees } from "../../../domain/features/getDegrees";
 import { getDepartments } from "../../../domain/features/getDepartments";
+import { getDropOutReasons } from "../../../domain/features/getDropOutReasons";
 import { getRegions } from "../../../domain/features/getRegions";
 import { getVulnerabilityIndicators } from "../../../domain/features/getVulnerabilityIndicators";
 import * as certificationsDb from "../../database/postgres/certifications";
@@ -10,6 +11,7 @@ import * as degreesDb from "../../database/postgres/degrees";
 import * as goalsDb from "../../database/postgres/goals";
 import * as locationsDb from "../../database/postgres/locations";
 import * as vulnerabilityIndicatorsDb from "../../database/postgres/vulnerabilityIndicators";
+import * as dropOutReasonsDb from "../../database/postgres/dropOutReasons";
 
 export const resolvers = {
   Query: {
@@ -62,6 +64,16 @@ export const resolvers = {
       const result = await getVulnerabilityIndicators({
         getVulnerabilityIndicators:
           vulnerabilityIndicatorsDb.getVulnerabilityIndicators,
+      })();
+
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
+    getDropOutReasons: async (_: any, _payload: any) => {
+      const result = await getDropOutReasons({
+        getDropOutReasons:
+          dropOutReasonsDb.getDropOutReasons,
       })();
 
       return result

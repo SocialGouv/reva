@@ -6,6 +6,7 @@ import { addExperienceToCandidacy } from "../../../domain/features/addExperience
 import { archiveCandidacy } from "../../../domain/features/archiveCandidacy";
 import { createCandidacy } from "../../../domain/features/createCandidacy";
 import { deleteCandidacy } from "../../../domain/features/deleteCandidacy";
+import { dropOutCandidacy } from "../../../domain/features/dropOutCandidacy";
 import { getBasicSkills } from "../../../domain/features/getBasicSkills";
 import { getCandidacySummaries } from "../../../domain/features/getCandidacies";
 import { getCandidacy } from "../../../domain/features/getCandidacy";
@@ -26,6 +27,7 @@ import { confirmTrainingFormByCandidate } from "../../../domain/features/validat
 import { Candidacy } from "../../../domain/types/candidacy";
 import * as basicSkillDb from "../../database/postgres/basicSkills";
 import * as candidacyDb from "../../database/postgres/candidacies";
+import * as dropOutDb from "../../database/postgres/dropOutReasons";
 import * as experienceDb from "../../database/postgres/experiences";
 import * as goalDb from "../../database/postgres/goals";
 import * as organismDb from "../../database/postgres/organisms";
@@ -62,7 +64,7 @@ export const resolvers = {
       other: unknown,
       { deviceId }: { deviceId: string },
       context: any
-    ) => {
+    ): Promise<mercurius.ErrorWithProps | Candidacy> => {
       const result = await getDeviceCandidacy({
         getCandidacyFromDeviceId: candidacyDb.getCandidacyFromDeviceId,
       })({ deviceId });
@@ -367,6 +369,38 @@ export const resolvers = {
         updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
       })({
         candidacyId: candidacyId,
+      });
+
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
+    candidacy_dropOut: async (
+      _: unknown,
+      payload: {
+        candidacyId: string;
+        dropOutReason: {
+          dropOutReasonId: string;
+          droppedOutAt?: number;
+          otherReasonContent?: string;
+        };
+      },
+      context: { auth: any }
+    ) => {
+      const droppedOutAt: Date = payload.dropOutReason.droppedOutAt
+        ? new Date(payload.dropOutReason.droppedOutAt)
+        : new Date();
+
+      const result = await dropOutCandidacy({
+        getCandidacyFromId: candidacyDb.getCandidacyFromId,
+        getDropOutReasonById: dropOutDb.getDropOutReasonById,
+        dropOutCandidacy: candidacyDb.dropOutCandidacy,
+        hasRole: context.auth.hasRole,
+      })({
+        candidacyId: payload.candidacyId,
+        dropOutReasonId: payload.dropOutReason.dropOutReasonId,
+        otherReasonContent: payload.dropOutReason.otherReasonContent,
+        droppedOutAt,
       });
 
       return result

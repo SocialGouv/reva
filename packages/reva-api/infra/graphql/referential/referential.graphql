@@ -35,6 +35,11 @@ type VulnerabilityIndicator {
   label: String!
 }
 
+type DropOutReason {
+  id: ID!
+  label: String!
+}
+
 type Query {
   getReferential: Referential!
   getCertifications(departmentId: UUID!): [Certification!]!
@@ -42,4 +47,5 @@ type Query {
   getDepartments: [Department!]!
   getDegrees: [Degree!]!
   getVulnerabilityIndicators: [VulnerabilityIndicator!]!
+  getDropOutReasons: [DropOutReason!]!
 }

@@ -52,7 +52,15 @@ type Candidacy {
   basicSkills: [BasicSkill!]!
   mandatoryTrainingIds: [UUID!]!
   mandatoryTrainings: [Training!]!
+  candidacyDropOut: CandidacyDropOut
   createdAt: Timestamp!
+}
+
+type CandidacyDropOut {
+  dropOutReason: DropOutReason!
+  droppedOutAt: Timestamp!
+  otherReasonContent: String
+  status: String!
 }
 
 type CandidacySummary {
@@ -169,6 +177,12 @@ input TrainingInput {
   isCertificationPartial: Boolean!
 }
 
+input DropOutInput {
+  droppedOutAt: Timestamp!
+  dropOutReasonId: UUID!
+  otherReasonContent: String
+}
+
 type Mutation {
   candidacy_createCandidacy(candidacy: CandidacyInput!): Candidacy
   candidacy_submitCandidacy(deviceId: ID!, candidacyId: ID!): Candidacy
@@ -219,4 +233,8 @@ type Mutation {
     training: TrainingInput!
   ): Candidacy!
   candidacy_confirmTrainingForm(candidacyId: UUID!): Candidacy!
+  candidacy_dropOut(
+    candidacyId: UUID!
+    dropOutReason: DropOutInput!
+  ): Candidacy!
 }
