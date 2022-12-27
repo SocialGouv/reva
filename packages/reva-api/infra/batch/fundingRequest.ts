@@ -73,7 +73,7 @@ export const batchFundingRequest = async () => {
 
     const fileDate = new Date().toLocaleDateString("sv").split("-").join("");
     const fileName = `DAF-${fileDate}.csv`;
-    sendFundingRequestsStream({
+    await sendFundingRequestsStream({
       fileName,
       readableStream: batchReadableStream,
     });
@@ -129,6 +129,7 @@ async function sendFundingRequestsStream(params: {
     logger.info("Stream sent");
   } catch (e: unknown) {
     logger.error(e);
+    throw e;
   } finally {
     if (!client.closed) {
       logger.info("Closing FTP connection");
