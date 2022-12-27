@@ -57,10 +57,10 @@ type Candidacy {
 }
 
 type DropOutReasonOnCandidacy {
-  dropOutReason: DropOutReason
-  droppedOutAt: Timestamp
+  dropOutReason: DropOutReason!
+  droppedOutAt: Timestamp!
   otherReasonContent: String
-  status: String
+  status: String!
 }
 
 type CandidacySummary {
