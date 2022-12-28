@@ -38,11 +38,6 @@ export const candidacyIncludes = {
       training: true,
     },
   },
-  dropOutReason: {
-    include: {
-      dropOutReason: true,
-    },
-  },
 };
 
 const toDomainCandidacySummary = (
@@ -75,7 +70,6 @@ const toDomainCandidacySummary = (
     email: candidacy.email,
     phone: candidacy.phone,
     lastStatus,
-    dropOutReason: null,
     department: candidacy.department,
     createdAt: candidacy.createdAt,
     sentAt,
@@ -137,7 +131,6 @@ export const insertCandidacy = async (params: {
       phone: newCandidacy.phone,
       email: newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
-      dropOutReason: null,
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
@@ -145,9 +138,7 @@ export const insertCandidacy = async (params: {
   }
 };
 
-export const getCandidacyFromDeviceId = async (
-  deviceId: string
-): Promise<Either<string, domain.Candidacy>> => {
+export const getCandidacyFromDeviceId = async (deviceId: string) => {
   try {
     const candidacy = await prismaClient.candidacy.findFirst({
       where: {
@@ -197,9 +188,7 @@ export const getCandidacyFromDeviceId = async (
   }
 };
 
-export const getCandidacyFromId = async (
-  candidacyId: string
-): Promise<Either<string, domain.Candidacy>> => {
+export const getCandidacyFromId = async (candidacyId: string) => {
   try {
     const candidacy = await prismaClient.candidacy.findUnique({
       where: {
@@ -243,7 +232,7 @@ export const getCandidacyFromId = async (
           codeRncp: certificationAndRegion?.certification.rncpId,
         },
       }))
-      .toEither(`Candidacy ${candidacyId} not found`);
+      .toEither(`Candidacy with deviceId ${candidacyId} not found`);
   } catch (e) {
     return Left(`error while retrieving the candidacy with id ${candidacyId}`);
   }
@@ -315,7 +304,7 @@ export const updateContactOnCandidacy = async (params: {
   candidacyId: string;
   email: string;
   phone: string;
-}): Promise<Either<string, domain.Candidacy>> => {
+}) => {
   try {
     const newCandidacy = await prismaClient.candidacy.update({
       where: {
@@ -354,7 +343,6 @@ export const updateContactOnCandidacy = async (params: {
       email: newCandidacy.email,
       phone: newCandidacy.phone,
       candidacyStatuses: newCandidacy.candidacyStatuses,
-      dropOutReason: newCandidacy.dropOutReason,
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
@@ -367,7 +355,7 @@ export const updateContactOnCandidacy = async (params: {
 export const updateCandidacyStatus = async (params: {
   candidacyId: string;
   status: CandidacyStatus;
-}): Promise<Either<string, domain.Candidacy>> => {
+}) => {
   try {
     const [, newCandidacy, certificationAndRegion] =
       await prismaClient.$transaction([
@@ -425,7 +413,6 @@ export const updateCandidacyStatus = async (params: {
       phone: newCandidacy.candidate?.phone || newCandidacy.phone,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
-      dropOutReason: newCandidacy.dropOutReason,
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
@@ -514,7 +501,6 @@ export const updateCertification = async (params: {
       phone: newCandidacy.candidate?.phone || newCandidacy.phone,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
-      dropOutReason: newCandidacy.dropOutReason,
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
@@ -742,7 +728,6 @@ export const updateAppointmentInformations = async (params: {
       firstAppointmentOccuredAt: candidacy.firstAppointmentOccuredAt,
       appointmentCount: candidacy.appointmentCount,
       wasPresentAtFirstAppointment: candidacy.wasPresentAtFirstAppointment,
-      dropOutReason: candidacy.dropOutReason,
       candidacyStatuses: candidacy.candidacyStatuses,
       createdAt: candidacy.createdAt,
     });
@@ -799,7 +784,6 @@ export const updateOrganism = async (params: {
       phone: newCandidacy.candidate?.phone || newCandidacy.phone,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
-      dropOutReason: newCandidacy.dropOutReason,
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
@@ -893,99 +877,11 @@ export const updateTrainingInformations = async (params: {
       phone: newCandidacy.candidate?.phone || newCandidacy.phone,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
-      dropOutReason: newCandidacy.dropOutReason,
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
     return Left(
       `error while updating training informations on candidacy ${params.candidacyId}`
-    );
-  }
-};
-
-interface DropOutCandidacyParams {
-  candidacyId: string;
-  dropOutReasonId: string;
-  droppedOutAt: Date;
-  otherReasonContent?: string;
-}
-
-export const dropOutCandidacy = async ({
-  candidacyId,
-  droppedOutAt,
-  dropOutReasonId,
-  otherReasonContent,
-}: DropOutCandidacyParams): Promise<Either<string, domain.Candidacy>> => {
-  let candidacyStatus: CandidacyStatus;
-
-  try {
-    const candidacy = await prismaClient.candidacy.findUnique({
-      where: {
-        id: candidacyId,
-      },
-      include: {
-        candidacyStatuses: true,
-      },
-    });
-    if (candidacy === null) {
-      return Left(`could not find candidacy ${candidacyId}`);
-    }
-    candidacyStatus = candidacy.candidacyStatuses[0].status;
-  } catch (e) {
-    return Left(`error while getting candidacy`);
-  }
-
-  try {
-    const [, , newCandidacy] = await prismaClient.$transaction([
-      prismaClient.candidacyDropOut.create({
-        data: {
-          candidacyId,
-          droppedOutAt,
-          status: candidacyStatus,
-          dropOutReasonId,
-          otherReasonContent,
-        },
-      }),
-      prismaClient.candidaciesStatus.updateMany({
-        where: {
-          candidacyId: candidacyId,
-        },
-        data: {
-          isActive: false,
-        },
-      }),
-      prismaClient.candidacy.update({
-        where: {
-          id: candidacyId,
-        },
-        data: {
-          candidacyStatuses: {
-            create: {
-              status: CandidacyStatus.ABANDON,
-              isActive: true,
-            },
-          },
-        },
-        include: {
-          candidacyDropOut: {
-            include: {
-              dropOutReason: true,
-            },
-          },
-          candidacyStatuses: true,
-          department: true,
-          experiences: true,
-          goals: true,
-        },
-      }),
-    ]);
-    return Right({
-      ...newCandidacy,
-      experiences: toDomainExperiences(newCandidacy.experiences),
-    });
-  } catch (e: any) {
-    return Left(
-      `error while creating dropping out candidacy ${candidacyId}: ${e.message}`
     );
   }
 };

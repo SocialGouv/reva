@@ -6,7 +6,6 @@ import fastifyStatic from "@fastify/static";
 import dotenv from "dotenv";
 import fastify from "fastify";
 import mercurius, { MercuriusOptions } from "mercurius";
-dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
 import {
   deleteCandidacyFromEmail,
@@ -15,6 +14,7 @@ import {
 import { graphqlConfiguration } from "../graphql";
 import keycloakAdminPlugin from "./keycloak-admin-plugin";
 import keycloakPlugin from "./keycloak-plugin";
+dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
 if (process.env.ES_APM_SERVER_URL) {
   const apm = require("elastic-apm-node").start({

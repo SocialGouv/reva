@@ -1,6 +1,7 @@
 import { Left, Right } from "purify-ts";
 
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
+// import { CandidacyInput, createCandidacy } from "./index";
 import { createCandidacy } from "./createCandidacy";
 
 describe("domain candidacy", () => {
