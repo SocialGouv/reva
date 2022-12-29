@@ -379,7 +379,7 @@ export const resolvers = {
       _: unknown,
       payload: {
         candidacyId: string;
-        dropOutReason: {
+        dropOut: {
           dropOutReasonId: string;
           droppedOutAt?: number;
           otherReasonContent?: string;
@@ -387,8 +387,8 @@ export const resolvers = {
       },
       context: { auth: any }
     ) => {
-      const droppedOutAt: Date = payload.dropOutReason.droppedOutAt
-        ? new Date(payload.dropOutReason.droppedOutAt)
+      const droppedOutAt: Date = payload.dropOut.droppedOutAt
+        ? new Date(payload.dropOut.droppedOutAt)
         : new Date();
 
       const result = await dropOutCandidacy({
@@ -398,8 +398,8 @@ export const resolvers = {
         hasRole: context.auth.hasRole,
       })({
         candidacyId: payload.candidacyId,
-        dropOutReasonId: payload.dropOutReason.dropOutReasonId,
-        otherReasonContent: payload.dropOutReason.otherReasonContent,
+        dropOutReasonId: payload.dropOut.dropOutReasonId,
+        otherReasonContent: payload.dropOut.otherReasonContent,
         droppedOutAt,
       });
 

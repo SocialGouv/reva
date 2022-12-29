@@ -38,7 +38,7 @@ export const candidacyIncludes = {
       training: true,
     },
   },
-  dropOutReason: {
+  candidacyDropOut: {
     include: {
       dropOutReason: true,
     },
@@ -245,7 +245,11 @@ export const getCandidacyFromId = async (
       }))
       .toEither(`Candidacy ${candidacyId} not found`);
   } catch (e) {
-    return Left(`error while retrieving the candidacy with id ${candidacyId}`);
+    return Left(
+      `error while retrieving the candidacy with id ${candidacyId} : ${
+        (e as Error).message
+      }`
+    );
   }
 };
 
@@ -354,7 +358,7 @@ export const updateContactOnCandidacy = async (params: {
       email: newCandidacy.email,
       phone: newCandidacy.phone,
       candidacyStatuses: newCandidacy.candidacyStatuses,
-      dropOutReason: newCandidacy.dropOutReason,
+      candidacyDropOut: newCandidacy.candidacyDropOut,
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
@@ -425,7 +429,7 @@ export const updateCandidacyStatus = async (params: {
       phone: newCandidacy.candidate?.phone || newCandidacy.phone,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
-      dropOutReason: newCandidacy.dropOutReason,
+      candidacyDropOut: newCandidacy.candidacyDropOut,
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
@@ -514,7 +518,7 @@ export const updateCertification = async (params: {
       phone: newCandidacy.candidate?.phone || newCandidacy.phone,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
-      dropOutReason: newCandidacy.dropOutReason,
+      candidacyDropOut: newCandidacy.candidacyDropOut,
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
@@ -742,7 +746,7 @@ export const updateAppointmentInformations = async (params: {
       firstAppointmentOccuredAt: candidacy.firstAppointmentOccuredAt,
       appointmentCount: candidacy.appointmentCount,
       wasPresentAtFirstAppointment: candidacy.wasPresentAtFirstAppointment,
-      dropOutReason: candidacy.dropOutReason,
+      candidacyDropOut: candidacy.candidacyDropOut,
       candidacyStatuses: candidacy.candidacyStatuses,
       createdAt: candidacy.createdAt,
     });
@@ -799,7 +803,7 @@ export const updateOrganism = async (params: {
       phone: newCandidacy.candidate?.phone || newCandidacy.phone,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
-      dropOutReason: newCandidacy.dropOutReason,
+      candidacyDropOut: newCandidacy.candidacyDropOut,
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
@@ -893,7 +897,7 @@ export const updateTrainingInformations = async (params: {
       phone: newCandidacy.candidate?.phone || newCandidacy.phone,
       email: newCandidacy.candidate?.email || newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
-      dropOutReason: newCandidacy.dropOutReason,
+      candidacyDropOut: newCandidacy.candidacyDropOut,
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
@@ -983,9 +987,9 @@ export const dropOutCandidacy = async ({
       ...newCandidacy,
       experiences: toDomainExperiences(newCandidacy.experiences),
     });
-  } catch (e: any) {
+  } catch (error) {
     return Left(
-      `error while creating dropping out candidacy ${candidacyId}: ${e.message}`
+      `error on drop out candidacy ${candidacyId}: ${(error as Error).message}`
     );
   }
 };
