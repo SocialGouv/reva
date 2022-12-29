@@ -16,10 +16,10 @@ type alias Admissibility =
 admissibilitySatusFromString : String -> Maybe AdmissibilityStatus
 admissibilitySatusFromString admissibilityStatus =
     case admissibilityStatus of
-        "admissible" ->
+        "Recevable" ->
             Just Admissible
 
-        "non admissible" ->
+        "Non recevable" ->
             Just NotAdmissible
 
         _ ->
@@ -30,7 +30,7 @@ admissibilitySatusToString : AdmissibilityStatus -> String
 admissibilitySatusToString admissibilityStatus =
     case admissibilityStatus of
         Admissible ->
-            "admissible"
+            "Recevable"
 
         NotAdmissible ->
-            "non admissible"
+            "Non recevable"
