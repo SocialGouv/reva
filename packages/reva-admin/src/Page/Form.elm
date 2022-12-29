@@ -49,6 +49,8 @@ type Element
     | Section String
     | Title String
     | Textarea String
+    | Radio String
+    | RadioList String (List ( String, String ))
 
 
 type alias Form =
@@ -362,6 +364,31 @@ viewEditableElement formData ( elementId, element ) =
                 Nothing ->
                     []
 
+        Radio label ->
+            [ div
+                [ class "flex items-start h-8 w-full" ]
+                [ radioView [] elementId label dataOrDefault
+                , labelView elementId "text-base text-slate-800" label
+                ]
+            ]
+
+        RadioList label choices ->
+            let
+                viewChoices =
+                    List.map
+                        (\( choiceId, choice ) -> viewEditableElement formData ( choiceId, Radio choice ))
+                        choices
+                        |> List.concat
+            in
+            [ div
+                [ name elementId
+                , id elementId
+                , class "mt-1 mb-4"
+                ]
+                viewChoices
+                |> withLegend label
+            ]
+
 
 viewReadOnlyElement : FormData -> ( String, Element ) -> List (Html (Msg referential))
 viewReadOnlyElement formData ( elementId, element ) =
@@ -465,6 +492,30 @@ viewReadOnlyElement formData ( elementId, element ) =
                 Nothing ->
                     []
 
+        Radio label ->
+            [ div
+                [ class "flex items-start h-8 w-full text-gray-500"
+                ]
+                [ radioView [ disabled True ] elementId label dataOrDefault
+                , labelView elementId "text-base font-normal" label
+                ]
+            ]
+
+        RadioList label choices ->
+            let
+                viewChoices =
+                    List.map
+                        (\( choiceId, choice ) -> li [] <| viewReadOnlyElement formData ( choiceId, Radio choice ))
+                        choices
+            in
+            ul
+                [ class "mt-2 mb-4"
+                , name elementId
+                , id elementId
+                ]
+                viewChoices
+                |> withTerm label
+
 
 info : String -> Html msg
 info value =
@@ -504,6 +555,23 @@ checkboxView extraAttributes elementId dataOrDefault =
                , class "disabled:hover:not-allowed"
                , class "disabled:text-gray-400 disabled:border-slate-200 disabled:bg-gray-100"
                , checked (dataOrDefault == "checked")
+               ]
+        )
+        []
+
+
+radioView : List (Html.Attribute (Msg referential)) -> String -> String -> String -> Html (Msg referential)
+radioView extraAttributes elementId label dataOrDefault =
+    input
+        (extraAttributes
+            ++ [ type_ "radio"
+               , name elementId
+               , id label
+               , value label
+               , class "h-4 w-4 text-blue-600 border-slate-400 mr-4"
+               , class "mt-1 block min-w-0 sm:text-sm border-gray-300"
+               , onCheck (\_ -> UserChangedElement elementId label)
+               , checked (dataOrDefault == label)
                ]
         )
         []
