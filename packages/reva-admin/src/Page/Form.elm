@@ -16,7 +16,7 @@ import Data.Context exposing (Context)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
 import Html.Styled as Html exposing (Html, button, dd, div, dt, fieldset, input, label, legend, li, option, p, select, text, textarea, ul)
-import Html.Styled.Attributes exposing (checked, class, classList, disabled, for, id, name, property, required, selected, type_, value)
+import Html.Styled.Attributes exposing (checked, class, classList, disabled, for, id, name, required, selected, type_, value)
 import Html.Styled.Events exposing (onCheck, onInput, onSubmit)
 import RemoteData exposing (RemoteData(..))
 import String exposing (String)
@@ -236,16 +236,26 @@ viewEditableElement formData ( elementId, element ) =
                 |> class
 
         inputView dataType extraClass =
+            let
+                extraAttributes =
+                    if dataType == "number" then
+                        [ Html.Styled.Attributes.min "0" ]
+
+                    else
+                        []
+            in
             input
-                [ type_ dataType
-                , name elementId
-                , id elementId
-                , onInput (UserChangedElement elementId)
-                , class extraClass
-                , class "min-w-0 h-[85px] pr-4"
-                , inputStyle
-                , value dataOrDefault
-                ]
+                ([ type_ dataType
+                 , name elementId
+                 , id elementId
+                 , onInput (UserChangedElement elementId)
+                 , class extraClass
+                 , class "min-w-0 h-[85px] pr-4"
+                 , inputStyle
+                 , value dataOrDefault
+                 ]
+                    ++ extraAttributes
+                )
                 []
 
         textareaView =
