@@ -209,6 +209,54 @@ export const validateFundingRequest =
     }
   };
 
+export const checkDropoutConditions = (
+  candidacy: Candidacy,
+  fundingRequest: FundingRequest
+): EitherAsync<FunctionalError, boolean> =>
+  EitherAsync.fromPromise(async () => {
+    if (candidacy.candidacyDropOut) {
+      switch (candidacy.candidacyDropOut.status) {
+        case "PRISE_EN_CHARGE":
+        case "PARCOURS_ENVOYE":
+        case "PARCOURS_CONFIRME": {
+          // in case of dropout, the funding request can only be made for those specific satus and can only include diagnosis and post exam costs
+          if (
+            fundingRequest.individualCost * fundingRequest.individualHourCount >
+              0 ||
+            fundingRequest.collectiveCost * fundingRequest.collectiveHourCount >
+              0 ||
+            fundingRequest.mandatoryTrainings *
+              fundingRequest.mandatoryTrainingsCost >
+              0 ||
+            fundingRequest.basicSkillsCost *
+              fundingRequest.basicSkillsHourCount >
+              0 ||
+            fundingRequest.certificateSkillsCost *
+              fundingRequest.certificateSkillsHourCount >
+              0 ||
+            fundingRequest.examCost * fundingRequest.examHourCount > 0
+          ) {
+            return Left(
+              new FunctionalError(
+                FunctionalCodeError.FUNDING_REQUEST_NOT_POSSIBLE,
+                `Une partie de cette demande de financement n'est pas possible pour cause d'abandon`
+              )
+            );
+          }
+          break;
+        }
+        default:
+          return Left(
+            new FunctionalError(
+              FunctionalCodeError.FUNDING_REQUEST_NOT_POSSIBLE,
+              `Cette demande de financement n'est pas possible pour cause d'abandon`
+            )
+          );
+      }
+    }
+    return Right(true);
+  });
+
 export const createFundingRequest =
   (deps: CreateFundingRequestDeps) =>
   async (params: {
@@ -247,6 +295,16 @@ export const createFundingRequest =
 
     const getCandidateByCandidacyId = EitherAsync.fromPromise(() =>
       deps.getCandidateByCandidacyId(params.candidacyId)
+    ).mapLeft(
+      () =>
+        new FunctionalError(
+          FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
+          `Aucune candidature n'a été trouvée`
+        )
+    );
+
+    const getCandidacyByCandidacyId = EitherAsync.fromPromise(() =>
+      deps.getCandidacyFromId(params.candidacyId)
     ).mapLeft(
       () =>
         new FunctionalError(
@@ -315,6 +373,10 @@ export const createFundingRequest =
         });
 
     return existsCandidacyInRequiredStatuses
+      .chain(() => getCandidacyByCandidacyId)
+      .chain((candidacy: Candidacy) =>
+        checkDropoutConditions(candidacy, params.fundingRequest)
+      )
       .chain(() => getCandidateByCandidacyId)
       .chain(checkRules)
       .chain(createFundingRequest)

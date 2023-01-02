@@ -902,7 +902,7 @@ describe("funding request", () => {
       });
       expect(result.isRight()).toEqual(true);
     }),
-      it("should throw error if createFundingRequestBatch fails", async () => {
+      it("should throw an error if createFundingRequestBatch fails", async () => {
         const cfr = createFundingRequest({
           createFundingRequest: (params: {
             candidacyId: string;
@@ -949,5 +949,173 @@ describe("funding request", () => {
             "Erreur lors de la creation du bach de la demande de financement",
         });
       });
+    it("should throw an error if candidate dropped out while in the 'PROJET' status", async () => {
+      const cfr = createFundingRequest({
+        createFundingRequest: (params: {
+          candidacyId: string;
+          fundingRequest: FundingRequest;
+        }) =>
+          Promise.resolve(
+            Right({
+              ...params.fundingRequest,
+              basicSkills: params.fundingRequest.basicSkills.map((b: any) => ({
+                basicSkill: b,
+              })),
+              mandatoryTrainings: params.fundingRequest.mandatoryTrainings.map(
+                (m: any) => ({
+                  training: m,
+                })
+              ),
+            })
+          ),
+        existsCandidacyWithActiveStatuses: () => Promise.resolve(Right(true)),
+        hasRole: () => true,
+        getCandidacyFromId: () =>
+          Promise.resolve(
+            Right({
+              certification: { rncpId: "1234" },
+              candidacyDropOut: { status: "PROJET" },
+            } as Candidacy)
+          ),
+        getCandidateByCandidacyId: () =>
+          Promise.resolve(
+            Right({
+              highestDegree: { level: 4 },
+              vulnerabilityIndicator: { label: "Vide" },
+            } as Candidate)
+          ),
+        createFundingRequestBatch: () =>
+          Promise.resolve(Right({} as FundingRequestBatch)),
+      });
+      const result = await cfr({
+        candidacyId: "1234",
+        fundingRequest: defaultValidFundingRequest,
+      });
+      expect(result.isLeft()).toEqual(true);
+    });
+    it("should not throw an error if candidate dropped out while in the 'PRISE_EN_CHARGE' status and asked for diagnosis and post exam costs financing", async () => {
+      const cfr = createFundingRequest({
+        createFundingRequest: (params: {
+          candidacyId: string;
+          fundingRequest: FundingRequest;
+        }) =>
+          Promise.resolve(
+            Right({
+              ...params.fundingRequest,
+              basicSkills: params.fundingRequest.basicSkills.map((b: any) => ({
+                basicSkill: b,
+              })),
+              mandatoryTrainings: params.fundingRequest.mandatoryTrainings.map(
+                (m: any) => ({
+                  training: m,
+                })
+              ),
+            })
+          ),
+        existsCandidacyWithActiveStatuses: () => Promise.resolve(Right(true)),
+        hasRole: () => true,
+        getCandidacyFromId: () =>
+          Promise.resolve(
+            Right({
+              certification: { rncpId: "1234" },
+              candidacyDropOut: { status: "PRISE_EN_CHARGE" },
+            } as Candidacy)
+          ),
+        getCandidateByCandidacyId: () =>
+          Promise.resolve(
+            Right({
+              highestDegree: { level: 4 },
+              vulnerabilityIndicator: { label: "Vide" },
+            } as Candidate)
+          ),
+        createFundingRequestBatch: () =>
+          Promise.resolve(Right({} as FundingRequestBatch)),
+      });
+      const result = await cfr({
+        candidacyId: "1234",
+        fundingRequest: {
+          ...defaultValidFundingRequest,
+          diagnosisCost: 10,
+          diagnosisHourCount: 2,
+          postExamCost: 10,
+          postExamHourCount: 2,
+          basicSkillsCost: 0,
+          basicSkillsHourCount: 0,
+          certificateSkillsCost: 0,
+          certificateSkillsHourCount: 0,
+          collectiveCost: 0,
+          collectiveHourCount: 0,
+          examCost: 0,
+          examHourCount: 0,
+          individualCost: 0,
+          individualHourCount: 0,
+          mandatoryTrainingsCost: 0,
+          mandatoryTrainingsHourCount: 0,
+        },
+      });
+      expect(result.isRight()).toEqual(true);
+    });
+    it("should throw an error if candidate dropped out while in the 'PRISE_EN_CHARGE' status and asked for anything beside diagnosis and post exam financing", async () => {
+      const cfr = createFundingRequest({
+        createFundingRequest: (params: {
+          candidacyId: string;
+          fundingRequest: FundingRequest;
+        }) =>
+          Promise.resolve(
+            Right({
+              ...params.fundingRequest,
+              basicSkills: params.fundingRequest.basicSkills.map((b: any) => ({
+                basicSkill: b,
+              })),
+              mandatoryTrainings: params.fundingRequest.mandatoryTrainings.map(
+                (m: any) => ({
+                  training: m,
+                })
+              ),
+            })
+          ),
+        existsCandidacyWithActiveStatuses: () => Promise.resolve(Right(true)),
+        hasRole: () => true,
+        getCandidacyFromId: () =>
+          Promise.resolve(
+            Right({
+              certification: { rncpId: "1234" },
+              candidacyDropOut: { status: "PRISE_EN_CHARGE" },
+            } as Candidacy)
+          ),
+        getCandidateByCandidacyId: () =>
+          Promise.resolve(
+            Right({
+              highestDegree: { level: 4 },
+              vulnerabilityIndicator: { label: "Vide" },
+            } as Candidate)
+          ),
+        createFundingRequestBatch: () =>
+          Promise.resolve(Right({} as FundingRequestBatch)),
+      });
+      const result = await cfr({
+        candidacyId: "1234",
+        fundingRequest: {
+          ...defaultValidFundingRequest,
+          diagnosisCost: 10,
+          diagnosisHourCount: 2,
+          postExamCost: 10,
+          postExamHourCount: 2,
+          basicSkillsCost: 0,
+          basicSkillsHourCount: 0,
+          certificateSkillsCost: 0,
+          certificateSkillsHourCount: 0,
+          collectiveCost: 0,
+          collectiveHourCount: 0,
+          examCost: 0,
+          examHourCount: 10,
+          individualCost: 2,
+          individualHourCount: 0,
+          mandatoryTrainingsCost: 0,
+          mandatoryTrainingsHourCount: 0,
+        },
+      });
+      expect(result.isLeft()).toEqual(true);
+    });
   });
 });
