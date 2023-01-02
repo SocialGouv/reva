@@ -67,7 +67,7 @@ const dropOutReasonWithRightRole = dropOutCandidacy({
         candidacyDropOut: {
           droppedOutAt: new Date(),
           dropOutReason: { id: params.dropOutReasonId, label: "" },
-          status: "COOL",
+          status: "PRISE_EN_CHARGE",
           otherReasonContent: null,
         },
       })
