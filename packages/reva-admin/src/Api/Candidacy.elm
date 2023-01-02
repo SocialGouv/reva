@@ -1,5 +1,6 @@
-module Api.Candidacy exposing (archive, delete, get, getCandidacies, takeOver)
+module Api.Candidacy exposing (archive, delete, get, getCandidacies, takeOver, dropOut)
 
+import Admin.InputObject exposing (DropOutInput)
 import Admin.Mutation as Mutation
 import Admin.Object
 import Admin.Object.Candidacy
@@ -13,6 +14,7 @@ import Admin.Object.Experience
 import Admin.Object.Organism
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
+import Admin.InputObject.DropOutInput
 import Api.Auth as Auth
 import Api.Degree
 import Api.RemoteData exposing (nothingToError)
@@ -94,6 +96,21 @@ takeOver endpointGraphql token toMsg candidacyId =
     Mutation.candidacy_takeOver (Mutation.CandidacyTakeOverRequiredArguments (Id id)) (SelectionSet.succeed ())
         |> Auth.makeMutation endpointGraphql token toMsg
 
+dropOut :
+    String
+    -> Token
+    -> (RemoteData String () -> msg)
+    -> CandidacyId
+    -> DropOutInput
+    -> Cmd msg
+dropOut endpointGraphql token toMsg candidacyId dropOutInput =
+    let
+        id =
+            Data.Candidacy.candidacyIdToString candidacyId
+
+    in
+    Mutation.candidacy_dropOut (Mutation.CandidacyDropOutRequiredArguments (Id id, DropOutInput dropOutInput)) (SelectionSet.succeed ())
+        |> Auth.makeMutation endpointGraphql token toMsg
 
 selection : String -> SelectionSet (Maybe Data.Candidacy.Candidacy) Graphql.Operation.RootQuery
 selection id =

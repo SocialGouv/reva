@@ -1,4 +1,4 @@
-module Data.Form.DropOut exposing (appointment, dropOutFromDict, keys)
+module Data.Form.DropOut exposing (dropOut, dropOutFromDict, keys)
 
 import Admin.Scalar exposing (Uuid)
 import Data.Form.Helper as Helper exposing (uuidToCheckedList)
@@ -34,8 +34,8 @@ dropOutFromDict dropOutReasons dict =
         (decode.date .droppedOutAt (Time.millisToPosix 0))
 
 
-appointment : List Uuid -> Maybe String -> Maybe Data.Scalar.Timestamp -> Dict String String
-appointment dropOutReasons otherReasonContent droppedOutAt =
+dropOut : List Uuid -> Maybe String -> Maybe Data.Scalar.Timestamp -> Dict String String
+dropOut dropOutReasons otherReasonContent droppedOutAt =
     let
         dropOutReasonsIds =
             uuidToCheckedList dropOutReasons

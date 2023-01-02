@@ -34,6 +34,7 @@ view :
         , deleteMsg : Candidacy -> msg
         , referential : RemoteData String Referential
         , token : Api.Token.Token
+        , dropOutMsg : Candidacy -> msg
     }
     -> List (Html msg)
 view config =
@@ -124,6 +125,12 @@ view config =
                 , onClick (config.archiveMsg config.candidacy)
                 ]
                 [ text "Archiver la candidature" ]
+            , button
+                [ type_ "button"
+                , class "shadow text-xs border border-gray-300 hover:bg-gray-50 text-gray-600 px-2 py-1 rounded"
+                , onClick (config.dropOutMsg config.candidacy)
+                ]
+                [ text "Déclarer l'abandon de la candidature" ]
             ]
         ]
     ]

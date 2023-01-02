@@ -8,6 +8,7 @@ module Page.Candidacies exposing
     , view
     )
 
+import Admin.InputObject exposing (DropOutInput)
 import Api.Candidacy
 import Api.Form.Appointment
 import Api.Form.Candidate
@@ -49,11 +50,13 @@ type Msg
     | GotCandidacyDeletionResponse (RemoteData String String)
     | GotCandidacyArchivingResponse (RemoteData String ())
     | GotCandidacyTakingOverResponse (RemoteData String ())
+    | GotCandidacyDropOutResponse (RemoteData String ())
     | GotFormMsg (Form.Msg ( Candidacy, Referential ))
     | GotReferentialResponse (RemoteData String Referential)
     | UserAddedFilter String
     | UserArchivedCandidacy Candidacy
     | UserDeletedCandidacy Candidacy
+    | UserDroppedOutCandidacy (Candidacy, DropOutInput)
 
 
 type alias State =
@@ -338,6 +341,7 @@ viewCandidacyPanel context model =
                     { candidacy = candidacy
                     , archiveMsg = UserArchivedCandidacy
                     , deleteMsg = UserDeletedCandidacy
+                    , dropOutMsg = UserDroppedOutCandidacy
                     , referential = model.state.referential
                     , token = context.token
                     }
@@ -562,6 +566,9 @@ update context msg model =
         GotCandidacyTakingOverResponse _ ->
             ( model, Cmd.none )
 
+        GotCandidacyDropOutResponse (Failure err) ->
+            ( { model | selected = Failure err }, Cmd.none )
+
         GotFormMsg formMsg ->
             let
                 ( formModel, formCmd ) =
@@ -587,7 +594,10 @@ update context msg model =
             , Api.Candidacy.archive context.endpoint context.token GotCandidacyArchivingResponse candidacy.id
             )
 
-
+        UserDroppedOutCandidacy (candidacy, dropOutInput) ->
+            ( model
+            , Api.Candidacy.dropOut context.endpoint context.token GotCandidacyDropOutResponse candidacy.id dropOutInput
+            )
 updateTab : Context -> Tab -> Model -> ( Model, Cmd Msg )
 updateTab context tab model =
     let
@@ -600,8 +610,8 @@ updateTab context tab model =
                 ( formModel, formCmd ) =
                     Form.updateForm context
                         { form = Page.Form.DropOut.form
-                        , onLoad = Api.Form.Appointment.get candidacyId -- TODO: replace with dropOut API
-                        , onSave = Api.Form.Appointment.update candidacyId -- TODO: replace with dropOut API
+                        , onLoad = Api.Form.DropOut.get candidacyId -- TODO: replace with dropOut API (query qui récup les champs)
+                        , onSave = Api.Form.DropOut.update candidacyId -- TODO: replace with dropOut API (mutation)
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
