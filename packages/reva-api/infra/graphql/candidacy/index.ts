@@ -4,6 +4,7 @@ import mercurius from "mercurius";
 
 import { addExperienceToCandidacy } from "../../../domain/features/addExperienceToCandidacy";
 import { archiveCandidacy } from "../../../domain/features/archiveCandidacy";
+import { canManageCandidacy } from "../../../domain/features/canManageCandidacy";
 import { createCandidacy } from "../../../domain/features/createCandidacy";
 import { deleteCandidacy } from "../../../domain/features/deleteCandidacy";
 import { dropOutCandidacy } from "../../../domain/features/dropOutCandidacy";
@@ -29,6 +30,7 @@ import { confirmTrainingFormByCandidate } from "../../../domain/features/validat
 import { Role } from "../../../domain/types/account";
 import { Admissibility, Candidacy } from "../../../domain/types/candidacy";
 import * as admissibilityDb from "../../database/postgres/admissibility";
+import * as accountDb from "../../database/postgres/accounts";
 import * as basicSkillDb from "../../database/postgres/basicSkills";
 import * as candidacyDb from "../../database/postgres/candidacies";
 import * as dropOutDb from "../../database/postgres/dropOutReasons";
@@ -371,7 +373,11 @@ export const resolvers = {
         existsCandidacyWithActiveStatus:
           candidacyDb.existsCandidacyWithActiveStatus,
         updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
+        canManageCandidacy: canManageCandidacy,
+        getAccountFromKeycloakId: accountDb.getAccountFromKeycloakId,
+        getCandidacyFromId: candidacyDb.getCandidacyFromId,
       })({
+        keycloakId: context.auth.userInfo?.sub,
         candidacyId: payload.candidacyId,
         training: payload.training,
       });
