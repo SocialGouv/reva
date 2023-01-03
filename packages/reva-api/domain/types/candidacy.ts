@@ -14,10 +14,22 @@ export interface CandidacyInput extends CandidacyAbstract {
 
 export interface CandidacyDropOut {
   droppedOutAt: Date;
-  status: string;
+  status: CandidacyStatusValue;
   dropOutReason: DropOutReason;
   otherReasonContent?: string | null;
 }
+
+export type CandidacyStatusValue =
+  | "ARCHIVE"
+  | "PROJET"
+  | "VALIDATION"
+  | "PRISE_EN_CHARGE"
+  | "PARCOURS_ENVOYE"
+  | "PARCOURS_CONFIRME"
+  | "DEMANDE_FINANCEMENT_ENVOYE"
+  | "ABANDON"
+  | "DOSSIER_PRO"
+  | "CERTIFICATION";
 
 export interface Candidacy extends CandidacyAbstract {
   id: string;
