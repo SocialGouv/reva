@@ -1,8 +1,9 @@
-module View.Candidacy exposing (Tab(..), view, viewSentAt)
+module View.Candidacy exposing (view, viewSentAt)
 
 import Admin.Enum.Duration exposing (Duration(..))
 import Api.Token
 import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, CandidacyId)
+import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department, Referential)
 import Dict
@@ -10,34 +11,25 @@ import Html.Styled exposing (Html, a, button, dd, div, dl, dt, h3, h4, li, nav, 
 import Html.Styled.Attributes exposing (attribute, class, classList, href, type_)
 import Html.Styled.Events exposing (onClick)
 import RemoteData exposing (RemoteData(..))
+import Route
 import Time exposing (Posix)
+import View.Candidacy.Tab exposing (Tab(..))
 import View.Date
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 
 
-type Tab
-    = CandidateInfo CandidacyId
-    | DropOut CandidacyId
-    | Empty
-    | Meetings CandidacyId
-    | Profil CandidacyId
-    | Training CandidacyId
-    | TrainingSent CandidacyId
-    | Admissibility CandidacyId
-    | FundingRequest CandidacyId
-
-
 view :
-    { a
-        | candidacy : Candidacy
-        , archiveMsg : Candidacy -> msg
-        , deleteMsg : Candidacy -> msg
-        , referential : RemoteData String Referential
-        , token : Api.Token.Token
-    }
+    Context
+    ->
+        { a
+            | candidacy : Candidacy
+            , archiveMsg : Candidacy -> msg
+            , deleteMsg : Candidacy -> msg
+            , referential : RemoteData String Referential
+        }
     -> List (Html msg)
-view config =
+view context config =
     [ nav
         [ class "flex items-start px-4 pb-3 sm:px-6 lg:px-8 md:hidden", attribute "aria-label" "Breadcrumb" ]
         [ a
@@ -113,7 +105,7 @@ view config =
 
                 _ ->
                     text "..."
-            , if Api.Token.isAdmin config.token then
+            , if Api.Token.isAdmin context.token then
                 viewOrganism config.candidacy.organism
 
               else
@@ -125,6 +117,12 @@ view config =
                 , onClick (config.archiveMsg config.candidacy)
                 ]
                 [ text "Archiver la candidature" ]
+            , a
+                [ class "ml-2"
+                , class "shadow text-xs border border-gray-300 hover:bg-gray-50 text-gray-600 px-2 py-1 rounded"
+                , href (Route.toString context.baseUrl (Route.Candidacy (DropOut config.candidacy.id)))
+                ]
+                [ text "Déclarer l'abandon de la candidature" ]
             ]
         ]
     ]

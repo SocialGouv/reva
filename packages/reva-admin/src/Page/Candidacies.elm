@@ -39,7 +39,8 @@ import Route
 import String exposing (String)
 import Time
 import View
-import View.Candidacy exposing (Tab(..))
+import View.Candidacy
+import View.Candidacy.Tab exposing (Tab(..))
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 import View.Steps
@@ -88,7 +89,7 @@ init context =
                 { candidacies = RemoteData.NotAsked
                 , referential = RemoteData.NotAsked
                 }
-            , tab = View.Candidacy.Empty
+            , tab = View.Candidacy.Tab.Empty
             }
 
         defaultCmd =
@@ -162,7 +163,7 @@ viewContent context model candidacies =
         viewForm name candidacyId =
             viewMain name
                 [ a
-                    [ Route.href context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId))
+                    [ Route.href context.baseUrl (Route.Candidacy (View.Candidacy.Tab.Profil candidacyId))
                     , class "flex items-center text-gray-800"
                     , class "mt-6 ml-6"
                     ]
@@ -265,17 +266,17 @@ viewNavigationSteps baseUrl candidacy =
             ]
 
         appointmentLink =
-            Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Meetings candidacy.id)
+            Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Tab.Meetings candidacy.id)
 
         trainingLink =
-            Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Training candidacy.id)
+            Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Tab.Training candidacy.id)
 
         fundingView =
             if candidacyStatus == "DEMANDE_FINANCEMENT_ENVOYE" then
-                View.Candidacy.FundingRequest
+                View.Candidacy.Tab.FundingRequest
 
             else
-                View.Candidacy.CandidateInfo
+                View.Candidacy.Tab.CandidateInfo
 
         candidateInfoLink =
             if Candidacy.isStatusEqualOrAbove candidacy "PARCOURS_CONFIRME" then
@@ -286,7 +287,7 @@ viewNavigationSteps baseUrl candidacy =
 
         admissibilityLink =
             if Candidacy.isStatusEqualOrAbove candidacy "PARCOURS_CONFIRME" then
-                Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Admissibility candidacy.id)
+                Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Tab.Admissibility candidacy.id)
 
             else
                 Nothing
@@ -350,11 +351,11 @@ viewCandidacyPanel context model =
 
             Success candidacy ->
                 View.Candidacy.view
+                    context
                     { candidacy = candidacy
                     , archiveMsg = UserArchivedCandidacy
                     , deleteMsg = UserDeletedCandidacy
                     , referential = model.state.referential
-                    , token = context.token
                     }
 
 
@@ -362,7 +363,7 @@ viewCandidacyArticle : String -> List (Html msg) -> Html msg
 viewCandidacyArticle baseUrl content =
     viewMain "profile"
         [ a
-            [ Route.href baseUrl (Route.Candidacy View.Candidacy.Empty)
+            [ Route.href baseUrl (Route.Candidacy View.Candidacy.Tab.Empty)
             , class "flex items-center text-gray-800 p-6"
             ]
             [ span [ class "text-3xl mr-4" ] [ text "← " ]
@@ -610,17 +611,17 @@ updateTab context tab model =
             { model | tab = tab }
     in
     case ( tab, model.selected ) of
-        ( View.Candidacy.DropOut candidacyId, Success _ ) ->
+        ( View.Candidacy.Tab.DropOut candidacyId, Success _ ) ->
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
                         { form = Page.Form.DropOut.form
-                        , onLoad = Api.Form.Appointment.get candidacyId -- TODO: replace with dropOut API
-                        , onSave = Api.Form.Appointment.update candidacyId -- TODO: replace with dropOut API
+                        , onLoad = Api.Form.Appointment.get candidacyId -- TODO: replace with dropOut API (query qui récup les champs)
+                        , onSave = Api.Candidacy.dropOut candidacyId -- TODO: replace with dropOut API (mutation)
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
-                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Tab.Profil candidacyId)))
                         , onValidate = \_ _ -> Ok ()
                         , status = Form.Editable
                         }
@@ -628,11 +629,11 @@ updateTab context tab model =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        ( View.Candidacy.Profil candidacyId, NotAsked ) ->
+        ( View.Candidacy.Tab.Profil candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
                 |> withTakeOver context candidacyId
 
-        ( View.Candidacy.Meetings candidacyId, Success _ ) ->
+        ( View.Candidacy.Tab.Meetings candidacyId, Success _ ) ->
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
@@ -642,7 +643,7 @@ updateTab context tab model =
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
-                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Tab.Profil candidacyId)))
                         , onValidate = \_ _ -> Ok ()
                         , status = Form.Editable
                         }
@@ -650,7 +651,7 @@ updateTab context tab model =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        ( View.Candidacy.FundingRequest candidacyId, Success candidacy ) ->
+        ( View.Candidacy.Tab.FundingRequest candidacyId, Success candidacy ) ->
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
@@ -660,7 +661,7 @@ updateTab context tab model =
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
-                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Tab.Profil candidacyId)))
                         , onValidate = Data.Form.FundingRequest.validate
                         , status =
                             if Candidacy.isFundingRequestSent candidacy then
@@ -673,7 +674,7 @@ updateTab context tab model =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        ( View.Candidacy.Training candidacyId, Success candidacy ) ->
+        ( View.Candidacy.Tab.Training candidacyId, Success candidacy ) ->
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
@@ -683,7 +684,7 @@ updateTab context tab model =
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
-                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.TrainingSent candidacyId)))
+                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Tab.TrainingSent candidacyId)))
                         , onValidate = \_ _ -> Ok ()
                         , status =
                             if Candidacy.isTrainingSent candidacy then
@@ -696,7 +697,7 @@ updateTab context tab model =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        ( View.Candidacy.CandidateInfo candidacyId, Success candidacy ) ->
+        ( View.Candidacy.Tab.CandidateInfo candidacyId, Success candidacy ) ->
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
@@ -712,7 +713,7 @@ updateTab context tab model =
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
-                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.FundingRequest candidacyId)))
+                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Tab.FundingRequest candidacyId)))
                         , onValidate = \_ _ -> Ok ()
                         , status =
                             if Candidacy.isFundingRequestSent candidacy then
@@ -725,7 +726,7 @@ updateTab context tab model =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        ( View.Candidacy.Admissibility candidacyId, Success candidacy ) ->
+        ( View.Candidacy.Tab.Admissibility candidacyId, Success candidacy ) ->
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
@@ -735,7 +736,7 @@ updateTab context tab model =
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
-                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Tab.Profil candidacyId)))
                         , onValidate = \_ _ -> Ok ()
                         , status =
                             Form.Editable
@@ -743,50 +744,50 @@ updateTab context tab model =
                         model.form
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
-        
-        ( View.Candidacy.DropOut candidacyId, NotAsked ) ->
+
+        ( View.Candidacy.Tab.DropOut candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
 
-        ( View.Candidacy.Meetings candidacyId, NotAsked ) ->
+        ( View.Candidacy.Tab.Meetings candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
 
-        ( View.Candidacy.Training candidacyId, NotAsked ) ->
+        ( View.Candidacy.Tab.Training candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
 
-        ( View.Candidacy.CandidateInfo candidacyId, NotAsked ) ->
+        ( View.Candidacy.Tab.CandidateInfo candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
 
-        ( View.Candidacy.FundingRequest candidacyId, NotAsked ) ->
+        ( View.Candidacy.Tab.FundingRequest candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
 
-        ( View.Candidacy.Admissibility candidacyId, NotAsked ) ->
+        ( View.Candidacy.Tab.Admissibility candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
-            
-        ( View.Candidacy.DropOut _, _ ) ->
+
+        ( View.Candidacy.Tab.DropOut _, _ ) ->
             ( newModel, Cmd.none )
 
-        ( View.Candidacy.Meetings _, _ ) ->
+        ( View.Candidacy.Tab.Meetings _, _ ) ->
             ( newModel, Cmd.none )
 
-        ( View.Candidacy.Training _, _ ) ->
+        ( View.Candidacy.Tab.Training _, _ ) ->
             ( newModel, Cmd.none )
 
-        ( View.Candidacy.TrainingSent _, _ ) ->
+        ( View.Candidacy.Tab.TrainingSent _, _ ) ->
             ( newModel, Cmd.none )
 
-        ( View.Candidacy.CandidateInfo _, _ ) ->
+        ( View.Candidacy.Tab.CandidateInfo _, _ ) ->
             ( newModel, Cmd.none )
 
-        ( View.Candidacy.FundingRequest candidacyId, _ ) ->
+        ( View.Candidacy.Tab.FundingRequest candidacyId, _ ) ->
             ( newModel, Cmd.none )
 
-        ( View.Candidacy.Profil _, _ ) ->
+        ( View.Candidacy.Tab.Profil _, _ ) ->
             ( newModel, Cmd.none )
 
-        ( View.Candidacy.Admissibility _, _ ) ->
+        ( View.Candidacy.Tab.Admissibility _, _ ) ->
             ( newModel, Cmd.none )
 
-        ( View.Candidacy.Empty, _ ) ->
+        ( View.Candidacy.Tab.Empty, _ ) ->
             ( { newModel | selected = NotAsked }, Cmd.none )
 
 

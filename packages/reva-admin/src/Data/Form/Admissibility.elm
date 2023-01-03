@@ -24,9 +24,9 @@ fromDict dict =
     in
     Admissibility
         (decode.bool .isCandidateAlreadyAdmissible False)
-        (decode.date .reportSentAt Nothing)
-        (decode.date .certifierRespondedAt Nothing)
-        (decode.date .responseAvailableToCandidateAt Nothing)
+        (decode.maybe.date .reportSentAt Nothing)
+        (decode.maybe.date .certifierRespondedAt Nothing)
+        (decode.maybe.date .responseAvailableToCandidateAt Nothing)
         (decode.generic .status admissibilitySatusFromString Nothing)
 
 
