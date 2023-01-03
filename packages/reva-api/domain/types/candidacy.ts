@@ -143,3 +143,14 @@ export interface DropOutReason {
   id: string;
   label: string;
 }
+
+export interface Admissibility {
+  id: string;
+  isCandidateAlreadyAdmissible: boolean;
+  reportSentAt: Date | null;
+  certifierRespondedAt: Date | null;
+  responseAvailableToCandidateAt: Date | null;
+  status: AdmissibilityStatus | null;
+}
+
+export type AdmissibilityStatus = "ADMISSIBLE" | "NOT_ADMISSIBLE";

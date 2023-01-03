@@ -9,6 +9,7 @@ module Page.Candidacies exposing
     )
 
 import Api.Candidacy
+import Api.Form.Admissibility
 import Api.Form.Appointment
 import Api.Form.Candidate
 import Api.Form.FundingRequest
@@ -27,6 +28,7 @@ import Html.Styled.Attributes exposing (action, attribute, class, classList, for
 import Html.Styled.Events exposing (onInput)
 import List.Extra
 import Page.Form as Form exposing (Form)
+import Page.Form.Admissibility
 import Page.Form.Appointment
 import Page.Form.Candidate
 import Page.Form.FundingRequest
@@ -215,6 +217,11 @@ viewContent context model candidacies =
                 , maybeNavigationSteps
                 ]
 
+            Admissibility candidacyId ->
+                [ viewForm "admissibility" candidacyId
+                , maybeNavigationSteps
+                ]
+
 
 viewNavigationSteps : String -> Candidacy -> Html msg
 viewNavigationSteps baseUrl candidacy =
@@ -270,12 +277,20 @@ viewNavigationSteps baseUrl candidacy =
 
             else
                 Nothing
+
+        admissibilityLink =
+            if Candidacy.isStatusEqualOrAbove candidacy "PARCOURS_CONFIRME" then
+                Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Admissibility candidacy.id)
+
+            else
+                Nothing
     in
     View.Steps.view (Candidacy.statusToProgressPosition candidacyStatus)
         [ { content = title, navigation = Nothing }
         , { content = expandedView "Rendez-vous pédagogique" "PRISE_EN_CHARGE", navigation = appointmentLink }
         , { content = expandedView "Définition du parcours" "PRISE_EN_CHARGE", navigation = trainingLink }
         , { content = [ View.Steps.info "Validation du parcours" ], navigation = Nothing }
+        , { content = expandedView "Gestion de la recevabilité" "PARCOURS_CONFIRME", navigation = admissibilityLink }
         , { content = expandedView "Demande de prise en charge" "PARCOURS_CONFIRME", navigation = candidateInfoLink }
         ]
 
@@ -686,6 +701,25 @@ updateTab context tab model =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
+        ( View.Candidacy.Admissibility candidacyId, Success candidacy ) ->
+            let
+                ( formModel, formCmd ) =
+                    Form.updateForm context
+                        { form = Page.Form.Admissibility.form
+                        , onLoad = Api.Form.Admissibility.get candidacyId
+                        , onSave = Api.Form.Admissibility.update candidacyId
+                        , onRedirect =
+                            Nav.pushUrl
+                                context.navKey
+                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Profil candidacyId)))
+                        , onValidate = \_ _ -> Ok ()
+                        , status =
+                            Form.Editable
+                        }
+                        model.form
+            in
+            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
+
         ( View.Candidacy.Meetings candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
 
@@ -696,6 +730,9 @@ updateTab context tab model =
             initCandidacy context candidacyId newModel
 
         ( View.Candidacy.FundingRequest candidacyId, NotAsked ) ->
+            initCandidacy context candidacyId newModel
+
+        ( View.Candidacy.Admissibility candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
 
         ( View.Candidacy.Meetings _, _ ) ->
@@ -714,6 +751,9 @@ updateTab context tab model =
             ( newModel, Cmd.none )
 
         ( View.Candidacy.Profil _, _ ) ->
+            ( newModel, Cmd.none )
+
+        ( View.Candidacy.Admissibility _, _ ) ->
             ( newModel, Cmd.none )
 
         ( View.Candidacy.Empty, _ ) ->

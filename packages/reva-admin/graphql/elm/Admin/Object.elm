@@ -9,6 +9,10 @@ type Account
     = Account
 
 
+type Admissibility
+    = Admissibility
+
+
 type BasicSkill
     = BasicSkill
 

@@ -23,6 +23,7 @@ type Tab
     | Profil CandidacyId
     | Training CandidacyId
     | TrainingSent CandidacyId
+    | Admissibility CandidacyId
     | FundingRequest CandidacyId
 
 

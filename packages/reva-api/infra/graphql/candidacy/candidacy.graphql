@@ -54,6 +54,7 @@ type Candidacy {
   mandatoryTrainings: [Training!]!
   candidacyDropOut: CandidacyDropOut
   createdAt: Timestamp!
+  admissibility: Admissibility!
 }
 
 type CandidacyDropOut {
@@ -129,6 +130,19 @@ type Query {
   getBasicSkills: [BasicSkill!]!
 }
 
+type Admissibility {
+  isCandidateAlreadyAdmissible: Boolean!
+  reportSentAt: Timestamp
+  certifierRespondedAt: Timestamp
+  responseAvailableToCandidateAt: Timestamp
+  status: AdmissibilityStatus
+}
+
+enum AdmissibilityStatus {
+  ADMISSIBLE
+  NOT_ADMISSIBLE
+}
+
 # MUTATIONS
 
 input CandidacyInput {
@@ -183,6 +197,14 @@ input DropOutInput {
   otherReasonContent: String
 }
 
+input AdmissibilityInput {
+  isCandidateAlreadyAdmissible: Boolean!
+  reportSentAt: Timestamp
+  certifierRespondedAt: Timestamp
+  responseAvailableToCandidateAt: Timestamp
+  status: AdmissibilityStatus
+}
+
 type Mutation {
   candidacy_createCandidacy(candidacy: CandidacyInput!): Candidacy
   candidacy_submitCandidacy(deviceId: ID!, candidacyId: ID!): Candidacy
@@ -233,8 +255,9 @@ type Mutation {
     training: TrainingInput!
   ): Candidacy!
   candidacy_confirmTrainingForm(candidacyId: UUID!): Candidacy!
-  candidacy_dropOut(
+  candidacy_dropOut(candidacyId: UUID!, dropOut: DropOutInput!): Candidacy!
+  candidacy_updateAdmissibility(
     candidacyId: UUID!
-    dropOut: DropOutInput!
-  ): Candidacy!
+    admissibility: AdmissibilityInput!
+  ): Admissibility!
 }

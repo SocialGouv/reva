@@ -119,6 +119,7 @@ model Candidacy {
   updatedAt                    DateTime?                               @map("updated_at") @db.Timestamptz(6)
   FundingRequest               FundingRequest[]
   isCertificationPartial       Boolean                                 @default(false) @map("is_certification_partial")
+  admissibility                Admissibility?
 
   @@map("candidacy")
 }
@@ -477,17 +478,18 @@ model FundingRequestBatch {
 }
 
 model DropOutReason {
-  id            String                       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label         String                       @unique @db.VarChar(255)
-  candidacies   CandidacyDropOut[]           @relation()
-  createdAt     DateTime                     @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt     DateTime?                    @map("updated_at") @db.Timestamptz(6)
+  id          String             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label       String             @unique @db.VarChar(255)
+  candidacies CandidacyDropOut[] @relation()
+  createdAt   DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime?          @map("updated_at") @db.Timestamptz(6)
+
   @@map("drop_out_reason")
 }
 
 model CandidacyDropOut {
   candidacy          Candidacy       @relation(fields: [candidacyId], references: [id])
-  candidacyId        String          @map("candidacy_id") @db.Uuid @unique
+  candidacyId        String          @unique @map("candidacy_id") @db.Uuid
   dropOutReason      DropOutReason   @relation(fields: [dropOutReasonId], references: [id])
   dropOutReasonId    String          @map("drop_out_reason_id") @db.Uuid
   status             CandidacyStatus
@@ -498,4 +500,24 @@ model CandidacyDropOut {
 
   @@id([candidacyId])
   @@map("candidacy_drop_out")
+}
+
+enum AdmissibilityStatus {
+  ADMISSIBLE
+  NOT_ADMISSIBLE
+}
+
+model Admissibility {
+  id                             String               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy                      Candidacy            @relation(fields: [candidacyId], references: [id])
+  candidacyId                    String               @unique @map("candidacy_id") @db.Uuid
+  isCandidateAlreadyAdmissible   Boolean              @default(false) @map("is_candidate_already_admissible")
+  reportSentAt                   DateTime?            @map("report_sent_at")
+  certifierRespondedAt           DateTime?            @map("certifier_responded_at")
+  responseAvailableToCandidateAt DateTime?            @map("response_available_to_candidate_at")
+  status                         AdmissibilityStatus? @map("status")
+  createdAt                      DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                      DateTime?            @map("updated_at") @db.Timestamptz(6)
+
+  @@map("admissibility")
 }
