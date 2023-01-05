@@ -1,4 +1,4 @@
-module Data.Referential exposing (BasicSkill, Department, MandatoryTraining, Referential, ReferentialGoal, ReferentialGoals, departmentToString)
+module Data.Referential exposing (BasicSkill, Department, DropOutReason, MandatoryTraining, Referential, ReferentialGoal, ReferentialGoals, departmentToString)
 
 import Data.Candidate
 import Data.Scalar
@@ -6,6 +6,12 @@ import Dict exposing (Dict)
 
 
 type alias BasicSkill =
+    { id : String
+    , label : String
+    }
+
+
+type alias DropOutReason =
     { id : String
     , label : String
     }
@@ -32,8 +38,9 @@ type alias MandatoryTraining =
 
 type alias Referential =
     { basicSkills : List BasicSkill
-    , goals : Dict String ReferentialGoal
     , degrees : List Data.Candidate.Degree
+    , dropOutReasons : List DropOutReason
+    , goals : Dict String ReferentialGoal
     , mandatoryTrainings : List MandatoryTraining
     , vulnerabilityIndicators : List Data.Candidate.VulnerabilityIndicator
     }

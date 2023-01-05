@@ -21,6 +21,10 @@ type Candidacy
     = Candidacy
 
 
+type CandidacyDropOut
+    = CandidacyDropOut
+
+
 type CandidacyStatus
     = CandidacyStatus
 
@@ -51,6 +55,10 @@ type Degree
 
 type Department
     = Department
+
+
+type DropOutReason
+    = DropOutReason
 
 
 type Experience

@@ -205,6 +205,13 @@ mandatoryTrainings object____ =
     Object.selectionForCompositeField "mandatoryTrainings" [] object____ (Basics.identity >> Decode.list)
 
 
+candidacyDropOut :
+    SelectionSet decodesTo Admin.Object.CandidacyDropOut
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
+candidacyDropOut object____ =
+    Object.selectionForCompositeField "candidacyDropOut" [] object____ (Basics.identity >> Decode.nullable)
+
+
 createdAt : SelectionSet Data.Scalar.Timestamp Admin.Object.Candidacy
 createdAt =
     Object.selectionForField "Data.Scalar.Timestamp" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)

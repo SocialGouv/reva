@@ -11,11 +11,11 @@ import Html.Styled.Attributes
 import Url
 import Url.Builder
 import Url.Parser as Parser exposing ((</>), Parser, map, oneOf, s, string, top)
-import View.Candidacy
+import View.Candidacy.Tab
 
 
 type Route
-    = Candidacy View.Candidacy.Tab
+    = Candidacy View.Candidacy.Tab.Tab
     | Home
     | Login
     | Logout
@@ -25,7 +25,7 @@ type Route
 parser : String -> Parser (Route -> a) a
 parser baseUrl =
     let
-        candidacyTab : String -> (Data.Candidacy.CandidacyId -> View.Candidacy.Tab) -> Route
+        candidacyTab : String -> (Data.Candidacy.CandidacyId -> View.Candidacy.Tab.Tab) -> Route
         candidacyTab rawId tab =
             Candidacy <| tab <| candidacyIdFromString rawId
     in
@@ -35,28 +35,31 @@ parser baseUrl =
                 , map Login (s "auth" </> s "login")
                 , map Logout (s "auth" </> s "logout")
                 , map
-                    (Candidacy View.Candidacy.Empty)
+                    (Candidacy View.Candidacy.Tab.Empty)
                     (s "candidacies")
                 , map
-                    (\id -> candidacyTab id View.Candidacy.Profil)
+                    (\id -> candidacyTab id View.Candidacy.Tab.Profil)
                     (s "candidacies" </> string)
                 , map
-                    (\id -> candidacyTab id View.Candidacy.CandidateInfo)
+                    (\id -> candidacyTab id View.Candidacy.Tab.CandidateInfo)
                     (s "candidacies" </> string </> s "candidate")
                 , map
-                    (\id -> candidacyTab id View.Candidacy.FundingRequest)
+                    (\id -> candidacyTab id View.Candidacy.Tab.DropOut)
+                    (s "candidacies" </> string </> s "drop-out")
+                , map
+                    (\id -> candidacyTab id View.Candidacy.Tab.FundingRequest)
                     (s "candidacies" </> string </> s "funding")
                 , map
-                    (\id -> candidacyTab id View.Candidacy.Meetings)
+                    (\id -> candidacyTab id View.Candidacy.Tab.Meetings)
                     (s "candidacies" </> string </> s "meetings")
                 , map
-                    (\id -> candidacyTab id View.Candidacy.Training)
+                    (\id -> candidacyTab id View.Candidacy.Tab.Training)
                     (s "candidacies" </> string </> s "training")
                 , map
-                    (\id -> candidacyTab id View.Candidacy.TrainingSent)
+                    (\id -> candidacyTab id View.Candidacy.Tab.TrainingSent)
                     (s "candidacies" </> string </> s "training" </> s "confirmation")
                 , map
-                    (\id -> candidacyTab id View.Candidacy.Admissibility)
+                    (\id -> candidacyTab id View.Candidacy.Tab.Admissibility)
                     (s "candidacies" </> string </> s "admissibility")
 
                 --  Add more routes like this:
@@ -80,28 +83,31 @@ href baseUrl route =
 toString : String -> Route -> String
 toString baseUrl route =
     case route of
-        Candidacy View.Candidacy.Empty ->
+        Candidacy View.Candidacy.Tab.Empty ->
             Url.Builder.absolute [ baseUrl, "candidacies" ] []
 
-        Candidacy (View.Candidacy.CandidateInfo candidacyId) ->
+        Candidacy (View.Candidacy.Tab.CandidateInfo candidacyId) ->
             Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "candidate" ] []
 
-        Candidacy (View.Candidacy.Profil candidacyId) ->
+        Candidacy (View.Candidacy.Tab.DropOut candidacyId) ->
+            Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "drop-out" ] []
+
+        Candidacy (View.Candidacy.Tab.Profil candidacyId) ->
             Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId ] []
 
-        Candidacy (View.Candidacy.Meetings candidacyId) ->
+        Candidacy (View.Candidacy.Tab.Meetings candidacyId) ->
             Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "meetings" ] []
 
-        Candidacy (View.Candidacy.FundingRequest candidacyId) ->
+        Candidacy (View.Candidacy.Tab.FundingRequest candidacyId) ->
             Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "funding" ] []
 
-        Candidacy (View.Candidacy.Training candidacyId) ->
+        Candidacy (View.Candidacy.Tab.Training candidacyId) ->
             Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "training" ] []
 
-        Candidacy (View.Candidacy.TrainingSent candidacyId) ->
+        Candidacy (View.Candidacy.Tab.TrainingSent candidacyId) ->
             Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "training", "confirmation" ] []
 
-        Candidacy (View.Candidacy.Admissibility candidacyId) ->
+        Candidacy (View.Candidacy.Tab.Admissibility candidacyId) ->
             Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "admissibility" ] []
 
         Home ->

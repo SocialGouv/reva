@@ -2,6 +2,7 @@ module Api.Referential exposing (get)
 
 import Admin.Object
 import Admin.Object.BasicSkill
+import Admin.Object.DropOutReason
 import Admin.Object.Goal
 import Admin.Object.Referential
 import Admin.Object.Training
@@ -29,13 +30,11 @@ get endpointGraphql token toMsg =
 
 selection : SelectionSet Data.Referential.Referential Graphql.Operation.RootQuery
 selection =
-    SelectionSet.succeed
-        (\basicSkills referentialGoals trainings ->
-            Data.Referential.Referential basicSkills referentialGoals.goals trainings
-        )
+    SelectionSet.succeed Data.Referential.Referential
         |> with (Query.getBasicSkills basicSkillSelection)
-        |> with (Query.getReferential goalsSelection)
         |> with (Query.getDegrees Api.Degree.selection)
+        |> with (Query.getDropOutReasons dropOutReasonSelection)
+        |> with (SelectionSet.map (\r -> r.goals) (Query.getReferential goalsSelection))
         |> with (Query.getTrainings trainingsSelection)
         |> with (Query.getVulnerabilityIndicators Api.VulnerabilityIndicator.selection)
 
@@ -45,6 +44,13 @@ basicSkillSelection =
     SelectionSet.succeed Data.Referential.BasicSkill
         |> with (SelectionSet.map (\(Uuid id) -> id) Admin.Object.BasicSkill.id)
         |> with Admin.Object.BasicSkill.label
+
+
+dropOutReasonSelection : SelectionSet Data.Referential.BasicSkill Admin.Object.DropOutReason
+dropOutReasonSelection =
+    SelectionSet.succeed Data.Referential.DropOutReason
+        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.DropOutReason.id)
+        |> with Admin.Object.DropOutReason.label
 
 
 referentialGoalSelection : SelectionSet Data.Referential.ReferentialGoal Admin.Object.Goal

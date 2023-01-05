@@ -36,7 +36,7 @@ appointmentFromDict candidacyId dict =
     Appointment candidacyId
         (decode.generic .typology candidateTypologyFromString NonSpecifie)
         (decode.string .additionalInformation "")
-        (decode.date .firstAppointmentOccurredAt Nothing)
+        (decode.maybe.date .firstAppointmentOccurredAt Nothing)
         (decode.int .appointmentCount 0)
         (decode.bool .wasPresentAtFirstAppointment False)
 
