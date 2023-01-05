@@ -119,6 +119,10 @@ selection id =
                 |> with Admin.Object.Candidacy.lastname
                 |> with Admin.Object.Candidacy.phone
                 |> with Admin.Object.Candidacy.email
+                |> with
+                    (Admin.Object.Candidacy.candidacyDropOut SelectionSet.empty
+                        |> SelectionSet.map (Maybe.map (always True) >> Maybe.withDefault False)
+                    )
                 |> with (Admin.Object.Candidacy.candidacyStatuses statusSelection)
                 |> with Admin.Object.Candidacy.createdAt
     in
@@ -164,6 +168,7 @@ summarySelection =
         |> with Admin.Object.CandidacySummary.lastname
         |> with Admin.Object.CandidacySummary.phone
         |> with Admin.Object.CandidacySummary.email
+        |> with Admin.Object.CandidacySummary.isDroppedOut
         |> with (Admin.Object.CandidacySummary.lastStatus statusSelection)
         |> with Admin.Object.CandidacySummary.createdAt
         |> with Admin.Object.CandidacySummary.sentAt

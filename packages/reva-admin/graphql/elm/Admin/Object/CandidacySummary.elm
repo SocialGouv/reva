@@ -80,6 +80,11 @@ email =
     Object.selectionForField "(Maybe String)" "email" [] (Decode.string |> Decode.nullable)
 
 
+isDroppedOut : SelectionSet Bool Admin.Object.CandidacySummary
+isDroppedOut =
+    Object.selectionForField "Bool" "isDroppedOut" [] Decode.bool
+
+
 lastStatus :
     SelectionSet decodesTo Admin.Object.CandidacyStatus
     -> SelectionSet decodesTo Admin.Object.CandidacySummary
