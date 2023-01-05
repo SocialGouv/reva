@@ -76,6 +76,7 @@ type CandidacySummary {
   lastname: String
   phone: String
   email: String
+  isDroppedOut: Boolean!
   lastStatus: CandidacyStatus!
   createdAt: Timestamp!
   sentAt: Timestamp

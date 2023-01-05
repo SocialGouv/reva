@@ -1,6 +1,7 @@
 import {
   CandidaciesStatus,
   Candidacy,
+  CandidacyDropOut,
   CandidacyStatus,
   CandidateTypology,
   Certification,
@@ -53,6 +54,7 @@ const toDomainCandidacySummary = (
     firstname: string | undefined;
     lastname: string | undefined;
     department: Department | null;
+    candidacyDropOut: CandidacyDropOut | null;
   }
 ) => {
   const statuses = candidacy.candidacyStatuses;
@@ -74,6 +76,7 @@ const toDomainCandidacySummary = (
     lastname: candidacy.lastname,
     email: candidacy.email,
     phone: candidacy.phone,
+    isDroppedOut: candidacy.candidacyDropOut !== null,
     lastStatus,
     dropOutReason: null,
     department: candidacy.department,
@@ -90,6 +93,7 @@ const toDomainCandidacySummaries = (
     firstname: string | undefined;
     lastname: string | undefined;
     department: Department | null;
+    candidacyDropOut: CandidacyDropOut | null;
   })[]
 ): domain.CandidacySummary[] => {
   return candidacies.map(toDomainCandidacySummary);
@@ -608,6 +612,7 @@ export const getCandidacies = async () => {
         candidate: true,
         organism: true,
         department: true,
+        candidacyDropOut: true,
       },
     });
 
@@ -663,6 +668,7 @@ export const getCandidaciesForUser = async (keycloakId: string) => {
         candidate: true,
         organism: true,
         department: true,
+        candidacyDropOut: true,
       },
     });
 

@@ -15,10 +15,10 @@ module Data.Candidacy exposing
     , isTrainingSent
     , lastStatus
     , sentDate
-    , statusToCategoryString
-    , statusToDirectoryPosition
     , statusToProgressPosition
     , toCandidacySummary
+    , toCategoryString
+    , toDirectoryPosition
     )
 
 import Admin.Enum.Duration exposing (Duration)
@@ -70,6 +70,7 @@ type alias Candidacy =
     , lastname : Maybe String
     , phone : Maybe String
     , email : Maybe String
+    , dropOutDate : Maybe Time.Posix
     , statuses : List CandidacyStatus
     , createdAt : Time.Posix
     }
@@ -85,6 +86,7 @@ type alias CandidacySummary =
     , lastname : Maybe String
     , phone : Maybe String
     , email : Maybe String
+    , isDroppedOut : Bool
     , lastStatus : CandidacyStatus
     , createdAt : Time.Posix
     , sentAt : Maybe Time.Posix
@@ -99,6 +101,15 @@ candidacyIdToString (CandidacyId id) =
 candidacyIdFromString : String -> CandidacyId
 candidacyIdFromString id =
     CandidacyId id
+
+
+toCategoryString : CandidacySummary -> String
+toCategoryString candidacy =
+    if candidacy.isDroppedOut then
+        "Candidatures abandonnées"
+
+    else
+        statusToCategoryString candidacy.lastStatus.status
 
 
 statusToCategoryString : String -> String
@@ -125,11 +136,17 @@ statusToCategoryString status =
         "DEMANDE_FINANCEMENT_ENVOYE" ->
             "Demandes de financement envoyées"
 
-        "ABANDON" ->
-            "Candidatures abandonnées"
-
         _ ->
             "Statut inconnu"
+
+
+toDirectoryPosition : CandidacySummary -> Int
+toDirectoryPosition candidacy =
+    if candidacy.isDroppedOut then
+        7
+
+    else
+        statusToDirectoryPosition candidacy.lastStatus.status
 
 
 statusToDirectoryPosition : String -> Int
@@ -155,9 +172,6 @@ statusToDirectoryPosition status =
 
         "DEMANDE_FINANCEMENT_ENVOYE" ->
             5
-
-        "ABANDON" ->
-            7
 
         _ ->
             10
@@ -190,11 +204,8 @@ statusToProgressPosition status =
         "DEMANDE_FINANCEMENT_ENVOYE" ->
             5
 
-        "ABANDON" ->
-            6
-
         _ ->
-            10
+            -1
 
 
 toCandidacySummary : Candidacy -> CandidacySummary
@@ -208,6 +219,7 @@ toCandidacySummary candidacy =
     , lastname = candidacy.lastname
     , phone = candidacy.phone
     , email = candidacy.email
+    , isDroppedOut = candidacy.dropOutDate /= Nothing
     , lastStatus = lastStatus candidacy.statuses
     , createdAt = candidacy.createdAt
     , sentAt = sentDate candidacy.statuses
