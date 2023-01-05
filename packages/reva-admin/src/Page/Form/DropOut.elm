@@ -5,6 +5,7 @@ import Data.Form.DropOut
 import Data.Form.Helper
 import Data.Referential exposing (Referential)
 import Dict exposing (Dict)
+import List.Extra
 import Page.Form as Form exposing (Form)
 import String exposing (String)
 
@@ -17,10 +18,21 @@ form _ ( _, referential ) =
 
         dropOutReasons =
             referential.dropOutReasons |> Data.Form.Helper.toIdList
+
+        maybeDropOutOtherReasonValue =
+            List.Extra.find (\reason -> reason.label == "Autre") referential.dropOutReasons
+                |> Maybe.map .id
     in
     { elements =
         [ ( keys.dropOutReason, Form.Select "Quelle est la raison de l'abandon ?" dropOutReasons )
-        , ( keys.otherReasonContent, Form.SelectOther "dropOutReason" "Autre raison" )
+        , ( keys.otherReasonContent
+          , case maybeDropOutOtherReasonValue of
+                Just dropOutOtherReasonValue ->
+                    Form.SelectOther "dropOutReason" dropOutOtherReasonValue "Autre raison"
+
+                Nothing ->
+                    Form.Empty
+          )
         , ( keys.droppedOutAt, Form.Date "Date" )
         ]
     , saveLabel = "Enregistrer"

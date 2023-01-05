@@ -45,7 +45,7 @@ type Element
     | Number String
     | ReadOnlyElement Element
     | Select String (List ( String, String ))
-    | SelectOther String String
+    | SelectOther String String String
     | Section String
     | Title String
     | Textarea String
@@ -191,6 +191,7 @@ viewForm referential status maybeError formData form saveButton =
         , div
             [ class "mt-6 flex flex-wrap" ]
             (List.map (viewElement formData) currentForm.elements
+                |> List.filter ((/=) [])
                 |> List.map (div [ class "mr-8" ])
             )
         , case status of
@@ -362,14 +363,15 @@ viewEditableElement formData ( elementId, element ) =
                 )
                 |> withLabel label
 
-        SelectOther selectId label ->
+        SelectOther selectId otherValue label ->
             case Dict.get selectId formData of
-                Just "Autre" ->
-                    inputView "text" "w-full"
-                        |> withLabel label
+                Just selectedValue ->
+                    if selectedValue == otherValue then
+                        textareaView
+                            |> withLabel label
 
-                Just _ ->
-                    []
+                    else
+                        []
 
                 Nothing ->
                     []
@@ -491,13 +493,14 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> Maybe.map (\( _, choice ) -> dataView choice |> withTerm label)
                 |> Maybe.withDefault []
 
-        SelectOther selectId label ->
+        SelectOther selectId otherValue label ->
             case Dict.get selectId formData of
-                Just "Autre" ->
-                    defaultView label
+                Just selectedValue ->
+                    if selectedValue == otherValue then
+                        defaultView label
 
-                Just _ ->
-                    []
+                    else
+                        []
 
                 Nothing ->
                     []
