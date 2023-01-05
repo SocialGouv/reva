@@ -70,7 +70,7 @@ type alias Candidacy =
     , lastname : Maybe String
     , phone : Maybe String
     , email : Maybe String
-    , isDroppedOut : Bool
+    , dropOutDate : Maybe Time.Posix
     , statuses : List CandidacyStatus
     , createdAt : Time.Posix
     }
@@ -219,7 +219,7 @@ toCandidacySummary candidacy =
     , lastname = candidacy.lastname
     , phone = candidacy.phone
     , email = candidacy.email
-    , isDroppedOut = candidacy.isDroppedOut
+    , isDroppedOut = candidacy.dropOutDate /= Nothing
     , lastStatus = lastStatus candidacy.statuses
     , createdAt = candidacy.createdAt
     , sentAt = sentDate candidacy.statuses

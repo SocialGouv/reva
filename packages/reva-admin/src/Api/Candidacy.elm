@@ -3,6 +3,7 @@ module Api.Candidacy exposing (archive, delete, get, getCandidacies, takeOver)
 import Admin.Mutation as Mutation
 import Admin.Object
 import Admin.Object.Candidacy
+import Admin.Object.CandidacyDropOut
 import Admin.Object.CandidacyStatus
 import Admin.Object.CandidacySummary
 import Admin.Object.Candidate
@@ -104,6 +105,10 @@ selection id =
         getCompanionsRequiredArg =
             Query.GetCompanionsForCandidacyRequiredArguments (Uuid id)
 
+        droppedOutDateSelection =
+            SelectionSet.succeed identity
+                |> with Admin.Object.CandidacyDropOut.droppedOutAt
+
         candidacySelectionWithoutCompanions =
             SelectionSet.succeed Data.Candidacy.Candidacy
                 |> with (SelectionSet.map (\(Id candidacyId) -> Data.Candidacy.candidacyIdFromString candidacyId) Admin.Object.Candidacy.id)
@@ -119,10 +124,7 @@ selection id =
                 |> with Admin.Object.Candidacy.lastname
                 |> with Admin.Object.Candidacy.phone
                 |> with Admin.Object.Candidacy.email
-                |> with
-                    (Admin.Object.Candidacy.candidacyDropOut SelectionSet.empty
-                        |> SelectionSet.map (Maybe.map (always True) >> Maybe.withDefault False)
-                    )
+                |> with (Admin.Object.Candidacy.candidacyDropOut droppedOutDateSelection)
                 |> with (Admin.Object.Candidacy.candidacyStatuses statusSelection)
                 |> with Admin.Object.Candidacy.createdAt
     in
