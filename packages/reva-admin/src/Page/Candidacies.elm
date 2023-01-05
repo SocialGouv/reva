@@ -617,7 +617,7 @@ updateTab context tab model =
                 ( formModel, formCmd ) =
                     Form.updateForm context
                         { form = Page.Form.DropOut.form
-                        , onLoad = Api.Form.Appointment.get candidacyId -- TODO: replace with dropOut API (query qui récup les champs)
+                        , onLoad = Api.Form.DropOut.get candidacyId
                         , onSave = Api.Form.DropOut.dropOut candidacyId
                         , onRedirect =
                             Nav.pushUrl

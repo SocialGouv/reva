@@ -2,16 +2,37 @@ module Api.Form.DropOut exposing (..)
 
 import Admin.InputObject exposing (DropOutInput)
 import Admin.Mutation as Mutation
-import Admin.Scalar exposing (Uuid(..))
+import Admin.Object
+import Admin.Object.Candidacy
+import Admin.Object.CandidacyDropOut
+import Admin.Object.DropOutReason
+import Admin.Query as Query
+import Admin.Scalar exposing (Id(..), Uuid(..))
 import Api.Auth as Auth
+import Api.RemoteData exposing (nothingToError)
 import Api.Token exposing (Token)
 import Data.Candidacy exposing (CandidacyId)
 import Data.Form.DropOut
 import Data.Referential
 import Dict exposing (Dict)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
-import Graphql.SelectionSet as SelectionSet
+import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData)
+
+
+get :
+    CandidacyId
+    -> String
+    -> Token
+    -> (RemoteData String (Dict String String) -> msg)
+    -> Cmd msg
+get candidacyId endpointGraphql token toMsg =
+    let
+        candidacyRequiredArgs =
+            Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
+    in
+    Query.getCandidacyById candidacyRequiredArgs selection
+        |> Auth.makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
 
 
 dropOut :
@@ -45,3 +66,21 @@ dropOut candidacyId endpointGraphql token toMsg ( _, referential ) dict =
     in
     Mutation.candidacy_dropOut (Mutation.CandidacyDropOutRequiredArguments (Uuid id) dropOutInput) (SelectionSet.succeed ())
         |> Auth.makeMutation endpointGraphql token toMsg
+
+
+selection : SelectionSet (Dict String String) Admin.Object.Candidacy
+selection =
+    let
+        dropOutReasonIdSelection =
+            SelectionSet.succeed identity
+                |> with Admin.Object.DropOutReason.id
+
+        dropOutSelection =
+            SelectionSet.succeed Data.Form.DropOut.dropOut
+                |> with (Admin.Object.CandidacyDropOut.dropOutReason dropOutReasonIdSelection)
+                |> with Admin.Object.CandidacyDropOut.otherReasonContent
+                |> with Admin.Object.CandidacyDropOut.droppedOutAt
+    in
+    SelectionSet.succeed identity
+        |> with (Admin.Object.Candidacy.candidacyDropOut dropOutSelection)
+        |> SelectionSet.withDefault Dict.empty

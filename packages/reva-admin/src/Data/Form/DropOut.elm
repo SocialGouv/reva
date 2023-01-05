@@ -1,6 +1,7 @@
 module Data.Form.DropOut exposing (dropOut, fromDict, keys)
 
-import Admin.Scalar exposing (Uuid)
+import Admin.Scalar exposing (Id(..), Uuid)
+import Admin.ScalarCodecs exposing (Id)
 import Data.Form.Helper as Helper exposing (uuidToCheckedList)
 import Data.Referential
 import Data.Scalar
@@ -34,16 +35,10 @@ fromDict dropOutReasons dict =
         (decode.date .droppedOutAt (Time.millisToPosix 0))
 
 
-dropOut : List Uuid -> Maybe String -> Maybe Data.Scalar.Timestamp -> Dict String String
-dropOut dropOutReasons otherReasonContent droppedOutAt =
-    let
-        dropOutReasonsIds =
-            uuidToCheckedList dropOutReasons
-
-        dropOutOtherFields =
-            [ ( .otherReasonContent, otherReasonContent )
-            , ( .droppedOutAt, Maybe.map Helper.dateToString droppedOutAt )
-            ]
-                |> Helper.toKeyedList keys
-    in
-    Dict.fromList (dropOutReasonsIds ++ dropOutOtherFields)
+dropOut : Id -> Maybe String -> Data.Scalar.Timestamp -> Dict String String
+dropOut (Id dropOutReason) otherReasonContent droppedOutAt =
+    [ ( .dropOutReason, Just dropOutReason )
+    , ( .otherReasonContent, otherReasonContent )
+    , ( .droppedOutAt, Just <| Helper.dateToString droppedOutAt )
+    ]
+        |> Helper.toDict keys
