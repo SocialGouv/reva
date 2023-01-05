@@ -132,7 +132,7 @@ form maybeCertification formData ( candidacy, referential ) =
                 |> withCheckedRequired referential.basicSkills
           )
         , ( "skills", Form.Title "Bloc de compétences certifiant" )
-        , ( keys.certificateSkills, Form.ReadOnlyElement <| Form.Textarea "" )
+        , ( keys.certificateSkills, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
         , ( keys.certificateSkillsHourCount
           , Form.Number "Nombre d'heures"
                 |> maybeReadOnlyTraining
@@ -144,7 +144,7 @@ form maybeCertification formData ( candidacy, referential ) =
                 |> withRequired hasCertificateSkills
           )
         , ( "other", Form.Title "Autres actions de formations complémentaires" )
-        , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" )
+        , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
         , ( keys.totalTrainingHourCount
           , Form.Info "Nombre d'heures total actes formatifs" <|
                 String.fromInt (totalTrainingHourCount formData)
