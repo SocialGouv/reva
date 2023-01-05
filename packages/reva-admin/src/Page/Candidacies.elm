@@ -12,6 +12,7 @@ import Api.Candidacy
 import Api.Form.Admissibility
 import Api.Form.Appointment
 import Api.Form.Candidate
+import Api.Form.DropOut
 import Api.Form.FundingRequest
 import Api.Form.Training
 import Api.Referential
@@ -617,7 +618,7 @@ updateTab context tab model =
                     Form.updateForm context
                         { form = Page.Form.DropOut.form
                         , onLoad = Api.Form.Appointment.get candidacyId -- TODO: replace with dropOut API (query qui récup les champs)
-                        , onSave = Api.Candidacy.dropOut candidacyId -- TODO: replace with dropOut API (mutation)
+                        , onSave = Api.Form.DropOut.dropOut candidacyId
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey

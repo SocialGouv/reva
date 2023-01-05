@@ -1,6 +1,5 @@
-module Api.Candidacy exposing (archive, delete, dropOut, get, getCandidacies, takeOver)
+module Api.Candidacy exposing (archive, delete, get, getCandidacies, takeOver)
 
-import Admin.InputObject exposing (DropOutInput)
 import Admin.Mutation as Mutation
 import Admin.Object
 import Admin.Object.Candidacy
@@ -22,12 +21,9 @@ import Api.VulnerabilityIndicator
 import Data.Candidacy exposing (CandidacyId)
 import Data.Candidate
 import Data.Certification
-import Data.Form.DropOut
 import Data.Organism exposing (Organism)
 import Data.Referential
-import Dict exposing (Dict)
 import Graphql.Operation
-import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
 
@@ -96,39 +92,6 @@ takeOver endpointGraphql token toMsg candidacyId =
             Data.Candidacy.candidacyIdToString candidacyId
     in
     Mutation.candidacy_takeOver (Mutation.CandidacyTakeOverRequiredArguments (Id id)) (SelectionSet.succeed ())
-        |> Auth.makeMutation endpointGraphql token toMsg
-
-
-dropOut :
-    CandidacyId
-    -> String
-    -> Token
-    -> (RemoteData String () -> msg)
-    -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
-    -> Dict String String
-    -> Cmd msg
-dropOut candidacyId endpointGraphql token toMsg ( _, referential ) dict =
-    let
-        dropOutData =
-            Data.Form.DropOut.fromDict referential.dropOutReasons dict
-
-        dropOutReasonContent =
-            if dropOutData.otherReasonContent == "" then
-                Null
-
-            else
-                Present dropOutData.otherReasonContent
-
-        dropOutInput =
-            DropOutInput
-                dropOutData.droppedOutAt
-                (Uuid dropOutData.dropOutReason)
-                dropOutReasonContent
-
-        id =
-            Data.Candidacy.candidacyIdToString candidacyId
-    in
-    Mutation.candidacy_dropOut (Mutation.CandidacyDropOutRequiredArguments (Uuid id) dropOutInput) (SelectionSet.succeed ())
         |> Auth.makeMutation endpointGraphql token toMsg
 
 
