@@ -41,10 +41,10 @@ import String exposing (String)
 import Time
 import View
 import View.Candidacy
+import View.Candidacy.NavigationSteps as NavigationSteps
 import View.Candidacy.Tab exposing (Tab(..))
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
-import View.Steps
 
 
 type Msg
@@ -178,7 +178,12 @@ viewContent context model candidacies =
         maybeNavigationSteps =
             case model.selected of
                 Success candidacy ->
-                    viewNavigationSteps context.baseUrl candidacy
+                    case candidacy.dropOutDate of
+                        Just droppedOutDate ->
+                            NavigationSteps.dropOutView context.baseUrl candidacy droppedOutDate
+
+                        Nothing ->
+                            NavigationSteps.view context.baseUrl candidacy
 
                 _ ->
                     text ""
@@ -229,78 +234,6 @@ viewContent context model candidacies =
                 [ viewForm "admissibility" candidacyId
                 , maybeNavigationSteps
                 ]
-
-
-viewNavigationSteps : String -> Candidacy -> Html msg
-viewNavigationSteps baseUrl candidacy =
-    let
-        candidacyStatus =
-            (Candidacy.lastStatus >> .status) candidacy.statuses
-
-        title =
-            [ div
-                [ class "h-32 flex items-end -mb-12" ]
-                [ span
-                    [ class "text-2xl font-medium" ]
-                    [ text "Prochaines étapes" ]
-                ]
-            ]
-
-        completeButton =
-            div
-                []
-                [ button
-                    [ class "bg-slate-900 text-white text-base"
-                    , class "mt-2 w-auto rounded"
-                    , class "text-center px-8 py-1"
-                    ]
-                    [ text "Compléter" ]
-                ]
-
-        expandedView stepTitle status =
-            [ View.Steps.link stepTitle
-            , if candidacyStatus == status then
-                completeButton
-
-              else
-                text ""
-            ]
-
-        appointmentLink =
-            Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Tab.Meetings candidacy.id)
-
-        trainingLink =
-            Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Tab.Training candidacy.id)
-
-        fundingView =
-            if candidacyStatus == "DEMANDE_FINANCEMENT_ENVOYE" then
-                View.Candidacy.Tab.FundingRequest
-
-            else
-                View.Candidacy.Tab.CandidateInfo
-
-        candidateInfoLink =
-            if Candidacy.isStatusEqualOrAbove candidacy "PARCOURS_CONFIRME" then
-                Just <| Route.href baseUrl <| Route.Candidacy (fundingView candidacy.id)
-
-            else
-                Nothing
-
-        admissibilityLink =
-            if Candidacy.isStatusEqualOrAbove candidacy "PARCOURS_CONFIRME" then
-                Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Tab.Admissibility candidacy.id)
-
-            else
-                Nothing
-    in
-    View.Steps.view (Candidacy.statusToProgressPosition candidacyStatus)
-        [ { content = title, navigation = Nothing }
-        , { content = expandedView "Rendez-vous pédagogique" "PRISE_EN_CHARGE", navigation = appointmentLink }
-        , { content = expandedView "Définition du parcours" "PRISE_EN_CHARGE", navigation = trainingLink }
-        , { content = [ View.Steps.info "Validation du parcours" ], navigation = Nothing }
-        , { content = expandedView "Gestion de la recevabilité" "PARCOURS_CONFIRME", navigation = admissibilityLink }
-        , { content = expandedView "Demande de prise en charge" "PARCOURS_CONFIRME", navigation = candidateInfoLink }
-        ]
 
 
 viewMain : String -> List (Html msg) -> Html msg
