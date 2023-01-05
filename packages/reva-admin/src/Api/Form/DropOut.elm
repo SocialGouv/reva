@@ -43,10 +43,10 @@ dropOut :
     -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
     -> Dict String String
     -> Cmd msg
-dropOut candidacyId endpointGraphql token toMsg ( _, referential ) dict =
+dropOut candidacyId endpointGraphql token toMsg _ dict =
     let
         dropOutData =
-            Data.Form.DropOut.fromDict referential.dropOutReasons dict
+            Data.Form.DropOut.fromDict dict
 
         dropOutReasonContent =
             if dropOutData.otherReasonContent == "" then
@@ -58,7 +58,7 @@ dropOut candidacyId endpointGraphql token toMsg ( _, referential ) dict =
         dropOutInput =
             DropOutInput
                 dropOutData.droppedOutAt
-                (Uuid dropOutData.dropOutReason)
+                (Uuid dropOutData.dropOutReasonId)
                 dropOutReasonContent
 
         id =

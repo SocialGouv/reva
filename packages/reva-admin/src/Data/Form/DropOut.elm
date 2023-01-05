@@ -10,7 +10,7 @@ import Time
 
 
 type alias DropOut =
-    { dropOutReason : String
+    { dropOutReasonId : String
     , otherReasonContent : String
     , droppedOutAt : Data.Scalar.Timestamp
     }
@@ -23,8 +23,8 @@ keys =
     }
 
 
-fromDict : List Data.Referential.DropOutReason -> Dict String String -> DropOut
-fromDict dropOutReasons dict =
+fromDict : Dict String String -> DropOut
+fromDict dict =
     let
         decode =
             Helper.decode keys dict
@@ -36,8 +36,8 @@ fromDict dropOutReasons dict =
 
 
 dropOut : Id -> Maybe String -> Data.Scalar.Timestamp -> Dict String String
-dropOut (Id dropOutReason) otherReasonContent droppedOutAt =
-    [ ( .dropOutReason, Just dropOutReason )
+dropOut (Id dropOutReasonId) otherReasonContent droppedOutAt =
+    [ ( .dropOutReason, Just dropOutReasonId )
     , ( .otherReasonContent, otherReasonContent )
     , ( .droppedOutAt, Just <| Helper.dateToString droppedOutAt )
     ]
