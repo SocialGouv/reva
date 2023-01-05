@@ -1,6 +1,6 @@
 module Page.Form.Training exposing (..)
 
-import Data.Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
+import Data.Candidacy exposing (Candidacy)
 import Data.Form.Helper
 import Data.Form.Training
 import Data.Referential exposing (Referential)
@@ -27,7 +27,7 @@ form _ ( _, referential ) =
           , Form.CheckboxList "Savoirs de base" <|
                 Data.Form.Helper.toIdList referential.basicSkills
           )
-        , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" Nothing )
+        , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" (Just "RNCP25467BC03 - intitulé") )
         , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" Nothing )
         , ( keys.isCertificationPartial, Form.Checkbox "Le candidat a un objectif de certification partielle." )
         ]
