@@ -113,16 +113,22 @@ view context config =
             , viewExperiences config.candidacy.experiences
             , button
                 [ type_ "button"
-                , class "shadow text-xs border border-gray-300 hover:bg-gray-50 text-gray-600 px-2 py-1 rounded"
+                , class "bg-gray-400 hover:bg-gray-500 text-white"
+                , class "text-xs px-3 py-2 rounded"
                 , onClick (config.archiveMsg config.candidacy)
                 ]
                 [ text "Archiver la candidature" ]
-            , a
-                [ class "ml-2"
-                , class "shadow text-xs border border-gray-300 hover:bg-gray-50 text-gray-600 px-2 py-1 rounded"
-                , href (Route.toString context.baseUrl (Route.Candidacy (DropOut config.candidacy.id)))
-                ]
-                [ text "Déclarer l'abandon de la candidature" ]
+            , if config.candidacy.dropOutDate == Nothing then
+                a
+                    [ class "ml-2"
+                    , class "bg-red-800 hover:bg-red-900 text-white"
+                    , class "text-xs px-3 py-2 rounded"
+                    , href (Route.toString context.baseUrl (Route.Candidacy (DropOut config.candidacy.id)))
+                    ]
+                    [ text "Déclarer l'abandon du candidat" ]
+
+              else
+                text ""
             ]
         ]
     ]
