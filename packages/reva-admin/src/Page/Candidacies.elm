@@ -612,7 +612,7 @@ updateTab context tab model =
             { model | tab = tab }
     in
     case ( tab, model.selected ) of
-        ( View.Candidacy.Tab.DropOut candidacyId, Success _ ) ->
+        ( View.Candidacy.Tab.DropOut candidacyId, Success candidacy ) ->
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
@@ -624,7 +624,12 @@ updateTab context tab model =
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Tab.Profil candidacyId)))
                         , onValidate = \_ _ -> Ok ()
-                        , status = Form.Editable
+                        , status =
+                            if candidacy.dropOutDate /= Nothing then
+                                Form.ReadOnly
+
+                            else
+                                Form.Editable
                         }
                         model.form
             in
