@@ -74,6 +74,7 @@ describe("candidacy management protection", () => {
   test("should succeed", async () => {
     const response = await canManageCandidacy(
       {
+        hasRole: (_) => true,
         getAccountFromKeycloakId: getAccountFromKeycloakIdMock,
         getCandidacyFromId: getCandidacyFromIdMock,
       },
