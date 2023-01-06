@@ -50,11 +50,9 @@ export const dropOutCandidacy =
     );
 
     const checkIfCandidacyIsNotAbandonned = (candidacy: Candidacy) => {
-      const canDropOut = !candidacy.candidacyStatuses.some(
-        (s) => s.status === "ABANDON"
-      );
+      const hasDropOut = Boolean(candidacy.candidacyDropOut);
       return Promise.resolve(
-        Maybe.fromFalsy(canDropOut).toEither(
+        Maybe.fromFalsy(!hasDropOut).toEither(
           new FunctionalError(
             FunctionalCodeError.CANDIDACY_ALREADY_DROPPED_OUT,
             `La candidature est déjà abandonnée`
