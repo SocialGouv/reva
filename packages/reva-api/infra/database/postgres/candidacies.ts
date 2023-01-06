@@ -931,7 +931,11 @@ export const dropOutCandidacy = async ({
         id: candidacyId,
       },
       include: {
-        candidacyStatuses: true,
+        candidacyStatuses: {
+          where: {
+            isActive: true
+          }
+        },
       },
     });
     if (candidacy === null) {
