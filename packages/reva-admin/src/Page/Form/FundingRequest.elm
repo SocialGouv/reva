@@ -1,4 +1,4 @@
-module Page.Form.FundingRequest exposing (..)
+module Page.Form.FundingRequest exposing (droppedOutForm, form)
 
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Candidate
@@ -15,17 +15,6 @@ import String exposing (String)
 form : Maybe Certification -> Dict String String -> ( Candidacy, Referential ) -> Form
 form maybeCertification formData ( candidacy, referential ) =
     let
-        baseTitle =
-            "Demande de prise en charge"
-
-        title =
-            Dict.get keys.numAction formData
-                |> Maybe.map (\numAction -> baseTitle ++ " " ++ numAction)
-                |> Maybe.withDefault baseTitle
-
-        keys =
-            Data.Form.FundingRequest.keys
-
         availableCompanions : List ( String, String )
         availableCompanions =
             candidacy.availableCompanions
@@ -80,13 +69,13 @@ form maybeCertification formData ( candidacy, referential ) =
                         Form.ReadOnlyElement formElement
     in
     { elements =
-        [ ( "heading", Form.Heading "2 - Parcours personnalisé" )
+        [ formHeading
         , ( "selected-certification", Form.Section "Certification choisie par le candidat" )
         , certificateField
-        , ( "organism", Form.Section "Accompagnement architecte de parcours" )
-        , ( "diagnosis", Form.Title "Entretien(s) de faisabilité" )
-        , ( keys.diagnosisHourCount, Form.Number "Nombre d'heures" )
-        , ( keys.diagnosisCost, Form.Number "Coût horaire" )
+        , formAPSection
+        , formDiagnosisTitle
+        , diagnosisHourCount
+        , diagnosisCost
         , ( "post-exam", Form.Title "Entretien post jury" )
         , ( keys.postExamHourCount, Form.Number "Nombre d'heures" )
         , ( keys.postExamCost, Form.Number "Coût horaire" )
@@ -152,62 +141,91 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( "jury", Form.Title "Prestation jury" )
         , ( keys.examHourCount, Form.Number "Nombre d'heures" )
         , ( keys.examCost, Form.Number "Coût horaire" )
-        , ( "total", Form.Section "Total" )
-        , ( "totalCost"
-          , Form.Info "Coût total de la demande de prise en charge" <|
-                String.concat
-                    [ String.fromInt (totalFundingRequestCost formData)
-                    , "€"
-                    ]
-          )
-        , if Candidacy.isStatusEqualOrAbove candidacy "DEMANDE_FINANCEMENT_ENVOYE" then
-            ( "", Form.Empty )
-
-          else
-            ( keys.isFormConfirmed, Form.Checkbox "Je confirme ce montant de prise en charge. Je ne pourrai pas éditer cette demande de prise en charge après son envoi." )
+        , totalSection
+        , totalCostSection formData
+        , confirmationSection candidacy
         ]
-    , saveLabel = "Envoyer"
-    , title = title
+    , saveLabel = saveLabel
+    , title = title formData
     }
 
 
 droppedOutForm : Maybe Certification -> Dict String String -> ( Candidacy, Referential ) -> Form
-droppedOutForm maybeCertification formData ( candidacy, referential ) =
+droppedOutForm _ formData ( candidacy, referential ) =
+    { elements =
+        [ formHeading
+        , formAPSection
+        , formDiagnosisTitle
+        , diagnosisHourCount
+        , diagnosisCost
+        , totalSection
+        , totalCostSection formData
+        , confirmationSection candidacy
+        ]
+    , saveLabel = saveLabel
+    , title = title formData
+    }
+
+
+title formData =
     let
+        baseTitle : String
         baseTitle =
             "Demande de prise en charge"
-
-        title =
-            Dict.get keys.numAction formData
-                |> Maybe.map (\numAction -> baseTitle ++ " " ++ numAction)
-                |> Maybe.withDefault baseTitle
-
-        keys =
-            Data.Form.FundingRequest.keys
     in
-    { elements =
-        [ ( "heading", Form.Heading "2 - Parcours personnalisé" )
-        , ( "organism", Form.Section "Accompagnement architecte de parcours" )
-        , ( "diagnosis", Form.Title "Entretien(s) de faisabilité" )
-        , ( keys.diagnosisHourCount, Form.Number "Nombre d'heures" )
-        , ( keys.diagnosisCost, Form.Number "Coût horaire" )
-        , ( "total", Form.Section "Total" )
-        , ( "totalCost"
-          , Form.Info "Coût total de la demande de prise en charge" <|
-                String.concat
-                    [ String.fromInt (totalFundingRequestCost formData)
-                    , "€"
-                    ]
-          )
-        , if Candidacy.isStatusEqualOrAbove candidacy "DEMANDE_FINANCEMENT_ENVOYE" then
-            ( "", Form.Empty )
+    Dict.get keys.numAction formData
+        |> Maybe.map (\numAction -> baseTitle ++ " " ++ numAction)
+        |> Maybe.withDefault baseTitle
 
-          else
-            ( keys.isFormConfirmed, Form.Checkbox "Je confirme ce montant de prise en charge. Je ne pourrai pas éditer cette demande de prise en charge après son envoi." )
-        ]
-    , saveLabel = "Envoyer"
-    , title = title
-    }
+
+keys =
+    Data.Form.FundingRequest.keys
+
+
+formHeading =
+    ( "heading", Form.Heading "2 - Parcours personnalisé" )
+
+
+formAPSection =
+    ( "organism", Form.Section "Accompagnement architecte de parcours" )
+
+
+formDiagnosisTitle =
+    ( "diagnosis", Form.Title "Entretien(s) de faisabilité" )
+
+
+diagnosisHourCount =
+    ( keys.diagnosisHourCount, Form.Number "Nombre d'heures" )
+
+
+diagnosisCost =
+    ( keys.diagnosisCost, Form.Number "Coût horaire" )
+
+
+totalSection =
+    ( "total", Form.Section "Total" )
+
+
+totalCostSection formData =
+    ( "totalCost"
+    , Form.Info "Coût total de la demande de prise en charge" <|
+        String.concat
+            [ String.fromInt (totalFundingRequestCost formData)
+            , "€"
+            ]
+    )
+
+
+confirmationSection candidacy =
+    if Candidacy.isStatusEqualOrAbove candidacy "DEMANDE_FINANCEMENT_ENVOYE" then
+        ( "", Form.Empty )
+
+    else
+        ( keys.isFormConfirmed, Form.Checkbox "Je confirme ce montant de prise en charge. Je ne pourrai pas éditer cette demande de prise en charge après son envoi." )
+
+
+saveLabel =
+    "Envoyer"
 
 
 hasAccessTrainingFunding : Referential -> Data.Candidate.Candidate -> Bool
@@ -227,9 +245,6 @@ hasAccessTrainingFunding referential candidate =
 totalTrainingHourCount : Dict String String -> Int
 totalTrainingHourCount formData =
     let
-        keys =
-            Data.Form.FundingRequest.keys
-
         decode =
             Data.Form.Helper.decode keys formData
 
@@ -244,9 +259,6 @@ totalTrainingHourCount formData =
 totalFundingRequestCost : Dict String String -> Int
 totalFundingRequestCost formData =
     let
-        keys =
-            Data.Form.FundingRequest.keys
-
         decode =
             Data.Form.Helper.decode keys formData
 
