@@ -43,8 +43,8 @@ import String exposing (String)
 import Time
 import View
 import View.Candidacy
-import View.Candidacy.NavigationSteps as NavigationSteps
 import View.Candidacy.Filters
+import View.Candidacy.NavigationSteps as NavigationSteps
 import View.Candidacy.Tab exposing (Tab(..))
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
@@ -179,15 +179,16 @@ view context model =
             candidacies
                 |> filter Candidacy.filterByWords .search
                 |> filter Candidacy.filterByStatus .status
-                |> viewContent context model
+                |> viewContent context model candidacies
 
 
 viewContent :
     Context
     -> Model
     -> List CandidacySummary
+    -> List CandidacySummary
     -> Html Msg
-viewContent context model candidacies =
+viewContent context model candidacies filteredCandidacies =
     let
         viewForm name candidacyId =
             viewMain name
@@ -221,8 +222,24 @@ viewContent context model candidacies =
     <|
         case model.tab of
             Empty filters ->
-                [ viewDirectoryPanel context candidacies
-                , View.Candidacy.Filters.view filters context
+                let
+                    haveBothSameStatusAndNotDroppedOut : CandidacySummary -> CandidacySummary -> Bool
+                    haveBothSameStatusAndNotDroppedOut c1 c2 =
+                        c1.lastStatus.status == c2.lastStatus.status && c1.isDroppedOut == False && c2.isDroppedOut == False
+
+                    areBothDroppedOut : CandidacySummary -> CandidacySummary -> Bool
+                    areBothDroppedOut c1 c2 =
+                        c1.isDroppedOut == True && c2.isDroppedOut == True
+
+                    candidaciesByStatus : List ( CandidacySummary, List CandidacySummary )
+                    candidaciesByStatus =
+                        filteredCandidacies
+                            |> List.sortBy (.sentAt >> Maybe.map Time.posixToMillis >> Maybe.withDefault 0 >> (*) -1)
+                            |> List.Extra.gatherWith (\c1 c2 -> haveBothSameStatusAndNotDroppedOut c1 c2 || areBothDroppedOut c1 c2)
+                            |> List.sortBy (\( c, _ ) -> Candidacy.toDirectoryPosition c)
+                in
+                [ viewDirectoryPanel context candidaciesByStatus
+                , View.Candidacy.Filters.view candidacies filters context
                 ]
 
             CandidateInfo candidacyId ->
@@ -339,24 +356,8 @@ viewCandidacyArticle baseUrl content =
         ]
 
 
-viewDirectoryPanel : Context -> List CandidacySummary -> Html Msg
-viewDirectoryPanel context candidacies =
-    let
-        haveBothSameStatusAndNotDroppedOut : CandidacySummary -> CandidacySummary -> Bool
-        haveBothSameStatusAndNotDroppedOut c1 c2 =
-            c1.lastStatus.status == c2.lastStatus.status && c1.isDroppedOut == False && c2.isDroppedOut == False
-
-        areBothDroppedOut : CandidacySummary -> CandidacySummary -> Bool
-        areBothDroppedOut c1 c2 =
-            c1.isDroppedOut == True && c2.isDroppedOut == True
-
-        candidaciesByStatus : List ( CandidacySummary, List CandidacySummary )
-        candidaciesByStatus =
-            candidacies
-                |> List.sortBy (.sentAt >> Maybe.map Time.posixToMillis >> Maybe.withDefault 0 >> (*) -1)
-                |> List.Extra.gatherWith (\c1 c2 -> haveBothSameStatusAndNotDroppedOut c1 c2 || areBothDroppedOut c1 c2)
-                |> List.sortBy (\( c, _ ) -> Candidacy.toDirectoryPosition c)
-    in
+viewDirectoryPanel : Context -> List ( CandidacySummary, List CandidacySummary ) -> Html Msg
+viewDirectoryPanel context candidaciesByStatus =
     aside
         [ class "hidden md:order-first md:flex md:flex-col flex-shrink-0"
         , class "w-full w-[780px] h-screen"
@@ -421,17 +422,8 @@ viewDirectory context ( firstCandidacy, candidacies ) =
             [ dataTest "directory-group-name"
             , class "z-10 sticky top-0 text-xl font-semibold text-slate-700"
             , class "bg-white px-10 py-3"
-            , class "flex justify-between"
             ]
-            [ h3 [] [ text (Candidacy.toCategoryString firstCandidacy) ]
-            , div
-                [ class "flex items-center justify-center"
-                , class "rounded-full px-2 h-6 bg-gray-200"
-                , class "text-sm text-gray-600"
-                ]
-                -- + 1 to count the firstCandidacy not included in the group
-                [ text <| String.fromInt (List.length candidacies + 1) ]
-            ]
+            [ h3 [] [ text (Candidacy.toCategoryString firstCandidacy) ] ]
         , List.map (viewItem context) (firstCandidacy :: candidacies)
             |> ul [ attribute "role" "list", class "text-lg relative z-0" ]
         ]
