@@ -29,8 +29,8 @@ import { updateGoalsOfCandidacy } from "../../../domain/features/updateGoalsOfCa
 import { confirmTrainingFormByCandidate } from "../../../domain/features/validateTrainingFormByCandidate";
 import { Role } from "../../../domain/types/account";
 import { Admissibility, Candidacy } from "../../../domain/types/candidacy";
-import * as admissibilityDb from "../../database/postgres/admissibility";
 import * as accountDb from "../../database/postgres/accounts";
+import * as admissibilityDb from "../../database/postgres/admissibility";
 import * as basicSkillDb from "../../database/postgres/basicSkills";
 import * as candidacyDb from "../../database/postgres/candidacies";
 import * as dropOutDb from "../../database/postgres/dropOutReasons";
@@ -423,11 +423,14 @@ export const resolvers = {
         getDropOutReasonById: dropOutDb.getDropOutReasonById,
         dropOutCandidacy: candidacyDb.dropOutCandidacy,
         hasRole: context.auth.hasRole,
+        canManageCandidacy: canManageCandidacy,
+        getAccountFromKeycloakId: accountDb.getAccountFromKeycloakId,
       })({
         candidacyId: payload.candidacyId,
         dropOutReasonId: payload.dropOut.dropOutReasonId,
         otherReasonContent: payload.dropOut.otherReasonContent,
         droppedOutAt,
+        keycloakId: context.auth.userInfo?.sub,
       });
 
       return result

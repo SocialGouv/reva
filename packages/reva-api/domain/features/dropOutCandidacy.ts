@@ -1,8 +1,13 @@
-import { Either, EitherAsync, Left, Maybe } from "purify-ts";
+import { Account } from "@prisma/client";
+import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
 import { Role } from "../types/account";
 import { Candidacy, DropOutReason } from "../types/candidacy";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
+import {
+  CanManageCandidacyDeps,
+  CanManageCandidacyParams,
+} from "./canManageCandidacy";
 
 interface DropOutCandidacyDeps {
   getCandidacyFromId: (
@@ -15,6 +20,13 @@ interface DropOutCandidacyDeps {
   dropOutCandidacy: (
     params: DropOutCandidacyParams
   ) => Promise<Either<string, Candidacy>>;
+  canManageCandidacy: (
+    deps: CanManageCandidacyDeps,
+    params: CanManageCandidacyParams
+  ) => Promise<Either<string, boolean>>;
+  getAccountFromKeycloakId: (
+    candidacyId: string
+  ) => Promise<Either<string, Account>>;
 }
 
 interface DropOutCandidacyParams {
@@ -22,22 +34,32 @@ interface DropOutCandidacyParams {
   dropOutReasonId: string;
   droppedOutAt: Date;
   otherReasonContent?: string;
+  keycloakId: string;
 }
 
 export const dropOutCandidacy =
   (deps: DropOutCandidacyDeps) => (params: DropOutCandidacyParams) => {
-    const hasRequiredRole =
-      deps.hasRole("manage_candidacy") || deps.hasRole("admin") || true;
-    if (!hasRequiredRole) {
-      return EitherAsync.liftEither(
-        Left(
-          `Vous n'êtes pas autorisé à déclarer l'abandon de cette candidature.`
+    const canManageCandidacy = EitherAsync.fromPromise(() =>
+      deps.canManageCandidacy(
+        {
+          getAccountFromKeycloakId: deps.getAccountFromKeycloakId,
+          getCandidacyFromId: deps.getCandidacyFromId,
+          hasRole: deps.hasRole,
+        },
+        { candidacyId: params.candidacyId, keycloakId: params.keycloakId }
+      )
+    )
+      .chain((isAllowed) =>
+        EitherAsync.liftEither(
+          isAllowed
+            ? Right(true)
+            : Left(`Vous n'êtes pas authorisé à traiter cette candidature.`)
         )
-      ).mapLeft(
-        (error: string) =>
+      )
+      .mapLeft(
+        (error) =>
           new FunctionalError(FunctionalCodeError.NOT_AUTHORIZED, error)
       );
-    }
 
     const checkIfCandidacyExists = EitherAsync.fromPromise(() =>
       deps.getCandidacyFromId(params.candidacyId)
@@ -94,6 +116,7 @@ export const dropOutCandidacy =
 
     return checkIfCandidacyExists
       .chain(checkIfCandidacyIsNotAbandonned)
+      .chain(() => canManageCandidacy)
       .chain(() => checkIfDropOutReasonExists)
       .chain(() => dropOutCandidacyResult);
   };
