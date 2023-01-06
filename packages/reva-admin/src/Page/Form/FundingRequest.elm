@@ -20,15 +20,6 @@ form maybeCertification formData ( candidacy, referential ) =
             candidacy.availableCompanions
                 |> Data.Form.Helper.toIdList
 
-        certificateField : ( String, Form.Element )
-        certificateField =
-            case maybeCertification of
-                Just certification ->
-                    ( "certification", Form.Info "" certification.label )
-
-                Nothing ->
-                    ( "certification", Form.Empty )
-
         maybeReadOnlyTraining : Form.Element -> Form.Element
         maybeReadOnlyTraining formElement =
             if
@@ -70,8 +61,8 @@ form maybeCertification formData ( candidacy, referential ) =
     in
     { elements =
         [ formHeading
-        , ( "selected-certification", Form.Section "Certification choisie par le candidat" )
-        , certificateField
+        , certificateSection
+        , certificateField maybeCertification
         , formAPSection
         , formDiagnosisTitle
         , diagnosisHourCount
@@ -151,9 +142,11 @@ form maybeCertification formData ( candidacy, referential ) =
 
 
 droppedOutForm : Maybe Certification -> Dict String String -> ( Candidacy, Referential ) -> Form
-droppedOutForm _ formData ( candidacy, referential ) =
+droppedOutForm maybeCertification formData ( candidacy, referential ) =
     { elements =
         [ formHeading
+        , certificateSection
+        , certificateField maybeCertification
         , formAPSection
         , formDiagnosisTitle
         , diagnosisHourCount
@@ -184,6 +177,21 @@ keys =
 
 formHeading =
     ( "heading", Form.Heading "2 - Parcours personnalisé" )
+
+
+certificateSection : ( String, Form.Element )
+certificateSection =
+    ( "selected-certification", Form.Section "Certification choisie par le candidat" )
+
+
+certificateField : Maybe Certification -> ( String, Form.Element )
+certificateField maybeCertification =
+    case maybeCertification of
+        Just certification ->
+            ( "certification", Form.Info "" certification.label )
+
+        Nothing ->
+            ( "certification", Form.Empty )
 
 
 formAPSection =
