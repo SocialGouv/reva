@@ -16,6 +16,7 @@ module Data.Candidacy exposing
     , isTrainingSent
     , lastStatus
     , sentDate
+    , statusToCategoryString
     , statusToProgressPosition
     , toCandidacySummary
     , toCategoryString
@@ -166,10 +167,10 @@ statusToDirectoryPosition status =
             2
 
         "PARCOURS_ENVOYE" ->
-            4
+            3
 
         "PARCOURS_CONFIRME" ->
-            3
+            4
 
         "DEMANDE_FINANCEMENT_ENVOYE" ->
             5

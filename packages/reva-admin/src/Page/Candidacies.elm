@@ -44,6 +44,7 @@ import Time
 import View
 import View.Candidacy
 import View.Candidacy.NavigationSteps as NavigationSteps
+import View.Candidacy.Filters
 import View.Candidacy.Tab exposing (Tab(..))
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
@@ -86,12 +87,12 @@ emptyFilters =
     { search = Nothing, status = Nothing }
 
 
-withStatusFilter : String -> Model -> ( Model, Cmd Msg )
+withStatusFilter : Maybe String -> Model -> ( Model, Cmd Msg )
 withStatusFilter status model =
     let
         withNewStatus : Filters -> Filters
         withNewStatus filters =
-            { filters | status = Just status }
+            { filters | status = status }
     in
     ( { model | filters = model.filters |> withNewStatus }, Cmd.none )
 
@@ -219,8 +220,10 @@ viewContent context model candidacies =
         [ class "grow flex h-full min-w-0 border-l-[73px] border-black bg-gray-100" ]
     <|
         case model.tab of
-            Empty _ ->
-                [ viewDirectoryPanel context candidacies ]
+            Empty filters ->
+                [ viewDirectoryPanel context candidacies
+                , View.Candidacy.Filters.view filters context
+                ]
 
             CandidateInfo candidacyId ->
                 [ viewForm "candidate" candidacyId
@@ -771,17 +774,8 @@ updateTab context tab model =
             ( newModel, Cmd.none )
 
         ( View.Candidacy.Tab.Empty filters, _ ) ->
-            let
-                unselectedModel =
-                    { newModel | selected = NotAsked }
-            in
-            case filters.status of
-                Just status ->
-                    unselectedModel
-                        |> withStatusFilter status
-
-                Nothing ->
-                    ( unselectedModel, Cmd.none )
+            { newModel | selected = NotAsked }
+                |> withStatusFilter filters.status
 
 
 withTakeOver : Context -> CandidacyId -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
