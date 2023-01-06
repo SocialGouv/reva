@@ -184,7 +184,6 @@ export const validateFundingRequest =
     }
 
     if (errors.length) {
-      console.log(errors);
       return Left(
         new FunctionalError(
           FunctionalCodeError.FUNDING_REQUEST_NOT_POSSIBLE,
