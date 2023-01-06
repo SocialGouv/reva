@@ -1,4 +1,4 @@
-import { FundingRequest } from "@prisma/client";
+import { FundingRequest, Organism } from "@prisma/client";
 import { format } from "date-fns";
 import pino from "pino";
 import { Left, Right } from "purify-ts";
@@ -133,6 +133,7 @@ export const createFundingRequest = async (params: {
       fundingRequest as FundingRequest & {
         basicSkills: any;
         mandatoryTrainings: any;
+        companion: Organism | null;
       }
     );
   } catch (e) {
