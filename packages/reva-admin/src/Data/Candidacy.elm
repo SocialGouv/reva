@@ -152,26 +152,26 @@ toDirectoryPosition candidacy =
 statusToDirectoryPosition : String -> Int
 statusToDirectoryPosition status =
     case status of
-        "VALIDATION" ->
+        "PROJET" ->
             1
 
-        "PROJET" ->
-            6
-
-        "ARCHIVE" ->
-            7
+        "VALIDATION" ->
+            2
 
         "PRISE_EN_CHARGE" ->
-            2
+            3
 
         "PARCOURS_ENVOYE" ->
             4
 
         "PARCOURS_CONFIRME" ->
-            3
+            5
 
         "DEMANDE_FINANCEMENT_ENVOYE" ->
-            5
+            6
+
+        "ARCHIVE" ->
+            7
 
         _ ->
             10
