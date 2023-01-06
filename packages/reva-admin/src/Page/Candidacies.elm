@@ -6,6 +6,7 @@ module Page.Candidacies exposing
     , update
     , updateTab
     , view
+    , withStatusFilter
     )
 
 import Admin.Object.CandidacySummary exposing (isDroppedOut)
@@ -68,12 +69,31 @@ type alias State =
 
 
 type alias Model =
-    { filter : Maybe String
+    { filters : Filters
     , form : Form.Model ( Candidacy, Referential )
     , selected : RemoteData String Candidacy
     , state : State
     , tab : Tab
     }
+
+
+type alias Filters =
+    { search : Maybe String, status : Maybe String }
+
+
+emptyFilters : Filters
+emptyFilters =
+    { search = Nothing, status = Nothing }
+
+
+withStatusFilter : String -> Model -> ( Model, Cmd Msg )
+withStatusFilter status model =
+    let
+        withNewStatus : Filters -> Filters
+        withNewStatus filters =
+            { filters | status = Just status }
+    in
+    ( { model | filters = model.filters |> withNewStatus }, Cmd.none )
 
 
 init : Context -> ( Model, Cmd Msg )
@@ -84,7 +104,7 @@ init context =
 
         defaultModel : Model
         defaultModel =
-            { filter = Nothing
+            { filters = emptyFilters
             , form = formModel
             , selected = NotAsked
             , state =
@@ -146,13 +166,19 @@ view context model =
             div [ class "text-red-500" ] [ text errors ]
 
         Success candidacies ->
-            case model.filter of
-                Nothing ->
-                    viewContent context model candidacies
+            let
+                filter f field l =
+                    case field model.filters of
+                        Just value ->
+                            List.filter (f value) l
 
-                Just filter ->
-                    List.filter (Candidacy.filterByWords filter) candidacies
-                        |> viewContent context model
+                        Nothing ->
+                            l
+            in
+            candidacies
+                |> filter Candidacy.filterByWords .search
+                |> filter Candidacy.filterByStatus .status
+                |> viewContent context model
 
 
 viewContent :
@@ -533,8 +559,12 @@ update context msg model =
             , Cmd.none
             )
 
-        UserAddedFilter filter ->
-            ( { model | filter = Just filter }, Cmd.none )
+        UserAddedFilter search ->
+            let
+                filters =
+                    model.filters
+            in
+            ( { model | filters = { filters | search = Just search } }, Cmd.none )
 
         UserDeletedCandidacy candidacy ->
             ( removeCandidacy model candidacy

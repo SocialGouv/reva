@@ -8,6 +8,7 @@ module Data.Candidacy exposing
     , candidacyIdFromString
     , candidacyIdToString
     , currentStatusPosition
+    , filterByStatus
     , filterByWords
     , isFundingRequestSent
     , isStatusEqual
@@ -305,3 +306,16 @@ filterByWords words candidacySummary =
                         False
     in
     matchAll (\word -> filterByWord word candidacySummary) (String.split " " words)
+
+
+filterByStatus : String -> CandidacySummary -> Bool
+filterByStatus lowerCaseStatus candidacySummary =
+    let
+        status =
+            String.toUpper lowerCaseStatus
+    in
+    if status == "ABANDON" then
+        candidacySummary.isDroppedOut
+
+    else
+        candidacySummary.lastStatus.status == status

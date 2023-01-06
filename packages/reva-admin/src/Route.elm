@@ -1,5 +1,6 @@
 module Route exposing
     ( Route(..)
+    , emptyFilters
     , fromUrl
     , href
     , toString
@@ -10,16 +11,26 @@ import Html.Styled exposing (Html)
 import Html.Styled.Attributes
 import Url
 import Url.Builder
-import Url.Parser as Parser exposing ((</>), Parser, map, oneOf, s, string, top)
+import Url.Parser as Parser exposing ((</>), (<?>), Parser, map, oneOf, s, string, top)
+import Url.Parser.Query as Query
 import View.Candidacy.Tab
+
+
+type alias Filters =
+    { status : Maybe String }
 
 
 type Route
     = Candidacy View.Candidacy.Tab.Tab
-    | Home
+    | Home Filters
     | Login
     | Logout
     | NotFound
+
+
+emptyFilters : Filters
+emptyFilters =
+    { status = Nothing }
 
 
 parser : String -> Parser (Route -> a) a
@@ -31,7 +42,7 @@ parser baseUrl =
     in
     s baseUrl
         </> oneOf
-                [ map Home top
+                [ map (Filters >> Home) (top <?> Query.string "status")
                 , map Login (s "auth" </> s "login")
                 , map Logout (s "auth" </> s "logout")
                 , map
@@ -110,8 +121,12 @@ toString baseUrl route =
         Candidacy (View.Candidacy.Tab.Admissibility candidacyId) ->
             Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "admissibility" ] []
 
-        Home ->
-            Url.Builder.absolute [ baseUrl, "" ] []
+        Home filters ->
+            Url.Builder.absolute [ baseUrl, "" ]
+                (filters.status
+                    |> Maybe.map (\status -> [ Url.Builder.string "status" status ])
+                    |> Maybe.withDefault []
+                )
 
         Login ->
             Url.Builder.absolute [ baseUrl, "auth", "login" ] []
