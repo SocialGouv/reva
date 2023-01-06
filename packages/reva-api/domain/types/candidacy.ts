@@ -27,7 +27,6 @@ export type CandidacyStatusValue =
   | "PARCOURS_ENVOYE"
   | "PARCOURS_CONFIRME"
   | "DEMANDE_FINANCEMENT_ENVOYE"
-  | "ABANDON"
   | "DOSSIER_PRO"
   | "CERTIFICATION";
 
