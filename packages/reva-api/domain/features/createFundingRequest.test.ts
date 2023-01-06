@@ -40,6 +40,9 @@ const defaultBacSupFragileCandidate: any = {
   },
 };
 
+const defaultCandidacy = {
+} as Candidacy
+
 const defaultValidFundingRequest: FundingRequestInput = {
   id: "1234567",
   candidacyId: "123",
@@ -80,13 +83,13 @@ const defaultValidFundingRequest: FundingRequestInput = {
 };
 
 const validateCandidateBacSupNonFragile = validateFundingRequest(
-  defaultBacSupNonFragileCandidate
+  defaultBacSupNonFragileCandidate, defaultCandidacy
 );
 const validateCandidateBacNonFragile = validateFundingRequest(
-  defaultBacNonFragileCandidate
+  defaultBacNonFragileCandidate, defaultCandidacy
 );
 const validateCandidateBacSupFragile = validateFundingRequest(
-  defaultBacSupFragileCandidate
+  defaultBacSupFragileCandidate, defaultCandidacy
 );
 
 describe("funding request", () => {

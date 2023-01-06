@@ -24,7 +24,7 @@ type alias FundingRequestInformations =
 
 
 type alias FundingRequestInput =
-    { companionId : String
+    { companionId : Maybe String
     , diagnosisHourCount : Int
     , diagnosisCost : Int
     , postExamHourCount : Int
@@ -78,17 +78,17 @@ keys =
 
 
 validate : ( Candidacy, Referential ) -> Dict String String -> Result String ()
-validate _ dict =
+validate ( candidacy, _ ) dict =
     let
         decode =
             Helper.decode keys dict
 
         companionValidation () =
-            case decode.maybe.string .companionId of
-                Nothing ->
+            case ( candidacy.dropOutDate, decode.maybe.string .companionId ) of
+                ( Nothing, Nothing ) ->
                     Err "Veuillez sélectionner un accompagnateur"
 
-                Just _ ->
+                _ ->
                     Ok ()
 
         confirmationValidation () =
@@ -109,7 +109,7 @@ fromDict basicSkillsIds mandatoryTrainingIds dict =
             Helper.decode keys dict
     in
     FundingRequestInput
-        (decode.string .companionId "")
+        (decode.maybe.string .companionId)
         (decode.int .diagnosisHourCount 0)
         (decode.int .diagnosisCost 0)
         (decode.int .postExamHourCount 0)
@@ -149,7 +149,7 @@ fundingRequest funding =
             Helper.toCheckedList funding.basicSkillsIds
 
         fundingList =
-            [ ( .companionId, string .companionId )
+            [ ( .companionId, string (.companionId >> Maybe.withDefault "") )
             , ( .diagnosisHourCount, int .diagnosisHourCount )
             , ( .diagnosisCost, int .diagnosisCost )
             , ( .postExamHourCount, int .postExamHourCount )

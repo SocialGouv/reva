@@ -38,7 +38,7 @@ export const getFundingRequest = async (params: { candidacyId: string }) => {
 export const createFundingRequest = async (params: {
   candidacyId: string;
   fundingRequest: {
-    companionId: string;
+    companionId?: string;
     diagnosisHourCount: number;
     diagnosisCost: number;
     postExamHourCount: number;

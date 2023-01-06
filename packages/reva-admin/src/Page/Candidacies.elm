@@ -8,6 +8,7 @@ module Page.Candidacies exposing
     , view
     )
 
+import Admin.Object.CandidacySummary exposing (isDroppedOut)
 import Api.Candidacy
 import Api.Form.Admissibility
 import Api.Form.Appointment
@@ -312,11 +313,19 @@ viewCandidacyArticle baseUrl content =
 viewDirectoryPanel : Context -> List CandidacySummary -> Html Msg
 viewDirectoryPanel context candidacies =
     let
+        haveBothSameStatusAndNotDroppedOut : CandidacySummary -> CandidacySummary -> Bool
+        haveBothSameStatusAndNotDroppedOut c1 c2 =
+            c1.lastStatus.status == c2.lastStatus.status && c1.isDroppedOut == False && c2.isDroppedOut == False
+
+        areBothDroppedOut : CandidacySummary -> CandidacySummary -> Bool
+        areBothDroppedOut c1 c2 =
+            c1.isDroppedOut == True && c2.isDroppedOut == True
+
         candidaciesByStatus : List ( CandidacySummary, List CandidacySummary )
         candidaciesByStatus =
             candidacies
                 |> List.sortBy (.sentAt >> Maybe.map Time.posixToMillis >> Maybe.withDefault 0 >> (*) -1)
-                |> List.Extra.gatherWith (\c1 c2 -> c1.lastStatus.status == c2.lastStatus.status)
+                |> List.Extra.gatherWith (\c1 c2 -> haveBothSameStatusAndNotDroppedOut c1 c2 || areBothDroppedOut c1 c2)
                 |> List.sortBy (\( c, _ ) -> Candidacy.toDirectoryPosition c)
     in
     aside
@@ -594,7 +603,12 @@ updateTab context tab model =
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
-                        { form = Page.Form.FundingRequest.form candidacy.certification
+                        { form =
+                            if candidacy.dropOutDate == Nothing then
+                                Page.Form.FundingRequest.form candidacy.certification
+
+                            else
+                                Page.Form.FundingRequest.droppedOutForm candidacy.certification
                         , onLoad = Api.Form.FundingRequest.get candidacyId
                         , onSave = Api.Form.FundingRequest.create candidacyId
                         , onRedirect =

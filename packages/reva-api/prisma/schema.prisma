@@ -415,8 +415,8 @@ model FundingRequest {
   id                          String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   candidacy                   Candidacy                     @relation(fields: [candidacyId], references: [id])
   candidacyId                 String                        @unique @map("candidacy_id") @db.Uuid
-  companion                   Organism                      @relation(fields: [companionId], references: [id], onDelete: Cascade)
-  companionId                 String                        @map("companion_id") @db.Uuid
+  companion                   Organism?                     @relation(fields: [companionId], references: [id], onDelete: Cascade)
+  companionId                 String?                       @map("companion_id") @db.Uuid
   diagnosisHourCount          Int                           @map("diagnosis_hour_count")
   diagnosisCost               Int                           @map("diagnosis_cost")
   postExamHourCount           Int                           @map("post_exam_hour_count")

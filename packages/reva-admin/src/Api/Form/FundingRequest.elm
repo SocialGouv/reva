@@ -17,6 +17,7 @@ import Data.Candidacy exposing (CandidacyId)
 import Data.Form.FundingRequest
 import Data.Referential
 import Dict exposing (Dict)
+import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
 
@@ -36,7 +37,12 @@ create candidacyId endpointGraphql token toMsg ( _, referential ) dict =
 
         fundingInput =
             Admin.InputObject.FundingRequestInput
-                (Uuid funding.companionId)
+                -- (
+                (Maybe.map
+                    (Uuid >> Present)
+                    funding.companionId
+                    |> Maybe.withDefault Absent
+                )
                 funding.diagnosisHourCount
                 funding.diagnosisCost
                 funding.postExamHourCount
