@@ -3,10 +3,10 @@ module View.Candidacy.Tab exposing (Tab(..))
 import Data.Candidacy exposing (CandidacyId)
 
 
-type Tab
+type Tab filters
     = CandidateInfo CandidacyId
     | DropOut CandidacyId
-    | Empty
+    | Empty filters
     | Meetings CandidacyId
     | Profil CandidacyId
     | Training CandidacyId

@@ -1,5 +1,6 @@
 module Route exposing
-    ( Route(..)
+    ( Filters
+    , Route(..)
     , emptyFilters
     , fromUrl
     , href
@@ -21,8 +22,8 @@ type alias Filters =
 
 
 type Route
-    = Candidacy View.Candidacy.Tab.Tab
-    | Home Filters
+    = Candidacy (View.Candidacy.Tab.Tab Filters)
+    | Home
     | Login
     | Logout
     | NotFound
@@ -36,18 +37,18 @@ emptyFilters =
 parser : String -> Parser (Route -> a) a
 parser baseUrl =
     let
-        candidacyTab : String -> (Data.Candidacy.CandidacyId -> View.Candidacy.Tab.Tab) -> Route
+        candidacyTab : String -> (Data.Candidacy.CandidacyId -> View.Candidacy.Tab.Tab Filters) -> Route
         candidacyTab rawId tab =
             Candidacy <| tab <| candidacyIdFromString rawId
     in
     s baseUrl
         </> oneOf
-                [ map (Filters >> Home) (top <?> Query.string "status")
+                [ map Home top
                 , map Login (s "auth" </> s "login")
                 , map Logout (s "auth" </> s "logout")
                 , map
-                    (Candidacy View.Candidacy.Tab.Empty)
-                    (s "candidacies")
+                    (Filters >> View.Candidacy.Tab.Empty >> Candidacy)
+                    (s "candidacies" <?> Query.string "status")
                 , map
                     (\id -> candidacyTab id View.Candidacy.Tab.Profil)
                     (s "candidacies" </> string)
@@ -94,8 +95,12 @@ href baseUrl route =
 toString : String -> Route -> String
 toString baseUrl route =
     case route of
-        Candidacy View.Candidacy.Tab.Empty ->
-            Url.Builder.absolute [ baseUrl, "candidacies" ] []
+        Candidacy (View.Candidacy.Tab.Empty filters) ->
+            Url.Builder.absolute [ baseUrl, "candidacies" ]
+                (filters.status
+                    |> Maybe.map (\status -> [ Url.Builder.string "status" status ])
+                    |> Maybe.withDefault []
+                )
 
         Candidacy (View.Candidacy.Tab.CandidateInfo candidacyId) ->
             Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "candidate" ] []
@@ -121,12 +126,8 @@ toString baseUrl route =
         Candidacy (View.Candidacy.Tab.Admissibility candidacyId) ->
             Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "admissibility" ] []
 
-        Home filters ->
-            Url.Builder.absolute [ baseUrl, "" ]
-                (filters.status
-                    |> Maybe.map (\status -> [ Url.Builder.string "status" status ])
-                    |> Maybe.withDefault []
-                )
+        Home ->
+            Url.Builder.absolute [ baseUrl, "" ] []
 
         Login ->
             Url.Builder.absolute [ baseUrl, "auth", "login" ] []

@@ -131,17 +131,7 @@ changeRouteTo context route model =
             ( model, Cmd.none )
     in
     case ( route, model.page ) of
-        ( Home filters, Candidacies candidaciesModel ) ->
-            case filters.status of
-                Just status ->
-                    candidaciesModel
-                        |> Candidacies.withStatusFilter status
-                        |> updateWith Candidacies GotCandidaciesMsg model
-
-                Nothing ->
-                    noChange
-
-        ( Home _, _ ) ->
+        ( Home, _ ) ->
             noChange
 
         ( Candidacy tab, Candidacies candidaciesModel ) ->
@@ -206,7 +196,7 @@ update msg model =
                 redirectRoute =
                     case route of
                         Login ->
-                            Home Route.emptyFilters
+                            Home
 
                         _ ->
                             route

@@ -73,7 +73,7 @@ type alias Model =
     , form : Form.Model ( Candidacy, Referential )
     , selected : RemoteData String Candidacy
     , state : State
-    , tab : Tab
+    , tab : Tab Route.Filters
     }
 
 
@@ -111,7 +111,7 @@ init context =
                 { candidacies = RemoteData.NotAsked
                 , referential = RemoteData.NotAsked
                 }
-            , tab = View.Candidacy.Tab.Empty
+            , tab = View.Candidacy.Tab.Empty Route.emptyFilters
             }
 
         defaultCmd =
@@ -219,7 +219,7 @@ viewContent context model candidacies =
         [ class "grow flex h-full min-w-0 border-l-[73px] border-black bg-gray-100" ]
     <|
         case model.tab of
-            Empty ->
+            Empty _ ->
                 [ viewDirectoryPanel context candidacies ]
 
             CandidateInfo candidacyId ->
@@ -324,7 +324,7 @@ viewCandidacyArticle : String -> List (Html msg) -> Html msg
 viewCandidacyArticle baseUrl content =
     viewMain "profile"
         [ a
-            [ Route.href baseUrl (Route.Candidacy View.Candidacy.Tab.Empty)
+            [ Route.href baseUrl (Route.Candidacy (View.Candidacy.Tab.Empty Route.emptyFilters))
             , class "flex items-center text-gray-800 p-6"
             ]
             [ span [ class "text-3xl mr-4" ] [ text "← " ]
@@ -577,7 +577,7 @@ update context msg model =
             )
 
 
-updateTab : Context -> Tab -> Model -> ( Model, Cmd Msg )
+updateTab : Context -> Tab Route.Filters -> Model -> ( Model, Cmd Msg )
 updateTab context tab model =
     let
         newModel =
@@ -770,8 +770,18 @@ updateTab context tab model =
         ( View.Candidacy.Tab.Admissibility _, _ ) ->
             ( newModel, Cmd.none )
 
-        ( View.Candidacy.Tab.Empty, _ ) ->
-            ( { newModel | selected = NotAsked }, Cmd.none )
+        ( View.Candidacy.Tab.Empty filters, _ ) ->
+            let
+                unselectedModel =
+                    { newModel | selected = NotAsked }
+            in
+            case filters.status of
+                Just status ->
+                    unselectedModel
+                        |> withStatusFilter status
+
+                Nothing ->
+                    ( unselectedModel, Cmd.none )
 
 
 withTakeOver : Context -> CandidacyId -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
