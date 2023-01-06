@@ -16,7 +16,7 @@ import Data.Context exposing (Context)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
 import Html.Styled as Html exposing (Html, button, dd, div, dt, fieldset, input, label, legend, li, option, p, select, text, textarea, ul)
-import Html.Styled.Attributes exposing (checked, class, classList, disabled, for, id, name, required, selected, type_, value)
+import Html.Styled.Attributes exposing (checked, class, classList, disabled, for, id, name, placeholder, required, selected, type_, value)
 import Html.Styled.Events exposing (onCheck, onInput, onSubmit)
 import RemoteData exposing (RemoteData(..))
 import String exposing (String)
@@ -48,7 +48,7 @@ type Element
     | SelectOther String String String
     | Section String
     | Title String
-    | Textarea String
+    | Textarea String (Maybe String)
     | Radio String
     | RadioList String (List ( String, String ))
 
@@ -261,7 +261,8 @@ viewEditableElement formData ( elementId, element ) =
                 )
                 []
 
-        textareaView =
+        textareaView : Maybe String -> Html (Msg referential)
+        textareaView placeholderValue =
             textarea
                 [ name elementId
                 , id elementId
@@ -269,6 +270,7 @@ viewEditableElement formData ( elementId, element ) =
                 , class "w-[520px] h-[150px] p-8 mb-8"
                 , inputStyle
                 , value dataOrDefault
+                , placeholderValue |> Maybe.map placeholder |> Maybe.withDefault (class "")
                 ]
                 []
 
@@ -331,8 +333,8 @@ viewEditableElement formData ( elementId, element ) =
             inputView "number" "w-40"
                 |> withLabel label
 
-        Textarea label ->
-            textareaView
+        Textarea label placeholder ->
+            textareaView placeholder
                 |> withLabel label
 
         Info label value ->
@@ -367,7 +369,7 @@ viewEditableElement formData ( elementId, element ) =
             case Dict.get selectId formData of
                 Just selectedValue ->
                     if selectedValue == otherValue then
-                        textareaView
+                        textareaView Nothing
                             |> withLabel label
 
                     else
@@ -478,7 +480,7 @@ viewReadOnlyElement formData ( elementId, element ) =
         Number label ->
             div [ class "w-40" ] [ dataView dataOrDefault ] |> withTerm label
 
-        Textarea label ->
+        Textarea label _ ->
             [ div [ class "w-[620px]" ] <| defaultView label ]
 
         ReadOnlyElement readOnlyElement ->
