@@ -39,7 +39,12 @@ const candidacy1: Candidacy = {
 const candidacy2: Candidacy = {
   ...blankCandidacy,
   id: "def345",
-  candidacyStatuses: [{ createdAt: new Date(), id: "124", status: "ABANDON" }],
+  candidacyStatuses: [{ createdAt: new Date(), id: "124", status: "COOL" }],
+  candidacyDropOut: {
+    dropOutReason: { id: "abc123", label: "got cold" },
+    status: "PARCOURS_ENVOYE",
+    droppedOutAt: new Date(),
+  },
   createdAt: new Date(),
 };
 
@@ -62,7 +67,7 @@ const dropOutReasonWithRightRole = dropOutCandidacy({
       Right({
         ...(getCandidacyById(params.candidacyId).extract() as Candidacy),
         candidacyStatuses: [
-          { id: "laal123", createdAt: new Date(), status: "ABANDON" },
+          { id: "laal123", createdAt: new Date(), status: "" },
         ],
         candidacyDropOut: {
           droppedOutAt: new Date(),
@@ -107,18 +112,6 @@ describe("drop out candidacy", () => {
     expect((result.extract() as FunctionalError).code).toEqual(
       FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON
     );
-  });
-
-  test("should return updated status", async () => {
-    const result = await dropOutReasonWithRightRole({
-      candidacyId: candidacy1.id,
-      droppedOutAt: new Date(),
-      dropOutReasonId: dropOutReasonTable[0].id,
-    });
-    expect(result.isRight()).toBe(true);
-    const candidacy = result.extract() as Candidacy;
-    expect(candidacy.candidacyStatuses.length).toEqual(1);
-    expect(candidacy.candidacyStatuses[0].status).toBe("ABANDON");
   });
 
   test("should return candidacy with drop out reason", async () => {
