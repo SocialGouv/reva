@@ -81,7 +81,7 @@ export const submitTraining =
       )
       .mapLeft(
         (error: string) =>
-          new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, error)
+          new FunctionalError(FunctionalCodeError.NOT_AUTHORIZED, error)
       );
 
     const existsCandidacyInValidation = EitherAsync.fromPromise(() =>
