@@ -74,7 +74,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             className="mb-6 text-red-500 font-semibold"
           >
             Votre lien d'accès est arrivé à expiration. Veuillez soumettre à
-            nouvau ce formulaire.
+            nouveau ce formulaire.
           </p>
         ) : (
           <>
