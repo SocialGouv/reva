@@ -13,7 +13,7 @@ import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
 import Api.Token exposing (Token)
-import Data.Candidacy exposing (CandidacyId)
+import Data.Candidacy exposing (Candidacy, CandidacyId)
 import Data.Form.FundingRequest
 import Data.Referential
 import Dict exposing (Dict)
@@ -30,7 +30,7 @@ create :
     -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
     -> Dict String String
     -> Cmd msg
-create candidacyId endpointGraphql token toMsg ( _, referential ) dict =
+create candidacyId endpointGraphql token toMsg ( candidacy, referential ) dict =
     let
         funding =
             Data.Form.FundingRequest.fromDict referential.basicSkills referential.mandatoryTrainings dict
@@ -75,29 +75,41 @@ create candidacyId endpointGraphql token toMsg ( _, referential ) dict =
 
 get :
     CandidacyId
+    -> Candidacy
     -> String
     -> Token
     -> (RemoteData String (Dict String String) -> msg)
     -> Cmd msg
-get candidacyId endpointGraphql token toMsg =
+get candidacyId candidacy endpointGraphql token toMsg =
     let
         fundingInfoRequiredArg =
             Query.CandidateGetFundingRequestRequiredArguments (Uuid <| Data.Candidacy.candidacyIdToString candidacyId)
 
         trainingFormSelection =
-            SelectionSet.succeed Data.Form.FundingRequest.TrainingForm
-                |> with
-                    (Admin.Object.TrainingForm.mandatoryTrainings
-                        (SelectionSet.succeed (\(Id id) -> id) |> with Admin.Object.Training.id)
-                    )
-                |> with
-                    (Admin.Object.TrainingForm.basicSkills
-                        (SelectionSet.succeed (\(Uuid id) -> id) |> with Admin.Object.BasicSkill.id)
-                    )
-                |> with Admin.Object.TrainingForm.certificateSkills
-                |> with Admin.Object.TrainingForm.otherTraining
-                |> with Admin.Object.TrainingForm.individualHourCount
-                |> with Admin.Object.TrainingForm.collectiveHourCount
+            if candidacy.dropOutDate == Nothing then
+                SelectionSet.succeed Data.Form.FundingRequest.TrainingForm
+                    |> with
+                        (Admin.Object.TrainingForm.mandatoryTrainings
+                            (SelectionSet.succeed (\(Id id) -> id) |> with Admin.Object.Training.id)
+                        )
+                    |> with
+                        (Admin.Object.TrainingForm.basicSkills
+                            (SelectionSet.succeed (\(Uuid id) -> id) |> with Admin.Object.BasicSkill.id)
+                        )
+                    |> with Admin.Object.TrainingForm.certificateSkills
+                    |> with Admin.Object.TrainingForm.otherTraining
+                    |> with Admin.Object.TrainingForm.individualHourCount
+                    |> with Admin.Object.TrainingForm.collectiveHourCount
+
+            else
+                SelectionSet.succeed
+                    { mandatoryTrainingIds = []
+                    , basicSkillsIds = []
+                    , certificateSkills = ""
+                    , otherTraining = ""
+                    , individualHourCount = 0
+                    , collectiveHourCount = 0
+                    }
     in
     SelectionSet.succeed Data.Form.FundingRequest.fundingRequestInformations
         |> with (Admin.Object.FundingRequestInformations.fundingRequest selection)
