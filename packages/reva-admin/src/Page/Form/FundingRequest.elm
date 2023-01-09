@@ -150,13 +150,18 @@ droppedOutForm maybeCertification formData ( candidacy, referential ) =
 
 commonFields : Maybe Certification -> List ( String, Form.Element )
 commonFields maybeCertification =
-    [ formHeading
-    , certificateSection
-    , certificateField maybeCertification
-    , formAPSection
-    , formDiagnosisTitle
-    , diagnosisHourCount
-    , diagnosisCost
+    [ ( "heading", Form.Heading "2 - Parcours personnalisé" )
+    , ( "selected-certification", Form.Section "Certification choisie par le candidat" )
+    , case maybeCertification of
+        Just certification ->
+            ( "certification", Form.Info "" certification.label )
+
+        Nothing ->
+            ( "certification", Form.Empty )
+    , ( "organism", Form.Section "Accompagnement architecte de parcours" )
+    , ( "diagnosis", Form.Title "Entretien(s) de faisabilité" )
+    , ( keys.diagnosisHourCount, Form.Number "Nombre d'heures" )
+    , ( keys.diagnosisCost, Form.Number "Coût horaire" )
     ]
 
 
@@ -174,46 +179,6 @@ title formData =
 
 keys =
     Data.Form.FundingRequest.keys
-
-
-formHeading : ( String, Form.Element )
-formHeading =
-    ( "heading", Form.Heading "2 - Parcours personnalisé" )
-
-
-certificateSection : ( String, Form.Element )
-certificateSection =
-    ( "selected-certification", Form.Section "Certification choisie par le candidat" )
-
-
-certificateField : Maybe Certification -> ( String, Form.Element )
-certificateField maybeCertification =
-    case maybeCertification of
-        Just certification ->
-            ( "certification", Form.Info "" certification.label )
-
-        Nothing ->
-            ( "certification", Form.Empty )
-
-
-formAPSection : ( String, Form.Element )
-formAPSection =
-    ( "organism", Form.Section "Accompagnement architecte de parcours" )
-
-
-formDiagnosisTitle : ( String, Form.Element )
-formDiagnosisTitle =
-    ( "diagnosis", Form.Title "Entretien(s) de faisabilité" )
-
-
-diagnosisHourCount : ( String, Form.Element )
-diagnosisHourCount =
-    ( keys.diagnosisHourCount, Form.Number "Nombre d'heures" )
-
-
-diagnosisCost : ( String, Form.Element )
-diagnosisCost =
-    ( keys.diagnosisCost, Form.Number "Coût horaire" )
 
 
 totalSection : ( String, Form.Element )
