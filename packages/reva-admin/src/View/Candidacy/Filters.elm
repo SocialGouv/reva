@@ -39,8 +39,6 @@ view candidacies filters context =
             , "PARCOURS_ENVOYE"
             , "PARCOURS_CONFIRME"
             , "DEMANDE_FINANCEMENT_ENVOYE"
-            , "PROJET"
-            , "ARCHIVE"
             ]
 
         viewFilter : String -> Html msg
@@ -53,16 +51,22 @@ view candidacies filters context =
                 []
                 [ link (Just loweredStatus) (Candidacy.statusToCategoryString status) ]
     in
-    div [ class "m-6 text-sm text-gray-600" ]
+    div [ class "mx-10 my-8 text-sm text-gray-600" ]
         [ ul
-            [ class "border-b pb-4 mb-4" ]
+            [ class "font-semibold" ]
             [ li
                 []
                 [ link Nothing "Toutes les candidatures actives"
+                , li
+                    []
+                    [ ul [ class "border-l ml-3 pl-2 font-normal" ] <|
+                        List.map viewFilter statuses
+                    ]
                 , link (Just "abandon") "Toutes les candidatures abandonnées"
+                , link (Just "archive") "Toutes les candidatures archivées"
+                , link (Just "projet") "Tous les projets en cours d'édition"
                 ]
             ]
-        , ul [] <| List.map viewFilter statuses
         ]
 
 
@@ -73,8 +77,8 @@ viewLink context filters count maybeStatus label =
             filters.status == maybeStatus
     in
     a
-        [ class "block group py-2 pl-3 pr-2"
-        , class "flex justify-between transition"
+        [ class "block group h-10 my-2 pl-3 pr-2"
+        , class "flex items-center justify-between transition"
         , classList
             [ ( "bg-gray-200 text-gray-900"
               , isSelected
