@@ -53,7 +53,7 @@ dropOutView baseUrl candidacy dropOutDate =
     let
         dropOutInfo =
             [ h3 [] [ text "Abandon du candidat confirmé" ]
-            , span [ class "text-sm text-gray-700" ] [ text <| View.Date.toString dropOutDate ]
+            , span [ class "text-sm text-gray-700" ] [ text <| View.Date.toFullFormat dropOutDate ]
             ]
 
         dropOutLink =

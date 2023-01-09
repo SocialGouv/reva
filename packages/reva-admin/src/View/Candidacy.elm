@@ -2,7 +2,7 @@ module View.Candidacy exposing (view, viewSentAt)
 
 import Admin.Enum.Duration exposing (Duration(..))
 import Api.Token
-import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, CandidacyId)
+import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, CandidacyId, DateWithLabels)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department, Referential)
@@ -12,7 +12,6 @@ import Html.Styled.Attributes exposing (attribute, class, classList, href, type_
 import Html.Styled.Events exposing (onClick)
 import RemoteData exposing (RemoteData(..))
 import Route
-import Time exposing (Posix)
 import View.Candidacy.Tab exposing (Tab(..))
 import View.Date
 import View.Helpers exposing (dataTest)
@@ -194,7 +193,7 @@ viewExperience : CandidacyExperience -> Html msg
 viewExperience experience =
     div [ class "rounded-lg px-5 py-4 bg-gray-100 text-base leading-tight" ]
         [ h4 [ class "font-semibold mb-2" ] [ text experience.title ]
-        , p [ class "my-4" ] [ text "Démarrée en ", text <| View.Date.toString experience.startedAt ]
+        , p [ class "my-4" ] [ text "Démarrée en ", text <| View.Date.toFullFormat experience.startedAt ]
         , p [ class "font-bold my-4" ] [ text "Durée d'expérience ", viewDuration experience.duration ]
         , p [ class "italic" ] [ text "\"", text experience.description, text "\"" ]
         ]
@@ -244,7 +243,7 @@ viewExperiences experiences =
         ]
 
 
-viewSentAt : Maybe Posix -> Html msg
+viewSentAt : Maybe DateWithLabels -> Html msg
 viewSentAt sentAt =
     div
         []
@@ -252,7 +251,7 @@ viewSentAt sentAt =
         case sentAt of
             Just date ->
                 [ text "Candidature envoyée le "
-                , text <| View.Date.toString date
+                , text date.fullFormat
                 ]
 
             Nothing ->

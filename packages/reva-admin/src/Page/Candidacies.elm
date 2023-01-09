@@ -243,7 +243,7 @@ viewContent context model candidacies filteredCandidacies =
                     candidaciesByStatus : List ( CandidacySummary, List CandidacySummary )
                     candidaciesByStatus =
                         filteredCandidacies
-                            |> List.sortBy (.sentAt >> Maybe.map Time.posixToMillis >> Maybe.withDefault 0 >> (*) -1)
+                            |> List.sortBy (.sentAt >> Maybe.map .posix >> Maybe.map Time.posixToMillis >> Maybe.withDefault 0 >> (*) -1)
                             |> List.Extra.gatherWith (\c1 c2 -> haveBothSameStatusAndNotDroppedOut c1 c2 || areBothDroppedOut c1 c2)
                             |> List.sortBy (\( c, _ ) -> Candidacy.toDirectoryPosition c)
                 in
@@ -380,10 +380,10 @@ viewDirectoryPanel context candidaciesByStatus =
             , p
                 [ class "text-base text-gray-500" ]
                 [ if Api.Token.isAdmin context.token then
-                    text "Recherchez par architecte de parcours, certification et information de contact"
+                    text "Recherchez par architecte de parcours, date de candidature, certification et information de contact"
 
                   else
-                    text "Recherchez par certification et information de contact"
+                    text "Recherchez par date de candidature, certification et information de contact"
                 ]
             , div
                 [ class "my-2 flex space-x-4", action "#" ]
