@@ -59,7 +59,9 @@ view candidacies filters context =
                 [ link Nothing "Toutes les candidatures actives"
                 , li
                     []
-                    [ ul [ class "border-l ml-3 pl-2 font-normal" ] <|
+                    [ ul
+                        [ class "border-l ml-3 pl-2 font-normal" ]
+                      <|
                         List.map viewFilter statuses
                     ]
                 , link (Just "abandon") "Toutes les candidatures abandonnées"
@@ -99,8 +101,11 @@ viewCount isSelected count =
         [ class "flex items-center justify-center"
         , class "ml-8"
         , class "rounded-full px-2 h-6"
-        , class "transition bg-gray-200 group-hover:bg-gray-300"
-        , classList [ ( "bg-gray-300 text-gray-600", isSelected ), ( "bg-gray-200 text-gray-500", not isSelected ) ]
+        , class "transition group-hover:bg-gray-300"
         , class "text-xs font-semibold"
+        , classList
+            [ ( "bg-gray-300 text-gray-600", isSelected )
+            , ( "bg-gray-200 text-gray-500", not isSelected )
+            ]
         ]
         [ text <| String.fromInt count ]
