@@ -1135,9 +1135,7 @@ export const mainMachine =
           },
           isProjectDroppedOut: (_context, event) => {
             const typedEvent = event as DoneInvokeEvent<any>;
-            const isDroppedOut =
-              typedEvent.data.candidacy?.candidacyStatus === "ABANDON";
-            return !!isDroppedOut;
+            return Boolean(typedEvent.data.candidacy?.candidacyDropOut);
           },
           isTokenInvalid: (_context, event) => {
             const typedEvent = event as DoneInvokeEvent<any>;

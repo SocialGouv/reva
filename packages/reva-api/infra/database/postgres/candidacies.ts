@@ -930,18 +930,21 @@ export const dropOutCandidacy = async ({
   otherReasonContent,
 }: DropOutCandidacyParams): Promise<Either<string, domain.Candidacy>> => {
   let candidacyStatus: CandidacyStatus;
-
+  let candidacy;
   try {
-    const candidacy = await prismaClient.candidacy.findUnique({
+    candidacy = await prismaClient.candidacy.findUnique({
       where: {
         id: candidacyId,
       },
       include: {
         candidacyStatuses: {
           where: {
-            isActive: true
-          }
+            isActive: true,
+          },
         },
+        department: true,
+        experiences: true,
+        goals: true,
       },
     });
     if (candidacy === null) {
@@ -953,53 +956,16 @@ export const dropOutCandidacy = async ({
   }
 
   try {
-    const [, , newCandidacy] = await prismaClient.$transaction([
-      prismaClient.candidacyDropOut.create({
-        data: {
-          candidacyId,
-          droppedOutAt,
-          status: candidacyStatus,
-          dropOutReasonId,
-          otherReasonContent,
-        },
-      }),
-      prismaClient.candidaciesStatus.updateMany({
-        where: {
-          candidacyId: candidacyId,
-        },
-        data: {
-          isActive: false,
-        },
-      }),
-      prismaClient.candidacy.update({
-        where: {
-          id: candidacyId,
-        },
-        data: {
-          candidacyStatuses: {
-            create: {
-              status: CandidacyStatus.ABANDON,
-              isActive: true,
-            },
-          },
-        },
-        include: {
-          candidacyDropOut: {
-            include: {
-              dropOutReason: true,
-            },
-          },
-          candidacyStatuses: true,
-          department: true,
-          experiences: true,
-          goals: true,
-        },
-      }),
-    ]);
-    return Right({
-      ...newCandidacy,
-      experiences: toDomainExperiences(newCandidacy.experiences),
+    await prismaClient.candidacyDropOut.create({
+      data: {
+        candidacyId,
+        droppedOutAt,
+        status: candidacyStatus,
+        dropOutReasonId,
+        otherReasonContent,
+      },
     });
+    return Right(candidacy);
   } catch (error) {
     return Left(
       `error on drop out candidacy ${candidacyId}: ${(error as Error).message}`

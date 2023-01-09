@@ -56,13 +56,12 @@
             },
             {
               "status": "PRISE_EN_CHARGE",
-              "isActive": false
-            },
-            {
-              "status": "ABANDON",
               "isActive": true
             }
           ],
+          "candidacyDropOut": {
+            "droppedOutAt": 1580428800000
+          },
           "appointmentCount": 0,
           "certificateSkills": "Blocs de compétences métier",
           "otherTraining": null,
