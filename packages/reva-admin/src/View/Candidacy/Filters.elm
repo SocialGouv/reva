@@ -29,6 +29,9 @@ view candidacies filters context =
                     candidacies
                         |> List.Extra.count (\c -> c.lastStatus.status == String.toUpper status)
 
+        link maybeStatus label =
+            viewLink context filters (count maybeStatus) maybeStatus label
+
         statuses : List String
         statuses =
             [ "VALIDATION"
@@ -40,24 +43,6 @@ view candidacies filters context =
             , "ARCHIVE"
             ]
 
-        viewLink : Maybe String -> String -> Html msg
-        viewLink maybeStatus label =
-            a
-                [ class "block py-2 px-3"
-                , class "flex justify-between"
-                , classList
-                    [ ( "bg-gray-200 text-gray-900"
-                      , filters.status == maybeStatus
-                      )
-                    , ( "hover:text-gray-900"
-                      , filters.status /= maybeStatus
-                      )
-                    ]
-                , Route.href context.baseUrl <|
-                    Route.Candidacy (View.Candidacy.Tab.Empty { status = maybeStatus })
-                ]
-                [ span [] [ text label ], viewCount (count maybeStatus) ]
-
         viewFilter : String -> Html msg
         viewFilter status =
             let
@@ -66,27 +51,52 @@ view candidacies filters context =
             in
             li
                 []
-                [ viewLink (Just loweredStatus) (Candidacy.statusToCategoryString status) ]
+                [ link (Just loweredStatus) (Candidacy.statusToCategoryString status) ]
     in
     div [ class "m-6 text-sm text-gray-600" ]
         [ ul
             [ class "border-b pb-4 mb-4" ]
             [ li
                 []
-                [ viewLink Nothing "Toutes les candidatures actives"
-                , viewLink (Just "abandon") "Toutes les candidatures abandonnées"
+                [ link Nothing "Toutes les candidatures actives"
+                , link (Just "abandon") "Toutes les candidatures abandonnées"
                 ]
             ]
         , ul [] <| List.map viewFilter statuses
         ]
 
 
-viewCount : Int -> Html msg
-viewCount count =
+viewLink : Context -> Route.Filters -> Int -> Maybe String -> String -> Html msg
+viewLink context filters count maybeStatus label =
+    let
+        isSelected =
+            filters.status == maybeStatus
+    in
+    a
+        [ class "block group py-2 pl-3 pr-2"
+        , class "flex justify-between transition"
+        , classList
+            [ ( "bg-gray-200 text-gray-900"
+              , isSelected
+              )
+            , ( "hover:text-gray-900"
+              , not isSelected
+              )
+            ]
+        , Route.href context.baseUrl <|
+            Route.Candidacy (View.Candidacy.Tab.Empty { status = maybeStatus })
+        ]
+        [ span [] [ text label ], viewCount isSelected count ]
+
+
+viewCount : Bool -> Int -> Html msg
+viewCount isSelected count =
     div
         [ class "flex items-center justify-center"
         , class "ml-8"
-        , class "rounded-full px-2 h-6 bg-gray-300"
-        , class "text-xs font-semibold text-gray-600"
+        , class "rounded-full px-2 h-6"
+        , class "transition bg-gray-200 group-hover:bg-gray-300"
+        , classList [ ( "bg-gray-300 text-gray-600", isSelected ), ( "bg-gray-200 text-gray-500", not isSelected ) ]
+        , class "text-xs font-semibold"
         ]
         [ text <| String.fromInt count ]
