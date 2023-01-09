@@ -135,7 +135,8 @@ changeRouteTo context route model =
             noChange
 
         ( Candidacy tab, Candidacies candidaciesModel ) ->
-            Candidacies.resetSelected candidaciesModel
+            candidaciesModel
+                |> Candidacies.resetSelected
                 |> Candidacies.updateTab context tab
                 |> updateWith Candidacies GotCandidaciesMsg model
 

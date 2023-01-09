@@ -8,13 +8,16 @@ module Data.Candidacy exposing
     , candidacyIdFromString
     , candidacyIdToString
     , currentStatusPosition
+    , filterByStatus
     , filterByWords
+    , isActive
     , isFundingRequestSent
     , isStatusEqual
     , isStatusEqualOrAbove
     , isTrainingSent
     , lastStatus
     , sentDate
+    , statusToCategoryString
     , statusToProgressPosition
     , toCandidacySummary
     , toCategoryString
@@ -165,10 +168,10 @@ statusToDirectoryPosition status =
             2
 
         "PARCOURS_ENVOYE" ->
-            4
+            3
 
         "PARCOURS_CONFIRME" ->
-            3
+            4
 
         "DEMANDE_FINANCEMENT_ENVOYE" ->
             5
@@ -305,3 +308,23 @@ filterByWords words candidacySummary =
                         False
     in
     matchAll (\word -> filterByWord word candidacySummary) (String.split " " words)
+
+
+filterByStatus : String -> CandidacySummary -> Bool
+filterByStatus lowerCaseStatus candidacySummary =
+    let
+        status =
+            String.toUpper lowerCaseStatus
+    in
+    if status == "ABANDON" then
+        candidacySummary.isDroppedOut
+
+    else
+        candidacySummary.lastStatus.status == status
+
+
+isActive : CandidacySummary -> Bool
+isActive candidacySummary =
+    not <|
+        List.member candidacySummary.lastStatus.status [ "ARCHIVE", "PROJET" ]
+            || candidacySummary.isDroppedOut

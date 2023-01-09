@@ -6,6 +6,7 @@ module Page.Candidacies exposing
     , update
     , updateTab
     , view
+    , withStatusFilter
     )
 
 import Admin.Object.CandidacySummary exposing (isDroppedOut)
@@ -42,6 +43,7 @@ import String exposing (String)
 import Time
 import View
 import View.Candidacy
+import View.Candidacy.Filters
 import View.Candidacy.NavigationSteps as NavigationSteps
 import View.Candidacy.Tab exposing (Tab(..))
 import View.Helpers exposing (dataTest)
@@ -68,12 +70,31 @@ type alias State =
 
 
 type alias Model =
-    { filter : Maybe String
+    { filters : Filters
     , form : Form.Model ( Candidacy, Referential )
     , selected : RemoteData String Candidacy
     , state : State
-    , tab : Tab
+    , tab : Tab Route.Filters
     }
+
+
+type alias Filters =
+    { search : Maybe String, status : Maybe String }
+
+
+emptyFilters : Filters
+emptyFilters =
+    { search = Nothing, status = Nothing }
+
+
+withStatusFilter : Maybe String -> Model -> ( Model, Cmd Msg )
+withStatusFilter status model =
+    let
+        withNewStatus : Filters -> Filters
+        withNewStatus filters =
+            { filters | status = status }
+    in
+    ( { model | filters = model.filters |> withNewStatus }, Cmd.none )
 
 
 init : Context -> ( Model, Cmd Msg )
@@ -84,14 +105,14 @@ init context =
 
         defaultModel : Model
         defaultModel =
-            { filter = Nothing
+            { filters = emptyFilters
             , form = formModel
             , selected = NotAsked
             , state =
                 { candidacies = RemoteData.NotAsked
                 , referential = RemoteData.NotAsked
                 }
-            , tab = View.Candidacy.Tab.Empty
+            , tab = View.Candidacy.Tab.Empty Route.emptyFilters
             }
 
         defaultCmd =
@@ -146,21 +167,37 @@ view context model =
             div [ class "text-red-500" ] [ text errors ]
 
         Success candidacies ->
-            case model.filter of
-                Nothing ->
-                    viewContent context model candidacies
+            let
+                preFilteredCandidacies =
+                    case model.filters.status of
+                        Just _ ->
+                            candidacies
 
-                Just filter ->
-                    List.filter (Candidacy.filterByWords filter) candidacies
-                        |> viewContent context model
+                        Nothing ->
+                            -- When not filter is selected, we display only active candidacy
+                            candidacies |> List.filter Candidacy.isActive
+
+                filter f field l =
+                    case field model.filters of
+                        Just value ->
+                            List.filter (f value) l
+
+                        Nothing ->
+                            l
+            in
+            preFilteredCandidacies
+                |> filter Candidacy.filterByWords .search
+                |> filter Candidacy.filterByStatus .status
+                |> viewContent context model candidacies
 
 
 viewContent :
     Context
     -> Model
     -> List CandidacySummary
+    -> List CandidacySummary
     -> Html Msg
-viewContent context model candidacies =
+viewContent context model candidacies filteredCandidacies =
     let
         viewForm name candidacyId =
             viewMain name
@@ -193,8 +230,26 @@ viewContent context model candidacies =
         [ class "grow flex h-full min-w-0 border-l-[73px] border-black bg-gray-100" ]
     <|
         case model.tab of
-            Empty ->
-                [ viewDirectoryPanel context candidacies ]
+            Empty filters ->
+                let
+                    haveBothSameStatusAndNotDroppedOut : CandidacySummary -> CandidacySummary -> Bool
+                    haveBothSameStatusAndNotDroppedOut c1 c2 =
+                        c1.lastStatus.status == c2.lastStatus.status && c1.isDroppedOut == False && c2.isDroppedOut == False
+
+                    areBothDroppedOut : CandidacySummary -> CandidacySummary -> Bool
+                    areBothDroppedOut c1 c2 =
+                        c1.isDroppedOut == True && c2.isDroppedOut == True
+
+                    candidaciesByStatus : List ( CandidacySummary, List CandidacySummary )
+                    candidaciesByStatus =
+                        filteredCandidacies
+                            |> List.sortBy (.sentAt >> Maybe.map Time.posixToMillis >> Maybe.withDefault 0 >> (*) -1)
+                            |> List.Extra.gatherWith (\c1 c2 -> haveBothSameStatusAndNotDroppedOut c1 c2 || areBothDroppedOut c1 c2)
+                            |> List.sortBy (\( c, _ ) -> Candidacy.toDirectoryPosition c)
+                in
+                [ viewDirectoryPanel context candidaciesByStatus
+                , View.Candidacy.Filters.view candidacies filters context
+                ]
 
             CandidateInfo candidacyId ->
                 [ viewForm "candidate" candidacyId
@@ -298,7 +353,7 @@ viewCandidacyArticle : String -> List (Html msg) -> Html msg
 viewCandidacyArticle baseUrl content =
     viewMain "profile"
         [ a
-            [ Route.href baseUrl (Route.Candidacy View.Candidacy.Tab.Empty)
+            [ Route.href baseUrl (Route.Candidacy (View.Candidacy.Tab.Empty Route.emptyFilters))
             , class "flex items-center text-gray-800 p-6"
             ]
             [ span [ class "text-3xl mr-4" ] [ text "← " ]
@@ -310,24 +365,8 @@ viewCandidacyArticle baseUrl content =
         ]
 
 
-viewDirectoryPanel : Context -> List CandidacySummary -> Html Msg
-viewDirectoryPanel context candidacies =
-    let
-        haveBothSameStatusAndNotDroppedOut : CandidacySummary -> CandidacySummary -> Bool
-        haveBothSameStatusAndNotDroppedOut c1 c2 =
-            c1.lastStatus.status == c2.lastStatus.status && c1.isDroppedOut == False && c2.isDroppedOut == False
-
-        areBothDroppedOut : CandidacySummary -> CandidacySummary -> Bool
-        areBothDroppedOut c1 c2 =
-            c1.isDroppedOut == True && c2.isDroppedOut == True
-
-        candidaciesByStatus : List ( CandidacySummary, List CandidacySummary )
-        candidaciesByStatus =
-            candidacies
-                |> List.sortBy (.sentAt >> Maybe.map Time.posixToMillis >> Maybe.withDefault 0 >> (*) -1)
-                |> List.Extra.gatherWith (\c1 c2 -> haveBothSameStatusAndNotDroppedOut c1 c2 || areBothDroppedOut c1 c2)
-                |> List.sortBy (\( c, _ ) -> Candidacy.toDirectoryPosition c)
-    in
+viewDirectoryPanel : Context -> List ( CandidacySummary, List CandidacySummary ) -> Html Msg
+viewDirectoryPanel context candidaciesByStatus =
     aside
         [ class "hidden md:order-first md:flex md:flex-col flex-shrink-0"
         , class "w-full w-[780px] h-screen"
@@ -392,17 +431,8 @@ viewDirectory context ( firstCandidacy, candidacies ) =
             [ dataTest "directory-group-name"
             , class "z-10 sticky top-0 text-xl font-semibold text-slate-700"
             , class "bg-white px-10 py-3"
-            , class "flex justify-between"
             ]
-            [ h3 [] [ text (Candidacy.toCategoryString firstCandidacy) ]
-            , div
-                [ class "flex items-center justify-center"
-                , class "rounded-full px-2 h-6 bg-gray-200"
-                , class "text-sm text-gray-600"
-                ]
-                -- + 1 to count the firstCandidacy not included in the group
-                [ text <| String.fromInt (List.length candidacies + 1) ]
-            ]
+            [ h3 [] [ text (Candidacy.toCategoryString firstCandidacy) ] ]
         , List.map (viewItem context) (firstCandidacy :: candidacies)
             |> ul [ attribute "role" "list", class "text-lg relative z-0" ]
         ]
@@ -533,8 +563,12 @@ update context msg model =
             , Cmd.none
             )
 
-        UserAddedFilter filter ->
-            ( { model | filter = Just filter }, Cmd.none )
+        UserAddedFilter search ->
+            let
+                filters =
+                    model.filters
+            in
+            ( { model | filters = { filters | search = Just search } }, Cmd.none )
 
         UserDeletedCandidacy candidacy ->
             ( removeCandidacy model candidacy
@@ -547,7 +581,7 @@ update context msg model =
             )
 
 
-updateTab : Context -> Tab -> Model -> ( Model, Cmd Msg )
+updateTab : Context -> Tab Route.Filters -> Model -> ( Model, Cmd Msg )
 updateTab context tab model =
     let
         newModel =
@@ -740,8 +774,9 @@ updateTab context tab model =
         ( View.Candidacy.Tab.Admissibility _, _ ) ->
             ( newModel, Cmd.none )
 
-        ( View.Candidacy.Tab.Empty, _ ) ->
-            ( { newModel | selected = NotAsked }, Cmd.none )
+        ( View.Candidacy.Tab.Empty filters, _ ) ->
+            { newModel | selected = NotAsked }
+                |> withStatusFilter filters.status
 
 
 withTakeOver : Context -> CandidacyId -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )

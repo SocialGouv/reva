@@ -1,5 +1,7 @@
 module Route exposing
-    ( Route(..)
+    ( Filters
+    , Route(..)
+    , emptyFilters
     , fromUrl
     , href
     , toString
@@ -10,22 +12,32 @@ import Html.Styled exposing (Html)
 import Html.Styled.Attributes
 import Url
 import Url.Builder
-import Url.Parser as Parser exposing ((</>), Parser, map, oneOf, s, string, top)
+import Url.Parser as Parser exposing ((</>), (<?>), Parser, map, oneOf, s, string, top)
+import Url.Parser.Query as Query
 import View.Candidacy.Tab
 
 
+type alias Filters =
+    { status : Maybe String }
+
+
 type Route
-    = Candidacy View.Candidacy.Tab.Tab
+    = Candidacy (View.Candidacy.Tab.Tab Filters)
     | Home
     | Login
     | Logout
     | NotFound
 
 
+emptyFilters : Filters
+emptyFilters =
+    { status = Nothing }
+
+
 parser : String -> Parser (Route -> a) a
 parser baseUrl =
     let
-        candidacyTab : String -> (Data.Candidacy.CandidacyId -> View.Candidacy.Tab.Tab) -> Route
+        candidacyTab : String -> (Data.Candidacy.CandidacyId -> View.Candidacy.Tab.Tab Filters) -> Route
         candidacyTab rawId tab =
             Candidacy <| tab <| candidacyIdFromString rawId
     in
@@ -35,8 +47,8 @@ parser baseUrl =
                 , map Login (s "auth" </> s "login")
                 , map Logout (s "auth" </> s "logout")
                 , map
-                    (Candidacy View.Candidacy.Tab.Empty)
-                    (s "candidacies")
+                    (Filters >> View.Candidacy.Tab.Empty >> Candidacy)
+                    (s "candidacies" <?> Query.string "status")
                 , map
                     (\id -> candidacyTab id View.Candidacy.Tab.Profil)
                     (s "candidacies" </> string)
@@ -83,8 +95,12 @@ href baseUrl route =
 toString : String -> Route -> String
 toString baseUrl route =
     case route of
-        Candidacy View.Candidacy.Tab.Empty ->
-            Url.Builder.absolute [ baseUrl, "candidacies" ] []
+        Candidacy (View.Candidacy.Tab.Empty filters) ->
+            Url.Builder.absolute [ baseUrl, "candidacies" ]
+                (filters.status
+                    |> Maybe.map (\status -> [ Url.Builder.string "status" status ])
+                    |> Maybe.withDefault []
+                )
 
         Candidacy (View.Candidacy.Tab.CandidateInfo candidacyId) ->
             Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "candidate" ] []
