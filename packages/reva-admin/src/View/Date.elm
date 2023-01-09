@@ -1,5 +1,6 @@
-module View.Date exposing (toFullFormat, toSmallFormat)
+module View.Date exposing (toDateWithLabels, toFullFormat, toSmallFormat)
 
+import Data.Candidacy exposing (DateWithLabels)
 import Time exposing (Month(..), Posix)
 
 
@@ -97,3 +98,11 @@ toSmallFormat date =
         , month
         , String.fromInt <| Time.toYear Time.utc date
         ]
+
+
+toDateWithLabels : Time.Posix -> DateWithLabels
+toDateWithLabels posix =
+    { posix = posix
+    , smallFormat = toSmallFormat posix
+    , fullFormat = toFullFormat posix
+    }

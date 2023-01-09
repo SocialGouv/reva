@@ -19,7 +19,7 @@ import Api.Degree
 import Api.RemoteData exposing (nothingToError)
 import Api.Token exposing (Token)
 import Api.VulnerabilityIndicator
-import Data.Candidacy exposing (CandidacyId)
+import Data.Candidacy exposing (CandidacyId, DateWithLabels)
 import Data.Candidate
 import Data.Certification
 import Data.Organism exposing (Organism)
@@ -27,7 +27,7 @@ import Data.Referential
 import Graphql.Operation
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
-import View.Date as Date
+import View.Date as Date exposing (toDateWithLabels)
 
 
 getCandidacies :
@@ -176,14 +176,7 @@ summarySelection =
         |> with Admin.Object.CandidacySummary.createdAt
         |> with
             (SelectionSet.map
-                (Maybe.map
-                    (\posix ->
-                        { posix = posix
-                        , smallFormat = Date.toSmallFormat posix
-                        , fullFormat = Date.toFullFormat posix
-                        }
-                    )
-                )
+                (Maybe.map toDateWithLabels)
                 Admin.Object.CandidacySummary.sentAt
             )
 
@@ -220,7 +213,7 @@ experienceSelection =
 statusSelection : SelectionSet Data.Candidacy.CandidacyStatus Admin.Object.CandidacyStatus
 statusSelection =
     SelectionSet.succeed Data.Candidacy.CandidacyStatus
-        |> with Admin.Object.CandidacyStatus.createdAt
+        |> with (SelectionSet.map toDateWithLabels Admin.Object.CandidacyStatus.createdAt)
         |> with Admin.Object.CandidacyStatus.status
         |> with Admin.Object.CandidacyStatus.isActive
 

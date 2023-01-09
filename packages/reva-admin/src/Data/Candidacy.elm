@@ -40,7 +40,7 @@ type CandidacyId
 
 
 type alias CandidacyStatus =
-    { createdAt : Time.Posix
+    { createdAt : DateWithLabels
     , status : String
     , isActive : Bool
     }
@@ -243,7 +243,7 @@ lastStatus statuses =
     List.filter (\status -> status.isActive) statuses
         |> List.head
         |> Maybe.withDefault
-            { createdAt = Time.millisToPosix 0
+            { createdAt = { posix = Time.millisToPosix 0, smallFormat = "", fullFormat = "" }
             , status = ""
             , isActive = True
             }
@@ -254,15 +254,6 @@ sentDate statuses =
     List.filter (.status >> (==) "VALIDATION") statuses
         |> List.head
         |> Maybe.map .createdAt
-        |> Maybe.map toDateWithLabel
-
-
-toDateWithLabel : Time.Posix -> DateWithLabels
-toDateWithLabel posix =
-    { posix = posix
-    , smallFormat = ""
-    , fullFormat = ""
-    }
 
 
 currentStatusPosition : Candidacy -> Int
