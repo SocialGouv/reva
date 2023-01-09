@@ -294,6 +294,9 @@ const CANDIDACY_SELECTION = `
       department {
         id
       }
+      candidacyDropOut {
+        droppedOutAt
+      }
       appointmentCount
       certificateSkills
       otherTraining
