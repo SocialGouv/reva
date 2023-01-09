@@ -27,6 +27,7 @@ import Data.Referential
 import Graphql.Operation
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
+import View.Date as Date
 
 
 getCandidacies :
@@ -173,7 +174,18 @@ summarySelection =
         |> with Admin.Object.CandidacySummary.isDroppedOut
         |> with (Admin.Object.CandidacySummary.lastStatus statusSelection)
         |> with Admin.Object.CandidacySummary.createdAt
-        |> with Admin.Object.CandidacySummary.sentAt
+        |> with
+            (SelectionSet.map
+                (Maybe.map
+                    (\posix ->
+                        { posix = posix
+                        , smallFormat = Date.toSmallFormat posix
+                        , fullFormat = Date.toString posix
+                        }
+                    )
+                )
+                Admin.Object.CandidacySummary.sentAt
+            )
 
 
 

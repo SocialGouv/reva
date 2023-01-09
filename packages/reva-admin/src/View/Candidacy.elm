@@ -2,7 +2,7 @@ module View.Candidacy exposing (view, viewSentAt)
 
 import Admin.Enum.Duration exposing (Duration(..))
 import Api.Token
-import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, CandidacyId)
+import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, CandidacyId, DateWithLabels)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department, Referential)
@@ -12,7 +12,6 @@ import Html.Styled.Attributes exposing (attribute, class, classList, href, type_
 import Html.Styled.Events exposing (onClick)
 import RemoteData exposing (RemoteData(..))
 import Route
-import Time exposing (Posix)
 import View.Candidacy.Tab exposing (Tab(..))
 import View.Date
 import View.Helpers exposing (dataTest)
@@ -244,7 +243,7 @@ viewExperiences experiences =
         ]
 
 
-viewSentAt : Maybe Posix -> Html msg
+viewSentAt : Maybe DateWithLabels -> Html msg
 viewSentAt sentAt =
     div
         []
@@ -252,7 +251,7 @@ viewSentAt sentAt =
         case sentAt of
             Just date ->
                 [ text "Candidature envoyée le "
-                , text <| View.Date.toString date
+                , text date.fullFormat
                 ]
 
             Nothing ->

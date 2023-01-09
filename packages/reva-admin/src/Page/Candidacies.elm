@@ -243,7 +243,7 @@ viewContent context model candidacies filteredCandidacies =
                     candidaciesByStatus : List ( CandidacySummary, List CandidacySummary )
                     candidaciesByStatus =
                         filteredCandidacies
-                            |> List.sortBy (.sentAt >> Maybe.map Time.posixToMillis >> Maybe.withDefault 0 >> (*) -1)
+                            |> List.sortBy (.sentAt >> Maybe.map .posix >> Maybe.map Time.posixToMillis >> Maybe.withDefault 0 >> (*) -1)
                             |> List.Extra.gatherWith (\c1 c2 -> haveBothSameStatusAndNotDroppedOut c1 c2 || areBothDroppedOut c1 c2)
                             |> List.sortBy (\( c, _ ) -> Candidacy.toDirectoryPosition c)
                 in

@@ -5,6 +5,7 @@ module Data.Candidacy exposing
     , CandidacyId
     , CandidacyStatus
     , CandidacySummary
+    , DateWithLabels
     , candidacyIdFromString
     , candidacyIdToString
     , currentStatusPosition
@@ -25,6 +26,7 @@ module Data.Candidacy exposing
     )
 
 import Admin.Enum.Duration exposing (Duration)
+import Admin.Object.CandidacySummary exposing (sentAt)
 import Data.Candidate exposing (Candidate)
 import Data.Certification exposing (Certification)
 import Data.Organism exposing (Organism)
@@ -92,7 +94,14 @@ type alias CandidacySummary =
     , isDroppedOut : Bool
     , lastStatus : CandidacyStatus
     , createdAt : Time.Posix
-    , sentAt : Maybe Time.Posix
+    , sentAt : Maybe DateWithLabels
+    }
+
+
+type alias DateWithLabels =
+    { posix : Time.Posix
+    , smallFormat : String
+    , fullFormat : String
     }
 
 
@@ -240,11 +249,20 @@ lastStatus statuses =
             }
 
 
-sentDate : List CandidacyStatus -> Maybe Time.Posix
+sentDate : List CandidacyStatus -> Maybe DateWithLabels
 sentDate statuses =
     List.filter (.status >> (==) "VALIDATION") statuses
         |> List.head
         |> Maybe.map .createdAt
+        |> Maybe.map toDateWithLabel
+
+
+toDateWithLabel : Time.Posix -> DateWithLabels
+toDateWithLabel posix =
+    { posix = posix
+    , smallFormat = ""
+    , fullFormat = ""
+    }
 
 
 currentStatusPosition : Candidacy -> Int
@@ -288,6 +306,8 @@ filterByWord word candidacySummary =
         || maybeMatch .lastname
         || maybeMatch .phone
         || maybeMatch .email
+        || maybeMatch (.sentAt >> Maybe.map .smallFormat)
+        || maybeMatch (.sentAt >> Maybe.map .fullFormat)
         || (Maybe.map match (Maybe.map .label candidacySummary.department) |> Maybe.withDefault False)
         || (Maybe.map match (Maybe.map .label candidacySummary.organism) |> Maybe.withDefault False)
 

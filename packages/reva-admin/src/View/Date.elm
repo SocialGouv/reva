@@ -1,4 +1,4 @@
-module View.Date exposing (toString)
+module View.Date exposing (toSmallFormat, toString)
 
 import Time exposing (Month(..), Posix)
 
@@ -46,6 +46,54 @@ toString date =
     in
     String.join " "
         [ String.fromInt <| Time.toDay Time.utc date
+        , month
+        , String.fromInt <| Time.toYear Time.utc date
+        ]
+
+
+toSmallFormat : Posix -> String
+toSmallFormat date =
+    let
+        month =
+            case Time.toMonth Time.utc date of
+                Jan ->
+                    "01"
+
+                Feb ->
+                    "02"
+
+                Mar ->
+                    "03"
+
+                Apr ->
+                    "04"
+
+                May ->
+                    "05"
+
+                Jun ->
+                    "06"
+
+                Jul ->
+                    "07"
+
+                Aug ->
+                    "08"
+
+                Sep ->
+                    "09"
+
+                Oct ->
+                    "10"
+
+                Nov ->
+                    "11"
+
+                Dec ->
+                    "12"
+    in
+    String.join "/"
+        [ Time.toDay Time.utc date |> String.fromInt |> (++) "0" |> String.right 2
         , month
         , String.fromInt <| Time.toYear Time.utc date
         ]
