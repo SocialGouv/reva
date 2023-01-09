@@ -168,6 +168,15 @@ view context model =
 
         Success candidacies ->
             let
+                preFilteredCandidacies =
+                    case model.filters.status of
+                        Just _ ->
+                            candidacies
+
+                        Nothing ->
+                            -- When not filter is selected, we display only active candidacy
+                            candidacies |> List.filter Candidacy.isActive
+
                 filter f field l =
                     case field model.filters of
                         Just value ->
@@ -176,7 +185,7 @@ view context model =
                         Nothing ->
                             l
             in
-            candidacies
+            preFilteredCandidacies
                 |> filter Candidacy.filterByWords .search
                 |> filter Candidacy.filterByStatus .status
                 |> viewContent context model candidacies

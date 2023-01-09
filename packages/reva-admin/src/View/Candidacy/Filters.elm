@@ -20,7 +20,7 @@ view candidacies filters context =
         count maybeStatus =
             case maybeStatus of
                 Nothing ->
-                    candidacies |> List.length
+                    candidacies |> List.filter Candidacy.isActive |> List.length
 
                 Just "abandon" ->
                     candidacies |> List.filter .isDroppedOut |> List.length

@@ -10,6 +10,7 @@ module Data.Candidacy exposing
     , currentStatusPosition
     , filterByStatus
     , filterByWords
+    , isActive
     , isFundingRequestSent
     , isStatusEqual
     , isStatusEqualOrAbove
@@ -320,3 +321,10 @@ filterByStatus lowerCaseStatus candidacySummary =
 
     else
         candidacySummary.lastStatus.status == status
+
+
+isActive : CandidacySummary -> Bool
+isActive candidacySummary =
+    not <|
+        List.member candidacySummary.lastStatus.status [ "ARCHIVE", "PROJET" ]
+            || candidacySummary.isDroppedOut
