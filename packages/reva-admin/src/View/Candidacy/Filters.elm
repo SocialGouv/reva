@@ -16,6 +16,10 @@ view :
     -> Html msg
 view candidacies filters context =
     let
+        isNotDroppedWithStatus : String -> CandidacySummary -> Bool
+        isNotDroppedWithStatus status c =
+            not c.isDroppedOut && c.lastStatus.status == String.toUpper status
+
         count : Maybe String -> Int
         count maybeStatus =
             case maybeStatus of
@@ -26,8 +30,7 @@ view candidacies filters context =
                     candidacies |> List.filter .isDroppedOut |> List.length
 
                 Just status ->
-                    candidacies
-                        |> List.Extra.count (\c -> c.lastStatus.status == String.toUpper status)
+                    candidacies |> List.Extra.count (isNotDroppedWithStatus status)
 
         link maybeStatus label =
             viewLink context filters (count maybeStatus) maybeStatus label
