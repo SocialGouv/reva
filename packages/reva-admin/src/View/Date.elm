@@ -1,10 +1,10 @@
-module View.Date exposing (toSmallFormat, toString)
+module View.Date exposing (toFullFormat, toSmallFormat)
 
 import Time exposing (Month(..), Posix)
 
 
-toString : Posix -> String
-toString date =
+toFullFormat : Posix -> String
+toFullFormat date =
     let
         month =
             case Time.toMonth Time.utc date of

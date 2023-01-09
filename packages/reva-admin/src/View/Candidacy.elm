@@ -193,7 +193,7 @@ viewExperience : CandidacyExperience -> Html msg
 viewExperience experience =
     div [ class "rounded-lg px-5 py-4 bg-gray-100 text-base leading-tight" ]
         [ h4 [ class "font-semibold mb-2" ] [ text experience.title ]
-        , p [ class "my-4" ] [ text "Démarrée en ", text <| View.Date.toString experience.startedAt ]
+        , p [ class "my-4" ] [ text "Démarrée en ", text <| View.Date.toFullFormat experience.startedAt ]
         , p [ class "font-bold my-4" ] [ text "Durée d'expérience ", viewDuration experience.duration ]
         , p [ class "italic" ] [ text "\"", text experience.description, text "\"" ]
         ]

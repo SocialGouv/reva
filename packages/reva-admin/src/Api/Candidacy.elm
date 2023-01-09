@@ -180,7 +180,7 @@ summarySelection =
                     (\posix ->
                         { posix = posix
                         , smallFormat = Date.toSmallFormat posix
-                        , fullFormat = Date.toString posix
+                        , fullFormat = Date.toFullFormat posix
                         }
                     )
                 )
