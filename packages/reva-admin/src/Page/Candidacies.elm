@@ -683,7 +683,7 @@ updateTab context tab model =
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Tab.TrainingSent candidacyId)))
                         , onValidate = \_ _ -> Ok ()
                         , status =
-                            if Candidacy.isTrainingSent candidacy then
+                            if Candidacy.isFundingRequestSent candidacy then
                                 Form.ReadOnly
 
                             else
