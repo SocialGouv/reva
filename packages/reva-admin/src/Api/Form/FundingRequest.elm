@@ -1,4 +1,4 @@
-module Api.Form.FundingRequest exposing (create, get)
+module Api.Form.FundingRequest exposing (create, get, selection)
 
 import Admin.InputObject
 import Admin.Mutation as Mutation

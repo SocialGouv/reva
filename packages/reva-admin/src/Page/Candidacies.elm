@@ -16,6 +16,7 @@ import Api.Form.Appointment
 import Api.Form.Candidate
 import Api.Form.DropOut
 import Api.Form.FundingRequest
+import Api.Form.PaymentRequest
 import Api.Form.Training
 import Api.Referential
 import Api.Token exposing (Token)
@@ -36,6 +37,7 @@ import Page.Form.Appointment
 import Page.Form.Candidate
 import Page.Form.DropOut
 import Page.Form.FundingRequest
+import Page.Form.PaymentRequest
 import Page.Form.Training
 import RemoteData exposing (RemoteData(..))
 import Route
@@ -648,23 +650,19 @@ updateTab context tab model =
                     Form.updateForm context
                         { form =
                             if candidacy.dropOutDate == Nothing || isReadOnly then
-                                Page.Form.FundingRequest.form candidacy.certification
+                                Page.Form.PaymentRequest.form candidacy.certification
 
                             else
                                 Page.Form.FundingRequest.droppedOutForm candidacy.certification
-                        , onLoad = Api.Form.FundingRequest.get candidacyId candidacy
-                        , onSave = Api.Form.FundingRequest.create candidacyId
+                        , onLoad = Api.Form.PaymentRequest.get candidacyId
+                        , onSave = Api.Form.PaymentRequest.create candidacyId
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Tab.Profil candidacyId)))
-                        , onValidate = Data.Form.FundingRequest.validate
+                        , onValidate = \_ _ -> Ok ()
                         , status =
-                            if isReadOnly then
-                                Form.ReadOnly
-
-                            else
-                                Form.Editable
+                            Form.Editable
                         }
                         model.form
             in
