@@ -31,9 +31,9 @@ numAction =
 
 companion :
     SelectionSet decodesTo Admin.Object.Organism
-    -> SelectionSet decodesTo Admin.Object.FundingRequest
+    -> SelectionSet (Maybe decodesTo) Admin.Object.FundingRequest
 companion object____ =
-    Object.selectionForCompositeField "companion" [] object____ Basics.identity
+    Object.selectionForCompositeField "companion" [] object____ (Basics.identity >> Decode.nullable)
 
 
 diagnosisHourCount : SelectionSet Int Admin.Object.FundingRequest

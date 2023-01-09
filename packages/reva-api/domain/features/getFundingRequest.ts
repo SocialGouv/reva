@@ -55,10 +55,10 @@ export const getFundingRequest =
               ),
             },
             training: {
-              certificateSkills: candidacy.certificateSkills,
-              individualHourCount: candidacy.individualHourCount,
-              collectiveHourCount: candidacy.collectiveHourCount,
-              otherTraining: candidacy.otherTraining,
+              certificateSkills: candidacy.certificateSkills || "",
+              individualHourCount: candidacy.individualHourCount || 0,
+              collectiveHourCount: candidacy.collectiveHourCount || 0,
+              otherTraining: candidacy.otherTraining || "",
               basicSkills: candidacy.basicSkills.map((b: any) => b.basicSkill),
               mandatoryTrainings: candidacy.trainings.map(
                 (t: any) => t.training

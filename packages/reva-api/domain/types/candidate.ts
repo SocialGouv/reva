@@ -69,7 +69,7 @@ export interface FundingRequest {
   postExamCost: number;
   postExamHourCount: number;
   totalCost?: number;
-  companion?: Organism;
+  companion: Organism | null;
   numAction: string;
 }
 

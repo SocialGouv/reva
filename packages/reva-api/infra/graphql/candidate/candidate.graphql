@@ -33,7 +33,7 @@ type FundingRequest {
   id: UUID!
   numAction: String
 
-  companion: Organism!
+  companion: Organism
 
   diagnosisHourCount: Int!
   diagnosisCost: Int!
@@ -105,7 +105,7 @@ input FullCandidateInput {
 }
 
 input FundingRequestInput {
-  companionId: UUID!
+  companionId: UUID
 
   diagnosisHourCount: Int!
   diagnosisCost: Int!
