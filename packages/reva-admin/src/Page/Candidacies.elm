@@ -635,15 +635,18 @@ updateTab context tab model =
 
         ( View.Candidacy.Tab.FundingRequest candidacyId, Success candidacy ) ->
             let
+                isReadOnly =
+                    Candidacy.isFundingRequestSent candidacy
+
                 ( formModel, formCmd ) =
                     Form.updateForm context
                         { form =
-                            if candidacy.dropOutDate == Nothing then
+                            if candidacy.dropOutDate == Nothing || isReadOnly then
                                 Page.Form.FundingRequest.form candidacy.certification
 
                             else
                                 Page.Form.FundingRequest.droppedOutForm candidacy.certification
-                        , onLoad = Api.Form.FundingRequest.get candidacyId
+                        , onLoad = Api.Form.FundingRequest.get candidacyId candidacy
                         , onSave = Api.Form.FundingRequest.create candidacyId
                         , onRedirect =
                             Nav.pushUrl
@@ -651,7 +654,7 @@ updateTab context tab model =
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Tab.Profil candidacyId)))
                         , onValidate = Data.Form.FundingRequest.validate
                         , status =
-                            if Candidacy.isFundingRequestSent candidacy then
+                            if isReadOnly then
                                 Form.ReadOnly
 
                             else
