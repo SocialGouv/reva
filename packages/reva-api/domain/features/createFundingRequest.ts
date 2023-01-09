@@ -27,7 +27,7 @@ interface CreateFundingRequestDeps {
   hasRole: (role: Role) => boolean;
   existsCandidacyWithActiveStatuses: (params: {
     candidacyId: string;
-    statuses: ["PARCOURS_CONFIRME"];
+    statuses: ["PRISE_EN_CHARGE", "PARCOURS_ENVOYE", "PARCOURS_CONFIRME"];
   }) => Promise<Either<string, boolean>>;
 }
 
@@ -274,7 +274,7 @@ export const createFundingRequest =
     const existsCandidacyInRequiredStatuses = EitherAsync.fromPromise(() =>
       deps.existsCandidacyWithActiveStatuses({
         candidacyId: params.candidacyId,
-        statuses: ["PARCOURS_CONFIRME"],
+        statuses: ["PRISE_EN_CHARGE", "PARCOURS_ENVOYE", "PARCOURS_CONFIRME"],
       })
     )
       .chain((existsCandidacy) => {
