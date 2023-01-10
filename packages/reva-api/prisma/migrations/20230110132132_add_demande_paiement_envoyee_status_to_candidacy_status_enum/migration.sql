@@ -1,0 +1,3 @@
+-- AlterEnum
+ALTER TYPE "CandidacyStatus"
+ADD VALUE 'DEMANDE_PAIEMENT_ENVOYEE';
