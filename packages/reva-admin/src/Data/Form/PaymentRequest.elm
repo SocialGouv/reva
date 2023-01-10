@@ -11,7 +11,6 @@ module Data.Form.PaymentRequest exposing
 import Data.Candidacy exposing (Candidacy)
 import Data.Form.FundingRequest exposing (FundingRequestInput)
 import Data.Form.Helper as Helper
-import Data.Form.Training exposing (Training)
 import Data.Referential exposing (BasicSkill, MandatoryTraining, Referential)
 import Dict exposing (Dict)
 
@@ -155,26 +154,10 @@ maybePaymentRequest maybeFunding maybeMaybePayment =
             paymentRequest funding payment
 
         ( Just funding, Just Nothing ) ->
-            emptyPaymentRequest funding
+            defaultPaymentRequest funding
 
         _ ->
             Dict.empty
-
-
-emptyPaymentRequest : FundingRequestInput -> Dict String String
-emptyPaymentRequest funding =
-    let
-        mandatoryTrainingsChecked =
-            Helper.toCheckedList funding.mandatoryTrainingIds
-
-        basicSkillsChecked =
-            Helper.toCheckedList funding.basicSkillsIds
-    in
-    Dict.fromList
-        (mandatoryTrainingsChecked
-            ++ basicSkillsChecked
-            ++ fundingList funding
-        )
 
 
 paymentRequest : FundingRequestInput -> PaymentRequestInput -> Dict String String
@@ -209,28 +192,17 @@ paymentRequest funding payment =
         )
 
 
-defaultPaymentRequest : TrainingForm -> Dict String String
-defaultPaymentRequest training =
-    let
-        string key =
-            Just <| key training
-
-        int key =
-            Just <| String.fromInt <| key training
-    in
+defaultPaymentRequest : FundingRequestInput -> Dict String String
+defaultPaymentRequest funding =
     let
         mandatoryTrainingsChecked =
-            Helper.toCheckedList training.mandatoryTrainingIds
+            Helper.toCheckedList funding.mandatoryTrainingIds
 
         basicSkillsChecked =
-            Helper.toCheckedList training.basicSkillsIds
-
-        otherTrainings =
-            [ ( .individualHourCount, int .individualHourCount )
-            , ( .collectiveHourCount, int .collectiveHourCount )
-            , ( .certificateSkills, string .certificateSkills )
-            , ( .otherTraining, string .otherTraining )
-            ]
-                |> Helper.toKeyedList keys
+            Helper.toCheckedList funding.basicSkillsIds
     in
-    Dict.fromList (mandatoryTrainingsChecked ++ basicSkillsChecked ++ otherTrainings)
+    Dict.fromList
+        (mandatoryTrainingsChecked
+            ++ basicSkillsChecked
+            ++ fundingList funding
+        )
