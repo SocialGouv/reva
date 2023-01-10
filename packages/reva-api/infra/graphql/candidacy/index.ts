@@ -5,6 +5,7 @@ import mercurius from "mercurius";
 
 import { addExperienceToCandidacy } from "../../../domain/features/addExperienceToCandidacy";
 import { archiveCandidacy } from "../../../domain/features/archiveCandidacy";
+import { confirmPaymentRequest } from "../../../domain/features/confirmPaymentRequest";
 import { createCandidacy } from "../../../domain/features/createCandidacy";
 import { createOrUpdatePaymentRequestForCandidacy } from "../../../domain/features/createOrUpdatePaymentRequestForCandidacy";
 import { deleteCandidacy } from "../../../domain/features/deleteCandidacy";
@@ -488,6 +489,25 @@ export const resolvers = {
       })({
         candidacyId,
         paymentRequest,
+      });
+
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
+    candidacy_confirmPaymentRequest: async (
+      context: { auth: { hasRole: (role: Role) => boolean } },
+      { candidacyId }: { candidacyId: string }
+    ) => {
+      const result = await confirmPaymentRequest({
+        hasRole: context.auth.hasRole,
+        existsCandidacyWithActiveStatus:
+          candidacyDb.existsCandidacyWithActiveStatus,
+        getPaymentRequestByCandidacyId:
+          paymentRequestDb.getPaymentRequestByCandidacyId,
+        updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
+      })({
+        candidacyId: candidacyId,
       });
 
       return result

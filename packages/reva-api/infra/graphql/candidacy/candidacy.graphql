@@ -289,4 +289,5 @@ type Mutation {
     candidacyId: UUID!
     paymentRequest: PaymentRequestInput!
   ): PaymentRequest!
+  candidacy_confirmPaymentRequest(candidacyId: UUID!): Candidacy!
 }
