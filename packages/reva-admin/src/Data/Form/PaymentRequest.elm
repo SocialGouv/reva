@@ -1,15 +1,15 @@
 module Data.Form.PaymentRequest exposing
-    ( PaymentRequestInformations
-    , PaymentRequestInput
+    ( PaymentRequestInput
     , TrainingForm
     , fromDict
     , keys
+    , maybePaymentRequest
     , paymentRequest
-    , paymentRequestInformations
     , validate
     )
 
 import Data.Candidacy exposing (Candidacy)
+import Data.Form.FundingRequest exposing (FundingRequestInput)
 import Data.Form.Helper as Helper
 import Data.Form.Training exposing (Training)
 import Data.Referential exposing (BasicSkill, MandatoryTraining, Referential)
@@ -26,35 +26,15 @@ type alias TrainingForm =
     }
 
 
-type alias PaymentRequestInformations =
-    { paymentRequest : PaymentRequestInput
-    , training : Training
-    }
-
-
 type alias PaymentRequestInput =
-    { companionId : Maybe String
-    , diagnosisHourCount : Int
-    , diagnosisCost : Int
+    { diagnosisHourCount : Int
     , postExamHourCount : Int
-    , postExamCost : Int
     , individualHourCount : Int
-    , individualCost : Int
     , collectiveHourCount : Int
-    , collectiveCost : Int
-    , basicSkillsIds : List String
     , basicSkillsHourCount : Int
-    , basicSkillsCost : Int
-    , mandatoryTrainingIds : List String
     , mandatoryTrainingsHourCount : Int
-    , mandatoryTrainingsCost : Int
-    , numAction : Maybe String
-    , certificateSkills : String
     , certificateSkillsHourCount : Int
-    , certificateSkillsCost : Int
-    , otherTraining : String
     , examHourCount : Int
-    , examCost : Int
     }
 
 
@@ -119,45 +99,89 @@ validate ( candidacy, _ ) dict =
         |> Result.andThen confirmationValidation
 
 
-fromDict : List BasicSkill -> List MandatoryTraining -> Dict String String -> PaymentRequestInput
-fromDict basicSkillsIds mandatoryTrainingIds dict =
+fromDict : Dict String String -> PaymentRequestInput
+fromDict dict =
     let
         decode =
             Helper.decode keys dict
     in
     PaymentRequestInput
-        (decode.maybe.string .companionId)
         (decode.int .diagnosisHourCount 0)
-        (decode.int .diagnosisCost 0)
         (decode.int .postExamHourCount 0)
-        (decode.int .postExamCost 0)
         (decode.int .individualHourCount 0)
-        (decode.int .individualCost 0)
         (decode.int .collectiveHourCount 0)
-        (decode.int .collectiveCost 0)
-        (decode.list basicSkillsIds)
         (decode.int .basicSkillsHourCount 0)
-        (decode.int .basicSkillsCost 0)
-        (decode.list mandatoryTrainingIds)
         (decode.int .mandatoryTrainingsHourCount 0)
-        (decode.int .mandatoryTrainingsCost 0)
-        (decode.maybe.string .numAction)
-        (decode.string .certificateSkills "")
         (decode.int .certificateSkillsHourCount 0)
-        (decode.int .certificateSkillsCost 0)
-        (decode.string .otherTraining "")
         (decode.int .examHourCount 0)
-        (decode.int .examCost 0)
 
 
-paymentRequest : PaymentRequestInput -> Dict String String
-paymentRequest funding =
+fundingList funding =
     let
         string key =
             Just <| key funding
 
         int key =
             Just <| String.fromInt <| key funding
+    in
+    [ ( .companionId, string (.companionId >> Maybe.withDefault "") )
+    , ( .diagnosisEstimatedHourCount, int .diagnosisHourCount )
+    , ( .diagnosisCost, int .diagnosisCost )
+    , ( .postExamEstimatedHourCount, int .postExamHourCount )
+    , ( .postExamCost, int .postExamCost )
+    , ( .individualEstimatedHourCount, int .individualHourCount )
+    , ( .individualCost, int .individualCost )
+    , ( .collectiveEstimatedHourCount, int .collectiveHourCount )
+    , ( .collectiveCost, int .collectiveCost )
+    , ( .basicSkillsEstimatedHourCount, int .basicSkillsHourCount )
+    , ( .basicSkillsCost, int .basicSkillsCost )
+    , ( .mandatoryTrainingsEstimatedHourCount, int .mandatoryTrainingsHourCount )
+    , ( .mandatoryTrainingsCost, int .mandatoryTrainingsCost )
+    , ( .numAction, funding.numAction )
+    , ( .certificateSkills, string .certificateSkills )
+    , ( .certificateSkillsEstimatedHourCount, int .certificateSkillsHourCount )
+    , ( .certificateSkillsCost, int .certificateSkillsCost )
+    , ( .otherTraining, string .otherTraining )
+    , ( .examEstimatedHourCount, int .examHourCount )
+    , ( .examCost, int .examCost )
+    ]
+        |> Helper.toKeyedList keys
+
+
+maybePaymentRequest : Maybe FundingRequestInput -> Maybe (Maybe PaymentRequestInput) -> Dict String String
+maybePaymentRequest maybeFunding maybeMaybePayment =
+    case ( maybeFunding, maybeMaybePayment ) of
+        ( Just funding, Just (Just payment) ) ->
+            paymentRequest funding payment
+
+        ( Just funding, Just Nothing ) ->
+            emptyPaymentRequest funding
+
+        _ ->
+            Dict.empty
+
+
+emptyPaymentRequest : FundingRequestInput -> Dict String String
+emptyPaymentRequest funding =
+    let
+        mandatoryTrainingsChecked =
+            Helper.toCheckedList funding.mandatoryTrainingIds
+
+        basicSkillsChecked =
+            Helper.toCheckedList funding.basicSkillsIds
+    in
+    Dict.fromList
+        (mandatoryTrainingsChecked
+            ++ basicSkillsChecked
+            ++ fundingList funding
+        )
+
+
+paymentRequest : FundingRequestInput -> PaymentRequestInput -> Dict String String
+paymentRequest funding payment =
+    let
+        int key =
+            Just <| String.fromInt <| key payment
 
         mandatoryTrainingsChecked =
             Helper.toCheckedList funding.mandatoryTrainingIds
@@ -165,31 +189,24 @@ paymentRequest funding =
         basicSkillsChecked =
             Helper.toCheckedList funding.basicSkillsIds
 
-        fundingList =
-            [ ( .companionId, string (.companionId >> Maybe.withDefault "") )
-            , ( .diagnosisHourCount, int .diagnosisHourCount )
-            , ( .diagnosisCost, int .diagnosisCost )
+        paymentList =
+            [ ( .diagnosisHourCount, int .diagnosisHourCount )
             , ( .postExamHourCount, int .postExamHourCount )
-            , ( .postExamCost, int .postExamCost )
             , ( .individualHourCount, int .individualHourCount )
-            , ( .individualCost, int .individualCost )
             , ( .collectiveHourCount, int .collectiveHourCount )
-            , ( .collectiveCost, int .collectiveCost )
             , ( .basicSkillsHourCount, int .basicSkillsHourCount )
-            , ( .basicSkillsCost, int .basicSkillsCost )
             , ( .mandatoryTrainingsHourCount, int .mandatoryTrainingsHourCount )
-            , ( .mandatoryTrainingsCost, int .mandatoryTrainingsCost )
-            , ( .numAction, funding.numAction )
-            , ( .certificateSkills, string .certificateSkills )
             , ( .certificateSkillsHourCount, int .certificateSkillsHourCount )
-            , ( .certificateSkillsCost, int .certificateSkillsCost )
-            , ( .otherTraining, string .otherTraining )
             , ( .examHourCount, int .examHourCount )
-            , ( .examCost, int .examCost )
             ]
                 |> Helper.toKeyedList keys
     in
-    Dict.fromList (mandatoryTrainingsChecked ++ basicSkillsChecked ++ fundingList)
+    Dict.fromList
+        (mandatoryTrainingsChecked
+            ++ basicSkillsChecked
+            ++ paymentList
+            ++ fundingList funding
+        )
 
 
 defaultPaymentRequest : TrainingForm -> Dict String String
@@ -217,13 +234,3 @@ defaultPaymentRequest training =
                 |> Helper.toKeyedList keys
     in
     Dict.fromList (mandatoryTrainingsChecked ++ basicSkillsChecked ++ otherTrainings)
-
-
-paymentRequestInformations : Maybe PaymentRequestInput -> TrainingForm -> Dict String String
-paymentRequestInformations maybePaymentRequest training =
-    case maybePaymentRequest of
-        Just funding ->
-            paymentRequest funding
-
-        Nothing ->
-            defaultPaymentRequest training

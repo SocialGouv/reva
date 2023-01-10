@@ -222,3 +222,10 @@ admissibility :
     -> SelectionSet decodesTo Admin.Object.Candidacy
 admissibility object____ =
     Object.selectionForCompositeField "admissibility" [] object____ Basics.identity
+
+
+paymentRequest :
+    SelectionSet decodesTo Admin.Object.PaymentRequest
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
+paymentRequest object____ =
+    Object.selectionForCompositeField "paymentRequest" [] object____ (Basics.identity >> Decode.nullable)

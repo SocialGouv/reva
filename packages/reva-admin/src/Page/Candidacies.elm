@@ -16,6 +16,7 @@ import Api.Form.Appointment
 import Api.Form.Candidate
 import Api.Form.DropOut
 import Api.Form.FundingRequest
+import Api.Form.PaymentRequest
 import Api.Form.Training
 import Api.Referential
 import Api.Token exposing (Token)
@@ -653,19 +654,15 @@ updateTab context tab model =
 
                             else
                                 Page.Form.FundingRequest.droppedOutForm candidacy.certification
-                        , onLoad = Api.Form.FundingRequest.get candidacyId candidacy
-                        , onSave = Api.Form.FundingRequest.create candidacyId
+                        , onLoad = Api.Form.PaymentRequest.get candidacyId
+                        , onSave = Api.Form.PaymentRequest.create candidacyId
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Tab.Profil candidacyId)))
-                        , onValidate = Data.Form.FundingRequest.validate
+                        , onValidate = \_ _ -> Ok ()
                         , status =
-                            if isReadOnly then
-                                Form.ReadOnly
-
-                            else
-                                Form.Editable
+                            Form.Editable
                         }
                         model.form
             in

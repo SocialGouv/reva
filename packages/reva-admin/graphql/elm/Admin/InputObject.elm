@@ -517,6 +517,47 @@ encodeFundingRequestInput input____ =
         [ ( "companionId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.companionId ), ( "diagnosisHourCount", Encode.int input____.diagnosisHourCount |> Just ), ( "diagnosisCost", Encode.int input____.diagnosisCost |> Just ), ( "postExamHourCount", Encode.int input____.postExamHourCount |> Just ), ( "postExamCost", Encode.int input____.postExamCost |> Just ), ( "individualHourCount", Encode.int input____.individualHourCount |> Just ), ( "individualCost", Encode.int input____.individualCost |> Just ), ( "collectiveHourCount", Encode.int input____.collectiveHourCount |> Just ), ( "collectiveCost", Encode.int input____.collectiveCost |> Just ), ( "basicSkillsIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.basicSkillsIds |> Just ), ( "basicSkillsHourCount", Encode.int input____.basicSkillsHourCount |> Just ), ( "basicSkillsCost", Encode.int input____.basicSkillsCost |> Just ), ( "mandatoryTrainingsIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.mandatoryTrainingsIds |> Just ), ( "mandatoryTrainingsHourCount", Encode.int input____.mandatoryTrainingsHourCount |> Just ), ( "mandatoryTrainingsCost", Encode.int input____.mandatoryTrainingsCost |> Just ), ( "certificateSkills", Encode.string input____.certificateSkills |> Just ), ( "certificateSkillsHourCount", Encode.int input____.certificateSkillsHourCount |> Just ), ( "certificateSkillsCost", Encode.int input____.certificateSkillsCost |> Just ), ( "otherTraining", Encode.string input____.otherTraining |> Just ), ( "examHourCount", Encode.int input____.examHourCount |> Just ), ( "examCost", Encode.int input____.examCost |> Just ) ]
 
 
+buildPaymentRequestInput :
+    PaymentRequestInputRequiredFields
+    -> PaymentRequestInput
+buildPaymentRequestInput required____ =
+    { diagnosisEffectiveHourCount = required____.diagnosisEffectiveHourCount, postExamEffectiveHourCount = required____.postExamEffectiveHourCount, individualEffectiveHourCount = required____.individualEffectiveHourCount, collectiveEffectiveHourCount = required____.collectiveEffectiveHourCount, mandatoryTrainingsEffectiveHourCount = required____.mandatoryTrainingsEffectiveHourCount, basicSkillsEffectiveHourCount = required____.basicSkillsEffectiveHourCount, certificateSkillsEffectiveHourCount = required____.certificateSkillsEffectiveHourCount, examEffectiveHourCount = required____.examEffectiveHourCount }
+
+
+type alias PaymentRequestInputRequiredFields =
+    { diagnosisEffectiveHourCount : Int
+    , postExamEffectiveHourCount : Int
+    , individualEffectiveHourCount : Int
+    , collectiveEffectiveHourCount : Int
+    , mandatoryTrainingsEffectiveHourCount : Int
+    , basicSkillsEffectiveHourCount : Int
+    , certificateSkillsEffectiveHourCount : Int
+    , examEffectiveHourCount : Int
+    }
+
+
+{-| Type for the PaymentRequestInput input object.
+-}
+type alias PaymentRequestInput =
+    { diagnosisEffectiveHourCount : Int
+    , postExamEffectiveHourCount : Int
+    , individualEffectiveHourCount : Int
+    , collectiveEffectiveHourCount : Int
+    , mandatoryTrainingsEffectiveHourCount : Int
+    , basicSkillsEffectiveHourCount : Int
+    , certificateSkillsEffectiveHourCount : Int
+    , examEffectiveHourCount : Int
+    }
+
+
+{-| Encode a PaymentRequestInput into a value that can be used as an argument.
+-}
+encodePaymentRequestInput : PaymentRequestInput -> Value
+encodePaymentRequestInput input____ =
+    Encode.maybeObject
+        [ ( "diagnosisEffectiveHourCount", Encode.int input____.diagnosisEffectiveHourCount |> Just ), ( "postExamEffectiveHourCount", Encode.int input____.postExamEffectiveHourCount |> Just ), ( "individualEffectiveHourCount", Encode.int input____.individualEffectiveHourCount |> Just ), ( "collectiveEffectiveHourCount", Encode.int input____.collectiveEffectiveHourCount |> Just ), ( "mandatoryTrainingsEffectiveHourCount", Encode.int input____.mandatoryTrainingsEffectiveHourCount |> Just ), ( "basicSkillsEffectiveHourCount", Encode.int input____.basicSkillsEffectiveHourCount |> Just ), ( "certificateSkillsEffectiveHourCount", Encode.int input____.certificateSkillsEffectiveHourCount |> Just ), ( "examEffectiveHourCount", Encode.int input____.examEffectiveHourCount |> Just ) ]
+
+
 buildTrainingInput :
     TrainingInputRequiredFields
     -> TrainingInput
