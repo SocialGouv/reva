@@ -55,7 +55,7 @@ export const submitTraining =
       );
     }
 
-    const existsCandidacySentForFunding = EitherAsync.fromPromise(() =>
+    const validateCandidacyNotAlreadyFunding = EitherAsync.fromPromise(() =>
       deps.existsCandidacyHavingHadStatus({
         candidacyId: params.candidacyId,
         status: "DEMANDE_FINANCEMENT_ENVOYE",
@@ -79,7 +79,7 @@ export const submitTraining =
           )
       );
 
-    const existsCandidacyInValidation = EitherAsync.fromPromise(() =>
+    const validateCandidacyIsTakeOver = EitherAsync.fromPromise(() =>
       deps.existsCandidacyHavingHadStatus({
         candidacyId: params.candidacyId,
         status: "PRISE_EN_CHARGE",
@@ -126,8 +126,8 @@ export const submitTraining =
         )
     );
 
-    return existsCandidacySentForFunding
-      .chain(() => existsCandidacyInValidation)
+    return validateCandidacyNotAlreadyFunding
+      .chain(() => validateCandidacyIsTakeOver)
       .chain(() => updateTrainingInformations)
       .chain(() => updateCandidacy);
   };
