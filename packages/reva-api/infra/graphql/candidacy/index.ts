@@ -368,8 +368,8 @@ export const resolvers = {
       const result = await submitTraining({
         hasRole: context.auth.hasRole,
         updateTrainingInformations: candidacyDb.updateTrainingInformations,
-        existsCandidacyWithActiveStatus:
-          candidacyDb.existsCandidacyWithActiveStatus,
+        existsCandidacyHavingHadStatus:
+          candidacyDb.existsCandidacyHavingHadStatus,
         updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
       })({
         candidacyId: payload.candidacyId,

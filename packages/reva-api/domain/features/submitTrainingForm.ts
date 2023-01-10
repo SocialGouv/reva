@@ -20,9 +20,9 @@ interface SubmitTrainingDeps {
     };
   }) => Promise<Either<string, Candidacy>>;
   hasRole: (role: Role) => boolean;
-  existsCandidacyWithActiveStatus: (params: {
+  existsCandidacyHavingHadStatus: (params: {
     candidacyId: string;
-    status: "PRISE_EN_CHARGE";
+    status: "PRISE_EN_CHARGE" | "DEMANDE_FINANCEMENT_ENVOYE";
   }) => Promise<Either<string, boolean>>;
   updateCandidacyStatus: (params: {
     candidacyId: string;
@@ -55,8 +55,32 @@ export const submitTraining =
       );
     }
 
-    const existsCandidacyInValidation = EitherAsync.fromPromise(() =>
-      deps.existsCandidacyWithActiveStatus({
+    const validateCandidacyNotAlreadyFunding = EitherAsync.fromPromise(() =>
+      deps.existsCandidacyHavingHadStatus({
+        candidacyId: params.candidacyId,
+        status: "DEMANDE_FINANCEMENT_ENVOYE",
+      })
+    )
+      .chain((existsCandidacy) => {
+        if (existsCandidacy) {
+          return EitherAsync.liftEither(
+            Left(
+              `Ce parcours ne peut pas être envoyé car la candidature fait l'objet d'une demande de financement.`
+            )
+          );
+        }
+        return EitherAsync.liftEither(Right(existsCandidacy));
+      })
+      .mapLeft(
+        (error: string) =>
+          new FunctionalError(
+            FunctionalCodeError.TRAINING_FORM_NOT_SUBMITTED,
+            error
+          )
+      );
+
+    const validateCandidacyIsTakeOver = EitherAsync.fromPromise(() =>
+      deps.existsCandidacyHavingHadStatus({
         candidacyId: params.candidacyId,
         status: "PRISE_EN_CHARGE",
       })
@@ -102,9 +126,8 @@ export const submitTraining =
         )
     );
 
-    // const updateCandidacyStatus =
-
-    return existsCandidacyInValidation
+    return validateCandidacyNotAlreadyFunding
+      .chain(() => validateCandidacyIsTakeOver)
       .chain(() => updateTrainingInformations)
       .chain(() => updateCandidacy);
   };
