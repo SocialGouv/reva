@@ -44,6 +44,7 @@ type Element
     | Input String
     | Number String
     | ReadOnlyElement Element
+    | ReadOnlyElements (List ( String, Element ))
     | Select String (List ( String, String ))
     | SelectOther String String String
     | Section String
@@ -342,7 +343,23 @@ viewEditableElement formData ( elementId, element ) =
                 |> withLabel label
 
         ReadOnlyElement readOnlyElement ->
-            [ div [ class "mb-8" ] <| viewReadOnlyElement formData ( elementId, readOnlyElement ) ]
+            [ div
+                [ class "mb-8" ]
+              <|
+                viewReadOnlyElement formData ( elementId, readOnlyElement )
+            ]
+
+        ReadOnlyElements readOnlyElements ->
+            [ div
+                [ class "flex rounded"
+                , class "bg-slate-50 border-slate-200"
+                , class "mb-8 pt-3 pb-2 px-2"
+                ]
+              <|
+                List.map
+                    (viewReadOnlyElement formData >> div [ class "mx-3" ])
+                    readOnlyElements
+            ]
 
         Section title ->
             [ View.Heading.h4 title ]
@@ -412,7 +429,7 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> Maybe.withDefault (defaultValue element)
 
         dataClass =
-            "min-h-[40px] bg-gray-100 px-6 py-5 text-lg font-medium leading-snug text-gray-500 mt-1 mb-4"
+            "min-h-[40px] bg-slate-100 px-6 py-5 text-lg font-medium leading-snug text-slate-600 mt-1 mb-4"
 
         dataView d =
             dd
@@ -485,6 +502,11 @@ viewReadOnlyElement formData ( elementId, element ) =
 
         ReadOnlyElement readOnlyElement ->
             viewReadOnlyElement formData ( elementId, readOnlyElement )
+
+        ReadOnlyElements readOnlyElements ->
+            List.map
+                (viewReadOnlyElement formData >> div [])
+                readOnlyElements
 
         Section title ->
             [ View.Heading.h4 title ]

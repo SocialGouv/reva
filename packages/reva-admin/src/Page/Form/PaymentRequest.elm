@@ -64,37 +64,37 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( "diagnosis", Form.Title "Entretien(s) de faisabilité" )
         , ( "diagnosisReview"
           , Form.ReadOnlyElements
-                [ ( keys.diagnosisEstimatedHourCount, Form.Number "Nombre d'heures prévues" )
+                [ ( keys.diagnosisEstimatedHourCount, Form.Number "Nb d'heures prévues" )
                 , ( keys.diagnosisCost, Form.Number "Coût horaire" )
                 ]
           )
-        , ( keys.diagnosisHourCount, Form.Number "Nombre d'heures réalisées" )
+        , ( keys.diagnosisHourCount, Form.Number "Nb d'heures réalisées" )
         , ( "post-exam", Form.Title "Entretien post jury" )
         , ( "diagnosisReview"
           , Form.ReadOnlyElements
-                [ ( keys.postExamEstimatedHourCount, Form.Number "Nombre d'heures prévues" )
+                [ ( keys.postExamEstimatedHourCount, Form.Number "Nb d'heures prévues" )
                 , ( keys.postExamCost, Form.Number "Coût horaire" )
                 ]
           )
-        , ( keys.postExamHourCount, Form.Number "Nombre d'heures réalisées" )
+        , ( keys.postExamHourCount, Form.Number "Nb d'heures réalisées" )
         , ( "companion", Form.Section "Accompagnement méthodologique" )
         , ( keys.companionId, Form.Select "Accompagnateur choisi par le candidat" availableCompanions )
         , ( "individual", Form.Title "Accompagnement individuel" )
         , ( "individualReview"
           , Form.ReadOnlyElements
-                [ ( keys.individualEstimatedHourCount, Form.Number "Nombre d'heures prévues" )
+                [ ( keys.individualEstimatedHourCount, Form.Number "Nb d'heures prévues" )
                 , ( keys.individualCost, Form.Number "Coût horaire" )
                 ]
           )
-        , ( keys.individualHourCount, Form.Number "Nombre d'heures réalisées" )
+        , ( keys.individualHourCount, Form.Number "Nb d'heures réalisées" )
         , ( "collective", Form.Title "Accompagnement collectif" )
         , ( "individualReview"
           , Form.ReadOnlyElements
-                [ ( keys.collectiveEstimatedHourCount, Form.Number "Nombre d'heures prévues" )
+                [ ( keys.collectiveEstimatedHourCount, Form.Number "Nb d'heures prévues" )
                 , ( keys.collectiveCost, Form.Number "Coût horaire" )
                 ]
           )
-        , ( keys.collectiveHourCount, Form.Number "Nombre d'heures réalisées" )
+        , ( keys.collectiveHourCount, Form.Number "Nb d'heures réalisées" )
         , ( "training", Form.Section "Actes formatifs" )
         , ( "mandatory", Form.Title "Formations obligatoires" )
         , ( keys.mandatoryTrainingIds
@@ -104,11 +104,11 @@ form maybeCertification formData ( candidacy, referential ) =
           )
         , ( "mandatoryTrainingsReview"
           , Form.ReadOnlyElements
-                [ ( keys.mandatoryTrainingsEstimatedHourCount, Form.ReadOnlyElement <| Form.Number "Nombre d'heures prévues" )
+                [ ( keys.mandatoryTrainingsEstimatedHourCount, Form.ReadOnlyElement <| Form.Number "Nb d'heures prévues" )
                 , ( keys.mandatoryTrainingsCost, Form.ReadOnlyElement <| Form.Number "Coût horaire" )
                 ]
           )
-        , ( keys.mandatoryTrainingsHourCount, Form.ReadOnlyElement <| Form.Number "Nombre d'heures réalisées" )
+        , ( keys.mandatoryTrainingsHourCount, Form.Number "Nb d'heures réalisées" )
         , ( "basic-skills", Form.Title "Formations savoirs de base" )
         , ( keys.basicSkillsIds
           , Form.ReadOnlyElement <|
@@ -117,32 +117,34 @@ form maybeCertification formData ( candidacy, referential ) =
           )
         , ( "basicSkillsReview"
           , Form.ReadOnlyElements
-                [ ( keys.basicSkillsEstimatedHourCount, Form.Number "Nombre d'heures prévues" )
+                [ ( keys.basicSkillsEstimatedHourCount, Form.Number "Nb d'heures prévues" )
                 , ( keys.basicSkillsCost, Form.Number "Coût horaire" )
                 ]
           )
-        , ( keys.basicSkillsHourCount, Form.Number "Nombre d'heures réalisées" )
+        , ( keys.basicSkillsHourCount, Form.Number "Nb d'heures réalisées" )
         , ( "skills", Form.Title "Bloc de compétences certifiant" )
         , ( keys.certificateSkills, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
         , ( "certificateSkillsReview"
           , Form.ReadOnlyElements
-                [ ( keys.certificateSkillsEstimatedHourCount, Form.Number "Nombre d'heures prévues" )
+                [ ( keys.certificateSkillsEstimatedHourCount, Form.Number "Nb d'heures prévues" )
                 , ( keys.certificateSkillsCost, Form.Number "Coût horaire" )
                 ]
           )
+        , ( keys.certificateSkillsHourCount, Form.Number "Nb d'heures réalisées" )
         , ( "other", Form.Title "Autres actions de formations complémentaires" )
         , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
         , ( keys.totalTrainingHourCount
-          , Form.Info "Nombre d'heures prévue total actes formatifs" <|
+          , Form.Info "Nb d'heures prévue total actes formatifs" <|
                 String.fromInt (totalTrainingHourCount formData)
           )
         , ( "jury", Form.Title "Prestation jury" )
         , ( "examReview"
           , Form.ReadOnlyElements
-                [ ( keys.examHourCount, Form.Number "Nombre d'heures prévues" )
+                [ ( keys.examEstimatedHourCount, Form.Number "Nb d'heures prévues" )
                 , ( keys.examCost, Form.Number "Coût horaire" )
                 ]
           )
+        , ( keys.examHourCount, Form.Number "Nb d'heures réalisées" )
         , ( "total", Form.Section "Total" )
         , totalCostSection formData
         , confirmationSection candidacy

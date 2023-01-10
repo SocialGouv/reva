@@ -36,6 +36,7 @@ import Page.Form.Appointment
 import Page.Form.Candidate
 import Page.Form.DropOut
 import Page.Form.FundingRequest
+import Page.Form.PaymentRequest
 import Page.Form.Training
 import RemoteData exposing (RemoteData(..))
 import Route
@@ -648,7 +649,7 @@ updateTab context tab model =
                     Form.updateForm context
                         { form =
                             if candidacy.dropOutDate == Nothing || isReadOnly then
-                                Page.Form.FundingRequest.form candidacy.certification
+                                Page.Form.PaymentRequest.form candidacy.certification
 
                             else
                                 Page.Form.FundingRequest.droppedOutForm candidacy.certification
