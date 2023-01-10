@@ -143,55 +143,11 @@ export const createFundingRequest = async (params: {
 };
 
 const getNextNumAction = async () => {
-  const numActionSequenceNum = (await dayHasChangedSinceLastSequenceNumber())
-    ? await getResetSequenceNextVal()
-    : await getRegularSequenceNextVal();
-
-  const newNumAction = makeNumActionValueFromSequenceNum(numActionSequenceNum);
-  logger.info(`fundingRequest:getNextNumAction => ${newNumAction}`);
-  return newNumAction;
-};
-
-const dayHasChangedSinceLastSequenceNumber = async (): Promise<boolean> => {
-  const curSeqNum = (
-    (await prismaClient.$queryRaw`SELECT last_value FROM funding_request_num_action_sequence`) as Array<{
-      last_value: number;
-    }>
-  )[0].last_value;
-  const numAction = makeNumActionValueFromSequenceNum(curSeqNum);
-  logger.info(
-    `fundingRequest:getNextNumAction current seq. num=${curSeqNum}, looking up numAction ${numAction}`
-  );
-
-  const todaysRevaNumActionWithCurrentSeqNumCount =
-    await prismaClient.fundingRequest.count({
-      where: {
-        numAction,
-      },
-    });
-  const dayHasChanged = todaysRevaNumActionWithCurrentSeqNumCount === 0;
-  logger.info(
-    `fundingRequest:getNextNumAction numAction count: ${todaysRevaNumActionWithCurrentSeqNumCount}. must reset: ${dayHasChanged}`
-  );
-
-  return dayHasChanged;
-};
-
-const getResetSequenceNextVal = async (): Promise<number> => {
-  const sequenceStart = 1;
-  await prismaClient.$queryRaw`Select setval('funding_request_num_action_sequence',${sequenceStart})`;
-  return sequenceStart;
-};
-
-const getRegularSequenceNextVal = async (): Promise<number> => {
-  return (
-    (await prismaClient.$queryRaw`Select nextval('funding_request_num_action_sequence')`) as Array<{
+  const nextValQueryResult =
+    (await prismaClient.$queryRaw`Select nextval('funding_request_num_action_sequence')`) as {
       nextval: number;
-    }>
-  )[0].nextval;
-};
-
-const makeNumActionValueFromSequenceNum = (sequenceNum: number) =>
-  `reva_${format(new Date(), "yyyyMMdd")}_${sequenceNum
+    }[];
+  return `reva_${format(new Date(), "yyyyMMdd")}_${nextValQueryResult[0].nextval
     .toString()
     .padStart(5, "0")}`;
+};
