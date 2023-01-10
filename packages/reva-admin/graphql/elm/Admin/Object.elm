@@ -81,6 +81,10 @@ type Organism
     = Organism
 
 
+type PaymentRequest
+    = PaymentRequest
+
+
 type Profession
     = Profession
 
