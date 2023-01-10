@@ -655,7 +655,7 @@ updateTab context tab model =
                             else
                                 Page.Form.FundingRequest.droppedOutForm candidacy.certification
                         , onLoad = Api.Form.PaymentRequest.get candidacyId
-                        , onSave = Api.Form.PaymentRequest.create candidacyId
+                        , onSave = Api.Form.PaymentRequest.confirm candidacyId
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey

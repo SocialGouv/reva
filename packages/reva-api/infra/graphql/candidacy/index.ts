@@ -496,8 +496,9 @@ export const resolvers = {
         .extract();
     },
     candidacy_confirmPaymentRequest: async (
-      context: { auth: { hasRole: (role: Role) => boolean } },
-      { candidacyId }: { candidacyId: string }
+      _: unknown,
+      { candidacyId }: { candidacyId: string },
+      context: { auth: { hasRole: (role: Role) => boolean } }
     ) => {
       const result = await confirmPaymentRequest({
         hasRole: context.auth.hasRole,
