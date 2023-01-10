@@ -1,4 +1,4 @@
-module Api.Form.PaymentRequest exposing (create, get)
+module Api.Form.PaymentRequest exposing (confirm, create, get)
 
 import Admin.InputObject
 import Admin.Mutation as Mutation
@@ -49,6 +49,24 @@ create candidacyId endpointGraphql token toMsg ( candidacy, referential ) dict =
                 paymentInput
     in
     Mutation.candidacy_createOrUpdatePaymentRequest paymentRequiredArg SelectionSet.empty
+        |> Auth.makeMutation endpointGraphql token toMsg
+
+
+confirm :
+    CandidacyId
+    -> String
+    -> Token
+    -> (RemoteData String () -> msg)
+    -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
+    -> Dict String String
+    -> Cmd msg
+confirm candidacyId endpointGraphql token toMsg _ _ =
+    let
+        paymentRequiredArg =
+            Mutation.CandidacyConfirmPaymentRequestRequiredArguments
+                (Uuid <| Data.Candidacy.candidacyIdToString candidacyId)
+    in
+    Mutation.candidacy_confirmPaymentRequest paymentRequiredArg SelectionSet.empty
         |> Auth.makeMutation endpointGraphql token toMsg
 
 
