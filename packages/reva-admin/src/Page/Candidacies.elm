@@ -170,8 +170,14 @@ view context model =
             let
                 preFilteredCandidacies =
                     case model.filters.status of
-                        Just _ ->
+                        Just "abandon" ->
                             candidacies
+
+                        Just "archive" ->
+                            candidacies
+
+                        Just _ ->
+                            candidacies |> List.filter (not << .isDroppedOut)
 
                         Nothing ->
                             -- When not filter is selected, we display only active candidacy
