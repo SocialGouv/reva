@@ -9,6 +9,7 @@ import Admin.Object.CandidacySummary
 import Admin.Object.Candidate
 import Admin.Object.CandidateGoal
 import Admin.Object.Certification
+import Admin.Object.CertificationSummary
 import Admin.Object.Department
 import Admin.Object.Experience
 import Admin.Object.Organism
@@ -164,7 +165,7 @@ summarySelection =
     SelectionSet.succeed Data.Candidacy.CandidacySummary
         |> with (SelectionSet.map (\(Id id) -> Data.Candidacy.candidacyIdFromString id) Admin.Object.CandidacySummary.id)
         |> with (SelectionSet.map (Maybe.map (\(Id id) -> id)) Admin.Object.CandidacySummary.certificationId)
-        |> with (Admin.Object.CandidacySummary.certification certificationSelection)
+        |> with (Admin.Object.CandidacySummary.certification certificationSummarySelection)
         |> with (Admin.Object.CandidacySummary.department departmentSelection)
         |> with (Admin.Object.CandidacySummary.organism organismSelection)
         |> with Admin.Object.CandidacySummary.firstname
@@ -234,6 +235,14 @@ certificationSelection =
         |> with Admin.Object.Certification.activityArea
         |> with Admin.Object.Certification.accessibleJobType
         |> with Admin.Object.Certification.abilities
+
+
+certificationSummarySelection : SelectionSet Data.Certification.CertificationSummary Admin.Object.CertificationSummary
+certificationSummarySelection =
+    SelectionSet.succeed Data.Certification.CertificationSummary
+        |> with Admin.Object.CertificationSummary.id
+        |> with Admin.Object.CertificationSummary.label
+        |> with Admin.Object.CertificationSummary.acronym
 
 
 

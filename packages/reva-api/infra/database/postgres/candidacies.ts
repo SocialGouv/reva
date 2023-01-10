@@ -46,10 +46,12 @@ export const candidacyIncludes = {
   },
 };
 
+type CertificationSummary = Pick<Certification, "id" | "label" | "acronym">;
+
 const toDomainCandidacySummary = (
   candidacy: Candidacy & {
     candidacyStatuses: CandidaciesStatus[];
-    certification: Certification;
+    certification: CertificationSummary;
     organism: Organism | null;
     firstname: string | undefined;
     lastname: string | undefined;
@@ -88,7 +90,7 @@ const toDomainCandidacySummary = (
 const toDomainCandidacySummaries = (
   candidacies: (Candidacy & {
     candidacyStatuses: CandidaciesStatus[];
-    certification: Certification;
+    certification: CertificationSummary;
     organism: Organism | null;
     firstname: string | undefined;
     lastname: string | undefined;
@@ -627,7 +629,13 @@ export const getCandidacies = async () => {
         candidacyStatuses: true,
         certificationsAndRegions: {
           select: {
-            certification: true,
+            certification: {
+              select: {
+                id: true,
+                label: true,
+                acronym: true,
+              },
+            },
           },
           where: {
             isActive: true,
@@ -683,7 +691,13 @@ export const getCandidaciesForUser = async (keycloakId: string) => {
         candidacyStatuses: true,
         certificationsAndRegions: {
           select: {
-            certification: true,
+            certification: {
+              select: {
+                id: true,
+                label: true,
+                acronym: true,
+              },
+            },
           },
           where: {
             isActive: true,

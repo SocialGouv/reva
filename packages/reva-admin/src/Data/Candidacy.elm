@@ -28,7 +28,7 @@ module Data.Candidacy exposing
 import Admin.Enum.Duration exposing (Duration)
 import Admin.Object.CandidacySummary exposing (sentAt)
 import Data.Candidate exposing (Candidate)
-import Data.Certification exposing (Certification)
+import Data.Certification exposing (Certification, CertificationSummary)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department)
 import RemoteData exposing (RemoteData)
@@ -84,7 +84,7 @@ type alias Candidacy =
 type alias CandidacySummary =
     { id : CandidacyId
     , certificationId : Maybe String
-    , certification : Maybe Certification
+    , certification : Maybe CertificationSummary
     , department : Maybe Department
     , organism : Maybe Organism
     , firstname : Maybe String
@@ -224,7 +224,7 @@ toCandidacySummary : Candidacy -> CandidacySummary
 toCandidacySummary candidacy =
     { id = candidacy.id
     , certificationId = candidacy.certificationId
-    , certification = candidacy.certification
+    , certification = candidacy.certification |> Maybe.map (\c -> { id = c.id, label = c.label, acronym = c.acronym })
     , department = candidacy.department
     , organism = candidacy.organism
     , firstname = candidacy.firstname

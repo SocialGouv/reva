@@ -34,6 +34,13 @@ certificationId =
     Object.selectionForField "(Maybe Data.Scalar.Id)" "certificationId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder |> Decode.nullable)
 
 
+certification :
+    SelectionSet decodesTo Admin.Object.CertificationSummary
+    -> SelectionSet (Maybe decodesTo) Admin.Object.CandidacySummary
+certification object____ =
+    Object.selectionForCompositeField "certification" [] object____ (Basics.identity >> Decode.nullable)
+
+
 organismId : SelectionSet (Maybe Data.Scalar.Id) Admin.Object.CandidacySummary
 organismId =
     Object.selectionForField "(Maybe Data.Scalar.Id)" "organismId" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder |> Decode.nullable)
@@ -44,13 +51,6 @@ organism :
     -> SelectionSet (Maybe decodesTo) Admin.Object.CandidacySummary
 organism object____ =
     Object.selectionForCompositeField "organism" [] object____ (Basics.identity >> Decode.nullable)
-
-
-certification :
-    SelectionSet decodesTo Admin.Object.Certification
-    -> SelectionSet (Maybe decodesTo) Admin.Object.CandidacySummary
-certification object____ =
-    Object.selectionForCompositeField "certification" [] object____ (Basics.identity >> Decode.nullable)
 
 
 department :
