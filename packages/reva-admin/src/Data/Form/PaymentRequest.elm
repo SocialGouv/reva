@@ -123,7 +123,8 @@ fundingList funding =
         int key =
             Just <| String.fromInt <| key funding
     in
-    [ ( .companionId, string (.companionId >> Maybe.withDefault "") )
+    [ ( .numAction, funding.numAction )
+    , ( .companionId, string (.companionId >> Maybe.withDefault "") )
     , ( .diagnosisEstimatedHourCount, int .diagnosisHourCount )
     , ( .diagnosisCost, int .diagnosisCost )
     , ( .postExamEstimatedHourCount, int .postExamHourCount )

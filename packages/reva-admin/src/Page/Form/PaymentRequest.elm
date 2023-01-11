@@ -31,6 +31,13 @@ form maybeCertification formData ( candidacy, referential ) =
 
             Nothing ->
                 ( "certification", Form.Empty )
+        , ( "funding-num-action", Form.Section "Numéro de prise en charge Reva" )
+        , case Dict.get keys.numAction formData of
+            Just numAction ->
+                ( "num-action", Form.Info "" numAction )
+
+            Nothing ->
+                ( "num-action", Form.Empty )
         , ( "organism", Form.Section "Accompagnement architecte de parcours" )
         , ( "diagnosis", Form.Title "Entretien(s) de faisabilité" )
         , ( "diagnosisReview"
@@ -124,20 +131,8 @@ form maybeCertification formData ( candidacy, referential ) =
         , confirmationSection candidacy
         ]
     , saveLabel = "Envoyer"
-    , title = title formData
+    , title = "Demande de paiement"
     }
-
-
-title : Dict String String -> String
-title formData =
-    let
-        baseTitle : String
-        baseTitle =
-            "Demande de prise en charge"
-    in
-    Dict.get keys.numAction formData
-        |> Maybe.map (\numAction -> baseTitle ++ " " ++ numAction)
-        |> Maybe.withDefault baseTitle
 
 
 totalCostSection : Dict String String -> ( String, Form.Element )

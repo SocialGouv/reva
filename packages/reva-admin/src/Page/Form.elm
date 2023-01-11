@@ -557,8 +557,8 @@ viewReadOnlyElement formData ( elementId, element ) =
 info : String -> Html msg
 info value =
     p
-        [ class "rounded bg-slate-100 text-slate-800 mb-8"
-        , class "px-8 py-6 text-lg"
+        [ class "rounded bg-slate-100 text-slate-800 mb-6"
+        , class "px-6 py-4 text-lg"
         ]
         [ text value ]
 
