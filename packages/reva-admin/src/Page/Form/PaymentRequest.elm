@@ -23,7 +23,7 @@ form maybeCertification formData ( candidacy, referential ) =
                 |> Data.Form.Helper.toIdList
     in
     { elements =
-        [ ( "heading", Form.Heading "2 - Parcours personnalisé" )
+        [ ( "heading", Form.Heading "1 - Informations des prestations" )
         , ( "selected-certification", Form.Section "Certification choisie par le candidat" )
         , case maybeCertification of
             Just certification ->

@@ -279,6 +279,11 @@ viewContent context model candidacies filteredCandidacies =
                 , maybeNavigationSteps
                 ]
 
+            PaymentRequest candidacyId ->
+                [ viewForm "payment" candidacyId
+                , maybeNavigationSteps
+                ]
+
             Profil _ ->
                 [ viewCandidacyPanel context model
                 , maybeNavigationSteps
@@ -641,7 +646,7 @@ updateTab context tab model =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        ( View.Candidacy.Tab.FundingRequest candidacyId, Success candidacy ) ->
+        ( View.Candidacy.Tab.PaymentRequest candidacyId, Success candidacy ) ->
             let
                 isReadOnly =
                     Candidacy.isFundingRequestSent candidacy
@@ -662,7 +667,42 @@ updateTab context tab model =
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Tab.Profil candidacyId)))
                         , onValidate = \_ _ -> Ok ()
                         , status =
-                            Form.Editable
+                            if Candidacy.isFundingRequestSent candidacy then
+                                Form.ReadOnly
+
+                            else
+                                Form.Editable
+                        }
+                        model.form
+            in
+            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
+
+        ( View.Candidacy.Tab.FundingRequest candidacyId, Success candidacy ) ->
+            let
+                isReadOnly =
+                    Candidacy.isFundingRequestSent candidacy
+
+                ( formModel, formCmd ) =
+                    Form.updateForm context
+                        { form =
+                            if candidacy.dropOutDate == Nothing || isReadOnly then
+                                Page.Form.FundingRequest.form candidacy.certification
+
+                            else
+                                Page.Form.FundingRequest.droppedOutForm candidacy.certification
+                        , onLoad = Api.Form.FundingRequest.get candidacyId candidacy
+                        , onSave = Api.Form.FundingRequest.create candidacyId
+                        , onRedirect =
+                            Nav.pushUrl
+                                context.navKey
+                                (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Tab.Profil candidacyId)))
+                        , onValidate = \_ _ -> Ok ()
+                        , status =
+                            if Candidacy.isFundingRequestSent candidacy then
+                                Form.ReadOnly
+
+                            else
+                                Form.Editable
                         }
                         model.form
             in
@@ -745,6 +785,9 @@ updateTab context tab model =
         ( View.Candidacy.Tab.Meetings candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
 
+        ( View.Candidacy.Tab.PaymentRequest candidacyId, NotAsked ) ->
+            initCandidacy context candidacyId newModel
+
         ( View.Candidacy.Tab.Training candidacyId, NotAsked ) ->
             initCandidacy context candidacyId newModel
 
@@ -763,6 +806,9 @@ updateTab context tab model =
         ( View.Candidacy.Tab.Meetings _, _ ) ->
             ( newModel, Cmd.none )
 
+        ( View.Candidacy.Tab.PaymentRequest _, _ ) ->
+            ( newModel, Cmd.none )
+
         ( View.Candidacy.Tab.Training _, _ ) ->
             ( newModel, Cmd.none )
 
@@ -772,7 +818,7 @@ updateTab context tab model =
         ( View.Candidacy.Tab.CandidateInfo _, _ ) ->
             ( newModel, Cmd.none )
 
-        ( View.Candidacy.Tab.FundingRequest candidacyId, _ ) ->
+        ( View.Candidacy.Tab.FundingRequest _, _ ) ->
             ( newModel, Cmd.none )
 
         ( View.Candidacy.Tab.Profil _, _ ) ->

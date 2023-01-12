@@ -214,7 +214,7 @@ statusToProgressPosition status =
             4
 
         "DEMANDE_FINANCEMENT_ENVOYE" ->
-            5
+            6
 
         _ ->
             -1
@@ -275,6 +275,11 @@ isStatusEqual candidacy status =
 isFundingRequestSent : Candidacy -> Bool
 isFundingRequestSent candidacy =
     isStatusEqualOrAbove candidacy "DEMANDE_FINANCEMENT_ENVOYE"
+
+
+isPaymentRequestSent : Candidacy -> Bool
+isPaymentRequestSent candidacy =
+    isStatusEqualOrAbove candidacy "DEMANDE_PAIEMENT_ENVOYEE"
 
 
 isTrainingSent : Candidacy -> Bool
