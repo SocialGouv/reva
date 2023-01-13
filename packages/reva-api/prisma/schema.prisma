@@ -118,6 +118,7 @@ model Candidacy {
   createdAt                    DateTime                                @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                    DateTime?                               @map("updated_at") @db.Timestamptz(6)
   FundingRequest               FundingRequest[]
+  paymentRequest               PaymentRequest?
   isCertificationPartial       Boolean                                 @default(false) @map("is_certification_partial")
   admissibility                Admissibility?
 
@@ -145,6 +146,7 @@ enum CandidacyStatus {
   PARCOURS_ENVOYE
   PARCOURS_CONFIRME
   DEMANDE_FINANCEMENT_ENVOYE
+  DEMANDE_PAIEMENT_ENVOYEE
   DOSSIER_PRO
   CERTIFICATION
 }
@@ -519,4 +521,20 @@ model Admissibility {
   updatedAt                      DateTime?            @map("updated_at") @db.Timestamptz(6)
 
   @@map("admissibility")
+}
+
+model PaymentRequest {
+  id                                   String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy                            Candidacy @relation(fields: [candidacyId], references: [id])
+  candidacyId                          String    @unique @map("candidacy_id") @db.Uuid
+  diagnosisEffectiveHourCount          Int       @map("diagnosis_effective_hour_count")
+  postExamEffectiveHourCount           Int       @map("post_exam_effective_hour_count")
+  individualEffectiveHourCount         Int       @map("individual_effective_hour_count")
+  collectiveEffectiveHourCount         Int       @map("collective_effective_hour_count")
+  mandatoryTrainingsEffectiveHourCount Int       @map("mandatory_training_effective_hour_count")
+  basicSkillsEffectiveHourCount        Int       @map("basic_skills_effective_hour_count")
+  certificateSkillsEffectiveHourCount  Int       @map("certificate_skills_effective_hour_count")
+  examEffectiveHourCount               Int       @map("exam_effective_hour_count")
+
+  @@map("payment_request")
 }
