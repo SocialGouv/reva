@@ -141,22 +141,15 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( keys.examHourCount, hourCountElement )
         , ( "total", Form.Section "Total" )
         , FundingRequest.totalCostSection "Coût total de la demande de paiement" formData
-        , confirmationSection candidacy
+        , if Candidacy.isStatusEqualOrAbove candidacy "DEMANDE_PAIEMENT_ENVOYEE" then
+            ( "", Form.Empty )
+
+          else
+            ( keys.isFormConfirmed
+            , Form.Checkbox "Je confirme ce montant de paiement. Je ne pourrai pas éditer cette demande de paiement après son envoi."
+            )
         ]
     , saveLabel = Just "Enregistrer"
     , submitLabel = "Envoyer"
     , title = "Demande de paiement"
     }
-
-
-confirmationSection : Candidacy -> ( String, Form.Element )
-confirmationSection candidacy =
-    if Candidacy.isStatusEqualOrAbove candidacy "DEMANDE_PAIEMENT_ENVOYEE" then
-        ( ""
-        , Form.Empty
-        )
-
-    else
-        ( keys.isFormConfirmed
-        , Form.Checkbox "Je confirme ce montant de paiement. Je ne pourrai pas éditer cette demande de paiement après son envoi."
-        )
