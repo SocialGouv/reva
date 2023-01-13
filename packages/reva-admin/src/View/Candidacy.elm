@@ -117,17 +117,6 @@ view context config =
                 , onClick (config.archiveMsg config.candidacy)
                 ]
                 [ text "Archiver la candidature" ]
-            , if config.candidacy.dropOutDate == Nothing then
-                a
-                    [ class "ml-2"
-                    , class "bg-red-800 hover:bg-red-900 text-white"
-                    , class "text-xs px-3 py-2 rounded"
-                    , href (Route.toString context.baseUrl (Route.Candidacy (DropOut config.candidacy.id)))
-                    ]
-                    [ text "Déclarer l'abandon du candidat" ]
-
-              else
-                text ""
             ]
         ]
     ]

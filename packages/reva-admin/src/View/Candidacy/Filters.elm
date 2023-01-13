@@ -67,7 +67,6 @@ view candidacies filters context =
                       <|
                         List.map viewFilter statuses
                     ]
-                , link (Just "abandon") "Toutes les candidatures abandonnées"
                 , link (Just "archive") "Toutes les candidatures archivées"
                 , link (Just "projet") "Tous les projets en cours d'édition"
                 ]
