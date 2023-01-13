@@ -43,6 +43,7 @@ form _ ( _, referential ) =
         , ( keys.highestDegree, Form.Select "Plus haut niveau de diplôme obtenu" degrees )
         , ( keys.vulnerabilityIndicator, Form.Select "Indicateur public fragile" vulnerabilityIndicators )
         ]
-    , saveLabel = "Suivant"
+    , saveLabel = Nothing
+    , submitLabel = "Suivant"
     , title = "Demande de prise en charge"
     }

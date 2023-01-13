@@ -130,7 +130,8 @@ form maybeCertification formData ( candidacy, referential ) =
         , totalCostSection formData
         , confirmationSection candidacy
         ]
-    , saveLabel = "Envoyer"
+    , saveLabel = Just "Enregistrer"
+    , submitLabel = "Envoyer"
     , title = "Demande de paiement"
     }
 

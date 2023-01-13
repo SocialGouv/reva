@@ -30,6 +30,7 @@ form _ _ =
         , ( keys.appointmentCount, Form.Number "Nombre de rendez-vous réalisés avec le candidat" )
         , ( keys.wasPresentAtFirstAppointment, Form.Checkbox "Le candidat a bien effectué le rendez-vous d'étude de faisabilité" )
         ]
-    , saveLabel = "Enregistrer"
+    , saveLabel = Nothing
+    , submitLabel = "Enregistrer"
     , title = "Rendez-vous pédagogique"
     }

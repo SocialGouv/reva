@@ -130,7 +130,8 @@ form maybeCertification formData ( candidacy, referential ) =
                , totalCostSection formData
                , confirmationSection candidacy
                ]
-    , saveLabel = saveLabel
+    , saveLabel = Nothing
+    , submitLabel = saveLabel
     , title = title formData
     }
 
@@ -143,7 +144,8 @@ droppedOutForm maybeCertification formData ( candidacy, referential ) =
                , totalCostSection formData
                , confirmationSection candidacy
                ]
-    , saveLabel = saveLabel
+    , saveLabel = Nothing
+    , submitLabel = saveLabel
     , title = title formData
     }
 
