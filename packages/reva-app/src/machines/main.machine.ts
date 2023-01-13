@@ -76,6 +76,7 @@ export interface MainContext {
   selectedDepartment?: Department;
   organisms: Organism[] | undefined;
   trainingProgram: TrainingProgram | undefined;
+  isTrainingProgramConfirmed: boolean;
 }
 
 type selectedDepartment = { type: "SELECT_DEPARTMENT"; departmentCode: string };
@@ -205,6 +206,7 @@ export const mainMachine =
           organisms: undefined,
           trainingProgram: undefined,
           isCertificationPartial: false,
+          isTrainingProgramConfirmed: false,
         },
         // TODO remove this hack when url handler is done
         initial:
@@ -498,6 +500,8 @@ export const mainMachine =
                               event.data.data.candidacy_confirmTrainingForm.createdAt
                             );
                           },
+                          isTrainingProgramConfirmed: (_context, _event) =>
+                            true,
                           candidacyStatus: (_context, _event) =>
                             "PARCOURS_CONFIRME",
                         }),
@@ -534,6 +538,7 @@ export const mainMachine =
                 target: "trainingProgramSummary",
                 actions: assign({
                   direction: (_context, _event) => "next",
+                  isTrainingProgramConfirmed: (_context, _event) => true,
                 }),
               },
             },
@@ -1072,6 +1077,10 @@ export const mainMachine =
                   department.id === event.data.candidacy.department?.id
               ),
               trainingProgram: event.data.candidacy.trainingProgram,
+              isTrainingProgramConfirmed:
+                event.data.candidacy?.candidacyStatuses.filter(
+                  (cs: { status: string }) => cs.status === "PARCOURS_CONFIRME"
+                ).length > 0,
             };
           }),
           navigateHome,
@@ -1121,8 +1130,10 @@ export const mainMachine =
           isTrainingProgramConfirmed: (_context, event) => {
             const typedEvent = event as DoneInvokeEvent<any>;
             const isConfirmed =
-              typedEvent.data.candidacy?.candidacyStatus ===
-              "PARCOURS_CONFIRME";
+              typedEvent.data.candidacy?.candidacyStatuses.filter(
+                (cs: { status: string }) => cs.status === "PARCOURS_CONFIRME"
+              ).length > 0;
+
             return !!isConfirmed;
           },
           isProjectSubmitted: (_context, event) => {

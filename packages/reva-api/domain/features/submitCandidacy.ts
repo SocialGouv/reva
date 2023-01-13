@@ -1,4 +1,4 @@
-import { Either, EitherAsync } from "purify-ts";
+import { Either, EitherAsync, Left, Right } from "purify-ts";
 
 import { Candidacy } from "../types/candidacy";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
@@ -9,11 +9,14 @@ interface SubmitCandidacyDeps {
     status: "VALIDATION";
   }) => Promise<Either<string, Candidacy>>;
   getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
+  existsCandidacyHavingHadStatus: (params: {
+    candidacyId: string;
+    status: "VALIDATION";
+  }) => Promise<Either<string, boolean>>;
 }
 
 export const submitCandidacy =
   (deps: SubmitCandidacyDeps) => (params: { candidacyId: string }) => {
-    // TODO Check if a candidacy does not already exist with status VALIDATION
     const checkIfCandidacyExists = EitherAsync.fromPromise(() =>
       deps.getCandidacyFromId(params.candidacyId)
     ).mapLeft(
@@ -23,6 +26,25 @@ export const submitCandidacy =
           `Aucune candidature n'a été trouvée`
         )
     );
+
+    const validateCandidacyNotAlreadySubmitted = EitherAsync.fromPromise(() =>
+      deps.existsCandidacyHavingHadStatus({
+        candidacyId: params.candidacyId,
+        status: "VALIDATION",
+      })
+    )
+      .chain((existsCandidacy) => {
+        if (existsCandidacy) {
+          return EitherAsync.liftEither(
+            Left(`Cette candidature ne peut être soumise à nouveau.`)
+          );
+        }
+        return EitherAsync.liftEither(Right(existsCandidacy));
+      })
+      .mapLeft(
+        (error: string) =>
+          new FunctionalError(FunctionalCodeError.STATUS_NOT_UPDATED, error)
+      );
 
     const updateContact = EitherAsync.fromPromise(() =>
       deps.updateCandidacyStatus({
@@ -37,5 +59,7 @@ export const submitCandidacy =
         )
     );
 
-    return checkIfCandidacyExists.chain(() => updateContact);
+    return checkIfCandidacyExists
+      .chain(() => validateCandidacyNotAlreadySubmitted)
+      .chain(() => updateContact);
   };

@@ -205,6 +205,8 @@ export const resolvers = {
       const result = await submitCandidacy({
         updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
+        existsCandidacyHavingHadStatus:
+          candidacyDb.existsCandidacyHavingHadStatus,
       })({ candidacyId: payload.candidacyId });
 
       return result
