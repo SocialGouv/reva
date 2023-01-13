@@ -66,7 +66,7 @@ const defaultValidFundingRequest: FundingRequestInput = {
   collectiveCost: 35,
   collectiveHourCount: 15,
   diagnosisCost: 70,
-  diagnosisHourCount: 2,
+  diagnosisHourCount: 1,
   examCost: 20,
   examHourCount: 2,
   individualCost: 70,
@@ -97,52 +97,57 @@ describe("funding request", () => {
     expect(result.isRight()).toEqual(true);
   });
 
-  describe("rules on diagnosisHourCount", () => {
-    test("should return an error when diagnosisHourCount > 2 for a candidate >bac and Non fragile", () => {
+  describe("rules on diagnosisHourCount and postExamHourCount", () => {
+    test("should return an error when (diagnosisHourCount + postExamHourCount) > 2 for a candidate >bac and Non fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        diagnosisHourCount: 3,
+        diagnosisHourCount: 2,
+        postExamHourCount: 1,
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
       expect((result.extract() as FunctionalError).errors).toContain(
-        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 0 et 2h."
+        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours doit être compris entre 0 et 2h."
       );
     });
-    test("should return an error when diagnosisHourCount > 4 for a candidate = bac", () => {
+    test("should return an error when (diagnosisHourCount + postExamHourCount) > 4 for a candidate = bac", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        diagnosisHourCount: 5,
+        diagnosisHourCount: 3,
+        postExamHourCount: 2,
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
       expect((result.extract() as FunctionalError).errors).toContain(
-        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 0 et 4h."
+        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours doit être compris entre 0 et 4h."
       );
     });
-    test("should return an ok when diagnosisHourCount <= 4 for a candidate = bac", () => {
+    test("should return an ok when (diagnosisHourCount + postExamHourCount) <= 4 for a candidate = bac", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        diagnosisHourCount: 4,
+        diagnosisHourCount: 2,
+        postExamHourCount: 2,
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
     });
-    test("should return an error when diagnosisHourCount > 4 for a candidate >bac and fragile", () => {
+    test("should return an error when (diagnosisHourCount + postExamHourCount) > 4 for a candidate >bac and fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        diagnosisHourCount: 5,
+        diagnosisHourCount: 3,
+        postExamHourCount: 2,
       };
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
       expect((result.extract() as FunctionalError).errors).toContain(
-        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 0 et 4h."
+        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours doit être compris entre 0 et 4h."
       );
     });
-    test("should return ok  when diagnosisHourCount > 4 for a candidate >bac and fragile", () => {
+    test("should return ok  when (diagnosisHourCount + postExamHourCount) <= 4 for a candidate >bac and fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        diagnosisHourCount: 4,
+        diagnosisHourCount: 2,
+        postExamHourCount: 2,
       };
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
@@ -669,7 +674,7 @@ describe("funding request", () => {
         collectiveCost: 35,
         collectiveHourCount: 15,
         diagnosisCost: 70,
-        diagnosisHourCount: 2,
+        diagnosisHourCount: 1,
         examCost: 20,
         examHourCount: 2,
         individualCost: 70,
@@ -681,7 +686,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
-      expect((result.extract() as FundingRequest).totalCost).toEqual(1825);
+      expect((result.extract() as FundingRequest).totalCost).toEqual(1755);
     });
 
     test("should return all hours multiply by its cost when candidate <= bac and Non fragile", () => {
