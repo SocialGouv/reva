@@ -20,7 +20,6 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
   const [state, send] = useActor(mainService);
   const [checkedCondition, setCheckedCondition] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  console.log(state.context)
   const isTrainingConfirmed =
     state.context.isTrainingProgramConfirmed;
 
