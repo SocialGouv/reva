@@ -1,0 +1,1002 @@
+[
+  {
+    "Numero_Fiche": "RNCP181",
+    "Codes_Rome_Code": "M1203",
+    "Codes_Rome_Libelle": "Comptabilité"
+  },
+  {
+    "Numero_Fiche": "RNCP183",
+    "Codes_Rome_Code": "I1306",
+    "Codes_Rome_Libelle": "Installation et maintenance en froid, conditionnement d''air"
+  },
+  {
+    "Numero_Fiche": "RNCP184",
+    "Codes_Rome_Code": "H2906",
+    "Codes_Rome_Libelle": "Conduite d''installation automatisée ou robotisée de fabrication mécanique"
+  },
+  {
+    "Numero_Fiche": "RNCP184",
+    "Codes_Rome_Code": "H3301",
+    "Codes_Rome_Libelle": "Conduite d''équipement de conditionnement"
+  },
+  {
+    "Numero_Fiche": "RNCP185",
+    "Codes_Rome_Code": "F1107",
+    "Codes_Rome_Libelle": "Mesures topographiques"
+  },
+  {
+    "Numero_Fiche": "RNCP192",
+    "Codes_Rome_Code": "D1408",
+    "Codes_Rome_Libelle": "Téléconseil et télévente"
+  },
+  {
+    "Numero_Fiche": "RNCP193",
+    "Codes_Rome_Code": "M1607",
+    "Codes_Rome_Libelle": "Secrétariat"
+  },
+  {
+    "Numero_Fiche": "RNCP194",
+    "Codes_Rome_Code": "D1401",
+    "Codes_Rome_Libelle": "Assistanat commercial"
+  },
+  {
+    "Numero_Fiche": "RNCP195",
+    "Codes_Rome_Code": "M1605",
+    "Codes_Rome_Libelle": "Assistanat technique et administratif"
+  },
+  {
+    "Numero_Fiche": "RNCP195",
+    "Codes_Rome_Code": "D1401",
+    "Codes_Rome_Libelle": "Assistanat commercial"
+  },
+  {
+    "Numero_Fiche": "RNCP202",
+    "Codes_Rome_Code": "H3302",
+    "Codes_Rome_Libelle": "Opérations manuelles d''assemblage, tri ou emballage"
+  },
+  {
+    "Numero_Fiche": "RNCP203",
+    "Codes_Rome_Code": "I1305",
+    "Codes_Rome_Libelle": "Installation et maintenance électronique"
+  },
+  {
+    "Numero_Fiche": "RNCP203",
+    "Codes_Rome_Code": "I1203",
+    "Codes_Rome_Libelle": "Maintenance des bâtiments et des locaux"
+  },
+  {
+    "Numero_Fiche": "RNCP205",
+    "Codes_Rome_Code": "I1604",
+    "Codes_Rome_Libelle": "Mécanique automobile et entretien de véhicules"
+  },
+  {
+    "Numero_Fiche": "RNCP206",
+    "Codes_Rome_Code": "I1604",
+    "Codes_Rome_Libelle": "Mécanique automobile et entretien de véhicules"
+  },
+  {
+    "Numero_Fiche": "RNCP207",
+    "Codes_Rome_Code": "I1604",
+    "Codes_Rome_Libelle": "Mécanique automobile et entretien de véhicules"
+  },
+  {
+    "Numero_Fiche": "RNCP209",
+    "Codes_Rome_Code": "I1402",
+    "Codes_Rome_Libelle": "Réparation de biens électrodomestiques et multimédia"
+  },
+  {
+    "Numero_Fiche": "RNCP209",
+    "Codes_Rome_Code": "I1305",
+    "Codes_Rome_Libelle": "Installation et maintenance électronique"
+  },
+  {
+    "Numero_Fiche": "RNCP210",
+    "Codes_Rome_Code": "I1402",
+    "Codes_Rome_Libelle": "Réparation de biens électrodomestiques et multimédia"
+  },
+  {
+    "Numero_Fiche": "RNCP210",
+    "Codes_Rome_Code": "I1305",
+    "Codes_Rome_Libelle": "Installation et maintenance électronique"
+  },
+  {
+    "Numero_Fiche": "RNCP211",
+    "Codes_Rome_Code": "I1309",
+    "Codes_Rome_Libelle": "Maintenance électrique"
+  },
+  {
+    "Numero_Fiche": "RNCP211",
+    "Codes_Rome_Code": "I1304",
+    "Codes_Rome_Libelle": "Installation et maintenance d''équipements industriels et d''exploitation"
+  },
+  {
+    "Numero_Fiche": "RNCP211",
+    "Codes_Rome_Code": "I1310",
+    "Codes_Rome_Libelle": "Maintenance mécanique industrielle"
+  },
+  {
+    "Numero_Fiche": "RNCP212",
+    "Codes_Rome_Code": "H1504",
+    "Codes_Rome_Libelle": "Intervention technique en contrôle essai qualité en électricité et électronique"
+  },
+  {
+    "Numero_Fiche": "RNCP212",
+    "Codes_Rome_Code": "I1305",
+    "Codes_Rome_Libelle": "Installation et maintenance électronique"
+  },
+  {
+    "Numero_Fiche": "RNCP212",
+    "Codes_Rome_Code": "I1304",
+    "Codes_Rome_Libelle": "Installation et maintenance d''équipements industriels et d''exploitation"
+  },
+  {
+    "Numero_Fiche": "RNCP213",
+    "Codes_Rome_Code": "I1308",
+    "Codes_Rome_Libelle": "Maintenance d''installation de chauffage"
+  },
+  {
+    "Numero_Fiche": "RNCP213",
+    "Codes_Rome_Code": "F1603",
+    "Codes_Rome_Libelle": "Installation d''équipements sanitaires et thermiques"
+  },
+  {
+    "Numero_Fiche": "RNCP214",
+    "Codes_Rome_Code": "F1603",
+    "Codes_Rome_Libelle": "Installation d''équipements sanitaires et thermiques"
+  },
+  {
+    "Numero_Fiche": "RNCP216",
+    "Codes_Rome_Code": "I1307",
+    "Codes_Rome_Libelle": "Installation et maintenance télécoms et courants faibles"
+  },
+  {
+    "Numero_Fiche": "RNCP216",
+    "Codes_Rome_Code": "F1605",
+    "Codes_Rome_Libelle": "Montage de réseaux électriques et télécoms"
+  },
+  {
+    "Numero_Fiche": "RNCP218",
+    "Codes_Rome_Code": "I1306",
+    "Codes_Rome_Libelle": "Installation et maintenance en froid, conditionnement d''air"
+  },
+  {
+    "Numero_Fiche": "RNCP220",
+    "Codes_Rome_Code": "D1403",
+    "Codes_Rome_Libelle": "Relation commerciale auprès de particuliers"
+  },
+  {
+    "Numero_Fiche": "RNCP220",
+    "Codes_Rome_Code": "D1404",
+    "Codes_Rome_Libelle": "Relation commerciale en vente de véhicules"
+  },
+  {
+    "Numero_Fiche": "RNCP220",
+    "Codes_Rome_Code": "D1212",
+    "Codes_Rome_Libelle": "Vente en décoration et équipement du foyer"
+  },
+  {
+    "Numero_Fiche": "RNCP220",
+    "Codes_Rome_Code": "D1214",
+    "Codes_Rome_Libelle": "Vente en habillement et accessoires de la personne"
+  },
+  {
+    "Numero_Fiche": "RNCP221",
+    "Codes_Rome_Code": "E1104",
+    "Codes_Rome_Libelle": "Conception de contenus multimédias"
+  },
+  {
+    "Numero_Fiche": "RNCP221",
+    "Codes_Rome_Code": "E1205",
+    "Codes_Rome_Libelle": "Réalisation de contenus multimédias"
+  },
+  {
+    "Numero_Fiche": "RNCP221",
+    "Codes_Rome_Code": "E1306",
+    "Codes_Rome_Libelle": "Prépresse"
+  },
+  {
+    "Numero_Fiche": "RNCP223",
+    "Codes_Rome_Code": "G1202",
+    "Codes_Rome_Libelle": "Animation d''activités culturelles ou ludiques"
+  },
+  {
+    "Numero_Fiche": "RNCP224",
+    "Codes_Rome_Code": "M1805",
+    "Codes_Rome_Libelle": "Études et développement informatique"
+  },
+  {
+    "Numero_Fiche": "RNCP225",
+    "Codes_Rome_Code": "I1401",
+    "Codes_Rome_Libelle": "Maintenance informatique et bureautique"
+  },
+  {
+    "Numero_Fiche": "RNCP226",
+    "Codes_Rome_Code": "I1401",
+    "Codes_Rome_Libelle": "Maintenance informatique et bureautique"
+  },
+  {
+    "Numero_Fiche": "RNCP226",
+    "Codes_Rome_Code": "I1307",
+    "Codes_Rome_Libelle": "Installation et maintenance télécoms et courants faibles"
+  },
+  {
+    "Numero_Fiche": "RNCP227",
+    "Codes_Rome_Code": "M1801",
+    "Codes_Rome_Libelle": "Administration de systèmes d''information"
+  },
+  {
+    "Numero_Fiche": "RNCP227",
+    "Codes_Rome_Code": "I1401",
+    "Codes_Rome_Libelle": "Maintenance informatique et bureautique"
+  },
+  {
+    "Numero_Fiche": "RNCP228",
+    "Codes_Rome_Code": "G1101",
+    "Codes_Rome_Libelle": "Accueil touristique"
+  },
+  {
+    "Numero_Fiche": "RNCP229",
+    "Codes_Rome_Code": "G1205",
+    "Codes_Rome_Libelle": "Personnel d''attractions ou de structures de loisirs"
+  },
+  {
+    "Numero_Fiche": "RNCP230",
+    "Codes_Rome_Code": "J1307",
+    "Codes_Rome_Libelle": "Préparation en pharmacie"
+  },
+  {
+    "Numero_Fiche": "RNCP231",
+    "Codes_Rome_Code": "K1305",
+    "Codes_Rome_Libelle": "Intervention sociale et familiale"
+  },
+  {
+    "Numero_Fiche": "RNCP231",
+    "Codes_Rome_Code": "K1304",
+    "Codes_Rome_Libelle": "Services domestiques"
+  },
+  {
+    "Numero_Fiche": "RNCP231",
+    "Codes_Rome_Code": "K1303",
+    "Codes_Rome_Libelle": "Assistance auprès d''enfants"
+  },
+  {
+    "Numero_Fiche": "RNCP231",
+    "Codes_Rome_Code": "K1302",
+    "Codes_Rome_Libelle": "Assistance auprès d''adultes"
+  },
+  {
+    "Numero_Fiche": "RNCP232",
+    "Codes_Rome_Code": "K1204",
+    "Codes_Rome_Libelle": "Médiation sociale et facilitation de la vie en société"
+  },
+  {
+    "Numero_Fiche": "RNCP233",
+    "Codes_Rome_Code": "H2605",
+    "Codes_Rome_Libelle": "Montage et câblage électronique"
+  },
+  {
+    "Numero_Fiche": "RNCP234",
+    "Codes_Rome_Code": "H2912",
+    "Codes_Rome_Libelle": "Réglage d''équipement de production industrielle"
+  },
+  {
+    "Numero_Fiche": "RNCP234",
+    "Codes_Rome_Code": "H2906",
+    "Codes_Rome_Libelle": "Conduite d''installation automatisée ou robotisée de fabrication mécanique"
+  },
+  {
+    "Numero_Fiche": "RNCP234",
+    "Codes_Rome_Code": "H2903",
+    "Codes_Rome_Libelle": "Conduite d''équipement d''usinage"
+  },
+  {
+    "Numero_Fiche": "RNCP235",
+    "Codes_Rome_Code": "A1203",
+    "Codes_Rome_Libelle": "Aménagement et entretien des espaces verts"
+  },
+  {
+    "Numero_Fiche": "RNCP236",
+    "Codes_Rome_Code": "H2903",
+    "Codes_Rome_Libelle": "Conduite d''équipement d''usinage"
+  },
+  {
+    "Numero_Fiche": "RNCP236",
+    "Codes_Rome_Code": "H2912",
+    "Codes_Rome_Libelle": "Réglage d''équipement de production industrielle"
+  },
+  {
+    "Numero_Fiche": "RNCP236",
+    "Codes_Rome_Code": "H2906",
+    "Codes_Rome_Libelle": "Conduite d''installation automatisée ou robotisée de fabrication mécanique"
+  },
+  {
+    "Numero_Fiche": "RNCP237",
+    "Codes_Rome_Code": "K1802",
+    "Codes_Rome_Libelle": "Développement local"
+  },
+  {
+    "Numero_Fiche": "RNCP237",
+    "Codes_Rome_Code": "M1302",
+    "Codes_Rome_Libelle": "Direction de petite ou moyenne entreprise"
+  },
+  {
+    "Numero_Fiche": "RNCP237",
+    "Codes_Rome_Code": "G1403",
+    "Codes_Rome_Libelle": "Gestion de structure de loisirs ou d''hébergement touristique"
+  },
+  {
+    "Numero_Fiche": "RNCP237",
+    "Codes_Rome_Code": "G1402",
+    "Codes_Rome_Libelle": "Management d''hôtel-restaurant"
+  },
+  {
+    "Numero_Fiche": "RNCP238",
+    "Codes_Rome_Code": "H3202",
+    "Codes_Rome_Libelle": "Réglage d''équipement de formage des plastiques et caoutchoucs"
+  },
+  {
+    "Numero_Fiche": "RNCP238",
+    "Codes_Rome_Code": "H3201",
+    "Codes_Rome_Libelle": "Conduite d''équipement de formage des plastiques et caoutchoucs"
+  },
+  {
+    "Numero_Fiche": "RNCP239",
+    "Codes_Rome_Code": "H3202",
+    "Codes_Rome_Libelle": "Réglage d''équipement de formage des plastiques et caoutchoucs"
+  },
+  {
+    "Numero_Fiche": "RNCP239",
+    "Codes_Rome_Code": "H3201",
+    "Codes_Rome_Libelle": "Conduite d''équipement de formage des plastiques et caoutchoucs"
+  },
+  {
+    "Numero_Fiche": "RNCP240",
+    "Codes_Rome_Code": "H3203",
+    "Codes_Rome_Libelle": "Fabrication de pièces en matériaux composites"
+  },
+  {
+    "Numero_Fiche": "RNCP241",
+    "Codes_Rome_Code": "H1403",
+    "Codes_Rome_Libelle": "Intervention technique en gestion industrielle et logistique"
+  },
+  {
+    "Numero_Fiche": "RNCP241",
+    "Codes_Rome_Code": "H1404",
+    "Codes_Rome_Libelle": "Intervention technique en méthodes et industrialisation"
+  },
+  {
+    "Numero_Fiche": "RNCP242",
+    "Codes_Rome_Code": "H3203",
+    "Codes_Rome_Libelle": "Fabrication de pièces en matériaux composites"
+  },
+  {
+    "Numero_Fiche": "RNCP242",
+    "Codes_Rome_Code": "H2908",
+    "Codes_Rome_Libelle": "Modelage de matériaux non métalliques"
+  },
+  {
+    "Numero_Fiche": "RNCP242",
+    "Codes_Rome_Code": "H2504",
+    "Codes_Rome_Libelle": "Encadrement d''équipe en industrie de transformation"
+  },
+  {
+    "Numero_Fiche": "RNCP243",
+    "Codes_Rome_Code": "H1203",
+    "Codes_Rome_Libelle": "Conception et dessin produits mécaniques"
+  },
+  {
+    "Numero_Fiche": "RNCP245",
+    "Codes_Rome_Code": "H2901",
+    "Codes_Rome_Libelle": "Ajustement et montage de fabrication"
+  },
+  {
+    "Numero_Fiche": "RNCP246",
+    "Codes_Rome_Code": "H2901",
+    "Codes_Rome_Libelle": "Ajustement et montage de fabrication"
+  },
+  {
+    "Numero_Fiche": "RNCP246",
+    "Codes_Rome_Code": "I1602",
+    "Codes_Rome_Libelle": "Maintenance d''aéronefs"
+  },
+  {
+    "Numero_Fiche": "RNCP247",
+    "Codes_Rome_Code": "K2111",
+    "Codes_Rome_Libelle": "Formation professionnelle"
+  },
+  {
+    "Numero_Fiche": "RNCP248",
+    "Codes_Rome_Code": "B1604",
+    "Codes_Rome_Libelle": "Réparation - montage en systèmes horlogers"
+  },
+  {
+    "Numero_Fiche": "RNCP249",
+    "Codes_Rome_Code": "H1203",
+    "Codes_Rome_Libelle": "Conception et dessin produits mécaniques"
+  },
+  {
+    "Numero_Fiche": "RNCP250",
+    "Codes_Rome_Code": "I1306",
+    "Codes_Rome_Libelle": "Installation et maintenance en froid, conditionnement d''air"
+  },
+  {
+    "Numero_Fiche": "RNCP250",
+    "Codes_Rome_Code": "I1203",
+    "Codes_Rome_Libelle": "Maintenance des bâtiments et des locaux"
+  },
+  {
+    "Numero_Fiche": "RNCP256",
+    "Codes_Rome_Code": "H1210",
+    "Codes_Rome_Libelle": "Intervention technique en études, recherche et développement"
+  },
+  {
+    "Numero_Fiche": "RNCP256",
+    "Codes_Rome_Code": "H2504",
+    "Codes_Rome_Libelle": "Encadrement d''équipe en industrie de transformation"
+  },
+  {
+    "Numero_Fiche": "RNCP256",
+    "Codes_Rome_Code": "H1404",
+    "Codes_Rome_Libelle": "Intervention technique en méthodes et industrialisation"
+  },
+  {
+    "Numero_Fiche": "RNCP256",
+    "Codes_Rome_Code": "H1503",
+    "Codes_Rome_Libelle": "Intervention technique en laboratoire d''analyse industrielle"
+  },
+  {
+    "Numero_Fiche": "RNCP257",
+    "Codes_Rome_Code": "A1302",
+    "Codes_Rome_Libelle": "Contrôle et diagnostic technique en agriculture"
+  },
+  {
+    "Numero_Fiche": "RNCP258",
+    "Codes_Rome_Code": "H2412",
+    "Codes_Rome_Libelle": "Patronnage - gradation"
+  },
+  {
+    "Numero_Fiche": "RNCP258",
+    "Codes_Rome_Code": "H1205",
+    "Codes_Rome_Libelle": "Études - modèles en industrie des matériaux souples"
+  },
+  {
+    "Numero_Fiche": "RNCP258",
+    "Codes_Rome_Code": "B1803",
+    "Codes_Rome_Libelle": "Réalisation de vêtements sur mesure ou en petite série"
+  },
+  {
+    "Numero_Fiche": "RNCP259",
+    "Codes_Rome_Code": "D1503",
+    "Codes_Rome_Libelle": "Management/gestion de rayon produits non alimentaires"
+  },
+  {
+    "Numero_Fiche": "RNCP259",
+    "Codes_Rome_Code": "D1502",
+    "Codes_Rome_Libelle": "Management/gestion de rayon produits alimentaires"
+  },
+  {
+    "Numero_Fiche": "RNCP260",
+    "Codes_Rome_Code": "N1302",
+    "Codes_Rome_Libelle": "Direction de site logistique"
+  },
+  {
+    "Numero_Fiche": "RNCP261",
+    "Codes_Rome_Code": "H2903",
+    "Codes_Rome_Libelle": "Conduite d''équipement d''usinage"
+  },
+  {
+    "Numero_Fiche": "RNCP261",
+    "Codes_Rome_Code": "H2912",
+    "Codes_Rome_Libelle": "Réglage d''équipement de production industrielle"
+  },
+  {
+    "Numero_Fiche": "RNCP262",
+    "Codes_Rome_Code": "H1210",
+    "Codes_Rome_Libelle": "Intervention technique en études, recherche et développement"
+  },
+  {
+    "Numero_Fiche": "RNCP262",
+    "Codes_Rome_Code": "H1404",
+    "Codes_Rome_Libelle": "Intervention technique en méthodes et industrialisation"
+  },
+  {
+    "Numero_Fiche": "RNCP262",
+    "Codes_Rome_Code": "H1503",
+    "Codes_Rome_Libelle": "Intervention technique en laboratoire d''analyse industrielle"
+  },
+  {
+    "Numero_Fiche": "RNCP262",
+    "Codes_Rome_Code": "H2301",
+    "Codes_Rome_Libelle": "Conduite d''équipement de production chimique ou pharmaceutique"
+  },
+  {
+    "Numero_Fiche": "RNCP263",
+    "Codes_Rome_Code": "F1102",
+    "Codes_Rome_Libelle": "Conception - aménagement d''espaces intérieurs"
+  },
+  {
+    "Numero_Fiche": "RNCP264",
+    "Codes_Rome_Code": "E1103",
+    "Codes_Rome_Libelle": "Communication"
+  },
+  {
+    "Numero_Fiche": "RNCP264",
+    "Codes_Rome_Code": "M1301",
+    "Codes_Rome_Libelle": "Direction de grande entreprise ou d''établissement public"
+  },
+  {
+    "Numero_Fiche": "RNCP264",
+    "Codes_Rome_Code": "M1302",
+    "Codes_Rome_Libelle": "Direction de petite ou moyenne entreprise"
+  },
+  {
+    "Numero_Fiche": "RNCP264",
+    "Codes_Rome_Code": "D1406",
+    "Codes_Rome_Libelle": "Management en force de vente"
+  },
+  {
+    "Numero_Fiche": "RNCP264",
+    "Codes_Rome_Code": "M1707",
+    "Codes_Rome_Libelle": "Stratégie commerciale"
+  },
+  {
+    "Numero_Fiche": "RNCP265",
+    "Codes_Rome_Code": "I1501",
+    "Codes_Rome_Libelle": "Intervention en grande hauteur"
+  },
+  {
+    "Numero_Fiche": "RNCP266",
+    "Codes_Rome_Code": "F1612",
+    "Codes_Rome_Libelle": "Taille et décoration de pierres"
+  },
+  {
+    "Numero_Fiche": "RNCP266",
+    "Codes_Rome_Code": "F1607",
+    "Codes_Rome_Libelle": "Pose de fermetures menuisées"
+  },
+  {
+    "Numero_Fiche": "RNCP266",
+    "Codes_Rome_Code": "F1503",
+    "Codes_Rome_Libelle": "Réalisation - installation d''ossatures bois"
+  },
+  {
+    "Numero_Fiche": "RNCP266",
+    "Codes_Rome_Code": "F1703",
+    "Codes_Rome_Libelle": "Maçonnerie"
+  },
+  {
+    "Numero_Fiche": "RNCP267",
+    "Codes_Rome_Code": "K1706",
+    "Codes_Rome_Libelle": "Sécurité publique"
+  },
+  {
+    "Numero_Fiche": "RNCP268",
+    "Codes_Rome_Code": "K1704",
+    "Codes_Rome_Libelle": "Management de la sécurité publique"
+  },
+  {
+    "Numero_Fiche": "RNCP269",
+    "Codes_Rome_Code": "K1706",
+    "Codes_Rome_Libelle": "Sécurité publique"
+  },
+  {
+    "Numero_Fiche": "RNCP270",
+    "Codes_Rome_Code": "K1704",
+    "Codes_Rome_Libelle": "Management de la sécurité publique"
+  },
+  {
+    "Numero_Fiche": "RNCP271",
+    "Codes_Rome_Code": "M1607",
+    "Codes_Rome_Libelle": "Secrétariat"
+  },
+  {
+    "Numero_Fiche": "RNCP272",
+    "Codes_Rome_Code": "M1501",
+    "Codes_Rome_Libelle": "Assistanat en ressources humaines"
+  },
+  {
+    "Numero_Fiche": "RNCP272",
+    "Codes_Rome_Code": "N1303",
+    "Codes_Rome_Libelle": "Intervention technique d''exploitation logistique"
+  },
+  {
+    "Numero_Fiche": "RNCP273",
+    "Codes_Rome_Code": "K2503",
+    "Codes_Rome_Libelle": "Sécurité et surveillance privées"
+  },
+  {
+    "Numero_Fiche": "RNCP273",
+    "Codes_Rome_Code": "K1706",
+    "Codes_Rome_Libelle": "Sécurité publique"
+  },
+  {
+    "Numero_Fiche": "RNCP274",
+    "Codes_Rome_Code": "I1401",
+    "Codes_Rome_Libelle": "Maintenance informatique et bureautique"
+  },
+  {
+    "Numero_Fiche": "RNCP274",
+    "Codes_Rome_Code": "I1307",
+    "Codes_Rome_Libelle": "Installation et maintenance télécoms et courants faibles"
+  },
+  {
+    "Numero_Fiche": "RNCP274",
+    "Codes_Rome_Code": "I1304",
+    "Codes_Rome_Libelle": "Installation et maintenance d''équipements industriels et d''exploitation"
+  },
+  {
+    "Numero_Fiche": "RNCP275",
+    "Codes_Rome_Code": "G1403",
+    "Codes_Rome_Libelle": "Gestion de structure de loisirs ou d''hébergement touristique"
+  },
+  {
+    "Numero_Fiche": "RNCP275",
+    "Codes_Rome_Code": "G1402",
+    "Codes_Rome_Libelle": "Management d''hôtel-restaurant"
+  },
+  {
+    "Numero_Fiche": "RNCP275",
+    "Codes_Rome_Code": "G1404",
+    "Codes_Rome_Libelle": "Management d''établissement de restauration collective"
+  },
+  {
+    "Numero_Fiche": "RNCP277",
+    "Codes_Rome_Code": "B1301",
+    "Codes_Rome_Libelle": "Décoration d''espaces de vente et d''exposition"
+  },
+  {
+    "Numero_Fiche": "RNCP277",
+    "Codes_Rome_Code": "F1102",
+    "Codes_Rome_Libelle": "Conception - aménagement d''espaces intérieurs"
+  },
+  {
+    "Numero_Fiche": "RNCP277",
+    "Codes_Rome_Code": "L1503",
+    "Codes_Rome_Libelle": "Décor et accessoires spectacle"
+  },
+  {
+    "Numero_Fiche": "RNCP278",
+    "Codes_Rome_Code": "J1301",
+    "Codes_Rome_Libelle": "Personnel polyvalent des services hospitaliers"
+  },
+  {
+    "Numero_Fiche": "RNCP278",
+    "Codes_Rome_Code": "K2204",
+    "Codes_Rome_Libelle": "Nettoyage de locaux"
+  },
+  {
+    "Numero_Fiche": "RNCP279",
+    "Codes_Rome_Code": "L1304",
+    "Codes_Rome_Libelle": "Réalisation cinématographique et audiovisuelle"
+  },
+  {
+    "Numero_Fiche": "RNCP279",
+    "Codes_Rome_Code": "L1302",
+    "Codes_Rome_Libelle": "Production et administration spectacle, cinéma et audiovisuel"
+  },
+  {
+    "Numero_Fiche": "RNCP279",
+    "Codes_Rome_Code": "L1505",
+    "Codes_Rome_Libelle": "Image cinématographique et télévisuelle"
+  },
+  {
+    "Numero_Fiche": "RNCP279",
+    "Codes_Rome_Code": "L1508",
+    "Codes_Rome_Libelle": "Prise de son et sonorisation"
+  },
+  {
+    "Numero_Fiche": "RNCP279",
+    "Codes_Rome_Code": "L1507",
+    "Codes_Rome_Libelle": "Montage audiovisuel et post-production"
+  },
+  {
+    "Numero_Fiche": "RNCP280",
+    "Codes_Rome_Code": "G1603",
+    "Codes_Rome_Libelle": "Personnel polyvalent en restauration"
+  },
+  {
+    "Numero_Fiche": "RNCP281",
+    "Codes_Rome_Code": "D1403",
+    "Codes_Rome_Libelle": "Relation commerciale auprès de particuliers"
+  },
+  {
+    "Numero_Fiche": "RNCP282",
+    "Codes_Rome_Code": "G1101",
+    "Codes_Rome_Libelle": "Accueil touristique"
+  },
+  {
+    "Numero_Fiche": "RNCP283",
+    "Codes_Rome_Code": "G1102",
+    "Codes_Rome_Libelle": "Promotion du tourisme local"
+  },
+  {
+    "Numero_Fiche": "RNCP283",
+    "Codes_Rome_Code": "K1802",
+    "Codes_Rome_Libelle": "Développement local"
+  },
+  {
+    "Numero_Fiche": "RNCP285",
+    "Codes_Rome_Code": "H1502",
+    "Codes_Rome_Libelle": "Management et ingénierie qualité industrielle"
+  },
+  {
+    "Numero_Fiche": "RNCP285",
+    "Codes_Rome_Code": "H2502",
+    "Codes_Rome_Libelle": "Management et ingénierie de production"
+  },
+  {
+    "Numero_Fiche": "RNCP285",
+    "Codes_Rome_Code": "H1206",
+    "Codes_Rome_Libelle": "Management et ingénierie études, recherche et développement industriel"
+  },
+  {
+    "Numero_Fiche": "RNCP286",
+    "Codes_Rome_Code": "G1203",
+    "Codes_Rome_Libelle": "Animation de loisirs auprès d''enfants ou d''adolescents"
+  },
+  {
+    "Numero_Fiche": "RNCP286",
+    "Codes_Rome_Code": "K1206",
+    "Codes_Rome_Libelle": "Intervention socioculturelle"
+  },
+  {
+    "Numero_Fiche": "RNCP286",
+    "Codes_Rome_Code": "G1202",
+    "Codes_Rome_Libelle": "Animation d''activités culturelles ou ludiques"
+  },
+  {
+    "Numero_Fiche": "RNCP289",
+    "Codes_Rome_Code": "M1203",
+    "Codes_Rome_Libelle": "Comptabilité"
+  },
+  {
+    "Numero_Fiche": "RNCP290",
+    "Codes_Rome_Code": "H1303",
+    "Codes_Rome_Libelle": "Intervention technique en Hygiène Sécurité Environnement -HSE- industriel"
+  },
+  {
+    "Numero_Fiche": "RNCP290",
+    "Codes_Rome_Code": "K2306",
+    "Codes_Rome_Libelle": "Supervision d''exploitation éco-industrielle"
+  },
+  {
+    "Numero_Fiche": "RNCP290",
+    "Codes_Rome_Code": "H1503",
+    "Codes_Rome_Libelle": "Intervention technique en laboratoire d''analyse industrielle"
+  },
+  {
+    "Numero_Fiche": "RNCP291",
+    "Codes_Rome_Code": "C1502",
+    "Codes_Rome_Libelle": "Gestion locative immobilière"
+  },
+  {
+    "Numero_Fiche": "RNCP292",
+    "Codes_Rome_Code": "L1505",
+    "Codes_Rome_Libelle": "Image cinématographique et télévisuelle"
+  },
+  {
+    "Numero_Fiche": "RNCP295",
+    "Codes_Rome_Code": "H1209",
+    "Codes_Rome_Libelle": "Intervention technique en études et développement électronique"
+  },
+  {
+    "Numero_Fiche": "RNCP296",
+    "Codes_Rome_Code": "H1203",
+    "Codes_Rome_Libelle": "Conception et dessin produits mécaniques"
+  },
+  {
+    "Numero_Fiche": "RNCP297",
+    "Codes_Rome_Code": "B1201",
+    "Codes_Rome_Libelle": "Réalisation d''objets décoratifs et utilitaires en céramique et matériaux de synthèse"
+  },
+  {
+    "Numero_Fiche": "RNCP298",
+    "Codes_Rome_Code": "E1106",
+    "Codes_Rome_Libelle": "Journalisme et information média"
+  },
+  {
+    "Numero_Fiche": "RNCP298",
+    "Codes_Rome_Code": "E1103",
+    "Codes_Rome_Libelle": "Communication"
+  },
+  {
+    "Numero_Fiche": "RNCP298",
+    "Codes_Rome_Code": "E1401",
+    "Codes_Rome_Libelle": "Développement et promotion publicitaire"
+  },
+  {
+    "Numero_Fiche": "RNCP298",
+    "Codes_Rome_Code": "E1104",
+    "Codes_Rome_Libelle": "Conception de contenus multimédias"
+  },
+  {
+    "Numero_Fiche": "RNCP298",
+    "Codes_Rome_Code": "E1402",
+    "Codes_Rome_Libelle": "Élaboration de plan média"
+  },
+  {
+    "Numero_Fiche": "RNCP299",
+    "Codes_Rome_Code": "G1404",
+    "Codes_Rome_Libelle": "Management d''établissement de restauration collective"
+  },
+  {
+    "Numero_Fiche": "RNCP299",
+    "Codes_Rome_Code": "G1601",
+    "Codes_Rome_Libelle": "Management du personnel de cuisine"
+  },
+  {
+    "Numero_Fiche": "RNCP299",
+    "Codes_Rome_Code": "G1402",
+    "Codes_Rome_Libelle": "Management d''hôtel-restaurant"
+  },
+  {
+    "Numero_Fiche": "RNCP300",
+    "Codes_Rome_Code": "M1604",
+    "Codes_Rome_Libelle": "Assistanat de direction"
+  },
+  {
+    "Numero_Fiche": "RNCP301",
+    "Codes_Rome_Code": "M1203",
+    "Codes_Rome_Libelle": "Comptabilité"
+  },
+  {
+    "Numero_Fiche": "RNCP302",
+    "Codes_Rome_Code": "M1203",
+    "Codes_Rome_Libelle": "Comptabilité"
+  },
+  {
+    "Numero_Fiche": "RNCP303",
+    "Codes_Rome_Code": "K2306",
+    "Codes_Rome_Libelle": "Supervision d''exploitation éco-industrielle"
+  },
+  {
+    "Numero_Fiche": "RNCP303",
+    "Codes_Rome_Code": "A1301",
+    "Codes_Rome_Libelle": "Conseil et assistance technique en agriculture"
+  },
+  {
+    "Numero_Fiche": "RNCP304",
+    "Codes_Rome_Code": "I1306",
+    "Codes_Rome_Libelle": "Installation et maintenance en froid, conditionnement d''air"
+  },
+  {
+    "Numero_Fiche": "RNCP305",
+    "Codes_Rome_Code": "F1602",
+    "Codes_Rome_Libelle": "Électricité bâtiment"
+  },
+  {
+    "Numero_Fiche": "RNCP305",
+    "Codes_Rome_Code": "H2602",
+    "Codes_Rome_Libelle": "Câblage électrique et électromécanique"
+  },
+  {
+    "Numero_Fiche": "RNCP306",
+    "Codes_Rome_Code": "M1805",
+    "Codes_Rome_Libelle": "Études et développement informatique"
+  },
+  {
+    "Numero_Fiche": "RNCP310",
+    "Codes_Rome_Code": "N1101",
+    "Codes_Rome_Libelle": "Conduite d''engins de déplacement des charges"
+  },
+  {
+    "Numero_Fiche": "RNCP311",
+    "Codes_Rome_Code": "N1103",
+    "Codes_Rome_Libelle": "Magasinage et préparation de commandes"
+  },
+  {
+    "Numero_Fiche": "RNCP316",
+    "Codes_Rome_Code": "I1203",
+    "Codes_Rome_Libelle": "Maintenance des bâtiments et des locaux"
+  },
+  {
+    "Numero_Fiche": "RNCP317",
+    "Codes_Rome_Code": "F1609",
+    "Codes_Rome_Libelle": "Pose de revêtements souples"
+  },
+  {
+    "Numero_Fiche": "RNCP318",
+    "Codes_Rome_Code": "F1501",
+    "Codes_Rome_Libelle": "Montage de structures et de charpentes bois"
+  },
+  {
+    "Numero_Fiche": "RNCP318",
+    "Codes_Rome_Code": "F1503",
+    "Codes_Rome_Libelle": "Réalisation - installation d''ossatures bois"
+  },
+  {
+    "Numero_Fiche": "RNCP319",
+    "Codes_Rome_Code": "F1606",
+    "Codes_Rome_Libelle": "Peinture en bâtiment"
+  },
+  {
+    "Numero_Fiche": "RNCP320",
+    "Codes_Rome_Code": "F1604",
+    "Codes_Rome_Libelle": "Montage d''agencements"
+  },
+  {
+    "Numero_Fiche": "RNCP324",
+    "Codes_Rome_Code": "G1204",
+    "Codes_Rome_Libelle": "Éducation en activités sportives"
+  },
+  {
+    "Numero_Fiche": "RNCP326",
+    "Codes_Rome_Code": "E1205",
+    "Codes_Rome_Libelle": "Réalisation de contenus multimédias"
+  },
+  {
+    "Numero_Fiche": "RNCP326",
+    "Codes_Rome_Code": "E1104",
+    "Codes_Rome_Libelle": "Conception de contenus multimédias"
+  },
+  {
+    "Numero_Fiche": "RNCP330",
+    "Codes_Rome_Code": "G1204",
+    "Codes_Rome_Libelle": "Éducation en activités sportives"
+  },
+  {
+    "Numero_Fiche": "RNCP331",
+    "Codes_Rome_Code": "K1802",
+    "Codes_Rome_Libelle": "Développement local"
+  },
+  {
+    "Numero_Fiche": "RNCP332",
+    "Codes_Rome_Code": "G1204",
+    "Codes_Rome_Libelle": "Éducation en activités sportives"
+  },
+  {
+    "Numero_Fiche": "RNCP333",
+    "Codes_Rome_Code": "G1202",
+    "Codes_Rome_Libelle": "Animation d''activités culturelles ou ludiques"
+  },
+  {
+    "Numero_Fiche": "RNCP333",
+    "Codes_Rome_Code": "K1206",
+    "Codes_Rome_Libelle": "Intervention socioculturelle"
+  },
+  {
+    "Numero_Fiche": "RNCP334",
+    "Codes_Rome_Code": "M1607",
+    "Codes_Rome_Libelle": "Secrétariat"
+  },
+  {
+    "Numero_Fiche": "RNCP335",
+    "Codes_Rome_Code": "G1602",
+    "Codes_Rome_Libelle": "Personnel de cuisine"
+  },
+  {
+    "Numero_Fiche": "RNCP336",
+    "Codes_Rome_Code": "M1203",
+    "Codes_Rome_Libelle": "Comptabilité"
+  },
+  {
+    "Numero_Fiche": "RNCP337",
+    "Codes_Rome_Code": "M1604",
+    "Codes_Rome_Libelle": "Assistanat de direction"
+  },
+  {
+    "Numero_Fiche": "RNCP339",
+    "Codes_Rome_Code": "D1407",
+    "Codes_Rome_Libelle": "Relation technico-commerciale"
+  },
+  {
+    "Numero_Fiche": "RNCP339",
+    "Codes_Rome_Code": "D1406",
+    "Codes_Rome_Libelle": "Management en force de vente"
+  },
+  {
+    "Numero_Fiche": "RNCP340",
+    "Codes_Rome_Code": "M1803",
+    "Codes_Rome_Libelle": "Direction des systèmes d''information"
+  },
+  {
+    "Numero_Fiche": "RNCP340",
+    "Codes_Rome_Code": "M1802",
+    "Codes_Rome_Libelle": "Expertise et support en systèmes d''information"
+  },
+  {
+    "Numero_Fiche": "RNCP340",
+    "Codes_Rome_Code": "M1805",
+    "Codes_Rome_Libelle": "Études et développement informatique"
+  }
+]
