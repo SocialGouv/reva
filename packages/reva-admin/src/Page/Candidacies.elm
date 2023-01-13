@@ -607,7 +607,8 @@ updateTab context tab model =
                     Form.updateForm context
                         { form = Page.Form.DropOut.form
                         , onLoad = Api.Form.DropOut.get candidacyId
-                        , onSave = Api.Form.DropOut.dropOut candidacyId
+                        , onSave = Nothing
+                        , onSubmit = Api.Form.DropOut.dropOut candidacyId
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
@@ -634,7 +635,8 @@ updateTab context tab model =
                     Form.updateForm context
                         { form = Page.Form.Appointment.form
                         , onLoad = Api.Form.Appointment.get candidacyId
-                        , onSave = Api.Form.Appointment.update candidacyId
+                        , onSave = Nothing
+                        , onSubmit = Api.Form.Appointment.update candidacyId
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
@@ -648,26 +650,19 @@ updateTab context tab model =
 
         ( View.Candidacy.Tab.PaymentRequest candidacyId, Success candidacy ) ->
             let
-                isReadOnly =
-                    Candidacy.isFundingRequestSent candidacy
-
                 ( formModel, formCmd ) =
                     Form.updateForm context
-                        { form =
-                            if candidacy.dropOutDate == Nothing || isReadOnly then
-                                Page.Form.PaymentRequest.form candidacy.certification
-
-                            else
-                                Page.Form.FundingRequest.droppedOutForm candidacy.certification
+                        { form = Page.Form.PaymentRequest.form candidacy.certification
                         , onLoad = Api.Form.PaymentRequest.get candidacyId
-                        , onSave = Api.Form.PaymentRequest.confirm candidacyId
+                        , onSave = Just <| Api.Form.PaymentRequest.createOrUpdate candidacyId
+                        , onSubmit = Api.Form.PaymentRequest.confirm candidacyId
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Tab.Profil candidacyId)))
                         , onValidate = \_ _ -> Ok ()
                         , status =
-                            if Candidacy.isFundingRequestSent candidacy then
+                            if Candidacy.isPaymentRequestSent candidacy then
                                 Form.ReadOnly
 
                             else
@@ -691,14 +686,15 @@ updateTab context tab model =
                             else
                                 Page.Form.FundingRequest.droppedOutForm candidacy.certification
                         , onLoad = Api.Form.FundingRequest.get candidacyId candidacy
-                        , onSave = Api.Form.FundingRequest.create candidacyId
+                        , onSave = Nothing
+                        , onSubmit = Api.Form.FundingRequest.create candidacyId
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Tab.Profil candidacyId)))
-                        , onValidate = \_ _ -> Ok ()
+                        , onValidate = Data.Form.FundingRequest.validate
                         , status =
-                            if Candidacy.isFundingRequestSent candidacy then
+                            if isReadOnly then
                                 Form.ReadOnly
 
                             else
@@ -714,7 +710,8 @@ updateTab context tab model =
                     Form.updateForm context
                         { form = Page.Form.Training.form
                         , onLoad = Api.Form.Training.get candidacyId
-                        , onSave = Api.Form.Training.update candidacyId
+                        , onSave = Nothing
+                        , onSubmit = Api.Form.Training.update candidacyId
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
@@ -743,7 +740,8 @@ updateTab context tab model =
 
                                 Nothing ->
                                     \_ _ _ -> Cmd.none
-                        , onSave = Api.Form.Candidate.update
+                        , onSave = Nothing
+                        , onSubmit = Api.Form.Candidate.update
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey
@@ -766,7 +764,8 @@ updateTab context tab model =
                     Form.updateForm context
                         { form = Page.Form.Admissibility.form
                         , onLoad = Api.Form.Admissibility.get candidacyId
-                        , onSave = Api.Form.Admissibility.update candidacyId
+                        , onSave = Nothing
+                        , onSubmit = Api.Form.Admissibility.update candidacyId
                         , onRedirect =
                             Nav.pushUrl
                                 context.navKey

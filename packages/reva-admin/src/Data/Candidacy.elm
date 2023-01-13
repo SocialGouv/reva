@@ -13,6 +13,7 @@ module Data.Candidacy exposing
     , filterByWords
     , isActive
     , isFundingRequestSent
+    , isPaymentRequestSent
     , isStatusEqual
     , isStatusEqualOrAbove
     , isTrainingSent
@@ -215,6 +216,9 @@ statusToProgressPosition status =
 
         "DEMANDE_FINANCEMENT_ENVOYE" ->
             6
+
+        "DEMANDE_PAIEMENT_ENVOYEE" ->
+            7
 
         _ ->
             -1

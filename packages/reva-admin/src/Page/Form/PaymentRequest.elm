@@ -139,7 +139,7 @@ form maybeCertification formData ( candidacy, referential ) =
 totalCostSection : Dict String String -> ( String, Form.Element )
 totalCostSection formData =
     ( "totalCost"
-    , Form.Info "Coût total de la demande de prise en charge" <|
+    , Form.Info "Coût total de la demande de paiement" <|
         String.concat
             [ String.fromInt (totalFundingRequestCost formData)
             , "€"
@@ -149,11 +149,11 @@ totalCostSection formData =
 
 confirmationSection : Candidacy -> ( String, Form.Element )
 confirmationSection candidacy =
-    if Candidacy.isStatusEqualOrAbove candidacy "DEMANDE_FINANCEMENT_ENVOYE" then
+    if Candidacy.isStatusEqualOrAbove candidacy "DEMANDE_PAIEMENT_ENVOYEE" then
         ( "", Form.Empty )
 
     else
-        ( keys.isFormConfirmed, Form.Checkbox "Je confirme ce montant de prise en charge. Je ne pourrai pas éditer cette demande de prise en charge après son envoi." )
+        ( keys.isFormConfirmed, Form.Checkbox "Je confirme ce montant de paiement. Je ne pourrai pas éditer cette demande de paiement après son envoi." )
 
 
 totalTrainingHourCount : Dict String String -> Int

@@ -1,4 +1,4 @@
-module Api.Form.PaymentRequest exposing (confirm, create, get)
+module Api.Form.PaymentRequest exposing (confirm, createOrUpdate, get)
 
 import Admin.InputObject
 import Admin.Mutation as Mutation
@@ -19,7 +19,7 @@ import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
 
 
-create :
+createOrUpdate :
     CandidacyId
     -> String
     -> Token
@@ -27,7 +27,7 @@ create :
     -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
     -> Dict String String
     -> Cmd msg
-create candidacyId endpointGraphql token toMsg ( candidacy, referential ) dict =
+createOrUpdate candidacyId endpointGraphql token toMsg ( candidacy, referential ) dict =
     let
         payment =
             Data.Form.PaymentRequest.fromDict dict

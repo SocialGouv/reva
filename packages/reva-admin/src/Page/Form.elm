@@ -139,7 +139,7 @@ view remoteReferential model =
         saveButton maybeLabel referential =
             case maybeLabel of
                 Just label ->
-                    View.primaryButton
+                    View.secondaryButton
                         [ dataTest "save-description"
                         , onClick (UserClickSave referential)
                         ]
@@ -258,7 +258,7 @@ viewForm referential status maybeError formData form saveButton submitButton =
         , case status of
             Editable ->
                 div
-                    [ class "mt-8 pb-4 flex justify-end" ]
+                    [ class "mt-8 pb-4 flex justify-between pr-4" ]
                     [ saveButton
                     , submitButton
                     ]
@@ -769,7 +769,8 @@ updateForm :
         { form : FormData -> referential -> Form
         , onLoad : String -> Token -> (RemoteData String (Dict String String) -> Msg referential) -> Cmd (Msg referential)
         , onRedirect : Cmd (Msg referential)
-        , onSave : String -> Token -> (RemoteData String () -> Msg referential) -> referential -> Dict String String -> Cmd (Msg referential)
+        , onSubmit : ClickHandler referential
+        , onSave : Maybe (ClickHandler referential)
         , onValidate : referential -> Dict String String -> Result String ()
         , status : Status
         }
@@ -779,7 +780,8 @@ updateForm context config model =
     ( { model
         | form = Loading config.form
         , onRedirect = config.onRedirect
-        , onSave = config.onSave
+        , onSave = config.onSave |> Maybe.withDefault (\_ _ _ _ _ -> Cmd.none)
+        , onSubmit = config.onSubmit
         , onValidate = config.onValidate
         , status = config.status
       }
