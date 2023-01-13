@@ -27,6 +27,7 @@ export type CandidacyStatusValue =
   | "PARCOURS_ENVOYE"
   | "PARCOURS_CONFIRME"
   | "DEMANDE_FINANCEMENT_ENVOYE"
+  | "DEMANDE_PAIEMENT_ENVOYEE"
   | "DOSSIER_PRO"
   | "CERTIFICATION";
 
@@ -46,6 +47,7 @@ export interface Candidacy extends CandidacyAbstract {
   //   collectiveHourCount: number | null;
   candidacyDropOut?: CandidacyDropOut | null;
   createdAt: Date;
+  paymentRequest?: PaymentRequest | null;
 }
 
 export interface CandidacyStatus {
@@ -165,3 +167,15 @@ export interface Admissibility {
 }
 
 export type AdmissibilityStatus = "ADMISSIBLE" | "NOT_ADMISSIBLE";
+
+export interface PaymentRequest {
+  id: string;
+  diagnosisEffectiveHourCount: number;
+  postExamEffectiveHourCount: number;
+  individualEffectiveHourCount: number;
+  collectiveEffectiveHourCount: number;
+  mandatoryTrainingsEffectiveHourCount: number;
+  basicSkillsEffectiveHourCount: number;
+  certificateSkillsEffectiveHourCount: number;
+  examEffectiveHourCount: number;
+}
