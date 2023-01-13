@@ -21,7 +21,7 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
   const [checkedCondition, setCheckedCondition] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const isTrainingConfirmed =
-    state.context.candidacyStatus === "PARCOURS_CONFIRME";
+    state.context.isTrainingProgramConfirmed;
 
   if (!state.context.trainingProgram) return <></>;
 
