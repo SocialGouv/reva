@@ -1,4 +1,4 @@
-module Page.Form.FundingRequest exposing (droppedOutForm, form)
+module Page.Form.FundingRequest exposing (droppedOutForm, form, totalCostSection, totalTrainingHourCount)
 
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Candidate
@@ -127,7 +127,7 @@ form maybeCertification formData ( candidacy, referential ) =
                , ( keys.examHourCount, Form.Number "Nombre d'heures" )
                , ( keys.examCost, Form.Number "Coût horaire" )
                , totalSection
-               , totalCostSection formData
+               , totalCostSection totalCostTitle formData
                , confirmationSection candidacy
                ]
     , saveLabel = Nothing
@@ -141,13 +141,18 @@ droppedOutForm maybeCertification formData ( candidacy, referential ) =
     { elements =
         commonFields maybeCertification
             ++ [ totalSection
-               , totalCostSection formData
+               , totalCostSection totalCostTitle formData
                , confirmationSection candidacy
                ]
     , saveLabel = Nothing
     , submitLabel = saveLabel
     , title = title formData
     }
+
+
+totalCostTitle : String
+totalCostTitle =
+    "Coût total de la demande de prise en charge"
 
 
 commonFields : Maybe Certification -> List ( String, Form.Element )
@@ -188,12 +193,12 @@ totalSection =
     ( "total", Form.Section "Total" )
 
 
-totalCostSection : Dict String String -> ( String, Form.Element )
-totalCostSection formData =
+totalCostSection : String -> Dict String String -> ( String, Form.Element )
+totalCostSection sectionTitle formData =
     ( "totalCost"
-    , Form.Info "Coût total de la demande de prise en charge" <|
+    , Form.Info sectionTitle <|
         String.concat
-            [ String.fromInt (totalFundingRequestCost formData)
+            [ String.fromInt (totalCost formData)
             , "€"
             ]
     )
@@ -241,8 +246,8 @@ totalTrainingHourCount formData =
         + int .certificateSkillsHourCount
 
 
-totalFundingRequestCost : Dict String String -> Int
-totalFundingRequestCost formData =
+totalCost : Dict String String -> Int
+totalCost formData =
     let
         decode =
             Data.Form.Helper.decode keys formData

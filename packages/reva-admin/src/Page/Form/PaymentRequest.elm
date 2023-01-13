@@ -7,6 +7,7 @@ import Data.Form.PaymentRequest
 import Data.Referential exposing (Referential)
 import Dict exposing (Dict)
 import Page.Form as Form exposing (Form)
+import Page.Form.FundingRequest as FundingRequest
 import String exposing (String)
 
 
@@ -115,8 +116,8 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( "other", Form.Title "Autres actions de formations complémentaires" )
         , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
         , ( keys.totalTrainingHourCount
-          , Form.Info "Nb d'heures prévue total actes formatifs" <|
-                String.fromInt (totalTrainingHourCount formData)
+          , Form.Info "Nb d'heures total actes formatifs" <|
+                String.fromInt (FundingRequest.totalTrainingHourCount formData)
           )
         , ( "jury", Form.Title "Prestation jury" )
         , ( "examReview"
@@ -127,24 +128,13 @@ form maybeCertification formData ( candidacy, referential ) =
           )
         , ( keys.examHourCount, Form.Number "Nb d'heures réalisées" )
         , ( "total", Form.Section "Total" )
-        , totalCostSection formData
+        , FundingRequest.totalCostSection "Coût total de la demande de paiement" formData
         , confirmationSection candidacy
         ]
     , saveLabel = Just "Enregistrer"
     , submitLabel = "Envoyer"
     , title = "Demande de paiement"
     }
-
-
-totalCostSection : Dict String String -> ( String, Form.Element )
-totalCostSection formData =
-    ( "totalCost"
-    , Form.Info "Coût total de la demande de paiement" <|
-        String.concat
-            [ String.fromInt (totalFundingRequestCost formData)
-            , "€"
-            ]
-    )
 
 
 confirmationSection : Candidacy -> ( String, Form.Element )
@@ -154,36 +144,3 @@ confirmationSection candidacy =
 
     else
         ( keys.isFormConfirmed, Form.Checkbox "Je confirme ce montant de paiement. Je ne pourrai pas éditer cette demande de paiement après son envoi." )
-
-
-totalTrainingHourCount : Dict String String -> Int
-totalTrainingHourCount formData =
-    let
-        decode =
-            Data.Form.Helper.decode keys formData
-
-        int f =
-            decode.int f 0
-    in
-    int .mandatoryTrainingsHourCount
-        + int .basicSkillsHourCount
-        + int .certificateSkillsHourCount
-
-
-totalFundingRequestCost : Dict String String -> Int
-totalFundingRequestCost formData =
-    let
-        decode =
-            Data.Form.Helper.decode keys formData
-
-        int f =
-            decode.int f 0
-    in
-    (int .diagnosisHourCount * int .diagnosisCost)
-        + (int .postExamHourCount * int .postExamCost)
-        + (int .individualHourCount * int .individualCost)
-        + (int .collectiveHourCount * int .collectiveCost)
-        + (int .mandatoryTrainingsHourCount * int .mandatoryTrainingsCost)
-        + (int .basicSkillsHourCount * int .basicSkillsCost)
-        + (int .certificateSkillsHourCount * int .certificateSkillsCost)
-        + (int .examHourCount * int .examCost)

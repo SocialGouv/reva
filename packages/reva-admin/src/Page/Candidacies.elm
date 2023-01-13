@@ -9,7 +9,6 @@ module Page.Candidacies exposing
     , withStatusFilter
     )
 
-import Admin.Object.CandidacySummary exposing (isDroppedOut)
 import Api.Candidacy
 import Api.Form.Admissibility
 import Api.Form.Appointment
@@ -27,7 +26,7 @@ import Data.Context exposing (Context)
 import Data.Form.FundingRequest
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Referential)
-import Html.Styled as Html exposing (Html, a, article, aside, button, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
+import Html.Styled as Html exposing (Html, a, article, aside, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
 import Html.Styled.Attributes exposing (action, attribute, class, classList, for, id, name, placeholder, type_)
 import Html.Styled.Events exposing (onInput)
 import List.Extra
