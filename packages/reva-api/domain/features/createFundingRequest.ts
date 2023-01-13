@@ -81,14 +81,20 @@ export const validateFundingRequest =
 
     if (
       isCandidateBacNonFragile &&
-      !isLower2(fundingRequest.diagnosisHourCount)
+      !isLower2(
+        fundingRequest.diagnosisHourCount + fundingRequest.postExamHourCount
+      )
     ) {
       errors.push(
-        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 0 et 2h."
+        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours doit être compris entre 0 et 2h."
       );
-    } else if (!isLower4(fundingRequest.diagnosisHourCount)) {
+    } else if (
+      !isLower4(
+        fundingRequest.diagnosisHourCount + fundingRequest.postExamHourCount
+      )
+    ) {
       errors.push(
-        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 0 et 4h."
+        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours doit être compris entre 0 et 4h."
       );
     }
 
