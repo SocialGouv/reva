@@ -31,9 +31,20 @@ form maybeCertification formData ( candidacy, referential ) =
         estimatedHourCountElement =
             Form.Number "Nb d'heures prévues"
 
-        hourCountElement : Form.Element
-        hourCountElement =
-            Form.Number "Nb d'heures réalisées"
+        hourCountElement field =
+            let
+                numberElement =
+                    Form.Number "Nb d'heures réalisées"
+            in
+            case Dict.get (field keys) formData of
+                Nothing ->
+                    Form.ReadOnlyElement numberElement
+
+                Just "0" ->
+                    Form.ReadOnlyElement numberElement
+
+                Just _ ->
+                    numberElement
     in
     { elements =
         [ ( "heading", Form.Heading "1 - Informations des prestations" )
@@ -59,7 +70,7 @@ form maybeCertification formData ( candidacy, referential ) =
                 , ( keys.diagnosisCost, costElement )
                 ]
           )
-        , ( keys.diagnosisHourCount, hourCountElement )
+        , ( keys.diagnosisHourCount, hourCountElement .diagnosisEstimatedHourCount )
         , ( "post-exam", Form.Title "Entretien post jury" )
         , ( "diagnosisReview"
           , Form.ReadOnlyElements
@@ -67,7 +78,7 @@ form maybeCertification formData ( candidacy, referential ) =
                 , ( keys.postExamCost, costElement )
                 ]
           )
-        , ( keys.postExamHourCount, hourCountElement )
+        , ( keys.postExamHourCount, hourCountElement .postExamEstimatedHourCount )
         , ( "companion", Form.Section "Accompagnement méthodologique" )
         , ( keys.companionId
           , Form.ReadOnlyElement <|
@@ -80,7 +91,7 @@ form maybeCertification formData ( candidacy, referential ) =
                 , ( keys.individualCost, costElement )
                 ]
           )
-        , ( keys.individualHourCount, hourCountElement )
+        , ( keys.individualHourCount, hourCountElement .individualEstimatedHourCount )
         , ( "collective", Form.Title "Accompagnement collectif" )
         , ( "individualReview"
           , Form.ReadOnlyElements
@@ -88,7 +99,7 @@ form maybeCertification formData ( candidacy, referential ) =
                 , ( keys.collectiveCost, costElement )
                 ]
           )
-        , ( keys.collectiveHourCount, hourCountElement )
+        , ( keys.collectiveHourCount, hourCountElement .collectiveEstimatedHourCount )
         , ( "training", Form.Section "Actes formatifs" )
         , ( "mandatory", Form.Title "Formations obligatoires" )
         , ( keys.mandatoryTrainingIds
@@ -102,7 +113,7 @@ form maybeCertification formData ( candidacy, referential ) =
                 , ( keys.mandatoryTrainingsCost, Form.ReadOnlyElement <| costElement )
                 ]
           )
-        , ( keys.mandatoryTrainingsHourCount, hourCountElement )
+        , ( keys.mandatoryTrainingsHourCount, hourCountElement .mandatoryTrainingsEstimatedHourCount )
         , ( "basic-skills", Form.Title "Formations savoirs de base" )
         , ( keys.basicSkillsIds
           , Form.ReadOnlyElement <|
@@ -115,7 +126,7 @@ form maybeCertification formData ( candidacy, referential ) =
                 , ( keys.basicSkillsCost, costElement )
                 ]
           )
-        , ( keys.basicSkillsHourCount, hourCountElement )
+        , ( keys.basicSkillsHourCount, hourCountElement .basicSkillsEstimatedHourCount )
         , ( "skills", Form.Title "Bloc de compétences certifiant" )
         , ( keys.certificateSkills, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
         , ( "certificateSkillsReview"
@@ -124,7 +135,7 @@ form maybeCertification formData ( candidacy, referential ) =
                 , ( keys.certificateSkillsCost, costElement )
                 ]
           )
-        , ( keys.certificateSkillsHourCount, hourCountElement )
+        , ( keys.certificateSkillsHourCount, hourCountElement .certificateSkillsEstimatedHourCount )
         , ( "other", Form.Title "Autres actions de formations complémentaires" )
         , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
         , ( keys.totalTrainingHourCount
@@ -138,7 +149,7 @@ form maybeCertification formData ( candidacy, referential ) =
                 , ( keys.examCost, costElement )
                 ]
           )
-        , ( keys.examHourCount, hourCountElement )
+        , ( keys.examHourCount, hourCountElement .examEstimatedHourCount )
         , ( "total", Form.Section "Total" )
         , FundingRequest.totalCostSection "Coût total de la demande de paiement" formData
         , if Candidacy.isStatusEqualOrAbove candidacy "DEMANDE_PAIEMENT_ENVOYEE" then

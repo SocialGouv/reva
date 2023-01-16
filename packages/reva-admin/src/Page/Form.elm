@@ -315,7 +315,7 @@ viewEditableElement formData ( elementId, element ) =
                  , id elementId
                  , onInput (UserChangedElement elementId)
                  , class extraClass
-                 , class "min-w-0 h-[85px] pr-4"
+                 , class "min-w-0 h-[78px] pr-4"
                  , inputStyle
                  , value dataOrDefault
                  ]
@@ -413,8 +413,8 @@ viewEditableElement formData ( elementId, element ) =
         ReadOnlyElements readOnlyElements ->
             [ div
                 [ class "flex rounded"
-                , class "bg-slate-50 border-slate-200"
-                , class "mb-8 pt-3 pb-2 px-2"
+                , class "bg-slate-100 border-slate-200"
+                , class "-mt-2 mb-8 px-1 pt-2"
                 ]
               <|
                 List.map
@@ -429,7 +429,7 @@ viewEditableElement formData ( elementId, element ) =
             select
                 [ id elementId
                 , onInput (UserChangedElement elementId)
-                , class "mt-1 block w-[520px] h-[85px] pr-10"
+                , class "mt-1 block w-[520px] h-[78px] pr-10"
                 , inputStyle
                 , required True
                 ]
@@ -490,11 +490,14 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> Maybe.withDefault (defaultValue element)
 
         dataClass =
-            "min-h-[40px] bg-slate-100 px-6 py-5 text-lg font-medium leading-snug text-slate-600 mt-1 mb-4"
+            "min-h-[40px] rounded px-8 py-5 text-xl font-medium leading-snug text-slate-900 mt-1 mb-4"
 
-        dataView d =
+        userEditedClass =
+            "min-h-[78px] flex items-center border border-slate-200 bg-white"
+
+        dataView extraClass d =
             dd
-                [ class dataClass ]
+                [ class extraClass, class dataClass ]
                 [ text d ]
 
         termView s =
@@ -508,7 +511,8 @@ viewReadOnlyElement formData ( elementId, element ) =
             ]
 
         defaultView label =
-            dataView dataOrDefault |> withTerm label
+            dataView userEditedClass dataOrDefault
+                |> withTerm label
     in
     case element of
         Checkbox label ->
@@ -553,13 +557,19 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> withTerm label
 
         Input label ->
-            defaultView label
+            div
+                [ class "w-[240px]" ]
+                [ dataView userEditedClass dataOrDefault ]
+                |> withTerm label
 
         Number label ->
-            div [ class "w-40" ] [ dataView dataOrDefault ] |> withTerm label
+            div
+                [ class "w-40" ]
+                [ dataView userEditedClass dataOrDefault ]
+                |> withTerm label
 
         Textarea label _ ->
-            [ div [ class "w-[620px]" ] <| defaultView label ]
+            [ div [ class "w-[590px]" ] <| defaultView label ]
 
         ReadOnlyElement readOnlyElement ->
             viewReadOnlyElement formData ( elementId, readOnlyElement )
@@ -575,7 +585,7 @@ viewReadOnlyElement formData ( elementId, element ) =
         Select label choices ->
             List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices
                 |> List.head
-                |> Maybe.map (\( _, choice ) -> dataView choice |> withTerm label)
+                |> Maybe.map (\( _, choice ) -> dataView "bg-slate-100 min-w-[240px]" choice |> withTerm label)
                 |> Maybe.withDefault []
 
         SelectOther selectId otherValue label ->
