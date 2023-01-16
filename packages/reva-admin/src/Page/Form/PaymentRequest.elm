@@ -1,5 +1,6 @@
 module Page.Form.PaymentRequest exposing (form)
 
+import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Certification exposing (Certification)
 import Data.Form.Helper
@@ -152,7 +153,7 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( keys.examHourCount, hourCountElement .examEstimatedHourCount )
         , ( "total", Form.Section "Total" )
         , FundingRequest.totalCostSection "Coût total de la demande de paiement" formData
-        , if Candidacy.isStatusEqualOrAbove candidacy "DEMANDE_PAIEMENT_ENVOYEE" then
+        , if Candidacy.isStatusEqualOrAbove candidacy DemandePaiementEnvoyee then
             ( "", Form.Empty )
 
           else

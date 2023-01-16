@@ -1,5 +1,6 @@
 module View.Candidacy.NavigationSteps exposing (dropOutView, view)
 
+import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Data.Candidacy as Candidacy exposing (Candidacy)
 import Html.Styled exposing (Html, button, div, h2, h3, span, text)
 import Html.Styled.Attributes exposing (class)
@@ -20,7 +21,7 @@ view baseUrl candidacy =
             Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Tab.Training candidacy.id)
 
         admissibilityLink =
-            if Candidacy.isStatusEqualOrAbove candidacy "PARCOURS_CONFIRME" then
+            if Candidacy.isStatusEqualOrAbove candidacy ParcoursConfirme then
                 Just <| Route.href baseUrl <| Route.Candidacy (View.Candidacy.Tab.Admissibility candidacy.id)
 
             else
@@ -30,19 +31,19 @@ view baseUrl candidacy =
         [ { content = [ title "Prochaines étapes" ]
           , navigation = Nothing
           }
-        , { content = expandedView "Rendez-vous pédagogique" "PRISE_EN_CHARGE" candidacy
+        , { content = expandedView "Rendez-vous pédagogique" PriseEnCharge candidacy
           , navigation = appointmentLink
           }
-        , { content = expandedView "Définition du parcours" "PRISE_EN_CHARGE" candidacy
+        , { content = expandedView "Définition du parcours" PriseEnCharge candidacy
           , navigation = trainingLink
           }
         , { content = [ View.Steps.info "Validation du parcours" ]
           , navigation = Nothing
           }
-        , { content = expandedView "Gestion de la recevabilité" "PARCOURS_CONFIRME" candidacy
+        , { content = expandedView "Gestion de la recevabilité" ParcoursConfirme candidacy
           , navigation = admissibilityLink
           }
-        , { content = expandedView "Demande de prise en charge" "PARCOURS_CONFIRME" candidacy
+        , { content = expandedView "Demande de prise en charge" ParcoursConfirme candidacy
           , navigation = candidateInfoLink baseUrl candidacy
           }
         ]
@@ -73,9 +74,9 @@ dropOutView baseUrl candidacy dropOutDate =
         , { content = dropOutInfo
           , navigation = dropOutLink
           }
-        , { content = expandedView "Demande de prise en charge" "PARCOURS_CONFIRME" candidacy
+        , { content = expandedView "Demande de prise en charge" ParcoursConfirme candidacy
           , navigation =
-                if Candidacy.isStatusEqualOrAbove candidacy "PARCOURS_CONFIRME" then
+                if Candidacy.isStatusEqualOrAbove candidacy ParcoursConfirme then
                     candidateInfoLink baseUrl candidacy
 
                 else
@@ -94,7 +95,7 @@ title value =
         ]
 
 
-expandedView : String -> String -> Candidacy -> List (Html msg)
+expandedView : String -> Candidacy.Step -> Candidacy -> List (Html msg)
 expandedView stepTitle status candidacy =
     [ View.Steps.link stepTitle
     , if candidacyStatus candidacy == status then
@@ -117,19 +118,19 @@ candidateInfoLink : String -> Candidacy -> Maybe (Html.Styled.Attribute msg)
 candidateInfoLink baseUrl candidacy =
     let
         fundingView =
-            if Candidacy.isStatusEqualOrAbove candidacy "DEMANDE_FINANCEMENT_ENVOYE" then
+            if Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye then
                 View.Candidacy.Tab.FundingRequest
 
             else
                 View.Candidacy.Tab.CandidateInfo
     in
-    if candidacy.dropOutDate /= Nothing || Candidacy.isStatusEqualOrAbove candidacy "PARCOURS_CONFIRME" then
+    if candidacy.dropOutDate /= Nothing || Candidacy.isStatusEqualOrAbove candidacy ParcoursConfirme then
         Just <| Route.href baseUrl <| Route.Candidacy (fundingView candidacy.id)
 
     else
         Nothing
 
 
-candidacyStatus : Candidacy -> String
+candidacyStatus : Candidacy -> Candidacy.Step
 candidacyStatus candidacy =
     (Candidacy.lastStatus >> .status) candidacy.statuses
