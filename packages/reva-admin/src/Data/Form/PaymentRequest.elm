@@ -78,24 +78,12 @@ validate ( candidacy, _ ) dict =
     let
         decode =
             Helper.decode keys dict
-
-        companionValidation () =
-            case ( candidacy.dropOutDate, decode.maybe.string .companionId ) of
-                ( Nothing, Nothing ) ->
-                    Err "Veuillez sélectionner un accompagnateur"
-
-                _ ->
-                    Ok ()
-
-        confirmationValidation () =
-            if decode.bool .isFormConfirmed False then
-                Ok ()
-
-            else
-                Err "Veuillez confirmer le montant de la prise en charge avant son envoi définitif"
     in
-    companionValidation ()
-        |> Result.andThen confirmationValidation
+    if decode.bool .isFormConfirmed False then
+        Ok ()
+
+    else
+        Err "Veuillez confirmer le montant de la prise en charge avant son envoi définitif"
 
 
 fromDict : Dict String String -> PaymentRequestInput

@@ -250,10 +250,10 @@ viewForm referential status maybeError formData form saveButton submitButton =
         ]
         [ View.title currentForm.title
         , div
-            [ class "mt-6 flex flex-wrap" ]
+            [ class "mt-6 flex flex-wrap gap-x-8" ]
             (List.map (viewElement formData) currentForm.elements
                 |> List.filter ((/=) [])
-                |> List.map (div [ class "mr-8" ])
+                |> List.map (div [])
             )
         , case status of
             Editable ->
@@ -575,9 +575,13 @@ viewReadOnlyElement formData ( elementId, element ) =
             viewReadOnlyElement formData ( elementId, readOnlyElement )
 
         ReadOnlyElements readOnlyElements ->
-            List.map
-                (viewReadOnlyElement formData >> div [])
-                readOnlyElements
+            [ div
+                [ class "flex justify-between gap-6 mr-2" ]
+              <|
+                List.map
+                    (viewReadOnlyElement formData >> div [])
+                    readOnlyElements
+            ]
 
         Section title ->
             [ View.Heading.h4 title ]
@@ -712,8 +716,8 @@ update context msg model =
         noChange =
             ( model, Cmd.none )
 
-        clickHandler handler toMsg state referential form formData =
-            case model.onValidate referential formData of
+        clickHandler handler validate toMsg state referential form formData =
+            case validate referential formData of
                 Err error ->
                     ( { model | form = Editing (Just error) form formData }, Cmd.none )
 
@@ -734,13 +738,13 @@ update context msg model =
             noChange
 
         ( UserClickSave referential, Editing _ form formData ) ->
-            clickHandler model.onSave GotSaveResponse Saving referential form formData
+            clickHandler model.onSave (\_ _ -> Ok ()) GotSaveResponse Saving referential form formData
 
         ( UserClickSave _, _ ) ->
             noChange
 
         ( UserClickSubmit referential, Editing _ form formData ) ->
-            clickHandler model.onSubmit GotSaveResponse Saving referential form formData
+            clickHandler model.onSubmit model.onValidate GotSaveResponse Saving referential form formData
 
         ( UserClickSubmit _, _ ) ->
             noChange

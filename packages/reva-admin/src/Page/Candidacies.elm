@@ -24,6 +24,7 @@ import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySu
 import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
 import Data.Form.FundingRequest
+import Data.Form.PaymentRequest
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Referential)
 import Html.Styled as Html exposing (Html, a, article, aside, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
@@ -659,7 +660,7 @@ updateTab context tab model =
                             Nav.pushUrl
                                 context.navKey
                                 (Route.toString context.baseUrl (Route.Candidacy (View.Candidacy.Tab.Profil candidacyId)))
-                        , onValidate = \_ _ -> Ok ()
+                        , onValidate = Data.Form.PaymentRequest.validate
                         , status =
                             if Candidacy.isPaymentRequestSent candidacy then
                                 Form.ReadOnly
