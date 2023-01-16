@@ -17,7 +17,7 @@ import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
 import Html.Styled as Html exposing (Html, button, dd, div, dt, fieldset, input, label, legend, li, option, p, select, text, textarea, ul)
 import Html.Styled.Attributes exposing (checked, class, classList, disabled, for, id, name, placeholder, required, selected, type_, value)
-import Html.Styled.Events exposing (onCheck, onInput, onSubmit)
+import Html.Styled.Events exposing (onCheck, onClick, onInput, onSubmit)
 import RemoteData exposing (RemoteData(..))
 import String exposing (String)
 import Task
@@ -28,7 +28,8 @@ import View.Helpers exposing (dataTest)
 
 type Msg referential
     = UserChangedElement String String
-    | UserClickedSave referential
+    | UserClickSave referential
+    | UserClickSubmit referential
     | GotSaveResponse (RemoteData String ())
     | GotLoadResponse (RemoteData String (Dict String String))
     | NoOp
@@ -44,6 +45,7 @@ type Element
     | Input String
     | Number String
     | ReadOnlyElement Element
+    | ReadOnlyElements (List ( String, Element ))
     | Select String (List ( String, String ))
     | SelectOther String String String
     | Section String
@@ -55,7 +57,8 @@ type Element
 
 type alias Form =
     { elements : List ( String, Element )
-    , saveLabel : String
+    , saveLabel : Maybe String
+    , submitLabel : String
     , title : String
     }
 
@@ -73,6 +76,7 @@ type RemoteForm referential
     | Loading (FormBuilder referential)
     | Editing (Maybe String) (FormBuilder referential) FormData
     | Saving (FormBuilder referential) FormData
+    | Submitting (FormBuilder referential) FormData
     | Failure
 
 
@@ -81,9 +85,19 @@ type Status
     | ReadOnly
 
 
+type alias ClickHandler referential =
+    String
+    -> Token
+    -> (RemoteData String () -> Msg referential)
+    -> referential
+    -> Dict String String
+    -> Cmd (Msg referential)
+
+
 type alias Model referential =
     { onRedirect : Cmd (Msg referential)
-    , onSave : String -> Token -> (RemoteData String () -> Msg referential) -> referential -> Dict String String -> Cmd (Msg referential)
+    , onSave : ClickHandler referential
+    , onSubmit : ClickHandler referential
     , onValidate : referential -> Dict String String -> Result String ()
     , form : RemoteForm referential
     , status : Status
@@ -97,6 +111,7 @@ init =
         model =
             { onRedirect = Cmd.none
             , onSave = \_ _ _ _ _ -> Cmd.none
+            , onSubmit = \_ _ _ _ _ -> Cmd.none
             , onValidate = \_ _ -> Ok ()
             , form = NotAsked
             , status = ReadOnly
@@ -114,22 +129,33 @@ init =
 view : RemoteData String referential -> Model referential -> Html (Msg referential)
 view remoteReferential model =
     let
-        saveButton label =
+        submitButton label =
             View.primaryButton
                 [ dataTest "save-description"
                 , type_ "submit"
                 ]
                 label
 
-        disabledSaveButton label =
+        saveButton maybeLabel referential =
+            case maybeLabel of
+                Just label ->
+                    View.secondaryButton
+                        [ dataTest "save-description"
+                        , onClick (UserClickSave referential)
+                        ]
+                        label
+
+                Nothing ->
+                    text ""
+
+        disabledButton dataTestValue =
             button
-                [ dataTest "save-description"
+                [ dataTest dataTestValue
                 , disabled True
-                , type_ "submit"
                 , class "text-center mt-4 rounded bg-blue-400"
                 , class "text-white px-12 py-2"
                 ]
-                [ text label ]
+                [ text "..." ]
 
         skeleton =
             div [ class "ml-16 mt-10" ]
@@ -150,17 +176,44 @@ view remoteReferential model =
         ( _, Loading _ ) ->
             skeleton
 
-        ( RemoteData.Success referential, Saving form formData ) ->
-            viewForm referential model.status Nothing formData form <|
-                disabledSaveButton "..."
+        ( RemoteData.Success referential, Saving formBuilder formData ) ->
+            let
+                form =
+                    formBuilder formData referential
+            in
+            viewForm referential
+                model.status
+                Nothing
+                formData
+                formBuilder
+                (disabledButton "save")
+                (submitButton form.submitLabel)
+
+        ( RemoteData.Success referential, Submitting formBuilder formData ) ->
+            let
+                form =
+                    formBuilder formData referential
+            in
+            viewForm referential
+                model.status
+                Nothing
+                formData
+                formBuilder
+                (saveButton form.saveLabel referential)
+                (disabledButton "submit")
 
         ( RemoteData.Success referential, Editing error formBuilder formData ) ->
             let
                 form =
                     formBuilder formData referential
             in
-            viewForm referential model.status error formData formBuilder <|
-                saveButton form.saveLabel
+            viewForm referential
+                model.status
+                error
+                formData
+                formBuilder
+                (saveButton form.saveLabel referential)
+                (submitButton form.submitLabel)
 
         ( _, Failure ) ->
             text "Une erreur est survenue"
@@ -169,8 +222,16 @@ view remoteReferential model =
             text err
 
 
-viewForm : referential -> Status -> Maybe String -> FormData -> FormBuilder referential -> Html (Msg referential) -> Html (Msg referential)
-viewForm referential status maybeError formData form saveButton =
+viewForm :
+    referential
+    -> Status
+    -> Maybe String
+    -> FormData
+    -> FormBuilder referential
+    -> Html (Msg referential)
+    -> Html (Msg referential)
+    -> Html (Msg referential)
+viewForm referential status maybeError formData form saveButton submitButton =
     let
         viewElement =
             case status of
@@ -185,20 +246,21 @@ viewForm referential status maybeError formData form saveButton =
     in
     Html.form
         [ class "pl-16 pr-4 mt-10"
-        , onSubmit (UserClickedSave referential)
+        , onSubmit (UserClickSubmit referential)
         ]
         [ View.title currentForm.title
         , div
-            [ class "mt-6 flex flex-wrap" ]
+            [ class "mt-6 flex flex-wrap gap-x-8" ]
             (List.map (viewElement formData) currentForm.elements
                 |> List.filter ((/=) [])
-                |> List.map (div [ class "mr-8" ])
+                |> List.map (div [])
             )
         , case status of
             Editable ->
                 div
-                    [ class "mt-8 pb-4 flex justify-end" ]
+                    [ class "mt-8 pb-4 flex justify-between pr-4" ]
                     [ saveButton
+                    , submitButton
                     ]
 
             ReadOnly ->
@@ -253,7 +315,7 @@ viewEditableElement formData ( elementId, element ) =
                  , id elementId
                  , onInput (UserChangedElement elementId)
                  , class extraClass
-                 , class "min-w-0 h-[85px] pr-4"
+                 , class "min-w-0 h-[78px] pr-4"
                  , inputStyle
                  , value dataOrDefault
                  ]
@@ -342,7 +404,23 @@ viewEditableElement formData ( elementId, element ) =
                 |> withLabel label
 
         ReadOnlyElement readOnlyElement ->
-            [ div [ class "mb-8" ] <| viewReadOnlyElement formData ( elementId, readOnlyElement ) ]
+            [ div
+                [ class "mb-8" ]
+              <|
+                viewReadOnlyElement formData ( elementId, readOnlyElement )
+            ]
+
+        ReadOnlyElements readOnlyElements ->
+            [ div
+                [ class "flex rounded"
+                , class "bg-slate-100 border-slate-200"
+                , class "-mt-2 mb-8 px-1 pt-2"
+                ]
+              <|
+                List.map
+                    (viewReadOnlyElement formData >> div [ class "mx-3" ])
+                    readOnlyElements
+            ]
 
         Section title ->
             [ View.Heading.h4 title ]
@@ -351,7 +429,7 @@ viewEditableElement formData ( elementId, element ) =
             select
                 [ id elementId
                 , onInput (UserChangedElement elementId)
-                , class "mt-1 block w-[520px] h-[85px] pr-10"
+                , class "mt-1 block w-[520px] h-[78px] pr-10"
                 , inputStyle
                 , required True
                 ]
@@ -412,11 +490,14 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> Maybe.withDefault (defaultValue element)
 
         dataClass =
-            "min-h-[40px] bg-gray-100 px-6 py-5 text-lg font-medium leading-snug text-gray-500 mt-1 mb-4"
+            "min-h-[40px] rounded px-8 py-5 text-xl font-medium leading-snug text-slate-900 mt-1 mb-4"
 
-        dataView d =
+        userEditedClass =
+            "min-h-[78px] flex items-center border border-slate-200 bg-white"
+
+        dataView extraClass d =
             dd
-                [ class dataClass ]
+                [ class extraClass, class dataClass ]
                 [ text d ]
 
         termView s =
@@ -430,7 +511,8 @@ viewReadOnlyElement formData ( elementId, element ) =
             ]
 
         defaultView label =
-            dataView dataOrDefault |> withTerm label
+            dataView userEditedClass dataOrDefault
+                |> withTerm label
     in
     case element of
         Checkbox label ->
@@ -475,16 +557,31 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> withTerm label
 
         Input label ->
-            defaultView label
+            div
+                [ class "w-[240px]" ]
+                [ dataView userEditedClass dataOrDefault ]
+                |> withTerm label
 
         Number label ->
-            div [ class "w-40" ] [ dataView dataOrDefault ] |> withTerm label
+            div
+                [ class "w-40" ]
+                [ dataView userEditedClass dataOrDefault ]
+                |> withTerm label
 
         Textarea label _ ->
-            [ div [ class "w-[620px]" ] <| defaultView label ]
+            [ div [ class "w-[590px]" ] <| defaultView label ]
 
         ReadOnlyElement readOnlyElement ->
             viewReadOnlyElement formData ( elementId, readOnlyElement )
+
+        ReadOnlyElements readOnlyElements ->
+            [ div
+                [ class "flex justify-between gap-6 mr-2" ]
+              <|
+                List.map
+                    (viewReadOnlyElement formData >> div [])
+                    readOnlyElements
+            ]
 
         Section title ->
             [ View.Heading.h4 title ]
@@ -492,7 +589,7 @@ viewReadOnlyElement formData ( elementId, element ) =
         Select label choices ->
             List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices
                 |> List.head
-                |> Maybe.map (\( _, choice ) -> dataView choice |> withTerm label)
+                |> Maybe.map (\( _, choice ) -> dataView "bg-slate-100 min-w-[240px]" choice |> withTerm label)
                 |> Maybe.withDefault []
 
         SelectOther selectId otherValue label ->
@@ -535,8 +632,8 @@ viewReadOnlyElement formData ( elementId, element ) =
 info : String -> Html msg
 info value =
     p
-        [ class "rounded bg-slate-100 text-slate-800 mb-8"
-        , class "px-8 py-6 text-lg"
+        [ class "rounded bg-slate-100 text-slate-800 mb-6"
+        , class "px-6 py-4 text-lg"
         ]
         [ text value ]
 
@@ -618,6 +715,16 @@ update context msg model =
     let
         noChange =
             ( model, Cmd.none )
+
+        clickHandler handler validate toMsg state referential form formData =
+            case validate referential formData of
+                Err error ->
+                    ( { model | form = Editing (Just error) form formData }, Cmd.none )
+
+                Ok () ->
+                    ( { model | form = state form formData }
+                    , handler context.endpoint context.token toMsg referential formData
+                    )
     in
     case ( msg, model.form ) of
         ( UserChangedElement elementId elementValue, Editing error form formData ) ->
@@ -630,17 +737,16 @@ update context msg model =
         ( UserChangedElement _ _, _ ) ->
             noChange
 
-        ( UserClickedSave referential, Editing _ form formData ) ->
-            case model.onValidate referential formData of
-                Err error ->
-                    ( { model | form = Editing (Just error) form formData }, Cmd.none )
+        ( UserClickSave referential, Editing _ form formData ) ->
+            clickHandler model.onSave (\_ _ -> Ok ()) GotSaveResponse Saving referential form formData
 
-                Ok () ->
-                    ( { model | form = Saving form formData }
-                    , model.onSave context.endpoint context.token GotSaveResponse referential formData
-                    )
+        ( UserClickSave _, _ ) ->
+            noChange
 
-        ( UserClickedSave _, _ ) ->
+        ( UserClickSubmit referential, Editing _ form formData ) ->
+            clickHandler model.onSubmit model.onValidate GotSaveResponse Saving referential form formData
+
+        ( UserClickSubmit _, _ ) ->
             noChange
 
         ( GotLoadResponse (RemoteData.Success formData), Loading form ) ->
@@ -677,7 +783,8 @@ updateForm :
         { form : FormData -> referential -> Form
         , onLoad : String -> Token -> (RemoteData String (Dict String String) -> Msg referential) -> Cmd (Msg referential)
         , onRedirect : Cmd (Msg referential)
-        , onSave : String -> Token -> (RemoteData String () -> Msg referential) -> referential -> Dict String String -> Cmd (Msg referential)
+        , onSubmit : ClickHandler referential
+        , onSave : Maybe (ClickHandler referential)
         , onValidate : referential -> Dict String String -> Result String ()
         , status : Status
         }
@@ -687,7 +794,8 @@ updateForm context config model =
     ( { model
         | form = Loading config.form
         , onRedirect = config.onRedirect
-        , onSave = config.onSave
+        , onSave = config.onSave |> Maybe.withDefault (\_ _ _ _ _ -> Cmd.none)
+        , onSubmit = config.onSubmit
         , onValidate = config.onValidate
         , status = config.status
       }

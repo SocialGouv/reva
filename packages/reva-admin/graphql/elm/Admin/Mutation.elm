@@ -311,6 +311,32 @@ candidacy_updateAdmissibility requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_updateAdmissibility" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "admissibility" requiredArgs____.admissibility Admin.InputObject.encodeAdmissibilityInput ] object____ Basics.identity
 
 
+type alias CandidacyCreateOrUpdatePaymentRequestRequiredArguments =
+    { candidacyId : Data.Scalar.Uuid
+    , paymentRequest : Admin.InputObject.PaymentRequestInput
+    }
+
+
+candidacy_createOrUpdatePaymentRequest :
+    CandidacyCreateOrUpdatePaymentRequestRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.PaymentRequest
+    -> SelectionSet decodesTo RootMutation
+candidacy_createOrUpdatePaymentRequest requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_createOrUpdatePaymentRequest" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "paymentRequest" requiredArgs____.paymentRequest Admin.InputObject.encodePaymentRequestInput ] object____ Basics.identity
+
+
+type alias CandidacyConfirmPaymentRequestRequiredArguments =
+    { candidacyId : Data.Scalar.Uuid }
+
+
+candidacy_confirmPaymentRequest :
+    CandidacyConfirmPaymentRequestRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet decodesTo RootMutation
+candidacy_confirmPaymentRequest requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_confirmPaymentRequest" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ Basics.identity
+
+
 type alias CandidateAskForRegistrationRequiredArguments =
     { candidate : Admin.InputObject.CandidateInput }
 

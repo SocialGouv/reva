@@ -25,7 +25,7 @@ h4 s =
 h5 : String -> Html msg
 h5 s =
     Html.h5
-        [ class "w-[620px] mt-4 mb-2"
+        [ class "w-[620px] mt-4 mb-3"
         , class "text-xl font-semibold text-slate-500"
         ]
         [ text s ]

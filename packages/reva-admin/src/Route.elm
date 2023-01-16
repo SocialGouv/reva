@@ -14,7 +14,7 @@ import Url
 import Url.Builder
 import Url.Parser as Parser exposing ((</>), (<?>), Parser, map, oneOf, s, string, top)
 import Url.Parser.Query as Query
-import View.Candidacy.Tab
+import View.Candidacy.Tab as Tab
 
 
 type alias Filters =
@@ -22,7 +22,7 @@ type alias Filters =
 
 
 type Route
-    = Candidacy (View.Candidacy.Tab.Tab Filters)
+    = Candidacy (Tab.Tab Filters)
     | Home
     | Login
     | Logout
@@ -37,47 +37,42 @@ emptyFilters =
 parser : String -> Parser (Route -> a) a
 parser baseUrl =
     let
-        candidacyTab : String -> (Data.Candidacy.CandidacyId -> View.Candidacy.Tab.Tab Filters) -> Route
-        candidacyTab rawId tab =
-            Candidacy <| tab <| candidacyIdFromString rawId
+        candidacyTab tab p =
+            map (\rawId -> Candidacy <| tab <| candidacyIdFromString rawId) p
+
+        topLevel p =
+            s "candidacies" </> p
+
+        subLevel path =
+            topLevel (string </> s path)
     in
     s baseUrl
         </> oneOf
-                [ map Home top
-                , map Login (s "auth" </> s "login")
-                , map Logout (s "auth" </> s "logout")
-                , map
-                    (Filters >> View.Candidacy.Tab.Empty >> Candidacy)
-                    (s "candidacies" <?> Query.string "status")
-                , map
-                    (\id -> candidacyTab id View.Candidacy.Tab.Profil)
-                    (s "candidacies" </> string)
-                , map
-                    (\id -> candidacyTab id View.Candidacy.Tab.CandidateInfo)
-                    (s "candidacies" </> string </> s "candidate")
-                , map
-                    (\id -> candidacyTab id View.Candidacy.Tab.DropOut)
-                    (s "candidacies" </> string </> s "drop-out")
-                , map
-                    (\id -> candidacyTab id View.Candidacy.Tab.FundingRequest)
-                    (s "candidacies" </> string </> s "funding")
-                , map
-                    (\id -> candidacyTab id View.Candidacy.Tab.Meetings)
-                    (s "candidacies" </> string </> s "meetings")
-                , map
-                    (\id -> candidacyTab id View.Candidacy.Tab.Training)
-                    (s "candidacies" </> string </> s "training")
-                , map
-                    (\id -> candidacyTab id View.Candidacy.Tab.TrainingSent)
-                    (s "candidacies" </> string </> s "training" </> s "confirmation")
-                , map
-                    (\id -> candidacyTab id View.Candidacy.Tab.Admissibility)
-                    (s "candidacies" </> string </> s "admissibility")
-
-                --  Add more routes like this:
-                --  , map Comment (s "user" </> string </> s "comment" </> int)
-                --  , map BlogQuery (s "blog" <?> Query.string "q")
-                --  Learn more: https://guide.elm-lang.org/webapps/url_parsing.html
+                [ top |> map Home
+                , s "auth" </> s "login" |> map Login
+                , s "auth" </> s "logout" |> map Logout
+                , s "candidacies"
+                    <?> Query.string "status"
+                    |> map (Filters >> Tab.Empty >> Candidacy)
+                , topLevel string
+                    |> candidacyTab Tab.Profil
+                , subLevel "admissibility"
+                    |> candidacyTab Tab.Admissibility
+                , subLevel "candidate"
+                    |> candidacyTab Tab.CandidateInfo
+                , subLevel "drop-out"
+                    |> candidacyTab Tab.DropOut
+                , subLevel "funding"
+                    |> candidacyTab Tab.FundingRequest
+                , subLevel "meetings"
+                    |> candidacyTab Tab.Meetings
+                , subLevel "payment"
+                    |> candidacyTab Tab.PaymentRequest
+                , subLevel "training"
+                    |> candidacyTab Tab.Training
+                , subLevel "training"
+                    </> s "confirmation"
+                    |> candidacyTab Tab.TrainingSent
                 ]
 
 
@@ -94,46 +89,56 @@ href baseUrl route =
 
 toString : String -> Route -> String
 toString baseUrl route =
+    let
+        topLevel path params =
+            Url.Builder.absolute (baseUrl :: path) params
+
+        subLevel candidacyId path params =
+            topLevel ([ "candidacies", candidacyIdToString candidacyId ] ++ path) params
+    in
     case route of
-        Candidacy (View.Candidacy.Tab.Empty filters) ->
-            Url.Builder.absolute [ baseUrl, "candidacies" ]
+        Home ->
+            topLevel [ "" ] []
+
+        Login ->
+            topLevel [ "auth", "login" ] []
+
+        Logout ->
+            topLevel [ "auth", "logout" ] []
+
+        NotFound ->
+            topLevel [ "not-found" ] []
+
+        Candidacy (Tab.Empty filters) ->
+            topLevel [ "candidacies" ]
                 (filters.status
                     |> Maybe.map (\status -> [ Url.Builder.string "status" status ])
                     |> Maybe.withDefault []
                 )
 
-        Candidacy (View.Candidacy.Tab.CandidateInfo candidacyId) ->
-            Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "candidate" ] []
+        Candidacy (Tab.Profil id) ->
+            topLevel [ "candidacies", candidacyIdToString id ] []
 
-        Candidacy (View.Candidacy.Tab.DropOut candidacyId) ->
-            Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "drop-out" ] []
+        Candidacy (Tab.CandidateInfo id) ->
+            subLevel id [ "candidate" ] []
 
-        Candidacy (View.Candidacy.Tab.Profil candidacyId) ->
-            Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId ] []
+        Candidacy (Tab.DropOut id) ->
+            subLevel id [ "drop-out" ] []
 
-        Candidacy (View.Candidacy.Tab.Meetings candidacyId) ->
-            Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "meetings" ] []
+        Candidacy (Tab.Meetings id) ->
+            subLevel id [ "meetings" ] []
 
-        Candidacy (View.Candidacy.Tab.FundingRequest candidacyId) ->
-            Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "funding" ] []
+        Candidacy (Tab.PaymentRequest id) ->
+            subLevel id [ "payment" ] []
 
-        Candidacy (View.Candidacy.Tab.Training candidacyId) ->
-            Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "training" ] []
+        Candidacy (Tab.FundingRequest id) ->
+            subLevel id [ "funding" ] []
 
-        Candidacy (View.Candidacy.Tab.TrainingSent candidacyId) ->
-            Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "training", "confirmation" ] []
+        Candidacy (Tab.Training id) ->
+            subLevel id [ "training" ] []
 
-        Candidacy (View.Candidacy.Tab.Admissibility candidacyId) ->
-            Url.Builder.absolute [ baseUrl, "candidacies", candidacyIdToString candidacyId, "admissibility" ] []
+        Candidacy (Tab.TrainingSent id) ->
+            subLevel id [ "training", "confirmation" ] []
 
-        Home ->
-            Url.Builder.absolute [ baseUrl, "" ] []
-
-        Login ->
-            Url.Builder.absolute [ baseUrl, "auth", "login" ] []
-
-        Logout ->
-            Url.Builder.absolute [ baseUrl, "auth", "logout" ] []
-
-        NotFound ->
-            Url.Builder.absolute [ baseUrl, "not-found" ] []
+        Candidacy (Tab.Admissibility id) ->
+            subLevel id [ "admissibility" ] []

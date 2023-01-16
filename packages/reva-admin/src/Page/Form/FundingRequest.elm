@@ -1,4 +1,4 @@
-module Page.Form.FundingRequest exposing (droppedOutForm, form)
+module Page.Form.FundingRequest exposing (droppedOutForm, form, totalCostSection, totalTrainingHourCount)
 
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Candidate
@@ -62,16 +62,16 @@ form maybeCertification formData ( candidacy, referential ) =
     { elements =
         commonFields maybeCertification
             ++ [ ( "post-exam", Form.Title "Entretien post jury" )
-               , ( keys.postExamHourCount, Form.Number "Nombre d'heures" )
-               , ( keys.postExamCost, Form.Number "Coût horaire" )
+               , ( keys.postExamHourCount, hourCountElement )
+               , ( keys.postExamCost, costElement )
                , ( "companion", Form.Section "Accompagnement méthodologique" )
                , ( keys.companionId, Form.Select "Accompagnateur choisi par le candidat" availableCompanions )
                , ( "individual", Form.Title "Accompagnement individuel" )
-               , ( keys.individualHourCount, Form.Number "Nombre d'heures" )
-               , ( keys.individualCost, Form.Number "Coût horaire" )
+               , ( keys.individualHourCount, hourCountElement )
+               , ( keys.individualCost, costElement )
                , ( "collective", Form.Title "Accompagnement collectif" )
-               , ( keys.collectiveHourCount, Form.Number "Nombre d'heures" )
-               , ( keys.collectiveCost, Form.Number "Coût horaire" )
+               , ( keys.collectiveHourCount, hourCountElement )
+               , ( keys.collectiveCost, costElement )
                , ( "training", Form.Section "Actes formatifs" )
                , ( "mandatory", Form.Title "Formations obligatoires" )
                , ( keys.mandatoryTrainingIds
@@ -80,12 +80,12 @@ form maybeCertification formData ( candidacy, referential ) =
                         Data.Form.Helper.toIdList referential.mandatoryTrainings
                  )
                , ( keys.mandatoryTrainingsHourCount
-                 , Form.Number "Nombre d'heures"
+                 , hourCountElement
                     |> maybeReadOnlyTraining
                     |> withCheckedRequired referential.mandatoryTrainings
                  )
                , ( keys.mandatoryTrainingsCost
-                 , Form.Number "Coût horaire"
+                 , costElement
                     |> maybeReadOnlyTraining
                     |> withCheckedRequired referential.mandatoryTrainings
                  )
@@ -96,24 +96,24 @@ form maybeCertification formData ( candidacy, referential ) =
                         Data.Form.Helper.toIdList referential.basicSkills
                  )
                , ( keys.basicSkillsHourCount
-                 , Form.Number "Nombre d'heures"
+                 , hourCountElement
                     |> maybeReadOnlyTraining
                     |> withCheckedRequired referential.basicSkills
                  )
                , ( keys.basicSkillsCost
-                 , Form.Number "Coût horaire"
+                 , costElement
                     |> maybeReadOnlyTraining
                     |> withCheckedRequired referential.basicSkills
                  )
                , ( "skills", Form.Title "Bloc de compétences certifiant" )
                , ( keys.certificateSkills, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
                , ( keys.certificateSkillsHourCount
-                 , Form.Number "Nombre d'heures"
+                 , hourCountElement
                     |> maybeReadOnlyTraining
                     |> withRequired hasCertificateSkills
                  )
                , ( keys.certificateSkillsCost
-                 , Form.Number "Coût horaire"
+                 , costElement
                     |> maybeReadOnlyTraining
                     |> withRequired hasCertificateSkills
                  )
@@ -124,13 +124,14 @@ form maybeCertification formData ( candidacy, referential ) =
                     String.fromInt (totalTrainingHourCount formData)
                  )
                , ( "jury", Form.Title "Prestation jury" )
-               , ( keys.examHourCount, Form.Number "Nombre d'heures" )
-               , ( keys.examCost, Form.Number "Coût horaire" )
+               , ( keys.examHourCount, hourCountElement )
+               , ( keys.examCost, costElement )
                , totalSection
-               , totalCostSection formData
+               , totalCostSection totalCostTitle formData
                , confirmationSection candidacy
                ]
-    , saveLabel = saveLabel
+    , saveLabel = Nothing
+    , submitLabel = saveLabel
     , title = title formData
     }
 
@@ -140,12 +141,28 @@ droppedOutForm maybeCertification formData ( candidacy, referential ) =
     { elements =
         commonFields maybeCertification
             ++ [ totalSection
-               , totalCostSection formData
+               , totalCostSection totalCostTitle formData
                , confirmationSection candidacy
                ]
-    , saveLabel = saveLabel
+    , saveLabel = Nothing
+    , submitLabel = saveLabel
     , title = title formData
     }
+
+
+totalCostTitle : String
+totalCostTitle =
+    "Coût total de la demande de prise en charge"
+
+
+costElement : Form.Element
+costElement =
+    Form.Number "Coût horaire"
+
+
+hourCountElement : Form.Element
+hourCountElement =
+    Form.Number "Nombre d'heures"
 
 
 commonFields : Maybe Certification -> List ( String, Form.Element )
@@ -160,8 +177,8 @@ commonFields maybeCertification =
             ( "certification", Form.Empty )
     , ( "organism", Form.Section "Accompagnement architecte de parcours" )
     , ( "diagnosis", Form.Title "Entretien(s) de faisabilité" )
-    , ( keys.diagnosisHourCount, Form.Number "Nombre d'heures" )
-    , ( keys.diagnosisCost, Form.Number "Coût horaire" )
+    , ( keys.diagnosisHourCount, hourCountElement )
+    , ( keys.diagnosisCost, costElement )
     ]
 
 
@@ -186,12 +203,12 @@ totalSection =
     ( "total", Form.Section "Total" )
 
 
-totalCostSection : Dict String String -> ( String, Form.Element )
-totalCostSection formData =
+totalCostSection : String -> Dict String String -> ( String, Form.Element )
+totalCostSection sectionTitle formData =
     ( "totalCost"
-    , Form.Info "Coût total de la demande de prise en charge" <|
+    , Form.Info sectionTitle <|
         String.concat
-            [ String.fromInt (totalFundingRequestCost formData)
+            [ String.fromInt (totalCost formData)
             , "€"
             ]
     )
@@ -200,10 +217,14 @@ totalCostSection formData =
 confirmationSection : Candidacy -> ( String, Form.Element )
 confirmationSection candidacy =
     if Candidacy.isStatusEqualOrAbove candidacy "DEMANDE_FINANCEMENT_ENVOYE" then
-        ( "", Form.Empty )
+        ( ""
+        , Form.Empty
+        )
 
     else
-        ( keys.isFormConfirmed, Form.Checkbox "Je confirme ce montant de prise en charge. Je ne pourrai pas éditer cette demande de prise en charge après son envoi." )
+        ( keys.isFormConfirmed
+        , Form.Checkbox "Je confirme ce montant de prise en charge. Je ne pourrai pas éditer cette demande de prise en charge après son envoi."
+        )
 
 
 saveLabel : String
@@ -239,8 +260,8 @@ totalTrainingHourCount formData =
         + int .certificateSkillsHourCount
 
 
-totalFundingRequestCost : Dict String String -> Int
-totalFundingRequestCost formData =
+totalCost : Dict String String -> Int
+totalCost formData =
     let
         decode =
             Data.Form.Helper.decode keys formData

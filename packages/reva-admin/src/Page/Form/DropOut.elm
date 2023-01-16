@@ -35,6 +35,7 @@ form _ ( _, referential ) =
           )
         , ( keys.droppedOutAt, Form.Date "Date" )
         ]
-    , saveLabel = "Enregistrer"
+    , saveLabel = Nothing
+    , submitLabel = "Enregistrer"
     , title = "Abandon du candidat"
     }

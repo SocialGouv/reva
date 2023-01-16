@@ -1,7 +1,7 @@
 module Data.Form.Training exposing (Training, fromDict, keys, training)
 
 import Admin.Scalar exposing (Uuid)
-import Data.Form.Helper as Helper exposing (booleanToString, toIdList, uuidToCheckedList)
+import Data.Form.Helper as Helper exposing (booleanToString, uuidToCheckedList)
 import Data.Referential exposing (BasicSkill, MandatoryTraining)
 import Dict exposing (Dict)
 

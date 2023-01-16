@@ -39,6 +39,7 @@ form formData _ =
                 )
     in
     { elements = elements
-    , saveLabel = "Valider"
+    , saveLabel = Nothing
+    , submitLabel = "Valider"
     , title = "Recevabilité"
     }

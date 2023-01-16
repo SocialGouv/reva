@@ -31,6 +31,7 @@ form _ ( _, referential ) =
         , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" Nothing )
         , ( keys.isCertificationPartial, Form.Checkbox "Le candidat a un objectif de certification partielle." )
         ]
-    , saveLabel = "Envoyer le parcours"
+    , saveLabel = Nothing
+    , submitLabel = "Envoyer le parcours"
     , title = "Définition du parcours"
     }

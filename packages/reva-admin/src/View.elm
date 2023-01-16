@@ -1,4 +1,4 @@
-module View exposing (image, primaryButton, primaryLink, skeleton, title)
+module View exposing (image, primaryButton, primaryLink, secondaryButton, skeleton, title)
 
 import Html.Styled as Html exposing (Html, a, button, div, h2, img, nav, span, text)
 import Html.Styled.Attributes exposing (attribute, class, href, src, type_)
@@ -96,11 +96,27 @@ image attributes baseUrl imgName =
     img ((src <| Url.Builder.absolute [ baseUrl, imgName ] []) :: attributes) []
 
 
+elementDefaultClass : Html.Attribute msg
+elementDefaultClass =
+    class "text-center mt-4 rounded px-6 py-2"
+
+
 primaryElement : (List (Html.Attribute msg) -> List (Html a) -> b) -> List (Html.Attribute msg) -> String -> b
 primaryElement el attributes label =
     el
-        ([ class "text-center mt-4 rounded bg-blue-600"
-         , class "hover:bg-blue-700 text-white px-6 py-2"
+        ([ elementDefaultClass
+         , class "bg-blue-600 text-white hover:bg-blue-700"
+         ]
+            ++ attributes
+        )
+        [ text label ]
+
+
+secondaryElement : (List (Html.Attribute msg) -> List (Html a) -> b) -> List (Html.Attribute msg) -> String -> b
+secondaryElement el attributes label =
+    el
+        ([ elementDefaultClass
+         , class "bg-gray-400 text-white hover:bg-gray-500"
          ]
             ++ attributes
         )
@@ -110,6 +126,11 @@ primaryElement el attributes label =
 primaryButton : List (Html.Attribute msg) -> String -> Html msg
 primaryButton =
     primaryElement button
+
+
+secondaryButton : List (Html.Attribute msg) -> String -> Html msg
+secondaryButton =
+    secondaryElement button
 
 
 primaryLink : List (Html.Attribute msg) -> String -> Html msg
