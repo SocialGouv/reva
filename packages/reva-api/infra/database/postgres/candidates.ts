@@ -1,4 +1,4 @@
-import { CandidacyStatus, Candidate } from "@prisma/client";
+import { CandidacyStatusStep, Candidate } from "@prisma/client";
 import { Left, Maybe, Right } from "purify-ts";
 
 import { Candidacy } from "../../../domain/types/candidacy";
@@ -79,7 +79,7 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
               deviceId: candidate.email,
               candidacyStatuses: {
                 create: {
-                  status: CandidacyStatus.PROJET,
+                  status: CandidacyStatusStep.PROJET,
                   isActive: true,
                 },
               },
@@ -210,7 +210,7 @@ export const getCandidateWithCandidacyFromKeycloakId = async (
               deviceId: keycloakId,
               candidacyStatuses: {
                 create: {
-                  status: CandidacyStatus.PROJET,
+                  status: CandidacyStatusStep.PROJET,
                   isActive: true,
                 },
               },

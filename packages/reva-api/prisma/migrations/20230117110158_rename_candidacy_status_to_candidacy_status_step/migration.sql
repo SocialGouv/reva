@@ -1,0 +1,1 @@
+ALTER TYPE "CandidacyStatus" RENAME TO "CandidacyStatusStep";
