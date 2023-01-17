@@ -63,7 +63,7 @@ if (process.env.NODE_ENV === "production") {
   server.register(fastifyStatic, {
     root: APP_FOLDER,
     prefix: APP_ROUTE_PATH,
-    decorateReply: process.env.FRAMER_WEBSITE_URL,
+    decorateReply: Boolean(process.env.FRAMER_WEBSITE_URL),
   });
 
   server.register(fastifyStatic, {
