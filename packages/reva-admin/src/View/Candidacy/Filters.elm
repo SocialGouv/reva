@@ -1,4 +1,4 @@
-module View.Candidacy.Filters exposing (view)
+module View.Candidacy.Filters exposing (Filters, emptyFilters, view)
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Data.Candidacy as Candidacy exposing (CandidacySummary)
@@ -7,12 +7,22 @@ import Html.Styled exposing (Html, a, div, label, li, span, text, ul)
 import Html.Styled.Attributes exposing (class, classList)
 import List.Extra
 import Route
-import View.Candidacy.Tab
+
+
+type alias Filters =
+    { search : Maybe String
+    , status : Maybe String
+    }
+
+
+emptyFilters : Filters
+emptyFilters =
+    { search = Nothing, status = Nothing }
 
 
 view :
     List CandidacySummary
-    -> Route.Filters
+    -> Filters
     -> Context
     -> Html msg
 view candidacies filters context =
@@ -80,7 +90,7 @@ view candidacies filters context =
         ]
 
 
-viewLink : Context -> Route.Filters -> Int -> Maybe String -> String -> Html msg
+viewLink : Context -> Filters -> Int -> Maybe String -> String -> Html msg
 viewLink context filters count maybeStatus label =
     let
         isSelected =
@@ -98,7 +108,7 @@ viewLink context filters count maybeStatus label =
               )
             ]
         , Route.href context.baseUrl <|
-            Route.Candidacy (View.Candidacy.Tab.Empty { status = maybeStatus })
+            Route.Candidacies { status = maybeStatus }
         ]
         [ span [] [ text label ], viewCount isSelected count ]
 

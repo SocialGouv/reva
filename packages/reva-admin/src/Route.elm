@@ -22,8 +22,8 @@ type alias Filters =
 
 
 type Route
-    = Candidacy (Tab.Tab Filters)
-    | Home
+    = Candidacy Tab.Tab
+    | Candidacies Filters
     | Login
     | Logout
     | NotFound
@@ -48,12 +48,12 @@ parser baseUrl =
     in
     s baseUrl
         </> oneOf
-                [ top |> map Home
+                [ top |> map (Candidacies emptyFilters)
                 , s "auth" </> s "login" |> map Login
                 , s "auth" </> s "logout" |> map Logout
                 , s "candidacies"
                     <?> Query.string "status"
-                    |> map (Filters >> Tab.Empty >> Candidacy)
+                    |> map (Filters >> Candidacies)
                 , topLevel string
                     |> candidacyTab Tab.Profil
                 , subLevel "admissibility"
@@ -97,9 +97,6 @@ toString baseUrl route =
             topLevel ([ "candidacies", candidacyIdToString candidacyId ] ++ path) params
     in
     case route of
-        Home ->
-            topLevel [ "" ] []
-
         Login ->
             topLevel [ "auth", "login" ] []
 
@@ -109,7 +106,7 @@ toString baseUrl route =
         NotFound ->
             topLevel [ "not-found" ] []
 
-        Candidacy (Tab.Empty filters) ->
+        Candidacies filters ->
             topLevel [ "candidacies" ]
                 (filters.status
                     |> Maybe.map (\status -> [ Url.Builder.string "status" status ])

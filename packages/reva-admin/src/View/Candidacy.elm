@@ -24,7 +24,6 @@ view :
         { a
             | candidacy : Candidacy
             , archiveMsg : Candidacy -> msg
-            , deleteMsg : Candidacy -> msg
             , referential : RemoteData String Referential
         }
     -> List (Html msg)

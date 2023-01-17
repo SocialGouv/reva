@@ -9,6 +9,7 @@ import Html.Styled.Attributes exposing (class)
 import Json.Decode as Decode exposing (..)
 import KeycloakConfiguration exposing (KeycloakConfiguration)
 import Page.Candidacies as Candidacies exposing (Model)
+import Page.Candidacy as Candidacy
 import Page.Loading
 import Route exposing (Route(..))
 import Url exposing (Url)
@@ -35,6 +36,7 @@ type alias Model =
 
 type Page
     = Candidacies Candidacies.Model
+    | Candidacy Candidacy.Model
     | Loading Token
     | LoggingOut
     | NotLoggedIn Route
@@ -46,6 +48,7 @@ type Msg
     | UserClickedLink Browser.UrlRequest
     | UserLoggedOut
     | GotCandidaciesMsg Candidacies.Msg
+    | GotCandidacyMsg Candidacy.Msg
     | GotLoggedIn Token
     | GotTokenRefreshed Token
     | GotLoggedOut
@@ -113,6 +116,10 @@ viewPage model =
             Candidacies.view model.context candidaciesModel
                 |> Html.map GotCandidaciesMsg
 
+        Candidacy candidacyModel ->
+            Candidacy.view model.context candidacyModel
+                |> Html.map GotCandidacyMsg
+
         Loading _ ->
             div [] []
 
@@ -131,25 +138,32 @@ changeRouteTo context route model =
             ( model, Cmd.none )
     in
     case ( route, model.page ) of
-        ( Home, _ ) ->
-            noChange
-
-        ( Candidacy tab, Candidacies candidaciesModel ) ->
+        ( Route.Candidacies filters, Candidacies candidaciesModel ) ->
             candidaciesModel
-                |> Candidacies.resetSelected
-                |> Candidacies.updateTab context tab
+                |> Candidacies.withStatusFilter filters.status
                 |> updateWith Candidacies GotCandidaciesMsg model
 
-        ( Candidacy _, _ ) ->
+        ( Route.Candidacy tab, Candidacy candidacyModel ) ->
+            ( candidacyModel, Cmd.none )
+                |> Candidacy.resetSelected
+                |> Candidacy.updateTab context tab
+                |> updateWith Candidacy GotCandidacyMsg model
+
+        ( Route.Candidacies filters, _ ) ->
+            Candidacies.init model.context filters.status
+                |> updateWith Candidacies GotCandidaciesMsg model
+
+        ( Route.Candidacy tab, _ ) ->
+            Candidacy.init model.context tab
+                |> updateWith Candidacy GotCandidacyMsg model
+
+        ( Route.Login, _ ) ->
             noChange
 
-        ( Login, _ ) ->
-            noChange
-
-        ( Logout, _ ) ->
+        ( Route.Logout, _ ) ->
             ( { model | page = LoggingOut }, Cmd.none )
 
-        ( NotFound, _ ) ->
+        ( Route.NotFound, _ ) ->
             noChange
 
 
@@ -184,6 +198,15 @@ update msg model =
             , Cmd.map GotCandidaciesMsg candidaciesCmd
             )
 
+        ( GotCandidacyMsg candidacyMsg, Candidacy candidacyModel ) ->
+            let
+                ( newCandidacyModel, candidacyCmd ) =
+                    Candidacy.update model.context candidacyMsg candidacyModel
+            in
+            ( { model | page = Candidacy newCandidacyModel }
+            , Cmd.map GotCandidacyMsg candidacyCmd
+            )
+
         -- Auth
         ( GotLoggedIn token, NotLoggedIn route ) ->
             let
@@ -196,13 +219,13 @@ update msg model =
                 redirectRoute =
                     case route of
                         Login ->
-                            Home
+                            Route.Candidacies Route.emptyFilters
 
                         _ ->
                             route
 
                 ( candidaciesModel, candidaciesCmd ) =
-                    Candidacies.init newContext
+                    Candidacies.init newContext Nothing
             in
             ( { model | context = newContext, page = Candidacies candidaciesModel }
             , Cmd.batch
