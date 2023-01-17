@@ -5,7 +5,6 @@ import { Admissibility } from "../types/candidacy";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
 interface UpdateAdmissibilityDeps {
-  hasRole: (role: Role) => boolean;
   getAdmissibilityFromCandidacyId: (params: {
     candidacyId: string;
   }) => Promise<Either<string, Maybe<Admissibility>>>;
@@ -21,15 +20,6 @@ export const updateAdmissibility =
     candidacyId: string;
     admissibility: Partial<Admissibility>;
   }): Promise<Either<FunctionalError, Admissibility>> => {
-    if (!deps.hasRole("admin") && !deps.hasRole("manage_candidacy")) {
-      return Left(
-        new FunctionalError(
-          FunctionalCodeError.NOT_AUTHORIZED,
-          `Vous n'avez pas accès à la recevabilité de cette candidature`
-        )
-      );
-    }
-
     const updateAdmissibilityOrRaiseError = (
       existingAdmissibility: Maybe<Admissibility>
     ): Promise<Either<string, Admissibility>> =>

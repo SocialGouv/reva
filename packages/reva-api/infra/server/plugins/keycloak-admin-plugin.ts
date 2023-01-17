@@ -1,7 +1,8 @@
 import KcAdminClient from "@keycloak/keycloak-admin-client";
+import { FastifyPluginCallback } from "fastify";
 import fp from "fastify-plugin";
 
-async function keycloakAdminPlugin(app: any, opts: any, next: any) {
+const keycloakAdminPlugin: FastifyPluginCallback<Record<string,never>> = (app, _opts, next): void => {
   const kcAdminClient = new KcAdminClient({
     baseUrl: process.env.KEYCLOAK_ADMIN_URL,
     realmName: process.env.KEYCLOAK_ADMIN_REALM,
