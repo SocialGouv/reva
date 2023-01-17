@@ -24,7 +24,7 @@ import String exposing (String)
 import Time
 import View.Candidacy
 import View.Candidacy.Filters exposing (Filters)
-import View.Candidacy.Tab exposing (Tab(..))
+import View.Candidacy.Tab exposing (Value(..))
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 
@@ -252,7 +252,7 @@ viewItem context candidacy =
             [ div
                 [ class "flex-1 min-w-0" ]
                 [ a
-                    [ Route.href context.baseUrl (Route.Candidacy <| Profil candidacy.id)
+                    [ Route.href context.baseUrl (Route.Candidacy { value = Profil, candidacyId = candidacy.id })
                     , class "focus:outline-none"
                     ]
                     [ span

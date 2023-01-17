@@ -37,8 +37,8 @@ emptyFilters =
 parser : String -> Parser (Route -> a) a
 parser baseUrl =
     let
-        candidacyTab tab p =
-            map (\rawId -> Candidacy <| tab <| candidacyIdFromString rawId) p
+        candidacyTab value p =
+            map (\rawId -> Candidacy { value = value, candidacyId = candidacyIdFromString rawId }) p
 
         topLevel p =
             s "candidacies" </> p
@@ -113,29 +113,44 @@ toString baseUrl route =
                     |> Maybe.withDefault []
                 )
 
-        Candidacy (Tab.Profil id) ->
-            topLevel [ "candidacies", candidacyIdToString id ] []
+        Candidacy tab ->
+            tabToString topLevel subLevel tab
 
-        Candidacy (Tab.CandidateInfo id) ->
-            subLevel id [ "candidate" ] []
 
-        Candidacy (Tab.DropOut id) ->
-            subLevel id [ "drop-out" ] []
+tabToString :
+    (List String -> List Url.Builder.QueryParameter -> String)
+    -> (Data.Candidacy.CandidacyId -> List String -> List Url.Builder.QueryParameter -> String)
+    -> Tab.Tab
+    -> String
+tabToString topLevel subLevel tab =
+    let
+        default path =
+            subLevel tab.candidacyId path []
+    in
+    case tab.value of
+        Tab.Profil ->
+            topLevel [ "candidacies", candidacyIdToString tab.candidacyId ] []
 
-        Candidacy (Tab.Meetings id) ->
-            subLevel id [ "meetings" ] []
+        Tab.CandidateInfo ->
+            default [ "candidate" ]
 
-        Candidacy (Tab.PaymentRequest id) ->
-            subLevel id [ "payment" ] []
+        Tab.DropOut ->
+            default [ "drop-out" ]
 
-        Candidacy (Tab.FundingRequest id) ->
-            subLevel id [ "funding" ] []
+        Tab.Meetings ->
+            default [ "meetings" ]
 
-        Candidacy (Tab.Training id) ->
-            subLevel id [ "training" ] []
+        Tab.PaymentRequest ->
+            default [ "payment" ]
 
-        Candidacy (Tab.TrainingSent id) ->
-            subLevel id [ "training", "confirmation" ] []
+        Tab.FundingRequest ->
+            default [ "funding" ]
 
-        Candidacy (Tab.Admissibility id) ->
-            subLevel id [ "admissibility" ] []
+        Tab.Training ->
+            default [ "training" ]
+
+        Tab.TrainingSent ->
+            default [ "training", "confirmation" ]
+
+        Tab.Admissibility ->
+            default [ "admissibility" ]
