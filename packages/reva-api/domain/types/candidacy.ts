@@ -1,3 +1,5 @@
+import { CandidacyStatusStep } from "@prisma/client";
+
 interface CandidacyAbstract {
   deviceId: string;
 
@@ -14,22 +16,10 @@ export interface CandidacyInput extends CandidacyAbstract {
 
 export interface CandidacyDropOut {
   droppedOutAt: Date;
-  status: CandidacyStatusValue;
+  status: CandidacyStatusStep;
   dropOutReason: DropOutReason;
   otherReasonContent?: string | null;
 }
-
-export type CandidacyStatusValue =
-  | "ARCHIVE"
-  | "PROJET"
-  | "VALIDATION"
-  | "PRISE_EN_CHARGE"
-  | "PARCOURS_ENVOYE"
-  | "PARCOURS_CONFIRME"
-  | "DEMANDE_FINANCEMENT_ENVOYE"
-  | "DEMANDE_PAIEMENT_ENVOYEE"
-  | "DOSSIER_PRO"
-  | "CERTIFICATION";
 
 export interface Candidacy extends CandidacyAbstract {
   id: string;

@@ -6,6 +6,7 @@ module Data.Candidacy exposing
     , CandidacyStatus
     , CandidacySummary
     , DateWithLabels
+    , Step
     , candidacyIdFromString
     , candidacyIdToString
     , currentStatusPosition
@@ -26,13 +27,12 @@ module Data.Candidacy exposing
     , toDirectoryPosition
     )
 
+import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Admin.Enum.Duration exposing (Duration)
-import Admin.Object.CandidacySummary exposing (sentAt)
 import Data.Candidate exposing (Candidate)
 import Data.Certification exposing (Certification)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department)
-import RemoteData exposing (RemoteData)
 import Time
 
 
@@ -40,9 +40,13 @@ type CandidacyId
     = CandidacyId String
 
 
+type alias Step =
+    CandidacyStatusStep
+
+
 type alias CandidacyStatus =
     { createdAt : DateWithLabels
-    , status : String
+    , status : Step
     , isActive : Bool
     }
 
@@ -125,28 +129,28 @@ toCategoryString candidacy =
         statusToCategoryString candidacy.lastStatus.status
 
 
-statusToCategoryString : String -> String
+statusToCategoryString : Step -> String
 statusToCategoryString status =
     case status of
-        "VALIDATION" ->
+        Validation ->
             "Candidatures envoyées"
 
-        "PROJET" ->
+        Projet ->
             "Projets en cours d'édition"
 
-        "ARCHIVE" ->
+        Archive ->
             "Candidatures archivées"
 
-        "PRISE_EN_CHARGE" ->
+        PriseEnCharge ->
             "Candidatures prises en charge"
 
-        "PARCOURS_ENVOYE" ->
+        ParcoursEnvoye ->
             "Parcours envoyés"
 
-        "PARCOURS_CONFIRME" ->
+        ParcoursConfirme ->
             "Parcours confirmés par le candidat"
 
-        "DEMANDE_FINANCEMENT_ENVOYE" ->
+        DemandeFinancementEnvoye ->
             "Demandes de financement envoyées"
 
         _ ->
@@ -162,62 +166,62 @@ toDirectoryPosition candidacy =
         statusToDirectoryPosition candidacy.lastStatus.status
 
 
-statusToDirectoryPosition : String -> Int
+statusToDirectoryPosition : Step -> Int
 statusToDirectoryPosition status =
     case status of
-        "VALIDATION" ->
+        Validation ->
             1
 
-        "PROJET" ->
+        Projet ->
             6
 
-        "ARCHIVE" ->
+        Archive ->
             7
 
-        "PRISE_EN_CHARGE" ->
+        PriseEnCharge ->
             2
 
-        "PARCOURS_ENVOYE" ->
+        ParcoursEnvoye ->
             3
 
-        "PARCOURS_CONFIRME" ->
+        ParcoursConfirme ->
             4
 
-        "DEMANDE_FINANCEMENT_ENVOYE" ->
+        DemandeFinancementEnvoye ->
             5
 
         _ ->
             10
 
 
-statusToProgressPosition : String -> Int
+statusToProgressPosition : Step -> Int
 statusToProgressPosition status =
     case status of
-        "ARCHIVE" ->
+        Archive ->
             -1
 
-        "PROJET" ->
+        Projet ->
             -- aka CANDIDATURE_INCOMPLETE
             0
 
-        "VALIDATION" ->
+        Validation ->
             -- aka CANDIDATURE_SOUMISE
             1
 
-        "PRISE_EN_CHARGE" ->
+        PriseEnCharge ->
             -- aka CANDIDATURE_PRISE_EN_CHARGE
             1
 
-        "PARCOURS_ENVOYE" ->
+        ParcoursEnvoye ->
             3
 
-        "PARCOURS_CONFIRME" ->
+        ParcoursConfirme ->
             4
 
-        "DEMANDE_FINANCEMENT_ENVOYE" ->
+        DemandeFinancementEnvoye ->
             6
 
-        "DEMANDE_PAIEMENT_ENVOYEE" ->
+        DemandePaiementEnvoyee ->
             7
 
         _ ->
@@ -248,14 +252,14 @@ lastStatus statuses =
         |> List.head
         |> Maybe.withDefault
             { createdAt = { posix = Time.millisToPosix 0, smallFormat = "", fullFormat = "" }
-            , status = ""
+            , status = Projet
             , isActive = True
             }
 
 
 sentDate : List CandidacyStatus -> Maybe DateWithLabels
 sentDate statuses =
-    List.filter (.status >> (==) "VALIDATION") statuses
+    List.filter (.status >> (==) Validation) statuses
         |> List.head
         |> Maybe.map .createdAt
 
@@ -266,29 +270,29 @@ currentStatusPosition candidacy =
         |> statusToProgressPosition
 
 
-isStatusEqualOrAbove : Candidacy -> String -> Bool
+isStatusEqualOrAbove : Candidacy -> Step -> Bool
 isStatusEqualOrAbove candidacy status =
     currentStatusPosition candidacy >= statusToProgressPosition status
 
 
-isStatusEqual : Candidacy -> String -> Bool
+isStatusEqual : Candidacy -> Step -> Bool
 isStatusEqual candidacy status =
     currentStatusPosition candidacy == statusToProgressPosition status
 
 
 isFundingRequestSent : Candidacy -> Bool
 isFundingRequestSent candidacy =
-    isStatusEqualOrAbove candidacy "DEMANDE_FINANCEMENT_ENVOYE"
+    isStatusEqualOrAbove candidacy DemandeFinancementEnvoye
 
 
 isPaymentRequestSent : Candidacy -> Bool
 isPaymentRequestSent candidacy =
-    isStatusEqualOrAbove candidacy "DEMANDE_PAIEMENT_ENVOYEE"
+    isStatusEqualOrAbove candidacy DemandePaiementEnvoyee
 
 
 isTrainingSent : Candidacy -> Bool
 isTrainingSent candidacy =
-    isStatusEqualOrAbove candidacy "PARCOURS_ENVOYE"
+    isStatusEqualOrAbove candidacy ParcoursEnvoye
 
 
 filterByWord : String -> CandidacySummary -> Bool
@@ -335,8 +339,10 @@ filterByStatus lowerCaseStatus candidacySummary =
     let
         status =
             String.toUpper lowerCaseStatus
+                |> Admin.Enum.CandidacyStatusStep.fromString
+                |> Maybe.withDefault Projet
     in
-    if status == "ABANDON" then
+    if lowerCaseStatus == "abandon" then
         candidacySummary.isDroppedOut
 
     else
@@ -346,5 +352,5 @@ filterByStatus lowerCaseStatus candidacySummary =
 isActive : CandidacySummary -> Bool
 isActive candidacySummary =
     not <|
-        List.member candidacySummary.lastStatus.status [ "ARCHIVE", "PROJET" ]
+        List.member candidacySummary.lastStatus.status [ Archive, Projet ]
             || candidacySummary.isDroppedOut

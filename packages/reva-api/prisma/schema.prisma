@@ -130,7 +130,7 @@ model CandidaciesStatus {
   id          String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   candidacy   Candidacy       @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
   candidacyId String          @map("candidacy_id") @db.Uuid
-  status      CandidacyStatus @default(PROJET)
+  status      CandidacyStatusStep @default(PROJET)
   isActive    Boolean         @default(false) @map("is_active")
   createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime?       @map("updated_at") @db.Timestamptz(6)
@@ -138,7 +138,7 @@ model CandidaciesStatus {
   @@map("candidacy_candidacy_status")
 }
 
-enum CandidacyStatus {
+enum CandidacyStatusStep {
   ARCHIVE
   PROJET
   VALIDATION
@@ -493,7 +493,7 @@ model CandidacyDropOut {
   candidacyId        String          @unique @map("candidacy_id") @db.Uuid
   dropOutReason      DropOutReason   @relation(fields: [dropOutReasonId], references: [id])
   dropOutReasonId    String          @map("drop_out_reason_id") @db.Uuid
-  status             CandidacyStatus
+  status             CandidacyStatusStep
   droppedOutAt       DateTime        @map("dropped_out_at")
   otherReasonContent String?         @map("other_reason_content")
   createdAt          DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)

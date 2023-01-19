@@ -1,5 +1,6 @@
 module Page.Form.FundingRequest exposing (droppedOutForm, form, totalCostSection, totalTrainingHourCount)
 
+import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Candidate
 import Data.Certification exposing (Certification)
@@ -216,7 +217,7 @@ totalCostSection sectionTitle formData =
 
 confirmationSection : Candidacy -> ( String, Form.Element )
 confirmationSection candidacy =
-    if Candidacy.isStatusEqualOrAbove candidacy "DEMANDE_FINANCEMENT_ENVOYE" then
+    if Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye then
         ( ""
         , Form.Empty
         )

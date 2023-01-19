@@ -4,6 +4,7 @@
 
 module Admin.Object.CandidacyStatus exposing (..)
 
+import Admin.Enum.CandidacyStatusStep
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -24,9 +25,9 @@ id =
     Object.selectionForField "Data.Scalar.Id" "id" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
-status : SelectionSet String Admin.Object.CandidacyStatus
+status : SelectionSet Admin.Enum.CandidacyStatusStep.CandidacyStatusStep Admin.Object.CandidacyStatus
 status =
-    Object.selectionForField "String" "status" [] Decode.string
+    Object.selectionForField "Enum.CandidacyStatusStep.CandidacyStatusStep" "status" [] Admin.Enum.CandidacyStatusStep.decoder
 
 
 isActive : SelectionSet Bool Admin.Object.CandidacyStatus

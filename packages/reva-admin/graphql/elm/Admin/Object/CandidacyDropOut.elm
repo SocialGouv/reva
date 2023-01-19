@@ -4,6 +4,7 @@
 
 module Admin.Object.CandidacyDropOut exposing (..)
 
+import Admin.Enum.CandidacyStatusStep
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -36,6 +37,6 @@ otherReasonContent =
     Object.selectionForField "(Maybe String)" "otherReasonContent" [] (Decode.string |> Decode.nullable)
 
 
-status : SelectionSet String Admin.Object.CandidacyDropOut
+status : SelectionSet Admin.Enum.CandidacyStatusStep.CandidacyStatusStep Admin.Object.CandidacyDropOut
 status =
-    Object.selectionForField "String" "status" [] Decode.string
+    Object.selectionForField "Enum.CandidacyStatusStep.CandidacyStatusStep" "status" [] Admin.Enum.CandidacyStatusStep.decoder

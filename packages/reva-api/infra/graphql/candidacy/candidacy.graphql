@@ -16,6 +16,19 @@ enum CandidateTypology {
   AUTRE
 }
 
+enum CandidacyStatusStep {
+  ARCHIVE
+  PROJET
+  VALIDATION
+  PRISE_EN_CHARGE
+  PARCOURS_ENVOYE
+  PARCOURS_CONFIRME
+  DEMANDE_FINANCEMENT_ENVOYE
+  DEMANDE_PAIEMENT_ENVOYEE
+  DOSSIER_PRO
+  CERTIFICATION
+}
+
 # QUERY
 
 type Candidacy {
@@ -62,7 +75,7 @@ type CandidacyDropOut {
   dropOutReason: DropOutReason!
   droppedOutAt: Timestamp!
   otherReasonContent: String
-  status: String!
+  status: CandidacyStatusStep!
 }
 
 type CandidacySummary {
@@ -85,7 +98,7 @@ type CandidacySummary {
 
 type CandidacyStatus {
   id: ID!
-  status: String!
+  status: CandidacyStatusStep!
   isActive: Boolean!
   createdAt: Timestamp!
 }

@@ -1,5 +1,6 @@
 module View.Candidacy.Filters exposing (view)
 
+import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Data.Candidacy as Candidacy exposing (CandidacySummary)
 import Data.Context exposing (Context)
 import Html.Styled exposing (Html, a, div, label, li, span, text, ul)
@@ -18,7 +19,9 @@ view candidacies filters context =
     let
         isNotDroppedWithStatus : String -> CandidacySummary -> Bool
         isNotDroppedWithStatus status c =
-            not c.isDroppedOut && c.lastStatus.status == String.toUpper status
+            not c.isDroppedOut
+                && Just c.lastStatus.status
+                == (status |> String.toUpper |> Admin.Enum.CandidacyStatusStep.fromString)
 
         count : Maybe String -> Int
         count maybeStatus =
@@ -35,20 +38,22 @@ view candidacies filters context =
         link maybeStatus label =
             viewLink context filters (count maybeStatus) maybeStatus label
 
-        statuses : List String
+        statuses : List Candidacy.Step
         statuses =
-            [ "VALIDATION"
-            , "PRISE_EN_CHARGE"
-            , "PARCOURS_ENVOYE"
-            , "PARCOURS_CONFIRME"
-            , "DEMANDE_FINANCEMENT_ENVOYE"
+            [ Validation
+            , PriseEnCharge
+            , ParcoursEnvoye
+            , ParcoursConfirme
+            , DemandeFinancementEnvoye
             ]
 
-        viewFilter : String -> Html msg
+        viewFilter : Candidacy.Step -> Html msg
         viewFilter status =
             let
                 loweredStatus =
-                    String.toLower status
+                    status
+                        |> Admin.Enum.CandidacyStatusStep.toString
+                        |> String.toLower
             in
             li
                 []

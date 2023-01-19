@@ -2,7 +2,7 @@ import {
   CandidaciesStatus,
   Candidacy,
   CandidacyDropOut,
-  CandidacyStatus,
+  CandidacyStatusStep,
   CandidateTypology,
   Certification,
   Department,
@@ -118,7 +118,7 @@ export const insertCandidacy = async (params: {
         },
         candidacyStatuses: {
           create: {
-            status: CandidacyStatus.PROJET,
+            status: CandidacyStatusStep.PROJET,
             isActive: true,
           },
         },
@@ -262,7 +262,7 @@ export const getCandidacyFromId = async (
 
 export const existsCandidacyHavingHadStatus = async (params: {
   candidacyId: string;
-  status: CandidacyStatus;
+  status: CandidacyStatusStep;
 }) => {
   try {
     const candidaciesCount = await prismaClient.candidacy.count({
@@ -286,7 +286,7 @@ export const existsCandidacyHavingHadStatus = async (params: {
 
 export const existsCandidacyWithActiveStatus = async (params: {
   candidacyId: string;
-  status: CandidacyStatus;
+  status: CandidacyStatusStep;
 }) => {
   try {
     const candidaciesCount = await prismaClient.candidacy.count({
@@ -311,7 +311,7 @@ export const existsCandidacyWithActiveStatus = async (params: {
 
 export const existsCandidacyWithActiveStatuses = async (params: {
   candidacyId: string;
-  statuses: CandidacyStatus[];
+  statuses: CandidacyStatusStep[];
 }) => {
   try {
     const candidaciesCount = await prismaClient.candidacy.count({
@@ -401,7 +401,7 @@ export const updateContactOnCandidacy = async (params: {
 
 export const updateCandidacyStatus = async (params: {
   candidacyId: string;
-  status: CandidacyStatus;
+  status: CandidacyStatusStep;
 }): Promise<Either<string, domain.Candidacy>> => {
   try {
     const [, newCandidacy, certificationAndRegion] =
@@ -953,7 +953,7 @@ export const dropOutCandidacy = async ({
   dropOutReasonId,
   otherReasonContent,
 }: DropOutCandidacyParams): Promise<Either<string, domain.Candidacy>> => {
-  let candidacyStatus: CandidacyStatus;
+  let candidacyStatus: CandidacyStatusStep;
   let candidacy;
   try {
     candidacy = await prismaClient.candidacy.findUnique({
