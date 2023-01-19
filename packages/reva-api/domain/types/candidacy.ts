@@ -1,5 +1,3 @@
-import { string } from "purify-ts";
-
 interface CandidacyAbstract {
   deviceId: string;
 
