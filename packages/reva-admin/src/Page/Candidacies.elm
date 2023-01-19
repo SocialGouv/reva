@@ -22,6 +22,7 @@ import RemoteData exposing (RemoteData(..))
 import Route
 import String exposing (String)
 import Time
+import View
 import View.Candidacy
 import View.Candidacy.Filters exposing (Filters)
 import View.Candidacy.Tab exposing (Value(..))
@@ -61,7 +62,7 @@ init context maybeStatusFilters =
         defaultModel : Model
         defaultModel =
             { filters = { search = Nothing, status = maybeStatusFilters }
-            , state = { candidacies = RemoteData.NotAsked }
+            , state = { candidacies = RemoteData.Loading }
             }
 
         defaultCmd =
@@ -84,12 +85,31 @@ view :
     -> Model
     -> Html Msg
 view context model =
+    let
+        candidacySkeleton =
+            div
+                []
+                [ View.skeleton "h-4 w-120"
+                , View.skeleton "mt-2 mb-12 h-12 w-96"
+                ]
+    in
     case model.state.candidacies of
         NotAsked ->
             div [] []
 
         Loading ->
-            div [] [ text "loading" ]
+            viewMain
+                [ viewDirectoryHeader context
+                , div
+                    [ class "py-3 px-10" ]
+                    [ View.skeleton "mb-10 h-6 w-56"
+                    , candidacySkeleton
+                    , candidacySkeleton
+                    , candidacySkeleton
+                    , candidacySkeleton
+                    ]
+                ]
+                [ View.skeleton "ml-10 mt-8 bg-gray-200 mt-6 h-10 w-[353px]" ]
 
         Failure errors ->
             div [ class "text-red-500" ] [ text errors ]
@@ -148,77 +168,82 @@ viewContent context filters candidacies filteredCandidacies =
                 |> List.Extra.gatherWith (\c1 c2 -> haveBothSameStatusAndNotDroppedOut c1 c2 || areBothDroppedOut c1 c2)
                 |> List.sortBy (\( c, _ ) -> Candidacy.toDirectoryPosition c)
     in
-    div
-        [ class "grow flex h-full min-w-0 border-l-[73px] border-black bg-gray-100" ]
-        [ viewDirectoryPanel context candidaciesByStatus
-        , View.Candidacy.Filters.view candidacies filters context
-        ]
+    viewMain
+        (viewDirectoryPanel context candidaciesByStatus)
+        (View.Candidacy.Filters.view candidacies filters context)
 
 
-viewMain : String -> List (Html msg) -> Html msg
-viewMain dataTestValue =
+viewMain : List (Html msg) -> List (Html msg) -> Html msg
+viewMain leftContent rightContent =
     node "main"
-        [ class "bg-white w-[780px] px-2 pt-2 pb-24"
-        , dataTest dataTestValue
+        [ class "grow flex h-full min-w-0 border-l-[73px] border-black bg-gray-100" ]
+    <|
+        [ aside
+            [ class "hidden md:order-first md:flex md:flex-col flex-shrink-0"
+            , class "w-full w-[780px] h-screen"
+            , class "bg-white"
+            ]
+            leftContent
+        , div [] rightContent
         ]
 
 
-viewDirectoryPanel : Context -> List ( CandidacySummary, List CandidacySummary ) -> Html Msg
-viewDirectoryPanel context candidaciesByStatus =
-    aside
-        [ class "hidden md:order-first md:flex md:flex-col flex-shrink-0"
-        , class "w-full w-[780px] h-screen"
-        , class "bg-white"
-        ]
-        [ div
-            [ class "px-10 pt-10 pb-4" ]
-            [ h2
-                [ class "text-3xl font-black text-slate-800 mb-6" ]
-                [ text "Candidatures" ]
-            , p
-                [ class "text-base text-gray-500" ]
-                [ if Api.Token.isAdmin context.token then
-                    text "Recherchez par architecte de parcours, date de candidature, certification et information de contact"
+viewDirectoryHeader : Context -> Html Msg
+viewDirectoryHeader context =
+    div
+        [ class "px-10 pt-10 pb-4" ]
+        [ h2
+            [ class "text-3xl font-black text-slate-800 mb-6" ]
+            [ text "Candidatures" ]
+        , p
+            [ class "text-base text-gray-500" ]
+            [ if Api.Token.isAdmin context.token then
+                text "Recherchez par architecte de parcours, date de candidature, certification et information de contact"
 
-                  else
-                    text "Recherchez par date de candidature, certification et information de contact"
-                ]
-            , div
-                [ class "my-2 flex space-x-4", action "#" ]
-                [ div
-                    [ class "flex-1 min-w-0" ]
-                    [ label
-                        [ for "search", class "sr-only" ]
-                        [ text "Rechercher" ]
-                    , div
-                        [ class "relative rounded-md shadow-sm" ]
-                        [ div
-                            [ class "absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none" ]
-                            [ Icons.search
-                            ]
-                        , input
-                            [ type_ "search"
-                            , name "search"
-                            , id "search"
-                            , class "block w-full pl-6 pr-12 py-5 bg-gray-100"
-                            , class "border-b-[3px] border-0 border-b-gray-800"
-                            , class "focus:ring-blue-500 focus:ring-0 focus:border-blue-600"
-                            , class "text-xl placeholder:text-gray-400"
-                            , placeholder "Rechercher"
-                            , onInput UserAddedFilter
-                            ]
-                            []
+              else
+                text "Recherchez par date de candidature, certification et information de contact"
+            ]
+        , div
+            [ class "my-2 flex space-x-4", action "#" ]
+            [ div
+                [ class "flex-1 min-w-0" ]
+                [ label
+                    [ for "search", class "sr-only" ]
+                    [ text "Rechercher" ]
+                , div
+                    [ class "relative rounded-md shadow-sm" ]
+                    [ div
+                        [ class "absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none" ]
+                        [ Icons.search
                         ]
+                    , input
+                        [ type_ "search"
+                        , name "search"
+                        , id "search"
+                        , class "block w-full pl-6 pr-12 py-5 bg-gray-100"
+                        , class "border-b-[3px] border-0 border-b-gray-800"
+                        , class "focus:ring-blue-500 focus:ring-0 focus:border-blue-600"
+                        , class "text-xl placeholder:text-gray-400"
+                        , placeholder "Rechercher"
+                        , onInput UserAddedFilter
+                        ]
+                        []
                     ]
                 ]
             ]
-        , List.map (viewDirectory context) candidaciesByStatus
-            |> nav
-                [ dataTest "directory"
-                , class "min-h-0 overflow-y-auto"
-                , attribute "aria-label" "Candidats"
-                ]
         ]
+
+
+viewDirectoryPanel : Context -> List ( CandidacySummary, List CandidacySummary ) -> List (Html Msg)
+viewDirectoryPanel context candidaciesByStatus =
+    [ viewDirectoryHeader context
+    , List.map (viewDirectory context) candidaciesByStatus
+        |> nav
+            [ dataTest "directory"
+            , class "min-h-0 overflow-y-auto"
+            , attribute "aria-label" "Candidats"
+            ]
+    ]
 
 
 viewDirectory : Context -> ( CandidacySummary, List Candidacy.CandidacySummary ) -> Html Msg

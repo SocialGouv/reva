@@ -1,4 +1,4 @@
-module View.Candidacy.Filters exposing (Filters, emptyFilters, view)
+module View.Candidacy.Filters exposing (Filters, view)
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Data.Candidacy as Candidacy exposing (CandidacySummary)
@@ -15,16 +15,11 @@ type alias Filters =
     }
 
 
-emptyFilters : Filters
-emptyFilters =
-    { search = Nothing, status = Nothing }
-
-
 view :
     List CandidacySummary
     -> Filters
     -> Context
-    -> Html msg
+    -> List (Html msg)
 view candidacies filters context =
     let
         isNotDroppedWithStatus : String -> CandidacySummary -> Bool
@@ -69,7 +64,7 @@ view candidacies filters context =
                 []
                 [ link (Just loweredStatus) (Candidacy.statusToCategoryString status) ]
     in
-    div [ class "mx-10 my-8 text-sm text-gray-600" ]
+    [ div [ class "mx-10 my-8 text-sm text-gray-600" ]
         [ ul
             [ class "font-semibold" ]
             [ li
@@ -88,6 +83,7 @@ view candidacies filters context =
                 ]
             ]
         ]
+    ]
 
 
 viewLink : Context -> Filters -> Int -> Maybe String -> String -> Html msg
