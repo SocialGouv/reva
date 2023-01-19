@@ -20,6 +20,7 @@ import Api.Referential
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Context exposing (Context)
+import Data.Form.DropOut
 import Data.Form.FundingRequest
 import Data.Form.PaymentRequest
 import Data.Referential exposing (Referential)
@@ -312,7 +313,7 @@ updateTab context tab ( model, cmd ) =
                         , onSave = Nothing
                         , onSubmit = Api.Form.DropOut.dropOut tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab Profil
-                        , onValidate = \_ _ -> Ok ()
+                        , onValidate = Data.Form.DropOut.validate
                         , status =
                             if candidacy.dropOutDate /= Nothing then
                                 Form.ReadOnly

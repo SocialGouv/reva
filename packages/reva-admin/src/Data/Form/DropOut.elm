@@ -1,9 +1,9 @@
-module Data.Form.DropOut exposing (dropOut, fromDict, keys)
+module Data.Form.DropOut exposing (dropOut, fromDict, keys, validate)
 
 import Admin.Scalar exposing (Id(..), Uuid)
-import Admin.ScalarCodecs exposing (Id)
-import Data.Form.Helper as Helper exposing (uuidToCheckedList)
-import Data.Referential
+import Data.Candidacy exposing (Candidacy)
+import Data.Form.Helper as Helper
+import Data.Referential exposing (Referential)
 import Data.Scalar
 import Dict exposing (Dict)
 import Time
@@ -21,6 +21,20 @@ keys =
     , droppedOutAt = "droppedOutAt"
     , otherReasonContent = "otherReasonContent"
     }
+
+
+validate : ( Candidacy, Referential ) -> Dict String String -> Result String ()
+validate ( _, _ ) dict =
+    let
+        decode =
+            Helper.decode keys dict
+    in
+    case decode.maybe.string .dropOutReason of
+        Nothing ->
+            Err "Veuillez sélectionner une raison d'abandon"
+
+        _ ->
+            Ok ()
 
 
 fromDict : Dict String String -> DropOut
