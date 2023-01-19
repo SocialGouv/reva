@@ -90,10 +90,6 @@ init context tab =
         |> updateTab context tab
 
 
-
--- |> initCandidacy context
-
-
 initCandidacy : Context -> CandidacyId -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 initCandidacy context candidacyId ( model, cmd ) =
     ( { model | selected = Loading }
@@ -147,55 +143,39 @@ view context model =
 
                 _ ->
                     text ""
+
+        content =
+            case model.tab.value of
+                CandidateInfo ->
+                    viewForm "candidate"
+
+                DropOut ->
+                    viewForm "drop-out"
+
+                FundingRequest ->
+                    viewForm "funding"
+
+                Meetings ->
+                    viewForm "meetings"
+
+                PaymentRequest ->
+                    viewForm "payment"
+
+                Profil ->
+                    viewCandidacyPanel context model
+
+                Training ->
+                    viewForm "training"
+
+                TrainingSent ->
+                    viewMain "training-sent" (viewTrainingSent context model.tab.candidacyId)
+
+                Admissibility ->
+                    viewForm "admissibility"
     in
     div
         [ class "grow flex h-full min-w-0 border-l-[73px] border-black bg-gray-100" ]
-    <|
-        case model.tab.value of
-            CandidateInfo ->
-                [ viewForm "candidate"
-                , maybeNavigationSteps
-                ]
-
-            DropOut ->
-                [ viewForm "drop-out"
-                , maybeNavigationSteps
-                ]
-
-            FundingRequest ->
-                [ viewForm "funding"
-                , maybeNavigationSteps
-                ]
-
-            Meetings ->
-                [ viewForm "meetings"
-                , maybeNavigationSteps
-                ]
-
-            PaymentRequest ->
-                [ viewForm "payment"
-                , maybeNavigationSteps
-                ]
-
-            Profil ->
-                [ viewCandidacyPanel context model
-                , maybeNavigationSteps
-                ]
-
-            Training ->
-                [ viewForm "training"
-                , maybeNavigationSteps
-                ]
-
-            TrainingSent ->
-                [ viewMain "training-sent" (viewTrainingSent context model.tab.candidacyId)
-                , maybeNavigationSteps
-                ]
-
-            Admissibility ->
-                [ viewForm "admissibility"
-                , maybeNavigationSteps
-                ]
+        [ content, maybeNavigationSteps ]
 
 
 viewMain : String -> List (Html msg) -> Html msg
