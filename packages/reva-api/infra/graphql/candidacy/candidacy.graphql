@@ -82,9 +82,9 @@ type CandidacySummary {
   id: ID!
   deviceId: ID!
   certificationId: ID
+  certification: CertificationSummary
   organismId: ID
   organism: Organism
-  certification: Certification
   department: Department
   firstname: String
   lastname: String
@@ -94,6 +94,12 @@ type CandidacySummary {
   lastStatus: CandidacyStatus!
   createdAt: Timestamp!
   sentAt: Timestamp
+}
+
+type CertificationSummary {
+  id: ID!
+  label: String!
+  acronym: String!
 }
 
 type CandidacyStatus {

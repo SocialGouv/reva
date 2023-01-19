@@ -49,11 +49,23 @@ export interface CandidacyStatus {
 export interface CandidacySummary
   extends Omit<
     Candidacy,
-    "experiences" | "goals" | "candidacyStatuses" | "regionId" | "region"
+    | "experiences"
+    | "goals"
+    | "candidacyStatuses"
+    | "regionId"
+    | "region"
+    | "certification"
   > {
   id: string;
+  certification: CertificationSummary;
   lastStatus: CandidacyStatus;
   createdAt: Date;
+}
+
+export interface CertificationSummary {
+  id: string;
+  label: string;
+  acronym: string;
 }
 
 export interface ExperienceInput {

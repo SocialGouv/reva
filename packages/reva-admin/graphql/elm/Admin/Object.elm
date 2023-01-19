@@ -49,6 +49,10 @@ type Certification
     = Certification
 
 
+type CertificationSummary
+    = CertificationSummary
+
+
 type Degree
     = Degree
 

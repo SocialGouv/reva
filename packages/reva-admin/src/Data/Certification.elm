@@ -22,6 +22,7 @@ type alias Certification =
 type alias CertificationSummary =
     { id : Data.Scalar.Id
     , label : String
+    , acronym : String
     }
 
 
