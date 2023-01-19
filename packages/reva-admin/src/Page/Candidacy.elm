@@ -232,14 +232,11 @@ viewCandidacyPanel context model =
                 []
 
             Loading ->
-                [ View.skeleton "mt-8 mb-20 w-96 h-8"
-                , div
-                    [ class "mx-8" ]
-                    [ View.skeleton "mb-2 w-48 h-6"
-                    , View.skeleton "mb-10 w-128 h-16"
-                    , View.skeleton "mb-2 w-48 h-6"
-                    , View.skeleton "w-128 h-64"
-                    ]
+                [ View.skeleton "mt-6 mb-10 w-96 h-8"
+                , View.skeleton "mb-3 w-48 h-6"
+                , View.skeleton "mb-10 w-128 h-24"
+                , View.skeleton "mb-3 w-48 h-6"
+                , View.skeleton "w-128 h-64"
                 ]
 
             Failure err ->
