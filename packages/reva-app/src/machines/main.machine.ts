@@ -1090,7 +1090,7 @@ export const mainMachine =
               ),
               trainingProgram: event.data.candidacy.trainingProgram,
               isTrainingProgramConfirmed:
-                !!isPreviouslyConfirmed && !isCurrentlySubmitted,
+                isPreviouslyConfirmed && !isCurrentlySubmitted,
             };
           }),
           navigateHome,
@@ -1137,7 +1137,7 @@ export const mainMachine =
               "PARCOURS_ENVOYE",
               typedEvent.data.candidacy?.candidacyStatuses
             );
-            return !!isSubmitted;
+            return isSubmitted;
           },
           isTrainingProgramConfirmed: (_context, event) => {
             const typedEvent = event as DoneInvokeEvent<any>;
@@ -1149,7 +1149,7 @@ export const mainMachine =
             const isCurrentlySubmitted =
               typedEvent.data.candidacy?.candidacyStatus === "PARCOURS_ENVOYE";
 
-            return !!isPreviouslyConfirmed && !isCurrentlySubmitted;
+            return isPreviouslyConfirmed && !isCurrentlySubmitted;
           },
           isProjectSubmitted: (_context, event) => {
             const typedEvent = event as DoneInvokeEvent<any>;
