@@ -1057,6 +1057,14 @@ export const mainMachine =
         actions: {
           loadCandidacy: assign((_, rawEvent) => {
             const event = rawEvent as DoneInvokeEvent<any>;
+            const isConfirmed = hasCandidacyAlreadyHadStatus(
+              "PARCOURS_CONFIRME",
+              event.data.candidacy?.candidacyStatuses
+            );
+
+            const isCurrentlySubmitted =
+              event.data.candidacy?.candidacyStatus === "PARCOURS_ENVOYE";
+
             return {
               candidacyId: event.data.candidacy.id,
               candidacyCreatedAt: new Date(event.data.candidacy.createdAt),
@@ -1081,10 +1089,8 @@ export const mainMachine =
                   department.id === event.data.candidacy.department?.id
               ),
               trainingProgram: event.data.candidacy.trainingProgram,
-              isTrainingProgramConfirmed: hasCandidacyAlreadyHadStatus(
-                "PARCOURS_CONFIRME",
-                event.data.candidacy?.candidacyStatuses
-              ),
+              isTrainingProgramConfirmed:
+                !!isConfirmed && !isCurrentlySubmitted,
             };
           }),
           navigateHome,
@@ -1140,7 +1146,10 @@ export const mainMachine =
               typedEvent.data.candidacy?.candidacyStatuses
             );
 
-            return !!isConfirmed;
+            const isCurrentlySubmitted =
+              typedEvent.data.candidacy?.candidacyStatus === "PARCOURS_ENVOYE";
+
+            return !!isConfirmed && !isCurrentlySubmitted;
           },
           isProjectSubmitted: (_context, event) => {
             const typedEvent = event as DoneInvokeEvent<any>;

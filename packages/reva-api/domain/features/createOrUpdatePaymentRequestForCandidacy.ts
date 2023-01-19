@@ -112,7 +112,7 @@ export const validatePaymentRequest = (
     }
     if (pr.individualEffectiveHourCount > fr.individualHourCount) {
       errors.push(
-        "Le nombre d'heures demandé pour l'accompagnement individuel  est supérieur au nombre d'heures de la demande de financement."
+        "Le nombre d'heures demandé pour l'accompagnement individuel est supérieur au nombre d'heures de la demande de financement."
       );
     }
     if (

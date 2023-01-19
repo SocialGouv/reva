@@ -76,4 +76,28 @@ context("Training Program", () => {
       cy.wait("@candidacy_confirmTrainingForm");
     });
   });
+
+  describe("Testing training confirmed but sent again", () => {
+    it("should be able to accept and submit the training again", () => {
+      cy.intercept("POST", "/graphql", (req) => {
+        stubMutation(req, "candidate_login", "candidate2-training-confirmed-sent-again.json");
+        stubQuery(req, "getReferential", "referential.json");
+        stubQuery(
+          req,
+          "candidacy_confirmTrainingForm",
+          "confirm-training-form.json"
+        );
+      });
+      cy.login();
+      cy.wait("@candidate_login");
+      cy.wait("@getReferential");
+
+      cy.get('[data-test="checkbox-accept-conditions"]').not("be.checked");
+      cy.get('[data-test="label-accept-conditions"]').should("exist");
+      cy.get('[data-test="submit-training"]').should("be.disabled");
+      cy.get('[data-test="checkbox-accept-conditions"]').check();
+      cy.get('[data-test="submit-training"]').should("be.enabled").click();
+      cy.wait("@candidacy_confirmTrainingForm");
+    });
+  });
 });
