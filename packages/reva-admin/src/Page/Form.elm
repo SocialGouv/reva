@@ -12,7 +12,9 @@ module Page.Form exposing
 
 import Api.Token exposing (Token)
 import Browser.Dom
+import Bytes exposing (Bytes)
 import Data.Context exposing (Context)
+import Data.Form exposing (FormData, get, insert)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
 import File exposing (File)
@@ -32,9 +34,9 @@ type Msg referential
     = UserChangedElement String String
     | UserClickSave referential
     | UserClickSubmit referential
-    | UserSelectFiles (List File)
+    | UserSelectFiles String (List File)
     | GotSaveResponse (RemoteData String ())
-    | GotFiles File (List File)
+    | GotFiles String (List Bytes)
     | GotLoadResponse (RemoteData String (Dict String String))
     | NoOp
 
@@ -72,10 +74,6 @@ type alias FormBuilder referential =
     FormData -> referential -> Form
 
 
-type alias FormData =
-    Dict String String
-
-
 type RemoteForm referential
     = NotAsked
     | Loading (FormBuilder referential)
@@ -95,7 +93,7 @@ type alias ClickHandler referential =
     -> Token
     -> (RemoteData String () -> Msg referential)
     -> referential
-    -> Dict String String
+    -> FormData
     -> Cmd (Msg referential)
 
 
@@ -103,7 +101,7 @@ type alias Model referential =
     { onRedirect : Cmd (Msg referential)
     , onSave : ClickHandler referential
     , onSubmit : ClickHandler referential
-    , onValidate : referential -> Dict String String -> Result String ()
+    , onValidate : referential -> FormData -> Result String ()
     , form : RemoteForm referential
     , status : Status
     }
@@ -293,7 +291,7 @@ viewEditableElement : FormData -> ( String, Element ) -> List (Html (Msg referen
 viewEditableElement formData ( elementId, element ) =
     let
         dataOrDefault =
-            Dict.get elementId formData
+            get elementId formData
                 |> Maybe.withDefault (defaultValue element)
 
         inputStyle =
@@ -397,13 +395,12 @@ viewEditableElement formData ( elementId, element ) =
                 , multiple True
                 , name elementId
                 , id elementId
-                , on "change" (Json.Decode.map UserSelectFiles filesDecoder)
+                , on "change" (Json.Decode.map (UserSelectFiles elementId) filesDecoder)
                 , class "block w-[520px] mb-4 text-sm text-slate-500"
                 , class "file:mr-4 file:py-2 file:px-4"
                 , class "file:rounded file:border-0"
                 , class "file:bg-gray-900 file:text-white"
                 , class "hover:file:bg-gray-800"
-                , value dataOrDefault
                 ]
                 []
                 |> withLabel label
@@ -471,7 +468,7 @@ viewEditableElement formData ( elementId, element ) =
                 |> withLabel label
 
         SelectOther selectId otherValue label ->
-            case Dict.get selectId formData of
+            case get selectId formData of
                 Just selectedValue ->
                     if selectedValue == otherValue then
                         textareaView Nothing
@@ -513,7 +510,7 @@ viewReadOnlyElement : FormData -> ( String, Element ) -> List (Html (Msg referen
 viewReadOnlyElement formData ( elementId, element ) =
     let
         dataOrDefault =
-            Dict.get elementId formData
+            get elementId formData
                 |> Maybe.withDefault (defaultValue element)
 
         dataClass =
@@ -623,7 +620,7 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> Maybe.withDefault []
 
         SelectOther selectId otherValue label ->
-            case Dict.get selectId formData of
+            case get selectId formData of
                 Just selectedValue ->
                     if selectedValue == otherValue then
                         defaultView label
@@ -760,7 +757,7 @@ update context msg model =
         ( UserChangedElement elementId elementValue, Editing error form formData ) ->
             let
                 newFormData =
-                    Dict.insert elementId elementValue formData
+                    insert elementId elementValue formData
             in
             ( { model | form = Editing Nothing form newFormData }, Cmd.none )
 
@@ -779,22 +776,21 @@ update context msg model =
         ( UserClickSubmit _, _ ) ->
             noChange
 
-        ( UserSelectFiles files, _ ) ->
-            let
-                _ =
-                    Debug.log "" files
-            in
+        ( UserSelectFiles key files, _ ) ->
+            ( model
+            , Task.perform (GotFiles key) <| Task.sequence <| List.map File.toBytes files
+            )
+
+        ( GotFiles key files, Editing error form formData ) ->
+            ( { model | form = Editing error form (Data.Form.insertFiles key files formData) }
+            , Cmd.none
+            )
+
+        ( GotFiles _ _, _ ) ->
             noChange
 
-        ( GotFiles file files, _ ) ->
-            let
-                _ =
-                    Debug.log "" (file :: files)
-            in
-            noChange
-
-        ( GotLoadResponse (RemoteData.Success formData), Loading form ) ->
-            ( { model | form = Editing Nothing form formData }, Cmd.none )
+        ( GotLoadResponse (RemoteData.Success dict), Loading form ) ->
+            ( { model | form = Editing Nothing form (Data.Form.fromDict dict) }, Cmd.none )
 
         ( GotLoadResponse (RemoteData.Failure _), Loading form ) ->
             ( { model | form = Failure }, Cmd.none )
@@ -831,7 +827,7 @@ updateForm :
         , onRedirect : Cmd (Msg referential)
         , onSubmit : ClickHandler referential
         , onSave : Maybe (ClickHandler referential)
-        , onValidate : referential -> Dict String String -> Result String ()
+        , onValidate : referential -> FormData -> Result String ()
         , status : Status
         }
     -> Model referential

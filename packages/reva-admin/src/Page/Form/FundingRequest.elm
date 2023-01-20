@@ -4,6 +4,7 @@ import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Candidate
 import Data.Certification exposing (Certification)
+import Data.Form exposing (FormData)
 import Data.Form.FundingRequest
 import Data.Form.Helper
 import Data.Referential exposing (Referential)
@@ -13,7 +14,7 @@ import Page.Form as Form exposing (Form)
 import String exposing (String)
 
 
-form : Maybe Certification -> Dict String String -> ( Candidacy, Referential ) -> Form
+form : Maybe Certification -> FormData -> ( Candidacy, Referential ) -> Form
 form maybeCertification formData ( candidacy, referential ) =
     let
         availableCompanions : List ( String, String )
@@ -43,7 +44,7 @@ form maybeCertification formData ( candidacy, referential ) =
 
         hasCertificateSkills : Bool
         hasCertificateSkills =
-            Dict.get keys.certificateSkills formData
+            Data.Form.get keys.certificateSkills formData
                 |> Maybe.map ((/=) "")
                 |> Maybe.withDefault False
 
@@ -137,7 +138,7 @@ form maybeCertification formData ( candidacy, referential ) =
     }
 
 
-droppedOutForm : Maybe Certification -> Dict String String -> ( Candidacy, Referential ) -> Form
+droppedOutForm : Maybe Certification -> FormData -> ( Candidacy, Referential ) -> Form
 droppedOutForm maybeCertification formData ( candidacy, referential ) =
     { elements =
         commonFields maybeCertification
@@ -183,14 +184,14 @@ commonFields maybeCertification =
     ]
 
 
-title : Dict String String -> String
+title : FormData -> String
 title formData =
     let
         baseTitle : String
         baseTitle =
             "Demande de prise en charge"
     in
-    Dict.get keys.numAction formData
+    Data.Form.get keys.numAction formData
         |> Maybe.map (\numAction -> baseTitle ++ " " ++ numAction)
         |> Maybe.withDefault baseTitle
 
@@ -204,7 +205,7 @@ totalSection =
     ( "total", Form.Section "Total" )
 
 
-totalCostSection : String -> Dict String String -> ( String, Form.Element )
+totalCostSection : String -> FormData -> ( String, Form.Element )
 totalCostSection sectionTitle formData =
     ( "totalCost"
     , Form.Info sectionTitle <|
@@ -247,7 +248,7 @@ hasAccessTrainingFunding referential candidate =
             False
 
 
-totalTrainingHourCount : Dict String String -> Int
+totalTrainingHourCount : FormData -> Int
 totalTrainingHourCount formData =
     let
         decode =
@@ -261,7 +262,7 @@ totalTrainingHourCount formData =
         + int .certificateSkillsHourCount
 
 
-totalCost : Dict String String -> Int
+totalCost : FormData -> Int
 totalCost formData =
     let
         decode =

@@ -3,6 +3,7 @@ module Page.Form.Candidate exposing (..)
 import Admin.Enum.Gender exposing (Gender(..))
 import Data.Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Candidate
+import Data.Form exposing (FormData)
 import Data.Form.Candidate
 import Data.Form.Helper
 import Data.Referential exposing (Referential)
@@ -11,7 +12,7 @@ import Page.Form as Form exposing (Form)
 import String exposing (String)
 
 
-form : Dict String String -> ( Candidacy, Referential ) -> Form
+form : FormData -> ( Candidacy, Referential ) -> Form
 form _ ( _, referential ) =
     let
         keys =

@@ -14,6 +14,7 @@ import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
 import Api.Token exposing (Token)
 import Data.Candidacy exposing (Candidacy, CandidacyId)
+import Data.Form exposing (FormData)
 import Data.Form.FundingRequest
 import Data.Referential
 import Dict exposing (Dict)
@@ -28,12 +29,12 @@ create :
     -> Token
     -> (RemoteData String () -> msg)
     -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
-    -> Dict String String
+    -> FormData
     -> Cmd msg
-create candidacyId endpointGraphql token toMsg ( candidacy, referential ) dict =
+create candidacyId endpointGraphql token toMsg ( candidacy, referential ) formData =
     let
         funding =
-            Data.Form.FundingRequest.fromDict referential.basicSkills referential.mandatoryTrainings dict
+            Data.Form.FundingRequest.fromDict referential.basicSkills referential.mandatoryTrainings formData
 
         fundingInput =
             Admin.InputObject.FundingRequestInput

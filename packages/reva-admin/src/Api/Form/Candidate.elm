@@ -15,6 +15,7 @@ import Api.Token exposing (Token)
 import Api.VulnerabilityIndicator
 import Data.Candidacy
 import Data.Candidate
+import Data.Form exposing (FormData)
 import Data.Form.Candidate
 import Data.Referential
 import Dict exposing (Dict)
@@ -43,12 +44,12 @@ update :
     -> Token
     -> (RemoteData String () -> msg)
     -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
-    -> Dict String String
+    -> FormData
     -> Cmd msg
-update endpointGraphql token toMsg _ dict =
+update endpointGraphql token toMsg _ formData =
     let
         candidate =
-            Data.Form.Candidate.fromDict dict
+            Data.Form.Candidate.fromDict formData
 
         maybeToOptional : Maybe a -> OptionalArgument a
         maybeToOptional arg =

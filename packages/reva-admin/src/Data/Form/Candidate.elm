@@ -2,6 +2,7 @@ module Data.Form.Candidate exposing (candidate, fromDict, keys)
 
 import Admin.Enum.Gender exposing (Gender(..))
 import Data.Candidate exposing (genderFromString, genderToString)
+import Data.Form exposing (FormData)
 import Data.Form.Helper as Helper
 import Dict exposing (Dict)
 
@@ -30,11 +31,11 @@ keys =
     }
 
 
-fromDict : Dict String String -> CandidateInput
-fromDict dict =
+fromDict : FormData -> CandidateInput
+fromDict formData =
     let
         decode =
-            Helper.decode keys dict
+            Helper.decode keys formData
     in
     CandidateInput
         (decode.string .id "")

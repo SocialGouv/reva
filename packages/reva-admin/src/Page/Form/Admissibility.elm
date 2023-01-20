@@ -3,6 +3,7 @@ module Page.Form.Admissibility exposing (..)
 import Admin.Enum.AdmissibilityStatus exposing (..)
 import Data.Admissibility exposing (admissibilitySatusToString)
 import Data.Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
+import Data.Form exposing (FormData)
 import Data.Form.Admissibility
 import Data.Referential exposing (Referential)
 import Dict exposing (Dict)
@@ -10,7 +11,7 @@ import Page.Form as Form exposing (Form)
 import String exposing (String)
 
 
-form : Dict String String -> ( Candidacy, Referential ) -> Form
+form : FormData -> ( Candidacy, Referential ) -> Form
 form formData _ =
     let
         keys =

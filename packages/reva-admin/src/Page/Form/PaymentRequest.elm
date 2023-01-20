@@ -3,6 +3,7 @@ module Page.Form.PaymentRequest exposing (form)
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Certification exposing (Certification)
+import Data.Form exposing (FormData)
 import Data.Form.Helper
 import Data.Form.PaymentRequest
 import Data.Referential exposing (Referential)
@@ -16,7 +17,7 @@ keys =
     Data.Form.PaymentRequest.keys
 
 
-form : Maybe Certification -> Dict String String -> ( Candidacy, Referential ) -> Form
+form : Maybe Certification -> FormData -> ( Candidacy, Referential ) -> Form
 form maybeCertification formData ( candidacy, referential ) =
     let
         availableCompanions : List ( String, String )
@@ -37,7 +38,7 @@ form maybeCertification formData ( candidacy, referential ) =
                 numberElement =
                     Form.Number "Nb d'heures réalisées"
             in
-            case Dict.get (field keys) formData of
+            case Data.Form.get (field keys) formData of
                 Nothing ->
                     Form.ReadOnlyElement numberElement
 
@@ -57,7 +58,7 @@ form maybeCertification formData ( candidacy, referential ) =
             Nothing ->
                 ( "certification", Form.Empty )
         , ( "funding-num-action", Form.Section "Numéro de prise en charge Reva" )
-        , case Dict.get keys.numAction formData of
+        , case Data.Form.get keys.numAction formData of
             Just numAction ->
                 ( "num-action", Form.Info "" numAction )
 

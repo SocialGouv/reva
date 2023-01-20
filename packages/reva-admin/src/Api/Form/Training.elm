@@ -10,6 +10,7 @@ import Api.Auth as Auth
 import Api.RemoteData exposing (nothingToError)
 import Api.Token exposing (Token)
 import Data.Candidacy exposing (CandidacyId)
+import Data.Form exposing (FormData)
 import Data.Form.Training
 import Data.Referential
 import Dict exposing (Dict)
@@ -38,12 +39,12 @@ update :
     -> Token
     -> (RemoteData String () -> msg)
     -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
-    -> Dict String String
+    -> FormData
     -> Cmd msg
-update candidacyId endpointGraphql token toMsg ( _, referential ) dict =
+update candidacyId endpointGraphql token toMsg ( _, referential ) formData =
     let
         training =
-            Data.Form.Training.fromDict referential.basicSkills referential.mandatoryTrainings dict
+            Data.Form.Training.fromDict referential.basicSkills referential.mandatoryTrainings formData
 
         trainingInformation =
             Admin.InputObject.TrainingInput

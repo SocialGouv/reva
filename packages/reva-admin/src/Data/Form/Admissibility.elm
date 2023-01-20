@@ -2,6 +2,7 @@ module Data.Form.Admissibility exposing (admissibility, fromDict, keys)
 
 import Admin.Enum.AdmissibilityStatus exposing (..)
 import Data.Admissibility exposing (Admissibility, admissibilitySatusFromString, admissibilitySatusToString)
+import Data.Form exposing (FormData)
 import Data.Form.Helper as Helper
 import Data.Scalar
 import Dict exposing (Dict)
@@ -16,11 +17,11 @@ keys =
     }
 
 
-fromDict : Dict String String -> Admissibility
-fromDict dict =
+fromDict : FormData -> Admissibility
+fromDict formData =
     let
         decode =
-            Helper.decode keys dict
+            Helper.decode keys formData
     in
     Admissibility
         (decode.bool .isCandidateAlreadyAdmissible False)

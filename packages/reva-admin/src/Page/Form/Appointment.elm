@@ -2,6 +2,7 @@ module Page.Form.Appointment exposing (..)
 
 import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
 import Data.Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
+import Data.Form exposing (FormData)
 import Data.Form.Appointment exposing (candidateTypologyToString)
 import Data.Referential exposing (Referential)
 import Dict exposing (Dict)
@@ -9,7 +10,7 @@ import Page.Form as Form exposing (Form)
 import String exposing (String)
 
 
-form : Dict String String -> ( Candidacy, Referential ) -> Form
+form : FormData -> ( Candidacy, Referential ) -> Form
 form _ _ =
     let
         keys =

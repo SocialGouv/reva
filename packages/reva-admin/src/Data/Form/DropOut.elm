@@ -2,6 +2,7 @@ module Data.Form.DropOut exposing (dropOut, fromDict, keys, validate)
 
 import Admin.Scalar exposing (Id(..), Uuid)
 import Data.Candidacy exposing (Candidacy)
+import Data.Form exposing (FormData)
 import Data.Form.Helper as Helper
 import Data.Referential exposing (Referential)
 import Data.Scalar
@@ -23,11 +24,11 @@ keys =
     }
 
 
-validate : ( Candidacy, Referential ) -> Dict String String -> Result String ()
-validate ( _, _ ) dict =
+validate : ( Candidacy, Referential ) -> FormData -> Result String ()
+validate ( _, _ ) formData =
     let
         decode =
-            Helper.decode keys dict
+            Helper.decode keys formData
     in
     case decode.maybe.string .dropOutReason of
         Nothing ->
@@ -37,11 +38,11 @@ validate ( _, _ ) dict =
             Ok ()
 
 
-fromDict : Dict String String -> DropOut
-fromDict dict =
+fromDict : FormData -> DropOut
+fromDict formData =
     let
         decode =
-            Helper.decode keys dict
+            Helper.decode keys formData
     in
     DropOut
         (decode.string .dropOutReason "")
