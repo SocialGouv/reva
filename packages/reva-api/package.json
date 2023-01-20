@@ -93,6 +93,7 @@
     "@types/cron": "^2.0.0",
     "@types/crypto-js": "^4.1.1",
     "@types/debug": "^4.1.7",
+    "@types/elastic-apm-node": "^2.7.0",
     "@types/jest": "^27.4.1",
     "@types/jsonwebtoken": "^8.5.9",
     "@types/keycloak-connect": "^7.0.0",
