@@ -70,6 +70,8 @@ keys =
     , examEstimatedHourCount = "examEstimatedHourCount"
     , examHourCount = "examHourCount"
     , examCost = "examCost"
+    , invoiceFiles = "invoiceFiles"
+    , appointmentFiles = "appointmentFiles"
     }
 
 

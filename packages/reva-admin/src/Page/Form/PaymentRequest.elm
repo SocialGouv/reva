@@ -160,6 +160,9 @@ form maybeCertification formData ( candidacy, referential ) =
             ( keys.isFormConfirmed
             , Form.Checkbox "Je confirme ce montant de paiement. Je ne pourrai pas éditer cette demande de paiement après son envoi."
             )
+        , ( "heading", Form.Heading "2 - Pièces à joindre" )
+        , ( keys.invoiceFiles, Form.Files "Facture" )
+        , ( keys.appointmentFiles, Form.Files "Récapitulatif des attestations de présence" )
         ]
     , saveLabel = Just "Enregistrer"
     , submitLabel = "Envoyer"

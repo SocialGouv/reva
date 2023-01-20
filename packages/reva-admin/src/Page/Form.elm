@@ -15,9 +15,11 @@ import Browser.Dom
 import Data.Context exposing (Context)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
+import File exposing (File)
 import Html.Styled as Html exposing (Html, button, dd, div, dt, fieldset, input, label, legend, li, option, p, select, text, textarea, ul)
-import Html.Styled.Attributes exposing (checked, class, classList, disabled, for, id, name, placeholder, required, selected, type_, value)
-import Html.Styled.Events exposing (onCheck, onClick, onInput, onSubmit)
+import Html.Styled.Attributes exposing (checked, class, classList, disabled, for, id, multiple, name, placeholder, required, selected, type_, value)
+import Html.Styled.Events exposing (on, onCheck, onClick, onInput, onSubmit)
+import Json.Decode
 import RemoteData exposing (RemoteData(..))
 import String exposing (String)
 import Task
@@ -30,7 +32,9 @@ type Msg referential
     = UserChangedElement String String
     | UserClickSave referential
     | UserClickSubmit referential
+    | UserSelectFiles (List File)
     | GotSaveResponse (RemoteData String ())
+    | GotFiles File (List File)
     | GotLoadResponse (RemoteData String (Dict String String))
     | NoOp
 
@@ -40,6 +44,7 @@ type Element
     | CheckboxList String (List ( String, String ))
     | Date String
     | Empty
+    | Files String
     | Heading String
     | Info String String
     | Input String
@@ -381,6 +386,28 @@ viewEditableElement formData ( elementId, element ) =
         Empty ->
             []
 
+        Files label ->
+            let
+                filesDecoder : Json.Decode.Decoder (List File)
+                filesDecoder =
+                    Json.Decode.at [ "target", "files" ] (Json.Decode.list File.decoder)
+            in
+            input
+                [ type_ "file"
+                , multiple True
+                , name elementId
+                , id elementId
+                , on "change" (Json.Decode.map UserSelectFiles filesDecoder)
+                , class "block w-[520px] mb-4 text-sm text-slate-500"
+                , class "file:mr-4 file:py-2 file:px-4"
+                , class "file:rounded file:border-0"
+                , class "file:bg-gray-900 file:text-white"
+                , class "hover:file:bg-gray-800"
+                , value dataOrDefault
+                ]
+                []
+                |> withLabel label
+
         Heading title ->
             [ View.Heading.h3 title ]
 
@@ -544,6 +571,9 @@ viewReadOnlyElement formData ( elementId, element ) =
             defaultView label
 
         Empty ->
+            []
+
+        Files _ ->
             []
 
         Heading title ->
@@ -747,6 +777,20 @@ update context msg model =
             clickHandler model.onSubmit model.onValidate GotSaveResponse Submitting referential form formData
 
         ( UserClickSubmit _, _ ) ->
+            noChange
+
+        ( UserSelectFiles files, _ ) ->
+            let
+                _ =
+                    Debug.log "" files
+            in
+            noChange
+
+        ( GotFiles file files, _ ) ->
+            let
+                _ =
+                    Debug.log "" (file :: files)
+            in
             noChange
 
         ( GotLoadResponse (RemoteData.Success formData), Loading form ) ->
