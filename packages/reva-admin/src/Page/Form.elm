@@ -758,7 +758,7 @@ update context msg model =
         ( GotLoadResponse _, _ ) ->
             noChange
 
-        ( GotSaveResponse (RemoteData.Success _), Saving _ _ ) ->
+        ( GotSaveResponse (RemoteData.Success _), _ ) ->
             ( model
             , Cmd.batch
                 [ Task.perform (\_ -> NoOp) (Browser.Dom.setViewport 0 0)
