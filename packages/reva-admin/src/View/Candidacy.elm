@@ -12,7 +12,7 @@ import Html.Styled.Attributes exposing (attribute, class, classList, href, type_
 import Html.Styled.Events exposing (onClick)
 import RemoteData exposing (RemoteData(..))
 import Route
-import View.Candidacy.Tab exposing (Tab(..))
+import View.Candidacy.Tab exposing (Value(..))
 import View.Date
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
@@ -24,7 +24,6 @@ view :
         { a
             | candidacy : Candidacy
             , archiveMsg : Candidacy -> msg
-            , deleteMsg : Candidacy -> msg
             , referential : RemoteData String Referential
         }
     -> List (Html msg)
@@ -122,7 +121,12 @@ view context config =
                     [ class "ml-2"
                     , class "bg-red-800 hover:bg-red-900 text-white"
                     , class "text-xs px-3 py-2 rounded"
-                    , href (Route.toString context.baseUrl (Route.Candidacy (DropOut config.candidacy.id)))
+                    , href
+                        (Route.toString context.baseUrl
+                            (Route.Candidacy <|
+                                View.Candidacy.Tab.Tab config.candidacy.id DropOut
+                            )
+                        )
                     ]
                     [ text "Déclarer l'abandon du candidat" ]
 

@@ -131,7 +131,7 @@ view remoteReferential model =
     let
         submitButton label =
             View.primaryButton
-                [ dataTest "save-description"
+                [ dataTest "submit"
                 , type_ "submit"
                 ]
                 label
@@ -140,13 +140,13 @@ view remoteReferential model =
             case maybeLabel of
                 Just label ->
                     View.secondaryButton
-                        [ dataTest "save-description"
+                        [ dataTest "save"
                         , onClick (UserClickSave referential)
                         ]
                         label
 
                 Nothing ->
-                    text ""
+                    div [] []
 
         disabledButton dataTestValue =
             button
@@ -744,7 +744,7 @@ update context msg model =
             noChange
 
         ( UserClickSubmit referential, Editing _ form formData ) ->
-            clickHandler model.onSubmit model.onValidate GotSaveResponse Saving referential form formData
+            clickHandler model.onSubmit model.onValidate GotSaveResponse Submitting referential form formData
 
         ( UserClickSubmit _, _ ) ->
             noChange
@@ -767,7 +767,9 @@ update context msg model =
             )
 
         ( GotSaveResponse (RemoteData.Failure error), Saving form formData ) ->
-            -- TODO: Handle save failure
+            ( { model | form = Editing (Just error) form formData }, Cmd.none )
+
+        ( GotSaveResponse (RemoteData.Failure error), Submitting form formData ) ->
             ( { model | form = Editing (Just error) form formData }, Cmd.none )
 
         ( GotSaveResponse _, _ ) ->
