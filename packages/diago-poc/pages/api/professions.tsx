@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Profession } from "../../types/types";
-import romeFiles from "../../data/rome_files.json";
 import {prismaClient} from "./prisma"
 
 const jobs = async () => {
