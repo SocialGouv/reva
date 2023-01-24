@@ -7,7 +7,7 @@ import Html.Styled.Attributes exposing (class)
 h3 : String -> Html msg
 h3 s =
     Html.h3
-        [ class "w-[620px] mt-8 mb-8"
+        [ class "w-[620px] -mt-4 mb-8"
         , class "text-2xl font-semibold uppercase text-blue-600"
         ]
         [ text s ]
