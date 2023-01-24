@@ -22,8 +22,6 @@ export interface Certification {
 
 export interface CertificationWithPurcentMatch extends Certification {
   purcent: number;
-}
-
-export interface CertificationWithNbCompetencies extends Certification {
-  nb_competencies: number;
+  nb_competencies_match: number;
+  nb_competencies_total: number;
 }

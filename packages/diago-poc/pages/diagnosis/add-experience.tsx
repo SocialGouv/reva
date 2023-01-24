@@ -9,9 +9,9 @@ const AddExperiencePage = () => {
   const { userInfos, computeDiagnosis } = useMainImportContext();
 
   const handleShowDiagnosisButtonClick = useCallback(async () => {
-    await computeDiagnosis();
+    // await computeDiagnosis();
     router.push("/diagnosis/show-diagnosis");
-  }, [computeDiagnosis, router]);
+  }, [router]);
 
   return (
     <div className="h-full flex flex-col py-12">

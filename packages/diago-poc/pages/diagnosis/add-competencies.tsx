@@ -75,7 +75,6 @@ const AddCompetenciesPage = () => {
     [professionAndCompetencies, router, updateUserInfos, userInfos]
   );
 
-  // console.log("professionAndCompetencies", professionAndCompetencies)
   return (
     <div className="h-full flex flex-col py-12">
       <h1 className="text-lg font-semibold">Nouvelle expérience</h1>

@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Competency, Profession } from "../../types/types";
-import competenciesFile from "../../data/competencies.json";
+import { Competency } from "../../types/types";
 import {prismaClient} from "./prisma"
 
 export const getCompetencyByJobCode = async (professionId: string) =>{
@@ -12,6 +11,7 @@ export const getCompetencyByJobCode = async (professionId: string) =>{
     inner join rome r on r.id = rc.rome_id
     inner join profession p on p.rome_id = r.id
     where p.id = ${Number.parseInt(professionId, 10)}
+    order by comp.label asc
   `
   return competencies as Competency[] ;
 }

@@ -71,3 +71,13 @@ model Profession {
 
   @@map("profession")
 }
+
+model Diagnosis {
+  id             Int       @id @default(autoincrement())
+  revaIdentifier String    @map("reva_identifier")
+  content        Json
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime? @map("updated_at") @db.Timestamptz(6)
+
+  @@map("diagnosis")
+}

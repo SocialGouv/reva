@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { createContext, ReactNode, useContext, useState } from "react";
-import { ProfessionAndCompetencies, Certification } from "../../types/types";
+import { ProfessionAndCompetencies, Certification, CertificationWithPurcentMatch } from "../../types/types";
 
 interface UserInfos {
   revaIdentifier: string;
   professionAndCompetencies: ProfessionAndCompetencies[];
-  diagnosis: Certification[];
+  diagnosis: CertificationWithPurcentMatch[];
 }
 
 interface MainContext {
@@ -28,11 +28,11 @@ export const MainContextProvider = (props: { children?: ReactNode }) => {
       const res = await fetch("/api/diagnosis", {
         method: "POST",
         body: JSON.stringify(
-          userInfos.professionAndCompetencies.flatMap((jAndC) => jAndC.competencies)
+          userInfos
         ),
       });
 
-      return res.ok ? ((await res.json()) as Certification[]) : [];
+      return res.ok ? ((await res.json()) as CertificationWithPurcentMatch[]) : [];
     },
   });
 
@@ -41,10 +41,10 @@ export const MainContextProvider = (props: { children?: ReactNode }) => {
 
   const computeDiagnosis = async () => {
     const diagnosis = await computeDiagnosisMutation.mutateAsync();
-    setUserInfos({
-      ...userInfos,
-      diagnosis,
-    });
+    // setUserInfos({
+    //   ...userInfos,
+    //   diagnosis,
+    // });
   };
 
   return (
