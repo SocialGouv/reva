@@ -11,7 +11,7 @@
     "prisma:migrate:deploy": "prisma migrate deploy"
   },
   "prisma": {
-    "seed": "ts-node --transpileOnly --project tsconfig-prisma.json prisma/seed.ts"
+    "seed": "npx ts-node --transpileOnly --project tsconfig-prisma.json prisma/seed.ts"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.4.7",
