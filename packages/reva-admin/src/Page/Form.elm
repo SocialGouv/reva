@@ -22,6 +22,7 @@ import Html.Styled as Html exposing (Html, button, dd, div, dt, fieldset, input,
 import Html.Styled.Attributes exposing (checked, class, classList, disabled, for, id, multiple, name, placeholder, required, selected, type_, value)
 import Html.Styled.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
+import List.Extra
 import RemoteData exposing (RemoteData(..))
 import String exposing (String)
 import Task
@@ -36,7 +37,7 @@ type Msg referential
     | UserClickSubmit referential
     | UserSelectFiles String (List File)
     | GotSaveResponse (RemoteData String ())
-    | GotFiles String (List Bytes)
+    | GotFiles String (List ( String, Bytes ))
     | GotLoadResponse (RemoteData String (Dict String String))
     | NoOp
 
@@ -777,8 +778,15 @@ update context msg model =
             noChange
 
         ( UserSelectFiles key files, _ ) ->
+            let
+                fileNames =
+                    List.map File.name files
+
+                filesWithNames bytes =
+                    List.Extra.zip fileNames bytes |> GotFiles key
+            in
             ( model
-            , Task.perform (GotFiles key) <| Task.sequence <| List.map File.toBytes files
+            , Task.perform filesWithNames <| Task.sequence <| List.map File.toBytes files
             )
 
         ( GotFiles key files, Editing error form formData ) ->

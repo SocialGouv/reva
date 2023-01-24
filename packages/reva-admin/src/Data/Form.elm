@@ -6,7 +6,7 @@ import Dict exposing (Dict)
 
 type FormData
     = FormData
-        { files : Dict String (List Bytes)
+        { files : Dict String (List ( String, Bytes ))
         , string : Dict String String
         }
 
@@ -39,22 +39,22 @@ fromDict dict =
 -- FILES
 
 
-insertFiles : String -> List Bytes -> FormData -> FormData
+insertFiles : String -> List ( String, Bytes ) -> FormData -> FormData
 insertFiles key value (FormData formData) =
     FormData { formData | files = Dict.insert key value formData.files }
 
 
-getFiles : String -> FormData -> List Bytes
+getFiles : String -> FormData -> List ( String, Bytes )
 getFiles key (FormData formData) =
     Dict.get key formData.files
         |> Maybe.withDefault []
 
 
-toDictFiles : FormData -> Dict String (List Bytes)
+toDictFiles : FormData -> Dict String (List ( String, Bytes ))
 toDictFiles (FormData formData) =
     formData.files
 
 
-fromDictFiles : Dict String (List Bytes) -> FormData
+fromDictFiles : Dict String (List ( String, Bytes )) -> FormData
 fromDictFiles dict =
     FormData { files = dict, string = Dict.empty }
