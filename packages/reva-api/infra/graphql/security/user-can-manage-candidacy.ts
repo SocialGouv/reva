@@ -17,7 +17,7 @@ import { SecurityCheck } from ".";
 
 const log = debug("gql");
 
-export const checkCanManageCandidacy: SecurityCheck = (
+export const checkCanManageCandidacy = (managerOnly?: boolean): SecurityCheck => (
   _: ResolverFirstArgument,
   payload: ResolverPayload,
   context: ResolverContext
@@ -31,7 +31,7 @@ export const checkCanManageCandidacy: SecurityCheck = (
         getAccountFromKeycloakId,
         getCandidacyFromId,
       },
-      { candidacyId, keycloakId }
+      { candidacyId, keycloakId, managerOnly }
     )
   )
     .mapLeft((err) => {

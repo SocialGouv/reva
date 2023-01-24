@@ -312,7 +312,7 @@ export const resolvers = {
     },
 
     candidacy_deleteById: applySecurityCheckToResolver(
-      checkCanManageCandidacy,
+      checkCanManageCandidacy(),
       async (_: unknown, payload: any) => {
         const result = await deleteCandidacy({
           deleteCandidacyFromId: candidacyDb.deleteCandidacyFromId,
@@ -329,7 +329,7 @@ export const resolvers = {
     ),
 
     candidacy_archiveById: applySecurityCheckToResolver(
-      checkCanManageCandidacy,
+      checkCanManageCandidacy(),
       async (_: unknown, payload: any) => {
         const result = await archiveCandidacy({
           updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
@@ -346,7 +346,7 @@ export const resolvers = {
     ),
 
     candidacy_updateAppointmentInformations: applySecurityCheckToResolver(
-      checkCanManageCandidacy,
+      checkCanManageCandidacy(),
       async (_: unknown, payload: any) => {
         const result = await updateAppointmentInformations({
           updateAppointmentInformations:
@@ -366,7 +366,7 @@ export const resolvers = {
     ),
 
     candidacy_takeOver: applySecurityCheckToResolver(
-      checkCanManageCandidacy,
+      checkCanManageCandidacy(true),
       async (_: unknown, payload: any, context: { auth: any }) => {
         const result = await takeOverCandidacy({
           hasRole: context.auth.hasRole,
@@ -374,7 +374,7 @@ export const resolvers = {
             candidacyDb.existsCandidacyWithActiveStatus,
           updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
         })({
-          candidacyId: payload.candidacyId,
+          candidacyId: payload.candidacyId
         });
 
         return result
@@ -399,7 +399,7 @@ export const resolvers = {
         .extract();
     },
     candidacy_submitTrainingForm: applySecurityCheckToResolver(
-      checkCanManageCandidacy,
+      checkCanManageCandidacy(),
       async (_: unknown, payload: any, context: { auth: any }) => {
         const result = await submitTraining({
           hasRole: context.auth.hasRole,
@@ -437,7 +437,7 @@ export const resolvers = {
         .extract();
     },
     candidacy_dropOut: applySecurityCheckToResolver(
-      checkCanManageCandidacy,
+      checkCanManageCandidacy(),
       async (
         _: unknown,
         payload: {
@@ -474,7 +474,7 @@ export const resolvers = {
       }
     ),
     candidacy_updateAdmissibility: applySecurityCheckToResolver(
-      checkCanManageCandidacy,
+      checkCanManageCandidacy(),
       async (
         _: unknown,
         {
