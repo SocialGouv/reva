@@ -19,16 +19,28 @@ export interface CanManageCandidacyDeps {
 interface CanManageCandidacyParams {
   candidacyId: string;
   keycloakId: string;
+  managerOnly?: boolean;
 }
 
 export const canManageCandidacy = async (
   deps: CanManageCandidacyDeps,
   params: CanManageCandidacyParams
 ): Promise<Either<string, boolean>> => {
-  if (!deps.hasRole("manage_candidacy")) {
-    return Right(false);
+  if(params.managerOnly) {
+    if (deps.hasRole("admin")) {
+      log('Admins are not authorized');
+      return Right(false);
+    }
+  } else {
+    if (deps.hasRole("admin")) {
+      log('User is admin, no further check');
+      return Right(true);
+    }
+    if (!deps.hasRole("manage_candidacy")) {
+      log('User is not manager');
+      return Right(false);
+    }
   }
-
   let candidacy, account;
   try {
     log("feature canManageCandidacy");
