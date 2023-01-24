@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { CertificationWithPurcentMatch } from "../../types/types";
 import {prismaClient} from "./prisma"
 
-export const getCertificationsByCompetenciesIds = async (competenciesIds: string[]) =>{
+export const getCertificationsByCompetenciesIds = async (competenciesIds: string[] = []) =>{
   const certifications = await prismaClient.$queryRaw`
     select c.*,
       cer_comp.sum_competencies::int as nb_competencies_match,
@@ -39,7 +39,8 @@ export default async function handler(
     res.status(200).json(diagnosis)
   } else {
     const { competenciesIds } = req.query;
-    const certifications = await getCertificationsByCompetenciesIds(competenciesIds as string[])
+    const ids = typeof competenciesIds === 'string' ? [competenciesIds] : (competenciesIds);
+    const certifications = await getCertificationsByCompetenciesIds(ids)
     res.status(200).json(certifications);
   }
 }

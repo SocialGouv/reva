@@ -23,7 +23,8 @@ const professionAndCompetenciesReducer = (
         return state
       }
       let competencies = [...state.competencies];
-      if (competencies.includes(action.payload)) {
+
+      if (competencies.find(c => c.id === action.payload?.id)) {
         competencies = competencies.filter(c => c.id !== action.payload?.id)
       } else {
         competencies.push(action.payload)
@@ -129,59 +130,6 @@ const AddCompetenciesPage = () => {
       </div>}
       
     </div>
-
-
-
-    // <Flex p={12} direction="column" justifyContent="center" alignItems="center">
-    //   <Flex direction="column" alignItems="flex-start">
-    //     <Flex alignItems="center" gap={4} w="500px">
-    //       <label>Expérience:</label>
-    //       <Select
-    //         onChange={(e) =>
-    //           dispatchProfessionAndCompetenciesEvent({
-    //             type: "set_job",
-    //             payload: professionsData?.find(
-    //               (p) => `${p.id}` === e.target.value
-    //             ) as Profession,
-    //           })
-    //         }
-    //       >
-    //         <option />
-    //         {professionsData?.map((p) => (
-    //           <option key={p.id} value={p.id}>
-    //             {p.label}
-    //           </option>
-    //         ))}
-    //       </Select>
-    //     </Flex>
-    //     <br />
-    //     <CheckboxGroup
-    //       defaultValue={professionAndCompetencies.competencies.map((c) => c.id)}
-    //       onChange={(v) =>
-    //         dispatchProfessionAndCompetenciesEvent({
-    //           type: "set_competencies",
-    //           payload:
-    //             competenciesData?.filter((c) =>v.includes(`${c.id}`)) || [],
-    //         })
-    //       }
-    //     >
-    //       <Flex wrap="wrap" gap={4}>
-    //         {competenciesData?.map((c) => (
-    //           <Checkbox key={c.id} value={c.id}>
-    //             {c.label}
-    //           </Checkbox>
-    //         ))}
-    //       </Flex>
-    //     </CheckboxGroup>
-    //     <br />
-    //     <br />
-    //     <form onSubmit={handleSubmit} style={{ width: "100%" }}>
-    //       <Button type="submit" colorScheme="blue" w="100%">
-    //         Ajouter expérience
-    //       </Button>
-    //     </form>
-    //   </Flex>
-    // </Flex>
   );
 };
 

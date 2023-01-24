@@ -49,6 +49,7 @@ const ShowDiagnosisPage = () => {
   return (
     <div className="h-full flex flex-col py-12">
       <h1 className="text-lg font-semibold">Votre diagnostique</h1>
+      <p className="text-sm font-light mt-2">Voici la liste des certifications correspondant aux compétences que vous avez sélectionnées.</p>
 
       <div className="flex flex-col mt-4 space-y-4">
         {certificationsData?.map((c) => (<CertificationCard key={c.id} certification={c}/>))}
