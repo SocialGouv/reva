@@ -1,0 +1,547 @@
+[
+  {
+    "Numero_Fiche": 5983,
+    "Bloc_Competences_Code": "RNCP5983BC04",
+    "Bloc_Competences_Libelle": " Exercer en tant que professionnel de nuit en secteur social et médico-social"
+  },
+  {
+    "Numero_Fiche": 5983,
+    "Bloc_Competences_Code": "RNCP5983BC03",
+    "Bloc_Competences_Libelle": "Assurer une continuité jour-nuit dans un cadre institutionnel donné"
+  },
+  {
+    "Numero_Fiche": 5983,
+    "Bloc_Competences_Code": "RNCP5983BC02",
+    "Bloc_Competences_Libelle": "Accompagner la personne vulnérable"
+  },
+  {
+    "Numero_Fiche": 5983,
+    "Bloc_Competences_Code": "RNCP5983BC01",
+    "Bloc_Competences_Libelle": "Assurer la sécurité des personnes et des biens"
+  },
+  {
+    "Numero_Fiche": 13905,
+    "Bloc_Competences_Code": "RNCP13905BC08",
+    "Bloc_Competences_Libelle": "Conduire en autonomie un service destiné aux acteurs et aux usagers d’un territoire"
+  },
+  {
+    "Numero_Fiche": 13905,
+    "Bloc_Competences_Code": "RNCP13905BC01",
+    "Bloc_Competences_Libelle": "Communiquer dans un contexte social et professionnel en mobilisant des références culturelles"
+  },
+  {
+    "Numero_Fiche": 13905,
+    "Bloc_Competences_Code": "RNCP13905BC07",
+    "Bloc_Competences_Libelle": "Communiquer en situation professionnelle et conduire en autonomie une activité d’accompagnement de la personne dans une perspective de confort, d’hygiène, de sécurité et d’existence de vie sociale"
+  },
+  {
+    "Numero_Fiche": 13905,
+    "Bloc_Competences_Code": "RNCP13905BC05",
+    "Bloc_Competences_Libelle": "Analyser les besoins des personnes liés à une activité de service "
+  },
+  {
+    "Numero_Fiche": 13905,
+    "Bloc_Competences_Code": "RNCP13905BC06",
+    "Bloc_Competences_Libelle": "Caractériser le contexte socioprofessionnel et territorial des activités de service et organiser le travail d’une équipe dans le cadre d’une activité de service"
+  },
+  {
+    "Numero_Fiche": 13905,
+    "Bloc_Competences_Code": "RNCP13905BC09",
+    "Bloc_Competences_Libelle": "S’adapter à des enjeux professionnels particuliers  "
+  },
+  {
+    "Numero_Fiche": 13905,
+    "Bloc_Competences_Code": "RNCP13905BC02",
+    "Bloc_Competences_Libelle": "Communiquer dans une langue étrangère dans les situations courantes de la vie professionnelle"
+  },
+  {
+    "Numero_Fiche": 13905,
+    "Bloc_Competences_Code": "RNCP13905BC03",
+    "Bloc_Competences_Libelle": "Développer sa motricité "
+  },
+  {
+    "Numero_Fiche": 13905,
+    "Bloc_Competences_Code": "RNCP13905BC04",
+    "Bloc_Competences_Libelle": "Mettre en œuvre des savoirs et savoir-faire scientifiques et techniques "
+  },
+  {
+    "Numero_Fiche": 17163,
+    "Bloc_Competences_Code": "RNCP17163BC02",
+    "Bloc_Competences_Libelle": "Etre un conducteur accompagnateur de personnes à mobilité réduite professionnel"
+  },
+  {
+    "Numero_Fiche": 17163,
+    "Bloc_Competences_Code": "RNCP17163BC03",
+    "Bloc_Competences_Libelle": "Accompagner la personne à mobilité réduite"
+  },
+  {
+    "Numero_Fiche": 17163,
+    "Bloc_Competences_Code": "RNCP17163BC04",
+    "Bloc_Competences_Libelle": "Conduire et assurer la sécurité des personnes et des biens"
+  },
+  {
+    "Numero_Fiche": 17163,
+    "Bloc_Competences_Code": "RNCP17163BC01",
+    "Bloc_Competences_Libelle": "Communiquer dans un cadre institutionnel donné"
+  },
+  {
+    "Numero_Fiche": 25085,
+    "Bloc_Competences_Code": "RNCP25085BC04",
+    "Bloc_Competences_Libelle": "UCP 1 : Établir une communication avec la personne et son entourage en lien avec son environnement"
+  },
+  {
+    "Numero_Fiche": 25085,
+    "Bloc_Competences_Code": "RNCP25085BC07",
+    "Bloc_Competences_Libelle": "UCARE : unité capitalisable d'adaptation régionale ou à l'emploi"
+  },
+  {
+    "Numero_Fiche": 25085,
+    "Bloc_Competences_Code": "RNCP25085BC06",
+    "Bloc_Competences_Libelle": "UCP 3 : Réaliser des activités de vente"
+  },
+  {
+    "Numero_Fiche": 25085,
+    "Bloc_Competences_Code": "RNCP25085BC05",
+    "Bloc_Competences_Libelle": "UCP 2 : Réaliser des interventions d’aide à la personne"
+  },
+  {
+    "Numero_Fiche": 25085,
+    "Bloc_Competences_Code": "RNCP25085BC02",
+    "Bloc_Competences_Libelle": "UCG 2 : Mettre en oeuvre des actions contribuant à sa construction personnelle"
+  },
+  {
+    "Numero_Fiche": 25085,
+    "Bloc_Competences_Code": "RNCP25085BC01",
+    "Bloc_Competences_Libelle": "UCG 1 : Agir dans des situations de la vie courante à l’aide de repères sociaux"
+  },
+  {
+    "Numero_Fiche": 25085,
+    "Bloc_Competences_Code": "RNCP25085BC03",
+    "Bloc_Competences_Libelle": "UCG 3 : Interagir avec son environnement social"
+  },
+  {
+    "Numero_Fiche": 28048,
+    "Bloc_Competences_Code": "RNCP28048BC01",
+    "Bloc_Competences_Libelle": "UP1 Accompagner le développement du jeune enfant"
+  },
+  {
+    "Numero_Fiche": 28048,
+    "Bloc_Competences_Code": "RNCP28048BC02",
+    "Bloc_Competences_Libelle": "UP2 Exercer son activité en accueil collectif"
+  },
+  {
+    "Numero_Fiche": 28048,
+    "Bloc_Competences_Code": "RNCP28048BC03",
+    "Bloc_Competences_Libelle": "UP3 Exercer son activité en accueil individuel"
+  },
+  {
+    "Numero_Fiche": 28048,
+    "Bloc_Competences_Code": "RNCP28048BC04",
+    "Bloc_Competences_Libelle": "UG1  Français, Histoire-Géographie et Enseignement moral et civique"
+  },
+  {
+    "Numero_Fiche": 28048,
+    "Bloc_Competences_Code": "RNCP28048BC05",
+    "Bloc_Competences_Libelle": "UG2 Mathématiques-Sciences physiques et chimiques"
+  },
+  {
+    "Numero_Fiche": 28048,
+    "Bloc_Competences_Code": "RNCP28048BC06",
+    "Bloc_Competences_Libelle": "UG3 Éducation physique et sportive"
+  },
+  {
+    "Numero_Fiche": 5983,
+    "Bloc_Competences_Code": "RNCP5983BC04",
+    "Bloc_Competences_Libelle": " Exercer en tant que professionnel de nuit en secteur social et médico-social"
+  },
+  {
+    "Numero_Fiche": 5983,
+    "Bloc_Competences_Code": "RNCP5983BC03",
+    "Bloc_Competences_Libelle": "Assurer une continuité jour-nuit dans un cadre institutionnel donné"
+  },
+  {
+    "Numero_Fiche": 5983,
+    "Bloc_Competences_Code": "RNCP5983BC02",
+    "Bloc_Competences_Libelle": "Accompagner la personne vulnérable"
+  },
+  {
+    "Numero_Fiche": 5983,
+    "Bloc_Competences_Code": "RNCP5983BC01",
+    "Bloc_Competences_Libelle": "Assurer la sécurité des personnes et des biens"
+  },
+  {
+    "Numero_Fiche": 13905,
+    "Bloc_Competences_Code": "RNCP13905BC08",
+    "Bloc_Competences_Libelle": "Conduire en autonomie un service destiné aux acteurs et aux usagers d’un territoire"
+  },
+  {
+    "Numero_Fiche": 13905,
+    "Bloc_Competences_Code": "RNCP13905BC01",
+    "Bloc_Competences_Libelle": "Communiquer dans un contexte social et professionnel en mobilisant des références culturelles"
+  },
+  {
+    "Numero_Fiche": 13905,
+    "Bloc_Competences_Code": "RNCP13905BC07",
+    "Bloc_Competences_Libelle": "Communiquer en situation professionnelle et conduire en autonomie une activité d’accompagnement de la personne dans une perspective de confort, d’hygiène, de sécurité et d’existence de vie sociale"
+  },
+  {
+    "Numero_Fiche": 13905,
+    "Bloc_Competences_Code": "RNCP13905BC05",
+    "Bloc_Competences_Libelle": "Analyser les besoins des personnes liés à une activité de service "
+  },
+  {
+    "Numero_Fiche": 13905,
+    "Bloc_Competences_Code": "RNCP13905BC06",
+    "Bloc_Competences_Libelle": "Caractériser le contexte socioprofessionnel et territorial des activités de service et organiser le travail d’une équipe dans le cadre d’une activité de service"
+  },
+  {
+    "Numero_Fiche": 13905,
+    "Bloc_Competences_Code": "RNCP13905BC09",
+    "Bloc_Competences_Libelle": "S’adapter à des enjeux professionnels particuliers  "
+  },
+  {
+    "Numero_Fiche": 13905,
+    "Bloc_Competences_Code": "RNCP13905BC02",
+    "Bloc_Competences_Libelle": "Communiquer dans une langue étrangère dans les situations courantes de la vie professionnelle"
+  },
+  {
+    "Numero_Fiche": 13905,
+    "Bloc_Competences_Code": "RNCP13905BC03",
+    "Bloc_Competences_Libelle": "Développer sa motricité "
+  },
+  {
+    "Numero_Fiche": 13905,
+    "Bloc_Competences_Code": "RNCP13905BC04",
+    "Bloc_Competences_Libelle": "Mettre en œuvre des savoirs et savoir-faire scientifiques et techniques "
+  },
+  {
+    "Numero_Fiche": 17163,
+    "Bloc_Competences_Code": "RNCP17163BC02",
+    "Bloc_Competences_Libelle": "Etre un conducteur accompagnateur de personnes à mobilité réduite professionnel"
+  },
+  {
+    "Numero_Fiche": 17163,
+    "Bloc_Competences_Code": "RNCP17163BC03",
+    "Bloc_Competences_Libelle": "Accompagner la personne à mobilité réduite"
+  },
+  {
+    "Numero_Fiche": 17163,
+    "Bloc_Competences_Code": "RNCP17163BC04",
+    "Bloc_Competences_Libelle": "Conduire et assurer la sécurité des personnes et des biens"
+  },
+  {
+    "Numero_Fiche": 17163,
+    "Bloc_Competences_Code": "RNCP17163BC01",
+    "Bloc_Competences_Libelle": "Communiquer dans un cadre institutionnel donné"
+  },
+  {
+    "Numero_Fiche": 25085,
+    "Bloc_Competences_Code": "RNCP25085BC04",
+    "Bloc_Competences_Libelle": "UCP 1 : Établir une communication avec la personne et son entourage en lien avec son environnement"
+  },
+  {
+    "Numero_Fiche": 25085,
+    "Bloc_Competences_Code": "RNCP25085BC07",
+    "Bloc_Competences_Libelle": "UCARE : unité capitalisable d'adaptation régionale ou à l'emploi"
+  },
+  {
+    "Numero_Fiche": 25085,
+    "Bloc_Competences_Code": "RNCP25085BC06",
+    "Bloc_Competences_Libelle": "UCP 3 : Réaliser des activités de vente"
+  },
+  {
+    "Numero_Fiche": 25085,
+    "Bloc_Competences_Code": "RNCP25085BC05",
+    "Bloc_Competences_Libelle": "UCP 2 : Réaliser des interventions d’aide à la personne"
+  },
+  {
+    "Numero_Fiche": 25085,
+    "Bloc_Competences_Code": "RNCP25085BC02",
+    "Bloc_Competences_Libelle": "UCG 2 : Mettre en oeuvre des actions contribuant à sa construction personnelle"
+  },
+  {
+    "Numero_Fiche": 25085,
+    "Bloc_Competences_Code": "RNCP25085BC01",
+    "Bloc_Competences_Libelle": "UCG 1 : Agir dans des situations de la vie courante à l’aide de repères sociaux"
+  },
+  {
+    "Numero_Fiche": 25085,
+    "Bloc_Competences_Code": "RNCP25085BC03",
+    "Bloc_Competences_Libelle": "UCG 3 : Interagir avec son environnement social"
+  },
+  {
+    "Numero_Fiche": 28048,
+    "Bloc_Competences_Code": "RNCP28048BC01",
+    "Bloc_Competences_Libelle": "UP1 Accompagner le développement du jeune enfant"
+  },
+  {
+    "Numero_Fiche": 28048,
+    "Bloc_Competences_Code": "RNCP28048BC02",
+    "Bloc_Competences_Libelle": "UP2 Exercer son activité en accueil collectif"
+  },
+  {
+    "Numero_Fiche": 28048,
+    "Bloc_Competences_Code": "RNCP28048BC03",
+    "Bloc_Competences_Libelle": "UP3 Exercer son activité en accueil individuel"
+  },
+  {
+    "Numero_Fiche": 28048,
+    "Bloc_Competences_Code": "RNCP28048BC04",
+    "Bloc_Competences_Libelle": "UG1  Français, Histoire-Géographie et Enseignement moral et civique"
+  },
+  {
+    "Numero_Fiche": 28048,
+    "Bloc_Competences_Code": "RNCP28048BC05",
+    "Bloc_Competences_Libelle": "UG2 Mathématiques-Sciences physiques et chimiques"
+  },
+  {
+    "Numero_Fiche": 28048,
+    "Bloc_Competences_Code": "RNCP28048BC06",
+    "Bloc_Competences_Libelle": "UG3 Éducation physique et sportive"
+  },
+  {
+    "Numero_Fiche": 34692,
+    "Bloc_Competences_Code": "RNCP34692BC06",
+    "Bloc_Competences_Libelle": "Activités auprès de personnes âgées"
+  },
+  {
+    "Numero_Fiche": 34690,
+    "Bloc_Competences_Code": "RNCP34690BC01",
+    "Bloc_Competences_Libelle": "Développement de son activité professionnelle auprès de plusieurs particuliers employeurs"
+  },
+  {
+    "Numero_Fiche": 34690,
+    "Bloc_Competences_Code": "RNCP34690BC04",
+    "Bloc_Competences_Libelle": "Entretien du domicile et du linge : pratiques éco-responsables"
+  },
+  {
+    "Numero_Fiche": 34690,
+    "Bloc_Competences_Code": "RNCP34690BC05",
+    "Bloc_Competences_Libelle": "Personne âgée en situation de dépendance : accompagnement personnalisé"
+  },
+  {
+    "Numero_Fiche": 34690,
+    "Bloc_Competences_Code": "RNCP34690BC03",
+    "Bloc_Competences_Libelle": "Prévention et sécurité au domicile"
+  },
+  {
+    "Numero_Fiche": 34690,
+    "Bloc_Competences_Code": "RNCP34690BC02",
+    "Bloc_Competences_Libelle": "Gestion de son activité professionnelle auprès de particuliers employeurs"
+  },
+  {
+    "Numero_Fiche": 34690,
+    "Bloc_Competences_Code": "RNCP34690BC07",
+    "Bloc_Competences_Libelle": "Actes du quotidien et activités de l'adulte en situation de dépendance"
+  },
+  {
+    "Numero_Fiche": 34690,
+    "Bloc_Competences_Code": "RNCP34690BC06",
+    "Bloc_Competences_Libelle": "Personne en situation de handicap : projet et accompagnement personnalisé"
+  },
+  {
+    "Numero_Fiche": 34690,
+    "Bloc_Competences_Code": "RNCP34690BC08",
+    "Bloc_Competences_Libelle": "Repas auprès de l'adulte en situation de dépendance"
+  },
+  {
+    "Numero_Fiche": 34691,
+    "Bloc_Competences_Code": "RNCP34691BC02",
+    "Bloc_Competences_Libelle": "Gestion de son activité professionnelle auprès de particuliers employeurs"
+  },
+  {
+    "Numero_Fiche": 34691,
+    "Bloc_Competences_Code": "RNCP34691BC05",
+    "Bloc_Competences_Libelle": "Projet d'accueil et d'accompagnement personnalisé de l'enfant"
+  },
+  {
+    "Numero_Fiche": 34691,
+    "Bloc_Competences_Code": "RNCP34691BC06",
+    "Bloc_Competences_Libelle": "Accompagnement aux actes quotidiens de l'enfant"
+  },
+  {
+    "Numero_Fiche": 34691,
+    "Bloc_Competences_Code": "RNCP34691BC07",
+    "Bloc_Competences_Libelle": "Activités d'éveil et de socialisation contribuant au développement de l'enfant "
+  },
+  {
+    "Numero_Fiche": 34691,
+    "Bloc_Competences_Code": "RNCP34691BC08",
+    "Bloc_Competences_Libelle": "Repas de l'enfant"
+  },
+  {
+    "Numero_Fiche": 34691,
+    "Bloc_Competences_Code": "RNCP34691BC01",
+    "Bloc_Competences_Libelle": "Développement de son activité professionnelle auprès de plusieurs particuliers employeurs"
+  },
+  {
+    "Numero_Fiche": 34691,
+    "Bloc_Competences_Code": "RNCP34691BC03",
+    "Bloc_Competences_Libelle": "Prévention et sécurité au domicile"
+  },
+  {
+    "Numero_Fiche": 34691,
+    "Bloc_Competences_Code": "RNCP34691BC04",
+    "Bloc_Competences_Libelle": "Entretien du domicile et du linge : pratiques éco-responsables"
+  },
+  {
+    "Numero_Fiche": 34692,
+    "Bloc_Competences_Code": "RNCP34692BC07",
+    "Bloc_Competences_Libelle": "Actes du quotidien et activités de l'enfant de plus de trois ans"
+  },
+  {
+    "Numero_Fiche": 34692,
+    "Bloc_Competences_Code": "RNCP34692BC08",
+    "Bloc_Competences_Libelle": "Repas au domicile du particulier employeur"
+  },
+  {
+    "Numero_Fiche": 34692,
+    "Bloc_Competences_Code": "RNCP34692BC01",
+    "Bloc_Competences_Libelle": "Développement de son activité professionnelle auprès de plusieurs particuliers employeurs"
+  },
+  {
+    "Numero_Fiche": 34692,
+    "Bloc_Competences_Code": "RNCP34692BC02",
+    "Bloc_Competences_Libelle": "Gestion de son activité professionnelle auprès de particuliers employeurs"
+  },
+  {
+    "Numero_Fiche": 34692,
+    "Bloc_Competences_Code": "RNCP34692BC03",
+    "Bloc_Competences_Libelle": "Prévention et sécurité au domicile "
+  },
+  {
+    "Numero_Fiche": 34692,
+    "Bloc_Competences_Code": "RNCP34692BC04",
+    "Bloc_Competences_Libelle": "Entretien du domicile et du linge : pratiques éco-responsables "
+  },
+  {
+    "Numero_Fiche": 34692,
+    "Bloc_Competences_Code": "RNCP34692BC05",
+    "Bloc_Competences_Libelle": "Services personnalisés aux familles"
+  },
+  {
+    "Numero_Fiche": 35028,
+    "Bloc_Competences_Code": "RNCP35028BC02",
+    "Bloc_Competences_Libelle": "Contribuer aux prestations du service hôtelier en respectant les standards de qualité de l'établissement"
+  },
+  {
+    "Numero_Fiche": 35028,
+    "Bloc_Competences_Code": "RNCP35028BC03",
+    "Bloc_Competences_Libelle": "Accompagner le résident dans les gestes de la vie quotidienne en tenant compte du projet d'accompagnement personnalisé"
+  },
+  {
+    "Numero_Fiche": 35028,
+    "Bloc_Competences_Code": "RNCP35028BC01",
+    "Bloc_Competences_Libelle": "Réaliser le nettoyage et le bionettoyage des locaux en s'adaptant à la présence des résidents"
+  },
+  {
+    "Numero_Fiche": 35506,
+    "Bloc_Competences_Code": "RNCP35506BC01",
+    "Bloc_Competences_Libelle": " Entretenir le logement  et le linge d’un particulier"
+  },
+  {
+    "Numero_Fiche": 35506,
+    "Bloc_Competences_Code": "RNCP35506BC02",
+    "Bloc_Competences_Libelle": "Accompagner la personne dans les actes essentiels du quotidien"
+  },
+  {
+    "Numero_Fiche": 35506,
+    "Bloc_Competences_Code": "RNCP35506BC03",
+    "Bloc_Competences_Libelle": "Relayer les parents dans la prise en charge des enfants à leur domicile"
+  },
+  {
+    "Numero_Fiche": 35506,
+    "Bloc_Competences_Code": "RNCP35506BC04",
+    "Bloc_Competences_Libelle": "CCS Accompagner la personne en situation de handicap vivant  à domicile "
+  },
+  {
+    "Numero_Fiche": 35513,
+    "Bloc_Competences_Code": "RNCP35513BC10",
+    "Bloc_Competences_Libelle": "Positionnement vis à vis d’un champ professionnel"
+  },
+  {
+    "Numero_Fiche": 35513,
+    "Bloc_Competences_Code": "RNCP35513BC01",
+    "Bloc_Competences_Libelle": "Concevoir des interventions adaptées aux enjeux de la société"
+  },
+  {
+    "Numero_Fiche": 35513,
+    "Bloc_Competences_Code": "RNCP35513BC02",
+    "Bloc_Competences_Libelle": "Construire des dynamiques partenariales"
+  },
+  {
+    "Numero_Fiche": 35513,
+    "Bloc_Competences_Code": "RNCP35513BC03",
+    "Bloc_Competences_Libelle": "Conduire un projet pour des établissements et services sanitaires et sociaux"
+  },
+  {
+    "Numero_Fiche": 35513,
+    "Bloc_Competences_Code": "RNCP35513BC04",
+    "Bloc_Competences_Libelle": "Construire des accompagnements adaptés"
+  },
+  {
+    "Numero_Fiche": 35513,
+    "Bloc_Competences_Code": "RNCP35513BC05",
+    "Bloc_Competences_Libelle": "Assurer l’encadrement et la coordination"
+  },
+  {
+    "Numero_Fiche": 35513,
+    "Bloc_Competences_Code": "RNCP35513BC06",
+    "Bloc_Competences_Libelle": "Usages numériques"
+  },
+  {
+    "Numero_Fiche": 35513,
+    "Bloc_Competences_Code": "RNCP35513BC07",
+    "Bloc_Competences_Libelle": "Exploitation de données à des fins d’analyse"
+  },
+  {
+    "Numero_Fiche": 35513,
+    "Bloc_Competences_Code": "RNCP35513BC08",
+    "Bloc_Competences_Libelle": "Expression et communication écrites et orales"
+  },
+  {
+    "Numero_Fiche": 35513,
+    "Bloc_Competences_Code": "RNCP35513BC09",
+    "Bloc_Competences_Libelle": "Action en responsabilité au sein d’une organisation professionnelle"
+  },
+  {
+    "Numero_Fiche": 35993,
+    "Bloc_Competences_Code": "RNCP35993BC01",
+    "Bloc_Competences_Libelle": "Concevoir et organiser une prestation de services au domicile"
+  },
+  {
+    "Numero_Fiche": 35993,
+    "Bloc_Competences_Code": "RNCP35993BC02",
+    "Bloc_Competences_Libelle": "Animer et coordonner une équipe d’intervenants à domicile"
+  },
+  {
+    "Numero_Fiche": 35993,
+    "Bloc_Competences_Code": "RNCP35993BC03",
+    "Bloc_Competences_Libelle": "Contribuer à l’amélioration de la qualité du service et représenter la structure auprès des partenaires"
+  },
+  {
+    "Numero_Fiche": 36004,
+    "Bloc_Competences_Code": "RNCP36004BC01",
+    "Bloc_Competences_Libelle": "Accompagnement de la personne dans les actes essentiels de la vie quotidienne"
+  },
+  {
+    "Numero_Fiche": 36004,
+    "Bloc_Competences_Code": "RNCP36004BC02",
+    "Bloc_Competences_Libelle": "Accompagnement de la personne dans les actes de la vie quotidienne dans le respect de cette personne et des règles d'hygiène et de sécurité"
+  },
+  {
+    "Numero_Fiche": 36004,
+    "Bloc_Competences_Code": "RNCP36004BC03",
+    "Bloc_Competences_Libelle": "Accompagnement à la vie sociale et relationnelle de la personne"
+  },
+  {
+    "Numero_Fiche": 36004,
+    "Bloc_Competences_Code": "RNCP36004BC04",
+    "Bloc_Competences_Libelle": "Positionnement en tant que travailleur social dans son contexte d'intervention"
+  },
+  {
+    "Numero_Fiche": 36004,
+    "Bloc_Competences_Code": "RNCP36004BC05",
+    "Bloc_Competences_Libelle": "Travail en équipe pluri-professionnelle, gestion des risques  et traitement des informations liées à l'accompagnement de la personne"
+  }
+]

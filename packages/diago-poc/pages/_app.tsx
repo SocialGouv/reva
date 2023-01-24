@@ -1,19 +1,26 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import { ChakraProvider } from "@chakra-ui/react";
 import { MainContextProvider } from "../components/main-context/MainContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Footer } from "../components/footer/Footer";
 
 const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider>
       <QueryClientProvider client={queryClient}>
         <MainContextProvider>
-          <Component {...pageProps} />
+          <div className="h-screen max-h-screen flex flex-col">
+            <div className="flex-1 sm:flex sm:flex-col sm:items-center sm:justify-center overflow-hidden">
+              <div className="App relative sm:px-20 h-full py-12 w-full max-w-2xl overflow-hidden">
+                <div className="sm:rounded-lg sm:shadow-lg sm:z-[1] relative flex flex-col w-full h-full bg-white py-6 px-4 overflow-auto">
+                  <Component {...pageProps} />
+                </div>
+              </div>
+            </div>
+            <Footer />
+          </div>
         </MainContextProvider>
       </QueryClientProvider>
-    </ChakraProvider>
   );
 }

@@ -1,0 +1,132 @@
+[
+  {
+    "id": 374,
+    "code": "K1305",
+    "label": "Intervention sociale et familiale",
+    "inserted_at": "2017-09-25 14:19:12.914012",
+    "updated_at": "2023-01-14 17:23:54",
+    "url": "http://candidat.pole-emploi.fr/marche-du-travail/fichemetierrome?codeRome=K1305",
+    "slug": "intervention-sociale-et-familiale",
+    "views": 693
+  },
+  {
+    "id": 352,
+    "code": "J1501",
+    "label": "Soins d'hygiène, de confort du patient",
+    "inserted_at": "2017-09-25 14:19:12.883267",
+    "updated_at": "2023-01-16 13:11:49",
+    "url": "http://candidat.pole-emploi.fr/marche-du-travail/fichemetierrome?codeRome=J1501",
+    "slug": "soins-d-hygiene-de-confort-du-patient",
+    "views": 8106
+  },
+  {
+    "id": 371,
+    "code": "K1302",
+    "label": "Assistance auprès d'adultes",
+    "inserted_at": "2017-09-25 14:19:12.910148",
+    "updated_at": "2023-01-16 12:12:18",
+    "url": "http://candidat.pole-emploi.fr/marche-du-travail/fichemetierrome?codeRome=K1302",
+    "slug": "assistance-aupres-d-adultes",
+    "views": 8574
+  },
+  {
+    "id": 333,
+    "code": "J1301",
+    "label": "Personnel polyvalent des services hospitaliers",
+    "inserted_at": "2017-09-25 14:19:12.861797",
+    "updated_at": "2023-01-16 04:40:09",
+    "url": "http://candidat.pole-emploi.fr/marche-du-travail/fichemetierrome?codeRome=J1301",
+    "slug": "personnel-polyvalent-des-services-hospitaliers",
+    "views": 1250
+  },
+  {
+    "id": 76,
+    "code": "D1102",
+    "label": "Boulangerie - viennoiserie",
+    "inserted_at": "2017-09-25 14:19:12.55119",
+    "updated_at": "2023-01-16 13:52:34",
+    "url": "http://candidat.pole-emploi.fr/marche-du-travail/fichemetierrome?codeRome=D1102",
+    "slug": "boulangerie-viennoiserie",
+    "views": 1757
+  },
+  {
+    "id": 372,
+    "code": "K1303",
+    "label": "Assistance auprès d'enfants",
+    "inserted_at": "2017-09-25 14:19:12.911368",
+    "updated_at": "2023-01-16 13:33:54",
+    "url": "http://candidat.pole-emploi.fr/marche-du-travail/fichemetierrome?codeRome=K1303",
+    "slug": "assistance-aupres-d-enfants",
+    "views": 5254
+  },
+  {
+    "id": 363,
+    "code": "K1201",
+    "label": "Action sociale",
+    "inserted_at": "2017-09-25 14:19:12.898259",
+    "updated_at": "2023-01-16 13:37:54",
+    "url": "http://candidat.pole-emploi.fr/marche-du-travail/fichemetierrome?codeRome=K1201",
+    "slug": "action-sociale",
+    "views": 6490
+  },
+  {
+    "id": 373,
+    "code": "K1304",
+    "label": "Services domestiques",
+    "inserted_at": "2017-09-25 14:19:12.912668",
+    "updated_at": "2023-01-16 00:56:23",
+    "url": "http://candidat.pole-emploi.fr/marche-du-travail/fichemetierrome?codeRome=K1304",
+    "slug": "services-domestiques",
+    "views": 1203
+  },
+  {
+    "id": 370,
+    "code": "K1301",
+    "label": "Accompagnement médicosocial",
+    "inserted_at": "2017-09-25 14:19:12.908912",
+    "updated_at": "2023-01-16 12:34:51",
+    "url": "http://candidat.pole-emploi.fr/marche-du-travail/fichemetierrome?codeRome=K1301",
+    "slug": "accompagnement-medicosocial",
+    "views": 1522
+  },
+  {
+    "id": 337,
+    "code": "J1305",
+    "label": "Conduite de véhicules sanitaires",
+    "inserted_at": "2017-09-25 14:19:12.867516",
+    "updated_at": "2023-01-16 11:29:12",
+    "url": "http://candidat.pole-emploi.fr/marche-du-travail/fichemetierrome?codeRome=J1305",
+    "slug": "conduite-de-vehicules-sanitaires",
+    "views": 610
+  },
+  {
+    "id": 519,
+    "code": "N4102",
+    "label": "Conduite de transport de particuliers",
+    "inserted_at": "2017-09-25 14:19:13.085424",
+    "updated_at": "2023-01-16 00:14:04",
+    "url": "http://candidat.pole-emploi.fr/marche-du-travail/fichemetierrome?codeRome=N4102",
+    "slug": "conduite-de-transport-de-particuliers",
+    "views": 579
+  },
+  {
+    "id": 377,
+    "code": "K1403",
+    "label": "Management de structure de santé, sociale ou pénitentiaire",
+    "inserted_at": "2017-09-25 14:19:12.91826",
+    "updated_at": "2023-01-16 13:17:44",
+    "url": "http://candidat.pole-emploi.fr/marche-du-travail/fichemetierrome?codeRome=K1403",
+    "slug": "management-de-structure-de-sante-sociale-ou-penitentiaire",
+    "views": 2157
+  },
+  {
+    "id": 80,
+    "code": "D1106",
+    "label": "Vente en alimentation",
+    "inserted_at": "2017-09-25 14:19:12.55536",
+    "updated_at": "2023-01-16 07:39:15",
+    "url": "http://candidat.pole-emploi.fr/marche-du-travail/fichemetierrome?codeRome=D1106",
+    "slug": "vente-en-alimentation",
+    "views": 3484
+  }
+]

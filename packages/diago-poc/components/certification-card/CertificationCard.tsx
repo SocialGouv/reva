@@ -1,7 +1,5 @@
-import { chakra, Flex } from "@chakra-ui/react";
-
-export const CertificationCard = chakra((props: { label: string }) => (
-  <Flex rounded="md" border="1px solid black" px={4} py={2}>
+export const CertificationCard = (props: { label: string }) => (
+  <div className="flex rounded-md border border-1 px-4 py-2">
     {props.label}
-  </Flex>
-));
+  </div>
+);

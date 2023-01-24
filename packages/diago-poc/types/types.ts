@@ -1,19 +1,21 @@
-export interface Job {
-  code: string;
+export interface Profession {
+  id: number;
   label: string;
 }
 
 export interface Competency {
-  code: string;
+  id: number;
+  blocId: string;
   label: string;
 }
 
-export interface JobAndCompetencies {
-  job: Job | null;
+export interface ProfessionAndCompetencies {
+  profession: Profession | null;
   competencies: Competency[];
 }
 
 export interface Certification {
-  code: string;
+  id: number;
+  rncpId: string;
   label: string;
 }

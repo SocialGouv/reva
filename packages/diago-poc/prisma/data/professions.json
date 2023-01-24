@@ -1,0 +1,1982 @@
+[
+  {
+    "id": 14599,
+    "label": "Conducteur / Conductrice de Véhicule Sanitaire",
+    "inserted_at": "2019-07-25 16:40:24.780144",
+    "updated_at": "2019-07-25 16:40:24.78015",
+    "rome_id": 337,
+    "slug": "conducteur-conductrice-de-vehicule-sanitaire",
+    "priority": 0
+  },
+  {
+    "id": 17540,
+    "label": "Responsable de service d'aide à domicile",
+    "inserted_at": "2019-07-25 16:40:25.258619",
+    "updated_at": "2019-07-25 16:40:25.258623",
+    "rome_id": 377,
+    "slug": "responsable-de-service-d-aide-a-domicile",
+    "priority": 0
+  },
+  {
+    "id": 17507,
+    "label": "Directeur / Directrice de centre hospitalier régional",
+    "inserted_at": "2019-07-25 16:40:25.245439",
+    "updated_at": "2019-07-25 16:40:25.245447",
+    "rome_id": 377,
+    "slug": "directeur-directrice-de-centre-hospitalier-regional",
+    "priority": 0
+  },
+  {
+    "id": 19767,
+    "label": "Assistance auprès d'adultes",
+    "inserted_at": "2019-07-25 16:40:25.684694",
+    "updated_at": "2019-07-25 16:40:25.684699",
+    "rome_id": 371,
+    "slug": "assistance-aupres-d-adultes",
+    "priority": 0
+  },
+  {
+    "id": 19781,
+    "label": "Auxiliaire familiale",
+    "inserted_at": "2019-07-25 16:40:25.687175",
+    "updated_at": "2019-07-25 16:40:25.68718",
+    "rome_id": 371,
+    "slug": "auxiliaire-familiale",
+    "priority": 0
+  },
+  {
+    "id": 19775,
+    "label": "Assistant / Assistante de vie auprès de personnes handicapées",
+    "inserted_at": "2019-07-25 16:40:25.686745",
+    "updated_at": "2019-07-25 16:40:25.686753",
+    "rome_id": 371,
+    "slug": "assistant-assistante-de-vie-aupres-de-personnes-handicapees",
+    "priority": 0
+  },
+  {
+    "id": 22017,
+    "label": "Surintendant / Surintendante d'usine et de services sociaux",
+    "inserted_at": "2019-07-25 16:40:26.138283",
+    "updated_at": "2019-07-25 16:40:26.13829",
+    "rome_id": 363,
+    "slug": "surintendant-surintendante-d-usine-et-de-services-sociaux",
+    "priority": 0
+  },
+  {
+    "id": 17489,
+    "label": "Assistant maternel / Assistante maternelle à domicile",
+    "inserted_at": "2019-07-25 16:40:25.242904",
+    "updated_at": "2019-07-25 16:40:25.242918",
+    "rome_id": 372,
+    "slug": "assistant-maternel-assistante-maternelle-a-domicile",
+    "priority": 0
+  },
+  {
+    "id": 22020,
+    "label": "Accompagnateur médicosocial / Accompagnatrice médicosociale",
+    "inserted_at": "2019-07-25 16:40:26.138801",
+    "updated_at": "2019-07-25 16:40:26.138809",
+    "rome_id": 370,
+    "slug": "accompagnateur-medicosocial-accompagnatrice-medicosociale",
+    "priority": 0
+  },
+  {
+    "id": 19783,
+    "label": "Employé / Employée à domicile auprès d'adultes",
+    "inserted_at": "2019-07-25 16:40:25.6873",
+    "updated_at": "2019-07-25 16:40:25.687304",
+    "rome_id": 371,
+    "slug": "employe-employee-a-domicile-aupres-d-adultes",
+    "priority": 0
+  },
+  {
+    "id": 19785,
+    "label": "Garde-malade",
+    "inserted_at": "2019-07-25 16:40:25.687474",
+    "updated_at": "2019-07-25 16:40:25.687479",
+    "rome_id": 371,
+    "slug": "garde-malade",
+    "priority": 0
+  },
+  {
+    "id": 21988,
+    "label": "Aide-soignant / Aide-soignante",
+    "inserted_at": "2019-07-25 16:40:26.130258",
+    "updated_at": "2019-07-25 16:40:26.130263",
+    "rome_id": 352,
+    "slug": "aide-soignant-aide-soignante",
+    "priority": 0
+  },
+  {
+    "id": 19773,
+    "label": "Assistant / Assistante de vie",
+    "inserted_at": "2019-07-25 16:40:25.685918",
+    "updated_at": "2019-07-25 16:40:25.685923",
+    "rome_id": 371,
+    "slug": "assistant-assistante-de-vie",
+    "priority": 0
+  },
+  {
+    "id": 17496,
+    "label": "Employé / Employée au pair",
+    "inserted_at": "2019-07-25 16:40:25.243872",
+    "updated_at": "2019-07-25 16:40:25.243879",
+    "rome_id": 372,
+    "slug": "employe-employee-au-pair",
+    "priority": 0
+  },
+  {
+    "id": 21981,
+    "label": "Agent / Agente des services hospitaliers",
+    "inserted_at": "2019-07-25 16:40:26.129706",
+    "updated_at": "2019-07-25 16:40:26.129715",
+    "rome_id": 333,
+    "slug": "agent-agente-des-services-hospitaliers",
+    "priority": 0
+  },
+  {
+    "id": 19779,
+    "label": "Auxiliaire de vie",
+    "inserted_at": "2019-07-25 16:40:25.687044",
+    "updated_at": "2019-07-25 16:40:25.687049",
+    "rome_id": 371,
+    "slug": "auxiliaire-de-vie",
+    "priority": 0
+  },
+  {
+    "id": 19782,
+    "label": "Auxiliaire familiale et sanitaire",
+    "inserted_at": "2019-07-25 16:40:25.687234",
+    "updated_at": "2019-07-25 16:40:25.687238",
+    "rome_id": 371,
+    "slug": "auxiliaire-familiale-et-sanitaire",
+    "priority": 0
+  },
+  {
+    "id": 17493,
+    "label": "Auxiliaire parental / parentale",
+    "inserted_at": "2019-07-25 16:40:25.243534",
+    "updated_at": "2019-07-25 16:40:25.243541",
+    "rome_id": 372,
+    "slug": "auxiliaire-parental-parentale",
+    "priority": 0
+  },
+  {
+    "id": 19784,
+    "label": "Employé familial / Employée familiale auprès d'adultes",
+    "inserted_at": "2019-07-25 16:40:25.687386",
+    "updated_at": "2019-07-25 16:40:25.687391",
+    "rome_id": 371,
+    "slug": "employe-familial-employee-familiale-aupres-d-adultes",
+    "priority": 0
+  },
+  {
+    "id": 17534,
+    "label": "Responsable d'antenne de service pénitentiaire d'insertion et de probation -SPIP-",
+    "inserted_at": "2019-07-25 16:40:25.249901",
+    "updated_at": "2019-07-25 16:40:25.249912",
+    "rome_id": 377,
+    "slug": "responsable-d-antenne-de-service-penitentiaire-d-insertion-et-de-probation-spip",
+    "priority": 0
+  },
+  {
+    "id": 19777,
+    "label": "Auxiliaire de gériatrie",
+    "inserted_at": "2019-07-25 16:40:25.68691",
+    "updated_at": "2019-07-25 16:40:25.686915",
+    "rome_id": 371,
+    "slug": "auxiliaire-de-geriatrie",
+    "priority": 0
+  },
+  {
+    "id": 17499,
+    "label": "Gouvernant / Gouvernante d'enfant à domicile",
+    "inserted_at": "2019-07-25 16:40:25.244323",
+    "updated_at": "2019-07-25 16:40:25.244333",
+    "rome_id": 372,
+    "slug": "gouvernant-gouvernante-d-enfant-a-domicile",
+    "priority": 0
+  },
+  {
+    "id": 17538,
+    "label": "Responsable de résidence pour personnes âgées",
+    "inserted_at": "2019-07-25 16:40:25.258447",
+    "updated_at": "2019-07-25 16:40:25.258455",
+    "rome_id": 377,
+    "slug": "responsable-de-residence-pour-personnes-agees",
+    "priority": 0
+  },
+  {
+    "id": 17500,
+    "label": "Maître / Maîtresse de maison d'enfants",
+    "inserted_at": "2019-07-25 16:40:25.244477",
+    "updated_at": "2019-07-25 16:40:25.244484",
+    "rome_id": 372,
+    "slug": "maitre-maitresse-de-maison-d-enfants",
+    "priority": 0
+  },
+  {
+    "id": 20534,
+    "label": "Chauffeur / Chauffeuse de maître",
+    "inserted_at": "2019-07-25 16:40:25.812527",
+    "updated_at": "2019-07-25 16:40:25.812532",
+    "rome_id": 519,
+    "slug": "chauffeur-chauffeuse-de-maitre",
+    "priority": 0
+  },
+  {
+    "id": 17504,
+    "label": "Chef de service socioéducatif",
+    "inserted_at": "2019-07-25 16:40:25.245062",
+    "updated_at": "2019-07-25 16:40:25.245069",
+    "rome_id": 377,
+    "slug": "chef-de-service-socioeducatif",
+    "priority": 0
+  },
+  {
+    "id": 17487,
+    "label": "Assistant familial / Assistante familiale",
+    "inserted_at": "2019-07-25 16:40:25.242651",
+    "updated_at": "2019-07-25 16:40:25.242658",
+    "rome_id": 372,
+    "slug": "assistant-familial-assistante-familiale",
+    "priority": 0
+  },
+  {
+    "id": 15892,
+    "label": "Gouvernant / Gouvernante d'intérieur",
+    "inserted_at": "2019-07-25 16:40:24.971345",
+    "updated_at": "2019-07-25 16:40:24.97135",
+    "rome_id": 373,
+    "slug": "gouvernant-gouvernante-d-interieur",
+    "priority": 0
+  },
+  {
+    "id": 19776,
+    "label": "Assistant / Assistante de vie dépendance",
+    "inserted_at": "2019-07-25 16:40:25.686836",
+    "updated_at": "2019-07-25 16:40:25.686841",
+    "rome_id": 371,
+    "slug": "assistant-assistante-de-vie-dependance",
+    "priority": 0
+  },
+  {
+    "id": 22011,
+    "label": "Coordonnateur / Coordonnatrice de service d'action sociale",
+    "inserted_at": "2019-07-25 16:40:26.132745",
+    "updated_at": "2019-07-25 16:40:26.13275",
+    "rome_id": 363,
+    "slug": "coordonnateur-coordonnatrice-de-service-d-action-sociale",
+    "priority": 0
+  },
+  {
+    "id": 21992,
+    "label": "Aide-soignant hospitalier / Aide-soignante hospitalière",
+    "inserted_at": "2019-07-25 16:40:26.130556",
+    "updated_at": "2019-07-25 16:40:26.13056",
+    "rome_id": 352,
+    "slug": "aide-soignant-hospitalier-aide-soignante-hospitaliere",
+    "priority": 0
+  },
+  {
+    "id": 21977,
+    "label": "Personnel polyvalent des services hospitaliers",
+    "inserted_at": "2019-07-25 16:40:26.128474",
+    "updated_at": "2019-07-25 16:40:26.128478",
+    "rome_id": 333,
+    "slug": "personnel-polyvalent-des-services-hospitaliers",
+    "priority": 0
+  },
+  {
+    "id": 17513,
+    "label": "Directeur / Directrice de foyer d'hébergement social",
+    "inserted_at": "2019-07-25 16:40:25.246441",
+    "updated_at": "2019-07-25 16:40:25.246448",
+    "rome_id": 377,
+    "slug": "directeur-directrice-de-foyer-d-hebergement-social",
+    "priority": 0
+  },
+  {
+    "id": 17511,
+    "label": "Directeur / Directrice de centre rééducation et réadaptation fonctionnelle",
+    "inserted_at": "2019-07-25 16:40:25.246143",
+    "updated_at": "2019-07-25 16:40:25.246158",
+    "rome_id": 377,
+    "slug": "directeur-directrice-de-centre-reeducation-et-readaptation-fonctionnelle",
+    "priority": 0
+  },
+  {
+    "id": 20532,
+    "label": "Conduite de transport de particuliers",
+    "inserted_at": "2019-07-25 16:40:25.81236",
+    "updated_at": "2019-07-25 16:40:25.812364",
+    "rome_id": 519,
+    "slug": "conduite-de-transport-de-particuliers",
+    "priority": 0
+  },
+  {
+    "id": 14638,
+    "label": "Maître / Maîtresse de maison d'établissement à caractère social",
+    "inserted_at": "2019-07-25 16:40:24.784343",
+    "updated_at": "2019-07-25 16:40:24.784349",
+    "rome_id": 374,
+    "slug": "maitre-maitresse-de-maison-d-etablissement-a-caractere-social",
+    "priority": 0
+  },
+  {
+    "id": 13266,
+    "label": "Vendeur / Vendeuse rayon traiteur",
+    "inserted_at": "2019-07-25 16:40:24.614614",
+    "updated_at": "2019-07-25 16:40:24.614618",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-rayon-traiteur",
+    "priority": 0
+  },
+  {
+    "id": 17498,
+    "label": "Garde d'enfant à domicile",
+    "inserted_at": "2019-07-25 16:40:25.244158",
+    "updated_at": "2019-07-25 16:40:25.244166",
+    "rome_id": 372,
+    "slug": "garde-d-enfant-a-domicile",
+    "priority": 0
+  },
+  {
+    "id": 20538,
+    "label": "Chauffeur accompagnateur / Chauffeuse accompagnatrice de personnes à mobilité réduite",
+    "inserted_at": "2019-07-25 16:40:25.815352",
+    "updated_at": "2019-07-25 16:40:25.815361",
+    "rome_id": 519,
+    "slug": "chauffeur-accompagnateur-chauffeuse-accompagnatrice-de-personnes-a-mobilite-reduite",
+    "priority": 0
+  },
+  {
+    "id": 15893,
+    "label": "Intervenant familial / Intervenante familiale de maison",
+    "inserted_at": "2019-07-25 16:40:24.971431",
+    "updated_at": "2019-07-25 16:40:24.971436",
+    "rome_id": 373,
+    "slug": "intervenant-familial-intervenante-familiale-de-maison",
+    "priority": 0
+  },
+  {
+    "id": 15890,
+    "label": "Employé familial polyvalent / Employée familiale polyvalente",
+    "inserted_at": "2019-07-25 16:40:24.971149",
+    "updated_at": "2019-07-25 16:40:24.971154",
+    "rome_id": 373,
+    "slug": "employe-familial-polyvalent-employee-familiale-polyvalente",
+    "priority": 0
+  },
+  {
+    "id": 14637,
+    "label": "Maître / Maîtresse de maison de retraite",
+    "inserted_at": "2019-07-25 16:40:24.784236",
+    "updated_at": "2019-07-25 16:40:24.784242",
+    "rome_id": 374,
+    "slug": "maitre-maitresse-de-maison-de-retraite",
+    "priority": 0
+  },
+  {
+    "id": 22003,
+    "label": "Assistant social / Assistante sociale du personnel",
+    "inserted_at": "2019-07-25 16:40:26.132126",
+    "updated_at": "2019-07-25 16:40:26.13213",
+    "rome_id": 363,
+    "slug": "assistant-social-assistante-sociale-du-personnel",
+    "priority": 0
+  },
+  {
+    "id": 14634,
+    "label": "Intervention sociale et familiale",
+    "inserted_at": "2019-07-25 16:40:24.783949",
+    "updated_at": "2019-07-25 16:40:24.783956",
+    "rome_id": 374,
+    "slug": "intervention-sociale-et-familiale",
+    "priority": 0
+  },
+  {
+    "id": 17524,
+    "label": "Directeur / Directrice d'établissement privé de santé",
+    "inserted_at": "2019-07-25 16:40:25.248191",
+    "updated_at": "2019-07-25 16:40:25.248198",
+    "rome_id": 377,
+    "slug": "directeur-directrice-d-etablissement-prive-de-sante",
+    "priority": 0
+  },
+  {
+    "id": 15891,
+    "label": "Gouvernant / Gouvernante à domicile",
+    "inserted_at": "2019-07-25 16:40:24.971261",
+    "updated_at": "2019-07-25 16:40:24.97127",
+    "rome_id": 373,
+    "slug": "gouvernant-gouvernante-a-domicile",
+    "priority": 0
+  },
+  {
+    "id": 14600,
+    "label": "Conducteur / Conductrice de Véhicule Sanitaire Léger -VSL-",
+    "inserted_at": "2019-07-25 16:40:24.780227",
+    "updated_at": "2019-07-25 16:40:24.780232",
+    "rome_id": 337,
+    "slug": "conducteur-conductrice-de-vehicule-sanitaire-leger-vsl",
+    "priority": 0
+  },
+  {
+    "id": 22019,
+    "label": "Accompagnant éducatif et social / Accompagnante éducative et sociale en structure collective",
+    "inserted_at": "2019-07-25 16:40:26.138613",
+    "updated_at": "2019-07-25 16:40:26.138622",
+    "rome_id": 370,
+    "slug": "accompagnant-educatif-et-social-accompagnante-educative-et-sociale-en-structure-collective",
+    "priority": 0
+  },
+  {
+    "id": 17532,
+    "label": "Directeur adjoint / Directrice adjointe d'établissement médicosocial",
+    "inserted_at": "2019-07-25 16:40:25.249475",
+    "updated_at": "2019-07-25 16:40:25.249483",
+    "rome_id": 377,
+    "slug": "directeur-adjoint-directrice-adjointe-d-etablissement-medicosocial",
+    "priority": 0
+  },
+  {
+    "id": 20549,
+    "label": "Motard / Motarde de presse",
+    "inserted_at": "2019-07-25 16:40:25.81742",
+    "updated_at": "2019-07-25 16:40:25.817429",
+    "rome_id": 519,
+    "slug": "motard-motarde-de-presse",
+    "priority": 0
+  },
+  {
+    "id": 14635,
+    "label": "Gouvernant / Gouvernante en maison de retraite",
+    "inserted_at": "2019-07-25 16:40:24.784028",
+    "updated_at": "2019-07-25 16:40:24.784033",
+    "rome_id": 374,
+    "slug": "gouvernant-gouvernante-en-maison-de-retraite",
+    "priority": 0
+  },
+  {
+    "id": 22006,
+    "label": "Conseiller / Conseillère du travail",
+    "inserted_at": "2019-07-25 16:40:26.132373",
+    "updated_at": "2019-07-25 16:40:26.132377",
+    "rome_id": 363,
+    "slug": "conseiller-conseillere-du-travail",
+    "priority": 0
+  },
+  {
+    "id": 17525,
+    "label": "Directeur / Directrice d'établissement thermal",
+    "inserted_at": "2019-07-25 16:40:25.248429",
+    "updated_at": "2019-07-25 16:40:25.24844",
+    "rome_id": 377,
+    "slug": "directeur-directrice-d-etablissement-thermal",
+    "priority": 0
+  },
+  {
+    "id": 17519,
+    "label": "Directeur / Directrice d'entreprise ou de Service d'Aide par le Travail -ESAT-",
+    "inserted_at": "2019-07-25 16:40:25.247396",
+    "updated_at": "2019-07-25 16:40:25.247404",
+    "rome_id": 377,
+    "slug": "directeur-directrice-d-entreprise-ou-de-service-d-aide-par-le-travail-esat",
+    "priority": 0
+  },
+  {
+    "id": 17543,
+    "label": "Responsable d'établissement médico-éducatif",
+    "inserted_at": "2019-07-25 16:40:25.258863",
+    "updated_at": "2019-07-25 16:40:25.258869",
+    "rome_id": 377,
+    "slug": "responsable-d-etablissement-medico-educatif",
+    "priority": 0
+  },
+  {
+    "id": 17547,
+    "label": "Responsable d'un service d'information et de coordination gérontologique",
+    "inserted_at": "2019-07-25 16:40:25.259187",
+    "updated_at": "2019-07-25 16:40:25.259192",
+    "rome_id": 377,
+    "slug": "responsable-d-un-service-d-information-et-de-coordination-gerontologique",
+    "priority": 0
+  },
+  {
+    "id": 13263,
+    "label": "Vendeur / Vendeuse en rôtisserie",
+    "inserted_at": "2019-07-25 16:40:24.614487",
+    "updated_at": "2019-07-25 16:40:24.61449",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-en-rotisserie",
+    "priority": 0
+  },
+  {
+    "id": 21983,
+    "label": "Agent hôtelier hospitalier / Agente hôtelière hospitalière",
+    "inserted_at": "2019-07-25 16:40:26.129898",
+    "updated_at": "2019-07-25 16:40:26.129903",
+    "rome_id": 333,
+    "slug": "agent-hotelier-hospitalier-agente-hoteliere-hospitaliere",
+    "priority": 0
+  },
+  {
+    "id": 20543,
+    "label": "Conducteur / Conductrice de navette de moins de 9 personnes",
+    "inserted_at": "2019-07-25 16:40:25.816339",
+    "updated_at": "2019-07-25 16:40:25.816348",
+    "rome_id": 519,
+    "slug": "conducteur-conductrice-de-navette-de-moins-de-9-personnes",
+    "priority": 0
+  },
+  {
+    "id": 22013,
+    "label": "Délégué social / Déléguée sociale",
+    "inserted_at": "2019-07-25 16:40:26.133644",
+    "updated_at": "2019-07-25 16:40:26.133649",
+    "rome_id": 363,
+    "slug": "delegue-social-deleguee-sociale",
+    "priority": 0
+  },
+  {
+    "id": 15882,
+    "label": "Services domestiques",
+    "inserted_at": "2019-07-25 16:40:24.970527",
+    "updated_at": "2019-07-25 16:40:24.970532",
+    "rome_id": 373,
+    "slug": "services-domestiques",
+    "priority": 0
+  },
+  {
+    "id": 13252,
+    "label": "Vendeur / Vendeuse en boulangerie-pâtisserie",
+    "inserted_at": "2019-07-25 16:40:24.613738",
+    "updated_at": "2019-07-25 16:40:24.613742",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-en-boulangerie-patisserie",
+    "priority": 0
+  },
+  {
+    "id": 17490,
+    "label": "Assistant maternel / Assistante maternelle du particulier employeur",
+    "inserted_at": "2019-07-25 16:40:25.24305",
+    "updated_at": "2019-07-25 16:40:25.243058",
+    "rome_id": 372,
+    "slug": "assistant-maternel-assistante-maternelle-du-particulier-employeur",
+    "priority": 0
+  },
+  {
+    "id": 20548,
+    "label": "Conducteur / Conductrice Véhicule Léger de l'armée",
+    "inserted_at": "2019-07-25 16:40:25.817236",
+    "updated_at": "2019-07-25 16:40:25.817245",
+    "rome_id": 519,
+    "slug": "conducteur-conductrice-vehicule-leger-de-l-armee",
+    "priority": 0
+  },
+  {
+    "id": 13251,
+    "label": "Vendeur / Vendeuse en boucherie-charcuterie",
+    "inserted_at": "2019-07-25 16:40:24.613683",
+    "updated_at": "2019-07-25 16:40:24.613689",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-en-boucherie-charcuterie",
+    "priority": 0
+  },
+  {
+    "id": 17526,
+    "label": "Directeur / Directrice d'hôpital public",
+    "inserted_at": "2019-07-25 16:40:25.248567",
+    "updated_at": "2019-07-25 16:40:25.248574",
+    "rome_id": 377,
+    "slug": "directeur-directrice-d-hopital-public",
+    "priority": 0
+  },
+  {
+    "id": 17549,
+    "label": "Responsable d'unité de services à la personne",
+    "inserted_at": "2019-07-25 16:40:25.259354",
+    "updated_at": "2019-07-25 16:40:25.259358",
+    "rome_id": 377,
+    "slug": "responsable-d-unite-de-services-a-la-personne",
+    "priority": 0
+  },
+  {
+    "id": 14601,
+    "label": "Conducteur ambulancier / Conductrice ambulancière",
+    "inserted_at": "2019-07-25 16:40:24.780356",
+    "updated_at": "2019-07-25 16:40:24.780362",
+    "rome_id": 337,
+    "slug": "conducteur-ambulancier-conductrice-ambulanciere",
+    "priority": 0
+  },
+  {
+    "id": 17530,
+    "label": "Directeur adjoint / Directrice adjointe de centre hospitalier spécialisé",
+    "inserted_at": "2019-07-25 16:40:25.249172",
+    "updated_at": "2019-07-25 16:40:25.24918",
+    "rome_id": 377,
+    "slug": "directeur-adjoint-directrice-adjointe-de-centre-hospitalier-specialise",
+    "priority": 0
+  },
+  {
+    "id": 14639,
+    "label": "Maître / Maîtresse de maison familiale",
+    "inserted_at": "2019-07-25 16:40:24.78446",
+    "updated_at": "2019-07-25 16:40:24.784466",
+    "rome_id": 374,
+    "slug": "maitre-maitresse-de-maison-familiale",
+    "priority": 0
+  },
+  {
+    "id": 19778,
+    "label": "Auxiliaire de gérontologie",
+    "inserted_at": "2019-07-25 16:40:25.686978",
+    "updated_at": "2019-07-25 16:40:25.686983",
+    "rome_id": 371,
+    "slug": "auxiliaire-de-gerontologie",
+    "priority": 0
+  },
+  {
+    "id": 18424,
+    "label": "Ouvrier boulanger / Ouvrière boulangère",
+    "inserted_at": "2019-07-25 16:40:25.417418",
+    "updated_at": "2019-07-25 16:40:25.417424",
+    "rome_id": 76,
+    "slug": "ouvrier-boulanger-ouvriere-boulangere",
+    "priority": 0
+  },
+  {
+    "id": 15888,
+    "label": "Employé / Employée de ménage",
+    "inserted_at": "2019-07-25 16:40:24.970973",
+    "updated_at": "2019-07-25 16:40:24.970978",
+    "rome_id": 373,
+    "slug": "employe-employee-de-menage",
+    "priority": 0
+  },
+  {
+    "id": 17478,
+    "label": "Assistance auprès d'enfants",
+    "inserted_at": "2019-07-25 16:40:25.23573",
+    "updated_at": "2019-07-25 16:40:25.235735",
+    "rome_id": 372,
+    "slug": "assistance-aupres-d-enfants",
+    "priority": 0
+  },
+  {
+    "id": 17509,
+    "label": "Directeur / Directrice de Centre Hospitalier Universitaire -CHU-",
+    "inserted_at": "2019-07-25 16:40:25.245761",
+    "updated_at": "2019-07-25 16:40:25.24577",
+    "rome_id": 377,
+    "slug": "directeur-directrice-de-centre-hospitalier-universitaire-chu",
+    "priority": 0
+  },
+  {
+    "id": 17514,
+    "label": "Directeur / Directrice de maison d'accueil spécialisée",
+    "inserted_at": "2019-07-25 16:40:25.24664",
+    "updated_at": "2019-07-25 16:40:25.24665",
+    "rome_id": 377,
+    "slug": "directeur-directrice-de-maison-d-accueil-specialisee",
+    "priority": 0
+  },
+  {
+    "id": 21980,
+    "label": "Agent / Agente de stérilisation de service hospitalier",
+    "inserted_at": "2019-07-25 16:40:26.128752",
+    "updated_at": "2019-07-25 16:40:26.128757",
+    "rome_id": 333,
+    "slug": "agent-agente-de-sterilisation-de-service-hospitalier",
+    "priority": 0
+  },
+  {
+    "id": 13261,
+    "label": "Vendeur / Vendeuse en produits diététiques",
+    "inserted_at": "2019-07-25 16:40:24.614394",
+    "updated_at": "2019-07-25 16:40:24.614398",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-en-produits-dietetiques",
+    "priority": 0
+  },
+  {
+    "id": 22001,
+    "label": "Assistant social / Assistante sociale",
+    "inserted_at": "2019-07-25 16:40:26.13199",
+    "updated_at": "2019-07-25 16:40:26.131994",
+    "rome_id": 363,
+    "slug": "assistant-social-assistante-sociale",
+    "priority": 0
+  },
+  {
+    "id": 17510,
+    "label": "Directeur / Directrice de centre médico thermal",
+    "inserted_at": "2019-07-25 16:40:25.245928",
+    "updated_at": "2019-07-25 16:40:25.24594",
+    "rome_id": 377,
+    "slug": "directeur-directrice-de-centre-medico-thermal",
+    "priority": 0
+  },
+  {
+    "id": 17548,
+    "label": "Responsable d'une unité de vie",
+    "inserted_at": "2019-07-25 16:40:25.259279",
+    "updated_at": "2019-07-25 16:40:25.259284",
+    "rome_id": 377,
+    "slug": "responsable-d-une-unite-de-vie",
+    "priority": 0
+  },
+  {
+    "id": 21991,
+    "label": "Aide-soignant / Aide-soignante en puériculture",
+    "inserted_at": "2019-07-25 16:40:26.130477",
+    "updated_at": "2019-07-25 16:40:26.130482",
+    "rome_id": 352,
+    "slug": "aide-soignant-aide-soignante-en-puericulture",
+    "priority": 0
+  },
+  {
+    "id": 22032,
+    "label": "Rééducateur / Rééducatrice en locomotion",
+    "inserted_at": "2019-07-25 16:40:26.141574",
+    "updated_at": "2019-07-25 16:40:26.14158",
+    "rome_id": 370,
+    "slug": "reeducateur-reeducatrice-en-locomotion",
+    "priority": 0
+  },
+  {
+    "id": 20545,
+    "label": "Conducteur / Conductrice de taxi moto",
+    "inserted_at": "2019-07-25 16:40:25.816746",
+    "updated_at": "2019-07-25 16:40:25.816755",
+    "rome_id": 519,
+    "slug": "conducteur-conductrice-de-taxi-moto",
+    "priority": 0
+  },
+  {
+    "id": 20544,
+    "label": "Conducteur / Conductrice de taxi",
+    "inserted_at": "2019-07-25 16:40:25.816583",
+    "updated_at": "2019-07-25 16:40:25.816596",
+    "rome_id": 519,
+    "slug": "conducteur-conductrice-de-taxi",
+    "priority": 0
+  },
+  {
+    "id": 21999,
+    "label": "Action sociale",
+    "inserted_at": "2019-07-25 16:40:26.131868",
+    "updated_at": "2019-07-25 16:40:26.131872",
+    "rome_id": 363,
+    "slug": "action-sociale",
+    "priority": 0
+  },
+  {
+    "id": 17536,
+    "label": "Responsable d'association caritative",
+    "inserted_at": "2019-07-25 16:40:25.258252",
+    "updated_at": "2019-07-25 16:40:25.258257",
+    "rome_id": 377,
+    "slug": "responsable-d-association-caritative",
+    "priority": 0
+  },
+  {
+    "id": 17508,
+    "label": "Directeur / Directrice de centre hospitalier spécialisé",
+    "inserted_at": "2019-07-25 16:40:25.245569",
+    "updated_at": "2019-07-25 16:40:25.24558",
+    "rome_id": 377,
+    "slug": "directeur-directrice-de-centre-hospitalier-specialise",
+    "priority": 0
+  },
+  {
+    "id": 17523,
+    "label": "Directeur / Directrice d'établissement médicosocial",
+    "inserted_at": "2019-07-25 16:40:25.248056",
+    "updated_at": "2019-07-25 16:40:25.248063",
+    "rome_id": 377,
+    "slug": "directeur-directrice-d-etablissement-medicosocial",
+    "priority": 0
+  },
+  {
+    "id": 20539,
+    "label": "Chauffeur accompagnateur / Chauffeuse accompagnatrice tourisme",
+    "inserted_at": "2019-07-25 16:40:25.815613",
+    "updated_at": "2019-07-25 16:40:25.815624",
+    "rome_id": 519,
+    "slug": "chauffeur-accompagnateur-chauffeuse-accompagnatrice-tourisme",
+    "priority": 0
+  },
+  {
+    "id": 21990,
+    "label": "Aide-soignant / Aide-soignante en gériatrie",
+    "inserted_at": "2019-07-25 16:40:26.130401",
+    "updated_at": "2019-07-25 16:40:26.130406",
+    "rome_id": 352,
+    "slug": "aide-soignant-aide-soignante-en-geriatrie",
+    "priority": 0
+  },
+  {
+    "id": 21984,
+    "label": "Brancardier / Brancardière",
+    "inserted_at": "2019-07-25 16:40:26.130006",
+    "updated_at": "2019-07-25 16:40:26.130011",
+    "rome_id": 333,
+    "slug": "brancardier-brancardiere",
+    "priority": 0
+  },
+  {
+    "id": 22016,
+    "label": "Responsable de circonscription d'intervention sanitaire et sociale",
+    "inserted_at": "2019-07-25 16:40:26.138162",
+    "updated_at": "2019-07-25 16:40:26.138169",
+    "rome_id": 363,
+    "slug": "responsable-de-circonscription-d-intervention-sanitaire-et-sociale",
+    "priority": 0
+  },
+  {
+    "id": 14594,
+    "label": "Conduite de véhicules sanitaires",
+    "inserted_at": "2019-07-25 16:40:24.778404",
+    "updated_at": "2019-07-25 16:40:24.77841",
+    "rome_id": 337,
+    "slug": "conduite-de-vehicules-sanitaires",
+    "priority": 0
+  },
+  {
+    "id": 17535,
+    "label": "Responsable d'association à caractère social",
+    "inserted_at": "2019-07-25 16:40:25.258139",
+    "updated_at": "2019-07-25 16:40:25.258151",
+    "rome_id": 377,
+    "slug": "responsable-d-association-a-caractere-social",
+    "priority": 0
+  },
+  {
+    "id": 17531,
+    "label": "Directeur adjoint / Directrice adjointe de maison de retraite",
+    "inserted_at": "2019-07-25 16:40:25.24933",
+    "updated_at": "2019-07-25 16:40:25.249338",
+    "rome_id": 377,
+    "slug": "directeur-adjoint-directrice-adjointe-de-maison-de-retraite",
+    "priority": 0
+  },
+  {
+    "id": 20546,
+    "label": "Conducteur / Conductrice de transport de particuliers",
+    "inserted_at": "2019-07-25 16:40:25.816899",
+    "updated_at": "2019-07-25 16:40:25.816907",
+    "rome_id": 519,
+    "slug": "conducteur-conductrice-de-transport-de-particuliers",
+    "priority": 0
+  },
+  {
+    "id": 15887,
+    "label": "Employé / Employée de maison",
+    "inserted_at": "2019-07-25 16:40:24.970894",
+    "updated_at": "2019-07-25 16:40:24.970899",
+    "rome_id": 373,
+    "slug": "employe-employee-de-maison",
+    "priority": 0
+  },
+  {
+    "id": 17483,
+    "label": "Aide maternel / maternelle de crèche - halte garderie",
+    "inserted_at": "2019-07-25 16:40:25.236891",
+    "updated_at": "2019-07-25 16:40:25.236897",
+    "rome_id": 372,
+    "slug": "aide-maternel-maternelle-de-creche-halte-garderie",
+    "priority": 0
+  },
+  {
+    "id": 21987,
+    "label": "Soins d'hygiène, de confort du patient",
+    "inserted_at": "2019-07-25 16:40:26.130183",
+    "updated_at": "2019-07-25 16:40:26.130188",
+    "rome_id": 352,
+    "slug": "soins-d-hygiene-de-confort-du-patient",
+    "priority": 0
+  },
+  {
+    "id": 17542,
+    "label": "Responsable d'établissement de santé",
+    "inserted_at": "2019-07-25 16:40:25.258769",
+    "updated_at": "2019-07-25 16:40:25.258774",
+    "rome_id": 377,
+    "slug": "responsable-d-etablissement-de-sante",
+    "priority": 0
+  },
+  {
+    "id": 22024,
+    "label": "Aide médico-psychologique",
+    "inserted_at": "2019-07-25 16:40:26.140636",
+    "updated_at": "2019-07-25 16:40:26.140646",
+    "rome_id": 370,
+    "slug": "aide-medico-psychologique",
+    "priority": 0
+  },
+  {
+    "id": 18420,
+    "label": "Boulanger-pâtissier-traiteur / Boulangère-pâtissière-traiteuse",
+    "inserted_at": "2019-07-25 16:40:25.417058",
+    "updated_at": "2019-07-25 16:40:25.417065",
+    "rome_id": 76,
+    "slug": "boulanger-patissier-traiteur-boulangere-patissiere-traiteuse",
+    "priority": 0
+  },
+  {
+    "id": 17501,
+    "label": "Nourrice",
+    "inserted_at": "2019-07-25 16:40:25.244627",
+    "updated_at": "2019-07-25 16:40:25.244634",
+    "rome_id": 372,
+    "slug": "nourrice",
+    "priority": 0
+  },
+  {
+    "id": 21989,
+    "label": "Aide-soignant / Aide-soignante à domicile",
+    "inserted_at": "2019-07-25 16:40:26.130325",
+    "updated_at": "2019-07-25 16:40:26.130329",
+    "rome_id": 352,
+    "slug": "aide-soignant-aide-soignante-a-domicile",
+    "priority": 0
+  },
+  {
+    "id": 22010,
+    "label": "Conseiller social / Conseillère sociale",
+    "inserted_at": "2019-07-25 16:40:26.132676",
+    "updated_at": "2019-07-25 16:40:26.132681",
+    "rome_id": 363,
+    "slug": "conseiller-social-conseillere-sociale",
+    "priority": 0
+  },
+  {
+    "id": 22022,
+    "label": "Accompagnateur médicosocial / Accompagnatrice médicosociale de personnes dépendantes",
+    "inserted_at": "2019-07-25 16:40:26.13914",
+    "updated_at": "2019-07-25 16:40:26.139148",
+    "rome_id": 370,
+    "slug": "accompagnateur-medicosocial-accompagnatrice-medicosociale-de-personnes-dependantes",
+    "priority": 0
+  },
+  {
+    "id": 22007,
+    "label": "Conseiller / Conseillère en économie sociale et familiale",
+    "inserted_at": "2019-07-25 16:40:26.132443",
+    "updated_at": "2019-07-25 16:40:26.132448",
+    "rome_id": 363,
+    "slug": "conseiller-conseillere-en-economie-sociale-et-familiale",
+    "priority": 0
+  },
+  {
+    "id": 17492,
+    "label": "Auxiliaire de vie sociale auprès d'enfants",
+    "inserted_at": "2019-07-25 16:40:25.243378",
+    "updated_at": "2019-07-25 16:40:25.243391",
+    "rome_id": 372,
+    "slug": "auxiliaire-de-vie-sociale-aupres-d-enfants",
+    "priority": 0
+  },
+  {
+    "id": 17491,
+    "label": "Assistant maternel / Assistante maternelle en famille d'accueil",
+    "inserted_at": "2019-07-25 16:40:25.243201",
+    "updated_at": "2019-07-25 16:40:25.243209",
+    "rome_id": 372,
+    "slug": "assistant-maternel-assistante-maternelle-en-famille-d-accueil",
+    "priority": 0
+  },
+  {
+    "id": 19768,
+    "label": "Accompagnant éducatif et social / Accompagnante éducative et sociale à domicile",
+    "inserted_at": "2019-07-25 16:40:25.684772",
+    "updated_at": "2019-07-25 16:40:25.684777",
+    "rome_id": 371,
+    "slug": "accompagnant-educatif-et-social-accompagnante-educative-et-sociale-a-domicile",
+    "priority": 0
+  },
+  {
+    "id": 13245,
+    "label": "Epicier / Epicière",
+    "inserted_at": "2019-07-25 16:40:24.61338",
+    "updated_at": "2019-07-25 16:40:24.613383",
+    "rome_id": 80,
+    "slug": "epicier-epiciere",
+    "priority": 0
+  },
+  {
+    "id": 21978,
+    "label": "Agent / Agente de bio nettoyage hospitalier",
+    "inserted_at": "2019-07-25 16:40:26.128563",
+    "updated_at": "2019-07-25 16:40:26.128567",
+    "rome_id": 333,
+    "slug": "agent-agente-de-bio-nettoyage-hospitalier",
+    "priority": 0
+  },
+  {
+    "id": 22031,
+    "label": "Rééducateur / Rééducatrice en autonomie de la vie journalière",
+    "inserted_at": "2019-07-25 16:40:26.141435",
+    "updated_at": "2019-07-25 16:40:26.14144",
+    "rome_id": 370,
+    "slug": "reeducateur-reeducatrice-en-autonomie-de-la-vie-journaliere",
+    "priority": 0
+  },
+  {
+    "id": 18418,
+    "label": "Boulanger / Boulangère",
+    "inserted_at": "2019-07-25 16:40:25.416939",
+    "updated_at": "2020-05-14 22:42:02",
+    "rome_id": 76,
+    "slug": "boulanger-boulangere",
+    "priority": 1
+  },
+  {
+    "id": 15894,
+    "label": "Majordome",
+    "inserted_at": "2019-07-25 16:40:24.971526",
+    "updated_at": "2019-07-25 16:40:24.971531",
+    "rome_id": 373,
+    "slug": "majordome",
+    "priority": 0
+  },
+  {
+    "id": 17512,
+    "label": "Directeur / Directrice de clinique",
+    "inserted_at": "2019-07-25 16:40:25.246325",
+    "updated_at": "2019-07-25 16:40:25.246333",
+    "rome_id": 377,
+    "slug": "directeur-directrice-de-clinique",
+    "priority": 0
+  },
+  {
+    "id": 17479,
+    "label": "Accueillant familial / Accueillante familiale auprès d'enfants",
+    "inserted_at": "2019-07-25 16:40:25.235811",
+    "updated_at": "2019-07-25 16:40:25.235836",
+    "rome_id": 372,
+    "slug": "accueillant-familial-accueillante-familiale-aupres-d-enfants",
+    "priority": 0
+  },
+  {
+    "id": 22018,
+    "label": "Accompagnement médicosocial",
+    "inserted_at": "2019-07-25 16:40:26.138465",
+    "updated_at": "2019-07-25 16:40:26.138473",
+    "rome_id": 370,
+    "slug": "accompagnement-medicosocial",
+    "priority": 0
+  },
+  {
+    "id": 19774,
+    "label": "Assistant / Assistante de vie auprès de personnes âgées",
+    "inserted_at": "2019-07-25 16:40:25.685986",
+    "updated_at": "2019-07-25 16:40:25.68599",
+    "rome_id": 371,
+    "slug": "assistant-assistante-de-vie-aupres-de-personnes-agees",
+    "priority": 0
+  },
+  {
+    "id": 13258,
+    "label": "Vendeur / Vendeuse en épicerie fine",
+    "inserted_at": "2019-07-25 16:40:24.614004",
+    "updated_at": "2019-07-25 16:40:24.614007",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-en-epicerie-fine",
+    "priority": 0
+  },
+  {
+    "id": 17488,
+    "label": "Assistant maternel / Assistante maternelle",
+    "inserted_at": "2019-07-25 16:40:25.242776",
+    "updated_at": "2019-07-25 16:40:25.242784",
+    "rome_id": 372,
+    "slug": "assistant-maternel-assistante-maternelle",
+    "priority": 0
+  },
+  {
+    "id": 17497,
+    "label": "Employé familial / Employée familiale auprès d'enfants",
+    "inserted_at": "2019-07-25 16:40:25.243995",
+    "updated_at": "2019-07-25 16:40:25.244003",
+    "rome_id": 372,
+    "slug": "employe-familial-employee-familiale-aupres-d-enfants",
+    "priority": 0
+  },
+  {
+    "id": 17515,
+    "label": "Directeur / Directrice de maison de retraite",
+    "inserted_at": "2019-07-25 16:40:25.24679",
+    "updated_at": "2019-07-25 16:40:25.246798",
+    "rome_id": 377,
+    "slug": "directeur-directrice-de-maison-de-retraite",
+    "priority": 0
+  },
+  {
+    "id": 17485,
+    "label": "Assistant  maternel agréé / Assistante maternelle agréée",
+    "inserted_at": "2019-07-25 16:40:25.24234",
+    "updated_at": "2019-07-25 16:40:25.242358",
+    "rome_id": 372,
+    "slug": "assistant-maternel-agree-assistante-maternelle-agreee",
+    "priority": 0
+  },
+  {
+    "id": 14596,
+    "label": "Ambulancier / Ambulancière urgentiste",
+    "inserted_at": "2019-07-25 16:40:24.779897",
+    "updated_at": "2019-07-25 16:40:24.779903",
+    "rome_id": 337,
+    "slug": "ambulancier-ambulanciere-urgentiste",
+    "priority": 0
+  },
+  {
+    "id": 13265,
+    "label": "Vendeur / Vendeuse rayon fromages",
+    "inserted_at": "2019-07-25 16:40:24.614575",
+    "updated_at": "2019-07-25 16:40:24.614579",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-rayon-fromages",
+    "priority": 0
+  },
+  {
+    "id": 22023,
+    "label": "Accompagnateur médicosocial / Accompagnatrice médicosociale de personnes en post-cure",
+    "inserted_at": "2019-07-25 16:40:26.13931",
+    "updated_at": "2019-07-25 16:40:26.139318",
+    "rome_id": 370,
+    "slug": "accompagnateur-medicosocial-accompagnatrice-medicosociale-de-personnes-en-post-cure",
+    "priority": 0
+  },
+  {
+    "id": 20536,
+    "label": "Chauffeur / Chauffeuse de taxi animalier",
+    "inserted_at": "2019-07-25 16:40:25.815025",
+    "updated_at": "2019-07-25 16:40:25.815034",
+    "rome_id": 519,
+    "slug": "chauffeur-chauffeuse-de-taxi-animalier",
+    "priority": 0
+  },
+  {
+    "id": 17546,
+    "label": "Responsable d'un service communal d'action sociale",
+    "inserted_at": "2019-07-25 16:40:25.259107",
+    "updated_at": "2019-07-25 16:40:25.259112",
+    "rome_id": 377,
+    "slug": "responsable-d-un-service-communal-d-action-sociale",
+    "priority": 0
+  },
+  {
+    "id": 22025,
+    "label": "Assistant / Assistante de soins en gérontologie",
+    "inserted_at": "2019-07-25 16:40:26.140752",
+    "updated_at": "2019-07-25 16:40:26.140757",
+    "rome_id": 370,
+    "slug": "assistant-assistante-de-soins-en-gerontologie",
+    "priority": 0
+  },
+  {
+    "id": 22005,
+    "label": "Chargé / Chargée d'intervention sociale",
+    "inserted_at": "2019-07-25 16:40:26.132295",
+    "updated_at": "2019-07-25 16:40:26.1323",
+    "rome_id": 363,
+    "slug": "charge-chargee-d-intervention-sociale",
+    "priority": 0
+  },
+  {
+    "id": 17516,
+    "label": "Directeur / Directrice de maison maternelle",
+    "inserted_at": "2019-07-25 16:40:25.246918",
+    "updated_at": "2019-07-25 16:40:25.246925",
+    "rome_id": 377,
+    "slug": "directeur-directrice-de-maison-maternelle",
+    "priority": 0
+  },
+  {
+    "id": 13259,
+    "label": "Vendeur / Vendeuse en poissonnerie",
+    "inserted_at": "2019-07-25 16:40:24.614049",
+    "updated_at": "2019-07-25 16:40:24.614052",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-en-poissonnerie",
+    "priority": 0
+  },
+  {
+    "id": 14597,
+    "label": "Ambulancier hospitalier / Ambulancière hospitalière",
+    "inserted_at": "2019-07-25 16:40:24.779977",
+    "updated_at": "2019-07-25 16:40:24.779983",
+    "rome_id": 337,
+    "slug": "ambulancier-hospitalier-ambulanciere-hospitaliere",
+    "priority": 0
+  },
+  {
+    "id": 22009,
+    "label": "Conseiller / Conseillère technique en action sociale",
+    "inserted_at": "2019-07-25 16:40:26.132601",
+    "updated_at": "2019-07-25 16:40:26.132606",
+    "rome_id": 363,
+    "slug": "conseiller-conseillere-technique-en-action-sociale",
+    "priority": 0
+  },
+  {
+    "id": 17503,
+    "label": "Chef de centre de détention pénitentiaire",
+    "inserted_at": "2019-07-25 16:40:25.244919",
+    "updated_at": "2019-07-25 16:40:25.244932",
+    "rome_id": 377,
+    "slug": "chef-de-centre-de-detention-penitentiaire",
+    "priority": 0
+  },
+  {
+    "id": 14598,
+    "label": "Auxiliaire ambulancier / ambulancière",
+    "inserted_at": "2019-07-25 16:40:24.780069",
+    "updated_at": "2019-07-25 16:40:24.780075",
+    "rome_id": 337,
+    "slug": "auxiliaire-ambulancier-ambulanciere",
+    "priority": 0
+  },
+  {
+    "id": 19772,
+    "label": "Assistant / Assistante de convivialité à domicile",
+    "inserted_at": "2019-07-25 16:40:25.685836",
+    "updated_at": "2019-07-25 16:40:25.685841",
+    "rome_id": 371,
+    "slug": "assistant-assistante-de-convivialite-a-domicile",
+    "priority": 0
+  },
+  {
+    "id": 17484,
+    "label": "Aide maternel / maternelle d'école",
+    "inserted_at": "2019-07-25 16:40:25.236989",
+    "updated_at": "2019-07-25 16:40:25.236995",
+    "rome_id": 372,
+    "slug": "aide-maternel-maternelle-d-ecole",
+    "priority": 0
+  },
+  {
+    "id": 22029,
+    "label": "Instructeur / Instructrice en locomotion",
+    "inserted_at": "2019-07-25 16:40:26.141202",
+    "updated_at": "2019-07-25 16:40:26.141208",
+    "rome_id": 370,
+    "slug": "instructeur-instructrice-en-locomotion",
+    "priority": 0
+  },
+  {
+    "id": 17486,
+    "label": "Assistant / Assistante accueil petite enfance",
+    "inserted_at": "2019-07-25 16:40:25.242514",
+    "updated_at": "2019-07-25 16:40:25.242524",
+    "rome_id": 372,
+    "slug": "assistant-assistante-accueil-petite-enfance",
+    "priority": 0
+  },
+  {
+    "id": 22000,
+    "label": "Assistant / Assistante de service social",
+    "inserted_at": "2019-07-25 16:40:26.131923",
+    "updated_at": "2019-07-25 16:40:26.131927",
+    "rome_id": 363,
+    "slug": "assistant-assistante-de-service-social",
+    "priority": 0
+  },
+  {
+    "id": 20533,
+    "label": "Chauffeur / Chauffeuse de direction",
+    "inserted_at": "2019-07-25 16:40:25.812445",
+    "updated_at": "2019-07-25 16:40:25.812449",
+    "rome_id": 519,
+    "slug": "chauffeur-chauffeuse-de-direction",
+    "priority": 0
+  },
+  {
+    "id": 13260,
+    "label": "Vendeur / Vendeuse en produits biologiques",
+    "inserted_at": "2019-07-25 16:40:24.614342",
+    "updated_at": "2019-07-25 16:40:24.614347",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-en-produits-biologiques",
+    "priority": 0
+  },
+  {
+    "id": 17480,
+    "label": "Accueillant familial / Accueillante familiale thérapeutique auprès d'enfants",
+    "inserted_at": "2019-07-25 16:40:25.236472",
+    "updated_at": "2019-07-25 16:40:25.23648",
+    "rome_id": 372,
+    "slug": "accueillant-familial-accueillante-familiale-therapeutique-aupres-d-enfants",
+    "priority": 0
+  },
+  {
+    "id": 22027,
+    "label": "Avéjiste",
+    "inserted_at": "2019-07-25 16:40:26.140996",
+    "updated_at": "2019-07-25 16:40:26.141002",
+    "rome_id": 370,
+    "slug": "avejiste",
+    "priority": 0
+  },
+  {
+    "id": 17529,
+    "label": "Directeur adjoint / Directrice adjointe de centre hospitalier régional",
+    "inserted_at": "2019-07-25 16:40:25.249009",
+    "updated_at": "2019-07-25 16:40:25.249017",
+    "rome_id": 377,
+    "slug": "directeur-adjoint-directrice-adjointe-de-centre-hospitalier-regional",
+    "priority": 0
+  },
+  {
+    "id": 19771,
+    "label": "Aide aux personnes âgées",
+    "inserted_at": "2019-07-25 16:40:25.685764",
+    "updated_at": "2019-07-25 16:40:25.68577",
+    "rome_id": 371,
+    "slug": "aide-aux-personnes-agees",
+    "priority": 0
+  },
+  {
+    "id": 17505,
+    "label": "Chef d'établissement pénitentiaire",
+    "inserted_at": "2019-07-25 16:40:25.245173",
+    "updated_at": "2019-07-25 16:40:25.245179",
+    "rome_id": 377,
+    "slug": "chef-d-etablissement-penitentiaire",
+    "priority": 0
+  },
+  {
+    "id": 20547,
+    "label": "Conducteur / Conductrice de voiture particulière",
+    "inserted_at": "2019-07-25 16:40:25.817065",
+    "updated_at": "2019-07-25 16:40:25.817073",
+    "rome_id": 519,
+    "slug": "conducteur-conductrice-de-voiture-particuliere",
+    "priority": 0
+  },
+  {
+    "id": 22008,
+    "label": "Conseiller / Conseillère technique de service social",
+    "inserted_at": "2019-07-25 16:40:26.132523",
+    "updated_at": "2019-07-25 16:40:26.132528",
+    "rome_id": 363,
+    "slug": "conseiller-conseillere-technique-de-service-social",
+    "priority": 0
+  },
+  {
+    "id": 20541,
+    "label": "Conducteur / Conductrice de cyclo taxi",
+    "inserted_at": "2019-07-25 16:40:25.815985",
+    "updated_at": "2019-07-25 16:40:25.815994",
+    "rome_id": 519,
+    "slug": "conducteur-conductrice-de-cyclo-taxi",
+    "priority": 0
+  },
+  {
+    "id": 22012,
+    "label": "Coordonnateur / Coordonnatrice de service social",
+    "inserted_at": "2019-07-25 16:40:26.133571",
+    "updated_at": "2019-07-25 16:40:26.133578",
+    "rome_id": 363,
+    "slug": "coordonnateur-coordonnatrice-de-service-social",
+    "priority": 0
+  },
+  {
+    "id": 20535,
+    "label": "Chauffeur / Chauffeuse de taxi",
+    "inserted_at": "2019-07-25 16:40:25.814819",
+    "updated_at": "2019-07-25 16:40:25.81484",
+    "rome_id": 519,
+    "slug": "chauffeur-chauffeuse-de-taxi",
+    "priority": 0
+  },
+  {
+    "id": 17539,
+    "label": "Responsable de secteur d'aide à domicile",
+    "inserted_at": "2019-07-25 16:40:25.258538",
+    "updated_at": "2019-07-25 16:40:25.258543",
+    "rome_id": 377,
+    "slug": "responsable-de-secteur-d-aide-a-domicile",
+    "priority": 0
+  },
+  {
+    "id": 17494,
+    "label": "Baby-sitter",
+    "inserted_at": "2019-07-25 16:40:25.243649",
+    "updated_at": "2019-07-25 16:40:25.243657",
+    "rome_id": 372,
+    "slug": "baby-sitter",
+    "priority": 0
+  },
+  {
+    "id": 22002,
+    "label": "Assistant social / Assistante sociale de secteur",
+    "inserted_at": "2019-07-25 16:40:26.132056",
+    "updated_at": "2019-07-25 16:40:26.13206",
+    "rome_id": 363,
+    "slug": "assistant-social-assistante-sociale-de-secteur",
+    "priority": 0
+  },
+  {
+    "id": 14595,
+    "label": "Ambulancier / Ambulancière",
+    "inserted_at": "2019-07-25 16:40:24.779797",
+    "updated_at": "2019-07-25 16:40:24.779809",
+    "rome_id": 337,
+    "slug": "ambulancier-ambulanciere",
+    "priority": 0
+  },
+  {
+    "id": 17544,
+    "label": "Responsable d'établissement médico-professionnel",
+    "inserted_at": "2019-07-25 16:40:25.258946",
+    "updated_at": "2019-07-25 16:40:25.258951",
+    "rome_id": 377,
+    "slug": "responsable-d-etablissement-medico-professionnel",
+    "priority": 0
+  },
+  {
+    "id": 19786,
+    "label": "Monsieur / Dame de compagnie",
+    "inserted_at": "2019-07-25 16:40:25.687533",
+    "updated_at": "2019-07-25 16:40:25.687538",
+    "rome_id": 371,
+    "slug": "monsieur-dame-de-compagnie",
+    "priority": 0
+  },
+  {
+    "id": 13250,
+    "label": "Vendeur / Vendeuse en boucherie",
+    "inserted_at": "2019-07-25 16:40:24.613613",
+    "updated_at": "2019-07-25 16:40:24.613617",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-en-boucherie",
+    "priority": 0
+  },
+  {
+    "id": 17537,
+    "label": "Responsable de pôle ou d'unité d'action sociale",
+    "inserted_at": "2019-07-25 16:40:25.258326",
+    "updated_at": "2019-07-25 16:40:25.258331",
+    "rome_id": 377,
+    "slug": "responsable-de-pole-ou-d-unite-d-action-sociale",
+    "priority": 0
+  },
+  {
+    "id": 15885,
+    "label": "Aide familial / familiale",
+    "inserted_at": "2019-07-25 16:40:24.970738",
+    "updated_at": "2019-07-25 16:40:24.970743",
+    "rome_id": 373,
+    "slug": "aide-familial-familiale",
+    "priority": 0
+  },
+  {
+    "id": 22021,
+    "label": "Accompagnateur médicosocial / Accompagnatrice médicosociale d'activités de la vie journalière",
+    "inserted_at": "2019-07-25 16:40:26.138952",
+    "updated_at": "2019-07-25 16:40:26.138959",
+    "rome_id": 370,
+    "slug": "accompagnateur-medicosocial-accompagnatrice-medicosociale-d-activites-de-la-vie-journaliere",
+    "priority": 0
+  },
+  {
+    "id": 22026,
+    "label": "Auxiliaire d'Intégration Scolaire -AIS-",
+    "inserted_at": "2019-07-25 16:40:26.140875",
+    "updated_at": "2019-07-25 16:40:26.140881",
+    "rome_id": 370,
+    "slug": "auxiliaire-d-integration-scolaire-ais",
+    "priority": 0
+  },
+  {
+    "id": 17541,
+    "label": "Responsable de structure d'accueil social",
+    "inserted_at": "2019-07-25 16:40:25.258696",
+    "updated_at": "2019-07-25 16:40:25.258701",
+    "rome_id": 377,
+    "slug": "responsable-de-structure-d-accueil-social",
+    "priority": 0
+  },
+  {
+    "id": 18422,
+    "label": "Boulanger-viennoisier / Boulangère-viennoisière",
+    "inserted_at": "2019-07-25 16:40:25.417288",
+    "updated_at": "2019-07-25 16:40:25.417292",
+    "rome_id": 76,
+    "slug": "boulanger-viennoisier-boulangere-viennoisiere",
+    "priority": 0
+  },
+  {
+    "id": 19769,
+    "label": "Accueillant familial / Accueillante familiale auprès d'adultes",
+    "inserted_at": "2019-07-25 16:40:25.68487",
+    "updated_at": "2019-07-25 16:40:25.685512",
+    "rome_id": 371,
+    "slug": "accueillant-familial-accueillante-familiale-aupres-d-adultes",
+    "priority": 0
+  },
+  {
+    "id": 17521,
+    "label": "Directeur / Directrice d'établissement à caractère social",
+    "inserted_at": "2019-07-25 16:40:25.247751",
+    "updated_at": "2019-07-25 16:40:25.247759",
+    "rome_id": 377,
+    "slug": "directeur-directrice-d-etablissement-a-caractere-social",
+    "priority": 0
+  },
+  {
+    "id": 21979,
+    "label": "Agent / Agente de propreté hospitalière",
+    "inserted_at": "2019-07-25 16:40:26.128657",
+    "updated_at": "2019-07-25 16:40:26.128662",
+    "rome_id": 333,
+    "slug": "agent-agente-de-proprete-hospitaliere",
+    "priority": 0
+  },
+  {
+    "id": 15883,
+    "label": "Agent / Agente à domicile",
+    "inserted_at": "2019-07-25 16:40:24.970594",
+    "updated_at": "2019-07-25 16:40:24.970601",
+    "rome_id": 373,
+    "slug": "agent-agente-a-domicile",
+    "priority": 0
+  },
+  {
+    "id": 13244,
+    "label": "Vente en alimentation",
+    "inserted_at": "2019-07-25 16:40:24.613347",
+    "updated_at": "2019-07-25 16:40:24.613351",
+    "rome_id": 80,
+    "slug": "vente-en-alimentation",
+    "priority": 0
+  },
+  {
+    "id": 13246,
+    "label": "Marchand / Marchande de fruits et légumes",
+    "inserted_at": "2019-07-25 16:40:24.613415",
+    "updated_at": "2019-07-25 16:40:24.613419",
+    "rome_id": 80,
+    "slug": "marchand-marchande-de-fruits-et-legumes",
+    "priority": 0
+  },
+  {
+    "id": 22028,
+    "label": "Educateur / Educatrice en locomotion",
+    "inserted_at": "2019-07-25 16:40:26.141094",
+    "updated_at": "2019-07-25 16:40:26.141099",
+    "rome_id": 370,
+    "slug": "educateur-educatrice-en-locomotion",
+    "priority": 0
+  },
+  {
+    "id": 15889,
+    "label": "Employé familial / Employée familiale de maison",
+    "inserted_at": "2019-07-25 16:40:24.971058",
+    "updated_at": "2019-07-25 16:40:24.971063",
+    "rome_id": 373,
+    "slug": "employe-familial-employee-familiale-de-maison",
+    "priority": 0
+  },
+  {
+    "id": 17506,
+    "label": "Directeur / Directrice de centre hospitalier",
+    "inserted_at": "2019-07-25 16:40:25.245294",
+    "updated_at": "2019-07-25 16:40:25.2453",
+    "rome_id": 377,
+    "slug": "directeur-directrice-de-centre-hospitalier",
+    "priority": 0
+  },
+  {
+    "id": 13264,
+    "label": "Vendeur / Vendeuse en vins et spiritueux",
+    "inserted_at": "2019-07-25 16:40:24.614529",
+    "updated_at": "2019-07-25 16:40:24.614532",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-en-vins-et-spiritueux",
+    "priority": 0
+  },
+  {
+    "id": 20537,
+    "label": "Chauffeur / Chauffeuse VTC",
+    "inserted_at": "2019-07-25 16:40:25.815198",
+    "updated_at": "2019-07-25 16:40:25.815208",
+    "rome_id": 519,
+    "slug": "chauffeur-chauffeuse-vtc",
+    "priority": 0
+  },
+  {
+    "id": 13254,
+    "label": "Vendeur / Vendeuse en chocolaterie",
+    "inserted_at": "2019-07-25 16:40:24.61383",
+    "updated_at": "2019-07-25 16:40:24.613834",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-en-chocolaterie",
+    "priority": 0
+  },
+  {
+    "id": 15884,
+    "label": "Aide à domicile",
+    "inserted_at": "2019-07-25 16:40:24.970671",
+    "updated_at": "2019-07-25 16:40:24.970675",
+    "rome_id": 373,
+    "slug": "aide-a-domicile",
+    "priority": 0
+  },
+  {
+    "id": 17517,
+    "label": "Directeur / Directrice de polyclinique",
+    "inserted_at": "2019-07-25 16:40:25.247115",
+    "updated_at": "2019-07-25 16:40:25.247122",
+    "rome_id": 377,
+    "slug": "directeur-directrice-de-polyclinique",
+    "priority": 0
+  },
+  {
+    "id": 17528,
+    "label": "Directeur adjoint / Directrice adjointe de centre hospitalier",
+    "inserted_at": "2019-07-25 16:40:25.248864",
+    "updated_at": "2019-07-25 16:40:25.248872",
+    "rome_id": 377,
+    "slug": "directeur-adjoint-directrice-adjointe-de-centre-hospitalier",
+    "priority": 0
+  },
+  {
+    "id": 13248,
+    "label": "Vendeur / Vendeuse de primeurs",
+    "inserted_at": "2019-07-25 16:40:24.613524",
+    "updated_at": "2019-07-25 16:40:24.613528",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-de-primeurs",
+    "priority": 0
+  },
+  {
+    "id": 17481,
+    "label": "Agent spécialisé / Agente spécialisée des écoles maternelles -ASEM- ATSEM",
+    "inserted_at": "2019-07-25 16:40:25.236653",
+    "updated_at": "2019-09-04 09:50:17.569289",
+    "rome_id": 372,
+    "slug": "agent-specialise-agente-specialisee-des-ecoles-maternelles-asem-atsem",
+    "priority": 0
+  },
+  {
+    "id": 17545,
+    "label": "Responsable d'établissement médico-psychologique",
+    "inserted_at": "2019-07-25 16:40:25.259028",
+    "updated_at": "2019-07-25 16:40:25.259033",
+    "rome_id": 377,
+    "slug": "responsable-d-etablissement-medico-psychologique",
+    "priority": 0
+  },
+  {
+    "id": 17482,
+    "label": "Agent spécialisé / Agente spécialisée des écoles primaires",
+    "inserted_at": "2019-07-25 16:40:25.236788",
+    "updated_at": "2019-07-25 16:40:25.236794",
+    "rome_id": 372,
+    "slug": "agent-specialise-agente-specialisee-des-ecoles-primaires",
+    "priority": 0
+  },
+  {
+    "id": 19770,
+    "label": "Accueillant familial / Accueillante familiale thérapeutique auprès d'adultes",
+    "inserted_at": "2019-07-25 16:40:25.685629",
+    "updated_at": "2019-07-25 16:40:25.685639",
+    "rome_id": 371,
+    "slug": "accueillant-familial-accueillante-familiale-therapeutique-aupres-d-adultes",
+    "priority": 0
+  },
+  {
+    "id": 14640,
+    "label": "Technicien / Technicienne Intervention Sociale et Familiale -TISF-",
+    "inserted_at": "2019-07-25 16:40:24.78455",
+    "updated_at": "2019-07-25 16:40:24.784555",
+    "rome_id": 374,
+    "slug": "technicien-technicienne-intervention-sociale-et-familiale-tisf",
+    "priority": 0
+  },
+  {
+    "id": 17502,
+    "label": "Management de structure de santé, sociale ou pénitentiaire",
+    "inserted_at": "2019-07-25 16:40:25.244715",
+    "updated_at": "2019-07-25 16:40:25.244721",
+    "rome_id": 377,
+    "slug": "management-de-structure-de-sante-sociale-ou-penitentiaire",
+    "priority": 0
+  },
+  {
+    "id": 14603,
+    "label": "Conducteur ambulancier hospitalier / Conductrice ambulancière hospitalière",
+    "inserted_at": "2019-07-25 16:40:24.78055",
+    "updated_at": "2019-07-25 16:40:24.780556",
+    "rome_id": 337,
+    "slug": "conducteur-ambulancier-hospitalier-conductrice-ambulanciere-hospitaliere",
+    "priority": 0
+  },
+  {
+    "id": 18419,
+    "label": "Boulanger-pâtissier / Boulangère-pâtissière",
+    "inserted_at": "2019-07-25 16:40:25.416986",
+    "updated_at": "2019-07-25 16:40:25.41699",
+    "rome_id": 76,
+    "slug": "boulanger-patissier-boulangere-patissiere",
+    "priority": 0
+  },
+  {
+    "id": 17527,
+    "label": "Directeur / Directrice d'hôpital thermal",
+    "inserted_at": "2019-07-25 16:40:25.248725",
+    "updated_at": "2019-07-25 16:40:25.248732",
+    "rome_id": 377,
+    "slug": "directeur-directrice-d-hopital-thermal",
+    "priority": 0
+  },
+  {
+    "id": 22004,
+    "label": "Assistant social / Assistante sociale du travail",
+    "inserted_at": "2019-07-25 16:40:26.132207",
+    "updated_at": "2019-07-25 16:40:26.132211",
+    "rome_id": 363,
+    "slug": "assistant-social-assistante-sociale-du-travail",
+    "priority": 0
+  },
+  {
+    "id": 20540,
+    "label": "Conducteur / Conductrice d'autorité de l'armée",
+    "inserted_at": "2019-07-25 16:40:25.815792",
+    "updated_at": "2019-07-25 16:40:25.815801",
+    "rome_id": 519,
+    "slug": "conducteur-conductrice-d-autorite-de-l-armee",
+    "priority": 0
+  },
+  {
+    "id": 13249,
+    "label": "Vendeur / Vendeuse en alimentation générale",
+    "inserted_at": "2019-07-25 16:40:24.613563",
+    "updated_at": "2019-07-25 16:40:24.613567",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-en-alimentation-generale",
+    "priority": 0
+  },
+  {
+    "id": 17518,
+    "label": "Directeur / Directrice de structure d'hébergement et de réadaptation sociale",
+    "inserted_at": "2019-07-25 16:40:25.247228",
+    "updated_at": "2019-07-25 16:40:25.247237",
+    "rome_id": 377,
+    "slug": "directeur-directrice-de-structure-d-hebergement-et-de-readaptation-sociale",
+    "priority": 0
+  },
+  {
+    "id": 18417,
+    "label": "Aide-boulanger / Aide-boulangère",
+    "inserted_at": "2019-07-25 16:40:25.416878",
+    "updated_at": "2019-07-25 16:40:25.416882",
+    "rome_id": 76,
+    "slug": "aide-boulanger-aide-boulangere",
+    "priority": 0
+  },
+  {
+    "id": 20542,
+    "label": "Conducteur / Conductrice de grande remise",
+    "inserted_at": "2019-07-25 16:40:25.816146",
+    "updated_at": "2019-07-25 16:40:25.816154",
+    "rome_id": 519,
+    "slug": "conducteur-conductrice-de-grande-remise",
+    "priority": 0
+  },
+  {
+    "id": 17533,
+    "label": "Directeur régional / Directrice régionale des services pénitentiaires",
+    "inserted_at": "2019-07-25 16:40:25.249635",
+    "updated_at": "2019-07-25 16:40:25.249642",
+    "rome_id": 377,
+    "slug": "directeur-regional-directrice-regionale-des-services-penitentiaires",
+    "priority": 0
+  },
+  {
+    "id": 13256,
+    "label": "Vendeur / Vendeuse en crèmerie",
+    "inserted_at": "2019-07-25 16:40:24.613922",
+    "updated_at": "2019-07-25 16:40:24.613925",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-en-cremerie",
+    "priority": 0
+  },
+  {
+    "id": 22015,
+    "label": "Responsable de circonscription d'action sociale",
+    "inserted_at": "2019-07-25 16:40:26.138044",
+    "updated_at": "2019-07-25 16:40:26.138051",
+    "rome_id": 363,
+    "slug": "responsable-de-circonscription-d-action-sociale",
+    "priority": 0
+  },
+  {
+    "id": 18416,
+    "label": "Boulangerie - viennoiserie",
+    "inserted_at": "2019-07-25 16:40:25.416831",
+    "updated_at": "2019-07-25 16:40:25.416836",
+    "rome_id": 76,
+    "slug": "boulangerie-viennoiserie",
+    "priority": 0
+  },
+  {
+    "id": 13257,
+    "label": "Vendeur / Vendeuse en épicerie",
+    "inserted_at": "2019-07-25 16:40:24.613963",
+    "updated_at": "2019-07-25 16:40:24.613967",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-en-epicerie",
+    "priority": 0
+  },
+  {
+    "id": 13262,
+    "label": "Vendeur / Vendeuse en produits frais",
+    "inserted_at": "2019-07-25 16:40:24.614444",
+    "updated_at": "2019-07-25 16:40:24.614448",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-en-produits-frais",
+    "priority": 0
+  },
+  {
+    "id": 13255,
+    "label": "Vendeur / Vendeuse en confiserie",
+    "inserted_at": "2019-07-25 16:40:24.613878",
+    "updated_at": "2019-07-25 16:40:24.613881",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-en-confiserie",
+    "priority": 0
+  },
+  {
+    "id": 13253,
+    "label": "Vendeur / Vendeuse en charcuterie",
+    "inserted_at": "2019-07-25 16:40:24.61379",
+    "updated_at": "2019-07-25 16:40:24.613794",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-en-charcuterie",
+    "priority": 0
+  },
+  {
+    "id": 14636,
+    "label": "Maître / Maîtresse de maison dans une unité de vie pour personnes âgées",
+    "inserted_at": "2019-07-25 16:40:24.784114",
+    "updated_at": "2019-07-25 16:40:24.784119",
+    "rome_id": 374,
+    "slug": "maitre-maitresse-de-maison-dans-une-unite-de-vie-pour-personnes-agees",
+    "priority": 0
+  },
+  {
+    "id": 22030,
+    "label": "Intervenant / Intervenante en accompagnement médicosocial",
+    "inserted_at": "2019-07-25 16:40:26.141314",
+    "updated_at": "2019-07-25 16:40:26.14132",
+    "rome_id": 370,
+    "slug": "intervenant-intervenante-en-accompagnement-medicosocial",
+    "priority": 0
+  },
+  {
+    "id": 22014,
+    "label": "Intervenant / Intervenante d'action sociale",
+    "inserted_at": "2019-07-25 16:40:26.13792",
+    "updated_at": "2019-07-25 16:40:26.137933",
+    "rome_id": 363,
+    "slug": "intervenant-intervenante-d-action-sociale",
+    "priority": 0
+  },
+  {
+    "id": 18421,
+    "label": "Boulanger-traiteur / Boulangère-traiteuse",
+    "inserted_at": "2019-07-25 16:40:25.417217",
+    "updated_at": "2019-07-25 16:40:25.417228",
+    "rome_id": 76,
+    "slug": "boulanger-traiteur-boulangere-traiteuse",
+    "priority": 0
+  },
+  {
+    "id": 17495,
+    "label": "Educateur familial / Educatrice familiale",
+    "inserted_at": "2019-07-25 16:40:25.24375",
+    "updated_at": "2019-07-25 16:40:25.243757",
+    "rome_id": 372,
+    "slug": "educateur-familial-educatrice-familiale",
+    "priority": 0
+  },
+  {
+    "id": 18423,
+    "label": "Chef boulanger / boulangère",
+    "inserted_at": "2019-07-25 16:40:25.417355",
+    "updated_at": "2019-07-25 16:40:25.417362",
+    "rome_id": 76,
+    "slug": "chef-boulanger-boulangere",
+    "priority": 0
+  },
+  {
+    "id": 15886,
+    "label": "Aide ménager / ménagère à domicile",
+    "inserted_at": "2019-07-25 16:40:24.970806",
+    "updated_at": "2019-07-25 16:40:24.970811",
+    "rome_id": 373,
+    "slug": "aide-menager-menagere-a-domicile",
+    "priority": 0
+  },
+  {
+    "id": 14602,
+    "label": "Conducteur ambulancier / Conductrice ambulancière de services d'urgence",
+    "inserted_at": "2019-07-25 16:40:24.780439",
+    "updated_at": "2019-07-25 16:40:24.780445",
+    "rome_id": 337,
+    "slug": "conducteur-ambulancier-conductrice-ambulanciere-de-services-d-urgence",
+    "priority": 0
+  },
+  {
+    "id": 13247,
+    "label": "Vendeur / Vendeuse de fruits et légumes",
+    "inserted_at": "2019-07-25 16:40:24.613477",
+    "updated_at": "2019-07-25 16:40:24.613481",
+    "rome_id": 80,
+    "slug": "vendeur-vendeuse-de-fruits-et-legumes",
+    "priority": 0
+  },
+  {
+    "id": 19780,
+    "label": "Auxiliaire de Vie Sociale -AVS-",
+    "inserted_at": "2019-07-25 16:40:25.687105",
+    "updated_at": "2019-07-25 16:40:25.68711",
+    "rome_id": 371,
+    "slug": "auxiliaire-de-vie-sociale-avs",
+    "priority": 0
+  },
+  {
+    "id": 21982,
+    "label": "Agent hospitalier / Agente hospitalière",
+    "inserted_at": "2019-07-25 16:40:26.129803",
+    "updated_at": "2019-07-25 16:40:26.129808",
+    "rome_id": 333,
+    "slug": "agent-hospitalier-agente-hospitaliere",
+    "priority": 0
+  },
+  {
+    "id": 17522,
+    "label": "Directeur / Directrice d'établissement de protection de la jeunesse",
+    "inserted_at": "2019-07-25 16:40:25.247901",
+    "updated_at": "2019-07-25 16:40:25.247912",
+    "rome_id": 377,
+    "slug": "directeur-directrice-d-etablissement-de-protection-de-la-jeunesse",
+    "priority": 0
+  },
+  {
+    "id": 17520,
+    "label": "Directeur / Directrice des services pénitentiaires d'insertion et de probation -DSPIP-",
+    "inserted_at": "2019-07-25 16:40:25.247574",
+    "updated_at": "2019-07-25 16:40:25.247582",
+    "rome_id": 377,
+    "slug": "directeur-directrice-des-services-penitentiaires-d-insertion-et-de-probation-dspip",
+    "priority": 0
+  }
+]

@@ -1,6 +1,6 @@
-import { Button, Flex, Heading } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
+import { Button } from "../../components/button/Button";
 import { CompetencyCard } from "../../components/competency-card/CompetencyCard";
 import { useMainImportContext } from "../../components/main-context/MainContext";
 
@@ -14,39 +14,39 @@ const AddExperiencePage = () => {
   }, [computeDiagnosis, router]);
 
   return (
-    <Flex p={12} direction="column" alignItems="center">
-      <Flex direction="column" alignItems="flex-start" w="500px">
-        <Flex direction="column" gap={8}>
-          {userInfos.jobsAndCompetencies.map((jAndC, i) => (
-            <Flex direction="column" gap={4} key={i}>
-              <Heading size="md">{jAndC.job?.label}</Heading>
-              <Flex wrap="wrap" gap={4}>
-                {jAndC.competencies.map((c) => (
-                  <CompetencyCard key={c.code} label={c.label} />
-                ))}
-              </Flex>
-            </Flex>
-          ))}
-        </Flex>
-        <br />
-        <br />
+    <div className="h-full flex flex-col py-12">
+      <div className="flex-none">
         <Button
-          w="100%"
-          colorScheme="blue"
-          onClick={handleShowDiagnosisButtonClick}
-        >
-          Voir mon diagnostic
-        </Button>
-        <br />
-        <Button
-          w="100%"
-          colorScheme="blue"
           onClick={() => router.push("/diagnosis/add-competencies")}
-        >
-          Ajouter une expérience
-        </Button>
-      </Flex>
-    </Flex>
+          label= "Ajouter une expérience"
+          size="large" 
+        />
+        {!!userInfos.professionAndCompetencies.length && (
+          <div className="flex-none">
+          <div className="mt-4">
+            <Button
+              onClick={handleShowDiagnosisButtonClick}
+              label= "Voir mon diagnostic"
+              size="large" 
+              />
+
+          </div>
+        </div>)}
+      </div>
+      {!!userInfos.professionAndCompetencies.length && <p className="text-lg font-semibold mt-12">Vos expériences</p>}
+      <div className="flex-1 flex flex-col space-y-8 mt-6">
+      {userInfos.professionAndCompetencies.map((pAndC, i) => (
+        <div key={pAndC.profession?.id} className="py-4">
+          <p className="text-sm font-semibold text-gray-800">{pAndC.profession?.label}</p>
+          <div className="flex flex-col space-y-4 mt-4">
+            {pAndC.competencies.map((c) => 
+              (<CompetencyCard key={c.id} competency={c} isSelected={false} />)
+            )}
+          </div>          
+        </div>
+      ))}
+      </div>
+    </div>
   );
 };
 

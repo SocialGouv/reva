@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Certification {
+  id           Int                     @id
+  label        String                  @db.VarChar(255)
+  rncpId       String                  @unique @map("rncp_id") @db.VarChar(255)
+  romes        RomesOnCertifications[]
+  competencies Competency[]
+  createdAt    DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime?               @map("updated_at") @db.Timestamptz(6)
+
+  @@map("certification")
+}
+
+model Competency {
+  id                  Int           @id @default(autoincrement())
+  label               String
+  blocId              String        @unique @map("bloc_id") @db.VarChar(255)
+  certification       Certification @relation(fields: [certificationRncpId], references: [rncpId])
+  certificationRncpId String        @map("certification_rncp_id")
+  createdAt           DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime?     @map("updated_at") @db.Timestamptz(6)
+
+  @@map("competency")
+}
+
+model Rome {
+  id             Int                     @id
+  code           String                  @unique @db.VarChar(255)
+  label          String                  @db.VarChar(255)
+  slug           String                  @db.VarChar(255)
+  url            String                  @db.VarChar(255)
+  profession     Profession[]
+  certifications RomesOnCertifications[]
+  createdAt      DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime?               @map("updated_at") @db.Timestamptz(6)
+
+  @@map("rome")
+}
+
+model RomesOnCertifications {
+  certification   Certification @relation(fields: [certificationId], references: [id])
+  certificationId Int           @map("certification_id")
+  rome            Rome          @relation(fields: [romeId], references: [id])
+  romeId          Int           @map("rome_id")
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime?     @map("updated_at") @db.Timestamptz(6)
+
+  @@id([certificationId, romeId])
+  @@map("rome_certification")
+}
+
+model Profession {
+  id     Int    @id
+  label  String @db.VarChar(255)
+  romeId Int    @map("rome_id")
+  rome   Rome?  @relation(fields: [romeId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime? @map("updated_at") @db.Timestamptz(6)
+
+  @@map("profession")
+}

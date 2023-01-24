@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Certification, Competency, Job } from "../../types/types";
+import { Certification, Competency, Profession } from "../../types/types";
 
 const certifications: Certification[] = [
-  { code: "cert1", label: "Certification1" },
-  { code: "cert2", label: "Certification2" },
+  // { code: "cert1", label: "Certification1" },
+  // { code: "cert2", label: "Certification2" },
 ];
 export default function handler(
   req: NextApiRequest,

@@ -12,7 +12,7 @@ const ShowDiagnosisPage = () => {
         <br />
         <Flex direction="column" gap={4}>
           {userInfos.diagnosis.map((c) => (
-            <CertificationCard key={c.code} label={c.label} />
+            <CertificationCard key={c.id} label={c.label} />
           ))}
         </Flex>
       </Flex>
