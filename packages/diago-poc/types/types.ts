@@ -19,3 +19,11 @@ export interface Certification {
   rncpId: string;
   label: string;
 }
+
+export interface CertificationWithPurcentMatch extends Certification {
+  purcent: number;
+}
+
+export interface CertificationWithNbCompetencies extends Certification {
+  nb_competencies: number;
+}

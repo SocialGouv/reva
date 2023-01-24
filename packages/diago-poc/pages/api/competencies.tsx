@@ -1,11 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Profession } from "../../types/types";
+import { Competency, Profession } from "../../types/types";
 import competenciesFile from "../../data/competencies.json";
 import {prismaClient} from "./prisma"
-import { Competency } from "@prisma/client";
 
 export const getCompetencyByJobCode = async (professionId: string) =>{
-  console.log('ahahaha',professionId)
   const competencies = await prismaClient.$queryRaw`
     select comp.*
     from competency comp
@@ -20,7 +18,7 @@ export const getCompetencyByJobCode = async (professionId: string) =>{
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Profession[]>
+  res: NextApiResponse<Competency[]>
 ) {
   const { professionId } = req.query;
   res.status(200).json(await getCompetencyByJobCode(professionId as string));
