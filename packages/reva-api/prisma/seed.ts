@@ -155,7 +155,7 @@ async function main() {
   await prisma.certification.update({
     where: { rncpId: "35832" },
     data: {
-      label: `Diplôme d'Etat Auxiliaire de puériculture`,
+      label: `Diplôme d'Etat Auxiliaire de puériculture (DEAP)`,
       summary: `L'auxiliaire de puériculture réalise des activités d'éveil et des soins adaptés à l'évolution de l'état clinique visant au bien-être, à l'autonomie et au développement de l'enfant.`,
     },
   });
