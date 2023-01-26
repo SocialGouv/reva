@@ -144,21 +144,21 @@ async function main() {
     },
   });
 
-  // await prisma.certification.update({
-  //   where: { rncpId: '35830' },
-  //   data: {
-  //     label: `Diplôme d'Etat Aide-Soignant (DEAS)`,
-  //     summary: `La certification mise en place par l'arrêté du 10 juin 2021 vise à répondre aux évolutions du  rôle de l'aide soignant. En tant que professionnel de santé, l'aide-soignant est habilité à dispenser des soins de la vie quotidienne ou des soins aigus pour préserver et restaurer la continuité de la vie.`,
-  //   }
-  // });
+  await prisma.certification.update({
+    where: { rncpId: "35830" },
+    data: {
+      label: `Diplôme d'Etat Aide-Soignant (DEAS)`,
+      summary: `La certification mise en place par l'arrêté du 10 juin 2021 vise à répondre aux évolutions du  rôle de l'aide soignant. En tant que professionnel de santé, l'aide-soignant est habilité à dispenser des soins de la vie quotidienne ou des soins aigus pour préserver et restaurer la continuité de la vie.`,
+    },
+  });
 
-  // await prisma.certification.update({
-  //   where: { rncpId: '35832' },
-  //   data: {
-  //     label: `Diplôme d'Etat Auxiliaire de puériculture`,
-  //     summary: `L'auxiliaire de puériculture réalise des activités d'éveil et des soins adaptés à l'évolution de l'état clinique visant au bien-être, à l'autonomie et au développement de l'enfant.`,
-  //   }
-  // });
+  await prisma.certification.update({
+    where: { rncpId: "35832" },
+    data: {
+      label: `Diplôme d'Etat Auxiliaire de puériculture`,
+      summary: `L'auxiliaire de puériculture réalise des activités d'éveil et des soins adaptés à l'évolution de l'état clinique visant au bien-être, à l'autonomie et au développement de l'enfant.`,
+    },
+  });
 
   await prisma.certification.update({
     where: { rncpId: "35993" },
@@ -218,6 +218,8 @@ async function main() {
     "36004",
     "2514",
     "4503",
+    "35830",
+    "35832",
   ];
 
   await prisma.$transaction([
