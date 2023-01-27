@@ -7,6 +7,7 @@ import { FunctionalCodeError } from "../../domain/types/functionalError";
 import { getAccountFromKeycloakId } from "../database/postgres/accounts";
 import { getCandidacyFromId } from "../database/postgres/candidacies";
 import { addFileToUploadSpooler } from "../database/postgres/fileUploadSpooler";
+import { getFundingRequest } from "../database/postgres/fundingRequests";
 import { getPaymentRequestByCandidacyId } from "../database/postgres/paymentRequest";
 
 const uploadRoute: FastifyPlugin = (server, opts: unknown, done) => {
@@ -54,6 +55,7 @@ const uploadRoute: FastifyPlugin = (server, opts: unknown, done) => {
           getCandidacyFromId,
           addFileToUploadSpooler,
           getPaymentRequestByCandidacyId,
+          getFundingRequestFromCandidacyId: getFundingRequest,
         },
         {
           keycloakId: request.auth?.userInfo?.sub,

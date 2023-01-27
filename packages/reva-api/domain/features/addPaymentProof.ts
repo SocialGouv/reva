@@ -15,6 +15,7 @@ import {
   FileUploadSpoolerEntry,
   PaymentRequest,
 } from "../types/candidacy";
+import { FundingRequest } from "../types/candidate";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 import { canManageCandidacy } from "./canManageCandidacy";
 
@@ -29,6 +30,9 @@ interface AddPaymentProofDeps {
   getPaymentRequestByCandidacyId: (params: {
     candidacyId: string;
   }) => Promise<Either<string, Maybe<PaymentRequest>>>;
+  getFundingRequestFromCandidacyId: (params: {
+    candidacyId: string;
+  }) => Promise<Either<string, FundingRequest | null>>;
   addFileToUploadSpooler: (
     data: Omit<FileUploadSpooler, "id" | "createdAt">
   ) => Promise<Either<string, string>>;
@@ -54,6 +58,7 @@ export const addPaymentProof = async (
     getAccountFromKeycloakId,
     getCandidacyFromId,
     getPaymentRequestByCandidacyId,
+    getFundingRequestFromCandidacyId,
     addFileToUploadSpooler,
   }: AddPaymentProofDeps,
   {
@@ -81,11 +86,13 @@ export const addPaymentProof = async (
     )
   ).chain((isAllowed) =>
     Promise.resolve(
-      isAllowed ? Right(true) : Left("Vous n'êtes pas autorisé à traiter cette candidature")
+      isAllowed
+        ? Right(true)
+        : Left("Vous n'êtes pas autorisé à traiter cette candidature")
     )
   );
 
-  let paymentRequestId: string;
+  let paymentRequestId: string, fundingRequestNumAction: string;
 
   const getPaymentRequestIdEitherAsync = EitherAsync.fromPromise(async () => {
     const paymentRequestEither = await getPaymentRequestByCandidacyId({
@@ -99,6 +106,20 @@ export const addPaymentProof = async (
       paymentRequestId = (paymentRequestMaybe.extract() as PaymentRequest).id;
     }
     return paymentRequestEither;
+  });
+
+  const getNumActionEitherAsync = EitherAsync.fromPromise(async () => {
+    const fundingRequestEither = await getFundingRequestFromCandidacyId({
+      candidacyId,
+    });
+    if (fundingRequestEither.isRight()) {
+      const fundingRequest = fundingRequestEither.extract();
+      if (fundingRequest === null) {
+        return Left("Funding request not found");
+      }
+      fundingRequestNumAction = fundingRequest.numAction;
+    }
+    return fundingRequestEither;
   });
 
   const addFileToSpoolerEitherAsync = (
@@ -121,13 +142,10 @@ export const addPaymentProof = async (
     });
   };
 
-  const addInvoiceToSpooler = (
-    numAction: string,
-    fileContent?: UploadedFileInfo[]
-  ) => {
+  const addInvoiceToSpooler = (fileContent?: UploadedFileInfo[]) => {
     const { filename, mimetype } = fileContent?.[0] as UploadedFileInfo;
     return addFileToSpoolerEitherAsync({
-      destinationFileName: `facture_${numAction}.${extractFilenameExtension(
+      destinationFileName: `facture_${fundingRequestNumAction}.${getFilenameExtension(
         filename
       )}`,
       destinationPath: "/candidacy/payment_request/proof",
@@ -136,13 +154,10 @@ export const addPaymentProof = async (
     });
   };
 
-  const addAppointmentToSpooler = (
-    numAction: string,
-    fileContent?: UploadedFileInfo[]
-  ) => {
+  const addAppointmentToSpooler = (fileContent?: UploadedFileInfo[]) => {
     const { filename, mimetype } = fileContent?.[0] as UploadedFileInfo;
     return addFileToSpoolerEitherAsync({
-      destinationFileName: `presence_${numAction}.${extractFilenameExtension(
+      destinationFileName: `presence_${fundingRequestNumAction}.${getFilenameExtension(
         filename
       )}`,
       destinationPath: "/candidacy/payment_request/proof",
@@ -153,14 +168,13 @@ export const addPaymentProof = async (
 
   return isAllowedEitherAsync
     .chain(() => getPaymentRequestIdEitherAsync)
+    .chain(() => getNumActionEitherAsync)
     .chain(() =>
-      invoice
-        ? addInvoiceToSpooler(paymentRequestId, invoice)
-        : Promise.resolve(Right(Nothing))
+      invoice ? addInvoiceToSpooler(invoice) : Promise.resolve(Right(Nothing))
     )
     .chain(() =>
       appointment
-        ? addAppointmentToSpooler(paymentRequestId, appointment)
+        ? addAppointmentToSpooler(appointment)
         : Promise.resolve(Right(Nothing))
     )
     .mapLeft(
@@ -169,6 +183,6 @@ export const addPaymentProof = async (
     .run();
 };
 
-function extractFilenameExtension(filename: string) {
+function getFilenameExtension(filename: string) {
   return filename.split(".").pop();
 }
