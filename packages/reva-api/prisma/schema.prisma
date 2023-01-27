@@ -538,3 +538,12 @@ model PaymentRequest {
 
   @@map("payment_request")
 }
+
+model FileUploadSpooler {
+  id                      String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt               DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  destinationFileName     String    @db.VarChar(255) @map("destination_file_name")
+  destinationPath         String    @db.VarChar(255) @map("destination_path")
+  description             String    @db.VarChar(255) @map("description")
+  fileContent             Bytes     @map("file_content")
+}

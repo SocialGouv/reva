@@ -59,6 +59,7 @@
   "dependencies": {
     "@fastify/cors": "^8.0.0",
     "@fastify/http-proxy": "^8.0.2",
+    "@fastify/multipart": "^7.4.0",
     "@fastify/static": "^6.4.0",
     "@graphql-tools/load-files": "^6.5.3",
     "@graphql-tools/merge": "^8.2.3",
@@ -86,6 +87,7 @@
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.3",
+    "@types/ajv": "^1.0.0",
     "@types/cron": "^2.0.0",
     "@types/crypto-js": "^4.1.1",
     "@types/debug": "^4.1.7",

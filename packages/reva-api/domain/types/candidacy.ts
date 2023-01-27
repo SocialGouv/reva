@@ -181,3 +181,10 @@ export interface PaymentRequest {
   certificateSkillsEffectiveHourCount: number;
   examEffectiveHourCount: number;
 }
+
+export interface FileUploadSpoolerEntry {
+  destinationFileName: string
+  destinationPath: string;
+  description: string;
+  fileContent?: Buffer;
+}
