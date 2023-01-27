@@ -15,7 +15,7 @@ form : FormData -> ( Candidacy, Referential ) -> Form
 form formData ( _, _ ) =
     { elements =
         [ ( "heading", Form.Heading "2 - Pièces à joindre" )
-        , ( keys.invoiceFiles, Form.Files "Facture" )
+        , ( keys.invoiceFiles, Form.File "Facture" )
         , ( "invoiceFilesHelp"
           , Form.Requirements "La facture doit faire apparaître les éléments suivants :"
                 [ "Nom de la structure prestataire (accompagnement, organisme de formation)"
@@ -24,7 +24,7 @@ form formData ( _, _ ) =
                 , "Total demandé et total réalisé"
                 ]
           )
-        , ( keys.appointmentFiles, Form.Files "Récapitulatif des attestations de présence" )
+        , ( keys.appointmentFiles, Form.File "Récapitulatif des attestations de présence" )
         ]
     , saveLabel = Nothing
     , submitLabel = "Envoyer"

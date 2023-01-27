@@ -46,6 +46,7 @@ type Element
     | CheckboxList String (List ( String, String ))
     | Date String
     | Empty
+    | File String
     | Files String
     | Heading String
     | Info String String
@@ -385,25 +386,12 @@ viewEditableElement formData ( elementId, element ) =
         Empty ->
             []
 
+        File label ->
+            viewInputFiles False elementId
+                |> withLabel label
+
         Files label ->
-            let
-                filesDecoder : Json.Decode.Decoder (List File)
-                filesDecoder =
-                    Json.Decode.at [ "target", "files" ] (Json.Decode.list File.decoder)
-            in
-            input
-                [ type_ "file"
-                , multiple True
-                , name elementId
-                , id elementId
-                , on "change" (Json.Decode.map (UserSelectFiles elementId) filesDecoder)
-                , class "block w-[520px] mb-4 text-sm text-slate-500"
-                , class "file:mr-4 file:py-2 file:px-4"
-                , class "file:rounded file:border-0"
-                , class "file:bg-gray-900 file:text-white"
-                , class "hover:file:bg-gray-800"
-                ]
-                []
+            viewInputFiles True elementId
                 |> withLabel label
 
         Heading title ->
@@ -587,6 +575,9 @@ viewReadOnlyElement formData ( elementId, element ) =
         Empty ->
             []
 
+        File _ ->
+            []
+
         Files _ ->
             []
 
@@ -751,6 +742,28 @@ viewChoice currentChoiceId ( choiceId, choice ) =
     option
         [ selected (choiceId == currentChoiceId), value choiceId ]
         [ text choice ]
+
+
+viewInputFiles : Bool -> String -> Html (Msg referential)
+viewInputFiles acceptMultipleFiles elementId =
+    let
+        filesDecoder : Json.Decode.Decoder (List File)
+        filesDecoder =
+            Json.Decode.at [ "target", "files" ] (Json.Decode.list File.decoder)
+    in
+    input
+        [ type_ "file"
+        , multiple acceptMultipleFiles
+        , name elementId
+        , id elementId
+        , on "change" (Json.Decode.map (UserSelectFiles elementId) filesDecoder)
+        , class "block w-[520px] mb-4 text-sm text-slate-500"
+        , class "file:mr-4 file:py-2 file:px-4"
+        , class "file:rounded file:border-0"
+        , class "file:bg-gray-900 file:text-white"
+        , class "hover:file:bg-gray-800"
+        ]
+        []
 
 
 
