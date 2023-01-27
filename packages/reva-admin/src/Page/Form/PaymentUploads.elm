@@ -16,6 +16,14 @@ form formData ( _, _ ) =
     { elements =
         [ ( "heading", Form.Heading "2 - Pièces à joindre" )
         , ( keys.invoiceFiles, Form.Files "Facture" )
+        , ( "invoiceFilesHelp"
+          , Form.Requirements "La facture doit faire apparaître les éléments suivants :"
+                [ "Nom de la structure prestataire (accompagnement, organisme de formation)"
+                , "Numéro de convention de prise en charge d'Uniformation"
+                , "Nombre d'heures réalisées en accompagnement individuel et collectif, actes formatifs, jury et post jury"
+                , "Total demandé et total réalisé"
+                ]
+          )
         , ( keys.appointmentFiles, Form.Files "Récapitulatif des attestations de présence" )
         ]
     , saveLabel = Nothing

@@ -18,7 +18,7 @@ import Data.Form exposing (FormData, get, insert)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
 import File exposing (File)
-import Html.Styled as Html exposing (Html, button, dd, div, dt, fieldset, input, label, legend, li, option, p, select, text, textarea, ul)
+import Html.Styled as Html exposing (Html, button, dd, div, dt, fieldset, input, label, legend, li, option, p, select, span, text, textarea, ul)
 import Html.Styled.Attributes exposing (checked, class, classList, disabled, for, id, multiple, name, placeholder, required, selected, type_, value)
 import Html.Styled.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
@@ -53,6 +53,7 @@ type Element
     | Number String
     | ReadOnlyElement Element
     | ReadOnlyElements (List ( String, Element ))
+    | Requirements String (List String)
     | Select String (List ( String, String ))
     | SelectOther String String String
     | Section String
@@ -446,6 +447,22 @@ viewEditableElement formData ( elementId, element ) =
                     readOnlyElements
             ]
 
+        Requirements title rules ->
+            let
+                viewRule rule =
+                    li [ class "mb-1" ] [ text rule ]
+            in
+            [ div
+                [ class "bg-gray-100 px-5 py-4 rounded-lg"
+                , class "text-sm text-gray-600 mb-8"
+                ]
+                [ span [ class "text-gray-900" ] [ text title ]
+                , ul
+                    [ class "mt-3 list-disc pl-4 max-w-lg" ]
+                    (List.map viewRule rules)
+                ]
+            ]
+
         Section title ->
             [ View.Heading.h4 title ]
 
@@ -609,6 +626,9 @@ viewReadOnlyElement formData ( elementId, element ) =
                     (viewReadOnlyElement formData >> div [])
                     readOnlyElements
             ]
+
+        Requirements _ _ ->
+            []
 
         Section title ->
             [ View.Heading.h4 title ]
