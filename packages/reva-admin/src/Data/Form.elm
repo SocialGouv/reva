@@ -1,13 +1,21 @@
-module Data.Form exposing (FormData, fromDict, fromDictFiles, get, getFiles, insert, insertFiles, toDict, toDictFiles)
+module Data.Form exposing (FormData, empty, fromDict, fromDictFiles, get, getFiles, insert, insertFiles, toDict, toDictFiles)
 
-import Bytes exposing (Bytes)
 import Dict exposing (Dict)
+import File exposing (File)
 
 
 type FormData
     = FormData
-        { files : Dict String (List ( String, Bytes ))
+        { files : Dict String (List ( String, File ))
         , string : Dict String String
+        }
+
+
+empty : FormData
+empty =
+    FormData
+        { files = Dict.empty
+        , string = Dict.empty
         }
 
 
@@ -39,22 +47,22 @@ fromDict dict =
 -- FILES
 
 
-insertFiles : String -> List ( String, Bytes ) -> FormData -> FormData
+insertFiles : String -> List ( String, File ) -> FormData -> FormData
 insertFiles key value (FormData formData) =
     FormData { formData | files = Dict.insert key value formData.files }
 
 
-getFiles : String -> FormData -> List ( String, Bytes )
+getFiles : String -> FormData -> List ( String, File )
 getFiles key (FormData formData) =
     Dict.get key formData.files
         |> Maybe.withDefault []
 
 
-toDictFiles : FormData -> Dict String (List ( String, Bytes ))
+toDictFiles : FormData -> Dict String (List ( String, File ))
 toDictFiles (FormData formData) =
     formData.files
 
 
-fromDictFiles : Dict String (List ( String, Bytes )) -> FormData
+fromDictFiles : Dict String (List ( String, File )) -> FormData
 fromDictFiles dict =
     FormData { files = dict, string = Dict.empty }

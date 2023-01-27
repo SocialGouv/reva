@@ -18,6 +18,7 @@ const app = Elm.Main.init({
          realm: import.meta.env.VITE_KEYCLOAK_REALM || "REVA",
          url: import.meta.env.VITE_KEYCLOAK_URL || "http://localhost:8888/auth/",
          clientId: import.meta.env.VITE_KEYCLOAK_CLIENT_ID || "reva-admin",
-      }
+      },
+      uploadEndpoint: import.meta.env.VITE_API_UPLOAD || "http://localhost:8080/payment-request/proof",
    }
 });

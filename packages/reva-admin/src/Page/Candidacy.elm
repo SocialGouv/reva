@@ -15,6 +15,7 @@ import Api.Form.Candidate
 import Api.Form.DropOut
 import Api.Form.FundingRequest
 import Api.Form.PaymentRequest
+import Api.Form.PaymentUploads
 import Api.Form.Training
 import Api.Referential
 import Browser.Navigation as Nav
@@ -313,7 +314,7 @@ updateTab context tab ( model, cmd ) =
                 ( formModel, formCmd ) =
                     Form.updateForm context
                         { form = Page.Form.DropOut.form
-                        , onLoad = Api.Form.DropOut.get tab.candidacyId
+                        , onLoad = Just <| Api.Form.DropOut.get tab.candidacyId
                         , onSave = Nothing
                         , onSubmit = Api.Form.DropOut.dropOut tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab Profile
@@ -334,7 +335,7 @@ updateTab context tab ( model, cmd ) =
                 ( formModel, formCmd ) =
                     Form.updateForm context
                         { form = Page.Form.Appointment.form
-                        , onLoad = Api.Form.Appointment.get tab.candidacyId
+                        , onLoad = Just <| Api.Form.Appointment.get tab.candidacyId
                         , onSave = Nothing
                         , onSubmit = Api.Form.Appointment.update tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab Profile
@@ -350,7 +351,7 @@ updateTab context tab ( model, cmd ) =
                 ( formModel, formCmd ) =
                     Form.updateForm context
                         { form = Page.Form.PaymentRequest.form candidacy.certification
-                        , onLoad = Api.Form.PaymentRequest.get tab.candidacyId
+                        , onLoad = Just <| Api.Form.PaymentRequest.get tab.candidacyId
                         , onSave = Just <| Api.Form.PaymentRequest.createOrUpdate tab.candidacyId
                         , onSubmit = Api.Form.PaymentRequest.confirm tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab Profile
@@ -366,16 +367,16 @@ updateTab context tab ( model, cmd ) =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        ( View.Candidacy.Tab.PaymentUploads, Success candidacy ) ->
+        ( View.Candidacy.Tab.PaymentUploads, Success _ ) ->
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
                         { form = Page.Form.PaymentUploads.form
-                        , onLoad = Api.Form.PaymentRequest.get tab.candidacyId -- TODO replace with PaymentUploads.get
+                        , onLoad = Nothing
                         , onSave = Nothing
-                        , onSubmit = Api.Form.PaymentRequest.confirm tab.candidacyId -- TODO replace with PaymentUploads.confirm
+                        , onSubmit = Api.Form.PaymentUploads.submit tab.candidacyId context.uploadEndpoint
                         , onRedirect = pushUrl <| candidacyTab Profile
-                        , onValidate = Data.Form.PaymentRequest.validate
+                        , onValidate = \_ _ -> Ok ()
                         , status = Form.Editable
                         }
                         model.form
@@ -395,7 +396,7 @@ updateTab context tab ( model, cmd ) =
 
                             else
                                 Page.Form.FundingRequest.droppedOutForm candidacy.certification
-                        , onLoad = Api.Form.FundingRequest.get tab.candidacyId candidacy
+                        , onLoad = Just <| Api.Form.FundingRequest.get tab.candidacyId candidacy
                         , onSave = Nothing
                         , onSubmit = Api.Form.FundingRequest.create tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab Profile
@@ -416,7 +417,7 @@ updateTab context tab ( model, cmd ) =
                 ( formModel, formCmd ) =
                     Form.updateForm context
                         { form = Page.Form.Training.form
-                        , onLoad = Api.Form.Training.get tab.candidacyId
+                        , onLoad = Just <| Api.Form.Training.get tab.candidacyId
                         , onSave = Nothing
                         , onSubmit = Api.Form.Training.update tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab TrainingSent
@@ -437,13 +438,7 @@ updateTab context tab ( model, cmd ) =
                 ( formModel, formCmd ) =
                     Form.updateForm context
                         { form = Page.Form.Candidate.form
-                        , onLoad =
-                            case candidacy.email of
-                                Just email ->
-                                    Api.Form.Candidate.get email
-
-                                Nothing ->
-                                    \_ _ _ -> Cmd.none
+                        , onLoad = candidacy.email |> Maybe.map Api.Form.Candidate.get
                         , onSave = Nothing
                         , onSubmit = Api.Form.Candidate.update
                         , onRedirect = pushUrl <| candidacyTab FundingRequest
@@ -464,7 +459,7 @@ updateTab context tab ( model, cmd ) =
                 ( formModel, formCmd ) =
                     Form.updateForm context
                         { form = Page.Form.Admissibility.form
-                        , onLoad = Api.Form.Admissibility.get tab.candidacyId
+                        , onLoad = Just <| Api.Form.Admissibility.get tab.candidacyId
                         , onSave = Nothing
                         , onSubmit = Api.Form.Admissibility.update tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab Profile

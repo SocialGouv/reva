@@ -37,7 +37,6 @@ type Msg referential
     | UserClickSubmit referential
     | UserSelectFiles String (List File)
     | GotSaveResponse (RemoteData String ())
-    | GotFiles String (List ( String, Bytes ))
     | GotLoadResponse (RemoteData String (Dict String String))
     | NoOp
 
@@ -777,24 +776,19 @@ update context msg model =
         ( UserClickSubmit _, _ ) ->
             noChange
 
-        ( UserSelectFiles key files, _ ) ->
+        ( UserSelectFiles key files, Editing error form formData ) ->
             let
                 fileNames =
                     List.map File.name files
 
-                filesWithNames bytes =
-                    List.Extra.zip fileNames bytes |> GotFiles key
+                filesWithNames =
+                    List.Extra.zip fileNames files
             in
-            ( model
-            , Task.perform filesWithNames <| Task.sequence <| List.map File.toBytes files
-            )
-
-        ( GotFiles key files, Editing error form formData ) ->
-            ( { model | form = Editing error form (Data.Form.insertFiles key files formData) }
+            ( { model | form = Editing error form (Data.Form.insertFiles key filesWithNames formData) }
             , Cmd.none
             )
 
-        ( GotFiles _ _, _ ) ->
+        ( UserSelectFiles _ _, _ ) ->
             noChange
 
         ( GotLoadResponse (RemoteData.Success dict), Loading form ) ->
@@ -831,7 +825,7 @@ updateForm :
     Context
     ->
         { form : FormData -> referential -> Form
-        , onLoad : String -> Token -> (RemoteData String (Dict String String) -> Msg referential) -> Cmd (Msg referential)
+        , onLoad : Maybe (String -> Token -> (RemoteData String (Dict String String) -> Msg referential) -> Cmd (Msg referential))
         , onRedirect : Cmd (Msg referential)
         , onSubmit : ClickHandler referential
         , onSave : Maybe (ClickHandler referential)
@@ -842,12 +836,17 @@ updateForm :
     -> ( Model referential, Cmd (Msg referential) )
 updateForm context config model =
     ( { model
-        | form = Loading config.form
+        | form =
+            config.onLoad
+                |> Maybe.map (always (Loading config.form))
+                |> Maybe.withDefault (Editing Nothing config.form Data.Form.empty)
         , onRedirect = config.onRedirect
         , onSave = config.onSave |> Maybe.withDefault (\_ _ _ _ _ -> Cmd.none)
         , onSubmit = config.onSubmit
         , onValidate = config.onValidate
         , status = config.status
       }
-    , config.onLoad context.endpoint context.token GotLoadResponse
+    , config.onLoad
+        |> Maybe.map (\loader -> loader context.endpoint context.token GotLoadResponse)
+        |> Maybe.withDefault Cmd.none
     )
