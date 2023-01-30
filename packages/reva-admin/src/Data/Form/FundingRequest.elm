@@ -1,6 +1,7 @@
 module Data.Form.FundingRequest exposing (FundingRequestInformations, FundingRequestInput, TrainingForm, fromDict, fundingRequest, fundingRequestInformations, keys, validate)
 
 import Data.Candidacy exposing (Candidacy)
+import Data.Form exposing (FormData)
 import Data.Form.Helper as Helper
 import Data.Form.Training exposing (Training)
 import Data.Referential exposing (BasicSkill, MandatoryTraining, Referential)
@@ -77,11 +78,11 @@ keys =
     }
 
 
-validate : ( Candidacy, Referential ) -> Dict String String -> Result String ()
-validate ( candidacy, _ ) dict =
+validate : ( Candidacy, Referential ) -> FormData -> Result String ()
+validate ( candidacy, _ ) formData =
     let
         decode =
-            Helper.decode keys dict
+            Helper.decode keys formData
 
         companionValidation () =
             case ( candidacy.dropOutDate, decode.maybe.string .companionId ) of
@@ -102,11 +103,11 @@ validate ( candidacy, _ ) dict =
         |> Result.andThen confirmationValidation
 
 
-fromDict : List BasicSkill -> List MandatoryTraining -> Dict String String -> FundingRequestInput
-fromDict basicSkillsIds mandatoryTrainingIds dict =
+fromDict : List BasicSkill -> List MandatoryTraining -> FormData -> FundingRequestInput
+fromDict basicSkillsIds mandatoryTrainingIds formData =
     let
         decode =
-            Helper.decode keys dict
+            Helper.decode keys formData
     in
     FundingRequestInput
         (decode.maybe.string .companionId)

@@ -7,7 +7,7 @@ module Route exposing
     , toString
     )
 
-import Data.Candidacy exposing (candidacyIdFromString, candidacyIdToString)
+import Data.Candidacy exposing (CandidacyId, candidacyIdFromString, candidacyIdToString)
 import Html.Styled exposing (Html)
 import Html.Styled.Attributes
 import Url
@@ -51,28 +51,17 @@ parser baseUrl =
                 [ top |> map (Candidacies emptyFilters)
                 , s "auth" </> s "login" |> map Login
                 , s "auth" </> s "logout" |> map Logout
-                , s "candidacies"
-                    <?> Query.string "status"
-                    |> map (Filters >> Candidacies)
-                , topLevel string
-                    |> candidacyTab Tab.Profil
-                , subLevel "admissibility"
-                    |> candidacyTab Tab.Admissibility
-                , subLevel "candidate"
-                    |> candidacyTab Tab.CandidateInfo
-                , subLevel "drop-out"
-                    |> candidacyTab Tab.DropOut
-                , subLevel "funding"
-                    |> candidacyTab Tab.FundingRequest
-                , subLevel "meetings"
-                    |> candidacyTab Tab.Meetings
-                , subLevel "payment"
-                    |> candidacyTab Tab.PaymentRequest
-                , subLevel "training"
-                    |> candidacyTab Tab.Training
-                , subLevel "training"
-                    </> s "confirmation"
-                    |> candidacyTab Tab.TrainingSent
+                , s "candidacies" <?> Query.string "status" |> map (Filters >> Candidacies)
+                , topLevel string |> candidacyTab Tab.Profile
+                , subLevel "admissibility" |> candidacyTab Tab.Admissibility
+                , subLevel "candidate" |> candidacyTab Tab.CandidateInfo
+                , subLevel "drop-out" |> candidacyTab Tab.DropOut
+                , subLevel "funding" |> candidacyTab Tab.FundingRequest
+                , subLevel "meetings" |> candidacyTab Tab.Meetings
+                , subLevel "payment" |> candidacyTab Tab.PaymentRequest
+                , subLevel "payment" </> s "uploads" |> candidacyTab Tab.PaymentUploads
+                , subLevel "training" |> candidacyTab Tab.Training
+                , subLevel "training" </> s "confirmation" |> candidacyTab Tab.TrainingSent
                 ]
 
 
@@ -128,7 +117,7 @@ tabToString topLevel subLevel tab =
             subLevel tab.candidacyId path []
     in
     case tab.value of
-        Tab.Profil ->
+        Tab.Profile ->
             topLevel [ "candidacies", candidacyIdToString tab.candidacyId ] []
 
         Tab.CandidateInfo ->
@@ -142,6 +131,9 @@ tabToString topLevel subLevel tab =
 
         Tab.PaymentRequest ->
             default [ "payment" ]
+
+        Tab.PaymentUploads ->
+            default [ "payment", "uploads" ]
 
         Tab.FundingRequest ->
             default [ "funding" ]

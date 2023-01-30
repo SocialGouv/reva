@@ -20,6 +20,7 @@ type alias Flags =
     { endpoint : String
     , baseUrl : String
     , keycloakConfiguration : Decode.Value
+    , uploadEndpoint : String
     }
 
 
@@ -276,6 +277,7 @@ initWithoutToken flags url key =
                     flags.endpoint
                     key
                     Api.Token.anonymous
+                    flags.uploadEndpoint
             , page = NotLoggedIn (Route.fromUrl flags.baseUrl url)
             , keycloakConfiguration =
                 Decode.decodeValue KeycloakConfiguration.keycloakConfiguration flags.keycloakConfiguration

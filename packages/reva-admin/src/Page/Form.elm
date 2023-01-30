@@ -12,12 +12,17 @@ module Page.Form exposing
 
 import Api.Token exposing (Token)
 import Browser.Dom
+import Bytes exposing (Bytes)
 import Data.Context exposing (Context)
+import Data.Form exposing (FormData, get, insert)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
-import Html.Styled as Html exposing (Html, button, dd, div, dt, fieldset, input, label, legend, li, option, p, select, text, textarea, ul)
-import Html.Styled.Attributes exposing (checked, class, classList, disabled, for, id, name, placeholder, required, selected, type_, value)
-import Html.Styled.Events exposing (onCheck, onClick, onInput, onSubmit)
+import File exposing (File)
+import Html.Styled as Html exposing (Html, button, dd, div, dt, fieldset, input, label, legend, li, option, p, select, span, text, textarea, ul)
+import Html.Styled.Attributes exposing (checked, class, classList, disabled, for, id, multiple, name, placeholder, required, selected, type_, value)
+import Html.Styled.Events exposing (on, onCheck, onClick, onInput, onSubmit)
+import Json.Decode
+import List.Extra
 import RemoteData exposing (RemoteData(..))
 import String exposing (String)
 import Task
@@ -30,6 +35,7 @@ type Msg referential
     = UserChangedElement String String
     | UserClickSave referential
     | UserClickSubmit referential
+    | UserSelectFiles String (List File)
     | GotSaveResponse (RemoteData String ())
     | GotLoadResponse (RemoteData String (Dict String String))
     | NoOp
@@ -40,12 +46,15 @@ type Element
     | CheckboxList String (List ( String, String ))
     | Date String
     | Empty
+    | File String
+    | Files String
     | Heading String
     | Info String String
     | Input String
     | Number String
     | ReadOnlyElement Element
     | ReadOnlyElements (List ( String, Element ))
+    | Requirements String (List String)
     | Select String (List ( String, String ))
     | SelectOther String String String
     | Section String
@@ -67,10 +76,6 @@ type alias FormBuilder referential =
     FormData -> referential -> Form
 
 
-type alias FormData =
-    Dict String String
-
-
 type RemoteForm referential
     = NotAsked
     | Loading (FormBuilder referential)
@@ -90,7 +95,7 @@ type alias ClickHandler referential =
     -> Token
     -> (RemoteData String () -> Msg referential)
     -> referential
-    -> Dict String String
+    -> FormData
     -> Cmd (Msg referential)
 
 
@@ -98,7 +103,7 @@ type alias Model referential =
     { onRedirect : Cmd (Msg referential)
     , onSave : ClickHandler referential
     , onSubmit : ClickHandler referential
-    , onValidate : referential -> Dict String String -> Result String ()
+    , onValidate : referential -> FormData -> Result String ()
     , form : RemoteForm referential
     , status : Status
     }
@@ -288,7 +293,7 @@ viewEditableElement : FormData -> ( String, Element ) -> List (Html (Msg referen
 viewEditableElement formData ( elementId, element ) =
     let
         dataOrDefault =
-            Dict.get elementId formData
+            get elementId formData
                 |> Maybe.withDefault (defaultValue element)
 
         inputStyle =
@@ -381,6 +386,14 @@ viewEditableElement formData ( elementId, element ) =
         Empty ->
             []
 
+        File label ->
+            viewInputFiles False elementId
+                |> withLabel label
+
+        Files label ->
+            viewInputFiles True elementId
+                |> withLabel label
+
         Heading title ->
             [ View.Heading.h3 title ]
 
@@ -422,6 +435,22 @@ viewEditableElement formData ( elementId, element ) =
                     readOnlyElements
             ]
 
+        Requirements title rules ->
+            let
+                viewRule rule =
+                    li [ class "mb-1" ] [ text rule ]
+            in
+            [ div
+                [ class "bg-gray-100 px-5 py-4 rounded-lg"
+                , class "text-sm text-gray-600 mb-8"
+                ]
+                [ span [ class "text-gray-900" ] [ text title ]
+                , ul
+                    [ class "mt-3 list-disc pl-4 max-w-lg" ]
+                    (List.map viewRule rules)
+                ]
+            ]
+
         Section title ->
             [ View.Heading.h4 title ]
 
@@ -444,7 +473,7 @@ viewEditableElement formData ( elementId, element ) =
                 |> withLabel label
 
         SelectOther selectId otherValue label ->
-            case Dict.get selectId formData of
+            case get selectId formData of
                 Just selectedValue ->
                     if selectedValue == otherValue then
                         textareaView Nothing
@@ -486,7 +515,7 @@ viewReadOnlyElement : FormData -> ( String, Element ) -> List (Html (Msg referen
 viewReadOnlyElement formData ( elementId, element ) =
     let
         dataOrDefault =
-            Dict.get elementId formData
+            get elementId formData
                 |> Maybe.withDefault (defaultValue element)
 
         dataClass =
@@ -546,6 +575,12 @@ viewReadOnlyElement formData ( elementId, element ) =
         Empty ->
             []
 
+        File _ ->
+            []
+
+        Files _ ->
+            []
+
         Heading title ->
             [ View.Heading.h3 title ]
 
@@ -583,6 +618,9 @@ viewReadOnlyElement formData ( elementId, element ) =
                     readOnlyElements
             ]
 
+        Requirements _ _ ->
+            []
+
         Section title ->
             [ View.Heading.h4 title ]
 
@@ -593,7 +631,7 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> Maybe.withDefault []
 
         SelectOther selectId otherValue label ->
-            case Dict.get selectId formData of
+            case get selectId formData of
                 Just selectedValue ->
                     if selectedValue == otherValue then
                         defaultView label
@@ -706,6 +744,28 @@ viewChoice currentChoiceId ( choiceId, choice ) =
         [ text choice ]
 
 
+viewInputFiles : Bool -> String -> Html (Msg referential)
+viewInputFiles acceptMultipleFiles elementId =
+    let
+        filesDecoder : Json.Decode.Decoder (List File)
+        filesDecoder =
+            Json.Decode.at [ "target", "files" ] (Json.Decode.list File.decoder)
+    in
+    input
+        [ type_ "file"
+        , multiple acceptMultipleFiles
+        , name elementId
+        , id elementId
+        , on "change" (Json.Decode.map (UserSelectFiles elementId) filesDecoder)
+        , class "block w-[520px] mb-4 text-sm text-slate-500"
+        , class "file:mr-4 file:py-2 file:px-4"
+        , class "file:rounded file:border-0"
+        , class "file:bg-gray-900 file:text-white"
+        , class "hover:file:bg-gray-800"
+        ]
+        []
+
+
 
 -- UPDATE
 
@@ -730,7 +790,7 @@ update context msg model =
         ( UserChangedElement elementId elementValue, Editing error form formData ) ->
             let
                 newFormData =
-                    Dict.insert elementId elementValue formData
+                    insert elementId elementValue formData
             in
             ( { model | form = Editing Nothing form newFormData }, Cmd.none )
 
@@ -749,8 +809,23 @@ update context msg model =
         ( UserClickSubmit _, _ ) ->
             noChange
 
-        ( GotLoadResponse (RemoteData.Success formData), Loading form ) ->
-            ( { model | form = Editing Nothing form formData }, Cmd.none )
+        ( UserSelectFiles key files, Editing error form formData ) ->
+            let
+                fileNames =
+                    List.map File.name files
+
+                filesWithNames =
+                    List.Extra.zip fileNames files
+            in
+            ( { model | form = Editing error form (Data.Form.insertFiles key filesWithNames formData) }
+            , Cmd.none
+            )
+
+        ( UserSelectFiles _ _, _ ) ->
+            noChange
+
+        ( GotLoadResponse (RemoteData.Success dict), Loading form ) ->
+            ( { model | form = Editing Nothing form (Data.Form.fromDict dict) }, Cmd.none )
 
         ( GotLoadResponse (RemoteData.Failure _), Loading form ) ->
             ( { model | form = Failure }, Cmd.none )
@@ -783,23 +858,28 @@ updateForm :
     Context
     ->
         { form : FormData -> referential -> Form
-        , onLoad : String -> Token -> (RemoteData String (Dict String String) -> Msg referential) -> Cmd (Msg referential)
+        , onLoad : Maybe (String -> Token -> (RemoteData String (Dict String String) -> Msg referential) -> Cmd (Msg referential))
         , onRedirect : Cmd (Msg referential)
         , onSubmit : ClickHandler referential
         , onSave : Maybe (ClickHandler referential)
-        , onValidate : referential -> Dict String String -> Result String ()
+        , onValidate : referential -> FormData -> Result String ()
         , status : Status
         }
     -> Model referential
     -> ( Model referential, Cmd (Msg referential) )
 updateForm context config model =
     ( { model
-        | form = Loading config.form
+        | form =
+            config.onLoad
+                |> Maybe.map (always (Loading config.form))
+                |> Maybe.withDefault (Editing Nothing config.form Data.Form.empty)
         , onRedirect = config.onRedirect
         , onSave = config.onSave |> Maybe.withDefault (\_ _ _ _ _ -> Cmd.none)
         , onSubmit = config.onSubmit
         , onValidate = config.onValidate
         , status = config.status
       }
-    , config.onLoad context.endpoint context.token GotLoadResponse
+    , config.onLoad
+        |> Maybe.map (\loader -> loader context.endpoint context.token GotLoadResponse)
+        |> Maybe.withDefault Cmd.none
     )

@@ -9,6 +9,7 @@ module Data.Form.PaymentRequest exposing
     )
 
 import Data.Candidacy exposing (Candidacy)
+import Data.Form exposing (FormData)
 import Data.Form.FundingRequest exposing (FundingRequestInput)
 import Data.Form.Helper as Helper
 import Data.Referential exposing (BasicSkill, MandatoryTraining, Referential)
@@ -70,14 +71,16 @@ keys =
     , examEstimatedHourCount = "examEstimatedHourCount"
     , examHourCount = "examHourCount"
     , examCost = "examCost"
+    , invoiceFiles = "invoiceFiles"
+    , appointmentFiles = "appointmentFiles"
     }
 
 
-validate : ( Candidacy, Referential ) -> Dict String String -> Result String ()
-validate ( candidacy, _ ) dict =
+validate : ( Candidacy, Referential ) -> FormData -> Result String ()
+validate ( candidacy, _ ) formData =
     let
         decode =
-            Helper.decode keys dict
+            Helper.decode keys formData
     in
     if decode.bool .isFormConfirmed False then
         Ok ()
@@ -86,11 +89,11 @@ validate ( candidacy, _ ) dict =
         Err "Veuillez confirmer le montant de la prise en charge avant son envoi définitif"
 
 
-fromDict : Dict String String -> PaymentRequestInput
-fromDict dict =
+fromDict : FormData -> PaymentRequestInput
+fromDict formData =
     let
         decode =
-            Helper.decode keys dict
+            Helper.decode keys formData
     in
     PaymentRequestInput
         (decode.int .diagnosisHourCount 0)

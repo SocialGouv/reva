@@ -277,7 +277,7 @@ viewItem context candidacy =
             [ div
                 [ class "flex-1 min-w-0" ]
                 [ a
-                    [ Route.href context.baseUrl (Route.Candidacy { value = Profil, candidacyId = candidacy.id })
+                    [ Route.href context.baseUrl (Route.Candidacy { value = Profile, candidacyId = candidacy.id })
                     , class "focus:outline-none"
                     ]
                     [ span

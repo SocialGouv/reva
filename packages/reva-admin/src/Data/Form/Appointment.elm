@@ -2,6 +2,7 @@ module Data.Form.Appointment exposing (Appointment, appointment, appointmentFrom
 
 import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
 import Data.Candidacy exposing (CandidacyId)
+import Data.Form exposing (FormData)
 import Data.Form.Helper as Helper exposing (booleanFromString, booleanToString)
 import Data.Scalar
 import Dict exposing (Dict)
@@ -27,11 +28,11 @@ keys =
     }
 
 
-appointmentFromDict : CandidacyId -> Dict String String -> Appointment
-appointmentFromDict candidacyId dict =
+appointmentFromDict : CandidacyId -> FormData -> Appointment
+appointmentFromDict candidacyId formData =
     let
         decode =
-            Helper.decode keys dict
+            Helper.decode keys formData
     in
     Appointment candidacyId
         (decode.generic .typology candidateTypologyFromString NonSpecifie)

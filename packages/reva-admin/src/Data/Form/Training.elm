@@ -1,6 +1,7 @@
 module Data.Form.Training exposing (Training, fromDict, keys, training)
 
 import Admin.Scalar exposing (Uuid)
+import Data.Form exposing (FormData)
 import Data.Form.Helper as Helper exposing (booleanToString, uuidToCheckedList)
 import Data.Referential exposing (BasicSkill, MandatoryTraining)
 import Dict exposing (Dict)
@@ -33,11 +34,11 @@ keys =
     }
 
 
-fromDict : List BasicSkill -> List MandatoryTraining -> Dict String String -> Training
-fromDict basicSkills mandatoryTrainings dict =
+fromDict : List BasicSkill -> List MandatoryTraining -> FormData -> Training
+fromDict basicSkills mandatoryTrainings formData =
     let
         decode =
-            Helper.decode keys dict
+            Helper.decode keys formData
     in
     Training
         (decode.list mandatoryTrainings)

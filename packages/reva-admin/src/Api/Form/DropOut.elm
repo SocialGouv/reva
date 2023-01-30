@@ -12,6 +12,7 @@ import Api.Auth as Auth
 import Api.RemoteData exposing (nothingToError)
 import Api.Token exposing (Token)
 import Data.Candidacy exposing (CandidacyId)
+import Data.Form exposing (FormData)
 import Data.Form.DropOut
 import Data.Referential
 import Dict exposing (Dict)
@@ -41,12 +42,12 @@ dropOut :
     -> Token
     -> (RemoteData String () -> msg)
     -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
-    -> Dict String String
+    -> FormData
     -> Cmd msg
-dropOut candidacyId endpointGraphql token toMsg _ dict =
+dropOut candidacyId endpointGraphql token toMsg _ formData =
     let
         dropOutData =
-            Data.Form.DropOut.fromDict dict
+            Data.Form.DropOut.fromDict formData
 
         dropOutReasonContent =
             if dropOutData.otherReasonContent == "" then

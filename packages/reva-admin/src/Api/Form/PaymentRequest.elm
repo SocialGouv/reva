@@ -12,6 +12,7 @@ import Api.Auth as Auth
 import Api.Form.FundingRequest
 import Api.Token exposing (Token)
 import Data.Candidacy exposing (Candidacy, CandidacyId)
+import Data.Form exposing (FormData)
 import Data.Form.PaymentRequest
 import Data.Referential
 import Dict exposing (Dict)
@@ -25,12 +26,12 @@ createOrUpdate :
     -> Token
     -> (RemoteData String () -> msg)
     -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
-    -> Dict String String
+    -> FormData
     -> Cmd msg
-createOrUpdate candidacyId endpointGraphql token toMsg ( candidacy, referential ) dict =
+createOrUpdate candidacyId endpointGraphql token toMsg ( candidacy, referential ) formData =
     let
         payment =
-            Data.Form.PaymentRequest.fromDict dict
+            Data.Form.PaymentRequest.fromDict formData
 
         paymentInput =
             Admin.InputObject.PaymentRequestInput
@@ -58,7 +59,7 @@ confirm :
     -> Token
     -> (RemoteData String () -> msg)
     -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
-    -> Dict String String
+    -> FormData
     -> Cmd msg
 confirm candidacyId endpointGraphql token toMsg _ _ =
     let

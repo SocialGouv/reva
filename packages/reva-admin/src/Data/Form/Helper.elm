@@ -15,6 +15,7 @@ module Data.Form.Helper exposing
     )
 
 import Admin.Scalar exposing (Uuid(..))
+import Data.Form exposing (FormData)
 import Data.Scalar exposing (Timestamp)
 import Date
 import Dict
@@ -102,9 +103,12 @@ string keys dict key default =
     generic keys dict key identity default
 
 
-selection : Dict.Dict String String -> List { a | id : String } -> List String
-selection dict referential =
+selection : FormData -> List { a | id : String } -> List String
+selection formData referential =
     let
+        dict =
+            Data.Form.toDict formData
+
         isSelected item value =
             if value == "checked" then
                 Just item.id
@@ -122,7 +126,7 @@ selection dict referential =
 
 decode :
     a
-    -> Dict.Dict String String
+    -> FormData
     ->
         { bool : (a -> String) -> Bool -> Bool
         , date : (a -> String) -> Timestamp -> Timestamp
@@ -132,12 +136,16 @@ decode :
         , string : (a -> String) -> String -> String
         , maybe : { date : (a -> String) -> Maybe Timestamp -> Maybe Timestamp, string : (a -> String) -> Maybe String }
         }
-decode keys dict =
+decode keys formData =
+    let
+        dict =
+            Data.Form.toDict formData
+    in
     { bool = bool keys dict
     , date = date keys dict
     , generic = generic keys dict
     , int = int keys dict
-    , list = selection dict
+    , list = selection formData
     , string = string keys dict
     , maybe =
         { date = maybeDate keys dict

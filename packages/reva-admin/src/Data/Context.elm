@@ -9,4 +9,5 @@ type alias Context =
     , endpoint : String
     , navKey : Browser.Navigation.Key
     , token : Token
+    , uploadEndpoint : String
     }
