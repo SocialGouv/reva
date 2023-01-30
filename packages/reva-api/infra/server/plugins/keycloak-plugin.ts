@@ -8,7 +8,6 @@ declare module 'fastify' {
       hasRole: (role:KeyCloakUserRole) => boolean
       userInfo: KeycloakConnectUserInfo
       token: string
-      // [x: string]: unknown
     }
   }
 }
