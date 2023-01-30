@@ -32,5 +32,3 @@ const paymentRequestProofUpload = new cron.CronJob({
 });
 
 logger.info("Started cron jobs");
-
-uploadSpoolerFiles(); // TODO: KILL ME
