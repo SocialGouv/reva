@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon -e ts,json,graphql -w . ./index.ts",
+    "dev": "nodemon -e ts,json,graphql -w . ./index.ts | npx pino-pretty",
     "debug": "nodemon -e ts,json,graphql -w . --exec node --inspect-brk -r ts-node/register ./index.ts",
     "build": "npm run prisma:generate && npm run build:ts && npm run build:graphql",
     "build:ts": "rimraf -f ./dist && tsc -p tsconfig.json",
@@ -19,6 +19,7 @@
     "prisma:private-seed": "ts-node prisma/private-seed.ts",
     "prisma:migrate:deploy": "prisma migrate deploy",
     "cron": "npx ts-node --transpileOnly --esm infra/cron.ts",
+    "cron-dev": "npx ts-node --transpileOnly --esm infra/cron.ts | npx pino-pretty",
     "lint-staged": "lint-staged",
     "lint-all": "prettier --write \"{domain,infra}/**/*.{ts,md}\""
   },
@@ -59,6 +60,7 @@
   "dependencies": {
     "@fastify/cors": "^8.0.0",
     "@fastify/http-proxy": "^8.0.2",
+    "@fastify/multipart": "^7.4.0",
     "@fastify/static": "^6.4.0",
     "@graphql-tools/load-files": "^6.5.3",
     "@graphql-tools/merge": "^8.2.3",
@@ -86,6 +88,7 @@
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.3",
+    "@types/ajv": "^1.0.0",
     "@types/cron": "^2.0.0",
     "@types/crypto-js": "^4.1.1",
     "@types/debug": "^4.1.7",
@@ -103,6 +106,7 @@
     "jest": "^27.5.1",
     "lint-staged": "^13.0.4",
     "nodemon": "^2.0.19",
+    "pino-pretty": "^9.1.1",
     "prettier": "^2.5.1",
     "prettier-plugin-import-sort": "^0.0.7",
     "prisma": "^3.15.2",

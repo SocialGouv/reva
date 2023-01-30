@@ -5,7 +5,7 @@ import { Either, Left, Right } from "purify-ts";
 import { Role } from "../types/account";
 import { Candidacy } from "../types/candidacy";
 
-const log = debug("domain");
+const log = debug("domain:canManageCandidacy");
 export interface CanManageCandidacyDeps {
   hasRole: (role: Role) => boolean;
   getCandidacyFromId: (
@@ -26,24 +26,22 @@ export const canManageCandidacy = async (
   deps: CanManageCandidacyDeps,
   params: CanManageCandidacyParams
 ): Promise<Either<string, boolean>> => {
-  if(params.managerOnly) {
-    if (deps.hasRole("admin")) {
-      log('Admins are not authorized');
+  if (deps.hasRole("admin")) {
+    if (params.managerOnly) {
+      log("Admins are not authorized");
       return Right(false);
     }
-  } else {
-    if (deps.hasRole("admin")) {
-      log('User is admin, no further check');
-      return Right(true);
-    }
-    if (!deps.hasRole("manage_candidacy")) {
-      log('User is not manager');
-      return Right(false);
-    }
+    log("User is admin, no further check");
+    return Right(true);
   }
+
+  if (!deps.hasRole("manage_candidacy")) {
+    log("User is not manager");
+    return Right(false);
+  }
+
   let candidacy, account;
   try {
-    log("feature canManageCandidacy");
     candidacy = (await deps.getCandidacyFromId(params.candidacyId)).mapLeft(
       (err: string) => {
         throw err;
@@ -56,13 +54,13 @@ export const canManageCandidacy = async (
     );
   } catch (err) {
     log("Check failed:", err);
-    return Left(`Failed canManageCandidacy check: ${err}`);
+    return Left(err as string);
   }
 
   const candidacyOrganismId = candidacy.extract().organism?.id;
   const accountOrganismId = account.extract().organismId;
 
   const isSameOrganism = candidacyOrganismId === accountOrganismId;
-  log("Check passed:", isSameOrganism);
+  log("Manager and candidacy have same organismId:", isSameOrganism);
   return Right(isSameOrganism);
 };

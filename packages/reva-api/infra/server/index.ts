@@ -13,8 +13,9 @@ import {
   deleteCandidacyFromPhone,
 } from "../database/postgres/candidacies";
 import { graphqlConfiguration } from "../graphql";
-import keycloakAdminPlugin from "./keycloak-admin-plugin";
-import keycloakPlugin from "./keycloak-plugin";
+import keycloakAdminPlugin from "./plugins/keycloak-admin-plugin";
+import keycloakPlugin from "./plugins/keycloak-plugin";
+import proofUploadRoute from "./proof-upload";
 
 if (process.env.ES_APM_SERVER_URL) {
   const apm = require("elastic-apm-node").start({
@@ -159,6 +160,8 @@ server.post("/admin/candidacies/delete", async (request, reply) => {
   }
   reply.send("deleted");
 });
+
+server.register(proofUploadRoute);
 
 const start = async () => {
   try {
