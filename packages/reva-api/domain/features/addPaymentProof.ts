@@ -1,4 +1,4 @@
-import { Account, FileUploadSpooler } from "@prisma/client";
+import { FileUploadSpooler } from "@prisma/client";
 import {
   Either,
   EitherAsync,
@@ -8,25 +8,13 @@ import {
   Nothing,
   Right,
 } from "purify-ts";
+import { UploadedFile } from "../../infra/server/proof-upload";
 
-import { Role } from "../types/account";
-import {
-  Candidacy,
-  FileUploadSpoolerEntry,
-  PaymentRequest,
-} from "../types/candidacy";
+import { FileUploadSpoolerEntry, PaymentRequest } from "../types/candidacy";
 import { FundingRequest } from "../types/candidate";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
-import { canManageCandidacy } from "./canManageCandidacy";
 
 interface AddPaymentProofDeps {
-  hasRole: (role: Role) => boolean;
-  getCandidacyFromId: (
-    candidacyId: string
-  ) => Promise<Either<string, Candidacy>>;
-  getAccountFromKeycloakId: (
-    candidacyId: string
-  ) => Promise<Either<string, Account>>;
   getPaymentRequestByCandidacyId: (params: {
     candidacyId: string;
   }) => Promise<Either<string, Maybe<PaymentRequest>>>;
@@ -39,34 +27,18 @@ interface AddPaymentProofDeps {
 }
 
 interface AddPaymentProofParams {
-  keycloakId: string;
   candidacyId: string;
-  invoice?: UploadedFileInfo[];
-  appointment?: UploadedFileInfo[];
-}
-
-interface UploadedFileInfo {
-  data: Buffer;
-  filename: string;
-  mimetype: string;
-  limit: number;
+  invoice?: UploadedFile[];
+  appointment?: UploadedFile[];
 }
 
 export const addPaymentProof = async (
   {
-    hasRole,
-    getAccountFromKeycloakId,
-    getCandidacyFromId,
     getPaymentRequestByCandidacyId,
     getFundingRequestFromCandidacyId,
     addFileToUploadSpooler,
   }: AddPaymentProofDeps,
-  {
-    candidacyId,
-    keycloakId: keycloakId,
-    appointment,
-    invoice,
-  }: AddPaymentProofParams
+  { candidacyId, appointment, invoice }: AddPaymentProofParams
 ): Promise<Either<FunctionalError, any>> => {
   if (!invoice && !appointment) {
     return Promise.resolve(
@@ -78,19 +50,6 @@ export const addPaymentProof = async (
       )
     );
   }
-
-  const isAllowedEitherAsync = EitherAsync.fromPromise(() =>
-    canManageCandidacy(
-      { hasRole, getAccountFromKeycloakId, getCandidacyFromId },
-      { candidacyId, keycloakId }
-    )
-  ).chain((isAllowed) =>
-    Promise.resolve(
-      isAllowed
-        ? Right(true)
-        : Left("Vous n'êtes pas autorisé à traiter cette candidature")
-    )
-  );
 
   let paymentRequestId: string, fundingRequestNumAction: string;
 
@@ -142,32 +101,32 @@ export const addPaymentProof = async (
     });
   };
 
-  const addInvoiceToSpooler = (fileContent?: UploadedFileInfo[]) => {
-    const { filename, mimetype } = fileContent?.[0] as UploadedFileInfo;
+  const addInvoiceToSpooler = (fileContent?: UploadedFile[]) => {
+    const { filename, mimetype } = fileContent?.[0] as UploadedFile;
     return addFileToSpoolerEitherAsync({
       destinationFileName: `facture_${fundingRequestNumAction}.${getFilenameExtension(
         filename
       )}`,
-      destinationPath: "/candidacy/payment_request/proof",
+      destinationPath: "import",
       description: `Facture pour paymentRequestId ${paymentRequestId} (${filename} - ${mimetype})`,
       fileContent: fileContent?.[0].data,
     });
   };
 
-  const addAppointmentToSpooler = (fileContent?: UploadedFileInfo[]) => {
-    const { filename, mimetype } = fileContent?.[0] as UploadedFileInfo;
+  const addAppointmentToSpooler = (fileContent?: UploadedFile[]) => {
+    const { filename, mimetype } = fileContent?.[0] as UploadedFile;
     return addFileToSpoolerEitherAsync({
       destinationFileName: `presence_${fundingRequestNumAction}.${getFilenameExtension(
         filename
       )}`,
-      destinationPath: "/candidacy/payment_request/proof",
+      destinationPath: "import",
       description: `Feuille de présence pour paymentRequestId ${paymentRequestId} (${filename} - ${mimetype})`,
       fileContent: fileContent?.[0].data,
     });
   };
 
-  return isAllowedEitherAsync
-    .chain(() => getPaymentRequestIdEitherAsync)
+  // TODO: Check file type and size
+  return getPaymentRequestIdEitherAsync
     .chain(() => getNumActionEitherAsync)
     .chain(() =>
       invoice ? addInvoiceToSpooler(invoice) : Promise.resolve(Right(Nothing))
