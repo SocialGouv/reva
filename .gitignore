@@ -9,6 +9,7 @@ packages/reva-api/infra/generated-graphql-schema.graphql
 infra/ftps/data/*
 .parcel-cache
 .vscode
+.idea
 **/private
 **/coverage
 **/screenshots

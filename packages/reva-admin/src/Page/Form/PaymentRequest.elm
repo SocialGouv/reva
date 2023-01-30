@@ -1,13 +1,11 @@
-module Page.Form.PaymentRequest exposing (form)
+module Page.Form.PaymentRequest exposing (confirmationForm, form)
 
-import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
-import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
+import Data.Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Certification exposing (Certification)
 import Data.Form exposing (FormData)
 import Data.Form.Helper
 import Data.Form.PaymentRequest
 import Data.Referential exposing (Referential)
-import Dict exposing (Dict)
 import Page.Form as Form exposing (Form)
 import Page.Form.FundingRequest as FundingRequest
 import String exposing (String)
@@ -154,15 +152,29 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( keys.examHourCount, hourCountElement .examEstimatedHourCount )
         , ( "total", Form.Section "Total" )
         , FundingRequest.totalCostSection "Coût total de la demande de paiement" formData
-        , if Candidacy.isStatusEqualOrAbove candidacy DemandePaiementEnvoyee then
-            ( "", Form.Empty )
-
-          else
-            ( keys.isFormConfirmed
-            , Form.Checkbox "Je confirme ce montant de paiement. Je ne pourrai pas éditer cette demande de paiement après son envoi."
-            )
         ]
-    , saveLabel = Just "Enregistrer"
+    , saveLabel = Nothing
+    , submitLabel = "Enregistrer"
+    , title = "Demande de paiement"
+    }
+
+
+confirmationForm : FormData -> ( Candidacy, Referential ) -> Form
+confirmationForm formData ( _, _ ) =
+    { elements =
+        [ ( "heading", Form.Heading "3 - Confirmation" )
+        , case Data.Form.get keys.numAction formData of
+            Just numAction ->
+                ( "num-action", Form.Info "Numéro de prise en charge Reva" numAction )
+
+            Nothing ->
+                ( "num-action", Form.Empty )
+        , FundingRequest.totalCostSection "Coût total de la demande de paiement" formData
+        , ( keys.isFormConfirmed
+          , Form.Checkbox "Je confirme ce montant de paiement. Je ne pourrai pas éditer cette demande de paiement après son envoi."
+          )
+        ]
+    , saveLabel = Nothing
     , submitLabel = "Envoyer"
     , title = "Demande de paiement"
     }

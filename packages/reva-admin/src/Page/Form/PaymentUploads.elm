@@ -27,6 +27,6 @@ form formData ( _, _ ) =
         , ( keys.appointmentFiles, Form.File "Récapitulatif des attestations de présence" )
         ]
     , saveLabel = Nothing
-    , submitLabel = "Envoyer"
+    , submitLabel = "Enregistrer"
     , title = "Demande de paiement"
     }

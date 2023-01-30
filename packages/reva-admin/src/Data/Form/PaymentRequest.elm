@@ -77,7 +77,7 @@ keys =
 
 
 validate : ( Candidacy, Referential ) -> FormData -> Result String ()
-validate ( candidacy, _ ) formData =
+validate ( _, _ ) formData =
     let
         decode =
             Helper.decode keys formData
@@ -86,7 +86,7 @@ validate ( candidacy, _ ) formData =
         Ok ()
 
     else
-        Err "Veuillez confirmer le montant de la prise en charge avant son envoi définitif"
+        Err "Veuillez confirmer le montant de la demande de paiement avant son envoi définitif"
 
 
 fromDict : FormData -> PaymentRequestInput

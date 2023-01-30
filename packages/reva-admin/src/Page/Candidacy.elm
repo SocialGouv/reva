@@ -164,6 +164,9 @@ view context model =
                 PaymentRequest ->
                     viewForm "payment"
 
+                PaymentRequestConfirmation ->
+                    viewForm "payment-confirmation"
+
                 PaymentUploads ->
                     viewForm "payment-uploads"
 
@@ -352,10 +355,10 @@ updateTab context tab ( model, cmd ) =
                     Form.updateForm context
                         { form = Page.Form.PaymentRequest.form candidacy.certification
                         , onLoad = Just <| Api.Form.PaymentRequest.get tab.candidacyId
-                        , onSave = Just <| Api.Form.PaymentRequest.createOrUpdate tab.candidacyId
-                        , onSubmit = Api.Form.PaymentRequest.confirm tab.candidacyId
-                        , onRedirect = pushUrl <| candidacyTab Profile
-                        , onValidate = Data.Form.PaymentRequest.validate
+                        , onSave = Nothing
+                        , onSubmit = Api.Form.PaymentRequest.createOrUpdate tab.candidacyId
+                        , onRedirect = pushUrl <| candidacyTab PaymentUploads
+                        , onValidate = \_ _ -> Ok ()
                         , status =
                             if Candidacy.isPaymentRequestSent candidacy then
                                 Form.ReadOnly
@@ -375,8 +378,24 @@ updateTab context tab ( model, cmd ) =
                         , onLoad = Nothing
                         , onSave = Nothing
                         , onSubmit = Api.Form.PaymentUploads.submit tab.candidacyId context.uploadEndpoint
-                        , onRedirect = pushUrl <| candidacyTab Profile
+                        , onRedirect = pushUrl <| candidacyTab PaymentRequestConfirmation
                         , onValidate = \_ _ -> Ok ()
+                        , status = Form.Editable
+                        }
+                        model.form
+            in
+            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
+
+        ( View.Candidacy.Tab.PaymentRequestConfirmation, Success _ ) ->
+            let
+                ( formModel, formCmd ) =
+                    Form.updateForm context
+                        { form = Page.Form.PaymentRequest.confirmationForm
+                        , onLoad = Just <| Api.Form.PaymentRequest.get tab.candidacyId
+                        , onSave = Nothing
+                        , onSubmit = Api.Form.PaymentRequest.confirm tab.candidacyId
+                        , onRedirect = pushUrl <| candidacyTab Profile
+                        , onValidate = Data.Form.PaymentRequest.validate
                         , status = Form.Editable
                         }
                         model.form
