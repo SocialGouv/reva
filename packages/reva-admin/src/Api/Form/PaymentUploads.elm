@@ -7,6 +7,7 @@ import Data.Form.PaymentRequest
 import Data.Referential
 import Http
 import RemoteData exposing (RemoteData(..))
+import Task
 
 
 submit :
@@ -49,19 +50,26 @@ submit candidacyId uploadEndpoint _ token toMsg ( candidacy, referential ) formD
                 , timeout = Nothing
                 , tracker = Nothing
                 }
+
+        error msg =
+            Task.succeed (RemoteData.Failure msg)
+                |> Task.perform toMsg
     in
     case ( invoiceFiles, appointmentFiles ) of
         ( [ invoiceFile ], [ appointmentFile ] ) ->
             post [ invoiceFile, appointmentFile ]
 
-        ( [ invoiceFile ], [] ) ->
-            post [ invoiceFile ]
+        ( [ _ ], [] ) ->
+            error "Veuillez choisir une attestation de présence."
 
-        ( [], [ appointmentFile ] ) ->
-            post [ appointmentFile ]
+        ( [], [ _ ] ) ->
+            error "Veuillez choisir une facture."
+
+        ( [], [] ) ->
+            error "Veuillez choisir une facture et une attestation de présence."
 
         ( _, _ ) ->
-            Cmd.none
+            error "Vous ne pouvez pas envoyer plus d'une facture et plus d'une attestation de présence."
 
 
 stringErrorResponse : Result Http.Error value -> Result String ()
