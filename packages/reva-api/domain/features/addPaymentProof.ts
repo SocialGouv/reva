@@ -8,8 +8,8 @@ import {
   Nothing,
   Right,
 } from "purify-ts";
-import { UploadedFile } from "../../infra/server/proof-upload";
 
+import { UploadedFile } from "../../infra/server/proof-upload";
 import { FileUploadSpoolerEntry, PaymentRequest } from "../types/candidacy";
 import { FundingRequest } from "../types/candidate";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
@@ -32,115 +32,119 @@ interface AddPaymentProofParams {
   appointment?: UploadedFile[];
 }
 
-export const addPaymentProof = async (
-  {
-    getPaymentRequestByCandidacyId,
-    getFundingRequestFromCandidacyId,
-    addFileToUploadSpooler,
-  }: AddPaymentProofDeps,
-  { candidacyId, appointment, invoice }: AddPaymentProofParams
-): Promise<Either<FunctionalError, any>> => {
-  if (!invoice && !appointment) {
-    return Promise.resolve(
-      Left(
-        new FunctionalError(
-          FunctionalCodeError.UPLOAD_PAYMENT_PROOF_NO_ATTACHEMENT,
-          "No document to upload"
+export const addPaymentProof =
+  (fileMaxSize: number) =>
+  async (
+    {
+      getPaymentRequestByCandidacyId,
+      getFundingRequestFromCandidacyId,
+      addFileToUploadSpooler,
+    }: AddPaymentProofDeps,
+    { candidacyId, appointment, invoice }: AddPaymentProofParams
+  ): Promise<Either<FunctionalError, any>> => {
+    if (!invoice && !appointment) {
+      return Promise.resolve(
+        Left(
+          new FunctionalError(
+            FunctionalCodeError.UPLOAD_PAYMENT_PROOF_NO_ATTACHEMENT,
+            "No document to upload"
+          )
         )
-      )
-    );
-  }
-
-  let paymentRequestId: string, fundingRequestNumAction: string;
-
-  const getPaymentRequestIdEitherAsync = EitherAsync.fromPromise(async () => {
-    const paymentRequestEither = await getPaymentRequestByCandidacyId({
-      candidacyId,
-    });
-    if (paymentRequestEither.isRight()) {
-      const paymentRequestMaybe = paymentRequestEither.extract();
-      if (paymentRequestMaybe.isNothing()) {
-        return Left("Payment request not found");
-      }
-      paymentRequestId = (paymentRequestMaybe.extract() as PaymentRequest).id;
+      );
     }
-    return paymentRequestEither;
-  });
 
-  const getNumActionEitherAsync = EitherAsync.fromPromise(async () => {
-    const fundingRequestEither = await getFundingRequestFromCandidacyId({
-      candidacyId,
-    });
-    if (fundingRequestEither.isRight()) {
-      const fundingRequest = fundingRequestEither.extract();
-      if (fundingRequest === null) {
-        return Left("Funding request not found");
-      }
-      fundingRequestNumAction = fundingRequest.numAction;
-    }
-    return fundingRequestEither;
-  });
+    let paymentRequestId: string, fundingRequestNumAction: string;
 
-  const addFileToSpoolerEitherAsync = (
-    data: FileUploadSpoolerEntry
-  ): EitherAsync<string, Maybe<string>> => {
-    return EitherAsync.fromPromise(async () => {
-      if (data.fileContent) {
-        const spoolerIdEither = await addFileToUploadSpooler({
-          description: data.description,
-          destinationFileName: data.destinationFileName,
-          destinationPath: data.destinationPath,
-          fileContent: data.fileContent,
-        });
-        if (spoolerIdEither.isLeft()) {
-          return spoolerIdEither;
+    const getPaymentRequestIdEitherAsync = EitherAsync.fromPromise(async () => {
+      const paymentRequestEither = await getPaymentRequestByCandidacyId({
+        candidacyId,
+      });
+      if (paymentRequestEither.isRight()) {
+        const paymentRequestMaybe = paymentRequestEither.extract();
+        if (paymentRequestMaybe.isNothing()) {
+          return Left("Payment request not found");
         }
-        return Right(Just(spoolerIdEither.extract()));
+        paymentRequestId = (paymentRequestMaybe.extract() as PaymentRequest).id;
       }
-      return Promise.resolve(Right(Nothing));
+      return paymentRequestEither;
     });
-  };
 
-  const addInvoiceToSpooler = (fileContent?: UploadedFile[]) => {
-    const { filename, mimetype } = fileContent?.[0] as UploadedFile;
-    return addFileToSpoolerEitherAsync({
-      destinationFileName: `facture_${fundingRequestNumAction}.${getFilenameExtension(
-        filename
-      )}`,
-      destinationPath: "import",
-      description: `Facture pour paymentRequestId ${paymentRequestId} (${filename} - ${mimetype})`,
-      fileContent: fileContent?.[0].data,
+    const getNumActionEitherAsync = EitherAsync.fromPromise(async () => {
+      const fundingRequestEither = await getFundingRequestFromCandidacyId({
+        candidacyId,
+      });
+      if (fundingRequestEither.isRight()) {
+        const fundingRequest = fundingRequestEither.extract();
+        if (fundingRequest === null) {
+          return Left("Funding request not found");
+        }
+        fundingRequestNumAction = fundingRequest.numAction;
+      }
+      return fundingRequestEither;
     });
-  };
 
-  const addAppointmentToSpooler = (fileContent?: UploadedFile[]) => {
-    const { filename, mimetype } = fileContent?.[0] as UploadedFile;
-    return addFileToSpoolerEitherAsync({
-      destinationFileName: `presence_${fundingRequestNumAction}.${getFilenameExtension(
-        filename
-      )}`,
-      destinationPath: "import",
-      description: `Feuille de présence pour paymentRequestId ${paymentRequestId} (${filename} - ${mimetype})`,
-      fileContent: fileContent?.[0].data,
-    });
-  };
+    const addFileToSpoolerEitherAsync = (
+      data: FileUploadSpoolerEntry
+    ): EitherAsync<string, Maybe<string>> => {
+      return EitherAsync.fromPromise(async () => {
+        if (data.fileContent) {
+          if (data.fileContent.byteLength > fileMaxSize) {
+            return Left("Le fichier envoyé dépasse la taille maximum acceptée");
+          }
+          const spoolerIdEither = await addFileToUploadSpooler({
+            description: data.description,
+            destinationFileName: data.destinationFileName,
+            destinationPath: data.destinationPath,
+            fileContent: data.fileContent,
+          });
+          if (spoolerIdEither.isLeft()) {
+            return spoolerIdEither;
+          }
+          return Right(Just(spoolerIdEither.extract()));
+        }
+        return Promise.resolve(Right(Nothing));
+      });
+    };
 
-  // TODO: Check file type and size
-  return getPaymentRequestIdEitherAsync
-    .chain(() => getNumActionEitherAsync)
-    .chain(() =>
-      invoice ? addInvoiceToSpooler(invoice) : Promise.resolve(Right(Nothing))
-    )
-    .chain(() =>
-      appointment
-        ? addAppointmentToSpooler(appointment)
-        : Promise.resolve(Right(Nothing))
-    )
-    .mapLeft(
-      (msg) => new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, msg)
-    )
-    .run();
-};
+    const addInvoiceToSpooler = (fileContent?: UploadedFile[]) => {
+      const { filename, mimetype } = fileContent?.[0] as UploadedFile;
+      return addFileToSpoolerEitherAsync({
+        destinationFileName: `facture_${fundingRequestNumAction}.${getFilenameExtension(
+          filename
+        )}`,
+        destinationPath: "import",
+        description: `Facture pour paymentRequestId ${paymentRequestId} (${filename} - ${mimetype})`,
+        fileContent: fileContent?.[0].data,
+      });
+    };
+
+    const addAppointmentToSpooler = (fileContent?: UploadedFile[]) => {
+      const { filename, mimetype } = fileContent?.[0] as UploadedFile;
+      return addFileToSpoolerEitherAsync({
+        destinationFileName: `presence_${fundingRequestNumAction}.${getFilenameExtension(
+          filename
+        )}`,
+        destinationPath: "import",
+        description: `Feuille de présence pour paymentRequestId ${paymentRequestId} (${filename} - ${mimetype})`,
+        fileContent: fileContent?.[0].data,
+      });
+    };
+
+    return getPaymentRequestIdEitherAsync
+      .chain(() => getNumActionEitherAsync)
+      .chain(() =>
+        invoice ? addInvoiceToSpooler(invoice) : Promise.resolve(Right(Nothing))
+      )
+      .chain(() =>
+        appointment
+          ? addAppointmentToSpooler(appointment)
+          : Promise.resolve(Right(Nothing))
+      )
+      .mapLeft(
+        (msg) => new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, msg)
+      )
+      .run();
+  };
 
 function getFilenameExtension(filename: string) {
   return filename.split(".").pop();

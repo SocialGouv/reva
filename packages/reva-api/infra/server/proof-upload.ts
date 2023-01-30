@@ -23,6 +23,13 @@ interface PaymentRequestProofBody {
 }
 
 const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
+  const maxUploadFileSize: string =
+    process.env.UPLOAD_MAX_FILE_SIZE ?? "4194304";
+  const validMimeTypes: string =
+    process.env.UPLOAD_VALID_MIME_TYPES ??
+    "application/pdf,image/png,image/jpeg";
+  const validMimeTypeList: string[] = validMimeTypes.split(",");
+
   server.register(fastifyMultipart, {
     addToBody: true,
   });
@@ -35,8 +42,8 @@ const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
         type: "object",
         properties: {
           candidacyId: { type: "string" },
-            invoice: { type: "array", "items": { "type": "object"} },
-            appointment: { type: "array", "items": { "type": "object"} },
+          invoice: { type: "array", items: { type: "object" } },
+          appointment: { type: "array", items: { type: "object" } },
         },
         required: ["candidacyId"],
       },
@@ -56,14 +63,22 @@ const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
       if (auhtorization.isLeft()) {
         return reply.status(500).send({ err: auhtorization.extract() });
       }
-
       if (auhtorization.extract() === false) {
         return reply.status(403).send({
           err: "Vous n'êtes pas autorisé à gérer cette candidature.",
         });
       }
 
-      const result = await addPaymentProof(
+      if (
+        !hasValidMimeType(request.body.appointment) ||
+        !hasValidMimeType(request.body.invoice)
+      ) {
+        return reply.status(400).send({
+          err: `Le format du fichier n'est pas supporté. Formats valides: ${validMimeTypes}`,
+        });
+      }
+
+      const result = await addPaymentProof(parseInt(maxUploadFileSize))(
         {
           addFileToUploadSpooler,
           getPaymentRequestByCandidacyId,
@@ -85,6 +100,13 @@ const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
       }
     },
   });
+
+  const hasValidMimeType = (file?: UploadedFile[]): boolean => {
+    if (!file) {
+      return true;
+    }
+    return validMimeTypeList.includes(file[0].mimetype);
+  };
 };
 
 export default uploadRoute;
