@@ -45,32 +45,40 @@ export default async () => {
   logger.info("Connected to FTP server.");
 
   // Upload files to FTP and delete DB record
-  for (const { id } of spoolerFilesId) {
-    try {
-      // Fetch file data from db
-      const spoolerFile = (await prismaClient.fileUploadSpooler.findFirst({
-        where: { id },
-      })) as FileUploadSpooler;
-      logger.info(
-        `Processing file ${spoolerFile.description} created at ${spoolerFile.createdAt}`
-      );
+  try {
+    for (const { id } of spoolerFilesId) {
+      try {
+        // Fetch file data from db
+        const spoolerFile = (await prismaClient.fileUploadSpooler.findFirst({
+          where: { id },
+        })) as FileUploadSpooler;
+        logger.info(
+          `Processing file ${spoolerFile.description} created at ${spoolerFile.createdAt}`
+        );
 
-      // Upload file
-      const stream = Readable.from(spoolerFile?.fileContent);
-      await ftpClient.uploadFrom(
-        stream,
-        `${spoolerFile.destinationPath}/${spoolerFile.destinationFileName}`
-      );
-      stream.destroy();
+        // Upload file
+        const stream = Readable.from(spoolerFile?.fileContent);
+        await ftpClient.uploadFrom(
+          stream,
+          `${spoolerFile.destinationPath}/${spoolerFile.destinationFileName}`
+        );
+        stream.destroy();
 
-      // Delete from db
-      await prismaClient.fileUploadSpooler.delete({ where: { id } });
-    } catch (err) {
-      const msg = `Failed to process fileUploadSpooler ${id}`;
-      logger.error(`${msg} - ${err}`);
-      throw err;
+        // Delete from db
+        await prismaClient.fileUploadSpooler.delete({ where: { id } });
+      } catch (err) {
+        const msg = `Failed to process fileUploadSpooler ${id}`;
+        logger.error(`${msg} - ${err}`);
+        throw err;
+      }
     }
+  } catch(e) {
+    logger.info("Job interrupted.");
+    throw e;
+  }
+  finally {
+    ftpClient.close();
   }
 
-  logger.info("Finished job");
+  logger.info("Finished job with success");
 };
