@@ -441,12 +441,12 @@ viewEditableElement formData ( elementId, element ) =
                     li [ class "mb-1" ] [ text rule ]
             in
             [ div
-                [ class "bg-gray-100 px-5 py-4 rounded-lg"
+                [ class "max-w-lg bg-gray-100 px-5 py-4 rounded-lg"
                 , class "text-sm text-gray-600 mb-8"
                 ]
                 [ span [ class "text-gray-900" ] [ text title ]
                 , ul
-                    [ class "mt-3 list-disc pl-4 max-w-lg" ]
+                    [ class "mt-3 list-disc pl-4" ]
                     (List.map viewRule rules)
                 ]
             ]
@@ -757,7 +757,7 @@ viewInputFiles acceptMultipleFiles elementId =
         , name elementId
         , id elementId
         , on "change" (Json.Decode.map (UserSelectFiles elementId) filesDecoder)
-        , class "block w-[520px] mb-4 text-sm text-slate-500"
+        , class "block w-[520px] mb-8 text-sm text-slate-500"
         , class "file:mr-4 file:py-2 file:px-4"
         , class "file:rounded file:border-0"
         , class "file:bg-gray-900 file:text-white"
