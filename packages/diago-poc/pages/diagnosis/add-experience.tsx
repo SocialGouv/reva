@@ -29,7 +29,6 @@ const AddExperiencePage = () => {
               label= "Voir mon diagnostic"
               size="large" 
               />
-
           </div>
         </div>)}
       </div>
@@ -40,7 +39,7 @@ const AddExperiencePage = () => {
           <p className="text-sm font-semibold text-gray-800">{pAndC.profession?.label}</p>
           <div className="flex flex-col space-y-4 mt-4">
             {pAndC.competencies.map((c) => 
-              (<CompetencyCard key={c.id} competency={c} isSelected={false} />)
+              (<CompetencyCard key={c.code_ogr} competency={c} isSelected={false} />)
             )}
           </div>          
         </div>

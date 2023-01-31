@@ -2,10 +2,10 @@ import { ChangeEvent } from "react";
 import { Competency } from "../../types/types";
 
 export const CompetencyCard =(props: { competency: Competency; isSelected: boolean; onToggle?: (v: ChangeEvent<HTMLInputElement>) => void }) => (
-  <label key={props.competency.id} className="relative flex cursor-pointer bg-white p-4 shadow-sm focus:outline-none">
+  <label key={props.competency.code_ogr} className="relative flex cursor-pointer bg-white p-4 shadow-sm focus:outline-none">
     
     {!!props.onToggle && (<input 
-      type="checkbox" value={props.competency.id} className="sr-only" aria-labelledby="project-type-0-label" aria-describedby="project-type-0-description-0 project-type-0-description-1"
+      type="checkbox" value={props.competency.code_ogr} className="sr-only" aria-labelledby="project-type-0-label" aria-describedby="project-type-0-description-0 project-type-0-description-1"
       onChange={props.onToggle}
     />)}
     <span className="flex flex-1">

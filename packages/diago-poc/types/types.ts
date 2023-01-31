@@ -3,9 +3,13 @@ export interface Profession {
   label: string;
 }
 
+export interface Activity {
+  code_ogr: number;
+  label: string;
+}
+
 export interface Competency {
-  id: number;
-  blocId: string;
+  code_ogr: number;
   label: string;
 }
 
@@ -22,6 +26,6 @@ export interface Certification {
 
 export interface CertificationWithPurcentMatch extends Certification {
   purcent: number;
-  nb_competencies_match: number;
-  nb_competencies_total: number;
+  nb_activities_match: number;
+  nb_activities_total: number;
 }

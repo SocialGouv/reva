@@ -11,37 +11,49 @@ datasource db {
 }
 
 model Certification {
-  id           Int                     @id
-  label        String                  @db.VarChar(255)
-  rncpId       String                  @unique @map("rncp_id") @db.VarChar(255)
-  romes        RomesOnCertifications[]
-  competencies Competency[]
-  createdAt    DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt    DateTime?               @map("updated_at") @db.Timestamptz(6)
+  id        Int                     @id
+  label     String                  @db.VarChar(255)
+  rncpId    String                  @unique @map("rncp_id") @db.VarChar(255)
+  romes     RomesOnCertifications[]
+  createdAt DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime?               @map("updated_at") @db.Timestamptz(6)
 
   @@map("certification")
 }
 
 model Competency {
-  id                  Int           @id @default(autoincrement())
-  label               String
-  blocId              String        @unique @map("bloc_id") @db.VarChar(255)
-  certification       Certification @relation(fields: [certificationRncpId], references: [rncpId])
-  certificationRncpId String        @map("certification_rncp_id")
-  createdAt           DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt           DateTime?     @map("updated_at") @db.Timestamptz(6)
+  codeOgr            String                @id @unique @map("code_ogr") @db.VarChar(255)
+  label              String
+  labeTypeCompetence String                @map("label_type_competence")
+  romes              CompetenciesOnRomes[]
+  isActive           Boolean               @map("is_active")
+  createdAt          DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime?             @map("updated_at") @db.Timestamptz(6)
 
   @@map("competency")
 }
 
+model CompetenciesOnRomes {
+  competency        Competency @relation(fields: [competencyCodeOgr], references: [codeOgr])
+  competencyCodeOgr String     @map("competence_code_ogr")
+  rome              Rome       @relation(fields: [romeCode], references: [code])
+  romeCode          String     @map("rome_code")
+  createdAt         DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime?  @map("updated_at") @db.Timestamptz(6)
+
+  @@id([competencyCodeOgr, romeCode])
+  @@map("competency_rome")
+}
+
 model Rome {
-  id             Int                     @id
+  id             Int                     @id @default(autoincrement())
   code           String                  @unique @db.VarChar(255)
   label          String                  @db.VarChar(255)
-  slug           String                  @db.VarChar(255)
-  url            String                  @db.VarChar(255)
   profession     Profession[]
   certifications RomesOnCertifications[]
+  competences    CompetenciesOnRomes[]
+  activities     ActivitiesOnRomes[]
+  isActive       Boolean                 @map("is_active")
   createdAt      DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt      DateTime?               @map("updated_at") @db.Timestamptz(6)
 
@@ -80,4 +92,27 @@ model Diagnosis {
   updatedAt      DateTime? @map("updated_at") @db.Timestamptz(6)
 
   @@map("diagnosis")
+}
+
+model Activity {
+  codeOgr          String              @id @unique @map("code_ogr") @db.VarChar(255)
+  label            String
+  labeTypeActivity String              @map("label_type_activity")
+  romes            ActivitiesOnRomes[]
+  createdAt        DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime?           @map("updated_at") @db.Timestamptz(6)
+
+  @@map("activity")
+}
+
+model ActivitiesOnRomes {
+  activity        Activity  @relation(fields: [activityCodeOgr], references: [codeOgr])
+  activityCodeOgr String    @map("activity_code_ogr")
+  rome            Rome      @relation(fields: [romeCode], references: [code])
+  romeCode        String    @map("rome_code")
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime? @map("updated_at") @db.Timestamptz(6)
+
+  @@id([activityCodeOgr, romeCode])
+  @@map("activity_rome")
 }

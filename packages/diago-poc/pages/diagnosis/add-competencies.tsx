@@ -24,8 +24,8 @@ const professionAndCompetenciesReducer = (
       }
       let competencies = [...state.competencies];
 
-      if (competencies.find(c => c.id === action.payload?.id)) {
-        competencies = competencies.filter(c => c.id !== action.payload?.id)
+      if (competencies.find(c => c.code_ogr === action.payload?.code_ogr)) {
+        competencies = competencies.filter(c => c.code_ogr !== action.payload?.code_ogr)
       } else {
         competencies.push(action.payload)
       }
@@ -54,7 +54,7 @@ const AddCompetenciesPage = () => {
     queryFn: async () =>
       (
         await fetch(
-          "/api/competencies?" +
+          "/api/activities?" +
             new URLSearchParams({ professionId: (professionAndCompetencies.profession?.id as string | undefined) || "" })
         )
       ).json(),
@@ -101,19 +101,17 @@ const AddCompetenciesPage = () => {
       {!!competenciesData?.length && (<div className="mt-12">
         <p>Quelles compétences avez-vous ?</p>
         <div className="flex flex-col space-y-4 mt-4">
-          {competenciesData?.map((c) => (
+          {competenciesData?.map((c, idx) => (
               <CompetencyCard 
-                key={c.id}
+                key={c.code_ogr}
                 competency={c}
                 isSelected={professionAndCompetencies.competencies.includes(c)}
                 onToggle={(v) => dispatchProfessionAndCompetenciesEvent({
                   type: "check_competency",
-                  payload: competenciesData.find(c => `${c.id}` === v.target.value),
+                  payload: competenciesData.find(c => `${c.code_ogr}` === v.target.value),
                 })
               }
               />
-
-              
           ))}
         </div>
       </div>)}

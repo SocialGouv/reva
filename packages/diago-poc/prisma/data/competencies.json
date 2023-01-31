@@ -1,547 +1,1143 @@
 [
   {
-    "Numero_Fiche": 5983,
-    "Bloc_Competences_Code": "RNCP5983BC04",
-    "Bloc_Competences_Libelle": " Exercer en tant que professionnel de nuit en secteur social et médico-social"
+    "code_ogr": "100016",
+    "libelle_competence": "Gestes et postures de manutention",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 5983,
-    "Bloc_Competences_Code": "RNCP5983BC03",
-    "Bloc_Competences_Libelle": "Assurer une continuité jour-nuit dans un cadre institutionnel donné"
+    "code_ogr": "100038",
+    "libelle_competence": "Chiffrage/calcul de coût",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 5983,
-    "Bloc_Competences_Code": "RNCP5983BC02",
-    "Bloc_Competences_Libelle": "Accompagner la personne vulnérable"
+    "code_ogr": "100089",
+    "libelle_competence": "Techniques d'inventaire",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 5983,
-    "Bloc_Competences_Code": "RNCP5983BC01",
-    "Bloc_Competences_Libelle": "Assurer la sécurité des personnes et des biens"
+    "code_ogr": "100090",
+    "libelle_competence": "Techniques pédagogiques",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 13905,
-    "Bloc_Competences_Code": "RNCP13905BC08",
-    "Bloc_Competences_Libelle": "Conduire en autonomie un service destiné aux acteurs et aux usagers d’un territoire"
+    "code_ogr": "100129",
+    "libelle_competence": "Code des marchés publics",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 13905,
-    "Bloc_Competences_Code": "RNCP13905BC01",
-    "Bloc_Competences_Libelle": "Communiquer dans un contexte social et professionnel en mobilisant des références culturelles"
+    "code_ogr": "100144",
+    "libelle_competence": "Règles d'hygiène et de sécurité",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 13905,
-    "Bloc_Competences_Code": "RNCP13905BC07",
-    "Bloc_Competences_Libelle": "Communiquer en situation professionnelle et conduire en autonomie une activité d’accompagnement de la personne dans une perspective de confort, d’hygiène, de sécurité et d’existence de vie sociale"
+    "code_ogr": "100259",
+    "libelle_competence": "Utilisation de matériel de nettoyage",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 13905,
-    "Bloc_Competences_Code": "RNCP13905BC05",
-    "Bloc_Competences_Libelle": "Analyser les besoins des personnes liés à une activité de service "
+    "code_ogr": "100262",
+    "libelle_competence": "Procédures de nettoyage et de désinfection",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 13905,
-    "Bloc_Competences_Code": "RNCP13905BC06",
-    "Bloc_Competences_Libelle": "Caractériser le contexte socioprofessionnel et territorial des activités de service et organiser le travail d’une équipe dans le cadre d’une activité de service"
+    "code_ogr": "100340",
+    "libelle_competence": "Techniques de vente",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 13905,
-    "Bloc_Competences_Code": "RNCP13905BC09",
-    "Bloc_Competences_Libelle": "S’adapter à des enjeux professionnels particuliers  "
+    "code_ogr": "100341",
+    "libelle_competence": "Procédures d'encaissement",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 13905,
-    "Bloc_Competences_Code": "RNCP13905BC02",
-    "Bloc_Competences_Libelle": "Communiquer dans une langue étrangère dans les situations courantes de la vie professionnelle"
+    "code_ogr": "100343",
+    "libelle_competence": "Législation sociale",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 13905,
-    "Bloc_Competences_Code": "RNCP13905BC03",
-    "Bloc_Competences_Libelle": "Développer sa motricité "
+    "code_ogr": "100354",
+    "libelle_competence": "Types de cépages (ampélographie)",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 13905,
-    "Bloc_Competences_Code": "RNCP13905BC04",
-    "Bloc_Competences_Libelle": "Mettre en œuvre des savoirs et savoir-faire scientifiques et techniques "
+    "code_ogr": "100359",
+    "libelle_competence": "Règles d'hygiène et de sécurité alimentaire",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 17163,
-    "Bloc_Competences_Code": "RNCP17163BC02",
-    "Bloc_Competences_Libelle": "Etre un conducteur accompagnateur de personnes à mobilité réduite professionnel"
+    "code_ogr": "100381",
+    "libelle_competence": "Argumentation commerciale",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 17163,
-    "Bloc_Competences_Code": "RNCP17163BC03",
-    "Bloc_Competences_Libelle": "Accompagner la personne à mobilité réduite"
+    "code_ogr": "100414",
+    "libelle_competence": "Règles d'hygiène et d'asepsie",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 17163,
-    "Bloc_Competences_Code": "RNCP17163BC04",
-    "Bloc_Competences_Libelle": "Conduire et assurer la sécurité des personnes et des biens"
+    "code_ogr": "100541",
+    "libelle_competence": "Techniques de communication",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 17163,
-    "Bloc_Competences_Code": "RNCP17163BC01",
-    "Bloc_Competences_Libelle": "Communiquer dans un cadre institutionnel donné"
+    "code_ogr": "100906",
+    "libelle_competence": "Ergonomie",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 25085,
-    "Bloc_Competences_Code": "RNCP25085BC04",
-    "Bloc_Competences_Libelle": "UCP 1 : Établir une communication avec la personne et son entourage en lien avec son environnement"
+    "code_ogr": "101175",
+    "libelle_competence": "Techniques de repassage",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 25085,
-    "Bloc_Competences_Code": "RNCP25085BC07",
-    "Bloc_Competences_Libelle": "UCARE : unité capitalisable d'adaptation régionale ou à l'emploi"
+    "code_ogr": "101207",
+    "libelle_competence": "Couture",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 25085,
-    "Bloc_Competences_Code": "RNCP25085BC06",
-    "Bloc_Competences_Libelle": "UCP 3 : Réaliser des activités de vente"
+    "code_ogr": "101341",
+    "libelle_competence": "Droit de la sécurité sociale",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 25085,
-    "Bloc_Competences_Code": "RNCP25085BC05",
-    "Bloc_Competences_Libelle": "UCP 2 : Réaliser des interventions d’aide à la personne"
+    "code_ogr": "101343",
+    "libelle_competence": "Principes de la relation client",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 25085,
-    "Bloc_Competences_Code": "RNCP25085BC02",
-    "Bloc_Competences_Libelle": "UCG 2 : Mettre en oeuvre des actions contribuant à sa construction personnelle"
+    "code_ogr": "101388",
+    "libelle_competence": "Gestion des Ressources Humaines",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 25085,
-    "Bloc_Competences_Code": "RNCP25085BC01",
-    "Bloc_Competences_Libelle": "UCG 1 : Agir dans des situations de la vie courante à l’aide de repères sociaux"
+    "code_ogr": "101489",
+    "libelle_competence": "Droit du travail",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 25085,
-    "Bloc_Competences_Code": "RNCP25085BC03",
-    "Bloc_Competences_Libelle": "UCG 3 : Interagir avec son environnement social"
+    "code_ogr": "101654",
+    "libelle_competence": "Techniques de médiation",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 28048,
-    "Bloc_Competences_Code": "RNCP28048BC01",
-    "Bloc_Competences_Libelle": "UP1 Accompagner le développement du jeune enfant"
+    "code_ogr": "101716",
+    "libelle_competence": "Chaîne du froid",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 28048,
-    "Bloc_Competences_Code": "RNCP28048BC02",
-    "Bloc_Competences_Libelle": "UP2 Exercer son activité en accueil collectif"
+    "code_ogr": "101743",
+    "libelle_competence": "Calcul de quantité",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 28048,
-    "Bloc_Competences_Code": "RNCP28048BC03",
-    "Bloc_Competences_Libelle": "UP3 Exercer son activité en accueil individuel"
+    "code_ogr": "101744",
+    "libelle_competence": "Conversion d'unités de mesure",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 28048,
-    "Bloc_Competences_Code": "RNCP28048BC04",
-    "Bloc_Competences_Libelle": "UG1  Français, Histoire-Géographie et Enseignement moral et civique"
+    "code_ogr": "101745",
+    "libelle_competence": "Tourage de pâte",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 28048,
-    "Bloc_Competences_Code": "RNCP28048BC05",
-    "Bloc_Competences_Libelle": "UG2 Mathématiques-Sciences physiques et chimiques"
+    "code_ogr": "101746",
+    "libelle_competence": "Pétrissage manuel",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 28048,
-    "Bloc_Competences_Code": "RNCP28048BC06",
-    "Bloc_Competences_Libelle": "UG3 Éducation physique et sportive"
+    "code_ogr": "101747",
+    "libelle_competence": "Utilisation de pétrin mécanique",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 5983,
-    "Bloc_Competences_Code": "RNCP5983BC04",
-    "Bloc_Competences_Libelle": " Exercer en tant que professionnel de nuit en secteur social et médico-social"
+    "code_ogr": "101748",
+    "libelle_competence": "Caractéristiques des farines",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 5983,
-    "Bloc_Competences_Code": "RNCP5983BC03",
-    "Bloc_Competences_Libelle": "Assurer une continuité jour-nuit dans un cadre institutionnel donné"
+    "code_ogr": "101757",
+    "libelle_competence": "Utilisation de four à bois",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 5983,
-    "Bloc_Competences_Code": "RNCP5983BC02",
-    "Bloc_Competences_Libelle": "Accompagner la personne vulnérable"
+    "code_ogr": "101758",
+    "libelle_competence": "Utilisation de trancheuse",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 5983,
-    "Bloc_Competences_Code": "RNCP5983BC01",
-    "Bloc_Competences_Libelle": "Assurer la sécurité des personnes et des biens"
+    "code_ogr": "101760",
+    "libelle_competence": "Conditions de surgélation",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 13905,
-    "Bloc_Competences_Code": "RNCP13905BC08",
-    "Bloc_Competences_Libelle": "Conduire en autonomie un service destiné aux acteurs et aux usagers d’un territoire"
+    "code_ogr": "101782",
+    "libelle_competence": "Modes de cuisson des aliments",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 13905,
-    "Bloc_Competences_Code": "RNCP13905BC01",
-    "Bloc_Competences_Libelle": "Communiquer dans un contexte social et professionnel en mobilisant des références culturelles"
+    "code_ogr": "101784",
+    "libelle_competence": "Variétés de viandes",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 13905,
-    "Bloc_Competences_Code": "RNCP13905BC07",
-    "Bloc_Competences_Libelle": "Communiquer en situation professionnelle et conduire en autonomie une activité d’accompagnement de la personne dans une perspective de confort, d’hygiène, de sécurité et d’existence de vie sociale"
+    "code_ogr": "101811",
+    "libelle_competence": "Dressage de plateaux de fruits de mer",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 13905,
-    "Bloc_Competences_Code": "RNCP13905BC05",
-    "Bloc_Competences_Libelle": "Analyser les besoins des personnes liés à une activité de service "
+    "code_ogr": "101813",
+    "libelle_competence": "Variétés de poissons",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 13905,
-    "Bloc_Competences_Code": "RNCP13905BC06",
-    "Bloc_Competences_Libelle": "Caractériser le contexte socioprofessionnel et territorial des activités de service et organiser le travail d’une équipe dans le cadre d’une activité de service"
+    "code_ogr": "101829",
+    "libelle_competence": "Utilisation d'engins de manutention non motorisés (transpalette, diable, ...)",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 13905,
-    "Bloc_Competences_Code": "RNCP13905BC09",
-    "Bloc_Competences_Libelle": "S’adapter à des enjeux professionnels particuliers  "
+    "code_ogr": "101846",
+    "libelle_competence": "Types de pain",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 13905,
-    "Bloc_Competences_Code": "RNCP13905BC02",
-    "Bloc_Competences_Libelle": "Communiquer dans une langue étrangère dans les situations courantes de la vie professionnelle"
+    "code_ogr": "101848",
+    "libelle_competence": "Types de produits de charcuterie",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 13905,
-    "Bloc_Competences_Code": "RNCP13905BC03",
-    "Bloc_Competences_Libelle": "Développer sa motricité "
+    "code_ogr": "101850",
+    "libelle_competence": "Variétés de fruits et légumes",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 13905,
-    "Bloc_Competences_Code": "RNCP13905BC04",
-    "Bloc_Competences_Libelle": "Mettre en œuvre des savoirs et savoir-faire scientifiques et techniques "
+    "code_ogr": "101851",
+    "libelle_competence": "Caractéristiques des fromages",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 17163,
-    "Bloc_Competences_Code": "RNCP17163BC02",
-    "Bloc_Competences_Libelle": "Etre un conducteur accompagnateur de personnes à mobilité réduite professionnel"
+    "code_ogr": "101853",
+    "libelle_competence": "Caractéristiques des vins",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 17163,
-    "Bloc_Competences_Code": "RNCP17163BC03",
-    "Bloc_Competences_Libelle": "Accompagner la personne à mobilité réduite"
+    "code_ogr": "101949",
+    "libelle_competence": "Techniques de prévention et de gestion de conflits",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 17163,
-    "Bloc_Competences_Code": "RNCP17163BC04",
-    "Bloc_Competences_Libelle": "Conduire et assurer la sécurité des personnes et des biens"
+    "code_ogr": "101987",
+    "libelle_competence": "Procédures de retraitement des déchets",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 17163,
-    "Bloc_Competences_Code": "RNCP17163BC01",
-    "Bloc_Competences_Libelle": "Communiquer dans un cadre institutionnel donné"
+    "code_ogr": "102023",
+    "libelle_competence": "Lecture de fiche technique",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 25085,
-    "Bloc_Competences_Code": "RNCP25085BC04",
-    "Bloc_Competences_Libelle": "UCP 1 : Établir une communication avec la personne et son entourage en lien avec son environnement"
+    "code_ogr": "102065",
+    "libelle_competence": "Diététique",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 25085,
-    "Bloc_Competences_Code": "RNCP25085BC07",
-    "Bloc_Competences_Libelle": "UCARE : unité capitalisable d'adaptation régionale ou à l'emploi"
+    "code_ogr": "102066",
+    "libelle_competence": "Techniques d'écoute et de la relation à la personne",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 25085,
-    "Bloc_Competences_Code": "RNCP25085BC06",
-    "Bloc_Competences_Libelle": "UCP 3 : Réaliser des activités de vente"
+    "code_ogr": "102096",
+    "libelle_competence": "Règles d'hygiène et de propreté",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 25085,
-    "Bloc_Competences_Code": "RNCP25085BC05",
-    "Bloc_Competences_Libelle": "UCP 2 : Réaliser des interventions d’aide à la personne"
+    "code_ogr": "102216",
+    "libelle_competence": "Gestion budgétaire",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 25085,
-    "Bloc_Competences_Code": "RNCP25085BC02",
-    "Bloc_Competences_Libelle": "UCG 2 : Mettre en oeuvre des actions contribuant à sa construction personnelle"
+    "code_ogr": "102226",
+    "libelle_competence": "Normes rédactionnelles",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 25085,
-    "Bloc_Competences_Code": "RNCP25085BC01",
-    "Bloc_Competences_Libelle": "UCG 1 : Agir dans des situations de la vie courante à l’aide de repères sociaux"
+    "code_ogr": "102250",
+    "libelle_competence": "Techniques d'animation d'équipe",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 25085,
-    "Bloc_Competences_Code": "RNCP25085BC03",
-    "Bloc_Competences_Libelle": "UCG 3 : Interagir avec son environnement social"
+    "code_ogr": "102336",
+    "libelle_competence": "Techniques de gestion du stress",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 28048,
-    "Bloc_Competences_Code": "RNCP28048BC01",
-    "Bloc_Competences_Libelle": "UP1 Accompagner le développement du jeune enfant"
+    "code_ogr": "102459",
+    "libelle_competence": "Méthodes d'enquête",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 28048,
-    "Bloc_Competences_Code": "RNCP28048BC02",
-    "Bloc_Competences_Libelle": "UP2 Exercer son activité en accueil collectif"
+    "code_ogr": "102631",
+    "libelle_competence": "Braille",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 28048,
-    "Bloc_Competences_Code": "RNCP28048BC03",
-    "Bloc_Competences_Libelle": "UP3 Exercer son activité en accueil individuel"
+    "code_ogr": "102633",
+    "libelle_competence": "Langage Parlé Complété -LPC-",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 28048,
-    "Bloc_Competences_Code": "RNCP28048BC04",
-    "Bloc_Competences_Libelle": "UG1  Français, Histoire-Géographie et Enseignement moral et civique"
+    "code_ogr": "102995",
+    "libelle_competence": "Règles de tenue de caisse",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 28048,
-    "Bloc_Competences_Code": "RNCP28048BC05",
-    "Bloc_Competences_Libelle": "UG2 Mathématiques-Sciences physiques et chimiques"
+    "code_ogr": "103848",
+    "libelle_competence": "Techniques d'animation de groupe",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 28048,
-    "Bloc_Competences_Code": "RNCP28048BC06",
-    "Bloc_Competences_Libelle": "UG3 Éducation physique et sportive"
+    "code_ogr": "103857",
+    "libelle_competence": "Comptabilité publique",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34692,
-    "Bloc_Competences_Code": "RNCP34692BC06",
-    "Bloc_Competences_Libelle": "Activités auprès de personnes âgées"
+    "code_ogr": "103872",
+    "libelle_competence": "Règles de sécurité des biens et des personnes",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34690,
-    "Bloc_Competences_Code": "RNCP34690BC01",
-    "Bloc_Competences_Libelle": "Développement de son activité professionnelle auprès de plusieurs particuliers employeurs"
+    "code_ogr": "103885",
+    "libelle_competence": "Gestes d'urgence et de secours",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34690,
-    "Bloc_Competences_Code": "RNCP34690BC04",
-    "Bloc_Competences_Libelle": "Entretien du domicile et du linge : pratiques éco-responsables"
+    "code_ogr": "103918",
+    "libelle_competence": "Techniques d'éveil de l'enfant",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34690,
-    "Bloc_Competences_Code": "RNCP34690BC05",
-    "Bloc_Competences_Libelle": "Personne âgée en situation de dépendance : accompagnement personnalisé"
+    "code_ogr": "103938",
+    "libelle_competence": "Classification des handicaps",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34690,
-    "Bloc_Competences_Code": "RNCP34690BC03",
-    "Bloc_Competences_Libelle": "Prévention et sécurité au domicile"
+    "code_ogr": "104085",
+    "libelle_competence": "Réglementation du transport de personnes",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34690,
-    "Bloc_Competences_Code": "RNCP34690BC02",
-    "Bloc_Competences_Libelle": "Gestion de son activité professionnelle auprès de particuliers employeurs"
+    "code_ogr": "104155",
+    "libelle_competence": "Gestion financière",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34690,
-    "Bloc_Competences_Code": "RNCP34690BC07",
-    "Bloc_Competences_Libelle": "Actes du quotidien et activités de l'adulte en situation de dépendance"
+    "code_ogr": "104167",
+    "libelle_competence": "Caractéristiques des produits d'entretien",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34690,
-    "Bloc_Competences_Code": "RNCP34690BC06",
-    "Bloc_Competences_Libelle": "Personne en situation de handicap : projet et accompagnement personnalisé"
+    "code_ogr": "104266",
+    "libelle_competence": "Utilisation d'appareil électroménager",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34690,
-    "Bloc_Competences_Code": "RNCP34690BC08",
-    "Bloc_Competences_Libelle": "Repas auprès de l'adulte en situation de dépendance"
+    "code_ogr": "107028",
+    "libelle_competence": "Mécanique automobile",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34691,
-    "Bloc_Competences_Code": "RNCP34691BC02",
-    "Bloc_Competences_Libelle": "Gestion de son activité professionnelle auprès de particuliers employeurs"
+    "code_ogr": "107204",
+    "libelle_competence": "Grille de codification Sécurité Sociale",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34691,
-    "Bloc_Competences_Code": "RNCP34691BC05",
-    "Bloc_Competences_Libelle": "Projet d'accueil et d'accompagnement personnalisé de l'enfant"
+    "code_ogr": "107255",
+    "libelle_competence": "Protocoles de lutte contre les infections nosocomiales",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34691,
-    "Bloc_Competences_Code": "RNCP34691BC06",
-    "Bloc_Competences_Libelle": "Accompagnement aux actes quotidiens de l'enfant"
+    "code_ogr": "107329",
+    "libelle_competence": "Utilisation de monobrosse",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34691,
-    "Bloc_Competences_Code": "RNCP34691BC07",
-    "Bloc_Competences_Libelle": "Activités d'éveil et de socialisation contribuant au développement de l'enfant "
+    "code_ogr": "107330",
+    "libelle_competence": "Techniques de bio-nettoyage",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34691,
-    "Bloc_Competences_Code": "RNCP34691BC08",
-    "Bloc_Competences_Libelle": "Repas de l'enfant"
+    "code_ogr": "107336",
+    "libelle_competence": "Procédures de traitement de linge hospitalier",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34691,
-    "Bloc_Competences_Code": "RNCP34691BC01",
-    "Bloc_Competences_Libelle": "Développement de son activité professionnelle auprès de plusieurs particuliers employeurs"
+    "code_ogr": "107338",
+    "libelle_competence": "Caractéristiques des équipements de brancardage (lit, fauteuil roulant, ...)",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34691,
-    "Bloc_Competences_Code": "RNCP34691BC03",
-    "Bloc_Competences_Libelle": "Prévention et sécurité au domicile"
+    "code_ogr": "107339",
+    "libelle_competence": "Procédures de désinfection/stérilisation de matériel médicochirurgical",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34691,
-    "Bloc_Competences_Code": "RNCP34691BC04",
-    "Bloc_Competences_Libelle": "Entretien du domicile et du linge : pratiques éco-responsables"
+    "code_ogr": "107340",
+    "libelle_competence": "Procédures de conditionnement de matériel médicochirurgical",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34692,
-    "Bloc_Competences_Code": "RNCP34692BC07",
-    "Bloc_Competences_Libelle": "Actes du quotidien et activités de l'enfant de plus de trois ans"
+    "code_ogr": "107361",
+    "libelle_competence": "Terminologie médicale",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34692,
-    "Bloc_Competences_Code": "RNCP34692BC08",
-    "Bloc_Competences_Libelle": "Repas au domicile du particulier employeur"
+    "code_ogr": "107373",
+    "libelle_competence": "Identification des signes et du degré de la douleur",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34692,
-    "Bloc_Competences_Code": "RNCP34692BC01",
-    "Bloc_Competences_Libelle": "Développement de son activité professionnelle auprès de plusieurs particuliers employeurs"
+    "code_ogr": "107374",
+    "libelle_competence": "Psychologie de l'enfant",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34692,
-    "Bloc_Competences_Code": "RNCP34692BC02",
-    "Bloc_Competences_Libelle": "Gestion de son activité professionnelle auprès de particuliers employeurs"
+    "code_ogr": "107375",
+    "libelle_competence": "Pathologies de l'enfant",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34692,
-    "Bloc_Competences_Code": "RNCP34692BC03",
-    "Bloc_Competences_Libelle": "Prévention et sécurité au domicile "
+    "code_ogr": "107376",
+    "libelle_competence": "Soins de nursing",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34692,
-    "Bloc_Competences_Code": "RNCP34692BC04",
-    "Bloc_Competences_Libelle": "Entretien du domicile et du linge : pratiques éco-responsables "
+    "code_ogr": "107382",
+    "libelle_competence": "Protocoles de soins pré et post-opératoires",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 34692,
-    "Bloc_Competences_Code": "RNCP34692BC05",
-    "Bloc_Competences_Libelle": "Services personnalisés aux familles"
+    "code_ogr": "107383",
+    "libelle_competence": "Pathologies psychiatriques",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35028,
-    "Bloc_Competences_Code": "RNCP35028BC02",
-    "Bloc_Competences_Libelle": "Contribuer aux prestations du service hôtelier en respectant les standards de qualité de l'établissement"
+    "code_ogr": "107391",
+    "libelle_competence": "Procédures de contrôle de matériel et d'équipements médico-techniques",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35028,
-    "Bloc_Competences_Code": "RNCP35028BC03",
-    "Bloc_Competences_Libelle": "Accompagner le résident dans les gestes de la vie quotidienne en tenant compte du projet d'accompagnement personnalisé"
+    "code_ogr": "107397",
+    "libelle_competence": "Réglementation de l'aide médicale d'urgence",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35028,
-    "Bloc_Competences_Code": "RNCP35028BC01",
-    "Bloc_Competences_Libelle": "Réaliser le nettoyage et le bionettoyage des locaux en s'adaptant à la présence des résidents"
+    "code_ogr": "107539",
+    "libelle_competence": "Psychologie",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35506,
-    "Bloc_Competences_Code": "RNCP35506BC01",
-    "Bloc_Competences_Libelle": " Entretenir le logement  et le linge d’un particulier"
+    "code_ogr": "107666",
+    "libelle_competence": "Manipulation d'équipement (lit médicalisé, lève malade, ...)",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35506,
-    "Bloc_Competences_Code": "RNCP35506BC02",
-    "Bloc_Competences_Libelle": "Accompagner la personne dans les actes essentiels du quotidien"
+    "code_ogr": "107667",
+    "libelle_competence": "Techniques de manipulation de patient",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35506,
-    "Bloc_Competences_Code": "RNCP35506BC03",
-    "Bloc_Competences_Libelle": "Relayer les parents dans la prise en charge des enfants à leur domicile"
+    "code_ogr": "107674",
+    "libelle_competence": "Pathologies du vieillissement",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35506,
-    "Bloc_Competences_Code": "RNCP35506BC04",
-    "Bloc_Competences_Libelle": "CCS Accompagner la personne en situation de handicap vivant  à domicile "
+    "code_ogr": "107774",
+    "libelle_competence": "Caractéristiques socio-culturelles des publics",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35513,
-    "Bloc_Competences_Code": "RNCP35513BC10",
-    "Bloc_Competences_Libelle": "Positionnement vis à vis d’un champ professionnel"
+    "code_ogr": "107775",
+    "libelle_competence": "Techniques de conduite d'entretien",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35513,
-    "Bloc_Competences_Code": "RNCP35513BC01",
-    "Bloc_Competences_Libelle": "Concevoir des interventions adaptées aux enjeux de la société"
+    "code_ogr": "107844",
+    "libelle_competence": "Code de procédure pénale",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35513,
-    "Bloc_Competences_Code": "RNCP35513BC02",
-    "Bloc_Competences_Libelle": "Construire des dynamiques partenariales"
+    "code_ogr": "107846",
+    "libelle_competence": "Gestion de logement social",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35513,
-    "Bloc_Competences_Code": "RNCP35513BC03",
-    "Bloc_Competences_Libelle": "Conduire un projet pour des établissements et services sanitaires et sociaux"
+    "code_ogr": "107925",
+    "libelle_competence": "Règles de sécurité domestique",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35513,
-    "Bloc_Competences_Code": "RNCP35513BC04",
-    "Bloc_Competences_Libelle": "Construire des accompagnements adaptés"
+    "code_ogr": "107926",
+    "libelle_competence": "Techniques d'écoute active",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35513,
-    "Bloc_Competences_Code": "RNCP35513BC05",
-    "Bloc_Competences_Libelle": "Assurer l’encadrement et la coordination"
+    "code_ogr": "107939",
+    "libelle_competence": "Relation à l'enfant ou l'adolescent",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35513,
-    "Bloc_Competences_Code": "RNCP35513BC06",
-    "Bloc_Competences_Libelle": "Usages numériques"
+    "code_ogr": "107969",
+    "libelle_competence": "Organisation du système sanitaire et social",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35513,
-    "Bloc_Competences_Code": "RNCP35513BC07",
-    "Bloc_Competences_Libelle": "Exploitation de données à des fins d’analyse"
+    "code_ogr": "107970",
+    "libelle_competence": "Procédures et circuits administratifs",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35513,
-    "Bloc_Competences_Code": "RNCP35513BC08",
-    "Bloc_Competences_Libelle": "Expression et communication écrites et orales"
+    "code_ogr": "107972",
+    "libelle_competence": "Règles de gestion de budget familial",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35513,
-    "Bloc_Competences_Code": "RNCP35513BC09",
-    "Bloc_Competences_Libelle": "Action en responsabilité au sein d’une organisation professionnelle"
+    "code_ogr": "108019",
+    "libelle_competence": "Contrôle de gestion",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35993,
-    "Bloc_Competences_Code": "RNCP35993BC01",
-    "Bloc_Competences_Libelle": "Concevoir et organiser une prestation de services au domicile"
+    "code_ogr": "108025",
+    "libelle_competence": "Règles de sécurité et d'hygiène des établissements de soins",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35993,
-    "Bloc_Competences_Code": "RNCP35993BC02",
-    "Bloc_Competences_Libelle": "Animer et coordonner une équipe d’intervenants à domicile"
+    "code_ogr": "108027",
+    "libelle_competence": "Droit pénal",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 35993,
-    "Bloc_Competences_Code": "RNCP35993BC03",
-    "Bloc_Competences_Libelle": "Contribuer à l’amélioration de la qualité du service et représenter la structure auprès des partenaires"
+    "code_ogr": "110028",
+    "libelle_competence": "Lecture de carte routière",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 36004,
-    "Bloc_Competences_Code": "RNCP36004BC01",
-    "Bloc_Competences_Libelle": "Accompagnement de la personne dans les actes essentiels de la vie quotidienne"
+    "code_ogr": "110512",
+    "libelle_competence": "Environnement géographique et culturel (sites touristiques, ...)",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 36004,
-    "Bloc_Competences_Code": "RNCP36004BC02",
-    "Bloc_Competences_Libelle": "Accompagnement de la personne dans les actes de la vie quotidienne dans le respect de cette personne et des règles d'hygiène et de sécurité"
+    "code_ogr": "115839",
+    "libelle_competence": "Démarche qualité",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 36004,
-    "Bloc_Competences_Code": "RNCP36004BC03",
-    "Bloc_Competences_Libelle": "Accompagnement à la vie sociale et relationnelle de la personne"
+    "code_ogr": "115916",
+    "libelle_competence": "Diagnostic social",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 36004,
-    "Bloc_Competences_Code": "RNCP36004BC04",
-    "Bloc_Competences_Libelle": "Positionnement en tant que travailleur social dans son contexte d'intervention"
+    "code_ogr": "116572",
+    "libelle_competence": "Produits biologiques",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   },
   {
-    "Numero_Fiche": 36004,
-    "Bloc_Competences_Code": "RNCP36004BC05",
-    "Bloc_Competences_Libelle": "Travail en équipe pluri-professionnelle, gestion des risques  et traitement des informations liées à l'accompagnement de la personne"
+    "code_ogr": "116573",
+    "libelle_competence": "Boucherie",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "116574",
+    "libelle_competence": "Charcuterie",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "116575",
+    "libelle_competence": "Chocolats, confiserie",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "116576",
+    "libelle_competence": "Épicerie salée",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "116577",
+    "libelle_competence": "Épicerie sucrée",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "116578",
+    "libelle_competence": "Fromagerie, crèmerie",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "116580",
+    "libelle_competence": "Poissonnerie",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "116581",
+    "libelle_competence": "Produits diététiques",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "116582",
+    "libelle_competence": "Produits exotiques",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "116583",
+    "libelle_competence": "Produits traiteurs et rôtisserie",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "117079",
+    "libelle_competence": "Organisation et fonctionnement des établissements hospitaliers",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "118106",
+    "libelle_competence": "Produits vins et spiritueux",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "118366",
+    "libelle_competence": "Produits de boulangerie",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "118867",
+    "libelle_competence": "Conduite du changement",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "118975",
+    "libelle_competence": "Outils bureautiques",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "119000",
+    "libelle_competence": "Gestion des stocks et des approvisionnements",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "119072",
+    "libelle_competence": "Gérontologie",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "119260",
+    "libelle_competence": "Maintenance de premier niveau",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "119325",
+    "libelle_competence": "Psychomotricité",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "119375",
+    "libelle_competence": "Langue des signes",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "119508",
+    "libelle_competence": "Logiciels de gestion de stocks",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "119644",
+    "libelle_competence": "Manutention de patients",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "119705",
+    "libelle_competence": "Gouvernance d'entreprise",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "119842",
+    "libelle_competence": "Management",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "120246",
+    "libelle_competence": "Gestion de projet",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "120372",
+    "libelle_competence": "Utilisation de matériel de navigation",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "120676",
+    "libelle_competence": "Utilisation d'outils de taille",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "120886",
+    "libelle_competence": "Logiciels comptables",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "120888",
+    "libelle_competence": "Gestion comptable",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "120889",
+    "libelle_competence": "Gestion administrative",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "121002",
+    "libelle_competence": "Maintenance de véhicules",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "121480",
+    "libelle_competence": "Produits de pâtisserie",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "121706",
+    "libelle_competence": "Techniques commerciales",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "121863",
+    "libelle_competence": "Analyse des risques",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "122410",
+    "libelle_competence": "Stockage de produits alimentaires",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "122425",
+    "libelle_competence": "Méthodes et outils de résolution de problèmes",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "122435",
+    "libelle_competence": "Système Hazard Analysis Critical Control Point (HACCP)",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "122545",
+    "libelle_competence": "Types de lait",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "122757",
+    "libelle_competence": "Règles pénitentiaires européennes",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "123019",
+    "libelle_competence": "Techniques de conditionnement",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "123347",
+    "libelle_competence": "Conduite de projet en intervention sociale",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "123811",
+    "libelle_competence": "Habilitation Prévention et Secours Civiques de niveau 1 (PSC1)",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "123940",
+    "libelle_competence": "Aide au maintien à domicile",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "123992",
+    "libelle_competence": "Dispositifs d'aide sociale",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "124341",
+    "libelle_competence": "Techniques de détachage",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "124455",
+    "libelle_competence": "Appareil de conditionnement",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "124475",
+    "libelle_competence": "Produits de nettoyage",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "124885",
+    "libelle_competence": "Économie sociale",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "124929",
+    "libelle_competence": "Boulage des pâtons",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "125248",
+    "libelle_competence": "Techniques de cirage de surfaces/sols",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "125612",
+    "libelle_competence": "Stérilisation de matériel",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "126124",
+    "libelle_competence": "Utilisation d'appareils de lecture optique de codes-barres (pistolet, flasheur, ...)",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "126172",
+    "libelle_competence": "Droit de l'enfant et protection des mineurs",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "126292",
+    "libelle_competence": "Fruits et légumes",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
+  },
+  {
+    "code_ogr": "126447",
+    "libelle_competence": "Lecture de modes d'emploi (produits, matériels, /...)",
+    "code_type_competence": "1",
+    "libelle_type_competence": "SAVOIRS THEORIQUES ET PROCEDURAUX",
+    "statut": "1"
   }
 ]

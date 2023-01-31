@@ -3,21 +3,28 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { CertificationWithPurcentMatch } from "../../types/types";
 import {prismaClient} from "./prisma"
 
-export const getCertificationsByCompetenciesIds = async (competenciesIds: string[] = []) =>{
+export const getCertificationsByactivitiesCodeOgrs = async (activitiesCodeOgrs: string[] = []) =>{
   const certifications = await prismaClient.$queryRaw`
+
     select c.*,
-      cer_comp.sum_competencies::int as nb_competencies_match,
-      cer_comp_all.sum_competencies::int as nb_competencies_total,
-      (cer_comp.sum_competencies/cer_comp_all.sum_competencies::float)*100 as purcent
+      cer_comp.sum_activities::int as nb_activities_match,
+      cer_comp_all.sum_activities::int as nb_activities_total,
+      (cer_comp.sum_activities/cer_comp_all.sum_activities::float)*100 as purcent
     from certification c
-    inner join (select cer.id, sum(1) as "sum_competencies", sum(1) as "sum_all_competencies"
+    
+    inner join (select cer.id, sum(1) as "sum_activities"
         from certification cer
-        inner join competency comp on comp.certification_rncp_id = cer.rncp_id
-        where comp.id in (${Prisma.join(competenciesIds.map(c => Number.parseInt(c, 10)))})
+        inner join rome_certification rc on rc.certification_id = cer.id
+        inner join rome r on r.id = rc.rome_id
+        inner join activity_rome ar on ar.rome_code = r.code
+        where ar.activity_code_ogr in (${Prisma.join(activitiesCodeOgrs)})
       group by 1) cer_comp on cer_comp.id = c.id
-    inner join (select cer.id, sum(1) as "sum_competencies"
+    
+    inner join (select cer.id, sum(1) as "sum_activities"
         from certification cer
-        inner join competency comp on comp.certification_rncp_id = cer.rncp_id
+        inner join rome_certification rc on rc.certification_id = cer.id
+        inner join rome r on r.id = rc.rome_id
+        inner join activity_rome ar on ar.rome_code = r.code
       group by 1) cer_comp_all on cer_comp_all.id = c.id
       order by purcent desc;
   `
@@ -38,9 +45,9 @@ export default async function handler(
     })
     res.status(200).json(diagnosis)
   } else {
-    const { competenciesIds } = req.query;
-    const ids = typeof competenciesIds === 'string' ? [competenciesIds] : (competenciesIds);
-    const certifications = await getCertificationsByCompetenciesIds(ids)
+    const { activitiesCodeOgrs } = req.query;
+    const ids = typeof activitiesCodeOgrs === 'string' ? [activitiesCodeOgrs] : (activitiesCodeOgrs);
+    const certifications = await getCertificationsByactivitiesCodeOgrs(ids)
     res.status(200).json(certifications);
   }
 }

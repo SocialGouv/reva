@@ -1,0 +1,2332 @@
+[
+  {
+    "code_rome": "D1102",
+    "code_ogr": "100259",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "100359",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "8",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "101743",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "7",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "101744",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "10",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "101745",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "5",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "101746",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "4",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "101747",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "101748",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "6",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "118366",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "9",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "124929",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "100340",
+    "code_ref_rubrique": "10",
+    "position_bloc": "5",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "100341",
+    "code_ref_rubrique": "10",
+    "position_bloc": "5",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "101716",
+    "code_ref_rubrique": "10",
+    "position_bloc": "3",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "4",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "101757",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "101758",
+    "code_ref_rubrique": "10",
+    "position_bloc": "3",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "101760",
+    "code_ref_rubrique": "10",
+    "position_bloc": "3",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "119000",
+    "code_ref_rubrique": "10",
+    "position_bloc": "6",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "119508",
+    "code_ref_rubrique": "10",
+    "position_bloc": "6",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "120886",
+    "code_ref_rubrique": "10",
+    "position_bloc": "9",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "120888",
+    "code_ref_rubrique": "10",
+    "position_bloc": "9",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "120889",
+    "code_ref_rubrique": "10",
+    "position_bloc": "9",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1102",
+    "code_ogr": "124455",
+    "code_ref_rubrique": "10",
+    "position_bloc": "3",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "100016",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "5",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "100089",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "100340",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "7",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "100359",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "10",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "100381",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "4",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "101716",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "9",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "101829",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "119000",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "6",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "119508",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "122410",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "8",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "126124",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "11",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "100038",
+    "code_ref_rubrique": "10",
+    "position_bloc": "10",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "100341",
+    "code_ref_rubrique": "10",
+    "position_bloc": "7",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "100354",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "19",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "101758",
+    "code_ref_rubrique": "10",
+    "position_bloc": "2",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "101782",
+    "code_ref_rubrique": "10",
+    "position_bloc": "4",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "101784",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "24",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "101811",
+    "code_ref_rubrique": "10",
+    "position_bloc": "5",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "101813",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "16",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "101846",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "17",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "101848",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "18",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "101850",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "23",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "101851",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "22",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "101853",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "20",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "102995",
+    "code_ref_rubrique": "10",
+    "position_bloc": "12",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "116572",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "11",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "116573",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "116574",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "116575",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "4",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "116576",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "5",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "116577",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "6",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "116578",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "7",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "116580",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "10",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "116581",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "12",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "116582",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "13",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "116583",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "14",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "118106",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "15",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "118366",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "118975",
+    "code_ref_rubrique": "10",
+    "position_bloc": "10",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "120888",
+    "code_ref_rubrique": "10",
+    "position_bloc": "10",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "4",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "120889",
+    "code_ref_rubrique": "10",
+    "position_bloc": "10",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "121480",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "9",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "122545",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "21",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "123019",
+    "code_ref_rubrique": "10",
+    "position_bloc": "3",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "D1106",
+    "code_ogr": "126292",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "8",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1301",
+    "code_ogr": "100259",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "6",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1301",
+    "code_ogr": "100414",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1301",
+    "code_ogr": "102023",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1301",
+    "code_ogr": "107255",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "5",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1301",
+    "code_ogr": "107329",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1301",
+    "code_ogr": "107330",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "4",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1301",
+    "code_ogr": "103885",
+    "code_ref_rubrique": "10",
+    "position_bloc": "4",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1301",
+    "code_ogr": "107336",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1301",
+    "code_ogr": "107338",
+    "code_ref_rubrique": "10",
+    "position_bloc": "4",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1301",
+    "code_ogr": "107339",
+    "code_ref_rubrique": "10",
+    "position_bloc": "5",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1301",
+    "code_ogr": "107340",
+    "code_ref_rubrique": "10",
+    "position_bloc": "5",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1301",
+    "code_ogr": "122435",
+    "code_ref_rubrique": "10",
+    "position_bloc": "2",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1305",
+    "code_ogr": "100262",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1305",
+    "code_ogr": "100414",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1305",
+    "code_ogr": "103885",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "9",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1305",
+    "code_ogr": "107204",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "4",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1305",
+    "code_ogr": "107361",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "6",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1305",
+    "code_ogr": "107391",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "8",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1305",
+    "code_ogr": "119000",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1305",
+    "code_ogr": "119644",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "7",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1305",
+    "code_ogr": "120372",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "5",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1305",
+    "code_ogr": "100343",
+    "code_ref_rubrique": "10",
+    "position_bloc": "4",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1305",
+    "code_ogr": "107028",
+    "code_ref_rubrique": "10",
+    "position_bloc": "3",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1305",
+    "code_ogr": "107397",
+    "code_ref_rubrique": "10",
+    "position_bloc": "2",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1305",
+    "code_ogr": "119260",
+    "code_ref_rubrique": "10",
+    "position_bloc": "3",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1305",
+    "code_ogr": "121002",
+    "code_ref_rubrique": "10",
+    "position_bloc": "3",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1501",
+    "code_ogr": "100414",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "9",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1501",
+    "code_ogr": "101987",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "11",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1501",
+    "code_ogr": "102065",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "4",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1501",
+    "code_ogr": "107255",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "10",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1501",
+    "code_ogr": "107373",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1501",
+    "code_ogr": "107375",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "5",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1501",
+    "code_ogr": "107376",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1501",
+    "code_ogr": "107383",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "7",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1501",
+    "code_ogr": "107666",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "8",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1501",
+    "code_ogr": "107667",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1501",
+    "code_ogr": "107674",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "6",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1501",
+    "code_ogr": "100262",
+    "code_ref_rubrique": "10",
+    "position_bloc": "4",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1501",
+    "code_ogr": "107340",
+    "code_ref_rubrique": "10",
+    "position_bloc": "5",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1501",
+    "code_ogr": "107382",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "J1501",
+    "code_ogr": "125612",
+    "code_ref_rubrique": "10",
+    "position_bloc": "5",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1201",
+    "code_ogr": "100541",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "4",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1201",
+    "code_ogr": "101341",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "7",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1201",
+    "code_ogr": "102066",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1201",
+    "code_ogr": "102226",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "5",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1201",
+    "code_ogr": "107774",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "6",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1201",
+    "code_ogr": "122425",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1201",
+    "code_ogr": "123992",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1201",
+    "code_ogr": "124885",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "8",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1201",
+    "code_ogr": "100090",
+    "code_ref_rubrique": "10",
+    "position_bloc": "7",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1201",
+    "code_ogr": "101489",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1201",
+    "code_ogr": "102459",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1201",
+    "code_ogr": "103848",
+    "code_ref_rubrique": "10",
+    "position_bloc": "6",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1201",
+    "code_ogr": "107844",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1201",
+    "code_ogr": "107846",
+    "code_ref_rubrique": "10",
+    "position_bloc": "5",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1201",
+    "code_ogr": "119842",
+    "code_ref_rubrique": "10",
+    "position_bloc": "8",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1201",
+    "code_ogr": "120246",
+    "code_ref_rubrique": "10",
+    "position_bloc": "2",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1201",
+    "code_ogr": "120889",
+    "code_ref_rubrique": "10",
+    "position_bloc": "4",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1301",
+    "code_ogr": "100414",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1301",
+    "code_ogr": "102066",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "4",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1301",
+    "code_ogr": "103885",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "7",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1301",
+    "code_ogr": "107373",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "5",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1301",
+    "code_ogr": "107539",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1301",
+    "code_ogr": "107666",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "8",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1301",
+    "code_ogr": "107775",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "6",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1301",
+    "code_ogr": "119325",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1301",
+    "code_ogr": "100090",
+    "code_ref_rubrique": "10",
+    "position_bloc": "5",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1301",
+    "code_ogr": "102631",
+    "code_ref_rubrique": "10",
+    "position_bloc": "2",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1301",
+    "code_ogr": "102633",
+    "code_ref_rubrique": "10",
+    "position_bloc": "2",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1301",
+    "code_ogr": "103848",
+    "code_ref_rubrique": "10",
+    "position_bloc": "4",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1301",
+    "code_ogr": "107376",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1301",
+    "code_ogr": "119375",
+    "code_ref_rubrique": "10",
+    "position_bloc": "2",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1302",
+    "code_ogr": "100906",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1302",
+    "code_ogr": "102065",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "4",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1302",
+    "code_ogr": "102066",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1302",
+    "code_ogr": "102096",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "7",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1302",
+    "code_ogr": "103885",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "5",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1302",
+    "code_ogr": "107666",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "9",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1302",
+    "code_ogr": "107925",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "6",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1302",
+    "code_ogr": "107926",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "8",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1302",
+    "code_ogr": "119072",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1302",
+    "code_ogr": "101175",
+    "code_ref_rubrique": "10",
+    "position_bloc": "2",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1302",
+    "code_ogr": "103848",
+    "code_ref_rubrique": "10",
+    "position_bloc": "4",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1302",
+    "code_ogr": "103938",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1302",
+    "code_ogr": "104167",
+    "code_ref_rubrique": "10",
+    "position_bloc": "2",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1302",
+    "code_ogr": "107674",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1302",
+    "code_ogr": "118975",
+    "code_ref_rubrique": "10",
+    "position_bloc": "11",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1302",
+    "code_ogr": "120889",
+    "code_ref_rubrique": "10",
+    "position_bloc": "10",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1302",
+    "code_ogr": "124475",
+    "code_ref_rubrique": "10",
+    "position_bloc": "2",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1303",
+    "code_ogr": "102065",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1303",
+    "code_ogr": "102096",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "10",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1303",
+    "code_ogr": "103885",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "8",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1303",
+    "code_ogr": "103918",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1303",
+    "code_ogr": "104167",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "6",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1303",
+    "code_ogr": "107374",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1303",
+    "code_ogr": "107375",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "4",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1303",
+    "code_ogr": "107925",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "7",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1303",
+    "code_ogr": "107939",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "9",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1303",
+    "code_ogr": "124475",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "5",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1303",
+    "code_ogr": "107774",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1303",
+    "code_ogr": "118975",
+    "code_ref_rubrique": "10",
+    "position_bloc": "8",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1304",
+    "code_ogr": "100262",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1304",
+    "code_ogr": "101175",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "7",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1304",
+    "code_ogr": "101207",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "6",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1304",
+    "code_ogr": "102096",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "5",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1304",
+    "code_ogr": "104167",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1304",
+    "code_ogr": "104266",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1304",
+    "code_ogr": "107925",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "8",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1304",
+    "code_ogr": "124475",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "4",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1304",
+    "code_ogr": "126447",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "9",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1304",
+    "code_ogr": "102065",
+    "code_ref_rubrique": "10",
+    "position_bloc": "4",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1304",
+    "code_ogr": "120676",
+    "code_ref_rubrique": "10",
+    "position_bloc": "9",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1304",
+    "code_ogr": "124341",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1304",
+    "code_ogr": "125248",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "100090",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "5",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "100144",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "8",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "101175",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "101949",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "14",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "102066",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "7",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "102336",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "6",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "107539",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "11",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "107774",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "13",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "107969",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "10",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "107970",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "12",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "107972",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "4",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "121863",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "123347",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "9",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "123940",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "101654",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "102250",
+    "code_ref_rubrique": "10",
+    "position_bloc": "4",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "103848",
+    "code_ref_rubrique": "10",
+    "position_bloc": "2",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "107375",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "118975",
+    "code_ref_rubrique": "10",
+    "position_bloc": "3",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "119000",
+    "code_ref_rubrique": "10",
+    "position_bloc": "3",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1305",
+    "code_ogr": "126172",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "100343",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "11",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "100541",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "101388",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "4",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "101949",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "13",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "102216",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "6",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "104155",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "5",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "108019",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "7",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "115839",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "12",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "118867",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "10",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "119705",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "9",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "119842",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "8",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "120246",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "121706",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "100129",
+    "code_ref_rubrique": "10",
+    "position_bloc": "5",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "103857",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "107969",
+    "code_ref_rubrique": "10",
+    "position_bloc": "4",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "108025",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "108027",
+    "code_ref_rubrique": "10",
+    "position_bloc": "2",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "115916",
+    "code_ref_rubrique": "10",
+    "position_bloc": "4",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "117079",
+    "code_ref_rubrique": "10",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "K1403",
+    "code_ogr": "122757",
+    "code_ref_rubrique": "10",
+    "position_bloc": "2",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "N4102",
+    "code_ogr": "101343",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "9",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "N4102",
+    "code_ogr": "103872",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "4",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "N4102",
+    "code_ogr": "104085",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "5",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "N4102",
+    "code_ogr": "107028",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "6",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "N4102",
+    "code_ogr": "110028",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "8",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "N4102",
+    "code_ogr": "110512",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "3",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "N4102",
+    "code_ogr": "119260",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "2",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "N4102",
+    "code_ogr": "120372",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "7",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "N4102",
+    "code_ogr": "121002",
+    "code_ref_rubrique": "7",
+    "position_bloc": "1",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "8",
+    "position_item": "1",
+    "id_priorisation": "1"
+  },
+  {
+    "code_rome": "N4102",
+    "code_ogr": "123811",
+    "code_ref_rubrique": "10",
+    "position_bloc": "2",
+    "code_type_referentiel": "1",
+    "code_compo_bloc": "9",
+    "position_item": "1",
+    "id_priorisation": "1"
+  }
+]

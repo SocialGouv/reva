@@ -12,20 +12,20 @@ const ShowDiagnosisPage = () => {
   const router = useRouter();
   const { userInfos, updateUserInfos, computeDiagnosis } = useMainImportContext();
 
-  const competenciesIds = 
+  const competenciesCodeOgrs = 
     userInfos.professionAndCompetencies.reduce((memo, pAc) => {
-      const ids = pAc.competencies.map(c => `${c.id}`)
+      const ids = pAc.competencies.map(c => `${c.code_ogr}`)
       return [...memo, ...ids]
     }, [] as string[]);
 
 
   const { data: certificationsData } = useQuery<CertificationWithPurcentMatch[]>({
-    queryKey: ["certifications", competenciesIds.join('-')],
+    queryKey: ["certifications", competenciesCodeOgrs.join('-')],
     queryFn: async () => {
       const result = await (await fetch(
         "/api/diagnosis?" +
           new URLSearchParams(
-            competenciesIds.map(c => ['competenciesIds', c])
+            competenciesCodeOgrs.map(c => ['activitiesCodeOgrs', c])
           )
       )).json()
       updateUserInfos({

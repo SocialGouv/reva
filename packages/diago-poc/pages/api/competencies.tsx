@@ -4,11 +4,11 @@ import {prismaClient} from "./prisma"
 
 export const getCompetencyByJobCode = async (professionId: string) =>{
   const competencies = await prismaClient.$queryRaw`
-    select comp.*
+    select 
+      comp.*
     from competency comp
-    inner join certification cer on cer.rncp_id = comp.certification_rncp_id
-    inner join rome_certification rc on rc.certification_id = cer.id
-    inner join rome r on r.id = rc.rome_id
+    inner join competency_rome cr on cr.competence_code_ogr = comp.code_ogr
+    inner join rome r on r.code = cr.rome_code
     inner join profession p on p.rome_id = r.id
     where p.id = ${Number.parseInt(professionId, 10)}
     order by comp.label asc
