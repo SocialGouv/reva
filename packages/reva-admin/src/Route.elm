@@ -59,6 +59,7 @@ parser baseUrl =
                 , subLevel "funding" |> candidacyTab Tab.FundingRequest
                 , subLevel "meetings" |> candidacyTab Tab.Meetings
                 , subLevel "payment" |> candidacyTab Tab.PaymentRequest
+                , subLevel "payment" </> s "confirmation" |> candidacyTab Tab.PaymentRequestConfirmation
                 , subLevel "payment" </> s "uploads" |> candidacyTab Tab.PaymentUploads
                 , subLevel "training" |> candidacyTab Tab.Training
                 , subLevel "training" </> s "confirmation" |> candidacyTab Tab.TrainingSent
@@ -131,6 +132,9 @@ tabToString topLevel subLevel tab =
 
         Tab.PaymentRequest ->
             default [ "payment" ]
+
+        Tab.PaymentRequestConfirmation ->
+            default [ "payment", "confirmation" ]
 
         Tab.PaymentUploads ->
             default [ "payment", "uploads" ]

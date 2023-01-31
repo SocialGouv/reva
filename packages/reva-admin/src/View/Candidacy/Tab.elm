@@ -15,6 +15,7 @@ type Value
     | DropOut
     | Meetings
     | PaymentRequest
+    | PaymentRequestConfirmation
     | PaymentUploads
     | Profile
     | Training
