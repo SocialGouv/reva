@@ -41,6 +41,7 @@ import * as fundingRequestDb from "../../database/postgres/fundingRequests";
 import * as goalDb from "../../database/postgres/goals";
 import * as organismDb from "../../database/postgres/organisms";
 import * as paymentRequestDb from "../../database/postgres/paymentRequest";
+import * as paymentRequestBatchDb from "../../database/postgres/paymentRequestBatches";
 import * as trainingDb from "../../database/postgres/trainings";
 import { notifyNewCandidacy } from "../../mattermost";
 import { applySecurityCheckToResolver } from "../security";
@@ -374,7 +375,7 @@ export const resolvers = {
             candidacyDb.existsCandidacyWithActiveStatus,
           updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
         })({
-          candidacyId: payload.candidacyId
+          candidacyId: payload.candidacyId,
         });
 
         return result
@@ -405,7 +406,7 @@ export const resolvers = {
           hasRole: context.auth.hasRole,
           updateTrainingInformations: candidacyDb.updateTrainingInformations,
           existsCandidacyHavingHadStatus:
-          candidacyDb.existsCandidacyHavingHadStatus,
+            candidacyDb.existsCandidacyHavingHadStatus,
           updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
         })({
           candidacyId: payload.candidacyId,
@@ -493,10 +494,13 @@ export const resolvers = {
           admissibility,
         });
 
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    }),
+        return result
+          .mapLeft(
+            (error) => new mercurius.ErrorWithProps(error.message, error)
+          )
+          .extract();
+      }
+    ),
     candidacy_createOrUpdatePaymentRequest: async (
       _: unknown,
       {
@@ -532,7 +536,11 @@ export const resolvers = {
           candidacyDb.existsCandidacyWithActiveStatus,
         getPaymentRequestByCandidacyId:
           paymentRequestDb.getPaymentRequestByCandidacyId,
+        createPaymentRequestBatch:
+          paymentRequestBatchDb.createPaymentRequestBatch,
+        getFundingRequestByCandidacyId: fundingRequestDb.getFundingRequest,
         updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
+        getCandidacyFromId: candidacyDb.getCandidacyFromId,
       })({
         candidacyId: candidacyId,
       });

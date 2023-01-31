@@ -1,7 +1,13 @@
 import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
 import { Role } from "../types/account";
-import { Candidacy, PaymentRequest } from "../types/candidacy";
+import {
+  Candidacy,
+  PaymentRequest,
+  PaymentRequestBatch,
+  PaymentRequestBatchContent,
+} from "../types/candidacy";
+import { FundingRequest } from "../types/candidate";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
 interface ConfirmPaymentRequestDeps {
@@ -13,10 +19,18 @@ interface ConfirmPaymentRequestDeps {
   getPaymentRequestByCandidacyId: (params: {
     candidacyId: string;
   }) => Promise<Either<string, Maybe<PaymentRequest>>>;
+  createPaymentRequestBatch: (params: {
+    paymentRequestId: string;
+    content: PaymentRequestBatchContent;
+  }) => Promise<Either<string, PaymentRequestBatch>>;
+  getFundingRequestByCandidacyId: (params: {
+    candidacyId: string;
+  }) => Promise<Either<string, FundingRequest | null>>;
   updateCandidacyStatus: (params: {
     candidacyId: string;
     status: "DEMANDE_PAIEMENT_ENVOYEE";
   }) => Promise<Either<string, Candidacy>>;
+  getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
 }
 
 export const confirmPaymentRequest =
@@ -54,7 +68,7 @@ export const confirmPaymentRequest =
           )
       );
 
-    const validateCandidacyPaymentRequestExistence = async () =>
+    const getCandidacyPaymentRequest = async () =>
       (
         await deps.getPaymentRequestByCandidacyId({
           candidacyId: params.candidacyId,
@@ -62,7 +76,7 @@ export const confirmPaymentRequest =
       )
         .chain((pr) =>
           pr.isJust()
-            ? Right(true)
+            ? Right(pr.extract())
             : Left(
                 `Aucune demande de paiement trouvée pour la candidature ${params.candidacyId}`
               )
@@ -88,7 +102,65 @@ export const confirmPaymentRequest =
         )
     );
 
+    const createPaymentRequestBatch = async (paymentRequest: PaymentRequest) =>
+      EitherAsync.fromPromise(() => deps.getCandidacyFromId(params.candidacyId))
+        .map((candidacy) =>
+          EitherAsync.fromPromise(() =>
+            deps.getFundingRequestByCandidacyId({
+              candidacyId: params.candidacyId,
+            })
+          ).map((fundingRequest) => ({
+            fundingRequest,
+            candidacy,
+            paymentRequest,
+          }))
+        )
+        .join()
+        .map(mapPaymentRequestBatchContent)
+        .chain((content) =>
+          deps.createPaymentRequestBatch({
+            paymentRequestId: paymentRequest.id,
+            content,
+          })
+        )
+        .mapLeft(
+          (e) =>
+            new FunctionalError(
+              FunctionalCodeError.PAYMENT_REQUEST_NOT_CONFIRMED,
+              e
+            )
+        );
+
     return validateCandidacyStatus
-      .chain(validateCandidacyPaymentRequestExistence)
+      .chain(getCandidacyPaymentRequest)
+      .chain(createPaymentRequestBatch)
       .chain(() => updateCandidacy);
   };
+
+export const mapPaymentRequestBatchContent = ({
+  candidacy,
+  fundingRequest,
+  paymentRequest,
+}: {
+  candidacy: Candidacy;
+  paymentRequest: PaymentRequest;
+  fundingRequest: FundingRequest | null;
+}): PaymentRequestBatchContent => ({
+  NumAction: fundingRequest?.numAction || "",
+  SiretAP: candidacy.organism?.siret || "",
+  NbHeureReaJury: paymentRequest.examEffectiveHourCount,
+  NbHeureReaAPDiag: paymentRequest.diagnosisEffectiveHourCount,
+  NbHeureReaAccVAEInd: paymentRequest.individualEffectiveHourCount,
+  NbHeureReaAPPostJury: paymentRequest.postExamEffectiveHourCount,
+  NbHeureReaAccVAEColl: paymentRequest.collectiveEffectiveHourCount,
+  NbHeureReaTotalActesFormatifs:
+    paymentRequest.mandatoryTrainingsEffectiveHourCount +
+    paymentRequest.basicSkillsEffectiveHourCount +
+    paymentRequest.certificateSkillsEffectiveHourCount,
+  NbHeureReaComplFormObligatoire:
+    paymentRequest.mandatoryTrainingsEffectiveHourCount,
+  NbHeureReaComplFormSavoirsDeBase:
+    paymentRequest.basicSkillsEffectiveHourCount,
+  NbHeureReaComplFormBlocDeCompetencesCertifiant:
+    paymentRequest.certificateSkillsEffectiveHourCount,
+});
