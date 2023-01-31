@@ -73,9 +73,9 @@ const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
         !hasValidMimeType(request.body.appointment) ||
         !hasValidMimeType(request.body.invoice)
       ) {
-        return reply.status(400).send({
-          err: `Le format du fichier n'est pas supporté. Formats valides: ${validMimeTypes}`,
-        });
+        return reply.status(400).send(
+          `Ce type de fichier n'est pas accepté. Veuillez soumettre une image ou un document.`,
+        );
       }
 
       const result = await addPaymentProof(parseInt(maxUploadFileSize))(
