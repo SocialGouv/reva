@@ -153,6 +153,9 @@ statusToCategoryString status =
         DemandeFinancementEnvoye ->
             "Demandes de financement envoyées"
 
+        DemandePaiementEnvoyee ->
+            "Demandes de paiement envoyées"
+
         _ ->
             "Statut inconnu"
 

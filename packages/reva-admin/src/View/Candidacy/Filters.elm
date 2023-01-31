@@ -50,6 +50,7 @@ view candidacies filters context =
             , ParcoursEnvoye
             , ParcoursConfirme
             , DemandeFinancementEnvoye
+            , DemandePaiementEnvoyee
             ]
 
         viewFilter : Candidacy.Step -> Html msg

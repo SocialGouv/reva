@@ -49,6 +49,9 @@ view baseUrl candidacy =
         , { content = expandedView "Demande de prise en charge" ParcoursConfirme candidacy
           , navigation = candidateInfoLink baseUrl candidacy
           }
+        , { content = expandedView "Demande de paiement" DemandeFinancementEnvoye candidacy
+          , navigation = paymentRequestLink baseUrl candidacy
+          }
         ]
 
 
@@ -67,7 +70,10 @@ dropOutView baseUrl candidacy dropOutDate =
             Just <| Route.href baseUrl <| Route.Candidacy (tab View.Candidacy.Tab.DropOut)
 
         progressPosition =
-            if Candidacy.isFundingRequestSent candidacy then
+            if Candidacy.isPaymentRequestSent candidacy then
+                4
+
+            else if Candidacy.isFundingRequestSent candidacy then
                 3
 
             else
@@ -81,12 +87,10 @@ dropOutView baseUrl candidacy dropOutDate =
           , navigation = dropOutLink
           }
         , { content = expandedView "Demande de prise en charge" ParcoursConfirme candidacy
-          , navigation =
-                if Candidacy.isStatusEqualOrAbove candidacy ParcoursConfirme then
-                    candidateInfoLink baseUrl candidacy
-
-                else
-                    Nothing
+          , navigation = candidateInfoLink baseUrl candidacy
+          }
+        , { content = expandedView "Demande de paiement" DemandeFinancementEnvoye candidacy
+          , navigation = paymentRequestLink baseUrl candidacy
           }
         ]
 
@@ -135,6 +139,19 @@ candidateInfoLink baseUrl candidacy =
     in
     if candidacy.dropOutDate /= Nothing || Candidacy.isStatusEqualOrAbove candidacy ParcoursConfirme then
         Just <| Route.href baseUrl <| Route.Candidacy fundingView
+
+    else
+        Nothing
+
+
+paymentRequestLink : String -> Candidacy -> Maybe (Html.Styled.Attribute msg)
+paymentRequestLink baseUrl candidacy =
+    let
+        tab =
+            View.Candidacy.Tab.Tab candidacy.id View.Candidacy.Tab.PaymentRequest
+    in
+    if candidacy.dropOutDate /= Nothing || Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye then
+        Just <| Route.href baseUrl <| Route.Candidacy tab
 
     else
         Nothing
