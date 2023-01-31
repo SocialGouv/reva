@@ -85,46 +85,46 @@ export const validatePaymentRequest = (
   } else {
     if (pr.basicSkillsEffectiveHourCount > fr.basicSkillsHourCount) {
       errors.push(
-        "Le nombre d'heures demandé pour les formations savoir de base est supérieur au nombre d'heures de la demande de financement."
+        "Le nombre d'heures réalisées pour les formations savoir de base doit être inférieur ou égal au nombre d'heures prévues dans la demande de prise en charge."
       );
     }
     if (
       pr.certificateSkillsEffectiveHourCount > fr.certificateSkillsHourCount
     ) {
       errors.push(
-        "Le nombre d'heures demandé pour les blocs de compétences certifiant est supérieur au nombre d'heures de la demande de financement."
+        "Le nombre d'heures réalisées pour les blocs de compétences certifiant doit être inférieur ou égal au nombre d'heures prévues dans la demande de prise en charge."
       );
     }
     if (pr.collectiveEffectiveHourCount > fr.collectiveHourCount) {
       errors.push(
-        "Le nombre d'heures demandé pour l'accompagnement collectif est supérieur au nombre d'heures de la demande de financement."
+        "Le nombre d'heures réalisées pour l'accompagnement collectif doit être inférieur ou égal au nombre d'heures prévues dans la demande de prise en charge."
       );
     }
     if (pr.diagnosisEffectiveHourCount > fr.diagnosisHourCount) {
       errors.push(
-        "Le nombre d'heures demandé pour l'entretien de faisabilité est supérieur au nombre d'heures de la demande de financement."
+        "Le nombre d'heures réalisées pour l'entretien de faisabilité doit être inférieur ou égal au nombre d'heures prévues dans la demande de prise en charge."
       );
     }
     if (pr.examEffectiveHourCount > fr.examHourCount) {
       errors.push(
-        "Le nombre d'heures demandé pour la prestation jury  est supérieur au nombre d'heures de la demande de financement."
+        "Le nombre d'heures réalisées pour la prestation jury  doit être inférieur ou égal au nombre d'heures prévues dans la demande de prise en charge."
       );
     }
     if (pr.individualEffectiveHourCount > fr.individualHourCount) {
       errors.push(
-        "Le nombre d'heures demandé pour l'accompagnement individuel est supérieur au nombre d'heures de la demande de financement."
+        "Le nombre d'heures réalisées pour l'accompagnement individuel doit être inférieur ou égal au nombre d'heures prévues dans la demande de prise en charge."
       );
     }
     if (
       pr.mandatoryTrainingsEffectiveHourCount > fr.mandatoryTrainingsHourCount
     ) {
       errors.push(
-        "Le nombre d'heures demandé pour les formations obligatoires est supérieur au nombre d'heures de la demande de financement."
+        "Le nombre d'heures réalisées pour les formations obligatoires doit être inférieur ou égal au nombre d'heures prévues dans la demande de prise en charge."
       );
     }
     if (pr.postExamEffectiveHourCount > fr.postExamHourCount) {
       errors.push(
-        "Le nombre d'heures demandé pour l'entretien post jury est supérieur au nombre d'heures de la demande de financement."
+        "Le nombre d'heures réalisées pour l'entretien post jury doit être inférieur ou égal au nombre d'heures prévues dans la demande de prise en charge."
       );
     }
   }

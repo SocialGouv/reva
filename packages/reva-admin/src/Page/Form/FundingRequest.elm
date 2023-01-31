@@ -225,7 +225,7 @@ confirmationSection candidacy =
 
     else
         ( keys.isFormConfirmed
-        , Form.Checkbox "Je confirme ce montant de prise en charge. Je ne pourrai pas éditer cette demande de prise en charge après son envoi."
+        , Form.Checkbox "Je confirme ce montant de prise en charge. Je ne pourrai pas modifier cette demande de prise en charge après son envoi."
         )
 
 

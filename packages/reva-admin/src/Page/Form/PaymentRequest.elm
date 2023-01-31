@@ -171,7 +171,7 @@ confirmationForm formData ( _, _ ) =
                 ( "num-action", Form.Empty )
         , FundingRequest.totalCostSection "Coût total de la demande de paiement" formData
         , ( keys.isFormConfirmed
-          , Form.Checkbox "Je confirme ce montant de paiement. Je ne pourrai pas éditer cette demande de paiement après son envoi."
+          , Form.Checkbox "Je confirme ce montant de paiement. Je ne pourrai pas modifier cette demande de paiement après son envoi."
           )
         ]
     , saveLabel = Nothing
