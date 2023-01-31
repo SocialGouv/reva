@@ -182,8 +182,29 @@ export interface PaymentRequest {
   examEffectiveHourCount: number;
 }
 
+export interface PaymentRequestBatch {
+  paymentRequestId: string;
+  sent: boolean;
+  batchFileName?: string;
+  content?: PaymentRequestBatchContent;
+}
+
+export interface PaymentRequestBatchContent {
+  NumAction: string;
+  SiretAP: string;
+  NbHeureReaJury: number;
+  NbHeureReaAPDiag: number;
+  NbHeureReaAccVAEInd: number;
+  NbHeureReaAPPostJury: number;
+  NbHeureReaAccVAEColl: number;
+  NbHeureReaTotalActesFormatifs: number;
+  NbHeureReaComplFormObligatoire: number;
+  NbHeureReaComplFormSavoirsDeBase: number;
+  NbHeureReaComplFormBlocDeCompetencesCertifiant: number;
+}
+
 export interface FileUploadSpoolerEntry {
-  destinationFileName: string
+  destinationFileName: string;
   destinationPath: string;
   description: string;
   fileContent?: Buffer;
