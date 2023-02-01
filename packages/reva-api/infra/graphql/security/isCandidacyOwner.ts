@@ -19,6 +19,7 @@ export const isCandidacyOwner =
 
     const eitherIsAuthorized = await canManageCandidacy(
       {
+        hasRole: context.auth.hasRole,
         getAccountFromKeycloakId,
         getCandidacyFromId,
       },

@@ -1,9 +1,14 @@
-import { hasRole } from "../security/hasRole";
-import { isCandidacyOwner } from "../security/isCandidacyOwner";
-import { whenHasRole } from "../security/whenHasRole";
+import security from "../security";
+const { hasRole, hasNotRole, whenHasRole, isCandidacyOwner } = security;
 
 const isAdminOrOwningManager = [
   hasRole(["admin", "manage_candidacy"]),
+  whenHasRole("manage_candidacy", isCandidacyOwner),
+];
+
+const isOwningManager = [
+  hasNotRole(["admin"]),
+  hasRole(["manage_candidacy"]),
   whenHasRole("manage_candidacy", isCandidacyOwner),
 ];
 
@@ -13,7 +18,7 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_deleteById": isAdminOrOwningManager,
   "Mutation.candidacy_archiveById": isAdminOrOwningManager,
   "Mutation.candidacy_updateAppointmentInformations": isAdminOrOwningManager,
-  "Mutation.candidacy_takeOver": isAdminOrOwningManager,
+  "Mutation.candidacy_takeOver": isOwningManager,
   "Mutation.candidacy_submitTrainingForm": isAdminOrOwningManager,
   "Mutation.candidacy_dropOut": isAdminOrOwningManager,
   "Mutation.candidacy_updateAdmissibility": [hasRole(["admin", "manage_candidacy"])],
