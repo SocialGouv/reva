@@ -14,6 +14,42 @@ type PaymentRequest {
   examEffectiveHourCount: Int!
 }
 
+type FundingRequest {
+  id: UUID!
+  numAction: String
+
+  companion: Organism
+
+  diagnosisHourCount: Int!
+  diagnosisCost: Int!
+
+  postExamHourCount: Int!
+  postExamCost: Int!
+
+  individualHourCount: Int!
+  individualCost: Int!
+
+  collectiveHourCount: Int!
+  collectiveCost: Int!
+
+  basicSkills: [BasicSkill!]!
+  basicSkillsHourCount: Int!
+  basicSkillsCost: Int!
+
+  mandatoryTrainings: [Training!]!
+  mandatoryTrainingsHourCount: Int!
+  mandatoryTrainingsCost: Int!
+
+  certificateSkills: String!
+  certificateSkillsHourCount: Int!
+  certificateSkillsCost: Int!
+
+  otherTraining: String!
+
+  examHourCount: Int!
+  examCost: Int!
+}
+
 input PaymentRequestInput {
   diagnosisEffectiveHourCount: Int!
   postExamEffectiveHourCount: Int!
@@ -25,10 +61,56 @@ input PaymentRequestInput {
   examEffectiveHourCount: Int!
 }
 
+input FundingRequestInput {
+  companionId: UUID
+
+  diagnosisHourCount: Int!
+  diagnosisCost: Int!
+
+  postExamHourCount: Int!
+  postExamCost: Int!
+
+  individualHourCount: Int!
+  individualCost: Int!
+
+  collectiveHourCount: Int!
+  collectiveCost: Int!
+
+  basicSkillsIds: [UUID!]!
+  basicSkillsHourCount: Int!
+  basicSkillsCost: Int!
+
+  mandatoryTrainingsIds: [UUID!]!
+  mandatoryTrainingsHourCount: Int!
+  mandatoryTrainingsCost: Int!
+
+  certificateSkills: String!
+  certificateSkillsHourCount: Int!
+  certificateSkillsCost: Int!
+
+  otherTraining: String!
+
+  examHourCount: Int!
+  examCost: Int!
+}
+
+type FundingRequestInformations {
+  training: TrainingForm!
+  fundingRequest: FundingRequest
+}
+
+type Query {
+  candidate_getFundingRequest(candidacyId: UUID!): FundingRequestInformations!
+}
+
 type Mutation {
   candidacy_createOrUpdatePaymentRequest(
     candidacyId: UUID!
     paymentRequest: PaymentRequestInput!
   ): PaymentRequest!
   candidacy_confirmPaymentRequest(candidacyId: UUID!): Candidacy!
+  candidate_createFundingRequest(
+    candidacyId: UUID!
+    fundingRequest: FundingRequestInput!
+  ): FundingRequest!
 }
