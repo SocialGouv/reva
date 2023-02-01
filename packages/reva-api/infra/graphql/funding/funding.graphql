@@ -1,0 +1,34 @@
+extend type Candidacy {
+  paymentRequest: PaymentRequest
+}
+
+type PaymentRequest {
+  id: ID!
+  diagnosisEffectiveHourCount: Int!
+  postExamEffectiveHourCount: Int!
+  individualEffectiveHourCount: Int!
+  collectiveEffectiveHourCount: Int!
+  mandatoryTrainingsEffectiveHourCount: Int!
+  basicSkillsEffectiveHourCount: Int!
+  certificateSkillsEffectiveHourCount: Int!
+  examEffectiveHourCount: Int!
+}
+
+input PaymentRequestInput {
+  diagnosisEffectiveHourCount: Int!
+  postExamEffectiveHourCount: Int!
+  individualEffectiveHourCount: Int!
+  collectiveEffectiveHourCount: Int!
+  mandatoryTrainingsEffectiveHourCount: Int!
+  basicSkillsEffectiveHourCount: Int!
+  certificateSkillsEffectiveHourCount: Int!
+  examEffectiveHourCount: Int!
+}
+
+type Mutation {
+  candidacy_createOrUpdatePaymentRequest(
+    candidacyId: UUID!
+    paymentRequest: PaymentRequestInput!
+  ): PaymentRequest!
+  candidacy_confirmPaymentRequest(candidacyId: UUID!): Candidacy!
+}
