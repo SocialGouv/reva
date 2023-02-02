@@ -52,7 +52,7 @@ const ShowDiagnosisPage = () => {
       <p className="text-sm font-light mt-2">Voici la liste des certifications correspondant aux compétences que vous avez sélectionnées.</p>
 
       <div className="flex flex-col mt-4 space-y-4">
-        {certificationsData?.map((c) => (<CertificationCard key={c.id} certification={c}/>))}
+        {certificationsData?.sort((c1, c2) => c1.purcent < c2.purcent ?  1 : (c1.purcent > c2.purcent ? -1 : 0)).map((c, index) => (<CertificationCard key={c.id} isLight={index > 4} certification={c}/>))}
       </div>
       <div className="mt-12">
       <form className="m-12" onSubmit={handleSubmit}>
