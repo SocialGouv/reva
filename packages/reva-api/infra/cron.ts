@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import pino from "pino";
 
 import { batchFundingRequest } from "./graphql/finance/batches/fundingRequest";
+import { batchPaymentRequest } from "./graphql/finance/batches/paymentRequest";
 import uploadSpoolerFiles from "./graphql/finance/batches/paymentRequestProofJob";
 
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
@@ -26,6 +27,16 @@ const paymentRequestProofUpload = new cron.CronJob({
   onTick: async function () {
     logger.info("Batch paymentRequestProofUpload ticked");
     await uploadSpoolerFiles();
+  },
+  start: true,
+  timeZone: "Europe/Paris",
+});
+
+const paymentRequest = new cron.CronJob({
+  cronTime: process.env.BATCH_PAYMENT_REQUEST_CRONTIME || "*/5 * * * *",
+  onTick: async function () {
+    logger.info("Batch paymentRequest ticked");
+    await batchPaymentRequest();
   },
   start: true,
   timeZone: "Europe/Paris",
