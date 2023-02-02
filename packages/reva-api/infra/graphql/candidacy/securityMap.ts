@@ -1,27 +1,36 @@
-import security from "../security";
-const { hasRole, hasNotRole, whenHasRole, isCandidacyOwner } = security;
+import {
+  defaultSecurity,
+  isAdminOrOwningManager,
+  isCandidate,
+  isOwningManager,
+} from "../security/presets";
 
-const isAdminOrOwningManager = [
-  hasRole(["admin", "manage_candidacy"]),
-  whenHasRole("manage_candidacy", isCandidacyOwner),
-];
-
-const isOwningManager = [
-  hasNotRole(["admin"]),
-  hasRole(["manage_candidacy"]),
-  whenHasRole("manage_candidacy", isCandidacyOwner),
-];
-
-// NB: les autres mutations sont accessibles au candidat
-// Elles ne nécessitent pas de contrôle
 export const resolversSecurityMap = {
+  // Sécurité par défaut
+  // cf https://the-guild.dev/graphql/tools/docs/resolvers-composition#supported-path-matcher-format
+  "Mutation.*": defaultSecurity,  // forbidden
+
+  // Mutations candidat
+  "Mutation.candidacy_createCandidacy": isCandidate,
+  "Mutation.candidacy_updateContact": isCandidate,
+  "Mutation.candidacy_updateGoals": isCandidate,
+  "Mutation.candidacy_updateExperience": isCandidate,
+  "Mutation.candidacy_removeExperience": isCandidate,
+  "Mutation.candidacy_addExperience": isCandidate,
+  "Mutation.candidacy_selectOrganism": isCandidate,
+  "Mutation.candidacy_submitCandidacy": isCandidate,
+  "Mutation.candidacy_confirmTrainingForm": isCandidate,
+
+  // Mutation manager
+  "Mutation.candidacy_takeOver": isOwningManager,
+
+  // Mutations manager ou admin
   "Mutation.candidacy_deleteById": isAdminOrOwningManager,
   "Mutation.candidacy_archiveById": isAdminOrOwningManager,
   "Mutation.candidacy_updateAppointmentInformations": isAdminOrOwningManager,
-  "Mutation.candidacy_takeOver": isOwningManager,
   "Mutation.candidacy_submitTrainingForm": isAdminOrOwningManager,
   "Mutation.candidacy_dropOut": isAdminOrOwningManager,
-  "Mutation.candidacy_updateAdmissibility": [hasRole(["admin", "manage_candidacy"])],
-  "Mutation.candidacy_createOrUpdatePaymentRequest": [hasRole(["admin", "manage_candidacy"])],
-  "Mutation.candidacy_confirmPaymentRequest": [hasRole(["admin", "manage_candidacy"])],
+  "Mutation.candidacy_updateAdmissibility": isAdminOrOwningManager,
+  "Mutation.candidacy_createOrUpdatePaymentRequest": isAdminOrOwningManager,
+  "Mutation.candidacy_confirmPaymentRequest": isAdminOrOwningManager,
 };
