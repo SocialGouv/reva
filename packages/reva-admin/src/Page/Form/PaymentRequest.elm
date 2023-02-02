@@ -152,6 +152,7 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( keys.examHourCount, hourCountElement .examEstimatedHourCount )
         , ( "total", Form.Section "Total" )
         , FundingRequest.totalCostSection "Coût total de la demande de paiement" formData
+        , ( "invoiceNumber", Form.InputRequired "Numéro de facture" )
         ]
     , saveLabel = Nothing
     , submitLabel = "Enregistrer"

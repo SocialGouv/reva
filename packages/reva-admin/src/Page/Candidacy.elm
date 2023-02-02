@@ -358,7 +358,7 @@ updateTab context tab ( model, cmd ) =
                         , onSave = Nothing
                         , onSubmit = Api.Form.PaymentRequest.createOrUpdate tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab PaymentUploads
-                        , onValidate = \_ _ -> Ok ()
+                        , onValidate = Data.Form.PaymentRequest.validate
                         , status =
                             if Candidacy.isPaymentRequestSent candidacy then
                                 Form.ReadOnly
@@ -395,7 +395,7 @@ updateTab context tab ( model, cmd ) =
                         , onSave = Nothing
                         , onSubmit = Api.Form.PaymentRequest.confirm tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab Profile
-                        , onValidate = Data.Form.PaymentRequest.validate
+                        , onValidate = Data.Form.PaymentRequest.validateConfirmation
                         , status = Form.Editable
                         }
                         model.form

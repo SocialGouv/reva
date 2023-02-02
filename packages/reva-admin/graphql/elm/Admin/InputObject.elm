@@ -521,7 +521,7 @@ buildPaymentRequestInput :
     PaymentRequestInputRequiredFields
     -> PaymentRequestInput
 buildPaymentRequestInput required____ =
-    { diagnosisEffectiveHourCount = required____.diagnosisEffectiveHourCount, postExamEffectiveHourCount = required____.postExamEffectiveHourCount, individualEffectiveHourCount = required____.individualEffectiveHourCount, collectiveEffectiveHourCount = required____.collectiveEffectiveHourCount, mandatoryTrainingsEffectiveHourCount = required____.mandatoryTrainingsEffectiveHourCount, basicSkillsEffectiveHourCount = required____.basicSkillsEffectiveHourCount, certificateSkillsEffectiveHourCount = required____.certificateSkillsEffectiveHourCount, examEffectiveHourCount = required____.examEffectiveHourCount }
+    { diagnosisEffectiveHourCount = required____.diagnosisEffectiveHourCount, postExamEffectiveHourCount = required____.postExamEffectiveHourCount, individualEffectiveHourCount = required____.individualEffectiveHourCount, collectiveEffectiveHourCount = required____.collectiveEffectiveHourCount, mandatoryTrainingsEffectiveHourCount = required____.mandatoryTrainingsEffectiveHourCount, basicSkillsEffectiveHourCount = required____.basicSkillsEffectiveHourCount, certificateSkillsEffectiveHourCount = required____.certificateSkillsEffectiveHourCount, examEffectiveHourCount = required____.examEffectiveHourCount, invoiceNumber = required____.invoiceNumber }
 
 
 type alias PaymentRequestInputRequiredFields =
@@ -533,6 +533,7 @@ type alias PaymentRequestInputRequiredFields =
     , basicSkillsEffectiveHourCount : Int
     , certificateSkillsEffectiveHourCount : Int
     , examEffectiveHourCount : Int
+    , invoiceNumber : String
     }
 
 
@@ -547,6 +548,7 @@ type alias PaymentRequestInput =
     , basicSkillsEffectiveHourCount : Int
     , certificateSkillsEffectiveHourCount : Int
     , examEffectiveHourCount : Int
+    , invoiceNumber : String
     }
 
 
@@ -555,7 +557,7 @@ type alias PaymentRequestInput =
 encodePaymentRequestInput : PaymentRequestInput -> Value
 encodePaymentRequestInput input____ =
     Encode.maybeObject
-        [ ( "diagnosisEffectiveHourCount", Encode.int input____.diagnosisEffectiveHourCount |> Just ), ( "postExamEffectiveHourCount", Encode.int input____.postExamEffectiveHourCount |> Just ), ( "individualEffectiveHourCount", Encode.int input____.individualEffectiveHourCount |> Just ), ( "collectiveEffectiveHourCount", Encode.int input____.collectiveEffectiveHourCount |> Just ), ( "mandatoryTrainingsEffectiveHourCount", Encode.int input____.mandatoryTrainingsEffectiveHourCount |> Just ), ( "basicSkillsEffectiveHourCount", Encode.int input____.basicSkillsEffectiveHourCount |> Just ), ( "certificateSkillsEffectiveHourCount", Encode.int input____.certificateSkillsEffectiveHourCount |> Just ), ( "examEffectiveHourCount", Encode.int input____.examEffectiveHourCount |> Just ) ]
+        [ ( "diagnosisEffectiveHourCount", Encode.int input____.diagnosisEffectiveHourCount |> Just ), ( "postExamEffectiveHourCount", Encode.int input____.postExamEffectiveHourCount |> Just ), ( "individualEffectiveHourCount", Encode.int input____.individualEffectiveHourCount |> Just ), ( "collectiveEffectiveHourCount", Encode.int input____.collectiveEffectiveHourCount |> Just ), ( "mandatoryTrainingsEffectiveHourCount", Encode.int input____.mandatoryTrainingsEffectiveHourCount |> Just ), ( "basicSkillsEffectiveHourCount", Encode.int input____.basicSkillsEffectiveHourCount |> Just ), ( "certificateSkillsEffectiveHourCount", Encode.int input____.certificateSkillsEffectiveHourCount |> Just ), ( "examEffectiveHourCount", Encode.int input____.examEffectiveHourCount |> Just ), ( "invoiceNumber", Encode.string input____.invoiceNumber |> Just ) ]
 
 
 buildTrainingInput :

@@ -59,6 +59,7 @@ input PaymentRequestInput {
   basicSkillsEffectiveHourCount: Int!
   certificateSkillsEffectiveHourCount: Int!
   examEffectiveHourCount: Int!
+  invoiceNumber: String!
 }
 
 input FundingRequestInput {

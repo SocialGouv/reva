@@ -51,6 +51,7 @@ type Element
     | Heading String
     | Info String String
     | Input String
+    | InputRequired String
     | Number String
     | ReadOnlyElement Element
     | ReadOnlyElements (List ( String, Element ))
@@ -305,15 +306,7 @@ viewEditableElement formData ( elementId, element ) =
                 ]
                 |> class
 
-        inputView dataType extraClass =
-            let
-                extraAttributes =
-                    if dataType == "number" then
-                        [ Html.Styled.Attributes.min "0" ]
-
-                    else
-                        []
-            in
+        inputView dataType extraClass extraAttributes =
             input
                 ([ type_ dataType
                  , name elementId
@@ -380,7 +373,7 @@ viewEditableElement formData ( elementId, element ) =
             ]
 
         Date label ->
-            inputView "date" "w-60 flex items-center"
+            inputView "date" "w-60 flex items-center" []
                 |> withLabel label
 
         Empty ->
@@ -401,11 +394,15 @@ viewEditableElement formData ( elementId, element ) =
             [ View.Heading.h5 title ]
 
         Input label ->
-            inputView "text" "w-full"
+            inputView "text" "w-full" []
                 |> withLabel label
 
+        InputRequired label ->
+            inputView "text" "w-full" [ required True ]
+                |> withLabel (label ++ " (requis)")
+
         Number label ->
-            inputView "number" "w-40"
+            inputView "number" "w-40" [ Html.Styled.Attributes.min "0" ]
                 |> withLabel label
 
         Textarea label placeholder ->
@@ -592,6 +589,12 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> withTerm label
 
         Input label ->
+            div
+                [ class "w-[240px]" ]
+                [ dataView userEditedClass dataOrDefault ]
+                |> withTerm label
+
+        InputRequired label ->
             div
                 [ class "w-[240px]" ]
                 [ dataView userEditedClass dataOrDefault ]
