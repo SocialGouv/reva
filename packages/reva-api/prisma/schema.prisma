@@ -127,13 +127,13 @@ model Candidacy {
 
 /// Candicadies statuses
 model CandidaciesStatus {
-  id          String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacy   Candidacy       @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
-  candidacyId String          @map("candidacy_id") @db.Uuid
+  id          String              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy   Candidacy           @relation(fields: [candidacyId], references: [id], onDelete: Cascade)
+  candidacyId String              @map("candidacy_id") @db.Uuid
   status      CandidacyStatusStep @default(PROJET)
-  isActive    Boolean         @default(false) @map("is_active")
-  createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime?       @map("updated_at") @db.Timestamptz(6)
+  isActive    Boolean             @default(false) @map("is_active")
+  createdAt   DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime?           @map("updated_at") @db.Timestamptz(6)
 
   @@map("candidacy_candidacy_status")
 }
@@ -489,15 +489,15 @@ model DropOutReason {
 }
 
 model CandidacyDropOut {
-  candidacy          Candidacy       @relation(fields: [candidacyId], references: [id])
-  candidacyId        String          @unique @map("candidacy_id") @db.Uuid
-  dropOutReason      DropOutReason   @relation(fields: [dropOutReasonId], references: [id])
-  dropOutReasonId    String          @map("drop_out_reason_id") @db.Uuid
+  candidacy          Candidacy           @relation(fields: [candidacyId], references: [id])
+  candidacyId        String              @unique @map("candidacy_id") @db.Uuid
+  dropOutReason      DropOutReason       @relation(fields: [dropOutReasonId], references: [id])
+  dropOutReasonId    String              @map("drop_out_reason_id") @db.Uuid
   status             CandidacyStatusStep
-  droppedOutAt       DateTime        @map("dropped_out_at")
-  otherReasonContent String?         @map("other_reason_content")
-  createdAt          DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt          DateTime?       @map("updated_at") @db.Timestamptz(6)
+  droppedOutAt       DateTime            @map("dropped_out_at")
+  otherReasonContent String?             @map("other_reason_content")
+  createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime?           @map("updated_at") @db.Timestamptz(6)
 
   @@id([candidacyId])
   @@map("candidacy_drop_out")
@@ -524,26 +524,37 @@ model Admissibility {
 }
 
 model PaymentRequest {
-  id                                   String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacy                            Candidacy @relation(fields: [candidacyId], references: [id])
-  candidacyId                          String    @unique @map("candidacy_id") @db.Uuid
-  diagnosisEffectiveHourCount          Int       @map("diagnosis_effective_hour_count")
-  postExamEffectiveHourCount           Int       @map("post_exam_effective_hour_count")
-  individualEffectiveHourCount         Int       @map("individual_effective_hour_count")
-  collectiveEffectiveHourCount         Int       @map("collective_effective_hour_count")
-  mandatoryTrainingsEffectiveHourCount Int       @map("mandatory_training_effective_hour_count")
-  basicSkillsEffectiveHourCount        Int       @map("basic_skills_effective_hour_count")
-  certificateSkillsEffectiveHourCount  Int       @map("certificate_skills_effective_hour_count")
-  examEffectiveHourCount               Int       @map("exam_effective_hour_count")
+  id                                   String               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy                            Candidacy            @relation(fields: [candidacyId], references: [id])
+  candidacyId                          String               @unique @map("candidacy_id") @db.Uuid
+  diagnosisEffectiveHourCount          Int                  @map("diagnosis_effective_hour_count")
+  postExamEffectiveHourCount           Int                  @map("post_exam_effective_hour_count")
+  individualEffectiveHourCount         Int                  @map("individual_effective_hour_count")
+  collectiveEffectiveHourCount         Int                  @map("collective_effective_hour_count")
+  mandatoryTrainingsEffectiveHourCount Int                  @map("mandatory_training_effective_hour_count")
+  basicSkillsEffectiveHourCount        Int                  @map("basic_skills_effective_hour_count")
+  certificateSkillsEffectiveHourCount  Int                  @map("certificate_skills_effective_hour_count")
+  examEffectiveHourCount               Int                  @map("exam_effective_hour_count")
+  PaymentRequestBatch                  PaymentRequestBatch?
 
   @@map("payment_request")
 }
 
+model PaymentRequestBatch {
+  id               String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  paymentRequest   PaymentRequest @relation(fields: [paymentRequestId], references: [id])
+  paymentRequestId String         @unique @map("payment_request_id") @db.Uuid
+  sent             Boolean        @default(false)
+  content          Json
+
+  @@map("payment_request_batch")
+}
+
 model FileUploadSpooler {
-  id                      String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  createdAt               DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  destinationFileName     String    @db.VarChar(255) @map("destination_file_name")
-  destinationPath         String    @db.VarChar(255) @map("destination_path")
-  description             String    @db.VarChar(255) @map("description")
-  fileContent             Bytes     @map("file_content")
+  id                  String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt           DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  destinationFileName String   @map("destination_file_name") @db.VarChar(255)
+  destinationPath     String   @map("destination_path") @db.VarChar(255)
+  description         String   @map("description") @db.VarChar(255)
+  fileContent         Bytes    @map("file_content")
 }
