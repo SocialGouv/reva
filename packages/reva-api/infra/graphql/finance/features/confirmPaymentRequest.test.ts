@@ -14,6 +14,7 @@ describe("payment request", () => {
         individualEffectiveHourCount: 6,
         mandatoryTrainingsEffectiveHourCount: 7,
         postExamEffectiveHourCount: 8,
+        invoiceNumber: "invoiceNumber_123",
       } as PaymentRequest;
       const batch = mapPaymentRequestBatchContent({
         candidacy: { organism: { siret: "siret1234" } } as Candidacy,
@@ -31,6 +32,7 @@ describe("payment request", () => {
         NbHeureReaJury: 5,
         NbHeureReaTotalActesFormatifs: 10,
         NumAction: "numAction_123",
+        NumFacture: "invoiceNumber_123",
         SiretAP: "siret1234",
       });
     });

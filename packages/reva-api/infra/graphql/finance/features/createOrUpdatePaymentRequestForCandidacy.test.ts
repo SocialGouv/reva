@@ -14,6 +14,7 @@ const defaultValidPaymentRequest: PaymentRequest = {
   individualEffectiveHourCount: 6,
   mandatoryTrainingsEffectiveHourCount: 7,
   postExamEffectiveHourCount: 8,
+  invoiceNumber: "invoiceNumber_123"
 };
 
 const defaultValidFundingRequest: FundingRequest = {
