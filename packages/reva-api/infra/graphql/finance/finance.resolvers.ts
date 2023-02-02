@@ -15,7 +15,7 @@ import * as fundingRequestsDb from "../../database/postgres/fundingRequests";
 import * as paymentRequestsDb from "../../database/postgres/paymentRequest";
 import * as paymentRequestBatchesDb from "../../database/postgres/paymentRequestBatches";
 
-export const resolvers = {
+export const financeResolvers = {
   Candidacy: {
     paymentRequest: async (
       parent: Candidacy,
