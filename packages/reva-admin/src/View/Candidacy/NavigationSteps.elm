@@ -81,12 +81,7 @@ dropOutView baseUrl candidacy dropOutDate =
           , navigation = dropOutLink
           }
         , { content = expandedView "Demande de prise en charge" ParcoursConfirme candidacy
-          , navigation =
-                if Candidacy.isStatusEqualOrAbove candidacy ParcoursConfirme then
-                    candidateInfoLink baseUrl candidacy
-
-                else
-                    Nothing
+          , navigation = candidateInfoLink baseUrl candidacy
           }
         ]
 
