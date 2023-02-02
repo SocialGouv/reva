@@ -1,13 +1,13 @@
 import { Left, Right } from "purify-ts";
 
-import { Candidacy, Organism } from "../types/candidacy";
+import { Candidacy, Organism } from "../../../../domain/types/candidacy";
 import {
   Candidate,
   FundingRequest,
   FundingRequestBatch,
   FundingRequestInput,
-} from "../types/candidate";
-import { FunctionalError } from "../types/functionalError";
+} from "../../../../domain/types/candidate";
+import { FunctionalError } from "../../../../domain/types/functionalError";
 import {
   createFundingRequest,
   validateFundingRequest,

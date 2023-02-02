@@ -4,7 +4,7 @@ import { FileUploadSpooler } from "@prisma/client";
 import * as ftp from "basic-ftp";
 import pino from "pino";
 
-import { prismaClient } from "../database/postgres/client";
+import { prismaClient } from "../../../database/postgres/client";
 
 const logger = pino();
 
@@ -72,11 +72,10 @@ export default async () => {
         throw err;
       }
     }
-  } catch(e) {
+  } catch (e) {
     logger.info("Job interrupted.");
     throw e;
-  }
-  finally {
+  } finally {
     ftpClient.close();
   }
 

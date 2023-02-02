@@ -68,7 +68,6 @@ type Candidacy {
   candidacyDropOut: CandidacyDropOut
   createdAt: Timestamp!
   admissibility: Admissibility!
-  paymentRequest: PaymentRequest
 }
 
 type CandidacyDropOut {
@@ -139,18 +138,6 @@ type Training {
 type BasicSkill {
   id: UUID!
   label: String!
-}
-
-type PaymentRequest {
-  id: ID!
-  diagnosisEffectiveHourCount: Int!
-  postExamEffectiveHourCount: Int!
-  individualEffectiveHourCount: Int!
-  collectiveEffectiveHourCount: Int!
-  mandatoryTrainingsEffectiveHourCount: Int!
-  basicSkillsEffectiveHourCount: Int!
-  certificateSkillsEffectiveHourCount: Int!
-  examEffectiveHourCount: Int!
 }
 
 type Query {
@@ -238,17 +225,6 @@ input AdmissibilityInput {
   status: AdmissibilityStatus
 }
 
-input PaymentRequestInput {
-  diagnosisEffectiveHourCount: Int!
-  postExamEffectiveHourCount: Int!
-  individualEffectiveHourCount: Int!
-  collectiveEffectiveHourCount: Int!
-  mandatoryTrainingsEffectiveHourCount: Int!
-  basicSkillsEffectiveHourCount: Int!
-  certificateSkillsEffectiveHourCount: Int!
-  examEffectiveHourCount: Int!
-}
-
 type Mutation {
   candidacy_createCandidacy(candidacy: CandidacyInput!): Candidacy
   candidacy_submitCandidacy(deviceId: ID!, candidacyId: ID!): Candidacy
@@ -304,9 +280,4 @@ type Mutation {
     candidacyId: UUID!
     admissibility: AdmissibilityInput!
   ): Admissibility!
-  candidacy_createOrUpdatePaymentRequest(
-    candidacyId: UUID!
-    paymentRequest: PaymentRequestInput!
-  ): PaymentRequest!
-  candidacy_confirmPaymentRequest(candidacyId: UUID!): Candidacy!
 }

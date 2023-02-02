@@ -1,5 +1,8 @@
-import { Candidacy, Organism } from "../types/candidacy";
-import { Candidate, FundingRequestInput } from "../types/candidate";
+import { Candidacy, Organism } from "../../../../domain/types/candidacy";
+import {
+  Candidate,
+  FundingRequestInput,
+} from "../../../../domain/types/candidate";
 import { mapFundingRequestBatch } from "./createFundingRequest";
 
 const defaultValidFundingRequest: FundingRequestInput = {

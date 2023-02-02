@@ -1,13 +1,10 @@
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
-import { PaymentRequest } from "@prisma/client";
 import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
 
 import { addExperienceToCandidacy } from "../../../domain/features/addExperienceToCandidacy";
 import { archiveCandidacy } from "../../../domain/features/archiveCandidacy";
-import { confirmPaymentRequest } from "../../../domain/features/confirmPaymentRequest";
 import { createCandidacy } from "../../../domain/features/createCandidacy";
-import { createOrUpdatePaymentRequestForCandidacy } from "../../../domain/features/createOrUpdatePaymentRequestForCandidacy";
 import { deleteCandidacy } from "../../../domain/features/deleteCandidacy";
 import { dropOutCandidacy } from "../../../domain/features/dropOutCandidacy";
 import { getAdmissibility } from "../../../domain/features/getAdmissibility";
@@ -17,7 +14,6 @@ import { getCandidacy } from "../../../domain/features/getCandidacy";
 import { getCompanionsForCandidacy } from "../../../domain/features/getCompanionsForCandidacy";
 import { getDeviceCandidacy } from "../../../domain/features/getDeviceCandidacy";
 import { getAAPOrganismsForCandidacy } from "../../../domain/features/getOrganismsForCandidacy";
-import { getPaymentRequestByCandidacyId } from "../../../domain/features/getPaymentRequestByCandidacyId";
 import { getTrainings } from "../../../domain/features/getTrainings";
 import { selectOrganismForCandidacy } from "../../../domain/features/selectOrganismForCandidacy";
 import { submitCandidacy } from "../../../domain/features/submitCandidacy";
@@ -37,10 +33,8 @@ import * as basicSkillDb from "../../database/postgres/basicSkills";
 import * as candidacyDb from "../../database/postgres/candidacies";
 import * as dropOutDb from "../../database/postgres/dropOutReasons";
 import * as experienceDb from "../../database/postgres/experiences";
-import * as fundingRequestDb from "../../database/postgres/fundingRequests";
 import * as goalDb from "../../database/postgres/goals";
 import * as organismDb from "../../database/postgres/organisms";
-import * as paymentRequestDb from "../../database/postgres/paymentRequest";
 import * as paymentRequestBatchDb from "../../database/postgres/paymentRequestBatches";
 import * as trainingDb from "../../database/postgres/trainings";
 import { notifyNewCandidacy } from "../../mattermost";
@@ -82,21 +76,6 @@ export const resolvers = {
         hasRole: context.auth.hasRole,
         getAdmissibilityFromCandidacyId:
           admissibilityDb.getAdmissibilityFromCandidacyId,
-      })({ candidacyId: parent.id });
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .map((v) => v.extractNullable())
-        .extract();
-    },
-    paymentRequest: async (
-      parent: Candidacy,
-      _: unknown,
-      context: { auth: { hasRole: (role: Role) => boolean } }
-    ) => {
-      const result = await getPaymentRequestByCandidacyId({
-        hasRole: context.auth.hasRole,
-        getPaymentRequestByCandidacyId:
-          paymentRequestDb.getPaymentRequestByCandidacyId,
       })({ candidacyId: parent.id });
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
@@ -501,53 +480,5 @@ export const resolvers = {
           .extract();
       }
     ),
-    candidacy_createOrUpdatePaymentRequest: async (
-      _: unknown,
-      {
-        candidacyId,
-        paymentRequest,
-      }: { candidacyId: string; paymentRequest: PaymentRequest },
-      context: { auth: { hasRole: (role: Role) => boolean } }
-    ) => {
-      const result = await createOrUpdatePaymentRequestForCandidacy({
-        hasRole: context.auth.hasRole,
-        getFundingRequestByCandidacyId: fundingRequestDb.getFundingRequest,
-        getPaymentRequestByCandidacyId:
-          paymentRequestDb.getPaymentRequestByCandidacyId,
-        createPaymentRequest: paymentRequestDb.createPaymentRequest,
-        updatePaymentRequest: paymentRequestDb.updatePaymentRequest,
-      })({
-        candidacyId,
-        paymentRequest,
-      });
-
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
-    candidacy_confirmPaymentRequest: async (
-      _: unknown,
-      { candidacyId }: { candidacyId: string },
-      context: { auth: { hasRole: (role: Role) => boolean } }
-    ) => {
-      const result = await confirmPaymentRequest({
-        hasRole: context.auth.hasRole,
-        existsCandidacyWithActiveStatus:
-          candidacyDb.existsCandidacyWithActiveStatus,
-        getPaymentRequestByCandidacyId:
-          paymentRequestDb.getPaymentRequestByCandidacyId,
-        createPaymentRequestBatch:
-          paymentRequestBatchDb.createPaymentRequestBatch,
-        getFundingRequestByCandidacyId: fundingRequestDb.getFundingRequest,
-        updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
-        getCandidacyFromId: candidacyDb.getCandidacyFromId,
-      })({
-        candidacyId: candidacyId,
-      });
-
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
   },
 };

@@ -15,6 +15,7 @@ import {
 import * as account from "./account";
 import * as candidacy from "./candidacy";
 import * as candidate from "./candidate";
+import { financeResolvers } from "./finance/finance.resolvers";
 import * as referential from "./referential";
 import * as search from "./search";
 
@@ -31,6 +32,7 @@ const resolvers = mergeResolvers([
   referential.resolvers,
   account.resolvers,
   candidate.resolvers,
+  financeResolvers,
 ]);
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;

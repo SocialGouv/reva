@@ -15,11 +15,6 @@ type CandidateLogged {
   candidate: Candidate!
 }
 
-type FundingRequestInformations {
-  training: TrainingForm!
-  fundingRequest: FundingRequest
-}
-
 type TrainingForm {
   individualHourCount: Int!
   certificateSkills: String!
@@ -27,42 +22,6 @@ type TrainingForm {
   basicSkills: [BasicSkill!]!
   mandatoryTrainings: [Training!]!
   otherTraining: String!
-}
-
-type FundingRequest {
-  id: UUID!
-  numAction: String
-
-  companion: Organism
-
-  diagnosisHourCount: Int!
-  diagnosisCost: Int!
-
-  postExamHourCount: Int!
-  postExamCost: Int!
-
-  individualHourCount: Int!
-  individualCost: Int!
-
-  collectiveHourCount: Int!
-  collectiveCost: Int!
-
-  basicSkills: [BasicSkill!]!
-  basicSkillsHourCount: Int!
-  basicSkillsCost: Int!
-
-  mandatoryTrainings: [Training!]!
-  mandatoryTrainingsHourCount: Int!
-  mandatoryTrainingsCost: Int!
-
-  certificateSkills: String!
-  certificateSkillsHourCount: Int!
-  certificateSkillsCost: Int!
-
-  otherTraining: String!
-
-  examHourCount: Int!
-  examCost: Int!
 }
 
 type Candidate {
@@ -82,7 +41,6 @@ type Candidate {
 type Query {
   candidate_getCandidateWithCandidacy: Candidate!
   candidate_getCandidateByEmail(email: String!): Candidate
-  candidate_getFundingRequest(candidacyId: UUID!): FundingRequestInformations!
 }
 
 input CandidateInput {
@@ -104,47 +62,10 @@ input FullCandidateInput {
   vulnerabilityIndicatorId: UUID
 }
 
-input FundingRequestInput {
-  companionId: UUID
-
-  diagnosisHourCount: Int!
-  diagnosisCost: Int!
-
-  postExamHourCount: Int!
-  postExamCost: Int!
-
-  individualHourCount: Int!
-  individualCost: Int!
-
-  collectiveHourCount: Int!
-  collectiveCost: Int!
-
-  basicSkillsIds: [UUID!]!
-  basicSkillsHourCount: Int!
-  basicSkillsCost: Int!
-
-  mandatoryTrainingsIds: [UUID!]!
-  mandatoryTrainingsHourCount: Int!
-  mandatoryTrainingsCost: Int!
-
-  certificateSkills: String!
-  certificateSkillsHourCount: Int!
-  certificateSkillsCost: Int!
-
-  otherTraining: String!
-
-  examHourCount: Int!
-  examCost: Int!
-}
-
 type Mutation {
   candidate_askForRegistration(candidate: CandidateInput!): String!
   candidate_askForLogin(email: String!): String!
   candidate_login(token: String!): CandidateLogged!
-  candidate_createFundingRequest(
-    candidacyId: UUID!
-    fundingRequest: FundingRequestInput!
-  ): FundingRequest!
   candidate_updateCandidate(
     id: UUID!
     candidate: FullCandidateInput!

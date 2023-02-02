@@ -4,8 +4,8 @@ import cron from "cron";
 import dotenv from "dotenv";
 import pino from "pino";
 
-import { batchFundingRequest } from "./batch/fundingRequest";
-import uploadSpoolerFiles from "./batch/paymentRequestProofJob";
+import { batchFundingRequest } from "./graphql/finance/batches/fundingRequest";
+import uploadSpoolerFiles from "./graphql/finance/batches/paymentRequestProofJob";
 
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
