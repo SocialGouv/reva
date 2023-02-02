@@ -1,9 +1,12 @@
 import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
-import { Role } from "../types/account";
-import { PaymentRequest } from "../types/candidacy";
-import { FundingRequest } from "../types/candidate";
-import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
+import { Role } from "../../../../domain/types/account";
+import { PaymentRequest } from "../../../../domain/types/candidacy";
+import { FundingRequest } from "../../../../domain/types/candidate";
+import {
+  FunctionalCodeError,
+  FunctionalError,
+} from "../../../../domain/types/functionalError";
 
 interface CreateOrUpdatePaymentRequestDeps {
   hasRole: (role: Role) => boolean;

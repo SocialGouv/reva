@@ -1,11 +1,6 @@
 import { PaymentRequest } from "@prisma/client";
 import mercurius from "mercurius";
 
-import { confirmPaymentRequest } from "../../../domain/features/confirmPaymentRequest";
-import { createFundingRequest } from "../../../domain/features/createFundingRequest";
-import { createOrUpdatePaymentRequestForCandidacy } from "../../../domain/features/createOrUpdatePaymentRequestForCandidacy";
-import { getFundingRequest } from "../../../domain/features/getFundingRequest";
-import { getPaymentRequestByCandidacyId } from "../../../domain/features/getPaymentRequestByCandidacyId";
 import { Role } from "../../../domain/types/account";
 import { Candidacy } from "../../../domain/types/candidacy";
 import * as candidaciesDb from "../../database/postgres/candidacies";
@@ -14,6 +9,11 @@ import * as fundingRequestBatchesDb from "../../database/postgres/fundingRequest
 import * as fundingRequestsDb from "../../database/postgres/fundingRequests";
 import * as paymentRequestsDb from "../../database/postgres/paymentRequest";
 import * as paymentRequestBatchesDb from "../../database/postgres/paymentRequestBatches";
+import { confirmPaymentRequest } from "./features/confirmPaymentRequest";
+import { createFundingRequest } from "./features/createFundingRequest";
+import { createOrUpdatePaymentRequestForCandidacy } from "./features/createOrUpdatePaymentRequestForCandidacy";
+import { getFundingRequest } from "./features/getFundingRequest";
+import { getPaymentRequestByCandidacyId } from "./features/getPaymentRequestByCandidacyId";
 
 export const financeResolvers = {
   Candidacy: {

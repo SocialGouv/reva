@@ -1,7 +1,7 @@
 import { Left, Maybe, Right } from "purify-ts";
 
-import { PaymentRequest } from "../types/candidacy";
-import { FundingRequest } from "../types/candidate";
+import { PaymentRequest } from "../../../../domain/types/candidacy";
+import { FundingRequest } from "../../../../domain/types/candidate";
 import { createOrUpdatePaymentRequestForCandidacy } from "./createOrUpdatePaymentRequestForCandidacy";
 
 const defaultValidPaymentRequest: PaymentRequest = {

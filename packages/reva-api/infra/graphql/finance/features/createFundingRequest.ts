@@ -1,8 +1,8 @@
 import pino from "pino";
 import { Either, EitherAsync, Left, Right } from "purify-ts";
 
-import { Role } from "../types/account";
-import { Candidacy, Degree } from "../types/candidacy";
+import { Role } from "../../../../domain/types/account";
+import { Candidacy, Degree } from "../../../../domain/types/candidacy";
 import {
   Candidate,
   FundingRequest,
@@ -10,8 +10,11 @@ import {
   FundingRequestBatchContent,
   FundingRequestInput,
   VulnerabilityIndicator,
-} from "../types/candidate";
-import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
+} from "../../../../domain/types/candidate";
+import {
+  FunctionalCodeError,
+  FunctionalError,
+} from "../../../../domain/types/functionalError";
 
 interface CreateFundingRequestDeps {
   createFundingRequest: (params: {
