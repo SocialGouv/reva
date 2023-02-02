@@ -175,6 +175,9 @@ paymentRequest funding payment =
         int key =
             Just <| String.fromInt <| key payment
 
+        string key =
+            Just <| key payment
+
         mandatoryTrainingsChecked =
             Helper.toCheckedList funding.mandatoryTrainingIds
 
@@ -190,6 +193,7 @@ paymentRequest funding payment =
             , ( .mandatoryTrainingsHourCount, int .mandatoryTrainingsHourCount )
             , ( .certificateSkillsHourCount, int .certificateSkillsHourCount )
             , ( .examHourCount, int .examHourCount )
+            , ( .invoiceNumber, string .invoiceNumber )
             ]
                 |> Helper.toKeyedList keys
     in

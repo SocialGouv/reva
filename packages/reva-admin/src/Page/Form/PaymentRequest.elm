@@ -152,7 +152,7 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( keys.examHourCount, hourCountElement .examEstimatedHourCount )
         , ( "total", Form.Section "Total" )
         , FundingRequest.totalCostSection "Coût total de la demande de paiement" formData
-        , ( "invoiceNumber", Form.InputRequired "Numéro de facture" )
+        , ( keys.invoiceNumber, Form.InputRequired "Numéro de facture" )
         ]
     , saveLabel = Nothing
     , submitLabel = "Enregistrer"
@@ -170,6 +170,12 @@ confirmationForm formData ( _, _ ) =
 
             Nothing ->
                 ( "num-action", Form.Empty )
+        , case Data.Form.get keys.invoiceNumber formData of
+            Just invoiceNumber ->
+                ( "invoice-number", Form.Info "Numéro de facture" invoiceNumber )
+
+            Nothing ->
+                ( "invoice-number", Form.Empty )
         , FundingRequest.totalCostSection "Coût total de la demande de paiement" formData
         , ( keys.isFormConfirmed
           , Form.Checkbox "Je confirme ce montant de paiement. Je ne pourrai pas modifier cette demande de paiement après son envoi."
