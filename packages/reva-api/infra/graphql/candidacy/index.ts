@@ -1,3 +1,4 @@
+import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
@@ -19,7 +20,6 @@ import { selectOrganismForCandidacy } from "../../../domain/features/selectOrgan
 import { submitCandidacy } from "../../../domain/features/submitCandidacy";
 import { submitTraining } from "../../../domain/features/submitTrainingForm";
 import { takeOverCandidacy } from "../../../domain/features/takeOverCandidacy";
-import { updateAdmissibility } from "../../../domain/features/updateAdmissibility";
 import { updateAppointmentInformations } from "../../../domain/features/updateAppointmentInformations";
 import { updateCertificationOfCandidacy } from "../../../domain/features/updateCertificationOfCandidacy";
 import { updateContactOfCandidacy } from "../../../domain/features/updateContactOfCandidacy";
@@ -27,7 +27,7 @@ import { updateExperienceOfCandidacy } from "../../../domain/features/updateExpe
 import { updateGoalsOfCandidacy } from "../../../domain/features/updateGoalsOfCandidacy";
 import { confirmTrainingFormByCandidate } from "../../../domain/features/validateTrainingFormByCandidate";
 import { Role } from "../../../domain/types/account";
-import { Admissibility, Candidacy } from "../../../domain/types/candidacy";
+import { Candidacy } from "../../../domain/types/candidacy";
 import * as admissibilityDb from "../../database/postgres/admissibility";
 import * as basicSkillDb from "../../database/postgres/basicSkills";
 import * as candidacyDb from "../../database/postgres/candidacies";
@@ -35,11 +35,9 @@ import * as dropOutDb from "../../database/postgres/dropOutReasons";
 import * as experienceDb from "../../database/postgres/experiences";
 import * as goalDb from "../../database/postgres/goals";
 import * as organismDb from "../../database/postgres/organisms";
-import * as paymentRequestBatchDb from "../../database/postgres/paymentRequestBatches";
 import * as trainingDb from "../../database/postgres/trainings";
 import { notifyNewCandidacy } from "../../mattermost";
-import { applySecurityCheckToResolver } from "../security";
-import { checkCanManageCandidacy } from "../security/user-can-manage-candidacy";
+import { resolversSecurityMap } from "./security";
 
 const withBasicSkills = (c: Candidacy) => ({
   ...c,
@@ -65,7 +63,7 @@ const withMandatoryTrainings = (c: Candidacy) => ({
   mandatoryTrainings: c.trainings.map((t) => t.training),
 });
 
-export const resolvers = {
+const unsafeResolvers = {
   Candidacy: {
     admissibility: async (
       parent: Candidacy,
@@ -291,79 +289,61 @@ export const resolvers = {
         .extract();
     },
 
-    candidacy_deleteById: applySecurityCheckToResolver(
-      checkCanManageCandidacy(),
-      async (_: unknown, payload: any) => {
-        const result = await deleteCandidacy({
-          deleteCandidacyFromId: candidacyDb.deleteCandidacyFromId,
-        })({
-          candidacyId: payload.candidacyId,
-        });
+    candidacy_deleteById: async (_: unknown, payload: any) => {
+      const result = await deleteCandidacy({
+        deleteCandidacyFromId: candidacyDb.deleteCandidacyFromId,
+      })({
+        candidacyId: payload.candidacyId,
+      });
 
-        return result
-          .mapLeft(
-            (error) => new mercurius.ErrorWithProps(error.message, error)
-          )
-          .extract();
-      }
-    ),
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
 
-    candidacy_archiveById: applySecurityCheckToResolver(
-      checkCanManageCandidacy(),
-      async (_: unknown, payload: any) => {
-        const result = await archiveCandidacy({
-          updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
-        })({
-          candidacyId: payload.candidacyId,
-        });
+    candidacy_archiveById: async (_: unknown, payload: any) => {
+      const result = await archiveCandidacy({
+        updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
+      })({
+        candidacyId: payload.candidacyId,
+      });
 
-        return result
-          .mapLeft(
-            (error) => new mercurius.ErrorWithProps(error.message, error)
-          )
-          .extract();
-      }
-    ),
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
 
-    candidacy_updateAppointmentInformations: applySecurityCheckToResolver(
-      checkCanManageCandidacy(),
-      async (_: unknown, payload: any) => {
-        const result = await updateAppointmentInformations({
-          updateAppointmentInformations:
-            candidacyDb.updateAppointmentInformations,
-        })({
-          candidacyId: payload.candidacyId,
-          candidateTypologyInformations: payload.candidateTypologyInformations,
-          appointmentInformations: payload.appointmentInformations,
-        });
+    candidacy_updateAppointmentInformations: async (
+      _: unknown,
+      payload: any
+    ) => {
+      const result = await updateAppointmentInformations({
+        updateAppointmentInformations:
+          candidacyDb.updateAppointmentInformations,
+      })({
+        candidacyId: payload.candidacyId,
+        candidateTypologyInformations: payload.candidateTypologyInformations,
+        appointmentInformations: payload.appointmentInformations,
+      });
 
-        return result
-          .mapLeft(
-            (error) => new mercurius.ErrorWithProps(error.message, error)
-          )
-          .extract();
-      }
-    ),
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
 
-    candidacy_takeOver: applySecurityCheckToResolver(
-      checkCanManageCandidacy(true),
-      async (_: unknown, payload: any, context: { auth: any }) => {
-        const result = await takeOverCandidacy({
-          hasRole: context.auth.hasRole,
-          existsCandidacyWithActiveStatus:
-            candidacyDb.existsCandidacyWithActiveStatus,
-          updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
-        })({
-          candidacyId: payload.candidacyId,
-        });
+    candidacy_takeOver: async (_: unknown, payload: any) => {
+      const result = await takeOverCandidacy({
+        existsCandidacyWithActiveStatus:
+          candidacyDb.existsCandidacyWithActiveStatus,
+        updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
+      })({
+        candidacyId: payload.candidacyId,
+      });
 
-        return result
-          .mapLeft(
-            (error) => new mercurius.ErrorWithProps(error.message, error)
-          )
-          .extract();
-      }
-    ),
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
 
     candidacy_selectOrganism: async (_: unknown, payload: any) => {
       const result = await selectOrganismForCandidacy({
@@ -378,27 +358,21 @@ export const resolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
-    candidacy_submitTrainingForm: applySecurityCheckToResolver(
-      checkCanManageCandidacy(),
-      async (_: unknown, payload: any, context: { auth: any }) => {
-        const result = await submitTraining({
-          hasRole: context.auth.hasRole,
-          updateTrainingInformations: candidacyDb.updateTrainingInformations,
-          existsCandidacyHavingHadStatus:
-            candidacyDb.existsCandidacyHavingHadStatus,
-          updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
-        })({
-          candidacyId: payload.candidacyId,
-          training: payload.training,
-        });
+    candidacy_submitTrainingForm: async (_: unknown, payload: any) => {
+      const result = await submitTraining({
+        updateTrainingInformations: candidacyDb.updateTrainingInformations,
+        existsCandidacyHavingHadStatus:
+          candidacyDb.existsCandidacyHavingHadStatus,
+        updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
+      })({
+        candidacyId: payload.candidacyId,
+        training: payload.training,
+      });
 
-        return result
-          .mapLeft(
-            (error) => new mercurius.ErrorWithProps(error.message, error)
-          )
-          .extract();
-      }
-    ),
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
 
     candidacy_confirmTrainingForm: async (
       _: unknown,
@@ -416,69 +390,40 @@ export const resolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
-    candidacy_dropOut: applySecurityCheckToResolver(
-      checkCanManageCandidacy(),
-      async (
-        _: unknown,
-        payload: {
-          candidacyId: string;
-          dropOut: {
-            dropOutReasonId: string;
-            droppedOutAt?: number;
-            otherReasonContent?: string;
-          };
-        },
-        context: { auth: any }
-      ) => {
-        const droppedOutAt: Date = payload.dropOut.droppedOutAt
-          ? new Date(payload.dropOut.droppedOutAt)
-          : new Date();
-
-        const result = await dropOutCandidacy({
-          getCandidacyFromId: candidacyDb.getCandidacyFromId,
-          getDropOutReasonById: dropOutDb.getDropOutReasonById,
-          dropOutCandidacy: candidacyDb.dropOutCandidacy,
-          hasRole: context.auth.hasRole,
-        })({
-          candidacyId: payload.candidacyId,
-          dropOutReasonId: payload.dropOut.dropOutReasonId,
-          otherReasonContent: payload.dropOut.otherReasonContent,
-          droppedOutAt,
-        });
-
-        return result
-          .mapLeft(
-            (error) => new mercurius.ErrorWithProps(error.message, error)
-          )
-          .extract();
+    candidacy_dropOut: async (
+      _: unknown,
+      payload: {
+        candidacyId: string;
+        dropOut: {
+          dropOutReasonId: string;
+          droppedOutAt?: number;
+          otherReasonContent?: string;
+        };
       }
-    ),
-    candidacy_updateAdmissibility: applySecurityCheckToResolver(
-      checkCanManageCandidacy(),
-      async (
-        _: unknown,
-        {
-          candidacyId,
-          admissibility,
-        }: { candidacyId: string; admissibility: Admissibility },
-        context: { auth: { hasRole: (role: Role) => boolean } }
-      ) => {
-        const result = await updateAdmissibility({
-          hasRole: context.auth.hasRole,
-          getAdmissibilityFromCandidacyId:
-            admissibilityDb.getAdmissibilityFromCandidacyId,
-          updateAdmissibility: admissibilityDb.updateAdmissibility,
-        })({
-          candidacyId,
-          admissibility,
-        });
+    ) => {
+      const droppedOutAt: Date = payload.dropOut.droppedOutAt
+        ? new Date(payload.dropOut.droppedOutAt)
+        : new Date();
 
-        return result
-          .mapLeft(
-            (error) => new mercurius.ErrorWithProps(error.message, error)
-          )
-          .extract();
-      }
-    ),
+      const result = await dropOutCandidacy({
+        getCandidacyFromId: candidacyDb.getCandidacyFromId,
+        getDropOutReasonById: dropOutDb.getDropOutReasonById,
+        dropOutCandidacy: candidacyDb.dropOutCandidacy,
+      })({
+        candidacyId: payload.candidacyId,
+        dropOutReasonId: payload.dropOut.dropOutReasonId,
+        otherReasonContent: payload.dropOut.otherReasonContent,
+        droppedOutAt,
+      });
+
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
   },
 };
+
+export const resolvers = composeResolvers(
+  unsafeResolvers,
+  resolversSecurityMap
+);

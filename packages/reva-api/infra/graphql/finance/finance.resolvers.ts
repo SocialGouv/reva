@@ -1,3 +1,4 @@
+import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { PaymentRequest } from "@prisma/client";
 import mercurius from "mercurius";
 
@@ -14,8 +15,9 @@ import { createFundingRequest } from "./features/createFundingRequest";
 import { createOrUpdatePaymentRequestForCandidacy } from "./features/createOrUpdatePaymentRequestForCandidacy";
 import { getFundingRequest } from "./features/getFundingRequest";
 import { getPaymentRequestByCandidacyId } from "./features/getPaymentRequestByCandidacyId";
+import { resolversSecurityMap } from "./security";
 
-export const financeResolvers = {
+const unsafeResolvers = {
   Candidacy: {
     paymentRequest: async (
       parent: Candidacy,
@@ -66,11 +68,9 @@ export const financeResolvers = {
       {
         candidacyId,
         paymentRequest,
-      }: { candidacyId: string; paymentRequest: PaymentRequest },
-      context: { auth: { hasRole: (role: Role) => boolean } }
+      }: { candidacyId: string; paymentRequest: PaymentRequest }
     ) => {
       const result = await createOrUpdatePaymentRequestForCandidacy({
-        hasRole: context.auth.hasRole,
         getFundingRequestByCandidacyId: fundingRequestsDb.getFundingRequest,
         getPaymentRequestByCandidacyId:
           paymentRequestsDb.getPaymentRequestByCandidacyId,
@@ -131,3 +131,8 @@ export const financeResolvers = {
     },
   },
 };
+
+export const financeResolvers = composeResolvers(
+  unsafeResolvers,
+  resolversSecurityMap
+);

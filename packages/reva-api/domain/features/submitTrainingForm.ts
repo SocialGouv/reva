@@ -1,6 +1,5 @@
 import { Either, EitherAsync, Left, Right } from "purify-ts";
 
-import { Role } from "../types/account";
 import { Candidacy } from "../types/candidacy";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
@@ -19,7 +18,6 @@ interface SubmitTrainingDeps {
       isCertificationPartial: boolean;
     };
   }) => Promise<Either<string, Candidacy>>;
-  hasRole: (role: Role) => boolean;
   existsCandidacyHavingHadStatus: (params: {
     candidacyId: string;
     status: "PRISE_EN_CHARGE" | "DEMANDE_FINANCEMENT_ENVOYE";
@@ -46,15 +44,6 @@ export const submitTraining =
       isCertificationPartial: boolean;
     };
   }) => {
-    if (!deps.hasRole("manage_candidacy")) {
-      return EitherAsync.liftEither(
-        Left(`Vous n'êtes pas authorisé à traiter cette candidature.`)
-      ).mapLeft(
-        (error: string) =>
-          new FunctionalError(FunctionalCodeError.NOT_AUTHORIZED, error)
-      );
-    }
-
     const validateCandidacyNotAlreadyFunding = EitherAsync.fromPromise(() =>
       deps.existsCandidacyHavingHadStatus({
         candidacyId: params.candidacyId,

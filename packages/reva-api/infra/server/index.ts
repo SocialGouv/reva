@@ -4,9 +4,9 @@ import cors from "@fastify/cors";
 import proxy from "@fastify/http-proxy";
 import fastifyStatic from "@fastify/static";
 import dotenv from "dotenv";
-import fastify from "fastify";
-import mercurius, { MercuriusOptions } from "mercurius";
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
+import fastify, { FastifyReply, FastifyRequest } from "fastify";
+import mercurius, { MercuriusOptions } from "mercurius";
 
 import {
   deleteCandidacyFromEmail,
@@ -132,11 +132,27 @@ server.register(keycloakPlugin, {
 server.register(keycloakAdminPlugin);
 
 // Start GRAPHQL server
-server.register(mercurius, graphqlConfiguration as MercuriusOptions);
+const buildGqlContext = async (req: FastifyRequest, _reply: FastifyReply) => {
+  return {
+    auth: req.auth
+  }
+}
 
-server.get("/ping", async function (request, reply) {
-  // const userInfo = await this.keycloak.grantManager.userInfo(request.headers.authorization?.split('Bearer ')[1]);
-  // console.log("userInfo", userInfo);
+
+type PromiseType<T> = T extends PromiseLike<infer U> ? U : T
+
+declare module 'mercurius' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface MercuriusContext extends PromiseType<ReturnType<typeof buildGqlContext>> {}
+}
+
+server.register(mercurius, {
+  ...graphqlConfiguration,
+  context: buildGqlContext
+} as MercuriusOptions
+);
+
+server.get("/ping", async function (_request, reply) {
   reply.send("pong");
 });
 

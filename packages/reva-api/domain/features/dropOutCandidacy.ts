@@ -1,6 +1,5 @@
-import { Either, EitherAsync, Left, Maybe } from "purify-ts";
+import { Either, EitherAsync, Maybe } from "purify-ts";
 
-import { Role } from "../types/account";
 import { Candidacy, DropOutReason } from "../types/candidacy";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
@@ -11,7 +10,6 @@ interface DropOutCandidacyDeps {
   getDropOutReasonById: (params: {
     dropOutReasonId: string;
   }) => Promise<Either<string, Maybe<DropOutReason>>>;
-  hasRole: (role: Role) => boolean;
   dropOutCandidacy: (
     params: DropOutCandidacyParams
   ) => Promise<Either<string, Candidacy>>;
@@ -26,19 +24,6 @@ interface DropOutCandidacyParams {
 
 export const dropOutCandidacy =
   (deps: DropOutCandidacyDeps) => (params: DropOutCandidacyParams) => {
-    const hasRequiredRole =
-      deps.hasRole("manage_candidacy") || deps.hasRole("admin") || true;
-    if (!hasRequiredRole) {
-      return EitherAsync.liftEither(
-        Left(
-          `Vous n'êtes pas autorisé à déclarer l'abandon de cette candidature.`
-        )
-      ).mapLeft(
-        (error: string) =>
-          new FunctionalError(FunctionalCodeError.NOT_AUTHORIZED, error)
-      );
-    }
-
     const checkIfCandidacyExists = EitherAsync.fromPromise(() =>
       deps.getCandidacyFromId(params.candidacyId)
     ).mapLeft(

@@ -1,11 +1,12 @@
 import { Account } from "@prisma/client";
 import debug from "debug";
 import { Either, Left, Right } from "purify-ts";
-
 import { Role } from "../types/account";
+
 import { Candidacy } from "../types/candidacy";
 
 const log = debug("domain:canManageCandidacy");
+
 export interface CanManageCandidacyDeps {
   hasRole: (role: Role) => boolean;
   getCandidacyFromId: (

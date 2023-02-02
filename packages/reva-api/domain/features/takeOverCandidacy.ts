@@ -1,11 +1,9 @@
 import { Either, EitherAsync, Left, Right } from "purify-ts";
 
-import { Role } from "../types/account";
 import { Candidacy } from "../types/candidacy";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
 interface TakeOverCandidacyDeps {
-  hasRole: (role: Role) => boolean;
   existsCandidacyWithActiveStatus: (params: {
     candidacyId: string;
     status: "VALIDATION";
@@ -18,29 +16,6 @@ interface TakeOverCandidacyDeps {
 
 export const takeOverCandidacy =
   (deps: TakeOverCandidacyDeps) => (params: { candidacyId: string }) => {
-    if (deps.hasRole("admin")) {
-      return EitherAsync.liftEither(
-        Left(
-          `La candidature ${params.candidacyId} ne peut être prise en charge par un admin`
-        )
-      ).mapLeft(
-        (error: string) =>
-          new FunctionalError(
-            FunctionalCodeError.CANDIDACIES_NOT_TAKEN_OVER,
-            error
-          )
-      );
-    }
-
-    if (!deps.hasRole("manage_candidacy")) {
-      return EitherAsync.liftEither(
-        Left(`Vous n'êtes pas autorisé à prendre en charge cette candidature.`)
-      ).mapLeft(
-        (error: string) =>
-          new FunctionalError(FunctionalCodeError.NOT_AUTHORIZED, error)
-      );
-    }
-
     const existsCandidacyInValidation = EitherAsync.fromPromise(() =>
       deps.existsCandidacyWithActiveStatus({
         candidacyId: params.candidacyId,

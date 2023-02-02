@@ -37,7 +37,6 @@ describe("create or update payment request", () => {
           paymentRequest: PaymentRequest;
         }) => Promise.resolve(Right(params.paymentRequest)),
 
-        hasRole: () => true,
         getPaymentRequestByCandidacyId: () =>
           Promise.resolve(Right(Maybe.empty())),
         getFundingRequestByCandidacyId: () =>
@@ -57,7 +56,6 @@ describe("create or update payment request", () => {
     const cpr = createOrUpdatePaymentRequestForCandidacy({
       createPaymentRequest: () =>
         Promise.resolve(Left("Test should not run create method")),
-      hasRole: () => true,
       getPaymentRequestByCandidacyId: () =>
         Promise.resolve(Right(Maybe.of(defaultValidPaymentRequest))),
       getFundingRequestByCandidacyId: () =>
@@ -79,7 +77,6 @@ describe("create or update payment request", () => {
         paymentRequest: PaymentRequest;
       }) => Promise.resolve(Right(params.paymentRequest)),
 
-      hasRole: () => true,
       getPaymentRequestByCandidacyId: () =>
         Promise.resolve(Right(Maybe.empty())),
       getFundingRequestByCandidacyId: () =>

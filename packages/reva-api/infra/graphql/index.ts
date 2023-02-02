@@ -48,9 +48,6 @@ export const graphqlConfiguration = {
     ]),
     resolvers,
   }),
-  context: (request: { auth: any }) => {
-    return { auth: request.auth };
-  },
   graphiql: !!process.env.GRAPHIQL,
   errorFormatter: (result: any) => {
     const statusCode = result.errors[0].originalError?.statusCode ?? 400;

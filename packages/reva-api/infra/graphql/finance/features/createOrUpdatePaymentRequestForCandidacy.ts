@@ -9,7 +9,6 @@ import {
 } from "../../../../domain/types/functionalError";
 
 interface CreateOrUpdatePaymentRequestDeps {
-  hasRole: (role: Role) => boolean;
   getFundingRequestByCandidacyId: (params: {
     candidacyId: string;
   }) => Promise<Either<string, FundingRequest | null>>;
@@ -32,15 +31,6 @@ export const createOrUpdatePaymentRequestForCandidacy =
     candidacyId: string;
     paymentRequest: PaymentRequest;
   }): Promise<Either<FunctionalError, PaymentRequest>> => {
-    if (!deps.hasRole("admin") && !deps.hasRole("manage_candidacy")) {
-      return Left(
-        new FunctionalError(
-          FunctionalCodeError.NOT_AUTHORIZED,
-          `Vous n'avez pas accès à la demande de paiement de cette candidature`
-        )
-      );
-    }
-
     const createOrUpdatePaymentRequest = (
       existingPaymentRequest: Maybe<PaymentRequest>
     ): Promise<Either<string, PaymentRequest>> =>

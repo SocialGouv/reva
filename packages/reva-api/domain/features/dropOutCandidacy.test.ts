@@ -61,7 +61,6 @@ const dropOutReasonWithRightRole = dropOutCandidacy({
   getCandidacyFromId: (id) => Promise.resolve(getCandidacyById(id)),
   getDropOutReasonById: ({ dropOutReasonId }) =>
     Promise.resolve(Right(getDropOutReasonById(dropOutReasonId))),
-  hasRole: () => true,
   dropOutCandidacy: (params) =>
     Promise.resolve(
       Right({
