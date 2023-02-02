@@ -20,7 +20,6 @@ import { selectOrganismForCandidacy } from "../../../domain/features/selectOrgan
 import { submitCandidacy } from "../../../domain/features/submitCandidacy";
 import { submitTraining } from "../../../domain/features/submitTrainingForm";
 import { takeOverCandidacy } from "../../../domain/features/takeOverCandidacy";
-import { updateAdmissibility } from "../../../domain/features/updateAdmissibility";
 import { updateAppointmentInformations } from "../../../domain/features/updateAppointmentInformations";
 import { updateCertificationOfCandidacy } from "../../../domain/features/updateCertificationOfCandidacy";
 import { updateContactOfCandidacy } from "../../../domain/features/updateContactOfCandidacy";
@@ -28,7 +27,7 @@ import { updateExperienceOfCandidacy } from "../../../domain/features/updateExpe
 import { updateGoalsOfCandidacy } from "../../../domain/features/updateGoalsOfCandidacy";
 import { confirmTrainingFormByCandidate } from "../../../domain/features/validateTrainingFormByCandidate";
 import { Role } from "../../../domain/types/account";
-import { Admissibility, Candidacy } from "../../../domain/types/candidacy";
+import { Candidacy } from "../../../domain/types/candidacy";
 import * as admissibilityDb from "../../database/postgres/admissibility";
 import * as basicSkillDb from "../../database/postgres/basicSkills";
 import * as candidacyDb from "../../database/postgres/candidacies";
@@ -36,10 +35,9 @@ import * as dropOutDb from "../../database/postgres/dropOutReasons";
 import * as experienceDb from "../../database/postgres/experiences";
 import * as goalDb from "../../database/postgres/goals";
 import * as organismDb from "../../database/postgres/organisms";
-import * as paymentRequestBatchDb from "../../database/postgres/paymentRequestBatches";
 import * as trainingDb from "../../database/postgres/trainings";
 import { notifyNewCandidacy } from "../../mattermost";
-import { resolversSecurityMap } from "./securityMap";
+import { resolversSecurityMap } from "./security";
 
 const withBasicSkills = (c: Candidacy) => ({
   ...c,
