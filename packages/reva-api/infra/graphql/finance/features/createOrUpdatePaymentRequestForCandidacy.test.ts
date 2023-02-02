@@ -100,7 +100,7 @@ describe("create or update payment request", () => {
       code: "FUNDING_REQUEST_NOT_POSSIBLE",
       message: "Une erreur est survenue lors de la validation du formulaire",
       errors: [
-        "Le nombre d'heures demandé pour l'accompagnement individuel est supérieur au nombre d'heures de la demande de financement.",
+        "Le nombre d'heures réalisées pour l'accompagnement individuel doit être inférieur ou égal au nombre d'heures prévues dans la demande de prise en charge.",
       ],
     });
   });
