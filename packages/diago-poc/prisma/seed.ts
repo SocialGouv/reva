@@ -109,6 +109,131 @@ async function main() {
             skipDuplicates: true
         })
     }
+
+
+  await prisma.certification.update({
+    where: { rncpId: "2514" },
+    data: {
+      label: `Certificat d'Aptitude aux Fonctions d'Encadrement et de Responsable d'Unité d'Intervention Sociale (CAFERUIS)`,
+    },
+  });
+
+  await prisma.certification.update({
+    where: { rncpId: "4503" },
+    data: {
+      label: `Diplôme d'Etat de Technicien de l'Intervention Sociale et Familiale (DETISF)`,
+    },
+  });
+
+  // TODO: REVIEW DESCRIPTION
+  await prisma.certification.update({
+    where: { rncpId: "5983" },
+    data: {
+      label: `Titre à finalité professionnelle Surveillant - Visiteur de nuit en secteur social et médico-social`,
+    },
+  });
+
+  // TODO: REVIEW DESCRIPTION
+  await prisma.certification.update({
+    where: { rncpId: "13905" },
+    data: {
+      label: `Bac Pro Services aux personnes et territoires`,
+    },
+  });
+
+  // TODO: REVIEW DESCRIPTION
+  await prisma.certification.update({
+    where: { rncpId: "17163" },
+    data: {
+      label: `Titre à finalité professionnelle Conducteur accompagnateur de personnes à mobilité réduite (CApmr)`,
+    },
+  });
+
+  // TODO: REVIEW DESCRIPTION
+  await prisma.certification.update({
+    where: { rncpId: "25085" },
+    data: {
+      label: `CAP agricole Services aux personnes et vente en espace rural`,
+    },
+  });
+
+  await prisma.certification.update({
+    where: { rncpId: "34690" },
+    data: {
+      label: `Titre à finalité professionnelle Assistant de vie dépendance`,
+    },
+  });
+
+  // TODO: REVIEW DESCRIPTION
+  await prisma.certification.update({
+    where: { rncpId: "34691" },
+    data: {
+      label: `Titre à finalité professionnelle Assistant maternel / Garde d'enfants`,
+    },
+  });
+
+  await prisma.certification.update({
+    where: { rncpId: "34692" },
+    data: {
+      label: `Titre à finalité professionnelle Employé familial`,
+    },
+  });
+
+  await prisma.certification.update({
+    where: { rncpId: "35028" },
+    data: {
+      label: `Titre Professionnel Agent de service médico-social`,
+    },
+  });
+
+  await prisma.certification.update({
+    where: { rncpId: "35506" },
+    data: {
+      label: `Titre Professionnel Assistant de vie aux familles`,
+    },
+  });
+
+  await prisma.certification.update({
+    where: { rncpId: "35513" },
+    data: {
+      label: `BUT Carrières sociales option Coordination et gestion des établissement et services sanitaires et sociaux`,
+    },
+  });
+
+  await prisma.certification.update({
+    where: { rncpId: "35993" },
+    data: {
+      label: `Titre Professionnel Responsable Coordonnateur service au domicile`,
+    },
+  });
+
+  await prisma.certification.update({
+    where: { rncpId: "36004" },
+    data: {
+      label: `Diplôme d'Etat Accompagnant éducatif et social (DEAES)`,
+    },
+  });
+
+  await prisma.certification.update({
+    where: { rncpId: "28048" },
+    data: {
+      label: `CAP Accompagnant Educatif Petite Enfance`,
+    },
+  });
+
+  await prisma.certification.update({
+    where: { rncpId: "12301" },
+    data: {
+      label: `Bac Pro Accompagnement, soins et services à la personne - en structure`,
+    },
+  });
+
+  await prisma.certification.update({
+    where: { rncpId: "12296" },
+    data: {
+      label: `Bac Pro Accompagnement, soins et services à la personne - à domicile`,
+    },
+  });
 }
 
 main()
