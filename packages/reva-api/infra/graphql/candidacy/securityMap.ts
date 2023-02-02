@@ -13,6 +13,7 @@ export const resolversSecurityMap = {
   // Mutations candidat
   "Mutation.candidacy_createCandidacy": isCandidate,
   "Mutation.candidacy_updateContact": isCandidate,
+  "Mutation.candidacy_updateCertification": isCandidate,
   "Mutation.candidacy_updateGoals": isCandidate,
   "Mutation.candidacy_updateExperience": isCandidate,
   "Mutation.candidacy_removeExperience": isCandidate,
