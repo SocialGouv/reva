@@ -2,33 +2,35 @@ import { FastifyPluginAsync, FastifyRequest } from "fastify";
 import fp from "fastify-plugin";
 import Keycloak, { KeycloakConfig } from "keycloak-connect";
 
-declare module 'fastify' {
+import { logger } from "../../logger";
+
+declare module "fastify" {
   interface FastifyRequest {
     auth: {
-      hasRole: (role:KeyCloakUserRole) => boolean
-      userInfo: KeycloakConnectUserInfo
-      token: string
-    }
+      hasRole: (role: KeyCloakUserRole) => boolean;
+      userInfo: KeycloakConnectUserInfo;
+      token: string;
+    };
   }
 }
 
 interface KeycloakConnectUserInfo {
   realm_access?: {
-    roles: KeyCloakUserRole[]
-  }
-  sub: string
+    roles: KeyCloakUserRole[];
+  };
+  sub: string;
 }
 
-type KeycloakPluginOptions =  {
-  config: KeycloakConfig
-  [x: string]: unknown
-}
+type KeycloakPluginOptions = {
+  config: KeycloakConfig;
+  [x: string]: unknown;
+};
 
-const keycloakPlugin: FastifyPluginAsync<KeycloakPluginOptions> = async (app, opts) : Promise<void> =>{
-  const {
-    config,
-    ...prototypes
-  } = opts;
+const keycloakPlugin: FastifyPluginAsync<KeycloakPluginOptions> = async (
+  app,
+  opts
+): Promise<void> => {
+  const { config, ...prototypes } = opts;
 
   if (!prototypes.accessDenied) {
     prototypes.accessDenied = (request: FastifyRequest) => {
@@ -43,32 +45,33 @@ const keycloakPlugin: FastifyPluginAsync<KeycloakPluginOptions> = async (app, op
 
   Keycloak.prototype["accessDenied"] = prototypes["accessDenied"];
 
-  const keycloak = new Keycloak(
-    {},
-    config
-  );
+  const keycloak = new Keycloak({}, config);
 
   app.addHook("onRequest", async (req: FastifyRequest, _res: any) => {
     if (req.headers.authorization) {
       const [, token] = req.headers.authorization.split("Bearer ");
       if (token) {
         try {
-          const userInfo = await keycloak.grantManager.userInfo<string,KeycloakConnectUserInfo>(token);
+          const userInfo = await keycloak.grantManager.userInfo<
+            string,
+            KeycloakConnectUserInfo
+          >(token);
           req.auth = {
             hasRole: (role: KeyCloakUserRole) => {
-              return (userInfo?.realm_access?.roles as KeyCloakUserRole[]).includes(role);
+              return (
+                userInfo?.realm_access?.roles as KeyCloakUserRole[]
+              ).includes(role);
             },
             token,
             userInfo,
           };
         } catch (e) {
-          console.log(e);
+          logger.error(e);
         }
       }
     }
     req.auth = req.auth || { hasRole: () => false };
   });
-
-}
+};
 
 export default fp(keycloakPlugin);

@@ -4,7 +4,6 @@ import cors from "@fastify/cors";
 import proxy from "@fastify/http-proxy";
 import fastifyStatic from "@fastify/static";
 import dotenv from "dotenv";
-dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 import fastify, { FastifyReply, FastifyRequest } from "fastify";
 import mercurius, { MercuriusOptions } from "mercurius";
 
@@ -13,9 +12,12 @@ import {
   deleteCandidacyFromPhone,
 } from "../database/postgres/candidacies";
 import { graphqlConfiguration } from "../graphql";
+import { logger } from "../logger";
 import keycloakAdminPlugin from "./plugins/keycloak-admin-plugin";
 import keycloakPlugin from "./plugins/keycloak-plugin";
 import proofUploadRoute from "./proof-upload";
+
+dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
 if (process.env.ES_APM_SERVER_URL) {
   const apm = require("elastic-apm-node").start({
@@ -134,23 +136,22 @@ server.register(keycloakAdminPlugin);
 // Start GRAPHQL server
 const buildGqlContext = async (req: FastifyRequest, _reply: FastifyReply) => {
   return {
-    auth: req.auth
-  }
-}
+    auth: req.auth,
+  };
+};
 
+type PromiseType<T> = T extends PromiseLike<infer U> ? U : T;
 
-type PromiseType<T> = T extends PromiseLike<infer U> ? U : T
-
-declare module 'mercurius' {
+declare module "mercurius" {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface MercuriusContext extends PromiseType<ReturnType<typeof buildGqlContext>> {}
+  interface MercuriusContext
+    extends PromiseType<ReturnType<typeof buildGqlContext>> {}
 }
 
 server.register(mercurius, {
   ...graphqlConfiguration,
-  context: buildGqlContext
-} as MercuriusOptions
-);
+  context: buildGqlContext,
+} as MercuriusOptions);
 
 server.get("/ping", async function (_request, reply) {
   reply.send("pong");
@@ -166,7 +167,7 @@ server.post("/admin/candidacies/delete", async (request, reply) => {
 
   const { email, phone } = request.query as any;
 
-  console.log({ email, phone });
+  logger.info({ email, phone });
 
   if (email) {
     await deleteCandidacyFromEmail(email);
@@ -185,7 +186,7 @@ const start = async () => {
       port: (process.env.PORT || 8080) as number,
       host: "0.0.0.0",
     });
-    console.log(
+    server.log.info(
       `Server listening on ${process.env.PORT} in ${process.env.NODE_ENV}`
     );
   } catch (err) {

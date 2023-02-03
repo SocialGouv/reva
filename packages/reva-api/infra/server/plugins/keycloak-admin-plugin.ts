@@ -2,7 +2,13 @@ import KcAdminClient from "@keycloak/keycloak-admin-client";
 import { FastifyPluginCallback } from "fastify";
 import fp from "fastify-plugin";
 
-const keycloakAdminPlugin: FastifyPluginCallback<Record<string,never>> = (app, _opts, next): void => {
+import { logger } from "../../logger";
+
+const keycloakAdminPlugin: FastifyPluginCallback<Record<string, never>> = (
+  app,
+  _opts,
+  next
+): void => {
   const kcAdminClient = new KcAdminClient({
     baseUrl: process.env.KEYCLOAK_ADMIN_URL,
     realmName: process.env.KEYCLOAK_ADMIN_REALM,
@@ -16,7 +22,7 @@ const keycloakAdminPlugin: FastifyPluginCallback<Record<string,never>> = (app, _
         clientSecret: process.env.KEYCLOAK_ADMIN_CLIENT_SECRET,
       });
     } catch (e) {
-      console.log(e);
+      logger.error(e);
     }
 
     return kcAdminClient;
@@ -25,6 +31,6 @@ const keycloakAdminPlugin: FastifyPluginCallback<Record<string,never>> = (app, _
   app.decorate("getKeycloakAdmin", getKeycloakAdmin);
 
   next();
-}
+};
 
 export default fp(keycloakAdminPlugin);

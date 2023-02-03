@@ -14,6 +14,7 @@ import { getCandidateByEmail } from "../../../domain/features/getCandidateByEmai
 import { updateCandidate } from "../../../domain/features/updateCandidate";
 import * as candidatesDb from "../../database/postgres/candidates";
 import { sendLoginEmail, sendRegistrationEmail } from "../../email";
+import { logger } from "../../logger";
 
 const generateJwt = (data: unknown, expiresIn: number = 15 * 60) => {
   const dataStr = JSON.stringify(data);
@@ -59,7 +60,7 @@ const getCandidateAccountInIAM =
 
       return Right(Maybe.fromNullable(userByEmail));
     } catch (e) {
-      console.log(e);
+      logger.error(e);
       return Left(`An error occured while retrieving ${email} on IAM`);
     }
   };
@@ -109,7 +110,7 @@ const createCandidateAccountInIAM =
 
       return Right(id);
     } catch (e) {
-      console.log(e);
+      logger.error(e);
       return Left(
         `An error occured while creating user with ${account.email} on IAM`
       );

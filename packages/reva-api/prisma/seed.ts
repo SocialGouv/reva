@@ -4,6 +4,8 @@ import * as path from "path";
 import { PrismaClient } from "@prisma/client";
 import * as csv from "fast-csv";
 
+import { logger } from "../infra/logger";
+
 const prisma = new PrismaClient();
 
 async function main() {
@@ -37,7 +39,7 @@ async function main() {
       )
       .on("end", (rowCount: number) => {
         promiseChain.then(() => resolve("done"));
-        console.log(`Parsed ${rowCount} rows`);
+        logger.info(`Parsed ${rowCount} rows`);
       });
   });
 
@@ -249,7 +251,7 @@ async function main() {
     select count(1) from certification;
   `;
 
-  console.log(`${(count as any)[0].count} certifications inserted`);
+  logger.info(`${(count as any)[0].count} certifications inserted`);
 
   await prisma.$queryRaw`
     REFRESH MATERIALIZED VIEW certification_search WITH DATA;

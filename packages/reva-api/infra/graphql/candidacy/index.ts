@@ -36,6 +36,7 @@ import * as experienceDb from "../../database/postgres/experiences";
 import * as goalDb from "../../database/postgres/goals";
 import * as organismDb from "../../database/postgres/organisms";
 import * as trainingDb from "../../database/postgres/trainings";
+import { logger } from "../../logger";
 import { notifyNewCandidacy } from "../../mattermost";
 import { resolversSecurityMap } from "./security";
 
@@ -257,7 +258,7 @@ const unsafeResolvers = {
         .extract();
     },
     candidacy_removeExperience: async (_: unknown, payload: any) => {
-      console.log("candidacy_removeExperience", payload);
+      logger.info("candidacy_removeExperience", payload);
     },
 
     candidacy_updateGoals: async (_: unknown, payload: any) => {

@@ -4,6 +4,8 @@ import { Left, Right } from "purify-ts";
 // @ts-ignore
 import SibApiV3Sdk from "sib-api-v3-sdk";
 
+import { logger } from "../logger";
+
 const defaultClient = SibApiV3Sdk.ApiClient.instance;
 // Configure API key authorization: api-key
 const apiKey = defaultClient.authentications["api-key"];
@@ -94,12 +96,12 @@ const sendEmail = async (
   sendSmtpEmail.tags = [process.env.APP_ENV || "development"];
 
   if (process.env.NODE_ENV !== "production") {
-    console.log("======= EMAIL CONTENT =======");
-    console.log(emailContent.html);
-    console.log("=========================");
-    console.log("======= EMAIL URL =======");
-    console.log(url);
-    console.log("=========================");
+    logger.info("======= EMAIL CONTENT =======");
+    logger.info(emailContent.html);
+    logger.info("=========================");
+    logger.info("======= EMAIL URL =======");
+    logger.info(url);
+    logger.info("=========================");
 
     return Right("result");
   }
@@ -107,7 +109,7 @@ const sendEmail = async (
     await apiInstance.sendTransacEmail(sendSmtpEmail);
     return Right(`email sent to ${email}`);
   } catch (e) {
-    console.log("error", e);
+    logger.error("error", e);
     return Left("error");
   }
 };
