@@ -2,15 +2,13 @@ import path from "path";
 
 import cron from "cron";
 import dotenv from "dotenv";
-import pino from "pino";
 
 import { batchFundingRequest } from "./graphql/finance/batches/fundingRequest";
 import { batchPaymentRequest } from "./graphql/finance/batches/paymentRequest";
 import uploadSpoolerFiles from "./graphql/finance/batches/paymentRequestProofJob";
+import { logger } from "./logger";
 
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
-
-const logger = pino();
 
 const fundingRequest = new cron.CronJob({
   cronTime: process.env.BATCH_FUNDING_REQUEST_CRONTIME || "*/5 * * * *",

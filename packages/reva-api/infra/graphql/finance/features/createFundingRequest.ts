@@ -1,4 +1,3 @@
-import pino from "pino";
 import { Either, EitherAsync, Left, Right } from "purify-ts";
 
 import { Role } from "../../../../domain/types/account";
@@ -15,6 +14,7 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import { logger } from "../../../logger";
 
 interface CreateFundingRequestDeps {
   createFundingRequest: (params: {
@@ -33,8 +33,6 @@ interface CreateFundingRequestDeps {
     statuses: ["PRISE_EN_CHARGE", "PARCOURS_ENVOYE", "PARCOURS_CONFIRME"];
   }) => Promise<Either<string, boolean>>;
 }
-
-const logger = pino();
 
 const candidateBacNonFragile = (candidate: any) =>
   candidate.highestDegree.level > 4 &&
