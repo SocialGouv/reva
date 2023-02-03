@@ -49,19 +49,17 @@ form maybeCertification formData ( candidacy, referential ) =
     { elements =
         [ ( "heading", Form.Heading "1 - Informations des prestations" )
         , ( "selected-certification", Form.Section "Certification choisie par le candidat" )
-        , case maybeCertification of
-            Just certification ->
-                ( "certification", Form.Info "" certification.label )
-
-            Nothing ->
-                ( "certification", Form.Empty )
+        , ( "certification"
+          , maybeCertification
+                |> Maybe.map (.label >> Form.Info "")
+                |> Maybe.withDefault Form.Empty
+          )
         , ( "funding-num-action", Form.Section "Numéro de prise en charge Reva" )
-        , case Data.Form.get keys.numAction formData of
-            Just numAction ->
-                ( "num-action", Form.Info "" numAction )
-
-            Nothing ->
-                ( "num-action", Form.Empty )
+        , ( "num-action"
+          , Data.Form.get keys.numAction formData
+                |> Maybe.map (Form.Info "")
+                |> Maybe.withDefault Form.Empty
+          )
         , ( "organism", Form.Section "Accompagnement architecte de parcours" )
         , ( "diagnosis", Form.Title "Entretien(s) de faisabilité" )
         , ( "diagnosisReview"
@@ -164,18 +162,16 @@ confirmationForm : FormData -> ( Candidacy, Referential ) -> Form
 confirmationForm formData ( _, _ ) =
     { elements =
         [ ( "heading", Form.Heading "3 - Confirmation" )
-        , case Data.Form.get keys.numAction formData of
-            Just numAction ->
-                ( "num-action", Form.Info "Numéro de prise en charge Reva" numAction )
-
-            Nothing ->
-                ( "num-action", Form.Empty )
-        , case Data.Form.get keys.invoiceNumber formData of
-            Just invoiceNumber ->
-                ( "invoice-number", Form.Info "Numéro de facture" invoiceNumber )
-
-            Nothing ->
-                ( "invoice-number", Form.Empty )
+        , ( "num-action"
+          , Data.Form.get keys.numAction formData
+                |> Maybe.map (Form.Info "Numéro de prise en charge Reva")
+                |> Maybe.withDefault Form.Empty
+          )
+        , ( "invoice-number"
+          , Data.Form.get keys.invoiceNumber formData
+                |> Maybe.map (Form.Info "Numéro de facture")
+                |> Maybe.withDefault Form.Empty
+          )
         , FundingRequest.totalCostSection "Coût total de la demande de paiement" formData
         , ( keys.isFormConfirmed
           , Form.Checkbox "Je confirme ce montant de paiement. Je ne pourrai pas modifier cette demande de paiement après son envoi."
