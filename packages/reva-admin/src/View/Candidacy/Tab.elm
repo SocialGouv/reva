@@ -11,6 +11,7 @@ type alias Tab =
 
 type Value
     = Admissibility
+    | Archive
     | CandidateInfo
     | DropOut
     | Meetings

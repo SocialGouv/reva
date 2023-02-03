@@ -22,7 +22,6 @@ module Data.Candidacy exposing
     , sentDate
     , statusToCategoryString
     , statusToProgressPosition
-    , toCandidacySummary
     , toCategoryString
     , toDirectoryPosition
     )
@@ -229,24 +228,6 @@ statusToProgressPosition status =
 
         _ ->
             -1
-
-
-toCandidacySummary : Candidacy -> CandidacySummary
-toCandidacySummary candidacy =
-    { id = candidacy.id
-    , certificationId = candidacy.certificationId
-    , certification = candidacy.certification |> Maybe.map (\c -> { id = c.id, label = c.label, acronym = c.acronym })
-    , department = candidacy.department
-    , organism = candidacy.organism
-    , firstname = candidacy.firstname
-    , lastname = candidacy.lastname
-    , phone = candidacy.phone
-    , email = candidacy.email
-    , isDroppedOut = candidacy.dropOutDate /= Nothing
-    , lastStatus = lastStatus candidacy.statuses
-    , createdAt = candidacy.createdAt
-    , sentAt = sentDate candidacy.statuses
-    }
 
 
 lastStatus : List CandidacyStatus -> CandidacyStatus

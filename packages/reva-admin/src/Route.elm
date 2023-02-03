@@ -54,6 +54,7 @@ parser baseUrl =
                 , s "candidacies" <?> Query.string "status" |> map (Filters >> Candidacies)
                 , topLevel string |> candidacyTab Tab.Profile
                 , subLevel "admissibility" |> candidacyTab Tab.Admissibility
+                , subLevel "archive" |> candidacyTab Tab.Archive
                 , subLevel "candidate" |> candidacyTab Tab.CandidateInfo
                 , subLevel "drop-out" |> candidacyTab Tab.DropOut
                 , subLevel "funding" |> candidacyTab Tab.FundingRequest
@@ -123,6 +124,9 @@ tabToString topLevel subLevel tab =
 
         Tab.CandidateInfo ->
             default [ "candidate" ]
+
+        Tab.Archive ->
+            default [ "archive" ]
 
         Tab.DropOut ->
             default [ "drop-out" ]

@@ -5,6 +5,7 @@ import Admin.Object.BasicSkill
 import Admin.Object.DropOutReason
 import Admin.Object.Goal
 import Admin.Object.Referential
+import Admin.Object.ReorientationReason
 import Admin.Object.Training
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
@@ -36,6 +37,7 @@ selection =
         |> with (Query.getDropOutReasons dropOutReasonSelection)
         |> with (SelectionSet.map (\r -> r.goals) (Query.getReferential goalsSelection))
         |> with (Query.getTrainings trainingsSelection)
+        |> with (Query.getReorientationReasons reorientationReasonSelection)
         |> with (Query.getVulnerabilityIndicators Api.VulnerabilityIndicator.selection)
 
 
@@ -51,6 +53,13 @@ dropOutReasonSelection =
     SelectionSet.succeed Data.Referential.DropOutReason
         |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.DropOutReason.id)
         |> with Admin.Object.DropOutReason.label
+
+
+reorientationReasonSelection : SelectionSet Data.Referential.BasicSkill Admin.Object.ReorientationReason
+reorientationReasonSelection =
+    SelectionSet.succeed Data.Referential.ReorientationReason
+        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.ReorientationReason.id)
+        |> with Admin.Object.ReorientationReason.label
 
 
 referentialGoalSelection : SelectionSet Data.Referential.ReferentialGoal Admin.Object.Goal
