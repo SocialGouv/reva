@@ -1,7 +1,8 @@
 import { Readable } from "stream";
 
 import * as ftp from "basic-ftp";
-import { logger } from "elastic-apm-node";
+
+import { logger } from "../../../../logger";
 
 export async function sendStreamToFtp(params: {
   fileName: string;
@@ -29,7 +30,6 @@ export async function sendStreamToFtp(params: {
     logger.info("Stream sent");
   } catch (e) {
     logger.error("ftp error");
-    e instanceof Error && logger.error(e);
     throw e;
   } finally {
     if (!client.closed) {
