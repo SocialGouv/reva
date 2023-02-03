@@ -19,7 +19,7 @@ submit :
     -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
     -> FormData
     -> Cmd msg
-submit candidacyId uploadEndpoint _ token toMsg ( candidacy, referential ) formData =
+submit candidacyId uploadEndpoint _ token toMsg ( _, _ ) formData =
     let
         keys =
             Data.Form.PaymentRequest.keys
@@ -46,7 +46,7 @@ submit candidacyId uploadEndpoint _ token toMsg ( candidacy, referential ) formD
                     [ Http.stringPart "candidacyId" (Data.Candidacy.candidacyIdToString candidacyId) ]
                         |> withFiles files
                         |> Http.multipartBody
-                , expect = Http.expectString (stringErrorResponse >> RemoteData.fromResult >> toMsg)
+                , expect = mayExpectError (RemoteData.fromResult >> toMsg)
                 , timeout = Nothing
                 , tracker = Nothing
                 }
@@ -72,29 +72,15 @@ submit candidacyId uploadEndpoint _ token toMsg ( candidacy, referential ) formD
             error "Vous ne pouvez pas envoyer plus d'une facture et plus d'une attestation de présence."
 
 
-stringErrorResponse : Result Http.Error value -> Result String ()
-stringErrorResponse result =
-    let
-        httpErrorToString error =
-            case error of
-                Http.BadUrl url ->
-                    "BadUrl: " ++ url
+mayExpectError toMsg =
+    Http.expectStringResponse toMsg <|
+        \response ->
+            case response of
+                Http.BadStatus_ _ errorBody ->
+                    Err errorBody
 
-                Http.Timeout ->
-                    "Timeout"
+                Http.GoodStatus_ _ _ ->
+                    Ok ()
 
-                Http.NetworkError ->
-                    "NetworkError"
-
-                Http.BadStatus code ->
-                    "BadStatus: " ++ String.fromInt code
-
-                Http.BadBody bodyError ->
-                    "BadBody: " ++ bodyError
-    in
-    case result of
-        Ok _ ->
-            Ok ()
-
-        Err err ->
-            Err (httpErrorToString err)
+                _ ->
+                    Err "Une erreur est survenue"

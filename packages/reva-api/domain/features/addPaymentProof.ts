@@ -89,7 +89,7 @@ export const addPaymentProof =
       return EitherAsync.fromPromise(async () => {
         if (data.fileContent) {
           if (data.fileContent.byteLength > fileMaxSize) {
-            return Left("Le fichier envoyé dépasse la taille maximum acceptée");
+            return Left("Le fichier envoyé dépasse la taille maximale acceptée");
           }
           const spoolerIdEither = await addFileToUploadSpooler({
             description: data.description,
