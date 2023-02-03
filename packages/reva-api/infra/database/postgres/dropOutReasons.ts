@@ -1,6 +1,7 @@
 import { Either, Left, Maybe, Right } from "purify-ts";
 
 import * as domain from "../../../domain/types/candidacy";
+import { logger } from "../../logger";
 import { prismaClient } from "./client";
 
 export const getDropOutReasons = async (): Promise<
@@ -11,6 +12,7 @@ export const getDropOutReasons = async (): Promise<
 
     return Right(dropOutReasons);
   } catch (e) {
+    logger.error(e);
     return Left(`error while retrieving drop out reasons`);
   }
 };
@@ -27,6 +29,7 @@ export const getDropOutReasonById = async (params: {
 
     return Right(Maybe.fromNullable(dropOutReason));
   } catch (e) {
+    logger.error(e);
     return Left(`error while retrieving drop out reason`);
   }
 };

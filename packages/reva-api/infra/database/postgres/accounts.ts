@@ -1,9 +1,7 @@
-import pino from "pino";
 import { Left, Right } from "purify-ts";
 
+import { logger } from "../../logger";
 import { prismaClient } from "./client";
-
-const logger = pino();
 
 export const createAccountProfile = async (params: {
   email: string;
@@ -25,6 +23,7 @@ export const createAccountProfile = async (params: {
 
     return Right(account);
   } catch (e) {
+    logger.error(e);
     return Left("error while creating account");
   }
 };

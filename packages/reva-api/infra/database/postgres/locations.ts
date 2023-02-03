@@ -1,6 +1,7 @@
 import { Either, Left, Right } from "purify-ts";
 
 import * as domain from "../../../domain/types/candidacy";
+import { logger } from "../../logger";
 import { prismaClient } from "./client";
 
 export const getRegions = async (): Promise<
@@ -15,6 +16,7 @@ export const getRegions = async (): Promise<
 
     return Right(regions);
   } catch (e) {
+    logger.error(e);
     return Left(`error while retrieving regions`);
   }
 };
@@ -27,6 +29,7 @@ export const getDepartments = async (): Promise<
 
     return Right(deparments);
   } catch (e) {
+    logger.error(e);
     return Left(`error while retrieving deparments`);
   }
 };

@@ -2,6 +2,7 @@ import { Experience } from "@prisma/client";
 import { Either, Left, Maybe, Right } from "purify-ts";
 
 import * as domain from "../../../domain/types/candidacy";
+import { logger } from "../../logger";
 import { prismaClient } from "./client";
 
 export const toDomainExperiences = (
@@ -30,6 +31,7 @@ export const getExperienceFromId = async (id: string) => {
       `Experience with id ${id} not found`
     );
   } catch (e) {
+    logger.error(e);
     return Left(`error while retrieving the experience with id ${id}`);
   }
 };
@@ -62,7 +64,7 @@ export const insertExperience = async (params: {
       startedAt: newExperience.startedAt,
     });
   } catch (e) {
-    console.log(e);
+    logger.error(e);
     return Left("error while creating experience");
   }
 };
@@ -94,7 +96,7 @@ export const updateExperience = async (params: {
       startedAt: newExperience.startedAt,
     });
   } catch (e) {
-    console.log(e);
+    logger.error(e);
     return Left("error while updating experience");
   }
 };

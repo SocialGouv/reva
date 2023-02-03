@@ -1,6 +1,7 @@
 import { Either, Left, Right } from "purify-ts";
 
 import * as domain from "../../../domain/types/candidacy";
+import { logger } from "../../logger";
 import { prismaClient } from "./client";
 
 export const getDegrees = async (): Promise<
@@ -11,6 +12,7 @@ export const getDegrees = async (): Promise<
 
     return Right(degrees);
   } catch (e) {
+    logger.error(e);
     return Left(`error while retrieving degrees`);
   }
 };

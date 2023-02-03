@@ -1,10 +1,8 @@
-import pino from "pino";
 import { Left, Right } from "purify-ts";
 
 import { FundingRequestBatch } from "../../../domain/types/candidate";
+import { logger } from "../../logger";
 import { prismaClient } from "./client";
-
-const logger = pino();
 
 export const createFundingRequestBatch = async (params: {
   fundingRequestId: string;

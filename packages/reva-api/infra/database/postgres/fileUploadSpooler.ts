@@ -1,6 +1,7 @@
 import { FileUploadSpooler } from "@prisma/client";
 import { Either, Left, Right } from "purify-ts";
 
+import { logger } from "../../logger";
 import { prismaClient } from "./client";
 
 export const addFileToUploadSpooler = async ({
@@ -8,7 +9,9 @@ export const addFileToUploadSpooler = async ({
   destinationPath,
   description,
   fileContent,
-}: Omit<FileUploadSpooler, "id" | "createdAt">) : Promise<Either<string,string>>=> {
+}: Omit<FileUploadSpooler, "id" | "createdAt">): Promise<
+  Either<string, string>
+> => {
   try {
     const fileSpooler = await prismaClient.fileUploadSpooler.create({
       data: {
@@ -20,7 +23,7 @@ export const addFileToUploadSpooler = async ({
     });
     return Right(fileSpooler.id);
   } catch (e) {
-    console.log(e);
+    logger.error(e);
     return Left(`Failed add file upload spooler - ${e}`);
   }
 };

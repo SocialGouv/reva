@@ -11,6 +11,7 @@ import {
 import { Either, Left, Maybe, Right } from "purify-ts";
 
 import * as domain from "../../../domain/types/candidacy";
+import { logger } from "../../logger";
 import { prismaClient } from "./client";
 import { toDomainExperiences } from "./experiences";
 
@@ -150,6 +151,7 @@ export const insertCandidacy = async (params: {
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
+    logger.error(e);
     return Left("error while creating candidacy");
   }
 };
@@ -202,6 +204,7 @@ export const getCandidacyFromDeviceId = async (
       }))
       .toEither(`Candidacy with deviceId ${deviceId} not found`);
   } catch (e) {
+    logger.error(e);
     return Left(`error while retrieving the candidacy with id ${deviceId}`);
   }
 };
@@ -254,6 +257,7 @@ export const getCandidacyFromId = async (
       }))
       .toEither(`Candidacy ${candidacyId} not found`);
   } catch (e) {
+    logger.error(e);
     return Left(
       `error while retrieving the candidacy with id ${candidacyId} : ${
         (e as Error).message
@@ -280,6 +284,7 @@ export const existsCandidacyHavingHadStatus = async (params: {
 
     return Right(candidaciesCount === 1);
   } catch (e) {
+    logger.error(e);
     return Left(
       `error while retrieving the candidacy with id ${params.candidacyId}`
     );
@@ -305,6 +310,7 @@ export const existsCandidacyWithActiveStatus = async (params: {
 
     return Right(candidaciesCount === 1);
   } catch (e) {
+    logger.error(e);
     return Left(
       `error while retrieving the candidacy with id ${params.candidacyId}`
     );
@@ -332,6 +338,7 @@ export const existsCandidacyWithActiveStatuses = async (params: {
 
     return Right(candidaciesCount === 1);
   } catch (e) {
+    logger.error(e);
     return Left(
       `error while retrieving the candidacy with id ${params.candidacyId}`
     );
@@ -395,6 +402,7 @@ export const updateContactOnCandidacy = async (params: {
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
+    logger.error(e);
     return Left(
       `error while updating contact on candidacy ${params.candidacyId}`
     );
@@ -466,6 +474,7 @@ export const updateCandidacyStatus = async (params: {
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
+    logger.error(e);
     return Left(
       `error while updating status on candidacy ${params.candidacyId}`
     );
@@ -555,6 +564,7 @@ export const updateCertification = async (params: {
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
+    logger.error(e);
     return Left(
       `error while updating certification on candidacy ${params.candidacyId}`
     );
@@ -575,6 +585,7 @@ export const deleteCandidacyFromPhone = async (phone: string) => {
       return Right(`Candidature supprimée `);
     }
   } catch (e) {
+    logger.error(e);
     return Left(`Candidature non supprimée, ${(e as any).message}`);
   }
 };
@@ -593,6 +604,7 @@ export const deleteCandidacyFromEmail = async (email: string) => {
       return Right(`Candidature supprimée `);
     }
   } catch (e) {
+    logger.error(e);
     return Left(`Candidature non supprimée, ${(e as any).message}`);
   }
 };
@@ -617,6 +629,7 @@ export const deleteCandidacyFromId = async (id: string) => {
       return Right(`Candidature supprimée `);
     }
   } catch (e) {
+    logger.error(e);
     return Left(`Candidature non supprimée, ${(e as any).message}`);
   }
 };
@@ -662,6 +675,7 @@ export const getCandidacies = async () => {
       )
     );
   } catch (e) {
+    logger.error(e);
     return Left(
       `Erreur lors de la récupération des candidatures, ${(e as any).message}`
     );
@@ -724,6 +738,7 @@ export const getCandidaciesForUser = async (keycloakId: string) => {
       )
     );
   } catch (e) {
+    logger.error(e);
     return Left(
       `Erreur lors de la récupération des candidatures, ${(e as any).message}`
     );
@@ -798,6 +813,7 @@ export const updateAppointmentInformations = async (params: {
       createdAt: candidacy.createdAt,
     });
   } catch (e) {
+    logger.error(e);
     return Left(
       `Erreur lors de la mise à jour des informations de rendez de la candidature, ${
         (e as any).message
@@ -854,6 +870,7 @@ export const updateOrganism = async (params: {
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
+    logger.error(e);
     return Left(
       `error while updating contact on candidacy ${params.candidacyId}`
     );
@@ -948,6 +965,7 @@ export const updateTrainingInformations = async (params: {
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
+    logger.error(e);
     return Left(
       `error while updating training informations on candidacy ${params.candidacyId}`
     );
@@ -990,6 +1008,7 @@ export const dropOutCandidacy = async ({
     }
     candidacyStatus = candidacy.candidacyStatuses[0].status;
   } catch (e) {
+    logger.error(e);
     return Left(`error while getting candidacy`);
   }
 
@@ -1004,9 +1023,10 @@ export const dropOutCandidacy = async ({
       },
     });
     return Right(candidacy);
-  } catch (error) {
+  } catch (e) {
+    logger.error(e);
     return Left(
-      `error on drop out candidacy ${candidacyId}: ${(error as Error).message}`
+      `error on drop out candidacy ${candidacyId}: ${(e as Error).message}`
     );
   }
 };

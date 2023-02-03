@@ -1,10 +1,8 @@
-import pino from "pino";
 import { Either, Left, Maybe, Right } from "purify-ts";
 
 import * as domain from "../../../domain/types/candidacy";
+import { logger } from "../../logger";
 import { prismaClient } from "./client";
-
-const logger = pino();
 
 export const getAdmissibilityFromCandidacyId = async (params: {
   candidacyId: string;

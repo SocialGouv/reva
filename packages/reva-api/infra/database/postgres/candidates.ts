@@ -2,6 +2,7 @@ import { CandidacyStatusStep, Candidate } from "@prisma/client";
 import { Left, Maybe, Right } from "purify-ts";
 
 import { Candidacy } from "../../../domain/types/candidacy";
+import { logger } from "../../logger";
 import { candidacyIncludes } from "./candidacies";
 import { prismaClient } from "./client";
 
@@ -157,7 +158,7 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
       }))
       .toEither(`Candidate not found`);
   } catch (e) {
-    console.log(e);
+    logger.error(e);
     return Left(
       `error while creating candidate ${candidate.email} with candidacy with keycloakId ${candidate.keycloakId}`
     );
@@ -268,6 +269,7 @@ export const getCandidateWithCandidacyFromKeycloakId = async (
       }))
       .toEither(`Candidate not found`);
   } catch (e) {
+    logger.error(e);
     return Left(`error while retrieving the candidate`);
   }
 };
@@ -282,6 +284,7 @@ export const getCandidateByEmail = async (email: string) => {
     });
     return Maybe.fromNullable(candidate).toEither(`Candidate not found`);
   } catch (e) {
+    logger.error(e);
     return Left(`error while retrieving the candidate`);
   }
 };
@@ -300,6 +303,7 @@ export const getCandidateByCandidacyId = async (id: string) => {
     });
     return Maybe.fromNullable(candidate).toEither(`Candidate not found`);
   } catch (e) {
+    logger.error(e);
     return Left(`error while retrieving the candidate`);
   }
 };
@@ -314,6 +318,7 @@ export const updateCandidate = async (id: string, candidate: Candidate) => {
     });
     return Right(newCandidate);
   } catch (e) {
+    logger.error(e);
     return Left(`error while updating candidate ${candidate.email}`);
   }
 };

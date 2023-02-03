@@ -1,12 +1,10 @@
 import { FundingRequest, Organism } from "@prisma/client";
 import { format } from "date-fns";
-import pino from "pino";
 import { Left, Right } from "purify-ts";
 
+import { logger } from "../../logger";
 import { updateCandidacyStatus } from "./candidacies";
 import { prismaClient } from "./client";
-
-const logger = pino();
 
 export const getFundingRequest = async (params: { candidacyId: string }) => {
   try {
@@ -31,6 +29,7 @@ export const getFundingRequest = async (params: { candidacyId: string }) => {
 
     return Right(fundingRequest);
   } catch (e) {
+    logger.error(e);
     return Left(`error while retrieving funding request`);
   }
 };

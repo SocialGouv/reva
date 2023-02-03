@@ -1,6 +1,7 @@
 import { Either, Left, Right } from "purify-ts";
 
 import type { Certification } from "../../../domain/types/search";
+import { logger } from "../../logger";
 import { prismaClient } from "./client";
 
 export const searchCertificationsByQuery = async ({
@@ -114,6 +115,7 @@ export const getCertifications = async ({
       })
     );
   } catch (e) {
+    logger.error(e);
     return Left(`error while retrieving certificates`);
   }
 };

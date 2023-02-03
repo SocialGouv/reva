@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 import { Either, Left, Maybe, Right } from "purify-ts";
 
 import * as domain from "../../../domain/types/candidacy";
+import { logger } from "../../logger";
 import { prismaClient } from "./client";
 
 export const getAAPOrganisms = async (params: {
@@ -22,6 +23,7 @@ export const getOrganismById = async (
 
     return Right(Maybe.fromNullable(organism));
   } catch (e) {
+    logger.error(e);
     return Left(`error while retrieving organism ${organismId}`);
   }
 };
@@ -84,6 +86,7 @@ const getOrganisms = async (params: {
 
     return Right(organisms);
   } catch (e) {
+    logger.error(e);
     return Left(`error while retrieving organisms`);
   }
 };
