@@ -44,7 +44,7 @@ async function main() {
   await inserts;
 
   await prisma.certification.update({
-    where: { rncpId: "36836" },
+    where: { rncpId: "2514" },
     data: {
       label: `Certificat d'Aptitude aux Fonctions d'Encadrement et de Responsable d'Unité d'Intervention Sociale (CAFERUIS)`,
       summary: `Le certificat d'aptitude aux fonctions d'encadrement et de responsable d'unité d'intervention sociale atteste des compétences nécessaires pour animer une unité de travail dans le champ de l'intervention sociale et conduire son action dans le cadre du projet et des missions de l'employeur, ainsi que dans le cadre des politiques publiques.`,
