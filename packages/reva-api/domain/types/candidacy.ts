@@ -180,6 +180,7 @@ export interface PaymentRequest {
   basicSkillsEffectiveHourCount: number;
   certificateSkillsEffectiveHourCount: number;
   examEffectiveHourCount: number;
+  invoiceNumber: string;
 }
 
 export interface PaymentRequestBatch {
@@ -191,6 +192,7 @@ export interface PaymentRequestBatch {
 
 export interface PaymentRequestBatchContent {
   NumAction: string;
+  NumFacture: string;
   SiretAP: string;
   NbHeureReaJury: number;
   NbHeureReaAPDiag: number;

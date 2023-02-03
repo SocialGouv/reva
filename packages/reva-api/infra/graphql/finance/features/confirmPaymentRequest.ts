@@ -150,6 +150,7 @@ export const mapPaymentRequestBatchContent = ({
   fundingRequest: FundingRequest | null;
 }): PaymentRequestBatchContent => ({
   NumAction: fundingRequest?.numAction || "",
+  NumFacture: paymentRequest.invoiceNumber,
   SiretAP: candidacy.organism?.siret || "",
   NbHeureReaJury: paymentRequest.examEffectiveHourCount,
   NbHeureReaAPDiag: paymentRequest.diagnosisEffectiveHourCount,

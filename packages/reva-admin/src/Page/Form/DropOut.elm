@@ -27,12 +27,9 @@ form _ ( _, referential ) =
     { elements =
         [ ( keys.dropOutReason, Form.Select "Quelle est la raison de l'abandon ?" dropOutReasons )
         , ( keys.otherReasonContent
-          , case maybeDropOutOtherReasonValue of
-                Just dropOutOtherReasonValue ->
-                    Form.SelectOther "dropOutReason" dropOutOtherReasonValue "Autre raison"
-
-                Nothing ->
-                    Form.Empty
+          , maybeDropOutOtherReasonValue
+                |> Maybe.map (\reason -> Form.SelectOther "dropOutReason" reason "Autre raison")
+                |> Maybe.withDefault Form.Empty
           )
         , ( keys.droppedOutAt, Form.Date "Date" )
         ]

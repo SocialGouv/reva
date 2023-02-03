@@ -6,6 +6,7 @@ module Data.Form.PaymentRequest exposing
     , maybePaymentRequest
     , paymentRequest
     , validate
+    , validateConfirmation
     )
 
 import Data.Candidacy exposing (Candidacy)
@@ -35,6 +36,7 @@ type alias PaymentRequestInput =
     , mandatoryTrainingsHourCount : Int
     , certificateSkillsHourCount : Int
     , examHourCount : Int
+    , invoiceNumber : String
     }
 
 
@@ -73,11 +75,25 @@ keys =
     , examCost = "examCost"
     , invoiceFiles = "invoiceFiles"
     , appointmentFiles = "appointmentFiles"
+    , invoiceNumber = "invoiceNumber"
     }
 
 
 validate : ( Candidacy, Referential ) -> FormData -> Result String ()
 validate ( _, _ ) formData =
+    let
+        decode =
+            Helper.decode keys formData
+    in
+    if decode.string .invoiceNumber "" == "" then
+        Err "Veuillez saisir un numéro de facture"
+
+    else
+        Ok ()
+
+
+validateConfirmation : ( Candidacy, Referential ) -> FormData -> Result String ()
+validateConfirmation ( _, _ ) formData =
     let
         decode =
             Helper.decode keys formData
@@ -104,6 +120,7 @@ fromDict formData =
         (decode.int .mandatoryTrainingsHourCount 0)
         (decode.int .certificateSkillsHourCount 0)
         (decode.int .examHourCount 0)
+        (decode.string .invoiceNumber "")
 
 
 fundingList funding =
@@ -158,6 +175,9 @@ paymentRequest funding payment =
         int key =
             Just <| String.fromInt <| key payment
 
+        string key =
+            Just <| key payment
+
         mandatoryTrainingsChecked =
             Helper.toCheckedList funding.mandatoryTrainingIds
 
@@ -173,6 +193,7 @@ paymentRequest funding payment =
             , ( .mandatoryTrainingsHourCount, int .mandatoryTrainingsHourCount )
             , ( .certificateSkillsHourCount, int .certificateSkillsHourCount )
             , ( .examHourCount, int .examHourCount )
+            , ( .invoiceNumber, string .invoiceNumber )
             ]
                 |> Helper.toKeyedList keys
     in

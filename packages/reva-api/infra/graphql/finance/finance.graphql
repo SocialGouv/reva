@@ -12,6 +12,7 @@ type PaymentRequest {
   basicSkillsEffectiveHourCount: Int!
   certificateSkillsEffectiveHourCount: Int!
   examEffectiveHourCount: Int!
+  invoiceNumber: String!
 }
 
 type FundingRequest {
@@ -59,6 +60,7 @@ input PaymentRequestInput {
   basicSkillsEffectiveHourCount: Int!
   certificateSkillsEffectiveHourCount: Int!
   examEffectiveHourCount: Int!
+  invoiceNumber: String!
 }
 
 input FundingRequestInput {

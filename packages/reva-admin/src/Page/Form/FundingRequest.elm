@@ -171,12 +171,11 @@ commonFields : Maybe Certification -> List ( String, Form.Element )
 commonFields maybeCertification =
     [ ( "heading", Form.Heading "2 - Parcours personnalisé" )
     , ( "selected-certification", Form.Section "Certification choisie par le candidat" )
-    , case maybeCertification of
-        Just certification ->
-            ( "certification", Form.Info "" certification.label )
-
-        Nothing ->
-            ( "certification", Form.Empty )
+    , ( "certification"
+      , maybeCertification
+            |> Maybe.map (.label >> Form.Info "")
+            |> Maybe.withDefault Form.Empty
+      )
     , ( "organism", Form.Section "Accompagnement architecte de parcours" )
     , ( "diagnosis", Form.Title "Entretien(s) de faisabilité" )
     , ( keys.diagnosisHourCount, hourCountElement )

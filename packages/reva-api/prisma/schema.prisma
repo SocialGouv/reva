@@ -535,6 +535,7 @@ model PaymentRequest {
   basicSkillsEffectiveHourCount        Int                  @map("basic_skills_effective_hour_count")
   certificateSkillsEffectiveHourCount  Int                  @map("certificate_skills_effective_hour_count")
   examEffectiveHourCount               Int                  @map("exam_effective_hour_count")
+  invoiceNumber                        String               @map("invoice_number")
   PaymentRequestBatch                  PaymentRequestBatch?
 
   @@map("payment_request")

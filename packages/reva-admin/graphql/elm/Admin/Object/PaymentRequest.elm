@@ -62,3 +62,8 @@ certificateSkillsEffectiveHourCount =
 examEffectiveHourCount : SelectionSet Int Admin.Object.PaymentRequest
 examEffectiveHourCount =
     Object.selectionForField "Int" "examEffectiveHourCount" [] Decode.int
+
+
+invoiceNumber : SelectionSet String Admin.Object.PaymentRequest
+invoiceNumber =
+    Object.selectionForField "String" "invoiceNumber" [] Decode.string
