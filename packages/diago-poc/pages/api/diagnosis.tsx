@@ -1,9 +1,10 @@
 import { Prisma } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getAccessToken } from "../../services/diago";
 import { CertificationWithPurcentMatch } from "../../types/types";
 import {prismaClient} from "./prisma"
 
-export const getCertificationsByactivitiesCodeOgrs = async (activitiesCodeOgrs: string[] = []) =>{
+export const getCertificationsByActivitiesCodeOgrs = async (activitiesCodeOgrs: string[] = []) =>{
   const certifications = await prismaClient.$queryRaw`
 
     select c.*,
@@ -31,6 +32,51 @@ export const getCertificationsByactivitiesCodeOgrs = async (activitiesCodeOgrs: 
   return certifications as CertificationWithPurcentMatch[] ;
 }
 
+export const getCertificationsByActivitiesCodeOgrsFromDiago = async (codesOgr: string[] = []) =>{
+  // call diago api
+  const accessToken = await getAccessToken()
+
+  const query = `
+  query certifications($codesOgr: [String!]!) {
+    certificationsSatellitairesViaCompetences(codesOGR: $codesOgr, limit: 20) {
+      score
+      certification {
+        id
+        level
+        codeRNCP
+        title
+      }
+    }
+  }`;
+
+  const result = await fetch(process.env.DIAGO_URL as string, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify({
+      query,
+      variables: { codesOgr },
+    })
+  })
+  const certifications = (await result.json()).data.certificationsSatellitairesViaCompetences;
+
+  return certifications.map(
+    (c: any) => {
+      return {
+          id: c.certification.id,
+          rncpId: c.certification.codeRNCP,
+          label: c.certification.title,
+          purcent: (c.score * 100),
+          nb_activities_match: 0,
+          nb_activities_total: 0
+      }
+    }
+  ) as CertificationWithPurcentMatch[] ;
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<CertificationWithPurcentMatch[] | any>
@@ -47,7 +93,13 @@ export default async function handler(
   } else {
     const { activitiesCodeOgrs } = req.query;
     const ids = typeof activitiesCodeOgrs === 'string' ? [activitiesCodeOgrs] : (activitiesCodeOgrs);
-    const certifications = await getCertificationsByactivitiesCodeOgrs(ids)
-    res.status(200).json(certifications);
+
+    if (req.headers['x-target'] === 'diago') {
+      res.status(200).json(await getCertificationsByActivitiesCodeOgrsFromDiago(ids))
+    } else {
+      const certifications = await getCertificationsByActivitiesCodeOgrs(ids)
+      res.status(200).json(certifications);
+    }
+
   }
 }

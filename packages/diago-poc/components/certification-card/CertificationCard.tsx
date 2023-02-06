@@ -5,7 +5,9 @@ export const CertificationCard = (props: { certification: CertificationWithPurce
     <span className="flex flex-1">
       <span className="pr-2">
         <span className={`block text-sm font-medium ${props.isLight ? "text-gray-500" : "text-gray-900" }`}>{props.certification.label}</span>
-        <span className={`block text-sm font-ligth ${props.isLight ? "text-gray-400" : "text-gray-700" } mt-2`}>Vous avez {props.certification.nb_activities_match} compétence(s) sur les {props.certification.nb_activities_total} associée(s) à cette certification.</span>
+        {props.certification.nb_activities_match > 0 && 
+          (<span className={`block text-sm font-ligth ${props.isLight ? "text-gray-400" : "text-gray-700" } mt-2`}>Vous avez {props.certification.nb_activities_match} compétence(s) sur les {props.certification.nb_activities_total} associée(s) à cette certification.</span>)
+        }
       </span>
     </span>
     <div className={`flex justify-center items-center p-2 w-10 h-10 ${props.isLight ? "bg-indigo-200" : "bg-indigo-500" } rounded-full text-xs font-semibold text-white`}>

@@ -4,6 +4,7 @@ import { ProfessionAndCompetencies, Certification, CertificationWithPurcentMatch
 
 interface UserInfos {
   revaIdentifier: string;
+  type: "reva" | "diago";
   professionAndCompetencies: ProfessionAndCompetencies[];
   diagnosis: CertificationWithPurcentMatch[];
 }
@@ -19,6 +20,7 @@ const MainContext = createContext<MainContext>({} as MainContext);
 export const MainContextProvider = (props: { children?: ReactNode }) => {
   const [userInfos, setUserInfos] = useState<UserInfos>({
     revaIdentifier: "",
+    type: "reva",
     professionAndCompetencies: [],
     diagnosis: [],
   });
