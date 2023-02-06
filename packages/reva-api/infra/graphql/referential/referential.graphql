@@ -40,6 +40,11 @@ type DropOutReason {
   label: String!
 }
 
+type ReorientationReason {
+  id: ID!
+  label: String!
+}
+
 type Query {
   getReferential: Referential!
   getCertifications(departmentId: UUID!): [Certification!]!
@@ -48,4 +53,5 @@ type Query {
   getDegrees: [Degree!]!
   getVulnerabilityIndicators: [VulnerabilityIndicator!]!
   getDropOutReasons: [DropOutReason!]!
+  getReorientationReasons: [ReorientationReason!]!
 }

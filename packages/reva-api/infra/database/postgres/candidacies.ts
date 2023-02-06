@@ -45,6 +45,7 @@ export const candidacyIncludes = {
       dropOutReason: true,
     },
   },
+  reorientationReason: true,
 };
 
 type CertificationSummary = Pick<Certification, "id" | "label" | "acronym">;
@@ -82,6 +83,7 @@ const toDomainCandidacySummary = (
     isDroppedOut: candidacy.candidacyDropOut !== null,
     lastStatus,
     dropOutReason: null,
+    reorientationReason: null,
     department: candidacy.department,
     createdAt: candidacy.createdAt,
     sentAt,
@@ -148,6 +150,7 @@ export const insertCandidacy = async (params: {
       email: newCandidacy.email,
       candidacyStatuses: newCandidacy.candidacyStatuses,
       dropOutReason: null,
+      reorientationReason: null,
       createdAt: newCandidacy.createdAt,
     });
   } catch (e) {
@@ -435,6 +438,79 @@ export const updateCandidacyStatus = async (params: {
                 isActive: true,
               },
             },
+          },
+          include: {
+            ...candidacyIncludes,
+            candidate: true,
+          },
+        }),
+        prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
+          where: {
+            candidacyId: params.candidacyId,
+            isActive: true,
+          },
+          include: {
+            certification: true,
+            region: true,
+          },
+        }),
+      ]);
+
+    return Right({
+      id: newCandidacy.id,
+      deviceId: newCandidacy.deviceId,
+      regionId: certificationAndRegion?.region.id,
+      region: certificationAndRegion?.region,
+      department: newCandidacy.department,
+      certificationId: certificationAndRegion?.certificationId,
+      certification: {
+        ...certificationAndRegion?.certification,
+        codeRncp: certificationAndRegion?.certification.rncpId,
+      },
+      organismId: newCandidacy.organismId,
+      experiences: toDomainExperiences(newCandidacy.experiences),
+      goals: newCandidacy.goals,
+      phone: newCandidacy.candidate?.phone || newCandidacy.phone,
+      email: newCandidacy.candidate?.email || newCandidacy.email,
+      candidacyStatuses: newCandidacy.candidacyStatuses,
+      candidacyDropOut: newCandidacy.candidacyDropOut,
+      createdAt: newCandidacy.createdAt,
+    });
+  } catch (e) {
+    logger.error(e);
+    return Left(
+      `error while updating status on candidacy ${params.candidacyId}`
+    );
+  }
+};
+
+export const archiveCandidacy = async (params: {
+  candidacyId: string;
+  reorientationReasonId: string | null;
+}): Promise<Either<string, domain.Candidacy>> => {
+  try {
+    const [, newCandidacy, certificationAndRegion] =
+      await prismaClient.$transaction([
+        prismaClient.candidaciesStatus.updateMany({
+          where: {
+            candidacyId: params.candidacyId,
+          },
+          data: {
+            isActive: false,
+          },
+        }),
+        prismaClient.candidacy.update({
+          where: {
+            id: params.candidacyId,
+          },
+          data: {
+            candidacyStatuses: {
+              create: {
+                status: "ARCHIVE",
+                isActive: true,
+              },
+            },
+            reorientationReasonId: params.reorientationReasonId,
           },
           include: {
             ...candidacyIncludes,

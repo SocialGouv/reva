@@ -11,6 +11,7 @@ infra/ftps/data/*
 .parcel-cache
 .vscode
 .idea
+.run
 **/private
 **/coverage
 **/screenshots

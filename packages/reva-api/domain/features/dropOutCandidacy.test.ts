@@ -32,14 +32,18 @@ const blankCandidacy: Candidacy = {
 const candidacy1: Candidacy = {
   ...blankCandidacy,
   id: "abc123",
-  candidacyStatuses: [{ createdAt: new Date(), id: "123", status: "COOL" }],
+  candidacyStatuses: [
+    { createdAt: new Date(), id: "123", status: "COOL", isActive: true },
+  ],
   createdAt: new Date(),
 };
 
 const candidacy2: Candidacy = {
   ...blankCandidacy,
   id: "def345",
-  candidacyStatuses: [{ createdAt: new Date(), id: "124", status: "COOL" }],
+  candidacyStatuses: [
+    { createdAt: new Date(), id: "124", status: "COOL", isActive: true },
+  ],
   candidacyDropOut: {
     dropOutReason: { id: "abc123", label: "got cold" },
     status: "PARCOURS_ENVOYE",
@@ -66,7 +70,7 @@ const dropOutReasonWithRightRole = dropOutCandidacy({
       Right({
         ...(getCandidacyById(params.candidacyId).extract() as Candidacy),
         candidacyStatuses: [
-          { id: "laal123", createdAt: new Date(), status: "" },
+          { id: "laal123", createdAt: new Date(), status: "", isActive: true },
         ],
         candidacyDropOut: {
           droppedOutAt: new Date(),

@@ -115,6 +115,8 @@ model Candidacy {
   department                   Department?                             @relation(fields: [departmentId], references: [id], onDelete: Cascade)
   departmentId                 String?                                 @map("department_id") @db.Uuid
   candidacyDropOut             CandidacyDropOut?                       @relation()
+  reorientationReason          ReorientationReason?                    @relation(fields: [reorientationReasonId], references: [id], onDelete: Cascade)
+  reorientationReasonId        String?                                 @map("reorientation_reason_id") @db.Uuid
   createdAt                    DateTime                                @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                    DateTime?                               @map("updated_at") @db.Timestamptz(6)
   FundingRequest               FundingRequest[]
@@ -501,6 +503,16 @@ model CandidacyDropOut {
 
   @@id([candidacyId])
   @@map("candidacy_drop_out")
+}
+
+model ReorientationReason {
+  id          String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label       String      @unique @db.VarChar(255)
+  candidacies Candidacy[] @relation()
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime?   @map("updated_at") @db.Timestamptz(6)
+
+  @@map("reorientation_reason")
 }
 
 enum AdmissibilityStatus {

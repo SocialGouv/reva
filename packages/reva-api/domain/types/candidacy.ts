@@ -36,6 +36,7 @@ export interface Candidacy extends CandidacyAbstract {
   //   individualHourCount: number | null;
   //   collectiveHourCount: number | null;
   candidacyDropOut?: CandidacyDropOut | null;
+  reorientationReason?: ReorientationReason | null;
   createdAt: Date;
   paymentRequest?: PaymentRequest | null;
 }
@@ -44,6 +45,7 @@ export interface CandidacyStatus {
   id: string;
   status: string;
   createdAt: Date;
+  isActive: boolean;
 }
 
 export interface CandidacySummary
@@ -157,6 +159,13 @@ export interface VulnerabilityIndicator {
 export interface DropOutReason {
   id: string;
   label: string;
+}
+
+export interface ReorientationReason {
+  id: string;
+  label: string;
+  createdAt: Date;
+  updatedAt: Date | null;
 }
 
 export interface Admissibility {
