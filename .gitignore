@@ -4,7 +4,6 @@ dist
 .elm-pages
 elm-stuff
 node_modules
-packages/*/package-lock.json
 packages/reva-api/infra/generated-graphql-schema.graphql
 infra/ftps/data/*
 .parcel-cache
