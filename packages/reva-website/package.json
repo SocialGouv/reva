@@ -13,9 +13,13 @@
     "build": "gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "postinstall": "copy-dsfr-to-public",
+    "prestart": "only-include-used-icons",
+    "prebuild": "only-include-used-icons"
   },
   "dependencies": {
+    "@codegouvfr/react-dsfr": "^0.31.0",
     "gatsby": "^5.5.0",
     "gatsby-plugin-image": "^3.5.0",
     "gatsby-plugin-sharp": "^5.5.0",
