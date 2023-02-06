@@ -9,7 +9,7 @@ import {
   Right,
 } from "purify-ts";
 
-import { UploadedFile } from "../../infra/server/proof-upload";
+import { UploadedFile } from "../../infra/rest/proof-upload";
 import { FileUploadSpoolerEntry, PaymentRequest } from "../types/candidacy";
 import { FundingRequest } from "../types/candidate";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";

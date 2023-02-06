@@ -9,7 +9,7 @@ import { restRoutes } from "../rest";
 import { mercuriusGraphQL } from "./mercurius";
 import keycloakAdminPlugin from "./plugins/keycloak-admin-plugin";
 import keycloakPlugin from "./plugins/keycloak-plugin";
-import proofUploadRoute from "./proof-upload";
+import proofUploadRoute from "../rest/proof-upload";
 
 const WEBSITE_ROUTE_PATH = "/";
 const APP_ROUTE_PATH = "/app";
