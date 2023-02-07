@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Diagnosis, Prisma } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getAccessToken } from "../../services/diago";
 import { CertificationWithPurcentMatch } from "../../types/types";
@@ -62,24 +62,29 @@ export const getCertificationsByActivitiesCodeOgrsFromDiago = async (codesOgr: s
     })
   })
   const certifications = (await result.json()).data.certificationsSatellitairesViaCompetences;
-
-  return certifications.map(
-    (c: any) => {
-      return {
-          id: c.certification.id,
-          rncpId: c.certification.codeRNCP,
-          label: c.certification.title,
-          purcent: (c.score * 100),
-          nb_activities_match: 0,
-          nb_activities_total: 0
+  return {
+    debug: {
+      query,
+      variables: { codesOgr },
+    },
+    certifications: certifications.map(
+      (c: any) => {
+        return {
+            id: c.certification.id,
+            rncpId: c.certification.codeRNCP,
+            label: c.certification.title,
+            purcent: (c.score * 100),
+            nb_activities_match: 0,
+            nb_activities_total: 0
+        }
       }
-    }
-  ) as CertificationWithPurcentMatch[] ;
+    ) as CertificationWithPurcentMatch[]
+  }
 }
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<CertificationWithPurcentMatch[] | any>
+  res: NextApiResponse<CertificationWithPurcentMatch[]  | {debug: {query: string, variables: unknown}, certifications: CertificationWithPurcentMatch[]} | Diagnosis>
 ) {
   if (req.method === 'POST') {
     const payload = JSON.parse(req.body);

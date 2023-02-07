@@ -8,6 +8,15 @@ import { CompetencyCard } from "../../components/competency-card/CompetencyCard"
 import { useMainImportContext } from "../../components/main-context/MainContext";
 import { CertificationWithPurcentMatch } from "../../types/types";
 
+
+interface CertificationsData {
+  debug: {
+    query: string;
+    variables: unknown;
+  },
+  certifications: CertificationWithPurcentMatch[]
+}
+
 const ShowDiagnosisPage = () => {
   const router = useRouter();
   const { userInfos, updateUserInfos, computeDiagnosis } = useMainImportContext();
@@ -19,7 +28,7 @@ const ShowDiagnosisPage = () => {
     }, [] as string[]);
 
 
-  const { data: certificationsData, isLoading, isSuccess } = useQuery<CertificationWithPurcentMatch[]>({
+  const { data: certificationsData, isLoading, isSuccess } = useQuery<CertificationsData>({
     queryKey: ["certifications", competenciesCodeOgrs.join('-')],
     queryFn: async () => {
       const result = await (await fetch(
@@ -35,7 +44,7 @@ const ShowDiagnosisPage = () => {
       updateUserInfos({
         ...userInfos,
         type: "diago",
-        diagnosis: (result as CertificationWithPurcentMatch[]) || [],
+        diagnosis: (result.certifications as CertificationWithPurcentMatch[]) || [],
       });
 
       return result
@@ -55,10 +64,19 @@ const ShowDiagnosisPage = () => {
     <div className="h-full flex flex-col py-12">
       <h1 className="text-lg font-semibold">Votre diagnostic</h1>
       <p className="text-sm font-light mt-2">Voici la liste des certifications correspondant aux compétences que vous avez sélectionnées.</p>
+      <details className="mt-4 text-gray-500 text-sm">
+        <summary>API Diago</summary>
+        <div>
+          <div>query:</div>
+          <p>{certificationsData?.debug.query.split("\n").map((l, idx) => (<div key={idx}>{l}</div>))}</p>
+          <div className="mt-4">variables:</div>
+          <p>{JSON.stringify(certificationsData?.debug.variables, null, 2)}</p>
+        </div>
+      </details>
 
       {isLoading && <div className="flex flex-col mt-4 space-y-4 items-center justify-center text-sm font-light">Chargement...</div>}
       {isSuccess && (<div className="flex flex-col mt-8">
-        {certificationsData?.sort((c1, c2) => c1.purcent < c2.purcent ?  1 : (c1.purcent > c2.purcent ? -1 : 0)).map((c, index) => (<CertificationCard key={c.id} isLight={index > 4} certification={c}/>))}
+        {certificationsData?.certifications.sort((c1, c2) => c1.purcent < c2.purcent ?  1 : (c1.purcent > c2.purcent ? -1 : 0)).map((c, index) => (<CertificationCard key={c.id} isLight={index > 4} certification={c}/>))}
       </div>)}
       <div className="mt-12">
       <form className="m-12" onSubmit={handleSubmit}>

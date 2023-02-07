@@ -60,7 +60,7 @@ export const getCompetenciesFromDiago = async (professionId: string) => {
   })
   const competences = (await result.json()).data.sousDomaine.competencesProches as CompentencyDiago[];
 
-  return competences
+  const activities = competences
     .sort((a,b) => a.title > b.title ? 1 : (b.title > a.title ? -1 : 0) )
     .map((c: any) => ({code_ogr: c.codeOGR, label: c.title} as Activity))
     .reduce((m, c) => {
@@ -69,11 +69,19 @@ export const getCompetenciesFromDiago = async (professionId: string) => {
       }
       return [...m, c]
     }, [] as Activity[]);
+
+    return {
+      debug: {
+        query,
+        variables: { codeRome: codesRome[0] },
+      },
+      activities
+    }
 }
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Activity[]>
+  res: NextApiResponse<Activity[] | {debug: {query: string, variables: unknown}, activities: Activity[]}>
 ) {
   const { professionId } = req.query;
 

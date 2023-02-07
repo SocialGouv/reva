@@ -6,9 +6,20 @@ const jobs = async () => {
   const professions = await prismaClient.profession.findMany({
     orderBy: {
       label: 'asc'
+    },
+    include: {
+      rome: {
+        select: {
+          code: true
+        }
+      }
     }
   })
-  return professions
+  return professions.map(p => ({
+    id: p.id,
+    label: p.label,
+    codeRome: p.rome?.code || ""
+  }))
 }
 
 export default async function handler(

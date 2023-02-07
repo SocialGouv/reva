@@ -7,6 +7,13 @@ import { Select } from "../../components/select/Select";
 import { Button } from "../../components/button/Button";
 import { CompetencyCard } from "../../components/competency-card/CompetencyCard";
 
+interface CompentenciesData {
+  debug: {
+    query: string;
+    variables: unknown;
+  },
+  activities: Competency[]
+}
 const professionAndCompetenciesReducer = (
   state: ProfessionAndCompetencies,
   action:
@@ -49,7 +56,7 @@ const AddCompetenciesPage = () => {
     queryFn: async () => (await fetch("/api/professions")).json(),
   });
 
-  const { data: competenciesData, isFetching } = useQuery<Competency[]>({
+  const { data: competenciesData, isFetching } = useQuery<CompentenciesData>({
     queryKey: ["competencies", professionAndCompetencies.profession?.id],
     queryFn: async () =>
       (
@@ -88,7 +95,7 @@ const AddCompetenciesPage = () => {
         className="mt-4"
         name="profession"
         label="Veuillez sélectionner un métier"
-        options={professionsData?.map(p => ({label: p.label, value: `${p.id}`})) || []}
+        options={professionsData?.map(p => ({label: `${p.codeRome} - ${p.label}`, value: `${p.id}`})) || []}
         onChangeHandler={(e) =>
           dispatchProfessionAndCompetenciesEvent({
             type: "set_job",
@@ -101,19 +108,28 @@ const AddCompetenciesPage = () => {
           })
         }
       />
+      <details className="mt-4 text-gray-500 text-sm">
+        <summary>API Diago</summary>
+        <div>
+          <div>query:</div>
+          <p>{competenciesData?.debug.query.split("\n").map((l, idx) => (<div key={idx}>{l}</div>))}</p>
+          <div className="mt-4">variables:</div>
+          <p>{JSON.stringify(competenciesData?.debug.variables, null, 2)}</p>
+        </div>
+      </details>
 
       {(isFetching) && <div className="flex flex-col mt-4 space-y-4 items-center justify-center text-sm font-light">Chargement...</div>}
-      {!!competenciesData?.length && (<div className="mt-12">
+      {!!competenciesData?.activities.length && (<div className="mt-12">
         <p>Quelles compétences avez-vous ?</p>
         <div className="flex flex-col space-y-4 mt-4">
-          {competenciesData?.map((c, idx) => (
+          {competenciesData?.activities.map((c, idx) => (
               <CompetencyCard 
                 key={c.code_ogr}
                 competency={c}
                 isSelected={professionAndCompetencies.competencies.includes(c)}
                 onToggle={(v) => dispatchProfessionAndCompetenciesEvent({
                   type: "check_competency",
-                  payload: competenciesData.find(c => `${c.code_ogr}` === v.target.value),
+                  payload: competenciesData.activities.find(c => `${c.code_ogr}` === v.target.value),
                 })
               }
               />

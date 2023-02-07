@@ -1,6 +1,7 @@
 export interface Profession {
   id: number;
   label: string;
+  codeRome: string;
 }
 
 export interface Activity {
