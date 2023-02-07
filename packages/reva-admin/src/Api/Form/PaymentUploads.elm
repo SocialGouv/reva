@@ -76,8 +76,12 @@ mayExpectError toMsg =
     Http.expectStringResponse toMsg <|
         \response ->
             case response of
-                Http.BadStatus_ _ errorBody ->
-                    Err errorBody
+                Http.BadStatus_ metadata errorBody ->
+                    if metadata.statusCode == 413 then
+                        Err "Le fichier que vous tentez d'envoyer est trop volumineux. Veuillez soumettre un fichier d'une taille inférieure à 10 Mo."
+
+                    else
+                        Err errorBody
 
                 Http.GoodStatus_ _ _ ->
                     Ok ()
