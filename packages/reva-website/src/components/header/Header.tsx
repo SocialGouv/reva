@@ -10,5 +10,14 @@ export const Header = (props: { className?: string }) => (
       href: "/",
       title: "Accueil - France VAE",
     }}
+    navigation={[
+      {
+        linkProps: {
+          href: "/espace-professionnel/creation",
+          target: "_self",
+        },
+        text: "Espace pro",
+      },
+    ]}
   />
 );
