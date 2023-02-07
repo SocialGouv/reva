@@ -1,6 +1,7 @@
 import * as React from "react";
 import { MainLayout } from "components/layout/main-layout/MainLayout";
 import { BlueLayout } from "components/layout/blue-layout/BlueLayout";
+import { StepOneForm } from "components/professional-workspace/creation/form/StepOneForm";
 
 const ProfessionalWorkspaceCreationPage = () => {
   return (
@@ -11,7 +12,7 @@ const ProfessionalWorkspaceCreationPage = () => {
         votre compte sur REVA afin de suivre et d’assurer la gestion de vos
         candidats sur leur parcours de formation"
       >
-        <div className="max-w-[80vw] w-[800px] h-[800px]" />
+        <StepOneForm />
       </BlueLayout>
     </MainLayout>
   );
