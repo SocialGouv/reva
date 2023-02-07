@@ -20,26 +20,28 @@ interface GraphqlRequest {
   variables: Record<string, any> | null;
 }
 
-interface InjectGraphqlParameters {
+type GraphqlRequestDefinition = GraphqlRequestParameters & {requestType: GraphqlRequestType}
+type InjectGraphqlParameters = {
   fastify: FastifyInstance;
   authorization?: string;
-  payload?: GraphqlRequest;
-  gql?: GraphqlRequestParameters & { requestType: GraphqlRequestType };
+  payload: GraphqlRequest | GraphqlRequestDefinition;
+}
+
+function hasFormatedQuery(obj: GraphqlRequest|GraphqlRequestDefinition): obj is GraphqlRequest {
+    return "query" in obj;
 }
 
 export const injectGraphql = ({
   fastify,
-  payload,
   authorization,
-  gql,
+  payload,
 }: InjectGraphqlParameters) => {
-  if (!payload && !gql) {
-    throw "injectGraphql: you must define either payload or gql";
-  }
   return fastify.inject({
     method: "POST",
     url: "/graphql",
-    payload: gql ? graphqlRequestPayload(gql.requestType)(gql) : payload,
+    payload: hasFormatedQuery(payload)
+        ? payload
+        : graphqlRequestPayload(payload.requestType)(payload),
     headers: {
       authorization: authorization ?? "",
     },
