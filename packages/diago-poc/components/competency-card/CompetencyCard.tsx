@@ -10,7 +10,8 @@ export const CompetencyCard =(props: { competency: Competency; isSelected: boole
     />)}
     <span className="flex flex-1">
       <span className="pr-2">
-        <span id="project-type-0-label" className="block text-sm font-medium text-gray-900">{props.competency.label}</span>
+        <span id={`project-type-${props.competency.code_ogr}-label`} className="block text-sm font-medium text-gray-900">{props.competency.label}</span>
+        <span id={`project-type-${props.competency.code_ogr}-code`} className="block text-sm font-ligth text-gray-700 mt-2">Code OGR : {props.competency.code_ogr}</span>
       </span>
     </span>
     <svg className={`h-5 w-5 text-indigo-600 ${props.isSelected ? "visible" : "invisible"}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
