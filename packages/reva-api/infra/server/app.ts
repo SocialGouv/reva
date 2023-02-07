@@ -3,19 +3,30 @@ import path from "path";
 import cors from "@fastify/cors";
 import proxy from "@fastify/http-proxy";
 import fastifyStatic from "@fastify/static";
-import fastify, { FastifyInstance } from "fastify";
+import fastify, {
+  FastifyInstance,
+  FastifyPluginAsync,
+  FastifyPluginOptions,
+  FastifyServerOptions,
+} from "fastify";
 
 import { restRoutes } from "../rest";
+import proofUploadRoute from "../rest/proof-upload";
 import { mercuriusGraphQL } from "./mercurius";
 import keycloakAdminPlugin from "./plugins/keycloak-admin-plugin";
 import keycloakPlugin from "./plugins/keycloak-plugin";
-import proofUploadRoute from "../rest/proof-upload";
 
 const WEBSITE_ROUTE_PATH = "/";
 const APP_ROUTE_PATH = "/app";
 const ADMIN_ROUTE_PATH = "/admin";
 
-export const buildApp = async (opts = {}): Promise<FastifyInstance> => {
+type BuilAppOptions = FastifyServerOptions & {
+  keycloakPluginMock?: FastifyPluginAsync<FastifyPluginOptions>;
+};
+
+export const buildApp = async (
+  opts: BuilAppOptions = {}
+): Promise<FastifyInstance> => {
   const app = await fastify(opts);
 
   if (process.env.ES_APM_SERVER_URL) {
@@ -105,16 +116,20 @@ export const buildApp = async (opts = {}): Promise<FastifyInstance> => {
     });
   }
 
-  app.register(keycloakPlugin, {
-    config: {
-      clientId: process.env.KEYCLOAK_ADMIN_CLIENTID_REVA || "reva-admin",
-      bearerOnly: true,
-      serverUrl:
-        process.env.KEYCLOAK_ADMIN_URL || "http://localhost:8888/auth/",
-      realm: process.env.KEYCLOAK_ADMIN_REALM_REVA || "reva",
-      realmPublicKey: process.env.KEYCLOAK_ADMIN_REALM_REVA_PUBLIC_KEY || "",
-    },
-  });
+  if (opts.keycloakPluginMock) {
+    app.register(opts.keycloakPluginMock);
+  } else {
+    app.register(keycloakPlugin, {
+      config: {
+        clientId: process.env.KEYCLOAK_ADMIN_CLIENTID_REVA || "reva-admin",
+        bearerOnly: true,
+        serverUrl:
+          process.env.KEYCLOAK_ADMIN_URL || "http://localhost:8888/auth/",
+        realm: process.env.KEYCLOAK_ADMIN_REALM_REVA || "reva",
+        realmPublicKey: process.env.KEYCLOAK_ADMIN_REALM_REVA_PUBLIC_KEY || "",
+      },
+    });
+  }
 
   app.register(keycloakPlugin, {
     config: {
