@@ -4,20 +4,20 @@ type GraqhqlRequestArguments = Record<string, unknown>;
 
 type GraphqlRequestType = "query" | "mutation";
 
-type GraphqlVariable = Record<string, any>;
+type GraphqlVariables = Record<string, unknown>;
 
 interface GraphqlRequestParameters {
   operationName?: string;
   endpoint: string;
   arguments?: GraqhqlRequestArguments;
-  variables?: GraphqlVariable;
+  variables?: GraphqlVariables;
   returnFields: string;
 }
 
 interface GraphqlRequest {
   operationName: string;
   query: string;
-  variables: Record<string, any> | null;
+  variables: GraphqlVariables | null;
 }
 
 type GraphqlRequestDefinition = GraphqlRequestParameters & {requestType: GraphqlRequestType}

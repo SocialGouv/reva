@@ -15,7 +15,7 @@
     "prepare": "husky install",
     "lint-staged": "npm run lint-staged --workspaces --if-present",
     "lint-all": "npm run lint-all --workspaces --if-present",
-    "test-api": "npm run test -w reva-api"
+    "test-api": "npm run test --workspace=reva-api"
   },
   "workspaces": [
     "packages/reva-api",
