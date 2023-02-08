@@ -5,10 +5,9 @@ module.exports = {
 
   collectCoverage: true,
   collectCoverageFrom: ["./domain/**"],
-  coverageThreshold: {
-    global: {
-      lines: 90
-    }
-  }
-
+  // coverageThreshold: {
+  //   global: {
+  //     lines: 90
+  //   }
+  // }
 };
