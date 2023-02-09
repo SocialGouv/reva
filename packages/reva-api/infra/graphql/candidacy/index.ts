@@ -20,6 +20,7 @@ import { selectOrganismForCandidacy } from "../../../domain/features/selectOrgan
 import { submitCandidacy } from "../../../domain/features/submitCandidacy";
 import { submitTraining } from "../../../domain/features/submitTrainingForm";
 import { takeOverCandidacy } from "../../../domain/features/takeOverCandidacy";
+import { updateAdmissibility } from "../../../domain/features/updateAdmissibility";
 import { updateAppointmentInformations } from "../../../domain/features/updateAppointmentInformations";
 import { updateCertificationOfCandidacy } from "../../../domain/features/updateCertificationOfCandidacy";
 import { updateContactOfCandidacy } from "../../../domain/features/updateContactOfCandidacy";
@@ -27,7 +28,7 @@ import { updateExperienceOfCandidacy } from "../../../domain/features/updateExpe
 import { updateGoalsOfCandidacy } from "../../../domain/features/updateGoalsOfCandidacy";
 import { confirmTrainingFormByCandidate } from "../../../domain/features/validateTrainingFormByCandidate";
 import { Role } from "../../../domain/types/account";
-import { Candidacy } from "../../../domain/types/candidacy";
+import { Admissibility, Candidacy } from "../../../domain/types/candidacy";
 import * as admissibilityDb from "../../database/postgres/admissibility";
 import * as basicSkillDb from "../../database/postgres/basicSkills";
 import * as candidacyDb from "../../database/postgres/candidacies";
@@ -415,6 +416,26 @@ const unsafeResolvers = {
         dropOutReasonId: payload.dropOut.dropOutReasonId,
         otherReasonContent: payload.dropOut.otherReasonContent,
         droppedOutAt,
+      });
+
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
+    candidacy_updateAdmissibility: async (
+      _: unknown,
+      {
+        candidacyId,
+        admissibility,
+      }: { candidacyId: string; admissibility: Admissibility }
+    ) => {
+      const result = await updateAdmissibility({
+        getAdmissibilityFromCandidacyId:
+          admissibilityDb.getAdmissibilityFromCandidacyId,
+        updateAdmissibility: admissibilityDb.updateAdmissibility,
+      })({
+        candidacyId,
+        admissibility,
       });
 
       return result
