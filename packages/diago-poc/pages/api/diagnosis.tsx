@@ -37,8 +37,8 @@ export const getCertificationsByActivitiesCodeOgrsFromDiago = async (codesOgr: s
   const accessToken = await getAccessToken()
 
   const query = `
-  query certifications($codesOgr: [String!]!, $secteur: String!) {
-    certificationsSatellitairesViaCompetences(codesOGR: $codesOgr, secteurROME: $secteur, limit: 20) {
+  query certifications($codesOgr: [String!]!, $secteurs: [String!]!) {
+    certificationsSatellitairesViaCompetences(codesOGR: $codesOgr, secteursROME: $secteurs, limit: 20) {
       score
       certification {
         id
@@ -49,11 +49,9 @@ export const getCertificationsByActivitiesCodeOgrsFromDiago = async (codesOgr: s
     }
   }`;
 
-  // Change this line and use "secteurs" when Diago api will be ready
-  const secteur = secteurs[0]
   const body = JSON.stringify({
     query,
-    variables: { codesOgr, secteur },
+    variables: { codesOgr, secteurs },
   })
   const result = await fetch(process.env.DIAGO_URL as string, {
     method: 'POST',
@@ -68,7 +66,7 @@ export const getCertificationsByActivitiesCodeOgrsFromDiago = async (codesOgr: s
   return {
     debug: {
       query,
-      variables: { codesOgr, secteur },
+      variables: { codesOgr, secteurs },
     },
     certifications: certifications.map(
       (c: any) => {
