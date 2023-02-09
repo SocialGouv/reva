@@ -45,6 +45,7 @@ const isLower2 = isBetween(0, 2);
 const isLower4 = isBetween(0, 4);
 const isLower15 = isBetween(0, 15);
 const isLower20 = isBetween(0, 20);
+const isLower25 = isBetween(0, 25);
 const isLower30 = isBetween(0, 30);
 const isLower35 = isBetween(0, 35);
 const isLower70 = isBetween(0, 70);
@@ -149,9 +150,9 @@ export const validateFundingRequest =
       );
     }
 
-    if (!isLower20(fundingRequest.basicSkillsCost)) {
+    if (!isLower25(fundingRequest.basicSkillsCost)) {
       errors.push(
-        "Le coût horaire demandé pour la prestation Compléments formatifs Savoirs de base doit être compris entre 0 et 20 euros."
+        "Le coût horaire demandé pour la prestation Compléments formatifs Savoirs de base doit être compris entre 0 et 25 euros."
       );
     }
 
@@ -178,15 +179,15 @@ export const validateFundingRequest =
       );
     }
 
-    if (!isLower20(fundingRequest.mandatoryTrainingsCost)) {
+    if (!isLower25(fundingRequest.mandatoryTrainingsCost)) {
       errors.push(
-        "Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 20 euros."
+        "Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 25 euros."
       );
     }
 
-    if (!isLower20(fundingRequest.certificateSkillsCost)) {
+    if (!isLower25(fundingRequest.certificateSkillsCost)) {
       errors.push(
-        "Le coût horaire demandé pour la prestation Compléments formatifs Blocs de compétences doit être compris entre 0 et 20 euros."
+        "Le coût horaire demandé pour la prestation Compléments formatifs Blocs de compétences doit être compris entre 0 et 25 euros."
       );
     }
 
