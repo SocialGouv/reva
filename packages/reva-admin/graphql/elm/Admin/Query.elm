@@ -173,6 +173,13 @@ getDropOutReasons object____ =
     Object.selectionForCompositeField "getDropOutReasons" [] object____ (Basics.identity >> Decode.list)
 
 
+getReorientationReasons :
+    SelectionSet decodesTo Admin.Object.ReorientationReason
+    -> SelectionSet (List decodesTo) RootQuery
+getReorientationReasons object____ =
+    Object.selectionForCompositeField "getReorientationReasons" [] object____ (Basics.identity >> Decode.list)
+
+
 type alias SearchCertificationsAndProfessionsOptionalArguments =
     { query : OptionalArgument String }
 
