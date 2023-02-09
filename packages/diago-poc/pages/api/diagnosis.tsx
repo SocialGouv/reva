@@ -32,13 +32,13 @@ export const getCertificationsByActivitiesCodeOgrs = async (activitiesCodeOgrs: 
   return certifications as CertificationWithPurcentMatch[] ;
 }
 
-export const getCertificationsByActivitiesCodeOgrsFromDiago = async (codesOgr: string[] = []) =>{
+export const getCertificationsByActivitiesCodeOgrsFromDiago = async (codesOgr: string[] = [], secteurs: string[] = []) =>{
   // call diago api
   const accessToken = await getAccessToken()
 
   const query = `
-  query certifications($codesOgr: [String!]!) {
-    certificationsSatellitairesViaCompetences(codesOGR: $codesOgr, limit: 20) {
+  query certifications($codesOgr: [String!]!, $secteur: String!) {
+    certificationsSatellitairesViaCompetences(codesOGR: $codesOgr, secteurROME: $secteur, limit: 20) {
       score
       certification {
         id
@@ -49,6 +49,12 @@ export const getCertificationsByActivitiesCodeOgrsFromDiago = async (codesOgr: s
     }
   }`;
 
+  // Change this line and use "secteurs" when Diago api will be ready
+  const secteur = secteurs[0]
+  const body = JSON.stringify({
+    query,
+    variables: { codesOgr, secteur },
+  })
   const result = await fetch(process.env.DIAGO_URL as string, {
     method: 'POST',
     headers: {
@@ -56,16 +62,13 @@ export const getCertificationsByActivitiesCodeOgrsFromDiago = async (codesOgr: s
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     },
-    body: JSON.stringify({
-      query,
-      variables: { codesOgr },
-    })
+    body
   })
   const certifications = (await result.json()).data.certificationsSatellitairesViaCompetences;
   return {
     debug: {
       query,
-      variables: { codesOgr },
+      variables: { codesOgr, secteur },
     },
     certifications: certifications.map(
       (c: any) => {
@@ -96,11 +99,12 @@ export default async function handler(
     })
     res.status(200).json(diagnosis)
   } else {
-    const { activitiesCodeOgrs } = req.query;
+    const { activitiesCodeOgrs, secteursRome } = req.query;
     const ids = typeof activitiesCodeOgrs === 'string' ? [activitiesCodeOgrs] : (activitiesCodeOgrs);
+    const secteurs = typeof secteursRome === 'string' ? [secteursRome] : (secteursRome);
 
     if (req.headers['x-target'] === 'diago') {
-      res.status(200).json(await getCertificationsByActivitiesCodeOgrsFromDiago(ids))
+      res.status(200).json(await getCertificationsByActivitiesCodeOgrsFromDiago(ids, secteurs))
     } else {
       const certifications = await getCertificationsByActivitiesCodeOgrs(ids)
       res.status(200).json(certifications);

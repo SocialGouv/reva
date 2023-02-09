@@ -5,6 +5,7 @@ export interface Profession {
 }
 
 export interface Activity {
+  secteur: string;
   code_ogr: number;
   label: string;
 }
@@ -12,6 +13,7 @@ export interface Activity {
 export interface Competency {
   code_ogr: number;
   label: string;
+  secteur: string;
 }
 
 export interface ProfessionAndCompetencies {

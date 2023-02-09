@@ -7,7 +7,7 @@ import {prismaClient} from "./prisma"
 export const getActivitiesByJobCode = async (professionId: string) =>{
   const activities = await prismaClient.$queryRaw`
     select 
-      act.*
+      act.code_ogr, act.label, LEFT(r.code, 1) as secteur
     from activity act
     inner join activity_rome cr on cr.activity_code_ogr = act.code_ogr
     inner join rome r on r.code = cr.rome_code
@@ -34,7 +34,7 @@ export const getCompetenciesFromDiago = async (professionId: string) => {
 
   // call diago api
   const accessToken = await getAccessToken()
-  const codesRome = codesRomeObject.map(c => c.code)
+  const codeRome = codesRomeObject.map(c => c.code)[0]
 
   const query = `
   query competences($codeRome: CodeFicheROME!) {
@@ -55,14 +55,14 @@ export const getCompetenciesFromDiago = async (professionId: string) => {
     },
     body: JSON.stringify({
       query,
-      variables: { codeRome: codesRome[0] },
+      variables: { codeRome: codeRome },
     })
   })
   const competences = (await result.json()).data.sousDomaine.competencesProches as CompentencyDiago[];
 
   const activities = competences
     .sort((a,b) => a.title > b.title ? 1 : (b.title > a.title ? -1 : 0) )
-    .map((c: any) => ({code_ogr: c.codeOGR, label: c.title} as Activity))
+    .map((c: any) => ({code_ogr: c.codeOGR, label: c.title, secteur: codeRome.charAt(0)} as Activity))
     .reduce((m, c) => {
       if (m.find(comp => comp.code_ogr === c.code_ogr)) {
         return m
@@ -73,7 +73,7 @@ export const getCompetenciesFromDiago = async (professionId: string) => {
     return {
       debug: {
         query,
-        variables: { codeRome: codesRome[0] },
+        variables: { codeRome: codeRome[0] },
       },
       activities
     }

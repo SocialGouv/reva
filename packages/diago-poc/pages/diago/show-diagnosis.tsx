@@ -27,6 +27,17 @@ const ShowDiagnosisPage = () => {
       return [...memo, ...ids]
     }, [] as string[]);
 
+  const secteursRome = 
+      userInfos.professionAndCompetencies.reduce((memo, pAc) => {
+        const secteurs = pAc.competencies.map(c => `${c.secteur}`)
+        return [...memo, ...secteurs]
+      }, [] as string[]).reduce((memo, s) => {
+        if (memo.includes(s)) {
+          return memo
+        }
+        return [...memo, s]
+      }, [] as string[]);
+
 
   const { data: certificationsData, isLoading, isSuccess } = useQuery<CertificationsData>({
     queryKey: ["certifications", competenciesCodeOgrs.join('-')],
@@ -34,7 +45,10 @@ const ShowDiagnosisPage = () => {
       const result = await (await fetch(
         "/api/diagnosis?" +
           new URLSearchParams(
-            competenciesCodeOgrs.map(c => ['activitiesCodeOgrs', c])
+            [
+              ...competenciesCodeOgrs.map(c => ['activitiesCodeOgrs', c]),
+              ...secteursRome.map(s => ['secteursRome', s]),
+          ]
           ), {
             headers: {
               "X-target": "diago"
