@@ -4,6 +4,7 @@ import {
   hasRole,
   isCandidacyOwner,
   whenHasRole,
+  allowed,
 } from "./middlewares";
 
 export const isAdminOrOwningManager = [
@@ -20,3 +21,7 @@ export const isOwningManager = [
 export const isCandidate = [hasNotRole(["admin", "manage_candidacy"])];
 
 export const defaultSecurity = [forbidden()];
+
+export const isAnyone = [allowed()];
+
+export const isAdmin = [hasRole(["admin"])];
