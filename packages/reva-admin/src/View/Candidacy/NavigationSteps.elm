@@ -1,4 +1,4 @@
-module View.Candidacy.NavigationSteps exposing (dropOutView, view)
+module View.Candidacy.NavigationSteps exposing (archiveView, dropOutView, view)
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Data.Candidacy as Candidacy exposing (Candidacy)
@@ -91,6 +91,25 @@ dropOutView baseUrl candidacy dropOutDate =
           }
         , { content = expandedView "Demande de paiement" DemandeFinancementEnvoye candidacy
           , navigation = paymentRequestLink baseUrl candidacy
+          }
+        ]
+
+
+archiveView : String -> Candidacy -> Html msg
+archiveView baseUrl candidacy =
+    let
+        archiveDate =
+            Candidacy.lastStatus candidacy.statuses |> .createdAt
+
+        archiveLink =
+            Route.href baseUrl <| Route.Candidacy (View.Candidacy.Tab.Tab candidacy.id View.Candidacy.Tab.Archive)
+    in
+    View.Steps.view 1
+        [ { content = [ title "Candidature archivée" ]
+          , navigation = Nothing
+          }
+        , { content = [ text "Archivée le ", text archiveDate.fullFormat ]
+          , navigation = Just archiveLink
           }
         ]
 

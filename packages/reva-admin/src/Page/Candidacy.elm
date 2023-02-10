@@ -145,7 +145,11 @@ view context model =
                             NavigationSteps.dropOutView context.baseUrl candidacy droppedOutDate
 
                         Nothing ->
-                            NavigationSteps.view context.baseUrl candidacy
+                            if (Candidacy.lastStatus candidacy.statuses |> .status) == Step.Archive then
+                                NavigationSteps.archiveView context.baseUrl candidacy
+
+                            else
+                                NavigationSteps.view context.baseUrl candidacy
 
                 _ ->
                     text ""
