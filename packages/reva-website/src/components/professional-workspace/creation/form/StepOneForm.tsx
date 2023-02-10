@@ -9,6 +9,7 @@ import { useForm, useController } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import DepartmentRegionData from "../../../../../content/departements-region.json";
+import { useProfessionalWorkspaceCreationContext } from "../context/ProfessionalWorkspaceCreationContext";
 
 const legalStatuses = ["EI", "EURL", "SARL", "SAS", "SASU", "SA"] as const;
 
@@ -32,6 +33,8 @@ const zodSchema = z.object({
 type StepOneFormSchema = z.infer<typeof zodSchema>;
 
 export const StepOneForm = () => {
+  const { professionalWorkspaceInfos, submitStepOne } =
+    useProfessionalWorkspaceCreationContext();
   const {
     register,
     handleSubmit,
@@ -39,24 +42,20 @@ export const StepOneForm = () => {
     formState: { errors },
   } = useForm<StepOneFormSchema>({
     resolver: zodResolver(zodSchema),
-    defaultValues: { companyTeachingMethods: [] },
+    defaultValues: { ...professionalWorkspaceInfos },
   });
 
   const companyInterventionZoneController = useController({
     name: "companyInterventionZone",
     control,
-    defaultValue: "1",
   });
 
   const companyLegalStatusController = useController({
     name: "companyLegalStatus",
     control,
-    defaultValue: "EI",
   });
 
-  const handleFormSubmit = (data: StepOneFormSchema) => {
-    console.log(data);
-  };
+  const handleFormSubmit = (data: StepOneFormSchema) => submitStepOne(data);
 
   return (
     <div className="flex flex-col min-w-[70vw]">
