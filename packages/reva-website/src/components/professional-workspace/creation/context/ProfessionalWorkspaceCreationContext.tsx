@@ -10,9 +10,13 @@ interface ProfessionalWorkspaceInfos {
   companyBillingAddress: string;
   companyBillingEmail: string;
   companyLegalStatus: LegalStatus;
+  accountFirstname: string;
+  accountLastname: string;
+  accountEmail: string;
+  accountPhoneNumber: string;
 }
 interface ProfessionalWorkspaceCreationState {
-  currentStep: "stepOne" | "stepTwo";
+  currentStep: "stepOne" | "stepTwo" | "stepThree";
   professionalWorkspaceInfos: Partial<ProfessionalWorkspaceInfos>;
 }
 
@@ -26,9 +30,15 @@ type StepOneData = Pick<
   | "companyLegalStatus"
 >;
 
+type StepTwoData = Pick<
+  ProfessionalWorkspaceInfos,
+  "accountFirstname" | "accountLastname" | "accountEmail" | "accountPhoneNumber"
+>;
+
 type ProfessionalWorkspaceCreationContext =
   ProfessionalWorkspaceCreationState & {
-    submitStepOne: (stepOneData: StepOneData) => void;
+    submitStepOne: (stepData: StepOneData) => void;
+    submitStepTwo: (stepData: StepTwoData) => void;
   };
 
 const ProfessionalWorkspaceCreationContext =
@@ -47,12 +57,25 @@ export const ProfessionalWorkspaceCreationProvider = (props: {
   });
 
   const submitStepOne = useCallback(
-    (stepOneData: StepOneData) => {
+    (stepData: StepOneData) => {
       setState({
         currentStep: "stepTwo",
         professionalWorkspaceInfos: {
           ...state.professionalWorkspaceInfos,
-          ...stepOneData,
+          ...stepData,
+        },
+      });
+    },
+    [state]
+  );
+
+  const submitStepTwo = useCallback(
+    (stepData: StepTwoData) => {
+      setState({
+        currentStep: "stepThree",
+        professionalWorkspaceInfos: {
+          ...state.professionalWorkspaceInfos,
+          ...stepData,
         },
       });
     },
@@ -61,7 +84,7 @@ export const ProfessionalWorkspaceCreationProvider = (props: {
 
   return (
     <ProfessionalWorkspaceCreationContext.Provider
-      value={{ ...state, submitStepOne }}
+      value={{ ...state, submitStepOne, submitStepTwo }}
     >
       {props.children}
     </ProfessionalWorkspaceCreationContext.Provider>
