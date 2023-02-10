@@ -7,6 +7,7 @@ import {
   useProfessionalWorkspaceCreationContext,
 } from "components/professional-workspace/creation/context/ProfessionalWorkspaceCreationContext";
 import { StepTwoForm } from "components/professional-workspace/creation/form/StepTwoForm";
+import { StepThreeForm } from "components/professional-workspace/creation/form/StepThreeForm";
 
 const PageContent = () => {
   const { currentStep } = useProfessionalWorkspaceCreationContext();
@@ -15,6 +16,8 @@ const PageContent = () => {
       return <StepOneForm />;
     case "stepTwo":
       return <StepTwoForm />;
+    case "stepThree":
+      return <StepThreeForm />;
     default:
       return <div>unknown step</div>;
   }
