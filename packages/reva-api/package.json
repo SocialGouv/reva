@@ -11,7 +11,7 @@
     "build:graphql": "rsync -R ./infra/graphql/**/*.graphql ./dist ",
     "start": "npm run prisma:migrate:deploy && npm run prisma:seed && node dist/index.js",
     "start:server:only": "node dist/index.js",
-    "test": "dotenv -e .env.test -- prisma migrate reset --force && dotenv -e .env.test prisma db seed && dotenv -e .env.test -- jest --runInBand --testRegex='.*.test.ts$'",
+    "test": "dotenv -e .env.test -- prisma migrate reset --force && dotenv -e .env.test -- jest --runInBand --testRegex='.*.test.ts$'",
     "graphql:generate": "ts-node ./infra/generate-graphql-schema.ts",
     "prisma:generate": "prisma generate",
     "prisma:seed": "prisma db seed",

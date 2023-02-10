@@ -1,40 +1,40 @@
-import path from "path";
+/**
+ * @jest-environment ./test/fastify-test-env.ts
+ */
+import { Candidacy, Candidate, Organism } from "@prisma/client";
 
-import dotenv from "dotenv";
-import { FastifyInstance } from "fastify";
-
-import { candidateJPL } from "../../../test/fixtures/people-organisms";
+import {
+  candidateJPL,
+  organismIperia,
+} from "../../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
-import keycloakPluginMock from "../../../test/mocks/keycloak-plugin.mock";
-import { seed } from "../../../test/seed";
 import { prismaClient } from "../../database/postgres/client";
-import { buildApp } from "../../server/app";
 
-dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
-
-let fastify: FastifyInstance;
-let sampleCandidacy1Id: string;
+let organism: Organism, candidate: Candidate, candidacy: Candidacy;
 
 beforeAll(async () => {
-  // Construct server
-  await seed();
-  fastify = await buildApp({ keycloakPluginMock });
-
-  // Create candidacy
-  const candidacy = await prismaClient.candidacy.create({
+  organism = await prismaClient.organism.create({ data: organismIperia });
+  candidate = await prismaClient.candidate.create({ data: candidateJPL });
+  candidacy = await prismaClient.candidacy.create({
     data: {
-      deviceId: candidateJPL.email,
-      email: candidateJPL.email,
-      candidateId: candidateJPL.id,
+      deviceId: candidate.email,
+      email: candidate.email,
+      candidateId: candidate.id,
+      organismId: organism.id,
     },
   });
-  sampleCandidacy1Id = candidacy.id;
 });
 
-test("candidacy_takeOver should fail when not authenticated", async () => {
+afterAll(async () => {
+  await prismaClient.candidacy.delete({ where: { id: candidacy.id } });
+  await prismaClient.candidate.delete({ where: { id: candidate.id } });
+  await prismaClient.organism.delete({ where: { id: organism.id } });
+});
+
+test("candidacy_takeOver should fail with code 400 when not authenticated", async function () {
   const resp = await injectGraphql({
-    fastify,
+    fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "candidate",
       keycloakId: "blabla",
@@ -42,28 +42,53 @@ test("candidacy_takeOver should fail when not authenticated", async () => {
     payload: {
       requestType: "mutation",
       endpoint: "candidacy_takeOver",
-      arguments: { candidacyId: sampleCandidacy1Id },
+      arguments: { candidacyId: candidacy.id },
       returnFields: "{ id }",
     },
   });
 
-  expect(resp.statusCode).toEqual(403);
+  expect(resp.statusCode).toEqual(400);
 });
 
-test.only("get existing Candidacy with admin user", async () => {
+test("get existing Candidacy with admin user", async () => {
   const resp = await injectGraphql({
-    fastify,
+    fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "admin",
-      keycloakId: "blabla",
+      keycloakId: "whatever",
     }),
     payload: {
       requestType: "query",
       endpoint: "getCandidacyById",
-      arguments: { id: sampleCandidacy1Id },
+      arguments: { id: candidacy.id },
       returnFields:
         "{organismId, firstname, lastname, email, candidacyStatuses {createdAt, isActive, status}}",
     },
   });
   expect(resp.statusCode).toEqual(200);
+  const obj = resp.json();
+  expect(obj.data.getCandidacyById).toMatchObject({
+    organismId: organism.id,
+    firstname: candidate.firstname,
+    lastname: candidate.lastname,
+    email: candidate.email,
+  });
 });
+
+test("get non existing candidacy should fail with 500", async() => {
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "admin",
+      keycloakId: "whatever",
+    }),
+    payload: {
+      requestType: "query",
+      endpoint: "getCandidacyById",
+      arguments: { id: "notfound" },
+      returnFields:
+        "{id}",
+    },
+  });
+  expect(resp.statusCode).toEqual(500);
+})

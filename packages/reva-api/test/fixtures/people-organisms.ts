@@ -1,16 +1,14 @@
-import { Account, Candidate, Organism } from "@prisma/client";
+import { Gender } from "@prisma/client";
 import { randomUUID } from "crypto";
 
 // Candidates
 
-export const candidateJPL_kcId = randomUUID();
-export const candidateJPL: Candidate = {
-    id: candidateJPL_kcId,
+const candidateJPL = {
     firstname: "Jean-Patrick",
     lastname: "Ledru",
     email: "jean-pat.ledru@gmail.com",
-    gender: "man",
-    keycloakId: candidateJPL_kcId,
+    gender: "man" as Gender,
+    keycloakId: randomUUID(),
     firstname2: "",
     firstname3: "",
     phone: "",
@@ -20,14 +18,12 @@ export const candidateJPL: Candidate = {
     updatedAt: new Date(),
 };
 
-export const candidateMPB_kcId = randomUUID();
-export const candidateMPB: Candidate = {
-    id: candidateMPB_kcId,
+const candidateMPB = {
     firstname: "Marie-Paule",
     lastname: "Belle",
     email: "mpb@gmail.com",
-    gender: "woman",
-    keycloakId: candidateMPB_kcId,
+    gender: "woman" as Gender,
+    keycloakId: randomUUID(),
     firstname2: "",
     firstname3: "",
     phone: "",
@@ -39,9 +35,7 @@ export const candidateMPB: Candidate = {
 
 // Organisms
 
-export const organismIperiaId = randomUUID();
-export const organismIperia: Organism = {
-    id: organismIperiaId,
+const organismIperia = {
     label: "Iperia",
     siret: "5038235679",
     address: "123 rue tabaga",
@@ -51,40 +45,38 @@ export const organismIperia: Organism = {
     contactCommercialEmail: "manu@iperia.fr",
     contactAdministrativeEmail: "josette@iperia.fr",
     isActive: true,
-    createdAt: new Date(),
-    updatedAt: null,
 }
 
 // Architectes
 
-export const archiIperia1KcId = randomUUID();
-export const archiIperia1: Account = {
-    id: randomUUID(),
-    keycloakId: archiIperia1KcId,
+const archiIperia1 = {
+    keycloakId: randomUUID(),
     firstname: "Gérard",
     lastname: "Jambon",
     email: "gege.bonbon@gmail.com",
-    organismId: organismIperiaId,
 }
 
-export const archiIperia2KcId = randomUUID();
-export const archiIperia2: Account = {
-    id: randomUUID(),
-    keycloakId: archiIperia2KcId,
+const archiIperia2 = {
+    keycloakId: randomUUID(),
     firstname: "Antoine",
     lastname: "Camembert",
     email: "toinou.kipu@hotmail.fr",
-    organismId: organismIperiaId,
 }
 
 // Admins
 
-export const adminAccount1KcId = randomUUID();
-export const adminAccount1: Account = {
-    id: randomUUID(),
-    keycloakId: adminAccount1KcId,
+const adminAccount1 = {
+    keycloakId: randomUUID(),
     firstname: "Mimi",
     lastname: "Matty",
     email: "mimi@yolo.fr",
-    organismId: organismIperiaId,
 }
+
+export {
+    organismIperia,
+    candidateJPL,
+    candidateMPB,
+    archiIperia1,
+    archiIperia2,
+    adminAccount1,
+};
