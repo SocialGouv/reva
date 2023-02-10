@@ -104,7 +104,7 @@ archiveView baseUrl candidacy =
         archiveLink =
             Route.href baseUrl <| Route.Candidacy (View.Candidacy.Tab.Tab candidacy.id View.Candidacy.Tab.Archive)
     in
-    View.Steps.view 1
+    View.Steps.view 2
         [ { content = [ title "Candidature archivée" ]
           , navigation = Nothing
           }
