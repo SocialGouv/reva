@@ -37,6 +37,7 @@ type StepTwoData = Pick<
 
 type ProfessionalWorkspaceCreationContext =
   ProfessionalWorkspaceCreationState & {
+    goBackToPreviousStep: () => void;
     submitStepOne: (stepData: StepOneData) => void;
     submitStepTwo: (stepData: StepTwoData) => void;
   };
@@ -55,6 +56,19 @@ export const ProfessionalWorkspaceCreationProvider = (props: {
       companyLegalStatus: "EI",
     },
   });
+
+  const goBackToPreviousStep = useCallback(() => {
+    let newCurrentStep = state.currentStep;
+    switch (state.currentStep) {
+      case "stepTwo":
+        newCurrentStep = "stepOne";
+        break;
+      case "stepThree":
+        newCurrentStep = "stepTwo";
+        break;
+    }
+    setState({ ...state, currentStep: newCurrentStep });
+  }, [state]);
 
   const submitStepOne = useCallback(
     (stepData: StepOneData) => {
@@ -84,7 +98,7 @@ export const ProfessionalWorkspaceCreationProvider = (props: {
 
   return (
     <ProfessionalWorkspaceCreationContext.Provider
-      value={{ ...state, submitStepOne, submitStepTwo }}
+      value={{ ...state, goBackToPreviousStep, submitStepOne, submitStepTwo }}
     >
       {props.children}
     </ProfessionalWorkspaceCreationContext.Provider>

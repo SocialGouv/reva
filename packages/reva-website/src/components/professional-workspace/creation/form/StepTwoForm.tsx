@@ -17,7 +17,7 @@ const zodSchema = z.object({
 type StepTwoFormSchema = z.infer<typeof zodSchema>;
 
 export const StepTwoForm = () => {
-  const { professionalWorkspaceInfos, submitStepTwo } =
+  const { professionalWorkspaceInfos, goBackToPreviousStep, submitStepTwo } =
     useProfessionalWorkspaceCreationContext();
   const {
     register,
@@ -66,9 +66,12 @@ export const StepTwoForm = () => {
             nativeInputProps={{ ...register("accountPhoneNumber") }}
           />
         </div>
-        <Button type="submit" className="ml-auto mt-4">
-          Suivant
-        </Button>
+        <div className="flex gap-2 ml-auto mt-4">
+          <Button priority="secondary" onClick={goBackToPreviousStep}>
+            Précédent
+          </Button>
+          <Button type="submit">Suivant</Button>
+        </div>
       </form>
     </div>
   );
