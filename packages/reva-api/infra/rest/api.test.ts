@@ -21,26 +21,3 @@ test("Ping should pong", async () => {
   expect(response.statusCode).toEqual(200);
   expect(response.body).toEqual("pong");
 });
-
-// test("Delete candidacy should fail when not authenticated", async () => {
-//   const response = await fastify.inject({
-//     method: "POST",
-//     url: "/admin/candidacies/delete",
-//     headers: {
-//       authorization: `admin/lala-213-well`
-//     }
-//   });
-//   expect(response.statusCode).toEqual(403);
-// });
-
-// test("Delete not existing candidacy should fail", async () => {
-//   const response = await fastify.inject({
-//     method: "POST",
-//     url: "/admin/candidacies/delete",
-//     headers: {
-//       authorization: `admin/lala-213-well`
-//     }
-//   });
-//   // expect(response.statusCode).toEqual(403);
-//   console.log(response.body);
-// })
