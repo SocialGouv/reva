@@ -12,11 +12,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [16.x]
-
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -24,5 +22,33 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-      - run: npm ci
-      - run: npm run build --if-present
+      - name: Installing dependencies
+        run: npm ci
+      - name: Building
+        run: npm run build --if-present
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - name: Installing dependencies
+        run: npm ci
+      - name: Setup Postgres database
+        uses: Daniel-Marynicz/postgresql-action@master
+        with:
+          postgres_image_tag: 13-alpine
+          app_user: reva
+          app_user_password: password
+          app_db: reva-test
+          exposed_postgres_port: 5444
+          postgres_extensions: uuid-ossp unaccent pg_trgm plpgsql
+      - name: Launch tests
+        run: npm run test-api
