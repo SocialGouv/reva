@@ -101,6 +101,10 @@ type Region
     = Region
 
 
+type ReorientationReason
+    = ReorientationReason
+
+
 type SearchCertificationsAndProfessionsResult
     = SearchCertificationsAndProfessionsResult
 

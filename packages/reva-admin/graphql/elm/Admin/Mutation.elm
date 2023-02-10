@@ -193,16 +193,29 @@ candidacy_updateContact fillInOptionals____ requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_updateContact" (optionalArgs____ ++ [ Argument.required "deviceId" requiredArgs____.deviceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ]) object____ (Basics.identity >> Decode.nullable)
 
 
+type alias CandidacyArchiveByIdOptionalArguments =
+    { reorientationReasonId : OptionalArgument Data.Scalar.Uuid }
+
+
 type alias CandidacyArchiveByIdRequiredArguments =
     { candidacyId : Data.Scalar.Id }
 
 
 candidacy_archiveById :
-    CandidacyArchiveByIdRequiredArguments
+    (CandidacyArchiveByIdOptionalArguments -> CandidacyArchiveByIdOptionalArguments)
+    -> CandidacyArchiveByIdRequiredArguments
     -> SelectionSet decodesTo Admin.Object.Candidacy
     -> SelectionSet decodesTo RootMutation
-candidacy_archiveById requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidacy_archiveById" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ Basics.identity
+candidacy_archiveById fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { reorientationReasonId = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "reorientationReasonId" filledInOptionals____.reorientationReasonId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "candidacy_archiveById" (optionalArgs____ ++ [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ]) object____ Basics.identity
 
 
 type alias CandidacyDeleteByIdRequiredArguments =

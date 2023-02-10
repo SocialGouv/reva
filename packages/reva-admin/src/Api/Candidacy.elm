@@ -1,4 +1,4 @@
-module Api.Candidacy exposing (archive, delete, get, getCandidacies, takeOver)
+module Api.Candidacy exposing (get, getCandidacies, statusSelection, takeOver)
 
 import Admin.Mutation as Mutation
 import Admin.Object
@@ -54,33 +54,6 @@ get endpointGraphql token toMsg candidacyId =
     in
     selection id
         |> Auth.makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
-
-
-delete :
-    String
-    -> Token
-    -> (RemoteData String String -> msg)
-    -> CandidacyId
-    -> Cmd msg
-delete endpointGraphql token toMsg candidacyId =
-    Mutation.CandidacyDeleteByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
-        |> Mutation.candidacy_deleteById
-        |> Auth.makeMutation endpointGraphql token toMsg
-
-
-archive :
-    String
-    -> Token
-    -> (RemoteData String () -> msg)
-    -> CandidacyId
-    -> Cmd msg
-archive endpointGraphql token toMsg candidacyId =
-    let
-        id =
-            Data.Candidacy.candidacyIdToString candidacyId
-    in
-    Mutation.candidacy_archiveById (Mutation.CandidacyArchiveByIdRequiredArguments (Id id)) (SelectionSet.succeed ())
-        |> Auth.makeMutation endpointGraphql token toMsg
 
 
 takeOver :

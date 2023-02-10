@@ -5,13 +5,15 @@ import { getDegrees } from "../../../domain/features/getDegrees";
 import { getDepartments } from "../../../domain/features/getDepartments";
 import { getDropOutReasons } from "../../../domain/features/getDropOutReasons";
 import { getRegions } from "../../../domain/features/getRegions";
+import { getReorientationReasons } from "../../../domain/features/getReorientationReasons";
 import { getVulnerabilityIndicators } from "../../../domain/features/getVulnerabilityIndicators";
 import * as certificationsDb from "../../database/postgres/certifications";
 import * as degreesDb from "../../database/postgres/degrees";
+import * as dropOutReasonsDb from "../../database/postgres/dropOutReasons";
 import * as goalsDb from "../../database/postgres/goals";
 import * as locationsDb from "../../database/postgres/locations";
+import * as reorientationReasonsDb from "../../database/postgres/reorientationReasons";
 import * as vulnerabilityIndicatorsDb from "../../database/postgres/vulnerabilityIndicators";
-import * as dropOutReasonsDb from "../../database/postgres/dropOutReasons";
 
 export const resolvers = {
   Query: {
@@ -72,8 +74,16 @@ export const resolvers = {
     },
     getDropOutReasons: async (_: any, _payload: any) => {
       const result = await getDropOutReasons({
-        getDropOutReasons:
-          dropOutReasonsDb.getDropOutReasons,
+        getDropOutReasons: dropOutReasonsDb.getDropOutReasons,
+      })();
+
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
+    getReorientationReasons: async (_: any, _payload: any) => {
+      const result = await getReorientationReasons({
+        getReorientationReasons: reorientationReasonsDb.getReorientationReasons,
       })();
 
       return result

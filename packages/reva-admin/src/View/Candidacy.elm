@@ -23,7 +23,6 @@ view :
     ->
         { a
             | candidacy : Candidacy
-            , archiveMsg : Candidacy -> msg
             , referential : RemoteData String Referential
         }
     -> List (Html msg)
@@ -109,11 +108,15 @@ view context config =
               else
                 text ""
             , viewExperiences config.candidacy.experiences
-            , button
-                [ type_ "button"
-                , class "bg-gray-400 hover:bg-gray-500 text-white"
+            , a
+                [ class "bg-gray-400 hover:bg-gray-500 text-white"
                 , class "text-xs px-3 py-2 rounded"
-                , onClick (config.archiveMsg config.candidacy)
+                , href
+                    (Route.toString context.baseUrl
+                        (Route.Candidacy <|
+                            View.Candidacy.Tab.Tab config.candidacy.id Archive
+                        )
+                    )
                 ]
                 [ text "Archiver la candidature" ]
             , if config.candidacy.dropOutDate == Nothing then

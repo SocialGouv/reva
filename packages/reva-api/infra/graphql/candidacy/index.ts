@@ -36,6 +36,7 @@ import * as dropOutDb from "../../database/postgres/dropOutReasons";
 import * as experienceDb from "../../database/postgres/experiences";
 import * as goalDb from "../../database/postgres/goals";
 import * as organismDb from "../../database/postgres/organisms";
+import * as reorientationReasonDb from "../../database/postgres/reorientationReasons";
 import * as trainingDb from "../../database/postgres/trainings";
 import { logger } from "../../logger";
 import { notifyNewCandidacy } from "../../mattermost";
@@ -303,11 +304,20 @@ const unsafeResolvers = {
         .extract();
     },
 
-    candidacy_archiveById: async (_: unknown, payload: any) => {
+    candidacy_archiveById: async (
+      _: unknown,
+      payload: any,
+      context: { auth: any }
+    ) => {
       const result = await archiveCandidacy({
-        updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
+        archiveCandidacy: candidacyDb.archiveCandidacy,
+        getCandidacyFromId: candidacyDb.getCandidacyFromId,
+        getReorientationReasonById:
+          reorientationReasonDb.getReorientationReasonById,
+        hasRole: context.auth.hasRole,
       })({
         candidacyId: payload.candidacyId,
+        reorientationReasonId: payload.reorientationReasonId,
       });
 
       return result

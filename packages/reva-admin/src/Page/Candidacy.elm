@@ -8,9 +8,11 @@ module Page.Candidacy exposing
     , view
     )
 
+import Admin.Enum.CandidacyStatusStep as Step
 import Api.Candidacy
 import Api.Form.Admissibility
 import Api.Form.Appointment
+import Api.Form.Archive
 import Api.Form.Candidate
 import Api.Form.DropOut
 import Api.Form.FundingRequest
@@ -21,6 +23,7 @@ import Api.Referential
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Context exposing (Context)
+import Data.Form.Archive
 import Data.Form.DropOut
 import Data.Form.FundingRequest
 import Data.Form.PaymentRequest
@@ -30,6 +33,7 @@ import Html.Styled.Attributes exposing (class, name)
 import Page.Form as Form exposing (Form)
 import Page.Form.Admissibility
 import Page.Form.Appointment
+import Page.Form.Archive
 import Page.Form.Candidate
 import Page.Form.DropOut
 import Page.Form.FundingRequest
@@ -53,7 +57,6 @@ type Msg
     | GotCandidacyTakingOverResponse (RemoteData String ())
     | GotFormMsg (Form.Msg ( Candidacy, Referential ))
     | GotReferentialResponse (RemoteData String Referential)
-    | UserArchivedCandidacy Candidacy
 
 
 type alias State =
@@ -142,7 +145,11 @@ view context model =
                             NavigationSteps.dropOutView context.baseUrl candidacy droppedOutDate
 
                         Nothing ->
-                            NavigationSteps.view context.baseUrl candidacy
+                            if (Candidacy.lastStatus candidacy.statuses |> .status) == Step.Archive then
+                                NavigationSteps.archiveView context.baseUrl candidacy
+
+                            else
+                                NavigationSteps.view context.baseUrl candidacy
 
                 _ ->
                     text ""
@@ -151,6 +158,9 @@ view context model =
             case model.tab.value of
                 CandidateInfo ->
                     viewForm "candidate"
+
+                Archive ->
+                    viewForm "archive"
 
                 DropOut ->
                     viewForm "drop-out"
@@ -235,7 +245,6 @@ viewCandidacyPanel context model =
                 View.Candidacy.view
                     context
                     { candidacy = candidacy
-                    , archiveMsg = UserArchivedCandidacy
                     , referential = model.state.referential
                     }
 
@@ -291,11 +300,6 @@ update context msg model =
             , Cmd.none
             )
 
-        UserArchivedCandidacy candidacy ->
-            ( model
-            , Api.Candidacy.archive context.endpoint context.token GotCandidacyArchivingResponse candidacy.id
-            )
-
 
 updateTab : Context -> Tab -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 updateTab context tab ( model, cmd ) =
@@ -312,6 +316,27 @@ updateTab context tab ( model, cmd ) =
                 (Route.toString context.baseUrl tabValue)
     in
     case ( tab.value, model.selected ) of
+        ( View.Candidacy.Tab.Archive, Success candidacy ) ->
+            let
+                ( formModel, formCmd ) =
+                    Form.updateForm context
+                        { form = Page.Form.Archive.form
+                        , onLoad = Just <| Api.Form.Archive.get tab.candidacyId
+                        , onSave = Nothing
+                        , onSubmit = Api.Form.Archive.archive tab.candidacyId
+                        , onRedirect = pushUrl <| candidacyTab Profile
+                        , onValidate = Data.Form.Archive.validate
+                        , status =
+                            if (Candidacy.lastStatus candidacy.statuses |> .status) == Step.Archive then
+                                Form.ReadOnly
+
+                            else
+                                Form.Editable
+                        }
+                        model.form
+            in
+            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
+
         ( View.Candidacy.Tab.DropOut, Success candidacy ) ->
             let
                 ( formModel, formCmd ) =
