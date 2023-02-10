@@ -37,7 +37,6 @@ export const StepThreeForm = () => {
         title="Saisir vos informations confidentielles"
         currentStep={3}
         stepCount={3}
-        nextTitle="Validation de votre compte professionnel"
       />
       <div className="border-t border-gray-300  mb-7" />
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>

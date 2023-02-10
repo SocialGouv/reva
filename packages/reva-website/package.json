@@ -23,6 +23,7 @@
     "@hookform/resolvers": "^2.9.10",
     "gatsby": "^5.5.0",
     "gatsby-plugin-image": "^3.5.0",
+    "gatsby-plugin-react-svg": "^3.3.0",
     "gatsby-plugin-sharp": "^5.5.0",
     "gatsby-plugin-sitemap": "^6.5.0",
     "gatsby-source-filesystem": "^5.5.0",

@@ -1,5 +1,6 @@
 import React, { useCallback, useContext, useState } from "react";
 import { createContext, ReactNode } from "react";
+import { navigate } from "gatsby";
 
 type LegalStatus = "EI" | "EURL" | "SARL" | "SAS" | "SASU" | "SA";
 
@@ -114,6 +115,7 @@ export const ProfessionalWorkspaceCreationProvider = (props: {
           ...stepData,
         },
       });
+      navigate("/espace-professionnel/confirmation-creation");
     },
     [state]
   );
