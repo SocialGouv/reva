@@ -4,14 +4,11 @@ import { createContext, ReactNode } from "react";
 type LegalStatus = "EI" | "EURL" | "SARL" | "SAS" | "SASU" | "SA";
 
 interface ProfessionalWorkspaceInfos {
-  accountStatus: "architect" | "certifier";
   companySiret: string;
   companyAddress: string;
   companyName: string;
   companyBillingAddress: string;
   companyBillingEmail: string;
-  companyTeachingMethods: ("remote" | "onsite")[];
-  companyInterventionZone: string;
   companyLegalStatus: LegalStatus;
 }
 interface ProfessionalWorkspaceCreationState {
@@ -21,14 +18,11 @@ interface ProfessionalWorkspaceCreationState {
 
 type StepOneData = Pick<
   ProfessionalWorkspaceInfos,
-  | "accountStatus"
   | "companySiret"
   | "companyAddress"
   | "companyName"
   | "companyBillingAddress"
   | "companyBillingEmail"
-  | "companyTeachingMethods"
-  | "companyInterventionZone"
   | "companyLegalStatus"
 >;
 
@@ -49,7 +43,6 @@ export const ProfessionalWorkspaceCreationProvider = (props: {
     currentStep: "stepOne",
     professionalWorkspaceInfos: {
       companyLegalStatus: "EI",
-      companyInterventionZone: "1",
     },
   });
 

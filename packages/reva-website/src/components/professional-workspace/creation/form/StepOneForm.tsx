@@ -3,12 +3,9 @@ import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
-import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { useForm, useController } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import DepartmentRegionData from "../../../../../content/departements-region.json";
 import { useProfessionalWorkspaceCreationContext } from "../context/ProfessionalWorkspaceCreationContext";
 
 const legalStatuses = ["EI", "EURL", "SARL", "SAS", "SASU", "SA"] as const;
@@ -19,15 +16,7 @@ const zodSchema = z.object({
   companyName: z.string().min(1, "obligatoire"),
   companyBillingAddress: z.string().min(1, "obligatoire"),
   companyBillingEmail: z.string().email("mauvais format"),
-  companyTeachingMethods: z
-    .enum(["remote", "onsite"])
-    .array()
-    .min(1, "obligatoire"),
-  companyInterventionZone: z.string().min(1, "obligatoire"),
   companyLegalStatus: z.enum(legalStatuses),
-  accountStatus: z.enum(["architect", "certifier"], {
-    invalid_type_error: "obligatoire",
-  }),
 });
 
 type StepOneFormSchema = z.infer<typeof zodSchema>;
@@ -43,11 +32,6 @@ export const StepOneForm = () => {
   } = useForm<StepOneFormSchema>({
     resolver: zodResolver(zodSchema),
     defaultValues: { ...professionalWorkspaceInfos },
-  });
-
-  const companyInterventionZoneController = useController({
-    name: "companyInterventionZone",
-    control,
   });
 
   const companyLegalStatusController = useController({
@@ -67,28 +51,6 @@ export const StepOneForm = () => {
       />
       <div className="border-t border-gray-300  mb-7" />
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>
-        <RadioButtons
-          legend="Votre statut"
-          options={[
-            {
-              label: "Architecte/Accompagnateur",
-              nativeInputProps: {
-                ...register("accountStatus"),
-                value: "architect",
-              },
-            },
-            {
-              label: "Certificateur",
-              nativeInputProps: {
-                ...register("accountStatus"),
-                value: "certifier",
-              },
-            },
-          ]}
-          state={errors.accountStatus ? "error" : "default"}
-          stateRelatedMessage={errors.accountStatus?.message}
-        />
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
           <Input
             label="SIRET *"
@@ -123,42 +85,6 @@ export const StepOneForm = () => {
               </option>
             ))}
           </Select>
-          <Select
-            label="Zone d'intervention *"
-            state={errors.companyInterventionZone ? "error" : "default"}
-            stateRelatedMessage={errors.companyInterventionZone?.message}
-            nativeSelectProps={{
-              value: companyInterventionZoneController.field.value,
-              onChange: companyInterventionZoneController.field.onChange,
-            }}
-          >
-            {DepartmentRegionData.map((d) => (
-              <option key={d.num_dep} value={d.num_dep}>
-                {d.dep_name}
-              </option>
-            ))}
-          </Select>
-          <Checkbox
-            legend="Modalité pédagogique *"
-            options={[
-              {
-                label: "distance",
-                nativeInputProps: {
-                  ...register("companyTeachingMethods"),
-                  value: "remote",
-                },
-              },
-              {
-                label: "physique",
-                nativeInputProps: {
-                  ...register("companyTeachingMethods"),
-                  value: "onsite",
-                },
-              },
-            ]}
-            state={errors.companyTeachingMethods ? "error" : "default"}
-            stateRelatedMessage={errors.companyTeachingMethods?.message}
-          />
           <Input
             label="Adresse de facturation *"
             state={errors.companyBillingAddress ? "error" : "default"}
