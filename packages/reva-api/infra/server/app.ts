@@ -17,6 +17,7 @@ import keycloakAdminPlugin from "./plugins/keycloak-admin-plugin";
 import keycloakPlugin from "./plugins/keycloak-plugin";
 
 const WEBSITE_ROUTE_PATH = "/";
+const NEW_WEBSITE_ROUTE_PATH = "/website";
 const APP_ROUTE_PATH = "/app";
 const ADMIN_ROUTE_PATH = "/admin";
 
@@ -64,6 +65,12 @@ export const buildApp = async (
         decorateReply: true,
       });
     }
+
+    app.register(fastifyStatic, {
+      root: WEBSITE_FOLDER,
+      prefix: NEW_WEBSITE_ROUTE_PATH,
+      decorateReply: false,
+    });
 
     app.register(fastifyStatic, {
       root: APP_FOLDER,
