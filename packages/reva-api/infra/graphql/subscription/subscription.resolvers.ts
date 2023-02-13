@@ -7,6 +7,16 @@ import * as domain from "./domain/index";
 import { resolversSecurityMap } from "./security";
 
 const unsafeResolvers = {
+  Query: {
+    getSubscriptionRequests: async() => {
+      const result = await domain.getSubscriptionRequests(
+        { getSubscriptionRequests: db.getSubscriptionRequests },
+      );
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    }
+  },
   Mutation: {
     createSubscriptionRequest: async (
       _: unknown,
@@ -36,7 +46,6 @@ const unsafeResolvers = {
         .extract();
     },
   },
-  // Query: {},
 };
 
 export const subscriptionRequestResolvers = composeResolvers(
