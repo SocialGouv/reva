@@ -71,7 +71,7 @@ const defaultValidFundingRequest: FundingRequestInput = {
   examHourCount: 2,
   individualCost: 70,
   individualHourCount: 15,
-  mandatoryTrainingsCost: 25,
+  mandatoryTrainingsCost: 20,
   mandatoryTrainingsHourCount: 1,
   postExamCost: 70,
   postExamHourCount: 1,
@@ -397,27 +397,27 @@ describe("funding request", () => {
         (result.extract() as FundingRequest).mandatoryTrainingsCost
       ).toEqual(10);
     });
-    test("should return an error when mandatoryTrainingsCost > 25 and candidate <=bac and Non fragile", () => {
+    test("should return an error when mandatoryTrainingsCost > 20 and candidate <=bac and Non fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        mandatoryTrainingsCost: 26,
+        mandatoryTrainingsCost: 21,
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
       expect((result.extract() as FunctionalError).errors).toContain(
-        "Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 25 euros."
+        "Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 20 euros."
       );
     });
 
-    test("should return an error when mandatoryTrainingsCost > 25 and candidate > bac and fragile", () => {
+    test("should return an error when mandatoryTrainingsCost > 20 and candidate > bac and fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        mandatoryTrainingsCost: 26,
+        mandatoryTrainingsCost: 21,
       };
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
       expect((result.extract() as FunctionalError).errors).toContain(
-        "Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 25 euros."
+        "Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 20 euros."
       );
     });
   });
@@ -486,27 +486,27 @@ describe("funding request", () => {
       expect(result.isRight()).toEqual(true);
       expect((result.extract() as FundingRequest).basicSkillsCost).toEqual(10);
     });
-    test("should return an error when basicSkillsCost > 25 and candidate <=bac and Non fragile", () => {
+    test("should return an error when basicSkillsCost > 20 and candidate <=bac and Non fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        basicSkillsCost: 26,
+        basicSkillsCost: 21,
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
       expect((result.extract() as FunctionalError).errors).toContain(
-        "Le coût horaire demandé pour la prestation Compléments formatifs Savoirs de base doit être compris entre 0 et 25 euros."
+        "Le coût horaire demandé pour la prestation Compléments formatifs Savoirs de base doit être compris entre 0 et 20 euros."
       );
     });
 
-    test("should return an error when basicSkillsCost > 25 and candidate > bac and fragile", () => {
+    test("should return an error when basicSkillsCost > 20 and candidate > bac and fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        basicSkillsCost: 26,
+        basicSkillsCost: 21,
       };
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
       expect((result.extract() as FunctionalError).errors).toContain(
-        "Le coût horaire demandé pour la prestation Compléments formatifs Savoirs de base doit être compris entre 0 et 25 euros."
+        "Le coût horaire demandé pour la prestation Compléments formatifs Savoirs de base doit être compris entre 0 et 20 euros."
       );
     });
   });
@@ -581,27 +581,27 @@ describe("funding request", () => {
         (result.extract() as FundingRequest).certificateSkillsCost
       ).toEqual(10);
     });
-    test("should return an error when certificateSkillsCost > 25 and candidate <=bac and Non fragile", () => {
+    test("should return an error when certificateSkillsCost > 20 and candidate <=bac and Non fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        certificateSkillsCost: 26,
+        certificateSkillsCost: 21,
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
       expect((result.extract() as FunctionalError).errors).toContain(
-        "Le coût horaire demandé pour la prestation Compléments formatifs Blocs de compétences doit être compris entre 0 et 25 euros."
+        "Le coût horaire demandé pour la prestation Compléments formatifs Blocs de compétences doit être compris entre 0 et 20 euros."
       );
     });
 
-    test("should return an error when certificateSkillsCost > 25 and candidate > bac and fragile", () => {
+    test("should return an error when certificateSkillsCost > 20 and candidate > bac and fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        certificateSkillsCost: 26,
+        certificateSkillsCost: 21,
       };
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
       expect((result.extract() as FunctionalError).errors).toContain(
-        "Le coût horaire demandé pour la prestation Compléments formatifs Blocs de compétences doit être compris entre 0 et 25 euros."
+        "Le coût horaire demandé pour la prestation Compléments formatifs Blocs de compétences doit être compris entre 0 et 20 euros."
       );
     });
   });
