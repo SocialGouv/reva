@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useCallback, useContext, useState } from "react";
 import { createContext, ReactNode } from "react";
 
@@ -54,6 +55,8 @@ const ProfessionalSpaceCreationContext =
 export const ProfessionalSpaceCreationProvider = (props: {
   children?: ReactNode;
 }) => {
+  const router = useRouter();
+
   const [state, setState] = useState<ProfessionalSpaceCreationState>({
     currentStep: "stepOne",
     professionalSpaceInfos: {
@@ -110,8 +113,9 @@ export const ProfessionalSpaceCreationProvider = (props: {
           ...stepData,
         },
       });
+      router.push("/espace-professionnel/creation/confirmation");
     },
-    [state.professionalSpaceInfos]
+    [router, state.professionalSpaceInfos]
   );
 
   return (
