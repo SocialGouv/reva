@@ -3,6 +3,7 @@ const nextConfig = {
   transpilePackages: ["@codegouvfr/react-dsfr"],
   reactStrictMode: true,
   swcMinify: true,
+  images: { unoptimized: true }, //needed for next export
   webpack: (config) => {
     config.module.rules.push({
       test: /\.woff2$/,
