@@ -1,7 +1,6 @@
-const withTM = require("next-transpile-modules")(["@codegouvfr/react-dsfr"]);
-
 /** @type {import('next').NextConfig} */
-const nextConfig = withTM({
+const nextConfig = {
+  transpilePackages: ["@codegouvfr/react-dsfr"],
   reactStrictMode: true,
   swcMinify: true,
   webpack: (config) => {
@@ -12,6 +11,6 @@ const nextConfig = withTM({
 
     return config;
   },
-});
+};
 
 module.exports = nextConfig;
