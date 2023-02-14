@@ -61,7 +61,7 @@ export const buildApp = async (
       app.register(fastifyStatic, {
         root: WEBSITE_FOLDER,
         prefix: WEBSITE_ROUTE_PATH,
-        decorateReply: true,
+        decorateReply: false,
       });
     }
 
