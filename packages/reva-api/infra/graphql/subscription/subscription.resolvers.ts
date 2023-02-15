@@ -8,7 +8,7 @@ import { resolversSecurityMap } from "./security";
 
 const unsafeResolvers = {
   Query: {
-    getSubscriptionRequests: async() => {
+    subscription_getSubscriptionRequests: async() => {
       const result = await domain.getSubscriptionRequests(
         { getSubscriptionRequests: db.getSubscriptionRequests },
       );
@@ -18,7 +18,7 @@ const unsafeResolvers = {
     }
   },
   Mutation: {
-    createSubscriptionRequest: async (
+    subscription_createSubscriptionRequest: async (
       _: unknown,
       payload: {
         subscriptionRequest: {

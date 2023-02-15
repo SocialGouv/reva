@@ -48,7 +48,7 @@ test("Should create a subscription request", async () => {
     }),
     payload: {
       requestType: "mutation",
-      endpoint: "createSubscriptionRequest",
+      endpoint: "subscription_createSubscriptionRequest",
       arguments: { subscriptionRequest: subreqSample },
       enumFields: ["companyLegalStatus"],
       returnFields:
@@ -56,7 +56,7 @@ test("Should create a subscription request", async () => {
     },
   });
   expect(resp.statusCode).toEqual(200);
-  const subreq = resp.json().data.createSubscriptionRequest;
+  const subreq = resp.json().data.subscription_createSubscriptionRequest;
   subreq1Id = subreq.id;
   expect(subreq).toMatchObject(subreqSample);
 });
@@ -70,7 +70,7 @@ test("Should create a subscription request", async () => {
 //     }),
 //     payload: {
 //       requestType: "mutation",
-//       endpoint: "createSubscriptionRequest",
+//       endpoint: "subscription_createSubscriptionRequest",
 //       arguments: { subscriptionRequest: subreqSample },
 //       enumFields: ["companyLegalStatus"],
 //       returnFields: "{ id }",
@@ -88,7 +88,7 @@ test("Should create a subscription request", async () => {
 //     }),
 //     payload: {
 //       requestType: "mutation",
-//       endpoint: "createSubscriptionRequest",
+//       endpoint: "subscription_createSubscriptionRequest",
 //       arguments: { subscriptionRequest: subreqSample },
 //       enumFields: ["companyLegalStatus"],
 //       returnFields: "{ id }",
