@@ -1,3 +1,4 @@
+import request, { gql } from "graphql-request";
 import { useRouter } from "next/router";
 import { useCallback, useContext, useState } from "react";
 import { createContext, ReactNode } from "react";
@@ -46,6 +47,10 @@ type ProfessionalSpaceCreationContext = ProfessionalSpaceCreationState & {
   submitStepTwo: (stepData: StepTwoData) => void;
   submitStepThree: (stepData: StepThreeData) => void;
 };
+
+const GRAPHQL_API_URL =
+  process.env.NEXT_PUBLIC_WEBSITE_API_GRAPHQL ||
+  "http://localhost:8080/graphql";
 
 const ProfessionalSpaceCreationContext =
   createContext<ProfessionalSpaceCreationContext>(
@@ -104,18 +109,43 @@ export const ProfessionalSpaceCreationProvider = (props: {
     [state]
   );
 
+  const executeGraphqlSubscriptionMutation = useCallback(
+    (professionalSpaceInfos: ProfessionalSpaceInfos) => {
+      const createSubscription = gql`
+        mutation createSubscriptionRequest(
+          $subscriptionRequest: SubscriptionRequestInput!
+        ) {
+          subscription_createSubscriptionRequest(
+            subscriptionRequest: $subscriptionRequest
+          ) {
+            id
+          }
+        }
+      `;
+
+      return request(GRAPHQL_API_URL, createSubscription, {
+        subscriptionRequest: professionalSpaceInfos,
+      });
+    },
+    []
+  );
+
   const submitStepThree = useCallback(
-    (stepData: StepThreeData) => {
-      setState({
-        currentStep: "stepThree",
+    async (stepData: StepThreeData) => {
+      const newState: ProfessionalSpaceCreationState = {
+        currentStep: "stepThree" as const,
         professionalSpaceInfos: {
           ...state.professionalSpaceInfos,
           ...stepData,
         },
-      });
+      };
+      setState(newState);
+      await executeGraphqlSubscriptionMutation(
+        newState.professionalSpaceInfos as ProfessionalSpaceInfos
+      );
       router.push("/espace-professionnel/creation/confirmation");
     },
-    [router, state.professionalSpaceInfos]
+    [executeGraphqlSubscriptionMutation, router, state.professionalSpaceInfos]
   );
 
   return (

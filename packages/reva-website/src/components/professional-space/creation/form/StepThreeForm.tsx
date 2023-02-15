@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useProfessionalSpaceCreationContext } from "../context/ProfessionalSpaceCreationContext";
+import { useState } from "react";
 
 const zodSchema = z.object({
   companyBic: z.string().length(8, "8 caractères"),
@@ -17,6 +18,7 @@ const zodSchema = z.object({
 type StepThreeFormSchema = z.infer<typeof zodSchema>;
 
 export const StepThreeForm = () => {
+  const [submissionError, setSubmissionError] = useState(false);
   const { professionalSpaceInfos, goBackToPreviousStep, submitStepThree } =
     useProfessionalSpaceCreationContext();
   const {
@@ -28,7 +30,15 @@ export const StepThreeForm = () => {
     defaultValues: { ...professionalSpaceInfos },
   });
 
-  const handleFormSubmit = (data: StepThreeFormSchema) => submitStepThree(data);
+  const handleFormSubmit = async (data: StepThreeFormSchema) => {
+    try {
+      setSubmissionError(false);
+      await submitStepThree(data);
+    } catch (e) {
+      console.log(e);
+      setSubmissionError(true);
+    }
+  };
 
   return (
     <div className="flex flex-col min-w-[70vw]">
@@ -38,6 +48,11 @@ export const StepThreeForm = () => {
         stepCount={3}
       />
       <div className="border-t border-gray-300  mb-7" />
+      {submissionError && (
+        <div className="fr-message--error mb-4">
+          Erreur lors de l&apos;envoi du formulaire
+        </div>
+      )}
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
           <Input
