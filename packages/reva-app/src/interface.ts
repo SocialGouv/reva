@@ -8,7 +8,7 @@ export interface Certification {
   abilities?: string;
   activityArea?: string;
   accessibleJobType?: string;
-  status: "AVAILABLE" | "SOON";
+  status: "AVAILABLE" | "SOON" | "INACTIVE";
 }
 
 export interface Contact {
