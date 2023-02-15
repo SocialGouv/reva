@@ -11,7 +11,7 @@ declare module "@codegouvfr/react-dsfr/next-pagesdir" {
 }
 
 const { withDsfr, dsfrDocumentApi } = createNextDsfrIntegrationApi({
-  defaultColorScheme: "system",
+  defaultColorScheme: "light",
   Link,
 });
 
