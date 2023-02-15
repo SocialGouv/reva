@@ -1,0 +1,61 @@
+enum LegalStatus {
+  EI
+  EURL
+  SARL
+  SAS
+  SASU
+  SA
+}
+
+type SubscriptionRequest {
+  id: ID!
+  companyName: String!
+  companyLegalStatus: LegalStatus!
+  companySiret: String!
+  companyAddress: String!
+  companyBillingAddress: String!
+  companyBillingEmail: String!
+  companyBic: String!
+  companyIban: String!
+  accountFirstname: String!
+  accountLastname: String!
+  accountEmail: String!
+  accountPhoneNumber: String!
+}
+
+type SubscriptionRequestSummary {
+  id: ID!
+  accountLastname: String!
+  accountFirstname: String!
+  accountEmail: String!
+  companyName: String!
+  companyAddress: String!
+}
+
+type Query {
+    getSubscriptionRequests: [SubscriptionRequestSummary]
+    getSubscriptionRequest(
+        subscriptionRequestId: ID!
+    ): SubscriptionRequest
+}
+
+input SubscriptionRequestInput {
+  companyName: String!
+  companyLegalStatus: LegalStatus!
+  companySiret: String!
+  companyAddress: String!
+  companyBillingAddress: String!
+  companyBillingEmail: String!
+  companyBic: String!
+  companyIban: String!
+  accountFirstname: String!
+  accountLastname: String!
+  accountEmail: String!
+  accountPhoneNumber: String!
+}
+
+type Mutation {
+    createSubscriptionRequest(
+        subscriptionRequest: SubscriptionRequestInput!
+    ): SubscriptionRequest!
+}

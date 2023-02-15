@@ -10,6 +10,7 @@ interface GraphqlRequestParameters {
   operationName?: string;
   endpoint: string;
   arguments?: GraqhqlRequestArguments;
+  enumFields?: string[],
   variables?: GraphqlVariables;
   returnFields: string;
 }
@@ -58,7 +59,7 @@ const graphqlRequestPayload =
   (requestType: GraphqlRequestType) =>
   (args: GraphqlRequestParameters): GraphqlRequest => {
     const operationName = args.operationName ?? "noname";
-    const argumentList = graphqlArgumentList(args.arguments);
+    const argumentList = graphqlArgumentList(args.arguments, args.enumFields);
     return {
       operationName,
       query: `${requestType} ${operationName} { ${args.endpoint} ${argumentList} ${args.returnFields} }`,
@@ -66,11 +67,24 @@ const graphqlRequestPayload =
     };
   };
 
-const graphqlArgumentList = (args?: GraqhqlRequestArguments): string => {
-  const argumentList = args
-    ? Object.entries(args)
-        .map(([key, value]) => `${key}: "${value}"`)
-        .join(",")
-    : undefined;
-  return argumentList ? `(${argumentList})` : "";
-};
+  const graphqlArgumentValue = (key: string, val: unknown, enumFields?: string[]) : string => {
+    switch(typeof val) {
+      case "string":
+        return enumFields?.includes(key) ? val : `"${val}"`;
+      case "number":
+        return val.toString();
+      default:
+        return graphqlArgumentList(val as GraqhqlRequestArguments, enumFields, true);
+    }
+  }
+  
+  const graphqlArgumentList = (args?: GraqhqlRequestArguments, enumFields?: string[], nested?: boolean ): string => {
+    const argumentList = args
+      ? Object.entries(args)
+          .map(([key, value]) => `${key}: ` + graphqlArgumentValue(key, value, enumFields))
+          .join(",")
+      : undefined;
+    const wrapOpen = nested ? "{" : "(";
+    const wrapClose = nested ? "}" : ")"; 
+    return argumentList ? `${wrapOpen}${argumentList}${wrapClose}` : "";
+  };

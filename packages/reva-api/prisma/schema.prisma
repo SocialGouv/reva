@@ -571,3 +571,29 @@ model FileUploadSpooler {
   description         String   @map("description") @db.VarChar(255)
   fileContent         Bytes    @map("file_content")
 }
+
+enum LegalStatus {
+  EI
+  EURL
+  SARL
+  SAS
+  SASU
+  SA
+}
+
+model SubscriptionRequest {
+  id                    String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  companyName           String      @map("company_name") @db.VarChar(255)
+  companyLegalStatus    LegalStatus @map("company_legal_status")
+  companySiret          String      @map("company_siret") @db.VarChar(255)
+  companyAddress        String      @map("company_address") @db.VarChar(255)
+  companyBillingAddress String      @map("company_billing_address") @db.VarChar(255)
+  companyBillingEmail   String      @map("company_billing_email") @db.VarChar(255)
+  companyBic            String      @map("company_bic") @db.VarChar(50)
+  companyIban           String      @map("company_iban") @db.VarChar(50)
+  accountFirstname      String      @map("account_firstname") @db.VarChar(100)
+  accountLastname       String      @map("account_lastname") @db.VarChar(100)
+  accountEmail          String      @map("account_email") @db.VarChar(255)
+  accountPhoneNumber    String      @map("account_phone_number") @db.VarChar(50)
+  createdAt             DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+}
