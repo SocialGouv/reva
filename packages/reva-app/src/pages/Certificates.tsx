@@ -126,7 +126,9 @@ export const Certificates = ({ mainService }: Props) => {
       ));
     }
 
-    return state.context.certifications.map(CertificateCard);
+    return state.context.certifications
+      .filter((certif) => certif.status !== "INACTIVE")
+      .map(CertificateCard);
   };
 
   return (

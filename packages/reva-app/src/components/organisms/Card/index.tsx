@@ -12,8 +12,12 @@ export type CardSize = "reduced" | "open";
 
 export const STATUS_AVAILABLE = "AVAILABLE";
 export const STATUS_SOON = "SOON";
+export const STATUS_INACTIVE = "INACTIVE";
 
-export type CardStatus = typeof STATUS_AVAILABLE | typeof STATUS_SOON;
+export type CardStatus =
+  | typeof STATUS_AVAILABLE
+  | typeof STATUS_SOON
+  | typeof STATUS_INACTIVE;
 
 interface CardProps {
   id: string;
