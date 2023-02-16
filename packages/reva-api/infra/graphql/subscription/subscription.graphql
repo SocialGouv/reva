@@ -32,8 +32,13 @@ type SubscriptionRequestSummary {
   companyAddress: String!
 }
 
+input SubscriptionRequestOrderByInput {
+  companyName: Sort
+  accountLastname: Sort
+}
+
 type Query {
-    subscription_getSubscriptionRequests: [SubscriptionRequestSummary]
+    subscription_getSubscriptionRequests(filter: String, offset: Int, limit: Int, orderBy: SubscriptionRequestOrderByInput): [SubscriptionRequestSummary]!
     subscription_getSubscriptionRequest(
         subscriptionRequestId: ID!
     ): SubscriptionRequest
