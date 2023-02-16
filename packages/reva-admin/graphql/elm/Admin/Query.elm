@@ -210,3 +210,22 @@ getCertification :
     -> SelectionSet (Maybe decodesTo) RootQuery
 getCertification requiredArgs____ object____ =
     Object.selectionForCompositeField "getCertification" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+
+
+subscription_getSubscriptionRequests :
+    SelectionSet decodesTo Admin.Object.SubscriptionRequestSummary
+    -> SelectionSet (Maybe (List (Maybe decodesTo))) RootQuery
+subscription_getSubscriptionRequests object____ =
+    Object.selectionForCompositeField "subscription_getSubscriptionRequests" [] object____ (Basics.identity >> Decode.nullable >> Decode.list >> Decode.nullable)
+
+
+type alias SubscriptionGetSubscriptionRequestRequiredArguments =
+    { subscriptionRequestId : Data.Scalar.Id }
+
+
+subscription_getSubscriptionRequest :
+    SubscriptionGetSubscriptionRequestRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.SubscriptionRequest
+    -> SelectionSet (Maybe decodesTo) RootQuery
+subscription_getSubscriptionRequest requiredArgs____ object____ =
+    Object.selectionForCompositeField "subscription_getSubscriptionRequest" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)

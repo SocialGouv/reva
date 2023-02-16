@@ -9,6 +9,7 @@ import Admin.Enum.AdmissibilityStatus
 import Admin.Enum.CandidateTypology
 import Admin.Enum.Duration
 import Admin.Enum.Gender
+import Admin.Enum.LegalStatus
 import Admin.Interface
 import Admin.Object
 import Admin.Scalar
@@ -558,6 +559,55 @@ encodePaymentRequestInput : PaymentRequestInput -> Value
 encodePaymentRequestInput input____ =
     Encode.maybeObject
         [ ( "diagnosisEffectiveHourCount", Encode.int input____.diagnosisEffectiveHourCount |> Just ), ( "postExamEffectiveHourCount", Encode.int input____.postExamEffectiveHourCount |> Just ), ( "individualEffectiveHourCount", Encode.int input____.individualEffectiveHourCount |> Just ), ( "collectiveEffectiveHourCount", Encode.int input____.collectiveEffectiveHourCount |> Just ), ( "mandatoryTrainingsEffectiveHourCount", Encode.int input____.mandatoryTrainingsEffectiveHourCount |> Just ), ( "basicSkillsEffectiveHourCount", Encode.int input____.basicSkillsEffectiveHourCount |> Just ), ( "certificateSkillsEffectiveHourCount", Encode.int input____.certificateSkillsEffectiveHourCount |> Just ), ( "examEffectiveHourCount", Encode.int input____.examEffectiveHourCount |> Just ), ( "invoiceNumber", Encode.string input____.invoiceNumber |> Just ) ]
+
+
+buildSubscriptionRequestInput :
+    SubscriptionRequestInputRequiredFields
+    -> SubscriptionRequestInput
+buildSubscriptionRequestInput required____ =
+    { companyName = required____.companyName, companyLegalStatus = required____.companyLegalStatus, companySiret = required____.companySiret, companyAddress = required____.companyAddress, companyBillingAddress = required____.companyBillingAddress, companyBillingEmail = required____.companyBillingEmail, companyBic = required____.companyBic, companyIban = required____.companyIban, accountFirstname = required____.accountFirstname, accountLastname = required____.accountLastname, accountEmail = required____.accountEmail, accountPhoneNumber = required____.accountPhoneNumber }
+
+
+type alias SubscriptionRequestInputRequiredFields =
+    { companyName : String
+    , companyLegalStatus : Admin.Enum.LegalStatus.LegalStatus
+    , companySiret : String
+    , companyAddress : String
+    , companyBillingAddress : String
+    , companyBillingEmail : String
+    , companyBic : String
+    , companyIban : String
+    , accountFirstname : String
+    , accountLastname : String
+    , accountEmail : String
+    , accountPhoneNumber : String
+    }
+
+
+{-| Type for the SubscriptionRequestInput input object.
+-}
+type alias SubscriptionRequestInput =
+    { companyName : String
+    , companyLegalStatus : Admin.Enum.LegalStatus.LegalStatus
+    , companySiret : String
+    , companyAddress : String
+    , companyBillingAddress : String
+    , companyBillingEmail : String
+    , companyBic : String
+    , companyIban : String
+    , accountFirstname : String
+    , accountLastname : String
+    , accountEmail : String
+    , accountPhoneNumber : String
+    }
+
+
+{-| Encode a SubscriptionRequestInput into a value that can be used as an argument.
+-}
+encodeSubscriptionRequestInput : SubscriptionRequestInput -> Value
+encodeSubscriptionRequestInput input____ =
+    Encode.maybeObject
+        [ ( "companyName", Encode.string input____.companyName |> Just ), ( "companyLegalStatus", Encode.enum Admin.Enum.LegalStatus.toString input____.companyLegalStatus |> Just ), ( "companySiret", Encode.string input____.companySiret |> Just ), ( "companyAddress", Encode.string input____.companyAddress |> Just ), ( "companyBillingAddress", Encode.string input____.companyBillingAddress |> Just ), ( "companyBillingEmail", Encode.string input____.companyBillingEmail |> Just ), ( "companyBic", Encode.string input____.companyBic |> Just ), ( "companyIban", Encode.string input____.companyIban |> Just ), ( "accountFirstname", Encode.string input____.accountFirstname |> Just ), ( "accountLastname", Encode.string input____.accountLastname |> Just ), ( "accountEmail", Encode.string input____.accountEmail |> Just ), ( "accountPhoneNumber", Encode.string input____.accountPhoneNumber |> Just ) ]
 
 
 buildTrainingInput :

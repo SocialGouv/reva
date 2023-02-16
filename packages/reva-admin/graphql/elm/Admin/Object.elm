@@ -109,6 +109,14 @@ type SearchCertificationsAndProfessionsResult
     = SearchCertificationsAndProfessionsResult
 
 
+type SubscriptionRequest
+    = SubscriptionRequest
+
+
+type SubscriptionRequestSummary
+    = SubscriptionRequestSummary
+
+
 type Tokens
     = Tokens
 

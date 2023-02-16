@@ -410,3 +410,15 @@ candidate_createFundingRequest :
     -> SelectionSet decodesTo RootMutation
 candidate_createFundingRequest requiredArgs____ object____ =
     Object.selectionForCompositeField "candidate_createFundingRequest" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "fundingRequest" requiredArgs____.fundingRequest Admin.InputObject.encodeFundingRequestInput ] object____ Basics.identity
+
+
+type alias SubscriptionCreateSubscriptionRequestRequiredArguments =
+    { subscriptionRequest : Admin.InputObject.SubscriptionRequestInput }
+
+
+subscription_createSubscriptionRequest :
+    SubscriptionCreateSubscriptionRequestRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.SubscriptionRequest
+    -> SelectionSet decodesTo RootMutation
+subscription_createSubscriptionRequest requiredArgs____ object____ =
+    Object.selectionForCompositeField "subscription_createSubscriptionRequest" [ Argument.required "subscriptionRequest" requiredArgs____.subscriptionRequest Admin.InputObject.encodeSubscriptionRequestInput ] object____ Basics.identity
