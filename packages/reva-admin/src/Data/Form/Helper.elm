@@ -112,6 +112,11 @@ int keys dict key default =
     generic keys dict key (String.toInt >> Maybe.withDefault default) default
 
 
+float : keys -> Dict.Dict String String -> (keys -> String) -> Float -> Float
+float keys dict key default =
+    generic keys dict key (String.toFloat >> Maybe.withDefault default) default
+
+
 decimal : keys -> Dict.Dict String String -> (keys -> String) -> Decimal -> Decimal
 decimal keys dict key default =
     generic keys dict key decimalFromString default
@@ -151,6 +156,7 @@ decode :
         , date : (a -> String) -> Timestamp -> Timestamp
         , generic : (a -> String) -> (String -> data) -> data -> data
         , int : (a -> String) -> Int -> Int
+        , float : (a -> String) -> Float -> Float
         , decimal : (a -> String) -> Decimal -> Decimal
         , list : List { b | id : String } -> List String
         , string : (a -> String) -> String -> String
@@ -165,6 +171,7 @@ decode keys formData =
     , date = date keys dict
     , generic = generic keys dict
     , int = int keys dict
+    , float = float keys dict
     , decimal = decimal keys dict
     , list = selection formData
     , string = string keys dict
