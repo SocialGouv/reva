@@ -23,6 +23,15 @@ const unsafeResolvers = {
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
+    },
+    subscription_getSubscriptionRequest: async(_parent: unknown, {subscriptionRequestId: id}: {subscriptionRequestId: string}) => {
+      const result = await domain.getSubscriptionRequest(
+        { getSubscriptionRequestById: db.getSubscriptionRequestById },
+        id
+      );
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
     }
   },
   Mutation: {
