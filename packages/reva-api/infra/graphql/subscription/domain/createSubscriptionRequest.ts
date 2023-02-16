@@ -4,7 +4,6 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
-import { SubscriptionRequest, SubscriptionRequestInput } from "./types";
 
 interface createSubscriptionRequestDeps {
   createSubscriptionRequest: (

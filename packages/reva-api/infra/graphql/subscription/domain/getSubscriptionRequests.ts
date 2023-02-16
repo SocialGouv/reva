@@ -4,16 +4,17 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
-import { SubscriptionRequest } from "./types";
 
 interface getSubscriptionRequestsDeps {
-  getSubscriptionRequests: () => Promise<Either<string, Array<Partial<SubscriptionRequest>>>>;
+  getSubscriptionRequests: (params: GetSubscriptionRequestsParams) => Promise<Either<string, Array<Partial<SubscriptionRequest>>>>;
 }
+
 
 export const getSubscriptionRequests = async (
   deps: getSubscriptionRequestsDeps,
+  params: GetSubscriptionRequestsParams,
 ) =>
-  EitherAsync.fromPromise(() => deps.getSubscriptionRequests()).mapLeft(
+  EitherAsync.fromPromise(() => deps.getSubscriptionRequests(params)).mapLeft(
     (err: string) =>
       new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, err)
   );

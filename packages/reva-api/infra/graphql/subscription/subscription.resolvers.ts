@@ -6,11 +6,19 @@ import * as db from "./db/subscription-request";
 import * as domain from "./domain/index";
 import { resolversSecurityMap } from "./security";
 
+interface getSubscriptionRequestsParams extends FilteredPaginatedListArgs {
+  orderBy?: {
+    companyName?: Sort
+    accountLastname?: Sort 
+  }
+}
+
 const unsafeResolvers = {
   Query: {
-    subscription_getSubscriptionRequests: async() => {
+    subscription_getSubscriptionRequests: async(_parent: unknown, payload: getSubscriptionRequestsParams) => {
       const result = await domain.getSubscriptionRequests(
         { getSubscriptionRequests: db.getSubscriptionRequests },
+        payload,
       );
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
