@@ -22,33 +22,33 @@ type FundingRequest {
   companion: Organism
 
   diagnosisHourCount: Int!
-  diagnosisCost: Int!
+  diagnosisCost: Decimal!
 
   postExamHourCount: Int!
-  postExamCost: Int!
+  postExamCost: Decimal!
 
   individualHourCount: Int!
-  individualCost: Int!
+  individualCost: Decimal!
 
   collectiveHourCount: Int!
-  collectiveCost: Int!
+  collectiveCost: Decimal!
 
   basicSkills: [BasicSkill!]!
   basicSkillsHourCount: Int!
-  basicSkillsCost: Int!
+  basicSkillsCost: Decimal!
 
   mandatoryTrainings: [Training!]!
   mandatoryTrainingsHourCount: Int!
-  mandatoryTrainingsCost: Int!
+  mandatoryTrainingsCost: Decimal!
 
   certificateSkills: String!
   certificateSkillsHourCount: Int!
-  certificateSkillsCost: Int!
+  certificateSkillsCost: Decimal!
 
   otherTraining: String!
 
   examHourCount: Int!
-  examCost: Int!
+  examCost: Decimal!
 }
 
 input PaymentRequestInput {
@@ -67,33 +67,33 @@ input FundingRequestInput {
   companionId: UUID
 
   diagnosisHourCount: Int!
-  diagnosisCost: Int!
+  diagnosisCost: Decimal!
 
   postExamHourCount: Int!
-  postExamCost: Int!
+  postExamCost: Decimal!
 
   individualHourCount: Int!
-  individualCost: Int!
+  individualCost: Decimal!
 
   collectiveHourCount: Int!
-  collectiveCost: Int!
+  collectiveCost: Decimal!
 
   basicSkillsIds: [UUID!]!
   basicSkillsHourCount: Int!
-  basicSkillsCost: Int!
+  basicSkillsCost: Decimal!
 
   mandatoryTrainingsIds: [UUID!]!
   mandatoryTrainingsHourCount: Int!
-  mandatoryTrainingsCost: Int!
+  mandatoryTrainingsCost: Decimal!
 
   certificateSkills: String!
   certificateSkillsHourCount: Int!
-  certificateSkillsCost: Int!
+  certificateSkillsCost: Decimal!
 
   otherTraining: String!
 
   examHourCount: Int!
-  examCost: Int!
+  examCost: Decimal!
 }
 
 type FundingRequestInformations {

@@ -3,3 +3,5 @@ scalar Timestamp
 scalar Void
 
 scalar UUID
+
+scalar Decimal

@@ -1,3 +1,4 @@
+import { Decimal } from "@prisma/client/runtime";
 import { Left, Right } from "purify-ts";
 
 import { Candidacy, Organism } from "../../../../domain/types/candidacy";
@@ -59,21 +60,21 @@ const defaultValidFundingRequest: FundingRequestInput = {
   mandatoryTrainingsIds: ["444"],
   certificateSkills: "RCNP12 RCNP34",
   otherTraining: "other training",
-  basicSkillsCost: 20,
+  basicSkillsCost: new Decimal(20),
   basicSkillsHourCount: 1,
-  certificateSkillsCost: 20,
+  certificateSkillsCost: new Decimal(20),
   certificateSkillsHourCount: 1,
-  collectiveCost: 35,
+  collectiveCost: new Decimal(35),
   collectiveHourCount: 15,
-  diagnosisCost: 70,
+  diagnosisCost: new Decimal(70),
   diagnosisHourCount: 1,
-  examCost: 20,
+  examCost: new Decimal(20),
   examHourCount: 2,
-  individualCost: 70,
+  individualCost: new Decimal(70),
   individualHourCount: 15,
-  mandatoryTrainingsCost: 20,
+  mandatoryTrainingsCost: new Decimal(20),
   mandatoryTrainingsHourCount: 1,
-  postExamCost: 70,
+  postExamCost: new Decimal(70),
   postExamHourCount: 1,
   companion: { siret: "1234" } as Organism,
   numAction: "reva_20221115_00000001",
@@ -158,7 +159,7 @@ describe("funding request", () => {
     test("should return an error when diagnosisCost > 70", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        diagnosisCost: 71,
+        diagnosisCost: new Decimal(71),
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
@@ -172,7 +173,7 @@ describe("funding request", () => {
     test("should return an error when postExamCost > 70", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        postExamCost: 71,
+        postExamCost: new Decimal(71),
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
@@ -238,7 +239,7 @@ describe("funding request", () => {
     test("should return an error when individualCost > 70 for a candidate >bac and non fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        individualCost: 71,
+        individualCost: new Decimal(71),
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
@@ -250,7 +251,7 @@ describe("funding request", () => {
     test("should return an error when individualCost > 70 for a candidate <=bac and non fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        individualCost: 71,
+        individualCost: new Decimal(71),
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
@@ -262,7 +263,7 @@ describe("funding request", () => {
     test("should return an error when individualCost > 70 for a candidate >bac and fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        individualCost: 71,
+        individualCost: new Decimal(71),
       };
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
@@ -317,7 +318,7 @@ describe("funding request", () => {
     test("should return an error when collectiveCost > 35", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        collectiveCost: 36,
+        collectiveCost: new Decimal(36),
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
@@ -367,40 +368,40 @@ describe("funding request", () => {
     test("should set mandatoryTrainingsCost to 0 when candidate >bac and Non fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        mandatoryTrainingsCost: 10,
+        mandatoryTrainingsCost: new Decimal(10),
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
       expect(
-        (result.extract() as FundingRequest).mandatoryTrainingsCost
+        (result.extract() as FundingRequest).mandatoryTrainingsCost.toNumber()
       ).toEqual(0);
     });
     test("should keep mandatoryTrainingsCost value when candidate <=bac and Non fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        mandatoryTrainingsCost: 10,
+        mandatoryTrainingsCost: new Decimal(10),
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
       expect(
-        (result.extract() as FundingRequest).mandatoryTrainingsCost
+        (result.extract() as FundingRequest).mandatoryTrainingsCost.toNumber()
       ).toEqual(10);
     });
     test("should keep mandatoryTrainingsCost value when candidate >bac and fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        mandatoryTrainingsCost: 10,
+        mandatoryTrainingsCost: new Decimal(10),
       };
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
       expect(
-        (result.extract() as FundingRequest).mandatoryTrainingsCost
+        (result.extract() as FundingRequest).mandatoryTrainingsCost.toNumber()
       ).toEqual(10);
     });
     test("should return an error when mandatoryTrainingsCost > 20 and candidate <=bac and Non fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        mandatoryTrainingsCost: 21,
+        mandatoryTrainingsCost: new Decimal(21),
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
@@ -412,7 +413,7 @@ describe("funding request", () => {
     test("should return an error when mandatoryTrainingsCost > 20 and candidate > bac and fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        mandatoryTrainingsCost: 21,
+        mandatoryTrainingsCost: new Decimal(21),
       };
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
@@ -462,34 +463,40 @@ describe("funding request", () => {
     test("should set basicSkillsCost to 0 when candidate >bac and Non fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        basicSkillsCost: 10,
+        basicSkillsCost: new Decimal(10),
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
-      expect((result.extract() as FundingRequest).basicSkillsCost).toEqual(0);
+      expect(
+        (result.extract() as FundingRequest).basicSkillsCost.toNumber()
+      ).toEqual(0);
     });
     test("should keep basicSkillsCost value when candidate <=bac and Non fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        basicSkillsCost: 10,
+        basicSkillsCost: new Decimal(10),
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
-      expect((result.extract() as FundingRequest).basicSkillsCost).toEqual(10);
+      expect(
+        (result.extract() as FundingRequest).basicSkillsCost.toNumber()
+      ).toEqual(10);
     });
     test("should keep basicSkillsCost value when candidate >bac and fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        basicSkillsCost: 10,
+        basicSkillsCost: new Decimal(10),
       };
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
-      expect((result.extract() as FundingRequest).basicSkillsCost).toEqual(10);
+      expect(
+        (result.extract() as FundingRequest).basicSkillsCost.toNumber()
+      ).toEqual(10);
     });
     test("should return an error when basicSkillsCost > 20 and candidate <=bac and Non fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        basicSkillsCost: 21,
+        basicSkillsCost: new Decimal(21),
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
@@ -501,7 +508,7 @@ describe("funding request", () => {
     test("should return an error when basicSkillsCost > 20 and candidate > bac and fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        basicSkillsCost: 21,
+        basicSkillsCost: new Decimal(21),
       };
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
@@ -551,40 +558,40 @@ describe("funding request", () => {
     test("should set certificateSkillsCost to 0 when candidate >bac and Non fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        certificateSkillsCost: 10,
+        certificateSkillsCost: new Decimal(10),
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
       expect(
-        (result.extract() as FundingRequest).certificateSkillsCost
+        (result.extract() as FundingRequest).certificateSkillsCost.toNumber()
       ).toEqual(0);
     });
     test("should keep certificateSkillsCost value when candidate <=bac and Non fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        certificateSkillsCost: 10,
+        certificateSkillsCost: new Decimal(10),
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
       expect(
-        (result.extract() as FundingRequest).certificateSkillsCost
+        (result.extract() as FundingRequest).certificateSkillsCost.toNumber()
       ).toEqual(10);
     });
     test("should keep certificateSkillsCost value when candidate >bac and fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        certificateSkillsCost: 10,
+        certificateSkillsCost: new Decimal(10),
       };
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
       expect(
-        (result.extract() as FundingRequest).certificateSkillsCost
+        (result.extract() as FundingRequest).certificateSkillsCost.toNumber()
       ).toEqual(10);
     });
     test("should return an error when certificateSkillsCost > 20 and candidate <=bac and Non fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        certificateSkillsCost: 21,
+        certificateSkillsCost: new Decimal(21),
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
@@ -596,7 +603,7 @@ describe("funding request", () => {
     test("should return an error when certificateSkillsCost > 20 and candidate > bac and fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        certificateSkillsCost: 21,
+        certificateSkillsCost: new Decimal(21),
       };
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
@@ -653,7 +660,7 @@ describe("funding request", () => {
     test("should return an error when examCost > 20", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        examCost: 21,
+        examCost: new Decimal(21),
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
@@ -667,76 +674,82 @@ describe("funding request", () => {
     test("should return all hours multiply by its cost but with reset values when candidate > bac and Non fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        basicSkillsCost: 20,
+        basicSkillsCost: new Decimal(20),
         basicSkillsHourCount: 2,
-        certificateSkillsCost: 20,
+        certificateSkillsCost: new Decimal(20),
         certificateSkillsHourCount: 2,
-        collectiveCost: 35,
+        collectiveCost: new Decimal(35),
         collectiveHourCount: 15,
-        diagnosisCost: 70,
+        diagnosisCost: new Decimal(70),
         diagnosisHourCount: 1,
-        examCost: 20,
+        examCost: new Decimal(20),
         examHourCount: 2,
-        individualCost: 70,
+        individualCost: new Decimal(70),
         individualHourCount: 15,
-        mandatoryTrainingsCost: 20,
+        mandatoryTrainingsCost: new Decimal(20),
         mandatoryTrainingsHourCount: 2,
-        postExamCost: 70,
+        postExamCost: new Decimal(70),
         postExamHourCount: 1,
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
-      expect((result.extract() as FundingRequest).totalCost).toEqual(1755);
+      expect(
+        (result.extract() as FundingRequest).totalCost?.toNumber()
+      ).toEqual(1755);
     });
 
     test("should return all hours multiply by its cost when candidate <= bac and Non fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        basicSkillsCost: 20,
+        basicSkillsCost: new Decimal(20),
         basicSkillsHourCount: 2,
-        certificateSkillsCost: 20,
+        certificateSkillsCost: new Decimal(20),
         certificateSkillsHourCount: 2,
-        collectiveCost: 35,
+        collectiveCost: new Decimal(35),
         collectiveHourCount: 15,
-        diagnosisCost: 70,
+        diagnosisCost: new Decimal(70),
         diagnosisHourCount: 2,
-        examCost: 20,
+        examCost: new Decimal(20),
         examHourCount: 2,
-        individualCost: 70,
+        individualCost: new Decimal(70),
         individualHourCount: 15,
-        mandatoryTrainingsCost: 20,
+        mandatoryTrainingsCost: new Decimal(20),
         mandatoryTrainingsHourCount: 2,
-        postExamCost: 70,
+        postExamCost: new Decimal(70),
         postExamHourCount: 1,
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
-      expect((result.extract() as FundingRequest).totalCost).toEqual(1945);
+      expect(
+        (result.extract() as FundingRequest).totalCost?.toNumber()
+      ).toEqual(1945);
     });
 
     test("should return all hours multiply by its cost when candidate > bac and fragile", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        basicSkillsCost: 20,
+        basicSkillsCost: new Decimal(20),
         basicSkillsHourCount: 2,
-        certificateSkillsCost: 20,
+        certificateSkillsCost: new Decimal(20),
         certificateSkillsHourCount: 2,
-        collectiveCost: 35,
+        collectiveCost: new Decimal(35),
         collectiveHourCount: 15,
-        diagnosisCost: 70,
+        diagnosisCost: new Decimal(70),
         diagnosisHourCount: 2,
-        examCost: 20,
+        examCost: new Decimal(20),
         examHourCount: 2,
-        individualCost: 70,
+        individualCost: new Decimal(70),
         individualHourCount: 15,
-        mandatoryTrainingsCost: 20,
+        mandatoryTrainingsCost: new Decimal(20),
         mandatoryTrainingsHourCount: 2,
-        postExamCost: 70,
+        postExamCost: new Decimal(70),
         postExamHourCount: 1,
       };
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
-      expect((result.extract() as FundingRequest).totalCost).toEqual(1945);
+      expect(
+        (result.extract() as FundingRequest).totalCost?.toNumber()
+      ).toEqual(1945);
     });
   });
 
@@ -746,13 +759,13 @@ describe("funding request", () => {
         ...defaultValidFundingRequest,
         mandatoryTrainings: [],
         mandatoryTrainingsIds: [],
-        mandatoryTrainingsCost: 20,
+        mandatoryTrainingsCost: new Decimal(20),
         mandatoryTrainingsHourCount: 2,
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
       expect(
-        (result.extract() as FundingRequest).mandatoryTrainingsCost
+        (result.extract() as FundingRequest).mandatoryTrainingsCost.toNumber()
       ).toEqual(0);
       expect(
         (result.extract() as FundingRequest).mandatoryTrainingsHourCount
@@ -764,13 +777,13 @@ describe("funding request", () => {
         ...defaultValidFundingRequest,
         mandatoryTrainings: [{ id: "123" }],
         mandatoryTrainingsIds: ["123"],
-        mandatoryTrainingsCost: 20,
+        mandatoryTrainingsCost: new Decimal(20),
         mandatoryTrainingsHourCount: 2,
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
       expect(
-        (result.extract() as FundingRequest).mandatoryTrainingsCost
+        (result.extract() as FundingRequest).mandatoryTrainingsCost.toNumber()
       ).toEqual(20);
       expect(
         (result.extract() as FundingRequest).mandatoryTrainingsHourCount
@@ -784,12 +797,14 @@ describe("funding request", () => {
         ...defaultValidFundingRequest,
         basicSkills: [],
         basicSkillsIds: [],
-        basicSkillsCost: 20,
+        basicSkillsCost: new Decimal(20),
         basicSkillsHourCount: 2,
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
-      expect((result.extract() as FundingRequest).basicSkillsCost).toEqual(0);
+      expect(
+        (result.extract() as FundingRequest).basicSkillsCost.toNumber()
+      ).toEqual(0);
       expect((result.extract() as FundingRequest).basicSkillsHourCount).toEqual(
         0
       );
@@ -800,12 +815,14 @@ describe("funding request", () => {
         ...defaultValidFundingRequest,
         basicSkills: [{ id: "123" }],
         basicSkillsIds: ["123"],
-        basicSkillsCost: 20,
+        basicSkillsCost: new Decimal(20),
         basicSkillsHourCount: 2,
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
-      expect((result.extract() as FundingRequest).basicSkillsCost).toEqual(20);
+      expect(
+        (result.extract() as FundingRequest).basicSkillsCost.toNumber()
+      ).toEqual(20);
       expect((result.extract() as FundingRequest).basicSkillsHourCount).toEqual(
         2
       );
@@ -817,13 +834,13 @@ describe("funding request", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
         certificateSkills: "",
-        certificateSkillsCost: 20,
+        certificateSkillsCost: new Decimal(20),
         certificateSkillsHourCount: 2,
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
       expect(
-        (result.extract() as FundingRequest).certificateSkillsCost
+        (result.extract() as FundingRequest).certificateSkillsCost.toNumber()
       ).toEqual(0);
       expect(
         (result.extract() as FundingRequest).certificateSkillsHourCount
@@ -834,13 +851,13 @@ describe("funding request", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
         certificateSkills: "     ",
-        certificateSkillsCost: 20,
+        certificateSkillsCost: new Decimal(20),
         certificateSkillsHourCount: 2,
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
       expect(
-        (result.extract() as FundingRequest).certificateSkillsCost
+        (result.extract() as FundingRequest).certificateSkillsCost.toNumber()
       ).toEqual(0);
       expect(
         (result.extract() as FundingRequest).certificateSkillsHourCount
@@ -851,13 +868,13 @@ describe("funding request", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
         certificateSkills: "RNCP123",
-        certificateSkillsCost: 20,
+        certificateSkillsCost: new Decimal(20),
         certificateSkillsHourCount: 2,
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
       expect(
-        (result.extract() as FundingRequest).certificateSkillsCost
+        (result.extract() as FundingRequest).certificateSkillsCost.toNumber()
       ).toEqual(20);
       expect(
         (result.extract() as FundingRequest).certificateSkillsHourCount
@@ -1040,21 +1057,21 @@ describe("funding request", () => {
         candidacyId: "1234",
         fundingRequest: {
           ...defaultValidFundingRequest,
-          diagnosisCost: 10,
+          diagnosisCost: new Decimal(10),
           diagnosisHourCount: 2,
-          postExamCost: 10,
+          postExamCost: new Decimal(10),
           postExamHourCount: 2,
-          basicSkillsCost: 0,
+          basicSkillsCost: new Decimal(0),
           basicSkillsHourCount: 0,
-          certificateSkillsCost: 0,
+          certificateSkillsCost: new Decimal(0),
           certificateSkillsHourCount: 0,
-          collectiveCost: 0,
+          collectiveCost: new Decimal(0),
           collectiveHourCount: 0,
-          examCost: 0,
+          examCost: new Decimal(0),
           examHourCount: 0,
-          individualCost: 0,
+          individualCost: new Decimal(0),
           individualHourCount: 0,
-          mandatoryTrainingsCost: 0,
+          mandatoryTrainingsCost: new Decimal(0),
           mandatoryTrainingsHourCount: 0,
         },
       });

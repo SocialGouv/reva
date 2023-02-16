@@ -1,3 +1,5 @@
+import { Decimal } from "@prisma/client/runtime";
+
 import { Degree, Organism } from "./candidacy";
 
 export interface VulnerabilityIndicator {
@@ -47,28 +49,28 @@ export interface TrainingForm {
 
 export interface FundingRequest {
   basicSkills: any;
-  basicSkillsCost: number;
+  basicSkillsCost: Decimal;
   basicSkillsHourCount: number;
   candidacyId: string;
   certificateSkills: string;
-  certificateSkillsCost: number;
+  certificateSkillsCost: Decimal;
   certificateSkillsHourCount: number;
-  collectiveCost: number;
+  collectiveCost: Decimal;
   collectiveHourCount: number;
-  diagnosisCost: number;
+  diagnosisCost: Decimal;
   diagnosisHourCount: number;
-  examCost: number;
+  examCost: Decimal;
   examHourCount: number;
   id: string;
-  individualCost: number;
+  individualCost: Decimal;
   individualHourCount: number;
   mandatoryTrainings: any;
-  mandatoryTrainingsCost: number;
+  mandatoryTrainingsCost: Decimal;
   mandatoryTrainingsHourCount: number;
   otherTraining: string;
-  postExamCost: number;
+  postExamCost: Decimal;
   postExamHourCount: number;
-  totalCost?: number;
+  totalCost?: Decimal;
   companion: Organism | null;
   numAction: string;
 }

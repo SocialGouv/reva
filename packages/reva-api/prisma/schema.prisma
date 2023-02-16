@@ -421,25 +421,25 @@ model FundingRequest {
   companion                   Organism?                     @relation(fields: [companionId], references: [id], onDelete: Cascade)
   companionId                 String?                       @map("companion_id") @db.Uuid
   diagnosisHourCount          Int                           @map("diagnosis_hour_count")
-  diagnosisCost               Int                           @map("diagnosis_cost")
+  diagnosisCost               Decimal                       @map("diagnosis_cost") @db.Decimal(10, 2)
   postExamHourCount           Int                           @map("post_exam_hour_count")
-  postExamCost                Int                           @map("post_exam_cost")
+  postExamCost                Decimal                       @map("post_exam_cost") @db.Decimal(10, 2)
   individualHourCount         Int                           @map("individual_hour_count")
-  individualCost              Int                           @map("individual_cost")
+  individualCost              Decimal                       @map("individual_cost") @db.Decimal(10, 2)
   collectiveHourCount         Int                           @map("collective_hour_count")
-  collectiveCost              Int                           @map("collective_cost")
+  collectiveCost              Decimal                       @map("collective_cost") @db.Decimal(10, 2)
   basicSkills                 BasicSkillOnFundingRequests[]
   basicSkillsHourCount        Int                           @map("basic_skills_hour_count")
-  basicSkillsCost             Int                           @map("basic_skills_cost")
+  basicSkillsCost             Decimal                       @map("basic_skills_cost") @db.Decimal(10, 2)
   mandatoryTrainings          TrainingOnFundingRequests[]
   mandatoryTrainingsHourCount Int                           @map("mandatory_training_hour_count")
-  mandatoryTrainingsCost      Int                           @map("mandatory_training_cost")
+  mandatoryTrainingsCost      Decimal                       @map("mandatory_training_cost") @db.Decimal(10, 2)
   certificateSkills           String                        @map("certificate_skills")
   certificateSkillsHourCount  Int                           @map("certificate_skills_hour_count")
-  certificateSkillsCost       Int                           @map("certificate_skills_cost")
+  certificateSkillsCost       Decimal                       @map("certificate_skills_cost") @db.Decimal(10, 2)
   otherTraining               String                        @map("other_training")
   examHourCount               Int                           @map("exam_hour_count")
-  examCost                    Int                           @map("exam_cost")
+  examCost                    Decimal                       @map("exam_cost") @db.Decimal(10, 2)
   fundingRequestBatch         FundingRequestBatch?
   numAction                   String                        @default("TO_MIGRATE") @map("num_action")
 
@@ -595,5 +595,5 @@ model SubscriptionRequest {
   accountLastname       String      @map("account_lastname") @db.VarChar(100)
   accountEmail          String      @map("account_email") @db.VarChar(255)
   accountPhoneNumber    String      @map("account_phone_number") @db.VarChar(50)
-  createdAt             DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  createdAt             DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
 }

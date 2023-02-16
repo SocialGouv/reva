@@ -1,3 +1,4 @@
+import { Decimal } from "@prisma/client/runtime";
 import { Either, EitherAsync, Left, Right } from "purify-ts";
 
 import { Role } from "../../../../domain/types/account";
@@ -58,25 +59,25 @@ export const validateFundingRequest =
 
     if (isCandidateBacNonFragile) {
       fundingRequest.mandatoryTrainingsHourCount = 0;
-      fundingRequest.mandatoryTrainingsCost = 0;
+      fundingRequest.mandatoryTrainingsCost = new Decimal(0);
       fundingRequest.basicSkillsHourCount = 0;
-      fundingRequest.basicSkillsCost = 0;
-      fundingRequest.certificateSkillsCost = 0;
+      fundingRequest.basicSkillsCost = new Decimal(0);
+      fundingRequest.certificateSkillsCost = new Decimal(0);
       fundingRequest.certificateSkillsHourCount = 0;
     }
 
     if (!fundingRequest.mandatoryTrainingsIds.length) {
       fundingRequest.mandatoryTrainingsHourCount = 0;
-      fundingRequest.mandatoryTrainingsCost = 0;
+      fundingRequest.mandatoryTrainingsCost = new Decimal(0);
     }
 
     if (!fundingRequest.basicSkillsIds.length) {
-      fundingRequest.basicSkillsCost = 0;
+      fundingRequest.basicSkillsCost = new Decimal(0);
       fundingRequest.basicSkillsHourCount = 0;
     }
 
     if (!fundingRequest.certificateSkills?.trim().length) {
-      fundingRequest.certificateSkillsCost = 0;
+      fundingRequest.certificateSkillsCost = new Decimal(0);
       fundingRequest.certificateSkillsHourCount = 0;
     }
 
@@ -99,13 +100,13 @@ export const validateFundingRequest =
       );
     }
 
-    if (!isLower70(fundingRequest.diagnosisCost)) {
+    if (!isLower70(fundingRequest.diagnosisCost.toNumber())) {
       errors.push(
         "Le coût horaire demandé pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 0 et 70 euros."
       );
     }
 
-    if (!isLower70(fundingRequest.postExamCost)) {
+    if (!isLower70(fundingRequest.postExamCost.toNumber())) {
       errors.push(
         "Le coût horaire demandé pour la prestation de l'Architecte de Parcours Post Jury doit être compris entre 0 et 70 euros."
       );
@@ -124,7 +125,7 @@ export const validateFundingRequest =
       );
     }
 
-    if (!isLower70(fundingRequest.individualCost)) {
+    if (!isLower70(fundingRequest.individualCost.toNumber())) {
       errors.push(
         "Le coût horaire demandé pour la prestation d'Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 70 euros."
       );
@@ -143,13 +144,13 @@ export const validateFundingRequest =
       );
     }
 
-    if (!isLower35(fundingRequest.collectiveCost)) {
+    if (!isLower35(fundingRequest.collectiveCost.toNumber())) {
       errors.push(
         "Le coût horaire demandé pour la prestation Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 35 euros."
       );
     }
 
-    if (!isLower20(fundingRequest.basicSkillsCost)) {
+    if (!isLower20(fundingRequest.basicSkillsCost.toNumber())) {
       errors.push(
         "Le coût horaire demandé pour la prestation Compléments formatifs Savoirs de base doit être compris entre 0 et 20 euros."
       );
@@ -172,19 +173,19 @@ export const validateFundingRequest =
         "Le nombre d'heures demandé pour la prestation Jury doit être compris entre 0 et 2h."
       );
     }
-    if (!isLower20(fundingRequest.examCost)) {
+    if (!isLower20(fundingRequest.examCost.toNumber())) {
       errors.push(
         "Le coût horaire demandé pour la prestation Jury doit être compris entre 0 et 20 euros."
       );
     }
 
-    if (!isLower20(fundingRequest.mandatoryTrainingsCost)) {
+    if (!isLower20(fundingRequest.mandatoryTrainingsCost.toNumber())) {
       errors.push(
         "Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 20 euros."
       );
     }
 
-    if (!isLower20(fundingRequest.certificateSkillsCost)) {
+    if (!isLower20(fundingRequest.certificateSkillsCost.toNumber())) {
       errors.push(
         "Le coût horaire demandé pour la prestation Compléments formatifs Blocs de compétences doit être compris entre 0 et 20 euros."
       );
@@ -199,17 +200,35 @@ export const validateFundingRequest =
         )
       );
     } else {
-      fundingRequest.totalCost =
-        fundingRequest.basicSkillsCost * fundingRequest.basicSkillsHourCount +
-        fundingRequest.certificateSkillsCost *
-          fundingRequest.certificateSkillsHourCount +
-        fundingRequest.collectiveCost * fundingRequest.collectiveHourCount +
-        fundingRequest.diagnosisCost * fundingRequest.diagnosisHourCount +
-        fundingRequest.examCost * fundingRequest.examHourCount +
-        fundingRequest.individualCost * fundingRequest.individualHourCount +
-        fundingRequest.mandatoryTrainingsCost *
-          fundingRequest.mandatoryTrainingsHourCount +
-        fundingRequest.postExamCost * fundingRequest.postExamHourCount;
+      fundingRequest.totalCost = fundingRequest.basicSkillsCost
+        .times(fundingRequest.basicSkillsHourCount)
+        .plus(
+          fundingRequest.certificateSkillsCost.times(
+            fundingRequest.certificateSkillsHourCount
+          )
+        )
+        .plus(
+          fundingRequest.collectiveCost.times(
+            fundingRequest.collectiveHourCount
+          )
+        )
+        .plus(
+          fundingRequest.diagnosisCost.times(fundingRequest.diagnosisHourCount)
+        )
+        .plus(fundingRequest.examCost.times(fundingRequest.examHourCount))
+        .plus(
+          fundingRequest.individualCost.times(
+            fundingRequest.individualHourCount
+          )
+        )
+        .plus(
+          fundingRequest.mandatoryTrainingsCost.times(
+            fundingRequest.mandatoryTrainingsHourCount
+          )
+        )
+        .plus(
+          fundingRequest.postExamCost.times(fundingRequest.postExamHourCount)
+        );
 
       return Right(fundingRequest);
     }
@@ -227,20 +246,24 @@ export const checkDropoutConditions = (
         case "PARCOURS_CONFIRME": {
           // in case of dropout, the funding request can only be made for those specific satus and can only include diagnosis and post exam costs
           if (
-            fundingRequest.individualCost * fundingRequest.individualHourCount >
-              0 ||
-            fundingRequest.collectiveCost * fundingRequest.collectiveHourCount >
-              0 ||
-            fundingRequest.mandatoryTrainings *
-              fundingRequest.mandatoryTrainingsCost >
-              0 ||
-            fundingRequest.basicSkillsCost *
-              fundingRequest.basicSkillsHourCount >
-              0 ||
-            fundingRequest.certificateSkillsCost *
-              fundingRequest.certificateSkillsHourCount >
-              0 ||
-            fundingRequest.examCost * fundingRequest.examHourCount > 0
+            fundingRequest.individualCost
+              .times(fundingRequest.individualHourCount)
+              .greaterThan(0) ||
+            fundingRequest.collectiveCost
+              .times(fundingRequest.collectiveHourCount)
+              .greaterThan(0) ||
+            fundingRequest.mandatoryTrainingsCost
+              .times(fundingRequest.mandatoryTrainingsCost)
+              .greaterThan(0) ||
+            fundingRequest.basicSkillsCost
+              .times(fundingRequest.basicSkillsHourCount)
+              .greaterThan(0) ||
+            fundingRequest.certificateSkillsCost
+              .times(fundingRequest.certificateSkillsHourCount)
+              .greaterThan(0) ||
+            fundingRequest.examCost
+              .times(fundingRequest.examHourCount)
+              .greaterThan(0)
           ) {
             return Left(
               new FunctionalError(
@@ -485,39 +508,41 @@ export const mapFundingRequestBatch = ({
       NiveauObtenuCandidat: getNiveauObtenuCandidat(candidate.highestDegree),
       IndPublicFragile: getIndPublicFragile(candidate.vulnerabilityIndicator),
       NbHeureDemAPDiag: fundingRequest.diagnosisHourCount,
-      CoutHeureDemAPDiag: fundingRequest.diagnosisCost,
+      CoutHeureDemAPDiag: fundingRequest.diagnosisCost.toNumber(),
       NbHeureDemAPPostJury: fundingRequest.postExamHourCount,
-      CoutHeureDemAPPostJury: fundingRequest.postExamCost,
+      CoutHeureDemAPPostJury: fundingRequest.postExamCost.toNumber(),
       NbHeureDemAccVAEInd: fundingRequest.individualHourCount,
-      CoutHeureDemAccVAEInd: fundingRequest.individualCost,
+      CoutHeureDemAccVAEInd: fundingRequest.individualCost.toNumber(),
       NbHeureDemAccVAEColl: fundingRequest.collectiveHourCount,
-      CoutHeureDemAccVAEColl: fundingRequest.collectiveCost,
+      CoutHeureDemAccVAEColl: fundingRequest.collectiveCost.toNumber(),
       ActeFormatifComplémentaire_FormationObligatoire:
         getActeFormatifComplémentaire_FormationObligatoire(
           fundingRequest.mandatoryTrainings
         ).join(","),
       NbHeureDemComplFormObligatoire:
         fundingRequest.mandatoryTrainingsHourCount,
-      CoutHeureDemComplFormObligatoire: fundingRequest.mandatoryTrainingsCost,
+      CoutHeureDemComplFormObligatoire:
+        fundingRequest.mandatoryTrainingsCost.toNumber(),
       ActeFormatifComplémentaire_SavoirsDeBase:
         getActeFormatifComplémentaire_SavoirsDeBase(
           fundingRequest.basicSkills
         ).join(","),
       NbHeureDemComplFormSavoirsDeBase: fundingRequest.basicSkillsHourCount,
-      CoutHeureDemComplFormSavoirsDeBase: fundingRequest.basicSkillsCost,
+      CoutHeureDemComplFormSavoirsDeBase:
+        fundingRequest.basicSkillsCost.toNumber(),
       ActeFormatifComplémentaire_BlocDeCompetencesCertifiant:
         fundingRequest.certificateSkills,
       NbHeureDemComplFormBlocDeCompetencesCertifiant:
         fundingRequest.certificateSkillsHourCount,
       CoutHeureDemComplFormBlocDeCompetencesCertifiant:
-        fundingRequest.certificateSkillsCost,
+        fundingRequest.certificateSkillsCost.toNumber(),
       ActeFormatifComplémentaire_Autre: fundingRequest.otherTraining,
       NbHeureDemTotalActesFormatifs:
         fundingRequest.mandatoryTrainingsHourCount +
         fundingRequest.basicSkillsHourCount +
         fundingRequest.certificateSkillsHourCount,
       NbHeureDemJury: fundingRequest.examHourCount,
-      CoutHeureJury: fundingRequest.examCost,
+      CoutHeureJury: fundingRequest.examCost.toNumber(),
     };
     return batchContent;
   }
