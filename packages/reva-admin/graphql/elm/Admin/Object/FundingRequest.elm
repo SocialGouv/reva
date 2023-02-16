@@ -41,9 +41,9 @@ diagnosisHourCount =
     Object.selectionForField "Int" "diagnosisHourCount" [] Decode.int
 
 
-diagnosisCost : SelectionSet Int Admin.Object.FundingRequest
+diagnosisCost : SelectionSet Data.Scalar.Decimal Admin.Object.FundingRequest
 diagnosisCost =
-    Object.selectionForField "Int" "diagnosisCost" [] Decode.int
+    Object.selectionForField "Data.Scalar.Decimal" "diagnosisCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
 
 
 postExamHourCount : SelectionSet Int Admin.Object.FundingRequest
@@ -51,9 +51,9 @@ postExamHourCount =
     Object.selectionForField "Int" "postExamHourCount" [] Decode.int
 
 
-postExamCost : SelectionSet Int Admin.Object.FundingRequest
+postExamCost : SelectionSet Data.Scalar.Decimal Admin.Object.FundingRequest
 postExamCost =
-    Object.selectionForField "Int" "postExamCost" [] Decode.int
+    Object.selectionForField "Data.Scalar.Decimal" "postExamCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
 
 
 individualHourCount : SelectionSet Int Admin.Object.FundingRequest
@@ -61,9 +61,9 @@ individualHourCount =
     Object.selectionForField "Int" "individualHourCount" [] Decode.int
 
 
-individualCost : SelectionSet Int Admin.Object.FundingRequest
+individualCost : SelectionSet Data.Scalar.Decimal Admin.Object.FundingRequest
 individualCost =
-    Object.selectionForField "Int" "individualCost" [] Decode.int
+    Object.selectionForField "Data.Scalar.Decimal" "individualCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
 
 
 collectiveHourCount : SelectionSet Int Admin.Object.FundingRequest
@@ -71,9 +71,9 @@ collectiveHourCount =
     Object.selectionForField "Int" "collectiveHourCount" [] Decode.int
 
 
-collectiveCost : SelectionSet Int Admin.Object.FundingRequest
+collectiveCost : SelectionSet Data.Scalar.Decimal Admin.Object.FundingRequest
 collectiveCost =
-    Object.selectionForField "Int" "collectiveCost" [] Decode.int
+    Object.selectionForField "Data.Scalar.Decimal" "collectiveCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
 
 
 basicSkills :
@@ -88,9 +88,9 @@ basicSkillsHourCount =
     Object.selectionForField "Int" "basicSkillsHourCount" [] Decode.int
 
 
-basicSkillsCost : SelectionSet Int Admin.Object.FundingRequest
+basicSkillsCost : SelectionSet Data.Scalar.Decimal Admin.Object.FundingRequest
 basicSkillsCost =
-    Object.selectionForField "Int" "basicSkillsCost" [] Decode.int
+    Object.selectionForField "Data.Scalar.Decimal" "basicSkillsCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
 
 
 mandatoryTrainings :
@@ -105,9 +105,9 @@ mandatoryTrainingsHourCount =
     Object.selectionForField "Int" "mandatoryTrainingsHourCount" [] Decode.int
 
 
-mandatoryTrainingsCost : SelectionSet Int Admin.Object.FundingRequest
+mandatoryTrainingsCost : SelectionSet Data.Scalar.Decimal Admin.Object.FundingRequest
 mandatoryTrainingsCost =
-    Object.selectionForField "Int" "mandatoryTrainingsCost" [] Decode.int
+    Object.selectionForField "Data.Scalar.Decimal" "mandatoryTrainingsCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
 
 
 certificateSkills : SelectionSet String Admin.Object.FundingRequest
@@ -120,9 +120,9 @@ certificateSkillsHourCount =
     Object.selectionForField "Int" "certificateSkillsHourCount" [] Decode.int
 
 
-certificateSkillsCost : SelectionSet Int Admin.Object.FundingRequest
+certificateSkillsCost : SelectionSet Data.Scalar.Decimal Admin.Object.FundingRequest
 certificateSkillsCost =
-    Object.selectionForField "Int" "certificateSkillsCost" [] Decode.int
+    Object.selectionForField "Data.Scalar.Decimal" "certificateSkillsCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
 
 
 otherTraining : SelectionSet String Admin.Object.FundingRequest
@@ -135,6 +135,6 @@ examHourCount =
     Object.selectionForField "Int" "examHourCount" [] Decode.int
 
 
-examCost : SelectionSet Int Admin.Object.FundingRequest
+examCost : SelectionSet Data.Scalar.Decimal Admin.Object.FundingRequest
 examCost =
-    Object.selectionForField "Int" "examCost" [] Decode.int
+    Object.selectionForField "Data.Scalar.Decimal" "examCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)

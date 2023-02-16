@@ -1,5 +1,6 @@
 module Data.Form.FundingRequest exposing (FundingRequestInformations, FundingRequestInput, TrainingForm, fromDict, fundingRequest, fundingRequestInformations, keys, validate)
 
+import Admin.Scalar exposing (Decimal)
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Form.Helper as Helper
@@ -27,26 +28,26 @@ type alias FundingRequestInformations =
 type alias FundingRequestInput =
     { companionId : Maybe String
     , diagnosisHourCount : Int
-    , diagnosisCost : Int
+    , diagnosisCost : Decimal
     , postExamHourCount : Int
-    , postExamCost : Int
+    , postExamCost : Decimal
     , individualHourCount : Int
-    , individualCost : Int
+    , individualCost : Decimal
     , collectiveHourCount : Int
-    , collectiveCost : Int
+    , collectiveCost : Decimal
     , basicSkillsIds : List String
     , basicSkillsHourCount : Int
-    , basicSkillsCost : Int
+    , basicSkillsCost : Decimal
     , mandatoryTrainingIds : List String
     , mandatoryTrainingsHourCount : Int
-    , mandatoryTrainingsCost : Int
+    , mandatoryTrainingsCost : Decimal
     , numAction : Maybe String
     , certificateSkills : String
     , certificateSkillsHourCount : Int
-    , certificateSkillsCost : Int
+    , certificateSkillsCost : Decimal
     , otherTraining : String
     , examHourCount : Int
-    , examCost : Int
+    , examCost : Decimal
     }
 
 
@@ -112,26 +113,26 @@ fromDict basicSkillsIds mandatoryTrainingIds formData =
     FundingRequestInput
         (decode.maybe.string .companionId)
         (decode.int .diagnosisHourCount 0)
-        (decode.int .diagnosisCost 0)
+        (decode.decimal .diagnosisCost (Admin.Scalar.Decimal "0"))
         (decode.int .postExamHourCount 0)
-        (decode.int .postExamCost 0)
+        (decode.decimal .postExamCost (Admin.Scalar.Decimal "0"))
         (decode.int .individualHourCount 0)
-        (decode.int .individualCost 0)
+        (decode.decimal .individualCost (Admin.Scalar.Decimal "0"))
         (decode.int .collectiveHourCount 0)
-        (decode.int .collectiveCost 0)
+        (decode.decimal .collectiveCost (Admin.Scalar.Decimal "0"))
         (decode.list basicSkillsIds)
         (decode.int .basicSkillsHourCount 0)
-        (decode.int .basicSkillsCost 0)
+        (decode.decimal .basicSkillsCost (Admin.Scalar.Decimal "0"))
         (decode.list mandatoryTrainingIds)
         (decode.int .mandatoryTrainingsHourCount 0)
-        (decode.int .mandatoryTrainingsCost 0)
+        (decode.decimal .mandatoryTrainingsCost (Admin.Scalar.Decimal "0"))
         (decode.maybe.string .numAction)
         (decode.string .certificateSkills "")
         (decode.int .certificateSkillsHourCount 0)
-        (decode.int .certificateSkillsCost 0)
+        (decode.decimal .certificateSkillsCost (Admin.Scalar.Decimal "0"))
         (decode.string .otherTraining "")
         (decode.int .examHourCount 0)
-        (decode.int .examCost 0)
+        (decode.decimal .examCost (Admin.Scalar.Decimal "0"))
 
 
 fundingRequest : FundingRequestInput -> Dict String String
@@ -143,6 +144,9 @@ fundingRequest funding =
         int key =
             Just <| String.fromInt <| key funding
 
+        decimal key =
+            Just <| Helper.decimalToString <| key funding
+
         mandatoryTrainingsChecked =
             Helper.toCheckedList funding.mandatoryTrainingIds
 
@@ -152,24 +156,24 @@ fundingRequest funding =
         fundingList =
             [ ( .companionId, string (.companionId >> Maybe.withDefault "") )
             , ( .diagnosisHourCount, int .diagnosisHourCount )
-            , ( .diagnosisCost, int .diagnosisCost )
+            , ( .diagnosisCost, decimal .diagnosisCost )
             , ( .postExamHourCount, int .postExamHourCount )
-            , ( .postExamCost, int .postExamCost )
+            , ( .postExamCost, decimal .postExamCost )
             , ( .individualHourCount, int .individualHourCount )
-            , ( .individualCost, int .individualCost )
+            , ( .individualCost, decimal .individualCost )
             , ( .collectiveHourCount, int .collectiveHourCount )
-            , ( .collectiveCost, int .collectiveCost )
+            , ( .collectiveCost, decimal .collectiveCost )
             , ( .basicSkillsHourCount, int .basicSkillsHourCount )
-            , ( .basicSkillsCost, int .basicSkillsCost )
+            , ( .basicSkillsCost, decimal .basicSkillsCost )
             , ( .mandatoryTrainingsHourCount, int .mandatoryTrainingsHourCount )
-            , ( .mandatoryTrainingsCost, int .mandatoryTrainingsCost )
+            , ( .mandatoryTrainingsCost, decimal .mandatoryTrainingsCost )
             , ( .numAction, funding.numAction )
             , ( .certificateSkills, string .certificateSkills )
             , ( .certificateSkillsHourCount, int .certificateSkillsHourCount )
-            , ( .certificateSkillsCost, int .certificateSkillsCost )
+            , ( .certificateSkillsCost, decimal .certificateSkillsCost )
             , ( .otherTraining, string .otherTraining )
             , ( .examHourCount, int .examHourCount )
-            , ( .examCost, int .examCost )
+            , ( .examCost, decimal .examCost )
             ]
                 |> Helper.toKeyedList keys
     in

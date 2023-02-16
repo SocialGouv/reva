@@ -130,28 +130,31 @@ fundingList funding =
 
         int key =
             Just <| String.fromInt <| key funding
+
+        decimal key =
+            Just <| Helper.decimalToString <| key funding
     in
     [ ( .numAction, funding.numAction )
     , ( .companionId, string (.companionId >> Maybe.withDefault "") )
     , ( .diagnosisEstimatedHourCount, int .diagnosisHourCount )
-    , ( .diagnosisCost, int .diagnosisCost )
+    , ( .diagnosisCost, decimal .diagnosisCost )
     , ( .postExamEstimatedHourCount, int .postExamHourCount )
-    , ( .postExamCost, int .postExamCost )
+    , ( .postExamCost, decimal .postExamCost )
     , ( .individualEstimatedHourCount, int .individualHourCount )
-    , ( .individualCost, int .individualCost )
+    , ( .individualCost, decimal .individualCost )
     , ( .collectiveEstimatedHourCount, int .collectiveHourCount )
-    , ( .collectiveCost, int .collectiveCost )
+    , ( .collectiveCost, decimal .collectiveCost )
     , ( .basicSkillsEstimatedHourCount, int .basicSkillsHourCount )
-    , ( .basicSkillsCost, int .basicSkillsCost )
+    , ( .basicSkillsCost, decimal .basicSkillsCost )
     , ( .mandatoryTrainingsEstimatedHourCount, int .mandatoryTrainingsHourCount )
-    , ( .mandatoryTrainingsCost, int .mandatoryTrainingsCost )
+    , ( .mandatoryTrainingsCost, decimal .mandatoryTrainingsCost )
     , ( .numAction, funding.numAction )
     , ( .certificateSkills, string .certificateSkills )
     , ( .certificateSkillsEstimatedHourCount, int .certificateSkillsHourCount )
-    , ( .certificateSkillsCost, int .certificateSkillsCost )
+    , ( .certificateSkillsCost, decimal .certificateSkillsCost )
     , ( .otherTraining, string .otherTraining )
     , ( .examEstimatedHourCount, int .examHourCount )
-    , ( .examCost, int .examCost )
+    , ( .examCost, decimal .examCost )
     ]
         |> Helper.toKeyedList keys
 

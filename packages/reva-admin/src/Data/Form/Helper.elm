@@ -3,6 +3,8 @@ module Data.Form.Helper exposing
     , booleanToString
     , dateFromString
     , dateToString
+    , decimalFromString
+    , decimalToString
     , decode
     , generic
     , maybe
@@ -14,7 +16,7 @@ module Data.Form.Helper exposing
     , uuidToCheckedList
     )
 
-import Admin.Scalar exposing (Uuid(..))
+import Admin.Scalar exposing (Decimal, Uuid(..))
 import Data.Form exposing (FormData)
 import Data.Scalar exposing (Timestamp)
 import Date
@@ -53,6 +55,18 @@ dateToString : Timestamp -> String
 dateToString time =
     Date.fromPosix Time.utc time
         |> Date.toIsoString
+
+
+decimalFromString : String -> Decimal
+decimalFromString stringValue =
+    Admin.Scalar.Decimal stringValue
+
+
+decimalToString : Decimal -> String
+decimalToString decimalValue =
+    case decimalValue of
+        Admin.Scalar.Decimal value ->
+            value
 
 
 maybe :
@@ -98,6 +112,11 @@ int keys dict key default =
     generic keys dict key (String.toInt >> Maybe.withDefault default) default
 
 
+decimal : keys -> Dict.Dict String String -> (keys -> String) -> Decimal -> Decimal
+decimal keys dict key default =
+    generic keys dict key decimalFromString default
+
+
 string : keys -> Dict.Dict String String -> (keys -> String) -> String -> String
 string keys dict key default =
     generic keys dict key identity default
@@ -132,6 +151,7 @@ decode :
         , date : (a -> String) -> Timestamp -> Timestamp
         , generic : (a -> String) -> (String -> data) -> data -> data
         , int : (a -> String) -> Int -> Int
+        , decimal : (a -> String) -> Decimal -> Decimal
         , list : List { b | id : String } -> List String
         , string : (a -> String) -> String -> String
         , maybe : { date : (a -> String) -> Maybe Timestamp -> Maybe Timestamp, string : (a -> String) -> Maybe String }
@@ -145,6 +165,7 @@ decode keys formData =
     , date = date keys dict
     , generic = generic keys dict
     , int = int keys dict
+    , decimal = decimal keys dict
     , list = selection formData
     , string = string keys dict
     , maybe =

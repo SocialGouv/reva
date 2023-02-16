@@ -457,25 +457,25 @@ buildFundingRequestInput required____ fillOptionals____ =
 
 type alias FundingRequestInputRequiredFields =
     { diagnosisHourCount : Int
-    , diagnosisCost : Int
+    , diagnosisCost : Data.Scalar.Decimal
     , postExamHourCount : Int
-    , postExamCost : Int
+    , postExamCost : Data.Scalar.Decimal
     , individualHourCount : Int
-    , individualCost : Int
+    , individualCost : Data.Scalar.Decimal
     , collectiveHourCount : Int
-    , collectiveCost : Int
+    , collectiveCost : Data.Scalar.Decimal
     , basicSkillsIds : List Data.Scalar.Uuid
     , basicSkillsHourCount : Int
-    , basicSkillsCost : Int
+    , basicSkillsCost : Data.Scalar.Decimal
     , mandatoryTrainingsIds : List Data.Scalar.Uuid
     , mandatoryTrainingsHourCount : Int
-    , mandatoryTrainingsCost : Int
+    , mandatoryTrainingsCost : Data.Scalar.Decimal
     , certificateSkills : String
     , certificateSkillsHourCount : Int
-    , certificateSkillsCost : Int
+    , certificateSkillsCost : Data.Scalar.Decimal
     , otherTraining : String
     , examHourCount : Int
-    , examCost : Int
+    , examCost : Data.Scalar.Decimal
     }
 
 
@@ -488,25 +488,25 @@ type alias FundingRequestInputOptionalFields =
 type alias FundingRequestInput =
     { companionId : OptionalArgument Data.Scalar.Uuid
     , diagnosisHourCount : Int
-    , diagnosisCost : Int
+    , diagnosisCost : Data.Scalar.Decimal
     , postExamHourCount : Int
-    , postExamCost : Int
+    , postExamCost : Data.Scalar.Decimal
     , individualHourCount : Int
-    , individualCost : Int
+    , individualCost : Data.Scalar.Decimal
     , collectiveHourCount : Int
-    , collectiveCost : Int
+    , collectiveCost : Data.Scalar.Decimal
     , basicSkillsIds : List Data.Scalar.Uuid
     , basicSkillsHourCount : Int
-    , basicSkillsCost : Int
+    , basicSkillsCost : Data.Scalar.Decimal
     , mandatoryTrainingsIds : List Data.Scalar.Uuid
     , mandatoryTrainingsHourCount : Int
-    , mandatoryTrainingsCost : Int
+    , mandatoryTrainingsCost : Data.Scalar.Decimal
     , certificateSkills : String
     , certificateSkillsHourCount : Int
-    , certificateSkillsCost : Int
+    , certificateSkillsCost : Data.Scalar.Decimal
     , otherTraining : String
     , examHourCount : Int
-    , examCost : Int
+    , examCost : Data.Scalar.Decimal
     }
 
 
@@ -515,7 +515,7 @@ type alias FundingRequestInput =
 encodeFundingRequestInput : FundingRequestInput -> Value
 encodeFundingRequestInput input____ =
     Encode.maybeObject
-        [ ( "companionId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.companionId ), ( "diagnosisHourCount", Encode.int input____.diagnosisHourCount |> Just ), ( "diagnosisCost", Encode.int input____.diagnosisCost |> Just ), ( "postExamHourCount", Encode.int input____.postExamHourCount |> Just ), ( "postExamCost", Encode.int input____.postExamCost |> Just ), ( "individualHourCount", Encode.int input____.individualHourCount |> Just ), ( "individualCost", Encode.int input____.individualCost |> Just ), ( "collectiveHourCount", Encode.int input____.collectiveHourCount |> Just ), ( "collectiveCost", Encode.int input____.collectiveCost |> Just ), ( "basicSkillsIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.basicSkillsIds |> Just ), ( "basicSkillsHourCount", Encode.int input____.basicSkillsHourCount |> Just ), ( "basicSkillsCost", Encode.int input____.basicSkillsCost |> Just ), ( "mandatoryTrainingsIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.mandatoryTrainingsIds |> Just ), ( "mandatoryTrainingsHourCount", Encode.int input____.mandatoryTrainingsHourCount |> Just ), ( "mandatoryTrainingsCost", Encode.int input____.mandatoryTrainingsCost |> Just ), ( "certificateSkills", Encode.string input____.certificateSkills |> Just ), ( "certificateSkillsHourCount", Encode.int input____.certificateSkillsHourCount |> Just ), ( "certificateSkillsCost", Encode.int input____.certificateSkillsCost |> Just ), ( "otherTraining", Encode.string input____.otherTraining |> Just ), ( "examHourCount", Encode.int input____.examHourCount |> Just ), ( "examCost", Encode.int input____.examCost |> Just ) ]
+        [ ( "companionId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.companionId ), ( "diagnosisHourCount", Encode.int input____.diagnosisHourCount |> Just ), ( "diagnosisCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.diagnosisCost |> Just ), ( "postExamHourCount", Encode.int input____.postExamHourCount |> Just ), ( "postExamCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.postExamCost |> Just ), ( "individualHourCount", Encode.int input____.individualHourCount |> Just ), ( "individualCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.individualCost |> Just ), ( "collectiveHourCount", Encode.int input____.collectiveHourCount |> Just ), ( "collectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.collectiveCost |> Just ), ( "basicSkillsIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.basicSkillsIds |> Just ), ( "basicSkillsHourCount", Encode.int input____.basicSkillsHourCount |> Just ), ( "basicSkillsCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.basicSkillsCost |> Just ), ( "mandatoryTrainingsIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.mandatoryTrainingsIds |> Just ), ( "mandatoryTrainingsHourCount", Encode.int input____.mandatoryTrainingsHourCount |> Just ), ( "mandatoryTrainingsCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.mandatoryTrainingsCost |> Just ), ( "certificateSkills", Encode.string input____.certificateSkills |> Just ), ( "certificateSkillsHourCount", Encode.int input____.certificateSkillsHourCount |> Just ), ( "certificateSkillsCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.certificateSkillsCost |> Just ), ( "otherTraining", Encode.string input____.otherTraining |> Just ), ( "examHourCount", Encode.int input____.examHourCount |> Just ), ( "examCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.examCost |> Just ) ]
 
 
 buildPaymentRequestInput :
