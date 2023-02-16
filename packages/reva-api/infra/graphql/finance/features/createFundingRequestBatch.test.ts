@@ -1,3 +1,5 @@
+import { Decimal } from "@prisma/client/runtime";
+
 import { Candidacy, Organism } from "../../../../domain/types/candidacy";
 import {
   Candidate,
@@ -39,23 +41,23 @@ const defaultValidFundingRequest: FundingRequestInput = {
   mandatoryTrainingsIds: ["111", "222", "333", "444"],
   certificateSkills: "RCNP12 RCNP34",
   otherTraining: "other training",
-  basicSkillsCost: 20,
+  basicSkillsCost: new Decimal(20),
   basicSkillsHourCount: 1,
-  certificateSkillsCost: 20,
+  certificateSkillsCost: new Decimal(20),
   certificateSkillsHourCount: 1,
-  collectiveCost: 35,
+  collectiveCost: new Decimal(35),
   collectiveHourCount: 15,
-  diagnosisCost: 70,
+  diagnosisCost: new Decimal(70),
   diagnosisHourCount: 2,
-  examCost: 20,
+  examCost: new Decimal(20),
   examHourCount: 2,
-  individualCost: 70,
+  individualCost: new Decimal(70),
   individualHourCount: 15,
-  mandatoryTrainingsCost: 20,
+  mandatoryTrainingsCost: new Decimal(20),
   mandatoryTrainingsHourCount: 1,
-  postExamCost: 70,
+  postExamCost: new Decimal(70),
   postExamHourCount: 1,
-  totalCost: 1885,
+  totalCost: new Decimal(1885),
   companion: { siret: "1234" } as Organism,
   numAction: "reva_20221115_00000001",
 };

@@ -17,6 +17,7 @@ import * as candidacy from "./candidacy";
 import * as candidate from "./candidate";
 import { financeResolvers } from "./finance/finance.resolvers";
 import * as referential from "./referential";
+import DecimalGraphqlScalar from "./scalar/DecimalGraphqlScalar";
 import * as search from "./search";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
 
@@ -39,6 +40,7 @@ const resolvers = mergeResolvers([
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;
 resolvers.UUID = UUIDResolver;
+resolvers.Decimal = DecimalGraphqlScalar;
 
 export const graphqlConfiguration = {
   schema: makeExecutableSchema({
