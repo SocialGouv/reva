@@ -1,8 +1,8 @@
-import { Prisma } from ".prisma/client";
-import { Either, Left, Right } from "purify-ts";
+import { Either, Left, Maybe, Right } from "purify-ts";
 
 import { prismaClient } from "../../../database/postgres/client";
 import { logger } from "../../../logger";
+import { Prisma } from ".prisma/client";
 
 export const createSubscriptionRequest = async (
   subscriptionRequestInput: any
@@ -28,6 +28,20 @@ export const createSubscriptionRequest = async (
   } catch (e: any) {
     logger.error(e);
     return Left("La création de demande d'inscription a échoué");
+  }
+};
+
+export const getSubscriptionRequestById = async (
+  id: string
+): Promise<Either<string, Maybe<any>>> => {
+  try {
+    const subreq = await prismaClient.subscriptionRequest.findUnique({
+      where: { id },
+    });
+    return Right(Maybe.fromNullable(subreq));
+  } catch (e: any) {
+    logger.error(e);
+    return Left("La récupération de la demande d'inscription a échoué");
   }
 };
 
