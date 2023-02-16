@@ -209,7 +209,7 @@ totalCostSection sectionTitle formData =
     ( "totalCost"
     , Form.Info sectionTitle <|
         String.concat
-            [ String.fromInt (totalCost formData)
+            [ String.fromFloat (totalCost formData)
             , "€"
             ]
     )
@@ -261,20 +261,29 @@ totalTrainingHourCount formData =
         + int .certificateSkillsHourCount
 
 
-totalCost : FormData -> Int
+totalCost : FormData -> Float
 totalCost formData =
     let
         decode =
             Data.Form.Helper.decode keys formData
 
-        int f =
-            decode.int f 0
+        float f =
+            decode.float f 0
+
+        roundCost =
+            (\x -> x * 100)
+                >> truncate
+                >> toFloat
+                >> (\x -> x / 100)
+
+        cost =
+            (float .diagnosisHourCount * float .diagnosisCost)
+                + (float .postExamHourCount * float .postExamCost)
+                + (float .individualHourCount * float .individualCost)
+                + (float .collectiveHourCount * float .collectiveCost)
+                + (float .mandatoryTrainingsHourCount * float .mandatoryTrainingsCost)
+                + (float .basicSkillsHourCount * float .basicSkillsCost)
+                + (float .certificateSkillsHourCount * float .certificateSkillsCost)
+                + (float .examHourCount * float .examCost)
     in
-    (int .diagnosisHourCount * int .diagnosisCost)
-        + (int .postExamHourCount * int .postExamCost)
-        + (int .individualHourCount * int .individualCost)
-        + (int .collectiveHourCount * int .collectiveCost)
-        + (int .mandatoryTrainingsHourCount * int .mandatoryTrainingsCost)
-        + (int .basicSkillsHourCount * int .basicSkillsCost)
-        + (int .certificateSkillsHourCount * int .certificateSkillsCost)
-        + (int .examHourCount * int .examCost)
+    roundCost cost
