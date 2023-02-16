@@ -53,6 +53,7 @@ type Element
     | Input String
     | InputRequired String
     | Number String
+    | Price String
     | ReadOnlyElement Element
     | ReadOnlyElements (List ( String, Element ))
     | Requirements String (List String)
@@ -405,6 +406,10 @@ viewEditableElement formData ( elementId, element ) =
             inputView "number" "w-40" [ Html.Styled.Attributes.min "0" ]
                 |> withLabel label
 
+        Price label ->
+            inputView "number" "w-40" [ Html.Styled.Attributes.min "0", Html.Styled.Attributes.step "0.01" ]
+                |> withLabel label
+
         Textarea label placeholder ->
             textareaView placeholder
                 |> withLabel label
@@ -601,6 +606,12 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> withTerm label
 
         Number label ->
+            div
+                [ class "w-40" ]
+                [ dataView userEditedClass dataOrDefault ]
+                |> withTerm label
+
+        Price label ->
             div
                 [ class "w-40" ]
                 [ dataView userEditedClass dataOrDefault ]
