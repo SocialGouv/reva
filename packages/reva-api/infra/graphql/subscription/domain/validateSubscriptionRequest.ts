@@ -12,7 +12,7 @@ interface ValidateSubscriptionRequestDeps {
   getSubscriptionRequestById: (
     id: string
   ) => Promise<Either<string, Maybe<SubscriptionRequest>>>;
-  deleteSubscriptioRequestById: (id: string) => Promise<Either<string, void>>;
+  deleteSubscriptionRequestById: (id: string) => Promise<Either<string, void>>;
   getOrganismBySiret: (
     siret: string
   ) => Promise<Either<string, Maybe<Organism>>>;
@@ -53,27 +53,33 @@ export const validateSubscriptionRequest = async (
     keyCloackId?: string;
   } = {};
 
-  const getSubscriptionRequest = EitherAsync.fromPromise(async () =>
-    (await deps.getSubscriptionRequestById(params.subscriptionRequestId))
-      .mapLeft(
-        (error: string) =>
-          new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, error)
-      )
-      .ifRight((maybeSubReq) => {
-        $store.subreq = maybeSubReq.extract();
-        if (maybeSubReq.isNothing()) {
-          logger.error(
-            `La demande d'inscription ${params.subscriptionRequestId} n'existe pas`
-          );
-        }
-        return maybeSubReq.toEither(
-          new FunctionalError(
-            FunctionalCodeError.SUBSCRIPTION_REQUEST_NOT_FOUND,
-            `La demande d'inscription ${params.subscriptionRequestId} n'existe pas`
-          )
-        );
-      })
-  );
+  const getSubscriptionRequest = EitherAsync.fromPromise(async () => {
+    const eitherSubreq = await deps.getSubscriptionRequestById(
+      params.subscriptionRequestId
+    );
+    if (eitherSubreq.isLeft()) {
+      return Left(
+        new FunctionalError(
+          FunctionalCodeError.TECHNICAL_ERROR,
+          eitherSubreq.extract()
+        )
+      );
+    }
+    const maybeSubReq = eitherSubreq.extract() as Maybe<SubscriptionRequest>;
+    if (maybeSubReq.isNothing()) {
+      const errorMessage = `La demande d'inscription ${params.subscriptionRequestId} n'existe pas`;
+      logger.error(`[validateSubscriptionRequestDeps] ${errorMessage}`);
+      return Left(
+        new FunctionalError(
+          FunctionalCodeError.SUBSCRIPTION_REQUEST_NOT_FOUND,
+          errorMessage
+        )
+      );
+    }
+    const subreq = maybeSubReq.extract() as SubscriptionRequest;
+    $store.subreq = subreq;
+    return Right(subreq);
+  });
 
   const checkIfOrganismExists = EitherAsync.fromPromise(async () => {
     const eitherOrganism = await deps.getOrganismBySiret(
@@ -90,7 +96,7 @@ export const validateSubscriptionRequest = async (
     const maybeOrganism = eitherOrganism.extract() as Maybe<Organism>;
     if (maybeOrganism.isJust()) {
       const errorMessage = `Un organisme existe déjà avec le siret ${$store.subreq?.companySiret}`;
-      logger.error(errorMessage);
+      logger.error(`[validateSubscriptionRequest] ${errorMessage}`);
       return Left(
         new FunctionalError(
           FunctionalCodeError.ORGANISM_ALREADY_EXISTS,
@@ -119,7 +125,7 @@ export const validateSubscriptionRequest = async (
     const maybeAccount = eitherAccount.extract() as Maybe<Account>;
     if (maybeAccount.isJust()) {
       const errorMessage = `Un compte existe déjà avec l'email ${$store.subreq?.accountEmail}`;
-      logger.error(errorMessage);
+      logger.error(`[validateSubscriptionRequest] ${errorMessage}`);
       return Left(
         new FunctionalError(
           FunctionalCodeError.ACCOUNT_ALREADY_EXISTS,
@@ -181,7 +187,7 @@ export const validateSubscriptionRequest = async (
   );
 
   const deleteSubscriptionRequest = EitherAsync.fromPromise(async () =>
-    (await deps.deleteSubscriptioRequestById(params.subscriptionRequestId))
+    (await deps.deleteSubscriptionRequestById(params.subscriptionRequestId))
       .mapLeft(
         (error: string) =>
           new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, error)
