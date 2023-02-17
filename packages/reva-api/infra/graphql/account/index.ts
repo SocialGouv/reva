@@ -1,8 +1,7 @@
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
-import { RequiredActionAlias } from "@keycloak/keycloak-admin-client/lib/defs/requiredActionProviderRepresentation";
 import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
-import { Either, Just, Left, Maybe, Nothing, Right } from "purify-ts";
+import { Left } from "purify-ts";
 
 import { createAccount } from "../../../domain/features/createAccount";
 import {
@@ -11,75 +10,8 @@ import {
 } from "../../../domain/types/functionalError";
 import * as accountsDb from "../../database/postgres/accounts";
 import * as organismsDb from "../../database/postgres/organisms";
+import * as IAM from "../../iam/keycloak";
 
-const getAccountInIAM =
-  (keycloakAdmin: KeycloakAdminClient) =>
-  async (params: {
-    email: string;
-    username: string;
-  }): Promise<Either<string, Maybe<any>>> => {
-    try {
-      const [userByEmail] = await keycloakAdmin.users.find({
-        email: params.email,
-        exact: true,
-        realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
-      });
-
-      if (userByEmail) {
-        return Right(Just(userByEmail));
-      }
-
-      const [userByUsername] = await keycloakAdmin.users.find({
-        username: params.username,
-        exact: true,
-        realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
-      });
-
-      return Right(Maybe.fromNullable(userByUsername));
-    } catch (e) {
-      return Left(
-        `An error occured while retrieving ${params.email} or ${params.username} on IAM`
-      );
-    }
-  };
-
-const createAccountInIAM =
-  (keycloakAdmin: KeycloakAdminClient) =>
-  async (account: {
-    email: string;
-    username: string;
-    firstname?: string;
-    lastname?: string;
-    group: string;
-  }): Promise<Either<string, string>> => {
-    try {
-      const { id } = await keycloakAdmin.users.create({
-        email: account.email,
-        username: account.username,
-        groups: [account.group],
-        requiredActions: [
-          RequiredActionAlias.UPDATE_PASSWORD,
-          RequiredActionAlias.VERIFY_EMAIL,
-        ],
-        enabled: true,
-        realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
-      });
-
-      await keycloakAdmin.users.executeActionsEmail({
-        id,
-        clientId: process.env.KEYCLOAK_ADMIN_CLIENTID_REVA,
-        actions: [RequiredActionAlias.UPDATE_PASSWORD],
-        lifespan: 4 * 24 * 60 * 60, // 4 days
-        realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
-      });
-
-      return Right(id);
-    } catch (e) {
-      return Left(
-        `An error occured while creating user with ${account.email} on IAM`
-      );
-    }
-  };
 
 export const resolvers = {
   Mutation: {
@@ -120,9 +52,9 @@ export const resolvers = {
       const keycloakAdmin = await context.app.getKeycloakAdmin();
 
       const result = await createAccount({
-        createAccountInIAM: createAccountInIAM(keycloakAdmin),
+        createAccountInIAM: IAM.createAccount(keycloakAdmin),
         createAccountWithProfile: accountsDb.createAccountProfile,
-        getAccountInIAM: getAccountInIAM(keycloakAdmin),
+        getAccountInIAM: IAM.getAccount(keycloakAdmin),
         getOrganismById: organismsDb.getOrganismById,
       })(params.account);
 
