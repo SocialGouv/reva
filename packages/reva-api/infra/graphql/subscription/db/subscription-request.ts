@@ -45,6 +45,20 @@ export const getSubscriptionRequestById = async (
   }
 };
 
+export const deleteSubscriptionRequestById = async (
+  id: string
+): Promise<Either<string, void>> => {
+  try {
+    await prismaClient.subscriptionRequest.delete({
+      where: { id },
+    });
+    return Right(undefined);
+  } catch (e: any) {
+    logger.error(e);
+    return Left("La suppression de la demande d'inscription a échoué");
+  }
+};
+
 export const getSubscriptionRequestsCount = async (
   params: GetSubscriptionRequestsParams
 ): Promise<Either<string, number>> => {

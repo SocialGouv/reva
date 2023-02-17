@@ -1,4 +1,5 @@
-import { Left, Right } from "purify-ts";
+import { Account } from ".prisma/client";
+import { Either, Left, Maybe, Right } from "purify-ts";
 
 import { logger } from "../../logger";
 import { prismaClient } from "./client";
@@ -9,7 +10,7 @@ export const createAccountProfile = async (params: {
   lastname: string;
   organismId: string;
   keycloakId: string;
-}) => {
+}): Promise<Either<string,Account>> => {
   try {
     const account = await prismaClient.account.create({
       data: {
@@ -28,9 +29,7 @@ export const createAccountProfile = async (params: {
   }
 };
 
-export const getAccountFromKeycloakId = async (
-  keycloakId: string
-) /*: Promise<Either<string, Maybe<Account>>>*/ => {
+export const getAccountFromKeycloakId = async (keycloakId: string) => {
   try {
     const account = await prismaClient.account.findUnique({
       where: {
@@ -45,5 +44,20 @@ export const getAccountFromKeycloakId = async (
   } catch (e) {
     logger.error(e);
     return Left(`Error while looking up account with keycloakId ${keycloakId}`);
+  }
+};
+
+export const getAccountFromEmail = async (email: string) => {
+  try {
+    const account = await prismaClient.account.findUnique({
+      where: {
+        email,
+      },
+    });
+    return Right(Maybe.fromNullable(account));
+  } catch (e: unknown) {
+    const errorMessage = `Error while retrieving account from email - ${e}`;
+    logger.error(errorMessage);
+    return Left(errorMessage);
   }
 };
