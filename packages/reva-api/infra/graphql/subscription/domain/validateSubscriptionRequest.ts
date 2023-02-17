@@ -36,7 +36,10 @@ interface ValidateSubscriptionRequestDeps {
     organismId: string;
     keycloakId: string;
   }) => Promise<Either<string, Account>>;
-  // sendEmail: (params: unknown) => Promise<Either<string, void>>;
+  sendProRegistrationEmail: (
+    email: string,
+    token: string
+  ) => Promise<Either<string, any>>;
 }
 
 interface ValidateSubscriptionRequestParams {
@@ -221,9 +224,21 @@ export const validateSubscriptionRequest = async (
       })
   );
 
-  // const sendValidationEmail = EitherAsync.fromPromise(async () => (
-  //   //
-  // ));
+  const sendValidationEmail = EitherAsync.fromPromise(() =>
+    deps.sendProRegistrationEmail(
+      $store.subreq?.accountEmail ?? "",
+      "my_beautiful_token"
+    )
+  )
+    .mapLeft(
+      (error: string) =>
+        new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, error)
+    )
+    .ifRight(() => {
+      logger.info(
+        `[validateSubscriptionRequestDeps] Successfuly sent registration mail to ${$store.subreq?.accountEmail}`
+      );
+    });
 
   return (
     getSubscriptionRequest
@@ -233,7 +248,7 @@ export const validateSubscriptionRequest = async (
       .chain(() => createOrganism)
       .chain(() => createKeycloakAccount)
       .chain(() => createAccount)
-      // .chain(() => sendValidationEmail)
+      .chain(() => sendValidationEmail)
       .chain(() => deleteSubscriptionRequest)
   );
 };
