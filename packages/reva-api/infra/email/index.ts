@@ -65,6 +65,34 @@ export const sendRegistrationEmail = async (email: string, token: string) => {
   return sendEmail(email, token, htmlContent);
 };
 
+export const sendProRegistrationEmail = async (email: string, token: string) => {
+  const htmlContent = (url: string) =>
+    mjml2html(
+      template({
+        headline:
+          "<strong>Félicitaions</strong>, votre compte Reva vient d'être vérifié. Vous pouvez accéder dès à présent à votre espace professionnel !",
+        labelCTA: "Activer mon compte",
+        url,
+      })
+    );
+
+  return sendEmail(email, token, htmlContent);
+};
+
+export const sendProRejectionEmail = async (email: string, token: string) => {
+  const htmlContent = (url: string) =>
+    mjml2html(
+      template({
+        headline:
+          "Navré, votre compte Reva n’a pas pu être vérifié.",
+        labelCTA: "Consulter ma demande",
+        url,
+      })
+    );
+
+  return sendEmail(email, token, htmlContent);
+};
+
 export const sendLoginEmail = async (email: string, token: string) => {
   const htmlContent = (url: string) =>
     mjml2html(
