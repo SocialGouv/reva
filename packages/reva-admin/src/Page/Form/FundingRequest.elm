@@ -159,7 +159,7 @@ totalCostTitle =
 
 costElement : Form.Element
 costElement =
-    Form.Price "Coût horaire"
+    Form.Number "Coût horaire"
 
 
 hourCountElement : Form.Element
