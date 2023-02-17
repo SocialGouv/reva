@@ -5,6 +5,7 @@ import mercurius from "mercurius";
 
 import * as AccountDb from "../../database/postgres/accounts";
 import * as OrganismDb from "../../database/postgres/organisms";
+import { sendProRejectionEmail } from "../../email";
 import * as IAM from "../../iam/keycloak";
 import * as db from "./db/subscription-request";
 import * as domain from "./domain/index";
@@ -87,12 +88,32 @@ const unsafeResolvers = {
       const result = await domain.validateSubscriptionRequest(
         {
           getSubscriptionRequestById: db.getSubscriptionRequestById,
-          deleteSubscriptioRequestById: db.deleteSubscriptionRequestById,
+          deleteSubscriptionRequestById: db.deleteSubscriptionRequestById,
           createAccountInIAM: IAM.createAccount(keycloakAdmin),
           createAccountProfile: AccountDb.createAccountProfile,
           getAccountFromEmail: AccountDb.getAccountFromEmail,
           getOrganismBySiret: OrganismDb.getOrganismBySiret,
           createOrganism: OrganismDb.createOrganism,
+        },
+        { subscriptionRequestId: payload.subscriptionRequestId }
+      );
+
+      return result
+        .map(() => "Ok")
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
+    subscription_rejectSubscriptionRequest: async (
+      _: unknown,
+      payload: {
+        subscriptionRequestId: string;
+      }
+    ) => {
+      const result = await domain.rejectSubscriptionRequest(
+        {
+          getSubscriptionRequestById: db.getSubscriptionRequestById,
+          deleteSubscriptionRequestById: db.deleteSubscriptionRequestById,
+          sendProRejectionEmail: sendProRejectionEmail,
         },
         { subscriptionRequestId: payload.subscriptionRequestId }
       );
