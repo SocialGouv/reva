@@ -72,7 +72,7 @@ const unsafeResolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
-    subscription_validateSubsriptionRequest: async (
+    subscription_validateSubscriptionRequest: async (
       _: unknown,
       payload: {
         subscriptionRequestId: string;
