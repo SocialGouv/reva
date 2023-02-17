@@ -64,4 +64,6 @@ type Mutation {
     subscription_createSubscriptionRequest(
         subscriptionRequest: SubscriptionRequestInput!
     ): SubscriptionRequest!
+    subscription_validateSubsriptionRequest(subscriptionRequestId: ID!): String
+    subscription_rejectSubscription(motive: String): String
 }

@@ -90,3 +90,41 @@ const getOrganisms = async (params: {
     return Left(`error while retrieving organisms`);
   }
 };
+
+export const getOrganismBySiret = async (
+  siret: string
+): Promise<Either<string, Maybe<domain.Organism>>> => {
+  try {
+    const organism = await prismaClient.organism.findFirst({
+      where: {
+        siret,
+      },
+    });
+    return Right(Maybe.fromNullable(organism));
+  } catch (e) {
+    logger.error(e);
+    return Left(`error while retrieving organism`);
+  }
+};
+
+export const createOrganism = async (data:{
+  label: string;
+  address: string;
+  zip: string;
+  city: string;
+  contactAdministrativeEmail: string;
+  contactCommercialName: string;
+  contactCommercialEmail: string;
+  siret: string;
+  isActive: boolean;
+}): Promise<Either<string, domain.Organism>> => {
+  try {
+    const organism = await prismaClient.organism.create({
+      data,
+    });
+    return Right(organism);
+  } catch (e) {
+    logger.error(e);
+    return Left(`error while creating organism`);
+  }
+};
