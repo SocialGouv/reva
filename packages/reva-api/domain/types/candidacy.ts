@@ -132,6 +132,9 @@ export interface Organism {
   city: string;
   siret: string;
   contactAdministrativeEmail: string;
+  contactCommercialName: string;
+  contactCommercialEmail: string;
+  isActive: boolean;
 }
 
 export interface BasicSkill {
