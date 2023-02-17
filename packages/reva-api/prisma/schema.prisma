@@ -287,6 +287,7 @@ model Account {
 model Organism {
   id                         String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   label                      String                                @unique @db.VarChar(255)
+  legalStatus                LegalStatus                           @map("legal_status") @default(NC)
   address                    String
   zip                        String                                @db.VarChar(5)
   city                       String                                @db.VarChar(255)
@@ -579,6 +580,7 @@ enum LegalStatus {
   SAS
   SASU
   SA
+  NC
 }
 
 model SubscriptionRequest {

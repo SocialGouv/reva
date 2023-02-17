@@ -1,4 +1,4 @@
-type LegalStatus = "EI" | "EURL" | "SARL" | "SAS" | "SASU" | "SA";
+type LegalStatus = "EI" | "EURL" | "SARL" | "SAS" | "SASU" | "SA" | "NC";
 
 interface SubscriptionRequestInput {
   companyName: string;

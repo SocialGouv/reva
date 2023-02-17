@@ -5,6 +5,7 @@ enum LegalStatus {
   SAS
   SASU
   SA
+  NC
 }
 
 type SubscriptionRequest {
