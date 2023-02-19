@@ -2,7 +2,7 @@ type MockedAuthorizationHeader = `${KeyCloakUserRole}/${string}`;
 
 interface AuhtorizationMockParameters {
   role: KeyCloakUserRole;
-  keycloakId: string;
+  keycloakId?: string;
 }
 export const authorizationHeaderForUser = ({
   role,

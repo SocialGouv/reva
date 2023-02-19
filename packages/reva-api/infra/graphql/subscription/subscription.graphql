@@ -38,8 +38,13 @@ input SubscriptionRequestOrderByInput {
   accountLastname: Sort
 }
 
+type SubscriptionRequestsPaginated {
+  rows: [SubscriptionRequestSummary]!
+  info: PaginationInfo!
+}
+
 type Query {
-    subscription_getSubscriptionRequests(filter: String, offset: Int, limit: Int, orderBy: SubscriptionRequestOrderByInput): [SubscriptionRequestSummary]!
+    subscription_getSubscriptionRequests(filter: String, offset: Int, limit: Int, orderBy: SubscriptionRequestOrderByInput): SubscriptionRequestsPaginated!
     subscription_getSubscriptionRequest(
         subscriptionRequestId: ID!
     ): SubscriptionRequest

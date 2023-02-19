@@ -25,7 +25,10 @@ const unsafeResolvers = {
       payload: getSubscriptionRequestsParams
     ) => {
       const result = await domain.getSubscriptionRequests(
-        { getSubscriptionRequests: db.getSubscriptionRequests },
+        {
+          getSubscriptionRequests: db.getSubscriptionRequests,
+          getSubscriptionRequestsCount: db.getSubscriptionRequestsCount,
+        },
         payload
       );
       return result
