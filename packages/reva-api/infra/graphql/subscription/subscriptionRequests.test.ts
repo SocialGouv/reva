@@ -60,39 +60,3 @@ test("Should create a subscription request", async () => {
   subreq1Id = subreq.id;
   expect(subreq).toMatchObject(subreqSample);
 });
-
-// test("Should fail when auhtentified as manager", async () => {
-//   const resp = await injectGraphql({
-//     fastify: (global as any).fastify,
-//     authorization: authorizationHeaderForUser({
-//       role: "manage_candidacy",
-//       keycloakId: "blabla",
-//     }),
-//     payload: {
-//       requestType: "mutation",
-//       endpoint: "subscription_createSubscriptionRequest",
-//       arguments: { subscriptionRequest: subreqSample },
-//       enumFields: ["companyLegalStatus"],
-//       returnFields: "{ id }",
-//     },
-//   });
-//   expect(resp.statusCode).toEqual(400);
-// });
-
-// test("Should fail when auhtentified as admin", async () => {
-//   const resp = await injectGraphql({
-//     fastify: (global as any).fastify,
-//     authorization: authorizationHeaderForUser({
-//       role: "admin",
-//       keycloakId: "blabla",
-//     }),
-//     payload: {
-//       requestType: "mutation",
-//       endpoint: "subscription_createSubscriptionRequest",
-//       arguments: { subscriptionRequest: subreqSample },
-//       enumFields: ["companyLegalStatus"],
-//       returnFields: "{ id }",
-//     },
-//   });
-//   expect(resp.statusCode).toEqual(400);
-// });
