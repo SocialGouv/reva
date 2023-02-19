@@ -2,3 +2,10 @@ enum Sort {
   asc
   desc
 }
+
+type PaginationInfo {
+  totalRows: Int!
+  currentPage: Int!
+  totalPages: Int!
+  pageLength: Int!
+}
