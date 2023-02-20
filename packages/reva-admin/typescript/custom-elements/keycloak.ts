@@ -28,8 +28,22 @@ class KeycloakElement extends HTMLElement {
   }
 
   connectedCallback() {
-    this._keycloak = Keycloak(this._configuration);
+    
+    this._keycloak = new Keycloak(this._configuration);
     const keycloak = this._keycloak;
+    
+    const setTimeoutRefreshToken = () => {
+      if (!keycloak.tokenParsed?.exp) {
+        return undefined;
+      }
+
+      const delai = ((keycloak.tokenParsed.exp * 1000) - Date.now()) / 2
+
+      return setTimeout(async () => {
+        console.log("[KEYCLOAK] Refresh token manually")
+        await keycloak.updateToken(delai);
+      }, delai)
+    }
 
     // debug purpose
     // @ts-ignore
@@ -60,6 +74,7 @@ class KeycloakElement extends HTMLElement {
               },
             })
           );
+          setTimeoutRefreshToken()
         }
       });
 
@@ -92,7 +107,8 @@ class KeycloakElement extends HTMLElement {
             token: keycloak.token,
           },
         })
-        );
+      );
+      setTimeoutRefreshToken()
     };
 
     keycloak.onAuthRefreshError = async () => {
@@ -112,6 +128,7 @@ class KeycloakElement extends HTMLElement {
       console.log("Token expired");
       await keycloak.updateToken(5);
     };
+
     keycloak.onAuthLogout = function () {
       console.log("Logged out");
       keycloak.login({
