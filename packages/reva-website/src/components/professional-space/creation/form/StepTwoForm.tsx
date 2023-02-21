@@ -57,7 +57,7 @@ export const StepTwoForm = () => {
             state={errors.accountEmail ? "error" : "default"}
             stateRelatedMessage={errors.accountEmail?.message}
             nativeInputProps={{ ...register("accountEmail") }}
-          />{" "}
+          />
           <Input
             label="Téléphone *"
             state={errors.accountPhoneNumber ? "error" : "default"}
