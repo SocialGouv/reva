@@ -14,6 +14,13 @@
         "summary": "résumé 2",
         "codeRncp": "34692",
         "status": "AVAILABLE"
+      },
+      {
+        "id": "c3",
+        "label": "Titre 3",
+        "summary": "résumé 3",
+        "codeRncp": "34693",
+        "status": "INACTIVE"
       }
     ]
   }
