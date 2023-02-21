@@ -18,7 +18,7 @@ export const updateCandidate =
       return Left(
         new FunctionalError(
           FunctionalCodeError.CANDIDATE_NOT_SAVED,
-          `Veuillez sélectionner un diplôme.`
+          `Veuillez renseigner le plus haut niveau de diplôme du candidat.`
         )
       );
     }
