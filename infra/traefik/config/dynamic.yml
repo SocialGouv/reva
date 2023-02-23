@@ -16,6 +16,30 @@ http:
       middlewares:
         - removeHeader
 
+    site-web:
+      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/`)"
+      service: site-web
+      middlewares:
+        - removeHeader
+
+    espace-pro:
+      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/admin`)"
+      service: espace-pro
+      middlewares:
+        - removeHeader
+
+    app-candidat:
+      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/app`)"
+      service: app-candidat
+      middlewares:
+        - removeHeader
+
+    api:
+      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/graphql`)"
+      service: api
+      middlewares:
+        - removeHeader
+
     # --- END STAGING ---
     # Enable dashboard on /dashboard with basic auth
     dashboard:
@@ -47,5 +71,29 @@ http:
         passHostHeader: false
         servers:
           - url: "https://metabase-reva-incubateur-net.osc-fr1.scalingo.io/"
+
+    site-web:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-staging.osc-fr1.scalingo.io/"
+
+    espace-pro:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-staging.osc-fr1.scalingo.io/admin/"
+
+    app-candidat:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-staging.osc-fr1.scalingo.io/app/"
+
+    api:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-staging.osc-fr1.scalingo.io/graphql"
 
     # --- END STAGING ---
