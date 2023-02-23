@@ -34,12 +34,12 @@ http:
       loadBalancer:
         passHostHeader: false
         servers:
-          - url: 'https://auth-reva-incubateur-net.{{ env "REGION_NAME" }}.scalingo.io/'
+          - url: "https://auth-reva-incubateur-net.osc-fr1.scalingo.io/"
 
     metabase-reva-incubateur-net:
       loadBalancer:
         passHostHeader: false
         servers:
-          - url: 'https://metabase-reva-incubateur-net.{{ env "REGION_NAME" }}.scalingo.io/'
+          - url: "https://metabase-reva-incubateur-net.osc-fr1.scalingo.io/"
 
     # --- END STAGING ---
