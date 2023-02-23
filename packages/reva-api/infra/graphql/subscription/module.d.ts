@@ -15,11 +15,22 @@ interface SubscriptionRequestInput {
   accountPhoneNumber: string;
 }
 
-interface SubscriptionRequest extends SubscriptionRequestInput { id: string };
+interface SubscriptionRequest extends SubscriptionRequestInput {
+  id: string;
+}
 
+type SubscriptionRequestSummary = Pick<
+  SubscriptionRequest,
+  | "id"
+  | "accountLastname"
+  | "accountFirstname"
+  | "accountEmail"
+  | "companyName"
+  | "companyAddress"
+>;
 interface GetSubscriptionRequestsParams extends FilteredPaginatedListArgs {
   orderBy?: {
-    companyName?: Sort
-    accountLastname?: Sort 
-  }
+    companyName?: Sort;
+    accountLastname?: Sort;
+  };
 }

@@ -39,7 +39,7 @@ interface ValidateSubscriptionRequestDeps {
   sendProRegistrationEmail: (
     email: string,
     token: string
-  ) => Promise<Either<string, any>>;
+  ) => Promise<Either<string, string>>;
 }
 
 interface ValidateSubscriptionRequestParams {

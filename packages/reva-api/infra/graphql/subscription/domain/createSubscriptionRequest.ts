@@ -7,7 +7,7 @@ import {
 
 interface createSubscriptionRequestDeps {
   createSubscriptionRequest: (
-    params: any
+    params: SubscriptionRequestInput
   ) => Promise<Either<string, SubscriptionRequest>>;
 }
 

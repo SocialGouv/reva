@@ -14,7 +14,7 @@ interface RejectSubscriptionRequestDeps {
   sendProRejectionEmail: (
     email: string,
     token: string
-  ) => Promise<Either<string, any>>;
+  ) => Promise<Either<string, string>>;
 }
 export const rejectSubscriptionRequest = async (
   deps: RejectSubscriptionRequestDeps,

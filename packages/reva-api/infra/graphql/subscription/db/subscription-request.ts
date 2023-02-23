@@ -5,8 +5,8 @@ import { logger } from "../../../logger";
 import { Prisma } from ".prisma/client";
 
 export const createSubscriptionRequest = async (
-  subscriptionRequestInput: any
-): Promise<Either<string, any>> => {
+  subscriptionRequestInput: SubscriptionRequestInput
+) : Promise<Either<string, SubscriptionRequest>> => {
   try {
     const subscriptionRequest = await prismaClient.subscriptionRequest.create({
       data: {
@@ -25,7 +25,7 @@ export const createSubscriptionRequest = async (
       },
     });
     return Right(subscriptionRequest);
-  } catch (e: any) {
+  } catch (e) {
     logger.error(e);
     return Left("La création de demande d'inscription a échoué");
   }
@@ -33,13 +33,13 @@ export const createSubscriptionRequest = async (
 
 export const getSubscriptionRequestById = async (
   id: string
-): Promise<Either<string, Maybe<any>>> => {
+): Promise<Either<string, Maybe<SubscriptionRequest>>> => {
   try {
     const subreq = await prismaClient.subscriptionRequest.findUnique({
       where: { id },
     });
     return Right(Maybe.fromNullable(subreq));
-  } catch (e: any) {
+  } catch (e) {
     logger.error(e);
     return Left("La récupération de la demande d'inscription a échoué");
   }
@@ -53,7 +53,7 @@ export const deleteSubscriptionRequestById = async (
       where: { id },
     });
     return Right(undefined);
-  } catch (e: any) {
+  } catch (e) {
     logger.error(e);
     return Left("La suppression de la demande d'inscription a échoué");
   }
@@ -67,7 +67,7 @@ export const getSubscriptionRequestsCount = async (
       filterClause(params)
     );
     return Right(numSubReq);
-  } catch (e: any) {
+  } catch (e) {
     logger.error(e);
     return Left("La récupération des demandes d'inscription a échoué");
   }
@@ -75,7 +75,7 @@ export const getSubscriptionRequestsCount = async (
 
 export const getSubscriptionRequests = async (
   params: GetSubscriptionRequestsParams
-): Promise<Either<string, any[]>> => {
+): Promise<Either<string, SubscriptionRequestSummary[]>> => {
   try {
     const subscriptionRequests =
       await prismaClient.subscriptionRequest.findMany(
@@ -96,7 +96,7 @@ export const getSubscriptionRequests = async (
         )
       );
     return Right(subscriptionRequests);
-  } catch (e: any) {
+  } catch (e) {
     logger.error(e);
     return Left("La récupération des demandes d'inscription a échoué");
   }
@@ -116,7 +116,7 @@ const filterClause = (params: GetSubscriptionRequestsParams) => {
 };
 
 const paginationClause = (params: GetSubscriptionRequestsParams) => {
-  const clause: any = {};
+  const clause: {take?:number;skip?:number}  = {};
   if (params.limit) {
     clause.take = params.limit;
   }
