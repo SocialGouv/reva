@@ -1,0 +1,34 @@
+# route app.region.scalingo.io/ to my-api.region.scalingo.io/
+http:
+  routers:
+    # route / to my-api service
+    my-api:
+      rule: 'Host(`{{ env "APP" }}.{{ env "REGION_NAME" }}.scalingo.io`) && PathPrefix(`/`)'
+      service: my-api
+      middlewares:
+        - my-api-secured
+  middlewares:
+    my-api-secured:
+      chain: # chain middlewares
+        middlewares:
+          - myApiIpWhiteList
+          - removeHeader
+    removeHeader: # remove double header
+      headers:
+        customResponseHeaders:
+          x-request-id: "" # remove
+          strict-transport-security: ""
+    myApiIpWhiteList: # ip whitelist
+      ipWhiteList:
+        sourceRange:
+          - "10.10.10.22" # whitelist IP
+          # - "10.0.0.0/8" # whitelist CIDR
+        ipStrategy: # Check first IP in X-Forwarded-For
+          depth: 1
+  services:
+    # service my-api
+    my-api:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+        - url: 'https://my-api.{{ env "REGION_NAME" }}.scalingo.io/'

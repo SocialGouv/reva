@@ -1,0 +1,45 @@
+# route app.region.scalingo.io/ to my-api.region.scalingo.io/
+
+http:
+  routers:
+    # --- BEGIN STAGING ---
+
+    metabase-reva-incubateur-net:
+      rule: "Host(`metabase.reva.incubateur.net`)"
+      service: metabase-reva-incubateur-net
+      middlewares:
+        - removeHeader
+
+    # --- END STAGING ---
+    # Enable dashboard on /dashboard with basic auth
+    dashboard:
+      rule: 'Host(`{{ env "APP" }}.{{ env "REGION_NAME" }}.scalingo.io`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))'
+      service: api@internal
+      middlewares:
+        - auth
+  middlewares:
+    removeHeader: # remove double header
+      headers:
+        customResponseHeaders:
+          x-request-id: "" # remove
+          strict-transport-security: ""
+    auth:
+      basicAuth:
+        users:
+          - '{{ env "BASIC_AUTH_USER_PASSWORD" }}' # htpasswd format  BASIC_AUTH_USER_PASSWORD="test:TODEFINED"
+  services:
+    # --- BEGIN STAGING ---
+
+    auth-reva-incubateur-net:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: 'https://auth-reva-incubateur-net.{{ env "REGION_NAME" }}.scalingo.io/'
+
+    metabase-reva-incubateur-net:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: 'https://metabase-reva-incubateur-net.{{ env "REGION_NAME" }}.scalingo.io/'
+
+    # --- END STAGING ---
