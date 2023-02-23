@@ -4,6 +4,12 @@ http:
   routers:
     # --- BEGIN STAGING ---
 
+    auth-reva-incubateur-net:
+      rule: "Host(`auth.reva.incubateur.net`)"
+      service: auth-reva-incubateur-net
+      middlewares:
+        - removeHeader
+
     metabase-reva-incubateur-net:
       rule: "Host(`metabase.reva.incubateur.net`)"
       service: metabase-reva-incubateur-net
