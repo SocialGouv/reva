@@ -1,12 +1,12 @@
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 
-const Term: FC = ({ children }) => (
+const Term = ({ children }: { children?: ReactNode }) => (
   <dt data-test="description-term" className="text-slate-400 mt-4">
     {children}
   </dt>
 );
 
-const Detail: FC = ({ children }) => (
+const Detail = ({ children }: { children?: ReactNode }) => (
   <dd
     data-test="description-details"
     className="text-white text-lg font-semibold mb-4"
@@ -17,6 +17,7 @@ const Detail: FC = ({ children }) => (
 
 interface Props {
   term: string;
+  children?: ReactNode;
 }
 
 export const Description: FC<Props> = ({ term, children }) =>

@@ -3,7 +3,7 @@ import "./index.css";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 // import { inspect } from "@xstate/inspect";
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 
 import App from "./App";
 import { Keycloak } from "./contexts/keycloakContext";
@@ -25,15 +25,17 @@ const keycloakInstance = Keycloak({
   url: process.env.REACT_APP_KEYCLOAK_URL as string,
 });
 
-ReactDOM.render(
+const container = document.getElementById("root");
+const root = createRoot(container!);
+
+root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <KeycloakProvider keycloakInstance={keycloakInstance}>
         <App />
       </KeycloakProvider>
     </ApolloProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );
 
 // If you want your app to work offline and load faster, you can change

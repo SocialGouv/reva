@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 
 import { PageHeaders } from "../../../components/molecules/PageHeaders";
 import certificationImg from "../../../components/organisms/Card/certification.png";
@@ -10,6 +10,7 @@ interface Props {
   certification: Certification;
   candidacyCreatedAt?: Date;
   direction: "initial" | "next" | "previous";
+  children?: ReactNode;
 }
 
 export const PageWithBackground: FC<Props> = ({
