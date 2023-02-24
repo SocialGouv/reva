@@ -131,6 +131,7 @@ export interface Organism {
   zip: string;
   city: string;
   siret: string;
+  legalStatus?: LegalStatus;
   contactAdministrativeEmail: string;
   contactCommercialName: string;
   contactCommercialEmail: string;
