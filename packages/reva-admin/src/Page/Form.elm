@@ -324,18 +324,17 @@ viewEditableElement formData ( elementId, element ) =
                     )
                 |> DSFR.Input.view
 
-        textareaView : Maybe String -> Html (Msg referential)
-        textareaView placeholderValue =
-            textarea
-                [ name elementId
-                , id elementId
-                , onInput (UserChangedElement elementId)
-                , class "w-[520px] h-[150px] p-8 mb-8"
-                , inputStyle
-                , value dataOrDefault
-                , placeholderValue |> Maybe.map placeholder |> Maybe.withDefault (class "")
-                ]
-                []
+        textareaView : String -> Maybe String -> Html (Msg referential)
+        textareaView label placeholderValue =
+            DSFR.Input.new
+                { value = dataOrDefault
+                , onInput = UserChangedElement elementId
+                , label = Accessibility.text label
+                , name = elementId
+                }
+                |> DSFR.Input.withType (TextArea (Just 10))
+                |> DSFR.Input.withExtraAttrs [ class "w-[520px]", placeholderValue |> Maybe.map placeholder |> Maybe.withDefault (class "") ]
+                |> DSFR.Input.view
 
         withLegend s el =
             fieldset
@@ -408,8 +407,7 @@ viewEditableElement formData ( elementId, element ) =
             [ inputView label NumberInput "w-40" [ Html.Attributes.min "0", Html.Attributes.step "0.01" ] ]
 
         Textarea label placeholder ->
-            textareaView placeholder
-                |> withLabel label
+            [ textareaView label placeholder ]
 
         Info label value ->
             info value
@@ -475,8 +473,7 @@ viewEditableElement formData ( elementId, element ) =
             case get selectId formData of
                 Just selectedValue ->
                     if selectedValue == otherValue then
-                        textareaView Nothing
-                            |> withLabel label
+                        [ textareaView label Nothing ]
 
                     else
                         []
