@@ -13,10 +13,11 @@ module Page.Form exposing
 import Accessibility
 import Api.Token exposing (Token)
 import Browser.Dom
+import DSFR.Checkbox
 import DSFR.Input exposing (InputType(..))
 import Data.Context exposing (Context)
 import Data.Form exposing (FormData, get, insert)
-import Data.Form.Helper exposing (booleanToString)
+import Data.Form.Helper exposing (booleanFromString, booleanToString)
 import Dict exposing (Dict)
 import File exposing (File)
 import Html exposing (Html, button, dd, div, dt, fieldset, input, label, legend, li, option, p, select, span, text, textarea, ul)
@@ -350,28 +351,36 @@ viewEditableElement formData ( elementId, element ) =
     in
     case element of
         Checkbox label ->
-            [ div
-                [ class "flex items-start h-8 w-full" ]
-                [ checkboxView [] elementId dataOrDefault
-                , labelView elementId "text-base text-slate-800" label
-                ]
+            [ DSFR.Checkbox.single
+                { value = dataOrDefault
+                , checked = Just (dataOrDefault == "checked")
+                , valueAsString = identity
+                , id = elementId
+                , label = label
+                , onChecked = \_ -> booleanToString >> UserChangedElement elementId
+                }
+                |> DSFR.Checkbox.viewSingle
             ]
 
         CheckboxList label choices ->
             let
-                viewChoices =
-                    List.map
-                        (\( choiceId, choice ) -> viewEditableElement formData ( choiceId, Checkbox choice ))
+                checkedChoices =
+                    List.filter
+                        (\( choiceId, _ ) -> get choiceId formData |> Maybe.withDefault "false" |> booleanFromString)
                         choices
-                        |> List.concat
             in
-            [ div
-                [ name elementId
-                , id elementId
-                , class "mt-1 mb-4"
-                ]
-                viewChoices
-                |> withLegend label
+            [ DSFR.Checkbox.group
+                { id = elementId
+                , label = Accessibility.text label
+                , onChecked = \( choiceId, _ ) bool -> UserChangedElement choiceId (booleanToString bool)
+                , values = choices
+                , checked = checkedChoices
+                , valueAsString = Tuple.second
+                , toId = Tuple.first
+                , toLabel = Tuple.second
+                }
+                |> DSFR.Checkbox.inline
+                |> DSFR.Checkbox.viewGroup
             ]
 
         Date label ->
