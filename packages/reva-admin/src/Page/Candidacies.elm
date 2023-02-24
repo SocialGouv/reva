@@ -14,9 +14,9 @@ import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Referential)
-import Html.Styled exposing (Html, a, aside, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
-import Html.Styled.Attributes exposing (action, attribute, class, classList, for, id, name, placeholder, type_)
-import Html.Styled.Events exposing (onInput)
+import Html exposing (Html, a, aside, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
+import Html.Attributes exposing (action, attribute, class, classList, for, id, name, placeholder, type_)
+import Html.Events exposing (onInput)
 import List.Extra
 import RemoteData exposing (RemoteData(..))
 import Route

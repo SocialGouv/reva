@@ -2,8 +2,8 @@ module View.Timeline exposing (Event, Status(..), view)
 
 import Css exposing (display, lastChild, none)
 import Css.Global exposing (descendants, typeSelector)
-import Html.Styled exposing (Html, div, li, p, span, text, time, ul)
-import Html.Styled.Attributes exposing (attribute, class, css)
+import Html exposing (Html, div, li, p, span, text, time, ul)
+import Html.Attributes exposing (attribute, class, css)
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
 

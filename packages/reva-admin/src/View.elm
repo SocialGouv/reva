@@ -1,8 +1,8 @@
 module View exposing (image, primaryButton, primaryLink, secondaryButton, skeleton, title)
 
-import Html.Styled as Html exposing (Html, a, button, div, h2, img, nav, span, text)
-import Html.Styled.Attributes exposing (attribute, class, href, src, type_)
-import Html.Styled.Events exposing (onClick)
+import Html exposing (Html, a, button, div, h2, img, nav, span, text)
+import Html.Attributes exposing (attribute, class, href, src, type_)
+import Html.Events exposing (onClick)
 import Url.Builder
 import View.Icons as Icons
 

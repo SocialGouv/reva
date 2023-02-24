@@ -7,9 +7,9 @@ import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department, Referential)
 import Dict
-import Html.Styled exposing (Html, a, button, dd, div, dl, dt, h3, h4, li, nav, p, span, text, ul)
-import Html.Styled.Attributes exposing (attribute, class, classList, href, type_)
-import Html.Styled.Events exposing (onClick)
+import Html exposing (Html, a, button, dd, div, dl, dt, h3, h4, li, nav, p, span, text, ul)
+import Html.Attributes exposing (attribute, class, classList, href, type_)
+import Html.Events exposing (onClick)
 import RemoteData exposing (RemoteData(..))
 import Route
 import View.Candidacy.Tab exposing (Value(..))

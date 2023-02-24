@@ -4,8 +4,8 @@ import Api.Token exposing (Token)
 import Browser
 import Browser.Navigation as Nav
 import Data.Context exposing (Context)
-import Html.Styled as Html exposing (Html, a, div, text, toUnstyled)
-import Html.Styled.Attributes exposing (class)
+import Html exposing (Html, a, div, text)
+import Html.Attributes exposing (class)
 import Json.Decode as Decode exposing (..)
 import KeycloakConfiguration exposing (KeycloakConfiguration)
 import Page.Candidacies as Candidacies exposing (Model)
@@ -87,7 +87,6 @@ view model =
                 model.keycloakConfiguration
                 (model.page == LoggingOut)
             ]
-            |> toUnstyled
         ]
     }
 

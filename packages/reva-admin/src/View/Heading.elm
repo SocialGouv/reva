@@ -1,7 +1,7 @@
 module View.Heading exposing (..)
 
-import Html.Styled as Html exposing (Html, text)
-import Html.Styled.Attributes exposing (class)
+import Html exposing (Html, text)
+import Html.Attributes exposing (class)
 
 
 h3 : String -> Html msg

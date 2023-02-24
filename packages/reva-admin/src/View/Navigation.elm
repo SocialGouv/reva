@@ -1,8 +1,8 @@
 module View.Navigation exposing (view)
 
-import Html.Styled exposing (Html, button, nav, text)
-import Html.Styled.Attributes exposing (attribute, class, classList, type_)
-import Html.Styled.Events exposing (onClick)
+import Html exposing (Html, button, nav, text)
+import Html.Attributes exposing (attribute, class, classList, type_)
+import Html.Events exposing (onClick)
 import View.Helpers exposing (dataTest)
 
 
