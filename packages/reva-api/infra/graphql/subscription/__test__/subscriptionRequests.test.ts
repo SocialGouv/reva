@@ -3,9 +3,9 @@
  */
 
 import { LegalStatus } from "@prisma/client";
-import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import { injectGraphql } from "../../../test/helpers/graphql-helper";
-import { prismaClient } from "../../database/postgres/client";
+import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
+import { injectGraphql } from "../../../../test/helpers/graphql-helper";
+import { prismaClient } from "../../../database/postgres/client";
 
 const subreqSample = {
   companyName: "Jojo formation",

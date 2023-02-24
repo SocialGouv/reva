@@ -4,9 +4,9 @@
 
 import { LegalStatus } from "@prisma/client";
 import { randomUUID } from "crypto";
-import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
-import { injectGraphql } from "../../../test/helpers/graphql-helper";
-import { prismaClient } from "../../database/postgres/client";
+import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
+import { injectGraphql } from "../../../../test/helpers/graphql-helper";
+import { prismaClient } from "../../../database/postgres/client";
 
 const NB_SUBSCRIPTION_REQUESTS = 40;
 

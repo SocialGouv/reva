@@ -47,6 +47,8 @@ export const getAccount =
         email: account.email,
         username: account.username,
         groups: [account.group],
+        firstName: account.firstname,
+        lastName: account.lastname,
         requiredActions: [
           RequiredActionAlias.UPDATE_PASSWORD,
           RequiredActionAlias.VERIFY_EMAIL,

@@ -5,7 +5,7 @@ import mercurius from "mercurius";
 
 import * as AccountDb from "../../database/postgres/accounts";
 import * as OrganismDb from "../../database/postgres/organisms";
-import { sendProRegistrationEmail, sendProRejectionEmail } from "../../email";
+import { sendRejectionEmail, sendConfirmationEmail } from "./mail";
 import * as IAM from "../../iam/keycloak";
 import * as db from "./db/subscription-request";
 import * as domain from "./domain/index";
@@ -92,12 +92,13 @@ const unsafeResolvers = {
         {
           getSubscriptionRequestById: db.getSubscriptionRequestById,
           deleteSubscriptionRequestById: db.deleteSubscriptionRequestById,
+          getIamAccount: IAM.getAccount(keycloakAdmin),
           createAccountInIAM: IAM.createAccount(keycloakAdmin),
           createAccountProfile: AccountDb.createAccountProfile,
           getAccountFromEmail: AccountDb.getAccountFromEmail,
           getOrganismBySiret: OrganismDb.getOrganismBySiret,
           createOrganism: OrganismDb.createOrganism,
-          sendProRegistrationEmail,
+          sendConfirmationEmail,
         },
         { subscriptionRequestId: payload.subscriptionRequestId }
       );
@@ -117,7 +118,7 @@ const unsafeResolvers = {
         {
           getSubscriptionRequestById: db.getSubscriptionRequestById,
           deleteSubscriptionRequestById: db.deleteSubscriptionRequestById,
-          sendProRejectionEmail,
+          sendRejectionEmail,
         },
         { subscriptionRequestId: payload.subscriptionRequestId }
       );

@@ -19,6 +19,10 @@ interface ValidateSubscriptionRequestDeps {
   createOrganism: (
     data: Omit<Organism, "id">
   ) => Promise<Either<string, Organism>>;
+  getIamAccount: (params: {
+    email: string;
+    username: string;
+  }) => Promise<Either<string, Maybe<any>>>;
   getAccountFromEmail: (
     email: string
   ) => Promise<Either<string, Maybe<Account>>>;
@@ -36,9 +40,9 @@ interface ValidateSubscriptionRequestDeps {
     organismId: string;
     keycloakId: string;
   }) => Promise<Either<string, Account>>;
-  sendProRegistrationEmail: (
+  sendConfirmationEmail: (
     email: string,
-    token: string
+    iamLinkUrl?: string
   ) => Promise<Either<string, string>>;
 }
 
@@ -142,6 +146,36 @@ export const validateSubscriptionRequest = async (
     return Right(undefined);
   });
 
+  const checkIfKeycloakAccountExists = EitherAsync.fromPromise(async () => {
+    const eitherAccount = await deps.getIamAccount({
+      email: ($store.subreq as SubscriptionRequest).accountEmail,
+      username: ""
+    });
+    if (eitherAccount.isLeft()) {
+      return Left(
+        new FunctionalError(
+          FunctionalCodeError.TECHNICAL_ERROR,
+          eitherAccount.extract()
+        )
+      );
+    }
+    const maybeAccount = eitherAccount.extract() as Maybe<Account>;
+    if (maybeAccount.isJust()) {
+      const errorMessage = `Un compte IAM existe déjà avec l'email ${$store.subreq?.accountEmail}`;
+      logger.error(`[validateSubscriptionRequest] ${errorMessage}`);
+      return Left(
+        new FunctionalError(
+          FunctionalCodeError.ACCOUNT_IN_IAM_ALREADY_EXISTS,
+          errorMessage
+        )
+      );
+    }
+    logger.info(
+      `[validateSubscriptionRequest] checkIfKeycloakAccountExists suceeded, continuing`
+    );
+    return Right(undefined);
+  });
+
   const createOrganism = EitherAsync.fromPromise(async () =>
     (
       await deps.createOrganism({
@@ -153,6 +187,7 @@ export const validateSubscriptionRequest = async (
         city: "",
         zip: "",
         siret: $store.subreq?.companySiret ?? "",
+        legalStatus: $store.subreq?.companyLegalStatus,
         isActive: true,
       })
     )
@@ -225,10 +260,7 @@ export const validateSubscriptionRequest = async (
   );
 
   const sendValidationEmail = EitherAsync.fromPromise(() =>
-    deps.sendProRegistrationEmail(
-      $store.subreq?.accountEmail ?? "",
-      "my_beautiful_token"
-    )
+    deps.sendConfirmationEmail($store.subreq?.accountEmail ?? "")
   )
     .mapLeft(
       (error: string) =>
@@ -244,7 +276,7 @@ export const validateSubscriptionRequest = async (
     getSubscriptionRequest
       .chain(() => checkIfOrganismExists)
       .chain(() => checkIfAccountExists)
-      // .chain(() => checkIfKeycloakAccountExists)
+      .chain(() => checkIfKeycloakAccountExists)
       .chain(() => createOrganism)
       .chain(() => createKeycloakAccount)
       .chain(() => createAccount)
