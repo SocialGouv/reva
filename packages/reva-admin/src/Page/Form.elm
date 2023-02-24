@@ -10,9 +10,10 @@ module Page.Form exposing
     , view
     )
 
+import Accessibility
 import Api.Token exposing (Token)
 import Browser.Dom
-import Bytes exposing (Bytes)
+import DSFR.Input exposing (InputType(..))
 import Data.Context exposing (Context)
 import Data.Form exposing (FormData, get, insert)
 import Data.Form.Helper exposing (booleanToString)
@@ -307,20 +308,21 @@ viewEditableElement formData ( elementId, element ) =
                 ]
                 |> class
 
-        inputView dataType extraClass extraAttributes =
-            input
-                ([ type_ dataType
-                 , name elementId
-                 , id elementId
-                 , onInput (UserChangedElement elementId)
-                 , class extraClass
-                 , class "min-w-0 h-[78px] pr-4"
-                 , inputStyle
-                 , value dataOrDefault
-                 ]
-                    ++ extraAttributes
-                )
-                []
+        inputView label dataType extraClass extraAttributes =
+            DSFR.Input.new
+                { value = dataOrDefault
+                , onInput = UserChangedElement elementId
+                , label = Accessibility.text label
+                , name = elementId
+                }
+                |> DSFR.Input.withType dataType
+                |> DSFR.Input.withExtraAttrs
+                    ([ class extraClass
+                     , class "min-w-0"
+                     ]
+                        ++ extraAttributes
+                    )
+                |> DSFR.Input.view
 
         textareaView : Maybe String -> Html (Msg referential)
         textareaView placeholderValue =
@@ -374,8 +376,7 @@ viewEditableElement formData ( elementId, element ) =
             ]
 
         Date label ->
-            inputView "date" "w-60 flex items-center" []
-                |> withLabel label
+            [ inputView label DateInput "w-60 flex items-center" [] ]
 
         Empty ->
             []
@@ -395,20 +396,16 @@ viewEditableElement formData ( elementId, element ) =
             [ View.Heading.h5 title ]
 
         Input label ->
-            inputView "text" "w-full" []
-                |> withLabel label
+            [ inputView label TextInput "w-full" [] ]
 
         InputRequired label ->
-            inputView "text" "w-full" [ required True ]
-                |> withLabel (label ++ " (requis)")
+            [ inputView (label ++ " *") TextInput "w-full" [ required True ] ]
 
         Number label ->
-            inputView "number" "w-40" [ Html.Attributes.min "0" ]
-                |> withLabel label
+            [ inputView label NumberInput "w-40" [ Html.Attributes.min "0" ] ]
 
         Price label ->
-            inputView "number" "w-40" [ Html.Attributes.min "0", Html.Attributes.step "0.01" ]
-                |> withLabel label
+            [ inputView label NumberInput "w-40" [ Html.Attributes.min "0", Html.Attributes.step "0.01" ] ]
 
         Textarea label placeholder ->
             textareaView placeholder
