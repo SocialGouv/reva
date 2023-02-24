@@ -461,22 +461,25 @@ viewEditableElement formData ( elementId, element ) =
             [ View.Heading.h4 title ]
 
         Select label choices ->
-            select
-                [ id elementId
-                , onInput (UserChangedElement elementId)
-                , class "mt-1 block w-[520px] h-[78px] pr-10"
-                , inputStyle
-                , required True
-                ]
-                (option
-                    [ disabled True
-                    , selected (dataOrDefault == "")
-                    , value ""
+            [ div
+                [ class "fr-select-group" ]
+                [ labelView elementId "" label
+                , select
+                    [ class "fr-select"
+                    , id elementId
+                    , onInput (UserChangedElement elementId)
+                    , required True
                     ]
-                    [ text "Sélectionner" ]
-                    :: List.map (viewChoice dataOrDefault) choices
-                )
-                |> withLabel label
+                    (option
+                        [ disabled True
+                        , selected (dataOrDefault == "")
+                        , value ""
+                        ]
+                        [ text "Sélectionner" ]
+                        :: List.map (viewChoice dataOrDefault) choices
+                    )
+                ]
+            ]
 
         SelectOther selectId otherValue label ->
             case get selectId formData of
@@ -702,7 +705,7 @@ labelView : String -> String -> String -> Html msg
 labelView elementId extraClass s =
     label
         [ for elementId
-        , class "block"
+        , class "fr-label"
         , class extraClass
         ]
         [ text s ]
