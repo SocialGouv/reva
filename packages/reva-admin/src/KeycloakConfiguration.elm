@@ -1,9 +1,9 @@
 module KeycloakConfiguration exposing (KeycloakConfiguration, iframeKeycloak, keycloakConfiguration)
 
 import Api.Token exposing (Token)
-import Html.Styled exposing (Html, node)
-import Html.Styled.Attributes exposing (attribute, class, id, property)
-import Html.Styled.Events exposing (on)
+import Html exposing (Html, node)
+import Html.Attributes exposing (attribute, class, id, property)
+import Html.Events exposing (on)
 import Json.Decode as Decode exposing (Decoder, succeed)
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode

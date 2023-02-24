@@ -8,8 +8,8 @@ module Route exposing
     )
 
 import Data.Candidacy exposing (CandidacyId, candidacyIdFromString, candidacyIdToString)
-import Html.Styled exposing (Html)
-import Html.Styled.Attributes
+import Html exposing (Html)
+import Html.Attributes
 import Url
 import Url.Builder
 import Url.Parser as Parser exposing ((</>), (<?>), Parser, map, oneOf, s, string, top)
@@ -73,9 +73,9 @@ fromUrl baseUrl url =
         |> Maybe.withDefault NotFound
 
 
-href : String -> Route -> Html.Styled.Attribute msg
+href : String -> Route -> Html.Attribute msg
 href baseUrl route =
-    Html.Styled.Attributes.href <| toString baseUrl route
+    Html.Attributes.href <| toString baseUrl route
 
 
 toString : String -> Route -> String

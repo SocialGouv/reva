@@ -28,8 +28,8 @@ import Data.Form.DropOut
 import Data.Form.FundingRequest
 import Data.Form.PaymentRequest
 import Data.Referential exposing (Referential)
-import Html.Styled as Html exposing (Html, a, article, div, node, p, span, text)
-import Html.Styled.Attributes exposing (class, name)
+import Html exposing (Html, a, article, div, node, p, span, text)
+import Html.Attributes exposing (class, name)
 import Page.Form as Form exposing (Form)
 import Page.Form.Admissibility
 import Page.Form.Appointment

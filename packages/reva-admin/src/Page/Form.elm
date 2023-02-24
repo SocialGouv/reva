@@ -18,9 +18,9 @@ import Data.Form exposing (FormData, get, insert)
 import Data.Form.Helper exposing (booleanToString)
 import Dict exposing (Dict)
 import File exposing (File)
-import Html.Styled as Html exposing (Html, button, dd, div, dt, fieldset, input, label, legend, li, option, p, select, span, text, textarea, ul)
-import Html.Styled.Attributes exposing (checked, class, classList, disabled, for, id, multiple, name, placeholder, required, selected, type_, value)
-import Html.Styled.Events exposing (on, onCheck, onClick, onInput, onSubmit)
+import Html exposing (Html, button, dd, div, dt, fieldset, input, label, legend, li, option, p, select, span, text, textarea, ul)
+import Html.Attributes exposing (checked, class, classList, disabled, for, id, multiple, name, placeholder, required, selected, type_, value)
+import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
 import Json.Decode
 import List.Extra
 import RemoteData exposing (RemoteData(..))
@@ -403,11 +403,11 @@ viewEditableElement formData ( elementId, element ) =
                 |> withLabel (label ++ " (requis)")
 
         Number label ->
-            inputView "number" "w-40" [ Html.Styled.Attributes.min "0" ]
+            inputView "number" "w-40" [ Html.Attributes.min "0" ]
                 |> withLabel label
 
         Price label ->
-            inputView "number" "w-40" [ Html.Styled.Attributes.min "0", Html.Styled.Attributes.step "0.01" ]
+            inputView "number" "w-40" [ Html.Attributes.min "0", Html.Attributes.step "0.01" ]
                 |> withLabel label
 
         Textarea label placeholder ->

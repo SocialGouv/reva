@@ -1,9 +1,9 @@
 module View.Icons exposing (accepted, add, candidates, checked, chevronLeft, close, commented, dot, filter, location, mail, menu, pending, rejected, search, signout, trash, user, userLarge)
 
-import Html.Styled exposing (Html)
-import Html.Styled.Attributes exposing (attribute)
-import Svg.Styled as Svg exposing (svg)
-import Svg.Styled.Attributes exposing (..)
+import Html exposing (Html)
+import Html.Attributes exposing (attribute)
+import Svg exposing (svg)
+import Svg.Attributes exposing (..)
 
 
 

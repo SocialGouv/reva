@@ -2,8 +2,8 @@ module View.Candidacy.NavigationSteps exposing (archiveView, dropOutView, view)
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Data.Candidacy as Candidacy exposing (Candidacy)
-import Html.Styled exposing (Html, button, div, h2, h3, span, text)
-import Html.Styled.Attributes exposing (class)
+import Html exposing (Html, button, div, h2, h3, span, text)
+import Html.Attributes exposing (class)
 import Route
 import Time
 import View.Candidacy.Tab
@@ -143,7 +143,7 @@ expandedView stepTitle status candidacy =
     ]
 
 
-candidateInfoLink : String -> Candidacy -> Maybe (Html.Styled.Attribute msg)
+candidateInfoLink : String -> Candidacy -> Maybe (Html.Attribute msg)
 candidateInfoLink baseUrl candidacy =
     let
         tab =
@@ -163,7 +163,7 @@ candidateInfoLink baseUrl candidacy =
         Nothing
 
 
-paymentRequestLink : String -> Candidacy -> Maybe (Html.Styled.Attribute msg)
+paymentRequestLink : String -> Candidacy -> Maybe (Html.Attribute msg)
 paymentRequestLink baseUrl candidacy =
     let
         tab =

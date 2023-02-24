@@ -23,7 +23,6 @@
             "justinmimbs/date": "4.0.1",
             "krisajenkins/remotedata": "6.0.1",
             "lukewestby/elm-string-interpolate": "1.0.4",
-            "rtfeldman/elm-css": "17.1.1",
             "rtfeldman/elm-iso8601-date-strings": "1.1.4",
             "rtfeldman/elm-validate": "4.0.1"
         },

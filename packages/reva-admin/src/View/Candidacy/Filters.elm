@@ -3,8 +3,8 @@ module View.Candidacy.Filters exposing (Filters, view)
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Data.Candidacy as Candidacy exposing (CandidacySummary)
 import Data.Context exposing (Context)
-import Html.Styled exposing (Html, a, div, label, li, span, text, ul)
-import Html.Styled.Attributes exposing (class, classList)
+import Html exposing (Html, a, div, label, li, span, text, ul)
+import Html.Attributes exposing (class, classList)
 import List.Extra
 import Route
 

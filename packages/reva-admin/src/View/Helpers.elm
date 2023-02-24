@@ -1,7 +1,7 @@
 module View.Helpers exposing (dataTest)
 
-import Html.Styled exposing (Attribute)
-import Html.Styled.Attributes exposing (attribute)
+import Html exposing (Attribute)
+import Html.Attributes exposing (attribute)
 
 
 dataTest : String -> Attribute msg
