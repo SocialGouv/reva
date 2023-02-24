@@ -92,6 +92,7 @@ const unsafeResolvers = {
         {
           getSubscriptionRequestById: db.getSubscriptionRequestById,
           deleteSubscriptionRequestById: db.deleteSubscriptionRequestById,
+          getIamAccount: IAM.getAccount(keycloakAdmin),
           createAccountInIAM: IAM.createAccount(keycloakAdmin),
           createAccountProfile: AccountDb.createAccountProfile,
           getAccountFromEmail: AccountDb.getAccountFromEmail,
