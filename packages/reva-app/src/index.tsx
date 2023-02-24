@@ -1,6 +1,7 @@
 import "./index.css";
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { startReactDsfr } from "@codegouvfr/react-dsfr/spa";
 // import { inspect } from "@xstate/inspect";
 import React from "react";
 import { createRoot } from "react-dom/client";
@@ -10,6 +11,8 @@ import { Keycloak } from "./contexts/keycloakContext";
 import { KeycloakProvider } from "./contexts/keycloakContext";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+
+startReactDsfr({ defaultColorScheme: "light" });
 
 const client = new ApolloClient({
   uri: process.env.REACT_APP_API_GRAPHQL || "http://localhost:8080/graphql",

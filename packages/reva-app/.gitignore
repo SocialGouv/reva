@@ -31,3 +31,4 @@ resources/ios
 resources/android/**
 !resources/android/icon-background.png
 !resources/android/icon-foreground.png
+/public/dsfr/
