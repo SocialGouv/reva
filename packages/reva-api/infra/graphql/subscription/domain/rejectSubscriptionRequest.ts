@@ -11,9 +11,10 @@ interface RejectSubscriptionRequestDeps {
     id: string
   ) => Promise<Either<string, Maybe<SubscriptionRequest>>>;
   deleteSubscriptionRequestById: (id: string) => Promise<Either<string, void>>;
-  sendProRejectionEmail: (
+  sendRejectionEmail: (
     email: string,
-    token: string
+    subscriptionRequestUri?: string,
+    reasons?: string[],
   ) => Promise<Either<string, string>>;
 }
 export const rejectSubscriptionRequest = async (
@@ -53,10 +54,7 @@ export const rejectSubscriptionRequest = async (
   });
 
   const sendEmail = EitherAsync.fromPromise(() =>
-    deps.sendProRejectionEmail(
-      $store.subreq?.accountEmail ?? "",
-      "my_beautiful_token"
-    )
+    deps.sendRejectionEmail($store.subreq?.accountEmail ?? "")
   )
     .mapLeft(
       (error: string) =>

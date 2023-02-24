@@ -1,5 +1,5 @@
 import mjml2html from "mjml";
-import { Left, Right } from "purify-ts";
+import { Either, Left, Right } from "purify-ts";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import SibApiV3Sdk from "sib-api-v3-sdk";
@@ -62,35 +62,7 @@ export const sendRegistrationEmail = async (email: string, token: string) => {
       })
     );
 
-  return sendEmail(email, token, htmlContent);
-};
-
-export const sendProRegistrationEmail = async (email: string, token: string) => {
-  const htmlContent = (url: string) =>
-    mjml2html(
-      template({
-        headline:
-          "<strong>Félicitaions</strong>, votre compte Reva vient d'être vérifié. Vous pouvez accéder dès à présent à votre espace professionnel !",
-        labelCTA: "Activer mon compte",
-        url,
-      })
-    );
-
-  return sendEmail(email, token, htmlContent);
-};
-
-export const sendProRejectionEmail = async (email: string, token: string) => {
-  const htmlContent = (url: string) =>
-    mjml2html(
-      template({
-        headline:
-          "Navré, votre compte Reva n’a pas pu être vérifié.",
-        labelCTA: "Consulter ma demande",
-        url,
-      })
-    );
-
-  return sendEmail(email, token, htmlContent);
+  return sendEmailWithLink(email, token, htmlContent);
 };
 
 export const sendLoginEmail = async (email: string, token: string) => {
@@ -104,24 +76,16 @@ export const sendLoginEmail = async (email: string, token: string) => {
       })
     );
 
-  return sendEmail(email, token, htmlContent);
+  return sendEmailWithLink(email, token, htmlContent);
 };
 
-const sendEmail = async (
+const sendEmailWithLink = async (
   email: string,
   token: string,
   htmlContent: (url: string) => { html: string }
 ) => {
-  const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-
-  const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail(); // SendSmtpEmail | Values to send a transactional email
   const url = `${process.env.BASE_URL}/app/login?token=${token}`;
   const emailContent = htmlContent(url);
-  sendSmtpEmail.sender = { email: "hello@reva.beta.gouv.fr" };
-  sendSmtpEmail.to = [{ email }];
-  sendSmtpEmail.subject = "Votre accès à votre parcours VAE - REVA";
-  sendSmtpEmail.htmlContent = emailContent.html;
-  sendSmtpEmail.tags = [process.env.APP_ENV || "development"];
 
   if (process.env.NODE_ENV !== "production") {
     logger.info("======= EMAIL CONTENT =======");
@@ -130,12 +94,47 @@ const sendEmail = async (
     logger.info("======= EMAIL URL =======");
     logger.info(url);
     logger.info("=========================");
-
     return Right("result");
   }
+  return sendGenericEmail({
+    htmlContent: emailContent.html,
+    to: { email },
+    subject: "Votre accès à votre parcours VAE - REVA",
+  });
+};
+
+interface EmailAccount {
+  email: string;
+}
+
+interface GenericEmailArgs {
+  to: EmailAccount;
+  subject: string;
+  htmlContent: string;
+  sender?: EmailAccount;
+}
+
+export const sendGenericEmail = async ({
+  to,
+  htmlContent,
+  sender,
+  subject,
+}: GenericEmailArgs): Promise<Either<string, string>> => {
+  const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+
+  const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+
   try {
-    await apiInstance.sendTransacEmail(sendSmtpEmail);
-    return Right(`email sent to ${email}`);
+    await apiInstance.sendTransacEmail(
+      Object.assign(sendSmtpEmail, {
+        sender: sender ?? { email: "hello@reva.beta.gouv.fr" },
+        to: [to],
+        subject,
+        htmlContent,
+        tags: [process.env.APP_ENV ?? "development"],
+      })
+    );
+    return Right(`email sent to ${to.email}`);
   } catch (e) {
     logger.error("error", e);
     return Left("error");

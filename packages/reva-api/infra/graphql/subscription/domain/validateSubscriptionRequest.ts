@@ -36,9 +36,9 @@ interface ValidateSubscriptionRequestDeps {
     organismId: string;
     keycloakId: string;
   }) => Promise<Either<string, Account>>;
-  sendProRegistrationEmail: (
+  sendConfirmationEmail: (
     email: string,
-    token: string
+    iamLinkUrl?: string
   ) => Promise<Either<string, string>>;
 }
 
@@ -153,6 +153,7 @@ export const validateSubscriptionRequest = async (
         city: "",
         zip: "",
         siret: $store.subreq?.companySiret ?? "",
+        legalStatus: $store.subreq?.companyLegalStatus,
         isActive: true,
       })
     )
@@ -225,10 +226,7 @@ export const validateSubscriptionRequest = async (
   );
 
   const sendValidationEmail = EitherAsync.fromPromise(() =>
-    deps.sendProRegistrationEmail(
-      $store.subreq?.accountEmail ?? "",
-      "my_beautiful_token"
-    )
+    deps.sendConfirmationEmail($store.subreq?.accountEmail ?? "")
   )
     .mapLeft(
       (error: string) =>
