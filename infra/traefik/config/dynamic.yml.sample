@@ -1,0 +1,34 @@
+# route app.region.scalingo.io/ to my-api.region.scalingo.io/
+# route app.region.scalingo.io/api to api@internal/api
+# route app.region.scalingo.io/dashboard to api@internal/dashboard (protect with basic auth)
+http:
+  routers:
+    # route / to my-api service
+    my-api:
+      rule: 'Host(`{{ env "APP" }}.{{ env "REGION_NAME" }}.scalingo.io`) && PathPrefix(`/`)'
+      service: my-api
+      middlewares:
+        - removeHeader
+    # Enable dashboard on /dashboard with basic auth
+    dashboard:
+      rule: 'Host(`{{ env "APP" }}.{{ env "REGION_NAME" }}.scalingo.io`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))'
+      service: api@internal
+      middlewares:
+        - auth
+  middlewares:
+    removeHeader: # remove double header
+      headers:
+        customResponseHeaders:
+          x-request-id: "" # remove
+          strict-transport-security: ""
+    auth:
+      basicAuth:
+        users: 
+          - '{{ env "BASIC_AUTH_USER_PASSWORD" }}' # htpasswd format  BASIC_AUTH_USER_PASSWORD="test:TODEFINED"
+  services:
+    # service my-api
+    my-api:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+        - url: 'https://my-api.{{ env "REGION_NAME" }}.scalingo.io/'

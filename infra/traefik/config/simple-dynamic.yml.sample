@@ -1,0 +1,22 @@
+# route app.region.scalingo.io/ to my-api.region.scalingo.io/
+http:
+  routers:
+    # route / to my-api service
+    my-api:
+      rule: 'Host(`{{ env "APP" }}.{{ env "REGION_NAME" }}.scalingo.io`) && PathPrefix(`/`)'
+      service: my-api
+      middlewares:
+        - removeHeader
+  middlewares:
+    removeHeader: # remove double header
+      headers:
+        customResponseHeaders:
+          x-request-id: "" # remove
+          strict-transport-security: ""
+  services:
+    # service my-api
+    my-api:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+        - url: 'https://my-api.{{ env "REGION_NAME" }}.scalingo.io/'
