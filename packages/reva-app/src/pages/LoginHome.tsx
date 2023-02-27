@@ -1,10 +1,9 @@
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Input } from "@codegouvfr/react-dsfr/Input";
 import { useActor } from "@xstate/react";
 import { useRef } from "react";
 import { Interpreter } from "xstate";
 
-import { Button } from "../components/atoms/Button";
-import { Input } from "../components/atoms/Input";
-import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
@@ -35,7 +34,7 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
     }
   };
 
-  const emailRef = useRef<HTMLDivElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
 
   return (
     <Page
@@ -43,38 +42,30 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
       className="z-[90] flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
-      <BackButton onClick={() => send("BACK")} />
-      <h1 className="mb-4 text-center font-bold text-lg text-slate-900">
-        Reva
-      </h1>
       <div className="h-full flex flex-col px-12 overflow-y-auto pt-4 pb-[400px] text-lg">
-        <p className="my-6 mb-10">
+        <h1 className="text-3xl font-bold text-dsfrBlue-500">Bienvenue 🤝,</h1>
+        <h2 className="my-6">Connexion</h2>
+        <p className="mb-10">
           Pour la sécurité de vos données, merci de renseigner votre email, un
           lien vous sera envoyé afin de retrouver votre candidature.
         </p>
-        <form onSubmit={onSubmit} className="space-y-6">
+        <form onSubmit={onSubmit} className="mb-6">
           <Input
-            ref={emailRef}
-            name="email"
+            nativeInputProps={{
+              id: "email",
+              ref: emailRef,
+              name: "email",
+              required: true,
+              placeholder: "votre@email.fr",
+            }}
             label="Email"
-            type="email"
-            required
-            placeholder="votre@email.fr"
           />
           {state.context.error && (
             <p key="error" className="text-red-600 my-4 text-sm">
               {state.context.error}
             </p>
           )}
-          <div className="py-6">
-            <Button
-              data-test={`login-home-submit`}
-              type="submit"
-              loading={state.matches("loginHome.submitting")}
-              label={"Envoyer"}
-              size="medium"
-            />
-          </div>
+          <Button data-test={`login-home-submit`}>Envoyer</Button>
         </form>
         <div className="border-t border-gray-200 pt-6">
           <button
