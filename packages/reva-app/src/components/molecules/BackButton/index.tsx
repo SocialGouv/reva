@@ -20,7 +20,7 @@ export const BackButton = ({
       data-test="button-back"
       type="button"
       onClick={onClick}
-      className={`${className} shrink-0 flex items-center w-full rounded py-4 pl-6 h-18 ml-6 w-[120px] ${
+      className={`Mui ${className} shrink-0 flex items-center w-full rounded py-4 pl-6 h-18 ml-6 w-[120px] ${
         color === "dark" ? "hover:bg-gray-100" : "hover:bg-slate-800"
       } ${colorClass}`}
     >
