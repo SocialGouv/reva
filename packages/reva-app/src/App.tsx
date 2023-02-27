@@ -1,17 +1,16 @@
 import {
   ApolloClient,
   ApolloContextValue,
-  Context,
   getApolloContext,
 } from "@apollo/client";
-import { Capacitor } from "@capacitor/core";
 import { Device } from "@capacitor/device";
 import { useMachine } from "@xstate/react";
 import { Crisp } from "crisp-sdk-web";
 import { AnimatePresence } from "framer-motion";
-import { ReactNode, useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect, useMemo } from "react";
 
 import { Footer } from "./components/organisms/Footer";
+import { Header } from "./components/organisms/Header/Header";
 import { useKeycloakContext } from "./contexts/keycloakContext";
 import { Certification, Contact } from "./interface";
 import { mainMachine } from "./machines/main.machine";
@@ -54,7 +53,6 @@ import {
   getCertification,
   searchCertifications,
 } from "./services/searchServices";
-import useWindowSize from "./utils/useWindowSize";
 
 function App() {
   const { client } = useContext(
@@ -237,17 +235,6 @@ function App() {
   // @ts-ignore
   window.state = current;
 
-  const windowSize = useWindowSize();
-
-  const appSize =
-    windowSize.width > 640
-      ? { width: 580, height: windowSize.height - 110 }
-      : // On mobile, for form pages it's better to keep 100vh (touching an input moves the view up)
-      ["loginHome", "projectExperience", "projectContact"].some(current.matches)
-      ? { width: windowSize.width, height: "100vh" }
-      : // Otherwise we use this height to prevent buttons fixed at the bottom to be hidden behind Safari bar
-        windowSize;
-
   const certificatesPage = (
     <Certificates key="show-results" mainService={mainService} />
   );
@@ -419,24 +406,11 @@ function App() {
   );
 
   return (
-    <div className="h-screen flex flex-col">
-      <div className="flex-grow sm:flex sm:flex-col sm:items-center sm:justify-center">
-        <div className="App relative sm:px-20">
-          {Capacitor.isNativePlatform() ? (
-            <div
-              className={`transition-opacity duration-200 ${
-                current.matches("searchResults") ? "opacity-1" : "opacity-0"
-              } absolute z-50 h-12 top-0 inset-x-0 backdrop-blur-md bg-white/50`}
-            ></div>
-          ) : (
-            <></>
-          )}
-          <div
-            className="sm:rounded-lg sm:shadow-lg sm:z-[1] relative flex flex-col w-full bg-white overflow-hidden"
-            style={appSize}
-          >
-            {pageContent}
-          </div>
+    <div className="h-screen w-screen flex flex-col">
+      <Header />
+      <div className="flex-grow sm:flex sm:flex-col sm:items-center sm:justify-center ">
+        <div className="sm:rounded-lg sm:shadow-lg sm:z-[1] md:my-5 relative flex flex-col w-full h-full max-w-[800px] bg-white overflow-hidden">
+          {pageContent}
         </div>
       </div>
       <Footer />
