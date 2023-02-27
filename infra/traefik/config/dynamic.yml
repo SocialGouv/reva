@@ -16,31 +16,98 @@ http:
       middlewares:
         - removeHeader
 
-    site-web:
+    site-web-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/`)"
-      service: site-web
+      service: site-web-staging
       middlewares:
         - removeHeader
 
-    espace-pro:
+    espace-pro-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/admin`)"
-      service: espace-pro
+      service: espace-pro-staging
       middlewares:
         - removeHeader
 
-    app-candidat:
+    app-candidat-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/app`)"
-      service: app-candidat
+      service: app-candidat-staging
       middlewares:
         - removeHeader
 
-    api:
+    api-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/graphql`)"
-      service: api
+      service: api-staging
+      middlewares:
+        - removeHeader
+
+    # Should be removed after the creation of the /api path
+    payment-request-staging:
+      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/payment-request/proof`)"
+      service: site-web-staging
+      middlewares:
+        - removeHeader
+
+    # Should be removed after the creation of the /api path
+    ping-staging:
+      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/ping`)"
+      service: site-web-staging
       middlewares:
         - removeHeader
 
     # --- END STAGING ---
+    # --- BEGIN PRODUCTION ---
+
+    auth-reva-beta-gouv-fr:
+      rule: "Host(`auth.reva.beta.gouv.fr`)"
+      service: auth-reva-beta-gouv-fr
+      middlewares:
+        - removeHeader
+
+    metabase-reva-beta-gouv-fr:
+      rule: "Host(`metabase.reva.beta.gouv.fr`)"
+      service: metabase-reva-beta-gouv-fr
+      middlewares:
+        - removeHeader
+
+    site-web-production:
+      rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/`)"
+      service: site-web-production
+      middlewares:
+        - removeHeader
+
+    espace-pro-production:
+      rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/admin`)"
+      service: espace-pro-production
+      middlewares:
+        - removeHeader
+
+    app-candidat-production:
+      rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/app`)"
+      service: app-candidat-production
+      middlewares:
+        - removeHeader
+
+    api-production:
+      rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/graphql`)"
+      service: api-production
+      middlewares:
+        - removeHeader
+
+    # Should be removed after the creation of the /api path
+    payment-request-production:
+      rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/payment-request/proof`)"
+      service: site-web-production
+      middlewares:
+        - removeHeader
+
+    # Should be removed after the creation of the /api path
+    ping-production:
+      rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/ping`)"
+      service: site-web-production
+      middlewares:
+        - removeHeader
+
+    # --- END PRODUCTION ---
     # Enable dashboard on /dashboard with basic auth
     dashboard:
       rule: 'Host(`{{ env "APP" }}.{{ env "REGION_NAME" }}.scalingo.io`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))'
@@ -72,28 +139,68 @@ http:
         servers:
           - url: "https://metabase-reva-incubateur-net.osc-fr1.scalingo.io/"
 
-    site-web:
+    site-web-staging:
       loadBalancer:
         passHostHeader: false
         servers:
           - url: "https://reva-staging.osc-fr1.scalingo.io/"
 
-    espace-pro:
+    espace-pro-staging:
       loadBalancer:
         passHostHeader: false
         servers:
           - url: "https://reva-staging.osc-fr1.scalingo.io/admin/"
 
-    app-candidat:
+    app-candidat-staging:
       loadBalancer:
         passHostHeader: false
         servers:
           - url: "https://reva-staging.osc-fr1.scalingo.io/app/"
 
-    api:
+    api-staging:
       loadBalancer:
         passHostHeader: false
         servers:
           - url: "https://reva-staging.osc-fr1.scalingo.io/graphql"
 
     # --- END STAGING ---
+
+    # --- BEGIN PRODUCTION ---
+
+    auth-reva-beta-gouv-fr:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://auth-reva-beta-gouv-fr.osc-secnum-fr1.scalingo.io/"
+
+    metabase-reva-beta-gouv-fr:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://metabase-reva-beta-gouv-fr.osc-secnum-fr1.scalingo.io/"
+
+    site-web-production:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-prod.osc-secnum-fr1.scalingo.io/"
+
+    espace-pro-production:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-prod.osc-secnum-fr1.scalingo.io/admin/"
+
+    app-candidat-production:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-prod.osc-secnum-fr1.scalingo.io/app/"
+
+    api-production:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-prod.osc-secnum-fr1.scalingo.io/graphql"
+
+    # --- END PRODUCTION ---
