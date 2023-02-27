@@ -1,15 +1,10 @@
-import {
-  ApolloClient,
-  ApolloContextValue,
-  Context,
-  getApolloContext,
-} from "@apollo/client";
+import { ApolloClient, getApolloContext } from "@apollo/client";
 import { Capacitor } from "@capacitor/core";
 import { Device } from "@capacitor/device";
 import { useMachine } from "@xstate/react";
 import { Crisp } from "crisp-sdk-web";
 import { AnimatePresence } from "framer-motion";
-import { ReactNode, useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect, useMemo } from "react";
 
 import { Footer } from "./components/organisms/Footer";
 import { useKeycloakContext } from "./contexts/keycloakContext";
@@ -57,9 +52,7 @@ import {
 import useWindowSize from "./utils/useWindowSize";
 
 function App() {
-  const { client } = useContext(
-    getApolloContext() as React.Context<ApolloContextValue>
-  );
+  const { client } = useContext(getApolloContext());
   //@ts-ignore
   const { authenticated, token, setTokens } = useKeycloakContext();
 

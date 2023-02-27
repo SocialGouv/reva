@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react";
+import { FC } from "react";
 
 import { ProgressTitle } from "../../../components/molecules/ProgressTitle";
 
@@ -6,7 +6,6 @@ interface Props {
   progress: number;
   title: string;
   theme: "dark" | "light";
-  children?: ReactNode;
 }
 
 export const ProgressCard: FC<Props> = ({

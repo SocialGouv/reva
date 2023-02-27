@@ -1,18 +1,15 @@
 import "./index.css";
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { startReactDsfr } from "@codegouvfr/react-dsfr/spa";
 // import { inspect } from "@xstate/inspect";
 import React from "react";
-import { createRoot } from "react-dom/client";
+import ReactDOM from "react-dom";
 
 import App from "./App";
 import { Keycloak } from "./contexts/keycloakContext";
 import { KeycloakProvider } from "./contexts/keycloakContext";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
-
-startReactDsfr({ defaultColorScheme: "light" });
 
 const client = new ApolloClient({
   uri: process.env.REACT_APP_API_GRAPHQL || "http://localhost:8080/graphql",
@@ -28,17 +25,15 @@ const keycloakInstance = Keycloak({
   url: process.env.REACT_APP_KEYCLOAK_URL as string,
 });
 
-const container = document.getElementById("root");
-const root = createRoot(container!);
-
-root.render(
+ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <KeycloakProvider keycloakInstance={keycloakInstance}>
         <App />
       </KeycloakProvider>
     </ApolloProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
+  document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change

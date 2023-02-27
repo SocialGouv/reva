@@ -116,11 +116,11 @@ export const Card = React.forwardRef<HTMLLIElement, CardProps>(
               <div className="mt-1 mb-4 font-bold text-white">{label}</div>
               <p className="overflow-auto text-slate-400 text-base leading-normal transition-opacity">
                 {summary}
-              </p>
+              </p>{" "}
             </div>
             <button
               data-test="certification-learn-more"
-              className="Mui block text-blue-500 py-4 underline"
+              className="block text-blue-500 py-4 underline"
               onClick={onLearnMore}
             >
               Lire tous les détails
@@ -192,7 +192,7 @@ export const Card = React.forwardRef<HTMLLIElement, CardProps>(
     return (
       <li ref={ref}>
         <motion.button
-          className="Mui relative block text-left w-full cursor-pointer overflow-hidden bg-slate-900 text-white rounded-2xl"
+          className="relative block text-left w-full cursor-pointer overflow-hidden bg-slate-900 text-white rounded-2xl"
           layout
           transition={transition}
           layoutDependency={size}

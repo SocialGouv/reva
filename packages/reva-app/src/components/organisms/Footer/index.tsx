@@ -1,9 +1,9 @@
-import { FC, ReactNode } from "react";
+import { FC } from "react";
 
 import logoImg from "../../atoms/Logo/logo.png";
 
 const Divider = () => <span className="text-gray-400">|</span>;
-const Link: FC<{ href: string; target?: string; children?: ReactNode }> = ({
+const Link: FC<{ href: string; target?: string }> = ({
   children,
   href,
   target = "_self",

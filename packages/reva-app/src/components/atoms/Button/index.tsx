@@ -75,7 +75,7 @@ export const Button = ({
     <button
       type={type}
       disabled={disabled || loading}
-      className={`Mui${
+      className={`${
         disabled ? "opacity-50 cursor-not-allowed" : ""
       } rounded-md flex justify-center items-center ${modeClass} ${
         sizeClasses[size]
