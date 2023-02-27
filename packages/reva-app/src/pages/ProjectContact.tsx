@@ -1,10 +1,9 @@
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Input } from "@codegouvfr/react-dsfr/Input";
 import { useActor } from "@xstate/react";
 import { useRef } from "react";
 import { Interpreter } from "xstate";
 
-import { Button } from "../components/atoms/Button";
-import { Input } from "../components/atoms/Input";
-import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
 import { Contact } from "../interface";
 import {
@@ -48,23 +47,16 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
     });
   };
   const editedContact = state.context.contact;
-  const firstnameRef = useRef<HTMLDivElement>(null);
-  const lastnameRef = useRef<HTMLDivElement>(null);
-  const phoneRef = useRef<HTMLDivElement>(null);
-  const emailRef = useRef<HTMLDivElement>(null);
+  const firstnameRef = useRef<HTMLInputElement>(null);
+  const lastnameRef = useRef<HTMLInputElement>(null);
+  const phoneRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
 
   return (
     <Page
       className="z-[80] flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
-      {hasCandidacy ? (
-        <BackButton onClick={() => send("BACK")} />
-      ) : (
-        <h1 className="mt-12 mb-4 text-center font-bold text-lg text-slate-900">
-          Reva
-        </h1>
-      )}
       <div className="h-full flex flex-col px-12 overflow-y-auto pt-4 pb-[400px] text-lg">
         {hasCandidacy ? (
           <></>
@@ -78,62 +70,67 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           </p>
         ) : (
           <>
-            <p>Bonjour 🤝,</p>
-            <p className="my-6 font-bold">
-              Votre parcours est unique, tout comme vous.
-            </p>
+            <h1 className="text-3xl font-bold text-dsfrBlue-500">
+              Bienvenue 🤝,
+            </h1>
+            <h2 className="my-6">Se créer un compte.</h2>
           </>
         )}
-        <p className="mb-10">
-          Ces informations de contact permettront à votre architecte de parcours
-          de vous contacter afin de discuter de votre projet.
-        </p>
-        <form onSubmit={onSubmit} className="space-y-6">
+        <form onSubmit={onSubmit} className="mb-6">
           <Input
-            ref={firstnameRef}
-            name="firstname"
             label="Prénom"
-            required
-            defaultValue={editedContact?.firstname || ""}
+            nativeInputProps={{
+              name: "firstname",
+              ref: firstnameRef,
+              required: true,
+              defaultValue: editedContact?.firstname || "",
+            }}
           />
+
           <Input
-            ref={lastnameRef}
-            name="lastname"
             label="Nom"
-            required
-            defaultValue={editedContact?.lastname || ""}
+            nativeInputProps={{
+              name: "lastname",
+              ref: lastnameRef,
+              required: true,
+              defaultValue: editedContact?.lastname || "",
+            }}
           />
+
           <Input
-            ref={phoneRef}
-            name="phone"
             label="Téléphone"
-            minLength={10}
-            required
-            defaultValue={editedContact?.phone || ""}
+            hintText="Format attendu : 00 33 X XX XX XX XX"
+            nativeInputProps={{
+              name: "phone",
+              ref: phoneRef,
+              minLength: 10,
+              required: true,
+              defaultValue: editedContact?.phone || "",
+            }}
           />
+
           <Input
-            ref={emailRef}
-            name="email"
             label="Email"
-            type="email"
-            required
-            placeholder="votre@email.fr"
-            defaultValue={editedContact?.email || ""}
+            nativeInputProps={{
+              name: "email",
+              ref: emailRef,
+              required: true,
+              placeholder: "votre@email.fr",
+              defaultValue: editedContact?.email || "",
+            }}
           />
-          {state.context.error && state.context.error !== INVALID_TOKEN_ERROR && (
-            <p key="error" className="text-red-600 my-4 text-sm">
-              {state.context.error}
-            </p>
-          )}
-          <div className="py-6">
-            <Button
-              data-test={`project-contact-${editedContact ? "save" : "add"}`}
-              type="submit"
-              loading={state.matches("projectContact.submitting")}
-              label={hasCandidacy ? "Valider" : "Commencer"}
-              size="medium"
-            />
-          </div>
+
+          {state.context.error &&
+            state.context.error !== INVALID_TOKEN_ERROR && (
+              <p key="error" className="text-red-600 my-4 text-sm">
+                {state.context.error}
+              </p>
+            )}
+          <Button
+            data-test={`project-contact-${editedContact ? "save" : "add"}`}
+          >
+            Valider
+          </Button>
         </form>
         {!hasCandidacy && (
           <div className="border-t border-gray-200 pt-6">

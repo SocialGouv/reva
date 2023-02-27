@@ -1,5 +1,4 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
-const colors = require("tailwindcss/colors");
 
 module.exports = {
   content: ["./src/**/*.{elm,js,jsx,ts,tsx}"],
@@ -23,11 +22,12 @@ module.exports = {
           800: "#19182f",
           900: "#21203D",
         },
+        dsfrBlue: { 500: "#000091" },
       },
       fontFamily: {
         sans: ["Marianne", ...defaultTheme.fontFamily.sans],
       },
     },
   },
-  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],
+  plugins: [require("@tailwindcss/typography")],
 };
