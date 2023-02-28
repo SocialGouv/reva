@@ -1,5 +1,4 @@
-import { Back } from "../../atoms/Icons";
-
+import { Button } from "@codegouvfr/react-dsfr/Button";
 type Color = "dark" | "light";
 
 interface BackButtonProps {
@@ -13,21 +12,17 @@ export const BackButton = ({
   color = "dark",
   onClick,
 }: BackButtonProps) => {
-  const colorClass = color === "dark" ? "text-slate-900" : "text-white";
+  const colorClass = color === "dark" ? "text-dsfrBlue-500" : "text-white";
+  const hoverBgClass = color === "dark" ? "" : "hover:!bg-slate-800";
 
   return (
-    <button
+    <Button
       data-test="button-back"
-      type="button"
+      iconId="fr-icon-arrow-go-back-fill"
       onClick={onClick}
-      className={`Mui ${className} shrink-0 flex items-center w-full rounded py-4 pl-6 h-18 ml-6 w-[120px] ${
-        color === "dark" ? "hover:bg-gray-100" : "hover:bg-slate-800"
-      } ${colorClass}`}
-    >
-      <div className="w-[22px]">
-        <Back />
-        <span className="sr-only">Revenir</span>
-      </div>
-    </button>
+      priority="tertiary no outline"
+      title="Revenir"
+      className={`ml-10 ${className} ${colorClass} ${hoverBgClass}`}
+    />
   );
 };
