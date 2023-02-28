@@ -144,11 +144,17 @@ export const buildApp = async (
 
   app.register(keycloakAdminPlugin);
 
-  app.register(mercuriusGraphQL);
+  app.register(mercuriusGraphQL, {
+    prefix: "/api",
+  });
 
-  app.register(restRoutes);
+  app.register(restRoutes, {
+    prefix: "/api",
+  });
 
-  app.register(proofUploadRoute);
+  app.register(proofUploadRoute, {
+    prefix: "/api",
+  });
 
   return app;
 };

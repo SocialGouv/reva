@@ -2,7 +2,7 @@ import { stubMutation, stubQuery } from "../utils/graphql";
 
 context("Certificates", () => {
   beforeEach(() => {
-    cy.intercept("POST", "/graphql", (req) => {
+    cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate1.json");
       stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "Certifications", "certifications.json");

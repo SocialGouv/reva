@@ -2,7 +2,7 @@ import { stubMutation, stubQuery } from "../utils/graphql";
 
 context("Submission", () => {
   it("log on a submitted project", function () {
-    cy.intercept("POST", "/graphql", (req) => {
+    cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate2-submitted.json");
       stubQuery(req, "getReferential", "referential.json");
     });
@@ -14,7 +14,7 @@ context("Submission", () => {
   });
 
   it("log on a project taken over", function () {
-    cy.intercept("POST", "/graphql", (req) => {
+    cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate2-taken-over.json");
       stubQuery(req, "getReferential", "referential.json");
     });

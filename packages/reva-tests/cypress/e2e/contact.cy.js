@@ -11,7 +11,7 @@ const phone2 = "06-01-02-03-05";
 
 context.skip("Contact", () => {
   it("add a contact", function () {
-    cy.intercept("POST", "/graphql", (req) => {
+    cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "candidate_askForRegistration", "registration.json");
     });
     cy.visit("/");
@@ -28,7 +28,7 @@ context.skip("Contact", () => {
   });
 
   it("retrieve contact info from registration", function () {
-    cy.intercept("POST", "/graphql", (req) => {
+    cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate1.json");
       stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "update_contact", "contact2.json");
@@ -51,7 +51,7 @@ context.skip("Contact", () => {
   });
 
   it("update email and phone", function () {
-    cy.intercept("POST", "/graphql", (req) => {
+    cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate1.json");
       stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "update_contact", "contact.json");

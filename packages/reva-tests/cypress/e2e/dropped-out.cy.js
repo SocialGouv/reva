@@ -7,7 +7,7 @@ const supportEmail = "support@reva.beta.gouv.fr";
 
 context("Dropped out", () => {
   it("log on a dropped-out project", function () {
-    cy.intercept("POST", "/graphql", (req) => {
+    cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate2-dropped-out.json");
       stubQuery(req, "getReferential", "referential.json");
     });
@@ -19,7 +19,7 @@ context("Dropped out", () => {
   });
 
   it("dropped-out project page should display candidate info", function () {
-    cy.intercept("POST", "/graphql", (req) => {
+    cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate2-dropped-out.json");
       stubQuery(req, "getReferential", "referential.json");
     });
@@ -38,7 +38,7 @@ context("Dropped out", () => {
   });
 
   it("dropped-out project page should display support email", function () {
-    cy.intercept("POST", "/graphql", (req) => {
+    cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate2-dropped-out.json");
       stubQuery(req, "getReferential", "referential.json");
     });

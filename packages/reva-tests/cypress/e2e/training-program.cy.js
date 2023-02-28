@@ -3,7 +3,7 @@ import { stubMutation, stubQuery } from "../utils/graphql";
 context("Training Program", () => {
   describe("Testing descriptions", () => {
     beforeEach(() => {
-      cy.intercept("POST", "/graphql", (req) => {
+      cy.intercept("POST", "/api/graphql", (req) => {
         stubMutation(
           req,
           "candidate_login",
@@ -32,7 +32,7 @@ context("Training Program", () => {
 
   describe("Testing descriptions with missing fields", () => {
     beforeEach(() => {
-      cy.intercept("POST", "/graphql", (req) => {
+      cy.intercept("POST", "/api/graphql", (req) => {
         stubQuery(
           req,
           "candidate_login",
@@ -55,7 +55,7 @@ context("Training Program", () => {
 
   describe("Testing Checkbox logic", () => {
     it("validates checked condition and its mechanics", () => {
-      cy.intercept("POST", "/graphql", (req) => {
+      cy.intercept("POST", "/api/graphql", (req) => {
         stubMutation(req, "candidate_login", "candidate2-training-sent.json");
         stubQuery(req, "getReferential", "referential.json");
         stubQuery(
@@ -79,7 +79,7 @@ context("Training Program", () => {
 
   describe("Testing training confirmed but sent again", () => {
     it("should be able to accept and submit the training again", () => {
-      cy.intercept("POST", "/graphql", (req) => {
+      cy.intercept("POST", "/api/graphql", (req) => {
         stubMutation(req, "candidate_login", "candidate2-training-confirmed-sent-again.json");
         stubQuery(req, "getReferential", "referential.json");
         stubQuery(
