@@ -1,10 +1,14 @@
 import { FastifyInstance } from "fastify";
-import { deleteCandidacyFromEmail, deleteCandidacyFromPhone } from "../database/postgres/candidacies";
+
+import {
+  deleteCandidacyFromEmail,
+  deleteCandidacyFromPhone,
+} from "../database/postgres/candidacies";
 
 export const restRoutes = (
   server: FastifyInstance,
   _opts: unknown,
-  done: () => void,
+  done: () => void
 ) => {
   server.get("/ping", async function (_request, reply) {
     reply.send("pong");

@@ -4,7 +4,7 @@ const email = "email@example.com";
 
 context("Login", () => {
   it("submit email", function () {
-    cy.intercept("POST", "/graphql", (req) => {
+    cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "candidate_askForLogin", "login.json");
     });
     cy.login({ token: null });
@@ -25,7 +25,7 @@ context("Login", () => {
   });
 
   it("use an expired token", function () {
-    cy.intercept("POST", "/graphql", (req) => {
+    cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "login-expired.json", 500);
       stubQuery(req, "getReferential", "referential.json");
     });

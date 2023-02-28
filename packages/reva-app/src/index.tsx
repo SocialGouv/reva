@@ -15,7 +15,7 @@ import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 startReactDsfr({ defaultColorScheme: "light" });
 
 const client = new ApolloClient({
-  uri: process.env.REACT_APP_API_GRAPHQL || "http://localhost:8080/graphql",
+  uri: process.env.REACT_APP_API_GRAPHQL || "http://localhost:8080/api/graphql",
   cache: new InMemoryCache(),
 });
 

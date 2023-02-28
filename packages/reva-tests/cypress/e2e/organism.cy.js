@@ -2,7 +2,7 @@ import { stubMutation, stubQuery } from "../utils/graphql";
 
 context("Empty candidacy", () => {
   it("prevent organism selection", function () {
-    cy.intercept("POST", "/graphql", (req) => {
+    cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate1.json");
       stubQuery(req, "getReferential", "referential.json");
     });
@@ -18,7 +18,7 @@ context("Empty candidacy", () => {
 
 context("Candidacy with department certification selected", () => {
   it("list all available organisms", function () {
-    cy.intercept("POST", "/graphql", (req) => {
+    cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate3.json");
       stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "getOrganismsForCandidacy", "organism.json");
@@ -72,7 +72,7 @@ context("Candidacy with department certification selected", () => {
   });
 
   it("submit default first organism", function () {
-    cy.intercept("POST", "/graphql", (req) => {
+    cy.intercept("POST", "/api/graphql", (req) => {
       stubMutation(req, "candidate_login", "candidate3.json");
       stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "getOrganismsForCandidacy", "organism.json");

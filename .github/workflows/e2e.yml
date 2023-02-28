@@ -2,7 +2,7 @@ name: Cypress tests
 on: [push]
 env:
   FRAMER_WEBSITE_URL: https://reva.incubateur.net
-  REACT_APP_API_GRAPHQL: https://reva.incubateur.net/graphql
+  REACT_APP_API_GRAPHQL: https://reva.incubateur.net/api/graphql
   REACT_APP_KEYCLOAK_REALM: reva-app
   REACT_APP_KEYCLOAK_URL: https://auth.reva.incubateur.net/
   REACT_APP_KEYCLOAK_CLIENT_ID: reva-app
