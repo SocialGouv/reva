@@ -1,7 +1,6 @@
 import { useActor } from "@xstate/react";
 import { Interpreter } from "xstate";
 
-import { Header } from "../components/atoms/Header";
 import { Page } from "../components/organisms/Page";
 import { MainContext, MainEvent } from "../machines/main.machine";
 
@@ -18,14 +17,15 @@ export const LoginConfirmation = ({ mainService }: LoginConfirmationProps) => {
       className="z-[100] overflow-hidden h-full flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
-      <h1 className="mt-12 text-center font-bold text-lg text-slate-900">
-        Reva
-      </h1>
-      <div className="relative overflow-y-auto flex flex-col mt-8 pl-12 pr-8 py-12 text-slate-800 leading-loose">
-        <Header label="Merci !" />
-        <p className="mt-4">
+      <div className="relative overflow-y-auto flex flex-col pt-4 pl-12 pr-8  text-slate-800 leading-loose">
+        <h1 className="text-3xl font-bold text-dsfrBlue-500">Merci !</h1>
+        <p className="mt-4 text-lg font-bold text-dsfrGray-500">
           Un email vous a été envoyé, il contient un lien qui vous permettra de
           retrouver votre candidature.
+        </p>
+        <p className="mt-4 text-dsfrGray-500">
+          Cliquez sur le lien de validation dans cet email pour accéder à votre
+          espace candidat.
         </p>
       </div>
     </Page>
