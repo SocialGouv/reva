@@ -2,8 +2,9 @@
  * @jest-environment ./test/fastify-test-env.ts
  */
 
-import { Account, LegalStatus, Organism, prisma } from "@prisma/client";
 import { randomUUID } from "crypto";
+
+import { Account, LegalStatus, Organism, prisma } from "@prisma/client";
 
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
@@ -46,12 +47,13 @@ const subreqSample = {
 
 const subreqSameOrganism = {
   ...subreqSample, // same siret
-  companyName: "Jeajean formation",
+  companyName: "Jeanjean formation",
   accountEmail: "contact@jojo-formation.fr", // different account
 };
 
 const subreqSameAccount = {
-  ...subreqSample, // same acount
+  ...subreqSample,
+  accountEmail: accountAP.email, // same account
   companyName: "Momo formation",
   companySiret: "987bla123", // different organism
 };
@@ -70,12 +72,15 @@ describe("Subscription request validation / rejection", () => {
       .then(({ id }) => (organismAPId = id));
     await prismaClient.account
       .create({
-        data: { ...accountAP, organismId: organismAPId, keycloakId: randomUUID() },
+        data: {
+          ...accountAP,
+          organismId: organismAPId,
+          keycloakId: randomUUID(),
+        },
       })
       .then(({ id }) => (accountAPId = id));
+    // Create subscription requests
     await prismaClient.subscriptionRequest
-
-
       .create({ data: subreqSample })
       .then(({ id }) => (subreqSampleId = id));
     await prismaClient.subscriptionRequest
@@ -87,8 +92,8 @@ describe("Subscription request validation / rejection", () => {
   });
 
   afterAll(async () => {
-    await prismaClient.account.delete({where: {id: accountAPId}});
-    await prismaClient.organism.delete({where: {id: organismAPId}});
+    await prismaClient.account.delete({ where: { id: accountAPId } });
+    await prismaClient.organism.delete({ where: { id: organismAPId } });
     await prismaClient.subscriptionRequest.deleteMany({
       where: {
         id: { in: [subreqSampleId, subreqSameOrganismId, subreqSameAccountId] },
@@ -112,6 +117,30 @@ describe("Subscription request validation / rejection", () => {
     expect(resp.statusCode).not.toBe(200);
     const errors = resp.json().errors;
     expect(errors.length).toEqual(1);
-    expect(errors[0].message).toEqual(`Un organisme existe déjà avec le siret ${subreqSameOrganism.companySiret}`);
+    expect(errors[0].message).toEqual(
+      `Un organisme existe déjà avec le siret ${subreqSameOrganism.companySiret}`
+    );
   });
+
+  test("Validation should fail when account already exists", async () => {
+    const resp = await injectGraphql({
+      fastify: (global as any).fastify,
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: "blabla",
+      }),
+      payload: {
+        requestType: "mutation",
+        endpoint: "subscription_validateSubscriptionRequest",
+        arguments: { subscriptionRequestId: subreqSameAccountId },
+      },
+    });
+    expect(resp.statusCode).not.toBe(200);
+    const errors = resp.json().errors;
+    expect(errors.length).toEqual(1);
+    expect(errors[0].message).toEqual(
+      `Un compte existe déjà avec l'email ${subreqSameAccount.accountEmail}`
+    );
+  });
+
 });
