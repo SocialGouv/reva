@@ -52,7 +52,7 @@ const subreqSameOrganism = {
 
 const subreqSameAccount = {
   ...subreqSample, // same acount
-  companyName: "momo formation",
+  companyName: "Momo formation",
   companySiret: "987bla123", // different organism
 };
 
@@ -105,14 +105,13 @@ describe("Subscription request validation / rejection", () => {
       }),
       payload: {
         requestType: "mutation",
-        endpoint: "subscription_validateubscriptionRequest",
+        endpoint: "subscription_validateSubscriptionRequest",
         arguments: { subscriptionRequestId: subreqSameOrganismId },
-        returnFields:
-          "{}",
       },
     });
-    expect(resp.statusCode).toEqual(400);
-    const subreq = resp.json().data.subscription_validateubscriptionRequest;
-    expect(subreq).toMatchObject(subreqSample);
+    expect(resp.statusCode).not.toBe(200);
+    const errors = resp.json().errors;
+    expect(errors.length).toEqual(1);
+    expect(errors[0].message).toEqual(`Un organisme existe déjà avec le siret ${subreqSameOrganism.companySiret}`);
   });
 });
