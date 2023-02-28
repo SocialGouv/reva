@@ -12,7 +12,7 @@ interface GraphqlRequestParameters {
   arguments?: GraqhqlRequestArguments;
   enumFields?: string[],
   variables?: GraphqlVariables;
-  returnFields: string;
+  returnFields?: string;
 }
 
 interface GraphqlRequest {
@@ -62,7 +62,7 @@ const graphqlRequestPayload =
     const argumentList = graphqlArgumentList(args.arguments, args.enumFields);
     return {
       operationName,
-      query: `${requestType} ${operationName} { ${args.endpoint} ${argumentList} ${args.returnFields} }`,
+      query: `${requestType} ${operationName} { ${args.endpoint} ${argumentList} ${args.returnFields ?? ""} }`,
       variables: args.variables ?? null,
     };
   };
