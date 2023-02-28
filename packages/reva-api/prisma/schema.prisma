@@ -571,6 +571,8 @@ model FileUploadSpooler {
   destinationPath     String   @map("destination_path") @db.VarChar(255)
   description         String   @map("description") @db.VarChar(255)
   fileContent         Bytes    @map("file_content")
+
+  @@map("file_upload_spooler")
 }
 
 enum LegalStatus {
@@ -598,4 +600,6 @@ model SubscriptionRequest {
   accountEmail          String      @map("account_email") @db.VarChar(255)
   accountPhoneNumber    String      @map("account_phone_number") @db.VarChar(50)
   createdAt             DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("subscription_request")
 }
