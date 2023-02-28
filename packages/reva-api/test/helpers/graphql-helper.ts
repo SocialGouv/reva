@@ -39,7 +39,7 @@ export const injectGraphql = ({
 }: InjectGraphqlParameters) => {
   return fastify.inject({
     method: "POST",
-    url: "/graphql",
+    url: "/api/graphql",
     payload: hasFormatedQuery(payload)
         ? payload
         : graphqlRequestPayload(payload.requestType)(payload),
