@@ -23,6 +23,7 @@ module.exports = {
           900: "#21203D",
         },
         dsfrBlue: { 500: "#000091" },
+        dsfrGray: { 500: "#666666" },
       },
       fontFamily: {
         sans: ["Marianne", ...defaultTheme.fontFamily.sans],
