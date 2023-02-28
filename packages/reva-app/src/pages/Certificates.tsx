@@ -1,12 +1,11 @@
+import { Select } from "@codegouvfr/react-dsfr/Select";
 import { useActor } from "@xstate/react";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
-import { Header } from "../components/atoms/Header";
-import { Select, option } from "../components/atoms/Select";
-import { BackButton } from "../components/molecules/BackButton";
+import { BackToHomeButton } from "../components/molecules/BackToHomeButton/BackToHomeButton";
 import { Card } from "../components/organisms/Card";
 import { transitionIn } from "../components/organisms/Card/view";
 import { CardSkeleton } from "../components/organisms/CardSkeleton";
@@ -39,12 +38,13 @@ export const Certificates = ({ mainService }: Props) => {
     }
   }, []);
 
-  const selectsOptionsDepartments: option[] = state.context.departments
-    .map((r) => ({
-      label: r.label,
-      value: r.code,
-    }))
-    .sort((a, b) => new Intl.Collator("fr").compare(a.label, b.label));
+  const selectsOptionsDepartments: { label: string; value: string }[] =
+    state.context.departments
+      .map((r) => ({
+        label: r.label,
+        value: r.code,
+      }))
+      .sort((a, b) => new Intl.Collator("fr").compare(a.label, b.label));
 
   const CertificateCard = (certification: Certification) => {
     const isSelected =
@@ -142,33 +142,45 @@ export const Certificates = ({ mainService }: Props) => {
         layoutScroll
         className="h-full overflow-y-auto pb-12 pt-6"
       >
-        <BackButton onClick={() => send("BACK")} />
-        <div className="px-12 pt-16 sm:pt-4 bg-white">
-          <Header label="Choisir mon diplôme" />
+        <BackToHomeButton onClick={() => send("BACK")} />
+        <div className="px-12 pt-4">
+          <h2 className="text-3xl text-dsfrBlue-500 font-bold">
+            {state.context.contact?.firstname} {state.context.contact?.lastname}
+          </h2>
+          <h1 className="text-lg text-dsfrGray-500 font-bold mt-6">
+            Nouveau parcours VAE
+          </h1>
           <Select
-            name="select_department"
-            className="mt-8 mb-4"
+            className="my-4"
             data-test="certificates-select-department"
-            defaultValue={chosenDepartmentCode}
-            placeholder="Mon département"
-            options={selectsOptionsDepartments}
-            onChangeHandler={(e) => {
-              const el = e.target as HTMLOptionElement;
-              const departmentCode = el.value;
-              setChosenDepartmentCode(departmentCode);
-              send({
-                type: "SELECT_DEPARTMENT",
-                departmentCode,
-              });
+            label="Choix du diplôme"
+            hint="Sélectionnez le diplôme que vous voulez valider"
+            nativeSelectProps={{
+              name: "select_department",
+              defaultValue: chosenDepartmentCode,
+              onChange: (e) => {
+                const departmentCode = e.target.value;
+                setChosenDepartmentCode(departmentCode);
+                send({
+                  type: "SELECT_DEPARTMENT",
+                  departmentCode,
+                });
+              },
             }}
-          />
+          >
+            <option value="unknown" disabled={true} hidden={true} selected>
+              Mon département
+            </option>
+            {selectsOptionsDepartments.map((d) => (
+              <option key={d.value} value={d.value}>
+                {d.label}
+              </option>
+            ))}
+          </Select>
         </div>
         {(!!chosenDepartmentCode || !!state.context.selectedDepartment) && (
           <div className="px-12">
-            <Results
-              title={`Diplômes disponibles dans ce département`}
-              listClassName="mb-4 space-y-8"
-            >
+            <Results title="" listClassName="mb-4 space-y-8">
               {displayCards()}
             </Results>
           </div>

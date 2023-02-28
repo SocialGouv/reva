@@ -19,7 +19,7 @@ context("Certificates", () => {
     cy.wait("@getReferential");
 
     cy.get('[data-test="project-home-select-certification"]').click();
-    cy.get("#select_department").select("2");
+    cy.get("[name='select_department']").select("2");
     cy.wait("@Certifications");
 
     cy.get('[data-test="certification-select-c2"]').click();

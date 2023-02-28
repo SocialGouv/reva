@@ -20,15 +20,19 @@ context("Certificate list", () => {
 
   it("should show only 2 certifications out of 3 because the last one is inactive", function () {
     cy.get('[data-test="project-home-select-certification"]').click();
-    console.log(cy.get("#select_department").children("option"));
-    cy.get("#select_department").children("option").should("have.length", 3); // 3 departements in referential but 1 inactive -> 3 options (2 departements and one inactive default empty choice)
-    cy.get("#select_department")
-      .children("option")
+    cy.get("[name='select_department']").select("2");
+    cy.wait("@Certifications");
+
+    cy.get('[data-test="results"]').children("li").should("have.length", 2); // 3 certifications in referential but 1 inactive -> 2 li
+
+    cy.get('[data-test="results"]')
+      .children("li")
+      .eq(0)
+      .should("have.text", "34691Titre 1Disponible");
+
+    cy.get('[data-test="results"]')
+      .children("li")
       .eq(1)
-      .should("have.text", "Région 1");
-    cy.get("#select_department")
-      .children("option")
-      .eq(2)
-      .should("have.text", "Région 2");
+      .should("have.text", "34692Titre 2Disponible");
   });
 });
