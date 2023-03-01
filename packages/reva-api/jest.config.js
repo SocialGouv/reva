@@ -8,7 +8,7 @@ module.exports = {
     }
   },
   collectCoverage: true,
-  collectCoverageFrom: ["./domain/**"],
+  collectCoverageFrom: ["./domain/**", "./infra/graphql/subscription/**"],
   // coverageThreshold: {
   //   global: {
   //     lines: 90

@@ -4,7 +4,7 @@
 
 import { randomUUID } from "crypto";
 
-import { Account, LegalStatus, Organism, prisma } from "@prisma/client";
+import { LegalStatus } from "@prisma/client";
 
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
@@ -96,7 +96,7 @@ describe("Subscription request validation / rejection", () => {
     await prismaClient.organism.delete({ where: { id: organismAPId } });
     await prismaClient.subscriptionRequest.deleteMany({
       where: {
-        id: { in: [subreqSampleId, subreqSameOrganismId, subreqSameAccountId] },
+        id: { in: [subreqSameOrganismId, subreqSameAccountId] },
       },
     });
   });
@@ -142,5 +142,43 @@ describe("Subscription request validation / rejection", () => {
       `Un compte existe déjà avec l'email ${subreqSameAccount.accountEmail}`
     );
   });
+
+  test("Rejection should succeed, send mail and delete subscription request", async () => {
+    const resp = await injectGraphql({
+      fastify: (global as any).fastify,
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: "blabla",
+      }),
+      payload: {
+        requestType: "mutation",
+        endpoint: "subscription_rejectSubscriptionRequest",
+        arguments: { subscriptionRequestId: subreqSampleId },
+      },
+    });
+    expect(resp.statusCode).toBe(200);
+    // TODO: verify email sent
+    const searchResult = await prismaClient.subscriptionRequest.findUnique({where: {id: subreqSampleId}})
+    expect(searchResult).toBeNull();
+  });
+
+  // test("Rejection should succeed, send mail and delete subscription request", async () => {
+  //   const resp = await injectGraphql({
+  //     fastify: (global as any).fastify,
+  //     authorization: authorizationHeaderForUser({
+  //       role: "admin",
+  //       keycloakId: "blabla",
+  //     }),
+  //     payload: {
+  //       requestType: "mutation",
+  //       endpoint: "subscription_rejectSubscriptionRequest",
+  //       arguments: { subscriptionRequestId: subreqSampleId },
+  //     },
+  //   });
+  //   expect(resp.statusCode).toBe(200);
+  //   // TODO: verify email sent
+  //   const searchResult = await prismaClient.subscriptionRequest.findUnique({where: {id: subreqSampleId}})
+  //   expect(searchResult).toBeNull();
+  // });
 
 });
