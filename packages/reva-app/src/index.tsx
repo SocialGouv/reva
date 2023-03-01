@@ -9,6 +9,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import { Keycloak } from "./contexts/keycloakContext";
 import { KeycloakProvider } from "./contexts/keycloakContext";
+import { MainMachineContextProvider } from "./contexts/MainMachineContext/MainMachineContext";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
@@ -35,7 +36,9 @@ root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <KeycloakProvider keycloakInstance={keycloakInstance}>
-        <App />
+        <MainMachineContextProvider>
+          <App />
+        </MainMachineContextProvider>
       </KeycloakProvider>
     </ApolloProvider>
   </React.StrictMode>
