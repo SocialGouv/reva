@@ -1,11 +1,10 @@
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { useActor } from "@xstate/react";
 import { useState } from "react";
 import { Interpreter } from "xstate";
 
-import { Button } from "../components/atoms/Button";
-import { Checkbox } from "../components/atoms/Checkbox";
-import { Title } from "../components/atoms/Title";
-import { BackButton } from "../components/molecules/BackButton";
+import { BackToHomeButton } from "../components/molecules/BackToHomeButton/BackToHomeButton";
 import { Page } from "../components/organisms/Page";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
@@ -26,18 +25,19 @@ export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
   };
 
   const goalSet = (
-    <fieldset className="space-y-6 pl-1">
-      <legend className="sr-only">Objectif</legend>
-      {goals.map((goal, index) => (
-        <Checkbox
-          key={goal.id}
-          checked={goal.checked}
-          label={goal.label}
-          name={goal.id}
-          toggle={() => toggle(index)}
-        />
-      ))}
-    </fieldset>
+    <Checkbox
+      className="w-full"
+      legend="Objectif"
+      options={goals.map((goal, index) => ({
+        label: goal.label,
+        nativeInputProps: {
+          name: goal.id,
+          value: index,
+          defaultChecked: goal.checked,
+          onChange: () => toggle(index),
+        },
+      }))}
+    />
   );
 
   return (
@@ -45,33 +45,30 @@ export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
       className="z-[80] flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
-      <BackButton onClick={() => send("BACK")} />
-      <div className="h-full flex flex-col px-12 overflow-y-auto">
+      <BackToHomeButton onClick={() => send("BACK")} />
+      <div className="h-full flex flex-col px-12 pt-4 overflow-y-auto">
         <div className="grow overflow-y-auto">
-          <Title label="Mon objectif" />
-          <p className="text-slate-800 text-lg">Plusieurs choix possibles</p>
+          <h1 className="text-4xl font-bold">Mon objectif</h1>
+          <p className="my-4 text-slate-800">Plusieurs choix possibles</p>
           {goalSet}
-        </div>
-        {state.matches("projectGoals.error") && (
-          <p key="error" className="text-red-600 my-4 text-sm">
-            {state.context.error}
-          </p>
-        )}
-
-        <div className="flex justify-center h-24">
           <Button
+            className="mb-4 justify-center w-[100%]  md:w-min"
             data-test="project-goals-submit-goals"
-            size="medium"
-            label="Valider"
-            loading={state.matches("projectGoals.submitting")}
             onClick={() =>
               send({
                 type: "SUBMIT_GOALS",
                 goals,
               })
             }
-          />
+          >
+            Continuer
+          </Button>
         </div>
+        {state.matches("projectGoals.error") && (
+          <p key="error" className="text-red-600 my-4 text-sm">
+            {state.context.error}
+          </p>
+        )}
       </div>
     </Page>
   );
