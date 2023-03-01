@@ -142,7 +142,7 @@ export const Certificates = ({ mainService }: Props) => {
         layoutScroll
         className="h-full overflow-y-auto pb-12 pt-6"
       >
-        <BackToHomeButton onClick={() => send("BACK")} />
+        <BackToHomeButton />
         <div className="px-12 pt-4">
           <h2 className="text-3xl text-dsfrBlue-500 font-bold">
             {state.context.contact?.firstname} {state.context.contact?.lastname}
