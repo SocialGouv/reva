@@ -1,12 +1,11 @@
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { RadioGroup } from "@headlessui/react";
 import { useActor } from "@xstate/react";
 import classNames from "classnames";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Interpreter } from "xstate";
 
-import { Button } from "../components/atoms/Button";
-import { Title } from "../components/atoms/Title";
-import { BackButton } from "../components/molecules/BackButton";
+import { BackToHomeButton } from "../components/molecules/BackToHomeButton/BackToHomeButton";
 import { Page } from "../components/organisms/Page";
 import { Organism } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
@@ -44,41 +43,44 @@ const Organisms: FC<PropsOrganisms> = ({
             data-test={`project-organisms-organism-${organism.id}`}
             key={organism.id}
             value={organism.id}
-            className={({ active, checked }) =>
+            className={({ active }) =>
               classNames(
-                active
-                  ? "ring-2 ring-indigo-500"
-                  : checked
-                  ? "ring-2 ring-slate-500"
-                  : "",
-                "relative block cursor-pointer bg-slate-100 focus:outline-none",
-                "block rounded-lg px-6 py-4",
-                "text-lg"
+                active ? "ring-2 ring-indigo-500" : "",
+                "relative block cursor-pointer bg-white focus:outline-none",
+                "border  border-dsfrBlue-500 p-4",
+                "text-lg text-black"
               )
             }
             onClick={() => setOrganismId(organism.id)}
           >
-            <RadioGroup.Label
-              as="h3"
-              data-test="project-organisms-organism-label"
-              className="font-bold text-slate-800"
-            >
-              {organism.label}
-            </RadioGroup.Label>
-            <RadioGroup.Description
-              as="address"
-              className="text-gray-700 not-italic leading-relaxed"
-            >
-              <p data-test="project-organisms-organism-address">
-                {organism.address}
-              </p>
-              <p data-test="project-organisms-organism-zip-city">
-                {organism.zip} {organism.city}
-              </p>
-              <p data-test="project-organisms-organism-email">
-                {organism.contactAdministrativeEmail}
-              </p>
-            </RadioGroup.Description>
+            {({ checked }) => (
+              <>
+                {checked && (
+                  <span className="fr-icon-success-fill absolute top-4 right-4 text-dsfrBlue-500" />
+                )}
+                <RadioGroup.Label
+                  as="h3"
+                  data-test="project-organisms-organism-label"
+                  className=""
+                >
+                  {organism.label}
+                </RadioGroup.Label>
+                <RadioGroup.Description
+                  as="address"
+                  className="not-italic leading-relaxed"
+                >
+                  <p data-test="project-organisms-organism-address">
+                    {organism.address}
+                  </p>
+                  <p data-test="project-organisms-organism-zip-city">
+                    {organism.zip} {organism.city}
+                  </p>
+                  <p data-test="project-organisms-organism-email">
+                    {organism.contactAdministrativeEmail}
+                  </p>
+                </RadioGroup.Description>
+              </>
+            )}
           </RadioGroup.Option>
         ))}
       </div>
@@ -104,43 +106,47 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
 
   return (
     <Page className="z-[80] flex flex-col bg-white pt-6" direction={direction}>
-      <BackButton />
+      <BackToHomeButton />
       <div className="h-full flex flex-col overflow-y-auto">
         <div className="grow overflow-y-auto px-12 pb-8">
+          <h1 className="mt-4 text-3xl font-bold">
+            Mon Architecte de Parcours
+          </h1>
           {selectedDepartment && (
-            <Title
-              label={`Architectes de parcours disponibles pour le département ${selectedDepartment?.label}`}
-            />
+            <p className="mt-4 text-black">
+              Voici les architectes de parcours disponibles pour le département{" "}
+              {selectedDepartment?.label}
+            </p>
           )}
-          <p className="mt-4 mb-12">
-            Choisissez l'architecte de parcours qui vous aidera à construire ce
-            projet.
+          <p className="mt-1.5 mb-4 text-dsfrGray-500 text-xs">
+            Cochez celui de votre choix.
           </p>
           <Organisms
             alreadySelectedOrganismId={selectedOrganismId}
             availableOrganisms={organisms}
             setOrganismId={setSelectedOrganismId}
           />
-        </div>
-        <div className="flex justify-center pt-8 pb-16">
           <Button
+            className="mt-6 justify-center w-[100%]  md:w-min"
             data-test="project-organisms-submit-organism"
-            size="medium"
-            label="OK"
             disabled={!isOrganismsLoaded}
-            loading={state.matches("projectOrganism.submitting")}
-            onClick={() => {
-              if (isOrganismsLoaded) {
-                send({
-                  type: "SUBMIT_ORGANISM",
-                  organism: {
-                    candidacyId,
-                    selectedOrganismId: selectedOrganismId || organisms[0]?.id,
-                  },
-                });
-              }
+            nativeButtonProps={{
+              onClick: () => {
+                if (isOrganismsLoaded) {
+                  send({
+                    type: "SUBMIT_ORGANISM",
+                    organism: {
+                      candidacyId,
+                      selectedOrganismId:
+                        selectedOrganismId || organisms[0]?.id,
+                    },
+                  });
+                }
+              },
             }}
-          />
+          >
+            Valider
+          </Button>
         </div>
       </div>
     </Page>
