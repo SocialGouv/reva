@@ -104,7 +104,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
 
   return (
     <Page className="z-[80] flex flex-col bg-white pt-6" direction={direction}>
-      <BackButton onClick={() => send("BACK")} />
+      <BackButton />
       <div className="h-full flex flex-col overflow-y-auto">
         <div className="grow overflow-y-auto px-12 pb-8">
           {selectedDepartment && (

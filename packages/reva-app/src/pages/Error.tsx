@@ -19,7 +19,7 @@ export const Error = ({ mainService }: ErrorProps) => {
       className="z-[60] h-full flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
-      <BackButton onClick={() => send("BACK")} />
+      <BackButton />
       <div className="grow flex flex-col text-center items-center justify-center px-10">
         <Header label="Oups..." size="small" />
         <p>{state.context.error}</p>

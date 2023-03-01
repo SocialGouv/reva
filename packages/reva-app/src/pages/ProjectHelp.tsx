@@ -12,7 +12,7 @@ interface ProjectHelpProps {
 }
 
 export const ProjectHelp = ({ mainService }: ProjectHelpProps) => {
-  const [state, send] = useActor(mainService);
+  const [state] = useActor(mainService);
 
   return (
     <Page
@@ -20,7 +20,7 @@ export const ProjectHelp = ({ mainService }: ProjectHelpProps) => {
       className="z-[80] overflow-hidden h-full flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
-      <BackButton onClick={() => send("BACK")} />
+      <BackButton />
       <div className="absolute text-neutral-200 left-[-70px] top-[100px] w-[200px]">
         <Locked />
       </div>

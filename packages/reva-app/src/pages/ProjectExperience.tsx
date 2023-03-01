@@ -62,7 +62,7 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
       className="z-[90] flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
-      <BackButton onClick={() => send("BACK")} />
+      <BackButton />
       <div className="h-full flex flex-col px-12 overflow-y-auto pb-[400px]">
         <form onSubmit={onSubmit} className="mt-4 space-y-6">
           <Input

@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { Add } from "../../atoms/Icons";
 import { TextResult } from "../../atoms/TextResult";
-import { BackButton } from "../../molecules/BackButton";
+import { BasicBackButton } from "../../molecules/BackButton";
 import certificationImg from "./certification.png";
 import { transitionIn, transitionOut } from "./view";
 
@@ -102,7 +102,7 @@ export const Card = React.forwardRef<HTMLLIElement, CardProps>(
           }}
         >
           <div className="absolute top-6 z-50 w-full">
-            <BackButton
+            <BasicBackButton
               color="light"
               onClick={() => {
                 setSize("reduced");

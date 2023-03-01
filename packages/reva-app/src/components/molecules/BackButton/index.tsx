@@ -1,19 +1,22 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
+
+import { useMainMachineContext } from "../../../contexts/MainMachineContext/MainMachineContext";
+
 type Color = "dark" | "light";
 
-export interface BackButtonProps {
+export interface BasicBackButtonProps {
   color?: Color;
   className?: string;
   onClick: () => void;
   label?: string;
 }
 
-export const BackButton = ({
+export const BasicBackButton = ({
   className = "",
   color = "dark",
   onClick,
   label,
-}: BackButtonProps) => {
+}: BasicBackButtonProps) => {
   const colorClass = color === "dark" ? "text-dsfrBlue-500" : "text-white";
   const hoverBgClass = color === "dark" ? "" : "hover:!bg-slate-800";
 
@@ -28,5 +31,12 @@ export const BackButton = ({
     >
       {label}
     </Button>
+  );
+};
+
+export const BackButton = (props: Omit<BasicBackButtonProps, "onClick">) => {
+  const { mainService } = useMainMachineContext();
+  return (
+    <BasicBackButton {...props} onClick={() => mainService.send("BACK")} />
   );
 };

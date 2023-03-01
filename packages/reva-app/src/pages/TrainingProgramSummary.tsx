@@ -20,8 +20,7 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
   const [state, send] = useActor(mainService);
   const [checkedCondition, setCheckedCondition] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const isTrainingConfirmed =
-    state.context.isTrainingProgramConfirmed;
+  const isTrainingConfirmed = state.context.isTrainingProgramConfirmed;
 
   if (!state.context.trainingProgram) return <></>;
 
@@ -45,11 +44,7 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
       direction={state.context.direction}
     >
       <div className="h-12">
-        {isTrainingConfirmed ? (
-          <BackButton color="light" onClick={() => send("BACK")} />
-        ) : (
-          <></>
-        )}
+        {isTrainingConfirmed ? <BackButton color="light" /> : <></>}
       </div>
 
       <div className="px-12 py-6 flex flex-col">

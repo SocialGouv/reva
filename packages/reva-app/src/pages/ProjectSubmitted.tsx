@@ -18,7 +18,7 @@ export const ProjectSubmitted = ({ mainService }: ProjectSubmittedProps) => {
       className="z-[80] h-full flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
-      <BackButton onClick={() => send("BACK")} />
+      <BackButton />
       <div className="px-12">
         <div className="flex flex-col items-center mt-8 rounded-xl px-8 py-12 bg-slate-100 text-slate-800">
           <h2 className="w-full text-2xl mb-8 font-bold">C'est parti !</h2>
