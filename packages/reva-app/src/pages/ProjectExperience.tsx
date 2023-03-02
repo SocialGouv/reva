@@ -1,6 +1,6 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
-import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
+import { Select } from "@codegouvfr/react-dsfr/Select";
 import { useActor } from "@xstate/react";
 import { Interpreter } from "xstate";
 
@@ -60,7 +60,7 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
     >
       <BackButton />
       <div className="h-full flex flex-col px-12 overflow-y-auto pb-[400px]">
-        <h1 className="mb-4 text-3xl font-bold text-black">
+        <h1 className="my-4 text-3xl font-bold text-black">
           Nouvelle expérience
         </h1>
         <p className="text-xs text-dsfrGray-500">
@@ -69,7 +69,7 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
         </p>
         <form onSubmit={onSubmit} className="mt-4 space-y-6">
           <Input
-            label="Intitulé du poste"
+            label="Intitulé de l'experience"
             nativeInputProps={{
               name: "title",
               required: true,
@@ -86,20 +86,25 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
               type: "date",
             }}
           />
-          <label htmlFor="duration" className="fr-label">
-            Pendant combien de temps avez-vous exercé cette activité ?
-          </label>
-          <RadioButtons
-            name="duration"
-            options={durationOptions.map((o) => ({
-              label: o.label,
-              nativeInputProps: {
-                value: o.value,
-                defaultChecked: editedExperience?.duration === o.value,
-                "data-test": `duration-${o.value}`,
-              },
-            }))}
-          />
+          <label htmlFor="duration" className="fr-label"></label>
+
+          <Select
+            label="Durée"
+            hint="Pendant combien de temps avez-vous exercé ?"
+            nativeSelectProps={{
+              name: "duration",
+              defaultValue: editedExperience?.duration,
+            }}
+          >
+            <option value="unknown" disabled={true} hidden={true} selected>
+              Sélectionnez une option
+            </option>
+            {durationOptions.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </Select>
 
           <Input
             textArea

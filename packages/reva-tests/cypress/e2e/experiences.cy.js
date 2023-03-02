@@ -22,9 +22,7 @@ context("Experiences", () => {
     cy.get('[data-test="project-experiences-add"]').click();
     cy.get("[name='title']").type(experienceTitle1);
     cy.get("[name='startedAt']").type("2019-01-31");
-    cy.get("[data-test='duration-betweenOneAndThreeYears']")
-      .next("label")
-      .click();
+    cy.get("[name='duration']").select("betweenOneAndThreeYears");
     cy.get("textarea[name='description']").type(experienceDescription1);
 
     cy.get('[data-test="project-experience-add"]').click();
@@ -54,7 +52,7 @@ context("Experiences", () => {
     cy.get('[data-test="project-experiences-edit-0"]').click();
     cy.get("[name='startedAt']").type("2017-03-31");
     cy.get("[name='title']").type(`{selectAll}${experienceTitle2}`);
-    cy.get("[data-test='duration-moreThanFiveYears']").next("label").click();
+    cy.get("[name='duration']").select("moreThanFiveYears");
     cy.get("textarea[name='description']").type(
       `{selectAll}${experienceDescription2}`
     );
