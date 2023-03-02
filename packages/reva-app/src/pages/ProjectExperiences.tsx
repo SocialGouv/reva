@@ -1,10 +1,10 @@
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { useActor } from "@xstate/react";
 import { Interpreter } from "xstate";
 
-import { Button } from "../components/atoms/Button";
 import { Add, Edit } from "../components/atoms/Icons";
 import { Title } from "../components/atoms/Title";
-import { BackButton } from "../components/molecules/BackButton";
+import { BackToHomeButton } from "../components/molecules/BackToHomeButton/BackToHomeButton";
 import { Page } from "../components/organisms/Page";
 import { Experience, duration } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
@@ -75,7 +75,7 @@ export const ProjectExperiences = ({
       className="z-[80] h-full flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
-      <BackButton />
+      <BackToHomeButton />
       <div className="mt-2 grow overflow-y-auto w-full space-y-3 px-12">
         <Title size="small" label="Mes expériences professionnelles" />
         <ul data-test="project-experiences-overview" className="space-y-3">
@@ -99,14 +99,14 @@ export const ProjectExperiences = ({
           </button>
         </div>
       </div>
-      <div className="bg-white flex justify-center pt-6 pb-12">
+      <div className="bg-white flex pt-6 pb-12 px-12">
         <Button
+          className="justify-center w-[100%] md:w-min"
           data-test="project-experiences-submit"
           onClick={() => send("SUBMIT_EXPERIENCES")}
-          type="submit"
-          label="Valider"
-          size="medium"
-        />
+        >
+          Valider
+        </Button>
       </div>
     </Page>
   );
