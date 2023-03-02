@@ -22,7 +22,7 @@ module.exports = {
           800: "#19182f",
           900: "#21203D",
         },
-        dsfrBlue: { 500: "#000091" },
+        dsfrBlue: { 300: "#E3E3FD", 500: "#000091" },
         dsfrGray: { 500: "#666666" },
       },
       fontFamily: {

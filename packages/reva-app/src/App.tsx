@@ -207,10 +207,11 @@ function App() {
   );
 
   return (
-    <div className="h-screen w-screen flex flex-col">
+    <div className="h-screen w-screen flex flex-col overflow-auto">
       <Header />
-      <div className="flex-grow sm:flex sm:flex-col sm:items-center sm:justify-center ">
-        <div className="sm:rounded-lg sm:shadow-lg sm:z-[1] md:my-5 relative flex flex-col w-full h-full max-w-[800px] bg-white overflow-hidden">
+      <div className="flex flex-1">
+        <div className="bg-dsfrBlue-300 w-0 lg:w-[20%]" />
+        <div className="relative flex flex-1 flex-col w-full p-4">
           {pageContent}
         </div>
       </div>
