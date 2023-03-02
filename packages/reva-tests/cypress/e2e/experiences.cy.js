@@ -20,10 +20,12 @@ context("Experiences", () => {
 
     cy.get('[data-test="project-home-edit-experiences"]').click();
     cy.get('[data-test="project-experiences-add"]').click();
-    cy.get("#title").type(experienceTitle1);
-    cy.get("#startedAt").type("2019-01-31");
-    cy.get("#duration").select("betweenOneAndThreeYears");
-    cy.get("#description").type(experienceDescription1);
+    cy.get("[name='title']").type(experienceTitle1);
+    cy.get("[name='startedAt']").type("2019-01-31");
+    cy.get("[data-test='duration-betweenOneAndThreeYears']")
+      .next("label")
+      .click();
+    cy.get("textarea[name='description']").type(experienceDescription1);
 
     cy.get('[data-test="project-experience-add"]').click();
     cy.wait("@add_experience");
@@ -50,10 +52,12 @@ context("Experiences", () => {
       });
 
     cy.get('[data-test="project-experiences-edit-0"]').click();
-    cy.get("#startedAt").type("2017-03-31");
-    cy.get("#title").type(`{selectAll}${experienceTitle2}`);
-    cy.get("#duration").select("moreThanFiveYears");
-    cy.get("#description").type(`{selectAll}${experienceDescription2}`);
+    cy.get("[name='startedAt']").type("2017-03-31");
+    cy.get("[name='title']").type(`{selectAll}${experienceTitle2}`);
+    cy.get("[data-test='duration-moreThanFiveYears']").next("label").click();
+    cy.get("textarea[name='description']").type(
+      `{selectAll}${experienceDescription2}`
+    );
     cy.get('[data-test="project-experience-save"]').click();
 
     cy.get('[data-test="project-experiences-overview"] > li')

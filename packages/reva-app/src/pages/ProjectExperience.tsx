@@ -1,12 +1,9 @@
-import { Capacitor } from "@capacitor/core";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Input } from "@codegouvfr/react-dsfr/Input";
+import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { useActor } from "@xstate/react";
-import { useRef } from "react";
 import { Interpreter } from "xstate";
 
-import { Button } from "../components/atoms/Button";
-import { Input } from "../components/atoms/Input";
-import { Select } from "../components/atoms/Select";
-import { Textarea } from "../components/atoms/Textarea";
 import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
 import { Experience, duration } from "../interface";
@@ -55,7 +52,6 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
   };
 
   const editedExperience = state.context.experiences.edited;
-  const descriptionRef = useRef<HTMLDivElement>(null);
 
   return (
     <Page
@@ -64,53 +60,68 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
     >
       <BackButton />
       <div className="h-full flex flex-col px-12 overflow-y-auto pb-[400px]">
+        <h1 className="mb-4 text-3xl font-bold text-black">
+          Nouvelle expérience
+        </h1>
+        <p className="text-xs text-dsfrGray-500">
+          Il peut s’agir d’une expérience professionnelle, bénévole, d’un stage
+          ou d’une activité extra-professionnelle.
+        </p>
         <form onSubmit={onSubmit} className="mt-4 space-y-6">
           <Input
-            name="title"
             label="Intitulé du poste"
-            required={true}
-            defaultValue={editedExperience?.title}
+            nativeInputProps={{
+              name: "title",
+              required: true,
+              defaultValue: editedExperience?.title,
+            }}
           />
           <Input
-            name="startedAt"
             label="Date de début"
-            type="date"
-            defaultValue={
-              editedExperience
+            nativeInputProps={{
+              name: "startedAt",
+              defaultValue: editedExperience
                 ? editedExperience.startedAt.toISOString().slice(0, -14)
-                : "2020-01-31"
-            }
+                : "2020-01-31",
+              type: "date",
+            }}
           />
-          <Select
-            label="Combien de temps"
+          <label htmlFor="duration" className="fr-label">
+            Pendant combien de temps avez-vous exercé cette activité ?
+          </label>
+          <RadioButtons
             name="duration"
-            options={durationOptions}
-            defaultValue={editedExperience?.duration}
+            options={durationOptions.map((o) => ({
+              label: o.label,
+              nativeInputProps: {
+                value: o.value,
+                defaultChecked: editedExperience?.duration === o.value,
+                "data-test": `duration-${o.value}`,
+              },
+            }))}
           />
-          <Textarea
-            ref={descriptionRef}
-            name="description"
+
+          <Input
+            textArea
             label="Description du poste"
-            onFocus={
-              Capacitor.getPlatform() === "android"
-                ? () => descriptionRef.current?.scrollIntoView()
-                : () => {}
-            }
-            rows={5}
-            defaultValue={editedExperience?.description}
+            nativeTextAreaProps={{
+              name: "description",
+              defaultValue: editedExperience?.description,
+              rows: 5,
+            }}
           />
           {state.matches("projectExperience.error") && (
             <p className="text-red-600 my-4 text-sm">{state.context.error}</p>
           )}
+
           <Button
+            className="mt-6 justify-center w-[100%]  md:w-min"
             data-test={`project-experience-${
               editedExperience ? "save" : "add"
             }`}
-            type="submit"
-            loading={state.matches("projectExperience.submitting")}
-            label={editedExperience ? "Valider" : "Ajouter"}
-            size="small"
-          />
+          >
+            {editedExperience ? "Valider" : "Ajouter"}
+          </Button>
         </form>
       </div>
     </Page>
