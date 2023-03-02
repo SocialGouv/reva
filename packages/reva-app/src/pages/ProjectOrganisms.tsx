@@ -109,18 +109,16 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
       <BackToHomeButton />
       <div className="h-full flex flex-col overflow-y-auto">
         <div className="grow overflow-y-auto px-12 pb-8">
-          <h1 className="mt-4 text-3xl font-bold">
-            Mon Architecte de Parcours
-          </h1>
+          <h1 className="mt-4 text-3xl font-bold">Votre référent</h1>
           {selectedDepartment && (
-            <p className="mt-4 text-black">
-              Voici les architectes de parcours disponibles pour le département{" "}
-              {selectedDepartment?.label}
-            </p>
+            <>
+              <p className="mt-6 text-black">
+                Voici les architectes de parcours disponibles dans votre
+                département.
+              </p>
+              <p className="mb-4 text-black"> Cochez celui de votre choix.</p>
+            </>
           )}
-          <p className="mt-1.5 mb-4 text-dsfrGray-500 text-xs">
-            Cochez celui de votre choix.
-          </p>
           <Organisms
             alreadySelectedOrganismId={selectedOrganismId}
             availableOrganisms={organisms}
