@@ -101,7 +101,7 @@ export const Card = React.forwardRef<HTMLLIElement, CardProps>(
             height: "calc(100vh - 116px)",
           }}
         >
-          <div className="absolute top-6 z-50 w-full">
+          <div className="absolute top-6 z-50 w-full pl-12">
             <BasicBackButton
               color="light"
               onClick={() => {

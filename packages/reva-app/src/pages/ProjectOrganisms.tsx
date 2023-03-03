@@ -105,48 +105,43 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
   if (!candidacyId) return <p>Aucun Id de candidat trouvé</p>;
 
   return (
-    <Page className="z-[80] flex flex-col bg-white pt-6" direction={direction}>
+    <Page direction={direction}>
       <BackToHomeButton />
-      <div className="h-full flex flex-col overflow-y-auto">
-        <div className="grow overflow-y-auto px-12 pb-8">
-          <h1 className="mt-4 text-3xl font-bold">Votre référent</h1>
-          {selectedDepartment && (
-            <>
-              <p className="mt-6 text-black">
-                Voici les architectes de parcours disponibles dans votre
-                département.
-              </p>
-              <p className="mb-4 text-black"> Cochez celui de votre choix.</p>
-            </>
-          )}
-          <Organisms
-            alreadySelectedOrganismId={selectedOrganismId}
-            availableOrganisms={organisms}
-            setOrganismId={setSelectedOrganismId}
-          />
-          <Button
-            className="mt-6 justify-center w-[100%]  md:w-min"
-            data-test="project-organisms-submit-organism"
-            disabled={!isOrganismsLoaded}
-            nativeButtonProps={{
-              onClick: () => {
-                if (isOrganismsLoaded) {
-                  send({
-                    type: "SUBMIT_ORGANISM",
-                    organism: {
-                      candidacyId,
-                      selectedOrganismId:
-                        selectedOrganismId || organisms[0]?.id,
-                    },
-                  });
-                }
-              },
-            }}
-          >
-            Valider
-          </Button>
-        </div>
-      </div>
+      <h1 className="mt-4 text-3xl font-bold">Votre référent</h1>
+      {selectedDepartment && (
+        <>
+          <p className="mt-6 text-black">
+            Voici les architectes de parcours disponibles dans votre
+            département.
+          </p>
+          <p className="mb-4 text-black"> Cochez celui de votre choix.</p>
+        </>
+      )}
+      <Organisms
+        alreadySelectedOrganismId={selectedOrganismId}
+        availableOrganisms={organisms}
+        setOrganismId={setSelectedOrganismId}
+      />
+      <Button
+        className="mt-6 justify-center w-[100%]  md:w-min"
+        data-test="project-organisms-submit-organism"
+        disabled={!isOrganismsLoaded}
+        nativeButtonProps={{
+          onClick: () => {
+            if (isOrganismsLoaded) {
+              send({
+                type: "SUBMIT_ORGANISM",
+                organism: {
+                  candidacyId,
+                  selectedOrganismId: selectedOrganismId || organisms[0]?.id,
+                },
+              });
+            }
+          },
+        }}
+      >
+        Valider
+      </Button>
     </Page>
   );
 };

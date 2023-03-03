@@ -1,5 +1,4 @@
 import { useActor } from "@xstate/react";
-import { AnimatePresence, motion } from "framer-motion";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
@@ -245,67 +244,43 @@ export const ProjectHome = ({
   );
 
   const retryErrorScreen = (
-    <motion.div
+    <div
       data-test="project-home-error"
-      key="project-home-error"
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className="absolute w-full flex flex-col bg-neutral-100 h-full"
+      className="absolute ml-[-16px] mt-[-16px] lg:ml-[-64px] lg:mt-[-80px]  w-full  bg-neutral-100 h-full grow flex flex-col text-center items-center justify-center px-10"
     >
-      <div className="grow flex flex-col text-center items-center justify-center px-10">
-        <Header label="Oups..." size="small" />
-        <p>{state.context.error}</p>
-        <div className="mt-8">
-          <Button
-            data-test="submission-home-retry-candidate"
-            size="small"
-            label="Réessayer"
-            onClick={() =>
-              send({
-                type: "SUBMIT_CERTIFICATION",
-                certification,
-              })
-            }
-          />
-        </div>
+      <Header label="Oups..." size="small" />
+      <p>{state.context.error}</p>
+      <div className="mt-8">
+        <Button
+          data-test="submission-home-retry-candidate"
+          size="small"
+          label="Réessayer"
+          onClick={() =>
+            send({
+              type: "SUBMIT_CERTIFICATION",
+              certification,
+            })
+          }
+        />
       </div>
-    </motion.div>
+    </div>
   );
 
   const loadingScreen = (
-    <motion.div
+    <div
       data-test="project-home-loading"
-      key="project-home-loading"
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className="absolute w-full h-full flex flex-col bg-neutral-100"
+      className="absolute ml-[-16px] mt-[-16px] lg:ml-[-64px] lg:mt-[-80px] w-full h-full flex flex-col bg-neutral-100 grow text-center items-center justify-center px-10"
     >
-      <div className="grow flex flex-col text-center items-center justify-center px-10">
-        <Header label="Connexion en cours" size="small" />
-        <div className="mt-8 w-8">
-          <Loader />
-        </div>
+      <Header label="Connexion en cours" size="small" />
+      <div className="mt-8 w-8">
+        <Loader />
       </div>
-    </motion.div>
+    </div>
   );
 
   const homeScreen = (
-    <motion.div
-      data-test={`project-home-${isValidated ? "validated" : "ready"}`}
-      key="project-home-ready"
-      className="flex flex-col w-full h-full relative overflow-hidden"
-      initial={
-        state.context.direction === "previous" || isValidated
-          ? false
-          : { opacity: 0, y: 10 }
-      }
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
-    >
-      <div className="px-12 grow overflow-y-auto py-8">
-        <h1 className="text-center font-bold text-lg text-slate-900">Reva</h1>
+    <div data-test={`project-home-${isValidated ? "validated" : "ready"}`}>
+      <div>
         {!isValidated && (
           <>
             <Header label="Bienvenue" />
@@ -344,23 +319,16 @@ export const ProjectHome = ({
           size="medium"
         />
       </div>
-    </motion.div>
+    </div>
   );
 
   return (
-    <Page
-      className={`${
-        isValidated ? "z-[80]" : "z-[70]"
-      } h-full flex flex-col bg-white`}
-      direction={state.context.direction}
-    >
-      <AnimatePresence>
-        {(state.matches({ projectHome: "loading" }) ||
-          state.matches({ projectHome: "fakeLoading" })) &&
-          loadingScreen}
-        {state.matches({ projectHome: "retry" }) && retryErrorScreen}
-        {isHomeReady && homeScreen}
-      </AnimatePresence>
+    <Page direction={state.context.direction}>
+      {(state.matches({ projectHome: "loading" }) ||
+        state.matches({ projectHome: "fakeLoading" })) &&
+        loadingScreen}
+      {state.matches({ projectHome: "retry" }) && retryErrorScreen}
+      {isHomeReady && homeScreen}
     </Page>
   );
 };

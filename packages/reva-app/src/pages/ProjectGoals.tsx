@@ -41,35 +41,28 @@ export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
   );
 
   return (
-    <Page
-      className="z-[80] flex flex-col bg-white pt-6"
-      direction={state.context.direction}
-    >
+    <Page direction={state.context.direction}>
       <BackToHomeButton />
-      <div className="h-full flex flex-col px-12 pt-4 overflow-y-auto">
-        <div className="grow overflow-y-auto">
-          <h1 className="text-4xl font-bold">Mon objectif</h1>
-          <p className="my-4 text-slate-800">Plusieurs choix possibles</p>
-          {goalSet}
-          <Button
-            className="mb-4 justify-center w-[100%]  md:w-min"
-            data-test="project-goals-submit-goals"
-            onClick={() =>
-              send({
-                type: "SUBMIT_GOALS",
-                goals,
-              })
-            }
-          >
-            Continuer
-          </Button>
-        </div>
-        {state.matches("projectGoals.error") && (
-          <p key="error" className="text-red-600 my-4 text-sm">
-            {state.context.error}
-          </p>
-        )}
-      </div>
+      <h1 className="mt-4 text-4xl font-bold">Mon objectif</h1>
+      <p className="my-4 text-slate-800">Plusieurs choix possibles</p>
+      {goalSet}
+      <Button
+        className="mb-4 justify-center w-[100%]  md:w-min"
+        data-test="project-goals-submit-goals"
+        onClick={() =>
+          send({
+            type: "SUBMIT_GOALS",
+            goals,
+          })
+        }
+      >
+        Continuer
+      </Button>
+      {state.matches("projectGoals.error") && (
+        <p key="error" className="text-red-600 my-4 text-sm">
+          {state.context.error}
+        </p>
+      )}
     </Page>
   );
 };

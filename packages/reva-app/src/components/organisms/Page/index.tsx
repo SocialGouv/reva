@@ -1,6 +1,8 @@
+import { ReactNode } from "react";
+
 interface PageConfig {
-  children: JSX.Element | JSX.Element[];
-  className: string;
+  children?: ReactNode;
+  className?: string;
   direction: Direction;
 }
 
@@ -13,7 +15,12 @@ export const Page = ({
   ...props
 }: PageConfig) => {
   return (
-    <div className={className} {...props}>
+    <div
+      className={`flex flex-col px-4 py-5 lg:pl-16 lg:pt-20 max-w-4xl ${
+        className || ""
+      } `}
+      {...props}
+    >
       {children}
     </div>
   );

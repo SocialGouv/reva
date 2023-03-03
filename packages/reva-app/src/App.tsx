@@ -211,7 +211,7 @@ function App() {
       <Header />
       <div className="flex flex-1">
         <div className="bg-dsfrBlue-300 w-0 lg:w-[20%]" />
-        <div className="relative flex flex-1 flex-col w-full p-4">
+        <div className="relative flex flex-1 flex-col w-full">
           {pageContent}
         </div>
       </div>

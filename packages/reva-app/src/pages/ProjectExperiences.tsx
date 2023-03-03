@@ -71,13 +71,10 @@ export const ProjectExperiences = ({
   const [state, send] = useActor(mainService);
 
   return (
-    <Page
-      className="z-[80] h-full flex flex-col bg-white pt-6"
-      direction={state.context.direction}
-    >
+    <Page direction={state.context.direction}>
       <BackToHomeButton />
-      <div className="mt-2 grow overflow-y-auto w-full space-y-3 px-12">
-        <Title size="small" label="Mes expériences professionnelles" />
+      <div className="mt-2 space-y-3">
+        <h1 className="text-xl font-bold">Mes expériences professionnelles</h1>
         <ul data-test="project-experiences-overview" className="space-y-3">
           {sortExperiences(state.context.experiences).map((exp, index) =>
             ExperiencePreview(exp, index, () =>

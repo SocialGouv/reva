@@ -16,21 +16,16 @@ export const ProjectContactConfirmation = ({
   return (
     <Page
       data-test="project-contact-confirmation"
-      className="z-[90] overflow-hidden h-full flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >
-      <div className="relative overflow-y-auto flex flex-col pt-4 pl-12 pr-8 text-slate-800 leading-loose">
-        <h1 className="text-3xl font-bold text-dsfrBlue-500">
-          Félicitations !
-        </h1>
-        <p className="mt-4 text-lg font-bold text-dsfrGray-500">
-          Vous allez recevoir un email pour finaliser votre inscription.
-        </p>
-        <p className="mt-4 text-dsfrGray-500">
-          Cliquez sur le lien de validation dans cet email pour accéder à votre
-          espace candidat.
-        </p>
-      </div>
+      <h1 className="text-3xl font-bold text-dsfrBlue-500">Félicitations !</h1>
+      <p className="mt-4 text-lg font-bold text-dsfrGray-500">
+        Vous allez recevoir un email pour finaliser votre inscription.
+      </p>
+      <p className="mt-4 text-dsfrGray-500">
+        Cliquez sur le lien de validation dans cet email pour accéder à votre
+        espace candidat.
+      </p>
     </Page>
   );
 };

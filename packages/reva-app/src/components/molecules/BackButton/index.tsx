@@ -27,7 +27,7 @@ export const BasicBackButton = ({
       onClick={onClick}
       priority="tertiary no outline"
       title="Revenir"
-      className={`ml-10 min-w-[120px] ${className} ${colorClass} ${hoverBgClass}`}
+      className={`!pl-0 min-w-[120px] ${className} ${colorClass} ${hoverBgClass}`}
     >
       {label}
     </Button>

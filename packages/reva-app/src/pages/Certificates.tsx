@@ -1,17 +1,14 @@
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { useActor } from "@xstate/react";
-import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { BackToHomeButton } from "../components/molecules/BackToHomeButton/BackToHomeButton";
 import { Card } from "../components/organisms/Card";
-import { transitionIn } from "../components/organisms/Card/view";
 import { CardSkeleton } from "../components/organisms/CardSkeleton";
 import { Page } from "../components/organisms/Page";
 import { Results } from "../components/organisms/Results";
-import { buttonVariants } from "../config";
 import { Certification } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
@@ -79,19 +76,10 @@ export const Certificates = ({ mainService }: Props) => {
     const isVisible = state.matches("certificateSummary");
     const certification = state.context.certification as Certification;
     return (
-      <motion.div
+      <div
         className={`absolute bottom-0 z-50 inset-x-0 p-12 ${
           isVisible ? "bg-slate-900" : "transparent"
         }`}
-        custom={state.toStrings().join("")}
-        variants={buttonVariants}
-        initial={false}
-        exit="hidden"
-        transition={
-          isVisible ? { ...transitionIn, delay: 0.1 } : { duration: 0 }
-        }
-        animate={isVisible ? "visible" : "hidden"}
-        layout="position"
       >
         {isVisible && (
           <Button
@@ -108,7 +96,7 @@ export const Certificates = ({ mainService }: Props) => {
             size="large"
           />
         )}
-      </motion.div>
+      </div>
     );
   }
 
@@ -134,58 +122,54 @@ export const Certificates = ({ mainService }: Props) => {
   return (
     <Page
       data-test="certificates"
-      className="z-[80] bg-white"
       direction={state.context.direction}
+      className={
+        state.matches("certificateSummary")
+          ? "max-h-[800px] overflow-hidden"
+          : ""
+      }
     >
-      <motion.div
-        ref={resultsElement}
-        layoutScroll
-        className="h-full overflow-y-auto pb-12 pt-6"
+      <BackToHomeButton />
+      <h2 className="text-3xl text-dsfrBlue-500 font-bold mt-4">
+        {state.context.contact?.firstname} {state.context.contact?.lastname}
+      </h2>
+      <h1 className="text-lg text-dsfrGray-500 font-bold mt-6">
+        Nouveau parcours VAE
+      </h1>
+      <Select
+        className="my-4"
+        data-test="certificates-select-department"
+        label="Choix du diplôme"
+        hint="Sélectionnez le diplôme que vous voulez valider"
+        nativeSelectProps={{
+          name: "select_department",
+          defaultValue: chosenDepartmentCode,
+          onChange: (e) => {
+            const departmentCode = e.target.value;
+            setChosenDepartmentCode(departmentCode);
+            send({
+              type: "SELECT_DEPARTMENT",
+              departmentCode,
+            });
+          },
+        }}
       >
-        <BackToHomeButton />
-        <div className="px-12 pt-4">
-          <h2 className="text-3xl text-dsfrBlue-500 font-bold">
-            {state.context.contact?.firstname} {state.context.contact?.lastname}
-          </h2>
-          <h1 className="text-lg text-dsfrGray-500 font-bold mt-6">
-            Nouveau parcours VAE
-          </h1>
-          <Select
-            className="my-4"
-            data-test="certificates-select-department"
-            label="Choix du diplôme"
-            hint="Sélectionnez le diplôme que vous voulez valider"
-            nativeSelectProps={{
-              name: "select_department",
-              defaultValue: chosenDepartmentCode,
-              onChange: (e) => {
-                const departmentCode = e.target.value;
-                setChosenDepartmentCode(departmentCode);
-                send({
-                  type: "SELECT_DEPARTMENT",
-                  departmentCode,
-                });
-              },
-            }}
-          >
-            <option value="unknown" disabled={true} hidden={true} selected>
-              Mon département
-            </option>
-            {selectsOptionsDepartments.map((d) => (
-              <option key={d.value} value={d.value}>
-                {d.label}
-              </option>
-            ))}
-          </Select>
+        <option value="unknown" disabled={true} hidden={true} selected>
+          Mon département
+        </option>
+        {selectsOptionsDepartments.map((d) => (
+          <option key={d.value} value={d.value}>
+            {d.label}
+          </option>
+        ))}
+      </Select>
+      {(!!chosenDepartmentCode || !!state.context.selectedDepartment) && (
+        <div>
+          <Results title="" listClassName="mb-4 space-y-8">
+            {displayCards()}
+          </Results>
         </div>
-        {(!!chosenDepartmentCode || !!state.context.selectedDepartment) && (
-          <div className="px-12">
-            <Results title="" listClassName="mb-4 space-y-8">
-              {displayCards()}
-            </Results>
-          </div>
-        )}
-      </motion.div>
+      )}
       {candidateButton()}
     </Page>
   );
