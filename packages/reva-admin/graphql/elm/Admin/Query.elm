@@ -212,11 +212,28 @@ getCertification requiredArgs____ object____ =
     Object.selectionForCompositeField "getCertification" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
 
 
+type alias SubscriptionGetSubscriptionRequestsOptionalArguments =
+    { filter : OptionalArgument String
+    , offset : OptionalArgument Int
+    , limit : OptionalArgument Int
+    , orderBy : OptionalArgument Admin.InputObject.SubscriptionRequestOrderByInput
+    }
+
+
 subscription_getSubscriptionRequests :
-    SelectionSet decodesTo Admin.Object.SubscriptionRequestSummary
-    -> SelectionSet (Maybe (List (Maybe decodesTo))) RootQuery
-subscription_getSubscriptionRequests object____ =
-    Object.selectionForCompositeField "subscription_getSubscriptionRequests" [] object____ (Basics.identity >> Decode.nullable >> Decode.list >> Decode.nullable)
+    (SubscriptionGetSubscriptionRequestsOptionalArguments -> SubscriptionGetSubscriptionRequestsOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.SubscriptionRequestsPaginated
+    -> SelectionSet decodesTo RootQuery
+subscription_getSubscriptionRequests fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { filter = Absent, offset = Absent, limit = Absent, orderBy = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "filter" filledInOptionals____.filter Encode.string, Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "orderBy" filledInOptionals____.orderBy Admin.InputObject.encodeSubscriptionRequestOrderByInput ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "subscription_getSubscriptionRequests" optionalArgs____ object____ Basics.identity
 
 
 type alias SubscriptionGetSubscriptionRequestRequiredArguments =
