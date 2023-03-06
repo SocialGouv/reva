@@ -5,6 +5,7 @@ import { Interpreter } from "xstate";
 import { Button } from "../components/atoms/Button";
 import { Header } from "../components/atoms/Header";
 import { Loader } from "../components/atoms/Icons";
+import { NameBadge } from "../components/molecules/NameBadge/NameBadge";
 import {
   Timeline,
   TimelineElement,
@@ -309,8 +310,11 @@ export const ProjectHome = ({
       <div>
         {!isValidated && (
           <>
-            <Header label="Bienvenue" />
-            <p className="my-4 pr-6 text-slate-600 text-lg">
+            <h1 className="text-lg font-bold text-dsfrGray-500">
+              Bienvenue 🤝,
+            </h1>
+            <NameBadge className="mt-4" />
+            <p className="my-4 pr-6 text-dsfrGray-500 text-base">
               Reva est une expérimentation visant à simplifier la Validation des
               Acquis de l'Expérience (VAE). Vous avez une expérience dans les
               secteurs de la dépendance et de la santé ? Choisissez votre
