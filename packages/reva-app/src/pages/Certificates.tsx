@@ -5,6 +5,7 @@ import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { BackToHomeButton } from "../components/molecules/BackToHomeButton/BackToHomeButton";
+import { NameBadge } from "../components/molecules/NameBadge/NameBadge";
 import { Card } from "../components/organisms/Card";
 import { CardSkeleton } from "../components/organisms/CardSkeleton";
 import { Page } from "../components/organisms/Page";
@@ -130,9 +131,7 @@ export const Certificates = ({ mainService }: Props) => {
       }
     >
       <BackToHomeButton />
-      <h2 className="text-3xl text-dsfrBlue-500 font-bold mt-4">
-        {state.context.contact?.firstname} {state.context.contact?.lastname}
-      </h2>
+      <NameBadge className="mt-4" />
       <h1 className="text-lg text-dsfrGray-500 font-bold mt-6">
         Nouveau parcours VAE
       </h1>
