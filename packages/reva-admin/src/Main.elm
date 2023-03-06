@@ -24,8 +24,6 @@ type alias Flags =
     , uploadEndpoint : String
     }
 
-
-
 -- MODEL
 
 
