@@ -31,10 +31,10 @@ function App() {
     crispId && Crisp.configure(crispId);
   }, []);
 
-  const { current, mainService } = useMainMachineContext();
+  const { state, mainService } = useMainMachineContext();
 
   // @ts-ignore
-  window.state = current;
+  window.state = state;
 
   const certificatesPage = (
     <Certificates key="show-results" mainService={mainService} />
@@ -135,74 +135,74 @@ function App() {
   );
 
   const pageContent = (
-    <AnimatePresence custom={current.context.direction} initial={false}>
+    <AnimatePresence custom={state.context.direction} initial={false}>
       {[
         "loadingCertifications",
         "searchResults",
         "searchResultsError",
         "certificateSummary",
-      ].some(current.matches) && certificatesPage}
+      ].some(state.matches) && certificatesPage}
 
-      {current.matches("loginHome") && loginHomePage()}
-      {current.matches("loginConfirmation") && loginConfirmationPage()}
+      {state.matches("loginHome") && loginHomePage()}
+      {state.matches("loginConfirmation") && loginConfirmationPage()}
 
-      {current.matches("projectHome") &&
+      {state.matches("projectHome") &&
         projectHomePage({
           isValidated: ["CANDIDATURE_VALIDEE", "VALIDATION"].includes(
-            current.context.candidacyStatus
+            state.context.candidacyStatus
           ),
-          certification: current.context.certification,
+          certification: state.context.certification,
         })}
 
-      {current.matches("projectSubmitted") && projectSubmittedPage()}
+      {state.matches("projectSubmitted") && projectSubmittedPage()}
 
-      {current.matches("projectContact") && projectContactPage()}
-      {current.matches("projectContactConfirmation") &&
+      {state.matches("projectContact") && projectContactPage()}
+      {state.matches("projectContactConfirmation") &&
         projectContactConfirmationPage()}
 
-      {current.matches("projectExperiences") && projectExperiencesPage()}
+      {state.matches("projectExperiences") && projectExperiencesPage()}
 
-      {current.matches("projectExperience") && projectExperiencePage()}
+      {state.matches("projectExperience") && projectExperiencePage()}
 
-      {current.matches("projectGoals") &&
-        projectGoalsPage(current.context.certification)}
+      {state.matches("projectGoals") &&
+        projectGoalsPage(state.context.certification)}
 
-      {current.matches("projectHelp") && projectHelpPage()}
+      {state.matches("projectHelp") && projectHelpPage()}
 
-      {current.matches("projectOrganism") &&
-        projectOrganismsPage(current.context.certification)}
+      {state.matches("projectOrganism") &&
+        projectOrganismsPage(state.context.certification)}
 
-      {current.matches("projectDroppedOut") &&
-        projectDroppedOutPage(current.context.contact)}
+      {state.matches("projectDroppedOut") &&
+        projectDroppedOutPage(state.context.contact)}
 
-      {current.matches("certificateDetails") &&
-        certificateDetails(current.context.certification)}
+      {state.matches("certificateDetails") &&
+        certificateDetails(state.context.certification)}
 
-      {current.matches("submissionHome") &&
+      {state.matches("submissionHome") &&
         submissionHomePage(
-          current.context.certification,
-          current.context.candidacyCreatedAt
+          state.context.certification,
+          state.context.candidacyCreatedAt
         )}
 
-      {current.matches("trainingProgramSummary") && (
+      {state.matches("trainingProgramSummary") && (
         <TrainingProgramSummary
           key="training-program-summary"
           mainService={mainService}
         />
       )}
 
-      {current.matches("trainingProgramConfirmed") && (
+      {state.matches("trainingProgramConfirmed") && (
         <TrainingProgramConfirmed
           key="training-program-confirmed"
-          certification={current.context.certification}
-          candidacyCreatedAt={current.context.candidacyCreatedAt}
-          direction={current.context.direction}
-          organism={current.context.organism}
+          certification={state.context.certification}
+          candidacyCreatedAt={state.context.candidacyCreatedAt}
+          direction={state.context.direction}
+          organism={state.context.organism}
           mainService={mainService}
         />
       )}
 
-      {current.matches("error") && errorPage()}
+      {state.matches("error") && errorPage()}
     </AnimatePresence>
   );
 

@@ -6,7 +6,7 @@ import { mainMachine } from "../../machines/main.machine";
 import { useConfiguredMainMachine } from "./configuredMainMachineHook";
 
 interface MainMachineContextType {
-  current: StateFrom<typeof mainMachine>;
+  state: StateFrom<typeof mainMachine>;
   mainService: InterpreterFrom<typeof mainMachine>;
 }
 
@@ -20,12 +20,12 @@ export const MainMachineContextProvider = ({
   children: ReactNode;
 }) => {
   const { configuredMainMachine } = useConfiguredMainMachine();
-  const [current, , mainService] = useMachine(configuredMainMachine, {
+  const [state, , mainService] = useMachine(configuredMainMachine, {
     devTools: true,
   });
 
   return (
-    <MainMachineContext.Provider value={{ current, mainService }}>
+    <MainMachineContext.Provider value={{ state, mainService }}>
       {children}
     </MainMachineContext.Provider>
   );
