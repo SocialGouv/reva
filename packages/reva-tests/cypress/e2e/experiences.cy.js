@@ -103,7 +103,7 @@ context("Experiences", () => {
 
     cy.get('[data-test="project-home-timeline"]')
       .children("section")
-      .eq(2)
+      .eq(3)
       .should("contain.text", experienceTitle2);
   });
 });
