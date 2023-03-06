@@ -39,15 +39,15 @@ input SubscriptionRequestOrderByInput {
 }
 
 type SubscriptionRequestsPaginated {
-  rows: [SubscriptionRequestSummary]!
+  rows: [SubscriptionRequestSummary!]!
   info: PaginationInfo!
 }
 
 type Query {
-    subscription_getSubscriptionRequests(filter: String, offset: Int, limit: Int, orderBy: SubscriptionRequestOrderByInput): SubscriptionRequestsPaginated!
-    subscription_getSubscriptionRequest(
-        subscriptionRequestId: ID!
-    ): SubscriptionRequest
+  subscription_getSubscriptionRequests(filter: String, offset: Int, limit: Int, orderBy: SubscriptionRequestOrderByInput): SubscriptionRequestsPaginated!
+  subscription_getSubscriptionRequest(
+    subscriptionRequestId: ID!
+  ): SubscriptionRequest
 }
 
 input SubscriptionRequestInput {
@@ -66,9 +66,9 @@ input SubscriptionRequestInput {
 }
 
 type Mutation {
-    subscription_createSubscriptionRequest(
-        subscriptionRequest: SubscriptionRequestInput!
-    ): SubscriptionRequest!
-    subscription_validateSubscriptionRequest(subscriptionRequestId: ID!): String
-    subscription_rejectSubscriptionRequest(subscriptionRequestId: ID!): String
+  subscription_createSubscriptionRequest(
+    subscriptionRequest: SubscriptionRequestInput!
+  ): SubscriptionRequest!
+  subscription_validateSubscriptionRequest(subscriptionRequestId: ID!): String
+  subscription_rejectSubscriptionRequest(subscriptionRequestId: ID!): String
 }

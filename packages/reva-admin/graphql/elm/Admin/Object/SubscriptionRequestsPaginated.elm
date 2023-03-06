@@ -21,9 +21,9 @@ import Json.Decode as Decode
 
 rows :
     SelectionSet decodesTo Admin.Object.SubscriptionRequestSummary
-    -> SelectionSet (List (Maybe decodesTo)) Admin.Object.SubscriptionRequestsPaginated
+    -> SelectionSet (List decodesTo) Admin.Object.SubscriptionRequestsPaginated
 rows object____ =
-    Object.selectionForCompositeField "rows" [] object____ (Basics.identity >> Decode.nullable >> Decode.list)
+    Object.selectionForCompositeField "rows" [] object____ (Basics.identity >> Decode.list)
 
 
 info :

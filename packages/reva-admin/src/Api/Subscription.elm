@@ -49,14 +49,14 @@ reject endpointGraphql token toMsg subscriptionId =
 getSubscriptions :
     String
     -> Token
-    -> (RemoteData String (List (Maybe Data.Subscription.SubscriptionSummary)) -> msg)
+    -> (RemoteData String (List Data.Subscription.SubscriptionSummary) -> msg)
     -> Cmd msg
 getSubscriptions endpointGraphql token toMsg =
     Query.subscription_getSubscriptionRequests identity selection
         |> Auth.makeQuery endpointGraphql token toMsg
 
 
-selection : SelectionSet (List (Maybe Data.Subscription.SubscriptionSummary)) Admin.Object.SubscriptionRequestsPaginated
+selection : SelectionSet (List Data.Subscription.SubscriptionSummary) Admin.Object.SubscriptionRequestsPaginated
 selection =
     SelectionSet.succeed identity
         |> with (Admin.Object.SubscriptionRequestsPaginated.rows subscriptionSelection)
