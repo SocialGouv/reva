@@ -9,7 +9,11 @@ import { stubMutation, stubQuery } from "../utils/graphql";
 context("Experiences", () => {
   it("add and edit an experience", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubMutation(req, "candidate_login", "candidate1.json");
+      stubMutation(
+        req,
+        "candidate_login",
+        "candidate1-certification-and-goals-selected.json"
+      );
       stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "add_experience", "added-experience1.json");
       stubQuery(req, "update_experience", "updated-experience2.json");
@@ -97,6 +101,9 @@ context("Experiences", () => {
         );
       });
 
-    cy.get('[data-test="progress-title-value"]').should("have.text", "40%");
+    cy.get('[data-test="project-home-timeline"]')
+      .children("section")
+      .eq(2)
+      .should("contain.text", experienceTitle2);
   });
 });

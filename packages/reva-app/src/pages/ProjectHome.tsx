@@ -1,11 +1,14 @@
+import { Button as DsfrButton } from "@codegouvfr/react-dsfr/Button";
 import { useActor } from "@xstate/react";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { Header } from "../components/atoms/Header";
 import { Loader } from "../components/atoms/Icons";
-import { ProgressTitle } from "../components/molecules/ProgressTitle";
-import certificationImg from "../components/organisms/Card/certification.png";
+import {
+  Timeline,
+  TimelineElement,
+} from "../components/molecules/Timeline/Timeline";
 import { Page } from "../components/organisms/Page";
 import { Certification, Experience, duration } from "../interface";
 import { MainContext, MainEvent } from "../machines/main.machine";
@@ -30,14 +33,13 @@ const durationToString: {
 };
 
 const ExperienceSummary = (experience: Experience, index: number) => (
-  <li
-    key={index}
-    className="shrink-0 h-[123px] w-[156px] flex flex-col justify-end rounded overflow-hidden bg-gray-50 px-4 py-3"
-  >
-    <p data-test="project-home-experience-duration" className="font-semibold">
+  <li key={index} className="flex flex-col p-4 border border-dsfrBlue-500">
+    <p data-test="project-home-experience-title" className="font-medium">
+      {experience.title}
+    </p>
+    <p data-test="project-home-experience-duration">
       {durationToString[experience.duration]}
     </p>
-    <p data-test="project-home-experience-title">{experience.title}</p>
   </li>
 );
 
@@ -80,51 +82,28 @@ export const ProjectHome = ({
       : send("OPEN_HELP");
 
   const EditCertification = () => (
-    <div className="bg-slate-900 rounded-xl overflow-hidden mt-6">
-      <div className={`mt-5 mr-6 text-white text-right font-bold grow `}>
-        {certification?.codeRncp}
-      </div>
+    <TimelineElement title="Votre diplôme">
       {certification && (
-        <img
-          className=""
-          alt=""
-          role="presentation"
-          style={{
-            marginLeft: "-42px",
-            marginTop: "-28px",
-            height: "104px",
-            width: "104px",
-          }}
-          src={certificationImg}
-        />
+        <h3 data-test="certification-label" className="text-base mb-4">
+          {certification?.label}
+        </h3>
       )}
-      <div className="px-8 pb-6">
-        <h2
-          data-test="certification-label"
-          className={`font-medium text-white ${
-            certification ? "text-2xl" : "mt-6 text-xl"
-          }`}
-          style={{ lineHeight: "1.1" }}
+
+      {!isValidated && (
+        <DsfrButton
+          data-test="project-home-select-certification"
+          priority="secondary"
+          onClick={() => send("CLOSE_SELECTED_CERTIFICATION")}
         >
-          {certification?.label || "Mon diplôme"}
-        </h2>
-        {!isValidated && (
-          <Button
-            data-test="project-home-select-certification"
-            size="tiny"
-            label={certification ? "Modifier" : "Choisir"}
-            className="mt-4 text-slate-900 bg-white"
-            onClick={() => send("CLOSE_SELECTED_CERTIFICATION")}
-          />
-        )}
-      </div>
-    </div>
+          {certification ? "Modifier votre diplôme" : "Choisir votre diplôme"}
+        </DsfrButton>
+      )}
+    </TimelineElement>
   );
 
   const EditGoals = () => (
-    <div className="rounded-xl pl-8 pr-6 py-6 bg-purple-100 text-purple-800">
-      <h2 className="font-bold mb-2 text-xl">Mon objectif</h2>
-      <ul className="mb-4 text-lg leading-tight">
+    <TimelineElement title="Vos objectifs">
+      <ul className="mb-2 leading-tight">
         {selectedGoals.map((goal) => (
           <li className="mb-2" key={goal.id}>
             {goal.label}
@@ -132,115 +111,109 @@ export const ProjectHome = ({
         ))}
       </ul>
       {!isValidated && (
-        <Button
+        <DsfrButton
           data-test="project-home-edit-goals"
-          size="tiny"
-          label={selectedGoals.length > 0 ? "Modifier" : "Choisir"}
-          className="text-white bg-purple-800"
+          priority="secondary"
           onClick={() => send("EDIT_GOALS")}
-        />
+        >
+          {selectedGoals.length > 0
+            ? "Modifier vos objectifs"
+            : "Choisir vos objectifs"}
+        </DsfrButton>
       )}
-    </div>
+    </TimelineElement>
   );
 
   const EditExperiences = () => (
-    <div className="rounded-xl px-8 py-6 bg-slate-100">
-      <h2 className="font-bold text-slate-800 text-xl mb-4">Mes expériences</h2>
+    <TimelineElement title="Vos expériences">
       {sortedExperiences.length > 0 && (
         <ul
           data-test="project-home-experiences"
-          className="mb-2 pb-2 flex space-x-3 overflow-x-auto"
+          className="mb-2 pb-2 flex flex-col space-y-3"
         >
           {sortedExperiences.map(ExperienceSummary)}
         </ul>
       )}
       <div className="text-sm text-slate-400">
         {!isValidated && (
-          <Button
+          <DsfrButton
             data-test="project-home-edit-experiences"
+            priority="secondary"
             onClick={() => send("EDIT_EXPERIENCES")}
-            size="tiny"
-            label={sortedExperiences.length > 0 ? "Modifier" : "Ajouter"}
-          />
+          >
+            {sortedExperiences.length > 0
+              ? "Modifier vos expériences"
+              : "Choisir vos expériences"}
+          </DsfrButton>
         )}
       </div>
-    </div>
+    </TimelineElement>
   );
 
   const EditContact = () => (
-    <div className="rounded-xl px-8 py-6 bg-neutral-100">
-      <h2 className="font-bold text-slate-800 text-xl mb-4">Mon contact</h2>
+    <TimelineElement title="Vos informations de contact">
       {state.context.contact?.phone && (
-        <p data-test="project-home-contact-phone" className="mt-2">
+        <p data-test="project-home-contact-phone" className="mb-2">
           {state.context.contact?.phone}
         </p>
       )}
       {state.context.contact?.email && (
-        <p data-test="project-home-contact-email" className="mt-2">
+        <p data-test="project-home-contact-email">
           {state.context.contact?.email}
         </p>
       )}
-      {/*<div className="mt-4 text-sm text-slate-400">
-        {!isValidated && (
-          <Button
-            data-test="project-home-edit-contact"
-            onClick={() => send("EDIT_CONTACT")}
-            size="tiny"
-            label={
-              state.context.contact &&
-              (state.context.contact?.phone !== "" ||
-                state.context.contact?.email !== "")
-                ? "Modifer"
-                : "Ajouter"
-            }
-          />
-        )}
-      </div>*/}
-    </div>
+    </TimelineElement>
   );
 
   const EditOrganism = () => (
-    <div className="rounded-xl px-8 py-6 bg-neutral-100">
-      <h2 className="font-bold text-slate-800 text-xl mb-4">
-        Mon architecte de parcours
-      </h2>
-      {state.context.organism?.label && (
-        <h3
-          data-test="project-home-organism-label"
-          className="font-bold text-slate-800 text-xl mb-4"
-        >
-          {state.context.organism?.label}
-        </h3>
+    <TimelineElement
+      title="Votre référent"
+      description="Il vous guide tout au long du parcours"
+    >
+      {state.context.organism && (
+        <div className="flex flex-col p-4 border border-dsfrBlue-500">
+          {state.context.organism?.label && (
+            <h3
+              data-test="project-home-organism-label"
+              className="text-base font-medium"
+            >
+              {state.context.organism?.label}
+            </h3>
+          )}
+          <address className="not-italic">
+            {state.context.organism?.address && (
+              <p data-test="project-home-organism-address">
+                {state.context.organism?.address}
+              </p>
+            )}
+            {state.context.organism?.zip && state.context.organism?.city && (
+              <p data-test="project-home-organism-zip-city">
+                {state.context.organism?.zip} {state.context.organism?.city}
+              </p>
+            )}
+            {state.context.organism?.contactAdministrativeEmail && (
+              <p data-test="project-home-organism-email">
+                {state.context.organism?.contactAdministrativeEmail}
+              </p>
+            )}
+          </address>
+        </div>
       )}
-      <address className="text-gray-600 leading-relaxed">
-        {state.context.organism?.address && (
-          <p data-test="project-home-organism-address">
-            {state.context.organism?.address}
-          </p>
-        )}
-        {state.context.organism?.zip && state.context.organism?.city && (
-          <p data-test="project-home-organism-zip-city">
-            {state.context.organism?.zip} {state.context.organism?.city}
-          </p>
-        )}
-        {state.context.organism?.contactAdministrativeEmail && (
-          <p data-test="project-home-organism-email">
-            {state.context.organism?.contactAdministrativeEmail}
-          </p>
-        )}
-      </address>
       <div className="mt-4 text-sm text-slate-400">
         {!isValidated && (
-          <Button
+          <DsfrButton
             data-test="project-home-edit-organism"
+            priority="secondary"
             onClick={() => send("EDIT_ORGANISM")}
-            size="tiny"
             disabled={state.context.certification == null}
-            label={state.context.organism ? "Modifer" : "Ajouter"}
-          />
+          >
+            {state.context.organism
+              ? "Modifier votre référent"
+              : "Choisir votre référent"}
+          </DsfrButton>
         )}
       </div>
-    </div>
+    </TimelineElement>
   );
 
   const retryErrorScreen = (
@@ -292,20 +265,16 @@ export const ProjectHome = ({
             </p>
           </>
         )}
-        {isValidated ? (
-          <SubmissionWarning />
-        ) : (
-          <ProgressTitle progress={progress} size="large" title="Projet" />
-        )}
-        <div className="space-y-4">
+        {isValidated ? <SubmissionWarning /> : null}
+        <Timeline className="mt-8" dataTest="project-home-timeline">
           <EditCertification />
           <EditGoals />
           <EditExperiences />
           <EditContact />
           <EditOrganism />
-        </div>
+        </Timeline>
       </div>
-      <div className="bg-white flex flex-col items-center pt-4 pb-12 sm:pb-4">
+      <div className="bg-white flex flex-col items-center pt-32 pb-12 sm:pb-4">
         <Button
           data-test={`project-home-${isValidated ? "submit" : "validate"}${
             !isProjectComplete ? "-locked" : ""

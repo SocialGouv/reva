@@ -10,8 +10,6 @@ context("Empty candidacy", () => {
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
 
-    cy.get('[data-test="progress-title-value"]').should("have.text", "20%");
-
     cy.get('[data-test="project-home-edit-organism').should("be.disabled");
   });
 });
@@ -26,8 +24,6 @@ context("Candidacy with department certification selected", () => {
     cy.login();
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
-
-    cy.get('[data-test="progress-title-value"]').should("have.text", "40%");
 
     cy.get('[data-test="project-home-edit-organism').click();
     cy.wait("@getOrganismsForCandidacy");

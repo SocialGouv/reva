@@ -12,9 +12,10 @@
         "email": "email@example.com",
         "phone": "06-01-02-03-04",
         "candidacy": {
-          "id": "c3",
+          "id": "c1",
+          "certificationId": null,
           "organism": null,
-          "createdAt": 1664376421912,
+          "createdAt": null,
           "certification": {
             "id": "c1",
             "label": "Titre 1",
@@ -22,15 +23,7 @@
             "codeRncp": "34691",
             "status": "AVAILABLE"
           },
-          "experiences": [
-            {
-              "id": "e1",
-              "title": "Experience 1",
-              "startedAt": 1580428800000,
-              "duration": "unknown",
-              "description": "description 1"
-            }
-          ],
+          "experiences": [],
           "goals": [
             {
               "goalId": "goal1",
@@ -49,7 +42,7 @@
           "individualHourCount": null,
           "collectiveHourCount": null,
           "additionalHourCount": null,
-          "validatedByCandidate": false,
+          "validatedByCandidate": null,
           "basicSkills": [],
           "mandatoryTrainings": []
         }
