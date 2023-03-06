@@ -85,6 +85,10 @@ type Organism
     = Organism
 
 
+type PaginationInfo
+    = PaginationInfo
+
+
 type PaymentRequest
     = PaymentRequest
 
@@ -115,6 +119,10 @@ type SubscriptionRequest
 
 type SubscriptionRequestSummary
     = SubscriptionRequestSummary
+
+
+type SubscriptionRequestsPaginated
+    = SubscriptionRequestsPaginated
 
 
 type Tokens

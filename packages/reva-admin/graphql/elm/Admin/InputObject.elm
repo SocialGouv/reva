@@ -10,6 +10,7 @@ import Admin.Enum.CandidateTypology
 import Admin.Enum.Duration
 import Admin.Enum.Gender
 import Admin.Enum.LegalStatus
+import Admin.Enum.Sort
 import Admin.Interface
 import Admin.Object
 import Admin.Scalar
@@ -608,6 +609,40 @@ encodeSubscriptionRequestInput : SubscriptionRequestInput -> Value
 encodeSubscriptionRequestInput input____ =
     Encode.maybeObject
         [ ( "companyName", Encode.string input____.companyName |> Just ), ( "companyLegalStatus", Encode.enum Admin.Enum.LegalStatus.toString input____.companyLegalStatus |> Just ), ( "companySiret", Encode.string input____.companySiret |> Just ), ( "companyAddress", Encode.string input____.companyAddress |> Just ), ( "companyBillingAddress", Encode.string input____.companyBillingAddress |> Just ), ( "companyBillingEmail", Encode.string input____.companyBillingEmail |> Just ), ( "companyBic", Encode.string input____.companyBic |> Just ), ( "companyIban", Encode.string input____.companyIban |> Just ), ( "accountFirstname", Encode.string input____.accountFirstname |> Just ), ( "accountLastname", Encode.string input____.accountLastname |> Just ), ( "accountEmail", Encode.string input____.accountEmail |> Just ), ( "accountPhoneNumber", Encode.string input____.accountPhoneNumber |> Just ) ]
+
+
+buildSubscriptionRequestOrderByInput :
+    (SubscriptionRequestOrderByInputOptionalFields -> SubscriptionRequestOrderByInputOptionalFields)
+    -> SubscriptionRequestOrderByInput
+buildSubscriptionRequestOrderByInput fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { companyName = Absent, accountLastname = Absent }
+    in
+    { companyName = optionals____.companyName, accountLastname = optionals____.accountLastname }
+
+
+type alias SubscriptionRequestOrderByInputOptionalFields =
+    { companyName : OptionalArgument Admin.Enum.Sort.Sort
+    , accountLastname : OptionalArgument Admin.Enum.Sort.Sort
+    }
+
+
+{-| Type for the SubscriptionRequestOrderByInput input object.
+-}
+type alias SubscriptionRequestOrderByInput =
+    { companyName : OptionalArgument Admin.Enum.Sort.Sort
+    , accountLastname : OptionalArgument Admin.Enum.Sort.Sort
+    }
+
+
+{-| Encode a SubscriptionRequestOrderByInput into a value that can be used as an argument.
+-}
+encodeSubscriptionRequestOrderByInput : SubscriptionRequestOrderByInput -> Value
+encodeSubscriptionRequestOrderByInput input____ =
+    Encode.maybeObject
+        [ ( "companyName", Encode.enum Admin.Enum.Sort.toString |> Encode.optional input____.companyName ), ( "accountLastname", Encode.enum Admin.Enum.Sort.toString |> Encode.optional input____.accountLastname ) ]
 
 
 buildTrainingInput :

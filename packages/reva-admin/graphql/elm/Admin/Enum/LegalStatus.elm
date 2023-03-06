@@ -14,11 +14,12 @@ type LegalStatus
     | Sas
     | Sasu
     | Sa
+    | Nc
 
 
 list : List LegalStatus
 list =
-    [ Ei, Eurl, Sarl, Sas, Sasu, Sa ]
+    [ Ei, Eurl, Sarl, Sas, Sasu, Sa, Nc ]
 
 
 decoder : Decoder LegalStatus
@@ -44,6 +45,9 @@ decoder =
 
                     "SA" ->
                         Decode.succeed Sa
+
+                    "NC" ->
+                        Decode.succeed Nc
 
                     _ ->
                         Decode.fail ("Invalid LegalStatus type, " ++ string ++ " try re-running the @dillonkearns/elm-graphql CLI ")
@@ -72,6 +76,9 @@ toString enum____ =
 
         Sa ->
             "SA"
+
+        Nc ->
+            "NC"
 
 
 {-| Convert from a String representation to an elm representation enum.
@@ -105,6 +112,9 @@ fromString enumString____ =
 
         "SA" ->
             Just Sa
+
+        "NC" ->
+            Just Nc
 
         _ ->
             Nothing

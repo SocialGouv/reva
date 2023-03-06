@@ -422,3 +422,25 @@ subscription_createSubscriptionRequest :
     -> SelectionSet decodesTo RootMutation
 subscription_createSubscriptionRequest requiredArgs____ object____ =
     Object.selectionForCompositeField "subscription_createSubscriptionRequest" [ Argument.required "subscriptionRequest" requiredArgs____.subscriptionRequest Admin.InputObject.encodeSubscriptionRequestInput ] object____ Basics.identity
+
+
+type alias SubscriptionValidateSubscriptionRequestRequiredArguments =
+    { subscriptionRequestId : Data.Scalar.Id }
+
+
+subscription_validateSubscriptionRequest :
+    SubscriptionValidateSubscriptionRequestRequiredArguments
+    -> SelectionSet (Maybe String) RootMutation
+subscription_validateSubscriptionRequest requiredArgs____ =
+    Object.selectionForField "(Maybe String)" "subscription_validateSubscriptionRequest" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] (Decode.string |> Decode.nullable)
+
+
+type alias SubscriptionRejectSubscriptionRequestRequiredArguments =
+    { subscriptionRequestId : Data.Scalar.Id }
+
+
+subscription_rejectSubscriptionRequest :
+    SubscriptionRejectSubscriptionRequestRequiredArguments
+    -> SelectionSet (Maybe String) RootMutation
+subscription_rejectSubscriptionRequest requiredArgs____ =
+    Object.selectionForField "(Maybe String)" "subscription_rejectSubscriptionRequest" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] (Decode.string |> Decode.nullable)
