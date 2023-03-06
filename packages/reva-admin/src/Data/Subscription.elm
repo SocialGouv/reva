@@ -1,4 +1,4 @@
-module Data.Subscription exposing (SubscriptionSummary)
+module Data.Subscription exposing (SubscriptionSummary, filterByWords)
 
 
 type alias SubscriptionSummary =
@@ -9,3 +9,8 @@ type alias SubscriptionSummary =
     , companyName : String
     , companyAddress : String
     }
+
+
+filterByWords : String -> SubscriptionSummary -> Bool
+filterByWords words candidacySummary =
+    True
