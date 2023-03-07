@@ -1,19 +1,14 @@
-import { Button as DsfrButton } from "@codegouvfr/react-dsfr/Button";
 import { useActor } from "@xstate/react";
+import { ProjectTimeline } from "components/organisms/ProjectTimeline/ProjectTimeline";
 import { Interpreter } from "xstate";
 
 import { Button } from "../components/atoms/Button";
 import { Header } from "../components/atoms/Header";
 import { Loader } from "../components/atoms/Icons";
 import { NameBadge } from "../components/molecules/NameBadge/NameBadge";
-import {
-  Timeline,
-  TimelineElement,
-} from "../components/molecules/Timeline/Timeline";
 import { Page } from "../components/organisms/Page";
-import { Certification, Experience, duration } from "../interface";
+import { Certification } from "../interface";
 import { MainContext, MainEvent } from "../machines/main.machine";
-import { sortExperiences } from "../utils/experienceHelpers";
 import { projectProgress } from "../utils/projectProgress";
 
 interface ProjectHomeProps {
@@ -21,28 +16,6 @@ interface ProjectHomeProps {
   certification: Certification;
   mainService: Interpreter<MainContext, any, MainEvent, any, any>;
 }
-
-const durationToString: {
-  [key in duration]: string;
-} = {
-  unknown: "Durée inconnue",
-  lessThanOneYear: "Moins d'un an",
-  betweenOneAndThreeYears: "Entre 1 et 3 ans",
-  moreThanThreeYears: "Plus de 3 ans",
-  moreThanFiveYears: "Plus de 5 ans",
-  moreThanTenYears: "Plus de 10 ans",
-};
-
-const ExperienceSummary = (experience: Experience, index: number) => (
-  <li key={index} className="flex flex-col p-4 border border-dsfrBlue-500">
-    <p data-test="project-home-experience-title" className="font-medium">
-      {experience.title}
-    </p>
-    <p data-test="project-home-experience-duration">
-      {durationToString[experience.duration]}
-    </p>
-  </li>
-);
 
 const SubmissionWarning = () => (
   <>
@@ -62,15 +35,11 @@ export const ProjectHome = ({
 }: ProjectHomeProps) => {
   const [state, send] = useActor(mainService);
 
-  const selectedGoals = state.context.goals.filter((goal) => goal.checked);
-
   const isHomeReady =
     !state.matches({ projectHome: "fakeLoading" }) &&
     !state.matches({ projectHome: "loading" }) &&
     !state.matches({ projectHome: "retry" }) &&
     !state.matches("submissionHome");
-
-  const sortedExperiences = sortExperiences(state.context.experiences);
 
   const progress = projectProgress(state.context);
   const isProjectComplete = progress === 100;
@@ -81,194 +50,6 @@ export const ProjectHome = ({
       : progress === 100
       ? send("VALIDATE_PROJECT")
       : send("OPEN_HELP");
-
-  const EditContact = () => (
-    <TimelineElement title="Vos informations de contact" status="editable">
-      {() => (
-        <>
-          {state.context.contact?.phone && (
-            <p data-test="project-home-contact-phone" className="mb-2">
-              {state.context.contact?.phone}
-            </p>
-          )}
-          {state.context.contact?.email && (
-            <p data-test="project-home-contact-email">
-              {state.context.contact?.email}
-            </p>
-          )}
-        </>
-      )}
-    </TimelineElement>
-  );
-
-  const EditCertification = () => (
-    <TimelineElement
-      title="Votre diplôme"
-      status={certification ? "editable" : "active"}
-    >
-      {({ status }) => (
-        <>
-          {certification && (
-            <h3 data-test="certification-label" className="text-base mb-4">
-              {certification?.label}
-            </h3>
-          )}
-
-          {!isValidated && (
-            <DsfrButton
-              data-test="project-home-select-certification"
-              priority="secondary"
-              onClick={() => send("CLOSE_SELECTED_CERTIFICATION")}
-              disabled={status === "disabled"}
-            >
-              {certification
-                ? "Modifier votre diplôme"
-                : "Choisir votre diplôme"}
-            </DsfrButton>
-          )}
-        </>
-      )}
-    </TimelineElement>
-  );
-
-  const EditGoals = () => (
-    <TimelineElement
-      title="Vos objectifs"
-      status={
-        certification
-          ? selectedGoals.length
-            ? "editable"
-            : "active"
-          : "disabled"
-      }
-    >
-      {({ status }) => (
-        <>
-          <ul className="mb-2 leading-tight">
-            {selectedGoals.map((goal) => (
-              <li className="mb-2" key={goal.id}>
-                {goal.label}
-              </li>
-            ))}
-          </ul>
-          {!isValidated && (
-            <DsfrButton
-              data-test="project-home-edit-goals"
-              priority="secondary"
-              onClick={() => send("EDIT_GOALS")}
-              disabled={status === "disabled"}
-            >
-              {selectedGoals.length > 0
-                ? "Modifier vos objectifs"
-                : "Choisir vos objectifs"}
-            </DsfrButton>
-          )}
-        </>
-      )}
-    </TimelineElement>
-  );
-
-  const EditExperiences = () => (
-    <TimelineElement
-      title="Vos expériences"
-      status={
-        selectedGoals.length
-          ? sortedExperiences.length
-            ? "editable"
-            : "active"
-          : "disabled"
-      }
-    >
-      {({ status }) => (
-        <>
-          {sortedExperiences.length > 0 && (
-            <ul
-              data-test="project-home-experiences"
-              className="mb-2 pb-2 flex flex-col space-y-3"
-            >
-              {sortedExperiences.map(ExperienceSummary)}
-            </ul>
-          )}
-          <div className="text-sm text-slate-400">
-            {!isValidated && (
-              <DsfrButton
-                data-test="project-home-edit-experiences"
-                priority="secondary"
-                onClick={() => send("EDIT_EXPERIENCES")}
-                disabled={status === "disabled"}
-              >
-                {sortedExperiences.length > 0
-                  ? "Modifier vos expériences"
-                  : "Choisir vos expériences"}
-              </DsfrButton>
-            )}
-          </div>
-        </>
-      )}
-    </TimelineElement>
-  );
-
-  const EditOrganism = () => (
-    <TimelineElement
-      title="Votre référent"
-      description="Il vous guide tout au long du parcours"
-      status={
-        state.context.experiences.rest.length
-          ? state.context.organism
-            ? "editable"
-            : "active"
-          : "disabled"
-      }
-    >
-      {({ status }) => (
-        <>
-          {state.context.organism && (
-            <div className="flex flex-col p-4 border border-dsfrBlue-500">
-              {state.context.organism?.label && (
-                <h3
-                  data-test="project-home-organism-label"
-                  className="text-base font-medium"
-                >
-                  {state.context.organism?.label}
-                </h3>
-              )}
-              <address className="not-italic">
-                {state.context.organism?.address && (
-                  <p data-test="project-home-organism-address">
-                    {state.context.organism?.address}
-                  </p>
-                )}
-                {state.context.organism?.zip && state.context.organism?.city && (
-                  <p data-test="project-home-organism-zip-city">
-                    {state.context.organism?.zip} {state.context.organism?.city}
-                  </p>
-                )}
-                {state.context.organism?.contactAdministrativeEmail && (
-                  <p data-test="project-home-organism-email">
-                    {state.context.organism?.contactAdministrativeEmail}
-                  </p>
-                )}
-              </address>
-            </div>
-          )}
-          <div className="mt-4 text-sm text-slate-400">
-            {!isValidated && (
-              <DsfrButton
-                data-test="project-home-edit-organism"
-                priority="secondary"
-                onClick={() => send("EDIT_ORGANISM")}
-                disabled={status === "disabled"}
-              >
-                {state.context.organism
-                  ? "Modifier votre référent"
-                  : "Choisir votre référent"}
-              </DsfrButton>
-            )}
-          </div>
-        </>
-      )}
-    </TimelineElement>
-  );
 
   const retryErrorScreen = (
     <div
@@ -323,13 +104,11 @@ export const ProjectHome = ({
           </>
         )}
         {isValidated ? <SubmissionWarning /> : null}
-        <Timeline className="mt-8" dataTest="project-home-timeline">
-          <EditContact />
-          <EditCertification />
-          <EditGoals />
-          <EditExperiences />
-          <EditOrganism />
-        </Timeline>
+        <ProjectTimeline
+          isProjectValidated={isValidated}
+          className="mt-8"
+          dataTest="project-home-timeline"
+        />
       </div>
       <div className="bg-white flex flex-col items-center pt-32 pb-12 sm:pb-4">
         <Button
