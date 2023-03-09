@@ -15,3 +15,4 @@ infra/ftps/data/*
 **/screenshots
 **/videos
 **/storybook-static
+.keystone
