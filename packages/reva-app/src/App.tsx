@@ -1,5 +1,6 @@
 import { Crisp } from "crisp-sdk-web";
 import { AnimatePresence } from "framer-motion";
+import { ProjectSubmissionConfirmation } from "pages/ProjectSubmissionConfirmation";
 import { useEffect } from "react";
 
 import { Footer } from "./components/organisms/Footer";
@@ -134,6 +135,10 @@ function App() {
     />
   );
 
+  const projectSubmissionConfirmationPage = () => (
+    <ProjectSubmissionConfirmation />
+  );
+
   const pageContent = (
     <AnimatePresence custom={state.context.direction} initial={false}>
       {[
@@ -153,6 +158,9 @@ function App() {
           ),
           certification: state.context.certification,
         })}
+
+      {state.matches("projectSubmissionConfirmation") &&
+        projectSubmissionConfirmationPage()}
 
       {state.matches("projectSubmitted") && projectSubmittedPage()}
 

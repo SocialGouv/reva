@@ -34,6 +34,7 @@ const projectDroppedOut = "projectDroppedOut";
 const submissionHome = "submissionHome";
 const trainingProgramSummary = "trainingProgramSummary";
 const trainingProgramConfirmed = "trainingProgramConfirmed";
+const projectSubmissionConfirmation = "projectSubmissionConfirmation";
 const error = "error";
 
 export type State =
@@ -54,7 +55,8 @@ export type State =
   | typeof projectDroppedOut
   | typeof submissionHome
   | typeof trainingProgramSummary
-  | typeof trainingProgramConfirmed;
+  | typeof trainingProgramConfirmed
+  | typeof projectSubmissionConfirmation;
 
 export const INVALID_TOKEN_ERROR = "INVALID_TOKEN_ERROR";
 
@@ -158,6 +160,7 @@ export type MainState =
         | typeof loginHome
         | typeof loginConfirmation
         | typeof projectHome
+        | typeof projectSubmissionConfirmation
         | typeof projectSubmitted
         | typeof projectDroppedOut
         | typeof projectGoals
@@ -969,52 +972,12 @@ export const mainMachine =
               ready: {
                 on: {
                   VALIDATE_PROJECT: {
-                    actions: [
-                      "navigateNext",
-                      assign({
-                        candidacyStatus: (_context, _event) =>
-                          "CANDIDATURE_VALIDEE",
-                      }),
-                    ],
-                    target: "ready",
-                    internal: false,
-                  },
-                  SUBMIT_PROJECT: {
-                    actions: assign({
-                      direction: (_context, _event) => "next",
-                    }),
-                    target: "submitting",
+                    actions: ["navigateNext"],
+                    target: "#mainMachine.projectSubmissionConfirmation",
                   },
                 },
               },
               error: {},
-              submitting: {
-                invoke: {
-                  src: "submitCandidacy",
-                  onDone: [
-                    {
-                      actions: assign({
-                        candidacyStatus: (_context, _event) => "VALIDATION",
-                        direction: (_context, _event) => "next",
-                      }),
-                      target: "leave",
-                    },
-                  ],
-                  onError: [
-                    {
-                      actions: assign({
-                        error: (_, _event) =>
-                          "Une erreur est survenue lors de la transmission de votre projet.",
-                        direction: (_context, _event) => "previous",
-                      }),
-                      target: "error",
-                    },
-                  ],
-                },
-              },
-              leave: {
-                type: "final",
-              },
             },
             on: {
               EDIT_EXPERIENCES: {
@@ -1051,6 +1014,49 @@ export const mainMachine =
             },
             onDone: {
               target: "projectSubmitted",
+            },
+          },
+          projectSubmissionConfirmation: {
+            initial: "ready",
+            states: {
+              ready: {
+                on: {
+                  BACK: {
+                    target: "#mainMachine.projectHomeLoading",
+                  },
+                  SUBMIT_PROJECT: {
+                    actions: assign({
+                      direction: (_context, _event) => "next",
+                    }),
+                    target: "submitting",
+                  },
+                },
+              },
+              submitting: {
+                invoke: {
+                  src: "submitCandidacy",
+                  onDone: [
+                    {
+                      actions: assign({
+                        candidacyStatus: (_context, _event) => "VALIDATION",
+                        direction: (_context, _event) => "next",
+                      }),
+                      target: "#mainMachine.submissionHome",
+                    },
+                  ],
+                  onError: [
+                    {
+                      actions: assign({
+                        error: (_, _event) =>
+                          "Une erreur est survenue lors de la transmission de votre projet.",
+                        direction: (_context, _event) => "previous",
+                      }),
+                      target: "error",
+                    },
+                  ],
+                },
+              },
+              error: {},
             },
           },
           projectSubmitted: {

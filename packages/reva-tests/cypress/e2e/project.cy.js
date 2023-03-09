@@ -31,9 +31,7 @@ context("Project", () => {
     cy.get('[data-test="project-home-ready"]');
     cy.get('[data-test="project-home-validate"]').click();
 
-    cy.get('[data-test="project-home-validated"]');
-    cy.wait(500);
-    cy.get('[data-test="project-home-submit"]').click();
+    cy.get('[data-test="project-submit"]').click();
     cy.wait("@submit_candidacy");
   });
 });

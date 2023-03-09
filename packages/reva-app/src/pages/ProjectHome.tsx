@@ -17,17 +17,6 @@ interface ProjectHomeProps {
   mainService: Interpreter<MainContext, any, MainEvent, any, any>;
 }
 
-const SubmissionWarning = () => (
-  <>
-    <h3 className="my-10 text-center font-bold text-xl">Tout est prêt !</h3>
-    <p className="text-red-800 leading-7 mb-10">
-      Lorsque le projet est validé, il engage un financement automatique proposé
-      dans le cadre de l'expérimentation à laquelle vous participez. Votre
-      engagement à poursuivre est nécessaire et vous engage personnellement.
-    </p>
-  </>
-);
-
 export const ProjectHome = ({
   isValidated,
   certification,
@@ -45,11 +34,7 @@ export const ProjectHome = ({
   const isProjectComplete = progress === 100;
 
   const projectButtonHandler = () =>
-    isValidated
-      ? send("SUBMIT_PROJECT")
-      : progress === 100
-      ? send("VALIDATE_PROJECT")
-      : send("OPEN_HELP");
+    progress === 100 ? send("VALIDATE_PROJECT") : send("OPEN_HELP");
 
   const retryErrorScreen = (
     <div
@@ -89,21 +74,15 @@ export const ProjectHome = ({
   const homeScreen = (
     <div data-test={`project-home-${isValidated ? "validated" : "ready"}`}>
       <div>
-        {!isValidated && (
-          <>
-            <h1 className="text-lg font-bold text-dsfrGray-500">
-              Bienvenue 🤝,
-            </h1>
-            <NameBadge className="mt-4" />
-            <p className="my-4 pr-6 text-dsfrGray-500 text-base">
-              Reva est une expérimentation visant à simplifier la Validation des
-              Acquis de l'Expérience (VAE). Vous avez une expérience dans les
-              secteurs de la dépendance et de la santé ? Choisissez votre
-              diplôme et laissez-vous accompagner !
-            </p>
-          </>
-        )}
-        {isValidated ? <SubmissionWarning /> : null}
+        <h1 className="text-lg font-bold text-dsfrGray-500">Bienvenue 🤝,</h1>
+        <NameBadge className="mt-4" />
+        <p className="my-4 pr-6 text-dsfrGray-500 text-base">
+          Reva est une expérimentation visant à simplifier la Validation des
+          Acquis de l'Expérience (VAE). Vous avez une expérience dans les
+          secteurs de la dépendance et de la santé ? Choisissez votre diplôme et
+          laissez-vous accompagner !
+        </p>
+
         <ProjectTimeline
           isProjectValidated={isValidated}
           className="mt-8"
@@ -112,15 +91,15 @@ export const ProjectHome = ({
       </div>
       <div className="bg-white flex flex-col items-center pt-32 pb-12 sm:pb-4">
         <Button
-          data-test={`project-home-${isValidated ? "submit" : "validate"}${
+          data-test={`project-home-validate${
             !isProjectComplete ? "-locked" : ""
           }`}
           locked={!isProjectComplete}
           onClick={projectButtonHandler}
           type="submit"
           loading={state.matches("projectHome.submitting")}
-          label={isValidated ? "Transmettre" : "Valider"}
-          primary={isValidated}
+          label="Valider"
+          primary={false}
           size="medium"
         />
       </div>
