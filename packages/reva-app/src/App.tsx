@@ -93,15 +93,12 @@ function App() {
   );
 
   const projectHomePage = ({
-    isValidated,
     certification,
   }: {
-    isValidated: boolean;
     certification: Certification;
   }) => (
     <ProjectHome
-      key={`project-home-${isValidated ? "validated" : "ready"}}`}
-      isValidated={isValidated}
+      key={`project-home-ready`}
       mainService={mainService}
       certification={certification}
     />
@@ -153,9 +150,6 @@ function App() {
 
       {state.matches("projectHome") &&
         projectHomePage({
-          isValidated: ["CANDIDATURE_VALIDEE", "VALIDATION"].includes(
-            state.context.candidacyStatus
-          ),
           certification: state.context.certification,
         })}
 

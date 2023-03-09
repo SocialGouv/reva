@@ -12,13 +12,11 @@ import { MainContext, MainEvent } from "../machines/main.machine";
 import { projectProgress } from "../utils/projectProgress";
 
 interface ProjectHomeProps {
-  isValidated: boolean;
   certification: Certification;
   mainService: Interpreter<MainContext, any, MainEvent, any, any>;
 }
 
 export const ProjectHome = ({
-  isValidated,
   certification,
   mainService,
 }: ProjectHomeProps) => {
@@ -72,7 +70,7 @@ export const ProjectHome = ({
   );
 
   const homeScreen = (
-    <div data-test={`project-home-${isValidated ? "validated" : "ready"}`}>
+    <div data-test={`project-home-ready`}>
       <div>
         <h1 className="text-lg font-bold text-dsfrGray-500">Bienvenue 🤝,</h1>
         <NameBadge className="mt-4" />
@@ -83,11 +81,7 @@ export const ProjectHome = ({
           laissez-vous accompagner !
         </p>
 
-        <ProjectTimeline
-          isProjectValidated={isValidated}
-          className="mt-8"
-          dataTest="project-home-timeline"
-        />
+        <ProjectTimeline className="mt-8" dataTest="project-home-timeline" />
       </div>
       <div className="bg-white flex flex-col items-center pt-32 pb-12 sm:pb-4">
         <Button
