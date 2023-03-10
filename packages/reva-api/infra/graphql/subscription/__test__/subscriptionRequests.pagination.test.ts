@@ -46,7 +46,8 @@ test("Get requests list should fail when not admin", async () => {
       returnFields: "{ id }",
     },
   });
-  expect(resp.statusCode).toEqual(400);
+  expect(resp.statusCode).toEqual(200);
+  expect(resp.json()).toHaveProperty("errors");
 });
 
 test("Get requests list should return paginated list", async () => {
@@ -67,6 +68,7 @@ test("Get requests list should return paginated list", async () => {
   });
   expect(resp.statusCode).toEqual(200);
   const result = resp.json();
+  expect(result).not.toHaveProperty("errors");
   console.log(result.data.subscription_getSubscriptionRequests);
 });
 

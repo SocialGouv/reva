@@ -56,6 +56,7 @@ test("Should create a subscription request", async () => {
     },
   });
   expect(resp.statusCode).toEqual(200);
+  expect(resp.json()).not.toHaveProperty("errors");
   const subreq = resp.json().data.subscription_createSubscriptionRequest;
   subreq1Id = subreq.id;
   expect(subreq).toMatchObject(subreqSample);

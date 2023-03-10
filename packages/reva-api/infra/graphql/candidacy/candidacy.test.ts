@@ -32,7 +32,7 @@ afterAll(async () => {
   await prismaClient.organism.delete({ where: { id: organism.id } });
 });
 
-test("candidacy_takeOver should fail with code 400 when not authenticated", async function () {
+test("candidacy_takeOver should fail when not authenticated", async function () {
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -47,7 +47,8 @@ test("candidacy_takeOver should fail with code 400 when not authenticated", asyn
     },
   });
 
-  expect(resp.statusCode).toEqual(400);
+  expect(resp.statusCode).toEqual(200);
+  expect(resp.json()).toHaveProperty("errors");
 });
 
 test("get existing Candidacy with admin user", async () => {
@@ -75,7 +76,7 @@ test("get existing Candidacy with admin user", async () => {
   });
 });
 
-test("get non existing candidacy should fail with 500", async() => {
+test("get non existing candidacy should yield errors", async() => {
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -90,5 +91,6 @@ test("get non existing candidacy should fail with 500", async() => {
         "{id}",
     },
   });
-  expect(resp.statusCode).toEqual(500);
+  expect(resp.statusCode).toEqual(200);
+  expect(resp.json()).toHaveProperty("errors");
 })
