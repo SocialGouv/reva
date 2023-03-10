@@ -40,7 +40,7 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
 
   return (
     <Page
-      className="z-[90] bg-slate-900 py-6 overflow-y-scroll"
+      className="bg-slate-900 !max-w-none h-full "
       direction={state.context.direction}
     >
       <div className="h-12">
