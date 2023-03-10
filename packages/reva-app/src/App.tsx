@@ -20,7 +20,6 @@ import { ProjectExperiences } from "./pages/ProjectExperiences";
 import { ProjectGoals } from "./pages/ProjectGoals";
 import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectOrganisms } from "./pages/ProjectOrganisms";
-import { ProjectSubmitted } from "./pages/ProjectSubmitted";
 import { SubmissionHome } from "./pages/SubmissionHome";
 import { TrainingProgramConfirmed } from "./pages/TrainingProgramConfirmed";
 import { TrainingProgramSummary } from "./pages/TrainingProgramSummary";
@@ -99,10 +98,6 @@ function App() {
     />
   );
 
-  const projectSubmittedPage = () => (
-    <ProjectSubmitted key="project-submitted" mainService={mainService} />
-  );
-
   const projectDroppedOutPage = (contact: Contact) => {
     const firstname = contact?.firstname ?? "";
     const lastname = contact?.lastname ?? "";
@@ -150,8 +145,6 @@ function App() {
 
       {state.matches("projectSubmissionConfirmation") &&
         projectSubmissionConfirmationPage()}
-
-      {state.matches("projectSubmitted") && projectSubmittedPage()}
 
       {state.matches("projectContact") && projectContactPage()}
       {state.matches("projectContactConfirmation") &&

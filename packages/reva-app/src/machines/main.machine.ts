@@ -28,7 +28,6 @@ const projectExperience = "projectExperience";
 const projectExperiences = "projectExperiences";
 const projectGoals = "projectGoals";
 const projectOrganism = "projectOrganism";
-const projectSubmitted = "projectSubmitted";
 const projectDroppedOut = "projectDroppedOut";
 const submissionHome = "submissionHome";
 const trainingProgramSummary = "trainingProgramSummary";
@@ -50,7 +49,6 @@ export type State =
   | typeof projectExperiences
   | typeof projectGoals
   | typeof projectOrganism
-  | typeof projectSubmitted
   | typeof projectDroppedOut
   | typeof submissionHome
   | typeof trainingProgramSummary
@@ -159,7 +157,6 @@ export type MainState =
         | typeof loginConfirmation
         | typeof projectHome
         | typeof projectSubmissionConfirmation
-        | typeof projectSubmitted
         | typeof projectDroppedOut
         | typeof projectGoals
         | typeof projectContact
@@ -997,9 +994,6 @@ export const mainMachine =
                 },
               ],
             },
-            onDone: {
-              target: "projectSubmitted",
-            },
           },
           projectSubmissionConfirmation: {
             initial: "ready",
@@ -1042,14 +1036,6 @@ export const mainMachine =
                 },
               },
               error: {},
-            },
-          },
-          projectSubmitted: {
-            on: {
-              BACK: {
-                actions: "navigateNext",
-                target: "#mainMachine.submissionHome",
-              },
             },
           },
           projectDroppedOut: {
