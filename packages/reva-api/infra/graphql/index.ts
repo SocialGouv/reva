@@ -54,7 +54,6 @@ export const graphqlConfiguration = {
   }),
   graphiql: !!process.env.GRAPHIQL,
   errorFormatter: (result: any) => {
-    const statusCode = result.errors[0].originalError?.statusCode ?? 400;
     let errors = result.errors;
 
     if (result.errors[0].extensions?.errors?.length) {
@@ -67,7 +66,7 @@ export const graphqlConfiguration = {
     }
 
     return {
-      statusCode,
+      statusCode: 200,
       response: {
         errors,
       },
