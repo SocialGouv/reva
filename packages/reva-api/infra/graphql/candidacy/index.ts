@@ -221,6 +221,7 @@ const unsafeResolvers = {
       const result = await updateCertificationOfCandidacy({
         updateCertification: candidacyDb.updateCertification,
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
+        updateOrganism: candidacyDb.updateOrganism,
       })({
         candidacyId: payload.candidacyId,
         certificationId: payload.certificationId,

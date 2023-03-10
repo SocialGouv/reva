@@ -900,7 +900,7 @@ export const updateAppointmentInformations = async (params: {
 
 export const updateOrganism = async (params: {
   candidacyId: string;
-  organismId: string;
+  organismId: string | null;
 }) => {
   try {
     const newCandidacy = await prismaClient.candidacy.update({

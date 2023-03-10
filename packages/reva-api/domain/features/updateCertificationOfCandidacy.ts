@@ -10,6 +10,10 @@ interface UpdateCertificationOfCandidacyDeps {
     departmentId: string;
     author: string;
   }) => Promise<Either<string, Candidacy>>;
+  updateOrganism: (params: {
+    candidacyId: string;
+    organismId: string | null;
+  }) => Promise<Either<string, Candidacy>>;
   getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
 }
 
@@ -41,5 +45,17 @@ export const updateCertificationOfCandidacy =
         )
     );
 
-    return checkIfCandidacyExists.chain(() => updateCertification);
+    const resetOrganism = EitherAsync.fromPromise(() =>
+      deps.updateOrganism({ candidacyId: params.candidacyId, organismId: null })
+    ).mapLeft(
+      () =>
+        new FunctionalError(
+          FunctionalCodeError.ORGANISM_NOT_UPDATED,
+          `Erreur lors de la mise à jour de l'organisme`
+        )
+    );
+
+    return checkIfCandidacyExists
+      .chain(() => updateCertification)
+      .chain(() => resetOrganism);
   };
