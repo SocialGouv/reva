@@ -1,0 +1,29 @@
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { TimelineElement } from "components/molecules/Timeline/Timeline";
+import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
+import { projectProgress } from "utils/projectProgress";
+
+export const ProjectSubmissionTimelineElement = () => {
+  const { state, mainService } = useMainMachineContext();
+  const progress = projectProgress(state.context);
+  const isProjectComplete = progress === 100;
+
+  return (
+    <TimelineElement
+      title="Envoi de votre candidature"
+      status={isProjectComplete ? "active" : "disabled"}
+    >
+      {({ status }) => (
+        <Button
+          data-test="project-home-validate"
+          disabled={status === "disabled"}
+          nativeButtonProps={{
+            onClick: () => mainService.send("VALIDATE_PROJECT"),
+          }}
+        >
+          Envoyer ma candidature
+        </Button>
+      )}
+    </TimelineElement>
+  );
+};

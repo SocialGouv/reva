@@ -10,10 +10,7 @@ context("Project", () => {
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
 
-    cy.get('[data-test="project-home-validate-locked"]').click();
-    cy.get('[data-test="project-help"]').should("exist");
-    cy.get('[data-test="project-help"] > [data-test="button-back"]').click();
-    cy.get('[data-test="project-home-ready"]').should("exist");
+    cy.get('[data-test="project-home-validate"]').should("be.disabled");
   });
 
   it("confirm registration", function () {

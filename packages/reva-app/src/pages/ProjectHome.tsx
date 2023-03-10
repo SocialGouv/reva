@@ -9,7 +9,6 @@ import { NameBadge } from "../components/molecules/NameBadge/NameBadge";
 import { Page } from "../components/organisms/Page";
 import { Certification } from "../interface";
 import { MainContext, MainEvent } from "../machines/main.machine";
-import { projectProgress } from "../utils/projectProgress";
 
 interface ProjectHomeProps {
   certification: Certification;
@@ -27,12 +26,6 @@ export const ProjectHome = ({
     !state.matches({ projectHome: "loading" }) &&
     !state.matches({ projectHome: "retry" }) &&
     !state.matches("submissionHome");
-
-  const progress = projectProgress(state.context);
-  const isProjectComplete = progress === 100;
-
-  const projectButtonHandler = () =>
-    progress === 100 ? send("VALIDATE_PROJECT") : send("OPEN_HELP");
 
   const retryErrorScreen = (
     <div
@@ -71,32 +64,16 @@ export const ProjectHome = ({
 
   const homeScreen = (
     <div data-test={`project-home-ready`}>
-      <div>
-        <h1 className="text-lg font-bold text-dsfrGray-500">Bienvenue 🤝,</h1>
-        <NameBadge className="mt-4" />
-        <p className="my-4 pr-6 text-dsfrGray-500 text-base">
-          Reva est une expérimentation visant à simplifier la Validation des
-          Acquis de l'Expérience (VAE). Vous avez une expérience dans les
-          secteurs de la dépendance et de la santé ? Choisissez votre diplôme et
-          laissez-vous accompagner !
-        </p>
+      <h1 className="text-lg font-bold text-dsfrGray-500">Bienvenue 🤝,</h1>
+      <NameBadge className="mt-4" />
+      <p className="my-4 pr-6 text-dsfrGray-500 text-base">
+        Reva est une expérimentation visant à simplifier la Validation des
+        Acquis de l'Expérience (VAE). Vous avez une expérience dans les secteurs
+        de la dépendance et de la santé ? Choisissez votre diplôme et
+        laissez-vous accompagner !
+      </p>
 
-        <ProjectTimeline className="mt-8" dataTest="project-home-timeline" />
-      </div>
-      <div className="bg-white flex flex-col items-center pt-32 pb-12 sm:pb-4">
-        <Button
-          data-test={`project-home-validate${
-            !isProjectComplete ? "-locked" : ""
-          }`}
-          locked={!isProjectComplete}
-          onClick={projectButtonHandler}
-          type="submit"
-          loading={state.matches("projectHome.submitting")}
-          label="Valider"
-          primary={false}
-          size="medium"
-        />
-      </div>
+      <ProjectTimeline className="mt-8" dataTest="project-home-timeline" />
     </div>
   );
 

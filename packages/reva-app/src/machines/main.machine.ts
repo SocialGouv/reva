@@ -28,7 +28,6 @@ const projectExperience = "projectExperience";
 const projectExperiences = "projectExperiences";
 const projectGoals = "projectGoals";
 const projectOrganism = "projectOrganism";
-const projectHelp = "projectHelp";
 const projectSubmitted = "projectSubmitted";
 const projectDroppedOut = "projectDroppedOut";
 const submissionHome = "submissionHome";
@@ -103,7 +102,6 @@ export type MainEvent =
   | { type: "LOADED" }
   | { type: "LOGIN" }
   | { type: "SUBMIT_LOGIN"; login: { email: string } }
-  | { type: "OPEN_HELP" }
   | { type: "SUBMIT_CERTIFICATION"; certification: Certification }
   | { type: "SUBMIT_CONTACT"; contact: Contact }
   | { type: "UPDATE_CONTACT"; contact: Contact }
@@ -168,7 +166,6 @@ export type MainState =
         | typeof projectContactConfirmation
         | typeof projectExperience
         | typeof projectExperiences
-        | typeof projectHelp
         | typeof projectOrganism
         | typeof error;
 
@@ -758,14 +755,6 @@ export const mainMachine =
               },
             },
           },
-          projectHelp: {
-            on: {
-              BACK: {
-                actions: "navigatePrevious",
-                target: "projectHome",
-              },
-            },
-          },
           projectOrganism: {
             invoke: {
               src: "getOrganisms",
@@ -1007,10 +996,6 @@ export const mainMachine =
                   target: "searchResults",
                 },
               ],
-              OPEN_HELP: {
-                actions: "navigateNext",
-                target: "projectHelp",
-              },
             },
             onDone: {
               target: "projectSubmitted",

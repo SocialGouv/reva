@@ -18,7 +18,6 @@ import { ProjectDroppedOut } from "./pages/ProjectDroppedOut";
 import { ProjectExperience } from "./pages/ProjectExperience";
 import { ProjectExperiences } from "./pages/ProjectExperiences";
 import { ProjectGoals } from "./pages/ProjectGoals";
-import { ProjectHelp } from "./pages/ProjectHelp";
 import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectOrganisms } from "./pages/ProjectOrganisms";
 import { ProjectSubmitted } from "./pages/ProjectSubmitted";
@@ -59,10 +58,6 @@ function App() {
 
   const projectOrganismsPage = (certification: Certification) => (
     <ProjectOrganisms key="project-organism" mainService={mainService} />
-  );
-
-  const projectHelpPage = () => (
-    <ProjectHelp key="project-help" mainService={mainService} />
   );
 
   const projectExperiencePage = () => (
@@ -168,8 +163,6 @@ function App() {
 
       {state.matches("projectGoals") &&
         projectGoalsPage(state.context.certification)}
-
-      {state.matches("projectHelp") && projectHelpPage()}
 
       {state.matches("projectOrganism") &&
         projectOrganismsPage(state.context.certification)}

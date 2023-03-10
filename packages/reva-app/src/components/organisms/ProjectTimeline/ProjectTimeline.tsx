@@ -1,4 +1,5 @@
 import { Timeline } from "components/molecules/Timeline/Timeline";
+import { ProjectSubmissionTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/ProjectSubmissionTimelineElement/ProjectSubmissionTimelineElement";
 
 import { CertificationTimelineElement } from "./TimelineElements/CertificationTimelineElement/CertificationTimelineElement";
 import { ContactTimelineElement } from "./TimelineElements/ContactTimelineElement/ContactTimelineElement";
@@ -22,6 +23,7 @@ export const ProjectTimeline = ({
       <GoalsTimelineElement readonly={isReadOnly} />
       <ExperiencesTimelineElement readonly={isReadOnly} />
       <OrganismTimelineElement readonly={isReadOnly} />
+      <ProjectSubmissionTimelineElement />
     </Timeline>
   );
 };
