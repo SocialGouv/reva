@@ -301,6 +301,18 @@ single =
     div [ class "fr-fieldset__element mb-4" ]
 
 
+infoView : String -> String -> Html msg
+infoView s d =
+    div [ class "text-lg" ]
+        [ if s /= "" then
+            label [] [ text s, text " : " ]
+
+          else
+            text ""
+        , span [] [ text d ]
+        ]
+
+
 viewEditableElement : FormData -> ( String, Element ) -> Html (Msg referential)
 viewEditableElement formData ( elementId, element ) =
     let
@@ -426,29 +438,16 @@ viewEditableElement formData ( elementId, element ) =
                 [ textareaView label placeholder ]
 
         Info label value ->
-            info value
-                |> withLabel label
-                |> single
+            single [ infoView label value ]
 
         ReadOnlyElement readOnlyElement ->
-            single
-                [ div
-                    [ class "mb-8" ]
-                    [ viewReadOnlyElement formData ( elementId, readOnlyElement ) ]
-                ]
+            viewReadOnlyElement formData ( elementId, readOnlyElement )
 
         ReadOnlyElements readOnlyElements ->
-            single
-                [ div
-                    [ class "flex rounded"
-                    , class "bg-slate-100 border-slate-200"
-                    , class "-mt-2 mb-8 px-1 pt-2"
-                    ]
-                  <|
-                    List.map
-                        (\e -> div [ class "mx-3" ] [ viewReadOnlyElement formData e ])
-                        readOnlyElements
-                ]
+            single <|
+                List.map
+                    (viewReadOnlyElement formData)
+                    readOnlyElements
 
         Requirements title rules ->
             let
@@ -540,17 +539,6 @@ viewReadOnlyElement formData ( elementId, element ) =
             get elementId formData
                 |> Maybe.withDefault (defaultValue element)
 
-        dataClass =
-            "min-h-[40px] rounded px-8 py-5 mt-1 mb-4"
-
-        userEditedClass =
-            "min-h-[78px] flex items-center bg-gray-100 text-gray-500"
-
-        dataView extraClass d =
-            dd
-                [ class extraClass, class dataClass ]
-                [ text d ]
-
         termView s =
             dt
                 [ class labelStyle ]
@@ -563,9 +551,8 @@ viewReadOnlyElement formData ( elementId, element ) =
                 , el
                 ]
 
-        defaultView label =
-            dataView userEditedClass dataOrDefault
-                |> withTerm label
+        defaultView label v =
+            div [ class "fr-fieldset__element mb-0" ] [ infoView label v ]
     in
     case element of
         Checkbox label ->
@@ -605,7 +592,7 @@ viewReadOnlyElement formData ( elementId, element ) =
                 ]
 
         Date label ->
-            defaultView label
+            defaultView label dataOrDefault
 
         Empty ->
             text ""
@@ -623,35 +610,22 @@ viewReadOnlyElement formData ( elementId, element ) =
             h5 [] [ text title ]
 
         Info label value ->
-            info value
-                |> withTerm label
+            defaultView label value
 
         Input label ->
-            div
-                [ class "w-[240px]" ]
-                [ dataView userEditedClass dataOrDefault ]
-                |> withTerm label
+            defaultView label dataOrDefault
 
         InputRequired label ->
-            div
-                [ class "w-[240px]" ]
-                [ dataView userEditedClass dataOrDefault ]
-                |> withTerm label
+            defaultView label dataOrDefault
 
         Number label ->
-            div
-                [ class "w-40" ]
-                [ dataView userEditedClass dataOrDefault ]
-                |> withTerm label
+            defaultView label dataOrDefault
 
         Price label ->
-            div
-                [ class "w-40" ]
-                [ dataView userEditedClass dataOrDefault ]
-                |> withTerm label
+            defaultView label dataOrDefault
 
         Textarea label _ ->
-            div [ class "w-[590px]" ] [ defaultView label ]
+            div [ class "w-[590px]" ] [ defaultView label dataOrDefault ]
 
         ReadOnlyElement readOnlyElement ->
             viewReadOnlyElement formData ( elementId, readOnlyElement )
@@ -671,16 +645,18 @@ viewReadOnlyElement formData ( elementId, element ) =
             h4 [] [ text title ]
 
         Select label choices ->
-            List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices
-                |> List.head
-                |> Maybe.map (\( _, choice ) -> dataView "bg-slate-100 min-w-[240px]" choice |> withTerm label)
-                |> Maybe.withDefault (text "")
+            single
+                [ List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices
+                    |> List.head
+                    |> Maybe.map (\( _, choice ) -> infoView label choice)
+                    |> Maybe.withDefault (text "")
+                ]
 
         SelectOther selectId otherValue label ->
             case get selectId formData of
                 Just selectedValue ->
                     if selectedValue == otherValue then
-                        defaultView label
+                        defaultView label dataOrDefault
 
                     else
                         text ""
@@ -710,13 +686,6 @@ viewReadOnlyElement formData ( elementId, element ) =
                 ]
                 viewChoices
                 |> withTerm label
-
-
-info : String -> Html msg
-info value =
-    p
-        [ class "text-lg" ]
-        [ text value ]
 
 
 labelStyle : String

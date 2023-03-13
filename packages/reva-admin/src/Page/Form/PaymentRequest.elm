@@ -135,7 +135,7 @@ form maybeCertification formData ( candidacy, referential ) =
           )
         , ( keys.certificateSkillsHourCount, hourCountElement .certificateSkillsEstimatedHourCount )
         , ( "other", Form.Title "Autres actions de formations complémentaires" )
-        , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
+        , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "Formations complémentaires" Nothing )
         , ( keys.totalTrainingHourCount
           , Form.Info "Nb d'heures total actes formatifs" <|
                 String.fromInt (FundingRequest.totalTrainingHourCount formData)
