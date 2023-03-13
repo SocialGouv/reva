@@ -1,12 +1,14 @@
-@import "tailwind.css";
+@import "tailwind-base.css";
 @import "dsfr.css";
+@import "tailwind.css";
+
 
 body {
-    margin: 0;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 input::-webkit-date-and-time-value {
-    text-align: left;
+  text-align: left;
 }
