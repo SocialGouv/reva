@@ -57,10 +57,7 @@ export const SubmissionHome = ({
   );
 
   return (
-    <Page
-      className="z-[90] flex flex-col bg-neutral-100"
-      direction={state.context.direction}
-    >
+    <Page className="!max-w-none" direction={state.context.direction}>
       <div className="flex flex-col h-full relative overflow-hidden">
         <img
           className="pointer-events-none"
