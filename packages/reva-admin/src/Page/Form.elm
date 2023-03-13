@@ -291,6 +291,16 @@ viewForm referential status maybeError formData form saveButton submitButton =
                ]
 
 
+group : List (Html msg) -> Html msg
+group =
+    div [ class "fr-fieldset__element -mb-2" ]
+
+
+single : List (Html msg) -> Html msg
+single =
+    div [ class "fr-fieldset__element mb-4" ]
+
+
 viewEditableElement : FormData -> ( String, Element ) -> Html (Msg referential)
 viewEditableElement formData ( elementId, element ) =
     let
@@ -332,12 +342,6 @@ viewEditableElement formData ( elementId, element ) =
             [ labelView elementId labelStyle s
             , el
             ]
-
-        group =
-            div [ class "fr-fieldset__element -mb-2" ]
-
-        single =
-            div [ class "fr-fieldset__element mb-4" ]
     in
     case element of
         Checkbox label ->
@@ -540,7 +544,7 @@ viewReadOnlyElement formData ( elementId, element ) =
             "min-h-[40px] rounded px-8 py-5 mt-1 mb-4"
 
         userEditedClass =
-            "min-h-[78px] flex items-center bg-gray-100 text-gray-600"
+            "min-h-[78px] flex items-center bg-gray-100 text-gray-500"
 
         dataView extraClass d =
             dd
@@ -565,28 +569,40 @@ viewReadOnlyElement formData ( elementId, element ) =
     in
     case element of
         Checkbox label ->
-            div
-                [ class "flex items-start h-8 w-full"
-                , classList [ ( "text-gray-500", dataOrDefault /= "checked" ) ]
-                ]
-                [ checkboxView [ disabled True ] elementId dataOrDefault
-                , labelView elementId "text-base font-normal" label
+            single
+                [ Checkbox.single
+                    { value = dataOrDefault
+                    , checked = Just (dataOrDefault == "checked")
+                    , valueAsString = identity
+                    , id = elementId
+                    , label = label
+                    , onChecked = \_ -> booleanToString >> UserChangedElement elementId
+                    }
+                    |> Checkbox.singleWithDisabled True
+                    |> Checkbox.viewSingle
                 ]
 
         CheckboxList label choices ->
             let
-                viewChoices =
-                    List.map
-                        (\( choiceId, choice ) -> li [] [ viewReadOnlyElement formData ( choiceId, Checkbox choice ) ])
+                checkedChoices =
+                    List.filter
+                        (\( choiceId, _ ) -> get choiceId formData |> Maybe.withDefault "false" |> booleanFromString)
                         choices
             in
-            ul
-                [ class "mt-2 mb-4"
-                , name elementId
-                , id elementId
+            group
+                [ Checkbox.group
+                    { id = elementId
+                    , label = Accessibility.text label
+                    , onChecked = \( choiceId, _ ) bool -> UserChangedElement choiceId (booleanToString bool)
+                    , values = choices
+                    , checked = checkedChoices
+                    , valueAsString = Tuple.second
+                    , toId = Tuple.first
+                    , toLabel = Tuple.second
+                    }
+                    |> Checkbox.groupWithDisabled True
+                    |> Checkbox.viewGroup
                 ]
-                viewChoices
-                |> withTerm label
 
         Date label ->
             defaultView label
@@ -716,25 +732,6 @@ labelView elementId extraClass s =
         , class extraClass
         ]
         [ text s ]
-
-
-checkboxView : List (Html.Attribute (Msg referential)) -> String -> String -> Html (Msg referential)
-checkboxView extraAttributes elementId dataOrDefault =
-    input
-        (extraAttributes
-            ++ [ type_ "checkbox"
-               , name elementId
-               , id elementId
-               , onCheck (booleanToString >> UserChangedElement elementId)
-               , class "focus:ring-blue-500 h-4 w-4 text-blue-600 border-slate-400 rounded mr-4"
-               , class "mt-1 block min-w-0 rounded sm:text-sm border-gray-300"
-               , class "checked:disabled:border-gray-600 checked:disabled:bg-gray-600"
-               , class "disabled:hover:not-allowed"
-               , class "disabled:text-gray-400 disabled:border-slate-200 disabled:bg-gray-100"
-               , checked (dataOrDefault == "checked")
-               ]
-        )
-        []
 
 
 radioView : List (Html.Attribute (Msg referential)) -> String -> String -> String -> Html (Msg referential)
