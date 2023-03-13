@@ -17,7 +17,6 @@ import {
   saveGoals,
   submitCandidacy,
   updateCertification,
-  updateContact,
   updateExperience,
 } from "../../services/candidacyServices";
 import {
@@ -161,19 +160,6 @@ export const useConfiguredMainMachine = () => {
             return askForRegistration(client as ApolloClient<object>)(
               event.contact
             );
-          },
-          updateContact: async (context, event) => {
-            if (event.type !== "UPDATE_CONTACT" || !context.candidacyId) {
-              return Promise.reject("Impossible state");
-            }
-
-            const deviceId = await Device.getId();
-            return updateContact(client as ApolloClient<object>)({
-              deviceId: deviceId.uuid,
-              candidacyId: context.candidacyId,
-              phone: event.contact.phone,
-              email: event.contact.email,
-            });
           },
           submitCandidacy: async (context, event) => {
             if (event.type !== "SUBMIT_PROJECT" || !context.candidacyId) {

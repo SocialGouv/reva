@@ -42,11 +42,10 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
       email: elements.email.value || null,
     };
     send({
-      type: hasCandidacy ? "UPDATE_CONTACT" : "SUBMIT_CONTACT",
+      type: "SUBMIT_CONTACT",
       contact,
     });
   };
-  const editedContact = state.context.contact;
   const firstnameRef = useRef<HTMLInputElement>(null);
   const lastnameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
@@ -79,7 +78,6 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             name: "firstname",
             ref: firstnameRef,
             required: true,
-            defaultValue: editedContact?.firstname || "",
           }}
         />
 
@@ -89,7 +87,6 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             name: "lastname",
             ref: lastnameRef,
             required: true,
-            defaultValue: editedContact?.lastname || "",
           }}
         />
 
@@ -101,7 +98,6 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             ref: phoneRef,
             minLength: 10,
             required: true,
-            defaultValue: editedContact?.phone || "",
           }}
         />
 
@@ -112,7 +108,6 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             ref: emailRef,
             required: true,
             placeholder: "votre@email.fr",
-            defaultValue: editedContact?.email || "",
           }}
         />
 
@@ -121,9 +116,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             {state.context.error}
           </p>
         )}
-        <Button data-test={`project-contact-${editedContact ? "save" : "add"}`}>
-          Valider
-        </Button>
+        <Button data-test="project-contact-add">Valider</Button>
       </form>
       {!hasCandidacy && (
         <div className="border-t border-gray-200 pt-6">

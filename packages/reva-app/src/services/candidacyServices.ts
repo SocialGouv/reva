@@ -192,47 +192,6 @@ export const askForRegistration =
     return data.candidate_askForRegistration;
   };
 
-const UPDATE_CONTACT = gql`
-  mutation update_contact(
-    $deviceId: ID!
-    $candidacyId: ID!
-    $phone: String
-    $email: String
-  ) {
-    candidacy_updateContact(
-      candidacyId: $candidacyId
-      deviceId: $deviceId
-      phone: $phone
-      email: $email
-    ) {
-      id
-      email
-      phone
-    }
-  }
-`;
-
-export const updateContact =
-  (client: ApolloClient<object>) =>
-  async ({
-    deviceId,
-    candidacyId,
-    phone,
-    email,
-  }: {
-    deviceId: string;
-    candidacyId: string;
-    phone: null | string;
-    email: null | string;
-  }) => {
-    const { data } = await client.mutate({
-      mutation: UPDATE_CONTACT,
-      variables: { deviceId, candidacyId, phone, email },
-    });
-
-    return data.candidacy_updateContact;
-  };
-
 const SUBMIT_CANDIDACY = gql`
   mutation submit_candidacy($deviceId: ID!, $candidacyId: ID!) {
     candidacy_submitCandidacy(candidacyId: $candidacyId, deviceId: $deviceId) {
