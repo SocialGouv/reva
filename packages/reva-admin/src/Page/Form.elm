@@ -537,10 +537,10 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> Maybe.withDefault (defaultValue element)
 
         dataClass =
-            "min-h-[40px] rounded px-8 py-5 text-xl font-medium leading-snug text-slate-900 mt-1 mb-4"
+            "min-h-[40px] rounded px-8 py-5 mt-1 mb-4"
 
         userEditedClass =
-            "min-h-[78px] flex items-center border border-slate-200 bg-white"
+            "min-h-[78px] flex items-center bg-gray-100 text-gray-600"
 
         dataView extraClass d =
             dd
@@ -699,9 +699,7 @@ viewReadOnlyElement formData ( elementId, element ) =
 info : String -> Html msg
 info value =
     p
-        [ class "rounded bg-slate-100 text-slate-800 mb-6"
-        , class "px-6 py-4 text-lg"
-        ]
+        [ class "text-lg" ]
         [ text value ]
 
 
