@@ -293,7 +293,7 @@ viewForm referential status maybeError formData form saveButton submitButton =
 
 group : List (Html msg) -> Html msg
 group =
-    div [ class "fr-fieldset__element -mb-2" ]
+    div [ class "fr-fieldset__element mt-2 -mb-3" ]
 
 
 single : List (Html msg) -> Html msg
@@ -438,7 +438,7 @@ viewEditableElement formData ( elementId, element ) =
                 [ textareaView label placeholder ]
 
         Info label value ->
-            div [ class "fr-fieldset__element mb-0" ] [ infoView label value ]
+            div [ class "fr-fieldset__element mb-2" ] [ infoView label value ]
 
         ReadOnlyElement readOnlyElement ->
             viewReadOnlyElement formData ( elementId, readOnlyElement )
@@ -552,7 +552,7 @@ viewReadOnlyElement formData ( elementId, element ) =
                 ]
 
         defaultView label v =
-            div [ class "fr-fieldset__element mb-0" ] [ infoView label v ]
+            div [ class "fr-fieldset__element mb-1" ] [ infoView label v ]
     in
     case element of
         Checkbox label ->
