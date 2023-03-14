@@ -102,7 +102,7 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( "mandatory", Form.Title "Formations obligatoires" )
         , ( keys.mandatoryTrainingIds
           , Form.ReadOnlyElement <|
-                Form.CheckboxList "" <|
+                Form.CheckboxList "Formations obligatoires sélectionnées" <|
                     Data.Form.Helper.toIdList referential.mandatoryTrainings
           )
         , ( "mandatoryTrainingsReview"
@@ -115,7 +115,7 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( "basic-skills", Form.Title "Formations savoirs de base" )
         , ( keys.basicSkillsIds
           , Form.ReadOnlyElement <|
-                Form.CheckboxList "" <|
+                Form.CheckboxList "Formations savoirs de base sélectionnées" <|
                     Data.Form.Helper.toIdList referential.basicSkills
           )
         , ( "basicSkillsReview"

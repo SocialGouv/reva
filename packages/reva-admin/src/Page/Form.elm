@@ -444,7 +444,7 @@ viewEditableElement formData ( elementId, element ) =
             viewReadOnlyElement formData ( elementId, readOnlyElement )
 
         ReadOnlyElements readOnlyElements ->
-            single <|
+            div [ class "fr-fieldset__element mb-3 -ml-2" ] <|
                 List.map
                     (viewReadOnlyElement formData)
                     readOnlyElements
