@@ -134,6 +134,7 @@ expandedView stepTitle status candidacy =
                 [ class "bg-slate-900 text-white text-base"
                 , class "mt-2 w-auto rounded"
                 , class "text-center px-8 py-1"
+                , class "hover:enabled:bg-gray-700"
                 ]
                 [ text "Compléter" ]
             ]

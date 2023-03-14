@@ -128,7 +128,7 @@ view context model =
                 [ a
                     [ Route.href context.baseUrl (Route.Candidacy (Tab model.tab.candidacyId View.Candidacy.Tab.Profile))
                     , class "flex items-center text-gray-800"
-                    , class "mt-6 ml-6"
+                    , class "pt-6 pb-1 ml-6"
                     ]
                     [ span [ class "text-3xl mr-4" ] [ text "← " ]
                     , text "Retour"
@@ -254,7 +254,7 @@ viewCandidacyArticle baseUrl content =
     viewMain "profile"
         [ a
             [ Route.href baseUrl (Route.Candidacies Route.emptyFilters)
-            , class "flex items-center text-gray-800 p-6"
+            , class "flex items-center text-gray-800 mx-6 pt-6 pb-1 mb-12"
             ]
             [ span [ class "text-3xl mr-4" ] [ text "← " ]
             , text "Toutes les candidatures"
