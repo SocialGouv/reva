@@ -43,9 +43,7 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
       className="bg-slate-900 !max-w-none h-full "
       direction={state.context.direction}
     >
-      <div className="h-12">
-        {isTrainingConfirmed ? <BackButton color="light" /> : <></>}
-      </div>
+      <BackButton color="light" className="h12" />
 
       <div className="px-12 py-6 flex flex-col">
         <h1 className="text-white text-4xl font-extrabold mb-10">

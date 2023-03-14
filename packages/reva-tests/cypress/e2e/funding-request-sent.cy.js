@@ -14,11 +14,8 @@ context("Funding Request Sent", () => {
       cy.login();
       cy.wait("@candidate_login");
       cy.wait("@getReferential");
-      
-      cy.get('[data-test="progress-title-value"]').should("have.text", "100%");
-      cy.get('[data-test="progress-100"]').should("exist");
-      cy.get('[data-test="review-training-form"]').should("exist");
-      cy.get('[data-test="ap-organism"]').should("exist");
+
+      cy.get('[data-test="view-training-program-button"]').should("exist");
     });
   });
 });

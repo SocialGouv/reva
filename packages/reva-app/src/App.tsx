@@ -20,7 +20,6 @@ import { ProjectExperiences } from "./pages/ProjectExperiences";
 import { ProjectGoals } from "./pages/ProjectGoals";
 import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectOrganisms } from "./pages/ProjectOrganisms";
-import { TrainingProgramConfirmed } from "./pages/TrainingProgramConfirmed";
 import { TrainingProgramSummary } from "./pages/TrainingProgramSummary";
 
 function App() {
@@ -125,11 +124,6 @@ function App() {
       {state.matches("loginHome") && loginHomePage()}
       {state.matches("loginConfirmation") && loginConfirmationPage()}
 
-      {state.matches("projectHome") &&
-        projectHomePage({
-          certification: state.context.certification,
-        })}
-
       {state.matches("projectSubmissionConfirmation") &&
         projectSubmissionConfirmationPage()}
 
@@ -160,16 +154,11 @@ function App() {
         />
       )}
 
-      {state.matches("trainingProgramConfirmed") && (
-        <TrainingProgramConfirmed
-          key="training-program-confirmed"
-          certification={state.context.certification}
-          candidacyCreatedAt={state.context.candidacyCreatedAt}
-          direction={state.context.direction}
-          organism={state.context.organism}
-          mainService={mainService}
-        />
-      )}
+      {state.matches("projectHome") || state.matches("trainingProgramConfirmed")
+        ? projectHomePage({
+            certification: state.context.certification,
+          })
+        : null}
 
       {state.matches("error") && errorPage()}
     </AnimatePresence>

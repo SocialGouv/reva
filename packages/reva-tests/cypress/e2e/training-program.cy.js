@@ -14,13 +14,7 @@ context("Training Program", () => {
       cy.login();
       cy.wait("@candidate_login");
       cy.wait("@getReferential");
-
-      cy.get('[data-test="progress-title-value"]').should("have.text", "100%");
-      cy.get('[data-test="progress-100"]').should("exist");
-      cy.get('[data-test="review-training-form"]').should("exist");
-      cy.get('[data-test="ap-organism"]').should("exist");
-
-      cy.get('[data-test="review-button"]').click();
+      cy.get('[data-test="view-training-program-button"]').click();
     });
 
     it("display all fields", () => {
@@ -43,7 +37,7 @@ context("Training Program", () => {
       cy.login();
       cy.wait("@candidate_login");
       cy.wait("@getReferential");
-      cy.get('[data-test="review-button"]').click();
+      cy.get('[data-test="view-training-program-button"]').click();
     });
 
     it("don't display missing fields", () => {
@@ -67,6 +61,7 @@ context("Training Program", () => {
       cy.login();
       cy.wait("@candidate_login");
       cy.wait("@getReferential");
+      cy.get('[data-test="validate-training-program-button"]').click();
 
       cy.get('[data-test="checkbox-accept-conditions"]').not("be.checked");
       cy.get('[data-test="label-accept-conditions"]').should("exist");
@@ -80,7 +75,11 @@ context("Training Program", () => {
   describe("Testing training confirmed but sent again", () => {
     it("should be able to accept and submit the training again", () => {
       cy.intercept("POST", "/api/graphql", (req) => {
-        stubMutation(req, "candidate_login", "candidate2-training-confirmed-sent-again.json");
+        stubMutation(
+          req,
+          "candidate_login",
+          "candidate2-training-confirmed-sent-again.json"
+        );
         stubQuery(req, "getReferential", "referential.json");
         stubQuery(
           req,
@@ -91,6 +90,7 @@ context("Training Program", () => {
       cy.login();
       cy.wait("@candidate_login");
       cy.wait("@getReferential");
+      cy.get('[data-test="validate-training-program-button"]').click();
 
       cy.get('[data-test="checkbox-accept-conditions"]').not("be.checked");
       cy.get('[data-test="label-accept-conditions"]').should("exist");

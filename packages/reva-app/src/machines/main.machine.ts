@@ -483,7 +483,7 @@ export const mainMachine =
                     target: "loading",
                   },
                   BACK: {
-                    target: "#mainMachine.trainingProgramConfirmed",
+                    target: "#mainMachine.projectHome",
                     actions: assign({
                       direction: (_context, _event) => "previous",
                     }),
@@ -873,11 +873,6 @@ export const mainMachine =
                     },
                     {
                       actions: ["loadCandidacy"],
-                      cond: "isTrainingProgramSubmitted",
-                      target: "#mainMachine.trainingProgramSummary.idle",
-                    },
-                    {
-                      actions: ["loadCandidacy"],
                       target: "ready",
                     },
                   ],
@@ -950,6 +945,9 @@ export const mainMachine =
                   target: "searchResults",
                 },
               ],
+              OPEN_TRAINING_PROGRAM_SUMMARY: {
+                target: "trainingProgramSummary",
+              },
             },
           },
           projectSubmissionConfirmation: {
