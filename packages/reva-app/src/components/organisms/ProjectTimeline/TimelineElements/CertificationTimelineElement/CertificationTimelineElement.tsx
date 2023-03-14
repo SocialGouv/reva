@@ -2,16 +2,18 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { TimelineElement } from "components/molecules/Timeline/Timeline";
 import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
 
-export const CertificationTimelineElement = ({
-  readonly,
-}: {
-  readonly?: boolean;
-}) => {
+export const CertificationTimelineElement = () => {
   const { state, mainService } = useMainMachineContext();
   return (
     <TimelineElement
       title="Votre diplôme"
-      status={state.context.certification ? "editable" : "active"}
+      status={
+        state.context.candidacyStatus === "PROJET"
+          ? state.context.certification
+            ? "editable"
+            : "active"
+          : "readonly"
+      }
     >
       {({ status }) => (
         <>
@@ -21,7 +23,7 @@ export const CertificationTimelineElement = ({
             </h3>
           )}
 
-          {!readonly && (
+          {status !== "readonly" && (
             <Button
               data-test="project-home-select-certification"
               priority="secondary"

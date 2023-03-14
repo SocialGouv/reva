@@ -24,8 +24,7 @@ export const ProjectHome = ({
   const isHomeReady =
     !state.matches({ projectHome: "fakeLoading" }) &&
     !state.matches({ projectHome: "loading" }) &&
-    !state.matches({ projectHome: "retry" }) &&
-    !state.matches("submissionHome");
+    !state.matches({ projectHome: "retry" });
 
   const retryErrorScreen = (
     <div

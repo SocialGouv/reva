@@ -5,11 +5,7 @@ import { Experience, duration } from "interface";
 import { useMemo } from "react";
 import { sortExperiences } from "utils/experienceHelpers";
 
-export const ExperiencesTimelineElement = ({
-  readonly,
-}: {
-  readonly?: boolean;
-}) => {
+export const ExperiencesTimelineElement = () => {
   const { state, mainService } = useMainMachineContext();
 
   const selectedGoals = useMemo(
@@ -26,11 +22,13 @@ export const ExperiencesTimelineElement = ({
     <TimelineElement
       title="Vos expériences"
       status={
-        selectedGoals.length
-          ? sortedExperiences.length
-            ? "editable"
-            : "active"
-          : "disabled"
+        state.context.candidacyStatus === "PROJET"
+          ? selectedGoals.length
+            ? sortedExperiences.length
+              ? "editable"
+              : "active"
+            : "disabled"
+          : "readonly"
       }
     >
       {({ status }) => (
@@ -44,7 +42,7 @@ export const ExperiencesTimelineElement = ({
             </ul>
           )}
           <div className="text-sm text-slate-400">
-            {!readonly && (
+            {status !== "readonly" && (
               <Button
                 data-test="project-home-edit-experiences"
                 priority="secondary"

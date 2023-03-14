@@ -20,7 +20,6 @@ import { ProjectExperiences } from "./pages/ProjectExperiences";
 import { ProjectGoals } from "./pages/ProjectGoals";
 import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectOrganisms } from "./pages/ProjectOrganisms";
-import { SubmissionHome } from "./pages/SubmissionHome";
 import { TrainingProgramConfirmed } from "./pages/TrainingProgramConfirmed";
 import { TrainingProgramSummary } from "./pages/TrainingProgramSummary";
 
@@ -37,18 +36,6 @@ function App() {
 
   const certificatesPage = (
     <Certificates key="show-results" mainService={mainService} />
-  );
-
-  const submissionHomePage = (
-    certification: Certification,
-    candidacyCreatedAt: Date
-  ) => (
-    <SubmissionHome
-      key="submission-home"
-      mainService={mainService}
-      certification={certification}
-      candidacyCreatedAt={candidacyCreatedAt}
-    />
   );
 
   const projectGoalsPage = (certification: Certification) => (
@@ -165,12 +152,6 @@ function App() {
 
       {state.matches("certificateDetails") &&
         certificateDetails(state.context.certification)}
-
-      {state.matches("submissionHome") &&
-        submissionHomePage(
-          state.context.certification,
-          state.context.candidacyCreatedAt
-        )}
 
       {state.matches("trainingProgramSummary") && (
         <TrainingProgramSummary

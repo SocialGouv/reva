@@ -2,11 +2,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { TimelineElement } from "components/molecules/Timeline/Timeline";
 import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
 
-export const OrganismTimelineElement = ({
-  readonly,
-}: {
-  readonly?: boolean;
-}) => {
+export const OrganismTimelineElement = () => {
   const { state, mainService } = useMainMachineContext();
 
   return (
@@ -14,11 +10,13 @@ export const OrganismTimelineElement = ({
       title="Votre référent"
       description="Il vous guide tout au long du parcours"
       status={
-        state.context.experiences.rest.length
-          ? state.context.organism
-            ? "editable"
-            : "active"
-          : "disabled"
+        state.context.candidacyStatus === "PROJET"
+          ? state.context.experiences.rest.length
+            ? state.context.organism
+              ? "editable"
+              : "active"
+            : "disabled"
+          : "readonly"
       }
     >
       {({ status }) => (
@@ -53,7 +51,7 @@ export const OrganismTimelineElement = ({
             </div>
           )}
           <div className="mt-4 text-sm text-slate-400">
-            {!readonly && (
+            {status !== "readonly" && (
               <Button
                 data-test="project-home-edit-organism"
                 priority="secondary"

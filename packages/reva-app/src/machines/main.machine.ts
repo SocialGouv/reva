@@ -29,7 +29,6 @@ const projectExperiences = "projectExperiences";
 const projectGoals = "projectGoals";
 const projectOrganism = "projectOrganism";
 const projectDroppedOut = "projectDroppedOut";
-const submissionHome = "submissionHome";
 const trainingProgramSummary = "trainingProgramSummary";
 const trainingProgramConfirmed = "trainingProgramConfirmed";
 const projectSubmissionConfirmation = "projectSubmissionConfirmation";
@@ -50,7 +49,6 @@ export type State =
   | typeof projectGoals
   | typeof projectOrganism
   | typeof projectDroppedOut
-  | typeof submissionHome
   | typeof trainingProgramSummary
   | typeof trainingProgramConfirmed
   | typeof projectSubmissionConfirmation;
@@ -140,14 +138,6 @@ export type MainState =
       context: MainContext & {
         certification: Certification;
         organism: Organism;
-      };
-    }
-  | {
-      value: typeof submissionHome;
-      context: MainContext & {
-        candidacyId: string;
-        certification: Certification;
-        candidacyCreatedAt: Date;
       };
     }
   | {
@@ -484,7 +474,6 @@ export const mainMachine =
               },
             ],
           },
-          submissionHome: {},
           trainingProgramSummary: {
             initial: "idle",
             states: {
@@ -888,11 +877,6 @@ export const mainMachine =
                       target: "#mainMachine.trainingProgramSummary.idle",
                     },
                     {
-                      actions: ["loadCandidacy", "navigateNext"],
-                      cond: "isProjectSubmitted",
-                      target: "#mainMachine.submissionHome",
-                    },
-                    {
                       actions: ["loadCandidacy"],
                       target: "ready",
                     },
@@ -993,7 +977,7 @@ export const mainMachine =
                         candidacyStatus: (_context, _event) => "VALIDATION",
                         direction: (_context, _event) => "next",
                       }),
-                      target: "#mainMachine.submissionHome",
+                      target: "#mainMachine",
                     },
                   ],
                   onError: [

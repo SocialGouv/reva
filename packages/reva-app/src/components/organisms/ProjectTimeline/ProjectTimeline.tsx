@@ -8,21 +8,19 @@ import { GoalsTimelineElement } from "./TimelineElements/GoalsTimelineElement/Go
 import { OrganismTimelineElement } from "./TimelineElements/OrganismTimelineElement/OrganismTimelineElement";
 
 export const ProjectTimeline = ({
-  isReadOnly,
   className,
   dataTest,
 }: {
-  isReadOnly?: boolean;
   className?: string;
   dataTest?: string;
 }) => {
   return (
     <Timeline className={className} dataTest={dataTest}>
       <ContactTimelineElement />
-      <CertificationTimelineElement readonly={isReadOnly} />
-      <GoalsTimelineElement readonly={isReadOnly} />
-      <ExperiencesTimelineElement readonly={isReadOnly} />
-      <OrganismTimelineElement readonly={isReadOnly} />
+      <CertificationTimelineElement />
+      <GoalsTimelineElement />
+      <ExperiencesTimelineElement />
+      <OrganismTimelineElement />
       <ProjectSubmissionTimelineElement />
     </Timeline>
   );

@@ -3,7 +3,7 @@ import { TimelineElement } from "components/molecules/Timeline/Timeline";
 import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
 import { useMemo } from "react";
 
-export const GoalsTimelineElement = ({ readonly }: { readonly?: boolean }) => {
+export const GoalsTimelineElement = () => {
   const { state, mainService } = useMainMachineContext();
 
   const selectedGoals = useMemo(
@@ -15,11 +15,13 @@ export const GoalsTimelineElement = ({ readonly }: { readonly?: boolean }) => {
     <TimelineElement
       title="Vos objectifs"
       status={
-        state.context.certification
-          ? selectedGoals
-            ? "editable"
-            : "active"
-          : "disabled"
+        state.context.candidacyStatus === "PROJET"
+          ? state.context.certification
+            ? selectedGoals
+              ? "editable"
+              : "active"
+            : "disabled"
+          : "readonly"
       }
     >
       {({ status }) => (
@@ -31,7 +33,7 @@ export const GoalsTimelineElement = ({ readonly }: { readonly?: boolean }) => {
               </li>
             ))}
           </ul>
-          {!readonly && (
+          {status !== "readonly" && (
             <Button
               data-test="project-home-edit-goals"
               priority="secondary"

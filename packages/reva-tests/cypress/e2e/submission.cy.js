@@ -10,7 +10,7 @@ context("Submission", () => {
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
 
-    cy.get('[data-test="submission-home-project-submitted"');
+    cy.get('[data-test="project-submitted-label"');
   });
 
   it("log on a project taken over", function () {
@@ -22,6 +22,6 @@ context("Submission", () => {
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
 
-    cy.get('[data-test="submission-home-project-submitted"');
+    cy.get('[data-test="project-submitted-label"');
   });
 });

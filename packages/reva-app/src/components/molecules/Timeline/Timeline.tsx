@@ -14,7 +14,7 @@ export const Timeline = ({
   );
 };
 
-type TimeLineElementStatus = "editable" | "disabled" | "active";
+type TimeLineElementStatus = "editable" | "disabled" | "active" | "readonly";
 export const TimelineElement = ({
   title,
   description,
@@ -58,7 +58,9 @@ const BarWithWhiteDot = ({ status }: { status: TimeLineElementStatus }) => (
     {/*Blue bar*/}
     <div
       className={`relative flex-shrink-0 w-4 ${
-        status === "editable" ? "bg-dsfrBlue-500" : "bg-[#D9D9D9]"
+        ["editable", "readonly"].includes(status)
+          ? "bg-dsfrBlue-500"
+          : "bg-[#D9D9D9]"
       } top-2 h-[calc(100%+8px)] rounded-b-full`}
     />
 
