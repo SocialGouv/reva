@@ -298,7 +298,7 @@ group =
 
 single : List (Html msg) -> Html msg
 single =
-    div [ class "fr-fieldset__element mb-4" ]
+    div [ class "fr-fieldset__element" ]
 
 
 infoView : String -> String -> Html msg
@@ -438,13 +438,13 @@ viewEditableElement formData ( elementId, element ) =
                 [ textareaView label placeholder ]
 
         Info label value ->
-            single [ infoView label value ]
+            div [ class "fr-fieldset__element mb-0" ] [ infoView label value ]
 
         ReadOnlyElement readOnlyElement ->
             viewReadOnlyElement formData ( elementId, readOnlyElement )
 
         ReadOnlyElements readOnlyElements ->
-            div [ class "fr-fieldset__element mb-3 -ml-2" ] <|
+            div [ class "fr-fieldset__element mb-4 -ml-2" ] <|
                 List.map
                     (viewReadOnlyElement formData)
                     readOnlyElements
@@ -604,10 +604,14 @@ viewReadOnlyElement formData ( elementId, element ) =
             text ""
 
         Heading title ->
-            h3 [] [ text title ]
+            legend
+                [ class "fr-fieldset__legend" ]
+                [ h3 [] [ text title ] ]
 
         Title title ->
-            h5 [] [ text title ]
+            legend
+                [ class "fr-fieldset__legend mt-6 mb-1" ]
+                [ h5 [] [ text title ] ]
 
         Info label value ->
             defaultView label value
@@ -631,18 +635,18 @@ viewReadOnlyElement formData ( elementId, element ) =
             viewReadOnlyElement formData ( elementId, readOnlyElement )
 
         ReadOnlyElements readOnlyElements ->
-            div
-                [ class "flex justify-between gap-6 mr-2" ]
-            <|
+            div [ class "fr-fieldset__element mb-0 -ml-2" ] <|
                 List.map
-                    (\e -> div [] [ viewReadOnlyElement formData e ])
+                    (\e -> viewReadOnlyElement formData e)
                     readOnlyElements
 
         Requirements _ _ ->
             text ""
 
         Section title ->
-            h4 [] [ text title ]
+            legend
+                [ class "fr-fieldset__legend mt-6 mb-0" ]
+                [ h4 [] [ text title ] ]
 
         Select label choices ->
             single
