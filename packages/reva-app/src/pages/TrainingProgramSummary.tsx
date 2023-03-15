@@ -1,26 +1,76 @@
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { useActor } from "@xstate/react";
-import { FC, useState } from "react";
+import { BackToHomeButton } from "components/molecules/BackToHomeButton/BackToHomeButton";
+import { ReactNode, useReducer } from "react";
 import { Interpreter } from "xstate";
 
-import { Button } from "../components/atoms/Button";
-import { CardBasic } from "../components/atoms/CardBasic";
-import { Checkbox } from "../components/atoms/Checkbox";
-import { Description } from "../components/atoms/Description";
-import { BackButton } from "../components/molecules/BackButton";
-import { DescriptionMultiLine } from "../components/molecules/DescriptionMultiLine";
-import { DescriptionSimple } from "../components/molecules/DescriptionSimple";
 import { Page } from "../components/organisms/Page";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
 
-interface Props {
-  mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
+type PageAction = {
+  type: "changeCondition";
+  payload: {
+    condition:
+      | "conditionOne"
+      | "conditionTwo"
+      | "conditionThree"
+      | "conditionFour";
+    checked: boolean;
+  };
+};
+
+interface PageState {
+  conditionOneChecked: boolean;
+  conditionTwoChecked: boolean;
+  conditionThreeChecked: boolean;
+  conditionFourChecked: boolean;
+  allConditionsChecked: boolean;
 }
 
-export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
+const pageReducer = (state: PageState, action: PageAction) => {
+  const newState = { ...state };
+  switch (action.type) {
+    case "changeCondition": {
+      switch (action.payload.condition) {
+        case "conditionOne":
+          newState.conditionOneChecked = action.payload.checked;
+          break;
+        case "conditionTwo":
+          newState.conditionTwoChecked = action.payload.checked;
+          break;
+        case "conditionThree":
+          newState.conditionThreeChecked = action.payload.checked;
+          break;
+        case "conditionFour":
+          newState.conditionFourChecked = action.payload.checked;
+          break;
+      }
+      newState.allConditionsChecked =
+        newState.conditionOneChecked &&
+        newState.conditionTwoChecked &&
+        newState.conditionThreeChecked &&
+        newState.conditionFourChecked;
+    }
+  }
+  return newState;
+};
+
+export const TrainingProgramSummary = ({
+  mainService,
+}: {
+  mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
+}) => {
   const [state, send] = useActor(mainService);
-  const [checkedCondition, setCheckedCondition] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const isTrainingConfirmed = state.context.isTrainingProgramConfirmed;
+
+  const [pageState, pageDispatch] = useReducer(pageReducer, {
+    conditionOneChecked: false,
+    conditionTwoChecked: false,
+    conditionThreeChecked: false,
+    conditionFourChecked: false,
+    allConditionsChecked: false,
+  });
 
   if (!state.context.trainingProgram) return <></>;
 
@@ -34,113 +84,183 @@ export const TrainingProgramSummary: FC<Props> = ({ mainService }) => {
       mandatoryTrainings,
       otherTraining,
     },
-    certification,
     isCertificationPartial,
   } = state.context;
 
   return (
-    <Page
-      className="bg-slate-900 !max-w-none h-full "
-      direction={state.context.direction}
-    >
-      <BackButton color="light" className="h12" />
+    <Page direction={state.context.direction}>
+      <BackToHomeButton />
+      <h1 className="mt-4 text-3xl font-bold">
+        {isTrainingConfirmed ? "Votre parcours" : "Valider votre parcours"}
+      </h1>
 
-      <div className="px-12 py-6 flex flex-col">
-        <h1 className="text-white text-4xl font-extrabold mb-10">
-          Votre parcours personnalisé
-        </h1>
-        <CardBasic
-          title="Mon accompagnateur"
-          text={state.context.organism?.label}
-        />
-        <dl data-test="description-list" className="mt-4">
-          <Description term="Diplôme visé">
-            <div>{certification?.label}</div>
-            {isCertificationPartial && (
-              <div className="text-gray-400 text-sm italic">
-                Certification visée partiellement
-              </div>
-            )}
-          </Description>
+      <p className="text-dsfrGray-800 mt-6">
+        Suite à votre rendez-vous de faisabilité avec votre Architecte de
+        Parcours, veuillez valider la proposition de parcours suivante :
+      </p>
 
-          <DescriptionSimple
-            term="Nombre d'heures d'accompagnement individuel"
-            detail={individualHourCount}
-            suffix="h"
-          />
+      <ul
+        className="mt-6 text-dsfrGray-700 list-square list-inside"
+        data-test="general-informations"
+      >
+        {isCertificationPartial ? (
+          <li>Certification visée partiellement</li>
+        ) : null}
+        <li>Accompagnement individuel: {individualHourCount || 0}h</li>
+        <li>Accompagnement collectif: {collectiveHourCount || 0}h</li>
+        <li>Formation: {additionalHourCount || 0}h</li>
+      </ul>
 
-          <DescriptionSimple
-            term="Nombre d'heures d'accompagnement collectif"
-            detail={collectiveHourCount}
-            suffix="h"
-          />
+      {mandatoryTrainings?.length ? (
+        <TrainingSection
+          title="Formations obligatoires"
+          data-test="mandatory-training-section"
+        >
+          <ul className="list-square list-inside">
+            {mandatoryTrainings.map((mt) => (
+              <li key={mt} className="text-dsfrGray-800">
+                {mt}
+              </li>
+            ))}
+          </ul>
+        </TrainingSection>
+      ) : null}
 
-          <DescriptionSimple
-            term="Nombre d'heures de formation"
-            detail={additionalHourCount}
-            suffix="h"
-          />
+      {basicSkills?.length ? (
+        <TrainingSection
+          title="Savoirs de base"
+          data-test="basic-skills-section"
+        >
+          <ul className="list-square list-inside">
+            {basicSkills.map((mt) => (
+              <li key={mt} className="text-dsfrGray-800">
+                {mt}
+              </li>
+            ))}
+          </ul>
+        </TrainingSection>
+      ) : null}
 
-          <DescriptionMultiLine
-            term="Formations obligatoires"
-            details={mandatoryTrainings}
-          />
+      {certificateSkills && (
+        <TrainingSection
+          title="Bloc de compétences métiers"
+          data-test="certificate-skills-section"
+        >
+          <p>{certificateSkills}</p>
+        </TrainingSection>
+      )}
 
-          <DescriptionMultiLine term="Savoirs de base" details={basicSkills} />
+      {otherTraining && (
+        <TrainingSection title="Autre" data-test="other-training-section">
+          <p>{otherTraining}</p>
+        </TrainingSection>
+      )}
 
-          <DescriptionSimple
-            term="Bloc de compétences métiers"
-            detail={certificateSkills}
-          />
+      <Checkbox
+        data-test="accept-conditions-checkbox-group"
+        className="mt-10"
+        legend="Conditions générales"
+        options={[
+          {
+            label:
+              "J’ai bien compris qu’il s’agissait des étapes et prestations nécessaires pour que j’obtienne mon diplôme",
+            nativeInputProps: {
+              disabled: isTrainingConfirmed,
+              defaultChecked: isTrainingConfirmed,
+              onChange: (e) =>
+                pageDispatch({
+                  type: "changeCondition",
+                  payload: {
+                    condition: "conditionOne",
+                    checked: e.target.checked,
+                  },
+                }),
+            },
+          },
+          {
+            label:
+              "Je m’engage à suivre ce parcours ou informer mon accompagnateur de tout abandon dans les 48h",
+            nativeInputProps: {
+              disabled: isTrainingConfirmed,
+              defaultChecked: isTrainingConfirmed,
+              onChange: (e) =>
+                pageDispatch({
+                  type: "changeCondition",
+                  payload: {
+                    condition: "conditionTwo",
+                    checked: e.target.checked,
+                  },
+                }),
+            },
+          },
+          {
+            label:
+              "J’ai bien compris que mon accord allait déclencher une demande de prise en charge financière de mon parcours",
+            nativeInputProps: {
+              disabled: isTrainingConfirmed,
+              defaultChecked: isTrainingConfirmed,
+              onChange: (e) =>
+                pageDispatch({
+                  type: "changeCondition",
+                  payload: {
+                    condition: "conditionThree",
+                    checked: e.target.checked,
+                  },
+                }),
+            },
+          },
+          {
+            label:
+              "J’accepte que les résultats de mon étude personnalisée ainsi que les résultats de ma session de jury me soient transmis ainsi qu’à mon accompagnateur.",
+            nativeInputProps: {
+              disabled: isTrainingConfirmed,
+              defaultChecked: isTrainingConfirmed,
+              onChange: (e) =>
+                pageDispatch({
+                  type: "changeCondition",
+                  payload: {
+                    condition: "conditionFour",
+                    checked: e.target.checked,
+                  },
+                }),
+            },
+          },
+        ]}
+      />
 
-          <DescriptionSimple term="Autre" detail={otherTraining} />
-        </dl>
-        <Checkbox
-          checked={isTrainingConfirmed || checkedCondition}
-          label="J'ai bien compris qu'il s'agissait des étapes et prestations nécessaires pour que j'obtienne mon diplôme et je m'engage à les suivre ou informer mon accompagnateur de tout abandon dans les 48h. J’ai bien compris que mon accord allait déclencher une demande de prise en charge financière de mon parcours. J'accepte que les résultats de mon étude personnalisée ainsi que le résultat à ma session de jury me soient transmis ainsi qu'à mon accompagnateur."
-          name="accept-conditions"
-          toggle={() => setCheckedCondition(!checkedCondition)}
-          theme="dark"
-          className="my-8"
-          size="small"
-          disabled={isTrainingConfirmed || submitted}
-        />
-        <div className="flex flex-col items-center">
-          {isTrainingConfirmed ? (
-            <Button
-              className="bg-white text-gray-800"
-              data-test="submit-training"
-              onClick={() => {
-                send({
-                  type: "BACK",
-                });
-              }}
-              label="Fermer"
-            />
-          ) : (
-            <Button
-              className="bg-white text-gray-800"
-              data-test="submit-training"
-              disabled={!checkedCondition}
-              onClick={() => {
-                setSubmitted(true);
-                send({
-                  type: "SUBMIT_TRAINING_PROGRAM",
-                });
-              }}
-              label="Je confirme"
-              loading={state.matches("trainingProgramSummary.loading")}
-            />
-          )}
-        </div>
-        {state.context.error ? (
-          <p key="error" className="text-red-600 mt-4 text-sm">
-            {state.context.error}
-          </p>
-        ) : (
-          <></>
-        )}
-      </div>
+      {!isTrainingConfirmed && (
+        <Button
+          data-test="submit-training-program-button"
+          className="mt-6 justify-center w-[100%]  md:w-fit"
+          nativeButtonProps={{ onClick: () => send("SUBMIT_TRAINING_PROGRAM") }}
+          disabled={!pageState.allConditionsChecked}
+        >
+          Valider votre parcours
+        </Button>
+      )}
+
+      {state.context.error ? (
+        <p key="error" className="text-red-600 mt-4 text-sm">
+          {state.context.error}
+        </p>
+      ) : (
+        <></>
+      )}
     </Page>
   );
 };
+
+const TrainingSection = ({
+  title,
+  children,
+  "data-test": dataTest,
+}: {
+  title: string;
+  children?: ReactNode;
+  "data-test"?: string;
+}) => (
+  <section className="text-dsfrGray-800 mt-4" data-test={dataTest}>
+    <h2 className="text-dsfrGray-800 text-lg font-bold mb-3">{title} :</h2>
+    {children}
+  </section>
+);

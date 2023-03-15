@@ -23,7 +23,7 @@ module.exports = {
           900: "#21203D",
         },
         dsfrBlue: { 300: "#E3E3FD", 500: "#000091" },
-        dsfrGray: { 500: "#666666" },
+        dsfrGray: { 500: "#666666", 700: "#3A3A3A", 800: "161616" },
       },
       fontFamily: {
         sans: ["Marianne", ...defaultTheme.fontFamily.sans],
@@ -33,6 +33,9 @@ module.exports = {
         md: "768px",
         lg: "992px",
         xl: "1248px",
+      },
+      listStyleType: {
+        square: "square",
       },
     },
   },

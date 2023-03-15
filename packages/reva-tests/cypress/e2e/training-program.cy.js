@@ -18,9 +18,27 @@ context("Training Program", () => {
     });
 
     it("display all fields", () => {
-      cy.get('[data-test="description-list"]').should("have.length", 1);
-      cy.get('[data-test="description-term"]').should("have.length", 8);
-      cy.get('[data-test="description-details"]').should("have.length", 8);
+      cy.get('[data-test="general-informations"]')
+        .children("li")
+        .should("have.length", 3);
+
+      cy.get('[data-test="mandatory-training-section"]')
+        .children("ul")
+        .children("li")
+        .should("have.length", 3);
+
+      cy.get('[data-test="basic-skills-section"]')
+        .children("ul")
+        .children("li")
+        .should("have.length", 2);
+
+      cy.get('[data-test="certificate-skills-section"]')
+        .children("p")
+        .should("have.text", "Blocs de compétences métier");
+
+      cy.get('[data-test="other-training-section"]')
+        .children("p")
+        .should("have.text", "Autres actions de formations complémentaires");
     });
   });
 
@@ -41,9 +59,21 @@ context("Training Program", () => {
     });
 
     it("don't display missing fields", () => {
-      cy.get('[data-test="description-list"]').should("have.length", 1);
-      cy.get('[data-test="description-term"]').should("have.length", 4);
-      cy.get('[data-test="description-details"]').should("have.length", 4);
+      cy.get('[data-test="general-informations"]')
+        .children("li")
+        .should("have.length", 3);
+
+      cy.get('[data-test="mandatory-training-section"]').should("not.exist");
+
+      cy.get('[data-test="basic-skills-section"]').should("not.exist");
+
+      cy.get('[data-test="certificate-skills-section"]')
+        .children("p")
+        .should("have.text", "Blocs de compétences métier");
+
+      cy.get('[data-test="other-training-section"]')
+        .children("p")
+        .should("have.text", "Autres actions de formations complémentaires");
     });
   });
 
@@ -63,11 +93,22 @@ context("Training Program", () => {
       cy.wait("@getReferential");
       cy.get('[data-test="validate-training-program-button"]').click();
 
-      cy.get('[data-test="checkbox-accept-conditions"]').not("be.checked");
-      cy.get('[data-test="label-accept-conditions"]').should("exist");
-      cy.get('[data-test="submit-training"]').should("be.disabled");
-      cy.get('[data-test="checkbox-accept-conditions"]').check();
-      cy.get('[data-test="submit-training"]').should("be.enabled").click();
+      cy.get('[data-test="accept-conditions-checkbox-group"]')
+        .find("input")
+        .not("be.checked");
+
+      cy.get('[data-test="submit-training-program-button"]').should(
+        "be.disabled"
+      );
+
+      cy.get('[data-test="accept-conditions-checkbox-group"]')
+        .find("label")
+        .click({ multiple: true });
+
+      cy.get('[data-test="submit-training-program-button"]')
+        .should("be.enabled")
+        .click();
+
       cy.wait("@candidacy_confirmTrainingForm");
     });
   });
@@ -92,11 +133,20 @@ context("Training Program", () => {
       cy.wait("@getReferential");
       cy.get('[data-test="validate-training-program-button"]').click();
 
-      cy.get('[data-test="checkbox-accept-conditions"]').not("be.checked");
-      cy.get('[data-test="label-accept-conditions"]').should("exist");
-      cy.get('[data-test="submit-training"]').should("be.disabled");
-      cy.get('[data-test="checkbox-accept-conditions"]').check();
-      cy.get('[data-test="submit-training"]').should("be.enabled").click();
+      cy.get('[data-test="accept-conditions-checkbox-group"]')
+        .find("input")
+        .not("be.checked");
+
+      cy.get('[data-test="submit-training-program-button"]').should(
+        "be.disabled"
+      );
+      cy.get('[data-test="accept-conditions-checkbox-group"]')
+        .find("label")
+        .click({ multiple: true });
+
+      cy.get('[data-test="submit-training-program-button"]')
+        .should("be.enabled")
+        .click();
       cy.wait("@candidacy_confirmTrainingForm");
     });
   });
