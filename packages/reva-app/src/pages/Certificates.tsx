@@ -142,7 +142,7 @@ export const Certificates = ({ mainService }: Props) => {
         hint="Sélectionnez le diplôme que vous voulez valider"
         nativeSelectProps={{
           name: "select_department",
-          defaultValue: chosenDepartmentCode,
+          defaultValue: state.context.selectedDepartment?.code,
           onChange: (e) => {
             const departmentCode = e.target.value;
             setChosenDepartmentCode(departmentCode);
