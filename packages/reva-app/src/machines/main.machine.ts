@@ -975,7 +975,7 @@ export const mainMachine =
                         candidacyStatus: (_context, _event) => "VALIDATION",
                         direction: (_context, _event) => "next",
                       }),
-                      target: "#mainMachine",
+                      target: "#mainMachine.projectHome",
                     },
                   ],
                   onError: [
