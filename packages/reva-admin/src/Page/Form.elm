@@ -15,7 +15,6 @@ import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
 import BetaGouv.DSFR.Checkbox as Checkbox
 import BetaGouv.DSFR.Input as Input
-import BetaGouv.DSFR.Radio as Radio
 import Browser.Dom
 import Data.Context exposing (Context)
 import Data.Form exposing (FormData, get, insert)
@@ -32,6 +31,7 @@ import String exposing (String)
 import Task
 import View
 import View.Helpers exposing (dataTest)
+import View.Radio as Radio
 
 
 type Msg referential
@@ -516,19 +516,21 @@ viewEditableElement formData ( elementId, element ) =
 
         RadioList label choices ->
             let
-                viewChoices =
-                    List.map
-                        (\( choiceId, choice ) -> viewEditableElement formData ( choiceId, Radio choice ))
-                        choices
+                findOption option =
+                    List.Extra.find (Tuple.second >> (==) option) choices
             in
             group
-                [ div
-                    [ name elementId
-                    , id elementId
-                    , class "mt-1 mb-4"
-                    ]
-                    viewChoices
-                    |> withLegend label
+                [ Radio.group
+                    { id = elementId
+                    , legend = Accessibility.text label
+                    , onChecked = \( _, option ) -> UserChangedElement elementId option
+                    , options = choices
+                    , current = get elementId formData |> Maybe.andThen findOption
+                    , toId = Tuple.first
+                    , toLabel = Tuple.second >> Accessibility.text
+                    }
+                    |> Radio.inline
+                    |> Radio.view
                 ]
 
 
@@ -584,7 +586,7 @@ viewReadOnlyElement formData ( elementId, element ) =
                     , values = choices
                     , checked = checkedChoices
                     , valueAsString = Tuple.second
-                    , toId = Tuple.first
+                    , toId = Tuple.second
                     , toLabel = Tuple.second
                     }
                     |> Checkbox.groupWithDisabled True

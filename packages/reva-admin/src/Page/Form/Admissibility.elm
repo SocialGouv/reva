@@ -18,10 +18,10 @@ form formData _ =
             Data.Form.Admissibility.keys
 
         statusList =
-            [ Admissible
-            , NotAdmissible
+            [ ( "admissible", Admissible )
+            , ( "not-admissible", NotAdmissible )
             ]
-                |> List.map (\el -> ( "status", admissibilitySatusToString el ))
+                |> List.map (\( id, status ) -> ( id, admissibilitySatusToString status ))
 
         admissibilityFromForm =
             Data.Form.Admissibility.fromDict formData
