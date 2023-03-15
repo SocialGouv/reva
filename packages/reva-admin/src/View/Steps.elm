@@ -77,6 +77,7 @@ view currentStepIndex timelineElements =
         [ ol
             [ attribute "role" "list"
             , class "-mt-8"
+            , class "fr-sidemenu fr-sidemenu--right"
             ]
           <|
             List.indexedMap viewNavigationTimelineStep timelineElements

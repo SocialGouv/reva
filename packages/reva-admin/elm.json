@@ -8,6 +8,7 @@
     "dependencies": {
         "direct": {
             "NoRedInk/elm-json-decode-pipeline": "1.0.1",
+            "betagouv/elm-dsfr": "3.0.0",
             "dillonkearns/elm-graphql": "5.0.9",
             "elm/browser": "1.0.2",
             "elm/bytes": "1.0.8",
@@ -19,12 +20,16 @@
             "elm/svg": "1.0.1",
             "elm/time": "1.0.0",
             "elm/url": "1.0.0",
+            "elm-community/html-extra": "3.4.0",
             "elm-community/list-extra": "8.5.2",
             "justinmimbs/date": "4.0.1",
             "krisajenkins/remotedata": "6.0.1",
             "lukewestby/elm-string-interpolate": "1.0.4",
+            "rtfeldman/elm-css": "17.1.1",
             "rtfeldman/elm-iso8601-date-strings": "1.1.4",
-            "rtfeldman/elm-validate": "4.0.1"
+            "rtfeldman/elm-validate": "4.0.1",
+            "tesk9/accessible-html": "6.1.0",
+            "tesk9/accessible-html-with-css": "4.1.0"
         },
         "indirect": {
             "elm/parser": "1.1.0",

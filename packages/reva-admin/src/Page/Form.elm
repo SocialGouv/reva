@@ -10,12 +10,16 @@ module Page.Form exposing
     , view
     )
 
+import Accessibility exposing (h2, h3, h4, h5)
 import Api.Token exposing (Token)
+import BetaGouv.DSFR.Button as Button
+import BetaGouv.DSFR.Checkbox as Checkbox
+import BetaGouv.DSFR.Input as Input
+import BetaGouv.DSFR.Radio as Radio
 import Browser.Dom
-import Bytes exposing (Bytes)
 import Data.Context exposing (Context)
 import Data.Form exposing (FormData, get, insert)
-import Data.Form.Helper exposing (booleanToString)
+import Data.Form.Helper exposing (booleanFromString, booleanToString)
 import Dict exposing (Dict)
 import File exposing (File)
 import Html exposing (Html, button, dd, div, dt, fieldset, input, label, legend, li, option, p, select, span, text, textarea, ul)
@@ -27,7 +31,6 @@ import RemoteData exposing (RemoteData(..))
 import String exposing (String)
 import Task
 import View
-import View.Heading
 import View.Helpers exposing (dataTest)
 
 
@@ -137,20 +140,16 @@ view : RemoteData String referential -> Model referential -> Html (Msg referenti
 view remoteReferential model =
     let
         submitButton label =
-            View.primaryButton
-                [ dataTest "submit"
-                , type_ "submit"
-                ]
-                label
+            Button.new { onClick = Nothing, label = label }
+                |> Button.submit
+                |> Button.view
 
         saveButton maybeLabel referential =
             case maybeLabel of
                 Just label ->
-                    View.secondaryButton
-                        [ dataTest "save"
-                        , onClick (UserClickSave referential)
-                        ]
-                        label
+                    Button.new { onClick = Just (UserClickSave referential), label = label }
+                        |> Button.secondary
+                        |> Button.view
 
                 Nothing ->
                     div [] []
@@ -250,90 +249,99 @@ viewForm referential status maybeError formData form saveButton submitButton =
 
         currentForm =
             form formData referential
+
+        formFieldset content =
+            Html.form
+                [ class "pl-16 pr-4 mt-10"
+                , onSubmit (UserClickSubmit referential)
+                ]
+                [ fieldset [ class "fr-fieldset" ] content ]
     in
-    Html.form
-        [ class "pl-16 pr-4 mt-10"
-        , onSubmit (UserClickSubmit referential)
+    formFieldset <|
+        legend
+            [ class "fr-fieldset__legend" ]
+            [ h2 [] [ text currentForm.title ] ]
+            :: List.map (viewElement formData) currentForm.elements
+            ++ [ case status of
+                    Editable ->
+                        div
+                            [ class "mt-8 pb-4 flex justify-end pr-2 w-full" ]
+                            [ saveButton
+                            , submitButton
+                            ]
+
+                    ReadOnly ->
+                        text ""
+               , case maybeError of
+                    Just error ->
+                        div
+                            [ class "fixed z-50 top-0 inset-x-0 pointer-events-none"
+                            , class "w-full flex justify-center"
+                            ]
+                            [ p
+                                [ class "max-w-2xl mt-10 px-6 py-4"
+                                , class "rounded bg-white border border-red-400"
+                                , class "text-center text-sm font-medium text-red-600"
+                                ]
+                                [ text error ]
+                            ]
+
+                    Nothing ->
+                        text ""
+               ]
+
+
+group : List (Html msg) -> Html msg
+group =
+    div [ class "fr-fieldset__element mt-2 -mb-3" ]
+
+
+single : List (Html msg) -> Html msg
+single =
+    div [ class "fr-fieldset__element" ]
+
+
+infoView : String -> String -> Html msg
+infoView s d =
+    div [ class "text-lg" ]
+        [ if s /= "" then
+            label [] [ text s, text " : " ]
+
+          else
+            text ""
+        , span [] [ text d ]
         ]
-        [ View.title currentForm.title
-        , div
-            [ class "mt-6 flex flex-wrap gap-x-8" ]
-            (List.map (viewElement formData) currentForm.elements
-                |> List.filter ((/=) [])
-                |> List.map (div [])
-            )
-        , case status of
-            Editable ->
-                div
-                    [ class "mt-8 pb-4 flex justify-between pr-4" ]
-                    [ saveButton
-                    , submitButton
-                    ]
-
-            ReadOnly ->
-                text ""
-        , case maybeError of
-            Just error ->
-                div
-                    [ class "fixed z-50 top-0 inset-x-0 pointer-events-none"
-                    , class "w-full flex justify-center"
-                    ]
-                    [ p
-                        [ class "max-w-2xl mt-10 px-6 py-4"
-                        , class "rounded bg-white border border-red-400"
-                        , class "text-center text-sm font-medium text-red-600"
-                        ]
-                        [ text error ]
-                    ]
-
-            Nothing ->
-                text ""
-        ]
 
 
-viewEditableElement : FormData -> ( String, Element ) -> List (Html (Msg referential))
+viewEditableElement : FormData -> ( String, Element ) -> Html (Msg referential)
 viewEditableElement formData ( elementId, element ) =
     let
         dataOrDefault =
             get elementId formData
                 |> Maybe.withDefault (defaultValue element)
 
-        inputStyle =
-            String.join " "
-                [ "border-b-[3px] border-0 border-b-gray-900"
-                , "focus:ring-blue-500 focus:ring-0 focus:border-blue-600"
-                , "text-xl placeholder:text-gray-500"
-                , "block bg-gray-100 pl-8 mb-8"
-                ]
-                |> class
+        inputView label inputType extraAttributes =
+            Input.new
+                { value = dataOrDefault
+                , onInput = UserChangedElement elementId
+                , label = Accessibility.text label
+                , name = elementId
+                }
+                |> inputType
+                |> Input.withExtraAttrs extraAttributes
+                |> Input.view
 
-        inputView dataType extraClass extraAttributes =
-            input
-                ([ type_ dataType
-                 , name elementId
-                 , id elementId
-                 , onInput (UserChangedElement elementId)
-                 , class extraClass
-                 , class "min-w-0 h-[78px] pr-4"
-                 , inputStyle
-                 , value dataOrDefault
-                 ]
-                    ++ extraAttributes
-                )
-                []
-
-        textareaView : Maybe String -> Html (Msg referential)
-        textareaView placeholderValue =
-            textarea
-                [ name elementId
-                , id elementId
-                , onInput (UserChangedElement elementId)
-                , class "w-[520px] h-[150px] p-8 mb-8"
-                , inputStyle
-                , value dataOrDefault
-                , placeholderValue |> Maybe.map placeholder |> Maybe.withDefault (class "")
-                ]
-                []
+        textareaView : String -> Maybe String -> Html (Msg referential)
+        textareaView label placeholderValue =
+            Input.new
+                { value = dataOrDefault
+                , onInput = UserChangedElement elementId
+                , label = Accessibility.text label
+                , name = elementId
+                }
+                |> Input.textArea (Just 10)
+                |> Input.withExtraAttrs [ placeholderValue |> Maybe.map placeholder |> Maybe.withDefault (class "") ]
+                |> Input.view
 
         withLegend s el =
             fieldset
@@ -349,151 +357,162 @@ viewEditableElement formData ( elementId, element ) =
     in
     case element of
         Checkbox label ->
-            [ div
-                [ class "flex items-start h-8 w-full" ]
-                [ checkboxView [] elementId dataOrDefault
-                , labelView elementId "text-base text-slate-800" label
+            single
+                [ Checkbox.single
+                    { value = dataOrDefault
+                    , checked = Just (dataOrDefault == "checked")
+                    , valueAsString = identity
+                    , id = elementId
+                    , label = label
+                    , onChecked = \_ -> booleanToString >> UserChangedElement elementId
+                    }
+                    |> Checkbox.viewSingle
                 ]
-            ]
 
         CheckboxList label choices ->
             let
-                viewChoices =
-                    List.map
-                        (\( choiceId, choice ) -> viewEditableElement formData ( choiceId, Checkbox choice ))
+                checkedChoices =
+                    List.filter
+                        (\( choiceId, _ ) -> get choiceId formData |> Maybe.withDefault "false" |> booleanFromString)
                         choices
-                        |> List.concat
             in
-            [ div
-                [ name elementId
-                , id elementId
-                , class "mt-1 mb-4"
+            group
+                [ Checkbox.group
+                    { id = elementId
+                    , label = Accessibility.text label
+                    , onChecked = \( choiceId, _ ) bool -> UserChangedElement choiceId (booleanToString bool)
+                    , values = choices
+                    , checked = checkedChoices
+                    , valueAsString = Tuple.second
+                    , toId = Tuple.first
+                    , toLabel = Tuple.second
+                    }
+                    |> Checkbox.viewGroup
                 ]
-                viewChoices
-                |> withLegend label
-            ]
 
         Date label ->
-            inputView "date" "w-60 flex items-center" []
-                |> withLabel label
+            single
+                [ inputView label Input.date [] ]
 
         Empty ->
-            []
+            text ""
 
         File label ->
             viewInputFiles False elementId
                 |> withLabel label
+                |> single
 
         Files label ->
             viewInputFiles True elementId
                 |> withLabel label
+                |> single
 
         Heading title ->
-            [ View.Heading.h3 title ]
+            legend
+                [ class "fr-fieldset__legend" ]
+                [ h3 [] [ text title ] ]
 
         Title title ->
-            [ View.Heading.h5 title ]
+            legend
+                [ class "fr-fieldset__legend mt-6 mb-1" ]
+                [ h5 [] [ text title ] ]
 
         Input label ->
-            inputView "text" "w-full" []
-                |> withLabel label
+            single
+                [ inputView label identity [] ]
 
         InputRequired label ->
-            inputView "text" "w-full" [ required True ]
-                |> withLabel (label ++ " (requis)")
+            single
+                [ inputView (label ++ " *") identity [ required True ] ]
 
         Number label ->
-            inputView "number" "w-40" [ Html.Attributes.min "0" ]
-                |> withLabel label
+            single
+                [ inputView label Input.number [ Html.Attributes.min "0" ] ]
 
         Price label ->
-            inputView "number" "w-40" [ Html.Attributes.min "0", Html.Attributes.step "0.01" ]
-                |> withLabel label
+            single
+                [ inputView label Input.number [ Html.Attributes.min "0", Html.Attributes.step "0.01" ] ]
 
         Textarea label placeholder ->
-            textareaView placeholder
-                |> withLabel label
+            single
+                [ textareaView label placeholder ]
 
         Info label value ->
-            info value
-                |> withLabel label
+            div [ class "fr-fieldset__element mb-2" ] [ infoView label value ]
 
         ReadOnlyElement readOnlyElement ->
-            [ div
-                [ class "mb-8" ]
-              <|
-                viewReadOnlyElement formData ( elementId, readOnlyElement )
-            ]
+            viewReadOnlyElement formData ( elementId, readOnlyElement )
 
         ReadOnlyElements readOnlyElements ->
-            [ div
-                [ class "flex rounded"
-                , class "bg-slate-100 border-slate-200"
-                , class "-mt-2 mb-8 px-1 pt-2"
-                ]
-              <|
+            div [ class "fr-fieldset__element mb-4 -ml-2" ] <|
                 List.map
-                    (viewReadOnlyElement formData >> div [ class "mx-3" ])
+                    (viewReadOnlyElement formData)
                     readOnlyElements
-            ]
 
         Requirements title rules ->
             let
                 viewRule rule =
                     li [ class "mb-1" ] [ text rule ]
             in
-            [ div
-                [ class "max-w-lg bg-gray-100 px-5 py-4 rounded-lg"
-                , class "text-sm text-gray-600 mb-8"
+            single
+                [ div
+                    [ class "max-w-lg bg-gray-100 px-5 py-4 rounded-lg"
+                    , class "text-sm text-gray-600 mb-8"
+                    ]
+                    [ span [ class "text-gray-900" ] [ text title ]
+                    , ul
+                        [ class "mt-3 list-disc pl-4" ]
+                        (List.map viewRule rules)
+                    ]
                 ]
-                [ span [ class "text-gray-900" ] [ text title ]
-                , ul
-                    [ class "mt-3 list-disc pl-4" ]
-                    (List.map viewRule rules)
-                ]
-            ]
 
         Section title ->
-            [ View.Heading.h4 title ]
+            legend
+                [ class "fr-fieldset__legend mt-6 mb-0" ]
+                [ h4 [] [ text title ] ]
 
         Select label choices ->
-            select
-                [ id elementId
-                , onInput (UserChangedElement elementId)
-                , class "mt-1 block w-[520px] h-[78px] pr-10"
-                , inputStyle
-                , required True
-                ]
-                (option
-                    [ disabled True
-                    , selected (dataOrDefault == "")
-                    , value ""
+            single
+                [ div
+                    [ class "fr-select-group" ]
+                    [ labelView elementId "" label
+                    , select
+                        [ class "fr-select"
+                        , id elementId
+                        , onInput (UserChangedElement elementId)
+                        , required True
+                        ]
+                        (option
+                            [ disabled True
+                            , selected (dataOrDefault == "")
+                            , value ""
+                            ]
+                            [ text "Sélectionner" ]
+                            :: List.map (viewChoice dataOrDefault) choices
+                        )
                     ]
-                    [ text "Sélectionner" ]
-                    :: List.map (viewChoice dataOrDefault) choices
-                )
-                |> withLabel label
+                ]
 
         SelectOther selectId otherValue label ->
             case get selectId formData of
                 Just selectedValue ->
                     if selectedValue == otherValue then
-                        textareaView Nothing
-                            |> withLabel label
+                        single [ textareaView label Nothing ]
 
                     else
-                        []
+                        text ""
 
                 Nothing ->
-                    []
+                    text ""
 
         Radio label ->
-            [ div
-                [ class "flex items-start h-8 w-full" ]
-                [ radioView [] elementId label dataOrDefault
-                , labelView elementId "text-base text-slate-800" label
+            single
+                [ div
+                    [ class "flex items-start h-8 w-full" ]
+                    [ radioView [] elementId label dataOrDefault
+                    , labelView elementId "text-base text-slate-800" label
+                    ]
                 ]
-            ]
 
         RadioList label choices ->
             let
@@ -501,35 +520,24 @@ viewEditableElement formData ( elementId, element ) =
                     List.map
                         (\( choiceId, choice ) -> viewEditableElement formData ( choiceId, Radio choice ))
                         choices
-                        |> List.concat
             in
-            [ div
-                [ name elementId
-                , id elementId
-                , class "mt-1 mb-4"
+            group
+                [ div
+                    [ name elementId
+                    , id elementId
+                    , class "mt-1 mb-4"
+                    ]
+                    viewChoices
+                    |> withLegend label
                 ]
-                viewChoices
-                |> withLegend label
-            ]
 
 
-viewReadOnlyElement : FormData -> ( String, Element ) -> List (Html (Msg referential))
+viewReadOnlyElement : FormData -> ( String, Element ) -> Html (Msg referential)
 viewReadOnlyElement formData ( elementId, element ) =
     let
         dataOrDefault =
             get elementId formData
                 |> Maybe.withDefault (defaultValue element)
-
-        dataClass =
-            "min-h-[40px] rounded px-8 py-5 text-xl font-medium leading-snug text-slate-900 mt-1 mb-4"
-
-        userEditedClass =
-            "min-h-[78px] flex items-center border border-slate-200 bg-white"
-
-        dataView extraClass d =
-            dd
-                [ class extraClass, class dataClass ]
-                [ text d ]
 
         termView s =
             dt
@@ -537,139 +545,142 @@ viewReadOnlyElement formData ( elementId, element ) =
                 [ text s ]
 
         withTerm s el =
-            [ termView s
-            , el
-            ]
+            div
+                []
+                [ termView s
+                , el
+                ]
 
-        defaultView label =
-            dataView userEditedClass dataOrDefault
-                |> withTerm label
+        defaultView label v =
+            div [ class "fr-fieldset__element mb-1" ] [ infoView label v ]
     in
     case element of
         Checkbox label ->
-            [ div
-                [ class "flex items-start h-8 w-full"
-                , classList [ ( "text-gray-500", dataOrDefault /= "checked" ) ]
+            single
+                [ Checkbox.single
+                    { value = dataOrDefault
+                    , checked = Just (dataOrDefault == "checked")
+                    , valueAsString = identity
+                    , id = elementId
+                    , label = label
+                    , onChecked = \_ -> booleanToString >> UserChangedElement elementId
+                    }
+                    |> Checkbox.singleWithDisabled True
+                    |> Checkbox.viewSingle
                 ]
-                [ checkboxView [ disabled True ] elementId dataOrDefault
-                , labelView elementId "text-base font-normal" label
-                ]
-            ]
 
         CheckboxList label choices ->
             let
-                viewChoices =
-                    List.map
-                        (\( choiceId, choice ) -> li [] <| viewReadOnlyElement formData ( choiceId, Checkbox choice ))
+                checkedChoices =
+                    List.filter
+                        (\( choiceId, _ ) -> get choiceId formData |> Maybe.withDefault "false" |> booleanFromString)
                         choices
             in
-            ul
-                [ class "mt-2 mb-4"
-                , name elementId
-                , id elementId
+            group
+                [ Checkbox.group
+                    { id = elementId
+                    , label = Accessibility.text label
+                    , onChecked = \( choiceId, _ ) bool -> UserChangedElement choiceId (booleanToString bool)
+                    , values = choices
+                    , checked = checkedChoices
+                    , valueAsString = Tuple.second
+                    , toId = Tuple.first
+                    , toLabel = Tuple.second
+                    }
+                    |> Checkbox.groupWithDisabled True
+                    |> Checkbox.viewGroup
                 ]
-                viewChoices
-                |> withTerm label
 
         Date label ->
-            defaultView label
+            defaultView label dataOrDefault
 
         Empty ->
-            []
+            text ""
 
         File _ ->
-            []
+            text ""
 
         Files _ ->
-            []
+            text ""
 
         Heading title ->
-            [ View.Heading.h3 title ]
+            legend
+                [ class "fr-fieldset__legend" ]
+                [ h3 [] [ text title ] ]
 
         Title title ->
-            [ View.Heading.h5 title ]
+            legend
+                [ class "fr-fieldset__legend mt-6 mb-1" ]
+                [ h5 [] [ text title ] ]
 
         Info label value ->
-            info value
-                |> withTerm label
+            defaultView label value
 
         Input label ->
-            div
-                [ class "w-[240px]" ]
-                [ dataView userEditedClass dataOrDefault ]
-                |> withTerm label
+            defaultView label dataOrDefault
 
         InputRequired label ->
-            div
-                [ class "w-[240px]" ]
-                [ dataView userEditedClass dataOrDefault ]
-                |> withTerm label
+            defaultView label dataOrDefault
 
         Number label ->
-            div
-                [ class "w-40" ]
-                [ dataView userEditedClass dataOrDefault ]
-                |> withTerm label
+            defaultView label dataOrDefault
 
         Price label ->
-            div
-                [ class "w-40" ]
-                [ dataView userEditedClass dataOrDefault ]
-                |> withTerm label
+            defaultView label dataOrDefault
 
         Textarea label _ ->
-            [ div [ class "w-[590px]" ] <| defaultView label ]
+            div [ class "w-[590px]" ] [ defaultView label dataOrDefault ]
 
         ReadOnlyElement readOnlyElement ->
             viewReadOnlyElement formData ( elementId, readOnlyElement )
 
         ReadOnlyElements readOnlyElements ->
-            [ div
-                [ class "flex justify-between gap-6 mr-2" ]
-              <|
+            div [ class "fr-fieldset__element mb-0 -ml-2" ] <|
                 List.map
-                    (viewReadOnlyElement formData >> div [])
+                    (\e -> viewReadOnlyElement formData e)
                     readOnlyElements
-            ]
 
         Requirements _ _ ->
-            []
+            text ""
 
         Section title ->
-            [ View.Heading.h4 title ]
+            legend
+                [ class "fr-fieldset__legend mt-6 mb-0" ]
+                [ h4 [] [ text title ] ]
 
         Select label choices ->
-            List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices
-                |> List.head
-                |> Maybe.map (\( _, choice ) -> dataView "bg-slate-100 min-w-[240px]" choice |> withTerm label)
-                |> Maybe.withDefault []
+            single
+                [ List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices
+                    |> List.head
+                    |> Maybe.map (\( _, choice ) -> infoView label choice)
+                    |> Maybe.withDefault (text "")
+                ]
 
         SelectOther selectId otherValue label ->
             case get selectId formData of
                 Just selectedValue ->
                     if selectedValue == otherValue then
-                        defaultView label
+                        defaultView label dataOrDefault
 
                     else
-                        []
+                        text ""
 
                 Nothing ->
-                    []
+                    text ""
 
         Radio label ->
-            [ div
+            div
                 [ class "flex items-start h-8 w-full text-gray-500"
                 ]
                 [ radioView [ disabled True ] elementId label dataOrDefault
                 , labelView elementId "text-base font-normal" label
                 ]
-            ]
 
         RadioList label choices ->
             let
                 viewChoices =
                     List.map
-                        (\( choiceId, choice ) -> li [] <| viewReadOnlyElement formData ( choiceId, Radio choice ))
+                        (\( choiceId, choice ) -> li [] [ viewReadOnlyElement formData ( choiceId, Radio choice ) ])
                         choices
             in
             ul
@@ -679,15 +690,6 @@ viewReadOnlyElement formData ( elementId, element ) =
                 ]
                 viewChoices
                 |> withTerm label
-
-
-info : String -> Html msg
-info value =
-    p
-        [ class "rounded bg-slate-100 text-slate-800 mb-6"
-        , class "px-6 py-4 text-lg"
-        ]
-        [ text value ]
 
 
 labelStyle : String
@@ -699,29 +701,10 @@ labelView : String -> String -> String -> Html msg
 labelView elementId extraClass s =
     label
         [ for elementId
-        , class "block"
+        , class "fr-label"
         , class extraClass
         ]
         [ text s ]
-
-
-checkboxView : List (Html.Attribute (Msg referential)) -> String -> String -> Html (Msg referential)
-checkboxView extraAttributes elementId dataOrDefault =
-    input
-        (extraAttributes
-            ++ [ type_ "checkbox"
-               , name elementId
-               , id elementId
-               , onCheck (booleanToString >> UserChangedElement elementId)
-               , class "focus:ring-blue-500 h-4 w-4 text-blue-600 border-slate-400 rounded mr-4"
-               , class "mt-1 block min-w-0 rounded sm:text-sm border-gray-300"
-               , class "checked:disabled:border-gray-600 checked:disabled:bg-gray-600"
-               , class "disabled:hover:not-allowed"
-               , class "disabled:text-gray-400 disabled:border-slate-200 disabled:bg-gray-100"
-               , checked (dataOrDefault == "checked")
-               ]
-        )
-        []
 
 
 radioView : List (Html.Attribute (Msg referential)) -> String -> String -> String -> Html (Msg referential)
