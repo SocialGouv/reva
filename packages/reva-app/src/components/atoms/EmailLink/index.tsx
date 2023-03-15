@@ -1,9 +1,9 @@
 interface EmailLinkProps {
   email: string;
-  dataTest?: string;
+  "data-test"?: string;
 }
 
-export const EmailLink = ({ email, dataTest }: EmailLinkProps) => {
+export const EmailLink = ({ email, "data-test": dataTest }: EmailLinkProps) => {
   const mailtoHref = `mailto:${email}`;
   return (
     <a

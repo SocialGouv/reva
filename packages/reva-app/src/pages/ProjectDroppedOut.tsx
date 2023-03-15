@@ -48,7 +48,7 @@ export const ProjectDroppedOut = ({
           Vous avez une question ?{" "}
           <EmailLink
             email={supportEmail}
-            dataTest="home-dropped-out-support-email"
+            data-test="home-dropped-out-support-email"
           />
         </p>
       </div>

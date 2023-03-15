@@ -10,13 +10,13 @@ import { OrganismTimelineElement } from "./TimelineElements/OrganismTimelineElem
 
 export const ProjectTimeline = ({
   className,
-  dataTest,
+  "data-test": dataTest,
 }: {
   className?: string;
-  dataTest?: string;
+  "data-test"?: string;
 }) => {
   return (
-    <Timeline className={className} dataTest={dataTest}>
+    <Timeline className={className} data-test={dataTest}>
       <ContactTimelineElement />
       <CertificationTimelineElement />
       <GoalsTimelineElement />

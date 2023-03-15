@@ -72,7 +72,7 @@ export const ProjectHome = ({
         laissez-vous accompagner !
       </p>
 
-      <ProjectTimeline className="mt-8" dataTest="project-home-timeline" />
+      <ProjectTimeline className="mt-8" data-test="project-home-timeline" />
     </div>
   );
 

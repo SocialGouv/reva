@@ -1,11 +1,11 @@
 export const Timeline = ({
   className,
   children,
-  dataTest,
+  "data-test": dataTest,
 }: {
   className?: string;
   children?: React.ReactNode;
-  dataTest?: string;
+  "data-test"?: string;
 }) => {
   return (
     <div className={`relative flex flex-col ${className}`} data-test={dataTest}>
