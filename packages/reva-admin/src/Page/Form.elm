@@ -15,15 +15,16 @@ import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
 import BetaGouv.DSFR.Checkbox as Checkbox
 import BetaGouv.DSFR.Input as Input
+import BetaGouv.DSFR.Radio as Radio
 import Browser.Dom
 import Data.Context exposing (Context)
 import Data.Form exposing (FormData, get, insert)
 import Data.Form.Helper exposing (booleanFromString, booleanToString)
 import Dict exposing (Dict)
 import File exposing (File)
-import Html exposing (Html, button, dd, div, dt, fieldset, input, label, legend, li, option, p, select, span, text, textarea, ul)
-import Html.Attributes exposing (checked, class, classList, disabled, for, id, multiple, name, placeholder, required, selected, type_, value)
-import Html.Events exposing (on, onCheck, onClick, onInput, onSubmit)
+import Html exposing (Html, button, div, fieldset, input, label, legend, li, option, p, select, span, text, ul)
+import Html.Attributes exposing (class, disabled, for, id, multiple, name, placeholder, required, selected, type_, value)
+import Html.Events exposing (on, onInput, onSubmit)
 import Json.Decode
 import List.Extra
 import RemoteData exposing (RemoteData(..))
@@ -31,7 +32,6 @@ import String exposing (String)
 import Task
 import View
 import View.Helpers exposing (dataTest)
-import View.Radio as Radio
 
 
 type Msg referential
@@ -65,7 +65,6 @@ type Element
     | Section String
     | Title String
     | Textarea String (Maybe String)
-    | Radio String
     | RadioList String (List ( String, String ))
 
 
@@ -321,34 +320,17 @@ viewEditableElement formData ( elementId, element ) =
                 |> Maybe.withDefault (defaultValue element)
 
         inputView label inputType extraAttributes =
-            Input.new
-                { value = dataOrDefault
-                , onInput = UserChangedElement elementId
-                , label = Accessibility.text label
-                , name = elementId
-                }
+            viewInput elementId label dataOrDefault
                 |> inputType
                 |> Input.withExtraAttrs extraAttributes
                 |> Input.view
 
         textareaView : String -> Maybe String -> Html (Msg referential)
         textareaView label placeholderValue =
-            Input.new
-                { value = dataOrDefault
-                , onInput = UserChangedElement elementId
-                , label = Accessibility.text label
-                , name = elementId
-                }
+            viewInput elementId label dataOrDefault
                 |> Input.textArea (Just 10)
                 |> Input.withExtraAttrs [ placeholderValue |> Maybe.map placeholder |> Maybe.withDefault (class "") ]
                 |> Input.view
-
-        withLegend s el =
-            fieldset
-                []
-                [ legend [ class labelStyle ] [ text s ]
-                , el
-                ]
 
         withLabel s el =
             [ labelView elementId labelStyle s
@@ -358,36 +340,22 @@ viewEditableElement formData ( elementId, element ) =
     case element of
         Checkbox label ->
             single
-                [ Checkbox.single
-                    { value = dataOrDefault
-                    , checked = Just (dataOrDefault == "checked")
-                    , valueAsString = identity
-                    , id = elementId
-                    , label = label
-                    , onChecked = \_ -> booleanToString >> UserChangedElement elementId
-                    }
+                [ viewCheckbox elementId label dataOrDefault
                     |> Checkbox.viewSingle
                 ]
 
         CheckboxList label choices ->
-            let
-                checkedChoices =
-                    List.filter
-                        (\( choiceId, _ ) -> get choiceId formData |> Maybe.withDefault "false" |> booleanFromString)
-                        choices
-            in
             group
-                [ Checkbox.group
-                    { id = elementId
-                    , label = Accessibility.text label
-                    , onChecked = \( choiceId, _ ) bool -> UserChangedElement choiceId (booleanToString bool)
-                    , values = choices
-                    , checked = checkedChoices
-                    , valueAsString = Tuple.second
-                    , toId = Tuple.first
-                    , toLabel = Tuple.second
-                    }
+                [ (\choiceId -> get choiceId formData)
+                    |> viewCheckboxList elementId label choices
                     |> Checkbox.viewGroup
+                ]
+
+        RadioList label choices ->
+            group
+                [ get elementId formData
+                    |> viewRadioList elementId label choices
+                    |> Radio.view
                 ]
 
         Date label ->
@@ -505,34 +473,6 @@ viewEditableElement formData ( elementId, element ) =
                 Nothing ->
                     text ""
 
-        Radio label ->
-            single
-                [ div
-                    [ class "flex items-start h-8 w-full" ]
-                    [ radioView [] elementId label dataOrDefault
-                    , labelView elementId "text-base text-slate-800" label
-                    ]
-                ]
-
-        RadioList label choices ->
-            let
-                findOption option =
-                    List.Extra.find (Tuple.second >> (==) option) choices
-            in
-            group
-                [ Radio.group
-                    { id = elementId
-                    , legend = Accessibility.text label
-                    , onChecked = \( _, option ) -> UserChangedElement elementId option
-                    , options = choices
-                    , current = get elementId formData |> Maybe.andThen findOption
-                    , toId = Tuple.first
-                    , toLabel = Tuple.second >> Accessibility.text
-                    }
-                    |> Radio.inline
-                    |> Radio.view
-                ]
-
 
 viewReadOnlyElement : FormData -> ( String, Element ) -> Html (Msg referential)
 viewReadOnlyElement formData ( elementId, element ) =
@@ -541,56 +481,31 @@ viewReadOnlyElement formData ( elementId, element ) =
             get elementId formData
                 |> Maybe.withDefault (defaultValue element)
 
-        termView s =
-            dt
-                [ class labelStyle ]
-                [ text s ]
-
-        withTerm s el =
-            div
-                []
-                [ termView s
-                , el
-                ]
-
         defaultView label v =
             div [ class "fr-fieldset__element mb-1" ] [ infoView label v ]
     in
     case element of
         Checkbox label ->
             single
-                [ Checkbox.single
-                    { value = dataOrDefault
-                    , checked = Just (dataOrDefault == "checked")
-                    , valueAsString = identity
-                    , id = elementId
-                    , label = label
-                    , onChecked = \_ -> booleanToString >> UserChangedElement elementId
-                    }
+                [ viewCheckbox elementId label dataOrDefault
                     |> Checkbox.singleWithDisabled True
                     |> Checkbox.viewSingle
                 ]
 
         CheckboxList label choices ->
-            let
-                checkedChoices =
-                    List.filter
-                        (\( choiceId, _ ) -> get choiceId formData |> Maybe.withDefault "false" |> booleanFromString)
-                        choices
-            in
             group
-                [ Checkbox.group
-                    { id = elementId
-                    , label = Accessibility.text label
-                    , onChecked = \( choiceId, _ ) bool -> UserChangedElement choiceId (booleanToString bool)
-                    , values = choices
-                    , checked = checkedChoices
-                    , valueAsString = Tuple.second
-                    , toId = Tuple.second
-                    , toLabel = Tuple.second
-                    }
+                [ (\choiceId -> get choiceId formData)
+                    |> viewCheckboxList elementId label choices
                     |> Checkbox.groupWithDisabled True
                     |> Checkbox.viewGroup
+                ]
+
+        RadioList label choices ->
+            group
+                [ get elementId formData
+                    |> viewRadioList elementId label choices
+                    |> Radio.withDisabled True
+                    |> Radio.view
                 ]
 
         Date label ->
@@ -670,29 +585,6 @@ viewReadOnlyElement formData ( elementId, element ) =
                 Nothing ->
                     text ""
 
-        Radio label ->
-            div
-                [ class "flex items-start h-8 w-full text-gray-500"
-                ]
-                [ radioView [ disabled True ] elementId label dataOrDefault
-                , labelView elementId "text-base font-normal" label
-                ]
-
-        RadioList label choices ->
-            let
-                viewChoices =
-                    List.map
-                        (\( choiceId, choice ) -> li [] [ viewReadOnlyElement formData ( choiceId, Radio choice ) ])
-                        choices
-            in
-            ul
-                [ class "mt-2 mb-4"
-                , name elementId
-                , id elementId
-                ]
-                viewChoices
-                |> withTerm label
-
 
 labelStyle : String
 labelStyle =
@@ -709,23 +601,6 @@ labelView elementId extraClass s =
         [ text s ]
 
 
-radioView : List (Html.Attribute (Msg referential)) -> String -> String -> String -> Html (Msg referential)
-radioView extraAttributes elementId label dataOrDefault =
-    input
-        (extraAttributes
-            ++ [ type_ "radio"
-               , name elementId
-               , id label
-               , value label
-               , class "h-4 w-4 text-blue-600 border-slate-400 mr-4"
-               , class "mt-1 block min-w-0 sm:text-sm border-gray-300"
-               , onCheck (\_ -> UserChangedElement elementId label)
-               , checked (dataOrDefault == label)
-               ]
-        )
-        []
-
-
 defaultValue : Element -> String
 defaultValue element =
     case element of
@@ -734,6 +609,80 @@ defaultValue element =
 
         _ ->
             ""
+
+
+
+-- Form element views
+
+
+viewInput : String -> String -> String -> Input.Config (Msg referential)
+viewInput elementId label value =
+    Input.new
+        { onInput = UserChangedElement elementId
+        , id = elementId
+        , label = Accessibility.text label
+        , value = value
+        }
+
+
+viewCheckbox : String -> String -> String -> Checkbox.Config (Msg referential)
+viewCheckbox elementId label value =
+    Checkbox.single
+        { checked = Just (value == "checked")
+        , onChecked = booleanToString >> UserChangedElement elementId
+        , id = elementId
+        , label = Accessibility.text label
+        , value = value
+        }
+
+
+viewCheckboxList :
+    String
+    -> String
+    -> List ( String, String )
+    -> (String -> Maybe String)
+    -> Checkbox.GroupConfig (Msg referential) ( String, String )
+viewCheckboxList elementId label choices isChecked =
+    let
+        checkedChoices =
+            List.filter
+                (\( choiceId, _ ) -> isChecked choiceId |> Maybe.withDefault "false" |> booleanFromString)
+                choices
+    in
+    Checkbox.group
+        { id = elementId
+        , legend = Accessibility.text label
+        , onChecked = \( choiceId, _ ) bool -> UserChangedElement choiceId (booleanToString bool)
+        , options = choices
+        , checked = checkedChoices
+        , toId = Tuple.first
+        , toLabel = Tuple.second >> Accessibility.text
+        , toValue = Tuple.second
+        }
+
+
+viewRadioList :
+    String
+    -> String
+    -> List ( String, String )
+    -> Maybe String
+    -> Radio.GroupConfig (Msg referential) ( String, String )
+viewRadioList elementId label choices current =
+    let
+        findOption option =
+            List.Extra.find (Tuple.second >> (==) option) choices
+    in
+    Radio.group
+        { id = elementId
+        , legend = Accessibility.text label
+        , onChecked = \( _, option ) -> UserChangedElement elementId option
+        , options = choices
+        , current = current |> Maybe.andThen findOption
+        , toId = Tuple.first
+        , toLabel = Tuple.second >> Accessibility.text
+        , toValue = Tuple.second
+        }
+        |> Radio.inline
 
 
 viewChoice : String -> ( String, String ) -> Html msg
