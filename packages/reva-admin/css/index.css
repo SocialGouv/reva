@@ -1,8 +1,56 @@
-@import "tailwind-base.css";
-@import url("@gouvfr/dsfr/dist/utility/utility.min.css");
-@import url("@gouvfr/dsfr/dist/dsfr.min.css");
-@import "tailwind.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+@font-face {
+  font-family: "Marianne";
+  src: local("Marianne-ExtraBold"),
+    url("/fonts/Marianne/Marianne-ExtraBold.woff") format("woff"),
+    url("/fonts/Marianne/Marianne-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+}
+
+@font-face {
+  font-family: "Marianne";
+  src: local("Marianne-Bold"),
+    url("/fonts/Marianne/Marianne-Bold.woff") format("woff"),
+    url("/fonts/Marianne/Marianne-Bold.woff2") format("woff2");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Marianne";
+  src: local("Marianne-Bold_Italic"),
+    url("/fonts/Marianne/Marianne-Bold_Italic.woff") format("woff"),
+    url("/fonts/Marianne/Marianne-Bold_Italic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Marianne";
+  src: local("Marianne"),
+    url("/fonts/Marianne/Marianne-Medium.woff") format("woff"),
+    url("/fonts/Marianne/Marianne-Medium.woff2") format("woff2");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Marianne";
+  src: local("Marianne"),
+    url("/fonts/Marianne/Marianne-Regular.woff") format("woff"),
+    url("/fonts/Marianne/Marianne-Regular.woff2") format("woff2");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Marianne";
+  src: local("Marianne_Italic"),
+    url("/fonts/Marianne/Marianne-Regular_Italic.woff") format("woff"),
+    url("/fonts/Marianne/Marianne-Regular_Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+}
 
 body {
   margin: 0;

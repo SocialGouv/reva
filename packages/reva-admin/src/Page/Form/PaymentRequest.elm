@@ -102,7 +102,7 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( "mandatory", Form.Title "Formations obligatoires" )
         , ( keys.mandatoryTrainingIds
           , Form.ReadOnlyElement <|
-                Form.CheckboxList "Formations obligatoires sélectionnées" <|
+                Form.CheckboxList "" <|
                     Data.Form.Helper.toIdList referential.mandatoryTrainings
           )
         , ( "mandatoryTrainingsReview"
@@ -115,7 +115,7 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( "basic-skills", Form.Title "Formations savoirs de base" )
         , ( keys.basicSkillsIds
           , Form.ReadOnlyElement <|
-                Form.CheckboxList "Formations savoirs de base sélectionnées" <|
+                Form.CheckboxList "" <|
                     Data.Form.Helper.toIdList referential.basicSkills
           )
         , ( "basicSkillsReview"
@@ -135,7 +135,7 @@ form maybeCertification formData ( candidacy, referential ) =
           )
         , ( keys.certificateSkillsHourCount, hourCountElement .certificateSkillsEstimatedHourCount )
         , ( "other", Form.Title "Autres actions de formations complémentaires" )
-        , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "Formations complémentaires" Nothing )
+        , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
         , ( keys.totalTrainingHourCount
           , Form.Info "Nb d'heures total actes formatifs" <|
                 String.fromInt (FundingRequest.totalTrainingHourCount formData)

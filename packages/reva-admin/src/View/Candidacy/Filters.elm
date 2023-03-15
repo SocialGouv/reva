@@ -65,11 +65,9 @@ view candidacies filters context =
                 []
                 [ link (Just loweredStatus) (Candidacy.statusToCategoryString status) ]
     in
-    [ div [ class "mx-2 my-8 text-sm text-gray-600" ]
+    [ div [ class "mx-10 my-8 text-sm text-gray-600" ]
         [ ul
-            [ class "font-semibold"
-            , class "fr-sidemenu fr-sidemenu--right"
-            ]
+            [ class "font-semibold" ]
             [ li
                 []
                 [ link Nothing "Toutes les candidatures actives"
