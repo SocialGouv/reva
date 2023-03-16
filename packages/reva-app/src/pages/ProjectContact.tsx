@@ -78,6 +78,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             name: "firstname",
             ref: firstnameRef,
             required: true,
+            autoComplete: "given-name",
           }}
         />
 
@@ -87,6 +88,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             name: "lastname",
             ref: lastnameRef,
             required: true,
+            autoComplete: "family-name",
           }}
         />
 
@@ -98,16 +100,21 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             ref: phoneRef,
             minLength: 10,
             required: true,
+            type: "tel",
+            autoComplete: "tel",
           }}
         />
 
         <Input
           label="Email"
+          hintText="Format attendu : nom@domaine.fr"
           nativeInputProps={{
             name: "email",
             ref: emailRef,
             required: true,
-            placeholder: "votre@email.fr",
+            type: "email",
+            autoComplete: "email",
+            spellCheck: "false",
           }}
         />
 
