@@ -7,7 +7,6 @@ import { Footer } from "./components/organisms/Footer";
 import { Header } from "./components/organisms/Header/Header";
 import { useMainMachineContext } from "./contexts/MainMachineContext/MainMachineContext";
 import { Certification, Contact } from "./interface";
-import { CertificateDetails } from "./pages/CertificateDetails";
 import { Certificates } from "./pages/Certificates";
 import { Error } from "./pages/Error";
 import { LoginConfirmation } from "./pages/LoginConfirmation";
@@ -99,14 +98,6 @@ function App() {
   };
 
   const errorPage = () => <Error key="error-page" mainService={mainService} />;
-
-  const certificateDetails = (certification: Certification) => (
-    <CertificateDetails
-      key="show-certificate-details"
-      mainService={mainService}
-      certification={certification}
-    />
-  );
 
   const projectSubmissionConfirmationPage = () => (
     <ProjectSubmissionConfirmation />
