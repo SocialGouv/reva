@@ -20,13 +20,15 @@ export const TimelineElement = ({
   description,
   status,
   children,
+  className,
 }: {
   title: string;
   description?: string;
   status: TimeLineElementStatus;
   children?: (args: { status: TimeLineElementStatus }) => React.ReactNode;
+  className?: string;
 }) => (
-  <section className="relative flex gap-3 h-full">
+  <section className={`relative flex gap-3 h-full ${className}`}>
     <BarWithWhiteDot status={status} />
     <div
       className={`flex flex-col relative bottom-0.5 ${

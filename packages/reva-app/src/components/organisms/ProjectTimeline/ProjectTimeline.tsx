@@ -1,5 +1,6 @@
 import { Timeline } from "components/molecules/Timeline/Timeline";
 import { AccompanimentTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/AccompanimentTimelineElement/AccompanimentTimelineElement";
+import { ProjectEndedTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/ProjectEndedTimelineElement/ProjectEndedTimelineElement";
 import { ProjectSubmissionTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/ProjectSubmissionTimelineElement/ProjectSubmissionTimelineElement";
 import { TrainingProgramTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/TrainingProgramTimelineElement/TrainingProgramTimelineElement";
 
@@ -26,6 +27,7 @@ export const ProjectTimeline = ({
       <ProjectSubmissionTimelineElement />
       <TrainingProgramTimelineElement />
       <AccompanimentTimelineElement />
+      <ProjectEndedTimelineElement />
     </Timeline>
   );
 };
