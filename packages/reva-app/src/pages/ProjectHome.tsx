@@ -63,7 +63,9 @@ export const ProjectHome = ({
 
   const homeScreen = (
     <div data-test={`project-home-ready`}>
-      <h1 className="text-lg font-bold text-dsfrGray-500">Bienvenue 🤝,</h1>
+      <h1 className="text-lg font-bold text-dsfrGray-500">
+        Bienvenue <span aria-hidden="true">🤝</span>,
+      </h1>
       <NameBadge className="mt-4" />
       <p className="my-4 pr-6 text-dsfrGray-500 text-base">
         Reva est une expérimentation visant à simplifier la Validation des

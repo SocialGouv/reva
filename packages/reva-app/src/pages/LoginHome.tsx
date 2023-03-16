@@ -38,7 +38,9 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
 
   return (
     <Page data-test="login-home" direction={state.context.direction}>
-      <h1 className="text-3xl font-bold text-dsfrBlue-500">Bienvenue 🤝,</h1>
+      <h1 className="text-3xl font-bold text-dsfrBlue-500">
+        Bienvenue <span aria-hidden="true">🤝</span>,
+      </h1>
       <h2 className="my-6">Connexion</h2>
       <p className="mb-10">
         Pour la sécurité de vos données, merci de renseigner votre email, un

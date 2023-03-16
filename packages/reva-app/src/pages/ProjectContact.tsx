@@ -66,7 +66,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
       ) : (
         <>
           <h1 className="text-3xl font-bold text-dsfrBlue-500">
-            Bienvenue 🤝,
+            Bienvenue <span aria-hidden="true">🤝</span>,
           </h1>
           <h2 className="my-6">Se créer un compte.</h2>
         </>
