@@ -17,8 +17,6 @@ import {
 const loadingCertifications = "loadingCertifications";
 const searchResults = "searchResults";
 const searchResultsError = "searchResultsError";
-const certificateSummary = "certificateSummary";
-const certificateDetails = "certificateDetails";
 const loginHome = "loginHome";
 const loginConfirmation = "loginConfirmation";
 const projectHome = "projectHome";
@@ -38,8 +36,6 @@ export type State =
   | typeof loadingCertifications
   | typeof searchResults
   | typeof searchResultsError
-  | typeof certificateSummary
-  | typeof certificateDetails
   | typeof loginHome
   | typeof loginConfirmation
   | typeof projectHome
@@ -85,7 +81,6 @@ type SelectCertification = {
 export type MainEvent =
   | selectedDepartment
   | SelectCertification
-  | { type: "SHOW_CERTIFICATION_DETAILS"; certification: Certification }
   | { type: "SHOW_PROJECT_HOME"; certification: Certification }
   | { type: "EDIT_CONTACT" }
   | { type: "ADD_EXPERIENCE" }
@@ -115,13 +110,6 @@ export type MainState =
       context: MainContext & {
         certification: undefined;
         candidacyId: undefined;
-      };
-    }
-  | {
-      value: typeof certificateSummary | typeof certificateDetails;
-      context: MainContext & {
-        certification: Certification;
-        candidacyId: string;
       };
     }
   | {
@@ -305,15 +293,12 @@ export const mainMachine =
           },
           searchResults: {
             on: {
-              SELECT_CERTIFICATION: {
-                actions: assign({
-                  certification: (_context, event) => {
-                    return event.certification;
-                  },
-                  error: (_context, _event) => "",
-                }),
-                target: "certificateSummary",
-              },
+              SUBMIT_CERTIFICATION: [
+                {
+                  actions: ["submitCertification", "resetOrganisms"],
+                  target: "submittingSelectedCertification",
+                },
+              ],
               SELECT_DEPARTMENT: {
                 actions: "selectingDepartment",
                 target: "loadingCertifications",
@@ -324,156 +309,35 @@ export const mainMachine =
               },
             },
           },
-          certificateSummary: {
+          submittingSelectedCertification: {
             invoke: {
-              src: "getCertification",
+              src: "updateCertification",
               onDone: [
                 {
-                  actions: assign({
-                    certification: (_, event) =>
-                      event.data.data.getCertification,
-                  }),
+                  actions: "navigatePrevious",
+                  target: "#mainMachine.projectHome.ready",
                 },
               ],
               onError: [
                 {
                   actions: assign({
                     error: (_, _event) =>
-                      "Une erreur est survenue lors de la récupération de la certification.",
+                      "Une erreur est survenue lors de la mise à jour de la certification.",
                   }),
+                  target: "retry",
                 },
               ],
             },
-            initial: "idle",
-            states: {
-              idle: {
-                on: {
-                  SUBMIT_CERTIFICATION: [
-                    {
-                      actions: [
-                        "navigateNext",
-                        "submitCertification",
-                        "resetOrganisms",
-                      ],
-                      target: "submittingChange",
-                    },
-                  ],
-                },
-              },
-              submittingChange: {
-                invoke: {
-                  src: "updateCertification",
-                  onDone: [
-                    {
-                      target: "leave",
-                    },
-                  ],
-                  onError: [
-                    {
-                      actions: assign({
-                        error: (_, _event) =>
-                          "Une erreur est survenue lors de la mise à jour de la certification.",
-                      }),
-                      target: "retry",
-                    },
-                  ],
-                },
-              },
-              retry: {
-                on: {
-                  SUBMIT_CERTIFICATION: {
-                    actions: [
-                      "navigateNext",
-                      "submitCertification",
-                      "resetOrganisms",
-                    ],
-                    target: "leave",
-                  },
-                },
-              },
-              leave: {
-                type: "final",
-              },
-            },
-            on: {
-              SHOW_CERTIFICATION_DETAILS: {
-                actions: "navigateNext",
-                target: "certificateDetails",
-              },
-              CLOSE_SELECTED_CERTIFICATION: {
-                actions: "navigateNext",
-                target: "searchResults",
-              },
-            },
-            onDone: [
-              { actions: "navigatePrevious", target: "projectHome.ready" },
-            ],
           },
-          certificateDetails: {
-            initial: "idle",
-            states: {
-              idle: {
-                on: {
-                  SUBMIT_CERTIFICATION: [
-                    {
-                      actions: [
-                        "navigatePrevious",
-                        "submitCertification",
-                        "resetOrganisms",
-                      ],
-                      target: "submittingChange",
-                    },
-                  ],
-                },
-              },
-              submittingChange: {
-                invoke: {
-                  src: "updateCertification",
-                  onDone: [
-                    {
-                      target: "leave",
-                    },
-                  ],
-                  onError: [
-                    {
-                      actions: assign({
-                        error: (_, _event) =>
-                          "Une erreur est survenue lors de la mise à jour de la certification.",
-                      }),
-                      target: "retry",
-                    },
-                  ],
-                },
-              },
-              retry: {
-                on: {
-                  SUBMIT_CERTIFICATION: {
-                    actions: [
-                      "navigatePrevious",
-                      "submitCertification",
-                      "resetOrganisms",
-                    ],
-                    target: "leave",
-                  },
-                },
-              },
-              leave: {
-                type: "final",
-              },
-            },
+          retry: {
             on: {
-              BACK: {
-                actions: "navigatePrevious",
-                target: "certificateSummary",
+              SUBMIT_CERTIFICATION: {
+                actions: ["submitCertification", "resetOrganisms"],
+                target: "#mainMachine.projectHome.ready",
               },
             },
-            onDone: [
-              {
-                actions: "navigatePrevious",
-                target: "projectHome.ready",
-              },
-            ],
           },
+          submissionHome: {},
           trainingProgramSummary: {
             initial: "idle",
             states: {
