@@ -12,6 +12,7 @@ module Page.Form exposing
 
 import Accessibility exposing (h2, h3, h4, h5)
 import Api.Token exposing (Token)
+import Array
 import BetaGouv.DSFR.Button as Button
 import BetaGouv.DSFR.Checkbox as Checkbox
 import BetaGouv.DSFR.Input as Input
@@ -23,7 +24,7 @@ import Data.Form.Helper exposing (booleanFromString, booleanToString)
 import Dict exposing (Dict)
 import File exposing (File)
 import Html exposing (Html, button, div, fieldset, input, label, legend, li, option, p, select, span, text, ul)
-import Html.Attributes exposing (class, disabled, for, id, multiple, name, placeholder, required, selected, type_, value)
+import Html.Attributes exposing (class, classList, disabled, for, id, multiple, name, placeholder, required, selected, type_, value)
 import Html.Events exposing (on, onInput, onSubmit)
 import Json.Decode
 import List.Extra
@@ -51,7 +52,7 @@ type Element
     | Empty
     | File String
     | Files String
-    | Heading String
+    | Heading String -- h3
     | Info String String
     | Input String
     | InputRequired String
@@ -62,8 +63,8 @@ type Element
     | Requirements String (List String)
     | Select String (List ( String, String ))
     | SelectOther String String String
-    | Section String
-    | Title String
+    | Section String -- h4
+    | Title String -- h5
     | Textarea String (Maybe String)
     | RadioList String (List ( String, String ))
 
@@ -72,7 +73,7 @@ type alias Form =
     { elements : List ( String, Element )
     , saveLabel : Maybe String
     , submitLabel : String
-    , title : String
+    , title : String -- h2
     }
 
 
@@ -238,14 +239,6 @@ viewForm :
     -> Html (Msg referential)
 viewForm referential status maybeError formData form saveButton submitButton =
     let
-        viewElement =
-            case status of
-                Editable ->
-                    viewEditableElement
-
-                ReadOnly ->
-                    viewReadOnlyElement
-
         currentForm =
             form formData referential
 
@@ -260,7 +253,7 @@ viewForm referential status maybeError formData form saveButton submitButton =
         legend
             [ class "fr-fieldset__legend" ]
             [ h2 [] [ text currentForm.title ] ]
-            :: List.map (viewElement formData) currentForm.elements
+            :: viewGroupedElements status formData currentForm.elements
             ++ [ case status of
                     Editable ->
                         div
@@ -288,6 +281,124 @@ viewForm referential status maybeError formData form saveButton submitButton =
                     Nothing ->
                         text ""
                ]
+
+
+viewGroupedElements : Status -> FormData -> List ( String, Element ) -> List (Html (Msg referential))
+viewGroupedElements status formData elements =
+    let
+        viewElement : FormData -> ( String, Element ) -> Html (Msg referential)
+        viewElement =
+            case status of
+                Editable ->
+                    viewEditableElement
+
+                ReadOnly ->
+                    viewReadOnlyElement
+
+        viewFieldsetElement : number -> Html msg -> Html msg
+        viewFieldsetElement level element =
+            if level > 3 then
+                element
+
+            else
+                div [ class "fr-fieldset__element" ] [ element ]
+
+        viewFieldset : Int -> List (Html msg) -> Html msg
+        viewFieldset level content =
+            case content of
+                head :: tail ->
+                    fieldset
+                        [ class "fr-fieldset mb-0" ]
+                        (head :: List.map (viewFieldsetElement level) tail)
+
+                [] ->
+                    text ""
+
+        traverse : List ( Int, List a ) -> ( Int, List a )
+        traverse l =
+            List.Extra.find (not << List.isEmpty << Tuple.second) l
+                |> Maybe.withDefault ( 4, [] )
+
+        groupHelper :
+            ( String, Element )
+            ->
+                { l1 : List (Html (Msg referential))
+                , l2 : List (Html (Msg referential))
+                , l3 : List (Html (Msg referential))
+                , elements : List (Html (Msg referential))
+                }
+            ->
+                { l1 : List (Html (Msg referential))
+                , l2 : List (Html (Msg referential))
+                , l3 : List (Html (Msg referential))
+                , elements : List (Html (Msg referential))
+                }
+        groupHelper element acc =
+            let
+                htmlElement =
+                    viewElement formData element
+            in
+            case isNewGroup element of
+                Just 1 ->
+                    let
+                        ( level, children ) =
+                            traverse [ ( 2, acc.l2 ), ( 3, acc.l3 ), ( 4, acc.elements ) ]
+                    in
+                    { acc
+                        | l1 = viewFieldset level (htmlElement :: children) :: acc.l1
+                        , l2 = []
+                        , l3 = []
+                        , elements = []
+                    }
+
+                Just 2 ->
+                    let
+                        ( level, children ) =
+                            traverse [ ( 3, acc.l3 ), ( 4, acc.elements ) ]
+                    in
+                    { acc
+                        | l2 = viewFieldset level (htmlElement :: children) :: acc.l2
+                        , l3 = []
+                        , elements = []
+                    }
+
+                Just 3 ->
+                    { acc
+                        | l3 = viewFieldset 4 (htmlElement :: acc.elements) :: acc.l3
+                        , elements = []
+                    }
+
+                Just _ ->
+                    acc
+
+                Nothing ->
+                    { acc | elements = htmlElement :: acc.elements }
+
+        isNewGroup : ( String, Element ) -> Maybe Int
+        isNewGroup ( _, element ) =
+            case element of
+                Heading _ ->
+                    Just 1
+
+                Section _ ->
+                    Just 2
+
+                Title _ ->
+                    Just 3
+
+                _ ->
+                    Nothing
+
+        groupedElements =
+            List.foldr groupHelper { l1 = [], l2 = [], l3 = [], elements = [] } elements
+    in
+    traverse
+        [ ( 1, groupedElements.l1 )
+        , ( 2, groupedElements.l2 )
+        , ( 3, groupedElements.l3 )
+        , ( 4, groupedElements.elements )
+        ]
+        |> Tuple.second
 
 
 group : List (Html msg) -> Html msg
@@ -409,10 +520,11 @@ viewEditableElement formData ( elementId, element ) =
             div [ class "fr-fieldset__element mb-2" ] [ infoView label value ]
 
         ReadOnlyElement readOnlyElement ->
-            viewReadOnlyElement formData ( elementId, readOnlyElement )
+            div [ class "fr-fieldset__element mb-4" ] <|
+                [ viewReadOnlyElement formData ( elementId, readOnlyElement ) ]
 
         ReadOnlyElements readOnlyElements ->
-            div [ class "fr-fieldset__element mb-4 -ml-2" ] <|
+            div [ class "fr-fieldset__element mb-4" ] <|
                 List.map
                     (viewReadOnlyElement formData)
                     readOnlyElements
@@ -482,31 +594,25 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> Maybe.withDefault (defaultValue element)
 
         defaultView label v =
-            div [ class "fr-fieldset__element mb-1" ] [ infoView label v ]
+            div [] [ infoView label v ]
     in
     case element of
         Checkbox label ->
-            single
-                [ viewCheckbox elementId label dataOrDefault
-                    |> Checkbox.singleWithDisabled True
-                    |> Checkbox.viewSingle
-                ]
+            viewCheckbox elementId label dataOrDefault
+                |> Checkbox.singleWithDisabled True
+                |> Checkbox.viewSingle
 
         CheckboxList label choices ->
-            group
-                [ (\choiceId -> get choiceId formData)
-                    |> viewCheckboxList elementId label choices
-                    |> Checkbox.groupWithDisabled True
-                    |> Checkbox.viewGroup
-                ]
+            (\choiceId -> get choiceId formData)
+                |> viewCheckboxList elementId label choices
+                |> Checkbox.groupWithDisabled True
+                |> Checkbox.viewGroup
 
         RadioList label choices ->
-            group
-                [ get elementId formData
-                    |> viewRadioList elementId label choices
-                    |> Radio.withDisabled True
-                    |> Radio.view
-                ]
+            get elementId formData
+                |> viewRadioList elementId label choices
+                |> Radio.withDisabled True
+                |> Radio.view
 
         Date label ->
             defaultView label dataOrDefault
@@ -521,14 +627,10 @@ viewReadOnlyElement formData ( elementId, element ) =
             text ""
 
         Heading title ->
-            legend
-                [ class "fr-fieldset__legend" ]
-                [ h3 [] [ text title ] ]
+            h3 [ class "mt-8" ] [ text title ]
 
         Title title ->
-            legend
-                [ class "fr-fieldset__legend mt-6 mb-1" ]
-                [ h5 [] [ text title ] ]
+            h5 [ class "mt-4 mb-2" ] [ text title ]
 
         Info label value ->
             defaultView label value
@@ -552,7 +654,7 @@ viewReadOnlyElement formData ( elementId, element ) =
             viewReadOnlyElement formData ( elementId, readOnlyElement )
 
         ReadOnlyElements readOnlyElements ->
-            div [ class "fr-fieldset__element mb-0 -ml-2" ] <|
+            div [] <|
                 List.map
                     (\e -> viewReadOnlyElement formData e)
                     readOnlyElements
@@ -561,17 +663,13 @@ viewReadOnlyElement formData ( elementId, element ) =
             text ""
 
         Section title ->
-            legend
-                [ class "fr-fieldset__legend mt-6 mb-0" ]
-                [ h4 [] [ text title ] ]
+            h4 [ class "mt-8 mb-2" ] [ text title ]
 
         Select label choices ->
-            single
-                [ List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices
-                    |> List.head
-                    |> Maybe.map (\( _, choice ) -> infoView label choice)
-                    |> Maybe.withDefault (text "")
-                ]
+            List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices
+                |> List.head
+                |> Maybe.map (\( _, choice ) -> infoView label choice)
+                |> Maybe.withDefault (text "")
 
         SelectOther selectId otherValue label ->
             case get selectId formData of
