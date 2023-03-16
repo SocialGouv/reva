@@ -118,7 +118,7 @@ function App() {
         "loadingCertifications",
         "searchResults",
         "searchResultsError",
-        "certificateSummary",
+        "submittingSelectedCertification",
       ].some(state.matches) && certificatesPage}
 
       {state.matches("loginHome") && loginHomePage()}
@@ -143,9 +143,6 @@ function App() {
 
       {state.matches("projectDroppedOut") &&
         projectDroppedOutPage(state.context.contact)}
-
-      {state.matches("certificateDetails") &&
-        certificateDetails(state.context.certification)}
 
       {state.matches("trainingProgramSummary") && (
         <TrainingProgramSummary
