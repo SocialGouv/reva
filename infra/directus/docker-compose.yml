@@ -1,0 +1,27 @@
+version: '3'
+services:
+  directus:
+    image: directus/directus:latest
+    ports:
+      - 8055:8055
+    network_mode: host
+    environment:
+      KEY: '255d861b-5ea1-5996-9aa3-922530ec40b1'
+      SECRET: '6116487b-cda1-52c2-b5b5-c8022c45e263'
+
+      PUBLIC_URL: http://localhost:8055
+
+      DB_CLIENT: pg
+      DB_CONNECTION_STRING: postgresql://reva:password@localhost:5444/reva-certif
+
+      ADMIN_EMAIL: vincent.tournebise@beta.gouv.fr
+      ADMIN_PASSWORD: lulz
+
+      AUTH_DISABLE_DEFAULT: true
+      AUTH_PROVIDERS: keycloak
+
+      AUTH_KEYCLOAK_DRIVER: 'openid'
+      AUTH_KEYCLOAK_CLIENT_ID: 'directus-dev'
+      AUTH_KEYCLOAK_CLIENT_SECRET: 'nhiHFS8jEk1flohVIugsIot87al2h9o1'
+      AUTH_KEYCLOAK_ISSUER_URL: 'https://auth.reva.incubateur.net/realms/reva-directus/.well-known/openid-configuration'
+      AUTH_KEYCLOAK_IDENTIFIER_KEY: 'email'
