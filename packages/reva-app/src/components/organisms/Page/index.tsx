@@ -16,7 +16,7 @@ export const Page = ({
 }: PageConfig) => {
   return (
     <div
-      className={`flex flex-col px-4 py-5 lg:pl-16 lg:pt-20 max-w-4xl ${
+      className={`flex flex-col px-4 pt-5 pb-32 lg:pl-16 lg:pt-20 max-w-4xl ${
         className || ""
       } `}
       {...props}
