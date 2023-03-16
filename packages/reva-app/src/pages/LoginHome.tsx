@@ -62,7 +62,7 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
             {state.context.error}
           </p>
         )}
-        <Button data-test={`login-home-submit`}>Envoyer</Button>
+        <Button data-test={`login-home-submit`}>Me connecter</Button>
       </form>
       <div className="border-t border-gray-200 pt-6">
         <button

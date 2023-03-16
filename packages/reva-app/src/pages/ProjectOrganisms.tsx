@@ -123,7 +123,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
         setOrganismId={setSelectedOrganismId}
       />
       <Button
-        className="mt-6 justify-center w-[100%]  md:w-min"
+        className="mt-6 justify-center w-[100%]  md:w-fit"
         data-test="project-organisms-submit-organism"
         disabled={!isOrganismsLoaded}
         nativeButtonProps={{
@@ -140,7 +140,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
           },
         }}
       >
-        Valider
+        Valider votre référent
       </Button>
     </Page>
   );

@@ -96,13 +96,13 @@ export const ProjectExperiences = ({
           </button>
         </div>
       </div>
-      <div className="bg-white flex pt-6 pb-12 px-12">
+      <div className="bg-white flex pt-6 pb-12">
         <Button
-          className="justify-center w-[100%] md:w-min"
+          className="justify-center w-[100%] md:w-fit"
           data-test="project-experiences-submit"
           onClick={() => send("SUBMIT_EXPERIENCES")}
         >
-          Valider
+          Valider mes expériences
         </Button>
       </div>
     </Page>

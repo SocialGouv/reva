@@ -43,11 +43,11 @@ export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
   return (
     <Page direction={state.context.direction}>
       <BackToHomeButton />
-      <h1 className="mt-4 text-4xl font-bold">Mon objectif</h1>
+      <h1 className="mt-4 text-4xl font-bold">Mes objectifs</h1>
       <p className="my-4 text-slate-800">Plusieurs choix possibles</p>
       {goalSet}
       <Button
-        className="mb-4 justify-center w-[100%]  md:w-min"
+        className="mb-4 justify-center w-[100%]  md:w-fit"
         data-test="project-goals-submit-goals"
         onClick={() =>
           send({
@@ -56,7 +56,7 @@ export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
           })
         }
       >
-        Continuer
+        Valider mes objectifs
       </Button>
       {state.matches("projectGoals.error") && (
         <p key="error" className="text-red-600 my-4 text-sm">

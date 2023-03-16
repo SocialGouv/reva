@@ -123,7 +123,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             {state.context.error}
           </p>
         )}
-        <Button data-test="project-contact-add">Valider</Button>
+        <Button data-test="project-contact-add">Créer mon compte</Button>
       </form>
       {!hasCandidacy && (
         <div className="border-t border-gray-200 pt-6">

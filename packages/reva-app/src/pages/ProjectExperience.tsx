@@ -116,10 +116,12 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
         )}
 
         <Button
-          className="mt-6 justify-center w-[100%]  md:w-min"
+          className="mt-6 justify-center w-[100%]  md:w-fit"
           data-test={`project-experience-${editedExperience ? "save" : "add"}`}
         >
-          {editedExperience ? "Valider" : "Ajouter"}
+          {editedExperience
+            ? "Valider mon expérience"
+            : "Ajouter mon expérience"}
         </Button>
       </form>
     </Page>
