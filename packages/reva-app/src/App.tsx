@@ -167,12 +167,12 @@ function App() {
   return (
     <div className="h-screen w-screen flex flex-col overflow-auto">
       <Header />
-      <div className="flex flex-1">
+      <main role="main" className="flex flex-1">
         <div className="bg-dsfrBlue-300 w-0 lg:w-[20%]" />
         <div className="relative flex flex-1 flex-col w-full">
           {pageContent}
         </div>
-      </div>
+      </main>
       <Footer />
     </div>
   );
