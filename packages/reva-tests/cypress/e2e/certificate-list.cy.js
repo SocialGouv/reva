@@ -28,11 +28,11 @@ context("Certificate list", () => {
     cy.get('[data-test="results"]')
       .children("li")
       .eq(0)
-      .should("have.text", "34691Titre 1");
+      .should("have.text", "34691Titre 1Disponible");
 
     cy.get('[data-test="results"]')
       .children("li")
       .eq(1)
-      .should("have.text", "34692Titre 2");
+      .should("have.text", "34692Titre 2Disponible");
   });
 });

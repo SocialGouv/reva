@@ -1,130 +1,212 @@
-import { Add } from "components/atoms/Icons";
-import { ReactNode } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import React from "react";
+import { useState } from "react";
 
-import certificationImg from "./certification.svg";
+import { Add } from "../../atoms/Icons";
+import { TextResult } from "../../atoms/TextResult";
+import { BasicBackButton } from "../../molecules/BackButton";
+import certificationImg from "./certification.png";
+import { transitionIn, transitionOut } from "./view";
+
+export type CardSize = "reduced" | "open";
+
+export const STATUS_AVAILABLE = "AVAILABLE";
+export const STATUS_SOON = "SOON";
+export const STATUS_INACTIVE = "INACTIVE";
+
+export type CardStatus =
+  | typeof STATUS_AVAILABLE
+  | typeof STATUS_SOON
+  | typeof STATUS_INACTIVE;
 
 interface CardProps {
   id: string;
-  codeRncp: string;
-  onClick?: () => void;
+  summary: string;
+  label: string;
+  status: CardStatus;
+  isSelectable: boolean;
+  onClose?: () => void;
+  onLearnMore?: () => void;
+  onOpen?: () => void;
+  initialSize?: CardSize;
   title: string;
 }
 
-const Hexagon = ({ className }: { className: string }) => (
-  <img
-    className={`absolute pointer-events-none z-10 rotate-3 ${className}`}
-    alt=""
-    role="presentation"
-    style={{
-      height: "162.5px",
-      width: "181.5px",
-    }}
-    src={certificationImg}
-  />
-);
-
-const Hexagons = () => (
-  <>
-    <Hexagon className="top-[64px] right-[-36px]" />
-    <Hexagon className="top-[142px] left-[-48px]" />
-    <Hexagon className="top-[238px] right-[-26px]" />
-  </>
-);
-
-const CardHeader = ({ children }: { children: ReactNode }) => (
-  <div className="flex flex-0 justify-end uppercase text-[9px] text-[#000091] font-bold">
-    {children}
-  </div>
-);
-
-const CardBody = ({ children }: { children: ReactNode }) => (
-  <div className="relative flex-1 bg-[#282848] rounded-xl mt-1 px-4 overflow-hidden">
-    <div className="relative flex flex-col space-y-3 z-20 mt-10">
-      {children}
-    </div>
-    <div className="absolute right-4 bottom-5 z-20 flex items-center justify-center w-[40px] h-[40px] bg-[#282848] text-white border-2 border-white rounded-full">
-      <Add width={18} height={18} />
-    </div>
-    <Hexagons />
-  </div>
-);
-
-const CardFooter = ({ children }: { children: ReactNode }) => (
-  <div
-    className="flex flex-0 justify-center uppercase text-[9px] font-bold  min-h-[13.5px]"
-    style={{ color: "#1B0D4C" }}
-  >
-    {children}
-  </div>
-);
-
-const CardWrapper = ({
-  children,
-  "data-test": dataTest,
-  "data-type": dataType,
-  onClick,
-}: {
-  children: ReactNode;
-  "data-test"?: string;
-  "data-type"?: string;
-  onClick?: () => void;
-}) => (
-  <div
-    data-test={dataTest}
-    data-type={dataType}
-    className="relative h-[315px] w-[288px] flex flex-col px-5 py-1 overflow-hidden cursor-pointer"
-    style={{ background: "rgba(0,0,0,0.03)" }}
-    onClick={onClick}
-  >
-    {children}
-  </div>
-);
-
-export const CardSkeleton = () => {
-  const titleSkeleton = (width: number) => (
-    <div
-      className={`animate-pulse rounded-full bg-current`}
-      style={{ width: `${width}px` }}
-    ></div>
-  );
-
+const CertificationStatus = (props: { status: CardStatus }) => {
   return (
-    <CardWrapper data-type="card-skeleton">
-      <CardHeader>
-        {/* <div>CAPMR</div> */}
-        {/* <div>France Compétences</div> */}
-        {/* <div>17163</div> */}
-        <div className="flex h-[12px]">{titleSkeleton(90)}</div>
-      </CardHeader>
-      <CardBody>
-        <div className="uppercase text-[9px] text-[#99E164]"></div>
-        <div className="flex text-white h-[20px]">{titleSkeleton(180)}</div>
-        <div className="flex text-white h-[20px]">{titleSkeleton(80)}</div>
-      </CardBody>
-
-      <CardFooter>{/* <div>CNEAP / XELYA-BCCA</div> */}</CardFooter>
-    </CardWrapper>
+    <div className="flex space-x-2 items-center text-xs uppercase font-medium">
+      <div
+        className={
+          `h-2 w-2 rounded-full ` +
+          (props.status === STATUS_AVAILABLE ? "bg-green-500" : "bg-red-500")
+        }
+      ></div>
+      <div
+        className={
+          props.status === STATUS_AVAILABLE ? "text-white" : "text-gray-400"
+        }
+      >
+        {props.status === STATUS_AVAILABLE ? "Disponible" : "Bientôt"}
+      </div>
+    </div>
   );
 };
 
-export const Card = (props: CardProps) => {
-  return (
-    <CardWrapper
-      data-type="card"
-      data-test={`certification-select-${props.id}`}
-      onClick={props.onClick}
-    >
-      <CardHeader>
-        {/* <div>CAPMR</div> */}
-        {/* <div>France Compétences</div> */}
-        <div>{props.codeRncp}</div>
-      </CardHeader>
-      <CardBody>
-        <div className="uppercase text-[9px] text-[#99E164]"></div>
-        <div className="text-white text-xl font-bold">{props.title}</div>
-      </CardBody>
+export const Card = React.forwardRef<HTMLLIElement, CardProps>(
+  (
+    {
+      summary,
+      id,
+      isSelectable,
+      label,
+      onClose = () => {},
+      onLearnMore = () => {},
+      onOpen = () => {},
+      title,
+      status,
+      initialSize = "reduced",
+      ...props
+    },
+    ref
+  ) => {
+    const [size, setSize] = useState<CardSize>(initialSize);
 
-      <CardFooter>{/* <div>CNEAP / XELYA-BCCA</div> */}</CardFooter>
-    </CardWrapper>
-  );
-};
+    const isReduced = size === "reduced";
+
+    const transition = isReduced ? transitionOut : transitionIn;
+
+    const fullScreenVariants = {
+      open: { y: 0, opacity: 1 },
+      closed: { y: 50, opacity: 1 },
+      exit: {
+        scale: [1, 0.94],
+        y: [0, 50],
+        transition: { duration: 0.03 },
+      },
+    };
+
+    // TODO: move this to an external component
+    const fullscreenDetails = (
+      <motion.div
+        variants={fullScreenVariants}
+        initial={initialSize === "open" || isReduced ? false : "closed"}
+        animate={isReduced ? "closed" : "open"}
+        exit="exit"
+        transition={transition}
+        className="overflow-x-hidden overflow-y-auto absolute inset-0 z-50 bg-slate-900"
+      >
+        <div
+          style={{
+            zIndex: 20,
+            height: "calc(100vh - 116px)",
+          }}
+        >
+          <div className="absolute top-6 z-50 w-full pl-12">
+            <BasicBackButton
+              color="light"
+              onClick={() => {
+                setSize("reduced");
+                onClose();
+              }}
+            />
+          </div>
+          <div className={`w-full px-12 mt-28 mb-4`}>
+            <TextResult size="large" title={title} color="light" />
+            <div>
+              <div className="mt-1 mb-4 font-bold text-white">{label}</div>
+              <p className="overflow-auto text-slate-400 text-base leading-normal transition-opacity">
+                {summary}
+              </p>
+            </div>
+            <button
+              data-test="certification-learn-more"
+              className="Mui block text-blue-500 py-4 underline"
+              onClick={onLearnMore}
+            >
+              Lire tous les détails
+            </button>
+          </div>
+          <img
+            className="pointer-events-none"
+            alt=""
+            role="presentation"
+            style={{
+              marginLeft: "-70px",
+              height: "174px",
+              width: "174px",
+            }}
+            src={certificationImg}
+          />
+        </div>
+      </motion.div>
+    );
+
+    const reducedInfo = (
+      <>
+        <motion.div
+          layout="position"
+          aria-label={title}
+          className={`absolute top-5 right-6 text-right font-bold grow ${
+            true ? "" : "pointer-events-none opacity-0"
+          }`}
+        >
+          {label}
+          <div
+            aria-hidden="true"
+            className="mt-4 rounded-full flex items-center justify-center h-[46px] w-[46px] bg-blue-500"
+          >
+            <div className="w-[18px]">
+              <Add />
+            </div>
+          </div>
+        </motion.div>
+        <motion.img
+          layout
+          className="absolute pointer-events-none"
+          alt=""
+          role="presentation"
+          style={{
+            left: "-43px",
+            top: "12px",
+            height: "104px",
+            width: "104px",
+          }}
+          src={certificationImg}
+        />
+        <motion.div layout className={"flex items-end h-full p-5"}>
+          <div className="mt-[102px] flex flex-col space-y-4">
+            <TextResult size="small" title={title} color="light" />
+            <CertificationStatus status={status} />
+          </div>
+        </motion.div>
+      </>
+    );
+
+    const clickHandler = () => {
+      if (isReduced) {
+        setSize("open");
+        onOpen();
+      }
+    };
+
+    return (
+      <li ref={ref}>
+        <motion.button
+          className="Mui relative block text-left w-full cursor-pointer overflow-hidden bg-slate-900 text-white rounded-2xl"
+          layout
+          transition={transition}
+          layoutDependency={size}
+          data-type="card"
+          data-test={`certification-select-${id}`}
+          tabIndex={isSelectable ? 0 : -1}
+          onClick={clickHandler}
+          whileTap={{ scale: isReduced ? 0.96 : 1 }}
+          {...props}
+        >
+          {reducedInfo}
+        </motion.button>
+        <AnimatePresence>{!isReduced && fullscreenDetails}</AnimatePresence>
+      </li>
+    );
+  }
+);

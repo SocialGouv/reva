@@ -1,11 +1,13 @@
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { useActor } from "@xstate/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Interpreter } from "xstate";
 
+import { Button } from "../components/atoms/Button";
 import { BackToHomeButton } from "../components/molecules/BackToHomeButton/BackToHomeButton";
 import { NameBadge } from "../components/molecules/NameBadge/NameBadge";
-import { Card, CardSkeleton } from "../components/organisms/Card";
+import { Card } from "../components/organisms/Card";
+import { CardSkeleton } from "../components/organisms/CardSkeleton";
 import { Page } from "../components/organisms/Page";
 import { Results } from "../components/organisms/Results";
 import { Certification } from "../interface";
@@ -17,11 +19,22 @@ interface Props {
 
 export const Certificates = ({ mainService }: Props) => {
   const [state, send] = useActor(mainService);
-  const UNKNOWN_DEPARTMENT = "unknown"
+
+  const resultsElement = useRef<HTMLDivElement | null>(null);
+  const currentCertificateElement = useRef<HTMLLIElement | null>(null);
 
   const [chosenDepartmentCode, setChosenDepartmentCode] = useState(
-    state.context.selectedDepartment?.code || UNKNOWN_DEPARTMENT
+    state.context.selectedDepartment?.code
   );
+
+  useEffect(() => {
+    if (resultsElement.current && currentCertificateElement.current) {
+      resultsElement.current.scrollTo(
+        0,
+        currentCertificateElement.current.offsetTop - 200
+      );
+    }
+  }, []);
 
   const selectsOptionsDepartments: { label: string; value: string }[] =
     state.context.departments
@@ -32,17 +45,61 @@ export const Certificates = ({ mainService }: Props) => {
       .sort((a, b) => new Intl.Collator("fr").compare(a.label, b.label));
 
   const CertificateCard = (certification: Certification) => {
+    const isSelected =
+      state.matches("certificateSummary") &&
+      (state.context.certification as Certification).id === certification.id;
+
     return (
       <Card
-        onClick={() => !state.matches({ certificateSummary: "submittingSelectedCertification" }) && send({ type: "SUBMIT_CERTIFICATION", certification })}
+        ref={isSelected ? currentCertificateElement : null}
+        initialSize={
+          isSelected && state.context.direction === "previous"
+            ? "open"
+            : "reduced"
+        }
+        onOpen={() => send({ type: "SELECT_CERTIFICATION", certification })}
+        onLearnMore={() =>
+          send({ type: "SHOW_CERTIFICATION_DETAILS", certification })
+        }
+        onClose={() => send("CLOSE_SELECTED_CERTIFICATION")}
         key={certification.id}
-        // isSelectable={state.matches("searchResults")}
+        isSelectable={state.matches("searchResults")}
         id={certification.id}
         title={certification.label}
-        codeRncp={certification.codeRncp}
+        label={certification.codeRncp}
+        summary={certification.summary}
+        status={certification.status}
       />
     );
   };
+
+  function candidateButton() {
+    const isVisible = state.matches("certificateSummary");
+    const certification = state.context.certification as Certification;
+    return (
+      <div
+        className={`absolute bottom-0 z-50 inset-x-0 p-12 ${
+          isVisible ? "bg-slate-900" : "transparent"
+        }`}
+      >
+        {isVisible && (
+          <Button
+            data-test="certification-save"
+            onClick={() =>
+              send({
+                type: "SUBMIT_CERTIFICATION",
+                certification,
+              })
+            }
+            loading={state.matches({ certificateSummary: "submittingChange" })}
+            label={"Valider"}
+            primary
+            size="large"
+          />
+        )}
+      </div>
+    );
+  }
 
   const displayCards = () => {
     if (state.matches("searchResultsError")) {
@@ -54,19 +111,24 @@ export const Certificates = ({ mainService }: Props) => {
     }
     if (state.matches("loadingCertifications")) {
       return [1, 2, 3, 4, 5].map((i) => (
-        <CardSkeleton key={`skeleton-${i}`} />
+        <CardSkeleton key={`skeleton-${i}`} size="small" />
       ));
     }
+
     return state.context.certifications
       .filter((certif) => certif.status !== "INACTIVE")
-      .map(CertificateCard)
-      .map((el) => <li>{el}</li>);
+      .map(CertificateCard);
   };
 
   return (
     <Page
       data-test="certificates"
       direction={state.context.direction}
+      className={
+        state.matches("certificateSummary")
+          ? "max-h-[800px] overflow-hidden"
+          : ""
+      }
     >
       <BackToHomeButton />
       <NameBadge className="mt-4" />
@@ -91,7 +153,7 @@ export const Certificates = ({ mainService }: Props) => {
           },
         }}
       >
-        <option value="unknown" disabled={true} hidden={true}>
+        <option value="unknown" disabled={true} hidden={true} selected>
           Mon département
         </option>
         {selectsOptionsDepartments.map((d) => (
@@ -100,13 +162,14 @@ export const Certificates = ({ mainService }: Props) => {
           </option>
         ))}
       </Select>
-      {(chosenDepartmentCode !== UNKNOWN_DEPARTMENT || !!state.context.selectedDepartment) && (
+      {(!!chosenDepartmentCode || !!state.context.selectedDepartment) && (
         <div>
-          <Results title="" listClassName="flex flex-wrap justify-center lg:justify-start items-center mb-4 gap-4">
+          <Results title="" listClassName="mb-4 space-y-8">
             {displayCards()}
           </Results>
         </div>
       )}
+      {candidateButton()}
     </Page>
   );
 };
