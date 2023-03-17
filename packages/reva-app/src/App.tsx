@@ -1,3 +1,4 @@
+import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import { Crisp } from "crisp-sdk-web";
 import { AnimatePresence } from "framer-motion";
 import { ProjectSubmissionConfirmation } from "pages/ProjectSubmissionConfirmation";
@@ -154,10 +155,26 @@ function App() {
 
   return (
     <div className="h-screen w-screen flex flex-col overflow-auto">
+      <SkipLinks
+        links={[
+          {
+            anchor: "#content",
+            label: "Contenu",
+          },
+          {
+            anchor: "#footer",
+            label: "Pied de page",
+          },
+        ]}
+      />
       <Header />
       <div className="flex flex-1">
         <div className="bg-dsfrBlue-300 w-0 lg:w-[20%]" />
-        <main role="main" className="relative flex flex-1 flex-col w-full">
+        <main
+          role="main"
+          id="content"
+          className="relative flex flex-1 flex-col w-full"
+        >
           {pageContent}
         </main>
       </div>
