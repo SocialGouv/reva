@@ -54,12 +54,15 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
       <form onSubmit={onSubmit} className="mb-6">
         <ErrorAlertFromState />
         <Input
+          hintText="Format attendu : nom@domaine.fr"
           nativeInputProps={{
             id: "email",
             ref: emailRef,
             name: "email",
             required: true,
-            placeholder: "votre@email.fr",
+            type: "email",
+            autoComplete: "email",
+            spellCheck: "false",
           }}
           label="Email"
         />

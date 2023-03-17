@@ -1,6 +1,6 @@
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 export const ErrorAlert = ({ message }: { message: string }) => (
-  <div role="alert" className="mb-8">
+  <div role="alert" className="my-8">
     <Alert
       description={message}
       severity="error"
