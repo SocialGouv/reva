@@ -12,7 +12,6 @@ module Page.Form exposing
 
 import Accessibility exposing (h2, h3, h4, h5)
 import Api.Token exposing (Token)
-import Array
 import BetaGouv.DSFR.Button as Button
 import BetaGouv.DSFR.Checkbox as Checkbox
 import BetaGouv.DSFR.Input as Input
@@ -24,7 +23,7 @@ import Data.Form.Helper exposing (booleanFromString, booleanToString)
 import Dict exposing (Dict)
 import File exposing (File)
 import Html exposing (Html, button, div, fieldset, input, label, legend, li, option, p, select, span, text, ul)
-import Html.Attributes exposing (class, classList, disabled, for, id, multiple, name, placeholder, required, selected, type_, value)
+import Html.Attributes exposing (class, disabled, for, id, multiple, name, placeholder, required, selected, type_, value)
 import Html.Events exposing (on, onInput, onSubmit)
 import Json.Decode
 import List.Extra
@@ -255,7 +254,7 @@ viewForm referential status maybeError formData form saveButton submitButton =
                 legend
                     [ class "fr-fieldset__legend -ml-2" ]
                     [ h2 [] [ text currentForm.title ] ]
-                    :: viewGroupedElements status formData currentForm.elements
+                    :: viewFieldsets status formData currentForm.elements
                     ++ [ div
                             [ class "mt-8 pb-4 flex justify-end pr-2 w-full" ]
                             [ saveButton
@@ -287,146 +286,6 @@ viewForm referential status maybeError formData form saveButton submitButton =
                     :: List.map (viewReadOnlyElement formData) currentForm.elements
 
 
-viewGroupedElements : Status -> FormData -> List ( String, Element ) -> List (Html (Msg referential))
-viewGroupedElements status formData elements =
-    let
-        viewElement : FormData -> ( String, Element ) -> Html (Msg referential)
-        viewElement =
-            case status of
-                Editable ->
-                    viewEditableElement
-
-                ReadOnly ->
-                    viewReadOnlyElement
-
-        viewFieldsetElement : number -> Html msg -> Html msg
-        viewFieldsetElement level element =
-            if level > 3 then
-                element
-
-            else
-                div [ class "fr-fieldset__element" ] [ element ]
-
-        viewFieldset : Int -> List (Html msg) -> Html msg
-        viewFieldset level content =
-            case content of
-                head :: tail ->
-                    fieldset
-                        [ class "fr-fieldset mb-0" ]
-                        (head :: List.map (viewFieldsetElement level) tail)
-
-                [] ->
-                    text ""
-
-        traverse : List ( Int, List a ) -> ( Int, List a )
-        traverse l =
-            List.Extra.find (not << List.isEmpty << Tuple.second) l
-                |> Maybe.withDefault ( 4, [] )
-
-        groupHelper :
-            ( String, Element )
-            ->
-                { l1 : List (Html (Msg referential))
-                , l2 : List (Html (Msg referential))
-                , l3 : List (Html (Msg referential))
-                , elements : List (Html (Msg referential))
-                }
-            ->
-                { l1 : List (Html (Msg referential))
-                , l2 : List (Html (Msg referential))
-                , l3 : List (Html (Msg referential))
-                , elements : List (Html (Msg referential))
-                }
-        groupHelper element acc =
-            let
-                htmlElement =
-                    viewElement formData element
-            in
-            case isNewGroup element of
-                Just 1 ->
-                    let
-                        ( level, children ) =
-                            traverse [ ( 2, acc.l2 ), ( 3, acc.l3 ), ( 4, acc.elements ) ]
-                    in
-                    { acc
-                        | l1 = viewFieldset level (htmlElement :: children) :: acc.l1
-                        , l2 = []
-                        , l3 = []
-                        , elements = []
-                    }
-
-                Just 2 ->
-                    let
-                        ( level, children ) =
-                            traverse [ ( 3, acc.l3 ), ( 4, acc.elements ) ]
-                    in
-                    { acc
-                        | l2 = viewFieldset level (htmlElement :: children) :: acc.l2
-                        , l3 = []
-                        , elements = []
-                    }
-
-                Just 3 ->
-                    { acc
-                        | l3 = viewFieldset 4 (htmlElement :: acc.elements) :: acc.l3
-                        , elements = []
-                    }
-
-                Just _ ->
-                    acc
-
-                Nothing ->
-                    { acc | elements = htmlElement :: acc.elements }
-
-        isNewGroup : ( String, Element ) -> Maybe Int
-        isNewGroup ( _, element ) =
-            case element of
-                Heading _ ->
-                    Just 1
-
-                Section _ ->
-                    Just 2
-
-                Title _ ->
-                    Just 3
-
-                _ ->
-                    Nothing
-
-        groupedElements =
-            List.foldr groupHelper { l1 = [], l2 = [], l3 = [], elements = [] } elements
-    in
-    traverse
-        [ ( 1, groupedElements.l1 )
-        , ( 2, groupedElements.l2 )
-        , ( 3, groupedElements.l3 )
-        , ( 4, groupedElements.elements )
-        ]
-        |> Tuple.second
-
-
-group : List (Html msg) -> Html msg
-group =
-    div [ class "fr-fieldset__element mt-2 -mb-3" ]
-
-
-single : List (Html msg) -> Html msg
-single =
-    div [ class "fr-fieldset__element" ]
-
-
-infoView : String -> String -> Html msg
-infoView s d =
-    div [ class "text-lg" ]
-        [ if s /= "" then
-            label [] [ text s, text " : " ]
-
-          else
-            text ""
-        , span [] [ text d ]
-        ]
-
-
 viewEditableElement : FormData -> ( String, Element ) -> Html (Msg referential)
 viewEditableElement formData ( elementId, element ) =
     let
@@ -454,27 +313,27 @@ viewEditableElement formData ( elementId, element ) =
     in
     case element of
         Checkbox label ->
-            single
+            viewFieldsetElement
                 [ viewCheckbox elementId label dataOrDefault
                     |> Checkbox.viewSingle
                 ]
 
         CheckboxList label choices ->
-            group
+            viewFieldsetComplexElement
                 [ (\choiceId -> get choiceId formData)
                     |> viewCheckboxList elementId label choices
                     |> Checkbox.viewGroup
                 ]
 
         RadioList label choices ->
-            group
+            viewFieldsetComplexElement
                 [ get elementId formData
                     |> viewRadioList elementId label choices
                     |> Radio.view
                 ]
 
         Date label ->
-            single
+            viewFieldsetElement
                 [ inputView label Input.date [] ]
 
         Empty ->
@@ -483,12 +342,12 @@ viewEditableElement formData ( elementId, element ) =
         File label ->
             viewInputFiles False elementId
                 |> withLabel label
-                |> single
+                |> viewFieldsetElement
 
         Files label ->
             viewInputFiles True elementId
                 |> withLabel label
-                |> single
+                |> viewFieldsetElement
 
         Heading title ->
             legend
@@ -501,27 +360,27 @@ viewEditableElement formData ( elementId, element ) =
                 [ h5 [] [ text title ] ]
 
         Input label ->
-            single
+            viewFieldsetElement
                 [ inputView label identity [] ]
 
         InputRequired label ->
-            single
+            viewFieldsetElement
                 [ inputView (label ++ " *") identity [ required True ] ]
 
         Number label ->
-            single
+            viewFieldsetElement
                 [ inputView label Input.number [ Html.Attributes.min "0" ] ]
 
         Price label ->
-            single
+            viewFieldsetElement
                 [ inputView label Input.number [ Html.Attributes.min "0", Html.Attributes.step "0.01" ] ]
 
         Textarea label placeholder ->
-            single
+            viewFieldsetElement
                 [ textareaView label placeholder ]
 
         Info label value ->
-            div [ class "fr-fieldset__element mb-2" ] [ infoView label value ]
+            div [ class "fr-fieldset__element mb-2" ] [ viewInfo label value ]
 
         ReadOnlyElement readOnlyElement ->
             div [ class "fr-fieldset__element mb-4" ] <|
@@ -538,7 +397,7 @@ viewEditableElement formData ( elementId, element ) =
                 viewRule rule =
                     li [ class "mb-1" ] [ text rule ]
             in
-            single
+            viewFieldsetElement
                 [ div
                     [ class "max-w-lg bg-gray-100 px-5 py-4 rounded-lg"
                     , class "text-sm text-gray-600 mb-8"
@@ -556,7 +415,7 @@ viewEditableElement formData ( elementId, element ) =
                 [ h4 [] [ text title ] ]
 
         Select label choices ->
-            single
+            viewFieldsetElement
                 [ div
                     [ class "fr-select-group" ]
                     [ labelView elementId "" label
@@ -581,7 +440,7 @@ viewEditableElement formData ( elementId, element ) =
             case get selectId formData of
                 Just selectedValue ->
                     if selectedValue == otherValue then
-                        single [ textareaView label Nothing ]
+                        viewFieldsetElement [ textareaView label Nothing ]
 
                     else
                         text ""
@@ -598,7 +457,7 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> Maybe.withDefault (defaultValue element)
 
         defaultView label v =
-            div [] [ infoView label v ]
+            div [] [ viewInfo label v ]
     in
     case element of
         Checkbox label ->
@@ -672,7 +531,7 @@ viewReadOnlyElement formData ( elementId, element ) =
         Select label choices ->
             List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices
                 |> List.head
-                |> Maybe.map (\( _, choice ) -> infoView label choice)
+                |> Maybe.map (\( _, choice ) -> viewInfo label choice)
                 |> Maybe.withDefault (text "")
 
         SelectOther selectId otherValue label ->
@@ -814,6 +673,195 @@ viewInputFiles acceptMultipleFiles elementId =
         , class "hover:file:bg-gray-800"
         ]
         []
+
+
+viewInfo : String -> String -> Html msg
+viewInfo s d =
+    div [ class "text-lg" ]
+        [ if s /= "" then
+            label [] [ text s, text " : " ]
+
+          else
+            text ""
+        , span [] [ text d ]
+        ]
+
+
+
+-- Fieldsets view
+
+
+{-| Group common form elements into fieldsets for better accessibility
+
+Example:
+
+    fieldset
+        [ h2, h3, h4, element a, h4, element b, element c, h3, element d, element e ]
+
+    Becomes:
+
+    fieldset
+        [ h2
+        , element
+            [ fieldset
+                [ h3
+                , element
+                    [ fieldset
+                        [ h4
+                        , element a
+                        ]
+                    ]
+                , element
+                    [ fieldset
+                        [ h4
+                        , element b
+                        , element c
+                        ]
+                    ]
+                ]
+            ]
+        , element
+            [ fieldset
+                [ h3
+                , element d
+                , element e
+                ]
+            ]
+        ]
+
+-}
+viewFieldsets : Status -> FormData -> List ( String, Element ) -> List (Html (Msg referential))
+viewFieldsets status formData elements =
+    let
+        viewMaybeFieldsetElement : number -> Html msg -> Html msg
+        viewMaybeFieldsetElement level element =
+            if level > 3 then
+                -- We don't want to wrap again leaf elements
+                element
+
+            else
+                viewFieldsetElement [ element ]
+
+        viewFieldset : Int -> List (Html msg) -> Html msg
+        viewFieldset level content =
+            case content of
+                head :: tail ->
+                    fieldset
+                        [ class "fr-fieldset mb-0" ]
+                        (head :: List.map (viewMaybeFieldsetElement level) tail)
+
+                [] ->
+                    text ""
+
+        -- Helper to find the group of elements to wrap. Read example below.
+        traverse : List ( Int, List a ) -> ( Int, List a )
+        traverse l =
+            List.Extra.find (not << List.isEmpty << Tuple.second) l
+                |> Maybe.withDefault ( 4, [] )
+
+        groupHelper :
+            ( String, Element )
+            ->
+                { l1 : List (Html (Msg referential))
+                , l2 : List (Html (Msg referential))
+                , l3 : List (Html (Msg referential))
+                , elements : List (Html (Msg referential))
+                }
+            ->
+                { l1 : List (Html (Msg referential))
+                , l2 : List (Html (Msg referential))
+                , l3 : List (Html (Msg referential))
+                , elements : List (Html (Msg referential))
+                }
+        groupHelper element acc =
+            let
+                htmlElement =
+                    viewEditableElement formData element
+            in
+            case isNewGroup element of
+                Just 1 ->
+                    let
+                        ( level, children ) =
+                            {--In the following example, we won't have level-2 and level-3 elements to wrap:
+                                        
+                                fieldset
+                                    [ h3
+                                    , element a
+                                    , element b
+                                    ]
+                                        
+                            So we traverse each possible level until we find elements to include in the fieldset.-}
+                            traverse [ ( 2, acc.l2 ), ( 3, acc.l3 ), ( 4, acc.elements ) ]
+                    in
+                    { acc
+                        | l1 = viewFieldset level (htmlElement :: children) :: acc.l1
+                        , l2 = []
+                        , l3 = []
+                        , elements = []
+                    }
+
+                Just 2 ->
+                    let
+                        ( level, children ) =
+                            traverse [ ( 3, acc.l3 ), ( 4, acc.elements ) ]
+                    in
+                    { acc
+                        | l2 = viewFieldset level (htmlElement :: children) :: acc.l2
+                        , l3 = []
+                        , elements = []
+                    }
+
+                Just 3 ->
+                    { acc
+                        | l3 = viewFieldset 4 (htmlElement :: acc.elements) :: acc.l3
+                        , elements = []
+                    }
+
+                Just _ ->
+                    acc
+
+                Nothing ->
+                    { acc | elements = htmlElement :: acc.elements }
+
+        isNewGroup : ( String, Element ) -> Maybe Int
+        isNewGroup ( _, element ) =
+            case element of
+                Heading _ ->
+                    Just 1
+
+                Section _ ->
+                    Just 2
+
+                Title _ ->
+                    Just 3
+
+                _ ->
+                    Nothing
+
+        groupedElements =
+            List.foldr groupHelper { l1 = [], l2 = [], l3 = [], elements = [] } elements
+    in
+    traverse
+        [ ( 1, groupedElements.l1 )
+        , ( 2, groupedElements.l2 )
+        , ( 3, groupedElements.l3 )
+        , ( 4, groupedElements.elements )
+        ]
+        |> Tuple.second
+
+
+{-| Wrap a complex element that already have internal margins, like radio or checkbox list
+-}
+viewFieldsetComplexElement : List (Html msg) -> Html msg
+viewFieldsetComplexElement =
+    div [ class "fr-fieldset__element mt-2 -mb-3" ]
+
+
+{-| Wrap a simple element like input or textarea
+-}
+viewFieldsetElement : List (Html msg) -> Html msg
+viewFieldsetElement =
+    div [ class "fr-fieldset__element" ]
 
 
 
