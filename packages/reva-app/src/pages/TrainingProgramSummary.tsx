@@ -2,6 +2,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { useActor } from "@xstate/react";
 import { BackToHomeButton } from "components/molecules/BackToHomeButton/BackToHomeButton";
+import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/ErrorAlertFromState";
 import { ReactNode, useReducer } from "react";
 import { Interpreter } from "xstate";
 
@@ -93,6 +94,8 @@ export const TrainingProgramSummary = ({
       <h1 className="mt-4 text-3xl font-bold">
         {isTrainingConfirmed ? "Votre parcours" : "Valider votre parcours"}
       </h1>
+
+      <ErrorAlertFromState />
 
       <p className="text-dsfrGray-800 mt-6">
         Suite à votre rendez-vous de faisabilité avec votre Architecte de
@@ -237,14 +240,6 @@ export const TrainingProgramSummary = ({
         >
           Valider votre parcours
         </Button>
-      )}
-
-      {state.context.error ? (
-        <p key="error" className="text-red-600 mt-4 text-sm">
-          {state.context.error}
-        </p>
-      ) : (
-        <></>
       )}
     </Page>
   );

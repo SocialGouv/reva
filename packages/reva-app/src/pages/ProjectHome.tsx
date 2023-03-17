@@ -1,4 +1,5 @@
 import { useActor } from "@xstate/react";
+import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/ErrorAlertFromState";
 import { ProjectTimeline } from "components/organisms/ProjectTimeline/ProjectTimeline";
 import { Interpreter } from "xstate";
 
@@ -32,7 +33,7 @@ export const ProjectHome = ({
       className="absolute ml-[-16px] mt-[-16px] lg:ml-[-64px] lg:mt-[-80px]  w-full  bg-neutral-100 h-full grow flex flex-col text-center items-center justify-center px-10"
     >
       <Header label="Oups..." size="small" />
-      <p>{state.context.error}</p>
+      <ErrorAlertFromState />
       <div className="mt-8">
         <Button
           data-test="submission-home-retry-candidate"

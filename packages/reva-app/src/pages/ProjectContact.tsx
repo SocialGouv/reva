@@ -1,6 +1,7 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { useActor } from "@xstate/react";
+import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/ErrorAlertFromState";
 import { useRef } from "react";
 import { Interpreter } from "xstate";
 
@@ -72,6 +73,10 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
         </>
       )}
       <form onSubmit={onSubmit} className="mb-6">
+        {state.context.error && state.context.error !== INVALID_TOKEN_ERROR && (
+          <ErrorAlertFromState />
+        )}
+
         <Input
           label="Prénom"
           nativeInputProps={{
@@ -118,11 +123,6 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           }}
         />
 
-        {state.context.error && state.context.error !== INVALID_TOKEN_ERROR && (
-          <p key="error" className="text-red-600 my-4 text-sm">
-            {state.context.error}
-          </p>
-        )}
         <Button data-test="project-contact-add">Créer mon compte</Button>
       </form>
       {!hasCandidacy && (

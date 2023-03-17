@@ -1,6 +1,7 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { useActor } from "@xstate/react";
+import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/ErrorAlertFromState";
 import { useRef } from "react";
 import { Interpreter } from "xstate";
 
@@ -51,6 +52,7 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
         lien vous sera envoyé afin de retrouver votre candidature.
       </p>
       <form onSubmit={onSubmit} className="mb-6">
+        <ErrorAlertFromState />
         <Input
           nativeInputProps={{
             id: "email",
@@ -61,11 +63,6 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
           }}
           label="Email"
         />
-        {state.context.error && (
-          <p key="error" className="text-red-600 my-4 text-sm">
-            {state.context.error}
-          </p>
-        )}
         <Button data-test={`login-home-submit`}>Me connecter</Button>
       </form>
       <div className="border-t border-gray-200 pt-6">

@@ -1,5 +1,6 @@
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { useActor } from "@xstate/react";
+import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/ErrorAlertFromState";
 import { useState } from "react";
 import { Interpreter } from "xstate";
 
@@ -50,11 +51,7 @@ export const Certificates = ({ mainService }: Props) => {
 
   const displayCards = () => {
     if (state.matches("searchResultsError")) {
-      return (
-        <p key="error" className="text-red-600 mt-4 text-sm">
-          {state.context.error}
-        </p>
-      );
+      return <ErrorAlertFromState />;
     }
     if (state.matches("loadingCertifications")) {
       return [1, 2, 3, 4, 5].map((i) => <CardSkeleton key={`skeleton-${i}`} />);

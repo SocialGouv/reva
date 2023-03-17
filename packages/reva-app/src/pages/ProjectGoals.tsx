@@ -1,6 +1,7 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { useActor } from "@xstate/react";
+import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/ErrorAlertFromState";
 import { useState } from "react";
 import { Interpreter } from "xstate";
 
@@ -45,6 +46,7 @@ export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
       <BackToHomeButton />
       <h1 className="mt-4 text-4xl font-bold">Mes objectifs</h1>
       <p className="my-4 text-slate-800">Plusieurs choix possibles</p>
+      {state.matches("projectGoals.error") && <ErrorAlertFromState />}
       {goalSet}
       <Button
         className="mb-4 justify-center w-[100%]  md:w-fit"
@@ -58,11 +60,6 @@ export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
       >
         Valider mes objectifs
       </Button>
-      {state.matches("projectGoals.error") && (
-        <p key="error" className="text-red-600 my-4 text-sm">
-          {state.context.error}
-        </p>
-      )}
     </Page>
   );
 };
