@@ -7,7 +7,7 @@ export const ProjectSubmissionConfirmation = () => {
   const { mainService } = useMainMachineContext();
 
   return (
-    <Page title="envoi de votre candidature" direction="next">
+    <Page title="Envoi de votre candidature" direction="next">
       <BackToHomeButton />
       <h1 className="text-2xl text-black mt-6">Envoi de votre candidature</h1>
       <p className="mt-6">

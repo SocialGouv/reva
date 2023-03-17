@@ -25,7 +25,7 @@ export const Page = ({
       {...props}
     >
       <Helmet>
-        <title>{title}</title>
+        <title>{title} - Reva - l'expérimentation de la VAE</title>
       </Helmet>
       {children}
     </div>

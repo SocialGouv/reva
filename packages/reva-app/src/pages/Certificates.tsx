@@ -65,7 +65,7 @@ export const Certificates = ({ mainService }: Props) => {
   return (
     <Page
       data-test="certificates"
-      title="choix de votre diplôme"
+      title="Choix du diplôme"
       direction={state.context.direction}
     >
       <BackToHomeButton />

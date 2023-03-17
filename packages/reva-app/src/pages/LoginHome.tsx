@@ -40,7 +40,7 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
   return (
     <Page
       data-test="login-home"
-      title="connexion"
+      title="Connexion"
       direction={state.context.direction}
     >
       <h1 className="text-3xl font-bold text-dsfrBlue-500">

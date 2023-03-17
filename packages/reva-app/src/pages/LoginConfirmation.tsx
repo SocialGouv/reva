@@ -14,7 +14,7 @@ export const LoginConfirmation = ({ mainService }: LoginConfirmationProps) => {
   return (
     <Page
       data-test="login-confirmation"
-      title="confirmation de connexion"
+      title="Confirmation de connexion"
       direction={state.context.direction}
     >
       <h1 className="text-3xl font-bold text-dsfrBlue-500">Merci !</h1>

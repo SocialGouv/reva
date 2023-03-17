@@ -80,7 +80,10 @@ export const ProjectHome = ({
   );
 
   return (
-    <Page title="votre projet" direction={state.context.direction}>
+    <Page
+      title="Démarrer et suivre votre VAE"
+      direction={state.context.direction}
+    >
       {(state.matches({ projectHome: "loading" }) ||
         state.matches({ projectHome: "fakeLoading" })) &&
         loadingScreen}

@@ -54,7 +54,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
   const emailRef = useRef<HTMLInputElement>(null);
 
   return (
-    <Page title="création de compte" direction={state.context.direction}>
+    <Page title="Création de compte" direction={state.context.direction}>
       {hasCandidacy ? (
         <></>
       ) : state.context.error === INVALID_TOKEN_ERROR ? (

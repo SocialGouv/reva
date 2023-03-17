@@ -42,7 +42,7 @@ export const ProjectGoals = ({ mainService }: ProjectGoalsProps) => {
   );
 
   return (
-    <Page title="vos objectifs" direction={state.context.direction}>
+    <Page title="Vos objectifs" direction={state.context.direction}>
       <BackToHomeButton />
       <h1 className="mt-4 text-4xl font-bold">Mes objectifs</h1>
       <p className="my-4 text-slate-800">Plusieurs choix possibles</p>

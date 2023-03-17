@@ -56,7 +56,7 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
   const editedExperience = state.context.experiences.edited;
 
   return (
-    <Page title="détail d'une expérience" direction={state.context.direction}>
+    <Page title="Détail d'une expérience" direction={state.context.direction}>
       <BackButton />
       <h1 className="mt-4 mb-6 text-3xl font-bold text-black">
         Ajouter une Nouvelle expérience
