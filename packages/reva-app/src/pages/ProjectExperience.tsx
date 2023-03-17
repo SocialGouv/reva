@@ -58,8 +58,8 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
   return (
     <Page title="détail d'une expérience" direction={state.context.direction}>
       <BackButton />
-      <h1 className="my-4 text-3xl font-bold text-black">
-        Nouvelle expérience
+      <h1 className="mt-4 mb-6 text-3xl font-bold text-black">
+        Ajouter une Nouvelle expérience
       </h1>
       <p className="text-xs text-dsfrGray-500">
         Il peut s’agir d’une expérience professionnelle, bénévole, d’un stage ou
@@ -67,57 +67,61 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
       </p>
       <FormOptionalFieldsDisclaimer className="my-4" />
 
-      <form onSubmit={onSubmit} className="mt-4 space-y-6">
+      <form onSubmit={onSubmit} className="mt-2 space-y-6">
         {state.matches("projectExperience.error") && <ErrorAlertFromState />}
+        <fieldset>
+          <legend>
+            <h2 className="mt-2 mb-4 text-lg">Nouvelle expérience</h2>
+          </legend>
 
-        <Input
-          label="Intitulé de l'experience"
-          nativeInputProps={{
-            name: "title",
-            required: true,
-            defaultValue: editedExperience?.title,
-          }}
-        />
-        <Input
-          label="Date de début"
-          nativeInputProps={{
-            name: "startedAt",
-            defaultValue: editedExperience
-              ? editedExperience.startedAt.toISOString().slice(0, -14)
-              : "2020-01-31",
-            type: "date",
-          }}
-        />
-        <label htmlFor="duration" className="fr-label"></label>
+          <Input
+            label="Intitulé de l'experience"
+            nativeInputProps={{
+              name: "title",
+              required: true,
+              defaultValue: editedExperience?.title,
+            }}
+          />
+          <Input
+            label="Date de début"
+            nativeInputProps={{
+              name: "startedAt",
+              defaultValue: editedExperience
+                ? editedExperience.startedAt.toISOString().slice(0, -14)
+                : "2020-01-31",
+              type: "date",
+            }}
+          />
+          <label htmlFor="duration" className="fr-label"></label>
 
-        <Select
-          label="Durée (optionnel)"
-          hint="Pendant combien de temps avez-vous exercé ?"
-          nativeSelectProps={{
-            name: "duration",
-            defaultValue: editedExperience?.duration,
-          }}
-        >
-          <option value="unknown" disabled={true} hidden={true} selected>
-            Sélectionnez une option
-          </option>
-          {durationOptions.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
+          <Select
+            label="Durée (optionnel)"
+            hint="Pendant combien de temps avez-vous exercé ?"
+            nativeSelectProps={{
+              name: "duration",
+              defaultValue: editedExperience?.duration,
+            }}
+          >
+            <option value="unknown" disabled={true} hidden={true} selected>
+              Sélectionnez une option
             </option>
-          ))}
-        </Select>
+            {durationOptions.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </Select>
 
-        <Input
-          textArea
-          label="Description du poste (optionnel)"
-          nativeTextAreaProps={{
-            name: "description",
-            defaultValue: editedExperience?.description,
-            rows: 5,
-          }}
-        />
-
+          <Input
+            textArea
+            label="Description du poste (optionnel)"
+            nativeTextAreaProps={{
+              name: "description",
+              defaultValue: editedExperience?.description,
+              rows: 5,
+            }}
+          />
+        </fieldset>
         <Button
           className="mt-6 justify-center w-[100%]  md:w-fit"
           data-test={`project-experience-${editedExperience ? "save" : "add"}`}
