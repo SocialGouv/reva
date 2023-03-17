@@ -24,6 +24,7 @@ export const ProjectDroppedOut = ({
   return (
     <Page
       data-test="home-project-dropped-out"
+      title="abandon de la candidature"
       className="z-[80] overflow-hidden h-full flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >

@@ -17,7 +17,7 @@ interface Props {
 
 export const Certificates = ({ mainService }: Props) => {
   const [state, send] = useActor(mainService);
-  const UNKNOWN_DEPARTMENT = "unknown"
+  const UNKNOWN_DEPARTMENT = "unknown";
 
   const [chosenDepartmentCode, setChosenDepartmentCode] = useState(
     state.context.selectedDepartment?.code || UNKNOWN_DEPARTMENT
@@ -34,7 +34,11 @@ export const Certificates = ({ mainService }: Props) => {
   const CertificateCard = (certification: Certification) => {
     return (
       <Card
-        onClick={() => !state.matches({ certificateSummary: "submittingSelectedCertification" }) && send({ type: "SUBMIT_CERTIFICATION", certification })}
+        onClick={() =>
+          !state.matches({
+            certificateSummary: "submittingSelectedCertification",
+          }) && send({ type: "SUBMIT_CERTIFICATION", certification })
+        }
         key={certification.id}
         // isSelectable={state.matches("searchResults")}
         id={certification.id}
@@ -53,9 +57,7 @@ export const Certificates = ({ mainService }: Props) => {
       );
     }
     if (state.matches("loadingCertifications")) {
-      return [1, 2, 3, 4, 5].map((i) => (
-        <CardSkeleton key={`skeleton-${i}`} />
-      ));
+      return [1, 2, 3, 4, 5].map((i) => <CardSkeleton key={`skeleton-${i}`} />);
     }
     return state.context.certifications
       .filter((certif) => certif.status !== "INACTIVE")
@@ -66,6 +68,7 @@ export const Certificates = ({ mainService }: Props) => {
   return (
     <Page
       data-test="certificates"
+      title="choix de votre diplôme"
       direction={state.context.direction}
     >
       <BackToHomeButton />
@@ -100,9 +103,13 @@ export const Certificates = ({ mainService }: Props) => {
           </option>
         ))}
       </Select>
-      {(chosenDepartmentCode !== UNKNOWN_DEPARTMENT || !!state.context.selectedDepartment) && (
+      {(chosenDepartmentCode !== UNKNOWN_DEPARTMENT ||
+        !!state.context.selectedDepartment) && (
         <div>
-          <Results title="" listClassName="flex flex-wrap justify-center lg:justify-start items-center mb-4 gap-4">
+          <Results
+            title=""
+            listClassName="flex flex-wrap justify-center lg:justify-start items-center mb-4 gap-4"
+          >
             {displayCards()}
           </Results>
         </div>

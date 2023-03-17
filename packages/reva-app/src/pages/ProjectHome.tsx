@@ -79,7 +79,7 @@ export const ProjectHome = ({
   );
 
   return (
-    <Page direction={state.context.direction}>
+    <Page title="votre projet" direction={state.context.direction}>
       {(state.matches({ projectHome: "loading" }) ||
         state.matches({ projectHome: "fakeLoading" })) &&
         loadingScreen}

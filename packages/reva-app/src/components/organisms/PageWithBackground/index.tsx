@@ -10,6 +10,7 @@ interface Props {
   candidacyCreatedAt?: Date;
   direction: "initial" | "next" | "previous";
   children?: ReactNode;
+  title: string;
 }
 
 export const PageWithBackground: FC<Props> = ({
@@ -17,9 +18,11 @@ export const PageWithBackground: FC<Props> = ({
   candidacyCreatedAt,
   direction,
   children,
+  title,
 }) => {
   return (
     <Page
+      title={title}
       className="relative flex flex-col bg-neutral-100 overflow-hidden w-full !max-w-none"
       direction={direction}
     >

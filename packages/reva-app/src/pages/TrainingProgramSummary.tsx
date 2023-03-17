@@ -88,7 +88,7 @@ export const TrainingProgramSummary = ({
   } = state.context;
 
   return (
-    <Page direction={state.context.direction}>
+    <Page title="votre parcours" direction={state.context.direction}>
       <BackToHomeButton />
       <h1 className="mt-4 text-3xl font-bold">
         {isTrainingConfirmed ? "Votre parcours" : "Valider votre parcours"}

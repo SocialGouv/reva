@@ -27,6 +27,7 @@ export const CertificateDetails = ({ certification, mainService }: Props) => {
 
   return (
     <Page
+      title="détails du diplôme"
       className="bg-slate-900 max-w-full"
       direction={state.context.direction}
     >

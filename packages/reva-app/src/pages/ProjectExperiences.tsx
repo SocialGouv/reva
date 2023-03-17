@@ -71,7 +71,7 @@ export const ProjectExperiences = ({
   const [state, send] = useActor(mainService);
 
   return (
-    <Page direction={state.context.direction}>
+    <Page title="vos expériences" direction={state.context.direction}>
       <BackToHomeButton />
       <div className="mt-2 space-y-3">
         <h1 className="text-xl font-bold">Mes expériences professionnelles</h1>

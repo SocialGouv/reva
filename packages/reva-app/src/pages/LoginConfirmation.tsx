@@ -12,7 +12,11 @@ export const LoginConfirmation = ({ mainService }: LoginConfirmationProps) => {
   const [state] = useActor(mainService);
 
   return (
-    <Page data-test="login-confirmation" direction={state.context.direction}>
+    <Page
+      data-test="login-confirmation"
+      title="confirmation de connexion"
+      direction={state.context.direction}
+    >
       <h1 className="text-3xl font-bold text-dsfrBlue-500">Merci !</h1>
       <p className="mt-4 text-lg font-bold text-dsfrGray-500">
         Un email vous a été envoyé, il contient un lien qui vous permettra de

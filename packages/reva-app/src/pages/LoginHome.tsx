@@ -37,7 +37,11 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
   const emailRef = useRef<HTMLInputElement>(null);
 
   return (
-    <Page data-test="login-home" direction={state.context.direction}>
+    <Page
+      data-test="login-home"
+      title="connexion"
+      direction={state.context.direction}
+    >
       <h1 className="text-3xl font-bold text-dsfrBlue-500">
         Bienvenue <span aria-hidden="true">🤝</span>,
       </h1>

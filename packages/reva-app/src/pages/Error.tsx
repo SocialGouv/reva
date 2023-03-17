@@ -16,6 +16,7 @@ export const Error = ({ mainService }: ErrorProps) => {
 
   return (
     <Page
+      title="erreur"
       className="z-[60] h-full flex flex-col bg-white pt-6"
       direction={state.context.direction}
     >

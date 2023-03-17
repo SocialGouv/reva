@@ -105,7 +105,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
   if (!candidacyId) return <p>Aucun Id de candidat trouvé</p>;
 
   return (
-    <Page direction={direction}>
+    <Page title="votre référent" direction={direction}>
       <BackToHomeButton />
       <h1 className="mt-4 text-3xl font-bold">Votre référent</h1>
       {selectedDepartment && (

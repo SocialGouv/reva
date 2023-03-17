@@ -1,14 +1,17 @@
 import { ReactNode } from "react";
+import { Helmet } from "react-helmet";
 
 interface PageConfig {
   children?: ReactNode;
   className?: string;
   direction: Direction;
+  title: string;
 }
 
 export type Direction = "initial" | "previous" | "next";
 
 export const Page = ({
+  title,
   children,
   className,
   direction,
@@ -21,6 +24,9 @@ export const Page = ({
       } `}
       {...props}
     >
+      <Helmet>
+        <title>{title}</title>
+      </Helmet>
       {children}
     </div>
   );

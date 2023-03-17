@@ -16,6 +16,7 @@ export const ProjectContactConfirmation = ({
   return (
     <Page
       data-test="project-contact-confirmation"
+      title="confirmation de création de compte"
       direction={state.context.direction}
     >
       <h1 className="text-3xl font-bold text-dsfrBlue-500">Félicitations !</h1>
