@@ -249,38 +249,42 @@ viewForm referential status maybeError formData form saveButton submitButton =
                 ]
                 [ fieldset [ class "fr-fieldset" ] content ]
     in
-    formFieldset <|
-        legend
-            [ class "fr-fieldset__legend" ]
-            [ h2 [] [ text currentForm.title ] ]
-            :: viewGroupedElements status formData currentForm.elements
-            ++ [ case status of
-                    Editable ->
-                        div
+    case status of
+        Editable ->
+            formFieldset <|
+                legend
+                    [ class "fr-fieldset__legend -ml-2" ]
+                    [ h2 [] [ text currentForm.title ] ]
+                    :: viewGroupedElements status formData currentForm.elements
+                    ++ [ div
                             [ class "mt-8 pb-4 flex justify-end pr-2 w-full" ]
                             [ saveButton
                             , submitButton
                             ]
+                       , case maybeError of
+                            Just error ->
+                                div
+                                    [ class "fixed z-50 top-0 inset-x-0 pointer-events-none"
+                                    , class "w-full flex justify-center"
+                                    ]
+                                    [ p
+                                        [ class "max-w-2xl mt-10 px-6 py-4"
+                                        , class "rounded bg-white border border-red-400"
+                                        , class "text-center text-sm font-medium text-red-600"
+                                        ]
+                                        [ text error ]
+                                    ]
 
-                    ReadOnly ->
-                        text ""
-               , case maybeError of
-                    Just error ->
-                        div
-                            [ class "fixed z-50 top-0 inset-x-0 pointer-events-none"
-                            , class "w-full flex justify-center"
-                            ]
-                            [ p
-                                [ class "max-w-2xl mt-10 px-6 py-4"
-                                , class "rounded bg-white border border-red-400"
-                                , class "text-center text-sm font-medium text-red-600"
-                                ]
-                                [ text error ]
-                            ]
+                            Nothing ->
+                                text ""
+                       ]
 
-                    Nothing ->
-                        text ""
-               ]
+        ReadOnly ->
+            div
+                [ class "bg-gray-50 m-8 p-4" ]
+            <|
+                h2 [] [ text currentForm.title ]
+                    :: List.map (viewReadOnlyElement formData) currentForm.elements
 
 
 viewGroupedElements : Status -> FormData -> List ( String, Element ) -> List (Html (Msg referential))
