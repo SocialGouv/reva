@@ -70,57 +70,65 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           <h1 className="text-3xl font-bold text-dsfrBlue-500">
             Bienvenue <span aria-hidden="true">🤝</span>,
           </h1>
-          <h2 className="mt-6">Se créer un compte.</h2>
         </>
       )}
       <form onSubmit={onSubmit} className="mb-6">
-        {state.context.error && state.context.error !== INVALID_TOKEN_ERROR && (
-          <ErrorAlertFromState />
-        )}
-        <FormOptionalFieldsDisclaimer className="mb-4" />
-        <Input
-          label="Prénom"
-          nativeInputProps={{
-            name: "firstname",
-            ref: firstnameRef,
-            required: true,
-            autoComplete: "given-name",
-          }}
-        />
-        <Input
-          label="Nom"
-          nativeInputProps={{
-            name: "lastname",
-            ref: lastnameRef,
-            required: true,
-            autoComplete: "family-name",
-          }}
-        />
-        <Input
-          label="Téléphone"
-          hintText="Format attendu : 00 33 X XX XX XX XX"
-          nativeInputProps={{
-            name: "phone",
-            ref: phoneRef,
-            minLength: 10,
-            required: true,
-            type: "tel",
-            autoComplete: "tel",
-          }}
-        />
-        <Input
-          label="Email"
-          hintText="Format attendu : nom@domaine.fr"
-          nativeInputProps={{
-            name: "email",
-            ref: emailRef,
-            required: true,
-            type: "email",
-            autoComplete: "email",
-            spellCheck: "false",
-          }}
-        />
-        <Button data-test="project-contact-add">Créer mon compte</Button>
+        <fieldset>
+          <legend>
+            <h2 className="mt-6">Créer votre compte.</h2>
+          </legend>
+
+          {state.context.error &&
+            state.context.error !== INVALID_TOKEN_ERROR && (
+              <ErrorAlertFromState />
+            )}
+          <FormOptionalFieldsDisclaimer className="mb-4" />
+          <Input
+            label="Prénom"
+            nativeInputProps={{
+              name: "firstname",
+              ref: firstnameRef,
+              required: true,
+              autoComplete: "given-name",
+            }}
+          />
+          <Input
+            label="Nom"
+            nativeInputProps={{
+              name: "lastname",
+              ref: lastnameRef,
+              required: true,
+              autoComplete: "family-name",
+            }}
+          />
+          <Input
+            label="Téléphone"
+            hintText="Format attendu : 00 33 X XX XX XX XX"
+            nativeInputProps={{
+              name: "phone",
+              ref: phoneRef,
+              minLength: 10,
+              required: true,
+              type: "tel",
+              autoComplete: "tel",
+            }}
+          />
+          <Input
+            label="Email"
+            hintText="Format attendu : nom@domaine.fr"
+            nativeInputProps={{
+              name: "email",
+              ref: emailRef,
+              required: true,
+              type: "email",
+              autoComplete: "email",
+              spellCheck: "false",
+            }}
+          />
+        </fieldset>
+        <Button data-test="project-contact-add" className="mt-6">
+          Créer mon compte
+        </Button>
       </form>
       {!hasCandidacy && (
         <div className="border-t border-gray-200 pt-6">
