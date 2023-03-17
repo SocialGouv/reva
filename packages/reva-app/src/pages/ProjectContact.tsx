@@ -1,6 +1,7 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { useActor } from "@xstate/react";
+import { FormOptionalFieldsDisclaimer } from "components/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/ErrorAlertFromState";
 import { useRef } from "react";
 import { Interpreter } from "xstate";
@@ -69,14 +70,14 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           <h1 className="text-3xl font-bold text-dsfrBlue-500">
             Bienvenue <span aria-hidden="true">🤝</span>,
           </h1>
-          <h2 className="my-6">Se créer un compte.</h2>
+          <h2 className="mt-6">Se créer un compte.</h2>
         </>
       )}
       <form onSubmit={onSubmit} className="mb-6">
         {state.context.error && state.context.error !== INVALID_TOKEN_ERROR && (
           <ErrorAlertFromState />
         )}
-
+        <FormOptionalFieldsDisclaimer className="mb-4" />
         <Input
           label="Prénom"
           nativeInputProps={{
@@ -86,7 +87,6 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             autoComplete: "given-name",
           }}
         />
-
         <Input
           label="Nom"
           nativeInputProps={{
@@ -96,7 +96,6 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             autoComplete: "family-name",
           }}
         />
-
         <Input
           label="Téléphone"
           hintText="Format attendu : 00 33 X XX XX XX XX"
@@ -109,7 +108,6 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             autoComplete: "tel",
           }}
         />
-
         <Input
           label="Email"
           hintText="Format attendu : nom@domaine.fr"
@@ -122,7 +120,6 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             spellCheck: "false",
           }}
         />
-
         <Button data-test="project-contact-add">Créer mon compte</Button>
       </form>
       {!hasCandidacy && (

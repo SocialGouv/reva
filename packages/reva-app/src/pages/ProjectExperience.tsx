@@ -2,6 +2,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { useActor } from "@xstate/react";
+import { FormOptionalFieldsDisclaimer } from "components/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/ErrorAlertFromState";
 import { Interpreter } from "xstate";
 
@@ -64,6 +65,8 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
         Il peut s’agir d’une expérience professionnelle, bénévole, d’un stage ou
         d’une activité extra-professionnelle.
       </p>
+      <FormOptionalFieldsDisclaimer className="my-4" />
+
       <form onSubmit={onSubmit} className="mt-4 space-y-6">
         {state.matches("projectExperience.error") && <ErrorAlertFromState />}
 
@@ -88,7 +91,7 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
         <label htmlFor="duration" className="fr-label"></label>
 
         <Select
-          label="Durée"
+          label="Durée (optionnel)"
           hint="Pendant combien de temps avez-vous exercé ?"
           nativeSelectProps={{
             name: "duration",
@@ -107,7 +110,7 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
 
         <Input
           textArea
-          label="Description du poste"
+          label="Description du poste (optionnel)"
           nativeTextAreaProps={{
             name: "description",
             defaultValue: editedExperience?.description,
