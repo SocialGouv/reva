@@ -23,7 +23,7 @@ import Data.Form.Helper exposing (booleanFromString, booleanToString)
 import Dict exposing (Dict)
 import File exposing (File)
 import Html exposing (Html, button, div, fieldset, input, label, legend, li, option, p, select, span, text, ul)
-import Html.Attributes exposing (class, disabled, for, id, multiple, name, placeholder, required, selected, type_, value)
+import Html.Attributes exposing (class, classList, disabled, for, id, multiple, name, placeholder, required, selected, type_, value)
 import Html.Events exposing (on, onInput, onSubmit)
 import Json.Decode
 import List.Extra
@@ -383,11 +383,11 @@ viewEditableElement formData ( elementId, element ) =
             div [ class "fr-fieldset__element mb-2" ] [ viewInfo label value ]
 
         ReadOnlyElement readOnlyElement ->
-            div [ class "fr-fieldset__element mb-4" ] <|
+            div [ class "fr-fieldset__element mb-1" ] <|
                 [ viewReadOnlyElement formData ( elementId, readOnlyElement ) ]
 
         ReadOnlyElements readOnlyElements ->
-            div [ class "fr-fieldset__element mb-4" ] <|
+            div [ class "fr-fieldset__element mb-1" ] <|
                 List.map
                     (viewReadOnlyElement formData)
                     readOnlyElements
@@ -733,14 +733,28 @@ Example:
 viewFieldsets : FormData -> List ( String, Element ) -> List (Html (Msg referential))
 viewFieldsets formData elements =
     let
-        viewFieldsetElements : List (Html msg) -> List (Html msg)
-        viewFieldsetElements l =
+        wrapWithElement : List (Html msg) -> List (Html msg)
+        wrapWithElement l =
             List.map (\e -> viewFieldsetElement [ e ]) l
+
+        wrapWithGrayElement : List (Html msg) -> List (Html msg)
+        wrapWithGrayElement l =
+            List.map
+                (\e ->
+                    div
+                        [ class "fr-fieldset__element"
+                        , class "mt-0 mb-4 pt-4 px-6 ml-2"
+                        , class "bg-[#f7f7f7]"
+                        ]
+                        [ e ]
+                )
+                l
 
         viewFieldset : Int -> List (Html msg) -> Html msg
         viewFieldset level content =
             fieldset
-                [ class "fr-fieldset mb-2" ]
+                [ class "fr-fieldset mb-2"
+                ]
                 content
 
         groupHelper :
@@ -769,8 +783,8 @@ viewFieldsets formData elements =
                             viewFieldset 1
                                 (htmlElement
                                     :: acc.elements
-                                    ++ viewFieldsetElements acc.l3
-                                    ++ viewFieldsetElements acc.l2
+                                    ++ wrapWithGrayElement acc.l3
+                                    ++ wrapWithElement acc.l2
                                 )
                                 :: acc.l1
                         , l2 = []
@@ -784,7 +798,7 @@ viewFieldsets formData elements =
                             viewFieldset 2
                                 (htmlElement
                                     :: acc.elements
-                                    ++ viewFieldsetElements acc.l3
+                                    ++ wrapWithGrayElement acc.l3
                                 )
                                 :: acc.l2
                         , l3 = []
@@ -822,9 +836,9 @@ viewFieldsets formData elements =
             List.foldr groupHelper { l1 = [], l2 = [], l3 = [], elements = [] } elements
     in
     groupedElements.elements
-        ++ viewFieldsetElements groupedElements.l3
-        ++ viewFieldsetElements groupedElements.l2
-        ++ viewFieldsetElements groupedElements.l1
+        ++ wrapWithGrayElement groupedElements.l3
+        ++ wrapWithElement groupedElements.l2
+        ++ wrapWithElement groupedElements.l1
 
 
 {-| Wrap a complex element that already have internal margins, like radio or checkbox list
