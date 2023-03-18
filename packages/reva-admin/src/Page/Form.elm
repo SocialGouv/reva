@@ -293,10 +293,10 @@ viewEditableElement formData ( elementId, element ) =
             get elementId formData
                 |> Maybe.withDefault (defaultValue element)
 
-        inputView label inputType extraAttributes =
+        inputView label inputType inputAttrs =
             viewInput elementId label dataOrDefault
                 |> inputType
-                |> Input.withExtraAttrs extraAttributes
+                |> Input.withInputAttrs inputAttrs
                 |> Input.view
 
         textareaView : String -> Maybe String -> Html (Msg referential)
@@ -369,11 +369,11 @@ viewEditableElement formData ( elementId, element ) =
 
         Number label ->
             viewFieldsetElement
-                [ inputView label Input.number [ Html.Attributes.min "0" ] ]
+                [ inputView label Input.numeric [ Html.Attributes.min "0" ] ]
 
         Price label ->
             viewFieldsetElement
-                [ inputView label Input.number [ Html.Attributes.min "0", Html.Attributes.step "0.01" ] ]
+                [ inputView label (Input.decimal 0.01) [ Html.Attributes.min "0" ] ]
 
         Textarea label placeholder ->
             viewFieldsetElement
