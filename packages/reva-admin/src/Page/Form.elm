@@ -254,7 +254,7 @@ viewForm referential status maybeError formData form saveButton submitButton =
                 legend
                     [ class "fr-fieldset__legend -ml-2" ]
                     [ h2 [] [ text currentForm.title ] ]
-                    :: viewFieldsets status formData currentForm.elements
+                    :: viewFieldsets formData currentForm.elements
                     ++ [ div
                             [ class "mt-8 pb-4 flex justify-end pr-2 w-full" ]
                             [ saveButton
@@ -411,7 +411,7 @@ viewEditableElement formData ( elementId, element ) =
 
         Section title ->
             legend
-                [ class "fr-fieldset__legend mt-6 mb-0" ]
+                [ class "fr-fieldset__legend mt-6 mb-1" ]
                 [ h4 [] [ text title ] ]
 
         Select label choices ->
@@ -730,34 +730,18 @@ Example:
         ]
 
 -}
-viewFieldsets : Status -> FormData -> List ( String, Element ) -> List (Html (Msg referential))
-viewFieldsets status formData elements =
+viewFieldsets : FormData -> List ( String, Element ) -> List (Html (Msg referential))
+viewFieldsets formData elements =
     let
-        viewMaybeFieldsetElement : number -> Html msg -> Html msg
-        viewMaybeFieldsetElement level element =
-            if level > 3 then
-                -- We don't want to wrap again leaf elements
-                element
-
-            else
-                viewFieldsetElement [ element ]
+        viewFieldsetElements : List (Html msg) -> List (Html msg)
+        viewFieldsetElements l =
+            List.map (\e -> viewFieldsetElement [ e ]) l
 
         viewFieldset : Int -> List (Html msg) -> Html msg
         viewFieldset level content =
-            case content of
-                head :: tail ->
-                    fieldset
-                        [ class "fr-fieldset mb-0" ]
-                        (head :: List.map (viewMaybeFieldsetElement level) tail)
-
-                [] ->
-                    text ""
-
-        -- Helper to find the group of elements to wrap. Read example below.
-        traverse : List ( Int, List a ) -> ( Int, List a )
-        traverse l =
-            List.Extra.find (not << List.isEmpty << Tuple.second) l
-                |> Maybe.withDefault ( 4, [] )
+            fieldset
+                [ class "fr-fieldset mb-2" ]
+                content
 
         groupHelper :
             ( String, Element )
@@ -780,40 +764,36 @@ viewFieldsets status formData elements =
             in
             case isNewGroup element of
                 Just 1 ->
-                    let
-                        ( level, children ) =
-                            {--In the following example, we won't have level-2 and level-3 elements to wrap:
-                                        
-                                fieldset
-                                    [ h3
-                                    , element a
-                                    , element b
-                                    ]
-                                        
-                            So we traverse each possible level until we find elements to include in the fieldset.-}
-                            traverse [ ( 2, acc.l2 ), ( 3, acc.l3 ), ( 4, acc.elements ) ]
-                    in
                     { acc
-                        | l1 = viewFieldset level (htmlElement :: children) :: acc.l1
+                        | l1 =
+                            viewFieldset 1
+                                (htmlElement
+                                    :: acc.elements
+                                    ++ viewFieldsetElements acc.l3
+                                    ++ viewFieldsetElements acc.l2
+                                )
+                                :: acc.l1
                         , l2 = []
                         , l3 = []
                         , elements = []
                     }
 
                 Just 2 ->
-                    let
-                        ( level, children ) =
-                            traverse [ ( 3, acc.l3 ), ( 4, acc.elements ) ]
-                    in
                     { acc
-                        | l2 = viewFieldset level (htmlElement :: children) :: acc.l2
+                        | l2 =
+                            viewFieldset 2
+                                (htmlElement
+                                    :: acc.elements
+                                    ++ viewFieldsetElements acc.l3
+                                )
+                                :: acc.l2
                         , l3 = []
                         , elements = []
                     }
 
                 Just 3 ->
                     { acc
-                        | l3 = viewFieldset 4 (htmlElement :: acc.elements) :: acc.l3
+                        | l3 = viewFieldset 3 (htmlElement :: acc.elements) :: acc.l3
                         , elements = []
                     }
 
@@ -841,13 +821,10 @@ viewFieldsets status formData elements =
         groupedElements =
             List.foldr groupHelper { l1 = [], l2 = [], l3 = [], elements = [] } elements
     in
-    traverse
-        [ ( 1, groupedElements.l1 )
-        , ( 2, groupedElements.l2 )
-        , ( 3, groupedElements.l3 )
-        , ( 4, groupedElements.elements )
-        ]
-        |> Tuple.second
+    groupedElements.elements
+        ++ viewFieldsetElements groupedElements.l3
+        ++ viewFieldsetElements groupedElements.l2
+        ++ viewFieldsetElements groupedElements.l1
 
 
 {-| Wrap a complex element that already have internal margins, like radio or checkbox list
