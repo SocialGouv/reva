@@ -14,7 +14,7 @@ import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Referential)
-import Html exposing (Html, a, aside, div, h2, h3, input, label, li, nav, node, p, span, text, ul)
+import Html exposing (Html, a, aside, div, form, h2, h3, input, label, li, nav, node, p, span, text, ul)
 import Html.Attributes exposing (action, attribute, class, classList, for, id, name, placeholder, type_)
 import Html.Events exposing (onInput)
 import List.Extra
@@ -205,13 +205,13 @@ viewDirectoryHeader context =
             ]
         , div
             [ class "my-2 flex space-x-4", action "#" ]
-            [ div
-                [ class "flex-1 min-w-0" ]
+            [ form
+                [ class "fr-search-bar w-full" ]
                 [ label
                     [ for "search", class "sr-only" ]
                     [ text "Rechercher" ]
                 , div
-                    [ class "relative rounded-md shadow-sm" ]
+                    [ class "relative w-full" ]
                     [ div
                         [ class "absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none" ]
                         [ Icons.search
@@ -220,10 +220,7 @@ viewDirectoryHeader context =
                         [ type_ "search"
                         , name "search"
                         , id "search"
-                        , class "block w-full pl-6 pr-12 py-5 bg-gray-100"
-                        , class "border-b-[3px] border-0 border-b-gray-800"
-                        , class "focus:ring-blue-500 focus:ring-0 focus:border-blue-600"
-                        , class "text-xl placeholder:text-gray-400"
+                        , class "fr-input w-full h-12"
                         , placeholder "Rechercher"
                         , onInput UserAddedFilter
                         ]
