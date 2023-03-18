@@ -9,12 +9,13 @@ module Page.Candidacies exposing
 
 import Api.Candidacy
 import Api.Token exposing (Token)
+import BetaGouv.DSFR.Button as Button
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Referential)
-import Html exposing (Html, a, aside, div, form, h2, h3, input, label, li, nav, node, p, span, text, ul)
+import Html exposing (Html, aside, div, form, h2, h3, input, label, li, nav, node, p, text, ul)
 import Html.Attributes exposing (action, attribute, class, classList, for, id, name, placeholder, type_)
 import Html.Events exposing (onInput)
 import List.Extra
@@ -220,7 +221,7 @@ viewDirectoryHeader context =
                         [ type_ "search"
                         , name "search"
                         , id "search"
-                        , class "fr-input w-full h-12"
+                        , class "fr-input w-full h-10"
                         , placeholder "Rechercher"
                         , onInput UserAddedFilter
                         ]
@@ -250,11 +251,11 @@ viewDirectory context ( firstCandidacy, candidacies ) =
         [ div
             [ dataTest "directory-group-name"
             , class "z-10 sticky top-0 text-xl font-semibold text-slate-700"
-            , class "bg-white px-10 py-3"
+            , class "bg-white px-10"
             ]
-            [ h3 [] [ text (Candidacy.toCategoryString firstCandidacy) ] ]
+            [ h3 [ class "mb-0" ] [ text (Candidacy.toCategoryString firstCandidacy) ] ]
         , List.map (viewItem context) (firstCandidacy :: candidacies)
-            |> ul [ attribute "role" "list", class "list-none text-lg relative z-0" ]
+            |> ul [ attribute "role" "list", class "list-none relative z-0" ]
         ]
 
 
@@ -266,77 +267,64 @@ viewItem context candidacy =
                 |> Maybe.withDefault (text "")
     in
     li
-        [ dataTest "directory-item" ]
+        [ dataTest "directory-item", attribute "style" "--li-bottom:0" ]
         [ div
-            [ class "relative px-10 py-4 flex items-center space-x-6 hover:bg-gray-50"
-            , class "focus-within:ring-1 focus-within:ring-inset focus-within:ring-indigo-500"
-            ]
+            [ class "flex-1 min-w-0" ]
             [ div
-                [ class "flex-1 min-w-0" ]
-                [ a
-                    [ Route.href context.baseUrl (Route.Candidacy { value = Profile, candidacyId = candidacy.id })
-                    , class "focus:outline-none"
+                [ class "border py-5 pl-6 pr-4 m-5" ]
+                [ p
+                    [ class "font-semibold truncate mb-2"
+                    , classList [ ( "italic", candidacy.certification == Nothing ) ]
                     ]
-                    [ span
-                        [ class "absolute inset-0", attribute "aria-hidden" "true" ]
-                        []
-                    , p
-                        [ class "text-blue-600 font-medium truncate"
-                        , classList [ ( "italic", candidacy.certification == Nothing ) ]
-                        ]
-                        [ Maybe.map .label candidacy.certification
-                            |> Maybe.withDefault "Certification non sélectionnée"
-                            |> text
-                        ]
-                    , p
-                        [ class "flex" ]
-                        [ div [ class "flex items-center space-x-12" ]
-                            [ div [ class "flex items-center space-x-2" ]
-                                [ div
-                                    [ class "flex-shrink-0 text-gray-600" ]
-                                    [ Icons.user ]
-                                , div
-                                    [ class "flex text-gray-700 space-x-2" ]
-                                  <|
-                                    case ( candidacy.firstname, candidacy.lastname ) of
-                                        ( Just firstname, Just lastname ) ->
-                                            [ text firstname, text " ", text lastname ]
+                    [ Maybe.map .label candidacy.certification
+                        |> Maybe.withDefault "Certification non sélectionnée"
+                        |> text
+                    ]
+                , p
+                    [ class "flex my-3" ]
+                    [ div [ class "flex items-center space-x-12" ]
+                        [ div [ class "flex items-center space-x-2" ]
+                            [ div
+                                [ class "flex space-x-2" ]
+                              <|
+                                case ( candidacy.firstname, candidacy.lastname ) of
+                                    ( Just firstname, Just lastname ) ->
+                                        [ text firstname, text " ", text lastname ]
 
-                                        _ ->
-                                            [ displayMaybe candidacy.phone
-                                            , displayMaybe candidacy.email
-                                            ]
-                                ]
-                            , case candidacy.department of
-                                Just department ->
-                                    div [ class "flex items-center space-x-2" ]
-                                        [ div
-                                            [ class "flex-shrink-0 text-gray-600 pt-1" ]
-                                            [ Icons.location ]
-                                        , div
-                                            []
-                                            [ Data.Referential.departmentToString department |> text
-                                            ]
+                                    _ ->
+                                        [ displayMaybe candidacy.phone
+                                        , displayMaybe candidacy.email
                                         ]
-
-                                _ ->
-                                    div [] []
                             ]
-                        ]
-                    , div
-                        [ class "flex items-end justify-between"
-                        , class "text-gray-500"
-                        ]
-                        [ View.Candidacy.viewSentAt candidacy.sentAt
-                        , case ( Api.Token.isAdmin context.token, candidacy.organism ) of
-                            ( True, Just organism ) ->
-                                div
-                                    [ class "text-sm whitespace-nowrap" ]
-                                    [ text organism.label ]
+                        , case candidacy.department of
+                            Just department ->
+                                div [ class "flex items-center space-x-2" ]
+                                    [ div
+                                        []
+                                        [ Data.Referential.departmentToString department |> text
+                                        ]
+                                    ]
 
                             _ ->
-                                text ""
+                                div [] []
                         ]
+                    ]
+                , div
+                    [ class "flex items-end justify-between mb-2" ]
+                    [ View.Candidacy.viewSentAt candidacy.sentAt ]
+                , div
+                    [ class "flex justify-between items-end" ]
+                    [ case ( Api.Token.isAdmin context.token, candidacy.organism ) of
+                        ( True, Just organism ) ->
+                            div
+                                [ class "text-sm whitespace-nowrap" ]
+                                [ text organism.label ]
+
+                        _ ->
+                            text ""
+                    , Button.new { onClick = Nothing, label = "Accéder à la candidature" }
+                        |> Button.linkButton (Route.toString context.baseUrl (Route.Candidacy { value = Profile, candidacyId = candidacy.id }))
+                        |> Button.view
                     ]
                 ]
             ]
