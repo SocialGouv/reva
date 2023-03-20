@@ -7,7 +7,7 @@ module Page.Candidacies exposing
     , withStatusFilter
     )
 
-import Accessibility exposing (button)
+import Accessibility exposing (button, h2, h4)
 import Api.Candidacy
 import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
@@ -16,7 +16,7 @@ import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Referential)
-import Html exposing (Html, aside, div, form, h2, h3, input, label, li, nav, node, p, text, ul)
+import Html exposing (Html, aside, div, input, label, li, nav, node, p, text, ul)
 import Html.Attributes exposing (action, attribute, class, classList, for, id, name, placeholder, type_)
 import Html.Attributes.Extra exposing (role)
 import Html.Events exposing (onInput)
@@ -30,7 +30,6 @@ import View.Candidacy
 import View.Candidacy.Filters exposing (Filters)
 import View.Candidacy.Tab exposing (Value(..))
 import View.Helpers exposing (dataTest)
-import View.Icons as Icons
 
 
 type Msg
@@ -196,15 +195,20 @@ viewDirectoryHeader context =
     div
         [ class "pl-10 pr-6 pt-10 pb-4" ]
         [ h2
-            [ class "text-3xl font-black text-slate-800 mb-6" ]
-            [ text "Candidatures" ]
-        , p
-            [ class "text-base text-gray-500" ]
+            []
             [ if Api.Token.isAdmin context.token then
-                text "Recherchez par architecte de parcours, date de candidature, certification et information de contact"
+                text "Espace pro administrateur"
 
               else
-                text "Recherchez par date de candidature, certification et information de contact"
+                text "Espace pro architecte de parcours"
+            ]
+        , p
+            []
+            [ if Api.Token.isAdmin context.token then
+                text "En tant qu’administrateur, vous pouvez gérer toutes les candidatures et faire une recherche par architecte de parcours."
+
+              else
+                text "En tant qu’architecte de parcours, vous pouvez gérer les différentes candidatures des usagers dans le cadre de leur projet professionnel."
             ]
         , div
             [ class "my-2 flex space-x-4", action "#" ]
@@ -218,7 +222,7 @@ viewDirectoryHeader context =
                     , name "search"
                     , id "search"
                     , class "fr-input w-full h-10"
-                    , placeholder "Rechercher"
+                    , placeholder "Recherchez par date de candidature, certification et information de contact"
                     , onInput UserAddedFilter
                     ]
                     []
@@ -251,7 +255,7 @@ viewDirectory context ( firstCandidacy, candidacies ) =
             , class "z-10 sticky top-0 text-xl font-semibold text-slate-700"
             , class "bg-white px-10"
             ]
-            [ h3 [ class "mb-0" ] [ text (Candidacy.toCategoryString firstCandidacy) ] ]
+            [ h4 [ class "mb-0" ] [ text (Candidacy.toCategoryString firstCandidacy) ] ]
         , List.map (viewItem context) (firstCandidacy :: candidacies)
             |> ul [ attribute "role" "list", class "list-none relative z-0" ]
         ]
