@@ -6,18 +6,18 @@ export const ContactTimelineElement = () => {
   return (
     <TimelineElement title="Vos informations de contact" status="editable">
       {() => (
-        <>
+        <ul className="leading-tight">
           {state.context.contact?.phone && (
-            <p data-test="project-home-contact-phone" className="mb-2">
+            <li data-test="project-home-contact-phone" className="mb-2">
               {state.context.contact?.phone}
-            </p>
+            </li>
           )}
           {state.context.contact?.email && (
-            <p data-test="project-home-contact-email">
+            <li data-test="project-home-contact-email" className="mb-2">
               {state.context.contact?.email}
-            </p>
+            </li>
           )}
-        </>
+        </ul>
       )}
     </TimelineElement>
   );
