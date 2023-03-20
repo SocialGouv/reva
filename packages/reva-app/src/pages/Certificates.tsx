@@ -69,15 +69,17 @@ export const Certificates = ({ mainService }: Props) => {
       direction={state.context.direction}
     >
       <BackToHomeButton />
-      <NameBadge className="mt-4" />
-      <h1 className="text-lg text-dsfrGray-500 font-bold mt-6">
-        Nouveau parcours VAE
-      </h1>
+      <NameBadge as="h1" className="mt-4" />
+      <h2 className="text-lg text-dsfrGray-500 font-bold mt-6">
+        Nouveau parcours VAE - Choix du diplôme
+      </h2>
+      <p className=" text-sm">
+        Sélectionnez le diplôme que vous voulez valider
+      </p>
       <Select
         className="my-4"
         data-test="certificates-select-department"
-        label="Choix du diplôme"
-        hint="Sélectionnez le diplôme que vous voulez valider"
+        label="Département"
         nativeSelectProps={{
           name: "select_department",
           defaultValue: state.context.selectedDepartment?.code,

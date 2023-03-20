@@ -67,7 +67,7 @@ export const ProjectHome = ({
       <h1 className="text-lg font-bold text-dsfrGray-500">
         Bienvenue <span aria-hidden="true">🤝</span>,
       </h1>
-      <NameBadge className="mt-4" />
+      <NameBadge as="h2" className="mt-4" />
       <p className="my-4 pr-6 text-dsfrGray-500 text-base">
         Reva est une expérimentation visant à simplifier la Validation des
         Acquis de l'Expérience (VAE). Vous avez une expérience dans les secteurs

@@ -5,19 +5,30 @@ import { useMainMachineContext } from "../../../contexts/MainMachineContext/Main
 export const BasicNameBadge = ({
   className,
   children,
+  as = "p",
 }: {
   className?: string;
   children?: ReactNode;
-}) => (
-  <h2 className={`text-3xl text-dsfrBlue-500 font-bold ${className}`}>
-    {children}
-  </h2>
-);
+  as: React.ElementType;
+}) => {
+  const As = as;
+  return (
+    <As className={`text-3xl text-dsfrBlue-500 font-bold ${className}`}>
+      {children}
+    </As>
+  );
+};
 
-export const NameBadge = ({ className }: { className?: string }) => {
+export const NameBadge = ({
+  as,
+  className,
+}: {
+  as: React.ElementType;
+  className?: string;
+}) => {
   const { state } = useMainMachineContext();
   return (
-    <BasicNameBadge className={className}>
+    <BasicNameBadge as={as} className={className}>
       {state.context.contact?.firstname} {state.context.contact?.lastname}
     </BasicNameBadge>
   );
