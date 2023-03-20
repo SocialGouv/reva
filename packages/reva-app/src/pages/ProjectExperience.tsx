@@ -59,7 +59,7 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
     <Page title="Détail d'une expérience" direction={state.context.direction}>
       <BackButton />
       <h1 className="mt-4 mb-6 text-3xl font-bold text-black">
-        Ajouter une Nouvelle expérience
+        Ajouter une expérience
       </h1>
       <p className="text-xs text-dsfrGray-500">
         Il peut s’agir d’une expérience professionnelle, bénévole, d’un stage ou
