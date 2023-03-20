@@ -22,7 +22,7 @@ export const AccompanimentTimelineElement = () => {
       status={isAccompanimentInWaiting ? "disabled" : "active"}
     >
       {({ status }) => (
-        <p>status: {status === "active" ? "en cours" : "en attente"}</p>
+        <p>Statut: {status === "active" ? "en cours" : "en attente"}</p>
       )}
     </TimelineElement>
   );
