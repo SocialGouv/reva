@@ -7,6 +7,7 @@ module Page.Candidacies exposing
     , withStatusFilter
     )
 
+import Accessibility exposing (button)
 import Api.Candidacy
 import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
@@ -17,6 +18,7 @@ import Data.Organism exposing (Organism)
 import Data.Referential exposing (Referential)
 import Html exposing (Html, aside, div, form, h2, h3, input, label, li, nav, node, p, text, ul)
 import Html.Attributes exposing (action, attribute, class, classList, for, id, name, placeholder, type_)
+import Html.Attributes.Extra exposing (role)
 import Html.Events exposing (onInput)
 import List.Extra
 import RemoteData exposing (RemoteData(..))
@@ -192,7 +194,7 @@ viewMain leftContent rightContent =
 viewDirectoryHeader : Context -> Html Msg
 viewDirectoryHeader context =
     div
-        [ class "px-10 pt-10 pb-4" ]
+        [ class "pl-10 pr-6 pt-10 pb-4" ]
         [ h2
             [ class "text-3xl font-black text-slate-800 mb-6" ]
             [ text "Candidatures" ]
@@ -206,27 +208,23 @@ viewDirectoryHeader context =
             ]
         , div
             [ class "my-2 flex space-x-4", action "#" ]
-            [ form
-                [ class "fr-search-bar w-full" ]
+            [ div
+                [ role "search", class "fr-search-bar w-full" ]
                 [ label
-                    [ for "search", class "sr-only" ]
+                    [ for "search", class "fr-label" ]
                     [ text "Rechercher" ]
-                , div
-                    [ class "relative w-full" ]
-                    [ div
-                        [ class "absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none" ]
-                        [ Icons.search
-                        ]
-                    , input
-                        [ type_ "search"
-                        , name "search"
-                        , id "search"
-                        , class "fr-input w-full h-10"
-                        , placeholder "Rechercher"
-                        , onInput UserAddedFilter
-                        ]
-                        []
+                , input
+                    [ type_ "search"
+                    , name "search"
+                    , id "search"
+                    , class "fr-input w-full h-10"
+                    , placeholder "Rechercher"
+                    , onInput UserAddedFilter
                     ]
+                    []
+                , button
+                    [ class "fr-btn sr-only", Html.Attributes.title "Rechercher" ]
+                    [ text "Rechercher" ]
                 ]
             ]
         ]
