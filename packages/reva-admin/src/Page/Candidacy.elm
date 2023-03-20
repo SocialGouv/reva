@@ -20,6 +20,7 @@ import Api.Form.PaymentRequest
 import Api.Form.PaymentUploads
 import Api.Form.Training
 import Api.Referential
+import BetaGouv.DSFR.Button as Button
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Context exposing (Context)
@@ -215,9 +216,9 @@ viewTrainingSent context candidacyId =
             , p
                 [ class "mt-6 mb-24" ]
                 [ text "Le parcours personnalisé a bien été envoyé." ]
-            , View.primaryLink
-                [ Route.href context.baseUrl (Route.Candidacy <| Tab candidacyId Profile) ]
-                "Retour à la candidature"
+            , Button.new { onClick = Nothing, label = "Retour à la candidature" }
+                |> Button.linkButton (Route.toString context.baseUrl (Route.Candidacy <| Tab candidacyId Profile))
+                |> Button.view
             ]
         ]
     ]

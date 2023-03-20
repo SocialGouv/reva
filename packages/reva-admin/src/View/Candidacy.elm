@@ -2,6 +2,7 @@ module View.Candidacy exposing (view, viewSentAt)
 
 import Admin.Enum.Duration exposing (Duration(..))
 import Api.Token
+import BetaGouv.DSFR.Button as Button
 import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, CandidacyId, DateWithLabels)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
@@ -108,30 +109,26 @@ view context config =
               else
                 text ""
             , viewExperiences config.candidacy.experiences
-            , a
-                [ class "bg-gray-400 hover:bg-gray-500 text-white"
-                , class "text-xs px-3 py-2 rounded"
-                , href
+            , Button.new { onClick = Nothing, label = "Archiver la candidature" }
+                |> Button.linkButton
                     (Route.toString context.baseUrl
                         (Route.Candidacy <|
                             View.Candidacy.Tab.Tab config.candidacy.id Archive
                         )
                     )
-                ]
-                [ text "Archiver la candidature" ]
+                |> Button.secondary
+                |> Button.view
             , if config.candidacy.dropOutDate == Nothing then
-                a
-                    [ class "ml-2"
-                    , class "bg-red-800 hover:bg-red-900 text-white"
-                    , class "text-xs px-3 py-2 rounded"
-                    , href
+                Button.new { onClick = Nothing, label = "Déclarer l'abandon du candidat" }
+                    |> Button.linkButton
                         (Route.toString context.baseUrl
                             (Route.Candidacy <|
                                 View.Candidacy.Tab.Tab config.candidacy.id DropOut
                             )
                         )
-                    ]
-                    [ text "Déclarer l'abandon du candidat" ]
+                    |> Button.secondary
+                    |> Button.withAttrs [ class "ml-3" ]
+                    |> Button.view
 
               else
                 text ""
