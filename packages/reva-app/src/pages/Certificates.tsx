@@ -102,6 +102,20 @@ export const Certificates = ({ mainService }: Props) => {
           </option>
         ))}
       </Select>
+      <p role="status">
+        {chosenDepartmentCode !== UNKNOWN_DEPARTMENT ||
+        !!state.context.selectedDepartment
+          ? `Nombre de diplômes disponibles pour le département ${
+              selectsOptionsDepartments.find(
+                (o) => o.value === chosenDepartmentCode
+              )?.label
+            } : ${
+              state.context.certifications.filter(
+                (certif) => certif.status !== "INACTIVE"
+              ).length
+            }`
+          : null}
+      </p>
       {(chosenDepartmentCode !== UNKNOWN_DEPARTMENT ||
         !!state.context.selectedDepartment) && (
         <div>
