@@ -82,7 +82,7 @@ export const Certificates = ({ mainService }: Props) => {
         label="Département"
         nativeSelectProps={{
           name: "select_department",
-          defaultValue: state.context.selectedDepartment?.code,
+          defaultValue: state.context.selectedDepartment?.code || "unknown",
           onChange: (e) => {
             const departmentCode = e.target.value;
             setChosenDepartmentCode(departmentCode);
