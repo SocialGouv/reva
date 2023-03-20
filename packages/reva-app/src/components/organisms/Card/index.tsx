@@ -14,7 +14,6 @@ const Hexagon = ({ className }: { className: string }) => (
   <img
     className={`absolute pointer-events-none z-10 rotate-3 ${className}`}
     alt=""
-    role="presentation"
     style={{
       height: "162.5px",
       width: "181.5px",
