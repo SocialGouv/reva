@@ -212,11 +212,10 @@ export const mainMachine =
               idle: {
                 on: {
                   BACK: {
-                    actions: ["resetError", "navigatePrevious", "navigateHome"],
+                    actions: ["resetError", "navigateHome"],
                     target: "#mainMachine.projectContact",
                   },
                   SUBMIT_LOGIN: {
-                    actions: "navigatePrevious",
                     target: "submitting",
                   },
                 },
@@ -246,7 +245,7 @@ export const mainMachine =
             },
             onDone: [
               {
-                actions: ["resetError", "navigateNext"],
+                actions: "resetError",
                 target: "loginConfirmation",
               },
             ],
@@ -283,7 +282,6 @@ export const mainMachine =
                 target: "loadingCertifications",
               },
               BACK: {
-                actions: "navigatePrevious",
                 target: "#mainMachine.projectHome",
               },
             },
@@ -301,7 +299,6 @@ export const mainMachine =
                 target: "loadingCertifications",
               },
               BACK: {
-                actions: "navigatePrevious",
                 target: "#mainMachine.projectHome.ready",
               },
             },
@@ -311,7 +308,6 @@ export const mainMachine =
               src: "updateCertification",
               onDone: [
                 {
-                  actions: "navigatePrevious",
                   target: "#mainMachine.projectHome.ready",
                 },
               ],
@@ -354,7 +350,6 @@ export const mainMachine =
                   onDone: [
                     {
                       actions: [
-                        "navigatePrevious",
                         assign({
                           candidacyCreatedAt: (_, event) => {
                             return new Date(
@@ -409,15 +404,13 @@ export const mainMachine =
               idle: {
                 on: {
                   BACK: {
-                    actions: "navigatePrevious",
                     target: "leave",
                   },
                   SUBMIT_CONTACT: {
-                    actions: "navigatePrevious",
                     target: "submitting",
                   },
                   LOGIN: {
-                    actions: ["resetError", "navigateNext"],
+                    actions: "resetError",
                     target: "#mainMachine.loginHome",
                   },
                 },
@@ -450,12 +443,12 @@ export const mainMachine =
             },
             onDone: [
               {
-                actions: ["resetError", "navigatePrevious"],
+                actions: "resetError",
                 target: "projectHome",
                 cond: "hasCandidacy",
               },
               {
-                actions: ["resetError", "navigateNext"],
+                actions: "resetError",
                 target: "projectContactConfirmation",
               },
             ],
@@ -468,7 +461,6 @@ export const mainMachine =
                 on: {
                   BACK: {
                     actions: [
-                      "navigatePrevious",
                       assign({
                         experiences: (context, _event) => ({
                           rest: context.experiences.edited
@@ -483,7 +475,6 @@ export const mainMachine =
                     target: "leave",
                   },
                   SUBMIT_EXPERIENCE: {
-                    actions: "navigatePrevious",
                     target: "submitting",
                   },
                 },
@@ -545,11 +536,9 @@ export const mainMachine =
           projectExperiences: {
             on: {
               BACK: {
-                actions: "navigatePrevious",
                 target: "projectHome",
               },
               ADD_EXPERIENCE: {
-                actions: "navigateNext",
                 target: "projectExperience",
               },
               EDIT_EXPERIENCE: {
@@ -565,7 +554,6 @@ export const mainMachine =
                 target: "projectExperience",
               },
               SUBMIT_EXPERIENCES: {
-                actions: "navigatePrevious",
                 target: "projectHome",
               },
             },
@@ -594,12 +582,10 @@ export const mainMachine =
               idle: {
                 on: {
                   BACK: {
-                    actions: "navigatePrevious",
                     target: "leave",
                   },
                   SUBMIT_ORGANISM: {
                     actions: [
-                      "navigatePrevious",
                       assign({
                         organism: (context, event) =>
                           context.organisms?.find(
@@ -653,11 +639,9 @@ export const mainMachine =
               idle: {
                 on: {
                   BACK: {
-                    actions: "navigatePrevious",
                     target: "leave",
                   },
                   SUBMIT_GOALS: {
-                    actions: "navigatePrevious",
                     target: "submitting",
                   },
                 },
@@ -705,9 +689,7 @@ export const mainMachine =
             },
           },
           projectHomeLoading: {
-            always: [
-              { actions: "navigateHome", target: "projectHome.loading" },
-            ],
+            always: [{ target: "projectHome.loading" }],
           },
           projectHome: {
             initial: "ready",
@@ -764,7 +746,6 @@ export const mainMachine =
               ready: {
                 on: {
                   VALIDATE_PROJECT: {
-                    actions: ["navigateNext"],
                     target: "#mainMachine.projectSubmissionConfirmation",
                   },
                 },
@@ -773,29 +754,23 @@ export const mainMachine =
             },
             on: {
               EDIT_EXPERIENCES: {
-                actions: "navigateNext",
                 target: "projectExperiences",
               },
               EDIT_GOALS: {
-                actions: "navigateNext",
                 target: "projectGoals",
               },
               EDIT_CONTACT: {
-                actions: "navigateNext",
                 target: "projectContact",
               },
               EDIT_ORGANISM: {
-                actions: "navigateNext",
                 target: "projectOrganism",
               },
               CLOSE_SELECTED_CERTIFICATION: [
                 {
-                  actions: "navigateNext",
                   target: "loadingCertifications",
                   cond: "isDepartmentSelected",
                 },
                 {
-                  actions: "navigateNext",
                   target: "searchResults",
                 },
               ],
