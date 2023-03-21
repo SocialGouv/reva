@@ -916,14 +916,7 @@ export const mainMachine =
           isDepartmentSelected: (context, _event) => {
             return !!context.selectedDepartment;
           },
-          isTrainingProgramSubmitted: (_context, event) => {
-            const typedEvent = event as DoneInvokeEvent<any>;
-            const isSubmitted = hasCandidacyAlreadyHadStatus(
-              "PARCOURS_ENVOYE",
-              typedEvent.data.candidacy?.candidacyStatuses
-            );
-            return isSubmitted;
-          },
+
           isTrainingProgramConfirmed: (_context, event) => {
             const typedEvent = event as DoneInvokeEvent<any>;
 
@@ -932,14 +925,7 @@ export const mainMachine =
               typedEvent.data.candidacy?.candidacyStatuses
             );
           },
-          isProjectSubmitted: (_context, event) => {
-            const typedEvent = event as DoneInvokeEvent<any>;
-            const isProjectSubmitted = hasCandidacyAlreadyHadStatus(
-              "VALIDATION",
-              typedEvent.data.candidacy?.candidacyStatuses
-            );
-            return isProjectSubmitted;
-          },
+
           isProjectDroppedOut: (_context, event) => {
             const typedEvent = event as DoneInvokeEvent<any>;
             return Boolean(typedEvent.data.candidacy?.candidacyDropOut);
