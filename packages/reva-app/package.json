@@ -102,7 +102,6 @@
     "autoprefixer": "^10.4.2",
     "esbuild": "^0.15.5",
     "eslint-plugin-react-hooks": "^4.3.0",
-    "framer-motion": "^6.2.8",
     "import-sort-style-module": "^6.0.0",
     "lint-staged": "^12.3.4",
     "postcss": "^8.4.7",

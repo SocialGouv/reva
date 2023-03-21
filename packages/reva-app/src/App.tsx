@@ -1,6 +1,5 @@
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import { Crisp } from "crisp-sdk-web";
-import { AnimatePresence } from "framer-motion";
 import { ProjectSubmissionConfirmation } from "pages/ProjectSubmissionConfirmation";
 import { useEffect } from "react";
 
@@ -101,7 +100,7 @@ function App() {
   );
 
   const pageContent = (
-    <AnimatePresence initial={false}>
+    <>
       {[
         "loadingCertifications",
         "searchResults",
@@ -146,7 +145,7 @@ function App() {
         : null}
 
       {state.matches("error") && errorPage()}
-    </AnimatePresence>
+    </>
   );
 
   return (
