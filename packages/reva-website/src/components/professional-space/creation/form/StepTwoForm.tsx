@@ -7,10 +7,15 @@ import * as z from "zod";
 import { useProfessionalSpaceCreationContext } from "../context/ProfessionalSpaceCreationContext";
 
 const zodSchema = z.object({
-  accountFirstname: z.string().min(1, "obligatoire"),
-  accountLastname: z.string().min(1, "obligatoire"),
-  accountEmail: z.string().email("mauvais format"),
-  accountPhoneNumber: z.string().min(1, "obligatoire"),
+  companyBillingContactFirstname: z.string().min(1, "obligatoire"),
+  companyBillingContactLastname: z.string().min(1, "obligatoire"),
+  companyBillingEmail: z.string().email("mauvais format"),
+  companyBillingPhoneNumber: z.string().min(1, "obligatoire"),
+  companyBic: z.string().length(8, "8 caractères"),
+  companyIban: z
+    .string()
+    .min(1, "obligatoire")
+    .max(34, "34 caractères maximum"),
 });
 
 type StepTwoFormSchema = z.infer<typeof zodSchema>;
@@ -32,37 +37,49 @@ export const StepTwoForm = () => {
   return (
     <div className="flex flex-col min-w-[70vw]">
       <Stepper
-        title="Saisir les informations du contact principal pour la facturation"
+        title="Saisir vos informations pour la facturation"
         currentStep={2}
         stepCount={3}
-        nextTitle="Saisir vos informations professionnelles"
+        nextTitle="Saisir les informations générales"
       />
       <div className="border-t border-gray-300  mb-7" />
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
           <Input
-            label="Prénom *"
-            state={errors.accountFirstname ? "error" : "default"}
-            stateRelatedMessage={errors.accountFirstname?.message}
-            nativeInputProps={{ ...register("accountFirstname") }}
+            label="Prénom du contact de facturation *"
+            state={errors.companyBillingContactFirstname ? "error" : "default"}
+            stateRelatedMessage={errors.companyBillingContactFirstname?.message}
+            nativeInputProps={{ ...register("companyBillingContactFirstname") }}
           />
           <Input
-            label="Nom *"
-            state={errors.accountLastname ? "error" : "default"}
-            stateRelatedMessage={errors.accountLastname?.message}
-            nativeInputProps={{ ...register("accountLastname") }}
+            label="Nom du contact de facturation *"
+            state={errors.companyBillingContactLastname ? "error" : "default"}
+            stateRelatedMessage={errors.companyBillingContactLastname?.message}
+            nativeInputProps={{ ...register("companyBillingContactLastname") }}
           />
           <Input
-            label="email *"
-            state={errors.accountEmail ? "error" : "default"}
-            stateRelatedMessage={errors.accountEmail?.message}
-            nativeInputProps={{ ...register("accountEmail") }}
+            label="Adresse email de facturation *"
+            state={errors.companyBillingEmail ? "error" : "default"}
+            stateRelatedMessage={errors.companyBillingEmail?.message}
+            nativeInputProps={{ ...register("companyBillingEmail") }}
           />
           <Input
-            label="Téléphone *"
-            state={errors.accountPhoneNumber ? "error" : "default"}
-            stateRelatedMessage={errors.accountPhoneNumber?.message}
-            nativeInputProps={{ ...register("accountPhoneNumber") }}
+            label="Téléphone du contact de facturation *"
+            state={errors.companyBillingPhoneNumber ? "error" : "default"}
+            stateRelatedMessage={errors.companyBillingPhoneNumber?.message}
+            nativeInputProps={{ ...register("companyBillingPhoneNumber") }}
+          />
+          <Input
+            label="BIC *"
+            state={errors.companyBic ? "error" : "default"}
+            stateRelatedMessage={errors.companyBic?.message}
+            nativeInputProps={{ ...register("companyBic") }}
+          />
+          <Input
+            label="IBAN *"
+            state={errors.companyIban ? "error" : "default"}
+            stateRelatedMessage={errors.companyIban?.message}
+            nativeInputProps={{ ...register("companyIban") }}
           />
         </div>
         <div className="flex gap-2 ml-auto mt-4">

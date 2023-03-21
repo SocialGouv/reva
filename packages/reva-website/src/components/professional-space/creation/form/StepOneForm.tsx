@@ -11,11 +11,11 @@ const legalStatuses = ["EI", "EURL", "SARL", "SAS", "SASU", "SA"] as const;
 
 const zodSchema = z.object({
   companySiret: z.string().length(14, "doit comporter 14 caractères"),
-  companyAddress: z.string().min(1, "obligatoire"),
-  companyName: z.string().min(1, "obligatoire"),
-  companyBillingAddress: z.string().min(1, "obligatoire"),
-  companyBillingEmail: z.string().email("mauvais format"),
   companyLegalStatus: z.enum(legalStatuses),
+  companyName: z.string().min(1, "obligatoire"),
+  companyAddress: z.string().min(1, "obligatoire"),
+  companyZipCode: z.string().length(5, "doit comporter 5 chiffres"),
+  companyCity: z.string().min(1, "obligatoire"),
 });
 
 type StepOneFormSchema = z.infer<typeof zodSchema>;
@@ -43,60 +43,68 @@ export const StepOneForm = () => {
   return (
     <div className="flex flex-col min-w-[70vw]">
       <Stepper
-        title="Saisir les informations de votre structure"
+        title="Saisir vos informations pour la structure"
         currentStep={1}
         stepCount={3}
-        nextTitle="Saisir les informations du contact principal pour la structure"
+        nextTitle="Saisir les informations pour la facturation"
       />
       <div className="border-t border-gray-300  mb-7" />
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-          <Input
-            label="SIRET *"
-            state={errors.companySiret ? "error" : "default"}
-            stateRelatedMessage={errors.companySiret?.message}
-            nativeInputProps={{ ...register("companySiret") }}
-          />
-          <Input
-            label="Adresse du siège social *"
-            state={errors.companyAddress ? "error" : "default"}
-            stateRelatedMessage={errors.companyAddress?.message}
-            nativeInputProps={{ ...register("companyAddress") }}
-          />
-          <Input
-            label="Raison sociale *"
-            state={errors.companyName ? "error" : "default"}
-            stateRelatedMessage={errors.companyName?.message}
-            nativeInputProps={{ ...register("companyName") }}
-          />
-          <Select
-            label="Forme juridique *"
-            state={errors.companyLegalStatus ? "error" : "default"}
-            stateRelatedMessage={errors.companyLegalStatus?.message}
-            nativeSelectProps={{
-              value: companyLegalStatusController.field.value,
-              onChange: companyLegalStatusController.field.onChange,
-            }}
-          >
-            {legalStatuses.map((ls) => (
-              <option key={ls} value={ls}>
-                {ls}
-              </option>
-            ))}
-          </Select>
-          <Input
-            label="Adresse de facturation *"
-            state={errors.companyBillingAddress ? "error" : "default"}
-            stateRelatedMessage={errors.companyBillingAddress?.message}
-            nativeInputProps={{ ...register("companyBillingAddress") }}
-          />
-          <Input
-            label="Adresse email de facturation*"
-            state={errors.companyBillingEmail ? "error" : "default"}
-            stateRelatedMessage={errors.companyBillingEmail?.message}
-            nativeInputProps={{ ...register("companyBillingEmail") }}
-          />
-        </div>
+          <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+            <legend className="text-xl font-bold text-gray-900 grow mb-4">
+              Informations juridiques de la structure
+            </legend>
+              <Input
+                label="SIRET de la structure *"
+                state={errors.companySiret ? "error" : "default"}
+                stateRelatedMessage={errors.companySiret?.message}
+                nativeInputProps={{ ...register("companySiret") }}
+              />
+              <Select
+                label="Forme juridique *"
+                state={errors.companyLegalStatus ? "error" : "default"}
+                stateRelatedMessage={errors.companyLegalStatus?.message}
+                nativeSelectProps={{
+                  value: companyLegalStatusController.field.value,
+                  onChange: companyLegalStatusController.field.onChange,
+                }}
+              >
+                {legalStatuses.map((ls) => (
+                  <option key={ls} value={ls}>
+                    {ls}
+                  </option>
+                ))}
+              </Select>
+              <Input
+                label="Raison sociale *"
+                state={errors.companyName ? "error" : "default"}
+                stateRelatedMessage={errors.companyName?.message}
+                nativeInputProps={{ ...register("companyName") }}
+              />
+          </fieldset>
+          <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-8 mt-8">
+            <legend className="text-lg font-bold text-gray-900 grow my-4">
+              Adresse de la structure
+            </legend>
+              <Input
+                label="Numéro et rue *"
+                state={errors.companyAddress ? "error" : "default"}
+                stateRelatedMessage={errors.companyAddress?.message}
+                nativeInputProps={{ ...register("companyAddress") }}
+              />
+              <Input
+                label="Code postal"
+                state={errors.companyZipCode ? "error" : "default"}
+                stateRelatedMessage={errors.companyZipCode?.message}
+                nativeInputProps={{ ...register("companyZipCode") }}
+              />
+              <Input
+                label="Ville"
+                state={errors.companyCity ? "error" : "default"}
+                stateRelatedMessage={errors.companyCity?.message}
+                nativeInputProps={{ ...register("companyCity") }}
+              />
+          </fieldset>
         <Button type="submit" className="ml-auto mt-4">
           Suivant
         </Button>

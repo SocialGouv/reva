@@ -7,17 +7,21 @@ type LegalStatus = "EI" | "EURL" | "SARL" | "SAS" | "SASU" | "SA";
 
 interface ProfessionalSpaceInfos {
   companySiret: string;
-  companyAddress: string;
-  companyName: string;
-  companyBillingAddress: string;
-  companyBillingEmail: string;
   companyLegalStatus: LegalStatus;
+  companyName: string;
+  companyAddress: string;
+  companyZipCode: string;
+  companyCity: string;
+  companyBillingContactFirstname: string;
+  companyBillingContactLastname: string;
+  companyBillingEmail: string;
+  companyBillingPhoneNumber: string;
+  companyBic: string;
+  companyIban: string;
   accountFirstname: string;
   accountLastname: string;
   accountEmail: string;
   accountPhoneNumber: string;
-  companyBic: string;
-  companyIban: string;
 }
 interface ProfessionalSpaceCreationState {
   currentStep: "stepOne" | "stepTwo" | "stepThree";
@@ -27,19 +31,27 @@ interface ProfessionalSpaceCreationState {
 type StepOneData = Pick<
   ProfessionalSpaceInfos,
   | "companySiret"
-  | "companyAddress"
-  | "companyName"
-  | "companyBillingAddress"
-  | "companyBillingEmail"
   | "companyLegalStatus"
+  | "companyName"
+  | "companyAddress"
+  | "companyZipCode"
+  | "companyCity"
 >;
 
 type StepTwoData = Pick<
   ProfessionalSpaceInfos,
-  "accountFirstname" | "accountLastname" | "accountEmail" | "accountPhoneNumber"
+  | "companyBillingContactFirstname"
+  | "companyBillingContactLastname"
+  | "companyBillingEmail"
+  | "companyBillingPhoneNumber"
+  | "companyBic"
+  | "companyIban"
 >;
 
-type StepThreeData = Pick<ProfessionalSpaceInfos, "companyBic" | "companyIban">;
+type StepThreeData = Pick<
+  ProfessionalSpaceInfos,
+  "accountFirstname" | "accountLastname" | "accountEmail" | "accountPhoneNumber"
+>;
 
 type ProfessionalSpaceCreationContext = ProfessionalSpaceCreationState & {
   goBackToPreviousStep: () => void;
@@ -50,7 +62,7 @@ type ProfessionalSpaceCreationContext = ProfessionalSpaceCreationState & {
 
 const GRAPHQL_API_URL =
   process.env.NEXT_PUBLIC_WEBSITE_API_GRAPHQL ||
-  "http://localhost:8080/graphql";
+  "http://localhost:8080/api/graphql";
 
 const ProfessionalSpaceCreationContext =
   createContext<ProfessionalSpaceCreationContext>(
