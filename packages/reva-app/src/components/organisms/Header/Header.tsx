@@ -7,7 +7,7 @@ export const Header = (props: { className?: string }) => (
     serviceTitle="Reva"
     homeLinkProps={{
       href: "/",
-      title: "Accueil - Reva",
+      title: "Accueil - Reva - l'expérimentation de la VAE",
     }}
   />
 );

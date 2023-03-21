@@ -10,7 +10,7 @@ export const Footer = (props: { className?: string }) => (
     }}
     homeLinkProps={{
       href: "/",
-      title: "Accueil - Reva",
+      title: "Accueil - Reva - l'expérimentation de la VAE",
     }}
   />
 );
