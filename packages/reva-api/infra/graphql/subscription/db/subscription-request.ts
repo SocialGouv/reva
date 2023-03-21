@@ -10,12 +10,16 @@ export const createSubscriptionRequest = async (
   try {
     const subscriptionRequest = await prismaClient.subscriptionRequest.create({
       data: {
-        companyName: subscriptionRequestInput.companyName,
-        companyLegalStatus: subscriptionRequestInput.companyLegalStatus,
         companySiret: subscriptionRequestInput.companySiret,
+        companyLegalStatus: subscriptionRequestInput.companyLegalStatus,
+        companyName: subscriptionRequestInput.companyName,
         companyAddress: subscriptionRequestInput.companyAddress,
-        companyBillingAddress: subscriptionRequestInput.companyBillingAddress,
+        companyZipCode: subscriptionRequestInput.companyZipCode,
+        companyCity: subscriptionRequestInput.companyCity,
+        companyBillingContactFirstname: subscriptionRequestInput.companyBillingContactFirstname,
+        companyBillingContactLastname: subscriptionRequestInput.companyBillingContactLastname,
         companyBillingEmail: subscriptionRequestInput.companyBillingEmail,
+        companyBillingPhoneNumber: subscriptionRequestInput.companyBillingPhoneNumber,
         companyBic: subscriptionRequestInput.companyBic,
         companyIban: subscriptionRequestInput.companyIban,
         accountFirstname: subscriptionRequestInput.accountFirstname,
@@ -115,7 +119,12 @@ const filterClause = (params: GetSubscriptionRequestsParams) => {
   }
 };
 
-const paginationClause = (params: GetSubscriptionRequestsParams) => {
+interface PaginationParams {
+  limit?: number;
+  offset?: number;
+}
+
+const paginationClause = (params: PaginationParams) => {
   const clause: {take?:number;skip?:number}  = {};
   if (params.limit) {
     clause.take = params.limit;
