@@ -8,7 +8,7 @@ export const BlueLayout = (props: {
   <div className="flex-1 flex flex-col relative">
     <div className="bg-blue-900 w-screen left-0 absolute z-0 pb-[400px]"></div>
     <div className="flex flex-col items-center z-1 relative pb-14 fr-container">
-      <div className="w-4/6 py-5">
+      <div className="w-full py-5">
         <h2 className="text-white">{props.title}</h2>
         <p className="text-white">{props.description}</p>
       </div>

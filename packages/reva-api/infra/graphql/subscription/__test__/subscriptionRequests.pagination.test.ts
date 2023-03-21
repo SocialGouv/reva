@@ -11,22 +11,18 @@ import { prismaClient } from "../../../database/postgres/client";
 const NB_SUBSCRIPTION_REQUESTS = 40;
 
 const subreqSample = {
-  companySiret: "1234888",
-  companyLegalStatus: LegalStatus.SAS,
   companyName: "Jojo formation",
-  companyAddress: "64 boulevard du Général Leclerc",
-  companyZipCode: "35660",
-  companyCity: "Fougères",
-  companyBillingContactFirstname: "Josette",
-  companyBillingContactLastname: "Lacomptable",
-  companyBillingEmail: "billingjosette@jojo-formation.fr",
-  companyBillingPhoneNumber: "03214556789",
+  companyLegalStatus: LegalStatus.SAS,
+  companySiret: "1234888",
+  companyAddress: "64 boulevard du Général Leclerc 35600 Fougères",
+  companyBillingAddress: "123 rue Tabaga 75015 Paris",
   companyBic: "1232131",
   companyIban: "234345343",
+  companyBillingEmail: "billing@jojo-formation.fr",
   accountFirstname: "Jojo",
   accountLastname: "Landouille",
-  accountEmail: "contact@jojo-formation.fr",
   accountPhoneNumber: "03214556789",
+  accountEmail: "contact@jojo-formation.fr",
 };
 
 beforeAll(() => {

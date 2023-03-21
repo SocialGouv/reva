@@ -52,7 +52,20 @@ const unsafeResolvers = {
     subscription_createSubscriptionRequest: async (
       _: unknown,
       payload: {
-        subscriptionRequest: SubscriptionRequestInput;
+        subscriptionRequest: {
+          companyName: string;
+          companyLegalStatus: LegalStatus;
+          companySiret: string;
+          companyAddress: string;
+          companyBillingAddress: string;
+          companyBillingEmail: string;
+          companyBic: string;
+          companyIban: string;
+          accountFirstname: string;
+          accountLastname: string;
+          accountEmail: string;
+          accountPhoneNumber: string;
+        };
       }
     ) => {
       const result = await domain.createSubscriptionRequest(

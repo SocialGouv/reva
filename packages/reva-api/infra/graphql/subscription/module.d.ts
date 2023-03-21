@@ -1,16 +1,12 @@
 type LegalStatus = "EI" | "EURL" | "SARL" | "SAS" | "SASU" | "SA" | "NC";
 
 interface SubscriptionRequestInput {
-  companySiret: string;
-  companyLegalStatus: LegalStatus;
   companyName: string;
+  companyLegalStatus: LegalStatus;
+  companySiret: string;
   companyAddress: string;
-  companyZipCode: string;
-  companyCity: string;
-  companyBillingContactFirstname: string;
-  companyBillingContactLastname: string;
+  companyBillingAddress: string;
   companyBillingEmail: string;
-  companyBillingPhoneNumber: string;
   companyBic: string;
   companyIban: string;
   accountFirstname: string;

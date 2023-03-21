@@ -7,21 +7,17 @@ type LegalStatus = "EI" | "EURL" | "SARL" | "SAS" | "SASU" | "SA";
 
 interface ProfessionalSpaceInfos {
   companySiret: string;
-  companyLegalStatus: LegalStatus;
-  companyName: string;
   companyAddress: string;
-  companyZipCode: string;
-  companyCity: string;
-  companyBillingContactFirstname: string;
-  companyBillingContactLastname: string;
+  companyName: string;
+  companyBillingAddress: string;
   companyBillingEmail: string;
-  companyBillingPhoneNumber: string;
-  companyBic: string;
-  companyIban: string;
+  companyLegalStatus: LegalStatus;
   accountFirstname: string;
   accountLastname: string;
   accountEmail: string;
   accountPhoneNumber: string;
+  companyBic: string;
+  companyIban: string;
 }
 interface ProfessionalSpaceCreationState {
   currentStep: "stepOne" | "stepTwo" | "stepThree";
@@ -31,27 +27,19 @@ interface ProfessionalSpaceCreationState {
 type StepOneData = Pick<
   ProfessionalSpaceInfos,
   | "companySiret"
-  | "companyLegalStatus"
-  | "companyName"
   | "companyAddress"
-  | "companyZipCode"
-  | "companyCity"
+  | "companyName"
+  | "companyBillingAddress"
+  | "companyBillingEmail"
+  | "companyLegalStatus"
 >;
 
 type StepTwoData = Pick<
   ProfessionalSpaceInfos,
-  | "companyBillingContactFirstname"
-  | "companyBillingContactLastname"
-  | "companyBillingEmail"
-  | "companyBillingPhoneNumber"
-  | "companyBic"
-  | "companyIban"
->;
-
-type StepThreeData = Pick<
-  ProfessionalSpaceInfos,
   "accountFirstname" | "accountLastname" | "accountEmail" | "accountPhoneNumber"
 >;
+
+type StepThreeData = Pick<ProfessionalSpaceInfos, "companyBic" | "companyIban">;
 
 type ProfessionalSpaceCreationContext = ProfessionalSpaceCreationState & {
   goBackToPreviousStep: () => void;
@@ -62,7 +50,7 @@ type ProfessionalSpaceCreationContext = ProfessionalSpaceCreationState & {
 
 const GRAPHQL_API_URL =
   process.env.NEXT_PUBLIC_WEBSITE_API_GRAPHQL ||
-  "http://localhost:8080/api/graphql";
+  "http://localhost:8080/graphql";
 
 const ProfessionalSpaceCreationContext =
   createContext<ProfessionalSpaceCreationContext>(
