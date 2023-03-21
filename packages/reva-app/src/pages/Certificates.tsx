@@ -41,7 +41,6 @@ export const Certificates = ({ mainService }: Props) => {
           }) && send({ type: "SUBMIT_CERTIFICATION", certification })
         }
         key={certification.id}
-        // isSelectable={state.matches("searchResults")}
         id={certification.id}
         title={certification.label}
         codeRncp={certification.codeRncp}
@@ -63,11 +62,7 @@ export const Certificates = ({ mainService }: Props) => {
   };
 
   return (
-    <Page
-      data-test="certificates"
-      title="Choix du diplôme"
-      direction={state.context.direction}
-    >
+    <Page data-test="certificates" title="Choix du diplôme">
       <BackToHomeButton />
       <NameBadge as="h1" className="mt-4" />
       <h2 className="text-lg text-dsfrGray-500 font-bold mt-6">

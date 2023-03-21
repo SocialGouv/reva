@@ -26,11 +26,7 @@ export const CertificateDetails = ({ certification, mainService }: Props) => {
   const [state, send] = useActor(mainService);
 
   return (
-    <Page
-      title="détails du diplôme"
-      className="bg-slate-900 max-w-full"
-      direction={state.context.direction}
-    >
+    <Page title="détails du diplôme" className="bg-slate-900 max-w-full">
       <BackButton color="light" />
       <div className="grow overflow-y-scroll">
         <div className="prose prose-invert prose-h2:my-1 mt-8 text-slate-400 text-base leading-normalpb-8">

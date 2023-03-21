@@ -21,7 +21,7 @@ interface ContactFormElement extends HTMLFormElement {
 }
 
 export const LoginHome = ({ mainService }: LoginHomeProps) => {
-  const [state, send] = useActor(mainService);
+  const [, send] = useActor(mainService);
 
   const onSubmit = (event: React.SyntheticEvent<ContactFormElement>) => {
     event.preventDefault();
@@ -38,11 +38,7 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
   const emailRef = useRef<HTMLInputElement>(null);
 
   return (
-    <Page
-      data-test="login-home"
-      title="Connexion"
-      direction={state.context.direction}
-    >
+    <Page data-test="login-home" title="Connexion">
       <h1 className="text-3xl font-bold text-dsfrBlue-500">
         Bienvenue <span aria-hidden="true">🤝</span>,
       </h1>

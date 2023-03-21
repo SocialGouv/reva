@@ -1,6 +1,5 @@
 import { DoneInvokeEvent, assign, createMachine } from "xstate";
 
-import { Direction } from "../components/organisms/Page";
 import {
   Certification,
   Contact,
@@ -58,7 +57,6 @@ export interface MainContext {
   candidacyCreatedAt?: Date;
   candidacyStatus: candidacyStatus;
   contact?: Contact;
-  direction: Direction;
   showStatusBar: boolean;
   certification?: Certification;
   isCertificationPartial: boolean;
@@ -186,7 +184,6 @@ export const mainMachine =
       {
         context: {
           error: "",
-          direction: "initial",
           certifications: [],
           candidacyStatus: "CANDIDATURE_VIDE",
           showStatusBar: false,
@@ -348,9 +345,6 @@ export const mainMachine =
                   },
                   BACK: {
                     target: "#mainMachine.projectHome",
-                    actions: assign({
-                      direction: (_context, _event) => "previous",
-                    }),
                   },
                 },
               },
@@ -404,7 +398,6 @@ export const mainMachine =
               OPEN_TRAINING_PROGRAM_SUMMARY: {
                 target: "trainingProgramSummary",
                 actions: assign({
-                  direction: (_context, _event) => "next",
                   isTrainingProgramConfirmed: (_context, _event) => true,
                 }),
               },
@@ -562,7 +555,6 @@ export const mainMachine =
               EDIT_EXPERIENCE: {
                 actions: assign({
                   certification: (context, _event) => context.certification,
-                  direction: (_context, _event) => "next",
                   experiences: (context, event) => ({
                     edited: context.experiences.rest[event.index],
                     rest: context.experiences.rest.filter(
@@ -744,7 +736,6 @@ export const mainMachine =
                     {
                       actions: assign({
                         error: (_, _event) => INVALID_TOKEN_ERROR,
-                        direction: (_context, _event) => "next",
                       }),
                       target: "#mainMachine.projectContact.idle",
                       cond: "isTokenInvalid",
@@ -752,7 +743,6 @@ export const mainMachine =
                     {
                       actions: assign({
                         error: (_, _event) => "Une erreur est survenue.",
-                        direction: (_context, _event) => "next",
                       }),
                       target: "retry",
                     },
@@ -823,9 +813,6 @@ export const mainMachine =
                     target: "#mainMachine.projectHomeLoading",
                   },
                   SUBMIT_PROJECT: {
-                    actions: assign({
-                      direction: (_context, _event) => "next",
-                    }),
                     target: "submitting",
                   },
                 },
@@ -837,7 +824,6 @@ export const mainMachine =
                     {
                       actions: assign({
                         candidacyStatus: (_context, _event) => "VALIDATION",
-                        direction: (_context, _event) => "next",
                       }),
                       target: "#mainMachine.projectHome",
                     },
@@ -847,7 +833,6 @@ export const mainMachine =
                       actions: assign({
                         error: (_, _event) =>
                           "Une erreur est survenue lors de la transmission de votre projet.",
-                        direction: (_context, _event) => "previous",
                       }),
                       target: "error",
                     },
@@ -900,12 +885,6 @@ export const mainMachine =
             };
           }),
           navigateHome,
-          navigateNext: assign((_context, _event) => ({
-            direction: "next",
-          })),
-          navigatePrevious: assign((_context, _event) => ({
-            direction: "previous",
-          })),
           resetError: assign((_context, _event) => ({
             error: undefined,
           })),

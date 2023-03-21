@@ -62,10 +62,7 @@ function App() {
   );
 
   const projectContactConfirmationPage = () => (
-    <ProjectContactConfirmation
-      key="project-contact-confirmation"
-      mainService={mainService}
-    />
+    <ProjectContactConfirmation key="project-contact-confirmation" />
   );
 
   const projectExperiencesPage = () => (
@@ -90,7 +87,6 @@ function App() {
     const fullName = `${firstname} ${lastname}`;
     return (
       <ProjectDroppedOut
-        mainService={mainService}
         candidateEmail={contact?.email ?? ""}
         candidateName={fullName}
         supportEmail="support@reva.beta.gouv.fr"
@@ -105,7 +101,7 @@ function App() {
   );
 
   const pageContent = (
-    <AnimatePresence custom={state.context.direction} initial={false}>
+    <AnimatePresence initial={false}>
       {[
         "loadingCertifications",
         "searchResults",

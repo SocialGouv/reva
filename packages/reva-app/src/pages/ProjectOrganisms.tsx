@@ -94,7 +94,7 @@ interface Props {
 
 export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
   const [state, send] = useActor(mainService);
-  const { direction, selectedDepartment, organism, organisms, candidacyId } =
+  const { selectedDepartment, organism, organisms, candidacyId } =
     state.context;
   const [selectedOrganismId, setSelectedOrganismId] = useState(
     organism?.id || ""
@@ -105,7 +105,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
   if (!candidacyId) return <p>Aucun Id de candidat trouvé</p>;
 
   return (
-    <Page title="Votre référent" direction={direction}>
+    <Page title="Votre référent">
       <BackToHomeButton />
       <h1 className="mt-4 text-3xl font-bold">Votre référent</h1>
       {selectedDepartment && (

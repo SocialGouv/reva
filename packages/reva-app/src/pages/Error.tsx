@@ -15,11 +15,7 @@ export const Error = ({ mainService }: ErrorProps) => {
   const [state, send] = useActor(mainService);
 
   return (
-    <Page
-      title="Erreur"
-      className="z-[60] h-full flex flex-col bg-white pt-6"
-      direction={state.context.direction}
-    >
+    <Page title="Erreur" className="z-[60] h-full flex flex-col bg-white pt-6">
       <BackButton />
       <div className="grow flex flex-col text-center items-center justify-center px-10">
         <Header label="Oups..." size="small" />
