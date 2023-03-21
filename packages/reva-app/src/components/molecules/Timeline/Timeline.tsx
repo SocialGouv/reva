@@ -36,7 +36,7 @@ export const TimelineElement = ({
       }
 `}
     >
-      <h2 className="text-black !leading-none">{title}</h2>
+      <h3 className="text-black !leading-none">{title}</h3>
 
       {description ? (
         <p className="text-sm text-dsfrGray-500 mt-4">{description}</p>

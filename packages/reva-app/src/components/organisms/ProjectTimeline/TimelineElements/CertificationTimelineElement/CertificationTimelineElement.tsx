@@ -18,9 +18,9 @@ export const CertificationTimelineElement = () => {
       {({ status }) => (
         <>
           {state.context.certification && (
-            <h3 data-test="certification-label" className="text-base mb-4">
+            <h4 data-test="certification-label" className="text-base mb-4">
               {state.context.certification?.label}
-            </h3>
+            </h4>
           )}
 
           {status !== "readonly" && (
