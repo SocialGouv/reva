@@ -81,7 +81,7 @@
     "graphql-scalars": "^1.17.0",
     "jsonwebtoken": "^8.5.1",
     "keycloak-connect": "^18.0.1",
-    "mercurius": "^10.0.0",
+    "mercurius": "^11.5.0",
     "mjml": "^4.13.0",
     "pino": "^8.7.0",
     "purify-ts": "^1.2.0",
