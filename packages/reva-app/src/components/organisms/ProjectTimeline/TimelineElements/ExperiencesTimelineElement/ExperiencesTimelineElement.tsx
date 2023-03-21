@@ -35,23 +35,27 @@ export const ExperiencesTimelineElement = () => {
         <>
           {!!sortedExperiences.length && (
             <ul
-              data-test="project-home-experiences"
+              data-test="timeline-experiences-list"
               className="mb-2 pb-2 flex flex-col space-y-3"
             >
-              {sortedExperiences.map(ExperienceSummary)}
+              {sortedExperiences.map((se, i) =>
+                ExperienceSummary(
+                  se,
+                  i,
+                  ["disabled", "readonly"].includes(status)
+                )
+              )}
             </ul>
           )}
           <div className="text-sm text-slate-400">
             {status !== "readonly" && (
               <Button
-                data-test="project-home-edit-experiences"
+                data-test="timeline-add-experience"
                 priority="secondary"
-                onClick={() => mainService.send("EDIT_EXPERIENCES")}
+                onClick={() => mainService.send("ADD_EXPERIENCE")}
                 disabled={status === "disabled"}
               >
-                {sortedExperiences.length
-                  ? "Modifier vos expériences"
-                  : "Choisir vos expériences"}
+                Ajouter une expérience
               </Button>
             )}
           </div>
@@ -61,16 +65,37 @@ export const ExperiencesTimelineElement = () => {
   );
 };
 
-const ExperienceSummary = (experience: Experience, index: number) => (
-  <li key={index} className="flex flex-col p-4 border border-dsfrBlue-500">
-    <p data-test="project-home-experience-title" className="font-medium">
-      {experience.title}
-    </p>
-    <p data-test="project-home-experience-duration">
-      {durationToString[experience.duration]}
-    </p>
-  </li>
-);
+const ExperienceSummary = (
+  experience: Experience,
+  index: number,
+  disabled?: boolean
+) => {
+  const {
+    mainService: { send },
+  } = useMainMachineContext();
+
+  return (
+    <li
+      key={index}
+      className={`flex gap-4 p-4 border border-dsfrBlue-500 ${
+        disabled ? "default" : "cursor-pointer"
+      }`}
+      onClick={() => !disabled && send({ type: "EDIT_EXPERIENCE", index })}
+    >
+      <div className="flex flex-col">
+        <p data-test="timeline-experience-title" className="font-medium">
+          {experience.title}
+        </p>
+        <p data-test="timeline-experience-duration">
+          {durationToString[experience.duration]}
+        </p>
+      </div>
+      {!disabled ? (
+        <span className="fr-icon-arrow-right-s-line self-center ml-auto text-dsfrBlue-500" />
+      ) : null}
+    </li>
+  );
+};
 
 const durationToString: {
   [key in duration]: string;

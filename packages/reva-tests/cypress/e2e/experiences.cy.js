@@ -22,8 +22,7 @@ context("Experiences", () => {
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
 
-    cy.get('[data-test="project-home-edit-experiences"]').click();
-    cy.get('[data-test="project-experiences-add"]').click();
+    cy.get('[data-test="timeline-add-experience"]').click();
     cy.get("[name='title']").type(experienceTitle1);
     cy.get("[name='startedAt']").type("2019-01-31");
     cy.get("[name='duration']").select("betweenOneAndThreeYears");
@@ -32,28 +31,20 @@ context("Experiences", () => {
     cy.get('[data-test="project-experience-add"]').click();
     cy.wait("@add_experience");
 
-    cy.get('[data-test="project-experiences-overview"] > li')
+    cy.get('[data-test="timeline-experiences-list"] > li')
       .eq(0)
       .within(() => {
-        cy.get('[data-test="project-experience-title"]').should(
+        cy.get('[data-test="timeline-experience-title"]').should(
           "have.text",
           experienceTitle1
         );
-        cy.get('[data-test="project-experience-start-date"]').should(
+        cy.get('[data-test="timeline-experience-duration"]').should(
           "have.text",
-          "Démarrée en janvier 2019"
-        );
-        cy.get('[data-test="project-experience-duration"]').should(
-          "have.text",
-          "Durée d'expérience comprise entre 1 et 3 ans"
-        );
-        cy.get('[data-test="project-experience-description"]').should(
-          "have.text",
-          `"${experienceDescription1}"`
+          "Entre 1 et 3 ans"
         );
       });
 
-    cy.get('[data-test="project-experiences-edit-0"]').click();
+    cy.get('[data-test="timeline-experiences-list"] > li').eq(0).click();
     cy.get("[name='startedAt']").type("2017-03-31");
     cy.get("[name='title']").type(`{selectAll}${experienceTitle2}`);
     cy.get("[name='duration']").select("moreThanFiveYears");
@@ -62,48 +53,17 @@ context("Experiences", () => {
     );
     cy.get('[data-test="project-experience-save"]').click();
 
-    cy.get('[data-test="project-experiences-overview"] > li')
+    cy.get('[data-test="timeline-experiences-list"] > li')
       .eq(0)
       .within(() => {
-        cy.get('[data-test="project-experience-title"]').should(
+        cy.get('[data-test="timeline-experience-title"]').should(
           "have.text",
           experienceTitle2
         );
-        cy.get('[data-test="project-experience-start-date"]').should(
-          "have.text",
-          "Démarrée en mars 2017"
-        );
-        cy.get('[data-test="project-experience-duration"]').should(
-          "have.text",
-          "Durée d'expérience de plus de 5 ans"
-        );
-        cy.get('[data-test="project-experience-description"]').should(
-          "have.text",
-          `"${experienceDescription2}"`
-        );
-      });
-
-    // We will split this to a separate test once the local storage is done
-
-    cy.get('[data-test="project-experiences-submit"]').click();
-    cy.wait("@update_experience");
-
-    cy.get('[data-test="project-home-experiences"] > li')
-      .eq(0)
-      .within(() => {
-        cy.get('[data-test="project-home-experience-duration"]').should(
+        cy.get('[data-test="timeline-experience-duration"]').should(
           "have.text",
           "Plus de 5 ans"
         );
-        cy.get('[data-test="project-home-experience-title"]').should(
-          "have.text",
-          experienceTitle2
-        );
       });
-
-    cy.get('[data-test="project-home-timeline"]')
-      .children("section")
-      .eq(3)
-      .should("contain.text", experienceTitle2);
   });
 });

@@ -22,7 +22,6 @@ const projectHome = "projectHome";
 const projectContact = "projectContact";
 const projectContactConfirmation = "projectContactConfirmation";
 const projectExperience = "projectExperience";
-const projectExperiences = "projectExperiences";
 const projectGoals = "projectGoals";
 const projectOrganism = "projectOrganism";
 const projectDroppedOut = "projectDroppedOut";
@@ -40,7 +39,6 @@ export type State =
   | typeof projectHome
   | typeof projectContact
   | typeof projectExperience
-  | typeof projectExperiences
   | typeof projectGoals
   | typeof projectOrganism
   | typeof projectDroppedOut
@@ -82,7 +80,6 @@ export type MainEvent =
   | { type: "SHOW_PROJECT_HOME"; certification: Certification }
   | { type: "EDIT_CONTACT" }
   | { type: "ADD_EXPERIENCE" }
-  | { type: "EDIT_EXPERIENCES" }
   | { type: "EDIT_EXPERIENCE"; index: number }
   | { type: "EDIT_GOALS" }
   | { type: "EDIT_ORGANISM" }
@@ -137,7 +134,6 @@ export type MainState =
         | typeof projectContact
         | typeof projectContactConfirmation
         | typeof projectExperience
-        | typeof projectExperiences
         | typeof projectOrganism
         | typeof error;
 
@@ -530,32 +526,7 @@ export const mainMachine =
               },
             },
             onDone: {
-              target: "projectExperiences",
-            },
-          },
-          projectExperiences: {
-            on: {
-              BACK: {
-                target: "projectHome",
-              },
-              ADD_EXPERIENCE: {
-                target: "projectExperience",
-              },
-              EDIT_EXPERIENCE: {
-                actions: assign({
-                  certification: (context, _event) => context.certification,
-                  experiences: (context, event) => ({
-                    edited: context.experiences.rest[event.index],
-                    rest: context.experiences.rest.filter(
-                      (_, i) => i !== event.index
-                    ),
-                  }),
-                }),
-                target: "projectExperience",
-              },
-              SUBMIT_EXPERIENCES: {
-                target: "projectHome",
-              },
+              target: "projectHome",
             },
           },
           projectOrganism: {
@@ -753,9 +724,6 @@ export const mainMachine =
               error: {},
             },
             on: {
-              EDIT_EXPERIENCES: {
-                target: "projectExperiences",
-              },
               EDIT_GOALS: {
                 target: "projectGoals",
               },
@@ -776,6 +744,21 @@ export const mainMachine =
               ],
               OPEN_TRAINING_PROGRAM_SUMMARY: {
                 target: "trainingProgramSummary",
+              },
+              EDIT_EXPERIENCE: {
+                actions: assign({
+                  certification: (context, _event) => context.certification,
+                  experiences: (context, event) => ({
+                    edited: context.experiences.rest[event.index],
+                    rest: context.experiences.rest.filter(
+                      (_, i) => i !== event.index
+                    ),
+                  }),
+                }),
+                target: "projectExperience",
+              },
+              ADD_EXPERIENCE: {
+                target: "projectExperience",
               },
             },
           },

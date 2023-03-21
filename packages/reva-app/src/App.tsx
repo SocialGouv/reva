@@ -15,7 +15,6 @@ import { ProjectContact } from "./pages/ProjectContact";
 import { ProjectContactConfirmation } from "./pages/ProjectContactConfirmation";
 import { ProjectDroppedOut } from "./pages/ProjectDroppedOut";
 import { ProjectExperience } from "./pages/ProjectExperience";
-import { ProjectExperiences } from "./pages/ProjectExperiences";
 import { ProjectGoals } from "./pages/ProjectGoals";
 import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectOrganisms } from "./pages/ProjectOrganisms";
@@ -62,10 +61,6 @@ function App() {
 
   const projectContactConfirmationPage = () => (
     <ProjectContactConfirmation key="project-contact-confirmation" />
-  );
-
-  const projectExperiencesPage = () => (
-    <ProjectExperiences key="project-experiences" mainService={mainService} />
   );
 
   const projectHomePage = ({
@@ -117,8 +112,6 @@ function App() {
       {state.matches("projectContact") && projectContactPage()}
       {state.matches("projectContactConfirmation") &&
         projectContactConfirmationPage()}
-
-      {state.matches("projectExperiences") && projectExperiencesPage()}
 
       {state.matches("projectExperience") && projectExperiencePage()}
 

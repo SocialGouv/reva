@@ -3,10 +3,10 @@ import { Input } from "@codegouvfr/react-dsfr/Input";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { useActor } from "@xstate/react";
 import { FormOptionalFieldsDisclaimer } from "components/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
+import { BackToHomeButton } from "components/molecules/BackToHomeButton/BackToHomeButton";
 import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/ErrorAlertFromState";
 import { Interpreter } from "xstate";
 
-import { BackButton } from "../components/molecules/BackButton";
 import { Page } from "../components/organisms/Page";
 import { Experience, duration } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
@@ -57,9 +57,10 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
 
   return (
     <Page title="Détail d'une expérience">
-      <BackButton />
+      <BackToHomeButton />
       <h1 className="mt-4 mb-6 text-3xl font-bold text-black">
-        Ajouter une expérience
+        {!!state.context.experiences.edited ? "Modifier" : "Ajouter"} une
+        expérience
       </h1>
       <p className="text-xs text-dsfrGray-500">
         Il peut s’agir d’une expérience professionnelle, bénévole, d’un stage ou
