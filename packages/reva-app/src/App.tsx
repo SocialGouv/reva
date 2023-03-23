@@ -1,5 +1,6 @@
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import { Crisp } from "crisp-sdk-web";
+import { CertificateDetails } from "pages/CertificateDetails";
 import { ProjectSubmissionConfirmation } from "pages/ProjectSubmissionConfirmation";
 import { useEffect } from "react";
 
@@ -35,11 +36,11 @@ function App() {
     <Certificates key="show-results" mainService={mainService} />
   );
 
-  const projectGoalsPage = (certification: Certification) => (
+  const projectGoalsPage = () => (
     <ProjectGoals key="project-goals" mainService={mainService} />
   );
 
-  const projectOrganismsPage = (certification: Certification) => (
+  const projectOrganismsPage = () => (
     <ProjectOrganisms key="project-organism" mainService={mainService} />
   );
 
@@ -96,12 +97,13 @@ function App() {
 
   const pageContent = (
     <>
-      {[
-        "loadingCertifications",
-        "searchResults",
-        "searchResultsError",
-        "submittingSelectedCertification",
-      ].some(state.matches) && certificatesPage}
+      {["loadingCertifications", "searchResults", "searchResultsError"].some(
+        state.matches
+      ) && certificatesPage}
+
+      {["certificateDetails", "submittingSelectedCertification"].some(
+        state.matches
+      ) && <CertificateDetails />}
 
       {state.matches("loginHome") && loginHomePage()}
       {state.matches("loginConfirmation") && loginConfirmationPage()}
@@ -115,11 +117,9 @@ function App() {
 
       {state.matches("projectExperience") && projectExperiencePage()}
 
-      {state.matches("projectGoals") &&
-        projectGoalsPage(state.context.certification)}
+      {state.matches("projectGoals") && projectGoalsPage()}
 
-      {state.matches("projectOrganism") &&
-        projectOrganismsPage(state.context.certification)}
+      {state.matches("projectOrganism") && projectOrganismsPage()}
 
       {state.matches("projectDroppedOut") &&
         projectDroppedOutPage(state.context.contact)}

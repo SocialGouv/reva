@@ -16,6 +16,7 @@ import {
 const loadingCertifications = "loadingCertifications";
 const searchResults = "searchResults";
 const searchResultsError = "searchResultsError";
+const certificateDetails = "certificateDetails";
 const loginHome = "loginHome";
 const loginConfirmation = "loginConfirmation";
 const projectHome = "projectHome";
@@ -34,6 +35,7 @@ export type State =
   | typeof loadingCertifications
   | typeof searchResults
   | typeof searchResultsError
+  | typeof certificateDetails
   | typeof loginHome
   | typeof loginConfirmation
   | typeof projectHome
@@ -57,6 +59,7 @@ export interface MainContext {
   contact?: Contact;
   showStatusBar: boolean;
   certification?: Certification;
+  selectedCertification?: Certification;
   isCertificationPartial: boolean;
   experiences: Experiences;
   goals: Goal[];
@@ -106,6 +109,10 @@ export type MainState =
         certification: undefined;
         candidacyId: undefined;
       };
+    }
+  | {
+      value: typeof certificateDetails;
+      context: MainContext;
     }
   | {
       value: typeof trainingProgramSummary;
@@ -284,12 +291,12 @@ export const mainMachine =
           },
           searchResults: {
             on: {
-              SUBMIT_CERTIFICATION: [
-                {
-                  actions: ["submitCertification", "resetOrganisms"],
-                  target: "submittingSelectedCertification",
-                },
-              ],
+              SELECT_CERTIFICATION: {
+                target: "certificateDetails",
+                actions: assign({
+                  selectedCertification: (_, event) => event.certification,
+                }),
+              },
               SELECT_DEPARTMENT: {
                 actions: "selectingDepartment",
                 target: "loadingCertifications",
@@ -297,6 +304,41 @@ export const mainMachine =
               BACK: {
                 target: "#mainMachine.projectHome.ready",
               },
+            },
+          },
+          certificateDetails: {
+            invoke: {
+              src: "getCertification",
+              onDone: [
+                {
+                  actions: assign({
+                    selectedCertification: (_, event) =>
+                      event.data.data.getCertification,
+                  }),
+                },
+              ],
+              onError: [
+                {
+                  actions: assign({
+                    error: (_, _event) =>
+                      "Une erreur est survenue lors de la récupération de la certification.",
+                  }),
+                },
+              ],
+            },
+            on: {
+              BACK: {
+                actions: assign({
+                  selectedCertification: (_, event) => undefined,
+                }),
+                target: "searchResults",
+              },
+              SUBMIT_CERTIFICATION: [
+                {
+                  actions: ["submitCertification", "resetOrganisms"],
+                  target: "submittingSelectedCertification",
+                },
+              ],
             },
           },
           submittingSelectedCertification: {
@@ -865,6 +907,7 @@ export const mainMachine =
               const typedEvent = event as SelectCertification;
               return typedEvent.certification;
             },
+            selectedCertification: (_) => undefined,
           }),
         },
         guards: {

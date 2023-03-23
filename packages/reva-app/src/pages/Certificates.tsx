@@ -38,7 +38,7 @@ export const Certificates = ({ mainService }: Props) => {
         onClick={() =>
           !state.matches({
             certificateSummary: "submittingSelectedCertification",
-          }) && send({ type: "SUBMIT_CERTIFICATION", certification })
+          }) && send({ type: "SELECT_CERTIFICATION", certification })
         }
         key={certification.id}
         id={certification.id}
