@@ -14,6 +14,7 @@ ALTER TABLE "file_upload_spooler" RENAME CONSTRAINT "FileUploadSpooler_pkey" TO 
 
 -- AlterTable
 ALTER TABLE "subscription_request" RENAME CONSTRAINT "SubscriptionRequest_pkey" TO "subscription_request_pkey";
+TRUNCATE TABLE "subscription_request";
 ALTER TABLE "subscription_request"
 DROP COLUMN "company_billing_address",
 ADD COLUMN     "company_billing_contact_firstname" VARCHAR(100) NOT NULL,
