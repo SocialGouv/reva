@@ -13,9 +13,9 @@ type SubscriptionRequest {
   companySiret: String!
   companyLegalStatus: LegalStatus!
   companyName: String!
-  companyAddress: String!
-  companyZipCode: String!
-  companyCity: String!
+  companyAddress: String
+  companyZipCode: String
+  companyCity: String
   companyBillingContactFirstname: String!
   companyBillingContactLastname: String!
   companyBillingEmail: String!
@@ -58,9 +58,9 @@ input SubscriptionRequestInput {
   companySiret: String!
   companyLegalStatus: LegalStatus!
   companyName: String!
-  companyAddress: String!
-  companyZipCode: String!
-  companyCity: String!
+  companyAddress: String
+  companyZipCode: String
+  companyCity: String
   companyBillingContactFirstname: String!
   companyBillingContactLastname: String!
   companyBillingEmail: String!

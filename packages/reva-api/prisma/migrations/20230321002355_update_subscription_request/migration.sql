@@ -20,5 +20,6 @@ DROP COLUMN "company_billing_address",
 ADD COLUMN     "company_billing_contact_firstname" VARCHAR(100) NOT NULL,
 ADD COLUMN     "company_billing_contact_lastname" VARCHAR(255) NOT NULL,
 ADD COLUMN     "company_billing_phone_number" VARCHAR(50) NOT NULL,
-ADD COLUMN     "company_city" VARCHAR(100) NOT NULL,
-ADD COLUMN     "company_zipcode" VARCHAR(5) NOT NULL;
+ALTER COLUMN   "company_address" DROP NOT NULL,
+ADD COLUMN     "company_city" VARCHAR(100),
+ADD COLUMN     "company_zipcode" VARCHAR(5);
