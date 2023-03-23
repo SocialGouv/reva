@@ -25,6 +25,7 @@ context("Certificates", () => {
 
   it("select department and submit certificate via summary", function () {
     cy.get('[data-test="certification-select-c2"]').click();
+    cy.get('[data-test="submit-certification-button"]').click();
     cy.wait("@candidacy_updateCertification");
 
     cy.get('[data-test="project-home-ready"]');
