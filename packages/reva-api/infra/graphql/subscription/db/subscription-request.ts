@@ -4,18 +4,33 @@ import { prismaClient } from "../../../database/postgres/client";
 import { logger } from "../../../logger";
 import { Prisma } from ".prisma/client";
 
+const withoutNullFields = (obj: Record<string, unknown>) => {
+  return Object.getOwnPropertyNames(obj).reduce((newObj, propName) => {
+    return obj[propName] === null
+      ? newObj
+      : Object.assign(newObj, { [propName]: obj[propName] });
+  }, {});
+};
+
 export const createSubscriptionRequest = async (
   subscriptionRequestInput: SubscriptionRequestInput
-) : Promise<Either<string, SubscriptionRequest>> => {
+): Promise<Either<string, SubscriptionRequest>> => {
   try {
     const subscriptionRequest = await prismaClient.subscriptionRequest.create({
       data: {
-        companyName: subscriptionRequestInput.companyName,
-        companyLegalStatus: subscriptionRequestInput.companyLegalStatus,
         companySiret: subscriptionRequestInput.companySiret,
+        companyLegalStatus: subscriptionRequestInput.companyLegalStatus,
+        companyName: subscriptionRequestInput.companyName,
         companyAddress: subscriptionRequestInput.companyAddress,
-        companyBillingAddress: subscriptionRequestInput.companyBillingAddress,
+        companyZipCode: subscriptionRequestInput.companyZipCode,
+        companyCity: subscriptionRequestInput.companyCity,
+        companyBillingContactFirstname:
+          subscriptionRequestInput.companyBillingContactFirstname,
+        companyBillingContactLastname:
+          subscriptionRequestInput.companyBillingContactLastname,
         companyBillingEmail: subscriptionRequestInput.companyBillingEmail,
+        companyBillingPhoneNumber:
+          subscriptionRequestInput.companyBillingPhoneNumber,
         companyBic: subscriptionRequestInput.companyBic,
         companyIban: subscriptionRequestInput.companyIban,
         accountFirstname: subscriptionRequestInput.accountFirstname,
@@ -24,7 +39,7 @@ export const createSubscriptionRequest = async (
         accountPhoneNumber: subscriptionRequestInput.accountPhoneNumber,
       },
     });
-    return Right(subscriptionRequest);
+    return Right(withoutNullFields(subscriptionRequest) as SubscriptionRequest);
   } catch (e) {
     logger.error(e);
     return Left("La création de demande d'inscription a échoué");
@@ -38,7 +53,11 @@ export const getSubscriptionRequestById = async (
     const subreq = await prismaClient.subscriptionRequest.findUnique({
       where: { id },
     });
-    return Right(Maybe.fromNullable(subreq));
+    return Right(
+      Maybe.fromNullable(subreq).map(
+        (subreq) => withoutNullFields(subreq) as SubscriptionRequest
+      )
+    );
   } catch (e) {
     logger.error(e);
     return Left("La récupération de la demande d'inscription a échoué");
@@ -95,7 +114,9 @@ export const getSubscriptionRequests = async (
           paginationClause(params)
         )
       );
-    return Right(subscriptionRequests);
+    return Right(
+      subscriptionRequests.map(withoutNullFields) as SubscriptionRequest[]
+    );
   } catch (e) {
     logger.error(e);
     return Left("La récupération des demandes d'inscription a échoué");
@@ -115,8 +136,13 @@ const filterClause = (params: GetSubscriptionRequestsParams) => {
   }
 };
 
-const paginationClause = (params: GetSubscriptionRequestsParams) => {
-  const clause: {take?:number;skip?:number}  = {};
+interface PaginationParams {
+  limit?: number;
+  offset?: number;
+}
+
+const paginationClause = (params: PaginationParams) => {
+  const clause: { take?: number; skip?: number } = {};
   if (params.limit) {
     clause.take = params.limit;
   }

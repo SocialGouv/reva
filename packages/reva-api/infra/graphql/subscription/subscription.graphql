@@ -10,12 +10,16 @@ enum LegalStatus {
 
 type SubscriptionRequest {
   id: ID!
-  companyName: String!
-  companyLegalStatus: LegalStatus!
   companySiret: String!
-  companyAddress: String!
-  companyBillingAddress: String!
+  companyLegalStatus: LegalStatus!
+  companyName: String!
+  companyAddress: String
+  companyZipCode: String
+  companyCity: String
+  companyBillingContactFirstname: String!
+  companyBillingContactLastname: String!
   companyBillingEmail: String!
+  companyBillingPhoneNumber: String!
   companyBic: String!
   companyIban: String!
   accountFirstname: String!
@@ -51,12 +55,16 @@ type Query {
 }
 
 input SubscriptionRequestInput {
-  companyName: String!
-  companyLegalStatus: LegalStatus!
   companySiret: String!
-  companyAddress: String!
-  companyBillingAddress: String!
+  companyLegalStatus: LegalStatus!
+  companyName: String!
+  companyAddress: String
+  companyZipCode: String
+  companyCity: String
+  companyBillingContactFirstname: String!
+  companyBillingContactLastname: String!
   companyBillingEmail: String!
+  companyBillingPhoneNumber: String!
   companyBic: String!
   companyIban: String!
   accountFirstname: String!
