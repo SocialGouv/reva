@@ -557,6 +557,84 @@ export const archiveCandidacy = async (params: {
   }
 };
 
+export const unarchiveCandidacy = async (params: {
+  candidacyId: string;
+}): Promise<Either<string, domain.Candidacy>> => {
+  try {
+    const latestStatusBeforeArchive = await prismaClient.candidaciesStatus.findFirst({
+      where: {
+        candidacyId: params.candidacyId,
+        status: { not: CandidacyStatusStep.ARCHIVE },
+      },
+      orderBy: [ { createdAt: 'desc'} ],
+    });
+    const [, newCandidacy, certificationAndRegion] =
+      await prismaClient.$transaction([
+        prismaClient.candidaciesStatus.updateMany({
+          where: {
+            candidacyId: params.candidacyId,
+          },
+          data: {
+            isActive: false,
+          },
+        }),
+        prismaClient.candidacy.update({
+          where: {
+            id: params.candidacyId,
+          },
+          data: {
+            candidacyStatuses: {
+              create: {
+                ...latestStatusBeforeArchive,
+                isActive: true,
+              },
+            },
+          },
+          include: {
+            ...candidacyIncludes,
+            candidate: true,
+          },
+        }),
+        prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
+          where: {
+            candidacyId: params.candidacyId,
+            isActive: true,
+          },
+          include: {
+            certification: true,
+            region: true,
+          },
+        }),
+      ]);
+
+    return Right({
+      id: newCandidacy.id,
+      deviceId: newCandidacy.deviceId,
+      regionId: certificationAndRegion?.region.id,
+      region: certificationAndRegion?.region,
+      department: newCandidacy.department,
+      certificationId: certificationAndRegion?.certificationId,
+      certification: {
+        ...certificationAndRegion?.certification,
+        codeRncp: certificationAndRegion?.certification.rncpId,
+      },
+      organismId: newCandidacy.organismId,
+      experiences: toDomainExperiences(newCandidacy.experiences),
+      goals: newCandidacy.goals,
+      phone: newCandidacy.candidate?.phone || newCandidacy.phone,
+      email: newCandidacy.candidate?.email || newCandidacy.email,
+      candidacyStatuses: newCandidacy.candidacyStatuses,
+      candidacyDropOut: newCandidacy.candidacyDropOut,
+      createdAt: newCandidacy.createdAt,
+    });
+  } catch (e) {
+    logger.error(e);
+    return Left(
+      `error while updating status on candidacy ${params.candidacyId}`
+    );
+  }
+};
+
 export const updateCertification = async (params: {
   candidacyId: string;
   certificationId: string;
