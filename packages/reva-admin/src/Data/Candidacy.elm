@@ -24,6 +24,7 @@ module Data.Candidacy exposing
     , statusToProgressPosition
     , toCategoryString
     , toDirectoryPosition
+    , isCandidacyArchived
     )
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
@@ -338,3 +339,8 @@ isActive candidacySummary =
     not <|
         List.member candidacySummary.lastStatus.status [ Archive, Projet ]
             || candidacySummary.isDroppedOut
+
+
+isCandidacyArchived : Candidacy -> Bool
+isCandidacyArchived candidacy =
+    List.any (\s -> s.isActive && s.status == Admin.Enum.CandidacyStatusStep.Archive) candidacy.statuses
