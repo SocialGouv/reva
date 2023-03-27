@@ -110,23 +110,28 @@ view context config =
               else
                 text ""
             , viewExperiences config.candidacy.experiences
-            , Button.new
-                { onClick = Nothing
-                , label =
-                    if not (isCandidacyArchived config.candidacy) then
-                        "Archiver la candidature"
-
-                    else
-                        "Restaurer la candidature"
-                }
-                |> Button.linkButton
-                    (Route.toString context.baseUrl
-                        (Route.Candidacy <|
-                            View.Candidacy.Tab.Tab config.candidacy.id Archive
+            , if isCandidacyArchived config.candidacy then
+                Button.new
+                    { onClick = Nothing, label = "Restaurer la candidature" }
+                    |> Button.linkButton
+                        (Route.toString context.baseUrl
+                            (Route.Candidacy <|
+                                View.Candidacy.Tab.Tab config.candidacy.id Unarchive
+                            )
                         )
-                    )
-                |> Button.secondary
-                |> Button.view
+                    |> Button.secondary
+                    |> Button.view
+                else
+                  Button.new
+                    { onClick = Nothing, label = "Archiver la candidature" }
+                    |> Button.linkButton
+                        (Route.toString context.baseUrl
+                            (Route.Candidacy <|
+                                View.Candidacy.Tab.Tab config.candidacy.id Archive
+                            )
+                        )
+                    |> Button.secondary
+                    |> Button.view
             , if config.candidacy.dropOutDate == Nothing then
                 Button.new { onClick = Nothing, label = "Déclarer l'abandon du candidat" }
                     |> Button.linkButton
