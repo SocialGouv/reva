@@ -25,9 +25,9 @@ id =
     Object.selectionForField "Data.Scalar.Id" "id" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
-companySiret : SelectionSet String Admin.Object.SubscriptionRequest
-companySiret =
-    Object.selectionForField "String" "companySiret" [] Decode.string
+companyName : SelectionSet String Admin.Object.SubscriptionRequest
+companyName =
+    Object.selectionForField "String" "companyName" [] Decode.string
 
 
 companyLegalStatus : SelectionSet Admin.Enum.LegalStatus.LegalStatus Admin.Object.SubscriptionRequest
@@ -35,44 +35,24 @@ companyLegalStatus =
     Object.selectionForField "Enum.LegalStatus.LegalStatus" "companyLegalStatus" [] Admin.Enum.LegalStatus.decoder
 
 
-companyName : SelectionSet String Admin.Object.SubscriptionRequest
-companyName =
-    Object.selectionForField "String" "companyName" [] Decode.string
+companySiret : SelectionSet String Admin.Object.SubscriptionRequest
+companySiret =
+    Object.selectionForField "String" "companySiret" [] Decode.string
 
 
-companyAddress : SelectionSet (Maybe String) Admin.Object.SubscriptionRequest
+companyAddress : SelectionSet String Admin.Object.SubscriptionRequest
 companyAddress =
-    Object.selectionForField "(Maybe String)" "companyAddress" [] (Decode.string |> Decode.nullable)
+    Object.selectionForField "String" "companyAddress" [] Decode.string
 
 
-companyZipCode : SelectionSet (Maybe String) Admin.Object.SubscriptionRequest
-companyZipCode =
-    Object.selectionForField "(Maybe String)" "companyZipCode" [] (Decode.string |> Decode.nullable)
-
-
-companyCity : SelectionSet (Maybe String) Admin.Object.SubscriptionRequest
-companyCity =
-    Object.selectionForField "(Maybe String)" "companyCity" [] (Decode.string |> Decode.nullable)
-
-
-companyBillingContactFirstname : SelectionSet String Admin.Object.SubscriptionRequest
-companyBillingContactFirstname =
-    Object.selectionForField "String" "companyBillingContactFirstname" [] Decode.string
-
-
-companyBillingContactLastname : SelectionSet String Admin.Object.SubscriptionRequest
-companyBillingContactLastname =
-    Object.selectionForField "String" "companyBillingContactLastname" [] Decode.string
+companyBillingAddress : SelectionSet String Admin.Object.SubscriptionRequest
+companyBillingAddress =
+    Object.selectionForField "String" "companyBillingAddress" [] Decode.string
 
 
 companyBillingEmail : SelectionSet String Admin.Object.SubscriptionRequest
 companyBillingEmail =
     Object.selectionForField "String" "companyBillingEmail" [] Decode.string
-
-
-companyBillingPhoneNumber : SelectionSet String Admin.Object.SubscriptionRequest
-companyBillingPhoneNumber =
-    Object.selectionForField "String" "companyBillingPhoneNumber" [] Decode.string
 
 
 companyBic : SelectionSet String Admin.Object.SubscriptionRequest

@@ -57,7 +57,6 @@ parser baseUrl =
                 , topLevel string |> candidacyTab Tab.Profile
                 , subLevel "admissibility" |> candidacyTab Tab.Admissibility
                 , subLevel "archive" |> candidacyTab Tab.Archive
-                , subLevel "unarchive" |> candidacyTab Tab.Unarchive
                 , subLevel "candidate" |> candidacyTab Tab.CandidateInfo
                 , subLevel "drop-out" |> candidacyTab Tab.DropOut
                 , subLevel "funding" |> candidacyTab Tab.FundingRequest
@@ -134,9 +133,6 @@ tabToString topLevel subLevel tab =
         Tab.Archive ->
             default [ "archive" ]
 
-        Tab.Unarchive ->
-            default [ "unarchive" ]
-            
         Tab.DropOut ->
             default [ "drop-out" ]
 

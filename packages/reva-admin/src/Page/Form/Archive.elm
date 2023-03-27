@@ -1,10 +1,11 @@
 module Page.Form.Archive exposing (..)
 
-import Data.Candidacy exposing (Candidacy)
+import Data.Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Form exposing (FormData)
 import Data.Form.Archive
 import Data.Form.Helper
 import Data.Referential exposing (Referential)
+import List.Extra
 import Page.Form as Form exposing (Form)
 
 

@@ -13,7 +13,6 @@ import Api.Candidacy
 import Api.Form.Admissibility
 import Api.Form.Appointment
 import Api.Form.Archive
-import Api.Form.Unarchive
 import Api.Form.Candidate
 import Api.Form.DropOut
 import Api.Form.FundingRequest
@@ -26,7 +25,6 @@ import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Context exposing (Context)
 import Data.Form.Archive
-import Data.Form.Unarchive
 import Data.Form.DropOut
 import Data.Form.FundingRequest
 import Data.Form.PaymentRequest
@@ -37,7 +35,6 @@ import Page.Form as Form exposing (Form)
 import Page.Form.Admissibility
 import Page.Form.Appointment
 import Page.Form.Archive
-import Page.Form.Unarchive
 import Page.Form.Candidate
 import Page.Form.DropOut
 import Page.Form.FundingRequest
@@ -58,7 +55,6 @@ type Msg
     = GotCandidacyResponse (RemoteData String Candidacy)
     | GotCandidacyDeletionResponse (RemoteData String String)
     | GotCandidacyArchivingResponse (RemoteData String ())
-    | GotCandidacyUnarchivingResponse (RemoteData String ())
     | GotCandidacyTakingOverResponse (RemoteData String ())
     | GotFormMsg (Form.Msg ( Candidacy, Referential ))
     | GotReferentialResponse (RemoteData String Referential)
@@ -166,9 +162,6 @@ view context model =
 
                 Archive ->
                     viewForm "archive"
-
-                Unarchive ->
-                    viewForm "unarchive"
 
                 DropOut ->
                     viewForm "drop-out"
@@ -293,9 +286,6 @@ update context msg model =
         GotCandidacyArchivingResponse _ ->
             ( { model | selected = NotAsked }, Cmd.none )
 
-        GotCandidacyUnarchivingResponse _ ->
-            ( { model | selected = NotAsked }, Cmd.none )
-
         GotCandidacyTakingOverResponse _ ->
             ( model, Cmd.none )
 
@@ -348,21 +338,6 @@ updateTab context tab ( model, cmd ) =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        ( View.Candidacy.Tab.Unarchive, Success candidacy ) ->
-            let
-                ( formModel, formCmd ) =
-                    Form.updateForm context
-                        { form = Page.Form.Unarchive.form
-                        , onLoad = Just <| Api.Form.Unarchive.get tab.candidacyId
-                        , onSave = Nothing
-                        , onSubmit = Api.Form.Unarchive.unarchive tab.candidacyId
-                        , onRedirect = pushUrl <| candidacyTab Profile
-                        , onValidate = Data.Form.Unarchive.validate
-                        , status = Form.Editable
-                        }
-                        model.form
-            in
-            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
         ( View.Candidacy.Tab.DropOut, Success candidacy ) ->
             let
                 ( formModel, formCmd ) =
