@@ -80,15 +80,15 @@ const defaultValidFundingRequest: FundingRequestInput = {
   numAction: "reva_20221115_00000001",
 };
 
-const validateCandidateBacSupNonFragile = validateFundingRequest(
-  defaultBacSupNonFragileCandidate
-);
-const validateCandidateBacNonFragile = validateFundingRequest(
-  defaultBacNonFragileCandidate
-);
-const validateCandidateBacSupFragile = validateFundingRequest(
-  defaultBacSupFragileCandidate
-);
+const validateCandidateBacSupNonFragile = (fr: FundingRequestInput) =>
+  validateFundingRequest(defaultBacSupNonFragileCandidate)(
+    fr,
+    "afgsuTrainingId"
+  );
+const validateCandidateBacNonFragile = (fr: FundingRequestInput) =>
+  validateFundingRequest(defaultBacNonFragileCandidate)(fr, "afgsuTrainingId");
+const validateCandidateBacSupFragile = (fr: FundingRequestInput) =>
+  validateFundingRequest(defaultBacSupFragileCandidate)(fr, "afgsuTrainingId");
 
 describe("funding request", () => {
   test("should pass ", () => {
@@ -917,6 +917,7 @@ describe("funding request", () => {
           ),
         createFundingRequestBatch: () =>
           Promise.resolve(Right({} as FundingRequestBatch)),
+        getTrainings: () => Promise.resolve(Right([])),
       });
       const result = await cfr({
         candidacyId: "1234",
@@ -958,6 +959,7 @@ describe("funding request", () => {
               } as Candidate)
             ),
           createFundingRequestBatch: () => Promise.resolve(Left("Error")),
+          getTrainings: () => Promise.resolve(Right([])),
         });
         const result = await cfr({
           candidacyId: "1234",
@@ -1008,6 +1010,7 @@ describe("funding request", () => {
           ),
         createFundingRequestBatch: () =>
           Promise.resolve(Right({} as FundingRequestBatch)),
+        getTrainings: () => Promise.resolve(Right([])),
       });
       const result = await cfr({
         candidacyId: "1234",
@@ -1052,6 +1055,7 @@ describe("funding request", () => {
           ),
         createFundingRequestBatch: () =>
           Promise.resolve(Right({} as FundingRequestBatch)),
+        getTrainings: () => Promise.resolve(Right([])),
       });
       const result = await cfr({
         candidacyId: "1234",
@@ -1114,6 +1118,7 @@ describe("funding request", () => {
           ),
         createFundingRequestBatch: () =>
           Promise.resolve(Right({} as FundingRequestBatch)),
+        getTrainings: () => Promise.resolve(Right([])),
       });
       const result = await cfr({
         candidacyId: "1234",

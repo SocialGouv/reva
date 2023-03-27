@@ -2,7 +2,11 @@ import { Decimal } from "@prisma/client/runtime";
 import { Either, EitherAsync, Left, Right } from "purify-ts";
 
 import { Role } from "../../../../domain/types/account";
-import { Candidacy, Degree } from "../../../../domain/types/candidacy";
+import {
+  Candidacy,
+  Degree,
+  Training,
+} from "../../../../domain/types/candidacy";
 import {
   Candidate,
   FundingRequest,
@@ -33,6 +37,7 @@ interface CreateFundingRequestDeps {
     candidacyId: string;
     statuses: ["PRISE_EN_CHARGE", "PARCOURS_ENVOYE", "PARCOURS_CONFIRME"];
   }) => Promise<Either<string, boolean>>;
+  getTrainings: () => Promise<Either<string, Training[]>>;
 }
 
 const candidateBacNonFragile = (candidate: any) =>
@@ -46,13 +51,18 @@ const isLower2 = isBetween(0, 2);
 const isLower4 = isBetween(0, 4);
 const isLower15 = isBetween(0, 15);
 const isLower20 = isBetween(0, 20);
+const isLower25 = isBetween(0, 25);
 const isLower30 = isBetween(0, 30);
 const isLower35 = isBetween(0, 35);
 const isLower70 = isBetween(0, 70);
 const isLower78 = isBetween(0, 78);
 
 export const validateFundingRequest =
-  (candidate: Candidate) => (fundingRequest: FundingRequestInput) => {
+  (candidate: Candidate) =>
+  (
+    fundingRequest: FundingRequestInput,
+    afgsuTrainingId: string
+  ): Either<FunctionalError, FundingRequestInput> => {
     const errors = [];
 
     const isCandidateBacNonFragile = candidateBacNonFragile(candidate);
@@ -179,7 +189,20 @@ export const validateFundingRequest =
       );
     }
 
-    if (!isLower20(fundingRequest.mandatoryTrainingsCost.toNumber())) {
+    const mandatoryTrainingContainAfgsu =
+      fundingRequest.mandatoryTrainingsIds.includes(afgsuTrainingId);
+
+    if (mandatoryTrainingContainAfgsu) {
+      if (fundingRequest.mandatoryTrainingsIds.length > 1) {
+        errors.push(
+          "Impossible de combiner l'AFGSU et une autre formation obligatoire."
+        );
+      } else if (!isLower25(fundingRequest.mandatoryTrainingsCost.toNumber())) {
+        errors.push(
+          "Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 25 euros."
+        );
+      }
+    } else if (!isLower20(fundingRequest.mandatoryTrainingsCost.toNumber())) {
       errors.push(
         "Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 20 euros."
       );
@@ -343,10 +366,29 @@ export const createFundingRequest =
     );
 
     // check rules
-    const checkRules = (candidate: any) =>
-      EitherAsync.fromPromise(async () =>
-        validateFundingRequest(candidate)(params.fundingRequest)
-      );
+    const checkRules = async (candidate: any) =>
+      (await deps.getTrainings())
+        .mapLeft(
+          () =>
+            new FunctionalError(
+              FunctionalCodeError.TECHNICAL_ERROR,
+              `Erreur pendant la récupération des formations`
+            )
+        )
+        .map(
+          (training) =>
+            training.find(
+              (t) =>
+                t.label ===
+                "Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU)"
+            )?.id
+        )
+        .chain((afgsuTrainingId) =>
+          validateFundingRequest(candidate)(
+            params.fundingRequest,
+            afgsuTrainingId || ""
+          )
+        );
 
     const createFundingRequest = (inputFundingRequest: any) =>
       EitherAsync.fromPromise(() =>

@@ -10,6 +10,7 @@ import * as fundingRequestBatchesDb from "../../database/postgres/fundingRequest
 import * as fundingRequestsDb from "../../database/postgres/fundingRequests";
 import * as paymentRequestsDb from "../../database/postgres/paymentRequest";
 import * as paymentRequestBatchesDb from "../../database/postgres/paymentRequestBatches";
+import * as trainingDb from "../../database/postgres/trainings";
 import { confirmPaymentRequest } from "./features/confirmPaymentRequest";
 import { createFundingRequest } from "./features/createFundingRequest";
 import { createOrUpdatePaymentRequestForCandidacy } from "./features/createOrUpdatePaymentRequestForCandidacy";
@@ -123,6 +124,7 @@ const unsafeResolvers = {
         getCandidacyFromId: candidaciesDb.getCandidacyFromId,
         hasRole: context.auth.hasRole,
         getCandidateByCandidacyId: candidatesDb.getCandidateByCandidacyId,
+        getTrainings: trainingDb.getTrainings,
       })(params);
 
       return result
