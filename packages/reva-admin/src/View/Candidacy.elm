@@ -3,7 +3,7 @@ module View.Candidacy exposing (view, viewSentAt)
 import Admin.Enum.Duration exposing (Duration(..))
 import Api.Token
 import BetaGouv.DSFR.Button as Button
-import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, CandidacyId, DateWithLabels)
+import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, CandidacyStatus, DateWithLabels)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department, Referential)
@@ -17,6 +17,7 @@ import View.Candidacy.Tab exposing (Value(..))
 import View.Date
 import View.Helpers exposing (dataTest)
 import View.Icons as Icons
+import Data.Candidacy exposing (isCandidacyArchived)
 
 
 view :
@@ -109,15 +110,28 @@ view context config =
               else
                 text ""
             , viewExperiences config.candidacy.experiences
-            , Button.new { onClick = Nothing, label = "Archiver la candidature" }
-                |> Button.linkButton
-                    (Route.toString context.baseUrl
-                        (Route.Candidacy <|
-                            View.Candidacy.Tab.Tab config.candidacy.id Archive
+            , if isCandidacyArchived config.candidacy then
+                Button.new
+                    { onClick = Nothing, label = "Restaurer la candidature" }
+                    |> Button.linkButton
+                        (Route.toString context.baseUrl
+                            (Route.Candidacy <|
+                                View.Candidacy.Tab.Tab config.candidacy.id Unarchive
+                            )
                         )
-                    )
-                |> Button.secondary
-                |> Button.view
+                    |> Button.secondary
+                    |> Button.view
+                else
+                  Button.new
+                    { onClick = Nothing, label = "Archiver la candidature" }
+                    |> Button.linkButton
+                        (Route.toString context.baseUrl
+                            (Route.Candidacy <|
+                                View.Candidacy.Tab.Tab config.candidacy.id Archive
+                            )
+                        )
+                    |> Button.secondary
+                    |> Button.view
             , if config.candidacy.dropOutDate == Nothing then
                 Button.new { onClick = Nothing, label = "Déclarer l'abandon du candidat" }
                     |> Button.linkButton

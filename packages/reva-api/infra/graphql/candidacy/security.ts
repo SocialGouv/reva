@@ -28,6 +28,7 @@ export const resolversSecurityMap = {
   // Mutations manager ou admin
   "Mutation.candidacy_deleteById": isAdminOrOwningManager,
   "Mutation.candidacy_archiveById": isAdminOrOwningManager,
+  "Mutation.candidacy_unarchiveById": isAdminOrOwningManager,
   "Mutation.candidacy_updateAppointmentInformations": isAdminOrOwningManager,
   "Mutation.candidacy_submitTrainingForm": isAdminOrOwningManager,
   "Mutation.candidacy_dropOut": isAdminOrOwningManager,
