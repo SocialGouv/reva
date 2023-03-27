@@ -66,7 +66,7 @@ export const unarchiveCandidacy =
         Maybe.fromFalsy(!isReorientation).toEither(
           new FunctionalError(
             FunctionalCodeError.CANDIDACY_IS_REORIENTATION,
-            `La candidature est une réorientation`
+            `Impossible de restaurer la candidature : la candidat a été réorienté.`
           )
         )
       );
