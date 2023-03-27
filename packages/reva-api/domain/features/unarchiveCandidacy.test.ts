@@ -60,7 +60,18 @@ const candidacyArchived: Candidacy = {
   candidacyStatuses: candidacyStatusesArchive,
 };
 
-const candidacyTable: Candidacy[] = [candidacyPriseEnCharge, candidacyArchived];
+const candidacyReoriented: Candidacy = {
+  ...candidacyArchived,
+  id: "c4",
+  reorientationReason: {
+    id: "r1",
+    label: "well",
+    createdAt: new Date(),
+    updatedAt: null,
+  },
+};
+
+const candidacyTable: Candidacy[] = [candidacyPriseEnCharge, candidacyArchived, candidacyReoriented];
 
 const unarchivedCandidacyStatuses = [
   ...candidacyStatusesArchive.map((status) => ({
@@ -111,6 +122,16 @@ describe("unarchive candidacy", () => {
     expect(result.isLeft()).toEqual(true);
     expect((result.extract() as FunctionalError).code).toEqual(
       FunctionalCodeError.CANDIDACIES_NOT_ARCHIVED
+    );
+  });
+
+  test("should fail with CANDIDACY_IS_REORIENTATION", async () => {
+    const result = await unarchiveWithRightRole({
+      candidacyId: candidacyReoriented.id,
+    });
+    expect(result.isLeft()).toEqual(true);
+    expect((result.extract() as FunctionalError).code).toEqual(
+      FunctionalCodeError.CANDIDACY_IS_REORIENTATION
     );
   });
 

@@ -49,10 +49,24 @@ export const unarchiveCandidacy =
         )
       );
       return Promise.resolve(
-        Maybe.fromFalsy(isArchived).toEither(
+        Maybe.fromFalsy(isArchived)
+          .map(() => candidacy)
+          .toEither(
+            new FunctionalError(
+              FunctionalCodeError.CANDIDACIES_NOT_ARCHIVED,
+              `La candidature n'est pas archivée`
+            )
+          )
+      );
+    };
+
+    const checkIfCandidacyIsNotReorientation = (candidacy: Candidacy) => {
+      const isReorientation = Boolean(candidacy.reorientationReason);
+      return Promise.resolve(
+        Maybe.fromFalsy(!isReorientation).toEither(
           new FunctionalError(
-            FunctionalCodeError.CANDIDACIES_NOT_ARCHIVED,
-            `La candidature n'est pas archivée`
+            FunctionalCodeError.CANDIDACY_IS_REORIENTATION,
+            `La candidature est une réorientation`
           )
         )
       );
@@ -70,5 +84,6 @@ export const unarchiveCandidacy =
 
     return checkIfCandidacyExists
       .chain(checkIfCandidacyIsArchived)
+      .chain(checkIfCandidacyIsNotReorientation)
       .chain(() => unarchiveCandidacyResult);
   };
