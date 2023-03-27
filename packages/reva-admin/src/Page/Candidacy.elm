@@ -358,12 +358,7 @@ updateTab context tab ( model, cmd ) =
                         , onSubmit = Api.Form.Unarchive.unarchive tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab Profile
                         , onValidate = Data.Form.Unarchive.validate
-                        , status =
-                            if (Candidacy.lastStatus candidacy.statuses |> .status) == Step.Archive then
-                                Form.ReadOnly
-
-                            else
-                                Form.Editable
+                        , status = Form.Editable
                         }
                         model.form
             in
