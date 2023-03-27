@@ -566,6 +566,9 @@ export const unarchiveCandidacy = async (params: {
         candidacyId: params.candidacyId,
         status: { not: CandidacyStatusStep.ARCHIVE },
       },
+      select: {
+        status: true,
+      },
       orderBy: [ { createdAt: 'desc'} ],
     });
     const [, newCandidacy, certificationAndRegion] =
