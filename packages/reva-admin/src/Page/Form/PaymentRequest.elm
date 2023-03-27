@@ -1,6 +1,6 @@
 module Page.Form.PaymentRequest exposing (confirmationForm, form)
 
-import Data.Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
+import Data.Candidacy exposing (Candidacy)
 import Data.Certification exposing (Certification)
 import Data.Form exposing (FormData)
 import Data.Form.Helper
@@ -45,6 +45,10 @@ form maybeCertification formData ( candidacy, referential ) =
 
                 Just _ ->
                     numberElement
+
+        toCheckBoxDescriptionList : List { a | id : String, label : String } -> List { id : String, label : String, disabled : Bool }
+        toCheckBoxDescriptionList l =
+            List.map (\e -> { id = e.id, label = e.label, disabled = True }) l
     in
     { elements =
         [ ( "heading", Form.Heading "1 - Informations des prestations" )
@@ -103,7 +107,7 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( keys.mandatoryTrainingIds
           , Form.ReadOnlyElement <|
                 Form.CheckboxList "Formations obligatoires sélectionnées" <|
-                    Data.Form.Helper.toIdList referential.mandatoryTrainings
+                    toCheckBoxDescriptionList referential.mandatoryTrainings
           )
         , ( "mandatoryTrainingsReview"
           , Form.ReadOnlyElements
@@ -116,7 +120,7 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( keys.basicSkillsIds
           , Form.ReadOnlyElement <|
                 Form.CheckboxList "Formations savoirs de base sélectionnées" <|
-                    Data.Form.Helper.toIdList referential.basicSkills
+                    toCheckBoxDescriptionList referential.basicSkills
           )
         , ( "basicSkillsReview"
           , Form.ReadOnlyElements

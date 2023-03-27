@@ -1,14 +1,13 @@
 module Page.Form.FundingRequest exposing (droppedOutForm, form, totalCostSection, totalTrainingHourCount)
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
-import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
+import Data.Candidacy as Candidacy exposing (Candidacy)
 import Data.Candidate
 import Data.Certification exposing (Certification)
 import Data.Form exposing (FormData)
 import Data.Form.FundingRequest
 import Data.Form.Helper
 import Data.Referential exposing (Referential)
-import Dict exposing (Dict)
 import List.Extra
 import Page.Form as Form exposing (Form)
 import String exposing (String)
@@ -60,6 +59,10 @@ form maybeCertification formData ( candidacy, referential ) =
 
                     else
                         Form.ReadOnlyElement formElement
+
+        toCheckBoxDescriptionList : List { a | id : String, label : String } -> List { id : String, label : String, disabled : Bool }
+        toCheckBoxDescriptionList l =
+            List.map (\e -> { id = e.id, label = e.label, disabled = True }) l
     in
     { elements =
         commonFields maybeCertification
@@ -79,7 +82,7 @@ form maybeCertification formData ( candidacy, referential ) =
                , ( keys.mandatoryTrainingIds
                  , Form.ReadOnlyElement <|
                     Form.CheckboxList "Formations obligatoires sélectionnées" <|
-                        Data.Form.Helper.toIdList referential.mandatoryTrainings
+                        toCheckBoxDescriptionList referential.mandatoryTrainings
                  )
                , ( keys.mandatoryTrainingsHourCount
                  , hourCountElement
@@ -95,7 +98,7 @@ form maybeCertification formData ( candidacy, referential ) =
                , ( keys.basicSkillsIds
                  , Form.ReadOnlyElement <|
                     Form.CheckboxList "Formations savoirs de base sélectionnées" <|
-                        Data.Form.Helper.toIdList referential.basicSkills
+                        toCheckBoxDescriptionList referential.basicSkills
                  )
                , ( keys.basicSkillsHourCount
                  , hourCountElement

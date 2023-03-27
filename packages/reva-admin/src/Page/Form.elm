@@ -23,7 +23,7 @@ import Data.Form.Helper exposing (booleanFromString, booleanToString)
 import Dict exposing (Dict)
 import File exposing (File)
 import Html exposing (Html, button, div, fieldset, input, label, legend, li, option, p, select, span, text, ul)
-import Html.Attributes exposing (class, classList, disabled, for, id, multiple, name, placeholder, required, selected, type_, value)
+import Html.Attributes exposing (class, disabled, for, id, multiple, name, placeholder, required, selected, type_, value)
 import Html.Events exposing (on, onInput, onSubmit)
 import Json.Decode
 import List.Extra
@@ -44,9 +44,13 @@ type Msg referential
     | NoOp
 
 
+type alias CheckBoxDescription =
+    { id : String, label : String, disabled : Bool }
+
+
 type Element
     = Checkbox String
-    | CheckboxList String (List ( String, String ))
+    | CheckboxList String (List CheckBoxDescription)
     | Date String
     | Empty
     | File String
@@ -322,6 +326,8 @@ viewEditableElement formData ( elementId, element ) =
             viewFieldsetComplexElement
                 [ (\choiceId -> get choiceId formData)
                     |> viewCheckboxList elementId label choices
+                    |> Checkbox.groupWithToDisabled
+                        (\choice -> choice.disabled)
                     |> Checkbox.viewGroup
                 ]
 
@@ -426,8 +432,7 @@ viewEditableElement formData ( elementId, element ) =
                         , required True
                         ]
                         (option
-                            [ disabled True
-                            , selected (dataOrDefault == "")
+                            [ selected (dataOrDefault == "")
                             , value ""
                             ]
                             [ text "Sélectionner" ]
@@ -600,25 +605,25 @@ viewCheckbox elementId label value =
 viewCheckboxList :
     String
     -> String
-    -> List ( String, String )
+    -> List CheckBoxDescription
     -> (String -> Maybe String)
-    -> Checkbox.GroupConfig (Msg referential) ( String, String )
+    -> Checkbox.GroupConfig (Msg referential) CheckBoxDescription
 viewCheckboxList elementId label choices isChecked =
     let
         checkedChoices =
             List.filter
-                (\( choiceId, _ ) -> isChecked choiceId |> Maybe.withDefault "false" |> booleanFromString)
+                (\choice -> isChecked choice.id |> Maybe.withDefault "false" |> booleanFromString)
                 choices
     in
     Checkbox.group
         { id = elementId
         , legend = Accessibility.text label
-        , onChecked = \( choiceId, _ ) bool -> UserChangedElement choiceId (booleanToString bool)
+        , onChecked = \choice bool -> UserChangedElement choice.id (booleanToString bool)
         , options = choices
         , checked = checkedChoices
-        , toId = Tuple.first
-        , toLabel = Tuple.second >> Accessibility.text
-        , toValue = Tuple.second
+        , toId = \choice -> choice.id
+        , toLabel = (\choice -> choice.label) >> Accessibility.text
+        , toValue = \choice -> choice.label
         }
 
 
