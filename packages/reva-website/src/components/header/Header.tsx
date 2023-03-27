@@ -9,14 +9,65 @@ export const Header = (props: { className?: string }) => (
       href: "/",
       title: "Accueil - France VAE",
     }}
-    navigation={[
+    quickAccessItems={[
       {
+        iconId: 'fr-icon-add-circle-line',
         linkProps: {
-          href: "/espace-professionnel/creation",
-          target: "_self",
+          className: '',
+          href: '#', 
         },
-        text: "Espace pro",
+        
+        text: 'Certifications '
       },
+      {
+        iconId: 'fr-icon-lock-line',
+        linkProps: {
+          className: '',
+          href: '#'
+        },
+        text: 'La VAE'
+      },
+      {
+        iconId: 'fr-icon-account-line',
+        linkProps: {
+          className: '',
+          href: '#'
+        },
+        text: 'Connexion'
+      },
+      {
+        iconId: 'fr-icon-account-line',
+        linkProps: {
+            className: '!bg-[#F8F8F8]  ',
+            href: '#'
+        },
+        text: 'Pro'
+      },
+      {
+        iconId: 'fr-icon-account-line',
+        linkProps: {
+            className: '!bg-[#000091] !text-white  ',
+            href: '#'
+        },
+        text: 'Démarrer mon parcours VAE'
+      }
     ]}
+    // navigation={[
+    //   {
+    //     linkProps: {
+    //       href: "/espace-professionnel/creation",
+    //       target: "_self",
+    //     },
+    //     text: "Espace pro",
+    //   },
+    //   {
+    //     linkProps: {
+    //       href: "/espace-professionnel/creation",
+    //       target: "_self",
+    //     },
+    //     text: "Espace prsefsdfo",
+    //   },
+    // ]}
   />
 );
+

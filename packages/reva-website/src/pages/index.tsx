@@ -1,6 +1,261 @@
+/* eslint-disable react/no-unescaped-entities */
 import * as React from "react";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import Head from "next/head";
+import Button from "@codegouvfr/react-dsfr/Button";
+import Image from "next/image";
+
+const Hexagon = ({ className }: { className: string }) => (
+
+  <svg viewBox="0 0 180 200" fill="none" xmlns="http://www.w3.org/2000/svg" className={`${className}`}>
+    <path fillRule="evenodd" clipRule="evenodd" d="M79.4033 3.11801C85.9606 -0.667827 94.0394 -0.667827 100.597 3.11801L168.604 42.382C175.161 46.1678 179.201 53.1643 179.201 60.736V139.264C179.201 146.836 175.161 153.832 168.604 157.618L100.597 196.882C94.0394 200.668 85.9606 200.668 79.4033 196.882L11.3961 157.618C4.83883 153.832 0.799383 146.836 0.799383 139.264V60.736C0.799383 53.1643 4.83883 46.1678 11.3961 42.382L79.4033 3.11801Z" fill="currentColor"/>
+  </svg>
+
+
+  // <Image
+  //   className={`absolute pointer-events-none z-0 ${className}`}
+  //   alt=""
+  //   width={85}
+  //   height={85}
+  //   src="/home-page/polygon.svg"
+  // />
+);
+
+const AvenirPro = () => (
+  <section id="avenir-professionnel" className="mt-[80px] overflow-x-hidden">
+    <div className="px-5">
+      <header>
+        <h1>Prenez votre avenir professionnel en main</h1>
+      </header>
+      <p className="font-bold leading-7">
+        Les raisons pour faire une VAE sont nombreuses: obtenir un nouvel
+        emploi, un meilleur salaire ou tout simplement la reconnaissance de vos
+        compétences. Grâce à la VAE, abordez votre avenir professionnel sous un
+        jour meilleur!
+      </p>
+
+      <div className="flex flex-col items-center space-y-4">
+        <Button
+          priority="primary"
+          className="!w-full justify-center"
+          linkProps={{ href: "#" }}
+          size="large"
+        >
+          Démarrez votre parcours VAE
+        </Button>
+        <a
+          className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
+          href="#"
+        >
+          En savoir plus sur la VAE
+        </a>
+      </div>
+    </div>
+    <div className="relative mt-16 -mx-5">
+      <Image
+        src="/home-page/image-hero.png"
+        className=""
+        alt="image compte validé"
+        width={1067}
+        height={969}
+      />
+    </div>
+  </section>
+);
+
+const ValorisationCompetences = () => (
+  <section id="valorisation-competences" className="relative flex flex-col-reverse mt-20 overflow-y-visible overflow-x-hidden">
+    <div className="px-5 mt-[100px]">
+      <header>
+        <p className="font-bold text-[#000091]">Pour vous</p>
+        <h1>Valorisez vos compétences</h1>
+      </header>
+      <p className="leading-7">
+        Votre parcours professionnel vous a permis d’acquérir de nouvelles compétences. La VAE vous permet de faire valider ces compétences et d’obtenir le diplôme ou la certification dont vous avez besoin pour vos projets professionnels.
+      </p>
+
+      <div className="flex flex-col items-center space-y-4">
+        <Button
+          priority="primary"
+          className="!w-full justify-center"
+          linkProps={{ href: "#" }}
+          size="large"
+        >
+          Identifiez vos compétences
+        </Button>
+        <a
+          className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
+          href="#"
+        >
+          En savoir plus sur la VAE
+        </a>
+      </div>
+    </div>
+    <div className="absolute top-0 right-0 w-48 h-48 -mr-[72px]">
+      <Image
+        src="/home-page/image-section1-metiers.png"
+        className=""
+        alt="image compte validé"
+        fill={true}
+        style={{
+          objectFit: 'contain'
+        }}
+      />
+    </div>
+  </section>
+);
+
+const CommentCaMarche = () => (
+  <section id="comment-ca-marche" className="relative mt-20 pb-48 bg-[#1B1B35] text-white">
+    <div className="px-5 mt-[100px]">
+      <header>
+        <p className="font-bold text-white">VAE 2.0</p>
+        <h1 className="text-white">Comment ça marche ?</h1>
+      </header>
+      <p className="leading-10">
+      Vous choisissez la certification que vous voulez passer, vous êtes pris en charge par un architecte de parcours, vous remplissez un dossier décrivant votre expérience et vos compétences et ce dossier sera ensuite présenté à un jury qui validera votre certification de manière totale ou partielle.
+      </p>
+
+      <div className="">
+        <Button
+          priority="primary"
+          className="!w-full justify-center !bg-white !text-[#000091]"
+          linkProps={{ href: "#" }}
+          size="large"
+        >
+          Démarrez un parcours VAE
+        </Button>
+      </div>
+    </div>
+    <ul className="relative list-none mt-[100px]">
+      <li>
+        <section>
+          <header>
+            <div className="relative h-[124px] w-[96px] text-[#FEF7DA]">
+              <Hexagon className="absolute top-0 left-[35px] w-[15px] h-[16px]"/>
+              <Hexagon className="absolute top-[22px] left-0 w-[30px] h-[33px]"/>
+              <Hexagon className="absolute bottom-0 right-0 w-[74px] h-[83px]"/>
+              <span className="absolute bottom-[18px] right-[4px] z-10 text-5xl text-black font-bold">1</span>
+            </div>
+            <h2 className="text-white text-2xl mt-3">Simplicité</h2>
+          </header>
+          <p className="text-[18px] leading-10">
+          L'ensemble des démarches pour constituer et suivre votre dossier de VAE pourront s'effectuer sur ce site.
+          </p>
+        </section>
+      </li>
+      <li className="mt-24">
+        <section>
+          <header>
+            <div className="relative h-[111px] w-[124px] text-[#FBB8F6]"> 
+              <Hexagon className="absolute bottom-0 left-[20px] w-[15px] h-[16px]"/>
+              <Hexagon className="absolute top-[28px] left-0 w-[30px] h-[33px]"/>
+              <Hexagon className="absolute bottom-[21px] right-0 w-[74px] h-[83px]"/>
+              <span className="absolute bottom-[39px] right-[4px] z-10 text-5xl text-black font-bold">2</span>
+            </div>
+            <h2 className="text-white text-2xl mt-3">Accompagnement</h2>
+          </header>
+          <p className="text-[18px] leading-10">
+          Dès le dépôt de votre candidature, vous serez accompagné par un professionnel qui vous guidera à chacune des étapes du parcours.
+          </p>
+        </section>
+      </li>
+      <li className="mt-24">
+        <section>
+          <header>
+            <div className="relative h-[124px] w-[106px] text-[#8BF8E7]"> 
+              <Hexagon className="absolute bottom-0 left-[45px] w-[15px] h-[16px]"/>
+              <Hexagon className="absolute top-[64px] left-0 w-[30px] h-[33px]"/>
+              <Hexagon className="absolute top-0 right-0 w-[74px] h-[83px]"/>
+              <span className="absolute top-[18px] right-[4px] z-10 text-5xl text-black font-bold">3</span>
+            </div>
+            <h2 className="text-white text-2xl mt-3">Financement</h2>
+          </header>
+          <p className="text-[18px] leading-10">
+          Tous les frais liés à votre parcours (déplacement, formations complémentaires etc...) seront pris en charge sans démarches supplémentaires.
+          </p>
+        </section>
+      </li>
+    </ul>
+  </section>
+);
+
+
+const TrouvezCertification = () => (
+  <section id="trouvez-certification" className="relative flex flex-col mt-20 pb-52 overflow-y-visible overflow-x-hidden">
+    <div className="px-5 mt-[100px]">
+      <header>
+        <p className="font-bold text-[#000091]">Pour tous</p>
+        <h1>Trouvez la certification dont vous avez besoin</h1>
+      </header>
+      <p className="leading-7">
+      La VAE est applicable à des milliers de diplômes et certifications professionnelles inscrits au RNCP qui vous ouvriront la porte à autant d’opportunités professionnelles.
+      </p>
+      <a
+        className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
+        href="#"
+      >
+        Voir la liste complète
+      </a>
+    </div>
+    <div className="mt-24 relative w-96 h-96">
+      <Image
+        src="/home-page/image-home-section-4.png"
+        className=""
+        alt="image compte validé"
+        fill={true}
+        style={{
+          objectFit: 'contain'
+        }}
+      />
+    </div>
+  </section>
+);
+
+
+const Professionnel = () => (
+  <section id="professionnel" className="relative flex flex-col mt-20 overflow-y-visible overflow-x-hidden bg-[#E5E5E5]">
+    <div className="px-5 mt-[100px]">
+      <header>
+        <p className="font-bold text-2xl text-[#000091]">Pour tous</p>
+        <h1>Professionnel de la VAE, rejoignez-nous</h1>
+      </header>
+      <p className="leading-7">
+      Vous voulez accompagner des candidats dans leurs parcours VAE ou vous voulez proposer de nouvelles certifications disponibles en VAE? Voici quelques informations pour vous guider.
+      </p>
+      <a
+        className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
+        href="#"
+      >
+        Espace PRO
+      </a>
+    </div>
+    <div className="mt-24 flex">
+      <div className="relative w-44 h-44">
+        <Image
+        src="/home-page/image-young-woman.png"
+        className=""
+        alt="image compte validé"
+        fill={true}
+        style={{
+          objectFit: 'contain'
+        }}
+      />
+      </div>
+      <div className="relative w-44 h-44">
+        <Image
+        src="/home-page/image-businessman.png"
+        className=""
+        alt="image compte validé"
+        fill={true}
+        style={{
+          objectFit: 'contain'
+        }}
+      />
+      </div>
+    </div>
+  </section>
+);
 
 const IndexPage = () => {
   return (
@@ -8,9 +263,11 @@ const IndexPage = () => {
       <Head>
         <title>Accueil - France VAE</title>
       </Head>
-      <div className="flex-1 flex justify-center mt-[10%] m-5">
-        <h1>Bienvenue sur France VAE</h1>
-      </div>
+      <AvenirPro />
+      <ValorisationCompetences />
+      <CommentCaMarche />
+      <TrouvezCertification />
+      <Professionnel />
     </MainLayout>
   );
 };
