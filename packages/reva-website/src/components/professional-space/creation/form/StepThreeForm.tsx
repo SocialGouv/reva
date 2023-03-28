@@ -49,7 +49,7 @@ export const StepThreeForm = () => {
       <div className="border-t border-gray-300  mb-7" />
       {submissionError && (
         <div className="fr-message--error mb-4">
-          Erreur lors de l&apos;envoi du formulaire
+          Erreur lors de l'envoi du formulaire
         </div>
       )}
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>
