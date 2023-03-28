@@ -1,6 +1,7 @@
-module View.Candidacy exposing (view, viewSentAt)
+module View.Candidacy exposing (view, viewCreatedAt, viewSentAt)
 
 import Admin.Enum.Duration exposing (Duration(..))
+import Api.Form.FundingRequest exposing (create)
 import Api.Token
 import BetaGouv.DSFR.Button as Button
 import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, CandidacyId, DateWithLabels)
@@ -13,6 +14,7 @@ import Html.Attributes exposing (attribute, class, classList, href, type_)
 import Html.Events exposing (onClick)
 import RemoteData exposing (RemoteData(..))
 import Route
+import Time
 import View.Candidacy.Tab exposing (Value(..))
 import View.Date
 import View.Helpers exposing (dataTest)
@@ -260,3 +262,12 @@ viewSentAt sentAt =
 
             Nothing ->
                 []
+
+
+viewCreatedAt : Time.Posix -> Html msg
+viewCreatedAt createdAt =
+    div
+        []
+        [ text "Candidature créée le "
+        , text <| View.Date.toFullFormat createdAt
+        ]

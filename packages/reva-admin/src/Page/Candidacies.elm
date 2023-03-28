@@ -8,6 +8,7 @@ module Page.Candidacies exposing
     )
 
 import Accessibility exposing (button, h2, h4)
+import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep)
 import Api.Candidacy
 import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
@@ -313,7 +314,12 @@ viewItem context candidacy =
                     ]
                 , div
                     [ class "flex items-end justify-between mb-2" ]
-                    [ View.Candidacy.viewSentAt candidacy.sentAt ]
+                    [ if candidacy.lastStatus.status == Admin.Enum.CandidacyStatusStep.Projet then
+                        div [ class "mb-2" ] [ View.Candidacy.viewCreatedAt candidacy.createdAt ]
+
+                      else
+                        View.Candidacy.viewSentAt candidacy.sentAt
+                    ]
                 , div
                     [ class "flex justify-between items-end" ]
                     [ case ( Api.Token.isAdmin context.token, candidacy.organism ) of
