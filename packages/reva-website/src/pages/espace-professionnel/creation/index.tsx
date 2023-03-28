@@ -29,7 +29,7 @@ const ProfessionalSpaceCreationPage = () => {
   return (
     <MainLayout>
       <Head>
-        <title>Page de création de compte professionnel</title>
+        <title>Création d'un compte professionnel - France VAE</title>
       </Head>
       <BlueLayout
         title="Créer un compte professionnel"

@@ -8,7 +8,9 @@ const ProfessionalSpaceCreationConfirmationPage = () => {
   return (
     <MainLayout>
       <Head>
-        <title>Page de confirmation de création de compte professionnel</title>
+        <title>
+          Confirmation de création de compte professionnel - France VAE
+        </title>
       </Head>
       <BlueLayout
         title="Créer un compte professionnel"
