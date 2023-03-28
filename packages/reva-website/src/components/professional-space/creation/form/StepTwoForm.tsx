@@ -46,7 +46,11 @@ export const StepTwoForm = () => {
       <div className="border-t border-gray-300  mb-7" />
       <FormOptionalFieldsDisclaimer className="mb-6" />
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+        <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+          <legend className="text-xl font-bold text-gray-900 grow mb-4">
+            Informations de facturation
+          </legend>
+
           <Input
             label="Prénom du contact de facturation"
             state={errors.companyBillingContactFirstname ? "error" : "default"}
@@ -100,7 +104,7 @@ export const StepTwoForm = () => {
             stateRelatedMessage={errors.companyIban?.message}
             nativeInputProps={{ ...register("companyIban") }}
           />
-        </div>
+        </fieldset>
         <div className="flex gap-2 ml-auto mt-4">
           <Button priority="secondary" onClick={goBackToPreviousStep}>
             Revenir à l'étape 1
