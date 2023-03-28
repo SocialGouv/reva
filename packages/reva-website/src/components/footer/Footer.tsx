@@ -19,7 +19,7 @@ export const Footer = (props: { className?: string }) => (
       href: "#",
     }}
     websiteMapLinkProps={{
-      href: "#",
+      href: "/plan-du-site",
     }}
   />
 );
