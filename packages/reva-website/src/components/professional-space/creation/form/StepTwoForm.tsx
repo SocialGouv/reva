@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useProfessionalSpaceCreationContext } from "../context/ProfessionalSpaceCreationContext";
+import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 
 const zodSchema = z.object({
   companyBillingContactFirstname: z.string().min(1, "obligatoire"),
@@ -43,40 +44,41 @@ export const StepTwoForm = () => {
         nextTitle="Saisir les informations générales"
       />
       <div className="border-t border-gray-300  mb-7" />
+      <FormOptionalFieldsDisclaimer className="mb-6" />
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
           <Input
-            label="Prénom du contact de facturation *"
+            label="Prénom du contact de facturation"
             state={errors.companyBillingContactFirstname ? "error" : "default"}
             stateRelatedMessage={errors.companyBillingContactFirstname?.message}
             nativeInputProps={{ ...register("companyBillingContactFirstname") }}
           />
           <Input
-            label="Nom du contact de facturation *"
+            label="Nom du contact de facturation"
             state={errors.companyBillingContactLastname ? "error" : "default"}
             stateRelatedMessage={errors.companyBillingContactLastname?.message}
             nativeInputProps={{ ...register("companyBillingContactLastname") }}
           />
           <Input
-            label="Adresse email de facturation *"
+            label="Adresse email de facturation"
             state={errors.companyBillingEmail ? "error" : "default"}
             stateRelatedMessage={errors.companyBillingEmail?.message}
             nativeInputProps={{ ...register("companyBillingEmail") }}
           />
           <Input
-            label="Téléphone du contact de facturation *"
+            label="Téléphone du contact de facturation"
             state={errors.companyBillingPhoneNumber ? "error" : "default"}
             stateRelatedMessage={errors.companyBillingPhoneNumber?.message}
             nativeInputProps={{ ...register("companyBillingPhoneNumber") }}
           />
           <Input
-            label="BIC *"
+            label="BIC"
             state={errors.companyBic ? "error" : "default"}
             stateRelatedMessage={errors.companyBic?.message}
             nativeInputProps={{ ...register("companyBic") }}
           />
           <Input
-            label="IBAN *"
+            label="IBAN"
             state={errors.companyIban ? "error" : "default"}
             stateRelatedMessage={errors.companyIban?.message}
             nativeInputProps={{ ...register("companyIban") }}

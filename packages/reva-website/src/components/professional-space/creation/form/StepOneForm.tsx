@@ -6,6 +6,7 @@ import { useForm, useController } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useProfessionalSpaceCreationContext } from "../context/ProfessionalSpaceCreationContext";
+import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 
 const legalStatuses = ["EI", "EURL", "SARL", "SAS", "SASU", "SA"] as const;
 
@@ -49,19 +50,20 @@ export const StepOneForm = () => {
         nextTitle="Saisir les informations pour la facturation"
       />
       <div className="border-t border-gray-300  mb-7" />
+      <FormOptionalFieldsDisclaimer className="mb-6" />
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>
         <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
           <legend className="text-xl font-bold text-gray-900 grow mb-4">
             Informations juridiques de la structure
           </legend>
           <Input
-            label="SIRET de la structure *"
+            label="SIRET de la structure"
             state={errors.companySiret ? "error" : "default"}
             stateRelatedMessage={errors.companySiret?.message}
             nativeInputProps={{ ...register("companySiret") }}
           />
           <Select
-            label="Forme juridique *"
+            label="Forme juridique"
             state={errors.companyLegalStatus ? "error" : "default"}
             stateRelatedMessage={errors.companyLegalStatus?.message}
             nativeSelectProps={{
@@ -76,7 +78,7 @@ export const StepOneForm = () => {
             ))}
           </Select>
           <Input
-            label="Raison sociale *"
+            label="Raison sociale"
             state={errors.companyName ? "error" : "default"}
             stateRelatedMessage={errors.companyName?.message}
             nativeInputProps={{ ...register("companyName") }}
@@ -87,19 +89,19 @@ export const StepOneForm = () => {
             Adresse de la structure
           </legend>
           <Input
-            label="Numéro et nom de rue"
+            label="Numéro et nom de rue (optionnel)"
             state={errors.companyAddress ? "error" : "default"}
             stateRelatedMessage={errors.companyAddress?.message}
             nativeInputProps={{ ...register("companyAddress") }}
           />
           <Input
-            label="Code postal"
+            label="Code postal (optionnel)"
             state={errors.companyZipCode ? "error" : "default"}
             stateRelatedMessage={errors.companyZipCode?.message}
             nativeInputProps={{ ...register("companyZipCode") }}
           />
           <Input
-            label="Ville"
+            label="Ville (optionnel)"
             state={errors.companyCity ? "error" : "default"}
             stateRelatedMessage={errors.companyCity?.message}
             nativeInputProps={{ ...register("companyCity") }}

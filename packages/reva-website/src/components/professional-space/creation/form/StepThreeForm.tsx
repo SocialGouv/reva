@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useProfessionalSpaceCreationContext } from "../context/ProfessionalSpaceCreationContext";
 import { useState } from "react";
+import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 
 const zodSchema = z.object({
   accountFirstname: z.string().min(1, "obligatoire"),
@@ -47,6 +48,7 @@ export const StepThreeForm = () => {
         stepCount={3}
       />
       <div className="border-t border-gray-300  mb-7" />
+      <FormOptionalFieldsDisclaimer className="mb-6" />
       {submissionError && (
         <div className="fr-message--error mb-4">
           Erreur lors de l'envoi du formulaire
@@ -55,25 +57,25 @@ export const StepThreeForm = () => {
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
           <Input
-            label="Prénom *"
+            label="Prénom"
             state={errors.accountFirstname ? "error" : "default"}
             stateRelatedMessage={errors.accountFirstname?.message}
             nativeInputProps={{ ...register("accountFirstname") }}
           />
           <Input
-            label="Nom *"
+            label="Nom"
             state={errors.accountLastname ? "error" : "default"}
             stateRelatedMessage={errors.accountLastname?.message}
             nativeInputProps={{ ...register("accountLastname") }}
           />
           <Input
-            label="Adresse email de l'architete de parcours *"
+            label="Adresse email de l'architete de parcours"
             state={errors.accountEmail ? "error" : "default"}
             stateRelatedMessage={errors.accountEmail?.message}
             nativeInputProps={{ ...register("accountEmail") }}
           />
           <Input
-            label="Téléphone de l'architecte de parcours *"
+            label="Téléphone de l'architecte de parcours"
             state={errors.accountPhoneNumber ? "error" : "default"}
             stateRelatedMessage={errors.accountPhoneNumber?.message}
             nativeInputProps={{ ...register("accountPhoneNumber") }}
