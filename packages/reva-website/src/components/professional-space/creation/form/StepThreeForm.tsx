@@ -60,25 +60,40 @@ export const StepThreeForm = () => {
             label="Prénom"
             state={errors.accountFirstname ? "error" : "default"}
             stateRelatedMessage={errors.accountFirstname?.message}
-            nativeInputProps={{ ...register("accountFirstname") }}
+            nativeInputProps={{
+              ...register("accountFirstname"),
+              autoComplete: "given-name",
+            }}
           />
           <Input
             label="Nom"
             state={errors.accountLastname ? "error" : "default"}
             stateRelatedMessage={errors.accountLastname?.message}
-            nativeInputProps={{ ...register("accountLastname") }}
+            nativeInputProps={{
+              ...register("accountLastname"),
+              autoComplete: "family-name",
+            }}
           />
           <Input
             label="Adresse email de l'architete de parcours"
             state={errors.accountEmail ? "error" : "default"}
             stateRelatedMessage={errors.accountEmail?.message}
-            nativeInputProps={{ ...register("accountEmail") }}
+            nativeInputProps={{
+              ...register("accountEmail"),
+              autoComplete: "email",
+              type: "email",
+              spellCheck: "false",
+            }}
           />
           <Input
             label="Téléphone de l'architecte de parcours"
             state={errors.accountPhoneNumber ? "error" : "default"}
             stateRelatedMessage={errors.accountPhoneNumber?.message}
-            nativeInputProps={{ ...register("accountPhoneNumber") }}
+            nativeInputProps={{
+              ...register("accountPhoneNumber"),
+              autoComplete: "phone",
+              type: "phone",
+            }}
           />
         </div>
         <div className="flex gap-2 ml-auto mt-4">

@@ -51,34 +51,51 @@ export const StepTwoForm = () => {
             label="Prénom du contact de facturation"
             state={errors.companyBillingContactFirstname ? "error" : "default"}
             stateRelatedMessage={errors.companyBillingContactFirstname?.message}
-            nativeInputProps={{ ...register("companyBillingContactFirstname") }}
+            nativeInputProps={{
+              ...register("companyBillingContactFirstname"),
+              autoComplete: "given-name",
+            }}
           />
           <Input
             label="Nom du contact de facturation"
             state={errors.companyBillingContactLastname ? "error" : "default"}
             stateRelatedMessage={errors.companyBillingContactLastname?.message}
-            nativeInputProps={{ ...register("companyBillingContactLastname") }}
+            nativeInputProps={{
+              ...register("companyBillingContactLastname"),
+              autoComplete: "family-name",
+            }}
           />
           <Input
             label="Adresse email de facturation"
             state={errors.companyBillingEmail ? "error" : "default"}
             stateRelatedMessage={errors.companyBillingEmail?.message}
-            nativeInputProps={{ ...register("companyBillingEmail") }}
+            nativeInputProps={{
+              ...register("companyBillingEmail"),
+              autoComplete: "email",
+              type: "email",
+              spellCheck: "false",
+            }}
           />
           <Input
             label="Téléphone du contact de facturation"
             state={errors.companyBillingPhoneNumber ? "error" : "default"}
             stateRelatedMessage={errors.companyBillingPhoneNumber?.message}
-            nativeInputProps={{ ...register("companyBillingPhoneNumber") }}
+            nativeInputProps={{
+              ...register("companyBillingPhoneNumber"),
+              autoComplete: "tel",
+              type: "tel",
+            }}
           />
           <Input
             label="BIC"
+            hintText="Format attendu: 8 caractères"
             state={errors.companyBic ? "error" : "default"}
             stateRelatedMessage={errors.companyBic?.message}
             nativeInputProps={{ ...register("companyBic") }}
           />
           <Input
             label="IBAN"
+            hintText="Format attendu: entre 27 et 34 caractères"
             state={errors.companyIban ? "error" : "default"}
             stateRelatedMessage={errors.companyIban?.message}
             nativeInputProps={{ ...register("companyIban") }}

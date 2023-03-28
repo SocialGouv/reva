@@ -58,12 +58,14 @@ export const StepOneForm = () => {
           </legend>
           <Input
             label="SIRET de la structure"
+            hintText="Format attendu : 14 chiffres"
             state={errors.companySiret ? "error" : "default"}
             stateRelatedMessage={errors.companySiret?.message}
             nativeInputProps={{ ...register("companySiret") }}
           />
           <Select
             label="Forme juridique"
+            hint="Sélectionnez la forme juridique de la structure"
             state={errors.companyLegalStatus ? "error" : "default"}
             stateRelatedMessage={errors.companyLegalStatus?.message}
             nativeSelectProps={{
@@ -81,7 +83,10 @@ export const StepOneForm = () => {
             label="Raison sociale"
             state={errors.companyName ? "error" : "default"}
             stateRelatedMessage={errors.companyName?.message}
-            nativeInputProps={{ ...register("companyName") }}
+            nativeInputProps={{
+              ...register("companyName"),
+              autoComplete: "organization",
+            }}
           />
         </fieldset>
         <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-8 mt-8">
@@ -92,19 +97,28 @@ export const StepOneForm = () => {
             label="Numéro et nom de rue (optionnel)"
             state={errors.companyAddress ? "error" : "default"}
             stateRelatedMessage={errors.companyAddress?.message}
-            nativeInputProps={{ ...register("companyAddress") }}
+            nativeInputProps={{
+              ...register("companyAddress"),
+              autoComplete: "street-address",
+            }}
           />
           <Input
             label="Code postal (optionnel)"
             state={errors.companyZipCode ? "error" : "default"}
             stateRelatedMessage={errors.companyZipCode?.message}
-            nativeInputProps={{ ...register("companyZipCode") }}
+            nativeInputProps={{
+              ...register("companyZipCode"),
+              autoComplete: "postal-code",
+            }}
           />
           <Input
             label="Ville (optionnel)"
             state={errors.companyCity ? "error" : "default"}
             stateRelatedMessage={errors.companyCity?.message}
-            nativeInputProps={{ ...register("companyCity") }}
+            nativeInputProps={{
+              ...register("companyCity"),
+              autoComplete: "address-level2",
+            }}
           />
         </fieldset>
         <Button type="submit" className="ml-auto mt-4">
