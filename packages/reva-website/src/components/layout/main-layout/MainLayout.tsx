@@ -5,7 +5,9 @@ import { Header } from "@/components/header/Header";
 export const MainLayout = (props: { children?: ReactNode }) => (
   <div className="min-h-screen flex flex-col">
     <Header />
-    <div className="flex-1 flex flex-col">{props.children}</div>
+    <main role="main" className="flex-1 flex flex-col">
+      {props.children}
+    </main>
     <Footer />
   </div>
 );
