@@ -8,7 +8,13 @@ export const TrainingProgramTimelineElement = () => {
   return (
     <TimelineElement
       title="Validation de parcours"
-      description="Validez le nombre d’heures d’accompagnement et de formation défini par votre référent"
+      description={
+        ["PROJET", "VALIDATION", "PRISE_EN_CHARGE"].includes(
+          state.context.candidacyStatus
+        )
+          ? "Votre référent va bientôt vous contacter pour définir avec vous votre parcours d’accompagnement. Vous pourrez prochainement valider le nombre d’heures d’accompagnement et de formation prévu."
+          : "Validez le nombre d’heures d’accompagnement et de formation défini par votre référent"
+      }
       status={
         state.context.candidacyStatus === "PROJET"
           ? "disabled"
