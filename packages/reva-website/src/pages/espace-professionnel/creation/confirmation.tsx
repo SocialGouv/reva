@@ -16,11 +16,14 @@ const ProfessionalSpaceCreationConfirmationPage = () => {
         title="Créer un compte professionnel"
         description="Félicitations, vous venez de créer votre compte"
       >
-        <div className="flex flex-col max-w-[50em] xl:max-w-[63.5em]">
+        <div
+          role="status"
+          className="flex flex-col max-w-[50em] xl:max-w-[63.5em]"
+        >
           <Image
             src="/professional-space/creation/union.svg"
             className="self-center mb-14"
-            alt="image compte validé"
+            alt="Compte validé"
             width={80}
             height={60}
           />
