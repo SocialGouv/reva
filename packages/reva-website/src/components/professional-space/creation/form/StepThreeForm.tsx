@@ -48,12 +48,12 @@ export const StepThreeForm = () => {
         stepCount={3}
       />
       <div className="border-t border-gray-300  mb-7" />
-      <FormOptionalFieldsDisclaimer className="mb-6" />
       {submissionError && (
-        <div className="fr-message--error mb-4">
+        <div className="fr-message--error mb-6">
           Erreur lors de l'envoi du formulaire
         </div>
       )}
+      <FormOptionalFieldsDisclaimer className="mb-6" />
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
           <Input
