@@ -50,63 +50,63 @@ export const StepOneForm = () => {
       />
       <div className="border-t border-gray-300  mb-7" />
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>
-          <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-            <legend className="text-xl font-bold text-gray-900 grow mb-4">
-              Informations juridiques de la structure
-            </legend>
-              <Input
-                label="SIRET de la structure *"
-                state={errors.companySiret ? "error" : "default"}
-                stateRelatedMessage={errors.companySiret?.message}
-                nativeInputProps={{ ...register("companySiret") }}
-              />
-              <Select
-                label="Forme juridique *"
-                state={errors.companyLegalStatus ? "error" : "default"}
-                stateRelatedMessage={errors.companyLegalStatus?.message}
-                nativeSelectProps={{
-                  value: companyLegalStatusController.field.value,
-                  onChange: companyLegalStatusController.field.onChange,
-                }}
-              >
-                {legalStatuses.map((ls) => (
-                  <option key={ls} value={ls}>
-                    {ls}
-                  </option>
-                ))}
-              </Select>
-              <Input
-                label="Raison sociale *"
-                state={errors.companyName ? "error" : "default"}
-                stateRelatedMessage={errors.companyName?.message}
-                nativeInputProps={{ ...register("companyName") }}
-              />
-          </fieldset>
-          <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-8 mt-8">
-            <legend className="text-lg font-bold text-gray-900 grow my-4">
-              Adresse de la structure
-            </legend>
-              <Input
-                label="Numéro et nom de rue"
-                state={errors.companyAddress ? "error" : "default"}
-                stateRelatedMessage={errors.companyAddress?.message}
-                nativeInputProps={{ ...register("companyAddress") }}
-              />
-              <Input
-                label="Code postal"
-                state={errors.companyZipCode ? "error" : "default"}
-                stateRelatedMessage={errors.companyZipCode?.message}
-                nativeInputProps={{ ...register("companyZipCode") }}
-              />
-              <Input
-                label="Ville"
-                state={errors.companyCity ? "error" : "default"}
-                stateRelatedMessage={errors.companyCity?.message}
-                nativeInputProps={{ ...register("companyCity") }}
-              />
-          </fieldset>
+        <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+          <legend className="text-xl font-bold text-gray-900 grow mb-4">
+            Informations juridiques de la structure
+          </legend>
+          <Input
+            label="SIRET de la structure *"
+            state={errors.companySiret ? "error" : "default"}
+            stateRelatedMessage={errors.companySiret?.message}
+            nativeInputProps={{ ...register("companySiret") }}
+          />
+          <Select
+            label="Forme juridique *"
+            state={errors.companyLegalStatus ? "error" : "default"}
+            stateRelatedMessage={errors.companyLegalStatus?.message}
+            nativeSelectProps={{
+              value: companyLegalStatusController.field.value,
+              onChange: companyLegalStatusController.field.onChange,
+            }}
+          >
+            {legalStatuses.map((ls) => (
+              <option key={ls} value={ls}>
+                {ls}
+              </option>
+            ))}
+          </Select>
+          <Input
+            label="Raison sociale *"
+            state={errors.companyName ? "error" : "default"}
+            stateRelatedMessage={errors.companyName?.message}
+            nativeInputProps={{ ...register("companyName") }}
+          />
+        </fieldset>
+        <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-8 mt-8">
+          <legend className="text-lg font-bold text-gray-900 grow my-4">
+            Adresse de la structure
+          </legend>
+          <Input
+            label="Numéro et nom de rue"
+            state={errors.companyAddress ? "error" : "default"}
+            stateRelatedMessage={errors.companyAddress?.message}
+            nativeInputProps={{ ...register("companyAddress") }}
+          />
+          <Input
+            label="Code postal"
+            state={errors.companyZipCode ? "error" : "default"}
+            stateRelatedMessage={errors.companyZipCode?.message}
+            nativeInputProps={{ ...register("companyZipCode") }}
+          />
+          <Input
+            label="Ville"
+            state={errors.companyCity ? "error" : "default"}
+            stateRelatedMessage={errors.companyCity?.message}
+            nativeInputProps={{ ...register("companyCity") }}
+          />
+        </fieldset>
         <Button type="submit" className="ml-auto mt-4">
-          Suivant
+          Passer à l'étape 2
         </Button>
       </form>
     </div>

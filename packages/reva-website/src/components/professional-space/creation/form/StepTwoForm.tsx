@@ -84,9 +84,9 @@ export const StepTwoForm = () => {
         </div>
         <div className="flex gap-2 ml-auto mt-4">
           <Button priority="secondary" onClick={goBackToPreviousStep}>
-            Précédent
+            Revenir à l'étape 1
           </Button>
-          <Button type="submit">Suivant</Button>
+          <Button type="submit"> Passer à l'étape 3</Button>
         </div>
       </form>
     </div>
