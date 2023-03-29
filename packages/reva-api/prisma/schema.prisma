@@ -287,7 +287,7 @@ model Account {
 model Organism {
   id                         String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   label                      String                                @unique @db.VarChar(255)
-  legalStatus                LegalStatus                           @map("legal_status") @default(NC)
+  legalStatus                LegalStatus                           @default(NC) @map("legal_status")
   address                    String
   zip                        String                                @db.VarChar(5)
   city                       String                                @db.VarChar(255)
@@ -541,13 +541,21 @@ model PaymentRequest {
   candidacy                            Candidacy            @relation(fields: [candidacyId], references: [id])
   candidacyId                          String               @unique @map("candidacy_id") @db.Uuid
   diagnosisEffectiveHourCount          Int                  @map("diagnosis_effective_hour_count")
+  diagnosisEffectiveCost               Decimal              @map("diagnosis_effective_cost") @db.Decimal(10, 2)
   postExamEffectiveHourCount           Int                  @map("post_exam_effective_hour_count")
+  postExamEffectiveCost                Decimal              @map("post_exam_effective_cost") @db.Decimal(10, 2)
   individualEffectiveHourCount         Int                  @map("individual_effective_hour_count")
+  individualEffectiveCost              Decimal              @map("individual_effective_cost") @db.Decimal(10, 2)
   collectiveEffectiveHourCount         Int                  @map("collective_effective_hour_count")
+  collectiveEffectiveCost              Decimal              @map("collective_effective_cost") @db.Decimal(10, 2)
   mandatoryTrainingsEffectiveHourCount Int                  @map("mandatory_training_effective_hour_count")
+  mandatoryTrainingsEffectiveCost      Decimal              @map("mandatory_training_effective_cost") @db.Decimal(10, 2)
   basicSkillsEffectiveHourCount        Int                  @map("basic_skills_effective_hour_count")
+  basicSkillsEffectiveCost             Decimal              @map("basic_skills_effective_cost") @db.Decimal(10, 2)
   certificateSkillsEffectiveHourCount  Int                  @map("certificate_skills_effective_hour_count")
+  certificateSkillsEffectiveCost       Decimal              @map("certificate_skills_effective_cost") @db.Decimal(10, 2)
   examEffectiveHourCount               Int                  @map("exam_effective_hour_count")
+  examEffectiveCost                    Decimal              @map("exam_effective_cost") @db.Decimal(10, 2)
   invoiceNumber                        String               @map("invoice_number")
   PaymentRequestBatch                  PaymentRequestBatch?
 
@@ -586,24 +594,24 @@ enum LegalStatus {
 }
 
 model SubscriptionRequest {
-  id                              String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  companyName                     String      @map("company_name") @db.VarChar(255)
-  companyLegalStatus              LegalStatus @map("company_legal_status")
-  companySiret                    String      @map("company_siret") @db.VarChar(255)
-  companyAddress                  String?     @map("company_address") @db.VarChar(255)
-  companyZipCode                  String?     @map("company_zipcode") @db.VarChar(5)
-  companyCity                     String?     @map("company_city") @db.VarChar(100)
-  companyBillingContactFirstname  String      @map("company_billing_contact_firstname") @db.VarChar(100)
-  companyBillingContactLastname   String      @map("company_billing_contact_lastname") @db.VarChar(255)
-  companyBillingEmail             String      @map("company_billing_email") @db.VarChar(255)
-  companyBillingPhoneNumber       String      @map("company_billing_phone_number") @db.VarChar(50)
-  companyBic                      String      @map("company_bic") @db.VarChar(50)
-  companyIban                     String      @map("company_iban") @db.VarChar(50)
-  accountFirstname                String      @map("account_firstname") @db.VarChar(100)
-  accountLastname                 String      @map("account_lastname") @db.VarChar(100)
-  accountEmail                    String      @map("account_email") @db.VarChar(255)
-  accountPhoneNumber              String      @map("account_phone_number") @db.VarChar(50)
-  createdAt                       DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  id                             String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  companyName                    String      @map("company_name") @db.VarChar(255)
+  companyLegalStatus             LegalStatus @map("company_legal_status")
+  companySiret                   String      @map("company_siret") @db.VarChar(255)
+  companyAddress                 String?     @map("company_address") @db.VarChar(255)
+  companyZipCode                 String?     @map("company_zipcode") @db.VarChar(5)
+  companyCity                    String?     @map("company_city") @db.VarChar(100)
+  companyBillingContactFirstname String      @map("company_billing_contact_firstname") @db.VarChar(100)
+  companyBillingContactLastname  String      @map("company_billing_contact_lastname") @db.VarChar(255)
+  companyBillingEmail            String      @map("company_billing_email") @db.VarChar(255)
+  companyBillingPhoneNumber      String      @map("company_billing_phone_number") @db.VarChar(50)
+  companyBic                     String      @map("company_bic") @db.VarChar(50)
+  companyIban                    String      @map("company_iban") @db.VarChar(50)
+  accountFirstname               String      @map("account_firstname") @db.VarChar(100)
+  accountLastname                String      @map("account_lastname") @db.VarChar(100)
+  accountEmail                   String      @map("account_email") @db.VarChar(255)
+  accountPhoneNumber             String      @map("account_phone_number") @db.VarChar(50)
+  createdAt                      DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@map("subscription_request")
 }

@@ -5,93 +5,90 @@ extend type Candidacy {
 type PaymentRequest {
   id: ID!
   diagnosisEffectiveHourCount: Int!
+  diagnosisEffectiveCost: Decimal!
   postExamEffectiveHourCount: Int!
+  postExamEffectiveCost: Decimal!
   individualEffectiveHourCount: Int!
+  individualEffectiveCost: Decimal!
   collectiveEffectiveHourCount: Int!
+  collectiveEffectiveCost: Decimal!
   mandatoryTrainingsEffectiveHourCount: Int!
+  mandatoryTrainingsEffectiveCost: Decimal!
   basicSkillsEffectiveHourCount: Int!
+  basicSkillsEffectiveCost: Decimal!
   certificateSkillsEffectiveHourCount: Int!
+  certificateSkillsEffectiveCost: Decimal!
   examEffectiveHourCount: Int!
+  examEffectiveCost: Decimal!
   invoiceNumber: String!
 }
 
 type FundingRequest {
   id: UUID!
   numAction: String
-
   companion: Organism
-
   diagnosisHourCount: Int!
   diagnosisCost: Decimal!
-
   postExamHourCount: Int!
   postExamCost: Decimal!
-
   individualHourCount: Int!
   individualCost: Decimal!
-
   collectiveHourCount: Int!
   collectiveCost: Decimal!
-
   basicSkills: [BasicSkill!]!
   basicSkillsHourCount: Int!
   basicSkillsCost: Decimal!
-
   mandatoryTrainings: [Training!]!
   mandatoryTrainingsHourCount: Int!
   mandatoryTrainingsCost: Decimal!
-
   certificateSkills: String!
   certificateSkillsHourCount: Int!
   certificateSkillsCost: Decimal!
-
   otherTraining: String!
-
   examHourCount: Int!
   examCost: Decimal!
 }
 
 input PaymentRequestInput {
   diagnosisEffectiveHourCount: Int!
+  diagnosisEffectiveCost: Decimal!
   postExamEffectiveHourCount: Int!
+  postExamEffectiveCost: Decimal!
   individualEffectiveHourCount: Int!
+  individualEffectiveCost: Decimal!
   collectiveEffectiveHourCount: Int!
+  collectiveEffectiveCost: Decimal!
   mandatoryTrainingsEffectiveHourCount: Int!
+  mandatoryTrainingsEffectiveCost: Decimal!
   basicSkillsEffectiveHourCount: Int!
+  basicSkillsEffectiveCost: Decimal!
   certificateSkillsEffectiveHourCount: Int!
+  certificateSkillsEffectiveCost: Decimal!
   examEffectiveHourCount: Int!
+  examEffectiveCost: Decimal!
   invoiceNumber: String!
 }
 
 input FundingRequestInput {
   companionId: UUID
-
   diagnosisHourCount: Int!
   diagnosisCost: Decimal!
-
   postExamHourCount: Int!
   postExamCost: Decimal!
-
   individualHourCount: Int!
   individualCost: Decimal!
-
   collectiveHourCount: Int!
   collectiveCost: Decimal!
-
   basicSkillsIds: [UUID!]!
   basicSkillsHourCount: Int!
   basicSkillsCost: Decimal!
-
   mandatoryTrainingsIds: [UUID!]!
   mandatoryTrainingsHourCount: Int!
   mandatoryTrainingsCost: Decimal!
-
   certificateSkills: String!
   certificateSkillsHourCount: Int!
   certificateSkillsCost: Decimal!
-
   otherTraining: String!
-
   examHourCount: Int!
   examCost: Decimal!
 }

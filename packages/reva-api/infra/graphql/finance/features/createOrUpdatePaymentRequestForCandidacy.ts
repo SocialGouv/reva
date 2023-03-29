@@ -1,14 +1,19 @@
 import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
-import { Role } from "../../../../domain/types/account";
 import { PaymentRequest } from "../../../../domain/types/candidacy";
-import { FundingRequest } from "../../../../domain/types/candidate";
+import { Candidate, FundingRequest } from "../../../../domain/types/candidate";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import {
+  getTotalCost,
+  validateIndividualCosts,
+  validateTotalCost,
+} from "./costValidationUtils";
 
 interface CreateOrUpdatePaymentRequestDeps {
+  getCandidateByCandidacyId: (id: string) => Promise<Either<string, Candidate>>;
   getFundingRequestByCandidacyId: (params: {
     candidacyId: string;
   }) => Promise<Either<string, FundingRequest | null>>;
@@ -23,6 +28,7 @@ interface CreateOrUpdatePaymentRequestDeps {
     paymentRequestId: string;
     paymentRequest: PaymentRequest;
   }) => Promise<Either<string, PaymentRequest>>;
+  getAfgsuTrainingId: () => Promise<string | null>;
 }
 
 export const createOrUpdatePaymentRequestForCandidacy =
@@ -48,11 +54,26 @@ export const createOrUpdatePaymentRequestForCandidacy =
           }),
       });
 
+    const afgsuTrainingId = await deps.getAfgsuTrainingId();
+
     return EitherAsync.fromPromise(() =>
       deps.getFundingRequestByCandidacyId({ candidacyId: params.candidacyId })
     )
-      .chain((fr) =>
-        Promise.resolve(validatePaymentRequest(params.paymentRequest, fr))
+      .map((fundingRequest) =>
+        EitherAsync.fromPromise(() =>
+          deps.getCandidateByCandidacyId(params.candidacyId)
+        ).map((candidate) => ({ fundingRequest, candidate }))
+      )
+      .join()
+      .chain((candidateAndFundingRequest) =>
+        Promise.resolve(
+          validatePaymentRequest(
+            candidateAndFundingRequest.candidate,
+            params.paymentRequest,
+            candidateAndFundingRequest.fundingRequest,
+            afgsuTrainingId
+          )
+        )
       )
       .chain(() =>
         deps.getPaymentRequestByCandidacyId({ candidacyId: params.candidacyId })
@@ -69,58 +90,55 @@ export const createOrUpdatePaymentRequestForCandidacy =
   };
 
 export const validatePaymentRequest = (
+  candidate: Candidate,
   pr: PaymentRequest,
-  fr: FundingRequest | null
+  fr: FundingRequest | null,
+  afgsuTrainingId: string | null
 ): Either<FunctionalError, PaymentRequest> => {
-  const errors: string[] = [];
+  let errors: string[] = [];
+
   if (!fr) {
     errors.push("Demande de financement non trouvée");
   } else {
-    if (pr.basicSkillsEffectiveHourCount > fr.basicSkillsHourCount) {
-      errors.push(
-        "Le nombre d'heures réalisées pour les formations savoir de base doit être inférieur ou égal au nombre d'heures prévues dans la demande de prise en charge."
-      );
-    }
-    if (
-      pr.certificateSkillsEffectiveHourCount > fr.certificateSkillsHourCount
-    ) {
-      errors.push(
-        "Le nombre d'heures réalisées pour les blocs de compétences certifiant doit être inférieur ou égal au nombre d'heures prévues dans la demande de prise en charge."
-      );
-    }
-    if (pr.collectiveEffectiveHourCount > fr.collectiveHourCount) {
-      errors.push(
-        "Le nombre d'heures réalisées pour l'accompagnement collectif doit être inférieur ou égal au nombre d'heures prévues dans la demande de prise en charge."
-      );
-    }
-    if (pr.diagnosisEffectiveHourCount > fr.diagnosisHourCount) {
-      errors.push(
-        "Le nombre d'heures réalisées pour l'entretien de faisabilité doit être inférieur ou égal au nombre d'heures prévues dans la demande de prise en charge."
-      );
-    }
-    if (pr.examEffectiveHourCount > fr.examHourCount) {
-      errors.push(
-        "Le nombre d'heures réalisées pour la prestation jury  doit être inférieur ou égal au nombre d'heures prévues dans la demande de prise en charge."
-      );
-    }
-    if (pr.individualEffectiveHourCount > fr.individualHourCount) {
-      errors.push(
-        "Le nombre d'heures réalisées pour l'accompagnement individuel doit être inférieur ou égal au nombre d'heures prévues dans la demande de prise en charge."
-      );
-    }
-    if (
-      pr.mandatoryTrainingsEffectiveHourCount > fr.mandatoryTrainingsHourCount
-    ) {
-      errors.push(
-        "Le nombre d'heures réalisées pour les formations obligatoires doit être inférieur ou égal au nombre d'heures prévues dans la demande de prise en charge."
-      );
-    }
-    if (pr.postExamEffectiveHourCount > fr.postExamHourCount) {
-      errors.push(
-        "Le nombre d'heures réalisées pour l'entretien post jury doit être inférieur ou égal au nombre d'heures prévues dans la demande de prise en charge."
-      );
-    }
+    const hoursAndCosts = {
+      diagnosisHourCount: pr.diagnosisEffectiveHourCount,
+      diagnosisCost: pr.diagnosisEffectiveCost,
+      postExamHourCount: pr.postExamEffectiveHourCount,
+      postExamCost: pr.postExamEffectiveCost,
+      individualHourCount: pr.individualEffectiveHourCount,
+      individualCost: pr.individualEffectiveCost,
+      collectiveHourCount: pr.collectiveEffectiveHourCount,
+      collectiveCost: pr.collectiveEffectiveCost,
+      mandatoryTrainingsHourCount: pr.mandatoryTrainingsEffectiveHourCount,
+      mandatoryTrainingsCost: pr.mandatoryTrainingsEffectiveCost,
+      basicSkillsHourCount: pr.basicSkillsEffectiveHourCount,
+      basicSkillsCost: pr.basicSkillsEffectiveCost,
+      certificateSkillsHourCount: pr.certificateSkillsEffectiveHourCount,
+      certificateSkillsCost: pr.certificateSkillsEffectiveCost,
+      examHourCount: pr.examEffectiveHourCount,
+      examCost: pr.examEffectiveCost,
+    };
+    const isCandidateBacNonFragile =
+      (candidate.highestDegree?.level || 0) > 4 &&
+      (candidate.vulnerabilityIndicator?.label || "Vide") === "Vide";
+
+    errors = validateIndividualCosts({
+      hoursAndCosts,
+      isCandidateBacNonFragile,
+      mandatoryTrainingContainAfgsu: fr.mandatoryTrainings.some(
+        (mt: { training: { id: string } }) => mt.training.id === afgsuTrainingId
+      ),
+      numberOfMandatoryTrainings: fr.mandatoryTrainings.length,
+    });
+
+    const total = getTotalCost(hoursAndCosts);
+    const totalCostErrorMessage = validateTotalCost(
+      total,
+      isCandidateBacNonFragile
+    );
+    totalCostErrorMessage && errors.push(totalCostErrorMessage);
   }
+
   return errors.length
     ? Left(
         new FunctionalError(

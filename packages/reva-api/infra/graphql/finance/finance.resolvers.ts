@@ -72,11 +72,13 @@ const unsafeResolvers = {
       }: { candidacyId: string; paymentRequest: PaymentRequest }
     ) => {
       const result = await createOrUpdatePaymentRequestForCandidacy({
+        getCandidateByCandidacyId: candidatesDb.getCandidateByCandidacyId,
         getFundingRequestByCandidacyId: fundingRequestsDb.getFundingRequest,
         getPaymentRequestByCandidacyId:
           paymentRequestsDb.getPaymentRequestByCandidacyId,
         createPaymentRequest: paymentRequestsDb.createPaymentRequest,
         updatePaymentRequest: paymentRequestsDb.updatePaymentRequest,
+        getAfgsuTrainingId: trainingDb.getAfgsuTrainingId,
       })({
         candidacyId,
         paymentRequest,
@@ -124,7 +126,7 @@ const unsafeResolvers = {
         getCandidacyFromId: candidaciesDb.getCandidacyFromId,
         hasRole: context.auth.hasRole,
         getCandidateByCandidacyId: candidatesDb.getCandidateByCandidacyId,
-        getTrainings: trainingDb.getTrainings,
+        getAfgsuTrainingId: trainingDb.getAfgsuTrainingId,
       })(params);
 
       return result

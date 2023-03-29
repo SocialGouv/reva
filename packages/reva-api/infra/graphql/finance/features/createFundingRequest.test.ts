@@ -917,7 +917,7 @@ describe("funding request", () => {
           ),
         createFundingRequestBatch: () =>
           Promise.resolve(Right({} as FundingRequestBatch)),
-        getTrainings: () => Promise.resolve(Right([])),
+        getAfgsuTrainingId: () => Promise.resolve(null),
       });
       const result = await cfr({
         candidacyId: "1234",
@@ -959,7 +959,7 @@ describe("funding request", () => {
               } as Candidate)
             ),
           createFundingRequestBatch: () => Promise.resolve(Left("Error")),
-          getTrainings: () => Promise.resolve(Right([])),
+          getAfgsuTrainingId: () => Promise.resolve(null),
         });
         const result = await cfr({
           candidacyId: "1234",
@@ -1010,7 +1010,7 @@ describe("funding request", () => {
           ),
         createFundingRequestBatch: () =>
           Promise.resolve(Right({} as FundingRequestBatch)),
-        getTrainings: () => Promise.resolve(Right([])),
+        getAfgsuTrainingId: () => Promise.resolve(null),
       });
       const result = await cfr({
         candidacyId: "1234",
@@ -1055,7 +1055,7 @@ describe("funding request", () => {
           ),
         createFundingRequestBatch: () =>
           Promise.resolve(Right({} as FundingRequestBatch)),
-        getTrainings: () => Promise.resolve(Right([])),
+        getAfgsuTrainingId: () => Promise.resolve(null),
       });
       const result = await cfr({
         candidacyId: "1234",
@@ -1118,7 +1118,7 @@ describe("funding request", () => {
           ),
         createFundingRequestBatch: () =>
           Promise.resolve(Right({} as FundingRequestBatch)),
-        getTrainings: () => Promise.resolve(Right([])),
+        getAfgsuTrainingId: () => Promise.resolve(null),
       });
       const result = await cfr({
         candidacyId: "1234",

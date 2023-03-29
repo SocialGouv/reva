@@ -2,11 +2,7 @@ import { Decimal } from "@prisma/client/runtime";
 import { Either, EitherAsync, Left, Right } from "purify-ts";
 
 import { Role } from "../../../../domain/types/account";
-import {
-  Candidacy,
-  Degree,
-  Training,
-} from "../../../../domain/types/candidacy";
+import { Candidacy, Degree } from "../../../../domain/types/candidacy";
 import {
   Candidate,
   FundingRequest,
@@ -20,6 +16,7 @@ import {
   FunctionalError,
 } from "../../../../domain/types/functionalError";
 import { logger } from "../../../logger";
+import { getTotalCost, validateIndividualCosts } from "./costValidationUtils";
 
 interface CreateFundingRequestDeps {
   createFundingRequest: (params: {
@@ -37,25 +34,12 @@ interface CreateFundingRequestDeps {
     candidacyId: string;
     statuses: ["PRISE_EN_CHARGE", "PARCOURS_ENVOYE", "PARCOURS_CONFIRME"];
   }) => Promise<Either<string, boolean>>;
-  getTrainings: () => Promise<Either<string, Training[]>>;
+  getAfgsuTrainingId: () => Promise<string | null>;
 }
 
 const candidateBacNonFragile = (candidate: any) =>
   candidate.highestDegree.level > 4 &&
   candidate.vulnerabilityIndicator.label === "Vide";
-
-const isBetween = (low: number, high: number) => (value: number) =>
-  low <= value && value <= high;
-
-const isLower2 = isBetween(0, 2);
-const isLower4 = isBetween(0, 4);
-const isLower15 = isBetween(0, 15);
-const isLower20 = isBetween(0, 20);
-const isLower25 = isBetween(0, 25);
-const isLower30 = isBetween(0, 30);
-const isLower35 = isBetween(0, 35);
-const isLower70 = isBetween(0, 70);
-const isLower78 = isBetween(0, 78);
 
 export const validateFundingRequest =
   (candidate: Candidate) =>
@@ -63,8 +47,6 @@ export const validateFundingRequest =
     fundingRequest: FundingRequestInput,
     afgsuTrainingId: string
   ): Either<FunctionalError, FundingRequestInput> => {
-    const errors = [];
-
     const isCandidateBacNonFragile = candidateBacNonFragile(candidate);
 
     if (isCandidateBacNonFragile) {
@@ -91,128 +73,15 @@ export const validateFundingRequest =
       fundingRequest.certificateSkillsHourCount = 0;
     }
 
-    if (
-      isCandidateBacNonFragile &&
-      !isLower2(
-        fundingRequest.diagnosisHourCount + fundingRequest.postExamHourCount
-      )
-    ) {
-      errors.push(
-        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours doit être compris entre 0 et 2h."
-      );
-    } else if (
-      !isLower4(
-        fundingRequest.diagnosisHourCount + fundingRequest.postExamHourCount
-      )
-    ) {
-      errors.push(
-        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours doit être compris entre 0 et 4h."
-      );
-    }
-
-    if (!isLower70(fundingRequest.diagnosisCost.toNumber())) {
-      errors.push(
-        "Le coût horaire demandé pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 0 et 70 euros."
-      );
-    }
-
-    if (!isLower70(fundingRequest.postExamCost.toNumber())) {
-      errors.push(
-        "Le coût horaire demandé pour la prestation de l'Architecte de Parcours Post Jury doit être compris entre 0 et 70 euros."
-      );
-    }
-
-    if (
-      isCandidateBacNonFragile &&
-      !isLower15(fundingRequest.individualHourCount)
-    ) {
-      errors.push(
-        "Le nombre d'heures demandé pour la prestation Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 15h."
-      );
-    } else if (!isLower30(fundingRequest.individualHourCount)) {
-      errors.push(
-        "Le nombre d'heures demandé pour la prestation Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 30h."
-      );
-    }
-
-    if (!isLower70(fundingRequest.individualCost.toNumber())) {
-      errors.push(
-        "Le coût horaire demandé pour la prestation d'Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 70 euros."
-      );
-    }
-
-    if (
-      isCandidateBacNonFragile &&
-      !isLower15(fundingRequest.collectiveHourCount)
-    ) {
-      errors.push(
-        "Le nombre d'heures demandées pour la prestation d'Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 15h."
-      );
-    } else if (!isLower30(fundingRequest.collectiveHourCount)) {
-      errors.push(
-        "Le nombre d'heures demandées pour la prestation d'Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 30h."
-      );
-    }
-
-    if (!isLower35(fundingRequest.collectiveCost.toNumber())) {
-      errors.push(
-        "Le coût horaire demandé pour la prestation Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 35 euros."
-      );
-    }
-
-    if (!isLower20(fundingRequest.basicSkillsCost.toNumber())) {
-      errors.push(
-        "Le coût horaire demandé pour la prestation Compléments formatifs Savoirs de base doit être compris entre 0 et 20 euros."
-      );
-    }
-
-    if (
-      !isLower78(
-        fundingRequest.mandatoryTrainingsHourCount +
-          fundingRequest.basicSkillsHourCount +
-          fundingRequest.certificateSkillsHourCount
-      )
-    ) {
-      errors.push(
-        "Le nombre d'heures total prescrit pour les actes formatifs doit être compris entre 0 et 78h."
-      );
-    }
-
-    if (!isLower2(fundingRequest.examHourCount)) {
-      errors.push(
-        "Le nombre d'heures demandé pour la prestation Jury doit être compris entre 0 et 2h."
-      );
-    }
-    if (!isLower20(fundingRequest.examCost.toNumber())) {
-      errors.push(
-        "Le coût horaire demandé pour la prestation Jury doit être compris entre 0 et 20 euros."
-      );
-    }
-
     const mandatoryTrainingContainAfgsu =
       fundingRequest.mandatoryTrainingsIds.includes(afgsuTrainingId);
 
-    if (mandatoryTrainingContainAfgsu) {
-      if (fundingRequest.mandatoryTrainingsIds.length > 1) {
-        errors.push(
-          "Impossible de combiner l'AFGSU et une autre formation obligatoire."
-        );
-      } else if (!isLower25(fundingRequest.mandatoryTrainingsCost.toNumber())) {
-        errors.push(
-          "Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 25 euros."
-        );
-      }
-    } else if (!isLower20(fundingRequest.mandatoryTrainingsCost.toNumber())) {
-      errors.push(
-        "Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 20 euros."
-      );
-    }
-
-    if (!isLower20(fundingRequest.certificateSkillsCost.toNumber())) {
-      errors.push(
-        "Le coût horaire demandé pour la prestation Compléments formatifs Blocs de compétences doit être compris entre 0 et 20 euros."
-      );
-    }
+    const errors = validateIndividualCosts({
+      hoursAndCosts: fundingRequest,
+      isCandidateBacNonFragile,
+      mandatoryTrainingContainAfgsu,
+      numberOfMandatoryTrainings: fundingRequest.mandatoryTrainingsIds.length,
+    });
 
     if (errors.length) {
       return Left(
@@ -223,36 +92,7 @@ export const validateFundingRequest =
         )
       );
     } else {
-      fundingRequest.totalCost = fundingRequest.basicSkillsCost
-        .times(fundingRequest.basicSkillsHourCount)
-        .plus(
-          fundingRequest.certificateSkillsCost.times(
-            fundingRequest.certificateSkillsHourCount
-          )
-        )
-        .plus(
-          fundingRequest.collectiveCost.times(
-            fundingRequest.collectiveHourCount
-          )
-        )
-        .plus(
-          fundingRequest.diagnosisCost.times(fundingRequest.diagnosisHourCount)
-        )
-        .plus(fundingRequest.examCost.times(fundingRequest.examHourCount))
-        .plus(
-          fundingRequest.individualCost.times(
-            fundingRequest.individualHourCount
-          )
-        )
-        .plus(
-          fundingRequest.mandatoryTrainingsCost.times(
-            fundingRequest.mandatoryTrainingsHourCount
-          )
-        )
-        .plus(
-          fundingRequest.postExamCost.times(fundingRequest.postExamHourCount)
-        );
-
+      fundingRequest.totalCost = getTotalCost(fundingRequest);
       return Right(fundingRequest);
     }
   };
@@ -365,30 +205,14 @@ export const createFundingRequest =
         )
     );
 
+    const afgsuTrainingId = await deps.getAfgsuTrainingId();
+
     // check rules
     const checkRules = async (candidate: any) =>
-      (await deps.getTrainings())
-        .mapLeft(
-          () =>
-            new FunctionalError(
-              FunctionalCodeError.TECHNICAL_ERROR,
-              `Erreur pendant la récupération des formations`
-            )
-        )
-        .map(
-          (training) =>
-            training.find(
-              (t) =>
-                t.label ===
-                "Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU)"
-            )?.id
-        )
-        .chain((afgsuTrainingId) =>
-          validateFundingRequest(candidate)(
-            params.fundingRequest,
-            afgsuTrainingId || ""
-          )
-        );
+      validateFundingRequest(candidate)(
+        params.fundingRequest,
+        afgsuTrainingId || ""
+      );
 
     const createFundingRequest = (inputFundingRequest: any) =>
       EitherAsync.fromPromise(() =>

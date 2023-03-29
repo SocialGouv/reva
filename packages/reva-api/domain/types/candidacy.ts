@@ -1,4 +1,5 @@
 import { CandidacyStatusStep } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime";
 
 interface CandidacyAbstract {
   deviceId: string;
@@ -186,13 +187,21 @@ export type AdmissibilityStatus = "ADMISSIBLE" | "NOT_ADMISSIBLE";
 export interface PaymentRequest {
   id: string;
   diagnosisEffectiveHourCount: number;
+  diagnosisEffectiveCost: Decimal;
   postExamEffectiveHourCount: number;
+  postExamEffectiveCost: Decimal;
   individualEffectiveHourCount: number;
+  individualEffectiveCost: Decimal;
   collectiveEffectiveHourCount: number;
+  collectiveEffectiveCost: Decimal;
   mandatoryTrainingsEffectiveHourCount: number;
+  mandatoryTrainingsEffectiveCost: Decimal;
   basicSkillsEffectiveHourCount: number;
+  basicSkillsEffectiveCost: Decimal;
   certificateSkillsEffectiveHourCount: number;
+  certificateSkillsEffectiveCost: Decimal;
   examEffectiveHourCount: number;
+  examEffectiveCost: Decimal;
   invoiceNumber: string;
 }
 

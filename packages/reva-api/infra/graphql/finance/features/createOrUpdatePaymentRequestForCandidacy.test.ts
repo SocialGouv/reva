@@ -1,20 +1,30 @@
+import { Decimal } from "@prisma/client/runtime";
 import { Left, Maybe, Right } from "purify-ts";
 
 import { PaymentRequest } from "../../../../domain/types/candidacy";
-import { FundingRequest } from "../../../../domain/types/candidate";
+import { Candidate, FundingRequest } from "../../../../domain/types/candidate";
 import { createOrUpdatePaymentRequestForCandidacy } from "./createOrUpdatePaymentRequestForCandidacy";
 
 const defaultValidPaymentRequest: PaymentRequest = {
   id: "1234",
   basicSkillsEffectiveHourCount: 1,
+  basicSkillsEffectiveCost: new Decimal(1),
   certificateSkillsEffectiveHourCount: 2,
+  certificateSkillsEffectiveCost: new Decimal(2),
   collectiveEffectiveHourCount: 3,
-  diagnosisEffectiveHourCount: 4,
-  examEffectiveHourCount: 5,
+  collectiveEffectiveCost: new Decimal(3),
+  diagnosisEffectiveHourCount: 2,
+  diagnosisEffectiveCost: new Decimal(4),
+  examEffectiveHourCount: 1,
+  examEffectiveCost: new Decimal(5),
   individualEffectiveHourCount: 6,
+  individualEffectiveCost: new Decimal(6),
   mandatoryTrainingsEffectiveHourCount: 7,
-  postExamEffectiveHourCount: 8,
-  invoiceNumber: "invoiceNumber_123"
+  mandatoryTrainingsEffectiveCost: new Decimal(7),
+  postExamEffectiveHourCount: 2,
+  postExamEffectiveCost: new Decimal(8),
+
+  invoiceNumber: "invoiceNumber_123",
 };
 
 const defaultValidFundingRequest: FundingRequest = {
@@ -22,11 +32,12 @@ const defaultValidFundingRequest: FundingRequest = {
   basicSkillsHourCount: 1,
   certificateSkillsHourCount: 2,
   collectiveHourCount: 3,
-  diagnosisHourCount: 4,
-  examHourCount: 5,
+  diagnosisHourCount: 2,
+  examHourCount: 1,
   individualHourCount: 6,
   mandatoryTrainingsHourCount: 7,
-  postExamHourCount: 8,
+  postExamHourCount: 2,
+  mandatoryTrainings: [],
 } as FundingRequest;
 
 describe("create or update payment request", () => {
@@ -45,11 +56,20 @@ describe("create or update payment request", () => {
 
         updatePaymentRequest: () =>
           Promise.resolve(Left("Test should not run update method")),
+        getAfgsuTrainingId: () => Promise.resolve(null),
+        getCandidateByCandidacyId: () =>
+          Promise.resolve(
+            Right({
+              highestDegree: { level: 1 },
+              vulnerabilityIndicator: { label: "Vide" },
+            } as Candidate)
+          ),
       });
       const result = await cpr({
         candidacyId: "1234",
         paymentRequest: defaultValidPaymentRequest,
       });
+      console.log(result);
       expect(result.isRight()).toEqual(true);
     });
   });
@@ -64,42 +84,19 @@ describe("create or update payment request", () => {
 
       updatePaymentRequest: (params: { paymentRequest: PaymentRequest }) =>
         Promise.resolve(Right(params.paymentRequest)),
+      getAfgsuTrainingId: () => Promise.resolve(null),
+      getCandidateByCandidacyId: () =>
+        Promise.resolve(
+          Right({
+            highestDegree: { level: 1 },
+            vulnerabilityIndicator: { label: "Vide" },
+          } as Candidate)
+        ),
     });
     const result = await cpr({
       candidacyId: "1234",
       paymentRequest: defaultValidPaymentRequest,
     });
     expect(result.isRight()).toEqual(true);
-  });
-  test("should fail to create a new payment request with hour count greater than matching funding request", async () => {
-    const cpr = createOrUpdatePaymentRequestForCandidacy({
-      createPaymentRequest: (params: {
-        candidacyId: string;
-        paymentRequest: PaymentRequest;
-      }) => Promise.resolve(Right(params.paymentRequest)),
-
-      getPaymentRequestByCandidacyId: () =>
-        Promise.resolve(Right(Maybe.empty())),
-      getFundingRequestByCandidacyId: () =>
-        Promise.resolve(Right(defaultValidFundingRequest)),
-
-      updatePaymentRequest: () =>
-        Promise.resolve(Left("Test should not run update method")),
-    });
-    const result = await cpr({
-      candidacyId: "1234",
-      paymentRequest: {
-        ...defaultValidPaymentRequest,
-        individualEffectiveHourCount: 12,
-      },
-    });
-    expect(result.isLeft()).toEqual(true);
-    expect(result.extract()).toMatchObject({
-      code: "FUNDING_REQUEST_NOT_POSSIBLE",
-      message: "Une erreur est survenue lors de la validation du formulaire",
-      errors: [
-        "Le nombre d'heures réalisées pour l'accompagnement individuel doit être inférieur ou égal au nombre d'heures prévues dans la demande de prise en charge.",
-      ],
-    });
   });
 });
