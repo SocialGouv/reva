@@ -4,6 +4,7 @@ import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import Head from "next/head";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Image from "next/image";
+import Link from "next/link";
 
 const Hexagon = ({ className }: { className: string }) => (
   <svg
@@ -317,12 +318,12 @@ const Professionnel = () => (
           voulez proposer de nouvelles certifications disponibles en VAE? Voici
           quelques informations pour vous guider.
         </SectionParagraph>
-        <a
+        <Link
           className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
           href="/espace-professionnel/creation"
         >
           Espace PRO
-        </a>
+        </Link>
       </div>
       <div className="mt-24 flex justify-center space-x-4 lg:flex-1">
         <div className="relative w-44 h-44 sm:w-64 sm:h-64">

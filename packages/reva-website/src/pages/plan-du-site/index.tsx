@@ -1,5 +1,6 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import Head from "next/head";
+import Link from "next/link";
 
 const SiteMapPage = () => {
   return (
@@ -8,10 +9,10 @@ const SiteMapPage = () => {
         <title>Plan du site - France VAE</title>
       </Head>
       <h1 className="text-3xl mb-5">Plan du site</h1>
-      <a href="/">Accueil</a>
-      <a href="/espace-professionnel/creation">
+      <Link href="/">Accueil</Link>
+      <Link href="/espace-professionnel/creation">
         Création d'un espace professionnel
-      </a>
+      </Link>
     </MainLayout>
   );
 };
