@@ -21,18 +21,32 @@ const Hexagon = ({ className }: { className: string }) => (
   // />
 );
 
+const SectionHeader = ({children}: {children: React.ReactNode}) => (
+  <h1 className="lg:text-[40px] lg:leading-[44px] xl:text-[80px] xl:leading-[88px]">{children}</h1>
+)
+
+const SectionSubHeader = ({className, children}: {className?: string; children: React.ReactNode}) => (
+  <p className={`font-bold lg:text-2xl ${className}`}>{children}</p>
+)
+
+const SectionParagraph = ({className, children}: {className?: string; children: React.ReactNode}) => (
+  <p className={`leading-7 lg:text-lg lg:leading-10 xl:text-[22px] ${className}`}>
+    {children}
+  </p>
+)
+
 const AvenirPro = () => (
   <section id="avenir-professionnel" className="w-full max-w-[1248px] mx-auto mt-[80px] overflow-x-hidden sm:flex lg:items-center">
     <div className="px-5 sm:flex-1">
       <header>
-        <h1 className="lg:text-[40px] lg:leading-[44px] xl:text-[80px] xl:leading-[88px]">Prenez votre avenir professionnel en main</h1>
+        <SectionHeader>Prenez votre avenir professionnel en main</SectionHeader>
       </header>
-      <p className="font-bold leading-7 lg:text-lg lg:leading-10 xl:text-[22px]">
+      <SectionParagraph className="font-bold">
         Les raisons pour faire une VAE sont nombreuses: obtenir un nouvel
         emploi, un meilleur salaire ou tout simplement la reconnaissance de vos
         compétences. Grâce à la VAE, abordez votre avenir professionnel sous un
         jour meilleur!
-      </p>
+      </SectionParagraph>
 
       <div className="flex flex-col items-center sm:items-start space-y-4">
         <Button
@@ -67,12 +81,12 @@ const ValorisationCompetences = () => (
   <section id="valorisation-competences" className="w-full max-w-[1248px] mx-auto relative sm:flex sm:flex-row-reverse mt-20 overflow-y-visible overflow-x-hidden sm:mt-24">
     <div className="flex-1 px-5 mt-24 sm:mt-0">
       <header>
-        <p className="font-bold text-[#000091] lg:text-2xl">Pour vous</p>
-        <h1 className="lg:text-[40px] lg:leading-[44px] xl:text-[80px] xl:leading-[88px]">Valorisez vos compétences</h1>
+        <SectionSubHeader className="text-[#000091]">Pour vous</SectionSubHeader>
+        <SectionHeader>Valorisez vos compétences</SectionHeader>
       </header>
-      <p className="leading-7 lg:text-lg lg:leading-10 xl:text-[22px]">
+      <SectionParagraph>
         Votre parcours professionnel vous a permis d’acquérir de nouvelles compétences. La VAE vous permet de faire valider ces compétences et d’obtenir le diplôme ou la certification dont vous avez besoin pour vos projets professionnels.
-      </p>
+      </SectionParagraph>
 
       <div className="flex flex-col items-center sm:items-start space-y-4">
         <Button
@@ -110,12 +124,12 @@ const CommentCaMarche = () => (
     <div className="relative w-full max-w-[1248px] mx-auto px-5 lg:flex lg:space-x-12">
       <div className="flex-1 mt-[100px]">
         <header>
-          <p className="font-bold text-white lg:text-2xl">VAE 2.0</p>
+          <SectionSubHeader className="text-white">VAE 2.0</SectionSubHeader>
           <h1 className="text-white lg:text-[40px] lg:leading-[44px] xl:text-[80px] xl:leading-[88px]">Comment ça marche ?</h1>
         </header>
-        <p className="leading-7 lg:text-lg lg:leading-10 xl:text-[22px]">
+        <SectionParagraph>
         Vous choisissez la certification que vous voulez passer, vous êtes pris en charge par un architecte de parcours, vous remplissez un dossier décrivant votre expérience et vos compétences et ce dossier sera ensuite présenté à un jury qui validera votre certification de manière totale ou partielle.
-        </p>
+        </SectionParagraph>
 
         <div className="">
           <Button
@@ -141,9 +155,9 @@ const CommentCaMarche = () => (
               <header>
                 <h2 className="text-white text-2xl mt-3">Simplicité</h2>
               </header>
-              <p className="text-[18px] leading-7 lg:text-lg lg:leading-10 xl:text-[22px]">
+              <SectionParagraph>
               L'ensemble des démarches pour constituer et suivre votre dossier de VAE pourront s'effectuer sur ce site.
-              </p>
+              </SectionParagraph>
             </div>
           </section>
         </li>
@@ -159,9 +173,9 @@ const CommentCaMarche = () => (
               <header>
                 <h2 className="text-white text-2xl mt-3">Accompagnement</h2>
               </header>
-              <p className="text-[18px] leading-7 lg:text-lg lg:leading-10 xl:text-[22px]">
+              <SectionParagraph>
               Dès le dépôt de votre candidature, vous serez accompagné par un professionnel qui vous guidera à chacune des étapes du parcours.
-              </p>
+              </SectionParagraph>
             </div>
           </section>
         </li>
@@ -177,9 +191,9 @@ const CommentCaMarche = () => (
               <header>
                 <h2 className="text-white text-2xl mt-3">Financement</h2>
               </header>
-              <p className="text-[18px] leading-7 lg:text-lg lg:leading-10 xl:text-[22px]">
+              <SectionParagraph>
               Tous les frais liés à votre parcours (déplacement, formations complémentaires etc...) seront pris en charge sans démarches supplémentaires.
-              </p>
+              </SectionParagraph>
             </div>
           </section>
         </li>
@@ -193,12 +207,12 @@ const TrouvezCertification = () => (
   <section id="trouvez-certification" className="relative flex flex-col lg:flex-row-reverse mt-20 pb-52 px-5 overflow-y-visible overflow-x-hidden">
     <div className="lg:flex-1">
       <header>
-        <p className="font-bold text-[#000091] lg:text-2xl">Pour tous</p>
-        <h1 className="lg:text-[40px] lg:leading-[44px] xl:text-[80px] xl:leading-[88px]">Trouvez la certification dont vous avez besoin</h1>
+        <SectionSubHeader className="text-[#000091]">Pour tous</SectionSubHeader>
+        <SectionHeader>Trouvez la certification dont vous avez besoin</SectionHeader>
       </header>
-      <p className="leading-7 lg:text-lg lg:leading-10 xl:text-[22px]">
+      <SectionParagraph>
       La VAE est applicable à des milliers de diplômes et certifications professionnelles inscrits au RNCP qui vous ouvriront la porte à autant d’opportunités professionnelles.
-      </p>
+      </SectionParagraph>
       <a
         className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
         href="#"
@@ -227,11 +241,11 @@ const Professionnel = () => (
       <div className="lg:pb-20">
         <header>
           <p className="font-bold text-2xl text-[#000091] lg:text-2xl">Pour tous</p>
-          <h1 className="lg:text-[40px] lg:leading-[44px] xl:text-[80px] xl:leading-[88px]">Professionnel de la VAE, rejoignez-nous</h1>
+          <SectionHeader>Professionnel de la VAE, rejoignez-nous</SectionHeader>
         </header>
-        <p className="leading-7 lg:text-lg lg:leading-10 xl:text-[22px]">
+        <SectionParagraph>
         Vous voulez accompagner des candidats dans leurs parcours VAE ou vous voulez proposer de nouvelles certifications disponibles en VAE? Voici quelques informations pour vous guider.
-        </p>
+        </SectionParagraph>
         <a
           className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
           href="#"
