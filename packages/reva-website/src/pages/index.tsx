@@ -119,6 +119,11 @@ const ValorisationCompetences = () => (
   </section>
 );
 
+const SubSectionHeader = ({children}: {children: React.ReactNode}) => (
+  <header>
+    <h2 className="text-white text-2xl mt-3">{children}</h2>
+  </header>
+)
 const CommentCaMarche = () => (
   <section id="comment-ca-marche" className="mt-20 pb-48 bg-[#1B1B35] text-white">
     <div className="relative w-full max-w-[1248px] mx-auto px-5 lg:flex lg:space-x-12">
@@ -153,7 +158,7 @@ const CommentCaMarche = () => (
             </div>
             <div className="flex-1">
               <header>
-                <h2 className="text-white text-2xl mt-3">Simplicité</h2>
+                <SubSectionHeader>Simplicité</SubSectionHeader>
               </header>
               <SectionParagraph>
               L'ensemble des démarches pour constituer et suivre votre dossier de VAE pourront s'effectuer sur ce site.
@@ -171,7 +176,7 @@ const CommentCaMarche = () => (
             </div>
             <div className="flex-1">
               <header>
-                <h2 className="text-white text-2xl mt-3">Accompagnement</h2>
+                <SubSectionHeader>Accompagnement</SubSectionHeader>
               </header>
               <SectionParagraph>
               Dès le dépôt de votre candidature, vous serez accompagné par un professionnel qui vous guidera à chacune des étapes du parcours.
@@ -189,7 +194,7 @@ const CommentCaMarche = () => (
             </div>
             <div className="flex-1">
               <header>
-                <h2 className="text-white text-2xl mt-3">Financement</h2>
+                <SubSectionHeader>Financement</SubSectionHeader>
               </header>
               <SectionParagraph>
               Tous les frais liés à votre parcours (déplacement, formations complémentaires etc...) seront pris en charge sans démarches supplémentaires.
