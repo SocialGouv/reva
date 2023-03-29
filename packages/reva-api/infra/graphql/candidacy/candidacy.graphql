@@ -263,6 +263,7 @@ type Mutation {
     phone: String
   ): Candidacy
   candidacy_archiveById(candidacyId: ID!, reorientationReasonId: UUID): Candidacy!
+  candidacy_unarchiveById(candidacyId: ID!): Candidacy!
   candidacy_deleteById(candidacyId: ID!): String!
   candidacy_updateAppointmentInformations(
     candidacyId: ID!

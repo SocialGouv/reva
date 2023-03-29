@@ -13,6 +13,8 @@ module Data.Candidacy exposing
     , filterByStatus
     , filterByWords
     , isActive
+    , isCandidacyArchived
+    , isCandidacyReoriented
     , isFundingRequestSent
     , isPaymentRequestSent
     , isStatusEqual
@@ -31,7 +33,7 @@ import Admin.Enum.Duration exposing (Duration)
 import Data.Candidate exposing (Candidate)
 import Data.Certification exposing (Certification, CertificationSummary)
 import Data.Organism exposing (Organism)
-import Data.Referential exposing (Department)
+import Data.Referential exposing (Department, ReorientationReason)
 import Time
 
 
@@ -82,6 +84,7 @@ type alias Candidacy =
     , dropOutDate : Maybe Time.Posix
     , statuses : List CandidacyStatus
     , createdAt : Time.Posix
+    , reorientationReason : Maybe ReorientationReason
     }
 
 
@@ -338,3 +341,13 @@ isActive candidacySummary =
     not <|
         List.member candidacySummary.lastStatus.status [ Archive, Projet ]
             || candidacySummary.isDroppedOut
+
+
+isCandidacyArchived : Candidacy -> Bool
+isCandidacyArchived candidacy =
+    candidacy.reorientationReason == Nothing && List.any (\s -> s.isActive && s.status == Admin.Enum.CandidacyStatusStep.Archive) candidacy.statuses
+
+
+isCandidacyReoriented : Candidacy -> Bool
+isCandidacyReoriented candidacy =
+    not <| candidacy.reorientationReason == Nothing

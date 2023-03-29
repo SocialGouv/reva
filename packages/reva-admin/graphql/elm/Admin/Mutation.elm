@@ -218,6 +218,18 @@ candidacy_archiveById fillInOptionals____ requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_archiveById" (optionalArgs____ ++ [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ]) object____ Basics.identity
 
 
+type alias CandidacyUnarchiveByIdRequiredArguments =
+    { candidacyId : Data.Scalar.Id }
+
+
+candidacy_unarchiveById :
+    CandidacyUnarchiveByIdRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet decodesTo RootMutation
+candidacy_unarchiveById requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_unarchiveById" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ Basics.identity
+
+
 type alias CandidacyDeleteByIdRequiredArguments =
     { candidacyId : Data.Scalar.Id }
 

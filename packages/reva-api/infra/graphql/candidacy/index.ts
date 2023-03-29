@@ -20,6 +20,7 @@ import { selectOrganismForCandidacy } from "../../../domain/features/selectOrgan
 import { submitCandidacy } from "../../../domain/features/submitCandidacy";
 import { submitTraining } from "../../../domain/features/submitTrainingForm";
 import { takeOverCandidacy } from "../../../domain/features/takeOverCandidacy";
+import { unarchiveCandidacy } from "../../../domain/features/unarchiveCandidacy";
 import { updateAdmissibility } from "../../../domain/features/updateAdmissibility";
 import { updateAppointmentInformations } from "../../../domain/features/updateAppointmentInformations";
 import { updateCertificationOfCandidacy } from "../../../domain/features/updateCertificationOfCandidacy";
@@ -325,7 +326,23 @@ const unsafeResolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
+    candidacy_unarchiveById: async (
+      _: unknown,
+      payload: any,
+      context: { auth: any }
+    ) => {
+      const result = await unarchiveCandidacy({
+        unarchiveCandidacy: candidacyDb.unarchiveCandidacy,
+        getCandidacyFromId: candidacyDb.getCandidacyFromId,
+        hasRole: context.auth.hasRole,
+      })({
+        candidacyId: payload.candidacyId,
+      });
 
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
     candidacy_updateAppointmentInformations: async (
       _: unknown,
       payload: any
