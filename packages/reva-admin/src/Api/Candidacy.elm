@@ -29,6 +29,7 @@ import Graphql.Operation
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
 import View.Date as Date exposing (toDateWithLabels)
+import Admin.Object.ReorientationReason
 
 
 getCandidacies :
@@ -83,7 +84,10 @@ selection id =
         droppedOutDateSelection =
             SelectionSet.succeed identity
                 |> with Admin.Object.CandidacyDropOut.droppedOutAt
-
+        reorientationReasonSelection =
+            SelectionSet.succeed Data.Referential.ReorientationReason
+                |> with (SelectionSet.map (\(Id rrId) -> rrId) Admin.Object.ReorientationReason.id)
+                |> with Admin.Object.ReorientationReason.label
         candidacySelectionWithoutCompanions =
             SelectionSet.succeed Data.Candidacy.Candidacy
                 |> with (SelectionSet.map (\(Id candidacyId) -> Data.Candidacy.candidacyIdFromString candidacyId) Admin.Object.Candidacy.id)
@@ -102,6 +106,8 @@ selection id =
                 |> with (Admin.Object.Candidacy.candidacyDropOut droppedOutDateSelection)
                 |> with (Admin.Object.Candidacy.candidacyStatuses statusSelection)
                 |> with Admin.Object.Candidacy.createdAt
+                |> with (Admin.Object.Candidacy.reorientationReason reorientationReasonSelection)
+
     in
     SelectionSet.succeed
         (\maybeCandidacy companions ->
