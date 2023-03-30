@@ -9,6 +9,7 @@ import {
 import Button from "@codegouvfr/react-dsfr/Button";
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 
 const ExperienceReconnue = () => (
   <section
@@ -28,7 +29,7 @@ const ExperienceReconnue = () => (
         <Button
           priority="primary"
           className="!w-full sm:!w-auto justify-center"
-          linkProps={{ href: "#" }}
+          linkProps={{ href: "/app" }}
           size="large"
         >
           Démarrez un parcours VAE
@@ -123,10 +124,11 @@ const Eligibilite = () => (
 
 const Accompagnement = () => (
   <section
-    id="avenir-professionnel"
-    className="w-full max-w-[1248px] mx-auto mt-[80px] overflow-x-hidden sm:flex lg:items-center"
+    id="acompagnement"
+    className="mt-20 pb-48 bg-[#F8F8F8]"
   >
-    <div className="px-5 sm:flex-1 text-center">
+    <div className="relative w-full px-5 lg:flex-no-wrap lg:space-x-12">
+    <div className="px-5 sm:flex-1 mx-auto max-w-[1248px] text-center mt-[100px]">
       <header>
         <SectionSubHeader className="text-[#000091]">
           Accompagnement
@@ -141,6 +143,57 @@ const Accompagnement = () => (
         sont des professionnels sélectionnés spécialement par France VAE pour
         leur expertise en développement de compétences.
       </SectionParagraph>
+    </div>
+    <div className="mx-auto w-full mt-[100px] flex flex-no-wrap">
+      <div className="flex-0 flex flex-row  grow-0 basis-1/4">
+        <div className="grow-1">
+          <Image
+            src="/candidate-space/icon-notepad.png"
+            alt="image bloc note"
+            width={145}
+            height={169}
+          />
+        </div>
+        <div>
+          <header>
+            <SectionSubHeader className="text-[#1B1B35] 700">Conception</SectionSubHeader>
+          </header>
+          <SectionParagraph>d'un parcours VAE adapté à votre besoin</SectionParagraph>
+        </div>
+      </div>
+      <div className="flex-1 flex flex-row grow-0 basis-1/4">
+        <div className="grow-1">
+          <Image
+            src="/candidate-space/icon-folder.png"
+            alt="image dossier"
+            width={192}
+            height={139}
+          />
+        </div>
+        <div>
+          <header>
+            <SectionSubHeader>Gestion</SectionSubHeader>
+          </header>
+          <SectionParagraph>de la recevabilité de votre dossier de candidature et de la demande de financement</SectionParagraph>
+        </div>
+      </div>
+      <div className="flex-2 flex flex-row  grow-0 basis-1/4">
+        <div className="grow-1">
+          <Image
+            src="/candidate-space/icon-rocket.png"
+            alt="image bloc note"
+            width={182}
+            height={161}
+          />
+        </div>
+        <div>
+          <header>
+            <SectionSubHeader>Planification</SectionSubHeader>
+          </header>
+          <SectionParagraph>de la date de votre passage devant le jury, en fonction de vos disponibilités</SectionParagraph>
+        </div>
+      </div>
+    </div>
     </div>
   </section>
 );
@@ -183,7 +236,9 @@ const Financement = () => (
             </div>
             <div className="flex-1 text-[#000091] align-middle">
               <header className="text-[#000091]">
-                <SectionSubHeader className="top">Les frais d'accompagnement</SectionSubHeader>
+                <SectionSubHeader className="top">
+                  Les frais d'accompagnement
+                </SectionSubHeader>
               </header>
             </div>
           </section>
@@ -215,7 +270,7 @@ const CommentCaMarche = () => (
     <div className="relative w-full max-w-[1248px] mx-auto px-5 lg:flex lg:space-x-12">
       <div className="flex-1 mt-[100px]">
         <header>
-          <SectionSubHeader className="text-white">
+          <SectionSubHeader className="text-[#FEF7DA]">
             Le parcours France VAE
           </SectionSubHeader>
           <h1 className="text-white lg:text-[40px] lg:leading-[44px] xl:text-[80px] xl:leading-[88px]">
@@ -223,8 +278,7 @@ const CommentCaMarche = () => (
           </h1>
         </header>
         <SectionParagraph>
-          Découvrez tout le chemin d’une certification France VAE d’un candidat
-          :
+          Découvrez tout le chemin d’une certification France VAE d’un candidat :
         </SectionParagraph>
       </div>
       <ul className="flex-1 relative p-0 list-none mt-[100px]">
@@ -303,52 +357,66 @@ const CommentCaMarche = () => (
       >
         Démarrez un parcours VAE
       </Button>
-      <Button
+      {/* <Button
         priority="primary"
         className="!w-full sm:!w-auto justify-center !bg-transparent text-white !border-white"
         linkProps={{ href: "#" }}
         size="large"
       >
         Tout voir en détails
-      </Button>
+      </Button> */}
     </div>
   </section>
 );
 
 const Professionnels = () => (
   <section
-    id="avenir-professionnel"
-    className="w-full max-w-[1248px] mx-auto mt-[80px] overflow-x-hidden sm:flex lg:items-center"
+    id="professionnel"
+    className=" mt-20 overflow-y-visible overflow-x-hidden bg-[#E5E5E5]"
   >
-    <div className="px-5 sm:flex-1">
-      <header>
-        <SectionSubHeader className="text-[#000091]">
-          Pour les professionnels
-        </SectionSubHeader>
-        <SectionHeader>Professionnels de la VAE, rejoignez-nous</SectionHeader>
-      </header>
-      <SectionParagraph>
-        Vous voulez accompagner des candidats dans leurs parcours VAE ou vous
-        voulez proposer de nouvelles certifications disponibles en VAE? Voici
-        quelques informations pour vous guider.
-      </SectionParagraph>
-      <div className="flex flex-col items-center sm:items-start space-y-4">
-        <a
+    <div className="w-full max-w-[1248px] mt-[100px] mx-auto relative flex flex-col lg:flex-row lg:items-end px-5">
+      <div className="lg:pb-20">
+        <header>
+          <p className="font-bold text-2xl text-[#000091] lg:text-2xl">
+            Pour les professionnels
+          </p>
+          <SectionHeader>Professionnel de la VAE, rejoignez-nous</SectionHeader>
+        </header>
+        <SectionParagraph>
+          Vous voulez accompagner des candidats dans leurs parcours VAE ? Venez
+          vous renseigner sur l'espace professionnel.
+        </SectionParagraph>
+        <Link
           className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
-          href="#"
+          href="/espace-candidat"
         >
           En savoir plus sur la VAE
-        </a>
+        </Link>
       </div>
-    </div>
-    <div className="relative mt-16 -mx-5 sm:mx-0 sm:flex-0 sm:w-2/5 sm:-mr-20 lg:mr-0 lg:flex-1">
-      <Image
-        src="/home-page/image-hero.png"
-        className=""
-        alt="image compte validé"
-        width={1067}
-        height={969}
-      />
+      <div className="mt-24 flex justify-center space-x-4 lg:flex-1">
+        <div className="relative w-44 h-44 sm:w-64 sm:h-64">
+          <Image
+            src="/home-page/image-young-woman.png"
+            className=""
+            alt="image compte validé"
+            fill={true}
+            style={{
+              objectFit: "contain",
+            }}
+          />
+        </div>
+        <div className="relative w-44 h-44 sm:w-64 sm:h-64">
+          <Image
+            src="/home-page/image-businessman.png"
+            className=""
+            alt="image compte validé"
+            fill={true}
+            style={{
+              objectFit: "contain",
+            }}
+          />
+        </div>
+      </div>
     </div>
   </section>
 );

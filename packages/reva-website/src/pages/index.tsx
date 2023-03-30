@@ -250,7 +250,7 @@ const TrouvezCertification = () => (
   </section>
 );
 
-const Professionnel = () => (
+const Professionnels = () => (
   <section
     id="professionnel"
     className=" mt-20 overflow-y-visible overflow-x-hidden bg-[#E5E5E5]"
@@ -313,7 +313,7 @@ const IndexPage = () => {
       <ValorisationCompetences />
       <CommentCaMarche />
       <TrouvezCertification />
-      <Professionnel />
+      <Professionnels />
     </MainLayout>
   );
 };
