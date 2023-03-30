@@ -38,12 +38,12 @@ const AvenirPro = () => (
         >
           Démarrez votre parcours VAE
         </Button>
-        <a
+        <Link
           className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
           href="/espace-candidat"
         >
           En savoir plus sur la VAE
-        </a>
+        </Link>
       </div>
     </div>
     <div className="relative mt-16 -mx-5 sm:mx-0 sm:flex-0 sm:w-2/5 sm:-mr-20 lg:mr-0 lg:flex-1">
@@ -86,12 +86,12 @@ const ValorisationCompetences = () => (
         >
           Identifiez vos compétences
         </Button>
-        <a
+        <Link
           className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
           href="/espace-candidat"
         >
           En savoir plus sur la VAE
-        </a>
+        </Link>
       </div>
     </div>
     <div className="absolute top-0 right-0 w-48 h-48 -mr-[72px] sm:relative sm:flex-0 sm:mr-0 sm:h-auto sm:w-2/5 sm:-ml-24 lg:ml-0 lg:flex-1 lg:w-auto">
@@ -229,12 +229,12 @@ const TrouvezCertification = () => (
         professionnelles inscrits au RNCP qui vous ouvriront la porte à autant
         d’opportunités professionnelles.
       </SectionParagraph>
-      {/* <a
+      {/* <Link
         className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
         href="#"
       >
         Voir la liste complète
-      </a> */}
+      </Link> */}
     </div>
     <div className="mt-24 relative w-96 h-96 sm:ml-[15%] lg:ml-0 lg:flex-1">
       <Image
