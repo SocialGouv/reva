@@ -33,7 +33,7 @@ const AvenirPro = () => (
         <Button
           priority="primary"
           className="!w-full sm:!w-auto justify-center"
-          linkProps={{ href: "#" }}
+          linkProps={{ href: "/app" }}
           size="large"
         >
           Démarrez votre parcours VAE
@@ -88,7 +88,7 @@ const ValorisationCompetences = () => (
         </Button>
         <a
           className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
-          href="#"
+          href="/espace-candidat"
         >
           En savoir plus sur la VAE
         </a>
@@ -133,7 +133,7 @@ const CommentCaMarche = () => (
           <Button
             priority="primary"
             className="!w-full sm:!w-auto justify-center !bg-white !text-[#000091]"
-            linkProps={{ href: "#" }}
+            linkProps={{ href: "/app" }}
             size="large"
           >
             Démarrez un parcours VAE
@@ -229,12 +229,12 @@ const TrouvezCertification = () => (
         professionnelles inscrits au RNCP qui vous ouvriront la porte à autant
         d’opportunités professionnelles.
       </SectionParagraph>
-      <a
+      {/* <a
         className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
         href="#"
       >
         Voir la liste complète
-      </a>
+      </a> */}
     </div>
     <div className="mt-24 relative w-96 h-96 sm:ml-[15%] lg:ml-0 lg:flex-1">
       <Image
@@ -270,7 +270,7 @@ const Professionnel = () => (
         </SectionParagraph>
         <Link
           className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
-          href="/espace-professionnel/creation"
+          href="/espace-professionnel"
         >
           Espace PRO
         </Link>
