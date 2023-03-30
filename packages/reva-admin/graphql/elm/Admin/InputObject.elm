@@ -523,18 +523,26 @@ buildPaymentRequestInput :
     PaymentRequestInputRequiredFields
     -> PaymentRequestInput
 buildPaymentRequestInput required____ =
-    { diagnosisEffectiveHourCount = required____.diagnosisEffectiveHourCount, postExamEffectiveHourCount = required____.postExamEffectiveHourCount, individualEffectiveHourCount = required____.individualEffectiveHourCount, collectiveEffectiveHourCount = required____.collectiveEffectiveHourCount, mandatoryTrainingsEffectiveHourCount = required____.mandatoryTrainingsEffectiveHourCount, basicSkillsEffectiveHourCount = required____.basicSkillsEffectiveHourCount, certificateSkillsEffectiveHourCount = required____.certificateSkillsEffectiveHourCount, examEffectiveHourCount = required____.examEffectiveHourCount, invoiceNumber = required____.invoiceNumber }
+    { diagnosisEffectiveHourCount = required____.diagnosisEffectiveHourCount, diagnosisEffectiveCost = required____.diagnosisEffectiveCost, postExamEffectiveHourCount = required____.postExamEffectiveHourCount, postExamEffectiveCost = required____.postExamEffectiveCost, individualEffectiveHourCount = required____.individualEffectiveHourCount, individualEffectiveCost = required____.individualEffectiveCost, collectiveEffectiveHourCount = required____.collectiveEffectiveHourCount, collectiveEffectiveCost = required____.collectiveEffectiveCost, mandatoryTrainingsEffectiveHourCount = required____.mandatoryTrainingsEffectiveHourCount, mandatoryTrainingsEffectiveCost = required____.mandatoryTrainingsEffectiveCost, basicSkillsEffectiveHourCount = required____.basicSkillsEffectiveHourCount, basicSkillsEffectiveCost = required____.basicSkillsEffectiveCost, certificateSkillsEffectiveHourCount = required____.certificateSkillsEffectiveHourCount, certificateSkillsEffectiveCost = required____.certificateSkillsEffectiveCost, examEffectiveHourCount = required____.examEffectiveHourCount, examEffectiveCost = required____.examEffectiveCost, invoiceNumber = required____.invoiceNumber }
 
 
 type alias PaymentRequestInputRequiredFields =
     { diagnosisEffectiveHourCount : Int
+    , diagnosisEffectiveCost : Data.Scalar.Decimal
     , postExamEffectiveHourCount : Int
+    , postExamEffectiveCost : Data.Scalar.Decimal
     , individualEffectiveHourCount : Int
+    , individualEffectiveCost : Data.Scalar.Decimal
     , collectiveEffectiveHourCount : Int
+    , collectiveEffectiveCost : Data.Scalar.Decimal
     , mandatoryTrainingsEffectiveHourCount : Int
+    , mandatoryTrainingsEffectiveCost : Data.Scalar.Decimal
     , basicSkillsEffectiveHourCount : Int
+    , basicSkillsEffectiveCost : Data.Scalar.Decimal
     , certificateSkillsEffectiveHourCount : Int
+    , certificateSkillsEffectiveCost : Data.Scalar.Decimal
     , examEffectiveHourCount : Int
+    , examEffectiveCost : Data.Scalar.Decimal
     , invoiceNumber : String
     }
 
@@ -543,13 +551,21 @@ type alias PaymentRequestInputRequiredFields =
 -}
 type alias PaymentRequestInput =
     { diagnosisEffectiveHourCount : Int
+    , diagnosisEffectiveCost : Data.Scalar.Decimal
     , postExamEffectiveHourCount : Int
+    , postExamEffectiveCost : Data.Scalar.Decimal
     , individualEffectiveHourCount : Int
+    , individualEffectiveCost : Data.Scalar.Decimal
     , collectiveEffectiveHourCount : Int
+    , collectiveEffectiveCost : Data.Scalar.Decimal
     , mandatoryTrainingsEffectiveHourCount : Int
+    , mandatoryTrainingsEffectiveCost : Data.Scalar.Decimal
     , basicSkillsEffectiveHourCount : Int
+    , basicSkillsEffectiveCost : Data.Scalar.Decimal
     , certificateSkillsEffectiveHourCount : Int
+    , certificateSkillsEffectiveCost : Data.Scalar.Decimal
     , examEffectiveHourCount : Int
+    , examEffectiveCost : Data.Scalar.Decimal
     , invoiceNumber : String
     }
 
@@ -559,7 +575,7 @@ type alias PaymentRequestInput =
 encodePaymentRequestInput : PaymentRequestInput -> Value
 encodePaymentRequestInput input____ =
     Encode.maybeObject
-        [ ( "diagnosisEffectiveHourCount", Encode.int input____.diagnosisEffectiveHourCount |> Just ), ( "postExamEffectiveHourCount", Encode.int input____.postExamEffectiveHourCount |> Just ), ( "individualEffectiveHourCount", Encode.int input____.individualEffectiveHourCount |> Just ), ( "collectiveEffectiveHourCount", Encode.int input____.collectiveEffectiveHourCount |> Just ), ( "mandatoryTrainingsEffectiveHourCount", Encode.int input____.mandatoryTrainingsEffectiveHourCount |> Just ), ( "basicSkillsEffectiveHourCount", Encode.int input____.basicSkillsEffectiveHourCount |> Just ), ( "certificateSkillsEffectiveHourCount", Encode.int input____.certificateSkillsEffectiveHourCount |> Just ), ( "examEffectiveHourCount", Encode.int input____.examEffectiveHourCount |> Just ), ( "invoiceNumber", Encode.string input____.invoiceNumber |> Just ) ]
+        [ ( "diagnosisEffectiveHourCount", Encode.int input____.diagnosisEffectiveHourCount |> Just ), ( "diagnosisEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.diagnosisEffectiveCost |> Just ), ( "postExamEffectiveHourCount", Encode.int input____.postExamEffectiveHourCount |> Just ), ( "postExamEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.postExamEffectiveCost |> Just ), ( "individualEffectiveHourCount", Encode.int input____.individualEffectiveHourCount |> Just ), ( "individualEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.individualEffectiveCost |> Just ), ( "collectiveEffectiveHourCount", Encode.int input____.collectiveEffectiveHourCount |> Just ), ( "collectiveEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.collectiveEffectiveCost |> Just ), ( "mandatoryTrainingsEffectiveHourCount", Encode.int input____.mandatoryTrainingsEffectiveHourCount |> Just ), ( "mandatoryTrainingsEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.mandatoryTrainingsEffectiveCost |> Just ), ( "basicSkillsEffectiveHourCount", Encode.int input____.basicSkillsEffectiveHourCount |> Just ), ( "basicSkillsEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.basicSkillsEffectiveCost |> Just ), ( "certificateSkillsEffectiveHourCount", Encode.int input____.certificateSkillsEffectiveHourCount |> Just ), ( "certificateSkillsEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.certificateSkillsEffectiveCost |> Just ), ( "examEffectiveHourCount", Encode.int input____.examEffectiveHourCount |> Just ), ( "examEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.examEffectiveCost |> Just ), ( "invoiceNumber", Encode.string input____.invoiceNumber |> Just ) ]
 
 
 buildSubscriptionRequestInput :

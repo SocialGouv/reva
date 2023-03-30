@@ -29,9 +29,19 @@ diagnosisEffectiveHourCount =
     Object.selectionForField "Int" "diagnosisEffectiveHourCount" [] Decode.int
 
 
+diagnosisEffectiveCost : SelectionSet Data.Scalar.Decimal Admin.Object.PaymentRequest
+diagnosisEffectiveCost =
+    Object.selectionForField "Data.Scalar.Decimal" "diagnosisEffectiveCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
+
+
 postExamEffectiveHourCount : SelectionSet Int Admin.Object.PaymentRequest
 postExamEffectiveHourCount =
     Object.selectionForField "Int" "postExamEffectiveHourCount" [] Decode.int
+
+
+postExamEffectiveCost : SelectionSet Data.Scalar.Decimal Admin.Object.PaymentRequest
+postExamEffectiveCost =
+    Object.selectionForField "Data.Scalar.Decimal" "postExamEffectiveCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
 
 
 individualEffectiveHourCount : SelectionSet Int Admin.Object.PaymentRequest
@@ -39,9 +49,19 @@ individualEffectiveHourCount =
     Object.selectionForField "Int" "individualEffectiveHourCount" [] Decode.int
 
 
+individualEffectiveCost : SelectionSet Data.Scalar.Decimal Admin.Object.PaymentRequest
+individualEffectiveCost =
+    Object.selectionForField "Data.Scalar.Decimal" "individualEffectiveCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
+
+
 collectiveEffectiveHourCount : SelectionSet Int Admin.Object.PaymentRequest
 collectiveEffectiveHourCount =
     Object.selectionForField "Int" "collectiveEffectiveHourCount" [] Decode.int
+
+
+collectiveEffectiveCost : SelectionSet Data.Scalar.Decimal Admin.Object.PaymentRequest
+collectiveEffectiveCost =
+    Object.selectionForField "Data.Scalar.Decimal" "collectiveEffectiveCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
 
 
 mandatoryTrainingsEffectiveHourCount : SelectionSet Int Admin.Object.PaymentRequest
@@ -49,9 +69,19 @@ mandatoryTrainingsEffectiveHourCount =
     Object.selectionForField "Int" "mandatoryTrainingsEffectiveHourCount" [] Decode.int
 
 
+mandatoryTrainingsEffectiveCost : SelectionSet Data.Scalar.Decimal Admin.Object.PaymentRequest
+mandatoryTrainingsEffectiveCost =
+    Object.selectionForField "Data.Scalar.Decimal" "mandatoryTrainingsEffectiveCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
+
+
 basicSkillsEffectiveHourCount : SelectionSet Int Admin.Object.PaymentRequest
 basicSkillsEffectiveHourCount =
     Object.selectionForField "Int" "basicSkillsEffectiveHourCount" [] Decode.int
+
+
+basicSkillsEffectiveCost : SelectionSet Data.Scalar.Decimal Admin.Object.PaymentRequest
+basicSkillsEffectiveCost =
+    Object.selectionForField "Data.Scalar.Decimal" "basicSkillsEffectiveCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
 
 
 certificateSkillsEffectiveHourCount : SelectionSet Int Admin.Object.PaymentRequest
@@ -59,9 +89,19 @@ certificateSkillsEffectiveHourCount =
     Object.selectionForField "Int" "certificateSkillsEffectiveHourCount" [] Decode.int
 
 
+certificateSkillsEffectiveCost : SelectionSet Data.Scalar.Decimal Admin.Object.PaymentRequest
+certificateSkillsEffectiveCost =
+    Object.selectionForField "Data.Scalar.Decimal" "certificateSkillsEffectiveCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
+
+
 examEffectiveHourCount : SelectionSet Int Admin.Object.PaymentRequest
 examEffectiveHourCount =
     Object.selectionForField "Int" "examEffectiveHourCount" [] Decode.int
+
+
+examEffectiveCost : SelectionSet Data.Scalar.Decimal Admin.Object.PaymentRequest
+examEffectiveCost =
+    Object.selectionForField "Data.Scalar.Decimal" "examEffectiveCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
 
 
 invoiceNumber : SelectionSet String Admin.Object.PaymentRequest

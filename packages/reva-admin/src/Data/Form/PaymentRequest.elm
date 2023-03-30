@@ -9,11 +9,13 @@ module Data.Form.PaymentRequest exposing
     , validateConfirmation
     )
 
+import Admin.Object.FundingRequest exposing (basicSkillsCost, certificateSkillsCost, collectiveCost, diagnosisCost, examCost, individualCost, mandatoryTrainingsCost, postExamCost)
+import Admin.Scalar exposing (Decimal)
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Form.FundingRequest exposing (FundingRequestInput)
 import Data.Form.Helper as Helper
-import Data.Referential exposing (BasicSkill, MandatoryTraining, Referential)
+import Data.Referential exposing (Referential)
 import Dict exposing (Dict)
 
 
@@ -29,13 +31,21 @@ type alias TrainingForm =
 
 type alias PaymentRequestInput =
     { diagnosisHourCount : Int
+    , diagnosisCost : Decimal
     , postExamHourCount : Int
+    , postExamCost : Decimal
     , individualHourCount : Int
+    , individualCost : Decimal
     , collectiveHourCount : Int
+    , collectiveCost : Decimal
     , basicSkillsHourCount : Int
+    , basicSkillsCost : Decimal
     , mandatoryTrainingsHourCount : Int
+    , mandatoryTrainingsCost : Decimal
     , certificateSkillsHourCount : Int
+    , certificateSkillsCost : Decimal
     , examHourCount : Int
+    , examCost : Decimal
     , invoiceNumber : String
     }
 
@@ -44,34 +54,42 @@ keys =
     { companionId = "companionId"
     , diagnosisEstimatedHourCount = "diagnosisEstimatedHourCount"
     , diagnosisHourCount = "diagnosisHourCount"
+    , diagnosisEstimatedCost = "diagnosisEstimatedCost"
     , diagnosisCost = "diagnosisCost"
     , postExamEstimatedHourCount = "postExamEstimatedHourCount"
     , postExamHourCount = "postExamHourCount"
+    , postExamEstimatedCost = "postExamEstimatedCost"
     , postExamCost = "postExamCost"
     , individualEstimatedHourCount = "individualEstimatedHourCount"
     , individualHourCount = "individualHourCount"
+    , individualEstimatedCost = "individualEstimatedCost"
     , individualCost = "individualCost"
     , isFormConfirmed = "isFormConfirmed"
     , collectiveEstimatedHourCount = "collectiveEstimatedHourCount"
     , collectiveHourCount = "collectiveHourCount"
+    , collectiveEstimatedCost = "collectiveEstimatedCost"
     , collectiveCost = "collectiveCost"
     , basicSkillsIds = "basicSkillsIds"
     , basicSkillsEstimatedHourCount = "basicSkillsEstimatedHourCount"
     , basicSkillsHourCount = "basicSkillsHourCount"
+    , basicSkillsEstimatedCost = "basicSkillsEstimatedCost"
     , basicSkillsCost = "basicSkillsCost"
     , mandatoryTrainingIds = "mandatoryTrainingIds"
     , mandatoryTrainingsEstimatedHourCount = "mandatoryTrainingsEstimatedHourCount"
     , mandatoryTrainingsHourCount = "mandatoryTrainingsHourCount"
+    , mandatoryTrainingsEstimatedCost = "mandatoryTrainingsEstimatedCost"
     , mandatoryTrainingsCost = "mandatoryTrainingsCost"
     , numAction = "numAction"
     , certificateSkills = "certificateSkills"
     , certificateSkillsEstimatedHourCount = "certificateSkillsEstimatedHourCount"
     , certificateSkillsHourCount = "certificateSkillsHourCount"
+    , certificateSkillsEstimatedCost = "certificateSkillsEstimatedCost"
     , certificateSkillsCost = "certificateSkillsCost"
     , otherTraining = "otherTraining"
     , totalTrainingHourCount = "totalTrainingHourCount"
     , examEstimatedHourCount = "examEstimatedHourCount"
     , examHourCount = "examHourCount"
+    , examEstimatedCost = "examEstimatedCost"
     , examCost = "examCost"
     , invoiceFiles = "invoiceFiles"
     , appointmentFiles = "appointmentFiles"
@@ -113,13 +131,21 @@ fromDict formData =
     in
     PaymentRequestInput
         (decode.int .diagnosisHourCount 0)
+        (decode.decimal .diagnosisCost (Admin.Scalar.Decimal "0"))
         (decode.int .postExamHourCount 0)
+        (decode.decimal .postExamCost (Admin.Scalar.Decimal "0"))
         (decode.int .individualHourCount 0)
+        (decode.decimal .individualCost (Admin.Scalar.Decimal "0"))
         (decode.int .collectiveHourCount 0)
+        (decode.decimal .collectiveCost (Admin.Scalar.Decimal "0"))
         (decode.int .basicSkillsHourCount 0)
+        (decode.decimal .basicSkillsCost (Admin.Scalar.Decimal "0"))
         (decode.int .mandatoryTrainingsHourCount 0)
+        (decode.decimal .mandatoryTrainingsCost (Admin.Scalar.Decimal "0"))
         (decode.int .certificateSkillsHourCount 0)
+        (decode.decimal .certificateSkillsCost (Admin.Scalar.Decimal "0"))
         (decode.int .examHourCount 0)
+        (decode.decimal .examCost (Admin.Scalar.Decimal "0"))
         (decode.string .invoiceNumber "")
 
 
@@ -137,24 +163,24 @@ fundingList funding =
     [ ( .numAction, funding.numAction )
     , ( .companionId, string (.companionId >> Maybe.withDefault "") )
     , ( .diagnosisEstimatedHourCount, int .diagnosisHourCount )
-    , ( .diagnosisCost, decimal .diagnosisCost )
+    , ( .diagnosisEstimatedCost, decimal .diagnosisCost )
     , ( .postExamEstimatedHourCount, int .postExamHourCount )
-    , ( .postExamCost, decimal .postExamCost )
+    , ( .postExamEstimatedCost, decimal .postExamCost )
     , ( .individualEstimatedHourCount, int .individualHourCount )
-    , ( .individualCost, decimal .individualCost )
+    , ( .individualEstimatedCost, decimal .individualCost )
     , ( .collectiveEstimatedHourCount, int .collectiveHourCount )
-    , ( .collectiveCost, decimal .collectiveCost )
+    , ( .collectiveEstimatedCost, decimal .collectiveCost )
     , ( .basicSkillsEstimatedHourCount, int .basicSkillsHourCount )
-    , ( .basicSkillsCost, decimal .basicSkillsCost )
+    , ( .basicSkillsEstimatedCost, decimal .basicSkillsCost )
     , ( .mandatoryTrainingsEstimatedHourCount, int .mandatoryTrainingsHourCount )
-    , ( .mandatoryTrainingsCost, decimal .mandatoryTrainingsCost )
+    , ( .mandatoryTrainingsEstimatedCost, decimal .mandatoryTrainingsCost )
     , ( .numAction, funding.numAction )
     , ( .certificateSkills, string .certificateSkills )
     , ( .certificateSkillsEstimatedHourCount, int .certificateSkillsHourCount )
-    , ( .certificateSkillsCost, decimal .certificateSkillsCost )
+    , ( .certificateSkillsEstimatedCost, decimal .certificateSkillsCost )
     , ( .otherTraining, string .otherTraining )
     , ( .examEstimatedHourCount, int .examHourCount )
-    , ( .examCost, decimal .examCost )
+    , ( .examEstimatedCost, decimal .examCost )
     ]
         |> Helper.toKeyedList keys
 
@@ -178,6 +204,9 @@ paymentRequest funding payment =
         int key =
             Just <| String.fromInt <| key payment
 
+        decimal key =
+            Just <| Helper.decimalToString <| key payment
+
         string key =
             Just <| key payment
 
@@ -189,13 +218,21 @@ paymentRequest funding payment =
 
         paymentList =
             [ ( .diagnosisHourCount, int .diagnosisHourCount )
+            , ( .diagnosisCost, decimal .diagnosisCost )
             , ( .postExamHourCount, int .postExamHourCount )
+            , ( .postExamCost, decimal .postExamCost )
             , ( .individualHourCount, int .individualHourCount )
+            , ( .individualCost, decimal .individualCost )
             , ( .collectiveHourCount, int .collectiveHourCount )
+            , ( .collectiveCost, decimal .collectiveCost )
             , ( .basicSkillsHourCount, int .basicSkillsHourCount )
+            , ( .basicSkillsCost, decimal .basicSkillsCost )
             , ( .mandatoryTrainingsHourCount, int .mandatoryTrainingsHourCount )
+            , ( .mandatoryTrainingsCost, decimal .mandatoryTrainingsCost )
             , ( .certificateSkillsHourCount, int .certificateSkillsHourCount )
+            , ( .certificateSkillsCost, decimal .certificateSkillsCost )
             , ( .examHourCount, int .examHourCount )
+            , ( .examCost, decimal .examCost )
             , ( .invoiceNumber, string .invoiceNumber )
             ]
                 |> Helper.toKeyedList keys

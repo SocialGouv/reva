@@ -11,7 +11,7 @@ import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
 import Api.Form.FundingRequest
 import Api.Token exposing (Token)
-import Data.Candidacy exposing (Candidacy, CandidacyId)
+import Data.Candidacy exposing (CandidacyId)
 import Data.Form exposing (FormData)
 import Data.Form.PaymentRequest
 import Data.Referential
@@ -36,13 +36,21 @@ createOrUpdate candidacyId endpointGraphql token toMsg ( candidacy, referential 
         paymentInput =
             Admin.InputObject.PaymentRequestInput
                 payment.diagnosisHourCount
+                payment.diagnosisCost
                 payment.postExamHourCount
+                payment.postExamCost
                 payment.individualHourCount
+                payment.individualCost
                 payment.collectiveHourCount
+                payment.collectiveCost
                 payment.mandatoryTrainingsHourCount
+                payment.mandatoryTrainingsCost
                 payment.basicSkillsHourCount
+                payment.basicSkillsCost
                 payment.certificateSkillsHourCount
+                payment.certificateSkillsCost
                 payment.examHourCount
+                payment.examCost
                 payment.invoiceNumber
 
         paymentRequiredArg =
@@ -102,11 +110,19 @@ selection : SelectionSet Data.Form.PaymentRequest.PaymentRequestInput Admin.Obje
 selection =
     SelectionSet.succeed Data.Form.PaymentRequest.PaymentRequestInput
         |> with Admin.Object.PaymentRequest.diagnosisEffectiveHourCount
+        |> with Admin.Object.PaymentRequest.diagnosisEffectiveCost
         |> with Admin.Object.PaymentRequest.postExamEffectiveHourCount
+        |> with Admin.Object.PaymentRequest.postExamEffectiveCost
         |> with Admin.Object.PaymentRequest.individualEffectiveHourCount
+        |> with Admin.Object.PaymentRequest.individualEffectiveCost
         |> with Admin.Object.PaymentRequest.collectiveEffectiveHourCount
+        |> with Admin.Object.PaymentRequest.collectiveEffectiveCost
         |> with Admin.Object.PaymentRequest.basicSkillsEffectiveHourCount
+        |> with Admin.Object.PaymentRequest.basicSkillsEffectiveCost
         |> with Admin.Object.PaymentRequest.mandatoryTrainingsEffectiveHourCount
+        |> with Admin.Object.PaymentRequest.mandatoryTrainingsEffectiveCost
         |> with Admin.Object.PaymentRequest.certificateSkillsEffectiveHourCount
+        |> with Admin.Object.PaymentRequest.certificateSkillsEffectiveCost
         |> with Admin.Object.PaymentRequest.examEffectiveHourCount
+        |> with Admin.Object.PaymentRequest.examEffectiveCost
         |> with Admin.Object.PaymentRequest.invoiceNumber
