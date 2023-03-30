@@ -5,58 +5,13 @@ import Head from "next/head";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Image from "next/image";
 import Link from "next/link";
-
-const Hexagon = ({ className }: { className: string }) => (
-  <svg
-    viewBox="0 0 180 200"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className={`${className}`}
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M79.4033 3.11801C85.9606 -0.667827 94.0394 -0.667827 100.597 3.11801L168.604 42.382C175.161 46.1678 179.201 53.1643 179.201 60.736V139.264C179.201 146.836 175.161 153.832 168.604 157.618L100.597 196.882C94.0394 200.668 85.9606 200.668 79.4033 196.882L11.3961 157.618C4.83883 153.832 0.799383 146.836 0.799383 139.264V60.736C0.799383 53.1643 4.83883 46.1678 11.3961 42.382L79.4033 3.11801Z"
-      fill="currentColor"
-    />
-  </svg>
-
-  // <Image
-  //   className={`absolute pointer-events-none z-0 ${className}`}
-  //   alt=""
-  //   width={85}
-  //   height={85}
-  //   src="/home-page/polygon.svg"
-  // />
-);
-
-const SectionHeader = ({ children }: { children: React.ReactNode }) => (
-  <h1 className="lg:text-[40px] lg:leading-[44px] xl:text-[80px] xl:leading-[88px]">
-    {children}
-  </h1>
-);
-
-const SectionSubHeader = ({
-  className,
-  children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) => <p className={`font-bold lg:text-2xl ${className}`}>{children}</p>;
-
-const SectionParagraph = ({
-  className,
-  children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) => (
-  <p
-    className={`leading-7 lg:text-lg lg:leading-10 xl:text-[22px] ${className}`}
-  >
-    {children}
-  </p>
-);
+import {
+  Hexagon,
+  SectionHeader,
+  SectionParagraph,
+  SectionSubHeader,
+  SubSectionHeader,
+} from "../components/section-content";
 
 const AvenirPro = () => (
   <section
@@ -78,14 +33,14 @@ const AvenirPro = () => (
         <Button
           priority="primary"
           className="!w-full sm:!w-auto justify-center"
-          linkProps={{ href: "#" }}
+          linkProps={{ href: "/app" }}
           size="large"
         >
           Démarrez votre parcours VAE
         </Button>
         <a
           className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
-          href="#"
+          href="/espace-candidat"
         >
           En savoir plus sur la VAE
         </a>
@@ -133,7 +88,7 @@ const ValorisationCompetences = () => (
         </Button>
         <a
           className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
-          href="#"
+          href="/espace-candidat"
         >
           En savoir plus sur la VAE
         </a>
@@ -153,11 +108,6 @@ const ValorisationCompetences = () => (
   </section>
 );
 
-const SubSectionHeader = ({ children }: { children: React.ReactNode }) => (
-  <header>
-    <h2 className="text-white text-2xl mt-3">{children}</h2>
-  </header>
-);
 const CommentCaMarche = () => (
   <section
     id="comment-ca-marche"
@@ -183,7 +133,7 @@ const CommentCaMarche = () => (
           <Button
             priority="primary"
             className="!w-full sm:!w-auto justify-center !bg-white !text-[#000091]"
-            linkProps={{ href: "#" }}
+            linkProps={{ href: "/app" }}
             size="large"
           >
             Démarrez un parcours VAE
@@ -279,12 +229,12 @@ const TrouvezCertification = () => (
         professionnelles inscrits au RNCP qui vous ouvriront la porte à autant
         d’opportunités professionnelles.
       </SectionParagraph>
-      <a
+      {/* <a
         className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
         href="#"
       >
         Voir la liste complète
-      </a>
+      </a> */}
     </div>
     <div className="mt-24 relative w-96 h-96 sm:ml-[15%] lg:ml-0 lg:flex-1">
       <Image
@@ -300,7 +250,7 @@ const TrouvezCertification = () => (
   </section>
 );
 
-const Professionnel = () => (
+const Professionnels = () => (
   <section
     id="professionnel"
     className=" mt-20 overflow-y-visible overflow-x-hidden bg-[#E5E5E5]"
@@ -320,7 +270,7 @@ const Professionnel = () => (
         </SectionParagraph>
         <Link
           className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
-          href="/espace-professionnel/creation"
+          href="/espace-professionnel"
         >
           Espace PRO
         </Link>
@@ -363,7 +313,7 @@ const IndexPage = () => {
       <ValorisationCompetences />
       <CommentCaMarche />
       <TrouvezCertification />
-      <Professionnel />
+      <Professionnels />
     </MainLayout>
   );
 };
