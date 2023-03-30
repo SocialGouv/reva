@@ -217,14 +217,22 @@ export interface PaymentRequestBatchContent {
   NumFacture: string;
   SiretAP: string;
   NbHeureReaJury: number;
+  CoutHeureReaJury: number;
   NbHeureReaAPDiag: number;
+  CoutHeureReaAPDiag: number;
   NbHeureReaAccVAEInd: number;
+  CoutHeureReaAccVAEInd: number;
   NbHeureReaAPPostJury: number;
+  CoutHeureReaAPPostJury: number;
   NbHeureReaAccVAEColl: number;
+  CoutHeureReaAccVAEColl: number;
   NbHeureReaTotalActesFormatifs: number;
   NbHeureReaComplFormObligatoire: number;
+  CoutHeureReaComplFormObligatoire: number;
   NbHeureReaComplFormSavoirsDeBase: number;
+  CoutHeureReaComplFormSavoirsDeBase: number;
   NbHeureReaComplFormBlocDeCompetencesCertifiant: number;
+  CoutHeureReaComplFormBlocDeCompetencesCertifiant: number;
 }
 
 export interface FileUploadSpoolerEntry {

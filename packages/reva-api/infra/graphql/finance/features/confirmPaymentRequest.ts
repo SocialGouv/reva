@@ -153,18 +153,29 @@ export const mapPaymentRequestBatchContent = ({
   NumFacture: paymentRequest.invoiceNumber,
   SiretAP: candidacy.organism?.siret || "",
   NbHeureReaJury: paymentRequest.examEffectiveHourCount,
+  CoutHeureReaJury: paymentRequest.examEffectiveCost.toNumber(),
   NbHeureReaAPDiag: paymentRequest.diagnosisEffectiveHourCount,
+  CoutHeureReaAPDiag: paymentRequest.diagnosisEffectiveCost.toNumber(),
   NbHeureReaAccVAEInd: paymentRequest.individualEffectiveHourCount,
+  CoutHeureReaAccVAEInd: paymentRequest.individualEffectiveCost.toNumber(),
   NbHeureReaAPPostJury: paymentRequest.postExamEffectiveHourCount,
+  CoutHeureReaAPPostJury: paymentRequest.postExamEffectiveCost.toNumber(),
   NbHeureReaAccVAEColl: paymentRequest.collectiveEffectiveHourCount,
+  CoutHeureReaAccVAEColl: paymentRequest.collectiveEffectiveCost.toNumber(),
   NbHeureReaTotalActesFormatifs:
     paymentRequest.mandatoryTrainingsEffectiveHourCount +
     paymentRequest.basicSkillsEffectiveHourCount +
     paymentRequest.certificateSkillsEffectiveHourCount,
   NbHeureReaComplFormObligatoire:
     paymentRequest.mandatoryTrainingsEffectiveHourCount,
+  CoutHeureReaComplFormObligatoire:
+    paymentRequest.mandatoryTrainingsEffectiveCost.toNumber(),
   NbHeureReaComplFormSavoirsDeBase:
     paymentRequest.basicSkillsEffectiveHourCount,
+  CoutHeureReaComplFormSavoirsDeBase:
+    paymentRequest.basicSkillsEffectiveCost.toNumber(),
   NbHeureReaComplFormBlocDeCompetencesCertifiant:
     paymentRequest.certificateSkillsEffectiveHourCount,
+  CoutHeureReaComplFormBlocDeCompetencesCertifiant:
+    paymentRequest.certificateSkillsEffectiveCost.toNumber(),
 });
