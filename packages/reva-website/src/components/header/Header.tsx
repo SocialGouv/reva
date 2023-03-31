@@ -11,27 +11,10 @@ export const Header = (props: { className?: string }) => (
     }}
     quickAccessItems={[
       {
-        iconId: "fr-icon-add-circle-line",
-        linkProps: {
-          className: "",
-          href: "#",
-        },
-
-        text: "Certifications ",
-      },
-      {
-        iconId: "fr-icon-lock-line",
-        linkProps: {
-          className: "",
-          href: "#",
-        },
-        text: "La VAE",
-      },
-      {
         iconId: "fr-icon-account-line",
         linkProps: {
           className: "",
-          href: "#",
+          href: "/app",
         },
         text: "Connexion",
       },
@@ -39,7 +22,7 @@ export const Header = (props: { className?: string }) => (
         iconId: "fr-icon-account-line",
         linkProps: {
           className: "!bg-[#F8F8F8]  ",
-          href: "/espace-professionnel/creation",
+          href: "/admin",
         },
         text: "Pro",
       },
@@ -47,26 +30,10 @@ export const Header = (props: { className?: string }) => (
         iconId: "fr-icon-account-line",
         linkProps: {
           className: "!bg-[#000091] !text-white  ",
-          href: "#",
+          href: "/app",
         },
         text: "Démarrer mon parcours VAE",
       },
     ]}
-    // navigation={[
-    //   {
-    //     linkProps: {
-    //       href: "/espace-professionnel/creation",
-    //       target: "_self",
-    //     },
-    //     text: "Espace pro",
-    //   },
-    //   {
-    //     linkProps: {
-    //       href: "/espace-professionnel/creation",
-    //       target: "_self",
-    //     },
-    //     text: "Espace prsefsdfo",
-    //   },
-    // ]}
   />
 );
