@@ -153,13 +153,12 @@ const Accompagnement = () => (
           </div>
           <div className="ml-3">
             <header>
-              <SectionSubHeader className="mb-2">
-                Conception
-              </SectionSubHeader>
+              <SectionSubHeader className="mb-2">Conception</SectionSubHeader>
             </header>
             <SectionParagraph className="!text-base">
               d’un parcours VAE adapté à votre besoin: accompagnement individuel
-              ou collectif, module de formation et période d'immersion éventuelles.
+              ou collectif, module de formation et période d'immersion
+              éventuelles.
             </SectionParagraph>
           </div>
         </div>
@@ -177,7 +176,8 @@ const Accompagnement = () => (
               <SectionSubHeader className="mb-2">Gestion</SectionSubHeader>
             </header>
             <SectionParagraph className="!text-base">
-              de la recevabilité de votre dossier avec le certificateur et de la demande de financement.
+              de la recevabilité de votre dossier avec le certificateur et de la
+              demande de financement.
             </SectionParagraph>
           </div>
         </div>
@@ -192,7 +192,9 @@ const Accompagnement = () => (
           </div>
           <div className="ml-3">
             <header>
-              <SectionSubHeader className="mb-2">Planification</SectionSubHeader>
+              <SectionSubHeader className="mb-2">
+                Planification
+              </SectionSubHeader>
             </header>
             <SectionParagraph className="!text-base">
               de la date de votre passage devant le jury.
@@ -225,7 +227,7 @@ const Financement = () => (
       <ul className="flex-1 relative p-0 list-none mt-[100px]">
         <li className="mt-24 lg:mt-10">
           <section className="lg:flex lg:space-x-6">
-            <div className="flex-0 relative w-[60px] h-[60px] text-[#F95C5E]">
+            <div className="-top-4 flex-0 relative w-[60px] h-[60px] text-[#F95C5E]">
               <Hexagon className="absolute w-[55px]" />
             </div>
             <div className="flex-1 text-[#000091]">
@@ -237,7 +239,7 @@ const Financement = () => (
         </li>
         <li className="mt-24 lg:mt-10">
           <section className="lg:flex lg:space-x-6">
-            <div className="flex-0 relative w-[60px] h-[60px] text-[#8BF8E7]">
+            <div className="-top-4 flex-0 relative w-[60px] h-[60px] text-[#8BF8E7]">
               <Hexagon className="absolute w-[55px]" />
             </div>
             <div className="flex-1 text-[#000091] align-middle">
@@ -251,7 +253,7 @@ const Financement = () => (
         </li>
         <li className="mt-24 lg:mt-10">
           <section className="lg:flex lg:space-x-6">
-            <div className="flex-0 relative w-[60px] h-[60px] text-[#FBB8F6]">
+            <div className="-top-4 flex-0 relative w-[60px] h-[60px] text-[#FBB8F6]">
               <Hexagon className="absolute w-[55px]" />
             </div>
             <div className="flex-1 text-[#000091]">
@@ -273,8 +275,8 @@ const CommentCaMarche = () => (
     id="comment-ca-marche"
     className="mt-20 pb-48 bg-[#1B1B35] text-white"
   >
-    <div className="relative w-full max-w-[1248px] mx-auto px-5 lg:flex lg:space-x-12">
-      <div className="flex-1 mt-[100px]">
+    <div className="relative w-full max-w-[1248px] mx-auto px-5 lg:space-x-12">
+      <div className="w-full mt-[100px] text-center">
         <header>
           <SectionSubHeader className="text-[#FEF7DA]">
             Le parcours France VAE
@@ -284,76 +286,46 @@ const CommentCaMarche = () => (
           </h1>
         </header>
         <SectionParagraph>
-          Découvrez tout le chemin d’une certification France VAE d’un candidat
-          :
+          Découvrez tout le chemin d’une certification France VAE d’un candidat:
         </SectionParagraph>
       </div>
-      <ul className="flex-1 relative p-0 list-none mt-[100px]">
-        <li>
-          <section className="lg:flex lg:space-x-6">
-            <div className="flex-0 relative h-[124px] w-[96px] text-[#FEF7DA] lg:ml-6">
-              <Hexagon className="absolute top-0 left-[35px] w-[15px] h-[16px]" />
-              <Hexagon className="absolute top-[22px] left-0 w-[30px] h-[33px]" />
-              <Hexagon className="absolute bottom-0 right-0 w-[74px] h-[83px]" />
-              <span className="absolute bottom-[18px] right-[4px] z-10 text-5xl text-black font-bold">
-                1
-              </span>
+      <div className="w-full flex flex-row justify-around">
+        <section className="basis-1/4">
+          <div className="">
+            <div className="flex-0 relative w-[60px] h-[60px] text-[#F95C5E]">
+              <Hexagon className="absolute w-[55px] text-[#F95C5E]" />
             </div>
-            <div className="flex-1">
-              <header>
-                <SubSectionHeader>Définition de votre projet</SubSectionHeader>
-              </header>
-              <SectionParagraph>
-                Faites le bilan des compétences acquises au cours de votre vie,
-                ainsi que le parcours professionnel envisagé.
-              </SectionParagraph>
-            </div>
-          </section>
-        </li>
-        <li className="mt-24 lg:mt-10">
-          <section className="lg:flex lg:space-x-6">
-            <div className="flex-0 relative h-[111px] w-[124px] text-[#FBB8F6]">
-              <Hexagon className="absolute bottom-0 left-[20px] w-[15px] h-[16px]" />
-              <Hexagon className="absolute top-[28px] left-0 w-[30px] h-[33px]" />
-              <Hexagon className="absolute bottom-[21px] right-0 w-[74px] h-[83px]" />
-              <span className="absolute bottom-[39px] right-[4px] z-10 text-5xl text-black font-bold">
-                2
-              </span>
-            </div>
-            <div className="flex-1">
-              <header>
-                <SubSectionHeader>
-                  Envoi du dossier de faisabilité
-                </SubSectionHeader>
-              </header>
-              <SectionParagraph>
-                Avec un accompagnateur qui vous aidera dans toutes vos démarches
-              </SectionParagraph>
-            </div>
-          </section>
-        </li>
-        <li className="mt-24 lg:mt-10">
-          <section className="lg:flex lg:space-x-6">
-            <div className="flex-0 relative h-[124px] w-[106px] text-[#8BF8E7] lg:ml-4">
-              <Hexagon className="absolute bottom-0 left-[45px] w-[15px] h-[16px]" />
-              <Hexagon className="absolute top-[64px] left-0 w-[30px] h-[33px]" />
-              <Hexagon className="absolute top-0 right-0 w-[74px] h-[83px]" />
-              <span className="absolute top-[18px] right-[4px] z-10 text-5xl text-black font-bold">
-                3
-              </span>
-            </div>
-            <div className="flex-1">
-              <header>
-                <SubSectionHeader>Passage devant le jury</SubSectionHeader>
-              </header>
-              <SectionParagraph>
-                Dans les 2 mois après le dépôt du dossier au certificateur.
-                Défendez vos compétences et obtenez votre diplôme!
-              </SectionParagraph>
-            </div>
-          </section>
-        </li>
-      </ul>
+            <header>
+              <SubSectionHeader>Définition de votre projet</SubSectionHeader>
+            </header>
+            <SectionParagraph>
+              Faites le bilan des compétences acquises au cours de votre vie,
+              ainsi que le parcours professionnel envisagé.
+            </SectionParagraph>
+          </div>
+        </section>
+        <section className="basis-1/4">
+          <div className="">
+            <header>
+              <SubSectionHeader>Envoi du dossier de faisabilité</SubSectionHeader>
+            </header>
+            <SectionParagraph>
+              Avec un accompagnateur qui vous aidera dans toutes vos démarches
+            </SectionParagraph>
+          </div>
+        </section>
+        <section className="basis-1/4">
+          <div className="">
+            <header>
+              <SubSectionHeader>Passage devant le jury</SubSectionHeader>
+            </header>
+            <SectionParagraph>
+              Dans les 2 mois après le dépôt du dossier au certificateur. Défendez
+              vos compétences et obtenez votre diplôme!
+            </SectionParagraph>
+          </div>
+        </section>
+      </div>
     </div>
     <div className="flex flex-col items-center sm:items-start space-y-4">
       <Button
