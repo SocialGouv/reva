@@ -78,14 +78,6 @@ const ValorisationCompetences = () => (
       </SectionParagraph>
 
       <div className="flex flex-col items-center sm:items-start space-y-4">
-        <Button
-          priority="primary"
-          className="!w-full sm:!w-auto justify-center"
-          linkProps={{ href: "#" }}
-          size="large"
-        >
-          Identifiez vos compétences
-        </Button>
         <Link
           className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
           href="/espace-candidat"
