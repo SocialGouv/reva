@@ -141,62 +141,61 @@ const Accompagnement = () => (
           leur expertise en développement de compétences.
         </SectionParagraph>
       </div>
-      <div className="mx-auto w-full mt-[100px] flex flex-no-wrap">
-        <div className="flex-0 flex flex-row  grow-0 basis-1/4">
-          <div className="grow-1">
+      <div className="!mx-0 mt-[100px] flex flex-no-wrap justify-around">
+        <div className="flex basis-1/4 grow-0">
+          <div className="min-w-[130px]">
             <Image
-              src="/candidate-space/icon-notepad.png"
+              src="/candidate-space/icon-conception.png"
               alt="image bloc note"
-              width={145}
-              height={169}
+              width={130}
+              height={121}
             />
           </div>
-          <div>
+          <div className="ml-3">
             <header>
-              <SectionSubHeader className="text-[#1B1B35] 700">
+              <SectionSubHeader className="mb-2">
                 Conception
               </SectionSubHeader>
             </header>
-            <SectionParagraph>
-              d'un parcours VAE adapté à votre besoin
+            <SectionParagraph className="!text-base">
+              d’un parcours VAE adapté à votre besoin: accompagnement individuel
+              ou collectif, module de formation et période d'immersion éventuelles.
             </SectionParagraph>
           </div>
         </div>
-        <div className="flex-1 flex flex-row grow-0 basis-1/4">
-          <div className="grow-1">
+        <div className="flex basis-1/4 grow-0">
+          <div className="min-w-[130px]">
             <Image
-              src="/candidate-space/icon-folder.png"
+              src="/candidate-space/icon-gestion.png"
               alt="image dossier"
-              width={192}
-              height={139}
+              width={130}
+              height={121}
             />
           </div>
-          <div>
+          <div className="ml-3">
             <header>
-              <SectionSubHeader>Gestion</SectionSubHeader>
+              <SectionSubHeader className="mb-2">Gestion</SectionSubHeader>
             </header>
-            <SectionParagraph>
-              de la recevabilité de votre dossier de candidature et de la
-              demande de financement
+            <SectionParagraph className="!text-base">
+              de la recevabilité de votre dossier avec le certificateur et de la demande de financement.
             </SectionParagraph>
           </div>
         </div>
-        <div className="flex-2 flex flex-row  grow-0 basis-1/4">
-          <div className="grow-1">
+        <div className="flex basis-1/4 grow-0">
+          <div className="min-w-[130px]">
             <Image
-              src="/candidate-space/icon-rocket.png"
+              src="/candidate-space/icon-plannification.png"
               alt="image bloc note"
-              width={182}
-              height={161}
+              width={130}
+              height={121}
             />
           </div>
-          <div>
+          <div className="ml-3">
             <header>
-              <SectionSubHeader>Planification</SectionSubHeader>
+              <SectionSubHeader className="mb-2">Planification</SectionSubHeader>
             </header>
-            <SectionParagraph>
-              de la date de votre passage devant le jury, en fonction de vos
-              disponibilités
+            <SectionParagraph className="!text-base">
+              de la date de votre passage devant le jury.
             </SectionParagraph>
           </div>
         </div>
