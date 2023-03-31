@@ -1,20 +1,22 @@
 import * as React from "react";
 
-export const SectionHeader = ({ children }: { children: React.ReactNode; }) => (
+export const SectionHeader = ({ children }: { children: React.ReactNode }) => (
   <h1 className="lg:text-[40px] lg:leading-[44px] xl:text-[80px] xl:leading-[88px]">
     {children}
   </h1>
 );
 
 export const SectionSubHeader = ({
-  className, children,
+  className,
+  children,
 }: {
   className?: string;
   children: React.ReactNode;
 }) => <p className={`font-bold lg:text-2xl ${className}`}>{children}</p>;
 
 export const SectionParagraph = ({
-  className, children,
+  className,
+  children,
 }: {
   className?: string;
   children: React.ReactNode;
@@ -26,7 +28,11 @@ export const SectionParagraph = ({
   </p>
 );
 
-export const SubSectionHeader = ({ children }: { children: React.ReactNode }) => (
+export const SubSectionHeader = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => (
   <header>
     <h2 className="text-white text-2xl mt-3">{children}</h2>
   </header>
@@ -38,6 +44,7 @@ export const Hexagon = ({ className }: { className: string }) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={`${className}`}
+    aria-hidden="true"
   >
     <path
       fillRule="evenodd"
