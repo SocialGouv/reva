@@ -11,7 +11,7 @@ import {
   SectionParagraph,
   SectionSubHeader,
   SubSectionHeader,
-} from "../components/section-content";
+} from "@/components/section-content/SectionContent";
 
 const AvenirPro = () => (
   <section

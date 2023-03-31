@@ -5,7 +5,7 @@ import {
   SectionParagraph,
   SectionSubHeader,
   SubSectionHeader,
-} from "@/components/section-content";
+} from "@/components/section-content/SectionContent";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Head from "next/head";
 import Image from "next/image";
@@ -123,77 +123,84 @@ const Eligibilite = () => (
 );
 
 const Accompagnement = () => (
-  <section
-    id="acompagnement"
-    className="mt-20 pb-48 bg-[#F8F8F8]"
-  >
+  <section id="acompagnement" className="mt-20 pb-48 bg-[#F8F8F8]">
     <div className="relative w-full px-5 lg:flex-no-wrap lg:space-x-12">
-    <div className="px-5 sm:flex-1 mx-auto max-w-[1248px] text-center mt-[100px]">
-      <header>
-        <SectionSubHeader className="text-[#000091]">
-          Accompagnement
-        </SectionSubHeader>
-        <SectionHeader>
-          Vous êtes guidé dès le début de votre démarche
-        </SectionHeader>
-      </header>
-      <SectionParagraph className="text-justify">
-        Un architecte accompagnateur de parcours vous aidera dans la gestion
-        administrative de votre dossier VAE dès le début de votre parcours. Ce
-        sont des professionnels sélectionnés spécialement par France VAE pour
-        leur expertise en développement de compétences.
-      </SectionParagraph>
-    </div>
-    <div className="mx-auto w-full mt-[100px] flex flex-no-wrap">
-      <div className="flex-0 flex flex-row  grow-0 basis-1/4">
-        <div className="grow-1">
-          <Image
-            src="/candidate-space/icon-notepad.png"
-            alt="image bloc note"
-            width={145}
-            height={169}
-          />
+      <div className="px-5 sm:flex-1 mx-auto max-w-[1248px] text-center mt-[100px]">
+        <header>
+          <SectionSubHeader className="text-[#000091]">
+            Accompagnement
+          </SectionSubHeader>
+          <SectionHeader>
+            Vous êtes guidé dès le début de votre démarche
+          </SectionHeader>
+        </header>
+        <SectionParagraph className="text-justify">
+          Un architecte accompagnateur de parcours vous aidera dans la gestion
+          administrative de votre dossier VAE dès le début de votre parcours. Ce
+          sont des professionnels sélectionnés spécialement par France VAE pour
+          leur expertise en développement de compétences.
+        </SectionParagraph>
+      </div>
+      <div className="mx-auto w-full mt-[100px] flex flex-no-wrap">
+        <div className="flex-0 flex flex-row  grow-0 basis-1/4">
+          <div className="grow-1">
+            <Image
+              src="/candidate-space/icon-notepad.png"
+              alt="image bloc note"
+              width={145}
+              height={169}
+            />
+          </div>
+          <div>
+            <header>
+              <SectionSubHeader className="text-[#1B1B35] 700">
+                Conception
+              </SectionSubHeader>
+            </header>
+            <SectionParagraph>
+              d'un parcours VAE adapté à votre besoin
+            </SectionParagraph>
+          </div>
         </div>
-        <div>
-          <header>
-            <SectionSubHeader className="text-[#1B1B35] 700">Conception</SectionSubHeader>
-          </header>
-          <SectionParagraph>d'un parcours VAE adapté à votre besoin</SectionParagraph>
+        <div className="flex-1 flex flex-row grow-0 basis-1/4">
+          <div className="grow-1">
+            <Image
+              src="/candidate-space/icon-folder.png"
+              alt="image dossier"
+              width={192}
+              height={139}
+            />
+          </div>
+          <div>
+            <header>
+              <SectionSubHeader>Gestion</SectionSubHeader>
+            </header>
+            <SectionParagraph>
+              de la recevabilité de votre dossier de candidature et de la
+              demande de financement
+            </SectionParagraph>
+          </div>
+        </div>
+        <div className="flex-2 flex flex-row  grow-0 basis-1/4">
+          <div className="grow-1">
+            <Image
+              src="/candidate-space/icon-rocket.png"
+              alt="image bloc note"
+              width={182}
+              height={161}
+            />
+          </div>
+          <div>
+            <header>
+              <SectionSubHeader>Planification</SectionSubHeader>
+            </header>
+            <SectionParagraph>
+              de la date de votre passage devant le jury, en fonction de vos
+              disponibilités
+            </SectionParagraph>
+          </div>
         </div>
       </div>
-      <div className="flex-1 flex flex-row grow-0 basis-1/4">
-        <div className="grow-1">
-          <Image
-            src="/candidate-space/icon-folder.png"
-            alt="image dossier"
-            width={192}
-            height={139}
-          />
-        </div>
-        <div>
-          <header>
-            <SectionSubHeader>Gestion</SectionSubHeader>
-          </header>
-          <SectionParagraph>de la recevabilité de votre dossier de candidature et de la demande de financement</SectionParagraph>
-        </div>
-      </div>
-      <div className="flex-2 flex flex-row  grow-0 basis-1/4">
-        <div className="grow-1">
-          <Image
-            src="/candidate-space/icon-rocket.png"
-            alt="image bloc note"
-            width={182}
-            height={161}
-          />
-        </div>
-        <div>
-          <header>
-            <SectionSubHeader>Planification</SectionSubHeader>
-          </header>
-          <SectionParagraph>de la date de votre passage devant le jury, en fonction de vos disponibilités</SectionParagraph>
-        </div>
-      </div>
-    </div>
     </div>
   </section>
 );
@@ -278,7 +285,8 @@ const CommentCaMarche = () => (
           </h1>
         </header>
         <SectionParagraph>
-          Découvrez tout le chemin d’une certification France VAE d’un candidat :
+          Découvrez tout le chemin d’une certification France VAE d’un candidat
+          :
         </SectionParagraph>
       </div>
       <ul className="flex-1 relative p-0 list-none mt-[100px]">
