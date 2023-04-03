@@ -8,7 +8,7 @@ import Image from "next/image";
 export const Accompagnement = () => (
   <section id="acompagnement" className="mt-20 pb-48 bg-[#F8F8F8]">
     <div className="relative w-full px-5 lg:flex-no-wrap lg:space-x-12">
-      <div className="px-5 sm:flex-1 mx-auto max-w-[1248px] text-center mt-[100px]">
+      <div className="px-5 sm:flex-1 mx-auto max-w-[1208px] text-center mt-[100px]">
         <header>
           <SectionSubHeader className="text-[#000091]">
             Accompagnement
@@ -24,8 +24,8 @@ export const Accompagnement = () => (
           leur expertise en développement de compétences.
         </SectionParagraph>
       </div>
-      <div className="!mx-0 mt-[100px] flex flex-no-wrap justify-around">
-        <div className="flex basis-1/4 grow-0">
+      <div className="mx-auto px-10 mt-4 flex flex-no-wrap gap-x-5">
+        <div className="flex basis-1/3">
           <div className="min-w-[130px]">
             <Image
               src="/candidate-space/icon-conception.png"
@@ -44,7 +44,7 @@ export const Accompagnement = () => (
             </SectionParagraph>
           </div>
         </div>
-        <div className="flex basis-1/4 grow-0">
+        <div className="flex basis-1/3">
           <div className="min-w-[130px]">
             <Image
               src="/candidate-space/icon-gestion.png"
@@ -62,7 +62,7 @@ export const Accompagnement = () => (
             </SectionParagraph>
           </div>
         </div>
-        <div className="flex basis-1/4 grow-0">
+        <div className="flex basis-1/3">
           <div className="min-w-[130px]">
             <Image
               src="/candidate-space/icon-plannification.png"

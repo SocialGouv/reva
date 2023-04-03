@@ -20,6 +20,8 @@ export const Financement = () => (
         Vous n’avez plus à vous préoccuper du financement de votre parcours.
         Pour faciliter l’accès à la VAE pour tous, France VAE rassemble ce
         financement auprès de différents acteurs publics et privés.
+        <br/><br/>
+        *hors dispositif particulier de la fonction publique
       </SectionParagraph>
     </div>
     <div className="relative mt-16 -mx-5 sm:mx-0 sm:flex-0 sm:w-2/5 sm:-mr-20 lg:mr-0 lg:flex-1">
@@ -29,8 +31,8 @@ export const Financement = () => (
             <div className="-top-4 flex-0 relative w-[60px] h-[60px] text-[#F95C5E]">
               <Hexagon className="absolute w-[55px]" />
             </div>
-            <div className="flex-1 text-[#000091]">
-              <header className="text-[#000091]">
+            <div className="flex-1 text-[#1B1B35]">
+              <header>
                 <SectionSubHeader>Les frais administratifs</SectionSubHeader>
               </header>
             </div>
@@ -41,8 +43,8 @@ export const Financement = () => (
             <div className="-top-4 flex-0 relative w-[60px] h-[60px] text-[#8BF8E7]">
               <Hexagon className="absolute w-[55px]" />
             </div>
-            <div className="flex-1 text-[#000091] align-middle">
-              <header className="text-[#000091]">
+            <div className="flex-1 text-[#1B1B35] align-middle">
+              <header>
                 <SectionSubHeader className="top">
                   Les frais d'accompagnement
                 </SectionSubHeader>
@@ -55,8 +57,8 @@ export const Financement = () => (
             <div className="-top-4 flex-0 relative w-[60px] h-[60px] text-[#FBB8F6]">
               <Hexagon className="absolute w-[55px]" />
             </div>
-            <div className="flex-1 text-[#000091]">
-              <header className="text-[#000091]">
+            <div className="flex-1 text-[#1B1B35]">
+              <header>
                 <SectionSubHeader>
                   Les actes formatifs complémentaires
                 </SectionSubHeader>

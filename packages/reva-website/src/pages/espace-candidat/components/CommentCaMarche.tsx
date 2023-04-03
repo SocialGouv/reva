@@ -30,19 +30,22 @@ export const CommentCaMarche = () => (
             <SubSectionHeader>Confirmation de votre projet</SubSectionHeader>
           </header>
           <SectionParagraph className="!text-[18px] !leading-8">
-            Faites le bilan des compétences acquises au cours de votre vie,
-            ainsi que le parcours professionnel envisagé
+            Faites un point sur vos compétences et votre objectif professionnel
+            avec un architecte accompagnateur de parcours.
           </SectionParagraph>
         </section>
-        <section className="w-[450px] h-[400px] pl-[120px] pt-[80px] pr-[32px] bg-[url('/candidate-space/hexa-group-2.svg')]">
+        <section className="w-[450px] h-[400px] pl-[128px] pt-[80px] pr-[32px] bg-[url('/candidate-space/hexa-group-2.svg')]">
           <header>
-            <SubSectionHeader>Envoi du dossier de faisabilité</SubSectionHeader>
+            <SubSectionHeader>
+              Préparation du dossier d’expérience
+            </SubSectionHeader>
           </header>
           <SectionParagraph className="!text-[18px] !leading-8">
-            Avec un accompagnateur qui vous aidera dans toutes vos démarches
+            Avec un architecte accompagnateur qui vous guidera dans toutes vos
+            démarches
           </SectionParagraph>
         </section>
-        <section className="w-[450px] h-[400px] pl-[120px] pt-[80px] pr-[32px] bg-[url('/candidate-space/hexa-group-3.svg')]">
+        <section className="w-[450px] h-[400px] pl-[128px] pt-[70px] pr-[36px] bg-[url('/candidate-space/hexa-group-3.svg')]">
           <header>
             <SubSectionHeader>Entretien avec le jury</SubSectionHeader>
           </header>

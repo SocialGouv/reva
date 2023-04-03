@@ -8,7 +8,7 @@ import Image from "next/image";
 export const QuestcequelaVae = () => (
   <section
     id="valorisation-competences"
-    className="w-full max-w-[1248px] mx-auto relative sm:flex sm:flex-row-reverse mt-20 overflow-y-visible overflow-x-hidden sm:mt-24"
+    className="w-full max-w-[1248px] mx-auto relative sm:flex sm:flex-row-reverse mt-[100px] overflow-y-visible overflow-x-hidden sm:mt-24"
   >
     <div className="flex-1 px-5 mt-24 sm:mt-0">
       <header>
