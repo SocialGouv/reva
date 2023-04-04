@@ -28,11 +28,9 @@ const SiteMapPage = () => {
               <Link href="/espace-professionnel/creation">
                 Création d'un espace professionnel
               </Link>
-              <ul>
-                <li>
-                  <Link href="/admin">Connexion professionnel</Link>
-                </li>
-              </ul>
+            </li>
+            <li>
+              <Link href="/admin">Connexion professionnel</Link>
             </li>
           </ul>
         </li>
