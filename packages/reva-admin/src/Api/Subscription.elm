@@ -66,8 +66,8 @@ subscriptionSelection : SelectionSet Data.Subscription.SubscriptionSummary Admin
 subscriptionSelection =
     SelectionSet.succeed Data.Subscription.SubscriptionSummary
         |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.SubscriptionRequestSummary.id)
-        |> with Admin.Object.SubscriptionRequestSummary.accountFirstname
         |> with Admin.Object.SubscriptionRequestSummary.accountLastname
+        |> with Admin.Object.SubscriptionRequestSummary.accountFirstname
         |> with Admin.Object.SubscriptionRequestSummary.accountEmail
         |> with Admin.Object.SubscriptionRequestSummary.companyName
         |> with Admin.Object.SubscriptionRequestSummary.companyAddress
