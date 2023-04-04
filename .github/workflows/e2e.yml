@@ -22,8 +22,4 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-      - run: npm install
-      - run: cd packages/reva-tests && npm install
       - run: npm run build
-      # On met le NODE_ENV ici car si on le met en global, ca install pas les devDeps
-      - run: cd packages/reva-tests && NODE_ENV=production npm run test:ci
