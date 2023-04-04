@@ -10,6 +10,7 @@ import Api.Auth as Auth
 import Api.RemoteData exposing (nothingToError)
 import Api.Token exposing (Token)
 import Data.Subscription
+import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
 
@@ -52,7 +53,9 @@ getSubscriptions :
     -> (RemoteData String (List Data.Subscription.SubscriptionSummary) -> msg)
     -> Cmd msg
 getSubscriptions endpointGraphql token toMsg =
-    Query.subscription_getSubscriptionRequests identity selection
+    Query.subscription_getSubscriptionRequests
+        (\optionals -> { optionals | limit = Present 50 })
+        selection
         |> Auth.makeQuery endpointGraphql token toMsg
 
 
