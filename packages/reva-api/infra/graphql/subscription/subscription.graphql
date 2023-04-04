@@ -35,6 +35,7 @@ type SubscriptionRequestSummary {
   accountEmail: String!
   companyName: String!
   companyAddress: String!
+  createdAt: Timestamp!
 }
 
 input SubscriptionRequestOrderByInput {
@@ -48,7 +49,12 @@ type SubscriptionRequestsPaginated {
 }
 
 type Query {
-  subscription_getSubscriptionRequests(filter: String, offset: Int, limit: Int, orderBy: SubscriptionRequestOrderByInput): SubscriptionRequestsPaginated!
+  subscription_getSubscriptionRequests(
+    filter: String
+    offset: Int
+    limit: Int
+    orderBy: SubscriptionRequestOrderByInput
+  ): SubscriptionRequestsPaginated!
   subscription_getSubscriptionRequest(
     subscriptionRequestId: ID!
   ): SubscriptionRequest

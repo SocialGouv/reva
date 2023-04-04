@@ -1,5 +1,7 @@
 module Data.Subscription exposing (SubscriptionSummary, filterByWords)
 
+import Data.Scalar exposing (Timestamp)
+
 
 type alias SubscriptionSummary =
     { id : String
@@ -8,6 +10,7 @@ type alias SubscriptionSummary =
     , accountEmail : String
     , companyName : String
     , companyAddress : String
+    , createdAt : Timestamp
     }
 
 

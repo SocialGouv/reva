@@ -107,6 +107,7 @@ export const getSubscriptionRequests = async (
               accountEmail: true,
               companyName: true,
               companyAddress: true,
+              createdAt: true,
             },
           },
           filterClause(params),

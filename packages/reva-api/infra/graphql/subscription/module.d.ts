@@ -21,6 +21,7 @@ interface SubscriptionRequestInput {
 
 interface SubscriptionRequest extends SubscriptionRequestInput {
   id: string;
+  createdAt: Date;
 }
 
 type SubscriptionRequestSummary = Pick<

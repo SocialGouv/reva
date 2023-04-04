@@ -71,3 +71,4 @@ subscriptionSelection =
         |> with Admin.Object.SubscriptionRequestSummary.accountEmail
         |> with Admin.Object.SubscriptionRequestSummary.companyName
         |> with Admin.Object.SubscriptionRequestSummary.companyAddress
+        |> with Admin.Object.SubscriptionRequestSummary.createdAt

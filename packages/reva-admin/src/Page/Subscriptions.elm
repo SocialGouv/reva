@@ -17,6 +17,7 @@ import Html.Events exposing (onClick)
 import RemoteData exposing (RemoteData(..))
 import String exposing (String)
 import View
+import View.Date exposing (toFullFormat)
 import View.Helpers exposing (dataTest)
 import View.Subscription.Filters exposing (Filters)
 
@@ -218,8 +219,10 @@ viewItem _ subscription =
             [ class "relative p-6 bg-neutral-100 flex hover:bg-gray-50"
             , class "focus-within:ring-1 focus-within:ring-inset focus-within:ring-indigo-500"
             ]
-            [ div [ class "flex flex-col text-sm" ]
+            [ div [ class "flex flex-col text-sm mb-2" ]
                 [ p [ class "font-bold" ] [ text (String.toUpper subscription.accountLastname), text " ", text subscription.accountFirstname ]
+                , p [ class "font-bold mb-0" ] [ text "Date d'envoi de l'inscription" ]
+                , p [] [ text (toFullFormat subscription.createdAt) ]
                 , p [ class "font-bold mb-0" ] [ text "Raison sociale de la structure" ]
                 , p [] [ text subscription.companyName ]
                 ]

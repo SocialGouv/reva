@@ -47,3 +47,8 @@ companyName =
 companyAddress : SelectionSet String Admin.Object.SubscriptionRequestSummary
 companyAddress =
     Object.selectionForField "String" "companyAddress" [] Decode.string
+
+
+createdAt : SelectionSet Data.Scalar.Timestamp Admin.Object.SubscriptionRequestSummary
+createdAt =
+    Object.selectionForField "Data.Scalar.Timestamp" "createdAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
