@@ -1,6 +1,4 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
-import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
-import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
 
 import { addExperienceToCandidacy } from "../../../domain/features/addExperienceToCandidacy";
@@ -116,17 +114,18 @@ const unsafeResolvers = {
     getCandidacies: async (
       _parent: unknown,
       _params: { deviceId: string },
-      context: {
-        reply: any;
-        auth: any;
-        app: {
-          keycloak: Keycloak.Keycloak;
-          getKeycloakAdmin: () => KeycloakAdminClient;
-        };
-      }
+      context: GraphqlContext,
+      // context: {
+      //   reply: any;
+      //   auth: any;
+      //   app: {
+      //     keycloak: Keycloak.Keycloak;
+      //     getKeycloakAdmin: () => KeycloakAdminClient;
+      //   };
+      // }
     ) => {
       const result = await getCandidacySummaries({
-        hasRole: context.auth.hasRole,
+        hasRole: context.auth?.hasRole,
         getCandidacySummaries: candidacyDb.getCandidacies,
         getCandidacySummariesForUser: candidacyDb.getCandidaciesForUser,
       })({ IAMId: context.auth.userInfo?.sub });
@@ -224,7 +223,7 @@ const unsafeResolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
-    candidacy_updateCertification: async (context: { auth: any }, payload: any) => {
+    candidacy_updateCertification: async (context: GraphqlContext, payload: any) => {
       const result = await updateCertificationOfCandidacy({
         updateCertification: candidacyDb.updateCertification,
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
@@ -236,13 +235,13 @@ const unsafeResolvers = {
       });
 
       logBusinessEvent({
-        authenticatedUser: context.auth?.userInfo,
+        requestContext: context,
         eventType: CandidacyBusinessEvent.UPDATED_CERTIFICATION,
-        isFailure: result.isLeft(),
         targetId: result.isRight() ? result.extract().id : undefined,
+        isError: result.isLeft(),
         extraInfo: {
           certificationId: payload.certificationId,
-        }
+        },
       });
 
       return result

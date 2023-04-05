@@ -2,39 +2,42 @@ import { CandidacyBusinessEvent } from "../../domain/types/candidacy";
 import { CandidateBusinessEvent } from "../../domain/types/candidate";
 import { getAccountFromKeycloakId } from "../database/postgres/accounts";
 import { logger } from "./logger";
+import * as iam from "../iam/keycloak";
 
 interface BusinessEvent {
-  authenticatedUser?: {
-    realm_access?: {
-      roles: KeyCloakUserRole[];
-    };
-    sub: string;
-  };
+  requestContext: GraphqlContext;
   eventType: CandidacyBusinessEvent | CandidateBusinessEvent;
-  isFailure: boolean;
+  isError: boolean;
   targetId?: string;
   extraInfo?: Record<string, unknown>;
 }
 
 export async function logBusinessEvent(event: BusinessEvent) {
   logger.info({
-    ...event,
+    eventType: event.eventType,
+    isError: event.isError,
+    targetId: event.targetId,
+    extraInfo: event.extraInfo,
     ...(await withAuthenticatedUserInfo(event)),
   });
 }
 
 const withAuthenticatedUserInfo = async (event: BusinessEvent) =>
-  event.authenticatedUser
+  event.requestContext.auth
     ? {
-        userKeycloakId: event.authenticatedUser?.sub,
-        userRoles: event.authenticatedUser.realm_access?.roles || [],
-        userEmail: await getKeycloakUserEmail(event.authenticatedUser.sub),
+        userKeycloakId: event.requestContext.auth.sub,
+        userRoles: event.requestContext.auth.realm_access?.roles || [],
+        userEmail: await getKeycloakUserEmail(
+          event.requestContext.auth,
+          event.requestContext.app
+        ),
       }
     : {};
 
-const getKeycloakUserEmail = async (keycloakId: string) => {
-  const eitherAccount = await getAccountFromKeycloakId(keycloakId);
-  return eitherAccount.isRight()
-    ? eitherAccount.extract().email
-    : `[error fetching email] ${eitherAccount.extract()}`;
+const getKeycloakUserEmail = async (auth: ContextAuth, app: ContextApp) => {
+  // requestContext.app.keycloak || requestContext.app.getKeycloakAdmin()
+  const eitherMaybeAccount = await iam.getAccount(app.getKeycloakAdmin())({username: "plop", email: ""});
+  // return eitherAccount.isRight()
+  //   ? eitherAccount.extract().email
+  //   : `[error fetching email] ${eitherAccount.extract()}`;
 };
