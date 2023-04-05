@@ -35,7 +35,7 @@ form maybeCertification formData ( candidacy, referential ) =
             Form.Number "Nb d'heures réalisées"
 
         costElement =
-            Form.Price "Coût horaire réalisé"
+            Form.Price "Coût horaire"
     in
     { elements =
         [ ( "heading", Form.Heading "1 - Informations des prestations" )
