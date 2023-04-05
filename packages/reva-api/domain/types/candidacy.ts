@@ -245,3 +245,9 @@ export interface FileUploadSpoolerEntry {
   description: string;
   fileContent?: Buffer;
 }
+
+export enum CandidacyBusinessEvent {
+  CREATED_CANDIDACY = "Created Candidacy",
+  SUBMITTED_CANDIDACY = "Submitted Candidacy",
+  UPDATED_CERTIFICATION = "Updated Certification",
+}

@@ -15,3 +15,18 @@ interface PaginatedListResult<T> {
   rows: T[];
   info: PaginationInfo;
 }
+
+interface GraphqlContext {
+  reply?: unknown;
+  auth?: {
+    hasRole: (role: Role) => boolean
+    realm_access?: {
+      roles: KeyCloakUserRole[];
+    };
+    sub: string;
+  };
+  app: {
+    keycloak: Keycloak.Keycloak;
+    getKeycloakAdmin: () => KeycloakAdminClient;
+  };
+}
