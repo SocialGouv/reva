@@ -16,7 +16,7 @@ import {
 const AvenirPro = () => (
   <section
     id="avenir-professionnel"
-    className="w-full max-w-[1248px] mx-auto mt-[80px] overflow-x-hidden sm:flex lg:items-center"
+    className="w-full fr-container mx-auto mt-[80px] overflow-x-hidden sm:flex lg:items-center"
   >
     <div className="px-5 sm:flex-1">
       <header>
@@ -61,7 +61,7 @@ const AvenirPro = () => (
 const ValorisationCompetences = () => (
   <section
     id="valorisation-competences"
-    className="w-full max-w-[1248px] mx-auto relative sm:flex sm:flex-row-reverse mt-20 overflow-y-visible overflow-x-hidden sm:mt-24"
+    className="w-full fr-container mx-auto relative sm:flex sm:flex-row-reverse mt-20 overflow-y-visible overflow-x-hidden sm:mt-24"
   >
     <div className="flex-1 px-5 mt-24 sm:mt-0">
       <header>
@@ -105,7 +105,7 @@ const CommentCaMarche = () => (
     id="comment-ca-marche"
     className="mt-20 pb-48 bg-[#1B1B35] text-white"
   >
-    <div className="relative w-full max-w-[1248px] mx-auto px-5 lg:flex lg:space-x-12">
+    <div className="relative w-full fr-container mx-auto px-5 lg:flex lg:space-x-12">
       <div className="flex-1 mt-[100px]">
         <header>
           <SectionSubHeader className="text-white">VAE 2.0</SectionSubHeader>
@@ -205,7 +205,7 @@ const CommentCaMarche = () => (
 const TrouvezCertification = () => (
   <section
     id="trouvez-certification"
-    className="relative flex flex-col lg:flex-row-reverse mt-20 pb-52 px-5 overflow-y-visible overflow-x-hidden"
+    className="fr-container relative flex flex-col lg:flex-row-reverse mt-20 pb-52 px-5 overflow-y-visible overflow-x-hidden"
   >
     <div className="lg:flex-1">
       <header>
@@ -247,7 +247,7 @@ const Professionnels = () => (
     id="professionnel"
     className=" mt-20 overflow-y-visible overflow-x-hidden bg-[#E5E5E5]"
   >
-    <div className="w-full max-w-[1248px] mt-[100px] mx-auto relative flex flex-col lg:flex-row lg:items-end px-5">
+    <div className="w-full fr-container mt-[100px] mx-auto relative flex flex-col lg:flex-row lg:items-end px-5">
       <div className="lg:pb-20">
         <header>
           <p className="font-bold text-2xl text-[#000091] lg:text-2xl">
