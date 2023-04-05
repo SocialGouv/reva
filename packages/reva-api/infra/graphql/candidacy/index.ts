@@ -115,20 +115,12 @@ const unsafeResolvers = {
       _parent: unknown,
       _params: { deviceId: string },
       context: GraphqlContext,
-      // context: {
-      //   reply: any;
-      //   auth: any;
-      //   app: {
-      //     keycloak: Keycloak.Keycloak;
-      //     getKeycloakAdmin: () => KeycloakAdminClient;
-      //   };
-      // }
     ) => {
       const result = await getCandidacySummaries({
-        hasRole: context.auth?.hasRole,
+        hasRole: context.auth!.hasRole,
         getCandidacySummaries: candidacyDb.getCandidacies,
         getCandidacySummariesForUser: candidacyDb.getCandidaciesForUser,
-      })({ IAMId: context.auth.userInfo?.sub });
+      })({ IAMId: context.auth!.userInfo!.sub });
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
