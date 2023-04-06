@@ -8,7 +8,7 @@ import Image from "next/image";
 export const ExperienceReconnue = () => (
   <section
     id="avenir-professionnel"
-    className="w-full max-w-[1248px] mx-auto mt-[80px] overflow-x-hidden sm:flex lg:items-center"
+    className="w-full max-w-[1248px] mx-auto !mt-[200px] overflow-x-hidden sm:flex lg:items-center"
   >
     <div className="px-5 sm:flex-1">
       <header>
