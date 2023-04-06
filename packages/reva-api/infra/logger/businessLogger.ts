@@ -1,43 +1,26 @@
 import { CandidacyBusinessEvent } from "../../domain/types/candidacy";
 import { CandidateBusinessEvent } from "../../domain/types/candidate";
-import { getAccountFromKeycloakId } from "../database/postgres/accounts";
 import { logger } from "./logger";
-import * as iam from "../iam/keycloak";
+
+export enum BusinessTargetType {
+  CANDIDATE = "CANDIDATE",
+  CANDIDACY = "CANDIDACY",
+  ACCOUNT = "ACCOUNT",
+  SUBSCRIPTION_REQUEST = "SUBSCRIPTION_REQUEST",
+  FUNDING_REQUEST = "FUNDING_REQUEST",
+  PAYMENT_REQUEST = "PAYMENT_REQUEST",
+}
 
 interface BusinessEvent {
-  requestContext: GraphqlContext;
+  userId?: string;
+  userEmail?: string;
+  targetType: BusinessTargetType;
   eventType: CandidacyBusinessEvent | CandidateBusinessEvent;
-  isError: boolean;
   targetId?: string;
+  isError: boolean;
   extraInfo?: Record<string, unknown>;
 }
 
 export async function logBusinessEvent(event: BusinessEvent) {
-  logger.info({
-    eventType: event.eventType,
-    isError: event.isError,
-    targetId: event.targetId,
-    extraInfo: event.extraInfo,
-    ...(await withAuthenticatedUserInfo(event)),
-  });
+  logger.info(event);
 }
-
-const withAuthenticatedUserInfo = async (event: BusinessEvent) =>
-  event.requestContext.auth
-    ? {
-        userKeycloakId: event.requestContext.auth.sub,
-        userRoles: event.requestContext.auth.realm_access?.roles || [],
-        userEmail: await getKeycloakUserEmail(
-          event.requestContext.auth,
-          event.requestContext.app
-        ),
-      }
-    : {};
-
-const getKeycloakUserEmail = async (auth: ContextAuth, app: ContextApp) => {
-  // requestContext.app.keycloak || requestContext.app.getKeycloakAdmin()
-  const eitherMaybeAccount = await iam.getAccount(app.getKeycloakAdmin())({username: "plop", email: ""});
-  // return eitherAccount.isRight()
-  //   ? eitherAccount.extract().email
-  //   : `[error fetching email] ${eitherAccount.extract()}`;
-};

@@ -27,7 +27,11 @@ import { updateExperienceOfCandidacy } from "../../../domain/features/updateExpe
 import { updateGoalsOfCandidacy } from "../../../domain/features/updateGoalsOfCandidacy";
 import { confirmTrainingFormByCandidate } from "../../../domain/features/validateTrainingFormByCandidate";
 import { Role } from "../../../domain/types/account";
-import { Admissibility, Candidacy, CandidacyBusinessEvent } from "../../../domain/types/candidacy";
+import {
+  Admissibility,
+  Candidacy,
+  CandidacyBusinessEvent,
+} from "../../../domain/types/candidacy";
 import * as admissibilityDb from "../../database/postgres/admissibility";
 import * as basicSkillDb from "../../database/postgres/basicSkills";
 import * as candidacyDb from "../../database/postgres/candidacies";
@@ -38,7 +42,10 @@ import * as organismDb from "../../database/postgres/organisms";
 import * as reorientationReasonDb from "../../database/postgres/reorientationReasons";
 import * as trainingDb from "../../database/postgres/trainings";
 import { logger } from "../../logger";
-import { logBusinessEvent } from "../../logger/businessLogger";
+import {
+  BusinessTargetType,
+  logBusinessEvent,
+} from "../../logger/businessLogger";
 import { notifyNewCandidacy } from "../../mattermost";
 import { resolversSecurityMap } from "./security";
 
@@ -87,7 +94,7 @@ const unsafeResolvers = {
   Query: {
     getCandidacy: async (
       _: unknown,
-      { deviceId }: { deviceId: string },
+      { deviceId }: { deviceId: string }
     ): Promise<mercurius.ErrorWithProps | Candidacy> => {
       const result = await getDeviceCandidacy({
         getCandidacyFromDeviceId: candidacyDb.getCandidacyFromDeviceId,
@@ -98,10 +105,7 @@ const unsafeResolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
-    getCandidacyById: async (
-      _: unknown,
-      { id }: { id: string },
-    ) => {
+    getCandidacyById: async (_: unknown, { id }: { id: string }) => {
       const result = await getCandidacy({
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
       })({ id });
@@ -114,7 +118,7 @@ const unsafeResolvers = {
     getCandidacies: async (
       _parent: unknown,
       _params: { deviceId: string },
-      context: GraphqlContext,
+      context: GraphqlContext
     ) => {
       const result = await getCandidacySummaries({
         hasRole: context.auth!.hasRole,
@@ -189,11 +193,12 @@ const unsafeResolvers = {
         departmentId: candidacy.departmentId,
       });
 
-      logger.info({
-        // userId: context.auth.userInfo.pub as string,
-        action: "Create Candidacy",
-        isFailure: result.isLeft(),
-        target: result.isLeft() ? undefined : (result.extract() as Candidacy).id,
+      logBusinessEvent({
+        userEmail: candidacy.deviceId,
+        targetType: BusinessTargetType.CANDIDACY,
+        eventType: CandidacyBusinessEvent.CREATED_CANDIDACY,
+        targetId: result.isRight() ? result.extract().id : undefined,
+        isError: result.isLeft(),
       });
 
       return result
@@ -202,7 +207,8 @@ const unsafeResolvers = {
     },
     candidacy_submitCandidacy: async (
       _: unknown,
-      payload: { deviceId: string; candidacyId: string }
+      payload: { deviceId: string; candidacyId: string },
+      context: GraphqlContext
     ) => {
       const result = await submitCandidacy({
         updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
@@ -211,11 +217,24 @@ const unsafeResolvers = {
           candidacyDb.existsCandidacyHavingHadStatus,
       })({ candidacyId: payload.candidacyId });
 
+      logBusinessEvent({
+        userId: context.auth.userInfo?.sub,
+        userEmail: context.auth.userInfo?.email,
+        targetType: BusinessTargetType.CANDIDACY,
+        eventType: CandidacyBusinessEvent.SUBMITTED_CANDIDACY,
+        targetId: result.isRight() ? result.extract().id : undefined,
+        isError: result.isLeft(),
+      });
+
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
-    candidacy_updateCertification: async (context: GraphqlContext, payload: any) => {
+    candidacy_updateCertification: async (
+      _: unknown,
+      payload: any,
+      context: GraphqlContext
+    ) => {
       const result = await updateCertificationOfCandidacy({
         updateCertification: candidacyDb.updateCertification,
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
@@ -225,9 +244,10 @@ const unsafeResolvers = {
         certificationId: payload.certificationId,
         departmentId: payload.departmentId,
       });
-
       logBusinessEvent({
-        requestContext: context,
+        userId: context.auth.userInfo?.sub,
+        userEmail: context.auth.userInfo?.email,
+        targetType: BusinessTargetType.ACCOUNT,
         eventType: CandidacyBusinessEvent.UPDATED_CERTIFICATION,
         targetId: result.isRight() ? result.extract().id : undefined,
         isError: result.isLeft(),
@@ -235,7 +255,6 @@ const unsafeResolvers = {
           certificationId: payload.certificationId,
         },
       });
-
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
@@ -248,7 +267,17 @@ const unsafeResolvers = {
         candidacyId: payload.candidacyId,
         experience: payload.experience,
       });
-
+      logBusinessEvent({
+        userId: context.auth.userInfo?.sub,
+        userEmail: context.auth.userInfo?.email,
+        targetType: BusinessTargetType.ACCOUNT,
+        eventType: CandidacyBusinessEvent.UPDATED_CERTIFICATION,
+        targetId: result.isRight() ? result.extract().id : undefined,
+        isError: result.isLeft(),
+        extraInfo: {
+          certificationId: payload.certificationId,
+        },
+      });
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();

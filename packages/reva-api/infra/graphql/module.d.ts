@@ -19,7 +19,10 @@ interface PaginatedListResult<T> {
 interface ContextAuth {
   hasRole: (role: Role) => boolean
   token?: string;
-  userInfo: {
+  userInfo?: {
+    email: string;
+    email_verified: boolean;
+    preferred_username: string;
     realm_access?: {
       roles: KeyCloakUserRole[];
     };
@@ -34,6 +37,6 @@ interface ContextApp {
 
 interface GraphqlContext {
   reply?: unknown;
-  auth?: ContextAuth;
+  auth: ContextAuth;
   app: ContextApp;
 }
