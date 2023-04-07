@@ -81,7 +81,6 @@ export type MainEvent =
   | selectedDepartment
   | SelectCertification
   | { type: "SHOW_PROJECT_HOME"; certification: Certification }
-  | { type: "EDIT_CONTACT" }
   | { type: "ADD_EXPERIENCE" }
   | { type: "EDIT_EXPERIENCE"; index: number }
   | { type: "EDIT_GOALS" }
@@ -768,9 +767,6 @@ export const mainMachine =
             on: {
               EDIT_GOALS: {
                 target: "projectGoals",
-              },
-              EDIT_CONTACT: {
-                target: "projectContact",
               },
               EDIT_ORGANISM: {
                 target: "projectOrganism",
