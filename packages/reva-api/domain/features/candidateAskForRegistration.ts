@@ -1,4 +1,4 @@
-import { Either, EitherAsync, Right } from "purify-ts";
+import { Either, EitherAsync } from "purify-ts";
 
 import { CandidateRegistrationInput } from "../types/candidate";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
@@ -8,6 +8,7 @@ interface CandidateInput {
   phone: string;
   firstname: string;
   lastname: string;
+  departmentId: string;
 }
 
 interface AskForRegistrationDeps {

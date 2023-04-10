@@ -16,6 +16,7 @@ export interface Candidate {
   vulnerabilityIndicator?: VulnerabilityIndicator | null;
   gender?: Gender | null;
   highestDegree?: Degree | null;
+  departmentId: string;
 }
 
 export type Gender = "undisclosed" | "man" | "woman";
@@ -27,6 +28,7 @@ export interface CandidateRegistrationInput {
   lastname: string;
   email: string;
   phone: string;
+  departmentId: string;
   action: "registration";
 }
 

@@ -14,8 +14,14 @@ import { prismaClient } from "../../database/postgres/client";
 let organism: Organism, candidate: Candidate, candidacy: Candidacy;
 
 beforeAll(async () => {
+  const ileDeFrance = await prismaClient.department.findFirst({
+    where: { code: "75" },
+  });
+
   organism = await prismaClient.organism.create({ data: organismIperia });
-  candidate = await prismaClient.candidate.create({ data: candidateJPL });
+  candidate = await prismaClient.candidate.create({
+    data: { ...candidateJPL, departmentId: ileDeFrance?.id || "" },
+  });
   candidacy = await prismaClient.candidacy.create({
     data: {
       deviceId: candidate.email,
@@ -76,7 +82,7 @@ test("get existing Candidacy with admin user", async () => {
   });
 });
 
-test("get non existing candidacy should yield errors", async() => {
+test("get non existing candidacy should yield errors", async () => {
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -87,10 +93,9 @@ test("get non existing candidacy should yield errors", async() => {
       requestType: "query",
       endpoint: "getCandidacyById",
       arguments: { id: "notfound" },
-      returnFields:
-        "{id}",
+      returnFields: "{id}",
     },
   });
   expect(resp.statusCode).toEqual(200);
   expect(resp.json()).toHaveProperty("errors");
-})
+});

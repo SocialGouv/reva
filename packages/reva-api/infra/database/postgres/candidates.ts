@@ -44,6 +44,7 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
         firstname: candidate.firstname,
         lastname: candidate.lastname,
         phone: candidate.phone,
+        departmentId: candidate.departmentId,
         keycloakId: candidate.keycloakId,
       },
     });
@@ -85,6 +86,7 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
                 },
               },
               admissibility: { create: {} },
+              departmentId: candidate.departmentId,
             },
           },
         },

@@ -4,6 +4,7 @@ context("Funding Request Sent", () => {
   describe("Testing correct screen", () => {
     it("display all fields", () => {
       cy.intercept("POST", "/api/graphql", (req) => {
+        stubQuery(req, "getDepartments", "departments.json");
         stubMutation(
           req,
           "candidate_login",

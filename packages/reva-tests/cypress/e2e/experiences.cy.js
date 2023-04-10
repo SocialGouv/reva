@@ -9,6 +9,7 @@ import { stubMutation, stubQuery } from "../utils/graphql";
 context("Experiences", () => {
   it("add and edit an experience", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(req, "getDepartments", "departments.json");
       stubMutation(
         req,
         "candidate_login",

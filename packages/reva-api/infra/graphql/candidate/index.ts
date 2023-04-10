@@ -228,6 +228,7 @@ export const resolvers = {
           phone: string;
           firstname: string;
           lastname: string;
+          departmentId: string;
         };
       }
     ) => {

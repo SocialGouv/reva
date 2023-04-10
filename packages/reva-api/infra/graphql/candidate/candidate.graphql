@@ -48,6 +48,7 @@ input CandidateInput {
   phone: String!
   firstname: String!
   lastname: String!
+  departmentId: String!
 }
 
 input FullCandidateInput {

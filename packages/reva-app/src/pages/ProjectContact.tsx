@@ -1,5 +1,6 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
+import Select from "@codegouvfr/react-dsfr/Select";
 import { useActor } from "@xstate/react";
 import { FormOptionalFieldsDisclaimer } from "components/atoms/FormOptionalFieldsDisclaimer/FormOptionalFieldsDisclaimer";
 import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/ErrorAlertFromState";
@@ -24,6 +25,7 @@ interface FormElements extends HTMLFormControlsCollection {
   lastname: HTMLInputElement;
   phone: HTMLInputElement;
   email: HTMLInputElement;
+  department: HTMLSelectElement;
 }
 
 interface ContactFormElement extends HTMLFormElement {
@@ -32,6 +34,14 @@ interface ContactFormElement extends HTMLFormElement {
 
 export const ProjectContact = ({ mainService }: ProjectContactProps) => {
   const [state, send] = useActor(mainService);
+
+  const selectsOptionsDepartments: { label: string; value: string }[] =
+    state.context.departments
+      .map((r) => ({
+        label: r.label,
+        value: r.id,
+      }))
+      .sort((a, b) => new Intl.Collator("fr").compare(a.label, b.label));
 
   const hasCandidacy = !!state.context.candidacyId;
   const onSubmit = (event: React.SyntheticEvent<ContactFormElement>) => {
@@ -42,6 +52,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
       lastname: elements.lastname.value || null,
       phone: elements.phone.value || null,
       email: elements.email.value || null,
+      departmentId: elements.department.value || null,
     };
     send({
       type: "SUBMIT_CONTACT",
@@ -52,6 +63,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
   const lastnameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
+  const departementRef = useRef<HTMLSelectElement>(null);
 
   return (
     <Page title="Création de compte">
@@ -125,6 +137,27 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
               spellCheck: "false",
             }}
           />
+          <Select
+            className="my-4"
+            data-test="certificates-select-department"
+            label="Département"
+            hint="Sélectionner votre département de résidence"
+            nativeSelectProps={{
+              name: "department",
+              defaultValue: "",
+              required: true,
+              ref: departementRef,
+            }}
+          >
+            <option value="" disabled={true} hidden={true}>
+              Mon département
+            </option>
+            {selectsOptionsDepartments.map((d) => (
+              <option key={d.value} value={d.value}>
+                {d.label}
+              </option>
+            ))}
+          </Select>
         </fieldset>
         <Button data-test="project-contact-add" className="mt-6">
           Créer mon compte

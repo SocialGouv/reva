@@ -5,6 +5,7 @@ import {
 } from "@apollo/client";
 import { Device } from "@capacitor/device";
 import { useContext, useMemo } from "react";
+import { getDepartments } from "services/referenceDataService";
 
 import { mainMachine } from "../../machines/main.machine";
 import {
@@ -46,6 +47,10 @@ export const useConfiguredMainMachine = () => {
               query: context.selectedDepartment?.id || "",
             });
           },
+          loadDepartments: () =>
+            getDepartments(client as ApolloClient<object>)({
+              token,
+            }),
           initializeApp: async (_context, _event, { data }) => {
             if (authenticated) {
               const data = await getCandidateWithCandidacy(

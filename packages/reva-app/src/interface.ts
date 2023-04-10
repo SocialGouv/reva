@@ -16,6 +16,7 @@ export interface Contact {
   lastname: null | string;
   phone: null | string;
   email: null | string;
+  departmentId: null | string;
 }
 
 export type duration =

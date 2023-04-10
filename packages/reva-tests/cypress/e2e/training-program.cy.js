@@ -4,6 +4,7 @@ context("Training Program", () => {
   describe("Testing descriptions", () => {
     beforeEach(() => {
       cy.intercept("POST", "/api/graphql", (req) => {
+        stubQuery(req, "getDepartments", "departments.json");
         stubMutation(
           req,
           "candidate_login",
@@ -45,6 +46,7 @@ context("Training Program", () => {
   describe("Testing descriptions with missing fields", () => {
     beforeEach(() => {
       cy.intercept("POST", "/api/graphql", (req) => {
+        stubQuery(req, "getDepartments", "departments.json");
         stubQuery(
           req,
           "candidate_login",
@@ -80,6 +82,7 @@ context("Training Program", () => {
   describe("Testing Checkbox logic", () => {
     it("validates checked condition and its mechanics", () => {
       cy.intercept("POST", "/api/graphql", (req) => {
+        stubQuery(req, "getDepartments", "departments.json");
         stubMutation(req, "candidate_login", "candidate2-training-sent.json");
         stubQuery(req, "getReferential", "referential.json");
         stubQuery(
@@ -116,6 +119,7 @@ context("Training Program", () => {
   describe("Testing training confirmed but sent again", () => {
     it("should be able to accept and submit the training again", () => {
       cy.intercept("POST", "/api/graphql", (req) => {
+        stubQuery(req, "getDepartments", "departments.json");
         stubMutation(
           req,
           "candidate_login",

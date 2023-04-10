@@ -169,6 +169,8 @@ model Candidate {
   firstname3               String?                 @db.VarChar(255)
   lastname                 String                  @db.VarChar(255)
   phone                    String                  @db.VarChar(255)
+  departmentId             String                  @map("department_id") @db.Uuid
+  department               Department              @relation(fields: [departmentId], references: [id])
   highestDegree            Degree?                 @relation(fields: [highestDegreeId], references: [id])
   highestDegreeId          String?                 @map("highest_degree_id") @db.Uuid
   vulnerabilityIndicator   VulnerabilityIndicator? @relation(fields: [vulnerabilityIndicatorId], references: [id])
@@ -251,6 +253,7 @@ model Department {
   candidacies Candidacy[]
   createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime?   @map("updated_at") @db.Timestamptz(6)
+  Candidate   Candidate[]
 
   @@map("department")
 }

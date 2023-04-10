@@ -183,6 +183,7 @@ export const askForRegistration =
     lastname: null | string;
     phone: null | string;
     email: null | string;
+    departmentId: null | string;
   }) => {
     const { data } = await client.mutate({
       mutation: ASK_FOR_REGISTRATION,
@@ -298,12 +299,6 @@ const GET_REFERENTIAL = gql`
         order
       }
     }
-
-    getDepartments {
-      id
-      code
-      label
-    }
   }
 `;
 
@@ -324,11 +319,11 @@ export const confirmRegistration =
         data: { candidateLogged },
       },
       {
-        data: { getReferential, getDepartments },
+        data: { getReferential },
       },
     ] = await Promise.all([registrationMutation, referentialQuery]);
 
-    return initializeApp({ candidateLogged, getReferential, getDepartments });
+    return initializeApp({ candidateLogged, getReferential });
   };
 
 const GET_CANDIDATE_WITH_CANDIDACY = gql`
@@ -378,18 +373,13 @@ export const getCandidateWithCandidacy =
     };
   };
 
-function initializeApp({
-  candidateLogged,
-  getReferential,
-  getDepartments,
-}: any) {
+function initializeApp({ candidateLogged, getReferential }: any) {
   return {
     tokens: candidateLogged.tokens,
     candidacy: formatCandidacy(candidateLogged.candidate, getReferential),
     referentials: {
       goals: getReferential.goals,
     },
-    departments: getDepartments,
   };
 }
 

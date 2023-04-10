@@ -5,6 +5,7 @@ const email = "email@example.com";
 context("Login", () => {
   it("submit email", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(req, "getDepartments", "departments.json");
       stubQuery(req, "candidate_askForLogin", "login.json");
     });
     cy.login({ token: null });
@@ -18,6 +19,10 @@ context("Login", () => {
   });
 
   it("access login page from contact page", function () {
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(req, "getDepartments", "departments.json");
+    });
+
     cy.auth();
     cy.visit("/");
     cy.get('[data-test="project-contact-login"]').click();
@@ -26,6 +31,7 @@ context("Login", () => {
 
   it("use an expired token", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(req, "getDepartments", "departments.json");
       stubMutation(req, "candidate_login", "login-expired.json", 500);
       stubQuery(req, "getReferential", "referential.json");
     });

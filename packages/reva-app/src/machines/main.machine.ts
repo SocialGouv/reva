@@ -199,15 +199,33 @@ export const mainMachine =
           isCertificationPartial: false,
           isTrainingProgramConfirmed: false,
         },
-        // TODO remove this hack when url handler is done
-        initial:
-          loginToken || authenticated
-            ? "projectHomeLoading"
-            : isLogin
-            ? "loginHome"
-            : "projectContact",
+        initial: "loadDepartments",
         id: "mainMachine",
         states: {
+          loadDepartments: {
+            invoke: {
+              src: "loadDepartments",
+              onDone: [
+                {
+                  actions: ["assignDepartmentsToContext"],
+                  target:
+                    loginToken || authenticated
+                      ? "projectHomeLoading"
+                      : isLogin
+                      ? "loginHome"
+                      : "projectContact",
+                },
+              ],
+              onError: [
+                {
+                  actions: assign({
+                    error: (_, _event) =>
+                      "Une erreur est survenue lors du chargement du réferentiel",
+                  }),
+                },
+              ],
+            },
+          },
           loginHome: {
             initial: "idle",
             states: {
@@ -846,7 +864,13 @@ export const mainMachine =
       },
       {
         actions: {
-          loadCandidacy: assign((_, rawEvent) => {
+          assignDepartmentsToContext: assign((_, rawEvent) => {
+            const event = rawEvent as DoneInvokeEvent<any>;
+            return {
+              departments: event.data.departments,
+            };
+          }),
+          loadCandidacy: assign((context, rawEvent) => {
             const event = rawEvent as DoneInvokeEvent<any>;
 
             return {
@@ -865,10 +889,10 @@ export const mainMachine =
                 lastname: event.data.candidacy.lastname,
                 email: event.data.candidacy.email,
                 phone: event.data.candidacy.phone,
+                departmentId: event.data.candidacy.departmentId,
               },
               organism: event.data.candidacy.organism,
-              departments: event.data.departments,
-              selectedDepartment: event.data.departments.find(
+              selectedDepartment: context.departments.find(
                 (department: Department) =>
                   department.id === event.data.candidacy.department?.id
               ),
