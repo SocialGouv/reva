@@ -11,8 +11,8 @@ export const ProjectSubmissionConfirmation = () => {
       <BackToHomeButton />
       <h1 className="text-2xl text-black mt-6">Envoi de votre candidature</h1>
       <p className="mt-6">
-        Après réception de votre candidature, votre référent vous contactera
-        pour fixer un rendez-vous pour définir votre parcours.
+        Après réception de votre candidature, votre organisme d'accompagnement
+        vous contactera pour fixer un rendez-vous pour définir votre parcours.
       </p>
       <Button
         className="mt-6 justify-center w-[100%]  md:w-fit"

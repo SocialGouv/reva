@@ -105,9 +105,11 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
   if (!candidacyId) return <p>Aucun Id de candidat trouvé</p>;
 
   return (
-    <Page title="Votre référent">
+    <Page title="Votre organisme d'accompagnement">
       <BackToHomeButton />
-      <h1 className="mt-4 text-3xl font-bold">Votre référent</h1>
+      <h1 className="mt-4 text-3xl font-bold">
+        Votre organisme d'accompagnement
+      </h1>
       {selectedDepartment && (
         <>
           <p className="mt-6 text-black">
@@ -140,7 +142,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
           },
         }}
       >
-        Valider votre référent
+        Valider votre organisme d'accompagnement
       </Button>
     </Page>
   );

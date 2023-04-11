@@ -12,8 +12,8 @@ export const TrainingProgramTimelineElement = () => {
         ["PROJET", "VALIDATION", "PRISE_EN_CHARGE"].includes(
           state.context.candidacyStatus
         )
-          ? "Votre référent va bientôt vous contacter pour définir avec vous votre parcours d’accompagnement. Vous pourrez prochainement valider le nombre d’heures d’accompagnement et de formation prévu."
-          : "Validez le nombre d’heures d’accompagnement et de formation défini par votre référent"
+          ? "Votre organisme d'accompagnement va bientôt vous contacter pour définir avec vous votre parcours d’accompagnement. Vous pourrez prochainement valider le nombre d’heures d’accompagnement et de formation prévu."
+          : "Validez le nombre d’heures d’accompagnement et de formation défini par votre organisme d'accompagnement"
       }
       status={
         state.context.candidacyStatus === "PROJET"

@@ -7,7 +7,7 @@ export const OrganismTimelineElement = () => {
 
   return (
     <TimelineElement
-      title="Votre référent"
+      title="Votre organisme d'accompagnement"
       description="Il vous guide tout au long du parcours"
       status={
         state.context.candidacyStatus === "PROJET"
@@ -59,8 +59,8 @@ export const OrganismTimelineElement = () => {
                 disabled={status === "disabled"}
               >
                 {state.context.organism
-                  ? "Modifier votre référent"
-                  : "Choisir votre référent"}
+                  ? "Modifier votre organisme d'accompagnement"
+                  : "Choisir votre organisme d'accompagnement"}
               </Button>
             )}
           </div>
