@@ -91,10 +91,10 @@ view context model =
     let
         candidacySkeleton =
             div
-                [ class "border border-gray-100 p-6 mb-8" ]
-                [ View.skeleton "h-4 w-120"
-                , View.skeleton "my-4 h-6 w-96"
-                , View.skeleton "my-4 mb-10 h-6 w-96"
+                [ class "border border-gray-100 p-6 mb-8 h-[198px]" ]
+                [ View.skeleton "h-6 w-120"
+                , View.skeleton "my-5 h-5 w-96"
+                , View.skeleton "my-5 h-5 w-96"
                 ]
     in
     case model.state.candidacies of
@@ -189,25 +189,24 @@ viewMain navContent content =
         , div
             [ class "z-1 relative fr-container" ]
             [ div
-                [ class "fr-grid-row" ]
+                [ class "mt-20 fr-grid-row" ]
                 [ div
                     [ class "fr-col-12 fr-col-md-4" ]
                     [ nav
                         [ role "navigation"
                         , class "hidden md:order-first md:flex md:flex-col flex-shrink-0"
                         , attribute "aria-labelledby" "fr-sidemenu-title"
-                        , class "mt-12 fr-sidemenu"
+                        , class "fr-sidemenu"
                         ]
                         [ div
                             [ class "fr-sidemenu__inner"
-                            , class "text-sm text-gray-600"
                             , class "min-h-[480px] bg-white shadow pl-4"
                             ]
                             navContent
                         ]
                     ]
                 , div
-                    [ class "mt-12 bg-white shadow"
+                    [ class "bg-white shadow"
                     , class "fr-col-12 fr-col-md-8"
                     ]
                     content
@@ -219,7 +218,7 @@ viewMain navContent content =
 viewDirectoryHeader : Context -> Html Msg
 viewDirectoryHeader context =
     div
-        [ class "px-6 py-4" ]
+        [ class "p-6" ]
         [ h2
             []
             [ if Api.Token.isAdmin context.token then
@@ -229,7 +228,7 @@ viewDirectoryHeader context =
                 text "Espace pro architecte de parcours"
             ]
         , p
-            []
+            [ class "text-xl" ]
             [ if Api.Token.isAdmin context.token then
                 text "En tant qu’administrateur, vous pouvez gérer toutes les candidatures et faire une recherche par architecte de parcours."
 
@@ -245,6 +244,7 @@ viewDirectoryHeader context =
                     [ text "Rechercher" ]
                 , input
                     [ type_ "search"
+                    , name "search"
                     , name "search"
                     , id "search"
                     , class "fr-input w-full h-10"
@@ -284,7 +284,7 @@ viewDirectory context ( firstCandidacy, candidacies ) =
         [ div
             [ dataTest "directory-group-name"
             , class "top-0 text-xl font-semibold text-slate-700"
-            , class "bg-white"
+            , class "bg-white text-gray-900"
             ]
             [ h4 [ class "mb-0" ] [ text (Candidacy.toCategoryString firstCandidacy ++ " (" ++ String.fromInt candidaciesInCategory ++ ")") ] ]
         , List.map (viewItem context) (firstCandidacy :: candidacies)
@@ -302,11 +302,11 @@ viewItem context candidacy =
     li
         [ dataTest "directory-item", attribute "style" "--li-bottom:0" ]
         [ div
-            [ class "flex-1 min-w-0" ]
+            [ class "text-lg flex-1 min-w-0" ]
             [ div
                 [ class "border py-5 pl-6 pr-4 my-8" ]
                 [ p
-                    [ class "font-semibold truncate mb-2"
+                    [ class "text-lg font-semibold truncate mb-2"
                     , classList [ ( "italic", candidacy.certification == Nothing ) ]
                     ]
                     [ Maybe.map .label candidacy.certification
@@ -314,7 +314,7 @@ viewItem context candidacy =
                         |> text
                     ]
                 , p
-                    [ class "flex my-3" ]
+                    [ class "text-lg flex my-3" ]
                     [ div [ class "flex items-center space-x-12" ]
                         [ div [ class "flex items-center space-x-2" ]
                             [ div
@@ -355,7 +355,7 @@ viewItem context candidacy =
                     [ case ( Api.Token.isAdmin context.token, candidacy.organism ) of
                         ( True, Just organism ) ->
                             div
-                                [ class "text-sm whitespace-nowrap" ]
+                                [ class "text-base text-gray-500 whitespace-nowrap" ]
                                 [ text organism.label ]
 
                         _ ->
