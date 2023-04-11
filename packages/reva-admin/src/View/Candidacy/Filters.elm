@@ -65,25 +65,23 @@ view candidacies filters context =
                 []
                 [ link (Just loweredStatus) (Candidacy.statusToCategoryString status) ]
     in
-    [ div [ class "mx-2 my-8 text-sm text-gray-600" ]
-        [ ul
-            [ class "font-semibold"
-            , class "fr-sidemenu fr-sidemenu--right"
-            ]
-            [ li
+    [ ul
+        [ class "font-semibold"
+        , class "fr-sidemenu__list"
+        ]
+        [ li
+            []
+            [ link Nothing "Toutes les candidatures actives"
+            , li
                 []
-                [ link Nothing "Toutes les candidatures actives"
-                , li
-                    []
-                    [ ul
-                        [ class "border-l ml-3 pl-2 font-normal" ]
-                      <|
-                        List.map viewFilter statuses
-                    ]
-                , link (Just "abandon") "Toutes les candidatures abandonnées"
-                , link (Just "archive") "Toutes les candidatures archivées"
-                , link (Just "projet") "Tous les projets en cours d'édition"
+                [ ul
+                    [ class "border-l ml-3 pl-2 font-normal" ]
+                  <|
+                    List.map viewFilter statuses
                 ]
+            , link (Just "abandon") "Toutes les candidatures abandonnées"
+            , link (Just "archive") "Toutes les candidatures archivées"
+            , link (Just "projet") "Tous les projets en cours d'édition"
             ]
         ]
     ]
@@ -96,8 +94,8 @@ viewLink context filters count maybeStatus label =
             filters.status == maybeStatus
     in
     a
-        [ class "block group h-10 my-2 pl-3 pr-2"
-        , class "flex items-center justify-between transition"
+        [ class "block group my-4 pl-3 pr-2 py-1"
+        , class "flex items-start justify-between transition"
         , classList
             [ ( "bg-gray-200 text-gray-900"
               , isSelected
@@ -109,20 +107,13 @@ viewLink context filters count maybeStatus label =
         , Route.href context.baseUrl <|
             Route.Candidacies { status = maybeStatus }
         ]
-        [ span [] [ text label ], viewCount isSelected count ]
+        [ span [] [ text label ], viewCount count ]
 
 
-viewCount : Bool -> Int -> Html msg
-viewCount isSelected count =
+viewCount : Int -> Html msg
+viewCount count =
     div
-        [ class "flex items-center justify-center"
-        , class "ml-8"
-        , class "rounded-full px-2 h-6"
-        , class "transition group-hover:bg-gray-300"
+        [ class "flex items-center justify-center mt-1"
         , class "text-xs font-semibold"
-        , classList
-            [ ( "bg-gray-300 text-gray-600", isSelected )
-            , ( "bg-gray-200 text-gray-500", not isSelected )
-            ]
         ]
         [ text <| String.fromInt count ]
