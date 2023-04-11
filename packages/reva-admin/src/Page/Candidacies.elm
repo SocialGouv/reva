@@ -91,9 +91,10 @@ view context model =
     let
         candidacySkeleton =
             div
-                []
+                [ class "border border-gray-100 p-6 mb-8" ]
                 [ View.skeleton "h-4 w-120"
-                , View.skeleton "mt-2 mb-12 h-12 w-96"
+                , View.skeleton "my-4 h-6 w-96"
+                , View.skeleton "my-4 mb-10 h-6 w-96"
                 ]
     in
     case model.state.candidacies of
@@ -102,17 +103,19 @@ view context model =
 
         Loading ->
             viewMain
+                [ View.skeleton "ml-3 mt-8 mb-6 h-5 w-[240px]"
+                , View.skeleton "ml-5 my-6 h-5 w-[160px]"
+                ]
                 [ viewDirectoryHeader context
                 , div
-                    [ class "py-3 px-10" ]
-                    [ View.skeleton "mb-10 h-6 w-56"
+                    [ class "px-6" ]
+                    [ View.skeleton "mt-2 mb-8 h-6 w-[300px]"
                     , candidacySkeleton
                     , candidacySkeleton
                     , candidacySkeleton
                     , candidacySkeleton
                     ]
                 ]
-                [ View.skeleton "ml-10 mt-8 bg-gray-200 mt-6 h-10 w-[353px]" ]
 
         Failure errors ->
             div [ class "text-red-500" ] [ text errors ]
@@ -172,29 +175,51 @@ viewContent context filters candidacies filteredCandidacies =
                 |> List.sortBy (\( c, _ ) -> Candidacy.toDirectoryPosition c)
     in
     viewMain
-        (viewDirectoryPanel context candidaciesByStatus)
         (View.Candidacy.Filters.view candidacies filters context)
+        (viewDirectoryPanel context candidaciesByStatus)
 
 
 viewMain : List (Html msg) -> List (Html msg) -> Html msg
-viewMain leftContent rightContent =
+viewMain navContent content =
     node "main"
-        [ class "grow flex h-full min-w-0 border-l-[73px] border-black bg-gray-100" ]
-    <|
-        [ aside
-            [ class "hidden md:order-first md:flex md:flex-col flex-shrink-0"
-            , class "w-full w-[780px] h-screen"
-            , class "bg-white"
+        [ role "main"
+        , class "flex relative"
+        ]
+        [ div [ class "bg-blue-900 w-screen inset-x absolute z-0 pb-[400px]" ] []
+        , div
+            [ class "z-1 relative fr-container" ]
+            [ div
+                [ class "fr-grid-row" ]
+                [ div
+                    [ class "fr-col-12 fr-col-md-4" ]
+                    [ nav
+                        [ role "navigation"
+                        , class "hidden md:order-first md:flex md:flex-col flex-shrink-0"
+                        , attribute "aria-labelledby" "fr-sidemenu-title"
+                        , class "mt-12 fr-sidemenu"
+                        ]
+                        [ div
+                            [ class "fr-sidemenu__inner"
+                            , class "text-sm text-gray-600"
+                            , class "min-h-[480px] bg-white shadow pl-4"
+                            ]
+                            navContent
+                        ]
+                    ]
+                , div
+                    [ class "mt-12 bg-white shadow"
+                    , class "fr-col-12 fr-col-md-8"
+                    ]
+                    content
+                ]
             ]
-            leftContent
-        , div [] rightContent
         ]
 
 
 viewDirectoryHeader : Context -> Html Msg
 viewDirectoryHeader context =
     div
-        [ class "pl-10 pr-6 pt-10 pb-4" ]
+        [ class "px-6 py-4" ]
         [ h2
             []
             [ if Api.Token.isAdmin context.token then
@@ -242,6 +267,7 @@ viewDirectoryPanel context candidaciesByStatus =
         |> nav
             [ dataTest "directory"
             , class "min-h-0 overflow-y-auto"
+            , class "px-6"
             , attribute "aria-label" "Candidats"
             ]
     ]
@@ -257,12 +283,12 @@ viewDirectory context ( firstCandidacy, candidacies ) =
         [ dataTest "directory-group", class "relative mb-2" ]
         [ div
             [ dataTest "directory-group-name"
-            , class "z-10 sticky top-0 text-xl font-semibold text-slate-700"
-            , class "bg-white px-10"
+            , class "top-0 text-xl font-semibold text-slate-700"
+            , class "bg-white"
             ]
             [ h4 [ class "mb-0" ] [ text (Candidacy.toCategoryString firstCandidacy ++ " (" ++ String.fromInt candidaciesInCategory ++ ")") ] ]
         , List.map (viewItem context) (firstCandidacy :: candidacies)
-            |> ul [ attribute "role" "list", class "list-none relative z-0" ]
+            |> ul [ role "list", class "list-none pl-0 mt-0 relative z-0" ]
         ]
 
 
@@ -278,7 +304,7 @@ viewItem context candidacy =
         [ div
             [ class "flex-1 min-w-0" ]
             [ div
-                [ class "border py-5 pl-6 pr-4 m-5" ]
+                [ class "border py-5 pl-6 pr-4 my-8" ]
                 [ p
                     [ class "font-semibold truncate mb-2"
                     , classList [ ( "italic", candidacy.certification == Nothing ) ]
