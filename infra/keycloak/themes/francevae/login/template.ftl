@@ -23,6 +23,19 @@
     <link rel="shortcut icon" href="${url.resourcesPath}/dsfr/favicon/favicon.ico" type="image/x-icon" />
     <!-- 32×32 -->
     <link rel="manifest" href="${url.resourcesPath}/dsfr/favicon/manifest.webmanifest" crossorigin="use-credentials" />
+    <style>
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+      }
+    </style>
   </head>
 
   <body style="min-height: 100vh; display: flex; flex-direction: column;">
@@ -64,9 +77,9 @@
             </div>
 
             <a class="ml-2 lg:ml-8 no-underline" style="color: black" href="${properties.revaUrl}">
-              <div class="font-bold lg:text-xl">Reva</div>
+              <div class="font-bold lg:text-xl">REVA L'expérimentation</div>
               <div class="hidden lg:block text-base">
-                L'expérimentation
+                REVA, l'expérimentation qui vise à transformer, simplifier et accélérer la VAE.
               </div>
             </a>
 
@@ -75,8 +88,8 @@
     </div>
     </header>
 
-    <main role="main">
-      <section class="section section-grey" style="min-height: calc(100vh - 400px)">
+    <main class="only-dsfr" role="main">
+      <section class="" style="min-height: calc(100vh - 400px); padding-top: 1em; padding-bottom: 1em;">
         <div class="container">
           <#--  <#nested "header">  -->
           <#nested "form">
