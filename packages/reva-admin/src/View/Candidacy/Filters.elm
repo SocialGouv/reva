@@ -66,7 +66,7 @@ view candidacies filters context =
                 [ link (Just loweredStatus) (Candidacy.statusToCategoryString status) ]
     in
     [ ul
-        [ class "font-semibold"
+        [ class "font-semibold text-gray-900 py-2"
         , class "fr-sidemenu__list"
         ]
         [ li
@@ -75,7 +75,7 @@ view candidacies filters context =
             , li
                 []
                 [ ul
-                    [ class "border-l ml-3 pl-2 font-normal" ]
+                    [ class "ml-3 font-normal" ]
                   <|
                     List.map viewFilter statuses
                 ]
@@ -94,26 +94,23 @@ viewLink context filters count maybeStatus label =
             filters.status == maybeStatus
     in
     a
-        [ class "block group my-4 pl-3 pr-2 py-1"
+        [ class "block group my-4 py-1 px-2"
         , class "flex items-start justify-between transition"
+        , class "border-l-2 border-transparent"
         , classList
-            [ ( "bg-gray-200 text-gray-900"
+            [ ( "text-blue-900 border-blue-900"
               , isSelected
               )
-            , ( "hover:text-gray-900"
+            , ( "hover:text-blue-900"
               , not isSelected
               )
             ]
         , Route.href context.baseUrl <|
             Route.Candidacies { status = maybeStatus }
         ]
-        [ span [] [ text label ], viewCount count ]
+        [ text label, viewCount count ]
 
 
 viewCount : Int -> Html msg
 viewCount count =
-    div
-        [ class "flex items-center justify-center mt-1"
-        , class "text-xs font-semibold"
-        ]
-        [ text <| String.fromInt count ]
+    text <| String.concat [ " (", String.fromInt count, ")" ]
