@@ -249,6 +249,10 @@ viewDirectoryPanel context candidaciesByStatus =
 
 viewDirectory : Context -> ( CandidacySummary, List Candidacy.CandidacySummary ) -> Html Msg
 viewDirectory context ( firstCandidacy, candidacies ) =
+    let
+        candidaciesInCategory =
+            List.length candidacies + 1
+    in
     div
         [ dataTest "directory-group", class "relative mb-2" ]
         [ div
@@ -256,7 +260,7 @@ viewDirectory context ( firstCandidacy, candidacies ) =
             , class "z-10 sticky top-0 text-xl font-semibold text-slate-700"
             , class "bg-white px-10"
             ]
-            [ h4 [ class "mb-0" ] [ text (Candidacy.toCategoryString firstCandidacy) ] ]
+            [ h4 [ class "mb-0" ] [ text (Candidacy.toCategoryString firstCandidacy ++ " (" ++ String.fromInt candidaciesInCategory ++ ")") ] ]
         , List.map (viewItem context) (firstCandidacy :: candidacies)
             |> ul [ attribute "role" "list", class "list-none relative z-0" ]
         ]
