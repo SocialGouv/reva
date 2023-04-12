@@ -9,7 +9,7 @@ module Data.Form.PaymentRequest exposing
     , validateConfirmation
     )
 
-import Admin.Object.FundingRequest exposing (basicSkillsCost, certificateSkillsCost, collectiveCost, diagnosisCost, examCost, individualCost, mandatoryTrainingsCost, postExamCost)
+import Admin.Object.FundingRequest exposing (otherTrainingCost, otherTrainingHourCount)
 import Admin.Scalar exposing (Decimal)
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
@@ -44,6 +44,8 @@ type alias PaymentRequestInput =
     , mandatoryTrainingsCost : Decimal
     , certificateSkillsHourCount : Int
     , certificateSkillsCost : Decimal
+    , otherTrainingHourCount : Int
+    , otherTrainingCost : Decimal
     , examHourCount : Int
     , examCost : Decimal
     , invoiceNumber : String
@@ -86,6 +88,10 @@ keys =
     , certificateSkillsEstimatedCost = "certificateSkillsEstimatedCost"
     , certificateSkillsCost = "certificateSkillsCost"
     , otherTraining = "otherTraining"
+    , otherTrainingEstimatedHourCount = "otherTrainingEstimatedHourCount"
+    , otherTrainingHourCount = "otherTrainingHourCount"
+    , otherTrainingEstimatedCost = "otherTrainingEstimatedCost"
+    , otherTrainingCost = "otherTrainingCost"
     , totalTrainingHourCount = "totalTrainingHourCount"
     , examEstimatedHourCount = "examEstimatedHourCount"
     , examHourCount = "examHourCount"
@@ -144,6 +150,8 @@ fromDict formData =
         (decode.decimal .mandatoryTrainingsCost (Admin.Scalar.Decimal "0"))
         (decode.int .certificateSkillsHourCount 0)
         (decode.decimal .certificateSkillsCost (Admin.Scalar.Decimal "0"))
+        (decode.int .otherTrainingHourCount 0)
+        (decode.decimal .otherTrainingCost (Admin.Scalar.Decimal "0"))
         (decode.int .examHourCount 0)
         (decode.decimal .examCost (Admin.Scalar.Decimal "0"))
         (decode.string .invoiceNumber "")
@@ -179,6 +187,8 @@ fundingList funding =
     , ( .certificateSkillsEstimatedHourCount, int .certificateSkillsHourCount )
     , ( .certificateSkillsEstimatedCost, decimal .certificateSkillsCost )
     , ( .otherTraining, string .otherTraining )
+    , ( .otherTrainingEstimatedHourCount, int .otherTrainingHourCount )
+    , ( .otherTrainingEstimatedCost, decimal .otherTrainingCost )
     , ( .examEstimatedHourCount, int .examHourCount )
     , ( .examEstimatedCost, decimal .examCost )
     ]
@@ -231,6 +241,8 @@ paymentRequest funding payment =
             , ( .mandatoryTrainingsCost, decimal .mandatoryTrainingsCost )
             , ( .certificateSkillsHourCount, int .certificateSkillsHourCount )
             , ( .certificateSkillsCost, decimal .certificateSkillsCost )
+            , ( .otherTrainingHourCount, int .otherTrainingHourCount )
+            , ( .otherTrainingCost, decimal .otherTrainingCost )
             , ( .examHourCount, int .examHourCount )
             , ( .examCost, decimal .examCost )
             , ( .invoiceNumber, string .invoiceNumber )

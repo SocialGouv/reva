@@ -94,6 +94,16 @@ certificateSkillsEffectiveCost =
     Object.selectionForField "Data.Scalar.Decimal" "certificateSkillsEffectiveCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
 
 
+otherTrainingEffectiveHourCount : SelectionSet Int Admin.Object.PaymentRequest
+otherTrainingEffectiveHourCount =
+    Object.selectionForField "Int" "otherTrainingEffectiveHourCount" [] Decode.int
+
+
+otherTrainingEffectiveCost : SelectionSet Data.Scalar.Decimal Admin.Object.PaymentRequest
+otherTrainingEffectiveCost =
+    Object.selectionForField "Data.Scalar.Decimal" "otherTrainingEffectiveCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
+
+
 examEffectiveHourCount : SelectionSet Int Admin.Object.PaymentRequest
 examEffectiveHourCount =
     Object.selectionForField "Int" "examEffectiveHourCount" [] Decode.int

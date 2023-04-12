@@ -49,6 +49,8 @@ createOrUpdate candidacyId endpointGraphql token toMsg ( candidacy, referential 
                 payment.basicSkillsCost
                 payment.certificateSkillsHourCount
                 payment.certificateSkillsCost
+                payment.otherTrainingHourCount
+                payment.otherTrainingCost
                 payment.examHourCount
                 payment.examCost
                 payment.invoiceNumber
@@ -123,6 +125,8 @@ selection =
         |> with Admin.Object.PaymentRequest.mandatoryTrainingsEffectiveCost
         |> with Admin.Object.PaymentRequest.certificateSkillsEffectiveHourCount
         |> with Admin.Object.PaymentRequest.certificateSkillsEffectiveCost
+        |> with Admin.Object.PaymentRequest.otherTrainingEffectiveHourCount
+        |> with Admin.Object.PaymentRequest.otherTrainingEffectiveCost
         |> with Admin.Object.PaymentRequest.examEffectiveHourCount
         |> with Admin.Object.PaymentRequest.examEffectiveCost
         |> with Admin.Object.PaymentRequest.invoiceNumber

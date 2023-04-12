@@ -561,6 +561,8 @@ model PaymentRequest {
   certificateSkillsEffectiveCost       Decimal              @map("certificate_skills_effective_cost") @db.Decimal(10, 2)
   examEffectiveHourCount               Int                  @map("exam_effective_hour_count")
   examEffectiveCost                    Decimal              @map("exam_effective_cost") @db.Decimal(10, 2)
+  otherTrainingEffectiveHourCount      Int                  @default(0) @map("other_training_effective_hour_count")
+  otherTrainingEffectiveCost           Decimal              @default(0) @map("other_training_effective_cost") @db.Decimal(10, 2)
   invoiceNumber                        String               @map("invoice_number")
   PaymentRequestBatch                  PaymentRequestBatch?
 

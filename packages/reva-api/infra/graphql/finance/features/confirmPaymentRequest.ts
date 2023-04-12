@@ -178,4 +178,8 @@ export const mapPaymentRequestBatchContent = ({
     paymentRequest.certificateSkillsEffectiveHourCount,
   CoutHeureReaComplFormBlocDeCompetencesCertifiant:
     paymentRequest.certificateSkillsEffectiveCost.toNumber(),
+  NBHeureReaActeFormatifComplémentaire_Autre:
+    paymentRequest.otherTrainingEffectiveHourCount,
+  CoutHeureReaActeFormatifComplémentaire_Autre:
+    paymentRequest.otherTrainingEffectiveCost.toNumber(),
 });

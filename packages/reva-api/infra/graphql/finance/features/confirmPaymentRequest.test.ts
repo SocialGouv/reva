@@ -24,6 +24,8 @@ describe("payment request", () => {
         mandatoryTrainingsEffectiveCost: new Decimal(9),
         postExamEffectiveHourCount: 8,
         postExamEffectiveCost: new Decimal(10),
+        otherTrainingEffectiveHourCount: 2,
+        otherTrainingEffectiveCost: new Decimal(25),
         invoiceNumber: "invoiceNumber_123",
       } as PaymentRequest;
       const batch = mapPaymentRequestBatchContent({
@@ -48,6 +50,8 @@ describe("payment request", () => {
         CoutHeureReaComplFormSavoirsDeBase: 3,
         NbHeureReaJury: 5,
         CoutHeureReaJury: 7,
+        NBHeureReaActeFormatifComplémentaire_Autre: 2,
+        CoutHeureReaActeFormatifComplémentaire_Autre: 25,
         NbHeureReaTotalActesFormatifs: 10,
         NumAction: "numAction_123",
         NumFacture: "invoiceNumber_123",

@@ -118,8 +118,8 @@ export const validatePaymentRequest = (
       certificateSkillsCost: pr.certificateSkillsEffectiveCost,
       examHourCount: pr.examEffectiveHourCount,
       examCost: pr.examEffectiveCost,
-      otherTrainingHourCount: 0,
-      otherTrainingCost: new Decimal(0),
+      otherTrainingHourCount: pr.otherTrainingEffectiveHourCount,
+      otherTrainingCost: pr.otherTrainingEffectiveCost,
     };
     const isCandidateBacNonFragile =
       (candidate.highestDegree?.level || 0) > 4 &&

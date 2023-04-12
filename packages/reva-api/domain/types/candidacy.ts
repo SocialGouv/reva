@@ -200,6 +200,8 @@ export interface PaymentRequest {
   basicSkillsEffectiveCost: Decimal;
   certificateSkillsEffectiveHourCount: number;
   certificateSkillsEffectiveCost: Decimal;
+  otherTrainingEffectiveHourCount: number;
+  otherTrainingEffectiveCost: Decimal;
   examEffectiveHourCount: number;
   examEffectiveCost: Decimal;
   invoiceNumber: string;
@@ -233,6 +235,8 @@ export interface PaymentRequestBatchContent {
   CoutHeureReaComplFormSavoirsDeBase: number;
   NbHeureReaComplFormBlocDeCompetencesCertifiant: number;
   CoutHeureReaComplFormBlocDeCompetencesCertifiant: number;
+  NBHeureReaActeFormatifComplémentaire_Autre: number;
+  CoutHeureReaActeFormatifComplémentaire_Autre: number;
 }
 
 export interface FileUploadSpoolerEntry {

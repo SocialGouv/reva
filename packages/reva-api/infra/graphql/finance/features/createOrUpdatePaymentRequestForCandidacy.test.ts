@@ -23,7 +23,8 @@ const defaultValidPaymentRequest: PaymentRequest = {
   mandatoryTrainingsEffectiveCost: new Decimal(7),
   postExamEffectiveHourCount: 2,
   postExamEffectiveCost: new Decimal(8),
-
+  otherTrainingEffectiveHourCount: 2,
+  otherTrainingEffectiveCost: new Decimal(25),
   invoiceNumber: "invoiceNumber_123",
 };
 
