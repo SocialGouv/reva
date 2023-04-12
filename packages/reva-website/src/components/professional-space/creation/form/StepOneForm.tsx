@@ -14,9 +14,9 @@ const zodSchema = z.object({
   companySiret: z.string().length(14, "doit comporter 14 caractères"),
   companyLegalStatus: z.enum(legalStatuses),
   companyName: z.string().min(1, "obligatoire"),
-  companyAddress: z.string(),
-  companyZipCode: z.string().max(5, "doit comporter 5 chiffres"),
-  companyCity: z.string(),
+  companyAddress: z.string().min(1, "obligatoire"),
+  companyZipCode: z.string().min(1, "obligatoire").max(5, "doit comporter 5 chiffres"),
+  companyCity: z.string().min(1, "obligatoire"),
 });
 
 type StepOneFormSchema = z.infer<typeof zodSchema>;
@@ -94,7 +94,7 @@ export const StepOneForm = () => {
             Adresse de la structure
           </legend>
           <Input
-            label="Numéro et nom de rue (optionnel)"
+            label="Numéro et nom de rue"
             state={errors.companyAddress ? "error" : "default"}
             stateRelatedMessage={errors.companyAddress?.message}
             nativeInputProps={{
@@ -103,7 +103,7 @@ export const StepOneForm = () => {
             }}
           />
           <Input
-            label="Code postal (optionnel)"
+            label="Code postal"
             state={errors.companyZipCode ? "error" : "default"}
             stateRelatedMessage={errors.companyZipCode?.message}
             nativeInputProps={{
@@ -112,7 +112,7 @@ export const StepOneForm = () => {
             }}
           />
           <Input
-            label="Ville (optionnel)"
+            label="Ville"
             state={errors.companyCity ? "error" : "default"}
             stateRelatedMessage={errors.companyCity?.message}
             nativeInputProps={{

@@ -22,13 +22,13 @@ const subreqSampleMin = {
   accountPhoneNumber: "03214556789",
 };
 
-const subreqSampleOpt = {
+const subreqSampleAddress = {
   companyAddress: "64 boulevard du Général Leclerc",
   companyZipCode: "35660",
   companyCity: "Fougères",
 }
 
-const subreqSampleFull = Object.assign({}, subreqSampleMin, subreqSampleOpt);
+const subreqSampleFull = Object.assign({}, subreqSampleMin, subreqSampleAddress);
 
 let subreq1Id: string, subreq2Id: string;
 
@@ -45,6 +45,26 @@ afterAll(async () => {
       id: { in: [subreq1Id, subreq2Id] },
     },
   });
+});
+
+test("Should fail to create a subscription request with missing address fields", async () => {
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "manage_candidacy",
+      keycloakId: "blabla",
+    }),
+    payload: {
+      requestType: "mutation",
+      endpoint: "subscription_createSubscriptionRequest",
+      arguments: { subscriptionRequest: subreqSampleMin },
+      enumFields: ["companyLegalStatus"],
+      returnFields:
+      "{ id, companySiret, companyLegalStatus, companyName, companyAddress, companyZipCode, companyCity, companyBillingContactFirstname, companyBillingContactLastname, companyBillingEmail, companyBillingPhoneNumber, companyBic, companyIban, accountFirstname, accountLastname, accountEmail, accountPhoneNumber }"
+    },
+  });
+  expect(resp.statusCode).toEqual(200);
+  expect(resp.json()).toHaveProperty("errors");
 });
 
 test("Should create a subscription request", async () => {
@@ -68,27 +88,4 @@ test("Should create a subscription request", async () => {
   const subreq = resp.json().data.subscription_createSubscriptionRequest;
   subreq1Id = subreq.id;
   expect(subreq).toMatchObject(subreqSampleFull);
-});
-
-test("Should create a subscription request without optional fields", async () => {
-  const resp = await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "manage_candidacy",
-      keycloakId: "blabla",
-    }),
-    payload: {
-      requestType: "mutation",
-      endpoint: "subscription_createSubscriptionRequest",
-      arguments: { subscriptionRequest: subreqSampleMin },
-      enumFields: ["companyLegalStatus"],
-      returnFields:
-      "{ id, companySiret, companyLegalStatus, companyName, companyAddress, companyZipCode, companyCity, companyBillingContactFirstname, companyBillingContactLastname, companyBillingEmail, companyBillingPhoneNumber, companyBic, companyIban, accountFirstname, accountLastname, accountEmail, accountPhoneNumber }"
-    },
-  });
-  expect(resp.statusCode).toEqual(200);
-  expect(resp.json()).not.toHaveProperty("errors");
-  const subreq = resp.json().data.subscription_createSubscriptionRequest;
-  subreq1Id = subreq.id;
-  expect(subreq).toMatchObject(subreqSampleMin);
 });
