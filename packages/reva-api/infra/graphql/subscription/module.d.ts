@@ -4,9 +4,9 @@ interface SubscriptionRequestInput {
   companySiret: string;
   companyLegalStatus: LegalStatus;
   companyName: string;
-  companyAddress?: string;
-  companyZipCode?: string;
-  companyCity?: string;
+  companyAddress: string;
+  companyZipCode: string;
+  companyCity: string;
   companyBillingContactFirstname: string;
   companyBillingContactLastname: string;
   companyBillingEmail: string;
