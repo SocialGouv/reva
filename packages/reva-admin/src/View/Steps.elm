@@ -5,14 +5,15 @@ import Html.Attributes exposing (attribute, class, classList)
 
 
 view :
-    Int
+    Html msg
+    -> Int
     ->
         List
             { navigation : Maybe (Html.Attribute msg)
             , content : List (Html msg)
             }
     -> Html msg
-view currentStepIndex timelineElements =
+view header currentStepIndex timelineElements =
     let
         timelineSize =
             List.length timelineElements
@@ -72,16 +73,14 @@ view currentStepIndex timelineElements =
                     ]
                 ]
     in
-    div
-        [ class "pl-12" ]
-        [ ol
-            [ attribute "role" "list"
-            , class "-mt-8"
-            , class "fr-sidemenu fr-sidemenu--right"
-            ]
-          <|
-            List.indexedMap viewNavigationTimelineStep timelineElements
+    ol
+        [ attribute "role" "list"
+        , class "fr-sidemenu fr-sidemenu--right"
         ]
+    <|
+        (header
+            :: List.indexedMap viewNavigationTimelineStep timelineElements
+        )
 
 
 linkHelper : String -> Html msg -> Html msg

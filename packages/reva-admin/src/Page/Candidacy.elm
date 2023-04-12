@@ -52,7 +52,6 @@ import View.Candidacy
 import View.Candidacy.NavigationSteps as NavigationSteps
 import View.Candidacy.Tab exposing (Tab, Value(..))
 import View.Helpers exposing (dataTest)
-import Data.Candidacy
 
 
 type Msg
@@ -152,7 +151,7 @@ view context model =
 
                         Nothing ->
                             if (Candidacy.lastStatus candidacy.statuses |> .status) == Step.Archive then
-                                if Data.Candidacy.isCandidacyReoriented candidacy then
+                                if Candidacy.isCandidacyReoriented candidacy then
                                     NavigationSteps.reorientationView context.baseUrl candidacy
 
                                 else
@@ -205,15 +204,13 @@ view context model =
                 Admissibility ->
                     viewForm "admissibility"
     in
-    div
-        [ class "grow flex h-full min-w-0 border-l-[73px] border-black bg-gray-100" ]
-        [ content, maybeNavigationSteps ]
+    View.layout [ maybeNavigationSteps ] [ content ]
 
 
 viewMain : String -> List (Html msg) -> Html msg
 viewMain dataTestValue =
-    node "main"
-        [ class "bg-white w-[780px] px-2 pt-2 pb-24"
+    div
+        [ class "bg-white px-2 pt-2"
         , dataTest dataTestValue
         ]
 

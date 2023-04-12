@@ -1,7 +1,9 @@
-module View exposing (image, skeleton, title)
+module View exposing (image, layout, skeleton, title)
 
-import Html exposing (Html, div, h2, img, text)
-import Html.Attributes exposing (class, src)
+import Accessibility exposing (nav)
+import Html exposing (Html, div, h2, img, node, text)
+import Html.Attributes exposing (attribute, class, src)
+import Html.Attributes.Extra exposing (role)
 import Url.Builder
 
 
@@ -26,3 +28,39 @@ skeleton extraClass =
         , class extraClass
         ]
         []
+
+
+layout : List (Html msg) -> List (Html msg) -> Html msg
+layout navContent content =
+    node "main"
+        [ role "main"
+        , class "flex relative"
+        ]
+        [ div [ class "bg-blue-900 w-screen inset-x absolute z-0 pb-[400px]" ] []
+        , div
+            [ class "z-1 relative fr-container" ]
+            [ div
+                [ class "mt-20 fr-grid-row" ]
+                [ div
+                    [ class "fr-col-12 fr-col-md-4" ]
+                    [ nav
+                        [ role "navigation"
+                        , class "hidden md:order-first md:flex md:flex-col flex-shrink-0"
+                        , attribute "aria-labelledby" "fr-sidemenu-title"
+                        , class "fr-sidemenu"
+                        ]
+                        [ div
+                            [ class "fr-sidemenu__inner"
+                            , class "min-h-[480px] bg-white shadow pl-4"
+                            ]
+                            navContent
+                        ]
+                    ]
+                , div
+                    [ class "bg-white shadow"
+                    , class "fr-col-12 fr-col-md-8 mb-24"
+                    ]
+                    content
+                ]
+            ]
+        ]
