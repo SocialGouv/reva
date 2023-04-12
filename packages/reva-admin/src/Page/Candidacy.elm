@@ -13,23 +13,23 @@ import Api.Candidacy
 import Api.Form.Admissibility
 import Api.Form.Appointment
 import Api.Form.Archive
-import Api.Form.Unarchive
 import Api.Form.Candidate
 import Api.Form.DropOut
 import Api.Form.FundingRequest
 import Api.Form.PaymentRequest
 import Api.Form.PaymentUploads
 import Api.Form.Training
+import Api.Form.Unarchive
 import Api.Referential
 import BetaGouv.DSFR.Button as Button
 import Browser.Navigation as Nav
-import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
+import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId)
 import Data.Context exposing (Context)
 import Data.Form.Archive
-import Data.Form.Unarchive
 import Data.Form.DropOut
 import Data.Form.FundingRequest
 import Data.Form.PaymentRequest
+import Data.Form.Unarchive
 import Data.Referential exposing (Referential)
 import Html exposing (Html, a, article, div, node, p, span, text)
 import Html.Attributes exposing (class, name)
@@ -37,13 +37,13 @@ import Page.Form as Form exposing (Form)
 import Page.Form.Admissibility
 import Page.Form.Appointment
 import Page.Form.Archive
-import Page.Form.Unarchive
 import Page.Form.Candidate
 import Page.Form.DropOut
 import Page.Form.FundingRequest
 import Page.Form.PaymentRequest
 import Page.Form.PaymentUploads
 import Page.Form.Training
+import Page.Form.Unarchive
 import RemoteData exposing (RemoteData(..))
 import Route
 import String exposing (String)
@@ -52,6 +52,7 @@ import View.Candidacy
 import View.Candidacy.NavigationSteps as NavigationSteps
 import View.Candidacy.Tab exposing (Tab, Value(..))
 import View.Helpers exposing (dataTest)
+import Data.Candidacy
 
 
 type Msg
@@ -151,7 +152,11 @@ view context model =
 
                         Nothing ->
                             if (Candidacy.lastStatus candidacy.statuses |> .status) == Step.Archive then
-                                NavigationSteps.archiveView context.baseUrl candidacy
+                                if Data.Candidacy.isCandidacyReoriented candidacy then
+                                    NavigationSteps.reorientationView context.baseUrl candidacy
+
+                                else
+                                    NavigationSteps.archiveView context.baseUrl candidacy
 
                             else
                                 NavigationSteps.view context.baseUrl candidacy
@@ -363,6 +368,7 @@ updateTab context tab ( model, cmd ) =
                         model.form
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
+
         ( View.Candidacy.Tab.DropOut, Success candidacy ) ->
             let
                 ( formModel, formCmd ) =
