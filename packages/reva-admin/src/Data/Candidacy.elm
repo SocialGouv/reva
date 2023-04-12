@@ -30,6 +30,7 @@ module Data.Candidacy exposing
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Admin.Enum.Duration exposing (Duration)
+import Css exposing (lowercase)
 import Data.Candidate exposing (Candidate)
 import Data.Certification exposing (Certification, CertificationSummary)
 import Data.Organism exposing (Organism)
@@ -100,6 +101,7 @@ type alias CandidacySummary =
     , email : Maybe String
     , isDroppedOut : Bool
     , lastStatus : CandidacyStatus
+    , isReorientation : Bool
     , createdAt : Time.Posix
     , sentAt : Maybe DateWithLabels
     }
@@ -332,6 +334,9 @@ filterByStatus lowerCaseStatus candidacySummary =
     if lowerCaseStatus == "abandon" then
         candidacySummary.isDroppedOut
 
+    else if lowerCaseStatus == "reorientation" then
+        candidacySummary.isReorientation
+
     else
         candidacySummary.lastStatus.status == status
 
@@ -341,6 +346,7 @@ isActive candidacySummary =
     not <|
         List.member candidacySummary.lastStatus.status [ Archive, Projet ]
             || candidacySummary.isDroppedOut
+            || candidacySummary.isReorientation
 
 
 isCandidacyArchived : Candidacy -> Bool

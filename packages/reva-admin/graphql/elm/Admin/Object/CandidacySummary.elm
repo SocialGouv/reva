@@ -85,6 +85,11 @@ isDroppedOut =
     Object.selectionForField "Bool" "isDroppedOut" [] Decode.bool
 
 
+isReorientation : SelectionSet Bool Admin.Object.CandidacySummary
+isReorientation =
+    Object.selectionForField "Bool" "isReorientation" [] Decode.bool
+
+
 lastStatus :
     SelectionSet decodesTo Admin.Object.CandidacyStatus
     -> SelectionSet decodesTo Admin.Object.CandidacySummary

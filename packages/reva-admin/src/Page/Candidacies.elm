@@ -31,6 +31,7 @@ import View.Candidacy
 import View.Candidacy.Filters exposing (Filters)
 import View.Candidacy.Tab exposing (Value(..))
 import View.Helpers exposing (dataTest)
+import Admin.Object.CandidacySummary exposing (isReorientation)
 
 
 type Msg
@@ -130,6 +131,9 @@ view context model =
                         Just "archive" ->
                             candidacies
 
+                        Just "reorientation" ->
+                            candidacies |> List.filter .isReorientation
+                            
                         Just _ ->
                             candidacies |> List.filter (not << .isDroppedOut)
 

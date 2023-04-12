@@ -227,7 +227,7 @@ buildCandidateInput :
     CandidateInputRequiredFields
     -> CandidateInput
 buildCandidateInput required____ =
-    { email = required____.email, phone = required____.phone, firstname = required____.firstname, lastname = required____.lastname }
+    { email = required____.email, phone = required____.phone, firstname = required____.firstname, lastname = required____.lastname, departmentId = required____.departmentId }
 
 
 type alias CandidateInputRequiredFields =
@@ -235,6 +235,7 @@ type alias CandidateInputRequiredFields =
     , phone : String
     , firstname : String
     , lastname : String
+    , departmentId : String
     }
 
 
@@ -245,6 +246,7 @@ type alias CandidateInput =
     , phone : String
     , firstname : String
     , lastname : String
+    , departmentId : String
     }
 
 
@@ -253,7 +255,7 @@ type alias CandidateInput =
 encodeCandidateInput : CandidateInput -> Value
 encodeCandidateInput input____ =
     Encode.maybeObject
-        [ ( "email", Encode.string input____.email |> Just ), ( "phone", Encode.string input____.phone |> Just ), ( "firstname", Encode.string input____.firstname |> Just ), ( "lastname", Encode.string input____.lastname |> Just ) ]
+        [ ( "email", Encode.string input____.email |> Just ), ( "phone", Encode.string input____.phone |> Just ), ( "firstname", Encode.string input____.firstname |> Just ), ( "lastname", Encode.string input____.lastname |> Just ), ( "departmentId", Encode.string input____.departmentId |> Just ) ]
 
 
 buildCandidateTypologyInformationsInput :
@@ -580,21 +582,18 @@ encodePaymentRequestInput input____ =
 
 buildSubscriptionRequestInput :
     SubscriptionRequestInputRequiredFields
-    -> (SubscriptionRequestInputOptionalFields -> SubscriptionRequestInputOptionalFields)
     -> SubscriptionRequestInput
-buildSubscriptionRequestInput required____ fillOptionals____ =
-    let
-        optionals____ =
-            fillOptionals____
-                { companyAddress = Absent, companyZipCode = Absent, companyCity = Absent }
-    in
-    { companySiret = required____.companySiret, companyLegalStatus = required____.companyLegalStatus, companyName = required____.companyName, companyAddress = optionals____.companyAddress, companyZipCode = optionals____.companyZipCode, companyCity = optionals____.companyCity, companyBillingContactFirstname = required____.companyBillingContactFirstname, companyBillingContactLastname = required____.companyBillingContactLastname, companyBillingEmail = required____.companyBillingEmail, companyBillingPhoneNumber = required____.companyBillingPhoneNumber, companyBic = required____.companyBic, companyIban = required____.companyIban, accountFirstname = required____.accountFirstname, accountLastname = required____.accountLastname, accountEmail = required____.accountEmail, accountPhoneNumber = required____.accountPhoneNumber }
+buildSubscriptionRequestInput required____ =
+    { companySiret = required____.companySiret, companyLegalStatus = required____.companyLegalStatus, companyName = required____.companyName, companyAddress = required____.companyAddress, companyZipCode = required____.companyZipCode, companyCity = required____.companyCity, companyBillingContactFirstname = required____.companyBillingContactFirstname, companyBillingContactLastname = required____.companyBillingContactLastname, companyBillingEmail = required____.companyBillingEmail, companyBillingPhoneNumber = required____.companyBillingPhoneNumber, companyBic = required____.companyBic, companyIban = required____.companyIban, accountFirstname = required____.accountFirstname, accountLastname = required____.accountLastname, accountEmail = required____.accountEmail, accountPhoneNumber = required____.accountPhoneNumber }
 
 
 type alias SubscriptionRequestInputRequiredFields =
     { companySiret : String
     , companyLegalStatus : Admin.Enum.LegalStatus.LegalStatus
     , companyName : String
+    , companyAddress : String
+    , companyZipCode : String
+    , companyCity : String
     , companyBillingContactFirstname : String
     , companyBillingContactLastname : String
     , companyBillingEmail : String
@@ -608,22 +607,15 @@ type alias SubscriptionRequestInputRequiredFields =
     }
 
 
-type alias SubscriptionRequestInputOptionalFields =
-    { companyAddress : OptionalArgument String
-    , companyZipCode : OptionalArgument String
-    , companyCity : OptionalArgument String
-    }
-
-
 {-| Type for the SubscriptionRequestInput input object.
 -}
 type alias SubscriptionRequestInput =
     { companySiret : String
     , companyLegalStatus : Admin.Enum.LegalStatus.LegalStatus
     , companyName : String
-    , companyAddress : OptionalArgument String
-    , companyZipCode : OptionalArgument String
-    , companyCity : OptionalArgument String
+    , companyAddress : String
+    , companyZipCode : String
+    , companyCity : String
     , companyBillingContactFirstname : String
     , companyBillingContactLastname : String
     , companyBillingEmail : String
@@ -642,7 +634,7 @@ type alias SubscriptionRequestInput =
 encodeSubscriptionRequestInput : SubscriptionRequestInput -> Value
 encodeSubscriptionRequestInput input____ =
     Encode.maybeObject
-        [ ( "companySiret", Encode.string input____.companySiret |> Just ), ( "companyLegalStatus", Encode.enum Admin.Enum.LegalStatus.toString input____.companyLegalStatus |> Just ), ( "companyName", Encode.string input____.companyName |> Just ), ( "companyAddress", Encode.string |> Encode.optional input____.companyAddress ), ( "companyZipCode", Encode.string |> Encode.optional input____.companyZipCode ), ( "companyCity", Encode.string |> Encode.optional input____.companyCity ), ( "companyBillingContactFirstname", Encode.string input____.companyBillingContactFirstname |> Just ), ( "companyBillingContactLastname", Encode.string input____.companyBillingContactLastname |> Just ), ( "companyBillingEmail", Encode.string input____.companyBillingEmail |> Just ), ( "companyBillingPhoneNumber", Encode.string input____.companyBillingPhoneNumber |> Just ), ( "companyBic", Encode.string input____.companyBic |> Just ), ( "companyIban", Encode.string input____.companyIban |> Just ), ( "accountFirstname", Encode.string input____.accountFirstname |> Just ), ( "accountLastname", Encode.string input____.accountLastname |> Just ), ( "accountEmail", Encode.string input____.accountEmail |> Just ), ( "accountPhoneNumber", Encode.string input____.accountPhoneNumber |> Just ) ]
+        [ ( "companySiret", Encode.string input____.companySiret |> Just ), ( "companyLegalStatus", Encode.enum Admin.Enum.LegalStatus.toString input____.companyLegalStatus |> Just ), ( "companyName", Encode.string input____.companyName |> Just ), ( "companyAddress", Encode.string input____.companyAddress |> Just ), ( "companyZipCode", Encode.string input____.companyZipCode |> Just ), ( "companyCity", Encode.string input____.companyCity |> Just ), ( "companyBillingContactFirstname", Encode.string input____.companyBillingContactFirstname |> Just ), ( "companyBillingContactLastname", Encode.string input____.companyBillingContactLastname |> Just ), ( "companyBillingEmail", Encode.string input____.companyBillingEmail |> Just ), ( "companyBillingPhoneNumber", Encode.string input____.companyBillingPhoneNumber |> Just ), ( "companyBic", Encode.string input____.companyBic |> Just ), ( "companyIban", Encode.string input____.companyIban |> Just ), ( "accountFirstname", Encode.string input____.accountFirstname |> Just ), ( "accountLastname", Encode.string input____.accountLastname |> Just ), ( "accountEmail", Encode.string input____.accountEmail |> Just ), ( "accountPhoneNumber", Encode.string input____.accountPhoneNumber |> Just ) ]
 
 
 buildSubscriptionRequestOrderByInput :

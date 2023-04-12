@@ -1,6 +1,7 @@
 module View.Candidacy.Filters exposing (Filters, view)
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
+import Admin.Object.CandidacySummary exposing (isReorientation)
 import Data.Candidacy as Candidacy exposing (CandidacySummary)
 import Data.Context exposing (Context)
 import Html exposing (Html, a, div, label, li, span, text, ul)
@@ -36,6 +37,9 @@ view candidacies filters context =
 
                 Just "abandon" ->
                     candidacies |> List.filter .isDroppedOut |> List.length
+
+                Just "reorientation" ->
+                    candidacies |> List.filter .isReorientation |> List.length
 
                 Just status ->
                     candidacies |> List.Extra.count (isNotDroppedWithStatus status)
@@ -80,6 +84,7 @@ view candidacies filters context =
                     List.map viewFilter statuses
                 ]
             , link (Just "abandon") "Toutes les candidatures abandonnées"
+            , link (Just "reorientation") "Toutes les candidatures réorientées"
             , link (Just "archive") "Toutes les candidatures archivées"
             , link (Just "projet") "Tous les projets en cours d'édition"
             ]
