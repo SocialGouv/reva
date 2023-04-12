@@ -1,4 +1,4 @@
-module View.Candidacy.NavigationSteps exposing (archiveView, dropOutView, view)
+module View.Candidacy.NavigationSteps exposing (archiveView, reorientationView, dropOutView, view)
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Data.Candidacy as Candidacy exposing (Candidacy)
@@ -112,7 +112,23 @@ archiveView baseUrl candidacy =
           , navigation = Just archiveLink
           }
         ]
+reorientationView : String -> Candidacy -> Html msg
+reorientationView baseUrl candidacy =
+    let
+        archiveDate =
+            Candidacy.lastStatus candidacy.statuses |> .createdAt
 
+        archiveLink =
+            Route.href baseUrl <| Route.Candidacy (View.Candidacy.Tab.Tab candidacy.id View.Candidacy.Tab.Archive)
+    in
+    View.Steps.view 2
+        [ { content = [ title "Candidature réorientée" ]
+          , navigation = Nothing
+          }
+        , { content = [ text "Réorientée le ", text archiveDate.fullFormat ]
+          , navigation = Just archiveLink
+          }
+        ]
 
 title : String -> Html msg
 title value =
