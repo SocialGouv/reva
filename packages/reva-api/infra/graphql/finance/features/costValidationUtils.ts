@@ -17,6 +17,8 @@ export interface HoursAndCosts {
   certificateSkillsCost: Decimal;
   examHourCount: number;
   examCost: Decimal;
+  otherTrainingHourCount: number;
+  otherTrainingCost: Decimal;
 }
 
 const isBetween = (low: number, high: number) => (value: number) =>
@@ -185,7 +187,12 @@ export const getTotalCost = (hoursAndCosts: HoursAndCosts) =>
         hoursAndCosts.mandatoryTrainingsHourCount
       )
     )
-    .plus(hoursAndCosts.postExamCost.times(hoursAndCosts.postExamHourCount));
+    .plus(hoursAndCosts.postExamCost.times(hoursAndCosts.postExamHourCount))
+    .plus(
+      hoursAndCosts.otherTrainingCost.times(
+        hoursAndCosts.otherTrainingHourCount
+      )
+    );
 
 export const validateTotalCost = (
   totalCost: Decimal,

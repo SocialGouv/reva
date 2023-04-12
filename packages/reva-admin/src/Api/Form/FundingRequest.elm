@@ -62,6 +62,8 @@ create candidacyId endpointGraphql token toMsg ( candidacy, referential ) formDa
                 funding.certificateSkillsHourCount
                 funding.certificateSkillsCost
                 funding.otherTraining
+                funding.otherTrainingHourCount
+                funding.otherTrainingCost
                 funding.examHourCount
                 funding.examCost
 
@@ -151,5 +153,7 @@ selection =
         |> with Admin.Object.FundingRequest.certificateSkillsHourCount
         |> with Admin.Object.FundingRequest.certificateSkillsCost
         |> with Admin.Object.FundingRequest.otherTraining
+        |> with Admin.Object.FundingRequest.otherTrainingHourCount
+        |> with Admin.Object.FundingRequest.otherTrainingCost
         |> with Admin.Object.FundingRequest.examHourCount
         |> with Admin.Object.FundingRequest.examCost

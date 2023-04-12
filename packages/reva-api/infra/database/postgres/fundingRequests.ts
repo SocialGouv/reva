@@ -56,6 +56,8 @@ export const createFundingRequest = async (params: {
     certificateSkillsHourCount: number;
     certificateSkillsCost: number;
     otherTraining: string;
+    otherTrainingHourCount: number;
+    otherTrainingCost: number;
     examHourCount: number;
     examCost: number;
   };
@@ -84,6 +86,8 @@ export const createFundingRequest = async (params: {
           params.fundingRequest.certificateSkillsHourCount,
         certificateSkillsCost: params.fundingRequest.certificateSkillsCost,
         otherTraining: params.fundingRequest.otherTraining,
+        otherTrainingHourCount: params.fundingRequest.otherTrainingHourCount,
+        otherTrainingCost: params.fundingRequest.otherTrainingCost,
         examHourCount: params.fundingRequest.examHourCount,
         examCost: params.fundingRequest.examCost,
       },

@@ -442,6 +442,8 @@ model FundingRequest {
   certificateSkillsHourCount  Int                           @map("certificate_skills_hour_count")
   certificateSkillsCost       Decimal                       @map("certificate_skills_cost") @db.Decimal(10, 2)
   otherTraining               String                        @map("other_training")
+  otherTrainingHourCount      Int                           @default(0) @map("other_training_hour_count")
+  otherTrainingCost           Decimal                       @default(0) @map("other_training_cost") @db.Decimal(10, 2)
   examHourCount               Int                           @map("exam_hour_count")
   examCost                    Decimal                       @map("exam_cost") @db.Decimal(10, 2)
   fundingRequestBatch         FundingRequestBatch?

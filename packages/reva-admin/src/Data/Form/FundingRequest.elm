@@ -46,6 +46,8 @@ type alias FundingRequestInput =
     , certificateSkillsHourCount : Int
     , certificateSkillsCost : Decimal
     , otherTraining : String
+    , otherTrainingHourCount : Int
+    , otherTrainingCost : Decimal
     , examHourCount : Int
     , examCost : Decimal
     }
@@ -73,6 +75,8 @@ keys =
     , certificateSkillsHourCount = "certificateSkillsHourCount"
     , certificateSkillsCost = "certificateSkillsCost"
     , otherTraining = "otherTraining"
+    , otherTrainingHourCount = "otherTrainingHourCount"
+    , otherTrainingCost = "otherTrainingCost"
     , totalTrainingHourCount = "totalTrainingHourCount"
     , examHourCount = "examHourCount"
     , examCost = "examCost"
@@ -131,6 +135,8 @@ fromDict basicSkillsIds mandatoryTrainingIds formData =
         (decode.int .certificateSkillsHourCount 0)
         (decode.decimal .certificateSkillsCost (Admin.Scalar.Decimal "0"))
         (decode.string .otherTraining "")
+        (decode.int .otherTrainingHourCount 0)
+        (decode.decimal .otherTrainingCost (Admin.Scalar.Decimal "0"))
         (decode.int .examHourCount 0)
         (decode.decimal .examCost (Admin.Scalar.Decimal "0"))
 
@@ -172,6 +178,8 @@ fundingRequest funding =
             , ( .certificateSkillsHourCount, int .certificateSkillsHourCount )
             , ( .certificateSkillsCost, decimal .certificateSkillsCost )
             , ( .otherTraining, string .otherTraining )
+            , ( .otherTrainingHourCount, int .otherTrainingHourCount )
+            , ( .otherTrainingCost, decimal .otherTrainingCost )
             , ( .examHourCount, int .examHourCount )
             , ( .examCost, decimal .examCost )
             ]

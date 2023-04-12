@@ -45,6 +45,8 @@ type FundingRequest {
   certificateSkillsHourCount: Int!
   certificateSkillsCost: Decimal!
   otherTraining: String!
+  otherTrainingHourCount: Int!
+  otherTrainingCost: Decimal!
   examHourCount: Int!
   examCost: Decimal!
 }
@@ -89,6 +91,8 @@ input FundingRequestInput {
   certificateSkillsHourCount: Int!
   certificateSkillsCost: Decimal!
   otherTraining: String!
+  otherTrainingHourCount: Int!
+  otherTrainingCost: Decimal!
   examHourCount: Int!
   examCost: Decimal!
 }

@@ -1,6 +1,7 @@
 module Page.Form.FundingRequest exposing (droppedOutForm, form, totalCostSection, totalTrainingHourCount)
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
+import Admin.Object.FundingRequest exposing (otherTrainingCost, otherTrainingHourCount)
 import Data.Candidacy as Candidacy exposing (Candidacy)
 import Data.Candidate
 import Data.Certification exposing (Certification)
@@ -120,6 +121,8 @@ form maybeCertification formData ( candidacy, referential ) =
                  )
                , ( "other", Form.Title "Autres actions de formations complémentaires" )
                , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
+               , ( keys.otherTrainingHourCount, hourCountElement )
+               , ( keys.otherTrainingCost, costElement )
                , ( keys.totalTrainingHourCount
                  , Form.Info "Nombre d'heures total actes formatifs" <|
                     String.fromInt (totalTrainingHourCount formData)
@@ -258,6 +261,7 @@ totalTrainingHourCount formData =
     int .mandatoryTrainingsHourCount
         + int .basicSkillsHourCount
         + int .certificateSkillsHourCount
+        + int .otherTrainingHourCount
 
 
 totalCost : FormData -> Float
@@ -283,6 +287,7 @@ totalCost formData =
                 + (float .mandatoryTrainingsHourCount * float .mandatoryTrainingsCost)
                 + (float .basicSkillsHourCount * float .basicSkillsCost)
                 + (float .certificateSkillsHourCount * float .certificateSkillsCost)
+                + (float .otherTrainingHourCount * float .otherTrainingCost)
                 + (float .examHourCount * float .examCost)
     in
     roundCost cost

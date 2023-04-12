@@ -70,6 +70,8 @@ export interface FundingRequest {
   mandatoryTrainingsCost: Decimal;
   mandatoryTrainingsHourCount: number;
   otherTraining: string;
+  otherTrainingCost: Decimal;
+  otherTrainingHourCount: number;
   postExamCost: Decimal;
   postExamHourCount: number;
   totalCost?: Decimal;
@@ -122,6 +124,8 @@ export interface FundingRequestBatchContent {
   NbHeureDemComplFormBlocDeCompetencesCertifiant: number;
   CoutHeureDemComplFormBlocDeCompetencesCertifiant: number;
   ActeFormatifComplémentaire_Autre: string;
+  NBHeureActeFormatifComplémentaire_Autre: number;
+  CoutHeureActeFormatifComplémentaire_Autre: number;
   NbHeureDemTotalActesFormatifs: number;
   NbHeureDemJury: number;
   CoutHeureJury: number;

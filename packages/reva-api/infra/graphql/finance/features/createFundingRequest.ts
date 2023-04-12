@@ -403,6 +403,10 @@ export const mapFundingRequestBatch = ({
       CoutHeureDemComplFormBlocDeCompetencesCertifiant:
         fundingRequest.certificateSkillsCost.toNumber(),
       ActeFormatifComplémentaire_Autre: fundingRequest.otherTraining,
+      NBHeureActeFormatifComplémentaire_Autre:
+        fundingRequest.otherTrainingHourCount,
+      CoutHeureActeFormatifComplémentaire_Autre:
+        fundingRequest.otherTrainingCost.toNumber(),
       NbHeureDemTotalActesFormatifs:
         fundingRequest.mandatoryTrainingsHourCount +
         fundingRequest.basicSkillsHourCount +

@@ -60,6 +60,8 @@ const defaultValidFundingRequest: FundingRequestInput = {
   mandatoryTrainingsIds: ["444"],
   certificateSkills: "RCNP12 RCNP34",
   otherTraining: "other training",
+  otherTrainingCost: new Decimal(25),
+  otherTrainingHourCount: 2,
   basicSkillsCost: new Decimal(20),
   basicSkillsHourCount: 1,
   certificateSkillsCost: new Decimal(20),
@@ -695,7 +697,7 @@ describe("funding request", () => {
       expect(result.isRight()).toEqual(true);
       expect(
         (result.extract() as FundingRequest).totalCost?.toNumber()
-      ).toEqual(1755);
+      ).toEqual(1805);
     });
 
     test("should return all hours multiply by its cost when candidate <= bac and Non fragile", () => {
@@ -722,7 +724,7 @@ describe("funding request", () => {
       expect(result.isRight()).toEqual(true);
       expect(
         (result.extract() as FundingRequest).totalCost?.toNumber()
-      ).toEqual(1945);
+      ).toEqual(1995);
     });
 
     test("should return all hours multiply by its cost when candidate > bac and fragile", () => {
@@ -749,7 +751,7 @@ describe("funding request", () => {
       expect(result.isRight()).toEqual(true);
       expect(
         (result.extract() as FundingRequest).totalCost?.toNumber()
-      ).toEqual(1945);
+      ).toEqual(1995);
     });
   });
 

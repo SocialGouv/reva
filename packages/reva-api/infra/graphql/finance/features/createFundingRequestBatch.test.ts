@@ -57,6 +57,8 @@ const defaultValidFundingRequest: FundingRequestInput = {
   mandatoryTrainingsHourCount: 1,
   postExamCost: new Decimal(70),
   postExamHourCount: 1,
+  otherTrainingHourCount: 2,
+  otherTrainingCost: new Decimal(30),
   totalCost: new Decimal(1885),
   companion: { siret: "1234" } as Organism,
   numAction: "reva_20221115_00000001",

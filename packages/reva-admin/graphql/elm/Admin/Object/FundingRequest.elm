@@ -130,6 +130,16 @@ otherTraining =
     Object.selectionForField "String" "otherTraining" [] Decode.string
 
 
+otherTrainingHourCount : SelectionSet Int Admin.Object.FundingRequest
+otherTrainingHourCount =
+    Object.selectionForField "Int" "otherTrainingHourCount" [] Decode.int
+
+
+otherTrainingCost : SelectionSet Data.Scalar.Decimal Admin.Object.FundingRequest
+otherTrainingCost =
+    Object.selectionForField "Data.Scalar.Decimal" "otherTrainingCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
+
+
 examHourCount : SelectionSet Int Admin.Object.FundingRequest
 examHourCount =
     Object.selectionForField "Int" "examHourCount" [] Decode.int

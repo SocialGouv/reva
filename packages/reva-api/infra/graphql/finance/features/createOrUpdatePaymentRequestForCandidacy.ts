@@ -1,3 +1,4 @@
+import { Decimal } from "@prisma/client/runtime";
 import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
 import { PaymentRequest } from "../../../../domain/types/candidacy";
@@ -117,6 +118,8 @@ export const validatePaymentRequest = (
       certificateSkillsCost: pr.certificateSkillsEffectiveCost,
       examHourCount: pr.examEffectiveHourCount,
       examCost: pr.examEffectiveCost,
+      otherTrainingHourCount: 0,
+      otherTrainingCost: new Decimal(0),
     };
     const isCandidateBacNonFragile =
       (candidate.highestDegree?.level || 0) > 4 &&
