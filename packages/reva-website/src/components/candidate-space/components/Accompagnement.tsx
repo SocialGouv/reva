@@ -17,17 +17,17 @@ export const Accompagnement = () => (
             Vous êtes guidé dès le début de votre démarche
           </SectionHeader>
         </header>
-        <SectionParagraph className="text-justify">
+        <SectionParagraph className="lg:text-justify text-left">
           Un architecte accompagnateur de parcours vous aidera dans la gestion
           administrative de votre dossier VAE dès le début de votre parcours. Ce
           sont des professionnels sélectionnés spécialement par France VAE pour
           leur expertise en développement de compétences.
         </SectionParagraph>
       </div>
-      <div className="mx-auto px-10 mt-4 flex flex-no-wrap gap-x-5">
-        <div className="flex basis-1/3">
-          <div className="min-w-[130px]">
-            <Image
+      <div className="mx-auto px-10 mt-4 lg:flex lg:flex-no-wrap gap-x-5 text-center lg:text-left">
+        <div className="flex-no-wrap lg:flex lg:basis-1/3">
+          <div className="min-w-[130px] lg:pt-[24px]">
+            <Image className=""
               src="/candidate-space/icon-conception.png"
               alt="image bloc note"
               width={130}
@@ -44,7 +44,7 @@ export const Accompagnement = () => (
             </SectionParagraph>
           </div>
         </div>
-        <div className="flex basis-1/3">
+        <div className="flex-no-wrap lg:flex lg:basis-1/3">
           <div className="min-w-[130px]">
             <Image
               src="/candidate-space/icon-gestion.png"
@@ -62,7 +62,7 @@ export const Accompagnement = () => (
             </SectionParagraph>
           </div>
         </div>
-        <div className="flex basis-1/3">
+        <div className="flex-no-wrap lg:flex lg:basis-1/3">
           <div className="min-w-[130px]">
             <Image
               src="/candidate-space/icon-plannification.png"
