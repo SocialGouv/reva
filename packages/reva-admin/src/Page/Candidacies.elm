@@ -102,7 +102,7 @@ view context model =
             div [] []
 
         Loading ->
-            viewMain
+            View.layout
                 [ View.skeleton "ml-3 mt-8 mb-6 h-5 w-[240px]"
                 , View.skeleton "ml-5 my-6 h-5 w-[160px]"
                 ]
@@ -174,45 +174,9 @@ viewContent context filters candidacies filteredCandidacies =
                 |> List.Extra.gatherWith (\c1 c2 -> haveBothSameStatusAndNotDroppedOut c1 c2 || areBothDroppedOut c1 c2)
                 |> List.sortBy (\( c, _ ) -> Candidacy.toDirectoryPosition c)
     in
-    viewMain
+    View.layout
         (View.Candidacy.Filters.view candidacies filters context)
         (viewDirectoryPanel context candidaciesByStatus)
-
-
-viewMain : List (Html msg) -> List (Html msg) -> Html msg
-viewMain navContent content =
-    node "main"
-        [ role "main"
-        , class "flex relative"
-        ]
-        [ div [ class "bg-blue-900 w-screen inset-x absolute z-0 pb-[400px]" ] []
-        , div
-            [ class "z-1 relative fr-container" ]
-            [ div
-                [ class "mt-20 fr-grid-row" ]
-                [ div
-                    [ class "fr-col-12 fr-col-md-4" ]
-                    [ nav
-                        [ role "navigation"
-                        , class "hidden md:order-first md:flex md:flex-col flex-shrink-0"
-                        , attribute "aria-labelledby" "fr-sidemenu-title"
-                        , class "fr-sidemenu"
-                        ]
-                        [ div
-                            [ class "fr-sidemenu__inner"
-                            , class "min-h-[480px] bg-white shadow pl-4"
-                            ]
-                            navContent
-                        ]
-                    ]
-                , div
-                    [ class "bg-white shadow"
-                    , class "fr-col-12 fr-col-md-8"
-                    ]
-                    content
-                ]
-            ]
-        ]
 
 
 viewDirectoryHeader : Context -> Html Msg

@@ -1,4 +1,4 @@
-module View.Candidacy.NavigationSteps exposing (archiveView, reorientationView, dropOutView, view)
+module View.Candidacy.NavigationSteps exposing (archiveView, dropOutView, reorientationView, view)
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Data.Candidacy as Candidacy exposing (Candidacy)
@@ -30,11 +30,9 @@ view baseUrl candidacy =
             else
                 Nothing
     in
-    View.Steps.view (Candidacy.statusToProgressPosition (candidacyStatus candidacy))
-        [ { content = [ title "Prochaines étapes" ]
-          , navigation = Nothing
-          }
-        , { content = expandedView "Rendez-vous pédagogique" PriseEnCharge candidacy
+    View.Steps.view (title "Prochaines étapes")
+        (Candidacy.statusToProgressPosition (candidacyStatus candidacy))
+        [ { content = expandedView "Rendez-vous pédagogique" PriseEnCharge candidacy
           , navigation = appointmentLink
           }
         , { content = expandedView "Définition du parcours" PriseEnCharge candidacy
@@ -79,11 +77,9 @@ dropOutView baseUrl candidacy dropOutDate =
             else
                 2
     in
-    View.Steps.view progressPosition
-        [ { content = [ title "Abandon du candidat" ]
-          , navigation = Nothing
-          }
-        , { content = dropOutInfo
+    View.Steps.view (title "Abandon du candidat")
+        progressPosition
+        [ { content = dropOutInfo
           , navigation = dropOutLink
           }
         , { content = expandedView "Demande de prise en charge" ParcoursConfirme candidacy
@@ -104,14 +100,14 @@ archiveView baseUrl candidacy =
         archiveLink =
             Route.href baseUrl <| Route.Candidacy (View.Candidacy.Tab.Tab candidacy.id View.Candidacy.Tab.Archive)
     in
-    View.Steps.view 2
-        [ { content = [ title "Candidature archivée" ]
-          , navigation = Nothing
-          }
-        , { content = [ text "Archivée le ", text archiveDate.fullFormat ]
+    View.Steps.view (title "Candidature archivée")
+        2
+        [ { content = [ text "Archivée le ", text archiveDate.fullFormat ]
           , navigation = Just archiveLink
           }
         ]
+
+
 reorientationView : String -> Candidacy -> Html msg
 reorientationView baseUrl candidacy =
     let
@@ -121,23 +117,21 @@ reorientationView baseUrl candidacy =
         archiveLink =
             Route.href baseUrl <| Route.Candidacy (View.Candidacy.Tab.Tab candidacy.id View.Candidacy.Tab.Archive)
     in
-    View.Steps.view 2
-        [ { content = [ title "Candidature réorientée" ]
-          , navigation = Nothing
-          }
-        , { content = [ text "Réorientée le ", text archiveDate.fullFormat ]
+    View.Steps.view (title "Candidature réorientée")
+        2
+        [ { content = [ text "Réorientée le ", text archiveDate.fullFormat ]
           , navigation = Just archiveLink
           }
         ]
 
+
 title : String -> Html msg
 title value =
     h2
-        [ class "h-32 flex items-end -mb-12" ]
-        [ span
-            [ class "text-2xl font-medium" ]
-            [ text value ]
+        [ class "my-8 flex items-end"
+        , class "text-2xl font-medium"
         ]
+        [ text value ]
 
 
 expandedView : String -> Candidacy.Step -> Candidacy -> List (Html msg)
