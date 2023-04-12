@@ -81,6 +81,7 @@ const toDomainCandidacySummary = (
     email: candidacy.email,
     phone: candidacy.phone,
     isDroppedOut: candidacy.candidacyDropOut !== null,
+    isReorientation: candidacy.reorientationReasonId !== null,
     lastStatus,
     dropOutReason: null,
     reorientationReason: null,

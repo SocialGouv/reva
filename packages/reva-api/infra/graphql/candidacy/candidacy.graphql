@@ -91,6 +91,7 @@ type CandidacySummary {
   phone: String
   email: String
   isDroppedOut: Boolean!
+  isReorientation: Boolean!
   lastStatus: CandidacyStatus!
   createdAt: Timestamp!
   sentAt: Timestamp
