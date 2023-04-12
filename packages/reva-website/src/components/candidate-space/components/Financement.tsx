@@ -8,9 +8,9 @@ import {
 export const Financement = () => (
   <section
     id="financement"
-    className="w-full max-w-[1248px] mx-auto mt-[80px] overflow-x-hidden sm:flex lg:items-center"
+    className="w-full max-w-[1248px] mx-auto mt-[80px] overflow-x-hidden flex flex-wrap lg:flex-no-wrap lg:items-center"
   >
-    <div className="px-5 sm:flex-1">
+    <div className="px-5">
       <header>
         <SectionHeader>
           Le financement de votre parcours pris en charge
@@ -25,13 +25,13 @@ export const Financement = () => (
       </SectionParagraph>
     </div>
     <div className="relative mt-16 -mx-5 sm:mx-0 sm:flex-0 sm:w-2/5 sm:-mr-20 lg:mr-0 lg:flex-1">
-      <ul className="flex-1 relative p-0 list-none mt-[100px]">
+      <ul className="flex-1 relative pl-8 lg:p-0 list-none mt-[100px]">
         <li className="mt-24 lg:mt-10">
-          <section className="lg:flex lg:space-x-6">
-            <div className="-top-4 flex-0 relative w-[60px] h-[60px] text-[#F95C5E]">
+          <section className="flex lg:space-x-6 space-x-2">
+            <div className="-top-4 lg:flex-0 relative w-[60px] h-[60px] text-[#F95C5E]">
               <Hexagon className="absolute w-[55px]" />
             </div>
-            <div className="flex-1 text-[#1B1B35]">
+            <div className="lg: flex-1 text-[#1B1B35]">
               <header>
                 <SectionSubHeader>Les frais administratifs</SectionSubHeader>
               </header>
@@ -39,7 +39,7 @@ export const Financement = () => (
           </section>
         </li>
         <li className="mt-24 lg:mt-10">
-          <section className="lg:flex lg:space-x-6">
+        <section className="flex lg:space-x-6 space-x-2">
             <div className="-top-4 flex-0 relative w-[60px] h-[60px] text-[#8BF8E7]">
               <Hexagon className="absolute w-[55px]" />
             </div>
@@ -58,8 +58,8 @@ export const Financement = () => (
               <Hexagon className="absolute w-[55px]" />
             </div>
             <div className="flex-1 text-[#1B1B35]">
-              <header>
-                <SectionSubHeader>
+              <header> 
+                <SectionSubHeader className="top">
                   Les actes formatifs complémentaires
                 </SectionSubHeader>
               </header>

@@ -10,7 +10,7 @@ import { QuestcequelaVae } from "../../components/candidate-space/components/Que
 
 const IndexCandidatPage = () => {
   return (
-    <MainLayout>
+    <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_180px]">
       <Head>
         <title>Accueil - France VAE</title>
       </Head>
