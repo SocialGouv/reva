@@ -15,89 +15,54 @@ view :
     -> Html msg
 view header currentStepIndex timelineElements =
     let
-        timelineSize =
-            List.length timelineElements
-
-        maybeLink element =
+        maybeLink index element =
             case element.navigation of
                 Nothing ->
-                    div [ class "relative flex items-start group" ]
+                    div [ class "relative flex items-start font-medium group" ]
 
                 Just navigation ->
                     a
                         [ navigation
                         , class "cursor-pointer relative flex items-start group"
+                        , classList
+                            [ ( "text-blue-900 font-semibold", index == currentStepIndex )
+                            , ( "font-medium", index /= currentStepIndex )
+                            ]
                         ]
 
         viewNavigationTimelineStep index element =
             li
-                [ class "pb-14 relative" ]
-                [ if index + 1 == timelineSize then
-                    text ""
-
-                  else
-                    div
-                        [ class "-ml-px absolute mt-0.5 top-2 left-2.5 w-0.5 h-full"
-                        , classList
-                            [ ( "bg-gray-300", index >= currentStepIndex )
-                            , ( "bg-blue-600", index < currentStepIndex )
-                            ]
-                        , attribute "aria-hidden" "true"
-                        ]
-                        []
-                , maybeLink element
-                    [ span
-                        [ class "mt-1.5 flex items-center" ]
-                        [ span
-                            [ class "relative z-10 w-5 h-5 flex items-center justify-center rounded-full"
-                            , class "border-2"
-                            , classList
-                                [ ( "border-gray-300", index > currentStepIndex )
-                                , ( "border-blue-600", index <= currentStepIndex )
-                                , ( "bg-gray-100 group-hover:bg-gray-200", index > currentStepIndex )
-                                , ( "bg-white group-hover:bg-blue-200", index == currentStepIndex )
-                                , ( "bg-blue-600 group-hover:bg-blue-400", index < currentStepIndex )
-                                ]
-                            ]
-                            [ if index == currentStepIndex then
-                                span [ class "bg-blue-600 w-2 h-2 rounded-full text-white" ] []
-
-                              else if index < currentStepIndex then
-                                span [ class "text-white text-xs font-bold" ] [ text "✓" ]
-
-                              else
-                                text ""
-                            ]
-                        ]
-                    , span [ class "ml-6 min-w-0 flex flex-col" ] element.content
+                [ class "relative border-l-2"
+                , classList
+                    [ ( "border-blue-900", index + 1 < currentStepIndex )
+                    , ( "pt-6", index /= 0 )
                     ]
+                ]
+                [ maybeLink index
+                    element
+                    [ span [ class "ml-6 min-w-0 flex flex-col" ] element.content ]
                 ]
     in
     ol
-        [ attribute "role" "list"
-        , class "fr-sidemenu fr-sidemenu--right"
-        ]
+        [ class "mb-8 pl-2" ]
     <|
         (header
             :: List.indexedMap viewNavigationTimelineStep timelineElements
         )
 
 
-linkHelper : String -> Html msg -> Html msg
-linkHelper label extraContent =
+linkHelper : String -> Html msg
+linkHelper label =
     div
-        [ class "flex items-center justify-between w-60" ]
-        [ span [ class "text-base" ] [ text label ]
-        , extraContent
-        ]
+        [ class "text-sm mb-3" ]
+        [ text label ]
 
 
 link : String -> Html msg
 link label =
-    linkHelper label <|
-        span [ class "text-lg" ] [ text "→" ]
+    linkHelper label
 
 
 info : String -> Html msg
 info label =
-    linkHelper label (text "")
+    linkHelper label

@@ -46,7 +46,7 @@ layout navContent content =
                     [ nav
                         [ role "navigation"
                         , class "hidden md:order-first md:flex md:flex-col flex-shrink-0"
-                        , attribute "aria-labelledby" "fr-sidemenu-title"
+                        , attribute "aria-label" "Menu latéral"
                         , class "fr-sidemenu"
                         ]
                         [ div
