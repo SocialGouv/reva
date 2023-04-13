@@ -29,6 +29,10 @@ view candidacies filters context =
                 && Just c.lastStatus.status
                 == (status |> String.toUpper |> Admin.Enum.CandidacyStatusStep.fromString)
 
+        isNotReorientation : CandidacySummary -> Bool
+        isNotReorientation c =
+            not c.isReorientation
+
         count : Maybe String -> Int
         count maybeStatus =
             case maybeStatus of
@@ -40,6 +44,9 @@ view candidacies filters context =
 
                 Just "reorientation" ->
                     candidacies |> List.filter .isReorientation |> List.length
+
+                Just "archive" ->
+                    candidacies |> List.filter (isNotDroppedWithStatus "archive") |> List.filter isNotReorientation |> List.length
 
                 Just status ->
                     candidacies |> List.Extra.count (isNotDroppedWithStatus status)

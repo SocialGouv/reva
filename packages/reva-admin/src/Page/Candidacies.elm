@@ -132,7 +132,7 @@ view context model =
                             candidacies
 
                         Just "reorientation" ->
-                            candidacies |> List.filter .isReorientation
+                            candidacies
                             
                         Just _ ->
                             candidacies |> List.filter (not << .isDroppedOut)
