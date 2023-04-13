@@ -1,6 +1,7 @@
 module View.Candidacy.NavigationSteps exposing (archiveView, dropOutView, reorientationView, view)
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
+import BetaGouv.DSFR.Button as Button
 import Data.Candidacy as Candidacy exposing (Candidacy)
 import Html exposing (Html, button, div, h2, h3, span, text)
 import Html.Attributes exposing (class)
@@ -30,7 +31,7 @@ view baseUrl candidacy =
             else
                 Nothing
     in
-    View.Steps.view (title "Prochaines étapes")
+    View.Steps.view (title "Toutes les étapes")
         (Candidacy.statusToProgressPosition (candidacyStatus candidacy))
         [ { content = expandedView "Rendez-vous pédagogique" PriseEnCharge candidacy
           , navigation = appointmentLink
@@ -128,8 +129,8 @@ reorientationView baseUrl candidacy =
 title : String -> Html msg
 title value =
     h2
-        [ class "my-8 flex items-end"
-        , class "text-2xl font-medium"
+        [ class "mt-8 mb-4 flex items-end"
+        , class "text-xl font-semibold"
         ]
         [ text value ]
 
@@ -140,14 +141,7 @@ expandedView stepTitle status candidacy =
     , if candidacyStatus candidacy == status then
         div
             []
-            [ button
-                [ class "bg-slate-900 text-white text-base"
-                , class "mt-2 w-auto rounded"
-                , class "text-center px-8 py-1"
-                , class "hover:enabled:bg-gray-700"
-                ]
-                [ text "Compléter" ]
-            ]
+            [ Button.new { onClick = Nothing, label = "Compléter" } |> Button.view ]
 
       else
         text ""

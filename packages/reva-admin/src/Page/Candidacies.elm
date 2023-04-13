@@ -256,7 +256,7 @@ viewDirectory context ( firstCandidacy, candidacies ) =
             ]
             [ h4 [ class "mb-0" ] [ text (Candidacy.toCategoryString firstCandidacy ++ " (" ++ String.fromInt candidaciesInCategory ++ ")") ] ]
         , List.map (viewItem context) (firstCandidacy :: candidacies)
-            |> ul [ role "list", class "list-none pl-0 mt-0 relative z-0" ]
+            |> ul [ class "list-none pl-0 mt-0 relative z-0" ]
         ]
 
 
