@@ -23,10 +23,11 @@ const AvenirPro = () => (
         <SectionHeader>Prenez votre avenir professionnel en main</SectionHeader>
       </header>
       <SectionParagraph className="font-bold">
-        Les raisons pour faire une VAE sont nombreuses: obtenir un nouvel
-        emploi, un meilleur salaire ou tout simplement la reconnaissance de vos
-        compétences. Grâce à la VAE, abordez votre avenir professionnel sous un
-        jour meilleur!
+        S’ouvrir de nouvelles perspectives d’emploi, améliorer ses conditions
+        salariales ou tout simplement obtenir la reconnaissance de ses
+        compétences, les raisons pour faire une VAE sont nombreuses et peuvent
+        vous permettre d’aborder votre avenir professionnel sous un jour
+        meilleur.
       </SectionParagraph>
 
       <div className="flex flex-col items-center sm:items-start space-y-4">
@@ -36,7 +37,7 @@ const AvenirPro = () => (
           linkProps={{ href: "/app" }}
           size="large"
         >
-          Démarrez votre parcours VAE
+          Démarrez un parcours VAE
         </Button>
         <Link
           className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
@@ -82,7 +83,7 @@ const ValorisationCompetences = () => (
           className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
           href="/espace-candidat"
         >
-          En savoir plus sur la VAE
+          Démarrez un parcours VAE
         </Link>
       </div>
     </div>
@@ -251,13 +252,13 @@ const Professionnels = () => (
       <div className="lg:pb-20">
         <header>
           <p className="font-bold text-2xl text-[#000091] lg:text-2xl">
-            Pour tous
+            Pour les pro
           </p>
           <SectionHeader>Professionnel de la VAE, rejoignez-nous</SectionHeader>
         </header>
         <SectionParagraph>
           Vous voulez accompagner des candidats dans leurs parcours VAE ou vous
-          voulez proposer de nouvelles certifications disponibles en VAE? Voici
+          voulez proposer de nouvelles certifications disponibles en VAE ? Voici
           quelques informations pour vous guider.
         </SectionParagraph>
         <Link
@@ -297,7 +298,7 @@ const Professionnels = () => (
 
 const IndexPage = () => {
   return (
-    <MainLayout>
+    <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_1150px]">
       <Head>
         <title>Accueil - France VAE</title>
       </Head>
