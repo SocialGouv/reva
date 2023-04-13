@@ -11,16 +11,24 @@ export enum BusinessTargetType {
   PAYMENT_REQUEST = "PAYMENT_REQUEST",
 }
 
+export type BusinessEventType = CandidacyBusinessEvent | CandidateBusinessEvent;
+
 interface BusinessEvent {
   userId?: string;
   userEmail?: string;
   targetType: BusinessTargetType;
-  eventType: CandidacyBusinessEvent | CandidateBusinessEvent;
+  eventType: BusinessEventType;
   targetId?: string;
   isError: boolean;
   extraInfo?: Record<string, unknown>;
 }
 
 export async function logBusinessEvent(event: BusinessEvent) {
-  logger.info(event);
+  if (event.isError) {
+    logger.error(event)
+  }
+  else {
+    logger.info(event);
+  }
 }
+

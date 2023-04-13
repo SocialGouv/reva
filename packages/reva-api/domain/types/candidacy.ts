@@ -249,5 +249,21 @@ export interface FileUploadSpoolerEntry {
 export enum CandidacyBusinessEvent {
   CREATED_CANDIDACY = "Created Candidacy",
   SUBMITTED_CANDIDACY = "Submitted Candidacy",
+  TOOK_OVER_CANDIDACY = "Took over candidacy",
   UPDATED_CERTIFICATION = "Updated Certification",
+  ADDED_EXPERIENCE = "Added experience",
+  UPDATED_EXPERIENCE = "Updated experience",
+  // DELETED_EXPERIENCE = "Deleted experience",
+  UPDATED_GOALS = "Updated goals",
+  UPDATED_CONTACT = "Updated contact",
+  DELETED_CANDIDACY = "Deleted candidacy",
+  ARCHIVED_CANDIDACY = "Archived candidacy",
+  UNARCHIVED_CANDIDACY = "Unarchived candidacy",
+  UPDATED_APPOINTMENT_INFO = "Updated appointment info",
+  SELECTED_ORGANISM = "Selected organism",
+  SUBMITTED_TRAINING_FORM = "Submitted training form",
+  CONFIRMED_TRAINING_FORM = "Confirmed training form",
+  UPDATED_ADMISSIBILITY = "Updated admissibility",
+  DROPPED_OUT_CANDIDACY = "Dropped out candidacy",
+  
 }
