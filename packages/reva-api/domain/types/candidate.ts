@@ -130,3 +130,7 @@ export interface FundingRequestBatchContent {
   NbHeureDemJury: number;
   CoutHeureJury: number;
 }
+
+export enum CandidateBusinessEvent {
+  CREATED_CANDIDATE = "Created Candidate",
+}
