@@ -33,7 +33,7 @@ const ProfessionalSpaceCreationPage = () => {
       </Head>
       <BlueLayout
         title="Créer un compte professionnel"
-        description="Vous êtes architecte de parcours ou certificateur, vous devez créer
+        description="Vous êtes architecte de parcours, vous devez créer
         votre compte sur REVA afin de suivre et d’assurer la gestion de vos
         candidats sur leur parcours de formation"
       >
