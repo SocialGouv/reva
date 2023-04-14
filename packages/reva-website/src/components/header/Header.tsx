@@ -14,7 +14,7 @@ export const Header = (props: { className?: string }) => (
         iconId: "fr-icon-account-line",
         linkProps: {
           className: "",
-          href: "/app",
+          href: "/app/login",
         },
         text: "Connexion",
       },
