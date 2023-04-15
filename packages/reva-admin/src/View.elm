@@ -36,7 +36,11 @@ layout navContent content =
         [ role "main"
         , class "flex relative"
         ]
-        [ div [ class "bg-blue-900 w-screen inset-x absolute z-0 pb-[400px]" ] []
+        [ div
+            [ class "bg-gradient-to-r from-[#557AFF] to-[#2400FF]"
+            , class "w-screen inset-x absolute z-0 pb-[400px]"
+            ]
+            []
         , div
             [ class "z-1 relative fr-container" ]
             [ div

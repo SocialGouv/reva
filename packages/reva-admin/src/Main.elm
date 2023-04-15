@@ -24,6 +24,8 @@ type alias Flags =
     , uploadEndpoint : String
     }
 
+
+
 -- MODEL
 
 
@@ -98,7 +100,6 @@ viewHeader model =
         [ class "sticky top-0 z-40 bg-white"
         , class "flex justify-between p-6 w-full"
         , class "text-gray-900 font-medium"
-        , class "border-b border-gray-200"
         ]
         [ View.image [ class "w-[73px]" ] model.context.baseUrl "logo.png"
         , a
