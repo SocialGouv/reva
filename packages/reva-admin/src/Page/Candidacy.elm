@@ -210,7 +210,7 @@ view context model =
 viewMain : String -> List (Html msg) -> Html msg
 viewMain dataTestValue =
     div
-        [ class "bg-white px-2 pt-2"
+        [ class "bg-white px-8 pt-6"
         , dataTest dataTestValue
         ]
 
@@ -264,14 +264,11 @@ viewCandidacyArticle baseUrl content =
     viewMain "profile"
         [ a
             [ Route.href baseUrl (Route.Candidacies Route.emptyFilters)
-            , class "flex items-center text-gray-800 mx-6 pt-6 pb-1 mb-12"
+            , class "fr-link fr-fi-arrow-left-line fr-link--icon-left"
+            , class "my-4 text-lg"
             ]
-            [ span [ class "text-3xl mr-4" ] [ text "← " ]
-            , text "Toutes les candidatures"
-            ]
-        , article
-            [ class "px-16" ]
-            content
+            [ text "Toutes les candidatures" ]
+        , article [ class "mt-6" ] content
         ]
 
 
