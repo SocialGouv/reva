@@ -1,6 +1,6 @@
-module View exposing (image, layout, skeleton, title)
+module View exposing (backLink, image, layout, skeleton, title)
 
-import Accessibility exposing (nav)
+import Accessibility exposing (a, nav)
 import Html exposing (Html, div, h2, img, node, text)
 import Html.Attributes exposing (attribute, class, src)
 import Html.Attributes.Extra exposing (role)
@@ -64,3 +64,13 @@ layout navContent content =
                 ]
             ]
         ]
+
+
+backLink : Html.Attribute Never -> String -> Accessibility.Html msg
+backLink linkAttribute label =
+    a
+        [ linkAttribute
+        , class "fr-link fr-fi-arrow-left-line fr-link--icon-left"
+        , class "my-4 text-lg"
+        ]
+        [ text label ]
