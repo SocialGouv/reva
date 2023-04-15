@@ -130,14 +130,9 @@ view context model =
     let
         viewForm name =
             viewMain name
-                [ a
-                    [ Route.href context.baseUrl (Route.Candidacy (Tab model.tab.candidacyId View.Candidacy.Tab.Profile))
-                    , class "flex items-center text-gray-800"
-                    , class "pt-6 pb-1 ml-6"
-                    ]
-                    [ span [ class "text-3xl mr-4" ] [ text "← " ]
-                    , text "Retour"
-                    ]
+                [ View.backLink
+                    (Route.href context.baseUrl (Route.Candidacy (Tab model.tab.candidacyId View.Candidacy.Tab.Profile)))
+                    "Retour"
                 , Form.view (RemoteData.map2 Tuple.pair model.selected model.state.referential) model.form
                     |> Html.map GotFormMsg
                 ]
@@ -262,12 +257,9 @@ viewCandidacyPanel context model =
 viewCandidacyArticle : String -> List (Html msg) -> Html msg
 viewCandidacyArticle baseUrl content =
     viewMain "profile"
-        [ a
-            [ Route.href baseUrl (Route.Candidacies Route.emptyFilters)
-            , class "fr-link fr-fi-arrow-left-line fr-link--icon-left"
-            , class "my-4 text-lg"
-            ]
-            [ text "Toutes les candidatures" ]
+        [ View.backLink
+            (Route.href baseUrl (Route.Candidacies Route.emptyFilters))
+            "Toutes les candidatures"
         , article [ class "mt-6" ] content
         ]
 

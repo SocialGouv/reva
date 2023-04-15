@@ -1,7 +1,6 @@
 module View.Candidacy exposing (view, viewCreatedAt, viewSentAt)
 
 import Admin.Enum.Duration exposing (Duration(..))
-import Api.Form.FundingRequest exposing (create)
 import Api.Token
 import BetaGouv.DSFR.Button as Button
 import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, CandidacyStatus, DateWithLabels, isCandidacyArchived, isCandidacyReoriented)
@@ -9,9 +8,8 @@ import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department, Referential)
 import Dict
-import Html exposing (Html, a, button, dd, div, dl, dt, h3, h4, li, nav, p, span, text, ul)
-import Html.Attributes exposing (attribute, class, classList, href, type_)
-import Html.Events exposing (onClick)
+import Html exposing (Html, a, dd, div, dl, dt, h3, h4, li, nav, p, span, text, ul)
+import Html.Attributes exposing (attribute, class, classList, href)
 import RemoteData exposing (RemoteData(..))
 import Route
 import Time

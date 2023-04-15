@@ -167,7 +167,7 @@ view remoteReferential model =
                 [ text "..." ]
 
         skeleton =
-            div [ class "ml-16 mt-10" ]
+            div [ class "mt-4" ]
                 [ View.skeleton "mt-8 h-8 w-96"
                 , View.skeleton "mt-12 h-4 w-96"
                 ]
@@ -247,7 +247,7 @@ viewForm referential status maybeError formData form saveButton submitButton =
 
         formFieldset content =
             Html.form
-                [ class "pl-16 pr-4 mt-10"
+                [ class "mt-4"
                 , onSubmit (UserClickSubmit referential)
                 ]
                 [ fieldset [ class "fr-fieldset" ] content ]
