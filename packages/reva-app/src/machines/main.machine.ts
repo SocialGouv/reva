@@ -156,7 +156,9 @@ export type MainState =
       };
     };
 
-const isLogin = window.location.pathname.endsWith("login");
+const isLogin =
+  window.location.pathname.endsWith("login") ||
+  window.location.pathname.endsWith("login/");
 const loginToken =
   isLogin && new URLSearchParams(window.location.search).get("token");
 const navigateHome = () => window.history.pushState({}, "", "/app/");
