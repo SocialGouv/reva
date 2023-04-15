@@ -41,7 +41,7 @@ view context config =
             ]
         ]
     , div
-        [ class "mt-4 mb-8 text-gray-700" ]
+        [ class "mt-4 mb-8 text-gray-900" ]
         [ dl
             []
             [ case ( config.candidacy.firstname, config.candidacy.lastname ) of
@@ -51,7 +51,7 @@ view context config =
                         "Prénom Nom"
                     <|
                         div
-                            [ class "text-3xl font-bold text-slate-800 mb-10" ]
+                            [ class "text-3xl font-bold mb-10" ]
                             [ text <| firstname ++ " " ++ lastname
                             ]
 
@@ -62,7 +62,7 @@ view context config =
                 "certification"
               <|
                 div
-                    [ class "text-xl font-bold leading-none text-slate-700 mb-5"
+                    [ class "text-xl font-bold leading-none text-gray-900 mb-5"
                     , classList [ ( "italic", config.candidacy.certification == Nothing ) ]
                     ]
                     [ Maybe.map .label config.candidacy.certification
@@ -70,8 +70,8 @@ view context config =
                         |> text
                     ]
             , div
-                [ class "bg-gray-100 rounded-lg px-5 py-4"
-                , class "leading-relaxed text-gray-500"
+                [ class "bg-gray-100 px-5 py-4"
+                , class "leading-relaxed"
                 ]
                 [ viewInfo "sent-at" "Date de candidature" <|
                     viewSentAt (Data.Candidacy.sentDate config.candidacy.statuses)
@@ -214,21 +214,21 @@ viewDuration duration =
 
 viewExperience : CandidacyExperience -> Html msg
 viewExperience experience =
-    div [ class "rounded-lg px-5 py-4 bg-gray-100 text-base leading-tight" ]
-        [ h4 [ class "font-semibold mb-2" ] [ text experience.title ]
-        , p [ class "my-4" ] [ text "Démarrée en ", text <| View.Date.toFullFormat experience.startedAt ]
-        , p [ class "font-bold my-4" ] [ text "Durée d'expérience ", viewDuration experience.duration ]
-        , p [ class "italic" ] [ text "\"", text experience.description, text "\"" ]
+    div [ class "px-5 py-4 bg-gray-100 leading-tight" ]
+        [ h4 [ class "font-semibold mb-1 text-lg" ] [ text experience.title ]
+        , p [ class "my-2" ] [ text "Démarrée en ", text <| View.Date.toFullFormat experience.startedAt ]
+        , p [ class "font-bold my-2" ] [ text "Durée d'expérience ", viewDuration experience.duration ]
+        , p [ class "italic mb-0" ] [ text "\"", text experience.description, text "\"" ]
         ]
 
 
 viewGoals : Referential -> List CandidacyGoal -> Html msg
 viewGoals referential candidacyGoals =
-    div [ class "text-purple-800 my-10" ]
+    div [ class "my-10" ]
         [ title "Mon objectif"
         , ul
-            [ class "mb-4 rounded-lg px-5 py-4 bg-purple-100 leading-tight"
-            , class "text-lg"
+            [ class "mb-4 px-5 py-4 bg-gray-100 leading-tight"
+            , class "list-none"
             ]
           <|
             if List.isEmpty candidacyGoals then
@@ -243,14 +243,12 @@ viewOrganism : Maybe Organism -> Html msg
 viewOrganism maybeOrganism =
     case maybeOrganism of
         Just organism ->
-            div [ class "text-gray-900 my-10" ]
+            div [ class "my-10" ]
                 [ title "Mon architecte de parcours"
                 , div
-                    [ class "rounded-lg px-5 py-4 bg-slate-100"
-                    , class "text-lg text-slate-900"
-                    ]
-                    [ p [] [ text organism.label ]
-                    , p [] [ text organism.contactAdministrativeEmail ]
+                    [ class "px-5 py-4 bg-gray-100" ]
+                    [ p [ class "mb-0" ] [ text organism.label ]
+                    , p [ class "mb-0" ] [ text organism.contactAdministrativeEmail ]
                     ]
                 ]
 
@@ -260,7 +258,7 @@ viewOrganism maybeOrganism =
 
 viewExperiences : List CandidacyExperience -> Html msg
 viewExperiences experiences =
-    div [ class "text-gray-900 my-10" ]
+    div [ class "my-10" ]
         [ title "Mes expériences"
         , div [ class "space-y-4" ] <| List.map viewExperience experiences
         ]
