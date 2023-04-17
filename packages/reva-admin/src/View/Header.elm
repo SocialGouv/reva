@@ -4,6 +4,7 @@ import Accessibility exposing (a, br, div, header, li, p, text, ul)
 import Html.Attributes exposing (attribute, class, href)
 import Html.Attributes.Autocomplete exposing (ContactType(..))
 import Route exposing (Route(..))
+import View
 
 
 view : { a | baseUrl : String } -> Accessibility.Html msg
@@ -24,18 +25,18 @@ view context =
                             [ class "fr-header__brand-top" ]
                             [ div
                                 [ class "fr-header__logo" ]
-                                [ p [ class "fr-logo" ] [ text "République", br [], text "française" ] ]
+                                [ View.logo ]
                             ]
                         , div
                             [ class "fr-header__service"
                             ]
                             [ a
-                                [ attribute "title" "Accueil - Espace professionnel"
+                                [ attribute "title" "Accueil - Espace Professionnel"
                                 , Route.href context.baseUrl (Route.Candidacies Route.emptyFilters)
                                 ]
                                 [ p
                                     [ class "fr-header__service-title" ]
-                                    [ text "Reva / Espace professionnel" ]
+                                    [ text "Reva / Espace Professionnel" ]
                                 ]
                             , p
                                 [ class "fr-header__service-tagline" ]

@@ -15,6 +15,7 @@ import Page.Subscriptions as Subscriptions
 import Route exposing (Route(..))
 import Url exposing (Url)
 import View
+import View.Footer
 import View.Header
 
 
@@ -90,6 +91,7 @@ view model =
                 }
                 model.keycloakConfiguration
                 (model.page == LoggingOut)
+            , View.Footer.view model.context
             ]
         ]
     }

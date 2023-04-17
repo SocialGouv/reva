@@ -1,6 +1,6 @@
-module View exposing (backLink, image, infoBlock, layout, skeleton, title)
+module View exposing (backLink, image, infoBlock, layout, logo, skeleton, title)
 
-import Accessibility exposing (a, h3, nav)
+import Accessibility exposing (a, br, h3, nav, p)
 import Html exposing (Html, div, h2, img, node, text)
 import Html.Attributes exposing (attribute, class, src)
 import Html.Attributes.Extra exposing (role)
@@ -85,3 +85,8 @@ infoBlock label contents =
     div [ class "mb-6 px-6 py-6 bg-gray-100" ] <|
         h3 [ class "text-2xl font-bold mb-2" ] [ text label ]
             :: contents
+
+
+logo : Accessibility.Html msg
+logo =
+    p [ class "fr-logo" ] [ text "République", br [], text "française" ]
