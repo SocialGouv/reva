@@ -205,7 +205,7 @@ view context model =
 viewMain : String -> List (Html msg) -> Html msg
 viewMain dataTestValue =
     div
-        [ class "bg-white px-8 pt-6"
+        [ class "bg-white px-4 sm:px-8 pt-6"
         , dataTest dataTestValue
         ]
 
@@ -236,11 +236,11 @@ viewCandidacyPanel context model =
                 []
 
             Loading ->
-                [ View.skeleton "mt-6 mb-10 w-96 h-8"
-                , View.skeleton "mb-3 w-48 h-6"
-                , View.skeleton "mb-10 w-128 h-24"
-                , View.skeleton "mb-3 w-48 h-6"
-                , View.skeleton "w-128 h-64"
+                [ View.skeleton "mt-6 mb-10 w-full sm:w-96 h-8"
+                , View.skeleton "mb-12 w-full w-96 h-5"
+                , View.skeleton "w-full h-32 mb-6"
+                , View.skeleton "w-full h-64 mb-6"
+                , View.skeleton "w-full h-64 mb-12"
                 ]
 
             Failure err ->

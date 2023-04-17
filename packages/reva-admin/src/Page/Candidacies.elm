@@ -9,6 +9,7 @@ module Page.Candidacies exposing
 
 import Accessibility exposing (button, h2, h4)
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep)
+import Admin.Object.CandidacySummary exposing (isReorientation)
 import Api.Candidacy
 import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
@@ -31,7 +32,6 @@ import View.Candidacy
 import View.Candidacy.Filters exposing (Filters)
 import View.Candidacy.Tab exposing (Value(..))
 import View.Helpers exposing (dataTest)
-import Admin.Object.CandidacySummary exposing (isReorientation)
 
 
 type Msg
@@ -92,7 +92,7 @@ view context model =
     let
         candidacySkeleton =
             div
-                [ class "border border-gray-100 p-6 mb-8 h-[198px]" ]
+                [ class "border border-gray-100 p-4 sm:p-6 mb-8 h-[198px]" ]
                 [ View.skeleton "h-6 w-120"
                 , View.skeleton "my-5 h-5 w-96"
                 , View.skeleton "my-5 h-5 w-96"
@@ -109,7 +109,7 @@ view context model =
                 ]
                 [ viewDirectoryHeader context
                 , div
-                    [ class "px-6" ]
+                    [ class "px-4 sm:px-6" ]
                     [ View.skeleton "mt-2 mb-8 h-6 w-[300px]"
                     , candidacySkeleton
                     , candidacySkeleton
@@ -133,7 +133,7 @@ view context model =
 
                         Just "reorientation" ->
                             candidacies
-                            
+
                         Just _ ->
                             candidacies |> List.filter (not << .isDroppedOut)
 
@@ -186,7 +186,7 @@ viewContent context filters candidacies filteredCandidacies =
 viewDirectoryHeader : Context -> Html Msg
 viewDirectoryHeader context =
     div
-        [ class "p-6" ]
+        [ class "p-4 sm:p-6" ]
         [ h2
             []
             [ if Api.Token.isAdmin context.token then
@@ -235,7 +235,7 @@ viewDirectoryPanel context candidaciesByStatus =
         |> nav
             [ dataTest "directory"
             , class "min-h-0 overflow-y-auto"
-            , class "px-6"
+            , class "px-4 sm:px-6"
             , attribute "aria-label" "Candidats"
             ]
     ]
@@ -323,7 +323,7 @@ viewItem context candidacy =
                     [ case ( Api.Token.isAdmin context.token, candidacy.organism ) of
                         ( True, Just organism ) ->
                             div
-                                [ class "text-base text-gray-500 whitespace-nowrap" ]
+                                [ class "hidden sm:block text-base text-gray-500 whitespace-nowrap" ]
                                 [ text organism.label ]
 
                         _ ->

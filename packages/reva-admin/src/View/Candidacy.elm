@@ -1,5 +1,6 @@
 module View.Candidacy exposing (view, viewCreatedAt, viewSentAt)
 
+import Accessibility exposing (h1, h2)
 import Admin.Enum.Duration exposing (Duration(..))
 import Api.Token
 import BetaGouv.DSFR.Button as Button
@@ -8,15 +9,15 @@ import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department, Referential)
 import Dict
-import Html exposing (Html, a, dd, div, dl, dt, h3, h4, li, nav, p, span, text, ul)
-import Html.Attributes exposing (attribute, class, classList, href)
+import Html exposing (Html, a, dd, div, dl, dt, h4, li, p, text, ul)
+import Html.Attributes exposing (class, classList, href)
 import RemoteData exposing (RemoteData(..))
 import Route
 import Time
+import View
 import View.Candidacy.Tab exposing (Value(..))
 import View.Date
 import View.Helpers exposing (dataTest)
-import View.Icons as Icons
 
 
 view :
@@ -28,17 +29,7 @@ view :
         }
     -> List (Html msg)
 view context config =
-    [ nav
-        [ class "flex items-start px-4 pb-3 sm:px-6 lg:px-8 md:hidden", attribute "aria-label" "Breadcrumb" ]
-        [ a
-            [ href "#", class "inline-flex items-center space-x-3 text-sm font-medium text-gray-900" ]
-            [ Icons.chevronLeft
-            , span
-                []
-                [ text "Candidatures" ]
-            ]
-        ]
-    , div
+    [ div
         [ class "mt-4 mb-8 text-gray-900" ]
         [ dl
             []
@@ -48,8 +39,8 @@ view context config =
                         "firstname lastname"
                         "Prénom Nom"
                     <|
-                        div
-                            [ class "text-3xl font-bold mb-10" ]
+                        h1
+                            [ class "text-3xl font-bold mb-8" ]
                             [ text <| firstname ++ " " ++ lastname
                             ]
 
@@ -59,18 +50,18 @@ view context config =
                 "certification-label"
                 "certification"
               <|
-                div
-                    [ class "text-xl font-bold leading-none text-gray-900 mb-5"
+                h2
+                    [ class "text-2xl font-bold leading-none text-gray-900 mb-5"
                     , classList [ ( "italic", config.candidacy.certification == Nothing ) ]
                     ]
                     [ Maybe.map .label config.candidacy.certification
                         |> Maybe.withDefault "Certification non sélectionnée"
                         |> text
                     ]
-            , div
-                [ class "bg-gray-100 px-5 py-4"
-                , class "leading-relaxed"
-                ]
+            ]
+        , div
+            [ class "mt-12 mb-4" ]
+            [ View.infoBlock "Ma candidature"
                 [ viewInfo "sent-at" "Date de candidature" <|
                     viewSentAt (Data.Candidacy.sentDate config.candidacy.statuses)
                 , div [ class "flex space-x-2" ]
@@ -91,10 +82,7 @@ view context config =
                         )
                     |> Maybe.withDefault (text "")
                 ]
-            ]
-        , div
-            [ class "my-12" ]
-            [ case config.referential of
+            , case config.referential of
                 Success referential ->
                     viewGoals referential config.candidacy.goals
 
@@ -108,7 +96,7 @@ view context config =
 
               else
                 text ""
-            , viewExperiences config.candidacy.experiences
+            , View.infoBlock "Mes expériences" <| List.map viewExperience config.candidacy.experiences
             , if isCandidacyReoriented config.candidacy then
                 text ""
 
@@ -144,7 +132,7 @@ view context config =
                             )
                         )
                     |> Button.secondary
-                    |> Button.withAttrs [ class "ml-3" ]
+                    |> Button.withAttrs [ class "mt-3 sm:mt-0 sm:ml-3" ]
                     |> Button.view
 
               else
@@ -159,14 +147,9 @@ viewInfo dataTestId label value =
     div []
         [ dt [ class "hidden" ] [ text label ]
         , dd
-            [ dataTest dataTestId ]
+            [ class "text-lg", dataTest dataTestId ]
             [ value ]
         ]
-
-
-title : String -> Html msg
-title s =
-    h3 [ class "text-xl font-bold mb-2" ] [ text s ]
 
 
 viewDepartment : Maybe Department -> Html msg
@@ -212,22 +195,19 @@ viewDuration duration =
 
 viewExperience : CandidacyExperience -> Html msg
 viewExperience experience =
-    div [ class "px-5 py-4 bg-gray-100 leading-tight" ]
-        [ h4 [ class "font-semibold mb-1 text-lg" ] [ text experience.title ]
-        , p [ class "my-2" ] [ text "Démarrée en ", text <| View.Date.toFullFormat experience.startedAt ]
-        , p [ class "font-bold my-2" ] [ text "Durée d'expérience ", viewDuration experience.duration ]
-        , p [ class "italic mb-0" ] [ text "\"", text experience.description, text "\"" ]
+    div [ class "mt-4 leading-tight" ]
+        [ h4 [ class "font-semibold mb-1 text-xl" ] [ text experience.title ]
+        , p [ class "text-lg my-2" ] [ text "Démarrée en ", text <| View.Date.toFullFormat experience.startedAt ]
+        , p [ class "text-lg my-2" ] [ text "Durée d'expérience ", viewDuration experience.duration ]
+        , p [ class "text-lg italic mb-0" ] [ text "\"", text experience.description, text "\"" ]
         ]
 
 
 viewGoals : Referential -> List CandidacyGoal -> Html msg
 viewGoals referential candidacyGoals =
-    div [ class "my-10" ]
-        [ title "Mon objectif"
-        , ul
-            [ class "mb-4 px-5 py-4 bg-gray-100 leading-tight"
-            , class "list-none"
-            ]
+    View.infoBlock "Mon objectif"
+        [ ul
+            [ class "text-lg px-0 mb-0 leading-tight list-none" ]
           <|
             if List.isEmpty candidacyGoals then
                 [ li [ class "italic opacity-50" ] [ text "Non renseigné" ] ]
@@ -241,25 +221,13 @@ viewOrganism : Maybe Organism -> Html msg
 viewOrganism maybeOrganism =
     case maybeOrganism of
         Just organism ->
-            div [ class "my-10" ]
-                [ title "Mon architecte de parcours"
-                , div
-                    [ class "px-5 py-4 bg-gray-100" ]
-                    [ p [ class "mb-0" ] [ text organism.label ]
-                    , p [ class "mb-0" ] [ text organism.contactAdministrativeEmail ]
-                    ]
+            View.infoBlock "Mon architecte de parcours"
+                [ p [ class "text-lg mb-0" ] [ text organism.label ]
+                , p [ class "text-lg mb-0" ] [ text organism.contactAdministrativeEmail ]
                 ]
 
         Nothing ->
             text ""
-
-
-viewExperiences : List CandidacyExperience -> Html msg
-viewExperiences experiences =
-    div [ class "my-10" ]
-        [ title "Mes expériences"
-        , div [ class "space-y-4" ] <| List.map viewExperience experiences
-        ]
 
 
 viewSentAt : Maybe DateWithLabels -> Html msg
@@ -269,7 +237,7 @@ viewSentAt sentAt =
     <|
         case sentAt of
             Just date ->
-                [ text "Candidature envoyée le "
+                [ text "Envoyée le "
                 , text date.fullFormat
                 ]
 
