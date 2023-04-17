@@ -190,10 +190,10 @@ viewDirectoryHeader context =
         [ h2
             []
             [ if Api.Token.isAdmin context.token then
-                text "Espace pro administrateur"
+                text "Espace Professionnel - Administrateur"
 
               else
-                text "Espace pro architecte de parcours"
+                text "Espace Professionnel - Architecte Accompagnateur de parcours"
             ]
         , p
             [ class "text-xl" ]
@@ -201,7 +201,7 @@ viewDirectoryHeader context =
                 text "En tant qu’administrateur, vous pouvez gérer toutes les candidatures et faire une recherche par architecte de parcours."
 
               else
-                text "En tant qu’architecte de parcours, vous pouvez gérer les différentes candidatures des usagers dans le cadre de leur projet professionnel."
+                text "En tant qu’architecte accompagnateur de parcours, vous pouvez gérer les différentes candidatures des usagers dans le cadre de leur projet professionnel."
             ]
         , div
             [ class "my-2 flex space-x-4", action "#" ]
