@@ -15,6 +15,7 @@ import Page.Subscriptions as Subscriptions
 import Route exposing (Route(..))
 import Url exposing (Url)
 import View
+import View.Header
 
 
 type alias Flags =
@@ -80,7 +81,7 @@ view model =
     , body =
         [ div
             [ class "min-h-screen flex flex-col" ]
-            [ viewHeader model
+            [ View.Header.view model.context
             , viewPage model
             , KeycloakConfiguration.iframeKeycloak
                 { onLoggedIn = GotLoggedIn
@@ -92,20 +93,6 @@ view model =
             ]
         ]
     }
-
-
-viewHeader : Model -> Html msg
-viewHeader model =
-    div
-        [ class "sticky top-0 z-40 bg-white"
-        , class "flex justify-between p-6 w-full"
-        , class "text-gray-900 font-medium"
-        ]
-        [ View.image [ class "w-[73px]" ] model.context.baseUrl "logo.png"
-        , a
-            [ Route.href model.context.baseUrl Logout ]
-            [ text "Se déconnecter" ]
-        ]
 
 
 viewPage : Model -> Html Msg

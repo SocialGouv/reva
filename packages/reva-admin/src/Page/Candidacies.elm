@@ -327,7 +327,7 @@ viewItem context candidacy =
                                 [ text organism.label ]
 
                         _ ->
-                            text ""
+                            div [] []
                     , Button.new { onClick = Nothing, label = "Accéder à la candidature" }
                         |> Button.linkButton (Route.toString context.baseUrl (Route.Candidacy { value = Profile, candidacyId = candidacy.id }))
                         |> Button.view
