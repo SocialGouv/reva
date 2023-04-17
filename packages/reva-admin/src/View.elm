@@ -1,6 +1,6 @@
-module View exposing (backLink, image, layout, skeleton, title)
+module View exposing (backLink, image, infoBlock, layout, skeleton, title)
 
-import Accessibility exposing (a, nav)
+import Accessibility exposing (a, h3, nav)
 import Html exposing (Html, div, h2, img, node, text)
 import Html.Attributes exposing (attribute, class, src)
 import Html.Attributes.Extra exposing (role)
@@ -24,7 +24,7 @@ image attributes baseUrl imgName =
 skeleton : String -> Html msg
 skeleton extraClass =
     div
-        [ class "animate-pulse rounded bg-gray-100"
+        [ class "animate-pulse bg-gray-50"
         , class extraClass
         ]
         []
@@ -78,3 +78,10 @@ backLink linkAttribute label =
         , class "my-4 text-lg"
         ]
         [ text label ]
+
+
+infoBlock : String -> List (Html msg) -> Html msg
+infoBlock label contents =
+    div [ class "mb-6 px-6 py-6 bg-gray-100" ] <|
+        h3 [ class "text-2xl font-bold mb-2" ] [ text label ]
+            :: contents
