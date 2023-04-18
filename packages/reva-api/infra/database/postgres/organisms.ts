@@ -107,7 +107,7 @@ export const getOrganismBySiret = async (
   }
 };
 
-export const createOrganism = async (data:{
+export const createOrganism = async (data: {
   label: string;
   address: string;
   zip: string;
@@ -117,6 +117,7 @@ export const createOrganism = async (data:{
   contactCommercialEmail: string;
   siret: string;
   isActive: boolean;
+  typology: OrganismTypology;
 }): Promise<Either<string, domain.Organism>> => {
   try {
     const organism = await prismaClient.organism.create({

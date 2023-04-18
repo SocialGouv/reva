@@ -125,6 +125,8 @@ export interface Department {
   label: string;
 }
 
+export type OrganismTypology = "experimentation" | "generaliste";
+
 export interface Organism {
   id: string;
   label: string;
@@ -137,6 +139,7 @@ export interface Organism {
   contactCommercialName: string;
   contactCommercialEmail: string;
   isActive: boolean;
+  typology: OrganismTypology;
 }
 
 export interface BasicSkill {
@@ -265,5 +268,4 @@ export enum CandidacyBusinessEvent {
   CONFIRMED_TRAINING_FORM = "Confirmed training form",
   UPDATED_ADMISSIBILITY = "Updated admissibility",
   DROPPED_OUT_CANDIDACY = "Dropped out candidacy",
-  
 }
