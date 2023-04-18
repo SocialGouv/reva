@@ -15,25 +15,28 @@ const zodSchema = z.object({
   accountPhoneNumber: z.string().min(1, "obligatoire"),
 });
 
-type StepThreeFormSchema = z.infer<typeof zodSchema>;
+type AccountInfoStepFormSchema = z.infer<typeof zodSchema>;
 
-export const StepThreeForm = () => {
+export const AccountInfoStepForm = () => {
   const [submissionError, setSubmissionError] = useState(false);
-  const { professionalSpaceInfos, goBackToPreviousStep, submitStepThree } =
-    useProfessionalSpaceCreationContext();
+  const {
+    professionalSpaceInfos,
+    goBackToPreviousStep,
+    submitAccountInfoStep,
+  } = useProfessionalSpaceCreationContext();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<StepThreeFormSchema>({
+  } = useForm<AccountInfoStepFormSchema>({
     resolver: zodResolver(zodSchema),
     defaultValues: { ...professionalSpaceInfos },
   });
 
-  const handleFormSubmit = async (data: StepThreeFormSchema) => {
+  const handleFormSubmit = async (data: AccountInfoStepFormSchema) => {
     try {
       setSubmissionError(false);
-      await submitStepThree(data);
+      await submitAccountInfoStep(data);
     } catch (e) {
       console.log(e);
       setSubmissionError(true);
@@ -44,8 +47,8 @@ export const StepThreeForm = () => {
     <div className="flex flex-col min-w-[70vw]">
       <Stepper
         title="Saisir vos informations générales"
-        currentStep={3}
-        stepCount={3}
+        currentStep={4}
+        stepCount={4}
       />
       <div className="border-t border-gray-300  mb-7" />
       {submissionError && (
@@ -101,7 +104,7 @@ export const StepThreeForm = () => {
         </fieldset>
         <div className="flex gap-2 ml-auto mt-4">
           <Button priority="secondary" onClick={goBackToPreviousStep}>
-            Revenir à l'étape 2
+            Revenir à l'étape 3
           </Button>
           <Button type="submit">Valider le formulaire</Button>
         </div>

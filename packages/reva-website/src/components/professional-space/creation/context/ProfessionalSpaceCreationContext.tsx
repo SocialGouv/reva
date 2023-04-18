@@ -5,7 +5,7 @@ import { createContext, ReactNode } from "react";
 
 type LegalStatus = "EI" | "EURL" | "SARL" | "SAS" | "SASU" | "SA";
 
-interface ProfessionalSpaceInfos {
+interface ProfessionalSpaceInfo {
   companySiret: string;
   companyLegalStatus: LegalStatus;
   companyName: string;
@@ -22,14 +22,19 @@ interface ProfessionalSpaceInfos {
   accountLastname: string;
   accountEmail: string;
   accountPhoneNumber: string;
+  typology: "generaliste";
 }
 interface ProfessionalSpaceCreationState {
-  currentStep: "stepOne" | "stepTwo" | "stepThree";
-  professionalSpaceInfos: Partial<ProfessionalSpaceInfos>;
+  currentStep:
+    | "companyInfoStep"
+    | "certificationsInfoStep"
+    | "billingInfoStep"
+    | "accountInfoStep";
+  professionalSpaceInfos: Partial<ProfessionalSpaceInfo>;
 }
 
-type StepOneData = Pick<
-  ProfessionalSpaceInfos,
+type CompanyInfoStepData = Pick<
+  ProfessionalSpaceInfo,
   | "companySiret"
   | "companyLegalStatus"
   | "companyName"
@@ -38,8 +43,8 @@ type StepOneData = Pick<
   | "companyCity"
 >;
 
-type StepTwoData = Pick<
-  ProfessionalSpaceInfos,
+type BillingInfoStepData = Pick<
+  ProfessionalSpaceInfo,
   | "companyBillingContactFirstname"
   | "companyBillingContactLastname"
   | "companyBillingEmail"
@@ -48,16 +53,19 @@ type StepTwoData = Pick<
   | "companyIban"
 >;
 
-type StepThreeData = Pick<
-  ProfessionalSpaceInfos,
+type AccountInfoStepData = Pick<
+  ProfessionalSpaceInfo,
   "accountFirstname" | "accountLastname" | "accountEmail" | "accountPhoneNumber"
 >;
 
+type CertificationsInfoStepData = Pick<ProfessionalSpaceInfo, "typology">;
+
 type ProfessionalSpaceCreationContext = ProfessionalSpaceCreationState & {
   goBackToPreviousStep: () => void;
-  submitStepOne: (stepData: StepOneData) => void;
-  submitStepTwo: (stepData: StepTwoData) => void;
-  submitStepThree: (stepData: StepThreeData) => void;
+  submitCompanyInfoStep: (stepData: CompanyInfoStepData) => void;
+  submitCertificationsInfoStep: (stepData: CertificationsInfoStepData) => void;
+  submitBillingInfoStep: (stepData: BillingInfoStepData) => void;
+  submitAccountInfoStep: (stepData: AccountInfoStepData) => void;
 };
 
 const GRAPHQL_API_URL =
@@ -75,7 +83,7 @@ export const ProfessionalSpaceCreationProvider = (props: {
   const router = useRouter();
 
   const [state, setState] = useState<ProfessionalSpaceCreationState>({
-    currentStep: "stepOne",
+    currentStep: "companyInfoStep",
     professionalSpaceInfos: {
       companyLegalStatus: "EI",
     },
@@ -85,20 +93,23 @@ export const ProfessionalSpaceCreationProvider = (props: {
     let newCurrentStep = state.currentStep;
 
     switch (state.currentStep) {
-      case "stepTwo":
-        newCurrentStep = "stepOne";
+      case "certificationsInfoStep":
+        newCurrentStep = "companyInfoStep";
         break;
-      case "stepThree":
-        newCurrentStep = "stepTwo";
+      case "billingInfoStep":
+        newCurrentStep = "certificationsInfoStep";
+        break;
+      case "accountInfoStep":
+        newCurrentStep = "billingInfoStep";
         break;
     }
     setState({ ...state, currentStep: newCurrentStep });
   }, [state]);
 
-  const submitStepOne = useCallback(
-    (stepData: StepOneData) => {
+  const submitCompanyInfoStep = useCallback(
+    (stepData: CompanyInfoStepData) => {
       setState({
-        currentStep: "stepTwo",
+        currentStep: "certificationsInfoStep",
         professionalSpaceInfos: {
           ...state.professionalSpaceInfos,
           ...stepData,
@@ -108,10 +119,23 @@ export const ProfessionalSpaceCreationProvider = (props: {
     [state]
   );
 
-  const submitStepTwo = useCallback(
-    (stepData: StepTwoData) => {
+  const submitCertificationsInfoStep = useCallback(
+    (stepData: CertificationsInfoStepData) => {
       setState({
-        currentStep: "stepThree",
+        currentStep: "billingInfoStep",
+        professionalSpaceInfos: {
+          ...state.professionalSpaceInfos,
+          ...stepData,
+        },
+      });
+    },
+    [state]
+  );
+
+  const submitBillingInfoStep = useCallback(
+    (stepData: BillingInfoStepData) => {
+      setState({
+        currentStep: "accountInfoStep",
         professionalSpaceInfos: {
           ...state.professionalSpaceInfos,
           ...stepData,
@@ -122,7 +146,7 @@ export const ProfessionalSpaceCreationProvider = (props: {
   );
 
   const executeGraphqlSubscriptionMutation = useCallback(
-    (professionalSpaceInfos: ProfessionalSpaceInfos) => {
+    (professionalSpaceInfos: ProfessionalSpaceInfo) => {
       const createSubscription = gql`
         mutation createSubscriptionRequest(
           $subscriptionRequest: SubscriptionRequestInput!
@@ -142,10 +166,10 @@ export const ProfessionalSpaceCreationProvider = (props: {
     []
   );
 
-  const submitStepThree = useCallback(
-    async (stepData: StepThreeData) => {
+  const submitAccountInfoStep = useCallback(
+    async (stepData: AccountInfoStepData) => {
       const newState: ProfessionalSpaceCreationState = {
-        currentStep: "stepThree" as const,
+        currentStep: "accountInfoStep",
         professionalSpaceInfos: {
           ...state.professionalSpaceInfos,
           ...stepData,
@@ -153,7 +177,7 @@ export const ProfessionalSpaceCreationProvider = (props: {
       };
       setState(newState);
       await executeGraphqlSubscriptionMutation(
-        newState.professionalSpaceInfos as ProfessionalSpaceInfos
+        newState.professionalSpaceInfos as ProfessionalSpaceInfo
       );
       router.push("/espace-professionnel/creation/confirmation");
     },
@@ -165,9 +189,10 @@ export const ProfessionalSpaceCreationProvider = (props: {
       value={{
         ...state,
         goBackToPreviousStep,
-        submitStepOne,
-        submitStepTwo,
-        submitStepThree,
+        submitCompanyInfoStep,
+        submitCertificationsInfoStep,
+        submitBillingInfoStep,
+        submitAccountInfoStep,
       }}
     >
       {props.children}

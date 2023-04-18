@@ -15,21 +15,24 @@ const zodSchema = z.object({
   companyLegalStatus: z.enum(legalStatuses),
   companyName: z.string().min(1, "obligatoire"),
   companyAddress: z.string().min(1, "obligatoire"),
-  companyZipCode: z.string().min(1, "obligatoire").max(5, "doit comporter 5 chiffres"),
+  companyZipCode: z
+    .string()
+    .min(1, "obligatoire")
+    .max(5, "doit comporter 5 chiffres"),
   companyCity: z.string().min(1, "obligatoire"),
 });
 
-type StepOneFormSchema = z.infer<typeof zodSchema>;
+type CompanyInfoStepFormSchema = z.infer<typeof zodSchema>;
 
-export const StepOneForm = () => {
-  const { professionalSpaceInfos, submitStepOne } =
+export const CompanyInfoStepForm = () => {
+  const { professionalSpaceInfos, submitCompanyInfoStep } =
     useProfessionalSpaceCreationContext();
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<StepOneFormSchema>({
+  } = useForm<CompanyInfoStepFormSchema>({
     resolver: zodResolver(zodSchema),
     defaultValues: { ...professionalSpaceInfos },
   });
@@ -39,15 +42,16 @@ export const StepOneForm = () => {
     control,
   });
 
-  const handleFormSubmit = (data: StepOneFormSchema) => submitStepOne(data);
+  const handleFormSubmit = (data: CompanyInfoStepFormSchema) =>
+    submitCompanyInfoStep(data);
 
   return (
     <div className="flex flex-col min-w-[70vw]">
       <Stepper
         title="Saisir vos informations pour la structure"
         currentStep={1}
-        stepCount={3}
-        nextTitle="Saisir les informations pour la facturation"
+        stepCount={4}
+        nextTitle="Renseigner les certifications concernées"
       />
       <div className="border-t border-gray-300  mb-7" />
       <FormOptionalFieldsDisclaimer className="mb-6" />
