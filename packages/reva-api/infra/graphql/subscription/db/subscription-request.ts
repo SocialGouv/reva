@@ -37,6 +37,7 @@ export const createSubscriptionRequest = async (
         accountLastname: subscriptionRequestInput.accountLastname,
         accountEmail: subscriptionRequestInput.accountEmail,
         accountPhoneNumber: subscriptionRequestInput.accountPhoneNumber,
+        typology: subscriptionRequestInput.typology,
       },
     });
     return Right(withoutNullFields(subscriptionRequest) as SubscriptionRequest);

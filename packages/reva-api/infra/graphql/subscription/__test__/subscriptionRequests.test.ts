@@ -3,9 +3,11 @@
  */
 
 import { LegalStatus } from "@prisma/client";
+
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 import { prismaClient } from "../../../database/postgres/client";
+
 const subreqSampleMin = {
   companySiret: "1234888",
   companyLegalStatus: LegalStatus.SAS,
@@ -20,15 +22,20 @@ const subreqSampleMin = {
   accountLastname: "Landouille",
   accountEmail: "contact@jojo-formation.fr",
   accountPhoneNumber: "03214556789",
+  typology: "generaliste" as const,
 };
 
 const subreqSampleAddress = {
   companyAddress: "64 boulevard du Général Leclerc",
   companyZipCode: "35660",
   companyCity: "Fougères",
-}
+};
 
-const subreqSampleFull = Object.assign({}, subreqSampleMin, subreqSampleAddress);
+const subreqSampleFull = Object.assign(
+  {},
+  subreqSampleMin,
+  subreqSampleAddress
+);
 
 let subreq1Id: string, subreq2Id: string;
 
@@ -60,7 +67,7 @@ test("Should fail to create a subscription request with missing address fields",
       arguments: { subscriptionRequest: subreqSampleMin },
       enumFields: ["companyLegalStatus"],
       returnFields:
-      "{ id, companySiret, companyLegalStatus, companyName, companyAddress, companyZipCode, companyCity, companyBillingContactFirstname, companyBillingContactLastname, companyBillingEmail, companyBillingPhoneNumber, companyBic, companyIban, accountFirstname, accountLastname, accountEmail, accountPhoneNumber }"
+        "{ id, companySiret, companyLegalStatus, companyName, companyAddress, companyZipCode, companyCity, companyBillingContactFirstname, companyBillingContactLastname, companyBillingEmail, companyBillingPhoneNumber, companyBic, companyIban, accountFirstname, accountLastname, accountEmail, accountPhoneNumber }",
     },
   });
   expect(resp.statusCode).toEqual(200);
@@ -78,14 +85,17 @@ test("Should create a subscription request", async () => {
       requestType: "mutation",
       endpoint: "subscription_createSubscriptionRequest",
       arguments: { subscriptionRequest: subreqSampleFull },
-      enumFields: ["companyLegalStatus"],
+      enumFields: ["companyLegalStatus", "typology"],
       returnFields:
-      "{ id, companySiret, companyLegalStatus, companyName, companyAddress, companyZipCode, companyCity, companyBillingContactFirstname, companyBillingContactLastname, companyBillingEmail, companyBillingPhoneNumber, companyBic, companyIban, accountFirstname, accountLastname, accountEmail, accountPhoneNumber }"
+        "{ id, companySiret, companyLegalStatus, companyName, companyAddress, companyZipCode, companyCity, companyBillingContactFirstname, companyBillingContactLastname, companyBillingEmail, companyBillingPhoneNumber, companyBic, companyIban, accountFirstname, accountLastname, accountEmail, accountPhoneNumber }",
     },
   });
   expect(resp.statusCode).toEqual(200);
   expect(resp.json()).not.toHaveProperty("errors");
   const subreq = resp.json().data.subscription_createSubscriptionRequest;
   subreq1Id = subreq.id;
-  expect(subreq).toMatchObject(subreqSampleFull);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { typology, ...subRequestWithoutTypology } = subreqSampleFull;
+  expect(subreq).toMatchObject(subRequestWithoutTypology);
 });

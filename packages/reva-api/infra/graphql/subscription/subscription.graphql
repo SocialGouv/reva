@@ -60,6 +60,10 @@ type Query {
   ): SubscriptionRequest
 }
 
+enum OrganismTypology {
+  generaliste
+}
+
 input SubscriptionRequestInput {
   companySiret: String!
   companyLegalStatus: LegalStatus!
@@ -77,6 +81,7 @@ input SubscriptionRequestInput {
   accountLastname: String!
   accountEmail: String!
   accountPhoneNumber: String!
+  typology: OrganismTypology!
 }
 
 type Mutation {
