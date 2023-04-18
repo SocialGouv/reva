@@ -46,6 +46,7 @@ const organismIperia = {
   contactCommercialEmail: "manu@iperia.fr",
   contactAdministrativeEmail: "josette@iperia.fr",
   isActive: true,
+  typology: "experimentation" as const,
 };
 
 // Architectes

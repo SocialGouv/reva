@@ -149,7 +149,7 @@ export const validateSubscriptionRequest = async (
   const checkIfKeycloakAccountExists = EitherAsync.fromPromise(async () => {
     const eitherAccount = await deps.getIamAccount({
       email: ($store.subreq as SubscriptionRequest).accountEmail,
-      username: ""
+      username: "",
     });
     if (eitherAccount.isLeft()) {
       return Left(
@@ -189,6 +189,7 @@ export const validateSubscriptionRequest = async (
         siret: $store.subreq?.companySiret ?? "",
         legalStatus: $store.subreq?.companyLegalStatus,
         isActive: true,
+        typology: $store.subreq?.typology ?? ("plop" as any),
       })
     )
       .mapLeft(
@@ -272,15 +273,13 @@ export const validateSubscriptionRequest = async (
       );
     });
 
-  return (
-    getSubscriptionRequest
-      .chain(() => checkIfOrganismExists)
-      .chain(() => checkIfAccountExists)
-      .chain(() => checkIfKeycloakAccountExists)
-      .chain(() => createOrganism)
-      .chain(() => createKeycloakAccount)
-      .chain(() => createAccount)
-      .chain(() => sendValidationEmail)
-      .chain(() => deleteSubscriptionRequest)
-  );
+  return getSubscriptionRequest
+    .chain(() => checkIfOrganismExists)
+    .chain(() => checkIfAccountExists)
+    .chain(() => checkIfKeycloakAccountExists)
+    .chain(() => createOrganism)
+    .chain(() => createKeycloakAccount)
+    .chain(() => createAccount)
+    .chain(() => sendValidationEmail)
+    .chain(() => deleteSubscriptionRequest);
 };

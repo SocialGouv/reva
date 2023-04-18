@@ -100,6 +100,7 @@ async function main() {
                   contactCommercialEmail: row.contact_commercial_email.trim(),
                   siret: row.siret.trim().replace(" ", ""),
                   isActive: row.is_active.trim() === "1",
+                  typology: "experimentation",
                 },
               });
             }))
