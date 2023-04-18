@@ -36,8 +36,8 @@ form _ ( _, referential ) =
     in
     { elements =
         [ ( "heading", Form.Heading "1 - Informations candidat" )
-        , ( keys.lastname, Form.Input "Nom" )
-        , ( keys.firstname, Form.Input "Prénom" )
+        , ( keys.lastname, Form.InputRequired "Nom" )
+        , ( keys.firstname, Form.InputRequired "Prénom" )
         , ( keys.firstname2, Form.Input "Prénom 2" )
         , ( keys.firstname3, Form.Input "Prénom 3" )
         , ( keys.gender, Form.Select "Genre" genders )
