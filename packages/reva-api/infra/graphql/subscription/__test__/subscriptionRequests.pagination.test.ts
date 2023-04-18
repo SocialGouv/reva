@@ -2,8 +2,10 @@
  * @jest-environment ./test/fastify-test-env.ts
  */
 
-import { LegalStatus } from "@prisma/client";
 import { randomUUID } from "crypto";
+
+import { LegalStatus } from "@prisma/client";
+
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 import { prismaClient } from "../../../database/postgres/client";
@@ -27,15 +29,17 @@ const subreqSample = {
   accountLastname: "Landouille",
   accountEmail: "contact@jojo-formation.fr",
   accountPhoneNumber: "03214556789",
+  typology: "generaliste" as const,
 };
 
 beforeAll(() => {
-  return prismaClient.subscriptionRequest.deleteMany()
-  .then(() => createManySubscriptionRequests(NB_SUBSCRIPTION_REQUESTS));
+  return prismaClient.subscriptionRequest
+    .deleteMany()
+    .then(() => createManySubscriptionRequests(NB_SUBSCRIPTION_REQUESTS));
 });
 
 afterAll(() => {
-  return prismaClient.subscriptionRequest.deleteMany()
+  return prismaClient.subscriptionRequest.deleteMany();
 });
 
 test("Get requests list should fail when not admin", async () => {
@@ -65,10 +69,11 @@ test("Get requests list should return paginated list", async () => {
       endpoint: "subscription_getSubscriptionRequests",
       arguments: {
         limit: 25,
-        offset: 56
+        offset: 56,
       },
-      returnFields: "{ rows { id }, info { totalRows, currentPage, pageLength, totalPages }  }",
-    }
+      returnFields:
+        "{ rows { id }, info { totalRows, currentPage, pageLength, totalPages }  }",
+    },
   });
   expect(resp.statusCode).toEqual(200);
   const result = resp.json();
@@ -76,17 +81,17 @@ test("Get requests list should return paginated list", async () => {
   console.log(result.data.subscription_getSubscriptionRequests);
 });
 
- const createManySubscriptionRequests = (nbSubReq: number) => {
+const createManySubscriptionRequests = (nbSubReq: number) => {
   const subReqList = [];
-  for(let i=0; i<nbSubReq; i++) {
+  for (let i = 0; i < nbSubReq; i++) {
     subReqList.push({
       ...subreqSample,
       accountEmail: `${randomUUID()}@mail.com`,
       companyName: randomUUID(),
       companySiret: randomUUID(),
-    })
+    });
   }
   return prismaClient.subscriptionRequest.createMany({
     data: subReqList,
   });
-}
+};
