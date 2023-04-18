@@ -256,8 +256,10 @@ viewForm referential status maybeError formData form saveButton submitButton =
         Editable ->
             formFieldset <|
                 legend
-                    [ class "fr-fieldset__legend -ml-2" ]
-                    [ h1 [] [ text currentForm.title ] ]
+                    [ class "fr-fieldset__legend -ml-1" ]
+                    [ h1 [] [ text currentForm.title ]
+                    , p [ class "font-normal" ] [ text "Sauf mention contraire “(optionnel)” dans le label, tous les champs sont obligatoires." ]
+                    ]
                     :: viewFieldsets formData currentForm.elements
                     ++ [ div
                             [ class "mt-8 pb-4 flex justify-end pr-2 w-full" ]
