@@ -24,8 +24,8 @@ form formData ( _, _ ) =
                 , "Total demandé et total réalisé"
                 ]
           )
-        , ( keys.invoiceFiles, Form.File "Facture" )
-        , ( keys.appointmentFiles, Form.File "Récapitulatif des attestations de présence" )
+        , ( keys.invoiceFiles, Form.File "Ajouter une facture" "Taille maximale : 10 Mo. Format supporté : pdf." )
+        , ( keys.appointmentFiles, Form.File "Ajouter un récapitulatif des attestations de présence" "Taille maximale : 10 Mo. Format supporté : pdf." )
         , ( "other-help-heading", Form.Section "Pièces justificatives à conserver" )
         , ( "other-help"
           , Form.Requirements "Pièces justificatives que vous devez collecter et conserver pendant 5 ans, en cas de contrôle à posteriori de l'OPCO de la Cohésion :"

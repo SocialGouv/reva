@@ -53,8 +53,8 @@ type Element
     | CheckboxList String (List CheckBoxDescription)
     | Date String
     | Empty
-    | File String
-    | Files String
+    | File String String
+    | Files String String
     | Heading String -- h3
     | Info String String
     | Input String
@@ -350,14 +350,12 @@ viewEditableElement formData ( elementId, element ) =
         Empty ->
             text ""
 
-        File label ->
-            viewInputFiles False elementId
-                |> withLabel label
+        File label hint ->
+            [ viewInputFiles False elementId label hint ]
                 |> viewFieldsetElement
 
-        Files label ->
-            viewInputFiles True elementId
-                |> withLabel label
+        Files label hint ->
+            [ viewInputFiles True elementId label hint ]
                 |> viewFieldsetElement
 
         Heading title ->
@@ -493,10 +491,10 @@ viewReadOnlyElement formData ( elementId, element ) =
         Empty ->
             text ""
 
-        File _ ->
+        File _ _ ->
             text ""
 
-        Files _ ->
+        Files _ _ ->
             text ""
 
         Heading title ->
@@ -666,26 +664,35 @@ viewChoice currentChoiceId ( choiceId, choice ) =
         [ text choice ]
 
 
-viewInputFiles : Bool -> String -> Html (Msg referential)
-viewInputFiles acceptMultipleFiles elementId =
+viewInputFiles : Bool -> String -> String -> String -> Html (Msg referential)
+viewInputFiles acceptMultipleFiles elementId title hint =
     let
         filesDecoder : Json.Decode.Decoder (List File)
         filesDecoder =
             Json.Decode.at [ "target", "files" ] (Json.Decode.list File.decoder)
     in
-    input
-        [ type_ "file"
-        , multiple acceptMultipleFiles
-        , name elementId
-        , id elementId
-        , on "change" (Json.Decode.map (UserSelectFiles elementId) filesDecoder)
-        , class "block w-[520px] mb-8 text-sm text-slate-500"
-        , class "file:mr-4 file:py-2 file:px-4"
-        , class "file:rounded file:border-0"
-        , class "file:bg-gray-900 file:text-white"
-        , class "hover:file:bg-gray-800"
+    div
+        [ class "fr-upload-group" ]
+        [ label
+            [ class "fr-label"
+            , for "file-upload"
+            ]
+            [ text title
+            , span
+                [ class "fr-hint-text"
+                ]
+                [ text hint ]
+            ]
+        , input
+            [ class "fr-upload w-[520px]"
+            , type_ "file"
+            , multiple acceptMultipleFiles
+            , id elementId
+            , name elementId
+            , on "change" (Json.Decode.map (UserSelectFiles elementId) filesDecoder)
+            ]
+            []
         ]
-        []
 
 
 viewInfo : String -> String -> Html msg
