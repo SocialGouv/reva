@@ -19,28 +19,32 @@ const zodSchema = z.object({
     .max(34, "34 caractères maximum"),
 });
 
-type StepTwoFormSchema = z.infer<typeof zodSchema>;
+type BillingInfoStepFormSchema = z.infer<typeof zodSchema>;
 
-export const StepTwoForm = () => {
-  const { professionalSpaceInfos, goBackToPreviousStep, submitStepTwo } =
-    useProfessionalSpaceCreationContext();
+export const BillingInfoStepForm = () => {
+  const {
+    professionalSpaceInfos,
+    goBackToPreviousStep,
+    submitBillingInfoStep,
+  } = useProfessionalSpaceCreationContext();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<StepTwoFormSchema>({
+  } = useForm<BillingInfoStepFormSchema>({
     resolver: zodResolver(zodSchema),
     defaultValues: { ...professionalSpaceInfos },
   });
 
-  const handleFormSubmit = (data: StepTwoFormSchema) => submitStepTwo(data);
+  const handleFormSubmit = (data: BillingInfoStepFormSchema) =>
+    submitBillingInfoStep(data);
 
   return (
     <div className="flex flex-col min-w-[70vw]">
       <Stepper
         title="Saisir vos informations pour la facturation"
-        currentStep={2}
-        stepCount={3}
+        currentStep={3}
+        stepCount={4}
         nextTitle="Saisir les informations générales"
       />
       <div className="border-t border-gray-300  mb-7" />
@@ -107,9 +111,9 @@ export const StepTwoForm = () => {
         </fieldset>
         <div className="flex gap-2 ml-auto mt-4">
           <Button priority="secondary" onClick={goBackToPreviousStep}>
-            Revenir à l'étape 1
+            Revenir à l'étape 2
           </Button>
-          <Button type="submit"> Passer à l'étape 3</Button>
+          <Button type="submit"> Passer à l'étape 4</Button>
         </div>
       </form>
     </div>

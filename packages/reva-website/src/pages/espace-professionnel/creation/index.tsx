@@ -2,24 +2,28 @@
 
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { BlueLayout } from "@/components/layout/blue-layout/BlueLayout";
-import { StepOneForm } from "@/components/professional-space/creation/form/StepOneForm";
+import { CompanyInfoStepForm } from "@/components/professional-space/creation/form/CompanyInfoStepForm";
 import {
   ProfessionalSpaceCreationProvider,
   useProfessionalSpaceCreationContext,
 } from "@/components/professional-space/creation/context/ProfessionalSpaceCreationContext";
-import { StepTwoForm } from "@/components/professional-space/creation/form/StepTwoForm";
-import { StepThreeForm } from "@/components/professional-space/creation/form/StepThreeForm";
+import { CertificationsInfoStepForm } from "@/components/professional-space/creation/form/CertificationsInfoStep";
+import { BillingInfoStepForm } from "@/components/professional-space/creation/form/BillingInfoStepForm";
+import { AccountInfoStepForm } from "@/components/professional-space/creation/form/AccountInfoStepForm";
+
 import Head from "next/head";
 
 const PageContent = () => {
   const { currentStep } = useProfessionalSpaceCreationContext();
   switch (currentStep) {
-    case "stepOne":
-      return <StepOneForm />;
-    case "stepTwo":
-      return <StepTwoForm />;
-    case "stepThree":
-      return <StepThreeForm />;
+    case "companyInfoStep":
+      return <CompanyInfoStepForm />;
+    case "certificationsInfoStep":
+      return <CertificationsInfoStepForm />;
+    case "billingInfoStep":
+      return <BillingInfoStepForm />;
+    case "accountInfoStep":
+      return <AccountInfoStepForm />;
     default:
       return <div>unknown step</div>;
   }
