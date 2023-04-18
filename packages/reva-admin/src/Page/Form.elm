@@ -297,16 +297,21 @@ viewEditableElement formData ( elementId, element ) =
             get elementId formData
                 |> Maybe.withDefault (defaultValue element)
 
-        inputView label inputType inputAttrs =
+        optional label =
+            label ++ " (optionnel)"
+
+        inputView label hint inputType inputAttrs =
             viewInput elementId label dataOrDefault
                 |> inputType
                 |> Input.withInputAttrs inputAttrs
+                |> Input.withHint [ text hint ]
                 |> Input.view
 
         textareaView : String -> Maybe String -> Html (Msg referential)
         textareaView label placeholderValue =
-            viewInput elementId label dataOrDefault
+            viewInput elementId (label |> optional) dataOrDefault
                 |> Input.textArea (Just 10)
+                |> Input.withHint [ text "Texte de description libre" ]
                 |> Input.withExtraAttrs [ placeholderValue |> Maybe.map placeholder |> Maybe.withDefault (class "") ]
                 |> Input.view
 
@@ -340,7 +345,7 @@ viewEditableElement formData ( elementId, element ) =
 
         Date label ->
             viewFieldsetElement
-                [ inputView label Input.date [] ]
+                [ inputView (label |> optional) "Date au format 31/12/2022" Input.date [] ]
 
         Empty ->
             text ""
@@ -367,19 +372,19 @@ viewEditableElement formData ( elementId, element ) =
 
         Input label ->
             viewFieldsetElement
-                [ inputView label identity [] ]
+                [ inputView (label |> optional) "Texte libre" identity [] ]
 
         InputRequired label ->
             viewFieldsetElement
-                [ inputView (label ++ " *") identity [ required True ] ]
+                [ inputView label "Texte libre" identity [ required True ] ]
 
         Number label ->
             viewFieldsetElement
-                [ inputView label Input.numeric [ Html.Attributes.min "0" ] ]
+                [ inputView label "Un nombre entier supérieur ou égal à 0" Input.numeric [ Html.Attributes.min "0" ] ]
 
         Price label ->
             viewFieldsetElement
-                [ inputView label (Input.decimal 0.01) [ Html.Attributes.min "0" ] ]
+                [ inputView label "Un nombre décimal supérieur ou égal à 0" (Input.decimal 0.01) [ Html.Attributes.min "0" ] ]
 
         Textarea label placeholder ->
             viewFieldsetElement
@@ -571,6 +576,9 @@ defaultValue : Element -> String
 defaultValue element =
     case element of
         Number _ ->
+            "0"
+
+        Price _ ->
             "0"
 
         _ ->
