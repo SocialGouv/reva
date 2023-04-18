@@ -10,7 +10,7 @@ module Page.Form exposing
     , view
     )
 
-import Accessibility exposing (h2, h3, h4, h5)
+import Accessibility exposing (h1, h2, h3, h4)
 import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
 import BetaGouv.DSFR.Checkbox as Checkbox
@@ -55,7 +55,7 @@ type Element
     | Empty
     | File String String
     | Files String String
-    | Heading String -- h3
+    | Heading String -- h2
     | Info String String
     | Input String
     | InputRequired String
@@ -66,8 +66,8 @@ type Element
     | Requirements String (List String)
     | Select String (List ( String, String ))
     | SelectOther String String String
-    | Section String -- h4
-    | Title String -- h5
+    | Section String -- h3
+    | Title String -- h4
     | Textarea String (Maybe String)
     | RadioList String (List ( String, String ))
 
@@ -257,7 +257,7 @@ viewForm referential status maybeError formData form saveButton submitButton =
             formFieldset <|
                 legend
                     [ class "fr-fieldset__legend -ml-2" ]
-                    [ h2 [] [ text currentForm.title ] ]
+                    [ h1 [] [ text currentForm.title ] ]
                     :: viewFieldsets formData currentForm.elements
                     ++ [ div
                             [ class "mt-8 pb-4 flex justify-end pr-2 w-full" ]
@@ -286,7 +286,7 @@ viewForm referential status maybeError formData form saveButton submitButton =
             div
                 [ class "bg-gray-50 m-8 p-4" ]
             <|
-                h2 [] [ text currentForm.title ]
+                h1 [] [ text currentForm.title ]
                     :: List.map (viewReadOnlyElement formData) currentForm.elements
 
 
@@ -361,12 +361,12 @@ viewEditableElement formData ( elementId, element ) =
         Heading title ->
             legend
                 [ class "fr-fieldset__legend" ]
-                [ h3 [] [ text title ] ]
+                [ h2 [] [ text title ] ]
 
         Title title ->
             legend
                 [ class "fr-fieldset__legend mt-6 mb-1" ]
-                [ h5 [] [ text title ] ]
+                [ h4 [] [ text title ] ]
 
         Input label ->
             viewFieldsetElement
@@ -421,7 +421,7 @@ viewEditableElement formData ( elementId, element ) =
         Section title ->
             legend
                 [ class "fr-fieldset__legend mt-6 mb-1" ]
-                [ h4 [] [ text title ] ]
+                [ h3 [] [ text title ] ]
 
         Select label choices ->
             viewFieldsetElement
@@ -498,10 +498,10 @@ viewReadOnlyElement formData ( elementId, element ) =
             text ""
 
         Heading title ->
-            h3 [ class "mt-8" ] [ text title ]
+            h2 [ class "mt-8" ] [ text title ]
 
         Title title ->
-            h5 [ class "mt-4 mb-2" ] [ text title ]
+            h4 [ class "mt-4 mb-2" ] [ text title ]
 
         Info label value ->
             defaultView label value
@@ -534,7 +534,7 @@ viewReadOnlyElement formData ( elementId, element ) =
             text ""
 
         Section title ->
-            h4 [ class "mt-8 mb-2" ] [ text title ]
+            h3 [ class "mt-8 mb-2" ] [ text title ]
 
         Select label choices ->
             List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices
