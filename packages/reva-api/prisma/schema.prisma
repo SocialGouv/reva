@@ -262,6 +262,7 @@ model Department {
   availableCertificationsByDepartments                   AvailableCertificationsByDepartments[]
   activeOrganismsByAvailableCertificationsAndDepartments ActiveOrganismsByAvailableCertificationsAndDepartments[]
   OrganismsOnDepartments                                 OrganismsOnDepartments[]
+  SubscriptionRequestsOnDepartments                      SubscriptionRequestsOnDepartments[]
 
   @@map("department")
 }
@@ -650,8 +651,21 @@ model SubscriptionRequest {
   createdAt                                 DateTime                                    @default(now()) @map("created_at") @db.Timestamptz(6)
   subscriptionRequestOnDomaine              SubscriptionRequestOnDomaine[]
   subscriptionRequestOnConventionCollective SubscriptionRequestOnConventionCollective[]
+  departmentsWithOrganismMethods            SubscriptionRequestsOnDepartments[]
 
   @@map("subscription_request")
+}
+
+model SubscriptionRequestsOnDepartments {
+  id                    String              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  department            Department          @relation(fields: [departmentId], references: [id])
+  departmentId          String              @map("department_id") @db.Uuid
+  isOnSite              Boolean             @default(false) @map("is_onsite")
+  isRemote              Boolean             @default(false) @map("is_remote")
+  subscriptionRequestId String              @map("subscription_request_id") @db.Uuid
+  SubscriptionRequest   SubscriptionRequest @relation(fields: [subscriptionRequestId], references: [id], onDelete: Cascade)
+
+  @@map("subscription_request_department")
 }
 
 enum OrganismTypology {

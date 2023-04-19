@@ -1,6 +1,9 @@
 import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
-import { Organism } from "../../../../domain/types/candidacy";
+import {
+  DepartmentWithOrganismMethods,
+  Organism,
+} from "../../../../domain/types/candidacy";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -17,7 +20,11 @@ interface ValidateSubscriptionRequestDeps {
     siret: string
   ) => Promise<Either<string, Maybe<Organism>>>;
   createOrganism: (
-    data: Omit<Organism, "id"> & { domaineIds?: string[]; ccnIds?: string[] }
+    data: Omit<Organism, "id"> & {
+      ccnIds?: string[];
+      domaineIds?: string[];
+      departmentsWithOrganismMethods: DepartmentWithOrganismMethods[];
+    }
   ) => Promise<Either<string, Organism>>;
   getIamAccount: (params: {
     email: string;
@@ -53,6 +60,11 @@ interface ValidateSubscriptionRequestParams {
 type SubscriptionRequestWithTypologyAssociations = SubscriptionRequest & {
   subscriptionRequestOnDomaine?: { domaineId: string }[];
   subscriptionRequestOnConventionCollective?: { ccnId: string }[];
+  departmentsWithOrganismMethods?: {
+    departmentId: string;
+    isOnSite: boolean;
+    isRemote: boolean;
+  }[];
 };
 
 export const validateSubscriptionRequest = async (
@@ -204,6 +216,8 @@ export const validateSubscriptionRequest = async (
         ccnIds: $store.subreq?.subscriptionRequestOnConventionCollective?.map(
           (o: any) => o.ccnId
         ),
+        departmentsWithOrganismMethods:
+          $store.subreq?.departmentsWithOrganismMethods ?? [],
       })
     )
       .mapLeft(

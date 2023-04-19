@@ -37,19 +37,27 @@ const subreqSampleFull = Object.assign(
   subreqSampleAddress
 );
 
-let subreq1Id: string, subreq2Id: string;
+let subreq1Id: string,
+  onSiteDepartmentsIds: string[],
+  remoteDepartmentsIds: string[];
 
 beforeAll(async () => {
-  const subreq = await prismaClient.subscriptionRequest.create({
-    data: subreqSampleFull,
+  const ileDeFrance = await prismaClient.department.findFirst({
+    where: { code: "75" },
   });
-  subreq2Id = subreq.id;
+
+  const loireAtlantique = await prismaClient.department.findFirst({
+    where: { code: "44" },
+  });
+
+  onSiteDepartmentsIds = [ileDeFrance?.id || ""];
+  remoteDepartmentsIds = [ileDeFrance?.id || "", loireAtlantique?.id || ""];
 });
 
 afterAll(async () => {
   await prismaClient.subscriptionRequest.deleteMany({
     where: {
-      id: { in: [subreq1Id, subreq2Id] },
+      id: { in: [subreq1Id] },
     },
   });
 });
@@ -84,7 +92,13 @@ test("Should create a subscription request", async () => {
     payload: {
       requestType: "mutation",
       endpoint: "subscription_createSubscriptionRequest",
-      arguments: { subscriptionRequest: subreqSampleFull },
+      arguments: {
+        subscriptionRequest: {
+          ...subreqSampleFull,
+          onSiteDepartmentsIds,
+          remoteDepartmentsIds,
+        },
+      },
       enumFields: ["companyLegalStatus", "typology"],
       returnFields:
         "{ id, companySiret, companyLegalStatus, companyName, companyAddress, companyZipCode, companyCity, companyBillingContactFirstname, companyBillingContactLastname, companyBillingEmail, companyBillingPhoneNumber, companyBic, companyIban, accountFirstname, accountLastname, accountEmail, accountPhoneNumber }",

@@ -12,6 +12,19 @@ const withoutNullFields = (obj: Record<string, unknown>) => {
   }, {});
 };
 
+const departmentsWithOrganismMethods = ({
+  onSite,
+  remote,
+}: {
+  onSite: string[];
+  remote: string[];
+}) =>
+  [...new Set([...onSite, ...remote])].map((departmentId) => ({
+    departmentId,
+    isOnSite: onSite.includes(departmentId),
+    isRemote: remote.includes(departmentId),
+  }));
+
 export const createSubscriptionRequest = async (
   subscriptionRequestInput: SubscriptionRequestInput
 ): Promise<Either<string, SubscriptionRequest>> => {
@@ -54,6 +67,14 @@ export const createSubscriptionRequest = async (
               })) || [],
           },
         },
+        departmentsWithOrganismMethods: {
+          createMany: {
+            data: departmentsWithOrganismMethods({
+              onSite: subscriptionRequestInput.onSiteDepartmentsIds,
+              remote: subscriptionRequestInput.remoteDepartmentsIds,
+            }),
+          },
+        },
       },
     });
     return Right(withoutNullFields(subscriptionRequest) as SubscriptionRequest);
@@ -72,6 +93,7 @@ export const getSubscriptionRequestById = async (
       include: {
         subscriptionRequestOnDomaine: true,
         subscriptionRequestOnConventionCollective: true,
+        departmentsWithOrganismMethods: true,
       },
     });
     return Right(
