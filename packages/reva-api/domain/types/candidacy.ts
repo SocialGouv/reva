@@ -1,5 +1,5 @@
 import { CandidacyStatusStep } from "@prisma/client";
-import { Decimal } from "@prisma/client/runtime";
+import { Decimal } from "@prisma/client/runtime/library";
 
 interface CandidacyAbstract {
   deviceId: string;

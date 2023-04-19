@@ -1,4 +1,3 @@
-import { Decimal } from "@prisma/client/runtime";
 import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
 import { PaymentRequest } from "../../../../domain/types/candidacy";

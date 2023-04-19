@@ -1,4 +1,4 @@
-import { Decimal } from "@prisma/client/runtime";
+import { Decimal } from "@prisma/client/runtime/library";
 import { Either, EitherAsync, Left, Right } from "purify-ts";
 
 import { Role } from "../../../../domain/types/account";

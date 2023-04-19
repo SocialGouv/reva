@@ -91,7 +91,7 @@ export const getCertifications = async ({
         INNER JOIN organism ON organism.id = organism_region_certification.organism_id
         INNER JOIN region ON region.id = organism_region_certification.region_id
         INNER JOIN department ON department.region_id = region.id
-        WHERE department.id = ${departmentId}
+        WHERE department.id = uuid(${departmentId})
         AND organism_region_certification.is_architect = true
         AND organism.is_active = true
         ORDER BY id, label DESC;
