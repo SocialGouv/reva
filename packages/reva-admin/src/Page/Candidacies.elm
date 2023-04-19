@@ -7,7 +7,7 @@ module Page.Candidacies exposing
     , withStatusFilter
     )
 
-import Accessibility exposing (button, h2, h4)
+import Accessibility exposing (button, h1, h2, h3)
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep)
 import Api.Candidacy
 import Api.Token exposing (Token)
@@ -186,7 +186,7 @@ viewDirectoryHeader : Context -> Html Msg
 viewDirectoryHeader context =
     div
         [ class "p-4 sm:p-6" ]
-        [ h2
+        [ h1
             []
             [ if Api.Token.isAdmin context.token then
                 text "Espace Professionnel - Administrateur"
@@ -253,7 +253,7 @@ viewDirectory context ( firstCandidacy, candidacies ) =
             , class "top-0 text-xl font-semibold text-slate-700"
             , class "bg-white text-gray-900"
             ]
-            [ h4 [ class "mb-0" ] [ text (Candidacy.toCategoryString firstCandidacy ++ " (" ++ String.fromInt candidaciesInCategory ++ ")") ] ]
+            [ h2 [ class "mb-0" ] [ text (Candidacy.toCategoryString firstCandidacy ++ " (" ++ String.fromInt candidaciesInCategory ++ ")") ] ]
         , List.map (viewItem context) (firstCandidacy :: candidacies)
             |> ul [ class "list-none pl-0 mt-0 relative z-0" ]
         ]
@@ -272,8 +272,8 @@ viewItem context candidacy =
             [ class "text-lg flex-1 min-w-0" ]
             [ div
                 [ class "border py-5 pl-6 pr-4 my-8" ]
-                [ p
-                    [ class "text-lg font-semibold truncate mb-2"
+                [ h3
+                    [ class "text-xl font-semibold truncate mb-2"
                     , classList [ ( "italic", candidacy.certification == Nothing ) ]
                     ]
                     [ Maybe.map .label candidacy.certification
