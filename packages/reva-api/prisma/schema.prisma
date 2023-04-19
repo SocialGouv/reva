@@ -261,6 +261,7 @@ model Department {
   Candidate                                              Candidate[]
   availableCertificationsByDepartments                   AvailableCertificationsByDepartments[]
   activeOrganismsByAvailableCertificationsAndDepartments ActiveOrganismsByAvailableCertificationsAndDepartments[]
+  OrganismsOnDepartments                                 OrganismsOnDepartments[]
 
   @@map("department")
 }
@@ -309,6 +310,7 @@ model Organism {
   candidacies                                            Candidacy[]
   accounts                                               Account[]
   regionsAndCertifications                               OrganismsOnRegionsAndCertifications[]
+  departmentsWithOrganismMethods                         OrganismsOnDepartments[]
   createdAt                                              DateTime                                                 @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                                              DateTime?                                                @map("updated_at") @db.Timestamptz(6)
   FundingRequest                                         FundingRequest[]
@@ -335,6 +337,21 @@ model OrganismsOnRegionsAndCertifications {
 
   @@unique([organismId, regionId, certificationId])
   @@map("organism_region_certification")
+}
+
+model OrganismsOnDepartments {
+  id           String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  organism     Organism   @relation(fields: [organismId], references: [id], onDelete: Cascade)
+  organismId   String     @map("organism_id") @db.Uuid
+  department   Department @relation(fields: [departmentId], references: [id])
+  departmentId String     @map("department_id") @db.Uuid
+  isOnSite     Boolean    @default(false) @map("is_onsite")
+  isRemote     Boolean    @default(false) @map("is_remote")
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime?  @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([organismId, departmentId])
+  @@map("organism_department")
 }
 
 model Training {

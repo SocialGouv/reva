@@ -131,6 +131,12 @@ export type OrganismTypology =
   | "expertFiliere"
   | "expertBranche";
 
+export interface DepartmentWithOrganismMethods {
+  department: Department;
+  isOnSite: boolean;
+  isRemote: boolean;
+}
+
 export interface Organism {
   id: string;
   label: string;
