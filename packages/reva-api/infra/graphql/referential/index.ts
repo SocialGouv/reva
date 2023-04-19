@@ -28,7 +28,10 @@ export const resolvers = {
     },
     getCertifications: async (_: any, payload: any) => {
       const result = await getCertifications({
-        getCertifications: certificationsDb.getCertifications,
+        getCertifications:
+          process.env.USE_ORGANISMS_WITH_NEW_TYPOLOGIES === "true"
+            ? certificationsDb.getCertificationsForDepartmentWithNewTypologies
+            : certificationsDb.getCertifications,
       })({ departmentId: payload.departmentId });
 
       return result

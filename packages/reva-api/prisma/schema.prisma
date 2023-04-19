@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["views"]
 }
 
 datasource db {
@@ -23,24 +24,25 @@ enum ExperienceDuration {
 }
 
 model Certification {
-  id                    String                                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label                 String                                  @db.VarChar(255)
-  acronym               String                                  @db.VarChar(255)
-  level                 Int
-  activities            String?
-  activityArea          String?                                 @map("activity_area")
-  accessibleJobType     String?                                 @map("accessible_job_type")
-  abilities             String?
-  slug                  String
-  summary               String?
-  status                CertificationStatus                     @default(INACTIVE)
-  rncpId                String                                  @unique @map("rncp_id") @db.VarChar(255)
-  romes                 RomesOnCertifications[]
+  id                                   String                                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                                String                                  @db.VarChar(255)
+  acronym                              String                                  @db.VarChar(255)
+  level                                Int
+  activities                           String?
+  activityArea                         String?                                 @map("activity_area")
+  accessibleJobType                    String?                                 @map("accessible_job_type")
+  abilities                            String?
+  slug                                 String
+  summary                              String?
+  status                               CertificationStatus                     @default(INACTIVE)
+  rncpId                               String                                  @unique @map("rncp_id") @db.VarChar(255)
+  romes                                RomesOnCertifications[]
   // candidacies Candidacy[]
-  candidaciesAndRegions CandidaciesOnRegionsAndCertifications[]
-  organismsAndRegions   OrganismsOnRegionsAndCertifications[]
-  createdAt             DateTime                                @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt             DateTime?                               @map("updated_at") @db.Timestamptz(6)
+  candidaciesAndRegions                CandidaciesOnRegionsAndCertifications[]
+  organismsAndRegions                  OrganismsOnRegionsAndCertifications[]
+  createdAt                            DateTime                                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                            DateTime?                               @map("updated_at") @db.Timestamptz(6)
+  availableCertificationsByDepartments AvailableCertificationsByDepartments[]
 
   @@map("certification")
 }
@@ -245,15 +247,16 @@ model Region {
 }
 
 model Department {
-  id          String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label       String      @unique @db.VarChar(255)
-  code        String      @unique @db.VarChar(3)
-  region      Region      @relation(fields: [regionId], references: [id])
-  regionId    String      @map("region_id") @db.Uuid
-  candidacies Candidacy[]
-  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime?   @map("updated_at") @db.Timestamptz(6)
-  Candidate   Candidate[]
+  id                                   String                                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                                String                                 @unique @db.VarChar(255)
+  code                                 String                                 @unique @db.VarChar(3)
+  region                               Region                                 @relation(fields: [regionId], references: [id])
+  regionId                             String                                 @map("region_id") @db.Uuid
+  candidacies                          Candidacy[]
+  createdAt                            DateTime                               @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                            DateTime?                              @map("updated_at") @db.Timestamptz(6)
+  Candidate                            Candidate[]
+  availableCertificationsByDepartments AvailableCertificationsByDepartments[]
 
   @@map("department")
 }
@@ -628,4 +631,14 @@ model SubscriptionRequest {
 enum OrganismTypology {
   experimentation
   generaliste
+}
+
+view AvailableCertificationsByDepartments {
+  certification   Certification @relation(fields: [certificationId], references: [id])
+  department      Department    @relation(fields: [departmentId], references: [id])
+  certificationId String        @map("certification_id") @db.Uuid
+  departmentId    String        @map("department_id") @db.Uuid
+
+  @@unique([certificationId, departmentId])
+  @@map("available_certification_by_department")
 }

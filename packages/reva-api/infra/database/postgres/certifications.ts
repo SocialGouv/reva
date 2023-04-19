@@ -119,3 +119,27 @@ export const getCertifications = async ({
     return Left(`error while retrieving certificates`);
   }
 };
+
+export const getCertificationsForDepartmentWithNewTypologies = async ({
+  departmentId,
+}: {
+  departmentId: string;
+}): Promise<Either<string, Certification[]>> => {
+  try {
+    const certifications = await prismaClient.certification.findMany({
+      where: {
+        availableCertificationsByDepartments: { some: { departmentId } },
+      },
+    });
+
+    return Right(
+      certifications.map((certification) => ({
+        ...certification,
+        codeRncp: certification.rncpId,
+      }))
+    );
+  } catch (e) {
+    logger.error(e);
+    return Left(`error while retrieving certificates`);
+  }
+};
