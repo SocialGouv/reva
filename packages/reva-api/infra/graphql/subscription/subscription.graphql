@@ -43,6 +43,8 @@ input SubscriptionRequestOrderByInput {
   accountLastname: Sort
 }
 
+
+
 type SubscriptionRequestsPaginated {
   rows: [SubscriptionRequestSummary!]!
   info: PaginationInfo!
@@ -86,6 +88,8 @@ input SubscriptionRequestInput {
   typology: OrganismTypology!
   domaineIds: [String!]
   ccnIds: [String!]
+  onSiteDepartmentsIds: [ID!]!
+  remoteDepartmentsIds: [ID!]!
 }
 
 type Mutation {

@@ -1,6 +1,10 @@
 type LegalStatus = "EI" | "EURL" | "SARL" | "SAS" | "SASU" | "SA" | "NC";
 
-type OrganismTypology = "generaliste" | "experimentation" | "expertFiliere" | "expertBranche";
+type OrganismTypology =
+  | "generaliste"
+  | "experimentation"
+  | "expertFiliere"
+  | "expertBranche";
 
 interface SubscriptionRequestInput {
   companySiret: string;
@@ -22,9 +26,23 @@ interface SubscriptionRequestInput {
   typology: OrganismTypology;
   domaineIds: string[];
   ccnIds: string[];
+  onSiteDepartmentsIds: string[];
+  remoteDepartmentsIds: string[];
 }
 
-type SubscriptionRequest = Omit<SubscriptionRequestInput, "domaineIds", "ccnIds"> & {
+interface DepartmentWithOrganismMethods {
+  departmentId: string;
+  isOnSite: boolean;
+  isRemote: boolean;
+}
+
+type SubscriptionRequest = Omit<
+  SubscriptionRequestInput,
+  "domaineIds",
+  "ccnIds",
+  "onSiteDepartmentsIds",
+  "remoteDepartmentsIds"
+> & {
   id: string;
   createdAt: Date;
 };
@@ -38,6 +56,7 @@ type SubscriptionRequestSummary = Pick<
   | "companyName"
   | "companyAddress"
 >;
+
 interface GetSubscriptionRequestsParams extends FilteredPaginatedListArgs {
   orderBy?: {
     companyName?: Sort;
