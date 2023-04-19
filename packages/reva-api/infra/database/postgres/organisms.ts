@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 import { Either, Left, Maybe, Right } from "purify-ts";
 
 import * as domain from "../../../domain/types/candidacy";
+import { DepartmentWithOrganismMethods } from "../../../domain/types/candidacy";
 import { logger } from "../../logger";
 import { prismaClient } from "./client";
 
@@ -120,9 +121,11 @@ export const createOrganism = async (data: {
   typology: OrganismTypology;
   ccnIds?: string[];
   domaineIds?: string[];
+  departmentsWithOrganismMethods: DepartmentWithOrganismMethods[];
 }): Promise<Either<string, domain.Organism>> => {
   try {
-    const { domaineIds, ccnIds, ...otherData } = data;
+    const { domaineIds, ccnIds, departmentsWithOrganismMethods, ...otherData } =
+      data;
     const organism = await prismaClient.organism.create({
       data: {
         ...otherData,
@@ -140,6 +143,15 @@ export const createOrganism = async (data: {
               domaineIds?.map((domaineId) => ({
                 domaineId,
               })) || [],
+          },
+        },
+        departmentsWithOrganismMethods: {
+          createMany: {
+            data: departmentsWithOrganismMethods?.map((d) => ({
+              departmentId: d.departmentId,
+              isOnSite: d.isOnSite,
+              isRemote: d.isRemote,
+            })),
           },
         },
       },
