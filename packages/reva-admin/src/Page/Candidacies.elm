@@ -262,9 +262,17 @@ viewDirectory context ( firstCandidacy, candidacies ) =
 viewItem : Context -> CandidacySummary -> Html Msg
 viewItem context candidacy =
     let
-        displayMaybe maybeInfo =
-            Maybe.map (\s -> div [] [ text s ]) maybeInfo
-                |> Maybe.withDefault (text "")
+        candidatureName =
+            case ( candidacy.firstname, candidacy.lastname ) of
+                ( Just firstname, Just lastname ) ->
+                    String.concat [ firstname, " ", lastname ]
+
+                _ ->
+                    String.concat
+                        [ Maybe.withDefault "" candidacy.phone
+                        , " "
+                        , Maybe.withDefault "" candidacy.email
+                        ]
     in
     li
         [ dataTest "directory-item", attribute "style" "--li-bottom:0" ]
@@ -286,15 +294,7 @@ viewItem context candidacy =
                         [ div [ class "flex items-center space-x-2" ]
                             [ div
                                 [ class "flex space-x-2" ]
-                              <|
-                                case ( candidacy.firstname, candidacy.lastname ) of
-                                    ( Just firstname, Just lastname ) ->
-                                        [ text firstname, text " ", text lastname ]
-
-                                    _ ->
-                                        [ displayMaybe candidacy.phone
-                                        , displayMaybe candidacy.email
-                                        ]
+                                [ text candidatureName ]
                             ]
                         , case candidacy.department of
                             Just department ->
@@ -329,6 +329,7 @@ viewItem context candidacy =
                             div [] []
                     , Button.new { onClick = Nothing, label = "Accéder à la candidature" }
                         |> Button.linkButton (Route.toString context.baseUrl (Route.Candidacy { value = Profile, candidacyId = candidacy.id }))
+                        |> Button.withAttrs [ attribute "title" ("Accéder à la candidature de " ++ candidatureName) ]
                         |> Button.view
                     ]
                 ]
