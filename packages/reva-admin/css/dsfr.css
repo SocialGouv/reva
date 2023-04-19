@@ -1,0 +1,14 @@
+@import url("@gouvfr/dsfr/dist/dsfr.min.css");
+@import url("@gouvfr/dsfr/dist/utility/utility.min.css");
+
+/*
+   For some reasons, these url are not resolved in dsfr.min.css.css.
+   Putting them here solves the issue
+*/
+.fr-search-bar .fr-btn::before {
+  mask-image: url("../icons/system/search-line.svg");
+}
+
+[target=_blank]:after {
+  mask-image: url("../icons/system/external-link-line.svg");
+}
