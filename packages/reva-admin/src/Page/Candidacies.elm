@@ -9,7 +9,6 @@ module Page.Candidacies exposing
 
 import Accessibility exposing (button, h2, h4)
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep)
-import Admin.Object.CandidacySummary exposing (isReorientation)
 import Api.Candidacy
 import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
@@ -18,8 +17,8 @@ import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Referential)
-import Html exposing (Html, aside, div, input, label, li, nav, node, p, text, ul)
-import Html.Attributes exposing (action, attribute, class, classList, for, id, name, placeholder, type_)
+import Html exposing (Html, div, input, label, li, nav, p, text, ul)
+import Html.Attributes exposing (attribute, class, classList, for, id, name, placeholder, type_)
 import Html.Attributes.Extra exposing (role)
 import Html.Events exposing (onInput)
 import List.Extra
@@ -204,24 +203,24 @@ viewDirectoryHeader context =
                 text "En tant qu’architecte accompagnateur de parcours, vous pouvez gérer les différentes candidatures des usagers dans le cadre de leur projet professionnel."
             ]
         , div
-            [ class "my-2 flex space-x-4", action "#" ]
-            [ div
+            [ class "my-2 " ]
+            [ label
+                [ for "search", class "fr-hint-text mb-1" ]
+                [ text "Recherchez par date de candidature, certification et information de contact" ]
+            , div
                 [ role "search", class "fr-search-bar w-full" ]
-                [ label
-                    [ for "search", class "fr-label" ]
-                    [ text "Rechercher" ]
-                , input
+                [ input
                     [ type_ "search"
                     , name "search"
                     , name "search"
                     , id "search"
                     , class "fr-input w-full h-10"
-                    , placeholder "Recherchez par date de candidature, certification et information de contact"
+                    , placeholder "Rechercher"
                     , onInput UserAddedFilter
                     ]
                     []
                 , button
-                    [ class "fr-btn sr-only", Html.Attributes.title "Rechercher" ]
+                    [ class "fr-btn", Html.Attributes.title "Rechercher" ]
                     [ text "Rechercher" ]
                 ]
             ]
