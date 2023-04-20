@@ -10,7 +10,7 @@ interface GraphqlRequestParameters {
   operationName?: string;
   endpoint: string;
   arguments?: GraqhqlRequestArguments;
-  enumFields?: string[],
+  enumFields?: string[];
   variables?: GraphqlVariables;
   returnFields: string;
 }
@@ -21,15 +21,19 @@ interface GraphqlRequest {
   variables: GraphqlVariables | null;
 }
 
-type GraphqlRequestDefinition = GraphqlRequestParameters & {requestType: GraphqlRequestType}
+type GraphqlRequestDefinition = GraphqlRequestParameters & {
+  requestType: GraphqlRequestType;
+};
 type InjectGraphqlParameters = {
   fastify: FastifyInstance;
   authorization?: string;
   payload: GraphqlRequest | GraphqlRequestDefinition;
-}
+};
 
-function hasFormatedQuery(obj: GraphqlRequest|GraphqlRequestDefinition): obj is GraphqlRequest {
-    return "query" in obj;
+function hasFormatedQuery(
+  obj: GraphqlRequest | GraphqlRequestDefinition
+): obj is GraphqlRequest {
+  return "query" in obj;
 }
 
 export const injectGraphql = ({
@@ -41,8 +45,8 @@ export const injectGraphql = ({
     method: "POST",
     url: "/api/graphql",
     payload: hasFormatedQuery(payload)
-        ? payload
-        : graphqlRequestPayload(payload.requestType)(payload),
+      ? payload
+      : graphqlRequestPayload(payload.requestType)(payload),
     headers: {
       authorization: authorization ?? "",
     },
@@ -67,24 +71,47 @@ const graphqlRequestPayload =
     };
   };
 
-  const graphqlArgumentValue = (key: string, val: unknown, enumFields?: string[]) : string => {
-    switch(typeof val) {
-      case "string":
-        return enumFields?.includes(key) ? val : `"${val}"`;
-      case "number":
-        return val.toString();
-      default:
-        return graphqlArgumentList(val as GraqhqlRequestArguments, enumFields, true);
-    }
+const graphqlArgumentValue = (
+  key: string,
+  val: unknown,
+  enumFields?: string[]
+): string => {
+  switch (typeof val) {
+    case "string":
+      return enumFields?.includes(key) ? val : `"${val}"`;
+    case "number":
+      return val.toString();
+    case "boolean":
+      return val ? "true" : "false";
+    default:
+      return graphqlArgumentList(
+        val as GraqhqlRequestArguments,
+        enumFields,
+        true
+      );
   }
-  
-  const graphqlArgumentList = (args?: GraqhqlRequestArguments, enumFields?: string[], nested?: boolean ): string => {
+};
+
+const graphqlArgumentList = (
+  args?: GraqhqlRequestArguments,
+  enumFields?: string[],
+  nested?: boolean
+): string => {
+  if (Array.isArray(args)) {
     const argumentList = args
-      ? Object.entries(args)
-          .map(([key, value]) => `${key}: ` + graphqlArgumentValue(key, value, enumFields))
-          .join(",")
-      : undefined;
-    const wrapOpen = nested ? "{" : "(";
-    const wrapClose = nested ? "}" : ")"; 
-    return argumentList ? `${wrapOpen}${argumentList}${wrapClose}` : "";
-  };
+      .map((value) => graphqlArgumentValue("", value, enumFields))
+      .join(",");
+    return `[${argumentList}]`;
+  }
+  const argumentList = args
+    ? Object.entries(args)
+        .map(
+          ([key, value]) =>
+            `${key}: ` + graphqlArgumentValue(key, value, enumFields)
+        )
+        .join(",")
+    : undefined;
+  const wrapOpen = nested ? "{" : "(";
+  const wrapClose = nested ? "}" : ")";
+  return argumentList ? `${wrapOpen}${argumentList}${wrapClose}` : "";
+};
