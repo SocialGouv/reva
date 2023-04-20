@@ -166,9 +166,16 @@ const unsafeResolvers = {
       _: unknown,
       params: { candidacyId: string }
     ) => {
-      const result = await getCompanionsForCandidacy({
-        getCompanionsForCandidacy: organismDb.getCompanionOrganisms,
-      })({ candidacyId: params.candidacyId });
+      const result = await (process.env.USE_ORGANISMS_WITH_NEW_TYPOLOGIES ===
+      "true"
+        ? getActiveOrganismsForCandidacyWithNewTypologies({
+            getActiveOrganismForCertificationAndDepartment:
+              organismDb.getActiveOrganismForCertificationAndDepartment,
+            getCandidacyFromId: candidacyDb.getCandidacyFromId,
+          })({ candidacyId: params.candidacyId })
+        : getCompanionsForCandidacy({
+            getCompanionsForCandidacy: organismDb.getCompanionOrganisms,
+          })({ candidacyId: params.candidacyId }));
 
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
