@@ -470,18 +470,16 @@ async function main() {
     },
   ];
 
-  await Promise.all(
-    regions.map(async (region) => {
-      await prisma.region.upsert({
-        where: { code: region.code },
-        update: {},
-        create: {
-          label: region.label,
-          code: region.code,
-        },
-      });
-    })
-  );
+  for (const region of regions) {
+    await prisma.region.upsert({
+      where: { code: region.code },
+      update: {},
+      create: {
+        label: region.label,
+        code: region.code,
+      },
+    });
+  }
 
   const departments = [
     { label: "Ain", code: "01", codeRegion: "84" },
@@ -589,21 +587,19 @@ async function main() {
   const countDepartments = await prisma.department.count();
 
   if (countDepartments === 0) {
-    await Promise.all(
-      departments.map(async (department) => {
-        await prisma.department.create({
-          data: {
-            code: department.code,
-            label: department.label,
-            region: {
-              connect: {
-                code: department.codeRegion,
-              },
+    for (const department of departments) {
+      await prisma.department.create({
+        data: {
+          code: department.code,
+          label: department.label,
+          region: {
+            connect: {
+              code: department.codeRegion,
             },
           },
-        });
-      })
-    );
+        },
+      });
+    }
   }
 
   const basicSkillCount = await prisma.basicSkill.count();
