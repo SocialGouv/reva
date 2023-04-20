@@ -189,7 +189,7 @@ export const validateSubscriptionRequest = async (
         siret: $store.subreq?.companySiret ?? "",
         legalStatus: $store.subreq?.companyLegalStatus,
         isActive: true,
-        typology: $store.subreq?.typology ?? ("plop" as any),
+        typology: $store.subreq?.typology ?? "generaliste",
       })
     )
       .mapLeft(
