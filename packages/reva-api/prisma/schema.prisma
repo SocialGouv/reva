@@ -24,25 +24,26 @@ enum ExperienceDuration {
 }
 
 model Certification {
-  id                                   String                                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label                                String                                  @db.VarChar(255)
-  acronym                              String                                  @db.VarChar(255)
-  level                                Int
-  activities                           String?
-  activityArea                         String?                                 @map("activity_area")
-  accessibleJobType                    String?                                 @map("accessible_job_type")
-  abilities                            String?
-  slug                                 String
-  summary                              String?
-  status                               CertificationStatus                     @default(INACTIVE)
-  rncpId                               String                                  @unique @map("rncp_id") @db.VarChar(255)
-  romes                                RomesOnCertifications[]
+  id                                                     String                                                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                                                  String                                                   @db.VarChar(255)
+  acronym                                                String                                                   @db.VarChar(255)
+  level                                                  Int
+  activities                                             String?
+  activityArea                                           String?                                                  @map("activity_area")
+  accessibleJobType                                      String?                                                  @map("accessible_job_type")
+  abilities                                              String?
+  slug                                                   String
+  summary                                                String?
+  status                                                 CertificationStatus                                      @default(INACTIVE)
+  rncpId                                                 String                                                   @unique @map("rncp_id") @db.VarChar(255)
+  romes                                                  RomesOnCertifications[]
   // candidacies Candidacy[]
-  candidaciesAndRegions                CandidaciesOnRegionsAndCertifications[]
-  organismsAndRegions                  OrganismsOnRegionsAndCertifications[]
-  createdAt                            DateTime                                @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                            DateTime?                               @map("updated_at") @db.Timestamptz(6)
-  availableCertificationsByDepartments AvailableCertificationsByDepartments[]
+  candidaciesAndRegions                                  CandidaciesOnRegionsAndCertifications[]
+  organismsAndRegions                                    OrganismsOnRegionsAndCertifications[]
+  createdAt                                              DateTime                                                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                                              DateTime?                                                @map("updated_at") @db.Timestamptz(6)
+  availableCertificationsByDepartments                   AvailableCertificationsByDepartments[]
+  activeOrganismsByAvailableCertificationsAndDepartments ActiveOrganismsByAvailableCertificationsAndDepartments[]
 
   @@map("certification")
 }
@@ -247,16 +248,17 @@ model Region {
 }
 
 model Department {
-  id                                   String                                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label                                String                                 @unique @db.VarChar(255)
-  code                                 String                                 @unique @db.VarChar(3)
-  region                               Region                                 @relation(fields: [regionId], references: [id])
-  regionId                             String                                 @map("region_id") @db.Uuid
-  candidacies                          Candidacy[]
-  createdAt                            DateTime                               @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                            DateTime?                              @map("updated_at") @db.Timestamptz(6)
-  Candidate                            Candidate[]
-  availableCertificationsByDepartments AvailableCertificationsByDepartments[]
+  id                                                     String                                                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                                                  String                                                   @unique @db.VarChar(255)
+  code                                                   String                                                   @unique @db.VarChar(3)
+  region                                                 Region                                                   @relation(fields: [regionId], references: [id])
+  regionId                                               String                                                   @map("region_id") @db.Uuid
+  candidacies                                            Candidacy[]
+  createdAt                                              DateTime                                                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                                              DateTime?                                                @map("updated_at") @db.Timestamptz(6)
+  Candidate                                              Candidate[]
+  availableCertificationsByDepartments                   AvailableCertificationsByDepartments[]
+  activeOrganismsByAvailableCertificationsAndDepartments ActiveOrganismsByAvailableCertificationsAndDepartments[]
 
   @@map("department")
 }
@@ -291,24 +293,25 @@ model Account {
 }
 
 model Organism {
-  id                         String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label                      String                                @unique @db.VarChar(255)
-  legalStatus                LegalStatus                           @default(NC) @map("legal_status")
-  address                    String
-  zip                        String                                @db.VarChar(5)
-  city                       String                                @db.VarChar(255)
-  contactAdministrativeEmail String                                @unique @map("contact_administrative_email") @db.VarChar(255)
-  contactCommercialName      String                                @map("contact_commercial_name")
-  contactCommercialEmail     String                                @map("contact_commercial_email")
-  siret                      String
-  isActive                   Boolean                               @default(false) @map("is_active")
-  candidacies                Candidacy[]
-  accounts                   Account[]
-  regionsAndCertifications   OrganismsOnRegionsAndCertifications[]
-  createdAt                  DateTime                              @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                  DateTime?                             @map("updated_at") @db.Timestamptz(6)
-  FundingRequest             FundingRequest[]
-  typology                   OrganismTypology                      @map("typology")
+  id                                                     String                                                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                                                  String                                                   @unique @db.VarChar(255)
+  legalStatus                                            LegalStatus                                              @default(NC) @map("legal_status")
+  address                                                String
+  zip                                                    String                                                   @db.VarChar(5)
+  city                                                   String                                                   @db.VarChar(255)
+  contactAdministrativeEmail                             String                                                   @unique @map("contact_administrative_email") @db.VarChar(255)
+  contactCommercialName                                  String                                                   @map("contact_commercial_name")
+  contactCommercialEmail                                 String                                                   @map("contact_commercial_email")
+  siret                                                  String
+  isActive                                               Boolean                                                  @default(false) @map("is_active")
+  candidacies                                            Candidacy[]
+  accounts                                               Account[]
+  regionsAndCertifications                               OrganismsOnRegionsAndCertifications[]
+  createdAt                                              DateTime                                                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                                              DateTime?                                                @map("updated_at") @db.Timestamptz(6)
+  FundingRequest                                         FundingRequest[]
+  typology                                               OrganismTypology                                         @map("typology")
+  activeOrganismsByAvailableCertificationsAndDepartments ActiveOrganismsByAvailableCertificationsAndDepartments[]
 
   @@map("organism")
 }
@@ -641,4 +644,16 @@ view AvailableCertificationsByDepartments {
 
   @@unique([certificationId, departmentId])
   @@map("available_certification_by_department")
+}
+
+view ActiveOrganismsByAvailableCertificationsAndDepartments {
+  organism        Organism      @relation(fields: [organismId], references: [id])
+  certification   Certification @relation(fields: [certificationId], references: [id])
+  department      Department    @relation(fields: [departmentId], references: [id])
+  organismId      String        @map("organism_id") @db.Uuid
+  certificationId String        @map("certification_id") @db.Uuid
+  departmentId    String        @map("department_id") @db.Uuid
+
+  @@unique([organismId, certificationId, departmentId])
+  @@map("active_organism_by_available_certification_and_department")
 }

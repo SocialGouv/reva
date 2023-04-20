@@ -129,3 +129,28 @@ export const createOrganism = async (data: {
     return Left(`error while creating organism`);
   }
 };
+
+export const getActiveOrganismForCertificationAndDepartment = async ({
+  certificationId,
+  departmentId,
+}: {
+  certificationId: string;
+  departmentId: string;
+}): Promise<Either<string, domain.Organism[]>> => {
+  try {
+    logger.info({ certificationId, departmentId });
+
+    return Right(
+      await prismaClient.organism.findMany({
+        where: {
+          activeOrganismsByAvailableCertificationsAndDepartments: {
+            some: { AND: [{ certificationId }, { departmentId }] },
+          },
+        },
+      })
+    );
+  } catch (e) {
+    logger.error(e);
+    return Left(`error while retreiving organism`);
+  }
+};
