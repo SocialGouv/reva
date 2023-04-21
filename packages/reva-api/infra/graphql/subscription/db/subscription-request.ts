@@ -61,6 +61,7 @@ export const getSubscriptionRequestById = async (
   try {
     const subreq = await prismaClient.subscriptionRequest.findUnique({
       where: { id },
+      include: { subscriptionRequestOnDomaine: true },
     });
     return Right(
       Maybe.fromNullable(subreq).map(
@@ -77,6 +78,10 @@ export const deleteSubscriptionRequestById = async (
   id: string
 ): Promise<Either<string, void>> => {
   try {
+    await prismaClient.subscriptionRequest.update({
+      where: { id },
+      data: { subscriptionRequestOnDomaine: { deleteMany: {} } },
+    });
     await prismaClient.subscriptionRequest.delete({
       where: { id },
     });

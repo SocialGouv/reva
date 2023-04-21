@@ -23,10 +23,10 @@ interface SubscriptionRequestInput {
   domaineIds: string[];
 }
 
-interface SubscriptionRequest extends SubscriptionRequestInput {
+type SubscriptionRequest = Omit<SubscriptionRequestInput, "domaineIds"> & {
   id: string;
   createdAt: Date;
-}
+};
 
 type SubscriptionRequestSummary = Pick<
   SubscriptionRequest,

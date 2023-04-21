@@ -312,6 +312,7 @@ model Organism {
   FundingRequest                                         FundingRequest[]
   typology                                               OrganismTypology                                         @map("typology")
   activeOrganismsByAvailableCertificationsAndDepartments ActiveOrganismsByAvailableCertificationsAndDepartments[]
+  organismOnDomaine                                      OrganismOnDomaine[]
 
   @@map("organism")
 }
@@ -665,6 +666,7 @@ model Domaine {
   label                        String                         @db.VarChar(255)
   code                         String                         @unique @db.VarChar(3)
   subscriptionRequestOnDomaine SubscriptionRequestOnDomaine[]
+  organismOnDomaine            OrganismOnDomaine[]
 
   @@map("domaine")
 }
@@ -679,4 +681,16 @@ model SubscriptionRequestOnDomaine {
 
   @@id([domaineId, subscriptionRequestId])
   @@map("subscription_request_on_domaine")
+}
+
+model OrganismOnDomaine {
+  domaine    Domaine   @relation(fields: [domaineId], references: [id])
+  domaineId  String    @map("domaine_id") @db.Uuid
+  organism   Organism  @relation(fields: [organismId], references: [id])
+  organismId String    @map("organism_id") @db.Uuid
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime? @map("updated_at") @db.Timestamptz(6)
+
+  @@id([domaineId, organismId])
+  @@map("organism_on_domaine")
 }

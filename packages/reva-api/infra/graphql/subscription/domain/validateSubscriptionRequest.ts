@@ -17,7 +17,7 @@ interface ValidateSubscriptionRequestDeps {
     siret: string
   ) => Promise<Either<string, Maybe<Organism>>>;
   createOrganism: (
-    data: Omit<Organism, "id">
+    data: Omit<Organism, "id"> & { domaineIds?: string[] }
   ) => Promise<Either<string, Organism>>;
   getIamAccount: (params: {
     email: string;
@@ -50,12 +50,17 @@ interface ValidateSubscriptionRequestParams {
   subscriptionRequestId: string;
 }
 
+type SubscriptionRequestWithSubscriptionRequestOnDomaine =
+  SubscriptionRequest & {
+    subscriptionRequestOnDomaine?: { domaineId: string }[];
+  };
+
 export const validateSubscriptionRequest = async (
   deps: ValidateSubscriptionRequestDeps,
   params: ValidateSubscriptionRequestParams
 ) => {
   const $store: {
-    subreq?: SubscriptionRequest;
+    subreq?: SubscriptionRequestWithSubscriptionRequestOnDomaine;
     organism?: Organism;
     keyCloackId?: string;
   } = {};
@@ -72,7 +77,8 @@ export const validateSubscriptionRequest = async (
         )
       );
     }
-    const maybeSubReq = eitherSubreq.extract() as Maybe<SubscriptionRequest>;
+    const maybeSubReq =
+      eitherSubreq.extract() as Maybe<SubscriptionRequestWithSubscriptionRequestOnDomaine>;
     if (maybeSubReq.isNothing()) {
       const errorMessage = `La demande d'inscription ${params.subscriptionRequestId} n'existe pas`;
       logger.error(`[validateSubscriptionRequestDeps] ${errorMessage}`);
@@ -83,8 +89,10 @@ export const validateSubscriptionRequest = async (
         )
       );
     }
-    const subreq = maybeSubReq.extract() as SubscriptionRequest;
+    const subreq =
+      maybeSubReq.extract() as SubscriptionRequestWithSubscriptionRequestOnDomaine;
     $store.subreq = subreq;
+
     return Right(subreq);
   });
 
@@ -190,6 +198,9 @@ export const validateSubscriptionRequest = async (
         legalStatus: $store.subreq?.companyLegalStatus,
         isActive: true,
         typology: $store.subreq?.typology ?? "generaliste",
+        domaineIds: $store.subreq?.subscriptionRequestOnDomaine?.map(
+          (o) => o.domaineId
+        ),
       })
     )
       .mapLeft(
