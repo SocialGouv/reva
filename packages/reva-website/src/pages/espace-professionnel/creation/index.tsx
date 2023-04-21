@@ -14,11 +14,21 @@ import { AccountInfoStepForm } from "@/components/professional-space/creation/fo
 import Head from "next/head";
 import request, { gql } from "graphql-request";
 import { GRAPHQL_API_URL } from "@/config/config";
+import { useEffect, useState } from "react";
 
 interface Domaine {
   id: string;
   label: string;
 }
+
+const getDomaines = gql`
+  query getDomaines {
+    getDomaines {
+      id
+      label
+    }
+  }
+`;
 
 const PageContent = ({
   availableDomaines,
@@ -42,11 +52,17 @@ const PageContent = ({
   }
 };
 
-const ProfessionalSpaceCreationPage = ({
-  availableDomaines,
-}: {
-  availableDomaines: Domaine[];
-}) => {
+const ProfessionalSpaceCreationPage = () => {
+  const [availableDomaines, setAvailableDomaines] = useState<Domaine[]>([]);
+
+  useEffect(() => {
+    const loadAvailableDomaines = async () =>
+      setAvailableDomaines(
+        (await request(GRAPHQL_API_URL, getDomaines)).getDomaines
+      );
+    loadAvailableDomaines();
+  }, []);
+
   return (
     <MainLayout>
       <Head>
@@ -67,23 +83,3 @@ const ProfessionalSpaceCreationPage = ({
 };
 
 export default ProfessionalSpaceCreationPage;
-
-export async function getStaticProps() {
-  const getDomaines = gql`
-    query getDomaines {
-      getDomaines {
-        id
-        label
-      }
-    }
-  `;
-
-  const availableDomaines = (await request(GRAPHQL_API_URL, getDomaines))
-    .getDomaines;
-
-  return {
-    props: {
-      availableDomaines,
-    },
-  };
-}
