@@ -38,6 +38,14 @@ export const createSubscriptionRequest = async (
         accountEmail: subscriptionRequestInput.accountEmail,
         accountPhoneNumber: subscriptionRequestInput.accountPhoneNumber,
         typology: subscriptionRequestInput.typology,
+        subscriptionRequestOnDomaine: {
+          createMany: {
+            data:
+              subscriptionRequestInput.domaineIds?.map((domaineId) => ({
+                domaineId,
+              })) || [],
+          },
+        },
       },
     });
     return Right(withoutNullFields(subscriptionRequest) as SubscriptionRequest);

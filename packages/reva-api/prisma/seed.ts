@@ -724,6 +724,16 @@ async function main() {
       ],
     });
   }
+  const domaineCount = await prisma.domaine.count();
+
+  if (domaineCount === 0) {
+    await prisma.domaine.createMany({
+      data: [
+        { code: "M", label: "Métallurgie" },
+        { code: "GD", label: "Grande distribution" },
+      ],
+    });
+  }
 }
 
 main()

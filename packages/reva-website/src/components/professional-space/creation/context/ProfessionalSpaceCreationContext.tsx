@@ -1,3 +1,4 @@
+import { GRAPHQL_API_URL } from "@/config/config";
 import request, { gql } from "graphql-request";
 import { useRouter } from "next/router";
 import { useCallback, useContext, useState } from "react";
@@ -22,7 +23,8 @@ interface ProfessionalSpaceInfo {
   accountLastname: string;
   accountEmail: string;
   accountPhoneNumber: string;
-  typology: "generaliste";
+  typology: "generaliste" | "expertFiliere";
+  domaineIds: string[];
 }
 interface ProfessionalSpaceCreationState {
   currentStep:
@@ -68,10 +70,6 @@ type ProfessionalSpaceCreationContext = ProfessionalSpaceCreationState & {
   submitAccountInfoStep: (stepData: AccountInfoStepData) => void;
 };
 
-const GRAPHQL_API_URL =
-  process.env.NEXT_PUBLIC_WEBSITE_API_GRAPHQL ||
-  "http://localhost:8080/api/graphql";
-
 const ProfessionalSpaceCreationContext =
   createContext<ProfessionalSpaceCreationContext>(
     {} as ProfessionalSpaceCreationContext
@@ -86,6 +84,7 @@ export const ProfessionalSpaceCreationProvider = (props: {
     currentStep: "companyInfoStep",
     professionalSpaceInfos: {
       companyLegalStatus: "EI",
+      domaineIds: [],
     },
   });
 

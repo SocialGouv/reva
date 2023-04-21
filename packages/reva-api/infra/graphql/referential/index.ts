@@ -8,6 +8,7 @@ import { getRegions } from "../../../domain/features/getRegions";
 import { getReorientationReasons } from "../../../domain/features/getReorientationReasons";
 import { getVulnerabilityIndicators } from "../../../domain/features/getVulnerabilityIndicators";
 import * as certificationsDb from "../../database/postgres/certifications";
+import { prismaClient } from "../../database/postgres/client";
 import * as degreesDb from "../../database/postgres/degrees";
 import * as dropOutReasonsDb from "../../database/postgres/dropOutReasons";
 import * as goalsDb from "../../database/postgres/goals";
@@ -93,5 +94,7 @@ export const resolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
+
+    getDomaines: () => prismaClient.domaine.findMany(),
   },
 };

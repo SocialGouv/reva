@@ -12,14 +12,27 @@ import { BillingInfoStepForm } from "@/components/professional-space/creation/fo
 import { AccountInfoStepForm } from "@/components/professional-space/creation/form/AccountInfoStepForm";
 
 import Head from "next/head";
+import request, { gql } from "graphql-request";
+import { GRAPHQL_API_URL } from "@/config/config";
 
-const PageContent = () => {
+interface Domaine {
+  id: string;
+  label: string;
+}
+
+const PageContent = ({
+  availableDomaines,
+}: {
+  availableDomaines: Domaine[];
+}) => {
   const { currentStep } = useProfessionalSpaceCreationContext();
   switch (currentStep) {
     case "companyInfoStep":
       return <CompanyInfoStepForm />;
     case "certificationsInfoStep":
-      return <CertificationsInfoStepForm />;
+      return (
+        <CertificationsInfoStepForm availableDomaines={availableDomaines} />
+      );
     case "billingInfoStep":
       return <BillingInfoStepForm />;
     case "accountInfoStep":
@@ -29,7 +42,11 @@ const PageContent = () => {
   }
 };
 
-const ProfessionalSpaceCreationPage = () => {
+const ProfessionalSpaceCreationPage = ({
+  availableDomaines,
+}: {
+  availableDomaines: Domaine[];
+}) => {
   return (
     <MainLayout>
       <Head>
@@ -42,7 +59,7 @@ const ProfessionalSpaceCreationPage = () => {
         candidats sur leur parcours de formation"
       >
         <ProfessionalSpaceCreationProvider>
-          <PageContent />
+          <PageContent availableDomaines={availableDomaines} />
         </ProfessionalSpaceCreationProvider>
       </BlueLayout>
     </MainLayout>
@@ -50,3 +67,23 @@ const ProfessionalSpaceCreationPage = () => {
 };
 
 export default ProfessionalSpaceCreationPage;
+
+export async function getStaticProps() {
+  const getDomaines = gql`
+    query getDomaines {
+      getDomaines {
+        id
+        label
+      }
+    }
+  `;
+
+  const availableDomaines = (await request(GRAPHQL_API_URL, getDomaines))
+    .getDomaines;
+
+  return {
+    props: {
+      availableDomaines,
+    },
+  };
+}

@@ -125,7 +125,10 @@ export interface Department {
   label: string;
 }
 
-export type OrganismTypology = "experimentation" | "generaliste";
+export type OrganismTypology =
+  | "experimentation"
+  | "generaliste"
+  | "expertFiliere";
 
 export interface Organism {
   id: string;

@@ -45,6 +45,12 @@ type ReorientationReason {
   label: String!
 }
 
+type Domaine {
+  id: ID!
+  code: String!
+  label: String!
+}
+
 type Query {
   getReferential: Referential!
   getCertifications(departmentId: UUID!): [Certification!]!
@@ -54,4 +60,5 @@ type Query {
   getVulnerabilityIndicators: [VulnerabilityIndicator!]!
   getDropOutReasons: [DropOutReason!]!
   getReorientationReasons: [ReorientationReason!]!
+  getDomaines: [Domaine]!
 }
