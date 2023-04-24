@@ -44,6 +44,7 @@ model Certification {
   updatedAt                                              DateTime?                                                @map("updated_at") @db.Timestamptz(6)
   availableCertificationsByDepartments                   AvailableCertificationsByDepartments[]
   activeOrganismsByAvailableCertificationsAndDepartments ActiveOrganismsByAvailableCertificationsAndDepartments[]
+  certificationOnDomaine                                 CertificationOnDomaine[]
 
   @@map("certification")
 }
@@ -667,6 +668,7 @@ model Domaine {
   code                         String                         @unique @db.VarChar(3)
   subscriptionRequestOnDomaine SubscriptionRequestOnDomaine[]
   organismOnDomaine            OrganismOnDomaine[]
+  certificationOnDomaine       CertificationOnDomaine[]
 
   @@map("domaine")
 }
@@ -693,4 +695,16 @@ model OrganismOnDomaine {
 
   @@id([domaineId, organismId])
   @@map("organism_on_domaine")
+}
+
+model CertificationOnDomaine {
+  domaine         Domaine       @relation(fields: [domaineId], references: [id])
+  domaineId       String        @map("domaine_id") @db.Uuid
+  certification   Certification @relation(fields: [certificationId], references: [id])
+  certificationId String        @map("certification_id") @db.Uuid
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime?     @map("updated_at") @db.Timestamptz(6)
+
+  @@id([domaineId, certificationId])
+  @@map("certification_on_domaine")
 }
