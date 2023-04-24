@@ -133,7 +133,7 @@ export const CertificationsInfoStepForm = ({
               label="Conventions collectives auxquelles vous êtes rattaché"
               hint="Vous pouvez cocher plusieurs conventions collectives"
               options={availableConventions.map((availableConvention) => ({
-                label: availableConvention.label,
+                label: `${availableConvention.code} ${availableConvention.label}`,
                 value: availableConvention.id,
               }))}
               placeholder={(selectedItemsCount) =>
