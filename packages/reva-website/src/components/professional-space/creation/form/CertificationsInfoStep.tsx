@@ -51,11 +51,17 @@ export const CertificationsInfoStepForm = ({
     rules: { required: true },
   });
 
+  const ccnIdsController = useController({
+    name: "ccnIds",
+    defaultValue: [],
+    control,
+    rules: { required: true },
+  });
+
   const handleFormSubmit = (data: CertificationsInfoStepFormSchema) =>
     submitCertificationsInfoStep(data);
 
   const currentTypology = useWatch({ name: "typology", control });
-  const currentConventionIds = useWatch({ name: "ccnIds", control });
 
   const handleTypologyChange = useCallback(
     (newTypology: string) => {
@@ -68,16 +74,6 @@ export const CertificationsInfoStepForm = ({
       typologyController.field.onChange(newTypology);
     },
     [setValue, typologyController.field]
-  );
-
-  const handleCcnIdToggle = useCallback(
-    (ccnId: string) => {
-      const newCcnIds = currentConventionIds.includes(ccnId)
-        ? currentConventionIds.filter((ccid) => ccid !== ccnId)
-        : [...currentConventionIds, ccnId];
-      setValue("ccnIds", newCcnIds);
-    },
-    [currentConventionIds, setValue]
   );
 
   return (
@@ -133,20 +129,26 @@ export const CertificationsInfoStepForm = ({
             />
           )}
           {currentTypology === "expertBranche" && (
-            <Checkbox
-              legend="Conventions collectives auxquelles vous êtes rattaché"
-              hintText="Vous pouvez cocher plusieurs choix, avec un minimum d’une conventiopn collective"
+            <MultiSelect
+              label="Conventions collectives auxquelles vous êtes rattaché"
+              hint="Vous pouvez cocher plusieurs conventions collectives"
               options={availableConventions.map((availableConvention) => ({
-                label: `${availableConvention.code} ${availableConvention.label}`,
-                nativeInputProps: {
-                  name: availableConvention.id,
-                  value: availableConvention.id,
-                  checked: currentConventionIds.includes(
-                    availableConvention.id
-                  ),
-                  onChange: () => handleCcnIdToggle(availableConvention.id),
-                },
+                label: availableConvention.label,
+                value: availableConvention.id,
               }))}
+              placeholder={(selectedItemsCount) =>
+                selectedItemsCount
+                  ? `${selectedItemsCount} conventions collectives séléctionnées`
+                  : "Cochez les conventions collectives concernées"
+              }
+              initialSelectedValues={availableConventions
+                .filter((ad) => ccnIdsController.field.value.includes(ad.id))
+                .map((d) => ({ label: d.label, value: d.id }))}
+              onChange={(selectedOptions) =>
+                ccnIdsController.field.onChange(
+                  selectedOptions.map((option) => option.value)
+                )
+              }
             />
           )}
         </fieldset>
