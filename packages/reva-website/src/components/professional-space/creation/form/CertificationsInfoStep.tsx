@@ -10,16 +10,19 @@ import Select from "@codegouvfr/react-dsfr/Select";
 import { useCallback } from "react";
 
 const zodSchema = z.object({
-  typology: z.enum(["generaliste", "expertFiliere"]),
+  typology: z.enum(["generaliste", "expertFiliere", "expertBranche"]),
   domaineIds: z.string().array(),
+  ccnIds: z.string().array(),
 });
 
 type CertificationsInfoStepFormSchema = z.infer<typeof zodSchema>;
 
 export const CertificationsInfoStepForm = ({
   availableDomaines,
+  availableConventions,
 }: {
   availableDomaines: { label: string; id: string }[];
+  availableConventions: { label: string; code: string; id: string }[];
 }) => {
   const {
     professionalSpaceInfos,
@@ -45,11 +48,15 @@ export const CertificationsInfoStepForm = ({
 
   const currentTypology = useWatch({ name: "typology", control });
   const currentDomaineIds = useWatch({ name: "domaineIds", control });
+  const currentConventionIds = useWatch({ name: "ccnIds", control });
 
   const handleTypologyChange = useCallback(
     (newTypology: string) => {
       if (newTypology !== "expertFiliere") {
         setValue("domaineIds", []);
+      }
+      if (newTypology !== "expertBranche") {
+        setValue("ccnIds", []);
       }
       typologyController.field.onChange(newTypology);
     },
@@ -64,6 +71,16 @@ export const CertificationsInfoStepForm = ({
       setValue("domaineIds", newDomaineIds);
     },
     [currentDomaineIds, setValue]
+  );
+
+  const handleCcnIdToggle = useCallback(
+    (ccnId: string) => {
+      const newCcnIds = currentConventionIds.includes(ccnId)
+        ? currentConventionIds.filter((ccid) => ccid !== ccnId)
+        : [...currentConventionIds, ccnId];
+      setValue("ccnIds", newCcnIds);
+    },
+    [currentConventionIds, setValue]
   );
 
   return (
@@ -91,10 +108,11 @@ export const CertificationsInfoStepForm = ({
           >
             <option value="generaliste">Généraliste</option>
             <option value="expertFiliere">Expert de filière(s)</option>
+            <option value="expertBranche">Expert de branche(s)</option>
           </Select>
           {currentTypology === "expertFiliere" && (
             <Checkbox
-              legend="Secteurs auquels vous êtes rattaché"
+              legend="Secteurs auxquels vous êtes rattaché"
               hintText="Vous pouvez cocher plusieurs choix, avec un minimum d’un secteur d’activité"
               options={availableDomaines.map((availableDomaine) => ({
                 label: availableDomaine.label,
@@ -103,6 +121,23 @@ export const CertificationsInfoStepForm = ({
                   value: availableDomaine.id,
                   checked: currentDomaineIds.includes(availableDomaine.id),
                   onChange: () => handleDomaineIdToggle(availableDomaine.id),
+                },
+              }))}
+            />
+          )}
+          {currentTypology === "expertBranche" && (
+            <Checkbox
+              legend="Conventions collectives auxquelles vous êtes rattaché"
+              hintText="Vous pouvez cocher plusieurs choix, avec un minimum d’une conventiopn collective"
+              options={availableConventions.map((availableConvention) => ({
+                label: `${availableConvention.code} ${availableConvention.label}`,
+                nativeInputProps: {
+                  name: availableConvention.id,
+                  value: availableConvention.id,
+                  checked: currentConventionIds.includes(
+                    availableConvention.id
+                  ),
+                  onChange: () => handleCcnIdToggle(availableConvention.id),
                 },
               }))}
             />
