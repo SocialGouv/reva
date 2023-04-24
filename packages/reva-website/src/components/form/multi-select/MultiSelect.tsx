@@ -78,7 +78,7 @@ export const MultiSelect = ({
         {placeholder?.(selectedItems.length)}
       </div>
       <ul
-        className={`bg-dsfrGray-contrast w-[calc(100%-5px)] rounded-lg border border-gray-300 absolute ml-[-5px] mt-[-30px] max-h-80 overflow-scroll p-0 fr-checkbox-group ${
+        className={`!absolute bg-dsfrGray-contrast w-[calc(100%-5px)] rounded-lg border border-gray-300  ml-[-5px] mt-[-30px] max-h-80 overflow-scroll p-0 fr-checkbox-group ${
           !(isOpen && options.length) && "hidden"
         }`}
         {...getMenuProps()}
