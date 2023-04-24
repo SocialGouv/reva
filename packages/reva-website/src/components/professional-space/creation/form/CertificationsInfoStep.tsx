@@ -8,6 +8,7 @@ import { useProfessionalSpaceCreationContext } from "../context/ProfessionalSpac
 import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { useCallback } from "react";
+import { MultiSelect } from "@/components/form/multi-select/MultiSelect";
 
 const zodSchema = z.object({
   typology: z.enum(["generaliste", "expertFiliere", "expertBranche"]),
@@ -43,11 +44,17 @@ export const CertificationsInfoStepForm = ({
     rules: { required: true },
   });
 
+  const domaineIdsController = useController({
+    name: "domaineIds",
+    defaultValue: [],
+    control,
+    rules: { required: true },
+  });
+
   const handleFormSubmit = (data: CertificationsInfoStepFormSchema) =>
     submitCertificationsInfoStep(data);
 
   const currentTypology = useWatch({ name: "typology", control });
-  const currentDomaineIds = useWatch({ name: "domaineIds", control });
   const currentConventionIds = useWatch({ name: "ccnIds", control });
 
   const handleTypologyChange = useCallback(
@@ -61,16 +68,6 @@ export const CertificationsInfoStepForm = ({
       typologyController.field.onChange(newTypology);
     },
     [setValue, typologyController.field]
-  );
-
-  const handleDomaineIdToggle = useCallback(
-    (domaineId: string) => {
-      const newDomaineIds = currentDomaineIds.includes(domaineId)
-        ? currentDomaineIds.filter((cdi) => cdi !== domaineId)
-        : [...currentDomaineIds, domaineId];
-      setValue("domaineIds", newDomaineIds);
-    },
-    [currentDomaineIds, setValue]
   );
 
   const handleCcnIdToggle = useCallback(
@@ -111,18 +108,28 @@ export const CertificationsInfoStepForm = ({
             <option value="expertBranche">Expert de branche(s)</option>
           </Select>
           {currentTypology === "expertFiliere" && (
-            <Checkbox
-              legend="Secteurs auxquels vous êtes rattaché"
-              hintText="Vous pouvez cocher plusieurs choix, avec un minimum d’un secteur d’activité"
+            <MultiSelect
+              label="Filière(s)"
+              hint="Vous pouvez cocher plusieurs choix, avec un minimum d’une filière"
               options={availableDomaines.map((availableDomaine) => ({
                 label: availableDomaine.label,
-                nativeInputProps: {
-                  name: availableDomaine.id,
-                  value: availableDomaine.id,
-                  checked: currentDomaineIds.includes(availableDomaine.id),
-                  onChange: () => handleDomaineIdToggle(availableDomaine.id),
-                },
+                value: availableDomaine.id,
               }))}
+              placeholder={(selectedItemsCount) =>
+                selectedItemsCount
+                  ? `${selectedItemsCount} filières séléctionnées`
+                  : "Cochez toutes les filières concernées"
+              }
+              initialSelectedValues={availableDomaines
+                .filter((ad) =>
+                  domaineIdsController.field.value.includes(ad.id)
+                )
+                .map((d) => ({ label: d.label, value: d.id }))}
+              onChange={(selectedOptions) =>
+                domaineIdsController.field.onChange(
+                  selectedOptions.map((option) => option.value)
+                )
+              }
             />
           )}
           {currentTypology === "expertBranche" && (
