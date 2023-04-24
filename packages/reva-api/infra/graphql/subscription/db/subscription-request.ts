@@ -46,6 +46,14 @@ export const createSubscriptionRequest = async (
               })) || [],
           },
         },
+        subscriptionRequestOnConventionCollective: {
+          createMany: {
+            data:
+              subscriptionRequestInput.ccnIds?.map((ccnId) => ({
+                ccnId,
+              })) || [],
+          },
+        },
       },
     });
     return Right(withoutNullFields(subscriptionRequest) as SubscriptionRequest);
@@ -61,7 +69,10 @@ export const getSubscriptionRequestById = async (
   try {
     const subreq = await prismaClient.subscriptionRequest.findUnique({
       where: { id },
-      include: { subscriptionRequestOnDomaine: true },
+      include: {
+        subscriptionRequestOnDomaine: true,
+        subscriptionRequestOnConventionCollective: true,
+      },
     });
     return Right(
       Maybe.fromNullable(subreq).map(
@@ -80,7 +91,10 @@ export const deleteSubscriptionRequestById = async (
   try {
     await prismaClient.subscriptionRequest.update({
       where: { id },
-      data: { subscriptionRequestOnDomaine: { deleteMany: {} } },
+      data: {
+        subscriptionRequestOnDomaine: { deleteMany: {} },
+        subscriptionRequestOnConventionCollective: { deleteMany: {} },
+      },
     });
     await prismaClient.subscriptionRequest.delete({
       where: { id },

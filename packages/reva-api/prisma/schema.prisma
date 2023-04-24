@@ -632,7 +632,7 @@ model SubscriptionRequest {
   typology                                  OrganismTypology                            @map("typology")
   createdAt                                 DateTime                                    @default(now()) @map("created_at") @db.Timestamptz(6)
   subscriptionRequestOnDomaine              SubscriptionRequestOnDomaine[]
-  SubscriptionRequestOnConventionCollective SubscriptionRequestOnConventionCollective[]
+  subscriptionRequestOnConventionCollective SubscriptionRequestOnConventionCollective[]
 
   @@map("subscription_request")
 }
@@ -641,6 +641,7 @@ enum OrganismTypology {
   experimentation
   generaliste
   expertFiliere
+  expertBranche
 }
 
 view AvailableCertificationsByDepartments {
