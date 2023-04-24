@@ -96,5 +96,6 @@ export const resolvers = {
     },
 
     getDomaines: () => prismaClient.domaine.findMany(),
+    getConventionCollectives: () => prismaClient.conventionCollective.findMany(),
   },
 };

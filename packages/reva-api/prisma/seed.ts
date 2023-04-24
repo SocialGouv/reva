@@ -724,6 +724,7 @@ async function main() {
       ],
     });
   }
+
   const domaineCount = await prisma.domaine.count();
 
   if (domaineCount === 0) {
@@ -731,6 +732,21 @@ async function main() {
       data: [
         { code: "M", label: "Métallurgie" },
         { code: "GD", label: "Grande distribution" },
+      ],
+    });
+  }
+
+  const ccnCount = await prisma.conventionCollective.count();
+
+  if (ccnCount === 0) {
+    await prisma.conventionCollective.createMany({
+      data: [
+        { code: "3133", label: "Charcuterie de détail" },
+        { code: "3050", label: "Miroiterie" },
+        {
+          code: "3340",
+          label: "Textiles artificiels et synthètiques et produits assimilés",
+        },
       ],
     });
   }

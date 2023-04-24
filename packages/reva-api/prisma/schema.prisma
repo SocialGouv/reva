@@ -45,6 +45,7 @@ model Certification {
   availableCertificationsByDepartments                   AvailableCertificationsByDepartments[]
   activeOrganismsByAvailableCertificationsAndDepartments ActiveOrganismsByAvailableCertificationsAndDepartments[]
   certificationOnDomaine                                 CertificationOnDomaine[]
+  certificationOnConventionCollective                    CertificationOnConventionCollective[]
 
   @@map("certification")
 }
@@ -314,6 +315,7 @@ model Organism {
   typology                                               OrganismTypology                                         @map("typology")
   activeOrganismsByAvailableCertificationsAndDepartments ActiveOrganismsByAvailableCertificationsAndDepartments[]
   organismOnDomaine                                      OrganismOnDomaine[]
+  organismOnConventionCollective                         OrganismOnConventionCollective[]
 
   @@map("organism")
 }
@@ -610,26 +612,27 @@ enum LegalStatus {
 }
 
 model SubscriptionRequest {
-  id                             String                         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  companyName                    String                         @map("company_name") @db.VarChar(255)
-  companyLegalStatus             LegalStatus                    @map("company_legal_status")
-  companySiret                   String                         @map("company_siret") @db.VarChar(255)
-  companyAddress                 String                         @default("") @map("company_address") @db.VarChar(255)
-  companyZipCode                 String                         @default("") @map("company_zipcode") @db.VarChar(5)
-  companyCity                    String                         @default("") @map("company_city") @db.VarChar(100)
-  companyBillingContactFirstname String                         @map("company_billing_contact_firstname") @db.VarChar(100)
-  companyBillingContactLastname  String                         @map("company_billing_contact_lastname") @db.VarChar(255)
-  companyBillingEmail            String                         @map("company_billing_email") @db.VarChar(255)
-  companyBillingPhoneNumber      String                         @map("company_billing_phone_number") @db.VarChar(50)
-  companyBic                     String                         @map("company_bic") @db.VarChar(50)
-  companyIban                    String                         @map("company_iban") @db.VarChar(50)
-  accountFirstname               String                         @map("account_firstname") @db.VarChar(100)
-  accountLastname                String                         @map("account_lastname") @db.VarChar(100)
-  accountEmail                   String                         @map("account_email") @db.VarChar(255)
-  accountPhoneNumber             String                         @map("account_phone_number") @db.VarChar(50)
-  typology                       OrganismTypology               @map("typology")
-  createdAt                      DateTime                       @default(now()) @map("created_at") @db.Timestamptz(6)
-  subscriptionRequestOnDomaine   SubscriptionRequestOnDomaine[]
+  id                                        String                                      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  companyName                               String                                      @map("company_name") @db.VarChar(255)
+  companyLegalStatus                        LegalStatus                                 @map("company_legal_status")
+  companySiret                              String                                      @map("company_siret") @db.VarChar(255)
+  companyAddress                            String                                      @default("") @map("company_address") @db.VarChar(255)
+  companyZipCode                            String                                      @default("") @map("company_zipcode") @db.VarChar(5)
+  companyCity                               String                                      @default("") @map("company_city") @db.VarChar(100)
+  companyBillingContactFirstname            String                                      @map("company_billing_contact_firstname") @db.VarChar(100)
+  companyBillingContactLastname             String                                      @map("company_billing_contact_lastname") @db.VarChar(255)
+  companyBillingEmail                       String                                      @map("company_billing_email") @db.VarChar(255)
+  companyBillingPhoneNumber                 String                                      @map("company_billing_phone_number") @db.VarChar(50)
+  companyBic                                String                                      @map("company_bic") @db.VarChar(50)
+  companyIban                               String                                      @map("company_iban") @db.VarChar(50)
+  accountFirstname                          String                                      @map("account_firstname") @db.VarChar(100)
+  accountLastname                           String                                      @map("account_lastname") @db.VarChar(100)
+  accountEmail                              String                                      @map("account_email") @db.VarChar(255)
+  accountPhoneNumber                        String                                      @map("account_phone_number") @db.VarChar(50)
+  typology                                  OrganismTypology                            @map("typology")
+  createdAt                                 DateTime                                    @default(now()) @map("created_at") @db.Timestamptz(6)
+  subscriptionRequestOnDomaine              SubscriptionRequestOnDomaine[]
+  SubscriptionRequestOnConventionCollective SubscriptionRequestOnConventionCollective[]
 
   @@map("subscription_request")
 }
@@ -707,4 +710,52 @@ model CertificationOnDomaine {
 
   @@id([domaineId, certificationId])
   @@map("certification_on_domaine")
+}
+
+
+model ConventionCollective {
+  id                                        String                                      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                                     String                                      @db.VarChar(255)
+  code                                      String                                      @unique @db.VarChar(10) @map("ccid")
+  subscriptionRequestOnConventionCollective SubscriptionRequestOnConventionCollective[]
+  organismOnConventionCollective            OrganismOnConventionCollective[]
+  certificationOnConventionCollective       CertificationOnConventionCollective[]
+
+  @@map("convention_collective")
+}
+
+model OrganismOnConventionCollective {
+  ccn        ConventionCollective @relation(fields: [ccnId], references: [id])
+  ccnId      String               @map("ccn_id") @db.Uuid
+  organism   Organism             @relation(fields: [organismId], references: [id])
+  organismId String               @map("organism_id") @db.Uuid
+  createdAt  DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime?            @map("updated_at") @db.Timestamptz(6)
+
+  @@id([ccnId, organismId])
+  @@map("organism_on_ccn")
+}
+
+model CertificationOnConventionCollective {
+  ccn             ConventionCollective @relation(fields: [ccnId], references: [id])
+  ccnId           String               @map("ccn_id") @db.Uuid
+  certification   Certification        @relation(fields: [certificationId], references: [id])
+  certificationId String               @map("certification_id") @db.Uuid
+  createdAt       DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime?            @map("updated_at") @db.Timestamptz(6)
+
+  @@id([ccnId, certificationId])
+  @@map("certification_on_ccn")
+}
+
+model SubscriptionRequestOnConventionCollective {
+  ccn                   ConventionCollective @relation(fields: [ccnId], references: [id])
+  ccnId                 String               @map("ccn_id") @db.Uuid
+  subscriptionRequest   SubscriptionRequest  @relation(fields: [subscriptionRequestId], references: [id])
+  subscriptionRequestId String               @map("subscription_request_id") @db.Uuid
+  createdAt             DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime?            @map("updated_at") @db.Timestamptz(6)
+
+  @@id([ccnId, subscriptionRequestId])
+  @@map("subscription_request_on_ccn")
 }
