@@ -21,6 +21,12 @@ interface Domaine {
   label: string;
 }
 
+interface ConventionCollective {
+  id: string;
+  code: string;
+  label: string;
+}
+
 const getDomaines = gql`
   query getDomaines {
     getDomaines {
@@ -30,10 +36,22 @@ const getDomaines = gql`
   }
 `;
 
+const getConventionsCollectives = gql`
+  query getConventionCollectives {
+    getConventionCollectives {
+      id
+      code
+      label
+    }
+  }
+`;
+
 const PageContent = ({
   availableDomaines,
+  availableConventions,
 }: {
   availableDomaines: Domaine[];
+  availableConventions: ConventionCollective[];
 }) => {
   const { currentStep } = useProfessionalSpaceCreationContext();
   switch (currentStep) {
@@ -41,7 +59,10 @@ const PageContent = ({
       return <CompanyInfoStepForm />;
     case "certificationsInfoStep":
       return (
-        <CertificationsInfoStepForm availableDomaines={availableDomaines} />
+        <CertificationsInfoStepForm
+          availableDomaines={availableDomaines}
+          availableConventions={availableConventions}
+        />
       );
     case "billingInfoStep":
       return <BillingInfoStepForm />;
@@ -54,13 +75,22 @@ const PageContent = ({
 
 const ProfessionalSpaceCreationPage = () => {
   const [availableDomaines, setAvailableDomaines] = useState<Domaine[]>([]);
+  const [availableConventions, setAvailableConventions] = useState<
+    ConventionCollective[]
+  >([]);
 
   useEffect(() => {
     const loadAvailableDomaines = async () =>
       setAvailableDomaines(
         (await request(GRAPHQL_API_URL, getDomaines)).getDomaines
       );
+    const loadAvailableConventions = async () =>
+      setAvailableConventions(
+        (await request(GRAPHQL_API_URL, getConventionsCollectives))
+          .getConventionCollectives
+      );
     loadAvailableDomaines();
+    loadAvailableConventions();
   }, []);
 
   return (
@@ -75,7 +105,10 @@ const ProfessionalSpaceCreationPage = () => {
         candidats sur leur parcours de formation"
       >
         <ProfessionalSpaceCreationProvider>
-          <PageContent availableDomaines={availableDomaines} />
+          <PageContent
+            availableDomaines={availableDomaines}
+            availableConventions={availableConventions}
+          />
         </ProfessionalSpaceCreationProvider>
       </BlueLayout>
     </MainLayout>

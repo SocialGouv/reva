@@ -17,7 +17,7 @@ interface ValidateSubscriptionRequestDeps {
     siret: string
   ) => Promise<Either<string, Maybe<Organism>>>;
   createOrganism: (
-    data: Omit<Organism, "id"> & { domaineIds?: string[] }
+    data: Omit<Organism, "id"> & { domaineIds?: string[]; ccnIds?: string[] }
   ) => Promise<Either<string, Organism>>;
   getIamAccount: (params: {
     email: string;
@@ -50,17 +50,17 @@ interface ValidateSubscriptionRequestParams {
   subscriptionRequestId: string;
 }
 
-type SubscriptionRequestWithSubscriptionRequestOnDomaine =
-  SubscriptionRequest & {
-    subscriptionRequestOnDomaine?: { domaineId: string }[];
-  };
+type SubscriptionRequestWithTypologyAssociations = SubscriptionRequest & {
+  subscriptionRequestOnDomaine?: { domaineId: string }[];
+  subscriptionRequestOnConventionCollective?: { ccnId: string }[];
+};
 
 export const validateSubscriptionRequest = async (
   deps: ValidateSubscriptionRequestDeps,
   params: ValidateSubscriptionRequestParams
 ) => {
   const $store: {
-    subreq?: SubscriptionRequestWithSubscriptionRequestOnDomaine;
+    subreq?: SubscriptionRequestWithTypologyAssociations;
     organism?: Organism;
     keyCloackId?: string;
   } = {};
@@ -78,7 +78,7 @@ export const validateSubscriptionRequest = async (
       );
     }
     const maybeSubReq =
-      eitherSubreq.extract() as Maybe<SubscriptionRequestWithSubscriptionRequestOnDomaine>;
+      eitherSubreq.extract() as Maybe<SubscriptionRequestWithTypologyAssociations>;
     if (maybeSubReq.isNothing()) {
       const errorMessage = `La demande d'inscription ${params.subscriptionRequestId} n'existe pas`;
       logger.error(`[validateSubscriptionRequestDeps] ${errorMessage}`);
@@ -90,7 +90,7 @@ export const validateSubscriptionRequest = async (
       );
     }
     const subreq =
-      maybeSubReq.extract() as SubscriptionRequestWithSubscriptionRequestOnDomaine;
+      maybeSubReq.extract() as SubscriptionRequestWithTypologyAssociations;
     $store.subreq = subreq;
 
     return Right(subreq);
@@ -199,7 +199,10 @@ export const validateSubscriptionRequest = async (
         isActive: true,
         typology: $store.subreq?.typology ?? "generaliste",
         domaineIds: $store.subreq?.subscriptionRequestOnDomaine?.map(
-          (o) => o.domaineId
+          (o: any) => o.domaineId
+        ),
+        ccnIds: $store.subreq?.subscriptionRequestOnConventionCollective?.map(
+          (o: any) => o.ccnId
         ),
       })
     )

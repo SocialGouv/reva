@@ -1,6 +1,6 @@
 type LegalStatus = "EI" | "EURL" | "SARL" | "SAS" | "SASU" | "SA" | "NC";
 
-type OrganismTypology = "generaliste" | "experimentation" | "expertFiliere";
+type OrganismTypology = "generaliste" | "experimentation" | "expertFiliere" | "expertBranche";
 
 interface SubscriptionRequestInput {
   companySiret: string;
@@ -21,9 +21,10 @@ interface SubscriptionRequestInput {
   accountPhoneNumber: string;
   typology: OrganismTypology;
   domaineIds: string[];
+  ccnIds: string[];
 }
 
-type SubscriptionRequest = Omit<SubscriptionRequestInput, "domaineIds"> & {
+type SubscriptionRequest = Omit<SubscriptionRequestInput, "domaineIds", "ccnIds"> & {
   id: string;
   createdAt: Date;
 };

@@ -23,7 +23,7 @@ interface ProfessionalSpaceInfo {
   accountLastname: string;
   accountEmail: string;
   accountPhoneNumber: string;
-  typology: "generaliste" | "expertFiliere";
+  typology: "generaliste" | "expertFiliere" | "expertBranche";
   domaineIds: string[];
 }
 interface ProfessionalSpaceCreationState {

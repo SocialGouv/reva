@@ -128,7 +128,8 @@ export interface Department {
 export type OrganismTypology =
   | "experimentation"
   | "generaliste"
-  | "expertFiliere";
+  | "expertFiliere"
+  | "expertBranche";
 
 export interface Organism {
   id: string;

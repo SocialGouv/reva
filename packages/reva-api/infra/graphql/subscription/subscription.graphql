@@ -63,6 +63,7 @@ type Query {
 enum OrganismTypology {
   generaliste
   expertFiliere
+  expertBranche
 }
 
 input SubscriptionRequestInput {
@@ -84,6 +85,7 @@ input SubscriptionRequestInput {
   accountPhoneNumber: String!
   typology: OrganismTypology!
   domaineIds: [String!]
+  ccnIds: [String!]
 }
 
 type Mutation {
