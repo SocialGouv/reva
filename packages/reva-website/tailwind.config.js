@@ -9,6 +9,9 @@ module.exports = {
         lg: "992px",
         xl: "1248px",
       },
+      colors: {
+        dsfrGray: { contrast: "#EEEEEE" },
+      },
     },
   },
   plugins: [],
