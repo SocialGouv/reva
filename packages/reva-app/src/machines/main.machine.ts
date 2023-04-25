@@ -953,12 +953,15 @@ export const mainMachine =
             const typedEvent = event as DoneInvokeEvent<any>;
             return Boolean(typedEvent.data.candidacy?.candidacyDropOut);
           },
+          
           isTokenInvalid: (_context, event) => {
             const typedEvent = event as DoneInvokeEvent<any>;
-            return (
+            const hasInvalidTokenErrorCode =
               typedEvent.data.networkError?.result?.errors?.[0]?.extensions
-                ?.code === "CANDIDATE_INVALID_TOKEN"
-            );
+                ?.code === "CANDIDATE_INVALID_TOKEN" ||
+              typedEvent.data.graphQLErrors?.[0]?.extensions?.code ===
+                "CANDIDATE_INVALID_TOKEN";
+            return hasInvalidTokenErrorCode;
           },
         },
       }
