@@ -166,7 +166,7 @@ export const TrainingProgramSummary = ({
         options={[
           {
             label:
-              "J’ai bien compris qu’il s’agissait des étapes et prestations nécessaires pour que j’obtienne mon diplôme",
+              "J’ai bien compris qu’il s’agissait des étapes et prestations nécessaires pour atteindre mon objectif de diplôme",
             nativeInputProps: {
               disabled: isTrainingConfirmed,
               defaultChecked: isTrainingConfirmed,
@@ -182,7 +182,7 @@ export const TrainingProgramSummary = ({
           },
           {
             label:
-              "Je m’engage à suivre ce parcours ou informer mon accompagnateur de tout abandon dans les 48h",
+              "Je m’engage à suivre ce parcours ou informer mon organisme d’accompagnement de tout abandon dans les 48h",
             nativeInputProps: {
               disabled: isTrainingConfirmed,
               defaultChecked: isTrainingConfirmed,
