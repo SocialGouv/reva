@@ -354,13 +354,15 @@ const GET_CANDIDATE_WITH_CANDIDACY = gql`
 `;
 
 export const getCandidateWithCandidacy =
-  (client: ApolloClient<object>) => async (params: { token: string }) => {
+  (client: ApolloClient<object>) => async (params: { token?: string }) => {
     const { data } = await client.query({
-      context: {
-        headers: {
-          authorization: `Bearer ${params.token}`,
-        },
-      },
+      context: params.token
+        ? {
+            headers: {
+              authorization: `Bearer ${params.token}`,
+            },
+          }
+        : undefined,
       query: GET_CANDIDATE_WITH_CANDIDACY,
     });
 
