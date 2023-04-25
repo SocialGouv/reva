@@ -1,7 +1,6 @@
 import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
 import { Button } from "@codegouvfr/react-dsfr/Button";
-import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
-import { useForm, useController, useWatch } from "react-hook-form";
+import { useController, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useProfessionalSpaceCreationContext } from "../context/ProfessionalSpaceCreationContext";
@@ -14,6 +13,8 @@ const zodSchema = z.object({
   typology: z.enum(["generaliste", "expertFiliere", "expertBranche"]),
   domaineIds: z.string().array(),
   ccnIds: z.string().array(),
+  onSiteDepartmentsIds: z.string().array(),
+  remoteDepartmentsIds: z.string().array(),
 });
 
 type CertificationsInfoStepFormSchema = z.infer<typeof zodSchema>;
@@ -21,9 +22,11 @@ type CertificationsInfoStepFormSchema = z.infer<typeof zodSchema>;
 export const CertificationsInfoStepForm = ({
   availableDomaines,
   availableConventions,
+  availableDepartments,
 }: {
   availableDomaines: { label: string; id: string }[];
   availableConventions: { label: string; code: string; id: string }[];
+  availableDepartments: { label: string; code: string; id: string }[];
 }) => {
   const {
     professionalSpaceInfos,
@@ -58,6 +61,20 @@ export const CertificationsInfoStepForm = ({
     rules: { required: true },
   });
 
+  const onSiteDepartmentsController = useController({
+    name: "onSiteDepartmentsIds",
+    defaultValue: [],
+    control,
+    rules: { required: true },
+  });
+
+  const remoteDepartmentsController = useController({
+    name: "remoteDepartmentsIds",
+    defaultValue: [],
+    control,
+    rules: { required: true },
+  });
+
   const handleFormSubmit = (data: CertificationsInfoStepFormSchema) =>
     submitCertificationsInfoStep(data);
 
@@ -76,6 +93,12 @@ export const CertificationsInfoStepForm = ({
     [setValue, typologyController.field]
   );
 
+  const toggle = (toggledId: string, current: string[]) => {
+    return current.includes(toggledId)
+      ? current.filter((id) => id !== toggledId)
+      : [...current, toggledId];
+  };
+
   return (
     <div className="flex flex-col min-w-[70vw]">
       <Stepper
@@ -87,71 +110,124 @@ export const CertificationsInfoStepForm = ({
       <div className="border-t border-gray-300  mb-7" />
       <FormOptionalFieldsDisclaimer className="mb-6" />
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>
-        <fieldset className="flex-flex-col max-w-lg">
-          <legend className="text-xl font-bold text-gray-900 grow mb-4">
-            Informations sur la typologie
-          </legend>
-          <Select
-            label="Typologie d’Architecte Accompagnateur de Parcours (AAP)"
-            hint="Les certifications vous sont rattachées en fonction de votre typologie d’AAP"
-            nativeSelectProps={{
-              onChange: (event) => handleTypologyChange(event.target.value),
-              value: typologyController.field.value,
-            }}
-          >
-            <option value="generaliste">Généraliste</option>
-            <option value="expertFiliere">Expert de filière(s)</option>
-            <option value="expertBranche">Expert de branche(s)</option>
-          </Select>
-          {currentTypology === "expertFiliere" && (
+        <div className="flex">
+          <fieldset className="flex-1 flex flex-col">
+            <legend className="text-xl font-bold text-gray-900 grow mb-4">
+              Informations sur la typologie
+            </legend>
+            <Select
+              label="Typologie d’Architecte Accompagnateur de Parcours"
+              hint="Les certifications vous sont rattachées en fonction de votre typologie d’AAP"
+              nativeSelectProps={{
+                onChange: (event) => handleTypologyChange(event.target.value),
+                value: typologyController.field.value,
+              }}
+            >
+              <option value="generaliste">Généraliste</option>
+              <option value="expertFiliere">Expert de filière(s)</option>
+              <option value="expertBranche">Expert de branche(s)</option>
+            </Select>
+            {currentTypology === "expertFiliere" && (
+              <MultiSelect
+                label="Filière(s)"
+                hint="Vous pouvez cocher plusieurs choix, avec un minimum d’une filière"
+                options={availableDomaines.map((availableDomaine) => ({
+                  label: availableDomaine.label,
+                  value: availableDomaine.id,
+                }))}
+                placeholder={(selectedItemsCount) =>
+                  selectedItemsCount
+                    ? `${selectedItemsCount} filières séléctionnées`
+                    : "Cochez toutes les filières concernées"
+                }
+                initialSelectedValues={availableDomaines
+                  .filter((ad) =>
+                    domaineIdsController.field.value.includes(ad.id)
+                  )
+                  .map((d) => ({ label: d.label, value: d.id }))}
+                onChange={(selectedOptions) =>
+                  domaineIdsController.field.onChange(
+                    selectedOptions.map((option) => option.value)
+                  )
+                }
+              />
+            )}
+            {currentTypology === "expertBranche" && (
+              <MultiSelect
+                label="Conventions collectives auxquelles vous êtes rattaché"
+                hint="Vous pouvez cocher plusieurs conventions collectives"
+                options={availableConventions.map((availableConvention) => ({
+                  label: `${availableConvention.code} ${availableConvention.label}`,
+                  value: availableConvention.id,
+                }))}
+                placeholder={(selectedItemsCount) =>
+                  selectedItemsCount
+                    ? `${selectedItemsCount} conventions collectives séléctionnées`
+                    : "Cochez les conventions collectives concernées"
+                }
+                initialSelectedValues={availableConventions
+                  .filter((ad) => ccnIdsController.field.value.includes(ad.id))
+                  .map((d) => ({ label: d.label, value: d.id }))}
+                onChange={(selectedOptions) =>
+                  ccnIdsController.field.onChange(
+                    selectedOptions.map((option) => option.value)
+                  )
+                }
+              />
+            )}
+          </fieldset>
+          <fieldset className="flex-1 flex flex-col ml-12 mb-12">
+            <legend className="text-xl font-bold text-gray-900 grow mb-4">
+              Choix de la zone d'intervention
+            </legend>
             <MultiSelect
-              label="Filière(s)"
-              hint="Vous pouvez cocher plusieurs choix, avec un minimum d’une filière"
-              options={availableDomaines.map((availableDomaine) => ({
-                label: availableDomaine.label,
-                value: availableDomaine.id,
+              label="Zone d’intervention en présentiel"
+              hint="Cochez les départements couverts en présentiel"
+              options={availableDepartments.map((department) => ({
+                label: `${department.label} (${department.code})`,
+                value: department.id,
               }))}
               placeholder={(selectedItemsCount) =>
                 selectedItemsCount
-                  ? `${selectedItemsCount} filières séléctionnées`
-                  : "Cochez toutes les filières concernées"
+                  ? `${selectedItemsCount} départements séléctionnés`
+                  : "Cochez les départements concernés"
               }
-              initialSelectedValues={availableDomaines
+              initialSelectedValues={availableDepartments
                 .filter((ad) =>
-                  domaineIdsController.field.value.includes(ad.id)
+                  onSiteDepartmentsController.field.value.includes(ad.id)
                 )
                 .map((d) => ({ label: d.label, value: d.id }))}
               onChange={(selectedOptions) =>
-                domaineIdsController.field.onChange(
+                onSiteDepartmentsController.field.onChange(
                   selectedOptions.map((option) => option.value)
                 )
               }
             />
-          )}
-          {currentTypology === "expertBranche" && (
             <MultiSelect
-              label="Conventions collectives auxquelles vous êtes rattaché"
-              hint="Vous pouvez cocher plusieurs conventions collectives"
-              options={availableConventions.map((availableConvention) => ({
-                label: `${availableConvention.code} ${availableConvention.label}`,
-                value: availableConvention.id,
+              label="Zone d’intervention en distanciel"
+              hint="Cochez les départements couverts en distanciel"
+              options={availableDepartments.map((department) => ({
+                label: `${department.label} (${department.code})`,
+                value: department.id,
               }))}
               placeholder={(selectedItemsCount) =>
                 selectedItemsCount
-                  ? `${selectedItemsCount} conventions collectives séléctionnées`
-                  : "Cochez les conventions collectives concernées"
+                  ? `${selectedItemsCount} départements séléctionnés`
+                  : "Cochez les départements concernés"
               }
-              initialSelectedValues={availableConventions
-                .filter((ad) => ccnIdsController.field.value.includes(ad.id))
+              initialSelectedValues={availableDepartments
+                .filter((ad) =>
+                  remoteDepartmentsController.field.value.includes(ad.id)
+                )
                 .map((d) => ({ label: d.label, value: d.id }))}
               onChange={(selectedOptions) =>
-                ccnIdsController.field.onChange(
+                remoteDepartmentsController.field.onChange(
                   selectedOptions.map((option) => option.value)
                 )
               }
             />
-          )}
-        </fieldset>
+          </fieldset>
+        </div>
         <div className="flex gap-2 ml-auto mt-4">
           <Button priority="secondary" onClick={goBackToPreviousStep}>
             Revenir à l'étape 1

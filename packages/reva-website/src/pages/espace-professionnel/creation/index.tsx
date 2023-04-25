@@ -27,6 +27,12 @@ interface ConventionCollective {
   label: string;
 }
 
+interface Department {
+  id: string;
+  code: string;
+  label: string;
+}
+
 const getDomaines = gql`
   query getDomaines {
     getDomaines {
@@ -46,12 +52,24 @@ const getConventionsCollectives = gql`
   }
 `;
 
+const getDepartments = gql`
+  query getDepartments {
+    getDepartments {
+      id
+      code
+      label
+    }
+  }
+`;
+
 const PageContent = ({
   availableDomaines,
   availableConventions,
+  availableDepartments,
 }: {
   availableDomaines: Domaine[];
   availableConventions: ConventionCollective[];
+  availableDepartments: Department[];
 }) => {
   const { currentStep } = useProfessionalSpaceCreationContext();
   switch (currentStep) {
@@ -62,6 +80,7 @@ const PageContent = ({
         <CertificationsInfoStepForm
           availableDomaines={availableDomaines}
           availableConventions={availableConventions}
+          availableDepartments={availableDepartments}
         />
       );
     case "billingInfoStep":
@@ -79,6 +98,10 @@ const ProfessionalSpaceCreationPage = () => {
     ConventionCollective[]
   >([]);
 
+  const [availableDepartments, setAvailableDepartments] = useState<
+    Department[]
+  >([]);
+
   useEffect(() => {
     const loadAvailableDomaines = async () =>
       setAvailableDomaines(
@@ -89,8 +112,16 @@ const ProfessionalSpaceCreationPage = () => {
         (await request(GRAPHQL_API_URL, getConventionsCollectives))
           .getConventionCollectives
       );
+    const loadAvailableDepartments = async () =>
+      setAvailableDepartments(
+        (await request(GRAPHQL_API_URL, getDepartments)).getDepartments.sort(
+          (a: Department, b: Department) => a.code.localeCompare(b.code)
+        )
+      );
+
     loadAvailableDomaines();
     loadAvailableConventions();
+    loadAvailableDepartments();
   }, []);
 
   return (
@@ -108,6 +139,7 @@ const ProfessionalSpaceCreationPage = () => {
           <PageContent
             availableDomaines={availableDomaines}
             availableConventions={availableConventions}
+            availableDepartments={availableDepartments}
           />
         </ProfessionalSpaceCreationProvider>
       </BlueLayout>
