@@ -113,7 +113,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
       {selectedDepartment && (
         <>
           <p className="mt-6 text-black">
-            Voici les architectes de parcours disponibles dans votre
+            Voici les organismes d'accompagnement disponibles dans votre
             département.
           </p>
           <p className="mb-4 text-black"> Cochez celui de votre choix.</p>
@@ -142,7 +142,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
           },
         }}
       >
-        Valider votre organisme d'accompagnement
+        Validez votre organisme d'accompagnement
       </Button>
     </Page>
   );

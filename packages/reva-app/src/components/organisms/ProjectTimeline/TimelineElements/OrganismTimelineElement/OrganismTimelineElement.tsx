@@ -59,7 +59,7 @@ export const OrganismTimelineElement = () => {
                 disabled={status === "disabled"}
               >
                 {state.context.organism
-                  ? "Modifier votre organisme d'accompagnement"
+                  ? "Modifiez votre organisme d'accompagnement"
                   : "Choisir votre organisme d'accompagnement"}
               </Button>
             )}
