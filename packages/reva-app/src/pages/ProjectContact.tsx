@@ -141,7 +141,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             className="my-4"
             data-test="certificates-select-department"
             label="Département"
-            hint="Sélectionner votre département de résidence"
+            hint="Sélectionnez votre département de résidence"
             nativeSelectProps={{
               name: "department",
               defaultValue: "",
@@ -160,7 +160,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           </Select>
         </fieldset>
         <Button data-test="project-contact-add" className="mt-6">
-          Créer mon compte
+          Créez mon compte
         </Button>
       </form>
       {!hasCandidacy && (
