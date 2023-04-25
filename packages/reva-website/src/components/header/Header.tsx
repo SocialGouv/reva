@@ -1,39 +1,52 @@
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
+import { useRouter } from "next/router";
 
-export const Header = (props: { className?: string }) => (
-  <DsfrHeader
-    className={props.className}
-    brandTop={<></>}
-    serviceTitle="France VAE"
-    homeLinkProps={{
-      href: "/",
-      title: "Accueil - France VAE",
-    }}
-    quickAccessItems={[
-      {
-        iconId: "fr-icon-account-line",
-        linkProps: {
-          className: "",
-          href: "/app/login",
+export const Header = (props: { className?: string }) => {
+  const { asPath } = useRouter();
+
+  return (
+    <DsfrHeader
+      className={props.className}
+      brandTop={<></>}
+      serviceTitle="France VAE"
+      homeLinkProps={{
+        href: "/",
+        title: "Accueil - France VAE",
+      }}
+      quickAccessItems={[
+        {
+          iconId: "fr-icon-arrow-right-line",
+          linkProps: {
+            href: "/admin",
+            className: "fr-link--icon-right",
+          },
+          text: "Espace professionnel",
         },
-        text: "Connexion",
-      },
-      {
-        iconId: "fr-icon-account-line",
-        linkProps: {
-          className: "!bg-[#F8F8F8]  ",
-          href: "/admin",
+        {
+          iconId: "fr-icon-arrow-right-line",
+          linkProps: {
+            href: "/app/login",
+            className: "fr-link--icon-right",
+          },
+          text: "Espace candidat",
         },
-        text: "Pro",
-      },
-      {
-        iconId: "fr-icon-account-line",
-        linkProps: {
-          className: "!bg-[#000091] !text-white  ",
-          href: "/app",
+      ]}
+      navigation={[
+        {
+          isActive: !!asPath.match(/\/espace-candidat/)?.length,
+          linkProps: {
+            href: "/espace-candidat",
+          },
+          text: "Je suis candidat",
         },
-        text: "Démarrer mon parcours VAE",
-      },
-    ]}
-  />
-);
+        {
+          isActive: !!asPath.match(/\/espace-professionnel/)?.length,
+          linkProps: {
+            href: "/espace-professionnel",
+          },
+          text: "Je suis professionnel",
+        },
+      ]}
+    />
+  );
+};
