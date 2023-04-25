@@ -12,7 +12,7 @@ const IndexCandidatPage = () => {
   return (
     <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_180px]">
       <Head>
-        <title>Accueil - France VAE</title>
+        <title>Accueil - Reva</title>
       </Head>
       <ExperienceReconnue />
       <QuestcequelaVae />

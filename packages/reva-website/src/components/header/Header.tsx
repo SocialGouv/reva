@@ -8,10 +8,10 @@ export const Header = (props: { className?: string }) => {
     <DsfrHeader
       className={props.className}
       brandTop={<></>}
-      serviceTitle="France VAE"
+      serviceTitle="Reva"
       homeLinkProps={{
         href: "/",
-        title: "Accueil - France VAE",
+        title: "Accueil - Reva",
       }}
       quickAccessItems={[
         {

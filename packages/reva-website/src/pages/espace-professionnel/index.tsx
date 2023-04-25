@@ -24,8 +24,8 @@ const SuiviCandidat = () => (
         </SectionHeader>
       </header>
       <SectionParagraph className="font-bold">
-        Le portail France VAE permet aux architectes accompagnateurs de parcours
-        de gérer toutes les démarches des candidats à la VAE
+        Le portail Reva permet aux architectes accompagnateurs de parcours de
+        gérer toutes les démarches des candidats à la VAE
       </SectionParagraph>
       <ul className="list-none pl-0 leading-7 lg:text-lg lg:leading-10 xl:text-2xl mb-8">
         <li className="my-2">
@@ -119,7 +119,7 @@ const ProfessionalSpaceHomePage = () => {
   return (
     <MainLayout className="fr-container py-20 lg:pt-48 gap-10 lg:gap-64 lg:pb-80 bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_1150px]">
       <Head>
-        <title>Page d'accueil espace professionnel - France VAE</title>
+        <title>Page d'accueil espace professionnel - Reva</title>
       </Head>
 
       <SuiviCandidat />

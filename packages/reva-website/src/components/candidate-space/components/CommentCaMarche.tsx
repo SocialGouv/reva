@@ -14,14 +14,14 @@ export const CommentCaMarche = () => (
       <div className="w-full mt-[100px] mx-auto text-center">
         <header>
           <SectionSubHeader className="text-[#FEF7DA]">
-            Le parcours France VAE
+            Le parcours Reva
           </SectionSubHeader>
           <h1 className="text-white lg:text-[40px] lg:leading-[44px] xl:text-[80px] xl:leading-[88px]">
             Comment ça marche ?
           </h1>
         </header>
         <SectionParagraph>
-          Découvrez tout le chemin d’une certification France VAE d’un candidat:
+          Découvrez tout le chemin d’une certification Reva d’un candidat:
         </SectionParagraph>
       </div>
       <div className="flex flex-col lg:flex-row mt-[100px] justify-around lg:min-w-[1248px]">

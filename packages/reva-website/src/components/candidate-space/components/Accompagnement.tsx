@@ -1,7 +1,7 @@
 import {
   SectionHeader,
   SectionParagraph,
-  SectionSubHeader
+  SectionSubHeader,
 } from "@/components/section-content/SectionContent";
 import Image from "next/image";
 
@@ -20,18 +20,20 @@ export const Accompagnement = () => (
         <SectionParagraph className="lg:text-justify text-left">
           Un architecte accompagnateur de parcours vous aidera dans la gestion
           administrative de votre dossier VAE dès le début de votre parcours. Ce
-          sont des professionnels sélectionnés spécialement par France VAE pour
-          leur expertise en développement de compétences.
+          sont des professionnels sélectionnés spécialement par Reva pour leur
+          expertise en développement de compétences.
         </SectionParagraph>
       </div>
       <div className="mx-auto px-10 mt-4 lg:flex lg:flex-no-wrap gap-x-5 text-center lg:text-left">
         <div className="flex-no-wrap lg:flex lg:basis-1/3">
           <div className="min-w-[130px] lg:pt-[24px]">
-            <Image className=""
+            <Image
+              className=""
               src="/candidate-space/icon-conception.png"
               alt="image bloc note"
               width={130}
-              height={121} />
+              height={121}
+            />
           </div>
           <div className="ml-3">
             <header>
@@ -50,7 +52,8 @@ export const Accompagnement = () => (
               src="/candidate-space/icon-gestion.png"
               alt="image dossier"
               width={130}
-              height={121} />
+              height={121}
+            />
           </div>
           <div className="ml-3">
             <header>
@@ -68,7 +71,8 @@ export const Accompagnement = () => (
               src="/candidate-space/icon-plannification.png"
               alt="image bloc note"
               width={130}
-              height={121} />
+              height={121}
+            />
           </div>
           <div className="ml-3">
             <header>

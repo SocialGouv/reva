@@ -1,7 +1,7 @@
 import {
   SectionHeader,
   SectionParagraph,
-  SectionSubHeader
+  SectionSubHeader,
 } from "@/components/section-content/SectionContent";
 import Image from "next/image";
 
@@ -12,9 +12,7 @@ export const QuestcequelaVae = () => (
   >
     <div className="flex-1 px-5 mt-24 sm:mt-0">
       <header>
-        <SectionSubHeader className="text-[#000091]">
-          France VAE
-        </SectionSubHeader>
+        <SectionSubHeader className="text-[#000091]">Reva</SectionSubHeader>
         <SectionHeader>Qu'est-ce que la VAE ?</SectionHeader>
       </header>
       <SectionParagraph>
@@ -40,7 +38,8 @@ export const QuestcequelaVae = () => (
         fill={true}
         style={{
           objectFit: "contain",
-        }} />
+        }}
+      />
     </div>
   </section>
 );

@@ -2,7 +2,7 @@ import {
   Hexagon,
   SectionHeader,
   SectionParagraph,
-  SectionSubHeader
+  SectionSubHeader,
 } from "@/components/section-content/SectionContent";
 
 export const Financement = () => (
@@ -18,9 +18,10 @@ export const Financement = () => (
       </header>
       <SectionParagraph>
         Vous n’avez plus à vous préoccuper du financement de votre parcours.
-        Pour faciliter l’accès à la VAE pour tous, France VAE rassemble ce
-        financement auprès de différents acteurs publics et privés.
-        <br/><br/>
+        Pour faciliter l’accès à la VAE pour tous, Reva rassemble ce financement
+        auprès de différents acteurs publics et privés.
+        <br />
+        <br />
         *hors dispositif particulier de la fonction publique
       </SectionParagraph>
     </div>
@@ -39,7 +40,7 @@ export const Financement = () => (
           </section>
         </li>
         <li className="mt-24 lg:mt-10">
-        <section className="flex lg:space-x-6 space-x-2">
+          <section className="flex lg:space-x-6 space-x-2">
             <div className="-top-4 flex-0 relative w-[60px] h-[60px] text-[#8BF8E7]">
               <Hexagon className="absolute w-[55px]" />
             </div>
@@ -58,7 +59,7 @@ export const Financement = () => (
               <Hexagon className="absolute w-[55px]" />
             </div>
             <div className="flex-1 text-[#1B1B35]">
-              <header> 
+              <header>
                 <SectionSubHeader className="top">
                   Les actes formatifs complémentaires
                 </SectionSubHeader>
