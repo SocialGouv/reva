@@ -118,13 +118,22 @@ export const createOrganism = async (data: {
   siret: string;
   isActive: boolean;
   typology: OrganismTypology;
+  ccnIds?: string[];
   domaineIds?: string[];
 }): Promise<Either<string, domain.Organism>> => {
   try {
-    const { domaineIds, ...otherData } = data;
+    const { domaineIds, ccnIds, ...otherData } = data;
     const organism = await prismaClient.organism.create({
       data: {
         ...otherData,
+        organismOnConventionCollective: {
+          createMany: {
+            data:
+              ccnIds?.map((ccnId) => ({
+                ccnId,
+              })) || [],
+          },
+        },
         organismOnDomaine: {
           createMany: {
             data:
