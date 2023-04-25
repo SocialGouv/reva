@@ -8,12 +8,12 @@ import {
 export const Financement = () => (
   <section
     id="financement"
-    className="w-full max-w-[1248px] mx-auto mt-[80px] overflow-x-hidden flex flex-wrap lg:flex-no-wrap lg:items-center"
+    className="w-full max-w-[1248px] mx-auto mt-20 lg:mt-[200px] overflow-x-hidden flex flex-col gap-x-24 lg:flex-row lg:items-center"
   >
     <div className="px-5">
       <header>
         <SectionHeader>
-          Le financement de votre parcours pris en charge
+          Le financement de votre parcours pris en charge*
         </SectionHeader>
       </header>
       <SectionParagraph>
@@ -25,47 +25,41 @@ export const Financement = () => (
         *hors dispositif particulier de la fonction publique
       </SectionParagraph>
     </div>
-    <div className="relative mt-16 -mx-5 sm:mx-0 sm:flex-0 sm:w-2/5 sm:-mr-20 lg:mr-0 lg:flex-1">
-      <ul className="flex-1 relative pl-8 lg:p-0 list-none mt-[100px]">
-        <li className="mt-24 lg:mt-10">
-          <section className="flex lg:space-x-6 space-x-2">
-            <div className="-top-4 lg:flex-0 relative w-[60px] h-[60px] text-[#F95C5E]">
-              <Hexagon className="absolute w-[55px]" />
-            </div>
-            <div className="lg: flex-1 text-[#1B1B35]">
-              <header>
-                <SectionSubHeader>Les frais administratifs</SectionSubHeader>
-              </header>
-            </div>
-          </section>
+    <div className="relative mt-10 -mx-5 sm:mx-0 sm:flex-0 sm:w-2/5 sm:-mr-20 lg:mr-0 lg:flex-1">
+      <ul className="flex-1 relative pl-8 lg:p-0 list-none lg:mt-[100px]">
+        <li className="flex gap-x-2 items-center">
+          <div className="text-[#F95C5E]">
+            <Hexagon className="w-[55px]" />
+          </div>
+          <div className="lg:flex-1 text-[#1B1B35]">
+            <SectionSubHeader className="mb-0">
+              Les frais administratifs
+            </SectionSubHeader>
+          </div>
         </li>
-        <li className="mt-24 lg:mt-10">
-          <section className="flex lg:space-x-6 space-x-2">
-            <div className="-top-4 flex-0 relative w-[60px] h-[60px] text-[#8BF8E7]">
-              <Hexagon className="absolute w-[55px]" />
-            </div>
-            <div className="flex-1 text-[#1B1B35] align-middle">
-              <header>
-                <SectionSubHeader className="top">
-                  Les frais d'accompagnement
-                </SectionSubHeader>
-              </header>
-            </div>
-          </section>
+        <li className="mt-10 flex gap-x-2 items-center">
+          <div className="text-[#8BF8E7]">
+            <Hexagon className="w-[55px]" />
+          </div>
+          <div className="flex-1 text-[#1B1B35]">
+            <header>
+              <SectionSubHeader className="mb-0">
+                Les frais d'accompagnement
+              </SectionSubHeader>
+            </header>
+          </div>
         </li>
-        <li className="mt-24 lg:mt-10">
-          <section className="lg:flex lg:space-x-6">
-            <div className="-top-4 flex-0 relative w-[60px] h-[60px] text-[#FBB8F6]">
-              <Hexagon className="absolute w-[55px]" />
-            </div>
-            <div className="flex-1 text-[#1B1B35]">
-              <header>
-                <SectionSubHeader className="top">
-                  Les actes formatifs complémentaires
-                </SectionSubHeader>
-              </header>
-            </div>
-          </section>
+        <li className="mt-10 flex gap-x-2 items-center">
+          <div className="text-[#FBB8F6]">
+            <Hexagon className="w-[55px]" />
+          </div>
+          <div className="flex-1 text-[#1B1B35]">
+            <header>
+              <SectionSubHeader className="mb-0 pr-2">
+                Les actes formatifs complémentaires: de courte durée
+              </SectionSubHeader>
+            </header>
+          </div>
         </li>
       </ul>
     </div>

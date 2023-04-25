@@ -10,7 +10,8 @@ module.exports = {
         xl: "1248px",
       },
       colors: {
-        dsfrGray: { contrast: "#EEEEEE" },
+        dsfrGray: { contrast: "#EEEEEE", altblueFrance: "#F5F5FE" },
+        dsfrBlue: { franceSun: "#000091" },
       },
     },
   },

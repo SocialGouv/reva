@@ -6,9 +6,12 @@ import {
 import Image from "next/image";
 
 export const Accompagnement = () => (
-  <section id="acompagnement" className="mt-20 pb-48 bg-[#F8F8F8]">
+  <section
+    id="acompagnement"
+    className="mt-20 lg:mt-[200px] pb-48 bg-dsfrGray-altblueFrance"
+  >
     <div className="relative w-full px-5 lg:flex-no-wrap lg:space-x-12">
-      <div className="px-5 sm:flex-1 mx-auto max-w-[1208px] text-center mt-[100px]">
+      <div className="px-5 sm:flex-1 mx-auto max-w-[1208px] text-center mt-[100px] mb-20">
         <header>
           <SectionSubHeader className="text-[#000091]">
             Accompagnement
@@ -17,16 +20,16 @@ export const Accompagnement = () => (
             Vous êtes guidé dès le début de votre démarche
           </SectionHeader>
         </header>
-        <SectionParagraph className="lg:text-justify text-left">
+        <SectionParagraph className="lg:text-center text-left">
           Un architecte accompagnateur de parcours vous aidera dans la gestion
           administrative de votre dossier VAE dès le début de votre parcours. Ce
-          sont des professionnels sélectionnés spécialement par Reva pour leur
-          expertise en développement de compétences.
+          sont des professionnels sélectionnés spécialement par France VAE pour
+          leur expertise en développement de compétences.
         </SectionParagraph>
       </div>
       <div className="mx-auto px-10 mt-4 lg:flex lg:flex-no-wrap gap-x-5 text-center lg:text-left">
         <div className="flex-no-wrap lg:flex lg:basis-1/3">
-          <div className="min-w-[130px] lg:pt-[24px]">
+          <div className="min-w-[130px] lg:pt-[24px] ">
             <Image
               className=""
               src="/candidate-space/icon-conception.png"
@@ -81,7 +84,8 @@ export const Accompagnement = () => (
               </SectionSubHeader>
             </header>
             <SectionParagraph className="!text-base">
-              de la date de votre passage devant le jury.
+              de la date de votre passage devant le jury, en fonction de vos
+              disponibilités.
             </SectionParagraph>
           </div>
         </div>

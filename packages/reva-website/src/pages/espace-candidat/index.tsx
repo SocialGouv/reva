@@ -5,7 +5,6 @@ import { CommentCaMarche } from "../../components/candidate-space/components/Com
 import { Eligibilite } from "../../components/candidate-space/components/Eligibilite";
 import { ExperienceReconnue } from "../../components/candidate-space/components/ExperienceReconnue";
 import { Financement } from "../../components/candidate-space/components/Financement";
-import { Professionnels } from "../../components/candidate-space/components/Professionnels";
 import { QuestcequelaVae } from "../../components/candidate-space/components/QuestcequelaVae";
 
 const IndexCandidatPage = () => {
@@ -20,7 +19,6 @@ const IndexCandidatPage = () => {
       <Accompagnement />
       <Financement />
       <CommentCaMarche />
-      <Professionnels />
     </MainLayout>
   );
 };
