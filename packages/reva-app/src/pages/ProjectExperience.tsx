@@ -77,6 +77,7 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
 
           <Input
             label="Intitulé de l'experience"
+            hintText="Exemples : Entretien de l'espace de vie ; respect des normes d'hygiène ; pilotage d'activité commerciale ; etc."
             nativeInputProps={{
               name: "title",
               required: true,
