@@ -35,7 +35,7 @@ export const TrainingProgramTimelineElement = () => {
               onClick: () => mainService.send("OPEN_TRAINING_PROGRAM_SUMMARY"),
             }}
           >
-            Consulter mon parcours
+            Consultez votre parcours
           </Button>
         ) : (
           state.context.candidacyStatus === "PARCOURS_ENVOYE" && (
@@ -49,7 +49,7 @@ export const TrainingProgramTimelineElement = () => {
                 disabled: status === "disabled",
               }}
             >
-              Valider mon parcours
+              Validez votre parcours
             </Button>
           )
         )

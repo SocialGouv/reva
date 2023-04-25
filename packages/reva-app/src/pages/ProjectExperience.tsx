@@ -128,8 +128,8 @@ export const ProjectExperience = ({ mainService }: ProjectExperienceProps) => {
           data-test={`project-experience-${editedExperience ? "save" : "add"}`}
         >
           {editedExperience
-            ? "Valider mon expérience"
-            : "Ajouter mon expérience"}
+            ? "Valider votre expérience"
+            : "Ajouter votre expérience"}
         </Button>
       </form>
     </Page>

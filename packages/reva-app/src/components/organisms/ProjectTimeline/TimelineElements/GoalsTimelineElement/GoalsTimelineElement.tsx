@@ -41,7 +41,7 @@ export const GoalsTimelineElement = () => {
               disabled={status === "disabled"}
             >
               {selectedGoals.length > 0
-                ? "Modifier vos objectifs"
+                ? "Modifiez vos objectifs"
                 : "Choisir vos objectifs"}
             </Button>
           )}

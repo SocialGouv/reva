@@ -89,7 +89,7 @@ export const Certificates = ({ mainService }: Props) => {
         }}
       >
         <option value="unknown" disabled={true} hidden={true}>
-          Mon département
+          Votre département
         </option>
         {selectsOptionsDepartments.map((d) => (
           <option key={d.value} value={d.value}>

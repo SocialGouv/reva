@@ -150,7 +150,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             }}
           >
             <option value="" disabled={true} hidden={true}>
-              Mon département
+              Votre département
             </option>
             {selectsOptionsDepartments.map((d) => (
               <option key={d.value} value={d.value}>
@@ -160,7 +160,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           </Select>
         </fieldset>
         <Button data-test="project-contact-add" className="mt-6">
-          Créez mon compte
+          Créez votre compte
         </Button>
       </form>
       {!hasCandidacy && (

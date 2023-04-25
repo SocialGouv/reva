@@ -31,7 +31,7 @@ export const CertificationTimelineElement = () => {
               disabled={status === "disabled"}
             >
               {state.context.certification
-                ? "Modifier votre diplôme"
+                ? "Modifiez votre diplôme"
                 : "Choisir votre diplôme"}
             </Button>
           )}

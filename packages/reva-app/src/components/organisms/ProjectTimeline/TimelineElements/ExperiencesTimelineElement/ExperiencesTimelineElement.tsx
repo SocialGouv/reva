@@ -55,7 +55,7 @@ export const ExperiencesTimelineElement = () => {
                 onClick={() => mainService.send("ADD_EXPERIENCE")}
                 disabled={status === "disabled"}
               >
-                Ajouter une expérience
+                Ajoutez une expérience
               </Button>
             )}
           </div>

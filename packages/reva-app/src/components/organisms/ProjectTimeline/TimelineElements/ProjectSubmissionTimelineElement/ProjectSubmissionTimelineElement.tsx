@@ -30,7 +30,7 @@ export const ProjectSubmissionTimelineElement = () => {
               onClick: () => mainService.send("VALIDATE_PROJECT"),
             }}
           >
-            Envoyer ma candidature
+            Envoyez votre candidature
           </Button>
         )
       }
