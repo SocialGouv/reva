@@ -21,7 +21,7 @@ export const ProjectSubmissionTimelineElement = () => {
     >
       {({ status }) =>
         status === "readonly" ? (
-          <span data-test="project-submitted-label">Statut : effectué</span>
+          <span data-test="project-submitted-label">Statut : envoyée</span>
         ) : (
           <Button
             data-test="project-home-validate"
