@@ -110,8 +110,8 @@ export const CertificationsInfoStepForm = ({
       <div className="border-t border-gray-300  mb-7" />
       <FormOptionalFieldsDisclaimer className="mb-6" />
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>
-        <div className="flex">
-          <fieldset className="flex-1 flex flex-col">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <fieldset className="flex flex-col">
             <legend className="text-xl font-bold text-gray-900 grow mb-4">
               Informations sur la typologie
             </legend>
@@ -176,7 +176,7 @@ export const CertificationsInfoStepForm = ({
               />
             )}
           </fieldset>
-          <fieldset className="flex-1 flex flex-col ml-12 mb-12">
+          <fieldset className="flex flex-col md:mb-12">
             <legend className="text-xl font-bold text-gray-900 grow mb-4">
               Choix de la zone d'intervention
             </legend>
