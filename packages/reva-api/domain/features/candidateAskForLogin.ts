@@ -1,9 +1,6 @@
-import { Either, EitherAsync, Right } from "purify-ts";
+import { Either, EitherAsync } from "purify-ts";
 
-import {
-  CandidateLoginInput,
-  CandidateRegistrationInput,
-} from "../types/candidate";
+import { CandidateLoginInput } from "../types/candidate";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
 interface AskForLoginDeps {

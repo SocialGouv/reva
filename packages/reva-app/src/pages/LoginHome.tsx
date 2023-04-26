@@ -6,7 +6,13 @@ import { useRef } from "react";
 import { Interpreter } from "xstate";
 
 import { Page } from "../components/organisms/Page";
-import { MainContext, MainEvent, MainState } from "../machines/main.machine";
+import {
+  INVALID_LOGIN_TOKEN_ERROR,
+  MainContext,
+  MainEvent,
+  MainState,
+  UNKNOWN_CANDIDATE_ERROR,
+} from "../machines/main.machine";
 
 interface LoginHomeProps {
   mainService: Interpreter<MainContext, any, MainEvent, MainState, any>;
@@ -21,7 +27,7 @@ interface ContactFormElement extends HTMLFormElement {
 }
 
 export const LoginHome = ({ mainService }: LoginHomeProps) => {
-  const [, send] = useActor(mainService);
+  const [state, send] = useActor(mainService);
 
   const onSubmit = (event: React.SyntheticEvent<ContactFormElement>) => {
     event.preventDefault();
@@ -42,13 +48,18 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
       <h1 className="text-3xl font-bold text-dsfrBlue-500">
         Bienvenue <span aria-hidden="true">🤝</span>,
       </h1>
-      <h2 className="my-6">Connexion</h2>
-      <p className="mb-10">
-        Pour la sécurité de vos données, merci de renseigner votre email, un
-        lien vous sera envoyé afin de retrouver votre candidature.
-      </p>
+      {state.context.error ? (
+        <LoginErrorMessage error={state.context.error} />
+      ) : (
+        <>
+          <h2 className="my-6">Connexion</h2>
+          <p className="mb-10">
+            Pour la sécurité de vos données, merci de renseigner votre email, un
+            lien vous sera envoyé afin de retrouver votre candidature.
+          </p>
+        </>
+      )}
       <form onSubmit={onSubmit} className="mb-6">
-        <ErrorAlertFromState />
         <Input
           hintText="Format attendu : nom@domaine.fr"
           nativeInputProps={{
@@ -74,4 +85,57 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
       </div>
     </Page>
   );
+};
+
+const LoginErrorMessage = ({ error }: { error: string }) => {
+  switch (error) {
+    case INVALID_LOGIN_TOKEN_ERROR:
+      return (
+        <>
+          <p
+            data-test="login-unknown-candidate"
+            className="mb-6 mt-6 text-red-500 font-semibold"
+          >
+            Votre lien d'accès est arrivé à expiration.
+          </p>
+          <p className="mb-6">
+            Pour remédier à ce problème, veuillez entrer à nouveau votre adresse
+            e-mail ci-dessous.
+            <br/>Le lien est valide pendant quinze minutes.
+          </p>
+        </>
+      );
+    case UNKNOWN_CANDIDATE_ERROR:
+      return (
+        <>
+          <p
+            data-test="login-unknown-candidate"
+            className="mb-6 mt-6 text-red-500 font-semibold"
+          >
+            Oups! Il semble y avoir une erreur.
+          </p>
+          <p className="mb-6">
+            Pour y remédier, assurez-vous de :
+            <ul className="list-disc list-inside mb-4 mt-4">
+              <li>
+                vérifier que l'adresse e-mail indiquée est bien celle que vous
+                avez utilisée lors de votre inscription
+              </li>
+              <li>
+                entrer à nouveau votre adresse e-mail ci-dessous. Le lien est
+                valide pendant quinze minutes.
+              </li>
+              <li>
+                contrôler votre connexion internet et essayez de vous
+                reconnecter une fois que celle-ci est assurée et stable.
+              </li>
+            </ul>
+            Si le problème persiste, n'hésitez pas à nous contacter à l'adresse
+            e-mail suivante : support@beta.gouv.fr
+          </p>
+        </>
+      );
+    default:
+      return <ErrorAlertFromState />;
+  }
 };

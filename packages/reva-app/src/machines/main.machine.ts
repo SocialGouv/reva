@@ -48,8 +48,9 @@ export type State =
   | typeof trainingProgramConfirmed
   | typeof projectSubmissionConfirmation;
 
-export const INVALID_TOKEN_ERROR = "INVALID_TOKEN_ERROR";
-
+export const INVALID_REGISTRATION_TOKEN_ERROR = "INVALID_REGISTRATION_TOKEN_ERROR";
+export const INVALID_LOGIN_TOKEN_ERROR = "INVALID_LOGIN_TOKEN_ERROR";
+export const UNKNOWN_CANDIDATE_ERROR = "UNKNOWN_CANDIDATE_ERROR";
 export interface MainContext {
   error: string;
   candidacyId?: string;
@@ -159,8 +160,11 @@ export type MainState =
 const isLogin =
   window.location.pathname.endsWith("login") ||
   window.location.pathname.endsWith("login/");
+const isRegistration =
+  window.location.pathname.endsWith("registration") ||
+  window.location.pathname.endsWith("registration/");
 const loginToken =
-  isLogin && new URLSearchParams(window.location.search).get("token");
+  (isLogin || isRegistration) && new URLSearchParams(window.location.search).get("token");
 const navigateHome = () => window.history.pushState({}, "", "/app/");
 const hasCandidacyAlreadyHadStatus = (
   status: string,
@@ -749,10 +753,24 @@ export const mainMachine =
                   onError: [
                     {
                       actions: assign({
-                        error: (_, _event) => INVALID_TOKEN_ERROR,
+                        error: (_, _event) => INVALID_REGISTRATION_TOKEN_ERROR,
                       }),
                       target: "#mainMachine.projectContact.idle",
-                      cond: "isTokenInvalid",
+                      cond: "isInvalidRegistrationToken",
+                    },
+                    {
+                      actions: assign({
+                        error: (_, _event) => INVALID_LOGIN_TOKEN_ERROR,
+                      }),
+                      target: "#mainMachine.loginHome",
+                      cond: "isInvalidLoginToken",
+                    },
+                    {
+                      actions: assign({
+                        error: (_, _event) => UNKNOWN_CANDIDATE_ERROR,
+                      }),
+                      target: "#mainMachine.loginHome",
+                      cond: "isUnknownCandidate",
                     },
                     {
                       actions: assign({
@@ -953,16 +971,43 @@ export const mainMachine =
             const typedEvent = event as DoneInvokeEvent<any>;
             return Boolean(typedEvent.data.candidacy?.candidacyDropOut);
           },
-          
-          isTokenInvalid: (_context, event) => {
+
+          isInvalidRegistrationToken: (_context, event) => {
             const typedEvent = event as DoneInvokeEvent<any>;
-            const hasInvalidTokenErrorCode =
-              typedEvent.data.networkError?.result?.errors?.[0]?.extensions
-                ?.code === "CANDIDATE_INVALID_TOKEN" ||
-              typedEvent.data.graphQLErrors?.[0]?.extensions?.code ===
-                "CANDIDATE_INVALID_TOKEN";
-            return hasInvalidTokenErrorCode;
+            return isRegistration && eventHasGQLErrorWithExtensionsCode(
+              typedEvent,
+              "CANDIDATE_INVALID_TOKEN"
+            );
+            // was typedEvent.data.networkError?.result?.errors?.[0]?.extensions.code === "CANDIDATE_INVALID_TOKEN" ||
+          },
+
+          isInvalidLoginToken: (_context, event) => {
+            const typedEvent = event as DoneInvokeEvent<any>;
+            return isLogin && eventHasGQLErrorWithExtensionsCode(
+              typedEvent,
+              "CANDIDATE_INVALID_TOKEN"
+            );
+            // was typedEvent.data.networkError?.result?.errors?.[0]?.extensions.code === "CANDIDATE_INVALID_TOKEN" ||
+          },
+
+          isUnknownCandidate: (_context, event) => {
+            const typedEvent = event as DoneInvokeEvent<any>;
+            return eventHasGQLErrorWithExtensionsCode(
+              typedEvent,
+              "ACCOUNT_IN_IAM_NOT_FOUND"
+            );
           },
         },
       }
     );
+
+const eventHasGQLErrorWithExtensionsCode = (
+  evt: DoneInvokeEvent<any>,
+  code: string
+): boolean => {
+  return evt.data.graphQLErrors && Array.isArray(evt.data.graphQLErrors)
+    ? evt.data.graphQLErrors.some(
+        (gqlError: any) => gqlError.extensions?.code === code
+      )
+    : false;
+};

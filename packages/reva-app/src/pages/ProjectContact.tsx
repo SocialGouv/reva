@@ -10,7 +10,7 @@ import { Interpreter } from "xstate";
 import { Page } from "../components/organisms/Page";
 import { Contact } from "../interface";
 import {
-  INVALID_TOKEN_ERROR,
+  INVALID_REGISTRATION_TOKEN_ERROR,
   MainContext,
   MainEvent,
   MainState,
@@ -69,14 +69,8 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
     <Page title="Création de compte">
       {hasCandidacy ? (
         <></>
-      ) : state.context.error === INVALID_TOKEN_ERROR ? (
-        <p
-          data-test="project-contact-invalid-token"
-          className="mb-6 text-red-500 font-semibold"
-        >
-          Votre lien d'accès est arrivé à expiration. Veuillez soumettre à
-          nouveau ce formulaire.
-        </p>
+      ) : state.context.error ? (
+        <RegistrationErrorMessage error={state.context.error} />
       ) : (
         <>
           <h1 className="text-3xl font-bold text-dsfrBlue-500">
@@ -91,7 +85,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           </legend>
 
           {state.context.error &&
-            state.context.error !== INVALID_TOKEN_ERROR && (
+            state.context.error !== INVALID_REGISTRATION_TOKEN_ERROR && (
               <ErrorAlertFromState />
             )}
           <FormOptionalFieldsDisclaimer className="mb-4" />
@@ -176,4 +170,21 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
       )}
     </Page>
   );
+};
+
+const RegistrationErrorMessage = ({ error }: { error: string }) => {
+  switch (error) {
+    case INVALID_REGISTRATION_TOKEN_ERROR:
+      return (
+        <p
+          data-test="project-contact-invalid-token"
+          className="mb-6 text-red-500 font-semibold"
+        >
+          Votre lien d'inscription est arrivé à expiration.Veuillez soumettre à
+          nouveau ce formulaire.
+        </p>
+      );
+    default:
+      return <></>;
+  }
 };
