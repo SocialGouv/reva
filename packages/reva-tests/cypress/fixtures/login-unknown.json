@@ -1,0 +1,14 @@
+{
+  "errors": [
+    {
+      "message": "Candidat non trouvé",
+      "locations": [{ "line": 2, "column": 3 }],
+      "path": ["candidateLogged"],
+      "extensions": {
+        "code": "ACCOUNT_IN_IAM_NOT_FOUND",
+        "message": "Candidat non trouvé",
+        "errors": []
+      }
+    }
+  ]
+}
