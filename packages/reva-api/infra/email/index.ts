@@ -62,7 +62,7 @@ export const sendRegistrationEmail = async (email: string, token: string) => {
       })
     );
 
-  return sendEmailWithLink(email, token, htmlContent);
+  return sendEmailWithLink(email, token,"registration", htmlContent);
 };
 
 export const sendLoginEmail = async (email: string, token: string) => {
@@ -76,15 +76,16 @@ export const sendLoginEmail = async (email: string, token: string) => {
       })
     );
 
-  return sendEmailWithLink(email, token, htmlContent);
+  return sendEmailWithLink(email, token, "login", htmlContent);
 };
 
 const sendEmailWithLink = async (
   email: string,
   token: string,
+  action: "registration" | "login",
   htmlContent: (url: string) => { html: string }
 ) => {
-  const url = `${process.env.BASE_URL}/app/login?token=${token}`;
+  const url = `${process.env.BASE_URL}/app/${action}?token=${token}`;
   const emailContent = htmlContent(url);
 
   if (process.env.NODE_ENV !== "production") {

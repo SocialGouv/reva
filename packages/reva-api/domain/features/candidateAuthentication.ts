@@ -1,7 +1,6 @@
 import { Either, EitherAsync, Maybe, Right } from "purify-ts";
 
 import { IAMAccount } from "../types/account";
-import { Candidacy } from "../types/candidacy";
 import {
   Candidate,
   CandidateAuthenticationInput,

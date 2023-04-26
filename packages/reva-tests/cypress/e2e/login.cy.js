@@ -32,13 +32,26 @@ context("Login", () => {
   it("use an expired token", function () {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "getDepartments", "departments.json");
-      stubMutation(req, "candidate_login", "login-expired.json", 500);
+      stubMutation(req, "candidate_login", "login-expired.json", 200);
       stubQuery(req, "getReferential", "referential.json");
     });
     cy.login();
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
 
-    cy.get('[data-test="project-contact-invalid-token"]');
+    cy.get('[data-test="login-invalid-token"]');
+  });
+
+  it("use a token with an uknown candidate", function () {
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(req, "getDepartments", "departments.json");
+      stubMutation(req, "candidate_login", "login-unknown.json", 200);
+      stubQuery(req, "getReferential", "referential.json");
+    });
+    cy.login();
+    cy.wait("@candidate_login");
+    cy.wait("@getReferential");
+
+    cy.get('[data-test="login-unknown-candidate"]');
   });
 });
