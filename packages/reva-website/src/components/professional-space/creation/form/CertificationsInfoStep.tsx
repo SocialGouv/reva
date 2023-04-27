@@ -144,12 +144,8 @@ export const CertificationsInfoStepForm = ({
                   .filter((ad) =>
                     domaineIdsController.field.value.includes(ad.id)
                   )
-                  .map((d) => ({ label: d.label, value: d.id }))}
-                onChange={(selectedOptions) =>
-                  domaineIdsController.field.onChange(
-                    selectedOptions.map((option) => option.value)
-                  )
-                }
+                  .map((d) => d.id)}
+                onChange={domaineIdsController.field.onChange}
               />
             )}
             {currentTypology === "expertBranche" && (
@@ -167,12 +163,8 @@ export const CertificationsInfoStepForm = ({
                 }
                 initialSelectedValues={availableConventions
                   .filter((ad) => ccnIdsController.field.value.includes(ad.id))
-                  .map((d) => ({ label: d.label, value: d.id }))}
-                onChange={(selectedOptions) =>
-                  ccnIdsController.field.onChange(
-                    selectedOptions.map((option) => option.value)
-                  )
-                }
+                  .map((d) => d.id)}
+                onChange={ccnIdsController.field.onChange}
               />
             )}
           </fieldset>
@@ -196,12 +188,8 @@ export const CertificationsInfoStepForm = ({
                 .filter((ad) =>
                   onSiteDepartmentsController.field.value.includes(ad.id)
                 )
-                .map((d) => ({ label: d.label, value: d.id }))}
-              onChange={(selectedOptions) =>
-                onSiteDepartmentsController.field.onChange(
-                  selectedOptions.map((option) => option.value)
-                )
-              }
+                .map((d) => d.id)}
+              onChange={onSiteDepartmentsController.field.onChange}
             />
             <MultiSelect
               label="Zone d’intervention en distanciel"
@@ -219,12 +207,8 @@ export const CertificationsInfoStepForm = ({
                 .filter((ad) =>
                   remoteDepartmentsController.field.value.includes(ad.id)
                 )
-                .map((d) => ({ label: d.label, value: d.id }))}
-              onChange={(selectedOptions) =>
-                remoteDepartmentsController.field.onChange(
-                  selectedOptions.map((option) => option.value)
-                )
-              }
+                .map((d) => d.id)}
+              onChange={remoteDepartmentsController.field.onChange}
             />
           </fieldset>
         </div>

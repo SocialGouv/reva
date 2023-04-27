@@ -1,5 +1,5 @@
-import classNames from "classnames";
-import { useMultipleSelection, useSelect } from "downshift";
+import { Listbox } from "@headlessui/react";
+import { useCallback, useState } from "react";
 
 interface Option {
   label: string;
@@ -18,92 +18,54 @@ export const MultiSelect = ({
   hint?: string;
   placeholder?: (numberOfItems: number) => string;
   options: Option[];
-  onChange?: (values: Option[]) => void;
-  initialSelectedValues?: Option[];
+  onChange?: (values: string[]) => void;
+  initialSelectedValues?: string[];
 }) => {
-  const { getDropdownProps, selectedItems, setSelectedItems } =
-    useMultipleSelection({ initialSelectedItems: initialSelectedValues });
+  const [selectedValues, setSelectedValues] = useState<string[]>(
+    initialSelectedValues || []
+  );
 
-  const { isOpen, getToggleButtonProps, getMenuProps, getItemProps } =
-    useSelect({
-      selectedItem: null,
-      items: options,
-      stateReducer: (_, actionAndChanges) => {
-        const { changes, type } = actionAndChanges;
-        switch (type) {
-          case useSelect.stateChangeTypes.ToggleButtonKeyDownEnter:
-          case useSelect.stateChangeTypes.ToggleButtonKeyDownSpaceButton:
-          case useSelect.stateChangeTypes.ItemClick:
-            return {
-              ...changes,
-              isOpen: true,
-            };
-        }
-        return changes;
-      },
-      onStateChange: ({ type, selectedItem: newSelectedItem }) => {
-        switch (type) {
-          case useSelect.stateChangeTypes.ToggleButtonKeyDownEnter:
-          case useSelect.stateChangeTypes.ToggleButtonKeyDownSpaceButton:
-          case useSelect.stateChangeTypes.ItemClick:
-          case useSelect.stateChangeTypes.ToggleButtonBlur:
-            if (newSelectedItem) {
-              const isItemAlreadySelected = selectedItems
-                .map((s) => s.value)
-                .includes(newSelectedItem.value);
-              const newSelectedItems = isItemAlreadySelected
-                ? selectedItems.filter((s) => s.value !== newSelectedItem.value)
-                : [...selectedItems, newSelectedItem];
+  const handleChange = useCallback(
+    (newValues: string[]) => {
+      setSelectedValues(newValues);
+      onChange?.(newValues);
+    },
+    [onChange]
+  );
 
-              setSelectedItems(newSelectedItems);
-              onChange?.(newSelectedItems);
-            }
-            break;
-          default:
-            break;
-        }
-      },
-    });
   return (
     <div className="w-full relative  fr-select-group">
       <label className="fr-label">
         {label}
         <span className="fr-hint-text">{hint}</span>
       </label>
-      <div
-        className="fr-select cursor-pointer"
-        {...getToggleButtonProps(
-          getDropdownProps({ preventKeyAction: isOpen })
-        )}
-      >
-        {placeholder?.(selectedItems.length)}
-      </div>
-      <ul
-        className={`!absolute z-10 bg-dsfrGray-contrast w-[calc(100%-5px)] rounded-lg border border-gray-300  ml-[-5px] mt-[-30px] max-h-60 md:max-h-80 overflow-scroll p-0 fr-checkbox-group ${
-          !(isOpen && options.length) && "hidden"
-        }`}
-        {...getMenuProps()}
-      >
-        {isOpen &&
-          options.map((item, index) => (
-            <li
-              className={classNames("py-2 px-3 flex gap-2 cursor-pointer")}
-              key={`${item.value}${index}`}
-              {...getItemProps({ item, index })}
-            >
-              <div>
-                <input
-                  type="checkbox"
-                  checked={selectedItems
-                    .map((i) => i.value)
-                    .includes(item.value)}
-                  readOnly
-                />
-                <label className="fr-label">{item.label}</label>
-              </div>
-            </li>
+      <Listbox value={selectedValues} onChange={handleChange} multiple>
+        <Listbox.Button className="fr-select min-h-10 mt-2 text-left hover:!bg-dsfrGray-contrast">
+          {placeholder?.(selectedValues.length)}
+        </Listbox.Button>
+        <Listbox.Options className="!absolute z-10 max-h-52 md:max-h-72 overflow-scroll fr-checkbox-group list-none bg-dsfrGray-contrast w-[calc(100%-5px)] rounded-lg border border-gray-300 p-2">
+          {options.map((option) => (
+            <Listbox.Option key={option.value} value={option.value}>
+              {({ active }) => (
+                <li
+                  className={`flex p-1 rounded ${
+                    active ? "bg-blue-400" : ""
+                  } cursor-pointer`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedValues.includes(option.value)}
+                    readOnly
+                  />
+                  <label className={`fr-label ${active ? "!text-white" : ""}`}>
+                    {option.label}
+                  </label>
+                </li>
+              )}
+            </Listbox.Option>
           ))}
-      </ul>
+        </Listbox.Options>
+      </Listbox>
     </div>
   );
 };
