@@ -2,6 +2,7 @@ port module Main exposing (main)
 
 import Api.Token exposing (Token)
 import Browser
+import Browser.Dom as Dom
 import Browser.Navigation as Nav
 import Data.Context exposing (Context)
 import Html exposing (Html, a, div, text)
@@ -13,6 +14,7 @@ import Page.Candidacy as Candidacy
 import Page.Loading
 import Page.Subscriptions as Subscriptions
 import Route exposing (Route(..))
+import Task
 import Url exposing (Url)
 import View
 import View.Footer
@@ -58,6 +60,7 @@ type Msg
     | GotLoggedIn Token
     | GotTokenRefreshed Token
     | GotLoggedOut
+    | NoOp
 
 
 main : Program Flags Model Msg
@@ -176,7 +179,10 @@ update msg model =
             case urlRequest of
                 Browser.Internal url ->
                     ( model
-                    , Nav.pushUrl model.context.navKey (Url.toString url)
+                    , Cmd.batch
+                        [ Dom.setViewport 0 0 |> Task.perform (\_ -> NoOp)
+                        , Nav.pushUrl model.context.navKey (Url.toString url)
+                        ]
                     )
 
                 Browser.External url ->
