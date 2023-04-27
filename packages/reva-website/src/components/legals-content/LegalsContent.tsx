@@ -7,7 +7,7 @@ export const ContentSection = ({
   title: string;
   children: React.ReactNode;
 }) => (
-  <section id={id} className="mb-8 pl-3">
+  <section id={id} className="mb-10 pl-3">
     <SectionHeader>{title}</SectionHeader>
     {children}
   </section>
@@ -46,6 +46,6 @@ export const SectionParagraph = ({
   className?: string;
   children: React.ReactNode;
 }) => (
-  <p className={`text-base md:text-xl xl:text-2xl ${className}`}>{children}</p>
+  <p className={`text-base md:text-xl xl:text-2xl leading-8 ${className}`}>{children}</p>
 );
 

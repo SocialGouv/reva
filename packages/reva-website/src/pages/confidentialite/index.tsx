@@ -4,7 +4,7 @@ import Head from "next/head";
 
 const IndexConfidentialitePage = () => {
   return (
-    <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_180px]">
+    <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_180px] overflow-x-hidden">
       <Head>
         <title>Politique de confidentialité - Reva</title>
       </Head>
