@@ -25,7 +25,7 @@ export const ProjectSubmissionConfirmation = () => {
           },
         }}
       >
-        Envoyer ma candidature
+        Envoyez ma candidature
       </Button>
     </Page>
   );
