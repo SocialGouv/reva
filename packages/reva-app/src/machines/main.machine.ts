@@ -48,7 +48,8 @@ export type State =
   | typeof trainingProgramConfirmed
   | typeof projectSubmissionConfirmation;
 
-export const INVALID_REGISTRATION_TOKEN_ERROR = "INVALID_REGISTRATION_TOKEN_ERROR";
+export const INVALID_REGISTRATION_TOKEN_ERROR =
+  "INVALID_REGISTRATION_TOKEN_ERROR";
 export const INVALID_LOGIN_TOKEN_ERROR = "INVALID_LOGIN_TOKEN_ERROR";
 export const UNKNOWN_CANDIDATE_ERROR = "UNKNOWN_CANDIDATE_ERROR";
 export interface MainContext {
@@ -67,12 +68,18 @@ export interface MainContext {
   organism?: Organism;
   departments: Department[];
   selectedDepartment?: Department;
+  certificationSearchText: string;
   organisms: Organism[] | undefined;
   trainingProgram: TrainingProgram | undefined;
   isTrainingProgramConfirmed: boolean;
 }
 
 type selectedDepartment = { type: "SELECT_DEPARTMENT"; departmentCode: string };
+type setCertificationSearchText = {
+  type: "SET_CERTIFICATION_SEARCH_TEXT";
+  certificationSearchText: string;
+};
+
 type SelectCertification = {
   type: "SELECT_CERTIFICATION";
   certification: Certification;
@@ -81,6 +88,7 @@ type SelectCertification = {
 export type MainEvent =
   | selectedDepartment
   | SelectCertification
+  | setCertificationSearchText
   | { type: "SHOW_PROJECT_HOME"; certification: Certification }
   | { type: "ADD_EXPERIENCE" }
   | { type: "EDIT_EXPERIENCE"; index: number }
@@ -164,7 +172,8 @@ const isRegistration =
   window.location.pathname.endsWith("registration") ||
   window.location.pathname.endsWith("registration/");
 const loginToken =
-  (isLogin || isRegistration) && new URLSearchParams(window.location.search).get("token");
+  (isLogin || isRegistration) &&
+  new URLSearchParams(window.location.search).get("token");
 const navigateHome = () => window.history.pushState({}, "", "/app/");
 const hasCandidacyAlreadyHadStatus = (
   status: string,
@@ -204,6 +213,7 @@ export const mainMachine =
           trainingProgram: undefined,
           isCertificationPartial: false,
           isTrainingProgramConfirmed: false,
+          certificationSearchText: "",
         },
         initial: "loadDepartments",
         id: "mainMachine",
@@ -322,6 +332,10 @@ export const mainMachine =
               },
               SELECT_DEPARTMENT: {
                 actions: "selectingDepartment",
+                target: "loadingCertifications",
+              },
+              SET_CERTIFICATION_SEARCH_TEXT: {
+                actions: "assignCertificationSearchTextToContext",
                 target: "loadingCertifications",
               },
               BACK: {
@@ -942,6 +956,13 @@ export const mainMachine =
             },
             error: (_context, _event) => "",
           }),
+          assignCertificationSearchTextToContext: assign({
+            certificationSearchText: (_, event) => {
+              return (event as setCertificationSearchText)
+                .certificationSearchText;
+            },
+            error: (_context, _event) => "",
+          }),
           submitCertification: assign({
             certification: (_context, event) => {
               const typedEvent = event as SelectCertification;
@@ -974,18 +995,24 @@ export const mainMachine =
 
           isInvalidRegistrationToken: (_context, event) => {
             const typedEvent = event as DoneInvokeEvent<any>;
-            return isRegistration && eventHasGQLErrorWithExtensionsCode(
-              typedEvent,
-              "CANDIDATE_INVALID_TOKEN"
+            return (
+              isRegistration &&
+              eventHasGQLErrorWithExtensionsCode(
+                typedEvent,
+                "CANDIDATE_INVALID_TOKEN"
+              )
             );
             // was typedEvent.data.networkError?.result?.errors?.[0]?.extensions.code === "CANDIDATE_INVALID_TOKEN" ||
           },
 
           isInvalidLoginToken: (_context, event) => {
             const typedEvent = event as DoneInvokeEvent<any>;
-            return isLogin && eventHasGQLErrorWithExtensionsCode(
-              typedEvent,
-              "CANDIDATE_INVALID_TOKEN"
+            return (
+              isLogin &&
+              eventHasGQLErrorWithExtensionsCode(
+                typedEvent,
+                "CANDIDATE_INVALID_TOKEN"
+              )
             );
             // was typedEvent.data.networkError?.result?.errors?.[0]?.extensions.code === "CANDIDATE_INVALID_TOKEN" ||
           },

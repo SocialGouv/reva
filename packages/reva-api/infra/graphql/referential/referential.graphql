@@ -59,7 +59,7 @@ type ConventionCollective {
 
 type Query {
   getReferential: Referential!
-  getCertifications(departmentId: UUID!): [Certification!]!
+  getCertifications(departmentId: UUID!, searchText: String): [Certification!]!
   getRegions: [Region!]!
   getDepartments: [Department!]!
   getDegrees: [Degree!]!

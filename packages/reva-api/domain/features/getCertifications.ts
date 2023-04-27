@@ -1,4 +1,4 @@
-import { Either, EitherAsync, Left } from "purify-ts";
+import { Either, EitherAsync } from "purify-ts";
 
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 import { Certification } from "../types/search";
@@ -6,12 +6,13 @@ import { Certification } from "../types/search";
 interface GetCertificationsDependencies {
   getCertifications: (params: {
     departmentId: string;
+    searchText?: string;
   }) => Promise<Either<string, Certification[]>>;
 }
 
 export const getCertifications =
   (deps: GetCertificationsDependencies) =>
-  async (params: { departmentId: string }) =>
+  async (params: { departmentId: string; searchText?: string }) =>
     EitherAsync.fromPromise(() => deps.getCertifications(params)).mapLeft(
       () =>
         new FunctionalError(

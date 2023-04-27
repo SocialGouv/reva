@@ -122,22 +122,21 @@ export const getCertifications = async ({
 
 export const getCertificationsForDepartmentWithNewTypologies = async ({
   departmentId,
+  searchText,
 }: {
   departmentId: string;
+  searchText?: string;
 }): Promise<Either<string, Certification[]>> => {
   try {
-    const certifications = await prismaClient.certification.findMany({
-      where: {
-        availableCertificationsByDepartments: { some: { departmentId } },
-      },
-    });
+    const certifications =
+      (await prismaClient.$queryRawUnsafe(`select c.id,c.label,c.summary,c.status, c.rncp_id as "codeRncp"
+      from certification c, available_certification_by_department where c.id=available_certification_by_department.certification_id and available_certification_by_department.department_id=uuid('${departmentId}') ${
+        searchText
+          ? `and certification_searchable_text@@to_tsquery('french',unaccent('${searchText}:*'))`
+          : ""
+      }`)) as Certification[];
 
-    return Right(
-      certifications.map((certification) => ({
-        ...certification,
-        codeRncp: certification.rncpId,
-      }))
-    );
+    return Right(certifications);
   } catch (e) {
     logger.error(e);
     return Left(`error while retrieving certificates`);

@@ -44,7 +44,8 @@ export const useConfiguredMainMachine = () => {
         services: {
           searchCertifications: (context, _event) => {
             return searchCertifications(client as ApolloClient<object>)({
-              query: context.selectedDepartment?.id || "",
+              departementId: context.selectedDepartment?.id || "",
+              searchText: context.certificationSearchText,
             });
           },
           loadDepartments: () =>

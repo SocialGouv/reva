@@ -33,7 +33,10 @@ export const resolvers = {
           process.env.USE_ORGANISMS_WITH_NEW_TYPOLOGIES === "true"
             ? certificationsDb.getCertificationsForDepartmentWithNewTypologies
             : certificationsDb.getCertifications,
-      })({ departmentId: payload.departmentId });
+      })({
+        departmentId: payload.departmentId,
+        searchText: payload.searchText,
+      });
 
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
@@ -96,6 +99,7 @@ export const resolvers = {
     },
 
     getDomaines: () => prismaClient.domaine.findMany(),
-    getConventionCollectives: () => prismaClient.conventionCollective.findMany(),
+    getConventionCollectives: () =>
+      prismaClient.conventionCollective.findMany(),
   },
 };

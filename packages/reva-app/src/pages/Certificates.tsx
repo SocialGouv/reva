@@ -1,7 +1,9 @@
+import { SearchBar } from "@codegouvfr/react-dsfr/SearchBar";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { useActor } from "@xstate/react";
 import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/ErrorAlertFromState";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDebounce } from "usehooks-ts";
 import { Interpreter } from "xstate";
 
 import { BackToHomeButton } from "../components/molecules/BackToHomeButton/BackToHomeButton";
@@ -18,11 +20,22 @@ interface Props {
 
 export const Certificates = ({ mainService }: Props) => {
   const [state, send] = useActor(mainService);
+  const [searchText, setSearchText] = useState<string>(
+    state.context.certificationSearchText
+  );
+  const debouncedSearchText = useDebounce(searchText);
   const UNKNOWN_DEPARTMENT = "unknown";
 
   const [chosenDepartmentCode, setChosenDepartmentCode] = useState(
     state.context.selectedDepartment?.code || UNKNOWN_DEPARTMENT
   );
+
+  useEffect(() => {
+    send({
+      type: "SET_CERTIFICATION_SEARCH_TEXT",
+      certificationSearchText: debouncedSearchText,
+    });
+  }, [debouncedSearchText, send]);
 
   const selectsOptionsDepartments: { label: string; value: string }[] =
     state.context.departments
@@ -97,6 +110,16 @@ export const Certificates = ({ mainService }: Props) => {
           </option>
         ))}
       </Select>
+      <SearchBar
+        label="Rechercher un diplôme"
+        className="mb-8"
+        nativeInputProps={{
+          defaultValue: searchText,
+          onChange: (e) => {
+            setSearchText(e.target.value);
+          },
+        }}
+      />
       <p role="status">
         {chosenDepartmentCode !== UNKNOWN_DEPARTMENT ||
         !!state.context.selectedDepartment
