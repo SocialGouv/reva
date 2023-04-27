@@ -91,7 +91,7 @@ view context model =
     let
         candidacySkeleton =
             div
-                [ class "border border-gray-100 p-4 sm:p-6 mb-8 h-[198px]" ]
+                [ class "border border-gray-100 sm:p-6 mb-8 h-[198px]" ]
                 [ View.skeleton "h-6 w-120"
                 , View.skeleton "my-5 h-5 w-96"
                 , View.skeleton "my-5 h-5 w-96"
@@ -103,12 +103,13 @@ view context model =
 
         Loading ->
             View.layout
+                filterByStatusTitle
                 [ View.skeleton "ml-3 mt-8 mb-6 h-5 w-[240px]"
                 , View.skeleton "ml-5 my-6 h-5 w-[160px]"
                 ]
                 [ viewDirectoryHeader context
                 , div
-                    [ class "px-4 sm:px-6" ]
+                    [ class "sm:px-6" ]
                     [ View.skeleton "mt-2 mb-8 h-6 w-[300px]"
                     , candidacySkeleton
                     , candidacySkeleton
@@ -154,6 +155,11 @@ view context model =
                 |> viewContent context model.filters candidacies
 
 
+filterByStatusTitle : String
+filterByStatusTitle =
+    "Filtrer les candidatures par statut"
+
+
 viewContent :
     Context
     -> Filters
@@ -178,6 +184,7 @@ viewContent context filters candidacies filteredCandidacies =
                 |> List.sortBy (\( c, _ ) -> Candidacy.toDirectoryPosition c)
     in
     View.layout
+        filterByStatusTitle
         (View.Candidacy.Filters.view candidacies filters context)
         (viewDirectoryPanel context candidaciesByStatus)
 
@@ -185,7 +192,7 @@ viewContent context filters candidacies filteredCandidacies =
 viewDirectoryHeader : Context -> Html Msg
 viewDirectoryHeader context =
     div
-        [ class "p-4 sm:p-6" ]
+        [ class "sm:p-6 mb-8" ]
         [ h1
             []
             [ if Api.Token.isAdmin context.token then
@@ -234,7 +241,7 @@ viewDirectoryPanel context candidaciesByStatus =
         |> nav
             [ dataTest "directory"
             , class "min-h-0 overflow-y-auto"
-            , class "px-4 sm:px-6"
+            , class "sm:px-6"
             , attribute "aria-label" "Candidats"
             ]
     ]
@@ -318,11 +325,13 @@ viewItem context candidacy =
                         View.Candidacy.viewSentAt candidacy.sentAt
                     ]
                 , div
-                    [ class "flex justify-between items-end" ]
+                    [ class "sm:flex justify-between items-end" ]
                     [ case ( Api.Token.isAdmin context.token, candidacy.organism ) of
                         ( True, Just organism ) ->
                             div
-                                [ class "hidden sm:block text-base text-gray-500 whitespace-nowrap" ]
+                                [ class "my-4 sm:my-0"
+                                , class "text-base text-gray-500 whitespace-nowrap"
+                                ]
                                 [ text organism.label ]
 
                         _ ->

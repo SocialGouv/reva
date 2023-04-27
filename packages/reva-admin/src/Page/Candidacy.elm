@@ -199,13 +199,13 @@ view context model =
                 Admissibility ->
                     viewForm "admissibility"
     in
-    View.layout [ maybeNavigationSteps ] [ content ]
+    View.layout "Accéder aux étapes du parcours" [ maybeNavigationSteps ] [ content ]
 
 
 viewMain : String -> List (Html msg) -> Html msg
 viewMain dataTestValue =
     div
-        [ class "bg-white px-4 sm:px-8 pt-6"
+        [ class "bg-white px-4 pt-0 sm:px-8 sm:pt-6"
         , dataTest dataTestValue
         ]
 
