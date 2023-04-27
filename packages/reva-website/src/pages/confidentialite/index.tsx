@@ -1,4 +1,5 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { ContentSection, MainTitle, SectionParagraph } from "@/components/legals-content/LegalsContent";
 import Head from "next/head";
 
 const IndexConfidentialitePage = () => {
@@ -362,56 +363,5 @@ const IndexConfidentialitePage = () => {
     </MainLayout>
   );
 };
-
-const ContentSection = ({
-  id,
-  title,
-  children,
-}: {
-  id: string;
-  title: string;
-  children: React.ReactNode;
-}) => (
-  <section id={id} className="mb-8 pl-3">
-    <SectionHeader>{title}</SectionHeader>
-    {children}
-  </section>
-);
-
-const MainTitle = ({
-  className,
-  children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) => (
-  <h1
-    className={`pl-3 my-8 text-[20px] md:text-[32px] xl:text-[48px] ${className}`}
-  >
-    {children}
-  </h1>
-);
-
-const SectionHeader = ({
-  className,
-  children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) => (
-  <h2 className={`text-[16px] md:text-[20px] xl:text-[40px] ${className}`}>
-    {children}
-  </h2>
-);
-
-const SectionParagraph = ({
-  className,
-  children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) => (
-  <p className={`text-lg md:text-xl xl:text-2xl ${className}`}>{children}</p>
-);
 
 export default IndexConfidentialitePage;
