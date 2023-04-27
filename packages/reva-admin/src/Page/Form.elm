@@ -521,7 +521,7 @@ viewReadOnlyElement formData ( elementId, element ) =
             defaultView label dataOrDefault
 
         Textarea label _ ->
-            div [ class "w-[590px]" ] [ defaultView label dataOrDefault ]
+            div [ class "w-full lg:w-[590px]" ] [ defaultView label dataOrDefault ]
 
         ReadOnlyElement readOnlyElement ->
             viewReadOnlyElement formData ( elementId, readOnlyElement )
@@ -686,7 +686,7 @@ viewInputFiles acceptMultipleFiles elementId title hint =
                 [ text hint ]
             ]
         , input
-            [ class "fr-upload w-[520px]"
+            [ class "fr-upload w-full lg:w-[520px]"
             , type_ "file"
             , multiple acceptMultipleFiles
             , id elementId

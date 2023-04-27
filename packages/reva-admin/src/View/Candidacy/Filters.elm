@@ -5,7 +5,7 @@ import Admin.Object.CandidacySummary exposing (isReorientation)
 import Data.Candidacy as Candidacy exposing (CandidacySummary)
 import Data.Context exposing (Context)
 import Html exposing (Html, a, div, label, li, span, text, ul)
-import Html.Attributes exposing (class, classList)
+import Html.Attributes exposing (class, classList, id)
 import List.Extra
 import Route
 

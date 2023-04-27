@@ -1,8 +1,7 @@
 module View.Header exposing (..)
 
-import Accessibility exposing (a, br, div, header, li, p, text, ul)
-import Html.Attributes exposing (attribute, class, href)
-import Html.Attributes.Autocomplete exposing (ContactType(..))
+import Accessibility exposing (a, button, div, header, li, nav, p, text, ul)
+import Html.Attributes exposing (attribute, class, href, id, target, title)
 import Route exposing (Route(..))
 import View
 
@@ -26,6 +25,18 @@ view context =
                             [ div
                                 [ class "fr-header__logo" ]
                                 [ View.logo ]
+                            , div
+                                [ class "fr-header__navbar" ]
+                                [ button
+                                    [ class "fr-btn--menu fr-btn"
+                                    , attribute "data-fr-opened" "false"
+                                    , attribute "aria-controls" "header-menu-modal"
+                                    , attribute "aria-haspopup" "menu"
+                                    , id "button-menu-modal"
+                                    , title "Menu"
+                                    ]
+                                    [ text "Menu" ]
+                                ]
                             ]
                         , div
                             [ class "fr-header__service"
@@ -61,6 +72,55 @@ view context =
                             ]
                         ]
                     ]
+                ]
+            ]
+        , headerMenuModal
+        ]
+
+
+headerMenuModal : Accessibility.Html msg
+headerMenuModal =
+    let
+        navItems =
+            -- We don't have specific navigation items for the mobile modal
+            []
+
+        itemLink ( label, url ) =
+            li
+                [ class "fr-nav__item" ]
+                [ a
+                    [ class "fr-nav__link"
+                    , href url
+                    , target "_self"
+                    ]
+                    [ text label ]
+                ]
+    in
+    div
+        [ class "fr-header__menu fr-modal"
+        , id "header-menu-modal"
+        , attribute "aria-labelledby" "button-menu-modal"
+        ]
+        [ div
+            [ class "fr-container" ]
+            [ button
+                [ class "fr-btn--close fr-btn"
+                , attribute "aria-controls" "header-menu-modal"
+                , title "Fermer"
+                ]
+                [ text "Fermer" ]
+            , div
+                [ class "fr-header__menu-links" ]
+                []
+            , nav
+                [ class "fr-nav"
+                , attribute "role" "navigation"
+                , attribute "aria-label" "Menu principal"
+                ]
+                [ ul
+                    [ class "fr-nav__list" ]
+                  <|
+                    List.map itemLink navItems
                 ]
             ]
         ]

@@ -12,3 +12,15 @@
 [target=_blank]:after {
   mask-image: url("../icons/system/external-link-line.svg");
 }
+
+.fr-header__navbar .fr-btn--menu:before {
+  mask-image: url("../icons/system/menu-fill.svg");
+}
+
+.fr-sidemenu__inner > .fr-sidemenu__btn:before {
+  -webkit-mask-image: url("../icons/system/menu-2-fill.svg");
+}
+
+.fr-sidemenu__btn[aria-expanded]:after {
+  -webkit-mask-image: url("../icons/system/arrow-down-s-line.svg");
+}
