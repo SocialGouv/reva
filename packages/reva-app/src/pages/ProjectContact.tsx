@@ -180,7 +180,7 @@ const RegistrationErrorMessage = ({ error }: { error: string }) => {
           data-test="project-contact-invalid-token"
           className="mb-6 text-red-500 font-semibold"
         >
-          Votre lien d'inscription est arrivé à expiration.Veuillez soumettre à
+          Votre lien d'inscription est arrivé à expiration. Veuillez soumettre à
           nouveau ce formulaire.
         </p>
       );

@@ -101,7 +101,8 @@ const LoginErrorMessage = ({ error }: { error: string }) => {
           <p className="mb-6">
             Pour remédier à ce problème, veuillez entrer à nouveau votre adresse
             e-mail ci-dessous.
-            <br/>Le lien est valide pendant quinze minutes.
+            <br />
+            Le lien n'est valide que pendant quinze minutes.
           </p>
         </>
       );
@@ -115,15 +116,15 @@ const LoginErrorMessage = ({ error }: { error: string }) => {
             Oups! Il semble y avoir une erreur.
           </p>
           <p className="mb-6">
-            Pour y remédier, assurez-vous de :
+            Pour y remédier, nous vous conseillons de :
             <ul className="list-disc list-inside mb-4 mt-4">
               <li>
                 vérifier que l'adresse e-mail indiquée est bien celle que vous
                 avez utilisée lors de votre inscription
               </li>
               <li>
-                entrer à nouveau votre adresse e-mail ci-dessous. Le lien est
-                valide pendant quinze minutes.
+                entrer à nouveau votre adresse e-mail ci-dessous. Le lien n'est
+                valide que pendant quinze minutes.
               </li>
               <li>
                 contrôler votre connexion internet et essayez de vous
