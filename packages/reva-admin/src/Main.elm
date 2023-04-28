@@ -60,7 +60,7 @@ type Msg
     | GotLoggedIn Token
     | GotTokenRefreshed Token
     | GotLoggedOut
-    | NoOp
+    | ScrolledToTop
 
 
 main : Program Flags Model Msg
@@ -178,9 +178,9 @@ update msg model =
         ( UserClickedLink urlRequest, _ ) ->
             case urlRequest of
                 Browser.Internal url ->
-                    ( model
+                    ( { model | context = scrollingToTop True model.context }
                     , Cmd.batch
-                        [ Dom.setViewport 0 0 |> Task.perform (\_ -> NoOp)
+                        [ Dom.setViewport 0 0 |> Task.perform (\_ -> ScrolledToTop)
                         , Nav.pushUrl model.context.navKey (Url.toString url)
                         ]
                     )
@@ -256,8 +256,16 @@ update msg model =
             , Cmd.none
             )
 
+        ( ScrolledToTop, _ ) ->
+            ( { model | context = scrollingToTop False model.context }, Cmd.none )
+
         _ ->
             ( model, Cmd.none )
+
+
+scrollingToTop : Bool -> Context -> Context
+scrollingToTop isScrolling context =
+    { context | isScrollingToTop = isScrolling }
 
 
 updateWith : (subModel -> Page) -> (subMsg -> Msg) -> Model -> ( subModel, Cmd subMsg ) -> ( Model, Cmd Msg )
@@ -293,6 +301,7 @@ initWithoutToken flags url key =
                     key
                     Api.Token.anonymous
                     flags.uploadEndpoint
+                    False
             , page = NotLoggedIn (Route.fromUrl flags.baseUrl url)
             , keycloakConfiguration =
                 Decode.decodeValue KeycloakConfiguration.keycloakConfiguration flags.keycloakConfiguration

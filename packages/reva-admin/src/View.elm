@@ -55,20 +55,28 @@ layout navButtonLabel navContent content =
                         ]
                         [ div
                             [ class "py-2 fr-sidemenu__inner"
-                            , class "md:min-h-[480px] bg-white sm:shadow pl-4"
+                            , class "md:min-h-[480px] pl-4 md:mb-48"
+                            , class "bg-white md:shadow"
                             ]
-                            [ button
-                                [ class "fr-sidemenu__btn"
-                                , attribute "aria-controls" "fr-sidemenu-wrapper"
-                                , attribute "aria-expanded" "false"
+                          <|
+                            -- When the nav context is empty, we remove the wrapper.
+                            -- As a result, on mobile, we can close the nav when browsing to a new page
+                            if navContent == [] then
+                                [ div [ class "h-[16px] my-4 bg-gray-50" ] [] ]
+
+                            else
+                                [ button
+                                    [ class "fr-sidemenu__btn"
+                                    , attribute "aria-controls" "fr-sidemenu-wrapper"
+                                    , attribute "aria-expanded" "false"
+                                    ]
+                                    [ text navButtonLabel ]
+                                , div
+                                    [ class "fr-collapse"
+                                    , id "fr-sidemenu-wrapper"
+                                    ]
+                                    navContent
                                 ]
-                                [ text navButtonLabel ]
-                            , div
-                                [ class "fr-collapse"
-                                , id "fr-sidemenu-wrapper"
-                                ]
-                                navContent
-                            ]
                         ]
                     ]
                 , div
