@@ -2,7 +2,7 @@ import { Footer as DsfrFooter } from "@codegouvfr/react-dsfr/Footer";
 export const Footer = (props: { className?: string }) => (
   <DsfrFooter
     className={props.className}
-    accessibility="fully compliant"
+    accessibility="non compliant"
     brandTop={<></>}
     contentDescription="Reva"
     cookiesManagementLinkProps={{
