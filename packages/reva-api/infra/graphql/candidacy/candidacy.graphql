@@ -69,6 +69,7 @@ type Candidacy {
   createdAt: Timestamp!
   admissibility: Admissibility!
   reorientationReason: ReorientationReason
+  examInfo: ExamInfo!
 }
 
 type CandidacyDropOut {
@@ -142,16 +143,6 @@ type BasicSkill {
   label: String!
 }
 
-type Query {
-  getCandidacy(deviceId: ID!): Candidacy
-  getCandidacyById(id: ID!): Candidacy
-  getCandidacies: [CandidacySummary!]!
-  getTrainings: [Training!]!
-  getOrganismsForCandidacy(candidacyId: UUID!): [Organism!]!
-  getCompanionsForCandidacy(candidacyId: UUID!): [Organism!]!
-  getBasicSkills: [BasicSkill!]!
-}
-
 type Admissibility {
   isCandidateAlreadyAdmissible: Boolean!
   reportSentAt: Timestamp
@@ -163,6 +154,29 @@ type Admissibility {
 enum AdmissibilityStatus {
   ADMISSIBLE
   NOT_ADMISSIBLE
+}
+
+type ExamInfo {
+  examResult: ExamResult
+  estimatedExamDate: Timestamp
+  actualExamDate: Timestamp
+}
+
+enum ExamResult {
+  SUCCESS
+  PARTIAL_SUCCESS
+  PARTIAL_CERTIFICATION_SUCCCESS
+  FAILURE
+}
+
+type Query {
+  getCandidacy(deviceId: ID!): Candidacy
+  getCandidacyById(id: ID!): Candidacy
+  getCandidacies: [CandidacySummary!]!
+  getTrainings: [Training!]!
+  getOrganismsForCandidacy(candidacyId: UUID!): [Organism!]!
+  getCompanionsForCandidacy(candidacyId: UUID!): [Organism!]!
+  getBasicSkills: [BasicSkill!]!
 }
 
 # MUTATIONS
@@ -227,6 +241,12 @@ input AdmissibilityInput {
   status: AdmissibilityStatus
 }
 
+input ExamInfoInput {
+  examResult: ExamResult
+  estimatedExamDate: Timestamp
+  actualExamDate: Timestamp
+}
+
 type Mutation {
   candidacy_createCandidacy(candidacy: CandidacyInput!): Candidacy
   candidacy_submitCandidacy(deviceId: ID!, candidacyId: ID!): Candidacy
@@ -263,7 +283,10 @@ type Mutation {
     email: String
     phone: String
   ): Candidacy
-  candidacy_archiveById(candidacyId: ID!, reorientationReasonId: UUID): Candidacy!
+  candidacy_archiveById(
+    candidacyId: ID!
+    reorientationReasonId: UUID
+  ): Candidacy!
   candidacy_unarchiveById(candidacyId: ID!): Candidacy!
   candidacy_deleteById(candidacyId: ID!): String!
   candidacy_updateAppointmentInformations(
@@ -283,4 +306,8 @@ type Mutation {
     candidacyId: UUID!
     admissibility: AdmissibilityInput!
   ): Admissibility!
+  candidacy_updateExamInfo(
+    candidacyId: UUID!
+    examInfo: ExamInfoInput!
+  ): ExamInfo!
 }

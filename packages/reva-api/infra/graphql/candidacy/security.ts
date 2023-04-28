@@ -8,7 +8,7 @@ import {
 export const resolversSecurityMap = {
   // Sécurité par défaut
   // cf https://the-guild.dev/graphql/tools/docs/resolvers-composition#supported-path-matcher-format
-  "Mutation.*": defaultSecurity,  // forbidden
+  "Mutation.*": defaultSecurity, // forbidden
 
   // Mutations candidat
   "Mutation.candidacy_createCandidacy": isCandidate,
@@ -35,4 +35,5 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_updateAdmissibility": isAdminOrOwningManager,
   "Mutation.candidacy_createOrUpdatePaymentRequest": isAdminOrOwningManager,
   "Mutation.candidacy_confirmPaymentRequest": isAdminOrOwningManager,
+  "Mutation.candidacy_updateExamInfo": isAdminOrOwningManager,
 };

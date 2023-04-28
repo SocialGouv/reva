@@ -12,6 +12,7 @@ import { getCandidacySummaries } from "../../../domain/features/getCandidacies";
 import { getCandidacy } from "../../../domain/features/getCandidacy";
 import { getCompanionsForCandidacy } from "../../../domain/features/getCompanionsForCandidacy";
 import { getDeviceCandidacy } from "../../../domain/features/getDeviceCandidacy";
+import { getExamInfo } from "../../../domain/features/getExamInfo";
 import {
   getAAPOrganismsForCandidacy,
   getActiveOrganismsForCandidacyWithNewTypologies,
@@ -26,6 +27,7 @@ import { updateAdmissibility } from "../../../domain/features/updateAdmissibilit
 import { updateAppointmentInformations } from "../../../domain/features/updateAppointmentInformations";
 import { updateCertificationOfCandidacy } from "../../../domain/features/updateCertificationOfCandidacy";
 import { updateContactOfCandidacy } from "../../../domain/features/updateContactOfCandidacy";
+import { updateExamInfo } from "../../../domain/features/updateExamInfo";
 import { updateExperienceOfCandidacy } from "../../../domain/features/updateExperienceOfCandidacy";
 import { updateGoalsOfCandidacy } from "../../../domain/features/updateGoalsOfCandidacy";
 import { confirmTrainingFormByCandidate } from "../../../domain/features/validateTrainingFormByCandidate";
@@ -34,11 +36,13 @@ import {
   Admissibility,
   Candidacy,
   CandidacyBusinessEvent,
+  ExamInfo,
 } from "../../../domain/types/candidacy";
 import * as admissibilityDb from "../../database/postgres/admissibility";
 import * as basicSkillDb from "../../database/postgres/basicSkills";
 import * as candidacyDb from "../../database/postgres/candidacies";
 import * as dropOutDb from "../../database/postgres/dropOutReasons";
+import * as examInfoDb from "../../database/postgres/examInfo";
 import * as experienceDb from "../../database/postgres/experiences";
 import * as goalDb from "../../database/postgres/goals";
 import * as organismDb from "../../database/postgres/organisms";
@@ -84,6 +88,20 @@ const unsafeResolvers = {
         hasRole: context.auth.hasRole,
         getAdmissibilityFromCandidacyId:
           admissibilityDb.getAdmissibilityFromCandidacyId,
+      })({ candidacyId: parent.id });
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .map((v) => v.extractNullable())
+        .extract();
+    },
+    examInfo: async (
+      parent: Candidacy,
+      _: unknown,
+      context: { auth: { hasRole: (role: Role) => boolean } }
+    ) => {
+      const result = await getExamInfo({
+        hasRole: context.auth.hasRole,
+        getExamInfoFromCandidacyId: examInfoDb.getExamInfoFromCandidacyId,
       })({ candidacyId: parent.id });
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
@@ -626,6 +644,29 @@ const unsafeResolvers = {
         candidacyId,
         eventType: CandidacyBusinessEvent.UPDATED_ADMISSIBILITY,
         extraInfo: { admissibility },
+        context,
+        result,
+      });
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
+    candidacy_updateExamInfo: async (
+      _: unknown,
+      { candidacyId, examInfo }: { candidacyId: string; examInfo: ExamInfo },
+      context: GraphqlContext
+    ) => {
+      const result = await updateExamInfo({
+        getExamInfoFromCandidacyId: examInfoDb.getExamInfoFromCandidacyId,
+        updateExamInfo: examInfoDb.updateExamInfo,
+      })({
+        candidacyId,
+        examInfo,
+      });
+      logCandidacyEvent({
+        candidacyId,
+        eventType: CandidacyBusinessEvent.UPDATED_EXAM_INFO,
+        extraInfo: { examInfo },
         context,
         result,
       });

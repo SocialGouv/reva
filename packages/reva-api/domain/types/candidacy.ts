@@ -278,4 +278,18 @@ export enum CandidacyBusinessEvent {
   CONFIRMED_TRAINING_FORM = "Confirmed training form",
   UPDATED_ADMISSIBILITY = "Updated admissibility",
   DROPPED_OUT_CANDIDACY = "Dropped out candidacy",
+  UPDATED_EXAM_INFO = "Updated exam information",
 }
+
+export interface ExamInfo {
+  id: string;
+  examResult: ExamResult | null;
+  estimatedExamDate: Date | null;
+  actualExamDate: Date | null;
+}
+
+export type ExamResult =
+  | "SUCCESS"
+  | "PARTIAL_SUCCESS"
+  | "PARTIAL_CERTIFICATION_SUCCCESS"
+  | "FAILURE";

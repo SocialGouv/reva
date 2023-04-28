@@ -128,6 +128,7 @@ model Candidacy {
   paymentRequest               PaymentRequest?
   isCertificationPartial       Boolean                                 @default(false) @map("is_certification_partial")
   admissibility                Admissibility?
+  examInfo                     ExamInfo?
 
   @@map("candidacy")
 }
@@ -744,11 +745,10 @@ model CertificationOnDomaine {
   @@map("certification_on_domaine")
 }
 
-
 model ConventionCollective {
   id                                        String                                      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   label                                     String                                      @db.VarChar(255)
-  code                                      String                                      @unique @db.VarChar(10) @map("ccid")
+  code                                      String                                      @unique @map("ccid") @db.VarChar(10)
   subscriptionRequestOnConventionCollective SubscriptionRequestOnConventionCollective[]
   organismOnConventionCollective            OrganismOnConventionCollective[]
   certificationOnConventionCollective       CertificationOnConventionCollective[]
@@ -790,4 +790,24 @@ model SubscriptionRequestOnConventionCollective {
 
   @@id([ccnId, subscriptionRequestId])
   @@map("subscription_request_on_ccn")
+}
+
+enum ExamResult {
+  SUCCESS
+  PARTIAL_SUCCESS
+  PARTIAL_CERTIFICATION_SUCCCESS
+  FAILURE
+}
+
+model ExamInfo {
+  id                String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy         Candidacy   @relation(fields: [candidacyId], references: [id])
+  candidacyId       String      @unique @map("candidacy_id") @db.Uuid
+  examResult        ExamResult? @map("exam_result")
+  estimatedExamDate DateTime?   @map("estimated_exam_date")
+  actualExamDate    DateTime?   @map("actual_exam_date")
+  createdAt         DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime?   @map("updated_at") @db.Timestamptz(6)
+
+  @@map("exam_info")
 }

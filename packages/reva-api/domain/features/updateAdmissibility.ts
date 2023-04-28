@@ -1,6 +1,5 @@
 import { Either, EitherAsync, Left, Maybe } from "purify-ts";
 
-import { Role } from "../types/account";
 import { Admissibility } from "../types/candidacy";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 

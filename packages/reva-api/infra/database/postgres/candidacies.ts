@@ -131,6 +131,9 @@ export const insertCandidacy = async (params: {
         admissibility: {
           create: {},
         },
+        examInfo: {
+          create: {},
+        },
       },
       include: candidacyIncludes,
     });
@@ -562,16 +565,17 @@ export const unarchiveCandidacy = async (params: {
   candidacyId: string;
 }): Promise<Either<string, domain.Candidacy>> => {
   try {
-    const latestStatusBeforeArchive = await prismaClient.candidaciesStatus.findFirst({
-      where: {
-        candidacyId: params.candidacyId,
-        status: { not: CandidacyStatusStep.ARCHIVE },
-      },
-      select: {
-        status: true,
-      },
-      orderBy: [ { createdAt: 'desc'} ],
-    });
+    const latestStatusBeforeArchive =
+      await prismaClient.candidaciesStatus.findFirst({
+        where: {
+          candidacyId: params.candidacyId,
+          status: { not: CandidacyStatusStep.ARCHIVE },
+        },
+        select: {
+          status: true,
+        },
+        orderBy: [{ createdAt: "desc" }],
+      });
     const [, newCandidacy, certificationAndRegion] =
       await prismaClient.$transaction([
         prismaClient.candidaciesStatus.updateMany({
