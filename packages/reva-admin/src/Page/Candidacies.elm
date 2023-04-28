@@ -96,17 +96,11 @@ view context model =
                 , View.skeleton "my-5 h-5 w-96"
                 , View.skeleton "my-5 h-5 w-96"
                 ]
-    in
-    case model.state.candidacies of
-        NotAsked ->
-            div [] []
 
-        Loading ->
+        loadingLayout =
             View.layout
                 filterByStatusTitle
-                [ View.skeleton "ml-3 mt-8 mb-6 h-5 w-[240px]"
-                , View.skeleton "ml-5 my-6 h-5 w-[160px]"
-                ]
+                []
                 [ viewDirectoryHeader context
                 , div
                     [ class "sm:px-6" ]
@@ -117,11 +111,21 @@ view context model =
                     , candidacySkeleton
                     ]
                 ]
+    in
+    case ( context.isScrollingToTop, model.state.candidacies ) of
+        ( _, NotAsked ) ->
+            div [] []
 
-        Failure errors ->
+        ( _, Loading ) ->
+            loadingLayout
+
+        ( True, _ ) ->
+            loadingLayout
+
+        ( _, Failure errors ) ->
             div [ class "text-red-500" ] [ text errors ]
 
-        Success candidacies ->
+        ( _, Success candidacies ) ->
             let
                 preFilteredCandidacies =
                     case model.filters.status of

@@ -140,7 +140,7 @@ view context model =
         maybeNavigationSteps =
             case model.selected of
                 Success candidacy ->
-                    case candidacy.dropOutDate of
+                    [ case candidacy.dropOutDate of
                         Just droppedOutDate ->
                             NavigationSteps.dropOutView context.baseUrl candidacy droppedOutDate
 
@@ -154,9 +154,10 @@ view context model =
 
                             else
                                 NavigationSteps.view context.baseUrl candidacy
+                    ]
 
                 _ ->
-                    text ""
+                    []
 
         content =
             case model.tab.value of
@@ -199,7 +200,7 @@ view context model =
                 Admissibility ->
                     viewForm "admissibility"
     in
-    View.layout "Accéder aux étapes du parcours" [ maybeNavigationSteps ] [ content ]
+    View.layout "Accéder aux étapes du parcours" maybeNavigationSteps [ content ]
 
 
 viewMain : String -> List (Html msg) -> Html msg

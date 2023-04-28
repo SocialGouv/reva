@@ -10,4 +10,5 @@ type alias Context =
     , navKey : Browser.Navigation.Key
     , token : Token
     , uploadEndpoint : String
+    , isScrollingToTop : Bool
     }
