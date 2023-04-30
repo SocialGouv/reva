@@ -53,12 +53,20 @@ type CertificationSummary
     = CertificationSummary
 
 
+type ConventionCollective
+    = ConventionCollective
+
+
 type Degree
     = Degree
 
 
 type Department
     = Department
+
+
+type Domaine
+    = Domaine
 
 
 type DropOutReason

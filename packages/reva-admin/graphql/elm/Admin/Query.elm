@@ -126,16 +126,29 @@ getReferential object____ =
     Object.selectionForCompositeField "getReferential" [] object____ Basics.identity
 
 
+type alias GetCertificationsOptionalArguments =
+    { searchText : OptionalArgument String }
+
+
 type alias GetCertificationsRequiredArguments =
     { departmentId : Data.Scalar.Uuid }
 
 
 getCertifications :
-    GetCertificationsRequiredArguments
+    (GetCertificationsOptionalArguments -> GetCertificationsOptionalArguments)
+    -> GetCertificationsRequiredArguments
     -> SelectionSet decodesTo Admin.Object.Certification
     -> SelectionSet (List decodesTo) RootQuery
-getCertifications requiredArgs____ object____ =
-    Object.selectionForCompositeField "getCertifications" [ Argument.required "departmentId" requiredArgs____.departmentId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.list)
+getCertifications fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { searchText = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "searchText" filledInOptionals____.searchText Encode.string ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "getCertifications" (optionalArgs____ ++ [ Argument.required "departmentId" requiredArgs____.departmentId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ]) object____ (Basics.identity >> Decode.list)
 
 
 getRegions :
@@ -178,6 +191,20 @@ getReorientationReasons :
     -> SelectionSet (List decodesTo) RootQuery
 getReorientationReasons object____ =
     Object.selectionForCompositeField "getReorientationReasons" [] object____ (Basics.identity >> Decode.list)
+
+
+getDomaines :
+    SelectionSet decodesTo Admin.Object.Domaine
+    -> SelectionSet (List (Maybe decodesTo)) RootQuery
+getDomaines object____ =
+    Object.selectionForCompositeField "getDomaines" [] object____ (Basics.identity >> Decode.nullable >> Decode.list)
+
+
+getConventionCollectives :
+    SelectionSet decodesTo Admin.Object.ConventionCollective
+    -> SelectionSet (List (Maybe decodesTo)) RootQuery
+getConventionCollectives object____ =
+    Object.selectionForCompositeField "getConventionCollectives" [] object____ (Basics.identity >> Decode.nullable >> Decode.list)
 
 
 type alias SearchCertificationsAndProfessionsOptionalArguments =
