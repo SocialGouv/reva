@@ -171,6 +171,9 @@ export const getActiveOrganismForCertificationAndDepartment = async ({
   departmentId: string;
 }): Promise<Either<string, domain.Organism[]>> => {
   try {
+    if (!certificationId || !departmentId) {
+      return Right([]);
+    }
     return Right(
       await prismaClient.organism.findMany({
         where: {
