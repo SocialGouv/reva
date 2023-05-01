@@ -8,6 +8,7 @@ import Admin.Enum.AccountGroup
 import Admin.Enum.AdmissibilityStatus
 import Admin.Enum.CandidateTypology
 import Admin.Enum.Duration
+import Admin.Enum.ExamResult
 import Admin.Enum.Gender
 import Admin.Enum.LegalStatus
 import Admin.Enum.OrganismTypology
@@ -363,6 +364,42 @@ encodeDropOutInput : DropOutInput -> Value
 encodeDropOutInput input____ =
     Encode.maybeObject
         [ ( "droppedOutAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) input____.droppedOutAt |> Just ), ( "dropOutReasonId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) input____.dropOutReasonId |> Just ), ( "otherReasonContent", Encode.string |> Encode.optional input____.otherReasonContent ) ]
+
+
+buildExamInfoInput :
+    (ExamInfoInputOptionalFields -> ExamInfoInputOptionalFields)
+    -> ExamInfoInput
+buildExamInfoInput fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { examResult = Absent, estimatedExamDate = Absent, actualExamDate = Absent }
+    in
+    { examResult = optionals____.examResult, estimatedExamDate = optionals____.estimatedExamDate, actualExamDate = optionals____.actualExamDate }
+
+
+type alias ExamInfoInputOptionalFields =
+    { examResult : OptionalArgument Admin.Enum.ExamResult.ExamResult
+    , estimatedExamDate : OptionalArgument Data.Scalar.Timestamp
+    , actualExamDate : OptionalArgument Data.Scalar.Timestamp
+    }
+
+
+{-| Type for the ExamInfoInput input object.
+-}
+type alias ExamInfoInput =
+    { examResult : OptionalArgument Admin.Enum.ExamResult.ExamResult
+    , estimatedExamDate : OptionalArgument Data.Scalar.Timestamp
+    , actualExamDate : OptionalArgument Data.Scalar.Timestamp
+    }
+
+
+{-| Encode a ExamInfoInput into a value that can be used as an argument.
+-}
+encodeExamInfoInput : ExamInfoInput -> Value
+encodeExamInfoInput input____ =
+    Encode.maybeObject
+        [ ( "examResult", Encode.enum Admin.Enum.ExamResult.toString |> Encode.optional input____.examResult ), ( "estimatedExamDate", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) |> Encode.optional input____.estimatedExamDate ), ( "actualExamDate", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) |> Encode.optional input____.actualExamDate ) ]
 
 
 buildExperienceInput :

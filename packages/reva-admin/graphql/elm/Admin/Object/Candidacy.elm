@@ -231,6 +231,13 @@ reorientationReason object____ =
     Object.selectionForCompositeField "reorientationReason" [] object____ (Basics.identity >> Decode.nullable)
 
 
+examInfo :
+    SelectionSet decodesTo Admin.Object.ExamInfo
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+examInfo object____ =
+    Object.selectionForCompositeField "examInfo" [] object____ Basics.identity
+
+
 paymentRequest :
     SelectionSet decodesTo Admin.Object.PaymentRequest
     -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy

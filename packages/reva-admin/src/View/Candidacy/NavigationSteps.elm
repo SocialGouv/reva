@@ -3,7 +3,7 @@ module View.Candidacy.NavigationSteps exposing (archiveView, dropOutView, reorie
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import BetaGouv.DSFR.Button as Button
 import Data.Candidacy as Candidacy exposing (Candidacy)
-import Html exposing (Html, button, div, h2, h3, span, text)
+import Html exposing (Html, div, h2, h3, span, text)
 import Html.Attributes exposing (class)
 import Route
 import Time
@@ -30,6 +30,13 @@ view baseUrl candidacy =
 
             else
                 Nothing
+
+        examInfoLink =
+            if Candidacy.isStatusEqualOrAbove candidacy ParcoursConfirme then
+                Just <| Route.href baseUrl <| Route.Candidacy (tab View.Candidacy.Tab.ExamInfo)
+
+            else
+                Nothing
     in
     View.Steps.view (title "Toutes les étapes")
         (Candidacy.statusToProgressPosition (candidacyStatus candidacy))
@@ -44,6 +51,9 @@ view baseUrl candidacy =
           }
         , { content = expandedView "Gestion de la recevabilité" ParcoursConfirme candidacy
           , navigation = admissibilityLink
+          }
+        , { content = expandedView "Jury" ParcoursConfirme candidacy
+          , navigation = examInfoLink
           }
         , { content = expandedView "Demande de prise en charge" ParcoursConfirme candidacy
           , navigation = candidateInfoLink baseUrl candidacy

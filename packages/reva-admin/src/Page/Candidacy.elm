@@ -15,6 +15,7 @@ import Api.Form.Appointment
 import Api.Form.Archive
 import Api.Form.Candidate
 import Api.Form.DropOut
+import Api.Form.ExamInfo
 import Api.Form.FundingRequest
 import Api.Form.PaymentRequest
 import Api.Form.PaymentUploads
@@ -39,6 +40,7 @@ import Page.Form.Appointment
 import Page.Form.Archive
 import Page.Form.Candidate
 import Page.Form.DropOut
+import Page.Form.ExamInfo
 import Page.Form.FundingRequest
 import Page.Form.PaymentRequest
 import Page.Form.PaymentUploads
@@ -199,6 +201,9 @@ view context model =
 
                 Admissibility ->
                     viewForm "admissibility"
+
+                ExamInfo ->
+                    viewForm "examInfo"
     in
     View.layout "Accéder aux étapes du parcours" maybeNavigationSteps [ content ]
 
@@ -536,6 +541,22 @@ updateTab context tab ( model, cmd ) =
         ( View.Candidacy.Tab.Profile, NotAsked ) ->
             initCandidacy context tab.candidacyId ( newModel, cmd )
                 |> withTakeOver context tab.candidacyId
+
+        ( View.Candidacy.Tab.ExamInfo, Success _ ) ->
+            let
+                ( formModel, formCmd ) =
+                    Form.updateForm context
+                        { form = Page.Form.ExamInfo.form
+                        , onLoad = Just <| Api.Form.ExamInfo.get tab.candidacyId
+                        , onSave = Nothing
+                        , onSubmit = Api.Form.ExamInfo.update tab.candidacyId
+                        , onRedirect = pushUrl <| candidacyTab Profile
+                        , onValidate = \_ _ -> Ok ()
+                        , status = Form.Editable
+                        }
+                        model.form
+            in
+            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
         ( _, NotAsked ) ->
             initCandidacy context tab.candidacyId ( newModel, cmd )

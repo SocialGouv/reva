@@ -128,11 +128,12 @@ toCategoryString : CandidacySummary -> String
 toCategoryString candidacy =
     if candidacy.isDroppedOut then
         "Candidatures abandonnées"
-      else
-        if candidacy.isReorientation then
-          "Candidatures réorientées"
-        else
-            statusToCategoryString candidacy.lastStatus.status
+
+    else if candidacy.isReorientation then
+        "Candidatures réorientées"
+
+    else
+        statusToCategoryString candidacy.lastStatus.status
 
 
 statusToCategoryString : Step -> String
@@ -225,13 +226,13 @@ statusToProgressPosition status =
             3
 
         ParcoursConfirme ->
-            4
+            5
 
         DemandeFinancementEnvoye ->
-            6
+            7
 
         DemandePaiementEnvoyee ->
-            7
+            8
 
         _ ->
             -1
@@ -340,7 +341,7 @@ filterByStatus lowerCaseStatus candidacySummary =
         candidacySummary.isReorientation
 
     else
-        candidacySummary.lastStatus.status == status && (not candidacySummary.isReorientation)
+        candidacySummary.lastStatus.status == status && not candidacySummary.isReorientation
 
 
 isActive : CandidacySummary -> Bool

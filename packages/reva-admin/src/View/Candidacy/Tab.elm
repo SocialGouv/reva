@@ -23,3 +23,4 @@ type Value
     | Training
     | TrainingSent
     | FundingRequest
+    | ExamInfo

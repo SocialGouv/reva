@@ -67,6 +67,7 @@ parser baseUrl =
                 , subLevel "payment" </> s "uploads" |> candidacyTab Tab.PaymentUploads
                 , subLevel "training" |> candidacyTab Tab.Training
                 , subLevel "training" </> s "confirmation" |> candidacyTab Tab.TrainingSent
+                , subLevel "examInfo" |> candidacyTab Tab.ExamInfo
                 ]
 
 
@@ -136,7 +137,7 @@ tabToString topLevel subLevel tab =
 
         Tab.Unarchive ->
             default [ "unarchive" ]
-            
+
         Tab.DropOut ->
             default [ "drop-out" ]
 
@@ -163,3 +164,6 @@ tabToString topLevel subLevel tab =
 
         Tab.Admissibility ->
             default [ "admissibility" ]
+
+        Tab.ExamInfo ->
+            default [ "examInfo" ]

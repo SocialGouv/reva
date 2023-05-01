@@ -73,6 +73,10 @@ type DropOutReason
     = DropOutReason
 
 
+type ExamInfo
+    = ExamInfo
+
+
 type Experience
     = Experience
 
