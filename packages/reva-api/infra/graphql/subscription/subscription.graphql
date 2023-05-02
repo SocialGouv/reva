@@ -41,9 +41,8 @@ type SubscriptionRequestSummary {
 input SubscriptionRequestOrderByInput {
   companyName: Sort
   accountLastname: Sort
+  createdAt: Sort
 }
-
-
 
 type SubscriptionRequestsPaginated {
   rows: [SubscriptionRequestSummary!]!

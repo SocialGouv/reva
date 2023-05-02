@@ -710,14 +710,15 @@ buildSubscriptionRequestOrderByInput fillOptionals____ =
     let
         optionals____ =
             fillOptionals____
-                { companyName = Absent, accountLastname = Absent }
+                { companyName = Absent, accountLastname = Absent, createdAt = Absent }
     in
-    { companyName = optionals____.companyName, accountLastname = optionals____.accountLastname }
+    { companyName = optionals____.companyName, accountLastname = optionals____.accountLastname, createdAt = optionals____.createdAt }
 
 
 type alias SubscriptionRequestOrderByInputOptionalFields =
     { companyName : OptionalArgument Admin.Enum.Sort.Sort
     , accountLastname : OptionalArgument Admin.Enum.Sort.Sort
+    , createdAt : OptionalArgument Admin.Enum.Sort.Sort
     }
 
 
@@ -726,6 +727,7 @@ type alias SubscriptionRequestOrderByInputOptionalFields =
 type alias SubscriptionRequestOrderByInput =
     { companyName : OptionalArgument Admin.Enum.Sort.Sort
     , accountLastname : OptionalArgument Admin.Enum.Sort.Sort
+    , createdAt : OptionalArgument Admin.Enum.Sort.Sort
     }
 
 
@@ -734,7 +736,7 @@ type alias SubscriptionRequestOrderByInput =
 encodeSubscriptionRequestOrderByInput : SubscriptionRequestOrderByInput -> Value
 encodeSubscriptionRequestOrderByInput input____ =
     Encode.maybeObject
-        [ ( "companyName", Encode.enum Admin.Enum.Sort.toString |> Encode.optional input____.companyName ), ( "accountLastname", Encode.enum Admin.Enum.Sort.toString |> Encode.optional input____.accountLastname ) ]
+        [ ( "companyName", Encode.enum Admin.Enum.Sort.toString |> Encode.optional input____.companyName ), ( "accountLastname", Encode.enum Admin.Enum.Sort.toString |> Encode.optional input____.accountLastname ), ( "createdAt", Encode.enum Admin.Enum.Sort.toString |> Encode.optional input____.createdAt ) ]
 
 
 buildTrainingInput :

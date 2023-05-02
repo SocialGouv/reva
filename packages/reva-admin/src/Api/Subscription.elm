@@ -1,5 +1,6 @@
 module Api.Subscription exposing (getSubscriptions, reject, validate)
 
+import Admin.Enum.Sort exposing (Sort)
 import Admin.Mutation as Mutation
 import Admin.Object
 import Admin.Object.SubscriptionRequestSummary
@@ -54,7 +55,7 @@ getSubscriptions :
     -> Cmd msg
 getSubscriptions endpointGraphql token toMsg =
     Query.subscription_getSubscriptionRequests
-        (\optionals -> { optionals | limit = Present 50 })
+        (\optionals -> { optionals | limit = Present 50, orderBy = Present { accountLastname = Absent, companyName = Absent, createdAt = Present Admin.Enum.Sort.Desc } })
         selection
         |> Auth.makeQuery endpointGraphql token toMsg
 
