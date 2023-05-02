@@ -795,7 +795,7 @@ model SubscriptionRequestOnConventionCollective {
 enum ExamResult {
   SUCCESS
   PARTIAL_SUCCESS
-  PARTIAL_CERTIFICATION_SUCCCESS
+  PARTIAL_CERTIFICATION_SUCCESS
   FAILURE
 }
 

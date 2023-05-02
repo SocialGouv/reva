@@ -19,7 +19,7 @@ form formData _ =
             [ ( "Non renseigné", Nothing )
             , ( "Réussite", Just Success )
             , ( "Réussite partielle", Just PartialSuccess )
-            , ( "Réussite à une demande initiale de certification partielle", Just PartialCertificationSucccess )
+            , ( "Réussite à une demande initiale de certification partielle", Just PartialCertificationSuccess )
             , ( "Échec", Just Failure )
             ]
                 |> List.map (\( id, result ) -> ( id, examResultToString result ))

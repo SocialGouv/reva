@@ -10,13 +10,13 @@ import Json.Decode as Decode exposing (Decoder)
 type ExamResult
     = Success
     | PartialSuccess
-    | PartialCertificationSucccess
+    | PartialCertificationSuccess
     | Failure
 
 
 list : List ExamResult
 list =
-    [ Success, PartialSuccess, PartialCertificationSucccess, Failure ]
+    [ Success, PartialSuccess, PartialCertificationSuccess, Failure ]
 
 
 decoder : Decoder ExamResult
@@ -31,8 +31,8 @@ decoder =
                     "PARTIAL_SUCCESS" ->
                         Decode.succeed PartialSuccess
 
-                    "PARTIAL_CERTIFICATION_SUCCCESS" ->
-                        Decode.succeed PartialCertificationSucccess
+                    "PARTIAL_CERTIFICATION_SUCCESS" ->
+                        Decode.succeed PartialCertificationSuccess
 
                     "FAILURE" ->
                         Decode.succeed Failure
@@ -53,8 +53,8 @@ toString enum____ =
         PartialSuccess ->
             "PARTIAL_SUCCESS"
 
-        PartialCertificationSucccess ->
-            "PARTIAL_CERTIFICATION_SUCCCESS"
+        PartialCertificationSuccess ->
+            "PARTIAL_CERTIFICATION_SUCCESS"
 
         Failure ->
             "FAILURE"
@@ -80,8 +80,8 @@ fromString enumString____ =
         "PARTIAL_SUCCESS" ->
             Just PartialSuccess
 
-        "PARTIAL_CERTIFICATION_SUCCCESS" ->
-            Just PartialCertificationSucccess
+        "PARTIAL_CERTIFICATION_SUCCESS" ->
+            Just PartialCertificationSuccess
 
         "FAILURE" ->
             Just Failure

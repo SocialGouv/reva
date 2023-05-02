@@ -291,5 +291,5 @@ export interface ExamInfo {
 export type ExamResult =
   | "SUCCESS"
   | "PARTIAL_SUCCESS"
-  | "PARTIAL_CERTIFICATION_SUCCCESS"
+  | "PARTIAL_CERTIFICATION_SUCCESS"
   | "FAILURE";

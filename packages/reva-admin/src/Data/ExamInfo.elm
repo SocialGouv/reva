@@ -21,7 +21,7 @@ examResultFromString examResult =
             Just PartialSuccess
 
         "Réussite à une demande initiale de certification partielle" ->
-            Just PartialCertificationSucccess
+            Just PartialCertificationSuccess
 
         "Échec" ->
             Just Failure
@@ -42,7 +42,7 @@ examResultToString examResult =
         Just PartialSuccess ->
             "Réussite partielle"
 
-        Just PartialCertificationSucccess ->
+        Just PartialCertificationSuccess ->
             "Réussite à une demande initiale de certification partielle"
 
         Just Failure ->
