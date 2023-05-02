@@ -1,10 +1,15 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import { ContentSection, MainTitle, SectionParagraph } from "@/components/legals-content/LegalsContent";
+import {
+  ContentSection,
+  MainTitle,
+  SectionParagraph,
+} from "@/components/legals-content/LegalsContent";
 import Head from "next/head";
+import { ReactNode } from "react";
 
 const IndexConfidentialitePage = () => {
   return (
-    <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_180px] overflow-x-hidden">
+    <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_180px] overflow-x-hidden font-light">
       <Head>
         <title>Politique de confidentialité - Reva</title>
       </Head>
@@ -28,7 +33,7 @@ const IndexConfidentialitePage = () => {
           <SectionParagraph>
             REVA manipule des données à caractère personnel pour les raisons
             suivantes :
-            <ul>
+            <ul className="list-inside">
               <li>
                 Permettre aux personnes utilisatrices de candidater simplement
                 en vue d’obtenir une certification en adéquation avec leurs
@@ -62,7 +67,7 @@ const IndexConfidentialitePage = () => {
         >
           <SectionParagraph>
             REVA traite les données et catégories de données suivantes :
-            <ul>
+            <ul className="list-inside">
               <li>
                 Données relatives au candidat (Nom, prénom, adresse e-mail,
                 genre,nationalité)
@@ -86,7 +91,7 @@ const IndexConfidentialitePage = () => {
         >
           <SectionParagraph>
             REVA traite les données à caractère personnel en se basant sur :
-            <ul>
+            <ul className="list-inside">
               <li>
                 L’exécution d’une mission d’intérêt public ou relevant de
                 l’exercice de l’autorité publique dont est investi le
@@ -105,7 +110,7 @@ const IndexConfidentialitePage = () => {
         >
           <SectionParagraph>
             La durée de conservation de ces données est de 24 mois :
-            <ul>
+            <ul className="list-inside">
               <li>
                 à partir du dernier contact avec la personne candidate, afin de
                 permettre aux candidats de poursuivre leur projet de VAE.
@@ -125,24 +130,35 @@ const IndexConfidentialitePage = () => {
           <SectionParagraph>
             Vous disposez des droits suivants concernant vos données à caractère
             personnel :
-            <ul>
+            <ul className="list-inside">
               <li>Droit d’information et droit d’accès aux données;</li>
               <li>Droit de rectification des données;</li>
               <li>Droit à la limitation des données;</li>
               <li>Droit d’opposition;</li>
               <li>Droit à la portabilité de vos données;</li>
             </ul>
-            Pour les exercer, contactez-nous à : contact@reva.beta.gouv.fr Par
-            voie postale : Délégation générale à l'emploi et à la formation
-            10-18 place des 5-Martyrs-du-Lycée-Buffon 75015 Paris Puisque ce
-            sont des droits personnels, nous ne traiterons votre demande que si
-            nous sommes en mesure de vous identifier. Dans le cas où nous ne
-            parvenons pas à vous identifier, nous pouvons être amenés à vous
-            demander une preuve de votre identité. Pour vous aider dans votre
-            démarche, vous trouverez un modèle de courrier élaboré par la CNIL
-            ici :
-            https://www.cnil.fr/fr/modele/courrier/exercer-son-droit-dacces Nous
-            nous engageons à vous répondre dans un délai raisonnable qui ne
+            Pour les exercer, contactez-nous
+            à : <a href="mailto:contact@reva.beta.gouv.fr">contact@reva.beta.gouv.fr</a>
+          </SectionParagraph>
+          <SectionParagraph>
+            Par voie postale :<br />
+            Délégation générale à l'emploi et à la formation<br/>
+            10-18 place des 5-Martyrs-du-Lycée-Buffon<br />
+            75015 Paris
+          </SectionParagraph>
+          <SectionParagraph>
+            Puisque ce sont des droits personnels, nous ne traiterons votre
+            demande que si nous sommes en mesure de vous identifier. Dans le cas
+            où nous ne parvenons pas à vous identifier, nous pouvons être amenés
+            à vous demander une preuve de votre identité.
+          </SectionParagraph>
+          <SectionParagraph>
+            Pour vous aider dans votre démarche, vous trouverez un modèle de
+            courrier élaboré par la CNIL ici :
+            &nbsp;<a href="https://www.cnil.fr/fr/modele/courrier/exercer- son-droit-dacces">https://www.cnil.fr/fr/modele/courrier/exercer-son-droit-dacces</a>
+          </SectionParagraph>
+          <SectionParagraph>
+            Nous nous engageons à vous répondre dans un délai raisonnable qui ne
             saurait dépasser 1 mois à compter de la réception de votre demande.
           </SectionParagraph>
         </ContentSection>
@@ -155,14 +171,19 @@ const IndexConfidentialitePage = () => {
             Les membres de l’équipe REVA en charge du recueil et de la
             sécurisation des données ainsi que ceux qui sont chargés du pilotage
             du projet et de l’étude des comportements utilisateurs auront accès
-            à ces données personnelles. Des données personnelles pourront être
+            à ces données personnelles.
+          </SectionParagraph>
+          <SectionParagraph>
+            Des données personnelles pourront être
             partagées avec certains organismes référencés dans le service REVA
             comme architecte de parcours ou accompagnateurs VAE ou centre de
             formation à des fins de contact, inscription aux services
             sollicitées et traitement de la candidature et de son financement.
-            Les données sont envoyées aux organismes certificateurs etb: ou aux
+          </SectionParagraph>
+          <SectionParagraph>
+            Les données sont envoyées aux organismes certificateurs ou aux
             architectes accompagnateurs de parcours suivants :
-            <ul>
+            <ul className="list-inside">
               <li>Ministère de l’agriculture</li>
               <li>Les 2 Rives</li>
               <li>Domus Vi</li>
@@ -199,7 +220,7 @@ const IndexConfidentialitePage = () => {
             Les mesures techniques et organisationnelles de sécurité adoptées
             pour assurer la confidentialité, l’intégrité et protéger l’accès des
             données sont notamment :
-            <ul>
+            <ul className="list-inside">
               <li>Stockage des données en base de données</li>
               <li>Stockage des mots de passe en base sont hachés</li>
               <li>Cloisonnement des données</li>
@@ -228,37 +249,43 @@ const IndexConfidentialitePage = () => {
             assuré de la mise en œuvre par ses sous-traitants de garanties
             adéquates et du respect de conditions strictes de confidentialité,
             d’usage et de protection des données.
-            <table>
-              <tr>
-                <th>Partenaire</th>
-                <th>Pays destinataire</th>
-                <th>Traitement réalisé</th>
-                <th>Garanties</th>
-              </tr>
-              <tr>
-                <td>Scalingo</td>
-                <td>France</td>
-                <td>Hébergement SecNumCloud</td>
-                <td>https://scalingo.com/fr/data-processing-agreement</td>
-              </tr>
-              <tr>
-                <td>Matomo</td>
-                <td>France</td>
-                <td>Mesure d’audience</td>
-                <td>https://fr.matomo.org/privacy-policy/</td>
-              </tr>
-              <tr>
-                <td>Crisp</td>
-                <td>Union européenne</td>
-                <td>Support</td>
-                <td>https://crisp.chat/fr/privacy/</td>
-              </tr>
-              <tr>
-                <td>Hotjar</td>
-                <td>Irlande</td>
-                <td>Mesure d’audience </td>
-                <td>https://help.hotjar.com/hc/en-us/articles/360058514233 </td>
-              </tr>
+          </SectionParagraph>
+          <SectionParagraph>
+            <table className="border">
+              <thead className="border-b text-lg font-medium bg-neutral-200">
+                <tr>
+                  <th className="pl-1 border-r">Partenaire</th>
+                  <th className="border-r">Pays destinataire</th>
+                  <th className="border-r">Traitement réalisé</th>
+                  <th>Garanties</th>
+                </tr>
+              </thead>
+              <tbody className="text-lg">
+                <tr>
+                  <TextBoldCell>Scalingo</TextBoldCell>
+                  <TextCell>France</TextCell>
+                  <TextCell>Hébergement SecNumCloud</TextCell>
+                  <LinkCell url="https://scalingo.com/fr/data-processing-agreement" />
+                </tr>
+                <tr>
+                  <TextBoldCell>Matomo</TextBoldCell>
+                  <TextCell>France</TextCell>
+                  <TextCell>Mesure d’audience</TextCell>
+                  <LinkCell url="https://fr.matomo.org/privacy-policy/" />
+                </tr>
+                <tr>
+                  <TextBoldCell>Crisp</TextBoldCell>
+                  <TextCell>Union européenne</TextCell>
+                  <TextCell>Support</TextCell>
+                  <LinkCell url="https://crisp.chat/fr/privacy/" />
+                </tr>
+                <tr>
+                  <TextBoldCell>Hotjar</TextBoldCell>
+                  <TextCell>Irlande</TextCell>
+                  <TextCell>Mesure d’audience</TextCell>
+                  <LinkCell url="https://help.hotjar.com/hc/en-us/articles/360058514233" />
+                </tr>
+              </tbody>
             </table>
           </SectionParagraph>
         </ContentSection>
@@ -305,35 +332,39 @@ const IndexConfidentialitePage = () => {
             également des outils de mesure d’audience.
           </SectionParagraph>
           <SectionParagraph>
-            <table>
-              <tr>
-                <th>Cookie</th>
-                <th></th>
-                <th>Base juridique</th>
-                <th>Utilisation</th>
-                <th></th>
-              </tr>
-              <tr>
-                <td>Matomo</td>
-                <td>France</td>
-                <td>Exemption de consentement</td>
-                <td>Mesure d’audience</td>
-                <td>https://fr.matomo.org/privacy-policy/</td>
-              </tr>
-              <tr>
-                <td>Crisp</td>
-                <td>Union européenne</td>
-                <td>Consentement</td>
-                <td>Support</td>
-                <td>https://crisp.chat/fr/privacy/</td>
-              </tr>
-              <tr>
-                <td>Hotjar</td>
-                <td>Irlande</td>
-                <td>Consentement</td>
-                <td>Mesure d’audience </td>
-                <td>https://help.hotjar.com/hc/en-us/articles/360058514233</td>
-              </tr>
+            <table className="border">
+              <thead className="border-b text-lg font-medium bg-neutral-200">
+                <tr>
+                  <th className="pl-1 border-r">Cookie</th>
+                  <th className="border-r"></th>
+                  <th className="border-r">Base juridique</th>
+                  <th>Utilisation</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody className="text-lg">
+                <tr>
+                  <TextBoldCell>Matomo</TextBoldCell>
+                  <TextCell>France</TextCell>
+                  <TextCell>Exemption de consentement</TextCell>
+                  <TextCell>Mesure d’audience</TextCell>
+                  <LinkCell url="https://fr.matomo.org/privacy-policy/" />
+                </tr>
+                <tr>
+                  <TextBoldCell>Crisp</TextBoldCell>
+                  <TextCell>Union européenne</TextCell>
+                  <TextCell>Consentement</TextCell>
+                  <TextCell>Support</TextCell>
+                  <LinkCell url="https://crisp.chat/fr/privacy/" />
+                </tr>
+                <tr>
+                  <TextBoldCell>Hotjar</TextBoldCell>
+                  <TextCell>Irlande</TextCell>
+                  <TextCell>Consentement</TextCell>
+                  <TextCell>Mesure d’audience </TextCell>
+                  <LinkCell url="https://help.hotjar.com/hc/en-us/articles/360058514233" />
+                </tr>
+              </tbody>
             </table>
           </SectionParagraph>
           <SectionParagraph>
@@ -345,7 +376,7 @@ const IndexConfidentialitePage = () => {
           <SectionParagraph>
             Pour aller plus loin, vous avez la possibilité de consulter les
             fiches proposées par la CNIL grâce aux liens suivants :
-            <ul>
+            <ul className="list-inside">
               <li>
                 <a href="https://www.cnil.fr/fr/cookies-et-traceurs-que-dit-la-loi">
                   Cookies & traceurs : que dit la loi ?
@@ -363,5 +394,23 @@ const IndexConfidentialitePage = () => {
     </MainLayout>
   );
 };
+
+const TextCell = ({
+  className,
+  children,
+}: {
+  className?: string;
+  children: ReactNode;
+}) => <td className={`px-1 border-r ${className}`}>{children}</td>;
+
+const TextBoldCell = ({ children }: { children: ReactNode }) => (
+  <TextCell className="font-normal">{children}</TextCell>
+);
+
+const LinkCell = ({ url }: { url: string }) => (
+  <TextCell>
+    <a href={url}>{url}</a>
+  </TextCell>
+);
 
 export default IndexConfidentialitePage;

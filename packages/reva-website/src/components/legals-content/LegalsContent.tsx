@@ -21,7 +21,7 @@ export const MainTitle = ({
   children: React.ReactNode;
 }) => (
   <h1
-    className={`pl-3 my-8 text-[20px] md:text-[32px] xl:text-[48px] ${className}`}
+    className={`pl-3 py-8 my-8 text-[20px] md:text-[32px] xl:text-[48px] font-extrabold ${className}`}
   >
     {children}
   </h1>
@@ -34,7 +34,7 @@ export const SectionHeader = ({
   className?: string;
   children: React.ReactNode;
 }) => (
-  <h2 className={`text-[16px] md:text-[20px] xl:text-[40px] ${className}`}>
+  <h2 className={`text-[16px] md:text-[20px] xl:text-[36px] my-9 ${className}`}>
     {children}
   </h2>
 );
@@ -46,6 +46,6 @@ export const SectionParagraph = ({
   className?: string;
   children: React.ReactNode;
 }) => (
-  <p className={`text-base md:text-xl xl:text-2xl leading-8 ${className}`}>{children}</p>
+  <p className={`text-base md:text-xl xl:text-2xl pb-8 leading-8 ${className}`}>{children}</p>
 );
 
