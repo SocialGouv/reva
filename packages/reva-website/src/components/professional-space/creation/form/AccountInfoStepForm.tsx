@@ -81,7 +81,7 @@ export const AccountInfoStepForm = () => {
             }}
           />
           <Input
-            label="Adresse email de l'architete de parcours"
+            label="Adresse email de l'architecte de parcours"
             state={errors.accountEmail ? "error" : "default"}
             stateRelatedMessage={errors.accountEmail?.message}
             nativeInputProps={{
