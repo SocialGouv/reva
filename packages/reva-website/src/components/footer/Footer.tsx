@@ -13,10 +13,10 @@ export const Footer = (props: { className?: string }) => (
       title: "Accueil - Reva",
     }}
     personalDataLinkProps={{
-      href: "#",
+      href: "/confidentialite",
     }}
     termsLinkProps={{
-      href: "#",
+      href: "/mentions-legales",
     }}
     websiteMapLinkProps={{
       href: "/plan-du-site",
