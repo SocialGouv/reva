@@ -127,7 +127,10 @@ const ProfessionalSpaceCreationPage = () => {
   return (
     <MainLayout>
       <Head>
-        <title>Création d'un compte professionnel - Reva</title>
+        <title>
+          Création d'un compte professionnel - Reva | Prenez votre avenir
+          professionnel en main
+        </title>
       </Head>
       <BlueLayout
         title="Créer un compte professionnel"

@@ -119,7 +119,10 @@ const ProfessionalSpaceHomePage = () => {
   return (
     <MainLayout className="fr-container py-20 lg:pt-48 gap-10 lg:gap-64 lg:pb-80 bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_1150px]">
       <Head>
-        <title>Page d'accueil espace professionnel - Reva</title>
+        <title>
+          Page d'accueil espace professionnel - Reva | Prenez votre avenir
+          professionnel en main
+        </title>
       </Head>
 
       <SuiviCandidat />

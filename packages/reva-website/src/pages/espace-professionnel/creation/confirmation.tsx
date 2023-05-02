@@ -8,7 +8,10 @@ const ProfessionalSpaceCreationConfirmationPage = () => {
   return (
     <MainLayout>
       <Head>
-        <title>Confirmation de création de compte professionnel - Reva</title>
+        <title>
+          Confirmation de création de compte professionnel - Reva | Prenez votre
+          avenir professionnel en main
+        </title>
       </Head>
       <BlueLayout
         title="Créer un compte professionnel"

@@ -11,7 +11,9 @@ const IndexCandidatPage = () => {
   return (
     <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_180px]">
       <Head>
-        <title>Accueil - Reva</title>
+        <title>
+          Accueil - Reva | Prenez votre avenir professionnel en main
+        </title>
       </Head>
       <ExperienceReconnue />
       <QuestcequelaVae />
