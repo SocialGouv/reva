@@ -301,11 +301,12 @@ const IndexPage = () => {
     <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_1150px]">
       <Head>
         <title>
-          Accueil - Reva | Prenez votre avenir professionnel en main
+          Accueil - Reva | Découvrez le portail officiel du service public de la
+          Validation des Acquis de L’Expérience.
         </title>
         <meta
           name="description"
-          content="Les raisons pour faire une VAE sont nombreuses: obtenir un nouvel emploi, un meilleur salaire ou tout simplement la reconnaissance de vos compétences."
+          content="Découvrez le portail officiel du service public de la Validation des Acquis de L’Expérience."
         />
       </Head>
       <AvenirPro />

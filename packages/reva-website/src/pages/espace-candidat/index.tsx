@@ -12,8 +12,13 @@ const IndexCandidatPage = () => {
     <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_180px]">
       <Head>
         <title>
-          Accueil - Reva | Prenez votre avenir professionnel en main
+          Accueil candidats - Reva | Votre expérience enfin reconnue par un
+          diplôme
         </title>
+        <meta
+          name="description"
+          content="Vous souhaitez préparer une reconversion professionnelle, obtenir un meilleur salaire, faire évoluer votre carrière... La VAE est faite pour vous !"
+        />
       </Head>
       <ExperienceReconnue />
       <QuestcequelaVae />
