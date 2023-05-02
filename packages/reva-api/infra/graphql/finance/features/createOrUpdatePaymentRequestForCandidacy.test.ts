@@ -1,4 +1,4 @@
-import { Decimal } from "@prisma/client/runtime";
+import { Decimal } from "@prisma/client/runtime/library";
 import { Left, Maybe, Right } from "purify-ts";
 
 import { PaymentRequest } from "../../../../domain/types/candidacy";
@@ -14,14 +14,14 @@ const defaultValidPaymentRequest: PaymentRequest = {
   collectiveEffectiveHourCount: 3,
   collectiveEffectiveCost: new Decimal(3),
   diagnosisEffectiveHourCount: 2,
-  diagnosisEffectiveCost: new Decimal(4),
+  diagnosisEffectiveCost: new Decimal(3),
   examEffectiveHourCount: 1,
   examEffectiveCost: new Decimal(5),
   individualEffectiveHourCount: 6,
   individualEffectiveCost: new Decimal(6),
   mandatoryTrainingsEffectiveHourCount: 7,
   mandatoryTrainingsEffectiveCost: new Decimal(7),
-  postExamEffectiveHourCount: 2,
+  postExamEffectiveHourCount: 1,
   postExamEffectiveCost: new Decimal(8),
   otherTrainingEffectiveHourCount: 2,
   otherTrainingEffectiveCost: new Decimal(25),
@@ -37,7 +37,7 @@ const defaultValidFundingRequest: FundingRequest = {
   examHourCount: 1,
   individualHourCount: 6,
   mandatoryTrainingsHourCount: 7,
-  postExamHourCount: 2,
+  postExamHourCount: 1,
   mandatoryTrainings: [],
 } as FundingRequest;
 

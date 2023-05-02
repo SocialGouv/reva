@@ -1,4 +1,4 @@
-import { Decimal } from "@prisma/client/runtime";
+import { Decimal } from "@prisma/client/runtime/library";
 import { Left, Right } from "purify-ts";
 
 import { Candidacy, Organism } from "../../../../domain/types/candidacy";
@@ -100,59 +100,57 @@ describe("funding request", () => {
     expect(result.isRight()).toEqual(true);
   });
 
-  describe("rules on diagnosisHourCount and postExamHourCount", () => {
-    test("should return an error when (diagnosisHourCount + postExamHourCount) > 2 for a candidate >bac and Non fragile", () => {
+  describe("rules on diagnosisHourCount", () => {
+    test("should return an error when diagnosisHourCount > 3", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        diagnosisHourCount: 2,
-        postExamHourCount: 1,
+        diagnosisHourCount: 4,
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
       expect((result.extract() as FunctionalError).errors).toContain(
-        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours doit être compris entre 0 et 2h."
+        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 1 et 3h."
       );
     });
-    test("should return an error when (diagnosisHourCount + postExamHourCount) > 4 for a candidate = bac", () => {
+    test("should return an error when diagnosisHourCount < 1", () => {
+      const fundingRequest = {
+        ...defaultValidFundingRequest,
+        diagnosisHourCount: 0,
+      };
+      const result = validateCandidateBacSupNonFragile(fundingRequest);
+      expect(result.isLeft()).toEqual(true);
+      expect((result.extract() as FunctionalError).errors).toContain(
+        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 1 et 3h."
+      );
+    });
+    test("should return ok when diagnosisHourCount is between 1 and 3", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
         diagnosisHourCount: 3,
-        postExamHourCount: 2,
       };
-      const result = validateCandidateBacNonFragile(fundingRequest);
-      expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
-        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours doit être compris entre 0 et 4h."
-      );
-    });
-    test("should return an ok when (diagnosisHourCount + postExamHourCount) <= 4 for a candidate = bac", () => {
-      const fundingRequest = {
-        ...defaultValidFundingRequest,
-        diagnosisHourCount: 2,
-        postExamHourCount: 2,
-      };
-      const result = validateCandidateBacNonFragile(fundingRequest);
+      const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
     });
-    test("should return an error when (diagnosisHourCount + postExamHourCount) > 4 for a candidate >bac and fragile", () => {
+  });
+
+  describe("rules on postExamHourCount", () => {
+    test("should return an error when postExamHourCount > 1", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        diagnosisHourCount: 3,
         postExamHourCount: 2,
       };
-      const result = validateCandidateBacSupFragile(fundingRequest);
+      const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
       expect((result.extract() as FunctionalError).errors).toContain(
-        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours doit être compris entre 0 et 4h."
+        "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Post Jury doit être compris entre 0 et 1h."
       );
     });
-    test("should return ok  when (diagnosisHourCount + postExamHourCount) <= 4 for a candidate >bac and fragile", () => {
+    test("should return ok when postExamHourCount <= 1", () => {
       const fundingRequest = {
         ...defaultValidFundingRequest,
-        diagnosisHourCount: 2,
-        postExamHourCount: 2,
+        postExamHourCount: 1,
       };
-      const result = validateCandidateBacSupFragile(fundingRequest);
+      const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isRight()).toEqual(true);
     });
   });
@@ -1066,7 +1064,7 @@ describe("funding request", () => {
           diagnosisCost: new Decimal(10),
           diagnosisHourCount: 2,
           postExamCost: new Decimal(10),
-          postExamHourCount: 2,
+          postExamHourCount: 1,
           basicSkillsCost: new Decimal(0),
           basicSkillsHourCount: 0,
           certificateSkillsCost: new Decimal(0),

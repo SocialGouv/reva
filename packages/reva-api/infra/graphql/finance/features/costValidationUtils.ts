@@ -24,8 +24,9 @@ export interface HoursAndCosts {
 const isBetween = (low: number, high: number) => (value: number) =>
   low <= value && value <= high;
 
+const isLower1 = isBetween(0, 1);
 const isLower2 = isBetween(0, 2);
-const isLower4 = isBetween(0, 4);
+const isBetween1And3 = isBetween(1, 3);
 const isLower15 = isBetween(0, 15);
 const isLower20 = isBetween(0, 20);
 const isLower25 = isBetween(0, 25);
@@ -47,22 +48,14 @@ export const validateIndividualCosts = ({
 }): string[] => {
   const errors = [];
 
-  if (
-    isCandidateBacNonFragile &&
-    !isLower2(
-      hoursAndCosts.diagnosisHourCount + hoursAndCosts.postExamHourCount
-    )
-  ) {
+  if (!isBetween1And3(hoursAndCosts.diagnosisHourCount)) {
     errors.push(
-      "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours doit être compris entre 0 et 2h."
+      "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 1 et 3h."
     );
-  } else if (
-    !isLower4(
-      hoursAndCosts.diagnosisHourCount + hoursAndCosts.postExamHourCount
-    )
-  ) {
+  }
+  if (!isLower1(hoursAndCosts.postExamHourCount)) {
     errors.push(
-      "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours doit être compris entre 0 et 4h."
+      "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Post Jury doit être compris entre 0 et 1h."
     );
   }
 
