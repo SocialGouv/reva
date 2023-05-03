@@ -1,4 +1,17 @@
-module Data.Referential exposing (BasicSkill, Department, DropOutReason, MandatoryTraining, Referential, ReferentialGoal, ReferentialGoals, ReorientationReason, departmentToString)
+module Data.Referential exposing
+    ( BasicSkill
+    , ConventionCollective
+    , Department
+    , DepartmentWithOrganismMethods
+    , Domain
+    , DropOutReason
+    , MandatoryTraining
+    , Referential
+    , ReferentialGoal
+    , ReferentialGoals
+    , ReorientationReason
+    , departmentToString
+    )
 
 import Data.Candidate
 import Data.Scalar
@@ -55,6 +68,27 @@ type alias Referential =
 
 type alias Department =
     { id : Data.Scalar.Id
+    , code : String
+    , label : String
+    }
+
+
+type alias DepartmentWithOrganismMethods =
+    { department : Department
+    , isOnSite : Bool
+    , isRemote : Bool
+    }
+
+
+type alias Domain =
+    { id : String
+    , code : String
+    , label : String
+    }
+
+
+type alias ConventionCollective =
+    { id : String
     , code : String
     , label : String
     }

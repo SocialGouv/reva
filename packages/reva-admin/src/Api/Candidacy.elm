@@ -10,7 +10,6 @@ import Admin.Object.Candidate
 import Admin.Object.CandidateGoal
 import Admin.Object.Certification
 import Admin.Object.CertificationSummary
-import Admin.Object.Department
 import Admin.Object.Experience
 import Admin.Object.Organism
 import Admin.Object.ReorientationReason
@@ -18,6 +17,7 @@ import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
 import Api.Degree
+import Api.Referential exposing (departmentSelection)
 import Api.RemoteData exposing (nothingToError)
 import Api.Token exposing (Token)
 import Api.VulnerabilityIndicator
@@ -29,7 +29,7 @@ import Data.Referential
 import Graphql.Operation
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
-import View.Date as Date exposing (toDateWithLabels)
+import View.Date exposing (toDateWithLabels)
 
 
 getCandidacies :
@@ -224,18 +224,6 @@ certificationSummarySelection =
         |> with Admin.Object.CertificationSummary.id
         |> with Admin.Object.CertificationSummary.label
         |> with Admin.Object.CertificationSummary.acronym
-
-
-
--- DEPARTMENT
-
-
-departmentSelection : SelectionSet Data.Referential.Department Admin.Object.Department
-departmentSelection =
-    SelectionSet.succeed Data.Referential.Department
-        |> with Admin.Object.Department.id
-        |> with Admin.Object.Department.code
-        |> with Admin.Object.Department.label
 
 
 
