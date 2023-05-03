@@ -18,7 +18,7 @@ services:
       context: .
       dockerfile: Dockerfile.local
     volumes:
-      - ./themes:/opt/jboss/keycloak/themes
+      - ./themes/francevae:/opt/jboss/keycloak/themes/francevae
     environment:
       DB_VENDOR: POSTGRES
       DB_ADDR: postgres
@@ -29,8 +29,8 @@ services:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: Pa55w0rd
       REVA_BASE_URL: https://reva.incubateur.net
-      # KEYCLOAK_WELCOME_THEME: francevae
-      # KEYCLOAK_DEFAULT_THEME: francevae
+      #KEYCLOAK_WELCOME_THEME: francevae
+      #KEYCLOAK_DEFAULT_THEME: francevae
       # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
       #JDBC_PARAMS: "ssl=true"
     ports:
