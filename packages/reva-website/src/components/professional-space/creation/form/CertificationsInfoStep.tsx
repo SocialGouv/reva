@@ -175,6 +175,7 @@ export const CertificationsInfoStepForm = ({
             <MultiSelect
               label="Zone d’intervention en présentiel"
               hint="Cochez les départements couverts en présentiel"
+              withSelectAll
               options={availableDepartments.map((department) => ({
                 label: `${department.label} (${department.code})`,
                 value: department.id,
