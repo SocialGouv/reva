@@ -114,7 +114,7 @@ view context config =
 
               else
                 Button.new
-                    { onClick = Nothing, label = "Archiver la candidature" }
+                    { onClick = Nothing, label = "Supprimer la candidature" }
                     |> Button.linkButton
                         (Route.toString context.baseUrl
                             (Route.Candidacy <|

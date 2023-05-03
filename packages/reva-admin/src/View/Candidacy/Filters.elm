@@ -92,7 +92,7 @@ view candidacies filters context =
                 ]
             , link (Just "abandon") "Toutes les candidatures abandonnées"
             , link (Just "reorientation") "Toutes les candidatures réorientées"
-            , link (Just "archive") "Toutes les candidatures archivées"
+            , link (Just "archive") "Toutes les candidatures supprimées"
             , link (Just "projet") "Tous les projets en cours d'édition"
             ]
         ]

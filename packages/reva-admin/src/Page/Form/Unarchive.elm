@@ -11,5 +11,5 @@ form _ ( _, referential ) =
     { elements = []
     , saveLabel = Nothing
     , submitLabel = "Confirmer"
-    , title = "Restaurer une candidature archivée"
+    , title = "Restaurer une candidature supprimée"
     }

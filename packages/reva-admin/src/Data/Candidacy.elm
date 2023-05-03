@@ -146,7 +146,7 @@ statusToCategoryString status =
             "Projets en cours d'édition"
 
         Archive ->
-            "Candidatures archivées"
+            "Candidatures supprimées"
 
         PriseEnCharge ->
             "Candidatures prises en charge"

@@ -31,5 +31,5 @@ form formData ( _, referential ) =
             )
     , saveLabel = Nothing
     , submitLabel = "Enregistrer"
-    , title = "Archivage d'une candidature"
+    , title = "Suppression ou réorientation d’une candidature"
     }

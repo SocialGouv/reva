@@ -31,7 +31,7 @@ validate ( _, _ ) formData =
     in
     case ( decode.bool .isNotReoriented False, decode.maybe.string .reorientationReason ) of
         ( False, Nothing ) ->
-            Err "Veuillez sélectionner une raison avant d'archiver cette candidature"
+            Err "Veuillez sélectionner une raison avant de supprimer cette candidature"
 
         _ ->
             Ok ()
