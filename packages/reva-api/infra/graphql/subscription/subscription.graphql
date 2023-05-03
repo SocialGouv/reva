@@ -13,9 +13,9 @@ type SubscriptionRequest {
   companySiret: String!
   companyLegalStatus: LegalStatus!
   companyName: String!
-  companyAddress: String
-  companyZipCode: String
-  companyCity: String
+  companyAddress: String!
+  companyZipCode: String!
+  companyCity: String!
   companyBillingContactFirstname: String!
   companyBillingContactLastname: String!
   companyBillingEmail: String!
@@ -26,6 +26,24 @@ type SubscriptionRequest {
   accountLastname: String!
   accountEmail: String!
   accountPhoneNumber: String!
+  typology: OrganismTypology!
+  subscriptionRequestOnDomaine: [SubscriptionRequestOnDomaine!]!
+  subscriptionRequestOnConventionCollective: [SubscriptionRequestOnConventionCollective!]!
+  departmentsWithOrganismMethods: [DepartmentWithOrganismMethods!]!
+}
+
+type SubscriptionRequestOnDomaine {
+  domaine: Domaine!
+}
+
+type SubscriptionRequestOnConventionCollective {
+  ccn: ConventionCollective!
+}
+
+type DepartmentWithOrganismMethods {
+  department: Department!
+  isOnSite: Boolean!
+  isRemote: Boolean!
 }
 
 type SubscriptionRequestSummary {
