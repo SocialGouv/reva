@@ -5,6 +5,7 @@
 module Admin.Object.SubscriptionRequest exposing (..)
 
 import Admin.Enum.LegalStatus
+import Admin.Enum.OrganismTypology
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -40,19 +41,19 @@ companyName =
     Object.selectionForField "String" "companyName" [] Decode.string
 
 
-companyAddress : SelectionSet (Maybe String) Admin.Object.SubscriptionRequest
+companyAddress : SelectionSet String Admin.Object.SubscriptionRequest
 companyAddress =
-    Object.selectionForField "(Maybe String)" "companyAddress" [] (Decode.string |> Decode.nullable)
+    Object.selectionForField "String" "companyAddress" [] Decode.string
 
 
-companyZipCode : SelectionSet (Maybe String) Admin.Object.SubscriptionRequest
+companyZipCode : SelectionSet String Admin.Object.SubscriptionRequest
 companyZipCode =
-    Object.selectionForField "(Maybe String)" "companyZipCode" [] (Decode.string |> Decode.nullable)
+    Object.selectionForField "String" "companyZipCode" [] Decode.string
 
 
-companyCity : SelectionSet (Maybe String) Admin.Object.SubscriptionRequest
+companyCity : SelectionSet String Admin.Object.SubscriptionRequest
 companyCity =
-    Object.selectionForField "(Maybe String)" "companyCity" [] (Decode.string |> Decode.nullable)
+    Object.selectionForField "String" "companyCity" [] Decode.string
 
 
 companyBillingContactFirstname : SelectionSet String Admin.Object.SubscriptionRequest
@@ -103,3 +104,29 @@ accountEmail =
 accountPhoneNumber : SelectionSet String Admin.Object.SubscriptionRequest
 accountPhoneNumber =
     Object.selectionForField "String" "accountPhoneNumber" [] Decode.string
+
+
+typology : SelectionSet Admin.Enum.OrganismTypology.OrganismTypology Admin.Object.SubscriptionRequest
+typology =
+    Object.selectionForField "Enum.OrganismTypology.OrganismTypology" "typology" [] Admin.Enum.OrganismTypology.decoder
+
+
+subscriptionRequestOnDomaine :
+    SelectionSet decodesTo Admin.Object.SubscriptionRequestOnDomaine
+    -> SelectionSet (List decodesTo) Admin.Object.SubscriptionRequest
+subscriptionRequestOnDomaine object____ =
+    Object.selectionForCompositeField "subscriptionRequestOnDomaine" [] object____ (Basics.identity >> Decode.list)
+
+
+subscriptionRequestOnConventionCollective :
+    SelectionSet decodesTo Admin.Object.SubscriptionRequestOnConventionCollective
+    -> SelectionSet (List decodesTo) Admin.Object.SubscriptionRequest
+subscriptionRequestOnConventionCollective object____ =
+    Object.selectionForCompositeField "subscriptionRequestOnConventionCollective" [] object____ (Basics.identity >> Decode.list)
+
+
+departmentsWithOrganismMethods :
+    SelectionSet decodesTo Admin.Object.DepartmentWithOrganismMethods
+    -> SelectionSet (List decodesTo) Admin.Object.SubscriptionRequest
+departmentsWithOrganismMethods object____ =
+    Object.selectionForCompositeField "departmentsWithOrganismMethods" [] object____ (Basics.identity >> Decode.list)

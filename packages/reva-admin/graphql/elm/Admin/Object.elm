@@ -65,6 +65,10 @@ type Department
     = Department
 
 
+type DepartmentWithOrganismMethods
+    = DepartmentWithOrganismMethods
+
+
 type Domaine
     = Domaine
 
@@ -127,6 +131,14 @@ type SearchCertificationsAndProfessionsResult
 
 type SubscriptionRequest
     = SubscriptionRequest
+
+
+type SubscriptionRequestOnConventionCollective
+    = SubscriptionRequestOnConventionCollective
+
+
+type SubscriptionRequestOnDomaine
+    = SubscriptionRequestOnDomaine
 
 
 type SubscriptionRequestSummary
