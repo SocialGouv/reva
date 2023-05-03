@@ -91,9 +91,13 @@ export const getSubscriptionRequestById = async (
     const subreq = await prismaClient.subscriptionRequest.findUnique({
       where: { id },
       include: {
-        subscriptionRequestOnDomaine: true,
-        subscriptionRequestOnConventionCollective: true,
-        departmentsWithOrganismMethods: true,
+        subscriptionRequestOnDomaine: { include: { domaine: true } },
+        subscriptionRequestOnConventionCollective: {
+          include: { ccn: true },
+        },
+        departmentsWithOrganismMethods: {
+          include: { department: true },
+        },
       },
     });
     return Right(
