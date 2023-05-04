@@ -157,7 +157,7 @@ function App() {
       />
       <Header />
       <div className="flex flex-1">
-        <div className="bg-dsfrBlue-300 w-0 lg:w-[20%]" />
+        <div className="bg-gradient-to-r from-[#557AFF] to-[#2400FF] w-0 lg:w-[25%]" />
         <main
           role="main"
           id="content"
