@@ -31,8 +31,7 @@ export const MultiSelect = ({
     Boolean(initialSelectedValues?.length === options.length)
   );
 
-  const handleSelectAll = (event: any) => {
-    console.log("Clicked ALL", event);
+  const handleSelectAll = () => {
     if (selectAllChecked) {
       setSelectedValues([]);
       setSelectAllChecked(false);
@@ -43,10 +42,13 @@ export const MultiSelect = ({
   };
 
   const handleChange = (newValues: string[]) => {
-    setSelectAllChecked(newValues.length === options.length);
-    setSelectedValues(newValues);
-    onChange?.(newValues);
-  };
+      if (newValues.includes("all")) {
+        return handleSelectAll();
+      }
+      setSelectAllChecked(newValues.length === options.length);
+      setSelectedValues(newValues);
+      onChange?.(newValues);
+    };
 
   return (
     <div className="w-full relative  fr-select-group">
@@ -60,16 +62,26 @@ export const MultiSelect = ({
         </Listbox.Button>
         <Listbox.Options className="!absolute z-10 max-h-52 md:max-h-72 overflow-auto fr-checkbox-group list-none bg-dsfrGray-contrast w-[calc(100%-5px)] rounded-lg border border-gray-300 p-2">
           {withSelectAll && (
-            <li
-              className="flex p-1 rounded cursor-pointer"
-              onClick={handleSelectAll}
-            >
-              <input type="checkbox" checked={selectAllChecked} readOnly />
-              <label className="fr-label">
-                {selectAllChecked ? "Tout décocher" : "Tout cocher"}
-              </label>
-            </li>
+            <Listbox.Option key="all" value={"all"}>
+              {({ active }) => (
+                <li
+                  className={`flex p-1 rounded ${
+                    active ? "bg-blue-400" : ""
+                  } cursor-pointer`}
+                  onClick={(evt) => {
+                    handleSelectAll();
+                    evt.stopPropagation();
+                  }}
+                >
+                  <input type="checkbox" checked={selectAllChecked} readOnly />
+                  <label className={`fr-label ${active ? "!text-white" : ""}`}>
+                    {selectAllChecked ? "Tout décocher" : "Tout cocher"}
+                  </label>
+                </li>
+              )}
+            </Listbox.Option>
           )}
+
           {options.map((option) => (
             <Listbox.Option key={option.value} value={option.value}>
               {({ active }) => (
