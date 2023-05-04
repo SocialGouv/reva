@@ -71,8 +71,8 @@ dropOutView baseUrl candidacy dropOutDate =
             View.Candidacy.Tab.Tab candidacy.id
 
         dropOutInfo =
-            [ h3 [] [ text "Abandon du candidat confirmé" ]
-            , span [ class "text-sm text-gray-700" ] [ text <| View.Date.toFullFormat dropOutDate ]
+            [ h3 [ class "text-sm mt-1" ] [ text "Abandon du candidat confirmé" ]
+            , span [ class "text-sm text-gray-700 mb-2" ] [ text <| View.Date.toFullFormat dropOutDate ]
             ]
 
         dropOutLink =

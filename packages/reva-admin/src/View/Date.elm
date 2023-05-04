@@ -45,11 +45,15 @@ toFullFormat date =
                 Dec ->
                     "décembre"
     in
-    String.join " "
-        [ String.fromInt <| Time.toDay Time.utc date
-        , month
-        , String.fromInt <| Time.toYear Time.utc date
-        ]
+    if Time.posixToMillis date == 0 then
+        ""
+
+    else
+        String.join " "
+            [ String.fromInt <| Time.toDay Time.utc date
+            , month
+            , String.fromInt <| Time.toYear Time.utc date
+            ]
 
 
 toSmallFormat : Posix -> String
