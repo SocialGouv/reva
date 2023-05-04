@@ -74,6 +74,7 @@ view context model =
             View.layout
                 ""
                 []
+                []
                 [ View.skeleton "ml-10 mt-8 bg-gray-100 mt-24 h-10 w-[353px]" ]
 
         Failure errors ->
@@ -82,6 +83,7 @@ view context model =
         Success subscription ->
             View.layout
                 ""
+                []
                 []
                 [ viewContent context model.state.errors subscription ]
 

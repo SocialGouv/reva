@@ -101,6 +101,7 @@ view context model =
             View.layout
                 filterByStatusTitle
                 []
+                []
                 [ viewDirectoryHeader context
                 , div
                     [ class "sm:px-6" ]
@@ -186,9 +187,23 @@ viewContent context filters candidacies filteredCandidacies =
                 |> List.sortBy (.sentAt >> Maybe.map .posix >> Maybe.map Time.posixToMillis >> Maybe.withDefault 0 >> (*) -1)
                 |> List.Extra.gatherWith (\c1 c2 -> haveBothSameStatusAndNotDroppedOut c1 c2 || areBothDroppedOut c1 c2)
                 |> List.sortBy (\( c, _ ) -> Candidacy.toDirectoryPosition c)
+
+        upperNavContent =
+            if Api.Token.isAdmin context.token then
+                [ Html.a
+                    [ class "fr-link"
+                    , class "md:text-lg text-gray-900 hover:text-blue-900"
+                    , Route.href context.baseUrl (Route.Subscriptions Route.emptyFilters)
+                    ]
+                    [ text "Validation des inscriptions en attente" ]
+                ]
+
+            else
+                []
     in
     View.layout
         filterByStatusTitle
+        upperNavContent
         (View.Candidacy.Filters.view candidacies filters context)
         (viewDirectoryPanel context candidaciesByStatus)
 

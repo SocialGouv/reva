@@ -87,6 +87,7 @@ view context model =
             View.layout
                 ""
                 []
+                []
                 [ viewDirectoryHeader context 0
                 , div
                     [ class "py-3 px-10" ]
@@ -124,6 +125,7 @@ viewContent :
 viewContent context actionErrors filteredSubscriptions =
     View.layout
         ""
+        []
         []
         (viewDirectoryPanel context filteredSubscriptions actionErrors)
 

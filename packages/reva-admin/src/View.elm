@@ -31,8 +31,8 @@ skeleton extraClass =
         []
 
 
-layout : String -> List (Html msg) -> List (Html msg) -> Html msg
-layout navButtonLabel navContent content =
+layout : String -> List (Html msg) -> List (Html msg) -> List (Html msg) -> Html msg
+layout navButtonLabel upperNavContent navContent content =
     node "main"
         [ role "main"
         , class "flex relative"
@@ -54,7 +54,17 @@ layout navButtonLabel navContent content =
                         , attribute "aria-label" "Menu latéral"
                         , class "fr-sidemenu"
                         ]
-                        [ div
+                        [ if upperNavContent == [] then
+                            div [] []
+
+                          else
+                            div
+                                [ class "fr-sidemenu__inner"
+                                , class "flex items-center pl-12 md:pl-8 mt-6 md:mt-0 md:h-24"
+                                , class "bg-white md:shadow mb-4"
+                                ]
+                                upperNavContent
+                        , div
                             [ class "py-2 fr-sidemenu__inner"
                             , class "md:min-h-[480px] pl-4 md:mb-48"
                             , class "bg-white md:shadow"
