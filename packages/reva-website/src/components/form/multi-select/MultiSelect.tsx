@@ -1,10 +1,12 @@
 import { Listbox } from "@headlessui/react";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 interface Option {
   label: string;
   value: string;
 }
+
+const ALL_SELECTED = "__ALL__";
 
 export const MultiSelect = ({
   label,
@@ -42,7 +44,7 @@ export const MultiSelect = ({
   };
 
   const handleChange = (newValues: string[]) => {
-      if (newValues.includes("all")) {
+      if (newValues.includes(ALL_SELECTED)) {
         return handleSelectAll();
       }
       setSelectAllChecked(newValues.length === options.length);
@@ -62,7 +64,7 @@ export const MultiSelect = ({
         </Listbox.Button>
         <Listbox.Options className="!absolute z-10 max-h-52 md:max-h-72 overflow-auto fr-checkbox-group list-none bg-dsfrGray-contrast w-[calc(100%-5px)] rounded-lg border border-gray-300 p-2">
           {withSelectAll && (
-            <Listbox.Option key="all" value={"all"}>
+            <Listbox.Option key={ALL_SELECTED} value={ALL_SELECTED}>
               {({ active }) => (
                 <li
                   className={`flex p-1 rounded ${
