@@ -1,5 +1,5 @@
 import { Listbox } from "@headlessui/react";
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 
 interface Option {
   label: string;
@@ -33,17 +33,21 @@ export const MultiSelect = ({
     Boolean(initialSelectedValues?.length === options.length)
   );
 
-  const handleChange = useCallback( (newValues: string[]) => {
-    if (newValues.includes(ALL_SELECTED)) {
-      setSelectedValues(selectAllChecked? [] : options.map(({ value }) => value));
-      setSelectAllChecked(!selectAllChecked);
-    }
-    else {
-      setSelectAllChecked(newValues.length === options.length);
-      setSelectedValues(newValues);
-    }
-    onChange?.(newValues);
-  }, [onChange, selectAllChecked, options]);
+  const handleChange = useCallback(
+    (newValues: string[]) => {
+      if (newValues.includes(ALL_SELECTED)) {
+        setSelectedValues(
+          selectAllChecked ? [] : options.map(({ value }) => value)
+        );
+        setSelectAllChecked(!selectAllChecked);
+      } else {
+        setSelectAllChecked(newValues.length === options.length);
+        setSelectedValues(newValues);
+      }
+      onChange?.(newValues);
+    },
+    [onChange, selectAllChecked, options]
+  );
 
   return (
     <div className="w-full relative  fr-select-group">
