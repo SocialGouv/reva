@@ -154,24 +154,29 @@ export const CertificationsInfoStepForm = ({
               />
             )}
             {currentTypology === "expertBranche" && (
-              <MultiSelect
-                label="Conventions collectives auxquelles vous êtes rattaché"
-                hint="Vous pouvez cocher plusieurs conventions collectives"
-                withSelectAll
-                options={availableConventions.map((availableConvention) => ({
-                  label: `${availableConvention.code} ${availableConvention.label}`,
-                  value: availableConvention.id,
-                }))}
-                placeholder={(selectedItemsCount) =>
-                  selectedItemsCount
-                    ? `${selectedItemsCount} conventions collectives séléctionnées`
-                    : "Cochez les conventions collectives concernées"
-                }
-                initialSelectedValues={availableConventions
-                  .filter((ad) => ccnIdsController.field.value.includes(ad.id))
-                  .map((d) => d.id)}
-                onChange={ccnIdsController.field.onChange}
-              />
+              <>
+                <Notice className="mb-4" title="En tant qu’Architecte Accompagnateur de Parcours expert de branche(s), votre offre de service couvre l'ensemble des certifications rattachées aux conventions collectives sélectionnées." />
+                <MultiSelect
+                  label="Conventions collectives auxquelles vous êtes rattaché"
+                  hint="Vous pouvez cocher plusieurs conventions collectives"
+                  withSelectAll
+                  options={availableConventions.map((availableConvention) => ({
+                    label: `${availableConvention.code} ${availableConvention.label}`,
+                    value: availableConvention.id,
+                  }))}
+                  placeholder={(selectedItemsCount) =>
+                    selectedItemsCount
+                      ? `${selectedItemsCount} conventions collectives séléctionnées`
+                      : "Cochez les conventions collectives concernées"
+                  }
+                  initialSelectedValues={availableConventions
+                    .filter((ad) =>
+                      ccnIdsController.field.value.includes(ad.id)
+                    )
+                    .map((d) => d.id)}
+                  onChange={ccnIdsController.field.onChange}
+                />
+              </>
             )}
           </fieldset>
           <fieldset className="flex flex-col md:mb-12">
