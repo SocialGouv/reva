@@ -12,9 +12,18 @@ export const sendRejectionEmail = async (
 ) => {
   const htmlContent = mjml2html(
     template({
-      headline: "Navré,",
-      message:
-        "Votre compte Reva n’a pas pu être vérifié pour les raisons suivantes:",
+      headline: "Bonjour,",
+      message: `<p>Nous vous remercions pour votre demande de référencement en tant qu'Architecte
+        Accompagnateur de Parcours (AAP) sur la plateforme France VAE.</p>
+        <p>Après vérification des éléments fournis concernant votre structure,
+        nous ne pouvons malheureusement pas valider votre référencement.</p>
+        <p>Pour de plus amples informations, nous vous invitons à nous contacter à l’adresse suivante:
+        support@beta.gouv.fr (à modifier en fonction de la stratégie mail définie),
+        nous vous répondrons dans les meilleurs délais.</p>
+        <br/>
+        <p>Très cordialement</p>
+        <p>L’équipe France VAE.</p>
+      `,
       cta: subscriptionRequestUri
         ? {
             label: "Consulter ma demande",

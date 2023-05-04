@@ -11,8 +11,18 @@ export const sendConfirmationEmail = async (
 ) => {
   const htmlContent = mjml2html(
     template({
-      headline: "Félicitations !",
-      message: "Votre compte Reva vient d'être vérifié. Vous pouvez accéder dès à présent à votre espace professionnel !",
+      headline: "<p>Bonjour,</p>",
+      message: `<p>Nous vous remercions pour votre référencement en tant qu'Architecte Accompagnateur
+        de Parcours (AAP) sur la plateforme France VAE.</p>
+        <p>Nous vous invitons désormais à vous rendre sur **[francevae.gouv.fr/comptepro](http://francevae.gouv.fr/comptepro)**
+        et saisir vos identifiants pour accéder à votre compte. Vous pouvez désormais compléter votre espace professionnel
+        à l’aide de la documentation mise à disposition.</p>
+        <p>N'hésitez pas à nous contacter via la messagerie instantanée présente dans votre back office ou par email à
+        **[support@francevae.gouv.fr](mailto:support@francevae.gouv.fr)**.</p>
+        <br/>
+        <p>Cordialement,</p>
+        <p>L’équipe France VAE.</p>
+      `,
       cta: iamLinkUrl
         ? {
             label: "Activer mon compte",
