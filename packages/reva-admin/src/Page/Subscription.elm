@@ -86,29 +86,6 @@ view context model =
                 [ viewContent context model.state.errors subscription ]
 
 
-viewErrorItem : String -> Html Msg
-viewErrorItem error =
-    li
-        []
-        [ text error ]
-
-
-viewErrorsPanel : List String -> Html Msg
-viewErrorsPanel errors =
-    case errors of
-        [] ->
-            text ""
-
-        _ ->
-            div [ class "text-red-500" ]
-                [ List.map viewErrorItem errors
-                    |> ul
-                        [ class "px-10 pt-10 pb-4"
-                        , attribute "aria-label" "Errors"
-                        ]
-                ]
-
-
 viewContent : Context -> List String -> Subscription -> Html Msg
 viewContent context errors subscription =
     View.article
@@ -119,7 +96,7 @@ viewContent context errors subscription =
             [ dataTest "directory-item"
             , class "flex flex-wrap"
             ]
-            [ viewErrorsPanel errors
+            [ View.errors errors
             , h1 [ class "w-full mb-0" ] [ text subscription.accountFirstname, text " ", text subscription.accountLastname ]
             , viewTitle "Informations générales"
             , viewInfo "Adresse email de l'architecte de parcours" [ subscription.accountEmail ]

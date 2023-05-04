@@ -34,7 +34,7 @@ type Msg
 
 type alias State =
     { subscriptions : RemoteData String (List SubscriptionSummary)
-    , errors : Maybe (List String)
+    , errors : List String
     }
 
 
@@ -52,7 +52,7 @@ init context maybeStatusFilters =
             { filters = { search = Nothing }
             , state =
                 { subscriptions = RemoteData.Loading
-                , errors = Nothing
+                , errors = []
                 }
             }
 
@@ -60,11 +60,6 @@ init context maybeStatusFilters =
             Api.Subscription.getSubscriptions context.endpoint context.token GotSubscriptionsResponse
     in
     ( defaultModel, defaultCmd )
-
-
-withSubscriptions : RemoteData String (List SubscriptionSummary) -> State -> State
-withSubscriptions subscriptions state =
-    { state | subscriptions = subscriptions }
 
 
 
@@ -118,17 +113,15 @@ view context model =
             in
             subscriptions
                 |> filter Subscription.filterByWords .search
-                |> viewContent context model.filters subscriptions model.state.errors
+                |> viewContent context model.state.errors
 
 
 viewContent :
     Context
-    -> Filters
-    -> List SubscriptionSummary
-    -> Maybe (List String)
+    -> List String
     -> List SubscriptionSummary
     -> Html Msg
-viewContent context filters subscriptions actionErrors filteredSubscriptions =
+viewContent context actionErrors filteredSubscriptions =
     View.layout
         ""
         []
@@ -168,18 +161,7 @@ viewErrorItem error =
         [ text error ]
 
 
-viewErrorsPanel : List String -> Html Msg
-viewErrorsPanel errors =
-    div [ class "text-red-500" ]
-        [ List.map viewErrorItem errors
-            |> ul
-                [ class "px-10 pt-10 pb-4"
-                , attribute "aria-label" "Errors"
-                ]
-        ]
-
-
-viewDirectoryPanel : Context -> List SubscriptionSummary -> Maybe (List String) -> List (Html Msg)
+viewDirectoryPanel : Context -> List SubscriptionSummary -> List String -> List (Html Msg)
 viewDirectoryPanel context subscriptionsByStatus actionErrors =
     [ viewDirectoryHeader context (List.length subscriptionsByStatus)
     , List.map (viewItem context) subscriptionsByStatus
@@ -188,7 +170,7 @@ viewDirectoryPanel context subscriptionsByStatus actionErrors =
             , class "min-h-0 overflow-y-auto mx-8 px-0"
             , attribute "aria-label" "Inscriptions"
             ]
-    , viewErrorsPanel (Maybe.withDefault [] actionErrors)
+    , View.errors actionErrors
     ]
 
 
@@ -233,9 +215,7 @@ update : Context -> Msg -> Model -> ( Model, Cmd Msg )
 update context msg model =
     case msg of
         GotSubscriptionsResponse remoteSubscriptions ->
-            ( { model | state = model.state |> withSubscriptions remoteSubscriptions }
-            , Cmd.none
-            )
+            ( model, Cmd.none ) |> withSubscriptions remoteSubscriptions
 
         UserAddedFilter search ->
             let
@@ -252,25 +232,14 @@ update context msg model =
             ( model, Cmd.none )
 
         GotValidationResponse RemoteData.Loading ->
-            let
-                state =
-                    model.state
-            in
-            ( { model | state = { state | errors = Nothing } }, Cmd.none )
+            ( model, Cmd.none ) |> withErrors []
 
         GotValidationResponse (RemoteData.Success _) ->
-            let
-                state =
-                    model.state
-            in
-            ( { model | state = { state | errors = Nothing } }, Api.Subscription.getSubscriptions context.endpoint context.token GotSubscriptionsResponse )
+            ( model, Api.Subscription.getSubscriptions context.endpoint context.token GotSubscriptionsResponse )
+                |> withErrors []
 
         GotValidationResponse (RemoteData.Failure errors) ->
-            let
-                state =
-                    model.state
-            in
-            ( { model | state = { state | errors = Just [ errors ] } }, Cmd.none )
+            ( model, Cmd.none ) |> withErrors [ errors ]
 
         -- REJECTION
         ClickedRejection id ->
@@ -287,18 +256,32 @@ update context msg model =
                 state =
                     model.state
             in
-            ( { model | state = { state | errors = Nothing } }, Cmd.none )
+            ( { model | state = { state | errors = [] } }, Cmd.none )
 
         GotRejectionResponse (RemoteData.Success _) ->
             let
                 state =
                     model.state
             in
-            ( { model | state = { state | errors = Nothing } }, Api.Subscription.getSubscriptions context.endpoint context.token GotSubscriptionsResponse )
+            ( { model | state = { state | errors = [] } }, Api.Subscription.getSubscriptions context.endpoint context.token GotSubscriptionsResponse )
 
         GotRejectionResponse (RemoteData.Failure errors) ->
-            let
-                state =
-                    model.state
-            in
-            ( { model | state = { state | errors = Just [ errors ] } }, Cmd.none )
+            ( model, Cmd.none ) |> withErrors [ errors ]
+
+
+withErrors : List String -> ( Model, Cmd msg ) -> ( Model, Cmd msg )
+withErrors errors ( model, cmd ) =
+    let
+        state =
+            model.state
+    in
+    ( { model | state = { state | errors = errors } }, cmd )
+
+
+withSubscriptions : RemoteData String (List SubscriptionSummary) -> ( Model, Cmd msg ) -> ( Model, Cmd msg )
+withSubscriptions subscriptions ( model, cmd ) =
+    let
+        state =
+            model.state
+    in
+    ( { model | state = { state | subscriptions = subscriptions } }, cmd )

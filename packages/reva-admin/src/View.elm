@@ -1,4 +1,4 @@
-module View exposing (article, backLink, image, infoBlock, layout, logo, skeleton, title)
+module View exposing (article, backLink, errors, image, infoBlock, layout, logo, skeleton, title)
 
 import Accessibility exposing (a, article, br, button, h3, nav, p)
 import Html exposing (Html, div, h2, img, node, text)
@@ -99,6 +99,30 @@ article dataTestValue backLinkRoute backLinkLabel content =
         [ backLink backLinkRoute backLinkLabel
         , Accessibility.article [ class "mt-6" ] content
         ]
+
+
+errors : List String -> Html msg
+errors messages =
+    case messages of
+        [] ->
+            text ""
+
+        _ ->
+            div
+                [ class "fixed z-[1000] top-4 inset-x-0 pointer-events-none"
+                , class "w-full flex flex-col items-center justify-center"
+                ]
+            <|
+                List.map
+                    (\error ->
+                        p
+                            [ class "max-w-2xl my-2 px-6 py-4"
+                            , class "rounded bg-white border border-red-400"
+                            , class "text-center text-sm font-medium text-red-600"
+                            ]
+                            [ text error ]
+                    )
+                    messages
 
 
 backLink : Html.Attribute Never -> String -> Accessibility.Html msg
