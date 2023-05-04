@@ -268,17 +268,7 @@ viewForm referential status maybeError formData form saveButton submitButton =
                             ]
                        , case maybeError of
                             Just error ->
-                                div
-                                    [ class "fixed z-50 top-0 inset-x-0 pointer-events-none"
-                                    , class "w-full flex justify-center"
-                                    ]
-                                    [ p
-                                        [ class "max-w-2xl mt-10 px-6 py-4"
-                                        , class "rounded bg-white border border-red-400"
-                                        , class "text-center text-sm font-medium text-red-600"
-                                        ]
-                                        [ text error ]
-                                    ]
+                                View.errors [ error ]
 
                             Nothing ->
                                 text ""
