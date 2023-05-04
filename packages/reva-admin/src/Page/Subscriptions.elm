@@ -89,7 +89,9 @@ view context model =
             div [] []
 
         Loading ->
-            viewMain
+            View.layout
+                ""
+                []
                 [ viewDirectoryHeader context 0
                 , div
                     [ class "py-3 px-10" ]
@@ -100,7 +102,6 @@ view context model =
                     , subscriptionSkeleton
                     ]
                 ]
-                [ View.skeleton "ml-10 mt-8 bg-gray-200 mt-6 h-10 w-[353px]" ]
 
         Failure errors ->
             div [ class "text-red-500" ] [ text errors ]
@@ -128,30 +129,16 @@ viewContent :
     -> List SubscriptionSummary
     -> Html Msg
 viewContent context filters subscriptions actionErrors filteredSubscriptions =
-    viewMain
-        (viewDirectoryPanel context filteredSubscriptions actionErrors)
+    View.layout
+        ""
         []
-
-
-viewMain : List (Html msg) -> List (Html msg) -> Html msg
-viewMain leftContent rightContent =
-    node "main"
-        [ class "grow flex h-full min-w-0 border-l-[73px] border-black bg-gray-100" ]
-    <|
-        [ aside
-            [ class "hidden md:order-first md:flex md:flex-col flex-shrink-0"
-            , class "w-full w-[780px] h-screen"
-            , class "bg-white"
-            ]
-            leftContent
-        , div [] rightContent
-        ]
+        (viewDirectoryPanel context filteredSubscriptions actionErrors)
 
 
 viewDirectoryHeader : Context -> Int -> Html Msg
 viewDirectoryHeader context waitingSubscriptionsCount =
     div
-        [ class "px-10 pt-10 pb-4" ]
+        [ class "px-8 pt-10 pb-4" ]
         [ h2
             []
             [ if Api.Token.isAdmin context.token then
@@ -198,7 +185,7 @@ viewDirectoryPanel context subscriptionsByStatus actionErrors =
     , List.map (viewItem context) subscriptionsByStatus
         |> ul
             [ dataTest "directory"
-            , class "min-h-0 overflow-y-auto mx-10 px-0"
+            , class "min-h-0 overflow-y-auto mx-8 px-0"
             , attribute "aria-label" "Inscriptions"
             ]
     , viewErrorsPanel (Maybe.withDefault [] actionErrors)
