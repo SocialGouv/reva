@@ -11,10 +11,10 @@ import Api.Token
 import BetaGouv.DSFR.Button as Button
 import Data.Context exposing (Context)
 import Data.Subscription as Subscription exposing (SubscriptionSummary)
-import Html exposing (Html, aside, button, div, h2, h4, li, node, p, text, ul)
-import Html.Attributes exposing (attribute, class, type_)
-import Html.Events exposing (onClick)
+import Html exposing (Html, aside, div, h2, h4, li, node, p, text, ul)
+import Html.Attributes exposing (attribute, class)
 import RemoteData exposing (RemoteData(..))
+import Route
 import String exposing (String)
 import View
 import View.Date exposing (toFullFormat)
@@ -27,6 +27,7 @@ type Msg
     | UserAddedFilter String
     | ClickedValidation String
     | ClickedRejection String
+    | ClickedViewMore String
     | GotValidationResponse (RemoteData String String)
     | GotRejectionResponse (RemoteData String String)
 
@@ -180,12 +181,8 @@ viewErrorItem error =
         [ text error ]
 
 
-
---viewErrorsPanel : List String -> Html Msg
-
-
+viewErrorsPanel : List String -> Html Msg
 viewErrorsPanel errors =
-    --div [ class "text-red-500" ] [ text errors ]
     div [ class "text-red-500" ]
         [ List.map viewErrorItem errors
             |> ul
@@ -209,11 +206,10 @@ viewDirectoryPanel context subscriptionsByStatus actionErrors =
 
 
 viewItem : Context -> SubscriptionSummary -> Html Msg
-viewItem _ subscription =
+viewItem context subscription =
     li
         [ dataTest "directory-item"
-        , class
-            "list-none mb-4"
+        , class "list-none mb-4"
         ]
         [ div
             [ class "relative p-6 bg-neutral-100 flex hover:bg-gray-50"
@@ -228,7 +224,11 @@ viewItem _ subscription =
                 ]
             , div
                 [ class "flex items-center space-x-4 ml-auto mt-auto" ]
-                [ Button.new { onClick = Just (ClickedRejection subscription.id), label = "Rejeter" }
+                [ Button.new { onClick = Nothing, label = "Voir plus" }
+                    |> Button.secondary
+                    |> Button.linkButton (Route.toString context.baseUrl <| Route.Subscription subscription.id)
+                    |> Button.view
+                , Button.new { onClick = Just (ClickedRejection subscription.id), label = "Rejeter" }
                     |> Button.secondary
                     |> Button.view
                 , Button.new { onClick = Just (ClickedValidation subscription.id), label = "Accepter" }
@@ -288,6 +288,9 @@ update context msg model =
         -- REJECTION
         ClickedRejection id ->
             ( model, Api.Subscription.reject context.endpoint context.token GotRejectionResponse id )
+
+        ClickedViewMore id ->
+            ( model, Cmd.none )
 
         GotRejectionResponse RemoteData.NotAsked ->
             ( model, Cmd.none )

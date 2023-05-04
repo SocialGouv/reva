@@ -12,6 +12,7 @@ import KeycloakConfiguration exposing (KeycloakConfiguration)
 import Page.Candidacies as Candidacies exposing (Model)
 import Page.Candidacy as Candidacy
 import Page.Loading
+import Page.Subscription as Subscription
 import Page.Subscriptions as Subscriptions
 import Route exposing (Route(..))
 import Task
@@ -46,6 +47,7 @@ type Page
     | Loading Token
     | LoggingOut
     | NotLoggedIn Route
+    | Subscription Subscription.Model
     | Subscriptions Subscriptions.Model
 
 
@@ -56,6 +58,7 @@ type Msg
     | UserLoggedOut
     | GotCandidaciesMsg Candidacies.Msg
     | GotSubscriptionsMsg Subscriptions.Msg
+    | GotSubscriptionMsg Subscription.Msg
     | GotCandidacyMsg Candidacy.Msg
     | GotLoggedIn Token
     | GotTokenRefreshed Token
@@ -114,6 +117,10 @@ viewPage model =
             Subscriptions.view model.context subscriptionsModel
                 |> Html.map GotSubscriptionsMsg
 
+        Subscription subscriptionModel ->
+            Subscription.view model.context subscriptionModel
+                |> Html.map GotSubscriptionMsg
+
         Candidacy candidacyModel ->
             Candidacy.view model.context candidacyModel
                 |> Html.map GotCandidacyMsg
@@ -154,6 +161,10 @@ changeRouteTo context route model =
         ( Route.Subscriptions filters, _ ) ->
             Subscriptions.init model.context filters.status
                 |> updateWith Subscriptions GotSubscriptionsMsg model
+
+        ( Route.Subscription subscriptionId, _ ) ->
+            Subscription.init model.context subscriptionId
+                |> updateWith Subscription GotSubscriptionMsg model
 
         ( Route.Candidacy tab, _ ) ->
             Candidacy.init model.context tab
@@ -211,6 +222,16 @@ update msg model =
             in
             ( { model | page = Subscriptions newSubscriptionsModel }
             , Cmd.map GotSubscriptionsMsg subscriptionsCmd
+            )
+
+        -- Subscription
+        ( GotSubscriptionMsg subscriptionMsg, Subscription subscriptionModel ) ->
+            let
+                ( newSubscriptionModel, subscriptionCmd ) =
+                    Subscription.update model.context subscriptionMsg subscriptionModel
+            in
+            ( { model | page = Subscription newSubscriptionModel }
+            , Cmd.map GotSubscriptionMsg subscriptionCmd
             )
 
         -- Candidacy

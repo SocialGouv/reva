@@ -131,11 +131,11 @@ view :
 view context model =
     let
         viewForm name =
-            viewMain name
-                [ View.backLink
-                    (Route.href context.baseUrl (Route.Candidacy (Tab model.tab.candidacyId View.Candidacy.Tab.Profile)))
-                    "Retour"
-                , Form.view (RemoteData.map2 Tuple.pair model.selected model.state.referential) model.form
+            View.article
+                name
+                (Route.href context.baseUrl (Route.Candidacy (Tab model.tab.candidacyId View.Candidacy.Tab.Profile)))
+                "Retour"
+                [ Form.view (RemoteData.map2 Tuple.pair model.selected model.state.referential) model.form
                     |> Html.map GotFormMsg
                 ]
 
@@ -197,7 +197,7 @@ view context model =
                     viewForm "training"
 
                 TrainingSent ->
-                    viewMain "training-sent" (viewTrainingSent context model.tab.candidacyId)
+                    viewMain context "training-sent" (viewTrainingSent context model.tab.candidacyId)
 
                 Admissibility ->
                     viewForm "admissibility"
@@ -206,14 +206,6 @@ view context model =
                     viewForm "examInfo"
     in
     View.layout "Accéder aux étapes du parcours" maybeNavigationSteps [ content ]
-
-
-viewMain : String -> List (Html msg) -> Html msg
-viewMain dataTestValue =
-    div
-        [ class "bg-white px-4 pt-0 sm:px-8 sm:pt-6"
-        , dataTest dataTestValue
-        ]
 
 
 viewTrainingSent : Context -> CandidacyId -> List (Html msg)
@@ -236,7 +228,7 @@ viewTrainingSent context candidacyId =
 
 viewCandidacyPanel : Context -> Model -> Html Msg
 viewCandidacyPanel context model =
-    viewCandidacyArticle context.baseUrl <|
+    viewMain context "profile" <|
         case model.selected of
             NotAsked ->
                 []
@@ -260,14 +252,13 @@ viewCandidacyPanel context model =
                     }
 
 
-viewCandidacyArticle : String -> List (Html msg) -> Html msg
-viewCandidacyArticle baseUrl content =
-    viewMain "profile"
-        [ View.backLink
-            (Route.href baseUrl (Route.Candidacies Route.emptyFilters))
-            "Toutes les candidatures"
-        , article [ class "mt-6" ] content
-        ]
+viewMain : Context -> String -> List (Html msg) -> Html msg
+viewMain context dataTest content =
+    View.article
+        dataTest
+        (Route.href context.baseUrl (Route.Candidacies Route.emptyFilters))
+        "Toutes les candidatures"
+        content
 
 
 

@@ -27,6 +27,7 @@ type Route
     | Login
     | Logout
     | NotFound
+    | Subscription String -- Subscription Id
     | Subscriptions Filters
 
 
@@ -54,6 +55,7 @@ parser baseUrl =
                 , s "auth" </> s "logout" |> map Logout
                 , s "candidacies" <?> Query.string "status" |> map (Filters >> Candidacies)
                 , s "subscriptions" <?> Query.string "search" |> map (Filters >> Subscriptions)
+                , s "subscriptions" </> string |> map Subscription
                 , topLevel string |> candidacyTab Tab.Profile
                 , subLevel "admissibility" |> candidacyTab Tab.Admissibility
                 , subLevel "archive" |> candidacyTab Tab.Archive
@@ -113,6 +115,9 @@ toString baseUrl route =
 
         Subscriptions filters ->
             topLevel [ "subscriptions" ] []
+
+        Subscription subscriptionId ->
+            topLevel [ "subscriptions", subscriptionId ] []
 
 
 tabToString :

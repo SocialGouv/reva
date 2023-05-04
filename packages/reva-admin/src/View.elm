@@ -1,10 +1,11 @@
-module View exposing (backLink, image, infoBlock, layout, logo, skeleton, title)
+module View exposing (article, backLink, image, infoBlock, layout, logo, skeleton, title)
 
-import Accessibility exposing (a, br, button, h3, nav, p)
+import Accessibility exposing (a, article, br, button, h3, nav, p)
 import Html exposing (Html, div, h2, img, node, text)
 import Html.Attributes exposing (attribute, class, id, src)
 import Html.Attributes.Extra exposing (role)
 import Url.Builder
+import View.Helpers exposing (dataTest)
 
 
 title : String -> Html msg
@@ -86,6 +87,17 @@ layout navButtonLabel navContent content =
                     content
                 ]
             ]
+        ]
+
+
+article : String -> Html.Attribute Never -> String -> List (Accessibility.Html msg) -> Html msg
+article dataTestValue backLinkRoute backLinkLabel content =
+    div
+        [ class "bg-white px-4 pt-0 sm:px-8 sm:pt-6"
+        , dataTest dataTestValue
+        ]
+        [ backLink backLinkRoute backLinkLabel
+        , Accessibility.article [ class "mt-6" ] content
         ]
 
 
