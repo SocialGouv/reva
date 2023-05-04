@@ -103,7 +103,7 @@ export const CertificationsInfoStepForm = ({
   return (
     <div className="flex flex-col min-w-[70vw]">
       <Stepper
-        title="Renseigner les certifications concernées"
+        title="Identifier les certifications qui vous concernent"
         nextTitle="Saisir les informations pour la facturation"
         currentStep={2}
         stepCount={4}

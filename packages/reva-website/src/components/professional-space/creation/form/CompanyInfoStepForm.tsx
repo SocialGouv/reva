@@ -51,7 +51,7 @@ export const CompanyInfoStepForm = () => {
         title="Saisir vos informations pour la structure"
         currentStep={1}
         stepCount={4}
-        nextTitle="Renseigner les certifications concernées"
+        nextTitle="Identifier les certifications qui vous concernent"
       />
       <div className="border-t border-gray-300  mb-7" />
       <FormOptionalFieldsDisclaimer className="mb-6" />
