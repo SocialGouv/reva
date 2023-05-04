@@ -1,5 +1,5 @@
 import { Listbox } from "@headlessui/react";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 interface Option {
   label: string;
@@ -33,25 +33,17 @@ export const MultiSelect = ({
     Boolean(initialSelectedValues?.length === options.length)
   );
 
-  const handleSelectAll = () => {
-    if (selectAllChecked) {
-      setSelectedValues([]);
-      setSelectAllChecked(false);
-    } else {
-      setSelectedValues(options.map(({ value }) => value));
-      setSelectAllChecked(true);
-    }
-  };
-
-  const handleChange = (newValues: string[]) => {
-    // When "select all" was checked using the keyboard
+  const handleChange = useCallback( (newValues: string[]) => {
     if (newValues.includes(ALL_SELECTED)) {
-      return handleSelectAll();
+      setSelectedValues(selectAllChecked? [] : options.map(({ value }) => value));
+      setSelectAllChecked(!selectAllChecked);
     }
-    setSelectAllChecked(newValues.length === options.length);
-    setSelectedValues(newValues);
+    else {
+      setSelectAllChecked(newValues.length === options.length);
+      setSelectedValues(newValues);
+    }
     onChange?.(newValues);
-  };
+  }, [onChange, selectAllChecked, options]);
 
   return (
     <div className="w-full relative  fr-select-group">
@@ -71,10 +63,6 @@ export const MultiSelect = ({
                   className={`flex p-1 rounded ${
                     active ? "bg-blue-400" : ""
                   } cursor-pointer`}
-                  onClick={(evt) => {
-                    handleSelectAll();
-                    evt.stopPropagation();
-                  }}
                 >
                   <input type="checkbox" checked={selectAllChecked} readOnly />
                   <label className={`fr-label ${active ? "!text-white" : ""}`}>
