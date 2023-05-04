@@ -8,6 +8,7 @@ import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fi
 import Select from "@codegouvfr/react-dsfr/Select";
 import { useCallback } from "react";
 import { MultiSelect } from "@/components/form/multi-select/MultiSelect";
+import { Notice } from "@codegouvfr/react-dsfr/Notice";
 
 const zodSchema = z.object({
   typology: z.enum(["generaliste", "expertFiliere", "expertBranche"]),
@@ -127,6 +128,9 @@ export const CertificationsInfoStepForm = ({
               <option value="expertFiliere">Expert de filière(s)</option>
               <option value="expertBranche">Expert de branche(s)</option>
             </Select>
+            {(!currentTypology || currentTypology === "generaliste") && (
+              <Notice title="En tant qu'Architecte Accompagnateur de Parcours généraliste, votre offre de service couvre toutes les certifications hormis celles rattachées aux conventions collectives." />
+            )}
             {currentTypology === "expertFiliere" && (
               <MultiSelect
                 label="Filière(s)"
