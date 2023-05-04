@@ -44,13 +44,14 @@ export const MultiSelect = ({
   };
 
   const handleChange = (newValues: string[]) => {
-      if (newValues.includes(ALL_SELECTED)) {
-        return handleSelectAll();
-      }
-      setSelectAllChecked(newValues.length === options.length);
-      setSelectedValues(newValues);
-      onChange?.(newValues);
-    };
+    // When "select all" was checked using the keyboard
+    if (newValues.includes(ALL_SELECTED)) {
+      return handleSelectAll();
+    }
+    setSelectAllChecked(newValues.length === options.length);
+    setSelectedValues(newValues);
+    onChange?.(newValues);
+  };
 
   return (
     <div className="w-full relative  fr-select-group">
