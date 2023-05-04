@@ -131,6 +131,7 @@ export const CertificationsInfoStepForm = ({
               <MultiSelect
                 label="Filière(s)"
                 hint="Vous pouvez cocher plusieurs choix, avec un minimum d’une filière"
+                withSelectAll
                 options={availableDomaines.map((availableDomaine) => ({
                   label: availableDomaine.label,
                   value: availableDomaine.id,
@@ -152,6 +153,7 @@ export const CertificationsInfoStepForm = ({
               <MultiSelect
                 label="Conventions collectives auxquelles vous êtes rattaché"
                 hint="Vous pouvez cocher plusieurs conventions collectives"
+                withSelectAll
                 options={availableConventions.map((availableConvention) => ({
                   label: `${availableConvention.code} ${availableConvention.label}`,
                   value: availableConvention.id,
@@ -175,6 +177,7 @@ export const CertificationsInfoStepForm = ({
             <MultiSelect
               label="Zone d’intervention en présentiel"
               hint="Cochez les départements couverts en présentiel"
+              withSelectAll
               options={availableDepartments.map((department) => ({
                 label: `${department.label} (${department.code})`,
                 value: department.id,
@@ -194,6 +197,7 @@ export const CertificationsInfoStepForm = ({
             <MultiSelect
               label="Zone d’intervention en distanciel"
               hint="Cochez les départements couverts en distanciel"
+              withSelectAll
               options={availableDepartments.map((department) => ({
                 label: `${department.label} (${department.code})`,
                 value: department.id,
