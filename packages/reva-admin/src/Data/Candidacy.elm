@@ -140,7 +140,7 @@ statusToCategoryString : Step -> String
 statusToCategoryString status =
     case status of
         Validation ->
-            "Candidatures envoyées"
+            "Nouvelles candidatures"
 
         Projet ->
             "Projets en cours d'édition"
