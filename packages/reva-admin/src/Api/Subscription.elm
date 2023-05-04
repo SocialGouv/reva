@@ -1,4 +1,4 @@
-module Api.Subscription exposing (getSubscriptions, reject, validate)
+module Api.Subscription exposing (get, getSubscriptions, reject, validate)
 
 import Admin.Enum.Sort exposing (Sort)
 import Admin.Mutation as Mutation
