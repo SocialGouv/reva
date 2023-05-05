@@ -2,9 +2,9 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { createNextDsfrIntegrationApi } from "@codegouvfr/react-dsfr/next-pagesdir";
 import Link from "next/link";
-import { init } from "@socialgouv/matomo-next";
 import { useEffect } from "react";
 import { MATOMO } from "@/config/config";
+import init from "@/components/analytics/matomo-tracker/matomoTracker";
 
 declare module "@codegouvfr/react-dsfr/next-pagesdir" {
   interface RegisterLink {
