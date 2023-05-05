@@ -86,7 +86,7 @@ view context model =
         Loading ->
             View.layout
                 ""
-                []
+                [ viewCandidaciesLink context ]
                 []
                 [ viewDirectoryHeader context 0
                 , div
@@ -125,7 +125,7 @@ viewContent :
 viewContent context actionErrors filteredSubscriptions =
     View.layout
         ""
-        []
+        [ viewCandidaciesLink context ]
         []
         (viewDirectoryPanel context filteredSubscriptions actionErrors)
 
@@ -287,3 +287,13 @@ withSubscriptions subscriptions ( model, cmd ) =
             model.state
     in
     ( { model | state = { state | subscriptions = subscriptions } }, cmd )
+
+
+viewCandidaciesLink : Context -> Html msg
+viewCandidaciesLink context =
+    Html.a
+        [ class "fr-link"
+        , class "md:text-lg text-gray-900 hover:text-blue-900"
+        , Route.href context.baseUrl (Route.Candidacies Route.emptyFilters)
+        ]
+        [ text "Voir les candidatures" ]

@@ -73,7 +73,7 @@ view context model =
         Loading ->
             View.layout
                 ""
-                []
+                [ viewCandidaciesLink context ]
                 []
                 [ View.skeleton "ml-10 mt-8 bg-gray-100 mt-24 h-10 w-[353px]" ]
 
@@ -83,7 +83,7 @@ view context model =
         Success subscription ->
             View.layout
                 ""
-                []
+                [ viewCandidaciesLink context ]
                 []
                 [ viewContent context model.state.errors subscription ]
 
@@ -206,3 +206,13 @@ withSubscription subscription ( model, cmd ) =
             model.state
     in
     ( { model | state = { state | subscription = subscription } }, cmd )
+
+
+viewCandidaciesLink : Context -> Html msg
+viewCandidaciesLink context =
+    Html.a
+        [ class "fr-link"
+        , class "md:text-lg text-gray-900 hover:text-blue-900"
+        , Route.href context.baseUrl (Route.Candidacies Route.emptyFilters)
+        ]
+        [ text "Voir les candidatures" ]
