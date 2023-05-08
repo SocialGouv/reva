@@ -130,3 +130,8 @@ departmentsWithOrganismMethods :
     -> SelectionSet (List decodesTo) Admin.Object.SubscriptionRequest
 departmentsWithOrganismMethods object____ =
     Object.selectionForCompositeField "departmentsWithOrganismMethods" [] object____ (Basics.identity >> Decode.list)
+
+
+companyWebsite : SelectionSet (Maybe String) Admin.Object.SubscriptionRequest
+companyWebsite =
+    Object.selectionForField "(Maybe String)" "companyWebsite" [] (Decode.string |> Decode.nullable)

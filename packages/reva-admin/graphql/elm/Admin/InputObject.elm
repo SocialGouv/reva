@@ -631,9 +631,9 @@ buildSubscriptionRequestInput required____ fillOptionals____ =
     let
         optionals____ =
             fillOptionals____
-                { domaineIds = Absent, ccnIds = Absent }
+                { domaineIds = Absent, ccnIds = Absent, companyWebsite = Absent }
     in
-    { companySiret = required____.companySiret, companyLegalStatus = required____.companyLegalStatus, companyName = required____.companyName, companyAddress = required____.companyAddress, companyZipCode = required____.companyZipCode, companyCity = required____.companyCity, companyBillingContactFirstname = required____.companyBillingContactFirstname, companyBillingContactLastname = required____.companyBillingContactLastname, companyBillingEmail = required____.companyBillingEmail, companyBillingPhoneNumber = required____.companyBillingPhoneNumber, companyBic = required____.companyBic, companyIban = required____.companyIban, accountFirstname = required____.accountFirstname, accountLastname = required____.accountLastname, accountEmail = required____.accountEmail, accountPhoneNumber = required____.accountPhoneNumber, typology = required____.typology, domaineIds = optionals____.domaineIds, ccnIds = optionals____.ccnIds, onSiteDepartmentsIds = required____.onSiteDepartmentsIds, remoteDepartmentsIds = required____.remoteDepartmentsIds }
+    { companySiret = required____.companySiret, companyLegalStatus = required____.companyLegalStatus, companyName = required____.companyName, companyAddress = required____.companyAddress, companyZipCode = required____.companyZipCode, companyCity = required____.companyCity, companyBillingContactFirstname = required____.companyBillingContactFirstname, companyBillingContactLastname = required____.companyBillingContactLastname, companyBillingEmail = required____.companyBillingEmail, companyBillingPhoneNumber = required____.companyBillingPhoneNumber, companyBic = required____.companyBic, companyIban = required____.companyIban, accountFirstname = required____.accountFirstname, accountLastname = required____.accountLastname, accountEmail = required____.accountEmail, accountPhoneNumber = required____.accountPhoneNumber, typology = required____.typology, domaineIds = optionals____.domaineIds, ccnIds = optionals____.ccnIds, onSiteDepartmentsIds = required____.onSiteDepartmentsIds, remoteDepartmentsIds = required____.remoteDepartmentsIds, companyWebsite = optionals____.companyWebsite }
 
 
 type alias SubscriptionRequestInputRequiredFields =
@@ -662,6 +662,7 @@ type alias SubscriptionRequestInputRequiredFields =
 type alias SubscriptionRequestInputOptionalFields =
     { domaineIds : OptionalArgument (List String)
     , ccnIds : OptionalArgument (List String)
+    , companyWebsite : OptionalArgument String
     }
 
 
@@ -689,6 +690,7 @@ type alias SubscriptionRequestInput =
     , ccnIds : OptionalArgument (List String)
     , onSiteDepartmentsIds : List Data.Scalar.Id
     , remoteDepartmentsIds : List Data.Scalar.Id
+    , companyWebsite : OptionalArgument String
     }
 
 
@@ -697,7 +699,7 @@ type alias SubscriptionRequestInput =
 encodeSubscriptionRequestInput : SubscriptionRequestInput -> Value
 encodeSubscriptionRequestInput input____ =
     Encode.maybeObject
-        [ ( "companySiret", Encode.string input____.companySiret |> Just ), ( "companyLegalStatus", Encode.enum Admin.Enum.LegalStatus.toString input____.companyLegalStatus |> Just ), ( "companyName", Encode.string input____.companyName |> Just ), ( "companyAddress", Encode.string input____.companyAddress |> Just ), ( "companyZipCode", Encode.string input____.companyZipCode |> Just ), ( "companyCity", Encode.string input____.companyCity |> Just ), ( "companyBillingContactFirstname", Encode.string input____.companyBillingContactFirstname |> Just ), ( "companyBillingContactLastname", Encode.string input____.companyBillingContactLastname |> Just ), ( "companyBillingEmail", Encode.string input____.companyBillingEmail |> Just ), ( "companyBillingPhoneNumber", Encode.string input____.companyBillingPhoneNumber |> Just ), ( "companyBic", Encode.string input____.companyBic |> Just ), ( "companyIban", Encode.string input____.companyIban |> Just ), ( "accountFirstname", Encode.string input____.accountFirstname |> Just ), ( "accountLastname", Encode.string input____.accountLastname |> Just ), ( "accountEmail", Encode.string input____.accountEmail |> Just ), ( "accountPhoneNumber", Encode.string input____.accountPhoneNumber |> Just ), ( "typology", Encode.enum Admin.Enum.OrganismTypology.toString input____.typology |> Just ), ( "domaineIds", (Encode.string |> Encode.list) |> Encode.optional input____.domaineIds ), ( "ccnIds", (Encode.string |> Encode.list) |> Encode.optional input____.ccnIds ), ( "onSiteDepartmentsIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.list) input____.onSiteDepartmentsIds |> Just ), ( "remoteDepartmentsIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.list) input____.remoteDepartmentsIds |> Just ) ]
+        [ ( "companySiret", Encode.string input____.companySiret |> Just ), ( "companyLegalStatus", Encode.enum Admin.Enum.LegalStatus.toString input____.companyLegalStatus |> Just ), ( "companyName", Encode.string input____.companyName |> Just ), ( "companyAddress", Encode.string input____.companyAddress |> Just ), ( "companyZipCode", Encode.string input____.companyZipCode |> Just ), ( "companyCity", Encode.string input____.companyCity |> Just ), ( "companyBillingContactFirstname", Encode.string input____.companyBillingContactFirstname |> Just ), ( "companyBillingContactLastname", Encode.string input____.companyBillingContactLastname |> Just ), ( "companyBillingEmail", Encode.string input____.companyBillingEmail |> Just ), ( "companyBillingPhoneNumber", Encode.string input____.companyBillingPhoneNumber |> Just ), ( "companyBic", Encode.string input____.companyBic |> Just ), ( "companyIban", Encode.string input____.companyIban |> Just ), ( "accountFirstname", Encode.string input____.accountFirstname |> Just ), ( "accountLastname", Encode.string input____.accountLastname |> Just ), ( "accountEmail", Encode.string input____.accountEmail |> Just ), ( "accountPhoneNumber", Encode.string input____.accountPhoneNumber |> Just ), ( "typology", Encode.enum Admin.Enum.OrganismTypology.toString input____.typology |> Just ), ( "domaineIds", (Encode.string |> Encode.list) |> Encode.optional input____.domaineIds ), ( "ccnIds", (Encode.string |> Encode.list) |> Encode.optional input____.ccnIds ), ( "onSiteDepartmentsIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.list) input____.onSiteDepartmentsIds |> Just ), ( "remoteDepartmentsIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.list) input____.remoteDepartmentsIds |> Just ), ( "companyWebsite", Encode.string |> Encode.optional input____.companyWebsite ) ]
 
 
 buildSubscriptionRequestOrderByInput :

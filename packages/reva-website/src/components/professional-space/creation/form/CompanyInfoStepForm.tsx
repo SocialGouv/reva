@@ -20,6 +20,7 @@ const zodSchema = z.object({
     .min(1, "obligatoire")
     .max(5, "doit comporter 5 chiffres"),
   companyCity: z.string().min(1, "obligatoire"),
+  companyWebsite: z.union([z.literal(""), z.string().url()]),
 });
 
 type CompanyInfoStepFormSchema = z.infer<typeof zodSchema>;
@@ -90,6 +91,16 @@ export const CompanyInfoStepForm = () => {
             nativeInputProps={{
               ...register("companyName"),
               autoComplete: "organization",
+            }}
+          />
+          <Input
+            label="Site internet de la structure (optionnel)"
+            state={errors.companyWebsite ? "error" : "default"}
+            stateRelatedMessage={errors.companyWebsite?.message}
+            nativeInputProps={{
+              ...register("companyWebsite"),
+              placeholder: "Copiez le lien du site internet de votre structure",
+              autoComplete: "url",
             }}
           />
         </fieldset>

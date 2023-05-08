@@ -652,6 +652,7 @@ model SubscriptionRequest {
   subscriptionRequestOnDomaine              SubscriptionRequestOnDomaine[]
   subscriptionRequestOnConventionCollective SubscriptionRequestOnConventionCollective[]
   departmentsWithOrganismMethods            SubscriptionRequestsOnDepartments[]
+  companyWebsite                            String?                                     @map("company_website") @db.VarChar(255)
 
   @@map("subscription_request")
 }

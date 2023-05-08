@@ -51,6 +51,7 @@ export const createSubscriptionRequest = async (
         accountEmail: subscriptionRequestInput.accountEmail,
         accountPhoneNumber: subscriptionRequestInput.accountPhoneNumber,
         typology: subscriptionRequestInput.typology,
+        companyWebsite: subscriptionRequestInput.companyWebsite,
         subscriptionRequestOnDomaine: {
           createMany: {
             data:

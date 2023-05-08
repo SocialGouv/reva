@@ -30,6 +30,7 @@ type SubscriptionRequest {
   subscriptionRequestOnDomaine: [SubscriptionRequestOnDomaine!]!
   subscriptionRequestOnConventionCollective: [SubscriptionRequestOnConventionCollective!]!
   departmentsWithOrganismMethods: [DepartmentWithOrganismMethods!]!
+  companyWebsite: String
 }
 
 type SubscriptionRequestOnDomaine {
@@ -107,6 +108,7 @@ input SubscriptionRequestInput {
   ccnIds: [String!]
   onSiteDepartmentsIds: [ID!]!
   remoteDepartmentsIds: [ID!]!
+  companyWebsite: String
 }
 
 type Mutation {

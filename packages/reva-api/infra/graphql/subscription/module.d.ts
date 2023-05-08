@@ -28,6 +28,7 @@ interface SubscriptionRequestInput {
   ccnIds: string[];
   onSiteDepartmentsIds: string[];
   remoteDepartmentsIds: string[];
+  companyWebsite?: string;
 }
 
 interface DepartmentWithOrganismMethods {

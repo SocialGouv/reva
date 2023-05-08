@@ -23,6 +23,7 @@ interface ProfessionalSpaceInfo {
   accountLastname: string;
   accountEmail: string;
   accountPhoneNumber: string;
+  companyWebsite: string;
   typology: "generaliste" | "expertFiliere" | "expertBranche";
   domaineIds: string[];
 }
@@ -43,6 +44,7 @@ type CompanyInfoStepData = Pick<
   | "companyAddress"
   | "companyZipCode"
   | "companyCity"
+  | "companyWebsite"
 >;
 
 type BillingInfoStepData = Pick<
