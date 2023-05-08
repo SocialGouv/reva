@@ -36,6 +36,12 @@ const SiteMapPage = () => {
             </li>
           </ul>
         </li>
+        <li>
+          <Link href="/mentions-legales">Mentions légales</Link>
+        </li>
+        <li>
+          <Link href="/confidentialite">Données personnelles</Link>
+        </li>
       </ul>
     </MainLayout>
   );
