@@ -187,11 +187,10 @@ viewItem context subscription =
             , class "focus-within:ring-1 focus-within:ring-inset focus-within:ring-indigo-500"
             ]
             [ div [ class "flex flex-col text-sm mb-2" ]
-                [ p [ class "font-bold" ] [ text (String.toUpper subscription.accountLastname), text " ", text subscription.accountFirstname ]
+                [ p [ class "font-bold mb-0" ] [ text "Raison sociale de la structure" ]
+                , p [] [ text subscription.companyName ]
                 , p [ class "font-bold mb-0" ] [ text "Date d'envoi de l'inscription" ]
                 , p [] [ text (toFullFormat subscription.createdAt) ]
-                , p [ class "font-bold mb-0" ] [ text "Raison sociale de la structure" ]
-                , p [] [ text subscription.companyName ]
                 ]
             , div
                 [ class "flex items-center space-x-4 ml-auto mt-auto" ]
