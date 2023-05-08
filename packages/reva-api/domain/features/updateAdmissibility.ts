@@ -1,3 +1,4 @@
+import { isBefore } from "date-fns";
 import { Either, EitherAsync, Left, Maybe } from "purify-ts";
 
 import { Admissibility } from "../types/candidacy";
@@ -13,12 +14,51 @@ interface UpdateAdmissibilityDeps {
   }) => Promise<Either<string, Admissibility>>;
 }
 
+const isBefore2019 = (date: Date) => isBefore(date, new Date(2019, 0));
+
 export const updateAdmissibility =
   (deps: UpdateAdmissibilityDeps) =>
-  async (params: {
+  async ({
+    candidacyId,
+    admissibility,
+  }: {
     candidacyId: string;
     admissibility: Partial<Admissibility>;
   }): Promise<Either<FunctionalError, Admissibility>> => {
+    if (
+      admissibility.reportSentAt &&
+      isBefore2019(admissibility.reportSentAt)
+    ) {
+      return Left(
+        new FunctionalError(
+          FunctionalCodeError.TECHNICAL_ERROR,
+          "La date d'envoi du dossier de la faisabilité doit être après 2019 "
+        )
+      );
+    }
+    if (
+      admissibility.certifierRespondedAt &&
+      isBefore2019(admissibility.certifierRespondedAt)
+    ) {
+      return Left(
+        new FunctionalError(
+          FunctionalCodeError.TECHNICAL_ERROR,
+          "La date du prononcé de la recevabilité doit être après 2019 "
+        )
+      );
+    }
+    if (
+      admissibility.responseAvailableToCandidateAt &&
+      isBefore2019(admissibility.responseAvailableToCandidateAt)
+    ) {
+      return Left(
+        new FunctionalError(
+          FunctionalCodeError.TECHNICAL_ERROR,
+          "La date de réception de l'avis de recevabilité doit être après 2019 "
+        )
+      );
+    }
+
     const updateAdmissibilityOrRaiseError = (
       existingAdmissibility: Maybe<Admissibility>
     ): Promise<Either<string, Admissibility>> =>
@@ -32,7 +72,7 @@ export const updateAdmissibility =
               reportSentAt: null,
               responseAvailableToCandidateAt: null,
               status: null,
-              ...params.admissibility,
+              ...admissibility,
             },
           }),
 
@@ -43,7 +83,7 @@ export const updateAdmissibility =
       });
 
     return EitherAsync.fromPromise(() =>
-      deps.getAdmissibilityFromCandidacyId({ candidacyId: params.candidacyId })
+      deps.getAdmissibilityFromCandidacyId({ candidacyId: candidacyId })
     )
       .chain(updateAdmissibilityOrRaiseError)
       .mapLeft(
