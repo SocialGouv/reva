@@ -1,9 +1,9 @@
+import { TrackableButton } from "@/components/analytics/trackable-button/TrackableButton";
 import {
   SectionParagraph,
   SectionSubHeader,
   SubSectionHeader,
 } from "@/components/section-content/SectionContent";
-import Button from "@codegouvfr/react-dsfr/Button";
 
 export const CommentCaMarche = () => (
   <section
@@ -61,14 +61,18 @@ export const CommentCaMarche = () => (
       </div>
     </div>
     <div className="text-center mt-[100px]">
-      <Button
+      <TrackableButton
+        eventTracked={{
+          location: "Espace candidat",
+          event: "Click sur 'Démarrez un parcours VAE'",
+        }}
         priority="primary"
         className="!bg-white !text-[#000091] mx-4"
-        linkProps={{ href: "#" }}
+        linkProps={{ href: "/app" }}
         size="large"
       >
         Démarrez un parcours VAE
-      </Button>
+      </TrackableButton>
     </div>
   </section>
 );

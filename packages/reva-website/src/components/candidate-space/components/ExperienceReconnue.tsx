@@ -1,8 +1,8 @@
+import { TrackableButton } from "@/components/analytics/trackable-button/TrackableButton";
 import {
   SectionHeader,
   SectionParagraph,
 } from "@/components/section-content/SectionContent";
-import Button from "@codegouvfr/react-dsfr/Button";
 import Image from "next/image";
 
 const ArrowRight = () => (
@@ -53,14 +53,18 @@ export const ExperienceReconnue = () => (
       </p>
 
       <div className="flex flex-col items-center sm:items-start space-y-4">
-        <Button
+        <TrackableButton
+          eventTracked={{
+            location: "Espace candidat",
+            event: "Click sur 'Démarrez un parcours VAE'",
+          }}
           priority="primary"
           className="!w-full sm:!w-auto justify-center"
           linkProps={{ href: "/app" }}
           size="large"
         >
           Démarrez un parcours VAE
-        </Button>
+        </TrackableButton>
       </div>
     </div>
     <div className="relative mt-16 -mx-5 sm:mx-0 sm:flex-0 sm:w-2/5 sm:-mr-20 lg:mr-0 lg:flex-1">

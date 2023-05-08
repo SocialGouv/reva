@@ -2,7 +2,6 @@
 import * as React from "react";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import Head from "next/head";
-import Button from "@codegouvfr/react-dsfr/Button";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -12,6 +11,7 @@ import {
   SectionSubHeader,
   SubSectionHeader,
 } from "@/components/section-content/SectionContent";
+import { TrackableButton } from "@/components/analytics/trackable-button/TrackableButton";
 
 const AvenirPro = () => (
   <section
@@ -31,14 +31,18 @@ const AvenirPro = () => (
       </SectionParagraph>
 
       <div className="flex flex-col items-center sm:items-start space-y-4">
-        <Button
+        <TrackableButton
+          eventTracked={{
+            location: "Accueil",
+            event: "Click sur 'Démarrez un parcours VAE'",
+          }}
           priority="primary"
           className="!w-full sm:!w-auto justify-center"
           linkProps={{ href: "/app" }}
           size="large"
         >
           Démarrez un parcours VAE
-        </Button>
+        </TrackableButton>
         <Link
           className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
           href="/espace-candidat"
@@ -122,15 +126,19 @@ const CommentCaMarche = () => (
           manière totale ou partielle.
         </SectionParagraph>
 
-        <div className="">
-          <Button
+        <div>
+          <TrackableButton
+            eventTracked={{
+              location: "Accueil",
+              event: "Click sur 'Démarrez un parcours VAE'",
+            }}
             priority="primary"
             className="!w-full sm:!w-auto justify-center !bg-white !text-[#000091]"
             linkProps={{ href: "/app" }}
             size="large"
           >
             Démarrez un parcours VAE
-          </Button>
+          </TrackableButton>
         </div>
       </div>
       <ul className="flex-1 relative p-0 list-none mt-[100px]">

@@ -1,5 +1,6 @@
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { useRouter } from "next/router";
+import { push } from "@/components/analytics/matomo-tracker/matomoTracker";
 
 export const Header = (props: { className?: string }) => {
   const { asPath } = useRouter();
@@ -19,6 +20,13 @@ export const Header = (props: { className?: string }) => {
           linkProps: {
             href: "/admin",
             className: "fr-link--icon-right",
+            onClick: () =>
+              push([
+                "trackEvent",
+                "En-tête",
+                "Click sur 'Espace professionnel'",
+                "Click sur 'Espace professionnel'",
+              ]),
           },
           text: "Espace professionnel",
         },
@@ -27,6 +35,13 @@ export const Header = (props: { className?: string }) => {
           linkProps: {
             href: "/app/login",
             className: "fr-link--icon-right",
+            onClick: () =>
+              push([
+                "trackEvent",
+                "En-tête",
+                "Click sur 'Espace candidat'",
+                "Click sur 'Espace candidat'",
+              ]),
           },
           text: "Espace candidat",
         },
