@@ -3,10 +3,9 @@ module Data.Form.Appointment exposing (Appointment, appointment, appointmentFrom
 import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
 import Data.Candidacy exposing (CandidacyId)
 import Data.Form exposing (FormData)
-import Data.Form.Helper as Helper exposing (booleanFromString, booleanToString)
+import Data.Form.Helper as Helper
 import Data.Scalar
 import Dict exposing (Dict)
-import Time
 
 
 type alias Appointment =
@@ -15,7 +14,6 @@ type alias Appointment =
     , additionalInformation : String
     , firstAppointmentOccurredAt : Maybe Data.Scalar.Timestamp
     , appointmentCount : Int
-    , wasPresentAtFirstAppointment : Bool
     }
 
 
@@ -24,7 +22,6 @@ keys =
     , additionalInformation = "additionalInformation"
     , firstAppointmentOccurredAt = "firstAppointmentOccurredAt"
     , appointmentCount = "appointmentCount"
-    , wasPresentAtFirstAppointment = "wasPresentAtFirstAppointment"
     }
 
 
@@ -39,16 +36,14 @@ appointmentFromDict candidacyId formData =
         (decode.string .additionalInformation "")
         (decode.maybe.date .firstAppointmentOccurredAt Nothing)
         (decode.int .appointmentCount 0)
-        (decode.bool .wasPresentAtFirstAppointment False)
 
 
-appointment : Maybe CandidateTypology -> Maybe String -> Maybe Data.Scalar.Timestamp -> Maybe Int -> Maybe Bool -> Dict String String
-appointment typology typologyAdditional firstAppointmentOccurredAt appointmentCount wasPresentAtFirstAppointment =
+appointment : Maybe CandidateTypology -> Maybe String -> Maybe Data.Scalar.Timestamp -> Maybe Int -> Dict String String
+appointment typology typologyAdditional firstAppointmentOccurredAt appointmentCount =
     [ ( .typology, Maybe.map candidateTypologyToString typology )
     , ( .additionalInformation, typologyAdditional )
     , ( .firstAppointmentOccurredAt, Maybe.map Helper.dateToString firstAppointmentOccurredAt )
     , ( .appointmentCount, Maybe.map String.fromInt appointmentCount )
-    , ( .wasPresentAtFirstAppointment, Maybe.map booleanToString wasPresentAtFirstAppointment )
     ]
         |> Helper.toDict keys
 

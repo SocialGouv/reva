@@ -916,7 +916,6 @@ export const updateAppointmentInformations = async (params: {
   appointmentInformations: {
     firstAppointmentOccuredAt: Date;
     appointmentCount: number;
-    wasPresentAtFirstAppointment: boolean;
   };
 }) => {
   try {
@@ -931,8 +930,6 @@ export const updateAppointmentInformations = async (params: {
         firstAppointmentOccuredAt:
           params.appointmentInformations.firstAppointmentOccuredAt,
         appointmentCount: params.appointmentInformations.appointmentCount,
-        wasPresentAtFirstAppointment:
-          params.appointmentInformations.wasPresentAtFirstAppointment,
       },
       include: {
         ...candidacyIncludes,
@@ -969,7 +966,6 @@ export const updateAppointmentInformations = async (params: {
       typologyAdditional: candidacy.typologyAdditional,
       firstAppointmentOccuredAt: candidacy.firstAppointmentOccuredAt,
       appointmentCount: candidacy.appointmentCount,
-      wasPresentAtFirstAppointment: candidacy.wasPresentAtFirstAppointment,
       candidacyDropOut: candidacy.candidacyDropOut,
       candidacyStatuses: candidacy.candidacyStatuses,
       createdAt: candidacy.createdAt,

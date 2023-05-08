@@ -58,7 +58,6 @@ update candidacyId endpointGraphql token toMsg _ formData =
                     |> Maybe.map Present
                     |> Maybe.withDefault Absent
                 )
-                appointment.wasPresentAtFirstAppointment
                 appointment.appointmentCount
 
         appointmentRequiredArs =
@@ -78,4 +77,3 @@ selection =
         |> with Admin.Object.Candidacy.typologyAdditional
         |> with Admin.Object.Candidacy.firstAppointmentOccuredAt
         |> with Admin.Object.Candidacy.appointmentCount
-        |> with Admin.Object.Candidacy.wasPresentAtFirstAppointment

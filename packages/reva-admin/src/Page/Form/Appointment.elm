@@ -29,7 +29,6 @@ form _ _ =
         , ( keys.additionalInformation, Form.SelectOther "typology" (candidateTypologyToString Autre) "Autre typologie" )
         , ( keys.firstAppointmentOccurredAt, Form.Date "Date du premier rendez-vous pédagogique" )
         , ( keys.appointmentCount, Form.Number "Nombre de rendez-vous réalisés avec le candidat" )
-        , ( keys.wasPresentAtFirstAppointment, Form.Checkbox "Le candidat a bien effectué le rendez-vous d'étude de faisabilité" )
         ]
     , saveLabel = Nothing
     , submitLabel = "Enregistrer"

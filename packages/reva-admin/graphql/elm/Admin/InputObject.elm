@@ -127,13 +127,11 @@ buildAppointmentInformationsInput required____ fillOptionals____ =
             fillOptionals____
                 { firstAppointmentOccuredAt = Absent }
     in
-    { firstAppointmentOccuredAt = optionals____.firstAppointmentOccuredAt, wasPresentAtFirstAppointment = required____.wasPresentAtFirstAppointment, appointmentCount = required____.appointmentCount }
+    { firstAppointmentOccuredAt = optionals____.firstAppointmentOccuredAt, appointmentCount = required____.appointmentCount }
 
 
 type alias AppointmentInformationsInputRequiredFields =
-    { wasPresentAtFirstAppointment : Bool
-    , appointmentCount : Int
-    }
+    { appointmentCount : Int }
 
 
 type alias AppointmentInformationsInputOptionalFields =
@@ -144,7 +142,6 @@ type alias AppointmentInformationsInputOptionalFields =
 -}
 type alias AppointmentInformationsInput =
     { firstAppointmentOccuredAt : OptionalArgument Data.Scalar.Timestamp
-    , wasPresentAtFirstAppointment : Bool
     , appointmentCount : Int
     }
 
@@ -154,7 +151,7 @@ type alias AppointmentInformationsInput =
 encodeAppointmentInformationsInput : AppointmentInformationsInput -> Value
 encodeAppointmentInformationsInput input____ =
     Encode.maybeObject
-        [ ( "firstAppointmentOccuredAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) |> Encode.optional input____.firstAppointmentOccuredAt ), ( "wasPresentAtFirstAppointment", Encode.bool input____.wasPresentAtFirstAppointment |> Just ), ( "appointmentCount", Encode.int input____.appointmentCount |> Just ) ]
+        [ ( "firstAppointmentOccuredAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) |> Encode.optional input____.firstAppointmentOccuredAt ), ( "appointmentCount", Encode.int input____.appointmentCount |> Just ) ]
 
 
 buildCandidacyInput :

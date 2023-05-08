@@ -110,7 +110,6 @@ export interface Companion {
 export interface AppointmentInformations {
   firstAppointmentOccuredAt: Date;
   appointmentCount: number;
-  wasPresentAtFirstAppointment: boolean;
 }
 
 export interface Region {

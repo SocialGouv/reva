@@ -139,11 +139,6 @@ appointmentCount =
     Object.selectionForField "(Maybe Int)" "appointmentCount" [] (Decode.int |> Decode.nullable)
 
 
-wasPresentAtFirstAppointment : SelectionSet (Maybe Bool) Admin.Object.Candidacy
-wasPresentAtFirstAppointment =
-    Object.selectionForField "(Maybe Bool)" "wasPresentAtFirstAppointment" [] (Decode.bool |> Decode.nullable)
-
-
 candidacyStatuses :
     SelectionSet decodesTo Admin.Object.CandidacyStatus
     -> SelectionSet (List decodesTo) Admin.Object.Candidacy
