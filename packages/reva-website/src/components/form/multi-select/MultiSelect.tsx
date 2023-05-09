@@ -34,11 +34,11 @@ export const MultiSelect = ({
   );
 
   const handleChange = useCallback(
-    (newValues: string[]) => {
-      if (newValues.includes(ALL_SELECTED)) {
-        setSelectedValues(
-          selectAllChecked ? [] : options.map(({ value }) => value)
-        );
+    (changedValues: string[]) => {
+      let newValues: string[] = changedValues;
+      if (changedValues.includes(ALL_SELECTED)) {
+        newValues = selectAllChecked ? [] : options.map(({ value }) => value);
+        setSelectedValues(newValues);
         setSelectAllChecked(!selectAllChecked);
       } else {
         setSelectAllChecked(newValues.length === options.length);
