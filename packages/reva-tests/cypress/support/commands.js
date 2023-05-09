@@ -10,7 +10,7 @@ Cypress.Commands.add("auth", () => {
     headers: {
       Location: `${
         Cypress.config().baseUrl
-      }silent-check-sso.html#error=login_required&state=6a5b9f5c-c131-421c-86e0-5b1d6d5bf44b`,
+      }app/silent-check-sso.html#error=login_required&state=6a5b9f5c-c131-421c-86e0-5b1d6d5bf44b`,
     },
     statusCode: 302,
   });
@@ -19,8 +19,8 @@ Cypress.Commands.add("auth", () => {
 Cypress.Commands.add("login", (config = { token: "abc" }, options) => {
   cy.auth();
   if (config.token) {
-    cy.visit(`/login?token=${config.token}`, options);
+    cy.visit(`/app/login?token=${config.token}`, options);
   } else {
-    cy.visit(`/login`, options);
+    cy.visit(`/app/login`, options);
   }
 });
