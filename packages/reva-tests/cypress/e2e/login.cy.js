@@ -24,7 +24,7 @@ context("Login", () => {
     });
 
     cy.auth();
-    cy.visit("/");
+    cy.visit("/app");
     cy.get('[data-test="project-contact-login"]').click();
     cy.get('[data-test="login-home"]');
   });

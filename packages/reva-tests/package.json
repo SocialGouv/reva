@@ -5,7 +5,7 @@
   "scripts": {
     "cypress": "cypress run",
     "cypress:open": "cypress open --e2e --browser electron",
-    "cypress:ci": "cypress run --config baseUrl=http://localhost:8080/app/",
+    "cypress:ci": "cypress run --config baseUrl=http://localhost:8080/",
     "server": "cd ../.. && npm run start:server:only -w reva-api",
     "test:ci": "start-server-and-test server http://localhost:8080/app cypress:ci"
   },
