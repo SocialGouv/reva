@@ -18,9 +18,13 @@
 }
 
 .fr-sidemenu__inner > .fr-sidemenu__btn:before {
-  -webkit-mask-image: url("../icons/system/menu-2-fill.svg");
+  mask-image: url("../icons/system/menu-2-fill.svg");
 }
 
 .fr-sidemenu__btn[aria-expanded]:after {
-  -webkit-mask-image: url("../icons/system/arrow-down-s-line.svg");
+  mask-image: url("../icons/system/arrow-down-s-line.svg");
+}
+
+.fr-alert--error:before {
+  mask-image: url("../icons/system/fr--error-fill.svg");
 }

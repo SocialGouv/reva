@@ -119,20 +119,19 @@ errors messages =
 
         _ ->
             div
-                [ class "fixed z-[1000] top-4 inset-x-0 pointer-events-none"
+                [ class "fixed z-[1000] top-12 sm:top-6 inset-x-0 pointer-events-none"
                 , class "w-full flex flex-col items-center justify-center"
                 ]
-            <|
-                List.map
-                    (\error ->
-                        p
-                            [ class "max-w-2xl my-2 px-6 py-4"
-                            , class "rounded bg-white border border-red-400"
-                            , class "text-center text-sm font-medium text-red-600"
-                            ]
-                            [ text error ]
-                    )
-                    messages
+                [ div
+                    [ class "mx-2 bg-white max-w-2xl"
+                    , class "fr-alert fr-alert--error fr-alert--sm"
+                    ]
+                  <|
+                    h3 [ class "fr-alert__title" ] [ text "Une erreur est survenue" ]
+                        :: List.map
+                            (\error -> p [] [ text error ])
+                            messages
+                ]
 
 
 backLink : Html.Attribute Never -> String -> Accessibility.Html msg

@@ -157,14 +157,11 @@ view remoteReferential model =
                 Nothing ->
                     div [] []
 
-        disabledButton dataTestValue =
-            button
-                [ dataTest dataTestValue
-                , disabled True
-                , class "text-center mt-4 rounded bg-blue-400"
-                , class "text-white px-12 py-2"
-                ]
-                [ text "..." ]
+        disabledButton _ =
+            Button.new { onClick = Nothing, label = "..." }
+                |> Button.disable
+                |> Button.withAttrs [ class "px-12" ]
+                |> Button.view
 
         skeleton =
             div [ class "mt-4" ]
