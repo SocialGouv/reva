@@ -1,12 +1,10 @@
 module View.Candidacy.Filters exposing (Filters, view)
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
-import Admin.Object.CandidacySummary exposing (isReorientation)
-import Data.Candidacy as Candidacy exposing (CandidacySummary)
+import Data.Candidacy as Candidacy exposing (CandidacyCountByStatus)
 import Data.Context exposing (Context)
 import Html exposing (Html, a, div, label, li, span, text, ul)
 import Html.Attributes exposing (class, classList, id)
-import List.Extra
 import Route
 
 
@@ -17,39 +15,50 @@ type alias Filters =
 
 
 view :
-    List CandidacySummary
+    CandidacyCountByStatus
     -> Filters
     -> Context
     -> List (Html msg)
-view candidacies filters context =
+view candidacyCountByStatus filters context =
     let
-        isNotDroppedWithStatus : String -> CandidacySummary -> Bool
-        isNotDroppedWithStatus status c =
-            not c.isDroppedOut
-                && Just c.lastStatus.status
-                == (status |> String.toUpper |> Admin.Enum.CandidacyStatusStep.fromString)
-
-        isNotReorientation : CandidacySummary -> Bool
-        isNotReorientation c =
-            not c.isReorientation
-
         count : Maybe String -> Int
         count maybeStatus =
             case maybeStatus of
                 Nothing ->
-                    candidacies |> List.filter Candidacy.isActive |> List.length
+                    candidacyCountByStatus.activeHorsAbandon
 
                 Just "abandon" ->
-                    candidacies |> List.filter .isDroppedOut |> List.length
+                    candidacyCountByStatus.abandon
 
                 Just "reorientation" ->
-                    candidacies |> List.filter .isReorientation |> List.length
+                    candidacyCountByStatus.reorienteeHorsAbandon
 
                 Just "archive" ->
-                    candidacies |> List.filter (isNotDroppedWithStatus "archive") |> List.filter isNotReorientation |> List.length
+                    candidacyCountByStatus.archiveHorsAbandonHorsReorientation
 
-                Just status ->
-                    candidacies |> List.Extra.count (isNotDroppedWithStatus status)
+                Just "demande_paiement_envoyee" ->
+                    candidacyCountByStatus.demandePaiementEnvoyeHorsAbandon
+
+                Just "demande_financement_envoye" ->
+                    candidacyCountByStatus.demandeFinancementEnvoyeHorsAbandon
+
+                Just "parcours_confirme" ->
+                    candidacyCountByStatus.parcourConfirmeHorsAbandon
+
+                Just "parcours_envoye" ->
+                    candidacyCountByStatus.parcoursEnvoyeHorsAbandon
+
+                Just "prise_en_charge" ->
+                    candidacyCountByStatus.priseEnChargeHorsAbandon
+
+                Just "validation" ->
+                    candidacyCountByStatus.validationHorsAbandon
+
+                Just "projet" ->
+                    candidacyCountByStatus.projetHorsAbandon
+
+                Just _ ->
+                    0
 
         link maybeStatus label =
             viewLink context filters (count maybeStatus) maybeStatus label

@@ -4,7 +4,7 @@ import Accessibility exposing (h1, h2)
 import Admin.Enum.Duration exposing (Duration(..))
 import Api.Token
 import BetaGouv.DSFR.Button as Button
-import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, CandidacyStatus, DateWithLabels, isCandidacyArchived, isCandidacyReoriented)
+import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, DateWithLabels, isCandidacyArchived, isCandidacyReoriented)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department, Referential)
