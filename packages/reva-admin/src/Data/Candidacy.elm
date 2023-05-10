@@ -1,5 +1,6 @@
 module Data.Candidacy exposing
     ( Candidacy
+    , CandidacyCountByStatus
     , CandidacyExperience
     , CandidacyGoal
     , CandidacyId
@@ -30,6 +31,7 @@ module Data.Candidacy exposing
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Admin.Enum.Duration exposing (Duration)
+import Admin.Object.CandidacyCountByStatus exposing (activeHorsAbandon)
 import Css exposing (lowercase)
 import Data.Candidate exposing (Candidate)
 import Data.Certification exposing (Certification, CertificationSummary)
@@ -104,6 +106,21 @@ type alias CandidacySummary =
     , isReorientation : Bool
     , createdAt : Time.Posix
     , sentAt : Maybe DateWithLabels
+    }
+
+
+type alias CandidacyCountByStatus =
+    { activeHorsAbandon : Int
+    , abandon : Int
+    , reorienteeHorsAbandon : Int
+    , archiveHorsAbandonHorsReorientation : Int
+    , parcourConfirmeHorsAbandon : Int
+    , priseEnChargeHorsAbandon : Int
+    , parcoursEnvoyeHorsAbandon : Int
+    , demandeFinancementEnvoyeHorsAbandon : Int
+    , demandePaiementEnvoyeHorsAbandon : Int
+    , validationHorsAbandon : Int
+    , projetHorsAbandon : Int
     }
 
 

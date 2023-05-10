@@ -88,6 +88,13 @@ getBasicSkills object____ =
     Object.selectionForCompositeField "getBasicSkills" [] object____ (Basics.identity >> Decode.list)
 
 
+candidacy_candidacyCountByStatus :
+    SelectionSet decodesTo Admin.Object.CandidacyCountByStatus
+    -> SelectionSet decodesTo RootQuery
+candidacy_candidacyCountByStatus object____ =
+    Object.selectionForCompositeField "candidacy_candidacyCountByStatus" [] object____ Basics.identity
+
+
 candidate_getCandidateWithCandidacy :
     SelectionSet decodesTo Admin.Object.Candidate
     -> SelectionSet decodesTo RootQuery

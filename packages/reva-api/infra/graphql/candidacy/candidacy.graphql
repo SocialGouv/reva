@@ -97,6 +97,20 @@ type CandidacySummary {
   sentAt: Timestamp
 }
 
+type CandidacySummaryFilterInfo {
+  active: Int!
+  projet: Int!
+  archive: Int!
+  reorientation: Int!
+  abandon: Int!
+  validation: Int!
+  priseEnCharge: Int!
+  parcoursEnvoye: Int!
+  parcoursConfirme: Int!
+  demandeFinancementEnvoye: Int!
+  demandePaiementEnvoyee: Int!
+}
+
 type CertificationSummary {
   id: ID!
   label: String!
@@ -168,6 +182,20 @@ enum ExamResult {
   FAILURE
 }
 
+type CandidacyCountByStatus {
+  ACTIVE_HORS_ABANDON: Int!
+  ABANDON: Int!
+  REORIENTEE_HORS_ABANDON: Int!
+  ARCHIVE_HORS_ABANDON_HORS_REORIENTATION: Int!
+  PARCOURS_CONFIRME_HORS_ABANDON: Int!
+  PRISE_EN_CHARGE_HORS_ABANDON: Int!
+  PARCOURS_ENVOYE_HORS_ABANDON: Int!
+  DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON: Int!
+  DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON: Int!
+  VALIDATION_HORS_ABANDON: Int!
+  PROJET_HORS_ABANDON: Int!
+}
+
 type Query {
   getCandidacy(deviceId: ID!): Candidacy
   getCandidacyById(id: ID!): Candidacy
@@ -176,6 +204,7 @@ type Query {
   getOrganismsForCandidacy(candidacyId: UUID!): [Organism!]!
   getCompanionsForCandidacy(candidacyId: UUID!): [Organism!]!
   getBasicSkills: [BasicSkill!]!
+  candidacy_candidacyCountByStatus: CandidacyCountByStatus!
 }
 
 # MUTATIONS
