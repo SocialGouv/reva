@@ -36,6 +36,7 @@ layout navButtonLabel upperNavContent navContent content =
     node "main"
         [ role "main"
         , class "flex relative"
+        , id "content"
         ]
         [ div
             [ class "hidden md:block"

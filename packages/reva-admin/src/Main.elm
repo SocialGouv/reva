@@ -20,6 +20,7 @@ import Url exposing (Url)
 import View
 import View.Footer
 import View.Header
+import View.Skiplinks
 
 
 type alias Flags =
@@ -88,7 +89,8 @@ view model =
     , body =
         [ div
             [ class "min-h-screen flex flex-col" ]
-            [ View.Header.view model.context
+            [ View.Skiplinks.view
+            , View.Header.view model.context
             , viewPage model
             , KeycloakConfiguration.iframeKeycloak
                 { onLoggedIn = GotLoggedIn

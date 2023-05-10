@@ -11,6 +11,7 @@ view context =
     header
         [ attribute "role" "banner"
         , class "fr-header"
+        , id "header-navigation"
         ]
         [ div
             [ class "fr-header__body" ]

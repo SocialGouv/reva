@@ -87,7 +87,8 @@ view context =
                         ]
                         [ a
                             [ class "fr-footer__bottom-link"
-                            , href "/mentions-légale"
+                            , target "_parent"
+                            , href "/mentions-legales/"
                             ]
                             [ text "Mentions légales" ]
                         ]
@@ -95,7 +96,8 @@ view context =
                         [ class "fr-footer__bottom-item" ]
                         [ a
                             [ class "fr-footer__bottom-link"
-                            , href "/politique-de-confidentialite"
+                            , target "_parent"
+                            , href "/confidentialite/"
                             ]
                             [ text "Données personnelles" ]
                         ]
