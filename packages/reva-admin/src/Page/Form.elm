@@ -664,7 +664,7 @@ viewInputFiles acceptMultipleFiles elementId title hint =
         [ class "fr-upload-group" ]
         [ label
             [ class "fr-label"
-            , for "file-upload"
+            , for elementId
             ]
             [ text title
             , span

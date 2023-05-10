@@ -33,7 +33,7 @@ import Data.Form.PaymentRequest
 import Data.Form.Unarchive
 import Data.Referential exposing (Referential)
 import Html exposing (Html, a, article, div, node, p, span, text)
-import Html.Attributes exposing (class, name)
+import Html.Attributes exposing (alt, class, name)
 import Page.Form as Form exposing (Form)
 import Page.Form.Admissibility
 import Page.Form.Appointment
@@ -214,7 +214,7 @@ viewTrainingSent context candidacyId =
         [ class "mt-12 px-20" ]
         [ View.title "Confirmation"
         , div [ class "flex flex-col items-center w-full p-10" ]
-            [ View.image [ class "w-[60px]" ] context.baseUrl "confirmation.png"
+            [ View.image [ alt "", class "w-[60px]" ] context.baseUrl "confirmation.png"
             , p
                 [ class "mt-6 mb-24" ]
                 [ text "Le parcours personnalisé a bien été envoyé." ]
