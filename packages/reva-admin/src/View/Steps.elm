@@ -43,12 +43,15 @@ view header currentStepIndex timelineElements =
                     [ span [ class "ml-6 min-w-0 flex flex-col" ] element.content ]
                 ]
     in
-    ol
-        [ class "mb-8 pl-2" ]
+    div
+        []
     <|
-        (header
-            :: List.indexedMap viewNavigationTimelineStep timelineElements
-        )
+        header
+            :: [ ol
+                    [ class "mb-8 pl-2" ]
+                 <|
+                    List.indexedMap viewNavigationTimelineStep timelineElements
+               ]
 
 
 linkHelper : String -> Html msg

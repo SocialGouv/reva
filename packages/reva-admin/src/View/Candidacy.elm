@@ -31,7 +31,7 @@ view :
 view context config =
     [ div
         [ class "mt-4 mb-8 text-gray-900" ]
-        [ dl
+        [ div
             []
             [ case ( config.candidacy.firstname, config.candidacy.lastname ) of
                 ( Just firstname, Just lastname ) ->
@@ -144,7 +144,7 @@ view context config =
 
 viewInfo : String -> String -> Html msg -> Html msg
 viewInfo dataTestId label value =
-    div []
+    dl []
         [ dt [ class "hidden" ] [ text label ]
         , dd
             [ class "text-lg", dataTest dataTestId ]
