@@ -6,7 +6,7 @@ module Page.Subscription exposing
     , view
     )
 
-import Accessibility exposing (dd, dl, dt, h1, h2, h3)
+import Accessibility exposing (dd, dl, dt, h1, h2)
 import Admin.Enum.LegalStatus as LegalStatus
 import Admin.Enum.OrganismTypology exposing (OrganismTypology(..))
 import Api.Subscription
@@ -15,8 +15,8 @@ import Browser.Navigation as Nav
 import Data.Context exposing (Context)
 import Data.Referential exposing (DepartmentWithOrganismMethods)
 import Data.Subscription exposing (Subscription, SubscriptionSummary)
-import Html exposing (Html, div, li, p, text, ul)
-import Html.Attributes exposing (attribute, class)
+import Html exposing (Html, div, li, text, ul)
+import Html.Attributes exposing (class)
 import RemoteData exposing (RemoteData(..))
 import Route
 import String exposing (String)
@@ -129,15 +129,6 @@ viewContent context errors subscription =
                 [ viewDepartements subscription.departmentsWithOrganismMethods .isOnSite ]
             , viewInfo "Zone d'intervention en distanciel"
                 [ viewDepartements subscription.departmentsWithOrganismMethods .isRemote ]
-            , viewTitle "Informations de facturation"
-            , viewInfoText "Contact de facturation"
-                [ subscription.companyBillingContactFirstname
-                , subscription.companyBillingContactLastname
-                ]
-            , viewInfoText "Adresse email de facturation" [ subscription.companyBillingEmail ]
-            , viewInfoText "Téléphone du contact de facturation" [ subscription.companyBillingPhoneNumber ]
-            , viewInfoText "BIC" [ subscription.companyBic ]
-            , viewInfoText "IBAN" [ subscription.companyIban ]
             , div
                 [ class "flex items-center justify-end space-x-4 w-full my-8" ]
                 [ Button.new { onClick = Just (ClickedRejection subscription.id), label = "Rejeter" }
@@ -180,7 +171,7 @@ viewCategory category =
 
 viewTitle : String -> Accessibility.Html msg
 viewTitle s =
-    h2 [ class "w-full mt-6 mb-0 text-xl" ] [ text s ]
+    h2 [ class "w-full mt-6 mb-1 text-xl" ] [ text s ]
 
 
 viewInfo : String -> List (Accessibility.Html msg) -> Accessibility.Html msg
