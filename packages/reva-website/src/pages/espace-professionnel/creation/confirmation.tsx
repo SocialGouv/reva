@@ -6,7 +6,7 @@ import Head from "next/head";
 
 const ProfessionalSpaceCreationConfirmationPage = () => {
   return (
-    <MainLayout>
+    <>
       <Head>
         <title>
           Confirmation de création de compte personnel - Reva | Prenez votre
@@ -37,7 +37,7 @@ const ProfessionalSpaceCreationConfirmationPage = () => {
           </p>
         </div>
       </BlueLayout>
-    </MainLayout>
+    </>
   );
 };
 

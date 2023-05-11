@@ -13,6 +13,15 @@ const nextConfig = {
 
     return config;
   },
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/espace-professionnel/creation",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

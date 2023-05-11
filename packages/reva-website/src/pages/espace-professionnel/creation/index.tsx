@@ -101,7 +101,7 @@ const ProfessionalSpaceCreationPage = ({
   availableDepartments,
 }: PageProps) => {
   return (
-    <MainLayout>
+    <>
       <Head>
         <title>
           Création d'un compte professionnel - Reva | Prenez votre avenir
@@ -137,7 +137,7 @@ const ProfessionalSpaceCreationPage = ({
           />
         </ProfessionalSpaceCreationProvider>
       </BlueLayout>
-    </MainLayout>
+    </>
   );
 };
 
