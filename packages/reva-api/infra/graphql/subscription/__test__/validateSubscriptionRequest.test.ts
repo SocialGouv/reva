@@ -4,27 +4,24 @@
 
 import { randomUUID } from "crypto";
 
+import { Prisma } from "@prisma/client";
+
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 import { prismaClient } from "../../../database/postgres/client";
+import {
+  __TEST_IAM_FAIL_CHECK__,
+  __TEST_IAM_PASS_CHECK__,
+} from "../domain/test-const";
 import { subreqSampleMin } from "./fixture";
 
-
-let subreqId: string,
+let subreqWithDepts: Prisma.SubscriptionRequestCreateInput,
   ccn3133Id: string,
-  domaineGdId: string,
-  subreqOnDepSample: Array<any>;
+  domaineGdId: string;
 
-describe("Subscription Request / Reject", () => {
+describe("Subscription Request / Validate", () => {
   beforeAll(async () => {
-    const res = await prismaClient.subscriptionRequest.create({
-      data: {
-        ...subreqSampleMin,
-        typology: "generaliste",
-      },
-    });
-    subreqId = res.id;
-
+    // await prismaClient.organism.deleteMany();
     const parisId = (
       await prismaClient.department.findFirst({
         where: { code: "75" },
@@ -50,18 +47,29 @@ describe("Subscription Request / Reject", () => {
         })
       )?.id ?? "";
 
-    subreqOnDepSample = [
-      {
-        departmentId: parisId,
-        isOnSite: true,
-        isRemote: false,
+    subreqWithDepts = {
+      ...subreqSampleMin,
+      typology: "generaliste",
+      departmentsWithOrganismMethods: {
+        create: [
+          {
+            departmentId: parisId,
+            isOnSite: true,
+            isRemote: false,
+          },
+          {
+            departmentId: illeEtVillaineId,
+            isOnSite: true,
+            isRemote: true,
+          },
+        ] as any,
       },
-      {
-        departmentId: illeEtVillaineId,
-        isOnSite: true,
-        isRemote: true,
-      },
-    ];
+    };
+  });
+
+  beforeEach(async () => {
+    await prismaClient.organism.deleteMany();
+    await prismaClient.account.deleteMany();
   });
 
   test("Should fail when not exist", async () => {
@@ -73,7 +81,7 @@ describe("Subscription Request / Reject", () => {
       }),
       payload: {
         requestType: "mutation",
-        endpoint: "subscription_rejectSubscriptionRequest",
+        endpoint: "subscription_validateSubscriptionRequest",
         arguments: { subscriptionRequestId: randomUUID() },
         returnFields: "",
       },
@@ -95,8 +103,8 @@ describe("Subscription Request / Reject", () => {
       }),
       payload: {
         requestType: "mutation",
-        endpoint: "subscription_rejectSubscriptionRequest",
-        arguments: { subscriptionRequestId: subreqId },
+        endpoint: "subscription_validateSubscriptionRequest",
+        arguments: { subscriptionRequestId: randomUUID() },
         returnFields: "",
       },
     });
@@ -104,18 +112,20 @@ describe("Subscription Request / Reject", () => {
     expect(resp.json()).toHaveProperty("errors");
   });
 
-  describe("Should fulfill rejection", () => {
+  test.todo("Should fail when keycloak account already exist with same Email");
+  test.todo("Should fail when organism already exist with same Siret");
+  test.todo("Should fail when account already exist with same Email");
+
+  describe("Should fulfill validation", () => {
     test("with typology généraliste", async () => {
-      const subreq = await prismaClient.subscriptionRequest.create({
+      const res = await prismaClient.subscriptionRequest.create({
         data: {
-          ...subreqSampleMin,
+          ...subreqWithDepts,
+          accountEmail: __TEST_IAM_PASS_CHECK__,
           typology: "generaliste",
-          departmentsWithOrganismMethods: {
-            create: subreqOnDepSample,
-          },
         },
       });
-      const subreqId = subreq.id;
+      const subreqId = res.id;
       const resp = await injectGraphql({
         fastify: (global as any).fastify,
         authorization: authorizationHeaderForUser({
@@ -124,14 +134,31 @@ describe("Subscription Request / Reject", () => {
         }),
         payload: {
           requestType: "mutation",
-          endpoint: "subscription_rejectSubscriptionRequest",
+          endpoint: "subscription_validateSubscriptionRequest",
           arguments: { subscriptionRequestId: subreqId },
           returnFields: "",
         },
       });
       expect(resp.statusCode).toEqual(200);
       expect(resp.json()).toMatchObject({
-        data: { subscription_rejectSubscriptionRequest: "Ok" },
+        data: { subscription_validateSubscriptionRequest: "Ok" },
+      });
+
+      // A new organism should have been created
+      const organism = await prismaClient.organism.findFirst({
+        where: { siret: subreqSampleMin.companySiret },
+      });
+      expect(organism).toMatchObject({
+        label: subreqSampleMin.companyName,
+        legalStatus: subreqSampleMin.companyLegalStatus,
+        address: subreqSampleMin.companyAddress,
+        zip: subreqSampleMin.companyZipCode,
+        city: subreqSampleMin.companyCity,
+        contactAdministrativeEmail: __TEST_IAM_PASS_CHECK__,
+        contactCommercialName: `${subreqSampleMin.companyBillingContactLastname} ${subreqSampleMin.companyBillingContactFirstname}`,
+        contactCommercialEmail: subreqSampleMin.companyBillingEmail,
+        isActive: true,
+        typology: "generaliste",
       });
 
       // The subscription should no longer exist and have no remaining relations
@@ -160,11 +187,9 @@ describe("Subscription Request / Reject", () => {
     test("with typology expert branche", async () => {
       const subreq = await prismaClient.subscriptionRequest.create({
         data: {
-          ...subreqSampleMin,
+          ...subreqWithDepts,
+          accountEmail: __TEST_IAM_PASS_CHECK__,
           typology: "expertBranche",
-          departmentsWithOrganismMethods: {
-            create: subreqOnDepSample,
-          },
           subscriptionRequestOnConventionCollective: {
             create: [{ ccnId: ccn3133Id }],
           },
@@ -179,14 +204,39 @@ describe("Subscription Request / Reject", () => {
         }),
         payload: {
           requestType: "mutation",
-          endpoint: "subscription_rejectSubscriptionRequest",
+          endpoint: "subscription_validateSubscriptionRequest",
           arguments: { subscriptionRequestId: subreqId },
           returnFields: "",
         },
       });
       expect(resp.statusCode).toEqual(200);
       expect(resp.json()).toMatchObject({
-        data: { subscription_rejectSubscriptionRequest: "Ok" },
+        data: { subscription_validateSubscriptionRequest: "Ok" },
+      });
+
+      // A new organism should have been created
+      const organism = await prismaClient.organism.findFirst({
+        where: { siret: subreqSampleMin.companySiret },
+        include: {
+          organismOnConventionCollective: true,
+        },
+      });
+      expect(organism).toMatchObject({
+        label: subreqSampleMin.companyName,
+        legalStatus: subreqSampleMin.companyLegalStatus,
+        address: subreqSampleMin.companyAddress,
+        zip: subreqSampleMin.companyZipCode,
+        city: subreqSampleMin.companyCity,
+        contactAdministrativeEmail: __TEST_IAM_PASS_CHECK__,
+        contactCommercialName: `${subreqSampleMin.companyBillingContactLastname} ${subreqSampleMin.companyBillingContactFirstname}`,
+        contactCommercialEmail: subreqSampleMin.companyBillingEmail,
+        isActive: true,
+        typology: "expertBranche",
+        organismOnConventionCollective: [
+          {
+            ccnId: ccn3133Id,
+          },
+        ],
       });
 
       // The subscription should no longer exist and have no remaining relations
@@ -215,11 +265,9 @@ describe("Subscription Request / Reject", () => {
     test("with typology expert filière", async () => {
       const subreq = await prismaClient.subscriptionRequest.create({
         data: {
-          ...subreqSampleMin,
+          ...subreqWithDepts,
+          accountEmail: __TEST_IAM_PASS_CHECK__,
           typology: "expertFiliere",
-          departmentsWithOrganismMethods: {
-            create: subreqOnDepSample,
-          },
           subscriptionRequestOnDomaine: {
             create: [{ domaineId: domaineGdId }],
           },
@@ -234,14 +282,39 @@ describe("Subscription Request / Reject", () => {
         }),
         payload: {
           requestType: "mutation",
-          endpoint: "subscription_rejectSubscriptionRequest",
+          endpoint: "subscription_validateSubscriptionRequest",
           arguments: { subscriptionRequestId: subreqId },
           returnFields: "",
         },
       });
       expect(resp.statusCode).toEqual(200);
       expect(resp.json()).toMatchObject({
-        data: { subscription_rejectSubscriptionRequest: "Ok" },
+        data: { subscription_validateSubscriptionRequest: "Ok" },
+      });
+
+      // A new organism should have been created
+      const organism = await prismaClient.organism.findFirst({
+        where: { siret: subreqSampleMin.companySiret },
+        include: {
+          organismOnDomaine: true,
+        },
+      });
+      expect(organism).toMatchObject({
+        label: subreqSampleMin.companyName,
+        legalStatus: subreqSampleMin.companyLegalStatus,
+        address: subreqSampleMin.companyAddress,
+        zip: subreqSampleMin.companyZipCode,
+        city: subreqSampleMin.companyCity,
+        contactAdministrativeEmail: __TEST_IAM_PASS_CHECK__,
+        contactCommercialName: `${subreqSampleMin.companyBillingContactLastname} ${subreqSampleMin.companyBillingContactFirstname}`,
+        contactCommercialEmail: subreqSampleMin.companyBillingEmail,
+        isActive: true,
+        typology: "expertFiliere",
+        organismOnDomaine: [
+          {
+            domaineId: domaineGdId,
+          },
+        ],
       });
 
       // The subscription should no longer exist and have no remaining relations
