@@ -649,7 +649,7 @@ model SubscriptionRequest {
   accountPhoneNumber                        String                                      @map("account_phone_number") @db.VarChar(50)
   typology                                  OrganismTypology                            @map("typology")
   createdAt                                 DateTime                                    @default(now()) @map("created_at") @db.Timestamptz(6)
-  subscriptionRequestOnDomaine              SubscriptionRequestOnDomaine[]
+  subscriptionRequestOnDomaine              SubscriptionRequestOnDomaine[]        
   subscriptionRequestOnConventionCollective SubscriptionRequestOnConventionCollective[]
   departmentsWithOrganismMethods            SubscriptionRequestsOnDepartments[]
   companyWebsite                            String?                                     @map("company_website") @db.VarChar(255)
@@ -687,7 +687,7 @@ view AvailableCertificationsByDepartments {
 }
 
 view ActiveOrganismsByAvailableCertificationsAndDepartments {
-  organism        Organism      @relation(fields: [organismId], references: [id])
+  organism        Organism      @relation(fields: [organismId], references: [id], onDelete: Cascade)
   certification   Certification @relation(fields: [certificationId], references: [id])
   department      Department    @relation(fields: [departmentId], references: [id])
   organismId      String        @map("organism_id") @db.Uuid
@@ -712,7 +712,7 @@ model Domaine {
 model SubscriptionRequestOnDomaine {
   domaine               Domaine             @relation(fields: [domaineId], references: [id])
   domaineId             String              @map("domaine_id") @db.Uuid
-  subscriptionRequest   SubscriptionRequest @relation(fields: [subscriptionRequestId], references: [id])
+  subscriptionRequest   SubscriptionRequest @relation(fields: [subscriptionRequestId], references: [id], onDelete: Cascade)
   subscriptionRequestId String              @map("subscription_request_id") @db.Uuid
   createdAt             DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt             DateTime?           @map("updated_at") @db.Timestamptz(6)
@@ -724,7 +724,7 @@ model SubscriptionRequestOnDomaine {
 model OrganismOnDomaine {
   domaine    Domaine   @relation(fields: [domaineId], references: [id])
   domaineId  String    @map("domaine_id") @db.Uuid
-  organism   Organism  @relation(fields: [organismId], references: [id])
+  organism   Organism  @relation(fields: [organismId], references: [id], onDelete: Cascade)
   organismId String    @map("organism_id") @db.Uuid
   createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt  DateTime? @map("updated_at") @db.Timestamptz(6)
@@ -759,7 +759,7 @@ model ConventionCollective {
 model OrganismOnConventionCollective {
   ccn        ConventionCollective @relation(fields: [ccnId], references: [id])
   ccnId      String               @map("ccn_id") @db.Uuid
-  organism   Organism             @relation(fields: [organismId], references: [id])
+  organism   Organism             @relation(fields: [organismId], references: [id], onDelete: Cascade)
   organismId String               @map("organism_id") @db.Uuid
   createdAt  DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt  DateTime?            @map("updated_at") @db.Timestamptz(6)
@@ -783,7 +783,7 @@ model CertificationOnConventionCollective {
 model SubscriptionRequestOnConventionCollective {
   ccn                   ConventionCollective @relation(fields: [ccnId], references: [id])
   ccnId                 String               @map("ccn_id") @db.Uuid
-  subscriptionRequest   SubscriptionRequest  @relation(fields: [subscriptionRequestId], references: [id])
+  subscriptionRequest   SubscriptionRequest  @relation(fields: [subscriptionRequestId], references: [id], onDelete: Cascade)
   subscriptionRequestId String               @map("subscription_request_id") @db.Uuid
   createdAt             DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt             DateTime?            @map("updated_at") @db.Timestamptz(6)
