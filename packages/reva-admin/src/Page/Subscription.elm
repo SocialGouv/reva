@@ -101,14 +101,14 @@ viewContent context errors subscription =
             , class "flex flex-wrap"
             ]
             [ View.errors errors
-            , h1 [ class "w-full mb-0" ] [ text subscription.accountFirstname, text " ", text subscription.accountLastname ]
+            , h1 [ class "w-full mb-0" ] [ text subscription.companyName ]
             , viewTitle "Informations générales"
+            , viewInfoText "Nom de l'architecte de parcours" [ subscription.accountFirstname, subscription.accountLastname ]
             , viewInfoText "Adresse email de l'architecte de parcours" [ subscription.accountEmail ]
             , viewInfoText "Téléphone de l'architecte de parcours" [ subscription.accountPhoneNumber ]
             , viewTitle "Informations juridiques de la structure"
             , viewInfoText "SIRET de la structure" [ subscription.companySiret ]
             , viewInfoText "Forme juridique" [ subscription.companyLegalStatus |> LegalStatus.toString ]
-            , viewInfoText "Raison sociale" [ subscription.companyName ]
             , viewInfoText "Adresse de la structure"
                 [ subscription.companyAddress
                 , subscription.companyZipCode
