@@ -116,6 +116,17 @@ selection =
         |> with Admin.Object.SubscriptionRequest.companyBillingPhoneNumber
         |> with Admin.Object.SubscriptionRequest.companyBic
         |> with Admin.Object.SubscriptionRequest.companyIban
+        |> with
+            (SelectionSet.map
+                (\website ->
+                    if website == Just "" then
+                        Nothing
+
+                    else
+                        website
+                )
+                Admin.Object.SubscriptionRequest.companyWebsite
+            )
         |> with Admin.Object.SubscriptionRequest.accountFirstname
         |> with Admin.Object.SubscriptionRequest.accountLastname
         |> with Admin.Object.SubscriptionRequest.accountEmail

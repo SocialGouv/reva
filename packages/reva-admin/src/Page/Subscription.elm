@@ -6,7 +6,7 @@ module Page.Subscription exposing
     , view
     )
 
-import Accessibility exposing (dd, dl, dt, h1, h2)
+import Accessibility exposing (a, dd, dl, dt, h1, h2)
 import Admin.Enum.LegalStatus as LegalStatus
 import Admin.Enum.OrganismTypology exposing (OrganismTypology(..))
 import Api.Subscription
@@ -16,7 +16,7 @@ import Data.Context exposing (Context)
 import Data.Referential exposing (DepartmentWithOrganismMethods)
 import Data.Subscription exposing (Subscription, SubscriptionSummary)
 import Html exposing (Html, div, li, text, ul)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, href)
 import RemoteData exposing (RemoteData(..))
 import Route
 import String exposing (String)
@@ -106,6 +106,11 @@ viewContent context errors subscription =
             , viewInfoText "Nom de l'architecte de parcours" [ subscription.accountFirstname, subscription.accountLastname ]
             , viewInfoText "Adresse email de l'architecte de parcours" [ subscription.accountEmail ]
             , viewInfoText "Téléphone de l'architecte de parcours" [ subscription.accountPhoneNumber ]
+            , viewInfo "Site internet de la structure"
+                [ subscription.companyWebsite
+                    |> Maybe.map (\website -> a [ href website ] [ text website ])
+                    |> Maybe.withDefault (text "Non spécifié")
+                ]
             , viewTitle "Informations juridiques de la structure"
             , viewInfoText "SIRET de la structure" [ subscription.companySiret ]
             , viewInfoText "Forme juridique" [ subscription.companyLegalStatus |> LegalStatus.toString ]

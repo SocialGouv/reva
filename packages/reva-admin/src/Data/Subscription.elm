@@ -31,6 +31,7 @@ type alias Subscription =
     , companyBillingPhoneNumber : String
     , companyBic : String
     , companyIban : String
+    , companyWebsite : Maybe String
     , accountFirstname : String
     , accountLastname : String
     , accountEmail : String
