@@ -17,8 +17,6 @@ interface ProfessionalSpaceInfo {
   companyBillingContactLastname: string;
   companyBillingEmail: string;
   companyBillingPhoneNumber: string;
-  companyBic: string;
-  companyIban: string;
   accountFirstname: string;
   accountLastname: string;
   accountEmail: string;
@@ -62,8 +60,6 @@ type BillingInfoStepData = Pick<
   | "companyBillingContactLastname"
   | "companyBillingEmail"
   | "companyBillingPhoneNumber"
-  | "companyBic"
-  | "companyIban"
 >;
 
 type AccountInfoStepData = Pick<

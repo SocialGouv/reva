@@ -12,11 +12,6 @@ const zodSchema = z.object({
   companyBillingContactLastname: z.string().min(1, "obligatoire"),
   companyBillingEmail: z.string().email("mauvais format"),
   companyBillingPhoneNumber: z.string().min(1, "obligatoire"),
-  companyBic: z.string().length(8, "8 caractères"),
-  companyIban: z
-    .string()
-    .min(1, "obligatoire")
-    .max(34, "34 caractères maximum"),
 });
 
 type BillingInfoStepFormSchema = z.infer<typeof zodSchema>;
@@ -93,20 +88,6 @@ export const BillingInfoStepForm = () => {
               autoComplete: "tel",
               type: "tel",
             }}
-          />
-          <Input
-            label="BIC"
-            hintText="Format attendu: 8 caractères"
-            state={errors.companyBic ? "error" : "default"}
-            stateRelatedMessage={errors.companyBic?.message}
-            nativeInputProps={{ ...register("companyBic") }}
-          />
-          <Input
-            label="IBAN"
-            hintText="Format attendu: entre 27 et 34 caractères"
-            state={errors.companyIban ? "error" : "default"}
-            stateRelatedMessage={errors.companyIban?.message}
-            nativeInputProps={{ ...register("companyIban") }}
           />
         </fieldset>
         <div className="flex gap-2 ml-auto mt-4">
