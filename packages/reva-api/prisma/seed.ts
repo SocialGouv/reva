@@ -1,14 +1,16 @@
 import * as fs from "fs";
 import * as path from "path";
 
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import * as csv from "fast-csv";
 
 import { logger } from "../infra/logger";
+import { readCsvRows } from "./read-csv";
 
 const prisma = new PrismaClient();
 
 async function main() {
+
   const certificationsCount = await prisma.certification.count();
 
   if (certificationsCount === 0) {
@@ -725,29 +727,25 @@ async function main() {
     });
   }
 
+  // Domaines : referentials/domaines.csv
   const domaineCount = await prisma.domaine.count();
-
   if (domaineCount === 0) {
     await prisma.domaine.createMany({
-      data: [
-        { code: "M", label: "Métallurgie" },
-        { code: "GD", label: "Grande distribution" },
-      ],
+      data: await readCsvRows<Prisma.DomaineCreateManyInput>(
+        "./referentials/domaines.csv",
+        ["label", "id", "code", undefined]
+      ),
     });
   }
 
+  // Conventions collectives : referentials/conventions-collectives.csv
   const ccnCount = await prisma.conventionCollective.count();
-
   if (ccnCount === 0) {
     await prisma.conventionCollective.createMany({
-      data: [
-        { code: "3133", label: "Charcuterie de détail" },
-        { code: "3050", label: "Miroiterie" },
-        {
-          code: "3340",
-          label: "Textiles artificiels et synthètiques et produits assimilés",
-        },
-      ],
+      data: await readCsvRows<Prisma.ConventionCollectiveCreateManyInput>(
+        "./referentials/conventions-collectives.csv",
+        ["label", "id", undefined, "code", undefined, undefined]
+      ),
     });
   }
 }
