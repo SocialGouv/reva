@@ -14,12 +14,18 @@ import {
   __TEST_IAM_PASS_CHECK__,
 } from "../domain/test-const";
 import { subreqSampleMin } from "./fixture";
+import { adminAccount1, organismIperia } from "../../../../test/fixtures/people-organisms";
 
 let subreqWithDepts: Prisma.SubscriptionRequestCreateInput,
   ccn3133Id: string,
   domaineGdId: string;
 
 describe("Subscription Request / Validate", () => {
+  beforeEach(async () => {
+    await prismaClient.organism.deleteMany();
+    await prismaClient.account.deleteMany();
+  });
+
   beforeAll(async () => {
     // await prismaClient.organism.deleteMany();
     const parisId = (
@@ -67,11 +73,6 @@ describe("Subscription Request / Validate", () => {
     };
   });
 
-  beforeEach(async () => {
-    await prismaClient.organism.deleteMany();
-    await prismaClient.account.deleteMany();
-  });
-
   test("Should fail when not exist", async () => {
     const resp = await injectGraphql({
       fastify: (global as any).fastify,
@@ -112,9 +113,107 @@ describe("Subscription Request / Validate", () => {
     expect(resp.json()).toHaveProperty("errors");
   });
 
-  test.todo("Should fail when keycloak account already exist with same Email");
-  test.todo("Should fail when organism already exist with same Siret");
-  test.todo("Should fail when account already exist with same Email");
+  test("Should fail when keycloak account already exist with same Email", async () => {
+    const res = await prismaClient.subscriptionRequest.create({
+      data: {
+        ...subreqSampleMin,
+        accountEmail: __TEST_IAM_FAIL_CHECK__,
+        typology: "generaliste",
+      }
+    });
+    const subreqId = res.id;
+    const resp = await injectGraphql({
+      fastify: (global as any).fastify,
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: "blabla",
+      }),
+      payload: {
+        requestType: "mutation",
+        endpoint: "subscription_validateSubscriptionRequest",
+        arguments: { subscriptionRequestId: subreqId },
+        returnFields: "",
+      },
+    });
+    expect(resp.statusCode).toEqual(200);
+    const result = resp.json();
+    expect(result).toHaveProperty("errors");
+    expect(result.errors[0].extensions.code).toBe(
+      "ACCOUNT_IN_IAM_ALREADY_EXISTS"
+    );
+  });
+
+  test("Should fail when organism already exist with same Siret", async () => {
+    const sameSiret = "0101010101";
+    await prismaClient.organism.create({
+      data: {
+        ...organismIperia,
+        siret:sameSiret,
+      }
+    });
+    const subreq = await prismaClient.subscriptionRequest.create({
+      data: {
+        ...subreqWithDepts,
+        companySiret: sameSiret,
+      },
+    });
+    const subreqId = subreq.id;
+    const resp = await injectGraphql({
+      fastify: (global as any).fastify,
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: "blabla",
+      }),
+      payload: {
+        requestType: "mutation",
+        endpoint: "subscription_validateSubscriptionRequest",
+        arguments: { subscriptionRequestId: subreqId },
+        returnFields: "",
+      },
+    });
+    expect(resp.statusCode).toEqual(200);
+    const result = resp.json();
+    expect(result).toHaveProperty("errors");
+    expect(result.errors[0].extensions.code).toBe(
+      "ORGANISM_ALREADY_EXISTS"
+    );
+  });
+
+  test("Should fail when account already exist with same Email", async () => {
+    const sameEmail = "0101010101@same-email.com";
+    await prismaClient.account.create({
+      data: {
+        ...adminAccount1,
+        email:sameEmail,
+      }
+    });
+    const subreq = await prismaClient.subscriptionRequest.create({
+      data: {
+        ...subreqWithDepts,
+        accountEmail: sameEmail,
+      },
+    });
+    const subreqId = subreq.id;
+    const resp = await injectGraphql({
+      fastify: (global as any).fastify,
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: "blabla",
+      }),
+      payload: {
+        requestType: "mutation",
+        endpoint: "subscription_validateSubscriptionRequest",
+        arguments: { subscriptionRequestId: subreqId },
+        returnFields: "",
+      },
+    });
+    expect(resp.statusCode).toEqual(200);
+    const result = resp.json();
+    expect(result).toHaveProperty("errors");
+    expect(result.errors[0].extensions.code).toBe(
+      "ACCOUNT_ALREADY_EXISTS"
+    );
+  });
 
   describe("Should fulfill validation", () => {
     test("with typology généraliste", async () => {
