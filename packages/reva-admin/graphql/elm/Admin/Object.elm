@@ -21,10 +21,6 @@ type Candidacy
     = Candidacy
 
 
-type CandidacyCountByStatus
-    = CandidacyCountByStatus
-
-
 type CandidacyDropOut
     = CandidacyDropOut
 
@@ -35,10 +31,6 @@ type CandidacyStatus
 
 type CandidacySummary
     = CandidacySummary
-
-
-type CandidacySummaryFilterInfo
-    = CandidacySummaryFilterInfo
 
 
 type Candidate

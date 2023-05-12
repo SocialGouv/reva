@@ -12,7 +12,7 @@ import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep)
 import Api.Candidacy
 import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
-import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyCountByStatus, CandidacyId, CandidacySummary)
+import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
@@ -36,12 +36,10 @@ import View.Helpers exposing (dataTest)
 type Msg
     = GotCandidaciesResponse (RemoteData String (List CandidacySummary))
     | UserAddedFilter String
-    | GotCandidacyCountByStatus (RemoteData String CandidacyCountByStatus)
 
 
 type alias State =
     { candidacies : RemoteData String (List CandidacySummary)
-    , candidacyCountByStatus : RemoteData String CandidacyCountByStatus
     }
 
 
@@ -67,14 +65,11 @@ init context maybeStatusFilters =
         defaultModel : Model
         defaultModel =
             { filters = { search = Nothing, status = maybeStatusFilters }
-            , state = { candidacies = RemoteData.Loading, candidacyCountByStatus = RemoteData.Loading }
+            , state = { candidacies = RemoteData.Loading }
             }
 
         defaultCmd =
-            Cmd.batch
-                [ Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse
-                , Api.Candidacy.getCandidacyCountByStatus context.endpoint context.token GotCandidacyCountByStatus
-                ]
+            Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse
     in
     ( defaultModel, defaultCmd )
 
@@ -82,11 +77,6 @@ init context maybeStatusFilters =
 withCandidacies : RemoteData String (List CandidacySummary) -> State -> State
 withCandidacies candidacies state =
     { state | candidacies = candidacies }
-
-
-withCandidacyCountByStatus : RemoteData String CandidacyCountByStatus -> State -> State
-withCandidacyCountByStatus candidacyCountByStatus state =
-    { state | candidacyCountByStatus = candidacyCountByStatus }
 
 
 
@@ -122,11 +112,8 @@ view context model =
                     , candidacySkeleton
                     ]
                 ]
-
-        candidaciesAndCountByStatus =
-            RemoteData.map2 Tuple.pair model.state.candidacies model.state.candidacyCountByStatus
     in
-    case ( context.isScrollingToTop, candidaciesAndCountByStatus ) of
+    case ( context.isScrollingToTop, model.state.candidacies ) of
         ( _, NotAsked ) ->
             div [] []
 
@@ -139,7 +126,7 @@ view context model =
         ( _, Failure errors ) ->
             div [ class "text-red-500" ] [ text errors ]
 
-        ( _, Success ( candidacies, candidacyCountByStatus ) ) ->
+        ( _, Success candidacies ) ->
             let
                 preFilteredCandidacies =
                     case model.filters.status of
@@ -170,7 +157,7 @@ view context model =
             preFilteredCandidacies
                 |> filter Candidacy.filterByWords .search
                 |> filter Candidacy.filterByStatus .status
-                |> viewContent context model.filters candidacyCountByStatus
+                |> viewContent context model.filters candidacies
 
 
 filterByStatusTitle : String
@@ -181,10 +168,10 @@ filterByStatusTitle =
 viewContent :
     Context
     -> Filters
-    -> CandidacyCountByStatus
+    -> List CandidacySummary
     -> List CandidacySummary
     -> Html Msg
-viewContent context filters candidacyCountByStatus filteredCandidacies =
+viewContent context filters candidacies filteredCandidacies =
     let
         haveBothSameStatusAndNotDroppedOut : CandidacySummary -> CandidacySummary -> Bool
         haveBothSameStatusAndNotDroppedOut c1 c2 =
@@ -217,7 +204,7 @@ viewContent context filters candidacyCountByStatus filteredCandidacies =
     View.layout
         filterByStatusTitle
         upperNavContent
-        (View.Candidacy.Filters.view candidacyCountByStatus filters context)
+        (View.Candidacy.Filters.view candidacies filters context)
         (viewDirectoryPanel context candidaciesByStatus)
 
 
@@ -396,8 +383,3 @@ update context msg model =
                     model.filters
             in
             ( { model | filters = { filters | search = Just search } }, Cmd.none )
-
-        GotCandidacyCountByStatus remoteCandidacyCountByStatus ->
-            ( { model | state = model.state |> withCandidacyCountByStatus remoteCandidacyCountByStatus }
-            , Cmd.none
-            )

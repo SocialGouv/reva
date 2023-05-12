@@ -1,9 +1,8 @@
-module Api.Candidacy exposing (get, getCandidacies, getCandidacyCountByStatus, statusSelection, takeOver)
+module Api.Candidacy exposing (get, getCandidacies, statusSelection, takeOver)
 
 import Admin.Mutation as Mutation
 import Admin.Object
 import Admin.Object.Candidacy
-import Admin.Object.CandidacyCountByStatus
 import Admin.Object.CandidacyDropOut
 import Admin.Object.CandidacyStatus
 import Admin.Object.CandidacySummary
@@ -71,16 +70,6 @@ takeOver endpointGraphql token toMsg candidacyId =
     in
     Mutation.candidacy_takeOver (Mutation.CandidacyTakeOverRequiredArguments (Id id)) (SelectionSet.succeed ())
         |> Auth.makeMutation endpointGraphql token toMsg
-
-
-getCandidacyCountByStatus :
-    String
-    -> Token
-    -> (RemoteData String Data.Candidacy.CandidacyCountByStatus -> msg)
-    -> Cmd msg
-getCandidacyCountByStatus endpointGraphql token toMsg =
-    Query.candidacy_candidacyCountByStatus candidacyCountByStatusSelection
-        |> Auth.makeQuery endpointGraphql token toMsg
 
 
 selection : String -> SelectionSet (Maybe Data.Candidacy.Candidacy) Graphql.Operation.RootQuery
@@ -172,22 +161,6 @@ summarySelection =
                 (Maybe.map toDateWithLabels)
                 Admin.Object.CandidacySummary.sentAt
             )
-
-
-candidacyCountByStatusSelection : SelectionSet Data.Candidacy.CandidacyCountByStatus Admin.Object.CandidacyCountByStatus
-candidacyCountByStatusSelection =
-    SelectionSet.succeed Data.Candidacy.CandidacyCountByStatus
-        |> with Admin.Object.CandidacyCountByStatus.activeHorsAbandon
-        |> with Admin.Object.CandidacyCountByStatus.abandon
-        |> with Admin.Object.CandidacyCountByStatus.reorienteeHorsAbandon
-        |> with Admin.Object.CandidacyCountByStatus.archiveHorsAbandonHorsReorientation
-        |> with Admin.Object.CandidacyCountByStatus.parcoursConfirmeHorsAbandon
-        |> with Admin.Object.CandidacyCountByStatus.priseEnChargeHorsAbandon
-        |> with Admin.Object.CandidacyCountByStatus.parcoursEnvoyeHorsAbandon
-        |> with Admin.Object.CandidacyCountByStatus.demandeFinancementEnvoyeHorsAbandon
-        |> with Admin.Object.CandidacyCountByStatus.demandePaiementEnvoyeeHorsAbandon
-        |> with Admin.Object.CandidacyCountByStatus.validationHorsAbandon
-        |> with Admin.Object.CandidacyCountByStatus.projetHorsAbandon
 
 
 

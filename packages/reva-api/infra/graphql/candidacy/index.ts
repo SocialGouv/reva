@@ -50,7 +50,6 @@ import * as reorientationReasonDb from "../../database/postgres/reorientationRea
 import * as trainingDb from "../../database/postgres/trainings";
 import { logger } from "../../logger";
 import { notifyNewCandidacy } from "../../mattermost";
-import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus";
 import { logCandidacyEvent } from "./logCandidacyEvent";
 import { resolversSecurityMap } from "./security";
 
@@ -200,7 +199,6 @@ const unsafeResolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
-    candidacy_candidacyCountByStatus: getCandidacyCountByStatus,
   },
   Mutation: {
     candidacy_createCandidacy: async (
