@@ -9,30 +9,7 @@ import {
   __TEST_IAM_FAIL_CHECK__,
   __TEST_IAM_PASS_CHECK__,
 } from "../domain/test-const";
-<<<<<<< HEAD
-
-const subreqSampleMin = {
-  companySiret: "1234888",
-  companyLegalStatus: LegalStatus.SAS,
-  companyName: "Jojo formation",
-  companyAddress: "64 boulevard du Général Leclerc",
-  companyZipCode: "35660",
-  companyCity: "Fougères",
-  companyBillingContactFirstname: "Josette",
-  companyBillingContactLastname: "Lacomptable",
-  companyBillingEmail: "billingjosette@jojo-formation.fr",
-  companyBillingPhoneNumber: "03214556789",
-  companyBic: "1232131",
-  companyIban: "234345343",
-  accountFirstname: "Jojo",
-  accountLastname: "Landouille",
-  accountEmail: "contact@jojo-formation.fr",
-  accountPhoneNumber: "03214556789",
-  qualiopiCertificateExpiresAt: new Date(2142, 0, 1),
-};
-=======
 import { subreqSampleMin } from "./fixture";
->>>>>>> 10a0cf94 (removed obsolete fields on API)
 
 afterEach(async () => {
   await prismaClient.account.deleteMany();

@@ -76,16 +76,6 @@ companyBillingPhoneNumber =
     Object.selectionForField "String" "companyBillingPhoneNumber" [] Decode.string
 
 
-companyBic : SelectionSet String Admin.Object.SubscriptionRequest
-companyBic =
-    Object.selectionForField "String" "companyBic" [] Decode.string
-
-
-companyIban : SelectionSet String Admin.Object.SubscriptionRequest
-companyIban =
-    Object.selectionForField "String" "companyIban" [] Decode.string
-
-
 accountFirstname : SelectionSet String Admin.Object.SubscriptionRequest
 accountFirstname =
     Object.selectionForField "String" "accountFirstname" [] Decode.string

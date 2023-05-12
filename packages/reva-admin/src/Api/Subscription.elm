@@ -114,8 +114,6 @@ selection =
         |> with Admin.Object.SubscriptionRequest.companyBillingContactLastname
         |> with Admin.Object.SubscriptionRequest.companyBillingEmail
         |> with Admin.Object.SubscriptionRequest.companyBillingPhoneNumber
-        |> with Admin.Object.SubscriptionRequest.companyBic
-        |> with Admin.Object.SubscriptionRequest.companyIban
         |> with
             (SelectionSet.map
                 (\website ->
