@@ -11,8 +11,6 @@ export const subreqSampleMin = {
   companyBillingContactLastname: "Lacomptable",
   companyBillingEmail: "billingjosette@jojo-formation.fr",
   companyBillingPhoneNumber: "03214556789",
-  companyBic: "1232131",
-  companyIban: "234345343",
   accountFirstname: "Jojo",
   accountLastname: "Landouille",
   accountEmail: "contact@jojo-formation.fr",

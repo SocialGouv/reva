@@ -17,8 +17,6 @@ interface SubscriptionRequestInput {
   companyBillingContactLastname: string;
   companyBillingEmail: string;
   companyBillingPhoneNumber: string;
-  companyBic: string;
-  companyIban: string;
   accountFirstname: string;
   accountLastname: string;
   accountEmail: string;

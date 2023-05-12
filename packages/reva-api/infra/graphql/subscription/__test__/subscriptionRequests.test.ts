@@ -2,29 +2,10 @@
  * @jest-environment ./test/fastify-test-env.ts
  */
 
-import { LegalStatus } from "@prisma/client";
-
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 import { prismaClient } from "../../../database/postgres/client";
-
-const subreqSampleMin = {
-  companySiret: "1234888",
-  companyLegalStatus: LegalStatus.SAS,
-  companyName: "Jojo formation",
-  companyBillingContactFirstname: "Josette",
-  companyBillingContactLastname: "Lacomptable",
-  companyBillingEmail: "billingjosette@jojo-formation.fr",
-  companyBillingPhoneNumber: "03214556789",
-  companyBic: "1232131",
-  companyIban: "234345343",
-  accountFirstname: "Jojo",
-  accountLastname: "Landouille",
-  accountEmail: "contact@jojo-formation.fr",
-  accountPhoneNumber: "03214556789",
-  typology: "generaliste" as const,
-  qualiopiCertificateExpiresAt: 5427820800000, //"2142-01-01" in milliseconds,
-};
+import { subreqSampleMin } from "./fixture";
 
 const subreqSampleAddress = {
   companyAddress: "64 boulevard du Général Leclerc",
@@ -33,9 +14,9 @@ const subreqSampleAddress = {
 };
 
 const subreqSampleFull = Object.assign(
-  {},
+  { typology: "generaliste" as const},
   subreqSampleMin,
-  subreqSampleAddress
+  subreqSampleAddress,
 );
 
 let subreq1Id: string,
@@ -76,7 +57,7 @@ test("Should fail to create a subscription request with missing address fields",
       arguments: { subscriptionRequest: subreqSampleMin },
       enumFields: ["companyLegalStatus"],
       returnFields:
-        "{ id, companySiret, companyLegalStatus, companyName, companyAddress, companyZipCode, companyCity, companyBillingContactFirstname, companyBillingContactLastname, companyBillingEmail, companyBillingPhoneNumber, companyBic, companyIban, accountFirstname, accountLastname, accountEmail, accountPhoneNumber }",
+        "{ id, companySiret, companyLegalStatus, companyName, companyAddress, companyZipCode, companyCity, companyBillingContactFirstname, companyBillingContactLastname, companyBillingEmail, companyBillingPhoneNumber, accountFirstname, accountLastname, accountEmail, accountPhoneNumber }",
     },
   });
   expect(resp.statusCode).toEqual(200);
@@ -102,7 +83,7 @@ test("Should create a subscription request", async () => {
       },
       enumFields: ["companyLegalStatus", "typology"],
       returnFields:
-        "{ id, companySiret, companyLegalStatus, companyName, companyAddress, companyZipCode, companyCity, companyBillingContactFirstname, companyBillingContactLastname, companyBillingEmail, companyBillingPhoneNumber, companyBic, companyIban, accountFirstname, accountLastname, accountEmail, accountPhoneNumber,qualiopiCertificateExpiresAt }",
+        "{ id, companySiret, companyLegalStatus, companyName, companyAddress, companyZipCode, companyCity, companyBillingContactFirstname, companyBillingContactLastname, companyBillingEmail, companyBillingPhoneNumber, accountFirstname, accountLastname, accountEmail, accountPhoneNumber, qualiopiCertificateExpiresAt }",
     },
   });
   expect(resp.statusCode).toEqual(200);

@@ -2,8 +2,6 @@
  * @jest-environment ./test/fastify-test-env.ts
  */
 
-import { LegalStatus } from "@prisma/client";
-
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 import { prismaClient } from "../../../database/postgres/client";
@@ -11,6 +9,7 @@ import {
   __TEST_IAM_FAIL_CHECK__,
   __TEST_IAM_PASS_CHECK__,
 } from "../domain/test-const";
+<<<<<<< HEAD
 
 const subreqSampleMin = {
   companySiret: "1234888",
@@ -31,6 +30,9 @@ const subreqSampleMin = {
   accountPhoneNumber: "03214556789",
   qualiopiCertificateExpiresAt: new Date(2142, 0, 1),
 };
+=======
+import { subreqSampleMin } from "./fixture";
+>>>>>>> 10a0cf94 (removed obsolete fields on API)
 
 afterEach(async () => {
   await prismaClient.account.deleteMany();

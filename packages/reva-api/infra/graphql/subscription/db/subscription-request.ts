@@ -44,8 +44,6 @@ export const createSubscriptionRequest = async (
         companyBillingEmail: subscriptionRequestInput.companyBillingEmail,
         companyBillingPhoneNumber:
           subscriptionRequestInput.companyBillingPhoneNumber,
-        companyBic: subscriptionRequestInput.companyBic,
-        companyIban: subscriptionRequestInput.companyIban,
         accountFirstname: subscriptionRequestInput.accountFirstname,
         accountLastname: subscriptionRequestInput.accountLastname,
         accountEmail: subscriptionRequestInput.accountEmail,
