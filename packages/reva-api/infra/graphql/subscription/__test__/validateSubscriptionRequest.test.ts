@@ -17,7 +17,7 @@ import { subreqSampleMin } from "./fixture";
 import { adminAccount1, organismIperia } from "../../../../test/fixtures/people-organisms";
 
 let subreqWithDepts: Prisma.SubscriptionRequestCreateInput,
-  ccn3139Id: string,
+  ccn3239Id: string,
   domaineGdId: string;
 
 describe("Subscription Request / Validate", () => {
@@ -39,10 +39,10 @@ describe("Subscription Request / Validate", () => {
       })
     )?.id;
 
-    ccn3139Id =
+    ccn3239Id =
       (
         await prismaClient.conventionCollective.findFirst({
-          where: { code: "3139" },
+          where: { code: "3239" },
         })
       )?.id ?? "";
 
@@ -290,7 +290,7 @@ describe("Subscription Request / Validate", () => {
           accountEmail: __TEST_IAM_PASS_CHECK__,
           typology: "expertBranche",
           subscriptionRequestOnConventionCollective: {
-            create: [{ ccnId: ccn3139Id }],
+            create: [{ ccnId: ccn3239Id }],
           },
         },
       });
@@ -333,7 +333,7 @@ describe("Subscription Request / Validate", () => {
         typology: "expertBranche",
         organismOnConventionCollective: [
           {
-            ccnId: ccn3139Id,
+            ccnId: ccn3239Id,
           },
         ],
       });
