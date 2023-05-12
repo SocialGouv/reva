@@ -10,6 +10,7 @@ infra/ftps/data/*
 .vscode
 .idea
 .run
+.nyc_output
 **/private
 **/coverage
 **/screenshots

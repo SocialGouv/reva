@@ -1,3 +1,5 @@
+import { randomUUID } from "crypto";
+
 import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
 import {
@@ -9,6 +11,7 @@ import {
   FunctionalError,
 } from "../../../../domain/types/functionalError";
 import { logger } from "../../../logger";
+import { __TEST_IAM_FAIL_CHECK__, __TEST_IAM_PASS_CHECK__ } from "./test-const";
 import { Account } from ".prisma/client";
 
 interface ValidateSubscriptionRequestDeps {
@@ -167,6 +170,24 @@ export const validateSubscriptionRequest = async (
   });
 
   const checkIfKeycloakAccountExists = EitherAsync.fromPromise(async () => {
+    if (
+      ($store.subreq as SubscriptionRequest).accountEmail ===
+      __TEST_IAM_FAIL_CHECK__
+    ) {
+      return Left(
+        new FunctionalError(
+          FunctionalCodeError.ACCOUNT_IN_IAM_ALREADY_EXISTS,
+          "TEST : le compte IAM existe déjà"
+        )
+      );
+    }
+    if (
+      ($store.subreq as SubscriptionRequest).accountEmail ===
+      __TEST_IAM_PASS_CHECK__
+    ) {
+      return Right(undefined);
+    }
+
     const eitherAccount = await deps.getIamAccount({
       email: ($store.subreq as SubscriptionRequest).accountEmail,
       username: "",
@@ -267,14 +288,15 @@ export const validateSubscriptionRequest = async (
   );
 
   const createKeycloakAccount = EitherAsync.fromPromise(async () =>
-    (
-      await deps.createAccountInIAM({
-        email: $store.subreq?.accountEmail ?? "",
-        firstname: $store.subreq?.accountFirstname ?? "",
-        lastname: $store.subreq?.accountLastname ?? "",
-        username: $store.subreq?.accountEmail ?? "",
-        group: "organism",
-      })
+    ($store.subreq?.accountEmail === __TEST_IAM_PASS_CHECK__
+      ? Right(randomUUID())
+      : await deps.createAccountInIAM({
+          email: $store.subreq?.accountEmail ?? "",
+          firstname: $store.subreq?.accountFirstname ?? "",
+          lastname: $store.subreq?.accountLastname ?? "",
+          username: $store.subreq?.accountEmail ?? "",
+          group: "organism",
+        })
     )
       .mapLeft(
         (error: string) =>
