@@ -11,7 +11,7 @@ import { subreqSampleMin } from "./fixture";
 
 
 let subreqId: string,
-  ccn3133Id: string,
+  ccn3239Id: string,
   domaineGdId: string,
   subreqOnDepSample: Array<any>;
 
@@ -36,10 +36,10 @@ describe("Subscription Request / Reject", () => {
       })
     )?.id;
 
-    ccn3133Id =
+    ccn3239Id =
       (
         await prismaClient.conventionCollective.findFirst({
-          where: { code: "3133" },
+          where: { code: "3239" },
         })
       )?.id ?? "";
 
@@ -166,7 +166,7 @@ describe("Subscription Request / Reject", () => {
             create: subreqOnDepSample,
           },
           subscriptionRequestOnConventionCollective: {
-            create: [{ ccnId: ccn3133Id }],
+            create: [{ ccnId: ccn3239Id }],
           },
         },
       });
