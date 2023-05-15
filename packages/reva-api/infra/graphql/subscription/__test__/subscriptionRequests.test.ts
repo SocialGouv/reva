@@ -14,9 +14,9 @@ const subreqSampleAddress = {
 };
 
 const subreqSampleFull = Object.assign(
-  { typology: "generaliste" as const},
+  { typology: "generaliste" as const },
   subreqSampleMin,
-  subreqSampleAddress,
+  subreqSampleAddress
 );
 
 let subreq1Id: string,
@@ -93,5 +93,8 @@ test("Should create a subscription request", async () => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { typology, ...subRequestWithoutTypology } = subreqSampleFull;
-  expect(subreq).toMatchObject(subRequestWithoutTypology);
+  expect(subreq).toMatchObject({
+    ...subRequestWithoutTypology,
+    qualiopiCertificateExpiresAt: 5427820800000,
+  });
 });
