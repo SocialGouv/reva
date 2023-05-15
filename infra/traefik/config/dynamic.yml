@@ -22,6 +22,12 @@ http:
       middlewares:
         - removeHeader
 
+    site-web-staging-subscription:
+      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/espace-professionnel/creation`)"
+      service: site-web-staging-subscription
+      middlewares:
+        - removeHeader
+
     espace-pro-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/admin`)"
       service: espace-pro-staging
@@ -144,6 +150,12 @@ http:
         passHostHeader: false
         servers:
           - url: "https://reva-staging.osc-fr1.scalingo.io/"
+
+    site-web-staging-subscription:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-staging-website.osc-fr1.scalingo.io/"
 
     espace-pro-staging:
       loadBalancer:
