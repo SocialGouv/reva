@@ -81,6 +81,12 @@ http:
       middlewares:
         - removeHeader
 
+    site-web-production-subscription:
+      rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/inscription-pro`)"
+      service: site-web-production-subscription
+      middlewares:
+        - removeHeader
+
     espace-pro-production:
       rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/admin`)"
       service: espace-pro-production
@@ -196,6 +202,12 @@ http:
         passHostHeader: false
         servers:
           - url: "https://reva-prod.osc-secnum-fr1.scalingo.io/"
+
+    site-web-production-subscription:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-prod-website.osc-secnum-fr1.scalingo.io/"
 
     espace-pro-production:
       loadBalancer:
