@@ -56,26 +56,6 @@ companyCity =
     Object.selectionForField "String" "companyCity" [] Decode.string
 
 
-companyBillingContactFirstname : SelectionSet String Admin.Object.SubscriptionRequest
-companyBillingContactFirstname =
-    Object.selectionForField "String" "companyBillingContactFirstname" [] Decode.string
-
-
-companyBillingContactLastname : SelectionSet String Admin.Object.SubscriptionRequest
-companyBillingContactLastname =
-    Object.selectionForField "String" "companyBillingContactLastname" [] Decode.string
-
-
-companyBillingEmail : SelectionSet String Admin.Object.SubscriptionRequest
-companyBillingEmail =
-    Object.selectionForField "String" "companyBillingEmail" [] Decode.string
-
-
-companyBillingPhoneNumber : SelectionSet String Admin.Object.SubscriptionRequest
-companyBillingPhoneNumber =
-    Object.selectionForField "String" "companyBillingPhoneNumber" [] Decode.string
-
-
 accountFirstname : SelectionSet String Admin.Object.SubscriptionRequest
 accountFirstname =
     Object.selectionForField "String" "accountFirstname" [] Decode.string

@@ -25,10 +25,6 @@ type alias Subscription =
     , companyAddress : String
     , companyZipCode : String
     , companyCity : String
-    , companyBillingContactFirstname : String
-    , companyBillingContactLastname : String
-    , companyBillingEmail : String
-    , companyBillingPhoneNumber : String
     , companyWebsite : Maybe String
     , accountFirstname : String
     , accountLastname : String
