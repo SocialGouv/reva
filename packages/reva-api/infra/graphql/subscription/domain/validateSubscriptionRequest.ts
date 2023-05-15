@@ -239,6 +239,8 @@ export const validateSubscriptionRequest = async (
         ),
         departmentsWithOrganismMethods:
           $store.subreq?.departmentsWithOrganismMethods ?? [],
+        qualiopiCertificateExpiresAt:
+          $store.subreq?.qualiopiCertificateExpiresAt,
       })
     )
       .mapLeft(

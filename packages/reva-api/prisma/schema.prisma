@@ -319,6 +319,7 @@ model Organism {
   activeOrganismsByAvailableCertificationsAndDepartments ActiveOrganismsByAvailableCertificationsAndDepartments[]
   organismOnDomaine                                      OrganismOnDomaine[]
   organismOnConventionCollective                         OrganismOnConventionCollective[]
+  qualiopiCertificateExpiresAt                           DateTime?                                                @map("qualiopi_certificate_expires_at")
 
   @@map("organism")
 }

@@ -149,6 +149,7 @@ export interface Organism {
   contactCommercialEmail: string;
   isActive: boolean;
   typology: OrganismTypology;
+  qualiopiCertificateExpiresAt: Date | null;
 }
 
 export interface BasicSkill {
