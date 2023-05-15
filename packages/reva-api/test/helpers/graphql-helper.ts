@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { FastifyInstance } from "fastify";
 
 type GraqhqlRequestArguments = Record<string, unknown>;
@@ -83,12 +84,19 @@ const graphqlArgumentValue = (
       return val.toString();
     case "boolean":
       return val ? "true" : "false";
+    case "object":
+      switch ((val as object).constructor.name) {
+        case "Date":
+          return `"${format(val as Date, "yyyy-MM-dd")}"`;
+        default:
+          return graphqlArgumentList(
+            val as GraqhqlRequestArguments,
+            enumFields,
+            true
+          );
+      }
     default:
-      return graphqlArgumentList(
-        val as GraqhqlRequestArguments,
-        enumFields,
-        true
-      );
+      throw new Error("Unhandled argument type");
   }
 };
 
