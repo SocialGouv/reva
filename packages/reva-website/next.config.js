@@ -5,6 +5,7 @@ const nextConfig = {
   swcMinify: true,
   images: { unoptimized: true }, //needed for next export
   trailingSlash: true,
+  basePath: "/inscription-pro",
   webpack: (config) => {
     config.module.rules.push({
       test: /\.woff2$/,
