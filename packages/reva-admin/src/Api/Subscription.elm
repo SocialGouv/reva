@@ -135,6 +135,7 @@ selection =
         |> with (Admin.Object.SubscriptionRequest.subscriptionRequestOnDomaine subscriptionRequestOnDomainSelection)
         |> with (Admin.Object.SubscriptionRequest.subscriptionRequestOnConventionCollective subscriptionRequestOnConventionCollectiveSelection)
         |> with (Admin.Object.SubscriptionRequest.departmentsWithOrganismMethods Api.Referential.departmentWithOrganismMethodsSelection)
+        |> with Admin.Object.SubscriptionRequest.qualiopiCertificateExpiresAt
 
 
 subscriptionRequestOnDomainSelection : SelectionSet Data.Referential.Domain Admin.Object.SubscriptionRequestOnDomaine

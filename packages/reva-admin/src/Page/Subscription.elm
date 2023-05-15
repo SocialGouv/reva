@@ -21,6 +21,7 @@ import RemoteData exposing (RemoteData(..))
 import Route
 import String exposing (String)
 import View
+import View.Date exposing (toSmallFormat)
 import View.Helpers exposing (dataTest)
 
 
@@ -111,6 +112,7 @@ viewContent context errors subscription =
                     |> Maybe.map (\website -> a [ href website ] [ text website ])
                     |> Maybe.withDefault (text "Non spécifié")
                 ]
+            , viewInfo "Date d'expiration de la certification Qualiopi VAE\n" [ text (toSmallFormat subscription.qualiopiCertificateExpiresAt) ]
             , viewTitle "Informations juridiques de la structure"
             , viewInfoText "SIRET de la structure" [ subscription.companySiret ]
             , viewInfoText "Forme juridique" [ subscription.companyLegalStatus |> LegalStatus.toString ]
