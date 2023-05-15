@@ -9,7 +9,6 @@ import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 import { prismaClient } from "../../../database/postgres/client";
 import { subreqSampleMin } from "./fixture";
 
-
 let subreqId: string,
   ccn3239Id: string,
   domaineGdId: string,

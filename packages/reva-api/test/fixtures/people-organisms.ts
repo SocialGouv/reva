@@ -42,8 +42,6 @@ const organismIperia = {
   address: "123 rue tabaga",
   city: "Paris",
   zip: "75017",
-  contactCommercialName: "Manu",
-  contactCommercialEmail: "manu@iperia.fr",
   contactAdministrativeEmail: "josette@iperia.fr",
   isActive: true,
   typology: "experimentation" as const,

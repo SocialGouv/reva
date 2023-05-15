@@ -13,12 +13,6 @@ interface SubscriptionRequestInput {
   companyAddress: string;
   companyZipCode: string;
   companyCity: string;
-  companyBillingContactFirstname: string;
-  companyBillingContactLastname: string;
-  companyBillingEmail: string;
-  companyBillingPhoneNumber: string;
-  companyBic: string;
-  companyIban: string;
   accountFirstname: string;
   accountLastname: string;
   accountEmail: string;

@@ -254,8 +254,6 @@ describe("Subscription Request / Validate", () => {
         zip: subreqSampleMin.companyZipCode,
         city: subreqSampleMin.companyCity,
         contactAdministrativeEmail: __TEST_IAM_PASS_CHECK__,
-        contactCommercialName: `${subreqSampleMin.companyBillingContactLastname} ${subreqSampleMin.companyBillingContactFirstname}`,
-        contactCommercialEmail: subreqSampleMin.companyBillingEmail,
         isActive: true,
         typology: "generaliste",
       });
@@ -327,8 +325,6 @@ describe("Subscription Request / Validate", () => {
         zip: subreqSampleMin.companyZipCode,
         city: subreqSampleMin.companyCity,
         contactAdministrativeEmail: __TEST_IAM_PASS_CHECK__,
-        contactCommercialName: `${subreqSampleMin.companyBillingContactLastname} ${subreqSampleMin.companyBillingContactFirstname}`,
-        contactCommercialEmail: subreqSampleMin.companyBillingEmail,
         isActive: true,
         typology: "expertBranche",
         organismOnConventionCollective: [
@@ -405,8 +401,6 @@ describe("Subscription Request / Validate", () => {
         zip: subreqSampleMin.companyZipCode,
         city: subreqSampleMin.companyCity,
         contactAdministrativeEmail: __TEST_IAM_PASS_CHECK__,
-        contactCommercialName: `${subreqSampleMin.companyBillingContactLastname} ${subreqSampleMin.companyBillingContactFirstname}`,
-        contactCommercialEmail: subreqSampleMin.companyBillingEmail,
         isActive: true,
         typology: "expertFiliere",
         organismOnDomaine: [

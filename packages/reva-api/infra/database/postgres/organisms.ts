@@ -114,8 +114,6 @@ export const createOrganism = async (data: {
   zip: string;
   city: string;
   contactAdministrativeEmail: string;
-  contactCommercialName: string;
-  contactCommercialEmail: string;
   siret: string;
   isActive: boolean;
   typology: OrganismTypology;

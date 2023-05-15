@@ -304,8 +304,6 @@ model Organism {
   zip                                                    String                                                   @db.VarChar(5)
   city                                                   String                                                   @db.VarChar(255)
   contactAdministrativeEmail                             String                                                   @unique @map("contact_administrative_email") @db.VarChar(255)
-  contactCommercialName                                  String                                                   @map("contact_commercial_name")
-  contactCommercialEmail                                 String                                                   @map("contact_commercial_email")
   siret                                                  String
   isActive                                               Boolean                                                  @default(false) @map("is_active")
   candidacies                                            Candidacy[]
@@ -638,12 +636,6 @@ model SubscriptionRequest {
   companyAddress                            String                                      @default("") @map("company_address") @db.VarChar(255)
   companyZipCode                            String                                      @default("") @map("company_zipcode") @db.VarChar(5)
   companyCity                               String                                      @default("") @map("company_city") @db.VarChar(100)
-  companyBillingContactFirstname            String                                      @map("company_billing_contact_firstname") @db.VarChar(100)
-  companyBillingContactLastname             String                                      @map("company_billing_contact_lastname") @db.VarChar(255)
-  companyBillingEmail                       String                                      @map("company_billing_email") @db.VarChar(255)
-  companyBillingPhoneNumber                 String                                      @map("company_billing_phone_number") @db.VarChar(50)
-  companyBic                                String                                      @map("company_bic") @db.VarChar(50)
-  companyIban                               String                                      @map("company_iban") @db.VarChar(50)
   accountFirstname                          String                                      @map("account_firstname") @db.VarChar(100)
   accountLastname                           String                                      @map("account_lastname") @db.VarChar(100)
   accountEmail                              String                                      @map("account_email") @db.VarChar(255)

@@ -47,8 +47,8 @@ export const AccountInfoStepForm = () => {
     <div className="flex flex-col min-w-[70vw]">
       <Stepper
         title="Saisir vos informations générales"
-        currentStep={5}
-        stepCount={5}
+        currentStep={4}
+        stepCount={4}
       />
       <div className="border-t border-gray-300  mb-7" />
       {submissionError && (

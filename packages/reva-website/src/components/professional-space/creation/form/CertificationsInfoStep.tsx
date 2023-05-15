@@ -100,7 +100,7 @@ export const CertificationsInfoStepForm = ({
         title="Identifier les certifications qui vous concernent"
         nextTitle="Saisir les informations pour la facturation"
         currentStep={3}
-        stepCount={5}
+        stepCount={4}
       />
       <div className="border-t border-gray-300  mb-7" />
       <FormOptionalFieldsDisclaimer className="mb-6" />

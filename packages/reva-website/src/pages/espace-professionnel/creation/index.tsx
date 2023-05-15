@@ -8,7 +8,6 @@ import {
   useProfessionalSpaceCreationContext,
 } from "@/components/professional-space/creation/context/ProfessionalSpaceCreationContext";
 import { CertificationsInfoStepForm } from "@/components/professional-space/creation/form/CertificationsInfoStep";
-import { BillingInfoStepForm } from "@/components/professional-space/creation/form/BillingInfoStepForm";
 import { AccountInfoStepForm } from "@/components/professional-space/creation/form/AccountInfoStepForm";
 
 import Head from "next/head";
@@ -86,8 +85,6 @@ const PageContent = ({
           availableDepartments={availableDepartments}
         />
       );
-    case "billingInfoStep":
-      return <BillingInfoStepForm />;
     case "accountInfoStep":
       return <AccountInfoStepForm />;
     default:

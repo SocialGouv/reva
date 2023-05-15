@@ -4,34 +4,12 @@
 
 import { randomUUID } from "crypto";
 
-import { LegalStatus } from "@prisma/client";
-
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 import { prismaClient } from "../../../database/postgres/client";
+import { subreqSampleMin } from "./fixture";
 
 const NB_SUBSCRIPTION_REQUESTS = 40;
-
-const subreqSample = {
-  companySiret: "1234888",
-  companyLegalStatus: LegalStatus.SAS,
-  companyName: "Jojo formation",
-  companyAddress: "64 boulevard du Général Leclerc",
-  companyZipCode: "35660",
-  companyCity: "Fougères",
-  companyBillingContactFirstname: "Josette",
-  companyBillingContactLastname: "Lacomptable",
-  companyBillingEmail: "billingjosette@jojo-formation.fr",
-  companyBillingPhoneNumber: "03214556789",
-  companyBic: "1232131",
-  companyIban: "234345343",
-  accountFirstname: "Jojo",
-  accountLastname: "Landouille",
-  accountEmail: "contact@jojo-formation.fr",
-  accountPhoneNumber: "03214556789",
-  typology: "generaliste" as const,
-  qualiopiCertificateExpiresAt: new Date(2142, 0, 1),
-};
 
 beforeAll(() => {
   return prismaClient.subscriptionRequest
@@ -86,10 +64,11 @@ const createManySubscriptionRequests = (nbSubReq: number) => {
   const subReqList = [];
   for (let i = 0; i < nbSubReq; i++) {
     subReqList.push({
-      ...subreqSample,
+      ...subreqSampleMin,
       accountEmail: `${randomUUID()}@mail.com`,
       companyName: randomUUID(),
       companySiret: randomUUID(),
+      typology: "generaliste" as const,
     });
   }
   return prismaClient.subscriptionRequest.createMany({

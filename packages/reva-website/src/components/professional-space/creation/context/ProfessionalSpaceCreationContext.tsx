@@ -13,12 +13,6 @@ interface ProfessionalSpaceInfo {
   companyAddress: string;
   companyZipCode: string;
   companyCity: string;
-  companyBillingContactFirstname: string;
-  companyBillingContactLastname: string;
-  companyBillingEmail: string;
-  companyBillingPhoneNumber: string;
-  companyBic: string;
-  companyIban: string;
   accountFirstname: string;
   accountLastname: string;
   accountEmail: string;
@@ -35,7 +29,6 @@ interface ProfessionalSpaceCreationState {
     | "qualiopiCertificateInfoStep"
     | "companyInfoStep"
     | "certificationsInfoStep"
-    | "billingInfoStep"
     | "accountInfoStep";
   professionalSpaceInfos: Partial<ProfessionalSpaceInfo>;
 }
@@ -56,16 +49,6 @@ type CompanyInfoStepData = Pick<
   | "companyWebsite"
 >;
 
-type BillingInfoStepData = Pick<
-  ProfessionalSpaceInfo,
-  | "companyBillingContactFirstname"
-  | "companyBillingContactLastname"
-  | "companyBillingEmail"
-  | "companyBillingPhoneNumber"
-  | "companyBic"
-  | "companyIban"
->;
-
 type AccountInfoStepData = Pick<
   ProfessionalSpaceInfo,
   "accountFirstname" | "accountLastname" | "accountEmail" | "accountPhoneNumber"
@@ -80,7 +63,6 @@ type ProfessionalSpaceCreationContext = ProfessionalSpaceCreationState & {
   ) => void;
   submitCompanyInfoStep: (stepData: CompanyInfoStepData) => void;
   submitCertificationsInfoStep: (stepData: CertificationsInfoStepData) => void;
-  submitBillingInfoStep: (stepData: BillingInfoStepData) => void;
   submitAccountInfoStep: (stepData: AccountInfoStepData) => void;
 };
 
@@ -113,11 +95,8 @@ export const ProfessionalSpaceCreationProvider = (props: {
       case "certificationsInfoStep":
         newCurrentStep = "companyInfoStep";
         break;
-      case "billingInfoStep":
-        newCurrentStep = "certificationsInfoStep";
-        break;
       case "accountInfoStep":
-        newCurrentStep = "billingInfoStep";
+        newCurrentStep = "certificationsInfoStep";
         break;
     }
     setState({ ...state, currentStep: newCurrentStep });
@@ -150,19 +129,6 @@ export const ProfessionalSpaceCreationProvider = (props: {
 
   const submitCertificationsInfoStep = useCallback(
     (stepData: CertificationsInfoStepData) => {
-      setState({
-        currentStep: "billingInfoStep",
-        professionalSpaceInfos: {
-          ...state.professionalSpaceInfos,
-          ...stepData,
-        },
-      });
-    },
-    [state]
-  );
-
-  const submitBillingInfoStep = useCallback(
-    (stepData: BillingInfoStepData) => {
       setState({
         currentStep: "accountInfoStep",
         professionalSpaceInfos: {
@@ -230,7 +196,6 @@ export const ProfessionalSpaceCreationProvider = (props: {
         submitQualiopiCertificateInfoStep,
         submitCompanyInfoStep,
         submitCertificationsInfoStep,
-        submitBillingInfoStep,
         submitAccountInfoStep,
       }}
     >
