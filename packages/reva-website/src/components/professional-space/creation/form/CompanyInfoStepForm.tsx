@@ -54,7 +54,7 @@ export const CompanyInfoStepForm = () => {
       <Stepper
         title="Saisir vos informations pour la structure"
         currentStep={2}
-        stepCount={5}
+        stepCount={4}
         nextTitle="Identifier les certifications qui vous concernent"
       />
       <div className="border-t border-gray-300  mb-7" />
