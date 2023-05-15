@@ -16,10 +16,6 @@ type SubscriptionRequest {
   companyAddress: String!
   companyZipCode: String!
   companyCity: String!
-  companyBillingContactFirstname: String!
-  companyBillingContactLastname: String!
-  companyBillingEmail: String!
-  companyBillingPhoneNumber: String!
   accountFirstname: String!
   accountLastname: String!
   accountEmail: String!
@@ -92,10 +88,6 @@ input SubscriptionRequestInput {
   companyAddress: String!
   companyZipCode: String!
   companyCity: String!
-  companyBillingContactFirstname: String!
-  companyBillingContactLastname: String!
-  companyBillingEmail: String!
-  companyBillingPhoneNumber: String!
   accountFirstname: String!
   accountLastname: String!
   accountEmail: String!

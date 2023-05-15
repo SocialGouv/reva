@@ -85,8 +85,6 @@ async function main() {
                   city: row.city.trim(),
                   contactAdministrativeEmail:
                     row.contact_administrative_email.trim(),
-                  contactCommercialName: row.contact_commercial_name.trim(),
-                  contactCommercialEmail: row.contact_commercial_email.trim(),
                   siret: row.siret.trim().replace(" ", ""),
                 },
                 create: {
@@ -96,8 +94,6 @@ async function main() {
                   city: row.city.trim(),
                   contactAdministrativeEmail:
                     row.contact_administrative_email.trim(),
-                  contactCommercialName: row.contact_commercial_name.trim(),
-                  contactCommercialEmail: row.contact_commercial_email.trim(),
                   siret: row.siret.trim().replace(" ", ""),
                   isActive: row.is_active.trim() === "1",
                   typology: "experimentation",

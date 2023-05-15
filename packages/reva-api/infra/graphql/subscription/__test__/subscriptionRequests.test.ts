@@ -57,7 +57,7 @@ test("Should fail to create a subscription request with missing address fields",
       arguments: { subscriptionRequest: subreqSampleMin },
       enumFields: ["companyLegalStatus"],
       returnFields:
-        "{ id, companySiret, companyLegalStatus, companyName, companyAddress, companyZipCode, companyCity, companyBillingContactFirstname, companyBillingContactLastname, companyBillingEmail, companyBillingPhoneNumber, accountFirstname, accountLastname, accountEmail, accountPhoneNumber }",
+        "{ id, companySiret, companyLegalStatus, companyName, companyAddress, companyZipCode, companyCity, accountFirstname, accountLastname, accountEmail, accountPhoneNumber }",
     },
   });
   expect(resp.statusCode).toEqual(200);
@@ -83,7 +83,7 @@ test("Should create a subscription request", async () => {
       },
       enumFields: ["companyLegalStatus", "typology"],
       returnFields:
-        "{ id, companySiret, companyLegalStatus, companyName, companyAddress, companyZipCode, companyCity, companyBillingContactFirstname, companyBillingContactLastname, companyBillingEmail, companyBillingPhoneNumber, accountFirstname, accountLastname, accountEmail, accountPhoneNumber, qualiopiCertificateExpiresAt }",
+        "{ id, companySiret, companyLegalStatus, companyName, companyAddress, companyZipCode, companyCity, accountFirstname, accountLastname, accountEmail, accountPhoneNumber, qualiopiCertificateExpiresAt }",
     },
   });
   expect(resp.statusCode).toEqual(200);
