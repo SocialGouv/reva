@@ -23,7 +23,7 @@ http:
         - removeHeader
 
     site-web-staging-subscription:
-      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/espace-professionnel/creation`)"
+      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/inscription-pro`)"
       service: site-web-staging-subscription
       middlewares:
         - removeHeader
