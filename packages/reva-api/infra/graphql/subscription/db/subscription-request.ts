@@ -76,6 +76,8 @@ export const createSubscriptionRequest = async (
             }),
           },
         },
+        qualiopiCertificateExpiresAt:
+          subscriptionRequestInput.qualiopiCertificateExpiresAt,
       },
     });
     return Right(withoutNullFields(subscriptionRequest) as SubscriptionRequest);

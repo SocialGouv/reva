@@ -17,4 +17,5 @@ export const subreqSampleMin = {
   accountLastname: "Landouille",
   accountEmail: "contact@jojo-formation.fr",
   accountPhoneNumber: "03214556789",
+  qualiopiCertificateExpiresAt: new Date(2142, 0, 1),
 };

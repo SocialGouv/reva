@@ -31,6 +31,7 @@ type SubscriptionRequest {
   subscriptionRequestOnConventionCollective: [SubscriptionRequestOnConventionCollective!]!
   departmentsWithOrganismMethods: [DepartmentWithOrganismMethods!]!
   companyWebsite: String
+  qualiopiCertificateExpiresAt: Timestamp!
 }
 
 type SubscriptionRequestOnDomaine {
@@ -109,6 +110,7 @@ input SubscriptionRequestInput {
   onSiteDepartmentsIds: [ID!]!
   remoteDepartmentsIds: [ID!]!
   companyWebsite: String
+  qualiopiCertificateExpiresAt: Timestamp!
 }
 
 type Mutation {

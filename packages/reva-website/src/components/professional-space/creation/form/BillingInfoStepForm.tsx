@@ -43,8 +43,8 @@ export const BillingInfoStepForm = () => {
     <div className="flex flex-col min-w-[70vw]">
       <Stepper
         title="Saisir vos informations pour la facturation"
-        currentStep={3}
-        stepCount={4}
+        currentStep={4}
+        stepCount={5}
         nextTitle="Saisir les informations générales"
       />
       <div className="border-t border-gray-300  mb-7" />
@@ -111,9 +111,9 @@ export const BillingInfoStepForm = () => {
         </fieldset>
         <div className="flex gap-2 ml-auto mt-4">
           <Button priority="secondary" onClick={goBackToPreviousStep}>
-            Revenir à l'étape 2
+            Revenir à l'étape 3
           </Button>
-          <Button type="submit"> Passer à l'étape 4</Button>
+          <Button type="submit"> Passer à l'étape 5</Button>
         </div>
       </form>
     </div>

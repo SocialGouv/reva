@@ -26,8 +26,11 @@ const zodSchema = z.object({
 type CompanyInfoStepFormSchema = z.infer<typeof zodSchema>;
 
 export const CompanyInfoStepForm = () => {
-  const { professionalSpaceInfos, submitCompanyInfoStep } =
-    useProfessionalSpaceCreationContext();
+  const {
+    professionalSpaceInfos,
+    submitCompanyInfoStep,
+    goBackToPreviousStep,
+  } = useProfessionalSpaceCreationContext();
   const {
     register,
     handleSubmit,
@@ -50,8 +53,8 @@ export const CompanyInfoStepForm = () => {
     <div className="flex flex-col min-w-[70vw]">
       <Stepper
         title="Saisir vos informations pour la structure"
-        currentStep={1}
-        stepCount={4}
+        currentStep={2}
+        stepCount={5}
         nextTitle="Identifier les certifications qui vous concernent"
       />
       <div className="border-t border-gray-300  mb-7" />
@@ -136,9 +139,12 @@ export const CompanyInfoStepForm = () => {
             }}
           />
         </fieldset>
-        <Button type="submit" className="ml-auto mt-4">
-          Passer à l'étape 2
-        </Button>
+        <div className="flex gap-2 ml-auto mt-4">
+          <Button priority="secondary" onClick={goBackToPreviousStep}>
+            Revenir à l'étape 1
+          </Button>
+          <Button type="submit">Passer à l'étape 3</Button>
+        </div>
       </form>
     </div>
   );

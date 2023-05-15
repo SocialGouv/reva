@@ -30,6 +30,7 @@ const subreqSample = {
   accountEmail: "contact@jojo-formation.fr",
   accountPhoneNumber: "03214556789",
   typology: "generaliste" as const,
+  qualiopiCertificateExpiresAt: new Date(2142, 0, 1),
 };
 
 beforeAll(() => {

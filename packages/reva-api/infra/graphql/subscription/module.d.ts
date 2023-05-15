@@ -29,6 +29,7 @@ interface SubscriptionRequestInput {
   onSiteDepartmentsIds: string[];
   remoteDepartmentsIds: string[];
   companyWebsite?: string;
+  qualiopiCertificateExpiresAt: Date;
 }
 
 interface DepartmentWithOrganismMethods {

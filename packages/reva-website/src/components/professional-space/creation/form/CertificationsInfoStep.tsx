@@ -94,19 +94,13 @@ export const CertificationsInfoStepForm = ({
     [setValue, typologyController.field]
   );
 
-  const toggle = (toggledId: string, current: string[]) => {
-    return current.includes(toggledId)
-      ? current.filter((id) => id !== toggledId)
-      : [...current, toggledId];
-  };
-
   return (
     <div className="flex flex-col min-w-[70vw]">
       <Stepper
         title="Identifier les certifications qui vous concernent"
         nextTitle="Saisir les informations pour la facturation"
-        currentStep={2}
-        stepCount={4}
+        currentStep={3}
+        stepCount={5}
       />
       <div className="border-t border-gray-300  mb-7" />
       <FormOptionalFieldsDisclaimer className="mb-6" />
@@ -155,7 +149,10 @@ export const CertificationsInfoStepForm = ({
             )}
             {currentTypology === "expertBranche" && (
               <>
-                <Notice className="mb-4" title="En tant qu’Architecte Accompagnateur de Parcours expert de branche(s), votre offre de service couvre l'ensemble des certifications rattachées aux conventions collectives sélectionnées." />
+                <Notice
+                  className="mb-4"
+                  title="En tant qu’Architecte Accompagnateur de Parcours expert de branche(s), votre offre de service couvre l'ensemble des certifications rattachées aux conventions collectives sélectionnées."
+                />
                 <MultiSelect
                   label="Conventions collectives auxquelles vous êtes rattaché"
                   hint="Vous pouvez cocher plusieurs conventions collectives"
@@ -227,9 +224,9 @@ export const CertificationsInfoStepForm = ({
         </div>
         <div className="flex gap-2 ml-auto mt-4">
           <Button priority="secondary" onClick={goBackToPreviousStep}>
-            Revenir à l'étape 1
+            Revenir à l'étape 2
           </Button>
-          <Button type="submit"> Passer à l'étape 3</Button>
+          <Button type="submit"> Passer à l'étape 4</Button>
         </div>
       </form>
     </div>

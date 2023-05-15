@@ -135,3 +135,8 @@ departmentsWithOrganismMethods object____ =
 companyWebsite : SelectionSet (Maybe String) Admin.Object.SubscriptionRequest
 companyWebsite =
     Object.selectionForField "(Maybe String)" "companyWebsite" [] (Decode.string |> Decode.nullable)
+
+
+qualiopiCertificateExpiresAt : SelectionSet Data.Scalar.Timestamp Admin.Object.SubscriptionRequest
+qualiopiCertificateExpiresAt =
+    Object.selectionForField "Data.Scalar.Timestamp" "qualiopiCertificateExpiresAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)

@@ -23,6 +23,7 @@ const subreqSampleMin = {
   accountEmail: "contact@jojo-formation.fr",
   accountPhoneNumber: "03214556789",
   typology: "generaliste" as const,
+  qualiopiCertificateExpiresAt: 5427820800000, //"2142-01-01" in milliseconds,
 };
 
 const subreqSampleAddress = {
@@ -101,7 +102,7 @@ test("Should create a subscription request", async () => {
       },
       enumFields: ["companyLegalStatus", "typology"],
       returnFields:
-        "{ id, companySiret, companyLegalStatus, companyName, companyAddress, companyZipCode, companyCity, companyBillingContactFirstname, companyBillingContactLastname, companyBillingEmail, companyBillingPhoneNumber, companyBic, companyIban, accountFirstname, accountLastname, accountEmail, accountPhoneNumber }",
+        "{ id, companySiret, companyLegalStatus, companyName, companyAddress, companyZipCode, companyCity, companyBillingContactFirstname, companyBillingContactLastname, companyBillingEmail, companyBillingPhoneNumber, companyBic, companyIban, accountFirstname, accountLastname, accountEmail, accountPhoneNumber,qualiopiCertificateExpiresAt }",
     },
   });
   expect(resp.statusCode).toEqual(200);
