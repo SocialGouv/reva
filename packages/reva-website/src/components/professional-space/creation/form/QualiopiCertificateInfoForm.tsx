@@ -53,7 +53,7 @@ export const QualiopiCertificateInfoStepForm = () => {
       <Stepper
         title="Certification de la structure"
         currentStep={1}
-        stepCount={5}
+        stepCount={4}
         nextTitle="Saisir les informations de la structure"
       />
       <div className="border-t border-gray-300  mb-7" />
