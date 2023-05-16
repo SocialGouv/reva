@@ -5,13 +5,11 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import * as csv from "fast-csv";
 
 import { logger } from "../infra/logger";
-import { mapCsvRows, readCsvRows } from "./read-csv";
-import { prismaClient } from "../infra/database/postgres/client";
+import { upsertCsvRows } from "./read-csv";
 
 const prisma = new PrismaClient();
 
 async function main() {
-
   const certificationsCount = await prisma.certification.count();
 
   if (certificationsCount === 0) {
@@ -728,53 +726,47 @@ async function main() {
     });
   }
 
-  let upsertChain: Promise<void>;
-
   // Domaines : referentials/domaines.csv
-  upsertChain = Promise.resolve();
-  await mapCsvRows<Prisma.DomaineCreateInput>(
-        "./referentials/domaines.csv",
-        ["label", "id", "code", undefined],  
-    ({id, label, code}) => {
-      upsertChain.then(() => prisma.domaine.upsert({
-        where: { id },
-        create: { id, label, code },
-        update: { label },
-      }));
-    }
-  ); 
-  await upsertChain;
+  await upsertCsvRows<Prisma.DomaineCreateInput, Prisma.DomaineUpsertArgs>({
+    filePath: "./referentials/domaines.csv",
+    headersDefinition: ["label", "id", "code", undefined],
+    transform: ({ id, label, code }) => ({
+      where: { id },
+      create: { id, label, code },
+      update: { label },
+    }),
+    upsertCommand: prisma.domaine.upsert,
+  });
 
   // Conventions collectives : referentials/conventions-collectives.csv
-  upsertChain = Promise.resolve();
-  await mapCsvRows<Prisma.ConventionCollectiveCreateInput>(
-        "./referentials/conventions-collectives.csv",
-        ["label", "id", undefined, "code", undefined, undefined ],  
-    ({id, label, code}) => {
-      upsertChain.then(() => prisma.conventionCollective.upsert({
-        where: { id },
-        create: { id, label, code },
-        update: { label },
-      }));
-    }
-  ); 
-  await upsertChain;
+  await upsertCsvRows<
+    Prisma.ConventionCollectiveCreateInput,
+    Prisma.ConventionCollectiveUpsertArgs
+  >({
+    filePath: "./referentials/conventions-collectives.csv",
+    headersDefinition: ["label", "id", undefined, "code", undefined, undefined],
+    transform: ({ id, label, code }) => ({
+      where: { id },
+      create: { id, label, code },
+      update: { label },
+    }),
+    upsertCommand: prisma.conventionCollective.upsert,
+  });
 
   // Types de diplôme : referentials/types-diplome.csv
-  upsertChain = Promise.resolve();
-  await mapCsvRows<Prisma.TypeDiplomeCreateInput>(
-    "./referentials/types-diplome.csv",
-    ["label", "id", undefined],
-    ({id, label}) => {
-      upsertChain.then(() => prisma.typeDiplome.upsert({
-        where: { id },
-        create: { id, label },
-        update: { label },
-      }));
-    }
-  ); 
-  await upsertChain;
-  
+  await upsertCsvRows<
+    Prisma.TypeDiplomeCreateInput,
+    Prisma.TypeDiplomeUpsertArgs
+  >({
+    filePath: "./referentials/types-diplome.csv",
+    headersDefinition: ["label", "id", undefined],
+    transform: ({ id, label }) => ({
+      where: { id },
+      create: { id, label },
+      update: { label },
+    }),
+    upsertCommand: prisma.typeDiplome.upsert,
+  });
 }
 
 main()
