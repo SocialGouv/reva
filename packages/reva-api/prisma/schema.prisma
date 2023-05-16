@@ -805,3 +805,10 @@ model ExamInfo {
 
   @@map("exam_info")
 }
+
+model TypeDiplome {
+  id    String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label String @db.VarChar(200)
+
+  @@map("type_diplome")
+}
