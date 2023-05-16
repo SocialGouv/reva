@@ -62,7 +62,7 @@ export const sendRegistrationEmail = async (email: string, token: string) => {
       })
     );
 
-  return sendEmailWithLink(email, token,"registration", htmlContent);
+  return sendEmailWithLink(email, token, "registration", htmlContent);
 };
 
 export const sendLoginEmail = async (email: string, token: string) => {
@@ -89,9 +89,6 @@ const sendEmailWithLink = async (
   const emailContent = htmlContent(url);
 
   if (process.env.NODE_ENV !== "production") {
-    logger.info("======= EMAIL CONTENT =======");
-    logger.info(emailContent.html);
-    logger.info("=========================");
     logger.info("======= EMAIL URL =======");
     logger.info(url);
     logger.info("=========================");
