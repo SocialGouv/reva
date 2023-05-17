@@ -71,7 +71,7 @@ export const batchPaymentRequest = async () => {
     );
 
     const fileDate = new Date().toLocaleDateString("sv").split("-").join("");
-    const fileName = `DR-${fileDate}.csv`;
+    const fileName = `DR_${fileDate}.csv`;
 
     await sendStreamToFtp({
       fileName,
