@@ -8,7 +8,6 @@ import { deleteCandidacy } from "../../../domain/features/deleteCandidacy";
 import { dropOutCandidacy } from "../../../domain/features/dropOutCandidacy";
 import { getAdmissibility } from "../../../domain/features/getAdmissibility";
 import { getBasicSkills } from "../../../domain/features/getBasicSkills";
-import { getCandidacySummaries } from "../../../domain/features/getCandidacies";
 import { getCandidacy } from "../../../domain/features/getCandidacy";
 import { getCompanionsForCandidacy } from "../../../domain/features/getCompanionsForCandidacy";
 import { getDeviceCandidacy } from "../../../domain/features/getDeviceCandidacy";
@@ -50,6 +49,7 @@ import * as reorientationReasonDb from "../../database/postgres/reorientationRea
 import * as trainingDb from "../../database/postgres/trainings";
 import { logger } from "../../logger";
 import { notifyNewCandidacy } from "../../mattermost";
+import { getCandidacySummaries } from "./features/getCandicacySummaries";
 import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus";
 import { logCandidacyEvent } from "./logCandidacyEvent";
 import { resolversSecurityMap } from "./security";
@@ -136,17 +136,19 @@ const unsafeResolvers = {
     },
     getCandidacies: async (
       _parent: unknown,
-      _params: { deviceId: string },
+      _params: { limit?: number; offset?: number },
       context: GraphqlContext
     ) => {
-      const result = await getCandidacySummaries({
-        hasRole: context.auth!.hasRole,
-        getCandidacySummaries: candidacyDb.getCandidacies,
-        getCandidacySummariesForUser: candidacyDb.getCandidaciesForUser,
-      })({ IAMId: context.auth!.userInfo!.sub });
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
+      try {
+        return getCandidacySummaries({
+          hasRole: context.auth.hasRole,
+          iAMId: context.auth?.userInfo?.sub || "",
+          ..._params,
+        });
+      } catch (e) {
+        logger.error(e);
+        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
+      }
     },
     getTrainings: async () => {
       const result = await getTrainings({

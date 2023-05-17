@@ -1,0 +1,181 @@
+import {
+  CandidaciesStatus,
+  Candidacy,
+  CandidacyDropOut,
+  Certification,
+  Department,
+  Organism,
+} from "@prisma/client";
+
+import * as domain from "../../../../domain/types/candidacy";
+import { processPaginationInfo } from "../../../../domain/utils/pagination";
+import { prismaClient } from "../../../database/postgres/client";
+
+const toDomainCandidacySummary = (
+  candidacy: Candidacy & {
+    candidacyStatuses: CandidaciesStatus[];
+    certification: CertificationSummary;
+    organism: Organism | null;
+    firstname: string | undefined;
+    lastname: string | undefined;
+    department: Department | null;
+    candidacyDropOut: CandidacyDropOut | null;
+  }
+) => {
+  const statuses = candidacy.candidacyStatuses;
+  const lastStatus = statuses.filter((status) => status.isActive)[0];
+  const sentStatus = statuses.filter(
+    (status) => status.status == "VALIDATION"
+  )?.[0];
+  const sentAt = sentStatus?.createdAt;
+
+  return {
+    id: candidacy.id,
+    deviceId: candidacy.deviceId,
+    organismId: candidacy.organismId,
+    organism: candidacy.organism,
+    certificationId: candidacy.certification?.id,
+    certification: candidacy.certification,
+    isCertificationPartial: candidacy.isCertificationPartial,
+    firstname: candidacy.firstname,
+    lastname: candidacy.lastname,
+    email: candidacy.email,
+    phone: candidacy.phone,
+    isDroppedOut: candidacy.candidacyDropOut !== null,
+    isReorientation: candidacy.reorientationReasonId !== null,
+    lastStatus,
+    dropOutReason: null,
+    reorientationReason: null,
+    department: candidacy.department,
+    createdAt: candidacy.createdAt,
+    sentAt,
+  };
+};
+
+type CertificationSummary = Pick<Certification, "id" | "label" | "acronym">;
+
+const toDomainCandidacySummaries = (
+  candidacies: (Candidacy & {
+    candidacyStatuses: CandidaciesStatus[];
+    certification: CertificationSummary;
+    organism: Organism | null;
+    firstname: string | undefined;
+    lastname: string | undefined;
+    department: Department | null;
+    candidacyDropOut: CandidacyDropOut | null;
+  })[]
+): domain.CandidacySummary[] => {
+  return candidacies.map(toDomainCandidacySummary);
+};
+
+export const getCandidaciesFromDb = async ({
+  limit,
+  offset,
+  organismAccountKeycloakId,
+}: {
+  limit: number;
+  offset: number;
+  organismAccountKeycloakId?: string;
+}) => {
+  const whereClause = organismAccountKeycloakId
+    ? {
+        organism: {
+          accounts: {
+            some: {
+              keycloakId: organismAccountKeycloakId,
+            },
+          },
+        },
+      }
+    : {};
+
+  const candidaciesCount = await prismaClient.candidacy.count({
+    where: whereClause,
+  });
+
+  const candidacies = await prismaClient.candidacy.findMany({
+    orderBy: [{ updatedAt: "desc" }],
+    where: whereClause,
+    include: {
+      candidacyStatuses: true,
+      certificationsAndRegions: {
+        select: {
+          certification: {
+            select: {
+              id: true,
+              label: true,
+              acronym: true,
+            },
+          },
+        },
+        where: {
+          isActive: true,
+        },
+      },
+      candidate: true,
+      organism: true,
+      department: true,
+      candidacyDropOut: true,
+    },
+    skip: offset,
+    take: limit,
+  });
+
+  return {
+    total: candidaciesCount,
+    candidacies: toDomainCandidacySummaries(
+      candidacies.map((c) => ({
+        ...c,
+        department: c.department,
+        certification: c.certificationsAndRegions[0]?.certification,
+        firstname: c.candidate?.firstname,
+        lastname: c.candidate?.lastname,
+        phone: c.candidate?.phone || c.phone,
+        email: c.candidate?.email || c.email,
+      }))
+    ),
+  };
+};
+
+export const getCandidacySummaries = async ({
+  hasRole,
+  iAMId,
+  limit,
+  offset,
+}: {
+  hasRole(role: string): boolean;
+  iAMId: string;
+  limit?: number;
+  offset?: number;
+}): Promise<PaginatedListResult<domain.CandidacySummary>> => {
+  const realOffset = offset || 0;
+  const realLimit = limit || 250;
+
+  let candidaciesAndTotal: {
+    total: number;
+    candidacies: domain.CandidacySummary[];
+  } = {
+    total: 0,
+    candidacies: [],
+  };
+  if (hasRole("admin")) {
+    candidaciesAndTotal = await getCandidaciesFromDb({
+      offset: realOffset,
+      limit: realLimit,
+    });
+  } else if (hasRole("manage_candidacy")) {
+    candidaciesAndTotal = await getCandidaciesFromDb({
+      organismAccountKeycloakId: iAMId,
+      offset: realOffset,
+      limit: realLimit,
+    });
+  }
+  return {
+    rows: candidaciesAndTotal.candidacies,
+    info: processPaginationInfo({
+      totalRows: candidaciesAndTotal.total,
+      limit: realLimit,
+      offset: realOffset,
+    }),
+  };
+};

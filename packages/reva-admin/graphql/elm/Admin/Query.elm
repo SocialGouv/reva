@@ -43,11 +43,26 @@ getCandidacyById requiredArgs____ object____ =
     Object.selectionForCompositeField "getCandidacyById" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
 
 
+type alias GetCandidaciesOptionalArguments =
+    { offset : OptionalArgument Int
+    , limit : OptionalArgument Int
+    }
+
+
 getCandidacies :
-    SelectionSet decodesTo Admin.Object.CandidacySummary
-    -> SelectionSet (List decodesTo) RootQuery
-getCandidacies object____ =
-    Object.selectionForCompositeField "getCandidacies" [] object____ (Basics.identity >> Decode.list)
+    (GetCandidaciesOptionalArguments -> GetCandidaciesOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.CandidacySummaryPage
+    -> SelectionSet decodesTo RootQuery
+getCandidacies fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { offset = Absent, limit = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "getCandidacies" optionalArgs____ object____ Basics.identity
 
 
 getTrainings :

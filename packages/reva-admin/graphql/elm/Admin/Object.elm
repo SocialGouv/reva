@@ -41,6 +41,10 @@ type CandidacySummaryFilterInfo
     = CandidacySummaryFilterInfo
 
 
+type CandidacySummaryPage
+    = CandidacySummaryPage
+
+
 type Candidate
     = Candidate
 

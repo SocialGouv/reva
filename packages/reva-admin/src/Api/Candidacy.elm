@@ -7,6 +7,7 @@ import Admin.Object.CandidacyCountByStatus
 import Admin.Object.CandidacyDropOut
 import Admin.Object.CandidacyStatus
 import Admin.Object.CandidacySummary
+import Admin.Object.CandidacySummaryPage
 import Admin.Object.Candidate
 import Admin.Object.CandidateGoal
 import Admin.Object.Certification
@@ -28,6 +29,7 @@ import Data.Certification
 import Data.Organism exposing (Organism)
 import Data.Referential
 import Graphql.Operation
+import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
 import View.Date exposing (toDateWithLabels)
@@ -39,7 +41,14 @@ getCandidacies :
     -> (RemoteData String (List Data.Candidacy.CandidacySummary) -> msg)
     -> Cmd msg
 getCandidacies endpointGraphql token toMsg =
-    Query.getCandidacies summarySelection
+    Query.getCandidacies
+        (\optionals ->
+            { optionals
+                | limit = Absent
+                , offset = Absent
+            }
+        )
+        summaryPageSelection
         |> Auth.makeQuery endpointGraphql token toMsg
 
 
@@ -149,6 +158,12 @@ candidateSelection =
 
 
 -- CANDIDACY SUMMARY
+
+
+summaryPageSelection : SelectionSet (List Data.Candidacy.CandidacySummary) Admin.Object.CandidacySummaryPage
+summaryPageSelection =
+    SelectionSet.succeed identity
+        |> with (Admin.Object.CandidacySummaryPage.rows summarySelection)
 
 
 summarySelection : SelectionSet Data.Candidacy.CandidacySummary Admin.Object.CandidacySummary

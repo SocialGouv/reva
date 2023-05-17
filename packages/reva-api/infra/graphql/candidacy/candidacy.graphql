@@ -196,10 +196,15 @@ type CandidacyCountByStatus {
   PROJET_HORS_ABANDON: Int!
 }
 
+type CandidacySummaryPage {
+  rows: [CandidacySummary!]!
+  info: PaginationInfo!
+}
+
 type Query {
   getCandidacy(deviceId: ID!): Candidacy
   getCandidacyById(id: ID!): Candidacy
-  getCandidacies: [CandidacySummary!]!
+  getCandidacies(offset: Int, limit: Int): CandidacySummaryPage!
   getTrainings: [Training!]!
   getOrganismsForCandidacy(candidacyId: UUID!): [Organism!]!
   getCompanionsForCandidacy(candidacyId: UUID!): [Organism!]!
