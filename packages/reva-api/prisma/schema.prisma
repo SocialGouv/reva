@@ -35,7 +35,7 @@ model Certification {
   slug                                                   String
   summary                                                String?
   status                                                 CertificationStatus                                      @default(INACTIVE)
-  rncpId                                                 String                                                   @unique @map("rncp_id") @db.VarChar(255)
+  rncpId                                                 String                                                   @map("rncp_id") @db.VarChar(255)
   romes                                                  RomesOnCertifications[]
   // candidacies Candidacy[]
   candidaciesAndRegions                                  CandidaciesOnRegionsAndCertifications[]
