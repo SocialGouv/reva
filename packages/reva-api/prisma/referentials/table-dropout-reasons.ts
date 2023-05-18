@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-export async function insertDropOutReasons(prisma: PrismaClient) {
+export async function insertDropOutReasonsIfNone(prisma: PrismaClient) {
   const dropOutReasonCount = await prisma.dropOutReason.count();
 
   if (dropOutReasonCount === 0) {

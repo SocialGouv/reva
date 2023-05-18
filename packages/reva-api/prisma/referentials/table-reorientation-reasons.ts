@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-export async function insertReorientationReasons(prisma: PrismaClient) {
+export async function insertReorientationReasonsIfNone(prisma: PrismaClient) {
   const reorientationReasonCount = await prisma.reorientationReason.count();
 
   if (reorientationReasonCount === 0) {

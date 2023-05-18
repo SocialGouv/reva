@@ -104,7 +104,7 @@ const departments = [
   { label: "Mayotte", code: "976", codeRegion: "06" },
 ];
 
-export const insertDepartments = async (prisma: PrismaClient) => {
+export const insertDepartmentsIfNone = async (prisma: PrismaClient) => {
   const countDepartments = await prisma.department.count();
 
   if (countDepartments === 0) {

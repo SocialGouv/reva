@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-export async function insertDegrees(prisma: PrismaClient) {
+export async function insertDegreesIfNone(prisma: PrismaClient) {
   const degreesCount = await prisma.degree.count();
 
   if (degreesCount === 0) {

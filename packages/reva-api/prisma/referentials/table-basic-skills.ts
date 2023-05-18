@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-export async function insertBasicSkills(prisma: PrismaClient) {
+export async function insertBasicSkillsIfNone(prisma: PrismaClient) {
   const basicSkillCount = await prisma.basicSkill.count();
 
   if (basicSkillCount === 0) {
