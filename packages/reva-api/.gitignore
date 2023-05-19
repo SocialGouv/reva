@@ -1,5 +1,5 @@
 ./dist
 ./coverage
 ./infra/graphql/generated-graphql-schema.graphql
-./prisma/private
+./prisma/seed/referentials/private
 ./prisma/*.tar

@@ -1,21 +1,20 @@
-
 import { Prisma, PrismaClient } from "@prisma/client";
 
 import { upsertCsvRows } from "./read-csv";
-import { insertDepartmentsIfNone } from "./referentials/table-departments";
-import { upsertGoals } from "./referentials/table-goals";
-import { upsertRegions } from "./referentials/table-regions";
+import { seedCertifications } from "./referentials/seed-certifications";
 import { insertBasicSkillsIfNone } from "./referentials/table-basic-skills";
 import { insertDegreesIfNone } from "./referentials/table-degrees";
-import { insertVulnerabilityIndicatorsIfNone } from "./referentials/table-vulnerability-indicators";
+import { insertDepartmentsIfNone } from "./referentials/table-departments";
 import { insertDropOutReasonsIfNone } from "./referentials/table-dropout-reasons";
+import { upsertGoals } from "./referentials/table-goals";
+import { upsertRegions } from "./referentials/table-regions";
 import { insertReorientationReasonsIfNone } from "./referentials/table-reorientation-reasons";
-import { seedCertificationsIfNone } from "./referentials/seed-certifications";
+import { insertVulnerabilityIndicatorsIfNone } from "./referentials/table-vulnerability-indicators";
 
 export const prisma = new PrismaClient();
 
 async function main() {
-  await seedCertificationsIfNone(prisma);
+  await seedCertifications(prisma);
   await upsertGoals(prisma);
   await upsertRegions(prisma);
   await insertDepartmentsIfNone(prisma);
@@ -76,4 +75,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
-

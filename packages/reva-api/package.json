@@ -16,7 +16,7 @@
     "prisma:generate": "prisma generate",
     "prisma:seed": "prisma db seed",
     "prisma:reset": "prisma migrate reset",
-    "prisma:private-seed": "ts-node prisma/private-seed.ts",
+    "prisma:private-seed": "ts-node prisma/seed/private-seed.ts",
     "prisma:migrate:deploy": "prisma migrate deploy",
     "cron": "npx ts-node --transpileOnly --esm infra/cron.ts",
     "cron-dev": "npx ts-node --transpileOnly --esm infra/cron.ts | npx pino-pretty",
@@ -24,7 +24,7 @@
     "lint-all": "prettier --write \"{domain,infra}/**/*.{ts,md}\""
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node prisma/seed/seed.ts"
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
