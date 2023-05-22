@@ -1,3 +1,4 @@
+import { CandidacyStatusFilter } from "../../../../domain/types/candidacy";
 import { prismaClient } from "../../../database/postgres/client";
 
 export const getCandidacyCountByStatus = async ({
@@ -7,20 +8,7 @@ export const getCandidacyCountByStatus = async ({
   hasRole(role: string): boolean;
   IAMId: string;
 }) => {
-  type MappedStatus =
-    | "ACTIVE_HORS_ABANDON"
-    | "ABANDON"
-    | "REORIENTEE_HORS_ABANDON"
-    | "ARCHIVE_HORS_ABANDON_HORS_REORIENTATION"
-    | "PARCOURS_CONFIRME_HORS_ABANDON"
-    | "PRISE_EN_CHARGE_HORS_ABANDON"
-    | "PARCOURS_ENVOYE_HORS_ABANDON"
-    | "DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON"
-    | "DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON"
-    | "VALIDATION_HORS_ABANDON"
-    | "PROJET_HORS_ABANDON";
-
-  const candidacyCountByStatus: Record<MappedStatus, number> = {
+  const candidacyCountByStatus: Record<CandidacyStatusFilter, number> = {
     ACTIVE_HORS_ABANDON: 0,
     ABANDON: 0,
     REORIENTEE_HORS_ABANDON: 0,
@@ -60,13 +48,15 @@ export const getCandidacyCountByStatus = async ({
     UNION ${reorienteHorsAbandonQuery}`;
 
     const candidacyCountByStatusFromDb: {
-      status: MappedStatus;
+      status: CandidacyStatusFilter;
       count: bigint;
     }[] = await prismaClient.$queryRawUnsafe(query);
 
     candidacyCountByStatusFromDb.forEach((csc) => {
       if (csc.status in candidacyCountByStatus) {
-        candidacyCountByStatus[csc.status as MappedStatus] = Number(csc.count);
+        candidacyCountByStatus[csc.status as CandidacyStatusFilter] = Number(
+          csc.count
+        );
       }
     });
     return candidacyCountByStatus;

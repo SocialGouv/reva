@@ -2,12 +2,15 @@ import {
   CandidaciesStatus,
   Candidacy,
   CandidacyDropOut,
+  CandidacyStatusStep,
   Certification,
   Department,
   Organism,
+  Prisma,
 } from "@prisma/client";
 
 import * as domain from "../../../../domain/types/candidacy";
+import { CandidacyStatusFilter } from "../../../../domain/types/candidacy";
 import { processPaginationInfo } from "../../../../domain/utils/pagination";
 import { prismaClient } from "../../../database/postgres/client";
 
@@ -72,12 +75,14 @@ export const getCandidaciesFromDb = async ({
   limit,
   offset,
   organismAccountKeycloakId,
+  statusFilter,
 }: {
   limit: number;
   offset: number;
   organismAccountKeycloakId?: string;
+  statusFilter?: CandidacyStatusFilter;
 }) => {
-  const whereClause = organismAccountKeycloakId
+  let whereClause: Prisma.CandidacyWhereInput = organismAccountKeycloakId
     ? {
         organism: {
           accounts: {
@@ -88,6 +93,11 @@ export const getCandidaciesFromDb = async ({
         },
       }
     : {};
+
+  whereClause = {
+    ...whereClause,
+    ...getWhereClauseFromStatusFilter(statusFilter),
+  };
 
   const candidaciesCount = await prismaClient.candidacy.count({
     where: whereClause,
@@ -142,14 +152,16 @@ export const getCandidacySummaries = async ({
   iAMId,
   limit,
   offset,
+  statusFilter,
 }: {
   hasRole(role: string): boolean;
   iAMId: string;
   limit?: number;
   offset?: number;
+  statusFilter?: CandidacyStatusFilter;
 }): Promise<PaginatedListResult<domain.CandidacySummary>> => {
   const realOffset = offset || 0;
-  const realLimit = limit || 250;
+  const realLimit = limit || 10000;
 
   let candidaciesAndTotal: {
     total: number;
@@ -158,18 +170,22 @@ export const getCandidacySummaries = async ({
     total: 0,
     candidacies: [],
   };
+
   if (hasRole("admin")) {
     candidaciesAndTotal = await getCandidaciesFromDb({
       offset: realOffset,
       limit: realLimit,
+      statusFilter,
     });
   } else if (hasRole("manage_candidacy")) {
     candidaciesAndTotal = await getCandidaciesFromDb({
       organismAccountKeycloakId: iAMId,
       offset: realOffset,
       limit: realLimit,
+      statusFilter,
     });
   }
+
   return {
     rows: candidaciesAndTotal.candidacies,
     info: processPaginationInfo({
@@ -178,4 +194,100 @@ export const getCandidacySummaries = async ({
       offset: realOffset,
     }),
   };
+};
+
+const getStatusFromStatusFilter = (statusFilter: string) => {
+  let status: CandidacyStatusStep | null = null;
+  switch (statusFilter) {
+    case "PARCOURS_CONFIRME_HORS_ABANDON":
+      status = "PARCOURS_CONFIRME";
+      break;
+    case "PRISE_EN_CHARGE_HORS_ABANDON":
+      status = "PRISE_EN_CHARGE";
+      break;
+    case "PARCOURS_ENVOYE_HORS_ABANDON":
+      status = "PARCOURS_ENVOYE";
+      break;
+    case "DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON":
+      status = "DEMANDE_FINANCEMENT_ENVOYE";
+      break;
+    case "DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON":
+      status = "DEMANDE_PAIEMENT_ENVOYEE";
+      break;
+    case "VALIDATION_HORS_ABANDON":
+      status = "VALIDATION";
+      break;
+    case "PROJET_HORS_ABANDON":
+      status = "PROJET";
+      break;
+  }
+  return status;
+};
+
+const getWhereClauseFromStatusFilter = (
+  statusFilter?: CandidacyStatusFilter
+) => {
+  let whereClause = {};
+  switch (statusFilter) {
+    case "PARCOURS_CONFIRME_HORS_ABANDON":
+    case "PRISE_EN_CHARGE_HORS_ABANDON":
+    case "PARCOURS_ENVOYE_HORS_ABANDON":
+    case "DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON":
+    case "DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON":
+    case "VALIDATION_HORS_ABANDON":
+    case "PROJET_HORS_ABANDON": {
+      const status = getStatusFromStatusFilter(statusFilter);
+      if (status !== null) {
+        whereClause = {
+          ...whereClause,
+          candidacyDropOut: null,
+          candidacyStatuses: {
+            some: { AND: { isActive: true, status } },
+          },
+        };
+      }
+      break;
+    }
+    case "ACTIVE_HORS_ABANDON":
+      whereClause = {
+        ...whereClause,
+        candidacyDropOut: null,
+        candidacyStatuses: {
+          some: {
+            AND: {
+              isActive: true,
+              status: { notIn: ["ARCHIVE", "PROJET"] },
+            },
+          },
+        },
+      };
+      break;
+    case "ABANDON":
+      whereClause = {
+        ...whereClause,
+        NOT: { candidacyDropOut: null },
+      };
+      break;
+    case "ARCHIVE_HORS_ABANDON_HORS_REORIENTATION":
+      whereClause = {
+        ...whereClause,
+        candidacyDropOut: null,
+        reorientationReasonId: null,
+        candidacyStatuses: {
+          some: { AND: { isActive: true, status: "ARCHIVE" } },
+        },
+      };
+      break;
+    case "REORIENTEE_HORS_ABANDON":
+      whereClause = {
+        ...whereClause,
+        candidacyDropOut: null,
+        NOT: { reorientationReasonId: null },
+        candidacyStatuses: {
+          some: { AND: { isActive: true, status: "ARCHIVE" } },
+        },
+      };
+      break;
+  }
+  return whereClause;
 };

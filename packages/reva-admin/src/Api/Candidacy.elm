@@ -1,5 +1,6 @@
 module Api.Candidacy exposing (get, getCandidacies, getCandidacyCountByStatus, statusSelection, takeOver)
 
+import Admin.Enum.CandidacyStatusFilter
 import Admin.Mutation as Mutation
 import Admin.Object
 import Admin.Object.Candidacy
@@ -23,13 +24,13 @@ import Api.Referential exposing (departmentSelection)
 import Api.RemoteData exposing (nothingToError)
 import Api.Token exposing (Token)
 import Api.VulnerabilityIndicator
-import Data.Candidacy exposing (CandidacyId, DateWithLabels)
+import Data.Candidacy exposing (CandidacyId)
 import Data.Candidate
 import Data.Certification
-import Data.Organism exposing (Organism)
+import Data.Organism
 import Data.Referential
 import Graphql.Operation
-import Graphql.OptionalArgument exposing (OptionalArgument(..))
+import Graphql.OptionalArgument as OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
 import View.Date exposing (toDateWithLabels)
@@ -39,13 +40,15 @@ getCandidacies :
     String
     -> Token
     -> (RemoteData String (List Data.Candidacy.CandidacySummary) -> msg)
+    -> Maybe Admin.Enum.CandidacyStatusFilter.CandidacyStatusFilter
     -> Cmd msg
-getCandidacies endpointGraphql token toMsg =
+getCandidacies endpointGraphql token toMsg statusFilter =
     Query.getCandidacies
         (\optionals ->
             { optionals
                 | limit = Absent
                 , offset = Absent
+                , statusFilter = OptionalArgument.fromMaybe statusFilter
             }
         )
         summaryPageSelection

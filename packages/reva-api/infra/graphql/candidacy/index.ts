@@ -35,6 +35,7 @@ import {
   Admissibility,
   Candidacy,
   CandidacyBusinessEvent,
+  CandidacyStatusFilter,
   ExamInfo,
 } from "../../../domain/types/candidacy";
 import * as admissibilityDb from "../../database/postgres/admissibility";
@@ -136,7 +137,11 @@ const unsafeResolvers = {
     },
     getCandidacies: async (
       _parent: unknown,
-      _params: { limit?: number; offset?: number },
+      _params: {
+        limit?: number;
+        offset?: number;
+        statusFilter?: CandidacyStatusFilter;
+      },
       context: GraphqlContext
     ) => {
       try {

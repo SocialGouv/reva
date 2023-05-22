@@ -11,7 +11,6 @@ module Data.Candidacy exposing
     , candidacyIdFromString
     , candidacyIdToString
     , currentStatusPosition
-    , filterByStatus
     , filterByWords
     , isActive
     , isCandidacyArchived
@@ -341,24 +340,6 @@ filterByWords words candidacySummary =
                         False
     in
     matchAll (\word -> filterByWord word candidacySummary) (String.split " " words)
-
-
-filterByStatus : String -> CandidacySummary -> Bool
-filterByStatus lowerCaseStatus candidacySummary =
-    let
-        status =
-            String.toUpper lowerCaseStatus
-                |> Admin.Enum.CandidacyStatusStep.fromString
-                |> Maybe.withDefault Projet
-    in
-    if lowerCaseStatus == "abandon" then
-        candidacySummary.isDroppedOut
-
-    else if lowerCaseStatus == "reorientation" then
-        candidacySummary.isReorientation
-
-    else
-        candidacySummary.lastStatus.status == status && not candidacySummary.isReorientation
 
 
 isActive : CandidacySummary -> Bool

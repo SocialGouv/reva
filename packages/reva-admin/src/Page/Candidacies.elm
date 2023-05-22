@@ -8,6 +8,7 @@ module Page.Candidacies exposing
     )
 
 import Accessibility exposing (button, h1, h2, h3)
+import Admin.Enum.CandidacyStatusFilter
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep)
 import Api.Candidacy
 import Api.Token exposing (Token)
@@ -51,14 +52,61 @@ type alias Model =
     }
 
 
-withStatusFilter : Maybe String -> Model -> ( Model, Cmd Msg )
-withStatusFilter status model =
+toStatusFilterEnum : Maybe String -> Maybe Admin.Enum.CandidacyStatusFilter.CandidacyStatusFilter
+toStatusFilterEnum status =
+    case status of
+        Just "abandon" ->
+            Just Admin.Enum.CandidacyStatusFilter.Abandon
+
+        Just "reorientation" ->
+            Just Admin.Enum.CandidacyStatusFilter.ReorienteeHorsAbandon
+
+        Just "archive" ->
+            Just Admin.Enum.CandidacyStatusFilter.ArchiveHorsAbandonHorsReorientation
+
+        Just "demande_paiement_envoyee" ->
+            Just Admin.Enum.CandidacyStatusFilter.DemandePaiementEnvoyeeHorsAbandon
+
+        Just "demande_financement_envoye" ->
+            Just Admin.Enum.CandidacyStatusFilter.DemandeFinancementEnvoyeHorsAbandon
+
+        Just "parcours_confirme" ->
+            Just Admin.Enum.CandidacyStatusFilter.ParcoursConfirmeHorsAbandon
+
+        Just "parcours_envoye" ->
+            Just Admin.Enum.CandidacyStatusFilter.ParcoursEnvoyeHorsAbandon
+
+        Just "prise_en_charge" ->
+            Just Admin.Enum.CandidacyStatusFilter.PriseEnChargeHorsAbandon
+
+        Just "validation" ->
+            Just Admin.Enum.CandidacyStatusFilter.ValidationHorsAbandon
+
+        Just "projet" ->
+            Just Admin.Enum.CandidacyStatusFilter.ProjetHorsAbandon
+
+        _ ->
+            Just Admin.Enum.CandidacyStatusFilter.ActiveHorsAbandon
+
+
+withStatusFilter : Context -> Maybe String -> Model -> ( Model, Cmd Msg )
+withStatusFilter context status model =
     let
+        statusChanged =
+            model.filters.status /= status
+
         withNewStatus : Filters -> Filters
         withNewStatus filters =
             { filters | status = status }
+
+        command =
+            if statusChanged then
+                Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (toStatusFilterEnum status)
+
+            else
+                Cmd.none
     in
-    ( { model | filters = model.filters |> withNewStatus }, Cmd.none )
+    ( { model | filters = model.filters |> withNewStatus }, command )
 
 
 init : Context -> Maybe String -> ( Model, Cmd Msg )
@@ -72,7 +120,7 @@ init context maybeStatusFilters =
 
         defaultCmd =
             Cmd.batch
-                [ Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse
+                [ Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (toStatusFilterEnum maybeStatusFilters)
                 , Api.Candidacy.getCandidacyCountByStatus context.endpoint context.token GotCandidacyCountByStatus
                 ]
     in
@@ -169,7 +217,6 @@ view context model =
             in
             preFilteredCandidacies
                 |> filter Candidacy.filterByWords .search
-                |> filter Candidacy.filterByStatus .status
                 |> viewContent context model.filters candidacyCountByStatus
 
 
