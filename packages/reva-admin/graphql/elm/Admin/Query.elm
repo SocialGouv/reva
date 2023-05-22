@@ -4,6 +4,7 @@
 
 module Admin.Query exposing (..)
 
+import Admin.Enum.CandidacyStatusFilter
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -46,6 +47,7 @@ getCandidacyById requiredArgs____ object____ =
 type alias GetCandidaciesOptionalArguments =
     { offset : OptionalArgument Int
     , limit : OptionalArgument Int
+    , statusFilter : OptionalArgument Admin.Enum.CandidacyStatusFilter.CandidacyStatusFilter
     }
 
 
@@ -56,10 +58,10 @@ getCandidacies :
 getCandidacies fillInOptionals____ object____ =
     let
         filledInOptionals____ =
-            fillInOptionals____ { offset = Absent, limit = Absent }
+            fillInOptionals____ { offset = Absent, limit = Absent, statusFilter = Absent }
 
         optionalArgs____ =
-            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int ]
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "statusFilter" filledInOptionals____.statusFilter (Encode.enum Admin.Enum.CandidacyStatusFilter.toString) ]
                 |> List.filterMap Basics.identity
     in
     Object.selectionForCompositeField "getCandidacies" optionalArgs____ object____ Basics.identity

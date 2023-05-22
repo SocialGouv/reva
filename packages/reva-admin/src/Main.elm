@@ -147,7 +147,7 @@ changeRouteTo context route model =
     case ( route, model.page ) of
         ( Route.Candidacies filters, Candidacies candidaciesModel ) ->
             candidaciesModel
-                |> Candidacies.withStatusFilter filters.status
+                |> Candidacies.withStatusFilter context filters.status
                 |> updateWith Candidacies GotCandidaciesMsg model
 
         ( Route.Candidacy tab, Candidacy candidacyModel ) ->
