@@ -13,13 +13,16 @@ import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep)
 import Api.Candidacy
 import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
+import BetaGouv.DSFR.Icons exposing (IconName)
+import BetaGouv.DSFR.Icons.System exposing (closeCircleFill, closeLine)
+import BetaGouv.DSFR.Icons.Weather exposing (moonFill)
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyCountByStatus, CandidacyId, CandidacySummary)
 import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Referential)
 import Html exposing (Html, div, input, label, li, nav, p, strong, text, ul)
-import Html.Attributes exposing (attribute, class, classList, for, id, name, placeholder, type_)
+import Html.Attributes exposing (attribute, class, classList, for, id, name, placeholder, type_, value)
 import Html.Attributes.Extra exposing (role)
 import Html.Events exposing (onClick, onInput)
 import List.Extra
@@ -38,6 +41,7 @@ type Msg
     = GotCandidaciesResponse (RemoteData String (List CandidacySummary))
     | UserUpdatedSearch String
     | UserValidatedSearch
+    | UserClearedSearch
     | GotCandidacyCountByStatus (RemoteData String CandidacyCountByStatus)
 
 
@@ -273,7 +277,14 @@ viewDirectoryHeader context searchFilter =
                     []
 
                 Just filterValue ->
-                    [ strong [] [ text "Filtre de recherche : " ], text filterValue ]
+                    [ strong [ class "mr-1" ] [ text "Filtre de recherche : " ]
+                    , text filterValue
+                    , Button.new { label = "Supprimer le filtre de recherche", onClick = Just UserClearedSearch }
+                        |> Button.withAttrs [ class "mt-1" ]
+                        |> Button.tertiaryNoOutline
+                        |> Button.onlyIcon closeLine
+                        |> Button.view
+                    ]
     in
     div
         [ class "sm:p-6 mb-8" ]
@@ -314,7 +325,7 @@ viewDirectoryHeader context searchFilter =
                     [ class "fr-btn", Html.Attributes.title "Rechercher", onClick UserValidatedSearch ]
                     [ text "Rechercher" ]
                 ]
-            , div [ role "status", class "mt-4" ] searchStatusDivContent
+            , div [ role "status", class "mt-4 flex items-center gap-1" ] searchStatusDivContent
             ]
         ]
 
@@ -456,6 +467,13 @@ update context msg model =
                     model.filters
             in
             ( { model | filters = { filters | search = model.state.search } }, Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (toStatusFilterEnum model.filters.status) model.state.search )
+
+        UserClearedSearch ->
+            let
+                filters =
+                    model.filters
+            in
+            ( { model | filters = { filters | search = Nothing } }, Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (toStatusFilterEnum model.filters.status) Nothing )
 
         GotCandidacyCountByStatus remoteCandidacyCountByStatus ->
             ( { model | state = model.state |> withCandidacyCountByStatus remoteCandidacyCountByStatus }
