@@ -76,11 +76,13 @@ export const getCandidaciesFromDb = async ({
   offset,
   organismAccountKeycloakId,
   statusFilter,
+  searchFilter,
 }: {
   limit: number;
   offset: number;
   organismAccountKeycloakId?: string;
   statusFilter?: CandidacyStatusFilter;
+  searchFilter?: string;
 }) => {
   let whereClause: Prisma.CandidacyWhereInput = organismAccountKeycloakId
     ? {
@@ -97,6 +99,7 @@ export const getCandidaciesFromDb = async ({
   whereClause = {
     ...whereClause,
     ...getWhereClauseFromStatusFilter(statusFilter),
+    ...getWhereClauseFromSearchFilter(searchFilter),
   };
 
   const candidaciesCount = await prismaClient.candidacy.count({
@@ -153,16 +156,17 @@ export const getCandidacySummaries = async ({
   limit,
   offset,
   statusFilter,
+  searchFilter,
 }: {
   hasRole(role: string): boolean;
   iAMId: string;
   limit?: number;
   offset?: number;
   statusFilter?: CandidacyStatusFilter;
+  searchFilter?: string;
 }): Promise<PaginatedListResult<domain.CandidacySummary>> => {
   const realOffset = offset || 0;
   const realLimit = limit || 10000;
-
   let candidaciesAndTotal: {
     total: number;
     candidacies: domain.CandidacySummary[];
@@ -176,6 +180,7 @@ export const getCandidacySummaries = async ({
       offset: realOffset,
       limit: realLimit,
       statusFilter,
+      searchFilter,
     });
   } else if (hasRole("manage_candidacy")) {
     candidaciesAndTotal = await getCandidaciesFromDb({
@@ -183,6 +188,7 @@ export const getCandidacySummaries = async ({
       offset: realOffset,
       limit: realLimit,
       statusFilter,
+      searchFilter,
     });
   }
 
@@ -288,6 +294,51 @@ const getWhereClauseFromStatusFilter = (
         },
       };
       break;
+  }
+  return whereClause;
+};
+
+const buildContainsFilterClause =
+  (searchFilter: string) => (field: string) => ({
+    [field]: { contains: searchFilter, mode: "insensitive" },
+  });
+
+const getWhereClauseFromSearchFilter = (searchFilter?: string) => {
+  let whereClause: Prisma.CandidacyWhereInput = {};
+  if (searchFilter) {
+    const containsFilter = buildContainsFilterClause(searchFilter);
+    whereClause = {
+      OR: [
+        {
+          candidate: {
+            OR: [
+              containsFilter("lastname"),
+              containsFilter("firstname"),
+              containsFilter("firstname2"),
+              containsFilter("firstname3"),
+              containsFilter("email"),
+              containsFilter("phone"),
+            ],
+          },
+        },
+        { organism: containsFilter("label") },
+        { department: containsFilter("label") },
+        {
+          certificationsAndRegions: {
+            some: {
+              AND: [
+                { isActive: true },
+                {
+                  certification: {
+                    OR: [containsFilter("label"), containsFilter("acronym")],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      ],
+    };
   }
   return whereClause;
 };

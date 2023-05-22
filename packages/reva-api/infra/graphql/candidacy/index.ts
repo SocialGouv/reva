@@ -141,6 +141,7 @@ const unsafeResolvers = {
         limit?: number;
         offset?: number;
         statusFilter?: CandidacyStatusFilter;
+        searchFilter?: string;
       },
       context: GraphqlContext
     ) => {

@@ -48,6 +48,7 @@ type alias GetCandidaciesOptionalArguments =
     { offset : OptionalArgument Int
     , limit : OptionalArgument Int
     , statusFilter : OptionalArgument Admin.Enum.CandidacyStatusFilter.CandidacyStatusFilter
+    , searchFilter : OptionalArgument String
     }
 
 
@@ -58,10 +59,10 @@ getCandidacies :
 getCandidacies fillInOptionals____ object____ =
     let
         filledInOptionals____ =
-            fillInOptionals____ { offset = Absent, limit = Absent, statusFilter = Absent }
+            fillInOptionals____ { offset = Absent, limit = Absent, statusFilter = Absent, searchFilter = Absent }
 
         optionalArgs____ =
-            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "statusFilter" filledInOptionals____.statusFilter (Encode.enum Admin.Enum.CandidacyStatusFilter.toString) ]
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "statusFilter" filledInOptionals____.statusFilter (Encode.enum Admin.Enum.CandidacyStatusFilter.toString), Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string ]
                 |> List.filterMap Basics.identity
     in
     Object.selectionForCompositeField "getCandidacies" optionalArgs____ object____ Basics.identity

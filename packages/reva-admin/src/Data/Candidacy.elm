@@ -11,7 +11,6 @@ module Data.Candidacy exposing
     , candidacyIdFromString
     , candidacyIdToString
     , currentStatusPosition
-    , filterByWords
     , isActive
     , isCandidacyArchived
     , isCandidacyReoriented
@@ -301,45 +300,6 @@ isPaymentRequestSent candidacy =
 isTrainingSent : Candidacy -> Bool
 isTrainingSent candidacy =
     isStatusEqualOrAbove candidacy ParcoursEnvoye
-
-
-filterByWord : String -> CandidacySummary -> Bool
-filterByWord word candidacySummary =
-    let
-        match s =
-            String.toLower s
-                |> String.contains (String.toLower word)
-
-        maybeMatch field =
-            Maybe.map match (field candidacySummary) |> Maybe.withDefault False
-    in
-    (Maybe.map (\certification -> match (certification.label ++ " " ++ certification.acronym)) candidacySummary.certification |> Maybe.withDefault False)
-        || maybeMatch .firstname
-        || maybeMatch .lastname
-        || maybeMatch .phone
-        || maybeMatch .email
-        || maybeMatch (.sentAt >> Maybe.map .smallFormat)
-        || maybeMatch (.sentAt >> Maybe.map .fullFormat)
-        || (Maybe.map match (Maybe.map .label candidacySummary.department) |> Maybe.withDefault False)
-        || (Maybe.map match (Maybe.map .label candidacySummary.organism) |> Maybe.withDefault False)
-
-
-filterByWords : String -> CandidacySummary -> Bool
-filterByWords words candidacySummary =
-    let
-        matchAll predicate list =
-            case list of
-                [] ->
-                    True
-
-                first :: rest ->
-                    if predicate first then
-                        matchAll predicate rest
-
-                    else
-                        False
-    in
-    matchAll (\word -> filterByWord word candidacySummary) (String.split " " words)
 
 
 isActive : CandidacySummary -> Bool

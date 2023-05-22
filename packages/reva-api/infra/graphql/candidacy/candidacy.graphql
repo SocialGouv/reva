@@ -222,6 +222,7 @@ type Query {
     offset: Int
     limit: Int
     statusFilter: CandidacyStatusFilter
+    searchFilter: String
   ): CandidacySummaryPage!
   getTrainings: [Training!]!
   getOrganismsForCandidacy(candidacyId: UUID!): [Organism!]!

@@ -18,10 +18,10 @@ import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Referential)
-import Html exposing (Html, div, input, label, li, nav, p, text, ul)
+import Html exposing (Html, div, input, label, li, nav, p, strong, text, ul)
 import Html.Attributes exposing (attribute, class, classList, for, id, name, placeholder, type_)
 import Html.Attributes.Extra exposing (role)
-import Html.Events exposing (onInput)
+import Html.Events exposing (onClick, onInput)
 import List.Extra
 import RemoteData exposing (RemoteData(..))
 import Route
@@ -36,13 +36,15 @@ import View.Helpers exposing (dataTest)
 
 type Msg
     = GotCandidaciesResponse (RemoteData String (List CandidacySummary))
-    | UserAddedFilter String
+    | UserUpdatedSearch String
+    | UserValidatedSearch
     | GotCandidacyCountByStatus (RemoteData String CandidacyCountByStatus)
 
 
 type alias State =
     { candidacies : RemoteData String (List CandidacySummary)
     , candidacyCountByStatus : RemoteData String CandidacyCountByStatus
+    , search : Maybe String
     }
 
 
@@ -101,7 +103,7 @@ withStatusFilter context status model =
 
         command =
             if statusChanged then
-                Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (toStatusFilterEnum status)
+                Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (toStatusFilterEnum status) model.filters.search
 
             else
                 Cmd.none
@@ -115,12 +117,12 @@ init context maybeStatusFilters =
         defaultModel : Model
         defaultModel =
             { filters = { search = Nothing, status = maybeStatusFilters }
-            , state = { candidacies = RemoteData.Loading, candidacyCountByStatus = RemoteData.Loading }
+            , state = { candidacies = RemoteData.Loading, candidacyCountByStatus = RemoteData.Loading, search = Nothing }
             }
 
         defaultCmd =
             Cmd.batch
-                [ Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (toStatusFilterEnum maybeStatusFilters)
+                [ Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (toStatusFilterEnum maybeStatusFilters) defaultModel.filters.search
                 , Api.Candidacy.getCandidacyCountByStatus context.endpoint context.token GotCandidacyCountByStatus
                 ]
     in
@@ -160,7 +162,7 @@ view context model =
                 filterByStatusTitle
                 []
                 []
-                [ viewDirectoryHeader context
+                [ viewDirectoryHeader context Nothing
                 , div
                     [ class "sm:px-6" ]
                     [ View.skeleton "mt-2 mb-8 h-6 w-[300px]"
@@ -206,17 +208,8 @@ view context model =
                         Nothing ->
                             -- When not filter is selected, we display only active candidacy
                             candidacies |> List.filter Candidacy.isActive
-
-                filter f field l =
-                    case field model.filters of
-                        Just value ->
-                            List.filter (f value) l
-
-                        Nothing ->
-                            l
             in
             preFilteredCandidacies
-                |> filter Candidacy.filterByWords .search
                 |> viewContent context model.filters candidacyCountByStatus
 
 
@@ -265,11 +258,23 @@ viewContent context filters candidacyCountByStatus filteredCandidacies =
         filterByStatusTitle
         upperNavContent
         (View.Candidacy.Filters.view candidacyCountByStatus filters context)
-        (viewDirectoryPanel context candidaciesByStatus)
+        (viewDirectoryPanel context candidaciesByStatus filters.search)
 
 
-viewDirectoryHeader : Context -> Html Msg
-viewDirectoryHeader context =
+viewDirectoryHeader : Context -> Maybe String -> Html Msg
+viewDirectoryHeader context searchFilter =
+    let
+        searchStatusDivContent =
+            case searchFilter of
+                Nothing ->
+                    []
+
+                Just "" ->
+                    []
+
+                Just filterValue ->
+                    [ strong [] [ text "Filtre de recherche : " ], text filterValue ]
+    in
     div
         [ class "sm:p-6 mb-8" ]
         [ h1
@@ -302,20 +307,21 @@ viewDirectoryHeader context =
                     , id "search"
                     , class "fr-input w-full h-10"
                     , placeholder "Rechercher"
-                    , onInput UserAddedFilter
+                    , onInput UserUpdatedSearch
                     ]
                     []
                 , button
-                    [ class "fr-btn", Html.Attributes.title "Rechercher" ]
+                    [ class "fr-btn", Html.Attributes.title "Rechercher", onClick UserValidatedSearch ]
                     [ text "Rechercher" ]
                 ]
+            , div [ role "status", class "mt-4" ] searchStatusDivContent
             ]
         ]
 
 
-viewDirectoryPanel : Context -> List ( CandidacySummary, List CandidacySummary ) -> List (Html Msg)
-viewDirectoryPanel context candidaciesByStatus =
-    [ viewDirectoryHeader context
+viewDirectoryPanel : Context -> List ( CandidacySummary, List CandidacySummary ) -> Maybe String -> List (Html Msg)
+viewDirectoryPanel context candidaciesByStatus searchFilter =
+    [ viewDirectoryHeader context searchFilter
     , List.map (viewDirectory context) candidaciesByStatus
         |> nav
             [ dataTest "directory"
@@ -437,12 +443,19 @@ update context msg model =
             , Cmd.none
             )
 
-        UserAddedFilter search ->
+        UserUpdatedSearch search ->
+            let
+                state =
+                    model.state
+            in
+            ( { model | state = { state | search = Just search } }, Cmd.none )
+
+        UserValidatedSearch ->
             let
                 filters =
                     model.filters
             in
-            ( { model | filters = { filters | search = Just search } }, Cmd.none )
+            ( { model | filters = { filters | search = model.state.search } }, Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (toStatusFilterEnum model.filters.status) model.state.search )
 
         GotCandidacyCountByStatus remoteCandidacyCountByStatus ->
             ( { model | state = model.state |> withCandidacyCountByStatus remoteCandidacyCountByStatus }

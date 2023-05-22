@@ -41,14 +41,16 @@ getCandidacies :
     -> Token
     -> (RemoteData String (List Data.Candidacy.CandidacySummary) -> msg)
     -> Maybe Admin.Enum.CandidacyStatusFilter.CandidacyStatusFilter
+    -> Maybe String
     -> Cmd msg
-getCandidacies endpointGraphql token toMsg statusFilter =
+getCandidacies endpointGraphql token toMsg statusFilter searchFilter =
     Query.getCandidacies
         (\optionals ->
             { optionals
                 | limit = Absent
                 , offset = Absent
                 , statusFilter = OptionalArgument.fromMaybe statusFilter
+                , searchFilter = OptionalArgument.fromMaybe searchFilter
             }
         )
         summaryPageSelection
