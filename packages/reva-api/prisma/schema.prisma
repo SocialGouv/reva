@@ -37,7 +37,6 @@ model Certification {
   status                                                 CertificationStatus                                      @default(INACTIVE)
   rncpId                                                 String                                                   @map("rncp_id") @db.VarChar(255)
   romes                                                  RomesOnCertifications[]
-  // candidacies Candidacy[]
   candidaciesAndRegions                                  CandidaciesOnRegionsAndCertifications[]
   organismsAndRegions                                    OrganismsOnRegionsAndCertifications[]
   createdAt                                              DateTime                                                 @default(now()) @map("created_at") @db.Timestamptz(6)
@@ -46,6 +45,8 @@ model Certification {
   activeOrganismsByAvailableCertificationsAndDepartments ActiveOrganismsByAvailableCertificationsAndDepartments[]
   certificationOnDomaine                                 CertificationOnDomaine[]
   certificationOnConventionCollective                    CertificationOnConventionCollective[]
+  typeDiplome                                            TypeDiplome?                                             @relation(fields: [typeDiplomeId], references: [id])
+  typeDiplomeId                                          String?                                                  @map("type_diplome_id") @db.Uuid
 
   @@map("certification")
 }
@@ -733,6 +734,7 @@ model OrganismOnDomaine {
 }
 
 model CertificationOnDomaine {
+  id              String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   domaine         Domaine       @relation(fields: [domaineId], references: [id])
   domaineId       String        @map("domaine_id") @db.Uuid
   certification   Certification @relation(fields: [certificationId], references: [id])
@@ -740,7 +742,7 @@ model CertificationOnDomaine {
   createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt       DateTime?     @map("updated_at") @db.Timestamptz(6)
 
-  @@id([domaineId, certificationId])
+  @@unique([domaineId, certificationId])
   @@map("certification_on_domaine")
 }
 
@@ -768,6 +770,7 @@ model OrganismOnConventionCollective {
 }
 
 model CertificationOnConventionCollective {
+  id              String               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   ccn             ConventionCollective @relation(fields: [ccnId], references: [id])
   ccnId           String               @map("ccn_id") @db.Uuid
   certification   Certification        @relation(fields: [certificationId], references: [id])
@@ -775,7 +778,7 @@ model CertificationOnConventionCollective {
   createdAt       DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt       DateTime?            @map("updated_at") @db.Timestamptz(6)
 
-  @@id([ccnId, certificationId])
+  @@unique([ccnId, certificationId])
   @@map("certification_on_ccn")
 }
 
@@ -812,8 +815,9 @@ model ExamInfo {
 }
 
 model TypeDiplome {
-  id    String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label String @db.VarChar(200)
+  id            String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label         String          @db.VarChar(200)
+  Certification Certification[]
 
   @@map("type_diplome")
 }
