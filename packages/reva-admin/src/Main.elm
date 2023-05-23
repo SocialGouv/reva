@@ -263,8 +263,16 @@ update msg model =
                         _ ->
                             route
 
+                statusfilter =
+                    case route of
+                        Route.Candidacies filter ->
+                            filter.status
+
+                        _ ->
+                            Nothing
+
                 ( candidaciesModel, candidaciesCmd ) =
-                    Candidacies.init newContext Nothing
+                    Candidacies.init newContext statusfilter
             in
             ( { model | context = newContext, page = Candidacies candidaciesModel }
             , Cmd.batch
