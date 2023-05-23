@@ -1,5 +1,6 @@
 port module Main exposing (main)
 
+import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
 import Api.Token exposing (Token)
 import Browser
 import Browser.Dom as Dom
@@ -269,7 +270,7 @@ update msg model =
                             filter.status
 
                         _ ->
-                            Nothing
+                            CandidacyStatusFilter.ActiveHorsAbandon
 
                 ( candidaciesModel, candidaciesCmd ) =
                     Candidacies.init newContext statusfilter

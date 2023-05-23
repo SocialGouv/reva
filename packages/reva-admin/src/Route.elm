@@ -7,6 +7,7 @@ module Route exposing
     , toString
     )
 
+import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
 import Data.Candidacy exposing (CandidacyId, candidacyIdFromString, candidacyIdToString)
 import Html exposing (Html)
 import Html.Attributes
@@ -18,7 +19,7 @@ import View.Candidacy.Tab as Tab
 
 
 type alias Filters =
-    { status : Maybe String }
+    { status : CandidacyStatusFilter }
 
 
 type Route
@@ -33,7 +34,7 @@ type Route
 
 emptyFilters : Filters
 emptyFilters =
-    { status = Nothing }
+    { status = CandidacyStatusFilter.ActiveHorsAbandon }
 
 
 parser : String -> Parser (Route -> a) a
@@ -47,13 +48,16 @@ parser baseUrl =
 
         subLevel path =
             topLevel (string </> s path)
+
+        statusStringToStatusFilter x =
+            Maybe.withDefault CandidacyStatusFilter.ActiveHorsAbandon (CandidacyStatusFilter.fromString (Maybe.withDefault "" x))
     in
     s baseUrl
         </> oneOf
                 [ top |> map (Candidacies emptyFilters)
                 , s "auth" </> s "login" |> map Login
                 , s "auth" </> s "logout" |> map Logout
-                , s "candidacies" <?> Query.string "status" |> map (Filters >> Candidacies)
+                , s "candidacies" <?> Query.string "status" |> map (statusStringToStatusFilter >> Filters >> Candidacies)
                 , s "subscriptions" |> map Subscriptions
                 , s "subscriptions" </> string |> map Subscription
                 , topLevel string |> candidacyTab Tab.Profile
@@ -105,10 +109,7 @@ toString baseUrl route =
 
         Candidacies filters ->
             topLevel [ "candidacies" ]
-                (filters.status
-                    |> Maybe.map (\status -> [ Url.Builder.string "status" status ])
-                    |> Maybe.withDefault []
-                )
+                [ Url.Builder.string "status" (CandidacyStatusFilter.toString filters.status) ]
 
         Candidacy tab ->
             tabToString topLevel subLevel tab

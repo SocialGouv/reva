@@ -1,7 +1,8 @@
 module View.Candidacy.Filters exposing (Filters, view)
 
+import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
-import Data.Candidacy as Candidacy exposing (CandidacyCountByStatus)
+import Data.Candidacy as Candidacy exposing (CandidacyCountByStatus, candidacyStatusFilterToReadableString)
 import Data.Context exposing (Context)
 import Html exposing (Html, a, div, label, li, span, text, ul)
 import Html.Attributes exposing (class, classList, id)
@@ -10,7 +11,7 @@ import Route
 
 type alias Filters =
     { search : Maybe String
-    , status : Maybe String
+    , status : CandidacyStatusFilter
     }
 
 
@@ -21,73 +22,64 @@ view :
     -> List (Html msg)
 view candidacyCountByStatus filters context =
     let
-        count : Maybe String -> Int
-        count maybeStatus =
-            case maybeStatus of
-                Nothing ->
+        count : CandidacyStatusFilter -> Int
+        count status =
+            case status of
+                CandidacyStatusFilter.ActiveHorsAbandon ->
                     candidacyCountByStatus.activeHorsAbandon
 
-                Just "abandon" ->
+                CandidacyStatusFilter.Abandon ->
                     candidacyCountByStatus.abandon
 
-                Just "reorientation" ->
+                CandidacyStatusFilter.ReorienteeHorsAbandon ->
                     candidacyCountByStatus.reorienteeHorsAbandon
 
-                Just "archive" ->
+                CandidacyStatusFilter.ArchiveHorsAbandonHorsReorientation ->
                     candidacyCountByStatus.archiveHorsAbandonHorsReorientation
 
-                Just "demande_paiement_envoyee" ->
+                CandidacyStatusFilter.DemandePaiementEnvoyeeHorsAbandon ->
                     candidacyCountByStatus.demandePaiementEnvoyeHorsAbandon
 
-                Just "demande_financement_envoye" ->
+                CandidacyStatusFilter.DemandeFinancementEnvoyeHorsAbandon ->
                     candidacyCountByStatus.demandeFinancementEnvoyeHorsAbandon
 
-                Just "parcours_confirme" ->
+                CandidacyStatusFilter.ParcoursConfirmeHorsAbandon ->
                     candidacyCountByStatus.parcourConfirmeHorsAbandon
 
-                Just "parcours_envoye" ->
+                CandidacyStatusFilter.ParcoursEnvoyeHorsAbandon ->
                     candidacyCountByStatus.parcoursEnvoyeHorsAbandon
 
-                Just "prise_en_charge" ->
+                CandidacyStatusFilter.PriseEnChargeHorsAbandon ->
                     candidacyCountByStatus.priseEnChargeHorsAbandon
 
-                Just "validation" ->
+                CandidacyStatusFilter.ValidationHorsAbandon ->
                     candidacyCountByStatus.validationHorsAbandon
 
-                Just "projet" ->
+                CandidacyStatusFilter.ProjetHorsAbandon ->
                     candidacyCountByStatus.projetHorsAbandon
 
-                Just _ ->
-                    0
+        link status label =
+            viewLink context filters (count status) status label
 
-        link maybeStatus label =
-            viewLink context filters (count maybeStatus) maybeStatus label
-
-        statuses : List Candidacy.Step
+        statuses : List CandidacyStatusFilter
         statuses =
-            [ Validation
-            , PriseEnCharge
-            , ParcoursEnvoye
-            , ParcoursConfirme
-            , DemandeFinancementEnvoye
-            , DemandePaiementEnvoyee
+            [ CandidacyStatusFilter.ValidationHorsAbandon
+            , CandidacyStatusFilter.PriseEnChargeHorsAbandon
+            , CandidacyStatusFilter.ParcoursEnvoyeHorsAbandon
+            , CandidacyStatusFilter.ParcoursConfirmeHorsAbandon
+            , CandidacyStatusFilter.DemandeFinancementEnvoyeHorsAbandon
+            , CandidacyStatusFilter.DemandePaiementEnvoyeeHorsAbandon
             ]
 
-        viewFilter : Candidacy.Step -> Html msg
+        viewFilter : CandidacyStatusFilter -> Html msg
         viewFilter status =
-            let
-                loweredStatus =
-                    status
-                        |> Admin.Enum.CandidacyStatusStep.toString
-                        |> String.toLower
-            in
-            link (Just loweredStatus) (Candidacy.statusToCategoryString status)
+            link status (candidacyStatusFilterToReadableString status)
     in
     [ ul
         [ class "font-semibold text-gray-900 py-2"
         , class "fr-sidemenu__list"
         ]
-        [ link Nothing "Toutes les candidatures actives"
+        [ viewFilter CandidacyStatusFilter.ActiveHorsAbandon
         , li
             []
             [ ul
@@ -95,19 +87,19 @@ view candidacyCountByStatus filters context =
               <|
                 List.map viewFilter statuses
             ]
-        , link (Just "abandon") "Toutes les candidatures abandonnées"
-        , link (Just "reorientation") "Toutes les candidatures réorientées"
-        , link (Just "archive") "Toutes les candidatures supprimées"
-        , link (Just "projet") "Tous les projets en cours d'édition"
+        , viewFilter CandidacyStatusFilter.Abandon
+        , viewFilter CandidacyStatusFilter.ReorienteeHorsAbandon
+        , viewFilter CandidacyStatusFilter.ArchiveHorsAbandonHorsReorientation
+        , viewFilter CandidacyStatusFilter.ProjetHorsAbandon
         ]
     ]
 
 
-viewLink : Context -> Filters -> Int -> Maybe String -> String -> Html msg
-viewLink context filters count maybeStatus label =
+viewLink : Context -> Filters -> Int -> CandidacyStatusFilter -> String -> Html msg
+viewLink context filters count statusFilter label =
     let
         isSelected =
-            filters.status == maybeStatus
+            filters.status == statusFilter
     in
     li
         []
@@ -124,7 +116,7 @@ viewLink context filters count maybeStatus label =
                   )
                 ]
             , Route.href context.baseUrl <|
-                Route.Candidacies { status = maybeStatus }
+                Route.Candidacies { status = statusFilter }
             ]
             [ text label, viewCount count ]
         ]

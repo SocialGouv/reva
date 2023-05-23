@@ -23,11 +23,9 @@ import Html exposing (Html, div, input, label, li, nav, p, strong, text, ul)
 import Html.Attributes exposing (attribute, class, classList, for, id, name, placeholder, type_, value)
 import Html.Attributes.Extra exposing (role)
 import Html.Events exposing (onClick, onInput)
-import List.Extra
 import RemoteData exposing (RemoteData(..))
 import Route
 import String exposing (String)
-import Time
 import View
 import View.Candidacy
 import View.Candidacy.Filters exposing (Filters)
@@ -56,44 +54,7 @@ type alias Model =
     }
 
 
-toStatusFilterEnum : Maybe String -> Maybe Admin.Enum.CandidacyStatusFilter.CandidacyStatusFilter
-toStatusFilterEnum status =
-    case status of
-        Just "abandon" ->
-            Just Admin.Enum.CandidacyStatusFilter.Abandon
-
-        Just "reorientation" ->
-            Just Admin.Enum.CandidacyStatusFilter.ReorienteeHorsAbandon
-
-        Just "archive" ->
-            Just Admin.Enum.CandidacyStatusFilter.ArchiveHorsAbandonHorsReorientation
-
-        Just "demande_paiement_envoyee" ->
-            Just Admin.Enum.CandidacyStatusFilter.DemandePaiementEnvoyeeHorsAbandon
-
-        Just "demande_financement_envoye" ->
-            Just Admin.Enum.CandidacyStatusFilter.DemandeFinancementEnvoyeHorsAbandon
-
-        Just "parcours_confirme" ->
-            Just Admin.Enum.CandidacyStatusFilter.ParcoursConfirmeHorsAbandon
-
-        Just "parcours_envoye" ->
-            Just Admin.Enum.CandidacyStatusFilter.ParcoursEnvoyeHorsAbandon
-
-        Just "prise_en_charge" ->
-            Just Admin.Enum.CandidacyStatusFilter.PriseEnChargeHorsAbandon
-
-        Just "validation" ->
-            Just Admin.Enum.CandidacyStatusFilter.ValidationHorsAbandon
-
-        Just "projet" ->
-            Just Admin.Enum.CandidacyStatusFilter.ProjetHorsAbandon
-
-        _ ->
-            Just Admin.Enum.CandidacyStatusFilter.ActiveHorsAbandon
-
-
-withStatusFilter : Context -> Maybe String -> Model -> ( Model, Cmd Msg )
+withStatusFilter : Context -> CandidacyStatusFilter -> Model -> ( Model, Cmd Msg )
 withStatusFilter context status model =
     let
         statusChanged =
@@ -105,7 +66,7 @@ withStatusFilter context status model =
 
         command =
             if statusChanged then
-                Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (toStatusFilterEnum status) model.filters.search
+                Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (Just status) model.filters.search
 
             else
                 Cmd.none
@@ -113,18 +74,18 @@ withStatusFilter context status model =
     ( { model | filters = model.filters |> withNewStatus }, command )
 
 
-init : Context -> Maybe String -> ( Model, Cmd Msg )
-init context maybeStatusFilters =
+init : Context -> CandidacyStatusFilter -> ( Model, Cmd Msg )
+init context statusFilter =
     let
         defaultModel : Model
         defaultModel =
-            { filters = { search = Nothing, status = maybeStatusFilters }
+            { filters = { search = Nothing, status = statusFilter }
             , state = { candidacies = RemoteData.Loading, candidacyCountByStatus = RemoteData.Loading, search = Nothing }
             }
 
         defaultCmd =
             Cmd.batch
-                [ Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (toStatusFilterEnum maybeStatusFilters) defaultModel.filters.search
+                [ Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (Just statusFilter) defaultModel.filters.search
                 , Api.Candidacy.getCandidacyCountByStatus context.endpoint context.token GotCandidacyCountByStatus
                 ]
     in
@@ -426,14 +387,14 @@ update context msg model =
                 filters =
                     model.filters
             in
-            ( { model | filters = { filters | search = model.state.search } }, Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (toStatusFilterEnum model.filters.status) model.state.search )
+            ( { model | filters = { filters | search = model.state.search } }, Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (Just model.filters.status) model.state.search )
 
         UserClearedSearch ->
             let
                 filters =
                     model.filters
             in
-            ( { model | filters = { filters | search = Nothing } }, Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (toStatusFilterEnum model.filters.status) Nothing )
+            ( { model | filters = { filters | search = Nothing } }, Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (Just model.filters.status) Nothing )
 
         GotCandidacyCountByStatus remoteCandidacyCountByStatus ->
             ( { model | state = model.state |> withCandidacyCountByStatus remoteCandidacyCountByStatus }

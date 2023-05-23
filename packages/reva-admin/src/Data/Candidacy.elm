@@ -10,6 +10,7 @@ module Data.Candidacy exposing
     , Step
     , candidacyIdFromString
     , candidacyIdToString
+    , candidacyStatusFilterToReadableString
     , currentStatusPosition
     , isActive
     , isCandidacyArchived
@@ -27,6 +28,7 @@ module Data.Candidacy exposing
     , toDirectoryPosition
     )
 
+import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Admin.Enum.Duration exposing (Duration)
 import Admin.Object.CandidacyCountByStatus exposing (activeHorsAbandon)
@@ -180,6 +182,43 @@ statusToCategoryString status =
 
         _ ->
             "Statut inconnu"
+
+
+candidacyStatusFilterToReadableString : CandidacyStatusFilter -> String
+candidacyStatusFilterToReadableString status =
+    case status of
+        CandidacyStatusFilter.ActiveHorsAbandon ->
+            "Toutes les candidatures actives "
+
+        CandidacyStatusFilter.Abandon ->
+            "Toutes les candidatures abandonnées"
+
+        CandidacyStatusFilter.ReorienteeHorsAbandon ->
+            "Toutes les candidatures réorientées"
+
+        CandidacyStatusFilter.ArchiveHorsAbandonHorsReorientation ->
+            "Toutes les candidatures supprimées"
+
+        CandidacyStatusFilter.ParcoursConfirmeHorsAbandon ->
+            "Parcours confirmés par le candidat"
+
+        CandidacyStatusFilter.PriseEnChargeHorsAbandon ->
+            "Candidatures prises en charge"
+
+        CandidacyStatusFilter.ParcoursEnvoyeHorsAbandon ->
+            "Parcours envoyés "
+
+        CandidacyStatusFilter.DemandeFinancementEnvoyeHorsAbandon ->
+            "Demandes de financement envoyées"
+
+        CandidacyStatusFilter.DemandePaiementEnvoyeeHorsAbandon ->
+            "Demandes de paiement envoyées"
+
+        CandidacyStatusFilter.ValidationHorsAbandon ->
+            "Nouvelles candidatures"
+
+        CandidacyStatusFilter.ProjetHorsAbandon ->
+            "Tous les projets en cours d'édition"
 
 
 toDirectoryPosition : CandidacySummary -> Int
