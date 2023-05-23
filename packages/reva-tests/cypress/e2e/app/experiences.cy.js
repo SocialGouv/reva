@@ -4,7 +4,7 @@ const experienceTitle2 = "Experience 2";
 const experienceDescription1 = "Description 1";
 const experienceDescription2 = "Description 2";
 
-import { stubMutation, stubQuery } from "../utils/graphql";
+import { stubMutation, stubQuery } from "../../utils/graphql";
 
 context("Experiences", () => {
   it("add and edit an experience", function () {

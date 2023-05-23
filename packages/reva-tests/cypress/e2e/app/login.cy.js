@@ -1,4 +1,4 @@
-import { stubMutation, stubQuery } from "../utils/graphql";
+import { stubMutation, stubQuery } from "../../utils/graphql";
 
 const email = "email@example.com";
 

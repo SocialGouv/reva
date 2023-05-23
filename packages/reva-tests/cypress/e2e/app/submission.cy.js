@@ -1,4 +1,4 @@
-import { stubMutation, stubQuery } from "../utils/graphql";
+import { stubMutation, stubQuery } from "../../utils/graphql";
 
 context("Submission", () => {
   it("log on a submitted project", function () {

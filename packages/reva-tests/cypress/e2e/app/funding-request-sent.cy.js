@@ -1,4 +1,4 @@
-import { stubMutation, stubQuery } from "../utils/graphql";
+import { stubMutation, stubQuery } from "../../utils/graphql";
 
 context("Funding Request Sent", () => {
   describe("Testing correct screen", () => {

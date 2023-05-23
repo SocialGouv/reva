@@ -1,4 +1,4 @@
-import { stubMutation, stubQuery } from "../utils/graphql";
+import { stubMutation, stubQuery } from "../../utils/graphql";
 
 context("Empty candidacy", () => {
   it("prevent organism selection", function () {
