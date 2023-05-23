@@ -13,9 +13,7 @@ import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep)
 import Api.Candidacy
 import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
-import BetaGouv.DSFR.Icons exposing (IconName)
-import BetaGouv.DSFR.Icons.System exposing (closeCircleFill, closeLine)
-import BetaGouv.DSFR.Icons.Weather exposing (moonFill)
+import BetaGouv.DSFR.Icons.System exposing (closeLine)
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyCountByStatus, CandidacyId, CandidacySummary)
 import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
