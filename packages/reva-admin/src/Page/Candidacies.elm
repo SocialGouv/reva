@@ -14,7 +14,7 @@ import Api.Candidacy
 import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
 import BetaGouv.DSFR.Icons.System exposing (closeLine)
-import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyCountByStatus, CandidacyId, CandidacySummary)
+import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyCountByStatus, CandidacyId, CandidacySummary, candidacyStatusFilterToReadableString)
 import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
@@ -187,7 +187,7 @@ viewContent context filters candidacyCountByStatus candidacies =
         filterByStatusTitle
         upperNavContent
         (View.Candidacy.Filters.view candidacyCountByStatus filters context)
-        (viewDirectoryPanel context candidacies filters.search)
+        (viewDirectoryPanel context (candidacyStatusFilterToReadableString filters.status) candidacies filters.search)
 
 
 viewDirectoryHeader : Context -> Maybe String -> Html Msg
@@ -255,8 +255,8 @@ viewDirectoryHeader context searchFilter =
         ]
 
 
-viewDirectoryPanel : Context -> List CandidacySummary -> Maybe String -> List (Html Msg)
-viewDirectoryPanel context candidacies searchFilter =
+viewDirectoryPanel : Context -> String -> List CandidacySummary -> Maybe String -> List (Html Msg)
+viewDirectoryPanel context title candidacies searchFilter =
     [ viewDirectoryHeader context searchFilter
     , nav
         [ dataTest "directory"
@@ -264,12 +264,12 @@ viewDirectoryPanel context candidacies searchFilter =
         , class "sm:px-6"
         , attribute "aria-label" "Candidats"
         ]
-        [ viewDirectory context candidacies ]
+        [ viewDirectory context title candidacies ]
     ]
 
 
-viewDirectory : Context -> List Candidacy.CandidacySummary -> Html Msg
-viewDirectory context candidacies =
+viewDirectory : Context -> String -> List Candidacy.CandidacySummary -> Html Msg
+viewDirectory context title candidacies =
     div
         [ dataTest "directory-group", class "relative mb-2" ]
         [ div
@@ -277,7 +277,7 @@ viewDirectory context candidacies =
             , class "top-0 text-xl font-semibold text-slate-700"
             , class "bg-white text-gray-900"
             ]
-            [ h2 [ class "mb-0" ] [] ]
+            [ h2 [ class "mb-0" ] [ text (title ++ " (" ++ String.fromInt (List.length candidacies) ++ ")") ] ]
         , List.map (viewItem context) candidacies
             |> ul [ class "list-none pl-0 mt-0 relative z-0" ]
         ]
