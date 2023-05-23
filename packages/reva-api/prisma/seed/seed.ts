@@ -65,6 +65,96 @@ async function main() {
     }),
     upsertCommand: prisma.typeDiplome.upsert,
   });
+
+  // Certifications : referentials/certifications_new.csv
+  // await prisma.certification.deleteMany({});  // TODO : virer ça!!
+  // await upsertCsvRows<
+  //   Prisma.CertificationCreateInput & {
+  //     level: string;
+  //     certificationOnConventionCollective: string;
+  //     certificationOnDomaine: string;
+  //   },
+  //   Prisma.CertificationUpsertArgs
+  // >({
+  //   filePath: "./referentials/certifications_new.csv",
+  //   headersDefinition: [
+  //     "rncpId",
+  //     "id",
+  //     "label",
+  //     "summary",
+  //     undefined,
+  //     "typeDiplome",
+  //     "level",
+  //     undefined,
+  //     "certificationOnConventionCollective",
+  //     undefined,
+  //     "certificationOnDomaine",
+  //     undefined,
+  //     undefined,
+  //     undefined,
+  //     undefined,
+  //   ],
+  //   transform: ({
+  //     id,
+  //     label,
+  //     rncpId,
+  //     summary,
+  //     level,
+  //     typeDiplome,
+  //     certificationOnConventionCollective,
+  //     certificationOnDomaine,
+  //   }) => ({
+  //     where: { id },
+  //     create: {
+  //       id,
+  //       rncpId,
+  //       label,
+  //       level: parseInt(level),
+  //       summary,
+  //       acronym: "",
+  //       slug: slugify(label),
+  //       typeDiplomeId: typeDiplome as string,
+  //       certificationOnDomaine: certificationOnDomaine
+  //         ? {
+  //             connect: parseCsvList(certificationOnDomaine).map(
+  //               (domaineId: string) => ({
+  //                 domaineId_certificationId: {
+  //                   domaineId,
+  //                   certificationId: id as string,
+  //                 },
+  //               })
+  //             ),
+  //           }
+  //         : undefined,
+  //       certificationOnConventionCollective: certificationOnConventionCollective
+  //         ? {
+  //             connect: parseCsvList(certificationOnConventionCollective).map(
+  //               (ccnId: string) => ({
+  //                 ccnId_certificationId: {
+  //                   ccnId,
+  //                   certificationId: id as string,
+  //                 },
+  //               })
+  //             ),
+  //           }
+  //         : undefined,
+  //     },
+  //     update: {
+  //       rncpId,
+  //       label,
+  //       level: parseInt(level),
+  //       summary,
+  //       acronym: "",
+  //       slug: slugify(label),
+  //       typeDiplomeId: typeDiplome as string,
+  //     },
+  //   }),
+  //   upsertCommand: prisma.certification.upsert,
+  // });
+}
+
+function parseCsvList(str: string): string[] {
+  return str.split(",").map((s: string) => s.trim());
 }
 
 main()
