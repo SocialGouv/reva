@@ -160,8 +160,8 @@ changeRouteTo context route model =
             Candidacies.init model.context filters.status
                 |> updateWith Candidacies GotCandidaciesMsg model
 
-        ( Route.Subscriptions filters, _ ) ->
-            Subscriptions.init model.context filters.status
+        ( Route.Subscriptions, _ ) ->
+            Subscriptions.init model.context
                 |> updateWith Subscriptions GotSubscriptionsMsg model
 
         ( Route.Subscription subscriptionId, _ ) ->

@@ -19,12 +19,10 @@ import String exposing (String)
 import View
 import View.Date exposing (toFullFormat)
 import View.Helpers exposing (dataTest)
-import View.Subscription.Filters exposing (Filters)
 
 
 type Msg
     = GotSubscriptionsResponse (RemoteData String (List SubscriptionSummary))
-    | UserAddedFilter String
     | ClickedValidation String
     | ClickedRejection String
     | ClickedViewMore String
@@ -39,18 +37,16 @@ type alias State =
 
 
 type alias Model =
-    { filters : Filters
-    , state : State
+    { state : State
     }
 
 
-init : Context -> Maybe String -> ( Model, Cmd Msg )
-init context maybeStatusFilters =
+init : Context -> ( Model, Cmd Msg )
+init context =
     let
         defaultModel : Model
         defaultModel =
-            { filters = { search = Nothing }
-            , state =
+            { state =
                 { subscriptions = RemoteData.Loading
                 , errors = []
                 }
@@ -103,17 +99,7 @@ view context model =
             div [ class "text-red-500" ] [ text errors ]
 
         Success subscriptions ->
-            let
-                filter f field l =
-                    case field model.filters of
-                        Just value ->
-                            List.filter (f value) l
-
-                        Nothing ->
-                            l
-            in
             subscriptions
-                |> filter Subscription.filterByWords .search
                 |> viewContent context model.state.errors
 
 
@@ -217,13 +203,6 @@ update context msg model =
     case msg of
         GotSubscriptionsResponse remoteSubscriptions ->
             ( model, Cmd.none ) |> withSubscriptions remoteSubscriptions
-
-        UserAddedFilter search ->
-            let
-                filters =
-                    model.filters
-            in
-            ( { model | filters = { filters | search = Just search } }, Cmd.none )
 
         -- VALIDATION
         ClickedValidation id ->

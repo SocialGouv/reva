@@ -214,7 +214,7 @@ viewContent context filters candidacyCountByStatus candidacies =
                 [ Html.a
                     [ class "fr-link"
                     , class "md:text-lg text-gray-900 hover:text-blue-900"
-                    , Route.href context.baseUrl (Route.Subscriptions Route.emptyFilters)
+                    , Route.href context.baseUrl Route.Subscriptions
                     ]
                     [ text "Validation des inscriptions en attente" ]
                 ]

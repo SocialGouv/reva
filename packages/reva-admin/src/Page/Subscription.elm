@@ -95,7 +95,7 @@ viewContent : Context -> List String -> Subscription -> Html Msg
 viewContent context errors subscription =
     View.article
         "subscription"
-        (Route.href context.baseUrl (Route.Subscriptions Route.emptyFilters))
+        (Route.href context.baseUrl Route.Subscriptions)
         "Toutes les inscriptions"
         [ div
             [ dataTest "directory-item"
@@ -206,7 +206,7 @@ update context msg model =
         redirectToSubscriptions =
             Nav.pushUrl
                 context.navKey
-                (Route.toString context.baseUrl (Route.Subscriptions Route.emptyFilters))
+                (Route.toString context.baseUrl Route.Subscriptions)
     in
     case msg of
         GotSubscriptionResponse remoteSubscription ->

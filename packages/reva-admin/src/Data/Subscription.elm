@@ -1,4 +1,4 @@
-module Data.Subscription exposing (Subscription, SubscriptionSummary, filterByWords)
+module Data.Subscription exposing (Subscription, SubscriptionSummary)
 
 import Admin.Enum.LegalStatus exposing (LegalStatus)
 import Admin.Enum.OrganismTypology exposing (OrganismTypology)
@@ -36,8 +36,3 @@ type alias Subscription =
     , departmentsWithOrganismMethods : List DepartmentWithOrganismMethods
     , qualiopiCertificateExpiresAt : Timestamp
     }
-
-
-filterByWords : String -> SubscriptionSummary -> Bool
-filterByWords words candidacySummary =
-    True
