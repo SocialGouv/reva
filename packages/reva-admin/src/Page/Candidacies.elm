@@ -8,7 +8,7 @@ module Page.Candidacies exposing
     )
 
 import Accessibility exposing (button, h1, h2, h3)
-import Admin.Enum.CandidacyStatusFilter
+import Admin.Enum.CandidacyStatusFilter exposing (CandidacyStatusFilter)
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep)
 import Api.Candidacy
 import Api.Token exposing (Token)
@@ -192,26 +192,7 @@ view context model =
             div [ class "text-red-500" ] [ text errors ]
 
         ( _, Success ( candidacies, candidacyCountByStatus ) ) ->
-            let
-                preFilteredCandidacies =
-                    case model.filters.status of
-                        Just "abandon" ->
-                            candidacies
-
-                        Just "archive" ->
-                            candidacies
-
-                        Just "reorientation" ->
-                            candidacies
-
-                        Just _ ->
-                            candidacies |> List.filter (not << .isDroppedOut)
-
-                        Nothing ->
-                            -- When not filter is selected, we display only active candidacy
-                            candidacies |> List.filter Candidacy.isActive
-            in
-            preFilteredCandidacies
+            candidacies
                 |> viewContent context model.filters candidacyCountByStatus
 
 
@@ -226,23 +207,8 @@ viewContent :
     -> CandidacyCountByStatus
     -> List CandidacySummary
     -> Html Msg
-viewContent context filters candidacyCountByStatus filteredCandidacies =
+viewContent context filters candidacyCountByStatus candidacies =
     let
-        haveBothSameStatusAndNotDroppedOut : CandidacySummary -> CandidacySummary -> Bool
-        haveBothSameStatusAndNotDroppedOut c1 c2 =
-            c1.lastStatus.status == c2.lastStatus.status && c1.isDroppedOut == False && c2.isDroppedOut == False
-
-        areBothDroppedOut : CandidacySummary -> CandidacySummary -> Bool
-        areBothDroppedOut c1 c2 =
-            c1.isDroppedOut == True && c2.isDroppedOut == True
-
-        candidaciesByStatus : List ( CandidacySummary, List CandidacySummary )
-        candidaciesByStatus =
-            filteredCandidacies
-                |> List.sortBy (.sentAt >> Maybe.map .posix >> Maybe.map Time.posixToMillis >> Maybe.withDefault 0 >> (*) -1)
-                |> List.Extra.gatherWith (\c1 c2 -> haveBothSameStatusAndNotDroppedOut c1 c2 || areBothDroppedOut c1 c2)
-                |> List.sortBy (\( c, _ ) -> Candidacy.toDirectoryPosition c)
-
         upperNavContent =
             if Api.Token.isAdmin context.token then
                 [ Html.a
@@ -260,7 +226,7 @@ viewContent context filters candidacyCountByStatus filteredCandidacies =
         filterByStatusTitle
         upperNavContent
         (View.Candidacy.Filters.view candidacyCountByStatus filters context)
-        (viewDirectoryPanel context candidaciesByStatus filters.search)
+        (viewDirectoryPanel context candidacies filters.search)
 
 
 viewDirectoryHeader : Context -> Maybe String -> Html Msg
@@ -328,25 +294,21 @@ viewDirectoryHeader context searchFilter =
         ]
 
 
-viewDirectoryPanel : Context -> List ( CandidacySummary, List CandidacySummary ) -> Maybe String -> List (Html Msg)
-viewDirectoryPanel context candidaciesByStatus searchFilter =
+viewDirectoryPanel : Context -> List CandidacySummary -> Maybe String -> List (Html Msg)
+viewDirectoryPanel context candidacies searchFilter =
     [ viewDirectoryHeader context searchFilter
-    , List.map (viewDirectory context) candidaciesByStatus
-        |> nav
-            [ dataTest "directory"
-            , class "min-h-0 overflow-y-auto"
-            , class "sm:px-6"
-            , attribute "aria-label" "Candidats"
-            ]
+    , nav
+        [ dataTest "directory"
+        , class "min-h-0 overflow-y-auto"
+        , class "sm:px-6"
+        , attribute "aria-label" "Candidats"
+        ]
+        [ viewDirectory context candidacies ]
     ]
 
 
-viewDirectory : Context -> ( CandidacySummary, List Candidacy.CandidacySummary ) -> Html Msg
-viewDirectory context ( firstCandidacy, candidacies ) =
-    let
-        candidaciesInCategory =
-            List.length candidacies + 1
-    in
+viewDirectory : Context -> List Candidacy.CandidacySummary -> Html Msg
+viewDirectory context candidacies =
     div
         [ dataTest "directory-group", class "relative mb-2" ]
         [ div
@@ -354,8 +316,8 @@ viewDirectory context ( firstCandidacy, candidacies ) =
             , class "top-0 text-xl font-semibold text-slate-700"
             , class "bg-white text-gray-900"
             ]
-            [ h2 [ class "mb-0" ] [ text (Candidacy.toCategoryString firstCandidacy ++ " (" ++ String.fromInt candidaciesInCategory ++ ")") ] ]
-        , List.map (viewItem context) (firstCandidacy :: candidacies)
+            [ h2 [ class "mb-0" ] [] ]
+        , List.map (viewItem context) candidacies
             |> ul [ class "list-none pl-0 mt-0 relative z-0" ]
         ]
 
