@@ -18,6 +18,7 @@ import View
 import View.Candidacy.Tab exposing (Value(..))
 import View.Date
 import View.Helpers exposing (dataTest)
+import Data.Candidacy exposing (canDropoutCandidacy)
 
 
 view :
@@ -123,7 +124,7 @@ view context config =
                         )
                     |> Button.secondary
                     |> Button.view
-            , if config.candidacy.dropOutDate == Nothing then
+            , if canDropoutCandidacy config.candidacy then
                 Button.new { onClick = Nothing, label = "Déclarer l'abandon du candidat" }
                     |> Button.linkButton
                         (Route.toString context.baseUrl

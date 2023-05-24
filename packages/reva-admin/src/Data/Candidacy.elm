@@ -9,6 +9,7 @@ module Data.Candidacy exposing
     , CandidacySummaryPage
     , DateWithLabels
     , Step
+    , canDropoutCandidacy
     , candidacyIdFromString
     , candidacyIdToString
     , candidacyStatusFilterToReadableString
@@ -365,3 +366,8 @@ isCandidacyArchived candidacy =
 isCandidacyReoriented : Candidacy -> Bool
 isCandidacyReoriented candidacy =
     not <| candidacy.reorientationReason == Nothing
+
+
+canDropoutCandidacy : Candidacy -> Bool
+canDropoutCandidacy candidacy =
+    candidacy.dropOutDate == Nothing && (not <| isCandidacyArchived candidacy)
