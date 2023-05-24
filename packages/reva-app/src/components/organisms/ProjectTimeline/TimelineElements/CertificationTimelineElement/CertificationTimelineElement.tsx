@@ -6,7 +6,7 @@ export const CertificationTimelineElement = () => {
   const { state, mainService } = useMainMachineContext();
   return (
     <TimelineElement
-      title="Votre diplôme"
+      title="Diplôme visé"
       status={
         state.context.candidacyStatus === "PROJET"
           ? state.context.certification
