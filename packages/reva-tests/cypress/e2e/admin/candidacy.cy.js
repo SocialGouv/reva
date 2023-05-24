@@ -1,17 +1,17 @@
-import { stubMutation, stubQuery } from "../../utils/graphql";
+import { stubQuery } from "../../utils/graphql";
 
 context("Candidacy", () => {
   beforeEach(() => {
     cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "getDepartments", "departments.json");
-      stubMutation(req, "candidate_login", "candidate1.json");
-      stubQuery(req, "getReferential", "referential.json");
-      stubQuery(req, "Certifications", "certifications.json");
-      stubQuery(req, "Certification", "certification-c2.json");
-      stubMutation(
+      stubQuery(
         req,
-        "candidacy_updateCertification",
-        "updated-candidacy1.json"
+        "candidacy_candidacyCountByStatus",
+        "admin/candidacy-count-by-status.json"
+      );
+      stubQuery(
+        req,
+        "candidacy_getCandidacies1555104720",
+        "admin/candidacies.json"
       );
     });
 

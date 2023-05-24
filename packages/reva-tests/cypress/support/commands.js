@@ -27,22 +27,22 @@ Cypress.Commands.add("login", (config = { token: "abc" }, options) => {
 
 Cypress.Commands.add("admin", (config = { token: "abc" }, options) => {
   cy.intercept("**/realms/reva/protocol/openid-connect/3p-cookies/step1.html", {
-    fixture: "auth-step1.html",
+    fixture: "admin/auth-step1.html",
   });
 
   cy.intercept(
     "**/realms/reva/protocol/openid-connect/login-status-iframe.html",
     {
-      fixture: "auth-status-iframe.html",
+      fixture: "admin/auth-status-iframe.html",
     }
   );
 
   cy.intercept("GET", "**/admin/silent-check-sso.html", {
-    fixture: "auth-silent-check-sso.html",
+    fixture: "admin/auth-silent-check-sso.html",
   });
 
   cy.intercept("POST", "**/realms/reva/protocol/openid-connect/token", {
-    fixture: "auth-token.json",
+    fixture: "admin/auth-token.json",
   });
 
   cy.visit(`/admin/`, {

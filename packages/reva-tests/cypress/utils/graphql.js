@@ -4,6 +4,8 @@
 // Utility to match GraphQL mutation based on the operation name
 export const hasOperationName = (req, operationName) => {
   const { body } = req;
+  console.log(body);
+  console.log(body.hasOwnProperty("operationName"));
   return (
     body.hasOwnProperty("operationName") && body.operationName === operationName
   );
