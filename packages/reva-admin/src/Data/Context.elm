@@ -11,4 +11,5 @@ type alias Context =
     , token : Token
     , uploadEndpoint : String
     , isScrollingToTop : Bool
+    , isMobile : Bool
     }
