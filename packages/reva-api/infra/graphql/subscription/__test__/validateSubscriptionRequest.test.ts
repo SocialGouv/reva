@@ -143,7 +143,7 @@ describe("Subscription Request / Validate", () => {
     );
   });
 
-  test("Should fail when organism already exist with same Siret", async () => {
+  test("Should fail when organism already exist with same Siret and typology", async () => {
     const sameSiret = "0101010101";
     await prismaClient.organism.create({
       data: {
@@ -155,6 +155,8 @@ describe("Subscription Request / Validate", () => {
       data: {
         ...subreqWithDepts,
         companySiret: sameSiret,
+        accountEmail: __TEST_IAM_PASS_CHECK__,
+        typology: "experimentation",
       },
     });
     const subreqId = subreq.id;
@@ -177,6 +179,43 @@ describe("Subscription Request / Validate", () => {
     expect(result.errors[0].extensions.code).toBe(
       "ORGANISM_ALREADY_EXISTS"
     );
+  });
+
+  test("Should succeed when organism already exist with same Siret but different typology provided",  async () => {
+    const sameSiret = "0101010101";
+    await prismaClient.organism.create({
+      data: {
+        ...organismIperia,
+        siret:sameSiret,
+        typology: "expertBranche",
+      }
+    });
+    const subreq = await prismaClient.subscriptionRequest.create({
+      data: {
+        ...subreqWithDepts,
+        companySiret: sameSiret,
+        accountEmail: __TEST_IAM_PASS_CHECK__,
+        typology: "expertFiliere",
+      },
+    });
+    const subreqId = subreq.id;
+    const resp = await injectGraphql({
+      fastify: (global as any).fastify,
+      authorization: authorizationHeaderForUser({
+        role: "admin",
+        keycloakId: "blabla",
+      }),
+      payload: {
+        requestType: "mutation",
+        endpoint: "subscription_validateSubscriptionRequest",
+        arguments: { subscriptionRequestId: subreqId },
+        returnFields: "",
+      },
+    });
+    expect(resp.statusCode).toEqual(200);
+    expect(resp.json()).toMatchObject({
+      data: { subscription_validateSubscriptionRequest: "Ok" },
+    });
   });
 
   test("Should fail when account already exist with same Email", async () => {
