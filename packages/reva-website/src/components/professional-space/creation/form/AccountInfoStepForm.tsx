@@ -104,7 +104,7 @@ export const AccountInfoStepForm = () => {
         </fieldset>
         <div className="flex gap-2 ml-auto mt-4">
           <Button priority="secondary" onClick={goBackToPreviousStep}>
-            Revenir à l'étape 4
+            Revenir à l'étape 3
           </Button>
           <Button type="submit">Valider le formulaire</Button>
         </div>
