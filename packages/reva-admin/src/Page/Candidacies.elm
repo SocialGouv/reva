@@ -402,7 +402,7 @@ update context msg model =
                 filters =
                     model.filters
             in
-            ( { model | filters = { filters | search = model.state.search } }, Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse model.filters.page (Just model.filters.status) model.state.search )
+            ( { model | filters = { filters | search = model.state.search, page = 1 } }, Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse 1 (Just model.filters.status) model.state.search )
 
         UserClearedSearch ->
             let
