@@ -16,6 +16,7 @@ import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
 import BetaGouv.DSFR.Icons.System exposing (closeLine)
 import BetaGouv.DSFR.Pagination
+import Browser.Events exposing (onKeyDown)
 import Data.Candidacy as Candidacy exposing (CandidacyCountByStatus, CandidacySummary, CandidacySummaryPage, candidacyStatusFilterToReadableString)
 import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
@@ -26,6 +27,7 @@ import Html exposing (Html, div, input, label, li, nav, p, strong, text, ul)
 import Html.Attributes exposing (attribute, class, classList, for, id, name, placeholder, type_, value)
 import Html.Attributes.Extra exposing (role)
 import Html.Events exposing (onClick, onInput)
+import Html.Events.Extra exposing (onEnter)
 import RemoteData exposing (RemoteData(..))
 import Route
 import String exposing (String)
@@ -254,6 +256,7 @@ viewDirectoryHeader context searchFilter =
                     , class "fr-input w-full h-10"
                     , placeholder "Rechercher"
                     , onInput UserUpdatedSearch
+                    , onEnter UserValidatedSearch
                     ]
                     []
                 , button
