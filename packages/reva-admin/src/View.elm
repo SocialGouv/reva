@@ -25,7 +25,7 @@ image attributes baseUrl imgName =
 skeleton : String -> Html msg
 skeleton extraClass =
     div
-        [ class "animate-pulse bg-gray-50"
+        [ class "animate-pulse bg-gray-100"
         , class extraClass
         ]
         []

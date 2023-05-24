@@ -14,8 +14,7 @@ import Api.Candidacy
 import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
 import BetaGouv.DSFR.Pagination
-import Browser.Events exposing (onKeyDown)
-import Data.Candidacy as Candidacy exposing (CandidacyCountByStatus, CandidacySummary, CandidacySummaryPage, candidacyStatusFilterToReadableString)
+import Data.Candidacy exposing (CandidacyCountByStatus, CandidacySummary, CandidacySummaryPage, candidacyStatusFilterToReadableString)
 import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
@@ -143,11 +142,8 @@ view context model =
                     , candidacySkeleton
                     ]
                 ]
-
-        currentCandidacyPageAndCountByStatus =
-            RemoteData.map2 Tuple.pair model.state.currentCandidacyPage model.state.candidacyCountByStatus
     in
-    case ( context.isScrollingToTop, currentCandidacyPageAndCountByStatus ) of
+    case ( context.isScrollingToTop, model.state.candidacyCountByStatus ) of
         ( _, NotAsked ) ->
             div [] []
 
@@ -160,9 +156,8 @@ view context model =
         ( _, Failure errors ) ->
             div [ class "text-red-500" ] [ text errors ]
 
-        ( _, Success ( currentCandidacyPage, candidacyCountByStatus ) ) ->
-            currentCandidacyPage
-                |> viewContent context model.filters candidacyCountByStatus
+        ( _, Success candidacyCountByStatus ) ->
+            viewContent context model candidacyCountByStatus
 
 
 filterByStatusTitle : String
@@ -172,11 +167,10 @@ filterByStatusTitle =
 
 viewContent :
     Context
-    -> Filters
+    -> Model
     -> CandidacyCountByStatus
-    -> CandidacySummaryPage
     -> Html Msg
-viewContent context filters candidacyCountByStatus candidacyPage =
+viewContent context model candidacyCountByStatus =
     let
         upperNavContent =
             if Api.Token.isAdmin context.token then
@@ -194,8 +188,8 @@ viewContent context filters candidacyCountByStatus candidacyPage =
     View.layout
         filterByStatusTitle
         upperNavContent
-        (View.Candidacy.Filters.view candidacyCountByStatus filters context)
-        (viewDirectoryPanel context (candidacyStatusFilterToReadableString filters.status) candidacyPage filters)
+        (View.Candidacy.Filters.view candidacyCountByStatus model.filters context)
+        (viewDirectoryPanel context model (candidacyStatusFilterToReadableString model.filters.status))
 
 
 viewDirectoryHeader : Context -> Html Msg
@@ -226,8 +220,8 @@ viewPager context currentPage totalPages statusFilter =
     BetaGouv.DSFR.Pagination.view currentPage totalPages (\p -> Route.toString context.baseUrl (Route.Candidacies (Route.Filters statusFilter p)))
 
 
-viewDirectoryPanel : Context -> String -> CandidacySummaryPage -> Filters -> List (Html Msg)
-viewDirectoryPanel context title candidacyPage filters =
+viewDirectoryPanel : Context -> Model -> String -> List (Html Msg)
+viewDirectoryPanel context model title =
     [ viewDirectoryHeader context
     , nav
         [ dataTest "directory"
@@ -235,36 +229,20 @@ viewDirectoryPanel context title candidacyPage filters =
         , class "sm:px-6"
         , attribute "aria-label" "Candidats"
         ]
-        [ viewDirectory context
-            title
-            candidacyPage.info.totalRows
-            candidacyPage.rows
-            filters
-        , div
-            [ class "flex justify-center" ]
-            [ viewPager context candidacyPage.info.currentPage candidacyPage.info.totalPages filters.status ]
+        [ viewDirectory context model title
+        , div [ class "flex justify-center" ] <|
+            case model.state.currentCandidacyPage of
+                Success candidacyPage ->
+                    [ viewPager context candidacyPage.info.currentPage candidacyPage.info.totalPages model.filters.status ]
+
+                _ ->
+                    []
         ]
     ]
 
 
-searchBar : Filters -> Int -> Html Msg
-searchBar filters totalRows =
-    let
-        countString =
-            if totalRows > 1 then
-                String.fromInt totalRows ++ " résultats"
-
-            else
-                String.fromInt totalRows ++ " résultat"
-
-        defaultSearchInfo search =
-            [ text <| countString ++ " pour « " ++ search ++ " »"
-            , Button.new { label = "Réinitialiser le filtre", onClick = Just UserClearedSearch }
-                |> Button.secondary
-                |> Button.withAttrs [ class "block mt-2" ]
-                |> Button.view
-            ]
-    in
+searchBar : Model -> Html Msg
+searchBar model =
     div [ class "mt-6" ]
         [ form
             [ onSubmit UserValidatedSearch ]
@@ -281,6 +259,7 @@ searchBar filters totalRows =
                     , class "fr-input w-full h-10"
                     , placeholder "Rechercher"
                     , onInput UserUpdatedSearch
+                    , Html.Attributes.value <| Maybe.withDefault "" model.state.search
                     ]
                     []
                 , button
@@ -291,21 +270,41 @@ searchBar filters totalRows =
                     [ text "Rechercher" ]
                 ]
             ]
-        , div [ class "mt-4 text-xl font-semibold" ] <|
-            case filters.search of
-                Just "" ->
-                    [ text countString ]
-
-                Nothing ->
-                    [ text countString ]
-
-                Just search ->
-                    defaultSearchInfo search
         ]
 
 
-viewDirectory : Context -> String -> Int -> List Candidacy.CandidacySummary -> Filters -> Html Msg
-viewDirectory context title totalRows candidacies filters =
+searchResults : Model -> Int -> Html Msg
+searchResults model totalRows =
+    let
+        countString =
+            if totalRows > 1 then
+                String.fromInt totalRows ++ " résultats"
+
+            else
+                String.fromInt totalRows ++ " résultat"
+
+        defaultSearchInfo search =
+            [ text <| countString ++ " pour « " ++ search ++ " »"
+            , Button.new { label = "Réinitialiser le filtre", onClick = Just UserClearedSearch }
+                |> Button.secondary
+                |> Button.withAttrs [ class "block mt-2" ]
+                |> Button.view
+            ]
+    in
+    div [ class "mt-4 text-xl font-semibold" ] <|
+        case model.filters.search of
+            Just "" ->
+                [ text countString ]
+
+            Nothing ->
+                [ text countString ]
+
+            Just search ->
+                defaultSearchInfo search
+
+
+viewDirectory : Context -> Model -> String -> Html Msg
+viewDirectory context model title =
     div
         [ dataTest "directory-group", class "relative mb-2" ]
         [ div
@@ -314,9 +313,33 @@ viewDirectory context title totalRows candidacies filters =
             , class "bg-white text-gray-900"
             ]
             [ h2 [ class "mb-0" ] [ text title ] ]
-        , searchBar filters totalRows
-        , List.map (viewItem context) candidacies
-            |> ul [ class "list-none pl-0 mt-0 relative z-0" ]
+        , searchBar model
+        , case model.state.currentCandidacyPage of
+            Success candidacyPage ->
+                div []
+                    [ searchResults model candidacyPage.info.totalRows
+                    , List.map (viewItem context) candidacyPage.rows
+                        |> ul [ class "list-none pl-0 mt-0 relative z-0" ]
+                    ]
+
+            Failure error ->
+                div [ class "my-2 font-medium text-red-500" ] [ text error ]
+
+            _ ->
+                div []
+                    [ View.skeleton "mt-5 mb-3 h-5 w-60"
+                    , case model.filters.search of
+                        Just "" ->
+                            text ""
+
+                        Nothing ->
+                            text ""
+
+                        _ ->
+                            View.skeleton "h-10 w-48"
+                    , View.skeleton "mt-8 h-[198px] w-full"
+                    , View.skeleton "mt-8 h-[198px] w-full"
+                    ]
         ]
 
 
@@ -424,14 +447,24 @@ update context msg model =
                 filters =
                     model.filters
             in
-            ( { model | filters = { filters | search = model.state.search, page = 1 } }, Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse 1 (Just model.filters.status) model.state.search )
+            ( { model
+                | filters = { filters | search = model.state.search, page = 1 }
+                , state = model.state |> withCandidacyPage Loading
+              }
+            , Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse 1 (Just model.filters.status) model.state.search
+            )
 
         UserClearedSearch ->
             let
                 filters =
                     model.filters
             in
-            ( { model | filters = { filters | search = Nothing } }, Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse model.filters.page (Just model.filters.status) Nothing )
+            ( { model
+                | filters = { filters | search = Nothing }
+                , state = model.state |> withCandidacyPage Loading
+              }
+            , Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse model.filters.page (Just model.filters.status) Nothing
+            )
 
         GotCandidacyCountByStatus remoteCandidacyCountByStatus ->
             ( { model | state = model.state |> withCandidacyCountByStatus remoteCandidacyCountByStatus }
