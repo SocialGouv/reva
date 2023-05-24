@@ -148,7 +148,7 @@ changeRouteTo context route model =
     case ( route, model.page ) of
         ( Route.Candidacies filters, Candidacies candidaciesModel ) ->
             candidaciesModel
-                |> Candidacies.withStatusFilter context filters.status
+                |> Candidacies.withFilters context filters.page filters.status
                 |> updateWith Candidacies GotCandidaciesMsg model
 
         ( Route.Candidacy tab, Candidacy candidacyModel ) ->
@@ -158,7 +158,7 @@ changeRouteTo context route model =
                 |> updateWith Candidacy GotCandidacyMsg model
 
         ( Route.Candidacies filters, _ ) ->
-            Candidacies.init model.context filters.status
+            Candidacies.init model.context filters.status filters.page
                 |> updateWith Candidacies GotCandidaciesMsg model
 
         ( Route.Subscriptions, _ ) ->
@@ -264,16 +264,16 @@ update msg model =
                         _ ->
                             route
 
-                statusfilter =
+                filters =
                     case route of
-                        Route.Candidacies filter ->
-                            filter.status
+                        Route.Candidacies f ->
+                            f
 
                         _ ->
-                            CandidacyStatusFilter.ActiveHorsAbandon
+                            { status = CandidacyStatusFilter.ActiveHorsAbandon, page = 1 }
 
                 ( candidaciesModel, candidaciesCmd ) =
-                    Candidacies.init newContext statusfilter
+                    Candidacies.init newContext filters.status filters.page
             in
             ( { model | context = newContext, page = Candidacies candidaciesModel }
             , Cmd.batch

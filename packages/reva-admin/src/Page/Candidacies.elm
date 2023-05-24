@@ -4,20 +4,23 @@ module Page.Candidacies exposing
     , init
     , update
     , view
-    , withStatusFilter
+    , withFilters
     )
 
 import Accessibility exposing (button, h1, h2, h3)
 import Admin.Enum.CandidacyStatusFilter exposing (CandidacyStatusFilter)
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep)
+import Admin.Object exposing (CandidacySummaryPage)
 import Api.Candidacy
 import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
 import BetaGouv.DSFR.Icons.System exposing (closeLine)
-import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyCountByStatus, CandidacyId, CandidacySummary, candidacyStatusFilterToReadableString)
+import BetaGouv.DSFR.Pagination
+import Data.Candidacy as Candidacy exposing (CandidacyCountByStatus, CandidacySummary, CandidacySummaryPage, candidacyStatusFilterToReadableString)
 import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
+import Data.Pagination exposing (PaginationInfo)
 import Data.Referential exposing (Referential)
 import Html exposing (Html, div, input, label, li, nav, p, strong, text, ul)
 import Html.Attributes exposing (attribute, class, classList, for, id, name, placeholder, type_, value)
@@ -34,7 +37,7 @@ import View.Helpers exposing (dataTest)
 
 
 type Msg
-    = GotCandidaciesResponse (RemoteData String (List CandidacySummary))
+    = GotCandidaciesResponse (RemoteData String CandidacySummaryPage)
     | UserUpdatedSearch String
     | UserValidatedSearch
     | UserClearedSearch
@@ -42,7 +45,7 @@ type Msg
 
 
 type alias State =
-    { candidacies : RemoteData String (List CandidacySummary)
+    { currentCandidacyPage : RemoteData String CandidacySummaryPage
     , candidacyCountByStatus : RemoteData String CandidacyCountByStatus
     , search : Maybe String
     }
@@ -54,47 +57,54 @@ type alias Model =
     }
 
 
-withStatusFilter : Context -> CandidacyStatusFilter -> Model -> ( Model, Cmd Msg )
-withStatusFilter context status model =
+withFilters : Context -> Int -> CandidacyStatusFilter -> Model -> ( Model, Cmd Msg )
+withFilters context page status model =
     let
         statusChanged =
             model.filters.status /= status
+
+        pageChanged =
+            model.filters.page /= page
 
         withNewStatus : Filters -> Filters
         withNewStatus filters =
             { filters | status = status }
 
+        withNewPage : Filters -> Filters
+        withNewPage filters =
+            { filters | page = page }
+
         command =
-            if statusChanged then
-                Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (Just status) model.filters.search
+            if statusChanged || pageChanged then
+                Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse page (Just status) model.filters.search
 
             else
                 Cmd.none
     in
-    ( { model | filters = model.filters |> withNewStatus }, command )
+    ( { model | filters = model.filters |> withNewPage |> withNewStatus }, command )
 
 
-init : Context -> CandidacyStatusFilter -> ( Model, Cmd Msg )
-init context statusFilter =
+init : Context -> CandidacyStatusFilter -> Int -> ( Model, Cmd Msg )
+init context statusFilter page =
     let
         defaultModel : Model
         defaultModel =
-            { filters = { search = Nothing, status = statusFilter }
-            , state = { candidacies = RemoteData.Loading, candidacyCountByStatus = RemoteData.Loading, search = Nothing }
+            { filters = { search = Nothing, status = statusFilter, page = page }
+            , state = { currentCandidacyPage = RemoteData.Loading, candidacyCountByStatus = RemoteData.Loading, search = Nothing }
             }
 
         defaultCmd =
             Cmd.batch
-                [ Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (Just statusFilter) defaultModel.filters.search
+                [ Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse page (Just statusFilter) defaultModel.filters.search
                 , Api.Candidacy.getCandidacyCountByStatus context.endpoint context.token GotCandidacyCountByStatus
                 ]
     in
     ( defaultModel, defaultCmd )
 
 
-withCandidacies : RemoteData String (List CandidacySummary) -> State -> State
-withCandidacies candidacies state =
-    { state | candidacies = candidacies }
+withCandidacyPage : RemoteData String CandidacySummaryPage -> State -> State
+withCandidacyPage candidacyPage state =
+    { state | currentCandidacyPage = candidacyPage }
 
 
 withCandidacyCountByStatus : RemoteData String CandidacyCountByStatus -> State -> State
@@ -136,10 +146,10 @@ view context model =
                     ]
                 ]
 
-        candidaciesAndCountByStatus =
-            RemoteData.map2 Tuple.pair model.state.candidacies model.state.candidacyCountByStatus
+        currentCandidacyPageAndCountByStatus =
+            RemoteData.map2 Tuple.pair model.state.currentCandidacyPage model.state.candidacyCountByStatus
     in
-    case ( context.isScrollingToTop, candidaciesAndCountByStatus ) of
+    case ( context.isScrollingToTop, currentCandidacyPageAndCountByStatus ) of
         ( _, NotAsked ) ->
             div [] []
 
@@ -152,8 +162,8 @@ view context model =
         ( _, Failure errors ) ->
             div [ class "text-red-500" ] [ text errors ]
 
-        ( _, Success ( candidacies, candidacyCountByStatus ) ) ->
-            candidacies
+        ( _, Success ( currentCandidacyPage, candidacyCountByStatus ) ) ->
+            currentCandidacyPage
                 |> viewContent context model.filters candidacyCountByStatus
 
 
@@ -166,9 +176,9 @@ viewContent :
     Context
     -> Filters
     -> CandidacyCountByStatus
-    -> List CandidacySummary
+    -> CandidacySummaryPage
     -> Html Msg
-viewContent context filters candidacyCountByStatus candidacies =
+viewContent context filters candidacyCountByStatus candidacyPage =
     let
         upperNavContent =
             if Api.Token.isAdmin context.token then
@@ -187,7 +197,7 @@ viewContent context filters candidacyCountByStatus candidacies =
         filterByStatusTitle
         upperNavContent
         (View.Candidacy.Filters.view candidacyCountByStatus filters context)
-        (viewDirectoryPanel context (candidacyStatusFilterToReadableString filters.status) candidacies filters.search)
+        (viewDirectoryPanel context (candidacyStatusFilterToReadableString filters.status) candidacyPage filters)
 
 
 viewDirectoryHeader : Context -> Maybe String -> Html Msg
@@ -255,21 +265,26 @@ viewDirectoryHeader context searchFilter =
         ]
 
 
-viewDirectoryPanel : Context -> String -> List CandidacySummary -> Maybe String -> List (Html Msg)
-viewDirectoryPanel context title candidacies searchFilter =
-    [ viewDirectoryHeader context searchFilter
+viewPager : Context -> Int -> Int -> CandidacyStatusFilter -> Html Msg
+viewPager context currentPage totalPages statusFilter =
+    BetaGouv.DSFR.Pagination.view currentPage totalPages (\p -> Route.toString context.baseUrl (Route.Candidacies (Route.Filters statusFilter p)))
+
+
+viewDirectoryPanel : Context -> String -> CandidacySummaryPage -> Filters -> List (Html Msg)
+viewDirectoryPanel context title candidacyPage filters =
+    [ viewDirectoryHeader context filters.search
     , nav
         [ dataTest "directory"
         , class "min-h-0 overflow-y-auto"
         , class "sm:px-6"
         , attribute "aria-label" "Candidats"
         ]
-        [ viewDirectory context title candidacies ]
+        [ viewDirectory context title candidacyPage.info.totalRows candidacyPage.rows, div [ class "flex justify-center" ] [ viewPager context candidacyPage.info.currentPage candidacyPage.info.totalPages filters.status ] ]
     ]
 
 
-viewDirectory : Context -> String -> List Candidacy.CandidacySummary -> Html Msg
-viewDirectory context title candidacies =
+viewDirectory : Context -> String -> Int -> List Candidacy.CandidacySummary -> Html Msg
+viewDirectory context title totalRows candidacies =
     div
         [ dataTest "directory-group", class "relative mb-2" ]
         [ div
@@ -277,7 +292,7 @@ viewDirectory context title candidacies =
             , class "top-0 text-xl font-semibold text-slate-700"
             , class "bg-white text-gray-900"
             ]
-            [ h2 [ class "mb-0" ] [ text (title ++ " (" ++ String.fromInt (List.length candidacies) ++ ")") ] ]
+            [ h2 [ class "mb-0" ] [ text (title ++ " (" ++ String.fromInt totalRows ++ ")") ] ]
         , List.map (viewItem context) candidacies
             |> ul [ class "list-none pl-0 mt-0 relative z-0" ]
         ]
@@ -370,8 +385,8 @@ viewItem context candidacy =
 update : Context -> Msg -> Model -> ( Model, Cmd Msg )
 update context msg model =
     case msg of
-        GotCandidaciesResponse remoteCandidacies ->
-            ( { model | state = model.state |> withCandidacies remoteCandidacies }
+        GotCandidaciesResponse remoteCandidacyPage ->
+            ( { model | state = model.state |> withCandidacyPage remoteCandidacyPage }
             , Cmd.none
             )
 
@@ -387,14 +402,14 @@ update context msg model =
                 filters =
                     model.filters
             in
-            ( { model | filters = { filters | search = model.state.search } }, Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (Just model.filters.status) model.state.search )
+            ( { model | filters = { filters | search = model.state.search } }, Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse model.filters.page (Just model.filters.status) model.state.search )
 
         UserClearedSearch ->
             let
                 filters =
                     model.filters
             in
-            ( { model | filters = { filters | search = Nothing } }, Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse (Just model.filters.status) Nothing )
+            ( { model | filters = { filters | search = Nothing } }, Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse model.filters.page (Just model.filters.status) Nothing )
 
         GotCandidacyCountByStatus remoteCandidacyCountByStatus ->
             ( { model | state = model.state |> withCandidacyCountByStatus remoteCandidacyCountByStatus }

@@ -15,6 +15,7 @@ import Admin.Object.Certification
 import Admin.Object.CertificationSummary
 import Admin.Object.Experience
 import Admin.Object.Organism
+import Admin.Object.PaginationInfo
 import Admin.Object.ReorientationReason
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
@@ -28,6 +29,7 @@ import Data.Candidacy exposing (CandidacyId)
 import Data.Candidate
 import Data.Certification
 import Data.Organism
+import Data.Pagination
 import Data.Referential
 import Graphql.Operation
 import Graphql.OptionalArgument as OptionalArgument exposing (OptionalArgument(..))
@@ -39,16 +41,17 @@ import View.Date exposing (toDateWithLabels)
 getCandidacies :
     String
     -> Token
-    -> (RemoteData String (List Data.Candidacy.CandidacySummary) -> msg)
+    -> (RemoteData String Data.Candidacy.CandidacySummaryPage -> msg)
+    -> Int
     -> Maybe Admin.Enum.CandidacyStatusFilter.CandidacyStatusFilter
     -> Maybe String
     -> Cmd msg
-getCandidacies endpointGraphql token toMsg statusFilter searchFilter =
+getCandidacies endpointGraphql token toMsg page statusFilter searchFilter =
     Query.getCandidacies
         (\optionals ->
             { optionals
-                | limit = Absent
-                , offset = Absent
+                | limit = Present 10
+                , offset = Present ((page - 1) * 10)
                 , statusFilter = OptionalArgument.fromMaybe statusFilter
                 , searchFilter = OptionalArgument.fromMaybe searchFilter
             }
@@ -165,10 +168,11 @@ candidateSelection =
 -- CANDIDACY SUMMARY
 
 
-summaryPageSelection : SelectionSet (List Data.Candidacy.CandidacySummary) Admin.Object.CandidacySummaryPage
+summaryPageSelection : SelectionSet Data.Candidacy.CandidacySummaryPage Admin.Object.CandidacySummaryPage
 summaryPageSelection =
-    SelectionSet.succeed identity
+    SelectionSet.succeed Data.Candidacy.CandidacySummaryPage
         |> with (Admin.Object.CandidacySummaryPage.rows summarySelection)
+        |> with (Admin.Object.CandidacySummaryPage.info pageInfoSelection)
 
 
 summarySelection : SelectionSet Data.Candidacy.CandidacySummary Admin.Object.CandidacySummary
@@ -192,6 +196,15 @@ summarySelection =
                 (Maybe.map toDateWithLabels)
                 Admin.Object.CandidacySummary.sentAt
             )
+
+
+pageInfoSelection : SelectionSet Data.Pagination.PaginationInfo Admin.Object.PaginationInfo
+pageInfoSelection =
+    SelectionSet.succeed Data.Pagination.PaginationInfo
+        |> with Admin.Object.PaginationInfo.totalRows
+        |> with Admin.Object.PaginationInfo.currentPage
+        |> with Admin.Object.PaginationInfo.totalPages
+        |> with Admin.Object.PaginationInfo.pageLength
 
 
 candidacyCountByStatusSelection : SelectionSet Data.Candidacy.CandidacyCountByStatus Admin.Object.CandidacyCountByStatus

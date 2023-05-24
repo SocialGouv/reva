@@ -19,7 +19,7 @@ import View.Candidacy.Tab as Tab
 
 
 type alias Filters =
-    { status : CandidacyStatusFilter }
+    { status : CandidacyStatusFilter, page : Int }
 
 
 type Route
@@ -34,7 +34,7 @@ type Route
 
 emptyFilters : Filters
 emptyFilters =
-    { status = CandidacyStatusFilter.ActiveHorsAbandon }
+    { status = CandidacyStatusFilter.ActiveHorsAbandon, page = 1 }
 
 
 parser : String -> Parser (Route -> a) a
@@ -49,15 +49,18 @@ parser baseUrl =
         subLevel path =
             topLevel (string </> s path)
 
-        statusStringToStatusFilter x =
-            Maybe.withDefault CandidacyStatusFilter.ActiveHorsAbandon (CandidacyStatusFilter.fromString (Maybe.withDefault "" x))
+        statusStringToStatusFilter s =
+            Maybe.withDefault CandidacyStatusFilter.ActiveHorsAbandon (CandidacyStatusFilter.fromString (Maybe.withDefault "" s))
+
+        toCandidaciesRoute s p =
+            Candidacies (Filters (statusStringToStatusFilter s) (Maybe.withDefault 1 (String.toInt (Maybe.withDefault "1" p))))
     in
     s baseUrl
         </> oneOf
                 [ top |> map (Candidacies emptyFilters)
                 , s "auth" </> s "login" |> map Login
                 , s "auth" </> s "logout" |> map Logout
-                , s "candidacies" <?> Query.string "status" |> map (statusStringToStatusFilter >> Filters >> Candidacies)
+                , s "candidacies" <?> Query.string "status" <?> Query.string "page" |> map toCandidaciesRoute
                 , s "subscriptions" |> map Subscriptions
                 , s "subscriptions" </> string |> map Subscription
                 , topLevel string |> candidacyTab Tab.Profile
@@ -109,7 +112,7 @@ toString baseUrl route =
 
         Candidacies filters ->
             topLevel [ "candidacies" ]
-                [ Url.Builder.string "status" (CandidacyStatusFilter.toString filters.status) ]
+                [ Url.Builder.string "status" (CandidacyStatusFilter.toString filters.status), Url.Builder.int "page" filters.page ]
 
         Candidacy tab ->
             tabToString topLevel subLevel tab

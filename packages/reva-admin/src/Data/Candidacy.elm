@@ -6,6 +6,7 @@ module Data.Candidacy exposing
     , CandidacyId
     , CandidacyStatus
     , CandidacySummary
+    , CandidacySummaryPage
     , DateWithLabels
     , Step
     , candidacyIdFromString
@@ -36,6 +37,7 @@ import Css exposing (lowercase)
 import Data.Candidate exposing (Candidate)
 import Data.Certification exposing (Certification, CertificationSummary)
 import Data.Organism exposing (Organism)
+import Data.Pagination exposing (PaginationInfo)
 import Data.Referential exposing (Department, ReorientationReason)
 import Time
 
@@ -106,6 +108,12 @@ type alias CandidacySummary =
     , isReorientation : Bool
     , createdAt : Time.Posix
     , sentAt : Maybe DateWithLabels
+    }
+
+
+type alias CandidacySummaryPage =
+    { rows : List CandidacySummary
+    , info : PaginationInfo
     }
 
 

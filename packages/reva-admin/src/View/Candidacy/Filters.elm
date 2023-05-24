@@ -12,6 +12,7 @@ import Route
 type alias Filters =
     { search : Maybe String
     , status : CandidacyStatusFilter
+    , page : Int
     }
 
 
@@ -116,7 +117,7 @@ viewLink context filters count statusFilter label =
                   )
                 ]
             , Route.href context.baseUrl <|
-                Route.Candidacies { status = statusFilter }
+                Route.Candidacies { status = statusFilter, page = 1 }
             ]
             [ text label, viewCount count ]
         ]
