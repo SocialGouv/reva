@@ -131,59 +131,6 @@ view :
     -> Html Msg
 view context model =
     let
-        candidacySkeleton =
-            div
-                [ class "border border-gray-100 sm:p-6 mb-8 h-[198px]" ]
-                [ View.skeleton "h-6 w-120"
-                , View.skeleton "my-5 h-5 w-96"
-                , View.skeleton "my-5 h-5 w-96"
-                ]
-
-        loadingLayout =
-            View.layout
-                filterByStatusTitle
-                []
-                []
-                [ viewDirectoryHeader context
-                , div
-                    [ class "sm:px-6" ]
-                    [ View.skeleton "mt-2 mb-8 h-6 w-[300px]"
-                    , candidacySkeleton
-                    , candidacySkeleton
-                    , candidacySkeleton
-                    , candidacySkeleton
-                    ]
-                ]
-    in
-    case ( context.isMobile && context.isScrollingToTop, model.state.candidacyCountByStatus ) of
-        ( _, NotAsked ) ->
-            div [] []
-
-        ( _, Loading ) ->
-            loadingLayout
-
-        ( True, _ ) ->
-            loadingLayout
-
-        ( _, Failure errors ) ->
-            div [ class "text-red-500" ] [ text errors ]
-
-        ( _, Success candidacyCountByStatus ) ->
-            viewContent context model candidacyCountByStatus
-
-
-filterByStatusTitle : String
-filterByStatusTitle =
-    "Filtrer les candidatures par statut"
-
-
-viewContent :
-    Context
-    -> Model
-    -> CandidacyCountByStatus
-    -> Html Msg
-viewContent context model candidacyCountByStatus =
-    let
         upperNavContent =
             if Api.Token.isAdmin context.token then
                 [ Html.a
@@ -196,12 +143,34 @@ viewContent context model candidacyCountByStatus =
 
             else
                 []
+
+        viewWithFilters filterContent =
+            View.layout
+                filterByStatusTitle
+                upperNavContent
+                filterContent
+                (viewDirectoryPanel context model (candidacyStatusFilterToReadableString model.filters.status))
     in
-    View.layout
-        filterByStatusTitle
-        upperNavContent
-        (View.Candidacy.Filters.view candidacyCountByStatus model.filters context)
-        (viewDirectoryPanel context model (candidacyStatusFilterToReadableString model.filters.status))
+    case ( context.isMobile && context.isScrollingToTop, model.state.candidacyCountByStatus ) of
+        ( _, NotAsked ) ->
+            div [] []
+
+        ( _, Loading ) ->
+            viewWithFilters []
+
+        ( True, _ ) ->
+            viewWithFilters []
+
+        ( _, Failure errors ) ->
+            viewWithFilters [ div [ class "m-4 font-medium text-red-500" ] [ text errors ] ]
+
+        ( _, Success candidacyCountByStatus ) ->
+            viewWithFilters (View.Candidacy.Filters.view candidacyCountByStatus model.filters context)
+
+
+filterByStatusTitle : String
+filterByStatusTitle =
+    "Filtrer les candidatures par statut"
 
 
 viewDirectoryHeader : Context -> Html Msg
