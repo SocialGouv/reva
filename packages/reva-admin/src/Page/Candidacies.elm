@@ -104,6 +104,11 @@ withCandidacyPage candidacyPage state =
     { state | currentCandidacyPage = candidacyPage }
 
 
+withSearch : Maybe String -> State -> State
+withSearch search state =
+    { state | search = search }
+
+
 withCandidacyCountByStatus : RemoteData String CandidacyCountByStatus -> State -> State
 withCandidacyCountByStatus candidacyCountByStatus state =
     { state | candidacyCountByStatus = candidacyCountByStatus }
@@ -461,7 +466,10 @@ update context msg model =
             in
             ( { model
                 | filters = { filters | search = Nothing }
-                , state = model.state |> withCandidacyPage Loading
+                , state =
+                    model.state
+                        |> withCandidacyPage Loading
+                        |> withSearch Nothing
               }
             , Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse model.filters.page (Just model.filters.status) Nothing
             )
