@@ -320,6 +320,7 @@ model Organism {
   qualiopiCertificateExpiresAt                           DateTime?                                                @map("qualiopi_certificate_expires_at")
 
   @@unique([siret,typology])
+  @@unique([label,typology])
   @@map("organism")
 }
 
