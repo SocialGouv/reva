@@ -13,7 +13,6 @@ import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep)
 import Api.Candidacy
 import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
-import BetaGouv.DSFR.Icons.System exposing (closeLine)
 import BetaGouv.DSFR.Pagination
 import Browser.Events exposing (onKeyDown)
 import Data.Candidacy as Candidacy exposing (CandidacyCountByStatus, CandidacySummary, CandidacySummaryPage, candidacyStatusFilterToReadableString)
@@ -21,11 +20,10 @@ import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Referential)
-import Html exposing (Html, div, input, label, li, nav, p, strong, text, ul)
+import Html exposing (Html, div, form, input, label, li, nav, p, text, ul)
 import Html.Attributes exposing (attribute, class, classList, for, id, name, placeholder, type_)
 import Html.Attributes.Extra exposing (role)
-import Html.Events exposing (onClick, onInput)
-import Html.Events.Extra exposing (onEnter)
+import Html.Events exposing (onInput, onSubmit)
 import RemoteData exposing (RemoteData(..))
 import Route
 import String exposing (String)
@@ -267,26 +265,31 @@ searchBar filters totalRows =
                 |> Button.view
             ]
     in
-    div
-        [ class "mt-6 " ]
-        [ label
-            [ for "search", class "fr-hint-text mb-1" ]
-            [ text "Recherchez par date de candidature, certification et information de contact" ]
-        , div
-            [ role "search", class "fr-search-bar w-full" ]
-            [ input
-                [ type_ "search"
-                , name "search"
-                , name "search"
-                , id "search"
-                , class "fr-input w-full h-10"
-                , placeholder "Rechercher"
-                , onInput UserUpdatedSearch
+    div [ class "mt-6" ]
+        [ form
+            [ onSubmit UserValidatedSearch ]
+            [ label
+                [ for "search", class "fr-hint-text mb-1" ]
+                [ text "Recherchez par date de candidature, certification et information de contact" ]
+            , div
+                [ role "search", class "fr-search-bar w-full" ]
+                [ input
+                    [ type_ "search"
+                    , name "search"
+                    , name "search"
+                    , id "search"
+                    , class "fr-input w-full h-10"
+                    , placeholder "Rechercher"
+                    , onInput UserUpdatedSearch
+                    ]
+                    []
+                , button
+                    [ type_ "submit"
+                    , class "fr-btn"
+                    , Html.Attributes.title "Rechercher"
+                    ]
+                    [ text "Rechercher" ]
                 ]
-                []
-            , button
-                [ class "fr-btn", Html.Attributes.title "Rechercher", onClick UserValidatedSearch ]
-                [ text "Rechercher" ]
             ]
         , div [ class "mt-4 text-xl font-semibold" ] <|
             case filters.search of
