@@ -107,7 +107,7 @@ export const getCandidaciesFromDb = async ({
   });
 
   const candidacies = await prismaClient.candidacy.findMany({
-    orderBy: [{ updatedAt: "desc" }],
+    orderBy: [{ createdAt: "desc" }],
     where: whereClause,
     include: {
       candidacyStatuses: true,
