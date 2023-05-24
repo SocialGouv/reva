@@ -10,7 +10,6 @@ module Page.Candidacies exposing
 import Accessibility exposing (button, h1, h2, h3)
 import Admin.Enum.CandidacyStatusFilter exposing (CandidacyStatusFilter)
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep)
-import Admin.Object exposing (CandidacySummaryPage)
 import Api.Candidacy
 import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
@@ -21,10 +20,9 @@ import Data.Candidacy as Candidacy exposing (CandidacyCountByStatus, CandidacySu
 import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
-import Data.Pagination exposing (PaginationInfo)
 import Data.Referential exposing (Referential)
 import Html exposing (Html, div, input, label, li, nav, p, strong, text, ul)
-import Html.Attributes exposing (attribute, class, classList, for, id, name, placeholder, type_, value)
+import Html.Attributes exposing (attribute, class, classList, for, id, name, placeholder, type_)
 import Html.Attributes.Extra exposing (role)
 import Html.Events exposing (onClick, onInput)
 import Html.Events.Extra exposing (onEnter)
@@ -137,7 +135,7 @@ view context model =
                 filterByStatusTitle
                 []
                 []
-                [ viewDirectoryHeader context Nothing
+                [ viewDirectoryHeader context
                 , div
                     [ class "sm:px-6" ]
                     [ View.skeleton "mt-2 mb-8 h-6 w-[300px]"
@@ -202,29 +200,10 @@ viewContent context filters candidacyCountByStatus candidacyPage =
         (viewDirectoryPanel context (candidacyStatusFilterToReadableString filters.status) candidacyPage filters)
 
 
-viewDirectoryHeader : Context -> Maybe String -> Html Msg
-viewDirectoryHeader context searchFilter =
-    let
-        searchStatusDivContent =
-            case searchFilter of
-                Nothing ->
-                    []
-
-                Just "" ->
-                    []
-
-                Just filterValue ->
-                    [ strong [ class "mr-1" ] [ text "Filtre de recherche : " ]
-                    , text filterValue
-                    , Button.new { label = "Supprimer le filtre de recherche", onClick = Just UserClearedSearch }
-                        |> Button.withAttrs [ class "mt-1" ]
-                        |> Button.tertiaryNoOutline
-                        |> Button.onlyIcon closeLine
-                        |> Button.view
-                    ]
-    in
+viewDirectoryHeader : Context -> Html Msg
+viewDirectoryHeader context =
     div
-        [ class "sm:p-6 mb-8" ]
+        [ class "sm:px-6 sm:mt-6" ]
         [ h1
             []
             [ if Api.Token.isAdmin context.token then
@@ -241,30 +220,6 @@ viewDirectoryHeader context searchFilter =
               else
                 text "En tant qu’architecte accompagnateur de parcours, vous pouvez gérer les différentes candidatures des usagers dans le cadre de leur projet professionnel."
             ]
-        , div
-            [ class "my-2 " ]
-            [ label
-                [ for "search", class "fr-hint-text mb-1" ]
-                [ text "Recherchez par date de candidature, certification et information de contact" ]
-            , div
-                [ role "search", class "fr-search-bar w-full" ]
-                [ input
-                    [ type_ "search"
-                    , name "search"
-                    , name "search"
-                    , id "search"
-                    , class "fr-input w-full h-10"
-                    , placeholder "Rechercher"
-                    , onInput UserUpdatedSearch
-                    , onEnter UserValidatedSearch
-                    ]
-                    []
-                , button
-                    [ class "fr-btn", Html.Attributes.title "Rechercher", onClick UserValidatedSearch ]
-                    [ text "Rechercher" ]
-                ]
-            , div [ role "status", class "mt-4 flex items-center gap-1" ] searchStatusDivContent
-            ]
         ]
 
 
@@ -275,19 +230,79 @@ viewPager context currentPage totalPages statusFilter =
 
 viewDirectoryPanel : Context -> String -> CandidacySummaryPage -> Filters -> List (Html Msg)
 viewDirectoryPanel context title candidacyPage filters =
-    [ viewDirectoryHeader context filters.search
+    [ viewDirectoryHeader context
     , nav
         [ dataTest "directory"
         , class "min-h-0 overflow-y-auto"
         , class "sm:px-6"
         , attribute "aria-label" "Candidats"
         ]
-        [ viewDirectory context title candidacyPage.info.totalRows candidacyPage.rows, div [ class "flex justify-center" ] [ viewPager context candidacyPage.info.currentPage candidacyPage.info.totalPages filters.status ] ]
+        [ viewDirectory context
+            title
+            candidacyPage.info.totalRows
+            candidacyPage.rows
+            filters
+        , div
+            [ class "flex justify-center" ]
+            [ viewPager context candidacyPage.info.currentPage candidacyPage.info.totalPages filters.status ]
+        ]
     ]
 
 
-viewDirectory : Context -> String -> Int -> List Candidacy.CandidacySummary -> Html Msg
-viewDirectory context title totalRows candidacies =
+searchBar : Filters -> Int -> Html Msg
+searchBar filters totalRows =
+    let
+        countString =
+            if totalRows > 1 then
+                String.fromInt totalRows ++ " résultats"
+
+            else
+                String.fromInt totalRows ++ " résultat"
+
+        defaultSearchInfo search =
+            [ text <| countString ++ " pour « " ++ search ++ " »"
+            , Button.new { label = "Réinitialiser le filtre", onClick = Just UserClearedSearch }
+                |> Button.secondary
+                |> Button.withAttrs [ class "block mt-2" ]
+                |> Button.view
+            ]
+    in
+    div
+        [ class "mt-6 " ]
+        [ label
+            [ for "search", class "fr-hint-text mb-1" ]
+            [ text "Recherchez par date de candidature, certification et information de contact" ]
+        , div
+            [ role "search", class "fr-search-bar w-full" ]
+            [ input
+                [ type_ "search"
+                , name "search"
+                , name "search"
+                , id "search"
+                , class "fr-input w-full h-10"
+                , placeholder "Rechercher"
+                , onInput UserUpdatedSearch
+                ]
+                []
+            , button
+                [ class "fr-btn", Html.Attributes.title "Rechercher", onClick UserValidatedSearch ]
+                [ text "Rechercher" ]
+            ]
+        , div [ class "mt-4 text-xl font-semibold" ] <|
+            case filters.search of
+                Just "" ->
+                    [ text countString ]
+
+                Nothing ->
+                    [ text countString ]
+
+                Just search ->
+                    defaultSearchInfo search
+        ]
+
+
+viewDirectory : Context -> String -> Int -> List Candidacy.CandidacySummary -> Filters -> Html Msg
+viewDirectory context title totalRows candidacies filters =
     div
         [ dataTest "directory-group", class "relative mb-2" ]
         [ div
@@ -295,7 +310,8 @@ viewDirectory context title totalRows candidacies =
             , class "top-0 text-xl font-semibold text-slate-700"
             , class "bg-white text-gray-900"
             ]
-            [ h2 [ class "mb-0" ] [ text (title ++ " (" ++ String.fromInt totalRows ++ ")") ] ]
+            [ h2 [ class "mb-0" ] [ text title ] ]
+        , searchBar filters totalRows
         , List.map (viewItem context) candidacies
             |> ul [ class "list-none pl-0 mt-0 relative z-0" ]
         ]
