@@ -298,7 +298,7 @@ model Account {
 
 model Organism {
   id                                                     String                                                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label                                                  String                                                   @unique @db.VarChar(255)
+  label                                                  String                                                   @db.VarChar(255)
   legalStatus                                            LegalStatus                                              @default(NC) @map("legal_status")
   address                                                String
   zip                                                    String                                                   @db.VarChar(5)
@@ -319,6 +319,7 @@ model Organism {
   organismOnConventionCollective                         OrganismOnConventionCollective[]
   qualiopiCertificateExpiresAt                           DateTime?                                                @map("qualiopi_certificate_expires_at")
 
+  @@unique([siret,typology])
   @@map("organism")
 }
 
