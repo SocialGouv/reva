@@ -1,4 +1,4 @@
-label,address,zip,city,contact_administrative_email,contact_commercial_name,contact_commercial_email,siret,is_active
-CNEAP,"cneap, adress",75001,PARIS,cneap@reva.incubateur.net,,cneap@reva.incubateur.net,82422000000000,1
-IPERIA,"iperia, adress",75002,PARIS,iperia@reva.incubateur.net,,iperia@reva.incubateur.net,82422000000001,1
-AFPA,"afpa, adress",75003,PARIS,afpa@reva.incubateur.net,,afpa@reva.incubateur.net,82422000000002,1
+id,label,address,zip,city,contact_administrative_email,contact_commercial_name,contact_commercial_email,siret,is_active
+66dfc6e8-8cd7-40a8-ac40-224322778f16,CNEAP,"cneap, adress",75001,PARIS,cneap@reva.incubateur.net,,cneap@reva.incubateur.net,82422000000000,1
+2179af27-ed95-4e88-a199-887c161941b1,IPERIA,"iperia, adress",75002,PARIS,iperia@reva.incubateur.net,,iperia@reva.incubateur.net,82422000000001,1
+23d1924c-4e96-4b7c-8411-7f09bf431cdb,AFPA,"afpa, adress",75003,PARIS,afpa@reva.incubateur.net,,afpa@reva.incubateur.net,82422000000002,1
