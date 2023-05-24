@@ -441,13 +441,13 @@ update context msg model =
                     model.filters
             in
             ( { model
-                | filters = { filters | search = Nothing }
+                | filters = { filters | search = Nothing, page = 1 }
                 , state =
                     model.state
                         |> withCandidacyPage Loading
                         |> withSearch Nothing
               }
-            , Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse model.filters.page (Just model.filters.status) Nothing
+            , Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse 1 (Just model.filters.status) Nothing
             )
 
         GotCandidacyCountByStatus remoteCandidacyCountByStatus ->
