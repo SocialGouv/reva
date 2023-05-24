@@ -77,7 +77,7 @@ async function main() {
           (row) =>
             (promiseChain = promiseChain.then(async () => {
               await prisma.organism.upsert({
-                where: { label: row.label.trim() },
+                where: { id: row.id.trim() },
                 update: {
                   label: row.label.trim(),
                   address: row.address.trim(),
@@ -88,6 +88,7 @@ async function main() {
                   siret: row.siret.trim().replace(" ", ""),
                 },
                 create: {
+                  id: row.id.trim(),
                   label: row.label.trim(),
                   address: row.address.trim(),
                   zip: row.zip.trim().replace(" ", ""),
@@ -109,7 +110,7 @@ async function main() {
 
   await insertOrganisms();
 
-  const organisms = await prisma.organism.findMany();
+  await prisma.organism.findMany();
 
   // Link region organism and certification
   const insertRelationship = () =>
@@ -134,7 +135,7 @@ async function main() {
           (row) =>
             (promiseChain = promiseChain.then(async () => {
               const currentCertification = row.certification.trim();
-              const currentOrganismLabel = row.organism.trim();
+              const currentOrganismId = row.organism.trim();
               if (!certificationsMap.get(currentCertification)) {
                 return;
               }
@@ -154,7 +155,7 @@ async function main() {
                               id: region.id,
                             },
                             organism: {
-                              label: currentOrganismLabel,
+                              label: currentOrganismId,
                             },
                           },
                         }
@@ -176,7 +177,7 @@ async function main() {
                           },
                           organism: {
                             connect: {
-                              label: currentOrganismLabel,
+                              id: currentOrganismId,
                             },
                           },
                           isArchitect: row.is_architect === "Oui",
@@ -207,7 +208,7 @@ async function main() {
                         id: regionsMap.get(row.region).id,
                       },
                       organism: {
-                        label: currentOrganismLabel,
+                        label: currentOrganismId,
                       },
                     },
                   });
@@ -227,7 +228,7 @@ async function main() {
                       },
                       organism: {
                         connect: {
-                          label: currentOrganismLabel,
+                          id: currentOrganismId,
                         },
                       },
                       isArchitect: row.is_architect === "Oui",
@@ -254,7 +255,6 @@ async function main() {
         });
     });
 
-  // await prisma.organismsOnRegionsAndCertifications.deleteMany();
   await insertRelationship();
 
   const activeOrganisms = await prisma.organism.count({
