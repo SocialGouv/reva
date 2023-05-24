@@ -4,6 +4,7 @@ import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (Candi
 import Api.Token exposing (Token)
 import Browser
 import Browser.Dom as Dom
+import Browser.Events
 import Browser.Navigation as Nav
 import Data.Context exposing (Context)
 import Html exposing (Html, a, div, text)
@@ -65,6 +66,8 @@ type Msg
     | GotLoggedIn Token
     | GotTokenRefreshed Token
     | GotLoggedOut
+    | GotViewport Dom.Viewport
+    | GotBrowserWidth Float
     | ScrolledToTop
 
 
@@ -288,6 +291,12 @@ update msg model =
             , Cmd.none
             )
 
+        ( GotViewport viewport, _ ) ->
+            ( model |> withNewBrowserWidth viewport.scene.width, Cmd.none )
+
+        ( GotBrowserWidth width, _ ) ->
+            ( model |> withNewBrowserWidth width, Cmd.none )
+
         ( ScrolledToTop, _ ) ->
             ( { model | context = scrollingToTop False model.context }, Cmd.none )
 
@@ -316,6 +325,15 @@ withTokenRefreshed token ({ context } as model) =
     { model | context = newContext }
 
 
+withNewBrowserWidth : Float -> Model -> Model
+withNewBrowserWidth width ({ context } as model) =
+    let
+        newContext =
+            { context | isMobile = width < 640 }
+    in
+    { model | context = newContext }
+
+
 init : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
     initWithoutToken flags url key
@@ -334,6 +352,7 @@ initWithoutToken flags url key =
                     Api.Token.anonymous
                     flags.uploadEndpoint
                     False
+                    False
             , page = NotLoggedIn (Route.fromUrl flags.baseUrl url)
             , keycloakConfiguration =
                 Decode.decodeValue KeycloakConfiguration.keycloakConfiguration flags.keycloakConfiguration
@@ -342,13 +361,16 @@ initWithoutToken flags url key =
             }
     in
     ( model
-    , Nav.pushUrl key (Route.toString flags.baseUrl Route.Login)
+    , Cmd.batch
+        [ Nav.pushUrl key (Route.toString flags.baseUrl Route.Login)
+        , Task.perform GotViewport Dom.getViewport
+        ]
     )
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.none
+    Browser.Events.onResize (\w _ -> toFloat w |> GotBrowserWidth)
 
 
 

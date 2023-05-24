@@ -148,7 +148,7 @@ view context model =
                     ]
                 ]
     in
-    case ( context.isScrollingToTop, model.state.candidacyCountByStatus ) of
+    case ( context.isMobile && context.isScrollingToTop, model.state.candidacyCountByStatus ) of
         ( _, NotAsked ) ->
             div [] []
 
