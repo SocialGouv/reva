@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 
-import { upsertCsvRows } from "./read-csv";
+import { readCsvRows, upsertCsvRows } from "./read-csv";
 import { seedCertifications } from "./referentials/seed-certifications";
 import { insertBasicSkillsIfNone } from "./referentials/table-basic-skills";
 import { insertDegreesIfNone } from "./referentials/table-degrees";
@@ -67,94 +67,127 @@ async function main() {
   });
 
   // Certifications : referentials/certifications_new.csv
-  // await prisma.certification.deleteMany({});  // TODO : virer ça!!
-  // await upsertCsvRows<
-  //   Prisma.CertificationCreateInput & {
-  //     level: string;
-  //     certificationOnConventionCollective: string;
-  //     certificationOnDomaine: string;
-  //   },
-  //   Prisma.CertificationUpsertArgs
-  // >({
-  //   filePath: "./referentials/certifications_new.csv",
-  //   headersDefinition: [
-  //     "rncpId",
-  //     "id",
-  //     "label",
-  //     "summary",
-  //     undefined,
-  //     "typeDiplome",
-  //     "level",
-  //     undefined,
-  //     "certificationOnConventionCollective",
-  //     undefined,
-  //     "certificationOnDomaine",
-  //     undefined,
-  //     undefined,
-  //     undefined,
-  //     undefined,
-  //   ],
-  //   transform: ({
-  //     id,
-  //     label,
-  //     rncpId,
-  //     summary,
-  //     level,
-  //     typeDiplome,
-  //     certificationOnConventionCollective,
-  //     certificationOnDomaine,
-  //   }) => ({
-  //     where: { id },
-  //     create: {
-  //       id,
-  //       rncpId,
-  //       label,
-  //       level: parseInt(level),
-  //       summary,
-  //       acronym: "",
-  //       slug: slugify(label),
-  //       typeDiplomeId: typeDiplome as string,
-  //       certificationOnDomaine: certificationOnDomaine
-  //         ? {
-  //             connect: parseCsvList(certificationOnDomaine).map(
-  //               (domaineId: string) => ({
-  //                 domaineId_certificationId: {
-  //                   domaineId,
-  //                   certificationId: id as string,
-  //                 },
-  //               })
-  //             ),
-  //           }
-  //         : undefined,
-  //       certificationOnConventionCollective: certificationOnConventionCollective
-  //         ? {
-  //             connect: parseCsvList(certificationOnConventionCollective).map(
-  //               (ccnId: string) => ({
-  //                 ccnId_certificationId: {
-  //                   ccnId,
-  //                   certificationId: id as string,
-  //                 },
-  //               })
-  //             ),
-  //           }
-  //         : undefined,
-  //     },
-  //     update: {
-  //       rncpId,
-  //       label,
-  //       level: parseInt(level),
-  //       summary,
-  //       acronym: "",
-  //       slug: slugify(label),
-  //       typeDiplomeId: typeDiplome as string,
-  //     },
-  //   }),
-  //   upsertCommand: prisma.certification.upsert,
-  // });
+  await upsertCsvRows<
+    Prisma.CertificationCreateInput & {
+      level: string;
+    },
+    Prisma.CertificationUpsertArgs
+  >({
+    filePath: "./referentials/certifications_new.csv",
+    headersDefinition: [
+      "rncpId",
+      "id",
+      "label",
+      "summary",
+      "acronym",
+      "typeDiplome",
+      "level",
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+    ],
+    transform: ({
+      id,
+      label,
+      rncpId,
+      summary,
+      level,
+      acronym,
+      typeDiplome,
+    }) => ({
+      where: { id },
+      create: {
+        id,
+        rncpId,
+        label,
+        level: parseInt(level),
+        summary,
+        acronym,
+        slug: "",
+        typeDiplomeId: typeDiplome as string,
+      },
+      update: {
+        rncpId,
+        label,
+        level: parseInt(level),
+        summary,
+        acronym,
+        slug: "",
+        typeDiplomeId: typeDiplome as string,
+      },
+    }),
+    upsertCommand: prisma.certification.upsert,
+  });
+
+  // Relations certifications
+  const certificationRel = await readCsvRows<{
+    certificationId: string;
+    conventionCollective: string;
+    domaine: string;
+  }>({
+    filePath: "./referentials/certifications_new.csv",
+    headersDefinition: [
+      undefined,
+      "certificationId",
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "conventionCollective",
+      undefined,
+      "domaine",
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+    ],
+  });
+  for (const {
+    certificationId,
+    conventionCollective,
+    domaine,
+  } of certificationRel) {
+    if (conventionCollective) {
+      await prisma.certificationOnConventionCollective.deleteMany({
+        where: {
+          certificationId,
+        },
+      });
+      await prisma.certificationOnConventionCollective.createMany({
+        data: parseCsvList(conventionCollective).map((ccnId: string) => ({
+          certificationId,
+          ccnId,
+        })),
+      });
+    }
+    if (domaine) {
+      await prisma.certificationOnDomaine.deleteMany({
+        where: {
+          certificationId,
+        },
+      });
+      await prisma.certificationOnDomaine.createMany({
+        data: parseCsvList(domaine).map((domaineId: string) => ({
+          certificationId,
+          domaineId,
+        })),
+      });
+    }
+  }
 }
 
 function parseCsvList(str: string): string[] {
-  return str.split(",").map((s: string) => s.trim());
+  return str
+    .trim()
+    .split(",")
+    .map((s: string) => s.trim());
 }
 
 main()
