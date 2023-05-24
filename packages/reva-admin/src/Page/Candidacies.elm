@@ -71,14 +71,21 @@ withFilters context page status model =
         withNewPage filters =
             { filters | page = page }
 
-        command =
+        ( newState, command ) =
             if statusChanged || pageChanged then
-                Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse page (Just status) model.filters.search
+                ( model.state |> withCandidacyPage Loading
+                , Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse page (Just status) model.filters.search
+                )
 
             else
-                Cmd.none
+                ( model.state, Cmd.none )
     in
-    ( { model | filters = model.filters |> withNewPage |> withNewStatus }, command )
+    ( { model
+        | filters = model.filters |> withNewPage |> withNewStatus
+        , state = newState
+      }
+    , command
+    )
 
 
 init : Context -> CandidacyStatusFilter -> Int -> ( Model, Cmd Msg )
