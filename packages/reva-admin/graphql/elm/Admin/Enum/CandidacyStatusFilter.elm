@@ -10,7 +10,7 @@ import Json.Decode as Decode exposing (Decoder)
 type CandidacyStatusFilter
     = ActiveHorsAbandon
     | Abandon
-    | ReorienteeHorsAbandon
+    | Reorientee
     | ArchiveHorsAbandonHorsReorientation
     | ParcoursConfirmeHorsAbandon
     | PriseEnChargeHorsAbandon
@@ -23,7 +23,7 @@ type CandidacyStatusFilter
 
 list : List CandidacyStatusFilter
 list =
-    [ ActiveHorsAbandon, Abandon, ReorienteeHorsAbandon, ArchiveHorsAbandonHorsReorientation, ParcoursConfirmeHorsAbandon, PriseEnChargeHorsAbandon, ParcoursEnvoyeHorsAbandon, DemandeFinancementEnvoyeHorsAbandon, DemandePaiementEnvoyeeHorsAbandon, ValidationHorsAbandon, ProjetHorsAbandon ]
+    [ ActiveHorsAbandon, Abandon, Reorientee, ArchiveHorsAbandonHorsReorientation, ParcoursConfirmeHorsAbandon, PriseEnChargeHorsAbandon, ParcoursEnvoyeHorsAbandon, DemandeFinancementEnvoyeHorsAbandon, DemandePaiementEnvoyeeHorsAbandon, ValidationHorsAbandon, ProjetHorsAbandon ]
 
 
 decoder : Decoder CandidacyStatusFilter
@@ -38,8 +38,8 @@ decoder =
                     "ABANDON" ->
                         Decode.succeed Abandon
 
-                    "REORIENTEE_HORS_ABANDON" ->
-                        Decode.succeed ReorienteeHorsAbandon
+                    "REORIENTEE" ->
+                        Decode.succeed Reorientee
 
                     "ARCHIVE_HORS_ABANDON_HORS_REORIENTATION" ->
                         Decode.succeed ArchiveHorsAbandonHorsReorientation
@@ -81,8 +81,8 @@ toString enum____ =
         Abandon ->
             "ABANDON"
 
-        ReorienteeHorsAbandon ->
-            "REORIENTEE_HORS_ABANDON"
+        Reorientee ->
+            "REORIENTEE"
 
         ArchiveHorsAbandonHorsReorientation ->
             "ARCHIVE_HORS_ABANDON_HORS_REORIENTATION"
@@ -129,8 +129,8 @@ fromString enumString____ =
         "ABANDON" ->
             Just Abandon
 
-        "REORIENTEE_HORS_ABANDON" ->
-            Just ReorienteeHorsAbandon
+        "REORIENTEE" ->
+            Just Reorientee
 
         "ARCHIVE_HORS_ABANDON_HORS_REORIENTATION" ->
             Just ArchiveHorsAbandonHorsReorientation

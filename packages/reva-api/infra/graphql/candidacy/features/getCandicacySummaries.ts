@@ -284,10 +284,9 @@ const getWhereClauseFromStatusFilter = (
         },
       };
       break;
-    case "REORIENTEE_HORS_ABANDON":
+    case "REORIENTEE":
       whereClause = {
         ...whereClause,
-        candidacyDropOut: null,
         NOT: { reorientationReasonId: null },
         candidacyStatuses: {
           some: { AND: { isActive: true, status: "ARCHIVE" } },

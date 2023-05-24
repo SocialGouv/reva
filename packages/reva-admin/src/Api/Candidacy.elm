@@ -212,7 +212,7 @@ candidacyCountByStatusSelection =
     SelectionSet.succeed Data.Candidacy.CandidacyCountByStatus
         |> with Admin.Object.CandidacyCountByStatus.activeHorsAbandon
         |> with Admin.Object.CandidacyCountByStatus.abandon
-        |> with Admin.Object.CandidacyCountByStatus.reorienteeHorsAbandon
+        |> with Admin.Object.CandidacyCountByStatus.reorientee
         |> with Admin.Object.CandidacyCountByStatus.archiveHorsAbandonHorsReorientation
         |> with Admin.Object.CandidacyCountByStatus.parcoursConfirmeHorsAbandon
         |> with Admin.Object.CandidacyCountByStatus.priseEnChargeHorsAbandon

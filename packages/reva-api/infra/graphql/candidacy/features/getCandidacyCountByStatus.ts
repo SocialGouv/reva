@@ -11,7 +11,7 @@ export const getCandidacyCountByStatus = async ({
   const candidacyCountByStatus: Record<CandidacyStatusFilter, number> = {
     ACTIVE_HORS_ABANDON: 0,
     ABANDON: 0,
-    REORIENTEE_HORS_ABANDON: 0,
+    REORIENTEE: 0,
     ARCHIVE_HORS_ABANDON_HORS_REORIENTATION: 0,
     PARCOURS_CONFIRME_HORS_ABANDON: 0,
     PRISE_EN_CHARGE_HORS_ABANDON: 0,
@@ -37,15 +37,15 @@ export const getCandidacyCountByStatus = async ({
     const archiveHorsAbandonHorsReorientationQuery = `select 'ARCHIVE_HORS_ABANDON_HORS_REORIENTATION' as status, count (status) from candidacy_candidacy_status join candidacy on candidacy.id = candidacy_candidacy_status.candidacy_id where status='ARCHIVE' and
     is_active=true and candidacy.reorientation_reason_id is null and not EXISTS (select candidacy_id from candidacy_drop_out where candidacy_id=candidacy.id) ${organismSelectionWhereClause} group by status`;
 
-    const reorienteHorsAbandonQuery = `select 'REORIENTEE_HORS_ABANDON' as status, count (status) from candidacy_candidacy_status join candidacy on candidacy.id = candidacy_candidacy_status.candidacy_id where status='ARCHIVE' and
-    is_active=true and candidacy.reorientation_reason_id is not null and not EXISTS (select candidacy_id from candidacy_drop_out where candidacy_id=candidacy.id) ${organismSelectionWhereClause} group by status;`;
+    const reorienteQuery = `select 'REORIENTEE' as status, count (status) from candidacy_candidacy_status join candidacy on candidacy.id = candidacy_candidacy_status.candidacy_id where status='ARCHIVE' and
+    is_active=true and candidacy.reorientation_reason_id is not null ${organismSelectionWhereClause} group by status;`;
 
     const query = `
     ${activeHorsAbandonQuery}
     UNION ${countByactiveStatusHorsAbandonQuery} 
     UNION ${abandonQuery} 
     UNION ${archiveHorsAbandonHorsReorientationQuery} 
-    UNION ${reorienteHorsAbandonQuery}`;
+    UNION ${reorienteQuery}`;
 
     const candidacyCountByStatusFromDb: {
       status: CandidacyStatusFilter;

@@ -120,7 +120,7 @@ type alias CandidacySummaryPage =
 type alias CandidacyCountByStatus =
     { activeHorsAbandon : Int
     , abandon : Int
-    , reorienteeHorsAbandon : Int
+    , reorientee : Int
     , archiveHorsAbandonHorsReorientation : Int
     , parcourConfirmeHorsAbandon : Int
     , priseEnChargeHorsAbandon : Int
@@ -201,7 +201,7 @@ candidacyStatusFilterToReadableString status =
         CandidacyStatusFilter.Abandon ->
             "Toutes les candidatures abandonnées"
 
-        CandidacyStatusFilter.ReorienteeHorsAbandon ->
+        CandidacyStatusFilter.Reorientee ->
             "Toutes les candidatures réorientées"
 
         CandidacyStatusFilter.ArchiveHorsAbandonHorsReorientation ->

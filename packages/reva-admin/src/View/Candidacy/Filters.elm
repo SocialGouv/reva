@@ -32,8 +32,8 @@ view candidacyCountByStatus filters context =
                 CandidacyStatusFilter.Abandon ->
                     candidacyCountByStatus.abandon
 
-                CandidacyStatusFilter.ReorienteeHorsAbandon ->
-                    candidacyCountByStatus.reorienteeHorsAbandon
+                CandidacyStatusFilter.Reorientee ->
+                    candidacyCountByStatus.reorientee
 
                 CandidacyStatusFilter.ArchiveHorsAbandonHorsReorientation ->
                     candidacyCountByStatus.archiveHorsAbandonHorsReorientation
@@ -89,7 +89,7 @@ view candidacyCountByStatus filters context =
                 List.map viewFilter statuses
             ]
         , viewFilter CandidacyStatusFilter.Abandon
-        , viewFilter CandidacyStatusFilter.ReorienteeHorsAbandon
+        , viewFilter CandidacyStatusFilter.Reorientee
         , viewFilter CandidacyStatusFilter.ArchiveHorsAbandonHorsReorientation
         , viewFilter CandidacyStatusFilter.ProjetHorsAbandon
         ]

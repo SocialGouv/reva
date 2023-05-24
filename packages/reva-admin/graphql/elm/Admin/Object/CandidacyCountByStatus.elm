@@ -29,9 +29,9 @@ abandon =
     Object.selectionForField "Int" "ABANDON" [] Decode.int
 
 
-reorienteeHorsAbandon : SelectionSet Int Admin.Object.CandidacyCountByStatus
-reorienteeHorsAbandon =
-    Object.selectionForField "Int" "REORIENTEE_HORS_ABANDON" [] Decode.int
+reorientee : SelectionSet Int Admin.Object.CandidacyCountByStatus
+reorientee =
+    Object.selectionForField "Int" "REORIENTEE" [] Decode.int
 
 
 archiveHorsAbandonHorsReorientation : SelectionSet Int Admin.Object.CandidacyCountByStatus
