@@ -83,7 +83,7 @@ keys =
     }
 
 
-validate : ( Candidacy, Referential ) -> FormData -> Result String ()
+validate : ( Candidacy, Referential ) -> FormData -> Result (List String) ()
 validate ( candidacy, _ ) formData =
     let
         decode =
@@ -92,7 +92,7 @@ validate ( candidacy, _ ) formData =
         companionValidation () =
             case ( candidacy.dropOutDate, decode.maybe.string .companionId ) of
                 ( Nothing, Nothing ) ->
-                    Err "Veuillez sélectionner un accompagnateur"
+                    Ok ()
 
                 _ ->
                     Ok ()
@@ -102,7 +102,7 @@ validate ( candidacy, _ ) formData =
                 Ok ()
 
             else
-                Err "Veuillez confirmer le montant de la prise en charge avant son envoi définitif"
+                Err [ "Veuillez confirmer le montant de la prise en charge avant son envoi définitif" ]
     in
     companionValidation ()
         |> Result.andThen confirmationValidation

@@ -23,7 +23,7 @@ get :
     CandidacyId
     -> String
     -> Token
-    -> (RemoteData String (Dict String String) -> msg)
+    -> (RemoteData (List String) (Dict String String) -> msg)
     -> Cmd msg
 get candidacyId endpointGraphql token toMsg =
     let
@@ -38,7 +38,7 @@ update :
     CandidacyId
     -> String
     -> Token
-    -> (RemoteData String () -> msg)
+    -> (RemoteData (List String) () -> msg)
     -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
     -> FormData
     -> Cmd msg

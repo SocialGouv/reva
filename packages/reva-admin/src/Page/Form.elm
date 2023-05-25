@@ -39,8 +39,8 @@ type Msg referential
     | UserClickSave referential
     | UserClickSubmit referential
     | UserSelectFiles String (List File)
-    | GotSaveResponse (RemoteData String ())
-    | GotLoadResponse (RemoteData String (Dict String String))
+    | GotSaveResponse (RemoteData (List String) ())
+    | GotLoadResponse (RemoteData (List String) (Dict String String))
     | NoOp
 
 
@@ -87,7 +87,7 @@ type alias FormBuilder referential =
 type RemoteForm referential
     = NotAsked
     | Loading (FormBuilder referential)
-    | Editing (Maybe String) (FormBuilder referential) FormData
+    | Editing (List String) (FormBuilder referential) FormData
     | Saving (FormBuilder referential) FormData
     | Submitting (FormBuilder referential) FormData
     | Failure
@@ -101,7 +101,7 @@ type Status
 type alias ClickHandler referential =
     String
     -> Token
-    -> (RemoteData String () -> Msg referential)
+    -> (RemoteData (List String) () -> Msg referential)
     -> referential
     -> FormData
     -> Cmd (Msg referential)
@@ -111,7 +111,7 @@ type alias Model referential =
     { onRedirect : Cmd (Msg referential)
     , onSave : ClickHandler referential
     , onSubmit : ClickHandler referential
-    , onValidate : referential -> FormData -> Result String ()
+    , onValidate : referential -> FormData -> Result (List String) ()
     , form : RemoteForm referential
     , status : Status
     }
@@ -139,7 +139,7 @@ init =
 -- VIEW
 
 
-view : RemoteData String referential -> Model referential -> Html (Msg referential)
+view : RemoteData (List String) referential -> Model referential -> Html (Msg referential)
 view remoteReferential model =
     let
         submitButton label =
@@ -189,7 +189,7 @@ view remoteReferential model =
             in
             viewForm referential
                 model.status
-                Nothing
+                []
                 formData
                 formBuilder
                 (disabledButton "save")
@@ -202,20 +202,20 @@ view remoteReferential model =
             in
             viewForm referential
                 model.status
-                Nothing
+                []
                 formData
                 formBuilder
                 (saveButton form.saveLabel referential)
                 (disabledButton "submit")
 
-        ( RemoteData.Success referential, Editing error formBuilder formData ) ->
+        ( RemoteData.Success referential, Editing errors formBuilder formData ) ->
             let
                 form =
                     formBuilder formData referential
             in
             viewForm referential
                 model.status
-                error
+                errors
                 formData
                 formBuilder
                 (saveButton form.saveLabel referential)
@@ -224,20 +224,20 @@ view remoteReferential model =
         ( _, Failure ) ->
             text "Une erreur est survenue"
 
-        ( RemoteData.Failure err, _ ) ->
-            text err
+        ( RemoteData.Failure errors, _ ) ->
+            View.errors errors
 
 
 viewForm :
     referential
     -> Status
-    -> Maybe String
+    -> List String
     -> FormData
     -> FormBuilder referential
     -> Html (Msg referential)
     -> Html (Msg referential)
     -> Html (Msg referential)
-viewForm referential status maybeError formData form saveButton submitButton =
+viewForm referential status errors formData form saveButton submitButton =
     let
         currentForm =
             form formData referential
@@ -263,12 +263,7 @@ viewForm referential status maybeError formData form saveButton submitButton =
                             [ saveButton
                             , submitButton
                             ]
-                       , case maybeError of
-                            Just error ->
-                                View.errors [ error ]
-
-                            Nothing ->
-                                text ""
+                       , View.popupErrors errors
                        ]
 
         ReadOnly ->
@@ -293,6 +288,7 @@ viewEditableElement formData ( elementId, element ) =
             viewInput elementId label dataOrDefault
                 |> inputType
                 |> Input.withInputAttrs inputAttrs
+                |> Input.withError (Just [ text "oh no it doesn't work" ])
                 |> Input.withHint [ text hint ]
                 |> Input.view
 
@@ -303,11 +299,6 @@ viewEditableElement formData ( elementId, element ) =
                 |> Input.withHint [ text "Texte de description libre" ]
                 |> Input.withExtraAttrs [ placeholderValue |> Maybe.map placeholder |> Maybe.withDefault (class "") ]
                 |> Input.view
-
-        withLabel s el =
-            [ labelView elementId labelStyle s
-            , el
-            ]
     in
     case element of
         Checkbox label ->
@@ -876,8 +867,8 @@ update context msg model =
 
         clickHandler handler validate toMsg state referential form formData =
             case validate referential formData of
-                Err error ->
-                    ( { model | form = Editing (Just error) form formData }, Cmd.none )
+                Err errors ->
+                    ( { model | form = Editing errors form formData }, Cmd.none )
 
                 Ok () ->
                     ( { model | form = state form formData }
@@ -885,12 +876,12 @@ update context msg model =
                     )
     in
     case ( msg, model.form ) of
-        ( UserChangedElement elementId elementValue, Editing error form formData ) ->
+        ( UserChangedElement elementId elementValue, Editing _ form formData ) ->
             let
                 newFormData =
                     insert elementId elementValue formData
             in
-            ( { model | form = Editing Nothing form newFormData }, Cmd.none )
+            ( { model | form = Editing [] form newFormData }, Cmd.none )
 
         ( UserChangedElement _ _, _ ) ->
             noChange
@@ -907,7 +898,7 @@ update context msg model =
         ( UserClickSubmit _, _ ) ->
             noChange
 
-        ( UserSelectFiles key files, Editing error form formData ) ->
+        ( UserSelectFiles key files, Editing errors form formData ) ->
             let
                 fileNames =
                     List.map File.name files
@@ -915,7 +906,7 @@ update context msg model =
                 filesWithNames =
                     List.Extra.zip fileNames files
             in
-            ( { model | form = Editing error form (Data.Form.insertFiles key filesWithNames formData) }
+            ( { model | form = Editing errors form (Data.Form.insertFiles key filesWithNames formData) }
             , Cmd.none
             )
 
@@ -923,7 +914,7 @@ update context msg model =
             noChange
 
         ( GotLoadResponse (RemoteData.Success dict), Loading form ) ->
-            ( { model | form = Editing Nothing form (Data.Form.fromDict dict) }, Cmd.none )
+            ( { model | form = Editing [] form (Data.Form.fromDict dict) }, Cmd.none )
 
         ( GotLoadResponse (RemoteData.Failure _), Loading form ) ->
             ( { model | form = Failure }, Cmd.none )
@@ -940,10 +931,10 @@ update context msg model =
             )
 
         ( GotSaveResponse (RemoteData.Failure error), Saving form formData ) ->
-            ( { model | form = Editing (Just error) form formData }, Cmd.none )
+            ( { model | form = Editing (Debug.log "" error) form formData }, Cmd.none )
 
         ( GotSaveResponse (RemoteData.Failure error), Submitting form formData ) ->
-            ( { model | form = Editing (Just error) form formData }, Cmd.none )
+            ( { model | form = Editing (Debug.log "" error) form formData }, Cmd.none )
 
         ( GotSaveResponse _, _ ) ->
             noChange
@@ -956,11 +947,11 @@ updateForm :
     Context
     ->
         { form : FormData -> referential -> Form
-        , onLoad : Maybe (String -> Token -> (RemoteData String (Dict String String) -> Msg referential) -> Cmd (Msg referential))
+        , onLoad : Maybe (String -> Token -> (RemoteData (List String) (Dict String String) -> Msg referential) -> Cmd (Msg referential))
         , onRedirect : Cmd (Msg referential)
         , onSubmit : ClickHandler referential
         , onSave : Maybe (ClickHandler referential)
-        , onValidate : referential -> FormData -> Result String ()
+        , onValidate : referential -> FormData -> Result (List String) ()
         , status : Status
         }
     -> Model referential
@@ -970,7 +961,7 @@ updateForm context config model =
         | form =
             config.onLoad
                 |> Maybe.map (always (Loading config.form))
-                |> Maybe.withDefault (Editing Nothing config.form Data.Form.empty)
+                |> Maybe.withDefault (Editing [] config.form Data.Form.empty)
         , onRedirect = config.onRedirect
         , onSave = config.onSave |> Maybe.withDefault (\_ _ _ _ _ -> Cmd.none)
         , onSubmit = config.onSubmit

@@ -11,7 +11,7 @@ import RemoteData exposing (RemoteData)
 makeQuery :
     String
     -> Token
-    -> (RemoteData String decodesTo -> msg)
+    -> (RemoteData (List String) decodesTo -> msg)
     -> SelectionSet decodesTo Graphql.Operation.RootQuery
     -> Cmd msg
 makeQuery endpointGraphql token msg query =
@@ -23,7 +23,7 @@ makeQuery endpointGraphql token msg query =
 makeMutation :
     String
     -> Token
-    -> (RemoteData String decodesTo -> msg)
+    -> (RemoteData (List String) decodesTo -> msg)
     -> SelectionSet decodesTo Graphql.Operation.RootMutation
     -> Cmd msg
 makeMutation endpointGraphql token msg query =
@@ -32,16 +32,10 @@ makeMutation endpointGraphql token msg query =
         |> makeAuthRequest token msg
 
 
-toRemote : Result (List String) a -> RemoteData String a
-toRemote r =
-    Result.mapError (String.join "\n") r
-        |> RemoteData.fromResult
-
-
 makeAuthRequest token msg request =
     request
         |> Graphql.Http.withHeader "authorization" ("Bearer " ++ Api.Token.toString token)
-        |> Graphql.Http.send (Result.mapError graphqlHttpErrorToString >> toRemote >> msg)
+        |> Graphql.Http.send (Result.mapError graphqlHttpErrorToString >> RemoteData.fromResult >> msg)
 
 
 simpleGraphqlHttpErrorToString : Graphql.Http.HttpError -> String

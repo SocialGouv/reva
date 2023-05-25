@@ -1,4 +1,4 @@
-module View exposing (article, backLink, errors, image, infoBlock, layout, logo, skeleton, title)
+module View exposing (article, backLink, errors, image, infoBlock, layout, logo, popupErrors, skeleton, title)
 
 import Accessibility exposing (a, article, br, button, h3, nav, p)
 import Html exposing (Html, div, h2, img, node, text)
@@ -113,7 +113,12 @@ article dataTestValue backLinkRoute backLinkLabel content =
 
 
 errors : List String -> Html msg
-errors messages =
+errors l =
+    div [ class "text-red-500" ] <| List.map (\e -> div [] [ text e ]) l
+
+
+popupErrors : List String -> Html msg
+popupErrors messages =
     case messages of
         [] ->
             text ""

@@ -23,7 +23,7 @@ keys =
     }
 
 
-validate : ( Candidacy, Referential ) -> FormData -> Result String ()
+validate : ( Candidacy, Referential ) -> FormData -> Result (List String) ()
 validate ( _, _ ) formData =
     let
         decode =
@@ -31,7 +31,7 @@ validate ( _, _ ) formData =
     in
     case ( decode.bool .isNotReoriented False, decode.maybe.string .reorientationReason ) of
         ( False, Nothing ) ->
-            Err "Veuillez sélectionner une raison avant de supprimer cette candidature"
+            Err [ "Veuillez sélectionner une raison avant de supprimer cette candidature" ]
 
         _ ->
             Ok ()

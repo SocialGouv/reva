@@ -15,7 +15,7 @@ submit :
     -> String
     -> String
     -> Token
-    -> (RemoteData String () -> msg)
+    -> (RemoteData (List String) () -> msg)
     -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
     -> FormData
     -> Cmd msg
@@ -52,7 +52,7 @@ submit candidacyId uploadEndpoint _ token toMsg ( _, _ ) formData =
                 }
 
         error msg =
-            Task.succeed (RemoteData.Failure msg)
+            Task.succeed (RemoteData.Failure [ msg ])
                 |> Task.perform toMsg
     in
     case ( invoiceFiles, appointmentFiles ) of
@@ -72,19 +72,20 @@ submit candidacyId uploadEndpoint _ token toMsg ( _, _ ) formData =
             error "Vous ne pouvez pas envoyer plus d'une facture et plus d'une attestation de présence."
 
 
+mayExpectError : (Result (List String) () -> msg) -> Http.Expect msg
 mayExpectError toMsg =
     Http.expectStringResponse toMsg <|
         \response ->
             case response of
                 Http.BadStatus_ metadata errorBody ->
                     if metadata.statusCode == 413 then
-                        Err "Le fichier que vous tentez d'envoyer est trop volumineux. Veuillez soumettre un fichier d'une taille inférieure à 10 Mo."
+                        Err [ "Le fichier que vous tentez d'envoyer est trop volumineux. Veuillez soumettre un fichier d'une taille inférieure à 10 Mo." ]
 
                     else
-                        Err errorBody
+                        Err [ errorBody ]
 
                 Http.GoodStatus_ _ _ ->
                     Ok ()
 
                 _ ->
-                    Err "Une erreur est survenue"
+                    Err [ "Une erreur est survenue" ]
