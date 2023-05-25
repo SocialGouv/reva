@@ -33,7 +33,11 @@ get key (FormData formData) =
 
 insert : String -> String -> FormData -> FormData
 insert key value (FormData formData) =
-    FormData { formData | string = Dict.insert key value formData.string }
+    FormData
+        { formData
+            | string = Dict.insert key value formData.string
+            , errors = Dict.remove key formData.errors
+        }
 
 
 toDict : FormData -> Dict String String
