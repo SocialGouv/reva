@@ -319,8 +319,8 @@ model Organism {
   organismOnConventionCollective                         OrganismOnConventionCollective[]
   qualiopiCertificateExpiresAt                           DateTime?                                                @map("qualiopi_certificate_expires_at")
 
-  @@unique([siret,typology])
-  @@unique([label,typology])
+  @@unique([siret, typology])
+  @@unique([label, typology])
   @@map("organism")
 }
 
@@ -670,6 +670,7 @@ enum OrganismTypology {
   generaliste
   expertFiliere
   expertBranche
+  expertBrancheEtFiliere
 }
 
 view AvailableCertificationsByDepartments {

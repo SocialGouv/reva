@@ -4,7 +4,8 @@ type OrganismTypology =
   | "generaliste"
   | "experimentation"
   | "expertFiliere"
-  | "expertBranche";
+  | "expertBranche"
+  | "expertBrancheEtFiliere";
 
 interface SubscriptionRequestInput {
   companySiret: string;
