@@ -41,7 +41,7 @@ import View.Date exposing (toDateWithLabels)
 getCandidacies :
     String
     -> Token
-    -> (RemoteData String Data.Candidacy.CandidacySummaryPage -> msg)
+    -> (RemoteData (List String) Data.Candidacy.CandidacySummaryPage -> msg)
     -> Int
     -> Maybe Admin.Enum.CandidacyStatusFilter.CandidacyStatusFilter
     -> Maybe String
@@ -63,7 +63,7 @@ getCandidacies endpointGraphql token toMsg page statusFilter searchFilter =
 get :
     String
     -> Token
-    -> (RemoteData String Data.Candidacy.Candidacy -> msg)
+    -> (RemoteData (List String) Data.Candidacy.Candidacy -> msg)
     -> CandidacyId
     -> Cmd msg
 get endpointGraphql token toMsg candidacyId =
@@ -78,7 +78,7 @@ get endpointGraphql token toMsg candidacyId =
 takeOver :
     String
     -> Token
-    -> (RemoteData String () -> msg)
+    -> (RemoteData (List String) () -> msg)
     -> CandidacyId
     -> Cmd msg
 takeOver endpointGraphql token toMsg candidacyId =
@@ -93,7 +93,7 @@ takeOver endpointGraphql token toMsg candidacyId =
 getCandidacyCountByStatus :
     String
     -> Token
-    -> (RemoteData String Data.Candidacy.CandidacyCountByStatus -> msg)
+    -> (RemoteData (List String) Data.Candidacy.CandidacyCountByStatus -> msg)
     -> Cmd msg
 getCandidacyCountByStatus endpointGraphql token toMsg =
     Query.candidacy_candidacyCountByStatus candidacyCountByStatusSelection

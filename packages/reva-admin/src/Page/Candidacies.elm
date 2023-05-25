@@ -34,16 +34,16 @@ import View.Helpers exposing (dataTest)
 
 
 type Msg
-    = GotCandidaciesResponse (RemoteData String CandidacySummaryPage)
+    = GotCandidaciesResponse (RemoteData (List String) CandidacySummaryPage)
     | UserUpdatedSearch String
     | UserValidatedSearch
     | UserClearedSearch
-    | GotCandidacyCountByStatus (RemoteData String CandidacyCountByStatus)
+    | GotCandidacyCountByStatus (RemoteData (List String) CandidacyCountByStatus)
 
 
 type alias State =
-    { currentCandidacyPage : RemoteData String CandidacySummaryPage
-    , candidacyCountByStatus : RemoteData String CandidacyCountByStatus
+    { currentCandidacyPage : RemoteData (List String) CandidacySummaryPage
+    , candidacyCountByStatus : RemoteData (List String) CandidacyCountByStatus
     , search : Maybe String
     }
 
@@ -106,7 +106,7 @@ init context statusFilter page =
     ( defaultModel, defaultCmd )
 
 
-withCandidacyPage : RemoteData String CandidacySummaryPage -> State -> State
+withCandidacyPage : RemoteData (List String) CandidacySummaryPage -> State -> State
 withCandidacyPage candidacyPage state =
     { state | currentCandidacyPage = candidacyPage }
 
@@ -116,7 +116,7 @@ withSearch search state =
     { state | search = search }
 
 
-withCandidacyCountByStatus : RemoteData String CandidacyCountByStatus -> State -> State
+withCandidacyCountByStatus : RemoteData (List String) CandidacyCountByStatus -> State -> State
 withCandidacyCountByStatus candidacyCountByStatus state =
     { state | candidacyCountByStatus = candidacyCountByStatus }
 
@@ -162,7 +162,7 @@ view context model =
             viewWithFilters []
 
         ( _, Failure errors ) ->
-            viewWithFilters [ div [ class "m-4 font-medium text-red-500" ] [ text errors ] ]
+            viewWithFilters [ div [ class "m-4 font-medium text-red-500" ] <| List.map (\e -> div [] [ text e ]) errors ]
 
         ( _, Success candidacyCountByStatus ) ->
             viewWithFilters (View.Candidacy.Filters.view candidacyCountByStatus model.filters context)
@@ -304,7 +304,7 @@ viewDirectory context model title =
                     ]
 
             Failure error ->
-                div [ class "my-2 font-medium text-red-500" ] [ text error ]
+                div [ class "my-2 font-medium text-red-500" ] <| List.map (\e -> div [] [ text e ]) error
 
             _ ->
                 div []

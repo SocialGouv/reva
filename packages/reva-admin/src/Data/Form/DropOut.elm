@@ -24,7 +24,7 @@ keys =
     }
 
 
-validate : ( Candidacy, Referential ) -> FormData -> Result String ()
+validate : ( Candidacy, Referential ) -> FormData -> Result (List String) ()
 validate ( _, _ ) formData =
     let
         decode =
@@ -32,7 +32,7 @@ validate ( _, _ ) formData =
     in
     case decode.maybe.string .dropOutReason of
         Nothing ->
-            Err "Veuillez sélectionner une raison d'abandon"
+            Err [ "Veuillez sélectionner une raison d'abandon" ]
 
         _ ->
             Ok ()

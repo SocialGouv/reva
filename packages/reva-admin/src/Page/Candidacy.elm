@@ -57,23 +57,23 @@ import View.Helpers exposing (dataTest)
 
 
 type Msg
-    = GotCandidacyResponse (RemoteData String Candidacy)
-    | GotCandidacyDeletionResponse (RemoteData String String)
-    | GotCandidacyArchivingResponse (RemoteData String ())
-    | GotCandidacyUnarchivingResponse (RemoteData String ())
-    | GotCandidacyTakingOverResponse (RemoteData String ())
+    = GotCandidacyResponse (RemoteData (List String) Candidacy)
+    | GotCandidacyDeletionResponse (RemoteData (List String) String)
+    | GotCandidacyArchivingResponse (RemoteData (List String) ())
+    | GotCandidacyUnarchivingResponse (RemoteData (List String) ())
+    | GotCandidacyTakingOverResponse (RemoteData (List String) ())
     | GotFormMsg (Form.Msg ( Candidacy, Referential ))
-    | GotReferentialResponse (RemoteData String Referential)
+    | GotReferentialResponse (RemoteData (List String) Referential)
 
 
 type alias State =
-    { referential : RemoteData String Referential
+    { referential : RemoteData (List String) Referential
     }
 
 
 type alias Model =
     { form : Form.Model ( Candidacy, Referential )
-    , selected : RemoteData String Candidacy
+    , selected : RemoteData (List String) Candidacy
     , state : State
     , tab : Tab
     }
@@ -115,7 +115,7 @@ resetSelected ( model, cmd ) =
     ( { model | selected = NotAsked }, cmd )
 
 
-withReferential : RemoteData String Referential -> State -> State
+withReferential : RemoteData (List String) Referential -> State -> State
 withReferential referential state =
     { state | referential = referential }
 
@@ -241,8 +241,8 @@ viewCandidacyPanel context model =
                 , View.skeleton "w-full h-64 mb-12"
                 ]
 
-            Failure err ->
-                [ text err ]
+            Failure errors ->
+                List.map text errors
 
             Success candidacy ->
                 View.Candidacy.view

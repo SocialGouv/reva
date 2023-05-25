@@ -23,7 +23,7 @@ keys =
     }
 
 
-validate : ( Candidacy, Referential ) -> FormData -> Result String ()
+validate : ( Candidacy, Referential ) -> FormData -> Result (List String) ()
 validate ( candidacy, _ ) formData =
     Ok ()
 

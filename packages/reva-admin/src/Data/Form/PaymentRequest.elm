@@ -103,20 +103,20 @@ keys =
     }
 
 
-validate : ( Candidacy, Referential ) -> FormData -> Result String ()
+validate : ( Candidacy, Referential ) -> FormData -> Result (List String) ()
 validate ( _, _ ) formData =
     let
         decode =
             Helper.decode keys formData
     in
     if decode.string .invoiceNumber "" == "" then
-        Err "Veuillez saisir un numéro de facture"
+        Err [ "Veuillez saisir un numéro de facture" ]
 
     else
         Ok ()
 
 
-validateConfirmation : ( Candidacy, Referential ) -> FormData -> Result String ()
+validateConfirmation : ( Candidacy, Referential ) -> FormData -> Result (List String) ()
 validateConfirmation ( _, _ ) formData =
     let
         decode =
@@ -126,7 +126,7 @@ validateConfirmation ( _, _ ) formData =
         Ok ()
 
     else
-        Err "Veuillez confirmer le montant de la demande de paiement avant son envoi définitif"
+        Err [ "Veuillez confirmer le montant de la demande de paiement avant son envoi définitif" ]
 
 
 fromDict : FormData -> PaymentRequestInput

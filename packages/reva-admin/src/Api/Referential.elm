@@ -33,7 +33,7 @@ import RemoteData exposing (RemoteData(..))
 get :
     String
     -> Token
-    -> (RemoteData String Data.Referential.Referential -> msg)
+    -> (RemoteData (List String) Data.Referential.Referential -> msg)
     -> Cmd msg
 get endpointGraphql token toMsg =
     Auth.makeQuery endpointGraphql token toMsg selection
