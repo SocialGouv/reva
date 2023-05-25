@@ -50,24 +50,24 @@ export const validateIndividualCosts = ({
 
   if (!isBetween1And3(hoursAndCosts.diagnosisHourCount)) {
     errors.push(
-      "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 1 et 3h."
+      "input.diagnosisHourCount: Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 1 et 3h."
     );
   }
   if (!isLower1(hoursAndCosts.postExamHourCount)) {
     errors.push(
-      "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Post Jury doit être compris entre 0 et 1h."
+      "input.postExamHourCount: Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Post Jury doit être compris entre 0 et 1h."
     );
   }
 
   if (!isLower70(hoursAndCosts.diagnosisCost.toNumber())) {
     errors.push(
-      "Le coût horaire demandé pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 0 et 70 euros."
+      "input.diagnosisCost: Le coût horaire demandé pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 0 et 70 euros."
     );
   }
 
   if (!isLower70(hoursAndCosts.postExamCost.toNumber())) {
     errors.push(
-      "Le coût horaire demandé pour la prestation de l'Architecte de Parcours Post Jury doit être compris entre 0 et 70 euros."
+      "input.postExamCost: Le coût horaire demandé pour la prestation de l'Architecte de Parcours Post Jury doit être compris entre 0 et 70 euros."
     );
   }
 
@@ -76,17 +76,17 @@ export const validateIndividualCosts = ({
     !isLower15(hoursAndCosts.individualHourCount)
   ) {
     errors.push(
-      "Le nombre d'heures demandé pour la prestation Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 15h."
+      "input.individualHourCount: Le nombre d'heures demandé pour la prestation Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 15h."
     );
   } else if (!isLower30(hoursAndCosts.individualHourCount)) {
     errors.push(
-      "Le nombre d'heures demandé pour la prestation Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 30h."
+      "input.individualHourCount: Le nombre d'heures demandé pour la prestation Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 30h."
     );
   }
 
   if (!isLower70(hoursAndCosts.individualCost.toNumber())) {
     errors.push(
-      "Le coût horaire demandé pour la prestation d'Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 70 euros."
+      "input.individualCost: Le coût horaire demandé pour la prestation d'Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 70 euros."
     );
   }
 
@@ -95,23 +95,23 @@ export const validateIndividualCosts = ({
     !isLower15(hoursAndCosts.collectiveHourCount)
   ) {
     errors.push(
-      "Le nombre d'heures demandées pour la prestation d'Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 15h."
+      "input.collectiveHourCount: Le nombre d'heures demandées pour la prestation d'Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 15h."
     );
   } else if (!isLower30(hoursAndCosts.collectiveHourCount)) {
     errors.push(
-      "Le nombre d'heures demandées pour la prestation d'Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 30h."
+      "input.collectiveHourCount: Le nombre d'heures demandées pour la prestation d'Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 30h."
     );
   }
 
   if (!isLower35(hoursAndCosts.collectiveCost.toNumber())) {
     errors.push(
-      "Le coût horaire demandé pour la prestation Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 35 euros."
+      "input.collectiveCost: Le coût horaire demandé pour la prestation Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 35 euros."
     );
   }
 
   if (!isLower20(hoursAndCosts.basicSkillsCost.toNumber())) {
     errors.push(
-      "Le coût horaire demandé pour la prestation Compléments formatifs Savoirs de base doit être compris entre 0 et 20 euros."
+      "input.basicSkillsCost: Le coût horaire demandé pour la prestation Compléments formatifs Savoirs de base doit être compris entre 0 et 20 euros."
     );
   }
 
@@ -129,12 +129,12 @@ export const validateIndividualCosts = ({
 
   if (!isLower2(hoursAndCosts.examHourCount)) {
     errors.push(
-      "Le nombre d'heures demandé pour la prestation Jury doit être compris entre 0 et 2h."
+      "input.examHourCount: Le nombre d'heures demandé pour la prestation Jury doit être compris entre 0 et 2h."
     );
   }
   if (!isLower20(hoursAndCosts.examCost.toNumber())) {
     errors.push(
-      "Le coût horaire demandé pour la prestation Jury doit être compris entre 0 et 20 euros."
+      "input.examCost: Le coût horaire demandé pour la prestation Jury doit être compris entre 0 et 20 euros."
     );
   }
 
@@ -145,18 +145,18 @@ export const validateIndividualCosts = ({
       );
     } else if (!isLower25(hoursAndCosts.mandatoryTrainingsCost.toNumber())) {
       errors.push(
-        "Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 25 euros."
+        "input.mandatoryTrainingsCost: Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 25 euros."
       );
     }
   } else if (!isLower20(hoursAndCosts.mandatoryTrainingsCost.toNumber())) {
     errors.push(
-      "Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 20 euros."
+      "input.mandatoryTrainingsCost: Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 20 euros."
     );
   }
 
   if (!isLower20(hoursAndCosts.certificateSkillsCost.toNumber())) {
     errors.push(
-      "Le coût horaire demandé pour la prestation Compléments formatifs Blocs de compétences doit être compris entre 0 et 20 euros."
+      "input.certificateSkillsCost: Le coût horaire demandé pour la prestation Compléments formatifs Blocs de compétences doit être compris entre 0 et 20 euros."
     );
   }
 
@@ -194,10 +194,10 @@ export const validateTotalCost = (
   if (isCandidateBacNonFragile) {
     return totalCost.lessThanOrEqualTo(1755)
       ? null
-      : "Le coût total ne doit pas dépasser 1755€";
+      : "Le coût total ne doit pas dépasser 1755€.";
   } else {
     return totalCost.lessThanOrEqualTo(5030)
       ? null
-      : "Le coût total ne doit pas dépasser 5030€";
+      : "Le coût total ne doit pas dépasser 5030€.";
   }
 };
