@@ -4,7 +4,7 @@ import Accessibility exposing (h1, h2)
 import Admin.Enum.Duration exposing (Duration(..))
 import Api.Token
 import BetaGouv.DSFR.Button as Button
-import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, DateWithLabels, isCandidacyArchived, isCandidacyReoriented)
+import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, DateWithLabels, canDropoutCandidacy, isCandidacyArchived, isCandidacyReoriented)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department, Referential)
@@ -18,7 +18,6 @@ import View
 import View.Candidacy.Tab exposing (Value(..))
 import View.Date
 import View.Helpers exposing (dataTest)
-import Data.Candidacy exposing (canDropoutCandidacy)
 
 
 view :
@@ -26,7 +25,7 @@ view :
     ->
         { a
             | candidacy : Candidacy
-            , referential : RemoteData String Referential
+            , referential : RemoteData (List String) Referential
         }
     -> List (Html msg)
 view context config =
@@ -87,8 +86,8 @@ view context config =
                 Success referential ->
                     viewGoals referential config.candidacy.goals
 
-                Failure err ->
-                    text err
+                Failure errors ->
+                    View.errors errors
 
                 _ ->
                     text "..."

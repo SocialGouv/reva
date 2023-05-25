@@ -22,16 +22,16 @@ import View.Helpers exposing (dataTest)
 
 
 type Msg
-    = GotSubscriptionsResponse (RemoteData String (List SubscriptionSummary))
+    = GotSubscriptionsResponse (RemoteData (List String) (List SubscriptionSummary))
     | ClickedValidation String
     | ClickedRejection String
     | ClickedViewMore String
-    | GotValidationResponse (RemoteData String String)
-    | GotRejectionResponse (RemoteData String String)
+    | GotValidationResponse (RemoteData (List String) String)
+    | GotRejectionResponse (RemoteData (List String) String)
 
 
 type alias State =
-    { subscriptions : RemoteData String (List SubscriptionSummary)
+    { subscriptions : RemoteData (List String) (List SubscriptionSummary)
     , errors : List String
     }
 
@@ -96,7 +96,7 @@ view context model =
                 ]
 
         Failure errors ->
-            div [ class "text-red-500" ] [ text errors ]
+            View.errors errors
 
         Success subscriptions ->
             subscriptions
@@ -158,7 +158,7 @@ viewDirectoryPanel context subscriptionsByStatus actionErrors =
             , class "min-h-0 overflow-y-auto mx-8 px-0"
             , attribute "aria-label" "Inscriptions"
             ]
-    , View.errors actionErrors
+    , View.popupErrors actionErrors
     ]
 
 
@@ -219,7 +219,7 @@ update context msg model =
                 |> withErrors []
 
         GotValidationResponse (RemoteData.Failure errors) ->
-            ( model, Cmd.none ) |> withErrors [ errors ]
+            ( model, Cmd.none ) |> withErrors errors
 
         -- REJECTION
         ClickedRejection id ->
@@ -246,7 +246,7 @@ update context msg model =
             ( { model | state = { state | errors = [] } }, Api.Subscription.getSubscriptions context.endpoint context.token GotSubscriptionsResponse )
 
         GotRejectionResponse (RemoteData.Failure errors) ->
-            ( model, Cmd.none ) |> withErrors [ errors ]
+            ( model, Cmd.none ) |> withErrors errors
 
 
 withErrors : List String -> ( Model, Cmd msg ) -> ( Model, Cmd msg )
@@ -258,7 +258,7 @@ withErrors errors ( model, cmd ) =
     ( { model | state = { state | errors = errors } }, cmd )
 
 
-withSubscriptions : RemoteData String (List SubscriptionSummary) -> ( Model, Cmd msg ) -> ( Model, Cmd msg )
+withSubscriptions : RemoteData (List String) (List SubscriptionSummary) -> ( Model, Cmd msg ) -> ( Model, Cmd msg )
 withSubscriptions subscriptions ( model, cmd ) =
     let
         state =

@@ -28,7 +28,7 @@ get :
     String
     -> String
     -> Token
-    -> (RemoteData String (Dict String String) -> msg)
+    -> (RemoteData (List String) (Dict String String) -> msg)
     -> Cmd msg
 get email endpointGraphql token toMsg =
     let
@@ -42,7 +42,7 @@ get email endpointGraphql token toMsg =
 update :
     String
     -> Token
-    -> (RemoteData String () -> msg)
+    -> (RemoteData (List String) () -> msg)
     -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
     -> FormData
     -> Cmd msg

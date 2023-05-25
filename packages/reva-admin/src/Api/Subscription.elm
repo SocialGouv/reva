@@ -28,7 +28,7 @@ import RemoteData exposing (RemoteData(..))
 validate :
     String
     -> Token
-    -> (RemoteData String String -> msg)
+    -> (RemoteData (List String) String -> msg)
     -> String
     -> Cmd msg
 validate endpointGraphql token toMsg subscriptionId =
@@ -40,7 +40,7 @@ validate endpointGraphql token toMsg subscriptionId =
 reject :
     String
     -> Token
-    -> (RemoteData String String -> msg)
+    -> (RemoteData (List String) String -> msg)
     -> String
     -> Cmd msg
 reject endpointGraphql token toMsg subscriptionId =
@@ -56,7 +56,7 @@ reject endpointGraphql token toMsg subscriptionId =
 getSubscriptions :
     String
     -> Token
-    -> (RemoteData String (List Data.Subscription.SubscriptionSummary) -> msg)
+    -> (RemoteData (List String) (List Data.Subscription.SubscriptionSummary) -> msg)
     -> Cmd msg
 getSubscriptions endpointGraphql token toMsg =
     Query.subscription_getSubscriptionRequests
@@ -68,7 +68,7 @@ getSubscriptions endpointGraphql token toMsg =
 get :
     String
     -> Token
-    -> (RemoteData String Data.Subscription.Subscription -> msg)
+    -> (RemoteData (List String) Data.Subscription.Subscription -> msg)
     -> String
     -> Cmd msg
 get endpointGraphql token toMsg subscriptionId =
