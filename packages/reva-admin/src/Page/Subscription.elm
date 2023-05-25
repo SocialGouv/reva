@@ -7,7 +7,7 @@ module Page.Subscription exposing
     )
 
 import Accessibility exposing (a, dd, dl, dt, h1, h2)
-import Admin.Enum.LegalStatus as LegalStatus
+import Admin.Enum.LegalStatus as LegalStatus exposing (LegalStatus(..))
 import Admin.Enum.OrganismTypology exposing (OrganismTypology(..))
 import Api.Subscription
 import BetaGouv.DSFR.Button as Button
@@ -93,6 +93,15 @@ view context model =
 
 viewContent : Context -> List String -> Subscription -> Html Msg
 viewContent context errors subscription =
+    let
+        toLegalStatusString ls =
+            case ls of
+                AssociationLoi1901 ->
+                    "Association loi 1901"
+
+                _ ->
+                    LegalStatus.toString ls
+    in
     View.article
         "subscription"
         (Route.href context.baseUrl Route.Subscriptions)
@@ -115,7 +124,7 @@ viewContent context errors subscription =
             , viewInfo "Date d'expiration de la certification Qualiopi VAE\n" [ text (toSmallFormat subscription.qualiopiCertificateExpiresAt) ]
             , viewTitle "Informations juridiques de la structure"
             , viewInfoText "SIRET de la structure" [ subscription.companySiret ]
-            , viewInfoText "Forme juridique" [ subscription.companyLegalStatus |> LegalStatus.toString ]
+            , viewInfoText "Forme juridique" [ subscription.companyLegalStatus |> toLegalStatusString ]
             , viewInfoText "Adresse de la structure"
                 [ subscription.companyAddress
                 , subscription.companyZipCode

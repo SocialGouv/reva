@@ -14,12 +14,14 @@ type LegalStatus
     | Sas
     | Sasu
     | Sa
+    | Eirl
+    | AssociationLoi1901
     | Nc
 
 
 list : List LegalStatus
 list =
-    [ Ei, Eurl, Sarl, Sas, Sasu, Sa, Nc ]
+    [ Ei, Eurl, Sarl, Sas, Sasu, Sa, Eirl, AssociationLoi1901, Nc ]
 
 
 decoder : Decoder LegalStatus
@@ -45,6 +47,12 @@ decoder =
 
                     "SA" ->
                         Decode.succeed Sa
+
+                    "EIRL" ->
+                        Decode.succeed Eirl
+
+                    "ASSOCIATION_LOI_1901" ->
+                        Decode.succeed AssociationLoi1901
 
                     "NC" ->
                         Decode.succeed Nc
@@ -76,6 +84,12 @@ toString enum____ =
 
         Sa ->
             "SA"
+
+        Eirl ->
+            "EIRL"
+
+        AssociationLoi1901 ->
+            "ASSOCIATION_LOI_1901"
 
         Nc ->
             "NC"
@@ -112,6 +126,12 @@ fromString enumString____ =
 
         "SA" ->
             Just Sa
+
+        "EIRL" ->
+            Just Eirl
+
+        "ASSOCIATION_LOI_1901" ->
+            Just AssociationLoi1901
 
         "NC" ->
             Just Nc

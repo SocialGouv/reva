@@ -8,7 +8,22 @@ import * as z from "zod";
 import { useProfessionalSpaceCreationContext } from "../context/ProfessionalSpaceCreationContext";
 import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 
-const legalStatuses = ["EI", "EURL", "SARL", "SAS", "SASU", "SA"] as const;
+const legalStatuses = [
+  "ASSOCIATION_LOI_1901",
+  "EI",
+  "EIRL",
+  "EURL",
+  "SA",
+  "SARL",
+  "SAS",
+  "SASU",
+] as const;
+
+const legalStatusLabel = (legalStatus: (typeof legalStatuses)[number]) => {
+  return legalStatus === "ASSOCIATION_LOI_1901"
+    ? "Association loi 1901"
+    : legalStatus.toString();
+};
 
 const zodSchema = z.object({
   companySiret: z.string().length(14, "doit comporter 14 caractères"),
@@ -83,7 +98,7 @@ export const CompanyInfoStepForm = () => {
           >
             {legalStatuses.map((ls) => (
               <option key={ls} value={ls}>
-                {ls}
+                {legalStatusLabel(ls)}
               </option>
             ))}
           </Select>

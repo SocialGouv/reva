@@ -4,7 +4,15 @@ import { useRouter } from "next/router";
 import { useCallback, useContext, useState } from "react";
 import { createContext, ReactNode } from "react";
 
-type LegalStatus = "EI" | "EURL" | "SARL" | "SAS" | "SASU" | "SA";
+type LegalStatus =
+  | "ASSOCIATION_LOI_1901"
+  | "EI"
+  | "EIRL"
+  | "EURL"
+  | "SARL"
+  | "SAS"
+  | "SASU"
+  | "SA";
 
 interface ProfessionalSpaceInfo {
   companySiret: string;
@@ -79,7 +87,7 @@ export const ProfessionalSpaceCreationProvider = (props: {
   const [state, setState] = useState<ProfessionalSpaceCreationState>({
     currentStep: "qualiopiCertificateInfoStep",
     professionalSpaceInfos: {
-      companyLegalStatus: "EI",
+      companyLegalStatus: "ASSOCIATION_LOI_1901",
       domaineIds: [],
     },
   });

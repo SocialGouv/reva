@@ -1,4 +1,13 @@
-type LegalStatus = "EI" | "EURL" | "SARL" | "SAS" | "SASU" | "SA" | "NC";
+type LegalStatus =
+  | "EI"
+  | "EURL"
+  | "SARL"
+  | "SAS"
+  | "SASU"
+  | "SA"
+  | "EIRL"
+  | "ASSOCIATION_LOI_1901"
+  | "NC";
 
 type OrganismTypology =
   | "generaliste"

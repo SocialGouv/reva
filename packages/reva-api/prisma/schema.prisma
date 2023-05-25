@@ -627,6 +627,8 @@ enum LegalStatus {
   SAS
   SASU
   SA
+  EIRL
+  ASSOCIATION_LOI_1901
   NC
 }
 
