@@ -25,6 +25,6 @@
   mask-image: url("../icons/system/arrow-down-s-line.svg");
 }
 
-.fr-alert--error:before {
+.fr-alert--error:before, .fr-error-text:before  {
   mask-image: url("../icons/system/fr--error-fill.svg");
 }

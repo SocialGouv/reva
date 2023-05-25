@@ -248,6 +248,16 @@ viewForm referential status errors formData form saveButton submitButton =
                 , onSubmit (UserClickSubmit referential)
                 ]
                 [ fieldset [ class "fr-fieldset" ] content ]
+
+        inputErrorPredicate =
+            String.startsWith "input."
+
+        inputErrors =
+            List.filter inputErrorPredicate errors
+                |> List.map (String.dropLeft 6)
+
+        globalErrors =
+            List.filter (not << inputErrorPredicate) errors
     in
     case status of
         Editable ->
@@ -257,13 +267,13 @@ viewForm referential status errors formData form saveButton submitButton =
                     [ h1 [] [ text currentForm.title ]
                     , p [ class "font-normal" ] [ text "Sauf mention contraire “(optionnel)” dans le label, tous les champs sont obligatoires." ]
                     ]
-                    :: viewFieldsets formData currentForm.elements
+                    :: viewFieldsets (Data.Form.withErrors formData inputErrors) currentForm.elements
                     ++ [ div
                             [ class "mt-8 pb-4 flex justify-end pr-2 w-full" ]
                             [ saveButton
                             , submitButton
                             ]
-                       , View.popupErrors errors
+                       , View.popupErrors globalErrors
                        ]
 
         ReadOnly ->
@@ -288,7 +298,7 @@ viewEditableElement formData ( elementId, element ) =
             viewInput elementId label dataOrDefault
                 |> inputType
                 |> Input.withInputAttrs inputAttrs
-                |> Input.withError (Just [ text "oh no it doesn't work" ])
+                |> Input.withError (Data.Form.getError elementId formData |> Maybe.map (\e -> [ text e ]))
                 |> Input.withHint [ text hint ]
                 |> Input.view
 
@@ -931,10 +941,10 @@ update context msg model =
             )
 
         ( GotSaveResponse (RemoteData.Failure error), Saving form formData ) ->
-            ( { model | form = Editing (Debug.log "" error) form formData }, Cmd.none )
+            ( { model | form = Editing error form formData }, Cmd.none )
 
         ( GotSaveResponse (RemoteData.Failure error), Submitting form formData ) ->
-            ( { model | form = Editing (Debug.log "" error) form formData }, Cmd.none )
+            ( { model | form = Editing error form formData }, Cmd.none )
 
         ( GotSaveResponse _, _ ) ->
             noChange
