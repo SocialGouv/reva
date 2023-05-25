@@ -22,8 +22,8 @@ import Data.Form exposing (FormData, get, insert)
 import Data.Form.Helper exposing (booleanFromString, booleanToString)
 import Dict exposing (Dict)
 import File exposing (File)
-import Html exposing (Html, button, div, fieldset, input, label, legend, li, option, p, select, span, text, ul)
-import Html.Attributes exposing (class, disabled, for, id, multiple, name, placeholder, required, selected, type_, value)
+import Html exposing (Html, div, fieldset, input, label, legend, li, option, p, select, span, text, ul)
+import Html.Attributes exposing (class, for, id, multiple, name, placeholder, required, selected, type_, value)
 import Html.Events exposing (on, onInput, onSubmit)
 import Json.Decode
 import List.Extra
@@ -31,7 +31,6 @@ import RemoteData exposing (RemoteData(..))
 import String exposing (String)
 import Task
 import View
-import View.Helpers exposing (dataTest)
 
 
 type Msg referential
@@ -39,7 +38,7 @@ type Msg referential
     | UserClickSave referential
     | UserClickSubmit referential
     | UserSelectFiles String (List File)
-    | GotSaveResponse (RemoteData (List String) ())
+    | GotSaveResponse referential (RemoteData (List String) ())
     | GotLoadResponse (RemoteData (List String) (Dict String String))
     | NoOp
 
@@ -248,16 +247,6 @@ viewForm referential status errors formData form saveButton submitButton =
                 , onSubmit (UserClickSubmit referential)
                 ]
                 [ fieldset [ class "fr-fieldset" ] content ]
-
-        inputErrorPredicate =
-            String.startsWith "input."
-
-        inputErrors =
-            List.filter inputErrorPredicate errors
-                |> List.map (String.dropLeft 6)
-
-        globalErrors =
-            List.filter (not << inputErrorPredicate) errors
     in
     case status of
         Editable ->
@@ -267,13 +256,13 @@ viewForm referential status errors formData form saveButton submitButton =
                     [ h1 [] [ text currentForm.title ]
                     , p [ class "font-normal" ] [ text "Sauf mention contraire “(optionnel)” dans le label, tous les champs sont obligatoires." ]
                     ]
-                    :: viewFieldsets (Data.Form.withErrors formData inputErrors) currentForm.elements
+                    :: viewFieldsets formData currentForm.elements
                     ++ [ div
                             [ class "mt-8 pb-4 flex justify-end pr-2 w-full" ]
                             [ saveButton
                             , submitButton
                             ]
-                       , View.popupErrors globalErrors
+                       , View.popupErrors errors
                        ]
 
         ReadOnly ->
@@ -884,6 +873,40 @@ update context msg model =
                     ( { model | form = state form formData }
                     , handler context.endpoint context.token toMsg referential formData
                     )
+
+        inputErrorPredicate =
+            String.startsWith "input."
+
+        inputErrors errors =
+            List.filter inputErrorPredicate errors
+                |> List.map (String.dropLeft 6)
+
+        globalErrors errors =
+            List.filter (not << inputErrorPredicate) errors
+
+        focusOnFirstInputError : Form -> FormData -> Cmd (Msg referential)
+        focusOnFirstInputError form formData =
+            case Data.Form.getFirstError form.elements formData of
+                Just firstError ->
+                    Task.attempt (\_ -> NoOp) (Browser.Dom.focus ("input-" ++ firstError))
+
+                Nothing ->
+                    Cmd.none
+
+        handleFailure :
+            List String
+            -> (FormData -> referential -> Form)
+            -> FormData
+            -> referential
+            -> ( Model referential, Cmd (Msg referential) )
+        handleFailure errors form formData referential =
+            let
+                newFormData =
+                    Data.Form.withErrors formData (inputErrors errors)
+            in
+            ( { model | form = Editing (globalErrors errors) form newFormData }
+            , focusOnFirstInputError (form newFormData referential) newFormData
+            )
     in
     case ( msg, model.form ) of
         ( UserChangedElement elementId elementValue, Editing _ form formData ) ->
@@ -897,13 +920,13 @@ update context msg model =
             noChange
 
         ( UserClickSave referential, Editing _ form formData ) ->
-            clickHandler model.onSave (\_ _ -> Ok ()) GotSaveResponse Saving referential form formData
+            clickHandler model.onSave (\_ _ -> Ok ()) (GotSaveResponse referential) Saving referential form formData
 
         ( UserClickSave _, _ ) ->
             noChange
 
         ( UserClickSubmit referential, Editing _ form formData ) ->
-            clickHandler model.onSubmit model.onValidate GotSaveResponse Submitting referential form formData
+            clickHandler model.onSubmit model.onValidate (GotSaveResponse referential) Submitting referential form formData
 
         ( UserClickSubmit _, _ ) ->
             noChange
@@ -932,7 +955,7 @@ update context msg model =
         ( GotLoadResponse _, _ ) ->
             noChange
 
-        ( GotSaveResponse (RemoteData.Success _), _ ) ->
+        ( GotSaveResponse _ (RemoteData.Success _), _ ) ->
             ( model
             , Cmd.batch
                 [ Task.perform (\_ -> NoOp) (Browser.Dom.setViewport 0 0)
@@ -940,13 +963,13 @@ update context msg model =
                 ]
             )
 
-        ( GotSaveResponse (RemoteData.Failure error), Saving form formData ) ->
-            ( { model | form = Editing error form formData }, Cmd.none )
+        ( GotSaveResponse referential (RemoteData.Failure errors), Saving form formData ) ->
+            handleFailure errors form formData referential
 
-        ( GotSaveResponse (RemoteData.Failure error), Submitting form formData ) ->
-            ( { model | form = Editing error form formData }, Cmd.none )
+        ( GotSaveResponse referential (RemoteData.Failure errors), Submitting form formData ) ->
+            handleFailure errors form formData referential
 
-        ( GotSaveResponse _, _ ) ->
+        ( GotSaveResponse _ _, _ ) ->
             noChange
 
         ( NoOp, _ ) ->

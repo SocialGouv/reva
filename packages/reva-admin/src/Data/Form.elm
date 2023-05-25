@@ -1,4 +1,4 @@
-module Data.Form exposing (FormData, empty, fromDict, fromDictFiles, get, getError, getFiles, insert, insertFiles, toDict, toDictFiles, withErrors)
+module Data.Form exposing (FormData, empty, fromDict, fromDictFiles, get, getError, getFiles, getFirstError, insert, insertFiles, toDict, toDictFiles, withErrors)
 
 import Dict exposing (Dict)
 import File exposing (File)
@@ -78,6 +78,12 @@ fromDictFiles dict =
 getError : String -> FormData -> Maybe String
 getError key (FormData formData) =
     Dict.get key formData.errors
+
+
+getFirstError : List ( String, a ) -> FormData -> Maybe String
+getFirstError elements (FormData formData) =
+    List.map Tuple.first elements
+        |> List.Extra.find (\key -> Dict.member key formData.errors)
 
 
 withErrors : FormData -> List String -> FormData
