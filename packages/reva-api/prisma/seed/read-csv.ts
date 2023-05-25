@@ -25,6 +25,7 @@ export function upsertCsvRows<T, U>({
       parse({
         headers: headersDefinition as Array<string | undefined>,
         renameHeaders: true,
+        ignoreEmpty: true,
       })
         .on("error", (err) => {
           error(err);

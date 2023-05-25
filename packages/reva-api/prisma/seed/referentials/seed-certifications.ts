@@ -17,6 +17,7 @@ export async function seedCertifications(prisma: PrismaClient) {
 }
 
 async function upsertCertificationsXp(prisma: PrismaClient) {
+  console.log("upsertCertificationsXp");
   await upsertCsvRows<
     Prisma.CertificationCreateInput & { level: string },
     Prisma.CertificationUpsertArgs

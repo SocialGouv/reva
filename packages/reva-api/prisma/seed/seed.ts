@@ -86,10 +86,6 @@ async function main() {
       undefined,
       undefined,
       undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
     ],
     transform: ({
       id,
@@ -99,28 +95,31 @@ async function main() {
       level,
       acronym,
       typeDiplome,
-    }) => ({
-      where: { id },
-      create: {
-        id,
-        rncpId,
-        label,
-        level: parseInt(level),
-        summary,
-        acronym,
-        slug: "",
-        typeDiplomeId: typeDiplome as string,
-      },
-      update: {
-        rncpId,
-        label,
-        level: parseInt(level),
-        summary,
-        acronym,
-        slug: "",
-        typeDiplomeId: typeDiplome as string,
-      },
-    }),
+    }) => {
+      // console.log("certifications_new", rncpId);
+      return {
+        where: { id },
+        create: {
+          id,
+          rncpId,
+          label,
+          level: parseInt(level),
+          summary,
+          acronym,
+          slug: "",
+          typeDiplomeId: typeDiplome as string,
+        },
+        update: {
+          rncpId,
+          label,
+          level: parseInt(level),
+          summary,
+          acronym,
+          slug: "",
+          typeDiplomeId: typeDiplome as string,
+        },
+      };
+    },
     upsertCommand: prisma.certification.upsert,
   });
 
@@ -143,10 +142,6 @@ async function main() {
       "conventionCollective",
       undefined,
       "domaine",
-      undefined,
-      undefined,
-      undefined,
-      undefined,
     ],
   });
   for (const {
