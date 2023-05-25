@@ -108,7 +108,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 1 et 3h."
       );
     });
@@ -119,7 +119,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 1 et 3h."
       );
     });
@@ -141,7 +141,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le nombre d'heures demandées pour la prestation de l'Architecte de Parcours Post Jury doit être compris entre 0 et 1h."
       );
     });
@@ -163,7 +163,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le coût horaire demandé pour la prestation de l'Architecte de Parcours Diagnostique doit être compris entre 0 et 70 euros."
       );
     });
@@ -177,7 +177,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le coût horaire demandé pour la prestation de l'Architecte de Parcours Post Jury doit être compris entre 0 et 70 euros."
       );
     });
@@ -191,7 +191,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le nombre d'heures demandé pour la prestation Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 15h."
       );
     });
@@ -202,7 +202,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le nombre d'heures demandé pour la prestation Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 30h."
       );
     });
@@ -221,7 +221,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le nombre d'heures demandé pour la prestation Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 30h."
       );
     });
@@ -243,7 +243,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le coût horaire demandé pour la prestation d'Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 70 euros."
       );
     });
@@ -255,7 +255,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le coût horaire demandé pour la prestation d'Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 70 euros."
       );
     });
@@ -267,7 +267,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le coût horaire demandé pour la prestation d'Accompagnement méthodologique à la VAE (individuel) doit être compris entre 0 et 70 euros."
       );
     });
@@ -281,7 +281,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le nombre d'heures demandées pour la prestation d'Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 15h."
       );
     });
@@ -292,7 +292,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le nombre d'heures demandées pour la prestation d'Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 30h."
       );
     });
@@ -322,7 +322,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le coût horaire demandé pour la prestation Accompagnement méthodologique à la VAE (collectif) doit être compris entre 0 et 35 euros."
       );
     });
@@ -405,7 +405,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 20 euros."
       );
     });
@@ -417,7 +417,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le coût horaire demandé pour la prestation Formations obligatoires doit être compris entre 0 et 20 euros."
       );
     });
@@ -500,7 +500,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le coût horaire demandé pour la prestation Compléments formatifs Savoirs de base doit être compris entre 0 et 20 euros."
       );
     });
@@ -512,7 +512,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le coût horaire demandé pour la prestation Compléments formatifs Savoirs de base doit être compris entre 0 et 20 euros."
       );
     });
@@ -595,7 +595,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le coût horaire demandé pour la prestation Compléments formatifs Blocs de compétences doit être compris entre 0 et 20 euros."
       );
     });
@@ -607,7 +607,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le coût horaire demandé pour la prestation Compléments formatifs Blocs de compétences doit être compris entre 0 et 20 euros."
       );
     });
@@ -623,7 +623,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le nombre d'heures total prescrit pour les actes formatifs doit être compris entre 0 et 78h."
       );
     });
@@ -636,7 +636,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacSupFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le nombre d'heures total prescrit pour les actes formatifs doit être compris entre 0 et 78h."
       );
     });
@@ -650,7 +650,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le nombre d'heures demandé pour la prestation Jury doit être compris entre 0 et 2h."
       );
     });
@@ -664,7 +664,7 @@ describe("funding request", () => {
       };
       const result = validateCandidateBacSupNonFragile(fundingRequest);
       expect(result.isLeft()).toEqual(true);
-      expect((result.extract() as FunctionalError).errors).toContain(
+      expect((result.extract() as FunctionalError).errors.join()).toContain(
         "Le coût horaire demandé pour la prestation Jury doit être compris entre 0 et 20 euros."
       );
     });
