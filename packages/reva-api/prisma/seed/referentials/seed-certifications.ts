@@ -19,7 +19,7 @@ export async function seedCertifications(prisma: PrismaClient) {
 async function upsertCertificationsXp(prisma: PrismaClient) {
   console.log("upsertCertificationsXp");
   await upsertCsvRows<
-    Prisma.CertificationCreateInput & { level: string },
+    Prisma.CertificationCreateInput & { level: string; typeDiplome: string },
     Prisma.CertificationUpsertArgs
   >({
     filePath: "./referentials/certifications_xp.csv",
@@ -32,7 +32,7 @@ async function upsertCertificationsXp(prisma: PrismaClient) {
       "label",
       "abilities",
       "accessibleJobType",
-      "acronym",
+      "typeDiplome",
       "activities",
       "activityArea",
       "level",
@@ -47,7 +47,7 @@ async function upsertCertificationsXp(prisma: PrismaClient) {
       label,
       abilities,
       accessibleJobType,
-      acronym,
+      typeDiplome,
       activities,
       activityArea,
       level,
@@ -62,7 +62,7 @@ async function upsertCertificationsXp(prisma: PrismaClient) {
         label,
         abilities,
         accessibleJobType,
-        acronym,
+        typeDiplome: { connect: { label: typeDiplome } },
         activities,
         activityArea,
         level: parseInt(level),
@@ -75,7 +75,7 @@ async function upsertCertificationsXp(prisma: PrismaClient) {
         label,
         abilities,
         accessibleJobType,
-        acronym,
+        typeDiplome: { connect: { label: typeDiplome } },
         activities,
         activityArea,
         level: parseInt(level),
@@ -83,7 +83,14 @@ async function upsertCertificationsXp(prisma: PrismaClient) {
         status,
       },
     }),
-    upsertCommand: prisma.certification.upsert,
+    upsertCommand: (obj: Prisma.CertificationUpsertArgs) => {
+      console.log(
+        `id: ${obj.where.id} - typeDiplome: ${
+          (obj as any).update.typeDiplome.connect.label
+        }`
+      );
+      return prisma.certification.upsert(obj);
+    },
   });
 
   const count = await prisma.$queryRaw`

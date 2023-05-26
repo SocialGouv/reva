@@ -64,3 +64,10 @@ export function readCsvRows<T>({
     );
   });
 }
+
+export function parseCsvList(str: string): string[] {
+  return str
+    .trim()
+    .split(",")
+    .map((s: string) => s.trim());
+}
