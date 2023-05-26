@@ -1,0 +1,1 @@
+ALTER TABLE "certification" DROP COLUMN "acronym";
