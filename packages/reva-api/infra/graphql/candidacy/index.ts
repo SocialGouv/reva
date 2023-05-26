@@ -41,6 +41,7 @@ import {
 import * as admissibilityDb from "../../database/postgres/admissibility";
 import * as basicSkillDb from "../../database/postgres/basicSkills";
 import * as candidacyDb from "../../database/postgres/candidacies";
+import { prismaClient } from "../../database/postgres/client";
 import * as dropOutDb from "../../database/postgres/dropOutReasons";
 import * as examInfoDb from "../../database/postgres/examInfo";
 import * as experienceDb from "../../database/postgres/experiences";
@@ -193,20 +194,29 @@ const unsafeResolvers = {
       _: unknown,
       params: { candidacyId: string }
     ) => {
-      const result = await (process.env.USE_ORGANISMS_WITH_NEW_TYPOLOGIES ===
-      "true"
-        ? getActiveOrganismsForCandidacyWithNewTypologies({
-            getActiveOrganismForCertificationAndDepartment:
-              organismDb.getActiveOrganismForCertificationAndDepartment,
-            getCandidacyFromId: candidacyDb.getCandidacyFromId,
-          })({ candidacyId: params.candidacyId })
-        : getCompanionsForCandidacy({
-            getCompanionsForCandidacy: organismDb.getCompanionOrganisms,
-          })({ candidacyId: params.candidacyId }));
+      const candidacy = await prismaClient.candidacy.findUnique({
+        where: { id: params.candidacyId },
+        include: { organism: true },
+      });
+      if (candidacy) {
+        //companion organisms are fetched differently if the candidacy organism typology is "experimentation" or not
+        const result = await (candidacy.organism?.typology === "experimentation"
+          ? getCompanionsForCandidacy({
+              getCompanionsForCandidacy: organismDb.getCompanionOrganisms,
+            })({ candidacyId: params.candidacyId })
+          : getActiveOrganismsForCandidacyWithNewTypologies({
+              getActiveOrganismForCertificationAndDepartment:
+                organismDb.getActiveOrganismForCertificationAndDepartment,
+              getCandidacyFromId: candidacyDb.getCandidacyFromId,
+            })({ candidacyId: params.candidacyId }));
 
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
+        return result
+          .mapLeft(
+            (error) => new mercurius.ErrorWithProps(error.message, error)
+          )
+          .extract();
+      }
+      return [];
     },
     candidacy_candidacyCountByStatus: (
       _: unknown,
