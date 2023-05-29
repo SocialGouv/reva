@@ -54,7 +54,7 @@ const SuiviCandidat = () => (
     <div className="mt-10 lg:mt-0 basis-1/2">
       <Image
         src="/professional-space/home-page/woman-standing.png"
-        alt="Femme souriante debout"
+        alt=""
         width={1016}
         height={665}
       />
@@ -68,7 +68,7 @@ const EngagementAAP = () => (
       <div className="float-right self-center mt-10 lg:mt-[-170px] w-[114px] lg:w-[250px]">
         <Image
           src="/professional-space/home-page/woman-face-smiling.png"
-          alt="Visage femme souriante"
+          alt=""
           width={250}
           height={285}
         />

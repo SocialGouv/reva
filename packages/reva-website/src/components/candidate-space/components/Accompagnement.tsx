@@ -33,7 +33,7 @@ export const Accompagnement = () => (
             <Image
               className=""
               src="/candidate-space/icon-conception.png"
-              alt="image bloc note"
+              alt=""
               width={130}
               height={121}
             />
@@ -53,7 +53,7 @@ export const Accompagnement = () => (
           <div className="min-w-[130px]">
             <Image
               src="/candidate-space/icon-gestion.png"
-              alt="image dossier"
+              alt=""
               width={130}
               height={121}
             />
@@ -72,7 +72,7 @@ export const Accompagnement = () => (
           <div className="min-w-[130px]">
             <Image
               src="/candidate-space/icon-plannification.png"
-              alt="image bloc note"
+              alt=""
               width={130}
               height={121}
             />

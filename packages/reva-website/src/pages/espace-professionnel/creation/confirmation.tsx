@@ -24,7 +24,7 @@ const ProfessionalSpaceCreationConfirmationPage = () => {
           <Image
             src="/professional-space/creation/union.svg"
             className="self-center mb-14"
-            alt="Compte validé"
+            alt=""
             width={80}
             height={60}
           />

@@ -32,7 +32,7 @@ export const QuestcequelaVae = () => (
     <div className="absolute top-0 right-0 w-48 h-48 -mr-[72px] sm:relative sm:flex-0 sm:mr-0 sm:h-auto sm:w-2/5 sm:-ml-24 lg:ml-0 lg:flex-1 lg:w-auto">
       <Image
         src="/candidate-space/image-questcequelavae.png"
-        alt="Visages souriants devant un titre professionnel"
+        alt=""
         fill={true}
         style={{
           objectFit: "contain",

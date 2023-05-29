@@ -70,7 +70,7 @@ export const ExperienceReconnue = () => (
     <div className="relative mt-16 -mx-5 sm:mx-0 sm:flex-0 sm:w-2/5 sm:-mr-20 lg:mr-0 lg:flex-1">
       <Image
         src="/candidate-space/image-accompagnement.png"
-        alt="visages souriant devant un titre professionnel"
+        alt=""
         width={1067}
         height={969}
       />
