@@ -72,6 +72,9 @@ export const CertificateDetails = () => {
         priority="tertiary no outline"
         className="p-0 mt-4"
         onClick={() => setShowMore((showMore) => !showMore)}
+        nativeButtonProps={{
+          "aria-expanded": showMore,
+        }}
       >
         Lire {showMore ? "moins" : "plus"}
       </Button>
