@@ -74,7 +74,7 @@ view context config =
                     |> Maybe.map
                         (\email ->
                             a
-                                [ class "text-blue-500 hover:text-blue-600 truncate"
+                                [ class "text-blue-700 hover:text-blue-800 truncate"
                                 , href ("mailto:" ++ email)
                                 ]
                                 [ text email ]
