@@ -1,5 +1,9 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import { ContentSection, MainTitle, SectionParagraph } from "@/components/legals-content/LegalsContent";
+import {
+  ContentSection,
+  MainTitle,
+  SectionParagraph,
+} from "@/components/legals-content/LegalsContent";
 import Head from "next/head";
 
 const IndexMentionsLegalesPage = () => {
@@ -36,17 +40,22 @@ const IndexMentionsLegalesPage = () => {
           <SectionParagraph>
             Si vous rencontrez un défaut d’accessibilité vous empêchant
             d’accéder à un contenu ou une fonctionnalité du site, merci de nous
-            en faire part à l'adresse <a href="mailto:contact@reva.beta.gouv.fr">contact@reva.beta.gouv.fr</a>
+            en faire part à l'adresse{" "}
+            <a href="mailto:contact@reva.beta.gouv.fr">
+              contact@reva.beta.gouv.fr
+            </a>
           </SectionParagraph>
           <SectionParagraph>
-            Si vous
-            n’obtenez pas de réponse rapide de notre part, vous êtes en droit de
-            faire parvenir vos doléances ou une demande de saisine au Défenseur
-            des droits.
+            Si vous n’obtenez pas de réponse rapide de notre part, vous êtes en
+            droit de faire parvenir vos doléances ou une demande de saisine au
+            Défenseur des droits.
           </SectionParagraph>
           <SectionParagraph>
-            Pour en savoir plus sur la politique d’accessibilité
-            numérique de l’État: <a href="http://references.modernisation.gouv.fr/accessibilite-numerique">http://references.modernisation.gouv.fr/accessibilite-numerique</a>
+            Pour en savoir plus sur la politique d’accessibilité numérique de
+            l’État:{" "}
+            <a href="http://references.modernisation.gouv.fr/accessibilite-numerique">
+              accessibilite.numerique.gouv.fr
+            </a>
           </SectionParagraph>
         </ContentSection>
         <ContentSection id="securite" title="Sécurité">
@@ -64,4 +73,3 @@ const IndexMentionsLegalesPage = () => {
 };
 
 export default IndexMentionsLegalesPage;
-
