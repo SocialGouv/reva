@@ -55,7 +55,7 @@ const AvenirPro = () => (
       <Image
         src="/home-page/image-hero.png"
         className=""
-        alt="image compte validé"
+        alt=""
         width={1067}
         height={969}
       />
@@ -95,7 +95,7 @@ const ValorisationCompetences = () => (
       <Image
         src="/home-page/image-section1-metiers.png"
         className=""
-        alt="image compte validé"
+        alt=""
         fill={true}
         style={{
           objectFit: "contain",
@@ -241,7 +241,7 @@ const TrouvezCertification = () => (
       <Image
         src="/home-page/image-home-section-4.png"
         className=""
-        alt="image compte validé"
+        alt=""
         fill={true}
         style={{
           objectFit: "contain",
@@ -281,7 +281,7 @@ const Professionnels = () => (
           <Image
             src="/home-page/image-young-woman.png"
             className=""
-            alt="image compte validé"
+            alt=""
             fill={true}
             style={{
               objectFit: "contain",
@@ -292,7 +292,7 @@ const Professionnels = () => (
           <Image
             src="/home-page/image-businessman.png"
             className=""
-            alt="image compte validé"
+            alt=""
             fill={true}
             style={{
               objectFit: "contain",
