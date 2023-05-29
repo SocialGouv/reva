@@ -22,7 +22,7 @@ export const SectionParagraph = ({
   children: React.ReactNode;
 }) => (
   <p
-    className={`leading-7 lg:text-lg lg:leading-10 xl:text-[22px] ${className}`}
+    className={`leading-7 lg:text-lg lg:leading-10 xl:text-[22px] ${className ?? ""}`}
   >
     {children}
   </p>
