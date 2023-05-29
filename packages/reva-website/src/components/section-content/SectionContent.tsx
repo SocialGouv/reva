@@ -33,9 +33,7 @@ export const SubSectionHeader = ({
 }: {
   children: React.ReactNode;
 }) => (
-  <header>
-    <h2 className="text-white text-2xl mt-3">{children}</h2>
-  </header>
+  <h2 className="text-white text-2xl mt-3">{children}</h2>
 );
 
 export const Hexagon = ({ className }: { className: string }) => (
