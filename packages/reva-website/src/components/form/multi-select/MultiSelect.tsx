@@ -65,7 +65,7 @@ export const MultiSelect = ({
               {({ active }) => (
                 <li
                   className={`flex p-1 rounded ${
-                    active ? "bg-blue-400" : ""
+                    active ? "bg-blue-600" : ""
                   } cursor-pointer`}
                 >
                   <input type="checkbox" checked={selectAllChecked} readOnly />
@@ -82,7 +82,7 @@ export const MultiSelect = ({
               {({ active }) => (
                 <li
                   className={`flex p-1 rounded ${
-                    active ? "bg-blue-400" : ""
+                    active ? "bg-blue-600" : ""
                   } cursor-pointer`}
                 >
                   <input
