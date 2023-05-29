@@ -5,7 +5,10 @@ export const Footer = ({ className }: { className?: string }) => (
       <div className="fr-footer__body">
         <div className="fr-footer__brand fr-enlarge-link">
           <Link title="Accueil - Reva" href="/">
-            <p className="fr-logo"></p>
+            <p className="fr-logo">
+              République
+              <br /> Française
+            </p>
           </Link>
         </div>
         <div className="fr-footer__content">
