@@ -1,6 +1,7 @@
 module View.Footer exposing (..)
 
 import Accessibility exposing (a, div, footer, li, p, span, text, ul)
+import Accessibility.Aria
 import Html.Attributes exposing (attribute, class, href, id, target)
 import Route
 import View
@@ -39,6 +40,7 @@ view context =
                                 [ class "fr-footer__content-link"
                                 , target "_blank"
                                 , href "https://legifrance.gouv.fr"
+                                , Accessibility.Aria.label "legifrance.gouv.fr nouvelle page"
                                 ]
                                 [ text "legifrance.gouv.fr" ]
                             ]
@@ -48,6 +50,7 @@ view context =
                                 [ class "fr-footer__content-link"
                                 , target "_blank"
                                 , href "https://gouvernement.fr"
+                                , Accessibility.Aria.label "gouvernement.fr nouvelle page"
                                 ]
                                 [ text "gouvernement.fr" ]
                             ]
@@ -57,6 +60,7 @@ view context =
                                 [ class "fr-footer__content-link"
                                 , target "_blank"
                                 , href "https://service-public.fr"
+                                , Accessibility.Aria.label "service-public.fr nouvelle page"
                                 ]
                                 [ text "service-public.fr" ]
                             ]
@@ -66,6 +70,7 @@ view context =
                                 [ class "fr-footer__content-link"
                                 , target "_blank"
                                 , href "https://data.gouv.fr"
+                                , Accessibility.Aria.label "data.gouv.fr nouvelle page"
                                 ]
                                 [ text "data.gouv.fr" ]
                             ]
@@ -109,6 +114,7 @@ view context =
                         , a
                             [ href "https://github.com/etalab/licence-ouverte/blob/master/LO.md"
                             , target "_blank"
+                            , Accessibility.Aria.label "licence etalab-2.0 nouvelle page"
                             ]
                             [ text "licence etalab-2.0" ]
                         ]
