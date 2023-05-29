@@ -74,9 +74,9 @@ const EngagementAAP = () => (
         />
       </div>
       <div>
-        <legend className="text-2xl text-['#161616'] opacity-40 mb-10">
+        <p className="text-2xl text-['#161616'] opacity-40 mb-10">
           Engagements des AAP :
-        </legend>
+        </p>
         <ul className="font-bold text-sm lg:text-xl list-none px-0">
           <li className="float-left clear-left mb-2.5 lg:mb-12">
             <Hex className="text-[#F95C5E]" />
