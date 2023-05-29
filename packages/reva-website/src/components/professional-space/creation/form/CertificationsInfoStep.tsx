@@ -116,6 +116,8 @@ export const CertificationsInfoStepForm = ({
               nativeSelectProps={{
                 onChange: (event) => handleTypologyChange(event.target.value),
                 value: typologyController.field.value,
+                "aria-label":
+                  "Typologie d'Architecte Accompagnateur de Parcours, une liste déroulante apparaît à l'activation des options Expert de filière(s) et Expert de branche(s)",
               }}
             >
               <option value="generaliste">Généraliste</option>
