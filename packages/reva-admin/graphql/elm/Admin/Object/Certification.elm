@@ -35,14 +35,14 @@ summary =
     Object.selectionForField "String" "summary" [] Decode.string
 
 
-acronym : SelectionSet String Admin.Object.Certification
-acronym =
-    Object.selectionForField "String" "acronym" [] Decode.string
-
-
 level : SelectionSet Int Admin.Object.Certification
 level =
     Object.selectionForField "Int" "level" [] Decode.int
+
+
+typeDiplome : SelectionSet String Admin.Object.Certification
+typeDiplome =
+    Object.selectionForField "String" "typeDiplome" [] Decode.string
 
 
 activities : SelectionSet (Maybe String) Admin.Object.Certification

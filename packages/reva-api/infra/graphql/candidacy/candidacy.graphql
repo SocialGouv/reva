@@ -114,7 +114,6 @@ type CandidacySummaryFilterInfo {
 type CertificationSummary {
   id: ID!
   label: String!
-  acronym: String!
 }
 
 type CandidacyStatus {

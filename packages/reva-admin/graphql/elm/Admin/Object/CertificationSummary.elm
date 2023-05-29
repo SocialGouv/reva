@@ -27,8 +27,3 @@ id =
 label : SelectionSet String Admin.Object.CertificationSummary
 label =
     Object.selectionForField "String" "label" [] Decode.string
-
-
-acronym : SelectionSet String Admin.Object.CertificationSummary
-acronym =
-    Object.selectionForField "String" "acronym" [] Decode.string

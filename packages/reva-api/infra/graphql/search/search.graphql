@@ -8,8 +8,8 @@ type Certification {
   id: ID!
   label: String!
   summary: String!
-  acronym: String!
   level: Int!
+  typeDiplome: String!
   activities: String
   activityArea: String
   accessibleJobType: String
