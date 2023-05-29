@@ -141,7 +141,7 @@ const CommentCaMarche = () => (
           </TrackableButton>
         </div>
       </div>
-      <ul className="flex-1 relative p-0 list-none mt-[100px]">
+      <ol className="flex-1 relative p-0 list-none mt-[100px]">
         <li>
           <section className="lg:flex lg:space-x-6">
             <div className="flex-0 relative h-[124px] w-[96px] text-[#FEF7DA] lg:ml-6">
@@ -206,7 +206,7 @@ const CommentCaMarche = () => (
             </div>
           </section>
         </li>
-      </ul>
+      </ol>
     </div>
   </section>
 );
