@@ -4,7 +4,7 @@ import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import BetaGouv.DSFR.Button as Button
 import Data.Candidacy as Candidacy exposing (Candidacy)
 import Html exposing (Html, div, h2, h3, span, text)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (attribute, class)
 import Route
 import Time
 import View.Candidacy.Tab
@@ -151,7 +151,10 @@ expandedView stepTitle status candidacy =
     , if candidacyStatus candidacy == status then
         div
             []
-            [ Button.new { onClick = Nothing, label = "Compléter" } |> Button.view ]
+            [ Button.new { onClick = Nothing, label = "Compléter" }
+                |> Button.withAttrs [ attribute "aria-label" ("Compléter " ++ stepTitle) ]
+                |> Button.view
+            ]
 
       else
         text ""
