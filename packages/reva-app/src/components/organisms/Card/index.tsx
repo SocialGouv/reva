@@ -1,5 +1,6 @@
 import { Add } from "components/atoms/Icons";
 import { ReactNode } from "react";
+import { onKeyboardValidation } from "utils/keyboardValidationHelper";
 
 import certificationImg from "./certification.svg";
 
@@ -73,7 +74,10 @@ const CardWrapper = ({
     data-type={dataType}
     className="relative h-[315px] w-[288px] flex flex-col px-5 py-1 overflow-hidden cursor-pointer"
     style={{ background: "rgba(0,0,0,0.03)" }}
+    role="button"
+    tabIndex={0}
     onClick={onClick}
+    onKeyUp={onKeyboardValidation(onClick)}
   >
     {children}
   </div>
