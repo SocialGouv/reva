@@ -14,6 +14,7 @@ import KeycloakConfiguration exposing (KeycloakConfiguration)
 import Page.Candidacies as Candidacies exposing (Model)
 import Page.Candidacy as Candidacy
 import Page.Loading
+import Page.SiteMap as SiteMap
 import Page.Subscription as Subscription
 import Page.Subscriptions as Subscriptions
 import Route exposing (Route(..))
@@ -52,6 +53,7 @@ type Page
     | NotLoggedIn Route
     | Subscription Subscription.Model
     | Subscriptions Subscriptions.Model
+    | SiteMap
 
 
 type Msg
@@ -137,6 +139,9 @@ viewPage model =
         LoggingOut ->
             text "Déconnexion en cours..."
 
+        SiteMap ->
+            SiteMap.view model.context
+
 
 
 -- UPDATE
@@ -184,6 +189,9 @@ changeRouteTo context route model =
 
         ( Route.NotFound, _ ) ->
             noChange
+
+        ( Route.SiteMap, _ ) ->
+            ( { model | page = SiteMap }, Cmd.none )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

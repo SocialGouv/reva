@@ -30,6 +30,7 @@ type Route
     | NotFound
     | Subscription String -- Subscription Id
     | Subscriptions
+    | SiteMap
 
 
 emptyFilters : Filters
@@ -60,6 +61,7 @@ parser baseUrl =
                 [ top |> map (Candidacies emptyFilters)
                 , s "auth" </> s "login" |> map Login
                 , s "auth" </> s "logout" |> map Logout
+                , s "plan-du-site" |> map SiteMap
                 , s "candidacies" <?> Query.string "status" <?> Query.string "page" |> map toCandidaciesRoute
                 , s "subscriptions" |> map Subscriptions
                 , s "subscriptions" </> string |> map Subscription
@@ -109,6 +111,9 @@ toString baseUrl route =
 
         NotFound ->
             topLevel [ "not-found" ] []
+
+        SiteMap ->
+            topLevel [ "plan-du-site" ] []
 
         Candidacies filters ->
             topLevel [ "candidacies" ]

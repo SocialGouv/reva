@@ -82,6 +82,17 @@ view context =
                 [ ul
                     [ class "fr-footer__bottom-list" ]
                     [ li
+                        [ class "fr-footer__bottom-item"
+                        ]
+                        [ a
+                            [ class "fr-footer__bottom-link"
+                            , target "_parent"
+                            , Route.href context.baseUrl <|
+                                Route.SiteMap
+                            ]
+                            [ text "Plan du site" ]
+                        ]
+                    , li
                         [ class "fr-footer__bottom-item" ]
                         [ span
                             [ class "fr-footer__bottom-link" ]
