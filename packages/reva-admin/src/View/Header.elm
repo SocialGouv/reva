@@ -1,6 +1,6 @@
 module View.Header exposing (..)
 
-import Accessibility exposing (a, button, div, header, li, nav, p, text, ul)
+import Accessibility exposing (a, button, div, header, li, p, span, text)
 import Html.Attributes exposing (attribute, class, href, id, target, title)
 import Route exposing (Route(..))
 import View
@@ -59,16 +59,13 @@ view context =
                         [ class "fr-header__tools" ]
                         [ div
                             [ class "fr-header__tools-links" ]
-                            [ ul
+                            [ span
                                 [ class "fr-btns-group" ]
-                                [ li
-                                    []
-                                    [ a
-                                        [ class "fr-btn fr-icon-logout-box-r-line"
-                                        , Route.href context.baseUrl Logout
-                                        ]
-                                        [ text "Se déconnecter" ]
+                                [ a
+                                    [ class "fr-btn fr-icon-logout-box-r-line"
+                                    , Route.href context.baseUrl Logout
                                     ]
+                                    [ text "Se déconnecter" ]
                                 ]
                             ]
                         ]
@@ -82,10 +79,6 @@ view context =
 headerMenuModal : Accessibility.Html msg
 headerMenuModal =
     let
-        navItems =
-            -- We don't have specific navigation items for the mobile modal
-            []
-
         itemLink ( label, url ) =
             li
                 [ class "fr-nav__item" ]
@@ -113,15 +106,5 @@ headerMenuModal =
             , div
                 [ class "fr-header__menu-links" ]
                 []
-            , nav
-                [ class "fr-nav"
-                , attribute "role" "navigation"
-                , attribute "aria-label" "Menu principal"
-                ]
-                [ ul
-                    [ class "fr-nav__list" ]
-                  <|
-                    List.map itemLink navItems
-                ]
             ]
         ]
