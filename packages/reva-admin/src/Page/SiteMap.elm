@@ -5,9 +5,9 @@ import Api.Token
 import Data.Candidacy exposing (candidacyStatusFilterToReadableString)
 import Data.Context exposing (Context)
 import Html exposing (Html, a, div, h1, li, node, text, ul)
-import Html.Attributes exposing (class, id)
+import Html.Attributes exposing (class, href, id, target)
 import Html.Attributes.Extra exposing (role)
-import Route exposing (Filters, emptyFilters)
+import Route exposing (emptyFilters)
 
 
 view :
@@ -69,6 +69,20 @@ view context =
                             , viewCandidacyLink CandidacyStatusFilter.ArchiveHorsAbandonHorsReorientation
                             , viewCandidacyLink CandidacyStatusFilter.ProjetHorsAbandon
                             ]
+                        ]
+                    , li [ class "py-1" ]
+                        [ a
+                            [ target "_parent"
+                            , href "/mentions-legales"
+                            ]
+                            [ text "Mentions légales" ]
+                        ]
+                    , li [ class "py-1" ]
+                        [ a
+                            [ target "_parent"
+                            , href "/confidentialite"
+                            ]
+                            [ text "Données personnelles" ]
                         ]
                     ]
                 ]
