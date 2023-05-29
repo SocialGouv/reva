@@ -4,7 +4,10 @@ export const Footer = () => (
       <div className="fr-footer__body">
         <div className="fr-footer__brand fr-enlarge-link">
           <a href="/" title="Accueil - Reva - l'expérimentation de la VAE">
-            <p className="fr-logo"></p>
+            <p className="fr-logo">
+              République
+              <br /> Française
+            </p>
           </a>
         </div>
         <div className="fr-footer__content">
