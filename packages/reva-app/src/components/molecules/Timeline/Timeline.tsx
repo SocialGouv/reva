@@ -1,3 +1,5 @@
+import { ReactElement } from "react";
+
 export const Timeline = ({
   className,
   children,
@@ -23,7 +25,7 @@ export const TimelineElement = ({
   className,
 }: {
   title: string;
-  description?: string;
+  description?: string | ReactElement;
   status: TimeLineElementStatus;
   children?: (args: { status: TimeLineElementStatus }) => React.ReactNode;
   className?: string;
@@ -39,7 +41,11 @@ export const TimelineElement = ({
       <h3 className="text-black !leading-none">{title}</h3>
 
       {description ? (
-        <p className="text-sm text-dsfrGray-500 mt-4">{description}</p>
+        typeof description === "string" ? (
+          <p className="text-sm text-dsfrGray-500 mt-4">{description}</p>
+        ) : (
+          description
+        )
       ) : null}
 
       {children && (
