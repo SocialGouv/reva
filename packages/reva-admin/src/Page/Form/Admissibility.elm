@@ -27,7 +27,13 @@ form formData _ =
             Data.Form.Admissibility.fromDict formData
 
         elements =
-            List.append [ ( keys.isCandidateAlreadyAdmissible, Form.Checkbox "Le candidat a déjà une recevabilité acquise et en cours de validité" ) ]
+            List.append
+                [ ( keys.isCandidateAlreadyAdmissible
+                  , Form.CheckboxWithAriaLabel
+                        "Le candidat a déjà une recevabilité acquise et en cours de validité, le formulaire disparait à son activation, il revient à la désactivation de cette même case à cocher"
+                        "Le candidat a déjà une recevabilité acquise et en cours de validité"
+                  )
+                ]
                 (if not admissibilityFromForm.isCandidateAlreadyAdmissible then
                     [ ( keys.reportSentAt, Form.Date "Date d'envoi du dossier de la faisabilité" )
                     , ( keys.certifierRespondedAt, Form.Date "Date du prononcé de la recevabilité" )

@@ -11,6 +11,7 @@ module Page.Form exposing
     )
 
 import Accessibility exposing (h1, h2, h3, h4)
+import Accessibility.Aria as Aria
 import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
 import BetaGouv.DSFR.Checkbox as Checkbox
@@ -49,6 +50,7 @@ type alias CheckBoxDescription =
 
 type Element
     = Checkbox String
+    | CheckboxWithAriaLabel String String
     | CheckboxList String (List CheckBoxDescription)
     | Date String
     | Empty
@@ -306,6 +308,13 @@ viewEditableElement formData ( elementId, element ) =
                     |> Checkbox.viewSingle
                 ]
 
+        CheckboxWithAriaLabel ariaLabel label ->
+            viewFieldsetElement
+                [ viewCheckbox elementId label dataOrDefault
+                    |> Checkbox.singleWithInputAttrs [ Aria.label ariaLabel ]
+                    |> Checkbox.viewSingle
+                ]
+
         CheckboxList label choices ->
             viewFieldsetComplexElement
                 [ (\choiceId -> get choiceId formData)
@@ -448,6 +457,11 @@ viewReadOnlyElement formData ( elementId, element ) =
     in
     case element of
         Checkbox label ->
+            viewCheckbox elementId label dataOrDefault
+                |> Checkbox.singleWithDisabled True
+                |> Checkbox.viewSingle
+
+        CheckboxWithAriaLabel _ label ->
             viewCheckbox elementId label dataOrDefault
                 |> Checkbox.singleWithDisabled True
                 |> Checkbox.viewSingle
