@@ -112,14 +112,10 @@
                                                 </div>
                                             </div>
                                         </#if>
-                                        <div class="fr-fieldset__element mt-4">
-                                            <ul class="fr-btns-group">
-                                                <li>
-                                                    <button type="submit" class="fr-mt-2v fr-btn">
-                                                        Se connecter
-                                                    </button>
-                                                </li>
-                                            </ul>
+                                        <div class="fr-fieldset__element fr-btns-group mt-4">
+                                            <button type="submit" class="fr-mt-2v fr-btn">
+                                                Se connecter
+                                            </button>
                                         </div>
                                         <div class="fr-messages-group" id="login-fieldset-messages" aria-live="assertive">
                                         </div>
