@@ -34,6 +34,7 @@ import Data.Form.Unarchive
 import Data.Referential exposing (Referential)
 import Html exposing (Html, a, article, div, node, p, span, text)
 import Html.Attributes exposing (alt, class, name)
+import Html.Attributes.Extra exposing (role)
 import Page.Form as Form exposing (Form)
 import Page.Form.Admissibility
 import Page.Form.Appointment
@@ -211,7 +212,7 @@ view context model =
 viewTrainingSent : Context -> CandidacyId -> List (Html msg)
 viewTrainingSent context candidacyId =
     [ div
-        [ class "mt-12 px-20" ]
+        [ class "mt-12 px-20", role "status" ]
         [ View.title "Confirmation"
         , div [ class "flex flex-col items-center w-full p-10" ]
             [ View.image [ alt "", class "w-[60px]" ] context.baseUrl "confirmation.png"
