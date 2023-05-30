@@ -390,7 +390,7 @@ viewEditableElement formData ( elementId, element ) =
                     [ class "max-w-lg bg-gray-100 px-5 py-4 rounded-lg"
                     , class "text-sm text-gray-600 mb-8"
                     ]
-                    [ span [ class "text-gray-900" ] [ text title ]
+                    [ p [ class "text-gray-900 text-sm mb-0" ] [ text title ]
                     , ul
                         [ class "mt-3 list-disc pl-4" ]
                         (List.map viewRule rules)
