@@ -90,14 +90,9 @@ getFirstError elements (FormData formData) =
         |> List.Extra.find (\key -> Dict.member key formData.errors)
 
 
-withErrors : FormData -> List String -> FormData
-withErrors (FormData formData) errors =
+withErrors : List String -> FormData -> List String -> FormData
+withErrors keys (FormData formData) errors =
     let
-        keys : List String
-        keys =
-            Dict.keys formData.string
-                ++ Dict.keys formData.files
-
         -- All error messages like "input.elementId: This number should be less than 30"
         -- will be added to the inputErrors dict with the key "elementId"
         inputErrors : Dict String String
@@ -110,7 +105,12 @@ withErrors (FormData formData) errors =
                     in
                     case List.Extra.find (\error -> String.startsWith tag error) errors of
                         Just error ->
-                            Dict.insert key (String.replace tag "" error |> String.trim) dict
+                            Dict.insert key
+                                (error
+                                    |> String.dropLeft (String.length tag)
+                                    |> String.trim
+                                )
+                                dict
 
                         Nothing ->
                             dict

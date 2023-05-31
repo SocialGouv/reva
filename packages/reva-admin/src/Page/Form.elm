@@ -915,8 +915,12 @@ update context msg model =
             -> ( Model referential, Cmd (Msg referential) )
         handleFailure errors form formData referential =
             let
+                keys =
+                    (form formData referential).elements
+                        |> List.map Tuple.first
+
                 newFormData =
-                    Data.Form.withErrors formData (inputErrors errors)
+                    Data.Form.withErrors keys formData (inputErrors errors)
             in
             ( { model | form = Editing (globalErrors errors) form newFormData }
             , focusOnFirstInputError (form newFormData referential) newFormData
