@@ -13,7 +13,7 @@
                                             <h1>Merci de choisir un mot de passe</h1>
                                             <form id="kc-passwd-update-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
                                                 <#if messagesPerField.existsError('password-confirm')>
-                                                    <div class="fr-alert fr-alert--error">
+                                                    <div class="fr-alert fr-alert--error" role="alert">
                                                         <h3 class="fr-alert__title">Une erreur est survenue</h3>
                                                         <p>
                                                             ${kcSanitize(messagesPerField.get('password-confirm'))?no_esc}
@@ -21,7 +21,7 @@
                                                     </div>
                                                 </#if>
                                                 <#if messagesPerField.existsError('password')>
-                                                    <div class="fr-alert fr-alert--error">
+                                                    <div class="fr-alert fr-alert--error" role="alert">
                                                         <h3 class="fr-alert__title">Une erreur est survenue</h3>
                                                         <p>
                                                             ${kcSanitize(messagesPerField.get('password'))?no_esc}
@@ -29,7 +29,7 @@
                                                     </div>
                                                 </#if>
                                                 <#if message?has_content && message.type=='error'>
-                                                    <div class="fr-alert fr-alert--error">
+                                                    <div class="fr-alert fr-alert--error" role="alert">
                                                         <h3 class="fr-alert__title">Une erreur est survenue</h3>
                                                         <p>
                                                             ${kcSanitize(message.summary)?no_esc}

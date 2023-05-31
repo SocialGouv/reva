@@ -21,7 +21,7 @@
                                         </legend>
                                         <#if message?has_content>
                                             <#if message.type == 'error'>
-                                                <div class="fr-alert fr-alert--error">
+                                                <div class="fr-alert fr-alert--error" role="alert">
                                                     <h3 class="fr-alert__title">Une erreur est survenue</h3>
                                                     <p>${kcSanitize(message.summary)?no_esc}</p>
                                                 </div>

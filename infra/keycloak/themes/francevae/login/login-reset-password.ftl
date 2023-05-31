@@ -16,7 +16,7 @@
 
                                 <form id="kc-reset-password-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
                                     <#if messagesPerField.existsError('username')>
-                                        <div class="fr-alert fr-alert--error">
+                                        <div class="fr-alert fr-alert--error" role="alert">
                                             <h3 class="fr-alert__title">Une erreur est survenue</h3>
                                             <p>${kcSanitize(messagesPerField.get('username'))?no_esc}</p>
                                         </div>
