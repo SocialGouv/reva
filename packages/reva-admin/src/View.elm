@@ -131,6 +131,7 @@ popupErrors messages =
                 [ div
                     [ class "mx-2 bg-white max-w-2xl"
                     , class "fr-alert fr-alert--error fr-alert--sm"
+                    , role "alert"
                     ]
                   <|
                     h3 [ class "fr-alert__title" ] [ text "Une erreur est survenue" ]
