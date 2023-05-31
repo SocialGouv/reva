@@ -160,7 +160,7 @@
     </header>
 
     <div class="only-dsfr">
-      <main role="main">
+      <main role="main" id="content">
         <div class="fr-container fr-py-6w">
           <section>
             <#nested "content">

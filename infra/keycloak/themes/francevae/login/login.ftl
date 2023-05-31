@@ -4,7 +4,7 @@
 
     <#elseif section = "form">
 
-    <main class="fr-pt-md-14v" role="main" id="content">
+    <div class="fr-pt-md-14v">
     <div class="fr-container fr-container--fluid fr-mb-md-14v">
         <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
             <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
@@ -138,7 +138,7 @@
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
 </#if>
 

@@ -88,7 +88,7 @@
     </div>
     </header>
 
-    <main class="only-dsfr" role="main">
+    <main class="only-dsfr" role="main" id="content">
       <section class="" style="min-height: calc(100vh - 400px); padding-top: 1em; padding-bottom: 1em;">
         <div class="container">
           <#--  <#nested "header">  -->
