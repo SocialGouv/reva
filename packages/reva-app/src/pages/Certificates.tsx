@@ -1,9 +1,8 @@
-import { SearchBar } from "@codegouvfr/react-dsfr/SearchBar";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { useActor } from "@xstate/react";
 import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/ErrorAlertFromState";
+import { SearchBar } from "components/molecules/SearchBar/SearchBar";
 import { useEffect, useState } from "react";
-import { useDebounce } from "usehooks-ts";
 import { Interpreter } from "xstate";
 
 import { BackToHomeButton } from "../components/molecules/BackToHomeButton/BackToHomeButton";
@@ -23,7 +22,6 @@ export const Certificates = ({ mainService }: Props) => {
   const [searchText, setSearchText] = useState<string>(
     state.context.certificationSearchText
   );
-  const debouncedSearchText = useDebounce(searchText);
   const UNKNOWN_DEPARTMENT = "unknown";
 
   const [chosenDepartmentCode, setChosenDepartmentCode] = useState(
@@ -33,9 +31,9 @@ export const Certificates = ({ mainService }: Props) => {
   useEffect(() => {
     send({
       type: "SET_CERTIFICATION_SEARCH_TEXT",
-      certificationSearchText: debouncedSearchText,
+      certificationSearchText: searchText,
     });
-  }, [debouncedSearchText, send]);
+  }, [searchText, send]);
 
   const selectsOptionsDepartments: { label: string; value: string }[] =
     state.context.departments
