@@ -1,4 +1,4 @@
-import Keycloak from "keycloak-js";
+import Keycloak from "../../vendor/keycloak-js/keycloak";
 
 class KeycloakElement extends HTMLElement {
   static get observedAttributes() {
