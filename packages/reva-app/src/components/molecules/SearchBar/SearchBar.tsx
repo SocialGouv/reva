@@ -1,6 +1,6 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
-import { SyntheticEvent } from "react";
+import { SyntheticEvent, useRef } from "react";
 
 interface SearchBarProps {
   label: string;
@@ -11,10 +11,11 @@ interface SearchBarProps {
   };
 }
 export const SearchBar = (props: SearchBarProps) => {
+  const searchTextRef = useRef(null);
   const handleClickSearch = (e: SyntheticEvent) => {
     return props.nativeInputProps.onChange({
       ...e,
-      target: document.getElementById("searchbarreplacement"),
+      target: searchTextRef.current,
     });
   };
   return (
@@ -25,7 +26,7 @@ export const SearchBar = (props: SearchBarProps) => {
         nativeInputProps={{
           type: "search",
           placeholder: "Rechercher un diplôme",
-          id: "searchbarreplacement",
+          ref: searchTextRef,
         }}
       />
       <Button
