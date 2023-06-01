@@ -207,7 +207,7 @@ http:
       loadBalancer:
         passHostHeader: false
         servers:
-          - url: "https://reva-prod-website.osc-secnum-fr1.scalingo.io/"
+          - url: "https://reva-prod-inscription-pro.osc-secnum-fr1.scalingo.io/"
 
     espace-pro-production:
       loadBalancer:
