@@ -182,25 +182,17 @@
               </p>
               <ul class="fr-footer__content-list">
                 <li class="fr-footer__content-item">
-                  <a class="fr-footer__content-link" href="https://legifrance.gouv.fr"
-                    >legifrance.gouv.fr</a
-                  >
-                </li>
-                <li class="fr-footer__content-item">
-                  <a class="fr-footer__content-link" href="https://gouvernement.fr"
-                    >gouvernement.fr</a
-                  >
-                </li>
-                <li class="fr-footer__content-item">
-                  <a class="fr-footer__content-link" href="https://service-public.fr"
-                    >service-public.fr</a
-                  >
-                </li>
-                <li class="fr-footer__content-item">
-                  <a class="fr-footer__content-link" href="https://data.gouv.fr"
-                    >data.gouv.fr</a
-                  >
-                </li>
+                  <a class="fr-footer__content-link" target="_blank" href="https://legifrance.gouv.fr" aria-label="legifrance.gouv.fr nouvelle page">legifrance.gouv.fr</a>
+                 </li>
+                 <li class="fr-footer__content-item">
+                  <a class="fr-footer__content-link" target="_blank" href="https://gouvernement.fr" aria-label="gouvernement.fr nouvelle page">gouvernement.fr</a>
+                 </li>
+                 <li class="fr-footer__content-item">
+                  <a class="fr-footer__content-link" target="_blank" href="https://service-public.fr" aria-label="service-public.fr nouvelle page">service-public.fr</a>
+                  </li>
+                  <li class="fr-footer__content-item">
+                    <a class="fr-footer__content-link" target="_blank" href="https://data.gouv.fr" aria-label="data.gouv.fr nouvelle page">data.gouv.fr</a>
+                  </li>
               </ul>
             </div>
           </div>
@@ -230,6 +222,7 @@
                 <a
                   href="https://github.com/etalab/licence-ouverte/blob/master/LO.md"
                   target="_blank"
+                  aria-label="licence etalab-2.0 nouvelle page"
                   >licence etalab-2.0</a
                 >
               </p>
