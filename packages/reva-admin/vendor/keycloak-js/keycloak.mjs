@@ -3,6 +3,8 @@ import sha256 from 'js-sha256';
 
 /*
  * Forked from https://www.npmjs.com/package/keycloak-js/v/18.0.1 (dist/keycloak.mjs)
+ * Modifications:
+ *  - add aria-hidden=true to iframes for better accessibility
  */
 
 /*
@@ -202,6 +204,7 @@ function Keycloak (config) {
                 var src = kc.createLoginUrl({prompt: 'none', redirectUri: kc.silentCheckSsoRedirectUri});
                 ifrm.setAttribute("src", src);
                 ifrm.setAttribute("title", "keycloak-silent-check-sso");
+                ifrm.setAttribute('aria-hidden', 'true');
                 ifrm.style.display = "none";
                 document.body.appendChild(ifrm);
 
@@ -1233,6 +1236,7 @@ function Keycloak (config) {
         var src = kc.endpoints.checkSessionIframe();
         iframe.setAttribute('src', src );
         iframe.setAttribute('title', 'keycloak-session-iframe' );
+        iframe.setAttribute('aria-hidden', 'true');
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
 
@@ -1305,6 +1309,7 @@ function Keycloak (config) {
             var iframe = document.createElement('iframe');
             iframe.setAttribute('src', kc.endpoints.thirdPartyCookiesIframe());
             iframe.setAttribute('title', 'keycloak-3p-check-iframe' );
+            iframe.setAttribute('aria-hidden', 'true');
             iframe.style.display = 'none';
             document.body.appendChild(iframe);
 
