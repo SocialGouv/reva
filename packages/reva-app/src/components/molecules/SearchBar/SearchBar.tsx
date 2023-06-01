@@ -25,6 +25,7 @@ export const SearchBar = (props: SearchBarProps) => {
         nativeInputProps={{
           type: "search",
           placeholder: "Rechercher un diplôme",
+          id: "searchbarreplacement",
         }}
       />
       <Button
