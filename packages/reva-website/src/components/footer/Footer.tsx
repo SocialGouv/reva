@@ -87,7 +87,7 @@ export const Footer = ({ className }: { className?: string }) => (
         </ul>
         <div className="fr-footer__bottom-copy">
           <p>
-            Sauf mention contraire, tous les contenus de ce site sont sous
+            Sauf mention contraire, tous les contenus de ce site sont sous{" "}
             <Link
               href="https://github.com/etalab/licence-ouverte/blob/master/LO.md"
               target="_blank"
