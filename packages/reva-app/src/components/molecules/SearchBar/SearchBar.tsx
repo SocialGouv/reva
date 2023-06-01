@@ -31,7 +31,7 @@ export const SearchBar = (props: SearchBarProps) => {
         ref={searchTextRef}
       />
       <button
-        className="btn btn-default form-submit js-form-submit submit-button fr-btn"
+        className="fr-btn !bg-dsfrBlue-500"
         title="Rechercher"
         type="submit"
       >
