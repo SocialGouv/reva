@@ -125,14 +125,11 @@
                             
                             <hr>
                             <h2>Vous n’avez pas de compte ?</h2>
-                            <ul class="fr-btns-group">
-                                <li>
-                                    <a class="fr-btn fr-btn--secondary" href="${properties.revaUrl}/espace-professionnel/creation">
-                                        Créer un compte
-                                    </a>
-                                </li>
-                            </ul>
-                            
+                            <div class="fr-btns-group">
+                                <a class="fr-btn fr-btn--secondary" href="${properties.revaUrl}/espace-professionnel/creation">
+                                    Créer un compte
+                                </a>
+                            </div>                            
                         </div>
                     </div>
                 </div>
