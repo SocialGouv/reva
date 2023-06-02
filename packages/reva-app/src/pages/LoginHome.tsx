@@ -95,6 +95,7 @@ const LoginErrorMessage = ({ error }: { error: string }) => {
           <p
             data-test="login-invalid-token"
             className="mb-6 mt-6 text-red-500 font-semibold"
+            role="alert"
           >
             Votre lien d'accès est arrivé à expiration.
           </p>
@@ -112,6 +113,7 @@ const LoginErrorMessage = ({ error }: { error: string }) => {
           <p
             data-test="login-unknown-candidate"
             className="mb-6 mt-6 text-red-500 font-semibold"
+            role="alert"
           >
             Oups! Il semble y avoir une erreur.
           </p>
