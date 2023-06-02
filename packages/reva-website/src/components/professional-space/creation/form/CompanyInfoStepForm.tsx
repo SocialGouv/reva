@@ -67,7 +67,7 @@ export const CompanyInfoStepForm = () => {
   return (
     <div className="flex flex-col min-w-[70vw]">
       <Stepper
-        title="Saisir vos informations pour la structure"
+        title="Saisir vos informations pour l'établissement"
         currentStep={3}
         stepCount={5}
         nextTitle="Identifier les certifications qui vous concernent"
@@ -77,10 +77,10 @@ export const CompanyInfoStepForm = () => {
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>
         <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
           <legend className="text-xl font-bold text-gray-900 grow mb-4">
-            Informations juridiques de la structure
+            Informations juridiques de l'établissement
           </legend>
           <Input
-            label="SIRET de la structure"
+            label="SIRET de l'établissement"
             hintText="Format attendu : 14 chiffres"
             state={errors.companySiret ? "error" : "default"}
             stateRelatedMessage={errors.companySiret?.message}
@@ -88,7 +88,7 @@ export const CompanyInfoStepForm = () => {
           />
           <Select
             label="Forme juridique"
-            hint="Sélectionnez la forme juridique de la structure"
+            hint="Sélectionnez la forme juridique de l'établissement"
             state={errors.companyLegalStatus ? "error" : "default"}
             stateRelatedMessage={errors.companyLegalStatus?.message}
             nativeSelectProps={{
@@ -112,19 +112,20 @@ export const CompanyInfoStepForm = () => {
             }}
           />
           <Input
-            label="Site internet de la structure (optionnel)"
+            label="Site internet de l'établissement (optionnel)"
             state={errors.companyWebsite ? "error" : "default"}
             stateRelatedMessage={errors.companyWebsite?.message}
             nativeInputProps={{
               ...register("companyWebsite"),
-              placeholder: "Copiez le lien du site internet de votre structure",
+              placeholder:
+                "Copiez le lien du site internet de votre établissement",
               autoComplete: "url",
             }}
           />
         </fieldset>
         <fieldset className="grid grid-cols-1 md:grid-cols-2 gap-x-8 mt-8">
           <legend className="text-lg font-bold text-gray-900 grow my-4">
-            Adresse de la structure
+            Adresse de l' établissement
           </legend>
           <Input
             label="Numéro et nom de rue"

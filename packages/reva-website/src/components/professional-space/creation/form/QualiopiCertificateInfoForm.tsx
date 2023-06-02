@@ -51,17 +51,17 @@ export const QualiopiCertificateInfoStepForm = () => {
   return (
     <div className="flex flex-col min-w-[70vw]">
       <Stepper
-        title="Certification de la structure"
+        title="Certification de l'établissement"
         currentStep={2}
         stepCount={5}
-        nextTitle="Saisir les informations de la structure"
+        nextTitle="Saisir les informations de l'établissement"
       />
       <div className="border-t border-gray-300  mb-7" />
       <FormOptionalFieldsDisclaimer className="mb-6" />
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>
         <fieldset className="flex flex-col  ">
           <legend className="text-xl font-bold text-gray-900 grow mb-8">
-            Pour créer votre compte, votre structure doit être certifiée
+            Pour créer votre compte, votre établissement doit être certifiée
             Qualiopi VAE
           </legend>
           <Checkbox

@@ -79,7 +79,8 @@ const IndexConfidentialitePage = () => {
                 diplôme, dernier diplôme obtenu)
               </li>
               <li>
-                Données de contact de la structure (adresse e-mail, nom, prénom)
+                Données de contact de l'établissement (adresse e-mail, nom,
+                prénom)
               </li>
             </ul>
           </SectionParagraph>
@@ -137,13 +138,17 @@ const IndexConfidentialitePage = () => {
               <li>Droit d’opposition;</li>
               <li>Droit à la portabilité de vos données;</li>
             </ul>
-            Pour les exercer, contactez-nous
-            à : <a href="mailto:contact@reva.beta.gouv.fr">contact@reva.beta.gouv.fr</a>
+            Pour les exercer, contactez-nous à :{" "}
+            <a href="mailto:contact@reva.beta.gouv.fr">
+              contact@reva.beta.gouv.fr
+            </a>
           </SectionParagraph>
           <SectionParagraph>
             Par voie postale :<br />
-            Délégation générale à l'emploi et à la formation<br/>
-            10-18 place des 5-Martyrs-du-Lycée-Buffon<br />
+            Délégation générale à l'emploi et à la formation
+            <br />
+            10-18 place des 5-Martyrs-du-Lycée-Buffon
+            <br />
             75015 Paris
           </SectionParagraph>
           <SectionParagraph>
@@ -154,8 +159,10 @@ const IndexConfidentialitePage = () => {
           </SectionParagraph>
           <SectionParagraph>
             Pour vous aider dans votre démarche, vous trouverez un modèle de
-            courrier élaboré par la CNIL ici :
-            &nbsp;<a href="https://www.cnil.fr/fr/modele/courrier/exercer- son-droit-dacces">https://www.cnil.fr/fr/modele/courrier/exercer-son-droit-dacces</a>
+            courrier élaboré par la CNIL ici : &nbsp;
+            <a href="https://www.cnil.fr/fr/modele/courrier/exercer- son-droit-dacces">
+              https://www.cnil.fr/fr/modele/courrier/exercer-son-droit-dacces
+            </a>
           </SectionParagraph>
           <SectionParagraph>
             Nous nous engageons à vous répondre dans un délai raisonnable qui ne
@@ -174,11 +181,11 @@ const IndexConfidentialitePage = () => {
             à ces données personnelles.
           </SectionParagraph>
           <SectionParagraph>
-            Des données personnelles pourront être
-            partagées avec certains organismes référencés dans le service REVA
-            comme architecte de parcours ou accompagnateurs VAE ou centre de
-            formation à des fins de contact, inscription aux services
-            sollicitées et traitement de la candidature et de son financement.
+            Des données personnelles pourront être partagées avec certains
+            organismes référencés dans le service REVA comme architecte de
+            parcours ou accompagnateurs VAE ou centre de formation à des fins de
+            contact, inscription aux services sollicitées et traitement de la
+            candidature et de son financement.
           </SectionParagraph>
           <SectionParagraph>
             Les données sont envoyées aux organismes certificateurs ou aux
