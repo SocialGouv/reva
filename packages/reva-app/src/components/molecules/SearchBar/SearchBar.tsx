@@ -27,6 +27,7 @@ export const SearchBar = (props: SearchBarProps) => {
         className="fr-input"
         placeholder="Rechercher un diplôme"
         type="search"
+        defaultValue={props.nativeInputProps.defaultValue}
         ref={searchTextRef}
       />
       <button
