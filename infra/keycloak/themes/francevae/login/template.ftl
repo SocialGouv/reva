@@ -55,6 +55,7 @@
     </svg>
 
     <header
+      role="banner"
       class="relative"
       style="
         font-family: Marianne, arial, sans-serif;

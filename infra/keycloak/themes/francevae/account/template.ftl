@@ -61,6 +61,7 @@
     </svg>
 
     <header
+      role="banner"
       class="mb-4"
       style="
         font-family: Marianne, arial, sans-serif;
