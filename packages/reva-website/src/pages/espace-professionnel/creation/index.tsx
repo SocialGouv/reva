@@ -136,8 +136,25 @@ const ProfessionalSpaceCreationPage = () => {
         </title>
       </Head>
       <BlueLayout
-        title="Créez votre compte professionnel"
-        description="Vous êtes architecte accompagnateur de parcours, vous devez créer votre compte sur REVA afin d'assurer le suivi et la gestion du parcours de vos candidats."
+        title="Créez le compte administrateur de votre établissement (direction nationale ou régionale)"
+        description={
+          <p className="text-white text-xl leading-relaxed mb-0">
+            Vous êtes responsable d’un réseau au niveau national ou régional,
+            créez le compte administrateur de votre structure qui vous permettra
+            :
+            <ul className="ml-4">
+              <li>
+                prochainement de créer et de gérer les accès de vos conseillers
+                habilitées à traiter les dossiers des candidats
+              </li>
+              <li>
+                d'attribuer les candidatures à chacun de vos conseillers afin
+                qu'ils assurent le suivi et la gestion du parcours des
+                candidats.
+              </li>
+            </ul>
+          </p>
+        }
       >
         <ProfessionalSpaceCreationProvider>
           <PageContent

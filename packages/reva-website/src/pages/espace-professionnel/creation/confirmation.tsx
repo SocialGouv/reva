@@ -14,7 +14,7 @@ const ProfessionalSpaceCreationConfirmationPage = () => {
         </title>
       </Head>
       <BlueLayout
-        title="Créez votre compte professionnel"
+        title="Créez le compte administrateur de votre établissement (direction nationale ou régionale)"
         description="Félicitations, vous venez de créer votre compte"
       >
         <div
@@ -29,8 +29,11 @@ const ProfessionalSpaceCreationConfirmationPage = () => {
             height={60}
           />
           <p className="text-xl">
-            Votre compte vient d’être créé avec succès. Vous allez recevoir un
-            lien sur votre adresse email pour confirmer votre inscription
+            Félicitations, votre demande de création de compte a bien été
+            enregistrée ! Vous recevrez un email contenant un lien d'activation
+            du compte valable 4 jours, dès qu’un administrateur France VAE
+            l’aura traitée. En cas de question vous pouvez contacter :
+            support@reva.beta.gouv.fr
           </p>
         </div>
       </BlueLayout>

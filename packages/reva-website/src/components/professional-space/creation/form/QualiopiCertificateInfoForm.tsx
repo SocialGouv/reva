@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useProfessionalSpaceCreationContext } from "../context/ProfessionalSpaceCreationContext";
 import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import Notice from "@codegouvfr/react-dsfr/Notice";
 
 const zodSchema = z.object({
   qualiopiCertificateExpiresAt: z.date({
@@ -62,13 +63,14 @@ export const QualiopiCertificateInfoStepForm = () => {
         <fieldset className="flex flex-col  ">
           <legend className="text-xl font-bold text-gray-900 grow mb-8">
             Pour créer votre compte, votre établissement doit être certifiée
-            Qualiopi VAE
+            Qualiopi pour les actions permettant de faire valider les acquis de
+            l'expérience ou Certimetal.
           </legend>
           <Checkbox
             options={[
               {
                 label:
-                  "J'atteste sur l'honneur avoir obtenu la certification Qualiopi VAE",
+                  "J'atteste sur l'honneur avoir obtenu la certification Qualiopi pour les actions permettant de faire valider les acquis de l'expérience ou Certimetal.",
                 nativeInputProps: {
                   ...register("qualiopiSwornStatement"),
                 },
@@ -76,7 +78,7 @@ export const QualiopiCertificateInfoStepForm = () => {
             ]}
           />
           <Input
-            label="Date d'expiration de la certification Qualiopi VAE"
+            label="Date d'expiration de votre certification"
             state={errors.qualiopiCertificateExpiresAt ? "error" : "default"}
             stateRelatedMessage={errors.qualiopiCertificateExpiresAt?.message}
             nativeInputProps={{
@@ -85,7 +87,13 @@ export const QualiopiCertificateInfoStepForm = () => {
               }),
               type: "date",
             }}
-            className="max-w-md"
+            className="max-w-lg"
+          />
+          <Notice
+            className="max-w-lg"
+            title="
+            Votre certification Qualiopi doit être encore valide au minimum 3
+            mois au moment de votre inscription."
           />
         </fieldset>
         <div className="flex gap-2 ml-auto mt-4">

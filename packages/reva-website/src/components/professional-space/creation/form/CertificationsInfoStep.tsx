@@ -112,7 +112,7 @@ export const CertificationsInfoStepForm = ({
             </legend>
             <Select
               label="Typologie d’Architecte Accompagnateur de Parcours"
-              hint="Les certifications vous sont rattachées en fonction de votre typologie d’AAP"
+              hint="Les certifications vous sont rattachées en fonction de la typologie sélectionnée."
               nativeSelectProps={{
                 onChange: (event) => handleTypologyChange(event.target.value),
                 value: typologyController.field.value,
@@ -128,32 +128,38 @@ export const CertificationsInfoStepForm = ({
               <Notice title="En tant qu'Architecte Accompagnateur de Parcours généraliste, votre offre de service couvre toutes les certifications hormis celles rattachées aux conventions collectives." />
             )}
             {currentTypology === "expertFiliere" && (
-              <MultiSelect
-                label="Filière(s)"
-                hint="Vous pouvez cocher plusieurs choix, avec un minimum d’une filière"
-                withSelectAll
-                options={availableDomaines.map((availableDomaine) => ({
-                  label: availableDomaine.label,
-                  value: availableDomaine.id,
-                }))}
-                placeholder={(selectedItemsCount) =>
-                  selectedItemsCount
-                    ? `${selectedItemsCount} filières séléctionnées`
-                    : "Cochez toutes les filières concernées"
-                }
-                initialSelectedValues={availableDomaines
-                  .filter((ad) =>
-                    domaineIdsController.field.value.includes(ad.id)
-                  )
-                  .map((d) => d.id)}
-                onChange={domaineIdsController.field.onChange}
-              />
+              <>
+                <Notice
+                  className="mb-4"
+                  title="En tant qu’Architecte Accompagnateur de Parcours expert de filière(s), votre offre de service couvre l'ensemble des certifications rattachées aux filières sélectionnées. Sur demande à notre service support@reva.beta.gouv.fr , vous pourrez aussi accompagner les certifications rattachées aux conventions collectives de ces filières."
+                />
+                <MultiSelect
+                  label="Filière(s)"
+                  hint="Vous pouvez cocher plusieurs choix, avec un minimum d’une filière"
+                  withSelectAll
+                  options={availableDomaines.map((availableDomaine) => ({
+                    label: availableDomaine.label,
+                    value: availableDomaine.id,
+                  }))}
+                  placeholder={(selectedItemsCount) =>
+                    selectedItemsCount
+                      ? `${selectedItemsCount} filières séléctionnées`
+                      : "Cochez toutes les filières concernées"
+                  }
+                  initialSelectedValues={availableDomaines
+                    .filter((ad) =>
+                      domaineIdsController.field.value.includes(ad.id)
+                    )
+                    .map((d) => d.id)}
+                  onChange={domaineIdsController.field.onChange}
+                />
+              </>
             )}
             {currentTypology === "expertBranche" && (
               <>
                 <Notice
                   className="mb-4"
-                  title="En tant qu’Architecte Accompagnateur de Parcours expert de branche(s), votre offre de service couvre l'ensemble des certifications rattachées aux conventions collectives sélectionnées."
+                  title="En tant qu’Architecte Accompagnateur de Parcours expert de branche(s), votre offre de service couvre l'ensemble des Certificats de Qualification professionnelle / Titres à visée professionnelle rattachés à une convention collective sélectionnée."
                 />
                 <MultiSelect
                   label="Conventions collectives auxquelles vous êtes rattaché"
