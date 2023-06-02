@@ -99,8 +99,8 @@ export const CertificationsInfoStepForm = ({
       <Stepper
         title="Identifier les certifications qui vous concernent"
         nextTitle="Saisir les informations pour la facturation"
-        currentStep={3}
-        stepCount={4}
+        currentStep={4}
+        stepCount={5}
       />
       <div className="border-t border-gray-300  mb-7" />
       <FormOptionalFieldsDisclaimer className="mb-6" />
@@ -226,9 +226,9 @@ export const CertificationsInfoStepForm = ({
         </div>
         <div className="flex gap-2 ml-auto mt-4">
           <Button priority="secondary" onClick={goBackToPreviousStep}>
-            Revenir à l'étape 2
+            Revenir à l'étape 3
           </Button>
-          <Button type="submit"> Passer à l'étape 4</Button>
+          <Button type="submit"> Passer à l'étape 5</Button>
         </div>
       </form>
     </div>

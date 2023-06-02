@@ -68,8 +68,8 @@ export const CompanyInfoStepForm = () => {
     <div className="flex flex-col min-w-[70vw]">
       <Stepper
         title="Saisir vos informations pour la structure"
-        currentStep={2}
-        stepCount={4}
+        currentStep={3}
+        stepCount={5}
         nextTitle="Identifier les certifications qui vous concernent"
       />
       <div className="border-t border-gray-300  mb-7" />
@@ -156,9 +156,9 @@ export const CompanyInfoStepForm = () => {
         </fieldset>
         <div className="flex gap-2 ml-auto mt-4">
           <Button priority="secondary" onClick={goBackToPreviousStep}>
-            Revenir à l'étape 1
+            Revenir à l'étape 2
           </Button>
-          <Button type="submit">Passer à l'étape 3</Button>
+          <Button type="submit">Passer à l'étape 4</Button>
         </div>
       </form>
     </div>

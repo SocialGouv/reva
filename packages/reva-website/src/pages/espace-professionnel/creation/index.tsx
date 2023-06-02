@@ -15,6 +15,7 @@ import request, { gql } from "graphql-request";
 import { GRAPHQL_API_URL } from "@/config/config";
 import { useEffect, useState } from "react";
 import { QualiopiCertificateInfoStepForm } from "@/components/professional-space/creation/form/QualiopiCertificateInfoForm";
+import { CguStep } from "@/components/professional-space/creation/form/CguStep";
 
 interface Domaine {
   id: string;
@@ -73,6 +74,8 @@ const PageContent = ({
 }) => {
   const { currentStep } = useProfessionalSpaceCreationContext();
   switch (currentStep) {
+    case "cguStep":
+      return <CguStep />;
     case "qualiopiCertificateInfoStep":
       return <QualiopiCertificateInfoStepForm />;
     case "companyInfoStep":

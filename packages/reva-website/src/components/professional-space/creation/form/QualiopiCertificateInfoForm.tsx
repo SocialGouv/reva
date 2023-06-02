@@ -28,7 +28,7 @@ const formatDate = (date?: Date) =>
 export const QualiopiCertificateInfoStepForm = () => {
   const {
     professionalSpaceInfos,
-
+    goBackToPreviousStep,
     submitQualiopiCertificateInfoStep,
   } = useProfessionalSpaceCreationContext();
   const {
@@ -52,8 +52,8 @@ export const QualiopiCertificateInfoStepForm = () => {
     <div className="flex flex-col min-w-[70vw]">
       <Stepper
         title="Certification de la structure"
-        currentStep={1}
-        stepCount={4}
+        currentStep={2}
+        stepCount={5}
         nextTitle="Saisir les informations de la structure"
       />
       <div className="border-t border-gray-300  mb-7" />
@@ -89,8 +89,12 @@ export const QualiopiCertificateInfoStepForm = () => {
           />
         </fieldset>
         <div className="flex gap-2 ml-auto mt-4">
+          <Button priority="secondary" onClick={goBackToPreviousStep}>
+            Revenir à l'étape 1
+          </Button>
+
           <Button type="submit" disabled={!isValid}>
-            Passer à l'étape 2
+            Passer à l'étape 3
           </Button>
         </div>
       </form>

@@ -47,8 +47,8 @@ export const AccountInfoStepForm = () => {
     <div className="flex flex-col min-w-[70vw]">
       <Stepper
         title="Saisir vos informations générales"
-        currentStep={4}
-        stepCount={4}
+        currentStep={5}
+        stepCount={5}
       />
       <div className="border-t border-gray-300  mb-7" />
       {submissionError && (
@@ -104,7 +104,7 @@ export const AccountInfoStepForm = () => {
         </fieldset>
         <div className="flex gap-2 ml-auto mt-4">
           <Button priority="secondary" onClick={goBackToPreviousStep}>
-            Revenir à l'étape 3
+            Revenir à l'étape 4
           </Button>
           <Button type="submit">Valider le formulaire</Button>
         </div>

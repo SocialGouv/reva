@@ -15,6 +15,7 @@ type LegalStatus =
   | "SA";
 
 interface ProfessionalSpaceInfo {
+  cguAcceptance: boolean;
   companySiret: string;
   companyLegalStatus: LegalStatus;
   companyName: string;
@@ -34,12 +35,15 @@ interface ProfessionalSpaceInfo {
 
 interface ProfessionalSpaceCreationState {
   currentStep:
+    | "cguStep"
     | "qualiopiCertificateInfoStep"
     | "companyInfoStep"
     | "certificationsInfoStep"
     | "accountInfoStep";
   professionalSpaceInfos: Partial<ProfessionalSpaceInfo>;
 }
+
+type cguStepData = Pick<ProfessionalSpaceInfo, "cguAcceptance">;
 
 type QualiopiCertificateInfoStepData = Pick<
   ProfessionalSpaceInfo,
@@ -66,8 +70,9 @@ type CertificationsInfoStepData = Pick<ProfessionalSpaceInfo, "typology">;
 
 type ProfessionalSpaceCreationContext = ProfessionalSpaceCreationState & {
   goBackToPreviousStep: () => void;
+  submitCguStep: (stepData: cguStepData) => void;
   submitQualiopiCertificateInfoStep: (
-    stepDatz: QualiopiCertificateInfoStepData
+    stepData: QualiopiCertificateInfoStepData
   ) => void;
   submitCompanyInfoStep: (stepData: CompanyInfoStepData) => void;
   submitCertificationsInfoStep: (stepData: CertificationsInfoStepData) => void;
@@ -85,7 +90,7 @@ export const ProfessionalSpaceCreationProvider = (props: {
   const router = useRouter();
 
   const [state, setState] = useState<ProfessionalSpaceCreationState>({
-    currentStep: "qualiopiCertificateInfoStep",
+    currentStep: "cguStep",
     professionalSpaceInfos: {
       companyLegalStatus: "ASSOCIATION_LOI_1901",
       domaineIds: [],
@@ -96,10 +101,12 @@ export const ProfessionalSpaceCreationProvider = (props: {
     let newCurrentStep = state.currentStep;
 
     switch (state.currentStep) {
+      case "qualiopiCertificateInfoStep":
+        newCurrentStep = "cguStep";
+        break;
       case "companyInfoStep":
         newCurrentStep = "qualiopiCertificateInfoStep";
         break;
-
       case "certificationsInfoStep":
         newCurrentStep = "companyInfoStep";
         break;
@@ -109,6 +116,19 @@ export const ProfessionalSpaceCreationProvider = (props: {
     }
     setState({ ...state, currentStep: newCurrentStep });
   }, [state]);
+
+  const submitCguStep = useCallback(
+    (stepData: cguStepData) => {
+      setState({
+        currentStep: "qualiopiCertificateInfoStep",
+        professionalSpaceInfos: {
+          ...state.professionalSpaceInfos,
+          ...stepData,
+        },
+      });
+    },
+    [state]
+  );
 
   const submitQualiopiCertificateInfoStep = useCallback(
     (stepData: QualiopiCertificateInfoStepData) => {
@@ -185,7 +205,7 @@ export const ProfessionalSpaceCreationProvider = (props: {
       };
       setState(newState);
 
-      const { qualiopiSwornStatement, ...mutationParameters } =
+      const { qualiopiSwornStatement, cguAcceptance, ...mutationParameters } =
         newState.professionalSpaceInfos;
 
       await executeGraphqlSubscriptionMutation(
@@ -201,6 +221,7 @@ export const ProfessionalSpaceCreationProvider = (props: {
       value={{
         ...state,
         goBackToPreviousStep,
+        submitCguStep,
         submitQualiopiCertificateInfoStep,
         submitCompanyInfoStep,
         submitCertificationsInfoStep,
