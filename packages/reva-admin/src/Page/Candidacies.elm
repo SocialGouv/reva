@@ -162,7 +162,7 @@ view context model =
             viewWithFilters []
 
         ( _, Failure errors ) ->
-            viewWithFilters [ div [ class "m-4 font-medium text-red-500" ] <| List.map (\e -> div [] [ text e ]) errors ]
+            viewWithFilters [ div [ class "m-4 font-medium text-red-500", role "alert" ] <| List.map (\e -> div [] [ text e ]) errors ]
 
         ( _, Success candidacyCountByStatus ) ->
             viewWithFilters (View.Candidacy.Filters.view candidacyCountByStatus model.filters context)
@@ -304,7 +304,7 @@ viewDirectory context model title =
                     ]
 
             Failure error ->
-                div [ class "my-2 font-medium text-red-500" ] <| List.map (\e -> div [] [ text e ]) error
+                div [ class "my-2 font-medium text-red-500", role "alert" ] <| List.map (\e -> div [] [ text e ]) error
 
             _ ->
                 div []

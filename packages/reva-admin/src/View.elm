@@ -114,7 +114,7 @@ article dataTestValue backLinkRoute backLinkLabel content =
 
 errors : List String -> Html msg
 errors l =
-    div [ class "text-red-500" ] <| List.map (\e -> div [] [ text e ]) l
+    div [ class "text-red-500", role "alert" ] <| List.map (\e -> div [] [ text e ]) l
 
 
 popupErrors : List String -> Html msg
