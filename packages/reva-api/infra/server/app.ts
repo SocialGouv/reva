@@ -10,6 +10,7 @@ import fastify, {
   FastifyServerOptions,
 } from "fastify";
 
+import { logger } from "../logger";
 import { restRoutes } from "../rest";
 import proofUploadRoute from "../rest/proof-upload";
 import { mercuriusGraphQL } from "./mercurius";
@@ -156,5 +157,6 @@ export const buildApp = async (
     prefix: "/api",
   });
 
+  logger.info("started");
   return app;
 };
