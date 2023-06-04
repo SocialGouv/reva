@@ -80,7 +80,7 @@
     "fastify-env": "2.1.1",
     "graphql-scalars": "^1.17.0",
     "jsonwebtoken": "^8.5.1",
-    "keycloak-connect": "^18.0.1",
+    "keycloak-connect": "^21.0.1",
     "mercurius": "^10.0.0",
     "mjml": "^4.13.0",
     "pino": "^8.7.0",
