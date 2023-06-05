@@ -54,7 +54,20 @@
       </symbol>
     </svg>
 
+    <div class="only-dsfr">
+      <div class="fr-skiplinks">
+        <nav class="fr-container" role="navigation" aria-label="Accès rapide">
+          <ul class="fr-skiplinks__list">
+            <li><a class="fr-link" href="#content" target="_self">Contenu</a></li>
+            <li><a class="fr-link" href="#header-navigation" target="_self">Menu</a></li>
+            <li><a class="fr-link" href="#footer" target="_self">Pied de page</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
     <header
+      id="header-navigation"
       role="banner"
       class="relative"
       style="
