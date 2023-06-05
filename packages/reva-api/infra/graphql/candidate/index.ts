@@ -234,7 +234,7 @@ export const resolvers = {
     ) => {
       const result = await askForRegistration({
         generateJWTForRegistration: async (data: unknown) =>
-          Right(generateJwt(data)),
+          Right(generateJwt(data, 3 * 60 * 60)),
         sendRegistrationEmail: async (data) =>
           sendRegistrationEmail(data.email, data.token),
       })(params.candidate);
@@ -276,7 +276,8 @@ export const resolvers = {
     },
     candidate_askForLogin: async (_: unknown, params: { email: string }) => {
       const result = await askForLogin({
-        generateJWTForLogin: async (data: unknown) => Right(generateJwt(data)),
+        generateJWTForLogin: async (data: unknown) =>
+          Right(generateJwt(data, 1 * 60 * 60)),
         sendLoginEmail: async (data) => sendLoginEmail(data.email, data.token),
       })(params.email);
 
