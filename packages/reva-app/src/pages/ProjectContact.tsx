@@ -153,7 +153,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             ))}
           </Select>
         </fieldset>
-        <Button data-test="project-contact-add" className="mt-6">
+        <Button data-test="project-contact-add" className="mt-6" disabled>
           Créez votre compte
         </Button>
       </form>
