@@ -28,3 +28,7 @@
 .fr-alert--error:before, .fr-error-text:before  {
   mask-image: url("../icons/system/fr--error-fill.svg");
 }
+
+.fr-alert--warning:before {
+  mask-image: url("../icons/system/fr--warning-fill.svg");
+}
