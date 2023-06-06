@@ -155,7 +155,7 @@ http:
       loadBalancer:
         passHostHeader: false
         servers:
-          - url: "https://reva-staging.osc-fr1.scalingo.io/"
+          - url: "https://reva-staging-website.osc-fr1.scalingo.io/"
 
     site-web-staging-subscription:
       loadBalancer:
