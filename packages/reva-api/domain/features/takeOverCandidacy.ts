@@ -22,15 +22,15 @@ export const takeOverCandidacy =
         status: "VALIDATION",
       })
     )
-      .chain((existsCandidacy) => {
-        if (!existsCandidacy) {
+      .chain((existsCandidacyInValidation) => {
+        if (!existsCandidacyInValidation) {
           return EitherAsync.liftEither(
             Left(
               `La candidature ${params.candidacyId} ne peut être prise en charge`
             )
           );
         }
-        return EitherAsync.liftEither(Right(existsCandidacy));
+        return EitherAsync.liftEither(Right(existsCandidacyInValidation));
       })
       .mapLeft(
         (error: string) =>

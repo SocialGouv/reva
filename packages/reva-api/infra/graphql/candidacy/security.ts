@@ -1,5 +1,6 @@
 import {
   defaultSecurity,
+  isAdminOrManager,
   isAdminOrOwningManager,
   isCandidate,
   isOwningManager,
@@ -8,6 +9,9 @@ import {
 export const resolversSecurityMap = {
   // Sécurité par défaut
   // cf https://the-guild.dev/graphql/tools/docs/resolvers-composition#supported-path-matcher-format
+
+  "Query.getCandidacies": isAdminOrManager,
+
   "Mutation.*": defaultSecurity, // forbidden
 
   // Mutations candidat

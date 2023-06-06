@@ -1,11 +1,13 @@
 import {
+  allowed,
   forbidden,
   hasNotRole,
   hasRole,
   isCandidacyOwner,
   whenHasRole,
-  allowed,
 } from "./middlewares";
+
+export const isAdminOrManager = [hasRole(["admin", "manage_candidacy"])];
 
 export const isAdminOrOwningManager = [
   hasRole(["admin", "manage_candidacy"]),
