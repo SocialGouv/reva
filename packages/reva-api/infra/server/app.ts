@@ -51,18 +51,11 @@ export const buildApp = async (
     const DIST_FOLDER = path.join(__dirname, "..", "..");
     const APP_FOLDER = path.join(DIST_FOLDER, "app");
     const ADMIN_FOLDER = path.join(DIST_FOLDER, "admin");
-    const WEBSITE_FOLDER = path.join(DIST_FOLDER, "website");
 
     if (process.env.FRAMER_WEBSITE_URL) {
       app.register(proxy, {
         upstream: process.env.FRAMER_WEBSITE_URL,
         prefix: WEBSITE_ROUTE_PATH,
-      });
-    } else {
-      app.register(fastifyStatic, {
-        root: WEBSITE_FOLDER,
-        prefix: WEBSITE_ROUTE_PATH,
-        decorateReply: false,
       });
     }
 

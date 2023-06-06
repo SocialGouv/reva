@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "package": "next build && next export && cp -R ./out ../reva-api/dist/website",
     "start": "next start",
     "lint": "next lint",
     "predev": "only-include-used-icons",
