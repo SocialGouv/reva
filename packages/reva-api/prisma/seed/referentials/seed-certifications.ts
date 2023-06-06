@@ -7,6 +7,14 @@ export async function seedCertifications(prisma: PrismaClient) {
   // Upsert from CSV
   await upsertCertificationsXp(prisma);
 
+  // 6/05/2023 : Supprimer la certification RNCP 37231
+  // trello.com/c/5lRTQtl2/757-modification-du-airtable
+  // Attention à ça si un jour elle est ajoutée de nouveau!!
+  const { count } = await prisma.certification.deleteMany({
+    where: { rncpId: "37231" },
+  });
+  console.log(`Deleted ${count} certification(s) with RNCPID 37231`);
+
   // Refresh materialized views
   await prisma.$queryRaw`
     REFRESH MATERIALIZED VIEW certification_search WITH DATA;
