@@ -13,9 +13,9 @@ import { AccountInfoStepForm } from "@/components/professional-space/creation/fo
 import Head from "next/head";
 import request, { gql } from "graphql-request";
 import { GRAPHQL_API_URL } from "@/config/config";
-import { useEffect, useState } from "react";
 import { QualiopiCertificateInfoStepForm } from "@/components/professional-space/creation/form/QualiopiCertificateInfoForm";
 import { CguStep } from "@/components/professional-space/creation/form/CguStep";
+import { GetStaticProps } from "next";
 
 interface Domaine {
   id: string;
@@ -62,16 +62,16 @@ const getDepartments = gql`
     }
   }
 `;
-
+interface PageProps {
+  availableDomaines: Domaine[];
+  availableConventions: ConventionCollective[];
+  availableDepartments: Department[];
+}
 const PageContent = ({
   availableDomaines,
   availableConventions,
   availableDepartments,
-}: {
-  availableDomaines: Domaine[];
-  availableConventions: ConventionCollective[];
-  availableDepartments: Department[];
-}) => {
+}: PageProps) => {
   const { currentStep } = useProfessionalSpaceCreationContext();
   switch (currentStep) {
     case "cguStep":
@@ -95,38 +95,11 @@ const PageContent = ({
   }
 };
 
-const ProfessionalSpaceCreationPage = () => {
-  const [availableDomaines, setAvailableDomaines] = useState<Domaine[]>([]);
-  const [availableConventions, setAvailableConventions] = useState<
-    ConventionCollective[]
-  >([]);
-
-  const [availableDepartments, setAvailableDepartments] = useState<
-    Department[]
-  >([]);
-
-  useEffect(() => {
-    const loadAvailableDomaines = async () =>
-      setAvailableDomaines(
-        (await request(GRAPHQL_API_URL, getDomaines)).getDomaines
-      );
-    const loadAvailableConventions = async () =>
-      setAvailableConventions(
-        (await request(GRAPHQL_API_URL, getConventionsCollectives))
-          .getConventionCollectives
-      );
-    const loadAvailableDepartments = async () =>
-      setAvailableDepartments(
-        (await request(GRAPHQL_API_URL, getDepartments)).getDepartments.sort(
-          (a: Department, b: Department) => a.code.localeCompare(b.code)
-        )
-      );
-
-    loadAvailableDomaines();
-    loadAvailableConventions();
-    loadAvailableDepartments();
-  }, []);
-
+const ProfessionalSpaceCreationPage = ({
+  availableDomaines,
+  availableConventions,
+  availableDepartments,
+}: PageProps) => {
   return (
     <MainLayout>
       <Head>
@@ -169,3 +142,26 @@ const ProfessionalSpaceCreationPage = () => {
 };
 
 export default ProfessionalSpaceCreationPage;
+
+export const getStaticProps: GetStaticProps = async () => {
+  const availableDomaines = (await request(GRAPHQL_API_URL, getDomaines))
+    .getDomaines;
+
+  const availableConventions = (
+    await request(GRAPHQL_API_URL, getConventionsCollectives)
+  ).getConventionCollectives;
+
+  const availableDepartments = (
+    await request(GRAPHQL_API_URL, getDepartments)
+  ).getDepartments.sort((a: Department, b: Department) =>
+    a.code.localeCompare(b.code)
+  );
+
+  return {
+    props: {
+      availableDomaines,
+      availableConventions,
+      availableDepartments,
+    },
+  };
+};
