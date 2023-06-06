@@ -12,10 +12,7 @@ import { getCandidacy } from "../../../domain/features/getCandidacy";
 import { getCompanionsForCandidacy } from "../../../domain/features/getCompanionsForCandidacy";
 import { getDeviceCandidacy } from "../../../domain/features/getDeviceCandidacy";
 import { getExamInfo } from "../../../domain/features/getExamInfo";
-import {
-  getAAPOrganismsForCandidacy,
-  getActiveOrganismsForCandidacyWithNewTypologies,
-} from "../../../domain/features/getOrganismsForCandidacy";
+import { getActiveOrganismsForCandidacyWithNewTypologies } from "../../../domain/features/getOrganismsForCandidacy";
 import { getTrainings } from "../../../domain/features/getTrainings";
 import { selectOrganismForCandidacy } from "../../../domain/features/selectOrganismForCandidacy";
 import { submitCandidacy } from "../../../domain/features/submitCandidacy";
@@ -168,16 +165,11 @@ const unsafeResolvers = {
       _: unknown,
       params: { candidacyId: string }
     ) => {
-      const result = await (process.env.USE_ORGANISMS_WITH_NEW_TYPOLOGIES ===
-      "true"
-        ? getActiveOrganismsForCandidacyWithNewTypologies({
-            getActiveOrganismForCertificationAndDepartment:
-              organismDb.getActiveOrganismForCertificationAndDepartment,
-            getCandidacyFromId: candidacyDb.getCandidacyFromId,
-          })({ candidacyId: params.candidacyId })
-        : getAAPOrganismsForCandidacy({
-            getAAPOrganisms: organismDb.getAAPOrganisms,
-          })({ candidacyId: params.candidacyId }));
+      const result = await getActiveOrganismsForCandidacyWithNewTypologies({
+        getActiveOrganismForCertificationAndDepartment:
+          organismDb.getActiveOrganismForCertificationAndDepartment,
+        getCandidacyFromId: candidacyDb.getCandidacyFromId,
+      })({ candidacyId: params.candidacyId });
 
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
