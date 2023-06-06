@@ -1,8 +1,8 @@
 import * as React from "react";
-import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { BlueLayout } from "@/components/layout/blue-layout/BlueLayout";
 import Image from "next/image";
 import Head from "next/head";
+import unionSvg from "./assets/union.svg";
 
 const ProfessionalSpaceCreationConfirmationPage = () => {
   return (
@@ -22,7 +22,7 @@ const ProfessionalSpaceCreationConfirmationPage = () => {
           className="flex flex-col max-w-[50em] xl:max-w-[63.5em]"
         >
           <Image
-            src="/professional-space/creation/union.svg"
+            src={unionSvg}
             className="self-center mb-14"
             alt=""
             width={80}
