@@ -258,42 +258,44 @@ const IndexConfidentialitePage = () => {
             d’usage et de protection des données.
           </SectionParagraph>
           <SectionParagraph>
-            <table className="border">
-              <thead className="border-b text-lg font-medium bg-neutral-200">
-                <tr>
-                  <th className="pl-1 border-r">Partenaire</th>
-                  <th className="border-r">Pays destinataire</th>
-                  <th className="border-r">Traitement réalisé</th>
-                  <th>Garanties</th>
-                </tr>
-              </thead>
-              <tbody className="text-lg">
-                <tr>
-                  <TextBoldCell>Scalingo</TextBoldCell>
-                  <TextCell>France</TextCell>
-                  <TextCell>Hébergement SecNumCloud</TextCell>
-                  <LinkCell url="https://scalingo.com/fr/data-processing-agreement" />
-                </tr>
-                <tr>
-                  <TextBoldCell>Matomo</TextBoldCell>
-                  <TextCell>France</TextCell>
-                  <TextCell>Mesure d’audience</TextCell>
-                  <LinkCell url="https://fr.matomo.org/privacy-policy/" />
-                </tr>
-                <tr>
-                  <TextBoldCell>Crisp</TextBoldCell>
-                  <TextCell>Union européenne</TextCell>
-                  <TextCell>Support</TextCell>
-                  <LinkCell url="https://crisp.chat/fr/privacy/" />
-                </tr>
-                <tr>
-                  <TextBoldCell>Hotjar</TextBoldCell>
-                  <TextCell>Irlande</TextCell>
-                  <TextCell>Mesure d’audience</TextCell>
-                  <LinkCell url="https://help.hotjar.com/hc/en-us/articles/360058514233" />
-                </tr>
-              </tbody>
-            </table>
+            <div className="fr-table">
+              <table>
+                <thead className="text-lg font-medium">
+                  <tr>
+                    <th>Partenaire</th>
+                    <th>Pays destinataire</th>
+                    <th>Traitement réalisé</th>
+                    <th>Garanties</th>
+                  </tr>
+                </thead>
+                <tbody className="text-lg">
+                  <tr>
+                    <TextBoldCell>Scalingo</TextBoldCell>
+                    <TextCell>France</TextCell>
+                    <TextCell>Hébergement SecNumCloud</TextCell>
+                    <LinkCell url="https://scalingo.com/fr/data-processing-agreement" />
+                  </tr>
+                  <tr>
+                    <TextBoldCell>Matomo</TextBoldCell>
+                    <TextCell>France</TextCell>
+                    <TextCell>Mesure d’audience</TextCell>
+                    <LinkCell url="https://fr.matomo.org/privacy-policy/" />
+                  </tr>
+                  <tr>
+                    <TextBoldCell>Crisp</TextBoldCell>
+                    <TextCell>Union européenne</TextCell>
+                    <TextCell>Support</TextCell>
+                    <LinkCell url="https://crisp.chat/fr/privacy/" />
+                  </tr>
+                  <tr>
+                    <TextBoldCell>Hotjar</TextBoldCell>
+                    <TextCell>Irlande</TextCell>
+                    <TextCell>Mesure d’audience</TextCell>
+                    <LinkCell url="https://help.hotjar.com/hc/en-us/articles/360058514233" />
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </SectionParagraph>
         </ContentSection>
 
@@ -339,40 +341,42 @@ const IndexConfidentialitePage = () => {
             également des outils de mesure d’audience.
           </SectionParagraph>
           <SectionParagraph>
-            <table className="border">
-              <thead className="border-b text-lg font-medium bg-neutral-200">
-                <tr>
-                  <th className="pl-1 border-r">Cookie</th>
-                  <th className="border-r"></th>
-                  <th className="border-r">Base juridique</th>
-                  <th>Utilisation</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody className="text-lg">
-                <tr>
-                  <TextBoldCell>Matomo</TextBoldCell>
-                  <TextCell>France</TextCell>
-                  <TextCell>Exemption de consentement</TextCell>
-                  <TextCell>Mesure d’audience</TextCell>
-                  <LinkCell url="https://fr.matomo.org/privacy-policy/" />
-                </tr>
-                <tr>
-                  <TextBoldCell>Crisp</TextBoldCell>
-                  <TextCell>Union européenne</TextCell>
-                  <TextCell>Consentement</TextCell>
-                  <TextCell>Support</TextCell>
-                  <LinkCell url="https://crisp.chat/fr/privacy/" />
-                </tr>
-                <tr>
-                  <TextBoldCell>Hotjar</TextBoldCell>
-                  <TextCell>Irlande</TextCell>
-                  <TextCell>Consentement</TextCell>
-                  <TextCell>Mesure d’audience </TextCell>
-                  <LinkCell url="https://help.hotjar.com/hc/en-us/articles/360058514233" />
-                </tr>
-              </tbody>
-            </table>
+            <div className="fr-table">
+              <table>
+                <thead className="text-lg font-medium">
+                  <tr>
+                    <th>Cookie</th>
+                    <th></th>
+                    <th>Base juridique</th>
+                    <th>Utilisation</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody className="text-lg">
+                  <tr>
+                    <TextBoldCell>Matomo</TextBoldCell>
+                    <TextCell>France</TextCell>
+                    <TextCell>Exemption de consentement</TextCell>
+                    <TextCell>Mesure d’audience</TextCell>
+                    <LinkCell url="https://fr.matomo.org/privacy-policy/" />
+                  </tr>
+                  <tr>
+                    <TextBoldCell>Crisp</TextBoldCell>
+                    <TextCell>Union européenne</TextCell>
+                    <TextCell>Consentement</TextCell>
+                    <TextCell>Support</TextCell>
+                    <LinkCell url="https://crisp.chat/fr/privacy/" />
+                  </tr>
+                  <tr>
+                    <TextBoldCell>Hotjar</TextBoldCell>
+                    <TextCell>Irlande</TextCell>
+                    <TextCell>Consentement</TextCell>
+                    <TextCell>Mesure d’audience </TextCell>
+                    <LinkCell url="https://help.hotjar.com/hc/en-us/articles/360058514233" />
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </SectionParagraph>
           <SectionParagraph>
             Pour mieux comprendre, l’outil MATOMO est un outil de mesure
