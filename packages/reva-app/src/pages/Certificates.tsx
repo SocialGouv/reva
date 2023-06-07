@@ -1,8 +1,9 @@
+import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 import { Select } from "@codegouvfr/react-dsfr/Select";
 import { useActor } from "@xstate/react";
 import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/ErrorAlertFromState";
 import { SearchBar } from "components/molecules/SearchBar/SearchBar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Interpreter } from "xstate";
 
 import { BackToHomeButton } from "../components/molecules/BackToHomeButton/BackToHomeButton";
@@ -19,21 +20,11 @@ interface Props {
 
 export const Certificates = ({ mainService }: Props) => {
   const [state, send] = useActor(mainService);
-  const [searchText, setSearchText] = useState<string>(
-    state.context.certificationSearchText
-  );
   const UNKNOWN_DEPARTMENT = "unknown";
 
   const [chosenDepartmentCode, setChosenDepartmentCode] = useState(
     state.context.selectedDepartment?.code || UNKNOWN_DEPARTMENT
   );
-
-  useEffect(() => {
-    send({
-      type: "SET_CERTIFICATION_SEARCH_TEXT",
-      certificationSearchText: searchText,
-    });
-  }, [searchText, send]);
 
   const selectsOptionsDepartments: { label: string; value: string }[] =
     state.context.departments
@@ -66,12 +57,10 @@ export const Certificates = ({ mainService }: Props) => {
     if (state.matches("loadingCertifications")) {
       return [1, 2, 3, 4, 5].map((i) => <CardSkeleton key={`skeleton-${i}`} />);
     }
-    return state.context.certifications
-      .filter((certif) => certif.status !== "INACTIVE")
+    return state.context.certificationPage.rows
       .map(CertificateCard)
       .map((el) => <li>{el}</li>);
   };
-
   return (
     <Page data-test="certificates" title="Choix du diplôme">
       <BackToHomeButton />
@@ -112,9 +101,12 @@ export const Certificates = ({ mainService }: Props) => {
         label="Rechercher un diplôme"
         className="mb-8"
         nativeInputProps={{
-          defaultValue: searchText,
+          defaultValue: state.context.certificationSearchText,
           onChange: (e) => {
-            setSearchText(e.target.value);
+            send({
+              type: "SET_CERTIFICATION_SEARCH_TEXT",
+              certificationSearchText: e.target.value,
+            });
           },
         }}
       />
@@ -125,21 +117,37 @@ export const Certificates = ({ mainService }: Props) => {
               selectsOptionsDepartments.find(
                 (o) => o.value === chosenDepartmentCode
               )?.label
-            } : ${
-              state.context.certifications.filter(
-                (certif) => certif.status !== "INACTIVE"
-              ).length
-            }`
+            } : ${state.context.certificationPage.info.totalRows}`
           : null}
       </p>
       {(chosenDepartmentCode !== UNKNOWN_DEPARTMENT ||
         !!state.context.selectedDepartment) && (
-        <div>
+        <div id="results">
           <Results
             title=""
             listClassName="flex flex-wrap justify-center lg:justify-start items-center mb-4 gap-4"
           >
-            {displayCards()}
+            <>
+              {displayCards()}
+              <Pagination
+                className="mt-8"
+                count={state.context.certificationPage.info.totalPages}
+                defaultPage={state.context.certificationPage.info.currentPage}
+                getPageLinkProps={(page) => ({
+                  href: "#",
+                  "aria-label": `page ${page}`,
+                  onClick: () => {
+                    send({
+                      type: "SET_CURRENT_CERTIFICATION_PAGE_NUMBER",
+                      pageNumber: page,
+                    });
+                    document
+                      .getElementById("main-scroll")
+                      ?.scrollTo({ top: 0 });
+                  },
+                })}
+              />
+            </>
           </Results>
         </div>
       )}

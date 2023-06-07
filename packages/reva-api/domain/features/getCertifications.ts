@@ -5,14 +5,21 @@ import { Certification } from "../types/search";
 
 interface GetCertificationsDependencies {
   getCertifications: (params: {
+    offset?: number;
+    limit?: number;
     departmentId: string;
     searchText?: string;
-  }) => Promise<Either<string, Certification[]>>;
+  }) => Promise<Either<string, PaginatedListResult<Certification>>>;
 }
 
 export const getCertifications =
   (deps: GetCertificationsDependencies) =>
-  async (params: { departmentId: string; searchText?: string }) =>
+  async (params: {
+    offset?: number;
+    limit?: number;
+    departmentId: string;
+    searchText?: string;
+  }) =>
     EitherAsync.fromPromise(() => deps.getCertifications(params)).mapLeft(
       () =>
         new FunctionalError(

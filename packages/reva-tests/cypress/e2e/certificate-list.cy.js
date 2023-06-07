@@ -19,12 +19,12 @@ context("Certificate list", () => {
     cy.wait("@getReferential");
   });
 
-  it("should show only 2 certifications out of 3 because the last one is inactive", function () {
+  it("should show only 2 certifications", function () {
     cy.get('[data-test="project-home-select-certification"]').click();
     cy.get("[name='select_department']").select("2");
     cy.wait("@Certifications");
 
-    cy.get('[data-test="results"]').children("li").should("have.length", 2); // 3 certifications in referential but 1 inactive -> 2 li
+    cy.get('[data-test="results"]').children("li").should("have.length", 2);
 
     cy.get('[data-test="results"]')
       .children("li")

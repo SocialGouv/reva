@@ -57,9 +57,19 @@ type ConventionCollective {
   label: String!
 }
 
+type CertificationPage {
+  rows: [Certification!]!
+  info: PaginationInfo!
+}
+
 type Query {
   getReferential: Referential!
-  getCertifications(departmentId: UUID!, searchText: String): [Certification!]!
+  getCertifications(
+    offset: Int
+    limit: Int
+    departmentId: UUID!
+    searchText: String
+  ): CertificationPage!
   getRegions: [Region!]!
   getDepartments: [Department!]!
   getDegrees: [Degree!]!

@@ -87,3 +87,13 @@ export interface TrainingProgram {
   otherTraining: string;
   validatedByCandidate: boolean;
 }
+
+export type Page<T> = {
+  rows: T[];
+  info: {
+    totalRows: number;
+    currentPage: number;
+    totalPages: number;
+    pageLength: number;
+  };
+};

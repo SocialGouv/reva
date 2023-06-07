@@ -142,7 +142,10 @@ function App() {
   );
 
   return (
-    <div className="h-screen w-screen flex flex-col overflow-auto">
+    <div
+      id="main-scroll"
+      className="h-screen w-screen flex flex-col overflow-auto"
+    >
       <SkipLinks
         links={[
           {

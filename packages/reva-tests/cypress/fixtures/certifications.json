@@ -1,27 +1,28 @@
 {
   "data": {
-    "getCertifications": [
-      {
-        "id": "c1",
-        "label": "Titre 1",
-        "summary": "résumé 1",
-        "codeRncp": "34691",
-        "status": "AVAILABLE"
-      },
-      {
-        "id": "c2",
-        "label": "Titre 2",
-        "summary": "résumé 2",
-        "codeRncp": "34692",
-        "status": "AVAILABLE"
-      },
-      {
-        "id": "c3",
-        "label": "Titre 3",
-        "summary": "résumé 3",
-        "codeRncp": "34693",
-        "status": "INACTIVE"
+    "getCertifications": {
+      "rows": [
+        {
+          "id": "c1",
+          "label": "Titre 1",
+          "summary": "résumé 1",
+          "codeRncp": "34691",
+          "status": "AVAILABLE"
+        },
+        {
+          "id": "c2",
+          "label": "Titre 2",
+          "summary": "résumé 2",
+          "codeRncp": "34692",
+          "status": "AVAILABLE"
+        }
+      ],
+      "info": {
+        "totalRows": 3,
+        "currentPage": 1,
+        "totalPages": 1,
+        "pageLength": 10
       }
-    ]
+    }
   }
 }

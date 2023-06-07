@@ -9,6 +9,7 @@ import {
   Goal,
   Organism,
   OrganismForCandidacy,
+  Page,
   TrainingProgram,
   candidacyStatus,
 } from "../interface";
@@ -55,13 +56,14 @@ export const UNKNOWN_CANDIDATE_ERROR = "UNKNOWN_CANDIDATE_ERROR";
 export interface MainContext {
   error: string;
   candidacyId?: string;
-  certifications: Certification[];
+  certificationPage: Page<Certification>;
   candidacyCreatedAt?: Date;
   candidacyStatus: candidacyStatus;
   contact?: Contact;
   showStatusBar: boolean;
   certification?: Certification;
   selectedCertification?: Certification;
+  currentCertificationPageNumber: number;
   isCertificationPartial: boolean;
   experiences: Experiences;
   goals: Goal[];
@@ -79,6 +81,10 @@ type setCertificationSearchText = {
   type: "SET_CERTIFICATION_SEARCH_TEXT";
   certificationSearchText: string;
 };
+type setCurrentCertificationPageNumber = {
+  type: "SET_CURRENT_CERTIFICATION_PAGE_NUMBER";
+  pageNumber: number;
+};
 
 type SelectCertification = {
   type: "SELECT_CERTIFICATION";
@@ -89,12 +95,13 @@ export type MainEvent =
   | selectedDepartment
   | SelectCertification
   | setCertificationSearchText
+  | setCurrentCertificationPageNumber
   | { type: "SHOW_PROJECT_HOME"; certification: Certification }
   | { type: "ADD_EXPERIENCE" }
   | { type: "EDIT_EXPERIENCE"; index: number }
   | { type: "EDIT_GOALS" }
   | { type: "EDIT_ORGANISM" }
-  | { type: "CLOSE_SELECTED_CERTIFICATION" }
+  | { type: "OPEN_CERTIFICATIONS_SELECTION" }
   | { type: "BACK" }
   | { type: "LOADED" }
   | { type: "LOGIN" }
@@ -116,6 +123,7 @@ export type MainState =
       context: MainContext & {
         certification: undefined;
         candidacyId: undefined;
+        currentCertificationPageNumber: number;
       };
     }
   | {
@@ -201,7 +209,16 @@ export const mainMachine =
       {
         context: {
           error: "",
-          certifications: [],
+          certificationPage: {
+            rows: [],
+            info: {
+              totalRows: 0,
+              currentPage: 0,
+              totalPages: 0,
+              pageLength: 0,
+            },
+          },
+          currentCertificationPageNumber: 1,
           candidacyStatus: "CANDIDATURE_VIDE",
           showStatusBar: false,
           experiences: { rest: [] },
@@ -294,7 +311,7 @@ export const mainMachine =
               onDone: [
                 {
                   actions: assign({
-                    certifications: (_, event) =>
+                    certificationPage: (_, event) =>
                       event.data.data.getCertifications,
                   }),
                   target: "searchResults",
@@ -331,11 +348,21 @@ export const mainMachine =
                 }),
               },
               SELECT_DEPARTMENT: {
-                actions: "selectingDepartment",
+                actions: [
+                  "selectingDepartment",
+                  "resetCurrentCertificationPageNumber",
+                ],
                 target: "loadingCertifications",
               },
               SET_CERTIFICATION_SEARCH_TEXT: {
-                actions: "assignCertificationSearchTextToContext",
+                actions: [
+                  "assignCertificationSearchTextToContext",
+                  "resetCurrentCertificationPageNumber",
+                ],
+                target: "loadingCertifications",
+              },
+              SET_CURRENT_CERTIFICATION_PAGE_NUMBER: {
+                actions: "assignCurrentCertificationPageNumberToContext",
                 target: "loadingCertifications",
               },
               BACK: {
@@ -823,12 +850,14 @@ export const mainMachine =
               EDIT_ORGANISM: {
                 target: "projectOrganism",
               },
-              CLOSE_SELECTED_CERTIFICATION: [
+              OPEN_CERTIFICATIONS_SELECTION: [
                 {
+                  actions: "resetCertificationSearchFilters",
                   target: "loadingCertifications",
                   cond: "isDepartmentSelected",
                 },
                 {
+                  actions: "resetCertificationSearchFilters",
                   target: "searchResults",
                 },
               ],
@@ -962,6 +991,19 @@ export const mainMachine =
                 .certificationSearchText;
             },
             error: (_context, _event) => "",
+          }),
+          resetCurrentCertificationPageNumber: assign({
+            currentCertificationPageNumber: 1,
+          }),
+          assignCurrentCertificationPageNumberToContext: assign({
+            currentCertificationPageNumber: (_, event) => {
+              return (event as setCurrentCertificationPageNumber).pageNumber;
+            },
+            error: (_context, _event) => "",
+          }),
+          resetCertificationSearchFilters: assign({
+            currentCertificationPageNumber: 1,
+            certificationSearchText: "",
           }),
           submitCertification: assign({
             certification: (_context, event) => {

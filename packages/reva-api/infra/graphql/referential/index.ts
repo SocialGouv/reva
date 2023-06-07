@@ -32,6 +32,8 @@ export const resolvers = {
         getCertifications:
           certificationsDb.getCertificationsForDepartmentWithNewTypologies,
       })({
+        offset: payload.offset,
+        limit: payload.limit,
         departmentId: payload.departmentId,
         searchText: payload.searchText,
       });

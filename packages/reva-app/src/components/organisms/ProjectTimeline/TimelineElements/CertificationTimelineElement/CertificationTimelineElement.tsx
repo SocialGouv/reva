@@ -27,7 +27,7 @@ export const CertificationTimelineElement = () => {
             <Button
               data-test="project-home-select-certification"
               priority="secondary"
-              onClick={() => mainService.send("CLOSE_SELECTED_CERTIFICATION")}
+              onClick={() => mainService.send("OPEN_CERTIFICATIONS_SELECTION")}
               disabled={status === "disabled"}
             >
               {state.context.certification

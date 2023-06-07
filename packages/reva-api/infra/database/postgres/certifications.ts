@@ -1,6 +1,7 @@
 import { Either, Left, Right } from "purify-ts";
 
 import type { Certification } from "../../../domain/types/search";
+import { processPaginationInfo } from "../../../domain/utils/pagination";
 import { logger } from "../../logger";
 import { prismaClient } from "./client";
 
@@ -68,22 +69,48 @@ export const getCertificationById = async ({
 };
 
 export const getCertificationsForDepartmentWithNewTypologies = async ({
+  offset,
+  limit,
   departmentId,
   searchText,
 }: {
+  offset?: number;
+  limit?: number;
   departmentId: string;
   searchText?: string;
-}): Promise<Either<string, Certification[]>> => {
+}): Promise<Either<string, PaginatedListResult<Certification>>> => {
   try {
+    const realLimit = limit || 10;
+    const realOffset = offset || 0;
+
     const certifications =
       (await prismaClient.$queryRawUnsafe(`select c.id,c.label,c.summary,c.status, c.rncp_id as "codeRncp"
       from certification c, available_certification_by_department where c.id=available_certification_by_department.certification_id and available_certification_by_department.department_id=uuid('${departmentId}') ${
         searchText
           ? `and certification_searchable_text@@to_tsquery('french',unaccent('${searchText}:*'))`
           : ""
-      }`)) as Certification[];
+      } offset ${realOffset} limit ${realLimit}`)) as Certification[];
 
-    return Right(certifications);
+    const certificationCount = Number(
+      (
+        (await prismaClient.$queryRawUnsafe(`select count(c.id)
+      from certification c, available_certification_by_department where c.id=available_certification_by_department.certification_id and available_certification_by_department.department_id=uuid('${departmentId}') ${
+          searchText
+            ? `and certification_searchable_text@@to_tsquery('french',unaccent('${searchText}:*'))`
+            : ""
+        }`)) as { count: BigInt }[]
+      )[0].count
+    );
+
+    const page = {
+      rows: certifications,
+      info: processPaginationInfo({
+        totalRows: certificationCount,
+        limit: realLimit,
+        offset: realOffset,
+      }),
+    };
+    return Right(page);
   } catch (e) {
     logger.error(e);
     return Left(`error while retrieving certificates`);
