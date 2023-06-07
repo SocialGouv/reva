@@ -100,7 +100,7 @@ http:
         - removeHeader
 
     api-production:
-      rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/graphql`)"
+      rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/api`)"
       service: api-production
       middlewares:
         - removeHeader
@@ -225,6 +225,6 @@ http:
       loadBalancer:
         passHostHeader: false
         servers:
-          - url: "https://reva-prod.osc-secnum-fr1.scalingo.io/graphql"
+          - url: "https://reva-prod.osc-secnum-fr1.scalingo.io/api"
 
     # --- END PRODUCTION ---
