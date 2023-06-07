@@ -1,4 +1,4 @@
-import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import {MainLayout} from "@/components/layout/main-layout/MainLayout";
 import Head from "next/head";
 import Link from "next/link";
 
@@ -7,7 +7,7 @@ const SiteMapPage = () => {
     <MainLayout className="fr-container pt-10 items-start gap-5">
       <Head>
         <title>
-          Plan du site - Reva | Prenez votre avenir professionnel en main
+          Plan du site - Reva | Bienvenue sur le portail de la VAE
         </title>
       </Head>
       <h1 className="text-3xl mb-5">Plan du site</h1>

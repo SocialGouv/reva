@@ -1,9 +1,5 @@
-/* eslint-disable react/no-unescaped-entities */
-import * as React from "react";
+import { TrackableButton } from "@/components/analytics/trackable-button/TrackableButton";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import Head from "next/head";
-import Image from "next/image";
-import Link from "next/link";
 import {
   Hexagon,
   SectionHeader,
@@ -11,7 +7,11 @@ import {
   SectionSubHeader,
   SubSectionHeader,
 } from "@/components/section-content/SectionContent";
-import { TrackableButton } from "@/components/analytics/trackable-button/TrackableButton";
+import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
+/* eslint-disable react/no-unescaped-entities */
+import * as React from "react";
 
 const AvenirPro = () => (
   <section
@@ -20,15 +20,19 @@ const AvenirPro = () => (
   >
     <div className="px-5 sm:flex-1">
       <header>
-        <SectionHeader>Prenez votre avenir professionnel en main</SectionHeader>
+        <h1 className="leading-tight text-5xl xl:text-7xl xl:leading-[84px]">
+          Bienvenue sur le portail de la VAE
+        </h1>
       </header>
-      <SectionParagraph className="font-bold">
-        S’ouvrir de nouvelles perspectives d’emploi, améliorer ses conditions
-        salariales ou tout simplement obtenir la reconnaissance de ses
-        compétences, les raisons pour faire une VAE sont nombreuses et peuvent
-        vous permettre d’aborder votre avenir professionnel sous un jour
-        meilleur.
-      </SectionParagraph>
+      <h2 className="text-2xl lg:text-3xl mb-10">
+        Découvrez le portail officiel du service public de la Validation des
+        Acquis de l’Expérience.
+      </h2>
+      <p className="text-xl leading-relaxed">
+        Notre mission est de fournir un espace unique rassemblant candidats et
+        professionnels de la VAE autour d’un nouveau dispositif modernisé,
+        simplifié et sécurisé par la loi n°2022-1598 du 21 décembre 2022.
+      </p>
 
       <div className="flex flex-col items-center sm:items-start space-y-4">
         <TrackableButton
