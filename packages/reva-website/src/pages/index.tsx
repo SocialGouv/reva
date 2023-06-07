@@ -16,9 +16,9 @@ import * as React from "react";
 const AvenirPro = () => (
   <section
     id="avenir-professionnel"
-    className="w-full fr-container mx-auto mt-[80px] overflow-x-hidden sm:flex lg:items-center"
+    className="w-full fr-container mx-auto mt-[80px] sm:flex lg:items-center"
   >
-    <div className="px-5 sm:flex-1">
+    <div className="px-5 sm:flex-1 max-w-3xl">
       <header>
         <h1 className="leading-tight text-5xl xl:text-7xl xl:leading-[84px]">
           Bienvenue sur le portail de la VAE
@@ -55,7 +55,7 @@ const AvenirPro = () => (
         </Link>
       </div>
     </div>
-    <div className="relative mt-16 -mx-5 sm:mx-0 sm:flex-0 sm:w-2/5 sm:-mr-20 lg:mr-0 lg:flex-1">
+    <div className="relative mt-16 -mx-5 sm:mx-0 sm:flex-0 sm:w-2/5 sm:-mr-20 lg:flex-1">
       <Image
         src="/home-page/image-hero.png"
         className=""
