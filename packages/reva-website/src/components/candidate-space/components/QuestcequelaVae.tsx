@@ -12,7 +12,7 @@ export const QuestcequelaVae = () => (
   >
     <div className="flex-1 px-5 mt-24 sm:mt-0">
       <header>
-        <SectionSubHeader className="text-[#000091]">VAE</SectionSubHeader>
+        <SectionSubHeader>VAE</SectionSubHeader>
         <SectionHeader>Qu'est-ce que la VAE ?</SectionHeader>
       </header>
       <SectionParagraph>

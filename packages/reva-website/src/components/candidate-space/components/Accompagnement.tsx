@@ -13,9 +13,7 @@ export const Accompagnement = () => (
     <div className="relative w-full px-5 lg:flex-no-wrap lg:space-x-12">
       <div className="px-5 sm:flex-1 mx-auto max-w-[1208px] text-center mt-[100px] mb-20">
         <header>
-          <SectionSubHeader className="text-[#000091]">
-            Accompagnement
-          </SectionSubHeader>
+          <SectionSubHeader>Accompagnement</SectionSubHeader>
           <SectionHeader>
             Vous êtes guidé dès le début de votre démarche
           </SectionHeader>

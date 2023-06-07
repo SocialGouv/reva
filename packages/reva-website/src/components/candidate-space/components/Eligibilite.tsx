@@ -12,9 +12,7 @@ export const Eligibilite = () => (
   >
     <div className="px-5 sm:flex-1">
       <header>
-        <SectionSubHeader className="text-[#000091]">
-          Éligibilité
-        </SectionSubHeader>
+        <SectionSubHeader>Éligibilité</SectionSubHeader>
         <SectionHeader>Qui peut faire une VAE ?</SectionHeader>
       </header>
       <SectionParagraph>
