@@ -117,7 +117,7 @@ const EngagementAAP = () => (
 
 const ProfessionalSpaceHomePage = () => {
   return (
-    <MainLayout className="fr-container py-20 lg:pt-48 gap-10 lg:gap-64 lg:pb-80 bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_1150px]">
+    <MainLayout className="fr-container py-20 gap-10 lg:gap-64 lg:pb-80 bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_1150px]">
       <Head>
         <title>
           Accueil professionnels - Reva | France VAE | Le service qui facilite

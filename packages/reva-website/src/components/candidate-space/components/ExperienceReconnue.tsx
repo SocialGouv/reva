@@ -12,7 +12,7 @@ const ArrowRight = () => (
 export const ExperienceReconnue = () => (
   <section
     id="experience-reconnue"
-    className="w-full max-w-[1248px] mx-auto mt-20 lg:mt-[200px] overflow-x-hidden sm:flex lg:items-center"
+    className="w-full max-w-[1248px] mx-auto mt-20 overflow-x-hidden sm:flex lg:items-center"
   >
     <div className="px-5 sm:flex-1">
       <header>
