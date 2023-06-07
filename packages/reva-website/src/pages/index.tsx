@@ -18,7 +18,7 @@ const AvenirPro = () => (
     id="avenir-professionnel"
     className="w-full fr-container mx-auto mt-[80px] sm:flex lg:items-center"
   >
-    <div className="px-5 sm:flex-1 max-w-3xl">
+    <div className="sm:flex-1 max-w-3xl md:mr-12">
       <header>
         <h1 className="leading-tight text-5xl xl:text-7xl xl:leading-[84px]">
           Bienvenue sur le portail de la VAE
@@ -33,27 +33,6 @@ const AvenirPro = () => (
         professionnels de la VAE autour d’un nouveau dispositif modernisé,
         simplifié et sécurisé par la loi n°2022-1598 du 21 décembre 2022.
       </p>
-
-      <div className="flex flex-col items-center sm:items-start space-y-4">
-        <TrackableButton
-          eventTracked={{
-            location: "Accueil",
-            event: "Click sur 'Démarrez un parcours VAE'",
-          }}
-          priority="primary"
-          className="!w-full sm:!w-auto justify-center"
-          linkProps={{ href: "/app" }}
-          size="large"
-        >
-          Démarrez un parcours VAE
-        </TrackableButton>
-        <Link
-          className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
-          href="/espace-candidat"
-        >
-          En savoir plus sur la VAE
-        </Link>
-      </div>
     </div>
     <div className="relative mt-16 -mx-5 sm:mx-0 sm:flex-0 sm:w-2/5 sm:-mr-20 lg:flex-1">
       <Image
@@ -70,41 +49,57 @@ const AvenirPro = () => (
 const ValorisationCompetences = () => (
   <section
     id="valorisation-competences"
-    className="w-full fr-container mx-auto relative sm:flex sm:flex-row-reverse mt-20 overflow-y-visible overflow-x-hidden sm:mt-24"
+    className="w-full mt-20 sm:mt-24 bg-dsfrGray-altblueFrance"
   >
-    <div className="flex-1 px-5 mt-24 sm:mt-0">
-      <header>
-        <SectionSubHeader className="text-[#000091]">
-          Pour vous
-        </SectionSubHeader>
-        <SectionHeader>Valorisez vos compétences</SectionHeader>
-      </header>
-      <SectionParagraph>
-        Votre parcours professionnel vous a permis d’acquérir de nouvelles
-        compétences. La VAE vous permet de faire valider ces compétences et
-        d’obtenir le diplôme ou la certification dont vous avez besoin pour vos
-        projets professionnels.
-      </SectionParagraph>
-
-      <div className="flex flex-col items-center sm:items-start space-y-4">
-        <Link
-          className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
-          href="/espace-candidat"
-        >
-          Démarrez un parcours VAE
-        </Link>
+    <div className="fr-container mx-auto relative md:flex">
+      <div className="relative flex-1 min-h-[200px] max-w-lg -mt-[60px] md:-mt-[180px]">
+        <Image
+          src="/home-page/image-home-section-1.png"
+          className=""
+          alt=""
+          fill={true}
+          style={{
+            objectFit: "contain",
+          }}
+        />
       </div>
-    </div>
-    <div className="absolute top-0 right-0 w-48 h-48 -mr-[72px] sm:relative sm:flex-0 sm:mr-0 sm:h-auto sm:w-2/5 sm:-ml-24 lg:ml-0 lg:flex-1 lg:w-auto">
-      <Image
-        src="/home-page/image-section1-metiers.png"
-        className=""
-        alt=""
-        fill={true}
-        style={{
-          objectFit: "contain",
-        }}
-      />
+      <div className="flex-1 px-5 my-12 md:my-24 md:ml-12">
+        <header>
+          <h1 className="leading-tight text-4xl lg:text-7xl lg:leading-[84px]">
+            Vos expériences ont de la valeur
+          </h1>
+        </header>
+        <h2 className="text-2xl lg:text-3xl mb-10">
+          Avec la VAE, faites valider vos compétences par un diplôme.
+        </h2>
+
+        <div className="flex flex-col xl:flex-row space-y-4 xl:space-y-0 xl:space-x-4 mb-4">
+          <TrackableButton
+            eventTracked={{
+              location: "Accueil",
+              event: "Click sur 'Démarrez un parcours VAE'",
+            }}
+            priority="primary"
+            iconPosition="right"
+            iconId="fr-icon-arrow-right-line"
+            linkProps={{ href: "/app" }}
+            size="large"
+          >
+            Démarrez un parcours
+          </TrackableButton>
+          <TrackableButton
+            eventTracked={{
+              location: "Accueil",
+              event: "Click sur 'En savoir plus sur la VAE'",
+            }}
+            priority="secondary"
+            linkProps={{ href: "/espace-candidat" }}
+            size="large"
+          >
+            En savoir plus sur la VAE
+          </TrackableButton>
+        </div>
+      </div>
     </div>
   </section>
 );
