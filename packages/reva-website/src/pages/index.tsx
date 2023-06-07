@@ -9,7 +9,6 @@ import {
 } from "@/components/section-content/SectionContent";
 import Head from "next/head";
 import Image from "next/image";
-import Link from "next/link";
 /* eslint-disable react/no-unescaped-entities */
 import * as React from "react";
 
@@ -229,12 +228,6 @@ const TrouvezCertification = () => (
         professionnelles inscrits au RNCP qui vous ouvriront la porte à autant
         d’opportunités professionnelles.
       </SectionParagraph>
-      {/* <Link
-        className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
-        href="#"
-      >
-        Voir la liste complète
-      </Link> */}
     </div>
     <div className="mt-24 relative w-96 h-96 sm:ml-[15%] lg:ml-0 lg:flex-1">
       <Image
@@ -253,50 +246,67 @@ const TrouvezCertification = () => (
 const Professionnels = () => (
   <section
     id="professionnel"
-    className=" mt-20 overflow-y-visible overflow-x-hidden bg-[#E5E5E5]"
+    className=" mt-20 overflow-y-visible overflow-x-hidden"
   >
     <div className="w-full fr-container mt-[100px] mx-auto relative flex flex-col lg:flex-row lg:items-end px-5">
-      <div className="lg:pb-20">
+      <div className="text-center">
         <header>
-          <p className="font-bold text-2xl text-[#000091] lg:text-2xl">
-            Pour les pro
+          <p className="font-bold text-2xl text-gray-500 lg:text-3xl mb-4">
+            Professionnels
           </p>
-          <SectionHeader>Professionnel de la VAE, rejoignez-nous</SectionHeader>
+          <h1 className="leading-tight text-4xl lg:text-7xl lg:leading-[84px]">
+            Participez à l’essor de la VAE !
+          </h1>
         </header>
-        <SectionParagraph>
-          Vous voulez accompagner des candidats dans leurs parcours VAE ou vous
-          voulez proposer de nouvelles certifications disponibles en VAE ? Voici
-          quelques informations pour vous guider.
-        </SectionParagraph>
-        <Link
-          className="fr-link fr-fi-arrow-right-line fr-link--icon-right"
-          href="/espace-professionnel"
-        >
-          Espace PRO
-        </Link>
-      </div>
-      <div className="mt-24 flex justify-center space-x-4 lg:flex-1">
-        <div className="relative w-44 h-44 sm:w-64 sm:h-64">
-          <Image
-            src="/home-page/image-young-woman.png"
-            className=""
-            alt=""
-            fill={true}
-            style={{
-              objectFit: "contain",
-            }}
-          />
-        </div>
-        <div className="relative w-44 h-44 sm:w-64 sm:h-64">
-          <Image
-            src="/home-page/image-businessman.png"
-            className=""
-            alt=""
-            fill={true}
-            style={{
-              objectFit: "contain",
-            }}
-          />
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 text-left [&>div]:border [&>div]:p-8 [&>div]:max-w-md [&>div]:flex [&>div]:flex-col [&_h2]:text-2xl [&_p]:text-xl [&_p]:leading-normal">
+          <div>
+            <h2>Architectes accompagnateurs de parcours</h2>
+            <p className="h-full">
+              Inscrivez-vous sur France VAE pour proposer vos services
+              d’accompagnement aux candidats à la VAE
+            </p>
+            <TrackableButton
+              eventTracked={{
+                location: "Accueil",
+                event: "Click sur 'En savoir plus sur les AAP'",
+              }}
+              priority="secondary"
+              linkProps={{ href: "/espace-professionnel" }}
+              size="large"
+            >
+              En savoir plus
+            </TrackableButton>
+          </div>
+          <div>
+            <h2>Certificateurs</h2>
+            <p className="h-full">
+              Référencez vos certifications sur notre plateforme pour la rendre
+              disponible aux candidats à la VAE.
+            </p>
+            <p className="!text-base text-dsfrBlue-franceSun font-semibold">
+              Enregistrer ma certification (page en construction)
+            </p>
+          </div>
+          <div>
+            <h2>Filières professionnelles</h2>
+            <p className="h-full">
+              Mettez en avant les dispositifs de soutien à la VAE au sein de
+              votre branche professionnelle sur un espace dédié.
+            </p>
+            <p className="!text-base text-dsfrBlue-franceSun font-semibold">
+              Espace dédiée aux Filières Professionnelles (page en construction)
+            </p>
+          </div>
+          <div>
+            <h2>Régions</h2>
+            <p className="h-full">
+              Valorisez les dispositifs de soutien à la VAE disponibles dans
+              votre région en les présentant sur votre espace dédié.
+            </p>
+            <p className="!text-base text-dsfrBlue-franceSun font-semibold">
+              Espace dédiée aux régions (page en construction)
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -318,9 +328,9 @@ const IndexPage = () => {
       </Head>
       <AvenirPro />
       <ValorisationCompetences />
+      <Professionnels />
       <CommentCaMarche />
       <TrouvezCertification />
-      <Professionnels />
     </MainLayout>
   );
 };
