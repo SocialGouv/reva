@@ -19,8 +19,8 @@ export const QuestcequelaVae = () => (
         C’est une démarche qui vous permet d’obtenir une certification grâce à
         votre expérience, sans retourner en formation. Cette certification peut
         être un diplôme, un titre ou un certificat de qualification
-        professionnelle qui doit être inscrite au{" "}
-        <u>Répertoire national des certifications professionnelles (RNCP)</u>.
+        professionnelle qui doit être inscrite au Répertoire national des
+        certifications professionnelles (RNCP).
       </SectionParagraph>
       <SectionParagraph>
         Toutes vos activités passées pourront être prises en compte :
