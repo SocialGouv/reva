@@ -6,10 +6,7 @@ import {
 import Image from "next/image";
 
 const ArrowRight = () => (
-  <span
-    className="fr-icon-arrow-right-line mr-6 text-dsfrBlue-franceSun"
-    aria-hidden="true"
-  />
+  <span className="fr-icon-arrow-right-line mr-6" aria-hidden="true" />
 );
 
 export const ExperienceReconnue = () => (
