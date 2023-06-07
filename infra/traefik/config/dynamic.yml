@@ -41,7 +41,7 @@ http:
         - removeHeader
 
     api-staging:
-      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/graphql`)"
+      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/api`)"
       service: api-staging
       middlewares:
         - removeHeader
@@ -179,7 +179,7 @@ http:
       loadBalancer:
         passHostHeader: false
         servers:
-          - url: "https://reva-staging.osc-fr1.scalingo.io/graphql"
+          - url: "https://reva-staging.osc-fr1.scalingo.io/api"
 
     # --- END STAGING ---
 
