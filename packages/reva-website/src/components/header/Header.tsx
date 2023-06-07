@@ -21,7 +21,7 @@ export const Header = (props: { className?: string }) => {
       }}
       quickAccessItems={[
         {
-          iconId: "fr-icon-arrow-right-line",
+          iconId: "fr-icon-briefcase-fill",
           linkProps: {
             href: "/admin",
             className: "fr-link--icon-right",
@@ -36,7 +36,7 @@ export const Header = (props: { className?: string }) => {
           text: "Espace professionnel",
         },
         {
-          iconId: "fr-icon-arrow-right-line",
+          iconId: "fr-icon-account-circle-fill",
           linkProps: {
             href: "/app/login",
             className: "fr-link--icon-right",
