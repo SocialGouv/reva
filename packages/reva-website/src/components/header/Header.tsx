@@ -64,7 +64,7 @@ export const Header = (props: { className?: string }) => {
           linkProps: {
             href: "/espace-professionnel",
           },
-          text: "Je suis professionnel",
+          text: "Je suis professionnel de la VAE",
         },
       ]}
     />
