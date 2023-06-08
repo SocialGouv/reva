@@ -1,3 +1,4 @@
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { useActor } from "@xstate/react";
 import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/ErrorAlertFromState";
 import { ProjectTimeline } from "components/organisms/ProjectTimeline/ProjectTimeline";
@@ -74,6 +75,13 @@ export const ProjectHome = ({
         de la dépendance et de la santé ? Choisissez votre diplôme et
         laissez-vous accompagner !
       </p>
+
+      <Alert
+        className="my-8"
+        severity="warning"
+        title="Attention, à partir de lundi 12 juin, le service va changer.
+        Si vous avez commencé une inscription mais que vous ne l’avez pas encore envoyée, nous vous invitons à la finaliser avant dimanche soir. Passé ce délai, votre dossier sera supprimé et vous devrez le recommencer à compter de début juillet via notre nouveau site."
+      />
 
       <ProjectTimeline className="mt-8" data-test="project-home-timeline" />
     </div>
