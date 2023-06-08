@@ -2,15 +2,35 @@ import { TrackableButton } from "@/components/analytics/trackable-button/Trackab
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import {
   Hexagon,
-  SectionHeader,
   SectionParagraph,
-  SectionSubHeader,
-  SubSectionHeader,
 } from "@/components/section-content/SectionContent";
 import Head from "next/head";
 import Image from "next/image";
 /* eslint-disable react/no-unescaped-entities */
 import * as React from "react";
+
+const HomeHeader = ({
+  title,
+  subTitle,
+}: {
+  title: string;
+  subTitle: string;
+}) => (
+  <header>
+    <p className="font-bold text-2xl text-gray-500 lg:text-3xl mb-4">
+      {subTitle}
+    </p>
+    <h1 className="leading-tight text-4xl lg:text-7xl lg:leading-[82px]">
+      {title}
+    </h1>
+  </header>
+);
+
+const HomeSubHeader = ({ title }: { title: string }) => (
+  <header>
+    <p className="text-3xl mt-3 mb-2 font-semibold text-gray-900">{title}</p>
+  </header>
+);
 
 const AvenirPro = () => (
   <section
@@ -51,7 +71,7 @@ const ValorisationCompetences = () => (
     className="w-full mt-20 sm:mt-24 bg-dsfrGray-altblueFrance"
   >
     <div className="fr-container mx-auto relative md:flex">
-      <div className="relative flex-1 min-h-[200px] max-w-lg -mt-[60px] md:-mt-[180px]">
+      <div className="relative flex-1 min-h-[200px] max-w-lg -mt-[60px] md:-mt-[190px]">
         <Image
           src="/home-page/image-home-section-1.png"
           className=""
@@ -68,7 +88,7 @@ const ValorisationCompetences = () => (
             Vos expériences ont de la valeur
           </h1>
         </header>
-        <h2 className="text-2xl lg:text-3xl mb-10">
+        <h2 className="text-2xl lg:text-3xl mt-8 mb-10">
           Avec la VAE, faites valider vos compétences par un diplôme.
         </h2>
 
@@ -104,18 +124,10 @@ const ValorisationCompetences = () => (
 );
 
 const CommentCaMarche = () => (
-  <section
-    id="comment-ca-marche"
-    className="mt-20 pb-48 bg-[#1B1B35] text-white"
-  >
+  <section id="comment-ca-marche" className="mt-20 pb-48">
     <div className="relative w-full fr-container mx-auto px-5 lg:flex lg:space-x-12">
       <div className="flex-1 mt-[100px]">
-        <header>
-          <SectionSubHeader className="text-white">VAE 2.0</SectionSubHeader>
-          <h1 className="text-white lg:text-[40px] lg:leading-[44px] xl:text-[80px] xl:leading-[88px]">
-            Comment ça marche ?
-          </h1>
-        </header>
+        <HomeHeader subTitle="VAE 2.0" title="Comment ça marche ?" />
         <SectionParagraph>
           Vous choisissez la certification que vous voulez passer, vous êtes
           pris en charge par un architecte de parcours, vous remplissez un
@@ -130,8 +142,7 @@ const CommentCaMarche = () => (
               location: "Accueil",
               event: "Click sur 'Démarrez un parcours VAE'",
             }}
-            priority="primary"
-            className="!w-full sm:!w-auto justify-center !bg-white !text-[#000091]"
+            priority="secondary"
             linkProps={{ href: "/app" }}
             size="large"
           >
@@ -139,7 +150,7 @@ const CommentCaMarche = () => (
           </TrackableButton>
         </div>
       </div>
-      <ol className="flex-1 relative p-0 list-none mt-[100px]">
+      <ol className="flex-1 relative p-0 !list-none mt-[100px] marker:content-none">
         <li>
           <section className="lg:flex lg:space-x-6">
             <div className="flex-0 relative h-[124px] w-[96px] text-[#FEF7DA] lg:ml-6">
@@ -151,9 +162,7 @@ const CommentCaMarche = () => (
               </span>
             </div>
             <div className="flex-1">
-              <header>
-                <SubSectionHeader>Simplicité</SubSectionHeader>
-              </header>
+              <HomeSubHeader title="Simplicité" />
               <SectionParagraph>
                 L'ensemble des démarches pour constituer et suivre votre dossier
                 de VAE pourront s'effectuer sur ce site.
@@ -172,9 +181,7 @@ const CommentCaMarche = () => (
               </span>
             </div>
             <div className="flex-1">
-              <header>
-                <SubSectionHeader>Accompagnement</SubSectionHeader>
-              </header>
+              <HomeSubHeader title="Accompagnement" />
               <SectionParagraph>
                 Dès le dépôt de votre candidature, vous serez accompagné par un
                 professionnel qui vous guidera à chacune des étapes du parcours.
@@ -193,9 +200,7 @@ const CommentCaMarche = () => (
               </span>
             </div>
             <div className="flex-1">
-              <header>
-                <SubSectionHeader>Financement</SubSectionHeader>
-              </header>
+              <HomeSubHeader title="Financement" />
               <SectionParagraph>
                 Tous les frais liés à votre parcours (déplacement, formations
                 complémentaires etc...) seront pris en charge sans démarches
@@ -215,14 +220,10 @@ const TrouvezCertification = () => (
     className="fr-container relative flex flex-col lg:flex-row-reverse mt-20 pb-52 px-5 overflow-y-visible overflow-x-hidden"
   >
     <div className="lg:flex-1">
-      <header>
-        <SectionSubHeader className="text-[#000091]">
-          Pour tous
-        </SectionSubHeader>
-        <SectionHeader>
-          Trouvez la certification dont vous avez besoin
-        </SectionHeader>
-      </header>
+      <HomeHeader
+        subTitle="Pour tous"
+        title="Trouvez la certification dont vous avez besoin"
+      />
       <SectionParagraph>
         La VAE est applicable à des milliers de diplômes et certifications
         professionnelles inscrits au RNCP qui vous ouvriront la porte à autant
@@ -250,18 +251,14 @@ const Professionnels = () => (
   >
     <div className="w-full fr-container mt-[100px] mx-auto relative flex flex-col lg:flex-row lg:items-end px-5">
       <div className="text-center">
-        <header>
-          <p className="font-bold text-2xl text-gray-500 lg:text-3xl mb-4">
-            Professionnels
-          </p>
-          <h1 className="leading-tight text-4xl lg:text-7xl lg:leading-[84px]">
-            Participez à l’essor de la VAE !
-          </h1>
-        </header>
+        <HomeHeader
+          title="Participez à l’essor de la VAE !"
+          subTitle="Professionnels"
+        />
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 text-left [&>div]:border [&>div]:p-8 [&>div]:max-w-md [&>div]:flex [&>div]:flex-col [&_h2]:text-2xl [&_p]:text-xl [&_p]:leading-normal">
           <div>
             <h2>Architectes accompagnateurs de parcours</h2>
-            <p className="h-full">
+            <p className="h-full mb-0">
               Inscrivez-vous sur France VAE pour proposer vos services
               d’accompagnement aux candidats à la VAE
             </p>
@@ -283,7 +280,7 @@ const Professionnels = () => (
               Référencez vos certifications sur notre plateforme pour la rendre
               disponible aux candidats à la VAE.
             </p>
-            <p className="!text-base text-dsfrBlue-franceSun font-semibold">
+            <p className="!text-base font-semibold mb-0">
               Enregistrer ma certification (page en construction)
             </p>
           </div>
@@ -293,7 +290,7 @@ const Professionnels = () => (
               Mettez en avant les dispositifs de soutien à la VAE au sein de
               votre branche professionnelle sur un espace dédié.
             </p>
-            <p className="!text-base text-dsfrBlue-franceSun font-semibold">
+            <p className="!text-base font-semibold mb-0">
               Espace dédiée aux Filières Professionnelles (page en construction)
             </p>
           </div>
@@ -303,7 +300,7 @@ const Professionnels = () => (
               Valorisez les dispositifs de soutien à la VAE disponibles dans
               votre région en les présentant sur votre espace dédié.
             </p>
-            <p className="!text-base text-dsfrBlue-franceSun font-semibold">
+            <p className="!text-base font-semibold mb-0">
               Espace dédiée aux régions (page en construction)
             </p>
           </div>
