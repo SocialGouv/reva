@@ -211,9 +211,8 @@ const CommentCaMarche = () => (
             <div className="flex-1">
               <HomeSubHeader title="Financement" />
               <SectionParagraph>
-                Tous les frais liés à votre parcours (déplacement, formations
-                complémentaires etc...) seront pris en charge sans démarches
-                supplémentaires.
+                Votre parcours personnalisé d’accompagnement sera pris en charge
+                sans démarches supplémentaires.
               </SectionParagraph>
             </div>
           </section>
@@ -234,7 +233,7 @@ const TrouvezCertification = () => (
         title="Trouvez la certification dont vous avez besoin"
       />
       <SectionParagraph>
-        La VAE est applicable à des milliers de diplômes et certifications
+        La VAE est applicable à des centaines de diplômes et certifications
         professionnelles inscrits au RNCP qui vous ouvriront la porte à autant
         d’opportunités professionnelles.
       </SectionParagraph>
