@@ -21,9 +21,11 @@ export const CommentCaMarche = () => (
       </div>
       <div className="flex flex-col lg:flex-row mt-[100px] justify-around lg:min-w-[1248px]">
         <section className="w-full lg:w-[450px] lg:h-[400px] lg:pl-[120px] lg:pt-[80px] lg:pr-[32px] lg:bg-[url('/candidate-space/hexa-group-1.svg')] bg-[url('/candidate-space/hexa-gp-sm-1.png')] bg-no-repeat bg-[top_left_20px] px-4 pt-[108px] mb-[50px]">
-          <div className="flex flex-col lg:ml-6 text-white">
+          <div className="flex flex-col lg:ml-6 lg:text-white">
             <header>
-              <SubSectionHeader>Confirmation de votre projet</SubSectionHeader>
+              <SubSectionHeader className="!text-black lg:!text-white">
+                Confirmation de votre projet
+              </SubSectionHeader>
             </header>
             <SectionParagraph className="!text-base !leading-10 lg:!leading-8  lg:-mt-2">
               Faites un point sur vos compétences et votre objectif
@@ -32,9 +34,9 @@ export const CommentCaMarche = () => (
           </div>
         </section>
         <section className="w-[360px] lg:w-[450px] lg:h-[400px] lg:pl-[128px] pr-[32px] lg:bg-left-top lg:bg-[url('/candidate-space/hexa-group-2.svg')] bg-[url('/candidate-space/hexa-gp-sm-2.png')] bg-no-repeat bg-[top_left_20px] px-4 pt-[108px] mb-[50px]">
-          <div className="flex flex-col lg:-mt-6 text-white">
+          <div className="flex flex-col lg:-mt-6 lg:text-white">
             <header>
-              <SubSectionHeader>
+              <SubSectionHeader className="!text-black lg:!text-white">
                 Préparation du dossier d’expérience
               </SubSectionHeader>
             </header>
@@ -45,9 +47,11 @@ export const CommentCaMarche = () => (
           </div>
         </section>
         <section className="w-[360px] lg:w-[450px] lg:h-[400px] lg:pl-[128px] pr-[36px] lg:bg-[url('/candidate-space/hexa-group-3.svg')] bg-[url('/candidate-space/hexa-gp-sm-3.png')]  bg-no-repeat bg-[top_left_20px] px-4 pt-[108px] mb-[50px]">
-          <div className="flex flex-col lg:-mt-9 lg:ml-5 text-white">
+          <div className="flex flex-col lg:-mt-9 lg:ml-5 lg:!text-white">
             <header>
-              <SubSectionHeader>Entretien avec le jury</SubSectionHeader>
+              <SubSectionHeader className="!text-black lg:!text-white">
+                Entretien avec le jury
+              </SubSectionHeader>
             </header>
             <SectionParagraph className="!text-base !leading-10 lg:!leading-7 lg:-mt-2">
               Rencontrez des professionnels et des enseignants pour échanger sur

@@ -22,18 +22,22 @@ export const SectionParagraph = ({
   children: React.ReactNode;
 }) => (
   <p
-    className={`leading-7 lg:text-lg lg:leading-10 xl:text-[22px] ${className ?? ""}`}
+    className={`leading-7 lg:text-lg lg:leading-10 xl:text-[22px] ${
+      className ?? ""
+    }`}
   >
     {children}
   </p>
 );
 
 export const SubSectionHeader = ({
+  className,
   children,
 }: {
+  className?: string;
   children: React.ReactNode;
 }) => (
-  <h2 className="text-white text-2xl mt-3">{children}</h2>
+  <h2 className={`text-white text-2xl mt-3 ${className || ""}`}>{children}</h2>
 );
 
 export const Hexagon = ({ className }: { className: string }) => (
