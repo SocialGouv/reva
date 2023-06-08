@@ -238,6 +238,17 @@ const TrouvezCertification = () => (
         professionnelles inscrits au RNCP qui vous ouvriront la porte à autant
         d’opportunités professionnelles.
       </SectionParagraph>
+      <TrackableButton
+        eventTracked={{
+          location: "Accueil",
+          event: "Click sur 'Démarrez un parcours VAE'",
+        }}
+        priority="secondary"
+        linkProps={{ href: "/app" }}
+        size="large"
+      >
+        Démarrez un parcours VAE
+      </TrackableButton>
     </div>
     <div className="mt-24 relative w-96 h-96 sm:ml-[15%] lg:ml-0 lg:flex-1">
       <Image
