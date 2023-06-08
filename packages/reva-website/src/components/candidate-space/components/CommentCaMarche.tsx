@@ -64,8 +64,8 @@ export const CommentCaMarche = () => (
           location: "Espace candidat",
           event: "Click sur 'Démarrez un parcours VAE'",
         }}
-        priority="primary"
-        className="!bg-white !text-[#000091] mx-4"
+        priority="secondary"
+        className="mx-4"
         linkProps={{ href: "/app" }}
         size="large"
       >
