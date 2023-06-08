@@ -1,5 +1,6 @@
 import { TrackableButton } from "@/components/analytics/trackable-button/TrackableButton";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
+import { PICTOGRAMS } from "@/components/pictograms";
 import {
   Hexagon,
   SectionParagraph,
@@ -12,11 +13,13 @@ import * as React from "react";
 const HomeHeader = ({
   title,
   subTitle,
+  className,
 }: {
   title: string;
   subTitle: string;
+  className?: string;
 }) => (
-  <header>
+  <header className={className}>
     <p className="font-bold text-2xl text-gray-500 lg:text-3xl mb-4">
       {subTitle}
     </p>
@@ -32,10 +35,16 @@ const HomeSubHeader = ({ title }: { title: string }) => (
   </header>
 );
 
+const HomeContainer = ({ children }: { children: React.ReactNode }) => (
+  <div className="w-full fr-container mx-auto relative flex flex-col items-center px-5 py-12 lg:pt-48 lg:pb-32">
+    {children}
+  </div>
+);
+
 const AvenirPro = () => (
   <section
     id="avenir-professionnel"
-    className="w-full fr-container mx-auto mt-[80px] sm:flex lg:items-center"
+    className="w-full fr-container mx-auto mt-[80px] lg:flex lg:items-center"
   >
     <div className="sm:flex-1 max-w-3xl md:mr-12">
       <header>
@@ -53,7 +62,7 @@ const AvenirPro = () => (
         simplifié et sécurisé par la loi n°2022-1598 du 21 décembre 2022.
       </p>
     </div>
-    <div className="relative mt-16 -mx-5 sm:mx-0 sm:flex-0 sm:w-2/5 sm:-mr-20 lg:flex-1">
+    <div className="relative mt-16 -mx-5 max-w-lg">
       <Image
         src="/home-page/image-hero.png"
         className=""
@@ -124,7 +133,7 @@ const ValorisationCompetences = () => (
 );
 
 const CommentCaMarche = () => (
-  <section id="comment-ca-marche" className="mt-20 pb-48">
+  <section id="comment-ca-marche" className="lg:mt-20 pb-24 lg:pb-48">
     <div className="relative w-full fr-container mx-auto px-5 lg:flex lg:space-x-12">
       <div className="flex-1 mt-[100px]">
         <HomeHeader subTitle="VAE 2.0" title="Comment ça marche ?" />
@@ -244,69 +253,129 @@ const TrouvezCertification = () => (
   </section>
 );
 
+const Professionel = ({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description: string;
+  children: React.ReactNode;
+}) => (
+  <div className="border p-8 max-w-md flex flex-col [&_p]:text-xl [&_p]:leading-normal [&_p]:first:h-full">
+    <h2 className="text-2xl">{title}</h2>
+    <p className="h-full">{description}</p>
+    {children}
+  </div>
+);
+
 const Professionnels = () => (
-  <section
-    id="professionnel"
-    className=" mt-20 overflow-y-visible overflow-x-hidden"
-  >
-    <div className="w-full fr-container mt-[100px] mx-auto relative flex flex-col lg:flex-row lg:items-end px-5">
-      <div className="text-center">
-        <HomeHeader
-          title="Participez à l’essor de la VAE !"
-          subTitle="Professionnels"
-        />
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 text-left [&>div]:border [&>div]:p-8 [&>div]:max-w-md [&>div]:flex [&>div]:flex-col [&_h2]:text-2xl [&_p]:text-xl [&_p]:leading-normal">
-          <div>
-            <h2>Architectes accompagnateurs de parcours</h2>
-            <p className="h-full mb-0">
-              Inscrivez-vous sur France VAE pour proposer vos services
-              d’accompagnement aux candidats à la VAE
-            </p>
-            <TrackableButton
-              eventTracked={{
-                location: "Accueil",
-                event: "Click sur 'En savoir plus sur les AAP'",
-              }}
-              priority="secondary"
-              linkProps={{ href: "/espace-professionnel" }}
-              size="large"
-            >
-              En savoir plus
-            </TrackableButton>
-          </div>
-          <div>
-            <h2>Certificateurs</h2>
-            <p className="h-full">
-              Référencez vos certifications sur notre plateforme pour la rendre
-              disponible aux candidats à la VAE.
-            </p>
-            <p className="!text-base font-semibold mb-0">
-              Enregistrer ma certification (page en construction)
-            </p>
-          </div>
-          <div>
-            <h2>Filières professionnelles</h2>
-            <p className="h-full">
-              Mettez en avant les dispositifs de soutien à la VAE au sein de
-              votre branche professionnelle sur un espace dédié.
-            </p>
-            <p className="!text-base font-semibold mb-0">
-              Espace dédiée aux Filières Professionnelles (page en construction)
-            </p>
-          </div>
-          <div>
-            <h2>Régions</h2>
-            <p className="h-full">
-              Valorisez les dispositifs de soutien à la VAE disponibles dans
-              votre région en les présentant sur votre espace dédié.
-            </p>
-            <p className="!text-base font-semibold mb-0">
-              Espace dédiée aux régions (page en construction)
-            </p>
-          </div>
-        </div>
+  <section id="professionnel" className="overflow-y-visible overflow-x-hidden">
+    <HomeContainer>
+      <HomeHeader
+        title="Participez à l’essor de la VAE !"
+        subTitle="Professionnels"
+        className="text-center"
+      />
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 text-left place-content-center">
+        <Professionel
+          title="Architectes accompagnateurs de parcours"
+          description="Inscrivez-vous sur France VAE pour proposer vos services
+            d’accompagnement aux candidats à la VAE
+          "
+        >
+          <TrackableButton
+            eventTracked={{
+              location: "Accueil",
+              event: "Click sur 'En savoir plus sur les AAP'",
+            }}
+            priority="secondary"
+            linkProps={{ href: "/espace-professionnel" }}
+            size="large"
+          >
+            En savoir plus
+          </TrackableButton>
+        </Professionel>
+        <Professionel
+          title="Certificateurs"
+          description="Référencez vos certifications sur notre plateforme pour la rendre
+            disponible aux candidats à la VAE."
+        >
+          <p className="!text-base font-semibold mb-0">
+            Enregistrer ma certification (page en construction)
+          </p>
+        </Professionel>
+        <Professionel
+          title="Filières professionnelles"
+          description="Mettez en avant les dispositifs de soutien à la VAE au sein de votre
+            branche professionnelle sur un espace dédié."
+        >
+          <p className="!text-base font-semibold mb-0">
+            Espace dédiée aux Filières Professionnelles (page en construction)
+          </p>
+        </Professionel>
+        <Professionel
+          title="Régions"
+          description="Valorisez les dispositifs de soutien à la VAE disponibles dans votre
+            région en les présentant sur votre espace dédié."
+        >
+          <p className="!text-base font-semibold mb-0">
+            Espace dédiée aux régions (page en construction)
+          </p>
+        </Professionel>
       </div>
-    </div>
+    </HomeContainer>
+  </section>
+);
+
+const RoadmapStep = ({
+  date,
+  children,
+}: {
+  date: string;
+  children: React.ReactNode;
+}) => (
+  <div className="border bg-white p-8 rounded-tl-3xl rounded-br-3xl overflow-hidden">
+    <h3 className="flex items-center">
+      {PICTOGRAMS.calendar}
+      <span className="ml-4">{date}</span>
+    </h3>
+    <p className="mb-0">{children}</p>
+  </div>
+);
+
+const Roadmap = () => (
+  <section id="professionnel" className="mt-20 bg-dsfrGray-altblueFrance">
+    <HomeContainer>
+      <HomeHeader
+        title="Une mise en place progressive"
+        subTitle="Feuille de route"
+        className="text-center"
+      />
+      <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 text-left place-content-center">
+        <RoadmapStep date="1er juillet 2023">
+          Lancement de la plateforme pour les certifications des quatre filières
+          suivantes : sanitaire et social, grande distribution, industrie
+          métallurgique et métiers du sport.
+        </RoadmapStep>
+        <RoadmapStep date="1er janvier 2024">
+          Le service public de la VAE sera accessible à tous les Français
+          (conditions spécifiques pour les salariés de la fonction publique et
+          les retraités).
+        </RoadmapStep>
+        <RoadmapStep date="Prochainement">
+          Ouverture de la plateforme à l’ensemble des certifications du RNCP, en
+          fonction des besoins exprimés par les candidats, les certificateurs ou
+          les entreprises.
+        </RoadmapStep>
+      </div>
+      <p className="text-xl mt-12 px-4 md:px-0 flex flex-col md:flex-row items-center max-w-6xl">
+        <span className="mb-4 md:mb-0 md:mr-4">{PICTOGRAMS.information}</span>
+        Le développement du nouveau portail du service public s'appuie sur les
+        retours d'expérience des utilisateurs. Des fonctionnalités
+        supplémentaires seront introduites progressivement au fil du temps.
+      </p>
+    </HomeContainer>
   </section>
 );
 
@@ -326,6 +395,7 @@ const IndexPage = () => {
       <AvenirPro />
       <ValorisationCompetences />
       <Professionnels />
+      <Roadmap />
       <CommentCaMarche />
       <TrouvezCertification />
     </MainLayout>
