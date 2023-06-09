@@ -15,6 +15,29 @@ const IndexMentionsLegalesPage = () => {
 
       <div className="w-full max-w-[1048px] mx-auto">
         <MainTitle>Mentions légales</MainTitle>
+        <ContentSection id="editeur" title="Éditeur">
+          <SectionParagraph>
+            Ce site est édité par la Délégation générale à l’emploi et à la
+            formation professionnelle :
+            <br />
+            DGEFP
+            <br />
+            14 avenue Duquesne
+            <br />
+            75350 Paris 07 SP
+            <br />
+            Tel. : 01 444 38 33 10
+          </SectionParagraph>
+        </ContentSection>
+        <ContentSection
+          id="directeur-publication"
+          title="Directeur de la publication"
+        >
+          <SectionParagraph>
+            Monsieur Bruno Lucas, Délégué général à l’emploi et à la formation
+            professionnelle. 
+          </SectionParagraph>
+        </ContentSection>
         <ContentSection id="hebergement" title="Hébergement du site">
           <SectionParagraph>
             Ce site est hébergé par :<br />
@@ -32,7 +55,6 @@ const IndexMentionsLegalesPage = () => {
             version de ce site.
           </SectionParagraph>
         </ContentSection>
-
         <ContentSection
           id="dysfonctionnement"
           title="Signaler un dysfonctionnement"
