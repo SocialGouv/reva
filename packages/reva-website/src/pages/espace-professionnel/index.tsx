@@ -130,7 +130,7 @@ const EngagementAAP = () => (
 );
 
 const TypologiesAAP = () => (
-  <section className="pb-48 bg-dsfrGray-altblueFrance">
+  <section className="pb-24 bg-dsfrGray-altblueFrance">
     <div className="relative w-full px-5 lg:flex-no-wrap lg:space-x-12">
       <div className="px-5 sm:flex-1 mx-auto max-w-[1208px]  mt-[100px] mb-20">
         <header>
