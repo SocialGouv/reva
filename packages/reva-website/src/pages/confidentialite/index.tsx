@@ -17,12 +17,26 @@ const IndexConfidentialitePage = () => {
       <div className="w-full max-w-[1048px] mx-auto">
         <MainTitle>Politique de confidentialité de REVA</MainTitle>
 
-        <ContentSection title="Qui est responsable de REVA ?" id="responsable">
+        <ContentSection
+          title="Qui est responsable de traitement REVA ?"
+          id="responsable"
+        >
           <SectionParagraph>
             La plateforme « REVA » est développée au sein de la Fabrique
-            numérique des ministères sociaux. Le responsable de l’utilisation
-            des données est la Délégation générale à l’emploi et à la formation
-            professionnelle (DGEFP) représentée par Monsieur Bruno Lucas.
+            numérique des ministères sociaux.
+          </SectionParagraph>
+          <SectionParagraph>
+            Le responsable de traitement est la Délégation générale à l’emploi
+            et à la formation professionnelle (DGEFP) représentée par Monsieur
+            Bruno Lucas.
+          </SectionParagraph>
+          <SectionParagraph>
+            Le responsable de traitement s’engage à ce que la collecte et le
+            traitement des données personnelles, effectués à partir de la
+            plateforme REVA soient conformes au règlement européen n° 2016/679
+            général sur la protection des données du 27 avril 2016 dit « RGPD »
+            et à la loi n° 78-17 relative à l’informatique, aux fichiers et aux
+            libertés dite « LIL ».
           </SectionParagraph>
         </ContentSection>
 
@@ -35,23 +49,29 @@ const IndexConfidentialitePage = () => {
             suivantes :
             <ul className="list-inside">
               <li>
-                Permettre aux personnes utilisatrices de candidater simplement
-                en vue d’obtenir une certification en adéquation avec leurs
-                compétences et leurs aspirations professionnelles;
+                Permettre aux personnes utilisatrices de candidater en vue
+                d’obtenir une certification inscrite au répertoire national des
+                certifications professionnelles (RNCP) en adéquation avec leurs
+                compétences et leurs aspirations professionnelles ;
               </li>
               <li>
                 Permettre aux personnes utilisatrices d’être accompagnées par un
-                organisme spécialisé dans la définition de leur projet, la
-                description de leurs expériences, la rédaction du dossier
-                professionnel et la préparation au jury;
+                organisme spécialisé (architecte accompagnateur de parcours)
+                dans la définition de leur projet, la description de leurs
+                expériences, la rédaction du dossier professionnel et la
+                préparation au jury ;
               </li>
               <li>
-                Suivre la confiance et la motivation de la personne candidate
-                dans son parcours et dans le dispositif expérimental REVA;
+                Permettre aux organismes professionnels de l’accompagnement de
+                suivre la confiance et la motivation de la personne candidate
+                dans leurs parcours et dans le dispositif REVA ;
               </li>
               <li>
-                Reconnaître les expériences et compétences de la personne
-                candidate;
+                Permettre d’identifier les financeurs d’un parcours de VAE ;
+              </li>
+              <li>
+                Reconnaître les expériences et compétences de l’utilisateur
+                candidat ;
               </li>
               <li>
                 Étudier et comprendre les comportements des utilisateurs sur la
@@ -66,21 +86,51 @@ const IndexConfidentialitePage = () => {
           id="quelles-donnees"
         >
           <SectionParagraph>
-            REVA traite les données et catégories de données suivantes :
+            REVA traite les catégories de données suivantes de l’utilisateur
+            candidat :
             <ul className="list-inside">
               <li>
-                Données relatives au candidat (Nom, prénom, adresse e-mail,
-                genre,nationalité)
+                <strong>Données d’inscription et de candidature</strong>{" "}
+                (adresse e-mail, numéro de téléphone, nom, prénom, département
+                de résidence) ;
               </li>
               <li>
-                Données relatives à la situation sociale et professionnelle du
-                candidat (Indicateur public fragile des candidats, RQTH, minima
-                sociaux, demandeur d’emploi de plus d’un an, haut niveau de
-                diplôme, dernier diplôme obtenu)
+                <strong>Données relatives aux parcours du candidat</strong>{" "}
+                (niveau de diplôme, expériences professionnelles, objectifs,
+                indicateur public fragile des candidats, RQTH, bénéficiaire de
+                minima sociaux, demandeur d’emploi de plus d’un an) ;
               </li>
               <li>
-                Données de contact de l'établissement (adresse e-mail, nom,
-                prénom)
+                <strong>
+                  Données relatives aux expériences professionnelles
+                </strong>{" "}
+                (métier exercé, durée, champ libre en rapport avec l’expérience
+                professionnelle) ;
+              </li>
+              <li>
+                <strong>
+                  Données relatives aux rendez-vous et suivi avec les
+                  Architectes accompagnateurs de parcours
+                </strong>{" "}
+                (nom, prénom, e-mail, numéro de téléphone, département de
+                résidence, niveau de diplôme, expériences professionnelles,
+                objectifs, indicateur public fragile des candidats, RQTH,
+                bénéficiaire de minima sociaux, demandeur d’emploi de plus d’un
+                an).
+              </li>
+            </ul>
+          </SectionParagraph>
+          <SectionParagraph>
+            REVA traite également les catégories de données suivantes des
+            architectes accompagnateurs de parcours (AAP) :
+            <ul>
+              <li>
+                <strong>Données de compte des AAP</strong> (nom et prénom,
+                adresse e-mail, adresse postale) ;
+              </li>
+              <li>
+                <strong>Données de contact des AAP</strong> (adresse e-mail,
+                numéro de téléphone).
               </li>
             </ul>
           </SectionParagraph>
@@ -91,14 +141,12 @@ const IndexConfidentialitePage = () => {
           id="autorisation"
         >
           <SectionParagraph>
-            REVA traite les données à caractère personnel en se basant sur :
-            <ul className="list-inside">
-              <li>
-                L’exécution d’une mission d’intérêt public ou relevant de
-                l’exercice de l’autorité publique dont est investi le
-                responsable de traitement au sens de l’article 6-1 e) du RGPD.
-              </li>
-            </ul>
+            REVA traite les données à caractère personnel en se basant sur
+            l’exécution d’une mission d’intérêt public ou relevant de l’exercice
+            de l’autorité publique dont est investi le responsable de traitement
+            au sens de l’article 6-1 e) du RGPD.
+          </SectionParagraph>
+          <SectionParagraph>
             Cette mission d’intérêt public se traduit par les articles 4 et 6 de
             l’arrêté du 4 mai 2017 portant organisation de la délégation
             générale à l’emploi et à la formation professionnelle.
@@ -109,15 +157,52 @@ const IndexConfidentialitePage = () => {
           title="Pendant combien de temps conservons-nous ces données ?"
           id="duree"
         >
+          <div className="fr-table">
+            <table>
+              <thead className="text-lg font-medium">
+                <tr>
+                  <th>Types de données</th>
+                  <th>Durée de conservation</th>
+                </tr>
+              </thead>
+              <tbody className="text-lg">
+                <tr>
+                  <TextCell>Données d’inscription et de candidature</TextCell>
+                  <TextCell rowSpan={6}>
+                    2 ans à compter de la dernière utilisation du compte par
+                    l’utilisateur ou l’AAP
+                  </TextCell>
+                </tr>
+                <tr>
+                  <TextCell>Données relatives aux parcours</TextCell>
+                </tr>
+                <tr>
+                  <TextCell>
+                    Données relatives aux expériences professionnelles
+                  </TextCell>
+                </tr>
+                <tr>
+                  <TextCell>
+                    Données aux rendez-vous et suivi avec des architectes
+                    accompagnateurs de parcours
+                  </TextCell>
+                </tr>
+                <tr>
+                  <TextCell>
+                    Données compte des architectes accompagnateurs de parcours
+                  </TextCell>
+                </tr>
+                <tr>
+                  <TextCell>Données de contact des AAP</TextCell>
+                </tr>
+                <tr>
+                  <TextCell>Cookies</TextCell>
+                  <TextCell>13 mois</TextCell>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <SectionParagraph>
-            La durée de conservation de ces données est de 24 mois :
-            <ul className="list-inside">
-              <li>
-                à partir du dernier contact avec la personne candidate, afin de
-                permettre aux candidats de poursuivre leur projet de VAE.
-              </li>
-              <li>à partir du dernier contact avec le professionnel.</li>
-            </ul>
             Au-delà de cette durée, afin d’étudier et comprendre les
             comportements des utilisateurs jusqu’à la fin du parcours (résultat
             à l’issue du jury et insertion professionnelle), nous procédons à
@@ -188,34 +273,7 @@ const IndexConfidentialitePage = () => {
             candidature et de son financement.
           </SectionParagraph>
           <SectionParagraph>
-            Les données sont envoyées aux organismes certificateurs ou aux
-            architectes accompagnateurs de parcours suivants :
-            <ul className="list-inside">
-              <li>Ministère de l’agriculture</li>
-              <li>Les 2 Rives</li>
-              <li>Domus Vi</li>
-              <li>Pôle Emploi Lille Vaucanson</li>
-              <li>Agence Pôle Emploi Verriers Mulhouse</li>
-              <li>LEAP Harol</li>
-              <li>DAVA – Dispositif Académique de Validation des Acquis</li>
-              <li>ASP – Agence de Services et de Paiement</li>
-              <li>
-                Ministère des solidarités et de la santé, notamment la Direction
-                Générale de la Cohésion Sociale (DGCS)
-              </li>
-              <li>IPERIA</li>
-              <li>Ministère de l’Education nationale (EducNat)</li>
-              <li>FEPEM – Branche Particulier-Employeur</li>
-              <li>Croix Rouge</li>
-              <li>AFPA</li>
-              <li>CROFF Consulting</li>
-              <li>Ministère du Travail, de l’emploi et de l’insertion</li>
-              <li>
-                Directions régionales de l’économie, de l’emploi, du travail et
-                des solidarités (DREETS)
-              </li>
-              <li>CNEAP</li>
-            </ul>
+            Les données sont envoyées aux AAP inscrits sur REVA.
           </SectionParagraph>
         </ContentSection>
 
@@ -271,27 +329,58 @@ const IndexConfidentialitePage = () => {
                 <tbody className="text-lg">
                   <tr>
                     <TextBoldCell>Scalingo</TextBoldCell>
-                    <TextCell>France</TextCell>
-                    <TextCell>Hébergement SecNumCloud</TextCell>
+                    <TextCell>Europe</TextCell>
+                    <TextCell>Infogérance</TextCell>
                     <LinkCell url="https://scalingo.com/fr/data-processing-agreement" />
+                  </tr>
+                  <tr>
+                    <TextBoldCell>Outscale</TextBoldCell>
+                    <TextCell>Europe</TextCell>
+                    <TextCell>Hébergement du site web </TextCell>
+                    <LinkCell url="https://fr.outscale.com/contact-donnees-personnelles/" />
+                  </tr>
+                  <tr>
+                    <TextBoldCell>Crisp</TextBoldCell>
+                    <TextCell>France</TextCell>
+                    <TextCell>Chat de support </TextCell>
+                    <LinkCell url="https://crisp.chat/fr/privacy/" />
+                  </tr>
+                  <tr>
+                    <TextBoldCell>DigitalOcean, LLC</TextBoldCell>
+                    <TextCell>Union européenne</TextCell>
+                    <TextCell>Hébergement des données de Crisp</TextCell>
+                    <LinkCell url="https://www.digitalocean.com/legal/data-processing-agreement " />
+                  </tr>
+                  <tr>
+                    <TextBoldCell>Hotjar</TextBoldCell>
+                    <TextCell>Irlande</TextCell>
+                    <TextCell>Mesure d’audience</TextCell>
+                    <TextCell>
+                      <ul className="list-none">
+                        <li>
+                          <a href="https://help.hotjar.com/hc/en-us/articles/360058514233">
+                            https://help.hotjar.com/hc/en-us/articles/360058514233
+                          </a>
+                        </li>
+                        <li>
+                          <a href="https://www.hotjar.com/legal/support/dpa/">
+                            https://www.hotjar.com/legal/support/dpa/
+                          </a>
+                        </li>
+                      </ul>
+                    </TextCell>
+                  </tr>
+                  <tr>
+                    <TextBoldCell>Amazon Web Services</TextBoldCell>
+                    <TextCell>Irlande</TextCell>
+                    <TextCell>Hébergement des données de Hotjar</TextCell>
+                    <LinkCell url="https://aws.amazon.com/fr/blogs/security/aws-gdpr-data-processing-addendum/" />
                   </tr>
                   <tr>
                     <TextBoldCell>Matomo</TextBoldCell>
                     <TextCell>France</TextCell>
                     <TextCell>Mesure d’audience</TextCell>
                     <LinkCell url="https://fr.matomo.org/privacy-policy/" />
-                  </tr>
-                  <tr>
-                    <TextBoldCell>Crisp</TextBoldCell>
-                    <TextCell>Union européenne</TextCell>
-                    <TextCell>Support</TextCell>
-                    <LinkCell url="https://crisp.chat/fr/privacy/" />
-                  </tr>
-                  <tr>
-                    <TextBoldCell>Hotjar</TextBoldCell>
-                    <TextCell>Irlande</TextCell>
-                    <TextCell>Mesure d’audience</TextCell>
-                    <LinkCell url="https://help.hotjar.com/hc/en-us/articles/360058514233" />
                   </tr>
                 </tbody>
               </table>
@@ -303,15 +392,35 @@ const IndexConfidentialitePage = () => {
           <SectionParagraph>
             Un cookie est un fichier déposé sur votre terminal lors de la visite
             d’un site. Il a pour but de collecter des informations relatives à
-            votre navigation et de vous adresser des services plus
-            personnalisés, adaptés à vos usages.
+            votre navigation et de vous adresser des services adaptés à votre
+            terminal (ordinateur, mobile ou tablette).{" "}
           </SectionParagraph>
-        </ContentSection>
+          <SectionParagraph>
+            En application de l’article 5(3) de la directive 2002/58/CE modifiée
+            concernant le traitement des données à caractère personnel et la
+            protection de la vie privée dans le secteur des communications
+            électroniques, transposée à l’article 82 de la loi n°78-17 du 6
+            janvier 1978 relative à l’informatique, aux fichiers et aux
+            libertés, les traceurs ou cookies suivent deux régimes distincts :
+            <ul>
+              <li>
+                Les cookies strictement nécessaires au service ou ayant pour
+                finalité exclusive de faciliter la communication par voie
+                électronique sont dispensés de consentement préalable au titre
+                de l’article 82 de la LIL ;
+              </li>
+              <li>
+                Les cookies n’étant pas strictement nécessaires au service ou
+                n’ayant pas pour finalité exclusive de faciliter la
+                communication par voie électronique doivent être consenti par
+                l’utilisateur. Ce consentement de la personne concernée pour une
+                ou plusieurs finalités spécifiques constitue une base légale au
+                sens du RGPD et doit être entendu au sens de l’article 6-a du
+                RGPD.
+              </li>
+            </ul>
+          </SectionParagraph>
 
-        <ContentSection
-          title="Pourquoi la plateforme REVA utilise des cookies ?"
-          id="pourquoi-cookies"
-        >
           <SectionParagraph>
             La plateforme REVA dépose différents cookies. Certains cookies
             impliquent un traitement de vos données personnelles au titre de la
@@ -320,26 +429,17 @@ const IndexConfidentialitePage = () => {
           </SectionParagraph>
           <SectionParagraph>
             La plateforme REVA utilise des cookies afin de faire fonctionner le
-            chatbot permettant une assistance continue sur la plateforme.
+            « chatbot » CRISP permettant une assistance continue sur la
+            plateforme.
           </SectionParagraph>
           <SectionParagraph>
             La plateforme REVA utilise des cookies de mesure d’audience
-            anonymisée. Conformément aux dispositions de l’article 5 de la
-            délibération CNIL numéro 2020-091 du 17 septembre 2020, l’usage de
-            ces cookies de mesure d’audience est dispensé du recueil de votre
-            consentement.
+            anonymisée MATOMO. Pour mieux comprendre, l’outil MATOMO est un
+            outil de mesure d’audience web libre, hébergé par les services de la
+            Fabrique numérique des ministères sociaux et paramétré pour être en
+            conformité avec la recommandation « Cookies » de la CNIL.
           </SectionParagraph>
-        </ContentSection>
 
-        <ContentSection
-          title="Quels sont les cookies déposés sur la plateforme REVA ?"
-          id="quels-cookies"
-        >
-          <SectionParagraph>
-            Nous vous informons que la plateforme REVA utilise des cookies
-            nécessaires au bon fonctionnement et à la sécurisation du site, mais
-            également des outils de mesure d’audience.
-          </SectionParagraph>
           <SectionParagraph>
             <div className="fr-table">
               <table>
@@ -379,12 +479,6 @@ const IndexConfidentialitePage = () => {
             </div>
           </SectionParagraph>
           <SectionParagraph>
-            Pour mieux comprendre, l’outil MATOMO est un outil de mesure
-            d’audience web libre, hébergé par les services de la Fabrique
-            numérique des ministères sociaux et paramétré pour être en
-            conformité avec la recommandation « Cookies » de la CNIL.
-          </SectionParagraph>
-          <SectionParagraph>
             Pour aller plus loin, vous avez la possibilité de consulter les
             fiches proposées par la CNIL grâce aux liens suivants :
             <ul className="list-inside">
@@ -409,10 +503,16 @@ const IndexConfidentialitePage = () => {
 const TextCell = ({
   className,
   children,
+  rowSpan,
 }: {
   className?: string;
   children: ReactNode;
-}) => <td className={`px-1 border-r ${className}`}>{children}</td>;
+  rowSpan?: number;
+}) => (
+  <td rowSpan={rowSpan} className={`px-1 border-r ${className || ""}`}>
+    {children}
+  </td>
+);
 
 const TextBoldCell = ({ children }: { children: ReactNode }) => (
   <TextCell className="font-normal">{children}</TextCell>
