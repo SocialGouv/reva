@@ -1,22 +1,23 @@
 import { TrackableButton } from "@/components/analytics/trackable-button/TrackableButton";
 import {
-  SectionParagraph,
   SectionSubHeader,
   SubSectionHeader,
 } from "@/components/section-content/SectionContent";
 import { ReactNode } from "react";
 
 const HexagonTile = ({
-  groupNumber,
   title,
+  largeBgClass,
+  smallBgClass,
   children,
 }: {
-  groupNumber: number;
   title: string;
+  largeBgClass: string;
+  smallBgClass: string;
   children: ReactNode;
 }) => (
   <section
-    className={`w-[360px] lg:w-[450px] lg:h-[400px] lg:pl-[128px] pr-[32px] lg:bg-left-top lg:bg-[url('/candidate-space/hexa-group-${groupNumber}.svg')] bg-[url('/candidate-space/hexa-gp-sm-${groupNumber}.png')] bg-no-repeat bg-[top_left_20px] px-4 pt-[108px] mb-[50px]`}
+    className={`w-[360px] lg:w-[450px] lg:h-[400px] lg:pl-[128px] pr-[32px] lg:bg-left-top ${largeBgClass} ${smallBgClass}  bg-no-repeat bg-[top_left_20px] px-4 pt-[108px] mb-[50px]`}
   >
     <div className="flex flex-col  lg:text-white">
       <header>
@@ -44,22 +45,31 @@ export const CommentCaMarche = () => (
         </header>
       </div>
       <div className="flex flex-col md:items-center xl:items-start xl:flex-row mt-[100px] justify-around xl:min-w-[1248px]">
-        <HexagonTile groupNumber={1} title="Confirmation de votre projet">
+        <HexagonTile
+          title="Confirmation de votre projet"
+          largeBgClass="lg:bg-[url('/candidate-space/hexa-group-1.svg')]"
+          smallBgClass="bg-[url('/candidate-space/hexa-gp-sm-1.png')]"
+        >
           <p className="text-sm">
             Faites un point sur vos compétences et votre objectif professionnel
             avec un architecte accompagnateur de parcours.
           </p>
         </HexagonTile>
         <HexagonTile
-          groupNumber={2}
           title="Préparation du dossier d’expérience"
+          largeBgClass="lg:bg-[url('/candidate-space/hexa-group-2.svg')]"
+          smallBgClass="bg-[url('/candidate-space/hexa-gp-sm-2.png')]"
         >
           <p className="text-sm">
             Avec un architecte accompagnateur qui vous guidera dans toutes vos
             démarches
           </p>
         </HexagonTile>
-        <HexagonTile groupNumber={3} title="Entretien avec le jury">
+        <HexagonTile
+          title="Entretien avec le jury"
+          largeBgClass="lg:bg-[url('/candidate-space/hexa-group-3.svg')]"
+          smallBgClass="bg-[url('/candidate-space/hexa-gp-sm-3.png')]"
+        >
           <p className="text-sm">
             Rencontrez des professionnels et des enseignants pour échanger sur
             les compétences décrites dans votre dossier d'expérience. Recevez
