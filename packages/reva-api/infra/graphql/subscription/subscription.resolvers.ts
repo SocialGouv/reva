@@ -83,8 +83,8 @@ const unsafeResolvers = {
           createAccountInIAM: IAM.createAccount(keycloakAdmin),
           createAccountProfile: AccountDb.createAccountProfile,
           getAccountFromEmail: AccountDb.getAccountFromEmail,
-          getOrganismBySiretAndTypology:
-            OrganismDb.getOrganismBySiretAndTypology,
+          getOrganismBySiretOrLabelAndTypology:
+            OrganismDb.getOrganismBySiretOrLabelAndTypology,
           createOrganism: OrganismDb.createOrganism,
         },
         { subscriptionRequestId: payload.subscriptionRequestId }

@@ -92,15 +92,24 @@ const getOrganisms = async (params: {
   }
 };
 
-export const getOrganismBySiretAndTypology = async (
+export const getOrganismBySiretOrLabelAndTypology = async (
   siret: string,
+  label: string,
   typology: OrganismTypology
 ): Promise<Either<string, Maybe<domain.Organism>>> => {
   try {
     const organism = await prismaClient.organism.findFirst({
       where: {
-        siret,
-        typology,
+        OR: [
+          {
+            siret,
+            typology,
+          },
+          {
+            label,
+            typology,
+          },
+        ],
       },
     });
     return Right(Maybe.fromNullable(organism));

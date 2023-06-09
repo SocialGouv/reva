@@ -19,8 +19,9 @@ interface ValidateSubscriptionRequestDeps {
     id: string
   ) => Promise<Either<string, Maybe<SubscriptionRequest>>>;
   deleteSubscriptionRequestById: (id: string) => Promise<Either<string, void>>;
-  getOrganismBySiretAndTypology: (
+  getOrganismBySiretOrLabelAndTypology: (
     siret: string,
+    label: string,
     typology: OrganismTypology
   ) => Promise<Either<string, Maybe<Organism>>>;
   createOrganism: (
@@ -109,8 +110,9 @@ export const validateSubscriptionRequest = async (
   });
 
   const checkIfOrganismExists = EitherAsync.fromPromise(async () => {
-    const eitherOrganism = await deps.getOrganismBySiretAndTypology(
+    const eitherOrganism = await deps.getOrganismBySiretOrLabelAndTypology(
       ($store.subreq as SubscriptionRequest).companySiret,
+      ($store.subreq as SubscriptionRequest).companyName,
       ($store.subreq as SubscriptionRequest).typology
     );
     if (eitherOrganism.isLeft()) {
@@ -123,7 +125,7 @@ export const validateSubscriptionRequest = async (
     }
     const maybeOrganism = eitherOrganism.extract() as Maybe<Organism>;
     if (maybeOrganism.isJust()) {
-      const errorMessage = `Un organisme existe déjà avec le siret ${$store.subreq?.companySiret} pour la typologie ${$store.subreq?.typology}`;
+      const errorMessage = `Un organisme existe déjà avec le siret ${$store.subreq?.companySiret} et/ou la raison sociale "${$store.subreq?.companyName}" pour la typologie ${$store.subreq?.typology}`;
       logger.error(`[validateSubscriptionRequest] ${errorMessage}`);
       return Left(
         new FunctionalError(
