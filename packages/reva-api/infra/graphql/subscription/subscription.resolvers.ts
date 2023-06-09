@@ -7,7 +7,7 @@ import * as OrganismDb from "../../database/postgres/organisms";
 import * as IAM from "../../iam/keycloak";
 import * as db from "./db/subscription-request";
 import * as domain from "./domain/index";
-import { sendConfirmationEmail, sendRejectionEmail } from "./mail";
+import { sendRejectionEmail } from "./mail";
 import { resolversSecurityMap } from "./security";
 
 interface getSubscriptionRequestsParams extends FilteredPaginatedListArgs {
@@ -83,9 +83,9 @@ const unsafeResolvers = {
           createAccountInIAM: IAM.createAccount(keycloakAdmin),
           createAccountProfile: AccountDb.createAccountProfile,
           getAccountFromEmail: AccountDb.getAccountFromEmail,
-          getOrganismBySiretAndTypology: OrganismDb.getOrganismBySiretAndTypology,
+          getOrganismBySiretAndTypology:
+            OrganismDb.getOrganismBySiretAndTypology,
           createOrganism: OrganismDb.createOrganism,
-          sendConfirmationEmail,
         },
         { subscriptionRequestId: payload.subscriptionRequestId }
       );

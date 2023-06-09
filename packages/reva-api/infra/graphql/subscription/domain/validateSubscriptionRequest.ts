@@ -51,10 +51,6 @@ interface ValidateSubscriptionRequestDeps {
     organismId: string;
     keycloakId: string;
   }) => Promise<Either<string, Account>>;
-  sendConfirmationEmail: (
-    email: string,
-    iamLinkUrl?: string
-  ) => Promise<Either<string, string>>;
 }
 
 interface ValidateSubscriptionRequestParams {
@@ -115,7 +111,7 @@ export const validateSubscriptionRequest = async (
   const checkIfOrganismExists = EitherAsync.fromPromise(async () => {
     const eitherOrganism = await deps.getOrganismBySiretAndTypology(
       ($store.subreq as SubscriptionRequest).companySiret,
-      ($store.subreq as SubscriptionRequest).typology,
+      ($store.subreq as SubscriptionRequest).typology
     );
     if (eitherOrganism.isLeft()) {
       return Left(
@@ -312,19 +308,6 @@ export const validateSubscriptionRequest = async (
       })
   );
 
-  const sendValidationEmail = EitherAsync.fromPromise(() =>
-    deps.sendConfirmationEmail($store.subreq?.accountEmail ?? "")
-  )
-    .mapLeft(
-      (error: string) =>
-        new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, error)
-    )
-    .ifRight(() => {
-      logger.info(
-        `[validateSubscriptionRequestDeps] Successfuly sent registration mail to ${$store.subreq?.accountEmail}`
-      );
-    });
-
   return getSubscriptionRequest
     .chain(() => checkIfOrganismExists)
     .chain(() => checkIfAccountExists)
@@ -332,6 +315,5 @@ export const validateSubscriptionRequest = async (
     .chain(() => createOrganism)
     .chain(() => createKeycloakAccount)
     .chain(() => createAccount)
-    .chain(() => sendValidationEmail)
     .chain(() => deleteSubscriptionRequest);
 };
