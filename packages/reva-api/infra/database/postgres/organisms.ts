@@ -5,6 +5,7 @@ import * as domain from "../../../domain/types/candidacy";
 import { DepartmentWithOrganismMethods } from "../../../domain/types/candidacy";
 import { logger } from "../../logger";
 import { prismaClient } from "./client";
+import { paginationClause } from "./utils/query-helper";
 
 export const getAAPOrganisms = async (params: {
   candidacyId: string;
@@ -175,16 +176,51 @@ export const createOrganism = async (data: {
 export const getActiveOrganismForCertificationAndDepartment = async ({
   certificationId,
   departmentId,
+  limit,
+  offset,
 }: {
   certificationId: string;
   departmentId: string;
+  limit?: number;
+  offset?: number;
 }): Promise<Either<string, domain.Organism[]>> => {
   try {
     if (!certificationId || !departmentId) {
-      return Right([]);
+      return Right([]); // TODO: should be Left
     }
     return Right(
-      await prismaClient.organism.findMany({
+      await prismaClient.organism.findMany(
+        Object.assign(
+          {
+            where: {
+              activeOrganismsByAvailableCertificationsAndDepartments: {
+                some: { AND: [{ certificationId }, { departmentId }] },
+              },
+            },
+          },
+          paginationClause({ limit, offset })
+        )
+      )
+    );
+  } catch (e) {
+    logger.error(e);
+    return Left(`error while retreiving organism`);
+  }
+};
+
+export const getActiveOrganismForCertificationAndDepartmentCount = async ({
+  certificationId,
+  departmentId,
+}: {
+  certificationId: string;
+  departmentId: string;
+}): Promise<Either<string, number>> => {
+  try {
+    if (!certificationId || !departmentId) {
+      return Right(0); // TODO : should be Left
+    }
+    return Right(
+      await prismaClient.organism.count({
         where: {
           activeOrganismsByAvailableCertificationsAndDepartments: {
             some: { AND: [{ certificationId }, { departmentId }] },

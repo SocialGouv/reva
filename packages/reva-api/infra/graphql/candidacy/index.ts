@@ -9,7 +9,6 @@ import { dropOutCandidacy } from "../../../domain/features/dropOutCandidacy";
 import { getAdmissibility } from "../../../domain/features/getAdmissibility";
 import { getBasicSkills } from "../../../domain/features/getBasicSkills";
 import { getCandidacy } from "../../../domain/features/getCandidacy";
-import { getCompanionsForCandidacy } from "../../../domain/features/getCompanionsForCandidacy";
 import { getDeviceCandidacy } from "../../../domain/features/getDeviceCandidacy";
 import { getExamInfo } from "../../../domain/features/getExamInfo";
 import { getActiveOrganismsForCandidacyWithNewTypologies } from "../../../domain/features/getOrganismsForCandidacy";
@@ -52,6 +51,12 @@ import { getCandidacySummaries } from "./features/getCandicacySummaries";
 import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus";
 import { logCandidacyEvent } from "./logCandidacyEvent";
 import { resolversSecurityMap } from "./security";
+
+// interface GetOrganismsForCandidacyParams {
+//   candidacyId: string;
+// }
+// type GetOrganismsForCandidacyPaginatedParams = GetOrganismsForCandidacyParams &
+//   FilteredPaginatedListArgs;
 
 const withBasicSkills = (c: Candidacy) => ({
   ...c,
@@ -163,13 +168,15 @@ const unsafeResolvers = {
     },
     getOrganismsForCandidacy: async (
       _: unknown,
-      params: { candidacyId: string }
+      params: { candidacyId: string } & FilteredPaginatedListArgs
     ) => {
       const result = await getActiveOrganismsForCandidacyWithNewTypologies({
+        getCandidacyFromId: candidacyDb.getCandidacyFromId,
         getActiveOrganismForCertificationAndDepartment:
           organismDb.getActiveOrganismForCertificationAndDepartment,
-        getCandidacyFromId: candidacyDb.getCandidacyFromId,
-      })({ candidacyId: params.candidacyId });
+        getActiveOrganismForCertificationAndDepartmentCount:
+          organismDb.getActiveOrganismForCertificationAndDepartmentCount,
+      })(params);
 
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
@@ -182,6 +189,7 @@ const unsafeResolvers = {
 
       return result.extract();
     },
+    // Companions are organisms with isCompanion flag for given candidacy
     getCompanionsForCandidacy: async (
       _: unknown,
       params: { candidacyId: string }
@@ -191,16 +199,44 @@ const unsafeResolvers = {
         include: { organism: true },
       });
       if (candidacy) {
-        //companion organisms are fetched differently if the candidacy organism typology is "experimentation" or not
-        const result = await (candidacy.organism?.typology === "experimentation"
-          ? getCompanionsForCandidacy({
-              getCompanionsForCandidacy: organismDb.getCompanionOrganisms,
-            })({ candidacyId: params.candidacyId })
-          : getActiveOrganismsForCandidacyWithNewTypologies({
-              getActiveOrganismForCertificationAndDepartment:
-                organismDb.getActiveOrganismForCertificationAndDepartment,
-              getCandidacyFromId: candidacyDb.getCandidacyFromId,
-            })({ candidacyId: params.candidacyId }));
+        const result = await getActiveOrganismsForCandidacyWithNewTypologies({
+          getActiveOrganismForCertificationAndDepartment:
+            organismDb.getActiveOrganismForCertificationAndDepartment,
+          getActiveOrganismForCertificationAndDepartmentCount:
+            organismDb.getActiveOrganismForCertificationAndDepartmentCount,
+          getCandidacyFromId: candidacyDb.getCandidacyFromId,
+        })({
+          candidacyId: params.candidacyId,
+        });
+
+        return result
+          .mapLeft(
+            (error) => new mercurius.ErrorWithProps(error.message, error)
+          )
+          .extract();
+      }
+      return [];
+    },
+    getCompanionsForCandidacyPaginated: async (
+      _: unknown,
+      params: { candidacyId: string; limit: number; offset: number }
+    ) => {
+      const candidacy = await prismaClient.candidacy.findUnique({
+        where: { id: params.candidacyId },
+        include: { organism: true },
+      });
+      if (candidacy) {
+        const result = await getActiveOrganismsForCandidacyWithNewTypologies({
+          getActiveOrganismForCertificationAndDepartment:
+            organismDb.getActiveOrganismForCertificationAndDepartment,
+          getActiveOrganismForCertificationAndDepartmentCount:
+            organismDb.getActiveOrganismForCertificationAndDepartmentCount,
+          getCandidacyFromId: candidacyDb.getCandidacyFromId,
+        })({
+          candidacyId: params.candidacyId,
+          limit: params.limit ?? 5,
+          offset: params.offset ?? 0,
+        });
 
         return result
           .mapLeft(
