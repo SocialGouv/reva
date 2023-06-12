@@ -24,6 +24,17 @@ context("Certificates", () => {
     cy.wait("@Certifications");
   });
 
+  it("display information about the selected certificate", function () {
+    cy.get('[data-test="certification-select-c2"]').click();
+    cy.get('[data-test="certification-label"]').should("contain", "Titre 2");
+    cy.get('[data-test="certification-code-rncp"]').should("contain", "34691");
+    cy.get('[data-test="certification-more-info-link"]').should(
+      "have.attr",
+      "href",
+      "https://www.francecompetences.fr/recherche/rncp/34691/"
+    );
+  });
+
   it("select department and submit certificate via summary", function () {
     cy.get('[data-test="certification-select-c2"]').click();
     cy.get('[data-test="submit-certification-button"]').click();
