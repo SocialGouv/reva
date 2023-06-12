@@ -76,8 +76,8 @@ export const Cgu = () => (
       distanciel.
     </p>
     <p>
-      L’administrateur Reva valide ou invalide l’accès à la plateforme de la
-      Structure Professionnelle selon les données saisies.
+      L’administrateur France VAE valide ou invalide l’accès à la plateforme de
+      la Structure Professionnelle selon les données saisies.
     </p>
 
     <h3>3.2 Boîte à outils</h3>

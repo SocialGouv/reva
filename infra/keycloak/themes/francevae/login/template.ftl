@@ -8,7 +8,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Reva - L'expérimentation</title>
+    <title>France VAE</title>
 
     <link href="${url.resourcesPath}/css/main.min.css" rel="stylesheet" />
     <link href="${url.resourcesPath}/css/dsfr.css" rel="stylesheet" />
@@ -77,11 +77,8 @@
               <div class="hidden lg:block logo-after"></div>
             </div>
 
-            <a class="ml-2 lg:ml-8 no-underline" style="color: black" href="${properties.revaUrl}">
-              <div class="font-bold lg:text-xl">REVA L'expérimentation</div>
-              <div class="hidden lg:block text-base">
-                REVA, l'expérimentation qui vise à transformer, simplifier et accélérer la VAE.
-              </div>
+            <a class="ml-2 lg:ml-8 no-underline font-bold lg:text-xl" style="color: black" href="${properties.revaUrl}">
+              France VAE
             </a>
 
           </section>
@@ -105,12 +102,12 @@
           <div class="fr-footer__body">
             <div class="fr-footer__brand fr-enlarge-link">
               <p class="fr-logo" title="république française">
-                Reva
+                France VAE
               </p>
             </div>
             <div class="fr-footer__content">
               <p class="fr-footer__content-desc">
-                REVA est une expérimentation qui vise à transformer la VAE avec <a class="inline-block fr-footer__content-link" href="https://reva.beta.gouv.fr/partenaires">nos partenaires.</a>
+                France VAE est le portail officiel du service public qui vise à transformer la VAE avec <a class="inline-block fr-footer__content-link" href="https://reva.beta.gouv.fr/partenaires">nos partenaires.</a>
               </p>
                <ul class="fr-footer__content-list">
                 <li class="fr-footer__content-item">

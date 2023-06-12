@@ -84,10 +84,7 @@
             </div>
 
             <a class="ml-2 lg:ml-8 no-underline" style="color: black" href="${url.logoutUrl}">
-              <div class="font-bold lg:text-xl">Reva</div>
-              <div class="hidden lg:block text-base">
-                L'expérimentation
-              </div>
+              <div class="font-bold lg:text-xl">France VAE</div>
             </a>
 
             <div class="flex flex-row ml-auto">
@@ -137,7 +134,7 @@
                     <svg class="mr-2" height="1em" width="1em">
                       <use xlink:href="#ri-arrow-left-line"></use>
                     </svg>
-                    Retourner sur Reva
+                    Retourner sur France VAE
                   </a>
                 </li>
                 <li class="py-2 border-0 border-b border-solid border-slate-200 lg:p-4">
@@ -174,12 +171,12 @@
           <div class="fr-footer__body">
             <div class="fr-footer__brand fr-enlarge-link">
               <p class="fr-logo" title="république française">
-                Reva
+                France VAE
               </p>
             </div>
             <div class="fr-footer__content">
               <p class="fr-footer__content-desc">
-                REVA est une expérimentation qui vise à transformer la VAE avec <a class="inline-block fr-footer__content-link" href="https://reva.beta.gouv.fr/partenaires">nos partenaires.</a>
+                France VAE est le portail officiel du service public qui vise à transformer la VAE avec <a class="inline-block fr-footer__content-link" href="https://reva.beta.gouv.fr/partenaires">nos partenaires.</a>
               </p>
               <ul class="fr-footer__content-list">
                 <li class="fr-footer__content-item">

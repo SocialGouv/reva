@@ -1,16 +1,16 @@
-import * as React from "react";
-import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { BlueLayout } from "@/components/layout/blue-layout/BlueLayout";
-import Image from "next/image";
+import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import Head from "next/head";
+import Image from "next/image";
+import * as React from "react";
 
 const ProfessionalSpaceCreationConfirmationPage = () => {
   return (
     <MainLayout>
       <Head>
         <title>
-          Confirmation de création de compte personnel - Reva | Prenez votre
-          avenir professionnel en main
+          Confirmation de création de compte personnel - France VAE | Prenez
+          votre avenir professionnel en main
         </title>
       </Head>
       <BlueLayout

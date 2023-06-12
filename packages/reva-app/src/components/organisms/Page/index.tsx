@@ -16,7 +16,7 @@ export const Page = ({ title, children, className, ...props }: PageConfig) => {
       {...props}
     >
       <Helmet>
-        <title>{title} - Reva - l'expérimentation de la VAE</title>
+        <title>{title} - France VAE</title>
       </Helmet>
       {children}
     </div>

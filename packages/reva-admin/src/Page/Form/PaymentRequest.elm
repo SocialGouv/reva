@@ -45,7 +45,7 @@ form maybeCertification formData ( candidacy, referential ) =
                 |> Maybe.map (.label >> Form.Info "")
                 |> Maybe.withDefault Form.Empty
           )
-        , ( "funding-num-action", Form.Section "Numéro de prise en charge Reva" )
+        , ( "funding-num-action", Form.Section "Numéro de prise en charge France VAE" )
         , ( "num-action"
           , Data.Form.get keys.numAction formData
                 |> Maybe.map (Form.Info "")
@@ -165,7 +165,7 @@ confirmationForm formData ( _, _ ) =
         [ ( "heading", Form.Heading "3 - Confirmation" )
         , ( "num-action"
           , Data.Form.get keys.numAction formData
-                |> Maybe.map (Form.Info "Numéro de prise en charge Reva")
+                |> Maybe.map (Form.Info "Numéro de prise en charge France VAE")
                 |> Maybe.withDefault Form.Empty
           )
         , ( "invoice-number"

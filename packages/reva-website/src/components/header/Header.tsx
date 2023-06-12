@@ -1,6 +1,6 @@
+import { push } from "@/components/analytics/matomo-tracker/matomoTracker";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { useRouter } from "next/router";
-import { push } from "@/components/analytics/matomo-tracker/matomoTracker";
 
 export const Header = (props: { className?: string }) => {
   const { asPath } = useRouter();
@@ -14,10 +14,10 @@ export const Header = (props: { className?: string }) => {
           <br /> Française
         </>
       }
-      serviceTitle="Reva"
+      serviceTitle="France VAE"
       homeLinkProps={{
         href: "/",
-        title: "Accueil - Reva",
+        title: "Accueil - France VAE",
       }}
       quickAccessItems={[
         {

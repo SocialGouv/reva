@@ -19,7 +19,7 @@ const reorientationReasonTable: ReorientationReason[] = [
   }),
   withTemporalInfo({
     id: "RaisonReorientationId3",
-    label: "Une autre certification de l'expérimentation Reva",
+    label: "Une autre certification de France VAE",
   }),
 ];
 

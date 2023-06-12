@@ -3,7 +3,7 @@ export const Footer = () => (
     <div className="fr-container">
       <div className="fr-footer__body">
         <div className="fr-footer__brand fr-enlarge-link">
-          <a href="/" title="Accueil - Reva - l'expérimentation de la VAE">
+          <a href="/" title="Accueil - France VAE">
             <p className="fr-logo">
               République
               <br /> Française
@@ -11,7 +11,7 @@ export const Footer = () => (
           </a>
         </div>
         <div className="fr-footer__content">
-          <p className="fr-footer__content-desc">Reva</p>
+          <p className="fr-footer__content-desc">France VAE</p>
           <ul className="fr-footer__content-list">
             <li className="fr-footer__content-item">
               <a

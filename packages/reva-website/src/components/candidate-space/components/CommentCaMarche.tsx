@@ -38,7 +38,7 @@ export const CommentCaMarche = () => (
     <div className="relative w-full mx-auto">
       <div className="w-full mt-[100px] mx-auto text-center">
         <header className="flex flex-col items-center">
-          <SectionSubHeader>Le parcours Reva</SectionSubHeader>
+          <SectionSubHeader>Le parcours France VAE</SectionSubHeader>
           <h1 className=" lg:text-[40px] lg:leading-[44px] xl:text-[80px] xl:leading-[88px] max-w-screen-xl">
             Des démarches simplifiées pour les candidats
           </h1>

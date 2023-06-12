@@ -9,10 +9,10 @@ export const Header = (props: { className?: string }) => (
         <br /> Française
       </>
     }
-    serviceTitle="Reva"
+    serviceTitle="France VAE"
     homeLinkProps={{
       href: "/",
-      title: "Accueil - Reva - l'expérimentation de la VAE",
+      title: "Accueil - France VAE",
     }}
   />
 );

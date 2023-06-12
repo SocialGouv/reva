@@ -1,9 +1,9 @@
 <#import "email-template.ftl" as layout>
 <@layout.emailLayout ; section>
     <#if section = "title">
-      Votre compte professionnel Reva
+      Votre compte professionnel France VAE
     <#elseif section = "intro">
-      <p>Nous vous remercions pour votre référencement en tant qu'Architecte Accompagnateur de Parcours (AAP) sur la plateforme Reva.</p>     
+      <p>Nous vous remercions pour votre référencement en tant qu'Architecte Accompagnateur de Parcours (AAP) sur la plateforme France VAE.</p>
       <p>Pour finaliser la création de votre compte, nous vous invitions à cliquer sur le bouton ci-dessous et vous laisser guider lors des étapes restantes.<p>
       <p>Il vous sera notamment demandé de choisir votre mot de passe.</p>
     <#elseif section = "actionButton">
@@ -14,6 +14,6 @@
       </p>
       <p>N'hésitez pas à nous contacter via la messagerie instantanée présente dans votre back office ou par email à support@reva.beta.gouv.fr</p>
       <p>Cordialement,</p>
-      <p>L’équipe Reva.</p>
+      <p>L’équipe France VAE.</p>
     </#if>
 </@layout.emailLayout>

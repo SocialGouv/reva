@@ -1,7 +1,7 @@
 <#import "email-template.ftl" as layout>
 <@layout.emailLayout ; section>
     <#if section = "title">
-      Reva - Vérification de votre courriel
+      France VAE - Vérification de votre courriel
     <#elseif section = "intro">
       Afin de finaliser la création de votre compte, merci de cliquer sur le bouton ci-dessous. 
     <#elseif section = "actionButton">

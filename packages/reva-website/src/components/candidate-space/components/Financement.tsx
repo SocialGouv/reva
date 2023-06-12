@@ -18,8 +18,8 @@ export const Financement = () => (
       </header>
       <SectionParagraph>
         Vous n’avez plus à vous préoccuper du financement de votre parcours.
-        Pour faciliter l’accès à la VAE pour tous, Reva rassemble ce financement
-        auprès de différents acteurs publics et privés.
+        Pour faciliter l’accès à la VAE pour tous, France VAE rassemble ce
+        financement auprès de différents acteurs publics et privés.
         <br />
         <br />
         *hors dispositif particulier de la fonction publique

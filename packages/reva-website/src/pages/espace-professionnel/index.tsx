@@ -4,11 +4,12 @@ import {
   SectionParagraph,
   SectionSubHeader,
 } from "@/components/section-content/SectionContent";
+import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Notice from "@codegouvfr/react-dsfr/Notice";
 import Head from "next/head";
 import Image from "next/image";
-import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
+
 const ArrowRight = () => (
   <span className="fr-icon-arrow-right-line mr-2 " aria-hidden="true" />
 );
@@ -237,8 +238,8 @@ const ProfessionalSpaceHomePage = () => {
     <MainLayout className=" py-20  gap-32 lg:gap-64 lg:pb-80 bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_1150px]">
       <Head>
         <title>
-          Accueil professionnels - Reva | France VAE | Le service qui facilite
-          le suivi des candidats
+          Accueil professionnels - France VAE | Le service qui facilite le suivi
+          des candidats
         </title>
         <meta
           name="description"
