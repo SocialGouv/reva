@@ -1,10 +1,13 @@
 import "@/styles/globals.css";
-import type { AppProps } from "next/app";
+import "@/styles/dsfr-theme-tac.min.css";
+import "@/styles/dsfr-theme-tac-extra.css";
+
+import init from "@/components/analytics/matomo-tracker/matomoTracker";
+import { MATOMO } from "@/config/config";
 import { createNextDsfrIntegrationApi } from "@codegouvfr/react-dsfr/next-pagesdir";
+import type { AppProps } from "next/app";
 import Link from "next/link";
 import { useEffect } from "react";
-import { MATOMO } from "@/config/config";
-import init from "@/components/analytics/matomo-tracker/matomoTracker";
 
 declare module "@codegouvfr/react-dsfr/next-pagesdir" {
   interface RegisterLink {

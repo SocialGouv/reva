@@ -19,7 +19,11 @@ export const TarteAuCitronWrapper = () => (
     <Script id="tarteaucitronInit">
       {`
         if (typeof window !== "undefined") {
-            tarteaucitron.init({});
+            tarteaucitron.init({
+              useExternalCss:true,
+              removeCredit:true,
+              "iconPosition": "BottomLeft"
+            });
             ${matomoService}
         }
       `}
