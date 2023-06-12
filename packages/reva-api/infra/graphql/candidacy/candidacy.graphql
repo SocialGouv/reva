@@ -215,11 +215,6 @@ enum CandidacyStatusFilter {
   PROJET_HORS_ABANDON
 }
 
-type OrganismPage {
-  rows: [Organism!]!
-  info: PaginationInfo!
-}
-
 type Query {
   getCandidacy(deviceId: ID!): Candidacy
   getCandidacyById(id: ID!): Candidacy
@@ -230,18 +225,8 @@ type Query {
     searchFilter: String
   ): CandidacySummaryPage!
   getTrainings: [Training!]!
-  getOrganismsForCandidacy(
-    offset: Int
-    limit: Int
-    departmentId: UUID!
-    searchText: String
-  ): OrganismPage!
+  getOrganismsForCandidacy(candidacyId: UUID!): [Organism!]!
   getCompanionsForCandidacy(candidacyId: UUID!): [Organism!]!
-  getCompanionsForCandidacyPaginated(
-    candidacyId: UUID!
-    offset: Int!
-    limit: Int!
-  ): OrganismPage!
   getBasicSkills: [BasicSkill!]!
   candidacy_candidacyCountByStatus: CandidacyCountByStatus!
 }
