@@ -48,11 +48,8 @@ view context =
                                 ]
                                 [ p
                                     [ class "fr-header__service-title" ]
-                                    [ text "Reva / Espace Professionnel" ]
+                                    [ text "France VAE" ]
                                 ]
-                            , p
-                                [ class "fr-header__service-tagline" ]
-                                [ text "L'expérimentation qui vise à transformer, simplifier et accélérer la VAE." ]
                             ]
                         ]
                     , div

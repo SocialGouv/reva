@@ -394,8 +394,8 @@ const IndexPage = () => {
     <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_1150px]">
       <Head>
         <title>
-          Accueil - Reva | Découvrez le portail officiel du service public de la
-          Validation des Acquis de L’Expérience.
+          Accueil - France VAE | Découvrez le portail officiel du service public
+          de la Validation des Acquis de L’Expérience.
         </title>
         <meta
           name="description"

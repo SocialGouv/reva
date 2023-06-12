@@ -1,4 +1,4 @@
-# Reva API seed
+# France VAE API seed
 
 Go get your referentials data there : https://airtable.com/appQT21E7Sy70YfSB/tblWDa9HN0cuqLnAl/viwJgFA4x4PgeGErE
 

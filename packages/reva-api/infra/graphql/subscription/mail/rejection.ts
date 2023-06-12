@@ -56,6 +56,6 @@ export const sendRejectionEmail = async (
   return sendGenericEmail({
     to: { email },
     htmlContent: htmlContent.html,
-    subject: "Votre compte Reva",
+    subject: "Votre compte France VAE",
   });
 };

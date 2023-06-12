@@ -10,7 +10,7 @@ const IndexMentionsLegalesPage = () => {
   return (
     <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_180px]">
       <Head>
-        <title>Mentions légales - Reva</title>
+        <title>Mentions légales - France VAE</title>
       </Head>
 
       <div className="w-full max-w-[1048px] mx-auto">

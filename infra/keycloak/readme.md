@@ -48,9 +48,9 @@ $ docker-compose logs -f
 
 Les données des Realms `reva-app` et `reva-admin` sont chargées et un utilisateur `admin` est créé pour se connecter à la console Keycloak.
 
-Il faudra ensuite créer des utilisateurs Reva (cf https://www.notion.so/fabnummas/Cr-ation-de-compte-pour-le-Back-Office-8123b5af3242427ab4d62f6075e41b99)
+Il faudra ensuite créer des utilisateurs France VAE (cf https://www.notion.so/fabnummas/Cr-ation-de-compte-pour-le-Back-Office-8123b5af3242427ab4d62f6075e41b99)
 
-## Lancer les applis Reva avec le nouvel environnement
+## Lancer les applis France VAE avec le nouvel environnement
 
 ```
 $ npm run dev

@@ -11,7 +11,7 @@ const IndexConfidentialitePage = () => {
   return (
     <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_180px] overflow-x-hidden font-light">
       <Head>
-        <title>Politique de confidentialité - Reva</title>
+        <title>Politique de confidentialité - France VAE</title>
       </Head>
 
       <div className="w-full max-w-[1048px] mx-auto">

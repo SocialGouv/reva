@@ -8,7 +8,7 @@ export async function insertReorientationReasonsIfNone(prisma: PrismaClient) {
       data: [
         { label: "Droit commun" },
         { label: "Architecte de parcours neutre" },
-        { label: "Une autre certification de l'expérimentation Reva" },
+        { label: "Une autre certification de France VAE" },
       ],
     });
   }

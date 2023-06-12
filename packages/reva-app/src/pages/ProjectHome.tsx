@@ -69,10 +69,9 @@ export const ProjectHome = ({
       </h1>
       <NameBadge as="h2" className="mt-4" />
       <p className="my-4 pr-6 text-dsfrGray-500 text-base">
-        Reva est une expérimentation visant à simplifier la Validation des
-        Acquis de l'Expérience (VAE). Vous avez une expérience dans les secteurs
-        de la dépendance et de la santé ? Choisissez votre diplôme et
-        laissez-vous accompagner !
+        France VAE est le portail officiel du service public qui a pour mission
+        de simplifier et accélérer la certification de vos compétences
+        professionnelles. Choisissez votre diplôme et laissez-vous accompagner !
       </p>
 
       <ProjectTimeline className="mt-8" data-test="project-home-timeline" />

@@ -33,8 +33,7 @@ export const ProjectDroppedOut = ({
         <p className="mt-8">
           Nous avons enregistré l'interruption de votre parcours.
           <br />
-          Nous vous informons que vous ne pourrez pas candidater à nouveau dans
-          le cadre de cette expérimentation.
+          Nous vous informons que vous ne pourrez pas candidater à nouveau.
         </p>
         <p className="mt-8">
           Vous avez une question ?{" "}

@@ -1,10 +1,11 @@
 import Link from "next/link";
+
 export const Footer = ({ className }: { className?: string }) => (
   <footer className={`fr-footer ${className}`} role="contentinfo" id="footer">
     <div className="fr-container">
       <div className="fr-footer__body">
         <div className="fr-footer__brand fr-enlarge-link">
-          <Link title="Accueil - Reva" href="/">
+          <Link title="Accueil - France VAE" href="/">
             <p className="fr-logo">
               République
               <br /> Française

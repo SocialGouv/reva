@@ -1,21 +1,20 @@
 "use client";
 
-import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { BlueLayout } from "@/components/layout/blue-layout/BlueLayout";
-import { CompanyInfoStepForm } from "@/components/professional-space/creation/form/CompanyInfoStepForm";
+import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import {
   ProfessionalSpaceCreationProvider,
   useProfessionalSpaceCreationContext,
 } from "@/components/professional-space/creation/context/ProfessionalSpaceCreationContext";
-import { CertificationsInfoStepForm } from "@/components/professional-space/creation/form/CertificationsInfoStep";
 import { AccountInfoStepForm } from "@/components/professional-space/creation/form/AccountInfoStepForm";
-
-import Head from "next/head";
-import request, { gql } from "graphql-request";
-import { GRAPHQL_API_URL } from "@/config/config";
-import { QualiopiCertificateInfoStepForm } from "@/components/professional-space/creation/form/QualiopiCertificateInfoForm";
+import { CertificationsInfoStepForm } from "@/components/professional-space/creation/form/CertificationsInfoStep";
 import { CguStep } from "@/components/professional-space/creation/form/CguStep";
+import { CompanyInfoStepForm } from "@/components/professional-space/creation/form/CompanyInfoStepForm";
+import { QualiopiCertificateInfoStepForm } from "@/components/professional-space/creation/form/QualiopiCertificateInfoForm";
+import { GRAPHQL_API_URL } from "@/config/config";
+import request, { gql } from "graphql-request";
 import { GetStaticProps } from "next";
+import Head from "next/head";
 
 interface Domaine {
   id: string;
@@ -104,7 +103,7 @@ const ProfessionalSpaceCreationPage = ({
     <MainLayout>
       <Head>
         <title>
-          Création d'un compte professionnel - Reva | Prenez votre avenir
+          Création d'un compte professionnel - France VAE | Prenez votre avenir
           professionnel en main
         </title>
       </Head>
