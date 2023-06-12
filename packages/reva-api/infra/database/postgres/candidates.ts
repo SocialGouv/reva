@@ -172,7 +172,7 @@ export const getCandidateWithCandidacyFromKeycloakId = async (
   keycloakId: string
 ) => {
   try {
-    let candidate = await prismaClient.candidate.findFirst({
+    const candidate = await prismaClient.candidate.findFirst({
       where: {
         keycloakId: keycloakId,
         candidacies: {
@@ -204,41 +204,11 @@ export const getCandidateWithCandidacyFromKeycloakId = async (
     });
 
     if (!candidate) {
-      candidate = await prismaClient.candidate.update({
-        where: {
-          keycloakId: keycloakId,
-        },
-        data: {
-          candidacies: {
-            create: {
-              deviceId: keycloakId,
-              candidacyStatuses: {
-                create: {
-                  status: CandidacyStatusStep.PROJET,
-                  isActive: true,
-                },
-              },
-              admissibility: { create: {} },
-              examInfo: { create: {} },
-            },
-          },
-        },
-        include: {
-          candidacies: {
-            where: {
-              candidacyStatuses: {
-                none: {
-                  status: "ARCHIVE",
-                  isActive: true,
-                },
-              },
-            },
-            include: candidacyIncludes,
-          },
-          highestDegree: true,
-          vulnerabilityIndicator: true,
-        },
-      });
+      // Legacy behaviour when candidacy was archived : recreate everything from scratch
+      logger.info(
+        `Tryed to log with an archived candidacy (keycloakId: ${keycloakId})`
+      );
+      return Left("Archived candidacy");
     }
 
     const certificationAndRegion =

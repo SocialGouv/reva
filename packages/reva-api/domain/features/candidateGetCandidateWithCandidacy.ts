@@ -21,10 +21,7 @@ export const getCandidateWithCandidacy =
         return { ...candidate, candidacy: candidate.candidacies[0] };
       })
       .mapLeft(
-        () =>
-          new FunctionalError(
-            FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-            `Aucune candidat n'a été trouvée`
-          )
+        (e) =>
+          new FunctionalError(FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST, e)
       )
       .run();
