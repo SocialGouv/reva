@@ -103,15 +103,8 @@ export function init({
    * we rely on Router.pathname
    */
 
-  const scriptElement = document.createElement("script");
-  const refElement = document.getElementsByTagName("script")[0];
-  scriptElement.type = "text/javascript";
-  scriptElement.async = true;
-  scriptElement.defer = true;
-  scriptElement.src = `${url}/${jsTrackerFile}`;
-  if (refElement.parentNode) {
-    refElement.parentNode.insertBefore(scriptElement, refElement);
-  }
+  //script is now injected by tarteaucitron
+
   previousPath = location.pathname;
 
   const defaultOnRouteChangeStart = (path: string): void => {
