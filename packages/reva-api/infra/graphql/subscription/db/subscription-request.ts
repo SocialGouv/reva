@@ -1,12 +1,8 @@
 import { Either, Left, Maybe, Right } from "purify-ts";
 
 import { prismaClient } from "../../../database/postgres/client";
-import {
-  filterClause,
-  paginationClause,
-  sortClause,
-} from "../../../database/postgres/utils/query-helper";
 import { logger } from "../../../logger";
+import { Prisma } from ".prisma/client";
 
 const withoutNullFields = (obj: Record<string, unknown>) => {
   return Object.getOwnPropertyNames(obj).reduce((newObj, propName) => {
@@ -173,5 +169,46 @@ export const getSubscriptionRequests = async (
   } catch (e) {
     logger.error(e);
     return Left("La récupération des demandes d'inscription a échoué");
+  }
+};
+
+const filterClause = (params: GetSubscriptionRequestsParams) => {
+  if (params.filter) {
+    return {
+      where: {
+        accountLastname: {
+          contains: params.filter as string,
+          mode: Prisma.QueryMode.insensitive,
+        },
+      },
+    };
+  }
+};
+
+interface PaginationParams {
+  limit?: number;
+  offset?: number;
+}
+
+const paginationClause = (params: PaginationParams) => {
+  const clause: { take?: number; skip?: number } = {};
+  if (params.limit) {
+    clause.take = params.limit;
+  }
+  if (params.offset) {
+    clause.skip = params.offset;
+  }
+  return clause;
+};
+
+const sortClause = (params: GetSubscriptionRequestsParams) => {
+  if (params.orderBy) {
+    return {
+      orderBy: [
+        ...Object.entries(params.orderBy).map(([column, value]) => ({
+          [column]: value,
+        })),
+      ],
+    };
   }
 };
