@@ -31,8 +31,8 @@ const ProfessionalSpaceCreationConfirmationPage = () => {
           <p className="text-xl">
             Félicitations, votre demande de création de compte a bien été
             enregistrée ! Vous recevrez un email contenant un lien d'activation
-            du compte valable 4 jours, dès qu’un administrateur Reva l’aura
-            traitée. En cas de question vous pouvez contacter :
+            du compte valable 4 jours, dès qu’un administrateur France VAE
+            l’aura traitée. En cas de question vous pouvez contacter :
             support@reva.beta.gouv.fr
           </p>
         </div>
