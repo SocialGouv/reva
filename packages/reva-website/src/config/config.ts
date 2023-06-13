@@ -7,3 +7,7 @@ export const MATOMO = {
   SITE_ID: process.env.NEXT_PUBLIC_MATOMO_SITE_ID,
   CONTAINER_NAME: process.env.NEXT_PUBLIC_MATOMO_CONTAINER_NAME,
 };
+
+export const CRISP = {
+  WEBSITE_ID: process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID,
+};

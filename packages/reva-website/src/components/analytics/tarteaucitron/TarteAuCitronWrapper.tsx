@@ -1,4 +1,4 @@
-import { MATOMO } from "@/config/config";
+import { CRISP, MATOMO } from "@/config/config";
 import Script from "next/script";
 import { useEffect } from "react";
 
@@ -24,6 +24,7 @@ export const TarteAuCitronWrapper = () => {
               iconPosition: "BottomLeft",
             });
             matomoServiceInit();
+            crispServiceInit();
           }
         }}
       />
@@ -35,4 +36,10 @@ export const matomoServiceInit = () => {
   const tarteaucitron = (window as any).tarteaucitron;
   tarteaucitron.user.matomotmUrl = `${MATOMO.URL}/js/container_${MATOMO.CONTAINER_NAME}.js`;
   (tarteaucitron.job = tarteaucitron.job || []).push("matomotm");
+};
+
+export const crispServiceInit = () => {
+  const tarteaucitron = (window as any).tarteaucitron;
+  tarteaucitron.user.crispID = CRISP.WEBSITE_ID;
+  (tarteaucitron.job = tarteaucitron.job || []).push("crisp");
 };
