@@ -1,35 +1,38 @@
-/* eslint-disable @next/next/no-before-interactive-script-outside-document */
 import { MATOMO } from "@/config/config";
 import Script from "next/script";
+import { useEffect } from "react";
 
 const tarteAuCitronFolder = "/vendor/tarteaucitronjs";
-export const TarteAuCitronWrapper = () => (
-  <>
-    <Script id="pretarteaucitron" strategy="beforeInteractive">
-      {`
-        if (typeof window !== "undefined") {
-            window.tarteaucitronForceCDN = "${tarteAuCitronFolder}/";
-        }
-    `}
-    </Script>
-    <Script
-      src={`${tarteAuCitronFolder}/tarteaucitron.js`}
-      strategy="beforeInteractive"
-    />
-    <Script id="tarteaucitronInit">
-      {`
-        if (typeof window !== "undefined") {
-            tarteaucitron.init({
-              useExternalCss:true,
-              removeCredit:true,
-              "iconPosition": "BottomLeft"
-            });
-            ${matomoService}
-        }
-      `}
-    </Script>
-  </>
-);
+export const TarteAuCitronWrapper = () => {
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      (
+        window as unknown as { tarteaucitronForceCDN: string }
+      ).tarteaucitronForceCDN = `${tarteAuCitronFolder}/`;
+    }
+  }, []);
 
-export const matomoService = `tarteaucitron.user.matomotmUrl = '${MATOMO.URL}/js/container_${MATOMO.CONTAINER_NAME}.js';
-(tarteaucitron.job = tarteaucitron.job || []).push('matomotm');`;
+  return (
+    <>
+      <Script
+        src={`${tarteAuCitronFolder}/tarteaucitron.js`}
+        onLoad={() => {
+          if (typeof window !== "undefined") {
+            (window as any).tarteaucitron.init({
+              useExternalCss: true,
+              removeCredit: true,
+              iconPosition: "BottomLeft",
+            });
+            matomoServiceInit();
+          }
+        }}
+      />
+    </>
+  );
+};
+
+export const matomoServiceInit = () => {
+  const tarteaucitron = (window as any).tarteaucitron;
+  tarteaucitron.user.matomotmUrl = `${MATOMO.URL}/js/container_${MATOMO.CONTAINER_NAME}.js`;
+  (tarteaucitron.job = tarteaucitron.job || []).push("matomotm");
+};
