@@ -81,7 +81,10 @@ export const Footer = ({ className }: { className?: string }) => (
             </Link>
           </li>
           <li className="fr-footer__bottom-item">
-            <Link className="fr-footer__bottom-link" href="/mentions-legales/#">
+            <Link
+              className="fr-footer__bottom-link"
+              href="/confidentialite/#definition-cookie"
+            >
               Gestion des cookies
             </Link>
           </li>
