@@ -1,8 +1,8 @@
 {
   "id": "reva",
   "realm": "reva",
-  "displayName": "REVA - localhost",
-  "displayNameHtml": "<div class=\"kc-logo-text\"><span>REVA - Staging</span></div>",
+  "displayName": "France VAE - localhost",
+  "displayNameHtml": "<div class=\"kc-logo-text\"><span>France VAE - Staging</span></div>",
   "notBefore": 0,
   "defaultSignatureAlgorithm": "RS256",
   "revokeRefreshToken": false,

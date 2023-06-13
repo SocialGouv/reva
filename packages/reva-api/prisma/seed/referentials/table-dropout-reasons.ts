@@ -13,7 +13,7 @@ export async function insertDropOutReasonsIfNone(prisma: PrismaClient) {
         { label: "Changement de projet" },
         { label: "Manque de temps" },
         { label: "Pas / plus intéressé" },
-        { label: "Le parcours REVA / VAE ne répond pas à mes objectifs" },
+        { label: "Le parcours France VAE ne répond pas à mes objectifs" },
         { label: "Rémunération non obtenue" },
         { label: "Financement non obtenu" },
         { label: "Avis architecte de parcours défavorable" },

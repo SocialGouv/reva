@@ -38,7 +38,7 @@ view context config =
                 [ text "Attention" ]
             , p
                 []
-                [ text "L’expérimentation REVA qui repense la VAE touche à sa fin ! Les demandes de prise en charge ne sont "
+                [ text "L’expérimentation Reva qui repense la VAE touche à sa fin ! Les demandes de prise en charge ne sont "
                 , span [ class "font-semibold" ] [ text "plus possible après le 30 juin 2023." ]
                 ]
             ]

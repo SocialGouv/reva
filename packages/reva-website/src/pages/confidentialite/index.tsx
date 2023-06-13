@@ -15,14 +15,14 @@ const IndexConfidentialitePage = () => {
       </Head>
 
       <div className="w-full max-w-[1048px] mx-auto">
-        <MainTitle>Politique de confidentialité de REVA</MainTitle>
+        <MainTitle>Politique de confidentialité de France VAE</MainTitle>
 
         <ContentSection
-          title="Qui est responsable de traitement REVA ?"
+          title="Qui est responsable de traitement France VAE ?"
           id="responsable"
         >
           <SectionParagraph>
-            La plateforme « REVA » est développée au sein de la Fabrique
+            La plateforme « France VAE » est développée au sein de la Fabrique
             numérique des ministères sociaux.
           </SectionParagraph>
           <SectionParagraph>
@@ -33,10 +33,10 @@ const IndexConfidentialitePage = () => {
           <SectionParagraph>
             Le responsable de traitement s’engage à ce que la collecte et le
             traitement des données personnelles, effectués à partir de la
-            plateforme REVA soient conformes au règlement européen n° 2016/679
-            général sur la protection des données du 27 avril 2016 dit « RGPD »
-            et à la loi n° 78-17 relative à l’informatique, aux fichiers et aux
-            libertés dite « LIL ».
+            plateforme France VAE soient conformes au règlement européen n°
+            2016/679 général sur la protection des données du 27 avril 2016 dit
+            « RGPD » et à la loi n° 78-17 relative à l’informatique, aux
+            fichiers et aux libertés dite « LIL ».
           </SectionParagraph>
         </ContentSection>
 
@@ -45,8 +45,8 @@ const IndexConfidentialitePage = () => {
           id="manipulation-donnees"
         >
           <SectionParagraph>
-            REVA manipule des données à caractère personnel pour les raisons
-            suivantes :
+            France VAE manipule des données à caractère personnel pour les
+            raisons suivantes :
             <ul className="list-inside">
               <li>
                 Permettre aux personnes utilisatrices de candidater en vue
@@ -64,7 +64,7 @@ const IndexConfidentialitePage = () => {
               <li>
                 Permettre aux organismes professionnels de l’accompagnement de
                 suivre la confiance et la motivation de la personne candidate
-                dans leurs parcours et dans le dispositif REVA ;
+                dans leurs parcours et dans le dispositif France VAE ;
               </li>
               <li>
                 Permettre d’identifier les financeurs d’un parcours de VAE ;
@@ -86,8 +86,8 @@ const IndexConfidentialitePage = () => {
           id="quelles-donnees"
         >
           <SectionParagraph>
-            REVA traite les catégories de données suivantes de l’utilisateur
-            candidat :
+            France VAE traite les catégories de données suivantes de
+            l’utilisateur candidat :
             <ul className="list-inside">
               <li>
                 <strong>Données d’inscription et de candidature</strong>{" "}
@@ -121,7 +121,7 @@ const IndexConfidentialitePage = () => {
             </ul>
           </SectionParagraph>
           <SectionParagraph>
-            REVA traite également les catégories de données suivantes des
+            France VAE traite également les catégories de données suivantes des
             architectes accompagnateurs de parcours (AAP) :
             <ul>
               <li>
@@ -141,7 +141,7 @@ const IndexConfidentialitePage = () => {
           id="autorisation"
         >
           <SectionParagraph>
-            REVA traite les données à caractère personnel en se basant sur
+            France VAE traite les données à caractère personnel en se basant sur
             l’exécution d’une mission d’intérêt public ou relevant de l’exercice
             de l’autorité publique dont est investi le responsable de traitement
             au sens de l’article 6-1 e) du RGPD.
@@ -260,20 +260,20 @@ const IndexConfidentialitePage = () => {
           id="qui-a-acces"
         >
           <SectionParagraph>
-            Les membres de l’équipe REVA en charge du recueil et de la
+            Les membres de l’équipe France VAE en charge du recueil et de la
             sécurisation des données ainsi que ceux qui sont chargés du pilotage
             du projet et de l’étude des comportements utilisateurs auront accès
             à ces données personnelles.
           </SectionParagraph>
           <SectionParagraph>
             Des données personnelles pourront être partagées avec certains
-            organismes référencés dans le service REVA comme architecte de
+            organismes référencés dans le service France VAE comme architecte de
             parcours ou accompagnateurs VAE ou centre de formation à des fins de
             contact, inscription aux services sollicitées et traitement de la
             candidature et de son financement.
           </SectionParagraph>
           <SectionParagraph>
-            Les données sont envoyées aux AAP inscrits sur REVA.
+            Les données sont envoyées aux AAP inscrits sur France VAE.
           </SectionParagraph>
         </ContentSection>
 
@@ -422,18 +422,18 @@ const IndexConfidentialitePage = () => {
           </SectionParagraph>
 
           <SectionParagraph>
-            La plateforme REVA dépose différents cookies. Certains cookies
+            La plateforme France VAE dépose différents cookies. Certains cookies
             impliquent un traitement de vos données personnelles au titre de la
             mission d’intérêt public qui nous incombe. Cela afin de faciliter
             votre navigation.
           </SectionParagraph>
           <SectionParagraph>
-            La plateforme REVA utilise des cookies afin de faire fonctionner le
-            « chatbot » CRISP permettant une assistance continue sur la
-            plateforme.
+            La plateforme France VAE utilise des cookies afin de faire
+            fonctionner le « chatbot » CRISP permettant une assistance continue
+            sur la plateforme.
           </SectionParagraph>
           <SectionParagraph>
-            La plateforme REVA utilise des cookies de mesure d’audience
+            La plateforme France VAE utilise des cookies de mesure d’audience
             anonymisée MATOMO. Pour mieux comprendre, l’outil MATOMO est un
             outil de mesure d’audience web libre, hébergé par les services de la
             Fabrique numérique des ministères sociaux et paramétré pour être en
