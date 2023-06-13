@@ -352,31 +352,6 @@ const IndexConfidentialitePage = () => {
                     <LinkCell url="https://www.digitalocean.com/legal/data-processing-agreement " />
                   </tr>
                   <tr>
-                    <TextBoldCell>Hotjar</TextBoldCell>
-                    <TextCell>Irlande</TextCell>
-                    <TextCell>Mesure d’audience</TextCell>
-                    <TextCell>
-                      <ul className="list-none">
-                        <li>
-                          <a href="https://help.hotjar.com/hc/en-us/articles/360058514233">
-                            https://help.hotjar.com/hc/en-us/articles/360058514233
-                          </a>
-                        </li>
-                        <li>
-                          <a href="https://www.hotjar.com/legal/support/dpa/">
-                            https://www.hotjar.com/legal/support/dpa/
-                          </a>
-                        </li>
-                      </ul>
-                    </TextCell>
-                  </tr>
-                  <tr>
-                    <TextBoldCell>Amazon Web Services</TextBoldCell>
-                    <TextCell>Irlande</TextCell>
-                    <TextCell>Hébergement des données de Hotjar</TextCell>
-                    <LinkCell url="https://aws.amazon.com/fr/blogs/security/aws-gdpr-data-processing-addendum/" />
-                  </tr>
-                  <tr>
                     <TextBoldCell>Matomo</TextBoldCell>
                     <TextCell>France</TextCell>
                     <TextCell>Mesure d’audience</TextCell>
@@ -466,13 +441,6 @@ const IndexConfidentialitePage = () => {
                     <TextCell>Consentement</TextCell>
                     <TextCell>Support</TextCell>
                     <LinkCell url="https://crisp.chat/fr/privacy/" />
-                  </tr>
-                  <tr>
-                    <TextBoldCell>Hotjar</TextBoldCell>
-                    <TextCell>Irlande</TextCell>
-                    <TextCell>Consentement</TextCell>
-                    <TextCell>Mesure d’audience </TextCell>
-                    <LinkCell url="https://help.hotjar.com/hc/en-us/articles/360058514233" />
                   </tr>
                 </tbody>
               </table>
