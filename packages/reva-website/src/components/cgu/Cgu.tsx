@@ -2,18 +2,19 @@ export const Cgu = () => (
   <div>
     <p>
       Les présentes conditions générales d’utilisation (dites « CGU ») fixent le
-      cadre juridique de la plateforme REVA et définissent les conditions
+      cadre juridique de la plateforme France VAE et définissent les conditions
       d’accès et d’utilisation des services par l’Utilisateur. Ce dispositif est
       un téléservice conformément aux dispositions de l’ordonnance 2005-1516 du
       8 décembre 2005 relative aux échanges électroniques entre les usagers et
       les autorités administratives et entre les autorités administratives.
     </p>
-    <h2>Article 1 – Présentation de REVA</h2>
+    <h2>Article 1 – Présentation de France VAE</h2>
     <p>
-      REVA est ouvert à toute personne souhaitant obtenir une certification par
-      la voie de la validation des acquis de l’expérience et par l’intermédiaire
-      du dispositif REVA. Il est également ouvert aux professionnels de REVA qui
-      peuvent avoir accès à des documents avec accès restreint.
+      France VAE est ouvert à toute personne souhaitant obtenir une
+      certification par la voie de la validation des acquis de l’expérience et
+      par l’intermédiaire du dispositif France VAE. Il est également ouvert aux
+      professionnels de France VAE qui peuvent avoir accès à des documents avec
+      accès restreint.
     </p>
     <p>
       L’étendue du dispositif a vocation à évoluer. A ce jour, le périmètre de
@@ -23,12 +24,12 @@ export const Cgu = () => (
 
     <h2>Article 2 – Définitions</h2>
     <p>
-      Les « Services » sont les fonctionnalités offertes par REVA pour répondre
-      à ses finalités.
+      Les « Services » sont les fonctionnalités offertes par France VAE pour
+      répondre à ses finalités.
     </p>
     <p>
-      Les « Structures Professionnelles » de REVA sont des organismes chargés du
-      suivi de la validation des acquis expérientiels des candidats.
+      Les « Structures Professionnelles » de France VAE sont des organismes
+      chargés du suivi de la validation des acquis expérientiels des candidats.
     </p>
 
     <h2>Article 3 – Fonctionnalités de la plateforme</h2>
@@ -97,7 +98,7 @@ export const Cgu = () => (
       Tout événement dû à un cas de force majeure ayant pour conséquence un
       dysfonctionnement de notre plateforme et sous réserve de toute
       interruption ou modification en cas de maintenance, n'engage pas la
-      responsabilité de REVA.
+      responsabilité de France VAE.
     </p>
     <p>
       L’éditeur s’autorise à suspendre ou révoquer n'importe quel compte et

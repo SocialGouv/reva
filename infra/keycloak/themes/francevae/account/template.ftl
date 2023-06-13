@@ -17,7 +17,7 @@
     <!-- Modifier les chemins relatifs des favicons en fonction de la structure du projet -->
     <!-- Dans le fichier manifest.webmanifest aussi, modifier les chemins vers les images -->
 
-    <title>Mon compte - REVA</title>
+    <title>Mon compte - France VAE</title>
   </head>
 
   <body>

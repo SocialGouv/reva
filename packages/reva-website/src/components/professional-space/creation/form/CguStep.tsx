@@ -1,14 +1,13 @@
-import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
-import { Input } from "@codegouvfr/react-dsfr/Input";
-import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
-
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useProfessionalSpaceCreationContext } from "../context/ProfessionalSpaceCreationContext";
-import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { Cgu } from "@/components/cgu/Cgu";
+import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
+import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+
+import { useProfessionalSpaceCreationContext } from "../context/ProfessionalSpaceCreationContext";
 
 const zodSchema = z.object({
   cguAcceptance: z.literal<boolean>(true),
@@ -33,7 +32,7 @@ export const CguStep = () => {
   return (
     <div className="flex flex-col min-w-[70vw]">
       <Stepper
-        title="Saisir vos conditions générales de la plateforme REVA "
+        title="Saisir vos conditions générales de la plateforme France VAE"
         currentStep={1}
         stepCount={5}
         nextTitle="Renseigner les certifications concernées"

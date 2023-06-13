@@ -56,7 +56,7 @@ export const sendRegistrationEmail = async (email: string, token: string) => {
     mjml2html(
       template({
         headline:
-          "<strong>Commencez</strong> dès maintenant votre parcours VAE REVA en cliquant sur le bouton ci-dessous.",
+          "<strong>Commencez</strong> dès maintenant votre parcours France VAE en cliquant sur le bouton ci-dessous.",
         labelCTA: "Démarrer mon parcours",
         url,
       })
@@ -70,7 +70,7 @@ export const sendLoginEmail = async (email: string, token: string) => {
     mjml2html(
       template({
         headline:
-          "<strong>Retrouvez</strong> dès maintenant votre candidature VAE REVA en cliquant sur le bouton ci-dessous.",
+          "<strong>Retrouvez</strong> dès maintenant votre candidature France VAE en cliquant sur le bouton ci-dessous.",
         labelCTA: "Reprendre mon parcours",
         url,
       })
@@ -97,7 +97,7 @@ const sendEmailWithLink = async (
   return sendGenericEmail({
     htmlContent: emailContent.html,
     to: { email },
-    subject: "Votre accès à votre parcours VAE - REVA",
+    subject: "Votre accès à votre parcours France VAE",
   });
 };
 

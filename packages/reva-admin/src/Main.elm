@@ -91,7 +91,7 @@ main =
 
 view : Model -> Browser.Document Msg
 view model =
-    { title = "REVA"
+    { title = "France VAE"
     , body =
         [ div
             [ class "min-h-screen flex flex-col" ]
