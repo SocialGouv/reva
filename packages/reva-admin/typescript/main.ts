@@ -25,6 +25,14 @@ const app = Elm.Main.init({
    },
 });
 
+app.ports.confirmRejection.subscribe(function (arg : { message: string, id: string }){
+   app.ports.confirmedRejection.send([window.confirm(arg.message), arg.id]);
+});
+
+app.ports.confirmValidation.subscribe(function (arg : { message: string, id: string }){
+   app.ports.confirmedValidation.send([window.confirm(arg.message), arg.id]);
+});
+
 // @ts-ignore
 window.dsfr = {
    verbose: false,
