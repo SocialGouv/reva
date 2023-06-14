@@ -2,6 +2,7 @@ import "./index.css";
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { startReactDsfr } from "@codegouvfr/react-dsfr/spa";
+import * as Sentry from "@sentry/react";
 // import { inspect } from "@xstate/inspect";
 import React from "react";
 import { createRoot } from "react-dom/client";
@@ -27,6 +28,11 @@ const keycloakInstance = Keycloak({
   clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID as string,
   realm: process.env.REACT_APP_KEYCLOAK_REALM as string,
   url: process.env.REACT_APP_KEYCLOAK_URL as string,
+});
+
+Sentry.init({
+  dsn: process.env.REACT_APP_SENTRY_DSN,
+  integrations: [new Sentry.BrowserTracing(), new Sentry.Replay()],
 });
 
 const container = document.getElementById("root");
