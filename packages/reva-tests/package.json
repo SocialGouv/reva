@@ -7,7 +7,7 @@
     "cypress:open": "cypress open --e2e --browser electron",
     "cypress:ci": "cypress run --config baseUrl=http://localhost:8080/app/",
     "server": "cd ../.. && npm run start:server:only -w reva-api",
-    "test:ci": "start-server-and-test server http://localhost:8080 cypress:ci"
+    "test:ci": "start-server-and-test server http://localhost:8080/app cypress:ci"
   },
   "importSort": {
     ".js, .ts, .jsx, .tsx": {
