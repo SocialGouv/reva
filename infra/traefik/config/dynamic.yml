@@ -120,6 +120,17 @@ http:
         - removeHeader
 
     # --- END PRODUCTION ---
+    # --- BEGIN PRODUCTION 2---
+
+    vae-gouv-main-page:
+      rule: "Host(`vae.gouv.fr`)"
+      service: framer-vae-gouv-fr-maintenance-page
+      middlewares:
+        - removeHeader
+        - removePath
+
+    # --- END PRODUCTION 2 ---
+
     # Enable dashboard on /dashboard with basic auth
     dashboard:
       rule: 'Host(`{{ env "APP" }}.{{ env "REGION_NAME" }}.scalingo.io`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))'
@@ -132,6 +143,10 @@ http:
         customResponseHeaders:
           x-request-id: "" # remove
           strict-transport-security: ""
+    removePath:
+      replacePath:
+        path: "/"
+
     auth:
       basicAuth:
         users:
@@ -228,3 +243,13 @@ http:
           - url: "https://reva-prod.osc-secnum-fr1.scalingo.io/api"
 
     # --- END PRODUCTION ---
+
+    # --- BEGIN PRODUCTION 2---
+
+    framer-vae-gouv-fr-maintenance-page:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://frequent-tool-670208.framer.app/"
+
+    # --- END PRODUCTION 2 ---
