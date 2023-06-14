@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react";
 import { DoneInvokeEvent, assign, createMachine } from "xstate";
 
 import {
@@ -251,10 +252,13 @@ export const mainMachine =
               ],
               onError: [
                 {
-                  actions: assign({
-                    error: (_, _event) =>
-                      "Une erreur est survenue lors du chargement du réferentiel",
-                  }),
+                  actions: [
+                    "sendErrorToSentry",
+                    assign({
+                      error: (_, _event) =>
+                        "Une erreur est survenue lors du chargement du réferentiel",
+                    }),
+                  ],
                 },
               ],
             },
@@ -283,10 +287,13 @@ export const mainMachine =
                   ],
                   onError: [
                     {
-                      actions: assign({
-                        error: (_, _event) =>
-                          "Une erreur est survenue lors de la demande d'un lien d'authentification.",
-                      }),
+                      actions: [
+                        "sendErrorToSentry",
+                        assign({
+                          error: (_, _event) =>
+                            "Une erreur est survenue lors de la demande d'un lien d'authentification.",
+                        }),
+                      ],
                       target: "idle",
                     },
                   ],
@@ -319,10 +326,13 @@ export const mainMachine =
               ],
               onError: [
                 {
-                  actions: assign({
-                    error: (_, _event) =>
-                      "Une erreur est survenue lors de la récupération des certifications.",
-                  }),
+                  actions: [
+                    "sendErrorToSentry",
+                    assign({
+                      error: (_, _event) =>
+                        "Une erreur est survenue lors de la récupération des certifications.",
+                    }),
+                  ],
                   target: "searchResultsError",
                 },
               ],
@@ -383,10 +393,13 @@ export const mainMachine =
               ],
               onError: [
                 {
-                  actions: assign({
-                    error: (_, _event) =>
-                      "Une erreur est survenue lors de la récupération de la certification.",
-                  }),
+                  actions: [
+                    "sendErrorToSentry",
+                    assign({
+                      error: (_, _event) =>
+                        "Une erreur est survenue lors de la récupération de la certification.",
+                    }),
+                  ],
                 },
               ],
             },
@@ -415,10 +428,13 @@ export const mainMachine =
               ],
               onError: [
                 {
-                  actions: assign({
-                    error: (_, _event) =>
-                      "Une erreur est survenue lors de la mise à jour de la certification.",
-                  }),
+                  actions: [
+                    "sendErrorToSentry",
+                    assign({
+                      error: (_, _event) =>
+                        "Une erreur est survenue lors de la mise à jour de la certification.",
+                    }),
+                  ],
                   target: "retry",
                 },
               ],
@@ -469,10 +485,13 @@ export const mainMachine =
                   ],
                   onError: [
                     {
-                      actions: assign({
-                        error: (_, _event) =>
-                          "Une erreur est survenue lors de la soumission du parcours.",
-                      }),
+                      actions: [
+                        "sendErrorToSentry",
+                        assign({
+                          error: (_, _event) =>
+                            "Une erreur est survenue lors de la soumission du parcours.",
+                        }),
+                      ],
                       target: "retry",
                     },
                   ],
@@ -530,10 +549,13 @@ export const mainMachine =
                   ],
                   onError: [
                     {
-                      actions: assign({
-                        error: (_, _event) =>
-                          "Une erreur est survenue lors de la demande de création d'un compte.",
-                      }),
+                      actions: [
+                        "sendErrorToSentry",
+                        assign({
+                          error: (_, _event) =>
+                            "Une erreur est survenue lors de la demande de création d'un compte.",
+                        }),
+                      ],
                       target: "idle",
                     },
                   ],
@@ -618,10 +640,13 @@ export const mainMachine =
                   ],
                   onError: [
                     {
-                      actions: assign({
-                        error: (_, _event) =>
-                          "Une erreur est survenue lors de l'enregistrement de votre expérience.",
-                      }),
+                      actions: [
+                        "sendErrorToSentry",
+                        assign({
+                          error: (_, _event) =>
+                            "Une erreur est survenue lors de l'enregistrement de votre expérience.",
+                        }),
+                      ],
                       target: "error",
                     },
                   ],
@@ -648,9 +673,12 @@ export const mainMachine =
               ],
               onError: [
                 {
-                  actions: assign({
-                    error: (_, event) => event.data.toString(),
-                  }),
+                  actions: [
+                    "sendErrorToSentry",
+                    assign({
+                      error: (_, event) => event.data.toString(),
+                    }),
+                  ],
                 },
               ],
             },
@@ -694,9 +722,12 @@ export const mainMachine =
                   ],
                   onError: [
                     {
-                      actions: assign({
-                        error: (_, event) => event.data,
-                      }),
+                      actions: [
+                        "sendErrorToSentry",
+                        assign({
+                          error: (_, event) => event.data,
+                        }),
+                      ],
                       target: "error",
                     },
                   ],
@@ -748,10 +779,13 @@ export const mainMachine =
                   ],
                   onError: [
                     {
-                      actions: assign({
-                        error: (_, _event) =>
-                          "Une erreur est survenue lors de l'enregistrement des objectifs.",
-                      }),
+                      actions: [
+                        "sendErrorToSentry",
+                        assign({
+                          error: (_, _event) =>
+                            "Une erreur est survenue lors de l'enregistrement des objectifs.",
+                        }),
+                      ],
                       target: "error",
                     },
                   ],
@@ -793,30 +827,43 @@ export const mainMachine =
                   ],
                   onError: [
                     {
-                      actions: assign({
-                        error: (_, _event) => INVALID_REGISTRATION_TOKEN_ERROR,
-                      }),
+                      actions: [
+                        "sendErrorToSentry",
+                        assign({
+                          error: (_, _event) =>
+                            INVALID_REGISTRATION_TOKEN_ERROR,
+                        }),
+                      ],
                       target: "#mainMachine.projectContact.idle",
                       cond: "isInvalidRegistrationToken",
                     },
                     {
-                      actions: assign({
-                        error: (_, _event) => INVALID_LOGIN_TOKEN_ERROR,
-                      }),
+                      actions: [
+                        "sendErrorToSentry",
+                        assign({
+                          error: (_, _event) => INVALID_LOGIN_TOKEN_ERROR,
+                        }),
+                      ],
                       target: "#mainMachine.loginHome",
                       cond: "isInvalidLoginToken",
                     },
                     {
-                      actions: assign({
-                        error: (_, _event) => UNKNOWN_CANDIDATE_ERROR,
-                      }),
+                      actions: [
+                        "sendErrorToSentry",
+                        assign({
+                          error: (_, _event) => UNKNOWN_CANDIDATE_ERROR,
+                        }),
+                      ],
                       target: "#mainMachine.loginHome",
                       cond: "isUnknownCandidate",
                     },
                     {
-                      actions: assign({
-                        error: (_, _event) => "Une erreur est survenue.",
-                      }),
+                      actions: [
+                        "sendErrorToSentry",
+                        assign({
+                          error: (_, _event) => "Une erreur est survenue.",
+                        }),
+                      ],
                       target: "retry",
                     },
                   ],
@@ -907,10 +954,13 @@ export const mainMachine =
                   ],
                   onError: [
                     {
-                      actions: assign({
-                        error: (_, _event) =>
-                          "Une erreur est survenue lors de la transmission de votre projet.",
-                      }),
+                      actions: [
+                        "sendErrorToSentry",
+                        assign({
+                          error: (_, _event) =>
+                            "Une erreur est survenue lors de la transmission de votre projet.",
+                        }),
+                      ],
                       target: "error",
                     },
                   ],
@@ -1012,6 +1062,8 @@ export const mainMachine =
             },
             selectedCertification: (_) => undefined,
           }),
+          sendErrorToSentry: (_, event: any) =>
+            Sentry.captureException(event.data),
         },
         guards: {
           hasCandidacy: (context, _event) => {
