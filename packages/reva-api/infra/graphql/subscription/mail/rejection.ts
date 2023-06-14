@@ -18,7 +18,7 @@ export const sendRejectionEmail = async (
         <p>Après vérification des éléments fournis concernant votre structure,
         nous ne pouvons malheureusement pas valider votre référencement.</p>
         <p>Pour de plus amples informations, nous vous invitons à nous contacter à l’adresse suivante:
-        support@beta.gouv.fr (à modifier en fonction de la stratégie mail définie),
+        support@reva.beta.gouv.fr,
         nous vous répondrons dans les meilleurs délais.</p>
         <br/>
         <p>Très cordialement</p>

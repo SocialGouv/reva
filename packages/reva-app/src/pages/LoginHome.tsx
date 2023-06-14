@@ -134,7 +134,7 @@ const LoginErrorMessage = ({ error }: { error: string }) => {
               </li>
             </ul>
             Si le problème persiste, n'hésitez pas à nous contacter à l'adresse
-            e-mail suivante : support@beta.gouv.fr
+            e-mail suivante : support@reva.beta.gouv.fr
           </p>
         </>
       );
