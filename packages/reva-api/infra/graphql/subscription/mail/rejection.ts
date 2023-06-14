@@ -14,7 +14,7 @@ export const sendRejectionEmail = async (
     template({
       headline: "Bonjour,",
       message: `<p>Nous vous remercions pour votre demande de référencement en tant qu'Architecte
-        Accompagnateur de Parcours (AAP) sur la plateforme France VAE.</p>
+        Accompagnateur de Parcours (AAP) sur la plateforme Reva.</p>
         <p>Après vérification des éléments fournis concernant votre structure,
         nous ne pouvons malheureusement pas valider votre référencement.</p>
         <p>Pour de plus amples informations, nous vous invitons à nous contacter à l’adresse suivante:
@@ -22,7 +22,7 @@ export const sendRejectionEmail = async (
         nous vous répondrons dans les meilleurs délais.</p>
         <br/>
         <p>Très cordialement</p>
-        <p>L’équipe France VAE.</p>
+        <p>L’équipe Reva.</p>
       `,
       cta: subscriptionRequestUri
         ? {
