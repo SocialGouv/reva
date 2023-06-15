@@ -14,10 +14,14 @@ export const Header = (props: { className?: string }) => {
           <br /> Française
         </>
       }
-      serviceTitle="France VAE"
       homeLinkProps={{
         href: "/",
         title: "Accueil - France VAE",
+      }}
+      operatorLogo={{
+        alt: "France VAE",
+        imgUrl: "/fvae_logo.svg",
+        orientation: "horizontal",
       }}
       quickAccessItems={[
         {
