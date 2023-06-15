@@ -129,6 +129,30 @@ http:
         - removeHeader
         - removePath
 
+    auth-vae-gouv-fr:
+      rule: "Host(`auth.vae.gouv.fr`)"
+      service: auth-vae-gouv-fr
+      middlewares:
+        - removeHeader
+
+    espace-pro-production-vae-gouv-fr:
+      rule: "Host(`vae.gouv.fr`) && PathPrefix(`/admin`)"
+      service: espace-pro-production-2
+      middlewares:
+        - removeHeader
+
+    app-candidat-production-vae-gouv-fr:
+      rule: "Host(`vae.gouv.fr`) && PathPrefix(`/app`)"
+      service: app-candidat-production-2
+      middlewares:
+        - removeHeader
+
+    api-production-vae-gouv-fr:
+      rule: "Host(`vae.gouv.fr`) && PathPrefix(`/api`)"
+      service: api-production-2
+      middlewares:
+        - removeHeader
+
     # --- END PRODUCTION 2 ---
 
     # Enable dashboard on /dashboard with basic auth
@@ -251,5 +275,29 @@ http:
         passHostHeader: false
         servers:
           - url: "https://frequent-tool-670208.framer.app/"
+
+    auth-vae-gouv-fr:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://auth-reva-beta-gouv-fr.osc-secnum-fr1.scalingo.io/"
+
+    espace-pro-production-2:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-prod-2.osc-secnum-fr1.scalingo.io/admin/"
+
+    app-candidat-production-2:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-prod-2.osc-secnum-fr1.scalingo.io/app/"
+
+    api-production-2:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-prod-2.osc-secnum-fr1.scalingo.io/api"
 
     # --- END PRODUCTION 2 ---
