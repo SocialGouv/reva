@@ -176,7 +176,8 @@
             </div>
             <div class="fr-footer__content">
               <p class="fr-footer__content-desc">
-                France VAE est le portail officiel du service public qui vise à transformer la VAE avec <a class="inline-block fr-footer__content-link" href="https://reva.beta.gouv.fr/partenaires">nos partenaires.</a>
+                France VAE est le portail officiel du service public qui vise à
+                transformer la VAE avec nos partenaires.
               </p>
               <ul class="fr-footer__content-list">
                 <li class="fr-footer__content-item">
