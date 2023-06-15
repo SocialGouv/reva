@@ -101,9 +101,13 @@
         <div class="fr-container">
           <div class="fr-footer__body">
             <div class="fr-footer__brand fr-enlarge-link">
-              <p class="fr-logo" title="république française">
-                France VAE
+              <p class="fr-logo">
+                République
+                <br /> Française
               </p>
+              <a class="fr-footer__brand-link" href="/" title="Accueil - France VAE">
+                <img class="fr-footer__logo sm:ml-12" width="225" height="138" src="${url.resourcesPath}/img/fvae_logo.svg" alt="France VAE"/>
+              </a>
             </div>
             <div class="fr-footer__content">
               <p class="fr-footer__content-desc">
