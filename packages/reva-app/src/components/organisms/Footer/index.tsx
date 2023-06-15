@@ -3,11 +3,22 @@ export const Footer = () => (
     <div className="fr-container">
       <div className="fr-footer__body">
         <div className="fr-footer__brand fr-enlarge-link">
-          <a href="/" title="Accueil - France VAE">
-            <p className="fr-logo">
-              République
-              <br /> Française
-            </p>
+          <p className="fr-logo">
+            République
+            <br /> Française
+          </p>
+          <a
+            className="fr-footer__brand-link"
+            href="/"
+            title="Accueil - France VAE"
+          >
+            <img
+              className="fr-footer__logo"
+              width="225"
+              height="138"
+              src="/app/fvae_logo.svg"
+              alt="France VAE"
+            />
           </a>
         </div>
         <div className="fr-footer__content">
@@ -72,7 +83,7 @@ export const Footer = () => (
           </li>
         </ul>
         <div className="fr-footer__bottom-copy">
-          <p>
+          <p className="mb-4">
             Sauf mention contraire, tous les contenus de ce site sont sous{" "}
             <a
               href="https://github.com/etalab/licence-ouverte/blob/master/LO.md"
