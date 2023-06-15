@@ -8,9 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "predev": "only-include-used-icons",
-    "prebuild": "only-include-used-icons",
-    "prepackage": "only-include-used-icons",
-    "postpackage": "rimraf node_modules"
+    "prebuild": "only-include-used-icons && node ./src/scripts/generateRobotsTxt.js"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^0.44.0",
