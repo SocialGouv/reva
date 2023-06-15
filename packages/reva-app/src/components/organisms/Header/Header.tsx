@@ -9,7 +9,11 @@ export const Header = (props: { className?: string }) => (
         <br /> Française
       </>
     }
-    serviceTitle="France VAE"
+    operatorLogo={{
+      alt: "France VAE",
+      imgUrl: "/app/fvae_logo.svg",
+      orientation: "horizontal",
+    }}
     homeLinkProps={{
       href: "/",
       title: "Accueil - France VAE",
