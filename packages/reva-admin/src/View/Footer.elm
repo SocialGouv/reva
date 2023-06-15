@@ -30,7 +30,7 @@ view context =
                     [ class "fr-footer__content" ]
                     [ p
                         [ class "fr-footer__content-desc" ]
-                        [ text "Le site officiel de la VAE" ]
+                        [ text "France VAE est le portail officiel du service public qui vise à transformer la VAE avec nos partenaires." ]
                     , ul
                         [ class "fr-footer__content-list" ]
                         [ li

@@ -11,7 +11,10 @@ export const Footer = () => (
           </a>
         </div>
         <div className="fr-footer__content">
-          <p className="fr-footer__content-desc">France VAE</p>
+          <p className="fr-footer__content-desc">
+            France VAE est le portail officiel du service public qui vise à
+            transformer la VAE avec nos partenaires.
+          </p>
           <ul className="fr-footer__content-list">
             <li className="fr-footer__content-item">
               <a
