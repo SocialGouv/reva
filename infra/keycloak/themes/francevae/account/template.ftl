@@ -97,7 +97,7 @@
             </div>
 
             <a class="ml-2 lg:ml-8 no-underline" style="color: black" href="${url.logoutUrl}">
-              <div class="font-bold lg:text-xl">France VAE</div>
+              <img style="width:145px" src="${url.resourcesPath}/img/fvae_logo.svg" alt="France VAE">
             </a>
 
             <div class="flex flex-row ml-auto">
