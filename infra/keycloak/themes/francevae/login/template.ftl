@@ -64,40 +64,32 @@
           </ul>
         </nav>
       </div>
-    </div>
-
-    <header
-      id="header-navigation"
-      role="banner"
-      class="relative"
-      style="
-        font-family: Marianne, arial, sans-serif;
-        box-shadow: 0 8px 8px 0 rgb(0 0 0 / 10%);
-      "
-    >
-      <div class="p-2 lg:p-0 text-lg">
-        <div class="flex flex-col xl:mx-auto xl:max-w-7xl">
-          <section class="flex flex-row px-2 pb-1 lg:p-4 items-center">
-            <div class="flex flex-col">
-              <div class="lg:mb-1 logo-before"></div>
-              <div
-                class="hidden lg:block uppercase font-bold leading-none tracking-tighter"
-              >
-                République
-                <br />
-                Française
+      <header id="header-navigation" role="banner" class="fr-header">
+        <div class="fr-header__body">
+          <div class="fr-container">
+            <div class="fr-header__body-row">
+              <div class="fr-header__brand fr-enlarge-link">
+                <div class="fr-header__brand-top">
+                  <div class="fr-header__logo">
+                    <a title="Accueil - France VAE" href="/">
+                      <p class="fr-logo">République<br> Française</p>
+                    </a>
+                  </div>
+                  <div class="fr-header__operator">
+                    <a title="Accueil - France VAE" href="${properties.revaUrl}">
+                      <img class="fr-responsive-img" style="max-width:9.0625rem" src="${url.resourcesPath}/img/fvae_logo.svg" alt="France VAE">
+                    </a>
+                  </div>
+                  <div class="fr-header__navbar">
+                    <button class="fr-btn--menu fr-btn" title="Menu">Menu</button>
+                  </div>
+                </div>
               </div>
-              <div class="hidden lg:block logo-after"></div>
             </div>
-
-            <a class="ml-2 lg:ml-8 no-underline font-bold lg:text-xl" style="color: black" href="${properties.revaUrl}">
-              France VAE
-            </a>
-
-          </section>
+          </div>
         </div>
+      </header>
     </div>
-    </header>
 
     <main class="only-dsfr" role="main" id="content">
       <section class="" style="min-height: calc(100vh - 400px); padding-top: 1em; padding-bottom: 1em;">
