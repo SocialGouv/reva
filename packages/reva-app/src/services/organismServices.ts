@@ -1,8 +1,8 @@
 import { ApolloClient, gql } from "@apollo/client";
 
 const GET_ORGANISMS_FOR_CANDIDACY = gql`
-  query getOrganismsForCandidacy($query: UUID!) {
-    getOrganismsForCandidacy(candidacyId: $query) {
+  query getRandomOrganismsForCandidacy($query: UUID!) {
+    getRandomOrganismsForCandidacy(candidacyId: $query) {
       id
       label
       address
@@ -13,7 +13,7 @@ const GET_ORGANISMS_FOR_CANDIDACY = gql`
   }
 `;
 
-export const getOrganismsForCandidacy =
+export const getRandomOrganismsForCandidacy =
   (client: ApolloClient<object>) =>
   ({ query }: { query: string }) =>
     client.query({

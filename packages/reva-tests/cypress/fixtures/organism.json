@@ -1,6 +1,6 @@
 {
   "data": {
-    "getOrganismsForCandidacy": [
+    "getRandomOrganismsForCandidacy": [
       {
         "id": "o1",
         "label": "Architecte 1",

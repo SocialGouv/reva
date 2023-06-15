@@ -667,7 +667,7 @@ export const mainMachine =
                 {
                   actions: assign({
                     organisms: (_, event) =>
-                      event.data.data.getOrganismsForCandidacy,
+                      event.data.data.getRandomOrganismsForCandidacy,
                   }),
                 },
               ],

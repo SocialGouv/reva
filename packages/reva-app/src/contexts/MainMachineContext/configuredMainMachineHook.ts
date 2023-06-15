@@ -21,7 +21,7 @@ import {
   updateExperience,
 } from "../../services/candidacyServices";
 import {
-  getOrganismsForCandidacy,
+  getRandomOrganismsForCandidacy,
   selectOrganismForCandidacy,
 } from "../../services/organismServices";
 import {
@@ -83,7 +83,9 @@ export const useConfiguredMainMachine = () => {
                 "unavailable candidacyId in XState context"
               );
 
-            return getOrganismsForCandidacy(client as ApolloClient<object>)({
+            return getRandomOrganismsForCandidacy(
+              client as ApolloClient<object>
+            )({
               query: context.candidacyId,
             });
           },

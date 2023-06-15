@@ -21,14 +21,14 @@ context("Candidacy with department certification selected", () => {
       stubQuery(req, "getDepartments", "departments.json");
       stubMutation(req, "candidate_login", "candidate3.json");
       stubQuery(req, "getReferential", "referential.json");
-      stubQuery(req, "getOrganismsForCandidacy", "organism.json");
+      stubQuery(req, "getRandomOrganismsForCandidacy", "organism.json");
     });
     cy.login();
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
 
     cy.get('[data-test="project-home-edit-organism').click();
-    cy.wait("@getOrganismsForCandidacy");
+    cy.wait("@getRandomOrganismsForCandidacy");
 
     cy.get('[data-test="project-organisms-organism-o1"]').within(() => {
       cy.get('[data-test="project-organisms-organism-label"]').should(
@@ -74,7 +74,7 @@ context("Candidacy with department certification selected", () => {
       stubQuery(req, "getDepartments", "departments.json");
       stubMutation(req, "candidate_login", "candidate3.json");
       stubQuery(req, "getReferential", "referential.json");
-      stubQuery(req, "getOrganismsForCandidacy", "organism.json");
+      stubQuery(req, "getRandomOrganismsForCandidacy", "organism.json");
       stubMutation(req, "candidacy_selectOrganism", "selected-organism.json");
     });
 
@@ -90,7 +90,7 @@ context("Candidacy with department certification selected", () => {
     cy.wait("@candidate_login");
 
     cy.get('[data-test="project-home-edit-organism').click();
-    cy.wait("@getOrganismsForCandidacy");
+    cy.wait("@getRandomOrganismsForCandidacy");
 
     cy.get('[data-test="project-organisms-submit-organism').click();
     cy.wait("@candidacy_selectOrganism");

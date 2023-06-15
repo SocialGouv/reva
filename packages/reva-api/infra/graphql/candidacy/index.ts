@@ -1,4 +1,5 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
+import { Organism } from "@prisma/client";
 import mercurius from "mercurius";
 
 import { addExperienceToCandidacy } from "../../../domain/features/addExperienceToCandidacy";
@@ -35,6 +36,7 @@ import {
   CandidacyStatusFilter,
   ExamInfo,
 } from "../../../domain/types/candidacy";
+import { shuffleArray } from "../../../domain/utils/array-shuffle";
 import * as admissibilityDb from "../../database/postgres/admissibility";
 import * as basicSkillDb from "../../database/postgres/basicSkills";
 import * as candidacyDb from "../../database/postgres/candidacies";
@@ -172,6 +174,37 @@ const unsafeResolvers = {
       })({ candidacyId: params.candidacyId });
 
       return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
+    getRandomOrganismsForCandidacy: async (
+      _: unknown,
+      params: { candidacyId: string }
+    ) => {
+      const candidacy = await prismaClient.candidacy.findUnique({
+        where: { id: params.candidacyId },
+        include: { organism: true },
+      });
+
+      const result = await getActiveOrganismsForCandidacyWithNewTypologies({
+        getActiveOrganismForCertificationAndDepartment:
+          organismDb.getActiveOrganismForCertificationAndDepartment,
+        getCandidacyFromId: candidacyDb.getCandidacyFromId,
+      })({ candidacyId: params.candidacyId });
+
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .map((organisms) => {
+          // Keep only 5 random organisms, including the one already selected
+          const randomOrganisms = shuffleArray(organisms).slice(0, 4);
+          if (
+            candidacy?.organismId &&
+            !randomOrganisms.some((org) => org.id == candidacy.organismId)
+          ) {
+            randomOrganisms[0] = candidacy.organism as Organism;
+          }
+          return randomOrganisms;
+        })
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },

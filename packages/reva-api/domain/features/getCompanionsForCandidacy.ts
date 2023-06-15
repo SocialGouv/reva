@@ -1,4 +1,4 @@
-import { Either, EitherAsync, Left } from "purify-ts";
+import { Either, EitherAsync } from "purify-ts";
 
 import { Organism } from "../types/candidacy";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
