@@ -1,8 +1,8 @@
 module View.Footer exposing (..)
 
-import Accessibility exposing (a, div, footer, li, p, span, text, ul)
+import Accessibility exposing (a, div, footer, img, li, p, span, text, ul)
 import Accessibility.Aria
-import Html.Attributes exposing (attribute, class, href, id, target)
+import Html.Attributes exposing (alt, attribute, class, height, href, id, src, target, width)
 import Route
 import View
 
@@ -20,11 +20,20 @@ view context =
                 [ class "fr-footer__body" ]
                 [ div
                     [ class "fr-footer__brand fr-enlarge-link" ]
-                    [ a
-                        [ attribute "title" "Accueil - Espace professionnel"
+                    [ View.logo
+                    , a
+                        [ class "fr-footer__brand-link"
+                        , attribute "title" "Accueil - Espace professionnel"
                         , Route.href context.baseUrl (Route.Candidacies Route.emptyFilters)
                         ]
-                        [ View.logo ]
+                        [ View.image
+                            [ alt "France VAE"
+                            , width 225
+                            , height 138
+                            ]
+                            context.baseUrl
+                            "fvae_logo.svg"
+                        ]
                     ]
                 , div
                     [ class "fr-footer__content" ]
