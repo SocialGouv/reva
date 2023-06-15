@@ -1,7 +1,7 @@
 module View.Header exposing (..)
 
 import Accessibility exposing (a, button, div, header, li, p, span, text)
-import Html.Attributes exposing (attribute, class, href, id, target, title)
+import Html.Attributes exposing (alt, attribute, class, height, href, id, style, target, title, width)
 import Route exposing (Route(..))
 import View
 
@@ -27,6 +27,21 @@ view context =
                                 [ class "fr-header__logo" ]
                                 [ View.logo ]
                             , div
+                                [ class "fr-header__operator" ]
+                                [ a
+                                    [ attribute "title" "Accueil - Espace professionnel"
+                                    , Route.href context.baseUrl (Route.Candidacies Route.emptyFilters)
+                                    ]
+                                    [ View.image
+                                        [ class "fr-responsive-img"
+                                        , style "max-width" "9.0625rem"
+                                        , alt "France VAE"
+                                        ]
+                                        context.baseUrl
+                                        "fvae_logo.svg"
+                                    ]
+                                ]
+                            , div
                                 [ class "fr-header__navbar" ]
                                 [ button
                                     [ class "fr-btn--menu fr-btn"
@@ -37,18 +52,6 @@ view context =
                                     , title "Menu"
                                     ]
                                     [ text "Menu" ]
-                                ]
-                            ]
-                        , div
-                            [ class "fr-header__service"
-                            ]
-                            [ a
-                                [ attribute "title" "Accueil - Espace Professionnel"
-                                , Route.href context.baseUrl (Route.Candidacies Route.emptyFilters)
-                                ]
-                                [ p
-                                    [ class "fr-header__service-title" ]
-                                    [ text "France VAE" ]
                                 ]
                             ]
                         ]
