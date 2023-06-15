@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export const Footer = ({ className }: { className?: string }) => (
@@ -5,11 +6,22 @@ export const Footer = ({ className }: { className?: string }) => (
     <div className="fr-container">
       <div className="fr-footer__body">
         <div className="fr-footer__brand fr-enlarge-link">
-          <Link title="Accueil - France VAE" href="/">
-            <p className="fr-logo">
-              République
-              <br /> Française
-            </p>
+          <p className="fr-logo">
+            République
+            <br /> Française
+          </p>
+          <Link
+            title="Accueil - France VAE"
+            href="/"
+            className="fr-footer__brand-link"
+          >
+            <Image
+              className="fr-footer__logo"
+              width="225"
+              height="138"
+              src="/fvae_logo.svg"
+              alt="France VAE"
+            />
           </Link>
         </div>
         <div className="fr-footer__content">
