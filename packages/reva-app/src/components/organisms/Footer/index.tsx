@@ -22,7 +22,7 @@ export const Footer = () => (
           </a>
         </div>
         <div className="fr-footer__content">
-          <p className="fr-footer__content-desc">
+          <p className="fr-footer__content-desc mb-2">
             France VAE est le portail officiel du service public qui vise à
             transformer la VAE avec nos partenaires.
           </p>
@@ -80,6 +80,16 @@ export const Footer = () => (
             <span className="fr-footer__bottom-link">
               Accessibilité : partiellement conforme
             </span>
+          </li>
+          <li className="fr-footer__bottom-item">
+            <a className="fr-footer__bottom-link" href="/mentions-legales/">
+              Mentions légales
+            </a>
+          </li>
+          <li className="fr-footer__bottom-item">
+            <a className="fr-footer__bottom-link" href="/confidentialite/">
+              Données personnelles
+            </a>
           </li>
         </ul>
         <div className="fr-footer__bottom-copy">
