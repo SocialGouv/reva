@@ -1,20 +1,161 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 
-import { logger } from "../../../infra/logger";
-import { upsertCsvRows } from "../read-csv";
+import { injectCsvRows, readCsvRows } from "../read-csv";
+
+const certificationsXp = [
+  "9b3997dd-b7f1-4294-9452-7b133b8d40b5",
+  "9140e7fb-b4a9-4969-973d-220d3cc1b6b0",
+  "c64f7ebb-7c15-43d6-93fc-b337eb0b1ffd",
+  "b8499961-4e6a-4ca2-a3f0-061e087d926b",
+  "39df14b2-b6b4-4951-9795-e5a2dec26340",
+  "da929b9d-6463-4682-a3f5-e95307f67d49",
+  "3ee32529-6ce6-4b27-9294-73b4295a4af8",
+  "ca4601d3-0bc8-412b-a774-3ea8372d2d54",
+  "eebee2d3-2696-47f9-840e-859ff5fc324b",
+  "bb2e7187-476e-478d-ab77-c38a0cd6ae83",
+  "2de4679a-c385-4fe8-bb2d-b7c08f662ddb",
+  "4c6a804c-a0c6-461b-a00a-6cc13e19a315",
+  "14d38f55-639d-4d5b-80e8-396a3cbfa2be",
+  "d37cf5c1-da1a-420f-b624-2b9cf4b54712",
+  "e5a76f62-f35b-4d46-b19d-344cf1a623b5",
+  "ac5e879b-c2d1-4039-85c0-5f3aed15251d",
+  "654c9471-6e2e-4ff2-a5d8-2069e78ea0d6",
+  "464b1c80-2951-4174-b462-3400cd65fddb",
+  "994b9bc4-e9f5-42c3-8556-f2494d11ebb4",
+];
 
 export async function seedCertifications(prisma: PrismaClient) {
-  // Upsert from CSV
-  await upsertCertificationsXp(prisma);
-
-  // 6/05/2023 : Supprimer la certification RNCP 37231
-  // trello.com/c/5lRTQtl2/757-modification-du-airtable
-  // Attention à ça si un jour elle est ajoutée de nouveau!!
+  // On supprime toutes les certifications, sauf celles de l'XP
   const { count } = await prisma.certification.deleteMany({
-    where: { rncpId: "37231" },
+    where: { id: { notIn: certificationsXp } },
   });
-  console.log(`Deleted ${count} certification(s) with RNCPID 37231`);
+  console.log(`Deleted ${count} previous "new" certification(s)`);
 
+  // Certifications : referentials/certifications.csv
+  console.log(`Recreating certifications`);
+  await injectCsvRows<
+    Prisma.CertificationCreateInput & {
+      level: string;
+      isActive?: string;
+    },
+    Prisma.CertificationUpsertArgs
+  >({
+    filePath: "./referentials/certifications.csv",
+    injectCommand: prisma.certification.upsert,
+    headersDefinition: [
+      "rncpId",
+      "isActive",
+      "id",
+      "label",
+      "summary",
+      "acronym",
+      "typeDiplome",
+      "level",
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+    ],
+    transform: ({
+      id,
+      label,
+      rncpId,
+      summary,
+      level,
+      acronym,
+      typeDiplome,
+      isActive,
+    }) => {
+      return {
+        where: { id },
+        create: {
+          id,
+          rncpId,
+          label,
+          level: parseInt(level),
+          summary,
+          acronym,
+          slug: "",
+          typeDiplomeId: typeDiplome as string,
+          status: isActive === "checked" ? "AVAILABLE" : "INACTIVE",
+        },
+        update: {
+          rncpId,
+          label,
+          level: parseInt(level),
+          summary,
+          acronym,
+          slug: "",
+          typeDiplomeId: typeDiplome as string,
+          status: isActive === "checked" ? "AVAILABLE" : "INACTIVE",
+        },
+      };
+    },
+  });
+
+  // Relations certifications
+  console.log(`Recreating certifications links (domains, ccn etc..)`);
+  const certificationRel = await readCsvRows<{
+    certificationId: string;
+    conventionCollective: string;
+    domaine: string;
+  }>({
+    filePath: "./referentials/certifications.csv",
+    headersDefinition: [
+      undefined, // rncp
+      undefined, // isActive
+      "certificationId", // id
+      undefined, // label
+      undefined, // summary
+      undefined, // acronym
+      undefined, // typeDiplome
+      undefined, // level
+      undefined, // ccn
+      "conventionCollective", // ccn
+      undefined, // filière
+      "domaine", // filière
+      undefined, // date
+      undefined, // last modif
+      undefined, // created by
+      undefined, // last updated by
+    ],
+  });
+  for (const {
+    certificationId,
+    conventionCollective,
+    domaine,
+  } of certificationRel) {
+    if (conventionCollective) {
+      await prisma.certificationOnConventionCollective.deleteMany({
+        where: {
+          certificationId,
+        },
+      });
+      await prisma.certificationOnConventionCollective.createMany({
+        data: parseCsvList(conventionCollective).map((ccnId: string) => ({
+          certificationId,
+          ccnId,
+        })),
+      });
+    }
+    if (domaine) {
+      await prisma.certificationOnDomaine.deleteMany({
+        where: {
+          certificationId,
+        },
+      });
+      await prisma.certificationOnDomaine.createMany({
+        data: parseCsvList(domaine).map((domaineId: string) => ({
+          certificationId,
+          domaineId,
+        })),
+      });
+    }
+  }
   // Refresh materialized views
   await prisma.$queryRaw`
     REFRESH MATERIALIZED VIEW certification_search WITH DATA;
@@ -24,79 +165,9 @@ export async function seedCertifications(prisma: PrismaClient) {
   `;
 }
 
-async function upsertCertificationsXp(prisma: PrismaClient) {
-  console.log("upsertCertificationsXp");
-  await upsertCsvRows<
-    Prisma.CertificationCreateInput & { level: string },
-    Prisma.CertificationUpsertArgs
-  >({
-    filePath: "./referentials/certifications_xp.csv",
-    headersDefinition: [
-      "id",
-      "slug",
-      "rncpId",
-      undefined,
-      undefined,
-      "label",
-      "abilities",
-      "accessibleJobType",
-      "acronym",
-      "activities",
-      "activityArea",
-      "level",
-      "summary",
-      "status",
-      undefined,
-    ],
-    transform: ({
-      id,
-      slug,
-      rncpId,
-      label,
-      abilities,
-      accessibleJobType,
-      acronym,
-      activities,
-      activityArea,
-      level,
-      summary,
-      status,
-    }) => ({
-      where: { id },
-      create: {
-        id,
-        slug,
-        rncpId,
-        label,
-        abilities,
-        accessibleJobType,
-        acronym,
-        activities,
-        activityArea,
-        level: parseInt(level),
-        summary,
-        status,
-      },
-      update: {
-        slug,
-        rncpId,
-        label,
-        abilities,
-        accessibleJobType,
-        acronym,
-        activities,
-        activityArea,
-        level: parseInt(level),
-        summary,
-        status,
-      },
-    }),
-    upsertCommand: prisma.certification.upsert,
-  });
-
-  const count = await prisma.$queryRaw`
-  select count(1) from certification;
-`;
-
-  logger.info(`${(count as any)[0].count} certifications inserted`);
+function parseCsvList(str: string): string[] {
+  return str
+    .trim()
+    .split(",")
+    .map((s: string) => s.trim());
 }

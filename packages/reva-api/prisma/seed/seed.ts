@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 
-import { readCsvRows, upsertCsvRows } from "./read-csv";
+import { injectCsvRows } from "./read-csv";
 import { seedCertifications } from "./referentials/seed-certifications";
 import { insertBasicSkillsIfNone } from "./referentials/table-basic-skills";
 import { insertDegreesIfNone } from "./referentials/table-degrees";
@@ -14,7 +14,6 @@ import { insertVulnerabilityIndicatorsIfNone } from "./referentials/table-vulner
 export const prisma = new PrismaClient();
 
 async function main() {
-  await seedCertifications(prisma);
   await upsertGoals(prisma);
   await upsertRegions(prisma);
   await insertDepartmentsIfNone(prisma);
@@ -25,7 +24,7 @@ async function main() {
   await insertReorientationReasonsIfNone(prisma);
 
   // Domaines : referentials/domaines.csv
-  await upsertCsvRows<Prisma.DomaineCreateInput, Prisma.DomaineUpsertArgs>({
+  await injectCsvRows<Prisma.DomaineCreateInput, Prisma.DomaineUpsertArgs>({
     filePath: "./referentials/domaines.csv",
     headersDefinition: ["label", "id", "code", undefined],
     transform: ({ id, label, code }) => ({
@@ -33,11 +32,11 @@ async function main() {
       create: { id, label, code },
       update: { label },
     }),
-    upsertCommand: prisma.domaine.upsert,
+    injectCommand: prisma.domaine.upsert,
   });
 
   // Conventions collectives : referentials/conventions-collectives.csv
-  await upsertCsvRows<
+  await injectCsvRows<
     Prisma.ConventionCollectiveCreateInput,
     Prisma.ConventionCollectiveUpsertArgs
   >({
@@ -48,11 +47,11 @@ async function main() {
       create: { id, label, code },
       update: { label },
     }),
-    upsertCommand: prisma.conventionCollective.upsert,
+    injectCommand: prisma.conventionCollective.upsert,
   });
 
   // Types de diplôme : referentials/types-diplome.csv
-  await upsertCsvRows<
+  await injectCsvRows<
     Prisma.TypeDiplomeCreateInput,
     Prisma.TypeDiplomeUpsertArgs
   >({
@@ -63,126 +62,10 @@ async function main() {
       create: { id, label },
       update: { label },
     }),
-    upsertCommand: prisma.typeDiplome.upsert,
+    injectCommand: prisma.typeDiplome.upsert,
   });
 
-  // Certifications : referentials/certifications_new.csv
-  await upsertCsvRows<
-    Prisma.CertificationCreateInput & {
-      level: string;
-    },
-    Prisma.CertificationUpsertArgs
-  >({
-    filePath: "./referentials/certifications_new.csv",
-    headersDefinition: [
-      "rncpId",
-      "id",
-      "label",
-      "summary",
-      "acronym",
-      "typeDiplome",
-      "level",
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-    ],
-    transform: ({
-      id,
-      label,
-      rncpId,
-      summary,
-      level,
-      acronym,
-      typeDiplome,
-    }) => {
-      // console.log("certifications_new", rncpId);
-      return {
-        where: { id },
-        create: {
-          id,
-          rncpId,
-          label,
-          level: parseInt(level),
-          summary,
-          acronym,
-          slug: "",
-          typeDiplomeId: typeDiplome as string,
-        },
-        update: {
-          rncpId,
-          label,
-          level: parseInt(level),
-          summary,
-          acronym,
-          slug: "",
-          typeDiplomeId: typeDiplome as string,
-        },
-      };
-    },
-    upsertCommand: prisma.certification.upsert,
-  });
-
-  // Relations certifications
-  const certificationRel = await readCsvRows<{
-    certificationId: string;
-    conventionCollective: string;
-    domaine: string;
-  }>({
-    filePath: "./referentials/certifications_new.csv",
-    headersDefinition: [
-      undefined,
-      "certificationId",
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      "conventionCollective",
-      undefined,
-      "domaine",
-    ],
-  });
-  for (const {
-    certificationId,
-    conventionCollective,
-    domaine,
-  } of certificationRel) {
-    if (conventionCollective) {
-      await prisma.certificationOnConventionCollective.deleteMany({
-        where: {
-          certificationId,
-        },
-      });
-      await prisma.certificationOnConventionCollective.createMany({
-        data: parseCsvList(conventionCollective).map((ccnId: string) => ({
-          certificationId,
-          ccnId,
-        })),
-      });
-    }
-    if (domaine) {
-      await prisma.certificationOnDomaine.deleteMany({
-        where: {
-          certificationId,
-        },
-      });
-      await prisma.certificationOnDomaine.createMany({
-        data: parseCsvList(domaine).map((domaineId: string) => ({
-          certificationId,
-          domaineId,
-        })),
-      });
-    }
-  }
-}
-
-function parseCsvList(str: string): string[] {
-  return str
-    .trim()
-    .split(",")
-    .map((s: string) => s.trim());
+  await seedCertifications(prisma);
 }
 
 main()

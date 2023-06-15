@@ -8,18 +8,18 @@ interface ReadCsvRowsParams<T> {
   headersDefinition: Array<keyof T | undefined>;
 }
 
-interface UpsertCsvRowsParams<T, U> extends ReadCsvRowsParams<T> {
+interface InjectCsvRowsParams<T, U> extends ReadCsvRowsParams<T> {
   transform: (row: T) => U;
-  upsertCommand: (args: U) => Promise<unknown>;
+  injectCommand: (args: U) => Promise<unknown>;
 }
 
-export function upsertCsvRows<T, U>({
+export function injectCsvRows<T, U>({
   filePath,
   headersDefinition,
   transform,
-  upsertCommand,
-}: UpsertCsvRowsParams<T, U>): Promise<void> {
-  const upsertArgs: U[] = [];
+  injectCommand,
+}: InjectCsvRowsParams<T, U>): Promise<void> {
+  const injectArgs: U[] = [];
   return new Promise((resolve, error) => {
     fs.createReadStream(path.resolve(__dirname, filePath)).pipe(
       parse({
@@ -30,10 +30,16 @@ export function upsertCsvRows<T, U>({
         .on("error", (err) => {
           error(err);
         })
-        .on("data", (row: T) => upsertArgs.push(transform(row)))
+        .on("data", (row: T) => {
+          const t = transform(row);
+          console.log(
+            `---- ${(t as any).create.id} -- ${(t as any).create.label}`
+          );
+          injectArgs.push(t);
+        })
         .on("end", async () => {
-          for (const args of upsertArgs) {
-            await upsertCommand(args);
+          for (const args of injectArgs) {
+            await injectCommand(args);
           }
           resolve();
         })
