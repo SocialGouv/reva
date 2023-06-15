@@ -196,7 +196,7 @@ const unsafeResolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .map((organisms) => {
           // Keep only 5 random organisms, including the one already selected
-          const randomOrganisms = shuffleArray(organisms).slice(0, 4);
+          const randomOrganisms = shuffleArray(organisms).slice(0, 5);
           if (
             candidacy?.organismId &&
             !randomOrganisms.some((org) => org.id == candidacy.organismId)
