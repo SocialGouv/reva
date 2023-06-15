@@ -105,7 +105,7 @@ view context =
                         [ class "fr-footer__bottom-item" ]
                         [ span
                             [ class "fr-footer__bottom-link" ]
-                            [ text "Accessibilité: non conforme" ]
+                            [ text "Accessibilité : partiellement conforme" ]
                         ]
                     , li
                         [ class "fr-footer__bottom-item"

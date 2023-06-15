@@ -199,7 +199,7 @@
             <ul class="fr-footer__bottom-list">
               <li class="fr-footer__bottom-item">
                 <a class="fr-footer__bottom-link" href="#"
-                  >Accessibilité: non conforme</a
+                  >Accessibilité : partiellement conforme</a
                 >
               </li>
               <li class="fr-footer__bottom-item">
