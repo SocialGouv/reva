@@ -81,7 +81,7 @@ const AvenirPro = () => (
 const ValorisationCompetences = () => (
   <section
     id="valorisation-competences"
-    className="w-full mt-20 sm:mt-24 bg-dsfrGray-altblueFrance"
+    className="w-full mt-20 sm:mt-24 bg-dsfrGray-altblueFrance md:bg-[url('/home-page/section-background/polygons-section1.5.svg')] md:bg-cover bg-no-repeat"
   >
     <div className="fr-container mx-auto relative md:flex">
       <div className="relative flex-1 min-h-[200px] max-w-lg -mt-[60px] md:-mt-[190px]">
@@ -137,7 +137,10 @@ const ValorisationCompetences = () => (
 );
 
 const CommentCaMarche = () => (
-  <section id="comment-ca-marche" className="lg:mt-20 pb-24 lg:pb-48">
+  <section
+    id="comment-ca-marche"
+    className="lg:pt-20 pb-24 lg:pb-48 bg-[url('/home-page/section-background/polygons-section4.svg')] bg-cover bg-no-repeat"
+  >
     <div className="relative w-full fr-container mx-auto px-5 lg:flex lg:space-x-12">
       <div className="flex-1 mt-[100px]">
         <HomeHeader subTitle="VAE 2.0" title="Comment ça marche ?" />
@@ -244,9 +247,9 @@ const CommentCaMarche = () => (
 const TrouvezCertification = () => (
   <section
     id="trouvez-certification"
-    className="fr-container relative flex flex-col lg:flex-row-reverse mt-20 pb-52 px-5 overflow-y-visible overflow-x-hidden"
+    className="w-full relative flex flex-col lg:flex-row-reverse mt-20 pb-52 px-5 overflow-y-visible overflow-x-hidden bg-[url('/home-page/section-background/polygons-section5.svg')] bg-cover bg-no-repeat"
   >
-    <div className="lg:flex-1">
+    <div className="fr-container  lg:flex-1">
       <HomeHeader
         subTitle="Pour tous"
         title="Trouvez la certification dont vous avez besoin"
@@ -299,7 +302,10 @@ const Professionel = ({
 );
 
 const Professionnels = () => (
-  <section id="professionnel" className="overflow-y-visible overflow-x-hidden">
+  <section
+    id="professionnel"
+    className="overflow-y-visible overflow-x-hidden bg-[url('/home-page/section-background/polygons-section2.svg')] bg-cover bg-no-repeat"
+  >
     <HomeContainer>
       <HomeHeader
         title="Participez à l’essor de la VAE !"
@@ -374,7 +380,10 @@ const RoadmapStep = ({
 );
 
 const Roadmap = () => (
-  <section id="professionnel" className="mt-20 bg-dsfrGray-altblueFrance">
+  <section
+    id="professionnel"
+    className="mt-20 bg-dsfrGray-altblueFrance bg-[url('/home-page/section-background/polygons-section3.svg')] bg-cover bg-no-repeat"
+  >
     <HomeContainer>
       <HomeHeader
         title="Une mise en place progressive"
