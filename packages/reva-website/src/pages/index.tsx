@@ -50,7 +50,7 @@ const AvenirPro = () => (
     id="avenir-professionnel"
     className="w-full fr-container mx-auto mt-[80px] lg:flex lg:items-center"
   >
-    <div className="sm:flex-1 max-w-3xl md:mr-12">
+    <div className="sm:flex-1 max-w-3xl md:mr-12 basis-1/2">
       <header>
         <h1 className="leading-tight text-5xl xl:text-7xl xl:leading-[84px]">
           Bienvenue sur le portail de la VAE
@@ -66,9 +66,9 @@ const AvenirPro = () => (
         simplifié et sécurisé par la loi n°2022-1598 du 21 décembre 2022.
       </p>
     </div>
-    <div className="relative mt-16 -mx-5 max-w-lg">
+    <div className="relative mt-16 -mx-5 max-w-lg basis-1/2">
       <Image
-        src="/home-page/image-hero.png"
+        src="/home-page/image-app-screenshots.png"
         className=""
         alt=""
         width={1067}
