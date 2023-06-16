@@ -25,7 +25,6 @@ export const logGraphqlEvent = ({
   const isError = result.isLeft();
   logBusinessEvent({
     userId: context.auth.userInfo?.sub,
-    userEmail: context.auth.userInfo?.email,
     targetType,
     eventType,
     targetId: targetId ?? (result.isRight() ? result.extract().id : undefined),

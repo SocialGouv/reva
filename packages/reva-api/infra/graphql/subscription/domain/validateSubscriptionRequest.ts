@@ -269,7 +269,7 @@ export const validateSubscriptionRequest = async (
       )
       .ifRight(() => {
         logger.info(
-          `[validateSubscriptionRequest] Successfuly created AP account with email ${$store.subreq?.accountEmail}`
+          `[validateSubscriptionRequest] Successfuly created AP with organismId ${$store.subreq?.organismId}`
         );
       })
   );
@@ -305,7 +305,7 @@ export const validateSubscriptionRequest = async (
       .ifRight((keycloakId) => {
         $store.keyCloackId = keycloakId;
         logger.info(
-          `[validateSubscriptionRequest] Successfuly created IAM account with email ${$store.subreq?.accountEmail}`
+          `[validateSubscriptionRequest] Successfuly created IAM account ${keycloakId}`
         );
       })
   );

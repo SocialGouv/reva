@@ -1,10 +1,7 @@
 import { Either } from "purify-ts";
 
 import { FunctionalError } from "../../../domain/types/functionalError";
-import {
-  BusinessEventType,
-  BusinessTargetType,
-} from "../../logger/businessLogger";
+import { BusinessEventType } from "../../logger/businessLogger";
 import { logGraphqlEvent } from "../logGraphqlEvent";
 
 export const logCandidacyEvent = ({
@@ -25,7 +22,7 @@ export const logCandidacyEvent = ({
     result,
     eventType,
     targetId: candidacyId,
-    targetType: BusinessTargetType.CANDIDACY,
+    targetType: "CANDIDACY",
     extraInfo,
   });
 };

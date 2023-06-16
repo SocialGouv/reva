@@ -14,7 +14,7 @@ interface RejectSubscriptionRequestDeps {
   sendRejectionEmail: (
     email: string,
     subscriptionRequestUri?: string,
-    reasons?: string[],
+    reasons?: string[]
   ) => Promise<Either<string, string>>;
 }
 export const rejectSubscriptionRequest = async (
@@ -62,7 +62,7 @@ export const rejectSubscriptionRequest = async (
     )
     .ifRight(() => {
       logger.info(
-        `[rejectSubscriptionRequestDeps] Successfuly sent rejection mail to ${$store.subreq?.accountEmail}`
+        `[rejectSubscriptionRequestDeps] Successfuly sent rejection mail for subscription request ${$store.subreq?.id}`
       );
     });
 
