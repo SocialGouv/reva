@@ -311,8 +311,8 @@ const Professionnels = () => (
           description="Référencez vos certifications sur notre plateforme pour la rendre
             disponible aux candidats à la VAE."
         >
-          <p className="!text-base font-semibold mb-0">
-            Enregistrer ma certification (page en construction)
+          <p className="!text-sm mb-0">
+            (Cette fonction sera disponible plus tard)
           </p>
         </Professionel>
         <Professionel
@@ -320,8 +320,8 @@ const Professionnels = () => (
           description="Mettez en avant les dispositifs de soutien à la VAE au sein de votre
             branche professionnelle sur un espace dédié."
         >
-          <p className="!text-base font-semibold mb-0">
-            Espace dédiée aux Filières Professionnelles (page en construction)
+          <p className="!text-sm mb-0">
+            (Cette fonction sera disponible plus tard)
           </p>
         </Professionel>
         <Professionel
@@ -329,8 +329,8 @@ const Professionnels = () => (
           description="Valorisez les dispositifs de soutien à la VAE disponibles dans votre
             région en les présentant sur votre espace dédié."
         >
-          <p className="!text-base font-semibold mb-0">
-            Espace dédiée aux régions (page en construction)
+          <p className="!text-sm mb-0">
+            (Cette fonction sera disponible plus tard)
           </p>
         </Professionel>
       </div>
