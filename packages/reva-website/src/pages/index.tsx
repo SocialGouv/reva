@@ -10,6 +10,10 @@ import Image from "next/image";
 /* eslint-disable react/no-unescaped-entities */
 import * as React from "react";
 
+const ArrowRight = () => (
+  <span className="fr-icon-arrow-right-line mr-6" aria-hidden="true" />
+);
+
 const HomeHeader = ({
   title,
   subTitle,
@@ -138,11 +142,26 @@ const CommentCaMarche = () => (
       <div className="flex-1 mt-[100px]">
         <HomeHeader subTitle="VAE 2.0" title="Comment ça marche ?" />
         <SectionParagraph>
-          Vous choisissez la certification que vous voulez passer, vous êtes
-          pris en charge par un architecte de parcours, vous remplissez un
-          dossier décrivant votre expérience et vos compétences et ce dossier
-          sera ensuite présenté à un jury qui validera votre certification de
-          manière totale ou partielle.
+          <ul className="list-none">
+            <li>
+              <ArrowRight />
+              Vous choisissez la certification que vous voulez passer
+            </li>
+            <li>
+              <ArrowRight />
+              Vous êtes pris en charge par un architecte de parcours
+            </li>
+            <li>
+              <ArrowRight />
+              Vous remplissez un dossier décrivant votre expérience et vos
+              compétences
+            </li>
+            <li>
+              <ArrowRight />
+              Ce dossier sera ensuite présenté à un jury qui validera votre
+              certification de manière totale ou partielle
+            </li>
+          </ul>
         </SectionParagraph>
 
         <div>
@@ -174,7 +193,7 @@ const CommentCaMarche = () => (
               <HomeSubHeader title="Simplicité" />
               <SectionParagraph>
                 L'ensemble des démarches pour constituer et suivre votre dossier
-                de VAE pourront s'effectuer sur ce site.
+                pourront s'effectuer sur France VAE.
               </SectionParagraph>
             </div>
           </section>
