@@ -393,10 +393,7 @@ const IndexPage = () => {
   return (
     <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_1150px]">
       <Head>
-        <title>
-          Accueil - France VAE | Découvrez le portail officiel du service public
-          de la Validation des Acquis de L’Expérience.
-        </title>
+        <title>France VAE | Bienvenue sur le portail de la VAE</title>
         <meta
           name="description"
           content="Découvrez le portail officiel du service public de la Validation des Acquis de L’Expérience."

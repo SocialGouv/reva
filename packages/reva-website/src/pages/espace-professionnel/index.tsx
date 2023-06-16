@@ -238,12 +238,11 @@ const ProfessionalSpaceHomePage = () => {
     <MainLayout className=" py-20  gap-32 lg:gap-64 lg:pb-80 bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_1150px]">
       <Head>
         <title>
-          Accueil professionnels - France VAE | Le service qui facilite le suivi
-          des candidats
+          France VAE | L’outil qui facilite le suivi des candidats à la VAE
         </title>
         <meta
           name="description"
-          content="Le portail France VAE permet aux architectes accompagnateurs de parcours de centraliser toutes les démarches des candidats à la VAE"
+          content="L’espace professionnel centralise le suivi de vos candidats depuis leur inscription jusqu’à leur passage devant le jury."
         />
       </Head>
 

@@ -13,8 +13,7 @@ const IndexCandidatPage = () => {
     <MainLayout className="bg-[url('/professional-space/home-page/background.png')] bg-contain bg-repeat bg-[left_top_180px]">
       <Head>
         <title>
-          Accueil candidats - France VAE | Votre expérience enfin reconnue par
-          un diplôme
+          France VAE | Votre expérience enfin reconnue par un diplôme
         </title>
         <meta
           name="description"
