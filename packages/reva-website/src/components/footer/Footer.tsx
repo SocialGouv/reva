@@ -81,9 +81,12 @@ export const Footer = ({ className }: { className?: string }) => (
             </Link>
           </li>
           <li className="fr-footer__bottom-item">
-            <span className="fr-footer__bottom-link">
+            <Link
+              className="fr-footer__bottom-link"
+              href="/declaration-accessibilite/"
+            >
               Accessibilité : partiellement conforme
-            </span>
+            </Link>
           </li>
           <li className="fr-footer__bottom-item">
             <Link className="fr-footer__bottom-link" href="/mentions-legales/">

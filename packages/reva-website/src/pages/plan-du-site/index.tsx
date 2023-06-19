@@ -40,6 +40,11 @@ const SiteMapPage = () => {
         <li>
           <Link href="/confidentialite">Données personnelles</Link>
         </li>
+        <li>
+          <Link href="/declaration-accessibilite">
+            Déclaration d'accessibilité
+          </Link>
+        </li>
       </ul>
     </MainLayout>
   );
