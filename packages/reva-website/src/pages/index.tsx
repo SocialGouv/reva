@@ -144,29 +144,26 @@ const CommentCaMarche = () => (
     <div className="relative w-full fr-container mx-auto px-5 lg:flex lg:space-x-12">
       <div className="flex-1 mt-[100px]">
         <HomeHeader subTitle="VAE 2.0" title="Comment ça marche ?" />
-        <SectionParagraph>
-          <ul className="list-none">
-            <li>
-              <ArrowRight />
-              Vous choisissez la certification que vous voulez passer
-            </li>
-            <li>
-              <ArrowRight />
-              Vous êtes pris en charge par un architecte de parcours
-            </li>
-            <li>
-              <ArrowRight />
-              Vous remplissez un dossier décrivant votre expérience et vos
-              compétences
-            </li>
-            <li>
-              <ArrowRight />
-              Ce dossier sera ensuite présenté à un jury qui validera votre
-              certification de manière totale ou partielle
-            </li>
-          </ul>
-        </SectionParagraph>
-
+        <ul className="text-xl list-none space-y-4 mb-8">
+          <li>
+            <ArrowRight />
+            Vous choisissez la certification que vous voulez passer
+          </li>
+          <li>
+            <ArrowRight />
+            Vous êtes pris en charge par un architecte de parcours
+          </li>
+          <li>
+            <ArrowRight />
+            Vous remplissez un dossier décrivant votre expérience et vos
+            compétences
+          </li>
+          <li>
+            <ArrowRight />
+            Ce dossier sera ensuite présenté à un jury qui validera votre
+            certification de manière totale ou partielle
+          </li>
+        </ul>
         <div>
           <TrackableButton
             eventTracked={{
