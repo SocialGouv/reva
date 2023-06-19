@@ -1,7 +1,7 @@
 import * as React from "react";
 
 export const SectionHeader = ({ children }: { children: React.ReactNode }) => (
-  <h1 className="lg:text-[40px] lg:leading-[44px] xl:text-[80px] xl:leading-[88px]">
+  <h1 className="lg:text-[40px] lg:leading-[44px] xl:text-7xl xl:leading-[80px]">
     {children}
   </h1>
 );
