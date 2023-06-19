@@ -1,5 +1,6 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import {
+  Hexagon,
   SectionHeader,
   SectionParagraph,
   SectionSubHeader,
@@ -61,7 +62,8 @@ const SuiviCandidat = () => (
 );
 
 const InterfaceProfessionnels = () => (
-  <section className="fr-container flex flex-col gap-10 lg:flex-row lg:gap-10">
+  <section className="relative fr-container flex flex-col gap-10 lg:flex-row lg:gap-10">
+    <Hexagon className="absolute -left-28 -top-32 text-pink-300 w-[100px]" />
     <div className="flex flex-col basis-1/2">
       <header>
         <SectionHeader>
@@ -103,7 +105,9 @@ const InterfaceProfessionnels = () => (
 );
 
 const EngagementAAP = () => (
-  <section className="fr-container flex flex-col-reverse gap-4 lg:gap-40 lg:flex-row">
+  <section className="relative fr-container flex flex-col-reverse gap-4 lg:gap-40 lg:flex-row">
+    <Hexagon className="absolute hidden lg:block right-32 -bottom-52 text-pink-300 w-[100px]" />
+
     <div className="relative min-h-[300px] mt-10 lg:mt-[-170px] -ml-[90px] basis-2/5">
       <Image
         src="/professional-space/home-page/man-face-smiling.png"
@@ -131,9 +135,9 @@ const EngagementAAP = () => (
 );
 
 const TypologiesAAP = () => (
-  <section className="pb-24 bg-dsfrGray-altblueFrance">
+  <section className="pb-24 bg-dsfrGray-altblueFrance lg:bg-[url('/professional-space/home-page/section-background/polygons-section4.svg')] lg:bg-cover bg-no-repeat">
     <div className="relative w-full px-5 lg:flex-no-wrap lg:space-x-12">
-      <div className="px-5 sm:flex-1 mx-auto max-w-[1208px]  mt-[100px] mb-20">
+      <div className="px-5 sm:flex-1 mx-auto max-w-[1208px]  mt-[100px] mb-40">
         <header>
           <SectionHeader>
             3 typologies d’Architectes Accompagnateurs de Parcours (AAP)
@@ -182,27 +186,34 @@ const TypologiesAAP = () => (
 );
 
 const NotreEquipeVousAccompagne = () => (
-  <section className="fr-container flex flex-col-reverse gap-4 lg:gap-40 lg:flex-row">
-    <div className="relative min-h-[300px] mt-10 lg:mt-[-170px] basis-1/3">
-      <Image
-        src="/professional-space/home-page/women-faces-smiling.png"
-        alt=""
-        fill
-        style={{
-          objectFit: "contain",
-        }}
-      />
+  <section className="relative w-full pt-32">
+    <div className="hidden md:block">
+      <Hexagon className="absolute -left-[50px] -top-32 text-black w-[100px]" />
+      <Hexagon className="absolute  left-[650px] -top-16 text-black w-[37px]" />
+      <Hexagon className="absolute left-[500px] -top-0 text-black w-[60px]" />
     </div>
-    <div className="flex flex-col basis-2/3">
-      <SectionHeader>
-        Notre équipe vous accompagne dans vos démarches
-      </SectionHeader>
-      <SectionParagraph>
-        France VAE vous soutient dans l’utilisation de l’espace professionnel et
-        met à disposition un support dédié pour répondre à vos besoins. Nous
-        vous proposons également des webinaires et documents spécifiques pour
-        vous aider à prendre en main l’outil.{" "}
-      </SectionParagraph>
+    <div className="fr-container flex flex-col-reverse gap-4 lg:gap-40 lg:flex-row">
+      <div className="relative min-h-[300px] mt-10 lg:mt-[-170px] basis-1/3">
+        <Image
+          src="/professional-space/home-page/women-faces-smiling.png"
+          alt=""
+          fill
+          style={{
+            objectFit: "contain",
+          }}
+        />
+      </div>
+      <div className="flex flex-col basis-2/3">
+        <SectionHeader>
+          Notre équipe vous accompagne dans vos démarches
+        </SectionHeader>
+        <SectionParagraph>
+          France VAE vous soutient dans l’utilisation de l’espace professionnel
+          et met à disposition un support dédié pour répondre à vos besoins.
+          Nous vous proposons également des webinaires et documents spécifiques
+          pour vous aider à prendre en main l’outil.{" "}
+        </SectionParagraph>
+      </div>
     </div>
   </section>
 );
