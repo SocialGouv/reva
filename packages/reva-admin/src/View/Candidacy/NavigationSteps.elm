@@ -12,6 +12,11 @@ import View.Date
 import View.Steps
 
 
+type ButtonState
+    = Enabled
+    | Disabled
+
+
 view : String -> Candidacy -> Html msg
 view baseUrl candidacy =
     let
@@ -40,25 +45,25 @@ view baseUrl candidacy =
     in
     View.Steps.view (title "Toutes les étapes")
         (Candidacy.statusToProgressPosition (candidacyStatus candidacy))
-        [ { content = expandedView "Rendez-vous pédagogique" PriseEnCharge candidacy
+        [ { content = expandedView Enabled "Rendez-vous pédagogique" PriseEnCharge candidacy
           , navigation = appointmentLink
           }
-        , { content = expandedView "Définition du parcours" PriseEnCharge candidacy
+        , { content = expandedView Enabled "Définition du parcours" PriseEnCharge candidacy
           , navigation = trainingLink
           }
         , { content = [ View.Steps.info "Validation du parcours" ]
           , navigation = Nothing
           }
-        , { content = expandedView "Gestion de la recevabilité" ParcoursConfirme candidacy
+        , { content = expandedView Enabled "Gestion de la recevabilité" ParcoursConfirme candidacy
           , navigation = admissibilityLink
           }
-        , { content = expandedView "Jury" ParcoursConfirme candidacy
+        , { content = expandedView Enabled "Jury" ParcoursConfirme candidacy
           , navigation = examInfoLink
           }
-        , { content = expandedView "Demande de prise en charge" ParcoursConfirme candidacy
-          , navigation = candidateInfoLink baseUrl candidacy
+        , { content = expandedView Disabled "Demande de prise en charge" ParcoursConfirme candidacy
+          , navigation = Nothing
           }
-        , { content = expandedView "Demande de paiement" DemandeFinancementEnvoye candidacy
+        , { content = expandedView Enabled "Demande de paiement" DemandeFinancementEnvoye candidacy
           , navigation = paymentRequestLink baseUrl candidacy
           }
         ]
@@ -93,10 +98,10 @@ dropOutView baseUrl candidacy dropOutDate =
         [ { content = dropOutInfo
           , navigation = dropOutLink
           }
-        , { content = expandedView "Demande de prise en charge" ParcoursConfirme candidacy
-          , navigation = candidateInfoLink baseUrl candidacy
+        , { content = expandedView Disabled "Demande de prise en charge" ParcoursConfirme candidacy
+          , navigation = Nothing
           }
-        , { content = expandedView "Demande de paiement" DemandeFinancementEnvoye candidacy
+        , { content = expandedView Enabled "Demande de paiement" DemandeFinancementEnvoye candidacy
           , navigation = paymentRequestLink baseUrl candidacy
           }
         ]
@@ -145,14 +150,20 @@ title value =
         [ text value ]
 
 
-expandedView : String -> Candidacy.Step -> Candidacy -> List (Html msg)
-expandedView stepTitle status candidacy =
+expandedView : ButtonState -> String -> Candidacy.Step -> Candidacy -> List (Html msg)
+expandedView buttonState stepTitle status candidacy =
     [ View.Steps.link stepTitle
     , if candidacyStatus candidacy == status then
         div
             []
             [ Button.new { onClick = Nothing, label = "Compléter" }
                 |> Button.withAttrs [ attribute "aria-label" ("Compléter " ++ stepTitle) ]
+                |> (if buttonState == Disabled then
+                        Button.disable
+
+                    else
+                        identity
+                   )
                 |> Button.view
             ]
 
@@ -187,7 +198,7 @@ paymentRequestLink baseUrl candidacy =
         tab =
             View.Candidacy.Tab.Tab candidacy.id View.Candidacy.Tab.PaymentRequest
     in
-    if candidacy.dropOutDate /= Nothing || Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye then
+    if Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye then
         Just <| Route.href baseUrl <| Route.Candidacy tab
 
     else
