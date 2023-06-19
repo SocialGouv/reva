@@ -22,14 +22,14 @@ const SuiviCandidat = () => (
           L’outil qui facilite le suivi des candidats à la VAE
         </SectionHeader>
       </header>
-      <SectionParagraph className="font-bold lg!text-3xl">
+      <SectionParagraph className="font-bold lg:!text-[20px] lg:!leading-[32px]">
         Depuis le 1er juillet 2023, France VAE est le portail unique de la
         validation des acquis de l’expérience pour plusieurs certifications des
         filières Grande distribution, Industrie métallurgique, Sport, Sanitaire
         et Social. Ce service permet de garantir un niveau de qualité de service
         pour l'ensemble des candidats à la VAE.
       </SectionParagraph>
-      <SectionParagraph>
+      <SectionParagraph className="lg:!text-[20px] lg:!leading-[28px]">
         L’inscription à la plateforme France VAE est ouverte dès maintenant pour
         les Architectes Accompagnateurs de{" "}
         <strong>Parcours certifiés Qualiopi VAE !</strong>
