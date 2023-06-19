@@ -244,7 +244,7 @@ const CommentCaMarche = () => (
 const TrouvezCertification = () => (
   <section
     id="trouvez-certification"
-    className="w-full relative flex flex-col lg:flex-row-reverse mt-20 pb-52 px-5 overflow-y-visible overflow-x-hidden bg-[url('/home-page/section-background/polygons-section5.svg')] bg-cover bg-no-repeat"
+    className="w-full relative flex flex-col lg:flex-row-reverse mt-20 pb-52 px-5 overflow-y-visible overflow-x-hidden lg:bg-[url('/home-page/section-background/polygons-section5.svg')] lg:bg-cover bg-no-repeat"
   >
     <div className="fr-container  lg:flex-1">
       <HomeHeader
