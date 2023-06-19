@@ -103,8 +103,11 @@ view context =
                         ]
                     , li
                         [ class "fr-footer__bottom-item" ]
-                        [ span
-                            [ class "fr-footer__bottom-link" ]
+                        [ a
+                            [ class "fr-footer__bottom-link"
+                            , target "_parent"
+                            , href "/declaration-accessibilite/"
+                            ]
                             [ text "Accessibilité : partiellement conforme" ]
                         ]
                     , li
