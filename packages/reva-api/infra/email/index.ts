@@ -31,9 +31,9 @@ const template = ({
   <mj-body>
     <mj-section>
       <mj-column>
-      <mj-image align="center" width="60px" height="23.8px" src="${
+      <mj-image align="center" width="92px" height="55.65px" src="${
         process.env.BASE_URL || "https://reva.beta.gouv.fr"
-      }/admin/logo.png"></mj-image>
+      }/fvae_logo.png"></mj-image>
     </mj-column>
     </mj-section>
     <mj-section>
