@@ -89,6 +89,18 @@ const InterfaceProfessionnels = () => (
           Suivi de la progression du parcours
         </li>
       </ul>
+      <Button
+        priority="secondary"
+        className="mb-12"
+        linkProps={{
+          target: "_blank",
+          href: "https://reva.crisp.help/fr/article/etapes-daccompagnement-dun-candidat-1waqti5/",
+          "aria-label":
+            "Découvrir les étapes d’accompagnement d’un candidat - nouvelle page",
+        }}
+      >
+        Découvrir les étapes d’accompagnement d’un candidat
+      </Button>
       <Notice title="France VAE offre un outil, élaboré en partenariat avec des architectes de parcours, dont l’optimisation continue est basée sur vos retours." />
     </div>
     <div className="relative min-h-[300px] mt-10 lg:mt-0 basis-1/2">
@@ -130,6 +142,19 @@ const EngagementAAP = () => (
       <SectionParagraph>
         Vous assurez également la gestion financière des dossiers des candidats.
       </SectionParagraph>
+      <Button
+        priority="secondary"
+        className="mt-12"
+        linkProps={{
+          target: "_blank",
+          href: "https://reva.crisp.help/fr/article/droits-et-obligations-des-architectes-accompagnateurs-de-parcours-1joypnz/",
+          "aria-label":
+            "Consulter les droits et obligations des Architectes Accompagnateurs de Parcours - nouvelle page",
+        }}
+      >
+        Consulter les droits et obligations des Architectes Accompagnateurs de
+        Parcours
+      </Button>
     </div>
   </section>
 );
