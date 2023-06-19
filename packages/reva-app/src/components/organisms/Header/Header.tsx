@@ -14,6 +14,7 @@ export const Header = (props: { className?: string }) => (
       imgUrl: "/app/fvae_logo.svg",
       orientation: "horizontal",
     }}
+    classes={{ operator: "min-w-[9.0625rem]" }}
     homeLinkProps={{
       href: "/",
       title: "Accueil - France VAE",

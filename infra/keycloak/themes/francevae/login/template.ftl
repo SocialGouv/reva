@@ -77,7 +77,7 @@
                   </div>
                   <div class="fr-header__operator">
                     <a title="Accueil - France VAE" href="${properties.revaUrl}">
-                      <img class="fr-responsive-img" style="max-width:9.0625rem" src="${url.resourcesPath}/img/fvae_logo.svg" alt="France VAE">
+                      <img  style="width:9.0625rem" src="${url.resourcesPath}/img/fvae_logo.svg" alt="France VAE">
                     </a>
                   </div>
                   <div class="fr-header__navbar">

@@ -11,7 +11,8 @@ export const Header = (props: { className?: string }) => {
       brandTop={
         <>
           République
-          <br /> Française
+          <br />
+          Française
         </>
       }
       homeLinkProps={{
@@ -23,6 +24,7 @@ export const Header = (props: { className?: string }) => {
         imgUrl: "/fvae_logo.svg",
         orientation: "horizontal",
       }}
+      classes={{ operator: "min-w-[9.0625rem]" }}
       quickAccessItems={[
         {
           iconId: "fr-icon-briefcase-fill",

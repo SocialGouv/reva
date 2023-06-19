@@ -33,8 +33,7 @@ view context =
                                     , Route.href context.baseUrl (Route.Candidacies Route.emptyFilters)
                                     ]
                                     [ View.image
-                                        [ class "fr-responsive-img"
-                                        , style "max-width" "9.0625rem"
+                                        [ style "width" "9.0625rem"
                                         , alt "France VAE"
                                         ]
                                         context.baseUrl
