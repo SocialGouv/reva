@@ -138,7 +138,7 @@
           <div class="fr-footer__bottom">
             <ul class="fr-footer__bottom-list">
               <li class="fr-footer__bottom-item">
-                <span class="fr-footer__bottom-link" >Accessibilité : partiellement conforme</span>
+                <a class="fr-footer__bottom-link" href="https://reva.beta.gouv.fr/declaration-accessibilite">Accessibilité : partiellement conforme</a>
               </li>
               <li class="fr-footer__bottom-item">
                 <a class="fr-footer__bottom-link" href="https://metabase.reva.beta.gouv.fr/public/dashboard/f27f670b-31fb-4b3d-8322-52761c4110c2">Statistiques</a>
