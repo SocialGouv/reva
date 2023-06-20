@@ -30,7 +30,7 @@ export const QuestcequelaVae = () => (
           etc.. Ces expériences doivent être en rapport avec le diplôme visé.
         </SectionParagraph>
       </div>
-      <div className="relative min-h-[300px] w-2/5 flex-1 lg:basis-1/2">
+      <div className="relative min-h-[300px] min-w-[300px] w-2/5 flex-1 lg:basis-1/2">
         <Image
           src="/candidate-space/image-questcequelavae.png"
           alt=""

@@ -64,7 +64,7 @@ export const ExperienceReconnue = () => (
         </TrackableButton>
       </div>
     </div>
-    <div className="relative mt-16 w-1/2 lg:mr-0 lg:basis-2/5">
+    <div className="relative min-h-[300px] min-w-[300px] mt-16 w-1/2 lg:mr-0 lg:basis-2/5">
       <Image
         src="/candidate-space/image-accompagnement.png"
         alt=""
