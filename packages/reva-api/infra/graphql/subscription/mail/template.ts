@@ -27,7 +27,7 @@ export const template = ({
     <mj-section>
       <mj-column>
       <mj-image align="center" width="92px" height="55.65px" src="${
-        process.env.BASE_URL || "https://reva.beta.gouv.fr"
+        process.env.BASE_URL || "https://vae.gouv.fr"
       }/fvae_logo.png"></mj-image>
     </mj-column>
     </mj-section>
