@@ -31,10 +31,7 @@ const HexagonTile = ({
 );
 
 export const CommentCaMarche = () => (
-  <section
-    id="comment-ca-marche"
-    className="mt-20 lg:mt-[200px] pb-48 bg-dsfrGray-altblueFrance"
-  >
+  <section id="comment-ca-marche" className="pb-48 bg-dsfrGray-altblueFrance">
     <div className="relative w-full mx-auto">
       <div className="w-full mt-[100px] mx-auto text-center">
         <header className="flex flex-col items-center">

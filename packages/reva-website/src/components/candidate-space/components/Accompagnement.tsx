@@ -8,9 +8,9 @@ import Image from "next/image";
 export const Accompagnement = () => (
   <section
     id="acompagnement"
-    className="mt-20 lg:mt-[200px] pb-48 bg-dsfrGray-altblueFrance"
+    className="mt-20 lg:mt-[200px] pb-48 bg-dsfrGray-altblueFrance lg:bg-[url('/candidate-space/home-page/section-background/polygons-section5.svg')] bg-none lg:bg-cover bg-no-repeat"
   >
-    <div className="relative w-full px-5 lg:flex-no-wrap lg:space-x-12">
+    <div className="relative w-full px-5 lg:flex-no-wrap lg:space-x-12 lg:my-[300px]">
       <div className="px-5 sm:flex-1 mx-auto max-w-[1208px] text-center mt-[100px] mb-20">
         <header>
           <SectionSubHeader>Accompagnement</SectionSubHeader>
