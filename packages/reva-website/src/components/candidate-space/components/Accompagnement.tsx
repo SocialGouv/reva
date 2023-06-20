@@ -26,8 +26,8 @@ export const Accompagnement = () => (
         </SectionParagraph>
       </div>
       <div className="mx-auto px-10 mt-4 lg:flex lg:flex-no-wrap gap-x-5 text-center lg:text-left">
-        <div className="flex-no-wrap lg:flex lg:basis-1/3">
-          <div className="min-w-[130px] lg:pt-[24px] ">
+        <div className="flex flex-nowrap flex-col items-center gap-4 lg:flex-row lg:gap-0 lg:basis-1/3">
+          <div className="min-w-[130px] lg:pt-[24px] -mt-7 ml-6 lg:ml-0">
             <Image
               className=""
               src="/candidate-space/icon-conception.png"
@@ -47,7 +47,7 @@ export const Accompagnement = () => (
             </SectionParagraph>
           </div>
         </div>
-        <div className="flex-no-wrap lg:flex lg:basis-1/3">
+        <div className="flex flex-nowrap flex-col items-center gap-4 lg:flex-row lg:gap-0 lg:basis-1/3">
           <div className="min-w-[130px]">
             <Image
               src="/candidate-space/icon-gestion.png"
@@ -66,8 +66,8 @@ export const Accompagnement = () => (
             </SectionParagraph>
           </div>
         </div>
-        <div className="flex-no-wrap lg:flex lg:basis-1/3">
-          <div className="min-w-[130px]">
+        <div className="flex flex-nowrap flex-col items-center gap-8 lg:flex-row lg:gap-0 lg:basis-1/3">
+          <div className="min-w-[130px] ml-6 lg:ml-0">
             <Image
               src="/candidate-space/icon-plannification.png"
               alt=""
