@@ -138,19 +138,19 @@
           <div class="fr-footer__bottom">
             <ul class="fr-footer__bottom-list">
               <li class="fr-footer__bottom-item">
-                <a class="fr-footer__bottom-link" href="https://reva.beta.gouv.fr/declaration-accessibilite">Accessibilité : partiellement conforme</a>
+                <a class="fr-footer__bottom-link" href="https://vae.gouv.fr/declaration-accessibilite">Accessibilité : partiellement conforme</a>
               </li>
               <li class="fr-footer__bottom-item">
-                <a class="fr-footer__bottom-link" href="https://metabase.reva.beta.gouv.fr/public/dashboard/f27f670b-31fb-4b3d-8322-52761c4110c2">Statistiques</a>
+                <a class="fr-footer__bottom-link" href="https://metabase.vae.gouv.fr/public/dashboard/f27f670b-31fb-4b3d-8322-52761c4110c2">Statistiques</a>
               </li>
               <li class="fr-footer__bottom-item">
-                <a class="fr-footer__bottom-link" href="https://reva.beta.gouv.fr/mentions-l%C3%A9gale">Mentions légales</a>
+                <a class="fr-footer__bottom-link" href="https://vae.gouv.fr/mentions-l%C3%A9gale">Mentions légales</a>
               </li>
               <li class="fr-footer__bottom-item">
-                <a class="fr-footer__bottom-link" href="https://reva.beta.gouv.fr/politique-de-confidentialite">Données personnelles</a>
+                <a class="fr-footer__bottom-link" href="https://vae.gouv.fr/politique-de-confidentialite">Données personnelles</a>
               </li>
               <li class="fr-footer__bottom-item">
-                <a class="fr-footer__bottom-link" href="https://reva.beta.gouv.fr/cgu">CGU</a>
+                <a class="fr-footer__bottom-link" href="https://vae.gouv.fr/cgu">CGU</a>
               </li>
             </ul>
             <div class="fr-footer__bottom-copy">

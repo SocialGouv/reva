@@ -8,10 +8,10 @@
   </head>
 
   <body>
-    <p>Redirection en cours vers <a href="https://reva.beta.gouv.fr">France VAE</a> ...</p>
+    <p>Redirection en cours vers <a href="https://vae.gouv.fr">France VAE</a> ...</p>
 
     <script>
-      window.location = 'https://reva.beta.gouv.fr'
+      window.location = 'https://vae.gouv.fr'
     </script>
 
   </body>
