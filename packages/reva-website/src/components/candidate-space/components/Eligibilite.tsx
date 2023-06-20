@@ -8,7 +8,7 @@ import Image from "next/image";
 export const Eligibilite = () => (
   <section
     id="eligibilite"
-    className="w-full max-w-[1248px] mx-auto mt-20 lg:mt-[200px] overflow-x-hidden sm:flex lg:items-center"
+    className="w-full flex flex-col items-center lg:flex-row max-w-[1248px] mx-auto mt-20 lg:mt-[200px]"
   >
     <div className="px-5 sm:flex-1">
       <header>

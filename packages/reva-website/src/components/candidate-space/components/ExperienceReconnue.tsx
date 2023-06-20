@@ -12,9 +12,9 @@ const ArrowRight = () => (
 export const ExperienceReconnue = () => (
   <section
     id="experience-reconnue"
-    className="w-full max-w-[1248px] mx-auto mt-20 overflow-x-hidden sm:flex lg:items-center"
+    className="w-full flex flex-col lg:flex-row items-center max-w-[1248px] mx-auto mt-20 overflow-x-hidden"
   >
-    <div className="px-5 sm:flex-1 basis-3/5">
+    <div className="px-5 flex-1 lg:basis-3/5">
       <header>
         <SectionHeader>
           Votre expérience enfin reconnue par un diplôme
@@ -64,7 +64,7 @@ export const ExperienceReconnue = () => (
         </TrackableButton>
       </div>
     </div>
-    <div className="relative mt-16 -mx-5 sm:mx-0 sm:flex-0 sm:w-2/5 sm:-mr-20 lg:mr-0 basis-2/5">
+    <div className="relative mt-16 w-1/2 lg:mr-0 lg:basis-2/5">
       <Image
         src="/candidate-space/image-accompagnement.png"
         alt=""
