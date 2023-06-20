@@ -84,7 +84,7 @@ function App() {
       <ProjectDroppedOut
         candidateEmail={contact?.email ?? ""}
         candidateName={fullName}
-        supportEmail="support@reva.beta.gouv.fr"
+        supportEmail="support@vae.gouv.fr"
       />
     );
   };

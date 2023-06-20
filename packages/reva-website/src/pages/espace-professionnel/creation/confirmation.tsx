@@ -33,7 +33,7 @@ const ProfessionalSpaceCreationConfirmationPage = () => {
             enregistrée ! Vous recevrez un email contenant un lien d'activation
             du compte valable 4 jours, dès qu’un administrateur France VAE
             l’aura traitée. En cas de question vous pouvez contacter :
-            support@reva.beta.gouv.fr
+            support@vae.gouv.fr
           </p>
         </div>
       </BlueLayout>

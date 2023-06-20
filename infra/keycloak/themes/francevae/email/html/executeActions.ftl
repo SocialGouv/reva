@@ -12,7 +12,7 @@
       <p class="text-build-content" data-testid="I0ETIbJm4" style="margin: 10px 0; margin-top: 10px;">
         À l’issue de cette action, vous pourrez dès lors compléter votre espace professionnel à l’aide de la documentation mise à disposition.
       </p>
-      <p>N'hésitez pas à nous contacter via la messagerie instantanée présente dans votre back office ou par email à support@reva.beta.gouv.fr</p>
+      <p>N'hésitez pas à nous contacter via la messagerie instantanée présente dans votre back office ou par email à support@vae.gouv.fr</p>
       <p>Cordialement,</p>
       <p>L’équipe France VAE.</p>
     </#if>
