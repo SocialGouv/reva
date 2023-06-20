@@ -63,9 +63,7 @@ const IndexMentionsLegalesPage = () => {
             Si vous rencontrez un défaut d’accessibilité vous empêchant
             d’accéder à un contenu ou une fonctionnalité du site, merci de nous
             en faire part à l'adresse{" "}
-            <a href="mailto:contact@reva.beta.gouv.fr">
-              contact@reva.beta.gouv.fr
-            </a>
+            <a href="mailto:contact@vae.gouv.fr">contact@vae.gouv.fr</a>
           </SectionParagraph>
           <SectionParagraph>
             Si vous n’obtenez pas de réponse rapide de notre part, vous êtes en

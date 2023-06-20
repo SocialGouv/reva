@@ -224,9 +224,7 @@ const IndexConfidentialitePage = () => {
               <li>Droit à la portabilité de vos données;</li>
             </ul>
             Pour les exercer, contactez-nous à :{" "}
-            <a href="mailto:contact@reva.beta.gouv.fr">
-              contact@reva.beta.gouv.fr
-            </a>
+            <a href="mailto:contact@vae.gouv.fr">contact@vae.gouv.fr</a>
           </SectionParagraph>
           <SectionParagraph>
             Par voie postale :<br />

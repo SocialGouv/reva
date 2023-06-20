@@ -1,14 +1,15 @@
-import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
-import { Button } from "@codegouvfr/react-dsfr/Button";
-import { useController, useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useProfessionalSpaceCreationContext } from "../context/ProfessionalSpaceCreationContext";
 import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import Select from "@codegouvfr/react-dsfr/Select";
-import { useCallback } from "react";
 import { MultiSelect } from "@/components/form/multi-select/MultiSelect";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Notice } from "@codegouvfr/react-dsfr/Notice";
+import Select from "@codegouvfr/react-dsfr/Select";
+import { Stepper } from "@codegouvfr/react-dsfr/Stepper";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useCallback } from "react";
+import { useController, useForm, useWatch } from "react-hook-form";
+import * as z from "zod";
+
+import { useProfessionalSpaceCreationContext } from "../context/ProfessionalSpaceCreationContext";
 
 const zodSchema = z.object({
   typology: z.enum(["generaliste", "expertFiliere", "expertBranche"]),
@@ -131,7 +132,7 @@ export const CertificationsInfoStepForm = ({
               <>
                 <Notice
                   className="mb-4"
-                  title="En tant qu’Architecte Accompagnateur de Parcours expert de filière(s), votre offre de service couvre l'ensemble des certifications rattachées aux filières sélectionnées. Sur demande à notre service support@reva.beta.gouv.fr , vous pourrez aussi accompagner les certifications rattachées aux conventions collectives de ces filières."
+                  title="En tant qu’Architecte Accompagnateur de Parcours expert de filière(s), votre offre de service couvre l'ensemble des certifications rattachées aux filières sélectionnées. Sur demande à notre service support@vae.gouv.fr , vous pourrez aussi accompagner les certifications rattachées aux conventions collectives de ces filières."
                 />
                 <MultiSelect
                   label="Filière(s)"
