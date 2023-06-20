@@ -28,7 +28,7 @@ export const sendRejectionEmail = async (
         ? {
             label: "Consulter ma demande",
             url: `${
-              process.env.BASE_URL ?? "https://reva.beta.gouv.fr"
+              process.env.BASE_URL ?? "https://vae.gouv.fr"
             }${subscriptionRequestUri}`,
           }
         : undefined,
