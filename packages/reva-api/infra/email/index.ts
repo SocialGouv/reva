@@ -125,7 +125,7 @@ export const sendGenericEmail = async ({
   try {
     await apiInstance.sendTransacEmail(
       Object.assign(sendSmtpEmail, {
-        sender: sender ?? { email: "hello@vae.gouv.fr" },
+        sender: sender ?? { email: "contact@vae.gouv.fr" },
         to: [to],
         subject,
         htmlContent,
