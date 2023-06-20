@@ -3,7 +3,7 @@ import { stubMutation, stubQuery } from "../utils/graphql";
 const firstname = "John";
 const lastname = "Doe";
 const email = "email@example.com";
-const supportEmail = "support@reva.beta.gouv.fr";
+const supportEmail = "support@vae.gouv.fr";
 
 context("Dropped out", () => {
   it("log on a dropped-out project", function () {
