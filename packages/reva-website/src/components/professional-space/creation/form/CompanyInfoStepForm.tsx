@@ -99,7 +99,9 @@ export const CompanyInfoStepForm = () => {
               onChange: companyLegalStatusController.field.onChange,
             }}
           >
-            <option value={undefined}></option>
+            {!companyLegalStatusController.field.value && (
+              <option value={undefined} />
+            )}
             {legalStatuses.map((ls) => (
               <option key={ls} value={ls}>
                 {legalStatusLabel(ls)}
