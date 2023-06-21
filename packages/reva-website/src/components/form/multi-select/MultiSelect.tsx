@@ -59,7 +59,7 @@ export const MultiSelect = ({
         <Listbox.Button className="fr-select min-h-10 mt-2 text-left hover:!bg-dsfrGray-contrast">
           {placeholder?.(selectedValues.length)}
         </Listbox.Button>
-        <Listbox.Options className="!absolute z-10 max-h-52 md:max-h-72 overflow-auto fr-checkbox-group list-none bg-dsfrGray-contrast w-[calc(100%-5px)] rounded-lg border border-gray-300 p-2">
+        <Listbox.Options className="!absolute z-10 max-h-52 overflow-auto fr-checkbox-group list-none bg-dsfrGray-contrast w-[calc(100%-5px)] rounded-lg border border-gray-300 p-2">
           {withSelectAll && (
             <Listbox.Option key={ALL_SELECTED} value={ALL_SELECTED}>
               {({ active }) => (

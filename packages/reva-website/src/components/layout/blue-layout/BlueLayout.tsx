@@ -18,7 +18,7 @@ export const BlueLayout = (props: {
           props.description
         )}
       </div>
-      <div className="bg-white drop-shadow-lg flex flex-col px-5 md:px-24 py-14">
+      <div className="bg-white drop-shadow-lg flex flex-col px-5 md:px-24 py-14 mb-8">
         {props.children}
       </div>
     </div>
