@@ -111,12 +111,12 @@ const ProfessionalSpaceCreationPage = ({
         title="Créez le compte administrateur de votre établissement (direction nationale ou régionale)"
         description={
           <>
-            <p className="text-white text-xl leading-relaxed mb-2">
+            <p className="text-white text-sm md:text-xl md:leading-relaxed mb-2">
               Vous êtes responsable d’un réseau au niveau national ou régional,
               créez le compte administrateur de votre structure qui vous
               permettra :
             </p>
-            <ul className="text-white text-xl leading-relaxed ml-4">
+            <ul className="text-white text-sm md:text-xl md:leading-relaxed ml-4">
               <li>
                 prochainement de créer et de gérer les accès de vos conseillers
                 habilitées à traiter les dossiers des candidats
