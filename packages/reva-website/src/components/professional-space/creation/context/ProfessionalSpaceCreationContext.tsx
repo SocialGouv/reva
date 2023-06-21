@@ -2,7 +2,7 @@ import { GRAPHQL_API_URL } from "@/config/config";
 import request, { gql } from "graphql-request";
 import { useRouter } from "next/router";
 import { useCallback, useContext, useState } from "react";
-import { createContext, ReactNode } from "react";
+import { ReactNode, createContext } from "react";
 
 type LegalStatus =
   | "ASSOCIATION_LOI_1901"
@@ -92,7 +92,6 @@ export const ProfessionalSpaceCreationProvider = (props: {
   const [state, setState] = useState<ProfessionalSpaceCreationState>({
     currentStep: "cguStep",
     professionalSpaceInfos: {
-      companyLegalStatus: "ASSOCIATION_LOI_1901",
       domaineIds: [],
     },
   });
