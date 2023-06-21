@@ -10,13 +10,36 @@ import { useCallback } from "react";
 import { MultiSelect } from "@/components/form/multi-select/MultiSelect";
 import { Notice } from "@codegouvfr/react-dsfr/Notice";
 
-const zodSchema = z.object({
-  typology: z.enum(["generaliste", "expertFiliere", "expertBranche"]),
-  domaineIds: z.string().array(),
-  ccnIds: z.string().array(),
-  onSiteDepartmentsIds: z.string().array(),
-  remoteDepartmentsIds: z.string().array(),
-});
+const zodSchema = z
+  .object({
+    typology: z.enum(["generaliste", "expertFiliere", "expertBranche"]),
+    domaineIds: z.string().array(),
+    ccnIds: z.string().array(),
+    onSiteDepartmentsIds: z.string().array(),
+    remoteDepartmentsIds: z.string().array(),
+  })
+  .superRefine(({ typology, ccnIds, domaineIds }, { addIssue }) => {
+    switch (typology) {
+      case "expertFiliere":
+        if (!domaineIds?.length) {
+          addIssue({
+            code: "custom",
+            path: ["domaineIds"],
+            message: "Vous devez choisir au moins un domaine",
+          });
+        }
+        break;
+      case "expertBranche":
+        if (!ccnIds?.length) {
+          addIssue({
+            code: "custom",
+            path: ["ccnIds"],
+            message: "Vous devez choisir au moins une convention collective",
+          });
+        }
+        break;
+    }
+  });
 
 type CertificationsInfoStepFormSchema = z.infer<typeof zodSchema>;
 
@@ -35,11 +58,15 @@ export const CertificationsInfoStepForm = ({
     submitCertificationsInfoStep,
   } = useProfessionalSpaceCreationContext();
 
-  const { handleSubmit, control, setValue } =
-    useForm<CertificationsInfoStepFormSchema>({
-      resolver: zodResolver(zodSchema),
-      defaultValues: { ...professionalSpaceInfos },
-    });
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors },
+  } = useForm<CertificationsInfoStepFormSchema>({
+    resolver: zodResolver(zodSchema),
+    defaultValues: { ...professionalSpaceInfos },
+  });
 
   const typologyController = useController({
     name: "typology",
@@ -52,28 +79,24 @@ export const CertificationsInfoStepForm = ({
     name: "domaineIds",
     defaultValue: [],
     control,
-    rules: { required: true },
   });
 
   const ccnIdsController = useController({
     name: "ccnIds",
     defaultValue: [],
     control,
-    rules: { required: true },
   });
 
   const onSiteDepartmentsController = useController({
     name: "onSiteDepartmentsIds",
     defaultValue: [],
     control,
-    rules: { required: true },
   });
 
   const remoteDepartmentsController = useController({
     name: "remoteDepartmentsIds",
     defaultValue: [],
     control,
-    rules: { required: true },
   });
 
   const handleFormSubmit = (data: CertificationsInfoStepFormSchema) =>
@@ -136,6 +159,8 @@ export const CertificationsInfoStepForm = ({
                 <MultiSelect
                   label="Filière(s)"
                   hint="Vous pouvez cocher plusieurs choix, avec un minimum d’une filière"
+                  state={errors?.domaineIds ? "error" : "default"}
+                  stateRelatedMessage={errors?.domaineIds?.message}
                   withSelectAll
                   options={availableDomaines.map((availableDomaine) => ({
                     label: availableDomaine.label,
@@ -164,6 +189,8 @@ export const CertificationsInfoStepForm = ({
                 <MultiSelect
                   label="Conventions collectives auxquelles vous êtes rattaché"
                   hint="Vous pouvez cocher plusieurs conventions collectives"
+                  state={errors?.ccnIds ? "error" : "default"}
+                  stateRelatedMessage={errors?.ccnIds?.message}
                   withSelectAll
                   options={availableConventions.map((availableConvention) => ({
                     label: `${availableConvention.code} ${availableConvention.label}`,
