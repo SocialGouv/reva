@@ -11,10 +11,23 @@ import * as z from "zod";
 import { useProfessionalSpaceCreationContext } from "../context/ProfessionalSpaceCreationContext";
 
 const zodSchema = z.object({
-  qualiopiCertificateExpiresAt: z.date({
-    required_error: "Obligatoire",
+  qualiopiCertificateExpiresAt: z
+    .date({
+      errorMap: () => ({
+        message: "Obligatoire",
+      }),
+    })
+    .refine((date) => {
+      const today = new Date(Date.now());
+      today.setHours(0, 0, 0, 0);
+      return date >= today;
+    }, "La date d'expiration de votre certification doit être supérieure ou égale à la date du jour"),
+  qualiopiSwornStatement: z.literal<boolean>(true, {
+    errorMap: () => ({
+      message:
+        "Vous devez attestee sur l'honneur avoir obtenu la certification Qualiopi pour les actions permettant de faire valider les acquis de l'expérience ou label d’accord de branches",
+    }),
   }),
-  qualiopiSwornStatement: z.literal<boolean>(true),
 });
 
 type QualiopiCertificateInfoStepFormSchema = z.infer<typeof zodSchema>;
@@ -67,6 +80,8 @@ export const QualiopiCertificateInfoStepForm = () => {
             l'expérience ou label d’accord de branches.
           </legend>
           <Checkbox
+            state={errors.qualiopiSwornStatement ? "error" : "default"}
+            stateRelatedMessage={errors.qualiopiSwornStatement?.message}
             options={[
               {
                 label:
@@ -101,9 +116,7 @@ export const QualiopiCertificateInfoStepForm = () => {
             Revenir à l'étape 1
           </Button>
 
-          <Button type="submit" disabled={!isValid}>
-            Passer à l'étape 3
-          </Button>
+          <Button type="submit">Passer à l'étape 3</Button>
         </div>
       </form>
     </div>
