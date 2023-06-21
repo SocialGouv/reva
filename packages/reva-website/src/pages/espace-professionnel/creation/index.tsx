@@ -111,11 +111,13 @@ const ProfessionalSpaceCreationPage = ({
       <BlueLayout
         title="Créez le compte administrateur de votre établissement (direction nationale ou régionale)"
         description={
-          <p className="text-white text-xl leading-relaxed mb-0">
-            Vous êtes responsable d’un réseau au niveau national ou régional,
-            créez le compte administrateur de votre structure qui vous permettra
-            :
-            <ul className="ml-4">
+          <>
+            <p className="text-white text-xl leading-relaxed mb-2">
+              Vous êtes responsable d’un réseau au niveau national ou régional,
+              créez le compte administrateur de votre structure qui vous
+              permettra :
+            </p>
+            <ul className="text-white text-xl leading-relaxed ml-4">
               <li>
                 prochainement de créer et de gérer les accès de vos conseillers
                 habilitées à traiter les dossiers des candidats
@@ -126,7 +128,7 @@ const ProfessionalSpaceCreationPage = ({
                 candidats.
               </li>
             </ul>
-          </p>
+          </>
         }
       >
         <ProfessionalSpaceCreationProvider>
