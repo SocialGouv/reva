@@ -16,6 +16,8 @@ export const MultiSelect = ({
   onChange,
   initialSelectedValues,
   withSelectAll,
+  state,
+  stateRelatedMessage,
 }: {
   label: string;
   hint?: string;
@@ -24,6 +26,8 @@ export const MultiSelect = ({
   onChange?: (values: string[]) => void;
   initialSelectedValues?: string[];
   withSelectAll?: boolean;
+  state?: "error" | "default";
+  stateRelatedMessage?: string;
 }) => {
   const [selectedValues, setSelectedValues] = useState<string[]>(
     initialSelectedValues || []
@@ -50,7 +54,11 @@ export const MultiSelect = ({
   );
 
   return (
-    <div className="w-full relative  fr-select-group">
+    <div
+      className={`w-full relative  fr-select-group ${
+        state === "error" ? "fr-select-group--error" : ""
+      }`}
+    >
       <label className="fr-label">
         {label}
         <span className="fr-hint-text">{hint}</span>
@@ -99,6 +107,9 @@ export const MultiSelect = ({
           ))}
         </Listbox.Options>
       </Listbox>
+      {stateRelatedMessage && (
+        <p className="fr-error-text">{stateRelatedMessage}</p>
+      )}
     </div>
   );
 };
