@@ -1,8 +1,7 @@
 module Page.Form.FundingRequest exposing (droppedOutForm, form, totalCostSection, totalTrainingHourCount)
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
-import Admin.Object.FundingRequest exposing (otherTrainingCost, otherTrainingHourCount)
-import Data.Candidacy as Candidacy exposing (Candidacy)
+import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Candidate
 import Data.Certification exposing (Certification)
 import Data.Form exposing (FormData)
@@ -79,7 +78,7 @@ form maybeCertification formData ( candidacy, referential ) =
                , ( keys.mandatoryTrainingIds
                  , Form.ReadOnlyElement <|
                     Form.CheckboxList "Formations obligatoires sélectionnées" <|
-                        Data.Form.Helper.toCheckBoxDescriptionList True referential.mandatoryTrainings
+                        Data.Form.Helper.toIdList referential.mandatoryTrainings
                  )
                , ( keys.mandatoryTrainingsHourCount
                  , hourCountElement
@@ -95,7 +94,7 @@ form maybeCertification formData ( candidacy, referential ) =
                , ( keys.basicSkillsIds
                  , Form.ReadOnlyElement <|
                     Form.CheckboxList "Formations savoirs de base sélectionnées" <|
-                        Data.Form.Helper.toCheckBoxDescriptionList True referential.basicSkills
+                        Data.Form.Helper.toIdList referential.basicSkills
                  )
                , ( keys.basicSkillsHourCount
                  , hourCountElement
