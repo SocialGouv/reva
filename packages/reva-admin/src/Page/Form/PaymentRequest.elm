@@ -1,6 +1,6 @@
 module Page.Form.PaymentRequest exposing (confirmationForm, form)
 
-import Data.Candidacy exposing (Candidacy)
+import Data.Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Certification exposing (Certification)
 import Data.Form exposing (FormData)
 import Data.Form.Helper
@@ -98,7 +98,7 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( keys.mandatoryTrainingIds
           , Form.ReadOnlyElement <|
                 Form.CheckboxList "Formations obligatoires sélectionnées" <|
-                    Data.Form.Helper.toCheckBoxDescriptionList True referential.mandatoryTrainings
+                    Data.Form.Helper.toIdList referential.mandatoryTrainings
           )
         , ( "mandatoryTrainingsReview"
           , Form.ReadOnlyElements
@@ -112,7 +112,7 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( keys.basicSkillsIds
           , Form.ReadOnlyElement <|
                 Form.CheckboxList "Formations savoirs de base sélectionnées" <|
-                    Data.Form.Helper.toCheckBoxDescriptionList True referential.basicSkills
+                    Data.Form.Helper.toIdList referential.basicSkills
           )
         , ( "basicSkillsReview"
           , Form.ReadOnlyElements

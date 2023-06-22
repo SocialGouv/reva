@@ -9,7 +9,6 @@ module Data.Form.Helper exposing
     , generic
     , maybe
     , selection
-    , toCheckBoxDescriptionList
     , toCheckedList
     , toDict
     , toIdList
@@ -209,8 +208,3 @@ toDict : a -> List ( a -> String, Maybe String ) -> Dict.Dict String String
 toDict keys data =
     toKeyedList keys data
         |> Dict.fromList
-
-
-toCheckBoxDescriptionList : Bool -> List { a | id : String, label : String } -> List { id : String, label : String, disabled : Bool }
-toCheckBoxDescriptionList disabled l =
-    List.map (\e -> { id = e.id, label = e.label, disabled = disabled }) l
