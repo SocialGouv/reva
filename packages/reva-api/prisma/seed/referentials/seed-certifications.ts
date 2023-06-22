@@ -25,144 +25,155 @@ const certificationsXp = [
 ];
 
 export async function seedCertifications(prisma: PrismaClient) {
-  // On supprime toutes les certifications, sauf celles de l'XP
-  const { count } = await prisma.certification.deleteMany({
-    where: { id: { notIn: certificationsXp } },
-  });
-  console.log(`Deleted ${count} previous "new" certification(s)`);
+  await prisma.$transaction(async (tx) => {
+    //defer constraints validation till end of transaction
+    await tx.$executeRawUnsafe(
+      `SET CONSTRAINTS "candidacy_region_certification_certification_id_fkey" DEFERRED;`
+    );
+    await tx.$executeRawUnsafe(
+      `SET CONSTRAINTS "organism_region_certification_certification_id_fkey" DEFERRED;`
+    );
 
-  // Certifications : referentials/certifications.csv
-  console.log(`Recreating certifications`);
-  await injectCsvRows<
-    Prisma.CertificationCreateInput & {
-      level: string;
-      isActive?: string;
-    },
-    Prisma.CertificationUpsertArgs
-  >({
-    filePath: "./referentials/certifications.csv",
-    injectCommand: prisma.certification.upsert,
-    headersDefinition: [
-      "rncpId",
-      "isActive",
-      "id",
-      "label",
-      "summary",
-      "acronym",
-      "typeDiplome",
-      "level",
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-    ],
-    transform: ({
-      id,
-      label,
-      rncpId,
-      summary,
-      level,
-      acronym,
-      typeDiplome,
-      isActive,
-    }) => {
-      return {
-        where: { id },
-        create: {
-          id,
-          rncpId,
-          label,
-          level: parseInt(level),
-          summary,
-          acronym,
-          slug: "",
-          typeDiplomeId: typeDiplome as string,
-          status: isActive === "checked" ? "AVAILABLE" : "INACTIVE",
-        },
-        update: {
-          rncpId,
-          label,
-          level: parseInt(level),
-          summary,
-          acronym,
-          slug: "",
-          typeDiplomeId: typeDiplome as string,
-          status: isActive === "checked" ? "AVAILABLE" : "INACTIVE",
-        },
-      };
-    },
-  });
+    // On supprime toutes les certifications, sauf celles de l'XP
+    const { count } = await tx.certification.deleteMany({
+      where: { id: { notIn: certificationsXp } },
+    });
+    console.log(`Deleted ${count} previous "new" certification(s)`);
 
-  // Relations certifications
-  console.log(`Recreating certifications links (domains, ccn etc..)`);
-  const certificationRel = await readCsvRows<{
-    certificationId: string;
-    conventionCollective: string;
-    domaine: string;
-  }>({
-    filePath: "./referentials/certifications.csv",
-    headersDefinition: [
-      undefined, // rncp
-      undefined, // isActive
-      "certificationId", // id
-      undefined, // label
-      undefined, // summary
-      undefined, // acronym
-      undefined, // typeDiplome
-      undefined, // level
-      undefined, // ccn
-      "conventionCollective", // ccn
-      undefined, // filière
-      "domaine", // filière
-      undefined, // date
-      undefined, // last modif
-      undefined, // created by
-      undefined, // last updated by
-    ],
+    // Certifications : referentials/certifications.csv
+    console.log(`Recreating certifications`);
+    await injectCsvRows<
+      Prisma.CertificationCreateInput & {
+        level: string;
+        isActive?: string;
+      },
+      Prisma.CertificationUpsertArgs
+    >({
+      filePath: "./referentials/certifications.csv",
+      injectCommand: tx.certification.upsert,
+      headersDefinition: [
+        "rncpId",
+        "isActive",
+        "id",
+        "label",
+        "summary",
+        "acronym",
+        "typeDiplome",
+        "level",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+      ],
+      transform: ({
+        id,
+        label,
+        rncpId,
+        summary,
+        level,
+        acronym,
+        typeDiplome,
+        isActive,
+      }) => {
+        return {
+          where: { id },
+          create: {
+            id,
+            rncpId,
+            label,
+            level: parseInt(level),
+            summary,
+            acronym,
+            slug: "",
+            typeDiplomeId: typeDiplome as string,
+            status: isActive === "checked" ? "AVAILABLE" : "INACTIVE",
+          },
+          update: {
+            rncpId,
+            label,
+            level: parseInt(level),
+            summary,
+            acronym,
+            slug: "",
+            typeDiplomeId: typeDiplome as string,
+            status: isActive === "checked" ? "AVAILABLE" : "INACTIVE",
+          },
+        };
+      },
+    });
+
+    // Relations certifications
+    console.log(`Recreating certifications links (domains, ccn etc..)`);
+    const certificationRel = await readCsvRows<{
+      certificationId: string;
+      conventionCollective: string;
+      domaine: string;
+    }>({
+      filePath: "./referentials/certifications.csv",
+      headersDefinition: [
+        undefined, // rncp
+        undefined, // isActive
+        "certificationId", // id
+        undefined, // label
+        undefined, // summary
+        undefined, // acronym
+        undefined, // typeDiplome
+        undefined, // level
+        undefined, // ccn
+        "conventionCollective", // ccn
+        undefined, // filière
+        "domaine", // filière
+        undefined, // date
+        undefined, // last modif
+        undefined, // created by
+        undefined, // last updated by
+      ],
+    });
+    for (const {
+      certificationId,
+      conventionCollective,
+      domaine,
+    } of certificationRel) {
+      if (conventionCollective) {
+        await tx.certificationOnConventionCollective.deleteMany({
+          where: {
+            certificationId,
+          },
+        });
+        await tx.certificationOnConventionCollective.createMany({
+          data: parseCsvList(conventionCollective).map((ccnId: string) => ({
+            certificationId,
+            ccnId,
+          })),
+        });
+      }
+      if (domaine) {
+        await tx.certificationOnDomaine.deleteMany({
+          where: {
+            certificationId,
+          },
+        });
+        await tx.certificationOnDomaine.createMany({
+          data: parseCsvList(domaine).map((domaineId: string) => ({
+            certificationId,
+            domaineId,
+          })),
+        });
+      }
+    }
+
+    //defer constraints validation till end of transaction
+    await tx.$executeRawUnsafe(
+      `SET CONSTRAINTS "candidacy_region_certification_certification_id_fkey" IMMEDIATE;`
+    );
+    await tx.$executeRawUnsafe(
+      `SET CONSTRAINTS "organism_region_certification_certification_id_fkey" IMMEDIATE;`
+    );
   });
-  for (const {
-    certificationId,
-    conventionCollective,
-    domaine,
-  } of certificationRel) {
-    if (conventionCollective) {
-      await prisma.certificationOnConventionCollective.deleteMany({
-        where: {
-          certificationId,
-        },
-      });
-      await prisma.certificationOnConventionCollective.createMany({
-        data: parseCsvList(conventionCollective).map((ccnId: string) => ({
-          certificationId,
-          ccnId,
-        })),
-      });
-    }
-    if (domaine) {
-      await prisma.certificationOnDomaine.deleteMany({
-        where: {
-          certificationId,
-        },
-      });
-      await prisma.certificationOnDomaine.createMany({
-        data: parseCsvList(domaine).map((domaineId: string) => ({
-          certificationId,
-          domaineId,
-        })),
-      });
-    }
-  }
-  // Refresh materialized views
-  await prisma.$queryRaw`
-    REFRESH MATERIALIZED VIEW certification_search WITH DATA;
-  `;
-  await prisma.$queryRaw`
-    REFRESH MATERIALIZED VIEW profession_search WITH DATA;
-  `;
 }
 
 function parseCsvList(str: string): string[] {
