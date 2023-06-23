@@ -141,6 +141,12 @@ http:
       middlewares:
         - removeHeader
 
+    metabase-vae-gouv-fr:
+      rule: "Host(`metabase.vae.gouv.fr`)"
+      service: metabase-production
+      middlewares:
+        - removeHeader
+
     espace-pro-production-vae-gouv-fr:
       rule: "Host(`vae.gouv.fr`) && PathPrefix(`/admin`)"
       service: espace-pro-production-2
@@ -293,6 +299,12 @@ http:
         passHostHeader: false
         servers:
           - url: "https://auth-reva-beta-gouv-fr.osc-secnum-fr1.scalingo.io/"
+
+    metabase-production:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://metabase-reva-beta-gouv-fr.osc-secnum-fr1.scalingo.io/"
 
     espace-pro-production-2:
       loadBalancer:
