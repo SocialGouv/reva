@@ -21,7 +21,10 @@ const zodSchema = z.object({
       const today = new Date(Date.now());
       today.setHours(0, 0, 0, 0);
       return date >= today;
-    }, "La date d'expiration de votre certification doit être supérieure ou égale à la date du jour"),
+    }, "La date d'expiration de votre certification doit être supérieure ou égale à la date du jour")
+    .refine((date) => {
+      return date.getFullYear() < 10000;
+    }, "L'année de la date d'expiration de votre certification doit comporter exactement quatre chiffres"),
   qualiopiSwornStatement: z.literal<boolean>(true, {
     errorMap: () => ({
       message:
