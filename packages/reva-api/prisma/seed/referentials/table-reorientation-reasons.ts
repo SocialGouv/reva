@@ -11,5 +11,12 @@ export async function insertReorientationReasonsIfNone(prisma: PrismaClient) {
         { label: "Une autre certification de France VAE" },
       ],
     });
+  } else {
+    await prisma.reorientationReason.updateMany({
+      where: {
+        label: "Une autre certification de l'expérimentation Reva",
+      },
+      data: { label: "Une autre certification de France VAE" },
+    });
   }
 }
