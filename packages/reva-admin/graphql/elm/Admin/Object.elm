@@ -125,10 +125,6 @@ type PaymentRequest
     = PaymentRequest
 
 
-type Profession
-    = Profession
-
-
 type Referential
     = Referential
 
@@ -139,10 +135,6 @@ type Region
 
 type ReorientationReason
     = ReorientationReason
-
-
-type SearchCertificationsAndProfessionsResult
-    = SearchCertificationsAndProfessionsResult
 
 
 type SubscriptionRequest

@@ -1,4 +1,4 @@
-import { Certification } from "../types/search";
+import { Certification } from "../types/certification";
 
 interface GetCertificationDependencies {
   getCertificationById: (params: {

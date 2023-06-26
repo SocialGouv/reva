@@ -18,7 +18,6 @@ import * as candidate from "./candidate";
 import { financeResolvers } from "./finance/finance.resolvers";
 import * as referential from "./referential";
 import DecimalGraphqlScalar from "./scalar/DecimalGraphqlScalar";
-import * as search from "./search";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
 
 // Resolvers
@@ -29,7 +28,6 @@ const typeDefs = loadFilesSync(path.join(__dirname, "."), {
 });
 
 const resolvers = mergeResolvers([
-  search.resolvers,
   candidacy.resolvers,
   referential.resolvers,
   account.resolvers,
