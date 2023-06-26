@@ -247,38 +247,6 @@ getConventionCollectives object____ =
     Object.selectionForCompositeField "getConventionCollectives" [] object____ (Basics.identity >> Decode.nullable >> Decode.list)
 
 
-type alias SearchCertificationsAndProfessionsOptionalArguments =
-    { query : OptionalArgument String }
-
-
-searchCertificationsAndProfessions :
-    (SearchCertificationsAndProfessionsOptionalArguments -> SearchCertificationsAndProfessionsOptionalArguments)
-    -> SelectionSet decodesTo Admin.Object.SearchCertificationsAndProfessionsResult
-    -> SelectionSet (Maybe decodesTo) RootQuery
-searchCertificationsAndProfessions fillInOptionals____ object____ =
-    let
-        filledInOptionals____ =
-            fillInOptionals____ { query = Absent }
-
-        optionalArgs____ =
-            [ Argument.optional "query" filledInOptionals____.query Encode.string ]
-                |> List.filterMap Basics.identity
-    in
-    Object.selectionForCompositeField "searchCertificationsAndProfessions" optionalArgs____ object____ (Basics.identity >> Decode.nullable)
-
-
-type alias GetCertificationRequiredArguments =
-    { id : Data.Scalar.Id }
-
-
-getCertification :
-    GetCertificationRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Certification
-    -> SelectionSet (Maybe decodesTo) RootQuery
-getCertification requiredArgs____ object____ =
-    Object.selectionForCompositeField "getCertification" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
-
-
 type alias SubscriptionGetSubscriptionRequestsOptionalArguments =
     { filter : OptionalArgument String
     , offset : OptionalArgument Int

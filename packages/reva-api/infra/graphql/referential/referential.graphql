@@ -57,6 +57,26 @@ type ConventionCollective {
   label: String!
 }
 
+enum CertificationStatus {
+  INACTIVE
+  SOON
+  AVAILABLE
+}
+
+type Certification {
+  id: ID!
+  label: String!
+  summary: String!
+  acronym: String!
+  level: Int!
+  activities: String
+  activityArea: String
+  accessibleJobType: String
+  abilities: String
+  codeRncp: String!
+  status: CertificationStatus!
+}
+
 type CertificationPage {
   rows: [Certification!]!
   info: PaginationInfo!

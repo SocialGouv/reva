@@ -20,10 +20,3 @@ export interface Certification {
   codeRncp: string;
   status: CertificationStatus;
 }
-
-export interface Profession {
-  id: string;
-  label: string;
-  description: string | null;
-  codeRome: string;
-}

@@ -1,7 +1,7 @@
 import { Either, EitherAsync } from "purify-ts";
 
+import { Certification } from "../types/certification";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
-import { Certification } from "../types/search";
 
 interface GetCertificationsDependencies {
   getCertifications: (params: {
