@@ -13,6 +13,7 @@ const legalStatuses = [
   "ASSOCIATION_LOI_1901",
   "EI",
   "EIRL",
+  "ETABLISSEMENT_PUBLIC",
   "EURL",
   "SA",
   "SARL",
@@ -21,9 +22,16 @@ const legalStatuses = [
 ] as const;
 
 const legalStatusLabel = (legalStatus: typeof legalStatuses[number]) => {
-  return legalStatus === "ASSOCIATION_LOI_1901"
-    ? "Association loi 1901"
-    : legalStatus.toString();
+  let label = legalStatus.toString();
+  switch (legalStatus) {
+    case "ASSOCIATION_LOI_1901":
+      label = "Association loi 1901";
+      break;
+    case "ETABLISSEMENT_PUBLIC":
+      label = "Établissement public (EPIC…)";
+      break;
+  }
+  return label;
 };
 
 const zodSchema = z.object({

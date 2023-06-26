@@ -87,6 +87,18 @@ getOrganismsForCandidacy requiredArgs____ object____ =
     Object.selectionForCompositeField "getOrganismsForCandidacy" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.list)
 
 
+type alias GetRandomOrganismsForCandidacyRequiredArguments =
+    { candidacyId : Data.Scalar.Uuid }
+
+
+getRandomOrganismsForCandidacy :
+    GetRandomOrganismsForCandidacyRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Organism
+    -> SelectionSet (List decodesTo) RootQuery
+getRandomOrganismsForCandidacy requiredArgs____ object____ =
+    Object.selectionForCompositeField "getRandomOrganismsForCandidacy" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.list)
+
+
 type alias GetCompanionsForCandidacyRequiredArguments =
     { candidacyId : Data.Scalar.Uuid }
 
@@ -152,7 +164,10 @@ getReferential object____ =
 
 
 type alias GetCertificationsOptionalArguments =
-    { searchText : OptionalArgument String }
+    { offset : OptionalArgument Int
+    , limit : OptionalArgument Int
+    , searchText : OptionalArgument String
+    }
 
 
 type alias GetCertificationsRequiredArguments =
@@ -162,18 +177,18 @@ type alias GetCertificationsRequiredArguments =
 getCertifications :
     (GetCertificationsOptionalArguments -> GetCertificationsOptionalArguments)
     -> GetCertificationsRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Certification
-    -> SelectionSet (List decodesTo) RootQuery
+    -> SelectionSet decodesTo Admin.Object.CertificationPage
+    -> SelectionSet decodesTo RootQuery
 getCertifications fillInOptionals____ requiredArgs____ object____ =
     let
         filledInOptionals____ =
-            fillInOptionals____ { searchText = Absent }
+            fillInOptionals____ { offset = Absent, limit = Absent, searchText = Absent }
 
         optionalArgs____ =
-            [ Argument.optional "searchText" filledInOptionals____.searchText Encode.string ]
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "searchText" filledInOptionals____.searchText Encode.string ]
                 |> List.filterMap Basics.identity
     in
-    Object.selectionForCompositeField "getCertifications" (optionalArgs____ ++ [ Argument.required "departmentId" requiredArgs____.departmentId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ]) object____ (Basics.identity >> Decode.list)
+    Object.selectionForCompositeField "getCertifications" (optionalArgs____ ++ [ Argument.required "departmentId" requiredArgs____.departmentId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ]) object____ Basics.identity
 
 
 getRegions :

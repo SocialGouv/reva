@@ -7,6 +7,7 @@ type LegalStatus =
   | "SA"
   | "EIRL"
   | "ASSOCIATION_LOI_1901"
+  | "ETABLISSEMENT_PUBLIC"
   | "NC";
 
 type OrganismTypology =

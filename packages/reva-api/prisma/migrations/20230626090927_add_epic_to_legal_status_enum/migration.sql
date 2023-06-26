@@ -1,0 +1,3 @@
+-- AlterEnum
+ALTER TYPE "LegalStatus"
+ADD VALUE 'ETABLISSEMENT_PUBLIC';

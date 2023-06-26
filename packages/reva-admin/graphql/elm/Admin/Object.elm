@@ -61,6 +61,10 @@ type Certification
     = Certification
 
 
+type CertificationPage
+    = CertificationPage
+
+
 type CertificationSummary
     = CertificationSummary
 

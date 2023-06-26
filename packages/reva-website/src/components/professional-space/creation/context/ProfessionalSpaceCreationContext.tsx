@@ -8,6 +8,7 @@ type LegalStatus =
   | "ASSOCIATION_LOI_1901"
   | "EI"
   | "EIRL"
+  | "ETABLISSEMENT_PUBLIC"
   | "EURL"
   | "SARL"
   | "SAS"
