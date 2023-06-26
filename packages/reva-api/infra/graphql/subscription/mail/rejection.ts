@@ -17,6 +17,11 @@ export const sendRejectionEmail = async (
         Accompagnateur de Parcours (AAP) sur la plateforme France VAE.</p>
         <p>Après vérification des éléments fournis concernant votre structure,
         nous ne pouvons malheureusement pas valider votre référencement.</p>
+        <p>En vue d’une meilleure appréhension des attendus et des enjeux du référencement,
+        nous vous conseillons vivement de participer à un webinaire de présentation de la plateforme
+        numérique du service public de la VAE. Vous trouverez sur le lien suivant le formulaire
+        d’inscription à l’ensemble des webinaires proposés : <a href="https://tally.so/r/mVjVeN">
+        Inscription webinaire de présentation de la plateforme numérique de la VAE</a>.</p>
         <p>Pour de plus amples informations, nous vous invitons à nous contacter à l’adresse suivante:
         support@vae.gouv.fr,
         nous vous répondrons dans les meilleurs délais.</p>
