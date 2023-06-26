@@ -36,7 +36,6 @@ model Certification {
   summary                                                String?
   status                                                 CertificationStatus                                      @default(INACTIVE)
   rncpId                                                 String                                                   @map("rncp_id") @db.VarChar(255)
-  romes                                                  RomesOnCertifications[]
   candidaciesAndRegions                                  CandidaciesOnRegionsAndCertifications[]
   organismsAndRegions                                    OrganismsOnRegionsAndCertifications[]
   createdAt                                              DateTime                                                 @default(now()) @map("created_at") @db.Timestamptz(6)
@@ -49,47 +48,6 @@ model Certification {
   typeDiplomeId                                          String?                                                  @map("type_diplome_id") @db.Uuid
 
   @@map("certification")
-}
-
-model Profession {
-  id          String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label       String  @db.VarChar(255)
-  slug        String
-  description String?
-  romeId      String  @map("rome_id") @db.Uuid
-  rome        Rome?   @relation(fields: [romeId], references: [id])
-
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime? @map("updated_at") @db.Timestamptz(6)
-
-  @@map("profession")
-}
-
-model Rome {
-  id             String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  code           String                  @unique @db.VarChar(255)
-  label          String                  @db.VarChar(255)
-  slug           String                  @db.VarChar(255)
-  url            String                  @db.VarChar(255)
-  profession     Profession[]
-  certifications RomesOnCertifications[]
-  isActive       Boolean                 @default(false) @map("is_active")
-  createdAt      DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt      DateTime?               @map("updated_at") @db.Timestamptz(6)
-
-  @@map("rome")
-}
-
-model RomesOnCertifications {
-  certification   Certification @relation(fields: [certificationId], references: [id])
-  certificationId String        @map("certification_id") @db.Uuid
-  rome            Rome          @relation(fields: [romeId], references: [id], onDelete: Cascade)
-  romeId          String        @map("rome_id") @db.Uuid
-  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt       DateTime?     @map("updated_at") @db.Timestamptz(6)
-
-  @@id([certificationId, romeId])
-  @@map("rome_certification")
 }
 
 model Candidacy {
