@@ -21,5 +21,12 @@ export async function insertDropOutReasonsIfNone(prisma: PrismaClient) {
         { label: "Autre" },
       ],
     });
+  } else {
+    await prisma.dropOutReason.updateMany({
+      where: {
+        label: "Le parcours REVA / VAE ne répond pas à mes objectifs",
+      },
+      data: { label: "Le parcours France VAE ne répond pas à mes objectifs" },
+    });
   }
 }
