@@ -27,7 +27,7 @@ export const QuestcequelaVae = () => (
           Toutes vos activités passées pourront être prises en compte :
           expériences personnelles et professionnelles, bénévolat, participation
           à des activités de volontariats, activités sportives de haut niveau,
-          etc.. Ces expériences doivent être en rapport avec le diplôme visé.
+          etc. Ces expériences doivent être en rapport avec le diplôme visé.
         </SectionParagraph>
       </div>
       <div className="relative min-h-[300px] min-w-[300px] w-2/5 flex-1 lg:basis-1/2">

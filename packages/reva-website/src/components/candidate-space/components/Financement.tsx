@@ -57,7 +57,7 @@ export const Financement = () => (
             <div className="flex-1 text-[#1B1B35]">
               <header>
                 <SectionSubHeader className="mb-0 pr-2">
-                  Les actes formatifs complémentaires: de courte durée
+                  Les actions de formations complémentaires de courte durée
                 </SectionSubHeader>
               </header>
             </div>

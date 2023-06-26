@@ -32,8 +32,8 @@ const SuiviCandidat = () => (
       </SectionParagraph>
       <SectionParagraph className="lg:!text-[20px] lg:!leading-[28px]">
         L’inscription à la plateforme France VAE est ouverte dès maintenant pour
-        les Architectes Accompagnateurs de{" "}
-        <strong>Parcours certifiés Qualiopi VAE !</strong>
+        les Architectes Accompagnateurs de Parcours{" "}
+        <strong>certifiés Qualiopi VAE !</strong>
       </SectionParagraph>
       <Button
         priority="primary"
@@ -101,7 +101,7 @@ const InterfaceProfessionnels = () => (
       >
         Découvrir les étapes d’accompagnement d’un candidat
       </Button>
-      <Notice title="France VAE offre un outil, élaboré en partenariat avec des architectes de parcours, dont l’optimisation continue est basée sur vos retours." />
+      <Notice title="France VAE offre un outil élaboré en partenariat avec des architectes de parcours, dont l’optimisation continue est basée sur vos retours." />
     </div>
     <div className="relative min-h-[300px] mt-10 lg:mt-0 basis-1/2">
       <Image

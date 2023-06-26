@@ -21,10 +21,10 @@ export const ExperienceReconnue = () => (
         </SectionHeader>
       </header>
       <SectionParagraph className="font-bold">
-        La VAE ou Validation des Acquis de l’Expérience, est la troisième voie
+        La VAE, ou Validation des Acquis de l’Expérience, est la troisième voie
         d’accès à un diplôme en France depuis 2002.
       </SectionParagraph>
-      <div className="font-bold lg:text-xl mb-4">Vous souhaitez: </div>
+      <div className="font-bold lg:text-xl mb-4">Vous souhaitez : </div>
       <ul className="list-none pl-0 leading-7 lg:text-lg lg:leading-10 xl:text-2xl mb-8 ml-6">
         <li className="my-2">
           <ArrowRight />
@@ -46,7 +46,7 @@ export const ExperienceReconnue = () => (
       <p className="lg:text-xl lg:leading-8">
         La VAE est faite pour vous !<br />
         Obtenez un diplôme à votre rythme sans interrompre votre activité
-        professionnelle
+        professionnelle.
       </p>
 
       <div className="flex flex-col items-center sm:items-start space-y-4">

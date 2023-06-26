@@ -330,8 +330,8 @@ const Professionnels = () => (
         </Professionel>
         <Professionel
           title="Certificateurs"
-          description="Référencez vos certifications sur notre plateforme pour la rendre
-            disponible aux candidats à la VAE."
+          description="Référencez vos certifications sur notre plateforme pour les rendre
+            disponibles aux candidats à la VAE."
         >
           <p className="!text-sm mb-0">
             (Cette fonction sera disponible plus tard)
@@ -394,9 +394,9 @@ const Roadmap = () => (
           métallurgique et métiers du sport.
         </RoadmapStep>
         <RoadmapStep date="1er janvier 2024">
-          Le service public de la VAE sera accessible à tous les Français
-          (conditions spécifiques pour les salariés de la fonction publique et
-          les retraités).
+          Le service public de la VAE sera accessible à tous (conditions
+          spécifiques pour les salariés de la fonction publique et les
+          retraités).
         </RoadmapStep>
         <RoadmapStep date="Prochainement">
           Ouverture de la plateforme à l’ensemble des certifications du RNCP, en
