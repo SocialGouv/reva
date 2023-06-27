@@ -32,17 +32,6 @@ view context config =
     [ div
         [ class "mt-4 mb-8 text-gray-900" ]
         [ div
-            [ class "mb-6 fr-alert fr-alert--warning" ]
-            [ h3
-                [ class "fr-alert__title" ]
-                [ text "Attention" ]
-            , p
-                []
-                [ text "L’expérimentation Reva qui repense la VAE touche à sa fin ! Les demandes de prise en charge ne sont "
-                , span [ class "font-semibold" ] [ text "plus possible après le 30 juin 2023." ]
-                ]
-            ]
-        , div
             []
             [ case ( config.candidacy.firstname, config.candidacy.lastname ) of
                 ( Just firstname, Just lastname ) ->
