@@ -47,6 +47,28 @@ const organismIperia = {
   typology: "experimentation" as const,
 };
 
+const organismDummy1 = {
+  label: "Dummyperia",
+  siret: "5038235666",
+  address: "4 place Thiers",
+  city: "Bondy",
+  zip: "93140",
+  contactAdministrativeEmail: "bunny@dummyperia.fr",
+  isActive: true,
+  typology: "generaliste" as const,
+};
+
+const organismDummy2 = {
+  label: "Dummyperia2",
+  siret: "5038235777",
+  address: "14 boulevard Ney",
+  city: "Nantes",
+  zip: "44000",
+  contactAdministrativeEmail: "elmer@foodbeat.fr",
+  isActive: true,
+  typology: "generaliste" as const,
+};
+
 // Architectes
 
 const archiIperia1 = {
@@ -74,6 +96,8 @@ const adminAccount1 = {
 
 export {
   organismIperia,
+  organismDummy1,
+  organismDummy2,
   candidateJPL,
   candidateMPB,
   archiIperia1,

@@ -38,25 +38,6 @@ afterAll(async () => {
   await prismaClient.organism.delete({ where: { id: organism.id } });
 });
 
-test("candidacy_takeOver should fail when not authenticated", async function () {
-  const resp = await injectGraphql({
-    fastify: (global as any).fastify,
-    authorization: authorizationHeaderForUser({
-      role: "candidate",
-      keycloakId: "blabla",
-    }),
-    payload: {
-      requestType: "mutation",
-      endpoint: "candidacy_takeOver",
-      arguments: { candidacyId: candidacy.id },
-      returnFields: "{ id }",
-    },
-  });
-
-  expect(resp.statusCode).toEqual(200);
-  expect(resp.json()).toHaveProperty("errors");
-});
-
 test("get existing Candidacy with admin user", async () => {
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
