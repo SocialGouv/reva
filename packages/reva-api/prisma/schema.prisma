@@ -32,7 +32,6 @@ model Certification {
   activityArea                                           String?                                                  @map("activity_area")
   accessibleJobType                                      String?                                                  @map("accessible_job_type")
   abilities                                              String?
-  slug                                                   String
   summary                                                String?
   status                                                 CertificationStatus                                      @default(INACTIVE)
   rncpId                                                 String                                                   @map("rncp_id") @db.VarChar(255)
