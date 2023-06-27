@@ -61,66 +61,17 @@ http:
         - removeHeader
 
     # --- END STAGING ---
-    # --- BEGIN PRODUCTION ---
-
-    auth-reva-beta-gouv-fr:
-      rule: "Host(`auth.reva.beta.gouv.fr`)"
-      service: auth-reva-beta-gouv-fr
-      middlewares:
-        - removeHeader
-
-    metabase-reva-beta-gouv-fr:
-      rule: "Host(`metabase.reva.beta.gouv.fr`)"
-      service: metabase-reva-beta-gouv-fr
-      middlewares:
-        - removeHeader
+    # --- BEGIN PRODUCTION REVA.BETA.GOUV.FR---
 
     site-web-production:
-      rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/`)"
-      service: site-web-production
+      rule: "Host(`reva.beta.gouv.fr`)"
+      service: framer-reva-beta-gouv-fr-maintenance-page
       middlewares:
         - removeHeader
+        - removePath
 
-    site-web-production-subscription:
-      rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/inscription-pro`)"
-      service: site-web-production-subscription
-      middlewares:
-        - removeHeader
-
-    espace-pro-production:
-      rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/admin`)"
-      service: espace-pro-production
-      middlewares:
-        - removeHeader
-
-    app-candidat-production:
-      rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/app`)"
-      service: app-candidat-production
-      middlewares:
-        - removeHeader
-
-    api-production:
-      rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/api`)"
-      service: api-production
-      middlewares:
-        - removeHeader
-
-    # Should be removed after the creation of the /api path
-    payment-request-production:
-      rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/payment-request/proof`)"
-      service: site-web-production
-      middlewares:
-        - removeHeader
-
-    # Should be removed after the creation of the /api path
-    ping-production:
-      rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/ping`)"
-      service: site-web-production
-      middlewares:
-        - removeHeader
-
-    # --- END PRODUCTION ---
-    # --- BEGIN PRODUCTION 2---
+    # --- END PRODUCTION REVA.BETA.GOUV.FR ---
+    # --- BEGIN PRODUCTION VAE.GOUV.FR--
 
     vae-gouv-main-page-www:
       rule: "Host(`www.vae.gouv.fr`)"
@@ -130,10 +81,9 @@ http:
 
     vae-gouv-main-page:
       rule: "Host(`vae.gouv.fr`)"
-      service: framer-vae-gouv-fr-maintenance-page
+      service: site-web-production
       middlewares:
         - removeHeader
-        - removePath
 
     auth-vae-gouv-fr:
       rule: "Host(`auth.vae.gouv.fr`)"
@@ -165,7 +115,7 @@ http:
       middlewares:
         - removeHeader
 
-    # --- END PRODUCTION 2 ---
+    # --- END PRODUCTION VAE.GOUV.FR ---
 
     # Enable dashboard on /dashboard with basic auth
     dashboard:
@@ -242,57 +192,17 @@ http:
 
     # --- BEGIN PRODUCTION ---
 
-    auth-reva-beta-gouv-fr:
+    framer-reva-beta-gouv-fr-maintenance-page:
       loadBalancer:
         passHostHeader: false
         servers:
-          - url: "https://auth-reva-beta-gouv-fr.osc-secnum-fr1.scalingo.io/"
-
-    metabase-reva-beta-gouv-fr:
-      loadBalancer:
-        passHostHeader: false
-        servers:
-          - url: "https://metabase-reva-beta-gouv-fr.osc-secnum-fr1.scalingo.io/"
+          - url: "https://cold-tool-912858.framer.app/"
 
     site-web-production:
       loadBalancer:
         passHostHeader: false
         servers:
-          - url: "https://reva-prod.osc-secnum-fr1.scalingo.io/"
-
-    site-web-production-subscription:
-      loadBalancer:
-        passHostHeader: false
-        servers:
-          - url: "https://reva-prod-inscription-pro.osc-secnum-fr1.scalingo.io/"
-
-    espace-pro-production:
-      loadBalancer:
-        passHostHeader: false
-        servers:
-          - url: "https://reva-prod.osc-secnum-fr1.scalingo.io/admin/"
-
-    app-candidat-production:
-      loadBalancer:
-        passHostHeader: false
-        servers:
-          - url: "https://reva-prod.osc-secnum-fr1.scalingo.io/app/"
-
-    api-production:
-      loadBalancer:
-        passHostHeader: false
-        servers:
-          - url: "https://reva-prod.osc-secnum-fr1.scalingo.io/api"
-
-    # --- END PRODUCTION ---
-
-    # --- BEGIN PRODUCTION 2---
-
-    framer-vae-gouv-fr-maintenance-page:
-      loadBalancer:
-        passHostHeader: false
-        servers:
-          - url: "https://frequent-tool-670208.framer.app/"
+          - url: "https://reva-prod-website.osc-secnum-fr1.scalingo.io/"
 
     auth-vae-gouv-fr:
       loadBalancer:
@@ -324,4 +234,4 @@ http:
         servers:
           - url: "https://reva-prod-2.osc-secnum-fr1.scalingo.io/api"
 
-    # --- END PRODUCTION 2 ---
+    # --- END PRODUCTION  ---
