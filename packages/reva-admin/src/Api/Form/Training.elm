@@ -53,7 +53,6 @@ update candidacyId endpointGraphql token toMsg ( _, referential ) formData =
                 training.individualHourCount
                 training.collectiveHourCount
                 training.additionalHourCount
-                True
                 (List.map Uuid training.basicSkillsIds)
                 (List.map Uuid training.mandatoryTrainingIds)
                 training.isCertificationPartial
@@ -73,7 +72,6 @@ selection =
         |> with Admin.Object.Candidacy.mandatoryTrainingIds
         |> with Admin.Object.Candidacy.basicSkillIds
         |> with Admin.Object.Candidacy.certificateSkills
-        |> with Admin.Object.Candidacy.validatedByCandidate
         |> with Admin.Object.Candidacy.otherTraining
         |> with Admin.Object.Candidacy.individualHourCount
         |> with Admin.Object.Candidacy.collectiveHourCount

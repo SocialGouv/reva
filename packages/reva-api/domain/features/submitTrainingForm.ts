@@ -14,7 +14,6 @@ interface SubmitTrainingDeps {
       individualHourCount: number;
       collectiveHourCount: number;
       additionalHourCount: number;
-      validatedByCandidate: boolean;
       isCertificationPartial: boolean;
     };
   }) => Promise<Either<string, Candidacy>>;
@@ -40,7 +39,6 @@ export const submitTraining =
       individualHourCount: number;
       collectiveHourCount: number;
       additionalHourCount: number;
-      validatedByCandidate: boolean;
       isCertificationPartial: boolean;
     };
   }) => {

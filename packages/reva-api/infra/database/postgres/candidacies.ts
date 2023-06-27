@@ -868,7 +868,6 @@ export const updateTrainingInformations = async (params: {
     individualHourCount: number;
     collectiveHourCount: number;
     additionalHourCount: number;
-    validatedByCandidate: boolean;
     isCertificationPartial: boolean;
   };
 }) => {
@@ -906,7 +905,6 @@ export const updateTrainingInformations = async (params: {
           individualHourCount: params.training.individualHourCount,
           collectiveHourCount: params.training.collectiveHourCount,
           additionalHourCount: params.training.additionalHourCount,
-          validatedByCandidate: params.training.validatedByCandidate,
           isCertificationPartial: params.training.isCertificationPartial,
         },
         include: {

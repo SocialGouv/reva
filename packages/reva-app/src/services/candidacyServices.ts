@@ -263,7 +263,6 @@ const CANDIDACY_SELECTION = `
       individualHourCount
       collectiveHourCount
       additionalHourCount
-      validatedByCandidate
       basicSkills {
         label
       }
@@ -409,7 +408,6 @@ function formatCandidacy(candidate: any, getReferential: any) {
       individualHourCount,
       mandatoryTrainings,
       otherTraining,
-      validatedByCandidate,
     } = candidacy;
 
     const trainingProgram = {
@@ -421,7 +419,6 @@ function formatCandidacy(candidate: any, getReferential: any) {
       individualHourCount,
       mandatoryTrainings: mandatoryTrainings?.map((m: any) => m.label),
       otherTraining,
-      validatedByCandidate,
     };
 
     candidacy = {
