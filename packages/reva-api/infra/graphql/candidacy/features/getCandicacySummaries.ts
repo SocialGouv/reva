@@ -55,7 +55,7 @@ const toDomainCandidacySummary = (
   };
 };
 
-type CertificationSummary = Pick<Certification, "id" | "label" | "acronym">;
+type CertificationSummary = Pick<Certification, "id" | "label">;
 
 const toDomainCandidacySummaries = (
   candidacies: (Candidacy & {
@@ -117,7 +117,7 @@ export const getCandidaciesFromDb = async ({
             select: {
               id: true,
               label: true,
-              acronym: true,
+              typeDiplome: true,
             },
           },
         },
@@ -329,7 +329,16 @@ const getWhereClauseFromSearchFilter = (searchFilter?: string) => {
                 { isActive: true },
                 {
                   certification: {
-                    OR: [containsFilter("label"), containsFilter("acronym")],
+                    OR: [
+                      containsFilter("label"),
+                      {
+                        typeDiplome: {
+                          Certification: {
+                            some: containsFilter("label"),
+                          },
+                        },
+                      },
+                    ],
                   },
                 },
               ],

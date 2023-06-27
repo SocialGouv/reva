@@ -270,7 +270,6 @@ certificationSelection =
         |> with Admin.Object.Certification.id
         |> with Admin.Object.Certification.label
         |> with Admin.Object.Certification.summary
-        |> with Admin.Object.Certification.acronym
         |> with Admin.Object.Certification.level
         |> with Admin.Object.Certification.activities
         |> with Admin.Object.Certification.activityArea
@@ -283,7 +282,6 @@ certificationSummarySelection =
     SelectionSet.succeed Data.Certification.CertificationSummary
         |> with Admin.Object.CertificationSummary.id
         |> with Admin.Object.CertificationSummary.label
-        |> with Admin.Object.CertificationSummary.acronym
 
 
 

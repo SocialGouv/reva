@@ -35,11 +35,6 @@ summary =
     Object.selectionForField "String" "summary" [] Decode.string
 
 
-acronym : SelectionSet String Admin.Object.Certification
-acronym =
-    Object.selectionForField "String" "acronym" [] Decode.string
-
-
 level : SelectionSet Int Admin.Object.Certification
 level =
     Object.selectionForField "Int" "level" [] Decode.int
@@ -73,3 +68,10 @@ codeRncp =
 status : SelectionSet Admin.Enum.CertificationStatus.CertificationStatus Admin.Object.Certification
 status =
     Object.selectionForField "Enum.CertificationStatus.CertificationStatus" "status" [] Admin.Enum.CertificationStatus.decoder
+
+
+typeDiplome :
+    SelectionSet decodesTo Admin.Object.TypeDiplome
+    -> SelectionSet decodesTo Admin.Object.Certification
+typeDiplome object____ =
+    Object.selectionForCompositeField "typeDiplome" [] object____ Basics.identity

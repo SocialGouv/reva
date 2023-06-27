@@ -169,5 +169,9 @@ type TrainingForm
     = TrainingForm
 
 
+type TypeDiplome
+    = TypeDiplome
+
+
 type VulnerabilityIndicator
     = VulnerabilityIndicator

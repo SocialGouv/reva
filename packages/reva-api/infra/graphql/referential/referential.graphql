@@ -57,6 +57,11 @@ type ConventionCollective {
   label: String!
 }
 
+type TypeDiplome {
+  id: ID!
+  label: String!
+}
+
 enum CertificationStatus {
   INACTIVE
   SOON
@@ -67,7 +72,6 @@ type Certification {
   id: ID!
   label: String!
   summary: String!
-  acronym: String!
   level: Int!
   activities: String
   activityArea: String
@@ -75,6 +79,7 @@ type Certification {
   abilities: String
   codeRncp: String!
   status: CertificationStatus!
+  typeDiplome: TypeDiplome!
 }
 
 type CertificationPage {

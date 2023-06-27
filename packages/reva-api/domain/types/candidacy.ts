@@ -68,7 +68,6 @@ export interface CandidacySummary
 export interface CertificationSummary {
   id: string;
   label: string;
-  acronym: string;
 }
 
 export interface ExperienceInput {

@@ -26,7 +26,6 @@ enum ExperienceDuration {
 model Certification {
   id                                                     String                                                   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   label                                                  String                                                   @db.VarChar(255)
-  acronym                                                String                                                   @db.VarChar(255)
   level                                                  Int
   activities                                             String?
   activityArea                                           String?                                                  @map("activity_area")
