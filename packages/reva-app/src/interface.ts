@@ -85,7 +85,6 @@ export interface TrainingProgram {
   individualHourCount: number;
   mandatoryTrainings: string[];
   otherTraining: string;
-  validatedByCandidate: boolean;
 }
 
 export type Page<T> = {

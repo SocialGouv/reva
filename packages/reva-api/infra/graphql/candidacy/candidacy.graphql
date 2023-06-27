@@ -59,7 +59,6 @@ type Candidacy {
   individualHourCount: Int
   collectiveHourCount: Int
   additionalHourCount: Int
-  validatedByCandidate: Boolean
   basicSkillIds: [UUID!]!
   basicSkills: [BasicSkill!]!
   mandatoryTrainingIds: [UUID!]!
@@ -273,7 +272,6 @@ input TrainingInput {
   individualHourCount: Int!
   collectiveHourCount: Int!
   additionalHourCount: Int!
-  validatedByCandidate: Boolean!
   basicSkillIds: [UUID!]!
   mandatoryTrainingIds: [UUID!]!
   isCertificationPartial: Boolean!

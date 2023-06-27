@@ -171,11 +171,6 @@ additionalHourCount =
     Object.selectionForField "(Maybe Int)" "additionalHourCount" [] (Decode.int |> Decode.nullable)
 
 
-validatedByCandidate : SelectionSet (Maybe Bool) Admin.Object.Candidacy
-validatedByCandidate =
-    Object.selectionForField "(Maybe Bool)" "validatedByCandidate" [] (Decode.bool |> Decode.nullable)
-
-
 basicSkillIds : SelectionSet (List Data.Scalar.Uuid) Admin.Object.Candidacy
 basicSkillIds =
     Object.selectionForField "(List Data.Scalar.Uuid)" "basicSkillIds" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecUuid |> .decoder |> Decode.list)

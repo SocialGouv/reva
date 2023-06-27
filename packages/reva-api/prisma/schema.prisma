@@ -71,7 +71,6 @@ model Candidacy {
   individualHourCount       Int?                                    @map("individual_hour_count")
   collectiveHourCount       Int?                                    @map("collective_hour_count")
   additionalHourCount       Int?                                    @map("additional_hour_count")
-  validatedByCandidate      Boolean?                                @map("validated_by_candidate")
   candidate                 Candidate?                              @relation(fields: [candidateId], references: [id], onDelete: Cascade)
   candidateId               String?                                 @map("candidate_id") @db.Uuid
   department                Department?                             @relation(fields: [departmentId], references: [id], onDelete: Cascade)

@@ -73,7 +73,6 @@
             "individualHourCount": 1,
             "collectiveHourCount": 2,
             "additionalHourCount": 3,
-            "validatedByCandidate": true,
             "basicSkills": [
               {
                 "label": "Base 1"

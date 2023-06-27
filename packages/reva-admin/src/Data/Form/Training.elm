@@ -56,14 +56,13 @@ training :
     List Uuid
     -> List Uuid
     -> Maybe String
-    -> Maybe Bool
     -> Maybe String
     -> Maybe Int
     -> Maybe Int
     -> Maybe Int
     -> Bool
     -> Dict String String
-training mandatoryTrainings basicSkills certificateSkills consent otherTraining individualHourCount collectiveHourCount additionalHourCount isCertificationPartial =
+training mandatoryTrainings basicSkills certificateSkills otherTraining individualHourCount collectiveHourCount additionalHourCount isCertificationPartial =
     let
         mandatoryTrainingsIds =
             uuidToCheckedList mandatoryTrainings
@@ -73,7 +72,6 @@ training mandatoryTrainings basicSkills certificateSkills consent otherTraining 
 
         otherTrainings =
             [ ( .certificateSkills, certificateSkills )
-            , ( .consent, Maybe.map booleanToString consent )
             , ( .otherTraining, otherTraining )
             , ( .individualHourCount, Maybe.map String.fromInt individualHourCount )
             , ( .collectiveHourCount, Maybe.map String.fromInt collectiveHourCount )
