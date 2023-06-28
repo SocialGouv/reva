@@ -1,5 +1,6 @@
 import { FastifyPluginAsync, FastifyRequest } from "fastify";
 import fp from "fastify-plugin";
+import jwt from "jsonwebtoken";
 import Keycloak, { KeycloakConfig } from "keycloak-connect";
 
 import { logger } from "../../logger";
@@ -22,7 +23,7 @@ interface KeycloakConnectUserInfo {
 }
 
 type KeycloakPluginOptions = {
-  config: KeycloakConfig;
+  config: KeycloakConfig & { clientId: string };
   [x: string]: unknown;
 };
 
@@ -50,23 +51,28 @@ const keycloakPlugin: FastifyPluginAsync<KeycloakPluginOptions> = async (
   app.addHook("onRequest", async (req: FastifyRequest, _res: any) => {
     if (req.headers.authorization) {
       const [, token] = req.headers.authorization.split("Bearer ");
+
       if (token) {
-        try {
-          const userInfo = await keycloak.grantManager.userInfo<
-            string,
-            KeycloakConnectUserInfo
-          >(token);
-          req.auth = {
-            hasRole: (role: KeyCloakUserRole) => {
-              return (
-                userInfo?.realm_access?.roles as KeyCloakUserRole[]
-              ).includes(role);
-            },
-            token,
-            userInfo,
-          };
-        } catch (e) {
-          logger.error(e);
+        const decodedToken = jwt.decode(token) as { azp?: string };
+        if (decodedToken?.azp === config.clientId) {
+          //check if request should be handled by plugin instance(we have multiple realms and so multiple plugin instances)
+          try {
+            const userInfo = await keycloak.grantManager.userInfo<
+              string,
+              KeycloakConnectUserInfo
+            >(token);
+            req.auth = {
+              hasRole: (role: KeyCloakUserRole) => {
+                return (
+                  userInfo?.realm_access?.roles as KeyCloakUserRole[]
+                ).includes(role);
+              },
+              token,
+              userInfo,
+            };
+          } catch (e) {
+            logger.error(e);
+          }
         }
       }
     }
