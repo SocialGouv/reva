@@ -800,7 +800,9 @@ export const mainMachine =
             },
           },
           projectHomeLoading: {
-            always: [{ target: "projectHome.loading" }],
+            always: [
+              { actions: "navigateHome", target: "projectHome.loading" },
+            ],
           },
           projectHome: {
             initial: "ready",
