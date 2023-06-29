@@ -22,6 +22,7 @@ import Api.Form.PaymentUploads
 import Api.Form.Training
 import Api.Form.Unarchive
 import Api.Referential
+import Api.Token
 import BetaGouv.DSFR.Button as Button
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId)
@@ -559,4 +560,16 @@ updateTab context tab ( model, cmd ) =
 
 withTakeOver : Context -> CandidacyId -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
 withTakeOver context candidacyId ( model, cmds ) =
-    ( model, Cmd.batch [ cmds, Api.Candidacy.takeOver context.endpoint context.token GotCandidacyTakingOverResponse candidacyId ] )
+    let
+        isAdmin =
+            Api.Token.isAdmin context.token
+
+        -- admins can never take over a candidacy
+        commands =
+            if not isAdmin then
+                [ cmds, Api.Candidacy.takeOver context.endpoint context.token GotCandidacyTakingOverResponse candidacyId ]
+
+            else
+                [ cmds ]
+    in
+    ( model, Cmd.batch commands )
