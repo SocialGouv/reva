@@ -1,3 +1,4 @@
+import { AdmissibleSectorsInfoPanel } from "@/components/admissible-sectors-info-panel/AdmissibleSectorsInfoPanel";
 import { TrackableButton } from "@/components/analytics/trackable-button/TrackableButton";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { PICTOGRAMS } from "@/components/pictograms";
@@ -104,6 +105,7 @@ const ValorisationCompetences = () => (
         <h2 className="text-2xl lg:text-3xl mt-8 mb-10">
           Avec la VAE, faites valider vos compétences par un diplôme.
         </h2>
+        <AdmissibleSectorsInfoPanel className="mb-4" />
 
         <div className="flex flex-col xl:flex-row space-y-4 xl:space-y-0 xl:space-x-4 mb-4">
           <TrackableButton
@@ -164,6 +166,7 @@ const CommentCaMarche = () => (
             certification de manière totale ou partielle
           </li>
         </ul>
+        <AdmissibleSectorsInfoPanel className="mb-4" />
         <div>
           <TrackableButton
             eventTracked={{
@@ -256,6 +259,7 @@ const TrouvezCertification = () => (
         professionnelles inscrits au RNCP qui vous ouvriront la porte à autant
         d’opportunités professionnelles.
       </SectionParagraph>
+      <AdmissibleSectorsInfoPanel className="mb-4" />
       <TrackableButton
         eventTracked={{
           location: "Accueil",

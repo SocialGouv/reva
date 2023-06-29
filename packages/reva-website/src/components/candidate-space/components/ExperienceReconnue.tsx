@@ -1,3 +1,4 @@
+import { AdmissibleSectorsInfoPanel } from "@/components/admissible-sectors-info-panel/AdmissibleSectorsInfoPanel";
 import { TrackableButton } from "@/components/analytics/trackable-button/TrackableButton";
 import {
   SectionHeader,
@@ -48,6 +49,8 @@ export const ExperienceReconnue = () => (
         Obtenez un diplôme à votre rythme sans interrompre votre activité
         professionnelle.
       </p>
+
+      <AdmissibleSectorsInfoPanel className="mb-4" />
 
       <div className="flex flex-col items-center sm:items-start space-y-4">
         <TrackableButton
