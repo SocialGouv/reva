@@ -5,14 +5,10 @@ context("Candidacy", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
-        "candidacy_candidacyCountByStatus",
+        "getCandidacyCountByStatus",
         "admin/candidacy-count-by-status.json"
       );
-      stubQuery(
-        req,
-        "candidacy_getCandidacies1555104720",
-        "admin/candidacies.json"
-      );
+      stubQuery(req, "getCandidacies", "admin/candidacies.json");
     });
 
     cy.admin();
