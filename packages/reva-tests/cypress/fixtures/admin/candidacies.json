@@ -1,7 +1,48 @@
 {
     "data": {
-        "getCandidacies1555104720": {
-            "rows": ["abc"]
+        "getCandidacies1556963913": {
+            "info": {
+                "pageLength1207450440": 10,
+                "totalPages1207450440": 56,
+                "currentPage1207450440": 1,
+                "totalRows1207450440": 551
+            },
+            "rows": [
+                {
+                    "sentAt2471995693": 1682537897163,
+                    "createdAt4151430017": 1682536375903,
+                    "isReorientation3880003826": false,
+                    "lastStatus": {
+                        "isActive3880003826": true,
+                        "status3238924706": "PRISE_EN_CHARGE",
+                        "createdAt4151430017": 1682577925822
+                    },
+                    "isDroppedOut3880003826": false,
+                    "email12867311": "john.doe@example.com",
+                    "phone12867311": "0600000000",
+                    "lastname12867311": "Doe",
+                    "firstname12867311": "John",
+                    "organism": {
+                        "contactAdministrativeEmail3832528868": "test@example.com",
+                        "city3832528868": "Bordeaux",
+                        "zip3832528868": "33200",
+                        "address3832528868": "22 rue de la petite rue",
+                        "label3832528868": "APOUIF",
+                        "id3509119574": "7901016a-47ef-4952-80d2-6e74c1a179c3"
+                    },
+                    "department": {
+                        "label3832528868": "Dordogne",
+                        "code3832528868": "24",
+                        "id4168169968": "b20f8bee-8cb5-4b39-b4c1-3020ab808dcc"
+                    },
+                    "certification": {
+                        "label3832528868": "Titre professionnel Assistant de vie aux familles - ADVF",
+                        "id4168169968": "d37cf5c1-da1a-420f-b624-2b9cf4b54712"
+                    },
+                    "certificationId3874409000": "d37cf5c1-da1a-420f-b624-2b9cf4b54712",
+                    "id4168169968": "dbb4786e-7fd9-4d3a-96f9-24da1cf873b1"
+                }
+            ]
         }
     }
 }
