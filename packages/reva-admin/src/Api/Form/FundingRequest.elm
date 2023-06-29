@@ -73,7 +73,7 @@ create candidacyId endpointGraphql token toMsg ( candidacy, referential ) formDa
                 fundingInput
     in
     Mutation.candidate_createFundingRequest fundingRequiredArg SelectionSet.empty
-        |> Auth.makeMutation endpointGraphql token toMsg
+        |> Auth.makeMutation "createFundingRequest" endpointGraphql token toMsg
 
 
 get :
@@ -118,7 +118,7 @@ get candidacyId candidacy endpointGraphql token toMsg =
         |> with (Admin.Object.FundingRequestInformations.fundingRequest selection)
         |> with (Admin.Object.FundingRequestInformations.training trainingFormSelection)
         |> Query.candidate_getFundingRequest fundingInfoRequiredArg
-        |> Auth.makeQuery endpointGraphql token toMsg
+        |> Auth.makeQuery "getFundingRequest" endpointGraphql token toMsg
 
 
 selection : SelectionSet Data.Form.FundingRequest.FundingRequestInput Admin.Object.FundingRequest

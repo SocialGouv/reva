@@ -57,7 +57,7 @@ getCandidacies endpointGraphql token toMsg page statusFilter searchFilter =
             }
         )
         summaryPageSelection
-        |> Auth.makeQuery endpointGraphql token toMsg
+        |> Auth.makeQuery "getCandidacies" endpointGraphql token toMsg
 
 
 get :
@@ -72,7 +72,7 @@ get endpointGraphql token toMsg candidacyId =
             Data.Candidacy.candidacyIdToString candidacyId
     in
     selection id
-        |> Auth.makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
+        |> Auth.makeQuery "getCandidacy" endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
 
 
 takeOver :
@@ -87,7 +87,7 @@ takeOver endpointGraphql token toMsg candidacyId =
             Data.Candidacy.candidacyIdToString candidacyId
     in
     Mutation.candidacy_takeOver (Mutation.CandidacyTakeOverRequiredArguments (Id id)) (SelectionSet.succeed ())
-        |> Auth.makeMutation endpointGraphql token toMsg
+        |> Auth.makeMutation "takeOverCandidacy" endpointGraphql token toMsg
 
 
 getCandidacyCountByStatus :
@@ -97,7 +97,7 @@ getCandidacyCountByStatus :
     -> Cmd msg
 getCandidacyCountByStatus endpointGraphql token toMsg =
     Query.candidacy_candidacyCountByStatus candidacyCountByStatusSelection
-        |> Auth.makeQuery endpointGraphql token toMsg
+        |> Auth.makeQuery "getCandidacyCountByStatus" endpointGraphql token toMsg
 
 
 selection : String -> SelectionSet (Maybe Data.Candidacy.Candidacy) Graphql.Operation.RootQuery

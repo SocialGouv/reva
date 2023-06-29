@@ -61,7 +61,7 @@ createOrUpdate candidacyId endpointGraphql token toMsg ( candidacy, referential 
                 paymentInput
     in
     Mutation.candidacy_createOrUpdatePaymentRequest paymentRequiredArg SelectionSet.empty
-        |> Auth.makeMutation endpointGraphql token toMsg
+        |> Auth.makeMutation "createOrUpdatePaymentRequest" endpointGraphql token toMsg
 
 
 confirm :
@@ -79,7 +79,7 @@ confirm candidacyId endpointGraphql token toMsg _ _ =
                 (Uuid <| Data.Candidacy.candidacyIdToString candidacyId)
     in
     Mutation.candidacy_confirmPaymentRequest paymentRequiredArg SelectionSet.empty
-        |> Auth.makeMutation endpointGraphql token toMsg
+        |> Auth.makeMutation "confirmPaymentRequest" endpointGraphql token toMsg
 
 
 get :
@@ -105,7 +105,7 @@ get candidacyId endpointGraphql token toMsg =
     SelectionSet.succeed Data.Form.PaymentRequest.maybePaymentRequest
         |> with (Query.candidate_getFundingRequest fundingInfoRequiredArg fundingRequestSelection)
         |> with (Query.getCandidacyById paymentInfoRequiredArg paymentRequestSelection)
-        |> Auth.makeQuery endpointGraphql token toMsg
+        |> Auth.makeQuery "getPaymentRequest" endpointGraphql token toMsg
 
 
 selection : SelectionSet Data.Form.PaymentRequest.PaymentRequestInput Admin.Object.PaymentRequest

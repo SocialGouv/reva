@@ -34,7 +34,7 @@ validate :
 validate endpointGraphql token toMsg subscriptionId =
     Mutation.subscription_validateSubscriptionRequest
         (Mutation.SubscriptionValidateSubscriptionRequestRequiredArguments (Id subscriptionId))
-        |> Auth.makeMutation endpointGraphql token (nothingToError "Cette inscription est introuvable" >> toMsg)
+        |> Auth.makeMutation "validateSubscription" endpointGraphql token (nothingToError "Cette inscription est introuvable" >> toMsg)
 
 
 reject :
@@ -46,7 +46,7 @@ reject :
 reject endpointGraphql token toMsg subscriptionId =
     Mutation.subscription_rejectSubscriptionRequest
         (Mutation.SubscriptionRejectSubscriptionRequestRequiredArguments (Id subscriptionId))
-        |> Auth.makeMutation endpointGraphql token (nothingToError "Cette inscription est introuvable" >> toMsg)
+        |> Auth.makeMutation "rejectSubscription" endpointGraphql token (nothingToError "Cette inscription est introuvable" >> toMsg)
 
 
 
@@ -62,7 +62,7 @@ getSubscriptions endpointGraphql token toMsg =
     Query.subscription_getSubscriptionRequests
         (\optionals -> { optionals | limit = Present 50, orderBy = Present { accountLastname = Absent, companyName = Absent, createdAt = Present Admin.Enum.Sort.Desc } })
         subscriptionsSelection
-        |> Auth.makeQuery endpointGraphql token toMsg
+        |> Auth.makeQuery "getSubscriptions" endpointGraphql token toMsg
 
 
 get :
@@ -79,7 +79,7 @@ get endpointGraphql token toMsg subscriptionId =
     Query.subscription_getSubscriptionRequest
         requiredArgs
         selection
-        |> Auth.makeQuery endpointGraphql token (nothingToError "Cette inscription est introuvable" >> toMsg)
+        |> Auth.makeQuery "getSubscription" endpointGraphql token (nothingToError "Cette inscription est introuvable" >> toMsg)
 
 
 subscriptionsSelection : SelectionSet (List Data.Subscription.SubscriptionSummary) Admin.Object.SubscriptionRequestsPaginated

@@ -36,7 +36,7 @@ get :
     -> (RemoteData (List String) Data.Referential.Referential -> msg)
     -> Cmd msg
 get endpointGraphql token toMsg =
-    Auth.makeQuery endpointGraphql token toMsg selection
+    Auth.makeQuery "getReferential" endpointGraphql token toMsg selection
 
 
 selection : SelectionSet Data.Referential.Referential Graphql.Operation.RootQuery
