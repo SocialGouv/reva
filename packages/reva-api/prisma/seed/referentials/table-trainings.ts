@@ -1,13 +1,14 @@
 import { PrismaClient } from "@prisma/client";
 
-export async function insertTrainingsIfNone(prisma: PrismaClient) {
+export async function upsertTrainings(prisma: PrismaClient) {
   await prisma.training.upsert({
+    // This label was modified by migration 20230629172500_rename_traning_AFGSU
     where: {
-      label: `Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU)`,
+      label: `Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU 2)`,
     },
     update: {},
     create: {
-      label: `Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU)`,
+      label: `Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU 2)`,
     },
   });
 

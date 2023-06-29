@@ -9,7 +9,7 @@ import { insertDropOutReasonsIfNone } from "./referentials/table-dropout-reasons
 import { upsertGoals } from "./referentials/table-goals";
 import { upsertRegions } from "./referentials/table-regions";
 import { insertReorientationReasonsIfNone } from "./referentials/table-reorientation-reasons";
-import { insertTrainingsIfNone } from "./referentials/table-trainings";
+import { upsertTrainings } from "./referentials/table-trainings";
 import { insertVulnerabilityIndicatorsIfNone } from "./referentials/table-vulnerability-indicators";
 
 export const prisma = new PrismaClient();
@@ -20,7 +20,7 @@ async function main() {
   await insertDepartmentsIfNone(prisma);
   await insertBasicSkillsIfNone(prisma);
   await insertDegreesIfNone(prisma);
-  await insertTrainingsIfNone(prisma);
+  await upsertTrainings(prisma);
   await insertVulnerabilityIndicatorsIfNone(prisma);
   await insertDropOutReasonsIfNone(prisma);
   await insertReorientationReasonsIfNone(prisma);
