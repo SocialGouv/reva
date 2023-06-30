@@ -1,3 +1,4 @@
+import { deburr } from "lodash";
 import { Either, Left, Right } from "purify-ts";
 
 import type { Certification } from "../../../domain/types/certification";
@@ -40,12 +41,21 @@ export const getCertificationsForDepartmentWithNewTypologies = async ({
     const realLimit = limit || 10;
     const realOffset = offset || 0;
 
-    const searchTextInTsQueryFormat = searchText
+    const searchTextInTsQueryFormat = deburr(searchText)
       ?.replace(/[^A-Z0-9]/gi, " ")
       ?.split(" ")
       .filter((t) => t)
       .map((t) => t + ":*")
       .join("&");
+
+    logger.info({
+      r: `select c.id,c.label,c.summary,c.status, c.rncp_id as "codeRncp"
+    from certification c, available_certification_by_department where c.id=available_certification_by_department.certification_id and available_certification_by_department.department_id=uuid('${departmentId}') ${
+        searchTextInTsQueryFormat
+          ? `and certification_searchable_text@@to_tsquery('french',unaccent('${searchTextInTsQueryFormat}'))`
+          : ""
+      } offset ${realOffset} limit ${realLimit}`,
+    });
 
     const certifications =
       (await prismaClient.$queryRawUnsafe(`select c.id,c.label,c.summary,c.status, c.rncp_id as "codeRncp"
