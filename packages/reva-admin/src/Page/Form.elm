@@ -294,7 +294,7 @@ viewEditableElement formData ( elementId, element ) =
             viewInput elementId (label |> optional) dataOrDefault
                 |> Input.textArea (Just 10)
                 |> Input.withHint [ text "Texte de description libre" ]
-                |> Input.withExtraAttrs [ placeholderValue |> Maybe.map placeholder |> Maybe.withDefault (class "") ]
+                |> Input.withInputAttrs [ placeholderValue |> Maybe.map placeholder |> Maybe.withDefault (class "") ]
                 |> Input.view
     in
     case element of
