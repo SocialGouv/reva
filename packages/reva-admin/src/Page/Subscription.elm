@@ -14,7 +14,7 @@ import Api.Subscription
 import Browser.Navigation as Nav
 import Data.Context exposing (Context)
 import Data.Form exposing (FormData)
-import Data.Form.OrganismSubscription exposing (Decision(..), decisionToString)
+import Data.Form.OrganismSubscription exposing (Decision(..), Status(..), decisionToString)
 import Data.Referential exposing (DepartmentWithOrganismMethods)
 import Data.Subscription exposing (Subscription, SubscriptionSummary)
 import Html exposing (Html, div, li, text, ul)
@@ -83,7 +83,7 @@ init context subscriptionId =
 
 
 form : FormData -> () -> Form
-form _ _ =
+form formData _ =
     let
         keys =
             Data.Form.OrganismSubscription.keys
@@ -92,12 +92,20 @@ form _ _ =
             [ ( "valid", Valid )
             , ( "invalid", Invalid )
             ]
-                |> List.map (\( id, status ) -> ( id, decisionToString status ))
+                |> List.map (\( id, decision ) -> ( id, decisionToString decision ))
+
+        status =
+            Data.Form.OrganismSubscription.fromDict formData
     in
     { elements =
-        [ ( keys.decision, Form.RadioList "Décision prise concernant cette inscription" decisions )
-        , ( keys.comment, Form.Textarea "Précisez les motifs de votre décision" Nothing )
-        ]
+        ( keys.decision, Form.RadioList "Décision prise concernant cette inscription" decisions )
+            :: (case status of
+                    Rejected _ ->
+                        [ ( keys.comment, Form.Textarea "Précisez les motifs de votre décision" Nothing ) ]
+
+                    _ ->
+                        []
+               )
     , saveLabel = Nothing
     , submitLabel = "Valider la décision"
     , title = ""

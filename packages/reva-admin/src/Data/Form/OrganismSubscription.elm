@@ -1,20 +1,19 @@
-module Data.Form.OrganismSubscription exposing (Decision(..), Subscription(..), decisionToString, fromDict, keys)
+module Data.Form.OrganismSubscription exposing (Decision(..), Status(..), decisionToString, fromDict, keys)
 
-import Admin.Scalar exposing (Uuid)
 import Data.Form exposing (FormData)
-import Data.Form.Helper as Helper exposing (booleanToString, uuidToCheckedList)
-import Data.Referential exposing (BasicSkill, MandatoryTraining)
-import Dict exposing (Dict)
+import Data.Form.Helper as Helper
 
 
-type Subscription
-    = Rejected String
-    | Approved
+type Status
+    = Approved
+    | Rejected String
+    | Pending
 
 
 type Decision
     = Valid
     | Invalid
+    | Unknown
 
 
 decisionToString reason =
@@ -24,6 +23,9 @@ decisionToString reason =
 
         Invalid ->
             "Dossier incomplet ou en erreur"
+
+        Unknown ->
+            "Inscription en attente de validation"
 
 
 decisionFromString reason =
@@ -35,7 +37,7 @@ decisionFromString reason =
             Invalid
 
         _ ->
-            Invalid
+            Unknown
 
 
 keys =
@@ -44,14 +46,18 @@ keys =
     }
 
 
-fromDict : FormData -> Subscription
+fromDict : FormData -> Status
 fromDict formData =
     let
         decode =
             Helper.decode keys formData
     in
-    if decisionFromString (decode.string .decision "") == Valid then
-        Approved
+    case decisionFromString (decode.string .decision "") of
+        Valid ->
+            Approved
 
-    else
-        Rejected (decode.string .comment "")
+        Invalid ->
+            Rejected (decode.string .comment "")
+
+        Unknown ->
+            Pending
