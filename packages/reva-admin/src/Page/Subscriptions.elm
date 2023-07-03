@@ -23,11 +23,7 @@ import View.Helpers exposing (dataTest)
 
 type Msg
     = GotSubscriptionsResponse (RemoteData (List String) (List SubscriptionSummary))
-    | ClickedValidation String
-    | ClickedRejection String
     | ClickedViewMore String
-    | GotValidationResponse (RemoteData (List String) String)
-    | GotRejectionResponse (RemoteData (List String) String)
 
 
 type alias State =
@@ -181,13 +177,8 @@ viewItem context subscription =
             , div
                 [ class "flex items-center space-x-4 ml-auto mt-auto" ]
                 [ Button.new { onClick = Nothing, label = "Voir plus" }
-                    |> Button.secondary
+                    |> Button.primary
                     |> Button.linkButton (Route.toString context.baseUrl <| Route.Subscription subscription.id)
-                    |> Button.view
-                , Button.new { onClick = Just (ClickedRejection subscription.id), label = "Rejeter" }
-                    |> Button.secondary
-                    |> Button.view
-                , Button.new { onClick = Just (ClickedValidation subscription.id), label = "Accepter" }
                     |> Button.view
                 ]
             ]
@@ -204,49 +195,8 @@ update context msg model =
         GotSubscriptionsResponse remoteSubscriptions ->
             ( model, Cmd.none ) |> withSubscriptions remoteSubscriptions
 
-        -- VALIDATION
-        ClickedValidation id ->
-            ( model, Api.Subscription.validate context.endpoint context.token GotValidationResponse id )
-
-        GotValidationResponse RemoteData.NotAsked ->
-            ( model, Cmd.none )
-
-        GotValidationResponse RemoteData.Loading ->
-            ( model, Cmd.none ) |> withErrors []
-
-        GotValidationResponse (RemoteData.Success _) ->
-            ( model, Api.Subscription.getSubscriptions context.endpoint context.token GotSubscriptionsResponse )
-                |> withErrors []
-
-        GotValidationResponse (RemoteData.Failure errors) ->
-            ( model, Cmd.none ) |> withErrors errors
-
-        -- REJECTION
-        ClickedRejection id ->
-            ( model, Api.Subscription.reject context.endpoint context.token GotRejectionResponse id )
-
         ClickedViewMore id ->
             ( model, Cmd.none )
-
-        GotRejectionResponse RemoteData.NotAsked ->
-            ( model, Cmd.none )
-
-        GotRejectionResponse RemoteData.Loading ->
-            let
-                state =
-                    model.state
-            in
-            ( { model | state = { state | errors = [] } }, Cmd.none )
-
-        GotRejectionResponse (RemoteData.Success _) ->
-            let
-                state =
-                    model.state
-            in
-            ( { model | state = { state | errors = [] } }, Api.Subscription.getSubscriptions context.endpoint context.token GotSubscriptionsResponse )
-
-        GotRejectionResponse (RemoteData.Failure errors) ->
-            ( model, Cmd.none ) |> withErrors errors
 
 
 withErrors : List String -> ( Model, Cmd msg ) -> ( Model, Cmd msg )
