@@ -32,7 +32,7 @@ get candidacyId endpointGraphql token toMsg =
             Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
     in
     Query.getCandidacyById examInfoRequiredArs selection
-        |> Auth.makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
+        |> Auth.makeQuery "getCandidacyExamDetails" endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
 
 
 update :
@@ -69,7 +69,7 @@ update candidacyId endpointGraphql token toMsg _ formData =
                 examInfoInformation
     in
     Mutation.candidacy_updateExamInfo examInfoRequiredArgs SelectionSet.empty
-        |> Auth.makeMutation endpointGraphql token toMsg
+        |> Auth.makeMutation "updateCandidacyExamDetails" endpointGraphql token toMsg
 
 
 selection : SelectionSet (Dict String String) Admin.Object.Candidacy

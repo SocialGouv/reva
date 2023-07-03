@@ -36,7 +36,7 @@ get email endpointGraphql token toMsg =
             Query.CandidateGetCandidateByEmailRequiredArguments email
     in
     Query.candidate_getCandidateByEmail candidateRequiredArgs selection
-        |> Auth.makeQuery endpointGraphql token (nothingToError "Ce candidat est introuvable" >> toMsg)
+        |> Auth.makeQuery "getCandidate" endpointGraphql token (nothingToError "Ce candidat est introuvable" >> toMsg)
 
 
 update :
@@ -74,7 +74,7 @@ update endpointGraphql token toMsg _ formData =
                 candidateInput
     in
     Mutation.candidate_updateCandidate candidateRequiredArg SelectionSet.empty
-        |> Auth.makeMutation endpointGraphql token toMsg
+        |> Auth.makeMutation "updateCandidate" endpointGraphql token toMsg
 
 
 selection : SelectionSet (Dict String String) Admin.Object.Candidate
