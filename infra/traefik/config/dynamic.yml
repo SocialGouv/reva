@@ -63,14 +63,13 @@ http:
     # --- END STAGING ---
     # --- BEGIN PRODUCTION REVA.BETA.GOUV.FR---
 
-    site-web-production:
+    reva-beta-gouv-fr:
       rule: "Host(`reva.beta.gouv.fr`)"
-      service: framer-reva-beta-gouv-fr-maintenance-page
+      service: noop@internal
       middlewares:
-        - removeHeader
-        - removePath
+        - redirect-reva-beta-gouv
 
-    site-web-production-subscription:
+    reva-beta-gouv-fr-subscription:
       rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/inscription-pro`)"
       service: noop@internal
       middlewares:
@@ -129,6 +128,7 @@ http:
       service: api@internal
       middlewares:
         - auth
+
   middlewares:
     removeHeader: # remove double header
       headers:
@@ -144,6 +144,12 @@ http:
       redirectRegex:
         regex: "^https?://www\\.(.+)"
         replacement: "https://${1}"
+        permanent: true
+
+    redirect-reva-beta-gouv:
+      redirectRegex:
+        regex: ".*"
+        replacement: "https://vae.gouv.fr/"
         permanent: true
 
     redirect-inscription-pro:
@@ -204,12 +210,6 @@ http:
     # --- END STAGING ---
 
     # --- BEGIN PRODUCTION ---
-
-    framer-reva-beta-gouv-fr-maintenance-page:
-      loadBalancer:
-        passHostHeader: false
-        servers:
-          - url: "https://cold-tool-912858.framer.app/"
 
     site-web-production:
       loadBalancer:
