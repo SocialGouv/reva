@@ -10,25 +10,29 @@ import RemoteData exposing (RemoteData)
 
 makeQuery :
     String
+    -> String
     -> Token
     -> (RemoteData (List String) decodesTo -> msg)
     -> SelectionSet decodesTo Graphql.Operation.RootQuery
     -> Cmd msg
-makeQuery endpointGraphql token msg query =
+makeQuery operationName endpointGraphql token msg query =
     query
         |> Graphql.Http.queryRequest endpointGraphql
+        |> Graphql.Http.withOperationName operationName
         |> makeAuthRequest token msg
 
 
 makeMutation :
     String
+    -> String
     -> Token
     -> (RemoteData (List String) decodesTo -> msg)
     -> SelectionSet decodesTo Graphql.Operation.RootMutation
     -> Cmd msg
-makeMutation endpointGraphql token msg query =
+makeMutation operationName endpointGraphql token msg query =
     query
         |> Graphql.Http.mutationRequest endpointGraphql
+        |> Graphql.Http.withOperationName operationName
         |> makeAuthRequest token msg
 
 

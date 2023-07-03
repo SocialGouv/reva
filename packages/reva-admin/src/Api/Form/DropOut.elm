@@ -33,7 +33,7 @@ get candidacyId endpointGraphql token toMsg =
             Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
     in
     Query.getCandidacyById candidacyRequiredArgs selection
-        |> Auth.makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
+        |> Auth.makeQuery "getCandidacyDropOutDetails" endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
 
 
 dropOut :
@@ -66,7 +66,7 @@ dropOut candidacyId endpointGraphql token toMsg _ formData =
             Data.Candidacy.candidacyIdToString candidacyId
     in
     Mutation.candidacy_dropOut (Mutation.CandidacyDropOutRequiredArguments (Uuid id) dropOutInput) (SelectionSet.succeed ())
-        |> Auth.makeMutation endpointGraphql token toMsg
+        |> Auth.makeMutation "dropOutCandidacy" endpointGraphql token toMsg
 
 
 selection : SelectionSet (Dict String String) Admin.Object.Candidacy

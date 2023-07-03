@@ -32,7 +32,7 @@ get candidacyId endpointGraphql token toMsg =
             Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
     in
     Query.getCandidacyById candidacyRequiredArgs selection
-        |> Auth.makeQuery endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
+        |> Auth.makeQuery "getCandidacyArchiveDetails" endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
 
 
 unarchive :
@@ -54,7 +54,7 @@ unarchive candidacyId endpointGraphql token toMsg _ formData =
     Mutation.candidacy_unarchiveById
         (Mutation.CandidacyArchiveByIdRequiredArguments (Id id))
         (SelectionSet.succeed ())
-        |> Auth.makeMutation endpointGraphql token toMsg
+        |> Auth.makeMutation "unarchiveCandidacy" endpointGraphql token toMsg
 
 
 selection : SelectionSet (Dict String String) Admin.Object.Candidacy
