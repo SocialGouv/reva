@@ -2,7 +2,6 @@ module Page.Subscriptions exposing
     ( Model
     , Msg
     , init
-    , subscriptions
     , update
     , view
     )
@@ -11,8 +10,8 @@ import Api.Subscription
 import Api.Token
 import BetaGouv.DSFR.Button as Button
 import Data.Context exposing (Context)
-import Data.Subscription exposing (SubscriptionSummary)
-import Html exposing (Html, div, h2, h4, li, p, text, ul)
+import Data.Subscription as Subscription exposing (SubscriptionSummary)
+import Html exposing (Html, aside, div, h2, h4, li, node, p, text, ul)
 import Html.Attributes exposing (attribute, class)
 import RemoteData exposing (RemoteData(..))
 import Route
@@ -20,16 +19,13 @@ import String exposing (String)
 import View
 import View.Date exposing (toFullFormat)
 import View.Helpers exposing (dataTest)
-import View.Subscription
-import Window
 
 
 type Msg
     = GotSubscriptionsResponse (RemoteData (List String) (List SubscriptionSummary))
-    | ClickedValidation String String
-    | ConfirmedValidation ( Bool, String )
-    | ClickedRejection String String
-    | ConfirmedRejection ( Bool, String )
+    | ClickedValidation String
+    | ClickedRejection String
+    | ClickedViewMore String
     | GotValidationResponse (RemoteData (List String) String)
     | GotRejectionResponse (RemoteData (List String) String)
 
@@ -102,8 +98,8 @@ view context model =
         Failure errors ->
             View.errors errors
 
-        Success subs ->
-            subs
+        Success subscriptions ->
+            subscriptions
                 |> viewContent context model.state.errors
 
 
@@ -146,6 +142,13 @@ viewDirectoryHeader context waitingSubscriptionsCount =
         ]
 
 
+viewErrorItem : String -> Html Msg
+viewErrorItem error =
+    li
+        []
+        [ text error ]
+
+
 viewDirectoryPanel : Context -> List SubscriptionSummary -> List String -> List (Html Msg)
 viewDirectoryPanel context subscriptionsByStatus actionErrors =
     [ viewDirectoryHeader context (List.length subscriptionsByStatus)
@@ -181,10 +184,10 @@ viewItem context subscription =
                     |> Button.secondary
                     |> Button.linkButton (Route.toString context.baseUrl <| Route.Subscription subscription.id)
                     |> Button.view
-                , Button.new { onClick = Just (ClickedRejection subscription.id subscription.companyName), label = "Rejeter" }
+                , Button.new { onClick = Just (ClickedRejection subscription.id), label = "Rejeter" }
                     |> Button.secondary
                     |> Button.view
-                , Button.new { onClick = Just (ClickedValidation subscription.id subscription.companyName), label = "Accepter" }
+                , Button.new { onClick = Just (ClickedValidation subscription.id), label = "Accepter" }
                     |> Button.view
                 ]
             ]
@@ -202,15 +205,8 @@ update context msg model =
             ( model, Cmd.none ) |> withSubscriptions remoteSubscriptions
 
         -- VALIDATION
-        ClickedValidation id name ->
-            ( model, View.Subscription.confirmValidation id name )
-
-        ConfirmedValidation ( isConfirmed, id ) ->
-            if isConfirmed then
-                ( model, Api.Subscription.validate context.endpoint context.token GotValidationResponse id )
-
-            else
-                ( model, Cmd.none )
+        ClickedValidation id ->
+            ( model, Api.Subscription.validate context.endpoint context.token GotValidationResponse id )
 
         GotValidationResponse RemoteData.NotAsked ->
             ( model, Cmd.none )
@@ -226,15 +222,11 @@ update context msg model =
             ( model, Cmd.none ) |> withErrors errors
 
         -- REJECTION
-        ClickedRejection id name ->
-            ( model, View.Subscription.confirmRejection id name )
+        ClickedRejection id ->
+            ( model, Api.Subscription.reject context.endpoint context.token GotRejectionResponse id )
 
-        ConfirmedRejection ( isConfirmed, id ) ->
-            if isConfirmed then
-                ( model, Api.Subscription.reject context.endpoint context.token GotRejectionResponse id )
-
-            else
-                ( model, Cmd.none )
+        ClickedViewMore id ->
+            ( model, Cmd.none )
 
         GotRejectionResponse RemoteData.NotAsked ->
             ( model, Cmd.none )
@@ -267,12 +259,12 @@ withErrors errors ( model, cmd ) =
 
 
 withSubscriptions : RemoteData (List String) (List SubscriptionSummary) -> ( Model, Cmd msg ) -> ( Model, Cmd msg )
-withSubscriptions subs ( model, cmd ) =
+withSubscriptions subscriptions ( model, cmd ) =
     let
         state =
             model.state
     in
-    ( { model | state = { state | subscriptions = subs } }, cmd )
+    ( { model | state = { state | subscriptions = subscriptions } }, cmd )
 
 
 viewCandidaciesLink : Context -> Html msg
@@ -283,15 +275,3 @@ viewCandidaciesLink context =
         , Route.href context.baseUrl (Route.Candidacies Route.emptyFilters)
         ]
         [ text "Voir les candidatures" ]
-
-
-
--- ELM SUBSCRIPTIONS
-
-
-subscriptions : Model -> Sub Msg
-subscriptions _ =
-    Sub.batch
-        [ Window.confirmedRejection ConfirmedRejection
-        , Window.confirmedValidation ConfirmedValidation
-        ]

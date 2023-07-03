@@ -377,21 +377,8 @@ initWithoutToken flags url key =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions model =
-    Sub.batch
-        [ Browser.Events.onResize (\w _ -> toFloat w |> GotBrowserWidth)
-        , case model.page of
-            Subscriptions subscriptionsModel ->
-                Subscriptions.subscriptions subscriptionsModel
-                    |> Sub.map GotSubscriptionsMsg
-
-            Subscription subscriptionModel ->
-                Subscription.subscriptions subscriptionModel
-                    |> Sub.map GotSubscriptionMsg
-
-            _ ->
-                Sub.none
-        ]
+subscriptions _ =
+    Browser.Events.onResize (\w _ -> toFloat w |> GotBrowserWidth)
 
 
 

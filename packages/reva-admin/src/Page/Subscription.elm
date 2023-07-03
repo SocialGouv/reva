@@ -2,7 +2,6 @@ module Page.Subscription exposing
     ( Model
     , Msg
     , init
-    , subscriptions
     , update
     , view
     )
@@ -24,16 +23,12 @@ import String exposing (String)
 import View
 import View.Date exposing (toSmallFormat)
 import View.Helpers exposing (dataTest)
-import View.Subscription
-import Window
 
 
 type Msg
     = GotSubscriptionResponse (RemoteData (List String) Subscription)
-    | ClickedValidation String String
-    | ConfirmedValidation ( Bool, String )
-    | ClickedRejection String String
-    | ConfirmedRejection ( Bool, String )
+    | ClickedValidation String
+    | ClickedRejection String
     | GotValidationResponse (RemoteData (List String) String)
     | GotRejectionResponse (RemoteData (List String) String)
 
@@ -152,16 +147,10 @@ viewContent context errors subscription =
                 [ viewDepartements subscription.departmentsWithOrganismMethods .isRemote ]
             , div
                 [ class "flex items-center justify-end space-x-4 w-full my-8" ]
-                [ Button.new
-                    { onClick = Just (ClickedRejection subscription.id subscription.companyName)
-                    , label = "Rejeter"
-                    }
+                [ Button.new { onClick = Just (ClickedRejection subscription.id), label = "Rejeter" }
                     |> Button.secondary
                     |> Button.view
-                , Button.new
-                    { onClick = Just (ClickedValidation subscription.id subscription.companyName)
-                    , label = "Accepter"
-                    }
+                , Button.new { onClick = Just (ClickedValidation subscription.id), label = "Accepter" }
                     |> Button.view
                 ]
             ]
@@ -232,15 +221,8 @@ update context msg model =
         GotSubscriptionResponse remoteSubscription ->
             ( model, Cmd.none ) |> withSubscription remoteSubscription
 
-        ClickedValidation id name ->
-            ( model, View.Subscription.confirmValidation id name )
-
-        ConfirmedValidation ( isConfirmed, id ) ->
-            if isConfirmed then
-                ( model, Api.Subscription.validate context.endpoint context.token GotValidationResponse id )
-
-            else
-                ( model, Cmd.none )
+        ClickedValidation id ->
+            ( model, Api.Subscription.validate context.endpoint context.token GotValidationResponse id )
 
         GotValidationResponse RemoteData.NotAsked ->
             ( model, Cmd.none )
@@ -254,15 +236,8 @@ update context msg model =
         GotValidationResponse (RemoteData.Failure errors) ->
             ( model, Cmd.none ) |> withErrors errors
 
-        ClickedRejection id name ->
-            ( model, View.Subscription.confirmRejection id name )
-
-        ConfirmedRejection ( isConfirmed, id ) ->
-            if isConfirmed then
-                ( model, Api.Subscription.reject context.endpoint context.token GotRejectionResponse id )
-
-            else
-                ( model, Cmd.none )
+        ClickedRejection id ->
+            ( model, Api.Subscription.reject context.endpoint context.token GotRejectionResponse id )
 
         GotRejectionResponse RemoteData.NotAsked ->
             ( model, Cmd.none )
@@ -303,15 +278,3 @@ viewCandidaciesLink context =
         , Route.href context.baseUrl (Route.Candidacies Route.emptyFilters)
         ]
         [ text "Voir les candidatures" ]
-
-
-
--- ELM SUBSCRIPTIONS
-
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Sub.batch
-        [ Window.confirmedRejection ConfirmedRejection
-        , Window.confirmedValidation ConfirmedValidation
-        ]
