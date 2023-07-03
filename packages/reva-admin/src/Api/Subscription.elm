@@ -28,24 +28,27 @@ import RemoteData exposing (RemoteData(..))
 validate :
     String
     -> Token
-    -> (RemoteData (List String) String -> msg)
+    -> (RemoteData (List String) () -> msg)
     -> String
     -> Cmd msg
 validate endpointGraphql token toMsg subscriptionId =
     Mutation.subscription_validateSubscriptionRequest
         (Mutation.SubscriptionValidateSubscriptionRequestRequiredArguments (Id subscriptionId))
+        |> SelectionSet.map (\_ -> Just ())
         |> Auth.makeMutation "validateSubscription" endpointGraphql token (nothingToError "Cette inscription est introuvable" >> toMsg)
 
 
 reject :
     String
     -> Token
-    -> (RemoteData (List String) String -> msg)
+    -> (RemoteData (List String) () -> msg)
+    -> String
     -> String
     -> Cmd msg
-reject endpointGraphql token toMsg subscriptionId =
+reject endpointGraphql token toMsg subscriptionId comment =
     Mutation.subscription_rejectSubscriptionRequest
-        (Mutation.SubscriptionRejectSubscriptionRequestRequiredArguments (Id subscriptionId))
+        (Mutation.SubscriptionRejectSubscriptionRequestRequiredArguments (Id subscriptionId) comment)
+        |> SelectionSet.map (\_ -> Just ())
         |> Auth.makeMutation "rejectSubscription" endpointGraphql token (nothingToError "Cette inscription est introuvable" >> toMsg)
 
 

@@ -4,6 +4,7 @@ module Page.Form exposing
     , Model
     , Msg
     , Status(..)
+    , empty
     , init
     , update
     , updateForm
@@ -114,20 +115,20 @@ type alias Model referential =
     }
 
 
+empty : Model referential
+empty =
+    { onRedirect = Cmd.none
+    , onSave = \_ _ _ _ _ -> Cmd.none
+    , onSubmit = \_ _ _ _ _ -> Cmd.none
+    , onValidate = \_ _ -> Ok ()
+    , form = NotAsked
+    , status = ReadOnly
+    }
+
+
 init : ( Model referential, Cmd msg )
 init =
-    let
-        model : Model referential
-        model =
-            { onRedirect = Cmd.none
-            , onSave = \_ _ _ _ _ -> Cmd.none
-            , onSubmit = \_ _ _ _ _ -> Cmd.none
-            , onValidate = \_ _ -> Ok ()
-            , form = NotAsked
-            , status = ReadOnly
-            }
-    in
-    ( model
+    ( empty
     , Cmd.none
     )
 

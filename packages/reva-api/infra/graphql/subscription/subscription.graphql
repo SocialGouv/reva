@@ -109,5 +109,5 @@ type Mutation {
     subscriptionRequest: SubscriptionRequestInput!
   ): SubscriptionRequest!
   subscription_validateSubscriptionRequest(subscriptionRequestId: ID!): String
-  subscription_rejectSubscriptionRequest(subscriptionRequestId: ID!): String
+  subscription_rejectSubscriptionRequest(subscriptionRequestId: ID!, reason: String!): String
 }

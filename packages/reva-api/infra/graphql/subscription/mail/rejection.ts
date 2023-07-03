@@ -5,39 +5,30 @@ import { sendGenericEmail } from "../../../email";
 import { logger } from "../../../logger";
 import { template } from "./template";
 
-export const sendRejectionEmail = async (
-  email: string,
-  subscriptionRequestUri?: string,
-  reasons?: string[]
-) => {
+export const sendRejectionEmail = async ({
+  email,
+  reason,
+}: {
+  email: string;
+  reason: string;
+}) => {
   const htmlContent = mjml2html(
     template({
       headline: "Bonjour,",
-      message: `<p>Nous vous remercions pour votre demande de référencement en tant qu'Architecte
-        Accompagnateur de Parcours (AAP) sur la plateforme France VAE.</p>
-        <p>Après vérification des éléments fournis concernant votre structure,
-        nous ne pouvons malheureusement pas valider votre référencement.</p>
-        <p>En vue d’une meilleure appréhension des attendus et des enjeux du référencement,
-        nous vous conseillons vivement de participer à un webinaire de présentation de la plateforme
-        numérique du service public de la VAE. Vous trouverez sur le lien suivant le formulaire
-        d’inscription à l’ensemble des webinaires proposés : <a href="https://tally.so/r/mVjVeN">
-        Inscription webinaire de présentation de la plateforme numérique de la VAE</a>.</p>
-        <p>Pour de plus amples informations, nous vous invitons à nous contacter à l’adresse suivante:
-        support@vae.gouv.fr,
-        nous vous répondrons dans les meilleurs délais.</p>
-        <br/>
+      message: `<p>Nous vous remercions pour votre demande de référencement en tant qu'Architecte Accompagnateur de Parcours (AAP) sur la plateforme France VAE.</p>
+        <p>Après vérification des éléments fournis concernant votre structure, nous ne pouvons malheureusement pas valider votre référencement.</p>
+        <p>Nous avons constaté les erreurs suivantes :</p>
+        <ul>${reason
+          .split("\n")
+          .map((line: string) => `<li>${line}</li>`)
+          .join("")}
+        </ul>
+        <p>Nous vous invitons à recommencer votre inscription en corrigeant ces points.</p>
+        <p>Si vous ne l’avez pas déjà fait, nous vous invitons à <a href="https://tally.so/r/mVjVeN">participer à un de nos webinaires de présentation de France VAE</a>.</p>
+        <p>Si des questions subsistent, n'hésitez pas à nous contacter via la messagerie instantanée ou par email à <a href="mailto:support@vae.gouv.fr">support@vae.gouv.fr</a>.</p>
         <p>Très cordialement</p>
         <p>L’équipe France VAE.</p>
       `,
-      cta: subscriptionRequestUri
-        ? {
-            label: "Consulter ma demande",
-            url: `${
-              process.env.BASE_URL ?? "https://vae.gouv.fr"
-            }${subscriptionRequestUri}`,
-          }
-        : undefined,
-      details: reasons,
     })
   );
 
@@ -53,14 +44,11 @@ export const sendRejectionEmail = async (
     logger.info("======= EMAIL CONTENT =======");
     logger.info(htmlContent.html);
     logger.info("=========================");
-    logger.info("======= EMAIL URL =======");
-    logger.info(subscriptionRequestUri);
-    logger.info("=========================");
-    return Right(subscriptionRequestUri ?? "ok");
+    return Right("ok");
   }
   return sendGenericEmail({
     to: { email },
     htmlContent: htmlContent.html,
-    subject: "Votre compte France VAE",
+    subject: "Votre inscription France VAE a été invalidée",
   });
 };

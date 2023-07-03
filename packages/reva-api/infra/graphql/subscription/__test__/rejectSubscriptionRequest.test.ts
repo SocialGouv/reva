@@ -73,7 +73,7 @@ describe("Subscription Request / Reject", () => {
       payload: {
         requestType: "mutation",
         endpoint: "subscription_rejectSubscriptionRequest",
-        arguments: { subscriptionRequestId: randomUUID() },
+        arguments: { subscriptionRequestId: randomUUID(), reason: "reason" },
         returnFields: "",
       },
     });
@@ -95,7 +95,7 @@ describe("Subscription Request / Reject", () => {
       payload: {
         requestType: "mutation",
         endpoint: "subscription_rejectSubscriptionRequest",
-        arguments: { subscriptionRequestId: subreqId },
+        arguments: { subscriptionRequestId: subreqId, reason: "reason" },
         returnFields: "",
       },
     });
@@ -124,7 +124,7 @@ describe("Subscription Request / Reject", () => {
         payload: {
           requestType: "mutation",
           endpoint: "subscription_rejectSubscriptionRequest",
-          arguments: { subscriptionRequestId: subreqId },
+          arguments: { subscriptionRequestId: subreqId, reason: "reason" },
           returnFields: "",
         },
       });
@@ -179,7 +179,7 @@ describe("Subscription Request / Reject", () => {
         payload: {
           requestType: "mutation",
           endpoint: "subscription_rejectSubscriptionRequest",
-          arguments: { subscriptionRequestId: subreqId },
+          arguments: { subscriptionRequestId: subreqId, reason: "reason" },
           returnFields: "",
         },
       });
@@ -234,7 +234,7 @@ describe("Subscription Request / Reject", () => {
         payload: {
           requestType: "mutation",
           endpoint: "subscription_rejectSubscriptionRequest",
-          arguments: { subscriptionRequestId: subreqId },
+          arguments: { subscriptionRequestId: subreqId, reason: "reason" },
           returnFields: "",
         },
       });

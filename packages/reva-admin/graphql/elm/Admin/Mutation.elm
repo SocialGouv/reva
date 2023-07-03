@@ -462,11 +462,13 @@ subscription_validateSubscriptionRequest requiredArgs____ =
 
 
 type alias SubscriptionRejectSubscriptionRequestRequiredArguments =
-    { subscriptionRequestId : Data.Scalar.Id }
+    { subscriptionRequestId : Data.Scalar.Id
+    , reason : String
+    }
 
 
 subscription_rejectSubscriptionRequest :
     SubscriptionRejectSubscriptionRequestRequiredArguments
     -> SelectionSet (Maybe String) RootMutation
 subscription_rejectSubscriptionRequest requiredArgs____ =
-    Object.selectionForField "(Maybe String)" "subscription_rejectSubscriptionRequest" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] (Decode.string |> Decode.nullable)
+    Object.selectionForField "(Maybe String)" "subscription_rejectSubscriptionRequest" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "reason" requiredArgs____.reason Encode.string ] (Decode.string |> Decode.nullable)

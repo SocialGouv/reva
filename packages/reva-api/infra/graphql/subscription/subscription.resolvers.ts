@@ -99,6 +99,7 @@ const unsafeResolvers = {
       _: unknown,
       payload: {
         subscriptionRequestId: string;
+        reason: string;
       }
     ) => {
       const result = await domain.rejectSubscriptionRequest(
@@ -107,7 +108,10 @@ const unsafeResolvers = {
           deleteSubscriptionRequestById: db.deleteSubscriptionRequestById,
           sendRejectionEmail,
         },
-        { subscriptionRequestId: payload.subscriptionRequestId }
+        {
+          subscriptionRequestId: payload.subscriptionRequestId,
+          reason: payload.reason,
+        }
       );
 
       return result

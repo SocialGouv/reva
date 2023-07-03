@@ -11,15 +11,17 @@ interface RejectSubscriptionRequestDeps {
     id: string
   ) => Promise<Either<string, Maybe<SubscriptionRequest>>>;
   deleteSubscriptionRequestById: (id: string) => Promise<Either<string, void>>;
-  sendRejectionEmail: (
-    email: string,
-    subscriptionRequestUri?: string,
-    reasons?: string[]
-  ) => Promise<Either<string, string>>;
+  sendRejectionEmail: ({
+    email,
+    reason,
+  }: {
+    email: string;
+    reason: string;
+  }) => Promise<Either<string, string>>;
 }
 export const rejectSubscriptionRequest = async (
   deps: RejectSubscriptionRequestDeps,
-  params: { subscriptionRequestId: string }
+  params: { subscriptionRequestId: string; reason: string }
 ) => {
   const $store: {
     subreq?: SubscriptionRequest;
@@ -54,7 +56,10 @@ export const rejectSubscriptionRequest = async (
   });
 
   const sendEmail = EitherAsync.fromPromise(() =>
-    deps.sendRejectionEmail($store.subreq?.accountEmail ?? "")
+    deps.sendRejectionEmail({
+      email: $store.subreq?.accountEmail ?? "",
+      reason: params.reason,
+    })
   )
     .mapLeft(
       (error: string) =>
