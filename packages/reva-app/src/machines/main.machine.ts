@@ -959,8 +959,7 @@ export const mainMachine =
                       actions: [
                         "sendErrorToSentry",
                         assign({
-                          error: (_, _event) =>
-                            "Une erreur est survenue lors de la transmission de votre projet.",
+                          error: (_, event) => event.data.message,
                         }),
                       ],
                       target: "error",
@@ -968,7 +967,18 @@ export const mainMachine =
                   ],
                 },
               },
-              error: {},
+              error: {
+                on: {
+                  BACK: {
+                    actions: ["resetError"],
+                    target: "#mainMachine.projectHomeLoading",
+                  },
+                  SUBMIT_PROJECT: {
+                    actions: ["resetError"],
+                    target: "submitting",
+                  },
+                },
+              },
             },
           },
           projectDroppedOut: {
