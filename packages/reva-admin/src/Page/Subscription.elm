@@ -58,7 +58,7 @@ init context subscriptionId =
                     Nav.pushUrl
                         context.navKey
                         (Route.toString context.baseUrl Route.Subscriptions)
-                , onValidate = \_ _ -> Ok ()
+                , onValidate = Data.Form.OrganismSubscription.validate
                 , status = Form.Editable
                 }
                 Form.empty

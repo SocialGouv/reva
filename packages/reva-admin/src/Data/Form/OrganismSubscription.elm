@@ -1,4 +1,4 @@
-module Data.Form.OrganismSubscription exposing (Decision(..), Status(..), decisionToString, fromDict, keys)
+module Data.Form.OrganismSubscription exposing (Decision(..), Status(..), decisionToString, fromDict, keys, validate)
 
 import Data.Form exposing (FormData)
 import Data.Form.Helper as Helper
@@ -61,3 +61,17 @@ fromDict formData =
 
         Unknown ->
             Pending
+
+
+validate : () -> FormData -> Result (List String) ()
+validate _ formData =
+    let
+        decode =
+            Helper.decode keys formData
+    in
+    case decisionFromString (decode.string .decision "") of
+        Unknown ->
+            Err [ "Veuillez cocher la décision prise" ]
+
+        _ ->
+            Ok ()
