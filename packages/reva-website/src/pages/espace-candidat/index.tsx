@@ -2,7 +2,6 @@ import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import Head from "next/head";
 
 import { Accompagnement } from "../../components/candidate-space/components/Accompagnement";
-import { CommentCaMarche } from "../../components/candidate-space/components/CommentCaMarche";
 import { Eligibilite } from "../../components/candidate-space/components/Eligibilite";
 import { ExperienceReconnue } from "../../components/candidate-space/components/ExperienceReconnue";
 import { Financement } from "../../components/candidate-space/components/Financement";
@@ -25,7 +24,6 @@ const IndexCandidatPage = () => {
       <Eligibilite />
       <Accompagnement />
       <Financement />
-      <CommentCaMarche />
     </MainLayout>
   );
 };
