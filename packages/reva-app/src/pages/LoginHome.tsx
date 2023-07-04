@@ -75,13 +75,16 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
         />
         <Button data-test={`login-home-submit`}>Me connecter</Button>
       </form>
-      <div className="border-t border-gray-200 pt-6">
-        <button
-          onClick={() => send("BACK")}
-          className="text-gray-500 underline"
-        >
-          Je n'ai pas de candidature
-        </button>
+      <hr />
+      <div className="fr-alert fr-alert--warning mt-4">
+        <h3 className="fr-alert__title">Attention</h3>
+        <p className="text-lg">
+          Ce site est actuellement en déploiement progressif. Les candidatures
+          pour effectuer une VAE seront ouvertes courant juillet 2023.
+        </p>
+        <p className="text-lg">
+          Les candidatures déjà en cours sont toujours accessibles.
+        </p>
       </div>
     </Page>
   );

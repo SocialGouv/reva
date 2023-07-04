@@ -1,5 +1,4 @@
-import { AdmissibleSectorsInfoPanel } from "@/components/admissible-sectors-info-panel/AdmissibleSectorsInfoPanel";
-import { TrackableButton } from "@/components/analytics/trackable-button/TrackableButton";
+import { ComingSoonInfoPanel } from "@/components/coming-soon-info-panel/ComingSoonInfoPanel";
 import {
   SectionHeader,
   SectionParagraph,
@@ -49,23 +48,7 @@ export const ExperienceReconnue = () => (
         Obtenez un diplôme à votre rythme sans interrompre votre activité
         professionnelle.
       </p>
-
-      <AdmissibleSectorsInfoPanel className="mb-4" />
-
-      <div className="flex flex-col items-center sm:items-start space-y-4">
-        <TrackableButton
-          eventTracked={{
-            location: "Espace candidat",
-            event: "Click sur 'Démarrez un parcours VAE'",
-          }}
-          priority="primary"
-          className="!w-full sm:!w-auto justify-center"
-          linkProps={{ href: "/app" }}
-          size="large"
-        >
-          Démarrez un parcours VAE
-        </TrackableButton>
-      </div>
+      <ComingSoonInfoPanel />
     </div>
     <div className="relative min-h-[300px] min-w-[300px] mt-16 w-1/2 lg:mr-0 lg:basis-2/5">
       <Image
