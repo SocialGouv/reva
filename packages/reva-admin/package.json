@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@gouvfr/dsfr": "^1.9.0",
-    "crisp-sdk-web": "^1.0.5"
+    "crisp-sdk-web": "^1.0.5",
+    "keycloak-js": "^18.0.1"
   }
 }
