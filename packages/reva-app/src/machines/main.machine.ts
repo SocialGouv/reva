@@ -69,6 +69,7 @@ export interface MainContext {
   experiences: Experiences;
   goals: Goal[];
   organism?: Organism;
+  organismSearchText: string;
   departments: Department[];
   selectedDepartment?: Department;
   certificationSearchText: string;
@@ -92,11 +93,17 @@ type SelectCertification = {
   certification: Certification;
 };
 
+type SetOrganismSearchText = {
+  type: "SET_ORGANISM_SEARCH_TEXT";
+  organismSearchText: string;
+};
+
 export type MainEvent =
   | selectedDepartment
   | SelectCertification
   | setCertificationSearchText
   | setCurrentCertificationPageNumber
+  | SetOrganismSearchText
   | { type: "SHOW_PROJECT_HOME"; certification: Certification }
   | { type: "ADD_EXPERIENCE" }
   | { type: "EDIT_EXPERIENCE"; index: number }
@@ -225,6 +232,7 @@ export const mainMachine =
           experiences: { rest: [] },
           goals: [],
           organism: undefined,
+          organismSearchText: "",
           departments: [],
           selectedDepartment: undefined,
           organisms: undefined,
@@ -689,6 +697,10 @@ export const mainMachine =
                   BACK: {
                     target: "leave",
                   },
+                  SET_ORGANISM_SEARCH_TEXT: {
+                    actions: "assignOrganismSearchTextToContext",
+                    target: "#mainMachine.projectOrganism",
+                  },
                   SUBMIT_ORGANISM: {
                     actions: [
                       assign({
@@ -1072,6 +1084,13 @@ export const mainMachine =
             certification: (_context, event) => {
               const typedEvent = event as SelectCertification;
               return typedEvent.certification;
+            },
+            selectedCertification: (_) => undefined,
+          }),
+          assignOrganismSearchTextToContext: assign({
+            organismSearchText: (_context, event) => {
+              const typedEvent = event as SetOrganismSearchText;
+              return typedEvent.organismSearchText;
             },
             selectedCertification: (_) => undefined,
           }),

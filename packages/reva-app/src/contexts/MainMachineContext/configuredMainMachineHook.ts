@@ -86,7 +86,8 @@ export const useConfiguredMainMachine = () => {
             return getRandomOrganismsForCandidacy(
               client as ApolloClient<object>
             )({
-              query: context.candidacyId,
+              candidacyId: context.candidacyId,
+              searchText: context.organismSearchText,
             });
           },
           updateCertification: async (context, event) => {

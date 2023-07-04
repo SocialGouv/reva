@@ -2,6 +2,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { RadioGroup } from "@headlessui/react";
 import { useActor } from "@xstate/react";
 import classNames from "classnames";
+import { SearchBar } from "components/molecules/SearchBar/SearchBar";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Interpreter } from "xstate";
 
@@ -110,6 +111,20 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
       <h1 className="mt-4 text-3xl font-bold">
         Votre organisme d'accompagnement
       </h1>
+      <SearchBar
+        label={"Rechercher un organisme"}
+        nativeInputProps={{
+          defaultValue: state.context.organismSearchText,
+          onChange: (e) => {
+            send({
+              type: "SET_ORGANISM_SEARCH_TEXT",
+              organismSearchText: e.target.value,
+            });
+          },
+        }}
+        className="mt-6"
+      />
+
       {selectedDepartment && (
         <>
           <p className="mt-6 text-black">

@@ -10,6 +10,7 @@ interface GetActiveOrganismsForCandidacyWithNewTypologiesDeps {
   getActiveOrganismForCertificationAndDepartment: (params: {
     certificationId: string;
     departmentId: string;
+    searchText?: string;
   }) => Promise<Either<string, Organism[]>>;
 }
 
@@ -18,12 +19,19 @@ export const getActiveOrganismsForCandidacyWithNewTypologies =
     getActiveOrganismForCertificationAndDepartment,
     getCandidacyFromId,
   }: GetActiveOrganismsForCandidacyWithNewTypologiesDeps) =>
-  ({ candidacyId }: { candidacyId: string }) => {
+  ({
+    candidacyId,
+    searchText,
+  }: {
+    candidacyId: string;
+    searchText?: string;
+  }) => {
     return EitherAsync.fromPromise(() => getCandidacyFromId(candidacyId))
       .chain((candidacy) =>
         getActiveOrganismForCertificationAndDepartment({
           certificationId: candidacy.certificationId || "",
           departmentId: candidacy.department?.id || "",
+          searchText,
         })
       )
       .mapLeft(

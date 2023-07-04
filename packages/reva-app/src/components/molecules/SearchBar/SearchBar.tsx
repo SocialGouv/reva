@@ -2,7 +2,7 @@ import { SyntheticEvent, useRef } from "react";
 
 interface SearchBarProps {
   label: string;
-  className: string;
+  className?: string;
   nativeInputProps: {
     defaultValue: string;
     onChange: (e: any) => void;
@@ -19,13 +19,13 @@ export const SearchBar = (props: SearchBarProps) => {
   };
   return (
     <form
-      className={`fr-search-bar ${props.className}`}
+      className={`fr-search-bar ${props.className || ""}`}
       role="search"
       onSubmit={handleSubmit}
     >
       <input
         className="fr-input"
-        placeholder="Rechercher un diplôme"
+        placeholder={props.label}
         type="search"
         defaultValue={props.nativeInputProps.defaultValue}
         ref={searchTextRef}

@@ -224,7 +224,10 @@ type Query {
   ): CandidacySummaryPage!
   getTrainings: [Training!]!
   getOrganismsForCandidacy(candidacyId: UUID!): [Organism!]!
-  getRandomOrganismsForCandidacy(candidacyId: UUID!): [Organism!]!
+  getRandomOrganismsForCandidacy(
+    candidacyId: UUID!
+    searchText: String
+  ): [Organism!]!
   getCompanionsForCandidacy(candidacyId: UUID!): [Organism!]!
   getBasicSkills: [BasicSkill!]!
   candidacy_candidacyCountByStatus: CandidacyCountByStatus!

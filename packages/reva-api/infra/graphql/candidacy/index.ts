@@ -180,10 +180,10 @@ const unsafeResolvers = {
     },
     getRandomOrganismsForCandidacy: async (
       _: unknown,
-      params: { candidacyId: string }
+      { candidacyId, searchText }: { candidacyId: string; searchText?: string }
     ) => {
       const candidacy = await prismaClient.candidacy.findUnique({
-        where: { id: params.candidacyId },
+        where: { id: candidacyId },
         include: { organism: true },
       });
 
@@ -191,7 +191,7 @@ const unsafeResolvers = {
         getActiveOrganismForCertificationAndDepartment:
           organismDb.getActiveOrganismForCertificationAndDepartment,
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
-      })({ candidacyId: params.candidacyId });
+      })({ candidacyId, searchText });
 
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
@@ -204,6 +204,7 @@ const unsafeResolvers = {
           ) {
             randomOrganisms[0] = candidacy.organism as Organism;
           }
+
           return randomOrganisms;
         })
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
