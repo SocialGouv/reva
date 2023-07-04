@@ -252,7 +252,8 @@ viewForm referential status errors formData form saveButton submitButton =
                 legend
                     [ class "fr-fieldset__legend -ml-1" ]
                     [ h1 [] [ text currentForm.title ]
-                    , p [ class "font-normal" ] [ text "Sauf mention contraire “(optionnel)” dans le label, tous les champs sont obligatoires." ]
+                    , p [ class "font-normal text-sm text-gray-600" ]
+                        [ text "Sauf mention contraire “(optionnel)” dans le label, tous les champs sont obligatoires." ]
                     ]
                     :: viewFieldsets formData currentForm.elements
                     ++ [ div
