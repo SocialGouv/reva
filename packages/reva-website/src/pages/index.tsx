@@ -372,9 +372,9 @@ const RoadmapStep = ({
   children: React.ReactNode;
 }) => (
   <div className="border bg-white p-8 rounded-tl-3xl rounded-br-3xl overflow-hidden">
-    <h3 className="flex items-center">
+    <h3 className="flex items-center text-2xl">
       {PICTOGRAMS.calendar}
-      <span className="ml-4">{date}</span>
+      <span className="ml-2">{date}</span>
     </h3>
     <p className="mb-0">{children}</p>
   </div>
@@ -392,17 +392,17 @@ const Roadmap = () => (
         className="text-center"
       />
       <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 text-left place-content-center">
-        <RoadmapStep date="1er juillet 2023">
+        <RoadmapStep date="Courant juillet 2023">
           Lancement de la plateforme pour les certifications des quatre filières
           suivantes : sanitaire et social, grande distribution, industrie
           métallurgique et métiers du sport.
         </RoadmapStep>
-        <RoadmapStep date="1er janvier 2024">
+        <RoadmapStep date="Janvier 2024">
           Le service public de la VAE sera accessible à tous (conditions
           spécifiques pour les salariés de la fonction publique et les
           retraités).
         </RoadmapStep>
-        <RoadmapStep date="Prochainement">
+        <RoadmapStep date="Courant 2024">
           Ouverture de la plateforme à l’ensemble des certifications du RNCP, en
           fonction des besoins exprimés par les candidats, les certificateurs ou
           les entreprises.
