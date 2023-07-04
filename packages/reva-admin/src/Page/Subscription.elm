@@ -147,6 +147,9 @@ viewContent context model subscription =
                 AssociationLoi1901 ->
                     "Association loi 1901"
 
+                EtablissementPublic ->
+                    "Établissement public (EPIC...)"
+
                 _ ->
                     LegalStatus.toString ls
     in
