@@ -228,11 +228,14 @@ const IndexConfidentialitePage = () => {
           </SectionParagraph>
           <SectionParagraph>
             Par voie postale :<br />
-            Délégation générale à l'emploi et à la formation
             <br />
-            10-18 place des 5-Martyrs-du-Lycée-Buffon
+            Ministère du Travail
             <br />
-            75015 Paris
+            DGFEP
+            <br />
+            14 avenue Duquesne
+            <br />
+            75350 Paris 07 SP
           </SectionParagraph>
           <SectionParagraph>
             Puisque ce sont des droits personnels, nous ne traiterons votre

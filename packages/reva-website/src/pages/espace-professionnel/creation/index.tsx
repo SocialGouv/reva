@@ -119,7 +119,7 @@ const ProfessionalSpaceCreationPage = ({
             <ul className="text-white text-sm md:text-xl md:leading-relaxed ml-4">
               <li>
                 prochainement de créer et de gérer les accès de vos conseillers
-                habilitées à traiter les dossiers des candidats
+                habilités à traiter les dossiers des candidats
               </li>
               <li>
                 d'attribuer les candidatures à chacun de vos conseillers afin

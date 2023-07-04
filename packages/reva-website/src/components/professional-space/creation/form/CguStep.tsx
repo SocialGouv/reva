@@ -64,7 +64,7 @@ export const CguStep = () => {
       />
       <div className="flex flex-col min-w-[70vw]">
         <Stepper
-          title="Saisir vos conditions générales de la plateforme France VAE"
+          title="Prendre connaissance des conditions générales d'utilisation de la plateforme France VAE"
           currentStep={1}
           stepCount={5}
           nextTitle="Renseigner les certifications concernées"

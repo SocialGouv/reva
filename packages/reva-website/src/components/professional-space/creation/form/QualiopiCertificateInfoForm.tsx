@@ -78,7 +78,7 @@ export const QualiopiCertificateInfoStepForm = () => {
       <form className="flex flex-col" onSubmit={handleSubmit(handleFormSubmit)}>
         <fieldset className="flex flex-col  ">
           <legend className="text-xl font-bold text-gray-900 grow mb-8">
-            Pour créer votre compte, votre établissement doit être certifiée
+            Pour créer votre compte, votre établissement doit être certifié
             Qualiopi pour les actions permettant de faire valider les acquis de
             l'expérience ou label d’accord de branches.
           </legend>
