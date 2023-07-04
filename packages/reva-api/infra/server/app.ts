@@ -17,7 +17,6 @@ import { mercuriusGraphQL } from "./mercurius";
 import keycloakAdminPlugin from "./plugins/keycloak-admin-plugin";
 import keycloakPlugin from "./plugins/keycloak-plugin";
 
-const WEBSITE_ROUTE_PATH = "/";
 const APP_ROUTE_PATH = "/app";
 const ADMIN_ROUTE_PATH = "/admin";
 
@@ -34,13 +33,6 @@ export const buildApp = async (
     const DIST_FOLDER = path.join(__dirname, "..", "..");
     const APP_FOLDER = path.join(DIST_FOLDER, "app");
     const ADMIN_FOLDER = path.join(DIST_FOLDER, "admin");
-
-    if (process.env.FRAMER_WEBSITE_URL) {
-      app.register(proxy, {
-        upstream: process.env.FRAMER_WEBSITE_URL,
-        prefix: WEBSITE_ROUTE_PATH,
-      });
-    }
 
     app.register(fastifyStatic, {
       root: APP_FOLDER,
@@ -64,8 +56,6 @@ export const buildApp = async (
         // eslint-disable-next-line
         //@ts-ignore
         res.sendFile("index.html", ADMIN_FOLDER);
-      } else {
-        res.redirect(process.env.FRAMER_WEBSITE_URL || "/");
       }
     });
 
@@ -73,11 +63,6 @@ export const buildApp = async (
       origin: (process.env.CORS_ORIGIN || "").split(","),
     });
   } else {
-    app.register(proxy, {
-      upstream: process.env.FRAMER_WEBSITE_URL || "http://localhost:3000",
-      prefix: WEBSITE_ROUTE_PATH,
-    });
-
     app.register(proxy, {
       upstream: "http://localhost:3001/app",
       prefix: APP_ROUTE_PATH,
