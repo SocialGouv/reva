@@ -30,23 +30,6 @@ export const buildApp = async (
 ): Promise<FastifyInstance> => {
   const app = await fastify(opts);
 
-  if (process.env.ES_APM_SERVER_URL) {
-    const apm = require("elastic-apm-node").start({
-      // Override the service name from package.json
-      // Allowed characters: a-z, A-Z, 0-9, -, _, and space
-      serviceName: `reva-api`,
-
-      // Use if APM Server requires a secret token
-      secretToken: process.env.ES_APM_SERVER_TOKEN || "",
-
-      // Set the custom APM Server URL (default: http://localhost:8200)
-      serverUrl: process.env.ES_APM_SERVER_URL,
-
-      // Set the service environment
-      environment: process.env.APP_ENV || "dev",
-    });
-  }
-
   if (process.env.NODE_ENV === "production") {
     const DIST_FOLDER = path.join(__dirname, "..", "..");
     const APP_FOLDER = path.join(DIST_FOLDER, "app");

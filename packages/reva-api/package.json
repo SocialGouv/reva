@@ -74,7 +74,6 @@
     "date-fns": "^2.29.3",
     "debug": "^4.3.4",
     "dotenv": "^16.0.0",
-    "elastic-apm-node": "^3.27.0",
     "fast-csv": "^4.3.6",
     "fastify": "^4.0.3",
     "fastify-env": "2.1.1",
