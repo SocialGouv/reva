@@ -3,7 +3,7 @@ import { RadioGroup } from "@headlessui/react";
 import { useActor } from "@xstate/react";
 import classNames from "classnames";
 import { SearchBar } from "components/molecules/SearchBar/SearchBar";
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import { Interpreter } from "xstate";
 
 import { BackToHomeButton } from "../components/molecules/BackToHomeButton/BackToHomeButton";
@@ -22,24 +22,18 @@ const Organisms: FC<PropsOrganisms> = ({
   setOrganismId,
   alreadySelectedOrganismId,
 }) => {
-  const [shuffledOrganisms, setShuffledOrganisms] =
-    useState(availableOrganisms);
   const [selectedOrganismId, setSelectedOrganismId] = useState(
     alreadySelectedOrganismId
   );
 
-  useEffect(() => {
-    setShuffledOrganisms(availableOrganisms.sort(() => 0.5 - Math.random()));
-  }, [availableOrganisms]);
-
   return (
     <RadioGroup
-      value={selectedOrganismId || shuffledOrganisms[0]?.id}
+      value={selectedOrganismId || availableOrganisms[0]?.id}
       onChange={setSelectedOrganismId}
     >
       <RadioGroup.Label className="sr-only">Accompagnateur</RadioGroup.Label>
       <div className="space-y-4">
-        {shuffledOrganisms.map((organism) => (
+        {availableOrganisms.map((organism) => (
           <RadioGroup.Option
             data-test={`project-organisms-organism-${organism.id}`}
             key={organism.id}
