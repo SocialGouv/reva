@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { Either, Left, Maybe, Right } from "purify-ts";
+import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
 import * as domain from "../../../domain/types/candidacy";
 import { DepartmentWithOrganismMethods } from "../../../domain/types/candidacy";
@@ -195,5 +195,23 @@ export const getActiveOrganismForCertificationAndDepartment = async ({
   } catch (e) {
     logger.error(e);
     return Left(`error while retreiving organism`);
+  }
+};
+
+export const getReferentOrganismFromCandidacyId = async (
+  candidacyId: string
+) => {
+  try {
+    const candidacy = await prismaClient.candidacy.findUnique({
+      where: { id: candidacyId },
+      include: { organism: true },
+    });
+    // return Right(candidacy?.organism);
+    return Right(Maybe.fromNullable(candidacy?.organism));
+  } catch (e) {
+    logger.error(e);
+    return Left(
+      `Error while retreiving referent organism from candidacy ${candidacyId}: ${e}`
+    );
   }
 };

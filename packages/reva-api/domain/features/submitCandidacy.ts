@@ -1,4 +1,5 @@
-import { Either, EitherAsync, Left, Right } from "purify-ts";
+import { Organism } from "@prisma/client";
+import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
 import { Candidacy } from "../types/candidacy";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
@@ -9,10 +10,14 @@ interface SubmitCandidacyDeps {
     status: "VALIDATION";
   }) => Promise<Either<string, Candidacy>>;
   getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
+  getOrganismFromCandidacyId: (
+    id: string
+  ) => Promise<Either<string, Maybe<Organism>>>;
   existsCandidacyHavingHadStatus: (params: {
     candidacyId: string;
     status: "VALIDATION";
   }) => Promise<Either<string, boolean>>;
+  sendNewCandidacyEmail: (to: string) => Promise<Either<string, string>>;
 }
 
 export const submitCandidacy =
@@ -59,7 +64,50 @@ export const submitCandidacy =
         )
     );
 
+    const getCandidacyOrganism = (candidacy: Candidacy) =>
+      EitherAsync.fromPromise(async () => {
+        const eitherMaybeOrganism = await deps.getOrganismFromCandidacyId(
+          candidacy.id
+        );
+        if (eitherMaybeOrganism.isLeft()) return eitherMaybeOrganism;
+        return Right({
+          candidacy,
+          organism: eitherMaybeOrganism.extract() as Maybe<Organism>,
+        });
+      }).mapLeft(
+        (message) =>
+          new FunctionalError(
+            FunctionalCodeError.TECHNICAL_ERROR,
+            `Impossible de trouver l'organisme pour la candidature ${candidacy.id}: ${message}`
+          )
+      );
+
+    const alertOrganism = ({
+      organism,
+      candidacy,
+    }: {
+      organism: Maybe<Organism>;
+      candidacy: Candidacy;
+    }) =>
+      EitherAsync.fromPromise(async () =>
+        organism.isNothing()
+          ? Left(`Could not fetch organism for candidacy ${candidacy.id}.`)
+          : deps.sendNewCandidacyEmail(
+              (organism.extract() as Organism).contactAdministrativeEmail
+            )
+      )
+        .map((_) => candidacy)
+        .mapLeft(
+          (message) =>
+            new FunctionalError(
+              FunctionalCodeError.NEW_CANDIDACY_MAIL_NOT_SENT,
+              `Erreur lors de l'envoi du mail d'alerte de nouvelle candidature : ${message}`
+            )
+        );
+
     return checkIfCandidacyExists
       .chain(() => validateCandidacyNotAlreadySubmitted)
-      .chain(() => updateContact);
+      .chain(() => updateContact)
+      .chain(getCandidacyOrganism)
+      .chain(alertOrganism);
   };

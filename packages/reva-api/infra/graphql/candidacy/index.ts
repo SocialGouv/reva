@@ -48,6 +48,7 @@ import * as goalDb from "../../database/postgres/goals";
 import * as organismDb from "../../database/postgres/organisms";
 import * as reorientationReasonDb from "../../database/postgres/reorientationReasons";
 import * as trainingDb from "../../database/postgres/trainings";
+import { sendNewCandidacyEmail } from "../../email/sendNewCandidacyEmail";
 import { logger } from "../../logger";
 import { notifyNewCandidacy } from "../../mattermost";
 import { getCandidacySummaries } from "./features/getCandicacySummaries";
@@ -299,6 +300,9 @@ const unsafeResolvers = {
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
         existsCandidacyHavingHadStatus:
           candidacyDb.existsCandidacyHavingHadStatus,
+        getOrganismFromCandidacyId:
+          organismDb.getReferentOrganismFromCandidacyId,
+        sendNewCandidacyEmail,
       })({ candidacyId: payload.candidacyId });
 
       logCandidacyEvent({

@@ -101,10 +101,6 @@ const sendEmailWithLink = async (
   });
 };
 
-interface EmailAccount {
-  email: string;
-}
-
 interface GenericEmailArgs {
   to: EmailAccount;
   subject: string;
@@ -132,6 +128,7 @@ export const sendGenericEmail = async ({
         tags: [process.env.APP_ENV ?? "development"],
       })
     );
+    logger.info(`email sent to ${to.email}`);
     return Right(`email sent to ${to.email}`);
   } catch (e) {
     logger.error("error", e);
