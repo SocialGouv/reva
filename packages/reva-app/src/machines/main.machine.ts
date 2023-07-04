@@ -886,6 +886,7 @@ export const mainMachine =
               ready: {
                 on: {
                   VALIDATE_PROJECT: {
+                    actions: ["resetError"],
                     target: "#mainMachine.projectSubmissionConfirmation",
                   },
                 },
