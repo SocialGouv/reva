@@ -196,13 +196,21 @@ const unsafeResolvers = {
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .map((organisms) => {
-          // Keep only 5 random organisms, including the one already selected
-          const randomOrganisms = shuffleArray(organisms).slice(0, 5);
+          // Keep only 5 random organisms, removing the one already selected if it exists
+          let randomOrganisms = shuffleArray(organisms)
+            .slice(0, 6)
+            .filter((c) => c.id !== candidacy?.organism?.id)
+            .slice(0, 5);
+
+          //add the candidacy selected organism as the first result if it exists
           if (
             candidacy?.organismId &&
             !randomOrganisms.some((org) => org.id == candidacy.organismId)
           ) {
-            randomOrganisms[0] = candidacy.organism as Organism;
+            randomOrganisms = [
+              candidacy.organism as Organism,
+              ...randomOrganisms.slice(0, 4),
+            ];
           }
 
           return randomOrganisms;
