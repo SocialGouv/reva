@@ -64,6 +64,13 @@ test("Should fail to create a subscription request with missing address fields",
   expect(resp.json()).toHaveProperty("errors");
 });
 
+test.todo(
+  "Should fail to create a subscription request when matching existing organism based on siret/typology"
+);
+test.todo(
+  "Should fail to create a similar subscription request based on siret/typology"
+);
+
 test("Should create a subscription request", async () => {
   const resp = await injectGraphql({
     fastify: (global as any).fastify,

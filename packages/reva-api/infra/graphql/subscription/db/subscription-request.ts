@@ -172,6 +172,21 @@ export const getSubscriptionRequests = async (
   }
 };
 
+export const existSubscriptionRequestWithTypologyAndSiret = async ({
+  typology,
+  companySiret,
+}: Pick<SubscriptionRequestInput, "companySiret" | "typology">) => {
+  try {
+    const matchCount = await prismaClient.subscriptionRequest.count({
+      where: { companySiret, typology: typology as OrganismTypology },
+    });
+    return Right(matchCount > 0);
+  } catch (e) {
+    logger.error(e);
+    return Left(`Error while counting subscription requests matching criteria`);
+  }
+};
+
 const filterClause = (params: GetSubscriptionRequestsParams) => {
   if (params.filter) {
     return {
