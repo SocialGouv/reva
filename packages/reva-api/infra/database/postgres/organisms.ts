@@ -187,7 +187,9 @@ export const getActiveOrganismForCertificationAndDepartment = async ({
     }
     const whereClauseArray: object[] = [{ certificationId }, { departmentId }];
     if (searchText) {
-      whereClauseArray.push({ organism: { label: { contains: searchText } } });
+      whereClauseArray.push({
+        organism: { label: { contains: searchText, mode: "insensitive" } },
+      });
     }
     return Right(
       await prismaClient.organism.findMany({
