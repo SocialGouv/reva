@@ -11,7 +11,7 @@ export const sendNewCandidacyEmail = (to: string) => {
       email: to,
     },
     sender: {
-      email: "noreply@france-vae.gouv.fr",
+      email: "support@vae.gouv.fr",
       name: "France VAE",
     },
     htmlContent: mjml2html(`
