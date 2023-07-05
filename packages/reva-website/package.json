@@ -11,7 +11,7 @@
     "prebuild": "only-include-used-icons && node ./src/scripts/generateRobotsTxt.js"
   },
   "dependencies": {
-    "@codegouvfr/react-dsfr": "^0.44.0",
+    "@codegouvfr/react-dsfr": "^0.66.6",
     "@headlessui/react": "^1.7.14",
     "@hookform/resolvers": "^2.9.11",
     "@next/font": "13.2.4",
