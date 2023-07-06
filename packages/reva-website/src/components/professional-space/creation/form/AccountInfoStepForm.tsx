@@ -42,7 +42,9 @@ export const AccountInfoStepForm = () => {
       await submitAccountInfoStep(data);
     } catch (err: any) {
       console.log(err);
-      setSubmissionError(err?.response?.errors?.[0].message as string);
+      setSubmissionError(
+        (err?.response?.errors?.[0].message as string) ?? "erreur inconnue"
+      );
     }
   };
 
