@@ -56,7 +56,13 @@ const unsafeResolvers = {
       }
     ) => {
       const result = await domain.createSubscriptionRequest(
-        { createSubscriptionRequest: db.createSubscriptionRequest },
+        {
+          createSubscriptionRequest: db.createSubscriptionRequest,
+          existOrganismWithTypologyAndSiret:
+            OrganismDb.existOrganismWithTypologyAndSiret,
+          existSubscriptionRequestWithTypologyAndSiret:
+            db.existSubscriptionRequestWithTypologyAndSiret,
+        },
         payload.subscriptionRequest
       );
       return result
