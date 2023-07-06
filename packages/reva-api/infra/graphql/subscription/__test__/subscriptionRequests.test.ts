@@ -8,10 +8,14 @@ import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 import { prismaClient } from "../../../database/postgres/client";
 import { subreqSampleMin } from "./fixture";
 
+const siret1 = "11001234567890",
+  siret2 = "22001234567890";
+
 const subreqSampleFull = Object.assign(
   { typology: "generaliste" as const },
-  subreqSampleMin,
   {
+    ...subreqSampleMin,
+    companySiret: siret1,
     companyAddress: "64 boulevard du Général Leclerc",
     companyZipCode: "35660",
     companyCity: "Fougères",
@@ -37,6 +41,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await prismaClient.subscriptionRequest.deleteMany({});
+  await prismaClient.organism.deleteMany({});
 });
 
 test("Should fail to create a subscription request with missing address fields", async () => {
@@ -63,7 +68,7 @@ test("Should fail to create a subscription request with missing address fields",
 test("Should fail to create a subscription request when matching existing organism based on siret/typology", async () => {
   const sameOrganism = await prismaClient.organism.create({
     data: {
-      siret: subreqSampleFull.companySiret,
+      siret: siret1,
       typology: subreqSampleFull.typology,
       contactAdministrativeEmail: subreqSampleFull.accountEmail,
       label: "beautiful SA",
@@ -108,7 +113,10 @@ test("Should fail to create a subscription request when matching existing organi
 
 test("Should fail to create a similar subscription request based on siret/typology", async () => {
   await prismaClient.subscriptionRequest.create({
-    data: subreqSampleFull,
+    data: {
+      ...subreqSampleFull,
+      companySiret: siret2,
+    },
   });
 
   const resp = await injectGraphql({
@@ -123,6 +131,7 @@ test("Should fail to create a similar subscription request based on siret/typolo
       arguments: {
         subscriptionRequest: {
           ...subreqSampleFull,
+          companySiret: siret2,
           onSiteDepartmentsIds,
           remoteDepartmentsIds,
         },
@@ -143,7 +152,7 @@ test("Should fail to create a similar subscription request based on siret/typolo
 test("Should create a subscription request", async () => {
   const successfulSubReq = {
     ...subreqSampleFull,
-    companySiret: "01234567891234",
+    companySiret: siret2,
     typology: "expertBranche",
   };
   const resp = await injectGraphql({
