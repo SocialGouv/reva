@@ -176,27 +176,19 @@ export const createOrganism = async (data: {
 export const getActiveOrganismForCertificationAndDepartment = async ({
   certificationId,
   departmentId,
-  searchText,
 }: {
   certificationId: string;
   departmentId: string;
-  searchText?: string;
 }): Promise<Either<string, domain.Organism[]>> => {
   try {
     if (!certificationId || !departmentId) {
       return Right([]);
     }
-    const whereClauseArray: object[] = [{ certificationId }, { departmentId }];
-    if (searchText) {
-      whereClauseArray.push({
-        organism: { label: { contains: searchText, mode: "insensitive" } },
-      });
-    }
     return Right(
       await prismaClient.organism.findMany({
         where: {
           activeOrganismsByAvailableCertificationsAndDepartments: {
-            some: { AND: whereClauseArray },
+            some: { AND: [{ certificationId }, { departmentId }] },
           },
         },
       })
