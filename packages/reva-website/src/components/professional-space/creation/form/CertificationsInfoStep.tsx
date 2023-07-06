@@ -1,5 +1,6 @@
 import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
 import { MultiSelect } from "@/components/form/multi-select/MultiSelect";
+import { MultiSelectWithAllableSubset } from "@/components/form/multi-select/MultiSelectWithAllableSubset";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Notice } from "@codegouvfr/react-dsfr/Notice";
 import Select from "@codegouvfr/react-dsfr/Select";
@@ -216,13 +217,20 @@ export const CertificationsInfoStepForm = ({
             <legend className="text-xl font-bold text-gray-900 grow mb-4">
               Choix de la zone d'intervention
             </legend>
-            <MultiSelect
+            <MultiSelectWithAllableSubset
               label="Zone d’intervention en présentiel"
               hint="Cochez les départements couverts en présentiel"
-              withSelectAll
+              subsetLabel="toute la France métropolitaine"
+              subsetRefList={availableDepartments
+                .filter(
+                  ({ code }) =>
+                    !["971", "972", "973", "974", "976"].includes(code)
+                )
+                .map(({ code }) => code)}
               options={availableDepartments.map((department) => ({
                 label: `${department.label} (${department.code})`,
                 value: department.id,
+                subref: department.code,
               }))}
               placeholder={(selectedItemsCount) =>
                 selectedItemsCount
@@ -236,13 +244,20 @@ export const CertificationsInfoStepForm = ({
                 .map((d) => d.id)}
               onChange={onSiteDepartmentsController.field.onChange}
             />
-            <MultiSelect
+            <MultiSelectWithAllableSubset
               label="Zone d’intervention en distanciel"
               hint="Cochez les départements couverts en distanciel"
-              withSelectAll
+              subsetLabel="toute la France métropolitaine"
+              subsetRefList={availableDepartments
+                .filter(
+                  ({ code }) =>
+                    !["971", "972", "973", "974", "976"].includes(code)
+                )
+                .map(({ code }) => code)}
               options={availableDepartments.map((department) => ({
                 label: `${department.label} (${department.code})`,
                 value: department.id,
+                subref: department.code,
               }))}
               placeholder={(selectedItemsCount) =>
                 selectedItemsCount
