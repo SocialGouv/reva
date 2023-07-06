@@ -19,7 +19,9 @@ const zodSchema = z.object({
 type AccountInfoStepFormSchema = z.infer<typeof zodSchema>;
 
 export const AccountInfoStepForm = () => {
-  const [submissionError, setSubmissionError] = useState(false);
+  const [submissionError, setSubmissionError] = useState<string | undefined>(
+    undefined
+  );
   const {
     professionalSpaceInfos,
     goBackToPreviousStep,
@@ -36,11 +38,11 @@ export const AccountInfoStepForm = () => {
 
   const handleFormSubmit = async (data: AccountInfoStepFormSchema) => {
     try {
-      setSubmissionError(false);
+      setSubmissionError(undefined);
       await submitAccountInfoStep(data);
-    } catch (e) {
-      console.log(e);
-      setSubmissionError(true);
+    } catch (err: any) {
+      console.log(err);
+      setSubmissionError(err?.response?.errors?.[0].message as string);
     }
   };
 
@@ -54,7 +56,7 @@ export const AccountInfoStepForm = () => {
       <div className="border-t border-gray-300  mb-7" />
       {submissionError && (
         <div className="fr-message--error mb-6">
-          Erreur lors de l'envoi du formulaire
+          Erreur lors de l'envoi du formulaire: {submissionError}
         </div>
       )}
       <FormOptionalFieldsDisclaimer className="mb-6" />
