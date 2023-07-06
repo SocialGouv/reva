@@ -14,6 +14,7 @@ import { getCompanionsForCandidacy } from "../../../domain/features/getCompanion
 import { getDeviceCandidacy } from "../../../domain/features/getDeviceCandidacy";
 import { getExamInfo } from "../../../domain/features/getExamInfo";
 import { getActiveOrganismsForCandidacyWithNewTypologies } from "../../../domain/features/getOrganismsForCandidacy";
+import { getRandomOrganismsForCandidacyWithNewTypologies } from "../../../domain/features/getRandomOrganismsForCandidacy";
 import { getTrainings } from "../../../domain/features/getTrainings";
 import { selectOrganismForCandidacy } from "../../../domain/features/selectOrganismForCandidacy";
 import { submitCandidacy } from "../../../domain/features/submitCandidacy";
@@ -36,7 +37,6 @@ import {
   CandidacyStatusFilter,
   ExamInfo,
 } from "../../../domain/types/candidacy";
-import { shuffleArray } from "../../../domain/utils/array-shuffle";
 import * as admissibilityDb from "../../database/postgres/admissibility";
 import * as basicSkillDb from "../../database/postgres/basicSkills";
 import * as candidacyDb from "../../database/postgres/candidacies";
@@ -187,18 +187,17 @@ const unsafeResolvers = {
         include: { organism: true },
       });
 
-      const result = await getActiveOrganismsForCandidacyWithNewTypologies({
-        getActiveOrganismForCertificationAndDepartment:
-          organismDb.getActiveOrganismForCertificationAndDepartment,
+      const result = await getRandomOrganismsForCandidacyWithNewTypologies({
+        getRandomActiveOrganismForCertificationAndDepartment:
+          organismDb.getRandomActiveOrganismForCertificationAndDepartment,
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
-      })({ candidacyId, searchText });
+      })({ candidacyId, searchText, limit: 6 });
 
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .map((organisms) => {
-          // Keep only 5 random organisms, removing the one already selected if it exists
-          let randomOrganisms = shuffleArray(organisms)
-            .slice(0, 6)
+          //remove the organism already selected for the candidacy if it's in the list
+          let randomOrganisms = organisms
             .filter((c) => c.id !== candidacy?.organism?.id)
             .slice(0, 5);
 

@@ -1,5 +1,6 @@
-import { Prisma } from "@prisma/client";
-import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
+import { Organism, Prisma } from "@prisma/client";
+import { camelCase, mapKeys } from "lodash";
+import { Either, Left, Maybe, Right } from "purify-ts";
 
 import * as domain from "../../../domain/types/candidacy";
 import { DepartmentWithOrganismMethods } from "../../../domain/types/candidacy";
@@ -236,5 +237,38 @@ export const existOrganismWithTypologyAndSiret = async ({
   } catch (e) {
     logger.error(e);
     return Left(`Error while counting organisms matching criteria`);
+  }
+};
+
+export const getRandomActiveOrganismForCertificationAndDepartment = async ({
+  certificationId,
+  departmentId,
+  searchText,
+  limit,
+}: {
+  certificationId: string;
+  departmentId: string;
+  searchText?: string;
+  limit: number;
+}): Promise<Either<string, domain.Organism[]>> => {
+  try {
+    if (!certificationId || !departmentId) {
+      return Right([]);
+    }
+
+    let whereClause = `where o.id = ao.organism_id and ao.certification_id=uuid('${certificationId}') and department_id=uuid('${departmentId}')`;
+    if (searchText) {
+      whereClause += ` and unaccent(o.label) ilike unaccent('%${searchText}%')`;
+    }
+    const query = `select * from organism o,active_organism_by_available_certification_and_department ao ${whereClause} order by Random() limit ${limit}`;
+
+    const results = (await prismaClient.$queryRawUnsafe<Organism[]>(query)).map(
+      (o) => mapKeys(o, (v, k) => camelCase(k)) //mapping rawquery output field names in snake case to camel case
+    ) as unknown as domain.Organism[];
+
+    return Right(results);
+  } catch (e) {
+    logger.error(e);
+    return Left(`error while retreiving organism`);
   }
 };
