@@ -23,7 +23,7 @@ export const AdmissibleSectorsInfoPanel = ({
         title="Voir tous les diplômes disponibles - ouvre une nouvelle fenêtre"
         target="_blank"
         referrerPolicy="no-referrer"
-        href="https://airtable.com/shrTDCbwwBI4xLLo9/tblWDa9HN0cuqLnAl"
+        href="https://airtable.com/shrhMGpOWNPJA15Xh"
       >
         Consultez les diplômes actuellement disponibles via France VAE
       </a>
