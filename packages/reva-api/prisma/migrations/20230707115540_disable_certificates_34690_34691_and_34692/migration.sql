@@ -1,0 +1,3 @@
+UPDATE certification
+SET STATUS = 'INACTIVE'
+WHERE rncp_id IN('34690', '34691', '34692');
