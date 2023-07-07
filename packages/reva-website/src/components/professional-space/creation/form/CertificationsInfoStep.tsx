@@ -60,6 +60,10 @@ export const CertificationsInfoStepForm = ({
     submitCertificationsInfoStep,
   } = useProfessionalSpaceCreationContext();
 
+  const metropoleDepartmentCodes = availableDepartments
+    .filter(({ code }) => !["971", "972", "973", "974", "976"].includes(code))
+    .map(({ code }) => code);
+
   const {
     handleSubmit,
     control,
@@ -221,12 +225,7 @@ export const CertificationsInfoStepForm = ({
               label="Zone d’intervention en présentiel"
               hint="Cochez les départements couverts en présentiel"
               subsetLabel="toute la France métropolitaine"
-              subsetRefList={availableDepartments
-                .filter(
-                  ({ code }) =>
-                    !["971", "972", "973", "974", "976"].includes(code)
-                )
-                .map(({ code }) => code)}
+              subsetRefList={metropoleDepartmentCodes}
               options={availableDepartments.map((department) => ({
                 label: `${department.label} (${department.code})`,
                 value: department.id,
@@ -248,12 +247,7 @@ export const CertificationsInfoStepForm = ({
               label="Zone d’intervention en distanciel"
               hint="Cochez les départements couverts en distanciel"
               subsetLabel="toute la France métropolitaine"
-              subsetRefList={availableDepartments
-                .filter(
-                  ({ code }) =>
-                    !["971", "972", "973", "974", "976"].includes(code)
-                )
-                .map(({ code }) => code)}
+              subsetRefList={metropoleDepartmentCodes}
               options={availableDepartments.map((department) => ({
                 label: `${department.label} (${department.code})`,
                 value: department.id,

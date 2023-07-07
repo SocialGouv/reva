@@ -1,5 +1,6 @@
 import { Listbox } from "@headlessui/react";
 import { useCallback, useState } from "react";
+import { difference } from "lodash";
 
 interface Option {
   label: string;
@@ -54,11 +55,15 @@ export const MultiSelectWithAllableSubset = ({
       const appendSubset = (curValues: string[]) =>
         Array.from(new Set([...curValues, ...subsetValues]));
       let newValues: string[] = changedValues;
-      if (changedValues.includes(ALL_SELECTED) && !selectAllChecked) {
+      const { hasCheckedAll, hasUncheckedAll } = getCheckAllDiff(
+        changedValues,
+        selectedValues
+      );
+      if (hasCheckedAll) {
         // "all" was just checked
         newValues = appendSubset(changedValues);
         setSelectAllChecked(true);
-      } else if (!changedValues.includes(ALL_SELECTED) && selectAllChecked) {
+      } else if (hasUncheckedAll) {
         // "all" was just unchecked
         newValues = removeSubset(changedValues);
         setSelectAllChecked(false);
@@ -69,8 +74,20 @@ export const MultiSelectWithAllableSubset = ({
       }
       setSelectedValues(newValues);
       onChange?.(newValues);
+
+      function getCheckAllDiff(presentValues: string[], pastValues: string[]) {
+        const checked = difference(presentValues, pastValues);
+        const unChecked = difference(pastValues, presentValues);
+        if (checked.length > 1 || unChecked.length > 1) {
+          throw "unexpected Select changes";
+        }
+        return {
+          hasCheckedAll: checked[0] === ALL_SELECTED,
+          hasUncheckedAll: unChecked[0] === ALL_SELECTED,
+        };
+      }
     },
-    [onChange, selectAllChecked, subsetValues]
+    [onChange, subsetValues, selectedValues]
   );
 
   return (
