@@ -9,8 +9,9 @@
                             <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
                                 <div class="fr-container fr-background-alt--grey fr-px-md-0 fr-py-10v fr-py-md-14v">
                                     <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
-                                        <div class="fr-col-12 fr-col-md-9 fr-col-lg-8">
+                                        <div class="fr-col-12 fr-col-md-10">
                                             <h1>Merci de choisir un mot de passe</h1>
+                                            <br>
                                             <form id="kc-passwd-update-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
                                                 <div class="fr-alert fr-alert--info">
                                                     <ul>
