@@ -9,9 +9,20 @@
     </#if>
     <span>${msg("allFieldsRequired")}</span>
 
-    <form action="${url.passwordUrl}" class="fr-py-4w" method="post">
+    <form action="${url.passwordUrl}" class="fr-py-4w m-0" method="post">
         <input type="text" id="username" name="username" value="${(account.username!'')}" autocomplete="username" readonly="readonly" style="display:none;">
         <input type="hidden" id="stateChecker" name="stateChecker" value="${stateChecker}">
+
+        <div class="fr-alert fr-alert--info">
+          <ul>
+            <li>Votre mot de passe doit contenir au moins 14 caractères.</li>
+            <li>Il doit inclure au moins une lettre majuscule.</li>
+            <li>Il doit inclure au moins une lettre minuscule.</li>
+            <li>Il doit inclure au moins un chiffre.</li>
+            <li>Il doit inclure au moins un caractère spécial.</li>
+          </ul>
+        </div>
+        <br>
 
         <#if password.passwordSet>
         <div class="fr-input-group">

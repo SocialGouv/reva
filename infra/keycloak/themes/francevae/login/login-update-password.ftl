@@ -12,6 +12,16 @@
                                         <div class="fr-col-12 fr-col-md-9 fr-col-lg-8">
                                             <h1>Merci de choisir un mot de passe</h1>
                                             <form id="kc-passwd-update-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
+                                                <div class="fr-alert fr-alert--info">
+                                                    <ul>
+                                                        <li>Votre mot de passe doit contenir au moins 14 caractères.</li>
+                                                        <li>Il doit inclure au moins une lettre majuscule.</li>
+                                                        <li>Il doit inclure au moins une lettre minuscule.</li>
+                                                        <li>Il doit inclure au moins un chiffre.</li>
+                                                        <li>Il doit inclure au moins un caractère spécial.</li>
+                                                    </ul>
+                                                </div>
+                                                <br>
                                                 <#if messagesPerField.existsError('password-confirm')>
                                                     <div class="fr-alert fr-alert--error" role="alert">
                                                         <h3 class="fr-alert__title">Une erreur est survenue</h3>
