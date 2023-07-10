@@ -127,7 +127,8 @@ export const deleteSubscriptionRequestById = async (
 };
 
 export const rejectSubscriptionRequestById = async (
-  id: string
+  id: string,
+  reason: string
 ): Promise<Either<string, SubscriptionRequest>> => {
   try {
     return Right(
@@ -135,6 +136,7 @@ export const rejectSubscriptionRequestById = async (
         where: { id },
         data: {
           status: "REJECTED",
+          rejectionReason: reason,
         },
       })
     );

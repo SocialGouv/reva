@@ -137,7 +137,10 @@ describe("Subscription Request / Reject", () => {
       const sub = await prismaClient.subscriptionRequest.findUnique({
         where: { id: subreqId },
       });
-      expect(sub).toMatchObject({ status: "REJECTED" });
+      expect(sub).toMatchObject({
+        status: "REJECTED",
+        rejectionReason: "reason",
+      });
     });
 
     test("with typology expert branche", async () => {
@@ -176,7 +179,10 @@ describe("Subscription Request / Reject", () => {
       const sub = await prismaClient.subscriptionRequest.findUnique({
         where: { id: subreqId },
       });
-      expect(sub).toMatchObject({ status: "REJECTED" });
+      expect(sub).toMatchObject({
+        status: "REJECTED",
+        rejectionReason: "reason",
+      });
     });
 
     test("with typology expert filière", async () => {
@@ -215,7 +221,10 @@ describe("Subscription Request / Reject", () => {
       const sub = await prismaClient.subscriptionRequest.findUnique({
         where: { id: subreqId },
       });
-      expect(sub).toMatchObject({ status: "REJECTED" });
+      expect(sub).toMatchObject({
+        status: "REJECTED",
+        rejectionReason: "reason",
+      });
     });
   });
 });

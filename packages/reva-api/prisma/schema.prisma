@@ -614,6 +614,7 @@ model SubscriptionRequest {
   companyWebsite                            String?                                     @map("company_website") @db.VarChar(255)
   qualiopiCertificateExpiresAt              DateTime                                    @map("qualiopi_certificate_expires_at")
   status                                    SubscriptionRequestStatus                   @default(PENDING)
+  rejectionReason                           String?                                     @map("rejection_reason")
 
   @@map("subscription_request")
 }

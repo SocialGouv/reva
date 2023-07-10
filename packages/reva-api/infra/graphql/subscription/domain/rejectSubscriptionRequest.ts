@@ -10,7 +10,10 @@ interface RejectSubscriptionRequestDeps {
   getSubscriptionRequestById: (
     id: string
   ) => Promise<Either<string, Maybe<SubscriptionRequest>>>;
-  rejectSubscriptionRequestById: (id: string) => Promise<Either<string, void>>;
+  rejectSubscriptionRequestById: (
+    id: string,
+    reason: string
+  ) => Promise<Either<string, void>>;
   sendRejectionEmail: ({
     email,
     reason,
@@ -72,7 +75,12 @@ export const rejectSubscriptionRequest = async (
     });
 
   const rejectSubscriptionRequest = EitherAsync.fromPromise(async () =>
-    (await deps.rejectSubscriptionRequestById(params.subscriptionRequestId))
+    (
+      await deps.rejectSubscriptionRequestById(
+        params.subscriptionRequestId,
+        params.reason
+      )
+    )
       .mapLeft(
         (error: string) =>
           new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, error)
