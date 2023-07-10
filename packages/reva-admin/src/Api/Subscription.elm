@@ -1,6 +1,7 @@
 module Api.Subscription exposing (get, getSubscriptions, reject, validate)
 
 import Admin.Enum.Sort exposing (Sort)
+import Admin.Enum.SubscriptionRequestStatus exposing (SubscriptionRequestStatus(..))
 import Admin.Mutation as Mutation
 import Admin.Object
 import Admin.Object.PaginationInfo
@@ -66,7 +67,7 @@ getSubscriptions :
     -> Cmd msg
 getSubscriptions endpointGraphql token toMsg page =
     Query.subscription_getSubscriptionRequests
-        (\optionals -> { optionals | limit = Present 10, offset = Present ((page - 1) * 10), orderBy = Present { accountLastname = Absent, companyName = Absent, createdAt = Present Admin.Enum.Sort.Desc } })
+        (\optionals -> { optionals | limit = Present 10, offset = Present ((page - 1) * 10), status = Present Pending, orderBy = Present { accountLastname = Absent, companyName = Absent, createdAt = Present Admin.Enum.Sort.Desc } })
         subscriptionSummaryPageSelection
         |> Auth.makeQuery "getSubscriptions" endpointGraphql token toMsg
 

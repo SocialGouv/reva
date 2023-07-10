@@ -6,6 +6,7 @@ module Admin.Object.SubscriptionRequest exposing (..)
 
 import Admin.Enum.LegalStatus
 import Admin.Enum.OrganismTypology
+import Admin.Enum.SubscriptionRequestStatus
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -110,3 +111,8 @@ companyWebsite =
 qualiopiCertificateExpiresAt : SelectionSet Data.Scalar.Timestamp Admin.Object.SubscriptionRequest
 qualiopiCertificateExpiresAt =
     Object.selectionForField "Data.Scalar.Timestamp" "qualiopiCertificateExpiresAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
+
+
+status : SelectionSet Admin.Enum.SubscriptionRequestStatus.SubscriptionRequestStatus Admin.Object.SubscriptionRequest
+status =
+    Object.selectionForField "Enum.SubscriptionRequestStatus.SubscriptionRequestStatus" "status" [] Admin.Enum.SubscriptionRequestStatus.decoder

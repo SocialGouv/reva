@@ -11,6 +11,7 @@ import { sendRejectionEmail } from "./mail";
 import { resolversSecurityMap } from "./security";
 
 interface getSubscriptionRequestsParams extends FilteredPaginatedListArgs {
+  status?: SubscriptionRequestStatus;
   orderBy?: {
     companyName?: Sort;
     accountLastname?: Sort;

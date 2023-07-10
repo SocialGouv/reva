@@ -5,6 +5,7 @@
 module Admin.Query exposing (..)
 
 import Admin.Enum.CandidacyStatusFilter
+import Admin.Enum.SubscriptionRequestStatus
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -264,6 +265,7 @@ type alias SubscriptionGetSubscriptionRequestsOptionalArguments =
     { offset : OptionalArgument Int
     , limit : OptionalArgument Int
     , orderBy : OptionalArgument Admin.InputObject.SubscriptionRequestOrderByInput
+    , status : OptionalArgument Admin.Enum.SubscriptionRequestStatus.SubscriptionRequestStatus
     }
 
 
@@ -274,10 +276,10 @@ subscription_getSubscriptionRequests :
 subscription_getSubscriptionRequests fillInOptionals____ object____ =
     let
         filledInOptionals____ =
-            fillInOptionals____ { offset = Absent, limit = Absent, orderBy = Absent }
+            fillInOptionals____ { offset = Absent, limit = Absent, orderBy = Absent, status = Absent }
 
         optionalArgs____ =
-            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "orderBy" filledInOptionals____.orderBy Admin.InputObject.encodeSubscriptionRequestOrderByInput ]
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "orderBy" filledInOptionals____.orderBy Admin.InputObject.encodeSubscriptionRequestOrderByInput, Argument.optional "status" filledInOptionals____.status (Encode.enum Admin.Enum.SubscriptionRequestStatus.toString) ]
                 |> List.filterMap Basics.identity
     in
     Object.selectionForCompositeField "subscription_getSubscriptionRequests" optionalArgs____ object____ Basics.identity

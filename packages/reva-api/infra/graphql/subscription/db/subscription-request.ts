@@ -126,11 +126,13 @@ export const deleteSubscriptionRequestById = async (
   }
 };
 
-export const getSubscriptionRequestsCount = async (): Promise<
-  Either<string, number>
-> => {
+export const getSubscriptionRequestsCount = async (
+  params: GetSubscriptionRequestsParams
+): Promise<Either<string, number>> => {
   try {
-    const numSubReq = await prismaClient.subscriptionRequest.count();
+    const numSubReq = await prismaClient.subscriptionRequest.count(
+      whereClause(params)
+    );
     return Right(numSubReq);
   } catch (e) {
     logger.error(e);
@@ -156,6 +158,7 @@ export const getSubscriptionRequests = async (
               createdAt: true,
             },
           },
+          whereClause(params),
           sortClause(params),
           paginationClause(params)
         )
@@ -211,3 +214,9 @@ const sortClause = (params: GetSubscriptionRequestsParams) => {
     };
   }
 };
+
+const whereClause = (
+  params: GetSubscriptionRequestsParams
+): { where: Prisma.SubscriptionRequestWhereInput } => ({
+  where: params.status ? { status: params.status } : {},
+});

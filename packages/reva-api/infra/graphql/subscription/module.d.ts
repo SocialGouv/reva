@@ -68,6 +68,7 @@ type SubscriptionRequestSummary = Pick<
 >;
 
 interface GetSubscriptionRequestsParams extends FilteredPaginatedListArgs {
+  status?: SubscriptionRequestStatus;
   orderBy?: {
     companyName?: Sort;
     accountLastname?: Sort;
