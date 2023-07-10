@@ -11,6 +11,11 @@ enum LegalStatus {
   NC
 }
 
+enum SubscriptionRequestStatus {
+  PENDING
+  REJECTED
+}
+
 type SubscriptionRequest {
   id: ID!
   companySiret: String!
@@ -29,6 +34,7 @@ type SubscriptionRequest {
   departmentsWithOrganismMethods: [DepartmentWithOrganismMethods!]!
   companyWebsite: String
   qualiopiCertificateExpiresAt: Timestamp!
+  status: SubscriptionRequestStatus!
 }
 
 type SubscriptionRequestOnDomaine {

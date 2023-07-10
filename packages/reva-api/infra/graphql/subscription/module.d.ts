@@ -17,6 +17,8 @@ type OrganismTypology =
   | "expertBranche"
   | "expertBrancheEtFiliere";
 
+type SubscriptionRequestStatus = "PENDING" | "REJECTED";
+
 interface SubscriptionRequestInput {
   companySiret: string;
   companyLegalStatus: LegalStatus;
@@ -35,6 +37,7 @@ interface SubscriptionRequestInput {
   remoteDepartmentsIds: string[];
   companyWebsite?: string;
   qualiopiCertificateExpiresAt: Date;
+  status: SubscriptionRequestStatus;
 }
 
 interface DepartmentWithOrganismMethods {

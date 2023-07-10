@@ -589,6 +589,11 @@ enum LegalStatus {
   NC
 }
 
+enum SubscriptionRequestStatus {
+  PENDING
+  REJECTED
+}
+
 model SubscriptionRequest {
   id                                        String                                      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   companyName                               String                                      @map("company_name") @db.VarChar(255)
@@ -608,6 +613,7 @@ model SubscriptionRequest {
   departmentsWithOrganismMethods            SubscriptionRequestsOnDepartments[]
   companyWebsite                            String?                                     @map("company_website") @db.VarChar(255)
   qualiopiCertificateExpiresAt              DateTime                                    @map("qualiopi_certificate_expires_at")
+  status                                    SubscriptionRequestStatus                   @default(PENDING)
 
   @@map("subscription_request")
 }
