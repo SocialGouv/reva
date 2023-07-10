@@ -3,6 +3,7 @@ module Api.Subscription exposing (get, getSubscriptions, reject, validate)
 import Admin.Enum.Sort exposing (Sort)
 import Admin.Mutation as Mutation
 import Admin.Object
+import Admin.Object.PaginationInfo
 import Admin.Object.SubscriptionRequest
 import Admin.Object.SubscriptionRequestOnConventionCollective
 import Admin.Object.SubscriptionRequestOnDomaine
@@ -14,6 +15,7 @@ import Api.Auth as Auth
 import Api.Referential
 import Api.RemoteData exposing (nothingToError)
 import Api.Token exposing (Token)
+import Data.Pagination
 import Data.Referential
 import Data.Subscription
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
@@ -59,12 +61,13 @@ reject endpointGraphql token toMsg subscriptionId comment =
 getSubscriptions :
     String
     -> Token
-    -> (RemoteData (List String) (List Data.Subscription.SubscriptionSummary) -> msg)
+    -> (RemoteData (List String) Data.Subscription.SubscriptionSummaryPage -> msg)
+    -> Int
     -> Cmd msg
-getSubscriptions endpointGraphql token toMsg =
+getSubscriptions endpointGraphql token toMsg page =
     Query.subscription_getSubscriptionRequests
-        (\optionals -> { optionals | limit = Present 50, orderBy = Present { accountLastname = Absent, companyName = Absent, createdAt = Present Admin.Enum.Sort.Desc } })
-        subscriptionsSelection
+        (\optionals -> { optionals | limit = Present 10, offset = Present ((page - 1) * 10), orderBy = Present { accountLastname = Absent, companyName = Absent, createdAt = Present Admin.Enum.Sort.Desc } })
+        subscriptionSummaryPageSelection
         |> Auth.makeQuery "getSubscriptions" endpointGraphql token toMsg
 
 
@@ -85,10 +88,11 @@ get endpointGraphql token toMsg subscriptionId =
         |> Auth.makeQuery "getSubscription" endpointGraphql token (nothingToError "Cette inscription est introuvable" >> toMsg)
 
 
-subscriptionsSelection : SelectionSet (List Data.Subscription.SubscriptionSummary) Admin.Object.SubscriptionRequestsPaginated
-subscriptionsSelection =
-    SelectionSet.succeed identity
+subscriptionSummaryPageSelection : SelectionSet Data.Subscription.SubscriptionSummaryPage Admin.Object.SubscriptionRequestsPaginated
+subscriptionSummaryPageSelection =
+    SelectionSet.succeed Data.Subscription.SubscriptionSummaryPage
         |> with (Admin.Object.SubscriptionRequestsPaginated.rows subscriptionSummarySelection)
+        |> with (Admin.Object.SubscriptionRequestsPaginated.info pageInfoSelection)
 
 
 subscriptionSummarySelection : SelectionSet Data.Subscription.SubscriptionSummary Admin.Object.SubscriptionRequestSummary
@@ -101,6 +105,15 @@ subscriptionSummarySelection =
         |> with Admin.Object.SubscriptionRequestSummary.companyName
         |> with Admin.Object.SubscriptionRequestSummary.companyAddress
         |> with Admin.Object.SubscriptionRequestSummary.createdAt
+
+
+pageInfoSelection : SelectionSet Data.Pagination.PaginationInfo Admin.Object.PaginationInfo
+pageInfoSelection =
+    SelectionSet.succeed Data.Pagination.PaginationInfo
+        |> with Admin.Object.PaginationInfo.totalRows
+        |> with Admin.Object.PaginationInfo.currentPage
+        |> with Admin.Object.PaginationInfo.totalPages
+        |> with Admin.Object.PaginationInfo.pageLength
 
 
 selection : SelectionSet Data.Subscription.Subscription Admin.Object.SubscriptionRequest

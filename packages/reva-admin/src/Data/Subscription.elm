@@ -1,9 +1,16 @@
-module Data.Subscription exposing (Subscription, SubscriptionSummary)
+module Data.Subscription exposing (Subscription, SubscriptionSummary, SubscriptionSummaryPage)
 
 import Admin.Enum.LegalStatus exposing (LegalStatus)
 import Admin.Enum.OrganismTypology exposing (OrganismTypology)
+import Data.Pagination exposing (PaginationInfo)
 import Data.Referential exposing (ConventionCollective, DepartmentWithOrganismMethods, Domain)
 import Data.Scalar exposing (Timestamp)
+
+
+type alias SubscriptionSummaryPage =
+    { rows : List SubscriptionSummary
+    , info : PaginationInfo
+    }
 
 
 type alias SubscriptionSummary =

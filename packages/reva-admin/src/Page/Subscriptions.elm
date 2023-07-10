@@ -10,7 +10,7 @@ import Api.Subscription
 import Api.Token
 import BetaGouv.DSFR.Button as Button
 import Data.Context exposing (Context)
-import Data.Subscription as Subscription exposing (SubscriptionSummary)
+import Data.Subscription as Subscription exposing (SubscriptionSummary, SubscriptionSummaryPage)
 import Html exposing (Html, aside, div, h2, h4, li, node, p, text, ul)
 import Html.Attributes exposing (attribute, class)
 import RemoteData exposing (RemoteData(..))
@@ -22,12 +22,12 @@ import View.Helpers exposing (dataTest)
 
 
 type Msg
-    = GotSubscriptionsResponse (RemoteData (List String) (List SubscriptionSummary))
+    = GotSubscriptionsResponse (RemoteData (List String) SubscriptionSummaryPage)
     | ClickedViewMore String
 
 
 type alias State =
-    { subscriptions : RemoteData (List String) (List SubscriptionSummary)
+    { subscriptions : RemoteData (List String) SubscriptionSummaryPage
     , errors : List String
     }
 
@@ -49,7 +49,7 @@ init context =
             }
 
         defaultCmd =
-            Api.Subscription.getSubscriptions context.endpoint context.token GotSubscriptionsResponse
+            Api.Subscription.getSubscriptions context.endpoint context.token GotSubscriptionsResponse 1
     in
     ( defaultModel, defaultCmd )
 
@@ -102,7 +102,7 @@ view context model =
 viewContent :
     Context
     -> List String
-    -> List SubscriptionSummary
+    -> SubscriptionSummaryPage
     -> Html Msg
 viewContent context actionErrors filteredSubscriptions =
     View.layout
@@ -145,10 +145,10 @@ viewErrorItem error =
         [ text error ]
 
 
-viewDirectoryPanel : Context -> List SubscriptionSummary -> List String -> List (Html Msg)
-viewDirectoryPanel context subscriptionsByStatus actionErrors =
-    [ viewDirectoryHeader context (List.length subscriptionsByStatus)
-    , List.map (viewItem context) subscriptionsByStatus
+viewDirectoryPanel : Context -> SubscriptionSummaryPage -> List String -> List (Html Msg)
+viewDirectoryPanel context subscriptionSummaryPage actionErrors =
+    [ viewDirectoryHeader context subscriptionSummaryPage.info.totalRows
+    , List.map (viewItem context) subscriptionSummaryPage.rows
         |> ul
             [ dataTest "directory"
             , class "min-h-0 overflow-y-auto mx-8 px-0"
@@ -208,7 +208,7 @@ withErrors errors ( model, cmd ) =
     ( { model | state = { state | errors = errors } }, cmd )
 
 
-withSubscriptions : RemoteData (List String) (List SubscriptionSummary) -> ( Model, Cmd msg ) -> ( Model, Cmd msg )
+withSubscriptions : RemoteData (List String) SubscriptionSummaryPage -> ( Model, Cmd msg ) -> ( Model, Cmd msg )
 withSubscriptions subscriptions ( model, cmd ) =
     let
         state =
