@@ -7,7 +7,7 @@ import Data.Context exposing (Context)
 import Html exposing (Html, a, div, h1, li, node, text, ul)
 import Html.Attributes exposing (class, href, id, target)
 import Html.Attributes.Extra exposing (role)
-import Route exposing (emptyFilters)
+import Route exposing (emptyCandidacyFilters)
 
 
 view :
@@ -57,7 +57,7 @@ view context =
                 , ul []
                     [ subscriptionsLink
                     , li []
-                        [ viewLink (Route.Candidacies emptyFilters) "Candidatures"
+                        [ viewLink (Route.Candidacies emptyCandidacyFilters) "Candidatures"
                         , ul []
                             [ viewCandidacyLink CandidacyStatusFilter.ActiveHorsAbandon
                             , ul [] <|

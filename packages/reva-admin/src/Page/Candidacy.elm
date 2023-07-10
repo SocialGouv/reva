@@ -258,7 +258,7 @@ viewMain : Context -> String -> List (Html msg) -> Html msg
 viewMain context dataTest content =
     View.article
         dataTest
-        (Route.href context.baseUrl (Route.Candidacies Route.emptyFilters))
+        (Route.href context.baseUrl (Route.Candidacies Route.emptyCandidacyFilters))
         "Toutes les candidatures"
         content
 

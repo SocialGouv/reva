@@ -198,7 +198,7 @@ viewDirectoryHeader context =
 
 viewPager : Context -> Int -> Int -> CandidacyStatusFilter -> Html Msg
 viewPager context currentPage totalPages statusFilter =
-    BetaGouv.DSFR.Pagination.view currentPage totalPages (\p -> Route.toString context.baseUrl (Route.Candidacies (Route.Filters statusFilter p)))
+    BetaGouv.DSFR.Pagination.view currentPage totalPages (\p -> Route.toString context.baseUrl (Route.Candidacies (Route.CandidacyFilters statusFilter p)))
 
 
 viewDirectoryPanel : Context -> Model -> String -> List (Html Msg)

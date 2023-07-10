@@ -290,6 +290,6 @@ viewCandidaciesLink context =
     Html.a
         [ class "fr-link"
         , class "md:text-lg text-gray-900 hover:text-blue-900"
-        , Route.href context.baseUrl (Route.Candidacies Route.emptyFilters)
+        , Route.href context.baseUrl (Route.Candidacies Route.emptyCandidacyFilters)
         ]
         [ text "Voir les candidatures" ]

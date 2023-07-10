@@ -1,7 +1,7 @@
 module Route exposing
-    ( Filters
+    ( CandidacyFilters
     , Route(..)
-    , emptyFilters
+    , emptyCandidacyFilters
     , fromUrl
     , href
     , toString
@@ -18,13 +18,13 @@ import Url.Parser.Query as Query
 import View.Candidacy.Tab as Tab
 
 
-type alias Filters =
+type alias CandidacyFilters =
     { status : CandidacyStatusFilter, page : Int }
 
 
 type Route
     = Candidacy Tab.Tab
-    | Candidacies Filters
+    | Candidacies CandidacyFilters
     | Login
     | Logout
     | NotFound
@@ -33,8 +33,8 @@ type Route
     | SiteMap
 
 
-emptyFilters : Filters
-emptyFilters =
+emptyCandidacyFilters : CandidacyFilters
+emptyCandidacyFilters =
     { status = CandidacyStatusFilter.ActiveHorsAbandon, page = 1 }
 
 
@@ -54,11 +54,11 @@ parser baseUrl =
             Maybe.withDefault CandidacyStatusFilter.ActiveHorsAbandon (CandidacyStatusFilter.fromString (Maybe.withDefault "" s))
 
         toCandidaciesRoute s p =
-            Candidacies (Filters (statusStringToStatusFilter s) (Maybe.withDefault 1 (String.toInt (Maybe.withDefault "1" p))))
+            Candidacies (CandidacyFilters (statusStringToStatusFilter s) (Maybe.withDefault 1 (String.toInt (Maybe.withDefault "1" p))))
     in
     s baseUrl
         </> oneOf
-                [ top |> map (Candidacies emptyFilters)
+                [ top |> map (Candidacies emptyCandidacyFilters)
                 , s "auth" </> s "login" |> map Login
                 , s "auth" </> s "logout" |> map Logout
                 , s "plan-du-site" |> map SiteMap

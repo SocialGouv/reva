@@ -30,7 +30,7 @@ view context =
                                 [ class "fr-header__operator" ]
                                 [ a
                                     [ attribute "title" "Accueil - Espace professionnel"
-                                    , Route.href context.baseUrl (Route.Candidacies Route.emptyFilters)
+                                    , Route.href context.baseUrl (Route.Candidacies Route.emptyCandidacyFilters)
                                     ]
                                     [ View.image
                                         [ style "width" "9.0625rem"

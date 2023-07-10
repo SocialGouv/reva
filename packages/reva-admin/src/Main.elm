@@ -270,7 +270,7 @@ update msg model =
                 redirectRoute =
                     case route of
                         Login ->
-                            Route.Candidacies Route.emptyFilters
+                            Route.Candidacies Route.emptyCandidacyFilters
 
                         _ ->
                             route
