@@ -154,13 +154,50 @@ export const CertificationsInfoStepForm = ({
               <option value="expertBranche">Expert de branche(s)</option>
             </Select>
             {(!currentTypology || currentTypology === "generaliste") && (
-              <Notice title="En tant qu'Architecte Accompagnateur de Parcours généraliste, votre offre de service couvre toutes les certifications hormis celles rattachées aux conventions collectives." />
+              <Notice
+                title={
+                  <>
+                    <p className="mb-2">
+                      En tant qu'Architecte Accompagnateur de Parcours
+                      généraliste, votre offre de service couvre toutes les
+                      certifications hormis celles rattachées aux conventions
+                      collectives.
+                    </p>
+                    <a
+                      href="https://airtable.com/shrTDCbwwBI4xLLo9/tblWDa9HN0cuqLnAl"
+                      target="_blank"
+                      title="Retrouvez l'ensemble des certifications vous concernant - nouvelle page"
+                    >
+                      Retrouvez l'ensemble des certifications vous concernant.
+                    </a>
+                  </>
+                }
+              />
             )}
             {currentTypology === "expertFiliere" && (
               <>
                 <Notice
                   className="mb-4"
-                  title="En tant qu’Architecte Accompagnateur de Parcours expert de filière(s), votre offre de service couvre l'ensemble des certifications rattachées aux filières sélectionnées. Sur demande à notre service support@vae.gouv.fr , vous pourrez aussi accompagner les certifications rattachées aux conventions collectives de ces filières."
+                  title={
+                    <>
+                      <p className="mb-2">
+                        En tant qu’Architecte Accompagnateur de Parcours expert
+                        de filière(s), votre offre de service couvre l'ensemble
+                        des certifications rattachées aux filières
+                        sélectionnées. Sur demande à notre service
+                        support@vae.gouv.fr , vous pourrez aussi accompagner les
+                        certifications rattachées aux conventions collectives de
+                        ces filières.
+                      </p>
+                      <a
+                        href="https://airtable.com/shrTDCbwwBI4xLLo9/tblWDa9HN0cuqLnAl"
+                        target="_blank"
+                        title="Retrouvez l'ensemble des certifications vous concernant - nouvelle page"
+                      >
+                        Retrouvez l'ensemble des certifications vous concernant.
+                      </a>
+                    </>
+                  }
                 />
                 <MultiSelect
                   label="Filière(s)"
@@ -190,7 +227,24 @@ export const CertificationsInfoStepForm = ({
               <>
                 <Notice
                   className="mb-4"
-                  title="En tant qu’Architecte Accompagnateur de Parcours expert de branche(s), votre offre de service couvre l'ensemble des Certificats de Qualification professionnelle / Titres à visée professionnelle rattachés à une convention collective sélectionnée."
+                  title={
+                    <>
+                      <p className="mb-2">
+                        En tant qu’Architecte Accompagnateur de Parcours expert
+                        de branche(s), votre offre de service couvre l'ensemble
+                        des Certificats de Qualification professionnelle /
+                        Titres à visée professionnelle rattachés à une
+                        convention collective sélectionnée.
+                      </p>
+                      <a
+                        href="https://airtable.com/shrWVrEQJuZNC7F6U/tblWDa9HN0cuqLnAl"
+                        target="_blank"
+                        title="Retrouvez l'ensemble des certifications vous concernant - nouvelle page"
+                      >
+                        Retrouvez l'ensemble des certifications vous concernant.
+                      </a>
+                    </>
+                  }
                 />
                 <MultiSelect
                   label="Conventions collectives auxquelles vous êtes rattaché"
