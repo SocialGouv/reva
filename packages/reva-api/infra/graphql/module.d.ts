@@ -2,7 +2,6 @@ type Sort = "asc" | "desc";
 interface FilteredPaginatedListArgs {
   limit?: number;
   offset?: number;
-  filter?: string;
 }
 
 interface PaginationInfo {
@@ -17,7 +16,7 @@ interface PaginatedListResult<T> {
 }
 
 interface ContextAuth {
-  hasRole: (role: Role) => boolean
+  hasRole: (role: Role) => boolean;
   token?: string;
   userInfo?: {
     email: string;
@@ -27,7 +26,7 @@ interface ContextAuth {
       roles: KeyCloakUserRole[];
     };
     sub: string;
-  }
+  };
 }
 
 interface ContextApp {

@@ -68,7 +68,6 @@ type SubscriptionRequestsPaginated {
 
 type Query {
   subscription_getSubscriptionRequests(
-    filter: String
     offset: Int
     limit: Int
     orderBy: SubscriptionRequestOrderByInput
@@ -109,5 +108,8 @@ type Mutation {
     subscriptionRequest: SubscriptionRequestInput!
   ): SubscriptionRequest!
   subscription_validateSubscriptionRequest(subscriptionRequestId: ID!): String
-  subscription_rejectSubscriptionRequest(subscriptionRequestId: ID!, reason: String!): String
+  subscription_rejectSubscriptionRequest(
+    subscriptionRequestId: ID!
+    reason: String!
+  ): String
 }

@@ -87,16 +87,29 @@ getOrganismsForCandidacy requiredArgs____ object____ =
     Object.selectionForCompositeField "getOrganismsForCandidacy" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.list)
 
 
+type alias GetRandomOrganismsForCandidacyOptionalArguments =
+    { searchText : OptionalArgument String }
+
+
 type alias GetRandomOrganismsForCandidacyRequiredArguments =
     { candidacyId : Data.Scalar.Uuid }
 
 
 getRandomOrganismsForCandidacy :
-    GetRandomOrganismsForCandidacyRequiredArguments
+    (GetRandomOrganismsForCandidacyOptionalArguments -> GetRandomOrganismsForCandidacyOptionalArguments)
+    -> GetRandomOrganismsForCandidacyRequiredArguments
     -> SelectionSet decodesTo Admin.Object.Organism
     -> SelectionSet (List decodesTo) RootQuery
-getRandomOrganismsForCandidacy requiredArgs____ object____ =
-    Object.selectionForCompositeField "getRandomOrganismsForCandidacy" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.list)
+getRandomOrganismsForCandidacy fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { searchText = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "searchText" filledInOptionals____.searchText Encode.string ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "getRandomOrganismsForCandidacy" (optionalArgs____ ++ [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ]) object____ (Basics.identity >> Decode.list)
 
 
 type alias GetCompanionsForCandidacyRequiredArguments =
@@ -248,8 +261,7 @@ getConventionCollectives object____ =
 
 
 type alias SubscriptionGetSubscriptionRequestsOptionalArguments =
-    { filter : OptionalArgument String
-    , offset : OptionalArgument Int
+    { offset : OptionalArgument Int
     , limit : OptionalArgument Int
     , orderBy : OptionalArgument Admin.InputObject.SubscriptionRequestOrderByInput
     }
@@ -262,10 +274,10 @@ subscription_getSubscriptionRequests :
 subscription_getSubscriptionRequests fillInOptionals____ object____ =
     let
         filledInOptionals____ =
-            fillInOptionals____ { filter = Absent, offset = Absent, limit = Absent, orderBy = Absent }
+            fillInOptionals____ { offset = Absent, limit = Absent, orderBy = Absent }
 
         optionalArgs____ =
-            [ Argument.optional "filter" filledInOptionals____.filter Encode.string, Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "orderBy" filledInOptionals____.orderBy Admin.InputObject.encodeSubscriptionRequestOrderByInput ]
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "orderBy" filledInOptionals____.orderBy Admin.InputObject.encodeSubscriptionRequestOrderByInput ]
                 |> List.filterMap Basics.identity
     in
     Object.selectionForCompositeField "subscription_getSubscriptionRequests" optionalArgs____ object____ Basics.identity

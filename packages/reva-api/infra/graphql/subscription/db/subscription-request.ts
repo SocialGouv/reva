@@ -126,13 +126,11 @@ export const deleteSubscriptionRequestById = async (
   }
 };
 
-export const getSubscriptionRequestsCount = async (
-  params: GetSubscriptionRequestsParams
-): Promise<Either<string, number>> => {
+export const getSubscriptionRequestsCount = async (): Promise<
+  Either<string, number>
+> => {
   try {
-    const numSubReq = await prismaClient.subscriptionRequest.count(
-      filterClause(params)
-    );
+    const numSubReq = await prismaClient.subscriptionRequest.count();
     return Right(numSubReq);
   } catch (e) {
     logger.error(e);
@@ -158,7 +156,6 @@ export const getSubscriptionRequests = async (
               createdAt: true,
             },
           },
-          filterClause(params),
           sortClause(params),
           paginationClause(params)
         )
@@ -184,19 +181,6 @@ export const existSubscriptionRequestWithTypologyAndSiret = async ({
   } catch (e) {
     logger.error(e);
     return Left(`Error while counting subscription requests matching criteria`);
-  }
-};
-
-const filterClause = (params: GetSubscriptionRequestsParams) => {
-  if (params.filter) {
-    return {
-      where: {
-        accountLastname: {
-          contains: params.filter as string,
-          mode: Prisma.QueryMode.insensitive,
-        },
-      },
-    };
   }
 };
 
