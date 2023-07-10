@@ -1,5 +1,5 @@
 import { Listbox } from "@headlessui/react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import { difference } from "lodash";
 
 interface Option {
@@ -8,7 +8,57 @@ interface Option {
   subref: string;
 }
 
-const ALL_SELECTED = "__ALL__";
+const ALL_SELECTED = "__ALL__",
+  NONE_SELECTED = "__NONE__";
+
+interface SelectState {
+  selectedValues: string[];
+  allSubsetSelected: boolean;
+  subsetValues: string[];
+}
+
+type SelectAction =
+  | {
+      type: "CHECK_ALL_SUBSET" | "UNCHECK_ALL_SUBSET";
+    }
+  | {
+      type: "OTHER";
+      values: string[];
+    };
+
+const selectionReducer = (
+  state: SelectState,
+  action: SelectAction
+): SelectState => {
+  switch (action.type) {
+    case "CHECK_ALL_SUBSET":
+      return {
+        ...state,
+        selectedValues: Array.from(
+          new Set([...state.selectedValues, ...state.subsetValues])
+        ),
+        allSubsetSelected: true,
+      };
+    case "UNCHECK_ALL_SUBSET":
+      return {
+        ...state,
+        selectedValues: state.selectedValues.filter(
+          (val) => !state.subsetValues.includes(val)
+        ),
+        allSubsetSelected: false,
+      };
+    case "OTHER":
+      return {
+        ...state,
+        selectedValues: action.values,
+        allSubsetSelected: state.subsetValues.every((value) =>
+          action.values.includes(value)
+        ),
+      };
+    default:
+      throw `Unexpected action type`;
+  }
+};
 
 export const MultiSelectWithAllableSubset = ({
   label,
@@ -19,7 +69,7 @@ export const MultiSelectWithAllableSubset = ({
   initialSelectedValues,
   subsetLabel,
   subsetRefList,
-  state,
+  status,
   stateRelatedMessage,
 }: {
   label: string;
@@ -30,91 +80,81 @@ export const MultiSelectWithAllableSubset = ({
   initialSelectedValues?: string[];
   subsetLabel: string;
   subsetRefList: string[];
-  state?: "error" | "default";
+  status?: "error" | "default";
   stateRelatedMessage?: string;
 }) => {
   const subsetValues = options
     .filter(({ subref }) => subsetRefList.includes(subref))
     .map(({ value }) => value);
 
-  const [selectedValues, setSelectedValues] = useState<string[]>(
-    initialSelectedValues || []
-  );
-
-  const [selectAllChecked, setSelectAllChecked] = useState<boolean>(
-    !Boolean(initialSelectedValues) ||
+  const [state, dispatch] = useReducer(selectionReducer, {
+    selectedValues: initialSelectedValues || [],
+    subsetValues,
+    allSubsetSelected:
+      !Boolean(initialSelectedValues) ||
       subsetValues.every((value) =>
         (initialSelectedValues as string[]).includes(value)
-      )
-  );
+      ),
+  });
+
+  useEffect(() => {
+    if (onChange) {
+      onChange(state.selectedValues);
+    }
+  });
 
   const handleChange = useCallback(
     (changedValues: string[]) => {
-      const removeSubset = (curValues: string[]) =>
-        curValues.filter((value) => !subsetValues.includes(value));
-      const appendSubset = (curValues: string[]) =>
-        Array.from(new Set([...curValues, ...subsetValues]));
-      let newValues: string[] = changedValues;
-      const { hasCheckedAll, hasUncheckedAll } = getCheckAllDiff(
-        changedValues,
-        selectedValues
-      );
-      if (hasCheckedAll) {
-        // "all" was just checked
-        newValues = appendSubset(changedValues);
-        setSelectAllChecked(true);
-      } else if (hasUncheckedAll) {
-        // "all" was just unchecked
-        newValues = removeSubset(changedValues);
-        setSelectAllChecked(false);
-      } else {
-        setSelectAllChecked(
-          subsetValues.every((value) => newValues.includes(value))
-        );
+      const checked = difference(changedValues, state.selectedValues);
+      if (checked.length > 1) {
+        throw "unexpected Select changes";
       }
-      setSelectedValues(newValues);
-      onChange?.(newValues);
-
-      function getCheckAllDiff(presentValues: string[], pastValues: string[]) {
-        const checked = difference(presentValues, pastValues);
-        const unChecked = difference(pastValues, presentValues);
-        if (checked.length > 1 || unChecked.length > 1) {
-          throw "unexpected Select changes";
-        }
-        return {
-          hasCheckedAll: checked[0] === ALL_SELECTED,
-          hasUncheckedAll: unChecked[0] === ALL_SELECTED,
-        };
+      if (checked[0] === ALL_SELECTED) {
+        return dispatch({ type: "CHECK_ALL_SUBSET" });
       }
+      if (checked[0] === NONE_SELECTED) {
+        return dispatch({ type: "UNCHECK_ALL_SUBSET" });
+      }
+      dispatch({
+        type: "OTHER",
+        values: changedValues,
+      });
     },
-    [onChange, subsetValues, selectedValues]
+    [state.selectedValues]
   );
 
   return (
     <div
       className={`w-full relative  fr-select-group ${
-        state === "error" ? "fr-select-group--error" : ""
+        status === "error" ? "fr-select-group--error" : ""
       }`}
     >
       <label className="fr-label">
         {label}
         <span className="fr-hint-text">{hint}</span>
       </label>
-      <Listbox value={selectedValues} onChange={handleChange} multiple>
+      <Listbox value={state.selectedValues} onChange={handleChange} multiple>
         <Listbox.Button className="fr-select min-h-10 mt-2 text-left hover:!bg-dsfrGray-contrast">
-          {placeholder?.(selectedValues.length)}
+          {placeholder?.(state.selectedValues.length)}
         </Listbox.Button>
         <Listbox.Options className="!absolute z-10 max-h-52 overflow-auto fr-checkbox-group list-none bg-dsfrGray-contrast w-[calc(100%-5px)] rounded-lg border border-gray-300 p-2">
-          <Listbox.Option key={ALL_SELECTED} value={ALL_SELECTED}>
+          <Listbox.Option
+            key={ALL_SELECTED}
+            value={state.allSubsetSelected ? NONE_SELECTED : ALL_SELECTED}
+          >
             {({ active }) => (
               <li
                 className={`flex p-1 rounded ${
                   active ? "bg-blue-600" : ""
                 } cursor-pointer`}
               >
-                <input type="checkbox" checked={selectAllChecked} readOnly />
+                <input
+                  type="checkbox"
+                  checked={state.allSubsetSelected}
+                  readOnly
+                />
                 <label className={`fr-label ${active ? "!text-white" : ""}`}>
-                  {selectAllChecked
+                  {state.allSubsetSelected
                     ? `Décocher ${subsetLabel}`
                     : `Cocher ${subsetLabel}`}
                 </label>
@@ -132,7 +172,7 @@ export const MultiSelectWithAllableSubset = ({
                 >
                   <input
                     type="checkbox"
-                    checked={selectedValues.includes(option.value)}
+                    checked={state.selectedValues.includes(option.value)}
                     readOnly
                   />
                   <label className={`fr-label ${active ? "!text-white" : ""}`}>
