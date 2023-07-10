@@ -137,23 +137,7 @@ describe("Subscription Request / Reject", () => {
       const sub = await prismaClient.subscriptionRequest.findUnique({
         where: { id: subreqId },
       });
-      expect(sub).toBeNull();
-      const subOnCCN =
-        await prismaClient.subscriptionRequestOnConventionCollective.findMany({
-          where: { subscriptionRequestId: subreqId },
-        });
-      expect(subOnCCN.length).toEqual(0);
-      const subOnDom = await prismaClient.subscriptionRequestOnDomaine.findMany(
-        {
-          where: { subscriptionRequestId: subreqId },
-        }
-      );
-      expect(subOnDom.length).toEqual(0);
-      const subOnDep =
-        await prismaClient.subscriptionRequestsOnDepartments.findMany({
-          where: { subscriptionRequestId: subreqId },
-        });
-      expect(subOnDep.length).toEqual(0);
+      expect(sub).toMatchObject({ status: "REJECTED" });
     });
 
     test("with typology expert branche", async () => {
@@ -192,23 +176,7 @@ describe("Subscription Request / Reject", () => {
       const sub = await prismaClient.subscriptionRequest.findUnique({
         where: { id: subreqId },
       });
-      expect(sub).toBeNull();
-      const subOnCCN =
-        await prismaClient.subscriptionRequestOnConventionCollective.findMany({
-          where: { subscriptionRequestId: subreqId },
-        });
-      expect(subOnCCN.length).toEqual(0);
-      const subOnDom = await prismaClient.subscriptionRequestOnDomaine.findMany(
-        {
-          where: { subscriptionRequestId: subreqId },
-        }
-      );
-      expect(subOnDom.length).toEqual(0);
-      const subOnDep =
-        await prismaClient.subscriptionRequestsOnDepartments.findMany({
-          where: { subscriptionRequestId: subreqId },
-        });
-      expect(subOnDep.length).toEqual(0);
+      expect(sub).toMatchObject({ status: "REJECTED" });
     });
 
     test("with typology expert filière", async () => {
@@ -247,23 +215,7 @@ describe("Subscription Request / Reject", () => {
       const sub = await prismaClient.subscriptionRequest.findUnique({
         where: { id: subreqId },
       });
-      expect(sub).toBeNull();
-      const subOnCCN =
-        await prismaClient.subscriptionRequestOnConventionCollective.findMany({
-          where: { subscriptionRequestId: subreqId },
-        });
-      expect(subOnCCN.length).toEqual(0);
-      const subOnDom = await prismaClient.subscriptionRequestOnDomaine.findMany(
-        {
-          where: { subscriptionRequestId: subreqId },
-        }
-      );
-      expect(subOnDom.length).toEqual(0);
-      const subOnDep =
-        await prismaClient.subscriptionRequestsOnDepartments.findMany({
-          where: { subscriptionRequestId: subreqId },
-        });
-      expect(subOnDep.length).toEqual(0);
+      expect(sub).toMatchObject({ status: "REJECTED" });
     });
   });
 });

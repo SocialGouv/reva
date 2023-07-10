@@ -10,7 +10,7 @@ interface RejectSubscriptionRequestDeps {
   getSubscriptionRequestById: (
     id: string
   ) => Promise<Either<string, Maybe<SubscriptionRequest>>>;
-  deleteSubscriptionRequestById: (id: string) => Promise<Either<string, void>>;
+  rejectSubscriptionRequestById: (id: string) => Promise<Either<string, void>>;
   sendRejectionEmail: ({
     email,
     reason,
@@ -71,20 +71,20 @@ export const rejectSubscriptionRequest = async (
       );
     });
 
-  const deleteSubscriptionRequest = EitherAsync.fromPromise(async () =>
-    (await deps.deleteSubscriptionRequestById(params.subscriptionRequestId))
+  const rejectSubscriptionRequest = EitherAsync.fromPromise(async () =>
+    (await deps.rejectSubscriptionRequestById(params.subscriptionRequestId))
       .mapLeft(
         (error: string) =>
           new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, error)
       )
       .ifRight(() => {
         logger.info(
-          `[rejectSubscriptionRequestDeps] Successfuly deleted subscriptionRequest ${$store.subreq?.id}`
+          `[rejectSubscriptionRequestDeps] Successfuly rejected subscriptionRequest ${$store.subreq?.id}`
         );
       })
   );
 
   return getSubscriptionRequest
     .chain(() => sendEmail)
-    .chain(() => deleteSubscriptionRequest);
+    .chain(() => rejectSubscriptionRequest);
 };

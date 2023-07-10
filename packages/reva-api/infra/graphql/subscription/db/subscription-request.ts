@@ -126,6 +126,24 @@ export const deleteSubscriptionRequestById = async (
   }
 };
 
+export const rejectSubscriptionRequestById = async (
+  id: string
+): Promise<Either<string, SubscriptionRequest>> => {
+  try {
+    return Right(
+      await prismaClient.subscriptionRequest.update({
+        where: { id },
+        data: {
+          status: "REJECTED",
+        },
+      })
+    );
+  } catch (e) {
+    logger.error(e);
+    return Left("La suppression de la demande d'inscription a échoué");
+  }
+};
+
 export const getSubscriptionRequestsCount = async (
   params: GetSubscriptionRequestsParams
 ): Promise<Either<string, number>> => {

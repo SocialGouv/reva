@@ -112,7 +112,7 @@ const unsafeResolvers = {
       const result = await domain.rejectSubscriptionRequest(
         {
           getSubscriptionRequestById: db.getSubscriptionRequestById,
-          deleteSubscriptionRequestById: db.deleteSubscriptionRequestById,
+          rejectSubscriptionRequestById: db.rejectSubscriptionRequestById,
           sendRejectionEmail,
         },
         {
