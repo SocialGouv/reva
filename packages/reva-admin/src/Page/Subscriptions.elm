@@ -9,6 +9,7 @@ module Page.Subscriptions exposing
 import Api.Subscription
 import Api.Token
 import BetaGouv.DSFR.Button as Button
+import BetaGouv.DSFR.Pagination
 import Data.Context exposing (Context)
 import Data.Subscription as Subscription exposing (SubscriptionSummary, SubscriptionSummaryPage)
 import Html exposing (Html, aside, div, h2, h4, li, node, p, text, ul)
@@ -34,11 +35,12 @@ type alias State =
 
 type alias Model =
     { state : State
+    , filters : { page : Int }
     }
 
 
-init : Context -> ( Model, Cmd Msg )
-init context =
+init : Context -> Int -> ( Model, Cmd Msg )
+init context page =
     let
         defaultModel : Model
         defaultModel =
@@ -46,10 +48,11 @@ init context =
                 { subscriptions = RemoteData.Loading
                 , errors = []
                 }
+            , filters = { page = page }
             }
 
         defaultCmd =
-            Api.Subscription.getSubscriptions context.endpoint context.token GotSubscriptionsResponse 1
+            Api.Subscription.getSubscriptions context.endpoint context.token GotSubscriptionsResponse page
     in
     ( defaultModel, defaultCmd )
 
@@ -154,8 +157,14 @@ viewDirectoryPanel context subscriptionSummaryPage actionErrors =
             , class "min-h-0 overflow-y-auto mx-8 px-0"
             , attribute "aria-label" "Inscriptions"
             ]
+    , div [ class "flex justify-center" ] [ viewPager context subscriptionSummaryPage.info.currentPage subscriptionSummaryPage.info.totalPages ]
     , View.popupErrors actionErrors
     ]
+
+
+viewPager : Context -> Int -> Int -> Html Msg
+viewPager context currentPage totalPages =
+    BetaGouv.DSFR.Pagination.view currentPage totalPages (\p -> Route.toString context.baseUrl (Route.Subscriptions { page = p }))
 
 
 viewItem : Context -> SubscriptionSummary -> Html Msg

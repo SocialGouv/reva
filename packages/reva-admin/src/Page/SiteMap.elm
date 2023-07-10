@@ -37,7 +37,7 @@ view context =
 
         subscriptionsLink =
             if Api.Token.isAdmin context.token then
-                viewLink Route.Subscriptions "Inscriptions"
+                viewLink (Route.Subscriptions { page = 1 }) "Inscriptions"
 
             else
                 Html.text ""

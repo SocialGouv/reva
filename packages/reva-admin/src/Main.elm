@@ -20,7 +20,6 @@ import Page.Subscriptions as Subscriptions
 import Route exposing (Route(..))
 import Task
 import Url exposing (Url)
-import View
 import View.Footer
 import View.Header
 import View.Skiplinks
@@ -169,8 +168,8 @@ changeRouteTo context route model =
             Candidacies.init model.context filters.status filters.page
                 |> updateWith Candidacies GotCandidaciesMsg model
 
-        ( Route.Subscriptions, _ ) ->
-            Subscriptions.init model.context
+        ( Route.Subscriptions filters, _ ) ->
+            Subscriptions.init model.context filters.page
                 |> updateWith Subscriptions GotSubscriptionsMsg model
 
         ( Route.Subscription subscriptionId, _ ) ->

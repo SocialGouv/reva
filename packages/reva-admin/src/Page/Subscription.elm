@@ -57,7 +57,7 @@ init context subscriptionId =
                 , onRedirect =
                     Nav.pushUrl
                         context.navKey
-                        (Route.toString context.baseUrl Route.Subscriptions)
+                        (Route.toString context.baseUrl (Route.Subscriptions { page = 1 }))
                 , onValidate = Data.Form.OrganismSubscription.validate
                 , status = Form.Editable
                 }
@@ -155,7 +155,7 @@ viewContent context model subscription =
     in
     View.article
         "subscription"
-        (Route.href context.baseUrl Route.Subscriptions)
+        (Route.href context.baseUrl (Route.Subscriptions { page = 1 }))
         "Toutes les inscriptions"
         [ div
             [ dataTest "directory-item"

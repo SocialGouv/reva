@@ -22,6 +22,10 @@ type alias CandidacyFilters =
     { status : CandidacyStatusFilter, page : Int }
 
 
+type alias SubscriptionFilters =
+    { page : Int }
+
+
 type Route
     = Candidacy Tab.Tab
     | Candidacies CandidacyFilters
@@ -29,7 +33,7 @@ type Route
     | Logout
     | NotFound
     | Subscription String -- Subscription Id
-    | Subscriptions
+    | Subscriptions SubscriptionFilters
     | SiteMap
 
 
@@ -55,6 +59,9 @@ parser baseUrl =
 
         toCandidaciesRoute s p =
             Candidacies (CandidacyFilters (statusStringToStatusFilter s) (Maybe.withDefault 1 (String.toInt (Maybe.withDefault "1" p))))
+
+        toSubscriptionsRoute p =
+            Subscriptions (SubscriptionFilters (Maybe.withDefault 1 (String.toInt (Maybe.withDefault "1" p))))
     in
     s baseUrl
         </> oneOf
@@ -63,7 +70,7 @@ parser baseUrl =
                 , s "auth" </> s "logout" |> map Logout
                 , s "plan-du-site" |> map SiteMap
                 , s "candidacies" <?> Query.string "status" <?> Query.string "page" |> map toCandidaciesRoute
-                , s "subscriptions" |> map Subscriptions
+                , s "subscriptions" <?> Query.string "page" |> map toSubscriptionsRoute
                 , s "subscriptions" </> string |> map Subscription
                 , topLevel string |> candidacyTab Tab.Profile
                 , subLevel "admissibility" |> candidacyTab Tab.Admissibility
@@ -122,8 +129,8 @@ toString baseUrl route =
         Candidacy tab ->
             tabToString topLevel subLevel tab
 
-        Subscriptions ->
-            topLevel [ "subscriptions" ] []
+        Subscriptions filters ->
+            topLevel [ "subscriptions" ] [ Url.Builder.int "page" filters.page ]
 
         Subscription subscriptionId ->
             topLevel [ "subscriptions", subscriptionId ] []
