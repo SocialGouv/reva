@@ -2,6 +2,7 @@ module Data.Subscription exposing (Subscription, SubscriptionSummary, Subscripti
 
 import Admin.Enum.LegalStatus exposing (LegalStatus)
 import Admin.Enum.OrganismTypology exposing (OrganismTypology)
+import Admin.Enum.SubscriptionRequestStatus exposing (SubscriptionRequestStatus)
 import Data.Pagination exposing (PaginationInfo)
 import Data.Referential exposing (ConventionCollective, DepartmentWithOrganismMethods, Domain)
 import Data.Scalar exposing (Timestamp)
@@ -42,4 +43,6 @@ type alias Subscription =
     , ccns : List ConventionCollective
     , departmentsWithOrganismMethods : List DepartmentWithOrganismMethods
     , qualiopiCertificateExpiresAt : Timestamp
+    , status : SubscriptionRequestStatus
+    , rejectionReaseon : Maybe String
     }

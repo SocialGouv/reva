@@ -116,3 +116,8 @@ qualiopiCertificateExpiresAt =
 status : SelectionSet Admin.Enum.SubscriptionRequestStatus.SubscriptionRequestStatus Admin.Object.SubscriptionRequest
 status =
     Object.selectionForField "Enum.SubscriptionRequestStatus.SubscriptionRequestStatus" "status" [] Admin.Enum.SubscriptionRequestStatus.decoder
+
+
+rejectionReason : SelectionSet (Maybe String) Admin.Object.SubscriptionRequest
+rejectionReason =
+    Object.selectionForField "(Maybe String)" "rejectionReason" [] (Decode.string |> Decode.nullable)

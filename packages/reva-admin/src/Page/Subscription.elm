@@ -6,9 +6,10 @@ module Page.Subscription exposing
     , view
     )
 
-import Accessibility exposing (a, dd, dl, dt, h1, h2, hr)
+import Accessibility exposing (a, dd, dl, dt, h1, h2, hr, pre)
 import Admin.Enum.LegalStatus as LegalStatus exposing (LegalStatus(..))
 import Admin.Enum.OrganismTypology exposing (OrganismTypology(..))
+import Admin.Enum.SubscriptionRequestStatus as SubscriptionRequestStatus
 import Api.Form.OrganismSubscription
 import Api.Subscription
 import Browser.Navigation as Nav
@@ -16,7 +17,7 @@ import Data.Context exposing (Context)
 import Data.Form exposing (FormData)
 import Data.Form.OrganismSubscription exposing (Decision(..), Status(..), decisionToString)
 import Data.Referential exposing (DepartmentWithOrganismMethods)
-import Data.Subscription exposing (Subscription, SubscriptionSummary)
+import Data.Subscription exposing (Subscription)
 import Html exposing (Html, div, li, text, ul)
 import Html.Attributes exposing (class, href)
 import Page.Form as Form exposing (Form)
@@ -197,8 +198,13 @@ viewContent context model subscription =
                 [ viewDepartements subscription.departmentsWithOrganismMethods .isRemote ]
             ]
         , hr [ class "mt-8" ] []
-        , Form.view (RemoteData.succeed ()) model.form
-            |> Html.map GotFormMsg
+        , case subscription.status of
+            SubscriptionRequestStatus.Pending ->
+                Form.view (RemoteData.succeed ()) model.form
+                    |> Html.map GotFormMsg
+
+            SubscriptionRequestStatus.Rejected ->
+                div [ class "flex flex-col mb-10" ] [ viewTitle "Motif du refus", pre [ class "mt-6" ] [ text (Maybe.withDefault "" subscription.rejectionReaseon) ] ]
         ]
 
 

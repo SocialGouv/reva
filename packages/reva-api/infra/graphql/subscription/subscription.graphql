@@ -35,6 +35,7 @@ type SubscriptionRequest {
   companyWebsite: String
   qualiopiCertificateExpiresAt: Timestamp!
   status: SubscriptionRequestStatus!
+  rejectionReason: String
 }
 
 type SubscriptionRequestOnDomaine {

@@ -148,6 +148,8 @@ selection =
         |> with (Admin.Object.SubscriptionRequest.subscriptionRequestOnConventionCollective subscriptionRequestOnConventionCollectiveSelection)
         |> with (Admin.Object.SubscriptionRequest.departmentsWithOrganismMethods Api.Referential.departmentWithOrganismMethodsSelection)
         |> with Admin.Object.SubscriptionRequest.qualiopiCertificateExpiresAt
+        |> with Admin.Object.SubscriptionRequest.status
+        |> with Admin.Object.SubscriptionRequest.rejectionReason
 
 
 subscriptionRequestOnDomainSelection : SelectionSet Data.Referential.Domain Admin.Object.SubscriptionRequestOnDomaine
