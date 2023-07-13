@@ -1,13 +1,16 @@
 module Route exposing
     ( CandidacyFilters
     , Route(..)
+    , SubscriptionFilters
     , emptyCandidacyFilters
+    , emptySubscriptionFilters
     , fromUrl
     , href
     , toString
     )
 
 import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
+import Admin.Enum.SubscriptionRequestStatus as SubscriptionRequestStatus exposing (SubscriptionRequestStatus(..))
 import Data.Candidacy exposing (CandidacyId, candidacyIdFromString, candidacyIdToString)
 import Html exposing (Html)
 import Html.Attributes
@@ -23,7 +26,7 @@ type alias CandidacyFilters =
 
 
 type alias SubscriptionFilters =
-    { page : Int }
+    { status : SubscriptionRequestStatus, page : Int }
 
 
 type Route
@@ -42,6 +45,11 @@ emptyCandidacyFilters =
     { status = CandidacyStatusFilter.ActiveHorsAbandon, page = 1 }
 
 
+emptySubscriptionFilters : SubscriptionFilters
+emptySubscriptionFilters =
+    { status = SubscriptionRequestStatus.Pending, page = 1 }
+
+
 parser : String -> Parser (Route -> a) a
 parser baseUrl =
     let
@@ -54,14 +62,17 @@ parser baseUrl =
         subLevel path =
             topLevel (string </> s path)
 
-        statusStringToStatusFilter s =
+        candidacyStatusStringToStatusFilter s =
             Maybe.withDefault CandidacyStatusFilter.ActiveHorsAbandon (CandidacyStatusFilter.fromString (Maybe.withDefault "" s))
 
         toCandidaciesRoute s p =
-            Candidacies (CandidacyFilters (statusStringToStatusFilter s) (Maybe.withDefault 1 (String.toInt (Maybe.withDefault "1" p))))
+            Candidacies (CandidacyFilters (candidacyStatusStringToStatusFilter s) (Maybe.withDefault 1 (String.toInt (Maybe.withDefault "1" p))))
 
-        toSubscriptionsRoute p =
-            Subscriptions (SubscriptionFilters (Maybe.withDefault 1 (String.toInt (Maybe.withDefault "1" p))))
+        subscriptionStatusStringToStatusFilter s =
+            Maybe.withDefault SubscriptionRequestStatus.Pending (SubscriptionRequestStatus.fromString (Maybe.withDefault "" s))
+
+        toSubscriptionsRoute s p =
+            Subscriptions (SubscriptionFilters (subscriptionStatusStringToStatusFilter s) (Maybe.withDefault 1 (String.toInt (Maybe.withDefault "1" p))))
     in
     s baseUrl
         </> oneOf
@@ -70,7 +81,7 @@ parser baseUrl =
                 , s "auth" </> s "logout" |> map Logout
                 , s "plan-du-site" |> map SiteMap
                 , s "candidacies" <?> Query.string "status" <?> Query.string "page" |> map toCandidaciesRoute
-                , s "subscriptions" <?> Query.string "page" |> map toSubscriptionsRoute
+                , s "subscriptions" <?> Query.string "status" <?> Query.string "page" |> map toSubscriptionsRoute
                 , s "subscriptions" </> string |> map Subscription
                 , topLevel string |> candidacyTab Tab.Profile
                 , subLevel "admissibility" |> candidacyTab Tab.Admissibility
@@ -130,7 +141,7 @@ toString baseUrl route =
             tabToString topLevel subLevel tab
 
         Subscriptions filters ->
-            topLevel [ "subscriptions" ] [ Url.Builder.int "page" filters.page ]
+            topLevel [ "subscriptions" ] [ Url.Builder.string "status" (SubscriptionRequestStatus.toString filters.status), Url.Builder.int "page" filters.page ]
 
         Subscription subscriptionId ->
             topLevel [ "subscriptions", subscriptionId ] []

@@ -6,14 +6,16 @@ module Page.Subscriptions exposing
     , view
     )
 
+import Admin.Enum.SubscriptionRequestStatus as SubscriptionRequestStatus exposing (SubscriptionRequestStatus(..))
+import Admin.Object.Admissibility exposing (status)
 import Api.Subscription
 import Api.Token
 import BetaGouv.DSFR.Button as Button
 import BetaGouv.DSFR.Pagination
 import Data.Context exposing (Context)
-import Data.Subscription as Subscription exposing (SubscriptionSummary, SubscriptionSummaryPage)
-import Html exposing (Html, aside, div, h2, h4, li, node, p, text, ul)
-import Html.Attributes exposing (attribute, class)
+import Data.Subscription exposing (SubscriptionSummary, SubscriptionSummaryPage)
+import Html exposing (Html, a, div, h2, h4, li, p, text, ul)
+import Html.Attributes exposing (attribute, class, classList)
 import RemoteData exposing (RemoteData(..))
 import Route
 import String exposing (String)
@@ -33,14 +35,18 @@ type alias State =
     }
 
 
+type alias Filters =
+    { page : Int, status : SubscriptionRequestStatus }
+
+
 type alias Model =
     { state : State
-    , filters : { page : Int }
+    , filters : Filters
     }
 
 
-init : Context -> Int -> ( Model, Cmd Msg )
-init context page =
+init : Context -> SubscriptionRequestStatus -> Int -> ( Model, Cmd Msg )
+init context statusFilter page =
     let
         defaultModel : Model
         defaultModel =
@@ -48,11 +54,11 @@ init context page =
                 { subscriptions = RemoteData.Loading
                 , errors = []
                 }
-            , filters = { page = page }
+            , filters = { page = page, status = statusFilter }
             }
 
         defaultCmd =
-            Api.Subscription.getSubscriptions context.endpoint context.token GotSubscriptionsResponse page
+            Api.Subscription.getSubscriptions context.endpoint context.token GotSubscriptionsResponse page statusFilter
     in
     ( defaultModel, defaultCmd )
 
@@ -82,8 +88,9 @@ view context model =
             View.layout
                 ""
                 [ viewCandidaciesLink context ]
-                []
-                [ viewDirectoryHeader context 0
+                [ viewFilterLinks context model.filters.status
+                ]
+                [ viewDirectoryHeader context 0 model.filters.status
                 , div
                     [ class "py-3 px-10" ]
                     [ View.skeleton "mb-10 h-6 w-56"
@@ -99,24 +106,39 @@ view context model =
 
         Success subscriptions ->
             subscriptions
-                |> viewContent context model.state.errors
+                |> viewContent context model.state.errors model.filters.status
 
 
 viewContent :
     Context
     -> List String
+    -> SubscriptionRequestStatus
     -> SubscriptionSummaryPage
     -> Html Msg
-viewContent context actionErrors filteredSubscriptions =
+viewContent context actionErrors statusFilter subscriptionPage =
     View.layout
         ""
         [ viewCandidaciesLink context ]
-        []
-        (viewDirectoryPanel context filteredSubscriptions actionErrors)
+        [ viewFilterLinks context statusFilter
+        ]
+        (viewDirectoryPanel context subscriptionPage statusFilter actionErrors)
 
 
-viewDirectoryHeader : Context -> Int -> Html Msg
-viewDirectoryHeader context waitingSubscriptionsCount =
+viewDirectoryHeader :
+    Context
+    -> Int
+    -> SubscriptionRequestStatus
+    -> Html Msg
+viewDirectoryHeader context waitingSubscriptionsCount statusFilter =
+    let
+        statusString =
+            case statusFilter of
+                Pending ->
+                    "en attente"
+
+                Rejected ->
+                    "refusées"
+    in
     div
         [ class "px-8 pt-10 pb-4" ]
         [ h2
@@ -133,7 +155,9 @@ viewDirectoryHeader context waitingSubscriptionsCount =
         , h4
             [ class "mb-2" ]
             [ text
-                ("Inscriptions en attente ("
+                ("Inscriptions "
+                    ++ statusString
+                    ++ " ("
                     ++ String.fromInt waitingSubscriptionsCount
                     ++ ")"
                 )
@@ -148,23 +172,23 @@ viewErrorItem error =
         [ text error ]
 
 
-viewDirectoryPanel : Context -> SubscriptionSummaryPage -> List String -> List (Html Msg)
-viewDirectoryPanel context subscriptionSummaryPage actionErrors =
-    [ viewDirectoryHeader context subscriptionSummaryPage.info.totalRows
+viewDirectoryPanel : Context -> SubscriptionSummaryPage -> SubscriptionRequestStatus -> List String -> List (Html Msg)
+viewDirectoryPanel context subscriptionSummaryPage statusFilter actionErrors =
+    [ viewDirectoryHeader context subscriptionSummaryPage.info.totalRows statusFilter
     , List.map (viewItem context) subscriptionSummaryPage.rows
         |> ul
             [ dataTest "directory"
             , class "min-h-0 overflow-y-auto mx-8 px-0"
             , attribute "aria-label" "Inscriptions"
             ]
-    , div [ class "flex justify-center" ] [ viewPager context subscriptionSummaryPage.info.currentPage subscriptionSummaryPage.info.totalPages ]
+    , div [ class "flex justify-center" ] [ viewPager context subscriptionSummaryPage.info.currentPage subscriptionSummaryPage.info.totalPages statusFilter ]
     , View.popupErrors actionErrors
     ]
 
 
-viewPager : Context -> Int -> Int -> Html Msg
-viewPager context currentPage totalPages =
-    BetaGouv.DSFR.Pagination.view currentPage totalPages (\p -> Route.toString context.baseUrl (Route.Subscriptions { page = p }))
+viewPager : Context -> Int -> Int -> SubscriptionRequestStatus -> Html Msg
+viewPager context currentPage totalPages statusFilter =
+    BetaGouv.DSFR.Pagination.view currentPage totalPages (\p -> Route.toString context.baseUrl (Route.Subscriptions { status = statusFilter, page = p }))
 
 
 viewItem : Context -> SubscriptionSummary -> Html Msg
@@ -234,3 +258,39 @@ viewCandidaciesLink context =
         , Route.href context.baseUrl (Route.Candidacies Route.emptyCandidacyFilters)
         ]
         [ text "Voir les candidatures" ]
+
+
+viewFilterLinks : Context -> SubscriptionRequestStatus -> Html msg
+viewFilterLinks context statusFilter =
+    ul
+        []
+        [ viewFilterLink context statusFilter SubscriptionRequestStatus.Pending "Inscriptions en attente"
+        , viewFilterLink context statusFilter SubscriptionRequestStatus.Rejected "Inscriptions refusées"
+        ]
+
+
+viewFilterLink : Context -> SubscriptionRequestStatus -> SubscriptionRequestStatus -> String -> Html msg
+viewFilterLink context currentStatus linkStatus label =
+    let
+        isSelected =
+            currentStatus == linkStatus
+    in
+    li
+        []
+        [ a
+            [ class "block group my-4 py-1 px-2"
+            , class "flex items-start justify-between transition"
+            , class "border-l-2 border-transparent"
+            , classList
+                [ ( "text-blue-900 border-blue-900"
+                  , isSelected
+                  )
+                , ( "hover:text-blue-900"
+                  , not isSelected
+                  )
+                ]
+            , Route.href context.baseUrl <|
+                Route.Subscriptions { status = linkStatus, page = 1 }
+            ]
+            [ text label ]
+        ]

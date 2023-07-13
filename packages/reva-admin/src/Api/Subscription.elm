@@ -64,10 +64,11 @@ getSubscriptions :
     -> Token
     -> (RemoteData (List String) Data.Subscription.SubscriptionSummaryPage -> msg)
     -> Int
+    -> SubscriptionRequestStatus
     -> Cmd msg
-getSubscriptions endpointGraphql token toMsg page =
+getSubscriptions endpointGraphql token toMsg page status =
     Query.subscription_getSubscriptionRequests
-        (\optionals -> { optionals | limit = Present 10, offset = Present ((page - 1) * 10), status = Present Pending, orderBy = Present { accountLastname = Absent, companyName = Absent, createdAt = Present Admin.Enum.Sort.Desc } })
+        (\optionals -> { optionals | limit = Present 10, offset = Present ((page - 1) * 10), status = Present status, orderBy = Present { accountLastname = Absent, companyName = Absent, createdAt = Present Admin.Enum.Sort.Desc } })
         subscriptionSummaryPageSelection
         |> Auth.makeQuery "getSubscriptions" endpointGraphql token toMsg
 
