@@ -7,8 +7,9 @@
 
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Accès à l’espace professionnel de France VAE" />
 
-    <title>France VAE</title>
+    <title>France VAE | Connexion à l'espace professionnel</title>
 
     <link href="${url.resourcesPath}/css/main.min.css" rel="stylesheet" />
     <link href="${url.resourcesPath}/css/dsfr.css" rel="stylesheet" />
