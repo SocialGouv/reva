@@ -138,7 +138,7 @@ view context model =
                     , class "md:text-lg text-gray-900 hover:text-blue-900"
                     , Route.href context.baseUrl (Route.Subscriptions Route.emptySubscriptionFilters)
                     ]
-                    [ text "Validation des inscriptions en attente" ]
+                    [ text "Voir les inscriptions" ]
                 ]
 
             else
