@@ -36,6 +36,7 @@
     }
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.195",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.21",
     "rimraf": "^4.1.2",
