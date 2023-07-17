@@ -79,6 +79,25 @@ export const sendLoginEmail = async (email: string, token: string) => {
   return sendEmailWithLink(email, token, "login", htmlContent);
 };
 
+export const sendUnknownUserEmail = async (email: string) => {
+  const htmlContent = `Vous avez demandé à recevoir un lien pour vous connecter mais votre e-mail n’existe pas dans notre base.
+    <br>
+    <ul>
+      <li>Si vous avez un dossier dépendant du site de l’Education Nationale (ex : DAVA), votre candidature est disponible sur le site dédié https://vae.education.gouv.fr/.</li>
+      <li>Si vous avez plusieurs adresses e-mails, peut-être n’avez-vous pas renseigné la bonne pour retrouver votre dossier.</li>
+      <li>Si vous n’avez pas encore créé de compte, vous devez d’abord vous inscrire (https://vae.gouv.fr/app/login/).</li>
+    </ul>
+    <br>
+    L’équipe France VAE`;
+
+  return sendGenericEmail({
+    htmlContent: htmlContent,
+    to: { email },
+    subject:
+      "Nous n’avons pas trouvé de compte France VAE correspondant à votre e-mail",
+  });
+};
+
 const sendEmailWithLink = async (
   email: string,
   token: string,

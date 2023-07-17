@@ -4,9 +4,13 @@ import { CandidateLoginInput } from "../types/candidate";
 import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
 
 interface AskForLoginDeps {
+  doesUserExists: (params: { userEmail: string }) => Promise<boolean>;
   generateJWTForLogin: (
     params: CandidateLoginInput
   ) => Promise<Either<string, string>>;
+  sendUnknownUserEmail: (params: {
+    email: string;
+  }) => Promise<Either<string, string>>;
   sendLoginEmail: (params: {
     email: string;
     token: string;
@@ -33,7 +37,21 @@ export const askForLogin = (deps: AskForLoginDeps) => async (email: string) => {
         )
     );
 
-  return generateJWTForLogin.chain((token: string) =>
-    sendLoginEmail({ email, token })
-  );
+  const sendMagicLinkEmail = () =>
+    generateJWTForLogin.chain((token: string) =>
+      sendLoginEmail({ email, token })
+    );
+
+  const sendUnknownUserEmail = () =>
+    EitherAsync.fromPromise(() => deps.sendUnknownUserEmail({ email })).mapLeft(
+      (error) =>
+        new FunctionalError(
+          FunctionalCodeError.CANDIDATE_LOGIN_EMAIL_ERROR,
+          error
+        )
+    );
+
+  return (await deps.doesUserExists({ userEmail: email }))
+    ? sendMagicLinkEmail()
+    : sendUnknownUserEmail();
 };

@@ -13,7 +13,11 @@ import { getCandidateWithCandidacy } from "../../../domain/features/candidateGet
 import { getCandidateByEmail } from "../../../domain/features/getCandidateByEmail";
 import { updateCandidate } from "../../../domain/features/updateCandidate";
 import * as candidatesDb from "../../database/postgres/candidates";
-import { sendLoginEmail, sendRegistrationEmail } from "../../email";
+import {
+  sendLoginEmail,
+  sendRegistrationEmail,
+  sendUnknownUserEmail,
+} from "../../email";
 import { logger } from "../../logger";
 
 const generateJwt = (data: unknown, expiresIn: number = 15 * 60) => {
@@ -274,11 +278,33 @@ export const resolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
-    candidate_askForLogin: async (_: unknown, params: { email: string }) => {
+    candidate_askForLogin: async (
+      _: unknown,
+      params: { email: string },
+      context: {
+        app: {
+          getKeycloakAdmin: () => KeycloakAdminClient;
+        };
+      }
+    ) => {
+      const keycloakAdmin = await context.app.getKeycloakAdmin();
+
+      const doesUserExists = async ({ userEmail }: { userEmail: string }) =>
+        !!(
+          await keycloakAdmin.users.find({
+            max: 1,
+            realm: process.env.KEYCLOAK_APP_REALM,
+            email: userEmail,
+            exact: true,
+          })
+        ).length;
+
       const result = await askForLogin({
+        doesUserExists,
         generateJWTForLogin: async (data: unknown) =>
           Right(generateJwt(data, 1 * 60 * 60)),
         sendLoginEmail: async (data) => sendLoginEmail(data.email, data.token),
+        sendUnknownUserEmail: async (data) => sendUnknownUserEmail(data.email),
       })(params.email);
 
       return result
