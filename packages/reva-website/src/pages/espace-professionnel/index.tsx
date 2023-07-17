@@ -176,25 +176,57 @@ const TypologiesAAP = () => (
         <br />
         <div className="fr-accordions-group mb-14">
           <Accordion label="Structure généraliste" defaultExpanded={true}>
-            Les Architectes Accompagnateurs de Parcours des structures
-            généralistes assurent l’accompagnement des candidats depuis leur
-            candidature jusqu’à l’entretien post-jury sur l’ensemble des
-            certifications, quelle que soit la filière, exceptées les
-            certifications de branches.
+            <p>
+              Les Architectes Accompagnateurs de Parcours des structures
+              généralistes assurent l’accompagnement des candidats depuis leur
+              candidature jusqu’à l’entretien post-jury sur l’ensemble des
+              certifications, quelle que soit la filière, exceptées les
+              certifications de branches.
+            </p>
+            <a
+              className="fr-link"
+              href="https://airtable.com/shrTDCbwwBI4xLLo9/tblWDa9HN0cuqLnAl"
+              target="_blank"
+              title="Retrouvez l'ensemble des certifications vous concernant - nouvelle page"
+            >
+              Retrouvez l'ensemble des certifications vous concernant
+            </a>
           </Accordion>
           <Accordion label="Structure experte de filière(s) ou de sous-filière(s)">
-            Les Architectes Accompagnateurs de Parcours des structures expertes
-            de filière ou de sous-filière assurent l’accompagnement depuis leur
-            candidature jusqu’à l’entretien post-jury sur l’ensemble des
-            certifications d’une ou plusieurs filières ou sous-filières, qu’ils
-            auront choisies (plusieurs filières possibles). Ils peuvent être
-            également expert d’une branche professionnelle.
+            <p>
+              Les Architectes Accompagnateurs de Parcours des structures
+              expertes de filière ou de sous-filière assurent l’accompagnement
+              depuis leur candidature jusqu’à l’entretien post-jury sur
+              l’ensemble des certifications d’une ou plusieurs filières ou
+              sous-filières, qu’ils auront choisies (plusieurs filières
+              possibles). Ils peuvent être également expert d’une branche
+              professionnelle.
+            </p>
+            <a
+              className="fr-link"
+              href="https://airtable.com/shrTDCbwwBI4xLLo9/tblWDa9HN0cuqLnAl"
+              target="_blank"
+              title="Retrouvez l'ensemble des certifications vous concernant - nouvelle page"
+            >
+              Retrouvez l'ensemble des certifications vous concernant
+            </a>
           </Accordion>
           <Accordion label="Structure experte de branche">
-            Les Architectes Accompagnateurs de Parcours des structures expertes
-            de branche assurent l’accompagnement depuis leur candidature jusqu’à
-            l’entretien post-jury sur l’ensemble des certifications relevant du
-            champ conventionnel d'une ou plusieurs branches professionnelles.
+            <p>
+              Les Architectes Accompagnateurs de Parcours des structures
+              expertes de branche assurent l’accompagnement depuis leur
+              candidature jusqu’à l’entretien post-jury sur l’ensemble des
+              certifications relevant du champ conventionnel d'une ou plusieurs
+              branches professionnelles.
+            </p>
+            <a
+              className="fr-link"
+              href="https://airtable.com/shrWVrEQJuZNC7F6U/tblWDa9HN0cuqLnAl"
+              target="_blank"
+              title="Retrouvez l'ensemble des certifications vous concernant - nouvelle page"
+            >
+              Retrouvez l'ensemble des certifications vous concernant
+            </a>
           </Accordion>
         </div>
         <Button
