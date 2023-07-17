@@ -168,7 +168,7 @@ export const CertificationsInfoStepForm = ({
                       target="_blank"
                       title="Retrouvez l'ensemble des certifications vous concernant - nouvelle page"
                     >
-                      Retrouvez l'ensemble des certifications vous concernant.
+                      Retrouvez l'ensemble des certifications vous concernant
                     </a>
                   </>
                 }
@@ -194,7 +194,7 @@ export const CertificationsInfoStepForm = ({
                         target="_blank"
                         title="Retrouvez l'ensemble des certifications vous concernant - nouvelle page"
                       >
-                        Retrouvez l'ensemble des certifications vous concernant.
+                        Retrouvez l'ensemble des certifications vous concernant
                       </a>
                     </>
                   }
@@ -241,7 +241,7 @@ export const CertificationsInfoStepForm = ({
                         target="_blank"
                         title="Retrouvez l'ensemble des certifications vous concernant - nouvelle page"
                       >
-                        Retrouvez l'ensemble des certifications vous concernant.
+                        Retrouvez l'ensemble des certifications vous concernant
                       </a>
                     </>
                   }
