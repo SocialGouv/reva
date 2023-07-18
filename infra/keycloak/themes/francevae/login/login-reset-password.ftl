@@ -15,16 +15,6 @@
                             <div>
 
                                 <form id="kc-reset-password-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
-                                    <div class="fr-alert fr-alert--info">
-                                        <ul>
-                                            <li>Votre mot de passe doit contenir au moins 14 caractères.</li>
-                                            <li>Il doit inclure au moins une lettre majuscule.</li>
-                                            <li>Il doit inclure au moins une lettre minuscule.</li>
-                                            <li>Il doit inclure au moins un chiffre.</li>
-                                            <li>Il doit inclure au moins un caractère spécial.</li>
-                                        </ul>
-                                    </div>
-                                    <br>
                                     <#if messagesPerField.existsError('username')>
                                         <div class="fr-alert fr-alert--error" role="alert">
                                             <h3 class="fr-alert__title">Une erreur est survenue</h3>
