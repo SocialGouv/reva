@@ -45,4 +45,5 @@ type alias Subscription =
     , qualiopiCertificateExpiresAt : Timestamp
     , status : SubscriptionRequestStatus
     , rejectionReaseon : Maybe String
+    , isCompanyNameUnique : Bool
     }

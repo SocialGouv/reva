@@ -150,6 +150,7 @@ selection =
         |> with Admin.Object.SubscriptionRequest.qualiopiCertificateExpiresAt
         |> with Admin.Object.SubscriptionRequest.status
         |> with Admin.Object.SubscriptionRequest.rejectionReason
+        |> with Admin.Object.SubscriptionRequest.isCompanyNameUnique
 
 
 subscriptionRequestOnDomainSelection : SelectionSet Data.Referential.Domain Admin.Object.SubscriptionRequestOnDomaine

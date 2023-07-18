@@ -19,6 +19,12 @@ interface getSubscriptionRequestsParams extends FilteredPaginatedListArgs {
 }
 
 const unsafeResolvers = {
+  SubscriptionRequest: {
+    isCompanyNameUnique: async ({ companyName }: { companyName: string }) =>
+      !(await OrganismDb.doesOrganismWithSameLabelExludingThoseInExperimentationExists(
+        companyName
+      )),
+  },
   Query: {
     subscription_getSubscriptionRequests: async (
       _parent: unknown,

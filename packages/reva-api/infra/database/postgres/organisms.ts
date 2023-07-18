@@ -255,3 +255,10 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
     return Left(`error while retreiving organism`);
   }
 };
+
+export const doesOrganismWithSameLabelExludingThoseInExperimentationExists =
+  async (label: string) =>
+    !!(await prismaClient.organism.findFirst({
+      select: { id: true },
+      where: { typology: { not: "experimentation" }, label },
+    }));

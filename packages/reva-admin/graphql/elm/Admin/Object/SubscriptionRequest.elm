@@ -121,3 +121,8 @@ status =
 rejectionReason : SelectionSet (Maybe String) Admin.Object.SubscriptionRequest
 rejectionReason =
     Object.selectionForField "(Maybe String)" "rejectionReason" [] (Decode.string |> Decode.nullable)
+
+
+isCompanyNameUnique : SelectionSet Bool Admin.Object.SubscriptionRequest
+isCompanyNameUnique =
+    Object.selectionForField "Bool" "isCompanyNameUnique" [] Decode.bool

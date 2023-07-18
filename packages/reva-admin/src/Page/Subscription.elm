@@ -20,6 +20,7 @@ import Data.Referential exposing (DepartmentWithOrganismMethods)
 import Data.Subscription exposing (Subscription)
 import Html exposing (Html, div, li, text, ul)
 import Html.Attributes exposing (class, href)
+import Html.Attributes.Extra exposing (role)
 import Page.Form as Form exposing (Form)
 import RemoteData exposing (RemoteData(..))
 import Route
@@ -198,6 +199,15 @@ viewContent context model subscription =
                 [ viewDepartements subscription.departmentsWithOrganismMethods .isRemote ]
             ]
         , hr [ class "mt-8" ] []
+        , if not subscription.isCompanyNameUnique then
+            div
+                [ class "fr-alert fr-alert--warning"
+                , role "alert"
+                ]
+                [ text "Une structure portant la même raison sociale existe déjà." ]
+
+          else
+            text ""
         , case subscription.status of
             SubscriptionRequestStatus.Pending ->
                 Form.view (RemoteData.succeed ()) model.form
