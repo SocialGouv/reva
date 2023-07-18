@@ -26,7 +26,7 @@ const defaultValidFundingRequest: FundingRequestInput = {
   mandatoryTrainings: [
     {
       id: "111",
-      label: "Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU)",
+      label: "Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU 2)",
     },
     {
       id: "222",

@@ -350,7 +350,7 @@ export const mapFundingRequestBatch = ({
     ) =>
       mandatoryTrainings.map((m) => {
         switch (m.label) {
-          case "Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU)":
+          case "Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU 2)":
             return "0";
           case "Equipier de Première Intervention":
             return "1";
