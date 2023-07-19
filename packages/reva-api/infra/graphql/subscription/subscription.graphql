@@ -28,7 +28,7 @@ type SubscriptionRequest {
   accountLastname: String!
   accountEmail: String!
   accountPhoneNumber: String!
-  typology: OrganismTypology!
+  typology: SubscriptionOrganismTypology!
   subscriptionRequestOnDomaine: [SubscriptionRequestOnDomaine!]!
   subscriptionRequestOnConventionCollective: [SubscriptionRequestOnConventionCollective!]!
   departmentsWithOrganismMethods: [DepartmentWithOrganismMethods!]!
@@ -86,7 +86,7 @@ type Query {
   ): SubscriptionRequest
 }
 
-enum OrganismTypology {
+enum SubscriptionOrganismTypology {
   generaliste
   expertFiliere
   expertBranche
@@ -103,7 +103,7 @@ input SubscriptionRequestInput {
   accountLastname: String!
   accountEmail: String!
   accountPhoneNumber: String!
-  typology: OrganismTypology!
+  typology: SubscriptionOrganismTypology!
   domaineIds: [String!]
   ccnIds: [String!]
   onSiteDepartmentsIds: [ID!]!

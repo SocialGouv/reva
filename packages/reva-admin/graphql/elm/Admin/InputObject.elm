@@ -11,8 +11,8 @@ import Admin.Enum.Duration
 import Admin.Enum.ExamResult
 import Admin.Enum.Gender
 import Admin.Enum.LegalStatus
-import Admin.Enum.OrganismTypology
 import Admin.Enum.Sort
+import Admin.Enum.SubscriptionOrganismTypology
 import Admin.Interface
 import Admin.Object
 import Admin.Scalar
@@ -647,7 +647,7 @@ type alias SubscriptionRequestInputRequiredFields =
     , accountLastname : String
     , accountEmail : String
     , accountPhoneNumber : String
-    , typology : Admin.Enum.OrganismTypology.OrganismTypology
+    , typology : Admin.Enum.SubscriptionOrganismTypology.SubscriptionOrganismTypology
     , onSiteDepartmentsIds : List Data.Scalar.Id
     , remoteDepartmentsIds : List Data.Scalar.Id
     , qualiopiCertificateExpiresAt : Data.Scalar.Timestamp
@@ -674,7 +674,7 @@ type alias SubscriptionRequestInput =
     , accountLastname : String
     , accountEmail : String
     , accountPhoneNumber : String
-    , typology : Admin.Enum.OrganismTypology.OrganismTypology
+    , typology : Admin.Enum.SubscriptionOrganismTypology.SubscriptionOrganismTypology
     , domaineIds : OptionalArgument (List String)
     , ccnIds : OptionalArgument (List String)
     , onSiteDepartmentsIds : List Data.Scalar.Id
@@ -689,7 +689,7 @@ type alias SubscriptionRequestInput =
 encodeSubscriptionRequestInput : SubscriptionRequestInput -> Value
 encodeSubscriptionRequestInput input____ =
     Encode.maybeObject
-        [ ( "companySiret", Encode.string input____.companySiret |> Just ), ( "companyLegalStatus", Encode.enum Admin.Enum.LegalStatus.toString input____.companyLegalStatus |> Just ), ( "companyName", Encode.string input____.companyName |> Just ), ( "companyAddress", Encode.string input____.companyAddress |> Just ), ( "companyZipCode", Encode.string input____.companyZipCode |> Just ), ( "companyCity", Encode.string input____.companyCity |> Just ), ( "accountFirstname", Encode.string input____.accountFirstname |> Just ), ( "accountLastname", Encode.string input____.accountLastname |> Just ), ( "accountEmail", Encode.string input____.accountEmail |> Just ), ( "accountPhoneNumber", Encode.string input____.accountPhoneNumber |> Just ), ( "typology", Encode.enum Admin.Enum.OrganismTypology.toString input____.typology |> Just ), ( "domaineIds", (Encode.string |> Encode.list) |> Encode.optional input____.domaineIds ), ( "ccnIds", (Encode.string |> Encode.list) |> Encode.optional input____.ccnIds ), ( "onSiteDepartmentsIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.list) input____.onSiteDepartmentsIds |> Just ), ( "remoteDepartmentsIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.list) input____.remoteDepartmentsIds |> Just ), ( "companyWebsite", Encode.string |> Encode.optional input____.companyWebsite ), ( "qualiopiCertificateExpiresAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) input____.qualiopiCertificateExpiresAt |> Just ) ]
+        [ ( "companySiret", Encode.string input____.companySiret |> Just ), ( "companyLegalStatus", Encode.enum Admin.Enum.LegalStatus.toString input____.companyLegalStatus |> Just ), ( "companyName", Encode.string input____.companyName |> Just ), ( "companyAddress", Encode.string input____.companyAddress |> Just ), ( "companyZipCode", Encode.string input____.companyZipCode |> Just ), ( "companyCity", Encode.string input____.companyCity |> Just ), ( "accountFirstname", Encode.string input____.accountFirstname |> Just ), ( "accountLastname", Encode.string input____.accountLastname |> Just ), ( "accountEmail", Encode.string input____.accountEmail |> Just ), ( "accountPhoneNumber", Encode.string input____.accountPhoneNumber |> Just ), ( "typology", Encode.enum Admin.Enum.SubscriptionOrganismTypology.toString input____.typology |> Just ), ( "domaineIds", (Encode.string |> Encode.list) |> Encode.optional input____.domaineIds ), ( "ccnIds", (Encode.string |> Encode.list) |> Encode.optional input____.ccnIds ), ( "onSiteDepartmentsIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.list) input____.onSiteDepartmentsIds |> Just ), ( "remoteDepartmentsIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.list) input____.remoteDepartmentsIds |> Just ), ( "companyWebsite", Encode.string |> Encode.optional input____.companyWebsite ), ( "qualiopiCertificateExpiresAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) input____.qualiopiCertificateExpiresAt |> Just ) ]
 
 
 buildSubscriptionRequestOrderByInput :

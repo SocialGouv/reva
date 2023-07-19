@@ -4,6 +4,7 @@
 
 module Admin.Object.Organism exposing (..)
 
+import Admin.Enum.OrganismTypology
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -47,3 +48,8 @@ city =
 contactAdministrativeEmail : SelectionSet String Admin.Object.Organism
 contactAdministrativeEmail =
     Object.selectionForField "String" "contactAdministrativeEmail" [] Decode.string
+
+
+typology : SelectionSet Admin.Enum.OrganismTypology.OrganismTypology Admin.Object.Organism
+typology =
+    Object.selectionForField "Enum.OrganismTypology.OrganismTypology" "typology" [] Admin.Enum.OrganismTypology.decoder

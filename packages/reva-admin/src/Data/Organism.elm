@@ -1,5 +1,7 @@
 module Data.Organism exposing (Organism)
 
+import Admin.Enum.OrganismTypology exposing (OrganismTypology)
+
 
 type alias Organism =
     { id : String
@@ -8,4 +10,5 @@ type alias Organism =
     , zip : String
     , city : String
     , contactAdministrativeEmail : String
+    , typology : OrganismTypology
     }

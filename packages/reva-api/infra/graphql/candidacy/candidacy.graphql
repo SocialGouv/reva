@@ -135,6 +135,14 @@ type CandidateGoal {
   additionalInformation: String
 }
 
+enum OrganismTypology {
+  experimentation
+  generaliste
+  expertFiliere
+  expertBranche
+  expertBrancheEtFiliere
+}
+
 type Organism {
   id: UUID!
   label: String!
@@ -142,6 +150,7 @@ type Organism {
   zip: String!
   city: String!
   contactAdministrativeEmail: String!
+  typology: OrganismTypology!
 }
 
 type Training {

@@ -297,3 +297,4 @@ organismSelection =
         |> with Admin.Object.Organism.zip
         |> with Admin.Object.Organism.city
         |> with Admin.Object.Organism.contactAdministrativeEmail
+        |> with Admin.Object.Organism.typology

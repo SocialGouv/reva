@@ -1,7 +1,7 @@
 module Data.Subscription exposing (Subscription, SubscriptionSummary, SubscriptionSummaryPage)
 
 import Admin.Enum.LegalStatus exposing (LegalStatus)
-import Admin.Enum.OrganismTypology exposing (OrganismTypology)
+import Admin.Enum.SubscriptionOrganismTypology exposing (SubscriptionOrganismTypology)
 import Admin.Enum.SubscriptionRequestStatus exposing (SubscriptionRequestStatus)
 import Data.Pagination exposing (PaginationInfo)
 import Data.Referential exposing (ConventionCollective, DepartmentWithOrganismMethods, Domain)
@@ -38,7 +38,7 @@ type alias Subscription =
     , accountLastname : String
     , accountEmail : String
     , accountPhoneNumber : String
-    , typology : OrganismTypology
+    , typology : SubscriptionOrganismTypology
     , domains : List Domain
     , ccns : List ConventionCollective
     , departmentsWithOrganismMethods : List DepartmentWithOrganismMethods

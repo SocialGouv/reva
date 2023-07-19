@@ -5,7 +5,7 @@
 module Admin.Object.SubscriptionRequest exposing (..)
 
 import Admin.Enum.LegalStatus
-import Admin.Enum.OrganismTypology
+import Admin.Enum.SubscriptionOrganismTypology
 import Admin.Enum.SubscriptionRequestStatus
 import Admin.InputObject
 import Admin.Interface
@@ -77,9 +77,9 @@ accountPhoneNumber =
     Object.selectionForField "String" "accountPhoneNumber" [] Decode.string
 
 
-typology : SelectionSet Admin.Enum.OrganismTypology.OrganismTypology Admin.Object.SubscriptionRequest
+typology : SelectionSet Admin.Enum.SubscriptionOrganismTypology.SubscriptionOrganismTypology Admin.Object.SubscriptionRequest
 typology =
-    Object.selectionForField "Enum.OrganismTypology.OrganismTypology" "typology" [] Admin.Enum.OrganismTypology.decoder
+    Object.selectionForField "Enum.SubscriptionOrganismTypology.SubscriptionOrganismTypology" "typology" [] Admin.Enum.SubscriptionOrganismTypology.decoder
 
 
 subscriptionRequestOnDomaine :

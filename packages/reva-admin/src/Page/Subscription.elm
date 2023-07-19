@@ -8,7 +8,7 @@ module Page.Subscription exposing
 
 import Accessibility exposing (a, dd, dl, dt, h1, h2, hr, pre)
 import Admin.Enum.LegalStatus as LegalStatus exposing (LegalStatus(..))
-import Admin.Enum.OrganismTypology exposing (OrganismTypology(..))
+import Admin.Enum.SubscriptionOrganismTypology exposing (SubscriptionOrganismTypology(..))
 import Admin.Enum.SubscriptionRequestStatus as SubscriptionRequestStatus
 import Api.Form.OrganismSubscription
 import Api.Subscription
@@ -218,7 +218,7 @@ viewContent context model subscription =
         ]
 
 
-typologyToString : OrganismTypology -> String
+typologyToString : SubscriptionOrganismTypology -> String
 typologyToString typology =
     case typology of
         Generaliste ->

@@ -2,33 +2,28 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module Admin.Enum.OrganismTypology exposing (..)
+module Admin.Enum.SubscriptionOrganismTypology exposing (..)
 
 import Json.Decode as Decode exposing (Decoder)
 
 
-type OrganismTypology
-    = Experimentation
-    | Generaliste
+type SubscriptionOrganismTypology
+    = Generaliste
     | ExpertFiliere
     | ExpertBranche
-    | ExpertBrancheEtFiliere
 
 
-list : List OrganismTypology
+list : List SubscriptionOrganismTypology
 list =
-    [ Experimentation, Generaliste, ExpertFiliere, ExpertBranche, ExpertBrancheEtFiliere ]
+    [ Generaliste, ExpertFiliere, ExpertBranche ]
 
 
-decoder : Decoder OrganismTypology
+decoder : Decoder SubscriptionOrganismTypology
 decoder =
     Decode.string
         |> Decode.andThen
             (\string ->
                 case string of
-                    "experimentation" ->
-                        Decode.succeed Experimentation
-
                     "generaliste" ->
                         Decode.succeed Generaliste
 
@@ -38,22 +33,16 @@ decoder =
                     "expertBranche" ->
                         Decode.succeed ExpertBranche
 
-                    "expertBrancheEtFiliere" ->
-                        Decode.succeed ExpertBrancheEtFiliere
-
                     _ ->
-                        Decode.fail ("Invalid OrganismTypology type, " ++ string ++ " try re-running the @dillonkearns/elm-graphql CLI ")
+                        Decode.fail ("Invalid SubscriptionOrganismTypology type, " ++ string ++ " try re-running the @dillonkearns/elm-graphql CLI ")
             )
 
 
 {-| Convert from the union type representing the Enum to a string that the GraphQL server will recognize.
 -}
-toString : OrganismTypology -> String
+toString : SubscriptionOrganismTypology -> String
 toString enum____ =
     case enum____ of
-        Experimentation ->
-            "experimentation"
-
         Generaliste ->
             "generaliste"
 
@@ -62,9 +51,6 @@ toString enum____ =
 
         ExpertBranche ->
             "expertBranche"
-
-        ExpertBrancheEtFiliere ->
-            "expertBrancheEtFiliere"
 
 
 {-| Convert from a String representation to an elm representation enum.
@@ -78,12 +64,9 @@ This is the inverse of the Enum `toString` function. So you can call `toString` 
 This can be useful for generating Strings to use for <select> menus to check which item was selected.
 
 -}
-fromString : String -> Maybe OrganismTypology
+fromString : String -> Maybe SubscriptionOrganismTypology
 fromString enumString____ =
     case enumString____ of
-        "experimentation" ->
-            Just Experimentation
-
         "generaliste" ->
             Just Generaliste
 
@@ -92,9 +75,6 @@ fromString enumString____ =
 
         "expertBranche" ->
             Just ExpertBranche
-
-        "expertBrancheEtFiliere" ->
-            Just ExpertBrancheEtFiliere
 
         _ ->
             Nothing

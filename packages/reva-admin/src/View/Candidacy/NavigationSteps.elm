@@ -1,6 +1,8 @@
 module View.Candidacy.NavigationSteps exposing (archiveView, dropOutView, reorientationView, view)
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
+import Admin.Enum.OrganismTypology exposing (OrganismTypology(..))
+import Admin.Object.Candidacy exposing (organism)
 import BetaGouv.DSFR.Button as Button
 import Data.Candidacy as Candidacy exposing (Candidacy)
 import Html exposing (Html, div, h2, h3, span, text)
@@ -42,31 +44,51 @@ view baseUrl candidacy =
 
             else
                 Nothing
+
+        showAdmissibilityMenuEntry =
+            case candidacy.organism of
+                Just organism ->
+                    organism.typology == Experimentation
+
+                Nothing ->
+                    False
+
+        admissibilityMenuEntry =
+            if showAdmissibilityMenuEntry then
+                [ { content = expandedView Enabled "Gestion de la recevabilité" ParcoursConfirme candidacy
+                  , navigation = admissibilityLink
+                  }
+                ]
+
+            else
+                []
     in
     View.Steps.view (title "Toutes les étapes")
         (Candidacy.statusToProgressPosition (candidacyStatus candidacy))
-        [ { content = expandedView Enabled "Rendez-vous pédagogique" PriseEnCharge candidacy
-          , navigation = appointmentLink
-          }
-        , { content = expandedView Enabled "Définition du parcours" PriseEnCharge candidacy
-          , navigation = trainingLink
-          }
-        , { content = [ View.Steps.info "Validation du parcours" ]
-          , navigation = Nothing
-          }
-        , { content = expandedView Enabled "Gestion de la recevabilité" ParcoursConfirme candidacy
-          , navigation = admissibilityLink
-          }
-        , { content = expandedView Enabled "Jury" ParcoursConfirme candidacy
-          , navigation = examInfoLink
-          }
-        , { content = expandedView Disabled "Demande de prise en charge" ParcoursConfirme candidacy
-          , navigation = Nothing
-          }
-        , { content = expandedView Enabled "Demande de paiement" DemandeFinancementEnvoye candidacy
-          , navigation = paymentRequestLink baseUrl candidacy
-          }
-        ]
+        (List.concat
+            [ [ { content = expandedView Enabled "Rendez-vous pédagogique" PriseEnCharge candidacy
+                , navigation = appointmentLink
+                }
+              , { content = expandedView Enabled "Définition du parcours" PriseEnCharge candidacy
+                , navigation = trainingLink
+                }
+              , { content = [ View.Steps.info "Validation du parcours" ]
+                , navigation = Nothing
+                }
+              ]
+            , admissibilityMenuEntry
+            , [ { content = expandedView Enabled "Jury" ParcoursConfirme candidacy
+                , navigation = examInfoLink
+                }
+              , { content = expandedView Disabled "Demande de prise en charge" ParcoursConfirme candidacy
+                , navigation = Nothing
+                }
+              , { content = expandedView Enabled "Demande de paiement" DemandeFinancementEnvoye candidacy
+                , navigation = paymentRequestLink baseUrl candidacy
+                }
+              ]
+            ]
+        )
 
 
 dropOutView : String -> Candidacy -> Time.Posix -> Html msg
