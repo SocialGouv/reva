@@ -22,6 +22,7 @@ const app = Elm.Main.init({
          clientId: import.meta.env.VITE_KEYCLOAK_CLIENT_ID || "reva-admin",
       },
       uploadEndpoint: import.meta.env.VITE_API_UPLOAD || "http://localhost:8080/api/payment-request/proof",
+      feasabilityFeatureEnabled: import.meta.env.VITE_FEASABILITY_FEATURE_ENABLED=="true"
    },
 });
 

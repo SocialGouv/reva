@@ -30,6 +30,7 @@ type alias Flags =
     , baseUrl : String
     , keycloakConfiguration : Decode.Value
     , uploadEndpoint : String
+    , feasabilityFeatureEnabled : Bool
     }
 
 
@@ -360,6 +361,7 @@ initWithoutToken flags url key =
                     flags.uploadEndpoint
                     False
                     False
+                    flags.feasabilityFeatureEnabled
             , page = NotLoggedIn (Route.fromUrl flags.baseUrl url)
             , keycloakConfiguration =
                 Decode.decodeValue KeycloakConfiguration.keycloakConfiguration flags.keycloakConfiguration

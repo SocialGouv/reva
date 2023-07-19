@@ -158,7 +158,7 @@ view context model =
                                     NavigationSteps.archiveView context.baseUrl candidacy
 
                             else
-                                NavigationSteps.view context.baseUrl candidacy
+                                NavigationSteps.view context.feasabilityFeatureEnabled context.baseUrl candidacy
                     ]
 
                 _ ->

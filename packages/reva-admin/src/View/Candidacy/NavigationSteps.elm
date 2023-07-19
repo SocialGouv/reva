@@ -19,8 +19,8 @@ type ButtonState
     | Disabled
 
 
-view : String -> Candidacy -> Html msg
-view baseUrl candidacy =
+view : Bool -> String -> Candidacy -> Html msg
+view feasabilityFeatureEnabled baseUrl candidacy =
     let
         tab =
             View.Candidacy.Tab.Tab candidacy.id
@@ -73,7 +73,7 @@ view baseUrl candidacy =
         showFeasabilityMenuEntry =
             case candidacy.organism of
                 Just organism ->
-                    organism.typology /= Experimentation
+                    organism.typology /= Experimentation && feasabilityFeatureEnabled
 
                 Nothing ->
                     False
