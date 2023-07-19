@@ -45,6 +45,13 @@ view baseUrl candidacy =
             else
                 Nothing
 
+        feasabilityLink =
+            if Candidacy.isStatusEqualOrAbove candidacy ParcoursConfirme then
+                Just <| Route.href baseUrl <| Route.Candidacy (tab View.Candidacy.Tab.Feasability)
+
+            else
+                Nothing
+
         showAdmissibilityMenuEntry =
             case candidacy.organism of
                 Just organism ->
@@ -57,6 +64,24 @@ view baseUrl candidacy =
             if showAdmissibilityMenuEntry then
                 [ { content = expandedView Enabled "Gestion de la recevabilité" ParcoursConfirme candidacy
                   , navigation = admissibilityLink
+                  }
+                ]
+
+            else
+                []
+
+        showFeasabilityMenuEntry =
+            case candidacy.organism of
+                Just organism ->
+                    organism.typology /= Experimentation
+
+                Nothing ->
+                    False
+
+        feasabilityMenuEntry =
+            if showFeasabilityMenuEntry then
+                [ { content = expandedView Enabled "Dossier de faisabilité" ParcoursConfirme candidacy
+                  , navigation = feasabilityLink
                   }
                 ]
 
@@ -77,6 +102,7 @@ view baseUrl candidacy =
                 }
               ]
             , admissibilityMenuEntry
+            , feasabilityMenuEntry
             , [ { content = expandedView Enabled "Jury" ParcoursConfirme candidacy
                 , navigation = examInfoLink
                 }

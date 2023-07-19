@@ -97,6 +97,7 @@ parser baseUrl =
                 , subLevel "training" |> candidacyTab Tab.Training
                 , subLevel "training" </> s "confirmation" |> candidacyTab Tab.TrainingSent
                 , subLevel "examInfo" |> candidacyTab Tab.ExamInfo
+                , subLevel "feasability" |> candidacyTab Tab.Feasability
                 ]
 
 
@@ -199,3 +200,6 @@ tabToString topLevel subLevel tab =
 
         Tab.ExamInfo ->
             default [ "examInfo" ]
+
+        Tab.Feasability ->
+            default [ "feasability" ]

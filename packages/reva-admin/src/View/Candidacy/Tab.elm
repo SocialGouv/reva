@@ -24,3 +24,4 @@ type Value
     | TrainingSent
     | FundingRequest
     | ExamInfo
+    | Feasability

@@ -33,16 +33,17 @@ import Data.Form.FundingRequest
 import Data.Form.PaymentRequest
 import Data.Form.Unarchive
 import Data.Referential exposing (Referential)
-import Html exposing (Html, a, article, div, node, p, span, text)
+import Html exposing (Html, div, p, text)
 import Html.Attributes exposing (alt, class, name)
 import Html.Attributes.Extra exposing (role)
-import Page.Form as Form exposing (Form)
+import Page.Form as Form
 import Page.Form.Admissibility
 import Page.Form.Appointment
 import Page.Form.Archive
 import Page.Form.Candidate
 import Page.Form.DropOut
 import Page.Form.ExamInfo
+import Page.Form.Feasability
 import Page.Form.FundingRequest
 import Page.Form.PaymentRequest
 import Page.Form.PaymentUploads
@@ -206,6 +207,9 @@ view context model =
 
                 ExamInfo ->
                     viewForm "examInfo"
+
+                Feasability ->
+                    viewForm "feasability"
     in
     View.layout "Accéder aux étapes du parcours" [] maybeNavigationSteps [ content ]
 
@@ -526,6 +530,22 @@ updateTab context tab ( model, cmd ) =
                         , onRedirect = pushUrl <| candidacyTab Profile
                         , onValidate = \_ _ -> Ok ()
                         , status = Form.Editable
+                        }
+                        model.form
+            in
+            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
+
+        ( View.Candidacy.Tab.Feasability, Success _ ) ->
+            let
+                ( formModel, formCmd ) =
+                    Form.updateForm context
+                        { form = Page.Form.Feasability.form
+                        , onLoad = Nothing
+                        , onSave = Nothing
+                        , onSubmit = \_ _ _ _ _ -> Cmd.none
+                        , onRedirect = pushUrl <| candidacyTab Profile
+                        , onValidate = \_ _ -> Ok ()
+                        , status = Form.ReadOnly
                         }
                         model.form
             in
