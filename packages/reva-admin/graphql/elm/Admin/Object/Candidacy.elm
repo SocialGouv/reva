@@ -228,6 +228,13 @@ examInfo object____ =
     Object.selectionForCompositeField "examInfo" [] object____ Basics.identity
 
 
+certificationAuthority :
+    SelectionSet decodesTo Admin.Object.CertificationAuthority
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
+certificationAuthority object____ =
+    Object.selectionForCompositeField "certificationAuthority" [] object____ (Basics.identity >> Decode.nullable)
+
+
 paymentRequest :
     SelectionSet decodesTo Admin.Object.PaymentRequest
     -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
