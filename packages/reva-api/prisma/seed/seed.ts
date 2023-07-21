@@ -1,6 +1,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 
 import { injectCsvRows } from "./read-csv";
+import { seedCertificationAuthorities } from "./referentials/seed-certification-authorities";
 import { seedCertifications } from "./referentials/seed-certifications";
 import { insertBasicSkillsIfNone } from "./referentials/table-basic-skills";
 import { insertDegreesIfNone } from "./referentials/table-degrees";
@@ -68,6 +69,8 @@ async function main() {
   });
 
   await seedCertifications(prisma);
+
+  await seedCertificationAuthorities(prisma);
 }
 
 main()
