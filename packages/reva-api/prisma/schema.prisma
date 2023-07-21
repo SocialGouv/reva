@@ -44,6 +44,7 @@ model Certification {
   certificationOnConventionCollective                    CertificationOnConventionCollective[]
   typeDiplome                                            TypeDiplome?                                             @relation(fields: [typeDiplomeId], references: [id])
   typeDiplomeId                                          String?                                                  @map("type_diplome_id") @db.Uuid
+  certificationAuthorityOnCertification                  CertificationAuthorityOnCertification[]
 
   @@map("certification")
 }
@@ -219,6 +220,7 @@ model Department {
   activeOrganismsByAvailableCertificationsAndDepartments ActiveOrganismsByAvailableCertificationsAndDepartments[]
   OrganismsOnDepartments                                 OrganismsOnDepartments[]
   SubscriptionRequestsOnDepartments                      SubscriptionRequestsOnDepartments[]
+  certificationAuthorityOnDepartment                     CertificationAuthorityOnDepartment[]
 
   @@map("department")
 }
@@ -782,4 +784,43 @@ model TypeDiplome {
   Certification Certification[]
 
   @@map("type_diplome")
+}
+
+model CertificationAuthority {
+  id                                    String                                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                                 String                                  @db.VarChar(200)
+  contactFullName                       String?                                 @map("contact_full_name") @db.VarChar(200)
+  contactEmail                          String?                                 @map("contact_email") @db.VarChar(200)
+  createdAt                             DateTime                                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                             DateTime?                               @map("updated_at") @db.Timestamptz(6)
+  certificationAuthorityOnDepartment    CertificationAuthorityOnDepartment[]
+  certificationAuthorityOnCertification CertificationAuthorityOnCertification[]
+
+  @@map("certification_authority")
+}
+
+model CertificationAuthorityOnDepartment {
+  id                       String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  certificationAuthority   CertificationAuthority @relation(fields: [certificationAuthorityId], references: [id], onDelete: Cascade)
+  certificationAuthorityId String                 @map("certification_authority_id") @db.Uuid
+  department               Department             @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  departmentId             String                 @map("department_id") @db.Uuid
+  createdAt                DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                DateTime?              @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([certificationAuthorityId, departmentId])
+  @@map("certification_authority_on_department")
+}
+
+model CertificationAuthorityOnCertification {
+  id                       String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  certificationAuthority   CertificationAuthority @relation(fields: [certificationAuthorityId], references: [id], onDelete: Cascade)
+  certificationAuthorityId String                 @map("certification_authority_id") @db.Uuid
+  certification            Certification          @relation(fields: [certificationId], references: [id], onDelete: Cascade)
+  certificationId          String                 @map("certification_id") @db.Uuid
+  createdAt                DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                DateTime?              @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([certificationAuthorityId, certificationId])
+  @@map("certification_authority_on_certification")
 }
