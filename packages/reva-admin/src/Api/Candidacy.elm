@@ -12,6 +12,7 @@ import Admin.Object.CandidacySummaryPage
 import Admin.Object.Candidate
 import Admin.Object.CandidateGoal
 import Admin.Object.Certification
+import Admin.Object.CertificationAuthority
 import Admin.Object.CertificationSummary
 import Admin.Object.Experience
 import Admin.Object.Organism
@@ -28,6 +29,7 @@ import Api.VulnerabilityIndicator
 import Data.Candidacy exposing (CandidacyId)
 import Data.Candidate
 import Data.Certification
+import Data.CertificationAuthority
 import Data.Organism
 import Data.Pagination
 import Data.Referential
@@ -137,6 +139,7 @@ selection id =
                 |> with (Admin.Object.Candidacy.candidacyStatuses statusSelection)
                 |> with Admin.Object.Candidacy.createdAt
                 |> with (Admin.Object.Candidacy.reorientationReason reorientationReasonSelection)
+                |> with (Admin.Object.Candidacy.certificationAuthority certificationAuthoritySelection)
     in
     SelectionSet.succeed
         (\maybeCandidacy companions ->
@@ -275,6 +278,15 @@ certificationSelection =
         |> with Admin.Object.Certification.activityArea
         |> with Admin.Object.Certification.accessibleJobType
         |> with Admin.Object.Certification.abilities
+
+
+certificationAuthoritySelection : SelectionSet Data.CertificationAuthority.CertificationAuthority Admin.Object.CertificationAuthority
+certificationAuthoritySelection =
+    SelectionSet.succeed Data.CertificationAuthority.CertificationAuthority
+        |> with Admin.Object.CertificationAuthority.id
+        |> with Admin.Object.CertificationAuthority.label
+        |> with Admin.Object.CertificationAuthority.contactFullName
+        |> with Admin.Object.CertificationAuthority.contactEmail
 
 
 certificationSummarySelection : SelectionSet Data.Certification.CertificationSummary Admin.Object.CertificationSummary

@@ -37,6 +37,7 @@ import Admin.Object.CandidacyCountByStatus exposing (activeHorsAbandon)
 import Css exposing (lowercase)
 import Data.Candidate exposing (Candidate)
 import Data.Certification exposing (Certification, CertificationSummary)
+import Data.CertificationAuthority exposing (CertificationAuthority)
 import Data.Organism exposing (Organism)
 import Data.Pagination exposing (PaginationInfo)
 import Data.Referential exposing (Department, ReorientationReason)
@@ -91,6 +92,7 @@ type alias Candidacy =
     , statuses : List CandidacyStatus
     , createdAt : Time.Posix
     , reorientationReason : Maybe ReorientationReason
+    , certificationAuthority : Maybe CertificationAuthority
     }
 
 

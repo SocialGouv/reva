@@ -10,25 +10,54 @@ form : FormData -> ( Candidacy, Referential ) -> Form
 form _ ( candidacy, _ ) =
     let
         elements =
-            [ ( "heading"
-              , Form.Section <|
-                    case candidacy.candidate of
-                        Just candidate ->
-                            String.concat [ candidate.firstname, " ", candidate.lastname ]
+            List.concat
+                [ [ ( "heading"
+                    , Form.Section <|
+                        case candidacy.candidate of
+                            Just candidate ->
+                                String.concat [ candidate.firstname, " ", candidate.lastname ]
 
-                        Nothing ->
-                            ""
-              )
-            , ( "heading2"
-              , Form.Section <|
-                    case candidacy.certification of
-                        Just certification ->
-                            certification.label
+                            Nothing ->
+                                ""
+                    )
+                  ]
+                , case candidacy.certification of
+                    Just certification ->
+                        [ ( "heading2"
+                          , Form.Section <|
+                                certification.label
+                          )
+                        ]
 
-                        Nothing ->
-                            ""
-              )
-            ]
+                    Nothing ->
+                        []
+                , case candidacy.certificationAuthority of
+                    Just certificationAuthority ->
+                        [ ( "authoritySectionTitle"
+                          , Form.Section <|
+                                "Certificateur"
+                          )
+                        , ( "authorityLabel"
+                          , Form.Section <|
+                                certificationAuthority.label
+                          )
+                        , ( "authorityContactFullName"
+                          , Form.Section <|
+                                Maybe.withDefault "" certificationAuthority.contactFullName
+                          )
+                        , ( "authorityContactEmail"
+                          , Form.Section <|
+                                Maybe.withDefault "" certificationAuthority.contactEmail
+                          )
+                        ]
+
+                    Nothing ->
+                        [ ( "authoritySectionTitle"
+                          , Form.Section <|
+                                "Certificateur Inconnu"
+                          )
+                        ]
+                ]
     in
     { elements = elements
     , saveLabel = Nothing

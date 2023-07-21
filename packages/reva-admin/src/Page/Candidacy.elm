@@ -545,7 +545,7 @@ updateTab context tab ( model, cmd ) =
                         , onSubmit = \_ _ _ _ _ -> Cmd.none
                         , onRedirect = pushUrl <| candidacyTab Profile
                         , onValidate = \_ _ -> Ok ()
-                        , status = Form.ReadOnly
+                        , status = Form.Editable
                         }
                         model.form
             in
