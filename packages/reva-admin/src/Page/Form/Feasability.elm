@@ -11,21 +11,28 @@ form _ ( candidacy, _ ) =
     let
         elements =
             List.concat
-                [ [ ( "heading"
-                    , Form.Section <|
-                        case candidacy.candidate of
+                [ [ ( "candidateFullName"
+                    , Form.Text
+                        (case candidacy.candidate of
                             Just candidate ->
                                 String.concat [ candidate.firstname, " ", candidate.lastname ]
 
                             Nothing ->
                                 ""
+                        )
+                        (Just
+                            "font-bold text-2xl"
+                        )
                     )
                   ]
                 , case candidacy.certification of
                     Just certification ->
-                        [ ( "heading2"
-                          , Form.Section <|
+                        [ ( "certificationLabel"
+                          , Form.Text
                                 certification.label
+                                (Just
+                                    "font-bold text-xl"
+                                )
                           )
                         ]
 
@@ -33,21 +40,33 @@ form _ ( candidacy, _ ) =
                         []
                 , case candidacy.certificationAuthority of
                     Just certificationAuthority ->
-                        [ ( "authoritySectionTitle"
-                          , Form.Section <|
-                                "Certificateur"
-                          )
-                        , ( "authorityLabel"
-                          , Form.Section <|
-                                certificationAuthority.label
-                          )
-                        , ( "authorityContactFullName"
-                          , Form.Section <|
-                                Maybe.withDefault "" certificationAuthority.contactFullName
-                          )
-                        , ( "authorityContactEmail"
-                          , Form.Section <|
-                                Maybe.withDefault "" certificationAuthority.contactEmail
+                        [ ( "authorityPanel"
+                          , Form.Panel
+                                [ ( "authoritySectionTitle"
+                                  , Form.Text
+                                        "Certificateur"
+                                        (Just
+                                            "font-bold text-xl"
+                                        )
+                                  )
+                                , ( "authorityLabel"
+                                  , Form.Text
+                                        certificationAuthority.label
+                                        (Just
+                                            "font-bold text-xl"
+                                        )
+                                  )
+                                , ( "authorityContactFullName"
+                                  , Form.Text
+                                        (Maybe.withDefault "" certificationAuthority.contactFullName)
+                                        Nothing
+                                  )
+                                , ( "authorityContactEmail"
+                                  , Form.Text
+                                        (Maybe.withDefault "" certificationAuthority.contactEmail)
+                                        Nothing
+                                  )
+                                ]
                           )
                         ]
 
