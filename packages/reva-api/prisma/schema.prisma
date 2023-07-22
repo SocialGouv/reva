@@ -45,6 +45,7 @@ model Certification {
   typeDiplome                                            TypeDiplome?                                             @relation(fields: [typeDiplomeId], references: [id])
   typeDiplomeId                                          String?                                                  @map("type_diplome_id") @db.Uuid
   certificationAuthorityOnCertification                  CertificationAuthorityOnCertification[]
+  searchable_text                                        Unsupported("tsvector")?                                 @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((((COALESCE(label, ''::character varying))::text || ' '::text) || COALESCE(summary, ''::text))))"))
 
   @@map("certification")
 }
@@ -641,10 +642,11 @@ enum OrganismTypology {
 }
 
 view AvailableCertificationsByDepartments {
-  certification   Certification @relation(fields: [certificationId], references: [id])
-  department      Department    @relation(fields: [departmentId], references: [id])
-  certificationId String        @map("certification_id") @db.Uuid
-  departmentId    String        @map("department_id") @db.Uuid
+  certification                 Certification            @relation(fields: [certificationId], references: [id])
+  department                    Department               @relation(fields: [departmentId], references: [id])
+  certificationId               String                   @map("certification_id") @db.Uuid
+  departmentId                  String                   @map("department_id") @db.Uuid
+  certification_searchable_text Unsupported("tsvector")?
 
   @@unique([certificationId, departmentId])
   @@map("available_certification_by_department")
