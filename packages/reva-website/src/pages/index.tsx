@@ -1,6 +1,5 @@
 import { AdmissibleSectorsInfoPanel } from "@/components/admissible-sectors-info-panel/AdmissibleSectorsInfoPanel";
 import { TrackableButton } from "@/components/analytics/trackable-button/TrackableButton";
-import { ComingSoonInfoPanel } from "@/components/coming-soon-info-panel/ComingSoonInfoPanel";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { PICTOGRAMS } from "@/components/pictograms";
 import {
@@ -67,7 +66,6 @@ const AvenirPro = () => (
         professionnels de la VAE autour d’un nouveau dispositif modernisé,
         simplifié et sécurisé par la loi n°2022-1598 du 21 décembre 2022.
       </p>
-      <ComingSoonInfoPanel />
     </div>
     <div className="relative mt-16 -mx-5 max-w-lg basis-1/2">
       <Image
@@ -113,6 +111,19 @@ const ValorisationCompetences = () => (
           <TrackableButton
             eventTracked={{
               location: "Accueil",
+              event: "Click sur 'Démarrez un parcours VAE'",
+            }}
+            priority="primary"
+            iconPosition="right"
+            iconId="fr-icon-arrow-right-line"
+            linkProps={{ href: "/app" }}
+            size="large"
+          >
+            Démarrez un parcours
+          </TrackableButton>
+          <TrackableButton
+            eventTracked={{
+              location: "Accueil",
               event: "Click sur 'En savoir plus sur la VAE'",
             }}
             priority="secondary"
@@ -155,6 +166,20 @@ const CommentCaMarche = () => (
             certification de manière totale ou partielle
           </li>
         </ul>
+        <AdmissibleSectorsInfoPanel className="mb-4" />
+        <div>
+          <TrackableButton
+            eventTracked={{
+              location: "Accueil",
+              event: "Click sur 'Démarrez un parcours VAE'",
+            }}
+            priority="secondary"
+            linkProps={{ href: "/app" }}
+            size="large"
+          >
+            Démarrez un parcours VAE
+          </TrackableButton>
+        </div>
       </div>
       <ol className="flex-1 relative p-0 !list-none mt-[100px] marker:content-none">
         <li>
@@ -234,6 +259,18 @@ const TrouvezCertification = () => (
         professionnelles inscrits au RNCP qui vous ouvriront la porte à autant
         d’opportunités professionnelles.
       </SectionParagraph>
+      <AdmissibleSectorsInfoPanel className="mb-4" />
+      <TrackableButton
+        eventTracked={{
+          location: "Accueil",
+          event: "Click sur 'Démarrez un parcours VAE'",
+        }}
+        priority="secondary"
+        linkProps={{ href: "/app" }}
+        size="large"
+      >
+        Démarrez un parcours VAE
+      </TrackableButton>
     </div>
     <div className="mt-24 relative w-96 h-96 sm:ml-[15%] lg:ml-0 lg:flex-1">
       <Image

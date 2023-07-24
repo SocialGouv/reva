@@ -75,15 +75,13 @@ export const LoginHome = ({ mainService }: LoginHomeProps) => {
         />
         <Button data-test={`login-home-submit`}>Me connecter</Button>
       </form>
-      <hr />
-      <div className="fr-alert fr-alert--warning mt-4">
-        <h3 className="fr-alert__title">Attention</h3>
-        <p className="text-lg font-semibold">
-          Les inscriptions pour effectuer une VAE ne sont pas encore ouvertes.
-        </p>
-        <p className="text-lg">
-          Les candidatures déjà en cours sont toujours accessibles.
-        </p>
+      <div className="border-t border-gray-200 pt-6">
+        <button
+          onClick={() => send("BACK")}
+          className="text-gray-500 underline"
+        >
+          Je n'ai pas de candidature
+        </button>
       </div>
     </Page>
   );
