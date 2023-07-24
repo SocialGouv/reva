@@ -9,11 +9,15 @@ export const feasabilityResolvers = {
       certificationId: string;
       departmentId: string;
     }) =>
-      prismaClient.certificationAuthority.findFirst({
-        where: {
-          certificationAuthorityOnDepartment: { some: { departmentId } },
-          certificationAuthorityOnCertification: { some: { certificationId } },
-        },
-      }),
+      certificationId && departmentId
+        ? prismaClient.certificationAuthority.findFirst({
+            where: {
+              certificationAuthorityOnDepartment: { some: { departmentId } },
+              certificationAuthorityOnCertification: {
+                some: { certificationId },
+              },
+            },
+          })
+        : null,
   },
 };
