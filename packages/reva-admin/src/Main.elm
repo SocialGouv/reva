@@ -29,7 +29,7 @@ type alias Flags =
     { endpoint : String
     , baseUrl : String
     , keycloakConfiguration : Decode.Value
-    , uploadEndpoint : String
+    , restApiEndpoint : String
     , feasabilityFeatureEnabled : Bool
     }
 
@@ -358,7 +358,7 @@ initWithoutToken flags url key =
                     flags.endpoint
                     key
                     Api.Token.anonymous
-                    flags.uploadEndpoint
+                    flags.restApiEndpoint
                     False
                     False
                     flags.feasabilityFeatureEnabled

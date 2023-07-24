@@ -21,7 +21,8 @@ const app = Elm.Main.init({
          url: import.meta.env.VITE_KEYCLOAK_URL || "http://localhost:8888/auth/",
          clientId: import.meta.env.VITE_KEYCLOAK_CLIENT_ID || "reva-admin",
       },
-      uploadEndpoint: import.meta.env.VITE_API_UPLOAD || "http://localhost:8080/api/payment-request/proof",
+      restApiEndpoint: import.meta.env.VITE_API_REST || "http://localhost:8080/api",
+
       feasabilityFeatureEnabled: import.meta.env.VITE_FEASABILITY_FEATURE_ENABLED=="true"
    },
 });

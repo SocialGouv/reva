@@ -19,7 +19,7 @@ submit :
     -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
     -> FormData
     -> Cmd msg
-submit candidacyId uploadEndpoint _ token toMsg ( _, _ ) formData =
+submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
     let
         keys =
             Data.Form.PaymentRequest.keys
@@ -41,7 +41,7 @@ submit candidacyId uploadEndpoint _ token toMsg ( _, _ ) formData =
             Http.request
                 { method = "POST"
                 , headers = [ Http.header "authorization" ("Bearer " ++ Api.Token.toString token) ]
-                , url = uploadEndpoint
+                , url = restApiEndpoint ++ "/payment-request/proof"
                 , body =
                     [ Http.stringPart "candidacyId" (Data.Candidacy.candidacyIdToString candidacyId) ]
                         |> withFiles files

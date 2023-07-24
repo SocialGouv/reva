@@ -9,7 +9,7 @@ type alias Context =
     , endpoint : String
     , navKey : Browser.Navigation.Key
     , token : Token
-    , uploadEndpoint : String
+    , restApiEndpoint : String
     , isScrollingToTop : Bool
     , isMobile : Bool
     , feasabilityFeatureEnabled : Bool
