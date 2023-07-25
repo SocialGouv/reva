@@ -6,6 +6,24 @@ export interface UploadedFile {
   mimetype: string;
 }
 
+export const getCertificationAuthority = ({
+  certificationId,
+  departmentId,
+}: {
+  certificationId: string;
+  departmentId: string;
+}) =>
+  certificationId && departmentId
+    ? prismaClient.certificationAuthority.findFirst({
+        where: {
+          certificationAuthorityOnDepartment: { some: { departmentId } },
+          certificationAuthorityOnCertification: {
+            some: { certificationId },
+          },
+        },
+      })
+    : null;
+
 export const createFeasibility = ({
   candidacyId,
   feasibilityFile,

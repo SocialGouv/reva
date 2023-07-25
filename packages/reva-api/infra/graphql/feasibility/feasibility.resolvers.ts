@@ -1,23 +1,10 @@
-import { prismaClient } from "../../database/postgres/client";
+import { getCertificationAuthority } from "./feasibility.features";
 
 export const feasibilityResolvers = {
   Candidacy: {
-    certificationAuthority: ({
-      certificationId,
-      departmentId,
-    }: {
+    certificationAuthority: (parent: {
       certificationId: string;
       departmentId: string;
-    }) =>
-      certificationId && departmentId
-        ? prismaClient.certificationAuthority.findFirst({
-            where: {
-              certificationAuthorityOnDepartment: { some: { departmentId } },
-              certificationAuthorityOnCertification: {
-                some: { certificationId },
-              },
-            },
-          })
-        : null,
+    }) => getCertificationAuthority(parent),
   },
 };
