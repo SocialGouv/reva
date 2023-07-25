@@ -30,7 +30,7 @@ type alias Flags =
     , baseUrl : String
     , keycloakConfiguration : Decode.Value
     , restApiEndpoint : String
-    , feasabilityFeatureEnabled : Bool
+    , feasibilityFeatureEnabled : Bool
     }
 
 
@@ -361,7 +361,7 @@ initWithoutToken flags url key =
                     flags.restApiEndpoint
                     False
                     False
-                    flags.feasabilityFeatureEnabled
+                    flags.feasibilityFeatureEnabled
             , page = NotLoggedIn (Route.fromUrl flags.baseUrl url)
             , keycloakConfiguration =
                 Decode.decodeValue KeycloakConfiguration.keycloakConfiguration flags.keycloakConfiguration

@@ -1,4 +1,4 @@
-module Page.Form.Feasability exposing (..)
+module Page.Form.Feasibility exposing (..)
 
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)

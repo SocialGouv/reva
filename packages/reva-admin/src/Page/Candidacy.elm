@@ -43,7 +43,7 @@ import Page.Form.Archive
 import Page.Form.Candidate
 import Page.Form.DropOut
 import Page.Form.ExamInfo
-import Page.Form.Feasability
+import Page.Form.Feasibility
 import Page.Form.FundingRequest
 import Page.Form.PaymentRequest
 import Page.Form.PaymentUploads
@@ -158,7 +158,7 @@ view context model =
                                     NavigationSteps.archiveView context.baseUrl candidacy
 
                             else
-                                NavigationSteps.view context.feasabilityFeatureEnabled context.baseUrl candidacy
+                                NavigationSteps.view context.feasibilityFeatureEnabled context.baseUrl candidacy
                     ]
 
                 _ ->
@@ -208,8 +208,8 @@ view context model =
                 ExamInfo ->
                     viewForm "examInfo"
 
-                Feasability ->
-                    viewForm "feasability"
+                Feasibility ->
+                    viewForm "feasibility"
     in
     View.layout "Accéder aux étapes du parcours" [] maybeNavigationSteps [ content ]
 
@@ -535,11 +535,11 @@ updateTab context tab ( model, cmd ) =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        ( View.Candidacy.Tab.Feasability, Success _ ) ->
+        ( View.Candidacy.Tab.Feasibility, Success _ ) ->
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
-                        { form = Page.Form.Feasability.form
+                        { form = Page.Form.Feasibility.form
                         , onLoad = Nothing
                         , onSave = Nothing
                         , onSubmit = \_ _ _ _ _ -> Cmd.none

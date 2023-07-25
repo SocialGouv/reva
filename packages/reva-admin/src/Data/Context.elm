@@ -12,5 +12,5 @@ type alias Context =
     , restApiEndpoint : String
     , isScrollingToTop : Bool
     , isMobile : Bool
-    , feasabilityFeatureEnabled : Bool
+    , feasibilityFeatureEnabled : Bool
     }

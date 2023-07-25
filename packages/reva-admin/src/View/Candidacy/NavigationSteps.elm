@@ -20,7 +20,7 @@ type ButtonState
 
 
 view : Bool -> String -> Candidacy -> Html msg
-view feasabilityFeatureEnabled baseUrl candidacy =
+view feasibilityFeatureEnabled baseUrl candidacy =
     let
         tab =
             View.Candidacy.Tab.Tab candidacy.id
@@ -45,9 +45,9 @@ view feasabilityFeatureEnabled baseUrl candidacy =
             else
                 Nothing
 
-        feasabilityLink =
+        feasibilityLink =
             if Candidacy.isStatusEqualOrAbove candidacy ParcoursConfirme then
-                Just <| Route.href baseUrl <| Route.Candidacy (tab View.Candidacy.Tab.Feasability)
+                Just <| Route.href baseUrl <| Route.Candidacy (tab View.Candidacy.Tab.Feasibility)
 
             else
                 Nothing
@@ -70,18 +70,18 @@ view feasabilityFeatureEnabled baseUrl candidacy =
             else
                 []
 
-        showFeasabilityMenuEntry =
+        showFeasibilityMenuEntry =
             case candidacy.organism of
                 Just organism ->
-                    organism.typology /= Experimentation && feasabilityFeatureEnabled
+                    organism.typology /= Experimentation && feasibilityFeatureEnabled
 
                 Nothing ->
                     False
 
-        feasabilityMenuEntry =
-            if showFeasabilityMenuEntry then
+        feasibilityMenuEntry =
+            if showFeasibilityMenuEntry then
                 [ { content = expandedView Enabled "Dossier de faisabilité" ParcoursConfirme candidacy
-                  , navigation = feasabilityLink
+                  , navigation = feasibilityLink
                   }
                 ]
 
@@ -102,7 +102,7 @@ view feasabilityFeatureEnabled baseUrl candidacy =
                 }
               ]
             , admissibilityMenuEntry
-            , feasabilityMenuEntry
+            , feasibilityMenuEntry
             , [ { content = expandedView Enabled "Jury" ParcoursConfirme candidacy
                 , navigation = examInfoLink
                 }

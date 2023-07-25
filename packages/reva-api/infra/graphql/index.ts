@@ -15,7 +15,7 @@ import {
 import * as account from "./account";
 import * as candidacy from "./candidacy";
 import * as candidate from "./candidate";
-import { feasabilityResolvers } from "./feasability/feasability.resolvers";
+import { feasibilityResolvers } from "./feasibility/feasibility.resolvers";
 import { financeResolvers } from "./finance/finance.resolvers";
 import * as referential from "./referential";
 import DecimalGraphqlScalar from "./scalar/DecimalGraphqlScalar";
@@ -35,7 +35,7 @@ const resolvers = mergeResolvers([
   candidate.resolvers,
   financeResolvers,
   subscriptionRequestResolvers,
-  feasabilityResolvers,
+  feasibilityResolvers,
 ]);
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;

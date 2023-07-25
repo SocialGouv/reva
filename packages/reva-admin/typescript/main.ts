@@ -23,7 +23,7 @@ const app = Elm.Main.init({
       },
       restApiEndpoint: import.meta.env.VITE_API_REST || "http://localhost:8080/api",
 
-      feasabilityFeatureEnabled: import.meta.env.VITE_FEASABILITY_FEATURE_ENABLED=="true"
+      feasibilityFeatureEnabled: import.meta.env.VITE_FEASABILITY_FEATURE_ENABLED=="true"
    },
 });
 

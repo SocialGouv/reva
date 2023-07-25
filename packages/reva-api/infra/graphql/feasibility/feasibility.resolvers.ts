@@ -1,6 +1,6 @@
 import { prismaClient } from "../../database/postgres/client";
 
-export const feasabilityResolvers = {
+export const feasibilityResolvers = {
   Candidacy: {
     certificationAuthority: ({
       certificationId,
