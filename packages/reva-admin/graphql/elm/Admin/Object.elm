@@ -105,6 +105,10 @@ type Experience
     = Experience
 
 
+type Feasibility
+    = Feasibility
+
+
 type FundingRequest
     = FundingRequest
 

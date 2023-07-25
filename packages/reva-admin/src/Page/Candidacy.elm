@@ -535,7 +535,7 @@ updateTab context tab ( model, cmd ) =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        ( View.Candidacy.Tab.Feasibility, Success _ ) ->
+        ( View.Candidacy.Tab.Feasibility, Success candidacy ) ->
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
@@ -545,7 +545,11 @@ updateTab context tab ( model, cmd ) =
                         , onSubmit = Api.Form.Feasibility.submit tab.candidacyId context.restApiEndpoint
                         , onRedirect = pushUrl <| candidacyTab Profile
                         , onValidate = \_ _ -> Ok ()
-                        , status = Form.Editable
+                        , status = 
+                            if candidacy.feasibility /= Nothing then
+                                Form.ReadOnly
+                            else
+                                Form.Editable
                         }
                         model.form
             in

@@ -33,8 +33,6 @@ module Data.Candidacy exposing
 import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Admin.Enum.Duration exposing (Duration)
-import Admin.Object.CandidacyCountByStatus exposing (activeHorsAbandon)
-import Css exposing (lowercase)
 import Data.Candidate exposing (Candidate)
 import Data.Certification exposing (Certification, CertificationSummary)
 import Data.CertificationAuthority exposing (CertificationAuthority)
@@ -42,6 +40,7 @@ import Data.Organism exposing (Organism)
 import Data.Pagination exposing (PaginationInfo)
 import Data.Referential exposing (Department, ReorientationReason)
 import Time
+import Data.Feasibility exposing (Feasibility)
 
 
 type CandidacyId
@@ -93,6 +92,7 @@ type alias Candidacy =
     , createdAt : Time.Posix
     , reorientationReason : Maybe ReorientationReason
     , certificationAuthority : Maybe CertificationAuthority
+    , feasibility : Maybe Feasibility
     }
 
 

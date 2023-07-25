@@ -235,6 +235,13 @@ certificationAuthority object____ =
     Object.selectionForCompositeField "certificationAuthority" [] object____ (Basics.identity >> Decode.nullable)
 
 
+feasibility :
+    SelectionSet decodesTo Admin.Object.Feasibility
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
+feasibility object____ =
+    Object.selectionForCompositeField "feasibility" [] object____ (Basics.identity >> Decode.nullable)
+
+
 paymentRequest :
     SelectionSet decodesTo Admin.Object.PaymentRequest
     -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy

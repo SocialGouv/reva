@@ -32,7 +32,7 @@ export const createFeasibility = ({
   candidacyId: string;
   feasibilityFile: UploadedFile;
   otherFile?: UploadedFile;
-}) =>
+}) => {
   prismaClient.feasibility.create({
     data: {
       candidacy: { connect: { id: candidacyId } },
@@ -55,3 +55,10 @@ export const createFeasibility = ({
         : undefined,
     },
   });
+};
+
+export const getFeasibilityByCandidacyid = ({
+  candidacyId,
+}: {
+  candidacyId: string;
+}) => prismaClient.feasibility.findFirst({ where: { candidacyId } });

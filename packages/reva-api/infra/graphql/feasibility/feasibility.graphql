@@ -5,6 +5,12 @@ type CertificationAuthority {
   contactEmail: String
 }
 
+type Feasibility {
+  id: ID!
+  feasibilityFileSentAt: Timestamp!
+}
+
 type Candidacy {
   certificationAuthority: CertificationAuthority
+  feasibility: Feasibility
 }

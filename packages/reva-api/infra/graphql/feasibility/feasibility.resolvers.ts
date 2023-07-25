@@ -1,4 +1,7 @@
-import { getCertificationAuthority } from "./feasibility.features";
+import {
+  getCertificationAuthority,
+  getFeasibilityByCandidacyid,
+} from "./feasibility.features";
 
 export const feasibilityResolvers = {
   Candidacy: {
@@ -6,5 +9,7 @@ export const feasibilityResolvers = {
       certificationId: string;
       departmentId: string;
     }) => getCertificationAuthority(parent),
+    feasibility: ({ id: candidacyId }: { id: string }) =>
+      getFeasibilityByCandidacyid({ candidacyId }),
   },
 };

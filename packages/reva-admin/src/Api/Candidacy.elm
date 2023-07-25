@@ -38,7 +38,8 @@ import Graphql.OptionalArgument as OptionalArgument exposing (OptionalArgument(.
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
 import View.Date exposing (toDateWithLabels)
-
+import Data.Feasibility
+import Admin.Object.Feasibility
 
 getCandidacies :
     String
@@ -140,6 +141,8 @@ selection id =
                 |> with Admin.Object.Candidacy.createdAt
                 |> with (Admin.Object.Candidacy.reorientationReason reorientationReasonSelection)
                 |> with (Admin.Object.Candidacy.certificationAuthority certificationAuthoritySelection)
+                |> with (Admin.Object.Candidacy.feasibility feasibilitySelection)
+
     in
     SelectionSet.succeed
         (\maybeCandidacy companions ->
@@ -287,6 +290,12 @@ certificationAuthoritySelection =
         |> with Admin.Object.CertificationAuthority.label
         |> with Admin.Object.CertificationAuthority.contactFullName
         |> with Admin.Object.CertificationAuthority.contactEmail
+
+feasibilitySelection : SelectionSet Data.Feasibility.Feasibility Admin.Object.Feasibility
+feasibilitySelection =
+    SelectionSet.succeed Data.Feasibility.Feasibility
+        |> with Admin.Object.Feasibility.id
+        |> with Admin.Object.Feasibility.feasibilityFileSentAt
 
 
 certificationSummarySelection : SelectionSet Data.Certification.CertificationSummary Admin.Object.CertificationSummary
