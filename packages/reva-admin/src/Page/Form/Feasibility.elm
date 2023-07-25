@@ -4,7 +4,7 @@ import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Referential exposing (Referential)
 import Page.Form as Form exposing (Form)
-
+import Data.Form.Feasibility exposing(keys)
 
 form : FormData -> ( Candidacy, Referential ) -> Form
 form _ ( candidacy, _ ) =
@@ -21,7 +21,7 @@ form _ ( candidacy, _ ) =
                                 ""
                         )
                         (Just
-                            "font-bold text-2xl"
+                            "font-bold text-2xl pl-2"
                         )
                     )
                   ]
@@ -31,13 +31,19 @@ form _ ( candidacy, _ ) =
                           , Form.Text
                                 certification.label
                                 (Just
-                                    "font-bold text-xl"
+                                    "font-bold text-xl mb-6 pl-2"
                                 )
                           )
                         ]
 
                     Nothing ->
                         []
+                        
+                ,[( "feasibilityFilePanel"
+                          , Form.Panel [(keys.feasibilityFile ,Form.File  "Joindre le dossier de faisabilité" "Format supporté : PDF uniquement")])]
+                ,  [( "otherFilePanel"
+                          , Form.Panel [(keys.otherFile ,Form.File  "Joindre une autre pièce (si besoin)" "Format supporté : PDF uniquement")])]
+
                 , case candidacy.certificationAuthority of
                     Just certificationAuthority ->
                         [ ( "authorityPanel"
@@ -46,25 +52,25 @@ form _ ( candidacy, _ ) =
                                   , Form.Text
                                         "Certificateur"
                                         (Just
-                                            "font-bold text-xl"
+                                            "font-bold text-xl pl-2"
                                         )
                                   )
                                 , ( "authorityLabel"
                                   , Form.Text
                                         certificationAuthority.label
                                         (Just
-                                            "font-bold text-xl"
+                                            "font-bold text-xl pl-2"
                                         )
                                   )
                                 , ( "authorityContactFullName"
                                   , Form.Text
                                         (Maybe.withDefault "" certificationAuthority.contactFullName)
-                                        Nothing
+                                        (Just "pl-2")
                                   )
                                 , ( "authorityContactEmail"
                                   , Form.Text
                                         (Maybe.withDefault "" certificationAuthority.contactEmail)
-                                        Nothing
+                                        (Just "pl-2")
                                   )
                                 ]
                           )

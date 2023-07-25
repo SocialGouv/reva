@@ -57,7 +57,7 @@ import View.Candidacy
 import View.Candidacy.NavigationSteps as NavigationSteps
 import View.Candidacy.Tab exposing (Tab, Value(..))
 import View.Helpers exposing (dataTest)
-
+import Api.Form.Feasibility
 
 type Msg
     = GotCandidacyResponse (RemoteData (List String) Candidacy)
@@ -542,7 +542,7 @@ updateTab context tab ( model, cmd ) =
                         { form = Page.Form.Feasibility.form
                         , onLoad = Nothing
                         , onSave = Nothing
-                        , onSubmit = \_ _ _ _ _ -> Cmd.none
+                        , onSubmit = Api.Form.Feasibility.submit tab.candidacyId context.restApiEndpoint
                         , onRedirect = pushUrl <| candidacyTab Profile
                         , onValidate = \_ _ -> Ok ()
                         , status = Form.Editable

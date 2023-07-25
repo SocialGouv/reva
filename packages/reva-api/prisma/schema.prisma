@@ -86,6 +86,7 @@ model Candidacy {
   isCertificationPartial    Boolean                                 @default(false) @map("is_certification_partial")
   admissibility             Admissibility?
   examInfo                  ExamInfo?
+  Feasibility               Feasibility?
 
   @@map("candidacy")
 }
@@ -825,4 +826,31 @@ model CertificationAuthorityOnCertification {
 
   @@unique([certificationAuthorityId, certificationId])
   @@map("certification_authority_on_certification")
+}
+
+model Feasibility {
+  id                    String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy             Candidacy @relation(fields: [candidacyId], references: [id])
+  candidacyId           String    @unique @map("candidacy_id") @db.Uuid
+  feasibilityFile       File      @relation("feasibility_file", fields: [feasibilityFileId], references: [id])
+  otherFile             File?     @relation("other_file", fields: [otherFileId], references: [id])
+  feasibilityFileId     String    @db.Uuid
+  otherFileId           String?   @db.Uuid
+  feasibilityFileSentAt DateTime? @map("feasibility_file_sent_at") @db.Timestamptz(6)
+  createdAt             DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime? @map("updated_at") @db.Timestamptz(6)
+
+  @@map("feasibility")
+}
+
+model File {
+  id                        String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name                      String        @map("name") @db.VarChar(255)
+  mimeType                  String        @map("mime_type") @db.VarChar(255)
+  content                   Bytes         @map("file_content")
+  createdAt                 DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  linkedAsFeasibilityFileBy Feasibility[] @relation("feasibility_file")
+  linkedAsOtherFileBy       Feasibility[] @relation("other_file")
+
+  @@map("file")
 }

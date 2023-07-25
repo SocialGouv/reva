@@ -1,0 +1,39 @@
+import { prismaClient } from "../../database/postgres/client";
+
+export interface UploadedFile {
+  data: Buffer;
+  filename: string;
+  mimetype: string;
+}
+
+export const createFeasibility = ({
+  candidacyId,
+  feasibilityFile,
+  otherFile,
+}: {
+  candidacyId: string;
+  feasibilityFile: UploadedFile;
+  otherFile?: UploadedFile;
+}) =>
+  prismaClient.feasibility.create({
+    data: {
+      candidacy: { connect: { id: candidacyId } },
+      feasibilityFileSentAt: new Date(),
+      feasibilityFile: {
+        create: {
+          content: feasibilityFile.data,
+          mimeType: feasibilityFile.mimetype,
+          name: feasibilityFile.filename,
+        },
+      },
+      otherFile: otherFile
+        ? {
+            create: {
+              content: otherFile.data,
+              mimeType: otherFile.mimetype,
+              name: otherFile.filename,
+            },
+          }
+        : undefined,
+    },
+  });

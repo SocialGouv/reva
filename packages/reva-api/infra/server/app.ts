@@ -10,6 +10,7 @@ import fastify, {
   FastifyServerOptions,
 } from "fastify";
 
+import { feasibilityFileUploadRoute } from "../graphql/feasibility/feasibility.routes";
 import { logger } from "../logger";
 import { restRoutes } from "../rest";
 import proofUploadRoute from "../rest/proof-upload";
@@ -117,6 +118,8 @@ export const buildApp = async (
   app.register(proofUploadRoute, {
     prefix: "/api",
   });
+
+  app.register(feasibilityFileUploadRoute, { prefix: "/api" });
 
   logger.info("started");
   return app;
