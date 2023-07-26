@@ -24,8 +24,8 @@ import Data.Form exposing (FormData, get, insert)
 import Data.Form.Helper exposing (booleanFromString, booleanToString)
 import Dict exposing (Dict)
 import File exposing (File)
-import Html exposing (Html, div, fieldset, input, label, legend, li, option, p, select, span, text, ul)
-import Html.Attributes exposing (class, disabled, for, id, multiple, name, placeholder, required, selected, type_, value)
+import Html exposing (Html, a, div, fieldset, input, label, legend, li, option, p, select, span, text, ul)
+import Html.Attributes exposing (class, disabled, for, href, id, multiple, name, placeholder, required, selected, target, title, type_, value)
 import Html.Events exposing (on, onInput, onSubmit)
 import Json.Decode
 import List.Extra
@@ -51,7 +51,7 @@ type Element
     | CheckboxList String (List ( String, String ))
     | Date String
     | Empty
-    | File String String
+    | File String String String String
     | Files String String
     | Heading String -- h2
     | Info String String
@@ -336,7 +336,7 @@ viewEditableElement formData ( elementId, element ) =
         Empty ->
             text ""
 
-        File label hint ->
+        File label hint _ _ ->
             [ viewInputFiles False elementId label hint ]
                 |> viewFieldsetElement
 
@@ -489,8 +489,9 @@ viewReadOnlyElement formData ( elementId, element ) =
         Empty ->
             text ""
 
-        File _ _ ->
-            text ""
+        File _ _ name url ->
+            [ viewFileLink name url ]
+                |> viewFieldsetElement
 
         Files _ _ ->
             text ""
@@ -553,7 +554,7 @@ viewReadOnlyElement formData ( elementId, element ) =
                     text ""
 
         Panel children ->
-            div [ class "bg-gray-50 p-6 my-5 w-full" ] (List.map (viewEditableElement formData) children)
+            div [ class "bg-gray-50 p-6 my-5 w-full" ] (List.map (viewReadOnlyElement formData) children)
 
         Text content classes ->
             p [ class ("mb-4 " ++ Maybe.withDefault "" classes) ] [ text content ]
@@ -697,6 +698,19 @@ viewInputFiles acceptMultipleFiles elementId title hint =
             ]
             []
         ]
+
+
+viewFileLink : String -> String -> Html (Msg referential)
+viewFileLink name url =
+    if name /= "" then
+        div [ class "bg-gray-50 p-8 border-2 border-solid border-black rounded-md border-dsfrBlue-300 " ]
+            [ a
+                [ href url, target "_blank", class "fr-link text-2xl font-bold", title (name ++ " - nouvelle fenêtre") ]
+                [ text ("Fichier: " ++ name) ]
+            ]
+
+    else
+        text ""
 
 
 viewInfo : String -> String -> Html msg

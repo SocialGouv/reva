@@ -2,9 +2,10 @@ module Page.Form.Feasibility exposing (..)
 
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
+import Data.Form.Feasibility exposing (keys)
 import Data.Referential exposing (Referential)
 import Page.Form as Form exposing (Form)
-import Data.Form.Feasibility exposing(keys)
+
 
 form : FormData -> ( Candidacy, Referential ) -> Form
 form _ ( candidacy, _ ) =
@@ -38,12 +39,14 @@ form _ ( candidacy, _ ) =
 
                     Nothing ->
                         []
-                        
-                ,[( "feasibilityFilePanel"
-                          , Form.Panel [(keys.feasibilityFile ,Form.File  "Joindre le dossier de faisabilité" "Format supporté : PDF uniquement")])]
-                ,  [( "otherFilePanel"
-                          , Form.Panel [(keys.otherFile ,Form.File  "Joindre une autre pièce (si besoin)" "Format supporté : PDF uniquement")])]
-
+                , [ ( "feasibilityFilePanel"
+                    , Form.Panel [ ( keys.feasibilityFile, Form.File "Joindre le dossier de faisabilité" "Format supporté : PDF uniquement" "" "" ) ]
+                    )
+                  ]
+                , [ ( "otherFilePanel"
+                    , Form.Panel [ ( keys.otherFile, Form.File "Joindre une autre pièce (si besoin)" "Format supporté : PDF uniquement" "" "" ) ]
+                    )
+                  ]
                 , case candidacy.certificationAuthority of
                     Just certificationAuthority ->
                         [ ( "authorityPanel"
