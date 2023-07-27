@@ -16,6 +16,7 @@ import Api.Form.Archive
 import Api.Form.Candidate
 import Api.Form.DropOut
 import Api.Form.ExamInfo
+import Api.Form.Feasibility
 import Api.Form.FundingRequest
 import Api.Form.PaymentRequest
 import Api.Form.PaymentUploads
@@ -33,7 +34,7 @@ import Data.Form.FundingRequest
 import Data.Form.PaymentRequest
 import Data.Form.Unarchive
 import Data.Referential exposing (Referential)
-import Html exposing (Html, div, p, text)
+import Html exposing (Html, div, h3, h4, h5, p, text)
 import Html.Attributes exposing (alt, class, name)
 import Html.Attributes.Extra exposing (role)
 import Page.Form as Form
@@ -56,8 +57,9 @@ import View
 import View.Candidacy
 import View.Candidacy.NavigationSteps as NavigationSteps
 import View.Candidacy.Tab exposing (Tab, Value(..))
+import View.FileLink exposing (viewFileLink)
 import View.Helpers exposing (dataTest)
-import Api.Form.Feasibility
+
 
 type Msg
     = GotCandidacyResponse (RemoteData (List String) Candidacy)
@@ -210,6 +212,9 @@ view context model =
 
                 Feasibility ->
                     viewForm "feasibility"
+
+                FeasibilityFileSubmitted ->
+                    viewMain context "feasibility-sent" (viewFeasibilityFileSubmitted context model.selected)
     in
     View.layout "Accéder aux étapes du parcours" [] maybeNavigationSteps [ content ]
 
@@ -228,6 +233,79 @@ viewTrainingSent context candidacyId =
                 |> Button.linkButton (Route.toString context.baseUrl (Route.Candidacy <| Tab candidacyId Profile))
                 |> Button.view
             ]
+        ]
+    ]
+
+
+viewFeasibilityFileSubmitted : Context -> RemoteData (List String) Candidacy -> List (Html msg)
+viewFeasibilityFileSubmitted _ candidacyRemoteData =
+    let
+        content =
+            case candidacyRemoteData of
+                Success candidacy ->
+                    let
+                        feasibilityFileNameAndUrl =
+                            Maybe.withDefault ( "", "" ) <|
+                                Maybe.map (\f -> ( f.feasibilityFile.name, f.feasibilityFile.url )) candidacy.feasibility
+
+                        otherFileNameAndUrl =
+                            case candidacy.feasibility of
+                                Just feasibility ->
+                                    case feasibility.otherFile of
+                                        Just otherFile ->
+                                            ( otherFile.name, otherFile.url )
+
+                                        Nothing ->
+                                            ( "", "" )
+
+                                Nothing ->
+                                    ( "", "" )
+                    in
+                    [ h3 [ class "mb-0" ]
+                        [ text
+                            (case candidacy.candidate of
+                                Just candidate ->
+                                    String.concat [ candidate.firstname, " ", candidate.lastname ]
+
+                                Nothing ->
+                                    ""
+                            )
+                        ]
+                    , h5 []
+                        [ text
+                            (case candidacy.certification of
+                                Just certification ->
+                                    certification.label
+
+                                Nothing ->
+                                    ""
+                            )
+                        ]
+                    , div [ class "flex flex-col w-full gap-8" ]
+                        [ viewFileLink (Tuple.first feasibilityFileNameAndUrl) (Tuple.second feasibilityFileNameAndUrl)
+                        , viewFileLink (Tuple.first otherFileNameAndUrl) (Tuple.second otherFileNameAndUrl)
+                        , case candidacy.certificationAuthority of
+                            Just certificationAuthority ->
+                                div [ class "bg-gray-50 p-6 flex flex-col gap-2.5" ]
+                                    [ p [ class "m-0 font-bold text-xl" ] [ text "Certificateur" ]
+                                    , p [ class "m-0 font-bold text-lg" ] [ text certificationAuthority.label ]
+                                    , p [ class "m-0" ] [ text (Maybe.withDefault "" certificationAuthority.contactFullName) ]
+                                    , p [ class "m-0" ] [ text (Maybe.withDefault "" certificationAuthority.contactEmail) ]
+                                    ]
+
+                            Nothing ->
+                                div [] [ text "Certificateur inconnu" ]
+                        ]
+                    ]
+
+                _ ->
+                    []
+    in
+    [ div
+        [ class "pb-10" ]
+        [ View.title "Dossier de faisabilité"
+        , div [ class "flex flex-col w-full gap-4" ]
+            content
         ]
     ]
 
@@ -545,9 +623,10 @@ updateTab context tab ( model, cmd ) =
                         , onSubmit = Api.Form.Feasibility.submit tab.candidacyId context.restApiEndpoint
                         , onRedirect = pushUrl <| candidacyTab Profile
                         , onValidate = \_ _ -> Ok ()
-                        , status = 
+                        , status =
                             if candidacy.feasibility /= Nothing then
                                 Form.ReadOnly
+
                             else
                                 Form.Editable
                         }

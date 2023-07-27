@@ -25,3 +25,4 @@ type Value
     | FundingRequest
     | ExamInfo
     | Feasibility
+    | FeasibilityFileSubmitted

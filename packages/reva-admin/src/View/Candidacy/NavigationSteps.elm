@@ -47,7 +47,17 @@ view feasibilityFeatureEnabled baseUrl candidacy =
 
         feasibilityLink =
             if Candidacy.isStatusEqualOrAbove candidacy ParcoursConfirme then
-                Just <| Route.href baseUrl <| Route.Candidacy (tab View.Candidacy.Tab.Feasibility)
+                Just <|
+                    Route.href baseUrl <|
+                        Route.Candidacy
+                            (tab <|
+                                case candidacy.feasibility of
+                                    Just _ ->
+                                        View.Candidacy.Tab.FeasibilityFileSubmitted
+
+                                    Nothing ->
+                                        View.Candidacy.Tab.Feasibility
+                            )
 
             else
                 Nothing

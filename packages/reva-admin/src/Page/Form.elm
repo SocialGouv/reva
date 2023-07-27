@@ -24,8 +24,8 @@ import Data.Form exposing (FormData, get, insert)
 import Data.Form.Helper exposing (booleanFromString, booleanToString)
 import Dict exposing (Dict)
 import File exposing (File)
-import Html exposing (Html, a, div, fieldset, input, label, legend, li, option, p, select, span, text, ul)
-import Html.Attributes exposing (class, disabled, for, href, id, multiple, name, placeholder, required, selected, target, title, type_, value)
+import Html exposing (Html, div, fieldset, input, label, legend, li, option, p, select, span, text, ul)
+import Html.Attributes exposing (class, disabled, for, id, multiple, name, placeholder, required, selected, title, type_, value)
 import Html.Events exposing (on, onInput, onSubmit)
 import Json.Decode
 import List.Extra
@@ -33,6 +33,7 @@ import RemoteData exposing (RemoteData(..))
 import String exposing (String)
 import Task
 import View
+import View.FileLink exposing (viewFileLink)
 
 
 type Msg referential
@@ -691,19 +692,6 @@ viewInputFiles acceptMultipleFiles elementId title hint =
             ]
             []
         ]
-
-
-viewFileLink : String -> String -> Html (Msg referential)
-viewFileLink name url =
-    if name /= "" then
-        div [ class "bg-gray-50 p-8 border-2 border-solid border-black rounded-md border-dsfrBlue-300 " ]
-            [ a
-                [ href url, target "_blank", class "fr-link text-2xl font-bold", title (name ++ " - nouvelle fenêtre") ]
-                [ text ("Fichier: " ++ name) ]
-            ]
-
-    else
-        text ""
 
 
 viewInfo : String -> String -> Html msg
