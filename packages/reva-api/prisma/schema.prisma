@@ -245,13 +245,15 @@ model CandidaciesOnRegionsAndCertifications {
 }
 
 model Account {
-  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  email      String    @unique @db.VarChar(255)
-  firstname  String?   @db.VarChar(255)
-  lastname   String?   @db.VarChar(255)
-  organism   Organism? @relation(fields: [organismId], references: [id])
-  organismId String?   @map("organism_id") @db.Uuid
-  keycloakId String    @unique @map("keycloak_id") @db.Uuid
+  id                       String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  email                    String                  @unique @db.VarChar(255)
+  firstname                String?                 @db.VarChar(255)
+  lastname                 String?                 @db.VarChar(255)
+  organism                 Organism?               @relation(fields: [organismId], references: [id])
+  organismId               String?                 @map("organism_id") @db.Uuid
+  certificationAuthority   CertificationAuthority? @relation(fields: [certificationAuthorityId], references: [id])
+  certificationAuthorityId String?                 @map("certification_authority_id") @db.Uuid
+  keycloakId               String                  @unique @map("keycloak_id") @db.Uuid
 
   @@map("account")
 }
@@ -798,6 +800,7 @@ model CertificationAuthority {
   updatedAt                             DateTime?                               @map("updated_at") @db.Timestamptz(6)
   certificationAuthorityOnDepartment    CertificationAuthorityOnDepartment[]
   certificationAuthorityOnCertification CertificationAuthorityOnCertification[]
+  Account                               Account[]
 
   @@map("certification_authority")
 }
