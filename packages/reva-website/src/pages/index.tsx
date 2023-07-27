@@ -58,8 +58,8 @@ const AvenirPro = () => (
         </h1>
       </header>
       <h2 className="text-2xl lg:text-3xl mb-10">
-        Découvrez le portail officiel du service public de la Validation des
-        Acquis de l’Expérience.
+        Découvrez la bêta du portail officiel du service public de la Validation
+        des Acquis de l’Expérience.
       </h2>
       <p className="text-xl leading-relaxed">
         Notre mission est de fournir un espace unique rassemblant candidats et
