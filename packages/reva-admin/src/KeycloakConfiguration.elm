@@ -40,8 +40,10 @@ getEncodedKeycloakConfiguration maybeKeycloakConfiguration =
 
 tokenDecoder : Decoder Token
 tokenDecoder =
-    Decode.map2 Api.Token.init
+    Decode.map4 Api.Token.init
         (Decode.field "isAdmin" Decode.bool)
+        (Decode.field "isCertificationAuthority" Decode.bool)
+        (Decode.field "isOrganism" Decode.bool)
         (Decode.field "token" Decode.string)
 
 

@@ -1,5 +1,6 @@
 port module Main exposing (main)
 
+import Accessibility exposing (h1)
 import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
 import Api.Token exposing (Token)
 import Browser
@@ -20,6 +21,7 @@ import Page.Subscriptions as Subscriptions
 import Route exposing (Route(..))
 import Task
 import Url exposing (Url)
+import View
 import View.Footer
 import View.Header
 import View.Skiplinks
@@ -48,9 +50,11 @@ type alias Model =
 type Page
     = Candidacies Candidacies.Model
     | Candidacy Candidacy.Model
+    | Feasibility
     | Loading Token
     | LoggingOut
     | NotLoggedIn Route
+    | NotFound
     | Subscription Subscription.Model
     | Subscriptions Subscriptions.Model
     | SiteMap
@@ -133,6 +137,18 @@ viewPage model =
             Candidacy.view model.context candidacyModel
                 |> Html.map GotCandidacyMsg
 
+        Feasibility ->
+            View.layout ""
+                []
+                []
+                [ div
+                    [ class "p-4" ]
+                    [ h1 [] [ text "Espace certificateur" ] ]
+                ]
+
+        NotFound ->
+            h1 [] [ text "Page introuvable" ]
+
         Loading _ ->
             div [] []
 
@@ -154,6 +170,9 @@ changeRouteTo context route model =
             ( model, Cmd.none )
     in
     case ( route, model.page ) of
+        ( Route.Home, _ ) ->
+            noChange
+
         ( Route.Candidacies filters, Candidacies candidaciesModel ) ->
             candidaciesModel
                 |> Candidacies.withFilters context filters.page filters.status
@@ -168,6 +187,9 @@ changeRouteTo context route model =
         ( Route.Candidacies filters, _ ) ->
             Candidacies.init model.context filters.status filters.page
                 |> updateWith Candidacies GotCandidaciesMsg model
+
+        ( Route.Feasibility, _ ) ->
+            noChange
 
         ( Route.Subscriptions filters, _ ) ->
             Subscriptions.init model.context filters.status filters.page
@@ -266,32 +288,39 @@ update msg model =
 
                 newContext =
                     { context | token = token }
-
-                redirectRoute =
-                    case route of
-                        Login ->
-                            Route.Candidacies Route.emptyCandidacyFilters
-
-                        _ ->
-                            route
-
-                filters =
-                    case route of
-                        Route.Candidacies f ->
-                            f
-
-                        _ ->
-                            { status = CandidacyStatusFilter.ActiveHorsAbandon, page = 1 }
-
-                ( candidaciesModel, candidaciesCmd ) =
-                    Candidacies.init newContext filters.status filters.page
             in
-            ( { model | context = newContext, page = Candidacies candidaciesModel }
-            , Cmd.batch
-                [ Cmd.map GotCandidaciesMsg candidaciesCmd
-                , Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl redirectRoute)
-                ]
-            )
+            if Api.Token.isAdmin token || Api.Token.isOrganism token then
+                let
+                    filters =
+                        case route of
+                            Route.Candidacies f ->
+                                f
+
+                            _ ->
+                                { status = CandidacyStatusFilter.ActiveHorsAbandon, page = 1 }
+
+                    ( candidaciesModel, candidaciesCmd ) =
+                        Candidacies.init newContext filters.status filters.page
+                in
+                ( { model | context = newContext, page = Candidacies candidaciesModel }
+                , Cmd.batch
+                    [ Cmd.map GotCandidaciesMsg candidaciesCmd
+                    , Nav.pushUrl model.context.navKey
+                        (Route.toString model.context.baseUrl <|
+                            Route.Candidacies Route.emptyCandidacyFilters
+                        )
+                    ]
+                )
+
+            else if Api.Token.isCertificationAuthority token then
+                ( { model | context = newContext, page = Feasibility }
+                , Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl Route.Feasibility)
+                )
+
+            else
+                ( { model | context = newContext, page = NotFound }
+                , Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl <| Route.NotFound)
+                )
 
         ( GotTokenRefreshed token, _ ) ->
             ( model
