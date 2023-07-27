@@ -32,6 +32,8 @@ type alias SubscriptionFilters =
 type Route
     = Candidacy Tab.Tab
     | Candidacies CandidacyFilters
+    | Feasibility
+    | Home
     | Login
     | Logout
     | NotFound
@@ -76,7 +78,7 @@ parser baseUrl =
     in
     s baseUrl
         </> oneOf
-                [ top |> map (Candidacies emptyCandidacyFilters)
+                [ top |> map Home
                 , s "auth" </> s "login" |> map Login
                 , s "auth" </> s "logout" |> map Logout
                 , s "plan-du-site" |> map SiteMap
@@ -123,6 +125,9 @@ toString baseUrl route =
             topLevel ([ "candidacies", candidacyIdToString candidacyId ] ++ path) params
     in
     case route of
+        Home ->
+            topLevel [ "" ] []
+
         Login ->
             topLevel [ "auth", "login" ] []
 
@@ -141,6 +146,9 @@ toString baseUrl route =
 
         Candidacy tab ->
             tabToString topLevel subLevel tab
+
+        Feasibility ->
+            topLevel [ "feasibility" ] []
 
         Subscriptions filters ->
             topLevel [ "subscriptions" ] [ Url.Builder.string "status" (SubscriptionRequestStatus.toString filters.status), Url.Builder.int "page" filters.page ]

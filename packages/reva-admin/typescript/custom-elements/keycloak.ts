@@ -70,6 +70,8 @@ class KeycloakElement extends HTMLElement {
             new CustomEvent("loggedIn", {
               detail: {
                 isAdmin: keycloak.hasResourceRole("admin"),
+                isCertificationAuthority: keycloak.hasResourceRole("manage_feasibility"),
+                isOrganism: keycloak.hasResourceRole("manage_candidacy"),
                 token: keycloak.token,
               },
             })
@@ -104,6 +106,8 @@ class KeycloakElement extends HTMLElement {
         new CustomEvent("tokenRefreshed", {
           detail: {
             isAdmin: keycloak.hasResourceRole("admin"),
+            isCertificationAuthority: keycloak.hasResourceRole("manage_feasibility"),
+            isOrganism: keycloak.hasResourceRole("manage_candidacy"),
             token: keycloak.token,
           },
         })
