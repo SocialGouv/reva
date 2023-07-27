@@ -56,43 +56,30 @@ form _ ( candidacy, _ ) =
 
                     Nothing ->
                         []
-                , [ ( "feasibilityFilePanel"
-                    , Form.Panel [ ( keys.feasibilityFile, Form.File "Joindre le dossier de faisabilité" "Format supporté : PDF uniquement" (Tuple.first feasibilityFileNameAndUrl) (Tuple.second feasibilityFileNameAndUrl) ) ]
-                    )
-                  ]
-                , [ ( "otherFilePanel"
-                    , Form.Panel [ ( keys.otherFile, Form.File "Joindre une autre pièce (si besoin)" "Format supporté : PDF uniquement" (Tuple.first otherFileNameAndUrl) (Tuple.second otherFileNameAndUrl) ) ]
-                    )
+                , [ ( "feasibilityFile", Form.Title "Dossier de faisabilité" )
+                  , ( keys.feasibilityFile, Form.File "Joindre le dossier de faisabilité" "Format supporté : PDF uniquement" (Tuple.first feasibilityFileNameAndUrl) (Tuple.second feasibilityFileNameAndUrl) )
+                  , ( "otherFile", Form.Title "Autre pièce jointe" )
+                  , ( keys.otherFile, Form.File "Joindre une autre pièce (si besoin)" "Format supporté : PDF uniquement" (Tuple.first otherFileNameAndUrl) (Tuple.second otherFileNameAndUrl) )
                   ]
                 , case candidacy.certificationAuthority of
                     Just certificationAuthority ->
-                        [ ( "authorityPanel"
-                          , Form.Panel
-                                [ ( "authoritySectionTitle"
-                                  , Form.Text
-                                        "Certificateur"
-                                        (Just
-                                            "font-bold text-xl pl-2"
-                                        )
-                                  )
-                                , ( "authorityLabel"
-                                  , Form.Text
-                                        certificationAuthority.label
-                                        (Just
-                                            "font-bold text-xl pl-2"
-                                        )
-                                  )
-                                , ( "authorityContactFullName"
-                                  , Form.Text
-                                        (Maybe.withDefault "" certificationAuthority.contactFullName)
-                                        (Just "pl-2")
-                                  )
-                                , ( "authorityContactEmail"
-                                  , Form.Text
-                                        (Maybe.withDefault "" certificationAuthority.contactEmail)
-                                        (Just "pl-2")
-                                  )
-                                ]
+                        [ ( "authoritySectionTitle", Form.Title "Certificateur" )
+                        , ( "authorityLabel"
+                          , Form.Text
+                                certificationAuthority.label
+                                (Just
+                                    "font-bold text-xl pl-2"
+                                )
+                          )
+                        , ( "authorityContactFullName"
+                          , Form.Text
+                                (Maybe.withDefault "" certificationAuthority.contactFullName)
+                                (Just "pl-2")
+                          )
+                        , ( "authorityContactEmail"
+                          , Form.Text
+                                (Maybe.withDefault "" certificationAuthority.contactEmail)
+                                (Just "pl-2")
                           )
                         ]
 

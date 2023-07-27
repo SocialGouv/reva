@@ -69,7 +69,6 @@ type Element
     | Textarea String (Maybe String)
     | RadioList String (List ( String, String ))
     | Text String (Maybe String)
-    | Panel (List ( String, Element ))
 
 
 type alias Form =
@@ -443,9 +442,6 @@ viewEditableElement formData ( elementId, element ) =
                 Nothing ->
                     text ""
 
-        Panel children ->
-            div [ class "bg-gray-50 p-6 my-5 w-full" ] (List.map (viewEditableElement formData) children)
-
         Text content classes ->
             div [ class ("mb-4 w-full " ++ Maybe.withDefault "" classes) ] [ text content ]
 
@@ -552,9 +548,6 @@ viewReadOnlyElement formData ( elementId, element ) =
 
                 Nothing ->
                     text ""
-
-        Panel children ->
-            div [ class "bg-gray-50 p-6 my-5 w-full" ] (List.map (viewReadOnlyElement formData) children)
 
         Text content classes ->
             p [ class ("mb-4 " ++ Maybe.withDefault "" classes) ] [ text content ]
