@@ -12,7 +12,6 @@ const keycloakPluginMock: FastifyPluginAsync = async (
   app,
   _opts
 ): Promise<void> => {
-
   app.addHook("onRequest", async (req: FastifyRequest, _res: any) => {
     if (req.headers.authorization) {
       const [role, sub] = req.headers.authorization.split("/");
@@ -31,6 +30,14 @@ const keycloakPluginMock: FastifyPluginAsync = async (
             sub,
             realm_access: {
               roles: ["manage_candidacy"],
+            },
+          };
+          break;
+        case "manage_feasibility":
+          userInfo = {
+            sub,
+            realm_access: {
+              roles: ["manage_feasibility"],
             },
           };
           break;
