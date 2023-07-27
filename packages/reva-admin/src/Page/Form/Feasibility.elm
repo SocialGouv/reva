@@ -10,6 +10,23 @@ import Page.Form as Form exposing (Form)
 form : FormData -> ( Candidacy, Referential ) -> Form
 form _ ( candidacy, _ ) =
     let
+        feasibilityFileNameAndUrl =
+            Maybe.withDefault ( "", "" ) <|
+                Maybe.map (\f -> ( f.feasibilityFile.name, f.feasibilityFile.url )) candidacy.feasibility
+
+        otherFileNameAndUrl =
+            case candidacy.feasibility of
+                Just feasibility ->
+                    case feasibility.otherFile of
+                        Just otherFile ->
+                            ( otherFile.name, otherFile.url )
+
+                        Nothing ->
+                            ( "", "" )
+
+                Nothing ->
+                    ( "", "" )
+
         elements =
             List.concat
                 [ [ ( "candidateFullName"
@@ -40,11 +57,11 @@ form _ ( candidacy, _ ) =
                     Nothing ->
                         []
                 , [ ( "feasibilityFilePanel"
-                    , Form.Panel [ ( keys.feasibilityFile, Form.File "Joindre le dossier de faisabilité" "Format supporté : PDF uniquement" "" "" ) ]
+                    , Form.Panel [ ( keys.feasibilityFile, Form.File "Joindre le dossier de faisabilité" "Format supporté : PDF uniquement" (Tuple.first feasibilityFileNameAndUrl) (Tuple.second feasibilityFileNameAndUrl) ) ]
                     )
                   ]
                 , [ ( "otherFilePanel"
-                    , Form.Panel [ ( keys.otherFile, Form.File "Joindre une autre pièce (si besoin)" "Format supporté : PDF uniquement" "" "" ) ]
+                    , Form.Panel [ ( keys.otherFile, Form.File "Joindre une autre pièce (si besoin)" "Format supporté : PDF uniquement" (Tuple.first otherFileNameAndUrl) (Tuple.second otherFileNameAndUrl) ) ]
                     )
                   ]
                 , case candidacy.certificationAuthority of

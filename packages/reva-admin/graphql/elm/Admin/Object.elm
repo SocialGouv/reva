@@ -109,6 +109,10 @@ type Feasibility
     = Feasibility
 
 
+type File
+    = File
+
+
 type FundingRequest
     = FundingRequest
 

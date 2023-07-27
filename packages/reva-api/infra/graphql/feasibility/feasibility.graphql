@@ -8,6 +8,13 @@ type CertificationAuthority {
 type Feasibility {
   id: ID!
   feasibilityFileSentAt: Timestamp!
+  feasibilityFile: File!
+  otherFile: File
+}
+
+type File {
+  url: String!
+  name: String!
 }
 
 type Candidacy {

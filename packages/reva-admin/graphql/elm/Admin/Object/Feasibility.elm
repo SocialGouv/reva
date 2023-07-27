@@ -27,3 +27,17 @@ id =
 feasibilityFileSentAt : SelectionSet Data.Scalar.Timestamp Admin.Object.Feasibility
 feasibilityFileSentAt =
     Object.selectionForField "Data.Scalar.Timestamp" "feasibilityFileSentAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder)
+
+
+feasibilityFile :
+    SelectionSet decodesTo Admin.Object.File
+    -> SelectionSet decodesTo Admin.Object.Feasibility
+feasibilityFile object____ =
+    Object.selectionForCompositeField "feasibilityFile" [] object____ Basics.identity
+
+
+otherFile :
+    SelectionSet decodesTo Admin.Object.File
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Feasibility
+otherFile object____ =
+    Object.selectionForCompositeField "otherFile" [] object____ (Basics.identity >> Decode.nullable)

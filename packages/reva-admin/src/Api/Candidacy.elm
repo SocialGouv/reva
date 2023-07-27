@@ -15,6 +15,8 @@ import Admin.Object.Certification
 import Admin.Object.CertificationAuthority
 import Admin.Object.CertificationSummary
 import Admin.Object.Experience
+import Admin.Object.Feasibility
+import Admin.Object.File
 import Admin.Object.Organism
 import Admin.Object.PaginationInfo
 import Admin.Object.ReorientationReason
@@ -30,6 +32,7 @@ import Data.Candidacy exposing (CandidacyId)
 import Data.Candidate
 import Data.Certification
 import Data.CertificationAuthority
+import Data.Feasibility
 import Data.Organism
 import Data.Pagination
 import Data.Referential
@@ -38,8 +41,7 @@ import Graphql.OptionalArgument as OptionalArgument exposing (OptionalArgument(.
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
 import View.Date exposing (toDateWithLabels)
-import Data.Feasibility
-import Admin.Object.Feasibility
+
 
 getCandidacies :
     String
@@ -142,7 +144,6 @@ selection id =
                 |> with (Admin.Object.Candidacy.reorientationReason reorientationReasonSelection)
                 |> with (Admin.Object.Candidacy.certificationAuthority certificationAuthoritySelection)
                 |> with (Admin.Object.Candidacy.feasibility feasibilitySelection)
-
     in
     SelectionSet.succeed
         (\maybeCandidacy companions ->
@@ -283,6 +284,17 @@ certificationSelection =
         |> with Admin.Object.Certification.abilities
 
 
+certificationSummarySelection : SelectionSet Data.Certification.CertificationSummary Admin.Object.CertificationSummary
+certificationSummarySelection =
+    SelectionSet.succeed Data.Certification.CertificationSummary
+        |> with Admin.Object.CertificationSummary.id
+        |> with Admin.Object.CertificationSummary.label
+
+
+
+-- CERTIFICATION AUTHORITY
+
+
 certificationAuthoritySelection : SelectionSet Data.CertificationAuthority.CertificationAuthority Admin.Object.CertificationAuthority
 certificationAuthoritySelection =
     SelectionSet.succeed Data.CertificationAuthority.CertificationAuthority
@@ -291,18 +303,25 @@ certificationAuthoritySelection =
         |> with Admin.Object.CertificationAuthority.contactFullName
         |> with Admin.Object.CertificationAuthority.contactEmail
 
+
+
+-- FEASIBILITY
+
+
 feasibilitySelection : SelectionSet Data.Feasibility.Feasibility Admin.Object.Feasibility
 feasibilitySelection =
     SelectionSet.succeed Data.Feasibility.Feasibility
         |> with Admin.Object.Feasibility.id
         |> with Admin.Object.Feasibility.feasibilityFileSentAt
+        |> with (Admin.Object.Feasibility.feasibilityFile fileSelection)
+        |> with (Admin.Object.Feasibility.otherFile fileSelection)
 
 
-certificationSummarySelection : SelectionSet Data.Certification.CertificationSummary Admin.Object.CertificationSummary
-certificationSummarySelection =
-    SelectionSet.succeed Data.Certification.CertificationSummary
-        |> with Admin.Object.CertificationSummary.id
-        |> with Admin.Object.CertificationSummary.label
+fileSelection : SelectionSet Data.Feasibility.File Admin.Object.File
+fileSelection =
+    SelectionSet.succeed Data.Feasibility.File
+        |> with Admin.Object.File.name
+        |> with Admin.Object.File.url
 
 
 
