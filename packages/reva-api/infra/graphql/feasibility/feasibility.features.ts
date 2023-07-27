@@ -84,3 +84,8 @@ export const getFileNameAndUrl = async ({
     return null;
   }
 };
+
+export const getFileWithContent = async ({ fileId }: { fileId: string }) =>
+  await prismaClient.file.findFirst({
+    where: { id: fileId },
+  });

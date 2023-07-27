@@ -5,7 +5,12 @@ import { canManageCandidacy } from "../../../domain/features/canManageCandidacy"
 import { getAccountFromKeycloakId } from "../../database/postgres/accounts";
 import { getCandidacyFromId } from "../../database/postgres/candidacies";
 import { logger } from "../../logger";
-import { UploadedFile, createFeasibility } from "./feasibility.features";
+import {
+  UploadedFile,
+  createFeasibility,
+  getFeasibilityByCandidacyid,
+  getFileWithContent,
+} from "./feasibility.features";
 
 interface UploadFeasibilityFileRequestBody {
   candidacyId: string;
@@ -22,6 +27,49 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
   server.register(fastifyMultipart, {
     addToBody: true,
   });
+
+  server.get<{ Params: { candidacyId: string; fileId: string } }>(
+    "/candidacy/:candidacyId/feasibility/file/:fileId",
+    {
+      schema: {
+        params: {
+          type: "object",
+          properties: {
+            feasibilityId: { type: "string" },
+            fileId: { type: "string" },
+          },
+          required: ["candidacyId", "fileId"],
+        },
+      },
+      handler: async (request, reply) => {
+        const { candidacyId, fileId } = request.params;
+
+        const feasibility = await getFeasibilityByCandidacyid({ candidacyId });
+
+        if (
+          ![feasibility?.feasibilityFileId, feasibility?.otherFileId].includes(
+            fileId
+          )
+        ) {
+          return reply.status(403).send({
+            err: "Vous n'êtes pas autorisé à visualiser ce fichier.",
+          });
+        }
+
+        const file = await getFileWithContent({ fileId });
+
+        if (file) {
+          reply
+            .header("Content-Disposition", "inline; filename=" + file.name)
+            .header("Content-Length", file.content.length)
+            .type(file.mimeType)
+            .send(file.content);
+        } else {
+          reply.status(400).send("Fichier non trouvé.");
+        }
+      },
+    }
+  );
 
   server.post<{
     Body: UploadFeasibilityFileRequestBody;
