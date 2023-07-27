@@ -58,8 +58,8 @@ const AvenirPro = () => (
         </h1>
       </header>
       <h2 className="text-2xl lg:text-3xl mb-10">
-        Découvrez la bêta du portail officiel du service public de la Validation
-        des Acquis de l’Expérience.
+        Découvrez la version beta du portail officiel du service public de la
+        Validation des Acquis de l’Expérience.
       </h2>
       <p className="text-xl leading-relaxed">
         Notre mission est de fournir un espace unique rassemblant candidats et
@@ -425,7 +425,7 @@ const IndexPage = () => {
         <title>France VAE | Bienvenue sur le portail de la VAE</title>
         <meta
           name="description"
-          content="Découvrez le portail officiel du service public de la Validation des Acquis de L’Expérience."
+          content="Découvrez la version beta du portail officiel du service public de la Validation des Acquis de L’Expérience."
         />
       </Head>
       <AvenirPro />
