@@ -78,9 +78,17 @@ view feasibilityFeatureEnabled baseUrl candidacy =
                 Nothing ->
                     False
 
+        feasibilityMenuEntryStatus =
+            case candidacy.feasibility of
+                Just _ ->
+                    Disabled
+
+                Nothing ->
+                    Enabled
+
         feasibilityMenuEntry =
             if showFeasibilityMenuEntry then
-                [ { content = expandedView Enabled "Dossier de faisabilité" ParcoursConfirme candidacy
+                [ { content = expandedView feasibilityMenuEntryStatus "Dossier de faisabilité" ParcoursConfirme candidacy
                   , navigation = feasibilityLink
                   }
                 ]
