@@ -223,9 +223,6 @@ const CANDIDACY_SELECTION = `
       organism {
         id
         label
-        address
-        zip
-        city
         contactAdministrativeEmail
       }
       createdAt

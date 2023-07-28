@@ -11,9 +11,6 @@ const GET_ORGANISMS_FOR_CANDIDACY = gql`
     ) {
       id
       label
-      address
-      zip
-      city
       contactAdministrativeEmail
     }
   }

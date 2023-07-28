@@ -64,11 +64,8 @@ export interface Department {
 
 export interface Organism {
   id: string;
-  address: string;
-  city: string;
   contactAdministrativeEmail: string;
   label: string;
-  zip: string;
 }
 
 export interface OrganismForCandidacy {

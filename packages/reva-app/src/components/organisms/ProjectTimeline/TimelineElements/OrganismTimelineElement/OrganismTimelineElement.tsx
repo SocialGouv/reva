@@ -32,16 +32,6 @@ export const OrganismTimelineElement = () => {
                 </h3>
               )}
               <address className="not-italic">
-                {state.context.organism?.address && (
-                  <p data-test="project-home-organism-address">
-                    {state.context.organism?.address}
-                  </p>
-                )}
-                {state.context.organism?.zip && state.context.organism?.city && (
-                  <p data-test="project-home-organism-zip-city">
-                    {state.context.organism?.zip} {state.context.organism?.city}
-                  </p>
-                )}
                 {state.context.organism?.contactAdministrativeEmail && (
                   <p data-test="project-home-organism-email">
                     {state.context.organism?.contactAdministrativeEmail}
