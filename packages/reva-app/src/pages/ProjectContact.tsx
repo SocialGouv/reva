@@ -1,3 +1,4 @@
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
@@ -73,6 +74,42 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
         <RegistrationErrorMessage error={state.context.error} />
       ) : (
         <>
+          <Alert
+            className="mb-6"
+            severity="warning"
+            title={
+              <div className="flex flex-col items-start gap-2 font-normal">
+                <h2 className="font-bold ">Attention</h2>
+                <p>Seuls quelques diplômes sont actuellement éligibles : </p>
+                <a
+                  className="fr-link"
+                  href="https://airtable.com/appQT21E7Sy70YfSB/shrTDCbwwBI4xLLo9/tblWDa9HN0cuqLnAl"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Voir tous les diplômes actuellement disponibles via France VAE - nouvelle fenêtre"
+                >
+                  Voir tous les diplômes actuellement disponibles via France VAE
+                </a>
+                <p>
+                  Les salariés ayant un contrat de travail de droit public, les
+                  retraités et les étudiants{" "}
+                  <strong>
+                    ne peuvent pas bénéficier du financement d’un parcours
+                    France VAE à date.
+                  </strong>
+                </p>
+                <a
+                  className="fr-link"
+                  href="https://airtable.com/appQT21E7Sy70YfSB/shrgvhoKYW1EsXUu5/tblQgchiTKInxOqqr"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="En cas de question, contactez un Point Relais Conseil - nouvelle fenêtre"
+                >
+                  En cas de question, contactez un Point Relais Conseil
+                </a>
+              </div>
+            }
+          />
           <h1 className="text-3xl font-bold text-dsfrBlue-500">
             Bienvenue <span aria-hidden="true">🤝</span>,
           </h1>
