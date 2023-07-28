@@ -3,6 +3,7 @@ import {
   SectionParagraph,
   SectionSubHeader,
 } from "@/components/section-content/SectionContent";
+import Alert from "@codegouvfr/react-dsfr/Alert";
 import Image from "next/image";
 
 export const QuestcequelaVae = () => (
@@ -29,6 +30,34 @@ export const QuestcequelaVae = () => (
           à des activités de volontariats, activités sportives de haut niveau,
           etc. Ces expériences doivent être en rapport avec le diplôme visé.
         </SectionParagraph>
+        <Alert
+          severity="info"
+          title={
+            <div className="flex flex-col items-start gap-2 font-normal">
+              <h5>Vous ne savez pas quel diplôme choisir ?</h5>
+              <p>
+                Les Points Relais Conseils ou les conseillers en évolution
+                professionnelle sont là pour vous aider.
+              </p>
+              <a
+                className="fr-link"
+                href="https://airtable.com/appQT21E7Sy70YfSB/shrgvhoKYW1EsXUu5/tblQgchiTKInxOqqr"
+                target="_blank"
+                title="Liste des Points Relais Conseils disponibles - nouvelle fenêtre"
+              >
+                Liste des Points Relais Conseils disponibles
+              </a>
+              <a
+                className="fr-link"
+                href="https://mon-cep.org/#trouver"
+                target="_blank"
+                title="Mon Conseil en Evolution Professionnelle - nouvelle fenêtre"
+              >
+                Mon Conseil en Evolution Professionnelle
+              </a>
+            </div>
+          }
+        />
       </div>
       <div className="relative min-h-[300px] min-w-[300px] w-2/5 flex-1 lg:basis-1/2">
         <Image
