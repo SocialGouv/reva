@@ -64,12 +64,6 @@ const Organisms: FC<PropsOrganisms> = ({
                   as="address"
                   className="not-italic leading-relaxed"
                 >
-                  <p data-test="project-organisms-organism-address">
-                    {organism.address}
-                  </p>
-                  <p data-test="project-organisms-organism-zip-city">
-                    {organism.zip} {organism.city}
-                  </p>
                   <p data-test="project-organisms-organism-email">
                     {organism.contactAdministrativeEmail}
                   </p>

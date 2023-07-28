@@ -35,14 +35,6 @@ context("Candidacy with department certification selected", () => {
         "have.text",
         "Architecte 1"
       );
-      cy.get('[data-test="project-organisms-organism-address"]').should(
-        "have.text",
-        "1 rue de l'exemple"
-      );
-      cy.get('[data-test="project-organisms-organism-zip-city"]').should(
-        "have.text",
-        "75000 Paris"
-      );
       cy.get('[data-test="project-organisms-organism-email"]').should(
         "have.text",
         "email@exemple.com"
@@ -53,14 +45,6 @@ context("Candidacy with department certification selected", () => {
       cy.get('[data-test="project-organisms-organism-label"]').should(
         "have.text",
         "Architecte 2"
-      );
-      cy.get('[data-test="project-organisms-organism-address"]').should(
-        "have.text",
-        "2 rue de l'exemple"
-      );
-      cy.get('[data-test="project-organisms-organism-zip-city"]').should(
-        "have.text",
-        "44000 Nantes"
       );
       cy.get('[data-test="project-organisms-organism-email"]').should(
         "have.text",
@@ -98,14 +82,6 @@ context("Candidacy with department certification selected", () => {
     cy.get('[data-test="project-home-organism-label"]').should(
       "have.text",
       "Architecte 1"
-    );
-    cy.get('[data-test="project-home-organism-address"]').should(
-      "have.text",
-      "1 rue de l'exemple"
-    );
-    cy.get('[data-test="project-home-organism-zip-city"]').should(
-      "have.text",
-      "75000 Paris"
     );
     cy.get('[data-test="project-home-organism-email"]').should(
       "have.text",
