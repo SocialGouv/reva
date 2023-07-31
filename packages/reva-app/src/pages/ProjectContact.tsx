@@ -83,7 +83,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
                 <p>Seuls quelques diplômes sont actuellement éligibles : </p>
                 <a
                   className="fr-link"
-                  href="https://airtable.com/appQT21E7Sy70YfSB/shrTDCbwwBI4xLLo9/tblWDa9HN0cuqLnAl"
+                  href="https://airtable.com/shrhMGpOWNPJA15Xh/tblWDa9HN0cuqLnAl"
                   target="_blank"
                   rel="noreferrer"
                   title="Voir tous les diplômes actuellement disponibles via France VAE - nouvelle fenêtre"
