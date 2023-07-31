@@ -24,7 +24,7 @@ view context =
                     , a
                         [ class "fr-footer__brand-link"
                         , attribute "title" "Accueil - Espace professionnel"
-                        , Route.href context.baseUrl (Route.Candidacies Route.emptyCandidacyFilters)
+                        , Route.href context.baseUrl Route.Home
                         ]
                         [ View.image
                             [ alt "France VAE"

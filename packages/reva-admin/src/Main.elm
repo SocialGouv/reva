@@ -171,7 +171,18 @@ changeRouteTo context route model =
     in
     case ( route, model.page ) of
         ( Route.Home, _ ) ->
-            noChange
+            let
+                redirectRoute =
+                    if Api.Token.isAdmin context.token || Api.Token.isOrganism context.token then
+                        Route.Candidacies Route.emptyCandidacyFilters
+
+                    else if Api.Token.isCertificationAuthority context.token then
+                        Route.Feasibility
+
+                    else
+                        Route.NotFound
+            in
+            ( model, Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl redirectRoute) )
 
         ( Route.Candidacies filters, Candidacies candidaciesModel ) ->
             candidaciesModel
