@@ -8,6 +8,7 @@ module Page.Candidacy exposing
     , view
     )
 
+import Accessibility exposing (span)
 import Admin.Enum.CandidacyStatusStep as Step
 import Api.Candidacy
 import Api.Form.Admissibility
@@ -135,11 +136,16 @@ view :
     -> Html Msg
 view context model =
     let
-        viewForm name =
+        viewArticle name c =
             View.article
                 name
                 (Route.href context.baseUrl (Route.Candidacy (Tab model.tab.candidacyId View.Candidacy.Tab.Profile)))
                 "Retour"
+                c
+
+        viewForm name =
+            viewArticle
+                name
                 [ Form.view (RemoteData.map2 Tuple.pair model.selected model.state.referential) model.form
                     |> Html.map GotFormMsg
                 ]
@@ -181,7 +187,17 @@ view context model =
                     viewForm "drop-out"
 
                 FundingRequest ->
-                    viewForm "funding"
+                    viewArticle "funding"
+                        [ div
+                            [ class "fr-alert fr-alert--warning" ]
+                            [ h3
+                                [ class "fr-alert__title" ]
+                                [ text "Attention" ]
+                            , p [] [ text "La demande de prise en charge est momentanément désactivée. Elle est actuellement en cours de développement en collaboration avec notre partenaire." ]
+                            , p [] [ text "Elle devrait être de nouveau disponible courant septembre 2023. Nous ne manquerons pas de vous tenir informés de sa réactivation." ]
+                            , p [ class "italic" ] [ text "Nous vous rappelons que l'accord de financement est subordonné à l'obtention de la recevabilité." ]
+                            ]
+                        ]
 
                 Meetings ->
                     viewForm "meetings"
