@@ -124,8 +124,8 @@ view feasibilityFeatureEnabled baseUrl candidacy =
             , [ { content = expandedView Enabled "Jury" ParcoursConfirme candidacy
                 , navigation = examInfoLink
                 }
-              , { content = expandedView Disabled "Demande de prise en charge" ParcoursConfirme candidacy
-                , navigation = Nothing
+              , { content = expandedView Enabled "Demande de prise en charge" ParcoursConfirme candidacy
+                , navigation = fundingRequestLink baseUrl candidacy
                 }
               , { content = expandedView Enabled "Demande de paiement" DemandeFinancementEnvoye candidacy
                 , navigation = paymentRequestLink baseUrl candidacy
@@ -164,8 +164,8 @@ dropOutView baseUrl candidacy dropOutDate =
         [ { content = dropOutInfo
           , navigation = dropOutLink
           }
-        , { content = expandedView Disabled "Demande de prise en charge" ParcoursConfirme candidacy
-          , navigation = Nothing
+        , { content = expandedView Enabled "Demande de prise en charge" ParcoursConfirme candidacy
+          , navigation = fundingRequestLink baseUrl candidacy
           }
         , { content = expandedView Enabled "Demande de paiement" DemandeFinancementEnvoye candidacy
           , navigation = paymentRequestLink baseUrl candidacy
@@ -238,21 +238,13 @@ expandedView buttonState stepTitle status candidacy =
     ]
 
 
-candidateInfoLink : String -> Candidacy -> Maybe (Html.Attribute msg)
-candidateInfoLink baseUrl candidacy =
-    let
-        tab =
-            View.Candidacy.Tab.Tab candidacy.id
-
-        fundingView =
-            if Candidacy.isStatusEqualOrAbove candidacy DemandeFinancementEnvoye then
-                tab View.Candidacy.Tab.FundingRequest
-
-            else
-                tab View.Candidacy.Tab.CandidateInfo
-    in
+fundingRequestLink : String -> Candidacy -> Maybe (Html.Attribute msg)
+fundingRequestLink baseUrl candidacy =
     if candidacy.dropOutDate /= Nothing || Candidacy.isStatusEqualOrAbove candidacy ParcoursConfirme then
-        Just <| Route.href baseUrl <| Route.Candidacy fundingView
+        Just <|
+            Route.href baseUrl <|
+                Route.Candidacy <|
+                    View.Candidacy.Tab.Tab candidacy.id View.Candidacy.Tab.FundingRequest
 
     else
         Nothing
