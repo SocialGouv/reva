@@ -158,6 +158,13 @@ candidate_getCandidateByEmail requiredArgs____ object____ =
     Object.selectionForCompositeField "candidate_getCandidateByEmail" [ Argument.required "email" requiredArgs____.email Encode.string ] object____ (Basics.identity >> Decode.nullable)
 
 
+feasibilityCountByCategory :
+    SelectionSet decodesTo Admin.Object.FeasibilityCountByCategory
+    -> SelectionSet (Maybe decodesTo) RootQuery
+feasibilityCountByCategory object____ =
+    Object.selectionForCompositeField "feasibilityCountByCategory" [] object____ (Basics.identity >> Decode.nullable)
+
+
 type alias CandidateGetFundingRequestRequiredArguments =
     { candidacyId : Data.Scalar.Uuid }
 

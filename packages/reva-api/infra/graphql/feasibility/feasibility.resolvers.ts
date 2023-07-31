@@ -1,6 +1,7 @@
 import {
   getCertificationAuthority,
   getFeasibilityByCandidacyid,
+  getFeasibilityCountByCategory,
   getFileNameAndUrl,
 } from "./feasibility.features";
 
@@ -28,5 +29,12 @@ export const feasibilityResolvers = {
       candidacyId: string;
       otherFileId: string;
     }) => getFileNameAndUrl({ candidacyId, fileId: otherFileId }),
+  },
+  Query: {
+    feasibilityCountByCategory: (_: unknown, _args: unknown, context: any) =>
+      getFeasibilityCountByCategory({
+        keycloakId: context.auth.userInfo?.sub,
+        hasRole: context.auth.hasRole,
+      }),
   },
 };

@@ -109,6 +109,10 @@ type Feasibility
     = Feasibility
 
 
+type FeasibilityCountByCategory
+    = FeasibilityCountByCategory
+
+
 type File
     = File
 

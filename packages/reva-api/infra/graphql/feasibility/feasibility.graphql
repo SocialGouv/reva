@@ -21,3 +21,11 @@ type Candidacy {
   certificationAuthority: CertificationAuthority
   feasibility: Feasibility
 }
+
+type FeasibilityCountByCategory {
+  ALL: Int!
+}
+
+type Query {
+  feasibilityCountByCategory: FeasibilityCountByCategory
+}
