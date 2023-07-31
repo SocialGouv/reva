@@ -291,6 +291,16 @@ update msg model =
             in
             if Api.Token.isAdmin token || Api.Token.isOrganism token then
                 let
+                    redirectRoute =
+                        case route of
+                            -- When the user is not logged in, we redirect him to the login page
+                            -- Then, by default, we redirect him to the candidacies page
+                            Login ->
+                                Route.Candidacies Route.emptyCandidacyFilters
+
+                            _ ->
+                                route
+
                     filters =
                         case route of
                             Route.Candidacies f ->
@@ -305,10 +315,7 @@ update msg model =
                 ( { model | context = newContext, page = Candidacies candidaciesModel }
                 , Cmd.batch
                     [ Cmd.map GotCandidaciesMsg candidaciesCmd
-                    , Nav.pushUrl model.context.navKey
-                        (Route.toString model.context.baseUrl <|
-                            Route.Candidacies Route.emptyCandidacyFilters
-                        )
+                    , Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl redirectRoute)
                     ]
                 )
 
