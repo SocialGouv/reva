@@ -3,6 +3,7 @@
  *  Copyright 2023 Direction du numérique des ministère sociaux
  *  Changes :
  *  - rename PICTOS to PICTOGRAMS
+ *  - add custom sizes
  */
 
 import cityHall, {
@@ -66,11 +67,14 @@ import system from "@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/system
 import technicalError from "@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/technical-error.svg";
 import warning from "@codegouvfr/react-dsfr/dsfr/artwork/pictograms/system/warning.svg";
 
-const generateSvg = (svg: SVG) => (
+const generateSvg = (
+  svg: SVG,
+  customSize?: { width: number; height: number }
+) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={`${svg.width}px`}
-    height={`${svg.height}px`}
+    width={`${customSize ? customSize.width : svg.width}px`}
+    height={`${customSize ? customSize.height : svg.height}px`}
     viewBox={`0 0 ${svg.width} ${svg.height}`}
     className="fr-artwork"
     aria-hidden="true"
@@ -154,4 +158,5 @@ export const PICTOGRAMS = {
   system: generateSvg(system),
   technicalError: generateSvg(technicalError),
   warning: generateSvg(warning),
+  warningLG: generateSvg(warning, { width: 120, height: 120 }),
 };
