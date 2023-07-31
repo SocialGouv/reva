@@ -195,3 +195,52 @@ test("should count no available feasibility for certificateur user since he does
     ALL: 0,
   });
 });
+
+test("should return all (1) available feasibility for certificateur user", async () => {
+  const candidacy = await prismaClient.candidacy.create({
+    data: {
+      deviceId: candidate.email,
+      email: candidate.email,
+      candidateId: candidate.id,
+      organismId: organism.id,
+    },
+  });
+
+  const feasibility = await prismaClient.feasibility.create({
+    data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
+  });
+
+  const ileDeFranceRegion = (await prismaClient.region.findFirst({
+    where: { departments: { some: { id: ileDeFranceDepartment.id } } },
+  })) as Department;
+
+  await prismaClient.candidaciesOnRegionsAndCertifications.create({
+    data: {
+      candidacyId: candidacy.id,
+      regionId: ileDeFranceRegion.id,
+      certificationId: certification.id,
+      author: "unknown",
+    },
+  });
+
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "manage_feasibility",
+      keycloakId: CERTIFICATOR_KEYCLOAK_ID,
+    }),
+    payload: {
+      requestType: "query",
+      endpoint: "feasibilities",
+      returnFields:
+        "{rows{id},info{totalRows,currentPage,totalPages,pageLength}}",
+    },
+  });
+
+  expect(resp.statusCode).toEqual(200);
+  const obj = resp.json();
+  expect(obj.data.feasibilities).toMatchObject({
+    rows: [{ id: feasibility.id }],
+    info: { currentPage: 1, totalPages: 1, totalRows: 1, pageLength: 10 },
+  });
+});

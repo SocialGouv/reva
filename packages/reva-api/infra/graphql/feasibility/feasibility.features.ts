@@ -1,3 +1,6 @@
+import { Feasibility, Prisma } from "@prisma/client";
+
+import { processPaginationInfo } from "../../../domain/utils/pagination";
 import { prismaClient } from "../../database/postgres/client";
 
 export interface UploadedFile {
@@ -90,17 +93,17 @@ export const getFileWithContent = async ({ fileId }: { fileId: string }) =>
     where: { id: fileId },
   });
 
-export const getFeasibilityCountByCategory = async ({
+const getFeasibilityListBaseQuery = async ({
   keycloakId,
   hasRole,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
 }) => {
-  let count = 0;
+  let query = {} as object;
   // admin sees all feasibilities
   if (hasRole("admin")) {
-    count = await prismaClient.feasibility.count();
+    query = {};
   }
   //only list feasibilties attached to candidacies that have both certification and department covered by the certification authority linked to the user account
   else if (hasRole("manage_feasibility")) {
@@ -127,7 +130,7 @@ export const getFeasibilityCountByCategory = async ({
       ) || [];
 
     if (account && account.certificationAuthority) {
-      count = await prismaClient.feasibility.count({
+      query = {
         where: {
           candidacy: {
             certificationsAndRegions: {
@@ -142,9 +145,56 @@ export const getFeasibilityCountByCategory = async ({
             },
           },
         },
-      });
+      };
     }
+  } else {
+    throw new Error("Utilisateur non autorisé");
   }
 
+  return query;
+};
+
+export const getFeasibilityCountByCategory = async ({
+  keycloakId,
+  hasRole,
+}: {
+  keycloakId: string;
+  hasRole: (role: string) => boolean;
+}) => {
+  const count = await prismaClient.feasibility.count(
+    await getFeasibilityListBaseQuery({ keycloakId, hasRole })
+  );
   return { ALL: count };
+};
+
+export const getFeasibilities = async ({
+  keycloakId,
+  hasRole,
+  limit = 10,
+  offset = 0,
+}: {
+  keycloakId: string;
+  hasRole: (role: string) => boolean;
+  limit?: number;
+  offset?: number;
+}): Promise<PaginatedListResult<Feasibility>> => {
+  const query = await getFeasibilityListBaseQuery({ keycloakId, hasRole });
+  const rows = await prismaClient.feasibility.findMany({
+    ...query,
+    skip: offset,
+    take: limit,
+  });
+
+  const totalRows = await prismaClient.feasibility.count(query);
+
+  const page = {
+    rows,
+    info: processPaginationInfo({
+      limit: limit,
+      offset: offset,
+      totalRows,
+    }),
+  };
+
+  return page;
 };

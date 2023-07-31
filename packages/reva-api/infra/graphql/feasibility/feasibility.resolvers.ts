@@ -1,5 +1,6 @@
 import {
   getCertificationAuthority,
+  getFeasibilities,
   getFeasibilityByCandidacyid,
   getFeasibilityCountByCategory,
   getFileNameAndUrl,
@@ -33,6 +34,11 @@ export const feasibilityResolvers = {
   Query: {
     feasibilityCountByCategory: (_: unknown, _args: unknown, context: any) =>
       getFeasibilityCountByCategory({
+        keycloakId: context.auth.userInfo?.sub,
+        hasRole: context.auth.hasRole,
+      }),
+    feasibilities: (_: unknown, _args: unknown, context: any) =>
+      getFeasibilities({
         keycloakId: context.auth.userInfo?.sub,
         hasRole: context.auth.hasRole,
       }),

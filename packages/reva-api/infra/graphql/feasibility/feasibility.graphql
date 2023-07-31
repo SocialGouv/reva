@@ -26,6 +26,12 @@ type FeasibilityCountByCategory {
   ALL: Int!
 }
 
+type FeasibilityPage {
+  rows: [Feasibility!]!
+  info: PaginationInfo!
+}
+
 type Query {
   feasibilityCountByCategory: FeasibilityCountByCategory
+  feasibilities: FeasibilityPage
 }

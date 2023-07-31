@@ -165,6 +165,13 @@ feasibilityCountByCategory object____ =
     Object.selectionForCompositeField "feasibilityCountByCategory" [] object____ (Basics.identity >> Decode.nullable)
 
 
+feasibilities :
+    SelectionSet decodesTo Admin.Object.FeasibilityPage
+    -> SelectionSet (Maybe decodesTo) RootQuery
+feasibilities object____ =
+    Object.selectionForCompositeField "feasibilities" [] object____ (Basics.identity >> Decode.nullable)
+
+
 type alias CandidateGetFundingRequestRequiredArguments =
     { candidacyId : Data.Scalar.Uuid }
 
