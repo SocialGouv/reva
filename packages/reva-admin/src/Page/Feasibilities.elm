@@ -8,19 +8,19 @@ module Page.Feasibilities exposing
     )
 
 import Accessibility exposing (h1, h2)
-import Admin.Enum.FeasibilityCategoryFilter as FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
-import Admin.Scalar
+import Admin.Enum.FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
 import Api.Feasibility
 import BetaGouv.DSFR.Pagination
 import Data.Context exposing (Context)
 import Data.Feasibility exposing (FeasibilityCountByCategory, FeasibilitySummary, FeasibilitySummaryPage, feasibilityCategoryFilterToReadableString)
-import Html exposing (Html, div, li, nav, p, text, ul)
+import Html exposing (Html, div, nav, p, text, ul)
 import Html.Attributes exposing (attribute, class)
 import Html.Attributes.Extra exposing (role)
 import RemoteData exposing (RemoteData(..))
 import Route exposing (FeasibilityFilters)
 import String exposing (String)
 import View
+import View.Feasibility.FeasibilityCard
 import View.Feasibility.Filters
 import View.Helpers exposing (dataTest)
 
@@ -215,14 +215,7 @@ viewDirectory context model title =
 
 viewItem : Context -> FeasibilitySummary -> Html Msg
 viewItem context feasibilitySummary =
-    let
-        idToString (Admin.Scalar.Id id) =
-            id
-    in
-    li
-        [ dataTest "directory-item", attribute "style" "--li-bottom:0" ]
-        [ text (idToString feasibilitySummary.id)
-        ]
+    View.Feasibility.FeasibilityCard.view context feasibilitySummary
 
 
 
