@@ -9,12 +9,11 @@ module Page.Feasibilities exposing
 
 import Accessibility exposing (h1, h2)
 import Admin.Enum.FeasibilityCategoryFilter as FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
-import Admin.Object.FeasibilityCountByCategory as FeasibilityCountByCategory
 import Admin.Scalar
 import Api.Feasibility
 import BetaGouv.DSFR.Pagination
 import Data.Context exposing (Context)
-import Data.Feasibility exposing (FeasibilityCountByCategory, FeasibilitySummary, FeasibilitySummaryPage)
+import Data.Feasibility exposing (FeasibilityCountByCategory, FeasibilitySummary, FeasibilitySummaryPage, feasibilityCategoryFilterToReadableString)
 import Html exposing (Html, div, li, nav, p, text, ul)
 import Html.Attributes exposing (attribute, class)
 import Html.Attributes.Extra exposing (role)
@@ -22,6 +21,7 @@ import RemoteData exposing (RemoteData(..))
 import Route exposing (FeasibilityFilters)
 import String exposing (String)
 import View
+import View.Feasibility.Filters
 import View.Helpers exposing (dataTest)
 
 
@@ -123,7 +123,7 @@ view context model =
 
         viewWithFilters filterContent =
             View.layout
-                "???"
+                "Filtrer les dossiers de faisabilité par catégorie"
                 upperNavContent
                 filterContent
                 (viewDirectoryPanel context model (feasibilityCategoryFilterToReadableString model.filters.category))
@@ -142,14 +142,7 @@ view context model =
             viewWithFilters [ div [ class "m-4 font-medium text-red-500", role "alert" ] <| List.map (\e -> div [] [ text e ]) errors ]
 
         ( _, Success feasibilityCountByCategory ) ->
-            viewWithFilters [ text (feasibilityCategoryFilterToReadableString FeasibilityCategoryFilter.All ++ " (" ++ String.fromInt feasibilityCountByCategory.all ++ ")") ]
-
-
-feasibilityCategoryFilterToReadableString : FeasibilityCategoryFilter -> String
-feasibilityCategoryFilterToReadableString categoryFilter =
-    case categoryFilter of
-        _ ->
-            "Tous les dossiers"
+            viewWithFilters (View.Feasibility.Filters.view feasibilityCountByCategory model.filters context)
 
 
 viewDirectoryHeader : Html msg

@@ -1,5 +1,6 @@
-module Data.Feasibility exposing (Feasibility, FeasibilityCountByCategory, FeasibilitySummary, FeasibilitySummaryPage, File)
+module Data.Feasibility exposing (Feasibility, FeasibilityCountByCategory, FeasibilitySummary, FeasibilitySummaryPage, File, feasibilityCategoryFilterToReadableString)
 
+import Admin.Enum.FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
 import Data.Pagination exposing (PaginationInfo)
 import Data.Scalar
 
@@ -32,3 +33,10 @@ type alias FeasibilitySummaryPage =
 type alias FeasibilityCountByCategory =
     { all : Int
     }
+
+
+feasibilityCategoryFilterToReadableString : FeasibilityCategoryFilter -> String
+feasibilityCategoryFilterToReadableString categoryFilter =
+    case categoryFilter of
+        _ ->
+            "Tous les dossiers"
