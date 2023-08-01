@@ -31,6 +31,9 @@ type FeasibilityPage {
   info: PaginationInfo!
 }
 
+enum FeasibilityCategoryFilter {
+  ALL
+}
 type Query {
   feasibilityCountByCategory: FeasibilityCountByCategory!
   feasibilities(offset: Int, limit: Int): FeasibilityPage!
