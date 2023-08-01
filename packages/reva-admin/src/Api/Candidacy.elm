@@ -18,12 +18,12 @@ import Admin.Object.Experience
 import Admin.Object.Feasibility
 import Admin.Object.File
 import Admin.Object.Organism
-import Admin.Object.PaginationInfo
 import Admin.Object.ReorientationReason
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
 import Api.Degree
+import Api.Pagination exposing (pageInfoSelection)
 import Api.Referential exposing (departmentSelection)
 import Api.RemoteData exposing (nothingToError)
 import Api.Token exposing (Token)
@@ -34,7 +34,6 @@ import Data.Certification
 import Data.CertificationAuthority
 import Data.Feasibility
 import Data.Organism
-import Data.Pagination
 import Data.Referential
 import Graphql.Operation
 import Graphql.OptionalArgument as OptionalArgument exposing (OptionalArgument(..))
@@ -203,15 +202,6 @@ summarySelection =
                 (Maybe.map toDateWithLabels)
                 Admin.Object.CandidacySummary.sentAt
             )
-
-
-pageInfoSelection : SelectionSet Data.Pagination.PaginationInfo Admin.Object.PaginationInfo
-pageInfoSelection =
-    SelectionSet.succeed Data.Pagination.PaginationInfo
-        |> with Admin.Object.PaginationInfo.totalRows
-        |> with Admin.Object.PaginationInfo.currentPage
-        |> with Admin.Object.PaginationInfo.totalPages
-        |> with Admin.Object.PaginationInfo.pageLength
 
 
 candidacyCountByStatusSelection : SelectionSet Data.Candidacy.CandidacyCountByStatus Admin.Object.CandidacyCountByStatus

@@ -4,7 +4,6 @@ import Admin.Enum.Sort exposing (Sort)
 import Admin.Enum.SubscriptionRequestStatus exposing (SubscriptionRequestStatus(..))
 import Admin.Mutation as Mutation
 import Admin.Object
-import Admin.Object.PaginationInfo
 import Admin.Object.SubscriptionRequest
 import Admin.Object.SubscriptionRequestOnConventionCollective
 import Admin.Object.SubscriptionRequestOnDomaine
@@ -13,10 +12,10 @@ import Admin.Object.SubscriptionRequestsPaginated
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
+import Api.Pagination exposing (pageInfoSelection)
 import Api.Referential
 import Api.RemoteData exposing (nothingToError)
 import Api.Token exposing (Token)
-import Data.Pagination
 import Data.Referential
 import Data.Subscription
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
@@ -107,15 +106,6 @@ subscriptionSummarySelection =
         |> with Admin.Object.SubscriptionRequestSummary.companyName
         |> with Admin.Object.SubscriptionRequestSummary.companyAddress
         |> with Admin.Object.SubscriptionRequestSummary.createdAt
-
-
-pageInfoSelection : SelectionSet Data.Pagination.PaginationInfo Admin.Object.PaginationInfo
-pageInfoSelection =
-    SelectionSet.succeed Data.Pagination.PaginationInfo
-        |> with Admin.Object.PaginationInfo.totalRows
-        |> with Admin.Object.PaginationInfo.currentPage
-        |> with Admin.Object.PaginationInfo.totalPages
-        |> with Admin.Object.PaginationInfo.pageLength
 
 
 selection : SelectionSet Data.Subscription.Subscription Admin.Object.SubscriptionRequest
