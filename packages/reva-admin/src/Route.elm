@@ -1,8 +1,10 @@
 module Route exposing
     ( CandidacyFilters
+    , FeasibilityFilters
     , Route(..)
     , SubscriptionFilters
     , emptyCandidacyFilters
+    , emptyFeasibilityFilters
     , emptySubscriptionFilters
     , fromUrl
     , href
@@ -10,6 +12,7 @@ module Route exposing
     )
 
 import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
+import Admin.Enum.FeasibilityCategoryFilter as FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
 import Admin.Enum.SubscriptionRequestStatus as SubscriptionRequestStatus exposing (SubscriptionRequestStatus(..))
 import Data.Candidacy exposing (CandidacyId, candidacyIdFromString, candidacyIdToString)
 import Html exposing (Html)
@@ -29,11 +32,17 @@ type alias SubscriptionFilters =
     { status : SubscriptionRequestStatus, page : Int }
 
 
+type alias FeasibilityFilters =
+    { category : FeasibilityCategoryFilter
+    , page : Int
+    }
+
+
 type Route
     = Candidacy Tab.Tab
     | Candidacies CandidacyFilters
     | Feasibility String -- Candidacy Id
-    | Feasibilities
+    | Feasibilities FeasibilityFilters
     | Home
     | Login
     | Logout
@@ -51,6 +60,11 @@ emptyCandidacyFilters =
 emptySubscriptionFilters : SubscriptionFilters
 emptySubscriptionFilters =
     { status = SubscriptionRequestStatus.Pending, page = 1 }
+
+
+emptyFeasibilityFilters : FeasibilityFilters
+emptyFeasibilityFilters =
+    { category = FeasibilityCategoryFilter.All, page = 1 }
 
 
 parser : String -> Parser (Route -> a) a
@@ -76,6 +90,12 @@ parser baseUrl =
 
         toSubscriptionsRoute s p =
             Subscriptions (SubscriptionFilters (subscriptionStatusStringToStatusFilter s) (Maybe.withDefault 1 (String.toInt (Maybe.withDefault "1" p))))
+
+        feasibilityCategoryStringToCategoryFilter c =
+            Maybe.withDefault FeasibilityCategoryFilter.All (FeasibilityCategoryFilter.fromString (Maybe.withDefault "" c))
+
+        toFeasibilitiesRoute c p =
+            Feasibilities (FeasibilityFilters (feasibilityCategoryStringToCategoryFilter c) (Maybe.withDefault 1 (String.toInt (Maybe.withDefault "1" p))))
     in
     s baseUrl
         </> oneOf
@@ -84,7 +104,7 @@ parser baseUrl =
                 , s "auth" </> s "logout" |> map Logout
                 , s "plan-du-site" |> map SiteMap
                 , s "candidacies" <?> Query.string "status" <?> Query.string "page" |> map toCandidaciesRoute
-                , s "feasibilities" |> map Feasibilities
+                , s "feasibilities" <?> Query.string "category" <?> Query.string "page" |> map toFeasibilitiesRoute
                 , s "subscriptions" <?> Query.string "status" <?> Query.string "page" |> map toSubscriptionsRoute
                 , s "subscriptions" </> string |> map Subscription
                 , topLevel "candidacies" string |> candidacyTab Tab.Profile
@@ -150,8 +170,8 @@ toString baseUrl route =
         Candidacy tab ->
             tabToString topLevel subLevel tab
 
-        Feasibilities ->
-            topLevel [ "feasibilities" ] []
+        Feasibilities filters ->
+            topLevel [ "feasibilities" ] [ Url.Builder.string "category" (FeasibilityCategoryFilter.toString filters.category), Url.Builder.int "page" filters.page ]
 
         Feasibility candidacyId ->
             topLevel [ "feasibilities", candidacyId ] []

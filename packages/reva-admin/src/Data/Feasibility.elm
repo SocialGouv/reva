@@ -1,5 +1,6 @@
-module Data.Feasibility exposing (Feasibility, File)
+module Data.Feasibility exposing (Feasibility, FeasibilityCountByCategory, FeasibilitySummary, FeasibilitySummaryPage, File)
 
+import Data.Pagination exposing (PaginationInfo)
 import Data.Scalar
 
 
@@ -14,4 +15,20 @@ type alias Feasibility =
     , feasibilityFileSentAt : Data.Scalar.Timestamp
     , feasibilityFile : File
     , otherFile : Maybe File
+    }
+
+
+type alias FeasibilitySummary =
+    { id : Data.Scalar.Id
+    }
+
+
+type alias FeasibilitySummaryPage =
+    { rows : List FeasibilitySummary
+    , info : PaginationInfo
+    }
+
+
+type alias FeasibilityCountByCategory =
+    { all : Int
     }

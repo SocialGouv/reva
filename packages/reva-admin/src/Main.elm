@@ -1,24 +1,26 @@
 port module Main exposing (main)
 
 import Accessibility exposing (h1, p)
-import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
+import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter
+import Admin.Enum.FeasibilityCategoryFilter as FeasibilityCategoryFilter
 import Api.Token exposing (Token)
 import Browser
 import Browser.Dom as Dom
 import Browser.Events
 import Browser.Navigation as Nav
 import Data.Context exposing (Context)
-import Html exposing (Html, a, div, text)
+import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)
 import Json.Decode as Decode exposing (..)
 import KeycloakConfiguration exposing (KeycloakConfiguration)
 import Page.Candidacies as Candidacies exposing (Model)
 import Page.Candidacy as Candidacy
+import Page.Feasibilities as Feasibilities
 import Page.Loading
 import Page.SiteMap as SiteMap
 import Page.Subscription as Subscription
 import Page.Subscriptions as Subscriptions
-import Route exposing (Route(..))
+import Route exposing (Route(..), emptyFeasibilityFilters)
 import Task
 import Url exposing (Url)
 import View
@@ -50,7 +52,7 @@ type alias Model =
 type Page
     = Candidacies Candidacies.Model
     | Candidacy Candidacy.Model
-    | Feasibilities
+    | Feasibilities Feasibilities.Model
     | Feasibility String -- Candidacy Id
     | Loading Token
     | LoggingOut
@@ -76,6 +78,7 @@ type Msg
     | GotViewport Dom.Viewport
     | GotBrowserWidth Float
     | ScrolledToTop
+    | GotFeasibilitiesMsg Feasibilities.Msg
 
 
 main : Program Flags Model Msg
@@ -138,14 +141,9 @@ viewPage model =
             Candidacy.view model.context candidacyModel
                 |> Html.map GotCandidacyMsg
 
-        Feasibilities ->
-            View.layout ""
-                []
-                []
-                [ div
-                    [ class "p-4" ]
-                    [ h1 [] [ text "Espace certificateur" ] ]
-                ]
+        Feasibilities feasibilitiesModel ->
+            Feasibilities.view model.context feasibilitiesModel
+                |> Html.map GotFeasibilitiesMsg
 
         Feasibility candidacyId ->
             View.layout ""
@@ -189,7 +187,7 @@ changeRouteTo context route model =
                         Route.Candidacies Route.emptyCandidacyFilters
 
                     else if Api.Token.isCertificationAuthority context.token then
-                        Route.Feasibilities
+                        Route.Feasibilities Route.emptyFeasibilityFilters
 
                     else
                         Route.NotFound
@@ -211,8 +209,9 @@ changeRouteTo context route model =
             Candidacies.init model.context filters.status filters.page
                 |> updateWith Candidacies GotCandidaciesMsg model
 
-        ( Route.Feasibilities, _ ) ->
-            noChange
+        ( Route.Feasibilities filters, _ ) ->
+            Feasibilities.init model.context filters.category filters.page
+                |> updateWith Feasibilities GotFeasibilitiesMsg model
 
         ( Route.Feasibility candidacyId, _ ) ->
             ( { model | page = Feasibility candidacyId }, Cmd.none )
@@ -306,6 +305,16 @@ update msg model =
             , Cmd.map GotCandidacyMsg candidacyCmd
             )
 
+        -- Feasibilities
+        ( GotFeasibilitiesMsg feasibilitiessMsg, Feasibilities feasibilitiesModel ) ->
+            let
+                ( newFeasibilitiesModel, feasibilitiessCmd ) =
+                    Feasibilities.update model.context feasibilitiessMsg feasibilitiesModel
+            in
+            ( { model | page = Feasibilities newFeasibilitiesModel }
+            , Cmd.map GotFeasibilitiesMsg feasibilitiessCmd
+            )
+
         -- Auth
         ( GotLoggedIn token, NotLoggedIn route ) ->
             let
@@ -347,17 +356,20 @@ update msg model =
 
             else if Api.Token.isCertificationAuthority token then
                 let
+                    ( feasibilitiesModel, _ ) =
+                        Feasibilities.init newContext FeasibilityCategoryFilter.All 1
+
                     redirectRoute =
                         case route of
                             -- When the user is not logged in, we redirect him to the login page
                             -- Then, by default, we redirect him to the feasibilities page
                             Login ->
-                                Route.Feasibilities
+                                Route.Feasibilities emptyFeasibilityFilters
 
                             _ ->
                                 route
                 in
-                ( { model | context = newContext, page = Feasibilities }
+                ( { model | context = newContext, page = Feasibilities feasibilitiesModel }
                 , Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl redirectRoute)
                 )
 
