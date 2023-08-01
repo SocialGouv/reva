@@ -160,9 +160,9 @@ candidate_getCandidateByEmail requiredArgs____ object____ =
 
 feasibilityCountByCategory :
     SelectionSet decodesTo Admin.Object.FeasibilityCountByCategory
-    -> SelectionSet (Maybe decodesTo) RootQuery
+    -> SelectionSet decodesTo RootQuery
 feasibilityCountByCategory object____ =
-    Object.selectionForCompositeField "feasibilityCountByCategory" [] object____ (Basics.identity >> Decode.nullable)
+    Object.selectionForCompositeField "feasibilityCountByCategory" [] object____ Basics.identity
 
 
 type alias FeasibilitiesOptionalArguments =
