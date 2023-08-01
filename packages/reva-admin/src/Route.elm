@@ -32,7 +32,8 @@ type alias SubscriptionFilters =
 type Route
     = Candidacy Tab.Tab
     | Candidacies CandidacyFilters
-    | Feasibility
+    | Feasibility String -- Candidacy Id
+    | Feasibilities
     | Home
     | Login
     | Logout
@@ -58,11 +59,11 @@ parser baseUrl =
         candidacyTab value p =
             map (\rawId -> Candidacy { value = value, candidacyId = candidacyIdFromString rawId }) p
 
-        topLevel p =
-            s "candidacies" </> p
+        topLevel topName p =
+            s topName </> p
 
-        subLevel path =
-            topLevel (string </> s path)
+        subLevel topName path =
+            topLevel topName (string </> s path)
 
         candidacyStatusStringToStatusFilter s =
             Maybe.withDefault CandidacyStatusFilter.ActiveHorsAbandon (CandidacyStatusFilter.fromString (Maybe.withDefault "" s))
@@ -83,24 +84,26 @@ parser baseUrl =
                 , s "auth" </> s "logout" |> map Logout
                 , s "plan-du-site" |> map SiteMap
                 , s "candidacies" <?> Query.string "status" <?> Query.string "page" |> map toCandidaciesRoute
+                , s "feasibilities" |> map Feasibilities
                 , s "subscriptions" <?> Query.string "status" <?> Query.string "page" |> map toSubscriptionsRoute
                 , s "subscriptions" </> string |> map Subscription
-                , topLevel string |> candidacyTab Tab.Profile
-                , subLevel "admissibility" |> candidacyTab Tab.Admissibility
-                , subLevel "archive" |> candidacyTab Tab.Archive
-                , subLevel "unarchive" |> candidacyTab Tab.Unarchive
-                , subLevel "candidate" |> candidacyTab Tab.CandidateInfo
-                , subLevel "drop-out" |> candidacyTab Tab.DropOut
-                , subLevel "funding" |> candidacyTab Tab.FundingRequest
-                , subLevel "meetings" |> candidacyTab Tab.Meetings
-                , subLevel "payment" |> candidacyTab Tab.PaymentRequest
-                , subLevel "payment" </> s "confirmation" |> candidacyTab Tab.PaymentRequestConfirmation
-                , subLevel "payment" </> s "uploads" |> candidacyTab Tab.PaymentUploads
-                , subLevel "training" |> candidacyTab Tab.Training
-                , subLevel "training" </> s "confirmation" |> candidacyTab Tab.TrainingSent
-                , subLevel "examInfo" |> candidacyTab Tab.ExamInfo
-                , subLevel "feasibility" |> candidacyTab Tab.Feasibility
-                , subLevel "feasibility" </> s "submitted" |> candidacyTab Tab.FeasibilityFileSubmitted
+                , topLevel "candidacies" string |> candidacyTab Tab.Profile
+                , topLevel "feasibilities" string |> map Feasibility
+                , subLevel "candidacies" "admissibility" |> candidacyTab Tab.Admissibility
+                , subLevel "candidacies" "archive" |> candidacyTab Tab.Archive
+                , subLevel "candidacies" "unarchive" |> candidacyTab Tab.Unarchive
+                , subLevel "candidacies" "candidate" |> candidacyTab Tab.CandidateInfo
+                , subLevel "candidacies" "drop-out" |> candidacyTab Tab.DropOut
+                , subLevel "candidacies" "funding" |> candidacyTab Tab.FundingRequest
+                , subLevel "candidacies" "meetings" |> candidacyTab Tab.Meetings
+                , subLevel "candidacies" "payment" |> candidacyTab Tab.PaymentRequest
+                , subLevel "candidacies" "payment" </> s "confirmation" |> candidacyTab Tab.PaymentRequestConfirmation
+                , subLevel "candidacies" "payment" </> s "uploads" |> candidacyTab Tab.PaymentUploads
+                , subLevel "candidacies" "training" |> candidacyTab Tab.Training
+                , subLevel "candidacies" "training" </> s "confirmation" |> candidacyTab Tab.TrainingSent
+                , subLevel "candidacies" "examInfo" |> candidacyTab Tab.ExamInfo
+                , subLevel "candidacies" "feasibility" |> candidacyTab Tab.Feasibility
+                , subLevel "candidacies" "feasibility" </> s "submitted" |> candidacyTab Tab.FeasibilityFileSubmitted
                 ]
 
 
@@ -147,8 +150,11 @@ toString baseUrl route =
         Candidacy tab ->
             tabToString topLevel subLevel tab
 
-        Feasibility ->
-            topLevel [ "feasibility" ] []
+        Feasibilities ->
+            topLevel [ "feasibilities" ] []
+
+        Feasibility candidacyId ->
+            topLevel [ "feasibilities", candidacyId ] []
 
         Subscriptions filters ->
             topLevel [ "subscriptions" ] [ Url.Builder.string "status" (SubscriptionRequestStatus.toString filters.status), Url.Builder.int "page" filters.page ]
