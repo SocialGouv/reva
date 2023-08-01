@@ -33,5 +33,5 @@ type FeasibilityPage {
 
 type Query {
   feasibilityCountByCategory: FeasibilityCountByCategory
-  feasibilities: FeasibilityPage
+  feasibilities(offset: Int, limit: Int): FeasibilityPage!
 }

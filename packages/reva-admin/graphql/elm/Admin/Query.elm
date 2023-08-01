@@ -165,11 +165,26 @@ feasibilityCountByCategory object____ =
     Object.selectionForCompositeField "feasibilityCountByCategory" [] object____ (Basics.identity >> Decode.nullable)
 
 
+type alias FeasibilitiesOptionalArguments =
+    { offset : OptionalArgument Int
+    , limit : OptionalArgument Int
+    }
+
+
 feasibilities :
-    SelectionSet decodesTo Admin.Object.FeasibilityPage
-    -> SelectionSet (Maybe decodesTo) RootQuery
-feasibilities object____ =
-    Object.selectionForCompositeField "feasibilities" [] object____ (Basics.identity >> Decode.nullable)
+    (FeasibilitiesOptionalArguments -> FeasibilitiesOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.FeasibilityPage
+    -> SelectionSet decodesTo RootQuery
+feasibilities fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { offset = Absent, limit = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "feasibilities" optionalArgs____ object____ Basics.identity
 
 
 type alias CandidateGetFundingRequestRequiredArguments =
