@@ -45,6 +45,7 @@ summarySelection : SelectionSet Data.Feasibility.FeasibilitySummary Admin.Object
 summarySelection =
     SelectionSet.succeed Data.Feasibility.FeasibilitySummary
         |> with Admin.Object.Feasibility.id
+        |> with Admin.Object.Feasibility.feasibilityFileSentAt
 
 
 getFeasibilityCountByCategory :

@@ -21,6 +21,7 @@ type alias Feasibility =
 
 type alias FeasibilitySummary =
     { id : Data.Scalar.Id
+    , feasibilityFileSentAt : Data.Scalar.Timestamp
     }
 
 
