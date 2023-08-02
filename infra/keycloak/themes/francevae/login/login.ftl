@@ -10,15 +10,11 @@
             <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
                 <div class="fr-container fr-background-alt--grey fr-px-md-0 fr-py-10v fr-py-md-14v">
                     <div class="fr-grid-row fr-grid-row-gutters fr-grid-row--center">
-                        <div class="fr-col-12 fr-col-md-9 fr-col-lg-8">
-                            <h1>Connexion à l'espace professionnel</h1>
+                        <div class="fr-col-12 fr-col-md-9 fr-col-lg-9">
+                            <h2>Connexion à votre espace professionnel</h2>
                             <div>
-
                                 <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="${url.loginAction}" method="post">
                                     <fieldset class="fr-fieldset" id="login-fieldset" aria-labelledby="login-fieldset-legend login-fieldset-messages">
-                                        <legend class="fr-fieldset__legend" id="login-fieldset-legend">
-                                            <h2>Se connecter avec son compte</h2>
-                                        </legend>
                                         <#if message?has_content>
                                             <#if message.type == 'error'>
                                                 <div class="fr-alert fr-alert--error" role="alert">
@@ -40,13 +36,9 @@
                                         <div class="fr-fieldset__element">
                                             <fieldset class="fr-fieldset" id="credentials" aria-labelledby="credentials-messages">
                                                 <div class="fr-fieldset__element">
-                                                    <span class="fr-hint-text">Sauf mention contraire, tous les champs sont obligatoires.</span>
-                                                </div>
-                                                <div class="fr-fieldset__element">
                                                     <div class="fr-input-group">
                                                         <label class="fr-label" for="username">
-                                                            Identifiant
-                                                            <span class="fr-hint-text">Format attendu : nom@domaine.fr</span>
+                                                            Saisissez votre e-mail pour vous connecter
                                                         </label>
                                                         <#if usernameEditDisabled??>
                                                             <input class="fr-input" aria-describedby="username-messages" name="username" id="username" value="${(login.username!'')}" type="text" disabled >
@@ -68,7 +60,7 @@
                                                 <div class="fr-fieldset__element mt-4">
                                                     <div class="fr-password" id="password">
                                                         <label class="fr-label" for="password-input">
-                                                            Mot de passe
+                                                            Saisissez votre mot de passe
                                                         </label>
                                                         <div class="fr-input-wrap">
                                                             <input class="fr-password__input fr-input" 
@@ -114,7 +106,7 @@
                                         </#if>
                                         <div class="fr-fieldset__element fr-btns-group mt-4">
                                             <button type="submit" class="fr-mt-2v fr-btn">
-                                                Se connecter
+                                                Connectez-vous
                                             </button>
                                         </div>
                                         <div class="fr-messages-group" id="login-fieldset-messages" aria-live="assertive">
@@ -124,12 +116,17 @@
                             </div>
                             
                             <hr>
-                            <h2>Vous n’avez pas de compte ?</h2>
+                            <h3>Vous n’avez pas de compte architecte accompagnateur de parcours ?</h3>
                             <div class="fr-btns-group">
                                 <a class="fr-btn fr-btn--secondary" href="${properties.revaUrl}/espace-professionnel/creation">
-                                    Créer un compte
+                                    Créez votre compte
                                 </a>
-                            </div>                            
+                            </div>
+                            <br/>
+                            <h3>Vous êtes certificateur ?</h3>
+                            <div>
+                              <a href="mailto:support@vae.gouv.fr">Contactez le support</a> pour voir les modalités de votre inscription.
+                            </div>                      
                         </div>
                     </div>
                 </div>
