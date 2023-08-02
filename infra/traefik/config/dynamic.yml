@@ -65,10 +65,9 @@ http:
 
     site-web-production:
       rule: "Host(`reva.beta.gouv.fr`)"
-      service: framer-reva-beta-gouv-fr-maintenance-page
+      service: noop@internal
       middlewares:
-        - removeHeader
-        - removePath
+        - redirect-vae-gouv-fr
 
     site-web-production-subscription:
       rule: "Host(`reva.beta.gouv.fr`) && PathPrefix(`/inscription-pro`)"
@@ -150,6 +149,12 @@ http:
       redirectRegex:
         regex: ".*"
         replacement: "https://vae.gouv.fr/espace-professionnel/creation/"
+        permanent: true
+
+    redirect-vae-gouv-fr:
+      redirectRegex:
+        regex: ".*"
+        replacement: "https://vae.gouv.fr/"
         permanent: true
 
     auth:
