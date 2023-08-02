@@ -1,13 +1,14 @@
 module Api.Form.Feasibility exposing (..)
-import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
+
 import Api.Token exposing (Token)
-import Data.Candidacy exposing ( CandidacyId)
+import Data.Candidacy exposing (CandidacyId)
 import Data.Form exposing (FormData)
-import Data.Referential
-import RemoteData exposing (RemoteData(..))
 import Data.Form.Feasibility
+import Data.Referential
 import Http
+import RemoteData exposing (RemoteData(..))
 import Task
+
 
 submit :
     CandidacyId
@@ -29,7 +30,7 @@ submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
 
         otherFiles =
             Data.Form.getFiles keys.otherFile formData
-                |> List.map (\( _, file ) -> (keys.otherFile, file ))
+                |> List.map (\( _, file ) -> ( keys.otherFile, file ))
 
         withFiles files body =
             files
@@ -53,10 +54,8 @@ submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
         error msg =
             Task.succeed (RemoteData.Failure [ msg ])
                 |> Task.perform toMsg
-
     in
     case ( feasibilityFiles, otherFiles ) of
-
         ( [], _ ) ->
             error "Veuillez choisir un dossier de faisabilité."
 
@@ -66,9 +65,9 @@ submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
         ( [ feasibilityFile ], _ ) ->
             post [ feasibilityFile ]
 
-
         ( _, _ ) ->
             error "Vous ne pouvez pas envoyer plus d'un dossier de faisabilité et plus d'une autre pièce jointe."
+
 
 mayExpectError : (Result (List String) () -> msg) -> Http.Expect msg
 mayExpectError toMsg =

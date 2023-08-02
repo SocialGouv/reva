@@ -23,6 +23,8 @@ import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
 import Api.Degree
+import Api.File as File
+import Api.Organism as Organism
 import Api.Pagination exposing (pageInfoSelection)
 import Api.Referential exposing (departmentSelection)
 import Api.RemoteData exposing (nothingToError)
@@ -128,7 +130,7 @@ selection id =
                 |> with (SelectionSet.succeed [])
                 |> with (Admin.Object.Candidacy.candidate candidateSelection)
                 |> with (SelectionSet.map (Maybe.map (\(Id certificationId) -> certificationId)) Admin.Object.Candidacy.certificationId)
-                |> with (Admin.Object.Candidacy.organism organismSelection)
+                |> with (Admin.Object.Candidacy.organism Organism.selection)
                 |> with (Admin.Object.Candidacy.certification certificationSelection)
                 |> with (Admin.Object.Candidacy.department departmentSelection)
                 |> with (Admin.Object.Candidacy.goals goalSelection)
@@ -150,7 +152,7 @@ selection id =
                 |> Maybe.map (\candidacy -> { candidacy | availableCompanions = companions })
         )
         |> with (Query.getCandidacyById candidacyRequiredArgs candidacySelectionWithoutCompanions)
-        |> with (Query.getCompanionsForCandidacy getCompanionsRequiredArg organismSelection)
+        |> with (Query.getCompanionsForCandidacy getCompanionsRequiredArg Organism.selection)
 
 
 
@@ -188,7 +190,7 @@ summarySelection =
         |> with (SelectionSet.map (Maybe.map (\(Id id) -> id)) Admin.Object.CandidacySummary.certificationId)
         |> with (Admin.Object.CandidacySummary.certification certificationSummarySelection)
         |> with (Admin.Object.CandidacySummary.department departmentSelection)
-        |> with (Admin.Object.CandidacySummary.organism organismSelection)
+        |> with (Admin.Object.CandidacySummary.organism Organism.selection)
         |> with Admin.Object.CandidacySummary.firstname
         |> with Admin.Object.CandidacySummary.lastname
         |> with Admin.Object.CandidacySummary.phone
@@ -298,33 +300,10 @@ certificationAuthoritySelection =
 -- FEASIBILITY
 
 
-feasibilitySelection : SelectionSet Data.Feasibility.Feasibility Admin.Object.Feasibility
+feasibilitySelection : SelectionSet Data.Candidacy.Feasibility Admin.Object.Feasibility
 feasibilitySelection =
-    SelectionSet.succeed Data.Feasibility.Feasibility
+    SelectionSet.succeed Data.Candidacy.Feasibility
         |> with Admin.Object.Feasibility.id
         |> with Admin.Object.Feasibility.feasibilityFileSentAt
-        |> with (Admin.Object.Feasibility.feasibilityFile fileSelection)
-        |> with (Admin.Object.Feasibility.otherFile fileSelection)
-
-
-fileSelection : SelectionSet Data.Feasibility.File Admin.Object.File
-fileSelection =
-    SelectionSet.succeed Data.Feasibility.File
-        |> with Admin.Object.File.name
-        |> with Admin.Object.File.url
-
-
-
--- ORGANISM
-
-
-organismSelection : SelectionSet Data.Organism.Organism Admin.Object.Organism
-organismSelection =
-    SelectionSet.succeed Data.Organism.Organism
-        |> with (SelectionSet.map (\(Uuid id) -> id) Admin.Object.Organism.id)
-        |> with Admin.Object.Organism.label
-        |> with Admin.Object.Organism.address
-        |> with Admin.Object.Organism.zip
-        |> with Admin.Object.Organism.city
-        |> with Admin.Object.Organism.contactAdministrativeEmail
-        |> with Admin.Object.Organism.typology
+        |> with (Admin.Object.Feasibility.feasibilityFile File.selection)
+        |> with (Admin.Object.Feasibility.otherFile File.selection)

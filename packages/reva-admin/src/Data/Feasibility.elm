@@ -1,21 +1,13 @@
-module Data.Feasibility exposing (Feasibility, FeasibilityCountByCategory, FeasibilitySummary, FeasibilitySummaryPage, File, feasibilityCategoryFilterToReadableString)
+module Data.Feasibility exposing (FeasibilityCountByCategory, FeasibilitySummary, FeasibilitySummaryPage, feasibilityCategoryFilterToReadableString)
 
 import Admin.Enum.FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
 import Data.Pagination exposing (PaginationInfo)
 import Data.Scalar
 
 
-type alias File =
-    { name : String
-    , url : String
-    }
-
-
-type alias Feasibility =
-    { id : Data.Scalar.Id
-    , feasibilityFileSentAt : Data.Scalar.Timestamp
-    , feasibilityFile : File
-    , otherFile : Maybe File
+type alias Candidate =
+    { firstname : String
+    , lastname : String
     }
 
 
