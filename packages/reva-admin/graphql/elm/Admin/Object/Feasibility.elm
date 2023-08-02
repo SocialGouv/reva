@@ -41,3 +41,10 @@ otherFile :
     -> SelectionSet (Maybe decodesTo) Admin.Object.Feasibility
 otherFile object____ =
     Object.selectionForCompositeField "otherFile" [] object____ (Basics.identity >> Decode.nullable)
+
+
+candidacy :
+    SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet decodesTo Admin.Object.Feasibility
+candidacy object____ =
+    Object.selectionForCompositeField "candidacy" [] object____ Basics.identity

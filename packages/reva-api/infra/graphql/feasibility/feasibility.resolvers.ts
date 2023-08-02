@@ -1,4 +1,5 @@
 import {
+  getCandidacyById,
   getCertificationAuthority,
   getFeasibilities,
   getFeasibilityByCandidacyid,
@@ -30,6 +31,8 @@ export const feasibilityResolvers = {
       candidacyId: string;
       otherFileId: string;
     }) => getFileNameAndUrl({ candidacyId, fileId: otherFileId }),
+    candidacy: ({ candidacyId }: { candidacyId: string }) =>
+      getCandidacyById({ candidacyId }),
   },
   Query: {
     feasibilityCountByCategory: (_: unknown, _args: unknown, context: any) =>

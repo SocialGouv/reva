@@ -10,6 +10,7 @@ type Feasibility {
   feasibilityFileSentAt: Timestamp!
   feasibilityFile: File!
   otherFile: File
+  candidacy: Candidacy!
 }
 
 type File {

@@ -1,6 +1,7 @@
-import { Feasibility, Prisma } from "@prisma/client";
+import { Feasibility } from "@prisma/client";
 
 import { processPaginationInfo } from "../../../domain/utils/pagination";
+import { getCandidacyFromId } from "../../database/postgres/candidacies";
 import { prismaClient } from "../../database/postgres/client";
 
 export interface UploadedFile {
@@ -197,4 +198,17 @@ export const getFeasibilities = async ({
   };
 
   return page;
+};
+
+export const getCandidacyById = async ({
+  candidacyId,
+}: {
+  candidacyId: string;
+}) => {
+  const result = await getCandidacyFromId(candidacyId);
+  if (result.isLeft()) {
+    throw new Error(result.leftOrDefault("Erreur inattendue"));
+  } else {
+    return result.extract();
+  }
 };
