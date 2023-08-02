@@ -6,10 +6,12 @@ module Page.Feasibility exposing
     , view
     )
 
-import Accessibility exposing (a, div, h3, h4)
+import Accessibility exposing (a, div, h3, h4, h5, h6, p)
 import Api.Feasibility
 import Data.Context exposing (Context)
 import Data.Feasibility exposing (Feasibility)
+import Data.File exposing (File)
+import Data.Organism exposing (Organism)
 import Html exposing (Html, text)
 import Html.Attributes exposing (class, href, target, title)
 import Page.Form as Form
@@ -82,9 +84,9 @@ viewFeasibilityPanel context model =
 
             Success feasibility ->
                 [ div
-                    [ class "p-4" ]
+                    [ class "flex flex-col gap-y-8" ]
                     [ h3
-                        [ class "text-4xl" ]
+                        [ class "text-4xl mb-0" ]
                         [ text
                             (case feasibility.candidate of
                                 Just candidate ->
@@ -94,18 +96,21 @@ viewFeasibilityPanel context model =
                                     ""
                             )
                         ]
-                    , h4 [] [ text <| Maybe.withDefault "" feasibility.certificationLabel ]
+                    , h4 [ class "mb-0" ] [ text <| Maybe.withDefault "" feasibility.certificationLabel ]
                     , viewFileLink feasibility.file
                     , feasibility.otherFile
                         |> Maybe.map viewFileLink
+                        |> Maybe.withDefault (text "")
+                    , Maybe.map viewOrganism feasibility.organism
                         |> Maybe.withDefault (text "")
                     ]
                 ]
 
 
+viewFileLink : File -> Html msg
 viewFileLink file =
     div
-        [ class "bg-gray-50 px-8 pt-6 pb-8 border" ]
+        [ class "bg-gray-100 px-8 pt-6 pb-8 border" ]
         [ a
             [ href file.url
             , target "_blank"
@@ -113,6 +118,20 @@ viewFileLink file =
             , title (file.name ++ " - nouvelle fenêtre")
             ]
             [ text file.name ]
+        ]
+
+
+viewOrganism : Organism -> Accessibility.Html msg
+viewOrganism organism =
+    div
+        [ class "bg-gray-100 px-8 pt-6 pb-8" ]
+        [ h5
+            [ class "text-2xl mb-4" ]
+            [ text "Architecte accompagnateur de parcours" ]
+        , h6
+            [ class "text-xl mb-4" ]
+            [ text organism.label ]
+        , p [ class "text-lg mb-0" ] [ text organism.contactAdministrativeEmail ]
         ]
 
 
