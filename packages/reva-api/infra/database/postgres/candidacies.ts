@@ -207,6 +207,43 @@ export const getCandidacyFromId = async (
   }
 };
 
+export const getCandidaciesFromIds = async (
+  candidacyIds: string[]
+): Promise<domain.Candidacy[]> => {
+  const candidacies = await prismaClient.candidacy.findMany({
+    where: {
+      id: { in: candidacyIds },
+    },
+    include: {
+      ...candidacyIncludes,
+      candidate: {
+        include: {
+          highestDegree: true,
+          vulnerabilityIndicator: true,
+        },
+      },
+    },
+  });
+
+  return candidacies.map((c) => {
+    const certificationAndRegion = c.certificationsAndRegions?.[0];
+    return {
+      ...c,
+      firstname: c.candidate?.firstname,
+      lastname: c.candidate?.lastname,
+      phone: c.candidate?.phone || c.phone,
+      email: c.candidate?.email || c.email,
+      regionId: certificationAndRegion?.region.id,
+      region: certificationAndRegion?.region,
+      certificationId: certificationAndRegion?.certification.id,
+      certification: certificationAndRegion && {
+        ...certificationAndRegion?.certification,
+        codeRncp: certificationAndRegion?.certification.rncpId,
+      },
+    };
+  });
+};
+
 export const existsCandidacyHavingHadStatus = async (params: {
   candidacyId: string;
   status: CandidacyStatusStep;

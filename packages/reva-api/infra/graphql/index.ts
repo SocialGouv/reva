@@ -15,6 +15,7 @@ import {
 import * as account from "./account";
 import * as candidacy from "./candidacy";
 import * as candidate from "./candidate";
+import { feasibilityLoaders } from "./feasibility/feasibility.loaders";
 import { feasibilityResolvers } from "./feasibility/feasibility.resolvers";
 import { financeResolvers } from "./finance/finance.resolvers";
 import * as referential from "./referential";
@@ -53,6 +54,7 @@ export const graphqlConfiguration = {
     resolvers,
   }),
   graphiql: !!process.env.GRAPHIQL,
+  loaders: { ...feasibilityLoaders },
   errorFormatter: (result: any) => {
     let errors = result.errors;
 
