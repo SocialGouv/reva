@@ -304,11 +304,20 @@ update msg model =
         -- Feasibilities
         ( GotFeasibilitiesMsg feasibilitiessMsg, Feasibilities feasibilitiesModel ) ->
             let
-                ( newFeasibilitiesModel, feasibilitiessCmd ) =
+                ( newFeasibilitiesModel, feasibilitiesCmd ) =
                     Feasibilities.update model.context feasibilitiessMsg feasibilitiesModel
             in
             ( { model | page = Feasibilities newFeasibilitiesModel }
-            , Cmd.map GotFeasibilitiesMsg feasibilitiessCmd
+            , Cmd.map GotFeasibilitiesMsg feasibilitiesCmd
+            )
+
+        ( GotFeasibilityMsg feasibilityMsg, Feasibility feasibilityModel ) ->
+            let
+                ( newFeasibilityModel, feasibilityCmd ) =
+                    Feasibility.update model.context feasibilityMsg feasibilityModel
+            in
+            ( { model | page = Feasibility newFeasibilityModel }
+            , Cmd.map GotFeasibilityMsg feasibilityCmd
             )
 
         -- Auth

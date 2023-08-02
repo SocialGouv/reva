@@ -10,10 +10,16 @@ import Admin.Object.Feasibility
 import Admin.Object.FeasibilityCountByCategory
 import Admin.Object.FeasibilityPage
 import Admin.Query as Query
+import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
+import Api.File as File
+import Api.Organism as Organism
 import Api.Pagination exposing (pageInfoSelection)
+import Api.RemoteData exposing (nothingToError)
 import Api.Token exposing (Token)
+import Data.Certification
 import Data.Feasibility
+import Data.Organism exposing (Organism)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
@@ -26,8 +32,54 @@ get :
     -> String
     -> Cmd msg
 get endpointGraphql token toMsg feasibilityId =
-    -- TODO
-    Cmd.none
+    let
+        feasibilityRequiredArgs =
+            Query.FeasibilityRequiredArguments (Id feasibilityId)
+    in
+    Query.feasibility feasibilityRequiredArgs (selection feasibilityId)
+        |> Auth.makeQuery "feasibility" endpointGraphql token (nothingToError "Ce dossier est introuvable" >> toMsg)
+
+
+selection : String -> SelectionSet Data.Feasibility.Feasibility Admin.Object.Feasibility
+selection feasibilityId =
+    SelectionSet.succeed
+        (\file otherFile candidacy ->
+            Data.Feasibility.Feasibility feasibilityId
+                file
+                otherFile
+                candidacy.candidate
+                candidacy.organism
+                candidacy.certificationLabel
+        )
+        |> with (Admin.Object.Feasibility.feasibilityFile File.selection)
+        |> with (Admin.Object.Feasibility.otherFile File.selection)
+        |> with (Admin.Object.Feasibility.candidacy candidacySelection)
+
+
+type alias Candidacy =
+    { candidate : Maybe Data.Feasibility.Candidate
+    , organism : Maybe Organism
+    , certificationLabel : Maybe String
+    }
+
+
+candidacySelection : SelectionSet Candidacy Admin.Object.Candidacy
+candidacySelection =
+    SelectionSet.succeed Candidacy
+        |> with (Admin.Object.Candidacy.candidate candidateSelection)
+        |> with (Admin.Object.Candidacy.organism Organism.selection)
+        |> with (Admin.Object.Candidacy.certification Admin.Object.Certification.label)
+
+
+candidateSelection : SelectionSet Data.Feasibility.Candidate Admin.Object.Candidate
+candidateSelection =
+    SelectionSet.succeed Data.Feasibility.Candidate
+        |> with Admin.Object.Candidate.firstname
+        |> with Admin.Object.Candidate.lastname
+
+
+
+-- FEASIBILITIES
 
 
 getFeasibilities :

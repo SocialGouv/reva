@@ -6,7 +6,7 @@ module Page.Feasibility exposing
     , view
     )
 
-import Accessibility exposing (div, h1, p)
+import Accessibility exposing (div, h1, h3, h4, p)
 import Api.Feasibility
 import Data.Context exposing (Context)
 import Data.Feasibility exposing (Feasibility)
@@ -39,16 +39,14 @@ init context feasibilityId =
         defaultModel : Model
         defaultModel =
             { form = formModel
-            , selected = NotAsked
+            , selected = Loading
             }
     in
-    ( defaultModel, Cmd.map GotFormMsg formCmd )
-
-
-initFeasibility : Context -> String -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
-initFeasibility context feasibilityId ( model, cmd ) =
-    ( { model | selected = Loading }
-    , Cmd.batch [ Api.Feasibility.get context.endpoint context.token GotFeasibilityResponse feasibilityId, cmd ]
+    ( defaultModel
+    , Cmd.batch
+        [ Api.Feasibility.get context.endpoint context.token GotFeasibilityResponse feasibilityId
+        , Cmd.map GotFormMsg formCmd
+        ]
     )
 
 
@@ -85,8 +83,18 @@ viewFeasibilityPanel context model =
             Success feasibility ->
                 [ div
                     [ class "p-4" ]
-                    [ h1 [] [ text "Dossier de faisabilité" ]
-                    , p [] [ text feasibility.id ]
+                    [ h3
+                        [ class "text-4xl" ]
+                        [ text
+                            (case feasibility.candidate of
+                                Just candidate ->
+                                    String.concat [ candidate.firstname, " ", candidate.lastname ]
+
+                                Nothing ->
+                                    ""
+                            )
+                        ]
+                    , h4 [] [ text <| Maybe.withDefault "" feasibility.certificationLabel ]
                     ]
                 ]
 
