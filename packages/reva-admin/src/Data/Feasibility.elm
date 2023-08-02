@@ -22,6 +22,11 @@ type alias Feasibility =
 type alias FeasibilitySummary =
     { id : Data.Scalar.Id
     , feasibilityFileSentAt : Data.Scalar.Timestamp
+    , certificationLabel : Maybe String
+    , candidateFirstname : Maybe String
+    , candidatelastname : Maybe String
+    , departmentLabel : Maybe String
+    , departmentCode : Maybe String
     }
 
 

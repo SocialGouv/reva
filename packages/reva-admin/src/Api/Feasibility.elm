@@ -2,6 +2,10 @@ module Api.Feasibility exposing (getFeasibilities, getFeasibilityCountByCategory
 
 import Admin.Enum.FeasibilityCategoryFilter
 import Admin.Object
+import Admin.Object.Candidacy
+import Admin.Object.Candidate
+import Admin.Object.Certification
+import Admin.Object.Department
 import Admin.Object.Feasibility
 import Admin.Object.FeasibilityCountByCategory
 import Admin.Object.FeasibilityPage
@@ -46,6 +50,11 @@ summarySelection =
     SelectionSet.succeed Data.Feasibility.FeasibilitySummary
         |> with Admin.Object.Feasibility.id
         |> with Admin.Object.Feasibility.feasibilityFileSentAt
+        |> with (Admin.Object.Feasibility.candidacy (Admin.Object.Candidacy.certification Admin.Object.Certification.label))
+        |> with (Admin.Object.Feasibility.candidacy (Admin.Object.Candidacy.candidate Admin.Object.Candidate.firstname))
+        |> with (Admin.Object.Feasibility.candidacy (Admin.Object.Candidacy.candidate Admin.Object.Candidate.lastname))
+        |> with (Admin.Object.Feasibility.candidacy (Admin.Object.Candidacy.department Admin.Object.Department.label))
+        |> with (Admin.Object.Feasibility.candidacy (Admin.Object.Candidacy.department Admin.Object.Department.code))
 
 
 getFeasibilityCountByCategory :
