@@ -6,12 +6,12 @@ module Page.Feasibility exposing
     , view
     )
 
-import Accessibility exposing (div, h1, h3, h4, p)
+import Accessibility exposing (a, div, h3, h4)
 import Api.Feasibility
 import Data.Context exposing (Context)
 import Data.Feasibility exposing (Feasibility)
 import Html exposing (Html, text)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, href, target, title)
 import Page.Form as Form
 import RemoteData exposing (RemoteData(..))
 import Route exposing (emptyFeasibilityFilters)
@@ -95,8 +95,25 @@ viewFeasibilityPanel context model =
                             )
                         ]
                     , h4 [] [ text <| Maybe.withDefault "" feasibility.certificationLabel ]
+                    , viewFileLink feasibility.file
+                    , feasibility.otherFile
+                        |> Maybe.map viewFileLink
+                        |> Maybe.withDefault (text "")
                     ]
                 ]
+
+
+viewFileLink file =
+    div
+        [ class "bg-gray-50 px-8 pt-6 pb-8 border" ]
+        [ a
+            [ href file.url
+            , target "_blank"
+            , class "fr-link text-2xl font-semibold"
+            , title (file.name ++ " - nouvelle fenêtre")
+            ]
+            [ text file.name ]
+        ]
 
 
 viewMain : Context -> String -> List (Html msg) -> Html msg
