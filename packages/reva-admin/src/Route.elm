@@ -173,8 +173,8 @@ toString baseUrl route =
         Feasibilities filters ->
             topLevel [ "feasibilities" ] [ Url.Builder.string "category" (FeasibilityCategoryFilter.toString filters.category), Url.Builder.int "page" filters.page ]
 
-        Feasibility candidacyId ->
-            topLevel [ "feasibilities", candidacyId ] []
+        Feasibility feasibilityId ->
+            topLevel [ "feasibilities", feasibilityId ] []
 
         Subscriptions filters ->
             topLevel [ "subscriptions" ] [ Url.Builder.string "status" (SubscriptionRequestStatus.toString filters.status), Url.Builder.int "page" filters.page ]

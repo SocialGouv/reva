@@ -1,4 +1,4 @@
-module Api.Feasibility exposing (getFeasibilities, getFeasibilityCountByCategory)
+module Api.Feasibility exposing (get, getFeasibilities, getFeasibilityCountByCategory)
 
 import Admin.Enum.FeasibilityCategoryFilter
 import Admin.Object
@@ -16,7 +16,18 @@ import Api.Token exposing (Token)
 import Data.Feasibility
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
-import RemoteData exposing (RemoteData)
+import RemoteData exposing (RemoteData(..))
+
+
+get :
+    String
+    -> Token
+    -> (RemoteData (List String) Data.Feasibility.Feasibility -> msg)
+    -> String
+    -> Cmd msg
+get endpointGraphql token toMsg feasibilityId =
+    -- TODO
+    Cmd.none
 
 
 getFeasibilities :
