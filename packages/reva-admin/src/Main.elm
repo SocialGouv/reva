@@ -16,6 +16,7 @@ import KeycloakConfiguration exposing (KeycloakConfiguration)
 import Page.Candidacies as Candidacies exposing (Model)
 import Page.Candidacy as Candidacy
 import Page.Feasibilities as Feasibilities
+import Page.Feasibility as Feasibility
 import Page.Loading
 import Page.SiteMap as SiteMap
 import Page.Subscription as Subscription
@@ -53,7 +54,7 @@ type Page
     = Candidacies Candidacies.Model
     | Candidacy Candidacy.Model
     | Feasibilities Feasibilities.Model
-    | Feasibility String -- Candidacy Id
+    | Feasibility Feasibility.Model
     | Loading Token
     | LoggingOut
     | NotLoggedIn Route
@@ -79,6 +80,7 @@ type Msg
     | GotBrowserWidth Float
     | ScrolledToTop
     | GotFeasibilitiesMsg Feasibilities.Msg
+    | GotFeasibilityMsg Feasibility.Msg
 
 
 main : Program Flags Model Msg
@@ -145,16 +147,9 @@ viewPage model =
             Feasibilities.view model.context feasibilitiesModel
                 |> Html.map GotFeasibilitiesMsg
 
-        Feasibility candidacyId ->
-            View.layout ""
-                []
-                []
-                [ div
-                    [ class "p-4" ]
-                    [ h1 [] [ text "Dossier de faisabilité" ]
-                    , p [] [ text candidacyId ]
-                    ]
-                ]
+        Feasibility feasibilityModel ->
+            Feasibility.view model.context feasibilityModel
+                |> Html.map GotFeasibilityMsg
 
         NotFound ->
             h1 [] [ text "Page introuvable" ]
@@ -213,8 +208,9 @@ changeRouteTo context route model =
             Feasibilities.init model.context filters.category filters.page
                 |> updateWith Feasibilities GotFeasibilitiesMsg model
 
-        ( Route.Feasibility candidacyId, _ ) ->
-            ( { model | page = Feasibility candidacyId }, Cmd.none )
+        ( Route.Feasibility feasibilityId, _ ) ->
+            Feasibility.init model.context feasibilityId
+                |> updateWith Feasibility GotFeasibilityMsg model
 
         ( Route.Subscriptions filters, _ ) ->
             Subscriptions.init model.context filters.status filters.page

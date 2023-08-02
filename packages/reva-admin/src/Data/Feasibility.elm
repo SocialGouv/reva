@@ -1,6 +1,8 @@
-module Data.Feasibility exposing (FeasibilityCountByCategory, FeasibilitySummary, FeasibilitySummaryPage, feasibilityCategoryFilterToReadableString)
+module Data.Feasibility exposing (Feasibility, FeasibilityCountByCategory, FeasibilitySummary, FeasibilitySummaryPage, feasibilityCategoryFilterToReadableString)
 
 import Admin.Enum.FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
+import Data.File exposing (File)
+import Data.Organism exposing (Organism)
 import Data.Pagination exposing (PaginationInfo)
 import Data.Scalar
 
@@ -8,6 +10,16 @@ import Data.Scalar
 type alias Candidate =
     { firstname : String
     , lastname : String
+    }
+
+
+type alias Feasibility =
+    { id : String
+    , file : File
+    , otherFile : Maybe File
+    , candidate : Maybe Candidate
+    , organism : Maybe Organism
+    , certificationLabel : String
     }
 
 
