@@ -8,7 +8,6 @@ module Page.Candidacy exposing
     , view
     )
 
-import Accessibility exposing (span)
 import Admin.Enum.CandidacyStatusStep as Step
 import Api.Candidacy
 import Api.Form.Admissibility
@@ -35,7 +34,7 @@ import Data.Form.FundingRequest
 import Data.Form.PaymentRequest
 import Data.Form.Unarchive
 import Data.Referential exposing (Referential)
-import Html exposing (Html, div, h3, h4, h5, p, text)
+import Html exposing (Html, div, h3, h5, p, text)
 import Html.Attributes exposing (alt, class, name)
 import Html.Attributes.Extra exposing (role)
 import Page.Form as Form
@@ -59,7 +58,6 @@ import View.Candidacy
 import View.Candidacy.NavigationSteps as NavigationSteps
 import View.Candidacy.Tab exposing (Tab, Value(..))
 import View.FileLink exposing (viewFileLink)
-import View.Helpers exposing (dataTest)
 
 
 type Msg
