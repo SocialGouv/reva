@@ -23,7 +23,7 @@ view context feasibilitySummary =
             [ div [ class "grid grid-cols-2" ]
                 [ h3 [ class "col-span-2 text-xl font-semibold truncate mb-2" ] [ text (Maybe.withDefault "" feasibilitySummary.certificationLabel) ]
                 , div [ class "flex text-lg" ]
-                    [ text (Maybe.withDefault "" feasibilitySummary.candidateFirstname ++ " " ++ Maybe.withDefault "" feasibilitySummary.candidatelastname)
+                    [ text (Maybe.withDefault "" feasibilitySummary.candidateFirstname ++ " " ++ Maybe.withDefault "" feasibilitySummary.candidateLastname)
                     ]
                 , p [ class "text-lg mb-2" ] [ text (Maybe.withDefault "" feasibilitySummary.departmentLabel ++ " (" ++ Maybe.withDefault "" feasibilitySummary.departmentCode ++ ")") ]
                 , p [ class "text-lg mb-2" ]

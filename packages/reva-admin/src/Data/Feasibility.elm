@@ -1,4 +1,4 @@
-module Data.Feasibility exposing (Feasibility, FeasibilityCountByCategory, FeasibilitySummary, FeasibilitySummaryPage, feasibilityCategoryFilterToReadableString)
+module Data.Feasibility exposing (Candidate, Feasibility, FeasibilityCountByCategory, FeasibilitySummary, FeasibilitySummaryPage, feasibilityCategoryFilterToReadableString)
 
 import Admin.Enum.FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
 import Data.File exposing (File)
@@ -19,7 +19,7 @@ type alias Feasibility =
     , otherFile : Maybe File
     , candidate : Maybe Candidate
     , organism : Maybe Organism
-    , certificationLabel : String
+    , certificationLabel : Maybe String
     }
 
 
@@ -28,7 +28,7 @@ type alias FeasibilitySummary =
     , feasibilityFileSentAt : Data.Scalar.Timestamp
     , certificationLabel : Maybe String
     , candidateFirstname : Maybe String
-    , candidatelastname : Maybe String
+    , candidateLastname : Maybe String
     , departmentLabel : Maybe String
     , departmentCode : Maybe String
     }

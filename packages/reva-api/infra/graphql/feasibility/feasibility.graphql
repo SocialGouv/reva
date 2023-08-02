@@ -38,4 +38,5 @@ enum FeasibilityCategoryFilter {
 type Query {
   feasibilityCountByCategory: FeasibilityCountByCategory!
   feasibilities(offset: Int, limit: Int): FeasibilityPage!
+  feasibility(id: ID!): Feasibility
 }

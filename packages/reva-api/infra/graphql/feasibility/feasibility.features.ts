@@ -220,3 +220,19 @@ export const getCandidaciesByIds = async ({
 }) => {
   return candidacyDb.getCandidaciesFromIds(candidacyIds);
 };
+
+export const getFeasibilityById = async ({
+  feasibilityId,
+  hasRole,
+}: {
+  feasibilityId: string;
+  hasRole: (role: string) => boolean;
+}) => {
+  if (hasRole("admin") || hasRole("manage_feasibility")) {
+    return await prismaClient.feasibility.findUnique({
+      where: { id: feasibilityId },
+    });
+  } else {
+    throw new Error("Utilisateur non autorisé");
+  }
+};
