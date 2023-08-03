@@ -6,15 +6,19 @@ module Page.Feasibility exposing
     , view
     )
 
-import Accessibility exposing (a, div, h3, h4, h5, h6, p)
+import Accessibility exposing (a, div, h3, h4, h5, h6, p, pre)
 import Api.Feasibility
+import Api.Form.Feasibility
+import Browser.Navigation as Nav
 import Data.Context exposing (Context)
-import Data.Feasibility exposing (Feasibility)
+import Data.Feasibility exposing (Feasibility, Status(..))
 import Data.File exposing (File)
+import Data.Form exposing (FormData)
+import Data.Form.Feasibility exposing (Decision(..), decisionToString)
 import Data.Organism exposing (Organism)
 import Html exposing (Html, text)
-import Html.Attributes exposing (class, href, target, title)
-import Page.Form as Form
+import Html.Attributes exposing (class, classList, href, target, title)
+import Page.Form as Form exposing (Form)
 import RemoteData exposing (RemoteData(..))
 import Route exposing (emptyFeasibilityFilters)
 import String exposing (String)
@@ -36,7 +40,19 @@ init : Context -> String -> ( Model, Cmd Msg )
 init context feasibilityId =
     let
         ( formModel, formCmd ) =
-            Form.init
+            Form.updateForm context
+                { form = form
+                , onLoad = Nothing
+                , onSave = Nothing
+                , onSubmit = Api.Form.Feasibility.submitDecision
+                , onRedirect =
+                    Nav.pushUrl
+                        context.navKey
+                        (Route.toString context.baseUrl (Route.Feasibility feasibilityId))
+                , onValidate = Data.Form.Feasibility.validate
+                , status = Form.Editable
+                }
+                Form.empty
 
         defaultModel : Model
         defaultModel =
@@ -84,7 +100,9 @@ viewFeasibilityPanel context model =
 
             Success feasibility ->
                 [ div
-                    [ class "flex flex-col gap-y-8" ]
+                    [ class "flex flex-col gap-y-8"
+                    , classList [ ( "pb-8", feasibility.status /= Pending ) ]
+                    ]
                     [ h3
                         [ class "text-4xl mb-0" ]
                         [ text
@@ -103,6 +121,25 @@ viewFeasibilityPanel context model =
                         |> Maybe.withDefault (text "")
                     , Maybe.map viewOrganism feasibility.organism
                         |> Maybe.withDefault (text "")
+                    , case feasibility.status of
+                        Pending ->
+                            Form.view (RemoteData.succeed feasibility) model.form
+                                |> Html.map GotFormMsg
+
+                        Rejected reason ->
+                            viewSection "Décision prise concernant ce dossier"
+                                [ p
+                                    [ class "font-semibold text-lg mb-4" ]
+                                    [ text "Non recevable" ]
+                                , p [ class "mb-0" ] [ text reason ]
+                                ]
+
+                        Admissible ->
+                            viewSection "Décision prise concernant ce dossier"
+                                [ p
+                                    [ class "font-semibold text-lg mb-0" ]
+                                    [ text "Recevable" ]
+                                ]
                     ]
                 ]
 
@@ -123,16 +160,57 @@ viewFileLink file =
 
 viewOrganism : Organism -> Accessibility.Html msg
 viewOrganism organism =
-    div
-        [ class "bg-gray-100 px-8 pt-6 pb-8" ]
-        [ h5
-            [ class "text-2xl mb-4" ]
-            [ text "Architecte accompagnateur de parcours" ]
-        , h6
+    viewSection "Architecte accompagnateur de parcours"
+        [ h6
             [ class "text-xl mb-4" ]
             [ text organism.label ]
         , p [ class "text-lg mb-0" ] [ text organism.contactAdministrativeEmail ]
         ]
+
+
+viewSection : String -> List (Html msg) -> Html msg
+viewSection title content =
+    div
+        [ class "bg-gray-100 px-8 pt-6 pb-8" ]
+        (h5
+            [ class "text-2xl mb-4" ]
+            [ text title ]
+            :: content
+        )
+
+
+form : FormData -> Feasibility -> Form
+form formData _ =
+    let
+        keys =
+            Data.Form.Feasibility.keys
+
+        decisions =
+            [ ( "valid", Valid )
+            , ( "invalid", Invalid )
+            ]
+                |> List.map (\( id, decision ) -> ( id, decisionToString decision ))
+
+        status =
+            Data.Form.Feasibility.fromDict formData
+    in
+    { elements =
+        ( keys.decision, Form.RadioList "Décision prise concernant ce dossier" decisions )
+            :: (case status of
+                    Rejected _ ->
+                        [ ( keys.reason, Form.Textarea "Précisez les motifs de votre décision" Nothing )
+                        , ( "info"
+                          , Form.Info "" "Rappel : les motifs de votre décision seront transmis au candidat et à son architecte de parcours."
+                          )
+                        ]
+
+                    _ ->
+                        []
+               )
+    , saveLabel = Nothing
+    , submitLabel = "Envoyer la décision"
+    , title = ""
+    }
 
 
 viewMain : Context -> String -> List (Html msg) -> Html msg

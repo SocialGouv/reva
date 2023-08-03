@@ -1,7 +1,9 @@
 module Api.Form.Feasibility exposing (..)
 
+import Api.Feasibility
 import Api.Token exposing (Token)
 import Data.Candidacy exposing (CandidacyId)
+import Data.Feasibility exposing (Feasibility, Status(..))
 import Data.Form exposing (FormData)
 import Data.Form.Feasibility
 import Data.Referential
@@ -67,6 +69,29 @@ submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
 
         ( _, _ ) ->
             error "Vous ne pouvez pas envoyer plus d'un dossier de faisabilité et plus d'une autre pièce jointe."
+
+
+submitDecision :
+    String
+    -> Token
+    -> (RemoteData (List String) () -> msg)
+    -> Feasibility
+    -> FormData
+    -> Cmd msg
+submitDecision endpointGraphql token toMsg feasibility formData =
+    let
+        decision =
+            Data.Form.Feasibility.fromDict formData
+    in
+    case decision of
+        Admissible ->
+            Api.Feasibility.validate endpointGraphql token toMsg feasibility.id
+
+        Rejected reason ->
+            Api.Feasibility.reject endpointGraphql token toMsg feasibility.id reason
+
+        Pending ->
+            Cmd.none
 
 
 mayExpectError : (Result (List String) () -> msg) -> Http.Expect msg
