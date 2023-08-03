@@ -1,4 +1,4 @@
-module Data.Feasibility exposing (Candidate, Feasibility, FeasibilityCountByCategory, FeasibilitySummary, FeasibilitySummaryPage, feasibilityCategoryFilterToReadableString)
+module Data.Feasibility exposing (Candidate, Feasibility, FeasibilityCountByCategory, FeasibilitySummary, FeasibilitySummaryPage, Status(..), feasibilityCategoryFilterToReadableString)
 
 import Admin.Enum.FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
 import Data.File exposing (File)
@@ -13,6 +13,12 @@ type alias Candidate =
     }
 
 
+type Status
+    = Admissible
+    | Rejected String
+    | Pending
+
+
 type alias Feasibility =
     { id : String
     , file : File
@@ -20,6 +26,7 @@ type alias Feasibility =
     , candidate : Maybe Candidate
     , organism : Maybe Organism
     , certificationLabel : Maybe String
+    , status : Status
     }
 
 
