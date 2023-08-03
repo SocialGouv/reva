@@ -4,8 +4,10 @@ import { Crisp } from "crisp-sdk-web";
 // @ts-ignore
 import { Elm } from "../src/Main.elm";
 import keycloakElement from "./custom-elements/keycloak";
+import AuthenticatedLinkElement from "./custom-elements/authenticated-link"
 
 customElements.define(keycloakElement.name, keycloakElement.clazz);
+customElements.define(AuthenticatedLinkElement.name,AuthenticatedLinkElement.clazz)
 
 const crispId = import.meta.env.VITE_CRISP_ID;
 if (crispId) {

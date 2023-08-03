@@ -1,16 +1,27 @@
 module View.FileLink exposing (viewFileLink)
 
-import Html exposing (Html, a, div, text)
-import Html.Attributes exposing (class, href, name, target, title)
+import Api.Token
+import Data.Context exposing (Context)
+import Html exposing (Html, div, node, text)
+import Html.Attributes exposing (class, name, property)
+import Json.Encode as Encode
 
 
-viewFileLink : String -> String -> Html msg
-viewFileLink name url =
+viewFileLink : Context -> String -> String -> Html msg
+viewFileLink context name url =
     if name /= "" then
         div [ class "bg-gray-50 p-8 border-2 border-solid border-black rounded-md border-dsfrBlue-300 " ]
-            [ a
-                [ href url, target "_blank", class "fr-link text-2xl font-bold", title (name ++ " - nouvelle fenêtre") ]
-                [ text ("Fichier: " ++ name) ]
+            [ node "authenticated-link"
+                [ property "params" <|
+                    Encode.object
+                        [ ( "text", Encode.string ("Fichier: " ++ name) )
+                        , ( "title", Encode.string ("Fichier: " ++ name ++ " - nouvelle fenêtre") )
+                        , ( "url", Encode.string url )
+                        , ( "token", Encode.string (Api.Token.toString context.token) )
+                        , ( "class", Encode.string "fr-link text-2xl font-bold" )
+                        ]
+                ]
+                []
             ]
 
     else

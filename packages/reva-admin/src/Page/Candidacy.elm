@@ -252,7 +252,7 @@ viewTrainingSent context candidacyId =
 
 
 viewFeasibilityFileSubmitted : Context -> RemoteData (List String) Candidacy -> List (Html msg)
-viewFeasibilityFileSubmitted _ candidacyRemoteData =
+viewFeasibilityFileSubmitted context candidacyRemoteData =
     let
         content =
             case candidacyRemoteData of
@@ -296,8 +296,8 @@ viewFeasibilityFileSubmitted _ candidacyRemoteData =
                             )
                         ]
                     , div [ class "flex flex-col w-full gap-8" ]
-                        [ viewFileLink (Tuple.first feasibilityFileNameAndUrl) (Tuple.second feasibilityFileNameAndUrl)
-                        , viewFileLink (Tuple.first otherFileNameAndUrl) (Tuple.second otherFileNameAndUrl)
+                        [ viewFileLink context (Tuple.first feasibilityFileNameAndUrl) (Tuple.second feasibilityFileNameAndUrl)
+                        , viewFileLink context (Tuple.first otherFileNameAndUrl) (Tuple.second otherFileNameAndUrl)
                         , case candidacy.certificationAuthority of
                             Just certificationAuthority ->
                                 div [ class "bg-gray-50 p-6 flex flex-col gap-2.5" ]

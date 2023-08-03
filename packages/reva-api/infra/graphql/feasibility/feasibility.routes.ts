@@ -28,7 +28,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
     addToBody: true,
   });
 
-  server.get<{ Params: { candidacyId: string; fileId: string } }>(
+  server.post<{ Params: { candidacyId: string; fileId: string } }>(
     "/candidacy/:candidacyId/feasibility/file/:fileId",
     {
       schema: {

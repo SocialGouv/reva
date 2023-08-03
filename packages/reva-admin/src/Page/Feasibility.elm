@@ -6,9 +6,10 @@ module Page.Feasibility exposing
     , view
     )
 
-import Accessibility exposing (a, div, h3, h4, h5, h6, p, pre)
+import Accessibility exposing (div, h3, h4, h5, h6, p)
 import Api.Feasibility
 import Api.Form.Feasibility
+import Api.Token
 import Browser.Navigation as Nav
 import Data.Context exposing (Context)
 import Data.Feasibility exposing (Feasibility, Status(..))
@@ -16,8 +17,9 @@ import Data.File exposing (File)
 import Data.Form exposing (FormData)
 import Data.Form.Feasibility exposing (Decision(..), decisionToString)
 import Data.Organism exposing (Organism)
-import Html exposing (Html, text)
-import Html.Attributes exposing (class, classList, href, target, title)
+import Html exposing (Html, node, text)
+import Html.Attributes exposing (class, classList, property, title)
+import Json.Encode as Encode
 import Page.Form as Form exposing (Form)
 import RemoteData exposing (RemoteData(..))
 import Route exposing (emptyFeasibilityFilters)
@@ -115,9 +117,9 @@ viewFeasibilityPanel context model =
                             )
                         ]
                     , h4 [ class "mb-0" ] [ text <| Maybe.withDefault "" feasibility.certificationLabel ]
-                    , viewFileLink feasibility.file
+                    , viewFileLink context feasibility.file
                     , feasibility.otherFile
-                        |> Maybe.map viewFileLink
+                        |> Maybe.map (viewFileLink context)
                         |> Maybe.withDefault (text "")
                     , Maybe.map viewOrganism feasibility.organism
                         |> Maybe.withDefault (text "")
@@ -135,17 +137,21 @@ viewFeasibilityPanel context model =
                 ]
 
 
-viewFileLink : File -> Html msg
-viewFileLink file =
+viewFileLink : Context -> File -> Html msg
+viewFileLink context file =
     div
         [ class "bg-gray-100 px-8 pt-6 pb-8 border" ]
-        [ a
-            [ href file.url
-            , target "_blank"
-            , class "fr-link text-2xl font-semibold"
-            , title (file.name ++ " - nouvelle fenêtre")
+        [ node "authenticated-link"
+            [ property "params" <|
+                Encode.object
+                    [ ( "text", Encode.string file.name )
+                    , ( "title", Encode.string (file.name ++ " - nouvelle fenêtre") )
+                    , ( "url", Encode.string file.url )
+                    , ( "token", Encode.string (Api.Token.toString context.token) )
+                    , ( "class", Encode.string "fr-link text-2xl font-semibold" )
+                    ]
             ]
-            [ text file.name ]
+            []
         ]
 
 
