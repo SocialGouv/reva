@@ -33,7 +33,6 @@ import RemoteData exposing (RemoteData(..))
 import String exposing (String)
 import Task
 import View
-import View.FileLink exposing (viewFileLink)
 
 
 type Msg referential
@@ -52,7 +51,7 @@ type Element
     | CheckboxList String (List ( String, String ))
     | Date String
     | Empty
-    | File String String String String
+    | File String String
     | Files String String
     | Heading String -- h2
     | Info String String
@@ -336,7 +335,7 @@ viewEditableElement formData ( elementId, element ) =
         Empty ->
             text ""
 
-        File label hint _ _ ->
+        File label hint ->
             [ viewInputFiles False elementId label hint ]
                 |> viewFieldsetElement
 
@@ -486,9 +485,8 @@ viewReadOnlyElement formData ( elementId, element ) =
         Empty ->
             text ""
 
-        File _ _ name url ->
-            [ viewFileLink name url ]
-                |> viewFieldsetElement
+        File _ _ ->
+            text ""
 
         Files _ _ ->
             text ""

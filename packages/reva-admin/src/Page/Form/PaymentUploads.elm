@@ -1,6 +1,6 @@
 module Page.Form.PaymentUploads exposing (..)
 
-import Data.Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
+import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Form.PaymentUploads
 import Data.Referential exposing (Referential)
@@ -12,7 +12,7 @@ keys =
 
 
 form : FormData -> ( Candidacy, Referential ) -> Form
-form formData ( _, _ ) =
+form _ ( _, _ ) =
     { elements =
         [ ( "files-heading", Form.Heading "2 - Documents" )
         , ( "other-help-heading", Form.Section "Pièces justificatives à joindre" )
@@ -24,8 +24,8 @@ form formData ( _, _ ) =
                 , "Total demandé et total réalisé"
                 ]
           )
-        , ( keys.invoiceFiles, Form.File "Ajouter une facture" "Taille maximale : 10 Mo. Format supporté : pdf." "" "" )
-        , ( keys.appointmentFiles, Form.File "Ajouter un récapitulatif des attestations de présence" "Taille maximale : 10 Mo. Format supporté : pdf." "" "" )
+        , ( keys.invoiceFiles, Form.File "Ajouter une facture" "Taille maximale : 10 Mo. Format supporté : pdf." )
+        , ( keys.appointmentFiles, Form.File "Ajouter un récapitulatif des attestations de présence" "Taille maximale : 10 Mo. Format supporté : pdf." )
         , ( "other-help-heading", Form.Section "Pièces justificatives à conserver" )
         , ( "other-help"
           , Form.Requirements "Pièces justificatives que vous devez collecter et conserver pendant 5 ans, en cas de contrôle à posteriori de l'OPCO de la Cohésion :"
