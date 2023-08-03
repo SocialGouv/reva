@@ -5,7 +5,7 @@ export const feasibilityLoaders = {
     candidacy: async (queries: { obj: { candidacyId: string } }[]) => {
       const candidacyIds: string[] = queries.map(({ obj }) => obj.candidacyId);
       const candidacies = await getCandidaciesByIds({ candidacyIds });
-      return candidacies;
+      return candidacyIds.map((cid) => candidacies.find((c) => c.id === cid));
     },
   },
 };
