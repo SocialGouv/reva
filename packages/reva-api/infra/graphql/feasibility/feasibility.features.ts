@@ -239,9 +239,11 @@ export const getFeasibilityById = async ({
 
 export const validateFeasibility = async ({
   feasibilityId,
+  comment,
   hasRole,
 }: {
   feasibilityId: string;
+  comment?: string;
   hasRole: (role: string) => boolean;
 }) => {
   if (hasRole("admin") || hasRole("manage_feasibility")) {
@@ -249,7 +251,7 @@ export const validateFeasibility = async ({
       where: { id: feasibilityId },
       data: {
         status: "ADMISSIBLE",
-        rejectionReason: null,
+        decisionComment: comment,
       },
     });
   } else {
@@ -259,11 +261,11 @@ export const validateFeasibility = async ({
 
 export const rejectFeasibility = async ({
   feasibilityId,
-  reason,
+  comment,
   hasRole,
 }: {
   feasibilityId: string;
-  reason: string;
+  comment?: string;
   hasRole: (role: string) => boolean;
 }) => {
   if (hasRole("admin") || hasRole("manage_feasibility")) {
@@ -271,7 +273,7 @@ export const rejectFeasibility = async ({
       where: { id: feasibilityId },
       data: {
         status: "REJECTED",
-        rejectionReason: reason,
+        decisionComment: comment,
       },
     });
   } else {

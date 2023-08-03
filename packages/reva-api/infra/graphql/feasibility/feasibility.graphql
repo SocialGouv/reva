@@ -18,7 +18,7 @@ type Feasibility {
   otherFile: File
   candidacy: Candidacy!
   status: FeasibilityStatus!
-  rejectionReason: String
+  decisionComment: String
 }
 
 type File {
@@ -51,10 +51,10 @@ type Query {
 }
 
 type Mutation {
-  validateFeasibility(feasibilityId: ID!): Feasibility
+  validateFeasibility(feasibilityId: ID!, comment: String): Feasibility
   rejectFeasibility(
     feasibilityId: ID!
-    reason: String!
+    comment: String
   ): Feasibility
 }
 
