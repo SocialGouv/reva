@@ -1,3 +1,9 @@
+enum FeasibilityStatus {
+  PENDING
+  REJECTED
+  ADMISSIBLE
+}
+
 type CertificationAuthority {
   id: ID!
   label: String!
@@ -11,6 +17,8 @@ type Feasibility {
   feasibilityFile: File!
   otherFile: File
   candidacy: Candidacy!
+  status: FeasibilityStatus!
+  rejectionReason: String
 }
 
 type File {
@@ -35,8 +43,18 @@ type FeasibilityPage {
 enum FeasibilityCategoryFilter {
   ALL
 }
+
 type Query {
   feasibilityCountByCategory: FeasibilityCountByCategory!
   feasibilities(offset: Int, limit: Int): FeasibilityPage!
-  feasibility(id: ID!): Feasibility
+  feasibility(feasibilityId: ID!): Feasibility
 }
+
+type Mutation {
+  validateFeasibility(feasibilityId: ID!): Feasibility
+  rejectFeasibility(
+    feasibilityId: ID!
+    reason: String!
+  ): Feasibility
+}
+

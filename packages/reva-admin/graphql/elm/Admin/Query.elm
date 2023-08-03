@@ -188,7 +188,7 @@ feasibilities fillInOptionals____ object____ =
 
 
 type alias FeasibilityRequiredArguments =
-    { id : Data.Scalar.Id }
+    { feasibilityId : Data.Scalar.Id }
 
 
 feasibility :
@@ -196,7 +196,7 @@ feasibility :
     -> SelectionSet decodesTo Admin.Object.Feasibility
     -> SelectionSet (Maybe decodesTo) RootQuery
 feasibility requiredArgs____ object____ =
-    Object.selectionForCompositeField "feasibility" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+    Object.selectionForCompositeField "feasibility" [ Argument.required "feasibilityId" requiredArgs____.feasibilityId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
 
 
 type alias CandidateGetFundingRequestRequiredArguments =

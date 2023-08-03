@@ -4,6 +4,7 @@
 
 module Admin.Object.Feasibility exposing (..)
 
+import Admin.Enum.FeasibilityStatus
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -48,3 +49,13 @@ candidacy :
     -> SelectionSet decodesTo Admin.Object.Feasibility
 candidacy object____ =
     Object.selectionForCompositeField "candidacy" [] object____ Basics.identity
+
+
+status : SelectionSet Admin.Enum.FeasibilityStatus.FeasibilityStatus Admin.Object.Feasibility
+status =
+    Object.selectionForField "Enum.FeasibilityStatus.FeasibilityStatus" "status" [] Admin.Enum.FeasibilityStatus.decoder
+
+
+rejectionReason : SelectionSet (Maybe String) Admin.Object.Feasibility
+rejectionReason =
+    Object.selectionForField "(Maybe String)" "rejectionReason" [] (Decode.string |> Decode.nullable)
