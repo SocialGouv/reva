@@ -59,24 +59,26 @@ export const feasibilityResolvers = {
       _: unknown,
       args: {
         feasibilityId: string;
+        comment?: string;
       },
       context: any
     ) =>
       validateFeasibility({
         feasibilityId: args.feasibilityId,
+        comment: args.comment,
         hasRole: context.auth.hasRole,
       }),
     rejectFeasibility: async (
       _: unknown,
       args: {
         feasibilityId: string;
-        reason: string;
+        comment?: string;
       },
       context: any
     ) =>
       rejectFeasibility({
         feasibilityId: args.feasibilityId,
-        reason: args.reason,
+        comment: args.comment,
         hasRole: context.auth.hasRole,
       }),
   },

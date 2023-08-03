@@ -127,19 +127,10 @@ viewFeasibilityPanel context model =
                                 |> Html.map GotFormMsg
 
                         Rejected reason ->
-                            viewSection "Décision prise concernant ce dossier"
-                                [ p
-                                    [ class "font-semibold text-lg mb-4" ]
-                                    [ text "Non recevable" ]
-                                , p [ class "mb-0" ] [ text reason ]
-                                ]
+                            viewDecision "Non recevable" reason
 
-                        Admissible ->
-                            viewSection "Décision prise concernant ce dossier"
-                                [ p
-                                    [ class "font-semibold text-lg mb-0" ]
-                                    [ text "Recevable" ]
-                                ]
+                        Admissible reason ->
+                            viewDecision "Recevable" reason
                     ]
                 ]
 
@@ -165,6 +156,25 @@ viewOrganism organism =
             [ class "text-xl mb-4" ]
             [ text organism.label ]
         , p [ class "text-lg mb-0" ] [ text organism.contactAdministrativeEmail ]
+        ]
+
+
+viewDecision : String -> String -> Html msg
+viewDecision decision reason =
+    div
+        [ class "flex flex-col mb-2 gap-y-8" ]
+        [ viewSection "Décision prise concernant ce dossier"
+            [ p
+                [ class "font-semibold text-lg text-gray-900 mb-0" ]
+                [ text decision ]
+            ]
+        , viewSection "Motifs de la décision"
+            [ if reason == "" then
+                p [ class "mb-0 italic" ] [ text "Motifs non précisés" ]
+
+              else
+                p [ class "mb-0" ] [ text reason ]
+            ]
         ]
 
 
@@ -195,18 +205,12 @@ form formData _ =
             Data.Form.Feasibility.fromDict formData
     in
     { elements =
-        ( keys.decision, Form.RadioList "Décision prise concernant ce dossier" decisions )
-            :: (case status of
-                    Rejected _ ->
-                        [ ( keys.reason, Form.Textarea "Précisez les motifs de votre décision" Nothing )
-                        , ( "info"
-                          , Form.Info "" "Rappel : les motifs de votre décision seront transmis au candidat et à son architecte de parcours."
-                          )
-                        ]
-
-                    _ ->
-                        []
-               )
+        [ ( keys.decision, Form.RadioList "Décision prise concernant ce dossier" decisions )
+        , ( keys.reason, Form.Textarea "Précisez les motifs de votre décision" Nothing )
+        , ( "info"
+          , Form.Info "" "Rappel : les motifs de votre décision seront transmis au candidat et à son architecte de parcours."
+          )
+        ]
     , saveLabel = Nothing
     , submitLabel = "Envoyer la décision"
     , title = ""

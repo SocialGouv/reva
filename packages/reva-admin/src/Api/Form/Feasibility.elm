@@ -84,8 +84,8 @@ submitDecision endpointGraphql token toMsg feasibility formData =
             Data.Form.Feasibility.fromDict formData
     in
     case decision of
-        Admissible ->
-            Api.Feasibility.validate endpointGraphql token toMsg feasibility.id
+        Admissible reason ->
+            Api.Feasibility.validate endpointGraphql token toMsg feasibility.id reason
 
         Rejected reason ->
             Api.Feasibility.reject endpointGraphql token toMsg feasibility.id reason

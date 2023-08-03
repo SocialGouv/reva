@@ -51,7 +51,7 @@ fromDict formData =
     in
     case decisionFromString (decode.string .decision "") of
         Valid ->
-            Admissible
+            Admissible (decode.string .reason "")
 
         Invalid ->
             Rejected (decode.string .reason "")

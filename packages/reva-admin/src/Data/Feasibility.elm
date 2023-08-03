@@ -14,7 +14,7 @@ type alias Candidate =
 
 
 type Status
-    = Admissible
+    = Admissible String
     | Rejected String
     | Pending
 

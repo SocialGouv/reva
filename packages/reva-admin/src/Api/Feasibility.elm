@@ -44,7 +44,7 @@ get endpointGraphql token toMsg feasibilityId =
 selection : String -> SelectionSet Data.Feasibility.Feasibility Admin.Object.Feasibility
 selection feasibilityId =
     SelectionSet.succeed
-        (\file otherFile candidacy status maybeRejectionReason ->
+        (\file otherFile candidacy status maybeDecisionComment ->
             Data.Feasibility.Feasibility feasibilityId
                 file
                 otherFile
@@ -54,10 +54,10 @@ selection feasibilityId =
             <|
                 case status of
                     Admin.Enum.FeasibilityStatus.Admissible ->
-                        Data.Feasibility.Admissible
+                        Data.Feasibility.Admissible (Maybe.withDefault "" maybeDecisionComment)
 
                     Admin.Enum.FeasibilityStatus.Rejected ->
-                        Data.Feasibility.Rejected (Maybe.withDefault "" maybeRejectionReason)
+                        Data.Feasibility.Rejected (Maybe.withDefault "" maybeDecisionComment)
 
                     Admin.Enum.FeasibilityStatus.Pending ->
                         Data.Feasibility.Pending
@@ -66,7 +66,7 @@ selection feasibilityId =
         |> with (Admin.Object.Feasibility.otherFile File.selection)
         |> with (Admin.Object.Feasibility.candidacy candidacySelection)
         |> with Admin.Object.Feasibility.status
-        |> with Admin.Object.Feasibility.rejectionReason
+        |> with Admin.Object.Feasibility.decisionComment
 
 
 type alias Candidacy =
@@ -100,13 +100,14 @@ validate :
     -> Token
     -> (RemoteData (List String) () -> msg)
     -> String
+    -> String
     -> Cmd msg
-validate endpointGraphql token toMsg feasibilityId =
+validate endpointGraphql token toMsg feasibilityId comment =
     let
         requiredArgs =
             Mutation.ValidateFeasibilityRequiredArguments (Id feasibilityId)
     in
-    Mutation.validateFeasibility requiredArgs SelectionSet.empty
+    Mutation.validateFeasibility (optionalReasonArgs comment) requiredArgs SelectionSet.empty
         |> Auth.makeMutation "validateFeasibility" endpointGraphql token (nothingToError "Ce dossier est introuvable" >> toMsg)
 
 
@@ -117,13 +118,25 @@ reject :
     -> String
     -> String
     -> Cmd msg
-reject endpointGraphql token toMsg feasibilityId reason =
+reject endpointGraphql token toMsg feasibilityId comment =
     let
         requiredArgs =
-            Mutation.RejectFeasibilityRequiredArguments (Id feasibilityId) reason
+            Mutation.RejectFeasibilityRequiredArguments (Id feasibilityId)
     in
-    Mutation.rejectFeasibility requiredArgs SelectionSet.empty
+    Mutation.rejectFeasibility (optionalReasonArgs comment) requiredArgs SelectionSet.empty
         |> Auth.makeMutation "rejectFeasibility" endpointGraphql token (nothingToError "Ce dossier est introuvable" >> toMsg)
+
+
+optionalReasonArgs : String -> { b | comment : OptionalArgument String } -> { b | comment : OptionalArgument String }
+optionalReasonArgs comment options =
+    { options
+        | comment =
+            if comment == "" then
+                Null
+
+            else
+                Present comment
+    }
 
 
 

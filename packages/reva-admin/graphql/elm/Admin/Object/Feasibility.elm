@@ -56,6 +56,6 @@ status =
     Object.selectionForField "Enum.FeasibilityStatus.FeasibilityStatus" "status" [] Admin.Enum.FeasibilityStatus.decoder
 
 
-rejectionReason : SelectionSet (Maybe String) Admin.Object.Feasibility
-rejectionReason =
-    Object.selectionForField "(Maybe String)" "rejectionReason" [] (Decode.string |> Decode.nullable)
+decisionComment : SelectionSet (Maybe String) Admin.Object.Feasibility
+decisionComment =
+    Object.selectionForField "(Maybe String)" "decisionComment" [] (Decode.string |> Decode.nullable)
