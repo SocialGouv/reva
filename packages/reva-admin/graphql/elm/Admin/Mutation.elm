@@ -398,6 +398,32 @@ candidate_updateCandidate requiredArgs____ object____ =
     Object.selectionForCompositeField "candidate_updateCandidate" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "candidate" requiredArgs____.candidate Admin.InputObject.encodeFullCandidateInput ] object____ Basics.identity
 
 
+type alias ValidateFeasibilityRequiredArguments =
+    { feasibilityId : Data.Scalar.Id }
+
+
+validateFeasibility :
+    ValidateFeasibilityRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Feasibility
+    -> SelectionSet (Maybe decodesTo) RootMutation
+validateFeasibility requiredArgs____ object____ =
+    Object.selectionForCompositeField "validateFeasibility" [ Argument.required "feasibilityId" requiredArgs____.feasibilityId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+
+
+type alias RejectFeasibilityRequiredArguments =
+    { feasibilityId : Data.Scalar.Id
+    , reason : String
+    }
+
+
+rejectFeasibility :
+    RejectFeasibilityRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Feasibility
+    -> SelectionSet (Maybe decodesTo) RootMutation
+rejectFeasibility requiredArgs____ object____ =
+    Object.selectionForCompositeField "rejectFeasibility" [ Argument.required "feasibilityId" requiredArgs____.feasibilityId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "reason" requiredArgs____.reason Encode.string ] object____ (Basics.identity >> Decode.nullable)
+
+
 type alias CandidacyCreateOrUpdatePaymentRequestRequiredArguments =
     { candidacyId : Data.Scalar.Uuid
     , paymentRequest : Admin.InputObject.PaymentRequestInput

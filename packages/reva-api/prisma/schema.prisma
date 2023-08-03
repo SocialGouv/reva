@@ -831,17 +831,25 @@ model CertificationAuthorityOnCertification {
   @@map("certification_authority_on_certification")
 }
 
+enum FeasibilityStatus {
+  PENDING
+  REJECTED
+  ADMISSIBLE
+}
+
 model Feasibility {
-  id                    String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacy             Candidacy @relation(fields: [candidacyId], references: [id])
-  candidacyId           String    @unique @map("candidacy_id") @db.Uuid
-  feasibilityFile       File      @relation("feasibility_file", fields: [feasibilityFileId], references: [id])
-  otherFile             File?     @relation("other_file", fields: [otherFileId], references: [id])
-  feasibilityFileId     String    @db.Uuid
-  otherFileId           String?   @db.Uuid
-  feasibilityFileSentAt DateTime? @map("feasibility_file_sent_at") @db.Timestamptz(6)
-  createdAt             DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt             DateTime? @map("updated_at") @db.Timestamptz(6)
+  id                    String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy             Candidacy         @relation(fields: [candidacyId], references: [id])
+  candidacyId           String            @unique @map("candidacy_id") @db.Uuid
+  feasibilityFile       File              @relation("feasibility_file", fields: [feasibilityFileId], references: [id])
+  otherFile             File?             @relation("other_file", fields: [otherFileId], references: [id])
+  feasibilityFileId     String            @db.Uuid
+  otherFileId           String?           @db.Uuid
+  feasibilityFileSentAt DateTime?         @map("feasibility_file_sent_at") @db.Timestamptz(6)
+  status                FeasibilityStatus @default(PENDING)
+  rejectionReason       String?           @map("rejection_reason")
+  createdAt             DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime?         @map("updated_at") @db.Timestamptz(6)
 
   @@map("feasibility")
 }

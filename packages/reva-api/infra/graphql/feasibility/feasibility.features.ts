@@ -236,3 +236,45 @@ export const getFeasibilityById = async ({
     throw new Error("Utilisateur non autorisé");
   }
 };
+
+export const validateFeasibility = async ({
+  feasibilityId,
+  hasRole,
+}: {
+  feasibilityId: string;
+  hasRole: (role: string) => boolean;
+}) => {
+  if (hasRole("admin") || hasRole("manage_feasibility")) {
+    return await prismaClient.feasibility.update({
+      where: { id: feasibilityId },
+      data: {
+        status: "ADMISSIBLE",
+        rejectionReason: null,
+      },
+    });
+  } else {
+    throw new Error("Utilisateur non autorisé");
+  }
+};
+
+export const rejectFeasibility = async ({
+  feasibilityId,
+  reason,
+  hasRole,
+}: {
+  feasibilityId: string;
+  reason: string;
+  hasRole: (role: string) => boolean;
+}) => {
+  if (hasRole("admin") || hasRole("manage_feasibility")) {
+    return await prismaClient.feasibility.update({
+      where: { id: feasibilityId },
+      data: {
+        status: "REJECTED",
+        rejectionReason: reason,
+      },
+    });
+  } else {
+    throw new Error("Utilisateur non autorisé");
+  }
+};
