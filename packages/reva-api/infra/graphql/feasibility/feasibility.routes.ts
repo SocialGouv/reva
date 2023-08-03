@@ -1,12 +1,11 @@
 import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
-import { canManageCandidacy } from "../../../domain/features/canManageCandidacy";
-import { getAccountFromKeycloakId } from "../../database/postgres/accounts";
-import { getCandidacyFromId } from "../../database/postgres/candidacies";
 import { logger } from "../../logger";
 import {
   UploadedFile,
+  canDownloadFeasibilityFiles,
+  canManageFeasibility,
   createFeasibility,
   getFeasibilityByCandidacyid,
   getFileWithContent,
@@ -43,6 +42,18 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
       },
       handler: async (request, reply) => {
         const { candidacyId, fileId } = request.params;
+
+        const authorized = await canDownloadFeasibilityFiles({
+          hasRole: request.auth.hasRole,
+          candidacyId,
+          keycloakId: request.auth?.userInfo?.sub,
+        });
+
+        if (!authorized) {
+          return reply.status(403).send({
+            err: "Vous n'êtes pas autorisé à accéder à ce fichier.",
+          });
+        }
 
         const feasibility = await getFeasibilityByCandidacyid({ candidacyId });
 
@@ -86,21 +97,13 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
       },
     },
     handler: async (request, reply) => {
-      const auhtorization = await canManageCandidacy(
-        {
-          hasRole: request.auth.hasRole,
-          getAccountFromKeycloakId,
-          getCandidacyFromId,
-        },
-        {
-          candidacyId: request.body.candidacyId,
-          keycloakId: request.auth?.userInfo?.sub,
-        }
-      );
-      if (auhtorization.isLeft()) {
-        return reply.status(500).send({ err: auhtorization.extract() });
-      }
-      if (auhtorization.extract() === false) {
+      const authorized = await canManageFeasibility({
+        hasRole: request.auth.hasRole,
+        candidacyId: request.body.candidacyId,
+        keycloakId: request.auth?.userInfo?.sub,
+      });
+
+      if (!authorized) {
         return reply.status(403).send({
           err: "Vous n'êtes pas autorisé à gérer cette candidature.",
         });

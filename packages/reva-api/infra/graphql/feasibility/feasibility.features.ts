@@ -1,7 +1,11 @@
 import { Feasibility } from "@prisma/client";
 
+import { canManageCandidacy } from "../../../domain/features/canManageCandidacy";
+import { Candidacy } from "../../../domain/types/candidacy";
 import { processPaginationInfo } from "../../../domain/utils/pagination";
+import { getAccountFromKeycloakId } from "../../database/postgres/accounts";
 import * as candidacyDb from "../../database/postgres/candidacies";
+import { getCandidacyFromId } from "../../database/postgres/candidacies";
 import { prismaClient } from "../../database/postgres/client";
 
 export interface UploadedFile {
@@ -204,12 +208,12 @@ export const getCandidacyById = async ({
   candidacyId,
 }: {
   candidacyId: string;
-}) => {
+}): Promise<Candidacy> => {
   const result = await candidacyDb.getCandidacyFromId(candidacyId);
   if (result.isLeft()) {
     throw new Error(result.leftOrDefault("Erreur inattendue"));
   } else {
-    return result.extract();
+    return result.extract() as Candidacy;
   }
 };
 
@@ -279,4 +283,76 @@ export const rejectFeasibility = async ({
   } else {
     throw new Error("Utilisateur non autorisé");
   }
+};
+
+export const canDownloadFeasibilityFiles = async ({
+  hasRole,
+  candidacyId,
+  keycloakId,
+}: {
+  hasRole(role: string): boolean;
+  candidacyId: string;
+  keycloakId: string;
+}) => {
+  const userCanManageCandidacy = (
+    await canManageCandidacy(
+      {
+        hasRole,
+        getAccountFromKeycloakId,
+        getCandidacyFromId,
+      },
+      {
+        candidacyId,
+        keycloakId,
+      }
+    )
+  ).orDefault(false);
+
+  return (
+    userCanManageCandidacy ||
+    canManageFeasibility({ hasRole, candidacyId, keycloakId })
+  );
+};
+
+export const canManageFeasibility = async ({
+  hasRole,
+  candidacyId,
+  keycloakId,
+}: {
+  hasRole(role: string): boolean;
+  candidacyId: string;
+  keycloakId: string;
+}) => {
+  //admins can manage everything
+  if (hasRole("admin")) {
+    return true;
+  } else if (hasRole("manage_feasibility")) {
+    const candidacy = await getCandidacyById({ candidacyId });
+
+    const candidacyDepartementsIds = (
+      await prismaClient.department.findMany({
+        where: { regionId: candidacy.regionId },
+      })
+    ).map((d) => d.id);
+
+    //is user account attached to a certification authority which manage the candidacy certification ?
+    const result = await prismaClient.account.findFirst({
+      where: {
+        keycloakId,
+        certificationAuthority: {
+          certificationAuthorityOnCertification: {
+            some: { certificationId: candidacy.certificationId },
+          },
+          certificationAuthorityOnDepartment: {
+            some: { departmentId: { in: candidacyDepartementsIds } },
+          },
+        },
+      },
+      select: { id: true },
+    });
+
+    return !!result;
+  }
+
+  return false;
 };
