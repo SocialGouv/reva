@@ -1,16 +1,17 @@
-import { Account } from ".prisma/client";
 import { Either, Left, Maybe, Right } from "purify-ts";
 
 import { logger } from "../../logger";
 import { prismaClient } from "./client";
+import { Account } from ".prisma/client";
 
 export const createAccountProfile = async (params: {
   email: string;
   firstname: string;
   lastname: string;
-  organismId: string;
+  organismId?: string;
   keycloakId: string;
-}): Promise<Either<string,Account>> => {
+  certificationAuthorityId?: string;
+}): Promise<Either<string, Account>> => {
   try {
     const account = await prismaClient.account.create({
       data: {
@@ -19,6 +20,7 @@ export const createAccountProfile = async (params: {
         firstname: params.firstname,
         lastname: params.lastname,
         organismId: params.organismId,
+        certificationAuthorityId: params.certificationAuthorityId,
       },
     });
 
