@@ -1,6 +1,7 @@
 enum AccountGroup {
   admin
   organism
+  certification_authority
 }
 
 type Account {

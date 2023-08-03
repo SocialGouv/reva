@@ -9,9 +9,9 @@ import {
   FunctionalError,
 } from "../../../domain/types/functionalError";
 import * as accountsDb from "../../database/postgres/accounts";
+import * as certificationAuthorityDb from "../../database/postgres/certificationAuthorities";
 import * as organismsDb from "../../database/postgres/organisms";
 import * as IAM from "../../iam/keycloak";
-
 
 export const resolvers = {
   Mutation: {
@@ -23,7 +23,7 @@ export const resolvers = {
           username: string;
           firstname?: string;
           lastname?: string;
-          group: string;
+          group: KeyCloakGroup;
           organismId?: string;
         };
       },
@@ -56,6 +56,8 @@ export const resolvers = {
         createAccountWithProfile: accountsDb.createAccountProfile,
         getAccountInIAM: IAM.getAccount(keycloakAdmin),
         getOrganismById: organismsDb.getOrganismById,
+        getCertificationAuthorityById:
+          certificationAuthorityDb.getCertificationAuthorityById,
       })(params.account);
 
       return result
