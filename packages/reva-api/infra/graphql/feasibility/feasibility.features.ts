@@ -134,24 +134,22 @@ const getFeasibilityListBaseQuery = async ({
         (c) => c.certificationId
       ) || [];
 
-    if (account && account.certificationAuthority) {
-      query = {
-        where: {
-          candidacy: {
-            certificationsAndRegions: {
-              some: {
-                certificationId: { in: accountCertificationIdList },
-                region: {
-                  departments: {
-                    some: { id: { in: accountDepartmentIdList } },
-                  },
+    query = {
+      where: {
+        candidacy: {
+          certificationsAndRegions: {
+            some: {
+              certificationId: { in: accountCertificationIdList },
+              region: {
+                departments: {
+                  some: { id: { in: accountDepartmentIdList } },
                 },
               },
             },
           },
         },
-      };
-    }
+      },
+    };
   } else {
     throw new Error("Utilisateur non autorisé");
   }
