@@ -43,10 +43,15 @@ export const feasibilityResolvers = {
         keycloakId: context.auth.userInfo?.sub,
         hasRole: context.auth.hasRole,
       }),
-    feasibilities: (_: unknown, _args: unknown, context: any) =>
+    feasibilities: (
+      _: unknown,
+      args: { offset?: number; limit?: number },
+      context: any
+    ) =>
       getFeasibilities({
         keycloakId: context.auth.userInfo?.sub,
         hasRole: context.auth.hasRole,
+        ...args,
       }),
     feasibility: (_: unknown, args: { feasibilityId: string }, context: any) =>
       getFeasibilityById({
