@@ -197,3 +197,6 @@ feasibilityCountByCategorySelection : SelectionSet Data.Feasibility.FeasibilityC
 feasibilityCountByCategorySelection =
     SelectionSet.succeed Data.Feasibility.FeasibilityCountByCategory
         |> with Admin.Object.FeasibilityCountByCategory.all
+        |> with Admin.Object.FeasibilityCountByCategory.pending
+        |> with Admin.Object.FeasibilityCountByCategory.admissible
+        |> with Admin.Object.FeasibilityCountByCategory.rejected

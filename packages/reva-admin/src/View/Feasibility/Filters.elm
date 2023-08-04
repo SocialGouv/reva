@@ -1,8 +1,8 @@
 module View.Feasibility.Filters exposing (..)
 
-import Admin.Enum.FeasibilityCategoryFilter as FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
+import Admin.Enum.FeasibilityCategoryFilter as FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter(..))
 import Data.Context exposing (Context)
-import Data.Feasibility exposing (FeasibilityCountByCategory, feasibilityCategoryFilterToReadableString)
+import Data.Feasibility exposing (FeasibilityCountByCategory, Status(..), feasibilityCategoryFilterToReadableString)
 import Html exposing (Html, a, label, li, text, ul)
 import Html.Attributes exposing (class, classList)
 import Route exposing (FeasibilityFilters)
@@ -17,6 +17,15 @@ view feasibilityCountByCategory filters context =
     let
         count category =
             case category of
+                FeasibilityCategoryFilter.Pending ->
+                    feasibilityCountByCategory.pending
+
+                FeasibilityCategoryFilter.Admissible ->
+                    feasibilityCountByCategory.admissible
+
+                FeasibilityCategoryFilter.Rejected ->
+                    feasibilityCountByCategory.rejected
+
                 _ ->
                     feasibilityCountByCategory.all
 
@@ -32,6 +41,13 @@ view feasibilityCountByCategory filters context =
         , class "fr-sidemenu__list"
         ]
         [ viewFilter FeasibilityCategoryFilter.All
+        , li []
+            [ ul [ class "ml-3 font-normal" ]
+                [ viewFilter FeasibilityCategoryFilter.Pending
+                , viewFilter FeasibilityCategoryFilter.Admissible
+                , viewFilter FeasibilityCategoryFilter.Rejected
+                ]
+            ]
         ]
     ]
 

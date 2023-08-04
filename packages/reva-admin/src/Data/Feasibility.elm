@@ -1,6 +1,6 @@
 module Data.Feasibility exposing (Candidate, Feasibility, FeasibilityCountByCategory, FeasibilitySummary, FeasibilitySummaryPage, Status(..), feasibilityCategoryFilterToReadableString)
 
-import Admin.Enum.FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
+import Admin.Enum.FeasibilityCategoryFilter as FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
 import Data.File exposing (File)
 import Data.Organism exposing (Organism)
 import Data.Pagination exposing (PaginationInfo)
@@ -49,11 +49,23 @@ type alias FeasibilitySummaryPage =
 
 type alias FeasibilityCountByCategory =
     { all : Int
+    , pending : Int
+    , admissible : Int
+    , rejected : Int
     }
 
 
 feasibilityCategoryFilterToReadableString : FeasibilityCategoryFilter -> String
 feasibilityCategoryFilterToReadableString categoryFilter =
     case categoryFilter of
+        FeasibilityCategoryFilter.Pending ->
+            "Dossiers en attente de recevabilité"
+
+        FeasibilityCategoryFilter.Admissible ->
+            "Dossiers recevables"
+
+        FeasibilityCategoryFilter.Rejected ->
+            "Dossiers non recevables"
+
         _ ->
             "Tous les dossiers"
