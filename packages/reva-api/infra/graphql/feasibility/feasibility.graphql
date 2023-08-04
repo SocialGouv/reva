@@ -50,9 +50,19 @@ enum FeasibilityCategoryFilter {
   ADMISSIBLE
 }
 
+enum FeasibilityStatusFilter {
+  PENDING
+  REJECTED
+  ADMISSIBLE
+}
+
 type Query {
   feasibilityCountByCategory: FeasibilityCountByCategory!
-  feasibilities(offset: Int, limit: Int): FeasibilityPage!
+  feasibilities(
+    offset: Int
+    limit: Int
+    status: FeasibilityStatusFilter
+  ): FeasibilityPage!
   feasibility(feasibilityId: ID!): Feasibility
 }
 

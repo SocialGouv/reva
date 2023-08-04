@@ -1,3 +1,5 @@
+import { FeasibilityStatus } from "@prisma/client";
+
 import {
   getCandidacyById,
   getCertificationAuthority,
@@ -45,7 +47,7 @@ export const feasibilityResolvers = {
       }),
     feasibilities: (
       _: unknown,
-      args: { offset?: number; limit?: number },
+      args: { offset?: number; limit?: number; status?: FeasibilityStatus },
       context: any
     ) =>
       getFeasibilities({

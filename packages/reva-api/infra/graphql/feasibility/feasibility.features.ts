@@ -1,4 +1,4 @@
-import { Feasibility, FeasibilityStatus } from "@prisma/client";
+import { Feasibility, FeasibilityStatus, Prisma } from "@prisma/client";
 
 import { canManageCandidacy } from "../../../domain/features/canManageCandidacy";
 import { Candidacy } from "../../../domain/types/candidacy";
@@ -158,19 +158,18 @@ export const getFeasibilities = async ({
   hasRole,
   limit = 10,
   offset = 0,
+  status,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
   limit?: number;
   offset?: number;
+  status?: FeasibilityStatus;
 }): Promise<PaginatedListResult<Feasibility>> => {
-  let query = {} as object;
-  // admin sees all feasibilities
-  if (hasRole("admin")) {
-    query = {};
-  }
+  let queryWhereClause: object = status ? { status } : {};
+
   //only list feasibilties attached to candidacies that have both certification and department covered by the certification authority linked to the user account
-  else if (hasRole("manage_feasibility")) {
+  if (hasRole("manage_feasibility")) {
     const account = await prismaClient.account.findFirst({
       where: { keycloakId },
       include: {
@@ -193,34 +192,35 @@ export const getFeasibilities = async ({
         (c) => c.certificationId
       ) || [];
 
-    query = {
-      where: {
-        candidacy: {
-          certificationsAndRegions: {
-            some: {
-              isActive: true,
-              certificationId: { in: accountCertificationIdList },
-              region: {
-                departments: {
-                  some: { id: { in: accountDepartmentIdList } },
-                },
+    queryWhereClause = {
+      ...queryWhereClause,
+      candidacy: {
+        certificationsAndRegions: {
+          some: {
+            isActive: true,
+            certificationId: { in: accountCertificationIdList },
+            region: {
+              departments: {
+                some: { id: { in: accountDepartmentIdList } },
               },
             },
           },
         },
       },
     };
-  } else {
+  } else if (!hasRole("admin")) {
+    //admin has access to everything
     throw new Error("Utilisateur non autorisé");
   }
-
   const rows = await prismaClient.feasibility.findMany({
-    ...query,
+    where: queryWhereClause,
     skip: offset,
     take: limit,
   });
 
-  const totalRows = await prismaClient.feasibility.count(query);
+  const totalRows = await prismaClient.feasibility.count({
+    where: queryWhereClause,
+  });
 
   const page = {
     rows,
