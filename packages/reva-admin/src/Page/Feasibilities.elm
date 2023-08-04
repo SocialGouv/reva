@@ -8,7 +8,8 @@ module Page.Feasibilities exposing
     )
 
 import Accessibility exposing (h1, h2)
-import Admin.Enum.FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
+import Admin.Enum.FeasibilityCategoryFilter as FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
+import Admin.Enum.FeasibilityStatusFilter as FeasibilityStatusFilter exposing (FeasibilityStatusFilter)
 import Api.Feasibility
 import BetaGouv.DSFR.Pagination
 import Data.Context exposing (Context)
@@ -63,10 +64,13 @@ withFilters context page category model =
         withNewPage filters =
             { filters | page = page }
 
+        statusFilter =
+            FeasibilityStatusFilter.fromString (FeasibilityCategoryFilter.toString category)
+
         ( newState, command ) =
             if categoryChanged || pageChanged then
                 ( model.state |> withFeasibilityPage Loading
-                , Api.Feasibility.getFeasibilities context.endpoint context.token GotFeasibilitiesResponse page (Just category)
+                , Api.Feasibility.getFeasibilities context.endpoint context.token GotFeasibilitiesResponse page statusFilter
                 )
 
             else
@@ -89,9 +93,12 @@ init context categoryFilter page =
             , state = { currentFeasibilityPage = RemoteData.Loading, feasibilityCountByCategory = RemoteData.Loading }
             }
 
+        statusFilter =
+            FeasibilityStatusFilter.fromString (FeasibilityCategoryFilter.toString categoryFilter)
+
         defaultCmd =
             Cmd.batch
-                [ Api.Feasibility.getFeasibilities context.endpoint context.token GotFeasibilitiesResponse page (Just categoryFilter)
+                [ Api.Feasibility.getFeasibilities context.endpoint context.token GotFeasibilitiesResponse page statusFilter
                 , Api.Feasibility.getFeasibilityCountByCategory context.endpoint context.token GotFeasibilitiesCountByCategoryResponse
                 ]
     in
@@ -223,7 +230,7 @@ viewItem context feasibilitySummary =
 
 
 update : Context -> Msg -> Model -> ( Model, Cmd Msg )
-update context msg model =
+update _ msg model =
     case msg of
         GotFeasibilitiesResponse remoteFeasibilityPage ->
             ( { model | state = model.state |> withFeasibilityPage remoteFeasibilityPage }

@@ -2,6 +2,7 @@ module Api.Feasibility exposing (get, getFeasibilities, getFeasibilityCountByCat
 
 import Admin.Enum.FeasibilityCategoryFilter
 import Admin.Enum.FeasibilityStatus
+import Admin.Enum.FeasibilityStatusFilter
 import Admin.Mutation as Mutation
 import Admin.Object
 import Admin.Object.Candidacy
@@ -21,7 +22,7 @@ import Api.RemoteData exposing (nothingToError)
 import Api.Token exposing (Token)
 import Data.Feasibility
 import Data.Organism exposing (Organism)
-import Graphql.OptionalArgument exposing (OptionalArgument(..))
+import Graphql.OptionalArgument as OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
 
@@ -148,14 +149,15 @@ getFeasibilities :
     -> Token
     -> (RemoteData (List String) Data.Feasibility.FeasibilitySummaryPage -> msg)
     -> Int
-    -> Maybe Admin.Enum.FeasibilityCategoryFilter.FeasibilityCategoryFilter
+    -> Maybe Admin.Enum.FeasibilityStatusFilter.FeasibilityStatusFilter
     -> Cmd msg
-getFeasibilities endpointGraphql token toMsg page category =
+getFeasibilities endpointGraphql token toMsg page status =
     Query.feasibilities
         (\optionals ->
             { optionals
                 | limit = Present 10
                 , offset = Present ((page - 1) * 10)
+                , status = OptionalArgument.fromMaybe status
             }
         )
         summaryPageSelection
