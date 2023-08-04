@@ -33,6 +33,9 @@ type Candidacy {
 
 type FeasibilityCountByCategory {
   ALL: Int!
+  PENDING: Int!
+  REJECTED: Int!
+  ADMISSIBLE: Int!
 }
 
 type FeasibilityPage {
@@ -42,6 +45,9 @@ type FeasibilityPage {
 
 enum FeasibilityCategoryFilter {
   ALL
+  PENDING
+  REJECTED
+  ADMISSIBLE
 }
 
 type Query {
@@ -52,9 +58,5 @@ type Query {
 
 type Mutation {
   validateFeasibility(feasibilityId: ID!, comment: String): Feasibility
-  rejectFeasibility(
-    feasibilityId: ID!
-    comment: String
-  ): Feasibility
+  rejectFeasibility(feasibilityId: ID!, comment: String): Feasibility
 }
-

@@ -9,11 +9,14 @@ import Json.Decode as Decode exposing (Decoder)
 
 type FeasibilityCategoryFilter
     = All
+    | Pending
+    | Rejected
+    | Admissible
 
 
 list : List FeasibilityCategoryFilter
 list =
-    [ All ]
+    [ All, Pending, Rejected, Admissible ]
 
 
 decoder : Decoder FeasibilityCategoryFilter
@@ -24,6 +27,15 @@ decoder =
                 case string of
                     "ALL" ->
                         Decode.succeed All
+
+                    "PENDING" ->
+                        Decode.succeed Pending
+
+                    "REJECTED" ->
+                        Decode.succeed Rejected
+
+                    "ADMISSIBLE" ->
+                        Decode.succeed Admissible
 
                     _ ->
                         Decode.fail ("Invalid FeasibilityCategoryFilter type, " ++ string ++ " try re-running the @dillonkearns/elm-graphql CLI ")
@@ -37,6 +49,15 @@ toString enum____ =
     case enum____ of
         All ->
             "ALL"
+
+        Pending ->
+            "PENDING"
+
+        Rejected ->
+            "REJECTED"
+
+        Admissible ->
+            "ADMISSIBLE"
 
 
 {-| Convert from a String representation to an elm representation enum.
@@ -55,6 +76,15 @@ fromString enumString____ =
     case enumString____ of
         "ALL" ->
             Just All
+
+        "PENDING" ->
+            Just Pending
+
+        "REJECTED" ->
+            Just Rejected
+
+        "ADMISSIBLE" ->
+            Just Admissible
 
         _ ->
             Nothing

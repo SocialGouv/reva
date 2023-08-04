@@ -22,3 +22,18 @@ import Json.Decode as Decode
 all : SelectionSet Int Admin.Object.FeasibilityCountByCategory
 all =
     Object.selectionForField "Int" "ALL" [] Decode.int
+
+
+pending : SelectionSet Int Admin.Object.FeasibilityCountByCategory
+pending =
+    Object.selectionForField "Int" "PENDING" [] Decode.int
+
+
+rejected : SelectionSet Int Admin.Object.FeasibilityCountByCategory
+rejected =
+    Object.selectionForField "Int" "REJECTED" [] Decode.int
+
+
+admissible : SelectionSet Int Admin.Object.FeasibilityCountByCategory
+admissible =
+    Object.selectionForField "Int" "ADMISSIBLE" [] Decode.int

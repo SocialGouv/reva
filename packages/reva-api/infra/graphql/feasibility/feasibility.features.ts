@@ -1,4 +1,4 @@
-import { Feasibility } from "@prisma/client";
+import { Feasibility, FeasibilityStatus } from "@prisma/client";
 
 import { canManageCandidacy } from "../../../domain/features/canManageCandidacy";
 import { Candidacy } from "../../../domain/types/candidacy";
@@ -98,13 +98,72 @@ export const getFileWithContent = async ({ fileId }: { fileId: string }) =>
     where: { id: fileId },
   });
 
-const getFeasibilityListBaseQuery = async ({
+export const getFeasibilityCountByCategory = async ({
   keycloakId,
   hasRole,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
 }) => {
+  const feasibilityCountByCategory = {
+    ALL: 0,
+    PENDING: 0,
+    ADMISSIBLE: 0,
+    REJECTED: 0,
+  };
+
+  const countQuery = (status?: FeasibilityStatus) => {
+    let commonWhereClause = "1=1";
+    let commonJoinClause = "";
+
+    if (hasRole("admin")) {
+      commonWhereClause = "1=1";
+    } else if (hasRole("manage_feasibility")) {
+      commonJoinClause = `join candidacy on candidacy.id=feasibility.candidacy_id join candidacy_region_certification on (candidacy_region_certification.is_active = true and candidacy_region_certification.candidacy_id = candidacy.id) join account on account.keycloak_id='${keycloakId}' join certification_authority on certification_authority.id = account.certification_authority_id`;
+
+      //restriction on certifications handled by certification authority
+      commonWhereClause = `${commonWhereClause} and candidacy_region_certification.certification_id in (select certification_authority_on_certification.certification_id from certification_authority_on_certification where certification_authority_on_certification.certification_authority_id=certification_authority.id)`;
+
+      //restriction on departments handled by certification authority
+      commonWhereClause = `${commonWhereClause} and candidacy_region_certification.region_id in (select department.region_id from department where department.id in (select certification_authority_on_department.department_id from certification_authority_on_department where certification_authority_on_department.certification_authority_id=certification_authority.id))`;
+    } else {
+      throw new Error("Utilisateur non autorisé");
+    }
+
+    return status
+      ? `select '${status.toString()}' as status, count (status) from feasibility ${commonJoinClause} where ${commonWhereClause} and feasibility.status = '${status}' group by status`
+      : `select 'ALL' as status, count (status) from feasibility ${commonJoinClause} where ${commonWhereClause} group by status`;
+  };
+
+  const query = `${countQuery()} 
+  UNION ${countQuery("PENDING")} 
+  UNION ${countQuery("ADMISSIBLE")} 
+  UNION ${countQuery("REJECTED")}`;
+
+  //logger.info({ query, keycloakId });
+  const feasibilityCountByStatusFromDb: {
+    status: FeasibilityStatus;
+    count: bigint;
+  }[] = await prismaClient.$queryRawUnsafe(query);
+
+  feasibilityCountByStatusFromDb.forEach((fcbs) => {
+    feasibilityCountByCategory[fcbs.status] = Number(fcbs.count);
+  });
+
+  return feasibilityCountByCategory;
+};
+
+export const getFeasibilities = async ({
+  keycloakId,
+  hasRole,
+  limit = 10,
+  offset = 0,
+}: {
+  keycloakId: string;
+  hasRole: (role: string) => boolean;
+  limit?: number;
+  offset?: number;
+}): Promise<PaginatedListResult<Feasibility>> => {
   let query = {} as object;
   // admin sees all feasibilities
   if (hasRole("admin")) {
@@ -155,34 +214,6 @@ const getFeasibilityListBaseQuery = async ({
     throw new Error("Utilisateur non autorisé");
   }
 
-  return query;
-};
-
-export const getFeasibilityCountByCategory = async ({
-  keycloakId,
-  hasRole,
-}: {
-  keycloakId: string;
-  hasRole: (role: string) => boolean;
-}) => {
-  const count = await prismaClient.feasibility.count(
-    await getFeasibilityListBaseQuery({ keycloakId, hasRole })
-  );
-  return { ALL: count };
-};
-
-export const getFeasibilities = async ({
-  keycloakId,
-  hasRole,
-  limit = 10,
-  offset = 0,
-}: {
-  keycloakId: string;
-  hasRole: (role: string) => boolean;
-  limit?: number;
-  offset?: number;
-}): Promise<PaginatedListResult<Feasibility>> => {
-  const query = await getFeasibilityListBaseQuery({ keycloakId, hasRole });
   const rows = await prismaClient.feasibility.findMany({
     ...query,
     skip: offset,

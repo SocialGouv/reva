@@ -246,3 +246,43 @@ test("should return all (1) available feasibility for certificateur user", async
     info: { currentPage: 1, totalPages: 1, totalRows: 1, pageLength: 10 },
   });
 });
+
+test("should count 1 pending feasibility for admin user", async () => {
+  const candidacy = await prismaClient.candidacy.create({
+    data: {
+      deviceId: candidate.email,
+      email: candidate.email,
+      candidateId: candidate.id,
+      organismId: organism.id,
+    },
+  });
+
+  await prismaClient.feasibility.create({
+    data: {
+      candidacyId: candidacy.id,
+      feasibilityFileId: feasibilityFile.id,
+      status: "PENDING",
+    },
+  });
+
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "admin",
+      keycloakId: "whatever",
+    }),
+    payload: {
+      requestType: "query",
+      endpoint: "feasibilityCountByCategory",
+      returnFields: "{ALL,PENDING,ADMISSIBLE,REJECTED}",
+    },
+  });
+  expect(resp.statusCode).toEqual(200);
+  const obj = resp.json();
+  expect(obj.data.feasibilityCountByCategory).toMatchObject({
+    ALL: 1,
+    PENDING: 1,
+    ADMISSIBLE: 0,
+    REJECTED: 0,
+  });
+});
