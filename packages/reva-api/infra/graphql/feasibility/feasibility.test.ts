@@ -141,6 +141,7 @@ test("should count all (1) available feasibility for certificateur user", async 
       regionId: ileDeFranceRegion.id,
       certificationId: certification.id,
       author: "unknown",
+      isActive: true,
     },
   });
 
@@ -220,6 +221,7 @@ test("should return all (1) available feasibility for certificateur user", async
       regionId: ileDeFranceRegion.id,
       certificationId: certification.id,
       author: "unknown",
+      isActive: true,
     },
   });
 

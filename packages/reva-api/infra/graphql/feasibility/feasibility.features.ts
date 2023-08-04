@@ -139,6 +139,7 @@ const getFeasibilityListBaseQuery = async ({
         candidacy: {
           certificationsAndRegions: {
             some: {
+              isActive: true,
               certificationId: { in: accountCertificationIdList },
               region: {
                 departments: {
