@@ -1,6 +1,6 @@
 port module Main exposing (main)
 
-import Accessibility exposing (h1, p)
+import Accessibility exposing (h1)
 import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter
 import Admin.Enum.FeasibilityCategoryFilter as FeasibilityCategoryFilter
 import Api.Token exposing (Token)
@@ -24,7 +24,6 @@ import Page.Subscriptions as Subscriptions
 import Route exposing (Route(..), emptyFeasibilityFilters)
 import Task
 import Url exposing (Url)
-import View
 import View.Footer
 import View.Header
 import View.Skiplinks
@@ -204,6 +203,11 @@ changeRouteTo context route model =
             Candidacies.init model.context filters.status filters.page
                 |> updateWith Candidacies GotCandidaciesMsg model
 
+        ( Route.Feasibilities filters, Feasibilities feasibilitiesModel ) ->
+            feasibilitiesModel
+                |> Feasibilities.withFilters context filters.page filters.category
+                |> updateWith Feasibilities GotFeasibilitiesMsg model
+
         ( Route.Feasibilities filters, _ ) ->
             Feasibilities.init model.context filters.category filters.page
                 |> updateWith Feasibilities GotFeasibilitiesMsg model
@@ -361,9 +365,6 @@ update msg model =
 
             else if Api.Token.isCertificationAuthority token then
                 let
-                    ( feasibilitiesModel, _ ) =
-                        Feasibilities.init newContext FeasibilityCategoryFilter.All 1
-
                     redirectRoute =
                         case route of
                             -- When the user is not logged in, we redirect him to the login page
@@ -373,9 +374,23 @@ update msg model =
 
                             _ ->
                                 route
+
+                    filters =
+                        case route of
+                            Route.Feasibilities f ->
+                                f
+
+                            _ ->
+                                { category = FeasibilityCategoryFilter.All, page = 1 }
+
+                    ( feasibilitiesModel, feasibilitiesCmd ) =
+                        Feasibilities.init newContext filters.category filters.page
                 in
                 ( { model | context = newContext, page = Feasibilities feasibilitiesModel }
-                , Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl redirectRoute)
+                , Cmd.batch
+                    [ Cmd.map GotFeasibilitiesMsg feasibilitiesCmd
+                    , Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl redirectRoute)
+                    ]
                 )
 
             else
