@@ -1,8 +1,8 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { Either, EitherAsync, Left, Right } from "purify-ts";
 
-import { Role } from "../../../../domain/types/account";
-import { Candidacy, Degree } from "../../../../domain/types/candidacy";
+import { Role } from "../../../../../domain/types/account";
+import { Candidacy, Degree } from "../../../../../domain/types/candidacy";
 import {
   Candidate,
   FundingRequest,
@@ -10,12 +10,12 @@ import {
   FundingRequestBatchContent,
   FundingRequestInput,
   VulnerabilityIndicator,
-} from "../../../../domain/types/candidate";
+} from "../../../../../domain/types/candidate";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../../../domain/types/functionalError";
-import { logger } from "../../../logger";
+} from "../../../../../domain/types/functionalError";
+import { logger } from "../../../../logger";
 import { getTotalCost, validateIndividualCosts } from "./costValidationUtils";
 
 interface CreateFundingRequestDeps {

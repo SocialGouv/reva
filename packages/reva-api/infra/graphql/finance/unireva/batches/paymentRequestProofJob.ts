@@ -3,8 +3,8 @@ import { Readable } from "stream";
 import { FileUploadSpooler } from "@prisma/client";
 import * as ftp from "basic-ftp";
 
-import { prismaClient } from "../../../database/postgres/client";
-import { logger } from "../../../logger";
+import { prismaClient } from "../../../../database/postgres/client";
+import { logger } from "../../../../logger";
 
 export default async () => {
   logger.info("Starting uploadSpoolerFiles job");

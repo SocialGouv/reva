@@ -3,9 +3,9 @@ import path from "path";
 import cron from "cron";
 import dotenv from "dotenv";
 
-import { batchFundingRequest } from "./graphql/finance/batches/fundingRequest";
-import { batchPaymentRequest } from "./graphql/finance/batches/paymentRequest";
-import uploadSpoolerFiles from "./graphql/finance/batches/paymentRequestProofJob";
+import { batchFundingRequest } from "./graphql/finance/unireva/batches/fundingRequest";
+import { batchPaymentRequest } from "./graphql/finance/unireva/batches/paymentRequest";
+import uploadSpoolerFiles from "./graphql/finance/unireva/batches/paymentRequestProofJob";
 import { logger } from "./logger";
 
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });

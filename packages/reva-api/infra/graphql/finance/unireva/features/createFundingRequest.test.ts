@@ -1,14 +1,14 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { Left, Right } from "purify-ts";
 
-import { Candidacy, Organism } from "../../../../domain/types/candidacy";
+import { Candidacy, Organism } from "../../../../../domain/types/candidacy";
 import {
   Candidate,
   FundingRequest,
   FundingRequestBatch,
   FundingRequestInput,
-} from "../../../../domain/types/candidate";
-import { FunctionalError } from "../../../../domain/types/functionalError";
+} from "../../../../../domain/types/candidate";
+import { FunctionalError } from "../../../../../domain/types/functionalError";
 import {
   createFundingRequest,
   validateFundingRequest,

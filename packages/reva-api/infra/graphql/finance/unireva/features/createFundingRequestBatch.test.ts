@@ -1,10 +1,10 @@
 import { Decimal } from "@prisma/client/runtime";
 
-import { Candidacy, Organism } from "../../../../domain/types/candidacy";
+import { Candidacy, Organism } from "../../../../../domain/types/candidacy";
 import {
   Candidate,
   FundingRequestInput,
-} from "../../../../domain/types/candidate";
+} from "../../../../../domain/types/candidate";
 import { mapFundingRequestBatch } from "./createFundingRequest";
 
 const defaultValidFundingRequest: FundingRequestInput = {
