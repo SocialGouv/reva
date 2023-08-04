@@ -1,17 +1,17 @@
 import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
-import { Role } from "../../../../domain/types/account";
+import { Role } from "../../../../../domain/types/account";
 import {
   Candidacy,
   PaymentRequest,
   PaymentRequestBatch,
   PaymentRequestBatchContent,
-} from "../../../../domain/types/candidacy";
-import { FundingRequest } from "../../../../domain/types/candidate";
+} from "../../../../../domain/types/candidacy";
+import { FundingRequest } from "../../../../../domain/types/candidate";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../../../domain/types/functionalError";
+} from "../../../../../domain/types/functionalError";
 
 interface ConfirmPaymentRequestDeps {
   hasRole: (role: Role) => boolean;

@@ -3,8 +3,8 @@ import { Readable } from "stream";
 import { Feature } from "@prisma/client";
 import * as csv from "fast-csv";
 
-import { prismaClient } from "../../../database/postgres/client";
-import { logger } from "../../../logger";
+import { prismaClient } from "../../../../database/postgres/client";
+import { logger } from "../../../../logger";
 import { sendStreamToFtp } from "./ftp/ftp";
 
 const BATCH_KEY = "batch.demande-paiement";
