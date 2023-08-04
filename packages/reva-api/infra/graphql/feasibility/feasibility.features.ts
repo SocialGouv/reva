@@ -132,7 +132,7 @@ export const getFeasibilityCountByCategory = async ({
 
     return status
       ? `select '${status.toString()}' as status, count (status) from feasibility ${commonJoinClause} where ${commonWhereClause} and feasibility.status = '${status}' group by status`
-      : `select 'ALL' as status, count (status) from feasibility ${commonJoinClause} where ${commonWhereClause} group by status`;
+      : `select 'ALL' as status, count (status) from feasibility ${commonJoinClause} where ${commonWhereClause}`;
   };
 
   const query = `${countQuery()} 
