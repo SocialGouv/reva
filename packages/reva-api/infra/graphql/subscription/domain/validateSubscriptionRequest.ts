@@ -221,6 +221,7 @@ export const validateSubscriptionRequest = async (
         label: $store.subreq?.companyName ?? "",
         address: $store.subreq?.companyAddress ?? "",
         contactAdministrativeEmail: $store.subreq?.accountEmail ?? "",
+        contactAdministrativePhone: $store.subreq.accountPhoneNumber ?? "",
         city: $store.subreq?.companyCity ?? "",
         zip: $store.subreq?.companyZipCode ?? "",
         siret: $store.subreq?.companySiret ?? "",

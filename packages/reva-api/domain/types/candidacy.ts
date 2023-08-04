@@ -145,6 +145,7 @@ export interface Organism {
   siret: string;
   legalStatus?: LegalStatus;
   contactAdministrativeEmail: string;
+  contactAdministrativePhone: string | null;
   isActive: boolean;
   typology: OrganismTypology;
   qualiopiCertificateExpiresAt: Date | null;

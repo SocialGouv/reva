@@ -266,6 +266,7 @@ model Organism {
   zip                                                    String                                                   @db.VarChar(5)
   city                                                   String                                                   @db.VarChar(255)
   contactAdministrativeEmail                             String                                                   @unique @map("contact_administrative_email") @db.VarChar(255)
+  contactAdministrativePhone                             String?                                                  @map("contact_administrative_phone") @db.VarChar(50)
   siret                                                  String
   isActive                                               Boolean                                                  @default(false) @map("is_active")
   candidacies                                            Candidacy[]
