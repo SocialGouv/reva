@@ -2,7 +2,7 @@ module View.Feasibility.Filters exposing (..)
 
 import Admin.Enum.FeasibilityCategoryFilter as FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter(..))
 import Data.Context exposing (Context)
-import Data.Feasibility exposing (FeasibilityCountByCategory, Status(..), feasibilityCategoryFilterToReadableString)
+import Data.Feasibility exposing (Decision(..), FeasibilityCountByCategory, feasibilityCategoryFilterToReadableString)
 import Html exposing (Html, a, label, li, text, ul)
 import Html.Attributes exposing (class, classList)
 import Route exposing (FeasibilityFilters)

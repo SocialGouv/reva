@@ -1,6 +1,6 @@
 module Data.Form.Feasibility exposing (Decision(..), decisionFromString, decisionToString, fromDict, keys, validate)
 
-import Data.Feasibility exposing (Feasibility, Status(..))
+import Data.Feasibility exposing (Feasibility)
 import Data.Form exposing (FormData)
 import Data.Form.Helper as Helper
 
@@ -43,7 +43,7 @@ decisionFromString reason =
             Unknown
 
 
-fromDict : FormData -> Status
+fromDict : FormData -> Data.Feasibility.Decision
 fromDict formData =
     let
         decode =
@@ -51,13 +51,13 @@ fromDict formData =
     in
     case decisionFromString (decode.string .decision "") of
         Valid ->
-            Admissible (decode.string .reason "")
+            Data.Feasibility.Admissible (decode.string .reason "")
 
         Invalid ->
-            Rejected (decode.string .reason "")
+            Data.Feasibility.Rejected (decode.string .reason "")
 
         Unknown ->
-            Pending
+            Data.Feasibility.Pending
 
 
 validate : Feasibility -> FormData -> Result (List String) ()

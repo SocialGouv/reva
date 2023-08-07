@@ -10,11 +10,12 @@ import Json.Decode as Decode exposing (Decoder)
 type AccountGroup
     = Admin
     | Organism
+    | Certification_authority
 
 
 list : List AccountGroup
 list =
-    [ Admin, Organism ]
+    [ Admin, Organism, Certification_authority ]
 
 
 decoder : Decoder AccountGroup
@@ -28,6 +29,9 @@ decoder =
 
                     "organism" ->
                         Decode.succeed Organism
+
+                    "certification_authority" ->
+                        Decode.succeed Certification_authority
 
                     _ ->
                         Decode.fail ("Invalid AccountGroup type, " ++ string ++ " try re-running the @dillonkearns/elm-graphql CLI ")
@@ -44,6 +48,9 @@ toString enum____ =
 
         Organism ->
             "organism"
+
+        Certification_authority ->
+            "certification_authority"
 
 
 {-| Convert from a String representation to an elm representation enum.
@@ -65,6 +72,9 @@ fromString enumString____ =
 
         "organism" ->
             Just Organism
+
+        "certification_authority" ->
+            Just Certification_authority
 
         _ ->
             Nothing

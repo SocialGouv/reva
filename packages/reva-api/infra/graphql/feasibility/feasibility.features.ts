@@ -1,4 +1,4 @@
-import { Feasibility, FeasibilityStatus, Prisma } from "@prisma/client";
+import { Feasibility, FeasibilityStatus } from "@prisma/client";
 
 import { canManageCandidacy } from "../../../domain/features/canManageCandidacy";
 import { Candidacy } from "../../../domain/types/candidacy";
@@ -112,7 +112,7 @@ export const getFeasibilityCountByCategory = async ({
     REJECTED: 0,
   };
 
-  const countQuery = (status?: FeasibilityStatus) => {
+  const countQuery = (decision?: FeasibilityStatus) => {
     let commonWhereClause = "1=1";
     let commonJoinClause = "";
 
@@ -130,9 +130,9 @@ export const getFeasibilityCountByCategory = async ({
       throw new Error("Utilisateur non autorisé");
     }
 
-    return status
-      ? `select '${status.toString()}' as status, count (status) from feasibility ${commonJoinClause} where ${commonWhereClause} and feasibility.status = '${status}' group by status`
-      : `select 'ALL' as status, count (status) from feasibility ${commonJoinClause} where ${commonWhereClause}`;
+    return decision
+      ? `select '${decision.toString()}' as decision, count (decision) from feasibility ${commonJoinClause} where ${commonWhereClause} and feasibility.decision = '${decision}' group by decision`
+      : `select 'ALL' as decision, count (decision) from feasibility ${commonJoinClause} where ${commonWhereClause}`;
   };
 
   const query = `${countQuery()} 
@@ -142,12 +142,12 @@ export const getFeasibilityCountByCategory = async ({
 
   //logger.info({ query, keycloakId });
   const feasibilityCountByStatusFromDb: {
-    status: FeasibilityStatus;
+    decision: FeasibilityStatus;
     count: bigint;
   }[] = await prismaClient.$queryRawUnsafe(query);
 
   feasibilityCountByStatusFromDb.forEach((fcbs) => {
-    feasibilityCountByCategory[fcbs.status] = Number(fcbs.count);
+    feasibilityCountByCategory[fcbs.decision] = Number(fcbs.count);
   });
 
   return feasibilityCountByCategory;
@@ -158,15 +158,15 @@ export const getFeasibilities = async ({
   hasRole,
   limit = 10,
   offset = 0,
-  status,
+  decision,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
   limit?: number;
   offset?: number;
-  status?: FeasibilityStatus;
+  decision?: FeasibilityStatus;
 }): Promise<PaginatedListResult<Feasibility>> => {
-  let queryWhereClause: object = status ? { status } : {};
+  let queryWhereClause: object = decision ? { decision } : {};
 
   //only list feasibilties attached to candidacies that have both certification and department covered by the certification authority linked to the user account
   if (hasRole("manage_feasibility")) {
@@ -285,8 +285,9 @@ export const validateFeasibility = async ({
     return await prismaClient.feasibility.update({
       where: { id: feasibilityId },
       data: {
-        status: "ADMISSIBLE",
+        decision: "ADMISSIBLE",
         decisionComment: comment,
+        decisionSentAt: new Date(),
       },
     });
   } else {
@@ -307,8 +308,9 @@ export const rejectFeasibility = async ({
     return await prismaClient.feasibility.update({
       where: { id: feasibilityId },
       data: {
-        status: "REJECTED",
+        decision: "REJECTED",
         decisionComment: comment,
+        decisionSentAt: new Date(),
       },
     });
   } else {

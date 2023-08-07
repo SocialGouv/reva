@@ -2,23 +2,23 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module Admin.Enum.FeasibilityStatusFilter exposing (..)
+module Admin.Enum.FeasibilityDecisionFilter exposing (..)
 
 import Json.Decode as Decode exposing (Decoder)
 
 
-type FeasibilityStatusFilter
+type FeasibilityDecisionFilter
     = Pending
     | Rejected
     | Admissible
 
 
-list : List FeasibilityStatusFilter
+list : List FeasibilityDecisionFilter
 list =
     [ Pending, Rejected, Admissible ]
 
 
-decoder : Decoder FeasibilityStatusFilter
+decoder : Decoder FeasibilityDecisionFilter
 decoder =
     Decode.string
         |> Decode.andThen
@@ -34,13 +34,13 @@ decoder =
                         Decode.succeed Admissible
 
                     _ ->
-                        Decode.fail ("Invalid FeasibilityStatusFilter type, " ++ string ++ " try re-running the @dillonkearns/elm-graphql CLI ")
+                        Decode.fail ("Invalid FeasibilityDecisionFilter type, " ++ string ++ " try re-running the @dillonkearns/elm-graphql CLI ")
             )
 
 
 {-| Convert from the union type representing the Enum to a string that the GraphQL server will recognize.
 -}
-toString : FeasibilityStatusFilter -> String
+toString : FeasibilityDecisionFilter -> String
 toString enum____ =
     case enum____ of
         Pending ->
@@ -64,7 +64,7 @@ This is the inverse of the Enum `toString` function. So you can call `toString` 
 This can be useful for generating Strings to use for <select> menus to check which item was selected.
 
 -}
-fromString : String -> Maybe FeasibilityStatusFilter
+fromString : String -> Maybe FeasibilityDecisionFilter
 fromString enumString____ =
     case enumString____ of
         "PENDING" ->

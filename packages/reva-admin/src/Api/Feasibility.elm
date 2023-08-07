@@ -1,8 +1,8 @@
 module Api.Feasibility exposing (get, getFeasibilities, getFeasibilityCountByCategory, reject, validate)
 
 import Admin.Enum.FeasibilityCategoryFilter
-import Admin.Enum.FeasibilityStatus
-import Admin.Enum.FeasibilityStatusFilter
+import Admin.Enum.FeasibilityDecision
+import Admin.Enum.FeasibilityDecisionFilter
 import Admin.Mutation as Mutation
 import Admin.Object
 import Admin.Object.Candidacy
@@ -45,29 +45,31 @@ get endpointGraphql token toMsg feasibilityId =
 selection : String -> SelectionSet Data.Feasibility.Feasibility Admin.Object.Feasibility
 selection feasibilityId =
     SelectionSet.succeed
-        (\file otherFile candidacy status maybeDecisionComment ->
+        (\file otherFile candidacy decision maybeDecisionComment decisionSentAt ->
             Data.Feasibility.Feasibility feasibilityId
                 file
                 otherFile
                 candidacy.candidate
                 candidacy.organism
                 candidacy.certificationLabel
-            <|
-                case status of
-                    Admin.Enum.FeasibilityStatus.Admissible ->
+                (case decision of
+                    Admin.Enum.FeasibilityDecision.Admissible ->
                         Data.Feasibility.Admissible (Maybe.withDefault "" maybeDecisionComment)
 
-                    Admin.Enum.FeasibilityStatus.Rejected ->
+                    Admin.Enum.FeasibilityDecision.Rejected ->
                         Data.Feasibility.Rejected (Maybe.withDefault "" maybeDecisionComment)
 
-                    Admin.Enum.FeasibilityStatus.Pending ->
+                    Admin.Enum.FeasibilityDecision.Pending ->
                         Data.Feasibility.Pending
+                )
+                decisionSentAt
         )
         |> with (Admin.Object.Feasibility.feasibilityFile File.selection)
         |> with (Admin.Object.Feasibility.otherFile File.selection)
         |> with (Admin.Object.Feasibility.candidacy candidacySelection)
-        |> with Admin.Object.Feasibility.status
+        |> with Admin.Object.Feasibility.decision
         |> with Admin.Object.Feasibility.decisionComment
+        |> with Admin.Object.Feasibility.decisionSentAt
 
 
 type alias Candidacy =
@@ -93,7 +95,7 @@ candidateSelection =
 
 
 
--- STATUS
+-- DECISION
 
 
 validate :
@@ -149,15 +151,15 @@ getFeasibilities :
     -> Token
     -> (RemoteData (List String) Data.Feasibility.FeasibilitySummaryPage -> msg)
     -> Int
-    -> Maybe Admin.Enum.FeasibilityStatusFilter.FeasibilityStatusFilter
+    -> Maybe Admin.Enum.FeasibilityDecisionFilter.FeasibilityDecisionFilter
     -> Cmd msg
-getFeasibilities endpointGraphql token toMsg page status =
+getFeasibilities endpointGraphql token toMsg page decision =
     Query.feasibilities
         (\optionals ->
             { optionals
                 | limit = Present 10
                 , offset = Present ((page - 1) * 10)
-                , status = OptionalArgument.fromMaybe status
+                , decision = OptionalArgument.fromMaybe decision
             }
         )
         summaryPageSelection

@@ -5,7 +5,7 @@
 module Admin.Query exposing (..)
 
 import Admin.Enum.CandidacyStatusFilter
-import Admin.Enum.FeasibilityStatusFilter
+import Admin.Enum.FeasibilityDecisionFilter
 import Admin.Enum.SubscriptionRequestStatus
 import Admin.InputObject
 import Admin.Interface
@@ -169,7 +169,7 @@ feasibilityCountByCategory object____ =
 type alias FeasibilitiesOptionalArguments =
     { offset : OptionalArgument Int
     , limit : OptionalArgument Int
-    , status : OptionalArgument Admin.Enum.FeasibilityStatusFilter.FeasibilityStatusFilter
+    , decision : OptionalArgument Admin.Enum.FeasibilityDecisionFilter.FeasibilityDecisionFilter
     }
 
 
@@ -180,10 +180,10 @@ feasibilities :
 feasibilities fillInOptionals____ object____ =
     let
         filledInOptionals____ =
-            fillInOptionals____ { offset = Absent, limit = Absent, status = Absent }
+            fillInOptionals____ { offset = Absent, limit = Absent, decision = Absent }
 
         optionalArgs____ =
-            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "status" filledInOptionals____.status (Encode.enum Admin.Enum.FeasibilityStatusFilter.toString) ]
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "decision" filledInOptionals____.decision (Encode.enum Admin.Enum.FeasibilityDecisionFilter.toString) ]
                 |> List.filterMap Basics.identity
     in
     Object.selectionForCompositeField "feasibilities" optionalArgs____ object____ Basics.identity
