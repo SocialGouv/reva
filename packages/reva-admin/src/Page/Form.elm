@@ -69,6 +69,7 @@ type Element
     | Textarea String (Maybe String)
     | RadioList String (List ( String, String ))
     | Text String (Maybe String)
+    | StaticHtml (Html Never)
 
 
 type alias Form =
@@ -445,6 +446,9 @@ viewEditableElement formData ( elementId, element ) =
         Text content classes ->
             div [ class ("mb-4 w-full " ++ Maybe.withDefault "" classes) ] [ text content ]
 
+        StaticHtml content ->
+            Html.map never content
+
 
 viewReadOnlyElement : FormData -> ( String, Element ) -> Html (Msg referential)
 viewReadOnlyElement formData ( elementId, element ) =
@@ -550,6 +554,9 @@ viewReadOnlyElement formData ( elementId, element ) =
 
         Text content classes ->
             p [ class ("mb-4 " ++ Maybe.withDefault "" classes) ] [ text content ]
+
+        StaticHtml content ->
+            Html.map never content
 
 
 labelStyle : String
