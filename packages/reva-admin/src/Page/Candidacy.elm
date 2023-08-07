@@ -29,6 +29,7 @@ import BetaGouv.DSFR.Button as Button
 import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId)
 import Data.Context exposing (Context)
+import Data.Feasibility
 import Data.Form.Archive
 import Data.Form.DropOut
 import Data.Form.FundingRequest
@@ -59,6 +60,7 @@ import View.Candidacy
 import View.Candidacy.NavigationSteps as NavigationSteps
 import View.Candidacy.Tab exposing (Tab, Value(..))
 import View.Candidate
+import View.Feasibility.Decision
 import View.FileLink exposing (viewFileLink)
 
 
@@ -229,11 +231,13 @@ view context model =
                 Feasibility ->
                     case model.selected of
                         Success candidacy ->
-                            if candidacy.feasibility /= Nothing then
-                                viewMain context "decision-sent" <| viewDecisionSent candidacy
+                            case candidacy.feasibility of
+                                Just feasibility ->
+                                    viewMain context "decision-sent" <|
+                                        viewDecisionSent candidacy feasibility
 
-                            else
-                                viewForm "feasibility"
+                                Nothing ->
+                                    viewForm "feasibility"
 
                         _ ->
                             viewForm "feasibility"
@@ -262,16 +266,17 @@ viewTrainingSent context candidacyId =
     ]
 
 
-viewDecisionSent : Candidacy -> List (Html msg)
-viewDecisionSent candidacy =
+viewDecisionSent : Candidacy -> Data.Feasibility.Feasibility -> List (Html msg)
+viewDecisionSent candidacy feasibility =
     [ h1 [] [ text "Dossier de faisabilité" ]
     , div
-        [ class "flex flex-col gap-y-8" ]
+        [ class "flex flex-col gap-y-8 mb-6" ]
         [ View.Candidate.viewWithCertification
             (candidacy.certification |> Maybe.map .label)
             candidacy.candidate
         , View.Candidate.viewCertificationAuthority
             candidacy.certificationAuthority
+        , View.Feasibility.Decision.view feasibility
         ]
     ]
 
@@ -285,7 +290,7 @@ viewFeasibilityFileSubmitted context candidacyRemoteData =
                     let
                         feasibilityFileNameAndUrl =
                             Maybe.withDefault ( "", "" ) <|
-                                Maybe.map (\f -> ( f.feasibilityFile.name, f.feasibilityFile.url )) candidacy.feasibility
+                                Maybe.map (\f -> ( f.file.name, f.file.url )) candidacy.feasibility
 
                         otherFileNameAndUrl =
                             case candidacy.feasibility of

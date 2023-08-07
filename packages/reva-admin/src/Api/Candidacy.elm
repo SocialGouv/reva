@@ -23,6 +23,7 @@ import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
 import Api.Degree
+import Api.Feasibility
 import Api.File as File
 import Api.Organism as Organism
 import Api.Pagination exposing (pageInfoSelection)
@@ -144,7 +145,7 @@ selection id =
                 |> with Admin.Object.Candidacy.createdAt
                 |> with (Admin.Object.Candidacy.reorientationReason reorientationReasonSelection)
                 |> with (Admin.Object.Candidacy.certificationAuthority certificationAuthoritySelection)
-                |> with (Admin.Object.Candidacy.feasibility feasibilitySelection)
+                |> with (Admin.Object.Candidacy.feasibility Api.Feasibility.selection)
     in
     SelectionSet.succeed
         (\maybeCandidacy companions ->
@@ -294,16 +295,3 @@ certificationAuthoritySelection =
         |> with Admin.Object.CertificationAuthority.label
         |> with Admin.Object.CertificationAuthority.contactFullName
         |> with Admin.Object.CertificationAuthority.contactEmail
-
-
-
--- FEASIBILITY
-
-
-feasibilitySelection : SelectionSet Data.Candidacy.Feasibility Admin.Object.Feasibility
-feasibilitySelection =
-    SelectionSet.succeed Data.Candidacy.Feasibility
-        |> with Admin.Object.Feasibility.id
-        |> with Admin.Object.Feasibility.feasibilityFileSentAt
-        |> with (Admin.Object.Feasibility.feasibilityFile File.selection)
-        |> with (Admin.Object.Feasibility.otherFile File.selection)

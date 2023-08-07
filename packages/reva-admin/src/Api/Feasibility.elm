@@ -1,4 +1,4 @@
-module Api.Feasibility exposing (get, getFeasibilities, getFeasibilityCountByCategory, reject, validate)
+module Api.Feasibility exposing (get, getFeasibilities, getFeasibilityCountByCategory, reject, selection, validate)
 
 import Admin.Enum.FeasibilityCategoryFilter
 import Admin.Enum.FeasibilityDecision
@@ -38,14 +38,14 @@ get endpointGraphql token toMsg feasibilityId =
         feasibilityRequiredArgs =
             Query.FeasibilityRequiredArguments (Id feasibilityId)
     in
-    Query.feasibility feasibilityRequiredArgs (selection feasibilityId)
+    Query.feasibility feasibilityRequiredArgs selection
         |> Auth.makeQuery "feasibility" endpointGraphql token (nothingToError "Ce dossier est introuvable" >> toMsg)
 
 
-selection : String -> SelectionSet Data.Feasibility.Feasibility Admin.Object.Feasibility
-selection feasibilityId =
+selection : SelectionSet Data.Feasibility.Feasibility Admin.Object.Feasibility
+selection =
     SelectionSet.succeed
-        (\file otherFile candidacy decision maybeDecisionComment decisionSentAt ->
+        (\(Id feasibilityId) file otherFile candidacy decision maybeDecisionComment decisionSentAt ->
             Data.Feasibility.Feasibility feasibilityId
                 file
                 otherFile
@@ -64,6 +64,7 @@ selection feasibilityId =
                 )
                 decisionSentAt
         )
+        |> with Admin.Object.Feasibility.id
         |> with (Admin.Object.Feasibility.feasibilityFile File.selection)
         |> with (Admin.Object.Feasibility.otherFile File.selection)
         |> with (Admin.Object.Feasibility.candidacy candidacySelection)
