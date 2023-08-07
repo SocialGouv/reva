@@ -6,7 +6,7 @@ module Page.Feasibility exposing
     , view
     )
 
-import Accessibility exposing (div, h3, h4, h5, h6, p)
+import Accessibility exposing (div, h3, h4, h6, p)
 import Api.Feasibility
 import Api.Form.Feasibility
 import Api.Token
@@ -18,15 +18,14 @@ import Data.Form exposing (FormData)
 import Data.Form.Feasibility exposing (Decision(..), decisionToString)
 import Data.Organism exposing (Organism)
 import Html exposing (Html, node, text)
-import Html.Attributes exposing (class, classList, property, title)
+import Html.Attributes exposing (class, classList, property)
 import Json.Encode as Encode
 import Page.Form as Form exposing (Form)
 import RemoteData exposing (RemoteData(..))
 import Route exposing (emptyFeasibilityFilters)
 import String exposing (String)
-import Time exposing (Posix)
 import View
-import View.Date
+import View.Feasibility.Decision
 
 
 type Msg
@@ -130,17 +129,8 @@ viewFeasibilityPanel context model =
                             Form.view (RemoteData.succeed feasibility) model.form
                                 |> Html.map GotFormMsg
 
-                        Rejected reason ->
-                            viewDecision "Non recevable"
-                                "Dossier rejeté le"
-                                feasibility.decisionSentAt
-                                reason
-
-                        Admissible reason ->
-                            viewDecision "Recevable"
-                                "Dossier validé le"
-                                feasibility.decisionSentAt
-                                reason
+                        _ ->
+                            View.Feasibility.Decision.view feasibility
                     ]
                 ]
 
@@ -165,56 +155,12 @@ viewFileLink context file =
 
 viewOrganism : Organism -> Accessibility.Html msg
 viewOrganism organism =
-    viewSection "Architecte accompagnateur de parcours"
+    View.summaryBlock "Architecte accompagnateur de parcours"
         [ h6
             [ class "text-xl mb-4" ]
             [ text organism.label ]
         , p [ class "text-lg mb-0" ] [ text organism.contactAdministrativeEmail ]
         ]
-
-
-viewDecision : String -> String -> Maybe Posix -> String -> Html msg
-viewDecision decision datePrefix maybeDate reason =
-    div
-        [ class "flex flex-col mb-2 gap-y-8" ]
-        [ viewSection "Décision prise concernant ce dossier"
-            [ p
-                [ class "font-semibold text-lg text-gray-900 mb-4" ]
-                [ text decision ]
-            , case maybeDate of
-                Just date ->
-                    p
-                        [ class "mb-0" ]
-                        [ text <|
-                            String.concat
-                                [ datePrefix
-                                , " "
-                                , View.Date.toSmallFormat date
-                                ]
-                        ]
-
-                Nothing ->
-                    text ""
-            ]
-        , viewSection "Motifs de la décision"
-            [ if reason == "" then
-                p [ class "mb-0 italic" ] [ text "Motifs non précisés" ]
-
-              else
-                p [ class "mb-0" ] [ text reason ]
-            ]
-        ]
-
-
-viewSection : String -> List (Html msg) -> Html msg
-viewSection title content =
-    div
-        [ class "bg-gray-100 px-8 pt-6 pb-8" ]
-        (h5
-            [ class "text-2xl mb-4" ]
-            [ text title ]
-            :: content
-        )
 
 
 form : FormData -> Feasibility -> Form
