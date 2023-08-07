@@ -1,16 +1,17 @@
 module View.Candidate exposing (..)
 
-import Accessibility exposing (div, h3, h4, text)
-import Data.Feasibility exposing (Candidate)
+import Accessibility exposing (div, h2, h3, h6, p, text)
+import Data.CertificationAuthority exposing (CertificationAuthority)
 import Html exposing (Html)
 import Html.Attributes exposing (class)
+import View
 
 
 viewWithCertification : Maybe String -> Maybe { a | firstname : String, lastname : String } -> Html msg
 viewWithCertification maybeCertificationLabel maybeCandidate =
     div
         []
-        [ h3
+        [ h2
             [ class "text-3xl mb-6" ]
             [ text
                 (case maybeCandidate of
@@ -21,7 +22,27 @@ viewWithCertification maybeCertificationLabel maybeCandidate =
                         ""
                 )
             ]
-        , h4
-            [ class "mb-0" ]
+        , h3
+            [ class "text-2xl mb-0" ]
             [ text <| Maybe.withDefault "Certification inconnue" maybeCertificationLabel ]
         ]
+
+
+viewCertificationAuthority : Maybe CertificationAuthority -> Html msg
+viewCertificationAuthority maybeCertificationAuthority =
+    View.summaryBlock "Certificateur" <|
+        case maybeCertificationAuthority of
+            Just certificationAuthority ->
+                [ h6
+                    [ class "text-xl mb-4" ]
+                    [ text certificationAuthority.label ]
+                , certificationAuthority.contactFullName
+                    |> Maybe.map (\name -> p [ class "text-lg mb-4" ] [ text name ])
+                    |> Maybe.withDefault (text "")
+                , certificationAuthority.contactEmail
+                    |> Maybe.map (\email -> p [ class "text-lg mb-0" ] [ text email ])
+                    |> Maybe.withDefault (text "")
+                ]
+
+            Nothing ->
+                [ text "Certificateur inconnu" ]

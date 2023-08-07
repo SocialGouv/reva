@@ -8,6 +8,7 @@ module Page.Candidacy exposing
     , view
     )
 
+import Accessibility exposing (h1, h6)
 import Admin.Enum.CandidacyStatusStep as Step
 import Api.Candidacy
 import Api.Form.Admissibility
@@ -57,6 +58,7 @@ import View
 import View.Candidacy
 import View.Candidacy.NavigationSteps as NavigationSteps
 import View.Candidacy.Tab exposing (Tab, Value(..))
+import View.Candidate
 import View.FileLink exposing (viewFileLink)
 
 
@@ -216,7 +218,7 @@ view context model =
                     viewForm "training"
 
                 TrainingSent ->
-                    viewMain context "training-sent" (viewTrainingSent context model.tab.candidacyId)
+                    viewMain context "training-sent" <| viewTrainingSent context model.tab.candidacyId
 
                 Admissibility ->
                     viewForm "admissibility"
@@ -225,7 +227,16 @@ view context model =
                     viewForm "examInfo"
 
                 Feasibility ->
-                    viewForm "feasibility"
+                    case model.selected of
+                        Success candidacy ->
+                            if candidacy.feasibility /= Nothing then
+                                viewMain context "decision-sent" <| viewDecisionSent candidacy
+
+                            else
+                                viewForm "feasibility"
+
+                        _ ->
+                            viewForm "feasibility"
 
                 FeasibilityFileSubmitted ->
                     viewMain context "feasibility-sent" (viewFeasibilityFileSubmitted context model.selected)
@@ -247,6 +258,20 @@ viewTrainingSent context candidacyId =
                 |> Button.linkButton (Route.toString context.baseUrl (Route.Candidacy <| Tab candidacyId Profile))
                 |> Button.view
             ]
+        ]
+    ]
+
+
+viewDecisionSent : Candidacy -> List (Html msg)
+viewDecisionSent candidacy =
+    [ h1 [] [ text "Dossier de faisabilité" ]
+    , div
+        [ class "flex flex-col gap-y-8" ]
+        [ View.Candidate.viewWithCertification
+            (candidacy.certification |> Maybe.map .label)
+            candidacy.candidate
+        , View.Candidate.viewCertificationAuthority
+            candidacy.certificationAuthority
         ]
     ]
 

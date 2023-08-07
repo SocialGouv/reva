@@ -447,7 +447,7 @@ viewEditableElement formData ( elementId, element ) =
             div [ class ("mb-4 w-full " ++ Maybe.withDefault "" classes) ] [ text content ]
 
         StaticHtml content ->
-            Html.map never content
+            div [ class "ml-2" ] [ Html.map never content ]
 
 
 viewReadOnlyElement : FormData -> ( String, Element ) -> Html (Msg referential)
@@ -556,12 +556,7 @@ viewReadOnlyElement formData ( elementId, element ) =
             p [ class ("mb-4 " ++ Maybe.withDefault "" classes) ] [ text content ]
 
         StaticHtml content ->
-            Html.map never content
-
-
-labelStyle : String
-labelStyle =
-    "text-lg font-medium text-slate-900 mb-2"
+            div [ class "ml-2" ] [ Html.map never content ]
 
 
 labelView : String -> String -> String -> Html msg
@@ -767,8 +762,7 @@ viewFieldsets formData elements =
                 (\e ->
                     div
                         [ class "fr-fieldset__element"
-                        , class "mt-0 mb-4 pt-4 px-6 ml-2"
-                        , class "bg-[#f7f7f7]"
+                        , class "mt-0 mb-4 pt-4 px-6 ml-2 bg-neutral-100"
                         ]
                         [ e ]
                 )
