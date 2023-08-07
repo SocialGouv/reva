@@ -29,7 +29,7 @@ form _ ( candidacy, _ ) =
             ( "id-card-warning"
             , Form.StaticHtml
                 (div
-                    [ class "fr-alert fr-alert--warning mt-2 mb-8", role "alert" ]
+                    [ class "fr-alert fr-alert--warning mt-6 mb-12", role "alert" ]
                     [ h6 [] [ text "Attention" ]
                     , p []
                         [ text "Ne joignez pas la Carte d’Identité du candidat dans ce formulaire. Pour le moment"
@@ -49,7 +49,7 @@ form _ ( candidacy, _ ) =
             ( "help panel"
             , Form.StaticHtml
                 (div
-                    [ class "fr-notice fr-notice--info mt-4" ]
+                    [ class "fr-notice fr-notice--info mt-12" ]
                     [ div [ class "fr-container" ]
                         [ div [ class "fr-notice__body" ]
                             [ div [ class "fr-notice__title" ]
