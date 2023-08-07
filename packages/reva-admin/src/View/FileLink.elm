@@ -10,7 +10,7 @@ import Json.Encode as Encode
 viewFileLink : Context -> String -> String -> Html msg
 viewFileLink context name url =
     if name /= "" then
-        div [ class "bg-gray-50 p-8 border-2 border-solid border-black rounded-md border-dsfrBlue-300 " ]
+        div [ class "bg-gray-50 px-8 pt-6 pb-8 border-2 border-solid border-black rounded-md border-dsfrBlue-300 " ]
             [ node "authenticated-link"
                 [ property "params" <|
                     Encode.object
