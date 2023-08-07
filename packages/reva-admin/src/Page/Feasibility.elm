@@ -25,6 +25,7 @@ import RemoteData exposing (RemoteData(..))
 import Route exposing (emptyFeasibilityFilters)
 import String exposing (String)
 import View
+import View.Candidate
 import View.Feasibility.Decision
 
 
@@ -106,18 +107,9 @@ viewFeasibilityPanel context model =
                     [ class "flex flex-col gap-y-8"
                     , classList [ ( "pb-8", feasibility.decision /= Pending ) ]
                     ]
-                    [ h3
-                        [ class "text-4xl mb-0" ]
-                        [ text
-                            (case feasibility.candidate of
-                                Just candidate ->
-                                    String.concat [ candidate.firstname, " ", candidate.lastname ]
-
-                                Nothing ->
-                                    ""
-                            )
-                        ]
-                    , h4 [ class "mb-0" ] [ text <| Maybe.withDefault "" feasibility.certificationLabel ]
+                    [ View.Candidate.viewWithCertification
+                        feasibility.certificationLabel
+                        feasibility.candidate
                     , viewFileLink context feasibility.file
                     , feasibility.otherFile
                         |> Maybe.map (viewFileLink context)

@@ -8,25 +8,36 @@ import Html exposing (a, div, h6, p, strong, text)
 import Html.Attributes exposing (class, href, target, title)
 import Html.Attributes.Extra exposing (role)
 import Page.Form as Form exposing (Form)
+import View.Candidate
 
 
 form : FormData -> ( Candidacy, Referential ) -> Form
 form _ ( candidacy, _ ) =
     let
+        candidateInfo =
+            ( "candidateWithCertification"
+            , Form.StaticHtml <|
+                div
+                    [ class "pl-2 mb-6" ]
+                    [ View.Candidate.viewWithCertification
+                        (candidacy.certification |> Maybe.map .label)
+                        candidacy.candidate
+                    ]
+            )
+
         idCardWarning =
-            [ ( "id-card-warning"
-              , Form.StaticHtml
-                    (div
-                        [ class "fr-alert fr-alert--warning ml-2 mt-2 mb-8", role "alert" ]
-                        [ h6 [] [ text "Attention" ]
-                        , p []
-                            [ text "Ne joignez pas la Carte d’Identité du candidat dans ce formulaire. Pour le moment"
-                            , strong [] [ text ", la Carte d’Identité est toujours à communiquer par email." ]
-                            ]
+            ( "id-card-warning"
+            , Form.StaticHtml
+                (div
+                    [ class "fr-alert fr-alert--warning ml-2 mt-2 mb-8", role "alert" ]
+                    [ h6 [] [ text "Attention" ]
+                    , p []
+                        [ text "Ne joignez pas la Carte d’Identité du candidat dans ce formulaire. Pour le moment"
+                        , strong [] [ text ", la Carte d’Identité est toujours à communiquer par email." ]
                         ]
-                    )
-              )
-            ]
+                    ]
+                )
+            )
 
         helpPanel =
             [ ( "help panel"
@@ -63,35 +74,9 @@ form _ ( candidacy, _ ) =
 
         elements =
             List.concat
-                [ [ ( "candidateFullName"
-                    , Form.Text
-                        (case candidacy.candidate of
-                            Just candidate ->
-                                String.concat [ candidate.firstname, " ", candidate.lastname ]
-
-                            Nothing ->
-                                ""
-                        )
-                        (Just
-                            "font-bold text-2xl pl-2"
-                        )
-                    )
-                  ]
-                , case candidacy.certification of
-                    Just certification ->
-                        [ ( "certificationLabel"
-                          , Form.Text
-                                certification.label
-                                (Just
-                                    "font-bold text-xl mb-6 pl-2"
-                                )
-                          )
-                        ]
-
-                    Nothing ->
-                        []
-                , idCardWarning
-                , [ ( "feasibilityFile", Form.Title "Dossier de faisabilité" )
+                [ [ candidateInfo
+                  , idCardWarning
+                  , ( "feasibilityFile", Form.Title "Dossier de faisabilité" )
                   , ( keys.feasibilityFile, Form.File "Joindre le dossier de faisabilité" "Format supporté : PDF uniquement" )
                   , ( "otherFile", Form.Title "Autre pièce jointe" )
                   , ( keys.otherFile, Form.File "Joindre une autre pièce (si besoin)" "Format supporté : PDF uniquement" )
