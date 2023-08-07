@@ -233,17 +233,14 @@ view context model =
                         Success candidacy ->
                             case candidacy.feasibility of
                                 Just feasibility ->
-                                    viewMain context "decision-sent" <|
-                                        viewDecisionSent candidacy feasibility
+                                    viewMain context "feasibility-sent" <|
+                                        viewFeasibilitySent context candidacy feasibility
 
                                 Nothing ->
                                     viewForm "feasibility"
 
                         _ ->
                             viewForm "feasibility"
-
-                FeasibilityFileSubmitted ->
-                    viewMain context "feasibility-sent" (viewFeasibilityFileSubmitted context model.selected)
     in
     View.layout "Accéder aux étapes du parcours" [] maybeNavigationSteps [ content ]
 
@@ -266,90 +263,31 @@ viewTrainingSent context candidacyId =
     ]
 
 
-viewDecisionSent : Candidacy -> Data.Feasibility.Feasibility -> List (Html msg)
-viewDecisionSent candidacy feasibility =
+viewFeasibilitySent : Context -> Candidacy -> Data.Feasibility.Feasibility -> List (Html msg)
+viewFeasibilitySent context candidacy feasibility =
+    let
+        feasibilityFileNameAndUrl =
+            ( feasibility.file.name, feasibility.file.url )
+
+        otherFileNameAndUrl =
+            case feasibility.otherFile of
+                Just otherFile ->
+                    ( otherFile.name, otherFile.url )
+
+                Nothing ->
+                    ( "", "" )
+    in
     [ h1 [] [ text "Dossier de faisabilité" ]
     , div
         [ class "flex flex-col gap-y-8 mb-6" ]
         [ View.Candidate.viewWithCertification
             (candidacy.certification |> Maybe.map .label)
             candidacy.candidate
+        , viewFileLink context (Tuple.first feasibilityFileNameAndUrl) (Tuple.second feasibilityFileNameAndUrl)
+        , viewFileLink context (Tuple.first otherFileNameAndUrl) (Tuple.second otherFileNameAndUrl)
         , View.Candidate.viewCertificationAuthority
             candidacy.certificationAuthority
         , View.Feasibility.Decision.view feasibility
-        ]
-    ]
-
-
-viewFeasibilityFileSubmitted : Context -> RemoteData (List String) Candidacy -> List (Html msg)
-viewFeasibilityFileSubmitted context candidacyRemoteData =
-    let
-        content =
-            case candidacyRemoteData of
-                Success candidacy ->
-                    let
-                        feasibilityFileNameAndUrl =
-                            Maybe.withDefault ( "", "" ) <|
-                                Maybe.map (\f -> ( f.file.name, f.file.url )) candidacy.feasibility
-
-                        otherFileNameAndUrl =
-                            case candidacy.feasibility of
-                                Just feasibility ->
-                                    case feasibility.otherFile of
-                                        Just otherFile ->
-                                            ( otherFile.name, otherFile.url )
-
-                                        Nothing ->
-                                            ( "", "" )
-
-                                Nothing ->
-                                    ( "", "" )
-                    in
-                    [ h3 [ class "mb-0" ]
-                        [ text
-                            (case candidacy.candidate of
-                                Just candidate ->
-                                    String.concat [ candidate.firstname, " ", candidate.lastname ]
-
-                                Nothing ->
-                                    ""
-                            )
-                        ]
-                    , h5 []
-                        [ text
-                            (case candidacy.certification of
-                                Just certification ->
-                                    certification.label
-
-                                Nothing ->
-                                    ""
-                            )
-                        ]
-                    , div [ class "flex flex-col w-full gap-8" ]
-                        [ viewFileLink context (Tuple.first feasibilityFileNameAndUrl) (Tuple.second feasibilityFileNameAndUrl)
-                        , viewFileLink context (Tuple.first otherFileNameAndUrl) (Tuple.second otherFileNameAndUrl)
-                        , case candidacy.certificationAuthority of
-                            Just certificationAuthority ->
-                                div [ class "bg-gray-50 p-6 flex flex-col gap-2.5" ]
-                                    [ p [ class "m-0 font-bold text-xl" ] [ text "Certificateur" ]
-                                    , p [ class "m-0 font-bold text-lg" ] [ text certificationAuthority.label ]
-                                    , p [ class "m-0" ] [ text (Maybe.withDefault "" certificationAuthority.contactFullName) ]
-                                    , p [ class "m-0" ] [ text (Maybe.withDefault "" certificationAuthority.contactEmail) ]
-                                    ]
-
-                            Nothing ->
-                                div [] [ text "Certificateur inconnu" ]
-                        ]
-                    ]
-
-                _ ->
-                    []
-    in
-    [ div
-        [ class "pb-10" ]
-        [ View.title "Dossier de faisabilité"
-        , div [ class "flex flex-col w-full gap-4" ]
-            content
         ]
     ]
 

@@ -123,7 +123,6 @@ parser baseUrl =
                 , subLevel "candidacies" "training" </> s "confirmation" |> candidacyTab Tab.TrainingSent
                 , subLevel "candidacies" "examInfo" |> candidacyTab Tab.ExamInfo
                 , subLevel "candidacies" "feasibility" |> candidacyTab Tab.Feasibility
-                , subLevel "candidacies" "feasibility" </> s "submitted" |> candidacyTab Tab.FeasibilityFileSubmitted
                 ]
 
 
@@ -238,6 +237,3 @@ tabToString topLevel subLevel tab =
 
         Tab.Feasibility ->
             default [ "feasibility" ]
-
-        Tab.FeasibilityFileSubmitted ->
-            default [ "feasibility", "submitted" ]
