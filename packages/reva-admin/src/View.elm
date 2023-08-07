@@ -1,6 +1,6 @@
-module View exposing (article, backLink, errors, image, infoBlock, layout, logo, popupErrors, skeleton, title)
+module View exposing (article, backLink, errors, image, infoBlock, layout, logo, popupErrors, skeleton, summaryBlock, title)
 
-import Accessibility exposing (a, article, br, button, h3, nav, p)
+import Accessibility exposing (a, article, br, button, h3, h5, nav, p)
 import Html exposing (Html, div, h2, img, node, text)
 import Html.Attributes exposing (attribute, class, id, src)
 import Html.Attributes.Extra exposing (role)
@@ -161,3 +161,14 @@ infoBlock label contents =
 logo : Accessibility.Html msg
 logo =
     p [ class "fr-logo" ] [ text "République", br [], text "française" ]
+
+
+summaryBlock : String -> List (Html msg) -> Html msg
+summaryBlock titleValue content =
+    div
+        [ class "bg-gray-100 px-8 pt-6 pb-8" ]
+        (h5
+            [ class "text-2xl mb-4" ]
+            [ text titleValue ]
+            :: content
+        )
