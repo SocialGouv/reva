@@ -129,6 +129,14 @@ view context =
                             ]
                             [ text "Données personnelles" ]
                         ]
+                    , li
+                        [ class "fr-footer__bottom-item" ]
+                        [ a
+                            [ class "fr-footer__bottom-link"
+                            , href "mailto:support@vae.gouv.fr"
+                            ]
+                            [ text "Nous contacter" ]
+                        ]
                     ]
                 , div
                     [ class "fr-footer__bottom-copy" ]

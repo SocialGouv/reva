@@ -229,6 +229,9 @@
               <li class="fr-footer__bottom-item">
                 <a class="fr-footer__bottom-link" href="https://vae.gouv.fr/cgu">CGU</a>
               </li>
+              <li class="fr-footer__bottom-item">
+                <a class="fr-footer__bottom-link" href="mailto:support@vae.gouv.fr">Nous contacter</a>
+              </li>
             </ul>
             <div class="fr-footer__bottom-copy">
               <p>
