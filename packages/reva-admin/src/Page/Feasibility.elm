@@ -24,7 +24,9 @@ import Page.Form as Form exposing (Form)
 import RemoteData exposing (RemoteData(..))
 import Route exposing (emptyFeasibilityFilters)
 import String exposing (String)
+import Time exposing (Posix)
 import View
+import View.Date
 
 
 type Msg
@@ -129,10 +131,16 @@ viewFeasibilityPanel context model =
                                 |> Html.map GotFormMsg
 
                         Rejected reason ->
-                            viewDecision "Non recevable" reason
+                            viewDecision "Non recevable"
+                                "Dossier rejeté le"
+                                feasibility.decisionSentAt
+                                reason
 
                         Admissible reason ->
-                            viewDecision "Recevable" reason
+                            viewDecision "Recevable"
+                                "Dossier validé le"
+                                feasibility.decisionSentAt
+                                reason
                     ]
                 ]
 
@@ -165,14 +173,28 @@ viewOrganism organism =
         ]
 
 
-viewDecision : String -> String -> Html msg
-viewDecision decision reason =
+viewDecision : String -> String -> Maybe Posix -> String -> Html msg
+viewDecision decision datePrefix maybeDate reason =
     div
         [ class "flex flex-col mb-2 gap-y-8" ]
         [ viewSection "Décision prise concernant ce dossier"
             [ p
-                [ class "font-semibold text-lg text-gray-900 mb-0" ]
+                [ class "font-semibold text-lg text-gray-900 mb-4" ]
                 [ text decision ]
+            , case maybeDate of
+                Just date ->
+                    p
+                        [ class "mb-0" ]
+                        [ text <|
+                            String.concat
+                                [ datePrefix
+                                , " "
+                                , View.Date.toSmallFormat date
+                                ]
+                        ]
+
+                Nothing ->
+                    text ""
             ]
         , viewSection "Motifs de la décision"
             [ if reason == "" then
