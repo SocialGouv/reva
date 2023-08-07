@@ -4,7 +4,7 @@
 
 module Admin.Object.Feasibility exposing (..)
 
-import Admin.Enum.FeasibilityStatus
+import Admin.Enum.FeasibilityDecision
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -51,11 +51,16 @@ candidacy object____ =
     Object.selectionForCompositeField "candidacy" [] object____ Basics.identity
 
 
-status : SelectionSet Admin.Enum.FeasibilityStatus.FeasibilityStatus Admin.Object.Feasibility
-status =
-    Object.selectionForField "Enum.FeasibilityStatus.FeasibilityStatus" "status" [] Admin.Enum.FeasibilityStatus.decoder
+decision : SelectionSet Admin.Enum.FeasibilityDecision.FeasibilityDecision Admin.Object.Feasibility
+decision =
+    Object.selectionForField "Enum.FeasibilityDecision.FeasibilityDecision" "decision" [] Admin.Enum.FeasibilityDecision.decoder
 
 
 decisionComment : SelectionSet (Maybe String) Admin.Object.Feasibility
 decisionComment =
     Object.selectionForField "(Maybe String)" "decisionComment" [] (Decode.string |> Decode.nullable)
+
+
+decisionSentAt : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.Feasibility
+decisionSentAt =
+    Object.selectionForField "(Maybe Data.Scalar.Timestamp)" "decisionSentAt" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecTimestamp |> .decoder |> Decode.nullable)

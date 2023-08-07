@@ -1,4 +1,4 @@
-enum FeasibilityStatus {
+enum FeasibilityDecision {
   PENDING
   REJECTED
   ADMISSIBLE
@@ -17,8 +17,9 @@ type Feasibility {
   feasibilityFile: File!
   otherFile: File
   candidacy: Candidacy!
-  status: FeasibilityStatus!
+  decision: FeasibilityDecision!
   decisionComment: String
+  decisionSentAt: Timestamp
 }
 
 type File {
@@ -50,7 +51,7 @@ enum FeasibilityCategoryFilter {
   ADMISSIBLE
 }
 
-enum FeasibilityStatusFilter {
+enum FeasibilityDecisionFilter {
   PENDING
   REJECTED
   ADMISSIBLE
@@ -61,7 +62,7 @@ type Query {
   feasibilities(
     offset: Int
     limit: Int
-    status: FeasibilityStatusFilter
+    decision: FeasibilityDecisionFilter
   ): FeasibilityPage!
   feasibility(feasibilityId: ID!): Feasibility
 }

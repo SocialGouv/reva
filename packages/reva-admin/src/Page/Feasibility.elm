@@ -12,7 +12,7 @@ import Api.Form.Feasibility
 import Api.Token
 import Browser.Navigation as Nav
 import Data.Context exposing (Context)
-import Data.Feasibility exposing (Feasibility, Status(..))
+import Data.Feasibility exposing (Decision(..), Feasibility)
 import Data.File exposing (File)
 import Data.Form exposing (FormData)
 import Data.Form.Feasibility exposing (Decision(..), decisionToString)
@@ -103,7 +103,7 @@ viewFeasibilityPanel context model =
             Success feasibility ->
                 [ div
                     [ class "flex flex-col gap-y-8"
-                    , classList [ ( "pb-8", feasibility.status /= Pending ) ]
+                    , classList [ ( "pb-8", feasibility.decision /= Pending ) ]
                     ]
                     [ h3
                         [ class "text-4xl mb-0" ]
@@ -123,7 +123,7 @@ viewFeasibilityPanel context model =
                         |> Maybe.withDefault (text "")
                     , Maybe.map viewOrganism feasibility.organism
                         |> Maybe.withDefault (text "")
-                    , case feasibility.status of
+                    , case feasibility.decision of
                         Pending ->
                             Form.view (RemoteData.succeed feasibility) model.form
                                 |> Html.map GotFormMsg

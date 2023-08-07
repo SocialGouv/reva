@@ -847,8 +847,9 @@ model Feasibility {
   feasibilityFileId     String            @db.Uuid
   otherFileId           String?           @db.Uuid
   feasibilityFileSentAt DateTime?         @map("feasibility_file_sent_at") @db.Timestamptz(6)
-  status                FeasibilityStatus @default(PENDING)
+  decision              FeasibilityStatus @default(PENDING)
   decisionComment       String?           @map("decision_comment")
+  decisionSentAt        DateTime?         @map("decision_sent_at") @db.Timestamptz(6)
   createdAt             DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt             DateTime?         @updatedAt @map("updated_at") @db.Timestamptz(6)
 

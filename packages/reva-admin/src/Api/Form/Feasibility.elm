@@ -3,7 +3,7 @@ module Api.Form.Feasibility exposing (..)
 import Api.Feasibility
 import Api.Token exposing (Token)
 import Data.Candidacy exposing (CandidacyId)
-import Data.Feasibility exposing (Feasibility, Status(..))
+import Data.Feasibility exposing (Decision(..), Feasibility)
 import Data.Form exposing (FormData)
 import Data.Form.Feasibility
 import Data.Referential

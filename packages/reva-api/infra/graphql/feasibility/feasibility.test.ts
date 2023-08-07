@@ -261,7 +261,7 @@ test("should count 1 pending feasibility for admin user", async () => {
     data: {
       candidacyId: candidacy.id,
       feasibilityFileId: feasibilityFile.id,
-      status: "PENDING",
+      decision: "PENDING",
     },
   });
 

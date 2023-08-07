@@ -9,7 +9,7 @@ module Page.Feasibilities exposing
 
 import Accessibility exposing (h1, h2)
 import Admin.Enum.FeasibilityCategoryFilter as FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
-import Admin.Enum.FeasibilityStatusFilter as FeasibilityStatusFilter exposing (FeasibilityStatusFilter)
+import Admin.Enum.FeasibilityDecisionFilter as FeasibilityDecisionFilter
 import Api.Feasibility
 import BetaGouv.DSFR.Pagination
 import Data.Context exposing (Context)
@@ -64,13 +64,13 @@ withFilters context page category model =
         withNewPage filters =
             { filters | page = page }
 
-        statusFilter =
-            FeasibilityStatusFilter.fromString (FeasibilityCategoryFilter.toString category)
+        decisionFilter =
+            FeasibilityDecisionFilter.fromString (FeasibilityCategoryFilter.toString category)
 
         ( newState, command ) =
             if categoryChanged || pageChanged then
                 ( model.state |> withFeasibilityPage Loading
-                , Api.Feasibility.getFeasibilities context.endpoint context.token GotFeasibilitiesResponse page statusFilter
+                , Api.Feasibility.getFeasibilities context.endpoint context.token GotFeasibilitiesResponse page decisionFilter
                 )
 
             else
@@ -93,12 +93,12 @@ init context categoryFilter page =
             , state = { currentFeasibilityPage = RemoteData.Loading, feasibilityCountByCategory = RemoteData.Loading }
             }
 
-        statusFilter =
-            FeasibilityStatusFilter.fromString (FeasibilityCategoryFilter.toString categoryFilter)
+        decisionFilter =
+            FeasibilityDecisionFilter.fromString (FeasibilityCategoryFilter.toString categoryFilter)
 
         defaultCmd =
             Cmd.batch
-                [ Api.Feasibility.getFeasibilities context.endpoint context.token GotFeasibilitiesResponse page statusFilter
+                [ Api.Feasibility.getFeasibilities context.endpoint context.token GotFeasibilitiesResponse page decisionFilter
                 , Api.Feasibility.getFeasibilityCountByCategory context.endpoint context.token GotFeasibilitiesCountByCategoryResponse
                 ]
     in
