@@ -251,7 +251,7 @@ model Account {
   lastname                 String?                 @db.VarChar(255)
   organism                 Organism?               @relation(fields: [organismId], references: [id])
   organismId               String?                 @map("organism_id") @db.Uuid
-  certificationAuthority   CertificationAuthority? @relation(fields: [certificationAuthorityId], references: [id])
+  certificationAuthority   CertificationAuthority? @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
   certificationAuthorityId String?                 @map("certification_authority_id") @db.Uuid
   keycloakId               String                  @unique @map("keycloak_id") @db.Uuid
 

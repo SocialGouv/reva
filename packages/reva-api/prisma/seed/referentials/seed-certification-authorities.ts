@@ -6,6 +6,9 @@ import { injectCsvRows, readCsvRows } from "../read-csv";
 
 export async function seedCertificationAuthorities(prisma: PrismaClient) {
   await prisma.$transaction(async (tx) => {
+    await tx.$executeRawUnsafe(
+      `SET CONSTRAINTS "account_certification_authority_id_fkey" DEFERRED;`
+    );
     await tx.certificationAuthority.deleteMany();
     await injectCsvRows<
       Prisma.CertificationAuthorityCreateInput,
@@ -85,5 +88,8 @@ export async function seedCertificationAuthorities(prisma: PrismaClient) {
     await tx.certificationAuthorityOnDepartment.createMany({
       data: certificationAuthorityOnDepartments,
     });
+    await tx.$executeRawUnsafe(
+      `SET CONSTRAINTS "account_certification_authority_id_fkey" IMMEDIATE;`
+    );
   });
 }

@@ -75,8 +75,8 @@ afterAll(async () => {
   await prismaClient.file.delete({ where: { id: feasibilityFile.id } });
   await prismaClient.candidate.delete({ where: { id: candidate.id } });
   await prismaClient.organism.delete({ where: { id: organism.id } });
-  await prismaClient.certificationAuthority.deleteMany();
   await prismaClient.account.delete({ where: { id: certificatorAccount.id } });
+  await prismaClient.certificationAuthority.deleteMany();
 });
 
 afterEach(async () => {
