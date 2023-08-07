@@ -884,8 +884,6 @@ model FundingRequestUnifvae {
   candidacyId                 String                               @unique @map("candidacy_id") @db.Uuid
   companion                   Organism?                            @relation(fields: [companionId], references: [id], onDelete: Cascade)
   companionId                 String?                              @map("companion_id") @db.Uuid
-  postExamHourCount           Int                                  @map("post_exam_hour_count")
-  postExamCost                Decimal                              @map("post_exam_cost") @db.Decimal(10, 2)
   individualHourCount         Int                                  @map("individual_hour_count")
   individualCost              Decimal                              @map("individual_cost") @db.Decimal(10, 2)
   collectiveHourCount         Int                                  @map("collective_hour_count")
