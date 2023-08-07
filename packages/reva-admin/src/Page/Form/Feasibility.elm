@@ -4,12 +4,27 @@ import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Form.Feasibility exposing (keys)
 import Data.Referential exposing (Referential)
+import Html exposing (div, h6, p, strong, text)
+import Html.Attributes exposing (class)
+import Html.Attributes.Extra exposing (role)
 import Page.Form as Form exposing (Form)
 
 
 form : FormData -> ( Candidacy, Referential ) -> Form
 form _ ( candidacy, _ ) =
     let
+        idCardWarning =
+            [ ( "id-card-warning"
+              , Form.StaticHtml
+                    (div
+                        [ class "fr-alert fr-alert--warning ml-2 mt-2 mb-8", role "alert" ]
+                        [ h6 [] [ text "Attention" ]
+                        , p [] [ text "Ne joignez pas la Carte d’Identité du candidat dans ce formulaire. Pour le moment", strong [] [ text ", la Carte d’Identité est toujours à communiquer par email." ] ]
+                        ]
+                    )
+              )
+            ]
+
         elements =
             List.concat
                 [ [ ( "candidateFullName"
@@ -39,6 +54,7 @@ form _ ( candidacy, _ ) =
 
                     Nothing ->
                         []
+                , idCardWarning
                 , [ ( "feasibilityFile", Form.Title "Dossier de faisabilité" )
                   , ( keys.feasibilityFile, Form.File "Joindre le dossier de faisabilité" "Format supporté : PDF uniquement" )
                   , ( "otherFile", Form.Title "Autre pièce jointe" )
