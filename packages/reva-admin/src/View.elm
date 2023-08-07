@@ -1,6 +1,6 @@
 module View exposing (article, backLink, errors, image, infoBlock, layout, logo, popupErrors, skeleton, summaryBlock, title)
 
-import Accessibility exposing (a, article, br, button, h3, h5, nav, p)
+import Accessibility exposing (a, br, button, h3, h5, nav, p)
 import Html exposing (Html, div, h2, img, node, text)
 import Html.Attributes exposing (attribute, class, id, src)
 import Html.Attributes.Extra exposing (role)
@@ -153,7 +153,7 @@ backLink linkAttribute label =
 
 infoBlock : String -> List (Html msg) -> Html msg
 infoBlock label contents =
-    div [ class "mb-6 px-6 py-6 bg-gray-100" ] <|
+    div [ class "mb-6 px-6 py-6 bg-neutral-100" ] <|
         h3 [ class "text-2xl font-bold mb-2" ] [ text label ]
             :: contents
 
@@ -166,7 +166,7 @@ logo =
 summaryBlock : String -> List (Html msg) -> Html msg
 summaryBlock titleValue content =
     div
-        [ class "bg-gray-100 px-8 pt-6 pb-8" ]
+        [ class "bg-neutral-100 px-8 pt-6 pb-8" ]
         (h5
             [ class "text-2xl mb-4" ]
             [ text titleValue ]
