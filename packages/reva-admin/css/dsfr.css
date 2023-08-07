@@ -32,3 +32,7 @@
 .fr-alert--warning:before {
   mask-image: url("../icons/system/fr--warning-fill.svg");
 }
+
+.fr-notice .fr-notice__body:before {
+  mask-image: url("../icons/system/fr--info-fill.svg");
+}
