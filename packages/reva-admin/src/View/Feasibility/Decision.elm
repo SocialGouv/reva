@@ -1,7 +1,7 @@
-module View.Feasibility.Decision exposing (..)
+module View.Feasibility.Decision exposing (view)
 
 import Accessibility exposing (div, p, text)
-import Data.Feasibility exposing (Decision(..), Feasibility)
+import Data.Feasibility exposing (Decision(..))
 import Html exposing (Html)
 import Html.Attributes exposing (class)
 import Time exposing (Posix)
@@ -9,7 +9,7 @@ import View
 import View.Date
 
 
-view : Feasibility -> Html msg
+view : { a | decision : Decision, decisionSentAt : Maybe Posix } -> Html msg
 view feasibility =
     case feasibility.decision of
         Pending ->

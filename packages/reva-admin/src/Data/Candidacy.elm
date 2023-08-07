@@ -8,7 +8,6 @@ module Data.Candidacy exposing
     , CandidacySummary
     , CandidacySummaryPage
     , DateWithLabels
-    , Feasibility
     , Step
     , canDropoutCandidacy
     , candidacyIdFromString
@@ -37,6 +36,7 @@ import Admin.Enum.Duration exposing (Duration)
 import Data.Candidate exposing (Candidate)
 import Data.Certification exposing (Certification, CertificationSummary)
 import Data.CertificationAuthority exposing (CertificationAuthority)
+import Data.Feasibility exposing (Feasibility)
 import Data.File exposing (File)
 import Data.Organism exposing (Organism)
 import Data.Pagination exposing (PaginationInfo)
@@ -72,14 +72,6 @@ type alias CandidacyExperience =
     , startedAt : Time.Posix
     , duration : Duration
     , description : String
-    }
-
-
-type alias Feasibility =
-    { id : Data.Scalar.Id
-    , feasibilityFileSentAt : Data.Scalar.Timestamp
-    , feasibilityFile : File
-    , otherFile : Maybe File
     }
 
 
