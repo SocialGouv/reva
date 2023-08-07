@@ -94,6 +94,14 @@ export const Footer = () => (
               Données personnelles
             </a>
           </li>
+          <li className="fr-footer__bottom-item">
+            <a
+              className="fr-footer__bottom-link"
+              href="mailto:support@vae.gouv.fr"
+            >
+              Nous contacter
+            </a>
+          </li>
         </ul>
         <div className="fr-footer__bottom-copy">
           <p className="mb-4">
