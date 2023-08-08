@@ -23,11 +23,22 @@ export async function seedCertificationAuthorities(prisma: PrismaClient) {
         "certificationAuthorityOnCertification",
         "certificationAuthorityOnDepartment",
       ],
-      transform: ({ id, label, contactFullName, contactEmail }) => ({
-        where: { id },
-        create: { id, label, contactFullName, contactEmail },
-        update: { label, contactFullName, contactEmail },
-      }),
+      transform: ({ id, label, contactFullName, contactEmail }) => {
+        const actualContactEmail =
+          process.env.APP_ENV === "production"
+            ? contactEmail
+            : "revatrash@gmail.com";
+        return {
+          where: { id },
+          create: {
+            id,
+            label,
+            contactFullName,
+            contactEmail: actualContactEmail,
+          },
+          update: { label, contactFullName, contactEmail: actualContactEmail },
+        };
+      },
       injectCommand: tx.certificationAuthority.upsert,
     });
 
