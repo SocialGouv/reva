@@ -114,6 +114,9 @@ viewFeasibilityPanel context model =
                     , feasibility.documentaryProofFile
                         |> Maybe.map (viewFileLink context)
                         |> Maybe.withDefault (text "")
+                    , feasibility.certificateOfAttendanceFile
+                        |> Maybe.map (viewFileLink context)
+                        |> Maybe.withDefault (text "")
                     , Maybe.map viewOrganism feasibility.organism
                         |> Maybe.withDefault (text "")
                     , case feasibility.decision of
