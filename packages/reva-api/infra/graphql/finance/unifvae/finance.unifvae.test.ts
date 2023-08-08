@@ -2,7 +2,12 @@
  * @jest-environment ./test/fastify-test-env.ts
  */
 
-import { Candidacy, CandidacyStatusStep, Organism } from "@prisma/client";
+import {
+  Account,
+  Candidacy,
+  CandidacyStatusStep,
+  Organism,
+} from "@prisma/client";
 
 import { organismDummy1 } from "../../../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
@@ -25,16 +30,29 @@ const fundingRequestSample = {
 };
 
 const candidateEmail = "toto@bongo.eu";
+const aapEmail = "aap@formation.com";
+const aapKeycloakId = "e4965f17-6c39-4ed2-8786-e504e320e476";
 
-let organism: Organism, candidacy: Candidacy;
+let organism: Organism,
+  candidacyUnireva: Candidacy,
+  candidacyUnifvae: Candidacy,
+  aapAccount: Account;
 
 beforeAll(async () => {
   organism = await prismaClient.organism.create({ data: organismDummy1 });
-  candidacy = await prismaClient.candidacy.create({
+  aapAccount = await prismaClient.account.create({
+    data: {
+      email: aapEmail,
+      keycloakId: aapKeycloakId,
+      organismId: organism.id,
+    },
+  });
+  candidacyUnifvae = await prismaClient.candidacy.create({
     data: {
       deviceId: candidateEmail,
       email: candidateEmail,
       organismId: organism.id,
+      financeModule: "unifvae",
       candidacyStatuses: {
         createMany: {
           data: [
@@ -47,15 +65,28 @@ beforeAll(async () => {
       },
     },
   });
+  candidacyUnireva = await prismaClient.candidacy.create({
+    data: {
+      deviceId: candidateEmail,
+      email: candidateEmail,
+      organismId: organism.id,
+      financeModule: "unireva",
+    },
+  });
 });
 
 afterAll(async () => {
   await prismaClient.trainingOnFundingRequestsUnifvae.deleteMany({});
   await prismaClient.basicSkillOnFundingRequestsUnifvae.deleteMany({});
   await prismaClient.fundingRequestUnifvae.deleteMany({});
-  await prismaClient.candidaciesStatus.deleteMany({});
-  await prismaClient.candidacy.deleteMany({});
-  await prismaClient.organism.deleteMany({});
+  await prismaClient.candidaciesStatus.deleteMany({
+    where: { candidacyId: candidacyUnifvae.id },
+  });
+  await prismaClient.candidacy.deleteMany({
+    where: { id: { in: [candidacyUnifvae.id, candidacyUnireva.id] } },
+  });
+  await prismaClient.organism.delete({ where: { id: organism.id } });
+  await prismaClient.account.delete({ where: { id: aapAccount.id } });
 });
 
 test("should create fundingRequestUnifvae", async () => {
@@ -63,7 +94,7 @@ test("should create fundingRequestUnifvae", async () => {
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_candidacy",
-      keycloakId: "whatever",
+      keycloakId: aapKeycloakId,
     }),
     payload: {
       requestType: "mutation",
@@ -71,7 +102,7 @@ test("should create fundingRequestUnifvae", async () => {
       returnFields:
         "{id, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount }",
       arguments: {
-        candidacyId: candidacy.id,
+        candidacyId: candidacyUnifvae.id,
         fundingRequest: {
           ...fundingRequestSample,
           companionId: organism.id,
@@ -92,7 +123,36 @@ test("should create fundingRequestUnifvae", async () => {
   });
   // Check candidacy status
   const status = await prismaClient.candidaciesStatus.findFirst({
-    where: { candidacyId: candidacy.id, isActive: true },
+    where: { candidacyId: candidacyUnifvae.id, isActive: true },
   });
   expect(status?.status).toBe(CandidacyStatusStep.DEMANDE_FINANCEMENT_ENVOYE);
+});
+
+test("Should fail when candidacy is not bound to UnifVae finance module", async () => {
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "manage_candidacy",
+      keycloakId: aapKeycloakId,
+    }),
+    payload: {
+      requestType: "mutation",
+      endpoint: "candidacy_createFundingRequestUnifvae",
+      returnFields:
+        "{id, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount }",
+      arguments: {
+        candidacyId: candidacyUnireva.id,
+        fundingRequest: {
+          ...fundingRequestSample,
+          companionId: organism.id,
+        },
+      },
+    },
+  });
+  expect(resp.statusCode).toBe(200);
+  const obj = resp.json();
+  expect(obj).toHaveProperty("errors");
+  expect(obj.errors[0].message).toBe(
+    'Cannot create FundingRequestUnifvae: candidacy.financeModule is "unireva"'
+  );
 });

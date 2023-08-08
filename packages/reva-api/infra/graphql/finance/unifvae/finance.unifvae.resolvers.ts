@@ -7,7 +7,7 @@ import { isAdminOrCandidacyCompanion } from "../../security/presets";
 import { createFundingRequestUnifvae } from "./finance.unifvae.features";
 import { logFundingRequestUnifvaeEvent } from "./logFundingRequestUnifvaeEvent";
 
-export const financeUnifvaeResolvers = {
+const unsafeResolvers = {
   Mutation: {
     candidacy_createFundingRequestUnifvae: async (
       _: unknown,
@@ -36,6 +36,6 @@ export const financeUnifvaeResolvers = {
   },
 };
 
-// export const financeUnifvaeResolvers = composeResolvers(unsafeResolvers, {
-//   "Mutation.candidacy_createFundingRequestUnifvae": isAdminOrCandidacyCompanion,
-// });
+export const financeUnifvaeResolvers = composeResolvers(unsafeResolvers, {
+  "Mutation.candidacy_createFundingRequestUnifvae": isAdminOrCandidacyCompanion,
+});
