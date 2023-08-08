@@ -10,15 +10,24 @@ import Json.Decode as Decode exposing (Decoder)
 type CandidateTypology
     = NonSpecifie
     | SalariePrive
+    | SalariePublic
     | SalariePublicHospitalier
+    | SalarieAlternant
+    | SalarieInterimaire
+    | SalarieIntermittent
+    | SalarieEnContratsAides
+    | TravailleurNonSalarie
+    | ConjointCollaborateur
     | DemandeurEmploi
     | AidantsFamiliaux
+    | Benevole
+    | Stagiaire
     | Autre
 
 
 list : List CandidateTypology
 list =
-    [ NonSpecifie, SalariePrive, SalariePublicHospitalier, DemandeurEmploi, AidantsFamiliaux, Autre ]
+    [ NonSpecifie, SalariePrive, SalariePublic, SalariePublicHospitalier, SalarieAlternant, SalarieInterimaire, SalarieIntermittent, SalarieEnContratsAides, TravailleurNonSalarie, ConjointCollaborateur, DemandeurEmploi, AidantsFamiliaux, Benevole, Stagiaire, Autre ]
 
 
 decoder : Decoder CandidateTypology
@@ -33,14 +42,41 @@ decoder =
                     "SALARIE_PRIVE" ->
                         Decode.succeed SalariePrive
 
+                    "SALARIE_PUBLIC" ->
+                        Decode.succeed SalariePublic
+
                     "SALARIE_PUBLIC_HOSPITALIER" ->
                         Decode.succeed SalariePublicHospitalier
+
+                    "SALARIE_ALTERNANT" ->
+                        Decode.succeed SalarieAlternant
+
+                    "SALARIE_INTERIMAIRE" ->
+                        Decode.succeed SalarieInterimaire
+
+                    "SALARIE_INTERMITTENT" ->
+                        Decode.succeed SalarieIntermittent
+
+                    "SALARIE_EN_CONTRATS_AIDES" ->
+                        Decode.succeed SalarieEnContratsAides
+
+                    "TRAVAILLEUR_NON_SALARIE" ->
+                        Decode.succeed TravailleurNonSalarie
+
+                    "CONJOINT_COLLABORATEUR" ->
+                        Decode.succeed ConjointCollaborateur
 
                     "DEMANDEUR_EMPLOI" ->
                         Decode.succeed DemandeurEmploi
 
                     "AIDANTS_FAMILIAUX" ->
                         Decode.succeed AidantsFamiliaux
+
+                    "BENEVOLE" ->
+                        Decode.succeed Benevole
+
+                    "STAGIAIRE" ->
+                        Decode.succeed Stagiaire
 
                     "AUTRE" ->
                         Decode.succeed Autre
@@ -61,14 +97,41 @@ toString enum____ =
         SalariePrive ->
             "SALARIE_PRIVE"
 
+        SalariePublic ->
+            "SALARIE_PUBLIC"
+
         SalariePublicHospitalier ->
             "SALARIE_PUBLIC_HOSPITALIER"
+
+        SalarieAlternant ->
+            "SALARIE_ALTERNANT"
+
+        SalarieInterimaire ->
+            "SALARIE_INTERIMAIRE"
+
+        SalarieIntermittent ->
+            "SALARIE_INTERMITTENT"
+
+        SalarieEnContratsAides ->
+            "SALARIE_EN_CONTRATS_AIDES"
+
+        TravailleurNonSalarie ->
+            "TRAVAILLEUR_NON_SALARIE"
+
+        ConjointCollaborateur ->
+            "CONJOINT_COLLABORATEUR"
 
         DemandeurEmploi ->
             "DEMANDEUR_EMPLOI"
 
         AidantsFamiliaux ->
             "AIDANTS_FAMILIAUX"
+
+        Benevole ->
+            "BENEVOLE"
+
+        Stagiaire ->
+            "STAGIAIRE"
 
         Autre ->
             "AUTRE"
@@ -94,14 +157,41 @@ fromString enumString____ =
         "SALARIE_PRIVE" ->
             Just SalariePrive
 
+        "SALARIE_PUBLIC" ->
+            Just SalariePublic
+
         "SALARIE_PUBLIC_HOSPITALIER" ->
             Just SalariePublicHospitalier
+
+        "SALARIE_ALTERNANT" ->
+            Just SalarieAlternant
+
+        "SALARIE_INTERIMAIRE" ->
+            Just SalarieInterimaire
+
+        "SALARIE_INTERMITTENT" ->
+            Just SalarieIntermittent
+
+        "SALARIE_EN_CONTRATS_AIDES" ->
+            Just SalarieEnContratsAides
+
+        "TRAVAILLEUR_NON_SALARIE" ->
+            Just TravailleurNonSalarie
+
+        "CONJOINT_COLLABORATEUR" ->
+            Just ConjointCollaborateur
 
         "DEMANDEUR_EMPLOI" ->
             Just DemandeurEmploi
 
         "AIDANTS_FAMILIAUX" ->
             Just AidantsFamiliaux
+
+        "BENEVOLE" ->
+            Just Benevole
+
+        "STAGIAIRE" ->
+            Just Stagiaire
 
         "AUTRE" ->
             Just Autre
