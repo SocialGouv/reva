@@ -9,12 +9,12 @@ import {
 
 export const isAdminOrManager = [hasRole(["admin", "manage_candidacy"])];
 
-export const isAdminOrCandidacyCompanion = [
+export const isAdminOrOwningManager = [
   hasRole(["admin", "manage_candidacy"]),
   whenHasRole("manage_candidacy", isCandidacyOwner),
 ];
 
-export const isCandidacyCompanion = [
+export const isOwningManager = [
   hasNotRole(["admin"]),
   hasRole(["manage_candidacy"]),
   whenHasRole("manage_candidacy", isCandidacyOwner),

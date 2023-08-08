@@ -1,7 +1,6 @@
-import { isAdminOrCandidacyCompanion } from "../../security/presets";
+import { isAdminOrOwningManager } from "../../security/presets";
 
 export const resolversSecurityMap = {
   // Mutations manager ou admin
-  "Mutation.candidacy_createOrUpdatePaymentRequest":
-    isAdminOrCandidacyCompanion,
+  "Mutation.candidacy_createOrUpdatePaymentRequest": isAdminOrOwningManager,
 };
