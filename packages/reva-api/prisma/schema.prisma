@@ -844,7 +844,7 @@ model Feasibility {
   candidacyId           String            @unique @map("candidacy_id") @db.Uuid
   feasibilityFile       File              @relation("feasibility_file", fields: [feasibilityFileId], references: [id])
   otherFile             File?             @relation("other_file", fields: [otherFileId], references: [id])
-  feasibilityFileId     String            @db.Uuid
+  feasibilityFileId     String            @map("feasibility_file_id") @db.Uuid
   otherFileId           String?           @db.Uuid
   feasibilityFileSentAt DateTime?         @map("feasibility_file_sent_at") @db.Timestamptz(6)
   decision              FeasibilityStatus @default(PENDING)
