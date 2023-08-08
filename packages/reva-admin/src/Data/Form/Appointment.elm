@@ -64,7 +64,34 @@ candidateTypologyToString candidateTypology =
             "Demandeur d’emploi"
 
         AidantsFamiliaux ->
-            "Aidants familiaux"
+            "Aidant familial"
+
+        SalariePublic ->
+            "Salarié du public"
+
+        SalarieAlternant ->
+            "Salarié alternant"
+
+        SalarieInterimaire ->
+            "Salarié intérimaire"
+
+        SalarieIntermittent ->
+            "Salarié intermittent"
+
+        SalarieEnContratsAides ->
+            "Salariés en contrat aidés (CAE, IAE, service civique...)"
+
+        TravailleurNonSalarie ->
+            "Travailleur non salarié (artisan, gérant, micro entrepreneur...)"
+
+        ConjointCollaborateur ->
+            "Conjoint collaborateur"
+
+        Benevole ->
+            "Bénévole"
+
+        Stagiaire ->
+            "Stagiaire"
 
         Autre ->
             "Autre"
@@ -85,8 +112,35 @@ candidateTypologyFromString candidateTypology =
         "Demandeur d’emploi" ->
             DemandeurEmploi
 
-        "Aidants familiaux" ->
+        "Aidant familial" ->
             AidantsFamiliaux
+
+        "Salarié du public" ->
+            SalariePublic
+
+        "Salarié alternant" ->
+            SalarieAlternant
+
+        "Salarié intérimaire" ->
+            SalarieInterimaire
+
+        "Salarié intermittent" ->
+            SalarieIntermittent
+
+        "Salariés en contrat aidés (CAE, IAE, service civique...)" ->
+            SalarieEnContratsAides
+
+        "Travailleur non salarié (artisan, gérant, micro entrepreneur...)" ->
+            TravailleurNonSalarie
+
+        "Conjoint collaborateur" ->
+            ConjointCollaborateur
+
+        "Bénévole" ->
+            Benevole
+
+        "Stagiaire" ->
+            Stagiaire
 
         "Autre" ->
             Autre

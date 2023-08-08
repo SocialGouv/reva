@@ -5,9 +5,7 @@ import Data.Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Form exposing (FormData)
 import Data.Form.Appointment exposing (candidateTypologyToString)
 import Data.Referential exposing (Referential)
-import Dict exposing (Dict)
 import Page.Form as Form exposing (Form)
-import String exposing (String)
 
 
 form : FormData -> ( Candidacy, Referential ) -> Form
@@ -17,11 +15,8 @@ form _ _ =
             Data.Form.Appointment.keys
 
         typologies =
-            [ SalariePrive
-            , DemandeurEmploi
-            , AidantsFamiliaux
-            , Autre
-            ]
+            Admin.Enum.CandidateTypology.list
+                |> List.filter (\el -> el /= NonSpecifie)
                 |> List.map (\el -> ( candidateTypologyToString el, candidateTypologyToString el ))
     in
     { elements =
