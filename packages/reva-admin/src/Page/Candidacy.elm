@@ -39,6 +39,7 @@ import Data.Referential exposing (Referential)
 import Html exposing (Html, div, h3, h5, p, text)
 import Html.Attributes exposing (alt, class, name)
 import Html.Attributes.Extra exposing (role)
+import Html.Extra exposing (nothing)
 import Page.Form as Form
 import Page.Form.Admissibility
 import Page.Form.Appointment
@@ -615,7 +616,7 @@ updateTab context tab ( model, cmd ) =
                         , onRedirect = pushUrl <| candidacyTab Profile
                         , onValidate = \_ _ -> Ok ()
                         , status =
-                            if candidacy.feasibility /= Nothing then
+                            if candidacy.feasibility /= Nothing || candidacy.certificationAuthority == Nothing then
                                 Form.ReadOnly
 
                             else
