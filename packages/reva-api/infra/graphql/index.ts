@@ -17,7 +17,6 @@ import * as candidacy from "./candidacy";
 import * as candidate from "./candidate";
 import { feasibilityLoaders } from "./feasibility/feasibility.loaders";
 import { feasibilityResolvers } from "./feasibility/feasibility.resolvers";
-import { financeUnifvaeResolvers } from "./finance/unifvae/finance.unifvae.resolvers";
 import { financeResolvers } from "./finance/unireva/finance.resolvers";
 import * as referential from "./referential";
 import DecimalGraphqlScalar from "./scalar/DecimalGraphqlScalar";
@@ -38,7 +37,6 @@ const resolvers = mergeResolvers([
   financeResolvers,
   subscriptionRequestResolvers,
   feasibilityResolvers,
-  financeUnifvaeResolvers,
 ]);
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;
