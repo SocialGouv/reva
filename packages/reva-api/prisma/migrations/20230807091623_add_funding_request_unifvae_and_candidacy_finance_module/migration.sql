@@ -8,6 +8,8 @@ CREATE TABLE "funding_request_unifvae" (
   "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
   "candidacy_id" UUID NOT NULL,
   "companion_id" UUID,
+  "post_exam_hour_count" INTEGER NOT NULL,
+  "post_exam_cost" DECIMAL(10, 2) NOT NULL,
   "individual_hour_count" INTEGER NOT NULL,
   "individual_cost" DECIMAL(10, 2) NOT NULL,
   "collective_hour_count" INTEGER NOT NULL,
