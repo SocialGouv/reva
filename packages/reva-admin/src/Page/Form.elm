@@ -254,8 +254,8 @@ viewForm referential status errors formData form saveButton submitButton =
             formFieldset <|
                 legend
                     [ class "fr-fieldset__legend -ml-1" ]
-                    [ h1 [] [ text currentForm.title ]
-                    , p [ class "font-normal text-sm text-gray-600" ]
+                    [ h1 [ class "mb-1" ] [ text currentForm.title ]
+                    , p [ class "font-medium text-sm text-gray-500" ]
                         [ text "Sauf mention contraire “(optionnel)” dans le label, tous les champs sont obligatoires." ]
                     ]
                     :: viewFieldsets formData currentForm.elements

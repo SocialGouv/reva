@@ -186,7 +186,7 @@ form formData _ =
         ]
     , saveLabel = Nothing
     , submitLabel = "Envoyer la décision"
-    , title = ""
+    , title = "Envoi de la décision"
     }
 
 
