@@ -1,4 +1,4 @@
-module View exposing (article, backLink, errors, image, infoBlock, layout, logo, popupErrors, skeleton, summaryBlock, title)
+module View exposing (article, backLink, errors, image, infoBlock, layout, logo, noticeInfo, popupErrors, skeleton, summaryBlock, title)
 
 import Accessibility exposing (a, br, button, h3, h5, nav, p)
 import Html exposing (Html, div, h2, img, node, text)
@@ -172,3 +172,19 @@ summaryBlock titleValue content =
             [ text titleValue ]
             :: content
         )
+
+
+noticeInfo : List (Html.Attribute msg) -> List (Html msg) -> Html msg
+noticeInfo attributes content =
+    div
+        (class "fr-notice fr-notice--info" :: attributes)
+        [ div
+            [ class "fr-container" ]
+            [ div
+                [ class "fr-notice__body" ]
+                [ div
+                    [ class "fr-notice__title" ]
+                    content
+                ]
+            ]
+        ]

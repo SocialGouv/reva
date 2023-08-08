@@ -177,7 +177,11 @@ form formData _ =
         [ ( keys.decision, Form.RadioList "Décision prise concernant ce dossier" decisions )
         , ( keys.reason, Form.Textarea "Précisez les motifs de votre décision" Nothing )
         , ( "info"
-          , Form.Info "" "Rappel : les motifs de votre décision seront transmis au candidat et à son architecte de parcours."
+          , Form.StaticHtml
+                (View.noticeInfo
+                    [ class "mt-4" ]
+                    [ text "Rappel : les motifs de votre décision seront transmis au candidat et à son architecte de parcours." ]
+                )
           )
         ]
     , saveLabel = Nothing
