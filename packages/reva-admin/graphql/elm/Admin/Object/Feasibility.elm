@@ -44,6 +44,13 @@ documentaryProofFile object____ =
     Object.selectionForCompositeField "documentaryProofFile" [] object____ (Basics.identity >> Decode.nullable)
 
 
+certificateOfAttendanceFile :
+    SelectionSet decodesTo Admin.Object.File
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Feasibility
+certificateOfAttendanceFile object____ =
+    Object.selectionForCompositeField "certificateOfAttendanceFile" [] object____ (Basics.identity >> Decode.nullable)
+
+
 candidacy :
     SelectionSet decodesTo Admin.Object.Candidacy
     -> SelectionSet decodesTo Admin.Object.Feasibility

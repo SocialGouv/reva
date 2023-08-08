@@ -36,10 +36,12 @@ export const createFeasibility = ({
   candidacyId,
   feasibilityFile,
   documentaryProofFile,
+  certificateOfAttendanceFile,
 }: {
   candidacyId: string;
   feasibilityFile: UploadedFile;
   documentaryProofFile?: UploadedFile;
+  certificateOfAttendanceFile?: UploadedFile;
 }) =>
   prismaClient.feasibility.create({
     data: {
@@ -58,6 +60,15 @@ export const createFeasibility = ({
               content: documentaryProofFile.data,
               mimeType: documentaryProofFile.mimetype,
               name: documentaryProofFile.filename,
+            },
+          }
+        : undefined,
+      certificateOfAttendanceFile: certificateOfAttendanceFile
+        ? {
+            create: {
+              content: certificateOfAttendanceFile.data,
+              mimeType: certificateOfAttendanceFile.mimetype,
+              name: certificateOfAttendanceFile.filename,
             },
           }
         : undefined,

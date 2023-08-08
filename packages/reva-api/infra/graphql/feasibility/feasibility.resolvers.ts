@@ -38,6 +38,14 @@ export const feasibilityResolvers = {
     }) => getFileNameAndUrl({ candidacyId, fileId: documentaryProofFileId }),
     candidacy: ({ candidacyId }: { candidacyId: string }) =>
       getCandidacyById({ candidacyId }),
+    certificateOfAttendanceFile: ({
+      candidacyId,
+      certificateOfAttendanceFileId: certificateOfAttendanceFileId,
+    }: {
+      candidacyId: string;
+      certificateOfAttendanceFileId: string;
+    }) =>
+      getFileNameAndUrl({ candidacyId, fileId: certificateOfAttendanceFileId }),
   },
   Query: {
     feasibilityCountByCategory: (_: unknown, _args: unknown, context: any) =>

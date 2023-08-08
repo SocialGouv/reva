@@ -16,6 +16,7 @@ type Feasibility {
   feasibilityFileSentAt: Timestamp!
   feasibilityFile: File!
   documentaryProofFile: File
+  certificateOfAttendanceFile: File
   candidacy: Candidacy!
   decision: FeasibilityDecision!
   decisionComment: String
