@@ -1,0 +1,43 @@
+type FundingRequestUnifvae {
+  id: UUID!
+  companion: Organism
+  individualHourCount: Int!
+  individualCost: Decimal!
+  collectiveHourCount: Int!
+  collectiveCost: Decimal!
+  basicSkills: [BasicSkill!]!
+  basicSkillsHourCount: Int!
+  basicSkillsCost: Decimal!
+  mandatoryTrainings: [Training!]!
+  mandatoryTrainingsHourCount: Int!
+  mandatoryTrainingsCost: Decimal!
+  certificateSkills: String!
+  certificateSkillsHourCount: Int!
+  certificateSkillsCost: Decimal!
+  otherTraining: String!
+  otherTrainingHourCount: Int!
+  otherTrainingCost: Decimal!
+}
+
+input FundingRequestUnifvaeInput {
+  companionId: UUID
+  individualHourCount: Int!
+  individualCost: Decimal!
+  collectiveHourCount: Int!
+  collectiveCost: Decimal!
+  basicSkillsHourCount: Int!
+  basicSkillsCost: Decimal!
+  mandatoryTrainingsHourCount: Int!
+  mandatoryTrainingsCost: Decimal!
+  certificateSkillsHourCount: Int!
+  certificateSkillsCost: Decimal!
+  otherTrainingHourCount: Int!
+  otherTrainingCost: Decimal!
+}
+
+type Mutation {
+  candidacy_createFundingRequestUnifvae(
+    candidacyId: UUID!
+    fundingRequest: FundingRequestUnifvaeInput!
+  ): FundingRequestUnifvae
+}

@@ -8,7 +8,8 @@ export type BusinessTargetType =
   | "ACCOUNT"
   | "SUBSCRIPTION_REQUEST"
   | "FUNDING_REQUEST"
-  | "PAYMENT_REQUEST";
+  | "PAYMENT_REQUEST"
+  | "FUNDING_REQUEST_UNIFVAE";
 
 export type BusinessEventType = CandidacyBusinessEvent | CandidateBusinessEvent;
 

@@ -278,6 +278,7 @@ export enum CandidacyBusinessEvent {
   UPDATED_ADMISSIBILITY = "Updated admissibility",
   DROPPED_OUT_CANDIDACY = "Dropped out candidacy",
   UPDATED_EXAM_INFO = "Updated exam information",
+  CREATED_FUNDING_REQUEST_UNIFVAE = "Created a funding request (unifvae)",
 }
 
 export interface ExamInfo {
