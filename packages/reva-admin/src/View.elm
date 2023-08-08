@@ -1,7 +1,7 @@
-module View exposing (article, backLink, errors, image, infoBlock, layout, logo, noticeInfo, popupErrors, skeleton, summaryBlock, title)
+module View exposing (AlertType(..), alert, article, backLink, errors, image, infoBlock, layout, logo, noticeInfo, popupErrors, skeleton, summaryBlock, title)
 
 import Accessibility exposing (a, br, button, h3, h5, nav, p)
-import Html exposing (Html, div, h2, img, node, text)
+import Html exposing (Html, div, h2, h6, img, node, text)
 import Html.Attributes exposing (attribute, class, id, src)
 import Html.Attributes.Extra exposing (role)
 import Url.Builder
@@ -188,3 +188,38 @@ noticeInfo attributes content =
                 ]
             ]
         ]
+
+
+type AlertType
+    = Warning
+    | Error
+    | Success
+    | Info
+
+
+alert : AlertType -> List (Html.Attribute msg) -> String -> List (Html msg) -> Html msg
+alert alertType attributes alertTitle content =
+    let
+        alertClass =
+            case alertType of
+                Warning ->
+                    "fr-alert--warning"
+
+                Error ->
+                    "fr-alert--error"
+
+                Success ->
+                    "fr-alert--success"
+
+                Info ->
+                    "fr-alert--info"
+    in
+    div
+        ([ class ("fr-alert " ++ alertClass), role "alert" ]
+            ++ attributes
+        )
+    <|
+        h6
+            []
+            [ text alertTitle ]
+            :: content

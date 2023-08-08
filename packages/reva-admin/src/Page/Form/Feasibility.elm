@@ -1,5 +1,6 @@
 module Page.Form.Feasibility exposing (..)
 
+import BetaGouv.DSFR.Alert exposing (warning)
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Form.Feasibility exposing (keys)
@@ -8,7 +9,7 @@ import Html exposing (a, div, h6, p, strong, text)
 import Html.Attributes exposing (class, href, target, title)
 import Html.Attributes.Extra exposing (role)
 import Page.Form as Form exposing (Form)
-import View
+import View exposing (AlertType(..))
 import View.Candidate
 
 
@@ -28,16 +29,15 @@ form _ ( candidacy, _ ) =
 
         idCardWarning =
             ( "id-card-warning"
-            , Form.StaticHtml
-                (div
-                    [ class "fr-alert fr-alert--warning mt-4 mb-10", role "alert" ]
-                    [ h6 [] [ text "Attention" ]
-                    , p []
+            , Form.StaticHtml <|
+                View.alert Warning
+                    [ class "mt-4 mb-10" ]
+                    "Attention"
+                    [ p []
                         [ text "Ne joignez pas la Carte d’Identité du candidat dans ce formulaire. Pour le moment"
                         , strong [] [ text ", la Carte d’Identité est toujours à communiquer par email." ]
                         ]
                     ]
-                )
             )
 
         certificationAuthorityInfo =
