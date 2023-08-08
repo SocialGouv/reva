@@ -1,15 +1,15 @@
 import { Either, EitherAsync, Left } from "purify-ts";
 
-import { Role } from "../../../../../domain/types/account";
-import { Candidacy } from "../../../../../domain/types/candidacy";
+import { Role } from "../../../../domain/types/account";
+import { Candidacy } from "../../../../domain/types/candidacy";
 import {
   FundingRequest,
   FundingRequestInformations,
-} from "../../../../../domain/types/candidate";
+} from "../../../../domain/types/candidate";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../../../../domain/types/functionalError";
+} from "../../../../domain/types/functionalError";
 
 interface GetFundingRequestDeps {
   hasRole: (role: Role) => boolean;

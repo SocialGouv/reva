@@ -17,7 +17,7 @@ import * as candidacy from "./candidacy";
 import * as candidate from "./candidate";
 import { feasibilityLoaders } from "./feasibility/feasibility.loaders";
 import { feasibilityResolvers } from "./feasibility/feasibility.resolvers";
-import { financeResolvers } from "./finance/unireva/finance.resolvers";
+import { financeResolvers } from "./finance/finance.resolvers";
 import * as referential from "./referential";
 import DecimalGraphqlScalar from "./scalar/DecimalGraphqlScalar";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
