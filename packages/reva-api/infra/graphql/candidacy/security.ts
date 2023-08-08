@@ -1,9 +1,9 @@
 import {
   defaultSecurity,
+  isAdminOrCandidacyCompanion,
   isAdminOrManager,
-  isAdminOrOwningManager,
+  isCandidacyCompanion,
   isCandidate,
-  isOwningManager,
 } from "../security/presets";
 
 export const resolversSecurityMap = {
@@ -27,17 +27,19 @@ export const resolversSecurityMap = {
   "Mutation.candidacy_confirmTrainingForm": isCandidate,
 
   // Mutation manager
-  "Mutation.candidacy_takeOver": isOwningManager,
+  "Mutation.candidacy_takeOver": isCandidacyCompanion,
 
   // Mutations manager ou admin
-  "Mutation.candidacy_deleteById": isAdminOrOwningManager,
-  "Mutation.candidacy_archiveById": isAdminOrOwningManager,
-  "Mutation.candidacy_unarchiveById": isAdminOrOwningManager,
-  "Mutation.candidacy_updateAppointmentInformations": isAdminOrOwningManager,
-  "Mutation.candidacy_submitTrainingForm": isAdminOrOwningManager,
-  "Mutation.candidacy_dropOut": isAdminOrOwningManager,
-  "Mutation.candidacy_updateAdmissibility": isAdminOrOwningManager,
-  "Mutation.candidacy_createOrUpdatePaymentRequest": isAdminOrOwningManager,
-  "Mutation.candidacy_confirmPaymentRequest": isAdminOrOwningManager,
-  "Mutation.candidacy_updateExamInfo": isAdminOrOwningManager,
+  "Mutation.candidacy_deleteById": isAdminOrCandidacyCompanion,
+  "Mutation.candidacy_archiveById": isAdminOrCandidacyCompanion,
+  "Mutation.candidacy_unarchiveById": isAdminOrCandidacyCompanion,
+  "Mutation.candidacy_updateAppointmentInformations":
+    isAdminOrCandidacyCompanion,
+  "Mutation.candidacy_submitTrainingForm": isAdminOrCandidacyCompanion,
+  "Mutation.candidacy_dropOut": isAdminOrCandidacyCompanion,
+  "Mutation.candidacy_updateAdmissibility": isAdminOrCandidacyCompanion,
+  "Mutation.candidacy_createOrUpdatePaymentRequest":
+    isAdminOrCandidacyCompanion,
+  "Mutation.candidacy_confirmPaymentRequest": isAdminOrCandidacyCompanion,
+  "Mutation.candidacy_updateExamInfo": isAdminOrCandidacyCompanion,
 };
