@@ -50,12 +50,6 @@ model Certification {
   @@map("certification")
 }
 
-enum FinanceModule {
-  unireva // XP: Uniformation / Reva
-  unifvae // GIP: Uniformation / France VAE
-  rsmfvae // GIP: RSM / France VAE (next step...)
-}
-
 model Candidacy {
   id                        String                                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   deviceId                  String                                  @db.VarChar(255)
@@ -87,10 +81,8 @@ model Candidacy {
   reorientationReasonId     String?                                 @map("reorientation_reason_id") @db.Uuid
   createdAt                 DateTime                                @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                 DateTime?                               @map("updated_at") @db.Timestamptz(6)
-  financeModule             FinanceModule                           @default(unifvae) @map("finance_module")
   FundingRequest            FundingRequest[]
   paymentRequest            PaymentRequest?
-  fundingRequestUnifvae     FundingRequestUnifvae[]
   isCertificationPartial    Boolean                                 @default(false) @map("is_certification_partial")
   admissibility             Admissibility?
   examInfo                  ExamInfo?
@@ -284,7 +276,6 @@ model Organism {
   createdAt                                              DateTime                                                 @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                                              DateTime?                                                @map("updated_at") @db.Timestamptz(6)
   FundingRequest                                         FundingRequest[]
-  fundingRequestUnifvae                                  FundingRequestUnifvae[]
   typology                                               OrganismTypology                                         @map("typology")
   activeOrganismsByAvailableCertificationsAndDepartments ActiveOrganismsByAvailableCertificationsAndDepartments[]
   organismOnDomaine                                      OrganismOnDomaine[]
@@ -328,13 +319,12 @@ model OrganismsOnDepartments {
 }
 
 model Training {
-  id                               String                             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label                            String                             @unique @db.VarChar(255)
-  candidacies                      TrainingOnCandidacies[]
-  createdAt                        DateTime                           @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                        DateTime?                          @map("updated_at") @db.Timestamptz(6)
-  trainingOnFundingRequests        TrainingOnFundingRequests[]
-  trainingOnFundingRequestsUnifvae TrainingOnFundingRequestsUnifvae[]
+  id                        String                      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                     String                      @unique @db.VarChar(255)
+  candidacies               TrainingOnCandidacies[]
+  createdAt                 DateTime                    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                 DateTime?                   @map("updated_at") @db.Timestamptz(6)
+  trainingOnFundingRequests TrainingOnFundingRequests[]
 
   @@map("training")
 }
@@ -352,13 +342,12 @@ model TrainingOnCandidacies {
 }
 
 model BasicSkill {
-  id                                 String                               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  label                              String                               @unique @db.VarChar(255)
-  candidacies                        BasicSkillOnCandidacies[]
-  createdAt                          DateTime                             @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                          DateTime?                            @map("updated_at") @db.Timestamptz(6)
-  basicSkillOnFundingRequests        BasicSkillOnFundingRequests[]
-  basicSkillOnFundingRequestsUnifvae BasicSkillOnFundingRequestsUnifvae[]
+  id                          String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  label                       String                        @unique @db.VarChar(255)
+  candidacies                 BasicSkillOnCandidacies[]
+  createdAt                   DateTime                      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                   DateTime?                     @map("updated_at") @db.Timestamptz(6)
+  basicSkillOnFundingRequests BasicSkillOnFundingRequests[]
 
   @@map("basic_skill")
 }
@@ -880,56 +869,4 @@ model File {
   linkedAsCertificateOfAttendanceFileBy Feasibility[] @relation("certificate_of_attendance_file")
 
   @@map("file")
-}
-
-model FundingRequestUnifvae {
-  id                          String                               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacy                   Candidacy                            @relation(fields: [candidacyId], references: [id])
-  candidacyId                 String                               @unique @map("candidacy_id") @db.Uuid
-  companion                   Organism?                            @relation(fields: [companionId], references: [id], onDelete: Cascade)
-  companionId                 String?                              @map("companion_id") @db.Uuid
-  postExamHourCount           Int                                  @map("post_exam_hour_count")
-  postExamCost                Decimal                              @map("post_exam_cost") @db.Decimal(10, 2)
-  individualHourCount         Int                                  @map("individual_hour_count")
-  individualCost              Decimal                              @map("individual_cost") @db.Decimal(10, 2)
-  collectiveHourCount         Int                                  @map("collective_hour_count")
-  collectiveCost              Decimal                              @map("collective_cost") @db.Decimal(10, 2)
-  basicSkills                 BasicSkillOnFundingRequestsUnifvae[]
-  basicSkillsHourCount        Int                                  @map("basic_skills_hour_count")
-  basicSkillsCost             Decimal                              @map("basic_skills_cost") @db.Decimal(10, 2)
-  mandatoryTrainings          TrainingOnFundingRequestsUnifvae[]
-  mandatoryTrainingsHourCount Int                                  @map("mandatory_training_hour_count")
-  mandatoryTrainingsCost      Decimal                              @map("mandatory_training_cost") @db.Decimal(10, 2)
-  certificateSkills           String                               @map("certificate_skills")
-  certificateSkillsHourCount  Int                                  @map("certificate_skills_hour_count")
-  certificateSkillsCost       Decimal                              @map("certificate_skills_cost") @db.Decimal(10, 2)
-  otherTraining               String                               @map("other_training")
-  otherTrainingHourCount      Int                                  @default(0) @map("other_training_hour_count")
-  otherTrainingCost           Decimal                              @default(0) @map("other_training_cost") @db.Decimal(10, 2)
-
-  @@map("funding_request_unifvae")
-}
-
-model BasicSkillOnFundingRequestsUnifvae {
-  basicSkill              BasicSkill            @relation(fields: [basicSkillId], references: [id])
-  basicSkillId            String                @map("basic_skill_id") @db.Uuid
-  createdAt               DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt               DateTime?             @map("updated_at") @db.Timestamptz(6)
-  FundingRequestUnifvae   FundingRequestUnifvae @relation(fields: [fundingRequestUnifvaeId], references: [id])
-  fundingRequestUnifvaeId String                @map("funding_request_unifvae_id") @db.Uuid
-
-  @@id([basicSkillId, fundingRequestUnifvaeId])
-  @@map("basic_skill_funding_request_unifvae")
-}
-
-model TrainingOnFundingRequestsUnifvae {
-  training                Training              @relation(fields: [trainingId], references: [id])
-  trainingId              String                @map("training_id") @db.Uuid
-  fundingRequestUnifvae   FundingRequestUnifvae @relation(fields: [fundingRequestUnifvaeId], references: [id])
-  fundingRequestUnifvaeId String                @map("funding_request_unifvae_id") @db.Uuid
-  createdAt               DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt               DateTime?             @map("updated_at") @db.Timestamptz(6)
-
-  @@id([trainingId, fundingRequestUnifvaeId])
-  @@map("training_funding_request_unifvae")
 }
