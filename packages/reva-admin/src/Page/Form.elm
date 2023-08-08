@@ -447,7 +447,7 @@ viewEditableElement formData ( elementId, element ) =
             div [ class ("mb-4 w-full " ++ Maybe.withDefault "" classes) ] [ text content ]
 
         StaticHtml content ->
-            div [ class "ml-2" ] [ Html.map never content ]
+            div [ class "ml-2 w-full" ] [ Html.map never content ]
 
 
 viewReadOnlyElement : FormData -> ( String, Element ) -> Html (Msg referential)
