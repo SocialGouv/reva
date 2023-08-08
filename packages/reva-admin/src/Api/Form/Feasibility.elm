@@ -34,6 +34,10 @@ submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
             Data.Form.getFiles keys.documentaryProofFile formData
                 |> List.map (\( _, file ) -> ( keys.documentaryProofFile, file ))
 
+        certificateOfAttendanceFiles =
+            Data.Form.getFiles keys.certificateOfAttendanceFile formData
+                |> List.map (\( _, file ) -> ( keys.certificateOfAttendanceFile, file ))
+
         withFiles files body =
             files
                 |> List.map (\( name, file ) -> Http.filePart name file)
@@ -57,17 +61,17 @@ submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
             Task.succeed (RemoteData.Failure [ msg ])
                 |> Task.perform toMsg
     in
-    case ( feasibilityFiles, documentaryProofFiles ) of
-        ( [], _ ) ->
+    case ( feasibilityFiles, documentaryProofFiles, certificateOfAttendanceFiles ) of
+        ( [], _, _ ) ->
             error "Veuillez choisir un dossier de faisabilité."
 
-        ( [ feasibilityFile ], [ documentaryProofFile ] ) ->
-            post [ feasibilityFile, documentaryProofFile ]
+        ( [ feasibilityFile ], [ documentaryProofFile ], [ certificateOfAttendanceFile ] ) ->
+            post [ feasibilityFile, documentaryProofFile, certificateOfAttendanceFile ]
 
-        ( [ feasibilityFile ], _ ) ->
+        ( [ feasibilityFile ], _, _ ) ->
             post [ feasibilityFile ]
 
-        ( _, _ ) ->
+        ( _, _, _ ) ->
             error "Vous ne pouvez pas envoyer plus d'un dossier de faisabilité et plus d'une autre pièce jointe."
 
 

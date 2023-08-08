@@ -1,6 +1,5 @@
 module Api.Feasibility exposing (get, getFeasibilities, getFeasibilityCountByCategory, reject, selection, validate)
 
-import Admin.Enum.FeasibilityCategoryFilter
 import Admin.Enum.FeasibilityDecision
 import Admin.Enum.FeasibilityDecisionFilter
 import Admin.Mutation as Mutation
@@ -45,10 +44,11 @@ get endpointGraphql token toMsg feasibilityId =
 selection : SelectionSet Data.Feasibility.Feasibility Admin.Object.Feasibility
 selection =
     SelectionSet.succeed
-        (\(Id feasibilityId) file documentaryProofFile candidacy decision maybeDecisionComment decisionSentAt ->
+        (\(Id feasibilityId) file documentaryProofFile certificateOfAttendanceFile candidacy decision maybeDecisionComment decisionSentAt ->
             Data.Feasibility.Feasibility feasibilityId
                 file
                 documentaryProofFile
+                certificateOfAttendanceFile
                 candidacy.candidate
                 candidacy.organism
                 candidacy.certificationLabel
@@ -67,6 +67,7 @@ selection =
         |> with Admin.Object.Feasibility.id
         |> with (Admin.Object.Feasibility.feasibilityFile File.selection)
         |> with (Admin.Object.Feasibility.documentaryProofFile File.selection)
+        |> with (Admin.Object.Feasibility.certificateOfAttendanceFile File.selection)
         |> with (Admin.Object.Feasibility.candidacy candidacySelection)
         |> with Admin.Object.Feasibility.decision
         |> with Admin.Object.Feasibility.decisionComment

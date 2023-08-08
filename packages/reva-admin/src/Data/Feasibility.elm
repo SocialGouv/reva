@@ -23,6 +23,7 @@ type alias Feasibility =
     { id : String
     , file : File
     , documentaryProofFile : Maybe File
+    , certificateOfAttendanceFile : Maybe File
     , candidate : Maybe Candidate
     , organism : Maybe Organism
     , certificationLabel : Maybe String

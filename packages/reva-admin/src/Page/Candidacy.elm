@@ -276,6 +276,14 @@ viewFeasibilitySent context candidacy feasibility =
 
                 Nothing ->
                     ( "", "" )
+
+        certificateOfAttendancefFileNameAndUrl =
+            case feasibility.certificateOfAttendanceFile of
+                Just certificateOfAttendanceFile ->
+                    ( certificateOfAttendanceFile.name, certificateOfAttendanceFile.url )
+
+                Nothing ->
+                    ( "", "" )
     in
     [ h1 [] [ text "Dossier de faisabilité" ]
     , div
@@ -285,6 +293,7 @@ viewFeasibilitySent context candidacy feasibility =
             candidacy.candidate
         , viewFileLink context (Tuple.first feasibilityFileNameAndUrl) (Tuple.second feasibilityFileNameAndUrl)
         , viewFileLink context (Tuple.first documentaryProofFileNameAndUrl) (Tuple.second documentaryProofFileNameAndUrl)
+        , viewFileLink context (Tuple.first certificateOfAttendancefFileNameAndUrl) (Tuple.second certificateOfAttendancefFileNameAndUrl)
         , View.Candidate.viewCertificationAuthority
             candidacy.certificationAuthority
         , View.Feasibility.Decision.view feasibility

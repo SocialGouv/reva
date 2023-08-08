@@ -85,6 +85,8 @@ form _ ( candidacy, _ ) =
             , ( keys.feasibilityFile, Form.File "" "Format supporté : PDF uniquement" )
             , ( "documentaryProofFile", Form.Title "Joindre une autre pièce (optionnel)" )
             , ( keys.documentaryProofFile, Form.File "Copie du ou des justificatif(s) ouvrant accès à une équivalence ou dispense en lien avec la certification visée." "Format supporté : PDF uniquement" )
+            , ( "certificateOfAttendanceFile", Form.Title "Joindre une autre pièce (optionnel)" )
+            , ( keys.certificateOfAttendanceFile, Form.File "Attestation ou certificat de suivi de formation dans le cas du pré-requis demandé par la certification visée." "Format supporté : PDF uniquement" )
             , ( "", Form.Section "Informations additionnelles" )
             , certificationAuthorityInfo
             , helpPanel

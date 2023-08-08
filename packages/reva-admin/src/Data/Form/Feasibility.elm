@@ -8,6 +8,7 @@ import Data.Form.Helper as Helper
 keys =
     { feasibilityFile = "feasibilityFile"
     , documentaryProofFile = "documentaryProofFile"
+    , certificateOfAttendanceFile = "certificateOfAttendanceFile"
     , decision = "decision"
     , reason = "reason"
     }
