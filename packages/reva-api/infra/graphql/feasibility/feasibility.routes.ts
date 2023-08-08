@@ -14,7 +14,7 @@ import {
 interface UploadFeasibilityFileRequestBody {
   candidacyId: string;
   feasibilityFile: UploadedFile[];
-  otherFile?: UploadedFile[];
+  documentaryProofFile?: UploadedFile[];
 }
 
 export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
@@ -58,9 +58,10 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
         const feasibility = await getFeasibilityByCandidacyid({ candidacyId });
 
         if (
-          ![feasibility?.feasibilityFileId, feasibility?.otherFileId].includes(
-            fileId
-          )
+          ![
+            feasibility?.feasibilityFileId,
+            feasibility?.documentaryProofFileId,
+          ].includes(fileId)
         ) {
           return reply.status(403).send({
             err: "Vous n'êtes pas autorisé à visualiser ce fichier.",
@@ -91,7 +92,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
         properties: {
           candidacyId: { type: "string" },
           feasibilityFile: { type: "array", items: { type: "object" } },
-          otherFile: { type: "array", items: { type: "object" } },
+          documentaryProofFile: { type: "array", items: { type: "object" } },
         },
         required: ["candidacyId"],
       },
@@ -110,9 +111,12 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
       }
 
       const feasibilityFile = request.body.feasibilityFile[0];
-      const otherFile = request.body.otherFile?.[0];
+      const documentaryProofFile = request.body.documentaryProofFile?.[0];
 
-      if (!hasValidMimeType(feasibilityFile) || !hasValidMimeType(otherFile)) {
+      if (
+        !hasValidMimeType(feasibilityFile) ||
+        !hasValidMimeType(documentaryProofFile)
+      ) {
         return reply
           .status(400)
           .send(
@@ -122,7 +126,8 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
 
       if (
         feasibilityFile.data?.byteLength > maxUploadFileSizeInKiloBytes ||
-        (otherFile?.data?.byteLength ?? 0) > maxUploadFileSizeInKiloBytes
+        (documentaryProofFile?.data?.byteLength ?? 0) >
+          maxUploadFileSizeInKiloBytes
       ) {
         return reply
           .status(400)
@@ -132,7 +137,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
         await createFeasibility({
           candidacyId: request.body.candidacyId,
           feasibilityFile,
-          otherFile,
+          documentaryProofFile,
         });
       } catch (e) {
         logger.error(e);

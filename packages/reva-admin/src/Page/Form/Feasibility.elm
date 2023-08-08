@@ -81,10 +81,10 @@ form _ ( candidacy, _ ) =
             [ candidateInfo
             , ( "", Form.Section "Pièces jointes" )
             , idCardWarning
-            , ( "feasibilityFile", Form.Title "Dossier de faisabilité" )
-            , ( keys.feasibilityFile, Form.File "Joindre le dossier de faisabilité" "Format supporté : PDF uniquement" )
-            , ( "otherFile", Form.Title "Autre pièce jointe" )
-            , ( keys.otherFile, Form.File "Joindre une autre pièce (si besoin)" "Format supporté : PDF uniquement" )
+            , ( "feasibilityFile", Form.Title "Joindre le dossier de faisabilité" )
+            , ( keys.feasibilityFile, Form.File "" "Format supporté : PDF uniquement" )
+            , ( "documentaryProofFile", Form.Title "Joindre une autre pièce (optionnel)" )
+            , ( keys.documentaryProofFile, Form.File "Copie du ou des justificatif(s) ouvrant accès à une équivalence ou dispense en lien avec la certification visée." "Format supporté : PDF uniquement" )
             , ( "", Form.Section "Informations additionnelles" )
             , certificationAuthorityInfo
             , helpPanel

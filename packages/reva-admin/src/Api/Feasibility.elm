@@ -45,10 +45,10 @@ get endpointGraphql token toMsg feasibilityId =
 selection : SelectionSet Data.Feasibility.Feasibility Admin.Object.Feasibility
 selection =
     SelectionSet.succeed
-        (\(Id feasibilityId) file otherFile candidacy decision maybeDecisionComment decisionSentAt ->
+        (\(Id feasibilityId) file documentaryProofFile candidacy decision maybeDecisionComment decisionSentAt ->
             Data.Feasibility.Feasibility feasibilityId
                 file
-                otherFile
+                documentaryProofFile
                 candidacy.candidate
                 candidacy.organism
                 candidacy.certificationLabel
@@ -66,7 +66,7 @@ selection =
         )
         |> with Admin.Object.Feasibility.id
         |> with (Admin.Object.Feasibility.feasibilityFile File.selection)
-        |> with (Admin.Object.Feasibility.otherFile File.selection)
+        |> with (Admin.Object.Feasibility.documentaryProofFile File.selection)
         |> with (Admin.Object.Feasibility.candidacy candidacySelection)
         |> with Admin.Object.Feasibility.decision
         |> with Admin.Object.Feasibility.decisionComment

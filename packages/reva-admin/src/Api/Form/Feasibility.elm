@@ -30,9 +30,9 @@ submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
             Data.Form.getFiles keys.feasibilityFile formData
                 |> List.map (\( _, file ) -> ( keys.feasibilityFile, file ))
 
-        otherFiles =
-            Data.Form.getFiles keys.otherFile formData
-                |> List.map (\( _, file ) -> ( keys.otherFile, file ))
+        documentaryProofFiles =
+            Data.Form.getFiles keys.documentaryProofFile formData
+                |> List.map (\( _, file ) -> ( keys.documentaryProofFile, file ))
 
         withFiles files body =
             files
@@ -57,12 +57,12 @@ submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
             Task.succeed (RemoteData.Failure [ msg ])
                 |> Task.perform toMsg
     in
-    case ( feasibilityFiles, otherFiles ) of
+    case ( feasibilityFiles, documentaryProofFiles ) of
         ( [], _ ) ->
             error "Veuillez choisir un dossier de faisabilité."
 
-        ( [ feasibilityFile ], [ otherFile ] ) ->
-            post [ feasibilityFile, otherFile ]
+        ( [ feasibilityFile ], [ documentaryProofFile ] ) ->
+            post [ feasibilityFile, documentaryProofFile ]
 
         ( [ feasibilityFile ], _ ) ->
             post [ feasibilityFile ]

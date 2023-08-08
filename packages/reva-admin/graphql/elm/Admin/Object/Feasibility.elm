@@ -37,11 +37,11 @@ feasibilityFile object____ =
     Object.selectionForCompositeField "feasibilityFile" [] object____ Basics.identity
 
 
-otherFile :
+documentaryProofFile :
     SelectionSet decodesTo Admin.Object.File
     -> SelectionSet (Maybe decodesTo) Admin.Object.Feasibility
-otherFile object____ =
-    Object.selectionForCompositeField "otherFile" [] object____ (Basics.identity >> Decode.nullable)
+documentaryProofFile object____ =
+    Object.selectionForCompositeField "documentaryProofFile" [] object____ (Basics.identity >> Decode.nullable)
 
 
 candidacy :

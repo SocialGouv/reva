@@ -15,7 +15,7 @@ type Feasibility {
   id: ID!
   feasibilityFileSentAt: Timestamp!
   feasibilityFile: File!
-  otherFile: File
+  documentaryProofFile: File
   candidacy: Candidacy!
   decision: FeasibilityDecision!
   decisionComment: String

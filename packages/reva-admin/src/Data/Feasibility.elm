@@ -22,7 +22,7 @@ type Decision
 type alias Feasibility =
     { id : String
     , file : File
-    , otherFile : Maybe File
+    , documentaryProofFile : Maybe File
     , candidate : Maybe Candidate
     , organism : Maybe Organism
     , certificationLabel : Maybe String

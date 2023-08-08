@@ -111,7 +111,7 @@ viewFeasibilityPanel context model =
                         feasibility.certificationLabel
                         feasibility.candidate
                     , viewFileLink context feasibility.file
-                    , feasibility.otherFile
+                    , feasibility.documentaryProofFile
                         |> Maybe.map (viewFileLink context)
                         |> Maybe.withDefault (text "")
                     , Maybe.map viewOrganism feasibility.organism
