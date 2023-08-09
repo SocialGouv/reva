@@ -7,6 +7,8 @@ import { getAccountFromKeycloakId } from "../../database/postgres/accounts";
 import * as candidacyDb from "../../database/postgres/candidacies";
 import { getCandidacyFromId } from "../../database/postgres/candidacies";
 import { prismaClient } from "../../database/postgres/client";
+import { logger } from "../../logger";
+import { sendNewFeasibilitySubmittedEmail } from "./feasibility.mails";
 
 export interface UploadedFile {
   data: Buffer;
@@ -32,7 +34,7 @@ export const getCertificationAuthority = ({
       })
     : null;
 
-export const createFeasibility = ({
+export const createFeasibility = async ({
   candidacyId,
   feasibilityFile,
   documentaryProofFile,
@@ -42,8 +44,8 @@ export const createFeasibility = ({
   feasibilityFile: UploadedFile;
   documentaryProofFile?: UploadedFile;
   certificateOfAttendanceFile?: UploadedFile;
-}) =>
-  prismaClient.feasibility.create({
+}) => {
+  const feasibility = await prismaClient.feasibility.create({
     data: {
       candidacy: { connect: { id: candidacyId } },
       feasibilityFileSentAt: new Date(),
@@ -74,6 +76,44 @@ export const createFeasibility = ({
         : undefined,
     },
   });
+
+  const candidacy = await prismaClient.candidacy.findFirst({
+    where: { id: candidacyId },
+    include: {
+      department: true,
+      certificationsAndRegions: {
+        where: { isActive: true },
+        include: { certification: true },
+      },
+    },
+  });
+
+  if (
+    candidacy?.certificationsAndRegions?.[0]?.certificationId &&
+    candidacy?.departmentId
+  ) {
+    const certificationAuthority = await getCertificationAuthority({
+      certificationId:
+        candidacy?.certificationsAndRegions?.[0]?.certificationId,
+      departmentId: candidacy?.departmentId,
+    });
+    if (!certificationAuthority) {
+      logger.error(
+        `Aucun certificateur trouvé pour la certification ${candidacy?.certificationsAndRegions?.[0]?.certificationId} et le departement : ${candidacy?.departmentId}`
+      );
+    }
+    if (certificationAuthority?.contactEmail) {
+      const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
+
+      sendNewFeasibilitySubmittedEmail({
+        email: certificationAuthority?.contactEmail,
+        feasibilityUrl: `${baseUrl}/admin/feasibilities/${feasibility.id}`,
+      });
+    }
+  }
+
+  return feasibility;
+};
 
 export const getFeasibilityByCandidacyid = ({
   candidacyId,
