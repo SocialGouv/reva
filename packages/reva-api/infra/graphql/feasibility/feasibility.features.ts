@@ -8,7 +8,11 @@ import * as candidacyDb from "../../database/postgres/candidacies";
 import { getCandidacyFromId } from "../../database/postgres/candidacies";
 import { prismaClient } from "../../database/postgres/client";
 import { logger } from "../../logger";
-import { sendNewFeasibilitySubmittedEmail } from "./feasibility.mails";
+import {
+  sendFeasibilityRejectedCandidateEmail,
+  sendFeasibilityValidatedCandidateEmail,
+  sendNewFeasibilitySubmittedEmail,
+} from "./feasibility.mails";
 
 export interface UploadedFile {
   data: Buffer;
@@ -333,14 +337,21 @@ export const validateFeasibility = async ({
   hasRole: (role: string) => boolean;
 }) => {
   if (hasRole("admin") || hasRole("manage_feasibility")) {
-    return await prismaClient.feasibility.update({
+    const feasibility = await prismaClient.feasibility.update({
       where: { id: feasibilityId },
       data: {
         decision: "ADMISSIBLE",
         decisionComment: comment,
         decisionSentAt: new Date(),
       },
+      select: {
+        candidacy: true,
+      },
     });
+    sendFeasibilityValidatedCandidateEmail(
+      feasibility.candidacy.email as string
+    );
+    return feasibility;
   } else {
     throw new Error("Utilisateur non autorisé");
   }
@@ -356,14 +367,21 @@ export const rejectFeasibility = async ({
   hasRole: (role: string) => boolean;
 }) => {
   if (hasRole("admin") || hasRole("manage_feasibility")) {
-    return await prismaClient.feasibility.update({
+    const feasibility = await prismaClient.feasibility.update({
       where: { id: feasibilityId },
       data: {
         decision: "REJECTED",
         decisionComment: comment,
         decisionSentAt: new Date(),
       },
+      select: {
+        candidacy: true,
+      },
     });
+    sendFeasibilityRejectedCandidateEmail(
+      feasibility.candidacy.email as string
+    );
+    return feasibility;
   } else {
     throw new Error("Utilisateur non autorisé");
   }

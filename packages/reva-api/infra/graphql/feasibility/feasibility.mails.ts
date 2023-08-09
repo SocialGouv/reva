@@ -11,8 +11,8 @@ const template = ({
 }: {
   headline: string;
   content: string;
-  labelCTA: string;
-  url: string;
+  labelCTA?: string;
+  url?: string;
 }) => `
   <mjml>
     <mj-head>
@@ -36,9 +36,14 @@ const template = ({
           <mj-text font-size="14px" font-family="helvetica" >
             ${content}
           </mj-text>
+          ${
+            labelCTA &&
+            `
           <mj-button css-class="cta" border-radius="4px" font-family="Helvetica" background-color="#1E293B" color="white" href="${url}">
             ${labelCTA}
            </mj-button>
+          `
+          }
         </mj-column>
       </mj-section>
     </mj-body>
@@ -81,5 +86,77 @@ export const sendNewFeasibilitySubmittedEmail = async ({
     to: { email },
     htmlContent: htmlContent.html,
     subject: "Un nouveau dossier de faisabilité est en attente",
+  });
+};
+
+export const sendFeasibilityValidatedCandidateEmail = async (email: string) => {
+  const htmlContent = mjml2html(
+    template({
+      headline: `<p>Bonjour,</p><p>`,
+      content: `La recevabilité de votre dossier a été prononcée.</p>
+          <pre>
+____ ____ ____ _  _   /
+|__/ |___ |    |  |  / 
+|  \\ |___ |___ |__| .  
+                       
+          </pre>
+          <p>L’équipe France VAE.</p>
+        `,
+    })
+  );
+
+  if (htmlContent.errors.length > 0) {
+    const errorMessage = htmlContent.errors
+      .map((e) => e.formattedMessage)
+      .join("\n");
+    logger.error(errorMessage);
+    throw new Error(errorMessage);
+  }
+
+  if (process.env.NODE_ENV !== "production") {
+    logger.info("======= EMAIL CONTENT =======");
+    logger.info(htmlContent.html);
+    logger.info("=========================");
+  }
+  return sendGenericEmail({
+    to: { email },
+    htmlContent: htmlContent.html,
+    subject: "Décision concernant votre projet de VAE",
+  });
+};
+
+export const sendFeasibilityRejectedCandidateEmail = async (email: string) => {
+  const htmlContent = mjml2html(
+    template({
+      headline: `<p>Bonjour,</p><p>`,
+      content: `La recevabilité de votre dossier a été prononcée.</p>
+          <pre>
+___ ____ _   _    ____ ____ ____ _ _  _   /  /
+ |  |__/  \\_/     |__| | __ |__| | |\\ |  /  / 
+ |  |  \\   |      |  | |__] |  | | | \\| .  .  
+                                              
+          </pre>
+          <p>L’équipe France VAE.</p>
+        `,
+    })
+  );
+
+  if (htmlContent.errors.length > 0) {
+    const errorMessage = htmlContent.errors
+      .map((e) => e.formattedMessage)
+      .join("\n");
+    logger.error(errorMessage);
+    throw new Error(errorMessage);
+  }
+
+  if (process.env.NODE_ENV !== "production") {
+    logger.info("======= EMAIL CONTENT =======");
+    logger.info(htmlContent.html);
+    logger.info("=========================");
+  }
+  return sendGenericEmail({
+    to: { email },
+    htmlContent: htmlContent.html,
+    subject: "Décision concernant votre projet de VAE",
   });
 };
