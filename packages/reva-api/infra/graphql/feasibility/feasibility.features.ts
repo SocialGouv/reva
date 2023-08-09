@@ -344,13 +344,20 @@ export const validateFeasibility = async ({
         decisionComment: comment,
         decisionSentAt: new Date(),
       },
-      select: {
-        candidacy: true,
+      include: {
+        candidacy: {
+          include: {
+            certificationsAndRegions: { include: { certification: true } },
+          },
+        },
       },
     });
-    sendFeasibilityValidatedCandidateEmail(
-      feasibility.candidacy.email as string
-    );
+    sendFeasibilityValidatedCandidateEmail({
+      email: feasibility.candidacy.email as string,
+      certifName:
+        feasibility.candidacy.certificationsAndRegions[0].certification.label,
+      comment,
+    });
     return feasibility;
   } else {
     throw new Error("Utilisateur non autorisé");
@@ -378,9 +385,10 @@ export const rejectFeasibility = async ({
         candidacy: true,
       },
     });
-    sendFeasibilityRejectedCandidateEmail(
-      feasibility.candidacy.email as string
-    );
+    sendFeasibilityRejectedCandidateEmail({
+      email: feasibility.candidacy.email as string,
+      comment,
+    });
     return feasibility;
   } else {
     throw new Error("Utilisateur non autorisé");

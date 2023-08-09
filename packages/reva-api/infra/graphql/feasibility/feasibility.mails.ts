@@ -1,6 +1,7 @@
 import mjml2html from "mjml";
 
 import { sendGenericEmail } from "../../email";
+import { formatFreeText } from "../../email/utils";
 import { logger } from "../../logger";
 
 const template = ({
@@ -9,7 +10,7 @@ const template = ({
   labelCTA,
   url,
 }: {
-  headline: string;
+  headline?: string;
   content: string;
   labelCTA?: string;
   url?: string;
@@ -32,7 +33,12 @@ const template = ({
       </mj-section>
       <mj-section>
         <mj-column>
+          ${
+            headline &&
+            `
           <mj-text font-size="20px" font-weight="bold" font-family="helvetica">${headline}</mj-text>
+          `
+          }
           <mj-text font-size="14px" font-family="helvetica" >
             ${content}
           </mj-text>
@@ -89,19 +95,32 @@ export const sendNewFeasibilitySubmittedEmail = async ({
   });
 };
 
-export const sendFeasibilityValidatedCandidateEmail = async (email: string) => {
+export const sendFeasibilityValidatedCandidateEmail = async ({
+  email,
+  comment,
+  certifName,
+}: {
+  email: string;
+  comment?: string;
+  certifName: string;
+}) => {
+  const commentInfo = comment
+    ? `
+        <br/>
+        <p><strong>Pour votre information, voici les remarques faites par le certificateur :</strong></p>
+        <p><em>${formatFreeText(comment)}</em></p>
+        `
+    : "";
   const htmlContent = mjml2html(
     template({
-      headline: `<p>Bonjour,</p><p>`,
-      content: `La recevabilité de votre dossier a été prononcée.</p>
-          <pre>
-____ ____ ____ _  _   /
-|__/ |___ |    |  |  / 
-|  \\ |___ |___ |__| .  
-                       
-          </pre>
-          <p>L’équipe France VAE.</p>
-        `,
+      content: `<p>Bonjour,</p>
+      <br/>
+      <p>Vous trouverez ci-dessous la décision de recevabilité concernant votre dossier de faisabilité pour la certification <em>${certifName}</em>.</p>
+      <p>Félicitations, votre dossier a été jugé recevable par le certificateur et vous pouvez désormais démarrer votre parcours VAE. Nous vous invitons à prendre contact avec votre architecte de parcours afin d’organiser la suite.</p>
+      ${commentInfo}
+      <br/>
+      L’équipe France VAE
+    `,
     })
   );
 
@@ -121,23 +140,35 @@ ____ ____ ____ _  _   /
   return sendGenericEmail({
     to: { email },
     htmlContent: htmlContent.html,
-    subject: "Décision concernant votre projet de VAE",
+    subject: "Votre dossier de faisabilité VAE a été examiné",
   });
 };
 
-export const sendFeasibilityRejectedCandidateEmail = async (email: string) => {
+export const sendFeasibilityRejectedCandidateEmail = async ({
+  email,
+  comment,
+}: {
+  email: string;
+  comment?: string;
+}) => {
+  const commentInfo = comment
+    ? `
+        <br/>
+        <p><strong>Voici les remarques faites par le certificateur</strong> (ces préconisations pourront être reprises avec votre architecte accompagnateur de parcours) :</p>
+        <p><em>${formatFreeText(comment)}</em></p>
+        `
+    : "";
+
   const htmlContent = mjml2html(
     template({
-      headline: `<p>Bonjour,</p><p>`,
-      content: `La recevabilité de votre dossier a été prononcée.</p>
-          <pre>
-___ ____ _   _    ____ ____ ____ _ _  _   /  /
- |  |__/  \\_/     |__| | __ |__| | |\\ |  /  / 
- |  |  \\   |      |  | |__] |  | | | \\| .  .  
-                                              
-          </pre>
-          <p>L’équipe France VAE.</p>
-        `,
+      content: `<p>Bonjour,</p>
+        <br/>
+        <p>Vous trouverez ci-dessous la décision concernent votre dossier de faisabilité.</p>
+        <p>Malheureusement, votre dossier a été jugé non recevable par le certificateur. Nous vous invitons à prendre contact avec votre architecte de parcours pour comprendre cette décision et échanger ensemble sur les suites à donner à votre parcours.</p>
+        ${commentInfo}
+        <br/>
+        <p>L’équipe France VAE</p>
+      `,
     })
   );
 
@@ -157,6 +188,6 @@ ___ ____ _   _    ____ ____ ____ _ _  _   /  /
   return sendGenericEmail({
     to: { email },
     htmlContent: htmlContent.html,
-    subject: "Décision concernant votre projet de VAE",
+    subject: "Votre dossier de faisabilité",
   });
 };
