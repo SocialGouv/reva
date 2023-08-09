@@ -13,9 +13,18 @@ import { insertReorientationReasonsIfNone } from "./referentials/table-reorienta
 import { upsertTrainings } from "./referentials/table-trainings";
 import { insertVulnerabilityIndicatorsIfNone } from "./referentials/table-vulnerability-indicators";
 
-export const prisma = new PrismaClient();
-
 async function main() {
+  const seedRestrictedToContainer = process.env.RESTRICT_SEED_TO_CONTAINER;
+  const containerName = process.env.CONTAINER;
+  if (
+    !seedRestrictedToContainer ||
+    seedRestrictedToContainer === containerName
+  ) {
+    await executeSeed();
+  }
+}
+
+const executeSeed = async () => {
   await upsertGoals(prisma);
   await upsertRegions(prisma);
   await insertDepartmentsIfNone(prisma);
@@ -71,7 +80,9 @@ async function main() {
   await seedCertifications(prisma);
 
   await seedCertificationAuthorities(prisma);
-}
+};
+
+export const prisma = new PrismaClient();
 
 main()
   .catch((e) => {
