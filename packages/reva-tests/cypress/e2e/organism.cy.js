@@ -39,6 +39,10 @@ context("Candidacy with department certification selected", () => {
         "have.text",
         "email@exemple.com"
       );
+      cy.get('[data-test="project-organisms-organism-phone"]').should(
+        "have.text",
+        "0111111111"
+      );
     });
 
     cy.get('[data-test="project-organisms-organism-o2"]').within(() => {
@@ -49,6 +53,10 @@ context("Candidacy with department certification selected", () => {
       cy.get('[data-test="project-organisms-organism-email"]').should(
         "have.text",
         "email2@exemple.com"
+      );
+      cy.get('[data-test="project-organisms-organism-phone"]').should(
+        "have.text",
+        "0222222222"
       );
     });
   });
@@ -86,6 +94,10 @@ context("Candidacy with department certification selected", () => {
     cy.get('[data-test="project-home-organism-email"]').should(
       "have.text",
       "email@exemple.com"
+    );
+    cy.get('[data-test="project-home-organism-phone"]').should(
+      "have.text",
+      "0111111111"
     );
   });
 });

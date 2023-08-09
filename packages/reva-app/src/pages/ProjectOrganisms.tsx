@@ -64,8 +64,18 @@ const Organisms: FC<PropsOrganisms> = ({
                   as="address"
                   className="not-italic leading-relaxed"
                 >
-                  <p data-test="project-organisms-organism-email">
-                    {organism.contactAdministrativeEmail}
+                  <p>
+                    <span data-test="project-organisms-organism-email">
+                      {organism.contactAdministrativeEmail}
+                    </span>
+                    {organism.contactAdministrativePhone && (
+                      <>
+                        &nbsp; - &nbsp;
+                        <span data-test="project-organisms-organism-phone">
+                          {organism.contactAdministrativePhone}
+                        </span>
+                      </>
+                    )}
                   </p>
                 </RadioGroup.Description>
               </>

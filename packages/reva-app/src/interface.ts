@@ -65,6 +65,7 @@ export interface Department {
 export interface Organism {
   id: string;
   contactAdministrativeEmail: string;
+  contactAdministrativePhone: string | null;
   label: string;
 }
 

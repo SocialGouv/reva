@@ -7,7 +7,8 @@
         "address": "1 rue de l'exemple",
         "zip": "75000",
         "city": "Paris",
-        "contactAdministrativeEmail": "email@exemple.com"
+        "contactAdministrativeEmail": "email@exemple.com",
+        "contactAdministrativePhone": "0111111111"
       },
       {
         "id": "o2",
@@ -15,7 +16,8 @@
         "address": "2 rue de l'exemple",
         "zip": "44000",
         "city": "Nantes",
-        "contactAdministrativeEmail": "email2@exemple.com"
+        "contactAdministrativeEmail": "email2@exemple.com",
+        "contactAdministrativePhone": "0222222222"
       }
     ]
   }
