@@ -396,19 +396,7 @@ export const canDownloadFeasibilityFiles = async ({
   candidacyId: string;
   keycloakId: string;
 }) => {
-  const userCanManageCandidacy = (
-    await canManageCandidacy(
-      {
-        hasRole,
-        getAccountFromKeycloakId,
-        getCandidacyFromId,
-      },
-      {
-        candidacyId,
-        keycloakId,
-      }
-    )
-  ).orDefault(false);
+  const userCanManageCandidacy = canUserManageCandidacy;
 
   return (
     userCanManageCandidacy ||
@@ -457,4 +445,28 @@ export const canManageFeasibility = async ({
   }
 
   return false;
+};
+
+export const canUserManageCandidacy = async ({
+  hasRole,
+  candidacyId,
+  keycloakId,
+}: {
+  hasRole(role: string): boolean;
+  candidacyId: string;
+  keycloakId: string;
+}) => {
+  return (
+    await canManageCandidacy(
+      {
+        hasRole,
+        getAccountFromKeycloakId,
+        getCandidacyFromId,
+      },
+      {
+        candidacyId,
+        keycloakId,
+      }
+    )
+  ).orDefault(false);
 };

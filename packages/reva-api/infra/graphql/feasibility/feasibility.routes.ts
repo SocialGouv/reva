@@ -5,7 +5,7 @@ import { logger } from "../../logger";
 import {
   UploadedFile,
   canDownloadFeasibilityFiles,
-  canManageFeasibility,
+  canUserManageCandidacy,
   createFeasibility,
   getFeasibilityByCandidacyid,
   getFileWithContent,
@@ -104,7 +104,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
       },
     },
     handler: async (request, reply) => {
-      const authorized = await canManageFeasibility({
+      const authorized = await canUserManageCandidacy({
         hasRole: request.auth.hasRole,
         candidacyId: request.body.candidacyId,
         keycloakId: request.auth?.userInfo?.sub,
