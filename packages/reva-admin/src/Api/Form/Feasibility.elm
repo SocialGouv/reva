@@ -68,6 +68,12 @@ submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
         ( [ feasibilityFile ], [ documentaryProofFile ], [ certificateOfAttendanceFile ] ) ->
             post [ feasibilityFile, documentaryProofFile, certificateOfAttendanceFile ]
 
+        ( [ feasibilityFile ], [ documentaryProofFile ], [] ) ->
+            post [ feasibilityFile, documentaryProofFile ]
+
+        ( [ feasibilityFile ], [], [certificateOfAttendanceFile] ) ->
+            post [ feasibilityFile, certificateOfAttendanceFile ]
+
         ( [ feasibilityFile ], _, _ ) ->
             post [ feasibilityFile ]
 
