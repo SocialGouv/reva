@@ -903,21 +903,21 @@ model FundingRequestUnifvae {
   candidateLastname           String                               @default("") @map("candidate_lastname")
   candidateGender             Gender                               @default(undisclosed) @map("candidate_gender")
   companionId                 String?                              @map("companion_id") @db.Uuid
-  individualHourCount         Int                                  @map("individual_hour_count")
+  individualHourCount         Decimal                              @map("individual_hour_count") @db.Decimal(5, 1)
   individualCost              Decimal                              @map("individual_cost") @db.Decimal(10, 2)
-  collectiveHourCount         Int                                  @map("collective_hour_count")
+  collectiveHourCount         Decimal                              @map("collective_hour_count") @db.Decimal(5, 1)
   collectiveCost              Decimal                              @map("collective_cost") @db.Decimal(10, 2)
   basicSkills                 BasicSkillOnFundingRequestsUnifvae[]
-  basicSkillsHourCount        Int                                  @map("basic_skills_hour_count")
+  basicSkillsHourCount        Decimal                              @map("basic_skills_hour_count") @db.Decimal(5, 1)
   basicSkillsCost             Decimal                              @map("basic_skills_cost") @db.Decimal(10, 2)
   mandatoryTrainings          TrainingOnFundingRequestsUnifvae[]
-  mandatoryTrainingsHourCount Int                                  @map("mandatory_training_hour_count")
+  mandatoryTrainingsHourCount Decimal                              @map("mandatory_training_hour_count") @db.Decimal(5, 1)
   mandatoryTrainingsCost      Decimal                              @map("mandatory_training_cost") @db.Decimal(10, 2)
   certificateSkills           String                               @map("certificate_skills")
-  certificateSkillsHourCount  Int                                  @map("certificate_skills_hour_count")
+  certificateSkillsHourCount  Decimal                              @map("certificate_skills_hour_count") @db.Decimal(5, 1)
   certificateSkillsCost       Decimal                              @map("certificate_skills_cost") @db.Decimal(10, 2)
   otherTraining               String                               @map("other_training")
-  otherTrainingHourCount      Int                                  @default(0) @map("other_training_hour_count")
+  otherTrainingHourCount      Decimal                              @default(0) @map("other_training_hour_count") @db.Decimal(5, 1)
   otherTrainingCost           Decimal                              @default(0) @map("other_training_cost") @db.Decimal(10, 2)
 
   @@map("funding_request_unifvae")

@@ -7,21 +7,21 @@ type FundingRequestUnifvae {
   candidateGender: Gender!
   isPartialCertification: Boolean!
   companion: Organism
-  individualHourCount: Int!
+  individualHourCount: Decimal!
   individualCost: Decimal!
-  collectiveHourCount: Int!
+  collectiveHourCount: Decimal!
   collectiveCost: Decimal!
   basicSkills: [BasicSkill!]!
-  basicSkillsHourCount: Int!
+  basicSkillsHourCount: Decimal!
   basicSkillsCost: Decimal!
   mandatoryTrainings: [Training!]!
-  mandatoryTrainingsHourCount: Int!
+  mandatoryTrainingsHourCount: Decimal!
   mandatoryTrainingsCost: Decimal!
   certificateSkills: String!
-  certificateSkillsHourCount: Int!
+  certificateSkillsHourCount: Decimal!
   certificateSkillsCost: Decimal!
   otherTraining: String!
-  otherTrainingHourCount: Int!
+  otherTrainingHourCount: Decimal!
   otherTrainingCost: Decimal!
 }
 
@@ -33,17 +33,17 @@ input FundingRequestUnifvaeInput {
   candidateLastname: String!
   candidateGender: Gender!
   isPartialCertification: Boolean!
-  individualHourCount: Int!
+  individualHourCount: Decimal!
   individualCost: Decimal!
-  collectiveHourCount: Int!
+  collectiveHourCount: Decimal!
   collectiveCost: Decimal!
-  basicSkillsHourCount: Int!
+  basicSkillsHourCount: Decimal!
   basicSkillsCost: Decimal!
-  mandatoryTrainingsHourCount: Int!
+  mandatoryTrainingsHourCount: Decimal!
   mandatoryTrainingsCost: Decimal!
-  certificateSkillsHourCount: Int!
+  certificateSkillsHourCount: Decimal!
   certificateSkillsCost: Decimal!
-  otherTrainingHourCount: Int!
+  otherTrainingHourCount: Decimal!
   otherTrainingCost: Decimal!
 }
 
