@@ -193,7 +193,15 @@ view context model =
                 FundingRequest ->
                     case model.selected of
                         Success candidacy ->
-                            case candidacy.financeModule of
+                            let
+                                financeModule =
+                                    if context.franceVaeFinanceModuleFeatureEnabled then
+                                        candidacy.financeModule
+
+                                    else
+                                        FinanceModule.Unireva
+                            in
+                            case financeModule of
                                 FinanceModule.Unireva ->
                                     viewArticle "funding"
                                         [ div

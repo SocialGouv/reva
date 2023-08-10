@@ -25,7 +25,8 @@ const app = Elm.Main.init({
       },
       restApiEndpoint: import.meta.env.VITE_API_REST || "http://localhost:8080/api",
 
-      feasibilityFeatureEnabled: import.meta.env.VITE_FEASIBILITY_FEATURE_ENABLED=="true"
+      feasibilityFeatureEnabled: import.meta.env.VITE_FEASIBILITY_FEATURE_ENABLED=="true",
+      franceVaeFinanceModuleFeatureEnabled: import.meta.env.VITE_FRANCE_VAE_FINANCE_MODULE_FEATURE_ENABLED=="true",
    },
 });
 
