@@ -1,5 +1,10 @@
 type FundingRequestUnifvae {
   id: UUID!
+  candidateFirstname: String!
+  candidateSecondname: String
+  candidateThirdname: String
+  candidateLastname: String!
+  candidateGender: Gender!
   companion: Organism
   individualHourCount: Int!
   individualCost: Decimal!
@@ -21,6 +26,11 @@ type FundingRequestUnifvae {
 
 input FundingRequestUnifvaeInput {
   companionId: UUID
+  candidateFirstname: String!
+  candidateSecondname: String
+  candidateThirdname: String
+  candidateLastname: String!
+  candidateGender: Gender!
   individualHourCount: Int!
   individualCost: Decimal!
   collectiveHourCount: Int!

@@ -15,6 +15,10 @@ import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 import { prismaClient } from "../../../database/postgres/client";
 
 const fundingRequestSample = {
+  candidateFirstname: "Jojo",
+  candidateSecondname: "Lapin",
+  candidateLastname: "De Garenne",
+  candidateGender: "man",
   basicSkillsCost: 123,
   basicSkillsHourCount: 213,
   certificateSkillsCost: 213,
@@ -100,7 +104,7 @@ test("should create fundingRequestUnifvae", async () => {
       requestType: "mutation",
       endpoint: "candidacy_createFundingRequestUnifvae",
       returnFields:
-        "{id, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount }",
+        "{id,candidateFirstname, candidateSecondname, candidateThirdname, candidateLastname, candidateGender, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount }",
       arguments: {
         candidacyId: candidacyUnifvae.id,
         fundingRequest: {
@@ -108,6 +112,7 @@ test("should create fundingRequestUnifvae", async () => {
           companionId: organism.id,
         },
       },
+      enumFields: ["candidateGender"],
     },
   });
   expect(resp.statusCode).toBe(200);
@@ -139,7 +144,7 @@ test("Should fail when candidacy is not bound to UnifVae finance module", async 
       requestType: "mutation",
       endpoint: "candidacy_createFundingRequestUnifvae",
       returnFields:
-        "{id, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount }",
+        "{id,candidateFirstname, candidateSecondname, candidateThirdname, candidateLastname, candidateGender, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount }",
       arguments: {
         candidacyId: candidacyUnireva.id,
         fundingRequest: {
@@ -147,6 +152,7 @@ test("Should fail when candidacy is not bound to UnifVae finance module", async 
           companionId: organism.id,
         },
       },
+      enumFields: ["candidateGender"],
     },
   });
   expect(resp.statusCode).toBe(200);
