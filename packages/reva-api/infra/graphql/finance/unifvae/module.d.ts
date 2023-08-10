@@ -1,3 +1,17 @@
+interface FundingRequestUnifvaeControlledFields {
+  individualHourCount: number;
+  individualCost: number;
+  collectiveHourCount: number;
+  collectiveCost: number;
+  basicSkillsHourCount: number;
+  basicSkillsCost: number;
+  mandatoryTrainingsHourCount: number;
+  mandatoryTrainingsCost: number;
+  certificateSkillsHourCount: number;
+  certificateSkillsCost: number;
+  otherTrainingHourCount: number;
+  otherTrainingCost: number;
+}
 interface FundingRequestUnifvaeInput {
   candidacyId: string;
   fundingRequest: {
@@ -8,17 +22,10 @@ interface FundingRequestUnifvaeInput {
     candidateFirstname: string;
     candidateFirstname: string;
     candidateGender: "man" | "woman" | "undisclosed";
-    individualHourCount: number;
-    individualCost: number;
-    collectiveHourCount: number;
-    collectiveCost: number;
-    basicSkillsHourCount: number;
-    basicSkillsCost: number;
-    mandatoryTrainingsHourCount: number;
-    mandatoryTrainingsCost: number;
-    certificateSkillsHourCount: number;
-    certificateSkillsCost: number;
-    otherTrainingHourCount: number;
-    otherTrainingCost: number;
-  };
+  } & FundingRequestUnifvaeControlledFields;
+}
+
+interface BusinessRulesValidationError {
+  fieldName: keyof FundingRequestUnifvaeControlledFields;
+  message: string;
 }
