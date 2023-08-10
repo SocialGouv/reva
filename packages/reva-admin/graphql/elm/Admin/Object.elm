@@ -129,6 +129,10 @@ type FundingRequestInformations
     = FundingRequestInformations
 
 
+type FundingRequestUnifvae
+    = FundingRequestUnifvae
+
+
 type Goal
     = Goal
 

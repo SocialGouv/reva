@@ -33,15 +33,14 @@ module Data.Candidacy exposing
 import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Admin.Enum.Duration exposing (Duration)
+import Admin.Enum.FinanceModule exposing (FinanceModule)
 import Data.Candidate exposing (Candidate)
 import Data.Certification exposing (Certification, CertificationSummary)
 import Data.CertificationAuthority exposing (CertificationAuthority)
 import Data.Feasibility exposing (Feasibility)
-import Data.File exposing (File)
 import Data.Organism exposing (Organism)
 import Data.Pagination exposing (PaginationInfo)
 import Data.Referential exposing (Department, ReorientationReason)
-import Data.Scalar
 import Time
 
 
@@ -95,6 +94,7 @@ type alias Candidacy =
     , reorientationReason : Maybe ReorientationReason
     , certificationAuthority : Maybe CertificationAuthority
     , feasibility : Maybe Feasibility
+    , financeModule : FinanceModule
     }
 
 

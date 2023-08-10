@@ -38,6 +38,11 @@ enum CandidacyStatusStep {
   CERTIFICATION
 }
 
+enum FinanceModule {
+  unireva
+  unifvae
+}
+
 # QUERY
 
 type Candidacy {
@@ -77,6 +82,7 @@ type Candidacy {
   admissibility: Admissibility!
   reorientationReason: ReorientationReason
   examInfo: ExamInfo!
+  financeModule: FinanceModule!
 }
 
 type CandidacyDropOut {

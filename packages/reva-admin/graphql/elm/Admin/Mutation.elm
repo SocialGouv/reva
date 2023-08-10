@@ -448,6 +448,20 @@ rejectFeasibility fillInOptionals____ requiredArgs____ object____ =
     Object.selectionForCompositeField "rejectFeasibility" (optionalArgs____ ++ [ Argument.required "feasibilityId" requiredArgs____.feasibilityId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ]) object____ (Basics.identity >> Decode.nullable)
 
 
+type alias CandidacyCreateFundingRequestUnifvaeRequiredArguments =
+    { candidacyId : Data.Scalar.Uuid
+    , fundingRequest : Admin.InputObject.FundingRequestUnifvaeInput
+    }
+
+
+candidacy_createFundingRequestUnifvae :
+    CandidacyCreateFundingRequestUnifvaeRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.FundingRequestUnifvae
+    -> SelectionSet (Maybe decodesTo) RootMutation
+candidacy_createFundingRequestUnifvae requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_createFundingRequestUnifvae" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "fundingRequest" requiredArgs____.fundingRequest Admin.InputObject.encodeFundingRequestUnifvaeInput ] object____ (Basics.identity >> Decode.nullable)
+
+
 type alias CandidacyCreateOrUpdatePaymentRequestRequiredArguments =
     { candidacyId : Data.Scalar.Uuid
     , paymentRequest : Admin.InputObject.PaymentRequestInput

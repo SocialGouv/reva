@@ -5,6 +5,7 @@
 module Admin.Object.Candidacy exposing (..)
 
 import Admin.Enum.CandidateTypology
+import Admin.Enum.FinanceModule
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -226,6 +227,11 @@ examInfo :
     -> SelectionSet decodesTo Admin.Object.Candidacy
 examInfo object____ =
     Object.selectionForCompositeField "examInfo" [] object____ Basics.identity
+
+
+financeModule : SelectionSet Admin.Enum.FinanceModule.FinanceModule Admin.Object.Candidacy
+financeModule =
+    Object.selectionForField "Enum.FinanceModule.FinanceModule" "financeModule" [] Admin.Enum.FinanceModule.decoder
 
 
 certificationAuthority :

@@ -50,6 +50,11 @@ contactAdministrativeEmail =
     Object.selectionForField "String" "contactAdministrativeEmail" [] Decode.string
 
 
+contactAdministrativePhone : SelectionSet (Maybe String) Admin.Object.Organism
+contactAdministrativePhone =
+    Object.selectionForField "(Maybe String)" "contactAdministrativePhone" [] (Decode.string |> Decode.nullable)
+
+
 typology : SelectionSet Admin.Enum.OrganismTypology.OrganismTypology Admin.Object.Organism
 typology =
     Object.selectionForField "Enum.OrganismTypology.OrganismTypology" "typology" [] Admin.Enum.OrganismTypology.decoder

@@ -146,6 +146,7 @@ selection id =
                 |> with (Admin.Object.Candidacy.reorientationReason reorientationReasonSelection)
                 |> with (Admin.Object.Candidacy.certificationAuthority certificationAuthoritySelection)
                 |> with (Admin.Object.Candidacy.feasibility Api.Feasibility.selection)
+                |> with Admin.Object.Candidacy.financeModule
     in
     SelectionSet.succeed
         (\maybeCandidacy companions ->
