@@ -6,6 +6,7 @@ import { CandidacyBusinessEvent } from "../../../../domain/types/candidacy";
 import { isAdminOrCandidacyCompanion } from "../../security/presets";
 import { createFundingRequestUnifvae } from "./finance.unifvae.features";
 import { logFundingRequestUnifvaeEvent } from "./logFundingRequestUnifvaeEvent";
+import applyBusinessValidationRules from "./rules";
 
 const unsafeResolvers = {
   Mutation: {
@@ -14,6 +15,14 @@ const unsafeResolvers = {
       payload: FundingRequestUnifvaeInput,
       context: GraphqlContext
     ) => {
+      const validationErrors = applyBusinessValidationRules(payload);
+      if (validationErrors.length) {
+        return new mercurius.ErrorWithProps("Validation error", {
+          businessErrors: validationErrors.map(
+            ({ fieldName, message }) => `${fieldName}: ${message}`
+          ),
+        });
+      }
       try {
         const fundreq = await createFundingRequestUnifvae(payload);
         logFundingRequestUnifvaeEvent({
