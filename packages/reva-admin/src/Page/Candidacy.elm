@@ -8,8 +8,9 @@ module Page.Candidacy exposing
     , view
     )
 
-import Accessibility exposing (h1, h6)
+import Accessibility exposing (h1)
 import Admin.Enum.CandidacyStatusStep as Step
+import Admin.Enum.FinanceModule as FinanceModule
 import Api.Candidacy
 import Api.Form.Admissibility
 import Api.Form.Appointment
@@ -190,17 +191,36 @@ view context model =
                     viewForm "drop-out"
 
                 FundingRequest ->
-                    viewArticle "funding"
-                        [ div
-                            [ class "fr-alert fr-alert--warning" ]
-                            [ h3
-                                [ class "fr-alert__title" ]
-                                [ text "Attention" ]
-                            , p [] [ text "La demande de prise en charge est momentanément désactivée. Elle est actuellement en cours de développement en collaboration avec notre partenaire." ]
-                            , p [] [ text "Elle devrait être de nouveau disponible courant septembre 2023. Nous ne manquerons pas de vous tenir informés de sa réactivation." ]
-                            , p [ class "italic" ] [ text "Nous vous rappelons que l'accord de financement est subordonné à l'obtention de la recevabilité." ]
-                            ]
-                        ]
+                    case model.selected of
+                        Success candidacy ->
+                            case candidacy.financeModule of
+                                FinanceModule.Unireva ->
+                                    viewArticle "funding"
+                                        [ div
+                                            [ class "fr-alert fr-alert--warning" ]
+                                            [ h3
+                                                [ class "fr-alert__title" ]
+                                                [ text "Attention" ]
+                                            , p [] [ text "La demande de prise en charge est momentanément désactivée. Elle est actuellement en cours de développement en collaboration avec notre partenaire." ]
+                                            , p [] [ text "Elle devrait être de nouveau disponible courant septembre 2023. Nous ne manquerons pas de vous tenir informés de sa réactivation." ]
+                                            , p [ class "italic" ] [ text "Nous vous rappelons que l'accord de financement est subordonné à l'obtention de la recevabilité." ]
+                                            ]
+                                        ]
+
+                                FinanceModule.Unifvae ->
+                                    viewArticle "funding"
+                                        [ div
+                                            [ class "fr-alert fr-alert--warning" ]
+                                            [ h3
+                                                [ class "fr-alert__title" ]
+                                                [ text "Attention" ]
+                                            , p [] [ text "Demande de prise en charge FVAE" ]
+                                            , p [] [ text "En construction" ]
+                                            ]
+                                        ]
+
+                        _ ->
+                            div [] []
 
                 Meetings ->
                     viewForm "meetings"
