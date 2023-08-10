@@ -19,6 +19,7 @@ const fundingRequestSample = {
   candidateSecondname: "Lapin",
   candidateLastname: "De Garenne",
   candidateGender: "man",
+  isPartialCertification: false,
   basicSkillsCost: 123,
   basicSkillsHourCount: 213,
   certificateSkillsCost: 213,
@@ -104,7 +105,7 @@ test("should create fundingRequestUnifvae", async () => {
       requestType: "mutation",
       endpoint: "candidacy_createFundingRequestUnifvae",
       returnFields:
-        "{id,candidateFirstname, candidateSecondname, candidateThirdname, candidateLastname, candidateGender, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount }",
+        "{id, isPartialCertification, candidateFirstname, candidateSecondname, candidateThirdname, candidateLastname, candidateGender, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount }",
       arguments: {
         candidacyId: candidacyUnifvae.id,
         fundingRequest: {

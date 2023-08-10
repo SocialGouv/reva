@@ -2,6 +2,12 @@ interface FundingRequestUnifvaeInput {
   candidacyId: string;
   fundingRequest: {
     companionId: string;
+    isPartialCertification: boolean;
+    candidateFirstname: string;
+    candidateFirstname: string;
+    candidateFirstname: string;
+    candidateFirstname: string;
+    candidateGender: "man" | "woman" | "undisclosed";
     individualHourCount: number;
     individualCost: number;
     collectiveHourCount: number;

@@ -896,6 +896,7 @@ model FundingRequestUnifvae {
   candidacy                   Candidacy                            @relation(fields: [candidacyId], references: [id])
   candidacyId                 String                               @unique @map("candidacy_id") @db.Uuid
   companion                   Organism?                            @relation(fields: [companionId], references: [id], onDelete: Cascade)
+  isPartialCertification      Boolean                              @default(false)
   candidateFirstname          String                               @default("") @map("candidate_firstname")
   candidateSecondname         String?                              @map("candidate_secondname")
   candidateThirdname          String?                              @map("candidate_thirdname")
