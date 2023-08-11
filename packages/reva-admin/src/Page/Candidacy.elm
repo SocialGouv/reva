@@ -33,6 +33,7 @@ import Data.Context exposing (Context)
 import Data.Feasibility
 import Data.Form.Archive
 import Data.Form.DropOut
+import Data.Form.FundingRequestUniFvae
 import Data.Form.FundingRequestUniReva
 import Data.Form.PaymentRequest
 import Data.Form.Unarchive
@@ -554,6 +555,14 @@ updateTab context tab ( model, cmd ) =
                     else
                         Page.Form.FundingRequestUniFvae.form candidacy.certification
 
+                onValidate =
+                    case candidacy.financeModule of
+                        FinanceModule.Unireva ->
+                            Data.Form.FundingRequestUniReva.validate
+
+                        FinanceModule.Unifvae ->
+                            Data.Form.FundingRequestUniFvae.validate
+
                 ( formModel, formCmd ) =
                     Form.updateForm context
                         { form = form
@@ -561,7 +570,7 @@ updateTab context tab ( model, cmd ) =
                         , onSave = Nothing
                         , onSubmit = Api.Form.FundingRequestUniReva.create tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab Profile
-                        , onValidate = Data.Form.FundingRequestUniReva.validate
+                        , onValidate = onValidate
                         , status =
                             if isReadOnly then
                                 Form.ReadOnly
