@@ -9,7 +9,7 @@ import Admin.Object.PaymentRequest
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
-import Api.Form.FundingRequest
+import Api.Form.FundingRequestUniReva
 import Api.Token exposing (Token)
 import Data.Candidacy exposing (CandidacyId)
 import Data.Form exposing (FormData)
@@ -97,7 +97,7 @@ get candidacyId endpointGraphql token toMsg =
             Query.GetCandidacyByIdRequiredArguments (Id <| Data.Candidacy.candidacyIdToString candidacyId)
 
         fundingRequestSelection =
-            Admin.Object.FundingRequestInformations.fundingRequest Api.Form.FundingRequest.selection
+            Admin.Object.FundingRequestInformations.fundingRequest Api.Form.FundingRequestUniReva.selection
 
         paymentRequestSelection =
             Admin.Object.Candidacy.paymentRequest selection

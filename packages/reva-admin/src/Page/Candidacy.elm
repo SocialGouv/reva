@@ -19,7 +19,7 @@ import Api.Form.Candidate
 import Api.Form.DropOut
 import Api.Form.ExamInfo
 import Api.Form.Feasibility
-import Api.Form.FundingRequest
+import Api.Form.FundingRequestUniReva
 import Api.Form.PaymentRequest
 import Api.Form.PaymentUploads
 import Api.Form.Training
@@ -33,7 +33,7 @@ import Data.Context exposing (Context)
 import Data.Feasibility
 import Data.Form.Archive
 import Data.Form.DropOut
-import Data.Form.FundingRequest
+import Data.Form.FundingRequestUniReva
 import Data.Form.PaymentRequest
 import Data.Form.Unarchive
 import Data.Referential exposing (Referential)
@@ -49,8 +49,8 @@ import Page.Form.Candidate
 import Page.Form.DropOut
 import Page.Form.ExamInfo
 import Page.Form.Feasibility
-import Page.Form.FundingRequest
 import Page.Form.FundingRequestUniFvae
+import Page.Form.FundingRequestUniReva
 import Page.Form.PaymentRequest
 import Page.Form.PaymentUploads
 import Page.Form.Training
@@ -546,10 +546,10 @@ updateTab context tab ( model, cmd ) =
                 form =
                     if candidacy.financeModule == FinanceModule.Unireva then
                         if candidacy.dropOutDate == Nothing || isReadOnly then
-                            Page.Form.FundingRequest.form candidacy.certification
+                            Page.Form.FundingRequestUniReva.form candidacy.certification
 
                         else
-                            Page.Form.FundingRequest.droppedOutForm candidacy.certification
+                            Page.Form.FundingRequestUniReva.droppedOutForm candidacy.certification
 
                     else
                         Page.Form.FundingRequestUniFvae.form candidacy.certification
@@ -557,11 +557,11 @@ updateTab context tab ( model, cmd ) =
                 ( formModel, formCmd ) =
                     Form.updateForm context
                         { form = form
-                        , onLoad = Just <| Api.Form.FundingRequest.get tab.candidacyId candidacy
+                        , onLoad = Just <| Api.Form.FundingRequestUniReva.get tab.candidacyId candidacy
                         , onSave = Nothing
-                        , onSubmit = Api.Form.FundingRequest.create tab.candidacyId
+                        , onSubmit = Api.Form.FundingRequestUniReva.create tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab Profile
-                        , onValidate = Data.Form.FundingRequest.validate
+                        , onValidate = Data.Form.FundingRequestUniReva.validate
                         , status =
                             if isReadOnly then
                                 Form.ReadOnly

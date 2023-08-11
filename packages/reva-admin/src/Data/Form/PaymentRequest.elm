@@ -13,7 +13,7 @@ import Admin.Object.FundingRequest exposing (otherTrainingCost, otherTrainingHou
 import Admin.Scalar exposing (Decimal)
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
-import Data.Form.FundingRequest exposing (FundingRequestInput)
+import Data.Form.FundingRequestUniReva exposing (FundingRequestInput)
 import Data.Form.Helper as Helper
 import Data.Referential exposing (Referential)
 import Dict exposing (Dict)

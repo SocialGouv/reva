@@ -1,4 +1,4 @@
-module Data.Form.FundingRequest exposing (FundingRequestInformations, FundingRequestInput, TrainingForm, fromDict, fundingRequest, fundingRequestInformations, keys, validate)
+module Data.Form.FundingRequestUniReva exposing (FundingRequestInformations, FundingRequestInput, TrainingForm, fromDict, fundingRequest, fundingRequestInformations, keys, validate)
 
 import Admin.Scalar exposing (Decimal)
 import Data.Candidacy exposing (Candidacy)

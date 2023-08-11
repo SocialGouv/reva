@@ -1,4 +1,4 @@
-module Api.Form.FundingRequest exposing (create, get, selection)
+module Api.Form.FundingRequestUniReva exposing (create, get, selection)
 
 import Admin.InputObject
 import Admin.Mutation as Mutation
@@ -15,7 +15,7 @@ import Api.Auth as Auth
 import Api.Token exposing (Token)
 import Data.Candidacy exposing (Candidacy, CandidacyId)
 import Data.Form exposing (FormData)
-import Data.Form.FundingRequest
+import Data.Form.FundingRequestUniReva
 import Data.Referential
 import Dict exposing (Dict)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
@@ -34,7 +34,7 @@ create :
 create candidacyId endpointGraphql token toMsg ( candidacy, referential ) formData =
     let
         funding =
-            Data.Form.FundingRequest.fromDict referential.basicSkills referential.mandatoryTrainings formData
+            Data.Form.FundingRequestUniReva.fromDict referential.basicSkills referential.mandatoryTrainings formData
 
         fundingInput =
             Admin.InputObject.FundingRequestInput
@@ -90,7 +90,7 @@ get candidacyId candidacy endpointGraphql token toMsg =
 
         trainingFormSelection =
             if candidacy.dropOutDate == Nothing then
-                SelectionSet.succeed Data.Form.FundingRequest.TrainingForm
+                SelectionSet.succeed Data.Form.FundingRequestUniReva.TrainingForm
                     |> with
                         (Admin.Object.TrainingForm.mandatoryTrainings
                             (SelectionSet.succeed (\(Id id) -> id) |> with Admin.Object.Training.id)
@@ -114,16 +114,16 @@ get candidacyId candidacy endpointGraphql token toMsg =
                     , collectiveHourCount = 0
                     }
     in
-    SelectionSet.succeed Data.Form.FundingRequest.fundingRequestInformations
+    SelectionSet.succeed Data.Form.FundingRequestUniReva.fundingRequestInformations
         |> with (Admin.Object.FundingRequestInformations.fundingRequest selection)
         |> with (Admin.Object.FundingRequestInformations.training trainingFormSelection)
         |> Query.candidate_getFundingRequest fundingInfoRequiredArg
         |> Auth.makeQuery "getFundingRequest" endpointGraphql token toMsg
 
 
-selection : SelectionSet Data.Form.FundingRequest.FundingRequestInput Admin.Object.FundingRequest
+selection : SelectionSet Data.Form.FundingRequestUniReva.FundingRequestInput Admin.Object.FundingRequest
 selection =
-    SelectionSet.succeed Data.Form.FundingRequest.FundingRequestInput
+    SelectionSet.succeed Data.Form.FundingRequestUniReva.FundingRequestInput
         |> with
             (Admin.Object.FundingRequest.companion
                 (SelectionSet.succeed (\(Uuid id) -> id) |> with Admin.Object.Organism.id)

@@ -7,7 +7,7 @@ import Data.Form.Helper
 import Data.Form.PaymentRequest
 import Data.Referential exposing (Referential)
 import Page.Form as Form exposing (Form)
-import Page.Form.FundingRequest as FundingRequest
+import Page.Form.FundingRequestUniReva as FundingRequest
 import String exposing (String)
 
 

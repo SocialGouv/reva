@@ -1,11 +1,11 @@
-module Page.Form.FundingRequest exposing (droppedOutForm, form, totalCostSection, totalTrainingHourCount)
+module Page.Form.FundingRequestUniReva exposing (droppedOutForm, form, totalCostSection, totalTrainingHourCount)
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Candidate
 import Data.Certification exposing (Certification)
 import Data.Form exposing (FormData)
-import Data.Form.FundingRequest
+import Data.Form.FundingRequestUniReva
 import Data.Form.Helper
 import Data.Referential exposing (Referential)
 import List.Extra
@@ -197,7 +197,7 @@ title formData =
 
 
 keys =
-    Data.Form.FundingRequest.keys
+    Data.Form.FundingRequestUniReva.keys
 
 
 totalSection : ( String, Form.Element )
