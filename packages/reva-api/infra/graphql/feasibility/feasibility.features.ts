@@ -348,12 +348,17 @@ export const validateFeasibility = async ({
         candidacy: {
           include: {
             certificationsAndRegions: { include: { certification: true } },
+            candidate: {
+              select: {
+                email: true,
+              },
+            },
           },
         },
       },
     });
     sendFeasibilityValidatedCandidateEmail({
-      email: feasibility.candidacy.email as string,
+      email: feasibility.candidacy.candidate?.email as string,
       certifName:
         feasibility.candidacy.certificationsAndRegions[0].certification.label,
       comment,
