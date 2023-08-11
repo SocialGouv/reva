@@ -387,11 +387,17 @@ export const rejectFeasibility = async ({
         decisionSentAt: new Date(),
       },
       select: {
-        candidacy: true,
+        candidacy: {
+          include: {
+            candidate: {
+              select: { email: true },
+            },
+          },
+        },
       },
     });
     sendFeasibilityRejectedCandidateEmail({
-      email: feasibility.candidacy.email as string,
+      email: feasibility.candidacy.candidate?.email as string,
       comment,
     });
     return feasibility;
