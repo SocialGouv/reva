@@ -7,22 +7,22 @@ type FundingRequestUnifvae {
   candidateGender: Gender!
   isPartialCertification: Boolean!
   companion: Organism
-  individualHourCount: Decimal!
-  individualCost: Decimal!
-  collectiveHourCount: Decimal!
-  collectiveCost: Decimal!
+  individualHourCount: Float!
+  individualCost: Float!
+  collectiveHourCount: Float!
+  collectiveCost: Float!
   basicSkills: [BasicSkill!]!
-  basicSkillsHourCount: Decimal!
-  basicSkillsCost: Decimal!
+  basicSkillsHourCount: Float!
+  basicSkillsCost: Float!
   mandatoryTrainings: [Training!]!
-  mandatoryTrainingsHourCount: Decimal!
-  mandatoryTrainingsCost: Decimal!
+  mandatoryTrainingsHourCount: Float!
+  mandatoryTrainingsCost: Float!
   certificateSkills: String!
-  certificateSkillsHourCount: Decimal!
-  certificateSkillsCost: Decimal!
+  certificateSkillsHourCount: Float!
+  certificateSkillsCost: Float!
   otherTraining: String!
-  otherTrainingHourCount: Decimal!
-  otherTrainingCost: Decimal!
+  otherTrainingHourCount: Float!
+  otherTrainingCost: Float!
 }
 
 input FundingRequestUnifvaeInput {
@@ -33,18 +33,18 @@ input FundingRequestUnifvaeInput {
   candidateLastname: String!
   candidateGender: Gender!
   isPartialCertification: Boolean!
-  individualHourCount: Decimal!
-  individualCost: Decimal!
-  collectiveHourCount: Decimal!
-  collectiveCost: Decimal!
-  basicSkillsHourCount: Decimal!
-  basicSkillsCost: Decimal!
-  mandatoryTrainingsHourCount: Decimal!
-  mandatoryTrainingsCost: Decimal!
-  certificateSkillsHourCount: Decimal!
-  certificateSkillsCost: Decimal!
-  otherTrainingHourCount: Decimal!
-  otherTrainingCost: Decimal!
+  individualHourCount: Float!
+  individualCost: Float!
+  collectiveHourCount: Float!
+  collectiveCost: Float!
+  basicSkillsHourCount: Float!
+  basicSkillsCost: Float!
+  mandatoryTrainingsHourCount: Float!
+  mandatoryTrainingsCost: Float!
+  certificateSkillsHourCount: Float!
+  certificateSkillsCost: Float!
+  otherTrainingHourCount: Float!
+  otherTrainingCost: Float!
 }
 
 type Mutation {

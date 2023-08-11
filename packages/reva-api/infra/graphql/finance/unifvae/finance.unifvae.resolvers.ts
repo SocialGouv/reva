@@ -19,7 +19,7 @@ const unsafeResolvers = {
       if (validationErrors.length) {
         return new mercurius.ErrorWithProps("Validation error", {
           businessErrors: validationErrors.map(
-            ({ fieldName, message }) => `${fieldName}: ${message}`
+            ({ fieldName, message }) => `input.${fieldName}: ${message}`
           ),
         });
       }

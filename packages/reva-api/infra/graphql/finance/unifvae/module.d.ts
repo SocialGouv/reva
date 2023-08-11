@@ -25,7 +25,10 @@ interface FundingRequestUnifvaeInput {
   } & FundingRequestUnifvaeControlledFields;
 }
 
+type BusinessRulesValidationFieldname =
+  keyof FundingRequestUnifvaeControlledFields;
+
 interface BusinessRulesValidationError {
-  fieldName: keyof FundingRequestUnifvaeControlledFields;
+  fieldName: BusinessRulesValidationFieldname;
   message: string;
 }

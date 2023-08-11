@@ -1,3 +1,6 @@
+// DESCRIPTION DES RÈGLES
+// ----------------------
+//
 // On souhaite intégrer une règle sur le forfait, il pourra en exister deux versions :
 //
 // Une certification totale

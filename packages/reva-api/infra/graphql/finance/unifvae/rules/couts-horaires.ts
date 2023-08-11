@@ -1,3 +1,6 @@
+// DESCRIPTION DES RÈGLES
+// ----------------------
+//
 // Dans tous les cas, que ce soit une certification totale ou certification par
 // bloc de compétence, on souhaite limiter le coût horaire:
 //
