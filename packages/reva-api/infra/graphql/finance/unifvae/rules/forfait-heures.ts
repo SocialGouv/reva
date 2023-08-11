@@ -19,7 +19,7 @@
 // le champ Complément formatif est limité à 35 heures maximum
 
 export const valideForfaitHeures = (
-  input: FundingRequestUnifvaeInput
+  input: FundingRequestUnifvaeInputCompleted
 ): BusinessRulesValidationError[] => {
   const fundingRequest = input.fundingRequest;
   const errors: BusinessRulesValidationError[] = [];

@@ -15,8 +15,6 @@ interface FundingRequestUnifvaeControlledFields {
 interface FundingRequestUnifvaeInput {
   candidacyId: string;
   fundingRequest: {
-    companionId: string;
-    isPartialCertification: boolean;
     candidateFirstname: string;
     candidateFirstname: string;
     candidateFirstname: string;
@@ -24,6 +22,12 @@ interface FundingRequestUnifvaeInput {
     candidateGender: "man" | "woman" | "undisclosed";
   } & FundingRequestUnifvaeControlledFields;
 }
+
+type FundingRequestUnifvaeInputCompleted = FundingRequestUnifvaeInput & {
+  fundingRequest: {
+    isPartialCertification: boolean;
+  };
+};
 
 type BusinessRulesValidationFieldname =
   keyof FundingRequestUnifvaeControlledFields;

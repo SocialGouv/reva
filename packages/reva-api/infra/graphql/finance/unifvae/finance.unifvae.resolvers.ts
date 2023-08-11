@@ -3,6 +3,7 @@ import mercurius from "mercurius";
 import { Left, Right } from "purify-ts";
 
 import { CandidacyBusinessEvent } from "../../../../domain/types/candidacy";
+import { prismaClient } from "../../../database/postgres/client";
 import { isAdminOrCandidacyCompanion } from "../../security/presets";
 import { createFundingRequestUnifvae } from "./finance.unifvae.features";
 import { logFundingRequestUnifvaeEvent } from "./logFundingRequestUnifvaeEvent";
@@ -15,7 +16,25 @@ const unsafeResolvers = {
       payload: FundingRequestUnifvaeInput,
       context: GraphqlContext
     ) => {
-      const validationErrors = applyBusinessValidationRules(payload);
+      const candidacy = await prismaClient.candidacy.findUnique({
+        where: { id: payload.candidacyId },
+      });
+      const fundingRequestCompleted: FundingRequestUnifvaeInputCompleted =
+        Object.assign(
+          {},
+          {
+            candidacyId: payload.candidacyId,
+            fundingRequest: {
+              ...payload.fundingRequest,
+              isPartialCertification: Boolean(
+                candidacy?.isCertificationPartial
+              ),
+            },
+          }
+        );
+      const validationErrors = applyBusinessValidationRules(
+        fundingRequestCompleted
+      );
       if (validationErrors.length) {
         return new mercurius.ErrorWithProps("Validation error", {
           businessErrors: validationErrors.map(
@@ -24,7 +43,9 @@ const unsafeResolvers = {
         });
       }
       try {
-        const fundreq = await createFundingRequestUnifvae(payload);
+        const fundreq = await createFundingRequestUnifvae(
+          fundingRequestCompleted
+        );
         logFundingRequestUnifvaeEvent({
           context,
           eventType: CandidacyBusinessEvent.CREATED_FUNDING_REQUEST_UNIFVAE,

@@ -19,7 +19,6 @@ const fundingRequestSample = {
   candidateSecondname: "Lapin",
   candidateLastname: "De Garenne",
   candidateGender: "man",
-  isPartialCertification: false,
   basicSkillsCost: 12.3,
   basicSkillsHourCount: 2.5,
   certificateSkillsCost: 21.3,
@@ -110,7 +109,6 @@ test("should create fundingRequestUnifvae", async () => {
         candidacyId: candidacyUnifvae.id,
         fundingRequest: {
           ...fundingRequestSample,
-          companionId: organism.id,
         },
       },
       enumFields: ["candidateGender"],
@@ -134,7 +132,7 @@ test("should create fundingRequestUnifvae", async () => {
   expect(status?.status).toBe(CandidacyStatusStep.DEMANDE_FINANCEMENT_ENVOYE);
 });
 
-test("Should fail when candidacy is not bound to UnifVae finance module", async () => {
+test("Should fail when candidacy is not bound to Unifvae finance module", async () => {
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -145,12 +143,11 @@ test("Should fail when candidacy is not bound to UnifVae finance module", async 
       requestType: "mutation",
       endpoint: "candidacy_createFundingRequestUnifvae",
       returnFields:
-        "{id,candidateFirstname, candidateSecondname, candidateThirdname, candidateLastname, candidateGender, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount }",
+        "{id, isPartialCertification, candidateFirstname, candidateSecondname, candidateThirdname, candidateLastname, candidateGender, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount }",
       arguments: {
         candidacyId: candidacyUnireva.id,
         fundingRequest: {
           ...fundingRequestSample,
-          companionId: organism.id,
         },
       },
       enumFields: ["candidateGender"],

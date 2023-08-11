@@ -6,7 +6,6 @@ type FundingRequestUnifvae {
   candidateLastname: String!
   candidateGender: Gender!
   isPartialCertification: Boolean!
-  companion: Organism
   individualHourCount: Float!
   individualCost: Float!
   collectiveHourCount: Float!
@@ -26,13 +25,11 @@ type FundingRequestUnifvae {
 }
 
 input FundingRequestUnifvaeInput {
-  companionId: UUID
   candidateFirstname: String!
   candidateSecondname: String
   candidateThirdname: String
   candidateLastname: String!
   candidateGender: Gender!
-  isPartialCertification: Boolean!
   individualHourCount: Float!
   individualCost: Float!
   collectiveHourCount: Float!

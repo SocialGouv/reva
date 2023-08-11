@@ -4,7 +4,7 @@ import { prismaClient } from "../../../database/postgres/client";
 export const createFundingRequestUnifvae = async ({
   candidacyId,
   fundingRequest,
-}: FundingRequestUnifvaeInput) => {
+}: FundingRequestUnifvaeInputCompleted) => {
   const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: candidacyId },
     select: {
@@ -65,7 +65,6 @@ export const createFundingRequestUnifvae = async ({
           training: true,
         },
       },
-      companion: true,
     },
   });
 };
