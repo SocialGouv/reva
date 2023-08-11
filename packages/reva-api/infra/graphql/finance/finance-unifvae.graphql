@@ -48,5 +48,5 @@ type Mutation {
   candidacy_createFundingRequestUnifvae(
     candidacyId: UUID!
     fundingRequest: FundingRequestUnifvaeInput!
-  ): FundingRequestUnifvae
+  ): FundingRequestUnifvae!
 }

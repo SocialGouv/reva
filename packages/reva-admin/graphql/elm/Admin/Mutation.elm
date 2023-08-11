@@ -457,9 +457,9 @@ type alias CandidacyCreateFundingRequestUnifvaeRequiredArguments =
 candidacy_createFundingRequestUnifvae :
     CandidacyCreateFundingRequestUnifvaeRequiredArguments
     -> SelectionSet decodesTo Admin.Object.FundingRequestUnifvae
-    -> SelectionSet (Maybe decodesTo) RootMutation
+    -> SelectionSet decodesTo RootMutation
 candidacy_createFundingRequestUnifvae requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidacy_createFundingRequestUnifvae" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "fundingRequest" requiredArgs____.fundingRequest Admin.InputObject.encodeFundingRequestUnifvaeInput ] object____ (Basics.identity >> Decode.nullable)
+    Object.selectionForCompositeField "candidacy_createFundingRequestUnifvae" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "fundingRequest" requiredArgs____.fundingRequest Admin.InputObject.encodeFundingRequestUnifvaeInput ] object____ Basics.identity
 
 
 type alias CandidacyCreateOrUpdatePaymentRequestRequiredArguments =

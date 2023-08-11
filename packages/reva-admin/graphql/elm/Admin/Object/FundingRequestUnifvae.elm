@@ -50,6 +50,11 @@ candidateGender =
     Object.selectionForField "Enum.Gender.Gender" "candidateGender" [] Admin.Enum.Gender.decoder
 
 
+isPartialCertification : SelectionSet Bool Admin.Object.FundingRequestUnifvae
+isPartialCertification =
+    Object.selectionForField "Bool" "isPartialCertification" [] Decode.bool
+
+
 companion :
     SelectionSet decodesTo Admin.Object.Organism
     -> SelectionSet (Maybe decodesTo) Admin.Object.FundingRequestUnifvae
@@ -57,24 +62,24 @@ companion object____ =
     Object.selectionForCompositeField "companion" [] object____ (Basics.identity >> Decode.nullable)
 
 
-individualHourCount : SelectionSet Int Admin.Object.FundingRequestUnifvae
+individualHourCount : SelectionSet Float Admin.Object.FundingRequestUnifvae
 individualHourCount =
-    Object.selectionForField "Int" "individualHourCount" [] Decode.int
+    Object.selectionForField "Float" "individualHourCount" [] Decode.float
 
 
-individualCost : SelectionSet Data.Scalar.Decimal Admin.Object.FundingRequestUnifvae
+individualCost : SelectionSet Float Admin.Object.FundingRequestUnifvae
 individualCost =
-    Object.selectionForField "Data.Scalar.Decimal" "individualCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
+    Object.selectionForField "Float" "individualCost" [] Decode.float
 
 
-collectiveHourCount : SelectionSet Int Admin.Object.FundingRequestUnifvae
+collectiveHourCount : SelectionSet Float Admin.Object.FundingRequestUnifvae
 collectiveHourCount =
-    Object.selectionForField "Int" "collectiveHourCount" [] Decode.int
+    Object.selectionForField "Float" "collectiveHourCount" [] Decode.float
 
 
-collectiveCost : SelectionSet Data.Scalar.Decimal Admin.Object.FundingRequestUnifvae
+collectiveCost : SelectionSet Float Admin.Object.FundingRequestUnifvae
 collectiveCost =
-    Object.selectionForField "Data.Scalar.Decimal" "collectiveCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
+    Object.selectionForField "Float" "collectiveCost" [] Decode.float
 
 
 basicSkills :
@@ -84,14 +89,14 @@ basicSkills object____ =
     Object.selectionForCompositeField "basicSkills" [] object____ (Basics.identity >> Decode.list)
 
 
-basicSkillsHourCount : SelectionSet Int Admin.Object.FundingRequestUnifvae
+basicSkillsHourCount : SelectionSet Float Admin.Object.FundingRequestUnifvae
 basicSkillsHourCount =
-    Object.selectionForField "Int" "basicSkillsHourCount" [] Decode.int
+    Object.selectionForField "Float" "basicSkillsHourCount" [] Decode.float
 
 
-basicSkillsCost : SelectionSet Data.Scalar.Decimal Admin.Object.FundingRequestUnifvae
+basicSkillsCost : SelectionSet Float Admin.Object.FundingRequestUnifvae
 basicSkillsCost =
-    Object.selectionForField "Data.Scalar.Decimal" "basicSkillsCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
+    Object.selectionForField "Float" "basicSkillsCost" [] Decode.float
 
 
 mandatoryTrainings :
@@ -101,14 +106,14 @@ mandatoryTrainings object____ =
     Object.selectionForCompositeField "mandatoryTrainings" [] object____ (Basics.identity >> Decode.list)
 
 
-mandatoryTrainingsHourCount : SelectionSet Int Admin.Object.FundingRequestUnifvae
+mandatoryTrainingsHourCount : SelectionSet Float Admin.Object.FundingRequestUnifvae
 mandatoryTrainingsHourCount =
-    Object.selectionForField "Int" "mandatoryTrainingsHourCount" [] Decode.int
+    Object.selectionForField "Float" "mandatoryTrainingsHourCount" [] Decode.float
 
 
-mandatoryTrainingsCost : SelectionSet Data.Scalar.Decimal Admin.Object.FundingRequestUnifvae
+mandatoryTrainingsCost : SelectionSet Float Admin.Object.FundingRequestUnifvae
 mandatoryTrainingsCost =
-    Object.selectionForField "Data.Scalar.Decimal" "mandatoryTrainingsCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
+    Object.selectionForField "Float" "mandatoryTrainingsCost" [] Decode.float
 
 
 certificateSkills : SelectionSet String Admin.Object.FundingRequestUnifvae
@@ -116,14 +121,14 @@ certificateSkills =
     Object.selectionForField "String" "certificateSkills" [] Decode.string
 
 
-certificateSkillsHourCount : SelectionSet Int Admin.Object.FundingRequestUnifvae
+certificateSkillsHourCount : SelectionSet Float Admin.Object.FundingRequestUnifvae
 certificateSkillsHourCount =
-    Object.selectionForField "Int" "certificateSkillsHourCount" [] Decode.int
+    Object.selectionForField "Float" "certificateSkillsHourCount" [] Decode.float
 
 
-certificateSkillsCost : SelectionSet Data.Scalar.Decimal Admin.Object.FundingRequestUnifvae
+certificateSkillsCost : SelectionSet Float Admin.Object.FundingRequestUnifvae
 certificateSkillsCost =
-    Object.selectionForField "Data.Scalar.Decimal" "certificateSkillsCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
+    Object.selectionForField "Float" "certificateSkillsCost" [] Decode.float
 
 
 otherTraining : SelectionSet String Admin.Object.FundingRequestUnifvae
@@ -131,11 +136,11 @@ otherTraining =
     Object.selectionForField "String" "otherTraining" [] Decode.string
 
 
-otherTrainingHourCount : SelectionSet Int Admin.Object.FundingRequestUnifvae
+otherTrainingHourCount : SelectionSet Float Admin.Object.FundingRequestUnifvae
 otherTrainingHourCount =
-    Object.selectionForField "Int" "otherTrainingHourCount" [] Decode.int
+    Object.selectionForField "Float" "otherTrainingHourCount" [] Decode.float
 
 
-otherTrainingCost : SelectionSet Data.Scalar.Decimal Admin.Object.FundingRequestUnifvae
+otherTrainingCost : SelectionSet Float Admin.Object.FundingRequestUnifvae
 otherTrainingCost =
-    Object.selectionForField "Data.Scalar.Decimal" "otherTrainingCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
+    Object.selectionForField "Float" "otherTrainingCost" [] Decode.float
