@@ -5,11 +5,21 @@ import { Left, Right } from "purify-ts";
 import { CandidacyBusinessEvent } from "../../../../domain/types/candidacy";
 import { prismaClient } from "../../../database/postgres/client";
 import { isAdminOrCandidacyCompanion } from "../../security/presets";
-import { createFundingRequestUnifvae } from "./finance.unifvae.features";
+import {
+  createFundingRequestUnifvae,
+  getFundingRequestUnifvaeFromCandidacyId,
+} from "./finance.unifvae.features";
 import { logFundingRequestUnifvaeEvent } from "./logFundingRequestUnifvaeEvent";
 import applyBusinessValidationRules from "./rules";
 
 const unsafeResolvers = {
+  Query: {
+    candidacy_getFundingRequestUnifvae: async (
+      _: unknown,
+      payload: { candidacyId: string },
+      _context: GraphqlContext
+    ) => getFundingRequestUnifvaeFromCandidacyId(payload.candidacyId),
+  },
   Mutation: {
     candidacy_createFundingRequestUnifvae: async (
       _: unknown,

@@ -44,6 +44,10 @@ input FundingRequestUnifvaeInput {
   otherTrainingCost: Float!
 }
 
+type Query {
+  candidacy_getFundingRequestUnifvae(candidacyId: UUID!): FundingRequestUnifvae!
+}
+
 type Mutation {
   candidacy_createFundingRequestUnifvae(
     candidacyId: UUID!

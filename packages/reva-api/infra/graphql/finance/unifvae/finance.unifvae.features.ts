@@ -68,3 +68,14 @@ export const createFundingRequestUnifvae = async ({
     },
   });
 };
+
+export const getFundingRequestUnifvaeFromCandidacyId = async (
+  candidacyId: string
+) =>
+  prismaClient.fundingRequestUnifvae.findFirstOrThrow({
+    where: { candidacyId },
+    include: {
+      basicSkills: true,
+      mandatoryTrainings: true,
+    },
+  });
