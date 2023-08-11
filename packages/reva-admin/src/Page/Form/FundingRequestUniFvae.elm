@@ -33,8 +33,8 @@ form maybeCertification formData ( candidacy, referential ) =
                 |> Maybe.map (.firstname >> Form.Info "Prénom")
                 |> Maybe.withDefault Form.Empty
           )
-        , ( keys.canidateSecondname, Form.Input "2ième prénom" )
-        , ( keys.canidateThirdname, Form.Input "3ième prénom" )
+        , ( keys.candidateSecondname, Form.Input "2ième prénom" )
+        , ( keys.candidateThirdname, Form.Input "3ième prénom" )
         , ( keys.candidateGender, Form.Select "Genre" genders )
         , ( "selected-certification", Form.Section "Certification choisie" )
         , ( "certification"
@@ -57,8 +57,8 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( keys.collectiveCost, costElement )
         , ( "training", Form.Section "Compléments formatifs" )
         , ( "mandatory-training", Form.Title "Formation obligatoire" )
-        , ( keys.mandatoryTrainingHourCount, hourCountElement )
-        , ( keys.mandatoryTrainingCost, costElement )
+        , ( keys.mandatoryTrainingsHourCount, hourCountElement )
+        , ( keys.mandatoryTrainingsCost, costElement )
         , ( "basic-skills", Form.Title "Savoir de base" )
         , ( keys.basicSkillsHourCount, hourCountElement )
         , ( keys.basicSkillsCost, costElement )
@@ -66,8 +66,8 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( keys.certificateSkillsHourCount, hourCountElement )
         , ( keys.certificateSkillsCost, costElement )
         , ( "other", Form.Title "Autres" )
-        , ( keys.otherSkillsHourCount, hourCountElement )
-        , ( keys.otherSkillsCost, costElement )
+        , ( keys.otherTrainingHourCount, hourCountElement )
+        , ( keys.otherTrainingCost, costElement )
         ]
     , saveLabel = Nothing
     , submitLabel = "Envoyer"

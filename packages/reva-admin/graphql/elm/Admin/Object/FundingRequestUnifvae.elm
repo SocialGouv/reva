@@ -55,13 +55,6 @@ isPartialCertification =
     Object.selectionForField "Bool" "isPartialCertification" [] Decode.bool
 
 
-companion :
-    SelectionSet decodesTo Admin.Object.Organism
-    -> SelectionSet (Maybe decodesTo) Admin.Object.FundingRequestUnifvae
-companion object____ =
-    Object.selectionForCompositeField "companion" [] object____ (Basics.identity >> Decode.nullable)
-
-
 individualHourCount : SelectionSet Float Admin.Object.FundingRequestUnifvae
 individualHourCount =
     Object.selectionForField "Float" "individualHourCount" [] Decode.float
