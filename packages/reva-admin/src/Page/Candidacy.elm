@@ -50,6 +50,7 @@ import Page.Form.DropOut
 import Page.Form.ExamInfo
 import Page.Form.Feasibility
 import Page.Form.FundingRequest
+import Page.Form.FundingRequestUniFvae
 import Page.Form.PaymentRequest
 import Page.Form.PaymentUploads
 import Page.Form.Training
@@ -216,16 +217,7 @@ view context model =
                                         ]
 
                                 FinanceModule.Unifvae ->
-                                    viewArticle "funding"
-                                        [ div
-                                            [ class "fr-alert fr-alert--warning" ]
-                                            [ h3
-                                                [ class "fr-alert__title" ]
-                                                [ text "Attention" ]
-                                            , p [] [ text "Demande de prise en charge FVAE" ]
-                                            , p [] [ text "En construction" ]
-                                            ]
-                                        ]
+                                    viewForm "funding"
 
                         _ ->
                             div [] []
@@ -551,14 +543,20 @@ updateTab context tab ( model, cmd ) =
                 isReadOnly =
                     Candidacy.isFundingRequestSent candidacy
 
+                form =
+                    if candidacy.financeModule == FinanceModule.Unireva then
+                        if candidacy.dropOutDate == Nothing || isReadOnly then
+                            Page.Form.FundingRequest.form candidacy.certification
+
+                        else
+                            Page.Form.FundingRequest.droppedOutForm candidacy.certification
+
+                    else
+                        Page.Form.FundingRequestUniFvae.form candidacy.certification
+
                 ( formModel, formCmd ) =
                     Form.updateForm context
-                        { form =
-                            if candidacy.dropOutDate == Nothing || isReadOnly then
-                                Page.Form.FundingRequest.form candidacy.certification
-
-                            else
-                                Page.Form.FundingRequest.droppedOutForm candidacy.certification
+                        { form = form
                         , onLoad = Just <| Api.Form.FundingRequest.get tab.candidacyId candidacy
                         , onSave = Nothing
                         , onSubmit = Api.Form.FundingRequest.create tab.candidacyId
