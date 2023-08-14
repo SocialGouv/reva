@@ -1,3 +1,4 @@
+import { validateAccompagnement } from "./accompagnement";
 import { validateComplementFormatif } from "./complement-formatif";
 import { validateCoutsHoraires } from "./couts-horaires";
 import { valideForfaitHeures } from "./forfait-heures";
@@ -10,6 +11,7 @@ const applyBusinessValidationRules = (
     .concat(validHoursCountAndCosts(input))
     .concat(valideForfaitHeures(input))
     .concat(validateCoutsHoraires(input))
-    .concat(validateComplementFormatif(input));
+    .concat(validateComplementFormatif(input))
+    .concat(validateAccompagnement(input));
 
 export default applyBusinessValidationRules;

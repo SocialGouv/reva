@@ -10,7 +10,7 @@ import {
   getFundingRequestUnifvaeFromCandidacyId,
 } from "./finance.unifvae.features";
 import { logFundingRequestUnifvaeEvent } from "./logFundingRequestUnifvaeEvent";
-import applyBusinessValidationRules from "./rules";
+import applyBusinessValidationRules from "./validation";
 
 const unsafeResolvers = {
   Query: {
