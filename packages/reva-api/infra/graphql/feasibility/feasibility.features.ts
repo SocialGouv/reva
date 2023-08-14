@@ -9,10 +9,13 @@ import { getCandidacyFromId } from "../../database/postgres/candidacies";
 import { prismaClient } from "../../database/postgres/client";
 import { logger } from "../../logger";
 import {
+  sendFeasibilityDecisionTakenToAAPEmail,
   sendFeasibilityRejectedCandidateEmail,
   sendFeasibilityValidatedCandidateEmail,
   sendNewFeasibilitySubmittedEmail,
 } from "./feasibility.mails";
+
+const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
 export interface UploadedFile {
   data: Buffer;
@@ -107,8 +110,6 @@ export const createFeasibility = async ({
       );
     }
     if (certificationAuthority?.contactEmail) {
-      const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
-
       sendNewFeasibilitySubmittedEmail({
         email: certificationAuthority?.contactEmail,
         feasibilityUrl: `${baseUrl}/admin/feasibilities/${feasibility.id}`,
@@ -353,6 +354,7 @@ export const validateFeasibility = async ({
                 email: true,
               },
             },
+            organism: { select: { contactAdministrativeEmail: true } },
           },
         },
       },
@@ -363,6 +365,12 @@ export const validateFeasibility = async ({
         feasibility.candidacy.certificationsAndRegions[0].certification.label,
       comment,
     });
+    if (feasibility.candidacy.organism?.contactAdministrativeEmail) {
+      sendFeasibilityDecisionTakenToAAPEmail({
+        email: feasibility.candidacy.organism?.contactAdministrativeEmail,
+        feasibilityUrl: `${baseUrl}/admin/feasibilities/${feasibility.id}`,
+      });
+    }
     return feasibility;
   } else {
     throw new Error("Utilisateur non autorisé");
@@ -392,6 +400,7 @@ export const rejectFeasibility = async ({
             candidate: {
               select: { email: true },
             },
+            organism: { select: { contactAdministrativeEmail: true } },
           },
         },
       },
@@ -400,6 +409,12 @@ export const rejectFeasibility = async ({
       email: feasibility.candidacy.candidate?.email as string,
       comment,
     });
+    if (feasibility.candidacy.organism?.contactAdministrativeEmail) {
+      sendFeasibilityDecisionTakenToAAPEmail({
+        email: feasibility.candidacy.organism?.contactAdministrativeEmail,
+        feasibilityUrl: `${baseUrl}/admin/feasibilities/${feasibilityId}`,
+      });
+    }
     return feasibility;
   } else {
     throw new Error("Utilisateur non autorisé");

@@ -65,8 +65,8 @@ export const sendNewFeasibilitySubmittedEmail = async ({
 }) => {
   const htmlContent = mjml2html(
     template({
-      headline: `<p>Bonjour,</p><p>`,
-      content: `Un nouveau dossier de faisabilité vous a été transmis. Vous pouvez y accéder dès maintenant en cliquant sur le bouton ci-dessous.</p>
+      headline: `<p>Bonjour,</p>`,
+      content: `<p>Un nouveau dossier de faisabilité vous a été transmis. Vous pouvez y accéder dès maintenant en cliquant sur le bouton ci-dessous.</p>
           <p>Nous vous rappelons que vous disposez d’un délai de 15 jours pour prononcer la recevabilité du dossier.</p>
           <p>L’équipe France VAE.</p>
         `,
@@ -189,5 +189,43 @@ export const sendFeasibilityRejectedCandidateEmail = async ({
     to: { email },
     htmlContent: htmlContent.html,
     subject: "Votre dossier de faisabilité",
+  });
+};
+
+export const sendFeasibilityDecisionTakenToAAPEmail = async ({
+  email,
+  feasibilityUrl,
+}: {
+  email: string;
+  feasibilityUrl: string;
+}) => {
+  const htmlContent = mjml2html(
+    template({
+      headline: `<p>Bonjour,</p>`,
+      content: `<p>Un nouvel avis de recevabilité est disponible via le lien ci-dessous.</p>
+          <p>L’équipe France VAE.</p>
+        `,
+      labelCTA: "Accéder à la notification de recevabilité",
+      url: feasibilityUrl,
+    })
+  );
+
+  if (htmlContent.errors.length > 0) {
+    const errorMessage = htmlContent.errors
+      .map((e) => e.formattedMessage)
+      .join("\n");
+    logger.error(errorMessage);
+    throw new Error(errorMessage);
+  }
+
+  if (process.env.NODE_ENV !== "production") {
+    logger.info("======= EMAIL CONTENT =======");
+    logger.info(htmlContent.html);
+    logger.info("=========================");
+  }
+  return sendGenericEmail({
+    to: { email },
+    htmlContent: htmlContent.html,
+    subject: "Un nouvel avis de recevabilité est disponible",
   });
 };
