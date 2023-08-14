@@ -6,22 +6,22 @@ type FundingRequestUnifvae {
   candidateLastname: String!
   candidateGender: Gender!
   isPartialCertification: Boolean!
-  individualHourCount: Float!
-  individualCost: Float!
-  collectiveHourCount: Float!
-  collectiveCost: Float!
+  individualHourCount: Decimal!
+  individualCost: Decimal!
+  collectiveHourCount: Decimal!
+  collectiveCost: Decimal!
   basicSkills: [BasicSkill!]!
-  basicSkillsHourCount: Float!
-  basicSkillsCost: Float!
+  basicSkillsHourCount: Decimal!
+  basicSkillsCost: Decimal!
   mandatoryTrainings: [Training!]!
-  mandatoryTrainingsHourCount: Float!
-  mandatoryTrainingsCost: Float!
+  mandatoryTrainingsHourCount: Decimal!
+  mandatoryTrainingsCost: Decimal!
   certificateSkills: String!
-  certificateSkillsHourCount: Float!
-  certificateSkillsCost: Float!
+  certificateSkillsHourCount: Decimal!
+  certificateSkillsCost: Decimal!
   otherTraining: String!
-  otherTrainingHourCount: Float!
-  otherTrainingCost: Float!
+  otherTrainingHourCount: Decimal!
+  otherTrainingCost: Decimal!
 }
 
 input FundingRequestUnifvaeInput {

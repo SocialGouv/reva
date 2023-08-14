@@ -7,6 +7,7 @@ import Data.Form exposing (FormData)
 import Data.Form.Helper as Helper
 import Data.Referential exposing (Referential)
 import Dict exposing (Dict)
+import Admin.Scalar exposing (Decimal)
 
 
 keys =
@@ -39,36 +40,36 @@ fromDict formData =
         (decode.maybe.string .candidateSecondname)
         (decode.maybe.string .candidateThirdname)
         (decode.generic .candidateGender genderFromString Undisclosed)
-        (decode.float .individualHourCount 0)
-        (decode.float .individualCost 0)
-        (decode.float .collectiveHourCount 0)
-        (decode.float .collectiveCost 0)
-        (decode.float .basicSkillsHourCount 0)
-        (decode.float .basicSkillsCost 0)
-        (decode.float .mandatoryTrainingsHourCount 0)
-        (decode.float .mandatoryTrainingsCost 0)
-        (decode.float .certificateSkillsHourCount 0)
-        (decode.float .certificateSkillsCost 0)
-        (decode.float .otherTrainingHourCount 0)
-        (decode.float .otherTrainingCost 0)
+        (decode.decimal .individualHourCount (Admin.Scalar.Decimal "0"))
+        (decode.decimal .individualCost (Admin.Scalar.Decimal "0"))
+        (decode.decimal .collectiveHourCount (Admin.Scalar.Decimal "0"))
+        (decode.decimal .collectiveCost (Admin.Scalar.Decimal "0"))
+        (decode.decimal .basicSkillsHourCount (Admin.Scalar.Decimal "0"))
+        (decode.decimal .basicSkillsCost (Admin.Scalar.Decimal "0"))
+        (decode.decimal .mandatoryTrainingsHourCount (Admin.Scalar.Decimal "0"))
+        (decode.decimal .mandatoryTrainingsCost (Admin.Scalar.Decimal "0"))
+        (decode.decimal .certificateSkillsHourCount (Admin.Scalar.Decimal "0"))
+        (decode.decimal .certificateSkillsCost (Admin.Scalar.Decimal "0"))
+        (decode.decimal .otherTrainingHourCount (Admin.Scalar.Decimal "0"))
+        (decode.decimal .otherTrainingCost (Admin.Scalar.Decimal "0"))
 
 
 type alias FundingRequestInput =
     { candidateSecondname : Maybe String
     , candidateThirdname : Maybe String
     , candidateGender : Gender
-    , individualHourCount : Float
-    , individualCost : Float
-    , collectiveHourCount : Float
-    , collectiveCost : Float
-    , basicSkillsHourCount : Float
-    , basicSkillsCost : Float
-    , mandatoryTrainingsHourCount : Float
-    , mandatoryTrainingsCost : Float
-    , certificateSkillsHourCount : Float
-    , certificateSkillsCost : Float
-    , otherTrainingHourCount : Float
-    , otherTrainingCost : Float
+    , individualHourCount : Decimal
+    , individualCost : Decimal
+    , collectiveHourCount : Decimal
+    , collectiveCost : Decimal
+    , basicSkillsHourCount : Decimal
+    , basicSkillsCost : Decimal
+    , mandatoryTrainingsHourCount : Decimal
+    , mandatoryTrainingsCost : Decimal
+    , certificateSkillsHourCount : Decimal
+    , certificateSkillsCost : Decimal
+    , otherTrainingHourCount : Decimal
+    , otherTrainingCost : Decimal
     }
 
 
@@ -83,25 +84,25 @@ toDict funding =
         string key =
             Just <| key funding
 
-        float key =
-            Just <| String.fromFloat <| key funding
+        decimal key =
+            Just <| Helper.decimalToString <| key funding
 
         fundingList =
             [ ( .candidateSecondname, string (.candidateSecondname >> Maybe.withDefault "") )
             , (.candidateGender,Just (genderToString (funding.candidateGender)))
             , ( .candidateThirdname, string (.candidateThirdname >> Maybe.withDefault "") )
-            , ( .individualHourCount, float .individualHourCount )
-            , ( .individualCost, float .individualCost )
-            , ( .collectiveHourCount, float .collectiveHourCount )
-            , ( .collectiveCost, float .collectiveCost )
-            , ( .basicSkillsHourCount, float .basicSkillsHourCount )
-            , ( .basicSkillsCost, float .basicSkillsCost )
-            , ( .mandatoryTrainingsHourCount, float .mandatoryTrainingsHourCount )
-            , ( .mandatoryTrainingsCost, float .mandatoryTrainingsCost )
-            , ( .certificateSkillsHourCount, float .certificateSkillsHourCount )
-            , ( .certificateSkillsCost, float .certificateSkillsCost )
-            , ( .otherTrainingHourCount, float .otherTrainingHourCount )
-            , ( .otherTrainingCost, float .otherTrainingCost )
+            , ( .individualHourCount, decimal .individualHourCount )
+            , ( .individualCost, decimal .individualCost )
+            , ( .collectiveHourCount, decimal .collectiveHourCount )
+            , ( .collectiveCost, decimal .collectiveCost )
+            , ( .basicSkillsHourCount, decimal .basicSkillsHourCount )
+            , ( .basicSkillsCost, decimal .basicSkillsCost )
+            , ( .mandatoryTrainingsHourCount, decimal .mandatoryTrainingsHourCount )
+            , ( .mandatoryTrainingsCost, decimal .mandatoryTrainingsCost )
+            , ( .certificateSkillsHourCount, decimal .certificateSkillsHourCount )
+            , ( .certificateSkillsCost, decimal .certificateSkillsCost )
+            , ( .otherTrainingHourCount, decimal .otherTrainingHourCount )
+            , ( .otherTrainingCost, decimal .otherTrainingCost )
             ]
                 |> Helper.toKeyedList keys
     in
