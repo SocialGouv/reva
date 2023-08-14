@@ -58,12 +58,17 @@ export async function seedCertificationAuthorities(prisma: PrismaClient) {
     });
 
     const certificationAuthorityOnCertifications =
-      certificationIdsByCertificationAuthorityIds.flatMap((c) =>
-        c.certificationIdsAsString.split(", ").map((cid) => ({
-          certificationAuthorityId: c.certificationAuthorityId,
-          certificationId: cid,
-        }))
-      );
+      certificationIdsByCertificationAuthorityIds
+        .flatMap((c) =>
+          c.certificationIdsAsString.split(", ").map((cid) => ({
+            certificationAuthorityId: c.certificationAuthorityId,
+            certificationId: cid,
+          }))
+        )
+        .filter(
+          (certificationAuthorityOnCertification) =>
+            certificationAuthorityOnCertification.certificationId
+        );
 
     await tx.certificationAuthorityOnCertification.deleteMany();
     await tx.certificationAuthorityOnCertification.createMany({
@@ -88,12 +93,14 @@ export async function seedCertificationAuthorities(prisma: PrismaClient) {
     });
 
     const certificationAuthorityOnDepartments =
-      departmentCodesIdsByCertificationAuthorityIds.flatMap((c) =>
-        c.departmentCodesAsString.split(", ").map((dCode) => ({
-          certificationAuthorityId: c.certificationAuthorityId,
-          departmentId: departments.find((d) => d.code === dCode)?.id || "",
-        }))
-      );
+      departmentCodesIdsByCertificationAuthorityIds
+        .flatMap((c) =>
+          c.departmentCodesAsString.split(", ").map((dCode) => ({
+            certificationAuthorityId: c.certificationAuthorityId,
+            departmentId: departments.find((d) => d.code === dCode)?.id || "",
+          }))
+        )
+        .filter((caod) => caod.departmentId);
 
     await tx.certificationAuthorityOnDepartment.deleteMany();
     await tx.certificationAuthorityOnDepartment.createMany({
