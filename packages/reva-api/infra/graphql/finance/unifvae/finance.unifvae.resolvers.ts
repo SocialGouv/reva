@@ -46,10 +46,11 @@ const unsafeResolvers = {
         fundingRequestCompleted
       );
       if (validationErrors.length) {
-        return new mercurius.ErrorWithProps("Validation error", {
-          businessErrors: validationErrors.map(
-            ({ fieldName, message }) => `input.${fieldName}: ${message}`
-          ),
+        const businessErrors = validationErrors.map(({ fieldName, message }) =>
+          fieldName === "GLOBAL" ? message : `input.${fieldName}: ${message}`
+        );
+        return new mercurius.ErrorWithProps(businessErrors[0], {
+          businessErrors,
         });
       }
       try {

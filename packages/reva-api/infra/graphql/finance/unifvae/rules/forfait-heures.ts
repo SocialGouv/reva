@@ -46,26 +46,14 @@ export const valideForfaitHeures = (
     });
   }
 
-  const complementaryHourCount =
-    fundingRequest.mandatoryTrainingsHourCount +
-    fundingRequest.basicSkillsHourCount +
-    fundingRequest.certificateSkillsHourCount +
-    fundingRequest.otherTrainingHourCount;
-  if (complementaryHourCount > maxComplementaryTrainingHours) {
+  const complementaryHourCount = fundingRequest.mandatoryTrainingsHourCount
+    .plus(fundingRequest.basicSkillsHourCount)
+    .plus(fundingRequest.certificateSkillsHourCount)
+    .plus(fundingRequest.otherTrainingHourCount);
+
+  if (complementaryHourCount.greaterThan(maxComplementaryTrainingHours)) {
     errors.push({
-      fieldName: "mandatoryTrainingsHourCount",
-      message: `Pour une certification ${certificationStatusName} le complément formatif ne peut excéder ${maxComplementaryTrainingHours} heures.`,
-    });
-    errors.push({
-      fieldName: "basicSkillsHourCount",
-      message: `Pour une certification ${certificationStatusName} le complément formatif ne peut excéder ${maxComplementaryTrainingHours} heures.`,
-    });
-    errors.push({
-      fieldName: "certificateSkillsHourCount",
-      message: `Pour une certification ${certificationStatusName} le complément formatif ne peut excéder ${maxComplementaryTrainingHours} heures.`,
-    });
-    errors.push({
-      fieldName: "otherTrainingHourCount",
+      fieldName: "GLOBAL",
       message: `Pour une certification ${certificationStatusName} le complément formatif ne peut excéder ${maxComplementaryTrainingHours} heures.`,
     });
   }

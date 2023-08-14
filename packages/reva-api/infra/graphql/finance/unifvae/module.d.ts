@@ -40,6 +40,6 @@ type BusinessRulesValidationFieldname =
   keyof FundingRequestUnifvaeControlledFields;
 
 interface BusinessRulesValidationError {
-  fieldName: BusinessRulesValidationFieldname;
+  fieldName: BusinessRulesValidationFieldname | "GLOBAL";
   message: string;
 }
