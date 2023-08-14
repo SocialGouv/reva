@@ -1,13 +1,13 @@
-module Data.Form.FundingRequestUniFvae exposing ( FundingRequestInput, fromDict, toDict, keys, validate)
+module Data.Form.FundingRequestUniFvae exposing (FundingRequestInput, fromDict, keys, maybeFundingRequest, toDict, validate)
 
 import Admin.Enum.Gender exposing (Gender(..))
+import Admin.Scalar exposing (Decimal)
 import Data.Candidacy exposing (Candidacy)
 import Data.Candidate exposing (genderFromString, genderToString)
 import Data.Form exposing (FormData)
 import Data.Form.Helper as Helper
 import Data.Referential exposing (Referential)
 import Dict exposing (Dict)
-import Admin.Scalar exposing (Decimal)
 
 
 keys =
@@ -27,7 +27,6 @@ keys =
     , otherTrainingHourCount = "otherTrainingHourCount"
     , otherTrainingCost = "otherTrainingCost"
     }
-
 
 
 fromDict : FormData -> FundingRequestInput
@@ -89,7 +88,7 @@ toDict funding =
 
         fundingList =
             [ ( .candidateSecondname, string (.candidateSecondname >> Maybe.withDefault "") )
-            , (.candidateGender,Just (genderToString (funding.candidateGender)))
+            , ( .candidateGender, Just (genderToString funding.candidateGender) )
             , ( .candidateThirdname, string (.candidateThirdname >> Maybe.withDefault "") )
             , ( .individualHourCount, decimal .individualHourCount )
             , ( .individualCost, decimal .individualCost )
@@ -108,3 +107,17 @@ toDict funding =
     in
     Dict.fromList fundingList
 
+
+defaultFundingRequest : Dict String String
+defaultFundingRequest =
+    Dict.fromList []
+
+
+maybeFundingRequest : Maybe FundingRequestInput -> Dict String String
+maybeFundingRequest maybeFr =
+    case maybeFr of
+        Just funding ->
+            toDict funding
+
+        Nothing ->
+            defaultFundingRequest

@@ -208,9 +208,9 @@ type alias CandidacyGetFundingRequestUnifvaeRequiredArguments =
 candidacy_getFundingRequestUnifvae :
     CandidacyGetFundingRequestUnifvaeRequiredArguments
     -> SelectionSet decodesTo Admin.Object.FundingRequestUnifvae
-    -> SelectionSet decodesTo RootQuery
+    -> SelectionSet (Maybe decodesTo) RootQuery
 candidacy_getFundingRequestUnifvae requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidacy_getFundingRequestUnifvae" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ Basics.identity
+    Object.selectionForCompositeField "candidacy_getFundingRequestUnifvae" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.nullable)
 
 
 type alias CandidateGetFundingRequestRequiredArguments =

@@ -1,24 +1,23 @@
 module Api.Form.FundingRequestUniFvae exposing (create, get)
 
 import Admin.InputObject
-import Admin.Object
 import Admin.Mutation as Mutation
+import Admin.Object
+import Admin.Object.FundingRequestUnifvae
+import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
 import Api.Token exposing (Token)
-import Data.Candidacy exposing ( CandidacyId)
+import Data.Candidacy exposing (CandidacyId)
 import Data.Form exposing (FormData)
 import Data.Form.FundingRequestUniFvae
 import Data.Referential
 import Dict exposing (Dict)
-import Graphql.OptionalArgument exposing (OptionalArgument(..))
-import Graphql.SelectionSet as SelectionSet
-import RemoteData exposing (RemoteData(..))
-import Graphql.OptionalArgument as OptionalArgument
+import Graphql.OptionalArgument as OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
-import Admin.Object.FundingRequestUnifvae
-import Admin.Query as Query
-import Data.Form.FundingRequestUniFvae
+import RemoteData exposing (RemoteData(..))
+
+
 create :
     CandidacyId
     -> String
@@ -56,7 +55,6 @@ create candidacyId endpointGraphql token toMsg ( candidacy, referential ) formDa
             Mutation.CandidacyCreateFundingRequestUnifvaeRequiredArguments
                 (Uuid <| Data.Candidacy.candidacyIdToString candidacyId)
                 fundingInput
-
     in
     Mutation.candidacy_createFundingRequestUnifvae fundingRequiredArg SelectionSet.empty
         |> Auth.makeMutation "createFundingRequestUnifvae" endpointGraphql token toMsg
@@ -69,19 +67,13 @@ get :
     -> (RemoteData (List String) (Dict String String) -> msg)
     -> Cmd msg
 get candidacyId endpointGraphql token toMsg =
-
     let
         fundingInfoRequiredArg =
             Query.CandidacyGetFundingRequestUnifvaeRequiredArguments (Uuid <| Data.Candidacy.candidacyIdToString candidacyId)
-
     in
-    SelectionSet.succeed Data.Form.FundingRequestUniFvae.toDict
-        |> with (selection)
-        |> Query.candidacy_getFundingRequestUnifvae fundingInfoRequiredArg
+    SelectionSet.succeed Data.Form.FundingRequestUniFvae.maybeFundingRequest
+        |> with (Query.candidacy_getFundingRequestUnifvae fundingInfoRequiredArg selection)
         |> Auth.makeQuery "getFundingRequestUnifvae" endpointGraphql token toMsg
-
-
-
 
 
 selection : SelectionSet Data.Form.FundingRequestUniFvae.FundingRequestInput Admin.Object.FundingRequestUnifvae

@@ -72,7 +72,7 @@ export const createFundingRequestUnifvae = async ({
 export const getFundingRequestUnifvaeFromCandidacyId = async (
   candidacyId: string
 ) =>
-  prismaClient.fundingRequestUnifvae.findFirstOrThrow({
+  prismaClient.fundingRequestUnifvae.findFirst({
     where: { candidacyId },
     include: {
       basicSkills: true,
