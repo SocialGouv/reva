@@ -201,6 +201,18 @@ feasibility requiredArgs____ object____ =
     Object.selectionForCompositeField "feasibility" [ Argument.required "feasibilityId" requiredArgs____.feasibilityId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
 
 
+type alias CandidacyGetFundingRequestUnifvaeRequiredArguments =
+    { candidacyId : Data.Scalar.Uuid }
+
+
+candidacy_getFundingRequestUnifvae :
+    CandidacyGetFundingRequestUnifvaeRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.FundingRequestUnifvae
+    -> SelectionSet decodesTo RootQuery
+candidacy_getFundingRequestUnifvae requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_getFundingRequestUnifvae" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ Basics.identity
+
+
 type alias CandidateGetFundingRequestRequiredArguments =
     { candidacyId : Data.Scalar.Uuid }
 

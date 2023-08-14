@@ -1,4 +1,4 @@
-module Data.Form.FundingRequestUniFvae exposing (FundingRequestInformations, FundingRequestInput, fromDict, fundingRequestInformations, keys, validate)
+module Data.Form.FundingRequestUniFvae exposing ( FundingRequestInput, fromDict, toDict, keys, validate)
 
 import Admin.Enum.Gender exposing (Gender(..))
 import Data.Candidacy exposing (Candidacy)
@@ -27,10 +27,6 @@ keys =
     , otherTrainingCost = "otherTrainingCost"
     }
 
-
-type alias FundingRequestInformations =
-    { fundingRequest : FundingRequestInput
-    }
 
 
 fromDict : FormData -> FundingRequestInput
@@ -81,8 +77,8 @@ validate ( candidacy, _ ) formData =
     Result.Ok ()
 
 
-fundingRequest : FundingRequestInput -> Dict String String
-fundingRequest funding =
+toDict : FundingRequestInput -> Dict String String
+toDict funding =
     let
         string key =
             Just <| key funding
@@ -111,17 +107,3 @@ fundingRequest funding =
     in
     Dict.fromList fundingList
 
-
-defaultFundingRequest : Dict String String
-defaultFundingRequest =
-    Dict.fromList []
-
-
-fundingRequestInformations : Maybe FundingRequestInput -> Dict String String
-fundingRequestInformations maybeFundingRequest =
-    case maybeFundingRequest of
-        Just funding ->
-            fundingRequest funding
-
-        Nothing ->
-            defaultFundingRequest
