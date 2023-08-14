@@ -68,7 +68,7 @@ export const valideForfaitHeures = (
     });
   }
 
-  const complementaryHourCount = (mandatoryTrainingsHourCount ?? new Decimal(0))
+  const complementaryHourCount = mandatoryTrainingsHourCount
     .plus(basicSkillsHourCount)
     .plus(certificateSkillsHourCount)
     .plus(otherTrainingHourCount);

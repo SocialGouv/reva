@@ -18,18 +18,20 @@ export const validateComplementFormatif = (
   ];
 
   const complementHoursSum = complementHourFields.reduce(
-    (a) => a, // TODO : do the math
+    (sum: Decimal, fieldName) =>
+      input.fundingRequest[fieldName]
+        ? sum.plus(input.fundingRequest[fieldName])
+        : sum,
     new Decimal(0)
   );
 
   if (complementHoursSum.greaterThan(70)) {
-    return complementHourFields.map(
-      (fieldName: keyof FundingRequestUnifvaeHourFields) => ({
-        fieldName,
-        message:
-          "Le coût de l'accompagnement individuel ne doit pas excéder 70€ l’heure",
-      })
-    );
+    return [
+      {
+        fieldName: "GLOBAL",
+        message: "Les compléments formatifs ne peuvent excéder 70 heures",
+      },
+    ];
   }
 
   return [];
