@@ -74,7 +74,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
 
         if (file) {
           reply
-            .header("Content-Disposition", "inline; filename=" + file.name)
+            .header("Content-Disposition", "inline")
             .header("Content-Length", file.content.length)
             .type(file.mimeType)
             .send(file.content);
