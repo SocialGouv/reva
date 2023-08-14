@@ -9,4 +9,5 @@ const applyBusinessValidationRules = (
     .concat(validHoursCountAndCosts(input))
     .concat(valideForfaitHeures(input))
     .concat(validateCoutsHoraires(input));
+
 export default applyBusinessValidationRules;

@@ -30,18 +30,18 @@ input FundingRequestUnifvaeInput {
   candidateThirdname: String
   candidateLastname: String!
   candidateGender: Gender!
-  individualHourCount: Float!
-  individualCost: Float!
-  collectiveHourCount: Float!
-  collectiveCost: Float!
-  basicSkillsHourCount: Float!
-  basicSkillsCost: Float!
-  mandatoryTrainingsHourCount: Float!
-  mandatoryTrainingsCost: Float!
-  certificateSkillsHourCount: Float!
-  certificateSkillsCost: Float!
-  otherTrainingHourCount: Float!
-  otherTrainingCost: Float!
+  individualHourCount: Decimal!
+  individualCost: Decimal!
+  collectiveHourCount: Decimal!
+  collectiveCost: Decimal!
+  basicSkillsHourCount: Decimal!
+  basicSkillsCost: Decimal!
+  mandatoryTrainingsHourCount: Decimal!
+  mandatoryTrainingsCost: Decimal!
+  certificateSkillsHourCount: Decimal!
+  certificateSkillsCost: Decimal!
+  otherTrainingHourCount: Decimal!
+  otherTrainingCost: Decimal!
 }
 
 type Query {

@@ -1,17 +1,24 @@
-interface FundingRequestUnifvaeControlledFields {
-  individualHourCount: number;
-  individualCost: number;
-  collectiveHourCount: number;
-  collectiveCost: number;
-  basicSkillsHourCount: number;
-  basicSkillsCost: number;
-  mandatoryTrainingsHourCount: number;
-  mandatoryTrainingsCost: number;
-  certificateSkillsHourCount: number;
-  certificateSkillsCost: number;
-  otherTrainingHourCount: number;
-  otherTrainingCost: number;
+interface FundingRequestUnifvaeHourFields {
+  individualHourCount: Decimal;
+  collectiveHourCount: Decimal;
+  basicSkillsHourCount: Decimal;
+  mandatoryTrainingsHourCount: Decimal;
+  certificateSkillsHourCount: Decimal;
+  otherTrainingHourCount: Decimal;
 }
+
+interface FundingRequestUnifvaeCostFields {
+  individualCost: Decimal;
+  collectiveCost: Decimal;
+  basicSkillsCost: Decimal;
+  mandatoryTrainingsCost: Decimal;
+  certificateSkillsCost: Decimal;
+  otherTrainingCost: Decimal;
+}
+
+type FundingRequestUnifvaeControlledFields = FundingRequestUnifvaeHourFields &
+  FundingRequestUnifvaeCostFields;
+
 interface FundingRequestUnifvaeInput {
   candidacyId: string;
   fundingRequest: {
