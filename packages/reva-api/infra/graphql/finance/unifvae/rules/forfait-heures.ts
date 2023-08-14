@@ -18,6 +18,8 @@
 // le champ Accompagnement Collectif est limité à 10 heures maximum
 // le champ Complément formatif est limité à 35 heures maximum
 
+import { Decimal } from "@prisma/client/runtime";
+
 export const valideForfaitHeures = (
   input: FundingRequestUnifvaeInputCompleted
 ): BusinessRulesValidationError[] => {
@@ -26,30 +28,50 @@ export const valideForfaitHeures = (
   const certificationStatusName = fundingRequest.isPartialCertification
     ? "partielle"
     : "complète";
-  const maxIndividualHours = fundingRequest.isPartialCertification ? 15 : 30;
-  const maxCollectiveHours = fundingRequest.isPartialCertification ? 10 : 20;
-  const maxComplementaryTrainingHours = fundingRequest.isPartialCertification
-    ? 35
-    : 70;
+  const maxIndividualHours = new Decimal(
+    fundingRequest.isPartialCertification ? 15 : 30
+  );
+  const maxCollectiveHours = new Decimal(
+    fundingRequest.isPartialCertification ? 10 : 20
+  );
+  const maxComplementaryTrainingHours = new Decimal(
+    fundingRequest.isPartialCertification ? 35 : 70
+  );
 
-  if (fundingRequest.individualHourCount > maxIndividualHours) {
+  let {
+    individualHourCount,
+    collectiveHourCount,
+    mandatoryTrainingsHourCount,
+    basicSkillsHourCount,
+    certificateSkillsHourCount,
+    otherTrainingHourCount,
+  } = fundingRequest;
+
+  individualHourCount = individualHourCount ?? new Decimal(0);
+  collectiveHourCount = collectiveHourCount ?? new Decimal(0);
+  mandatoryTrainingsHourCount = mandatoryTrainingsHourCount ?? new Decimal(0);
+  basicSkillsHourCount = basicSkillsHourCount ?? new Decimal(0);
+  certificateSkillsHourCount = certificateSkillsHourCount ?? new Decimal(0);
+  otherTrainingHourCount = otherTrainingHourCount ?? new Decimal(0);
+
+  if (individualHourCount.greaterThan(maxIndividualHours)) {
     errors.push({
       fieldName: "individualHourCount",
       message: `Pour une certification ${certificationStatusName} l'accompagnement individuel ne peut excéder ${maxIndividualHours} heures.`,
     });
   }
 
-  if (fundingRequest.collectiveHourCount > maxCollectiveHours) {
+  if (collectiveHourCount.greaterThan(maxCollectiveHours)) {
     errors.push({
       fieldName: "collectiveHourCount",
       message: `Pour une certification ${certificationStatusName} l'accompagnement collectif ne peut excéder ${maxCollectiveHours} heures.`,
     });
   }
 
-  const complementaryHourCount = fundingRequest.mandatoryTrainingsHourCount
-    .plus(fundingRequest.basicSkillsHourCount)
-    .plus(fundingRequest.certificateSkillsHourCount)
-    .plus(fundingRequest.otherTrainingHourCount);
+  const complementaryHourCount = (mandatoryTrainingsHourCount ?? new Decimal(0))
+    .plus(basicSkillsHourCount)
+    .plus(certificateSkillsHourCount)
+    .plus(otherTrainingHourCount);
 
   if (complementaryHourCount.greaterThan(maxComplementaryTrainingHours)) {
     errors.push({

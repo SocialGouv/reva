@@ -1,3 +1,5 @@
+import { Decimal } from "@prisma/client/runtime";
+
 import {
   candidacyId,
   fundingRequestFullCertOkHours,
@@ -11,7 +13,7 @@ describe("individualHourCount rules", () => {
       fundingRequest: {
         ...fundingRequestFullCertOkHours,
         isPartialCertification: false,
-        individualHourCount: 32,
+        individualHourCount: new Decimal(32),
       },
     });
     expect(errors.length).toBe(1);
@@ -25,7 +27,7 @@ describe("individualHourCount rules", () => {
       fundingRequest: {
         ...fundingRequestFullCertOkHours,
         isPartialCertification: true,
-        individualHourCount: 16,
+        individualHourCount: new Decimal(16),
       },
     });
     expect(errors.length).toBe(1);
@@ -39,7 +41,7 @@ describe("individualHourCount rules", () => {
       fundingRequest: {
         ...fundingRequestFullCertOkHours,
         isPartialCertification: false,
-        individualHourCount: 30,
+        individualHourCount: new Decimal(30),
       },
     });
     expect(errors.length).toBe(0);
@@ -50,7 +52,7 @@ describe("individualHourCount rules", () => {
       fundingRequest: {
         ...fundingRequestFullCertOkHours,
         isPartialCertification: true,
-        individualHourCount: 15,
+        individualHourCount: new Decimal(15),
       },
     });
     expect(errors.length).toBe(0);
@@ -64,7 +66,7 @@ describe("collectiveHourCount rules", () => {
       fundingRequest: {
         ...fundingRequestFullCertOkHours,
         isPartialCertification: false,
-        collectiveHourCount: 22,
+        collectiveHourCount: new Decimal(22),
       },
     });
     expect(errors.length).toBe(1);
@@ -78,7 +80,7 @@ describe("collectiveHourCount rules", () => {
       fundingRequest: {
         ...fundingRequestFullCertOkHours,
         isPartialCertification: true,
-        collectiveHourCount: 12,
+        collectiveHourCount: new Decimal(12),
       },
     });
     expect(errors.length).toBe(1);
@@ -92,7 +94,7 @@ describe("collectiveHourCount rules", () => {
       fundingRequest: {
         ...fundingRequestFullCertOkHours,
         isPartialCertification: false,
-        collectiveHourCount: 10,
+        collectiveHourCount: new Decimal(10),
       },
     });
     expect(errors.length).toBe(0);
@@ -103,7 +105,7 @@ describe("collectiveHourCount rules", () => {
       fundingRequest: {
         ...fundingRequestFullCertOkHours,
         isPartialCertification: true,
-        collectiveHourCount: 10,
+        collectiveHourCount: new Decimal(10),
       },
     });
     expect(errors.length).toBe(0);
@@ -117,25 +119,16 @@ describe("complementaryTraining hours sum rules", () => {
       fundingRequest: {
         ...fundingRequestFullCertOkHours,
         isPartialCertification: false,
-        basicSkillsHourCount: 68,
-        mandatoryTrainingsHourCount: 1,
-        certificateSkillsHourCount: 1,
-        otherTrainingHourCount: 1,
+        basicSkillsHourCount: new Decimal(68),
+        mandatoryTrainingsHourCount: new Decimal(1),
+        certificateSkillsHourCount: new Decimal(1),
+        otherTrainingHourCount: new Decimal(1),
       },
     });
-    expect(errors.length).toBe(4);
-    expect(errors[0].fieldName).toBe("mandatoryTrainingsHourCount");
+    expect(errors.length).toBe(1);
+    expect(errors[0].fieldName).toBe("GLOBAL");
     expect(errors[0].message).toContain("certification complète");
     expect(errors[0].message).toContain("70");
-    expect(errors[1].fieldName).toBe("basicSkillsHourCount");
-    expect(errors[1].message).toContain("certification complète");
-    expect(errors[1].message).toContain("70");
-    expect(errors[2].fieldName).toBe("certificateSkillsHourCount");
-    expect(errors[2].message).toContain("certification complète");
-    expect(errors[2].message).toContain("70");
-    expect(errors[3].fieldName).toBe("otherTrainingHourCount");
-    expect(errors[3].message).toContain("certification complète");
-    expect(errors[3].message).toContain("70");
   });
   test("Should yield 3 errors when partial certification and sum > 35", () => {
     const errors = valideForfaitHeures({
@@ -143,25 +136,16 @@ describe("complementaryTraining hours sum rules", () => {
       fundingRequest: {
         ...fundingRequestFullCertOkHours,
         isPartialCertification: true,
-        basicSkillsHourCount: 33,
-        mandatoryTrainingsHourCount: 1,
-        certificateSkillsHourCount: 1,
-        otherTrainingHourCount: 1,
+        basicSkillsHourCount: new Decimal(33),
+        mandatoryTrainingsHourCount: new Decimal(1),
+        certificateSkillsHourCount: new Decimal(1),
+        otherTrainingHourCount: new Decimal(1),
       },
     });
-    expect(errors.length).toBe(4);
-    expect(errors[0].fieldName).toBe("mandatoryTrainingsHourCount");
+    expect(errors.length).toBe(1);
+    expect(errors[0].fieldName).toBe("GLOBAL");
     expect(errors[0].message).toContain("certification partielle");
     expect(errors[0].message).toContain("35");
-    expect(errors[1].fieldName).toBe("basicSkillsHourCount");
-    expect(errors[1].message).toContain("certification partielle");
-    expect(errors[1].message).toContain("35");
-    expect(errors[2].fieldName).toBe("certificateSkillsHourCount");
-    expect(errors[2].message).toContain("certification partielle");
-    expect(errors[2].message).toContain("35");
-    expect(errors[3].fieldName).toBe("otherTrainingHourCount");
-    expect(errors[3].message).toContain("certification partielle");
-    expect(errors[3].message).toContain("35");
   });
   test("Should return no error when full certification and sum <= 70", () => {
     const errors = valideForfaitHeures({
@@ -169,10 +153,10 @@ describe("complementaryTraining hours sum rules", () => {
       fundingRequest: {
         ...fundingRequestFullCertOkHours,
         isPartialCertification: false,
-        basicSkillsHourCount: 67,
-        mandatoryTrainingsHourCount: 1,
-        certificateSkillsHourCount: 1,
-        otherTrainingHourCount: 1,
+        basicSkillsHourCount: new Decimal(67),
+        mandatoryTrainingsHourCount: new Decimal(1),
+        certificateSkillsHourCount: new Decimal(1),
+        otherTrainingHourCount: new Decimal(1),
       },
     });
     expect(errors.length).toBe(0);
@@ -183,10 +167,10 @@ describe("complementaryTraining hours sum rules", () => {
       fundingRequest: {
         ...fundingRequestFullCertOkHours,
         isPartialCertification: true,
-        basicSkillsHourCount: 32,
-        mandatoryTrainingsHourCount: 1,
-        certificateSkillsHourCount: 1,
-        otherTrainingHourCount: 1,
+        basicSkillsHourCount: new Decimal(32),
+        mandatoryTrainingsHourCount: new Decimal(1),
+        certificateSkillsHourCount: new Decimal(1),
+        otherTrainingHourCount: new Decimal(1),
       },
     });
     expect(errors.length).toBe(0);
