@@ -79,4 +79,5 @@ const unsafeResolvers = {
 
 export const financeUnifvaeResolvers = composeResolvers(unsafeResolvers, {
   "Mutation.candidacy_createFundingRequestUnifvae": isAdminOrCandidacyCompanion,
+  "Query.candidacy_getFundingRequestUnifvae": isAdminOrCandidacyCompanion,
 });

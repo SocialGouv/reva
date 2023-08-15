@@ -22,10 +22,8 @@ type FundingRequestUnifvaeControlledFields = FundingRequestUnifvaeHourFields &
 interface FundingRequestUnifvaeInput {
   candidacyId: string;
   fundingRequest: {
-    candidateFirstname: string;
-    candidateFirstname: string;
-    candidateFirstname: string;
-    candidateFirstname: string;
+    candidateSecondname: string;
+    candidateThirdname: string;
     candidateGender: "man" | "woman" | "undisclosed";
   } & FundingRequestUnifvaeControlledFields;
 }

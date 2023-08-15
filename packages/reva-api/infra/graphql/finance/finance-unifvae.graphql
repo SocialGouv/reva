@@ -25,10 +25,8 @@ type FundingRequestUnifvae {
 }
 
 input FundingRequestUnifvaeInput {
-  candidateFirstname: String!
   candidateSecondname: String
   candidateThirdname: String
-  candidateLastname: String!
   candidateGender: Gender!
   individualHourCount: Decimal!
   individualCost: Decimal!

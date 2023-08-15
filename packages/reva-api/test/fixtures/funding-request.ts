@@ -7,8 +7,8 @@ const dummyUuid = "123456789abc-1234-1234-12345678-1234";
 export const candidacyId = dummyUuid;
 
 const candidateInfo = {
-  candidateFirstname: "Coco",
-  candidateLastname: "Bello",
+  candidateSecondname: "Coco",
+  candidateThirdname: "Bello",
   candidateGender: "undisclosed" as Gender,
 };
 

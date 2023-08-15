@@ -6,6 +6,7 @@ import {
   Account,
   Candidacy,
   CandidacyStatusStep,
+  Candidate,
   FundingRequestUnifvae,
   Gender,
   Organism,
@@ -16,10 +17,14 @@ import { authorizationHeaderForUser } from "../../../../test/helpers/authorizati
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 import { prismaClient } from "../../../database/postgres/client";
 
+const candidateSample = {
+  firstname: "Jojo",
+  lastname: "De Garenne",
+};
+
 const fundingRequestSample = {
-  candidateFirstname: "Jojo",
   candidateSecondname: "Lapin",
-  candidateLastname: "De Garenne",
+  candidateThirdname: "Piou",
   candidateGender: "man",
   basicSkillsCost: 12.3,
   basicSkillsHourCount: 2.5,
@@ -38,9 +43,11 @@ const fundingRequestSample = {
 const candidateEmail = "toto@bongo.eu",
   aapEmail = "aap@formation.com",
   aapKeycloakId = "e4965f17-6c39-4ed2-8786-e504e320e476",
-  myCandidateEmail = "meuh@cocorico.com";
+  myCandidateEmail = "meuh@cocorico.com",
+  myCandidatKeycloakId = "f5965f17-6c39-4ed2-8786-e504e320e476";
 
 let organism: Organism,
+  myCandidate: Candidate,
   candidacyUnireva: Candidacy,
   candidacyUnifvae: any,
   aapAccount: Account,
@@ -62,12 +69,30 @@ beforeAll(async () => {
     },
   });
 
+  const departmentManche = await prismaClient.department.findUniqueOrThrow({
+    where: { code: "50" },
+    select: { id: true },
+  });
+
+  myCandidate = await prismaClient.candidate.create({
+    data: {
+      gender: fundingRequestSample.candidateGender as Gender,
+      firstname: candidateSample.firstname,
+      lastname: candidateSample.lastname,
+      email: candidateEmail,
+      keycloakId: myCandidatKeycloakId,
+      phone: "0123456789",
+      departmentId: departmentManche.id,
+    },
+  });
+
   candidacyUnifvae = await prismaClient.candidacy.create({
     data: {
       deviceId: candidateEmail,
       email: candidateEmail,
       organismId: organism.id,
       financeModule: "unifvae",
+      candidateId: myCandidate.id,
       candidacyStatuses: {
         createMany: {
           data: [
@@ -134,6 +159,10 @@ beforeAll(async () => {
     data: {
       candidacyId: myCandidacy.id,
       ...fundingRequestSample,
+      candidateFirstname: myCandidate.firstname,
+      candidateSecondname: myCandidate.firstname2,
+      candidateThirdname: myCandidate.firstname3,
+      candidateLastname: myCandidate.lastname,
       candidateGender: fundingRequestSample.candidateGender as Gender,
       otherTraining: candidacyUnifvae.otherTraining ?? "",
       certificateSkills: candidacyUnifvae.certificateSkills ?? "",
@@ -156,6 +185,7 @@ afterAll(async () => {
   });
   await prismaClient.organism.delete({ where: { id: organism.id } });
   await prismaClient.account.delete({ where: { id: aapAccount.id } });
+  await prismaClient.candidate.delete({ where: { id: myCandidate.id } });
 });
 
 test("should create fundingRequestUnifvae", async () => {
@@ -182,7 +212,7 @@ test("should create fundingRequestUnifvae", async () => {
   expect(resp.statusCode).toBe(200);
   const obj = resp.json();
   expect(obj).not.toHaveProperty("errors");
-  // Check
+  // Check resulting object
   expect(obj).toMatchObject({
     data: {
       candidacy_createFundingRequestUnifvae: {
@@ -190,14 +220,25 @@ test("should create fundingRequestUnifvae", async () => {
       },
     },
   });
+
   // Check candidacy status
   const status = await prismaClient.candidaciesStatus.findFirst({
     where: { candidacyId: candidacyUnifvae.id, isActive: true },
   });
   expect(status?.status).toBe(CandidacyStatusStep.DEMANDE_FINANCEMENT_ENVOYE);
+
+  // Check candidate
+  myCandidate = await prismaClient.candidate.findUniqueOrThrow({
+    where: { id: myCandidate.id },
+  });
+  expect(myCandidate).toMatchObject({
+    firstname2: fundingRequestSample.candidateSecondname,
+    firstname3: fundingRequestSample.candidateThirdname,
+    gender: fundingRequestSample.candidateGender,
+  });
 });
 
-test("Should fail when candidacy is not bound to Unifvae finance module", async () => {
+test("Should fail to create fundingRequestUnifvae when candidacy is not bound to Unifvae finance module", async () => {
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -246,8 +287,28 @@ test("should fetch fundingRequestUnifvae", async () => {
   expect(resp.statusCode).toBe(200);
   const obj = resp.json();
   expect(obj).not.toHaveProperty("errors");
-  // TODO : bring this check back
-  // expect(obj.data.candidacy_getFundingRequestUnifvae).toMatchObject(
-  //   myFundingRequest
-  // );
+
+  expect(obj.data.candidacy_getFundingRequestUnifvae).to;
+
+  expect(obj.data.candidacy_getFundingRequestUnifvae).toMatchObject({
+    candidateFirstname: myCandidate.firstname,
+    candidateSecondname: myCandidate.firstname2,
+    candidateThirdname: myCandidate.firstname3,
+    candidateLastname: myCandidate.lastname,
+    candidateGender: myCandidate.gender,
+    basicSkillsCost: myFundingRequest.basicSkillsCost.toNumber(),
+    basicSkillsHourCount: myFundingRequest.basicSkillsHourCount.toNumber(),
+    certificateSkillsCost: myFundingRequest.certificateSkillsCost.toNumber(),
+    certificateSkillsHourCount:
+      myFundingRequest.certificateSkillsHourCount.toNumber(),
+    collectiveCost: myFundingRequest.collectiveCost.toNumber(),
+    collectiveHourCount: myFundingRequest.collectiveHourCount.toNumber(),
+    individualCost: myFundingRequest.individualCost.toNumber(),
+    individualHourCount: myFundingRequest.individualHourCount.toNumber(),
+    mandatoryTrainingsCost: myFundingRequest.mandatoryTrainingsCost.toNumber(),
+    mandatoryTrainingsHourCount:
+      myFundingRequest.mandatoryTrainingsHourCount.toNumber(),
+    otherTrainingCost: myFundingRequest.otherTrainingCost.toNumber(),
+    otherTrainingHourCount: myFundingRequest.otherTrainingHourCount.toNumber(),
+  });
 });

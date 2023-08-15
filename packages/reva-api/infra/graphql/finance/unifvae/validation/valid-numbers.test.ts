@@ -6,8 +6,8 @@ import { validHoursCountAndCosts } from "./valid-numbers";
 
 const fundingRequestBase = {
   companionId: "123456789abc-1234-1234-12345678-1234",
-  candidateFirstname: "Coco",
-  candidateLastname: "Bello",
+  candidateSecondname: "Coco",
+  candidateThirdname: "Bello",
   candidateGender: "undisclosed" as Gender,
   basicSkillsCost: new Decimal(1),
   certificateSkillsCost: new Decimal(1),

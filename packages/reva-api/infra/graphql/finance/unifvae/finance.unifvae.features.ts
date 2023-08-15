@@ -1,3 +1,5 @@
+import { Candidate } from "@prisma/client";
+
 import { updateCandidacyStatus } from "../../../database/postgres/candidacies";
 import { prismaClient } from "../../../database/postgres/client";
 
@@ -13,6 +15,7 @@ export const createFundingRequestUnifvae = async ({
       trainings: true,
       otherTraining: true,
       certificateSkills: true,
+      candidate: true,
     },
   });
   if (candidacy === null) {
@@ -29,6 +32,8 @@ export const createFundingRequestUnifvae = async ({
       otherTraining: candidacy.otherTraining ?? "",
       certificateSkills: candidacy.certificateSkills ?? "",
       ...fundingRequest,
+      candidateFirstname: candidacy.candidate?.firstname,
+      candidateLastname: candidacy.candidate?.lastname,
     },
   });
   await prismaClient.$transaction([
@@ -43,6 +48,14 @@ export const createFundingRequestUnifvae = async ({
         trainingId,
         fundingRequestUnifvaeId: fundreq.id,
       })),
+    }),
+    prismaClient.candidate.update({
+      where: { id: (candidacy.candidate as Candidate).id },
+      data: {
+        gender: fundingRequest.candidateGender,
+        firstname2: fundingRequest.candidateSecondname,
+        firstname3: fundingRequest.candidateThirdname,
+      },
     }),
   ]);
   await updateCandidacyStatus({
