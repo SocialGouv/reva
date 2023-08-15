@@ -3,7 +3,10 @@ module Api.Form.FundingRequestUniFvae exposing (create, get)
 import Admin.InputObject
 import Admin.Mutation as Mutation
 import Admin.Object
+import Admin.Object.BasicSkill
+import Admin.Object.Candidacy
 import Admin.Object.FundingRequestUnifvae
+import Admin.Object.Training
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
@@ -29,7 +32,7 @@ create :
 create candidacyId endpointGraphql token toMsg ( candidacy, referential ) formData =
     let
         funding =
-            Data.Form.FundingRequestUniFvae.fromDict formData
+            Data.Form.FundingRequestUniFvae.fromDict referential.basicSkills referential.mandatoryTrainings formData
 
         fundingInput =
             Admin.InputObject.FundingRequestUnifvaeInput
@@ -66,17 +69,30 @@ get :
     -> Cmd msg
 get candidacyId endpointGraphql token toMsg =
     let
-        fundingInfoRequiredArg =
-            Query.CandidacyGetFundingRequestUnifvaeRequiredArguments (Uuid <| Data.Candidacy.candidacyIdToString candidacyId)
+        getCandidacyByIdRequiredArguments =
+            Query.GetCandidacyByIdRequiredArguments (Id (Data.Candidacy.candidacyIdToString candidacyId))
+
+        fundingRequestFromCandidacySelection =
+            Admin.Object.Candidacy.fundingRequestUnifvae fundingRequestSelection
+
+        basicSkillIdsFromCandidacySelection =
+            Admin.Object.Candidacy.basicSkillIds
+
+        mandatoryTrainingIdsFromCandidacySelection =
+            Admin.Object.Candidacy.mandatoryTrainingIds
     in
     SelectionSet.succeed Data.Form.FundingRequestUniFvae.maybeFundingRequest
-        |> with (Query.candidacy_getFundingRequestUnifvae fundingInfoRequiredArg selection)
-        |> Auth.makeQuery "getFundingRequestUnifvae" endpointGraphql token toMsg
+        |> with fundingRequestFromCandidacySelection
+        |> with basicSkillIdsFromCandidacySelection
+        |> with mandatoryTrainingIdsFromCandidacySelection
+        |> Query.getCandidacyById getCandidacyByIdRequiredArguments
+        |> SelectionSet.nonNullOrFail
+        |> Auth.makeQuery "getCandidacyById" endpointGraphql token toMsg
 
 
-selection : SelectionSet Data.Form.FundingRequestUniFvae.FundingRequestInput Admin.Object.FundingRequestUnifvae
-selection =
-    SelectionSet.succeed Data.Form.FundingRequestUniFvae.FundingRequestInput
+fundingRequestSelection : SelectionSet Data.Form.FundingRequestUniFvae.FundingRequest Admin.Object.FundingRequestUnifvae
+fundingRequestSelection =
+    SelectionSet.succeed Data.Form.FundingRequestUniFvae.FundingRequest
         |> with Admin.Object.FundingRequestUnifvae.candidateSecondname
         |> with Admin.Object.FundingRequestUnifvae.candidateThirdname
         |> with Admin.Object.FundingRequestUnifvae.candidateGender
@@ -84,8 +100,16 @@ selection =
         |> with Admin.Object.FundingRequestUnifvae.individualCost
         |> with Admin.Object.FundingRequestUnifvae.collectiveHourCount
         |> with Admin.Object.FundingRequestUnifvae.collectiveCost
+        |> with
+            (Admin.Object.FundingRequestUnifvae.basicSkills
+                (SelectionSet.succeed (\(Uuid id) -> id) |> with Admin.Object.BasicSkill.id)
+            )
         |> with Admin.Object.FundingRequestUnifvae.basicSkillsHourCount
         |> with Admin.Object.FundingRequestUnifvae.basicSkillsCost
+        |> with
+            (Admin.Object.FundingRequestUnifvae.mandatoryTrainings
+                (SelectionSet.succeed (\(Id id) -> id) |> with Admin.Object.Training.id)
+            )
         |> with Admin.Object.FundingRequestUnifvae.mandatoryTrainingsHourCount
         |> with Admin.Object.FundingRequestUnifvae.mandatoryTrainingsCost
         |> with Admin.Object.FundingRequestUnifvae.certificateSkillsHourCount

@@ -1,12 +1,12 @@
-module Data.Form.FundingRequestUniFvae exposing (FundingRequestInput, fromDict, keys, maybeFundingRequest, toDict, validate)
+module Data.Form.FundingRequestUniFvae exposing (FundingRequest, fromDict, keys, maybeFundingRequest, toDict, validate)
 
 import Admin.Enum.Gender exposing (Gender(..))
-import Admin.Scalar exposing (Decimal)
+import Admin.Scalar exposing (Decimal, Uuid)
 import Data.Candidacy exposing (Candidacy)
 import Data.Candidate exposing (genderFromString, genderToString)
 import Data.Form exposing (FormData)
 import Data.Form.Helper as Helper
-import Data.Referential exposing (Referential)
+import Data.Referential exposing (BasicSkill, MandatoryTraining, Referential)
 import Dict exposing (Dict)
 
 
@@ -18,8 +18,10 @@ keys =
     , individualCost = "individualCost"
     , collectiveHourCount = "collectiveHourCount"
     , collectiveCost = "collectiveCost"
+    , mandatoryTrainingIds = "mandatoryTrainingIds"
     , mandatoryTrainingsHourCount = "mandatoryTrainingsHourCount"
     , mandatoryTrainingsCost = "mandatoryTrainingsCost"
+    , basicSkillsIds = "basicSkillsIds"
     , basicSkillsHourCount = "basicSkillsHourCount"
     , basicSkillsCost = "basicSkillsCost"
     , certificateSkillsHourCount = "certificateSkillsHourCount"
@@ -29,13 +31,13 @@ keys =
     }
 
 
-fromDict : FormData -> FundingRequestInput
-fromDict formData =
+fromDict : List BasicSkill -> List MandatoryTraining -> FormData -> FundingRequest
+fromDict basicSkillsIds mandatoryTrainingIds formData =
     let
         decode =
             Helper.decode keys formData
     in
-    FundingRequestInput
+    FundingRequest
         (decode.maybe.string .candidateSecondname)
         (decode.maybe.string .candidateThirdname)
         (decode.generic .candidateGender genderFromString Undisclosed)
@@ -43,8 +45,10 @@ fromDict formData =
         (decode.decimal .individualCost (Admin.Scalar.Decimal "0"))
         (decode.decimal .collectiveHourCount (Admin.Scalar.Decimal "0"))
         (decode.decimal .collectiveCost (Admin.Scalar.Decimal "0"))
+        (decode.list basicSkillsIds)
         (decode.decimal .basicSkillsHourCount (Admin.Scalar.Decimal "0"))
         (decode.decimal .basicSkillsCost (Admin.Scalar.Decimal "0"))
+        (decode.list mandatoryTrainingIds)
         (decode.decimal .mandatoryTrainingsHourCount (Admin.Scalar.Decimal "0"))
         (decode.decimal .mandatoryTrainingsCost (Admin.Scalar.Decimal "0"))
         (decode.decimal .certificateSkillsHourCount (Admin.Scalar.Decimal "0"))
@@ -53,7 +57,7 @@ fromDict formData =
         (decode.decimal .otherTrainingCost (Admin.Scalar.Decimal "0"))
 
 
-type alias FundingRequestInput =
+type alias FundingRequest =
     { candidateSecondname : Maybe String
     , candidateThirdname : Maybe String
     , candidateGender : Gender
@@ -61,8 +65,10 @@ type alias FundingRequestInput =
     , individualCost : Decimal
     , collectiveHourCount : Decimal
     , collectiveCost : Decimal
+    , basicSkillsIds : List String
     , basicSkillsHourCount : Decimal
     , basicSkillsCost : Decimal
+    , mandatoryTrainingIds : List String
     , mandatoryTrainingsHourCount : Decimal
     , mandatoryTrainingsCost : Decimal
     , certificateSkillsHourCount : Decimal
@@ -77,7 +83,7 @@ validate ( candidacy, _ ) formData =
     Result.Ok ()
 
 
-toDict : FundingRequestInput -> Dict String String
+toDict : FundingRequest -> Dict String String
 toDict funding =
     let
         string key =
@@ -85,6 +91,12 @@ toDict funding =
 
         decimal key =
             Just <| Helper.decimalToString <| key funding
+
+        mandatoryTrainingsChecked =
+            Helper.toCheckedList funding.mandatoryTrainingIds
+
+        basicSkillsChecked =
+            Helper.toCheckedList funding.basicSkillsIds
 
         fundingList =
             [ ( .candidateSecondname, string (.candidateSecondname >> Maybe.withDefault "") )
@@ -105,19 +117,26 @@ toDict funding =
             ]
                 |> Helper.toKeyedList keys
     in
-    Dict.fromList fundingList
+    Dict.fromList (mandatoryTrainingsChecked ++ basicSkillsChecked ++ fundingList)
 
 
-defaultFundingRequest : Dict String String
-defaultFundingRequest =
-    Dict.fromList []
+defaultFundingRequest : List Uuid -> List Uuid -> Dict String String
+defaultFundingRequest basicSkillIds mandatoryTrainingIds =
+    let
+        mandatoryTrainingsChecked =
+            Helper.uuidToCheckedList mandatoryTrainingIds
+
+        basicSkillsChecked =
+            Helper.uuidToCheckedList basicSkillIds
+    in
+    Dict.fromList (mandatoryTrainingsChecked ++ basicSkillsChecked)
 
 
-maybeFundingRequest : Maybe FundingRequestInput -> Dict String String
-maybeFundingRequest maybeFr =
+maybeFundingRequest : Maybe FundingRequest -> List Uuid -> List Uuid -> Dict String String
+maybeFundingRequest maybeFr basicSkillIds mandatoryTrainingIds =
     case maybeFr of
         Just funding ->
             toDict funding
 
         Nothing ->
-            defaultFundingRequest
+            defaultFundingRequest basicSkillIds mandatoryTrainingIds

@@ -7,12 +7,13 @@ import Data.Candidate
 import Data.Certification exposing (Certification)
 import Data.Form exposing (FormData)
 import Data.Form.FundingRequestUniFvae exposing (keys)
+import Data.Form.Helper
 import Data.Referential exposing (Referential)
 import Page.Form as Form exposing (Form)
 
 
 form : Maybe Certification -> FormData -> ( Candidacy, Referential ) -> Form
-form maybeCertification formData ( candidacy, referential ) =
+form maybeCertification _ ( candidacy, referential ) =
     let
         genders =
             [ Undisclosed
@@ -57,9 +58,19 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( keys.collectiveCost, costElement )
         , ( "training", Form.Section "Compléments formatifs" )
         , ( "mandatory-training", Form.Title "Formation obligatoire" )
+        , ( keys.mandatoryTrainingIds
+          , Form.ReadOnlyElement <|
+                Form.CheckboxList "Formations obligatoires sélectionnées" <|
+                    Data.Form.Helper.toIdList referential.mandatoryTrainings
+          )
         , ( keys.mandatoryTrainingsHourCount, hourCountElement )
         , ( keys.mandatoryTrainingsCost, costElement )
         , ( "basic-skills", Form.Title "Savoir de base" )
+        , ( keys.basicSkillsIds
+          , Form.ReadOnlyElement <|
+                Form.CheckboxList "Formations savoirs de base sélectionnées" <|
+                    Data.Form.Helper.toIdList referential.basicSkills
+          )
         , ( keys.basicSkillsHourCount, hourCountElement )
         , ( keys.basicSkillsCost, costElement )
         , ( "skills", Form.Title "Bloc de compétences" )
