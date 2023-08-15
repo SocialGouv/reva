@@ -65,8 +65,7 @@ export const sendNewFeasibilitySubmittedEmail = async ({
 }) => {
   const htmlContent = mjml2html(
     template({
-      headline: `<p>Bonjour,</p>`,
-      content: `<p>Un nouveau dossier de faisabilité vous a été transmis. Vous pouvez y accéder dès maintenant en cliquant sur le bouton ci-dessous.</p>
+      content: `<p>Bonjour,</p><p>Un nouveau dossier de faisabilité vous a été transmis. Vous pouvez y accéder dès maintenant en cliquant sur le bouton ci-dessous.</p>
           <p>Nous vous rappelons que vous disposez d’un délai de 15 jours pour prononcer la recevabilité du dossier.</p>
           <p>L’équipe France VAE.</p>
         `,
@@ -201,8 +200,7 @@ export const sendFeasibilityDecisionTakenToAAPEmail = async ({
 }) => {
   const htmlContent = mjml2html(
     template({
-      headline: `<p>Bonjour,</p>`,
-      content: `<p>Un nouvel avis de recevabilité est disponible via le lien ci-dessous.</p>
+      content: `<p>Bonjour,</p><p>Un nouvel avis de recevabilité est disponible via le lien ci-dessous.</p>
           <p>L’équipe France VAE.</p>
         `,
       labelCTA: "Accéder à la notification de recevabilité",
