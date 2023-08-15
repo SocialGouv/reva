@@ -287,9 +287,6 @@ test("should fetch fundingRequestUnifvae", async () => {
   expect(resp.statusCode).toBe(200);
   const obj = resp.json();
   expect(obj).not.toHaveProperty("errors");
-
-  expect(obj.data.candidacy_getFundingRequestUnifvae).to;
-
   expect(obj.data.candidacy_getFundingRequestUnifvae).toMatchObject({
     candidateFirstname: myCandidate.firstname,
     candidateSecondname: myCandidate.firstname2,
