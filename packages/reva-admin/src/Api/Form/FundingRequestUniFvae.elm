@@ -33,10 +33,8 @@ create candidacyId endpointGraphql token toMsg ( candidacy, referential ) formDa
 
         fundingInput =
             Admin.InputObject.FundingRequestUnifvaeInput
-                ""
                 (OptionalArgument.fromMaybe funding.candidateSecondname)
                 (OptionalArgument.fromMaybe funding.candidateThirdname)
-                ""
                 funding.candidateGender
                 funding.individualHourCount
                 funding.individualCost
