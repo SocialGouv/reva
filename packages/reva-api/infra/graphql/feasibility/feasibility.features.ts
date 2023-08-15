@@ -348,7 +348,10 @@ export const validateFeasibility = async ({
       include: {
         candidacy: {
           include: {
-            certificationsAndRegions: { include: { certification: true } },
+            certificationsAndRegions: {
+              where: { isActive: true },
+              include: { certification: true },
+            },
             candidate: {
               select: {
                 email: true,
