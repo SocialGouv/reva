@@ -350,7 +350,7 @@ export const validateFeasibility = async ({
           include: {
             certificationsAndRegions: {
               where: { isActive: true },
-              include: { certification: true },
+              include: { certification: { select: { label: true } } },
             },
             candidate: {
               select: {
@@ -362,11 +362,21 @@ export const validateFeasibility = async ({
         },
       },
     });
+
+    const activeCertificationAndRegion =
+      feasibility.candidacy.certificationsAndRegions[0];
+
+    const certificationAuthority = await getCertificationAuthority({
+      certificationId: activeCertificationAndRegion.certificationId,
+      departmentId: feasibility.candidacy.departmentId || "",
+    });
+
     sendFeasibilityValidatedCandidateEmail({
       email: feasibility.candidacy.candidate?.email as string,
-      certifName:
-        feasibility.candidacy.certificationsAndRegions[0].certification.label,
+      certifName: activeCertificationAndRegion.certification.label,
       comment,
+      certificationAuthorityLabel:
+        certificationAuthority?.label || "certificateur inconnu",
     });
     if (feasibility.candidacy.organism?.contactAdministrativeEmail) {
       sendFeasibilityDecisionTakenToAAPEmail({
@@ -400,6 +410,9 @@ export const rejectFeasibility = async ({
       select: {
         candidacy: {
           include: {
+            certificationsAndRegions: {
+              where: { isActive: true },
+            },
             candidate: {
               select: { email: true },
             },
@@ -408,9 +421,20 @@ export const rejectFeasibility = async ({
         },
       },
     });
+
+    const activeCertificationAndRegion =
+      feasibility.candidacy.certificationsAndRegions[0];
+
+    const certificationAuthority = await getCertificationAuthority({
+      certificationId: activeCertificationAndRegion.certificationId,
+      departmentId: feasibility.candidacy.departmentId || "",
+    });
+
     sendFeasibilityRejectedCandidateEmail({
       email: feasibility.candidacy.candidate?.email as string,
       comment,
+      certificationAuthorityLabel:
+        certificationAuthority?.label || "certificateur inconnu",
     });
     if (feasibility.candidacy.organism?.contactAdministrativeEmail) {
       sendFeasibilityDecisionTakenToAAPEmail({

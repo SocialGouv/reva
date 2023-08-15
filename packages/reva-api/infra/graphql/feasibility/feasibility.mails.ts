@@ -9,11 +9,13 @@ const template = ({
   content,
   labelCTA,
   url,
+  hideFranceVaeLogo,
 }: {
   headline?: string;
   content: string;
   labelCTA?: string;
   url?: string;
+  hideFranceVaeLogo?: boolean;
 }) => `
   <mjml>
     <mj-head>
@@ -24,13 +26,15 @@ const template = ({
       </mj-style>
     </mj-head>
     <mj-body>
-      <mj-section>
-        <mj-column>
-        <mj-image align="center" width="92px" height="55.65px" src="${
-          process.env.BASE_URL || "https://vae.gouv.fr"
-        }/fvae_logo.png"></mj-image>
-      </mj-column>
-      </mj-section>
+      <mj-raw>{% if ${!!hideFranceVaeLogo} != true %}</mj-raw>
+        <mj-section>
+          <mj-column>
+          <mj-image align="center" width="92px" height="55.65px" src="${
+            process.env.BASE_URL || "https://vae.gouv.fr"
+          }/fvae_logo.png"></mj-image>
+        </mj-column>
+        </mj-section>
+      <mj-raw>{% endif %}</mj-raw>
       <mj-section>
         <mj-column>
           ${
@@ -98,10 +102,12 @@ export const sendFeasibilityValidatedCandidateEmail = async ({
   email,
   comment,
   certifName,
+  certificationAuthorityLabel,
 }: {
   email: string;
   comment?: string;
   certifName: string;
+  certificationAuthorityLabel: string;
 }) => {
   const commentInfo = comment
     ? `
@@ -114,12 +120,11 @@ export const sendFeasibilityValidatedCandidateEmail = async ({
     template({
       content: `<p>Bonjour,</p>
       <br/>
-      <p>Vous trouverez ci-dessous la décision de recevabilité concernant votre dossier de faisabilité pour la certification <em>${certifName}</em>.</p>
+      <p>Vous trouverez ci-dessous la décision de recevabilité du certificateur ${certificationAuthorityLabel} concernant votre dossier de faisabilité pour la certification <em>${certifName}</em>.</p>
       <p>Félicitations, votre dossier a été jugé recevable par le certificateur et vous pouvez désormais démarrer votre parcours VAE. Nous vous invitons à prendre contact avec votre architecte de parcours afin d’organiser la suite.</p>
       ${commentInfo}
-      <br/>
-      L’équipe France VAE
     `,
+      hideFranceVaeLogo: true,
     })
   );
 
@@ -146,9 +151,11 @@ export const sendFeasibilityValidatedCandidateEmail = async ({
 export const sendFeasibilityRejectedCandidateEmail = async ({
   email,
   comment,
+  certificationAuthorityLabel,
 }: {
   email: string;
   comment?: string;
+  certificationAuthorityLabel: string;
 }) => {
   const commentInfo = comment
     ? `
@@ -162,12 +169,11 @@ export const sendFeasibilityRejectedCandidateEmail = async ({
     template({
       content: `<p>Bonjour,</p>
         <br/>
-        <p>Vous trouverez ci-dessous la décision concernent votre dossier de faisabilité.</p>
+        <p>Vous trouverez ci-dessous la décision du certificateur ${certificationAuthorityLabel} concernant votre dossier de faisabilité.</p>
         <p>Malheureusement, votre dossier a été jugé non recevable par le certificateur. Nous vous invitons à prendre contact avec votre architecte de parcours pour comprendre cette décision et échanger ensemble sur les suites à donner à votre parcours.</p>
         ${commentInfo}
-        <br/>
-        <p>L’équipe France VAE</p>
       `,
+      hideFranceVaeLogo: true,
     })
   );
 
