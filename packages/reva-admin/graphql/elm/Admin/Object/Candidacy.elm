@@ -248,6 +248,13 @@ feasibility object____ =
     Object.selectionForCompositeField "feasibility" [] object____ (Basics.identity >> Decode.nullable)
 
 
+fundingRequestUnifvae :
+    SelectionSet decodesTo Admin.Object.FundingRequestUnifvae
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
+fundingRequestUnifvae object____ =
+    Object.selectionForCompositeField "fundingRequestUnifvae" [] object____ (Basics.identity >> Decode.nullable)
+
+
 paymentRequest :
     SelectionSet decodesTo Admin.Object.PaymentRequest
     -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy

@@ -13,11 +13,15 @@ import { logFundingRequestUnifvaeEvent } from "./logFundingRequestUnifvaeEvent";
 import applyBusinessValidationRules from "./validation";
 
 const unsafeResolvers = {
+  Candidacy: {
+    fundingRequestUnifvae: ({ id: candidacyId }: { id: string }) =>
+      getFundingRequestUnifvaeFromCandidacyId(candidacyId),
+  },
+
   Query: {
     candidacy_getFundingRequestUnifvae: async (
       _: unknown,
-      payload: { candidacyId: string },
-      _context: GraphqlContext
+      payload: { candidacyId: string }
     ) => getFundingRequestUnifvaeFromCandidacyId(payload.candidacyId),
   },
   Mutation: {

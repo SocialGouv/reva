@@ -42,6 +42,10 @@ input FundingRequestUnifvaeInput {
   otherTrainingCost: Decimal!
 }
 
+type Candidacy {
+  fundingRequestUnifvae: FundingRequestUnifvae
+}
+
 type Query {
   candidacy_getFundingRequestUnifvae(candidacyId: UUID!): FundingRequestUnifvae
 }
