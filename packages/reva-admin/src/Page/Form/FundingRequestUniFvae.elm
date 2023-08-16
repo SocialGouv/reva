@@ -74,9 +74,11 @@ form maybeCertification _ ( candidacy, referential ) =
         , ( keys.basicSkillsHourCount, hourCountElement )
         , ( keys.basicSkillsCost, costElement )
         , ( "skills", Form.Title "Bloc de compétences" )
+        , ( keys.certificateSkills, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
         , ( keys.certificateSkillsHourCount, hourCountElement )
         , ( keys.certificateSkillsCost, costElement )
         , ( "other", Form.Title "Autres" )
+        , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
         , ( keys.otherTrainingHourCount, hourCountElement )
         , ( keys.otherTrainingCost, costElement )
         ]

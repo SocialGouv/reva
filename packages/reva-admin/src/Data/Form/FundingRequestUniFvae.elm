@@ -24,8 +24,10 @@ keys =
     , basicSkillsIds = "basicSkillsIds"
     , basicSkillsHourCount = "basicSkillsHourCount"
     , basicSkillsCost = "basicSkillsCost"
+    , certificateSkills = "certificateSkills"
     , certificateSkillsHourCount = "certificateSkillsHourCount"
     , certificateSkillsCost = "certificateSkillsCost"
+    , otherTraining = "otherTraining"
     , otherTrainingHourCount = "otherTrainingHourCount"
     , otherTrainingCost = "otherTrainingCost"
     }
@@ -51,8 +53,10 @@ fromDict basicSkillsIds mandatoryTrainingIds formData =
         (decode.list mandatoryTrainingIds)
         (decode.decimal .mandatoryTrainingsHourCount (Admin.Scalar.Decimal "0"))
         (decode.decimal .mandatoryTrainingsCost (Admin.Scalar.Decimal "0"))
+        (decode.string .certificateSkills "")
         (decode.decimal .certificateSkillsHourCount (Admin.Scalar.Decimal "0"))
         (decode.decimal .certificateSkillsCost (Admin.Scalar.Decimal "0"))
+        (decode.string .otherTraining "")
         (decode.decimal .otherTrainingHourCount (Admin.Scalar.Decimal "0"))
         (decode.decimal .otherTrainingCost (Admin.Scalar.Decimal "0"))
 
@@ -71,8 +75,10 @@ type alias FundingRequest =
     , mandatoryTrainingIds : List String
     , mandatoryTrainingsHourCount : Decimal
     , mandatoryTrainingsCost : Decimal
+    , certificateSkills : String
     , certificateSkillsHourCount : Decimal
     , certificateSkillsCost : Decimal
+    , otherTraining : String
     , otherTrainingHourCount : Decimal
     , otherTrainingCost : Decimal
     }
@@ -110,8 +116,10 @@ toDict funding =
             , ( .basicSkillsCost, decimal .basicSkillsCost )
             , ( .mandatoryTrainingsHourCount, decimal .mandatoryTrainingsHourCount )
             , ( .mandatoryTrainingsCost, decimal .mandatoryTrainingsCost )
+            , ( .certificateSkills, string .certificateSkills )
             , ( .certificateSkillsHourCount, decimal .certificateSkillsHourCount )
             , ( .certificateSkillsCost, decimal .certificateSkillsCost )
+            , ( .otherTraining, string .otherTraining )
             , ( .otherTrainingHourCount, decimal .otherTrainingHourCount )
             , ( .otherTrainingCost, decimal .otherTrainingCost )
             ]
@@ -120,23 +128,29 @@ toDict funding =
     Dict.fromList (mandatoryTrainingsChecked ++ basicSkillsChecked ++ fundingList)
 
 
-defaultFundingRequest : List Uuid -> List Uuid -> Dict String String
-defaultFundingRequest basicSkillIds mandatoryTrainingIds =
+defaultFundingRequest : List Uuid -> List Uuid -> Maybe String -> Maybe String -> Dict String String
+defaultFundingRequest basicSkillIds mandatoryTrainingIds certificateSkills otherTraining =
     let
         mandatoryTrainingsChecked =
             Helper.uuidToCheckedList mandatoryTrainingIds
 
         basicSkillsChecked =
             Helper.uuidToCheckedList basicSkillIds
+
+        otherFields =
+            [ ( .certificateSkills, certificateSkills )
+            , ( .otherTraining, otherTraining )
+            ]
+                |> Helper.toKeyedList keys
     in
-    Dict.fromList (mandatoryTrainingsChecked ++ basicSkillsChecked)
+    Dict.fromList (mandatoryTrainingsChecked ++ basicSkillsChecked ++ otherFields)
 
 
-maybeFundingRequest : Maybe FundingRequest -> List Uuid -> List Uuid -> Dict String String
-maybeFundingRequest maybeFr basicSkillIds mandatoryTrainingIds =
+maybeFundingRequest : Maybe FundingRequest -> List Uuid -> List Uuid -> Maybe String -> Maybe String -> Dict String String
+maybeFundingRequest maybeFr basicSkillIds mandatoryTrainingIds certificateSkills otherTraining =
     case maybeFr of
         Just funding ->
             toDict funding
 
         Nothing ->
-            defaultFundingRequest basicSkillIds mandatoryTrainingIds
+            defaultFundingRequest basicSkillIds mandatoryTrainingIds certificateSkills otherTraining

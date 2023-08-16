@@ -80,11 +80,19 @@ get candidacyId endpointGraphql token toMsg =
 
         mandatoryTrainingIdsFromCandidacySelection =
             Admin.Object.Candidacy.mandatoryTrainingIds
+
+        certificateSkillsFromCandidacySelection =
+            Admin.Object.Candidacy.certificateSkills
+
+        otherTrainingFromCandidacySelection =
+            Admin.Object.Candidacy.otherTraining
     in
     SelectionSet.succeed Data.Form.FundingRequestUniFvae.maybeFundingRequest
         |> with fundingRequestFromCandidacySelection
         |> with basicSkillIdsFromCandidacySelection
         |> with mandatoryTrainingIdsFromCandidacySelection
+        |> with certificateSkillsFromCandidacySelection
+        |> with otherTrainingFromCandidacySelection
         |> Query.getCandidacyById getCandidacyByIdRequiredArguments
         |> SelectionSet.nonNullOrFail
         |> Auth.makeQuery "getCandidacyById" endpointGraphql token toMsg
@@ -112,7 +120,9 @@ fundingRequestSelection =
             )
         |> with Admin.Object.FundingRequestUnifvae.mandatoryTrainingsHourCount
         |> with Admin.Object.FundingRequestUnifvae.mandatoryTrainingsCost
+        |> with Admin.Object.FundingRequestUnifvae.certificateSkills
         |> with Admin.Object.FundingRequestUnifvae.certificateSkillsHourCount
         |> with Admin.Object.FundingRequestUnifvae.certificateSkillsCost
+        |> with Admin.Object.FundingRequestUnifvae.otherTraining
         |> with Admin.Object.FundingRequestUnifvae.otherTrainingHourCount
         |> with Admin.Object.FundingRequestUnifvae.otherTrainingCost
