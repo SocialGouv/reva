@@ -81,7 +81,7 @@ view :
     -> Model
     -> Html Msg
 view context model =
-    View.layout "" [] [] [ viewFeasibilityPanel context model ]
+    View.noNavLayout [ viewFeasibilityPanel context model ]
 
 
 viewFeasibilityPanel : Context -> Model -> Html Msg

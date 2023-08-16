@@ -1,6 +1,7 @@
-module View exposing (AlertType(..), alert, article, backLink, errors, image, infoBlock, layout, logo, noticeInfo, popupErrors, skeleton, summaryBlock, title)
+module View exposing (AlertType(..), alert, article, backLink, errors, image, infoBlock, layout, logo, noNavLayout, noticeInfo, popupErrors, skeleton, summaryBlock, title)
 
 import Accessibility exposing (a, br, button, h3, h5, nav, p)
+import Css exposing (content)
 import Html exposing (Html, div, h2, h6, img, node, text)
 import Html.Attributes exposing (attribute, class, id, src)
 import Html.Attributes.Extra exposing (role)
@@ -31,8 +32,8 @@ skeleton extraClass =
         []
 
 
-layout : String -> List (Html msg) -> List (Html msg) -> List (Html msg) -> Html msg
-layout navButtonLabel upperNavContent navContent content =
+baseLayout : List (Html msg) -> Html msg
+baseLayout content =
     node "main"
         [ role "main"
         , class "flex relative"
@@ -48,56 +49,73 @@ layout navButtonLabel upperNavContent navContent content =
             [ class "z-1 relative fr-container" ]
             [ div
                 [ class "md:mt-20 fr-grid-row" ]
-                [ div
-                    [ class "fr-col-12 fr-col-md-4" ]
-                    [ nav
-                        [ role "navigation"
-                        , attribute "aria-label" "Menu latéral"
-                        , class "fr-sidemenu"
-                        ]
-                        [ if upperNavContent == [] then
-                            div [] []
+                content
+            ]
+        ]
 
-                          else
-                            div
-                                [ class "fr-sidemenu__inner"
-                                , class "flex items-center pl-12 md:pl-8 mt-6 md:mt-0 md:h-24"
-                                , class "bg-white md:shadow mb-4"
-                                ]
-                                upperNavContent
-                        , div
-                            [ class "py-2 fr-sidemenu__inner"
-                            , class "md:min-h-[480px] pl-4 md:mb-48"
-                            , class "bg-white md:shadow"
-                            ]
-                          <|
-                            -- When the nav context is empty, we remove the wrapper.
-                            -- As a result, on mobile, we can close the nav when browsing to a new page
-                            if navContent == [] then
-                                [ div [ class "h-6 mx-4 my-6 bg-gray-100" ] [] ]
 
-                            else
-                                [ button
-                                    [ class "fr-sidemenu__btn"
-                                    , attribute "aria-controls" "fr-sidemenu-wrapper"
-                                    , attribute "aria-expanded" "false"
-                                    ]
-                                    [ text navButtonLabel ]
-                                , div
-                                    [ class "fr-collapse"
-                                    , id "fr-sidemenu-wrapper"
-                                    ]
-                                    navContent
-                                ]
+layout : String -> List (Html msg) -> List (Html msg) -> List (Html msg) -> Html msg
+layout navButtonLabel upperNavContent navContent content =
+    baseLayout
+        [ div
+            [ class "fr-col-12 fr-col-md-4" ]
+            [ nav
+                [ role "navigation"
+                , attribute "aria-label" "Menu latéral"
+                , class "fr-sidemenu"
+                ]
+                [ if upperNavContent == [] then
+                    div [] []
+
+                  else
+                    div
+                        [ class "fr-sidemenu__inner"
+                        , class "flex items-center pl-12 md:pl-8 mt-6 md:mt-0 md:h-24"
+                        , class "bg-white md:shadow mb-4"
                         ]
-                    ]
+                        upperNavContent
                 , div
-                    [ class "bg-white sm:shadow"
-                    , class "fr-col-12 fr-col-md-8 mb-24"
+                    [ class "py-2 fr-sidemenu__inner"
+                    , class "md:min-h-[480px] pl-4 md:mb-48"
+                    , class "bg-white md:shadow"
                     ]
-                    content
+                  <|
+                    -- When the nav context is empty, we remove the wrapper.
+                    -- As a result, on mobile, we can close the nav when browsing to a new page
+                    if navContent == [] then
+                        [ div [ class "h-6 mx-4 my-6 bg-gray-100" ] [] ]
+
+                    else
+                        [ button
+                            [ class "fr-sidemenu__btn"
+                            , attribute "aria-controls" "fr-sidemenu-wrapper"
+                            , attribute "aria-expanded" "false"
+                            ]
+                            [ text navButtonLabel ]
+                        , div
+                            [ class "fr-collapse"
+                            , id "fr-sidemenu-wrapper"
+                            ]
+                            navContent
+                        ]
                 ]
             ]
+        , div
+            [ class "bg-white sm:shadow"
+            , class "fr-col-12 fr-col-md-8 mb-24"
+            ]
+            content
+        ]
+
+
+noNavLayout : List (Html msg) -> Html msg
+noNavLayout content =
+    baseLayout
+        [ div
+            [ class "bg-white sm:shadow"
+            , class "fr-col-12 mb-24"
+            ]
+            content
         ]
 
 
