@@ -30,8 +30,10 @@ const withSkillsAndTrainings = (f: any) => ({
 
 const unsafeResolvers = {
   Candidacy: {
-    fundingRequestUnifvae: ({ id: candidacyId }: { id: string }) =>
-      getFundingRequestUnifvaeFromCandidacyId(candidacyId),
+    fundingRequestUnifvae: async ({ id: candidacyId }: { id: string }) =>
+      withSkillsAndTrainings(
+        await getFundingRequestUnifvaeFromCandidacyId(candidacyId)
+      ),
   },
 
   Query: {
