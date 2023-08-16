@@ -100,10 +100,16 @@ fundingRequestSelection =
         |> with Admin.Object.FundingRequestUnifvae.individualCost
         |> with Admin.Object.FundingRequestUnifvae.collectiveHourCount
         |> with Admin.Object.FundingRequestUnifvae.collectiveCost
-        |> SelectionSet.hardcoded []
+        |> with
+            (Admin.Object.FundingRequestUnifvae.basicSkills
+                (SelectionSet.succeed (\(Uuid id) -> id) |> with Admin.Object.BasicSkill.id)
+            )
         |> with Admin.Object.FundingRequestUnifvae.basicSkillsHourCount
         |> with Admin.Object.FundingRequestUnifvae.basicSkillsCost
-        |> SelectionSet.hardcoded []
+        |> with
+            (Admin.Object.FundingRequestUnifvae.mandatoryTrainings
+                (SelectionSet.succeed (\(Id id) -> id) |> with Admin.Object.Training.id)
+            )
         |> with Admin.Object.FundingRequestUnifvae.mandatoryTrainingsHourCount
         |> with Admin.Object.FundingRequestUnifvae.mandatoryTrainingsCost
         |> with Admin.Object.FundingRequestUnifvae.certificateSkillsHourCount
