@@ -88,7 +88,7 @@ export const getFundingRequestUnifvaeFromCandidacyId = async (
   prismaClient.fundingRequestUnifvae.findFirst({
     where: { candidacyId },
     include: {
-      basicSkills: true,
-      mandatoryTrainings: true,
+      basicSkills: { include: { basicSkill: true } },
+      mandatoryTrainings: { include: { training: true } },
     },
   });

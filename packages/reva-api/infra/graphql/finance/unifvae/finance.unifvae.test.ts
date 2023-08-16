@@ -166,6 +166,12 @@ beforeAll(async () => {
       candidateGender: fundingRequestSample.candidateGender as Gender,
       otherTraining: candidacyUnifvae.otherTraining ?? "",
       certificateSkills: candidacyUnifvae.certificateSkills ?? "",
+      basicSkills: {
+        create: [{ basicSkill: { create: { label: "skillA" } } }],
+      },
+      mandatoryTrainings: {
+        create: [{ training: { create: { label: "trainingA" } } }],
+      },
     },
   });
 });
@@ -186,6 +192,8 @@ afterAll(async () => {
   await prismaClient.organism.delete({ where: { id: organism.id } });
   await prismaClient.account.delete({ where: { id: aapAccount.id } });
   await prismaClient.candidate.delete({ where: { id: myCandidate.id } });
+  await prismaClient.training.delete({ where: { label: "trainingA" } });
+  await prismaClient.basicSkill.delete({ where: { label: "skillA" } });
 });
 
 test("should create fundingRequestUnifvae", async () => {
@@ -278,7 +286,7 @@ test("should fetch fundingRequestUnifvae", async () => {
       requestType: "query",
       endpoint: "candidacy_getFundingRequestUnifvae",
       returnFields:
-        "{id, isPartialCertification, candidateFirstname, candidateSecondname, candidateThirdname, candidateLastname, candidateGender, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount }",
+        "{id, isPartialCertification, candidateFirstname, candidateSecondname, candidateThirdname, candidateLastname, candidateGender, basicSkills {id, label}, mandatoryTrainings {id, label}, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount }",
       arguments: {
         candidacyId: myCandidacy.id,
       },
@@ -289,8 +297,6 @@ test("should fetch fundingRequestUnifvae", async () => {
   expect(obj).not.toHaveProperty("errors");
   expect(obj.data.candidacy_getFundingRequestUnifvae).toMatchObject({
     candidateFirstname: myCandidate.firstname,
-    candidateSecondname: myCandidate.firstname2,
-    candidateThirdname: myCandidate.firstname3,
     candidateLastname: myCandidate.lastname,
     candidateGender: myCandidate.gender,
     basicSkillsCost: myFundingRequest.basicSkillsCost.toNumber(),
@@ -307,5 +313,7 @@ test("should fetch fundingRequestUnifvae", async () => {
       myFundingRequest.mandatoryTrainingsHourCount.toNumber(),
     otherTrainingCost: myFundingRequest.otherTrainingCost.toNumber(),
     otherTrainingHourCount: myFundingRequest.otherTrainingHourCount.toNumber(),
+    basicSkills: [{ label: "skillA" }],
+    mandatoryTrainings: [{ label: "trainingA" }],
   });
 });

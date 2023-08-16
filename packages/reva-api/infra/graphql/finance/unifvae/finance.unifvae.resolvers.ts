@@ -12,6 +12,22 @@ import {
 import { logFundingRequestUnifvaeEvent } from "./logFundingRequestUnifvaeEvent";
 import applyBusinessValidationRules from "./validation";
 
+const withSkillsAndTrainings = (f: any) => ({
+  ...f,
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  basicSkills: f.basicSkills.map((bs) => ({
+    id: bs.basicSkillId,
+    label: bs.basicSkill.label,
+  })),
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  mandatoryTrainings: f.mandatoryTrainings.map((mt) => ({
+    id: mt.trainingId,
+    label: mt.training.label,
+  })),
+});
+
 const unsafeResolvers = {
   Candidacy: {
     fundingRequestUnifvae: ({ id: candidacyId }: { id: string }) =>
@@ -22,7 +38,12 @@ const unsafeResolvers = {
     candidacy_getFundingRequestUnifvae: async (
       _: unknown,
       payload: { candidacyId: string }
-    ) => getFundingRequestUnifvaeFromCandidacyId(payload.candidacyId),
+    ) => {
+      const fundreq = await getFundingRequestUnifvaeFromCandidacyId(
+        payload.candidacyId
+      );
+      return withSkillsAndTrainings(fundreq);
+    },
   },
   Mutation: {
     candidacy_createFundingRequestUnifvae: async (
