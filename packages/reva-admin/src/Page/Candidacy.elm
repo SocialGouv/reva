@@ -41,7 +41,6 @@ import Data.Referential exposing (Referential)
 import Html exposing (Html, div, h3, p, text)
 import Html.Attributes exposing (alt, class, name)
 import Html.Attributes.Extra exposing (role)
-import Html.Extra exposing (nothing)
 import Page.Form as Form
 import Page.Form.Admissibility
 import Page.Form.Appointment
@@ -191,30 +190,26 @@ view context model =
                 FundingRequest ->
                     case model.selected of
                         Success candidacy ->
-                            let
-                                financeModule =
-                                    if context.franceVaeFinanceModuleFeatureEnabled then
-                                        candidacy.financeModule
-
-                                    else
-                                        FinanceModule.Unireva
-                            in
-                            case financeModule of
+                            case candidacy.financeModule of
                                 FinanceModule.Unireva ->
-                                    viewArticle "funding"
-                                        [ div
-                                            [ class "fr-alert fr-alert--warning" ]
-                                            [ h3
-                                                [ class "fr-alert__title" ]
-                                                [ text "Attention" ]
-                                            , p [] [ text "La demande de prise en charge est momentanément désactivée. Elle est actuellement en cours de développement en collaboration avec notre partenaire." ]
-                                            , p [] [ text "Elle devrait être de nouveau disponible courant septembre 2023. Nous ne manquerons pas de vous tenir informés de sa réactivation." ]
-                                            , p [ class "italic" ] [ text "Nous vous rappelons que l'accord de financement est subordonné à l'obtention de la recevabilité." ]
-                                            ]
-                                        ]
+                                    viewForm "funding"
 
                                 FinanceModule.Unifvae ->
-                                    viewForm "funding"
+                                    if context.franceVaeFinanceModuleFeatureEnabled then
+                                        viewForm "funding"
+
+                                    else
+                                        viewArticle "funding"
+                                            [ div
+                                                [ class "fr-alert fr-alert--warning" ]
+                                                [ h3
+                                                    [ class "fr-alert__title" ]
+                                                    [ text "Attention" ]
+                                                , p [] [ text "La demande de prise en charge est momentanément désactivée. Elle est actuellement en cours de développement en collaboration avec notre partenaire." ]
+                                                , p [] [ text "Elle devrait être de nouveau disponible courant septembre 2023. Nous ne manquerons pas de vous tenir informés de sa réactivation." ]
+                                                , p [ class "italic" ] [ text "Nous vous rappelons que l'accord de financement est subordonné à l'obtention de la recevabilité." ]
+                                                ]
+                                            ]
 
                         _ ->
                             div [] []
@@ -556,11 +551,7 @@ updateTab context tab ( model, cmd ) =
                                 , onRedirect = pushUrl <| candidacyTab Profile
                                 , onValidate = Data.Form.FundingRequestUniReva.validate
                                 , status =
-                                    if isReadOnly then
-                                        Form.ReadOnly
-
-                                    else
-                                        Form.Editable
+                                    Form.ReadOnly
                                 }
                                 model.form
 

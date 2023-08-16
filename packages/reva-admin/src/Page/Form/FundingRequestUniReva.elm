@@ -170,7 +170,7 @@ hourCountElement =
 
 commonFields : Maybe Certification -> List ( String, Form.Element )
 commonFields maybeCertification =
-    [ ( "heading", Form.Heading "2 - Parcours personnalisé" )
+    [ ( "heading", Form.Heading "Parcours personnalisé" )
     , ( "selected-certification", Form.Section "Certification choisie par le candidat" )
     , ( "certification"
       , maybeCertification
