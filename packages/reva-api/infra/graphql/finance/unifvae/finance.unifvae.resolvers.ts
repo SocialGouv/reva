@@ -1,8 +1,11 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import mercurius from "mercurius";
-import { Left, Right } from "purify-ts";
 
 import { CandidacyBusinessEvent } from "../../../../domain/types/candidacy";
+import {
+  FunctionalCodeError,
+  FunctionalError,
+} from "../../../../domain/types/functionalError";
 import { prismaClient } from "../../../database/postgres/client";
 import { isAdminOrCandidacyCompanion } from "../../security/presets";
 import {
@@ -88,7 +91,7 @@ const unsafeResolvers = {
           context,
           eventType: CandidacyBusinessEvent.CREATED_FUNDING_REQUEST_UNIFVAE,
           candidacyId: payload.candidacyId,
-          result: Right(fundreq as Record<string, unknown>),
+          result: fundreq as Record<string, unknown>,
         });
         return fundreq;
       } catch (error: any) {
@@ -96,7 +99,10 @@ const unsafeResolvers = {
           context,
           eventType: CandidacyBusinessEvent.CREATED_FUNDING_REQUEST_UNIFVAE,
           candidacyId: payload.candidacyId,
-          result: Left(error.message),
+          result: new FunctionalError(
+            FunctionalCodeError.TECHNICAL_ERROR,
+            error.message
+          ),
         });
         return new mercurius.ErrorWithProps(error.message, error);
       }
