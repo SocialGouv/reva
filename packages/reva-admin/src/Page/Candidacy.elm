@@ -15,7 +15,6 @@ import Api.Candidacy
 import Api.Form.Admissibility
 import Api.Form.Appointment
 import Api.Form.Archive
-import Api.Form.Candidate
 import Api.Form.DropOut
 import Api.Form.ExamInfo
 import Api.Form.Feasibility
@@ -47,7 +46,6 @@ import Page.Form as Form
 import Page.Form.Admissibility
 import Page.Form.Appointment
 import Page.Form.Archive
-import Page.Form.Candidate
 import Page.Form.DropOut
 import Page.Form.ExamInfo
 import Page.Form.Feasibility
@@ -181,9 +179,6 @@ view context model =
 
         content =
             case model.tab.value of
-                CandidateInfo ->
-                    viewForm "candidate"
-
                 Archive ->
                     viewForm "archive"
 
@@ -597,27 +592,6 @@ updateTab context tab ( model, cmd ) =
                         , onSave = Nothing
                         , onSubmit = Api.Form.Training.update tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab TrainingSent
-                        , onValidate = \_ _ -> Ok ()
-                        , status =
-                            if Candidacy.isFundingRequestSent candidacy then
-                                Form.ReadOnly
-
-                            else
-                                Form.Editable
-                        }
-                        model.form
-            in
-            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
-
-        ( View.Candidacy.Tab.CandidateInfo, Success candidacy ) ->
-            let
-                ( formModel, formCmd ) =
-                    Form.updateForm context
-                        { form = Page.Form.Candidate.form
-                        , onLoad = candidacy.email |> Maybe.map Api.Form.Candidate.get
-                        , onSave = Nothing
-                        , onSubmit = Api.Form.Candidate.update
-                        , onRedirect = pushUrl <| candidacyTab FundingRequest
                         , onValidate = \_ _ -> Ok ()
                         , status =
                             if Candidacy.isFundingRequestSent candidacy then

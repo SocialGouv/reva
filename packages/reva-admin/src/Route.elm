@@ -112,7 +112,6 @@ parser baseUrl =
                 , subLevel "candidacies" "admissibility" |> candidacyTab Tab.Admissibility
                 , subLevel "candidacies" "archive" |> candidacyTab Tab.Archive
                 , subLevel "candidacies" "unarchive" |> candidacyTab Tab.Unarchive
-                , subLevel "candidacies" "candidate" |> candidacyTab Tab.CandidateInfo
                 , subLevel "candidacies" "drop-out" |> candidacyTab Tab.DropOut
                 , subLevel "candidacies" "funding" |> candidacyTab Tab.FundingRequest
                 , subLevel "candidacies" "meetings" |> candidacyTab Tab.Meetings
@@ -195,9 +194,6 @@ tabToString topLevel subLevel tab =
     case tab.value of
         Tab.Profile ->
             topLevel [ "candidacies", candidacyIdToString tab.candidacyId ] []
-
-        Tab.CandidateInfo ->
-            default [ "candidate" ]
 
         Tab.Archive ->
             default [ "archive" ]

@@ -13,7 +13,6 @@ type Value
     = Admissibility
     | Archive
     | Unarchive
-    | CandidateInfo
     | DropOut
     | Meetings
     | PaymentRequest
