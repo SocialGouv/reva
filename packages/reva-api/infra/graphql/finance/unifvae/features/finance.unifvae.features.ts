@@ -1,9 +1,9 @@
 import { Candidate } from "@prisma/client";
 import { format } from "date-fns";
 
-import { updateCandidacyStatus } from "../../../database/postgres/candidacies";
-import { prismaClient } from "../../../database/postgres/client";
-import { createBatchFromFundingRequestUnifvae } from "./batches/fundingRequest";
+import { updateCandidacyStatus } from "../../../../database/postgres/candidacies";
+import { prismaClient } from "../../../../database/postgres/client";
+import { createBatchFromFundingRequestUnifvae } from "./fundingRequestBatch";
 
 export const createFundingRequestUnifvae = async ({
   candidacyId,
