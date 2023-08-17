@@ -1,7 +1,9 @@
 import { Candidate } from "@prisma/client";
+import { format } from "date-fns";
 
 import { updateCandidacyStatus } from "../../../database/postgres/candidacies";
 import { prismaClient } from "../../../database/postgres/client";
+import { createBatchFromFundingRequestUnifvae } from "./batches/fundingRequest";
 
 export const createFundingRequestUnifvae = async ({
   candidacyId,
@@ -29,6 +31,7 @@ export const createFundingRequestUnifvae = async ({
   const fundreq = await prismaClient.fundingRequestUnifvae.create({
     data: {
       candidacyId,
+      numAction: await getNextNumAction(),
       otherTraining: candidacy.otherTraining ?? "",
       certificateSkills: candidacy.certificateSkills ?? "",
       ...fundingRequest,
@@ -36,6 +39,7 @@ export const createFundingRequestUnifvae = async ({
       candidateLastname: candidacy.candidate?.lastname,
     },
   });
+
   await prismaClient.$transaction([
     prismaClient.basicSkillOnFundingRequestsUnifvae.createMany({
       data: candidacy.basicSkills.map(({ basicSkillId }) => ({
@@ -62,6 +66,8 @@ export const createFundingRequestUnifvae = async ({
     candidacyId,
     status: "DEMANDE_FINANCEMENT_ENVOYE",
   });
+
+  await createBatchFromFundingRequestUnifvae(fundreq.id);
 
   return prismaClient.fundingRequestUnifvae.findUnique({
     where: {
@@ -92,3 +98,13 @@ export const getFundingRequestUnifvaeFromCandidacyId = async (
       mandatoryTrainings: { include: { training: true } },
     },
   });
+
+async function getNextNumAction() {
+  const nextValQueryResult =
+    (await prismaClient.$queryRaw`Select nextval('funding_request_unifvae_num_action_sequence')`) as {
+      nextval: number;
+    }[];
+  return `reva_${format(new Date(), "yyyyMMdd")}_${nextValQueryResult[0].nextval
+    .toString()
+    .padStart(5, "0")}`;
+}
