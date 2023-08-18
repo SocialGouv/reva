@@ -6,13 +6,11 @@ import { Role } from "../../../../domain/types/account";
 import { Candidacy } from "../../../../domain/types/candidacy";
 import * as candidaciesDb from "../../../database/postgres/candidacies";
 import * as candidatesDb from "../../../database/postgres/candidates";
-import * as fundingRequestBatchesDb from "../../../database/postgres/fundingRequestBatches";
 import * as fundingRequestsDb from "../../../database/postgres/fundingRequests";
 import * as paymentRequestsDb from "../../../database/postgres/paymentRequest";
 import * as paymentRequestBatchesDb from "../../../database/postgres/paymentRequestBatches";
 import * as trainingDb from "../../../database/postgres/trainings";
 import { confirmPaymentRequest } from "./features/confirmPaymentRequest";
-import { createFundingRequest } from "./features/createFundingRequest";
 import { createOrUpdatePaymentRequestForCandidacy } from "./features/createOrUpdatePaymentRequestForCandidacy";
 import { getFundingRequest } from "./features/getFundingRequest";
 import { getPaymentRequestByCandidacyId } from "./features/getPaymentRequestByCandidacyId";
@@ -107,27 +105,6 @@ const unsafeResolvers = {
       })({
         candidacyId: candidacyId,
       });
-
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
-    candidate_createFundingRequest: async (
-      _: unknown,
-      params: { candidacyId: string; fundingRequest: any },
-      context: { auth: any }
-    ) => {
-      const result = await createFundingRequest({
-        createFundingRequest: fundingRequestsDb.createFundingRequest,
-        createFundingRequestBatch:
-          fundingRequestBatchesDb.createFundingRequestBatch,
-        existsCandidacyWithActiveStatuses:
-          candidaciesDb.existsCandidacyWithActiveStatuses,
-        getCandidacyFromId: candidaciesDb.getCandidacyFromId,
-        hasRole: context.auth.hasRole,
-        getCandidateByCandidacyId: candidatesDb.getCandidateByCandidacyId,
-        getAfgsuTrainingId: trainingDb.getAfgsuTrainingId,
-      })(params);
 
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))

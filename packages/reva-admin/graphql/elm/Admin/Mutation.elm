@@ -488,20 +488,6 @@ candidacy_confirmPaymentRequest requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_confirmPaymentRequest" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ Basics.identity
 
 
-type alias CandidateCreateFundingRequestRequiredArguments =
-    { candidacyId : Data.Scalar.Uuid
-    , fundingRequest : Admin.InputObject.FundingRequestInput
-    }
-
-
-candidate_createFundingRequest :
-    CandidateCreateFundingRequestRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.FundingRequest
-    -> SelectionSet decodesTo RootMutation
-candidate_createFundingRequest requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidate_createFundingRequest" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "fundingRequest" requiredArgs____.fundingRequest Admin.InputObject.encodeFundingRequestInput ] object____ Basics.identity
-
-
 type alias SubscriptionCreateSubscriptionRequestRequiredArguments =
     { subscriptionRequest : Admin.InputObject.SubscriptionRequestInput }
 

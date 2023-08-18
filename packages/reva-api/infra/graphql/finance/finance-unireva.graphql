@@ -116,8 +116,4 @@ type Mutation {
     paymentRequest: PaymentRequestInput!
   ): PaymentRequest!
   candidacy_confirmPaymentRequest(candidacyId: UUID!): Candidacy!
-  candidate_createFundingRequest(
-    candidacyId: UUID!
-    fundingRequest: FundingRequestInput!
-  ): FundingRequest!
 }

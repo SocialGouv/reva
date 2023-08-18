@@ -563,7 +563,7 @@ updateTab context tab ( model, cmd ) =
                                         Page.Form.FundingRequestUniReva.droppedOutForm candidacy.certification
                                 , onLoad = Just <| Api.Form.FundingRequestUniReva.get tab.candidacyId candidacy
                                 , onSave = Nothing
-                                , onSubmit = Api.Form.FundingRequestUniReva.create tab.candidacyId
+                                , onSubmit = \_ _ _ _ _ -> Cmd.none
                                 , onRedirect = pushUrl <| candidacyTab Profile
                                 , onValidate = Data.Form.FundingRequestUniReva.validate
                                 , status =

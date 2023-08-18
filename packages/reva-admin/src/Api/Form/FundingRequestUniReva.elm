@@ -1,7 +1,5 @@
-module Api.Form.FundingRequestUniReva exposing (create, get, selection)
+module Api.Form.FundingRequestUniReva exposing (get, selection)
 
-import Admin.InputObject
-import Admin.Mutation as Mutation
 import Admin.Object
 import Admin.Object.BasicSkill
 import Admin.Object.FundingRequest
@@ -14,66 +12,11 @@ import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
 import Api.Token exposing (Token)
 import Data.Candidacy exposing (Candidacy, CandidacyId)
-import Data.Form exposing (FormData)
 import Data.Form.FundingRequestUniReva
-import Data.Referential
 import Dict exposing (Dict)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
-
-
-create :
-    CandidacyId
-    -> String
-    -> Token
-    -> (RemoteData (List String) () -> msg)
-    -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
-    -> FormData
-    -> Cmd msg
-create candidacyId endpointGraphql token toMsg ( candidacy, referential ) formData =
-    let
-        funding =
-            Data.Form.FundingRequestUniReva.fromDict referential.basicSkills referential.mandatoryTrainings formData
-
-        fundingInput =
-            Admin.InputObject.FundingRequestInput
-                -- (
-                (Maybe.map
-                    (Uuid >> Present)
-                    funding.companionId
-                    |> Maybe.withDefault Absent
-                )
-                funding.diagnosisHourCount
-                funding.diagnosisCost
-                funding.postExamHourCount
-                funding.postExamCost
-                funding.individualHourCount
-                funding.individualCost
-                funding.collectiveHourCount
-                funding.collectiveCost
-                (List.map Uuid funding.basicSkillsIds)
-                funding.basicSkillsHourCount
-                funding.basicSkillsCost
-                (List.map Uuid funding.mandatoryTrainingIds)
-                funding.mandatoryTrainingsHourCount
-                funding.mandatoryTrainingsCost
-                funding.certificateSkills
-                funding.certificateSkillsHourCount
-                funding.certificateSkillsCost
-                funding.otherTraining
-                funding.otherTrainingHourCount
-                funding.otherTrainingCost
-                funding.examHourCount
-                funding.examCost
-
-        fundingRequiredArg =
-            Mutation.CandidateCreateFundingRequestRequiredArguments
-                (Uuid <| Data.Candidacy.candidacyIdToString candidacyId)
-                fundingInput
-    in
-    Mutation.candidate_createFundingRequest fundingRequiredArg SelectionSet.empty
-        |> Auth.makeMutation "createFundingRequest" endpointGraphql token toMsg
 
 
 get :
