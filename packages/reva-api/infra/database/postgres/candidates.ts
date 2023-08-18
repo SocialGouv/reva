@@ -311,18 +311,3 @@ export const getCandidateByCandidacyId = async (id: string) => {
     return Left(`error while retrieving the candidate`);
   }
 };
-export const updateCandidate = async (id: string, candidate: Candidate) => {
-  try {
-    const newCandidate = await prismaClient.candidate.update({
-      where: {
-        id,
-      },
-      data: candidate,
-      include: candidateIncludes,
-    });
-    return Right(newCandidate);
-  } catch (e) {
-    logger.error(e);
-    return Left(`error while updating candidate ${candidate.email}`);
-  }
-};

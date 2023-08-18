@@ -67,8 +67,4 @@ type Mutation {
   candidate_askForRegistration(candidate: CandidateInput!): String!
   candidate_askForLogin(email: String!): String!
   candidate_login(token: String!): CandidateLogged!
-  candidate_updateCandidate(
-    id: UUID!
-    candidate: FullCandidateInput!
-  ): Candidate!
 }

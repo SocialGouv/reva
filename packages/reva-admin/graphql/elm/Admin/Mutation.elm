@@ -384,20 +384,6 @@ candidate_login requiredArgs____ object____ =
     Object.selectionForCompositeField "candidate_login" [ Argument.required "token" requiredArgs____.token Encode.string ] object____ Basics.identity
 
 
-type alias CandidateUpdateCandidateRequiredArguments =
-    { id : Data.Scalar.Uuid
-    , candidate : Admin.InputObject.FullCandidateInput
-    }
-
-
-candidate_updateCandidate :
-    CandidateUpdateCandidateRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Candidate
-    -> SelectionSet decodesTo RootMutation
-candidate_updateCandidate requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidate_updateCandidate" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "candidate" requiredArgs____.candidate Admin.InputObject.encodeFullCandidateInput ] object____ Basics.identity
-
-
 type alias ValidateFeasibilityOptionalArguments =
     { comment : OptionalArgument String }
 

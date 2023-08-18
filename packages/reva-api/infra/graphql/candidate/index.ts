@@ -1,5 +1,4 @@
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
-import { Candidate } from "@prisma/client";
 import CryptoJS from "crypto-js";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import Keycloak from "keycloak-connect";
@@ -11,7 +10,6 @@ import { askForRegistration } from "../../../domain/features/candidateAskForRegi
 import { candidateAuthentication } from "../../../domain/features/candidateAuthentication";
 import { getCandidateWithCandidacy } from "../../../domain/features/candidateGetCandidateWithCandidacy";
 import { getCandidateByEmail } from "../../../domain/features/getCandidateByEmail";
-import { updateCandidate } from "../../../domain/features/updateCandidate";
 import * as candidatesDb from "../../database/postgres/candidates";
 import {
   sendLoginEmail,
@@ -210,20 +208,6 @@ export const resolvers = {
     },
   },
   Mutation: {
-    candidate_updateCandidate: async (
-      _: any,
-      { id, candidate }: { id: string; candidate: Candidate },
-      context: { auth: any }
-    ) => {
-      const result = await updateCandidate({
-        hasRole: context.auth.hasRole,
-        updateCandidate: candidatesDb.updateCandidate,
-      })(id, candidate);
-
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
     candidate_askForRegistration: async (
       _: any,
       params: {
