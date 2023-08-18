@@ -13,7 +13,6 @@ module Data.Referential exposing
     , departmentToString
     )
 
-import Data.Candidate
 import Data.Scalar
 import Dict exposing (Dict)
 
@@ -57,12 +56,10 @@ type alias MandatoryTraining =
 
 type alias Referential =
     { basicSkills : List BasicSkill
-    , degrees : List Data.Candidate.Degree
     , dropOutReasons : List DropOutReason
     , goals : Dict String ReferentialGoal
     , mandatoryTrainings : List MandatoryTraining
     , reorientationReasons : List ReorientationReason
-    , vulnerabilityIndicators : List Data.Candidate.VulnerabilityIndicator
     }
 
 

@@ -1,14 +1,12 @@
 module Page.Form.FundingRequestUniReva exposing (droppedOutForm, form, totalCostSection, totalTrainingHourCount)
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
-import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
-import Data.Candidate
+import Data.Candidacy as Candidacy exposing (Candidacy)
 import Data.Certification exposing (Certification)
 import Data.Form exposing (FormData)
 import Data.Form.FundingRequestUniReva
 import Data.Form.Helper
 import Data.Referential exposing (Referential)
-import List.Extra
 import Page.Form as Form exposing (Form)
 import String exposing (String)
 
@@ -20,18 +18,6 @@ form maybeCertification formData ( candidacy, referential ) =
         availableCompanions =
             candidacy.availableCompanions
                 |> Data.Form.Helper.toIdList
-
-        maybeReadOnlyTraining : Form.Element -> Form.Element
-        maybeReadOnlyTraining formElement =
-            if
-                candidacy.candidate
-                    |> Maybe.map (hasAccessTrainingFunding referential)
-                    |> Maybe.withDefault False
-            then
-                formElement
-
-            else
-                Form.ReadOnlyElement formElement
 
         checked : List { a | id : String } -> List String
         checked ids =
@@ -82,12 +68,10 @@ form maybeCertification formData ( candidacy, referential ) =
                  )
                , ( keys.mandatoryTrainingsHourCount
                  , hourCountElement
-                    |> maybeReadOnlyTraining
                     |> withCheckedRequired referential.mandatoryTrainings
                  )
                , ( keys.mandatoryTrainingsCost
                  , costElement
-                    |> maybeReadOnlyTraining
                     |> withCheckedRequired referential.mandatoryTrainings
                  )
                , ( "basic-skills", Form.Title "Formations savoirs de base" )
@@ -98,24 +82,20 @@ form maybeCertification formData ( candidacy, referential ) =
                  )
                , ( keys.basicSkillsHourCount
                  , hourCountElement
-                    |> maybeReadOnlyTraining
                     |> withCheckedRequired referential.basicSkills
                  )
                , ( keys.basicSkillsCost
                  , costElement
-                    |> maybeReadOnlyTraining
                     |> withCheckedRequired referential.basicSkills
                  )
                , ( "skills", Form.Title "Bloc de compétences certifiant" )
                , ( keys.certificateSkills, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
                , ( keys.certificateSkillsHourCount
                  , hourCountElement
-                    |> maybeReadOnlyTraining
                     |> withRequired hasCertificateSkills
                  )
                , ( keys.certificateSkillsCost
                  , costElement
-                    |> maybeReadOnlyTraining
                     |> withRequired hasCertificateSkills
                  )
                , ( "other", Form.Title "Autres actions de formations complémentaires" )
@@ -232,20 +212,6 @@ confirmationSection candidacy =
 saveLabel : String
 saveLabel =
     "Envoyer"
-
-
-hasAccessTrainingFunding : Referential -> Data.Candidate.Candidate -> Bool
-hasAccessTrainingFunding referential candidate =
-    let
-        maybeBac =
-            List.Extra.find (\d -> d.code == "N4_BAC") referential.degrees
-    in
-    case ( candidate.highestDegree, candidate.vulnerabilityIndicator, maybeBac ) of
-        ( Just highestDegree, Just vulnerabilityIndicator, Just bac ) ->
-            highestDegree.level <= bac.level || vulnerabilityIndicator.label /= "Vide"
-
-        _ ->
-            False
 
 
 totalTrainingHourCount : FormData -> Int

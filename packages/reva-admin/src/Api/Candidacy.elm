@@ -22,7 +22,6 @@ import Admin.Object.ReorientationReason
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
-import Api.Degree
 import Api.Feasibility
 import Api.File as File
 import Api.Organism as Organism
@@ -30,7 +29,6 @@ import Api.Pagination exposing (pageInfoSelection)
 import Api.Referential exposing (departmentSelection)
 import Api.RemoteData exposing (nothingToError)
 import Api.Token exposing (Token)
-import Api.VulnerabilityIndicator
 import Data.Candidacy exposing (CandidacyId)
 import Data.Candidate
 import Data.Certification
@@ -169,9 +167,7 @@ candidateSelection =
         |> with Admin.Object.Candidate.firstname2
         |> with Admin.Object.Candidate.firstname3
         |> with Admin.Object.Candidate.gender
-        |> with (Admin.Object.Candidate.highestDegree Api.Degree.selection)
         |> with Admin.Object.Candidate.lastname
-        |> with (Admin.Object.Candidate.vulnerabilityIndicator Api.VulnerabilityIndicator.selection)
 
 
 

@@ -20,9 +20,7 @@ import Admin.Object.Training
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
-import Api.Degree
 import Api.Token exposing (Token)
-import Api.VulnerabilityIndicator
 import Data.Referential
 import Dict exposing (Dict)
 import Graphql.Operation
@@ -43,12 +41,10 @@ selection : SelectionSet Data.Referential.Referential Graphql.Operation.RootQuer
 selection =
     SelectionSet.succeed Data.Referential.Referential
         |> with (Query.getBasicSkills basicSkillSelection)
-        |> with (Query.getDegrees Api.Degree.selection)
         |> with (Query.getDropOutReasons dropOutReasonSelection)
         |> with (SelectionSet.map (\r -> r.goals) (Query.getReferential goalsSelection))
         |> with (Query.getTrainings trainingsSelection)
         |> with (Query.getReorientationReasons reorientationReasonSelection)
-        |> with (Query.getVulnerabilityIndicators Api.VulnerabilityIndicator.selection)
 
 
 basicSkillSelection : SelectionSet Data.Referential.BasicSkill Admin.Object.BasicSkill
