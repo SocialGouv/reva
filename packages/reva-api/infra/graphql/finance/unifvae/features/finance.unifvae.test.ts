@@ -176,27 +176,35 @@ beforeAll(async () => {
   });
 });
 
-afterAll(async () => {
-  await prismaClient.trainingOnFundingRequestsUnifvae.deleteMany({});
-  await prismaClient.basicSkillOnFundingRequestsUnifvae.deleteMany({});
-  await prismaClient.fundingRequestUnifvae.deleteMany({});
-  await prismaClient.candidaciesStatus.deleteMany({
-    where: { candidacyId: candidacyUnifvae.id },
-  });
-  await prismaClient.basicSkillOnCandidacies.deleteMany({});
-  await prismaClient.candidacy.deleteMany({
-    where: {
-      id: { in: [candidacyUnifvae.id, candidacyUnireva.id, myCandidacy.id] },
-    },
-  });
-  await prismaClient.organism.delete({ where: { id: organism.id } });
-  await prismaClient.account.delete({ where: { id: aapAccount.id } });
-  await prismaClient.candidate.delete({ where: { id: myCandidate.id } });
-  await prismaClient.training.delete({ where: { label: "trainingA" } });
-  await prismaClient.basicSkill.delete({ where: { label: "skillA" } });
-});
+// afterAll(async () => {
+//   await prismaClient.trainingOnFundingRequestsUnifvae.deleteMany({
+//     where: { fundingRequestUnifvaeId: myFundingRequest.id },
+//   });
+//   await prismaClient.basicSkillOnFundingRequestsUnifvae.deleteMany({
+//     where: { fundingRequestUnifvaeId: myFundingRequest.id },
+//   });
+//   await prismaClient.fundingRequestUnifvae.deleteMany({
+//     where: { id: myFundingRequest.id },
+//   });
+//   await prismaClient.candidaciesStatus.deleteMany({
+//     where: { candidacyId: candidacyUnifvae.id },
+//   });
+//   await prismaClient.basicSkillOnCandidacies.deleteMany({
+//     where: { candidacyId: candidacyUnifvae.id },
+//   });
+//   await prismaClient.candidacy.deleteMany({
+//     where: {
+//       id: { in: [candidacyUnifvae.id, candidacyUnireva.id, myCandidacy.id] },
+//     },
+//   });
+//   await prismaClient.organism.delete({ where: { id: organism.id } });
+//   await prismaClient.account.delete({ where: { id: aapAccount.id } });
+//   await prismaClient.candidate.delete({ where: { id: myCandidate.id } });
+//   await prismaClient.training.delete({ where: { label: "trainingA" } });
+//   await prismaClient.basicSkill.delete({ where: { label: "skillA" } });
+// });
 
-test("should create fundingRequestUnifvae", async () => {
+test.only("should create fundingRequestUnifvae", async () => {
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({

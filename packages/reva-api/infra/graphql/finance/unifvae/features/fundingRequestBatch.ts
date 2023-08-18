@@ -68,7 +68,7 @@ export const createBatchFromFundingRequestUnifvae = async (
         NumAction: fundingRequest.numAction,
         SiretAP: fundingRequest.candidacy?.organism?.siret,
         Certification:
-          fundingRequest.candidacy?.certificationsAndRegions[0].certification
+          fundingRequest.candidacy?.certificationsAndRegions[0]?.certification
             .label,
         NomCandidat: fundingRequest.candidateLastname,
         PrenomCandidat1: fundingRequest.candidateFirstname,
