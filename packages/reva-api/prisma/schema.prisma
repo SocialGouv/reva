@@ -894,6 +894,7 @@ model FundingRequestUnifvae {
   id                          String                               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   candidacy                   Candidacy                            @relation(fields: [candidacyId], references: [id])
   candidacyId                 String                               @unique @map("candidacy_id") @db.Uuid
+  numAction                   String                               @default("TO_MIGRATE") @map("num_action")
   isPartialCertification      Boolean                              @default(false)
   candidateFirstname          String                               @default("") @map("candidate_firstname")
   candidateSecondname         String?                              @map("candidate_secondname")
@@ -916,6 +917,7 @@ model FundingRequestUnifvae {
   otherTraining               String                               @map("other_training")
   otherTrainingHourCount      Decimal                              @default(0) @map("other_training_hour_count") @db.Decimal(5, 1)
   otherTrainingCost           Decimal                              @default(0) @map("other_training_cost") @db.Decimal(10, 2)
+  fundingRequestBatchUnifvae  FundingRequestBatchUnifvae?
 
   @@map("funding_request_unifvae")
 }
@@ -942,4 +944,14 @@ model TrainingOnFundingRequestsUnifvae {
 
   @@id([trainingId, fundingRequestUnifvaeId])
   @@map("training_funding_request_unifvae")
+}
+
+model FundingRequestBatchUnifvae {
+  id               String                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  fundingRequest   FundingRequestUnifvae @relation(fields: [fundingRequestId], references: [id])
+  fundingRequestId String                @unique @map("funding_request_id") @db.Uuid
+  sent             Boolean               @default(false)
+  content          Json
+
+  @@map("funding_request_batch_unifvae")
 }

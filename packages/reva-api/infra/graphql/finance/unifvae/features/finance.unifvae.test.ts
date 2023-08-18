@@ -12,10 +12,10 @@ import {
   Organism,
 } from "@prisma/client";
 
-import { organismDummy1 } from "../../../../test/fixtures/people-organisms";
-import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
-import { injectGraphql } from "../../../../test/helpers/graphql-helper";
-import { prismaClient } from "../../../database/postgres/client";
+import { organismDummy1 } from "../../../../../test/fixtures/people-organisms";
+import { authorizationHeaderForUser } from "../../../../../test/helpers/authorization-helper";
+import { injectGraphql } from "../../../../../test/helpers/graphql-helper";
+import { prismaClient } from "../../../../database/postgres/client";
 
 const candidateSample = {
   firstname: "Jojo",
@@ -177,21 +177,16 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await prismaClient.trainingOnFundingRequestsUnifvae.deleteMany({});
-  await prismaClient.basicSkillOnFundingRequestsUnifvae.deleteMany({});
-  await prismaClient.fundingRequestUnifvae.deleteMany({});
-  await prismaClient.candidaciesStatus.deleteMany({
-    where: { candidacyId: candidacyUnifvae.id },
-  });
-  await prismaClient.basicSkillOnCandidacies.deleteMany({});
-  await prismaClient.candidacy.deleteMany({
-    where: {
-      id: { in: [candidacyUnifvae.id, candidacyUnireva.id, myCandidacy.id] },
-    },
-  });
-  await prismaClient.organism.delete({ where: { id: organism.id } });
-  await prismaClient.account.delete({ where: { id: aapAccount.id } });
-  await prismaClient.candidate.delete({ where: { id: myCandidate.id } });
+  await prismaClient.trainingOnFundingRequestsUnifvae.deleteMany();
+  await prismaClient.basicSkillOnFundingRequestsUnifvae.deleteMany();
+  await prismaClient.fundingRequestBatchUnifvae.deleteMany();
+  await prismaClient.fundingRequestUnifvae.deleteMany();
+  await prismaClient.candidaciesStatus.deleteMany();
+  await prismaClient.basicSkillOnCandidacies.deleteMany();
+  await prismaClient.candidacy.deleteMany();
+  await prismaClient.organism.deleteMany();
+  await prismaClient.account.deleteMany();
+  await prismaClient.candidate.deleteMany();
   await prismaClient.training.delete({ where: { label: "trainingA" } });
   await prismaClient.basicSkill.delete({ where: { label: "skillA" } });
 });

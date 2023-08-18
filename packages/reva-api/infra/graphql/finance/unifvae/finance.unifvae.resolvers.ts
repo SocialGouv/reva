@@ -11,7 +11,7 @@ import { isAdminOrCandidacyCompanion } from "../../security/presets";
 import {
   createFundingRequestUnifvae,
   getFundingRequestUnifvaeFromCandidacyId,
-} from "./finance.unifvae.features";
+} from "./features/finance.unifvae.features";
 import { logFundingRequestUnifvaeEvent } from "./logFundingRequestUnifvaeEvent";
 import applyBusinessValidationRules from "./validation";
 
