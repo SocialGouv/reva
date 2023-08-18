@@ -200,12 +200,10 @@ view context model =
 
                                     else
                                         viewArticle "funding"
-                                            [ div
-                                                [ class "fr-alert fr-alert--warning" ]
-                                                [ h3
-                                                    [ class "fr-alert__title" ]
-                                                    [ text "Attention" ]
-                                                , p [] [ text "La demande de prise en charge est momentanément désactivée. Elle est actuellement en cours de développement en collaboration avec notre partenaire." ]
+                                            [ View.alert View.Warning
+                                                []
+                                                "Attention"
+                                                [ p [] [ text "La demande de prise en charge est momentanément désactivée. Elle est actuellement en cours de développement en collaboration avec notre partenaire." ]
                                                 , p [] [ text "Elle devrait être de nouveau disponible courant septembre 2023. Nous ne manquerons pas de vous tenir informés de sa réactivation." ]
                                                 , p [ class "italic" ] [ text "Nous vous rappelons que l'accord de financement est subordonné à l'obtention de la recevabilité." ]
                                                 ]
