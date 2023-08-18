@@ -216,7 +216,25 @@ view context model =
                     viewForm "meetings"
 
                 PaymentRequest ->
-                    viewForm "payment"
+                    case model.selected of
+                        Success candidacy ->
+                            case candidacy.financeModule of
+                                FinanceModule.Unireva ->
+                                    viewForm "payment"
+
+                                FinanceModule.Unifvae ->
+                                    viewArticle "payment"
+                                        [ View.alert View.Warning
+                                            []
+                                            "Attention"
+                                            [ p [] [ text "La demande de paiement est momentanément désactivée. Elle est actuellement en cours de développement en collaboration avec notre partenaire." ]
+                                            , p [] [ text "Elle devrait être de nouveau disponible courant 2023. Nous ne manquerons pas de vous tenir informés de sa réactivation." ]
+                                            , p [ class "italic" ] [ text "Nous vous rappelons que l'accord de financement est subordonné à l'obtention de la recevabilité." ]
+                                            ]
+                                        ]
+
+                        _ ->
+                            div [] []
 
                 PaymentRequestConfirmation ->
                     viewForm "payment-confirmation"
