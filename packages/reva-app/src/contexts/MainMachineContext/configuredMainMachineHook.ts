@@ -24,10 +24,7 @@ import {
   getRandomOrganismsForCandidacy,
   selectOrganismForCandidacy,
 } from "../../services/organismServices";
-import {
-  getCertification,
-  searchCertifications,
-} from "../../services/searchServices";
+import { searchCertifications } from "../../services/searchServices";
 import { useKeycloakContext } from "../keycloakContext";
 
 export const useConfiguredMainMachine = () => {
@@ -68,14 +65,6 @@ export const useConfiguredMainMachine = () => {
               setTokens(tokens);
               return rest;
             }
-          },
-          getCertification: (_context, event) => {
-            if (event.type !== "SELECT_CERTIFICATION") {
-              return Promise.reject("Impossible state");
-            }
-            return getCertification(client as ApolloClient<object>)({
-              id: event.certification.id,
-            });
           },
           getOrganisms: async (context, _event) => {
             if (!context.candidacyId)

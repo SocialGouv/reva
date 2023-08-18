@@ -7,7 +7,6 @@ context("Certificates", () => {
       stubMutation(req, "candidate_login", "candidate1.json");
       stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "Certifications", "certifications.json");
-      stubQuery(req, "Certification", "certification-c2.json");
       stubMutation(
         req,
         "candidacy_updateCertification",
@@ -27,11 +26,11 @@ context("Certificates", () => {
   it("display information about the selected certificate", function () {
     cy.get('[data-test="certification-select-c2"]').click();
     cy.get('[data-test="certification-label"]').should("contain", "Titre 2");
-    cy.get('[data-test="certification-code-rncp"]').should("contain", "34691");
+    cy.get('[data-test="certification-code-rncp"]').should("contain", "34692");
     cy.get('[data-test="certification-more-info-link"]').should(
       "have.attr",
       "href",
-      "https://www.francecompetences.fr/recherche/rncp/34691/"
+      "https://www.francecompetences.fr/recherche/rncp/34692/"
     );
   });
 

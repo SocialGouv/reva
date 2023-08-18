@@ -53,26 +53,3 @@ export const searchCertifications =
       },
     });
   };
-const GET_CERTIFICATE = gql`
-  query Certification($id: ID!) {
-    getCertification(id: $id) {
-      id
-      label
-      summary
-      codeRncp
-      activities
-      abilities
-      activityArea
-      accessibleJobType
-      status
-    }
-  }
-`;
-
-export const getCertification =
-  (client: ApolloClient<object>) =>
-  ({ id }: { id: string }) =>
-    client.query({
-      query: GET_CERTIFICATE,
-      variables: { id },
-    });

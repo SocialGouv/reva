@@ -389,28 +389,6 @@ export const mainMachine =
             },
           },
           certificateDetails: {
-            invoke: {
-              src: "getCertification",
-              onDone: [
-                {
-                  actions: assign({
-                    selectedCertification: (_, event) =>
-                      event.data.data.getCertification,
-                  }),
-                },
-              ],
-              onError: [
-                {
-                  actions: [
-                    "sendErrorToSentry",
-                    assign({
-                      error: (_, _event) =>
-                        "Une erreur est survenue lors de la récupération de la certification.",
-                    }),
-                  ],
-                },
-              ],
-            },
             on: {
               BACK: {
                 actions: assign({
