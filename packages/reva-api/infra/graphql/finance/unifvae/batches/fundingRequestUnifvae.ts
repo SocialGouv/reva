@@ -1,5 +1,4 @@
-import { PassThrough, Readable } from "stream";
-import { ReadableStream } from "stream/web";
+import { Readable } from "stream";
 
 import { Feature } from "@prisma/client";
 import * as csv from "fast-csv";
@@ -48,18 +47,17 @@ export const batchFundingRequestUnifvae = async () => {
     const batchReadableStream =
       await generateFundingRequestUnifvaeBatchCsvStream(itemsToSendIds);
 
-    const consoleStream = new PassThrough();
-    batchReadableStream.pipe(consoleStream);
-
     if (process.env.NODE_ENV !== "production") {
       console.log(`Writing funding_request_unifvae batch to "${fileName}"`);
-      consoleStream.on("data", (chunk) => console.log(chunk.toString()));
-      consoleStream.on("end", () => console.log("<EOF>"));
+      await sendStreamToConsole(batchReadableStream);
+      console.log("<EOF>");
+    } else {
+      await sendStreamToFtp({
+        fileName,
+        readableStream: batchReadableStream,
+      });
     }
-    await sendStreamToFtp({
-      fileName,
-      readableStream: consoleStream,
-    });
+
     await prismaClient.fundingRequestBatchUnifvae.updateMany({
       where: { id: { in: itemsToSendIds } },
       data: { sent: true },
@@ -110,8 +108,8 @@ async function generateFundingRequestUnifvaeBatchCsvStream(
   return fundingRequestBatchesWaitingToBeSentStream.pipe(csvStream);
 }
 
-// async function sendStreamToConsole(readable: Readable) {
-//   for await (const chunk of readable) {
-//     console.log((chunk as Buffer).toString());
-//   }
-// }
+async function sendStreamToConsole(readable: Readable) {
+  for await (const chunk of readable) {
+    console.log((chunk as Buffer).toString());
+  }
+}
