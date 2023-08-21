@@ -1,0 +1,19 @@
+type Organism {
+  id: UUID!
+  label: String!
+  address: String!
+  zip: String!
+  city: String!
+  contactAdministrativeEmail: String!
+  contactAdministrativePhone: String
+  typology: OrganismTypology!
+  organismOnDepartments(departmentId: UUID): [OrganismOnDepartment!]!
+}
+
+type OrganismOnDepartment {
+  id: UUID!
+  organismId: UUID!
+  departmentId: UUID!
+  isRemote: Boolean!
+  isOnSite: Boolean!
+}

@@ -19,6 +19,7 @@ import { feasibilityLoaders } from "./feasibility/feasibility.loaders";
 import { feasibilityResolvers } from "./feasibility/feasibility.resolvers";
 import { financeUnifvaeResolvers } from "./finance/unifvae/finance.unifvae.resolvers";
 import { financeResolvers } from "./finance/unireva/finance.resolvers";
+import { organismResolvers } from "./organism/organism.resolvers";
 import * as referential from "./referential";
 import DecimalGraphqlScalar from "./scalar/DecimalGraphqlScalar";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
@@ -39,6 +40,7 @@ const resolvers = mergeResolvers([
   subscriptionRequestResolvers,
   feasibilityResolvers,
   financeUnifvaeResolvers,
+  organismResolvers,
 ]);
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;

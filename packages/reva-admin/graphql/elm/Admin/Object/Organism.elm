@@ -58,3 +58,23 @@ contactAdministrativePhone =
 typology : SelectionSet Admin.Enum.OrganismTypology.OrganismTypology Admin.Object.Organism
 typology =
     Object.selectionForField "Enum.OrganismTypology.OrganismTypology" "typology" [] Admin.Enum.OrganismTypology.decoder
+
+
+type alias OrganismOnDepartmentsOptionalArguments =
+    { departmentId : OptionalArgument Data.Scalar.Uuid }
+
+
+organismOnDepartments :
+    (OrganismOnDepartmentsOptionalArguments -> OrganismOnDepartmentsOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.OrganismOnDepartment
+    -> SelectionSet (List decodesTo) Admin.Object.Organism
+organismOnDepartments fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { departmentId = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "departmentId" filledInOptionals____.departmentId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "organismOnDepartments" optionalArgs____ object____ (Basics.identity >> Decode.list)

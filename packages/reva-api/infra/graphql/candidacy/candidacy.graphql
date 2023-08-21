@@ -158,17 +158,6 @@ enum OrganismTypology {
   expertBrancheEtFiliere
 }
 
-type Organism {
-  id: UUID!
-  label: String!
-  address: String!
-  zip: String!
-  city: String!
-  contactAdministrativeEmail: String!
-  contactAdministrativePhone: String
-  typology: OrganismTypology!
-}
-
 type Training {
   id: ID!
   label: String!

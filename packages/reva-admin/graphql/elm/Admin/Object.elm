@@ -141,6 +141,10 @@ type Organism
     = Organism
 
 
+type OrganismOnDepartment
+    = OrganismOnDepartment
+
+
 type PaginationInfo
     = PaginationInfo
 
