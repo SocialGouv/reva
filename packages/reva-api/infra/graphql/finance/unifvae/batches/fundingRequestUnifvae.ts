@@ -50,10 +50,10 @@ export const batchFundingRequestUnifvae = async () => {
       const batchReadableStream =
         await generateFundingRequestUnifvaeBatchCsvStream(itemsToSendIds);
 
-      if (process.env.NODE_ENV === "production") {
-        console.log(`Writing funding_request_unifvae batch to "${fileName}"`);
+      if (process.env.NODE_ENV !== "production") {
+        logger.info(`Writing funding_request_unifvae batch to "${fileName}"`);
         await sendStreamToConsole(batchReadableStream);
-        console.log("<EOF>");
+        logger.info("<EOF>");
       } else {
         await sendStreamToFtp({
           fileName,
@@ -114,6 +114,6 @@ async function generateFundingRequestUnifvaeBatchCsvStream(
 
 async function sendStreamToConsole(readable: Readable) {
   for await (const chunk of readable) {
-    console.log((chunk as Buffer).toString());
+    logger.info((chunk as Buffer).toString());
   }
 }
