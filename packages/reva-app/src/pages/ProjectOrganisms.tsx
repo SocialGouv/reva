@@ -81,12 +81,18 @@ const Organisms: FC<PropsOrganisms> = ({
                     )}
                     <div className="flex justify-end gap-1 mt-2 lg:mt-0">
                       {organism.organismOnDepartments?.[0]?.isOnSite && (
-                        <Tag className="bg-dsfrBlue-500 text-white">
+                        <Tag
+                          data-test="project-organisms-onsite-tag"
+                          className="bg-dsfrBlue-500 text-white"
+                        >
                           Sur place
                         </Tag>
                       )}
                       {organism.organismOnDepartments?.[0]?.isRemote && (
-                        <Tag className="bg-dsfrBlue-300 text-dsfrBlue-500">
+                        <Tag
+                          data-test="project-organisms-remote-tag"
+                          className="bg-dsfrBlue-300 text-dsfrBlue-500"
+                        >
                           À distance
                         </Tag>
                       )}

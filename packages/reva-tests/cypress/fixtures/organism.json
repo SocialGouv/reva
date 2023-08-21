@@ -8,7 +8,15 @@
         "zip": "75000",
         "city": "Paris",
         "contactAdministrativeEmail": "email@exemple.com",
-        "contactAdministrativePhone": "0111111111"
+        "contactAdministrativePhone": "0111111111",
+        "organismOnDepartments": [
+          {
+            "id": "orgaOnDepartment1",
+            "isRemote": false,
+            "isOnSite": true,
+            "__typename": "OrganismOnDepartment"
+          }
+        ]
       },
       {
         "id": "o2",
@@ -17,7 +25,15 @@
         "zip": "44000",
         "city": "Nantes",
         "contactAdministrativeEmail": "email2@exemple.com",
-        "contactAdministrativePhone": "0222222222"
+        "contactAdministrativePhone": "0222222222",
+        "organismOnDepartments": [
+          {
+            "id": "orgaOnDepartment2",
+            "isRemote": true,
+            "isOnSite": false,
+            "__typename": "OrganismOnDepartment"
+          }
+        ]
       }
     ]
   }
