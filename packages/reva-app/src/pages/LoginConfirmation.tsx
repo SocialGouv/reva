@@ -9,14 +9,20 @@ interface LoginConfirmationProps {
 
 export const LoginConfirmation = ({ mainService }: LoginConfirmationProps) => (
   <Page data-test="login-confirmation" title="Confirmation de connexion">
-    <h1 className="text-3xl font-bold text-dsfrBlue-500">Merci !</h1>
+    <h1 className="text-3xl font-bold text-dsfrBlue-500">
+      Accès à votre compte France VAE
+    </h1>
     <p className="mt-4 text-lg font-bold text-dsfrGray-500">
-      Un email vous a été envoyé, il contient un lien qui vous permettra de
-      retrouver votre candidature.
+      Bonjour, vous avez demandé à accéder à votre compte France VAE.
+    </p>
+    <p className="mt-4 text-lg font-bold text-dsfrGray-500">
+      Si vous avez déjà un compte chez France VAE, vous allez recevoir un e-mail
+      avec un lien pour vous connecter et accéder à votre profil et à votre
+      candidature.
     </p>
     <p className="mt-4 text-dsfrGray-500">
-      Cliquez sur le lien de validation dans cet email pour accéder à votre
-      espace candidat.
+      Si vous ne trouvez pas notre e-mail, pensez à vérifiez votre dossier de
+      courriers indésirables (spams).
     </p>
   </Page>
 );
