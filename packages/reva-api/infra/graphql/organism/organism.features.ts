@@ -1,16 +1,10 @@
 import { prismaClient } from "../../database/postgres/client";
 
-export const getOrganismOnDepartmentsByOrganismIdAndDepartmentId = ({
-  organismId,
-  departmentId,
+export const getOrganismOnDepartmentsByOrganismAndDepartmentIds = ({
+  organismAndDepartmentIds,
 }: {
-  organismId: string;
-  departmentId?: string;
-}) => {
-  const whereClause = departmentId
-    ? { departmentId, organismId }
-    : { organismId };
-  return prismaClient.organismsOnDepartments.findMany({
-    where: whereClause,
+  organismAndDepartmentIds: { organismId: string; departmentId?: string }[];
+}) =>
+  prismaClient.organismsOnDepartments.findMany({
+    where: { OR: organismAndDepartmentIds },
   });
-};
