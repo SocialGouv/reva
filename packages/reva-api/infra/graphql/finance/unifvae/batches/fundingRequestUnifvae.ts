@@ -32,7 +32,7 @@ export const batchFundingRequestUnifvae = async (batchKey: string) => {
       const batchReadableStream =
         await generateFundingRequestUnifvaeBatchCsvStream(itemsToSendIds);
 
-      if (process.env.NODE_ENV !== "production") {
+      if (process.env.APP_ENV !== "production") {
         logger.info(`Writing funding_request_unifvae batch to "${fileName}"`);
         await sendStreamToConsole(batchReadableStream);
         logger.info("<EOF>");

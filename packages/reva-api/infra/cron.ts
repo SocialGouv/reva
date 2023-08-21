@@ -68,4 +68,4 @@ async function isFeatureActive(featureKey: string): Promise<boolean> {
   return Boolean(feat && feat.isActive);
 }
 
-logger.info("Started cron jobs");
+logger.info(`Started cron jobs with APP_ENV = "${process.env.APP_ENV}"`);
