@@ -381,7 +381,7 @@ export const validateFeasibility = async ({
     if (feasibility.candidacy.organism?.contactAdministrativeEmail) {
       sendFeasibilityDecisionTakenToAAPEmail({
         email: feasibility.candidacy.organism?.contactAdministrativeEmail,
-        feasibilityUrl: `${baseUrl}/admin/feasibilities/${feasibility.id}`,
+        feasibilityUrl: `${baseUrl}/admin/candidacies/${feasibility.candidacyId}/feasibility`,
       });
     }
     return feasibility;
@@ -439,7 +439,7 @@ export const rejectFeasibility = async ({
     if (feasibility.candidacy.organism?.contactAdministrativeEmail) {
       sendFeasibilityDecisionTakenToAAPEmail({
         email: feasibility.candidacy.organism?.contactAdministrativeEmail,
-        feasibilityUrl: `${baseUrl}/admin/feasibilities/${feasibilityId}`,
+        feasibilityUrl: `${baseUrl}/admin/candidacies/${feasibility.candidacy.id}/feasibility`,
       });
     }
     return feasibility;
