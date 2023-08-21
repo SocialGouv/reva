@@ -69,7 +69,7 @@ export const batchFundingRequestUnifvae = async (batchKey: string) => {
   }
 };
 
-async function generateFundingRequestUnifvaeBatchCsvStream(
+export async function generateFundingRequestUnifvaeBatchCsvStream(
   itemsToSendIds: string[]
 ) {
   const RECORDS_PER_FETCH = 10;

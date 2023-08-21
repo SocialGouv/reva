@@ -952,6 +952,7 @@ model FundingRequestBatchUnifvae {
   fundingRequestId String                @unique @map("funding_request_id") @db.Uuid
   sent             Boolean               @default(false)
   content          Json
+  createdAt        DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@map("funding_request_batch_unifvae")
 }
