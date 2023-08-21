@@ -1,35 +1,17 @@
 import { Readable } from "stream";
 
-import { Feature } from "@prisma/client";
 import * as csv from "fast-csv";
 
 import { prismaClient } from "../../../../database/postgres/client";
 import { sendStreamToFtp } from "../../../../ftp/ftp";
 import { logger } from "../../../../logger";
 
-const BATCH_KEY = "batch.demande-financement-unifvae";
-
-const isFeatureActive = (feature: Feature | null) =>
-  feature && feature.isActive;
-
-export const batchFundingRequestUnifvae = async () => {
+export const batchFundingRequestUnifvae = async (batchKey: string) => {
   try {
-    // Check if the feature is active
-    const fundingRequestFeature = await prismaClient.feature.findFirst({
-      where: {
-        key: BATCH_KEY,
-      },
-    });
-
-    if (!isFeatureActive(fundingRequestFeature)) {
-      logger.info(`Le batch ${BATCH_KEY} est inactif.`);
-      return;
-    }
-
     // Start the execution
     const batchExecution = await prismaClient.batchExecution.create({
       data: {
-        key: BATCH_KEY,
+        key: batchKey,
         startedAt: new Date(Date.now()),
       },
     });
@@ -42,7 +24,7 @@ export const batchFundingRequestUnifvae = async () => {
     ).map((v) => v.id);
 
     if (itemsToSendIds.length === 0) {
-      logger.info("Found 0 fundingRequestUnifvae batch to process.");
+      logger.info("Found no fundingRequestUnifvae to process.");
     } else {
       const fileDate = new Date().toLocaleDateString("sv").split("-").join("");
       const fileName = `DAF2_${fileDate}.csv`;
@@ -78,12 +60,12 @@ export const batchFundingRequestUnifvae = async () => {
     });
   } catch (e) {
     logger.error(
-      `Une erreur est survenue lors de l'exécution du batch ${BATCH_KEY}`,
+      `Une erreur est survenue lors de l'exécution du batch ${batchKey}`,
       e
     );
     e instanceof Error && logger.error(e.message);
   } finally {
-    logger.info(`Batch ${BATCH_KEY} terminé`);
+    logger.info(`Batch ${batchKey} terminé`);
   }
 };
 
