@@ -6,8 +6,8 @@ import * as ftp from "basic-ftp";
 import { prismaClient } from "../../../../database/postgres/client";
 import { logger } from "../../../../logger";
 
-export default async () => {
-  logger.info("Starting uploadSpoolerFiles job");
+export default async (batchKey: string) => {
+  logger.info(`Starting job ${batchKey}`);
 
   try {
     // Fetch spooled files list
@@ -80,9 +80,9 @@ export default async () => {
         ftpClient.close();
       }
     }
-    logger.info("Finished job with success");
+    logger.info(`Finished job ${batchKey} with success`);
   } catch (e) {
     logger.error(e);
-    logger.info("Finished job with errors");
+    logger.info(`Finished job ${batchKey} with errors`);
   }
 };

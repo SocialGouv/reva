@@ -7,11 +7,6 @@ import { prismaClient } from "../../../../database/postgres/client";
 import { sendStreamToFtp } from "../../../../ftp/ftp";
 import { logger } from "../../../../logger";
 
-const BATCH_KEY = "batch.demande-paiement";
-
-const isFeatureActive = (feature: Feature | null) =>
-  feature && feature.isActive;
-
 const generatePaymentRequestBatchCsvStream = async (
   itemsToSendIds: string[]
 ) => {
@@ -37,24 +32,12 @@ const generatePaymentRequestBatchCsvStream = async (
   return paymentRequestBatchesWaitingToBeSentStream.pipe(csvStream);
 };
 
-export const batchPaymentRequest = async () => {
+export const batchPaymentRequest = async (batchKey: string) => {
   try {
-    // Check if the feature is active
-    const paymentRequestFeature = await prismaClient.feature.findFirst({
-      where: {
-        key: BATCH_KEY,
-      },
-    });
-
-    if (!isFeatureActive(paymentRequestFeature)) {
-      logger.info(`Le batch ${BATCH_KEY} est inactif.`);
-      return;
-    }
-
     // Start the execution
     const batchExecution = await prismaClient.batchExecution.create({
       data: {
-        key: BATCH_KEY,
+        key: batchKey,
         startedAt: new Date(Date.now()),
       },
     });
@@ -66,23 +49,26 @@ export const batchPaymentRequest = async () => {
       })
     ).map((v) => v.id);
 
-    const batchReadableStream = await generatePaymentRequestBatchCsvStream(
-      itemsToSendIds
-    );
+    if (itemsToSendIds.length === 0) {
+      logger.info("Found no fundingRequestUnifvae to process.");
+    } else {
+      const batchReadableStream = await generatePaymentRequestBatchCsvStream(
+        itemsToSendIds
+      );
 
-    const fileDate = new Date().toLocaleDateString("sv").split("-").join("");
-    const fileName = `DR_${fileDate}.csv`;
+      const fileDate = new Date().toLocaleDateString("sv").split("-").join("");
+      const fileName = `DR_${fileDate}.csv`;
 
-    await sendStreamToFtp({
-      fileName,
-      readableStream: batchReadableStream,
-    });
+      await sendStreamToFtp({
+        fileName,
+        readableStream: batchReadableStream,
+      });
 
-    await prismaClient.paymentRequestBatch.updateMany({
-      where: { id: { in: itemsToSendIds } },
-      data: { sent: true },
-    });
-
+      await prismaClient.paymentRequestBatch.updateMany({
+        where: { id: { in: itemsToSendIds } },
+        data: { sent: true },
+      });
+    }
     // Finish the execution
     await prismaClient.batchExecution.update({
       where: {
@@ -94,11 +80,11 @@ export const batchPaymentRequest = async () => {
     });
   } catch (e) {
     logger.error(
-      `Une erreur est survenue lors de l'exécution du batch ${BATCH_KEY}`,
+      `Une erreur est survenue lors de l'exécution du batch ${batchKey}`,
       e
     );
     e instanceof Error && logger.error(e.message);
   } finally {
-    logger.info(`Batch ${BATCH_KEY} terminé`);
+    logger.info(`Batch ${batchKey} terminé`);
   }
 };
