@@ -67,6 +67,13 @@ export interface Organism {
   contactAdministrativeEmail: string;
   contactAdministrativePhone: string | null;
   label: string;
+  organismOnDepartments?: OrganismOnDepartment[];
+}
+
+export interface OrganismOnDepartment {
+  id: string;
+  isRemote: boolean;
+  isOnSite: boolean;
 }
 
 export interface OrganismForCandidacy {

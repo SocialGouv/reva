@@ -1,4 +1,5 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { RadioGroup } from "@headlessui/react";
 import { useActor } from "@xstate/react";
 import classNames from "classnames";
@@ -25,6 +26,8 @@ const Organisms: FC<PropsOrganisms> = ({
   const [selectedOrganismId, setSelectedOrganismId] = useState(
     alreadySelectedOrganismId
   );
+
+  console.log({ availableOrganisms });
 
   return (
     <RadioGroup
@@ -76,6 +79,18 @@ const Organisms: FC<PropsOrganisms> = ({
                         </span>
                       </>
                     )}
+                    <div className="flex justify-end gap-1 mt-2 lg:mt-0">
+                      {organism.organismOnDepartments?.[0]?.isOnSite && (
+                        <Tag className="bg-dsfrBlue-500 text-white">
+                          Sur place
+                        </Tag>
+                      )}
+                      {organism.organismOnDepartments?.[0]?.isRemote && (
+                        <Tag className="bg-dsfrBlue-300 text-dsfrBlue-500">
+                          À distance
+                        </Tag>
+                      )}
+                    </div>
                   </p>
                 </RadioGroup.Description>
               </>

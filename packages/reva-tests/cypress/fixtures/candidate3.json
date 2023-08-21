@@ -50,7 +50,8 @@
           "collectiveHourCount": null,
           "additionalHourCount": null,
           "basicSkills": [],
-          "mandatoryTrainings": []
+          "mandatoryTrainings": [],
+          "department": { "id": "department1" }
         }
       }
     }

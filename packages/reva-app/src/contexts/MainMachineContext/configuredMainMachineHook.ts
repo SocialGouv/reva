@@ -72,10 +72,16 @@ export const useConfiguredMainMachine = () => {
                 "unavailable candidacyId in XState context"
               );
 
+            if (!context.selectedDepartment)
+              return Promise.reject(
+                "unavailable selectedDepartment in XState context"
+              );
+
             return getRandomOrganismsForCandidacy(
               client as ApolloClient<object>
             )({
               candidacyId: context.candidacyId,
+              departmentId: context.selectedDepartment?.id,
               searchText: context.organismSearchText,
             });
           },

@@ -3,6 +3,7 @@ import { ApolloClient, gql } from "@apollo/client";
 const GET_ORGANISMS_FOR_CANDIDACY = gql`
   query getRandomOrganismsForCandidacy(
     $candidacyId: UUID!
+    $departmentId: UUID!
     $searchText: String
   ) {
     getRandomOrganismsForCandidacy(
@@ -13,16 +14,29 @@ const GET_ORGANISMS_FOR_CANDIDACY = gql`
       label
       contactAdministrativeEmail
       contactAdministrativePhone
+      organismOnDepartments(departmentId: $departmentId) {
+        id
+        isRemote
+        isOnSite
+      }
     }
   }
 `;
 
 export const getRandomOrganismsForCandidacy =
   (client: ApolloClient<object>) =>
-  ({ candidacyId, searchText }: { candidacyId: string; searchText?: string }) =>
+  ({
+    candidacyId,
+    departmentId,
+    searchText,
+  }: {
+    candidacyId: string;
+    departmentId: string;
+    searchText?: string;
+  }) =>
     client.query({
       query: GET_ORGANISMS_FOR_CANDIDACY,
-      variables: { candidacyId, searchText },
+      variables: { candidacyId, departmentId, searchText },
       fetchPolicy: "no-cache",
     });
 
