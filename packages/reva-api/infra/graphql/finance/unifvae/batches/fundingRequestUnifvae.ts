@@ -41,27 +41,31 @@ export const batchFundingRequestUnifvae = async () => {
       })
     ).map((v) => v.id);
 
-    const fileDate = new Date().toLocaleDateString("sv").split("-").join("");
-    const fileName = `DAF2_${fileDate}.csv`;
-
-    const batchReadableStream =
-      await generateFundingRequestUnifvaeBatchCsvStream(itemsToSendIds);
-
-    if (process.env.NODE_ENV !== "production") {
-      console.log(`Writing funding_request_unifvae batch to "${fileName}"`);
-      await sendStreamToConsole(batchReadableStream);
-      console.log("<EOF>");
+    if (itemsToSendIds.length === 0) {
+      logger.info("Found 0 fundingRequestUnifvae batch to process.");
     } else {
-      await sendStreamToFtp({
-        fileName,
-        readableStream: batchReadableStream,
+      const fileDate = new Date().toLocaleDateString("sv").split("-").join("");
+      const fileName = `DAF2_${fileDate}.csv`;
+
+      const batchReadableStream =
+        await generateFundingRequestUnifvaeBatchCsvStream(itemsToSendIds);
+
+      if (process.env.NODE_ENV === "production") {
+        console.log(`Writing funding_request_unifvae batch to "${fileName}"`);
+        await sendStreamToConsole(batchReadableStream);
+        console.log("<EOF>");
+      } else {
+        await sendStreamToFtp({
+          fileName,
+          readableStream: batchReadableStream,
+        });
+      }
+
+      await prismaClient.fundingRequestBatchUnifvae.updateMany({
+        where: { id: { in: itemsToSendIds } },
+        data: { sent: true },
       });
     }
-
-    await prismaClient.fundingRequestBatchUnifvae.updateMany({
-      where: { id: { in: itemsToSendIds } },
-      data: { sent: true },
-    });
 
     // Finish the execution
     await prismaClient.batchExecution.update({
