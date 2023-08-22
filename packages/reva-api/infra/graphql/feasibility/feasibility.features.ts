@@ -325,13 +325,9 @@ export const getFeasibilityById = async ({
     where: { id: feasibilityId },
   });
 
-  if (feasibility == null) {
-    throw new Error("Ce dossier est introuvable");
-  }
-
   const authorized = await canManageFeasibility({
     hasRole,
-    candidacyId: feasibility.candidacyId,
+    feasibility,
     keycloakId,
   });
 
@@ -346,13 +342,25 @@ export const validateFeasibility = async ({
   feasibilityId,
   comment,
   hasRole,
+  keycloakId,
 }: {
   feasibilityId: string;
   comment?: string;
   hasRole: (role: string) => boolean;
+  keycloakId: string;
 }) => {
-  if (hasRole("admin") || hasRole("manage_feasibility")) {
-    const feasibility = await prismaClient.feasibility.update({
+  const feasibility = await prismaClient.feasibility.findUnique({
+    where: { id: feasibilityId },
+  });
+
+  const authorized = await canManageFeasibility({
+    hasRole,
+    feasibility,
+    keycloakId,
+  });
+
+  if (hasRole("admin") || authorized) {
+    const updatedFeasibility = await prismaClient.feasibility.update({
       where: { id: feasibilityId },
       data: {
         decision: "ADMISSIBLE",
@@ -378,27 +386,28 @@ export const validateFeasibility = async ({
     });
 
     const activeCertificationAndRegion =
-      feasibility.candidacy.certificationsAndRegions[0];
+      updatedFeasibility.candidacy.certificationsAndRegions[0];
 
     const certificationAuthority = await getCertificationAuthority({
       certificationId: activeCertificationAndRegion.certificationId,
-      departmentId: feasibility.candidacy.departmentId || "",
+      departmentId: updatedFeasibility.candidacy.departmentId || "",
     });
 
     sendFeasibilityValidatedCandidateEmail({
-      email: feasibility.candidacy.candidate?.email as string,
+      email: updatedFeasibility.candidacy.candidate?.email as string,
       certifName: activeCertificationAndRegion.certification.label,
       comment,
       certificationAuthorityLabel:
         certificationAuthority?.label || "certificateur inconnu",
     });
-    if (feasibility.candidacy.organism?.contactAdministrativeEmail) {
+    if (updatedFeasibility.candidacy.organism?.contactAdministrativeEmail) {
       sendFeasibilityDecisionTakenToAAPEmail({
-        email: feasibility.candidacy.organism?.contactAdministrativeEmail,
-        feasibilityUrl: `${baseUrl}/admin/candidacies/${feasibility.candidacyId}/feasibility`,
+        email:
+          updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
+        feasibilityUrl: `${baseUrl}/admin/candidacies/${updatedFeasibility.candidacyId}/feasibility`,
       });
     }
-    return feasibility;
+    return updatedFeasibility;
   } else {
     throw new Error("Utilisateur non autorisé");
   }
@@ -408,20 +417,32 @@ export const rejectFeasibility = async ({
   feasibilityId,
   comment,
   hasRole,
+  keycloakId,
 }: {
   feasibilityId: string;
   comment?: string;
   hasRole: (role: string) => boolean;
+  keycloakId: string;
 }) => {
-  if (hasRole("admin") || hasRole("manage_feasibility")) {
-    const feasibility = await prismaClient.feasibility.update({
+  const feasibility = await prismaClient.feasibility.findUnique({
+    where: { id: feasibilityId },
+  });
+
+  const authorized = await canManageFeasibility({
+    hasRole,
+    feasibility,
+    keycloakId,
+  });
+
+  if (hasRole("admin") || authorized) {
+    const updatedFeasibility = await prismaClient.feasibility.update({
       where: { id: feasibilityId },
       data: {
         decision: "REJECTED",
         decisionComment: comment,
         decisionSentAt: new Date(),
       },
-      select: {
+      include: {
         candidacy: {
           include: {
             certificationsAndRegions: {
@@ -437,26 +458,27 @@ export const rejectFeasibility = async ({
     });
 
     const activeCertificationAndRegion =
-      feasibility.candidacy.certificationsAndRegions[0];
+      updatedFeasibility.candidacy.certificationsAndRegions[0];
 
     const certificationAuthority = await getCertificationAuthority({
       certificationId: activeCertificationAndRegion.certificationId,
-      departmentId: feasibility.candidacy.departmentId || "",
+      departmentId: updatedFeasibility.candidacy.departmentId || "",
     });
 
     sendFeasibilityRejectedCandidateEmail({
-      email: feasibility.candidacy.candidate?.email as string,
+      email: updatedFeasibility.candidacy.candidate?.email as string,
       comment,
       certificationAuthorityLabel:
         certificationAuthority?.label || "certificateur inconnu",
     });
-    if (feasibility.candidacy.organism?.contactAdministrativeEmail) {
+    if (updatedFeasibility.candidacy.organism?.contactAdministrativeEmail) {
       sendFeasibilityDecisionTakenToAAPEmail({
-        email: feasibility.candidacy.organism?.contactAdministrativeEmail,
-        feasibilityUrl: `${baseUrl}/admin/candidacies/${feasibility.candidacy.id}/feasibility`,
+        email:
+          updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
+        feasibilityUrl: `${baseUrl}/admin/candidacies/${updatedFeasibility.candidacy.id}/feasibility`,
       });
     }
-    return feasibility;
+    return updatedFeasibility;
   } else {
     throw new Error("Utilisateur non autorisé");
   }
@@ -475,11 +497,31 @@ export const canDownloadFeasibilityFiles = async ({
 
   return (
     userCanManageCandidacy ||
-    canManageFeasibility({ hasRole, candidacyId, keycloakId })
+    canManageFeasibilityWithCandidacyId({ hasRole, candidacyId, keycloakId })
   );
 };
 
 export const canManageFeasibility = async ({
+  hasRole,
+  feasibility,
+  keycloakId,
+}: {
+  hasRole(role: string): boolean;
+  feasibility: Feasibility | null;
+  keycloakId: string;
+}) => {
+  if (feasibility == null) {
+    throw new Error("Ce dossier est introuvable");
+  }
+
+  return await canManageFeasibilityWithCandidacyId({
+    hasRole,
+    candidacyId: feasibility.candidacyId,
+    keycloakId,
+  });
+};
+
+export const canManageFeasibilityWithCandidacyId = async ({
   hasRole,
   candidacyId,
   keycloakId,

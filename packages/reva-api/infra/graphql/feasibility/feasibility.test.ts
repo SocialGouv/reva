@@ -347,3 +347,121 @@ test("should count 1 pending feasibility for admin user", async () => {
     REJECTED: 0,
   });
 });
+
+test("should validate a feasibility since certificator is allowed to do so", async () => {
+  const feasiblity = await prismaClient.feasibility.create({
+    data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
+  });
+
+  await prismaClient.candidaciesOnRegionsAndCertifications.create(
+    ileDeFranceCandidacyData
+  );
+
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "manage_feasibility",
+      keycloakId: CERTIFICATOR_KEYCLOAK_ID,
+    }),
+    payload: {
+      requestType: "mutation",
+      endpoint: "validateFeasibility",
+      arguments: { feasibilityId: feasiblity.id },
+      returnFields: "{id}",
+    },
+  });
+
+  expect(resp.statusCode).toEqual(200);
+  const obj = resp.json();
+
+  expect(obj.data?.validateFeasibility).toMatchObject({
+    id: feasiblity.id,
+  });
+  expect(resp.json()).not.toHaveProperty("errors");
+});
+
+test("should not validate a feasibility since other certificator doesn't handle it", async () => {
+  const feasiblity = await prismaClient.feasibility.create({
+    data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
+  });
+
+  await prismaClient.candidaciesOnRegionsAndCertifications.create(
+    ileDeFranceCandidacyData
+  );
+
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "manage_feasibility",
+      keycloakId: OTHER_CERTIFICATOR_KEYCLOAK_ID,
+    }),
+    payload: {
+      requestType: "query",
+      endpoint: "validateFeasibility",
+      arguments: { feasibilityId: feasiblity.id },
+      returnFields: "{id}",
+    },
+  });
+
+  expect(resp.json()).toHaveProperty("errors");
+  expect(resp.json()).not.toHaveProperty("data");
+});
+
+test("should reject a feasibility since certificator is allowed to do so", async () => {
+  const feasiblity = await prismaClient.feasibility.create({
+    data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
+  });
+
+  await prismaClient.candidaciesOnRegionsAndCertifications.create(
+    ileDeFranceCandidacyData
+  );
+
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "manage_feasibility",
+      keycloakId: CERTIFICATOR_KEYCLOAK_ID,
+    }),
+    payload: {
+      requestType: "mutation",
+      endpoint: "rejectFeasibility",
+      arguments: { feasibilityId: feasiblity.id },
+      returnFields: "{id}",
+    },
+  });
+
+  expect(resp.statusCode).toEqual(200);
+  const obj = resp.json();
+
+  expect(obj.data?.rejectFeasibility).toMatchObject({
+    id: feasiblity.id,
+  });
+  expect(resp.json()).not.toHaveProperty("errors");
+});
+
+test("should not reject a feasibility since other certificator doesn't handle it", async () => {
+  const feasiblity = await prismaClient.feasibility.create({
+    data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
+  });
+
+  await prismaClient.candidaciesOnRegionsAndCertifications.create(
+    ileDeFranceCandidacyData
+  );
+
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "manage_feasibility",
+      keycloakId: OTHER_CERTIFICATOR_KEYCLOAK_ID,
+    }),
+    payload: {
+      requestType: "query",
+      endpoint: "rejectFeasibility",
+      arguments: { feasibilityId: feasiblity.id },
+      returnFields: "{id}",
+    },
+  });
+
+  expect(resp.json()).toHaveProperty("errors");
+  expect(resp.json()).not.toHaveProperty("data");
+});

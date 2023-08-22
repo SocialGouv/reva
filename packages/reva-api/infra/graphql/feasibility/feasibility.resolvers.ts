@@ -83,6 +83,7 @@ export const feasibilityResolvers = {
         feasibilityId: args.feasibilityId,
         comment: args.comment,
         hasRole: context.auth.hasRole,
+        keycloakId: context.auth?.userInfo?.sub,
       }),
     rejectFeasibility: async (
       _: unknown,
@@ -96,6 +97,7 @@ export const feasibilityResolvers = {
         feasibilityId: args.feasibilityId,
         comment: args.comment,
         hasRole: context.auth.hasRole,
+        keycloakId: context.auth?.userInfo?.sub,
       }),
   },
 };
