@@ -9,6 +9,7 @@ import {
   Department,
   File,
   Organism,
+  Region,
 } from "@prisma/client";
 
 import {
@@ -22,25 +23,39 @@ import { prismaClient } from "../../database/postgres/client";
 const CERTIFICATOR_KEYCLOAK_ID = "9d9f3489-dc01-4fb8-8c9b-9af891f13c2e";
 const OTHER_CERTIFICATOR_KEYCLOAK_ID = "34994753-656c-4afd-bf7e-e83604a22bbc";
 
+type candidacyOnRegionAndCertification = {
+  candidacyId: string;
+  regionId: string;
+  certificationId: string;
+  author: string;
+  isActive: boolean;
+};
+
 let organism: Organism,
   candidate: Candidate,
   candidacy: Candidacy,
   feasibilityFile: File,
   certification: Certification,
   otherCertification: Certification,
-  ileDeFranceDepartment: Department,
+  parisDepartment: Department,
+  ileDeFranceRegion: Region,
+  ileDeFranceCandidacyData: { data: candidacyOnRegionAndCertification },
   certificatorAccount: Account,
   otherCertificatorAccount: Account;
 
 beforeAll(async () => {
-  ileDeFranceDepartment = (await prismaClient.department.findFirst({
+  parisDepartment = (await prismaClient.department.findFirst({
     where: { code: "75" },
   })) as Department;
+
+  ileDeFranceRegion = (await prismaClient.region.findFirst({
+    where: { code: "11" },
+  })) as Region;
 
   organism = await prismaClient.organism.create({ data: organismIperia });
 
   candidate = await prismaClient.candidate.create({
-    data: { ...candidateJPL, departmentId: ileDeFranceDepartment?.id || "" },
+    data: { ...candidateJPL, departmentId: parisDepartment?.id || "" },
   });
 
   candidacy = await prismaClient.candidacy.create({
@@ -63,6 +78,16 @@ beforeAll(async () => {
   certification =
     (await prismaClient.certification.findFirst()) as Certification;
 
+  ileDeFranceCandidacyData = {
+    data: {
+      candidacyId: candidacy.id,
+      regionId: ileDeFranceRegion.id,
+      certificationId: certification.id,
+      author: "unknown",
+      isActive: true,
+    },
+  };
+
   otherCertification = (
     await prismaClient.certification.findMany()
   )[1] as Certification;
@@ -71,7 +96,7 @@ beforeAll(async () => {
     await prismaClient.certificationAuthority?.create({
       data: {
         certificationAuthorityOnDepartment: {
-          create: { departmentId: ileDeFranceDepartment?.id || "" },
+          create: { departmentId: parisDepartment?.id || "" },
         },
         certificationAuthorityOnCertification: {
           create: { certificationId: certification?.id || "" },
@@ -84,7 +109,7 @@ beforeAll(async () => {
     await prismaClient.certificationAuthority?.create({
       data: {
         certificationAuthorityOnDepartment: {
-          create: { departmentId: ileDeFranceDepartment?.id || "" },
+          create: { departmentId: parisDepartment?.id || "" },
         },
         certificationAuthorityOnCertification: {
           create: { certificationId: otherCertification?.id || "" },
@@ -156,19 +181,9 @@ test("should count all (1) available feasibility for certificator user", async (
     data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
   });
 
-  const ileDeFranceRegion = (await prismaClient.region.findFirst({
-    where: { departments: { some: { id: ileDeFranceDepartment.id } } },
-  })) as Department;
-
-  await prismaClient.candidaciesOnRegionsAndCertifications.create({
-    data: {
-      candidacyId: candidacy.id,
-      regionId: ileDeFranceRegion.id,
-      certificationId: certification.id,
-      author: "unknown",
-      isActive: true,
-    },
-  });
+  await prismaClient.candidaciesOnRegionsAndCertifications.create(
+    ileDeFranceCandidacyData
+  );
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
@@ -218,19 +233,9 @@ test("should return a feasibilty for certificator since he is allowed to handle 
     data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
   });
 
-  const ileDeFranceRegion = (await prismaClient.region.findFirst({
-    where: { departments: { some: { id: ileDeFranceDepartment.id } } },
-  })) as Department;
-
-  await prismaClient.candidaciesOnRegionsAndCertifications.create({
-    data: {
-      candidacyId: candidacy.id,
-      regionId: ileDeFranceRegion.id,
-      certificationId: certification.id,
-      author: "unknown",
-      isActive: true,
-    },
-  });
+  await prismaClient.candidaciesOnRegionsAndCertifications.create(
+    ileDeFranceCandidacyData
+  );
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
@@ -259,19 +264,9 @@ test("should return a feasibility error for other certificator since he doesn't 
     data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
   });
 
-  const ileDeFranceRegion = (await prismaClient.region.findFirst({
-    where: { departments: { some: { id: ileDeFranceDepartment.id } } },
-  })) as Department;
-
-  await prismaClient.candidaciesOnRegionsAndCertifications.create({
-    data: {
-      candidacyId: candidacy.id,
-      regionId: ileDeFranceRegion.id,
-      certificationId: certification.id,
-      author: "unknown",
-      isActive: true,
-    },
-  });
+  await prismaClient.candidaciesOnRegionsAndCertifications.create(
+    ileDeFranceCandidacyData
+  );
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
@@ -296,19 +291,9 @@ test("should return all (1) available feasibility for certificateur user", async
     data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
   });
 
-  const ileDeFranceRegion = (await prismaClient.region.findFirst({
-    where: { departments: { some: { id: ileDeFranceDepartment.id } } },
-  })) as Department;
-
-  await prismaClient.candidaciesOnRegionsAndCertifications.create({
-    data: {
-      candidacyId: candidacy.id,
-      regionId: ileDeFranceRegion.id,
-      certificationId: certification.id,
-      author: "unknown",
-      isActive: true,
-    },
-  });
+  await prismaClient.candidaciesOnRegionsAndCertifications.create(
+    ileDeFranceCandidacyData
+  );
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
