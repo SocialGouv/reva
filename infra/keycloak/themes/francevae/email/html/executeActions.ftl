@@ -1,17 +1,20 @@
 <#import "email-template.ftl" as layout>
-<@layout.emailLayout ; section>
-    <#if section = "title">
-      Votre compte professionnel France VAE
-    <#elseif section = "intro">
-      <p>Nous vous remercions pour votre référencement sur la plateforme France VAE. Pour finaliser la création de votre compte, nous vous invitions à cliquer sur le bouton ci-dessous et vous laisser guider.</p>
-    <#elseif section = "actionButton">
-      <a href="${link}" style="display:inline-block;background:#1c38b0;color:#ffffff;font-family:Arial, sans-serif;font-size:14px;font-weight:normal;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:10px 25px 10px 25px;mso-padding-alt:0px;border-radius:3px;" target="_blank"><span style="font-size:14px;">Créer mon compte</span></a>
-    <#elseif section = "outro">
-      <p class="text-build-content" data-testid="I0ETIbJm4" style="margin: 10px 0; margin-top: 10px;">
-        Vous pourrez ainsi compléter votre espace professionnel à l’aide de la documentation mise à disposition.
-      </p>
-      <p>N'hésitez pas à nous contacter via la messagerie instantanée présente dans votre espace personnel ou par email à support@vae.gouv.fr</p>
-      <p>Cordialement,</p>
-      <p>L’équipe France VAE.</p>
+  <@layout.emailLayout ; section>
+    <#if section="title">
+      Votre compte professionnel France VAE a été validé
+      <#elseif section="intro">
+        <p>Nous vous remercions pour votre référencement en tant qu'Architecte Accompagnateur de Parcours (AAP) sur la plateforme France VAE. Votre compte a été validé.</p>
+        <h2 style="margin-top: 35px">Finalisez votre inscription</h2>
+        <p>Il ne vous reste qu’une seule étape : choisir un mot de passe pour vos futures connexions. Nous vous invitons à cliquer sur le bouton ci-dessous.</p>
+        <p>Ce lien est valable 4 jours. </p>
+        <a href="${link}" style="display:inline-block;background:transparent;color:black;border: solid 1px lightgray;font-family:Arial, sans-serif;font-size:14px;font-weight:normal;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:5px 8px;mso-padding-alt:0px;border-radius:3px;" target="_blank">Finaliser mon inscription ⚠️</a>
+        <p>Si vous avez dépassé ce délai, <a href="https://auth.vae.gouv.fr/realms/reva/login-actions/reset-credentials" target="_blank">nous vous invitons à redemander un mot de passe.</a></p>
+        <#elseif section="outro">
+          <h2 style="margin-top: 0px">Aide et support</h2>
+          <p><a href="https://france-vae.info/" target="_blank">Explorez l’espace documentaire</a> dédié aux professionnels de la VAE. Cet espace regroupe les documents essentiels pour suivre vos premiers candidats. Nous vous conseillons de vous familiariser dès maintenant avec <a href="https://france-vae.info/Cahier-des-charges-ea8790303ab447cfb25b5c11c26b0d67" target="_blank">le cahier des charges des AAP.</a></p>
+          <br />
+          <p>Si jamais vous rencontrez encore des difficultés, n’hésitez pas à nous contacter via la messagerie instantanée (en bas à droite de l’écran sur le site France VAE) ou par email à support@vae.gouv.fr</p>
+          <br />
+          <p>L’équipe France VAE.</p>
     </#if>
-</@layout.emailLayout>
+  </@layout.emailLayout>
