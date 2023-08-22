@@ -67,6 +67,7 @@ export const feasibilityResolvers = {
       getFeasibilityById({
         feasibilityId: args.feasibilityId,
         hasRole: context.auth.hasRole,
+        keycloakId: context.auth?.userInfo?.sub,
       }),
   },
   Mutation: {
