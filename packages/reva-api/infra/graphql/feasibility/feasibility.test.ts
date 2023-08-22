@@ -3,6 +3,7 @@
  */
 import {
   Account,
+  Candidacy,
   Candidate,
   Certification,
   Department,
@@ -23,6 +24,7 @@ const OTHER_CERTIFICATOR_KEYCLOAK_ID = "34994753-656c-4afd-bf7e-e83604a22bbc";
 
 let organism: Organism,
   candidate: Candidate,
+  candidacy: Candidacy,
   feasibilityFile: File,
   certification: Certification,
   otherCertification: Certification,
@@ -39,6 +41,15 @@ beforeAll(async () => {
 
   candidate = await prismaClient.candidate.create({
     data: { ...candidateJPL, departmentId: ileDeFranceDepartment?.id || "" },
+  });
+
+  candidacy = await prismaClient.candidacy.create({
+    data: {
+      deviceId: candidate.email,
+      email: candidate.email,
+      candidateId: candidate.id,
+      organismId: organism.id,
+    },
   });
 
   feasibilityFile = await prismaClient.file.create({
@@ -101,6 +112,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await prismaClient.file.delete({ where: { id: feasibilityFile.id } });
+  await prismaClient.candidacy.delete({ where: { id: candidacy.id } });
   await prismaClient.candidate.delete({ where: { id: candidate.id } });
   await prismaClient.organism.delete({ where: { id: organism.id } });
   await prismaClient.account.delete({ where: { id: certificatorAccount.id } });
@@ -112,19 +124,10 @@ afterAll(async () => {
 
 afterEach(async () => {
   await prismaClient.feasibility.deleteMany({});
-  await prismaClient.candidacy.deleteMany({});
+  await prismaClient.candidaciesOnRegionsAndCertifications.deleteMany({});
 });
 
 test("should count all (1) feasibilities for admin user", async () => {
-  const candidacy = await prismaClient.candidacy.create({
-    data: {
-      deviceId: candidate.email,
-      email: candidate.email,
-      candidateId: candidate.id,
-      organismId: organism.id,
-    },
-  });
-
   await prismaClient.feasibility.create({
     data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
   });
@@ -149,15 +152,6 @@ test("should count all (1) feasibilities for admin user", async () => {
 });
 
 test("should count all (1) available feasibility for certificator user", async () => {
-  const candidacy = await prismaClient.candidacy.create({
-    data: {
-      deviceId: candidate.email,
-      email: candidate.email,
-      candidateId: candidate.id,
-      organismId: organism.id,
-    },
-  });
-
   await prismaClient.feasibility.create({
     data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
   });
@@ -196,15 +190,6 @@ test("should count all (1) available feasibility for certificator user", async (
 });
 
 test("should count no available feasibility for certificator user since he doesn't handle the related certifications", async () => {
-  const candidacy = await prismaClient.candidacy.create({
-    data: {
-      deviceId: candidate.email,
-      email: candidate.email,
-      candidateId: candidate.id,
-      organismId: organism.id,
-    },
-  });
-
   await prismaClient.feasibility.create({
     data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
   });
@@ -229,15 +214,6 @@ test("should count no available feasibility for certificator user since he doesn
 });
 
 test("should return a feasibilty for certificator since he is allowed to handle it", async () => {
-  const candidacy = await prismaClient.candidacy.create({
-    data: {
-      deviceId: candidate.email,
-      email: candidate.email,
-      candidateId: candidate.id,
-      organismId: organism.id,
-    },
-  });
-
   const feasiblity = await prismaClient.feasibility.create({
     data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
   });
@@ -279,15 +255,6 @@ test("should return a feasibilty for certificator since he is allowed to handle 
 });
 
 test("should return a feasibility error for other certificator since he doesn't handle it", async () => {
-  const candidacy = await prismaClient.candidacy.create({
-    data: {
-      deviceId: candidate.email,
-      email: candidate.email,
-      candidateId: candidate.id,
-      organismId: organism.id,
-    },
-  });
-
   const feasiblity = await prismaClient.feasibility.create({
     data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
   });
@@ -325,15 +292,6 @@ test("should return a feasibility error for other certificator since he doesn't 
 });
 
 test("should return all (1) available feasibility for certificateur user", async () => {
-  const candidacy = await prismaClient.candidacy.create({
-    data: {
-      deviceId: candidate.email,
-      email: candidate.email,
-      candidateId: candidate.id,
-      organismId: organism.id,
-    },
-  });
-
   const feasibility = await prismaClient.feasibility.create({
     data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
   });
@@ -375,15 +333,6 @@ test("should return all (1) available feasibility for certificateur user", async
 });
 
 test("should count 1 pending feasibility for admin user", async () => {
-  const candidacy = await prismaClient.candidacy.create({
-    data: {
-      deviceId: candidate.email,
-      email: candidate.email,
-      candidateId: candidate.id,
-      organismId: organism.id,
-    },
-  });
-
   await prismaClient.feasibility.create({
     data: {
       candidacyId: candidacy.id,
