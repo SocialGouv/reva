@@ -315,16 +315,30 @@ export const getCandidaciesByIds = async ({
 export const getFeasibilityById = async ({
   feasibilityId,
   hasRole,
+  keycloakId,
 }: {
   feasibilityId: string;
   hasRole: (role: string) => boolean;
+  keycloakId: string;
 }) => {
-  if (hasRole("admin") || hasRole("manage_feasibility")) {
-    return await prismaClient.feasibility.findUnique({
-      where: { id: feasibilityId },
-    });
+  const feasibility = await prismaClient.feasibility.findUnique({
+    where: { id: feasibilityId },
+  });
+
+  if (feasibility == null) {
+    throw new Error("Ce dossier est introuvable");
+  }
+
+  const authorized = await canManageFeasibility({
+    hasRole,
+    candidacyId: feasibility.candidacyId,
+    keycloakId,
+  });
+
+  if (hasRole("admin") || authorized) {
+    return feasibility;
   } else {
-    throw new Error("Utilisateur non autorisé");
+    throw new Error("Vous n'êtes pas autorisé à consulter ce dossier");
   }
 };
 

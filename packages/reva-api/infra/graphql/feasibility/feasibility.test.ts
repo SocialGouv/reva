@@ -19,13 +19,16 @@ import { injectGraphql } from "../../../test/helpers/graphql-helper";
 import { prismaClient } from "../../database/postgres/client";
 
 const CERTIFICATOR_KEYCLOAK_ID = "9d9f3489-dc01-4fb8-8c9b-9af891f13c2e";
+const OTHER_CERTIFICATOR_KEYCLOAK_ID = "34994753-656c-4afd-bf7e-e83604a22bbc";
 
 let organism: Organism,
   candidate: Candidate,
   feasibilityFile: File,
   certification: Certification,
+  otherCertification: Certification,
   ileDeFranceDepartment: Department,
-  certificatorAccount: Account;
+  certificatorAccount: Account,
+  otherCertificatorAccount: Account;
 
 beforeAll(async () => {
   ileDeFranceDepartment = (await prismaClient.department.findFirst({
@@ -49,6 +52,10 @@ beforeAll(async () => {
   certification =
     (await prismaClient.certification.findFirst()) as Certification;
 
+  otherCertification = (
+    await prismaClient.certification.findMany()
+  )[1] as Certification;
+
   const certificationAuthority =
     await prismaClient.certificationAuthority?.create({
       data: {
@@ -62,11 +69,32 @@ beforeAll(async () => {
       },
     });
 
+  const otherCertificationAuthority =
+    await prismaClient.certificationAuthority?.create({
+      data: {
+        certificationAuthorityOnDepartment: {
+          create: { departmentId: ileDeFranceDepartment?.id || "" },
+        },
+        certificationAuthorityOnCertification: {
+          create: { certificationId: otherCertification?.id || "" },
+        },
+        label: "The other authority",
+      },
+    });
+
   certificatorAccount = await prismaClient.account.create({
     data: {
       keycloakId: CERTIFICATOR_KEYCLOAK_ID,
       email: "certificator@vae.gouv.fr",
       certificationAuthorityId: certificationAuthority.id,
+    },
+  });
+
+  otherCertificatorAccount = await prismaClient.account.create({
+    data: {
+      keycloakId: OTHER_CERTIFICATOR_KEYCLOAK_ID,
+      email: "other.certificator@vae.gouv.fr",
+      certificationAuthorityId: otherCertificationAuthority.id,
     },
   });
 });
@@ -76,6 +104,9 @@ afterAll(async () => {
   await prismaClient.candidate.delete({ where: { id: candidate.id } });
   await prismaClient.organism.delete({ where: { id: organism.id } });
   await prismaClient.account.delete({ where: { id: certificatorAccount.id } });
+  await prismaClient.account.delete({
+    where: { id: otherCertificatorAccount.id },
+  });
   await prismaClient.certificationAuthority.deleteMany();
 });
 
@@ -117,7 +148,7 @@ test("should count all (1) feasibilities for admin user", async () => {
   });
 });
 
-test("should count all (1) available feasibility for certificateur user", async () => {
+test("should count all (1) available feasibility for certificator user", async () => {
   const candidacy = await prismaClient.candidacy.create({
     data: {
       deviceId: candidate.email,
@@ -164,7 +195,7 @@ test("should count all (1) available feasibility for certificateur user", async 
   });
 });
 
-test("should count no available feasibility for certificateur user since he doesn't handle the related certifications", async () => {
+test("should count no available feasibility for certificator user since he doesn't handle the related certifications", async () => {
   const candidacy = await prismaClient.candidacy.create({
     data: {
       deviceId: candidate.email,
@@ -195,6 +226,102 @@ test("should count no available feasibility for certificateur user since he does
   expect(obj.data.feasibilityCountByCategory).toMatchObject({
     ALL: 0,
   });
+});
+
+test("should return a feasibilty for certificator since he is allowed to handle it", async () => {
+  const candidacy = await prismaClient.candidacy.create({
+    data: {
+      deviceId: candidate.email,
+      email: candidate.email,
+      candidateId: candidate.id,
+      organismId: organism.id,
+    },
+  });
+
+  const feasiblity = await prismaClient.feasibility.create({
+    data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
+  });
+
+  const ileDeFranceRegion = (await prismaClient.region.findFirst({
+    where: { departments: { some: { id: ileDeFranceDepartment.id } } },
+  })) as Department;
+
+  await prismaClient.candidaciesOnRegionsAndCertifications.create({
+    data: {
+      candidacyId: candidacy.id,
+      regionId: ileDeFranceRegion.id,
+      certificationId: certification.id,
+      author: "unknown",
+      isActive: true,
+    },
+  });
+
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "manage_feasibility",
+      keycloakId: CERTIFICATOR_KEYCLOAK_ID,
+    }),
+    payload: {
+      requestType: "query",
+      endpoint: "feasibility",
+      arguments: { feasibilityId: feasiblity.id },
+      returnFields: "{id}",
+    },
+  });
+
+  expect(resp.statusCode).toEqual(200);
+  const obj = resp.json();
+  expect(obj.data?.feasibility).toMatchObject({
+    id: feasiblity.id,
+  });
+  expect(resp.json()).not.toHaveProperty("errors");
+});
+
+test("should return a feasibility error for other certificator since he doesn't handle it", async () => {
+  const candidacy = await prismaClient.candidacy.create({
+    data: {
+      deviceId: candidate.email,
+      email: candidate.email,
+      candidateId: candidate.id,
+      organismId: organism.id,
+    },
+  });
+
+  const feasiblity = await prismaClient.feasibility.create({
+    data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
+  });
+
+  const ileDeFranceRegion = (await prismaClient.region.findFirst({
+    where: { departments: { some: { id: ileDeFranceDepartment.id } } },
+  })) as Department;
+
+  await prismaClient.candidaciesOnRegionsAndCertifications.create({
+    data: {
+      candidacyId: candidacy.id,
+      regionId: ileDeFranceRegion.id,
+      certificationId: certification.id,
+      author: "unknown",
+      isActive: true,
+    },
+  });
+
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "manage_feasibility",
+      keycloakId: OTHER_CERTIFICATOR_KEYCLOAK_ID,
+    }),
+    payload: {
+      requestType: "query",
+      endpoint: "feasibility",
+      arguments: { feasibilityId: feasiblity.id },
+      returnFields: "{id}",
+    },
+  });
+
+  expect(resp.json()).toHaveProperty("errors");
+  expect(resp.json()).not.toHaveProperty("data");
 });
 
 test("should return all (1) available feasibility for certificateur user", async () => {
