@@ -141,7 +141,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
       ) {
         return reply
           .status(400)
-          .send(`La taille du fichier dépasse la taille maximum authorisée`);
+          .send(`La taille du fichier dépasse la taille maximum autorisée`);
       }
       try {
         await createFeasibility({
