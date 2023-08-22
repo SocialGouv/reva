@@ -5,7 +5,7 @@ import Admin.Enum.OrganismTypology exposing (OrganismTypology(..))
 import Admin.Object.Candidacy exposing (organism)
 import BetaGouv.DSFR.Button as Button
 import Data.Candidacy as Candidacy exposing (Candidacy)
-import Html exposing (Html, div, h2, h3, span, text)
+import Html exposing (Html, div, h2, h3, i, span, text)
 import Html.Attributes exposing (attribute, class)
 import Route
 import Time
@@ -210,18 +210,20 @@ title value =
 
 expandedView : ButtonState -> String -> Candidacy.Step -> Candidacy -> List (Html msg)
 expandedView buttonState stepTitle status candidacy =
+    let
+        buttonLabel =
+            if buttonState == Enabled then
+                "Compléter"
+
+            else
+                "Consulter"
+    in
     [ View.Steps.link stepTitle
     , if candidacyStatus candidacy == status then
         div
             []
-            [ Button.new { onClick = Nothing, label = "Compléter" }
-                |> Button.withAttrs [ attribute "aria-label" ("Compléter " ++ stepTitle) ]
-                |> (if buttonState == Disabled then
-                        Button.disable
-
-                    else
-                        identity
-                   )
+            [ Button.new { onClick = Nothing, label = buttonLabel }
+                |> Button.withAttrs [ attribute "aria-label" (buttonLabel ++ stepTitle) ]
                 |> Button.view
             ]
 
