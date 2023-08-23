@@ -16,6 +16,11 @@ interface createSubscriptionRequestDeps {
   existOrganismWithTypologyAndSiret: (
     params: Pick<Prisma.OrganismWhereInput, "siret" | "typology">
   ) => Promise<Either<string, boolean>>;
+  sendSubscriptionValidationInProgressEmail: ({
+    email,
+  }: {
+    email: string;
+  }) => Promise<Either<string, string>>;
 }
 
 export const createSubscriptionRequest = async (
@@ -76,9 +81,15 @@ export const createSubscriptionRequest = async (
     });
 
   const createSubscriptionRequest = () =>
-    EitherAsync.fromPromise(() =>
-      deps.createSubscriptionRequest(params)
-    ).mapLeft(
+    EitherAsync.fromPromise(async () => {
+      const result = await deps.createSubscriptionRequest(params);
+      if (result.isRight()) {
+        await deps.sendSubscriptionValidationInProgressEmail({
+          email: params.accountEmail,
+        });
+      }
+      return result;
+    }).mapLeft(
       (err: string) =>
         new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, err)
     );

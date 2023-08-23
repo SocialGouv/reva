@@ -8,6 +8,7 @@ import * as IAM from "../../iam/keycloak";
 import * as db from "./db/subscription-request";
 import * as domain from "./domain/index";
 import { sendRejectionEmail } from "./mail";
+import { sendSubscriptionValidationInProgressEmail } from "./mail/validationInProgress";
 import { resolversSecurityMap } from "./security";
 
 interface getSubscriptionRequestsParams extends FilteredPaginatedListArgs {
@@ -69,6 +70,8 @@ const unsafeResolvers = {
             OrganismDb.existOrganismWithTypologyAndSiret,
           existSubscriptionRequestWithTypologyAndSiret:
             db.existSubscriptionRequestWithTypologyAndSiret,
+          sendSubscriptionValidationInProgressEmail:
+            sendSubscriptionValidationInProgressEmail,
         },
         payload.subscriptionRequest
       );
