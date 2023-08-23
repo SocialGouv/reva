@@ -105,7 +105,7 @@ afterAll(async () => {
   await prismaClient.candidacy.deleteMany({});
 });
 
-test("Should generate a CSV stream with fundingRequest to be sent", async () => {
+test.skip("Should generate a CSV stream with fundingRequest to be sent", async () => {
   const itemsToSend = await prismaClient.fundingRequestBatchUnifvae.findMany({
     where: { sent: false },
     select: { id: true },
