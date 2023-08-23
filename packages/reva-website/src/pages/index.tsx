@@ -93,9 +93,22 @@ const AvenirPro = () => (
             <br />
             <p className="mb-4">
               Si vous ne trouvez pas votre diplôme dans la liste, nous vous
-              invitons à vous rapprocher d’un <u>point relais conseil</u>, d’un{" "}
-              <u>conseiller en évolution professionnelle</u>, ou d'une{" "}
-              <u>association de transition professionnelle (AT Pro)</u>.
+              invitons à vous rapprocher d’un{" "}
+              <a
+                href="https://vae.centre-inffo.fr/?page=carte-prc"
+                target="_blank"
+              >
+                point relais conseil
+              </a>
+              , d’un{" "}
+              <a href="https://mon-cep.org/#trouver" target="_blank">
+                conseiller en évolution professionnelle
+              </a>{" "}
+              ou d'une{" "}
+              <a href="https://www.transitionspro.fr/" target="_blank">
+                association de transition professionnelle (AT Pro)
+              </a>
+              .
             </p>
             <Button
               linkProps={{
