@@ -6,6 +6,8 @@ import {
   Hexagon,
   SectionParagraph,
 } from "@/components/section-content/SectionContent";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
 import Head from "next/head";
 import Image from "next/image";
 /* eslint-disable react/no-unescaped-entities */
@@ -49,9 +51,9 @@ const HomeContainer = ({ children }: { children: React.ReactNode }) => (
 const AvenirPro = () => (
   <section
     id="avenir-professionnel"
-    className="w-full fr-container mx-auto mt-[80px] lg:flex lg:items-center"
+    className="w-full fr-container mx-auto mt-[80px] lg:flex"
   >
-    <div className="sm:flex-1 max-w-3xl md:mr-12 basis-1/2">
+    <div className="sm:flex-1 md:mr-12 basis-1/2">
       <header>
         <h1 className="leading-tight text-5xl xl:text-7xl xl:leading-[84px]">
           Bienvenue sur le portail de la VAE
@@ -67,14 +69,52 @@ const AvenirPro = () => (
         simplifié et sécurisé par la loi n°2022-1598 du 21 décembre 2022.
       </p>
     </div>
-    <div className="relative mt-16 -mx-5 max-w-lg basis-1/2">
-      <Image
-        src="/home-page/image-app-screenshots.png"
-        className=""
-        alt=""
-        width={1067}
-        height={969}
-      />
+    <div className="relative -mx-5 basis-1/2">
+      <div className="flex flex-col lg:gap-14">
+        <div className="fr-callout">
+          <h3 className="fr-callout__title">
+            Quels diplômes sont disponibles sur France VAE ?
+          </h3>
+          <div className="fr-callout__text">
+            <p>
+              Du fait de son déploiement progressif, tous les diplômes ne sont
+              pas encore couverts par France VAE.
+            </p>
+            <p className="font-bold">
+              Seules les filières suivantes sont actuellement éligibles :
+            </p>
+            <br />
+            <ul>
+              <li>sanitaire et social</li>
+              <li>grande distribution</li>
+              <li>industrie métallurgique</li>
+              <li>métiers du sport</li>
+            </ul>
+            <br />
+            <p className="mb-4">
+              Si vous ne trouvez pas votre diplôme dans la liste, nous vous
+              invitons à vous rapprocher d’un <u>point relais conseil</u>, d’un{" "}
+              <u>conseiller en évolution professionnelle</u>, ou d'une{" "}
+              <u>association de transition professionnelle (AT Pro)</u>.
+            </p>
+            <Button
+              linkProps={{
+                href: "https://airtable.com/shrhMGpOWNPJA15Xh",
+                target: "_blank",
+              }}
+            >
+              Consultez les diplômes disponibles
+            </Button>
+          </div>
+        </div>
+        <Image
+          src="/home-page/image-app-screenshots.png"
+          className=""
+          alt=""
+          width={1067}
+          height={969}
+        />
+      </div>
     </div>
   </section>
 );
