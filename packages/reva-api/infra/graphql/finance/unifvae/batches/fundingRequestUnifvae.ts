@@ -81,6 +81,7 @@ export async function generateFundingRequestUnifvaeBatchCsvStream(
         where: { id: { in: itemsToSendIds } },
         skip,
         take: RECORDS_PER_FETCH,
+        orderBy: { createdAt: "asc" },
       });
 
       results.length
