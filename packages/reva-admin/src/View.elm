@@ -37,18 +37,15 @@ baseLayout content =
     node "main"
         [ role "main"
         , class "flex relative"
+        , class "md:bg-gradient-to-r from-[#557AFF] to-[#2400FF]"
         , id "content"
         ]
         [ div
-            [ class "hidden md:block"
-            , class "bg-gradient-to-r from-[#557AFF] to-[#2400FF]"
-            , class "w-screen inset-x absolute z-0 pb-[400px]"
-            ]
-            []
-        , div
-            [ class "z-1 relative fr-container" ]
+            [ class "fr-container" ]
             [ div
-                [ class "md:mt-20 fr-grid-row" ]
+                [ class "md:mt-16 fr-grid-row"
+                , class "bg-white mb-12"
+                ]
                 content
             ]
         ]
@@ -62,48 +59,50 @@ layout navButtonLabel upperNavContent navContent content =
             [ nav
                 [ role "navigation"
                 , attribute "aria-label" "Menu latéral"
-                , class "fr-sidemenu"
+                , class "fr-sidemenu bg-white"
+                , class "h-full md:pl-2 pr-0 py-6"
                 ]
-                [ if upperNavContent == [] then
-                    div [] []
+                [ div
+                    [ class "h-full md:border-r" ]
+                    [ if upperNavContent == [] then
+                        div [] []
 
-                  else
-                    div
+                      else
+                        div
+                            [ class "fr-sidemenu__inner"
+                            , class "shadow-none pr-0"
+                            , class "flex items-center pl-6 md:pl-4"
+                            ]
+                            upperNavContent
+                    , div
                         [ class "fr-sidemenu__inner"
-                        , class "flex items-center pl-12 md:pl-8 mt-6 md:mt-0 md:h-24"
-                        , class "bg-white md:shadow mb-4"
+                        , class "shadow-none pr-0"
+                        , class "h-full pl-4 md:pb-24"
                         ]
-                        upperNavContent
-                , div
-                    [ class "py-2 fr-sidemenu__inner"
-                    , class "md:min-h-[480px] pl-4 md:mb-48"
-                    , class "bg-white md:shadow"
-                    ]
-                  <|
-                    -- When the nav context is empty, we remove the wrapper.
-                    -- As a result, on mobile, we can close the nav when browsing to a new page
-                    if navContent == [] then
-                        [ div [ class "h-6 mx-4 my-6 bg-gray-100" ] [] ]
+                      <|
+                        -- When the nav context is empty, we remove the wrapper.
+                        -- As a result, on mobile, we can close the nav when browsing to a new page
+                        if navContent == [] then
+                            [ div [ class "h-6 mr-4 my-6 bg-gray-100" ] [] ]
 
-                    else
-                        [ button
-                            [ class "fr-sidemenu__btn"
-                            , attribute "aria-controls" "fr-sidemenu-wrapper"
-                            , attribute "aria-expanded" "false"
+                        else
+                            [ button
+                                [ class "fr-sidemenu__btn"
+                                , attribute "aria-controls" "fr-sidemenu-wrapper"
+                                , attribute "aria-expanded" "false"
+                                ]
+                                [ text navButtonLabel ]
+                            , div
+                                [ class "fr-collapse"
+                                , id "fr-sidemenu-wrapper"
+                                ]
+                                navContent
                             ]
-                            [ text navButtonLabel ]
-                        , div
-                            [ class "fr-collapse"
-                            , id "fr-sidemenu-wrapper"
-                            ]
-                            navContent
-                        ]
+                    ]
                 ]
             ]
         , div
-            [ class "bg-white sm:shadow"
-            , class "fr-col-12 fr-col-md-8 mb-24"
-            ]
+            [ class "fr-col-12 fr-col-md-8 pt-3 md:pt-0" ]
             content
         ]
 

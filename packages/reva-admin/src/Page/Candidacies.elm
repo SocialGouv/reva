@@ -133,12 +133,11 @@ view context model =
     let
         upperNavContent =
             if Api.Token.isAdmin context.token then
-                [ Html.a
-                    [ class "fr-link"
-                    , class "md:text-lg text-gray-900 hover:text-blue-900"
-                    , Route.href context.baseUrl (Route.Subscriptions Route.emptySubscriptionFilters)
-                    ]
-                    [ text "Voir les inscriptions" ]
+                [ Button.new { onClick = Nothing, label = "Voir les inscriptions" }
+                    |> Button.linkButton
+                        (Route.toString context.baseUrl <| Route.Subscriptions Route.emptySubscriptionFilters)
+                    |> Button.tertiary
+                    |> Button.view
                 ]
 
             else

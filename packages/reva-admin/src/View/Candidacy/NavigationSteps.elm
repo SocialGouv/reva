@@ -202,7 +202,7 @@ reorientationView baseUrl candidacy =
 title : String -> Html msg
 title value =
     h2
-        [ class "my-4 flex items-end"
+        [ class "mb-4 flex items-end"
         , class "text-xl font-semibold"
         ]
         [ text value ]
