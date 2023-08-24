@@ -7,7 +7,7 @@ export async function insertReorientationReasonsIfNone(prisma: PrismaClient) {
     await prisma.reorientationReason.createMany({
       data: [
         { label: "Droit commun" },
-        { label: "Architecte de parcours neutre", deletedAt: new Date() },
+        { label: "Architecte de parcours neutre", disabled: true },
         { label: "Une autre certification de France VAE" },
       ],
     });
@@ -21,7 +21,7 @@ export async function insertReorientationReasonsIfNone(prisma: PrismaClient) {
 
     await prisma.reorientationReason.update({
       where: { label: "Architecte de parcours neutre" },
-      data: { deletedAt: new Date() },
+      data: { disabled: true },
     });
   }
 }

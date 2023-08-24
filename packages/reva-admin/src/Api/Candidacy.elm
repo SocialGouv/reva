@@ -26,7 +26,7 @@ import Api.Feasibility
 import Api.File as File
 import Api.Organism as Organism
 import Api.Pagination exposing (pageInfoSelection)
-import Api.Referential exposing (departmentSelection)
+import Api.Referential exposing (departmentSelection, reorientationReasonSelection)
 import Api.RemoteData exposing (nothingToError)
 import Api.Token exposing (Token)
 import Data.Candidacy exposing (CandidacyId)
@@ -117,11 +117,6 @@ selection id =
         droppedOutDateSelection =
             SelectionSet.succeed identity
                 |> with Admin.Object.CandidacyDropOut.droppedOutAt
-
-        reorientationReasonSelection =
-            SelectionSet.succeed Data.Referential.ReorientationReason
-                |> with (SelectionSet.map (\(Id rrId) -> rrId) Admin.Object.ReorientationReason.id)
-                |> with Admin.Object.ReorientationReason.label
 
         candidacySelectionWithoutCompanions =
             SelectionSet.succeed Data.Candidacy.Candidacy

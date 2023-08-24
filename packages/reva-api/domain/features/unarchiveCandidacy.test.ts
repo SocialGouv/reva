@@ -68,7 +68,7 @@ const candidacyReoriented: Candidacy = {
     label: "well",
     createdAt: new Date(),
     updatedAt: null,
-    deletedAt: null,
+    disabled: false,
   },
 };
 

@@ -8,14 +8,21 @@ import Data.Referential exposing (Referential)
 import Page.Form as Form exposing (Form)
 
 
-form : FormData -> ( Candidacy, Referential ) -> Form
-form formData ( _, referential ) =
+form : Form.Status -> FormData -> ( Candidacy, Referential ) -> Form
+form status formData ( _, referential ) =
     let
         keys =
             Data.Form.Archive.keys
 
         reorientationReasons =
-            referential.reorientationReasons |> Data.Form.Helper.toIdList
+            Data.Form.Helper.toIdList <|
+                case status of
+                    Form.Editable ->
+                        referential.reorientationReasons
+                            |> List.filter (not << .disabled)
+
+                    Form.ReadOnly ->
+                        referential.reorientationReasons
 
         archive =
             Data.Form.Archive.fromDict formData

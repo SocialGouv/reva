@@ -76,7 +76,7 @@ const candidacyWithReorientationReason: Candidacy = {
     label: "Droit commun",
     createdAt: new Date(),
     updatedAt: null,
-    deletedAt: null,
+    disabled: false,
   },
 };
 

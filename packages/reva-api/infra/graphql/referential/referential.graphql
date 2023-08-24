@@ -43,6 +43,7 @@ type DropOutReason {
 type ReorientationReason {
   id: ID!
   label: String!
+  disabled: Boolean!
 }
 
 type Domaine {

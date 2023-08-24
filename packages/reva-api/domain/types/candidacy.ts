@@ -183,7 +183,7 @@ export interface ReorientationReason {
   label: string;
   createdAt: Date;
   updatedAt: Date | null;
-  deletedAt: Date | null;
+  disabled: boolean;
 }
 
 export interface Admissibility {

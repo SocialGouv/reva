@@ -4,6 +4,7 @@ module Api.Referential exposing
     , departmentWithOrganismMethodsSelection
     , domainSelection
     , get
+    , reorientationReasonSelection
     )
 
 import Admin.Object
@@ -61,11 +62,12 @@ dropOutReasonSelection =
         |> with Admin.Object.DropOutReason.label
 
 
-reorientationReasonSelection : SelectionSet Data.Referential.BasicSkill Admin.Object.ReorientationReason
+reorientationReasonSelection : SelectionSet Data.Referential.ReorientationReason Admin.Object.ReorientationReason
 reorientationReasonSelection =
     SelectionSet.succeed Data.Referential.ReorientationReason
         |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.ReorientationReason.id)
         |> with Admin.Object.ReorientationReason.label
+        |> with Admin.Object.ReorientationReason.disabled
 
 
 referentialGoalSelection : SelectionSet Data.Referential.ReferentialGoal Admin.Object.Goal

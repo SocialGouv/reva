@@ -26,6 +26,7 @@ type alias BasicSkill =
 type alias ReorientationReason =
     { id : String
     , label : String
+    , disabled : Bool
     }
 
 

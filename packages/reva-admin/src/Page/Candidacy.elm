@@ -421,20 +421,22 @@ updateTab context tab ( model, cmd ) =
     case ( tab.value, model.selected ) of
         ( View.Candidacy.Tab.Archive, Success candidacy ) ->
             let
+                formStatus =
+                    if (Candidacy.lastStatus candidacy.statuses |> .status) == Step.Archive then
+                        Form.ReadOnly
+
+                    else
+                        Form.Editable
+
                 ( formModel, formCmd ) =
                     Form.updateForm context
-                        { form = Page.Form.Archive.form
+                        { form = Page.Form.Archive.form formStatus
                         , onLoad = Just <| Api.Form.Archive.get tab.candidacyId
                         , onSave = Nothing
                         , onSubmit = Api.Form.Archive.archive tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab Profile
                         , onValidate = Data.Form.Archive.validate
-                        , status =
-                            if (Candidacy.lastStatus candidacy.statuses |> .status) == Step.Archive then
-                                Form.ReadOnly
-
-                            else
-                                Form.Editable
+                        , status = formStatus
                         }
                         model.form
             in

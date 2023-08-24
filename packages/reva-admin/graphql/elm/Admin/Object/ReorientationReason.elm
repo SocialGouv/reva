@@ -27,3 +27,8 @@ id =
 label : SelectionSet String Admin.Object.ReorientationReason
 label =
     Object.selectionForField "String" "label" [] Decode.string
+
+
+disabled : SelectionSet Bool Admin.Object.ReorientationReason
+disabled =
+    Object.selectionForField "Bool" "disabled" [] Decode.bool
