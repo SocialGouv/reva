@@ -6,9 +6,7 @@ import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Form.Helper as Helper
 import Data.Referential exposing (Referential)
-import Data.Scalar
 import Dict exposing (Dict)
-import Time
 
 
 type alias Archive =

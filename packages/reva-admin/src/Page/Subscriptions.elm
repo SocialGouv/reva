@@ -7,7 +7,6 @@ module Page.Subscriptions exposing
     )
 
 import Admin.Enum.SubscriptionRequestStatus as SubscriptionRequestStatus exposing (SubscriptionRequestStatus(..))
-import Admin.Object.Admissibility exposing (status)
 import Api.Subscription
 import Api.Token
 import BetaGouv.DSFR.Button as Button

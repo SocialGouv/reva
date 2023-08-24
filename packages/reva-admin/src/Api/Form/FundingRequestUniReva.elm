@@ -14,7 +14,6 @@ import Api.Token exposing (Token)
 import Data.Candidacy exposing (Candidacy, CandidacyId)
 import Data.Form.FundingRequestUniReva
 import Dict exposing (Dict)
-import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
 

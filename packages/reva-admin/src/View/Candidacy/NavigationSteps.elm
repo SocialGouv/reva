@@ -2,10 +2,9 @@ module View.Candidacy.NavigationSteps exposing (archiveView, dropOutView, reorie
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Admin.Enum.OrganismTypology exposing (OrganismTypology(..))
-import Admin.Object.Candidacy exposing (organism)
 import BetaGouv.DSFR.Button as Button
 import Data.Candidacy as Candidacy exposing (Candidacy)
-import Html exposing (Html, div, h2, h3, i, span, text)
+import Html exposing (Html, div, h2, h3, span, text)
 import Html.Attributes exposing (attribute, class)
 import Route
 import Time

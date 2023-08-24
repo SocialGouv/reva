@@ -5,9 +5,7 @@ import Data.Form exposing (FormData)
 import Data.Form.Helper
 import Data.Form.Training
 import Data.Referential exposing (Referential)
-import Dict exposing (Dict)
 import Page.Form as Form exposing (Form)
-import String exposing (String)
 
 
 form : FormData -> ( Candidacy, Referential ) -> Form

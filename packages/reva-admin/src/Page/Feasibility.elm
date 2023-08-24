@@ -6,7 +6,7 @@ module Page.Feasibility exposing
     , view
     )
 
-import Accessibility exposing (div, h3, h4, h6, p)
+import Accessibility exposing (div, h6, p)
 import Api.Feasibility
 import Api.Form.Feasibility
 import Api.Token

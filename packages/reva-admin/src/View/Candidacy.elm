@@ -1,6 +1,6 @@
 module View.Candidacy exposing (view, viewCreatedAt, viewSentAt)
 
-import Accessibility exposing (h1, h2, h3, span)
+import Accessibility exposing (h1, h2)
 import Admin.Enum.Duration exposing (Duration(..))
 import Api.Token
 import BetaGouv.DSFR.Button as Button

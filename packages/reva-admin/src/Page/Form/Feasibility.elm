@@ -1,13 +1,11 @@
 module Page.Form.Feasibility exposing (..)
 
-import BetaGouv.DSFR.Alert exposing (warning)
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Form.Feasibility exposing (keys)
 import Data.Referential exposing (Referential)
-import Html exposing (a, div, h6, p, strong, text)
+import Html exposing (a, div, p, strong, text)
 import Html.Attributes exposing (class, href, target, title)
-import Html.Attributes.Extra exposing (role)
 import Page.Form as Form exposing (Form)
 import View exposing (AlertType(..))
 import View.Candidate

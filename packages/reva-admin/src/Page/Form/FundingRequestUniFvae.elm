@@ -1,6 +1,5 @@
 module Page.Form.FundingRequestUniFvae exposing (form)
 
-import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Admin.Enum.Gender exposing (Gender(..))
 import Data.Candidacy exposing (Candidacy)
 import Data.Candidate

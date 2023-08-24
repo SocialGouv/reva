@@ -3,7 +3,7 @@ module Page.Form.Unarchive exposing (..)
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Referential exposing (Referential)
-import Page.Form as Form exposing (Form)
+import Page.Form exposing (Form)
 
 
 form : FormData -> ( Candidacy, Referential ) -> Form

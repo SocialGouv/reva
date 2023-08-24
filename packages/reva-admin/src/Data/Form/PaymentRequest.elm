@@ -9,7 +9,6 @@ module Data.Form.PaymentRequest exposing
     , validateConfirmation
     )
 
-import Admin.Object.FundingRequest exposing (otherTrainingCost, otherTrainingHourCount)
 import Admin.Scalar exposing (Decimal)
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)

@@ -15,7 +15,6 @@ import Data.Form exposing (FormData)
 import Data.Form.Unarchive
 import Data.Referential
 import Dict exposing (Dict)
-import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData)
 

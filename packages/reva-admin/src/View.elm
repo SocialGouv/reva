@@ -1,7 +1,6 @@
 module View exposing (AlertType(..), alert, article, backLink, errors, image, infoBlock, layout, logo, noNavLayout, noticeInfo, popupErrors, skeleton, summaryBlock, title)
 
 import Accessibility exposing (a, br, button, h3, h5, nav, p)
-import Css exposing (content)
 import Html exposing (Html, div, h2, h6, img, node, text)
 import Html.Attributes exposing (attribute, class, id, src)
 import Html.Attributes.Extra exposing (role)
