@@ -30,7 +30,7 @@ form _ ( _, referential ) =
           )
         , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" (Just "RNCP25467BC03 - intitulé") )
         , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" Nothing )
-        , ( keys.isCertificationPartial, Form.Checkbox "Le candidat a un objectif de certification partielle." )
+        , ( keys.isCertificationPartial, Form.Checkbox "Le candidat vise un ou plusieurs blocs de compétences." )
         ]
     , saveLabel = Nothing
     , submitLabel = "Envoyer le parcours"
