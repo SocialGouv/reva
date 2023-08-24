@@ -1,7 +1,7 @@
 module View.Steps exposing (info, link, view)
 
 import Html exposing (Html, a, div, label, li, ol, span, text)
-import Html.Attributes exposing (attribute, class, classList)
+import Html.Attributes exposing (class, classList)
 
 
 view :

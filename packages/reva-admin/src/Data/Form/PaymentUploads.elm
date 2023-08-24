@@ -7,10 +7,8 @@ module Data.Form.PaymentUploads exposing
 
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
-import Data.Form.FundingRequestUniReva exposing (FundingRequestInput)
 import Data.Form.Helper as Helper
 import Data.Referential exposing (BasicSkill, MandatoryTraining, Referential)
-import Dict exposing (Dict)
 
 
 type alias PaymentUploadsInput =

@@ -1,7 +1,7 @@
 module View.Header exposing (..)
 
-import Accessibility exposing (a, button, div, header, li, p, span, text)
-import Html.Attributes exposing (alt, attribute, class, height, href, id, style, target, title, width)
+import Accessibility exposing (a, button, div, header, li, span, text)
+import Html.Attributes exposing (alt, attribute, class, href, id, style, target, title)
 import Route exposing (Route(..))
 import View
 

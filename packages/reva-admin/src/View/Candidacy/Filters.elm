@@ -1,11 +1,10 @@
 module View.Candidacy.Filters exposing (Filters, view)
 
 import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
-import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
-import Data.Candidacy as Candidacy exposing (CandidacyCountByStatus, candidacyStatusFilterToReadableString)
+import Data.Candidacy exposing (CandidacyCountByStatus, candidacyStatusFilterToReadableString)
 import Data.Context exposing (Context)
-import Html exposing (Html, a, div, label, li, span, text, ul)
-import Html.Attributes exposing (class, classList, id)
+import Html exposing (Html, a, label, li, text, ul)
+import Html.Attributes exposing (class, classList)
 import Route
 
 

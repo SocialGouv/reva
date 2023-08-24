@@ -15,15 +15,10 @@ import Admin.Object.Certification
 import Admin.Object.CertificationAuthority
 import Admin.Object.CertificationSummary
 import Admin.Object.Experience
-import Admin.Object.Feasibility
-import Admin.Object.File
-import Admin.Object.Organism
-import Admin.Object.ReorientationReason
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
 import Api.Feasibility
-import Api.File as File
 import Api.Organism as Organism
 import Api.Pagination exposing (pageInfoSelection)
 import Api.Referential exposing (departmentSelection, reorientationReasonSelection)
@@ -33,9 +28,6 @@ import Data.Candidacy exposing (CandidacyId)
 import Data.Candidate
 import Data.Certification
 import Data.CertificationAuthority
-import Data.Feasibility
-import Data.Organism
-import Data.Referential
 import Graphql.Operation
 import Graphql.OptionalArgument as OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)

@@ -1,8 +1,8 @@
 module View.Footer exposing (..)
 
-import Accessibility exposing (a, div, footer, img, li, p, span, text, ul)
+import Accessibility exposing (a, div, footer, li, p, text, ul)
 import Accessibility.Aria
-import Html.Attributes exposing (alt, attribute, class, height, href, id, src, target, width)
+import Html.Attributes exposing (alt, attribute, class, height, href, id, target, width)
 import Route
 import View
 
