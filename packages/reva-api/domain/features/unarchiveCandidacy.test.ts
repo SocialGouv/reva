@@ -68,10 +68,15 @@ const candidacyReoriented: Candidacy = {
     label: "well",
     createdAt: new Date(),
     updatedAt: null,
+    deletedAt: null,
   },
 };
 
-const candidacyTable: Candidacy[] = [candidacyPriseEnCharge, candidacyArchived, candidacyReoriented];
+const candidacyTable: Candidacy[] = [
+  candidacyPriseEnCharge,
+  candidacyArchived,
+  candidacyReoriented,
+];
 
 const unarchivedCandidacyStatuses = [
   ...candidacyStatusesArchive.map((status) => ({

@@ -8,7 +8,9 @@ export const getReorientationReasons = async (): Promise<
 > => {
   try {
     const reorientationReasons =
-      await prismaClient.reorientationReason.findMany();
+      await prismaClient.reorientationReason.findMany({
+        where: { deletedAt: null },
+      });
 
     return Right(reorientationReasons);
   } catch (e) {
