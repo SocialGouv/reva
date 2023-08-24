@@ -24,31 +24,24 @@ view header currentStepIndex timelineElements =
                     a
                         [ navigation
                         , class "cursor-pointer relative flex items-start group"
-                        , classList
-                            [ ( "text-blue-900 font-semibold", index == currentStepIndex )
-                            , ( "font-medium", index /= currentStepIndex )
-                            ]
                         ]
 
         viewNavigationTimelineStep index element =
             li
-                [ class "relative border-l-2"
-                , classList
-                    [ ( "border-blue-900", index + 1 < currentStepIndex )
-                    , ( "pt-6", index /= 0 )
-                    ]
+                [ class "relative"
+                , classList [ ( "my-4", index /= 0 ) ]
                 ]
                 [ maybeLink index
                     element
-                    [ span [ class "ml-6 min-w-0 flex flex-col" ] element.content ]
+                    [ span [ class "min-w-0 flex flex-col" ] element.content ]
                 ]
     in
     div
-        []
+        [ class "md:ml-4" ]
     <|
         header
             :: [ ol
-                    [ class "mb-8 pl-2" ]
+                    [ class "my-5" ]
                  <|
                     List.indexedMap viewNavigationTimelineStep timelineElements
                ]

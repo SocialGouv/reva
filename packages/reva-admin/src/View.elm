@@ -60,7 +60,7 @@ layout navButtonLabel upperNavContent navContent content =
                 [ role "navigation"
                 , attribute "aria-label" "Menu latéral"
                 , class "fr-sidemenu bg-white"
-                , class "h-full md:pl-2 pr-0 py-6"
+                , class "h-full md:pl-2 pr-0 py-2 md:py-6"
                 ]
                 [ div
                     [ class "h-full md:border-r" ]
@@ -71,7 +71,7 @@ layout navButtonLabel upperNavContent navContent content =
                         div
                             [ class "fr-sidemenu__inner"
                             , class "shadow-none pr-0"
-                            , class "flex items-center pl-6 md:pl-4"
+                            , class "flex items-center pl-6 my-4 md:my-0 md:pl-4"
                             ]
                             upperNavContent
                     , div

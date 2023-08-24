@@ -12,6 +12,7 @@ import Admin.Enum.SubscriptionOrganismTypology exposing (SubscriptionOrganismTyp
 import Admin.Enum.SubscriptionRequestStatus as SubscriptionRequestStatus
 import Api.Form.OrganismSubscription
 import Api.Subscription
+import BetaGouv.DSFR.Button as Button
 import Browser.Navigation as Nav
 import Data.Context exposing (Context)
 import Data.Form exposing (FormData)
@@ -303,9 +304,7 @@ withSubscription subscription ( model, cmd ) =
 
 viewCandidaciesLink : Context -> Html msg
 viewCandidaciesLink context =
-    Html.a
-        [ class "fr-link"
-        , class "md:text-lg text-gray-900 hover:text-blue-900"
-        , Route.href context.baseUrl (Route.Candidacies Route.emptyCandidacyFilters)
-        ]
-        [ text "Voir les candidatures" ]
+    Button.new { onClick = Nothing, label = "Voir les candidatures" }
+        |> Button.linkButton (Route.toString context.baseUrl <| Route.Candidacies Route.emptyCandidacyFilters)
+        |> Button.tertiary
+        |> Button.view

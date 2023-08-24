@@ -252,12 +252,10 @@ withSubscriptions subscriptions ( model, cmd ) =
 
 viewCandidaciesLink : Context -> Html msg
 viewCandidaciesLink context =
-    Html.a
-        [ class "fr-link"
-        , class "md:text-lg text-gray-900 hover:text-blue-900"
-        , Route.href context.baseUrl (Route.Candidacies Route.emptyCandidacyFilters)
-        ]
-        [ text "Voir les candidatures" ]
+    Button.new { onClick = Nothing, label = "Voir les candidatures" }
+        |> Button.linkButton (Route.toString context.baseUrl <| Route.Candidacies Route.emptyCandidacyFilters)
+        |> Button.tertiary
+        |> Button.view
 
 
 viewFilterLinks : Context -> SubscriptionRequestStatus -> Html msg

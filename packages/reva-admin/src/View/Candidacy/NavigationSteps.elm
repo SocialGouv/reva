@@ -202,7 +202,7 @@ reorientationView baseUrl candidacy =
 title : String -> Html msg
 title value =
     h2
-        [ class "mb-4 flex items-end"
+        [ class "mt-2 mb-4 flex items-end"
         , class "text-xl font-semibold"
         ]
         [ text value ]
@@ -218,18 +218,21 @@ expandedView buttonState stepTitle status candidacy =
             else
                 "Consulter"
     in
-    [ View.Steps.link stepTitle
-    , if candidacyStatus candidacy == status then
-        div
+    if candidacyStatus candidacy == status then
+        [ span [ class "font-semibold text-dsfrBlue-500" ] [ View.Steps.link stepTitle ]
+        , div
             []
             [ Button.new { onClick = Nothing, label = buttonLabel }
-                |> Button.withAttrs [ attribute "aria-label" (buttonLabel ++ stepTitle) ]
+                |> Button.withAttrs
+                    [ attribute "aria-label" (buttonLabel ++ stepTitle)
+                    , class "mb-3"
+                    ]
                 |> Button.view
             ]
+        ]
 
-      else
-        text ""
-    ]
+    else
+        [ View.Steps.link stepTitle ]
 
 
 fundingRequestLink : String -> Candidacy -> Maybe (Html.Attribute msg)
