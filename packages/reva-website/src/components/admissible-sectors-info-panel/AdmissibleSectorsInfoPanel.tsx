@@ -12,7 +12,7 @@ export const AdmissibleSectorsInfoPanel = ({
       Seules les filières suivantes sont actuellement éligibles :
     </p>
     <ul>
-      <li>sanitaire et social,</li>
+      <li>sanitaire et sociale,</li>
       <li>grande distribution,</li>
       <li>industrie métallurgique,</li>
       <li>métiers du sport.</li>

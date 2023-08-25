@@ -85,7 +85,7 @@ const AvenirPro = () => (
             </p>
             <br />
             <ul>
-              <li>sanitaire et social</li>
+              <li>sanitaire et sociale</li>
               <li>grande distribution</li>
               <li>industrie métallurgique</li>
               <li>métiers du sport</li>
@@ -447,7 +447,7 @@ const Roadmap = () => (
       <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 text-left place-content-center">
         <RoadmapStep date="Courant juillet 2023">
           Lancement de la plateforme pour les certifications des quatre filières
-          suivantes : sanitaire et social, grande distribution, industrie
+          suivantes : sanitaire et sociale, grande distribution, industrie
           métallurgique et métiers du sport.
         </RoadmapStep>
         <RoadmapStep date="Janvier 2024">
