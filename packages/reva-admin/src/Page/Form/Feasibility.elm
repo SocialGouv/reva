@@ -86,15 +86,15 @@ form _ ( candidacy, _ ) =
             case candidacy.certificationAuthority of
                 Just _ ->
                     [ candidateInfo
-                    , ( "", Form.Section "Pièces jointes" )
+                    , ( "", Form.Title2 "Pièces jointes" )
                     , idCardWarning
-                    , ( "feasibilityFile", Form.Title "Joindre le dossier de faisabilité" )
+                    , ( "feasibilityFile", Form.Title3 "Joindre le dossier de faisabilité" )
                     , ( keys.feasibilityFile, Form.File "" "Format supporté : PDF uniquement" )
-                    , ( "documentaryProofFile", Form.Title "Joindre une autre pièce (optionnel)" )
+                    , ( "documentaryProofFile", Form.Title3 "Joindre une autre pièce (optionnel)" )
                     , ( keys.documentaryProofFile, Form.File "Copie du ou des justificatif(s) ouvrant accès à une équivalence ou dispense en lien avec la certification visée." "Format supporté : PDF uniquement" )
-                    , ( "certificateOfAttendanceFile", Form.Title "Joindre une autre pièce (optionnel)" )
+                    , ( "certificateOfAttendanceFile", Form.Title3 "Joindre une autre pièce (optionnel)" )
                     , ( keys.certificateOfAttendanceFile, Form.File "Attestation ou certificat de suivi de formation dans le cas du pré-requis demandé par la certification visée." "Format supporté : PDF uniquement" )
-                    , ( "", Form.Section "Informations additionnelles" )
+                    , ( "", Form.Title2 "Informations additionnelles" )
                     , certificationAuthorityInfo
                     , helpPanel
                     ]

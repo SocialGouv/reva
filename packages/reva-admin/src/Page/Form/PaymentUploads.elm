@@ -14,8 +14,8 @@ keys =
 form : FormData -> ( Candidacy, Referential ) -> Form
 form _ ( _, _ ) =
     { elements =
-        [ ( "files-heading", Form.Heading "2 - Documents" )
-        , ( "other-help-heading", Form.Section "Pièces justificatives à joindre" )
+        [ ( "files-heading", Form.Title1 "2 - Documents" )
+        , ( "other-help-heading", Form.Title2 "Pièces justificatives à joindre" )
         , ( "invoice-files-help"
           , Form.Requirements "La facture doit faire apparaître les éléments suivants :"
                 [ "Nom de la structure prestataire (accompagnement, organisme de formation)"
@@ -26,7 +26,7 @@ form _ ( _, _ ) =
           )
         , ( keys.invoiceFiles, Form.File "Ajouter une facture" "Taille maximale : 10 Mo. Format supporté : pdf." )
         , ( keys.appointmentFiles, Form.File "Ajouter un récapitulatif des attestations de présence" "Taille maximale : 10 Mo. Format supporté : pdf." )
-        , ( "other-help-heading", Form.Section "Pièces justificatives à conserver" )
+        , ( "other-help-heading", Form.Title2 "Pièces justificatives à conserver" )
         , ( "other-help"
           , Form.Requirements "Pièces justificatives que vous devez collecter et conserver pendant 5 ans, en cas de contrôle à posteriori de l'OPCO de la Cohésion :"
                 [ "Avis de recevabilité transmis par le certificateur"

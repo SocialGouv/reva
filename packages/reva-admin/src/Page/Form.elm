@@ -54,7 +54,9 @@ type Element
     | Empty
     | File String String
     | Files String String
-    | Heading String -- h2
+    | Title1 String -- h2
+    | Title2 String -- h3
+    | Title3 String -- h4
     | Info String String
     | Input String
     | InputRequired String
@@ -65,8 +67,6 @@ type Element
     | Requirements String (List String)
     | Select String (List ( String, String ))
     | SelectOther String String String
-    | Section String -- h3
-    | Title String -- h4
     | Textarea String (Maybe String)
     | RadioList String (List ( String, String ))
     | Text String (Maybe String)
@@ -348,12 +348,17 @@ viewEditableElement formData ( elementId, element ) =
             [ viewInputFiles True elementId label hint ]
                 |> viewFieldsetElement
 
-        Heading title ->
+        Title1 title ->
             legend
                 []
                 [ h2 [ class "text-lg" ] [ text title ] ]
 
-        Title title ->
+        Title2 title ->
+            legend
+                [ class "" ]
+                [ h3 [ class "text-xl" ] [ text title ] ]
+
+        Title3 title ->
             legend
                 []
                 [ h4 [ class "text-base font-medium -mt-14 -ml-6" ] [ text title ] ]
@@ -406,11 +411,6 @@ viewEditableElement formData ( elementId, element ) =
                         (List.map viewRule rules)
                     ]
                 ]
-
-        Section title ->
-            legend
-                [ class "" ]
-                [ h3 [ class "text-xl" ] [ text title ] ]
 
         Select label choices ->
             viewFieldsetElement
@@ -501,11 +501,14 @@ viewReadOnlyElement formData ( elementId, element ) =
         Files _ _ ->
             text ""
 
-        Heading title ->
+        Title1 title ->
             h2 [ class "mt-8" ] [ text title ]
 
-        Title title ->
+        Title3 title ->
             h4 [ class "mt-4 mb-2" ] [ text title ]
+
+        Title2 title ->
+            h3 [ class "mt-8 mb-2" ] [ text title ]
 
         Info label value ->
             defaultView label value
@@ -540,9 +543,6 @@ viewReadOnlyElement formData ( elementId, element ) =
 
         Requirements _ _ ->
             text ""
-
-        Section title ->
-            h3 [ class "mt-8 mb-2" ] [ text title ]
 
         Select label choices ->
             List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices
@@ -846,13 +846,13 @@ viewFieldsets formData elements =
         isNewGroup : ( String, Element ) -> Maybe Int
         isNewGroup ( _, element ) =
             case element of
-                Heading _ ->
+                Title1 _ ->
                     Just 1
 
-                Section _ ->
+                Title2 _ ->
                     Just 2
 
-                Title _ ->
+                Title3 _ ->
                     Just 3
 
                 _ ->
