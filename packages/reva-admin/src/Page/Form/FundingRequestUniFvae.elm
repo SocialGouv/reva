@@ -49,10 +49,11 @@ form maybeCertification _ ( candidacy, referential ) =
                 |> Maybe.withDefault Form.Empty
           )
         , ( "companion", Form.Title2 "3. Parcours personnalisé" )
-        , ( "individual", Form.Title3 "Accompagnement individuel" )
+        , ( "individual", Form.Title3 "Accompagnement" )
+        , ( "collective", Form.Title4 "Individuel" )
         , ( keys.individualHourCount, hourCountElement )
         , ( keys.individualCost, costElement )
-        , ( "collective", Form.Title3 "Accompagnement collectif" )
+        , ( "collective", Form.Title4 "Collectif" )
         , ( keys.collectiveHourCount, hourCountElement )
         , ( keys.collectiveCost, costElement )
         , ( "training", Form.Title2 "4. Compléments formatifs" )

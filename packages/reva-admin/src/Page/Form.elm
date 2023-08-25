@@ -11,7 +11,7 @@ module Page.Form exposing
     , view
     )
 
-import Accessibility exposing (h1, h2, h3, h4)
+import Accessibility exposing (h1, h2, h3, h4, h5)
 import Accessibility.Aria as Aria
 import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
@@ -57,6 +57,7 @@ type Element
     | Title1 String -- h2
     | Title2 String -- h3
     | Title3 String -- h4
+    | Title4 String -- h5
     | Info String String
     | Input String
     | InputRequired String
@@ -361,7 +362,17 @@ viewEditableElement formData ( elementId, element ) =
         Title3 title ->
             legend
                 []
-                [ h4 [ class "text-base font-medium -mt-14 -ml-6" ] [ text title ] ]
+                [ h4 [ class "text-base font-medium -mt-14 -ml-8" ] [ text title ] ]
+
+        Title4 title ->
+            legend
+                []
+                [ h5
+                    [ class "text-base font-normal h-10"
+                    , class "w-full md:w-[100px] xl:w-[190px]"
+                    ]
+                    [ text title ]
+                ]
 
         Input label ->
             viewFieldsetElement
@@ -373,11 +384,11 @@ viewEditableElement formData ( elementId, element ) =
 
         Number label ->
             viewFieldsetElement
-                [ inputView label "Un nombre entier supérieur ou égal à 0" Input.numeric [ Html.Attributes.min "0" ] ]
+                [ inputView label "Un entier supérieur ou égal à 0" Input.numeric [ Html.Attributes.min "0" ] ]
 
         Price label ->
             viewFieldsetElement
-                [ inputView label "Un nombre décimal supérieur ou égal à 0" (Input.decimal 0.01) [ Html.Attributes.min "0" ] ]
+                [ inputView label "Un décimal supérieur ou égal à 0" (Input.decimal 0.01) [ Html.Attributes.min "0" ] ]
 
         Textarea label placeholder ->
             viewFieldsetElement
@@ -504,11 +515,16 @@ viewReadOnlyElement formData ( elementId, element ) =
         Title1 title ->
             h2 [ class "mt-8" ] [ text title ]
 
-        Title3 title ->
-            h4 [ class "mt-4 mb-2" ] [ text title ]
-
         Title2 title ->
             h3 [ class "mt-8 mb-2" ] [ text title ]
+
+        Title3 title ->
+            h4 [ class "text-base mt-4 mb-2" ] [ text title ]
+
+        Title4 title ->
+            legend
+                []
+                [ h5 [ class "text-base" ] [ text title ] ]
 
         Info label value ->
             defaultView label value
@@ -768,7 +784,7 @@ viewFieldsets formData elements =
             List.map
                 (\e ->
                     div
-                        [ class "w-full px-6 pt-5 my-8"
+                        [ class "w-full px-6 md:px-3 lg:pl-8 lg:pr-0 pt-5 my-8"
                         , class "border rounded-xl"
                         ]
                         [ e ]
@@ -878,7 +894,7 @@ viewFieldsetComplexElement =
 -}
 viewFieldsetElement : List (Html msg) -> Html msg
 viewFieldsetElement =
-    div [ class "w-full md:w-auto md:min-w-[228px] mb-6" ]
+    div [ class "w-full md:w-1/3 xl:w-auto xl:min-w-[228px] mb-6" ]
 
 
 
