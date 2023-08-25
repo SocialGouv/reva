@@ -22,7 +22,7 @@ form maybeCertification _ ( candidacy, referential ) =
                 |> List.map (\el -> ( Data.Candidate.genderToString el, Data.Candidate.genderToString el ))
     in
     { elements =
-        [ ( "candidate-info", Form.Section "Informations du candidat" )
+        [ ( "candidate-info", Form.Section "1. Informations du candidat" )
         , ( "nom"
           , candidacy.candidate
                 |> Maybe.map (.lastname >> Form.Info "Nom")
@@ -33,29 +33,29 @@ form maybeCertification _ ( candidacy, referential ) =
                 |> Maybe.map (.firstname >> Form.Info "Prénom")
                 |> Maybe.withDefault Form.Empty
           )
+        , ( "", Form.Break )
         , ( keys.candidateSecondname, Form.Input "2ième prénom" )
         , ( keys.candidateThirdname, Form.Input "3ième prénom" )
         , ( keys.candidateGender, Form.Select "Genre" genders )
-        , ( "selected-certification", Form.Section "Certification choisie" )
+        , ( "selected-organism", Form.Section "2. Choix du candidat" )
         , ( "certification"
           , maybeCertification
-                |> Maybe.map (.label >> Form.Info "")
+                |> Maybe.map (.label >> Form.Info "Certification choisie")
                 |> Maybe.withDefault Form.Empty
           )
-        , ( "selected-organism", Form.Section "Accompagnateur choisi" )
         , ( "certification"
           , candidacy.organism
-                |> Maybe.map (.label >> Form.Info "")
+                |> Maybe.map (.label >> Form.Info "Accompagnateur choisi")
                 |> Maybe.withDefault Form.Empty
           )
-        , ( "companion", Form.Section "Accompagnement" )
+        , ( "companion", Form.Section "3. Parcours personnalisé" )
         , ( "individual", Form.Title "Accompagnement individuel" )
         , ( keys.individualHourCount, hourCountElement )
         , ( keys.individualCost, costElement )
         , ( "collective", Form.Title "Accompagnement collectif" )
         , ( keys.collectiveHourCount, hourCountElement )
         , ( keys.collectiveCost, costElement )
-        , ( "training", Form.Section "Compléments formatifs" )
+        , ( "training", Form.Section "4. Compléments formatifs" )
         , ( "mandatory-training", Form.Title "Formation obligatoire" )
         , ( keys.mandatoryTrainingIds
           , Form.ReadOnlyElement <|

@@ -29,7 +29,7 @@ form status formData ( _, referential ) =
     in
     { elements =
         List.append
-            [ ( keys.isNotReoriented, Form.Checkbox "Le candidat n'a pas été réorienté" ), ( "", Form.Title "" ) ]
+            [ ( keys.isNotReoriented, Form.Checkbox "Le candidat n'a pas été réorienté" ) ]
             (if not archive.isNotReoriented then
                 [ ( keys.reorientationReason, Form.Select "Le candidat a été réorienté vers :" reorientationReasons ) ]
 

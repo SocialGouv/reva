@@ -151,6 +151,7 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( keys.examCost, costElement )
         , ( "total", Form.Section "Total" )
         , FundingRequest.totalCostSection "Coût total de la demande de paiement" formData
+        , ( "", Form.Break )
         , ( keys.invoiceNumber, Form.InputRequired "Numéro de facture" )
         ]
     , saveLabel = Nothing

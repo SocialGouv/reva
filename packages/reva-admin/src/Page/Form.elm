@@ -46,7 +46,8 @@ type Msg referential
 
 
 type Element
-    = Checkbox String
+    = Break
+    | Checkbox String
     | CheckboxWithAriaLabel String String
     | CheckboxList String (List ( String, String ))
     | Date String
@@ -244,18 +245,18 @@ viewForm referential status errors formData form saveButton submitButton =
 
         formFieldset content =
             Html.form
-                [ class "mt-4"
+                [ class "my-4"
                 , onSubmit (UserClickSubmit referential)
                 ]
-                [ fieldset [ class "fr-fieldset" ] content ]
+                [ fieldset [] content ]
     in
     case status of
         Editable ->
             formFieldset <|
                 legend
-                    [ class "fr-fieldset__legend -ml-1" ]
-                    [ h1 [ class "mb-1" ] [ text currentForm.title ]
-                    , p [ class "font-medium text-sm text-gray-500" ]
+                    [ class "mb-4" ]
+                    [ h1 [ class "text-dsfrBlue-500 text-4xl mb-1" ] [ text currentForm.title ]
+                    , p [ class "text-gray-600" ]
                         [ text "Sauf mention contraire “(optionnel)” dans le label, tous les champs sont obligatoires." ]
                     ]
                     :: viewFieldsets formData currentForm.elements
@@ -302,6 +303,9 @@ viewEditableElement formData ( elementId, element ) =
                 |> Input.view
     in
     case element of
+        Break ->
+            div [ class "w-full" ] []
+
         Checkbox label ->
             viewFieldsetElement
                 [ viewCheckbox elementId label dataOrDefault
@@ -346,21 +350,21 @@ viewEditableElement formData ( elementId, element ) =
 
         Heading title ->
             legend
-                [ class "fr-fieldset__legend" ]
-                [ h2 [] [ text title ] ]
+                []
+                [ h2 [ class "text-lg" ] [ text title ] ]
 
         Title title ->
             legend
-                [ class "fr-fieldset__legend mt-6 mb-1" ]
-                [ h4 [] [ text title ] ]
+                []
+                [ h4 [ class "text-base font-medium -mt-14 -ml-6" ] [ text title ] ]
 
         Input label ->
             viewFieldsetElement
-                [ inputView (label |> optional) "Texte libre" identity [] ]
+                [ inputView (label |> optional) "" identity [] ]
 
         InputRequired label ->
             viewFieldsetElement
-                [ inputView label "Texte libre" identity [ required True ] ]
+                [ inputView label "" identity [ required True ] ]
 
         Number label ->
             viewFieldsetElement
@@ -375,14 +379,13 @@ viewEditableElement formData ( elementId, element ) =
                 [ textareaView label placeholder ]
 
         Info label value ->
-            div [ class "fr-fieldset__element mb-2" ] [ viewInfo label value ]
+            viewInfo elementId label value
 
         ReadOnlyElement readOnlyElement ->
-            div [ class "fr-fieldset__element mb-1" ] <|
-                [ viewReadOnlyElement formData ( elementId, readOnlyElement ) ]
+            viewReadOnlyElement formData ( elementId, readOnlyElement )
 
         ReadOnlyElements readOnlyElements ->
-            div [ class "fr-fieldset__element mb-1" ] <|
+            div [ class "flex flex-wrap gap-x-4" ] <|
                 List.map
                     (viewReadOnlyElement formData)
                     readOnlyElements
@@ -406,14 +409,14 @@ viewEditableElement formData ( elementId, element ) =
 
         Section title ->
             legend
-                [ class "fr-fieldset__legend mt-6 mb-1" ]
-                [ h3 [] [ text title ] ]
+                [ class "" ]
+                [ h3 [ class "text-xl" ] [ text title ] ]
 
         Select label choices ->
             viewFieldsetElement
                 [ div
                     [ class "fr-select-group" ]
-                    [ labelView elementId "" label
+                    [ viewLabel elementId [ text label ]
                     , select
                         [ class "fr-select"
                         , id elementId
@@ -458,9 +461,12 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> Maybe.withDefault (defaultValue element)
 
         defaultView label v =
-            div [] [ viewInfo label v ]
+            div [] [ viewInfo elementId label v ]
     in
     case element of
+        Break ->
+            div [ class "w-full" ] []
+
         Checkbox label ->
             viewCheckbox elementId label dataOrDefault
                 |> Checkbox.singleWithDisabled True
@@ -517,7 +523,11 @@ viewReadOnlyElement formData ( elementId, element ) =
             defaultView label dataOrDefault
 
         Textarea label _ ->
-            div [ class "w-full lg:w-[590px]" ] [ defaultView label dataOrDefault ]
+            if String.length dataOrDefault > 0 then
+                div [ class "w-full lg:w-[590px]" ] [ defaultView label dataOrDefault ]
+
+            else
+                text ""
 
         ReadOnlyElement readOnlyElement ->
             viewReadOnlyElement formData ( elementId, readOnlyElement )
@@ -537,7 +547,7 @@ viewReadOnlyElement formData ( elementId, element ) =
         Select label choices ->
             List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices
                 |> List.head
-                |> Maybe.map (\( _, choice ) -> viewInfo label choice)
+                |> Maybe.map (\( _, choice ) -> viewInfo elementId label choice)
                 |> Maybe.withDefault (text "")
 
         SelectOther selectId otherValue label ->
@@ -559,14 +569,13 @@ viewReadOnlyElement formData ( elementId, element ) =
             div [ class "ml-2" ] [ Html.map never content ]
 
 
-labelView : String -> String -> String -> Html msg
-labelView elementId extraClass s =
+viewLabel : String -> List (Html msg) -> Html msg
+viewLabel elementId content =
     label
         [ for elementId
-        , class "fr-label"
-        , class extraClass
+        , class "block uppercase text-xs font-semibold mb-[10px]"
         ]
-        [ text s ]
+        content
 
 
 defaultValue : Element -> String
@@ -591,7 +600,7 @@ viewInput elementId label value =
     Input.new
         { onInput = UserChangedElement elementId
         , id = elementId
-        , label = Accessibility.text label
+        , label = span [ class "uppercase text-xs font-semibold mb-2" ] [ Accessibility.text label ]
         , value = value
         }
 
@@ -672,10 +681,8 @@ viewInputFiles acceptMultipleFiles elementId title hint =
     in
     div
         [ class "fr-upload-group" ]
-        [ label
-            [ class "fr-label"
-            , for elementId
-            ]
+        [ viewLabel
+            elementId
             [ text title
             , span
                 [ class "fr-hint-text"
@@ -694,15 +701,15 @@ viewInputFiles acceptMultipleFiles elementId title hint =
         ]
 
 
-viewInfo : String -> String -> Html msg
-viewInfo s d =
-    div [ class "text-lg" ]
+viewInfo : String -> String -> String -> Html msg
+viewInfo elementId s d =
+    viewFieldsetElement
         [ if s /= "" then
-            label [] [ text s, text " : " ]
+            viewLabel elementId [ text s ]
 
           else
             text ""
-        , span [] [ text d ]
+        , div [ id elementId ] [ text d ]
         ]
 
 
@@ -754,15 +761,15 @@ viewFieldsets formData elements =
     let
         wrapWithElement : List (Html msg) -> List (Html msg)
         wrapWithElement l =
-            List.map (\e -> viewFieldsetElement [ e ]) l
+            List.map (\e -> div [ class "border-b pb-4 mb-10" ] [ e ]) l
 
         wrapWithGrayElement : List (Html msg) -> List (Html msg)
         wrapWithGrayElement l =
             List.map
                 (\e ->
                     div
-                        [ class "fr-fieldset__element"
-                        , class "mt-0 mb-4 pt-4 px-6 ml-2 bg-neutral-100"
+                        [ class "w-full px-6 pt-5 my-8"
+                        , class "border rounded-xl"
                         ]
                         [ e ]
                 )
@@ -771,7 +778,8 @@ viewFieldsets formData elements =
         viewFieldset : Int -> List (Html msg) -> Html msg
         viewFieldset level content =
             fieldset
-                [ class "fr-fieldset mb-2"
+                [ class "mb-2"
+                , class "flex flex-wrap items-end gap-x-4"
                 ]
                 content
 
@@ -863,14 +871,14 @@ viewFieldsets formData elements =
 -}
 viewFieldsetComplexElement : List (Html msg) -> Html msg
 viewFieldsetComplexElement =
-    div [ class "fr-fieldset__element mt-2 -mb-3" ]
+    div [ class "mt-2 -mb-3" ]
 
 
 {-| Wrap a simple element like input or textarea
 -}
 viewFieldsetElement : List (Html msg) -> Html msg
 viewFieldsetElement =
-    div [ class "fr-fieldset__element" ]
+    div [ class "w-full md:w-auto md:min-w-[228px] mb-6" ]
 
 
 
