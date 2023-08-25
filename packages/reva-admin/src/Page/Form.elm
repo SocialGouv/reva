@@ -11,7 +11,7 @@ module Page.Form exposing
     , view
     )
 
-import Accessibility exposing (h1, h2, h3, h4, h5)
+import Accessibility exposing (h1, h2, h3, h4, h5, hr)
 import Accessibility.Aria as Aria
 import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
@@ -58,6 +58,7 @@ type Element
     | Title2 String -- h3
     | Title3 String -- h4
     | Title4 String -- h5
+    | TitleInlined String -- h5
     | Info String String
     | Input String
     | InputRequired String
@@ -369,11 +370,18 @@ viewEditableElement formData ( elementId, element ) =
             legend
                 []
                 [ h5
-                    [ class "text-base font-normal h-10"
-                    , class "w-full md:w-[100px] xl:w-[190px]"
+                    [ class "text-base font-normal"
+                    , class "w-full md:w-[500px] xl:w-[680px]"
                     ]
                     [ text title ]
                 ]
+
+        TitleInlined title ->
+            h5
+                [ class "text-base font-normal h-10"
+                , class "w-full md:w-[120px] xl:w-[180px]"
+                ]
+                [ text title ]
 
         Input label ->
             viewFieldsetElement
@@ -527,6 +535,11 @@ viewReadOnlyElement formData ( elementId, element ) =
             h4 [ class "text-base mt-4 mb-2" ] [ text title ]
 
         Title4 title ->
+            legend
+                []
+                [ h5 [ class "text-base" ] [ text title ] ]
+
+        TitleInlined title ->
             legend
                 []
                 [ h5 [ class "text-base" ] [ text title ] ]
@@ -787,8 +800,8 @@ viewFieldsets formData elements =
         wrapWithElement l =
             List.map (\e -> div [ class "border-b pb-4 mb-10" ] [ e ]) l
 
-        wrapWithGrayElement : List (Html msg) -> List (Html msg)
-        wrapWithGrayElement l =
+        wrapWithBorderedElement : List (Html msg) -> List (Html msg)
+        wrapWithBorderedElement l =
             List.map
                 (\e ->
                     div
@@ -796,6 +809,19 @@ viewFieldsets formData elements =
                         , class "border rounded-xl"
                         ]
                         [ e ]
+                )
+                l
+
+        wrapWithHorizontalLineElement : List (Html msg) -> List (Html msg)
+        wrapWithHorizontalLineElement l =
+            List.map
+                (\e ->
+                    div
+                        [ class "relative w-full pb-8 last:pb-0 [&:last-child_hr]:hidden" ]
+                        [ e
+                        , -- We use an absolute hr instead of a border-b to escape the parent padding
+                          hr [ class "absolute bottom-0 left-0 lg:left-[-32px] right-0" ] []
+                        ]
                 )
                 l
 
@@ -813,12 +839,14 @@ viewFieldsets formData elements =
                 { l1 : List (Html (Msg referential))
                 , l2 : List (Html (Msg referential))
                 , l3 : List (Html (Msg referential))
+                , l4 : List (Html (Msg referential))
                 , elements : List (Html (Msg referential))
                 }
             ->
                 { l1 : List (Html (Msg referential))
                 , l2 : List (Html (Msg referential))
                 , l3 : List (Html (Msg referential))
+                , l4 : List (Html (Msg referential))
                 , elements : List (Html (Msg referential))
                 }
         groupHelper element acc =
@@ -833,12 +861,14 @@ viewFieldsets formData elements =
                             viewFieldset 1
                                 (htmlElement
                                     :: acc.elements
-                                    ++ wrapWithGrayElement acc.l3
+                                    ++ wrapWithBorderedElement acc.l4
+                                    ++ wrapWithBorderedElement acc.l3
                                     ++ wrapWithElement acc.l2
                                 )
                                 :: acc.l1
                         , l2 = []
                         , l3 = []
+                        , l4 = []
                         , elements = []
                     }
 
@@ -848,16 +878,36 @@ viewFieldsets formData elements =
                             viewFieldset 2
                                 (htmlElement
                                     :: acc.elements
-                                    ++ wrapWithGrayElement acc.l3
+                                    ++ acc.l4
+                                    ++ wrapWithBorderedElement acc.l3
                                 )
                                 :: acc.l2
                         , l3 = []
+                        , l4 = []
                         , elements = []
                     }
 
                 Just 3 ->
                     { acc
-                        | l3 = viewFieldset 3 (htmlElement :: acc.elements) :: acc.l3
+                        | l3 =
+                            viewFieldset 3
+                                (htmlElement
+                                    :: acc.elements
+                                    ++ wrapWithHorizontalLineElement acc.l4
+                                )
+                                :: acc.l3
+                        , l4 = []
+                        , elements = []
+                    }
+
+                Just 4 ->
+                    { acc
+                        | l4 =
+                            viewFieldset 4
+                                (htmlElement
+                                    :: acc.elements
+                                )
+                                :: acc.l4
                         , elements = []
                     }
 
@@ -879,14 +929,20 @@ viewFieldsets formData elements =
                 Title3 _ ->
                     Just 3
 
+                Title4 _ ->
+                    Just 4
+
+                TitleInlined _ ->
+                    Just 4
+
                 _ ->
                     Nothing
 
         groupedElements =
-            List.foldr groupHelper { l1 = [], l2 = [], l3 = [], elements = [] } elements
+            List.foldr groupHelper { l1 = [], l2 = [], l3 = [], l4 = [], elements = [] } elements
     in
     groupedElements.elements
-        ++ wrapWithGrayElement groupedElements.l3
+        ++ wrapWithBorderedElement groupedElements.l3
         ++ wrapWithElement groupedElements.l2
         ++ wrapWithElement groupedElements.l1
 

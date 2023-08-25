@@ -50,14 +50,14 @@ form maybeCertification _ ( candidacy, referential ) =
           )
         , ( "companion", Form.Title2 "3. Parcours personnalisé" )
         , ( "individual", Form.Title3 "Accompagnement" )
-        , ( "collective", Form.Title4 "Individuel" )
+        , ( "collective", Form.TitleInlined "Individuel" )
         , ( keys.individualHourCount, hourCountElement )
         , ( keys.individualCost, costElement )
-        , ( "collective", Form.Title4 "Collectif" )
+        , ( "collective", Form.TitleInlined "Collectif" )
         , ( keys.collectiveHourCount, hourCountElement )
         , ( keys.collectiveCost, costElement )
-        , ( "training", Form.Title2 "4. Compléments formatifs" )
-        , ( "mandatory-training", Form.Title3 "Formation obligatoire" )
+        , ( "training", Form.Title3 "Compléments formatifs" )
+        , ( "mandatory-training", Form.Title4 "Formation obligatoire" )
         , ( keys.mandatoryTrainingIds
           , Form.ReadOnlyElement <|
                 Form.CheckboxList "Formations obligatoires sélectionnées" <|
@@ -65,7 +65,7 @@ form maybeCertification _ ( candidacy, referential ) =
           )
         , ( keys.mandatoryTrainingsHourCount, hourCountElement )
         , ( keys.mandatoryTrainingsCost, costElement )
-        , ( "basic-skills", Form.Title3 "Savoir de base" )
+        , ( "basic-skills", Form.Title4 "Savoir de base" )
         , ( keys.basicSkillsIds
           , Form.ReadOnlyElement <|
                 Form.CheckboxList "Formations savoirs de base sélectionnées" <|
@@ -73,11 +73,11 @@ form maybeCertification _ ( candidacy, referential ) =
           )
         , ( keys.basicSkillsHourCount, hourCountElement )
         , ( keys.basicSkillsCost, costElement )
-        , ( "skills", Form.Title3 "Bloc de compétences" )
+        , ( "skills", Form.TitleInlined "Bloc de compétences" )
         , ( keys.certificateSkills, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
         , ( keys.certificateSkillsHourCount, hourCountElement )
         , ( keys.certificateSkillsCost, costElement )
-        , ( "other", Form.Title3 "Autres" )
+        , ( "other", Form.TitleInlined "Autres" )
         , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
         , ( keys.otherTrainingHourCount, hourCountElement )
         , ( keys.otherTrainingCost, costElement )
