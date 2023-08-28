@@ -1,8 +1,5 @@
 module Page.Form.FundingRequestUniFvae exposing (form)
 
--- import Admin.Object.FundingRequest exposing (basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount)
--- import Admin.Object.FundingRequestUnifvae exposing (mandatoryTrainingsHourCount)
-
 import Admin.Enum.Gender exposing (Gender(..))
 import Data.Candidacy exposing (Candidacy)
 import Data.Candidate
@@ -63,7 +60,9 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( "", Form.Break )
         , ( "companionSubTotal"
           , Form.StaticHtml <|
-                View.Form.intermediateTotal "Sous-total des accompagnements" (displayHours (totalCompanionHourCount formData)) (displayEuros (totalCompanionCost formData))
+                View.Form.intermediateTotal "Sous-total des accompagnements"
+                    (totalCompanionHourCount formData |> displayHours)
+                    (totalCompanionCost formData |> displayEuros)
           )
         , ( "training", Form.Title2 "Compléments formatifs" )
         , ( "mandatory-training", Form.Title3 "Formation obligatoire" )
@@ -93,12 +92,16 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( "", Form.Break )
         , ( "trainingSubTotal"
           , Form.StaticHtml <|
-                View.Form.intermediateTotal "Sous-total des compléments formatifs" (displayHours (totalTrainingHourCount formData)) (displayEuros (totalTrainingCost formData))
+                View.Form.intermediateTotal "Sous-total des compléments formatifs"
+                    (totalTrainingHourCount formData |> displayHours)
+                    (totalTrainingCost formData |> displayEuros)
           )
         , ( "", Form.BreakToplevel )
         , ( "grandTotal"
           , Form.StaticHtml <|
-                View.Form.total "Total" (displayHours (totalHourCount formData)) (displayEuros (totalCost formData))
+                View.Form.total "Total"
+                    (totalHourCount formData |> displayHours)
+                    (totalCost formData |> displayEuros)
           )
         ]
     , saveLabel = Nothing
