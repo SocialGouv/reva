@@ -1,5 +1,6 @@
 module Page.Form.FundingRequestUniFvae exposing (form)
 
+import Accessibility exposing (div, text)
 import Admin.Enum.Gender exposing (Gender(..))
 import Data.Candidacy exposing (Candidacy)
 import Data.Candidate
@@ -8,6 +9,7 @@ import Data.Form exposing (FormData)
 import Data.Form.FundingRequestUniFvae exposing (keys)
 import Data.Form.Helper
 import Data.Referential exposing (Referential)
+import Html.Attributes exposing (class)
 import Page.Form as Form exposing (Form)
 import View.Form
 
@@ -21,6 +23,21 @@ form maybeCertification formData ( candidacy, referential ) =
             , Woman
             ]
                 |> List.map (\el -> ( Data.Candidate.genderToString el, Data.Candidate.genderToString el ))
+
+        displayInfo key =
+            ( key
+            , Data.Form.get key formData
+                |> Maybe.map
+                    (\s ->
+                        Form.StaticHtml <|
+                            View.Form.column
+                                [ class "-mt-4 min-h-[120px]"
+                                , class "text-sm text-gray-500"
+                                ]
+                                [ text s ]
+                    )
+                |> Maybe.withDefault Form.Empty
+            )
     in
     { elements =
         [ ( "candidate-info", Form.Title1 "1. Informations du candidat" )
@@ -81,12 +98,12 @@ form maybeCertification formData ( candidacy, referential ) =
           )
         , ( keys.basicSkillsHourCount, hourCountElement )
         , ( keys.basicSkillsCost, costElement )
-        , ( "skills", Form.TitleInlined "Bloc de compétences" )
-        , ( keys.certificateSkills, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
+        , ( "skills", Form.Title3 "Bloc de compétences" )
+        , displayInfo keys.certificateSkills
         , ( keys.certificateSkillsHourCount, hourCountElement )
         , ( keys.certificateSkillsCost, costElement )
-        , ( "other", Form.TitleInlined "Autres" )
-        , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
+        , ( "other", Form.Title3 "Autres" )
+        , displayInfo keys.otherTraining
         , ( keys.otherTrainingHourCount, hourCountElement )
         , ( keys.otherTrainingCost, costElement )
         , ( "", Form.Break )

@@ -369,6 +369,7 @@ viewEditableElement formData ( elementId, element ) =
                 []
                 [ h4
                     [ class "text-base font-normal"
+                    , class "mb-2"
                     , class "w-full md:w-[500px] xl:w-[680px]"
                     ]
                     [ text title ]
@@ -507,11 +508,11 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> List.map
                     (\( _, choice ) ->
                         p
-                            [ class "fr-tag fr-tag--sm" ]
+                            [ class "mr-1 mt-2 fr-tag fr-tag--sm" ]
                             [ text choice ]
                     )
                 |> View.Form.column
-                    [ class "h-full flex items-start flex-wrap gap-2"
+                    [ class "h-full"
                     , class "h-auto lg:min-h-[120px] max-h-[220px]"
                     , class "overflow-auto mb-5 lg:mb-0"
                     ]
@@ -570,7 +571,7 @@ viewReadOnlyElement formData ( elementId, element ) =
 
         Textarea label _ ->
             if String.length dataOrDefault > 0 then
-                div [ class "w-full lg:w-[590px]" ] [ defaultView label dataOrDefault ]
+                defaultView label dataOrDefault
 
             else
                 text ""
