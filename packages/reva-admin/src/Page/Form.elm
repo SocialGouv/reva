@@ -398,7 +398,7 @@ viewEditableElement formData ( elementId, element ) =
                 [ inputView label "Un décimal supérieur ou égal à 0" (Input.decimal 0.5) [ Html.Attributes.min "0" ] ]
 
         Textarea label placeholder ->
-            div [ class "w-full mb-6" ]
+            div [ class "w-full max-w-lg mb-6" ]
                 [ textareaView label placeholder ]
 
         Info label value ->
@@ -420,7 +420,7 @@ viewEditableElement formData ( elementId, element ) =
             in
             div
                 [ class "max-w-lg bg-gray-100 px-5 py-4 rounded-lg"
-                , class "text-sm text-gray-600 mb-3"
+                , class "text-sm text-gray-600 mb-8"
                 ]
                 [ p [ class "text-gray-900 text-sm mb-0" ] [ text title ]
                 , ul
@@ -429,7 +429,7 @@ viewEditableElement formData ( elementId, element ) =
                 ]
 
         Select label choices ->
-            div [ class "max-w-lg mb-6" ]
+            div [ class "min-w-[160px] xl:min-w-[228px] max-w-lg mb-6" ]
                 [ div
                     [ class "fr-select-group" ]
                     [ viewLabel elementId [ text label ]
@@ -715,7 +715,7 @@ viewInputFiles acceptMultipleFiles elementId title hint =
             Json.Decode.at [ "target", "files" ] (Json.Decode.list File.decoder)
     in
     div
-        [ class "fr-upload-group my-4" ]
+        [ class "fr-upload-group mb-4 max-w-lg" ]
         [ viewLabel
             elementId
             [ text title
