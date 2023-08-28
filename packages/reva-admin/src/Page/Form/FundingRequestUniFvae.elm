@@ -1,5 +1,8 @@
 module Page.Form.FundingRequestUniFvae exposing (form)
 
+-- import Admin.Object.FundingRequest exposing (basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount)
+-- import Admin.Object.FundingRequestUnifvae exposing (mandatoryTrainingsHourCount)
+
 import Admin.Enum.Gender exposing (Gender(..))
 import Data.Candidacy exposing (Candidacy)
 import Data.Candidate
@@ -9,6 +12,7 @@ import Data.Form.FundingRequestUniFvae exposing (keys)
 import Data.Form.Helper
 import Data.Referential exposing (Referential)
 import Page.Form as Form exposing (Form)
+import View.Form
 
 
 form : Maybe Certification -> FormData -> ( Candidacy, Referential ) -> Form
@@ -56,14 +60,10 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( "collective", Form.TitleInlined "Collectif" )
         , ( keys.collectiveHourCount, hourCountElement )
         , ( keys.collectiveCost, costElement )
-        , ( "sum-companion", Form.TitleInlined "Sous-total des accompagnements" )
-        , ( "-h"
-          , Form.Info "Nombre d'heures total accompagnement" <|
-                String.fromFloat (totalCompanionHourCount formData)
-          )
-        , ( "-€"
-          , Form.Info "Coût des heures d'accompagnement" <|
-                String.fromFloat (totalCompanionCost formData)
+        , ( "", Form.Break )
+        , ( "companionSubTotal"
+          , Form.StaticHtml <|
+                View.Form.intermediateTotal "Sous-total des accompagnements" (displayHours (totalCompanionHourCount formData)) (displayEuros (totalCompanionCost formData))
           )
         , ( "training", Form.Title2 "Compléments formatifs" )
         , ( "mandatory-training", Form.Title3 "Formation obligatoire" )
@@ -90,6 +90,16 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
         , ( keys.otherTrainingHourCount, hourCountElement )
         , ( keys.otherTrainingCost, costElement )
+        , ( "", Form.Break )
+        , ( "trainingSubTotal"
+          , Form.StaticHtml <|
+                View.Form.intermediateTotal "Sous-total des compléments formatifs" (displayHours (totalTrainingHourCount formData)) (displayEuros (totalTrainingCost formData))
+          )
+        , ( "", Form.BreakToplevel )
+        , ( "grandTotal"
+          , Form.StaticHtml <|
+                View.Form.total "Total" (displayHours (totalHourCount formData)) (displayEuros (totalCost formData))
+          )
         ]
     , saveLabel = Nothing
     , submitLabel = "Envoyer"
@@ -109,6 +119,24 @@ costElement =
 hourCountElement : Form.Element
 hourCountElement =
     Form.HourCount "Nombre d'heures"
+
+
+displayHours : Float -> String
+displayHours hours =
+    String.fromFloat hours ++ " h"
+
+
+displayEuros : Float -> String
+displayEuros euros =
+    String.fromFloat euros ++ " €"
+
+
+roundCost : Float -> Float
+roundCost =
+    (\x -> x * 100)
+        >> truncate
+        >> toFloat
+        >> (\x -> x / 100)
 
 
 totalCompanionHourCount : FormData -> Float
@@ -133,12 +161,6 @@ totalCompanionCost formData =
         float f =
             decode.float f 0
 
-        roundCost =
-            (\x -> x * 100)
-                >> truncate
-                >> toFloat
-                >> (\x -> x / 100)
-
         cost =
             (float .individualHourCount * float .individualCost)
                 + (float .collectiveHourCount * float .collectiveCost)
@@ -146,5 +168,71 @@ totalCompanionCost formData =
     roundCost cost
 
 
+totalTrainingHourCount : FormData -> Float
+totalTrainingHourCount formData =
+    let
+        decode =
+            Data.Form.Helper.decode keys formData
 
--- cost
+        float f =
+            decode.float f 0
+    in
+    float .mandatoryTrainingsHourCount
+        + float .basicSkillsHourCount
+        + float .certificateSkillsHourCount
+        + float .otherTrainingHourCount
+
+
+totalTrainingCost : FormData -> Float
+totalTrainingCost formData =
+    let
+        decode =
+            Data.Form.Helper.decode keys formData
+
+        float f =
+            decode.float f 0
+
+        cost =
+            (float .mandatoryTrainingsHourCount * float .mandatoryTrainingsCost)
+                + (float .basicSkillsHourCount * float .basicSkillsCost)
+                + (float .certificateSkillsHourCount * float .certificateSkillsCost)
+                + (float .otherTrainingHourCount * float .otherTrainingCost)
+    in
+    roundCost cost
+
+
+totalHourCount : FormData -> Float
+totalHourCount formData =
+    let
+        decode =
+            Data.Form.Helper.decode keys formData
+
+        float f =
+            decode.float f 0
+    in
+    float .individualHourCount
+        + float .collectiveHourCount
+        + float .mandatoryTrainingsHourCount
+        + float .basicSkillsHourCount
+        + float .certificateSkillsHourCount
+        + float .otherTrainingHourCount
+
+
+totalCost : FormData -> Float
+totalCost formData =
+    let
+        decode =
+            Data.Form.Helper.decode keys formData
+
+        float f =
+            decode.float f 0
+
+        cost =
+            (float .individualHourCount * float .individualCost)
+                + (float .collectiveHourCount * float .collectiveCost)
+                + (float .mandatoryTrainingsHourCount * float .mandatoryTrainingsCost)
+                + (float .basicSkillsHourCount * float .basicSkillsCost)
+                + (float .certificateSkillsHourCount * float .certificateSkillsCost)
+                + (float .otherTrainingHourCount * float .otherTrainingCost)
+    in
+    roundCost cost
