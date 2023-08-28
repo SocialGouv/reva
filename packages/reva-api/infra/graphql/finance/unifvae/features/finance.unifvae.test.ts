@@ -56,9 +56,20 @@ let organism: Organism,
   myCandidacy: any,
   myFundingRequest: FundingRequestUnifvae;
 
+const basicSkill1Label = "Pêche au coup",
+  basicSkill2Label = "Arboriculture";
+
 beforeAll(async () => {
-  [{ id: basicSkillId1 }, { id: basicSkillId2 }] =
-    await prismaClient.basicSkill.findMany({ select: { id: true } });
+  const bs1 = await prismaClient.basicSkill.create({
+    data: { label: basicSkill1Label },
+    select: { id: true },
+  });
+  basicSkillId1 = bs1.id;
+  const bs2 = await prismaClient.basicSkill.create({
+    data: { label: basicSkill2Label },
+    select: { id: true },
+  });
+  basicSkillId2 = bs2.id;
 
   organism = await prismaClient.organism.create({ data: organismDummy1 });
   aapAccount = await prismaClient.account.create({
@@ -189,9 +200,12 @@ afterAll(async () => {
   await prismaClient.candidate.deleteMany();
   await prismaClient.training.delete({ where: { label: "trainingA" } });
   await prismaClient.basicSkill.delete({ where: { label: "skillA" } });
+  await prismaClient.basicSkill.deleteMany({
+    where: { id: { in: [basicSkillId1, basicSkillId2] } },
+  });
 });
 
-test("should create fundingRequestUnifvae", async () => {
+test("should create fundingRequestUnifvae with matching batch", async () => {
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -238,6 +252,34 @@ test("should create fundingRequestUnifvae", async () => {
     firstname2: fundingRequestSample.candidateSecondname,
     firstname3: fundingRequestSample.candidateThirdname,
     gender: fundingRequestSample.candidateGender,
+  });
+
+  // Check batch
+  const myFundReqBatch =
+    await prismaClient.fundingRequestBatchUnifvae.findFirst({
+      where: { fundingRequestId: obj.data.id },
+    });
+  expect(myFundReqBatch).toMatchObject({
+    sent: false,
+    content: {
+      SiretAP: organism.siret,
+      // Certification: ,
+      NomCandidat: myCandidate.lastname,
+      PrenomCandidat1: myCandidate.firstname,
+      PrenomCandidat2: myCandidate.firstname2,
+      PrenomCandidat3: myCandidate.firstname3,
+      ActeFormatifComplémentaire_FormationObligatoire: "",
+      ActeFormatifComplémentaire_SavoirsDeBase: "Arboriculture, Pêche au coup",
+      ActeFormatifComplémentaire_BlocDeCompetencesCertifiant: "",
+      ActeFormatifComplémentaire_Autre: "",
+      NbHeureDemAccVAEInd: "2.00",
+      CoutHeureDemAccVAEInd: "21.30",
+      NbHeureDemAccVAEColl: "2.00",
+      CoutHeureDemAccVAEColl: "21.30",
+      NHeureDemActeFormatifCompl: "9.00",
+      CoutHeureDemActeFormatifCompl: "169.20",
+      ForfaitPartiel: 0,
+    },
   });
 });
 
