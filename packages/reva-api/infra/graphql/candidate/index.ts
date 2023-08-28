@@ -5,11 +5,6 @@ import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
 import { Either, Left, Maybe, Right } from "purify-ts";
 
-import { askForLogin } from "../../../domain/features/candidateAskForLogin";
-import { askForRegistration } from "../../../domain/features/candidateAskForRegistration";
-import { candidateAuthentication } from "../../../domain/features/candidateAuthentication";
-import { getCandidateWithCandidacy } from "../../../domain/features/candidateGetCandidateWithCandidacy";
-import { getCandidateByEmail } from "../../../domain/features/getCandidateByEmail";
 import * as candidatesDb from "../../database/postgres/candidates";
 import {
   sendLoginEmail,
@@ -17,6 +12,11 @@ import {
   sendUnknownUserEmail,
 } from "../../email";
 import { logger } from "../../logger";
+import { askForLogin } from "./features/candidateAskForLogin";
+import { askForRegistration } from "./features/candidateAskForRegistration";
+import { candidateAuthentication } from "./features/candidateAuthentication";
+import { getCandidateWithCandidacy } from "./features/candidateGetCandidateWithCandidacy";
+import { getCandidateByEmail } from "./features/getCandidateByEmail";
 
 const generateJwt = (data: unknown, expiresIn: number = 15 * 60) => {
   const dataStr = JSON.stringify(data);

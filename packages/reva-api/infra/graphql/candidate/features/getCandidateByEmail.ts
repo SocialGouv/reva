@@ -1,8 +1,11 @@
 import { Candidate } from "@prisma/client";
 import { Either, EitherAsync, Left } from "purify-ts";
 
-import { Role } from "../types/account";
-import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
+import { Role } from "../../../../domain/types/account";
+import {
+  FunctionalCodeError,
+  FunctionalError,
+} from "../../../../domain/types/functionalError";
 
 interface GetCandidateByEmailDeps {
   hasRole: (role: Role) => boolean;
