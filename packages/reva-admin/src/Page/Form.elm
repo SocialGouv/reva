@@ -310,13 +310,13 @@ viewEditableElement formData ( elementId, element ) =
             div [ class "w-full" ] []
 
         Checkbox label ->
-            viewFieldsetElement
+            div [ class "mb-8" ]
                 [ viewCheckbox elementId label dataOrDefault
                     |> Checkbox.viewSingle
                 ]
 
         CheckboxWithAriaLabel ariaLabel label ->
-            viewFieldsetElement
+            div [ class "mb-8" ]
                 [ viewCheckbox elementId label dataOrDefault
                     |> Checkbox.singleWithInputAttrs [ Aria.label ariaLabel ]
                     |> Checkbox.viewSingle
@@ -398,7 +398,7 @@ viewEditableElement formData ( elementId, element ) =
                 [ inputView label "Un décimal supérieur ou égal à 0" (Input.decimal 0.5) [ Html.Attributes.min "0" ] ]
 
         Textarea label placeholder ->
-            viewFieldsetElement
+            div [ class "w-full mb-6" ]
                 [ textareaView label placeholder ]
 
         Info label value ->
@@ -429,7 +429,7 @@ viewEditableElement formData ( elementId, element ) =
                 ]
 
         Select label choices ->
-            viewFieldsetElement
+            div [ class "max-w-lg mb-6" ]
                 [ div
                     [ class "fr-select-group" ]
                     [ viewLabel elementId [ text label ]

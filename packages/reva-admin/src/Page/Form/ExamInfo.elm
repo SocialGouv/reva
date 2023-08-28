@@ -25,8 +25,10 @@ form formData _ =
                 |> List.map (\( id, result ) -> ( id, examResultToString result ))
 
         elements =
-            [ ( keys.estimatedExamDate, Form.Date "Date prévisionnelle de passage devant le jury" )
-            , ( keys.actualExamDate, Form.Date "Date réelle de passage devant le jury" )
+            [ ( "dates", Form.Title1 "1 - Dates de passage devant le jury" )
+            , ( keys.estimatedExamDate, Form.Date "Date prévisionnelle" )
+            , ( keys.actualExamDate, Form.Date "Date réelle" )
+            , ( "result", Form.Title1 "2 - Résultat" )
             , ( keys.examResult, Form.Select "Résultat obtenu par le candidat" examResultList )
             ]
     in
