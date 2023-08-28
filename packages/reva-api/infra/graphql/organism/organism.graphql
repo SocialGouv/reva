@@ -6,6 +6,7 @@ type Organism {
   city: String!
   contactAdministrativeEmail: String!
   contactAdministrativePhone: String
+  website: String
   typology: OrganismTypology!
   organismOnDepartments(departmentId: UUID): [OrganismOnDepartment!]!
 }

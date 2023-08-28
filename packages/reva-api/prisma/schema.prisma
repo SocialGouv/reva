@@ -298,6 +298,7 @@ model Organism {
   organismOnDomaine                                      OrganismOnDomaine[]
   organismOnConventionCollective                         OrganismOnConventionCollective[]
   qualiopiCertificateExpiresAt                           DateTime?                                                @map("qualiopi_certificate_expires_at")
+  website                                                String?                                                  @db.VarChar(255)
 
   @@unique([siret, typology])
   @@map("organism")

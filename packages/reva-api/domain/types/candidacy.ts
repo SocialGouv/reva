@@ -144,6 +144,7 @@ export interface Organism {
   legalStatus?: LegalStatus;
   contactAdministrativeEmail: string;
   contactAdministrativePhone: string | null;
+  website: string | null;
   isActive: boolean;
   typology: OrganismTypology;
   qualiopiCertificateExpiresAt: Date | null;

@@ -67,6 +67,7 @@ export interface Organism {
   contactAdministrativeEmail: string;
   contactAdministrativePhone: string | null;
   label: string;
+  website?: string;
   organismOnDepartments?: OrganismOnDepartment[];
 }
 

@@ -14,6 +14,7 @@ const GET_ORGANISMS_FOR_CANDIDACY = gql`
       label
       contactAdministrativeEmail
       contactAdministrativePhone
+      website
       organismOnDepartments(departmentId: $departmentId) {
         id
         isRemote

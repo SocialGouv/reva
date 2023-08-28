@@ -27,8 +27,6 @@ const Organisms: FC<PropsOrganisms> = ({
     alreadySelectedOrganismId
   );
 
-  console.log({ availableOrganisms });
-
   return (
     <RadioGroup
       value={selectedOrganismId || availableOrganisms[0]?.id}
@@ -61,7 +59,13 @@ const Organisms: FC<PropsOrganisms> = ({
                   data-test="project-organisms-organism-label"
                   className=""
                 >
-                  {organism.label}
+                  {organism.website ? (
+                    <a href={organism.website} target="blank">
+                      {organism.label}
+                    </a>
+                  ) : (
+                    organism.label
+                  )}
                 </RadioGroup.Label>
                 <RadioGroup.Description
                   as="address"
