@@ -12,10 +12,10 @@ const filePath = "./referentials/certification-authorities.csv";
 
 import KcAdminClient from "@keycloak/keycloak-admin-client";
 
-import { createAccount } from "../../../domain/features/createAccount";
 import * as accountsDb from "../../../infra/database/postgres/accounts";
 import * as certificationAuthorityDb from "../../../infra/database/postgres/certificationAuthorities";
 import * as organismsDb from "../../../infra/database/postgres/organisms";
+import { createAccount } from "../../../infra/graphql/account/features/createAccount";
 import * as IAM from "../../../infra/iam/keycloak";
 import { readCsvRows } from "../read-csv";
 

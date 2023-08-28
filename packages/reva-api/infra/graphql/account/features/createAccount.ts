@@ -1,9 +1,12 @@
 import { CertificationAuthority } from "@prisma/client";
 import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
-import { IAMAccount } from "../types/account";
-import { Organism } from "../types/candidacy";
-import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
+import { IAMAccount } from "../../../../domain/types/account";
+import { Organism } from "../../../../domain/types/candidacy";
+import {
+  FunctionalCodeError,
+  FunctionalError,
+} from "../../../../domain/types/functionalError";
 
 interface CreateAccountDeps {
   getAccountInIAM: (params: {

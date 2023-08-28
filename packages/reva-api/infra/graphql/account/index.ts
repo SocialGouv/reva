@@ -3,7 +3,6 @@ import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
 import { Left } from "purify-ts";
 
-import { createAccount } from "../../../domain/features/createAccount";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -12,6 +11,7 @@ import * as accountsDb from "../../database/postgres/accounts";
 import * as certificationAuthorityDb from "../../database/postgres/certificationAuthorities";
 import * as organismsDb from "../../database/postgres/organisms";
 import * as IAM from "../../iam/keycloak";
+import { createAccount } from "./features/createAccount";
 
 export const resolvers = {
   Mutation: {
