@@ -1,6 +1,8 @@
 import { FormOptionalFieldsDisclaimer } from "@/components/form/form-optional-fields-disclaimer/FormOptionalFieldsDisclaimer";
-import { MultiSelect } from "@/components/form/multi-select/MultiSelect";
-import { MultiSelectWithAllableSubset } from "@/components/form/multi-select/MultiSelectWithAllableSubset";
+import {
+  MultiSelect,
+  Option as MultiSelectOption,
+} from "@/components/form/multi-select/MultiSelect";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Notice } from "@codegouvfr/react-dsfr/Notice";
 import Select from "@codegouvfr/react-dsfr/Select";
@@ -59,10 +61,6 @@ export const CertificationsInfoStepForm = ({
     goBackToPreviousStep,
     submitCertificationsInfoStep,
   } = useProfessionalSpaceCreationContext();
-
-  const metropoleDepartmentCodes = availableDepartments
-    .filter(({ code }) => !["971", "972", "973", "974", "976"].includes(code))
-    .map(({ code }) => code);
 
   const {
     handleSubmit,
@@ -123,6 +121,51 @@ export const CertificationsInfoStepForm = ({
     [setValue, typologyController.field]
   );
 
+  // Domains
+  const availableDomaineOptions: MultiSelectOption[] = availableDomaines.map(
+    (availableDomaine) => ({
+      label: availableDomaine.label,
+      value: availableDomaine.id,
+    })
+  );
+
+  const selectedDomaineOptions = availableDomaineOptions.filter((option) =>
+    domaineIdsController.field.value.includes(option.value)
+  );
+
+  // Conventions
+  const availableConventionOptions: MultiSelectOption[] =
+    availableConventions.map((availableConvention) => ({
+      label: `${availableConvention.code} ${availableConvention.label}`,
+      value: availableConvention.id,
+    }));
+
+  const selectedConventionOptions = availableConventionOptions.filter(
+    (option) => ccnIdsController.field.value.includes(option.value)
+  );
+
+  // Departments
+  const availableDepartmentOptions: MultiSelectOption[] =
+    availableDepartments.map((department) => ({
+      label: `${department.label} (${department.code})`,
+      value: department.id,
+    }));
+
+  const selectedOnSiteDepartmentOptions = availableDepartmentOptions.filter(
+    (option) => onSiteDepartmentsController.field.value.includes(option.value)
+  );
+
+  const selectedRemoteDepartmentOptions = availableDepartmentOptions.filter(
+    (option) => remoteDepartmentsController.field.value.includes(option.value)
+  );
+
+  const domTomDepartmentOptions = availableDepartments
+    .filter(({ code }) => ["971", "972", "973", "974", "976"].includes(code))
+    .map((department) => ({
+      label: `${department.label} (${department.code})`,
+      value: department.id,
+    }));
+
   return (
     <div className="flex flex-col min-w-[70vw]">
       <Stepper
@@ -157,12 +200,13 @@ export const CertificationsInfoStepForm = ({
               <Notice
                 title={
                   <>
-                    <p className="mb-2">
+                    <span>
                       En tant qu'Architecte Accompagnateur de Parcours
                       généraliste, votre offre de service couvre toutes les
                       certifications hormis celles rattachées aux conventions
                       collectives.
-                    </p>
+                    </span>
+                    <br />
                     <a
                       href="https://airtable.com/shrTDCbwwBI4xLLo9/tblWDa9HN0cuqLnAl"
                       target="_blank"
@@ -180,7 +224,7 @@ export const CertificationsInfoStepForm = ({
                   className="mb-4"
                   title={
                     <>
-                      <p className="mb-2">
+                      <span>
                         En tant qu’Architecte Accompagnateur de Parcours expert
                         de filière(s), votre offre de service couvre l'ensemble
                         des certifications rattachées aux filières
@@ -188,7 +232,8 @@ export const CertificationsInfoStepForm = ({
                         support@vae.gouv.fr , vous pourrez aussi accompagner les
                         certifications rattachées aux conventions collectives de
                         ces filières.
-                      </p>
+                      </span>
+                      <br />
                       <a
                         href="https://airtable.com/shrTDCbwwBI4xLLo9/tblWDa9HN0cuqLnAl"
                         target="_blank"
@@ -205,21 +250,18 @@ export const CertificationsInfoStepForm = ({
                   state={errors?.domaineIds ? "error" : "default"}
                   stateRelatedMessage={errors?.domaineIds?.message}
                   withSelectAll
-                  options={availableDomaines.map((availableDomaine) => ({
-                    label: availableDomaine.label,
-                    value: availableDomaine.id,
-                  }))}
+                  options={availableDomaineOptions}
+                  selectedOptions={selectedDomaineOptions}
                   placeholder={(selectedItemsCount) =>
                     selectedItemsCount
                       ? `${selectedItemsCount} filières séléctionnées`
                       : "Cochez toutes les filières concernées"
                   }
-                  initialSelectedValues={availableDomaines
-                    .filter((ad) =>
-                      domaineIdsController.field.value.includes(ad.id)
-                    )
-                    .map((d) => d.id)}
-                  onChange={domaineIdsController.field.onChange}
+                  onChange={(values) => {
+                    domaineIdsController.field.onChange(
+                      values.map((value) => value.value)
+                    );
+                  }}
                 />
               </>
             )}
@@ -229,13 +271,14 @@ export const CertificationsInfoStepForm = ({
                   className="mb-4"
                   title={
                     <>
-                      <p className="mb-2">
+                      <span>
                         En tant qu’Architecte Accompagnateur de Parcours expert
                         de branche(s), votre offre de service couvre l'ensemble
                         des Certificats de Qualification professionnelle /
                         Titres à visée professionnelle rattachés à une
                         convention collective sélectionnée.
-                      </p>
+                      </span>
+                      <br />
                       <a
                         href="https://airtable.com/shrWVrEQJuZNC7F6U/tblWDa9HN0cuqLnAl"
                         target="_blank"
@@ -252,21 +295,18 @@ export const CertificationsInfoStepForm = ({
                   state={errors?.ccnIds ? "error" : "default"}
                   stateRelatedMessage={errors?.ccnIds?.message}
                   withSelectAll
-                  options={availableConventions.map((availableConvention) => ({
-                    label: `${availableConvention.code} ${availableConvention.label}`,
-                    value: availableConvention.id,
-                  }))}
+                  options={availableConventionOptions}
+                  selectedOptions={selectedConventionOptions}
                   placeholder={(selectedItemsCount) =>
                     selectedItemsCount
                       ? `${selectedItemsCount} conventions collectives séléctionnées`
                       : "Cochez les conventions collectives concernées"
                   }
-                  initialSelectedValues={availableConventions
-                    .filter((ad) =>
-                      ccnIdsController.field.value.includes(ad.id)
-                    )
-                    .map((d) => d.id)}
-                  onChange={ccnIdsController.field.onChange}
+                  onChange={(values) => {
+                    ccnIdsController.field.onChange(
+                      values.map((value) => value.value)
+                    );
+                  }}
                 />
               </>
             )}
@@ -275,49 +315,45 @@ export const CertificationsInfoStepForm = ({
             <legend className="text-xl font-bold text-gray-900 grow mb-4">
               Choix de la zone d'intervention
             </legend>
-            <MultiSelectWithAllableSubset
+            <MultiSelect
               label="Zone d’intervention en présentiel"
               hint="Cochez les départements couverts en présentiel"
-              subsetLabel="toute la France métropolitaine"
-              subsetRefList={metropoleDepartmentCodes}
-              options={availableDepartments.map((department) => ({
-                label: `${department.label} (${department.code})`,
-                value: department.id,
-                subref: department.code,
-              }))}
+              withSelectAll
+              selectAllLabel="Cocher toute la France métropolitaine"
+              unSelectAllLabel="Décocher toute la France métropolitaine"
+              options={availableDepartmentOptions}
+              selectedOptions={selectedOnSiteDepartmentOptions}
+              ignoredOptionsOnSelectAll={domTomDepartmentOptions}
               placeholder={(selectedItemsCount) =>
                 selectedItemsCount
                   ? `${selectedItemsCount} départements séléctionnés`
                   : "Cochez les départements concernés"
               }
-              initialSelectedValues={availableDepartments
-                .filter((ad) =>
-                  onSiteDepartmentsController.field.value.includes(ad.id)
-                )
-                .map((d) => d.id)}
-              onChange={onSiteDepartmentsController.field.onChange}
+              onChange={(values) => {
+                onSiteDepartmentsController.field.onChange(
+                  values.map((value) => value.value)
+                );
+              }}
             />
-            <MultiSelectWithAllableSubset
+            <MultiSelect
               label="Zone d’intervention en distanciel"
               hint="Cochez les départements couverts en distanciel"
-              subsetLabel="toute la France métropolitaine"
-              subsetRefList={metropoleDepartmentCodes}
-              options={availableDepartments.map((department) => ({
-                label: `${department.label} (${department.code})`,
-                value: department.id,
-                subref: department.code,
-              }))}
+              withSelectAll
+              selectAllLabel="Cocher toute la France métropolitaine"
+              unSelectAllLabel="Décocher toute la France métropolitaine"
+              options={availableDepartmentOptions}
+              selectedOptions={selectedRemoteDepartmentOptions}
+              ignoredOptionsOnSelectAll={domTomDepartmentOptions}
               placeholder={(selectedItemsCount) =>
                 selectedItemsCount
                   ? `${selectedItemsCount} départements séléctionnés`
                   : "Cochez les départements concernés"
               }
-              initialSelectedValues={availableDepartments
-                .filter((ad) =>
-                  remoteDepartmentsController.field.value.includes(ad.id)
-                )
-                .map((d) => d.id)}
-              onChange={remoteDepartmentsController.field.onChange}
+              onChange={(values) => {
+                remoteDepartmentsController.field.onChange(
+                  values.map((value) => value.value)
+                );
+              }}
             />
           </fieldset>
         </div>
