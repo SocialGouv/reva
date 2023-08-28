@@ -60,7 +60,7 @@ form maybeCertification _ ( candidacy, referential ) =
         , ( "mandatory-training", Form.Title4 "Formation obligatoire" )
         , ( keys.mandatoryTrainingIds
           , Form.ReadOnlyElement <|
-                Form.CheckboxList "Formations obligatoires sélectionnées" <|
+                Form.CheckboxList "" <|
                     Data.Form.Helper.toIdList referential.mandatoryTrainings
           )
         , ( keys.mandatoryTrainingsHourCount, hourCountElement )
