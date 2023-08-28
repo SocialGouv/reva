@@ -12,7 +12,7 @@ import Page.Form as Form exposing (Form)
 
 
 form : Maybe Certification -> FormData -> ( Candidacy, Referential ) -> Form
-form maybeCertification _ ( candidacy, referential ) =
+form maybeCertification formData ( candidacy, referential ) =
     let
         genders =
             [ Undisclosed
@@ -56,6 +56,15 @@ form maybeCertification _ ( candidacy, referential ) =
         , ( "collective", Form.TitleInlined "Collectif" )
         , ( keys.collectiveHourCount, hourCountElement )
         , ( keys.collectiveCost, costElement )
+        , ( "sum-companion", Form.TitleInlined "Sous-total des accompagnements" )
+        , ( "-h"
+          , Form.Info "Nombre d'heures total accompagnement" <|
+                String.fromFloat (totalCompanionHourCount formData)
+          )
+        , ( "-€"
+          , Form.Info "Coût des heures d'accompagnement" <|
+                String.fromFloat (totalCompanionCost formData)
+          )
         , ( "training", Form.Title2 "Compléments formatifs" )
         , ( "mandatory-training", Form.Title3 "Formation obligatoire" )
         , ( keys.mandatoryTrainingIds
@@ -100,3 +109,42 @@ costElement =
 hourCountElement : Form.Element
 hourCountElement =
     Form.HourCount "Nombre d'heures"
+
+
+totalCompanionHourCount : FormData -> Float
+totalCompanionHourCount formData =
+    let
+        decode =
+            Data.Form.Helper.decode keys formData
+
+        float f =
+            decode.float f 0
+    in
+    float .individualHourCount
+        + float .collectiveHourCount
+
+
+totalCompanionCost : FormData -> Float
+totalCompanionCost formData =
+    let
+        decode =
+            Data.Form.Helper.decode keys formData
+
+        float f =
+            decode.float f 0
+
+        roundCost =
+            (\x -> x * 100)
+                >> truncate
+                >> toFloat
+                >> (\x -> x / 100)
+
+        cost =
+            (float .individualHourCount * float .individualCost)
+                + (float .collectiveHourCount * float .collectiveCost)
+    in
+    roundCost cost
+
+
+
+-- cost
