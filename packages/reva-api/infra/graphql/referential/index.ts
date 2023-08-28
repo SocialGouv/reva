@@ -1,12 +1,5 @@
 import mercurius from "mercurius";
 
-import { getCertifications } from "../../../domain/features/getCertifications";
-import { getDegrees } from "../../../domain/features/getDegrees";
-import { getDepartments } from "../../../domain/features/getDepartments";
-import { getDropOutReasons } from "../../../domain/features/getDropOutReasons";
-import { getRegions } from "../../../domain/features/getRegions";
-import { getReorientationReasons } from "../../../domain/features/getReorientationReasons";
-import { getVulnerabilityIndicators } from "../../../domain/features/getVulnerabilityIndicators";
 import * as certificationsDb from "../../database/postgres/certifications";
 import { prismaClient } from "../../database/postgres/client";
 import * as degreesDb from "../../database/postgres/degrees";
@@ -15,6 +8,13 @@ import * as goalsDb from "../../database/postgres/goals";
 import * as locationsDb from "../../database/postgres/locations";
 import * as reorientationReasonsDb from "../../database/postgres/reorientationReasons";
 import * as vulnerabilityIndicatorsDb from "../../database/postgres/vulnerabilityIndicators";
+import { getCertifications } from "./features/getCertifications";
+import { getDegrees } from "./features/getDegrees";
+import { getDepartments } from "./features/getDepartments";
+import { getDropOutReasons } from "./features/getDropOutReasons";
+import { getRegions } from "./features/getRegions";
+import { getReorientationReasons } from "./features/getReorientationReasons";
+import { getVulnerabilityIndicators } from "./features/getVulnerabilityIndicators";
 
 export const resolvers = {
   Query: {

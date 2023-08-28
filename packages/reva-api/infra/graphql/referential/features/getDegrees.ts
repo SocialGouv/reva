@@ -1,7 +1,10 @@
 import { Either, EitherAsync } from "purify-ts";
 
-import { Degree } from "../types/candidacy";
-import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
+import { Degree } from "../../../../domain/types/candidacy";
+import {
+  FunctionalCodeError,
+  FunctionalError,
+} from "../../../../domain/types/functionalError";
 
 interface GetDegreesDeps {
   getDegrees: () => Promise<Either<string, Degree[]>>;

@@ -1,7 +1,10 @@
 import { Either, EitherAsync } from "purify-ts";
 
-import { Region } from "../types/candidacy";
-import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
+import { Region } from "../../../../domain/types/candidacy";
+import {
+  FunctionalCodeError,
+  FunctionalError,
+} from "../../../../domain/types/functionalError";
 
 interface GetRegionsDeps {
   getRegions: () => Promise<Either<string, Region[]>>;

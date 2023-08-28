@@ -1,7 +1,10 @@
 import { Either, EitherAsync } from "purify-ts";
 
-import { ReorientationReason } from "../types/candidacy";
-import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
+import { ReorientationReason } from "../../../../domain/types/candidacy";
+import {
+  FunctionalCodeError,
+  FunctionalError,
+} from "../../../../domain/types/functionalError";
 
 interface GetReorientationReasonsDeps {
   getReorientationReasons: () => Promise<Either<string, ReorientationReason[]>>;
