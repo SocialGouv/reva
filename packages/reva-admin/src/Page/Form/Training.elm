@@ -15,9 +15,13 @@ form _ ( _, referential ) =
             Data.Form.Training.keys
     in
     { elements =
-        [ ( keys.individualHourCount, Form.Number "Nombre d'heures d'accompagnement individuel" )
+        [ ( "hours", Form.Title1 "1 - Nombre d'heures" )
+        , ( "companion", Form.Title2 "Accompagnement" )
+        , ( keys.individualHourCount, Form.Number "Nombre d'heures d'accompagnement individuel" )
         , ( keys.collectiveHourCount, Form.Number "Nombre d'heures d'accompagnement collectif" )
-        , ( keys.additionalHourCount, Form.Number "Nombre d'heures de formations complémentaires" )
+        , ( "training-hours", Form.Title2 "Formations complémentaires" )
+        , ( keys.additionalHourCount, Form.Number "Nombre d'heures" )
+        , ( "training", Form.Title1 "2 - Compléments formatifs" )
         , ( keys.mandatoryTrainings
           , Form.CheckboxList "Formations obligatoires" <|
                 Data.Form.Helper.toIdList referential.mandatoryTrainings

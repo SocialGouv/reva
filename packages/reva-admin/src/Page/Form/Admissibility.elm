@@ -33,10 +33,12 @@ form formData _ =
                   )
                 ]
                 (if not admissibilityFromForm.isCandidateAlreadyAdmissible then
-                    [ ( keys.reportSentAt, Form.Date "Date d'envoi du dossier de la faisabilité" )
+                    [ ( "dates", Form.Title1 "1 - Dates" )
+                    , ( keys.reportSentAt, Form.Date "Date d'envoi du dossier de la faisabilité" )
                     , ( keys.certifierRespondedAt, Form.Date "Date du prononcé de la recevabilité" )
                     , ( keys.responseAvailableToCandidateAt, Form.Date "Date de réception de l'avis de recevabilité" )
-                    , ( keys.status, Form.RadioList "Avis de recevabilité du certificateur" statusList )
+                    , ( "admissibility", Form.Title1 "2 - Avis de recevabilité du certificateur" )
+                    , ( keys.status, Form.RadioList "" statusList )
                     ]
 
                  else
