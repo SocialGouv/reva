@@ -57,9 +57,14 @@ dateToString time =
         |> Date.toIsoString
 
 
-decimalFromString : String -> Decimal
+decimalFromString : String -> Maybe Decimal
 decimalFromString stringValue =
-    Admin.Scalar.Decimal stringValue
+    case stringValue of
+        "" ->
+            Nothing
+
+        _ ->
+            Just (Admin.Scalar.Decimal stringValue)
 
 
 decimalToString : Decimal -> String
@@ -119,7 +124,7 @@ float keys dict key default =
 
 decimal : keys -> Dict.Dict String String -> (keys -> String) -> Decimal -> Decimal
 decimal keys dict key default =
-    generic keys dict key decimalFromString default
+    generic keys dict key (decimalFromString >> Maybe.withDefault default) default
 
 
 string : keys -> Dict.Dict String String -> (keys -> String) -> String -> String
