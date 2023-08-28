@@ -9,10 +9,16 @@ import {
   Right,
 } from "purify-ts";
 
-import { UploadedFile } from "../../infra/rest/proof-upload";
-import { FileUploadSpoolerEntry, PaymentRequest } from "../types/candidacy";
-import { FundingRequest } from "../types/candidate";
-import { FunctionalCodeError, FunctionalError } from "../types/functionalError";
+import {
+  FileUploadSpoolerEntry,
+  PaymentRequest,
+} from "../../../../../domain/types/candidacy";
+import { FundingRequest } from "../../../../../domain/types/candidate";
+import {
+  FunctionalCodeError,
+  FunctionalError,
+} from "../../../../../domain/types/functionalError";
+import { UploadedFile } from "../finance.routes";
 
 interface AddPaymentProofDeps {
   getPaymentRequestByCandidacyId: (params: {
@@ -89,7 +95,9 @@ export const addPaymentProof =
       return EitherAsync.fromPromise(async () => {
         if (data.fileContent) {
           if (data.fileContent.byteLength > fileMaxSize) {
-            return Left("Le fichier envoyé dépasse la taille maximale acceptée");
+            return Left(
+              "Le fichier envoyé dépasse la taille maximale acceptée"
+            );
           }
           const spoolerIdEither = await addFileToUploadSpooler({
             description: data.description,

@@ -11,9 +11,9 @@ import fastify, {
 } from "fastify";
 
 import { feasibilityFileUploadRoute } from "../graphql/feasibility/feasibility.routes";
+import proofUploadRoute from "../graphql/finance/unireva/finance.routes";
 import { logger } from "../logger";
 import { restRoutes } from "../rest";
-import proofUploadRoute from "../rest/proof-upload";
 import { mercuriusGraphQL } from "./mercurius";
 import keycloakAdminPlugin from "./plugins/keycloak-admin-plugin";
 import keycloakPlugin from "./plugins/keycloak-plugin";

@@ -1,13 +1,13 @@
 import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
-import { addPaymentProof } from "../../domain/features/addPaymentProof";
-import { canManageCandidacy } from "../../domain/features/canManageCandidacy";
-import { getAccountFromKeycloakId } from "../database/postgres/accounts";
-import { getCandidacyFromId } from "../database/postgres/candidacies";
-import { addFileToUploadSpooler } from "../database/postgres/fileUploadSpooler";
-import { getFundingRequest } from "../database/postgres/fundingRequests";
-import { getPaymentRequestByCandidacyId } from "../database/postgres/paymentRequest";
+import { canManageCandidacy } from "../../../../domain/features/canManageCandidacy";
+import { getAccountFromKeycloakId } from "../../../database/postgres/accounts";
+import { getCandidacyFromId } from "../../../database/postgres/candidacies";
+import { addFileToUploadSpooler } from "../../../database/postgres/fileUploadSpooler";
+import { getFundingRequest } from "../../../database/postgres/fundingRequests";
+import { getPaymentRequestByCandidacyId } from "../../../database/postgres/paymentRequest";
+import { addPaymentProof } from "./features/addPaymentProof";
 
 export interface UploadedFile {
   data: Buffer;
