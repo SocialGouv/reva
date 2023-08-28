@@ -63,6 +63,7 @@ type Element
     | InputRequired String
     | Number String
     | Price String
+    | HourCount String
     | ReadOnlyElement Element
     | ReadOnlyElements (List ( String, Element ))
     | Requirements String (List String)
@@ -390,6 +391,10 @@ viewEditableElement formData ( elementId, element ) =
             viewFieldsetElement
                 [ inputView label "Un décimal supérieur ou égal à 0" (Input.decimal 0.01) [ Html.Attributes.min "0" ] ]
 
+        HourCount label ->
+            viewFieldsetElement
+                [ inputView label "Un décimal supérieur ou égal à 0" (Input.decimal 0.5) [ Html.Attributes.min "0" ] ]
+
         Textarea label placeholder ->
             viewFieldsetElement
                 [ textareaView label placeholder ]
@@ -539,6 +544,9 @@ viewReadOnlyElement formData ( elementId, element ) =
             defaultView label dataOrDefault
 
         Price label ->
+            defaultView label dataOrDefault
+
+        HourCount label ->
             defaultView label dataOrDefault
 
         Textarea label _ ->

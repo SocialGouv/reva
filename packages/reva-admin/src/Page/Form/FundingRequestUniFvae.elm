@@ -99,4 +99,4 @@ costElement =
 
 hourCountElement : Form.Element
 hourCountElement =
-    Form.Number "Nombre d'heures"
+    Form.HourCount "Nombre d'heures"
