@@ -9,6 +9,7 @@ import Data.Referential exposing (Referential)
 import Page.Form as Form exposing (Form)
 import Page.Form.FundingRequestUniReva as FundingRequest
 import String exposing (String)
+import View.Form
 
 
 keys =
@@ -36,93 +37,101 @@ form maybeCertification formData ( candidacy, referential ) =
 
         costElement =
             Form.Price "Coût horaire"
+
+        emptyColumn =
+            ( "", Form.StaticHtml <| View.Form.column [] [] )
     in
     { elements =
         [ ( "heading", Form.Title1 "1 - Informations des prestations" )
-        , ( "selected-certification", Form.Title2 "Certification choisie par le candidat" )
+        , ( "selected-certification", Form.Title1 "Certification choisie par le candidat" )
         , ( "certification"
           , maybeCertification
                 |> Maybe.map (.label >> Form.Info "")
                 |> Maybe.withDefault Form.Empty
           )
-        , ( "funding-num-action", Form.Title2 "Numéro de prise en charge France VAE" )
+        , ( "funding-num-action", Form.Title1 "2 - Numéro de prise en charge France VAE" )
         , ( "num-action"
           , Data.Form.get keys.numAction formData
                 |> Maybe.map (Form.Info "")
                 |> Maybe.withDefault Form.Empty
           )
-        , ( "organism", Form.Title2 "Accompagnement architecte de parcours" )
-        , ( "diagnosis", Form.Title3 "Entretien(s) de faisabilité" )
+        , ( "organism", Form.Title1 "3 - Parcours personnalisé" )
+        , ( "organism", Form.Title2 "Entretien(s)" )
+        , ( "diagnosis", Form.TitleInlined "Entretien(s) de faisabilité" )
         , ( "diagnosisReview"
           , Form.ReadOnlyElements
                 [ ( keys.diagnosisEstimatedHourCount, estimatedHourCountElement )
                 , ( keys.diagnosisEstimatedCost, estimatedCostElement )
                 ]
           )
+        , emptyColumn
         , ( keys.diagnosisHourCount, hourCountElement )
         , ( keys.diagnosisCost, costElement )
-        , ( "post-exam", Form.Title3 "Entretien post jury" )
+        , ( "post-exam", Form.TitleInlined "Entretien post jury" )
         , ( "diagnosisReview"
           , Form.ReadOnlyElements
                 [ ( keys.postExamEstimatedHourCount, estimatedHourCountElement )
                 , ( keys.postExamEstimatedCost, estimatedCostElement )
                 ]
           )
+        , emptyColumn
         , ( keys.postExamHourCount, hourCountElement )
         , ( keys.postExamCost, costElement )
-        , ( "companion", Form.Title2 "Accompagnement méthodologique" )
+        , ( "companion", Form.Title2 "Accompagnement" )
         , ( keys.companionId
           , Form.ReadOnlyElement <|
                 Form.Select "Accompagnateur choisi par le candidat" availableCompanions
           )
-        , ( "individual", Form.Title3 "Accompagnement individuel" )
+        , ( "individual", Form.TitleInlined "Individuel" )
         , ( "individualReview"
           , Form.ReadOnlyElements
                 [ ( keys.individualEstimatedHourCount, estimatedHourCountElement )
                 , ( keys.individualEstimatedCost, estimatedCostElement )
                 ]
           )
+        , emptyColumn
         , ( keys.individualHourCount, hourCountElement )
         , ( keys.individualCost, costElement )
-        , ( "collective", Form.Title3 "Accompagnement collectif" )
+        , ( "collective", Form.TitleInlined "Collectif" )
         , ( "individualReview"
           , Form.ReadOnlyElements
                 [ ( keys.collectiveEstimatedHourCount, estimatedHourCountElement )
                 , ( keys.collectiveEstimatedCost, estimatedCostElement )
                 ]
           )
+        , emptyColumn
         , ( keys.collectiveHourCount, hourCountElement )
         , ( keys.collectiveCost, costElement )
-        , ( "training", Form.Title2 "Actes formatifs" )
-        , ( "mandatory", Form.Title3 "Formations obligatoires" )
-        , ( keys.mandatoryTrainingIds
-          , Form.ReadOnlyElement <|
-                Form.CheckboxList "Formations obligatoires sélectionnées" <|
-                    Data.Form.Helper.toIdList referential.mandatoryTrainings
-          )
+        , ( "training", Form.Title2 "Compléments formatifs" )
+        , ( "mandatory", Form.TitleInlined "Formations" )
         , ( "mandatoryTrainingsReview"
           , Form.ReadOnlyElements
                 [ ( keys.mandatoryTrainingsEstimatedHourCount, Form.ReadOnlyElement <| Form.Number "Nb d'heures prévues" )
                 , ( keys.mandatoryTrainingsEstimatedCost, Form.ReadOnlyElement <| estimatedCostElement )
                 ]
           )
+        , ( keys.mandatoryTrainingIds
+          , Form.ReadOnlyElement <|
+                Form.CheckboxList "Formations obligatoires sélectionnées" <|
+                    Data.Form.Helper.toIdList referential.mandatoryTrainings
+          )
         , ( keys.mandatoryTrainingsHourCount, hourCountElement )
         , ( keys.mandatoryTrainingsCost, costElement )
-        , ( "basic-skills", Form.Title3 "Formations savoirs de base" )
-        , ( keys.basicSkillsIds
-          , Form.ReadOnlyElement <|
-                Form.CheckboxList "Formations savoirs de base sélectionnées" <|
-                    Data.Form.Helper.toIdList referential.basicSkills
-          )
+        , ( "basic-skills", Form.TitleInlined "Savoirs de base" )
         , ( "basicSkillsReview"
           , Form.ReadOnlyElements
                 [ ( keys.basicSkillsEstimatedHourCount, estimatedHourCountElement )
                 , ( keys.basicSkillsEstimatedCost, estimatedCostElement )
                 ]
           )
+        , ( keys.basicSkillsIds
+          , Form.ReadOnlyElement <|
+                Form.CheckboxList "Formations savoirs de base sélectionnées" <|
+                    Data.Form.Helper.toIdList referential.basicSkills
+          )
         , ( keys.basicSkillsHourCount, hourCountElement )
         , ( keys.basicSkillsCost, costElement )
-        , ( "skills", Form.Title3 "Bloc de compétences certifiant" )
+        , ( "skills", Form.TitleInlined "Bloc de compétences" )
         , ( keys.certificateSkills, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
         , ( "certificateSkillsReview"
           , Form.ReadOnlyElements
@@ -130,17 +139,19 @@ form maybeCertification formData ( candidacy, referential ) =
                 , ( keys.certificateSkillsEstimatedCost, estimatedCostElement )
                 ]
           )
+        , ( "", Form.StaticHtml <| View.Form.column [] [] )
         , ( keys.certificateSkillsHourCount, hourCountElement )
         , ( keys.certificateSkillsCost, costElement )
-        , ( "other", Form.Title3 "Autres actions de formations complémentaires" )
+        , ( "other", Form.TitleInlined "Autres actions de formations" )
         , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "Formations complémentaires" Nothing )
         , ( keys.otherTrainingHourCount, hourCountElement )
         , ( keys.otherTrainingCost, costElement )
+        , ( "total-training", Form.TitleInlined "Total" )
         , ( keys.totalTrainingHourCount
           , Form.Info "Nb d'heures total actes formatifs" <|
                 String.fromInt (FundingRequest.totalTrainingHourCount formData)
           )
-        , ( "jury", Form.Title3 "Prestation jury" )
+        , ( "jury", Form.Title2 "Prestation jury" )
         , ( "examReview"
           , Form.ReadOnlyElements
                 [ ( keys.examEstimatedHourCount, estimatedHourCountElement )
@@ -149,7 +160,7 @@ form maybeCertification formData ( candidacy, referential ) =
           )
         , ( keys.examHourCount, hourCountElement )
         , ( keys.examCost, costElement )
-        , ( "total", Form.Title2 "Total" )
+        , ( "total", Form.Title1 "Total" )
         , FundingRequest.totalCostSection "Coût total de la demande de paiement" formData
         , ( "", Form.Break )
         , ( keys.invoiceNumber, Form.InputRequired "Numéro de facture" )

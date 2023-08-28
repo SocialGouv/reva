@@ -48,19 +48,19 @@ form maybeCertification formData ( candidacy, referential ) =
     in
     { elements =
         commonFields maybeCertification
-            ++ [ ( "post-exam", Form.Title3 "Entretien post jury" )
+            ++ [ ( "post-exam", Form.Title2 "Entretien post jury" )
                , ( keys.postExamHourCount, hourCountElement )
                , ( keys.postExamCost, costElement )
-               , ( "companion", Form.Title2 "Accompagnement méthodologique" )
+               , ( "companion", Form.Title1 "Accompagnement méthodologique" )
                , ( keys.companionId, Form.Select "Accompagnateur choisi par le candidat" availableCompanions )
-               , ( "individual", Form.Title3 "Accompagnement individuel" )
+               , ( "individual", Form.Title2 "Accompagnement individuel" )
                , ( keys.individualHourCount, hourCountElement )
                , ( keys.individualCost, costElement )
-               , ( "collective", Form.Title3 "Accompagnement collectif" )
+               , ( "collective", Form.Title2 "Accompagnement collectif" )
                , ( keys.collectiveHourCount, hourCountElement )
                , ( keys.collectiveCost, costElement )
-               , ( "training", Form.Title2 "Actes formatifs" )
-               , ( "mandatory", Form.Title3 "Formations obligatoires" )
+               , ( "training", Form.Title1 "Actes formatifs" )
+               , ( "mandatory", Form.Title2 "Formations obligatoires" )
                , ( keys.mandatoryTrainingIds
                  , Form.ReadOnlyElement <|
                     Form.CheckboxList "Formations obligatoires sélectionnées" <|
@@ -74,7 +74,7 @@ form maybeCertification formData ( candidacy, referential ) =
                  , costElement
                     |> withCheckedRequired referential.mandatoryTrainings
                  )
-               , ( "basic-skills", Form.Title3 "Formations savoirs de base" )
+               , ( "basic-skills", Form.Title2 "Formations savoirs de base" )
                , ( keys.basicSkillsIds
                  , Form.ReadOnlyElement <|
                     Form.CheckboxList "Formations savoirs de base sélectionnées" <|
@@ -88,7 +88,7 @@ form maybeCertification formData ( candidacy, referential ) =
                  , costElement
                     |> withCheckedRequired referential.basicSkills
                  )
-               , ( "skills", Form.Title3 "Bloc de compétences certifiant" )
+               , ( "skills", Form.Title2 "Bloc de compétences certifiant" )
                , ( keys.certificateSkills, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
                , ( keys.certificateSkillsHourCount
                  , hourCountElement
@@ -98,7 +98,7 @@ form maybeCertification formData ( candidacy, referential ) =
                  , costElement
                     |> withRequired hasCertificateSkills
                  )
-               , ( "other", Form.Title3 "Autres actions de formations complémentaires" )
+               , ( "other", Form.Title2 "Autres actions de formations complémentaires" )
                , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
                , ( keys.otherTrainingHourCount, hourCountElement )
                , ( keys.otherTrainingCost, costElement )
@@ -106,7 +106,7 @@ form maybeCertification formData ( candidacy, referential ) =
                  , Form.Info "Nombre d'heures total actes formatifs" <|
                     String.fromInt (totalTrainingHourCount formData)
                  )
-               , ( "jury", Form.Title3 "Prestation jury" )
+               , ( "jury", Form.Title2 "Prestation jury" )
                , ( keys.examHourCount, hourCountElement )
                , ( keys.examCost, costElement )
                , totalSection
@@ -158,7 +158,7 @@ commonFields maybeCertification =
             |> Maybe.withDefault Form.Empty
       )
     , ( "organism", Form.Title2 "Accompagnement architecte de parcours" )
-    , ( "diagnosis", Form.Title3 "Entretien(s) de faisabilité" )
+    , ( "diagnosis", Form.Title1 "Entretien(s) de faisabilité" )
     , ( keys.diagnosisHourCount, hourCountElement )
     , ( keys.diagnosisCost, costElement )
     ]
@@ -182,7 +182,7 @@ keys =
 
 totalSection : ( String, Form.Element )
 totalSection =
-    ( "total", Form.Title2 "Total" )
+    ( "total", Form.Title1 "Total" )
 
 
 totalCostSection : String -> FormData -> ( String, Form.Element )
