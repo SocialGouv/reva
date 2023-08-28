@@ -54,15 +54,15 @@ layout : String -> List (Html msg) -> List (Html msg) -> List (Html msg) -> Html
 layout navButtonLabel upperNavContent navContent content =
     baseLayout
         [ div
-            [ class "fr-col-12 fr-col-md-4" ]
+            [ class "fr-col-12 fr-col-md-3 fr-col-lg-4" ]
             [ nav
                 [ role "navigation"
                 , attribute "aria-label" "Menu latéral"
                 , class "fr-sidemenu bg-white"
-                , class "h-full md:pl-2 pr-0 py-2 md:py-6"
+                , class "h-full lg:pl-2 pr-0 py-2 md:py-6"
                 ]
                 [ div
-                    [ class "h-full md:border-r" ]
+                    [ class "h-full md:border-r mr-1 lg:mr-0" ]
                     [ if upperNavContent == [] then
                         div [] []
 
@@ -70,13 +70,13 @@ layout navButtonLabel upperNavContent navContent content =
                         div
                             [ class "fr-sidemenu__inner"
                             , class "shadow-none pr-0"
-                            , class "flex items-center pl-6 my-4 md:my-0 md:pl-4"
+                            , class "flex items-center pl-2 lg:pl-6 my-4 md:my-0"
                             ]
                             upperNavContent
                     , div
                         [ class "fr-sidemenu__inner"
                         , class "shadow-none pr-0"
-                        , class "h-full pl-4 md:pb-24"
+                        , class "h-full lg:pl-4 md:pb-24"
                         ]
                       <|
                         -- When the nav context is empty, we remove the wrapper.
@@ -101,7 +101,7 @@ layout navButtonLabel upperNavContent navContent content =
                 ]
             ]
         , div
-            [ class "fr-col-12 fr-col-md-8 pt-3 md:pt-0" ]
+            [ class "fr-col-12 fr-col-md-9 fr-col-lg-8 pt-3 md:pt-0" ]
             content
         ]
 

@@ -364,7 +364,7 @@ viewEditableElement formData ( elementId, element ) =
         Title3 title ->
             legend
                 []
-                [ h4 [ class "text-base font-medium -mt-14 -ml-8" ] [ text title ] ]
+                [ h4 [ class "text-base font-medium -mt-14 -ml-5" ] [ text title ] ]
 
         Title4 title ->
             legend
@@ -379,7 +379,7 @@ viewEditableElement formData ( elementId, element ) =
         TitleInlined title ->
             h5
                 [ class "text-base font-normal h-10"
-                , class "w-full md:w-[120px] xl:w-[180px]"
+                , class "w-full md:w-[120px] xl:w-[190px]"
                 ]
                 [ text title ]
 
@@ -502,11 +502,27 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> Checkbox.viewSingle
 
         CheckboxList label choices ->
+            choices
+                |> List.filter (\( choiceId, _ ) -> get choiceId formData /= Nothing)
+                |> List.map
+                    (\( _, choice ) ->
+                        p
+                            [ class "fr-tag fr-tag--sm" ]
+                            [ text choice ]
+                    )
+                |> div
+                    [ class "h-full flex items-start flex-wrap gap-2"
+                    , class "h-auto min-h-[120px] max-h-[220px]"
+                    , class "overflow-auto mb-5 md:mb-0"
+                    , class "w-full md:w-[120px] xl:w-[190px]"
+                    ]
+
+        {--
             (\choiceId -> get choiceId formData)
                 |> viewCheckboxList elementId label choices
                 |> Checkbox.groupWithDisabled True
                 |> Checkbox.viewGroup
-
+-}
         RadioList label choices ->
             get elementId formData
                 |> viewRadioList elementId label choices
@@ -798,14 +814,23 @@ viewFieldsets formData elements =
     let
         wrapWithElement : List (Html msg) -> List (Html msg)
         wrapWithElement l =
-            List.map (\e -> div [ class "border-b pb-4 mb-10" ] [ e ]) l
+            -- The first element is a legend. The second element doesn't need a top border :
+            List.map
+                (\e ->
+                    div
+                        [ class "border-t pt-10 mb-6"
+                        , class "[&:nth-child(2)]:border-none [&:nth-child(2)]:pt-0"
+                        ]
+                        [ e ]
+                )
+                l
 
         wrapWithBorderedElement : List (Html msg) -> List (Html msg)
         wrapWithBorderedElement l =
             List.map
                 (\e ->
                     div
-                        [ class "w-full px-6 md:px-3 lg:pl-8 lg:pr-0 pt-5 my-8"
+                        [ class "w-full px-6 md:px-3 lg:pl-5 lg:pr-0 pt-5 my-8"
                         , class "border rounded-xl"
                         ]
                         [ e ]
@@ -820,7 +845,7 @@ viewFieldsets formData elements =
                         [ class "relative w-full pb-8 last:pb-0 [&:last-child_hr]:hidden" ]
                         [ e
                         , -- We use an absolute hr instead of a border-b to escape the parent padding
-                          hr [ class "absolute bottom-0 left-0 lg:left-[-32px] right-0" ] []
+                          hr [ class "absolute bottom-0 left-0 lg:left-[-21px] right-0" ] []
                         ]
                 )
                 l
