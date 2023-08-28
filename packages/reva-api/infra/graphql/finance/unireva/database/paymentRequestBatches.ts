@@ -1,8 +1,8 @@
 import { Left, Right } from "purify-ts";
 
-import { PaymentRequestBatch } from "../../../domain/types/candidacy";
-import { logger } from "../../logger";
-import { prismaClient } from "./client";
+import { prismaClient } from "../../../../database/postgres/client";
+import { logger } from "../../../../logger";
+import { PaymentRequestBatch } from "../finance.types";
 
 export const createPaymentRequestBatch = async (params: {
   paymentRequestId: string;

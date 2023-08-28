@@ -1,12 +1,12 @@
 import { Either, Left, Maybe, Right } from "purify-ts";
 
-import * as domain from "../../../domain/types/candidacy";
-import { logger } from "../../logger";
-import { prismaClient } from "./client";
+import { prismaClient } from "../../../../database/postgres/client";
+import { logger } from "../../../../logger";
+import { PaymentRequest } from "../finance.types";
 
 export const getPaymentRequestByCandidacyId = async (params: {
   candidacyId: string;
-}): Promise<Either<string, Maybe<domain.PaymentRequest>>> => {
+}): Promise<Either<string, Maybe<PaymentRequest>>> => {
   try {
     const paymentRequest = await prismaClient.paymentRequest.findUnique({
       where: {
@@ -25,8 +25,8 @@ export const getPaymentRequestByCandidacyId = async (params: {
 
 export const createPaymentRequest = async (params: {
   candidacyId: string;
-  paymentRequest: domain.PaymentRequest;
-}): Promise<Either<string, domain.PaymentRequest>> => {
+  paymentRequest: PaymentRequest;
+}): Promise<Either<string, PaymentRequest>> => {
   try {
     const paymentRequest = await prismaClient.paymentRequest.create({
       data: {
@@ -46,8 +46,8 @@ export const createPaymentRequest = async (params: {
 
 export const updatePaymentRequest = async (params: {
   paymentRequestId: string;
-  paymentRequest: domain.PaymentRequest;
-}): Promise<Either<string, domain.PaymentRequest>> => {
+  paymentRequest: PaymentRequest;
+}): Promise<Either<string, PaymentRequest>> => {
   try {
     const paymentRequest = await prismaClient.paymentRequest.update({
       where: { id: params.paymentRequestId },

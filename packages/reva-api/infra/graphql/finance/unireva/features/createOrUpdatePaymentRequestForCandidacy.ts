@@ -1,14 +1,11 @@
 import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
-import { PaymentRequest } from "../../../../../domain/types/candidacy";
-import {
-  Candidate,
-  FundingRequest,
-} from "../../../../../domain/types/candidate";
+import { Candidate } from "../../../../../domain/types/candidate";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../../domain/types/functionalError";
+import { FundingRequest, PaymentRequest } from "../finance.types";
 import {
   getTotalCost,
   validateIndividualCosts,

@@ -1,8 +1,8 @@
 import { FileUploadSpooler } from "@prisma/client";
 import { Either, Left, Right } from "purify-ts";
 
-import { logger } from "../../logger";
-import { prismaClient } from "./client";
+import { prismaClient } from "../../../../database/postgres/client";
+import { logger } from "../../../../logger";
 
 export const addFileToUploadSpooler = async ({
   destinationFileName,

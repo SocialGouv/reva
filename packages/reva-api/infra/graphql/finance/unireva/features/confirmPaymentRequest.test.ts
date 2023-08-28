@@ -1,10 +1,7 @@
 import { Decimal } from "@prisma/client/runtime";
 
-import {
-  Candidacy,
-  PaymentRequest,
-} from "../../../../../domain/types/candidacy";
-import { FundingRequest } from "../../../../../domain/types/candidate";
+import { Candidacy } from "../../../../../domain/types/candidacy";
+import { FundingRequest, PaymentRequest } from "../finance.types";
 import { mapPaymentRequestBatchContent } from "./confirmPaymentRequest";
 
 describe("payment request", () => {

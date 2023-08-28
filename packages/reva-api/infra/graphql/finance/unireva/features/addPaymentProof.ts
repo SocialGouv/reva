@@ -10,15 +10,15 @@ import {
 } from "purify-ts";
 
 import {
-  FileUploadSpoolerEntry,
-  PaymentRequest,
-} from "../../../../../domain/types/candidacy";
-import { FundingRequest } from "../../../../../domain/types/candidate";
-import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../../domain/types/functionalError";
 import { UploadedFile } from "../finance.routes";
+import {
+  FileUploadSpoolerEntry,
+  FundingRequest,
+  PaymentRequest,
+} from "../finance.types";
 
 interface AddPaymentProofDeps {
   getPaymentRequestByCandidacyId: (params: {

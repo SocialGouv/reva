@@ -1,11 +1,8 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { Left, Maybe, Right } from "purify-ts";
 
-import { PaymentRequest } from "../../../../../domain/types/candidacy";
-import {
-  Candidate,
-  FundingRequest,
-} from "../../../../../domain/types/candidate";
+import { Candidate } from "../../../../../domain/types/candidate";
+import { FundingRequest, PaymentRequest } from "../finance.types";
 import { createOrUpdatePaymentRequestForCandidacy } from "./createOrUpdatePaymentRequestForCandidacy";
 
 const defaultValidPaymentRequest: PaymentRequest = {

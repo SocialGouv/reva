@@ -3,10 +3,10 @@ import { FastifyPluginAsync } from "fastify";
 
 import { getAccountFromKeycloakId } from "../../../database/postgres/accounts";
 import { getCandidacyFromId } from "../../../database/postgres/candidacies";
-import { addFileToUploadSpooler } from "../../../database/postgres/fileUploadSpooler";
-import { getFundingRequest } from "../../../database/postgres/fundingRequests";
-import { getPaymentRequestByCandidacyId } from "../../../database/postgres/paymentRequest";
 import { canManageCandidacy } from "../../candidacy/features/canManageCandidacy";
+import { addFileToUploadSpooler } from "./database/fileUploadSpooler";
+import { getFundingRequest } from "./database/fundingRequests";
+import { getPaymentRequestByCandidacyId } from "./database/paymentRequest";
 import { addPaymentProof } from "./features/addPaymentProof";
 
 export interface UploadedFile {

@@ -1,5 +1,4 @@
 import { CandidacyStatusStep } from "@prisma/client";
-import { Decimal } from "@prisma/client/runtime/library";
 
 interface CandidacyAbstract {
   deviceId: string;
@@ -39,7 +38,6 @@ export interface Candidacy extends CandidacyAbstract {
   candidacyDropOut?: CandidacyDropOut | null;
   reorientationReason?: ReorientationReason | null;
   createdAt: Date;
-  paymentRequest?: PaymentRequest | null;
 }
 
 export interface CandidacyStatus {
@@ -196,68 +194,6 @@ export interface Admissibility {
 }
 
 export type AdmissibilityStatus = "ADMISSIBLE" | "NOT_ADMISSIBLE";
-
-export interface PaymentRequest {
-  id: string;
-  diagnosisEffectiveHourCount: number;
-  diagnosisEffectiveCost: Decimal;
-  postExamEffectiveHourCount: number;
-  postExamEffectiveCost: Decimal;
-  individualEffectiveHourCount: number;
-  individualEffectiveCost: Decimal;
-  collectiveEffectiveHourCount: number;
-  collectiveEffectiveCost: Decimal;
-  mandatoryTrainingsEffectiveHourCount: number;
-  mandatoryTrainingsEffectiveCost: Decimal;
-  basicSkillsEffectiveHourCount: number;
-  basicSkillsEffectiveCost: Decimal;
-  certificateSkillsEffectiveHourCount: number;
-  certificateSkillsEffectiveCost: Decimal;
-  otherTrainingEffectiveHourCount: number;
-  otherTrainingEffectiveCost: Decimal;
-  examEffectiveHourCount: number;
-  examEffectiveCost: Decimal;
-  invoiceNumber: string;
-}
-
-export interface PaymentRequestBatch {
-  paymentRequestId: string;
-  sent: boolean;
-  batchFileName?: string;
-  content?: PaymentRequestBatchContent;
-}
-
-export interface PaymentRequestBatchContent {
-  NumAction: string;
-  NumFacture: string;
-  SiretAP: string;
-  NbHeureReaJury: number;
-  CoutHeureReaJury: number;
-  NbHeureReaAPDiag: number;
-  CoutHeureReaAPDiag: number;
-  NbHeureReaAccVAEInd: number;
-  CoutHeureReaAccVAEInd: number;
-  NbHeureReaAPPostJury: number;
-  CoutHeureReaAPPostJury: number;
-  NbHeureReaAccVAEColl: number;
-  CoutHeureReaAccVAEColl: number;
-  NbHeureReaTotalActesFormatifs: number;
-  NbHeureReaComplFormObligatoire: number;
-  CoutHeureReaComplFormObligatoire: number;
-  NbHeureReaComplFormSavoirsDeBase: number;
-  CoutHeureReaComplFormSavoirsDeBase: number;
-  NbHeureReaComplFormBlocDeCompetencesCertifiant: number;
-  CoutHeureReaComplFormBlocDeCompetencesCertifiant: number;
-  NBHeureReaActeFormatifComplémentaire_Autre: number;
-  CoutHeureReaActeFormatifComplémentaire_Autre: number;
-}
-
-export interface FileUploadSpoolerEntry {
-  destinationFileName: string;
-  destinationPath: string;
-  description: string;
-  fileContent?: Buffer;
-}
 
 export enum CandidacyBusinessEvent {
   CREATED_CANDIDACY = "Created Candidacy",

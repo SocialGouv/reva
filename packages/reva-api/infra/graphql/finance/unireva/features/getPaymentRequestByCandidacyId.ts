@@ -1,11 +1,11 @@
 import { Either, EitherAsync, Left, Maybe } from "purify-ts";
 
 import { Role } from "../../../../../domain/types/account";
-import { PaymentRequest } from "../../../../../domain/types/candidacy";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../../domain/types/functionalError";
+import { PaymentRequest } from "../finance.types";
 
 interface getPaymentRequestDeps {
   hasRole: (role: Role) => boolean;

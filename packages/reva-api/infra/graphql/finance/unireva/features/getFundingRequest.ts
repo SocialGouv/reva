@@ -3,13 +3,10 @@ import { Either, EitherAsync, Left } from "purify-ts";
 import { Role } from "../../../../../domain/types/account";
 import { Candidacy } from "../../../../../domain/types/candidacy";
 import {
-  FundingRequest,
-  FundingRequestInformations,
-} from "../../../../../domain/types/candidate";
-import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../../domain/types/functionalError";
+import { FundingRequest, FundingRequestInformations } from "../finance.types";
 
 interface GetFundingRequestDeps {
   hasRole: (role: Role) => boolean;
