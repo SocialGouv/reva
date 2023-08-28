@@ -22,7 +22,7 @@ form maybeCertification _ ( candidacy, referential ) =
                 |> List.map (\el -> ( Data.Candidate.genderToString el, Data.Candidate.genderToString el ))
     in
     { elements =
-        [ ( "candidate-info", Form.Title2 "1. Informations du candidat" )
+        [ ( "candidate-info", Form.Title1 "1. Informations du candidat" )
         , ( "nom"
           , candidacy.candidate
                 |> Maybe.map (.lastname >> Form.Info "Nom")
@@ -37,7 +37,7 @@ form maybeCertification _ ( candidacy, referential ) =
         , ( keys.candidateSecondname, Form.Input "2ième prénom" )
         , ( keys.candidateThirdname, Form.Input "3ième prénom" )
         , ( keys.candidateGender, Form.Select "Genre" genders )
-        , ( "selected-organism", Form.Title2 "2. Choix du candidat" )
+        , ( "selected-organism", Form.Title1 "2. Choix du candidat" )
         , ( "certification"
           , maybeCertification
                 |> Maybe.map (.label >> Form.Info "Certification choisie")
@@ -48,16 +48,16 @@ form maybeCertification _ ( candidacy, referential ) =
                 |> Maybe.map (.label >> Form.Info "Accompagnateur choisi")
                 |> Maybe.withDefault Form.Empty
           )
-        , ( "companion", Form.Title2 "3. Parcours personnalisé" )
-        , ( "individual", Form.Title3 "Accompagnement" )
+        , ( "companion", Form.Title1 "3. Parcours personnalisé" )
+        , ( "individual", Form.Title2 "Accompagnement" )
         , ( "collective", Form.TitleInlined "Individuel" )
         , ( keys.individualHourCount, hourCountElement )
         , ( keys.individualCost, costElement )
         , ( "collective", Form.TitleInlined "Collectif" )
         , ( keys.collectiveHourCount, hourCountElement )
         , ( keys.collectiveCost, costElement )
-        , ( "training", Form.Title3 "Compléments formatifs" )
-        , ( "mandatory-training", Form.Title4 "Formation obligatoire" )
+        , ( "training", Form.Title2 "Compléments formatifs" )
+        , ( "mandatory-training", Form.Title3 "Formation obligatoire" )
         , ( keys.mandatoryTrainingIds
           , Form.ReadOnlyElement <|
                 Form.CheckboxList "" <|
@@ -65,7 +65,7 @@ form maybeCertification _ ( candidacy, referential ) =
           )
         , ( keys.mandatoryTrainingsHourCount, hourCountElement )
         , ( keys.mandatoryTrainingsCost, costElement )
-        , ( "basic-skills", Form.Title4 "Savoir de base" )
+        , ( "basic-skills", Form.Title3 "Savoir de base" )
         , ( keys.basicSkillsIds
           , Form.ReadOnlyElement <|
                 Form.CheckboxList "Formations savoirs de base sélectionnées" <|

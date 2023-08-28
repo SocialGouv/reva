@@ -20,8 +20,10 @@ form _ _ =
                 |> List.map (\el -> ( candidateTypologyToString el, candidateTypologyToString el ))
     in
     { elements =
-        [ ( keys.typology, Form.Select "Typologie" typologies )
+        [ ( "candidat", Form.Title1 "1 - Informations du candidat" )
+        , ( keys.typology, Form.Select "Typologie" typologies )
         , ( keys.additionalInformation, Form.SelectOther "typology" (candidateTypologyToString Autre) "Autre typologie" )
+        , ( "appointment", Form.Title1 "2 - Rendez-vous" )
         , ( keys.firstAppointmentOccurredAt, Form.Date "Date du premier rendez-vous pédagogique" )
         , ( keys.appointmentCount, Form.Number "Nombre de rendez-vous réalisés avec le candidat" )
         ]

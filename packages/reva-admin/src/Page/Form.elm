@@ -33,6 +33,7 @@ import RemoteData exposing (RemoteData(..))
 import String exposing (String)
 import Task
 import View
+import View.Form
 
 
 type Msg referential
@@ -54,10 +55,9 @@ type Element
     | Empty
     | File String String
     | Files String String
-    | Title1 String -- h2
-    | Title2 String -- h3
-    | Title3 String -- h4
-    | Title4 String -- h5
+    | Title1 String -- h3
+    | Title2 String -- h4
+    | Title3 String -- h5
     | TitleInlined String -- h5
     | Info String String
     | Input String
@@ -344,32 +344,25 @@ viewEditableElement formData ( elementId, element ) =
             text ""
 
         File label hint ->
-            [ viewInputFiles False elementId label hint ]
-                |> viewFieldsetElement
+            viewInputFiles False elementId label hint
 
         Files label hint ->
-            [ viewInputFiles True elementId label hint ]
-                |> viewFieldsetElement
+            viewInputFiles True elementId label hint
 
         Title1 title ->
             legend
-                []
-                [ h2 [ class "text-lg" ] [ text title ] ]
+                [ class "" ]
+                [ h2 [ class "text-xl" ] [ text title ] ]
 
         Title2 title ->
             legend
-                [ class "" ]
-                [ h3 [ class "text-xl" ] [ text title ] ]
+                []
+                [ h3 [ class "text-base font-medium -mt-14 -ml-5" ] [ text title ] ]
 
         Title3 title ->
             legend
                 []
-                [ h4 [ class "text-base font-medium -mt-14 -ml-5" ] [ text title ] ]
-
-        Title4 title ->
-            legend
-                []
-                [ h5
+                [ h4
                     [ class "text-base font-normal"
                     , class "w-full md:w-[500px] xl:w-[680px]"
                     ]
@@ -377,11 +370,12 @@ viewEditableElement formData ( elementId, element ) =
                 ]
 
         TitleInlined title ->
-            h5
-                [ class "text-base font-normal h-10"
-                , class "w-full md:w-[120px] xl:w-[190px]"
+            View.Form.column
+                []
+                [ h4
+                    [ class "text-base font-normal h-10 lg:pr-2" ]
+                    [ text title ]
                 ]
-                [ text title ]
 
         Input label ->
             viewFieldsetElement
@@ -424,16 +418,14 @@ viewEditableElement formData ( elementId, element ) =
                 viewRule rule =
                     li [ class "mb-1" ] [ text rule ]
             in
-            viewFieldsetElement
-                [ div
-                    [ class "max-w-lg bg-gray-100 px-5 py-4 rounded-lg"
-                    , class "text-sm text-gray-600 mb-8"
-                    ]
-                    [ p [ class "text-gray-900 text-sm mb-0" ] [ text title ]
-                    , ul
-                        [ class "mt-3 list-disc pl-4" ]
-                        (List.map viewRule rules)
-                    ]
+            div
+                [ class "max-w-lg bg-gray-100 px-5 py-4 rounded-lg"
+                , class "text-sm text-gray-600 mb-3"
+                ]
+                [ p [ class "text-gray-900 text-sm mb-0" ] [ text title ]
+                , ul
+                    [ class "mt-3 list-disc pl-4" ]
+                    (List.map viewRule rules)
                 ]
 
         Select label choices ->
@@ -474,7 +466,7 @@ viewEditableElement formData ( elementId, element ) =
             div [ class ("mb-4 w-full " ++ Maybe.withDefault "" classes) ] [ text content ]
 
         StaticHtml content ->
-            div [ class "ml-2 w-full" ] [ Html.map never content ]
+            Html.map never content
 
 
 viewReadOnlyElement : FormData -> ( String, Element ) -> Html (Msg referential)
@@ -501,7 +493,7 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> Checkbox.singleWithDisabled True
                 |> Checkbox.viewSingle
 
-        CheckboxList label choices ->
+        CheckboxList _ choices ->
             choices
                 |> List.filter (\( choiceId, _ ) -> get choiceId formData /= Nothing)
                 |> List.map
@@ -510,19 +502,12 @@ viewReadOnlyElement formData ( elementId, element ) =
                             [ class "fr-tag fr-tag--sm" ]
                             [ text choice ]
                     )
-                |> div
+                |> View.Form.column
                     [ class "h-full flex items-start flex-wrap gap-2"
-                    , class "h-auto min-h-[120px] max-h-[220px]"
-                    , class "overflow-auto mb-5 md:mb-0"
-                    , class "w-full md:w-[120px] xl:w-[190px]"
+                    , class "h-auto lg:min-h-[120px] max-h-[220px]"
+                    , class "overflow-auto mb-5 lg:mb-0"
                     ]
 
-        {--
-            (\choiceId -> get choiceId formData)
-                |> viewCheckboxList elementId label choices
-                |> Checkbox.groupWithDisabled True
-                |> Checkbox.viewGroup
--}
         RadioList label choices ->
             get elementId formData
                 |> viewRadioList elementId label choices
@@ -542,23 +527,20 @@ viewReadOnlyElement formData ( elementId, element ) =
             text ""
 
         Title1 title ->
-            h2 [ class "mt-8" ] [ text title ]
+            h2 [ class "mt-8 mb-2" ] [ text title ]
 
         Title2 title ->
-            h3 [ class "mt-8 mb-2" ] [ text title ]
+            h3 [ class "text-base mt-4 mb-2" ] [ text title ]
 
         Title3 title ->
-            h4 [ class "text-base mt-4 mb-2" ] [ text title ]
-
-        Title4 title ->
             legend
                 []
-                [ h5 [ class "text-base" ] [ text title ] ]
+                [ h4 [ class "text-base" ] [ text title ] ]
 
         TitleInlined title ->
             legend
                 []
-                [ h5 [ class "text-base" ] [ text title ] ]
+                [ h4 [ class "text-base" ] [ text title ] ]
 
         Info label value ->
             defaultView label value
@@ -733,7 +715,7 @@ viewInputFiles acceptMultipleFiles elementId title hint =
             Json.Decode.at [ "target", "files" ] (Json.Decode.list File.decoder)
     in
     div
-        [ class "fr-upload-group" ]
+        [ class "fr-upload-group my-4" ]
         [ viewLabel
             elementId
             [ text title
@@ -861,15 +843,13 @@ viewFieldsets formData elements =
         groupHelper :
             ( String, Element )
             ->
-                { l1 : List (Html (Msg referential))
-                , l2 : List (Html (Msg referential))
+                { l2 : List (Html (Msg referential))
                 , l3 : List (Html (Msg referential))
                 , l4 : List (Html (Msg referential))
                 , elements : List (Html (Msg referential))
                 }
             ->
-                { l1 : List (Html (Msg referential))
-                , l2 : List (Html (Msg referential))
+                { l2 : List (Html (Msg referential))
                 , l3 : List (Html (Msg referential))
                 , l4 : List (Html (Msg referential))
                 , elements : List (Html (Msg referential))
@@ -880,23 +860,6 @@ viewFieldsets formData elements =
                     viewEditableElement formData element
             in
             case isNewGroup element of
-                Just 1 ->
-                    { acc
-                        | l1 =
-                            viewFieldset 1
-                                (htmlElement
-                                    :: acc.elements
-                                    ++ wrapWithBorderedElement acc.l4
-                                    ++ wrapWithBorderedElement acc.l3
-                                    ++ wrapWithElement acc.l2
-                                )
-                                :: acc.l1
-                        , l2 = []
-                        , l3 = []
-                        , l4 = []
-                        , elements = []
-                    }
-
                 Just 2 ->
                     { acc
                         | l2 =
@@ -946,15 +909,12 @@ viewFieldsets formData elements =
         isNewGroup ( _, element ) =
             case element of
                 Title1 _ ->
-                    Just 1
-
-                Title2 _ ->
                     Just 2
 
-                Title3 _ ->
+                Title2 _ ->
                     Just 3
 
-                Title4 _ ->
+                Title3 _ ->
                     Just 4
 
                 TitleInlined _ ->
@@ -964,12 +924,11 @@ viewFieldsets formData elements =
                     Nothing
 
         groupedElements =
-            List.foldr groupHelper { l1 = [], l2 = [], l3 = [], l4 = [], elements = [] } elements
+            List.foldr groupHelper { l2 = [], l3 = [], l4 = [], elements = [] } elements
     in
     groupedElements.elements
         ++ wrapWithBorderedElement groupedElements.l3
         ++ wrapWithElement groupedElements.l2
-        ++ wrapWithElement groupedElements.l1
 
 
 {-| Wrap a complex element that already have internal margins, like radio or checkbox list
@@ -983,7 +942,7 @@ viewFieldsetComplexElement =
 -}
 viewFieldsetElement : List (Html msg) -> Html msg
 viewFieldsetElement =
-    div [ class "w-full md:w-1/3 xl:w-auto xl:min-w-[228px] mb-6" ]
+    View.Form.columnAuto [ class "mb-6" ]
 
 
 
