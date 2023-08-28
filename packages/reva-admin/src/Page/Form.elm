@@ -47,7 +47,8 @@ type Msg referential
 
 
 type Element
-    = Break
+    = BreakToplevel
+    | Break
     | Checkbox String
     | CheckboxWithAriaLabel String String
     | CheckboxList String (List ( String, String ))
@@ -306,6 +307,9 @@ viewEditableElement formData ( elementId, element ) =
                 |> Input.view
     in
     case element of
+        BreakToplevel ->
+            div [ class "w-full" ] []
+
         Break ->
             div [ class "w-full" ] []
 
@@ -351,7 +355,8 @@ viewEditableElement formData ( elementId, element ) =
 
         Title1 title ->
             legend
-                [ class "" ]
+                [ class "w-full border-t pt-6"
+                ]
                 [ h2 [ class "text-xl" ] [ text title ] ]
 
         Title2 title ->
@@ -480,6 +485,9 @@ viewReadOnlyElement formData ( elementId, element ) =
             div [] [ viewInfo elementId label v ]
     in
     case element of
+        BreakToplevel ->
+            div [ class "w-full" ] []
+
         Break ->
             div [ class "w-full" ] []
 
@@ -794,19 +802,6 @@ Example:
 viewFieldsets : FormData -> List ( String, Element ) -> List (Html (Msg referential))
 viewFieldsets formData elements =
     let
-        wrapWithElement : List (Html msg) -> List (Html msg)
-        wrapWithElement l =
-            -- The first element is a legend. The second element doesn't need a top border :
-            List.map
-                (\e ->
-                    div
-                        [ class "border-t pt-10 mb-6"
-                        , class "[&:nth-child(2)]:border-none [&:nth-child(2)]:pt-0"
-                        ]
-                        [ e ]
-                )
-                l
-
         wrapWithBorderedElement : List (Html msg) -> List (Html msg)
         wrapWithBorderedElement l =
             List.map
@@ -920,6 +915,12 @@ viewFieldsets formData elements =
                 TitleInlined _ ->
                     Just 4
 
+                BreakToplevel ->
+                    Just 2
+
+                Break ->
+                    Just 4
+
                 _ ->
                     Nothing
 
@@ -928,7 +929,7 @@ viewFieldsets formData elements =
     in
     groupedElements.elements
         ++ wrapWithBorderedElement groupedElements.l3
-        ++ wrapWithElement groupedElements.l2
+        ++ groupedElements.l2
 
 
 {-| Wrap a complex element that already have internal margins, like radio or checkbox list
