@@ -528,7 +528,7 @@ viewReadOnlyElement formData ( elementId, element ) =
             in
             View.Form.column
                 [ class "h-full"
-                , class "h-auto lg:min-h-[120px] max-h-[220px]"
+                , class "h-auto lg:min-h-[106px] max-h-[220px]"
                 , class "overflow-auto mb-5 lg:mb-0"
                 ]
                 content
@@ -615,7 +615,13 @@ viewReadOnlyElement formData ( elementId, element ) =
             List.filter (\( choiceId, _ ) -> choiceId == dataOrDefault) choices
                 |> List.head
                 |> Maybe.map (\( _, choice ) -> viewInfo elementId label choice)
-                |> Maybe.withDefault (text "")
+                |> Maybe.withDefault
+                    (div
+                        [ class "mb-6" ]
+                        [ viewLabel "" [ text label ]
+                        , text "Non précisé"
+                        ]
+                    )
 
         SelectOther selectId otherValue label ->
             case get selectId formData of
@@ -633,7 +639,7 @@ viewReadOnlyElement formData ( elementId, element ) =
             p [ class ("mb-4 " ++ Maybe.withDefault "" classes) ] [ text content ]
 
         StaticHtml content ->
-            div [ class "ml-2" ] [ Html.map never content ]
+            Html.map never content
 
 
 viewLabel : String -> List (Html msg) -> Html msg

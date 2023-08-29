@@ -9,6 +9,7 @@ import Data.Form.Helper
 import Data.Referential exposing (Referential)
 import Page.Form as Form exposing (Form)
 import String exposing (String)
+import View.Form
 
 
 form : Maybe Certification -> FormData -> ( Candidacy, Referential ) -> Form
@@ -45,22 +46,28 @@ form maybeCertification formData ( candidacy, referential ) =
 
                     else
                         Form.ReadOnlyElement formElement
+
+        displayInfo key =
+            ( key
+            , Data.Form.get key formData
+                |> Maybe.map (Form.StaticHtml << View.Form.summary)
+                |> Maybe.withDefault Form.Empty
+            )
     in
     { elements =
-        commonFields maybeCertification
-            ++ [ ( "post-exam", Form.Title2 "Entretien post jury" )
+        commonFields availableCompanions maybeCertification
+            ++ [ ( "post-exam", Form.TitleInlined "Entretien post jury" )
                , ( keys.postExamHourCount, hourCountElement )
                , ( keys.postExamCost, costElement )
-               , ( "companion", Form.Title1 "Accompagnement méthodologique" )
-               , ( keys.companionId, Form.Select "Accompagnateur choisi par le candidat" availableCompanions )
-               , ( "individual", Form.Title2 "Accompagnement individuel" )
+               , ( "companion", Form.Title2 "Accompagnement" )
+               , ( "individual", Form.TitleInlined "Individuel" )
                , ( keys.individualHourCount, hourCountElement )
                , ( keys.individualCost, costElement )
-               , ( "collective", Form.Title2 "Accompagnement collectif" )
+               , ( "collective", Form.TitleInlined "Collectif" )
                , ( keys.collectiveHourCount, hourCountElement )
                , ( keys.collectiveCost, costElement )
-               , ( "training", Form.Title1 "Actes formatifs" )
-               , ( "mandatory", Form.Title2 "Formations obligatoires" )
+               , ( "training", Form.Title2 "Actes formatifs" )
+               , ( "mandatory", Form.Title3 "Formations obligatoires" )
                , ( keys.mandatoryTrainingIds
                  , Form.ReadOnlyElement <|
                     Form.CheckboxList "" <|
@@ -74,7 +81,7 @@ form maybeCertification formData ( candidacy, referential ) =
                  , costElement
                     |> withCheckedRequired referential.mandatoryTrainings
                  )
-               , ( "basic-skills", Form.Title2 "Formations savoirs de base" )
+               , ( "basic-skills", Form.Title3 "Savoirs de base" )
                , ( keys.basicSkillsIds
                  , Form.ReadOnlyElement <|
                     Form.CheckboxList "" <|
@@ -88,8 +95,8 @@ form maybeCertification formData ( candidacy, referential ) =
                  , costElement
                     |> withCheckedRequired referential.basicSkills
                  )
-               , ( "skills", Form.Title2 "Bloc de compétences certifiant" )
-               , ( keys.certificateSkills, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
+               , ( "skills", Form.Title3 "Bloc de compétences certifiant" )
+               , displayInfo keys.certificateSkills
                , ( keys.certificateSkillsHourCount
                  , hourCountElement
                     |> withRequired hasCertificateSkills
@@ -98,13 +105,16 @@ form maybeCertification formData ( candidacy, referential ) =
                  , costElement
                     |> withRequired hasCertificateSkills
                  )
-               , ( "other", Form.Title2 "Autres actions de formations complémentaires" )
-               , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
+               , ( "other", Form.Title3 "Autres" )
+               , displayInfo keys.otherTraining
                , ( keys.otherTrainingHourCount, hourCountElement )
                , ( keys.otherTrainingCost, costElement )
-               , ( keys.totalTrainingHourCount
-                 , Form.Info "Nombre d'heures total actes formatifs" <|
-                    String.fromInt (totalTrainingHourCount formData)
+               , ( "", Form.Break )
+               , ( "companionSubTotal"
+                 , Form.StaticHtml <|
+                    View.Form.intermediateTotal "Nombre d'heures total actes formatifs"
+                        (String.fromInt (totalTrainingHourCount formData))
+                        ""
                  )
                , ( "jury", Form.Title2 "Prestation jury" )
                , ( keys.examHourCount, hourCountElement )
@@ -122,7 +132,7 @@ form maybeCertification formData ( candidacy, referential ) =
 droppedOutForm : Maybe Certification -> FormData -> ( Candidacy, Referential ) -> Form
 droppedOutForm maybeCertification formData ( candidacy, referential ) =
     { elements =
-        commonFields maybeCertification
+        commonFields [] maybeCertification
             ++ [ totalSection
                , totalCostSection totalCostTitle formData
                , confirmationSection candidacy
@@ -148,17 +158,18 @@ hourCountElement =
     Form.Number "Nombre d'heures"
 
 
-commonFields : Maybe Certification -> List ( String, Form.Element )
-commonFields maybeCertification =
-    [ ( "heading", Form.Title1 "Parcours personnalisé" )
-    , ( "selected-certification", Form.Title2 "Certification choisie par le candidat" )
+commonFields : List ( String, String ) -> Maybe Certification -> List ( String, Form.Element )
+commonFields availableCompanions maybeCertification =
+    [ ( "heading", Form.Title1 "1 - Choix du candidat" )
     , ( "certification"
       , maybeCertification
-            |> Maybe.map (.label >> Form.Info "")
-            |> Maybe.withDefault Form.Empty
+            |> Maybe.map (.label >> Form.Info "Certification choisie")
+            |> Maybe.withDefault (Form.Info "Certification choisie" "Aucune certification choisie")
       )
-    , ( "organism", Form.Title2 "Accompagnement architecte de parcours" )
-    , ( "diagnosis", Form.Title1 "Entretien(s) de faisabilité" )
+    , ( keys.companionId, Form.Select "Accompagnateur choisi" availableCompanions )
+    , ( "companion", Form.Title1 "2. Parcours personnalisé" )
+    , ( "companion", Form.Title2 "Entretien(s)" )
+    , ( "diagnosis", Form.TitleInlined "Entretien(s) de faisabilité" )
     , ( keys.diagnosisHourCount, hourCountElement )
     , ( keys.diagnosisCost, costElement )
     ]
