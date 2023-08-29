@@ -133,7 +133,7 @@ form maybeCertification formData ( candidacy, referential ) =
           )
         , ( keys.basicSkillsIds
           , Form.ReadOnlyElement <|
-                Form.CheckboxList "Formations savoirs de base sélectionnées" <|
+                Form.CheckboxList "" <|
                     Data.Form.Helper.toIdList referential.basicSkills
           )
         , ( keys.basicSkillsHourCount, hourCountElement )

@@ -39,7 +39,7 @@ total label total1 total2 =
         , class "font-medium"
         ]
         [ column
-            [ class "mr-4 mb-2 lg:mb-0"
+            [ class "mr-5 mb-2 lg:mb-0"
             , class "text-lg font-semibold"
             ]
             [ text label ]

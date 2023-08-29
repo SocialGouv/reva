@@ -1,6 +1,5 @@
 module Page.Form.FundingRequestUniFvae exposing (form)
 
-import Accessibility exposing (div, text)
 import Admin.Enum.Gender exposing (Gender(..))
 import Data.Candidacy exposing (Candidacy)
 import Data.Candidate
@@ -9,7 +8,6 @@ import Data.Form exposing (FormData)
 import Data.Form.FundingRequestUniFvae exposing (keys)
 import Data.Form.Helper
 import Data.Referential exposing (Referential)
-import Html.Attributes exposing (class)
 import Page.Form as Form exposing (Form)
 import View.Form
 
@@ -85,7 +83,7 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( "basic-skills", Form.Title3 "Savoir de base" )
         , ( keys.basicSkillsIds
           , Form.ReadOnlyElement <|
-                Form.CheckboxList "Formations savoirs de base sélectionnées" <|
+                Form.CheckboxList "" <|
                     Data.Form.Helper.toIdList referential.basicSkills
           )
         , ( keys.basicSkillsHourCount, hourCountElement )

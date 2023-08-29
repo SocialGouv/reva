@@ -263,7 +263,7 @@ viewForm referential status errors formData form saveButton submitButton =
                     , p [ class "text-gray-600" ]
                         [ text "Sauf mention contraire “(optionnel)” dans le label, tous les champs sont obligatoires." ]
                     ]
-                    :: viewFieldsets formData currentForm.elements
+                    :: viewFieldsets viewEditableElement formData currentForm.elements
                     ++ [ div
                             [ class "mt-8 pb-4 flex justify-end pr-2 w-full" ]
                             [ saveButton
@@ -274,10 +274,10 @@ viewForm referential status errors formData form saveButton submitButton =
 
         ReadOnly ->
             div
-                [ class "bg-gray-50 m-8 p-4" ]
+                [ class "mb-24" ]
             <|
                 h1 [] [ text currentForm.title ]
-                    :: List.map (viewReadOnlyElement formData) currentForm.elements
+                    :: viewFieldsets viewReadOnlyElement formData currentForm.elements
 
 
 viewEditableElement : FormData -> ( String, Element ) -> Html (Msg referential)
@@ -355,25 +355,16 @@ viewEditableElement formData ( elementId, element ) =
 
         Title1 title ->
             legend
-                [ class "w-full border-t pt-6"
-                ]
+                [ class "w-full border-t pt-6" ]
                 [ h2 [ class "text-xl" ] [ text title ] ]
 
         Title2 title ->
             legend
                 []
-                [ h3 [ class "text-base font-medium -mt-14 -ml-5" ] [ text title ] ]
+                [ viewTitle2 title ]
 
         Title3 title ->
-            legend
-                []
-                [ h4
-                    [ class "text-base font-normal"
-                    , class "mb-2"
-                    , class "w-full md:w-[500px] xl:w-[680px]"
-                    ]
-                    [ text title ]
-                ]
+            legend [] [ viewTitle3 title ]
 
         TitleInlined title ->
             View.Form.column
@@ -480,7 +471,7 @@ viewReadOnlyElement formData ( elementId, element ) =
     let
         dataOrDefault =
             get elementId formData
-                |> Maybe.withDefault (defaultValue element)
+                |> Maybe.withDefault "Non précisé"
 
         defaultView label v =
             div [] [ viewInfo elementId label v ]
@@ -502,20 +493,45 @@ viewReadOnlyElement formData ( elementId, element ) =
                 |> Checkbox.singleWithDisabled True
                 |> Checkbox.viewSingle
 
-        CheckboxList _ choices ->
-            choices
-                |> List.filter (\( choiceId, _ ) -> get choiceId formData /= Nothing)
-                |> List.map
-                    (\( _, choice ) ->
-                        p
-                            [ class "mr-1 mt-2 fr-tag fr-tag--sm" ]
-                            [ text choice ]
-                    )
-                |> View.Form.column
-                    [ class "h-full"
-                    , class "h-auto lg:min-h-[120px] max-h-[220px]"
-                    , class "overflow-auto mb-5 lg:mb-0"
-                    ]
+        CheckboxList title choices ->
+            let
+                tags =
+                    choices
+                        |> List.filter (\( choiceId, _ ) -> get choiceId formData /= Nothing)
+                        |> List.map
+                            (\( _, choice ) ->
+                                p
+                                    [ class "mr-1 mt-2 fr-tag fr-tag--sm" ]
+                                    [ text choice ]
+                            )
+
+                tagsOrEmpty =
+                    if List.isEmpty tags then
+                        [ span
+                            [ class "italic text-sm text-gray-500" ]
+                            [ text "Aucun élément séléctionné" ]
+                        ]
+
+                    else
+                        tags
+
+                content =
+                    if title /= "" then
+                        [ h5
+                            [ class "text-base font-normal" ]
+                            [ text title ]
+                        ]
+                            ++ tagsOrEmpty
+
+                    else
+                        tagsOrEmpty
+            in
+            View.Form.column
+                [ class "h-full"
+                , class "h-auto lg:min-h-[120px] max-h-[220px]"
+                , class "overflow-auto mb-5 lg:mb-0"
+                ]
+                content
 
         RadioList label choices ->
             get elementId formData
@@ -536,20 +552,27 @@ viewReadOnlyElement formData ( elementId, element ) =
             text ""
 
         Title1 title ->
-            h2 [ class "mt-8 mb-2" ] [ text title ]
+            h2
+                [ class "w-full border-t pt-6"
+                , class "text-xl"
+                ]
+                [ text title ]
 
         Title2 title ->
-            h3 [ class "text-base mt-4 mb-2" ] [ text title ]
+            legend [] [ viewTitle2 title ]
 
         Title3 title ->
-            legend
-                []
-                [ h4 [ class "text-base" ] [ text title ] ]
+            viewTitle3 title
 
         TitleInlined title ->
-            legend
+            View.Form.column
                 []
-                [ h4 [ class "text-base" ] [ text title ] ]
+                [ h4
+                    [ class "ml-2"
+                    , class "text-base font-normal"
+                    ]
+                    [ text title ]
+                ]
 
         Info label value ->
             defaultView label value
@@ -757,6 +780,25 @@ viewInfo elementId s d =
         ]
 
 
+viewTitle2 : String -> Html msg
+viewTitle2 title =
+    h3
+        [ class "text-base font-medium"
+        , class "-mt-14 -ml-5"
+        ]
+        [ text title ]
+
+
+viewTitle3 : String -> Html msg
+viewTitle3 title =
+    h4
+        [ class "text-base font-normal"
+        , class "mb-2"
+        , class "w-full md:w-[500px] xl:w-[680px]"
+        ]
+        [ text title ]
+
+
 
 -- Fieldsets view
 
@@ -800,8 +842,12 @@ Example:
         ]
 
 -}
-viewFieldsets : FormData -> List ( String, Element ) -> List (Html (Msg referential))
-viewFieldsets formData elements =
+viewFieldsets :
+    (FormData -> ( String, Element ) -> Html (Msg referential))
+    -> FormData
+    -> List ( String, Element )
+    -> List (Html (Msg referential))
+viewFieldsets viewElement formData elements =
     let
         wrapWithBorderedElement : List (Html msg) -> List (Html msg)
         wrapWithBorderedElement l =
@@ -853,7 +899,7 @@ viewFieldsets formData elements =
         groupHelper element acc =
             let
                 htmlElement =
-                    viewEditableElement formData element
+                    viewElement formData element
             in
             case isNewGroup element of
                 Just 2 ->
