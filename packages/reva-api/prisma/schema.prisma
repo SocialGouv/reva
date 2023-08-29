@@ -919,6 +919,10 @@ model FundingRequestUnifvae {
   otherTraining               String                               @map("other_training")
   otherTrainingHourCount      Decimal                              @default(0) @map("other_training_hour_count") @db.Decimal(5, 1)
   otherTrainingCost           Decimal                              @default(0) @map("other_training_cost") @db.Decimal(10, 2)
+  fundingContactFirstname     String?                              @map("funding_contact_firstname") @db.VarChar(200)
+  fundingContactLastname      String?                              @map("funding_contact_lastname") @db.VarChar(200)
+  fundingContactEmail         String?                              @map("funding_contact_email") @db.VarChar(200)
+  fundingContactPhone         String?                              @map("funding_contact_phone") @db.VarChar(50)
   fundingRequestBatchUnifvae  FundingRequestBatchUnifvae?
 
   @@map("funding_request_unifvae")

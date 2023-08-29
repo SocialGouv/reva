@@ -22,6 +22,10 @@ type FundingRequestUnifvae {
   otherTraining: String!
   otherTrainingHourCount: Decimal!
   otherTrainingCost: Decimal!
+  fundingContactFirstname: String
+  fundingContactLastname: String
+  fundingContactEmail: String
+  fundingContactPhone: String
 }
 
 input FundingRequestUnifvaeInput {
@@ -40,6 +44,10 @@ input FundingRequestUnifvaeInput {
   certificateSkillsCost: Decimal!
   otherTrainingHourCount: Decimal!
   otherTrainingCost: Decimal!
+  fundingContactFirstname: String
+  fundingContactLastname: String
+  fundingContactEmail: String
+  fundingContactPhone: String
 }
 
 type Candidacy {
