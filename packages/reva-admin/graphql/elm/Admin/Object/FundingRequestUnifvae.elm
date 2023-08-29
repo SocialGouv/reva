@@ -137,3 +137,23 @@ otherTrainingHourCount =
 otherTrainingCost : SelectionSet Data.Scalar.Decimal Admin.Object.FundingRequestUnifvae
 otherTrainingCost =
     Object.selectionForField "Data.Scalar.Decimal" "otherTrainingCost" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecDecimal |> .decoder)
+
+
+fundingContactFirstname : SelectionSet (Maybe String) Admin.Object.FundingRequestUnifvae
+fundingContactFirstname =
+    Object.selectionForField "(Maybe String)" "fundingContactFirstname" [] (Decode.string |> Decode.nullable)
+
+
+fundingContactLastname : SelectionSet (Maybe String) Admin.Object.FundingRequestUnifvae
+fundingContactLastname =
+    Object.selectionForField "(Maybe String)" "fundingContactLastname" [] (Decode.string |> Decode.nullable)
+
+
+fundingContactEmail : SelectionSet (Maybe String) Admin.Object.FundingRequestUnifvae
+fundingContactEmail =
+    Object.selectionForField "(Maybe String)" "fundingContactEmail" [] (Decode.string |> Decode.nullable)
+
+
+fundingContactPhone : SelectionSet (Maybe String) Admin.Object.FundingRequestUnifvae
+fundingContactPhone =
+    Object.selectionForField "(Maybe String)" "fundingContactPhone" [] (Decode.string |> Decode.nullable)
