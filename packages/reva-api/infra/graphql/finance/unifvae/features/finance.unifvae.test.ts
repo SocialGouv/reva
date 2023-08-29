@@ -22,6 +22,7 @@ const candidateSample = {
   lastname: "De Garenne",
 };
 
+// : Partial<FundingRequestUnifvaeInput> | {candidateSecondname: string, candidateThirdname: string, candidateGender: string}
 const fundingRequestSample = {
   candidateSecondname: "Lapin",
   candidateThirdname: "Piou",
@@ -38,6 +39,10 @@ const fundingRequestSample = {
   mandatoryTrainingsHourCount: 2,
   otherTrainingCost: 21.3,
   otherTrainingHourCount: 2.5,
+  fundingContactFirstname: "Ramuncho",
+  fundingContactLastname: "Delavega",
+  fundingContactEmail: "ramdelav@disney.com",
+  fundingContactPhone: "+4472334567890",
 };
 
 const candidateEmail = "toto@bongo.eu",
@@ -216,7 +221,7 @@ test("should create fundingRequestUnifvae with matching batch", async () => {
       requestType: "mutation",
       endpoint: "candidacy_createFundingRequestUnifvae",
       returnFields:
-        "{id, isPartialCertification, candidateFirstname, candidateSecondname, candidateThirdname, candidateLastname, candidateGender, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount }",
+        "{id, isPartialCertification, candidateFirstname, candidateSecondname, candidateThirdname, candidateLastname, candidateGender, basicSkillsCost, basicSkillsHourCount, certificateSkillsCost, certificateSkillsHourCount, collectiveCost, collectiveHourCount, individualCost, individualHourCount, mandatoryTrainingsCost, mandatoryTrainingsHourCount, otherTrainingCost, otherTrainingHourCount, fundingContactFirstname, fundingContactLastname, fundingContactEmail, fundingContactPhone }",
       arguments: {
         candidacyId: candidacyUnifvae.id,
         fundingRequest: {
