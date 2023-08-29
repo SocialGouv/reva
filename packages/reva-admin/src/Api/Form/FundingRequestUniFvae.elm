@@ -51,6 +51,10 @@ create candidacyId endpointGraphql token toMsg ( candidacy, referential ) formDa
                 funding.certificateSkillsCost
                 funding.otherTrainingHourCount
                 funding.otherTrainingCost
+                (OptionalArgument.fromMaybe funding.fundingContactFirstname)
+                (OptionalArgument.fromMaybe funding.fundingContactLastname)
+                (OptionalArgument.fromMaybe funding.fundingContactEmail)
+                (OptionalArgument.fromMaybe funding.fundingContactPhone)
 
         fundingRequiredArg =
             Mutation.CandidacyCreateFundingRequestUnifvaeRequiredArguments
@@ -126,3 +130,7 @@ fundingRequestSelection =
         |> with Admin.Object.FundingRequestUnifvae.otherTraining
         |> with Admin.Object.FundingRequestUnifvae.otherTrainingHourCount
         |> with Admin.Object.FundingRequestUnifvae.otherTrainingCost
+        |> with Admin.Object.FundingRequestUnifvae.fundingContactFirstname
+        |> with Admin.Object.FundingRequestUnifvae.fundingContactLastname
+        |> with Admin.Object.FundingRequestUnifvae.fundingContactEmail
+        |> with Admin.Object.FundingRequestUnifvae.fundingContactPhone

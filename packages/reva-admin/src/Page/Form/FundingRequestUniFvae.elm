@@ -110,6 +110,14 @@ form maybeCertification formData ( candidacy, referential ) =
                     (totalHourCount formData |> displayHours)
                     (totalCost formData |> displayEuros)
           )
+        , ( "", Form.BreakToplevel )
+        , ( "funding-contact", Form.Title1 "4. Responsable du financement" )
+        , ( "funding-contact-title", Form.Title2 "Informations concernant le responsable du financement" )
+        , ( keys.fundingContactLastname, Form.Input "Nom" )
+        , ( keys.fundingContactFirstname, Form.Input "Prénom" )
+        , ( keys.fundingContactPhone, Form.Input "Numéro de téléphone" )
+        , ( keys.fundingContactEmail, Form.Input "Adresse email" )
+        , ( "", Form.Break )
         ]
     , saveLabel = Nothing
     , submitLabel = "Envoyer"

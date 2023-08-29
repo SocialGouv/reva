@@ -1,5 +1,7 @@
 module Data.Form.FundingRequestUniFvae exposing (FundingRequest, fromDict, keys, maybeFundingRequest, toDict, validate)
 
+-- import Admin.Object.FundingRequestUnifvae exposing (fundingContactEmail, fundingContactFirstname, fundingContactLastname, fundingContactPhone)
+
 import Admin.Enum.Gender exposing (Gender(..))
 import Admin.Scalar exposing (Decimal, Uuid)
 import Data.Candidacy exposing (Candidacy)
@@ -30,6 +32,10 @@ keys =
     , otherTraining = "otherTraining"
     , otherTrainingHourCount = "otherTrainingHourCount"
     , otherTrainingCost = "otherTrainingCost"
+    , fundingContactFirstname = "fundingContactFirstname"
+    , fundingContactLastname = "fundingContactLastname"
+    , fundingContactEmail = "fundingContactEmail"
+    , fundingContactPhone = "fundingContactPhone"
     }
 
 
@@ -59,6 +65,10 @@ fromDict basicSkillsIds mandatoryTrainingIds formData =
         (decode.string .otherTraining "")
         (decode.decimal .otherTrainingHourCount (Admin.Scalar.Decimal "0"))
         (decode.decimal .otherTrainingCost (Admin.Scalar.Decimal "0"))
+        (decode.maybe.string .fundingContactFirstname)
+        (decode.maybe.string .fundingContactLastname)
+        (decode.maybe.string .fundingContactEmail)
+        (decode.maybe.string .fundingContactPhone)
 
 
 type alias FundingRequest =
@@ -81,6 +91,10 @@ type alias FundingRequest =
     , otherTraining : String
     , otherTrainingHourCount : Decimal
     , otherTrainingCost : Decimal
+    , fundingContactFirstname : Maybe String
+    , fundingContactLastname : Maybe String
+    , fundingContactEmail : Maybe String
+    , fundingContactPhone : Maybe String
     }
 
 
@@ -122,6 +136,10 @@ toDict funding =
             , ( .otherTraining, string .otherTraining )
             , ( .otherTrainingHourCount, decimal .otherTrainingHourCount )
             , ( .otherTrainingCost, decimal .otherTrainingCost )
+            , ( .fundingContactFirstname, string (.fundingContactFirstname >> Maybe.withDefault "") )
+            , ( .fundingContactLastname, string (.fundingContactLastname >> Maybe.withDefault "") )
+            , ( .fundingContactEmail, string (.fundingContactEmail >> Maybe.withDefault "") )
+            , ( .fundingContactPhone, string (.fundingContactPhone >> Maybe.withDefault "") )
             ]
                 |> Helper.toKeyedList keys
     in

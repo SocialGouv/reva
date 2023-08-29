@@ -568,9 +568,9 @@ buildFundingRequestUnifvaeInput required____ fillOptionals____ =
     let
         optionals____ =
             fillOptionals____
-                { candidateSecondname = Absent, candidateThirdname = Absent }
+                { candidateSecondname = Absent, candidateThirdname = Absent, fundingContactFirstname = Absent, fundingContactLastname = Absent, fundingContactEmail = Absent, fundingContactPhone = Absent }
     in
-    { candidateSecondname = optionals____.candidateSecondname, candidateThirdname = optionals____.candidateThirdname, candidateGender = required____.candidateGender, individualHourCount = required____.individualHourCount, individualCost = required____.individualCost, collectiveHourCount = required____.collectiveHourCount, collectiveCost = required____.collectiveCost, basicSkillsHourCount = required____.basicSkillsHourCount, basicSkillsCost = required____.basicSkillsCost, mandatoryTrainingsHourCount = required____.mandatoryTrainingsHourCount, mandatoryTrainingsCost = required____.mandatoryTrainingsCost, certificateSkillsHourCount = required____.certificateSkillsHourCount, certificateSkillsCost = required____.certificateSkillsCost, otherTrainingHourCount = required____.otherTrainingHourCount, otherTrainingCost = required____.otherTrainingCost }
+    { candidateSecondname = optionals____.candidateSecondname, candidateThirdname = optionals____.candidateThirdname, candidateGender = required____.candidateGender, individualHourCount = required____.individualHourCount, individualCost = required____.individualCost, collectiveHourCount = required____.collectiveHourCount, collectiveCost = required____.collectiveCost, basicSkillsHourCount = required____.basicSkillsHourCount, basicSkillsCost = required____.basicSkillsCost, mandatoryTrainingsHourCount = required____.mandatoryTrainingsHourCount, mandatoryTrainingsCost = required____.mandatoryTrainingsCost, certificateSkillsHourCount = required____.certificateSkillsHourCount, certificateSkillsCost = required____.certificateSkillsCost, otherTrainingHourCount = required____.otherTrainingHourCount, otherTrainingCost = required____.otherTrainingCost, fundingContactFirstname = optionals____.fundingContactFirstname, fundingContactLastname = optionals____.fundingContactLastname, fundingContactEmail = optionals____.fundingContactEmail, fundingContactPhone = optionals____.fundingContactPhone }
 
 
 type alias FundingRequestUnifvaeInputRequiredFields =
@@ -593,6 +593,10 @@ type alias FundingRequestUnifvaeInputRequiredFields =
 type alias FundingRequestUnifvaeInputOptionalFields =
     { candidateSecondname : OptionalArgument String
     , candidateThirdname : OptionalArgument String
+    , fundingContactFirstname : OptionalArgument String
+    , fundingContactLastname : OptionalArgument String
+    , fundingContactEmail : OptionalArgument String
+    , fundingContactPhone : OptionalArgument String
     }
 
 
@@ -614,6 +618,10 @@ type alias FundingRequestUnifvaeInput =
     , certificateSkillsCost : Data.Scalar.Decimal
     , otherTrainingHourCount : Data.Scalar.Decimal
     , otherTrainingCost : Data.Scalar.Decimal
+    , fundingContactFirstname : OptionalArgument String
+    , fundingContactLastname : OptionalArgument String
+    , fundingContactEmail : OptionalArgument String
+    , fundingContactPhone : OptionalArgument String
     }
 
 
@@ -622,7 +630,7 @@ type alias FundingRequestUnifvaeInput =
 encodeFundingRequestUnifvaeInput : FundingRequestUnifvaeInput -> Value
 encodeFundingRequestUnifvaeInput input____ =
     Encode.maybeObject
-        [ ( "candidateSecondname", Encode.string |> Encode.optional input____.candidateSecondname ), ( "candidateThirdname", Encode.string |> Encode.optional input____.candidateThirdname ), ( "candidateGender", Encode.enum Admin.Enum.Gender.toString input____.candidateGender |> Just ), ( "individualHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.individualHourCount |> Just ), ( "individualCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.individualCost |> Just ), ( "collectiveHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.collectiveHourCount |> Just ), ( "collectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.collectiveCost |> Just ), ( "basicSkillsHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.basicSkillsHourCount |> Just ), ( "basicSkillsCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.basicSkillsCost |> Just ), ( "mandatoryTrainingsHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.mandatoryTrainingsHourCount |> Just ), ( "mandatoryTrainingsCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.mandatoryTrainingsCost |> Just ), ( "certificateSkillsHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.certificateSkillsHourCount |> Just ), ( "certificateSkillsCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.certificateSkillsCost |> Just ), ( "otherTrainingHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.otherTrainingHourCount |> Just ), ( "otherTrainingCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.otherTrainingCost |> Just ) ]
+        [ ( "candidateSecondname", Encode.string |> Encode.optional input____.candidateSecondname ), ( "candidateThirdname", Encode.string |> Encode.optional input____.candidateThirdname ), ( "candidateGender", Encode.enum Admin.Enum.Gender.toString input____.candidateGender |> Just ), ( "individualHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.individualHourCount |> Just ), ( "individualCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.individualCost |> Just ), ( "collectiveHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.collectiveHourCount |> Just ), ( "collectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.collectiveCost |> Just ), ( "basicSkillsHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.basicSkillsHourCount |> Just ), ( "basicSkillsCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.basicSkillsCost |> Just ), ( "mandatoryTrainingsHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.mandatoryTrainingsHourCount |> Just ), ( "mandatoryTrainingsCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.mandatoryTrainingsCost |> Just ), ( "certificateSkillsHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.certificateSkillsHourCount |> Just ), ( "certificateSkillsCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.certificateSkillsCost |> Just ), ( "otherTrainingHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.otherTrainingHourCount |> Just ), ( "otherTrainingCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.otherTrainingCost |> Just ), ( "fundingContactFirstname", Encode.string |> Encode.optional input____.fundingContactFirstname ), ( "fundingContactLastname", Encode.string |> Encode.optional input____.fundingContactLastname ), ( "fundingContactEmail", Encode.string |> Encode.optional input____.fundingContactEmail ), ( "fundingContactPhone", Encode.string |> Encode.optional input____.fundingContactPhone ) ]
 
 
 buildPaymentRequestInput :
