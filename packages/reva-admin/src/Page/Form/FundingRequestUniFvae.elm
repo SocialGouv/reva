@@ -27,15 +27,7 @@ form maybeCertification formData ( candidacy, referential ) =
         displayInfo key =
             ( key
             , Data.Form.get key formData
-                |> Maybe.map
-                    (\s ->
-                        Form.StaticHtml <|
-                            View.Form.column
-                                [ class "-mt-4 min-h-[120px]"
-                                , class "text-sm text-gray-500"
-                                ]
-                                [ text s ]
-                    )
+                |> Maybe.map (\s -> Form.StaticHtml <| View.Form.summary s)
                 |> Maybe.withDefault Form.Empty
             )
     in

@@ -1,4 +1,4 @@
-module View.Form exposing (column, columnAuto, intermediateTotal, total)
+module View.Form exposing (column, columnAuto, intermediateTotal, summary, total)
 
 import Accessibility exposing (Attribute, div, text)
 import Html exposing (Html)
@@ -46,3 +46,12 @@ total label total1 total2 =
         , columnAuto [ class "mr-4" ] [ text total1 ]
         , columnAuto [ class "font-medium" ] [ text total2 ]
         ]
+
+
+summary : String -> Html msg
+summary s =
+    column
+        [ class "min-h-[120px] max-h-[180px] overflow-auto"
+        , class "text-sm text-gray-500"
+        ]
+        [ text s ]

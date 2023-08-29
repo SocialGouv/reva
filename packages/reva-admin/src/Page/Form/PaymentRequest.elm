@@ -40,6 +40,13 @@ form maybeCertification formData ( candidacy, referential ) =
 
         emptyColumn =
             ( "", Form.StaticHtml <| View.Form.column [] [] )
+
+        displayInfo key =
+            ( key
+            , Data.Form.get key formData
+                |> Maybe.map (\s -> Form.StaticHtml <| View.Form.summary s)
+                |> Maybe.withDefault Form.Empty
+            )
     in
     { elements =
         [ ( "heading", Form.Title1 "1 - Informations des prestations" )
@@ -132,18 +139,17 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( keys.basicSkillsHourCount, hourCountElement )
         , ( keys.basicSkillsCost, costElement )
         , ( "skills", Form.TitleInlined "Bloc de compétences" )
-        , ( keys.certificateSkills, Form.ReadOnlyElement <| Form.Textarea "" Nothing )
         , ( "certificateSkillsReview"
           , Form.ReadOnlyElements
                 [ ( keys.certificateSkillsEstimatedHourCount, estimatedHourCountElement )
                 , ( keys.certificateSkillsEstimatedCost, estimatedCostElement )
                 ]
           )
-        , ( "", Form.StaticHtml <| View.Form.column [] [] )
+        , displayInfo keys.certificateSkills
         , ( keys.certificateSkillsHourCount, hourCountElement )
         , ( keys.certificateSkillsCost, costElement )
-        , ( "other", Form.TitleInlined "Autres actions de formations" )
-        , ( keys.otherTraining, Form.ReadOnlyElement <| Form.Textarea "Formations complémentaires" Nothing )
+        , ( "other", Form.Title3 "Autres actions de formations" )
+        , displayInfo keys.otherTraining
         , ( keys.otherTrainingHourCount, hourCountElement )
         , ( keys.otherTrainingCost, costElement )
         , ( "total-training", Form.TitleInlined "Total" )
