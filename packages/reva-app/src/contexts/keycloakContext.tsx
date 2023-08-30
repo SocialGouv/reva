@@ -7,6 +7,7 @@ const KeycloakContext = React.createContext<{
   authenticated: boolean;
   token: string | undefined;
   setTokens: any;
+  logout: () => void;
 } | null>(null);
 
 interface KeycloakProviderProps {
@@ -105,6 +106,7 @@ export const KeycloakProvider = ({
         authenticated,
         token,
         setTokens,
+        logout: keycloakInstance.logout,
       }}
     >
       {ready && children}
