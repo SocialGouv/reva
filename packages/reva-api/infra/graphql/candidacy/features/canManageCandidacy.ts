@@ -2,8 +2,8 @@ import { Account } from "@prisma/client";
 import debug from "debug";
 import { Either, Left, Right } from "purify-ts";
 
-import { Candidacy } from "../../../../domain/types/candidacy";
 import { Role } from "../../account/account.types";
+import { Candidacy } from "../candidacy.types";
 
 const log = debug("domain:canManageCandidacy");
 

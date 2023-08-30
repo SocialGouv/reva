@@ -1,4 +1,4 @@
-import { CandidacyBusinessEvent } from "../../domain/types/candidacy";
+import { CandidacyBusinessEvent } from "../graphql/candidacy/candidacy.types";
 import { CandidateBusinessEvent } from "../graphql/candidate/candidate.types";
 import { logger } from "./logger";
 

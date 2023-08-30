@@ -1,14 +1,10 @@
 import { Either, EitherAsync } from "purify-ts";
 
 import {
-  Candidacy,
-  Experience,
-  ExperienceInput,
-} from "../../../../domain/types/candidacy";
-import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import { Candidacy, Experience, ExperienceInput } from "../candidacy.types";
 
 interface AddExperienceToCandidacyDeps {
   createExperience: (params: {

@@ -1,7 +1,7 @@
 import { Left, Right } from "purify-ts";
 
-import { logger } from "../../logger";
-import { prismaClient } from "./client";
+import { prismaClient } from "../../../database/postgres/client";
+import { logger } from "../../../logger";
 
 export const getTrainings = async () => {
   try {

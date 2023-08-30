@@ -1,13 +1,15 @@
 import { Feasibility, FeasibilityStatus } from "@prisma/client";
 
-import { Candidacy } from "../../../domain/types/candidacy";
 import { processPaginationInfo } from "../../../domain/utils/pagination";
-import { updateCandidacyStatus } from "../../database/postgres/candidacies";
-import * as candidacyDb from "../../database/postgres/candidacies";
-import { getCandidacyFromId } from "../../database/postgres/candidacies";
 import { prismaClient } from "../../database/postgres/client";
 import { logger } from "../../logger";
 import { getAccountFromKeycloakId } from "../account/database/accounts";
+import { Candidacy } from "../candidacy/candidacy.types";
+import {
+  getCandidaciesFromIds,
+  getCandidacyFromId,
+  updateCandidacyStatus,
+} from "../candidacy/database/candidacies";
 import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
 import {
   sendFeasibilityDecisionTakenToAAPEmail,
@@ -302,7 +304,7 @@ export const getCandidacyById = async ({
 }: {
   candidacyId: string;
 }): Promise<Candidacy> => {
-  const result = await candidacyDb.getCandidacyFromId(candidacyId);
+  const result = await getCandidacyFromId(candidacyId);
   if (result.isLeft()) {
     throw new Error(result.leftOrDefault("Erreur inattendue"));
   } else {
@@ -315,7 +317,7 @@ export const getCandidaciesByIds = async ({
 }: {
   candidacyIds: string[];
 }) => {
-  return candidacyDb.getCandidaciesFromIds(candidacyIds);
+  return getCandidaciesFromIds(candidacyIds);
 };
 
 export const getFeasibilityById = async ({

@@ -1,11 +1,11 @@
 import { ReorientationReason } from "@prisma/client";
 import { Either, Maybe, Right } from "purify-ts";
 
-import { Candidacy } from "../../../../domain/types/candidacy";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import { Candidacy } from "../candidacy.types";
 import { archiveCandidacy } from "./archiveCandidacy";
 
 const withTemporalInfo = (obj: any) => ({

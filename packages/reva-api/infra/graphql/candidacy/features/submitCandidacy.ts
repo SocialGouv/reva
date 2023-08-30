@@ -1,11 +1,11 @@
 import { Organism } from "@prisma/client";
 import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
-import { Candidacy } from "../../../../domain/types/candidacy";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import { Candidacy } from "../candidacy.types";
 
 interface SubmitCandidacyDeps {
   updateCandidacyStatus: (params: {

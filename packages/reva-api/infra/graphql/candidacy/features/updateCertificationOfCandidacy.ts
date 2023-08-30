@@ -1,10 +1,10 @@
 import { Either, EitherAsync } from "purify-ts";
 
-import { Candidacy } from "../../../../domain/types/candidacy";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import { Candidacy } from "../candidacy.types";
 
 interface UpdateCertificationOfCandidacyDeps {
   updateCertification: (params: {

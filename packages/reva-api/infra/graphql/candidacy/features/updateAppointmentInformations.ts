@@ -1,14 +1,14 @@
 import { Either, EitherAsync } from "purify-ts";
 
 import {
-  AppointmentInformations,
-  Candidacy,
-  CandidateTypology,
-} from "../../../../domain/types/candidacy";
-import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import {
+  AppointmentInformations,
+  Candidacy,
+  CandidateTypology,
+} from "../candidacy.types";
 
 interface UpdateAppointmentInformations {
   updateAppointmentInformations: (params: {

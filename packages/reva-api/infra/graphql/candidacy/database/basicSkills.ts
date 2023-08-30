@@ -1,8 +1,8 @@
 import { Either, Left, Right } from "purify-ts";
 
-import * as domain from "../../../domain/types/candidacy";
-import { logger } from "../../logger";
-import { prismaClient } from "./client";
+import { prismaClient } from "../../../database/postgres/client";
+import { logger } from "../../../logger";
+import * as domain from "../candidacy.types";
 
 export const getBasicSkills = async (): Promise<
   Either<string, domain.BasicSkill[]>

@@ -1,10 +1,10 @@
 import { Either, EitherAsync, Left, Maybe } from "purify-ts";
 
-import { ExamInfo } from "../../../../domain/types/candidacy";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import { ExamInfo } from "../candidacy.types";
 
 interface UpdateExamInfoDeps {
   getExamInfoFromCandidacyId: (params: {

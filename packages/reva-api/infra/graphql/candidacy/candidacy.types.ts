@@ -5,7 +5,7 @@ import {
   DropOutReason,
   Region,
   ReorientationReason,
-} from "../../infra/graphql/referential/referential.types";
+} from "../../graphql/referential/referential.types";
 
 interface CandidacyAbstract {
   deviceId: string;

@@ -2,8 +2,8 @@ import { Organism, Prisma } from "@prisma/client";
 import { camelCase, mapKeys } from "lodash";
 import { Either, Left, Maybe, Right } from "purify-ts";
 
-import * as domain from "../../../domain/types/candidacy";
-import { DepartmentWithOrganismMethods } from "../../../domain/types/candidacy";
+import * as domain from "../../graphql/candidacy/candidacy.types";
+import { DepartmentWithOrganismMethods } from "../../graphql/candidacy/candidacy.types";
 import { logger } from "../../logger";
 import { prismaClient } from "./client";
 

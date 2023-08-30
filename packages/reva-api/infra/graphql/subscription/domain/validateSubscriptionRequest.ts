@@ -3,14 +3,14 @@ import { randomUUID } from "crypto";
 import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
 import {
-  DepartmentWithOrganismMethods,
-  Organism,
-} from "../../../../domain/types/candidacy";
-import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
 import { logger } from "../../../logger";
+import {
+  DepartmentWithOrganismMethods,
+  Organism,
+} from "../../candidacy/candidacy.types";
 import { __TEST_IAM_FAIL_CHECK__, __TEST_IAM_PASS_CHECK__ } from "./test-const";
 import { Account } from ".prisma/client";
 

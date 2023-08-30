@@ -2,10 +2,14 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { PaymentRequest } from "@prisma/client";
 import mercurius from "mercurius";
 
-import { Candidacy } from "../../../../domain/types/candidacy";
-import * as candidaciesDb from "../../../database/postgres/candidacies";
-import * as trainingDb from "../../../database/postgres/trainings";
 import { Role } from "../../account/account.types";
+import { Candidacy } from "../../candidacy/candidacy.types";
+import {
+  existsCandidacyWithActiveStatus,
+  getCandidacyFromId,
+  updateCandidacyStatus,
+} from "../../candidacy/database/candidacies";
+import { getAfgsuTrainingId } from "../../candidacy/database/trainings";
 import { getCandidateByCandidacyId } from "../../candidate/database/candidates";
 import * as fundingRequestsDb from "./database/fundingRequests";
 import * as paymentRequestsDb from "./database/paymentRequest";
@@ -42,7 +46,7 @@ const unsafeResolvers = {
     ) => {
       const result = await getFundingRequest({
         hasRole: context.auth.hasRole,
-        getCandidacyFromId: candidaciesDb.getCandidacyFromId,
+        getCandidacyFromId,
         getFundingRequestFromCandidacyId: fundingRequestsDb.getFundingRequest,
       })({ candidacyId: params.candidacyId });
 
@@ -76,7 +80,7 @@ const unsafeResolvers = {
           paymentRequestsDb.getPaymentRequestByCandidacyId,
         createPaymentRequest: paymentRequestsDb.createPaymentRequest,
         updatePaymentRequest: paymentRequestsDb.updatePaymentRequest,
-        getAfgsuTrainingId: trainingDb.getAfgsuTrainingId,
+        getAfgsuTrainingId: getAfgsuTrainingId,
       })({
         candidacyId,
         paymentRequest,
@@ -93,15 +97,14 @@ const unsafeResolvers = {
     ) => {
       const result = await confirmPaymentRequest({
         hasRole: context.auth.hasRole,
-        existsCandidacyWithActiveStatus:
-          candidaciesDb.existsCandidacyWithActiveStatus,
+        existsCandidacyWithActiveStatus,
         getPaymentRequestByCandidacyId:
           paymentRequestsDb.getPaymentRequestByCandidacyId,
-        updateCandidacyStatus: candidaciesDb.updateCandidacyStatus,
+        updateCandidacyStatus,
         createPaymentRequestBatch:
           paymentRequestBatchesDb.createPaymentRequestBatch,
         getFundingRequestByCandidacyId: fundingRequestsDb.getFundingRequest,
-        getCandidacyFromId: candidaciesDb.getCandidacyFromId,
+        getCandidacyFromId,
       })({
         candidacyId: candidacyId,
       });

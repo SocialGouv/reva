@@ -2,27 +2,27 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { Organism } from "@prisma/client";
 import mercurius from "mercurius";
 
-import {
-  Admissibility,
-  Candidacy,
-  CandidacyBusinessEvent,
-  CandidacyStatusFilter,
-  ExamInfo,
-} from "../../../domain/types/candidacy";
-import * as admissibilityDb from "../../database/postgres/admissibility";
-import * as basicSkillDb from "../../database/postgres/basicSkills";
-import * as candidacyDb from "../../database/postgres/candidacies";
 import { prismaClient } from "../../database/postgres/client";
-import * as examInfoDb from "../../database/postgres/examInfo";
-import * as experienceDb from "../../database/postgres/experiences";
 import * as organismDb from "../../database/postgres/organisms";
-import * as trainingDb from "../../database/postgres/trainings";
 import { sendNewCandidacyEmail } from "../../email/sendNewCandidacyEmail";
 import { logger } from "../../logger";
 import { notifyNewCandidacy } from "../../mattermost";
 import { Role } from "../account/account.types";
 import { getDropOutReasonById } from "../referential/database/dropOutReasons";
 import { getReorientationReasonById } from "../referential/database/reorientationReasons";
+import {
+  Admissibility,
+  Candidacy,
+  CandidacyBusinessEvent,
+  CandidacyStatusFilter,
+  ExamInfo,
+} from "./candidacy.types";
+import * as admissibilityDb from "./database/admissibility";
+import * as basicSkillDb from "./database/basicSkills";
+import * as candidacyDb from "./database/candidacies";
+import * as examInfoDb from "./database/examInfo";
+import * as experienceDb from "./database/experiences";
+import * as trainingDb from "./database/trainings";
 import { addExperienceToCandidacy } from "./features/addExperienceToCandidacy";
 import { archiveCandidacy } from "./features/archiveCandidacy";
 import { createCandidacy } from "./features/createCandidacy";

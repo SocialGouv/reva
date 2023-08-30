@@ -1,10 +1,10 @@
 import { Either, EitherAsync } from "purify-ts";
 
-import { BasicSkill } from "../../../../domain/types/candidacy";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import { BasicSkill } from "../candidacy.types";
 
 interface GetBasicSkillsDeps {
   getBasicSkills: () => Promise<Either<string, BasicSkill[]>>;

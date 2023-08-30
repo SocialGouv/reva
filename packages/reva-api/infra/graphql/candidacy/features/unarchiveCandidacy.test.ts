@@ -1,11 +1,11 @@
 import { sub } from "date-fns";
 import { Either, Maybe, Right } from "purify-ts";
 
-import { Candidacy } from "../../../../domain/types/candidacy";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import { Candidacy } from "../candidacy.types";
 import { unarchiveCandidacy } from "./unarchiveCandidacy";
 
 const recentDate = new Date();

@@ -1,11 +1,11 @@
 import { Either, EitherAsync, Left, Maybe } from "purify-ts";
 
-import { ExamInfo } from "../../../../domain/types/candidacy";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
 import { Role } from "../../account/account.types";
+import { ExamInfo } from "../candidacy.types";
 
 interface GetExamInfoDeps {
   hasRole: (role: Role) => boolean;

@@ -1,5 +1,5 @@
-import { CandidacyStatusFilter } from "../../../../domain/types/candidacy";
 import { prismaClient } from "../../../database/postgres/client";
+import { CandidacyStatusFilter } from "../candidacy.types";
 
 export const getCandidacyCountByStatus = async ({
   hasRole,

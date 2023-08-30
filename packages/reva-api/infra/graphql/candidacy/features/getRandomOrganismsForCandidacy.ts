@@ -1,10 +1,10 @@
 import { Either, EitherAsync } from "purify-ts";
 
-import { Candidacy, Organism } from "../../../../domain/types/candidacy";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import { Candidacy, Organism } from "../candidacy.types";
 
 interface GetRandomActiveOrganismsForCandidacyWithNewTypologiesDeps {
   getCandidacyFromId: (

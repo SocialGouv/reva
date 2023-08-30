@@ -9,10 +9,10 @@ import {
   Prisma,
 } from "@prisma/client";
 
-import * as domain from "../../../../domain/types/candidacy";
-import { CandidacyStatusFilter } from "../../../../domain/types/candidacy";
 import { processPaginationInfo } from "../../../../domain/utils/pagination";
 import { prismaClient } from "../../../database/postgres/client";
+import * as domain from "../candidacy.types";
+import { CandidacyStatusFilter } from "../candidacy.types";
 
 const toDomainCandidacySummary = (
   candidacy: Candidacy & {

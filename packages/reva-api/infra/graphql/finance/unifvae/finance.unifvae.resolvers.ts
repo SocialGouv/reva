@@ -1,12 +1,12 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import mercurius from "mercurius";
 
-import { CandidacyBusinessEvent } from "../../../../domain/types/candidacy";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
 import { prismaClient } from "../../../database/postgres/client";
+import { CandidacyBusinessEvent } from "../../candidacy/candidacy.types";
 import { isAdminOrCandidacyCompanion } from "../../security/presets";
 import {
   createFundingRequestUnifvae,

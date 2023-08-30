@@ -1,6 +1,6 @@
 import { Decimal } from "@prisma/client/runtime";
 
-import { Candidacy } from "../../../../../domain/types/candidacy";
+import { Candidacy } from "../../../candidacy/candidacy.types";
 import { FundingRequest, PaymentRequest } from "../finance.types";
 import { mapPaymentRequestBatchContent } from "./confirmPaymentRequest";
 

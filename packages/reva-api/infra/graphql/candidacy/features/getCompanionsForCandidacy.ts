@@ -1,10 +1,10 @@
 import { Either, EitherAsync } from "purify-ts";
 
-import { Organism } from "../../../../domain/types/candidacy";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import { Organism } from "../candidacy.types";
 
 interface GetCompanionsForCandidacyDeps {
   getCompanionsForCandidacy: (params: {
