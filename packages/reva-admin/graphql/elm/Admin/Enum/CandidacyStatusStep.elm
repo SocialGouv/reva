@@ -14,6 +14,7 @@ type CandidacyStatusStep
     | PriseEnCharge
     | ParcoursEnvoye
     | ParcoursConfirme
+    | DossierFaisabiliteEnvoye
     | DemandeFinancementEnvoye
     | DemandePaiementEnvoyee
     | DossierPro
@@ -22,7 +23,7 @@ type CandidacyStatusStep
 
 list : List CandidacyStatusStep
 list =
-    [ Archive, Projet, Validation, PriseEnCharge, ParcoursEnvoye, ParcoursConfirme, DemandeFinancementEnvoye, DemandePaiementEnvoyee, DossierPro, Certification ]
+    [ Archive, Projet, Validation, PriseEnCharge, ParcoursEnvoye, ParcoursConfirme, DossierFaisabiliteEnvoye, DemandeFinancementEnvoye, DemandePaiementEnvoyee, DossierPro, Certification ]
 
 
 decoder : Decoder CandidacyStatusStep
@@ -48,6 +49,9 @@ decoder =
 
                     "PARCOURS_CONFIRME" ->
                         Decode.succeed ParcoursConfirme
+
+                    "DOSSIER_FAISABILITE_ENVOYE" ->
+                        Decode.succeed DossierFaisabiliteEnvoye
 
                     "DEMANDE_FINANCEMENT_ENVOYE" ->
                         Decode.succeed DemandeFinancementEnvoye
@@ -88,6 +92,9 @@ toString enum____ =
 
         ParcoursConfirme ->
             "PARCOURS_CONFIRME"
+
+        DossierFaisabiliteEnvoye ->
+            "DOSSIER_FAISABILITE_ENVOYE"
 
         DemandeFinancementEnvoye ->
             "DEMANDE_FINANCEMENT_ENVOYE"
@@ -133,6 +140,9 @@ fromString enumString____ =
 
         "PARCOURS_CONFIRME" ->
             Just ParcoursConfirme
+
+        "DOSSIER_FAISABILITE_ENVOYE" ->
+            Just DossierFaisabiliteEnvoye
 
         "DEMANDE_FINANCEMENT_ENVOYE" ->
             Just DemandeFinancementEnvoye

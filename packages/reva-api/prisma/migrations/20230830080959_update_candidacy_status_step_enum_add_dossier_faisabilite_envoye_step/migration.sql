@@ -1,0 +1,3 @@
+-- AlterEnum
+ALTER TYPE "CandidacyStatusStep"
+ADD VALUE 'DOSSIER_FAISABILITE_ENVOYE';

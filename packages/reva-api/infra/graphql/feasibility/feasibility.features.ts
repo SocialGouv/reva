@@ -3,6 +3,7 @@ import { Feasibility, FeasibilityStatus } from "@prisma/client";
 import { Candidacy } from "../../../domain/types/candidacy";
 import { processPaginationInfo } from "../../../domain/utils/pagination";
 import { getAccountFromKeycloakId } from "../../database/postgres/accounts";
+import { updateCandidacyStatus } from "../../database/postgres/candidacies";
 import * as candidacyDb from "../../database/postgres/candidacies";
 import { getCandidacyFromId } from "../../database/postgres/candidacies";
 import { prismaClient } from "../../database/postgres/client";
@@ -82,6 +83,11 @@ export const createFeasibility = async ({
           }
         : undefined,
     },
+  });
+
+  await updateCandidacyStatus({
+    candidacyId,
+    status: "DOSSIER_FAISABILITE_ENVOYE",
   });
 
   const candidacy = await prismaClient.candidacy.findFirst({
