@@ -5,6 +5,7 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import { injectCsvRows, readCsvRows } from "../read-csv";
 
 export async function seedCertificationAuthorities(prisma: PrismaClient) {
+  const noEmailAutoritiesId: string[] = [];
   await prisma.$transaction(async (tx) => {
     await tx.$executeRawUnsafe(
       `SET CONSTRAINTS "account_certification_authority_id_fkey" DEFERRED;`
@@ -24,10 +25,13 @@ export async function seedCertificationAuthorities(prisma: PrismaClient) {
         "certificationAuthorityOnDepartment",
       ],
       transform: ({ id, label, contactFullName, contactEmail }) => {
-        const actualContactEmail =
-          process.env.APP_ENV === "production"
-            ? contactEmail
-            : "revatrash@gmail.com";
+        let actualContactEmail = contactEmail;
+        if (process.env.APP_ENV !== "production") {
+          actualContactEmail =
+            typeof contactEmail === "string" && contactEmail.length > 0
+              ? "revatrash@gmail.com"
+              : null; // keep it null to avoid further insert
+        }
         return {
           where: { id },
           create: {
@@ -39,7 +43,14 @@ export async function seedCertificationAuthorities(prisma: PrismaClient) {
           update: { label, contactFullName, contactEmail: actualContactEmail },
         };
       },
-      injectCommand: tx.certificationAuthority.upsert,
+      injectCommand: async (args) => {
+        // Insert only those with an email address, ban the others
+        if (!args.create.contactEmail) {
+          noEmailAutoritiesId.push(args.create.id as string);
+          return null;
+        }
+        return tx.certificationAuthority.upsert(args);
+      },
     });
 
     const certificationIdsByCertificationAuthorityIds = await readCsvRows<{
@@ -67,7 +78,10 @@ export async function seedCertificationAuthorities(prisma: PrismaClient) {
         )
         .filter(
           (certificationAuthorityOnCertification) =>
-            certificationAuthorityOnCertification.certificationId
+            Boolean(certificationAuthorityOnCertification.certificationId) &&
+            !noEmailAutoritiesId.includes(
+              certificationAuthorityOnCertification.certificationAuthorityId
+            )
         );
 
     await tx.certificationAuthorityOnCertification.deleteMany();
@@ -100,7 +114,11 @@ export async function seedCertificationAuthorities(prisma: PrismaClient) {
             departmentId: departments.find((d) => d.code === dCode)?.id || "",
           }))
         )
-        .filter((caod) => caod.departmentId);
+        .filter(
+          (caod) =>
+            Boolean(caod.departmentId) &&
+            !noEmailAutoritiesId.includes(caod.certificationAuthorityId)
+        );
 
     await tx.certificationAuthorityOnDepartment.deleteMany();
     await tx.certificationAuthorityOnDepartment.createMany({
