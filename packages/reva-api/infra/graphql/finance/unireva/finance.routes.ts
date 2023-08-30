@@ -1,8 +1,8 @@
 import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
-import { getAccountFromKeycloakId } from "../../../database/postgres/accounts";
 import { getCandidacyFromId } from "../../../database/postgres/candidacies";
+import { getAccountFromKeycloakId } from "../../account/database/accounts";
 import { canManageCandidacy } from "../../candidacy/features/canManageCandidacy";
 import { addFileToUploadSpooler } from "./database/fileUploadSpooler";
 import { getFundingRequest } from "./database/fundingRequests";

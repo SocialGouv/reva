@@ -7,10 +7,10 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../domain/types/functionalError";
-import * as accountsDb from "../../database/postgres/accounts";
-import * as certificationAuthorityDb from "../../database/postgres/certificationAuthorities";
 import * as organismsDb from "../../database/postgres/organisms";
 import * as IAM from "../../iam/keycloak";
+import { getCertificationAuthorityById } from "../feasibility/feasibility.features";
+import * as accountsDb from "./database/accounts";
 import { createAccount } from "./features/createAccount";
 
 export const resolvers = {
@@ -56,8 +56,7 @@ export const resolvers = {
         createAccountWithProfile: accountsDb.createAccountProfile,
         getAccountInIAM: IAM.getAccount(keycloakAdmin),
         getOrganismById: organismsDb.getOrganismById,
-        getCertificationAuthorityById:
-          certificationAuthorityDb.getCertificationAuthorityById,
+        getCertificationAuthorityById,
       })(params.account);
 
       return result

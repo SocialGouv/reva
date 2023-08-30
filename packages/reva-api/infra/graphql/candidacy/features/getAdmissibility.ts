@@ -1,11 +1,11 @@
 import { Either, EitherAsync, Left, Maybe } from "purify-ts";
 
-import { Role } from "../../../../domain/types/account";
 import { Admissibility } from "../../../../domain/types/candidacy";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import { Role } from "../../account/account.types";
 
 interface GetAdmissibilityDeps {
   hasRole: (role: Role) => boolean;

@@ -1,8 +1,8 @@
 import debug from "debug";
 import { IFieldResolver, MercuriusContext } from "mercurius";
 
-import { getAccountFromKeycloakId } from "../../../database/postgres/accounts";
 import { getCandidacyFromId } from "../../../database/postgres/candidacies";
+import { getAccountFromKeycloakId } from "../../account/database/accounts";
 import { canManageCandidacy } from "../../candidacy/features/canManageCandidacy";
 
 const log = debug("gql:security");

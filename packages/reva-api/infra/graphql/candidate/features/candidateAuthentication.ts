@@ -1,6 +1,5 @@
 import { Either, EitherAsync, Maybe, Right } from "purify-ts";
 
-import { IAMAccount } from "../../../../domain/types/account";
 import {
   Candidate,
   CandidateAuthenticationInput,
@@ -10,6 +9,7 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import { IAMAccount } from "../../account/account.types";
 
 interface CommonDeps {
   getCandidateIdFromIAM: (

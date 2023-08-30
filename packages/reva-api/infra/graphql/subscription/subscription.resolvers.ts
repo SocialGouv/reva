@@ -2,9 +2,12 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import mercurius from "mercurius";
 
-import * as AccountDb from "../../database/postgres/accounts";
 import * as OrganismDb from "../../database/postgres/organisms";
 import * as IAM from "../../iam/keycloak";
+import {
+  createAccountProfile,
+  getAccountFromEmail,
+} from "../account/database/accounts";
 import * as db from "./db/subscription-request";
 import * as domain from "./domain/index";
 import { sendRejectionEmail } from "./mail";
@@ -97,8 +100,8 @@ const unsafeResolvers = {
           deleteSubscriptionRequestById: db.deleteSubscriptionRequestById,
           getIamAccount: IAM.getAccount(keycloakAdmin),
           createAccountInIAM: IAM.createAccount(keycloakAdmin),
-          createAccountProfile: AccountDb.createAccountProfile,
-          getAccountFromEmail: AccountDb.getAccountFromEmail,
+          createAccountProfile: createAccountProfile,
+          getAccountFromEmail: getAccountFromEmail,
           getOrganismBySiretAndTypology:
             OrganismDb.getOrganismBySiretAndTypology,
           createOrganism: OrganismDb.createOrganism,

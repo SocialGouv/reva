@@ -2,11 +2,11 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { PaymentRequest } from "@prisma/client";
 import mercurius from "mercurius";
 
-import { Role } from "../../../../domain/types/account";
 import { Candidacy } from "../../../../domain/types/candidacy";
 import * as candidaciesDb from "../../../database/postgres/candidacies";
 import * as candidatesDb from "../../../database/postgres/candidates";
 import * as trainingDb from "../../../database/postgres/trainings";
+import { Role } from "../../account/account.types";
 import * as fundingRequestsDb from "./database/fundingRequests";
 import * as paymentRequestsDb from "./database/paymentRequest";
 import * as paymentRequestBatchesDb from "./database/paymentRequestBatches";

@@ -12,10 +12,10 @@ const filePath = "./referentials/certification-authorities.csv";
 
 import KcAdminClient from "@keycloak/keycloak-admin-client";
 
-import * as accountsDb from "../../../infra/database/postgres/accounts";
-import * as certificationAuthorityDb from "../../../infra/database/postgres/certificationAuthorities";
 import * as organismsDb from "../../../infra/database/postgres/organisms";
+import { createAccountProfile } from "../../../infra/graphql/account/database/accounts";
 import { createAccount } from "../../../infra/graphql/account/features/createAccount";
+import { getCertificationAuthorityById } from "../../../infra/graphql/feasibility/feasibility.features";
 import * as IAM from "../../../infra/iam/keycloak";
 import { readCsvRows } from "../read-csv";
 
@@ -30,11 +30,10 @@ const createAccountForCertificationAuthority = (params: {
 }) =>
   createAccount({
     createAccountInIAM: IAM.createAccount(keycloakAdmin),
-    createAccountWithProfile: accountsDb.createAccountProfile,
+    createAccountWithProfile: createAccountProfile,
     getAccountInIAM: IAM.getAccount(keycloakAdmin),
     getOrganismById: organismsDb.getOrganismById,
-    getCertificationAuthorityById:
-      certificationAuthorityDb.getCertificationAuthorityById,
+    getCertificationAuthorityById,
   })({
     group: "certification_authority",
     email: params.contactEmail,

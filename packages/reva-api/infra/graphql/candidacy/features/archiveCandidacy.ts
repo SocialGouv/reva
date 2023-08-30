@@ -1,12 +1,12 @@
 import { ReorientationReason } from "@prisma/client";
 import { Either, EitherAsync, Left, Maybe } from "purify-ts";
 
-import { Role } from "../../../../domain/types/account";
 import { Candidacy } from "../../../../domain/types/candidacy";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import { Role } from "../../account/account.types";
 
 interface ArchiveCandidacyDeps {
   getCandidacyFromId: (

@@ -2,7 +2,6 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { Organism } from "@prisma/client";
 import mercurius from "mercurius";
 
-import { Role } from "../../../domain/types/account";
 import {
   Admissibility,
   Candidacy,
@@ -21,6 +20,7 @@ import * as trainingDb from "../../database/postgres/trainings";
 import { sendNewCandidacyEmail } from "../../email/sendNewCandidacyEmail";
 import { logger } from "../../logger";
 import { notifyNewCandidacy } from "../../mattermost";
+import { Role } from "../account/account.types";
 import { getDropOutReasonById } from "../referential/database/dropOutReasons";
 import { getReorientationReasonById } from "../referential/database/reorientationReasons";
 import { addExperienceToCandidacy } from "./features/addExperienceToCandidacy";

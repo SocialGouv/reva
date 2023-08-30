@@ -1,10 +1,10 @@
 import { Either, EitherAsync, Left, Maybe } from "purify-ts";
 
-import { Role } from "../../../../../domain/types/account";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../../domain/types/functionalError";
+import { Role } from "../../../account/account.types";
 import { PaymentRequest } from "../finance.types";
 
 interface getPaymentRequestDeps {
