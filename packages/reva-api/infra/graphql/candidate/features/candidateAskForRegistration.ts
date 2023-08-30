@@ -1,10 +1,10 @@
 import { Either, EitherAsync } from "purify-ts";
 
-import { CandidateRegistrationInput } from "../../../../domain/types/candidate";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import { CandidateRegistrationInput } from "../candidate.types";
 
 interface CandidateInput {
   email: string;

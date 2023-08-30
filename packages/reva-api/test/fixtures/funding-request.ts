@@ -1,6 +1,6 @@
 import { Decimal } from "@prisma/client/runtime";
 
-import { Gender } from "../../domain/types/candidate";
+import { Gender } from "../../infra/graphql/candidate/candidate.types";
 
 const dummyUuid = "123456789abc-1234-1234-12345678-1234";
 

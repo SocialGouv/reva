@@ -5,13 +5,17 @@ import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
 import { Either, Left, Maybe, Right } from "purify-ts";
 
-import * as candidatesDb from "../../database/postgres/candidates";
 import {
   sendLoginEmail,
   sendRegistrationEmail,
   sendUnknownUserEmail,
 } from "../../email";
 import { logger } from "../../logger";
+import {
+  createCandidateWithCandidacy,
+  getCandidateByEmail as getCandidateByEmailFromDb,
+  getCandidateWithCandidacyFromKeycloakId,
+} from "./database/candidates";
 import { askForLogin } from "./features/candidateAskForLogin";
 import { askForRegistration } from "./features/candidateAskForRegistration";
 import { candidateAuthentication } from "./features/candidateAuthentication";
@@ -184,8 +188,7 @@ export const resolvers = {
       context: { auth: any }
     ) => {
       const result = await getCandidateWithCandidacy({
-        getCandidateWithCandidacy:
-          candidatesDb.getCandidateWithCandidacyFromKeycloakId,
+        getCandidateWithCandidacy: getCandidateWithCandidacyFromKeycloakId,
       })({ keycloakId: context.auth.userInfo?.sub });
 
       return result
@@ -199,7 +202,7 @@ export const resolvers = {
     ) => {
       const result = await getCandidateByEmail({
         hasRole: context.auth.hasRole,
-        getCandidateByEmail: candidatesDb.getCandidateByEmail,
+        getCandidateByEmail: getCandidateByEmailFromDb,
       })({ email });
 
       return result
@@ -249,13 +252,12 @@ export const resolvers = {
 
       const result = await candidateAuthentication({
         createCandidateInIAM: createCandidateAccountInIAM(keycloakAdmin),
-        createCandidateWithCandidacy: candidatesDb.createCandidateWithCandidacy,
+        createCandidateWithCandidacy,
         extractCandidateFromToken: async () => getJWTContent(params.token),
         extractEmailFromToken: async () => getJWTContent(params.token),
         getCandidateIdFromIAM: getCandidateAccountInIAM(keycloakAdmin),
         generateIAMToken: generateIAMToken(keycloakAdmin),
-        getCandidateWithCandidacy:
-          candidatesDb.getCandidateWithCandidacyFromKeycloakId,
+        getCandidateWithCandidacy: getCandidateWithCandidacyFromKeycloakId,
       })(params);
 
       return result

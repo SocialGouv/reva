@@ -1,10 +1,10 @@
-import { CandidacyStatusStep, Candidate } from "@prisma/client";
-import { Left, Maybe, Right } from "purify-ts";
+import { CandidacyStatusStep } from "@prisma/client";
+import { Left, Maybe } from "purify-ts";
 
-import { Candidacy } from "../../../domain/types/candidacy";
-import { logger } from "../../logger";
-import { candidacyIncludes } from "./candidacies";
-import { prismaClient } from "./client";
+import { Candidacy } from "../../../../domain/types/candidacy";
+import { candidacyIncludes } from "../../../database/postgres/candidacies";
+import { prismaClient } from "../../../database/postgres/client";
+import { logger } from "../../../logger";
 
 const candidateIncludes = {
   highestDegree: true,

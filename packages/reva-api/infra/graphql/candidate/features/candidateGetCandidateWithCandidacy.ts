@@ -1,10 +1,10 @@
 import { Either, EitherAsync } from "purify-ts";
 
-import { Candidate } from "../../../../domain/types/candidate";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import { Candidate } from "../candidate.types";
 
 interface GetCandidacyDeps {
   getCandidateWithCandidacy: (

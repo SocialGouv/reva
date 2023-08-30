@@ -4,9 +4,9 @@ import mercurius from "mercurius";
 
 import { Candidacy } from "../../../../domain/types/candidacy";
 import * as candidaciesDb from "../../../database/postgres/candidacies";
-import * as candidatesDb from "../../../database/postgres/candidates";
 import * as trainingDb from "../../../database/postgres/trainings";
 import { Role } from "../../account/account.types";
+import { getCandidateByCandidacyId } from "../../candidate/database/candidates";
 import * as fundingRequestsDb from "./database/fundingRequests";
 import * as paymentRequestsDb from "./database/paymentRequest";
 import * as paymentRequestBatchesDb from "./database/paymentRequestBatches";
@@ -70,7 +70,7 @@ const unsafeResolvers = {
       }: { candidacyId: string; paymentRequest: PaymentRequest }
     ) => {
       const result = await createOrUpdatePaymentRequestForCandidacy({
-        getCandidateByCandidacyId: candidatesDb.getCandidateByCandidacyId,
+        getCandidateByCandidacyId,
         getFundingRequestByCandidacyId: fundingRequestsDb.getFundingRequest,
         getPaymentRequestByCandidacyId:
           paymentRequestsDb.getPaymentRequestByCandidacyId,

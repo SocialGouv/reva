@@ -1,7 +1,7 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { Left, Maybe, Right } from "purify-ts";
 
-import { Candidate } from "../../../../../domain/types/candidate";
+import { Candidate } from "../../../candidate/candidate.types";
 import { FundingRequest, PaymentRequest } from "../finance.types";
 import { createOrUpdatePaymentRequestForCandidacy } from "./createOrUpdatePaymentRequestForCandidacy";
 

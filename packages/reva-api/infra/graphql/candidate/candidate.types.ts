@@ -1,7 +1,7 @@
 import {
   Degree,
   VulnerabilityIndicator,
-} from "../../infra/graphql/referential/referential.types";
+} from "../referential/referential.types";
 
 export interface Candidate {
   firstname: string;

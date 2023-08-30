@@ -1,10 +1,10 @@
 import { Either, EitherAsync } from "purify-ts";
 
-import { CandidateLoginInput } from "../../../../domain/types/candidate";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import { CandidateLoginInput } from "../candidate.types";
 
 interface AskForLoginDeps {
   doesUserExists: (params: { userEmail: string }) => Promise<boolean>;

@@ -1,7 +1,7 @@
 import { Decimal } from "@prisma/client/runtime";
 
-import { Gender } from "../../../../../domain/types/candidate";
 import { candidacyId } from "../../../../../test/fixtures/funding-request";
+import { Gender } from "../../../candidate/candidate.types";
 import { validHoursCountAndCosts } from "./valid-numbers";
 
 const fundingRequestBase = {

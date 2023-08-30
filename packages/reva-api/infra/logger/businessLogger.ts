@@ -1,5 +1,5 @@
 import { CandidacyBusinessEvent } from "../../domain/types/candidacy";
-import { CandidateBusinessEvent } from "../../domain/types/candidate";
+import { CandidateBusinessEvent } from "../graphql/candidate/candidate.types";
 import { logger } from "./logger";
 
 export type BusinessTargetType =
