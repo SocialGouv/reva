@@ -1,11 +1,11 @@
 import { Either, Left, Maybe, Right } from "purify-ts";
 
-import * as domain from "../../../domain/types/candidacy";
-import { logger } from "../../logger";
-import { prismaClient } from "./client";
+import { prismaClient } from "../../../database/postgres/client";
+import { logger } from "../../../logger";
+import { DropOutReason } from "../referential.types";
 
 export const getDropOutReasons = async (): Promise<
-  Either<string, domain.DropOutReason[]>
+  Either<string, DropOutReason[]>
 > => {
   try {
     const dropOutReasons = await prismaClient.dropOutReason.findMany();
@@ -19,7 +19,7 @@ export const getDropOutReasons = async (): Promise<
 
 export const getDropOutReasonById = async (params: {
   dropOutReasonId: string;
-}): Promise<Either<string, Maybe<domain.DropOutReason>>> => {
+}): Promise<Either<string, Maybe<DropOutReason>>> => {
   try {
     const dropOutReason = await prismaClient.dropOutReason.findUnique({
       where: {

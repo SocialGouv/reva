@@ -1,10 +1,10 @@
 import { Either, EitherAsync } from "purify-ts";
 
-import { DropOutReason } from "../../../../domain/types/candidacy";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import { DropOutReason } from "../referential.types";
 
 interface GetDropOutReasonsDeps {
   getDropOutReasons: () => Promise<Either<string, DropOutReason[]>>;

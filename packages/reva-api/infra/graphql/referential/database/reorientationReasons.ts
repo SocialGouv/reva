@@ -1,10 +1,10 @@
 import { Either, Left, Maybe, Right } from "purify-ts";
 
-import * as domain from "../../../domain/types/candidacy";
-import { prismaClient } from "./client";
+import { prismaClient } from "../../../database/postgres/client";
+import { ReorientationReason } from "../referential.types";
 
 export const getReorientationReasons = async (): Promise<
-  Either<string, domain.ReorientationReason[]>
+  Either<string, ReorientationReason[]>
 > => {
   try {
     const reorientationReasons =
@@ -18,7 +18,7 @@ export const getReorientationReasons = async (): Promise<
 
 export const getReorientationReasonById = async (params: {
   reorientationReasonId: string | null;
-}): Promise<Either<string, Maybe<domain.ReorientationReason>>> => {
+}): Promise<Either<string, Maybe<ReorientationReason>>> => {
   if (!params.reorientationReasonId) {
     return Left(`error while retrieving reorientation reason`);
   }

@@ -14,16 +14,15 @@ import * as admissibilityDb from "../../database/postgres/admissibility";
 import * as basicSkillDb from "../../database/postgres/basicSkills";
 import * as candidacyDb from "../../database/postgres/candidacies";
 import { prismaClient } from "../../database/postgres/client";
-import * as dropOutDb from "../../database/postgres/dropOutReasons";
 import * as examInfoDb from "../../database/postgres/examInfo";
 import * as experienceDb from "../../database/postgres/experiences";
-import * as goalDb from "../../database/postgres/goals";
 import * as organismDb from "../../database/postgres/organisms";
-import * as reorientationReasonDb from "../../database/postgres/reorientationReasons";
 import * as trainingDb from "../../database/postgres/trainings";
 import { sendNewCandidacyEmail } from "../../email/sendNewCandidacyEmail";
 import { logger } from "../../logger";
 import { notifyNewCandidacy } from "../../mattermost";
+import { getDropOutReasonById } from "../referential/database/dropOutReasons";
+import { getReorientationReasonById } from "../referential/database/reorientationReasons";
 import { addExperienceToCandidacy } from "./features/addExperienceToCandidacy";
 import { archiveCandidacy } from "./features/archiveCandidacy";
 import { createCandidacy } from "./features/createCandidacy";
@@ -415,7 +414,7 @@ const unsafeResolvers = {
       context: GraphqlContext
     ) => {
       const result = await updateGoalsOfCandidacy({
-        updateGoals: goalDb.updateGoals,
+        updateGoals: candidacyDb.updateCandidacyGoals,
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
       })({
         candidacyId: payload.candidacyId,
@@ -488,8 +487,7 @@ const unsafeResolvers = {
       const result = await archiveCandidacy({
         archiveCandidacy: candidacyDb.archiveCandidacy,
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
-        getReorientationReasonById:
-          reorientationReasonDb.getReorientationReasonById,
+        getReorientationReasonById,
         hasRole: context.auth.hasRole,
       })({
         candidacyId: payload.candidacyId,
@@ -670,7 +668,7 @@ const unsafeResolvers = {
 
       const result = await dropOutCandidacy({
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
-        getDropOutReasonById: dropOutDb.getDropOutReasonById,
+        getDropOutReasonById,
         dropOutCandidacy: candidacyDb.dropOutCandidacy,
       })({
         candidacyId: payload.candidacyId,

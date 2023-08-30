@@ -1,12 +1,10 @@
 import { Either, Left, Right } from "purify-ts";
 
-import * as domain from "../../../domain/types/candidacy";
-import { logger } from "../../logger";
-import { prismaClient } from "./client";
+import { prismaClient } from "../../../database/postgres/client";
+import { logger } from "../../../logger";
+import { Degree } from "../referential.types";
 
-export const getDegrees = async (): Promise<
-  Either<string, domain.Degree[]>
-> => {
+export const getDegrees = async (): Promise<Either<string, Degree[]>> => {
   try {
     const degrees = await prismaClient.degree.findMany();
 

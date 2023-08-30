@@ -1,10 +1,10 @@
 import { Either, EitherAsync } from "purify-ts";
 
-import { Department } from "../../../../domain/types/candidacy";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
+import { Department } from "../referential.types";
 
 interface GetDepartmentsDeps {
   getDepartments: () => Promise<Either<string, Department[]>>;

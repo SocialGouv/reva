@@ -1,10 +1,10 @@
 import { deburr } from "lodash";
 import { Either, Left, Right } from "purify-ts";
 
-import type { Certification } from "../../../domain/types/certification";
-import { processPaginationInfo } from "../../../domain/utils/pagination";
-import { logger } from "../../logger";
-import { prismaClient } from "./client";
+import { processPaginationInfo } from "../../../../domain/utils/pagination";
+import { prismaClient } from "../../../database/postgres/client";
+import { logger } from "../../../logger";
+import { Certification } from "../referential.types";
 
 export const getCertificationById = async ({
   id,

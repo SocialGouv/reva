@@ -1,5 +1,12 @@
 import { CandidacyStatusStep } from "@prisma/client";
 
+import {
+  Department,
+  DropOutReason,
+  Region,
+  ReorientationReason,
+} from "../../infra/graphql/referential/referential.types";
+
 interface CandidacyAbstract {
   deviceId: string;
 
@@ -109,18 +116,6 @@ export interface AppointmentInformations {
   appointmentCount: number;
 }
 
-export interface Region {
-  id: string;
-  code: string;
-  label: string;
-}
-
-export interface Department {
-  id: string;
-  code: string;
-  label: string;
-}
-
 export type OrganismTypology =
   | "experimentation"
   | "generaliste"
@@ -158,31 +153,6 @@ export interface BasicSkill {
 export interface Training {
   id: string;
   label: string;
-}
-
-export interface Degree {
-  id: string;
-  code: string;
-  label: string;
-  level: number;
-}
-
-export interface VulnerabilityIndicator {
-  id: string;
-  label: string;
-}
-
-export interface DropOutReason {
-  id: string;
-  label: string;
-}
-
-export interface ReorientationReason {
-  id: string;
-  label: string;
-  createdAt: Date;
-  updatedAt: Date | null;
-  disabled: boolean;
 }
 
 export interface Admissibility {

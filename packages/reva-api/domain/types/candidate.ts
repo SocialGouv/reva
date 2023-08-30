@@ -1,9 +1,8 @@
-import { Degree } from "./candidacy";
+import {
+  Degree,
+  VulnerabilityIndicator,
+} from "../../infra/graphql/referential/referential.types";
 
-export interface VulnerabilityIndicator {
-  id: string;
-  label: string;
-}
 export interface Candidate {
   firstname: string;
   firstname2?: string | null;

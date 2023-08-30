@@ -1,13 +1,13 @@
 import mercurius from "mercurius";
 
-import * as certificationsDb from "../../database/postgres/certifications";
 import { prismaClient } from "../../database/postgres/client";
-import * as degreesDb from "../../database/postgres/degrees";
-import * as dropOutReasonsDb from "../../database/postgres/dropOutReasons";
-import * as goalsDb from "../../database/postgres/goals";
-import * as locationsDb from "../../database/postgres/locations";
-import * as reorientationReasonsDb from "../../database/postgres/reorientationReasons";
-import * as vulnerabilityIndicatorsDb from "../../database/postgres/vulnerabilityIndicators";
+import * as certificationsDb from "./database/certifications";
+import * as degreesDb from "./database/degrees";
+import * as dropOutReasonsDb from "./database/dropOutReasons";
+import * as goalsDb from "./database/goals";
+import * as locationsDb from "./database/locations";
+import * as reorientationReasonsDb from "./database/reorientationReasons";
+import * as vulnerabilityIndicatorsDb from "./database/vulnerabilityIndicators";
 import { getCertifications } from "./features/getCertifications";
 import { getDegrees } from "./features/getDegrees";
 import { getDepartments } from "./features/getDepartments";

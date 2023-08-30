@@ -1,12 +1,10 @@
 import { Either, Left, Right } from "purify-ts";
 
-import * as domain from "../../../domain/types/candidacy";
-import { logger } from "../../logger";
-import { prismaClient } from "./client";
+import { prismaClient } from "../../../database/postgres/client";
+import { logger } from "../../../logger";
+import { Department, Region } from "../referential.types";
 
-export const getRegions = async (): Promise<
-  Either<string, domain.Region[]>
-> => {
+export const getRegions = async (): Promise<Either<string, Region[]>> => {
   try {
     const regions = await prismaClient.region.findMany({
       include: {
@@ -22,7 +20,7 @@ export const getRegions = async (): Promise<
 };
 
 export const getDepartments = async (): Promise<
-  Either<string, domain.Department[]>
+  Either<string, Department[]>
 > => {
   try {
     const deparments = await prismaClient.department.findMany();
