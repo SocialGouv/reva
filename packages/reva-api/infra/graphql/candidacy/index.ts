@@ -190,7 +190,7 @@ const unsafeResolvers = {
         getRandomActiveOrganismForCertificationAndDepartment:
           organismDb.getRandomActiveOrganismForCertificationAndDepartment,
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
-      })({ candidacyId, searchText, limit: 6 });
+      })({ candidacyId, searchText, limit: 11 });
 
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
@@ -198,7 +198,7 @@ const unsafeResolvers = {
           //remove the organism already selected for the candidacy if it's in the list
           let randomOrganisms = organisms
             .filter((c) => c.id !== candidacy?.organism?.id)
-            .slice(0, 5);
+            .slice(0, 10);
 
           //add the candidacy selected organism as the first result if it exists
           if (
@@ -207,7 +207,7 @@ const unsafeResolvers = {
           ) {
             randomOrganisms = [
               candidacy.organism as Organism,
-              ...randomOrganisms.slice(0, 4),
+              ...randomOrganisms.slice(0, 9),
             ];
           }
 

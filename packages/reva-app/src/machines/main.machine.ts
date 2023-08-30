@@ -98,12 +98,17 @@ type SetOrganismSearchText = {
   organismSearchText: string;
 };
 
+type RefreshOrganisms = {
+  type: "REFRESH_ORGANISMS";
+};
+
 export type MainEvent =
   | selectedDepartment
   | SelectCertification
   | setCertificationSearchText
   | setCurrentCertificationPageNumber
   | SetOrganismSearchText
+  | RefreshOrganisms
   | { type: "SHOW_PROJECT_HOME"; certification: Certification }
   | { type: "ADD_EXPERIENCE" }
   | { type: "EDIT_EXPERIENCE"; index: number }
@@ -674,6 +679,9 @@ export const mainMachine =
                 on: {
                   BACK: {
                     target: "leave",
+                  },
+                  REFRESH_ORGANISMS: {
+                    target: "#mainMachine.projectOrganism",
                   },
                   SET_ORGANISM_SEARCH_TEXT: {
                     actions: "assignOrganismSearchTextToContext",

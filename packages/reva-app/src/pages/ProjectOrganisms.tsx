@@ -162,26 +162,40 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
         availableOrganisms={organisms}
         setOrganismId={setSelectedOrganismId}
       />
-      <Button
-        className="mt-6 justify-center w-[100%]  md:w-fit"
-        data-test="project-organisms-submit-organism"
-        disabled={!isOrganismsLoaded}
-        nativeButtonProps={{
-          onClick: () => {
-            if (isOrganismsLoaded) {
+      <div className="mt-6 w-full flex flex-row items-center justify-between">
+        <Button
+          data-test="project-organisms-refresh-organisms"
+          priority="secondary"
+          nativeButtonProps={{
+            onClick: () => {
               send({
-                type: "SUBMIT_ORGANISM",
-                organism: {
-                  candidacyId,
-                  selectedOrganismId: selectedOrganismId || organisms[0]?.id,
-                },
+                type: "REFRESH_ORGANISMS",
               });
-            }
-          },
-        }}
-      >
-        Validez votre organisme d'accompagnement
-      </Button>
+            },
+          }}
+        >
+          Rafraîchir la liste
+        </Button>
+        <Button
+          data-test="project-organisms-submit-organism"
+          disabled={!isOrganismsLoaded}
+          nativeButtonProps={{
+            onClick: () => {
+              if (isOrganismsLoaded) {
+                send({
+                  type: "SUBMIT_ORGANISM",
+                  organism: {
+                    candidacyId,
+                    selectedOrganismId: selectedOrganismId || organisms[0]?.id,
+                  },
+                });
+              }
+            },
+          }}
+        >
+          Validez votre organisme d'accompagnement
+        </Button>
+      </div>
     </Page>
   );
 };
