@@ -1,5 +1,6 @@
 module Page.Form.FundingRequestUniFvae exposing (form)
 
+import Accessibility exposing (div)
 import Admin.Enum.Gender exposing (Gender(..))
 import Data.Candidacy exposing (Candidacy)
 import Data.Candidate
@@ -8,6 +9,7 @@ import Data.Form exposing (FormData)
 import Data.Form.FundingRequestUniFvae exposing (keys)
 import Data.Form.Helper
 import Data.Referential exposing (Referential)
+import Html.Attributes exposing (class)
 import Page.Form as Form exposing (Form)
 import View.Form
 
@@ -57,6 +59,27 @@ form maybeCertification formData ( candidacy, referential ) =
                 |> Maybe.withDefault Form.Empty
           )
         , ( "companion", Form.Title1 "3. Parcours personnalisé" )
+        , ( "forfait"
+          , Form.StaticHtml <|
+                div
+                    [ class "w-full flex flex-wrap -mt-2"
+                    , class "pl-3 lg:pl-5"
+                    , class "font-medium"
+                    ]
+                    [ div
+                        [ class "w-full sm:w-[320px] lg:w-[320px] xl:w-[228px]"
+                        , class "mr-5 mb-2 lg:mb-0"
+                        , class "text-lg font-semibold"
+                        ]
+                        [ Accessibility.text "Forfait d’étude de faisabilité et entretien post-jury" ]
+                    , div
+                        [ class "w-full sm:w-[160px] lg:w-[160px] xl:w-[228px]"
+                        , class "mr-5 mb-2 lg:mb-0"
+                        , class "text-lg font-medium"
+                        ]
+                        [ Accessibility.text "Forfait 300€ net" ]
+                    ]
+          )
         , ( "individual", Form.Title2 "Accompagnement" )
         , ( "collective", Form.TitleInlined "Individuel" )
         , ( keys.individualHourCount, hourCountElement )
@@ -246,7 +269,8 @@ totalCost formData =
             decode.float f 0
 
         cost =
-            (float .individualHourCount * float .individualCost)
+            300
+                + (float .individualHourCount * float .individualCost)
                 + (float .collectiveHourCount * float .collectiveCost)
                 + (float .mandatoryTrainingsHourCount * float .mandatoryTrainingsCost)
                 + (float .basicSkillsHourCount * float .basicSkillsCost)
