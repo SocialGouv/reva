@@ -295,6 +295,9 @@ statusToProgressPosition status =
         ParcoursConfirme ->
             5
 
+        DossierFaisabiliteEnvoye ->
+            6
+
         DemandeFinancementEnvoye ->
             7
 
