@@ -472,6 +472,13 @@ viewReadOnlyElement formData ( elementId, element ) =
         dataOrDefault =
             get elementId formData
                 |> Maybe.withDefault "Non précisé"
+                |> (\s ->
+                        if String.isEmpty <| String.trim s then
+                            "Non précisé"
+
+                        else
+                            s
+                   )
 
         defaultView label v =
             div [] [ viewInfo elementId label v ]
@@ -527,9 +534,8 @@ viewReadOnlyElement formData ( elementId, element ) =
                         tagsOrEmpty
             in
             View.Form.column
-                [ class "h-full"
-                , class "h-auto lg:min-h-[106px] max-h-[220px]"
-                , class "overflow-auto mb-5 lg:mb-0"
+                [ class "max-h-[220px]"
+                , class "overflow-auto mb-5 lg:mb-3"
                 ]
                 content
 
@@ -593,11 +599,17 @@ viewReadOnlyElement formData ( elementId, element ) =
             defaultView label dataOrDefault
 
         Textarea label _ ->
-            if String.length dataOrDefault > 0 then
-                defaultView label dataOrDefault
+            div
+                [ class "w-full mb-6" ]
+                [ if String.isEmpty label then
+                    text ""
 
-            else
-                text ""
+                  else
+                    viewLabel elementId [ text label ]
+                , div
+                    [ class "text-sm text-gray-600", id elementId ]
+                    [ text dataOrDefault ]
+                ]
 
         ReadOnlyElement readOnlyElement ->
             viewReadOnlyElement formData ( elementId, readOnlyElement )
@@ -646,7 +658,8 @@ viewLabel : String -> List (Html msg) -> Html msg
 viewLabel elementId content =
     label
         [ for elementId
-        , class "block uppercase text-xs font-semibold mb-[10px]"
+        , class "block mt-[6px] mb-[10px]"
+        , class "uppercase text-xs font-semibold"
         ]
         content
 
@@ -884,7 +897,7 @@ viewFieldsets viewElement formData elements =
         viewFieldset level content =
             fieldset
                 [ class "mb-2"
-                , class "flex flex-wrap items-end gap-x-4"
+                , class "flex flex-wrap items-start gap-x-4"
                 ]
                 content
 

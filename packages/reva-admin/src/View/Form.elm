@@ -51,13 +51,14 @@ total label total1 total2 =
 summary : String -> Html msg
 summary s =
     column
-        [ class "min-h-[80px] max-h-[180px] overflow-auto"
+        [ class "mb-2 sm:mb-0"
+        , class "max-h-[180px] overflow-auto"
         , class "text-sm text-gray-500"
         ]
         [ text <|
-            if s /= "" then
-                s
+            if String.isEmpty <| String.trim s then
+                "Non précisé"
 
             else
-                "Non précisé"
+                s
         ]
