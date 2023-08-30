@@ -16,6 +16,7 @@ export const getCandidacyCountByStatus = async ({
     PARCOURS_CONFIRME_HORS_ABANDON: 0,
     PRISE_EN_CHARGE_HORS_ABANDON: 0,
     PARCOURS_ENVOYE_HORS_ABANDON: 0,
+    DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON: 0,
     DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON: 0,
     DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON: 0,
     VALIDATION_HORS_ABANDON: 0,
@@ -30,7 +31,7 @@ export const getCandidacyCountByStatus = async ({
 
     const activeHorsAbandonQuery = `select 'ACTIVE_HORS_ABANDON' as status, count(candidacy_id) from candidacy_candidacy_status join candidacy on candidacy.id = candidacy_candidacy_status.candidacy_id where status!='ARCHIVE' AND STATUS!='PROJET' and is_active=true and not EXISTS (select candidacy_id from candidacy_drop_out where candidacy_id=candidacy.id) ${organismSelectionWhereClause}`;
 
-    const countByactiveStatusHorsAbandonQuery = `select status::VARCHAR||'_HORS_ABANDON' as status, count (status) from candidacy_candidacy_status join candidacy on candidacy.id = candidacy_candidacy_status.candidacy_id where status in ('PARCOURS_CONFIRME', 'PRISE_EN_CHARGE', 'PARCOURS_ENVOYE', 'DEMANDE_FINANCEMENT_ENVOYE', 'DEMANDE_PAIEMENT_ENVOYEE', 'VALIDATION', 'PROJET') and is_active=true and not EXISTS (select candidacy_id from candidacy_drop_out where candidacy_id=candidacy.id) ${organismSelectionWhereClause} group by status`;
+    const countByactiveStatusHorsAbandonQuery = `select status::VARCHAR||'_HORS_ABANDON' as status, count (status) from candidacy_candidacy_status join candidacy on candidacy.id = candidacy_candidacy_status.candidacy_id where status in ('PARCOURS_CONFIRME', 'PRISE_EN_CHARGE', 'PARCOURS_ENVOYE', 'DOSSIER_FAISABILITE_ENVOYE', 'DEMANDE_FINANCEMENT_ENVOYE', 'DEMANDE_PAIEMENT_ENVOYEE', 'VALIDATION', 'PROJET') and is_active=true and not EXISTS (select candidacy_id from candidacy_drop_out where candidacy_id=candidacy.id) ${organismSelectionWhereClause} group by status`;
 
     const abandonQuery = `select 'ABANDON' as status, count(candidacy_id) from candidacy_drop_out join candidacy on candidacy.id = candidacy_drop_out.candidacy_id where true ${organismSelectionWhereClause}`;
 

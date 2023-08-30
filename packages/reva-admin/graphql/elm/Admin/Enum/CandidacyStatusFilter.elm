@@ -15,6 +15,7 @@ type CandidacyStatusFilter
     | ParcoursConfirmeHorsAbandon
     | PriseEnChargeHorsAbandon
     | ParcoursEnvoyeHorsAbandon
+    | DossierFaisabiliteEnvoyeHorsAbandon
     | DemandeFinancementEnvoyeHorsAbandon
     | DemandePaiementEnvoyeeHorsAbandon
     | ValidationHorsAbandon
@@ -23,7 +24,7 @@ type CandidacyStatusFilter
 
 list : List CandidacyStatusFilter
 list =
-    [ ActiveHorsAbandon, Abandon, Reorientee, ArchiveHorsAbandonHorsReorientation, ParcoursConfirmeHorsAbandon, PriseEnChargeHorsAbandon, ParcoursEnvoyeHorsAbandon, DemandeFinancementEnvoyeHorsAbandon, DemandePaiementEnvoyeeHorsAbandon, ValidationHorsAbandon, ProjetHorsAbandon ]
+    [ ActiveHorsAbandon, Abandon, Reorientee, ArchiveHorsAbandonHorsReorientation, ParcoursConfirmeHorsAbandon, PriseEnChargeHorsAbandon, ParcoursEnvoyeHorsAbandon, DossierFaisabiliteEnvoyeHorsAbandon, DemandeFinancementEnvoyeHorsAbandon, DemandePaiementEnvoyeeHorsAbandon, ValidationHorsAbandon, ProjetHorsAbandon ]
 
 
 decoder : Decoder CandidacyStatusFilter
@@ -52,6 +53,9 @@ decoder =
 
                     "PARCOURS_ENVOYE_HORS_ABANDON" ->
                         Decode.succeed ParcoursEnvoyeHorsAbandon
+
+                    "DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON" ->
+                        Decode.succeed DossierFaisabiliteEnvoyeHorsAbandon
 
                     "DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON" ->
                         Decode.succeed DemandeFinancementEnvoyeHorsAbandon
@@ -95,6 +99,9 @@ toString enum____ =
 
         ParcoursEnvoyeHorsAbandon ->
             "PARCOURS_ENVOYE_HORS_ABANDON"
+
+        DossierFaisabiliteEnvoyeHorsAbandon ->
+            "DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON"
 
         DemandeFinancementEnvoyeHorsAbandon ->
             "DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON"
@@ -143,6 +150,9 @@ fromString enumString____ =
 
         "PARCOURS_ENVOYE_HORS_ABANDON" ->
             Just ParcoursEnvoyeHorsAbandon
+
+        "DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON" ->
+            Just DossierFaisabiliteEnvoyeHorsAbandon
 
         "DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON" ->
             Just DemandeFinancementEnvoyeHorsAbandon

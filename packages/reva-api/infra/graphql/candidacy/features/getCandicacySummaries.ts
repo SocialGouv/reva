@@ -214,6 +214,9 @@ const getStatusFromStatusFilter = (statusFilter: string) => {
     case "PARCOURS_ENVOYE_HORS_ABANDON":
       status = "PARCOURS_ENVOYE";
       break;
+    case "DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON":
+      status = "DOSSIER_FAISABILITE_ENVOYE";
+      break;
     case "DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON":
       status = "DEMANDE_FINANCEMENT_ENVOYE";
       break;
@@ -238,6 +241,7 @@ const getWhereClauseFromStatusFilter = (
     case "PARCOURS_CONFIRME_HORS_ABANDON":
     case "PRISE_EN_CHARGE_HORS_ABANDON":
     case "PARCOURS_ENVOYE_HORS_ABANDON":
+    case "DOSSIER_FAISABILITE_ENVOYE_HORS_ABANDON":
     case "DEMANDE_FINANCEMENT_ENVOYE_HORS_ABANDON":
     case "DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON":
     case "VALIDATION_HORS_ABANDON":
