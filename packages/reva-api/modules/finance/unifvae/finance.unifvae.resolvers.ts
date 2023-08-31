@@ -62,6 +62,16 @@ const unsafeResolvers = {
       const candidacy = await prismaClient.candidacy.findUnique({
         where: { id: payload.candidacyId },
       });
+      if (!candidacy) {
+        return new mercurius.ErrorWithProps(
+          `Candidacy not found: ${payload.candidacyId}`
+        );
+      }
+      if (candidacy.financeModule !== "unifvae") {
+        return new mercurius.ErrorWithProps(
+          `Cannot create FundingRequestUnifvae: candidacy.financeModule is "${candidacy.financeModule}"`
+        );
+      }
       const fundingRequestCompleted: FundingRequestUnifvaeInputCompleted =
         Object.assign(
           {},
@@ -75,7 +85,7 @@ const unsafeResolvers = {
             },
           }
         );
-      const validationErrors = applyBusinessValidationRules(
+      const validationErrors = await applyBusinessValidationRules(
         fundingRequestCompleted
       );
       if (validationErrors.length) {

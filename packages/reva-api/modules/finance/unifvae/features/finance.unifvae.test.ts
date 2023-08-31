@@ -22,7 +22,6 @@ const candidateSample = {
   lastname: "De Garenne",
 };
 
-// : Partial<FundingRequestUnifvaeInput> | {candidateSecondname: string, candidateThirdname: string, candidateGender: string}
 const fundingRequestSample = {
   candidateSecondname: "Lapin",
   candidateThirdname: "Piou",
@@ -127,6 +126,18 @@ beforeAll(async () => {
           ],
         },
       },
+      Feasibility: {
+        create: {
+          decision: "ADMISSIBLE",
+          feasibilityFile: {
+            create: {
+              name: "dummyFile.ext",
+              content: new Buffer("coucou"),
+              mimeType: "kikoo/lol",
+            },
+          },
+        },
+      },
     },
     include: {
       trainings: true,
@@ -193,6 +204,8 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  await prismaClient.feasibility.deleteMany({});
+  await prismaClient.file.deleteMany({});
   await prismaClient.trainingOnFundingRequestsUnifvae.deleteMany();
   await prismaClient.basicSkillOnFundingRequestsUnifvae.deleteMany();
   await prismaClient.fundingRequestBatchUnifvae.deleteMany();

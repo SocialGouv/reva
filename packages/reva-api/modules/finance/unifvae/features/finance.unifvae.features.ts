@@ -23,11 +23,6 @@ export const createFundingRequestUnifvae = async ({
   if (candidacy === null) {
     throw new Error(`Candidacy ${candidacyId} not found`);
   }
-  if (candidacy.financeModule !== "unifvae") {
-    throw new Error(
-      `Cannot create FundingRequestUnifvae: candidacy.financeModule is "${candidacy.financeModule}"`
-    );
-  }
   const fundreq = await prismaClient.fundingRequestUnifvae.create({
     data: {
       candidacyId,
