@@ -4,7 +4,7 @@ import { Either, Left, Right } from "purify-ts";
 // @ts-ignore
 import SibApiV3Sdk from "sib-api-v3-sdk";
 
-import { logger } from "../logger";
+import { logger } from "../../../infra/logger";
 
 const defaultClient = SibApiV3Sdk.ApiClient.instance;
 // Configure API key authorization: api-key

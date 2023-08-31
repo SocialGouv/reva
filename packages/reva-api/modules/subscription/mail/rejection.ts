@@ -1,8 +1,8 @@
 import mjml2html from "mjml";
 import { Left, Right } from "purify-ts";
 
-import { sendGenericEmail } from "../../../infra/email";
 import { logger } from "../../../infra/logger";
+import { sendGenericEmail } from "../../shared/email";
 import { template } from "./template";
 
 export const sendRejectionEmail = async ({
