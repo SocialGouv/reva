@@ -1,4 +1,4 @@
-import { prismaClient } from "../../../../infra/database/postgres/client";
+import { prismaClient } from "../../../../prisma/client";
 import { validateAccompagnement } from "./accompagnement";
 import { validateComplementFormatif } from "./complement-formatif";
 import { validateCoutsHoraires } from "./couts-horaires";
