@@ -10,7 +10,7 @@ import { logger } from "../../../logger";
 import {
   DepartmentWithOrganismMethods,
   Organism,
-} from "../../candidacy/candidacy.types";
+} from "../../organism/organism.types";
 import { __TEST_IAM_FAIL_CHECK__, __TEST_IAM_PASS_CHECK__ } from "./test-const";
 import { Account } from ".prisma/client";
 

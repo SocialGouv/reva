@@ -5,7 +5,7 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
-import { Organism } from "../../candidacy/candidacy.types";
+import { Organism } from "../../organism/organism.types";
 import { IAMAccount } from "../account.types";
 
 interface CreateAccountDeps {

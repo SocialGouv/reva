@@ -1,7 +1,7 @@
 import { Decimal } from "@prisma/client/runtime/library";
 
-import { Organism } from "../../candidacy/candidacy.types";
 import { TrainingForm } from "../../candidate/candidate.types";
+import { Organism } from "../../organism/organism.types";
 
 export interface FundingRequest {
   basicSkills: any;

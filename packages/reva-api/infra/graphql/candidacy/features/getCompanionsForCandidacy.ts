@@ -4,7 +4,7 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
-import { Organism } from "../candidacy.types";
+import { Organism } from "../../organism/organism.types";
 
 interface GetCompanionsForCandidacyDeps {
   getCompanionsForCandidacy: (params: {

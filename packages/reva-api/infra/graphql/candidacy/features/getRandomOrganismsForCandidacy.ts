@@ -4,7 +4,8 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../../domain/types/functionalError";
-import { Candidacy, Organism } from "../candidacy.types";
+import { Organism } from "../../organism/organism.types";
+import { Candidacy } from "../candidacy.types";
 
 interface GetRandomActiveOrganismsForCandidacyWithNewTypologiesDeps {
   getCandidacyFromId: (

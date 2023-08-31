@@ -3,11 +3,11 @@ import { Organism } from "@prisma/client";
 import mercurius from "mercurius";
 
 import { prismaClient } from "../../database/postgres/client";
-import * as organismDb from "../../database/postgres/organisms";
 import { sendNewCandidacyEmail } from "../../email/sendNewCandidacyEmail";
 import { logger } from "../../logger";
 import { notifyNewCandidacy } from "../../mattermost";
 import { Role } from "../account/account.types";
+import * as organismDb from "../organism/database/organisms";
 import { getDropOutReasonById } from "../referential/database/dropOutReasons";
 import { getReorientationReasonById } from "../referential/database/reorientationReasons";
 import {

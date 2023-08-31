@@ -6,6 +6,7 @@ import {
   Region,
   ReorientationReason,
 } from "../../graphql/referential/referential.types";
+import { Organism } from "../organism/organism.types";
 
 interface CandidacyAbstract {
   deviceId: string;
@@ -114,35 +115,6 @@ export interface Companion {
 export interface AppointmentInformations {
   firstAppointmentOccuredAt: Date;
   appointmentCount: number;
-}
-
-export type OrganismTypology =
-  | "experimentation"
-  | "generaliste"
-  | "expertFiliere"
-  | "expertBranche"
-  | "expertBrancheEtFiliere";
-
-export interface DepartmentWithOrganismMethods {
-  departmentId: string;
-  isOnSite: boolean;
-  isRemote: boolean;
-}
-
-export interface Organism {
-  id: string;
-  label: string;
-  address: string;
-  zip: string;
-  city: string;
-  siret: string;
-  legalStatus?: LegalStatus;
-  contactAdministrativeEmail: string;
-  contactAdministrativePhone: string | null;
-  website: string | null;
-  isActive: boolean;
-  typology: OrganismTypology;
-  qualiopiCertificateExpiresAt: Date | null;
 }
 
 export interface BasicSkill {

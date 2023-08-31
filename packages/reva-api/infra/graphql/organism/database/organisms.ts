@@ -2,10 +2,9 @@ import { Organism, Prisma } from "@prisma/client";
 import { camelCase, mapKeys } from "lodash";
 import { Either, Left, Maybe, Right } from "purify-ts";
 
-import * as domain from "../../graphql/candidacy/candidacy.types";
-import { DepartmentWithOrganismMethods } from "../../graphql/candidacy/candidacy.types";
-import { logger } from "../../logger";
-import { prismaClient } from "./client";
+import { prismaClient } from "../../../database/postgres/client";
+import { logger } from "../../../logger";
+import * as domain from "../organism.types";
 
 export const getAAPOrganisms = async (params: {
   candidacyId: string;
@@ -122,7 +121,7 @@ export const createOrganism = async (data: {
   typology: OrganismTypology;
   ccnIds?: string[];
   domaineIds?: string[];
-  departmentsWithOrganismMethods: DepartmentWithOrganismMethods[];
+  departmentsWithOrganismMethods: domain.DepartmentWithOrganismMethods[];
 }): Promise<Either<string, domain.Organism>> => {
   try {
     const { domaineIds, ccnIds, departmentsWithOrganismMethods, ...otherData } =

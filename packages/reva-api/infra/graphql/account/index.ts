@@ -7,9 +7,9 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../domain/types/functionalError";
-import * as organismsDb from "../../database/postgres/organisms";
 import * as IAM from "../../iam/keycloak";
 import { getCertificationAuthorityById } from "../feasibility/feasibility.features";
+import * as organismsDb from "../organism/database/organisms";
 import * as accountsDb from "./database/accounts";
 import { createAccount } from "./features/createAccount";
 
