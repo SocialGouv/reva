@@ -16,7 +16,6 @@ interface CreateCandidacyDeps {
   getCandidacyFromDeviceId: (
     deviceId: string
   ) => Promise<Either<string, Candidacy>>;
-  notifyTeam: (candidacyId: string) => Promise<void>;
 }
 
 export const createCandidacy =
@@ -49,7 +48,5 @@ export const createCandidacy =
         )
     );
 
-    return checkIfCandidacyAlreadyExists
-      .chain(() => createCandidacy)
-      .ifRight(async (candidacy: any) => deps.notifyTeam(candidacy.id));
+    return checkIfCandidacyAlreadyExists.chain(() => createCandidacy);
   };

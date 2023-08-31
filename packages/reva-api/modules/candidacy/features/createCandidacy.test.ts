@@ -51,7 +51,6 @@ describe("domain candidacy", () => {
             },
           })
         ),
-      notifyTeam: async (candidacyId: string) => console.log(`notify`),
     });
 
     const result = await createCandidacyWithDeps({
@@ -74,7 +73,6 @@ describe("domain candidacy", () => {
       getCandidacyFromDeviceId: (id: string) =>
         Promise.resolve(Left("Not found")),
       createCandidacy: () => Promise.resolve(Left("Error while saving")),
-      notifyTeam: async (candidacyId: string) => console.log(`notify`),
     });
 
     const result = await createCandidacyWithDeps({
@@ -119,7 +117,6 @@ describe("domain candidacy", () => {
             },
           })
         ),
-      notifyTeam: async (candidacyId: string) => console.log(`notify`),
     });
 
     const result = await createCandidacyWithDeps({
