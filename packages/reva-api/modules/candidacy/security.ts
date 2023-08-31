@@ -4,7 +4,7 @@ import {
   isAdminOrManager,
   isCandidacyCompanion,
   isCandidate,
-} from "../security/presets";
+} from "../shared/security/presets";
 
 export const resolversSecurityMap = {
   // Sécurité par défaut

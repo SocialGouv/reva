@@ -1,4 +1,4 @@
-import { isAdmin, isAnyone } from "../security/presets";
+import { isAdmin, isAnyone } from "../shared/security/presets";
 
 export const resolversSecurityMap = {
   "Mutation.subscription_createSubscriptionRequest": isAnyone,

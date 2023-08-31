@@ -3,11 +3,11 @@ import mercurius from "mercurius";
 
 import { prismaClient } from "../../../prisma/client";
 import { CandidacyBusinessEvent } from "../../candidacy/candidacy.types";
-import { isAdminOrCandidacyCompanion } from "../../security/presets";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../shared/error/functionalError";
+import { isAdminOrCandidacyCompanion } from "../../shared/security/presets";
 import {
   createFundingRequestUnifvae,
   getFundingRequestUnifvaeFromCandidacyId,
