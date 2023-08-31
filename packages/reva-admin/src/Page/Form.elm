@@ -392,7 +392,7 @@ viewEditableElement formData ( elementId, element ) =
 
         HourCount label ->
             viewFieldsetElement
-                [ inputView label "Vous pouvez facturer des heures entières ou demi-heures. Pour les demi-heures, saisissez ,5" (Input.decimal 0.5) [ Html.Attributes.min "0" ] ]
+                [ inputView label "Exemple : saisir 2,5 pour 2h30" (Input.decimal 0.5) [ Html.Attributes.min "0" ] ]
 
         Textarea label placeholder ->
             div [ class "w-full max-w-lg mb-6" ]
