@@ -2,9 +2,9 @@ import { Readable } from "stream";
 
 import * as csv from "fast-csv";
 
-import { sendStreamToFtp } from "../../../../infra/ftp/ftp";
 import { logger } from "../../../../infra/logger";
 import { prismaClient } from "../../../../prisma/client";
+import { sendStreamToFtp } from "../../shared/ftp";
 
 export const batchFundingRequestUnifvae = async (batchKey: string) => {
   try {
