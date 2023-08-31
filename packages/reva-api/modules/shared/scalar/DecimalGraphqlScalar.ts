@@ -1,7 +1,7 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { GraphQLScalarType, Kind } from "graphql";
 
-import { logger } from "../shared/logger";
+import { logger } from "../logger";
 
 export default new GraphQLScalarType({
   name: "Decimal",

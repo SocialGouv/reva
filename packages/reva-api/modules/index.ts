@@ -21,7 +21,7 @@ import { financeUnifvaeResolvers } from "./finance/unifvae/finance.unifvae.resol
 import { financeResolvers } from "./finance/unireva/finance.resolvers";
 import { organismLoaders } from "./organism/organism.loaders";
 import * as referential from "./referential";
-import DecimalGraphqlScalar from "./scalar/DecimalGraphqlScalar";
+import DecimalGraphqlScalar from "./shared/scalar/DecimalGraphqlScalar";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
 
 // Resolvers
