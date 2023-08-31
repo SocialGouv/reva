@@ -4,7 +4,7 @@ import * as path from "path";
 import { PrismaClient } from "@prisma/client";
 import * as csv from "fast-csv";
 
-import { logger } from "../../infra/logger";
+import { logger } from "../../modules/shared/logger";
 
 const prisma = new PrismaClient();
 
@@ -165,9 +165,13 @@ async function main() {
                       );
 
                     if (!existingResult) {
-                      const certId = (await prisma.certification.findFirst(
-                        {where: {rncpId: certificationsMap.get(currentCertification)}}
-                        ))?.id;
+                      const certId = (
+                        await prisma.certification.findFirst({
+                          where: {
+                            rncpId: certificationsMap.get(currentCertification),
+                          },
+                        })
+                      )?.id;
                       await prisma.organismsOnRegionsAndCertifications.create({
                         data: {
                           certification: {
@@ -219,14 +223,18 @@ async function main() {
                   });
 
                 if (!existingResult) {
-                  const certId = (await prisma.certification.findFirst(
-                    {where: {rncpId: certificationsMap.get(currentCertification)}}
-                    ))?.id;
+                  const certId = (
+                    await prisma.certification.findFirst({
+                      where: {
+                        rncpId: certificationsMap.get(currentCertification),
+                      },
+                    })
+                  )?.id;
                   await prisma.organismsOnRegionsAndCertifications.create({
                     data: {
                       certification: {
                         connect: {
-                          id: certId
+                          id: certId,
                         },
                       },
                       region: {

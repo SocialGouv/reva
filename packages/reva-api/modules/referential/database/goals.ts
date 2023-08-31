@@ -1,8 +1,8 @@
 import { Goal } from "@prisma/client";
 import { Either, Left, Right } from "purify-ts";
 
-import { logger } from "../../../infra/logger";
 import { prismaClient } from "../../../prisma/client";
+import { logger } from "../../shared/logger";
 
 export const getGoals = async (): Promise<Either<string, Goal[]>> => {
   try {

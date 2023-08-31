@@ -5,12 +5,12 @@ import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
 import { Either, Left, Maybe, Right } from "purify-ts";
 
-import { logger } from "../../infra/logger";
 import {
   sendLoginEmail,
   sendRegistrationEmail,
   sendUnknownUserEmail,
 } from "../shared/email";
+import { logger } from "../shared/logger";
 import {
   createCandidateWithCandidacy,
   getCandidateByEmail as getCandidateByEmailFromDb,

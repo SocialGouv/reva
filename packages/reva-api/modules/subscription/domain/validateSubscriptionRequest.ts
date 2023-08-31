@@ -6,11 +6,11 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../domain/types/functionalError";
-import { logger } from "../../../infra/logger";
 import {
   DepartmentWithOrganismMethods,
   Organism,
 } from "../../organism/organism.types";
+import { logger } from "../../shared/logger";
 import { __TEST_IAM_FAIL_CHECK__, __TEST_IAM_PASS_CHECK__ } from "./test-const";
 import { Account } from ".prisma/client";
 

@@ -1,7 +1,7 @@
 import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
-import { logger } from "../../infra/logger";
+import { logger } from "../shared/logger";
 import {
   UploadedFile,
   canDownloadFeasibilityFiles,

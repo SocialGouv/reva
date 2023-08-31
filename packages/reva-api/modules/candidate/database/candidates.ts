@@ -1,10 +1,10 @@
 import { CandidacyStatusStep } from "@prisma/client";
 import { Left, Maybe } from "purify-ts";
 
-import { logger } from "../../../infra/logger";
 import { prismaClient } from "../../../prisma/client";
 import { Candidacy } from "../../candidacy/candidacy.types";
 import { candidacyIncludes } from "../../candidacy/database/candidacies";
+import { logger } from "../../shared/logger";
 
 const candidateIncludes = {
   highestDegree: true,

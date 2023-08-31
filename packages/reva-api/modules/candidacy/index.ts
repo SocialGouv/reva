@@ -2,7 +2,6 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import { Organism } from "@prisma/client";
 import mercurius from "mercurius";
 
-import { logger } from "../../infra/logger";
 import { notifyNewCandidacy } from "../../infra/mattermost";
 import { prismaClient } from "../../prisma/client";
 import { Role } from "../account/account.types";
@@ -10,6 +9,7 @@ import * as organismDb from "../organism/database/organisms";
 import { getDropOutReasonById } from "../referential/database/dropOutReasons";
 import { getReorientationReasonById } from "../referential/database/reorientationReasons";
 import { sendNewCandidacyEmail } from "../shared/email/sendNewCandidacyEmail";
+import { logger } from "../shared/logger";
 import {
   Admissibility,
   Candidacy,

@@ -1,7 +1,7 @@
 import { Either, Left, Right } from "purify-ts";
 
-import { logger } from "../../../infra/logger";
 import { prismaClient } from "../../../prisma/client";
+import { logger } from "../../shared/logger";
 import { Department, Region } from "../referential.types";
 
 export const getRegions = async (): Promise<Either<string, Region[]>> => {

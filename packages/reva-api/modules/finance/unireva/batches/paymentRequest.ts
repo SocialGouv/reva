@@ -2,8 +2,8 @@ import { Readable } from "stream";
 
 import * as csv from "fast-csv";
 
-import { logger } from "../../../../infra/logger";
 import { prismaClient } from "../../../../prisma/client";
+import { logger } from "../../../shared/logger";
 import { sendStreamToFtp } from "../../shared/ftp";
 
 const generatePaymentRequestBatchCsvStream = async (

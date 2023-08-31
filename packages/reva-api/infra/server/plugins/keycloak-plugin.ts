@@ -3,7 +3,7 @@ import fp from "fastify-plugin";
 import jwt from "jsonwebtoken";
 import Keycloak, { KeycloakConfig } from "keycloak-connect";
 
-import { logger } from "../../logger";
+import { logger } from "../../../modules/shared/logger";
 
 declare module "fastify" {
   interface FastifyRequest {

@@ -5,7 +5,7 @@ import {
   BusinessEventType,
   BusinessTargetType,
   logBusinessEvent,
-} from "../infra/logger/businessLogger";
+} from "./shared/logger/businessLogger";
 
 export const logGraphqlEvent = ({
   context,

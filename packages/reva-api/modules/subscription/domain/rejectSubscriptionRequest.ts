@@ -4,7 +4,7 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../domain/types/functionalError";
-import { logger } from "../../../infra/logger";
+import { logger } from "../../shared/logger";
 
 interface RejectSubscriptionRequestDeps {
   getSubscriptionRequestById: (

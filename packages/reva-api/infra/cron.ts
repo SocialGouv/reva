@@ -6,8 +6,8 @@ import dotenv from "dotenv";
 import { batchFundingRequestUnifvae } from "../modules/finance/unifvae/batches/fundingRequestUnifvae";
 import { batchPaymentRequest } from "../modules/finance/unireva/batches/paymentRequest";
 import uploadSpoolerFiles from "../modules/finance/unireva/batches/paymentRequestProofJob";
+import { logger } from "../modules/shared/logger";
 import { prismaClient } from "../prisma/client";
-import { logger } from "./logger";
 
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 

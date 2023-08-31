@@ -2,7 +2,7 @@ import KcAdminClient from "@keycloak/keycloak-admin-client";
 import { FastifyPluginCallback } from "fastify";
 import fp from "fastify-plugin";
 
-import { logger } from "../../logger";
+import { logger } from "../../../modules/shared/logger";
 
 const keycloakAdminPlugin: FastifyPluginCallback<Record<string, never>> = (
   app,

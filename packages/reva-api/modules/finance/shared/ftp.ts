@@ -2,7 +2,7 @@ import { Readable } from "stream";
 
 import * as ftp from "basic-ftp";
 
-import { logger } from "../../../infra/logger";
+import { logger } from "../../shared/logger";
 
 export async function sendStreamToFtp(params: {
   fileName: string;

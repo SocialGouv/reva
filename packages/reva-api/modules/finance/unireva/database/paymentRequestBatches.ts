@@ -1,7 +1,7 @@
 import { Left, Right } from "purify-ts";
 
-import { logger } from "../../../../infra/logger";
 import { prismaClient } from "../../../../prisma/client";
+import { logger } from "../../../shared/logger";
 import { PaymentRequestBatch } from "../finance.types";
 
 export const createPaymentRequestBatch = async (params: {

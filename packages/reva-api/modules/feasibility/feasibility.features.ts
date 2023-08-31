@@ -1,7 +1,6 @@
 import { Feasibility, FeasibilityStatus } from "@prisma/client";
 
 import { processPaginationInfo } from "../../domain/utils/pagination";
-import { logger } from "../../infra/logger";
 import { prismaClient } from "../../prisma/client";
 import { getAccountFromKeycloakId } from "../account/database/accounts";
 import { Candidacy } from "../candidacy/candidacy.types";
@@ -11,6 +10,7 @@ import {
   updateCandidacyStatus,
 } from "../candidacy/database/candidacies";
 import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
+import { logger } from "../shared/logger";
 import {
   sendFeasibilityDecisionTakenToAAPEmail,
   sendFeasibilityRejectedCandidateEmail,

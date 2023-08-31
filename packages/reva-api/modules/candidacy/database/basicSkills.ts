@@ -1,7 +1,7 @@
 import { Either, Left, Right } from "purify-ts";
 
-import { logger } from "../../../infra/logger";
 import { prismaClient } from "../../../prisma/client";
+import { logger } from "../../shared/logger";
 import * as domain from "../candidacy.types";
 
 export const getBasicSkills = async (): Promise<

@@ -1,8 +1,8 @@
 import { Either } from "purify-ts";
 
 import { FunctionalError } from "../../domain/types/functionalError";
-import { BusinessEventType } from "../../infra/logger/businessLogger";
 import { logGraphqlEvent } from "../logGraphqlEvent";
+import { BusinessEventType } from "../shared/logger/businessLogger";
 
 export const logCandidacyEvent = ({
   context,

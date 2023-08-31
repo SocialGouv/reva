@@ -1,8 +1,8 @@
 import mjml2html from "mjml";
 
-import { logger } from "../../infra/logger";
 import { sendGenericEmail } from "../shared/email";
 import { formatFreeText } from "../shared/email/utils";
+import { logger } from "../shared/logger";
 
 const template = ({
   headline,

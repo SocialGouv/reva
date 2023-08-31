@@ -1,7 +1,7 @@
 import { Either, Left, Maybe, Right } from "purify-ts";
 
-import { logger } from "../../../infra/logger";
 import { prismaClient } from "../../../prisma/client";
+import { logger } from "../../shared/logger";
 import { Account } from ".prisma/client";
 
 export const createAccountProfile = async (params: {

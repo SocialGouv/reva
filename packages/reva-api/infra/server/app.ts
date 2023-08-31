@@ -12,7 +12,7 @@ import fastify, {
 
 import { feasibilityFileUploadRoute } from "../../modules/feasibility/feasibility.routes";
 import proofUploadRoute from "../../modules/finance/unireva/finance.routes";
-import { logger } from "../logger";
+import { logger } from "../../modules/shared/logger";
 import { restRoutes } from "../rest";
 import { mercuriusGraphQL } from "./mercurius";
 import keycloakAdminPlugin from "./plugins/keycloak-admin-plugin";
