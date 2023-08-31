@@ -1,6 +1,6 @@
 module Page.Form.FundingRequestUniFvae exposing (form)
 
-import Accessibility exposing (div)
+import Accessibility exposing (div, span)
 import Admin.Enum.Gender exposing (Gender(..))
 import Data.Candidacy exposing (Candidacy)
 import Data.Candidate
@@ -62,22 +62,21 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( "forfait"
           , Form.StaticHtml <|
                 div
-                    [ class "w-full flex flex-wrap -mt-2"
-                    , class "pl-3 lg:pl-5"
-                    , class "font-medium"
+                    [ class "w-full flex flex-wrap mb-6"
                     ]
                     [ div
-                        [ class "w-full sm:w-[320px] lg:w-[320px] xl:w-[228px]"
-                        , class "mr-5 mb-2 lg:mb-0"
-                        , class "text-lg font-semibold"
+                        [ class "w-full lg:w-2/3 " ]
+                        [ div [ class "flex flex-col" ]
+                            [ span [ class "text-md font-semibold" ] [ Accessibility.text "Forfait d’étude de faisabilité et entretien post-jury" ]
+                            , span [ class "mt-3" ] []
+                            , span [ class "text-sm text-orange-500" ] [ Accessibility.text "⚠ Ne pourra être demandé que si l'étude a été réalisée dans sa totalité." ]
+                            ]
                         ]
-                        [ Accessibility.text "Forfait d’étude de faisabilité et entretien post-jury" ]
                     , div
-                        [ class "w-full sm:w-[160px] lg:w-[160px] xl:w-[228px]"
-                        , class "mr-5 mb-2 lg:mb-0"
+                        [ class "w-full lg:w-1/3 pl-6 mb-2 lg:mb-0"
                         , class "text-lg font-medium"
                         ]
-                        [ Accessibility.text "Forfait 300€ net" ]
+                        [ div [ class "flex flex-col mx-auto" ] [ span [] [ Accessibility.text "Forfait" ], span [] [ Accessibility.text "300€ net" ] ] ]
                     ]
           )
         , ( "individual", Form.Title2 "Accompagnement" )
