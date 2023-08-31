@@ -4,7 +4,7 @@ dist
 .elm-pages
 elm-stuff
 node_modules
-packages/reva-api/infra/generated-graphql-schema.graphql
+packages/reva-api/modules/generated-graphql-schema.graphql
 infra/ftps/data/*
 .parcel-cache
 .vscode

@@ -10,8 +10,8 @@ import fastify, {
   FastifyServerOptions,
 } from "fastify";
 
-import { feasibilityFileUploadRoute } from "../graphql/feasibility/feasibility.routes";
-import proofUploadRoute from "../graphql/finance/unireva/finance.routes";
+import { feasibilityFileUploadRoute } from "../../modules/feasibility/feasibility.routes";
+import proofUploadRoute from "../../modules/finance/unireva/finance.routes";
 import { logger } from "../logger";
 import { restRoutes } from "../rest";
 import { mercuriusGraphQL } from "./mercurius";

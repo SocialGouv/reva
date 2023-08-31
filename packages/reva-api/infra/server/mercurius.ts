@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import mercurius, { MercuriusOptions } from "mercurius";
 
-import { graphqlConfiguration } from "../graphql";
+import { graphqlConfiguration } from "../../modules";
 
 const buildGqlContext = async (req: FastifyRequest, _reply: FastifyReply) => {
   return {

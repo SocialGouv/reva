@@ -12,11 +12,11 @@ const filePath = "./referentials/certification-authorities.csv";
 
 import KcAdminClient from "@keycloak/keycloak-admin-client";
 
-import { createAccountProfile } from "../../../infra/graphql/account/database/accounts";
-import { createAccount } from "../../../infra/graphql/account/features/createAccount";
-import { getCertificationAuthorityById } from "../../../infra/graphql/feasibility/feasibility.features";
-import * as organismsDb from "../../../infra/graphql/organism/database/organisms";
 import * as IAM from "../../../infra/iam/keycloak";
+import { createAccountProfile } from "../../../modules/account/database/accounts";
+import { createAccount } from "../../../modules/account/features/createAccount";
+import { getCertificationAuthorityById } from "../../../modules/feasibility/feasibility.features";
+import * as organismsDb from "../../../modules/organism/database/organisms";
 import { readCsvRows } from "../read-csv";
 
 const keycloakAdmin = new KcAdminClient({

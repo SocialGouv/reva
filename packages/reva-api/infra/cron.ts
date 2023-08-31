@@ -3,10 +3,10 @@ import path from "path";
 import cron from "cron";
 import dotenv from "dotenv";
 
+import { batchFundingRequestUnifvae } from "../modules/finance/unifvae/batches/fundingRequestUnifvae";
+import { batchPaymentRequest } from "../modules/finance/unireva/batches/paymentRequest";
+import uploadSpoolerFiles from "../modules/finance/unireva/batches/paymentRequestProofJob";
 import { prismaClient } from "./database/postgres/client";
-import { batchFundingRequestUnifvae } from "./graphql/finance/unifvae/batches/fundingRequestUnifvae";
-import { batchPaymentRequest } from "./graphql/finance/unireva/batches/paymentRequest";
-import uploadSpoolerFiles from "./graphql/finance/unireva/batches/paymentRequestProofJob";
 import { logger } from "./logger";
 
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });

@@ -3,7 +3,7 @@ import { FastifyInstance } from "fastify";
 import {
   deleteCandidacyFromEmail,
   deleteCandidacyFromPhone,
-} from "../graphql/candidacy/database/candidacies";
+} from "../../modules/candidacy/database/candidacies";
 
 export const restRoutes = (
   server: FastifyInstance,
