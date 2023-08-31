@@ -7,7 +7,7 @@
 
 import { Decimal } from "@prisma/client/runtime";
 
-import { prismaClient } from "../../../../infra/database/postgres/client";
+import { prismaClient } from "../../../../prisma/client";
 
 export const validateFeasibilityChecks = async (
   input: FundingRequestUnifvaeInput
