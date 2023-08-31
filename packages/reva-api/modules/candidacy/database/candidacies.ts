@@ -704,44 +704,6 @@ export const updateCertification = async (params: {
   }
 };
 
-export const deleteCandidacyFromPhone = async (phone: string) => {
-  try {
-    const { count } = await prismaClient.candidacy.deleteMany({
-      where: {
-        phone: phone,
-      },
-    });
-
-    if (count === 0) {
-      return Right(`Candidature non trouvée.`);
-    } else {
-      return Right(`Candidature supprimée `);
-    }
-  } catch (e) {
-    logger.error(e);
-    return Left(`Candidature non supprimée, ${(e as any).message}`);
-  }
-};
-
-export const deleteCandidacyFromEmail = async (email: string) => {
-  try {
-    const { count } = await prismaClient.candidacy.deleteMany({
-      where: {
-        email: email,
-      },
-    });
-
-    if (count === 0) {
-      return Right(`Candidature non trouvée.`);
-    } else {
-      return Right(`Candidature supprimée `);
-    }
-  } catch (e) {
-    logger.error(e);
-    return Left(`Candidature non supprimée, ${(e as any).message}`);
-  }
-};
-
 export const deleteCandidacyFromId = async (id: string) => {
   try {
     const { count } = await prismaClient.candidacy.deleteMany({

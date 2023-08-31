@@ -13,7 +13,6 @@ import fastify, {
 import { feasibilityFileUploadRoute } from "../../modules/feasibility/feasibility.routes";
 import proofUploadRoute from "../../modules/finance/unireva/finance.routes";
 import { logger } from "../../modules/shared/logger";
-import { restRoutes } from "../rest";
 import { mercuriusGraphQL } from "./mercurius";
 import keycloakAdminPlugin from "./plugins/keycloak-admin-plugin";
 import keycloakPlugin from "./plugins/keycloak-plugin";
@@ -108,10 +107,6 @@ export const buildApp = async (
   app.register(keycloakAdminPlugin);
 
   app.register(mercuriusGraphQL, {
-    prefix: "/api",
-  });
-
-  app.register(restRoutes, {
     prefix: "/api",
   });
 
