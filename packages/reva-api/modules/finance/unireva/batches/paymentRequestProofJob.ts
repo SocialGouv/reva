@@ -3,8 +3,8 @@ import { Readable } from "stream";
 import { FileUploadSpooler } from "@prisma/client";
 import * as ftp from "basic-ftp";
 
-import { prismaClient } from "../../../../infra/database/postgres/client";
 import { logger } from "../../../../infra/logger";
+import { prismaClient } from "../../../../prisma/client";
 
 export default async (batchKey: string) => {
   logger.info(`Starting job ${batchKey}`);

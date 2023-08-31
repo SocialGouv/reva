@@ -2,8 +2,8 @@ import { deburr } from "lodash";
 import { Either, Left, Right } from "purify-ts";
 
 import { processPaginationInfo } from "../../../domain/utils/pagination";
-import { prismaClient } from "../../../infra/database/postgres/client";
 import { logger } from "../../../infra/logger";
+import { prismaClient } from "../../../prisma/client";
 import { Certification } from "../referential.types";
 
 export const getCertificationById = async ({

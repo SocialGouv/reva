@@ -1,6 +1,6 @@
 import mercurius from "mercurius";
 
-import { prismaClient } from "../../infra/database/postgres/client";
+import { prismaClient } from "../../prisma/client";
 import * as certificationsDb from "./database/certifications";
 import * as degreesDb from "./database/degrees";
 import * as dropOutReasonsDb from "./database/dropOutReasons";

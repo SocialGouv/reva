@@ -1,7 +1,7 @@
 import { Either, Left, Maybe, Right } from "purify-ts";
 
-import { prismaClient } from "../../../../infra/database/postgres/client";
 import { logger } from "../../../../infra/logger";
+import { prismaClient } from "../../../../prisma/client";
 import { PaymentRequest } from "../finance.types";
 
 export const getPaymentRequestByCandidacyId = async (params: {

@@ -4,7 +4,7 @@
 import { Account, Candidacy, Candidate, Organism } from "@prisma/client";
 import { CandidacyStatusStep } from "@prisma/client";
 
-import { prismaClient } from "../../infra/database/postgres/client";
+import { prismaClient } from "../../prisma/client";
 import {
   candidateJPL,
   candidateMPB,

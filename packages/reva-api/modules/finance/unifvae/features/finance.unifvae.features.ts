@@ -1,7 +1,7 @@
 import { Candidate } from "@prisma/client";
 import { format } from "date-fns";
 
-import { prismaClient } from "../../../../infra/database/postgres/client";
+import { prismaClient } from "../../../../prisma/client";
 import { updateCandidacyStatus } from "../../../candidacy/database/candidacies";
 import { createBatchFromFundingRequestUnifvae } from "./fundingRequestBatch";
 

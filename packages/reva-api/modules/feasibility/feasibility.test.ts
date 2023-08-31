@@ -12,7 +12,7 @@ import {
   Region,
 } from "@prisma/client";
 
-import { prismaClient } from "../../infra/database/postgres/client";
+import { prismaClient } from "../../prisma/client";
 import {
   candidateJPL,
   organismIperia,

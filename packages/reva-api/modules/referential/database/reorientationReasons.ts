@@ -1,6 +1,6 @@
 import { Either, Left, Maybe, Right } from "purify-ts";
 
-import { prismaClient } from "../../../infra/database/postgres/client";
+import { prismaClient } from "../../../prisma/client";
 import { ReorientationReason } from "../referential.types";
 
 export const getReorientationReasons = async (): Promise<

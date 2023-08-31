@@ -10,7 +10,7 @@ import {
 } from "@prisma/client";
 
 import { processPaginationInfo } from "../../../domain/utils/pagination";
-import { prismaClient } from "../../../infra/database/postgres/client";
+import { prismaClient } from "../../../prisma/client";
 import * as domain from "../candidacy.types";
 import { CandidacyStatusFilter } from "../candidacy.types";
 

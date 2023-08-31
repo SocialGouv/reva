@@ -1,8 +1,8 @@
 import { CandidacyStatusStep, CandidateTypology } from "@prisma/client";
 import { Either, Left, Maybe, Right } from "purify-ts";
 
-import { prismaClient } from "../../../infra/database/postgres/client";
 import { logger } from "../../../infra/logger";
+import { prismaClient } from "../../../prisma/client";
 import * as domain from "../candidacy.types";
 import { toDomainExperiences } from "./experiences";
 

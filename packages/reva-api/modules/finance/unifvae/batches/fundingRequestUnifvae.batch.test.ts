@@ -1,6 +1,6 @@
 import { Candidacy, Gender } from "@prisma/client";
 
-import { prismaClient } from "../../../../infra/database/postgres/client";
+import { prismaClient } from "../../../../prisma/client";
 import { generateFundingRequestUnifvaeBatchCsvStream } from "./fundingRequestUnifvae";
 
 const candidateEmail1 = "toto@bongo.eu",

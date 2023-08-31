@@ -3,9 +3,9 @@ import { Readable } from "stream";
 import { Feature } from "@prisma/client";
 import * as csv from "fast-csv";
 
-import { prismaClient } from "../../../../infra/database/postgres/client";
 import { sendStreamToFtp } from "../../../../infra/ftp/ftp";
 import { logger } from "../../../../infra/logger";
+import { prismaClient } from "../../../../prisma/client";
 
 const generatePaymentRequestBatchCsvStream = async (
   itemsToSendIds: string[]

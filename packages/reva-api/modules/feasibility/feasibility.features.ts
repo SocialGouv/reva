@@ -1,8 +1,8 @@
 import { Feasibility, FeasibilityStatus } from "@prisma/client";
 
 import { processPaginationInfo } from "../../domain/utils/pagination";
-import { prismaClient } from "../../infra/database/postgres/client";
 import { logger } from "../../infra/logger";
+import { prismaClient } from "../../prisma/client";
 import { getAccountFromKeycloakId } from "../account/database/accounts";
 import { Candidacy } from "../candidacy/candidacy.types";
 import {

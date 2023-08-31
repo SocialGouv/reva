@@ -2,8 +2,8 @@ import { Organism, Prisma } from "@prisma/client";
 import { camelCase, mapKeys } from "lodash";
 import { Either, Left, Maybe, Right } from "purify-ts";
 
-import { prismaClient } from "../../../infra/database/postgres/client";
 import { logger } from "../../../infra/logger";
+import { prismaClient } from "../../../prisma/client";
 import * as domain from "../organism.types";
 
 export const getAAPOrganisms = async (params: {

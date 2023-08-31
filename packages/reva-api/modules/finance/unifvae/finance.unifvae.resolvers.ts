@@ -5,7 +5,7 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../domain/types/functionalError";
-import { prismaClient } from "../../../infra/database/postgres/client";
+import { prismaClient } from "../../../prisma/client";
 import { CandidacyBusinessEvent } from "../../candidacy/candidacy.types";
 import { isAdminOrCandidacyCompanion } from "../../security/presets";
 import {

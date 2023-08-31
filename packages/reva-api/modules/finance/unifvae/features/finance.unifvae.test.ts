@@ -12,7 +12,7 @@ import {
   Organism,
 } from "@prisma/client";
 
-import { prismaClient } from "../../../../infra/database/postgres/client";
+import { prismaClient } from "../../../../prisma/client";
 import { organismDummy1 } from "../../../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";

@@ -1,4 +1,4 @@
-import { prismaClient } from "../../infra/database/postgres/client";
+import { prismaClient } from "../../prisma/client";
 
 export const getOrganismOnDepartmentsByOrganismAndDepartmentIds = ({
   organismAndDepartmentIds,
