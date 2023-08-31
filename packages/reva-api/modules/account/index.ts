@@ -7,11 +7,11 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../domain/types/functionalError";
-import * as IAM from "../../infra/iam/keycloak";
 import { getCertificationAuthorityById } from "../feasibility/feasibility.features";
 import * as organismsDb from "../organism/database/organisms";
 import * as accountsDb from "./database/accounts";
 import { createAccount } from "./features/createAccount";
+import * as IAM from "./features/keycloak";
 
 export const resolvers = {
   Mutation: {

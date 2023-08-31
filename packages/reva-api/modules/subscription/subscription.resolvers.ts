@@ -2,11 +2,11 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import mercurius from "mercurius";
 
-import * as IAM from "../../infra/iam/keycloak";
 import {
   createAccountProfile,
   getAccountFromEmail,
 } from "../account/database/accounts";
+import * as IAM from "../account/features/keycloak";
 import * as OrganismDb from "../organism/database/organisms";
 import * as db from "./db/subscription-request";
 import * as domain from "./domain/index";
