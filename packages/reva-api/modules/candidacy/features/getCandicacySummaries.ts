@@ -9,8 +9,8 @@ import {
   Prisma,
 } from "@prisma/client";
 
-import { processPaginationInfo } from "../../../domain/utils/pagination";
 import { prismaClient } from "../../../prisma/client";
+import { processPaginationInfo } from "../../shared/list/pagination";
 import * as domain from "../candidacy.types";
 import { CandidacyStatusFilter } from "../candidacy.types";
 

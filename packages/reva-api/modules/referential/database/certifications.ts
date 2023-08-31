@@ -1,8 +1,8 @@
 import { deburr } from "lodash";
 import { Either, Left, Right } from "purify-ts";
 
-import { processPaginationInfo } from "../../../domain/utils/pagination";
 import { prismaClient } from "../../../prisma/client";
+import { processPaginationInfo } from "../../shared/list/pagination";
 import { logger } from "../../shared/logger";
 import { Certification } from "../referential.types";
 

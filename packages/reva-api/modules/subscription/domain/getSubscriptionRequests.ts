@@ -4,7 +4,7 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../../domain/types/functionalError";
-import { processPaginationInfo } from "../../../domain/utils/pagination";
+import { processPaginationInfo } from "../../shared/list/pagination";
 
 interface getSubscriptionRequestsDeps {
   getSubscriptionRequests: (
