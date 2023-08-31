@@ -1,10 +1,10 @@
 import { Either, EitherAsync, Maybe, Right } from "purify-ts";
 
+import { IAMAccount } from "../../account/account.types";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../../domain/types/functionalError";
-import { IAMAccount } from "../../account/account.types";
+} from "../../shared/error/functionalError";
 import {
   Candidate,
   CandidateAuthenticationInput,

@@ -2,10 +2,10 @@
  * @jest-environment ./test/fastify-test-env.ts
  */
 
-import { FunctionalCodeError } from "../../../domain/types/functionalError";
 import { prismaClient } from "../../../prisma/client";
 import { authorizationHeaderForUser } from "../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../test/helpers/graphql-helper";
+import { FunctionalCodeError } from "../../shared/error/functionalError";
 import { subreqSampleMin } from "./fixture";
 
 const siret1 = "11001234567890",

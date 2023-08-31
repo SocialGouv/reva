@@ -1,10 +1,10 @@
 import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
+import { Candidate } from "../../../candidate/candidate.types";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../../../domain/types/functionalError";
-import { Candidate } from "../../../candidate/candidate.types";
+} from "../../../shared/error/functionalError";
 import { FundingRequest, PaymentRequest } from "../finance.types";
 import {
   getTotalCost,

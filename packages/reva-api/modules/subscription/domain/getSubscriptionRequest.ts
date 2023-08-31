@@ -3,7 +3,7 @@ import { Either, EitherAsync, Maybe } from "purify-ts";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../../domain/types/functionalError";
+} from "../../shared/error/functionalError";
 
 interface getSubscriptionRequestsDeps {
   getSubscriptionRequestById: (

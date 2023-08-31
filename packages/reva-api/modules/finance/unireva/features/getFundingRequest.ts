@@ -1,11 +1,11 @@
 import { Either, EitherAsync, Left } from "purify-ts";
 
+import { Role } from "../../../account/account.types";
+import { Candidacy } from "../../../candidacy/candidacy.types";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../../../domain/types/functionalError";
-import { Role } from "../../../account/account.types";
-import { Candidacy } from "../../../candidacy/candidacy.types";
+} from "../../../shared/error/functionalError";
 import { FundingRequest, FundingRequestInformations } from "../finance.types";
 
 interface GetFundingRequestDeps {

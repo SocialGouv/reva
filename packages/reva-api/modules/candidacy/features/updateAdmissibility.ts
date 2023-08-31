@@ -4,7 +4,7 @@ import { Either, EitherAsync, Left, Maybe } from "purify-ts";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../../domain/types/functionalError";
+} from "../../shared/error/functionalError";
 import { Admissibility } from "../candidacy.types";
 
 interface UpdateAdmissibilityDeps {

@@ -4,7 +4,7 @@ import { Either, EitherAsync, Left, Right } from "purify-ts";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../../domain/types/functionalError";
+} from "../../shared/error/functionalError";
 
 interface createSubscriptionRequestDeps {
   createSubscriptionRequest: (

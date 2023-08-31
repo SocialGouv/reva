@@ -1,7 +1,7 @@
 import { Left, Right } from "purify-ts";
 
-import { FunctionalError } from "../../../domain/types/functionalError";
 import { logGraphqlEvent } from "../../logGraphqlEvent";
+import { FunctionalError } from "../../shared/error/functionalError";
 import { BusinessEventType } from "../../shared/logger/businessLogger";
 
 export const logFundingRequestUnifvaeEvent = ({

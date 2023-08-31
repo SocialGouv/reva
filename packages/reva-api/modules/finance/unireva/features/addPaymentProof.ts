@@ -12,7 +12,7 @@ import {
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../../../domain/types/functionalError";
+} from "../../../shared/error/functionalError";
 import { UploadedFile } from "../finance.routes";
 import {
   FileUploadSpoolerEntry,

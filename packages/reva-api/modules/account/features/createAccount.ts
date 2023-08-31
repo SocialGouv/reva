@@ -1,11 +1,11 @@
 import { CertificationAuthority } from "@prisma/client";
 import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
+import { Organism } from "../../organism/organism.types";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../../domain/types/functionalError";
-import { Organism } from "../../organism/organism.types";
+} from "../../shared/error/functionalError";
 import { IAMAccount } from "../account.types";
 
 interface CreateAccountDeps {

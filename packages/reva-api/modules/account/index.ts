@@ -3,12 +3,12 @@ import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
 import { Left } from "purify-ts";
 
+import { getCertificationAuthorityById } from "../feasibility/feasibility.features";
+import * as organismsDb from "../organism/database/organisms";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../domain/types/functionalError";
-import { getCertificationAuthorityById } from "../feasibility/feasibility.features";
-import * as organismsDb from "../organism/database/organisms";
+} from "../shared/error/functionalError";
 import * as accountsDb from "./database/accounts";
 import { createAccount } from "./features/createAccount";
 import * as IAM from "./features/keycloak";

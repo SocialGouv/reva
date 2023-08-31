@@ -4,7 +4,7 @@ import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../../domain/types/functionalError";
+} from "../../shared/error/functionalError";
 import { Candidacy } from "../candidacy.types";
 
 interface SubmitCandidacyDeps {

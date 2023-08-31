@@ -3,7 +3,7 @@ import { Either, EitherAsync } from "purify-ts";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../../domain/types/functionalError";
+} from "../../shared/error/functionalError";
 import { DropOutReason } from "../referential.types";
 
 interface GetDropOutReasonsDeps {

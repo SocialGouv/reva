@@ -1,6 +1,6 @@
 import { Either } from "purify-ts";
 
-import { FunctionalError } from "../domain/types/functionalError";
+import { FunctionalError } from "./shared/error/functionalError";
 import {
   BusinessEventType,
   BusinessTargetType,

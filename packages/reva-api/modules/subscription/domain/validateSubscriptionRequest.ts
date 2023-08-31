@@ -3,13 +3,13 @@ import { randomUUID } from "crypto";
 import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
 import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "../../../domain/types/functionalError";
-import {
   DepartmentWithOrganismMethods,
   Organism,
 } from "../../organism/organism.types";
+import {
+  FunctionalCodeError,
+  FunctionalError,
+} from "../../shared/error/functionalError";
 import { logger } from "../../shared/logger";
 import { __TEST_IAM_FAIL_CHECK__, __TEST_IAM_PASS_CHECK__ } from "./test-const";
 import { Account } from ".prisma/client";

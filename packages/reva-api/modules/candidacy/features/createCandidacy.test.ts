@@ -3,7 +3,7 @@ import { Left, Right } from "purify-ts";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../../domain/types/functionalError";
+} from "../../shared/error/functionalError";
 import { createCandidacy } from "./createCandidacy";
 
 describe("domain candidacy", () => {

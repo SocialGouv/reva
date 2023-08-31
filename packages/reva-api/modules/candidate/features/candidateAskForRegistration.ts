@@ -3,7 +3,7 @@ import { Either, EitherAsync } from "purify-ts";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../../domain/types/functionalError";
+} from "../../shared/error/functionalError";
 import { CandidateRegistrationInput } from "../candidate.types";
 
 interface CandidateInput {

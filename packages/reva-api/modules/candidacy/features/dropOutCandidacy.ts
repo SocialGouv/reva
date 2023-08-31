@@ -1,10 +1,10 @@
 import { Either, EitherAsync, Maybe } from "purify-ts";
 
+import { DropOutReason } from "../../referential/referential.types";
 import {
   FunctionalCodeError,
   FunctionalError,
-} from "../../../domain/types/functionalError";
-import { DropOutReason } from "../../referential/referential.types";
+} from "../../shared/error/functionalError";
 import { Candidacy } from "../candidacy.types";
 
 interface DropOutCandidacyDeps {
