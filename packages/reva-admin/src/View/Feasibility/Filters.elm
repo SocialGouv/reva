@@ -1,16 +1,23 @@
-module View.Feasibility.Filters exposing (..)
+module View.Feasibility.Filters exposing (Filters, view)
 
 import Admin.Enum.FeasibilityCategoryFilter as FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter(..))
 import Data.Context exposing (Context)
 import Data.Feasibility exposing (Decision(..), FeasibilityCountByCategory, feasibilityCategoryFilterToReadableString)
 import Html exposing (Html, a, label, li, text, ul)
 import Html.Attributes exposing (class, classList)
-import Route exposing (FeasibilityFilters)
+import Route
+
+
+type alias Filters =
+    { search : Maybe String
+    , category : FeasibilityCategoryFilter
+    , page : Int
+    }
 
 
 view :
     FeasibilityCountByCategory
-    -> FeasibilityFilters
+    -> Filters
     -> Context
     -> List (Html msg)
 view feasibilityCountByCategory filters context =
@@ -52,7 +59,7 @@ view feasibilityCountByCategory filters context =
     ]
 
 
-viewLink : Context -> FeasibilityFilters -> Int -> FeasibilityCategoryFilter -> String -> Html msg
+viewLink : Context -> Filters -> Int -> FeasibilityCategoryFilter -> String -> Html msg
 viewLink context filters count categoryFilter label =
     let
         isSelected =

@@ -154,14 +154,16 @@ getFeasibilities :
     -> (RemoteData (List String) Data.Feasibility.FeasibilitySummaryPage -> msg)
     -> Int
     -> Maybe Admin.Enum.FeasibilityDecisionFilter.FeasibilityDecisionFilter
+    -> Maybe String
     -> Cmd msg
-getFeasibilities endpointGraphql token toMsg page decision =
+getFeasibilities endpointGraphql token toMsg page decision searchFilter =
     Query.feasibilities
         (\optionals ->
             { optionals
                 | limit = Present 10
                 , offset = Present ((page - 1) * 10)
                 , decision = OptionalArgument.fromMaybe decision
+                , searchFilter = OptionalArgument.fromMaybe searchFilter
             }
         )
         summaryPageSelection

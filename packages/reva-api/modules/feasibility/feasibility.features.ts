@@ -1,4 +1,4 @@
-import { Feasibility, FeasibilityStatus } from "@prisma/client";
+import { Feasibility, FeasibilityStatus, Prisma } from "@prisma/client";
 
 import { processPaginationInfo } from "../../domain/utils/pagination";
 import { prismaClient } from "../../prisma/client";
@@ -217,20 +217,29 @@ export const getFeasibilityCountByCategory = async ({
   return feasibilityCountByCategory;
 };
 
+const buildContainsFilterClause =
+  (searchFilter: string) => (field: string) => ({
+    [field]: { contains: searchFilter, mode: "insensitive" },
+  });
+
 export const getFeasibilities = async ({
   keycloakId,
   hasRole,
   limit = 10,
   offset = 0,
   decision,
+  searchFilter,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
   limit?: number;
   offset?: number;
   decision?: FeasibilityStatus;
+  searchFilter?: string;
 }): Promise<PaginatedListResult<Feasibility>> => {
-  let queryWhereClause: object = decision ? { decision } : {};
+  let queryWhereClause: Prisma.FeasibilityFindManyArgs["where"] = decision
+    ? { decision }
+    : {};
 
   //only list feasibilties attached to candidacies that have both certification and department covered by the certification authority linked to the user account
   if (hasRole("manage_feasibility")) {
@@ -272,6 +281,40 @@ export const getFeasibilities = async ({
         },
       },
     };
+
+    if (searchFilter && searchFilter.length > 0) {
+      const containsFilter = buildContainsFilterClause(searchFilter);
+
+      queryWhereClause = {
+        ...queryWhereClause,
+        candidacy: {
+          ...(queryWhereClause.candidacy as Prisma.CandidacyWhereInput),
+          OR: [
+            {
+              candidate: {
+                OR: [
+                  containsFilter("lastname"),
+                  containsFilter("firstname"),
+                  containsFilter("firstname2"),
+                  containsFilter("firstname3"),
+                  containsFilter("email"),
+                  containsFilter("phone"),
+                ],
+              },
+            },
+            { organism: containsFilter("label") },
+            { department: containsFilter("label") },
+            {
+              certificationsAndRegions: {
+                some: {
+                  certification: containsFilter("label"),
+                },
+              },
+            },
+          ],
+        },
+      };
+    }
   } else if (!hasRole("admin")) {
     //admin has access to everything
     throw new Error("Utilisateur non autorisé");

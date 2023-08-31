@@ -170,6 +170,7 @@ type alias FeasibilitiesOptionalArguments =
     { offset : OptionalArgument Int
     , limit : OptionalArgument Int
     , decision : OptionalArgument Admin.Enum.FeasibilityDecisionFilter.FeasibilityDecisionFilter
+    , searchFilter : OptionalArgument String
     }
 
 
@@ -180,10 +181,10 @@ feasibilities :
 feasibilities fillInOptionals____ object____ =
     let
         filledInOptionals____ =
-            fillInOptionals____ { offset = Absent, limit = Absent, decision = Absent }
+            fillInOptionals____ { offset = Absent, limit = Absent, decision = Absent, searchFilter = Absent }
 
         optionalArgs____ =
-            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "decision" filledInOptionals____.decision (Encode.enum Admin.Enum.FeasibilityDecisionFilter.toString) ]
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "decision" filledInOptionals____.decision (Encode.enum Admin.Enum.FeasibilityDecisionFilter.toString), Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string ]
                 |> List.filterMap Basics.identity
     in
     Object.selectionForCompositeField "feasibilities" optionalArgs____ object____ Basics.identity

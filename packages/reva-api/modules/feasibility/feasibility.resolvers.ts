@@ -55,7 +55,12 @@ export const feasibilityResolvers = {
       }),
     feasibilities: (
       _: unknown,
-      args: { offset?: number; limit?: number; status?: FeasibilityStatus },
+      args: {
+        offset?: number;
+        limit?: number;
+        status?: FeasibilityStatus;
+        searchFilter?: string;
+      },
       context: any
     ) =>
       getFeasibilities({
