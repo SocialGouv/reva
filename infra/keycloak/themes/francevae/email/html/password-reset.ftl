@@ -1,13 +1,13 @@
 <#import "email-template.ftl" as layout>
-<@layout.emailLayout ; section>
-    <#if section = "title">
-      France VAE - Récupération de mot de passe
-    <#elseif section = "intro">
-      Nous avons reçu une demande de récupération de mot de passe pour le site France VAE pour cette adresse électronique. Si vous avez bien effectué cette demande, vous pouvez changer de mot de passe en cliquant sur le lien ci-dessous:
-    <#elseif section = "actionButton">
-      <a href="${link}" style="display:inline-block;background:#1c38b0;color:#ffffff;font-family:Arial, sans-serif;font-size:14px;font-weight:normal;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:10px 25px 10px 25px;mso-padding-alt:0px;border-radius:3px;" target="_blank"><span style="font-size:14px;">Choisir un nouveau mot de passe</span></a>
-    <#elseif section = "outro">
-      <p class="text-build-content" data-testid="I0ETIbJm4" style="margin: 10px 0; margin-top: 10px;"><b>Si vous n'avez pas effectué cette demande, vous pouvez ignorer ce message.</b></p>
-      <p class="text-build-content" data-testid="I0ETIbJm4" style="margin: 10px 0; margin-top: 10px;">Ce lien expire dans ${linkExpirationFormatter(linkExpiration)}.</p>
+  <@layout.emailLayout ; section>
+    <#if section="title">
+      Réinitialisation de votre mot de passe France VAE
+      <#elseif section="intro">
+        Nous avons reçu une demande de récupération de mot de passe pour le site France VAE pour cette adresse électronique. Si vous avez bien effectué cette demande, vous pouvez changer de mot de passe en cliquant sur le lien ci-dessous:
+        <a href="${link}" style="display:inline-block;background:transparent;color:black;border: solid 1px lightgray;font-family:Arial, sans-serif;font-size:14px;font-weight:normal;line-height:120%;margin:0;margin-top:20px;text-decoration:none;text-transform:none;padding:5px 8px;mso-padding-alt:0px;border-radius:3px;" target="_blank">Choisir un nouveau mot de passe ⚠️</a>
+        <#elseif section="outro">
+          <p class="text-build-content" data-testid="I0ETIbJm4" style="margin: 10px 0;">Si vous n'êtes pas à l'origine de cette demande, merci de ne pas tenir compte de ce mail.
+          </p>
+          <p class="text-build-content" data-testid="I0ETIbJm4" style="margin: 0; margin-bottom: 10px;">Ce lien expire dans ${linkExpirationFormatter(linkExpiration)}.</p>
     </#if>
-</@layout.emailLayout>
+  </@layout.emailLayout>
