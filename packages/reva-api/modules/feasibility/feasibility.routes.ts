@@ -21,7 +21,7 @@ interface UploadFeasibilityFileRequestBody {
 export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
   server
 ) => {
-  const maxUploadFileSizeInKiloBytes = 15000000;
+  const maxUploadFileSizeInBytes = 15728640;
   const validMimeTypes = ["application/pdf"];
 
   server.register(fastifyMultipart, {
@@ -133,15 +133,19 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
       }
 
       if (
-        feasibilityFile.data?.byteLength > maxUploadFileSizeInKiloBytes ||
+        feasibilityFile.data?.byteLength > maxUploadFileSizeInBytes ||
         (documentaryProofFile?.data?.byteLength ?? 0) >
-          maxUploadFileSizeInKiloBytes ||
+          maxUploadFileSizeInBytes ||
         (certificateOfAttendanceFile?.data?.byteLength ?? 0) >
-          maxUploadFileSizeInKiloBytes
+          maxUploadFileSizeInBytes
       ) {
         return reply
           .status(400)
-          .send(`La taille du fichier dépasse la taille maximum autorisée`);
+          .send(
+            `La taille du fichier dépasse la taille maximum autorisée. Veuillez soumettre un fichier de moins de ${Math.floor(
+              maxUploadFileSizeInBytes / 1024 / 1024
+            )} Mo.`
+          );
       }
       try {
         await createFeasibility({
