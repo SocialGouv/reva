@@ -62,9 +62,9 @@ async function createCertificationAuthoritiesAccounts() {
 
   for (const authority of authorities) {
     console.log("creating account for", authority.contactEmail);
-    (await createAccountForCertificationAuthority(authority)).mapLeft(
+    /**(await createAccountForCertificationAuthority(authority)).mapLeft(
       console.error
-    );
+    );*/
   }
 }
 
