@@ -7,7 +7,6 @@ import {
   SectionParagraph,
 } from "@/components/section-content/SectionContent";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
 import Head from "next/head";
 import Image from "next/image";
 /* eslint-disable react/no-unescaped-entities */
@@ -219,7 +218,6 @@ const CommentCaMarche = () => (
             certification de manière totale ou partielle
           </li>
         </ul>
-        <AdmissibleSectorsInfoPanel className="mb-4" />
         <div>
           <TrackableButton
             eventTracked={{
@@ -312,7 +310,6 @@ const TrouvezCertification = () => (
         professionnelles inscrits au RNCP qui vous ouvriront la porte à autant
         d’opportunités professionnelles.
       </SectionParagraph>
-      <AdmissibleSectorsInfoPanel className="mb-4" />
       <TrackableButton
         eventTracked={{
           location: "Accueil",
