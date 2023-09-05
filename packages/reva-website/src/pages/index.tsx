@@ -6,7 +6,6 @@ import {
   Hexagon,
   SectionParagraph,
 } from "@/components/section-content/SectionContent";
-import Button from "@codegouvfr/react-dsfr/Button";
 import Head from "next/head";
 import Image from "next/image";
 /* eslint-disable react/no-unescaped-entities */
@@ -50,9 +49,9 @@ const HomeContainer = ({ children }: { children: React.ReactNode }) => (
 const AvenirPro = () => (
   <section
     id="avenir-professionnel"
-    className="w-full fr-container mx-auto mt-[80px] lg:flex"
+    className="w-full fr-container mx-auto mt-[80px] lg:flex lg:items-center"
   >
-    <div className="sm:flex-1 md:mr-12 basis-1/2">
+    <div className="sm:flex-1 max-w-3xl md:mr-12 basis-1/2">
       <header>
         <h1 className="leading-tight text-5xl xl:text-7xl xl:leading-[84px]">
           Bienvenue sur le portail de la VAE
@@ -68,65 +67,14 @@ const AvenirPro = () => (
         simplifié et sécurisé par la loi n°2022-1598 du 21 décembre 2022.
       </p>
     </div>
-    <div className="relative -mx-5 basis-1/2">
-      <div className="flex flex-col lg:gap-14">
-        <div className="fr-callout">
-          <h3 className="fr-callout__title">
-            Quels diplômes sont disponibles sur France VAE ?
-          </h3>
-          <div className="fr-callout__text">
-            <p>
-              Du fait de son déploiement progressif, tous les diplômes ne sont
-              pas encore couverts par France VAE.
-            </p>
-            <p className="font-bold">
-              Seules les filières suivantes sont actuellement éligibles :
-            </p>
-            <br />
-            <ul>
-              <li>sanitaire et sociale</li>
-              <li>grande distribution</li>
-              <li>industrie métallurgique</li>
-              <li>métiers du sport</li>
-            </ul>
-            <br />
-            <p className="mb-4">
-              Si vous ne trouvez pas votre diplôme dans la liste, nous vous
-              invitons à vous rapprocher d’un{" "}
-              <a
-                href="https://vae.centre-inffo.fr/?page=carte-prc"
-                target="_blank"
-              >
-                point relais conseil
-              </a>
-              , d’un{" "}
-              <a href="https://mon-cep.org/#trouver" target="_blank">
-                conseiller en évolution professionnelle
-              </a>{" "}
-              ou d'une{" "}
-              <a href="https://www.transitionspro.fr/" target="_blank">
-                association de transition professionnelle (AT Pro)
-              </a>
-              .
-            </p>
-            <Button
-              linkProps={{
-                href: "https://airtable.com/shrhMGpOWNPJA15Xh",
-                target: "_blank",
-              }}
-            >
-              Consultez les diplômes disponibles
-            </Button>
-          </div>
-        </div>
-        <Image
-          src="/home-page/image-app-screenshots.png"
-          className=""
-          alt=""
-          width={1067}
-          height={969}
-        />
-      </div>
+    <div className="relative mt-16 -mx-5 max-w-lg basis-1/2">
+      <Image
+        src="/home-page/image-app-screenshots.png"
+        className=""
+        alt=""
+        width={1067}
+        height={969}
+      />
     </div>
   </section>
 );
