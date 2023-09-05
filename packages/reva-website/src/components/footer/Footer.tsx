@@ -109,6 +109,14 @@ export const Footer = ({ className }: { className?: string }) => (
           <li className="fr-footer__bottom-item">
             <Link
               className="fr-footer__bottom-link"
+              href="https://metabase.vae.gouv.fr/public/dashboard/951df0e6-757d-4491-928e-2cd2d6beafec"
+            >
+              Statistiques
+            </Link>
+          </li>
+          <li className="fr-footer__bottom-item">
+            <Link
+              className="fr-footer__bottom-link"
               href="mailto:support@vae.gouv.fr"
             >
               Nous contacter
