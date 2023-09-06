@@ -4,7 +4,7 @@
       Votre compte professionnel France VAE est prêt à être finalisé
       <#elseif section="intro">
         <p>Nous vous remercions pour votre référencement sur la plateforme France VAE. Pour finaliser la création de votre compte, il ne vous reste qu’une seule étape : choisir un mot de passe pour vos futures connexions. Nous vous invitons à cliquer sur le bouton ci-dessous.</p>
-        <a href="${link}" style="display:inline-block;background:#00007f;color:white;font-family:Arial, sans-serif;font-size:14px;font-weight:normal;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:5px 8px;mso-padding-alt:0px;border-radius:3px;" target="_blank">Finaliser mon inscription</a>
+        <a href="${link}" style="display:inline-block;background:#00007f;color:white;font-family:Arial, sans-serif;font-size:18px;font-weight:500;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:15px 24px;mso-padding-alt:0px;" target="_blank">Finaliser mon inscription</a>
         <p>Ce lien est valable 4 jours. </p>
         <p>Si vous avez dépassé ce délai, <a href="https://${properties.keycloakHostname}/realms/reva/login-actions/reset-credentials" target="_blank">nous vous invitons à redemander un mot de passe.</a></p>
         <#elseif section="outro">
