@@ -7,7 +7,7 @@ module Page.Candidacies exposing
     , withFilters
     )
 
-import Accessibility exposing (button, h1, h2, h3)
+import Accessibility exposing (a, button, h1, h2, h3)
 import Admin.Enum.CandidacyStatusFilter exposing (CandidacyStatusFilter)
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep)
 import Api.Candidacy
@@ -20,7 +20,7 @@ import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Referential)
 import Html exposing (Html, div, form, input, label, li, nav, p, text, ul)
-import Html.Attributes exposing (attribute, class, classList, for, id, name, placeholder, type_)
+import Html.Attributes exposing (attribute, class, classList, for, href, id, name, placeholder, target, type_)
 import Html.Attributes.Extra exposing (role)
 import Html.Events exposing (onInput, onSubmit)
 import RemoteData exposing (RemoteData(..))
@@ -147,7 +147,7 @@ view context model =
             View.layout
                 filterByStatusTitle
                 upperNavContent
-                filterContent
+                (filterContent ++ [ organismHelp ])
                 (viewDirectoryPanel context model (candidacyStatusFilterToReadableString model.filters.status))
     in
     case ( context.isMobile && context.isScrollingToTop, model.state.candidacyCountByStatus ) of
@@ -170,6 +170,38 @@ view context model =
 filterByStatusTitle : String
 filterByStatusTitle =
     "Filtrer les candidatures par statut"
+
+
+organismHelp : Html msg
+organismHelp =
+    let
+        item s link =
+            li
+                [ class "my-4" ]
+                [ a
+                    [ class "hover:text-blue-900"
+                    , href link
+                    , target "_blank"
+                    ]
+                    [ text s ]
+                ]
+    in
+    div
+        [ class "hidden sm:block"
+        , class "mt-2 mr-8 pl-3 pt-6 border-t"
+        ]
+        [ h3
+            [ class "text-lg mt-1 mb-0" ]
+            [ text "Notre aide en ligne" ]
+        , ul
+            []
+            [ item "Espace documentaire" "https://france-vae.info/"
+            , item "Cahier des charges AAP" "https://france-vae.info/Cahier-des-charges-ea8790303ab447cfb25b5c11c26b0d67"
+            , item "Centre d’aide" "https://reva.crisp.help/fr/"
+            , item "FAQ AAP" "https://reva.crisp.help/fr/category/architectes-accompagnateurs-de-parcours-1oikyam/"
+            , item "Calendrier des webinaires" "https://france-vae.info/82b7cdf15d7b45d1830c8b1024ddfa8c?v=3a2fe0a672f34db9900d7f0bb3ab598f"
+            ]
+        ]
 
 
 viewDirectoryHeader : Context -> Html Msg
