@@ -39,15 +39,15 @@ const container = document.getElementById("root");
 const root = createRoot(container!);
 
 root.render(
-  <React.StrictMode>
-    <ApolloProvider client={client}>
-      <KeycloakProvider keycloakInstance={keycloakInstance}>
+  <KeycloakProvider keycloakInstance={keycloakInstance}>
+    <React.StrictMode>
+      <ApolloProvider client={client}>
         <MainMachineContextProvider>
           <App />
         </MainMachineContextProvider>
-      </KeycloakProvider>
-    </ApolloProvider>
-  </React.StrictMode>
+      </ApolloProvider>
+    </React.StrictMode>
+  </KeycloakProvider>
 );
 
 // If you want your app to work offline and load faster, you can change
