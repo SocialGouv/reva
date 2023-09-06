@@ -185,7 +185,7 @@
 																	<td align="center" vertical-align="middle" style="font-size:0px;padding:10px 25px 10px 25px;padding-right:25px;padding-left:25px;word-break:break-word;">
 																		<table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
 																			<tr>
-																				<td align="center" bgcolor="#1c38b0" role="presentation" style="border:0px solid #ffffff;border-radius:3px;cursor:auto;mso-padding-alt:10px 25px 10px 25px;background:#1c38b0;" valign="middle">
+																				<td align="center" bgcolor="#1c38b0" role="presentation" style="border:0px solid #ffffff;cursor:auto;mso-padding-alt:10px 25px 10px 25px;background:#000099;" valign="middle">
 																					<#nested "actionButton">
 																				</td>
 																			</tr>
