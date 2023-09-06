@@ -9,5 +9,7 @@
           <p class="text-build-content" data-testid="I0ETIbJm4" style="margin: 10px 0;">Si vous n'êtes pas à l'origine de cette demande, merci de ne pas tenir compte de ce mail.
           </p>
           <p class="text-build-content" data-testid="I0ETIbJm4" style="margin: 0; margin-bottom: 10px;">Ce lien expire dans ${linkExpirationFormatter(linkExpiration)}.</p>
+          <br />
+          <p>L’équipe France VAE.</p>
     </#if>
   </@layout.emailLayout>
