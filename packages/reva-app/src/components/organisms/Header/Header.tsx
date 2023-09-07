@@ -13,18 +13,12 @@ export const Header = (props: { className?: string }) => {
 
   if (keycloakContext?.token) {
     quickAccessItems.push(
-      <div className="fr-header__tools">
-        <div className="fr-header__tools-links">
-          <span className="fr-btns-group">
-            <Button
-              iconId="fr-icon-logout-box-r-line"
-              onClick={keycloakContext.logout}
-            >
-              Se déconnecter
-            </Button>
-          </span>
-        </div>
-      </div>
+      <Button
+        iconId="fr-icon-logout-box-r-line"
+        onClick={keycloakContext.logout}
+      >
+        Se déconnecter
+      </Button>
     );
   }
 
