@@ -1,6 +1,7 @@
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import { RequiredActionAlias } from "@keycloak/keycloak-admin-client/lib/defs/requiredActionProviderRepresentation";
-import { Either, Maybe, Right, Just, Left } from "purify-ts";
+import UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
+import { Either, Just, Left, Maybe, Right } from "purify-ts";
 
 export const getAccount =
   (keycloakAdmin: KeycloakAdminClient) =>
@@ -33,7 +34,7 @@ export const getAccount =
     }
   };
 
-  export const createAccount =
+export const createAccount =
   (keycloakAdmin: KeycloakAdminClient) =>
   async (account: {
     email: string;
@@ -43,7 +44,7 @@ export const getAccount =
     group: string;
   }): Promise<Either<string, string>> => {
     try {
-      const { id } = await keycloakAdmin.users.create({
+      const payload: UserRepresentation & { realm?: string | undefined } = {
         email: account.email,
         username: account.username,
         groups: [account.group],
@@ -55,7 +56,15 @@ export const getAccount =
         ],
         enabled: true,
         realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
-      });
+      };
+
+      if (account.group != undefined) {
+        payload.attributes = {
+          user_profile_type: account.group,
+        };
+      }
+
+      const { id } = await keycloakAdmin.users.create(payload);
 
       await keycloakAdmin.users.executeActionsEmail({
         id,
