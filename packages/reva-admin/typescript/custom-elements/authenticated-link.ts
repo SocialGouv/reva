@@ -32,7 +32,10 @@ class AuthenticatedLinkElement extends HTMLElement {
             a.href = url;
             a.target="_blank"
             a.click();
-            window.URL.revokeObjectURL(url);
+            setTimeout(function(){
+              document.body.removeChild(a);
+              window.URL.revokeObjectURL(url);
+            }, 250);
         }
       };
       
