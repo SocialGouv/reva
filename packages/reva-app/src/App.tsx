@@ -12,6 +12,7 @@ import { Certificates } from "./pages/Certificates";
 import { Error } from "./pages/Error";
 import { LoginConfirmation } from "./pages/LoginConfirmation";
 import { LoginHome } from "./pages/LoginHome";
+import { LogoutConfirmation } from "./pages/LogoutConfirmation";
 import { ProjectContact } from "./pages/ProjectContact";
 import { ProjectContactConfirmation } from "./pages/ProjectContactConfirmation";
 import { ProjectDroppedOut } from "./pages/ProjectDroppedOut";
@@ -54,6 +55,10 @@ function App() {
 
   const loginConfirmationPage = () => (
     <LoginConfirmation key="login-confirmation" mainService={mainService} />
+  );
+
+  const logoutConfirmationPage = () => (
+    <LogoutConfirmation key="logout-confirmation" mainService={mainService} />
   );
 
   const projectContactPage = () => (
@@ -107,6 +112,7 @@ function App() {
 
       {state.matches("loginHome") && loginHomePage()}
       {state.matches("loginConfirmation") && loginConfirmationPage()}
+      {state.matches("logoutConfirmation") && logoutConfirmationPage()}
 
       {state.matches("projectSubmissionConfirmation") &&
         projectSubmissionConfirmationPage()}

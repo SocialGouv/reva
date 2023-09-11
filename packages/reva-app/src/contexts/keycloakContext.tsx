@@ -11,7 +11,7 @@ const KeycloakContext = React.createContext<{
 } | null>(null);
 
 interface KeycloakProviderProps {
-  keycloakInstance: any; //_Keycloak;
+  keycloakInstance: any; // _Keycloak;
   children: JSX.Element | JSX.Element[];
 }
 
@@ -37,6 +37,13 @@ export const KeycloakProvider = ({
     const tokens_ = localStorage.getItem(storageKey);
     return tokens_ && JSON.parse(tokens_);
   });
+
+  const logout = () => {
+    localStorage.removeItem(storageKey);
+
+    setAuthenticated(false);
+    setTokens([]);
+  };
 
   useEffect(() => {
     localStorage.setItem(storageKey, JSON.stringify(tokens));
@@ -106,7 +113,7 @@ export const KeycloakProvider = ({
         authenticated,
         token,
         setTokens,
-        logout: keycloakInstance.logout,
+        logout,
       }}
     >
       {ready && children}

@@ -21,6 +21,7 @@ const searchResultsError = "searchResultsError";
 const certificateDetails = "certificateDetails";
 const loginHome = "loginHome";
 const loginConfirmation = "loginConfirmation";
+const logoutConfirmation = "logoutConfirmation";
 const projectHome = "projectHome";
 const projectContact = "projectContact";
 const projectContactConfirmation = "projectContactConfirmation";
@@ -40,6 +41,7 @@ export type State =
   | typeof certificateDetails
   | typeof loginHome
   | typeof loginConfirmation
+  | typeof logoutConfirmation
   | typeof projectHome
   | typeof projectContact
   | typeof projectExperience
@@ -118,6 +120,7 @@ export type MainEvent =
   | { type: "BACK" }
   | { type: "LOADED" }
   | { type: "LOGIN" }
+  | { type: "LOGOUT" }
   | { type: "SUBMIT_LOGIN"; login: { email: string } }
   | { type: "SUBMIT_CERTIFICATION"; certification: Certification }
   | { type: "SUBMIT_CONTACT"; contact: Contact }
@@ -163,6 +166,7 @@ export type MainState =
       value:
         | typeof loginHome
         | typeof loginConfirmation
+        | typeof logoutConfirmation
         | typeof projectHome
         | typeof projectSubmissionConfirmation
         | typeof projectDroppedOut
@@ -324,6 +328,7 @@ export const mainMachine =
             ],
           },
           loginConfirmation: {},
+          logoutConfirmation: {},
           loadingCertifications: {
             invoke: {
               src: "searchCertifications",
@@ -892,6 +897,9 @@ export const mainMachine =
               error: {},
             },
             on: {
+              LOGOUT: {
+                target: "logoutConfirmation",
+              },
               EDIT_GOALS: {
                 target: "projectGoals",
               },

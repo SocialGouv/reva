@@ -4,18 +4,27 @@ import {
   HeaderProps,
 } from "@codegouvfr/react-dsfr/Header";
 import { useKeycloakContext } from "contexts/keycloakContext";
+import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
 
 export const Header = (props: { className?: string }) => {
   const keycloakContext = useKeycloakContext();
 
+  const {
+    mainService: { send },
+  } = useMainMachineContext();
+
   const quickAccessItems: (React.ReactNode | HeaderProps.QuickAccessItem)[] =
     [];
 
-  if (keycloakContext?.token) {
+  if (keycloakContext?.authenticated) {
     quickAccessItems.push(
       <Button
         iconId="fr-icon-logout-box-r-line"
-        onClick={keycloakContext.logout}
+        onClick={() => {
+          send("LOGOUT");
+
+          keycloakContext.logout();
+        }}
       >
         Se déconnecter
       </Button>
