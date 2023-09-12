@@ -5,6 +5,7 @@ import Admin.Enum.Gender exposing (Gender(..))
 import Data.Candidacy exposing (Candidacy)
 import Data.Candidate
 import Data.Certification exposing (Certification)
+import Data.Feasibility exposing (Decision(..))
 import Data.Form exposing (FormData)
 import Data.Form.FundingRequestUniFvae exposing (keys)
 import Data.Form.Helper
@@ -30,6 +31,19 @@ form maybeCertification formData ( candidacy, referential ) =
                 |> Maybe.map (Form.StaticHtml << View.Form.summary)
                 |> Maybe.withDefault Form.Empty
             )
+
+        showCustomFundingFields =
+            case candidacy.feasibility of
+                Just f ->
+                    case f.decision of
+                        Admissible _ ->
+                            True
+
+                        _ ->
+                            False
+
+                Nothing ->
+                    False
     in
     { elements =
         [ ( "candidate-info", Form.Title1 "1. Informations du candidat" )
@@ -79,68 +93,75 @@ form maybeCertification formData ( candidacy, referential ) =
                         [ div [ class "flex flex-col mx-auto" ] [ span [] [ Accessibility.text "Forfait" ], span [] [ Accessibility.text "300€ net" ] ] ]
                     ]
           )
-        , ( "individual", Form.Title2 "Accompagnement" )
-        , ( "collective", Form.TitleInlined "Individuel" )
-        , ( keys.individualHourCount, hourCountElement )
-        , ( keys.individualCost, costElement )
-        , ( "collective", Form.TitleInlined "Collectif" )
-        , ( keys.collectiveHourCount, hourCountElement )
-        , ( keys.collectiveCost, costElement )
-        , ( "", Form.Break )
-        , ( "companionSubTotal"
-          , Form.StaticHtml <|
-                View.Form.intermediateTotal "Sous-total des accompagnements"
-                    (totalCompanionHourCount formData |> displayHours)
-                    (totalCompanionCost formData |> displayEuros)
-          )
-        , ( "training", Form.Title2 "Compléments formatifs" )
-        , ( "mandatory-training", Form.Title3 "Formation obligatoire" )
-        , ( keys.mandatoryTrainingIds
-          , Form.ReadOnlyElement <|
-                Form.CheckboxList "" <|
-                    Data.Form.Helper.toIdList referential.mandatoryTrainings
-          )
-        , ( keys.mandatoryTrainingsHourCount, hourCountElement )
-        , ( keys.mandatoryTrainingsCost, costElement )
-        , ( "basic-skills", Form.Title3 "Savoir de base" )
-        , ( keys.basicSkillsIds
-          , Form.ReadOnlyElement <|
-                Form.CheckboxList "" <|
-                    Data.Form.Helper.toIdList referential.basicSkills
-          )
-        , ( keys.basicSkillsHourCount, hourCountElement )
-        , ( keys.basicSkillsCost, costElement )
-        , ( "skills", Form.Title3 "Bloc de compétences" )
-        , displayInfo keys.certificateSkills
-        , ( keys.certificateSkillsHourCount, hourCountElement )
-        , ( keys.certificateSkillsCost, costElement )
-        , ( "other", Form.Title3 "Autres" )
-        , displayInfo keys.otherTraining
-        , ( keys.otherTrainingHourCount, hourCountElement )
-        , ( keys.otherTrainingCost, costElement )
-        , ( "", Form.Break )
-        , ( "trainingSubTotal"
-          , Form.StaticHtml <|
-                View.Form.intermediateTotal "Sous-total des compléments formatifs"
-                    (totalTrainingHourCount formData |> displayHours)
-                    (totalTrainingCost formData |> displayEuros)
-          )
-        , ( "", Form.BreakToplevel )
-        , ( "grandTotal"
-          , Form.StaticHtml <|
-                View.Form.total "Total"
-                    (totalHourCount formData |> displayHours)
-                    (totalCost formData |> displayEuros)
-          )
-        , ( "", Form.BreakToplevel )
-        , ( "funding-contact", Form.Title1 "4. Responsable du financement" )
-        , ( "funding-contact-title", Form.Title2 "Informations concernant le responsable du financement" )
-        , ( keys.fundingContactLastname, Form.Input "Nom" )
-        , ( keys.fundingContactFirstname, Form.Input "Prénom" )
-        , ( keys.fundingContactPhone, Form.Input "Numéro de téléphone" )
-        , ( keys.fundingContactEmail, Form.Input "Adresse email" )
-        , ( "", Form.Break )
         ]
+            ++ (if showCustomFundingFields then
+                    [ ( "individual", Form.Title2 "Accompagnement" )
+                    , ( "collective", Form.TitleInlined "Individuel" )
+                    , ( keys.individualHourCount, hourCountElement )
+                    , ( keys.individualCost, costElement )
+                    , ( "collective", Form.TitleInlined "Collectif" )
+                    , ( keys.collectiveHourCount, hourCountElement )
+                    , ( keys.collectiveCost, costElement )
+                    , ( "", Form.Break )
+                    , ( "companionSubTotal"
+                      , Form.StaticHtml <|
+                            View.Form.intermediateTotal "Sous-total des accompagnements"
+                                (totalCompanionHourCount formData |> displayHours)
+                                (totalCompanionCost formData |> displayEuros)
+                      )
+                    , ( "training", Form.Title2 "Compléments formatifs" )
+                    , ( "mandatory-training", Form.Title3 "Formation obligatoire" )
+                    , ( keys.mandatoryTrainingIds
+                      , Form.ReadOnlyElement <|
+                            Form.CheckboxList "" <|
+                                Data.Form.Helper.toIdList referential.mandatoryTrainings
+                      )
+                    , ( keys.mandatoryTrainingsHourCount, hourCountElement )
+                    , ( keys.mandatoryTrainingsCost, costElement )
+                    , ( "basic-skills", Form.Title3 "Savoir de base" )
+                    , ( keys.basicSkillsIds
+                      , Form.ReadOnlyElement <|
+                            Form.CheckboxList "" <|
+                                Data.Form.Helper.toIdList referential.basicSkills
+                      )
+                    , ( keys.basicSkillsHourCount, hourCountElement )
+                    , ( keys.basicSkillsCost, costElement )
+                    , ( "skills", Form.Title3 "Bloc de compétences" )
+                    , displayInfo keys.certificateSkills
+                    , ( keys.certificateSkillsHourCount, hourCountElement )
+                    , ( keys.certificateSkillsCost, costElement )
+                    , ( "other", Form.Title3 "Autres" )
+                    , displayInfo keys.otherTraining
+                    , ( keys.otherTrainingHourCount, hourCountElement )
+                    , ( keys.otherTrainingCost, costElement )
+                    , ( "", Form.Break )
+                    , ( "trainingSubTotal"
+                      , Form.StaticHtml <|
+                            View.Form.intermediateTotal "Sous-total des compléments formatifs"
+                                (totalTrainingHourCount formData |> displayHours)
+                                (totalTrainingCost formData |> displayEuros)
+                      )
+                    , ( "", Form.BreakToplevel )
+                    , ( "grandTotal"
+                      , Form.StaticHtml <|
+                            View.Form.total "Total"
+                                (totalHourCount formData |> displayHours)
+                                (totalCost formData |> displayEuros)
+                      )
+                    , ( "", Form.BreakToplevel )
+                    ]
+
+                else
+                    []
+               )
+            ++ [ ( "funding-contact", Form.Title1 "4. Responsable du financement" )
+               , ( "funding-contact-title", Form.Title2 "Informations concernant le responsable du financement" )
+               , ( keys.fundingContactLastname, Form.Input "Nom" )
+               , ( keys.fundingContactFirstname, Form.Input "Prénom" )
+               , ( keys.fundingContactPhone, Form.Input "Numéro de téléphone" )
+               , ( keys.fundingContactEmail, Form.Input "Adresse email" )
+               , ( "", Form.Break )
+               ]
     , saveLabel = Nothing
     , submitLabel = "Envoyer"
     , title = "Demande de prise en charge"
