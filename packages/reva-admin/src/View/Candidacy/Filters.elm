@@ -49,6 +49,12 @@ view candidacyCountByStatus filters context =
                 CandidacyStatusFilter.DossierFaisabiliteEnvoyeHorsAbandon ->
                     candidacyCountByStatus.dossierFaisabiliteEnvoyeHorsAbandon
 
+                CandidacyStatusFilter.DossierFaisabiliteRecevableHorsAbandon ->
+                    candidacyCountByStatus.dossierFaisabiliteRecevableHorsAbandon
+
+                CandidacyStatusFilter.DossierFaisabiliteNonRecevableHorsAbandon ->
+                    candidacyCountByStatus.dossierFaisabiliteNonRecevableHorsAbandon
+
                 CandidacyStatusFilter.ParcoursEnvoyeHorsAbandon ->
                     candidacyCountByStatus.parcoursEnvoyeHorsAbandon
 
@@ -71,6 +77,7 @@ view candidacyCountByStatus filters context =
             , CandidacyStatusFilter.ParcoursEnvoyeHorsAbandon
             , CandidacyStatusFilter.ParcoursConfirmeHorsAbandon
             , CandidacyStatusFilter.DossierFaisabiliteEnvoyeHorsAbandon
+            , CandidacyStatusFilter.DossierFaisabiliteRecevableHorsAbandon
             , CandidacyStatusFilter.DemandeFinancementEnvoyeHorsAbandon
             , CandidacyStatusFilter.DemandePaiementEnvoyeeHorsAbandon
             ]
@@ -91,6 +98,7 @@ view candidacyCountByStatus filters context =
               <|
                 List.map viewFilter statuses
             ]
+        , viewFilter CandidacyStatusFilter.DossierFaisabiliteNonRecevableHorsAbandon
         , viewFilter CandidacyStatusFilter.Abandon
         , viewFilter CandidacyStatusFilter.Reorientee
         , viewFilter CandidacyStatusFilter.ArchiveHorsAbandonHorsReorientation
