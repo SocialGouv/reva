@@ -15,6 +15,8 @@ type CandidacyStatusStep
     | ParcoursEnvoye
     | ParcoursConfirme
     | DossierFaisabiliteEnvoye
+    | DossierFaisabiliteRecevable
+    | DossierFaisabiliteNonRecevable
     | DemandeFinancementEnvoye
     | DemandePaiementEnvoyee
     | DossierPro
@@ -23,7 +25,7 @@ type CandidacyStatusStep
 
 list : List CandidacyStatusStep
 list =
-    [ Archive, Projet, Validation, PriseEnCharge, ParcoursEnvoye, ParcoursConfirme, DossierFaisabiliteEnvoye, DemandeFinancementEnvoye, DemandePaiementEnvoyee, DossierPro, Certification ]
+    [ Archive, Projet, Validation, PriseEnCharge, ParcoursEnvoye, ParcoursConfirme, DossierFaisabiliteEnvoye, DossierFaisabiliteRecevable, DossierFaisabiliteNonRecevable, DemandeFinancementEnvoye, DemandePaiementEnvoyee, DossierPro, Certification ]
 
 
 decoder : Decoder CandidacyStatusStep
@@ -52,6 +54,12 @@ decoder =
 
                     "DOSSIER_FAISABILITE_ENVOYE" ->
                         Decode.succeed DossierFaisabiliteEnvoye
+
+                    "DOSSIER_FAISABILITE_RECEVABLE" ->
+                        Decode.succeed DossierFaisabiliteRecevable
+
+                    "DOSSIER_FAISABILITE_NON_RECEVABLE" ->
+                        Decode.succeed DossierFaisabiliteNonRecevable
 
                     "DEMANDE_FINANCEMENT_ENVOYE" ->
                         Decode.succeed DemandeFinancementEnvoye
@@ -95,6 +103,12 @@ toString enum____ =
 
         DossierFaisabiliteEnvoye ->
             "DOSSIER_FAISABILITE_ENVOYE"
+
+        DossierFaisabiliteRecevable ->
+            "DOSSIER_FAISABILITE_RECEVABLE"
+
+        DossierFaisabiliteNonRecevable ->
+            "DOSSIER_FAISABILITE_NON_RECEVABLE"
 
         DemandeFinancementEnvoye ->
             "DEMANDE_FINANCEMENT_ENVOYE"
@@ -143,6 +157,12 @@ fromString enumString____ =
 
         "DOSSIER_FAISABILITE_ENVOYE" ->
             Just DossierFaisabiliteEnvoye
+
+        "DOSSIER_FAISABILITE_RECEVABLE" ->
+            Just DossierFaisabiliteRecevable
+
+        "DOSSIER_FAISABILITE_NON_RECEVABLE" ->
+            Just DossierFaisabiliteNonRecevable
 
         "DEMANDE_FINANCEMENT_ENVOYE" ->
             Just DemandeFinancementEnvoye
