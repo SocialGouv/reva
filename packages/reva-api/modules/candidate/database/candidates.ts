@@ -1,4 +1,4 @@
-import { CandidacyStatusStep } from "@prisma/client";
+import { CandidacyStatusStep, Prisma } from "@prisma/client";
 import { Left, Maybe } from "purify-ts";
 
 import { prismaClient } from "../../../prisma/client";
@@ -9,6 +9,18 @@ import { logger } from "../../shared/logger";
 const candidateIncludes = {
   highestDegree: true,
   vulnerabilityIndicator: true,
+};
+
+//A candidacy is considered ongoing if its active status is not ARCHIVE and it has never been in the DOSSIER_FAISABILITE_NON_RECEVABLE status
+const ongoingCandidacyFilter: Prisma.CandidacyWhereInput = {
+  candidacyStatuses: {
+    none: {
+      OR: [
+        { status: "ARCHIVE", isActive: true },
+        { status: "DOSSIER_FAISABILITE_NON_RECEVABLE" },
+      ],
+    },
+  },
 };
 
 const withBasicSkills = (c: Candidacy) => ({
@@ -63,12 +75,7 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
     const candidacy = await prismaClient.candidacy.findFirst({
       where: {
         candidateId: createdCandidate.id,
-        candidacyStatuses: {
-          none: {
-            status: "ARCHIVE",
-            isActive: true,
-          },
-        },
+        ...ongoingCandidacyFilter,
       },
     });
 
@@ -96,14 +103,7 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
         },
         include: {
           candidacies: {
-            where: {
-              candidacyStatuses: {
-                none: {
-                  status: "ARCHIVE",
-                  isActive: true,
-                },
-              },
-            },
+            where: ongoingCandidacyFilter,
             include: candidacyIncludes,
           },
         },
@@ -115,14 +115,7 @@ export const createCandidateWithCandidacy = async (candidate: any) => {
         },
         include: {
           candidacies: {
-            where: {
-              candidacyStatuses: {
-                none: {
-                  status: "ARCHIVE",
-                  isActive: true,
-                },
-              },
-            },
+            where: ongoingCandidacyFilter,
             include: candidacyIncludes,
           },
         },
@@ -176,26 +169,12 @@ export const getCandidateWithCandidacyFromKeycloakId = async (
       where: {
         keycloakId: keycloakId,
         candidacies: {
-          some: {
-            candidacyStatuses: {
-              none: {
-                status: "ARCHIVE",
-                isActive: true,
-              },
-            },
-          },
+          some: ongoingCandidacyFilter,
         },
       },
       include: {
         candidacies: {
-          where: {
-            candidacyStatuses: {
-              none: {
-                status: "ARCHIVE",
-                isActive: true,
-              },
-            },
-          },
+          where: ongoingCandidacyFilter,
           include: candidacyIncludes,
         },
         highestDegree: true,
@@ -225,14 +204,7 @@ export const getCandidateWithCandidacyFromKeycloakId = async (
         },
         include: {
           candidacies: {
-            where: {
-              candidacyStatuses: {
-                none: {
-                  status: "ARCHIVE",
-                  isActive: true,
-                },
-              },
-            },
+            where: ongoingCandidacyFilter,
             include: candidacyIncludes,
           },
           highestDegree: true,
