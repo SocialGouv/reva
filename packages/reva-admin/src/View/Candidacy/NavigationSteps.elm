@@ -115,7 +115,7 @@ view feasibilityFeatureEnabled baseUrl candidacy =
             , [ { content = expandedView Enabled "Jury" ParcoursConfirme candidacy
                 , navigation = examInfoLink
                 }
-              , { content = expandedView Enabled "Demande de prise en charge" DossierFaisabiliteEnvoye candidacy
+              , { content = expandedView Enabled "Demande de prise en charge" DossierFaisabiliteRecevable candidacy
                 , navigation = fundingRequestLink baseUrl candidacy
                 }
               , { content = expandedView Enabled "Demande de paiement" DemandeFinancementEnvoye candidacy
@@ -155,7 +155,7 @@ dropOutView baseUrl candidacy dropOutDate =
         [ { content = dropOutInfo
           , navigation = dropOutLink
           }
-        , { content = expandedView Enabled "Demande de prise en charge" DossierFaisabiliteEnvoye candidacy
+        , { content = expandedView Enabled "Demande de prise en charge" DossierFaisabiliteRecevable candidacy
           , navigation = fundingRequestLink baseUrl candidacy
           }
         , { content = expandedView Enabled "Demande de paiement" DemandeFinancementEnvoye candidacy
@@ -236,7 +236,7 @@ expandedView buttonState stepTitle status candidacy =
 
 fundingRequestLink : String -> Candidacy -> Maybe (Html.Attribute msg)
 fundingRequestLink baseUrl candidacy =
-    if candidacy.dropOutDate /= Nothing || Candidacy.isStatusEqualOrAbove candidacy DossierFaisabiliteEnvoye then
+    if candidacy.dropOutDate /= Nothing || Candidacy.isStatusEqualOrAbove candidacy DossierFaisabiliteRecevable then
         Just <|
             Route.href baseUrl <|
                 Route.Candidacy <|
