@@ -63,7 +63,7 @@ view feasibilityFeatureEnabled baseUrl candidacy =
 
         admissibilityMenuEntry =
             if showAdmissibilityMenuEntry then
-                [ { content = expandedView Enabled "Gestion de la recevabilité" ParcoursConfirme candidacy
+                [ { content = expandedView Enabled "Gestion de la recevabilité" [ ParcoursConfirme ] candidacy
                   , navigation = admissibilityLink
                   }
                 ]
@@ -89,7 +89,7 @@ view feasibilityFeatureEnabled baseUrl candidacy =
 
         feasibilityMenuEntry =
             if showFeasibilityMenuEntry then
-                [ { content = expandedView feasibilityMenuEntryStatus "Dossier de faisabilité" ParcoursConfirme candidacy
+                [ { content = expandedView feasibilityMenuEntryStatus "Dossier de faisabilité" [ ParcoursConfirme ] candidacy
                   , navigation = feasibilityLink
                   }
                 ]
@@ -100,10 +100,10 @@ view feasibilityFeatureEnabled baseUrl candidacy =
     View.Steps.view (title "Toutes les étapes")
         (Candidacy.statusToProgressPosition (candidacyStatus candidacy))
         (List.concat
-            [ [ { content = expandedView Enabled "Rendez-vous pédagogique" PriseEnCharge candidacy
+            [ [ { content = expandedView Enabled "Rendez-vous pédagogique" [ PriseEnCharge ] candidacy
                 , navigation = appointmentLink
                 }
-              , { content = expandedView Enabled "Définition du parcours" PriseEnCharge candidacy
+              , { content = expandedView Enabled "Définition du parcours" [ PriseEnCharge ] candidacy
                 , navigation = trainingLink
                 }
               , { content = [ View.Steps.info "Validation du parcours" ]
@@ -112,13 +112,13 @@ view feasibilityFeatureEnabled baseUrl candidacy =
               ]
             , admissibilityMenuEntry
             , feasibilityMenuEntry
-            , [ { content = expandedView Enabled "Jury" ParcoursConfirme candidacy
+            , [ { content = expandedView Enabled "Jury" [ ParcoursConfirme ] candidacy
                 , navigation = examInfoLink
                 }
-              , { content = expandedView Enabled "Demande de prise en charge" DossierFaisabiliteRecevable candidacy
+              , { content = expandedView Enabled "Demande de prise en charge" [ DossierFaisabiliteRecevable, DossierFaisabiliteNonRecevable ] candidacy
                 , navigation = fundingRequestLink baseUrl candidacy
                 }
-              , { content = expandedView Enabled "Demande de paiement" DemandeFinancementEnvoye candidacy
+              , { content = expandedView Enabled "Demande de paiement" [ DemandeFinancementEnvoye ] candidacy
                 , navigation = paymentRequestLink baseUrl candidacy
                 }
               ]
@@ -155,10 +155,10 @@ dropOutView baseUrl candidacy dropOutDate =
         [ { content = dropOutInfo
           , navigation = dropOutLink
           }
-        , { content = expandedView Enabled "Demande de prise en charge" DossierFaisabiliteRecevable candidacy
+        , { content = expandedView Enabled "Demande de prise en charge" [ DossierFaisabiliteRecevable, DossierFaisabiliteNonRecevable ] candidacy
           , navigation = fundingRequestLink baseUrl candidacy
           }
-        , { content = expandedView Enabled "Demande de paiement" DemandeFinancementEnvoye candidacy
+        , { content = expandedView Enabled "Demande de paiement" [ DemandeFinancementEnvoye ] candidacy
           , navigation = paymentRequestLink baseUrl candidacy
           }
         ]
@@ -207,8 +207,8 @@ title value =
         [ text value ]
 
 
-expandedView : ButtonState -> String -> Candidacy.Step -> Candidacy -> List (Html msg)
-expandedView buttonState stepTitle status candidacy =
+expandedView : ButtonState -> String -> List Candidacy.Step -> Candidacy -> List (Html msg)
+expandedView buttonState stepTitle showButtonForGivenStatusList candidacy =
     let
         buttonLabel =
             if buttonState == Enabled then
@@ -217,7 +217,7 @@ expandedView buttonState stepTitle status candidacy =
             else
                 "Consulter"
     in
-    if candidacyStatus candidacy == status then
+    if List.member (candidacyStatus candidacy) showButtonForGivenStatusList then
         [ span [ class "font-semibold text-dsfrBlue-500" ] [ View.Steps.link stepTitle ]
         , div
             []

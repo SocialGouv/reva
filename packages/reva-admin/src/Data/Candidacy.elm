@@ -313,6 +313,9 @@ statusToProgressPosition status =
         DossierFaisabiliteRecevable ->
             7
 
+        DossierFaisabiliteNonRecevable ->
+            7
+
         DemandeFinancementEnvoye ->
             8
 
