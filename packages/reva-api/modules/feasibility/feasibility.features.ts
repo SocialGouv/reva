@@ -436,6 +436,11 @@ export const validateFeasibility = async ({
       },
     });
 
+    await updateCandidacyStatus({
+      candidacyId: feasibility?.candidacyId || "",
+      status: "DOSSIER_FAISABILITE_RECEVABLE",
+    });
+
     const activeCertificationAndRegion =
       updatedFeasibility.candidacy.certificationsAndRegions[0];
 
@@ -506,6 +511,11 @@ export const rejectFeasibility = async ({
           },
         },
       },
+    });
+
+    await updateCandidacyStatus({
+      candidacyId: feasibility?.candidacyId || "",
+      status: "DOSSIER_FAISABILITE_NON_RECEVABLE",
     });
 
     const activeCertificationAndRegion =
