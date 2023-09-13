@@ -103,11 +103,13 @@
                                                     <div id="kc-form-buttons" class="${properties.kcFormButtonsClass!}">
                                                         <#if isAppInitiatedAction??>
                                                             <input class="fr-btn" type="submit" value="${msg("doSubmit")}" />
-                                                            <button class="fr-btn fr-btn--secondary" type="submit" name="cancel-aia" value="true" />
-                                                            ${msg("doCancel")}
+                                                            <button class="fr-btn fr-btn--secondary" type="submit" name="cancel-aia" value="true">
+                                                                ${msg("doCancel")}
                                                             </button>
-                                                            <#else>
-                                                                <input class="fr-btn" type="submit" value="${msg("doSubmit")}" />
+                                                        <#else>
+                                                            <button class="fr-btn" type="submit">
+                                                                ${msg("doSubmit")}
+                                                            </button>
                                                         </#if>
                                                     </div>
                                                 </div>
