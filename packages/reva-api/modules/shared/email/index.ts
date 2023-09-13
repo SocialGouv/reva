@@ -94,8 +94,7 @@ export const sendLoginEmail = async (email: string, token: string) => {
     token,
     "login",
     htmlContent,
-    "Accédez à votre compte France VAE",
-    { name: "France VAE", email: "contact@vae.gouv.fr" }
+    "Accédez à votre compte France VAE"
   );
 };
 
@@ -123,8 +122,7 @@ const sendEmailWithLink = async (
   token: string,
   action: "registration" | "login",
   htmlContent: (url: string) => { html: string },
-  subject?: string,
-  sender?: EmailAccount
+  subject?: string
 ) => {
   const url = `${process.env.BASE_URL}/app/${action}?token=${token}`;
   const emailContent = htmlContent(url);
@@ -139,7 +137,6 @@ const sendEmailWithLink = async (
     htmlContent: emailContent.html,
     to: { email },
     subject: subject || "Votre accès à votre parcours France VAE",
-    sender,
   });
 };
 
@@ -163,7 +160,7 @@ export const sendGenericEmail = async ({
   try {
     await apiInstance.sendTransacEmail(
       Object.assign(sendSmtpEmail, {
-        sender: sender ?? { email: "contact@vae.gouv.fr" },
+        sender: sender ?? { name: "France VAE", email: "contact@vae.gouv.fr" },
         to: [to],
         subject,
         htmlContent,
