@@ -77,7 +77,7 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( "forfait", Form.StaticHtml forfaitInfo )
         ]
             ++ (if showCustomFundingFields then
-                    [ ( "individual", Form.Title2 "Accompagnement" )
+                    [ ( "individual", Form.Title2 "Accompagnement (au moins une ligne obligatoire)" )
                     , ( "collective", Form.TitleInlined "Individuel" )
                     , ( keys.individualHourCount, hourCountElement )
                     , ( keys.individualCost, costElement )
@@ -140,7 +140,7 @@ form maybeCertification formData ( candidacy, referential ) =
                , ( "funding-contact-title", Form.Title2 "Informations concernant le responsable du financement" )
                , ( keys.fundingContactLastname, Form.Input "Nom" )
                , ( keys.fundingContactFirstname, Form.Input "Prénom" )
-               , ( keys.fundingContactPhone, Form.Input "Numéro de téléphone" )
+               , ( keys.fundingContactPhone, Form.Input "Téléphone" )
                , ( keys.fundingContactEmail, Form.Input "Adresse email" )
                , ( "", Form.Break )
                ]
