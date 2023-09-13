@@ -207,7 +207,7 @@ searchBar model =
             [ onSubmit UserValidatedSearch ]
             [ label
                 [ for "search", class "fr-hint-text mb-1" ]
-                [ text "Recherchez par certification et information de contact" ]
+                [ text "" ]
             , div
                 [ role "search", class "fr-search-bar w-full" ]
                 [ input
