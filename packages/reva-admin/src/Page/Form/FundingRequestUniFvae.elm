@@ -1,6 +1,6 @@
 module Page.Form.FundingRequestUniFvae exposing (form)
 
-import Accessibility exposing (div, span)
+import Accessibility exposing (Html, div, h3, h4, span, text)
 import Admin.Enum.Gender exposing (Gender(..))
 import Data.Candidacy exposing (Candidacy)
 import Data.Candidate
@@ -73,26 +73,7 @@ form maybeCertification formData ( candidacy, referential ) =
                 |> Maybe.withDefault Form.Empty
           )
         , ( "companion", Form.Title1 "3. Parcours personnalisé" )
-        , ( "forfait"
-          , Form.StaticHtml <|
-                div
-                    [ class "w-full flex flex-wrap mb-6"
-                    ]
-                    [ div
-                        [ class "w-full lg:w-2/3 " ]
-                        [ div [ class "flex flex-col" ]
-                            [ span [ class "text-md font-semibold" ] [ Accessibility.text "Forfait d’étude de faisabilité et entretien post-jury" ]
-                            , span [ class "mt-3" ] []
-                            , span [ class "text-sm text-orange-500" ] [ Accessibility.text "⚠ Ne pourra être demandé que si l'étude a été réalisée dans sa totalité." ]
-                            ]
-                        ]
-                    , div
-                        [ class "w-full lg:w-1/3 pl-6 mb-2 lg:mb-0"
-                        , class "text-lg font-medium"
-                        ]
-                        [ div [ class "flex flex-col mx-auto" ] [ span [] [ Accessibility.text "Forfait" ], span [] [ Accessibility.text "300€ net" ] ] ]
-                    ]
-          )
+        , ( "forfait", Form.StaticHtml forfaitInfo )
         ]
             ++ (if showCustomFundingFields then
                     [ ( "individual", Form.Title2 "Accompagnement" )
@@ -166,6 +147,31 @@ form maybeCertification formData ( candidacy, referential ) =
     , submitLabel = "Envoyer"
     , title = "Demande de prise en charge"
     }
+
+
+forfaitInfo : Html msg
+forfaitInfo =
+    div
+        [ class "w-full flex flex-wrap mb-6" ]
+        [ div
+            [ class "w-full lg:w-2/3 " ]
+            [ div [ class "flex flex-col" ]
+                [ h3 [ class "text-base font-medium mb-2" ] [ text "Forfait d’étude de faisabilité et entretien post-jury" ]
+                , span [ class "text-xs text-dsfrOrange-500" ] [ text "⚠ Ne pourra être demandé que si l'étude a été réalisée dans sa totalité." ]
+                ]
+            ]
+        , div
+            [ class "flex flex-col items-end lg:items-start"
+            , class "w-full lg:w-[200px] pl-6 mb-2 lg:mb-0 mr-2 lg:mr-0"
+            ]
+            [ h4
+                [ class "hidden lg:block"
+                , class "uppercase text-xs font-semibold mb-2"
+                ]
+                [ text "Forfait" ]
+            , span [ class "font-medium" ] [ text "300€ net" ]
+            ]
+        ]
 
 
 keys =
