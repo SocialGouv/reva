@@ -603,7 +603,7 @@ updateTab context tab ( model, cmd ) =
                         , onRedirect = pushUrl <| candidacyTab TrainingSent
                         , onValidate = \_ _ -> Ok ()
                         , status =
-                            if Candidacy.isFundingRequestSent candidacy then
+                            if Candidacy.isFeasibilityFileSent candidacy then
                                 Form.ReadOnly
 
                             else

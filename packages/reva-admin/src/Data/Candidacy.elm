@@ -17,6 +17,7 @@ module Data.Candidacy exposing
     , isActive
     , isCandidacyArchived
     , isCandidacyReoriented
+    , isFeasibilityFileSent
     , isFundingRequestSent
     , isPaymentRequestSent
     , isStatusEqual
@@ -373,6 +374,11 @@ isPaymentRequestSent candidacy =
 isTrainingSent : Candidacy -> Bool
 isTrainingSent candidacy =
     isStatusEqualOrAbove candidacy ParcoursEnvoye
+
+
+isFeasibilityFileSent : Candidacy -> Bool
+isFeasibilityFileSent candidacy =
+    isStatusEqualOrAbove candidacy DossierFaisabiliteEnvoye
 
 
 isActive : CandidacySummary -> Bool
