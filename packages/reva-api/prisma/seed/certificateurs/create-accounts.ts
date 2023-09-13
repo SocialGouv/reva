@@ -28,6 +28,10 @@ const keycloakAdmin = new KcAdminClient({
   realmName: process.env.KEYCLOAK_ADMIN_REALM,
 });
 
+function cleanEmail(email: string): string {
+  return email.toLowerCase().replace(/\s/g, "");
+}
+
 const createAccountForCertificationAuthority = (params: {
   contactEmail: string;
   id: string;
@@ -40,9 +44,9 @@ const createAccountForCertificationAuthority = (params: {
     getCertificationAuthorityById,
   })({
     group: "certification_authority",
-    email: params.contactEmail,
+    email: cleanEmail(params.contactEmail),
     certificationAuthorityId: params.id,
-    username: params.contactEmail,
+    username: cleanEmail(params.contactEmail),
   });
 
 async function createCertificationAuthoritiesAccounts() {
