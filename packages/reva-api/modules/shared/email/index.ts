@@ -14,11 +14,15 @@ apiKey.apiKey = process.env.SENDINBLUE_API_KEY || "secret";
 const template = ({
   headline,
   labelCTA,
+  bottomline,
   url,
+  disableThanks,
 }: {
   headline: string;
   labelCTA: string;
+  bottomline?: string;
   url: string;
+  disableThanks?: boolean;
 }) => `
 <mjml>
   <mj-head>
@@ -38,13 +42,19 @@ const template = ({
     </mj-section>
     <mj-section>
       <mj-column>
-        <mj-text font-size="20px" font-weight="bold" font-family="helvetica">Merci !</mj-text>
+      ${
+        !disableThanks &&
+        '<mj-text font-size="20px" font-weight="bold" font-family="helvetica">Merci !</mj-text>'
+      }
         <mj-text font-size="14px" font-family="helvetica" >
           ${headline}
         </mj-text>
         <mj-button css-class="cta" border-radius="4px" font-family="Helvetica" background-color="#1E293B" color="white" href="${url}">
           ${labelCTA}
-         </mj-button>
+        </mj-button>
+        <mj-text font-size="14px" font-family="helvetica" >
+          ${bottomline || ""}
+        </mj-text>
       </mj-column>
     </mj-section>
   </mj-body>
@@ -70,13 +80,23 @@ export const sendLoginEmail = async (email: string, token: string) => {
     mjml2html(
       template({
         headline:
-          "<strong>Retrouvez</strong> dès maintenant votre candidature France VAE en cliquant sur le bouton ci-dessous.",
+          "Bonjour, vous avez demandé à accéder à votre compte France VAE, retrouvez votre dossier dès maintenant en cliquant sur le bouton ci-dessous.",
         labelCTA: "Reprendre mon parcours",
         url,
+        bottomline:
+          "Si vous n'êtes pas à l'origine de cette demande, merci de ne pas tenir compte de cet e-mail.<br /><br />Ce lien est valide 1 heure et ne peut être utilisé qu’une fois.<br /><br />L’équipe France VAE",
+        disableThanks: true,
       })
     );
 
-  return sendEmailWithLink(email, token, "login", htmlContent);
+  return sendEmailWithLink(
+    email,
+    token,
+    "login",
+    htmlContent,
+    "Accédez à votre compte France VAE",
+    { name: "France VAE", email: "contact@vae.gouv.fr" }
+  );
 };
 
 export const sendUnknownUserEmail = async (email: string) => {
@@ -102,7 +122,9 @@ const sendEmailWithLink = async (
   email: string,
   token: string,
   action: "registration" | "login",
-  htmlContent: (url: string) => { html: string }
+  htmlContent: (url: string) => { html: string },
+  subject?: string,
+  sender?: EmailAccount
 ) => {
   const url = `${process.env.BASE_URL}/app/${action}?token=${token}`;
   const emailContent = htmlContent(url);
@@ -116,7 +138,8 @@ const sendEmailWithLink = async (
   return sendGenericEmail({
     htmlContent: emailContent.html,
     to: { email },
-    subject: "Votre accès à votre parcours France VAE",
+    subject: subject || "Votre accès à votre parcours France VAE",
+    sender,
   });
 };
 
