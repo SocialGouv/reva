@@ -1,6 +1,7 @@
 module Page.Form.FundingRequestUniFvae exposing (form)
 
-import Accessibility exposing (Html, div, h3, h4, span, text)
+import Accessibility exposing (Html, div, h3, h4, p, span, text)
+import Accessibility.Aria as Aria
 import Admin.Enum.Gender exposing (Gender(..))
 import Data.Candidacy exposing (Candidacy)
 import Data.Candidate
@@ -152,12 +153,15 @@ form maybeCertification formData ( candidacy, referential ) =
 forfaitInfo : Html msg
 forfaitInfo =
     div
-        [ class "w-full flex flex-wrap mb-6" ]
+        [ class "w-full flex flex-wrap mb-3" ]
         [ div
             [ class "w-full lg:w-2/3 " ]
             [ div [ class "flex flex-col" ]
                 [ h3 [ class "text-base font-medium mb-2" ] [ text "Forfait d’étude de faisabilité et entretien post-jury" ]
-                , span [ class "text-xs text-dsfrOrange-500" ] [ text "⚠ Ne pourra être demandé que si l'étude a été réalisée dans sa totalité." ]
+                , p [ class "text-xs text-dsfrOrange-500" ]
+                    [ span [ class "fr-icon-warning-fill fr-icon--sm mr-1", Aria.hidden True ] []
+                    , text "Ne pourra être demandé que si l'étude a été réalisée dans sa totalité."
+                    ]
                 ]
             ]
         , div
