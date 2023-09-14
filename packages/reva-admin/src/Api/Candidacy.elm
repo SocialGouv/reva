@@ -12,12 +12,12 @@ import Admin.Object.CandidacySummaryPage
 import Admin.Object.Candidate
 import Admin.Object.CandidateGoal
 import Admin.Object.Certification
-import Admin.Object.CertificationAuthority
 import Admin.Object.CertificationSummary
 import Admin.Object.Experience
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
+import Api.CertificationAuthority as CertificationAuthority
 import Api.Feasibility
 import Api.Organism as Organism
 import Api.Pagination exposing (pageInfoSelection)
@@ -27,7 +27,6 @@ import Api.Token exposing (Token)
 import Data.Candidacy exposing (CandidacyId)
 import Data.Candidate
 import Data.Certification
-import Data.CertificationAuthority
 import Graphql.Operation
 import Graphql.OptionalArgument as OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
@@ -129,7 +128,7 @@ selection id =
                 |> with (Admin.Object.Candidacy.candidacyStatuses statusSelection)
                 |> with Admin.Object.Candidacy.createdAt
                 |> with (Admin.Object.Candidacy.reorientationReason reorientationReasonSelection)
-                |> with (Admin.Object.Candidacy.certificationAuthorities certificationAuthoritySelection)
+                |> with (Admin.Object.Candidacy.certificationAuthorities CertificationAuthority.selection)
                 |> with (Admin.Object.Candidacy.feasibility Api.Feasibility.selection)
                 |> with Admin.Object.Candidacy.financeModule
     in
@@ -270,16 +269,3 @@ certificationSummarySelection =
     SelectionSet.succeed Data.Certification.CertificationSummary
         |> with Admin.Object.CertificationSummary.id
         |> with Admin.Object.CertificationSummary.label
-
-
-
--- CERTIFICATION AUTHORITY
-
-
-certificationAuthoritySelection : SelectionSet Data.CertificationAuthority.CertificationAuthority Admin.Object.CertificationAuthority
-certificationAuthoritySelection =
-    SelectionSet.succeed Data.CertificationAuthority.CertificationAuthority
-        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.CertificationAuthority.id)
-        |> with Admin.Object.CertificationAuthority.label
-        |> with Admin.Object.CertificationAuthority.contactFullName
-        |> with Admin.Object.CertificationAuthority.contactEmail

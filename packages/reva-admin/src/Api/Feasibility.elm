@@ -13,6 +13,7 @@ import Admin.Object.FeasibilityPage
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
+import Api.CertificationAuthority as CertificationAuthority
 import Api.File as File
 import Api.Organism as Organism
 import Api.Pagination exposing (pageInfoSelection)
@@ -44,8 +45,9 @@ get endpointGraphql token toMsg feasibilityId =
 selection : SelectionSet Data.Feasibility.Feasibility Admin.Object.Feasibility
 selection =
     SelectionSet.succeed
-        (\(Id feasibilityId) file documentaryProofFile certificateOfAttendanceFile candidacy decision maybeDecisionComment decisionSentAt ->
+        (\(Id feasibilityId) certificationAuthority file documentaryProofFile certificateOfAttendanceFile candidacy decision maybeDecisionComment decisionSentAt ->
             Data.Feasibility.Feasibility feasibilityId
+                certificationAuthority
                 file
                 documentaryProofFile
                 certificateOfAttendanceFile
@@ -65,6 +67,7 @@ selection =
                 decisionSentAt
         )
         |> with Admin.Object.Feasibility.id
+        |> with (Admin.Object.Feasibility.certificationAuthority CertificationAuthority.selection)
         |> with (Admin.Object.Feasibility.feasibilityFile File.selection)
         |> with (Admin.Object.Feasibility.documentaryProofFile File.selection)
         |> with (Admin.Object.Feasibility.certificateOfAttendanceFile File.selection)
