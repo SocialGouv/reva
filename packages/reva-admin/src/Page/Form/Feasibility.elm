@@ -38,11 +38,9 @@ form _ ( candidacy, _ ) =
                     ]
             )
 
-        certificationAuthorityInfo =
-            ( "certificationAuthority"
-            , Form.StaticHtml <|
-                View.Candidate.viewCertificationAuthority candidacy.certificationAuthority
-            )
+        certificationAuthorities =
+            candidacy.certificationAuthorities
+                |> List.map (\c -> ( c.id, c.label ))
 
         helpPanel =
             ( "help panel"
@@ -83,24 +81,23 @@ form _ ( candidacy, _ ) =
             )
 
         elements =
-            case candidacy.certificationAuthority of
-                Just _ ->
-                    [ candidateInfo
-                    , ( "", Form.Title1 "Pièces jointes" )
-                    , idCardWarning
-                    , ( "feasibilityFile", Form.Title2 "1 - Joindre le dossier de faisabilité" )
-                    , ( keys.feasibilityFile, Form.File "" "Format supporté : PDF uniquement" )
-                    , ( "documentaryProofFile", Form.Title2 "2 - Joindre une autre pièce (optionnel)" )
-                    , ( keys.documentaryProofFile, Form.File "Copie du ou des justificatif(s) ouvrant accès à une équivalence ou dispense en lien avec la certification visée." "Format supporté : PDF uniquement" )
-                    , ( "certificateOfAttendanceFile", Form.Title2 "3 - Joindre une autre pièce (optionnel)" )
-                    , ( keys.certificateOfAttendanceFile, Form.File "Attestation ou certificat de suivi de formation dans le cas du pré-requis demandé par la certification visée." "Format supporté : PDF uniquement" )
-                    , ( "", Form.Title1 "Informations additionnelles" )
-                    , certificationAuthorityInfo
-                    , helpPanel
-                    ]
+            if List.isEmpty candidacy.certificationAuthorities then
+                [ candidateInfo, noCertificationAuthorityWarning ]
 
-                Nothing ->
-                    [ candidateInfo, noCertificationAuthorityWarning ]
+            else
+                [ candidateInfo
+                , ( "", Form.Title1 "Pièces jointes" )
+                , idCardWarning
+                , ( "feasibilityFile", Form.Title2 "1 - Joindre le dossier de faisabilité" )
+                , ( keys.feasibilityFile, Form.File "" "Format supporté : PDF uniquement" )
+                , ( "documentaryProofFile", Form.Title2 "2 - Joindre une autre pièce (optionnel)" )
+                , ( keys.documentaryProofFile, Form.File "Copie du ou des justificatif(s) ouvrant accès à une équivalence ou dispense en lien avec la certification visée." "Format supporté : PDF uniquement" )
+                , ( "certificateOfAttendanceFile", Form.Title2 "3 - Joindre une autre pièce (optionnel)" )
+                , ( keys.certificateOfAttendanceFile, Form.File "Attestation ou certificat de suivi de formation dans le cas du pré-requis demandé par la certification visée." "Format supporté : PDF uniquement" )
+                , ( "", Form.Title1 "Autorité de certification" )
+                , ( keys.certificationAuthorityId, Form.Select "Sélectionnez l'autorité certificatrice" certificationAuthorities )
+                , helpPanel
+                ]
     in
     { elements = elements
     , saveLabel = Nothing
