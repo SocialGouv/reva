@@ -234,11 +234,11 @@ financeModule =
     Object.selectionForField "Enum.FinanceModule.FinanceModule" "financeModule" [] Admin.Enum.FinanceModule.decoder
 
 
-certificationAuthority :
+certificationAuthorities :
     SelectionSet decodesTo Admin.Object.CertificationAuthority
-    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
-certificationAuthority object____ =
-    Object.selectionForCompositeField "certificationAuthority" [] object____ (Basics.identity >> Decode.nullable)
+    -> SelectionSet (List decodesTo) Admin.Object.Candidacy
+certificationAuthorities object____ =
+    Object.selectionForCompositeField "certificationAuthorities" [] object____ (Basics.identity >> Decode.list)
 
 
 feasibility :

@@ -14,6 +14,7 @@ import {
 
 interface UploadFeasibilityFileRequestBody {
   candidacyId: string;
+  certificationAuthorityId: string;
   feasibilityFile: UploadedFile[];
   documentaryProofFile?: UploadedFile[];
   certificateOfAttendanceFile?: UploadedFile[];
@@ -153,6 +154,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
       try {
         await createFeasibility({
           candidacyId: request.body.candidacyId,
+          certificationAuthorityId: request.body.certificationAuthorityId,
           feasibilityFile,
           documentaryProofFile,
           certificateOfAttendanceFile,

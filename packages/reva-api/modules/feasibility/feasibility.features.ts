@@ -45,13 +45,33 @@ export const getCertificationAuthority = ({
       })
     : null;
 
+export const getCertificationAuthorities = ({
+  certificationId,
+  departmentId,
+}: {
+  certificationId: string;
+  departmentId: string;
+}) =>
+  certificationId && departmentId
+    ? prismaClient.certificationAuthority.findMany({
+        where: {
+          certificationAuthorityOnDepartment: { some: { departmentId } },
+          certificationAuthorityOnCertification: {
+            some: { certificationId },
+          },
+        },
+      })
+    : null;
+
 export const createFeasibility = async ({
   candidacyId,
+  certificationAuthorityId,
   feasibilityFile,
   documentaryProofFile,
   certificateOfAttendanceFile,
 }: {
   candidacyId: string;
+  certificationAuthorityId: string;
   feasibilityFile: UploadedFile;
   documentaryProofFile?: UploadedFile;
   certificateOfAttendanceFile?: UploadedFile;
@@ -59,6 +79,7 @@ export const createFeasibility = async ({
   const feasibility = await prismaClient.feasibility.create({
     data: {
       candidacy: { connect: { id: candidacyId } },
+      certificationAuthority: { connect: { id: certificationAuthorityId } },
       feasibilityFileSentAt: new Date(),
       feasibilityFile: {
         create: {
@@ -108,11 +129,9 @@ export const createFeasibility = async ({
     candidacy?.certificationsAndRegions?.[0]?.certificationId &&
     candidacy?.departmentId
   ) {
-    const certificationAuthority = await getCertificationAuthority({
-      certificationId:
-        candidacy?.certificationsAndRegions?.[0]?.certificationId,
-      departmentId: candidacy?.departmentId,
-    });
+    const certificationAuthority = await getCertificationAuthorityById(
+      certificationAuthorityId
+    );
     if (!certificationAuthority) {
       logger.error(
         `Aucun certificateur trouvé pour la certification ${candidacy?.certificationsAndRegions?.[0]?.certificationId} et le departement : ${candidacy?.departmentId}`
@@ -442,6 +461,7 @@ export const validateFeasibility = async ({
             organism: { select: { contactAdministrativeEmail: true } },
           },
         },
+        certificationAuthority: true,
       },
     });
 
@@ -453,17 +473,19 @@ export const validateFeasibility = async ({
     const activeCertificationAndRegion =
       updatedFeasibility.candidacy.certificationsAndRegions[0];
 
-    const certificationAuthority = await getCertificationAuthority({
-      certificationId: activeCertificationAndRegion.certificationId,
-      departmentId: updatedFeasibility.candidacy.departmentId || "",
-    });
+    const certificationAuthorities =
+      updatedFeasibility.certificationAuthority ??
+      (await getCertificationAuthority({
+        certificationId: activeCertificationAndRegion.certificationId,
+        departmentId: updatedFeasibility.candidacy.departmentId || "",
+      }));
 
     sendFeasibilityValidatedCandidateEmail({
       email: updatedFeasibility.candidacy.candidate?.email as string,
       certifName: activeCertificationAndRegion.certification.label,
       comment,
       certificationAuthorityLabel:
-        certificationAuthority?.label || "certificateur inconnu",
+        certificationAuthorities?.label || "certificateur inconnu",
       infoFile,
     });
     if (updatedFeasibility.candidacy.organism?.contactAdministrativeEmail) {
@@ -522,6 +544,7 @@ export const rejectFeasibility = async ({
             organism: { select: { contactAdministrativeEmail: true } },
           },
         },
+        certificationAuthority: true,
       },
     });
 
@@ -533,10 +556,12 @@ export const rejectFeasibility = async ({
     const activeCertificationAndRegion =
       updatedFeasibility.candidacy.certificationsAndRegions[0];
 
-    const certificationAuthority = await getCertificationAuthority({
-      certificationId: activeCertificationAndRegion.certificationId,
-      departmentId: updatedFeasibility.candidacy.departmentId || "",
-    });
+    const certificationAuthority =
+      updatedFeasibility.certificationAuthority ??
+      (await getCertificationAuthority({
+        certificationId: activeCertificationAndRegion.certificationId,
+        departmentId: updatedFeasibility.candidacy.departmentId || "",
+      }));
 
     sendFeasibilityRejectedCandidateEmail({
       email: updatedFeasibility.candidacy.candidate?.email as string,

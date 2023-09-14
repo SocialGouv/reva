@@ -828,6 +828,7 @@ model CertificationAuthority {
   certificationAuthorityOnDepartment    CertificationAuthorityOnDepartment[]
   certificationAuthorityOnCertification CertificationAuthorityOnCertification[]
   Account                               Account[]
+  Feasibility                           Feasibility[]
 
   @@map("certification_authority")
 }
@@ -866,22 +867,24 @@ enum FeasibilityStatus {
 }
 
 model Feasibility {
-  id                            String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacy                     Candidacy         @relation(fields: [candidacyId], references: [id])
-  candidacyId                   String            @map("candidacy_id") @db.Uuid
-  feasibilityFile               File              @relation("feasibility_file", fields: [feasibilityFileId], references: [id])
-  documentaryProofFile          File?             @relation("documentary_proof_file", fields: [documentaryProofFileId], references: [id])
-  feasibilityFileId             String            @map("feasibility_file_id") @db.Uuid
-  documentaryProofFileId        String?           @map("documentary_proof_file_id") @db.Uuid
-  certificateOfAttendanceFile   File?             @relation("certificate_of_attendance_file", fields: [certificateOfAttendanceFileId], references: [id])
-  certificateOfAttendanceFileId String?           @map("certificate_of_attendance_file_id") @db.Uuid
-  feasibilityFileSentAt         DateTime?         @map("feasibility_file_sent_at") @db.Timestamptz(6)
-  decision                      FeasibilityStatus @default(PENDING)
-  decisionComment               String?           @map("decision_comment")
-  decisionSentAt                DateTime?         @map("decision_sent_at") @db.Timestamptz(6)
-  isActive                      Boolean           @default(true) @map("is_active")
-  createdAt                     DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt                     DateTime?         @updatedAt @map("updated_at") @db.Timestamptz(6)
+  id                            String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy                     Candidacy               @relation(fields: [candidacyId], references: [id])
+  candidacyId                   String                  @map("candidacy_id") @db.Uuid
+  certificationAuthority        CertificationAuthority? @relation(fields: [certificationAuthorityId], references: [id])
+  certificationAuthorityId      String?                 @map("certification_authority_id") @db.Uuid
+  feasibilityFile               File                    @relation("feasibility_file", fields: [feasibilityFileId], references: [id])
+  documentaryProofFile          File?                   @relation("documentary_proof_file", fields: [documentaryProofFileId], references: [id])
+  feasibilityFileId             String                  @map("feasibility_file_id") @db.Uuid
+  documentaryProofFileId        String?                 @map("documentary_proof_file_id") @db.Uuid
+  certificateOfAttendanceFile   File?                   @relation("certificate_of_attendance_file", fields: [certificateOfAttendanceFileId], references: [id])
+  certificateOfAttendanceFileId String?                 @map("certificate_of_attendance_file_id") @db.Uuid
+  feasibilityFileSentAt         DateTime?               @map("feasibility_file_sent_at") @db.Timestamptz(6)
+  decision                      FeasibilityStatus       @default(PENDING)
+  decisionComment               String?                 @map("decision_comment")
+  decisionSentAt                DateTime?               @map("decision_sent_at") @db.Timestamptz(6)
+  isActive                      Boolean                 @default(true) @map("is_active")
+  createdAt                     DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                     DateTime?               @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   @@map("feasibility")
 }

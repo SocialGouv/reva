@@ -37,6 +37,10 @@ submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
             Data.Form.getFiles keys.certificateOfAttendanceFile formData
                 |> List.map (\( _, file ) -> ( keys.certificateOfAttendanceFile, file ))
 
+        certificationAuthorityId =
+            Data.Form.get keys.certificationAuthorityId formData
+                |> Maybe.withDefault ""
+
         withFiles files body =
             files
                 |> List.map (\( name, file ) -> Http.filePart name file)
@@ -48,7 +52,9 @@ submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
                 , headers = [ Http.header "authorization" ("Bearer " ++ Api.Token.toString token) ]
                 , url = restApiEndpoint ++ "/feasibility/upload-feasibility-file"
                 , body =
-                    [ Http.stringPart "candidacyId" (Data.Candidacy.candidacyIdToString candidacyId) ]
+                    [ Http.stringPart "candidacyId" (Data.Candidacy.candidacyIdToString candidacyId)
+                    , Http.stringPart "certificationAuthorityId" certificationAuthorityId
+                    ]
                         |> withFiles files
                         |> Http.multipartBody
                 , expect = mayExpectError (RemoteData.fromResult >> toMsg)
@@ -60,24 +66,28 @@ submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
             Task.succeed (RemoteData.Failure [ msg ])
                 |> Task.perform toMsg
     in
-    case ( feasibilityFiles, documentaryProofFiles, certificateOfAttendanceFiles ) of
-        ( [], _, _ ) ->
-            error "Veuillez choisir un dossier de faisabilité."
+    if certificationAuthorityId == "" then
+        error "Veuillez choisir une autorité de certification."
 
-        ( [ feasibilityFile ], [ documentaryProofFile ], [ certificateOfAttendanceFile ] ) ->
-            post [ feasibilityFile, documentaryProofFile, certificateOfAttendanceFile ]
+    else
+        case ( feasibilityFiles, documentaryProofFiles, certificateOfAttendanceFiles ) of
+            ( [], _, _ ) ->
+                error "Veuillez choisir un dossier de faisabilité."
 
-        ( [ feasibilityFile ], [ documentaryProofFile ], [] ) ->
-            post [ feasibilityFile, documentaryProofFile ]
+            ( [ feasibilityFile ], [ documentaryProofFile ], [ certificateOfAttendanceFile ] ) ->
+                post [ feasibilityFile, documentaryProofFile, certificateOfAttendanceFile ]
 
-        ( [ feasibilityFile ], [], [ certificateOfAttendanceFile ] ) ->
-            post [ feasibilityFile, certificateOfAttendanceFile ]
+            ( [ feasibilityFile ], [ documentaryProofFile ], [] ) ->
+                post [ feasibilityFile, documentaryProofFile ]
 
-        ( [ feasibilityFile ], _, _ ) ->
-            post [ feasibilityFile ]
+            ( [ feasibilityFile ], [], [ certificateOfAttendanceFile ] ) ->
+                post [ feasibilityFile, certificateOfAttendanceFile ]
 
-        ( _, _, _ ) ->
-            error "Vous ne pouvez pas envoyer plus d'un dossier de faisabilité et plus d'une autre pièce jointe."
+            ( [ feasibilityFile ], _, _ ) ->
+                post [ feasibilityFile ]
+
+            ( _, _, _ ) ->
+                error "Vous ne pouvez pas envoyer plus d'un dossier de faisabilité et plus d'une autre pièce jointe."
 
 
 submitDecision :

@@ -1,6 +1,7 @@
 module Data.Feasibility exposing (Candidate, Decision(..), Feasibility, FeasibilityCountByCategory, FeasibilitySummary, FeasibilitySummaryPage, feasibilityCategoryFilterToReadableString)
 
 import Admin.Enum.FeasibilityCategoryFilter as FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
+import Data.CertificationAuthority exposing (CertificationAuthority)
 import Data.File exposing (File)
 import Data.Organism exposing (Organism)
 import Data.Pagination exposing (PaginationInfo)

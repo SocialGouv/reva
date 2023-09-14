@@ -129,7 +129,7 @@ selection id =
                 |> with (Admin.Object.Candidacy.candidacyStatuses statusSelection)
                 |> with Admin.Object.Candidacy.createdAt
                 |> with (Admin.Object.Candidacy.reorientationReason reorientationReasonSelection)
-                |> with (Admin.Object.Candidacy.certificationAuthority certificationAuthoritySelection)
+                |> with (Admin.Object.Candidacy.certificationAuthorities certificationAuthoritySelection)
                 |> with (Admin.Object.Candidacy.feasibility Api.Feasibility.selection)
                 |> with Admin.Object.Candidacy.financeModule
     in
@@ -279,7 +279,7 @@ certificationSummarySelection =
 certificationAuthoritySelection : SelectionSet Data.CertificationAuthority.CertificationAuthority Admin.Object.CertificationAuthority
 certificationAuthoritySelection =
     SelectionSet.succeed Data.CertificationAuthority.CertificationAuthority
-        |> with Admin.Object.CertificationAuthority.id
+        |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.CertificationAuthority.id)
         |> with Admin.Object.CertificationAuthority.label
         |> with Admin.Object.CertificationAuthority.contactFullName
         |> with Admin.Object.CertificationAuthority.contactEmail
