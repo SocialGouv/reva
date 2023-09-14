@@ -29,7 +29,7 @@ type File {
 }
 
 type Candidacy {
-  certificationAuthority: CertificationAuthority
+  certificationAuthorities: [CertificationAuthority!]!
   feasibility: Feasibility
 }
 

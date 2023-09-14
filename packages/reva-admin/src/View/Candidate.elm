@@ -28,21 +28,16 @@ viewWithCertification maybeCertificationLabel maybeCandidate =
         ]
 
 
-viewCertificationAuthority : Maybe CertificationAuthority -> Html msg
-viewCertificationAuthority maybeCertificationAuthority =
+viewCertificationAuthority : CertificationAuthority -> Html msg
+viewCertificationAuthority certificationAuthority =
     View.summaryBlock "Certificateur" <|
-        case maybeCertificationAuthority of
-            Just certificationAuthority ->
-                [ h6
-                    [ class "text-xl mb-4" ]
-                    [ text certificationAuthority.label ]
-                , certificationAuthority.contactFullName
-                    |> Maybe.map (\name -> p [ class "text-lg mb-4" ] [ text name ])
-                    |> Maybe.withDefault (text "")
-                , certificationAuthority.contactEmail
-                    |> Maybe.map (\email -> p [ class "text-lg mb-0" ] [ text email ])
-                    |> Maybe.withDefault (text "")
-                ]
-
-            Nothing ->
-                [ text "Certificateur inconnu" ]
+        [ h6
+            [ class "text-xl mb-4" ]
+            [ text certificationAuthority.label ]
+        , certificationAuthority.contactFullName
+            |> Maybe.map (\name -> p [ class "text-lg mb-4" ] [ text name ])
+            |> Maybe.withDefault (text "")
+        , certificationAuthority.contactEmail
+            |> Maybe.map (\email -> p [ class "text-lg mb-0" ] [ text email ])
+            |> Maybe.withDefault (text "")
+        ]

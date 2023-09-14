@@ -5,17 +5,17 @@ import {
   getActiveFeasibilityByCandidacyid,
   getActiveFeasibilityCountByCategory,
   getCandidacyById,
-  getCertificationAuthority,
+  getCertificationAuthorities,
   getFeasibilityById,
   getFileNameAndUrl,
 } from "./feasibility.features";
 
 export const feasibilityResolvers = {
   Candidacy: {
-    certificationAuthority: (parent: {
+    certificationAuthorities: (parent: {
       certificationId: string;
       departmentId: string;
-    }) => getCertificationAuthority(parent),
+    }) => getCertificationAuthorities(parent),
     feasibility: ({ id: candidacyId }: { id: string }) =>
       getActiveFeasibilityByCandidacyid({ candidacyId }),
   },
