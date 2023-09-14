@@ -329,9 +329,9 @@ viewFeasibilitySent context candidacy feasibility =
         , viewFileLink context (Tuple.first feasibilityFileNameAndUrl) (Tuple.second feasibilityFileNameAndUrl)
         , viewFileLink context (Tuple.first documentaryProofFileNameAndUrl) (Tuple.second documentaryProofFileNameAndUrl)
         , viewFileLink context (Tuple.first certificateOfAttendancefFileNameAndUrl) (Tuple.second certificateOfAttendancefFileNameAndUrl)
-        , div [] <|
-            List.map View.Candidate.viewCertificationAuthority
-                candidacy.certificationAuthorities
+        , feasibility.certificationAuthority
+            |> Maybe.map View.Candidate.viewCertificationAuthority
+            |> Maybe.withDefault (text "")
         , View.Feasibility.Decision.view feasibility
         ]
     ]

@@ -13,6 +13,7 @@ type CertificationAuthority {
 
 type Feasibility {
   id: ID!
+  certificationAuthority: CertificationAuthority
   feasibilityFileSentAt: Timestamp!
   feasibilityFile: File!
   documentaryProofFile: File
