@@ -145,6 +145,7 @@ interface GenericEmailArgs {
   subject: string;
   htmlContent: string;
   sender?: EmailAccount;
+  attachment?: { name: string; content: string }[];
 }
 
 export const sendGenericEmail = async ({
@@ -152,6 +153,7 @@ export const sendGenericEmail = async ({
   htmlContent,
   sender,
   subject,
+  attachment,
 }: GenericEmailArgs): Promise<Either<string, string>> => {
   const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
@@ -164,6 +166,7 @@ export const sendGenericEmail = async ({
         to: [to],
         subject,
         htmlContent,
+        attachment,
         tags: [process.env.APP_ENV ?? "development"],
       })
     );
