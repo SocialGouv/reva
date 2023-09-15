@@ -121,12 +121,7 @@
                                 <a class="fr-btn fr-btn--secondary" href="${properties.revaUrl}/espace-professionnel/creation">
                                     Créez votre compte
                                 </a>
-                            </div>
-                            <br/>
-                            <h3>Vous êtes certificateur ?</h3>
-                            <div>
-                              <a href="mailto:support@vae.gouv.fr">Contactez le support</a> pour voir les modalités de votre inscription.
-                            </div>                      
+                            </div>                 
                         </div>
                     </div>
                 </div>
