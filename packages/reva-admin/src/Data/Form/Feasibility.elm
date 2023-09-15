@@ -3,6 +3,7 @@ module Data.Form.Feasibility exposing (Decision(..), decisionFromString, decisio
 import Data.Feasibility exposing (Feasibility)
 import Data.Form exposing (FormData)
 import Data.Form.Helper as Helper
+import File exposing (File)
 
 
 keys =
@@ -11,6 +12,7 @@ keys =
     , certificateOfAttendanceFile = "certificateOfAttendanceFile"
     , decision = "decision"
     , reason = "reason"
+    , infoFile = "infoFile"
     }
 
 
@@ -44,21 +46,26 @@ decisionFromString reason =
             Unknown
 
 
-fromDict : FormData -> Data.Feasibility.Decision
+fromDict : FormData -> ( Data.Feasibility.Decision, Maybe File )
 fromDict formData =
     let
         decode =
             Helper.decode keys formData
+
+        infoFile =
+            Data.Form.getFiles keys.infoFile formData
+                |> List.map (\( _, file ) -> file)
+                |> List.head
     in
     case decisionFromString (decode.string .decision "") of
         Valid ->
-            Data.Feasibility.Admissible (decode.string .reason "")
+            ( Data.Feasibility.Admissible (decode.string .reason ""), infoFile )
 
         Invalid ->
-            Data.Feasibility.Rejected (decode.string .reason "")
+            ( Data.Feasibility.Rejected (decode.string .reason ""), infoFile )
 
         Unknown ->
-            Data.Feasibility.Pending
+            ( Data.Feasibility.Pending, Nothing )
 
 
 validate : Feasibility -> FormData -> Result (List String) ()

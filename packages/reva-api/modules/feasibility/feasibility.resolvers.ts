@@ -8,8 +8,6 @@ import {
   getFeasibilityById,
   getFeasibilityCountByCategory,
   getFileNameAndUrl,
-  rejectFeasibility,
-  validateFeasibility,
 } from "./feasibility.features";
 
 export const feasibilityResolvers = {
@@ -71,36 +69,6 @@ export const feasibilityResolvers = {
     feasibility: (_: unknown, args: { feasibilityId: string }, context: any) =>
       getFeasibilityById({
         feasibilityId: args.feasibilityId,
-        hasRole: context.auth.hasRole,
-        keycloakId: context.auth?.userInfo?.sub,
-      }),
-  },
-  Mutation: {
-    validateFeasibility: async (
-      _: unknown,
-      args: {
-        feasibilityId: string;
-        comment?: string;
-      },
-      context: any
-    ) =>
-      validateFeasibility({
-        feasibilityId: args.feasibilityId,
-        comment: args.comment,
-        hasRole: context.auth.hasRole,
-        keycloakId: context.auth?.userInfo?.sub,
-      }),
-    rejectFeasibility: async (
-      _: unknown,
-      args: {
-        feasibilityId: string;
-        comment?: string;
-      },
-      context: any
-    ) =>
-      rejectFeasibility({
-        feasibilityId: args.feasibilityId,
-        comment: args.comment,
         hasRole: context.auth.hasRole,
         keycloakId: context.auth?.userInfo?.sub,
       }),

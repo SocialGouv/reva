@@ -1,6 +1,5 @@
 module Api.Form.Feasibility exposing (..)
 
-import Api.Feasibility
 import Api.Token exposing (Token)
 import Data.Candidacy exposing (CandidacyId)
 import Data.Feasibility exposing (Decision(..), Feasibility)
@@ -71,7 +70,7 @@ submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
         ( [ feasibilityFile ], [ documentaryProofFile ], [] ) ->
             post [ feasibilityFile, documentaryProofFile ]
 
-        ( [ feasibilityFile ], [], [certificateOfAttendanceFile] ) ->
+        ( [ feasibilityFile ], [], [ certificateOfAttendanceFile ] ) ->
             post [ feasibilityFile, certificateOfAttendanceFile ]
 
         ( [ feasibilityFile ], _, _ ) ->
@@ -83,22 +82,49 @@ submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
 
 submitDecision :
     String
+    -> String
     -> Token
     -> (RemoteData (List String) () -> msg)
     -> Feasibility
     -> FormData
     -> Cmd msg
-submitDecision endpointGraphql token toMsg feasibility formData =
+submitDecision restApiEndpoint _ token toMsg feasibility formData =
     let
-        decision =
+        ( feasibilityDecision, feasibilityInfoFile ) =
             Data.Form.Feasibility.fromDict formData
+
+        filesToSend file =
+            Maybe.withDefault [] <|
+                Maybe.map
+                    (\iFile -> [ ( "infoFile", iFile ) ])
+                    file
+
+        withFiles files body =
+            files
+                |> List.map (\( name, file ) -> Http.filePart name file)
+                |> (++) body
+
+        post feasibilityId decisionString comment infoFile =
+            Http.request
+                { method = "POST"
+                , headers = [ Http.header "authorization" ("Bearer " ++ Api.Token.toString token) ]
+                , url = restApiEndpoint ++ "/feasibility/" ++ feasibilityId ++ "/decision"
+                , body =
+                    [ Http.stringPart "decision" decisionString, Http.stringPart "comment" comment ]
+                        |> withFiles (filesToSend infoFile)
+                        |> Http.multipartBody
+                , expect = mayExpectError (RemoteData.fromResult >> toMsg)
+                , timeout = Nothing
+                , tracker = Nothing
+                }
     in
-    case decision of
+    case feasibilityDecision of
+        --            post [ invoiceFile, appointmentFile ]
         Admissible reason ->
-            Api.Feasibility.validate endpointGraphql token toMsg feasibility.id reason
+            post feasibility.id "Admissible" reason feasibilityInfoFile
 
         Rejected reason ->
-            Api.Feasibility.reject endpointGraphql token toMsg feasibility.id reason
+            post feasibility.id "Rejected" reason feasibilityInfoFile
 
         Pending ->
             Cmd.none

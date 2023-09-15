@@ -48,7 +48,7 @@ init context feasibilityId =
                 { form = form
                 , onLoad = Nothing
                 , onSave = Nothing
-                , onSubmit = Api.Form.Feasibility.submitDecision
+                , onSubmit = Api.Form.Feasibility.submitDecision context.restApiEndpoint
                 , onRedirect =
                     Nav.pushUrl
                         context.navKey
@@ -159,7 +159,7 @@ viewOrganism organism =
 
 
 form : FormData -> Feasibility -> Form
-form formData _ =
+form _ _ =
     let
         keys =
             Data.Form.Feasibility.keys
@@ -169,17 +169,15 @@ form formData _ =
             , ( "invalid", Invalid )
             ]
                 |> List.map (\( id, decision ) -> ( id, decisionToString decision ))
-
-        status =
-            Data.Form.Feasibility.fromDict formData
     in
     { elements =
         [ ( keys.decision, Form.RadioList "Décision prise concernant ce dossier" decisions )
         , ( keys.reason, Form.Textarea "Précisez les motifs de votre décision" Nothing )
+        , ( keys.infoFile, Form.File "Joindre le courrier de recevabilité" "Ce courrier sera joint au message envoyé au candidat. L'architecte de parcours ne le recevra pas" )
         , ( "info"
           , Form.StaticHtml
                 (View.noticeInfo
-                    [ class "mt-4" ]
+                    [ class "mt-6" ]
                     [ text "Rappel : les motifs de votre décision seront transmis au candidat et à son architecte de parcours." ]
                 )
           )

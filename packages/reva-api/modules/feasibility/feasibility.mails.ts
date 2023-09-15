@@ -3,6 +3,7 @@ import mjml2html from "mjml";
 import { sendGenericEmail } from "../shared/email";
 import { formatFreeText } from "../shared/email/utils";
 import { logger } from "../shared/logger";
+import { UploadedFile } from "./feasibility.features";
 
 const template = ({
   headline,
@@ -103,11 +104,13 @@ export const sendFeasibilityValidatedCandidateEmail = async ({
   comment,
   certifName,
   certificationAuthorityLabel,
+  infoFile,
 }: {
   email: string;
   comment?: string;
   certifName: string;
   certificationAuthorityLabel: string;
+  infoFile?: UploadedFile;
 }) => {
   const commentInfo = comment
     ? `
@@ -141,10 +144,16 @@ export const sendFeasibilityValidatedCandidateEmail = async ({
     logger.info(htmlContent.html);
     logger.info("=========================");
   }
+
+  const attachment = infoFile
+    ? [{ name: infoFile.filename, content: infoFile.data.toString("base64") }]
+    : undefined;
+
   return sendGenericEmail({
     to: { email },
     htmlContent: htmlContent.html,
     subject: "Votre dossier de faisabilité VAE a été examiné",
+    attachment,
   });
 };
 
@@ -152,10 +161,12 @@ export const sendFeasibilityRejectedCandidateEmail = async ({
   email,
   comment,
   certificationAuthorityLabel,
+  infoFile,
 }: {
   email: string;
   comment?: string;
   certificationAuthorityLabel: string;
+  infoFile?: UploadedFile;
 }) => {
   const commentInfo = comment
     ? `
@@ -190,10 +201,15 @@ export const sendFeasibilityRejectedCandidateEmail = async ({
     logger.info(htmlContent.html);
     logger.info("=========================");
   }
+  const attachment = infoFile
+    ? [{ name: infoFile.filename, content: infoFile.data.toString("base64") }]
+    : undefined;
+
   return sendGenericEmail({
     to: { email },
     htmlContent: htmlContent.html,
     subject: "Votre dossier de faisabilité",
+    attachment,
   });
 };
 

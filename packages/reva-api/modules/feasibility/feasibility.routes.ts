@@ -9,6 +9,8 @@ import {
   createFeasibility,
   getFeasibilityByCandidacyid,
   getFileWithContent,
+  handleFeasibilityDecision,
+  validateFeasibility,
 } from "./feasibility.features";
 
 interface UploadFeasibilityFileRequestBody {
@@ -160,6 +162,65 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
         const message = e instanceof Error ? e.message : "unknown error";
         reply.send(message);
       }
+    },
+  });
+
+  server.post<{
+    Params: { feasibilityId: string };
+    Body: {
+      comment: string;
+      decision: string;
+      infoFile?: UploadedFile[];
+    };
+  }>("/feasibility/:feasibilityId/decision", {
+    schema: {
+      params: {
+        type: "object",
+        properties: {
+          feasibilityId: { type: "string" },
+        },
+        required: ["feasibilityId"],
+      },
+      body: {
+        type: "object",
+        properties: {
+          decision: { type: "string" },
+          comment: { type: "string" },
+          infoFile: { type: "array", items: { type: "object" } },
+        },
+      },
+    },
+    handler: async (request, reply) => {
+      const { feasibilityId } = request.params;
+      const infoFile = request?.body?.infoFile?.[0];
+      if (infoFile) {
+        if (!hasValidMimeType(infoFile)) {
+          return reply
+            .status(400)
+            .send(
+              `Ce type de fichier n'est pas pris en charge. Veuillez soumettre un document PDF.`
+            );
+        }
+
+        if (infoFile.data?.byteLength > maxUploadFileSizeInBytes) {
+          return reply
+            .status(400)
+            .send(
+              `La taille du fichier dépasse la taille maximum autorisée. Veuillez soumettre un fichier de moins de ${Math.floor(
+                maxUploadFileSizeInBytes / 1024 / 1024
+              )} Mo.`
+            );
+        }
+      }
+
+      return handleFeasibilityDecision({
+        feasibilityId,
+        decision: request.body.decision,
+        hasRole: request.auth.hasRole as (role: string) => boolean,
+        keycloakId: request.auth?.userInfo?.sub,
+        comment: request.body.comment,
+        infoFile,
+      });
     },
   });
 

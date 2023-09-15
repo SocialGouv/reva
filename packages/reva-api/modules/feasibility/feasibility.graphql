@@ -68,8 +68,3 @@ type Query {
   ): FeasibilityPage!
   feasibility(feasibilityId: ID!): Feasibility
 }
-
-type Mutation {
-  validateFeasibility(feasibilityId: ID!, comment: String): Feasibility
-  rejectFeasibility(feasibilityId: ID!, comment: String): Feasibility
-}

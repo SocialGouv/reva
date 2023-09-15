@@ -11,6 +11,7 @@ import {
   Organism,
   Region,
 } from "@prisma/client";
+import { FastifyInstance } from "fastify";
 
 import { prismaClient } from "../../prisma/client";
 import {
@@ -348,6 +349,26 @@ test("should count 1 pending feasibility for admin user", async () => {
   });
 });
 
+const postFeasibilityDecision = ({
+  feasibilityId,
+  decision,
+  authorization,
+}: {
+  feasibilityId: string;
+  decision: string;
+  authorization: ReturnType<typeof authorizationHeaderForUser>;
+}) => {
+  const fastify = (global as any).fastify as FastifyInstance;
+  return fastify.inject({
+    method: "POST",
+    url: `/api/feasibility/${feasibilityId}/decision`,
+    payload: { decision },
+    headers: {
+      authorization,
+    },
+  });
+};
+
 test("should validate a feasibility since certificator is allowed to do so", async () => {
   const feasiblity = await prismaClient.feasibility.create({
     data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
@@ -357,27 +378,22 @@ test("should validate a feasibility since certificator is allowed to do so", asy
     ileDeFranceCandidacyData
   );
 
-  const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+  const resp = await postFeasibilityDecision({
+    feasibilityId: feasiblity.id,
+    decision: "Admissible",
     authorization: authorizationHeaderForUser({
       role: "manage_feasibility",
       keycloakId: CERTIFICATOR_KEYCLOAK_ID,
     }),
-    payload: {
-      requestType: "mutation",
-      endpoint: "validateFeasibility",
-      arguments: { feasibilityId: feasiblity.id },
-      returnFields: "{id}",
-    },
   });
 
   expect(resp.statusCode).toEqual(200);
-  const obj = resp.json();
+  const obj = JSON.parse(resp.body);
 
-  expect(obj.data?.validateFeasibility).toMatchObject({
+  expect(obj).toMatchObject({
     id: feasiblity.id,
+    decision: "ADMISSIBLE",
   });
-  expect(resp.json()).not.toHaveProperty("errors");
 });
 
 test("should not validate a feasibility since other certificator doesn't handle it", async () => {
@@ -389,22 +405,15 @@ test("should not validate a feasibility since other certificator doesn't handle 
     ileDeFranceCandidacyData
   );
 
-  const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+  const resp = await postFeasibilityDecision({
+    feasibilityId: feasiblity.id,
+    decision: "Admissible",
     authorization: authorizationHeaderForUser({
       role: "manage_feasibility",
       keycloakId: OTHER_CERTIFICATOR_KEYCLOAK_ID,
     }),
-    payload: {
-      requestType: "query",
-      endpoint: "validateFeasibility",
-      arguments: { feasibilityId: feasiblity.id },
-      returnFields: "{id}",
-    },
   });
-
-  expect(resp.json()).toHaveProperty("errors");
-  expect(resp.json()).not.toHaveProperty("data");
+  expect(resp.statusCode).toBe(500);
 });
 
 test("should reject a feasibility since certificator is allowed to do so", async () => {
@@ -416,27 +425,27 @@ test("should reject a feasibility since certificator is allowed to do so", async
     ileDeFranceCandidacyData
   );
 
-  const resp = await injectGraphql({
-    fastify: (global as any).fastify,
+  const resp = await postFeasibilityDecision({
+    feasibilityId: feasiblity.id,
+    decision: "Rejected",
     authorization: authorizationHeaderForUser({
       role: "manage_feasibility",
       keycloakId: CERTIFICATOR_KEYCLOAK_ID,
     }),
-    payload: {
-      requestType: "mutation",
-      endpoint: "rejectFeasibility",
-      arguments: { feasibilityId: feasiblity.id },
-      returnFields: "{id}",
-    },
   });
 
   expect(resp.statusCode).toEqual(200);
-  const obj = resp.json();
 
-  expect(obj.data?.rejectFeasibility).toMatchObject({
+  const obj = JSON.parse(resp.body);
+
+  expect(obj).toMatchObject({
     id: feasiblity.id,
   });
-  expect(resp.json()).not.toHaveProperty("errors");
+
+  expect(obj).toMatchObject({
+    id: feasiblity.id,
+    decision: "REJECTED",
+  });
 });
 
 test("should not reject a feasibility since other certificator doesn't handle it", async () => {

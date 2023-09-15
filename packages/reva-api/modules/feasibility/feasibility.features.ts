@@ -394,11 +394,13 @@ export const validateFeasibility = async ({
   comment,
   hasRole,
   keycloakId,
+  infoFile,
 }: {
   feasibilityId: string;
   comment?: string;
   hasRole: (role: string) => boolean;
   keycloakId: string;
+  infoFile?: UploadedFile;
 }) => {
   const feasibility = await prismaClient.feasibility.findUnique({
     where: { id: feasibilityId },
@@ -455,6 +457,7 @@ export const validateFeasibility = async ({
       comment,
       certificationAuthorityLabel:
         certificationAuthority?.label || "certificateur inconnu",
+      infoFile,
     });
     if (updatedFeasibility.candidacy.organism?.contactAdministrativeEmail) {
       sendFeasibilityDecisionTakenToAAPEmail({
@@ -474,11 +477,13 @@ export const rejectFeasibility = async ({
   comment,
   hasRole,
   keycloakId,
+  infoFile,
 }: {
   feasibilityId: string;
   comment?: string;
   hasRole: (role: string) => boolean;
   keycloakId: string;
+  infoFile?: UploadedFile;
 }) => {
   const feasibility = await prismaClient.feasibility.findUnique({
     where: { id: feasibilityId },
@@ -531,6 +536,7 @@ export const rejectFeasibility = async ({
       comment,
       certificationAuthorityLabel:
         certificationAuthority?.label || "certificateur inconnu",
+      infoFile,
     });
     if (updatedFeasibility.candidacy.organism?.contactAdministrativeEmail) {
       sendFeasibilityDecisionTakenToAAPEmail({
@@ -655,4 +661,24 @@ export const getCertificationAuthorityById = async (id: string) => {
       id,
     },
   });
+};
+
+export const handleFeasibilityDecision = async (args: {
+  feasibilityId: string;
+  decision: string;
+  comment?: string;
+  hasRole: (role: string) => boolean;
+  keycloakId: string;
+  infoFile?: UploadedFile;
+}) => {
+  const { decision, ...otherParameters } = args;
+  if (decision === "Admissible") {
+    return validateFeasibility(otherParameters);
+  } else if (decision === "Rejected") {
+    return rejectFeasibility(otherParameters);
+  } else {
+    throw new Error(
+      `La décision ${decision} est invalide pour le dossier de faisabilité`
+    );
+  }
 };

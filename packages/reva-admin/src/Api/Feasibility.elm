@@ -1,8 +1,7 @@
-module Api.Feasibility exposing (get, getFeasibilities, getFeasibilityCountByCategory, reject, selection, validate)
+module Api.Feasibility exposing (get, getFeasibilities, getFeasibilityCountByCategory, selection)
 
 import Admin.Enum.FeasibilityDecision
 import Admin.Enum.FeasibilityDecisionFilter
-import Admin.Mutation as Mutation
 import Admin.Object
 import Admin.Object.Candidacy
 import Admin.Object.Candidate
@@ -21,6 +20,7 @@ import Api.RemoteData exposing (nothingToError)
 import Api.Token exposing (Token)
 import Data.Feasibility
 import Data.Organism exposing (Organism)
+import File
 import Graphql.OptionalArgument as OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
@@ -94,54 +94,6 @@ candidateSelection =
     SelectionSet.succeed Data.Feasibility.Candidate
         |> with Admin.Object.Candidate.firstname
         |> with Admin.Object.Candidate.lastname
-
-
-
--- DECISION
-
-
-validate :
-    String
-    -> Token
-    -> (RemoteData (List String) () -> msg)
-    -> String
-    -> String
-    -> Cmd msg
-validate endpointGraphql token toMsg feasibilityId comment =
-    let
-        requiredArgs =
-            Mutation.ValidateFeasibilityRequiredArguments (Id feasibilityId)
-    in
-    Mutation.validateFeasibility (optionalReasonArgs comment) requiredArgs SelectionSet.empty
-        |> Auth.makeMutation "validateFeasibility" endpointGraphql token (nothingToError "Ce dossier est introuvable" >> toMsg)
-
-
-reject :
-    String
-    -> Token
-    -> (RemoteData (List String) () -> msg)
-    -> String
-    -> String
-    -> Cmd msg
-reject endpointGraphql token toMsg feasibilityId comment =
-    let
-        requiredArgs =
-            Mutation.RejectFeasibilityRequiredArguments (Id feasibilityId)
-    in
-    Mutation.rejectFeasibility (optionalReasonArgs comment) requiredArgs SelectionSet.empty
-        |> Auth.makeMutation "rejectFeasibility" endpointGraphql token (nothingToError "Ce dossier est introuvable" >> toMsg)
-
-
-optionalReasonArgs : String -> { b | comment : OptionalArgument String } -> { b | comment : OptionalArgument String }
-optionalReasonArgs comment options =
-    { options
-        | comment =
-            if comment == "" then
-                Null
-
-            else
-                Present comment
-    }
 
 
 

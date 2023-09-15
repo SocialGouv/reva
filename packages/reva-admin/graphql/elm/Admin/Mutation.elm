@@ -384,56 +384,6 @@ candidate_login requiredArgs____ object____ =
     Object.selectionForCompositeField "candidate_login" [ Argument.required "token" requiredArgs____.token Encode.string ] object____ Basics.identity
 
 
-type alias ValidateFeasibilityOptionalArguments =
-    { comment : OptionalArgument String }
-
-
-type alias ValidateFeasibilityRequiredArguments =
-    { feasibilityId : Data.Scalar.Id }
-
-
-validateFeasibility :
-    (ValidateFeasibilityOptionalArguments -> ValidateFeasibilityOptionalArguments)
-    -> ValidateFeasibilityRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Feasibility
-    -> SelectionSet (Maybe decodesTo) RootMutation
-validateFeasibility fillInOptionals____ requiredArgs____ object____ =
-    let
-        filledInOptionals____ =
-            fillInOptionals____ { comment = Absent }
-
-        optionalArgs____ =
-            [ Argument.optional "comment" filledInOptionals____.comment Encode.string ]
-                |> List.filterMap Basics.identity
-    in
-    Object.selectionForCompositeField "validateFeasibility" (optionalArgs____ ++ [ Argument.required "feasibilityId" requiredArgs____.feasibilityId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ]) object____ (Basics.identity >> Decode.nullable)
-
-
-type alias RejectFeasibilityOptionalArguments =
-    { comment : OptionalArgument String }
-
-
-type alias RejectFeasibilityRequiredArguments =
-    { feasibilityId : Data.Scalar.Id }
-
-
-rejectFeasibility :
-    (RejectFeasibilityOptionalArguments -> RejectFeasibilityOptionalArguments)
-    -> RejectFeasibilityRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Feasibility
-    -> SelectionSet (Maybe decodesTo) RootMutation
-rejectFeasibility fillInOptionals____ requiredArgs____ object____ =
-    let
-        filledInOptionals____ =
-            fillInOptionals____ { comment = Absent }
-
-        optionalArgs____ =
-            [ Argument.optional "comment" filledInOptionals____.comment Encode.string ]
-                |> List.filterMap Basics.identity
-    in
-    Object.selectionForCompositeField "rejectFeasibility" (optionalArgs____ ++ [ Argument.required "feasibilityId" requiredArgs____.feasibilityId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ]) object____ (Basics.identity >> Decode.nullable)
-
-
 type alias CandidacyCreateFundingRequestUnifvaeRequiredArguments =
     { candidacyId : Data.Scalar.Uuid
     , fundingRequest : Admin.InputObject.FundingRequestUnifvaeInput
