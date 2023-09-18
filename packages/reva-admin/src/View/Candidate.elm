@@ -30,7 +30,7 @@ viewWithCertification maybeCertificationLabel maybeCandidate =
 
 viewCertificationAuthority : CertificationAuthority -> Html msg
 viewCertificationAuthority certificationAuthority =
-    View.summaryBlock "Certificateur" <|
+    View.summaryBlock "" <|
         [ h6
             [ class "text-xl mb-4" ]
             [ text certificationAuthority.label ]

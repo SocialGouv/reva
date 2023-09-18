@@ -183,11 +183,15 @@ summaryBlock : String -> List (Html msg) -> Html msg
 summaryBlock titleValue content =
     div
         [ class "bg-neutral-100 px-8 pt-6 pb-8" ]
-        (h5
-            [ class "text-2xl mb-4" ]
-            [ text titleValue ]
-            :: content
-        )
+    <|
+        if titleValue == "" then
+            content
+
+        else
+            h5
+                [ class "text-2xl mb-4" ]
+                [ text titleValue ]
+                :: content
 
 
 noticeInfo : List (Html.Attribute msg) -> List (Html msg) -> Html msg
