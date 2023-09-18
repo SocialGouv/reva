@@ -38,7 +38,7 @@ form _ ( candidacy, _ ) =
                     ]
             )
 
-        certificationAuthorities =
+        certificationAuthorityIds =
             candidacy.certificationAuthorities
                 |> List.map (\c -> ( c.id, c.label ))
 
@@ -94,8 +94,17 @@ form _ ( candidacy, _ ) =
                 , ( keys.documentaryProofFile, Form.File "Copie du ou des justificatif(s) ouvrant accès à une équivalence ou dispense en lien avec la certification visée." "Format supporté : PDF uniquement" )
                 , ( "certificateOfAttendanceFile", Form.Title2 "3 - Joindre une autre pièce (optionnel)" )
                 , ( keys.certificateOfAttendanceFile, Form.File "Attestation ou certificat de suivi de formation dans le cas du pré-requis demandé par la certification visée." "Format supporté : PDF uniquement" )
-                , ( "", Form.Title1 "Autorité de certification" )
-                , ( keys.certificationAuthorityId, Form.Select "Sélectionnez l'autorité certificatrice" certificationAuthorities )
+                , ( "", Form.Title1 "Autorité certificatrice" )
+                , case candidacy.certificationAuthorities of
+                    [ certificationAuthority ] ->
+                        ( "certificationAuthority"
+                        , Form.StaticHtml <| View.Candidate.viewCertificationAuthority certificationAuthority
+                        )
+
+                    _ ->
+                        ( keys.certificationAuthorityId
+                        , Form.Select "Sélectionnez l'autorité de certification" certificationAuthorityIds
+                        )
                 , helpPanel
                 ]
     in

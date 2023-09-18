@@ -2,6 +2,7 @@ module Api.Form.Feasibility exposing (..)
 
 import Api.Token exposing (Token)
 import Data.Candidacy exposing (CandidacyId)
+import Data.CertificationAuthority exposing (CertificationAuthority)
 import Data.Feasibility exposing (Decision(..), Feasibility)
 import Data.Form exposing (FormData)
 import Data.Form.Feasibility
@@ -13,6 +14,7 @@ import Task
 
 submit :
     CandidacyId
+    -> List CertificationAuthority
     -> String
     -> String
     -> Token
@@ -20,7 +22,7 @@ submit :
     -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
     -> FormData
     -> Cmd msg
-submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
+submit candidacyId certificationAuthorities restApiEndpoint _ token toMsg ( _, _ ) formData =
     let
         keys =
             Data.Form.Feasibility.keys
@@ -38,8 +40,13 @@ submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
                 |> List.map (\( _, file ) -> ( keys.certificateOfAttendanceFile, file ))
 
         certificationAuthorityId =
-            Data.Form.get keys.certificationAuthorityId formData
-                |> Maybe.withDefault ""
+            case certificationAuthorities of
+                [ certificationAuthority ] ->
+                    certificationAuthority.id
+
+                _ ->
+                    Data.Form.get keys.certificationAuthorityId formData
+                        |> Maybe.withDefault ""
 
         withFiles files body =
             files
