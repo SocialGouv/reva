@@ -236,7 +236,7 @@ expandedView buttonState stepTitle showButtonForGivenStatusList candidacy =
 
 fundingRequestLink : String -> Candidacy -> Maybe (Html.Attribute msg)
 fundingRequestLink baseUrl candidacy =
-    if candidacy.dropOutDate /= Nothing || Candidacy.isStatusEqualOrAbove candidacy DossierFaisabiliteRecevable then
+    if Candidacy.isStatusEqualOrAbove candidacy DossierFaisabiliteRecevable then
         Just <|
             Route.href baseUrl <|
                 Route.Candidacy <|
