@@ -208,9 +208,11 @@ export const getActiveFeasibilityCountByCategory = async ({
   UNION ${countQuery("ADMISSIBLE")} 
   UNION ${countQuery("REJECTED")}`;
 
-  //logger.info({ query, keycloakId });
+  type DecisionWithoutIncomplete = //can't use Omit here since it loses information and mess up the array indexing bellow
+    "ALL" | "PENDING" | "REJECTED" | "ADMISSIBLE";
+
   const feasibilityCountByStatusFromDb: {
-    decision: FeasibilityStatus;
+    decision: DecisionWithoutIncomplete;
     count: bigint;
   }[] = await prismaClient.$queryRawUnsafe(query);
 
@@ -557,16 +559,17 @@ export const rejectFeasibility = async ({
 
 export const markFeasibilityAsIncomplete = async ({
   feasibilityId,
+  comment,
   hasRole,
   keycloakId,
 }: {
   feasibilityId: string;
+  comment?: string;
   hasRole: (role: string) => boolean;
   keycloakId: string;
 }) => {
   const feasibility = await prismaClient.feasibility.findUnique({
     where: { id: feasibilityId },
-    include: { candidacy: { include: { organism: true } } },
   });
 
   const authorized = await canManageFeasibility({
@@ -576,32 +579,42 @@ export const markFeasibilityAsIncomplete = async ({
   });
 
   if (feasibility && (hasRole("admin") || authorized)) {
-    await prismaClient.feasibility.delete({
+    const updatedFeasibility = await prismaClient.feasibility.update({
       where: { id: feasibilityId },
+      data: {
+        decision: "INCOMPLETE",
+        decisionComment: comment,
+        decisionSentAt: new Date(),
+        isActive: false,
+      },
+      include: {
+        candidacy: {
+          include: {
+            certificationsAndRegions: {
+              where: { isActive: true },
+            },
+            candidate: {
+              select: { email: true },
+            },
+            organism: { select: { contactAdministrativeEmail: true } },
+          },
+        },
+      },
     });
-
-    for (const fileId of [
-      feasibility.feasibilityFileId,
-      feasibility.certificateOfAttendanceFileId,
-      feasibility.documentaryProofFileId,
-    ]) {
-      if (fileId) {
-        await prismaClient.file.delete({ where: { id: fileId } });
-      }
-    }
 
     await updateCandidacyStatus({
       candidacyId: feasibility?.candidacyId || "",
       status: "PARCOURS_CONFIRME",
     });
 
-    if (feasibility.candidacy.organism?.contactAdministrativeEmail) {
+    if (updatedFeasibility.candidacy.organism?.contactAdministrativeEmail) {
       sendFeasibilityIncompleteMailToAAP({
-        email: feasibility.candidacy.organism?.contactAdministrativeEmail,
-        feasibilityUrl: `${baseUrl}/admin/candidacies/${feasibility.candidacy.id}/feasibility`,
+        email:
+          updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
+        feasibilityUrl: `${baseUrl}/admin/candidacies/${updatedFeasibility.candidacy.id}/feasibility`,
       });
     }
-    return feasibility;
+    return updatedFeasibility;
   } else {
     throw new Error("Utilisateur non autorisé");
   }

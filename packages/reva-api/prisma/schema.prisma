@@ -860,6 +860,7 @@ enum FeasibilityStatus {
   PENDING
   REJECTED
   ADMISSIBLE
+  INCOMPLETE
 }
 
 model Feasibility {
