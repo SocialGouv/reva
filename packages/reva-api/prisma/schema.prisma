@@ -94,7 +94,7 @@ model Candidacy {
   isCertificationPartial    Boolean                                 @default(false) @map("is_certification_partial")
   admissibility             Admissibility?
   examInfo                  ExamInfo?
-  Feasibility               Feasibility?
+  Feasibility               Feasibility[]
 
   @@map("candidacy")
 }
@@ -865,7 +865,7 @@ enum FeasibilityStatus {
 model Feasibility {
   id                            String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   candidacy                     Candidacy         @relation(fields: [candidacyId], references: [id])
-  candidacyId                   String            @unique @map("candidacy_id") @db.Uuid
+  candidacyId                   String            @map("candidacy_id") @db.Uuid
   feasibilityFile               File              @relation("feasibility_file", fields: [feasibilityFileId], references: [id])
   documentaryProofFile          File?             @relation("documentary_proof_file", fields: [documentaryProofFileId], references: [id])
   feasibilityFileId             String            @map("feasibility_file_id") @db.Uuid
@@ -876,6 +876,7 @@ model Feasibility {
   decision                      FeasibilityStatus @default(PENDING)
   decisionComment               String?           @map("decision_comment")
   decisionSentAt                DateTime?         @map("decision_sent_at") @db.Timestamptz(6)
+  isActive                      Boolean           @default(true) @map("is_active")
   createdAt                     DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt                     DateTime?         @updatedAt @map("updated_at") @db.Timestamptz(6)
 

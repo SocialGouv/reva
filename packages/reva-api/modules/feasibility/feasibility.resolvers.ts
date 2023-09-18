@@ -1,12 +1,12 @@
 import { FeasibilityStatus } from "@prisma/client";
 
 import {
+  getActiveFeasibilities,
+  getActiveFeasibilityByCandidacyid,
+  getActiveFeasibilityCountByCategory,
   getCandidacyById,
   getCertificationAuthority,
-  getFeasibilities,
-  getFeasibilityByCandidacyid,
   getFeasibilityById,
-  getFeasibilityCountByCategory,
   getFileNameAndUrl,
 } from "./feasibility.features";
 
@@ -17,7 +17,7 @@ export const feasibilityResolvers = {
       departmentId: string;
     }) => getCertificationAuthority(parent),
     feasibility: ({ id: candidacyId }: { id: string }) =>
-      getFeasibilityByCandidacyid({ candidacyId }),
+      getActiveFeasibilityByCandidacyid({ candidacyId }),
   },
   Feasibility: {
     feasibilityFile: ({
@@ -47,7 +47,7 @@ export const feasibilityResolvers = {
   },
   Query: {
     feasibilityCountByCategory: (_: unknown, _args: unknown, context: any) =>
-      getFeasibilityCountByCategory({
+      getActiveFeasibilityCountByCategory({
         keycloakId: context.auth.userInfo?.sub,
         hasRole: context.auth.hasRole,
       }),
@@ -61,7 +61,7 @@ export const feasibilityResolvers = {
       },
       context: any
     ) =>
-      getFeasibilities({
+      getActiveFeasibilities({
         keycloakId: context.auth.userInfo?.sub,
         hasRole: context.auth.hasRole,
         ...args,

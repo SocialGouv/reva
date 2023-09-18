@@ -21,7 +21,7 @@ export const validateFeasibilityChecks = async (
   });
 
   // Vérirife qu'on a envoyé un dossier de faisabilité
-  if (!candidacy?.Feasibility) {
+  if (!candidacy?.Feasibility?.length) {
     return [
       {
         fieldName: "GLOBAL",
@@ -32,7 +32,7 @@ export const validateFeasibilityChecks = async (
   }
 
   // Vérirife que la recevabilité a été prononcée
-  if (candidacy?.Feasibility?.decision === "PENDING") {
+  if (candidacy?.Feasibility?.[0]?.decision === "PENDING") {
     return [
       {
         fieldName: "GLOBAL",
@@ -45,7 +45,7 @@ export const validateFeasibilityChecks = async (
   let errors: BusinessRulesValidationError[] = [];
 
   // Vérifie qu'on n'a aucun coût hors-forfait si dossier non validé
-  if (candidacy.Feasibility?.decision === "REJECTED") {
+  if (candidacy.Feasibility?.[0]?.decision === "REJECTED") {
     const hourFields: Array<keyof FundingRequestUnifvaeHourFields> = [
       "individualHourCount",
       "collectiveHourCount",

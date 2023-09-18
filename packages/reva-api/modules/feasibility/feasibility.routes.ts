@@ -7,10 +7,9 @@ import {
   canDownloadFeasibilityFiles,
   canUserManageCandidacy,
   createFeasibility,
-  getFeasibilityByCandidacyid,
+  getActiveFeasibilityByCandidacyid,
   getFileWithContent,
   handleFeasibilityDecision,
-  validateFeasibility,
 } from "./feasibility.features";
 
 interface UploadFeasibilityFileRequestBody {
@@ -58,7 +57,9 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
           });
         }
 
-        const feasibility = await getFeasibilityByCandidacyid({ candidacyId });
+        const feasibility = await getActiveFeasibilityByCandidacyid({
+          candidacyId,
+        });
 
         if (
           ![

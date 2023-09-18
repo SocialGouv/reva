@@ -129,11 +129,14 @@ export const createFeasibility = async ({
   return feasibility;
 };
 
-export const getFeasibilityByCandidacyid = ({
+export const getActiveFeasibilityByCandidacyid = ({
   candidacyId,
 }: {
   candidacyId: string;
-}) => prismaClient.feasibility.findFirst({ where: { candidacyId } });
+}) =>
+  prismaClient.feasibility.findFirst({
+    where: { candidacyId, isActive: true },
+  });
 
 export const getFileNameAndUrl = async ({
   candidacyId,
@@ -163,7 +166,7 @@ export const getFileWithContent = async ({ fileId }: { fileId: string }) =>
     where: { id: fileId },
   });
 
-export const getFeasibilityCountByCategory = async ({
+export const getActiveFeasibilityCountByCategory = async ({
   keycloakId,
   hasRole,
 }: {
@@ -197,7 +200,7 @@ export const getFeasibilityCountByCategory = async ({
 
     return decision
       ? `select '${decision.toString()}' as decision, count (decision) from feasibility ${commonJoinClause} where ${commonWhereClause} and feasibility.decision = '${decision}' group by decision`
-      : `select 'ALL' as decision, count (decision) from feasibility ${commonJoinClause} where ${commonWhereClause}`;
+      : `select 'ALL' as decision, count (decision) from feasibility ${commonJoinClause} where ${commonWhereClause} and feasibility.is_active = 'true'`;
   };
 
   const query = `${countQuery()} 
@@ -223,7 +226,7 @@ const buildContainsFilterClause =
     [field]: { contains: searchFilter, mode: "insensitive" },
   });
 
-export const getFeasibilities = async ({
+export const getActiveFeasibilities = async ({
   keycloakId,
   hasRole,
   limit = 10,
@@ -239,8 +242,8 @@ export const getFeasibilities = async ({
   searchFilter?: string;
 }): Promise<PaginatedListResult<Feasibility>> => {
   let queryWhereClause: Prisma.FeasibilityFindManyArgs["where"] = decision
-    ? { decision }
-    : {};
+    ? { decision, isActive: true }
+    : { isActive: true };
 
   //only list feasibilties attached to candidacies that have both certification and department covered by the certification authority linked to the user account
   if (hasRole("manage_feasibility")) {
