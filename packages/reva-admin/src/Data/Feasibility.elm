@@ -16,6 +16,7 @@ type alias Candidate =
 type Decision
     = Admissible String
     | Rejected String
+    | Incomplete String
     | Pending
 
 

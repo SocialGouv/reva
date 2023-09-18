@@ -27,6 +27,12 @@ view feasibility =
                 feasibility.decisionSentAt
                 reason
 
+        Incomplete reason ->
+            viewDecision "Dossier incomplet"
+                "Dossier marqué incomplet le"
+                feasibility.decisionSentAt
+                reason
+
 
 viewDecision : String -> String -> Maybe Posix -> String -> Html msg
 viewDecision decision datePrefix maybeDate reason =

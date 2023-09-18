@@ -19,6 +19,7 @@ keys =
 type Decision
     = Valid
     | Invalid
+    | Incomplete
     | Unknown
 
 
@@ -29,6 +30,9 @@ decisionToString reason =
 
         Invalid ->
             "Dossier non recevable"
+
+        Incomplete ->
+            "Dossier incomplet"
 
         Unknown ->
             "Dossier en attente de validation"
@@ -41,6 +45,9 @@ decisionFromString reason =
 
         "Dossier non recevable" ->
             Invalid
+
+        "Dossier incomplet" ->
+            Incomplete
 
         _ ->
             Unknown
@@ -63,6 +70,9 @@ fromDict formData =
 
         Invalid ->
             ( Data.Feasibility.Rejected (decode.string .reason ""), infoFile )
+
+        Incomplete ->
+            ( Data.Feasibility.Incomplete (decode.string .reason ""), infoFile )
 
         Unknown ->
             ( Data.Feasibility.Pending, Nothing )

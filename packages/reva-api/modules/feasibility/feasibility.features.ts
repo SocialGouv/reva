@@ -13,6 +13,7 @@ import { processPaginationInfo } from "../shared/list/pagination";
 import { logger } from "../shared/logger";
 import {
   sendFeasibilityDecisionTakenToAAPEmail,
+  sendFeasibilityIncompleteMailToAAP,
   sendFeasibilityRejectedCandidateEmail,
   sendFeasibilityValidatedCandidateEmail,
   sendNewFeasibilitySubmittedEmail,
@@ -551,6 +552,58 @@ export const rejectFeasibility = async ({
   }
 };
 
+export const markFeasibilityAsIncomplete = async ({
+  feasibilityId,
+  hasRole,
+  keycloakId,
+}: {
+  feasibilityId: string;
+  hasRole: (role: string) => boolean;
+  keycloakId: string;
+}) => {
+  const feasibility = await prismaClient.feasibility.findUnique({
+    where: { id: feasibilityId },
+    include: { candidacy: { include: { organism: true } } },
+  });
+
+  const authorized = await canManageFeasibility({
+    hasRole,
+    feasibility,
+    keycloakId,
+  });
+
+  if (feasibility && (hasRole("admin") || authorized)) {
+    await prismaClient.feasibility.delete({
+      where: { id: feasibilityId },
+    });
+
+    for (const fileId of [
+      feasibility.feasibilityFileId,
+      feasibility.certificateOfAttendanceFileId,
+      feasibility.documentaryProofFileId,
+    ]) {
+      if (fileId) {
+        await prismaClient.file.delete({ where: { id: fileId } });
+      }
+    }
+
+    await updateCandidacyStatus({
+      candidacyId: feasibility?.candidacyId || "",
+      status: "PARCOURS_CONFIRME",
+    });
+
+    if (feasibility.candidacy.organism?.contactAdministrativeEmail) {
+      sendFeasibilityIncompleteMailToAAP({
+        email: feasibility.candidacy.organism?.contactAdministrativeEmail,
+        feasibilityUrl: `${baseUrl}/admin/candidacies/${feasibility.candidacy.id}/feasibility`,
+      });
+    }
+    return feasibility;
+  } else {
+    throw new Error("Utilisateur non autorisé");
+  }
+};
+
 export const canDownloadFeasibilityFiles = async ({
   hasRole,
   candidacyId,
@@ -672,13 +725,17 @@ export const handleFeasibilityDecision = async (args: {
   infoFile?: UploadedFile;
 }) => {
   const { decision, ...otherParameters } = args;
-  if (decision === "Admissible") {
-    return validateFeasibility(otherParameters);
-  } else if (decision === "Rejected") {
-    return rejectFeasibility(otherParameters);
-  } else {
-    throw new Error(
-      `La décision ${decision} est invalide pour le dossier de faisabilité`
-    );
+  switch (decision) {
+    case "Admissible":
+      return validateFeasibility(otherParameters);
+    case "Rejected":
+      return rejectFeasibility(otherParameters);
+    case "Incomplete":
+      return markFeasibilityAsIncomplete(otherParameters);
+
+    default:
+      throw new Error(
+        `La décision ${decision} est invalide pour le dossier de faisabilité`
+      );
   }
 };

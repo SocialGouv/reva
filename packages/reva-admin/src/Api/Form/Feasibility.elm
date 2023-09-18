@@ -119,12 +119,14 @@ submitDecision restApiEndpoint _ token toMsg feasibility formData =
                 }
     in
     case feasibilityDecision of
-        --            post [ invoiceFile, appointmentFile ]
         Admissible reason ->
             post feasibility.id "Admissible" reason feasibilityInfoFile
 
         Rejected reason ->
             post feasibility.id "Rejected" reason feasibilityInfoFile
+
+        Incomplete reason ->
+            post feasibility.id "Incomplete" reason feasibilityInfoFile
 
         Pending ->
             Cmd.none

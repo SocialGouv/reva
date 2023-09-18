@@ -249,3 +249,41 @@ export const sendFeasibilityDecisionTakenToAAPEmail = async ({
     subject: "Un nouvel avis de recevabilité est disponible",
   });
 };
+
+export const sendFeasibilityIncompleteMailToAAP = async ({
+  email,
+  feasibilityUrl,
+}: {
+  email: string;
+  feasibilityUrl: string;
+}) => {
+  const htmlContent = mjml2html(
+    template({
+      content: `<p>Bonjour,</p><p>Un dossier transmis par vos soins a été noté comme incomplet par le certificateur.</p>
+      <p>Vous trouverez le détail des éléments manquants dans la page du dossier.</p>
+      <p>Nous vous invitons à le compléter et à le renvoyer au certificateur dans les meilleurs délais.</p>
+        `,
+      labelCTA: "Accéder au dossier",
+      url: feasibilityUrl,
+    })
+  );
+
+  if (htmlContent.errors.length > 0) {
+    const errorMessage = htmlContent.errors
+      .map((e) => e.formattedMessage)
+      .join("\n");
+    logger.error(errorMessage);
+    throw new Error(errorMessage);
+  }
+
+  if (process.env.NODE_ENV !== "production") {
+    logger.info("======= EMAIL CONTENT =======");
+    logger.info(htmlContent.html);
+    logger.info("=========================");
+  }
+  return sendGenericEmail({
+    to: { email },
+    htmlContent: htmlContent.html,
+    subject: "Un dossier de recevabilité a été marqué comme incomplet",
+  });
+};

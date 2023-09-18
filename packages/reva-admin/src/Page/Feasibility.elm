@@ -22,11 +22,11 @@ import Html.Attributes exposing (class, classList, property)
 import Json.Encode as Encode
 import Page.Form as Form exposing (Form)
 import RemoteData exposing (RemoteData(..))
-import Route exposing (emptyFeasibilityFilters)
+import Route exposing (FeasibilityFilters, emptyFeasibilityFilters)
 import String exposing (String)
 import View
 import View.Candidate
-import View.Feasibility.Decision
+import View.Feasibility.Decision as DecisionView
 
 
 type Msg
@@ -52,7 +52,7 @@ init context feasibilityId =
                 , onRedirect =
                     Nav.pushUrl
                         context.navKey
-                        (Route.toString context.baseUrl (Route.Feasibility feasibilityId))
+                        (Route.toString context.baseUrl (Route.Feasibilities emptyFeasibilityFilters))
                 , onValidate = Data.Form.Feasibility.validate
                 , status = Form.Editable
                 }
@@ -125,7 +125,7 @@ viewFeasibilityPanel context model =
                                 |> Html.map GotFormMsg
 
                         _ ->
-                            View.Feasibility.Decision.view feasibility
+                            DecisionView.view feasibility
                     ]
                 ]
 
@@ -167,6 +167,7 @@ form _ _ =
         decisions =
             [ ( "valid", Valid )
             , ( "invalid", Invalid )
+            , ( "incomplete", Data.Form.Feasibility.Incomplete )
             ]
                 |> List.map (\( id, decision ) -> ( id, decisionToString decision ))
     in
