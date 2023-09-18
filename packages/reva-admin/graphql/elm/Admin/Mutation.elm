@@ -322,6 +322,18 @@ candidacy_dropOut requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_dropOut" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "dropOut" requiredArgs____.dropOut Admin.InputObject.encodeDropOutInput ] object____ Basics.identity
 
 
+type alias CandidacyCancelDropOutByIdRequiredArguments =
+    { candidacyId : Data.Scalar.Uuid }
+
+
+candidacy_cancelDropOutById :
+    CandidacyCancelDropOutByIdRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet decodesTo RootMutation
+candidacy_cancelDropOutById requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_cancelDropOutById" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ Basics.identity
+
+
 type alias CandidacyUpdateAdmissibilityRequiredArguments =
     { candidacyId : Data.Scalar.Uuid
     , admissibility : Admin.InputObject.AdmissibilityInput

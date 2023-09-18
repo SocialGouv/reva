@@ -113,6 +113,7 @@ parser baseUrl =
                 , subLevel "candidacies" "archive" |> candidacyTab Tab.Archive
                 , subLevel "candidacies" "unarchive" |> candidacyTab Tab.Unarchive
                 , subLevel "candidacies" "drop-out" |> candidacyTab Tab.DropOut
+                , subLevel "candidacies" "cancel-drop-out" |> candidacyTab Tab.CancelDropOut
                 , subLevel "candidacies" "funding" |> candidacyTab Tab.FundingRequest
                 , subLevel "candidacies" "meetings" |> candidacyTab Tab.Meetings
                 , subLevel "candidacies" "payment" |> candidacyTab Tab.PaymentRequest
@@ -203,6 +204,9 @@ tabToString topLevel subLevel tab =
 
         Tab.DropOut ->
             default [ "drop-out" ]
+
+        Tab.CancelDropOut ->
+            default [ "cancel-drop-out" ]
 
         Tab.Meetings ->
             default [ "meetings" ]

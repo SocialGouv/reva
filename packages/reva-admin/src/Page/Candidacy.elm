@@ -15,6 +15,7 @@ import Api.Candidacy
 import Api.Form.Admissibility
 import Api.Form.Appointment
 import Api.Form.Archive
+import Api.Form.CancelDropOut
 import Api.Form.DropOut
 import Api.Form.ExamInfo
 import Api.Form.Feasibility
@@ -32,6 +33,7 @@ import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId)
 import Data.Context exposing (Context)
 import Data.Feasibility
 import Data.Form.Archive
+import Data.Form.CancelDropOut
 import Data.Form.DropOut
 import Data.Form.FundingRequestUniFvae
 import Data.Form.FundingRequestUniReva
@@ -45,6 +47,7 @@ import Page.Form as Form
 import Page.Form.Admissibility
 import Page.Form.Appointment
 import Page.Form.Archive
+import Page.Form.CancelDropOut
 import Page.Form.DropOut
 import Page.Form.ExamInfo
 import Page.Form.Feasibility
@@ -186,6 +189,9 @@ view context model =
 
                 DropOut ->
                     viewForm "drop-out"
+
+                CancelDropOut ->
+                    viewForm "cancel-drop-out"
 
                 FundingRequest ->
                     case model.selected of
@@ -474,6 +480,22 @@ updateTab context tab ( model, cmd ) =
 
                             else
                                 Form.Editable
+                        }
+                        model.form
+            in
+            ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
+
+        ( View.Candidacy.Tab.CancelDropOut, Success candidacy ) ->
+            let
+                ( formModel, formCmd ) =
+                    Form.updateForm context
+                        { form = Page.Form.CancelDropOut.form
+                        , onLoad = Just <| Api.Form.CancelDropOut.get tab.candidacyId
+                        , onSave = Nothing
+                        , onSubmit = Api.Form.CancelDropOut.cancelDropOut tab.candidacyId
+                        , onRedirect = pushUrl <| candidacyTab Profile
+                        , onValidate = Data.Form.CancelDropOut.validate
+                        , status = Form.Editable
                         }
                         model.form
             in

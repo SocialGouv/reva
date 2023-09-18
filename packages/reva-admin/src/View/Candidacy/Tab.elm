@@ -14,6 +14,7 @@ type Value
     | Archive
     | Unarchive
     | DropOut
+    | CancelDropOut
     | Meetings
     | PaymentRequest
     | PaymentRequestConfirmation

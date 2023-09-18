@@ -22,7 +22,7 @@ import Browser.Dom
 import Data.Context exposing (Context)
 import Data.Form exposing (FormData, get, insert)
 import Data.Form.Helper exposing (booleanFromString, booleanToString)
-import Dict exposing (Dict)
+import Dict exposing (Dict, isEmpty)
 import File exposing (File)
 import Html exposing (Html, div, fieldset, input, label, legend, li, option, p, select, span, text, ul)
 import Html.Attributes exposing (class, disabled, for, id, multiple, name, placeholder, required, selected, title, type_, value)
@@ -260,8 +260,12 @@ viewForm referential status errors formData form saveButton submitButton =
                 legend
                     [ class "mb-4" ]
                     [ h1 [ class "text-dsfrBlue-500 text-4xl mb-1" ] [ text currentForm.title ]
-                    , p [ class "text-gray-600" ]
-                        [ text "Sauf mention contraire “(optionnel)” dans le label, tous les champs sont obligatoires." ]
+                    , if List.isEmpty currentForm.elements then
+                        text ""
+
+                      else
+                        p [ class "text-gray-600" ]
+                            [ text "Sauf mention contraire “(optionnel)” dans le label, tous les champs sont obligatoires." ]
                     ]
                     :: viewFieldsets viewEditableElement formData currentForm.elements
                     ++ [ div

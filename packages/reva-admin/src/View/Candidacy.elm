@@ -4,7 +4,7 @@ import Accessibility exposing (h1, h2)
 import Admin.Enum.Duration exposing (Duration(..))
 import Api.Token
 import BetaGouv.DSFR.Button as Button
-import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, DateWithLabels, canDropoutCandidacy, isCandidacyArchived, isCandidacyReoriented)
+import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, DateWithLabels, canCancelDropoutCandidacy, canDropoutCandidacy, isCandidacyArchived, isCandidacyReoriented)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department, Referential)
@@ -129,6 +129,18 @@ view context config =
                         (Route.toString context.baseUrl
                             (Route.Candidacy <|
                                 View.Candidacy.Tab.Tab config.candidacy.id DropOut
+                            )
+                        )
+                    |> Button.secondary
+                    |> Button.withAttrs [ class "mt-3 sm:mt-0 sm:ml-3" ]
+                    |> Button.view
+
+              else if Api.Token.isAdmin context.token && canCancelDropoutCandidacy config.candidacy then
+                Button.new { onClick = Nothing, label = "Annuler l'abandon du candidat" }
+                    |> Button.linkButton
+                        (Route.toString context.baseUrl
+                            (Route.Candidacy <|
+                                View.Candidacy.Tab.Tab config.candidacy.id CancelDropOut
                             )
                         )
                     |> Button.secondary

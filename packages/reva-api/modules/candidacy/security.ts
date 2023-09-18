@@ -1,5 +1,6 @@
 import {
   defaultSecurity,
+  isAdmin,
   isAdminOrCandidacyCompanion,
   isAdminOrManager,
   isCandidacyCompanion,
@@ -37,6 +38,7 @@ export const resolversSecurityMap = {
     isAdminOrCandidacyCompanion,
   "Mutation.candidacy_submitTrainingForm": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_dropOut": isAdminOrCandidacyCompanion,
+  "Mutation.candidacy_cancelDropOutById": isAdmin,
   "Mutation.candidacy_updateAdmissibility": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_createOrUpdatePaymentRequest":
     isAdminOrCandidacyCompanion,

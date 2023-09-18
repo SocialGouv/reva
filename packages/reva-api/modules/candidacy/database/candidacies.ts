@@ -1009,6 +1009,53 @@ export const dropOutCandidacy = async ({
   }
 };
 
+interface CancelDropOutCandidacyParams {
+  candidacyId: string;
+}
+
+export const cancelDropOutCandidacy = async ({
+  candidacyId,
+}: CancelDropOutCandidacyParams): Promise<Either<string, domain.Candidacy>> => {
+  let candidacy;
+  try {
+    candidacy = await prismaClient.candidacy.findUnique({
+      where: {
+        id: candidacyId,
+      },
+      include: {
+        candidacyStatuses: {
+          where: {
+            isActive: true,
+          },
+        },
+        department: true,
+        experiences: true,
+        goals: true,
+      },
+    });
+    if (candidacy === null) {
+      return Left(`could not find candidacy ${candidacyId}`);
+    }
+  } catch (e) {
+    logger.error(e);
+    return Left(`error while getting candidacy`);
+  }
+
+  try {
+    await prismaClient.candidacyDropOut.delete({
+      where: {
+        candidacyId,
+      },
+    });
+    return Right(candidacy);
+  } catch (e) {
+    logger.error(e);
+    return Left(
+      `error on drop out candidacy ${candidacyId}: ${(e as Error).message}`
+    );
+  }
+};
+
 export const updateCandidacyGoals = async (params: {
   candidacyId: string;
   goals: domain.Goal[];

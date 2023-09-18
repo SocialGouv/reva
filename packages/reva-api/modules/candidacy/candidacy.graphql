@@ -377,6 +377,7 @@ type Mutation {
   ): Candidacy!
   candidacy_confirmTrainingForm(candidacyId: UUID!): Candidacy!
   candidacy_dropOut(candidacyId: UUID!, dropOut: DropOutInput!): Candidacy!
+  candidacy_cancelDropOutById(candidacyId: UUID!): Candidacy!
   candidacy_updateAdmissibility(
     candidacyId: UUID!
     admissibility: AdmissibilityInput!

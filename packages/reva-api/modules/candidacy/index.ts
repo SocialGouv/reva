@@ -24,6 +24,7 @@ import * as experienceDb from "./database/experiences";
 import * as trainingDb from "./database/trainings";
 import { addExperienceToCandidacy } from "./features/addExperienceToCandidacy";
 import { archiveCandidacy } from "./features/archiveCandidacy";
+import { cancelDropOutCandidacy } from "./features/cancelDropOutCandidacy";
 import { createCandidacy } from "./features/createCandidacy";
 import { deleteCandidacy } from "./features/deleteCandidacy";
 import { dropOutCandidacy } from "./features/dropOutCandidacy";
@@ -678,6 +679,29 @@ const unsafeResolvers = {
         candidacyId: payload.candidacyId,
         eventType: CandidacyBusinessEvent.DROPPED_OUT_CANDIDACY,
         extraInfo: { ...payload.dropOut },
+        context,
+        result,
+      });
+      return result
+        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .extract();
+    },
+    candidacy_cancelDropOutById: async (
+      _: unknown,
+      payload: {
+        candidacyId: string;
+      },
+      context: GraphqlContext
+    ) => {
+      const result = await cancelDropOutCandidacy({
+        getCandidacyFromId: candidacyDb.getCandidacyFromId,
+        cancelDropOutCandidacy: candidacyDb.cancelDropOutCandidacy,
+      })({
+        candidacyId: payload.candidacyId,
+      });
+      logCandidacyEvent({
+        candidacyId: payload.candidacyId,
+        eventType: CandidacyBusinessEvent.CANCELED_DROPPED_OUT_CANDIDACY,
         context,
         result,
       });

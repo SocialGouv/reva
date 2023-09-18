@@ -157,6 +157,7 @@ export enum CandidacyBusinessEvent {
   CONFIRMED_TRAINING_FORM = "Confirmed training form",
   UPDATED_ADMISSIBILITY = "Updated admissibility",
   DROPPED_OUT_CANDIDACY = "Dropped out candidacy",
+  CANCELED_DROPPED_OUT_CANDIDACY = "Canceled dropped out candidacy",
   UPDATED_EXAM_INFO = "Updated exam information",
   CREATED_FUNDING_REQUEST_UNIFVAE = "Created a funding request (unifvae)",
 }
