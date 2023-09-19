@@ -126,7 +126,7 @@ submitDecision restApiEndpoint _ token toMsg feasibility formData =
             post feasibility.id "Rejected" reason feasibilityInfoFile
 
         Incomplete reason ->
-            post feasibility.id "Incomplete" reason feasibilityInfoFile
+            post feasibility.id "Incomplete" reason Nothing
 
         Pending ->
             Cmd.none
