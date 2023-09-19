@@ -134,6 +134,7 @@ type alias CandidacyCountByStatus =
     , parcoursEnvoyeHorsAbandon : Int
     , dossierFaisabiliteEnvoyeHorsAbandon : Int
     , dossierFaisabiliteRecevableHorsAbandon : Int
+    , dossierFaisabiliteIncompletHorsAbandon : Int
     , dossierFaisabiliteNonRecevableHorsAbandon : Int
     , demandeFinancementEnvoyeHorsAbandon : Int
     , demandePaiementEnvoyeHorsAbandon : Int
@@ -223,6 +224,9 @@ candidacyStatusFilterToReadableString status =
         CandidacyStatusFilter.DossierFaisabiliteEnvoyeHorsAbandon ->
             "Dossier de faisabilité envoyé"
 
+        CandidacyStatusFilter.DossierFaisabiliteIncompletHorsAbandon ->
+            "Dossier de faisabilité incomplet"
+
         CandidacyStatusFilter.DossierFaisabiliteRecevableHorsAbandon ->
             "Dossier de faisabilité recevable"
 
@@ -307,6 +311,9 @@ statusToProgressPosition status =
             3
 
         ParcoursConfirme ->
+            5
+
+        DossierFaisabiliteIncomplet ->
             5
 
         DossierFaisabiliteEnvoye ->

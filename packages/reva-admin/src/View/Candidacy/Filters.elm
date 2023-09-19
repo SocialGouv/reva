@@ -49,6 +49,9 @@ view candidacyCountByStatus filters context =
                 CandidacyStatusFilter.DossierFaisabiliteEnvoyeHorsAbandon ->
                     candidacyCountByStatus.dossierFaisabiliteEnvoyeHorsAbandon
 
+                CandidacyStatusFilter.DossierFaisabiliteIncompletHorsAbandon ->
+                    candidacyCountByStatus.dossierFaisabiliteIncompletHorsAbandon
+
                 CandidacyStatusFilter.DossierFaisabiliteRecevableHorsAbandon ->
                     candidacyCountByStatus.dossierFaisabiliteRecevableHorsAbandon
 
@@ -77,6 +80,7 @@ view candidacyCountByStatus filters context =
             , CandidacyStatusFilter.ParcoursEnvoyeHorsAbandon
             , CandidacyStatusFilter.ParcoursConfirmeHorsAbandon
             , CandidacyStatusFilter.DossierFaisabiliteEnvoyeHorsAbandon
+            , CandidacyStatusFilter.DossierFaisabiliteIncompletHorsAbandon
             , CandidacyStatusFilter.DossierFaisabiliteRecevableHorsAbandon
             , CandidacyStatusFilter.DemandeFinancementEnvoyeHorsAbandon
             , CandidacyStatusFilter.DemandePaiementEnvoyeeHorsAbandon

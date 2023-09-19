@@ -22,6 +22,8 @@ view context =
             , CandidacyStatusFilter.ParcoursEnvoyeHorsAbandon
             , CandidacyStatusFilter.ParcoursConfirmeHorsAbandon
             , CandidacyStatusFilter.DossierFaisabiliteEnvoyeHorsAbandon
+            , CandidacyStatusFilter.DossierFaisabiliteIncompletHorsAbandon
+            , CandidacyStatusFilter.DossierFaisabiliteRecevableHorsAbandon
             , CandidacyStatusFilter.DemandeFinancementEnvoyeHorsAbandon
             , CandidacyStatusFilter.DemandePaiementEnvoyeeHorsAbandon
             ]
@@ -65,6 +67,7 @@ view context =
                                 List.map
                                     viewCandidacyLink
                                     statuses
+                            , viewCandidacyLink CandidacyStatusFilter.DossierFaisabiliteNonRecevableHorsAbandon
                             , viewCandidacyLink CandidacyStatusFilter.Abandon
                             , viewCandidacyLink CandidacyStatusFilter.Reorientee
                             , viewCandidacyLink CandidacyStatusFilter.ArchiveHorsAbandonHorsReorientation

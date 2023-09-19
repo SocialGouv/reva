@@ -89,7 +89,7 @@ view feasibilityFeatureEnabled baseUrl candidacy =
 
         feasibilityMenuEntry =
             if showFeasibilityMenuEntry then
-                [ { content = expandedView feasibilityMenuEntryStatus "Dossier de faisabilité" [ ParcoursConfirme ] candidacy
+                [ { content = expandedView feasibilityMenuEntryStatus "Dossier de faisabilité" [ ParcoursConfirme, DossierFaisabiliteIncomplet ] candidacy
                   , navigation = feasibilityLink
                   }
                 ]
@@ -112,7 +112,7 @@ view feasibilityFeatureEnabled baseUrl candidacy =
               ]
             , admissibilityMenuEntry
             , feasibilityMenuEntry
-            , [ { content = expandedView Enabled "Jury" [ ParcoursConfirme ] candidacy
+            , [ { content = expandedView Enabled "Jury" [ ParcoursConfirme, DossierFaisabiliteIncomplet ] candidacy
                 , navigation = examInfoLink
                 }
               , { content = expandedView Enabled "Demande de prise en charge" [ DossierFaisabiliteRecevable, DossierFaisabiliteNonRecevable ] candidacy

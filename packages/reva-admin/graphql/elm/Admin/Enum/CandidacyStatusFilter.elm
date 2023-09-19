@@ -17,6 +17,7 @@ type CandidacyStatusFilter
     | ParcoursEnvoyeHorsAbandon
     | DossierFaisabiliteEnvoyeHorsAbandon
     | DossierFaisabiliteRecevableHorsAbandon
+    | DossierFaisabiliteIncompletHorsAbandon
     | DossierFaisabiliteNonRecevableHorsAbandon
     | DemandeFinancementEnvoyeHorsAbandon
     | DemandePaiementEnvoyeeHorsAbandon
@@ -26,7 +27,7 @@ type CandidacyStatusFilter
 
 list : List CandidacyStatusFilter
 list =
-    [ ActiveHorsAbandon, Abandon, Reorientee, ArchiveHorsAbandonHorsReorientation, ParcoursConfirmeHorsAbandon, PriseEnChargeHorsAbandon, ParcoursEnvoyeHorsAbandon, DossierFaisabiliteEnvoyeHorsAbandon, DossierFaisabiliteRecevableHorsAbandon, DossierFaisabiliteNonRecevableHorsAbandon, DemandeFinancementEnvoyeHorsAbandon, DemandePaiementEnvoyeeHorsAbandon, ValidationHorsAbandon, ProjetHorsAbandon ]
+    [ ActiveHorsAbandon, Abandon, Reorientee, ArchiveHorsAbandonHorsReorientation, ParcoursConfirmeHorsAbandon, PriseEnChargeHorsAbandon, ParcoursEnvoyeHorsAbandon, DossierFaisabiliteEnvoyeHorsAbandon, DossierFaisabiliteRecevableHorsAbandon, DossierFaisabiliteIncompletHorsAbandon, DossierFaisabiliteNonRecevableHorsAbandon, DemandeFinancementEnvoyeHorsAbandon, DemandePaiementEnvoyeeHorsAbandon, ValidationHorsAbandon, ProjetHorsAbandon ]
 
 
 decoder : Decoder CandidacyStatusFilter
@@ -61,6 +62,9 @@ decoder =
 
                     "DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON" ->
                         Decode.succeed DossierFaisabiliteRecevableHorsAbandon
+
+                    "DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON" ->
+                        Decode.succeed DossierFaisabiliteIncompletHorsAbandon
 
                     "DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON" ->
                         Decode.succeed DossierFaisabiliteNonRecevableHorsAbandon
@@ -113,6 +117,9 @@ toString enum____ =
 
         DossierFaisabiliteRecevableHorsAbandon ->
             "DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON"
+
+        DossierFaisabiliteIncompletHorsAbandon ->
+            "DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON"
 
         DossierFaisabiliteNonRecevableHorsAbandon ->
             "DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON"
@@ -170,6 +177,9 @@ fromString enumString____ =
 
         "DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON" ->
             Just DossierFaisabiliteRecevableHorsAbandon
+
+        "DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON" ->
+            Just DossierFaisabiliteIncompletHorsAbandon
 
         "DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON" ->
             Just DossierFaisabiliteNonRecevableHorsAbandon

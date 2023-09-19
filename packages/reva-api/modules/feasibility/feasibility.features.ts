@@ -604,7 +604,7 @@ export const markFeasibilityAsIncomplete = async ({
 
     await updateCandidacyStatus({
       candidacyId: feasibility?.candidacyId || "",
-      status: "PARCOURS_CONFIRME",
+      status: "DOSSIER_FAISABILITE_INCOMPLET",
     });
 
     if (updatedFeasibility.candidacy.organism?.contactAdministrativeEmail) {
