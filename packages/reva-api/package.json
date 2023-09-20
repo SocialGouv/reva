@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "create_auth_accounts": "ts-node ./prisma/seed/certificateurs/create-accounts.ts | npx pino-pretty",
+    "create_auth_accounts": "npx ts-node --transpileOnly ./prisma/seed/certificateurs/create-accounts.ts | npx pino-pretty",
     "dev": "nodemon -e ts,json,graphql -w . ./index.ts | npx pino-pretty",
     "debug": "nodemon -e ts,json,graphql -w . --exec node --inspect-brk -r ts-node/register ./index.ts",
     "build": "npm run prisma:generate && npm run build:ts && npm run build:graphql",
