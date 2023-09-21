@@ -180,12 +180,21 @@ afterEach(async () => {
   await prismaClient.candidaciesOnRegionsAndCertifications.deleteMany({});
 });
 
-test("should count all (1) feasibilities for admin user", async () => {
+test("should count all (2) feasibilities for admin user", async () => {
   await prismaClient.feasibility.create({
     data: {
       candidacyId: candidacy.id,
       feasibilityFileId: feasibilityFile.id,
       certificationAuthorityId: account75A_firstChoice.certificationAuthorityId,
+    },
+  });
+
+  await prismaClient.feasibility.create({
+    data: {
+      candidacyId: candidacy.id,
+      feasibilityFileId: feasibilityFile.id,
+      certificationAuthorityId:
+        account75A_secondChoice.certificationAuthorityId,
     },
   });
 
@@ -204,13 +213,26 @@ test("should count all (1) feasibilities for admin user", async () => {
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
   expect(obj.data.feasibilityCountByCategory).toMatchObject({
-    ALL: 1,
+    ALL: 2,
   });
 });
 
-test("should count all (1) available feasibility for certificator user", async () => {
+test("should count all (1) available feasibility for certificator user even if other exists on the same scope", async () => {
   await prismaClient.feasibility.create({
-    data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
+    data: {
+      candidacyId: candidacy.id,
+      feasibilityFileId: feasibilityFile.id,
+      certificationAuthorityId: account75A_firstChoice.certificationAuthorityId,
+    },
+  });
+
+  await prismaClient.feasibility.create({
+    data: {
+      candidacyId: candidacy.id,
+      feasibilityFileId: feasibilityFile.id,
+      certificationAuthorityId:
+        account75A_secondChoice.certificationAuthorityId,
+    },
   });
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
@@ -238,14 +260,18 @@ test("should count all (1) available feasibility for certificator user", async (
 
 test("should count no available feasibility for certificator user since he doesn't handle the related certifications", async () => {
   await prismaClient.feasibility.create({
-    data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
+    data: {
+      candidacyId: candidacy.id,
+      feasibilityFileId: feasibilityFile.id,
+      certificationAuthorityId: account75A_firstChoice.certificationAuthorityId,
+    },
   });
 
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_feasibility",
-      keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
+      keycloakId: CERTIFICATOR2_KEYCLOAK_ID,
     }),
     payload: {
       requestType: "query",

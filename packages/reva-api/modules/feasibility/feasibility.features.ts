@@ -200,27 +200,36 @@ export const getActiveFeasibilityCountByCategory = async ({
     REJECTED: 0,
   };
 
+  const countQueryHelper = ({
+    decision,
+    from,
+    where,
+  }: {
+    decision?: string;
+    from: string;
+    where?: string;
+  }) => {
+    const select = decision
+      ? `'${decision.toString()}' as decision`
+      : "'ALL' as decision";
+    const whereAnd = where ? `${where} and` : "";
+    const maybeWhereDecision = decision
+      ? `feasibility.decision = '${decision}' and`
+      : "";
+    return `select ${select}, count(decision) from ${from} where ${whereAnd} ${maybeWhereDecision} feasibility.is_active = 'true'`;
+  };
   const countQuery = (decision?: FeasibilityStatus) => {
-    let commonWhereClause = "1=1";
-    let commonJoinClause = "";
-
     if (hasRole("admin")) {
-      commonWhereClause = "1=1";
+      return countQueryHelper({ decision, from: `feasibility` });
     } else if (hasRole("manage_feasibility")) {
-      commonJoinClause = `join candidacy on candidacy.id=feasibility.candidacy_id join candidacy_region_certification on (candidacy_region_certification.is_active = true and candidacy_region_certification.candidacy_id = candidacy.id) join account on account.keycloak_id='${keycloakId}' join certification_authority on certification_authority.id = account.certification_authority_id`;
-
-      //restriction on certifications handled by certification authority
-      commonWhereClause = `${commonWhereClause} and candidacy_region_certification.certification_id in (select certification_authority_on_certification.certification_id from certification_authority_on_certification where certification_authority_on_certification.certification_authority_id=certification_authority.id)`;
-
-      //restriction on departments handled by certification authority
-      commonWhereClause = `${commonWhereClause} and candidacy_region_certification.region_id in (select department.region_id from department where department.id in (select certification_authority_on_department.department_id from certification_authority_on_department where certification_authority_on_department.certification_authority_id=certification_authority.id))`;
+      return countQueryHelper({
+        decision,
+        from: `account join feasibility on feasibility.certification_authority_id = account.certification_authority_id`,
+        where: `account.keycloak_id = '${keycloakId}'`,
+      });
     } else {
       throw new Error("Utilisateur non autorisé");
     }
-
-    return decision
-      ? `select '${decision.toString()}' as decision, count (decision) from feasibility ${commonJoinClause} where ${commonWhereClause} and feasibility.decision = '${decision}' group by decision`
-      : `select 'ALL' as decision, count (decision) from feasibility ${commonJoinClause} where ${commonWhereClause} and feasibility.is_active = 'true'`;
   };
 
   const query = `${countQuery()} 
