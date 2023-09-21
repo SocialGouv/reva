@@ -275,6 +275,7 @@ model Account {
   certificationAuthority   CertificationAuthority? @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
   certificationAuthorityId String?                 @map("certification_authority_id") @db.Uuid
   keycloakId               String                  @unique @map("keycloak_id") @db.Uuid
+  AuditEvent               AuditEvent[]
 
   @@map("account")
 }
@@ -967,4 +968,15 @@ model FundingRequestBatchUnifvae {
   createdAt        DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@map("funding_request_batch_unifvae")
+}
+
+model AuditEvent {
+  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  accountId String   @map("account_id") @db.Uuid
+  account   Account  @relation(fields: [accountId], references: [keycloakId])
+  type      String   @db.VarChar(255)
+  content   Json
+
+  @@map("audit_event")
 }

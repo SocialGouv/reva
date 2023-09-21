@@ -1041,13 +1041,32 @@ export const cancelDropOutCandidacy = async ({
     return Left(`error while getting candidacy`);
   }
 
+  let candidacyDropOut;
+  try {
+    candidacyDropOut = await prismaClient.candidacyDropOut.findFirst({
+      where: {
+        candidacyId,
+      },
+      include: { dropOutReason: true },
+    });
+
+    if (!candidacyDropOut) {
+      throw new Error("CandidacyDropOut not fount");
+    }
+  } catch (e) {
+    logger.error(e);
+    return Left(
+      `error on drop out candidacy ${candidacyId}: ${(e as Error).message}`
+    );
+  }
+
   try {
     await prismaClient.candidacyDropOut.delete({
       where: {
         candidacyId,
       },
     });
-    return Right(candidacy);
+    return Right({ ...candidacy, candidacyDropOut });
   } catch (e) {
     logger.error(e);
     return Left(

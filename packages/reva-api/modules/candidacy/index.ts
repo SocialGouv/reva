@@ -22,6 +22,7 @@ import * as candidacyDb from "./database/candidacies";
 import * as examInfoDb from "./database/examInfo";
 import * as experienceDb from "./database/experiences";
 import * as trainingDb from "./database/trainings";
+import { cancelDropOutCandidacyEvent } from "./events";
 import { addExperienceToCandidacy } from "./features/addExperienceToCandidacy";
 import { archiveCandidacy } from "./features/archiveCandidacy";
 import { cancelDropOutCandidacy } from "./features/cancelDropOutCandidacy";
@@ -699,12 +700,26 @@ const unsafeResolvers = {
       })({
         candidacyId: payload.candidacyId,
       });
+
+      // Save candidacyDropOut as AuditEvent
+      const accountId = context.auth.userInfo?.sub;
+
+      const candidacyDropOut = result.isRight()
+        ? result.extract().candidacyDropOut
+        : undefined;
+
+      if (accountId && candidacyDropOut) {
+        await cancelDropOutCandidacyEvent(accountId, candidacyDropOut);
+      }
+
       logCandidacyEvent({
         candidacyId: payload.candidacyId,
         eventType: CandidacyBusinessEvent.CANCELED_DROPPED_OUT_CANDIDACY,
+        extraInfo: { candidacyDropOut },
         context,
         result,
       });
+
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
