@@ -36,13 +36,13 @@ let organism: Organism,
   candidate: Candidate,
   candidacy: Candidacy,
   feasibilityFile: File,
-  certification: Certification,
-  otherCertification: Certification,
+  certificationA: Certification,
+  certificationB: Certification,
   parisDepartment: Department,
   ileDeFranceRegion: Region,
   ileDeFranceCandidacyData: { data: candidacyOnRegionAndCertification },
-  certificatorAccount: Account,
-  otherCertificatorAccount: Account;
+  account75A: Account,
+  account75B: Account;
 
 beforeAll(async () => {
   parisDepartment = (await prismaClient.department.findFirst({
@@ -76,62 +76,60 @@ beforeAll(async () => {
     },
   });
 
-  certification =
+  certificationA =
     (await prismaClient.certification.findFirst()) as Certification;
 
   ileDeFranceCandidacyData = {
     data: {
       candidacyId: candidacy.id,
       regionId: ileDeFranceRegion.id,
-      certificationId: certification.id,
+      certificationId: certificationA.id,
       author: "unknown",
       isActive: true,
     },
   };
 
-  otherCertification = (
+  certificationB = (
     await prismaClient.certification.findMany()
   )[1] as Certification;
 
-  const certificationAuthority =
-    await prismaClient.certificationAuthority?.create({
-      data: {
-        certificationAuthorityOnDepartment: {
-          create: { departmentId: parisDepartment?.id || "" },
-        },
-        certificationAuthorityOnCertification: {
-          create: { certificationId: certification?.id || "" },
-        },
-        label: "The authority",
-      },
-    });
-
-  const otherCertificationAuthority =
-    await prismaClient.certificationAuthority?.create({
-      data: {
-        certificationAuthorityOnDepartment: {
-          create: { departmentId: parisDepartment?.id || "" },
-        },
-        certificationAuthorityOnCertification: {
-          create: { certificationId: otherCertification?.id || "" },
-        },
-        label: "The other authority",
-      },
-    });
-
-  certificatorAccount = await prismaClient.account.create({
+  const authority75A = await prismaClient.certificationAuthority?.create({
     data: {
-      keycloakId: CERTIFICATOR_KEYCLOAK_ID,
-      email: "certificator@vae.gouv.fr",
-      certificationAuthorityId: certificationAuthority.id,
+      certificationAuthorityOnDepartment: {
+        create: { departmentId: parisDepartment?.id || "" },
+      },
+      certificationAuthorityOnCertification: {
+        create: { certificationId: certificationA?.id || "" },
+      },
+      label: "Autorité certificatrice du 75 sur la certification A",
     },
   });
 
-  otherCertificatorAccount = await prismaClient.account.create({
+  const authority75B = await prismaClient.certificationAuthority?.create({
+    data: {
+      certificationAuthorityOnDepartment: {
+        create: { departmentId: parisDepartment?.id || "" },
+      },
+      certificationAuthorityOnCertification: {
+        create: { certificationId: certificationB?.id || "" },
+      },
+      label: "Autorité certificatrice du 75 sur la certification B",
+    },
+  });
+
+  account75A = await prismaClient.account.create({
+    data: {
+      keycloakId: CERTIFICATOR_KEYCLOAK_ID,
+      email: "certificator@vae.gouv.fr",
+      certificationAuthorityId: authority75A.id,
+    },
+  });
+
+  account75B = await prismaClient.account.create({
     data: {
       keycloakId: OTHER_CERTIFICATOR_KEYCLOAK_ID,
       email: "other.certificator@vae.gouv.fr",
-      certificationAuthorityId: otherCertificationAuthority.id,
+      certificationAuthorityId: authority75B.id,
     },
   });
 });
@@ -141,9 +139,9 @@ afterAll(async () => {
   await prismaClient.candidacy.delete({ where: { id: candidacy.id } });
   await prismaClient.candidate.delete({ where: { id: candidate.id } });
   await prismaClient.organism.delete({ where: { id: organism.id } });
-  await prismaClient.account.delete({ where: { id: certificatorAccount.id } });
+  await prismaClient.account.delete({ where: { id: account75A.id } });
   await prismaClient.account.delete({
-    where: { id: otherCertificatorAccount.id },
+    where: { id: account75B.id },
   });
   await prismaClient.certificationAuthority.deleteMany();
 });
