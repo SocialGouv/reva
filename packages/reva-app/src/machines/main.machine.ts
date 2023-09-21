@@ -252,6 +252,11 @@ export const mainMachine =
         },
         initial: "loadDepartments",
         id: "mainMachine",
+        on: {
+          LOGOUT: {
+            target: "logoutConfirmation",
+          },
+        },
         states: {
           loadDepartments: {
             invoke: {
@@ -897,9 +902,6 @@ export const mainMachine =
               error: {},
             },
             on: {
-              LOGOUT: {
-                target: "logoutConfirmation",
-              },
               EDIT_GOALS: {
                 target: "projectGoals",
               },
