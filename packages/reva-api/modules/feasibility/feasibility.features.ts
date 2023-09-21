@@ -651,18 +651,16 @@ export const markFeasibilityAsIncomplete = async ({
 
 export const canDownloadFeasibilityFiles = async ({
   hasRole,
-  candidacyId,
+  feasibility,
   keycloakId,
 }: {
   hasRole(role: string): boolean;
-  candidacyId: string;
+  feasibility: Feasibility | null;
   keycloakId: string;
 }) => {
-  const userCanManageCandidacy = canUserManageCandidacy;
-
   return (
-    userCanManageCandidacy ||
-    canManageFeasibilityWithCandidacyId({ hasRole, candidacyId, keycloakId })
+    canUserManageCandidacy ||
+    canManageFeasibility({ hasRole, feasibility, keycloakId })
   );
 };
 
@@ -679,46 +677,15 @@ export const canManageFeasibility = async ({
     throw new Error("Ce dossier est introuvable");
   }
 
-  return await canManageFeasibilityWithCandidacyId({
-    hasRole,
-    candidacyId: feasibility.candidacyId,
-    keycloakId,
-  });
-};
-
-export const canManageFeasibilityWithCandidacyId = async ({
-  hasRole,
-  candidacyId,
-  keycloakId,
-}: {
-  hasRole(role: string): boolean;
-  candidacyId: string;
-  keycloakId: string;
-}) => {
   //admins can manage everything
   if (hasRole("admin")) {
     return true;
   } else if (hasRole("manage_feasibility")) {
-    const candidacy = await getCandidacyById({ candidacyId });
-
-    const candidacyDepartementsIds = (
-      await prismaClient.department.findMany({
-        where: { regionId: candidacy.regionId },
-      })
-    ).map((d) => d.id);
-
     //is user account attached to a certification authority which manage the candidacy certification ?
     const result = await prismaClient.account.findFirst({
       where: {
         keycloakId,
-        certificationAuthority: {
-          certificationAuthorityOnCertification: {
-            some: { certificationId: candidacy.certificationId },
-          },
-          certificationAuthorityOnDepartment: {
-            some: { departmentId: { in: candidacyDepartementsIds } },
-          },
-        },
+        certificationAuthorityId: feasibility.certificationAuthorityId,
       },
       select: { id: true },
     });
