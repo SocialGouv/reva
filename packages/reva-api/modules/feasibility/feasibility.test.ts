@@ -21,8 +21,9 @@ import {
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
 
-const CERTIFICATOR_KEYCLOAK_ID = "9d9f3489-dc01-4fb8-8c9b-9af891f13c2e";
-const OTHER_CERTIFICATOR_KEYCLOAK_ID = "34994753-656c-4afd-bf7e-e83604a22bbc";
+const CERTIFICATOR1_KEYCLOAK_ID = "9d9f3489-dc01-4fb8-8c9b-9af891f13c2e";
+const CERTIFICATOR3_KEYCLOAK_ID = "34994753-656c-4afd-bf7e-e83604a22bbc";
+const CERTIFICATOR2_KEYCLOAK_ID = "054fdfa8-2593-461c-85f5-39e4f189a4d2";
 
 type candidacyOnRegionAndCertification = {
   candidacyId: string;
@@ -41,7 +42,8 @@ let organism: Organism,
   parisDepartment: Department,
   ileDeFranceRegion: Region,
   ileDeFranceCandidacyData: { data: candidacyOnRegionAndCertification },
-  account75A: Account,
+  account75A_firstChoice: Account,
+  account75A_secondChoice: Account,
   account75B: Account;
 
 beforeAll(async () => {
@@ -93,17 +95,31 @@ beforeAll(async () => {
     await prismaClient.certification.findMany()
   )[1] as Certification;
 
-  const authority75A = await prismaClient.certificationAuthority?.create({
-    data: {
-      certificationAuthorityOnDepartment: {
-        create: { departmentId: parisDepartment?.id || "" },
+  const authority75A_firstChoice =
+    await prismaClient.certificationAuthority?.create({
+      data: {
+        certificationAuthorityOnDepartment: {
+          create: { departmentId: parisDepartment?.id || "" },
+        },
+        certificationAuthorityOnCertification: {
+          create: { certificationId: certificationA?.id || "" },
+        },
+        label: "Une 1ere autorité certificatrice du 75 sur la certification A",
       },
-      certificationAuthorityOnCertification: {
-        create: { certificationId: certificationA?.id || "" },
+    });
+
+  const authority75A_secondChoice =
+    await prismaClient.certificationAuthority?.create({
+      data: {
+        certificationAuthorityOnDepartment: {
+          create: { departmentId: parisDepartment?.id || "" },
+        },
+        certificationAuthorityOnCertification: {
+          create: { certificationId: certificationA?.id || "" },
+        },
+        label: "Une 2e autorité certificatrice du 75 sur la certification A",
       },
-      label: "Autorité certificatrice du 75 sur la certification A",
-    },
-  });
+    });
 
   const authority75B = await prismaClient.certificationAuthority?.create({
     data: {
@@ -113,22 +129,30 @@ beforeAll(async () => {
       certificationAuthorityOnCertification: {
         create: { certificationId: certificationB?.id || "" },
       },
-      label: "Autorité certificatrice du 75 sur la certification B",
+      label: "Une autorité certificatrice du 75 sur la certification B",
     },
   });
 
-  account75A = await prismaClient.account.create({
+  account75A_firstChoice = await prismaClient.account.create({
     data: {
-      keycloakId: CERTIFICATOR_KEYCLOAK_ID,
+      keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
       email: "certificator@vae.gouv.fr",
-      certificationAuthorityId: authority75A.id,
+      certificationAuthorityId: authority75A_firstChoice.id,
+    },
+  });
+
+  account75A_secondChoice = await prismaClient.account.create({
+    data: {
+      keycloakId: CERTIFICATOR2_KEYCLOAK_ID,
+      email: "certificator2@vae.gouv.fr",
+      certificationAuthorityId: authority75A_secondChoice.id,
     },
   });
 
   account75B = await prismaClient.account.create({
     data: {
-      keycloakId: OTHER_CERTIFICATOR_KEYCLOAK_ID,
-      email: "other.certificator@vae.gouv.fr",
+      keycloakId: CERTIFICATOR3_KEYCLOAK_ID,
+      email: "certificator3@vae.gouv.fr",
       certificationAuthorityId: authority75B.id,
     },
   });
@@ -139,7 +163,12 @@ afterAll(async () => {
   await prismaClient.candidacy.delete({ where: { id: candidacy.id } });
   await prismaClient.candidate.delete({ where: { id: candidate.id } });
   await prismaClient.organism.delete({ where: { id: organism.id } });
-  await prismaClient.account.delete({ where: { id: account75A.id } });
+  await prismaClient.account.delete({
+    where: { id: account75A_firstChoice.id },
+  });
+  await prismaClient.account.delete({
+    where: { id: account75A_secondChoice.id },
+  });
   await prismaClient.account.delete({
     where: { id: account75B.id },
   });
@@ -153,7 +182,11 @@ afterEach(async () => {
 
 test("should count all (1) feasibilities for admin user", async () => {
   await prismaClient.feasibility.create({
-    data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
+    data: {
+      candidacyId: candidacy.id,
+      feasibilityFileId: feasibilityFile.id,
+      certificationAuthorityId: account75A_firstChoice.certificationAuthorityId,
+    },
   });
 
   const resp = await injectGraphql({
@@ -188,7 +221,7 @@ test("should count all (1) available feasibility for certificator user", async (
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_feasibility",
-      keycloakId: CERTIFICATOR_KEYCLOAK_ID,
+      keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
     }),
     payload: {
       requestType: "query",
@@ -212,7 +245,7 @@ test("should count no available feasibility for certificator user since he doesn
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_feasibility",
-      keycloakId: CERTIFICATOR_KEYCLOAK_ID,
+      keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
     }),
     payload: {
       requestType: "query",
@@ -229,7 +262,11 @@ test("should count no available feasibility for certificator user since he doesn
 
 test("should return a feasibilty for certificator since he is allowed to handle it", async () => {
   const feasiblity = await prismaClient.feasibility.create({
-    data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
+    data: {
+      candidacyId: candidacy.id,
+      feasibilityFileId: feasibilityFile.id,
+      certificationAuthorityId: account75A_firstChoice.certificationAuthorityId,
+    },
   });
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
@@ -240,7 +277,7 @@ test("should return a feasibilty for certificator since he is allowed to handle 
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_feasibility",
-      keycloakId: CERTIFICATOR_KEYCLOAK_ID,
+      keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
     }),
     payload: {
       requestType: "query",
@@ -258,9 +295,13 @@ test("should return a feasibilty for certificator since he is allowed to handle 
   expect(resp.json()).not.toHaveProperty("errors");
 });
 
-test("should return a feasibility error for other certificator since he doesn't handle it", async () => {
+test("should return a feasibility error for certificator 3 since he doesn't handle it", async () => {
   const feasiblity = await prismaClient.feasibility.create({
-    data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
+    data: {
+      candidacyId: candidacy.id,
+      feasibilityFileId: feasibilityFile.id,
+      certificationAuthorityId: account75A_firstChoice.certificationAuthorityId,
+    },
   });
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
@@ -271,7 +312,7 @@ test("should return a feasibility error for other certificator since he doesn't 
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_feasibility",
-      keycloakId: OTHER_CERTIFICATOR_KEYCLOAK_ID,
+      keycloakId: CERTIFICATOR3_KEYCLOAK_ID,
     }),
     payload: {
       requestType: "query",
@@ -287,7 +328,11 @@ test("should return a feasibility error for other certificator since he doesn't 
 
 test("should return all (1) available feasibility for certificateur user", async () => {
   const feasibility = await prismaClient.feasibility.create({
-    data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
+    data: {
+      candidacyId: candidacy.id,
+      feasibilityFileId: feasibilityFile.id,
+      certificationAuthorityId: account75A_firstChoice.certificationAuthorityId,
+    },
   });
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
@@ -298,7 +343,7 @@ test("should return all (1) available feasibility for certificateur user", async
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_feasibility",
-      keycloakId: CERTIFICATOR_KEYCLOAK_ID,
+      keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
     }),
     payload: {
       requestType: "query",
@@ -321,7 +366,7 @@ test("should count 1 pending feasibility for admin user", async () => {
     data: {
       candidacyId: candidacy.id,
       feasibilityFileId: feasibilityFile.id,
-      decision: "PENDING",
+      certificationAuthorityId: account75A_firstChoice.certificationAuthorityId,
     },
   });
 
@@ -369,7 +414,11 @@ const postFeasibilityDecision = ({
 
 test("should validate a feasibility since certificator is allowed to do so", async () => {
   const feasiblity = await prismaClient.feasibility.create({
-    data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
+    data: {
+      candidacyId: candidacy.id,
+      feasibilityFileId: feasibilityFile.id,
+      certificationAuthorityId: account75A_firstChoice.certificationAuthorityId,
+    },
   });
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
@@ -381,7 +430,7 @@ test("should validate a feasibility since certificator is allowed to do so", asy
     decision: "Admissible",
     authorization: authorizationHeaderForUser({
       role: "manage_feasibility",
-      keycloakId: CERTIFICATOR_KEYCLOAK_ID,
+      keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
     }),
   });
 
@@ -394,9 +443,13 @@ test("should validate a feasibility since certificator is allowed to do so", asy
   });
 });
 
-test("should not validate a feasibility since other certificator doesn't handle it", async () => {
+test("should not validate a feasibility since certificator 2 doesn't handle it, even if he is on the same scope as certificator 1", async () => {
   const feasiblity = await prismaClient.feasibility.create({
-    data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
+    data: {
+      candidacyId: candidacy.id,
+      feasibilityFileId: feasibilityFile.id,
+      certificationAuthorityId: account75A_firstChoice.certificationAuthorityId,
+    },
   });
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
@@ -408,7 +461,31 @@ test("should not validate a feasibility since other certificator doesn't handle 
     decision: "Admissible",
     authorization: authorizationHeaderForUser({
       role: "manage_feasibility",
-      keycloakId: OTHER_CERTIFICATOR_KEYCLOAK_ID,
+      keycloakId: CERTIFICATOR2_KEYCLOAK_ID,
+    }),
+  });
+  expect(resp.statusCode).toBe(500);
+});
+
+test("should not validate a feasibility since certificator 3 doesn't handle it", async () => {
+  const feasiblity = await prismaClient.feasibility.create({
+    data: {
+      candidacyId: candidacy.id,
+      feasibilityFileId: feasibilityFile.id,
+      certificationAuthorityId: account75A_firstChoice.certificationAuthorityId,
+    },
+  });
+
+  await prismaClient.candidaciesOnRegionsAndCertifications.create(
+    ileDeFranceCandidacyData
+  );
+
+  const resp = await postFeasibilityDecision({
+    feasibilityId: feasiblity.id,
+    decision: "Admissible",
+    authorization: authorizationHeaderForUser({
+      role: "manage_feasibility",
+      keycloakId: CERTIFICATOR3_KEYCLOAK_ID,
     }),
   });
   expect(resp.statusCode).toBe(500);
@@ -416,7 +493,11 @@ test("should not validate a feasibility since other certificator doesn't handle 
 
 test("should reject a feasibility since certificator is allowed to do so", async () => {
   const feasiblity = await prismaClient.feasibility.create({
-    data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
+    data: {
+      candidacyId: candidacy.id,
+      feasibilityFileId: feasibilityFile.id,
+      certificationAuthorityId: account75A_firstChoice.certificationAuthorityId,
+    },
   });
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
@@ -428,7 +509,7 @@ test("should reject a feasibility since certificator is allowed to do so", async
     decision: "Rejected",
     authorization: authorizationHeaderForUser({
       role: "manage_feasibility",
-      keycloakId: CERTIFICATOR_KEYCLOAK_ID,
+      keycloakId: CERTIFICATOR1_KEYCLOAK_ID,
     }),
   });
 
@@ -446,9 +527,13 @@ test("should reject a feasibility since certificator is allowed to do so", async
   });
 });
 
-test("should not reject a feasibility since other certificator doesn't handle it", async () => {
+test("should not reject a feasibility since certificator 3 doesn't handle it", async () => {
   const feasiblity = await prismaClient.feasibility.create({
-    data: { candidacyId: candidacy.id, feasibilityFileId: feasibilityFile.id },
+    data: {
+      candidacyId: candidacy.id,
+      feasibilityFileId: feasibilityFile.id,
+      certificationAuthorityId: account75B.certificationAuthorityId,
+    },
   });
 
   await prismaClient.candidaciesOnRegionsAndCertifications.create(
@@ -459,7 +544,7 @@ test("should not reject a feasibility since other certificator doesn't handle it
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
       role: "manage_feasibility",
-      keycloakId: OTHER_CERTIFICATOR_KEYCLOAK_ID,
+      keycloakId: CERTIFICATOR3_KEYCLOAK_ID,
     }),
     payload: {
       requestType: "query",

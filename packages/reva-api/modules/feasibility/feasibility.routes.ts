@@ -46,9 +46,13 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
       handler: async (request, reply) => {
         const { candidacyId, fileId } = request.params;
 
+        const feasibility = await getActiveFeasibilityByCandidacyid({
+          candidacyId,
+        });
+
         const authorized = await canDownloadFeasibilityFiles({
           hasRole: request.auth.hasRole,
-          candidacyId,
+          feasibility: feasibility,
           keycloakId: request.auth?.userInfo?.sub,
         });
 
@@ -57,10 +61,6 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
             err: "Vous n'êtes pas autorisé à accéder à ce fichier.",
           });
         }
-
-        const feasibility = await getActiveFeasibilityByCandidacyid({
-          candidacyId,
-        });
 
         if (
           ![
