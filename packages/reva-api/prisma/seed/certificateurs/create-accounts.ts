@@ -16,6 +16,8 @@ import { createAccount } from "../../../modules/account/features/createAccount";
 import * as IAM from "../../../modules/account/features/keycloak";
 import { getCertificationAuthorityById } from "../../../modules/feasibility/feasibility.features";
 import * as organismsDb from "../../../modules/organism/database/organisms";
+import { logger } from "../../../modules/shared/logger";
+import { prismaClient } from "../../client";
 import { readCsvRows } from "../read-csv";
 
 dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
@@ -68,11 +70,32 @@ async function createCertificationAuthoritiesAccounts() {
     ],
   });
 
-  for (const authority of authorities) {
-    console.log("creating account for", authority.contactEmail);
-    (await createAccountForCertificationAuthority(authority)).mapLeft(
-      console.error
-    );
+  const emailsOfAccountsToCreate = authorities
+    .filter((a) => !!a)
+    .map((a) => a.contactEmail);
+
+  const existingEmails = (
+    await prismaClient.account.findMany({
+      select: { email: true },
+      where: { email: { in: emailsOfAccountsToCreate } },
+    })
+  ).map((eemail) => eemail.email);
+
+  const authoritiesToCreateAccountFor = authorities.filter(
+    (a) => !existingEmails.includes(a.contactEmail as string)
+  );
+
+  logger.info(
+    { existingEmails },
+    `Accounts for the following emails already exists in the account table and will NOT be created`
+  );
+
+  logger.info(
+    { authoritiesToCreateAccountFor },
+    `Accounts for the following authorities will be created`
+  );
+
+      logger.info(`creating account for ${authority.contactEmail}`);
   }
 }
 
