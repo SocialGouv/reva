@@ -11,11 +11,7 @@ import path from "path";
 import KcAdminClient from "@keycloak/keycloak-admin-client";
 import dotenv from "dotenv";
 
-import { createAccountProfile } from "../../../modules/account/database/accounts";
 import { createAccount } from "../../../modules/account/features/createAccount";
-import * as IAM from "../../../modules/account/features/keycloak";
-import { getCertificationAuthorityById } from "../../../modules/feasibility/feasibility.features";
-import * as organismsDb from "../../../modules/organism/database/organisms";
 import { logger } from "../../../modules/shared/logger";
 import { prismaClient } from "../../client";
 import { readCsvRows } from "../read-csv";
@@ -39,12 +35,7 @@ const createAccountForCertificationAuthority = (params: {
   id: string;
 }) =>
   createAccount({
-    createAccountInIAM: IAM.createAccount(keycloakAdmin),
-    createAccountWithProfile: createAccountProfile,
-    getAccountInIAM: IAM.getAccount(keycloakAdmin),
-    getOrganismById: organismsDb.getOrganismById,
-    getCertificationAuthorityById,
-  })({
+    keycloakAdmin,
     group: "certification_authority",
     email: cleanEmail(params.contactEmail),
     certificationAuthorityId: params.id,

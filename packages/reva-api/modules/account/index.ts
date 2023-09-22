@@ -3,15 +3,11 @@ import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
 import { Left } from "purify-ts";
 
-import { getCertificationAuthorityById } from "../feasibility/feasibility.features";
-import * as organismsDb from "../organism/database/organisms";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../shared/error/functionalError";
-import * as accountsDb from "./database/accounts";
 import { createAccount } from "./features/createAccount";
-import * as IAM from "./features/keycloak";
 
 export const resolvers = {
   Mutation: {
@@ -51,13 +47,7 @@ export const resolvers = {
 
       const keycloakAdmin = await context.app.getKeycloakAdmin();
 
-      const result = await createAccount({
-        createAccountInIAM: IAM.createAccount(keycloakAdmin),
-        createAccountWithProfile: accountsDb.createAccountProfile,
-        getAccountInIAM: IAM.getAccount(keycloakAdmin),
-        getOrganismById: organismsDb.getOrganismById,
-        getCertificationAuthorityById,
-      })(params.account);
+      const result = await createAccount({ ...params.account, keycloakAdmin });
 
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
