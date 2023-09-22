@@ -76,9 +76,9 @@ async function createCertificationAuthoritiesAccounts({
     })
   ).map((eemail) => eemail.email);
 
-  const authoritiesToCreateAccountFor = authorities.filter(
-    (a) => !existingEmails.includes(a.contactEmail as string)
-  );
+  const authoritiesToCreateAccountFor = authorities
+    .filter((a) => !!a.contactEmail)
+    .filter((a) => !existingEmails.includes(a.contactEmail as string));
 
   logger.info(
     { existingEmails },
