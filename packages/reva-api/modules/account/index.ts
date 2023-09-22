@@ -7,6 +7,7 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../shared/error/functionalError";
+import { logger } from "../shared/logger";
 import { createAccount } from "./features/createAccount";
 
 export const resolvers = {
@@ -46,12 +47,20 @@ export const resolvers = {
       }
 
       const keycloakAdmin = await context.app.getKeycloakAdmin();
+      try {
+        return createAccount({
+          ...params.account,
+          keycloakAdmin,
+        });
+      } catch (e) {
+        logger.error(e);
 
-      const result = await createAccount({ ...params.account, keycloakAdmin });
-
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
+        if (e instanceof Error) {
+          throw new mercurius.ErrorWithProps(e.message, e);
+        } else {
+          throw new mercurius.ErrorWithProps("unknown error");
+        }
+      }
     },
   },
 };

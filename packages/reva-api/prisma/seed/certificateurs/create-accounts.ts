@@ -93,9 +93,11 @@ async function createCertificationAuthoritiesAccounts({
   if (!dryRun) {
     for (const authority of authoritiesToCreateAccountFor) {
       logger.info(`creating account for ${authority.contactEmail}`);
-      (await createAccountForCertificationAuthority(authority)).mapLeft(
-        logger.error
-      );
+      try {
+        await createAccountForCertificationAuthority(authority);
+      } catch (e) {
+        logger.error(e);
+      }
     }
   }
 }
