@@ -51,7 +51,11 @@ const createAccountForCertificationAuthority = (params: {
     username: cleanEmail(params.contactEmail),
   });
 
-async function createCertificationAuthoritiesAccounts() {
+async function createCertificationAuthoritiesAccounts({
+  dryRun,
+}: {
+  dryRun: boolean;
+}) {
   await keycloakAdmin.auth({
     grantType: "client_credentials",
     clientId: process.env.KEYCLOAK_ADMIN_CLIENTID || "admin-cli",
@@ -95,10 +99,24 @@ async function createCertificationAuthoritiesAccounts() {
     `Accounts for the following authorities will be created`
   );
 
+  if (!dryRun) {
+    for (const authority of authoritiesToCreateAccountFor) {
       logger.info(`creating account for ${authority.contactEmail}`);
+      (await createAccountForCertificationAuthority(authority)).mapLeft(
+        logger.error
+      );
+    }
   }
 }
 
 (async () => {
-  await createCertificationAuthoritiesAccounts();
+  const dryRun = process.argv[2] === "DRY_RUN";
+
+  logger.info(
+    "Running in " +
+      (dryRun
+        ? "DRY RUN MODE: Accounts WILL be created"
+        : "PRODUCTON MODE: Accounts will NOT be created")
+  );
+  await createCertificationAuthoritiesAccounts({ dryRun });
 })();
