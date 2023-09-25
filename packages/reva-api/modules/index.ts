@@ -20,7 +20,7 @@ import { feasibilityResolvers } from "./feasibility/feasibility.resolvers";
 import { financeUnifvaeResolvers } from "./finance/unifvae/finance.unifvae.resolvers";
 import { financeResolvers } from "./finance/unireva/finance.resolvers";
 import { organismLoaders } from "./organism/organism.loaders";
-import * as referential from "./referential";
+import { referentialResolvers } from "./referential/referential.resolvers";
 import DecimalGraphqlScalar from "./shared/scalar/DecimalGraphqlScalar";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
 
@@ -33,7 +33,7 @@ const typeDefs = loadFilesSync(path.join(__dirname, "."), {
 
 const resolvers = mergeResolvers([
   candidacy.resolvers,
-  referential.resolvers,
+  referentialResolvers,
   account.resolvers,
   candidate.resolvers,
   financeResolvers,

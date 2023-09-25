@@ -12,7 +12,7 @@ import { getRegions } from "./features/getRegions";
 import { getReorientationReasons } from "./features/getReorientationReasons";
 import { getVulnerabilityIndicators } from "./features/getVulnerabilityIndicators";
 
-export const resolvers = {
+export const referentialResolvers = {
   Query: {
     // eslint-disable-next-line
     // @ts-ignore
