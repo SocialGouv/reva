@@ -10,6 +10,9 @@ export async function seedCertificationAuthorities(prisma: PrismaClient) {
     await tx.$executeRawUnsafe(
       `SET CONSTRAINTS "account_certification_authority_id_fkey" DEFERRED;`
     );
+    await tx.$executeRawUnsafe(
+      `SET CONSTRAINTS "feasibility_certification_authority_id_fkey" DEFERRED;`
+    );
     await tx.certificationAuthority.deleteMany();
     await injectCsvRows<
       Prisma.CertificationAuthorityCreateInput,
@@ -126,6 +129,9 @@ export async function seedCertificationAuthorities(prisma: PrismaClient) {
     });
     await tx.$executeRawUnsafe(
       `SET CONSTRAINTS "account_certification_authority_id_fkey" IMMEDIATE;`
+    );
+    await tx.$executeRawUnsafe(
+      `SET CONSTRAINTS "feasibility_certification_authority_id_fkey" IMMEDIATE;`
     );
   });
 }

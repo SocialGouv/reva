@@ -25,6 +25,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
         Feasibility: {
           create: {
             decision: "ADMISSIBLE",
+            certificationAuthority: { create: { label: "dummy" } },
             feasibilityFile: {
               create: {
                 name: "dummyFile.ext",
@@ -42,6 +43,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
         Feasibility: {
           create: {
             decision: "REJECTED",
+            certificationAuthority: { create: { label: "dummy" } },
             feasibilityFile: {
               create: {
                 name: "dummyFile.ext",
@@ -59,6 +61,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
         Feasibility: {
           create: {
             decision: "PENDING",
+            certificationAuthority: { create: { label: "dummy" } },
             feasibilityFile: {
               create: {
                 name: "dummyFile.ext",

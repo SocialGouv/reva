@@ -27,24 +27,6 @@ export interface UploadedFile {
   mimetype: string;
 }
 
-export const getCertificationAuthority = ({
-  certificationId,
-  departmentId,
-}: {
-  certificationId: string;
-  departmentId: string;
-}) =>
-  certificationId && departmentId
-    ? prismaClient.certificationAuthority.findFirst({
-        where: {
-          certificationAuthorityOnDepartment: { some: { departmentId } },
-          certificationAuthorityOnCertification: {
-            some: { certificationId },
-          },
-        },
-      })
-    : null;
-
 export const getCertificationAuthorities = ({
   certificationId,
   departmentId,
@@ -488,19 +470,13 @@ export const validateFeasibility = async ({
     const activeCertificationAndRegion =
       updatedFeasibility.candidacy.certificationsAndRegions[0];
 
-    const certificationAuthorities =
-      updatedFeasibility.certificationAuthority ??
-      (await getCertificationAuthority({
-        certificationId: activeCertificationAndRegion.certificationId,
-        departmentId: updatedFeasibility.candidacy.departmentId || "",
-      }));
-
     sendFeasibilityValidatedCandidateEmail({
       email: updatedFeasibility.candidacy.candidate?.email as string,
       certifName: activeCertificationAndRegion.certification.label,
       comment,
       certificationAuthorityLabel:
-        certificationAuthorities?.label || "certificateur inconnu",
+        updatedFeasibility.certificationAuthority.label ||
+        "certificateur inconnu",
       infoFile,
     });
     if (updatedFeasibility.candidacy.organism?.contactAdministrativeEmail) {
@@ -550,9 +526,6 @@ export const rejectFeasibility = async ({
       include: {
         candidacy: {
           include: {
-            certificationsAndRegions: {
-              where: { isActive: true },
-            },
             candidate: {
               select: { email: true },
             },
@@ -568,21 +541,12 @@ export const rejectFeasibility = async ({
       status: "DOSSIER_FAISABILITE_NON_RECEVABLE",
     });
 
-    const activeCertificationAndRegion =
-      updatedFeasibility.candidacy.certificationsAndRegions[0];
-
-    const certificationAuthority =
-      updatedFeasibility.certificationAuthority ??
-      (await getCertificationAuthority({
-        certificationId: activeCertificationAndRegion.certificationId,
-        departmentId: updatedFeasibility.candidacy.departmentId || "",
-      }));
-
     sendFeasibilityRejectedCandidateEmail({
       email: updatedFeasibility.candidacy.candidate?.email as string,
       comment,
       certificationAuthorityLabel:
-        certificationAuthority?.label || "certificateur inconnu",
+        updatedFeasibility.certificationAuthority.label ||
+        "certificateur inconnu",
       infoFile,
     });
     if (updatedFeasibility.candidacy.organism?.contactAdministrativeEmail) {
