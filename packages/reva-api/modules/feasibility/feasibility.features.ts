@@ -287,44 +287,45 @@ export const getActiveFeasibilities = async ({
         },
       },
     };
-
-    if (searchFilter && searchFilter.length > 0) {
-      const containsFilter = buildContainsFilterClause(searchFilter);
-
-      queryWhereClause = {
-        ...queryWhereClause,
-        candidacy: {
-          ...(queryWhereClause.candidacy as Prisma.CandidacyWhereInput),
-          OR: [
-            {
-              candidate: {
-                OR: [
-                  containsFilter("lastname"),
-                  containsFilter("firstname"),
-                  containsFilter("firstname2"),
-                  containsFilter("firstname3"),
-                  containsFilter("email"),
-                  containsFilter("phone"),
-                ],
-              },
-            },
-            { organism: containsFilter("label") },
-            { department: containsFilter("label") },
-            {
-              certificationsAndRegions: {
-                some: {
-                  certification: containsFilter("label"),
-                },
-              },
-            },
-          ],
-        },
-      };
-    }
   } else if (!hasRole("admin")) {
     //admin has access to everything
     throw new Error("Utilisateur non autorisé");
   }
+
+  if (searchFilter && searchFilter.length > 0) {
+    const containsFilter = buildContainsFilterClause(searchFilter);
+
+    queryWhereClause = {
+      ...queryWhereClause,
+      candidacy: {
+        ...(queryWhereClause.candidacy as Prisma.CandidacyWhereInput),
+        OR: [
+          {
+            candidate: {
+              OR: [
+                containsFilter("lastname"),
+                containsFilter("firstname"),
+                containsFilter("firstname2"),
+                containsFilter("firstname3"),
+                containsFilter("email"),
+                containsFilter("phone"),
+              ],
+            },
+          },
+          { organism: containsFilter("label") },
+          { department: containsFilter("label") },
+          {
+            certificationsAndRegions: {
+              some: {
+                certification: containsFilter("label"),
+              },
+            },
+          },
+        ],
+      },
+    };
+  }
+
   const rows = await prismaClient.feasibility.findMany({
     where: queryWhereClause,
     skip: offset,
