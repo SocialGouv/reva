@@ -7,7 +7,6 @@ import * as dropOutReasonsDb from "./database/dropOutReasons";
 import * as goalsDb from "./database/goals";
 import * as locationsDb from "./database/locations";
 import * as reorientationReasonsDb from "./database/reorientationReasons";
-import * as vulnerabilityIndicatorsDb from "./database/vulnerabilityIndicators";
 import { getCertifications } from "./features/getCertifications";
 import { getDegrees } from "./features/getDegrees";
 import { getDepartments } from "./features/getDepartments";
@@ -69,16 +68,8 @@ export const resolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
-    getVulnerabilityIndicators: async (_: any, _payload: any) => {
-      const result = await getVulnerabilityIndicators({
-        getVulnerabilityIndicators:
-          vulnerabilityIndicatorsDb.getVulnerabilityIndicators,
-      })();
-
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
+    getVulnerabilityIndicators: async (_: any, _payload: any) =>
+      getVulnerabilityIndicators(),
     getDropOutReasons: async (_: any, _payload: any) => {
       const result = await getDropOutReasons({
         getDropOutReasons: dropOutReasonsDb.getDropOutReasons,
