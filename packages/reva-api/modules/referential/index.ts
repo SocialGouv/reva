@@ -4,12 +4,12 @@ import { prismaClient } from "../../prisma/client";
 import * as certificationsDb from "./database/certifications";
 import * as degreesDb from "./database/degrees";
 import * as dropOutReasonsDb from "./database/dropOutReasons";
-import * as goalsDb from "./database/goals";
 import * as locationsDb from "./database/locations";
 import { getCertifications } from "./features/getCertifications";
 import { getDegrees } from "./features/getDegrees";
 import { getDepartments } from "./features/getDepartments";
 import { getDropOutReasons } from "./features/getDropOutReasons";
+import { getGoals } from "./features/getGoals";
 import { getRegions } from "./features/getRegions";
 import { getReorientationReasons } from "./features/getReorientationReasons";
 import { getVulnerabilityIndicators } from "./features/getVulnerabilityIndicators";
@@ -19,7 +19,7 @@ export const resolvers = {
     // eslint-disable-next-line
     // @ts-ignore
     getReferential: async (_: any, _payload: any) => {
-      const goals = (await goalsDb.getGoals()).orDefault([]);
+      const goals = await getGoals();
 
       return {
         goals: goals,
