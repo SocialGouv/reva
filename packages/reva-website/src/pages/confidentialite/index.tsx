@@ -41,12 +41,12 @@ const IndexConfidentialitePage = () => {
         </ContentSection>
 
         <ContentSection
-          title="Pourquoi manipulons-nous des données ?"
+          title="Pourquoi traitons-nous des données ?"
           id="manipulation-donnees"
         >
           <SectionParagraph>
-            France VAE manipule des données à caractère personnel pour les
-            raisons suivantes :
+            France VAE traite des données à caractère personnel pour les raisons
+            suivantes :
             <ul className="list-inside">
               <li>
                 Permettre aux personnes utilisatrices de candidater en vue
@@ -82,7 +82,7 @@ const IndexConfidentialitePage = () => {
         </ContentSection>
 
         <ContentSection
-          title="Quelles sont les données que nous manipulons ?"
+          title="Quelles sont les données que nous traitons ?"
           id="quelles-donnees"
         >
           <SectionParagraph>
@@ -99,6 +99,13 @@ const IndexConfidentialitePage = () => {
                 (niveau de diplôme, expériences professionnelles, objectifs,
                 indicateur public fragile des candidats, RQTH, bénéficiaire de
                 minima sociaux, demandeur d’emploi de plus d’un an) ;
+              </li>
+              <li>
+                <strong>
+                  Données relatives à l’envoi du dossier du candidat au
+                  certificateur par l’accompagnateur{" "}
+                </strong>{" "}
+                (carte nationale d’identité du candidat) ;
               </li>
               <li>
                 <strong>
@@ -137,7 +144,7 @@ const IndexConfidentialitePage = () => {
         </ContentSection>
 
         <ContentSection
-          title="Qu’est-ce qui nous autorise à manipuler ces données ?"
+          title="Qu’est-ce qui nous autorise à traiter ces données ?"
           id="autorisation"
         >
           <SectionParagraph>
@@ -196,6 +203,15 @@ const IndexConfidentialitePage = () => {
                   <TextCell>Données de contact des AAP</TextCell>
                 </tr>
                 <tr>
+                  <TextCell>
+                    Données relatives à l’envoi du dossier du candidat au
+                    certificateur par l’accompagnateur
+                  </TextCell>
+                  <TextCell>
+                    Uniquement le temps de la transmission au certificateur
+                  </TextCell>
+                </tr>
+                <tr>
                   <TextCell>Cookies</TextCell>
                   <TextCell>13 mois</TextCell>
                 </tr>
@@ -219,9 +235,8 @@ const IndexConfidentialitePage = () => {
             <ul className="list-inside">
               <li>Droit d’information et droit d’accès aux données;</li>
               <li>Droit de rectification des données;</li>
-              <li>Droit à la limitation des données;</li>
+              <li>Droit à la limitation du traitement de vos données;</li>
               <li>Droit d’opposition;</li>
-              <li>Droit à la portabilité de vos données;</li>
             </ul>
             Pour les exercer, contactez-nous à :{" "}
             <a href="mailto:contact@vae.gouv.fr">contact@vae.gouv.fr</a>
@@ -261,6 +276,11 @@ const IndexConfidentialitePage = () => {
           id="qui-a-acces"
         >
           <SectionParagraph>
+            Les accès aux données sont strictement encadrés et juridiquement
+            justifiés. Les personnes suivantes, les destinataires, vont avoir
+            accès aux données :
+          </SectionParagraph>
+          <SectionParagraph>
             Les membres de l’équipe France VAE en charge du recueil et de la
             sécurisation des données ainsi que ceux qui sont chargés du pilotage
             du projet et de l’étude des comportements utilisateurs auront accès
@@ -269,12 +289,12 @@ const IndexConfidentialitePage = () => {
           <SectionParagraph>
             Des données personnelles pourront être partagées avec certains
             organismes référencés dans le service France VAE comme architecte de
-            parcours ou accompagnateurs VAE ou centre de formation à des fins de
-            contact, inscription aux services sollicitées et traitement de la
-            candidature et de son financement.
+            parcours, ou, accompagnateurs VAE, certificateurs ou centre de
+            formation à des fins de contact, inscription aux services
+            sollicitées et traitement de la candidature et de son financement.
           </SectionParagraph>
           <SectionParagraph>
-            Les données sont envoyées aux AAP inscrits sur France VAE.
+            Les données sont notamment envoyées aux AAP inscrits sur France VAE.
           </SectionParagraph>
         </ContentSection>
 
@@ -298,7 +318,7 @@ const IndexConfidentialitePage = () => {
               <li>Protection des réseaux</li>
               <li>Sauvegarde</li>
               <li>
-                Mesures restrictives limitant l’accès physiques aux données à
+                Mesures restrictives limitant l’accès physique aux données à
                 caractère personnel
               </li>
             </ul>
@@ -306,7 +326,7 @@ const IndexConfidentialitePage = () => {
         </ContentSection>
 
         <ContentSection
-          title="Qui nous aide à manipuler vos données ?"
+          title="Qui nous aide à traiter vos données ?"
           id="qui-aide"
         >
           <SectionParagraph>
@@ -400,8 +420,7 @@ const IndexConfidentialitePage = () => {
           <SectionParagraph>
             La plateforme France VAE dépose différents cookies. Certains cookies
             impliquent un traitement de vos données personnelles au titre de la
-            mission d’intérêt public qui nous incombe. Cela afin de faciliter
-            votre navigation.
+            mission d’intérêt public qui nous incombe.
           </SectionParagraph>
           <SectionParagraph>
             La plateforme France VAE utilise des cookies afin de faire
@@ -409,11 +428,12 @@ const IndexConfidentialitePage = () => {
             sur la plateforme.
           </SectionParagraph>
           <SectionParagraph>
-            La plateforme France VAE utilise des cookies de mesure d’audience
-            anonymisée MATOMO. Pour mieux comprendre, l’outil MATOMO est un
-            outil de mesure d’audience web libre, hébergé par les services de la
-            Fabrique numérique des ministères sociaux et paramétré pour être en
-            conformité avec la recommandation « Cookies » de la CNIL.
+            La plateforme France VAE utilise notamment la solution de mesure
+            d’audience anonymisée MATOMO. Pour mieux comprendre, l’outil MATOMO
+            est un outil de mesure d’audience web libre, hébergé par les
+            services de la Fabrique numérique des ministères sociaux et
+            paramétré pour être en conformité avec la recommandation « Cookies »
+            de la CNIL.
           </SectionParagraph>
 
           <SectionParagraph>
