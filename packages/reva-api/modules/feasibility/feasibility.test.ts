@@ -349,7 +349,6 @@ test("should return a feasibility error for certificator 3 since he doesn't hand
   });
 
   expect(resp.json()).toHaveProperty("errors");
-  expect(resp.json()).not.toHaveProperty("data");
 });
 
 test("should return all (1) available feasibility for certificateur user", async () => {
@@ -581,5 +580,4 @@ test("should not reject a feasibility since certificator 3 doesn't handle it", a
   });
 
   expect(resp.json()).toHaveProperty("errors");
-  expect(resp.json()).not.toHaveProperty("data");
 });

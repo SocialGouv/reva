@@ -11,6 +11,7 @@ import {
   VoidResolver,
   VoidTypeDefinition,
 } from "graphql-scalars";
+import mercurius, { MercuriusOptions } from "mercurius";
 
 import * as account from "./account";
 import * as candidacy from "./candidacy";
@@ -21,6 +22,7 @@ import { financeUnifvaeResolvers } from "./finance/unifvae/finance.unifvae.resol
 import { financeResolvers } from "./finance/unireva/finance.resolvers";
 import { organismLoaders } from "./organism/organism.loaders";
 import { referentialResolvers } from "./referential/referential.resolvers";
+import { logger } from "./shared/logger";
 import DecimalGraphqlScalar from "./shared/scalar/DecimalGraphqlScalar";
 import { subscriptionRequestResolvers } from "./subscription/subscription.resolvers";
 
@@ -46,7 +48,7 @@ resolvers.Timestamp = TimestampResolver;
 resolvers.UUID = UUIDResolver;
 resolvers.Decimal = DecimalGraphqlScalar;
 
-export const graphqlConfiguration = {
+export const graphqlConfiguration: MercuriusOptions = {
   schema: makeExecutableSchema({
     typeDefs: mergeTypeDefs([
       ...typeDefs,
@@ -58,23 +60,14 @@ export const graphqlConfiguration = {
   }),
   graphiql: !!process.env.GRAPHIQL,
   loaders: { ...feasibilityLoaders, ...organismLoaders },
-  errorFormatter: (result: any) => {
-    let errors = result.errors;
-
-    if (result.errors[0].extensions?.errors?.length) {
-      errors =
-        result.errors[0].extensions.errors.map((error: string) => ({
-          message: error,
-          path: result.errors[0].path,
-          location: result.errors[0].location,
-        })) || [];
-    }
+  errorFormatter: (error, ...args) => {
+    error.errors
+      ? error.errors.forEach((e) => logger.error(e))
+      : logger.error(error);
 
     return {
+      ...mercurius.defaultErrorFormatter(error, ...args),
       statusCode: 200,
-      response: {
-        errors,
-      },
     };
   },
 };
