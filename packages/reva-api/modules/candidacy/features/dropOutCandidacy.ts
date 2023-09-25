@@ -13,7 +13,7 @@ interface DropOutCandidacyDeps {
   ) => Promise<Either<string, Candidacy>>;
   getDropOutReasonById: (params: {
     dropOutReasonId: string;
-  }) => Promise<Either<string, Maybe<DropOutReason>>>;
+  }) => Promise<DropOutReason | null>;
   dropOutCandidacy: (
     params: DropOutCandidacyParams
   ) => Promise<Either<string, Candidacy>>;
@@ -50,24 +50,17 @@ export const dropOutCandidacy =
       );
     };
 
-    const checkIfDropOutReasonExists = EitherAsync.fromPromise(() =>
-      deps.getDropOutReasonById(params)
-    )
-      .mapLeft(
-        (error: string) =>
-          new FunctionalError(
-            FunctionalCodeError.CANDIDACY_DROP_OUT_FAILED,
-            error
-          )
-      )
-      .chain(async (maybeDropOutReason: Maybe<DropOutReason>) => {
-        return maybeDropOutReason.toEither(
-          new FunctionalError(
-            FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON,
-            `La raison d'abandon n'est pas valide`
-          )
-        );
+    const checkIfDropOutReasonExists = EitherAsync.fromPromise(async () => {
+      const r = await deps.getDropOutReasonById({
+        dropOutReasonId: params.dropOutReasonId || "",
       });
+      return Maybe.fromNullable(r).toEither(
+        new FunctionalError(
+          FunctionalCodeError.CANDIDACY_INVALID_DROP_OUT_REASON,
+          `La raison d'abandon n'est pas valide`
+        )
+      );
+    });
 
     const dropOutCandidacyResult = EitherAsync.fromPromise(() =>
       deps.dropOutCandidacy(params)

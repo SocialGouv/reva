@@ -61,13 +61,13 @@ const getCandidacyById = (id: string): Either<string, Candidacy> =>
   Maybe.fromNullable(candidacyTable.find((c) => c.id === id)).toEither(
     "not found"
   );
-const getDropOutReasonById = (id: string): Maybe<DropOutReason> =>
-  Maybe.fromNullable(dropOutReasonTable.find((r) => r.id === id));
+const getDropOutReasonById = (id: string): DropOutReason | null =>
+  dropOutReasonTable.find((r) => r.id === id) || null;
 
 const dropOutReasonWithRightRole = dropOutCandidacy({
   getCandidacyFromId: (id) => Promise.resolve(getCandidacyById(id)),
   getDropOutReasonById: ({ dropOutReasonId }) =>
-    Promise.resolve(Right(getDropOutReasonById(dropOutReasonId))),
+    Promise.resolve(getDropOutReasonById(dropOutReasonId)),
   dropOutCandidacy: (params) =>
     Promise.resolve(
       Right({
