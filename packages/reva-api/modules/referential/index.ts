@@ -3,7 +3,6 @@ import mercurius from "mercurius";
 import { prismaClient } from "../../prisma/client";
 import * as certificationsDb from "./database/certifications";
 import * as dropOutReasonsDb from "./database/dropOutReasons";
-import * as locationsDb from "./database/locations";
 import { getCertifications } from "./features/getCertifications";
 import { getDegrees } from "./features/getDegrees";
 import { getDepartments } from "./features/getDepartments";
@@ -39,24 +38,8 @@ export const resolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
-    getRegions: async (_: any, _payload: any) => {
-      const result = await getRegions({
-        getRegions: locationsDb.getRegions,
-      })();
-
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
-    getDepartments: async (_: any, _payload: any) => {
-      const result = await getDepartments({
-        getDepartments: locationsDb.getDepartments,
-      })();
-
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
+    getRegions: async (_: any, _payload: any) => getRegions(),
+    getDepartments: async (_: any, _payload: any) => getDepartments(),
     getDegrees: async (_: any, _payload: any) => getDegrees(),
     getVulnerabilityIndicators: async (_: any, _payload: any) =>
       getVulnerabilityIndicators(),

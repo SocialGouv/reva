@@ -1,20 +1,3 @@
-import { Either, EitherAsync } from "purify-ts";
+import { prismaClient } from "../../../prisma/client";
 
-import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "../../shared/error/functionalError";
-import { Department } from "../referential.types";
-
-interface GetDepartmentsDeps {
-  getDepartments: () => Promise<Either<string, Department[]>>;
-}
-
-export const getDepartments = (deps: GetDepartmentsDeps) => async () =>
-  EitherAsync.fromPromise(() => deps.getDepartments()).mapLeft(
-    () =>
-      new FunctionalError(
-        FunctionalCodeError.TECHNICAL_ERROR,
-        "Erreur lors de la récupération des départements"
-      )
-  );
+export const getDepartments = () => prismaClient.department.findMany();
