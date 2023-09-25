@@ -6,7 +6,6 @@ import * as degreesDb from "./database/degrees";
 import * as dropOutReasonsDb from "./database/dropOutReasons";
 import * as goalsDb from "./database/goals";
 import * as locationsDb from "./database/locations";
-import * as reorientationReasonsDb from "./database/reorientationReasons";
 import { getCertifications } from "./features/getCertifications";
 import { getDegrees } from "./features/getDegrees";
 import { getDepartments } from "./features/getDepartments";
@@ -79,15 +78,8 @@ export const resolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
-    getReorientationReasons: async (_: any, _payload: any) => {
-      const result = await getReorientationReasons({
-        getReorientationReasons: reorientationReasonsDb.getReorientationReasons,
-      })();
-
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
+    getReorientationReasons: async (_: any, _payload: any) =>
+      getReorientationReasons(),
 
     getDomaines: () => prismaClient.domaine.findMany(),
     getConventionCollectives: () =>

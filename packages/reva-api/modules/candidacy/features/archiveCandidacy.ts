@@ -13,8 +13,8 @@ interface ArchiveCandidacyDeps {
     candidacyId: string
   ) => Promise<Either<string, Candidacy>>;
   getReorientationReasonById: (params: {
-    reorientationReasonId: string | null;
-  }) => Promise<Either<string, Maybe<ReorientationReason>>>;
+    reorientationReasonId: string;
+  }) => Promise<ReorientationReason | null>;
   hasRole: (role: Role) => boolean;
   archiveCandidacy: (params: {
     candidacyId: string;
@@ -67,24 +67,19 @@ export const archiveCandidacy =
       );
     };
 
-    const checkIfReorientationReasonExists = EitherAsync.fromPromise(() =>
-      deps.getReorientationReasonById(params)
-    )
-      .mapLeft(
-        (error: string) =>
-          new FunctionalError(
-            FunctionalCodeError.CANDIDACIES_NOT_ARCHIVED,
-            error
-          )
-      )
-      .chain(async (maybeReorientationReason: Maybe<ReorientationReason>) => {
-        return maybeReorientationReason.toEither(
+    const checkIfReorientationReasonExists = EitherAsync.fromPromise(
+      async () => {
+        const r = await deps.getReorientationReasonById({
+          reorientationReasonId: params.reorientationReasonId || "",
+        });
+        return Maybe.fromNullable(r).toEither(
           new FunctionalError(
             FunctionalCodeError.CANDIDACY_INVALID_REORIENTATION_REASON,
             `La raison de réorientation n'est pas valide`
           )
         );
-      });
+      }
+    );
 
     const archiveCandidacyResult = EitherAsync.fromPromise(() =>
       deps.archiveCandidacy(params)

@@ -6,7 +6,7 @@ import { prismaClient } from "../../prisma/client";
 import { Role } from "../account/account.types";
 import * as organismDb from "../organism/database/organisms";
 import { getDropOutReasonById } from "../referential/database/dropOutReasons";
-import { getReorientationReasonById } from "../referential/database/reorientationReasons";
+import { getReorientationReasonById } from "../referential/features/getReorientationReasonById";
 import { sendNewCandidacyEmail } from "../shared/email/sendNewCandidacyEmail";
 import { logger } from "../shared/logger";
 import {

@@ -99,15 +99,13 @@ const getCandidacyById = (id: string): Either<string, Candidacy> =>
   Maybe.fromNullable(candidacyTable.find((c) => c.id === id)).toEither(
     "not found"
   );
-const getReorientationReasonById = (
-  id: string | null
-): Maybe<ReorientationReason> =>
-  Maybe.fromNullable(reorientationReasonTable.find((r) => r.id === id));
+const getReorientationReasonById = (id: string): ReorientationReason | null =>
+  reorientationReasonTable.find((r) => r.id === id) || null;
 
 const archiveWithRightRole = archiveCandidacy({
   getCandidacyFromId: (id) => Promise.resolve(getCandidacyById(id)),
   getReorientationReasonById: ({ reorientationReasonId }) =>
-    Promise.resolve(Right(getReorientationReasonById(reorientationReasonId))),
+    Promise.resolve(getReorientationReasonById(reorientationReasonId)),
   hasRole: () => true,
   archiveCandidacy: (params) =>
     Promise.resolve(
@@ -115,8 +113,8 @@ const archiveWithRightRole = archiveCandidacy({
         ...(getCandidacyById(params.candidacyId).extract() as Candidacy),
         candidacyStatuses: candidacyStatusesArchive,
         reorientationReason: getReorientationReasonById(
-          params.reorientationReasonId
-        ).extractNullable(),
+          params.reorientationReasonId || ""
+        ),
       })
     ),
 });

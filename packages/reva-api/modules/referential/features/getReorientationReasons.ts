@@ -1,21 +1,5 @@
-import { Either, EitherAsync } from "purify-ts";
-
-import {
-  FunctionalCodeError,
-  FunctionalError,
-} from "../../shared/error/functionalError";
+import { prismaClient } from "../../../prisma/client";
 import { ReorientationReason } from "../referential.types";
 
-interface GetReorientationReasonsDeps {
-  getReorientationReasons: () => Promise<Either<string, ReorientationReason[]>>;
-}
-
-export const getReorientationReasons =
-  (deps: GetReorientationReasonsDeps) => async () =>
-    EitherAsync.fromPromise(() => deps.getReorientationReasons()).mapLeft(
-      () =>
-        new FunctionalError(
-          FunctionalCodeError.TECHNICAL_ERROR,
-          "Erreur lors de la récupération des raisons de réorientation"
-        )
-    );
+export const getReorientationReasons = (): Promise<ReorientationReason[]> =>
+  prismaClient.reorientationReason.findMany();
