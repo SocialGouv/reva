@@ -1,8 +1,5 @@
-import mercurius from "mercurius";
-
 import { prismaClient } from "../../prisma/client";
-import * as certificationsDb from "./database/certifications";
-import { getCertifications } from "./features/getCertifications";
+import { getCertificationsForDepartmentWithNewTypologies } from "./features/getCertificationsForDepartmentWithNewTypologies";
 import { getDegrees } from "./features/getDegrees";
 import { getDepartments } from "./features/getDepartments";
 import { getDropOutReasons } from "./features/getDropOutReasons";
@@ -22,21 +19,13 @@ export const referentialResolvers = {
         goals: goals,
       };
     },
-    getCertifications: async (_: any, payload: any) => {
-      const result = await getCertifications({
-        getCertifications:
-          certificationsDb.getCertificationsForDepartmentWithNewTypologies,
-      })({
+    getCertifications: async (_: any, payload: any) =>
+      getCertificationsForDepartmentWithNewTypologies({
         offset: payload.offset,
         limit: payload.limit,
         departmentId: payload.departmentId,
         searchText: payload.searchText,
-      });
-
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
+      }),
     getRegions: async (_: any, _payload: any) => getRegions(),
     getDepartments: async (_: any, _payload: any) => getDepartments(),
     getDegrees: async (_: any, _payload: any) => getDegrees(),
