@@ -2,7 +2,6 @@ import mercurius from "mercurius";
 
 import { prismaClient } from "../../prisma/client";
 import * as certificationsDb from "./database/certifications";
-import * as degreesDb from "./database/degrees";
 import * as dropOutReasonsDb from "./database/dropOutReasons";
 import * as locationsDb from "./database/locations";
 import { getCertifications } from "./features/getCertifications";
@@ -58,15 +57,7 @@ export const resolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
-    getDegrees: async (_: any, _payload: any) => {
-      const result = await getDegrees({
-        getDegrees: degreesDb.getDegrees,
-      })();
-
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
+    getDegrees: async (_: any, _payload: any) => getDegrees(),
     getVulnerabilityIndicators: async (_: any, _payload: any) =>
       getVulnerabilityIndicators(),
     getDropOutReasons: async (_: any, _payload: any) => {
