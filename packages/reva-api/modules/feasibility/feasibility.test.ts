@@ -163,7 +163,7 @@ async function createFeasibility(account: Account) {
     data: {
       candidacyId: candidacy.id,
       feasibilityFileId: feasibilityFile.id,
-      certificationAuthorityId: account.certificationAuthorityId,
+      certificationAuthorityId: account.certificationAuthorityId ?? "",
     },
   });
 }

@@ -129,6 +129,7 @@ beforeAll(async () => {
       Feasibility: {
         create: {
           decision: "ADMISSIBLE",
+          certificationAuthority: { create: { label: "dummy" } },
           feasibilityFile: {
             create: {
               name: "dummyFile.ext",
