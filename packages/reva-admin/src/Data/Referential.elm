@@ -33,6 +33,7 @@ type alias ReorientationReason =
 type alias DropOutReason =
     { id : String
     , label : String
+    , isActive : Bool
     }
 
 

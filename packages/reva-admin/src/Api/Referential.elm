@@ -55,11 +55,12 @@ basicSkillSelection =
         |> with Admin.Object.BasicSkill.label
 
 
-dropOutReasonSelection : SelectionSet Data.Referential.BasicSkill Admin.Object.DropOutReason
+dropOutReasonSelection : SelectionSet Data.Referential.DropOutReason Admin.Object.DropOutReason
 dropOutReasonSelection =
     SelectionSet.succeed Data.Referential.DropOutReason
         |> with (SelectionSet.map (\(Id id) -> id) Admin.Object.DropOutReason.id)
         |> with Admin.Object.DropOutReason.label
+        |> with Admin.Object.DropOutReason.isActive
 
 
 reorientationReasonSelection : SelectionSet Data.Referential.ReorientationReason Admin.Object.ReorientationReason

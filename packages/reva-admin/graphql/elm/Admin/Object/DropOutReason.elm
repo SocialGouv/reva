@@ -27,3 +27,8 @@ id =
 label : SelectionSet String Admin.Object.DropOutReason
 label =
     Object.selectionForField "String" "label" [] Decode.string
+
+
+isActive : SelectionSet Bool Admin.Object.DropOutReason
+isActive =
+    Object.selectionForField "Bool" "isActive" [] Decode.bool

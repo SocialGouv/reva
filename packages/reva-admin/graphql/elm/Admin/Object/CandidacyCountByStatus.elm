@@ -64,11 +64,6 @@ dossierFaisabiliteRecevableHorsAbandon =
     Object.selectionForField "Int" "DOSSIER_FAISABILITE_RECEVABLE_HORS_ABANDON" [] Decode.int
 
 
-dossierFaisabiliteIncompletHorsAbandon : SelectionSet Int Admin.Object.CandidacyCountByStatus
-dossierFaisabiliteIncompletHorsAbandon =
-    Object.selectionForField "Int" "DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON" [] Decode.int
-
-
 dossierFaisabiliteNonRecevableHorsAbandon : SelectionSet Int Admin.Object.CandidacyCountByStatus
 dossierFaisabiliteNonRecevableHorsAbandon =
     Object.selectionForField "Int" "DOSSIER_FAISABILITE_NON_RECEVABLE_HORS_ABANDON" [] Decode.int
@@ -92,3 +87,8 @@ validationHorsAbandon =
 projetHorsAbandon : SelectionSet Int Admin.Object.CandidacyCountByStatus
 projetHorsAbandon =
     Object.selectionForField "Int" "PROJET_HORS_ABANDON" [] Decode.int
+
+
+dossierFaisabiliteIncompletHorsAbandon : SelectionSet Int Admin.Object.CandidacyCountByStatus
+dossierFaisabiliteIncompletHorsAbandon =
+    Object.selectionForField "Int" "DOSSIER_FAISABILITE_INCOMPLET_HORS_ABANDON" [] Decode.int

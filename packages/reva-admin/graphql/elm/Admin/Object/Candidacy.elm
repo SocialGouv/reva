@@ -234,11 +234,11 @@ financeModule =
     Object.selectionForField "Enum.FinanceModule.FinanceModule" "financeModule" [] Admin.Enum.FinanceModule.decoder
 
 
-certificationAuthorities :
+certificationAuthority :
     SelectionSet decodesTo Admin.Object.CertificationAuthority
-    -> SelectionSet (List decodesTo) Admin.Object.Candidacy
-certificationAuthorities object____ =
-    Object.selectionForCompositeField "certificationAuthorities" [] object____ (Basics.identity >> Decode.list)
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
+certificationAuthority object____ =
+    Object.selectionForCompositeField "certificationAuthority" [] object____ (Basics.identity >> Decode.nullable)
 
 
 feasibility :
@@ -260,3 +260,10 @@ paymentRequest :
     -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
 paymentRequest object____ =
     Object.selectionForCompositeField "paymentRequest" [] object____ (Basics.identity >> Decode.nullable)
+
+
+certificationAuthorities :
+    SelectionSet decodesTo Admin.Object.CertificationAuthority
+    -> SelectionSet (List decodesTo) Admin.Object.Candidacy
+certificationAuthorities object____ =
+    Object.selectionForCompositeField "certificationAuthorities" [] object____ (Basics.identity >> Decode.list)

@@ -38,6 +38,7 @@ type VulnerabilityIndicator {
 type DropOutReason {
   id: ID!
   label: String!
+  isActive: Boolean!
 }
 
 type ReorientationReason {

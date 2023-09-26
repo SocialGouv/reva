@@ -507,6 +507,7 @@ model DropOutReason {
   id          String             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   label       String             @unique @db.VarChar(255)
   candidacies CandidacyDropOut[] @relation()
+  isActive    Boolean            @default(true) @map("is_active")
   createdAt   DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime?          @map("updated_at") @db.Timestamptz(6)
 
