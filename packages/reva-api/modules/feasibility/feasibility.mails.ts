@@ -253,14 +253,23 @@ export const sendFeasibilityDecisionTakenToAAPEmail = async ({
 export const sendFeasibilityIncompleteMailToAAP = async ({
   email,
   feasibilityUrl,
+  comment,
 }: {
   email: string;
   feasibilityUrl: string;
+  comment?: string;
 }) => {
+  const commentInfo = comment
+    ? `<p>Voici les éléments qu’il a indiqués comme manquants :</p>
+      <br/>
+      <p><em>${formatFreeText(comment || "")}</em></p>
+      <br/>`
+    : "";
+
   const htmlContent = mjml2html(
     template({
       content: `<p>Bonjour,</p><p>Un dossier transmis par vos soins a été noté comme incomplet par le certificateur.</p>
-      <p>Vous trouverez le détail des éléments manquants dans la page du dossier.</p>
+     ${commentInfo}
       <p>Nous vous invitons à le compléter et à le renvoyer au certificateur dans les meilleurs délais.</p>
         `,
       labelCTA: "Accéder au dossier",
