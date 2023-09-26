@@ -1,6 +1,7 @@
 module View.Candidacy.NavigationSteps exposing (archiveView, dropOutView, reorientationView, view)
 
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
+import Admin.Enum.FinanceModule exposing (FinanceModule(..))
 import Admin.Enum.OrganismTypology exposing (OrganismTypology(..))
 import BetaGouv.DSFR.Button as Button
 import Data.Candidacy as Candidacy exposing (Candidacy)
@@ -236,7 +237,16 @@ expandedView buttonState stepTitle showButtonForGivenStatusList candidacy =
 
 fundingRequestLink : String -> Candidacy -> Maybe (Html.Attribute msg)
 fundingRequestLink baseUrl candidacy =
-    if Candidacy.isStatusEqualOrAbove candidacy DossierFaisabiliteRecevable then
+    let
+        canAccessFundingRequest =
+            case candidacy.financeModule of
+                Unireva ->
+                    candidacy.dropOutDate /= Nothing || Candidacy.isStatusEqualOrAbove candidacy ParcoursConfirme
+
+                Unifvae ->
+                    Candidacy.isStatusEqualOrAbove candidacy DossierFaisabiliteRecevable
+    in
+    if canAccessFundingRequest then
         Just <|
             Route.href baseUrl <|
                 Route.Candidacy <|
