@@ -33,6 +33,14 @@
   mask-image: url("../icons/system/fr--warning-fill.svg");
 }
 
+.fr-alert--info:before {
+  mask-image: url("../icons/system/fr--info-fill.svg");
+}
+
+.fr-alert--success:before {
+  mask-image: url("../icons/system/fr--success-fill.svg");
+}
+
 .fr-notice .fr-notice__body:before {
   mask-image: url("../icons/system/fr--info-fill.svg");
 }
