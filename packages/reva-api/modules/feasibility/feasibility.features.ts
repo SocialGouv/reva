@@ -612,6 +612,7 @@ export const markFeasibilityAsIncomplete = async ({
         email:
           updatedFeasibility.candidacy.organism?.contactAdministrativeEmail,
         feasibilityUrl: `${baseUrl}/admin/candidacies/${updatedFeasibility.candidacy.id}/feasibility`,
+        comment,
       });
     }
     return updatedFeasibility;
