@@ -4,9 +4,11 @@ import mercurius from "mercurius";
 
 import { prismaClient } from "../../prisma/client";
 import { Role } from "../account/account.types";
+import { generateJwt } from "../candidate/auth.helper";
 import * as organismDb from "../organism/database/organisms";
 import { getDropOutReasonById } from "../referential/features/getDropOutReasonById";
 import { getReorientationReasonById } from "../referential/features/getReorientationReasonById";
+import { sendTrainingEmail } from "../shared/email";
 import { sendNewCandidacyEmail } from "../shared/email/sendNewCandidacyEmail";
 import { logger } from "../shared/logger";
 import {
@@ -614,6 +616,16 @@ const unsafeResolvers = {
         candidacyId: payload.candidacyId,
         training: payload.training,
       });
+
+      const candidacy = result.isRight() ? result.extract() : undefined;
+      if (candidacy?.email) {
+        const token = generateJwt(
+          { email: candidacy?.email },
+          1 * 60 * 60 * 24 * 4
+        );
+        sendTrainingEmail(candidacy.email, token);
+      }
+
       logCandidacyEvent({
         candidacyId: payload.candidacyId,
         eventType: CandidacyBusinessEvent.SUBMITTED_TRAINING_FORM,
