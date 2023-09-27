@@ -345,23 +345,9 @@ update msg model =
 
                             _ ->
                                 route
-
-                    filters =
-                        case route of
-                            Route.Candidacies f ->
-                                f
-
-                            _ ->
-                                { status = CandidacyStatusFilter.ActiveHorsAbandon, page = 1 }
-
-                    ( candidaciesModel, candidaciesCmd ) =
-                        Candidacies.init newContext filters.status filters.page
                 in
-                ( { model | context = newContext, page = Candidacies candidaciesModel }
-                , Cmd.batch
-                    [ Cmd.map GotCandidaciesMsg candidaciesCmd
-                    , Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl redirectRoute)
-                    ]
+                ( { model | context = newContext }
+                , Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl redirectRoute)
                 )
 
             else if Api.Token.isCertificationAuthority token then
@@ -375,23 +361,9 @@ update msg model =
 
                             _ ->
                                 route
-
-                    filters =
-                        case route of
-                            Route.Feasibilities f ->
-                                f
-
-                            _ ->
-                                { category = FeasibilityCategoryFilter.All, page = 1 }
-
-                    ( feasibilitiesModel, feasibilitiesCmd ) =
-                        Feasibilities.init newContext filters.category filters.page
                 in
-                ( { model | context = newContext, page = Feasibilities feasibilitiesModel }
-                , Cmd.batch
-                    [ Cmd.map GotFeasibilitiesMsg feasibilitiesCmd
-                    , Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl redirectRoute)
-                    ]
+                ( { model | context = newContext }
+                , Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl redirectRoute)
                 )
 
             else
