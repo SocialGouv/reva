@@ -86,6 +86,15 @@ async function createCertificationAuthoritiesAccounts({
   );
 
   logger.info(
+    {
+      emailsToCreateAccountfor: authoritiesToCreateAccountFor.map(
+        (a) => a.contactEmail
+      ),
+    },
+    `Accounts for the following emails already exists in the account table and WILL be created`
+  );
+
+  logger.info(
     { authoritiesToCreateAccountFor },
     `Accounts for the following authorities will be created`
   );
