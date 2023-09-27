@@ -55,7 +55,6 @@ type Page
     | Candidacy Candidacy.Model
     | Feasibilities Feasibilities.Model
     | Feasibility Feasibility.Model
-    | Loading Token
     | LoggingOut
     | NotLoggedIn Route
     | NotFound
@@ -153,9 +152,6 @@ viewPage model =
 
         NotFound ->
             h1 [] [ text "Page introuvable" ]
-
-        Loading _ ->
-            div [] []
 
         LoggingOut ->
             text "Déconnexion en cours..."
@@ -428,6 +424,18 @@ init flags url key =
 initWithoutToken : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
 initWithoutToken flags url key =
     let
+        redirectTo : Route
+        redirectTo =
+            case Route.fromUrl flags.baseUrl url of
+                Logout ->
+                    {- When a user logs out, he is redirected to a login page with a redirect URI set to "auth/logout" -}
+                    {- So, if he logs in again, he would be redirected to the logout page, being logged out immediately. -}
+                    {- To prevent this, we redirect him to the home page instead. -}
+                    Home
+
+                route ->
+                    route
+
         model : Model
         model =
             { context =
@@ -441,7 +449,7 @@ initWithoutToken flags url key =
                     False
                     flags.feasibilityFeatureEnabled
                     flags.franceVaeFinanceModuleFeatureEnabled
-            , page = NotLoggedIn (Route.fromUrl flags.baseUrl url)
+            , page = NotLoggedIn redirectTo
             , keycloakConfiguration =
                 Decode.decodeValue KeycloakConfiguration.keycloakConfiguration flags.keycloakConfiguration
                     |> Result.map Just
@@ -449,10 +457,7 @@ initWithoutToken flags url key =
             }
     in
     ( model
-    , Cmd.batch
-        [ Nav.pushUrl key (Route.toString flags.baseUrl Route.Login)
-        , Task.perform GotViewport Dom.getViewport
-        ]
+    , Task.perform GotViewport Dom.getViewport
     )
 
 
