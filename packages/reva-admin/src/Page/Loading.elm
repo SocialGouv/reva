@@ -2,11 +2,16 @@ module Page.Loading exposing (view)
 
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)
+import View
 
 
 view : Html msg
 view =
-    div [ class "h-screen flex flex-col items-center justify-center" ]
-        [ div [ class "mb-4 font-bold text-normal" ] [ text "France VAE" ]
-        , text "Chargement..."
+    View.layout
+        ""
+        []
+        []
+        [ div
+            [ class "h-screen px-8 pt-6" ]
+            [ div [ class "animate-pulse bg-gray-100 w-96 h-16" ] [] ]
         ]

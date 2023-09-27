@@ -154,7 +154,7 @@ viewPage model =
             h1 [] [ text "Page introuvable" ]
 
         LoggingOut ->
-            text "Déconnexion en cours..."
+            Page.Loading.view
 
         SiteMap ->
             SiteMap.view model.context
