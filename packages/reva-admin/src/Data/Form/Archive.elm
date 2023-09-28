@@ -23,16 +23,7 @@ keys =
 
 validate : ( Candidacy, Referential ) -> FormData -> Result (List String) ()
 validate ( _, _ ) formData =
-    let
-        decode =
-            Helper.decode keys formData
-    in
-    case ( decode.bool .isNotReoriented False, decode.maybe.string .reorientationReason ) of
-        ( False, Nothing ) ->
-            Err [ "Veuillez sélectionner une raison avant de supprimer cette candidature" ]
-
-        _ ->
-            Ok ()
+   Ok ()
 
 
 fromDict : FormData -> Archive
