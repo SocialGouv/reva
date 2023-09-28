@@ -7,8 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "predev": "only-include-used-icons",
-    "prebuild": "only-include-used-icons && node ./src/scripts/generateRobotsTxt.js"
+    "graphql:generate": "graphql-codegen",
+    "graphql:watch": "graphql-codegen --watch",
+    "predev": "only-include-used-icons && npm run graphql:generate",
+    "prebuild": "only-include-used-icons && node ./src/scripts/generateRobotsTxt.js && npm i --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && npm run graphql:generate"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^0.66.6",
@@ -36,6 +38,9 @@
     }
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
+    "@parcel/watcher": "^2.3.0",
     "@types/lodash": "^4.14.195",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.21",
