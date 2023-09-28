@@ -253,6 +253,9 @@ viewForm referential status errors formData form saveButton submitButton =
                 , onSubmit (UserClickSubmit referential)
                 ]
                 [ fieldset [] content ]
+
+        containsInfoElement =
+            List.length currentForm.elements == 1 && List.Extra.find (\( value, _ ) -> value == "info") currentForm.elements /= Nothing
     in
     case status of
         Editable ->
@@ -260,7 +263,7 @@ viewForm referential status errors formData form saveButton submitButton =
                 legend
                     [ class "mb-4" ]
                     [ h1 [ class "text-dsfrBlue-500 text-4xl mb-1" ] [ text currentForm.title ]
-                    , if List.isEmpty currentForm.elements then
+                    , if List.isEmpty currentForm.elements || containsInfoElement then
                         text ""
 
                       else
