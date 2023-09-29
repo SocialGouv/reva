@@ -620,7 +620,7 @@ const unsafeResolvers = {
       const candidacy = result.isRight() ? result.extract() : undefined;
       if (candidacy?.email) {
         const token = generateJwt(
-          { email: candidacy?.email },
+          { email: candidacy?.email, action: "login" },
           1 * 60 * 60 * 24 * 4
         );
         sendTrainingEmail(candidacy.email, token);
