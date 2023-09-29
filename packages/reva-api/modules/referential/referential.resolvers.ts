@@ -1,5 +1,4 @@
 import { prismaClient } from "../../prisma/client";
-import { getCertificationsForDepartmentWithNewTypologies } from "./features/getCertificationsForDepartmentWithNewTypologies";
 import { getDegrees } from "./features/getDegrees";
 import { getDepartments } from "./features/getDepartments";
 import { getDropOutReasons } from "./features/getDropOutReasons";
@@ -7,6 +6,7 @@ import { getGoals } from "./features/getGoals";
 import { getRegions } from "./features/getRegions";
 import { getReorientationReasons } from "./features/getReorientationReasons";
 import { getVulnerabilityIndicators } from "./features/getVulnerabilityIndicators";
+import { searchCertifications } from "./features/searchCertifications";
 
 export const referentialResolvers = {
   Query: {
@@ -20,7 +20,7 @@ export const referentialResolvers = {
       };
     },
     getCertifications: async (_: any, payload: any) =>
-      getCertificationsForDepartmentWithNewTypologies({
+      searchCertifications({
         offset: payload.offset,
         limit: payload.limit,
         departmentId: payload.departmentId,

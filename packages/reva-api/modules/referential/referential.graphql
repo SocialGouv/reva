@@ -94,7 +94,7 @@ type Query {
   getCertifications(
     offset: Int
     limit: Int
-    departmentId: UUID!
+    departmentId: UUID
     searchText: String
   ): CertificationPage!
   getRegions: [Region!]!
