@@ -1,15 +1,31 @@
 import { AdmissibleSectorsInfoPanel } from "@/components/admissible-sectors-info-panel/AdmissibleSectorsInfoPanel";
 import { TrackableButton } from "@/components/analytics/trackable-button/TrackableButton";
+import { Autocomplete } from "@/components/form/autocomplete/AutoComplete";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { PICTOGRAMS } from "@/components/pictograms";
 import {
   Hexagon,
   SectionParagraph,
 } from "@/components/section-content/SectionContent";
+import { FeatureFlags, GRAPHQL_API_URL } from "@/config/config";
+import { graphql } from "@/graphql/generated/gql";
+import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
+import request from "graphql-request";
 import Head from "next/head";
 import Image from "next/image";
 /* eslint-disable react/no-unescaped-entities */
 import * as React from "react";
+
+const searchCertificationsQuery = graphql(`
+  query searchCertificationsQuery($searchText: String!) {
+    getCertifications(searchText: $searchText) {
+      rows {
+        id
+        label
+      }
+    }
+  }
+`);
 
 const ArrowRight = () => (
   <span className="fr-icon-arrow-right-line mr-6" aria-hidden="true" />
@@ -45,6 +61,81 @@ const HomeContainer = ({ children }: { children: React.ReactNode }) => (
     {children}
   </div>
 );
+
+export const FaitesValiderVosCompetencesParUnDiplome = () => {
+  return (
+    <section
+      id="faites-valider-vos-competences-par-un-diplome"
+      className="w-full fr-container mx-auto mt-[40px] lg:flex lg:items-center"
+    >
+      <div className="sm:flex-1 max-w-3xl md:mr-12 basis-1/2">
+        <h2 className="text-2xl lg:text-3xl">
+          Vous connaissez le diplôme que vous souhaitez obtenir :
+        </h2>
+        <p className="text-xl leading-relaxed">
+          Recherchez-le et commencez votre parcours VAE dès maintenant !
+        </p>
+        <Autocomplete
+          searchFunction={async (searchText) =>
+            (
+              await request(GRAPHQL_API_URL, searchCertificationsQuery, {
+                searchText,
+              })
+            ).getCertifications.rows.map((r) => ({
+              value: r.id,
+              label: r.label,
+            }))
+          }
+          onOptionSelection={(o) => alert(o.value)}
+          placeholder="Rechercher un diplôme ..."
+        />
+        <br />
+        <h2 className="text-2xl lg:text-3xl mb-10 mt-10">
+          Vous souhaitez en savoir plus sur la VAE ? Prenez rendez-vous avec un
+          conseiller près de chez vous.
+        </h2>
+        <CallOut>
+          Du fait de son déploiement progressif, tous les diplômes ne sont pas
+          encore couverts par France VAE. Si vous ne trouvez pas votre diplôme
+          dans la liste, nous vous invitons à vous rapprocher d’un{" "}
+          <a
+            href="https://vae.centre-inffo.fr/?page=carte-prc"
+            target="_blank"
+            title="point relais conseil - nouvelle fenêtre"
+          >
+            point relais conseil
+          </a>
+          , d’un{" "}
+          <a
+            href="https://mon-cep.org/#trouver"
+            target="_blank"
+            title="conseiller en évolution professionnelle - nouvelle fenêtre"
+          >
+            conseiller en évolution professionnelle
+          </a>
+          , une{" "}
+          <a
+            href="https://www.transitionspro.fr/"
+            target="_blank"
+            title="association de transition professionnelle (AT Pro) - nouvelle fenêtre"
+          >
+            association de transition professionnelle (AT Pro)
+          </a>
+          .
+        </CallOut>
+      </div>
+      <div className="relative mt-16 -mx-5 max-w-lg basis-1/2">
+        <Image
+          src="/home-page/image-woman-walking.png"
+          className=""
+          alt=""
+          width={1067}
+          height={969}
+        />
+      </div>
+    </section>
+  );
+};
 
 const AvenirPro = () => (
   <section
@@ -427,6 +518,9 @@ const IndexPage = () => {
         />
       </Head>
       <AvenirPro />
+      {FeatureFlags.CANDIDATE_ORIENTATION === "true" ? (
+        <FaitesValiderVosCompetencesParUnDiplome />
+      ) : null}
       <ValorisationCompetences />
       <Professionnels />
       <Roadmap />

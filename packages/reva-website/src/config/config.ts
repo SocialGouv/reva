@@ -11,3 +11,7 @@ export const MATOMO = {
 export const CRISP = {
   WEBSITE_ID: process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID,
 };
+
+export const FeatureFlags = {
+  CANDIDATE_ORIENTATION: process.env.NEXT_PUBLIC_FEATURE_CANDIDATE_ORIENTATION,
+};
