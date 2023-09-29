@@ -88,6 +88,12 @@ export const FaitesValiderVosCompetencesParUnDiplome = () => {
           }
           onOptionSelection={(o) => alert(o.value)}
           placeholder="Rechercher un diplôme ..."
+          emptyState={(searchCriteria) => (
+            <p className="text-lg font-bold p-8">
+              Les diplômes correspondants au métier "{searchCriteria}" ne sont
+              pas disponibles.
+            </p>
+          )}
         />
         <br />
         <h2 className="text-2xl lg:text-3xl mb-10 mt-10">
