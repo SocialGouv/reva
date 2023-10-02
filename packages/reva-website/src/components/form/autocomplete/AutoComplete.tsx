@@ -54,7 +54,11 @@ export const Autocomplete = ({
                 <Combobox.Option
                   key={option.value}
                   value={option}
-                  className="px-2 py-2 list-none hover:!bg-dsfrGray-contrast"
+                  className={({ active }) =>
+                    `px-2 py-2 list-none  ${
+                      active ? "bg-dsfrGray-contrast" : "transparent"
+                    }`
+                  }
                 >
                   {option.label}
                 </Combobox.Option>
