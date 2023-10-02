@@ -36,7 +36,7 @@ export const Autocomplete = ({
 
   const gotSearchResults = searchCriteria && options.length;
 
-  const gotNoSearchResults = searchCriteria && !options.length;
+  const gotNoSearchResult = searchCriteria && !options.length;
 
   return (
     <Combobox value={selectedOption} onChange={handleOptionSelection}>
@@ -72,7 +72,7 @@ export const Autocomplete = ({
             )}
           />
         </div>
-        {gotNoSearchResults && emptyState ? emptyState(searchCriteria) : null}
+        {gotNoSearchResult && emptyState ? emptyState(searchCriteria) : null}
       </>
     </Combobox>
   );
