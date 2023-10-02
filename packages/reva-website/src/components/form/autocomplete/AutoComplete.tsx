@@ -1,6 +1,7 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Combobox } from "@headlessui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
 
 interface AutocompleteOption {
   label: string;
@@ -21,12 +22,13 @@ export const Autocomplete = ({
 
   const [selectedOption, setSelectedOption] =
     useState<AutocompleteOption | null>(null);
+
   const [searchCriteria, setSearchCriteria] = useState("");
+
+  const [debouncedSearchCriteria] = useDebounce(searchCriteria, 500);
 
   const updateSearchCriteria = async (newSearchCriteria: string) => {
     setSearchCriteria(newSearchCriteria);
-    const newOptions = await searchFunction(newSearchCriteria);
-    setOptions(newOptions);
   };
 
   const handleOptionSelection = (newSelectedOption: AutocompleteOption) => {
@@ -34,9 +36,22 @@ export const Autocomplete = ({
     onOptionSelection?.(newSelectedOption);
   };
 
-  const gotSearchResults = searchCriteria && options.length;
+  const gotSearchResults = debouncedSearchCriteria && options.length;
 
-  const gotNoSearchResult = searchCriteria && !options.length;
+  const gotNoSearchResult = debouncedSearchCriteria && !options.length;
+
+  //search and update autocomplete options based on debounced search criteria
+  useEffect(() => {
+    const updateOptions = async () => {
+      if (debouncedSearchCriteria) {
+        const newOptions = await searchFunction(debouncedSearchCriteria);
+        setOptions(newOptions);
+      } else {
+        setOptions([]);
+      }
+    };
+    updateOptions();
+  }, [debouncedSearchCriteria, searchFunction]);
 
   return (
     <Combobox value={selectedOption} onChange={handleOptionSelection}>
@@ -76,7 +91,9 @@ export const Autocomplete = ({
             )}
           />
         </div>
-        {gotNoSearchResult && emptyState ? emptyState(searchCriteria) : null}
+        {gotNoSearchResult && emptyState
+          ? emptyState(debouncedSearchCriteria)
+          : null}
       </>
     </Combobox>
   );
