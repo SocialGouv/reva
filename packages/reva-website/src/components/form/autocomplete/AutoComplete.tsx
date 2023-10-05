@@ -16,7 +16,7 @@ export const Autocomplete = ({
   searchFunction: (searchCriteria: string) => Promise<AutocompleteOption[]>;
   onOptionSelection?: (selectedOption: AutocompleteOption) => void;
   placeholder?: string;
-  emptyState?: (searchCriteria: string) => void;
+  emptyState?: (searchCriteria: string) => React.ReactNode;
 }) => {
   const [options, setOptions] = useState<AutocompleteOption[]>([]);
 
@@ -58,13 +58,17 @@ export const Autocomplete = ({
       <>
         <div className="relative flex rounded-[100px] h-[56px] shadow-[0px_8px_24px_0px_rgba(11,11,248,0.16)]">
           <Combobox.Input
+            data-testid="autocomplete-input"
             displayValue={(option: AutocompleteOption) => option?.label}
             onChange={(event) => updateSearchCriteria(event.target.value)}
             placeholder={placeholder}
             className="flex items-center w-full rounded-[100px] rounded-r-none border-2 border-dsfrBlue-franceSun px-6 py-4 outline-none placeholder:italic bg-white"
           />
           {gotSearchResults ? (
-            <Combobox.Options className="absolute z-10 max-h-[500px] overflow-auto top-[48px] left-0 bg-white border-[1px] border-gray-300 w-[calc(100%-52px)] py-2 shadow-[0px_2px_6px_0px_rgba(0,0,18,0.16)]">
+            <Combobox.Options
+              data-testid="autocomplete-options"
+              className="absolute z-10 max-h-[500px] overflow-auto top-[48px] left-0 bg-white border-[1px] border-gray-300 w-[calc(100%-52px)] py-2 shadow-[0px_2px_6px_0px_rgba(0,0,18,0.16)]"
+            >
               {options.map((option) => (
                 <Combobox.Option
                   key={option.value}
@@ -91,9 +95,11 @@ export const Autocomplete = ({
             )}
           />
         </div>
-        {gotNoSearchResult && emptyState
-          ? emptyState(debouncedSearchCriteria)
-          : null}
+        {gotNoSearchResult && emptyState ? (
+          <div data-testid="autocomplete-empty-state">
+            {emptyState(debouncedSearchCriteria)}
+          </div>
+        ) : null}
       </>
     </Combobox>
   );
