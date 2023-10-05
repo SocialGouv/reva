@@ -10,7 +10,8 @@
     "graphql:generate": "graphql-codegen",
     "graphql:watch": "graphql-codegen --watch",
     "predev": "only-include-used-icons && npm run graphql:generate",
-    "prebuild": "only-include-used-icons && node ./src/scripts/generateRobotsTxt.js && npm i --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && npm run graphql:generate"
+    "prebuild": "only-include-used-icons && node ./src/scripts/generateRobotsTxt.js && npm i --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && npm run graphql:generate",
+    "cypress:open":"cypress open"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^0.66.6",
@@ -44,6 +45,7 @@
     "@parcel/watcher": "^2.3.0",
     "@types/lodash": "^4.14.195",
     "autoprefixer": "^10.4.13",
+    "cypress": "^13.3.0",
     "postcss": "^8.4.21",
     "rimraf": "^4.1.2",
     "tailwindcss": "^3.2.6"
