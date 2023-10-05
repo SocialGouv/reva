@@ -179,7 +179,7 @@ const AvenirPro = () => (
 const ValorisationCompetences = () => (
   <section
     id="valorisation-competences"
-    className="w-full mt-20 sm:mt-24 bg-dsfrGray-altblueFrance md:bg-[url('/home-page/section-background/polygons-section1.5.svg')] md:bg-cover bg-no-repeat"
+    className="w-full mt-20 sm:mt-24 bg-dsfrGray-altblueFrance md:bg-[url('/home-page/section-background/polygons-section1.5.svg')] md:bg-cover bg-no-repeat overflow-hidden"
   >
     <div className="fr-container mx-auto relative md:flex">
       <div className="relative flex-1 min-h-[200px] max-w-lg -mt-[60px] md:-mt-[190px]">
