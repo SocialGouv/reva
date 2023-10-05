@@ -70,7 +70,7 @@ export const Autocomplete = ({
           {status === "GOT_RESULTS" ? (
             <Combobox.Options
               data-testid="autocomplete-options"
-              className="absolute z-10 max-h-[500px] overflow-auto top-[48px] left-0 bg-white border-[1px] border-gray-300 w-[calc(100%-52px)] py-2 shadow-[0px_2px_6px_0px_rgba(0,0,18,0.16)]"
+              className="absolute z-10 max-h-[500px] overflow-auto top-[48px] left-0 bg-white border-[1px] border-gray-300 w-[calc(100%-52px)] px-4 py-2 shadow-[0px_2px_6px_0px_rgba(0,0,18,0.16)]"
             >
               {options.map((option) => (
                 <Combobox.Option
