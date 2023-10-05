@@ -23,6 +23,10 @@ export const Autocomplete = ({
   const [selectedOption, setSelectedOption] =
     useState<AutocompleteOption | null>(null);
 
+  const [status, setStatus] = useState<
+    "IDLE" | "SEARCHING" | "GOT_RESULTS" | "GOT_NO_RESULT"
+  >("IDLE");
+
   const [searchCriteria, setSearchCriteria] = useState("");
 
   const [debouncedSearchCriteria] = useDebounce(searchCriteria, 500);
@@ -36,18 +40,17 @@ export const Autocomplete = ({
     onOptionSelection?.(newSelectedOption);
   };
 
-  const gotSearchResults = debouncedSearchCriteria && options.length;
-
-  const gotNoSearchResult = debouncedSearchCriteria && !options.length;
-
   //search and update autocomplete options based on debounced search criteria
   useEffect(() => {
     const updateOptions = async () => {
+      setStatus("SEARCHING");
       if (debouncedSearchCriteria) {
         const newOptions = await searchFunction(debouncedSearchCriteria);
         setOptions(newOptions);
+        setStatus(newOptions.length ? "GOT_RESULTS" : "GOT_NO_RESULT");
       } else {
         setOptions([]);
+        setStatus("IDLE");
       }
     };
     updateOptions();
@@ -64,7 +67,7 @@ export const Autocomplete = ({
             placeholder={placeholder}
             className="flex items-center w-full rounded-[100px] rounded-r-none border-2 border-dsfrBlue-franceSun px-6 py-4 outline-none placeholder:italic bg-white"
           />
-          {gotSearchResults ? (
+          {status === "GOT_RESULTS" ? (
             <Combobox.Options
               data-testid="autocomplete-options"
               className="absolute z-10 max-h-[500px] overflow-auto top-[48px] left-0 bg-white border-[1px] border-gray-300 w-[calc(100%-52px)] py-2 shadow-[0px_2px_6px_0px_rgba(0,0,18,0.16)]"
@@ -95,7 +98,7 @@ export const Autocomplete = ({
             )}
           />
         </div>
-        {gotNoSearchResult && emptyState ? (
+        {status === "GOT_NO_RESULT" && emptyState ? (
           <div data-testid="autocomplete-empty-state">
             {emptyState(debouncedSearchCriteria)}
           </div>
