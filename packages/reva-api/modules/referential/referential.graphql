@@ -97,6 +97,7 @@ type Query {
     departmentId: UUID
     searchText: String
   ): CertificationPage!
+  getCertification(certificationId: ID!): Certification!
   getRegions: [Region!]!
   getDepartments: [Department!]!
   getDegrees: [Degree!]!

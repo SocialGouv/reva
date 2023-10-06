@@ -236,29 +236,25 @@ getReferential object____ =
 type alias GetCertificationsOptionalArguments =
     { offset : OptionalArgument Int
     , limit : OptionalArgument Int
+    , departmentId : OptionalArgument Data.Scalar.Uuid
     , searchText : OptionalArgument String
     }
 
 
-type alias GetCertificationsRequiredArguments =
-    { departmentId : Data.Scalar.Uuid }
-
-
 getCertifications :
     (GetCertificationsOptionalArguments -> GetCertificationsOptionalArguments)
-    -> GetCertificationsRequiredArguments
     -> SelectionSet decodesTo Admin.Object.CertificationPage
     -> SelectionSet decodesTo RootQuery
-getCertifications fillInOptionals____ requiredArgs____ object____ =
+getCertifications fillInOptionals____ object____ =
     let
         filledInOptionals____ =
-            fillInOptionals____ { offset = Absent, limit = Absent, searchText = Absent }
+            fillInOptionals____ { offset = Absent, limit = Absent, departmentId = Absent, searchText = Absent }
 
         optionalArgs____ =
-            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "searchText" filledInOptionals____.searchText Encode.string ]
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "departmentId" filledInOptionals____.departmentId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.optional "searchText" filledInOptionals____.searchText Encode.string ]
                 |> List.filterMap Basics.identity
     in
-    Object.selectionForCompositeField "getCertifications" (optionalArgs____ ++ [ Argument.required "departmentId" requiredArgs____.departmentId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ]) object____ Basics.identity
+    Object.selectionForCompositeField "getCertifications" optionalArgs____ object____ Basics.identity
 
 
 getRegions :
@@ -351,3 +347,15 @@ subscription_getSubscriptionRequest :
     -> SelectionSet (Maybe decodesTo) RootQuery
 subscription_getSubscriptionRequest requiredArgs____ object____ =
     Object.selectionForCompositeField "subscription_getSubscriptionRequest" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+
+
+type alias GetCertificationRequiredArguments =
+    { certificationId : Data.Scalar.Id }
+
+
+getCertification :
+    GetCertificationRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Certification
+    -> SelectionSet decodesTo RootQuery
+getCertification requiredArgs____ object____ =
+    Object.selectionForCompositeField "getCertification" [ Argument.required "certificationId" requiredArgs____.certificationId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ Basics.identity
