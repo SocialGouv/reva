@@ -7,7 +7,7 @@ export const CertificateCard = ({
   rncpCode: string;
   certificateType: string;
 }) => (
-  <div className="flex flex-col ml-0 lg:ml-32">
+  <div className="flex flex-col">
     <h2 className="text-dsfrGray-labelGrey text-xs font-bold uppercase">
       Diplôme sélectionné
     </h2>
