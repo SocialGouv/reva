@@ -43,7 +43,7 @@ export const getCertificationAuthorities = ({
           },
         },
       })
-    : null;
+    : [];
 
 export const createFeasibility = async ({
   candidacyId,
