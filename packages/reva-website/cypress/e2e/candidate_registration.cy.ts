@@ -1,0 +1,28 @@
+import { stubQuery } from "../support/graphql";
+
+describe("candidate registration", () => {
+  it("should show the certificate selected in the previous screen", () => {
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");
+    });
+
+    cy.visit(
+      "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
+    );
+
+    cy.wait("@getCertification");
+
+    cy.get('[data-testid="selected-certificate-label"]').should(
+      "have.text",
+      "BTS Chaudronnier"
+    );
+    cy.get('[data-testid="selected-certificate-code-rncp"]').should(
+      "have.text",
+      "RNCP123"
+    );
+    cy.get('[data-testid="selected-certificate-type-diplome"]').should(
+      "have.text",
+      "Titre-BTS"
+    );
+  });
+});

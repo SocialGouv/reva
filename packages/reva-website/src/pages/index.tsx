@@ -13,6 +13,7 @@ import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
 import request from "graphql-request";
 import Head from "next/head";
 import Image from "next/image";
+import { useRouter } from "next/router";
 /* eslint-disable react/no-unescaped-entities */
 import * as React from "react";
 
@@ -63,6 +64,7 @@ const HomeContainer = ({ children }: { children: React.ReactNode }) => (
 );
 
 export const FaitesValiderVosCompetencesParUnDiplome = () => {
+  const router = useRouter();
   return (
     <section
       id="faites-valider-vos-competences-par-un-diplome"
@@ -86,7 +88,9 @@ export const FaitesValiderVosCompetencesParUnDiplome = () => {
               label: r.label,
             }))
           }
-          onOptionSelection={(o) => alert(o.value)}
+          onOptionSelection={(o) =>
+            router.push(`/inscription-candidat?certificationId=${o.value}`)
+          }
           placeholder="Rechercher un diplôme ..."
           emptyState={(searchCriteria) => (
             <p className="text-lg font-bold p-8">
