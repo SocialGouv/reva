@@ -26,6 +26,22 @@ describe("candidate registration", () => {
     );
   });
 
+  it("should have an empty candidate typology at page load", () => {
+    cy.intercept("POST", "/api/graphql", (req) => {
+      stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");
+    });
+
+    cy.visit(
+      "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
+    );
+
+    cy.wait("@getCertification");
+
+    cy.get('[data-testid="candidate-typology-select"]')
+      .children("select")
+      .should("have.value", null);
+  });
+
   it("should show an error panel when i select a candidate typology of 'SALARIE_PUBLIC' or 'AUTRE'", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");

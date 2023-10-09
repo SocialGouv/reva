@@ -99,7 +99,7 @@ const OrientationCandidatPage = () => {
                       setCandidateTypology(e.target.value as CandidateTypology),
                   }}
                 >
-                  <option value={undefined} disabled></option>
+                  <option value={undefined} disabled selected></option>
                   <option value="SALARIE_PRIVE">
                     Je suis salarié du secteur privé
                   </option>
