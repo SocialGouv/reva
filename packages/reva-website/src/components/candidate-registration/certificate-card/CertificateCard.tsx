@@ -8,7 +8,7 @@ export const CertificateCard = ({
   certificateType: string;
 }) => (
   <div className="flex flex-col">
-    <h2 className="text-dsfrGray-labelGrey text-xs font-bold uppercase">
+    <h2 className="text-dsfrGray-labelGrey text-xs font-bold uppercase mb-2">
       Diplôme sélectionné
     </h2>
     <div

@@ -6,6 +6,7 @@ import {
   CandidateTypology,
   CandidateTypologySelect,
 } from "@/components/candidate-registration/candidate-typology-select/CandidateTypologySelect";
+import { CertificateAutocomplete } from "@/components/candidate-registration/certificate-autocomplete/CertificateAutocomplete";
 import { CertificateCard } from "@/components/candidate-registration/certificate-card/CertificateCard";
 import { WouldYouLikeToKnowMorePanel } from "@/components/candidate-registration/would-you-like-to-know-more-panel/WouldYouLikeToKnowMorePanel";
 import { FullHeightBlueLayout } from "@/components/layout/full-height-blue-layout/FullHeightBlueLayout";
@@ -94,6 +95,18 @@ const OrientationCandidatPage = () => {
           </p>
           {certification && (
             <div className="flex flex-col ml-0 lg:ml-32 gap-4 max-w-7xl">
+              <fieldset className="mb-4">
+                <legend className="text-sm mb-2 text-dsfrGray-titleGrey">
+                  Recherchez parmi les diplômes disponibles
+                </legend>
+                <CertificateAutocomplete
+                  onOptionSelection={(o) =>
+                    router.push(
+                      `/inscription-candidat?certificationId=${o.value}`
+                    )
+                  }
+                />
+              </fieldset>
               <CertificateCard
                 label={certification.label}
                 rncpCode={certification.codeRncp}

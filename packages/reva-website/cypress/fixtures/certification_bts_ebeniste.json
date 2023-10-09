@@ -1,0 +1,12 @@
+{
+  "data": {
+    "getCertification": {
+      "id": "b8cc6d4b-188d-4d22-86b4-b246cbc6e6ae",
+      "label": "BTS Ébéniste",
+      "codeRncp": "RNCP5678",
+      "typeDiplome": {
+        "label": "Titre-BTS"
+      }
+    }
+  }
+}

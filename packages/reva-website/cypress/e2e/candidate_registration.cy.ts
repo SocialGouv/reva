@@ -194,3 +194,33 @@ describe("candidate registration", () => {
     );
   });
 });
+
+it("should show another certificate when i search for another one within the page", () => {
+  cy.intercept("POST", "/api/graphql", (req) => {
+    stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");
+    stubQuery(
+      req,
+      "searchCertificationsQuery",
+      "candidate_certificate_search.json"
+    );
+  });
+
+  cy.visit(
+    "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
+  );
+
+  cy.wait("@getCertification");
+
+  cy.get('[data-testid="autocomplete-input"]').type("ebeniste", {
+    delay: 0,
+  });
+
+  cy.wait("@searchCertificationsQuery");
+
+  cy.get('[data-testid="autocomplete-options"]').children("li").eq(1).click();
+
+  cy.url().should(
+    "eq",
+    "http://localhost:3002/inscription-candidat/?certificationId=b8cc6d4b-188d-4d22-86b4-b246cbc6e6ae"
+  );
+});

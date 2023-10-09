@@ -17,10 +17,10 @@ describe("candidate certificate search", () => {
     });
     cy.wait("@searchCertificationsQuery");
 
-    cy.get('[data-testid="autocomplete-options"]').should(
-      "have.text",
-      "BTS Chaudronnier"
-    );
+    cy.get('[data-testid="autocomplete-options"]')
+      .children("li")
+      .eq(0)
+      .should("have.text", "BTS Chaudronnier");
   });
 
   it("should show an empty state when no relevant certificate is found", () => {
