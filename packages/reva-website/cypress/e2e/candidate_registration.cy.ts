@@ -68,7 +68,7 @@ describe("candidate registration", () => {
 
     cy.get('[data-testid="candidate-typology-error-panel"]').should(
       "have.text",
-      "Le parcours VAE sur vae.gouv.fr n'est pas encore disponible dans votre situation. Dirigez-vous vers vae.centre-inffo.fr"
+      "Prenez rendez-vous avec un conseiller près de chez vous pour être orienté."
     );
   });
 

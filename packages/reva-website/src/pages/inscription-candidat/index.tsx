@@ -4,7 +4,6 @@ import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { Certification } from "@/graphql/generated/graphql";
-import Alert from "@codegouvfr/react-dsfr/Alert";
 import CallOut from "@codegouvfr/react-dsfr/CallOut";
 import Notice from "@codegouvfr/react-dsfr/Notice";
 import Select from "@codegouvfr/react-dsfr/Select";
@@ -118,7 +117,11 @@ const OrientationCandidatPage = () => {
                   <Notice
                     data-testid="candidate-typology-error-panel"
                     className="basis-1/2"
-                    title="Le parcours VAE sur vae.gouv.fr n'est pas encore disponible dans votre situation. Dirigez-vous vers vae.centre-inffo.fr"
+                    title={
+                      candidateTypology === "SALARIE_PUBLIC"
+                        ? "Le parcours VAE sur vae.gouv.fr n'est pas encore disponible dans votre situation. Dirigez-vous vers vae.centre-inffo.fr"
+                        : "Prenez rendez-vous avec un conseiller près de chez vous pour être orienté."
+                    }
                   />
                 )}
               </div>
