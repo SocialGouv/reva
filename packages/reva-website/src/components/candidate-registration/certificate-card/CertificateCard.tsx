@@ -13,7 +13,7 @@ export const CertificateCard = ({
     </h2>
     <div
       data-testid="selected-certificate"
-      className="grid grid-cols-2 gap-y-2 p-4 rounded-2xl border-4 border-dsfrBlue-openBlueFrance bg-dsfrGray-defaultGrey max-w-3xl"
+      className="grid grid-cols-[1fr_60px] gap-y-2 p-4 rounded-2xl border-4 border-dsfrBlue-openBlueFrance bg-dsfrGray-defaultGrey max-w-3xl"
     >
       <div
         data-testid="selected-certificate-type-diplome"
