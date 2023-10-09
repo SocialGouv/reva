@@ -137,7 +137,7 @@ describe("candidate registration", () => {
     cy.get('[data-testid="candidate-registration-form"]').should("exist");
   });
 
-  it.only("should let me send a valid candidate registration form  ", () => {
+  it("should let me send a valid candidate registration form  ", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");
       stubQuery(
