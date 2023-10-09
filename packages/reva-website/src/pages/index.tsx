@@ -1,32 +1,19 @@
 import { AdmissibleSectorsInfoPanel } from "@/components/admissible-sectors-info-panel/AdmissibleSectorsInfoPanel";
 import { TrackableButton } from "@/components/analytics/trackable-button/TrackableButton";
-import { Autocomplete } from "@/components/form/autocomplete/AutoComplete";
+import { CertificateAutocomplete } from "@/components/candidate-registration/certificate-autocomplete/CertificateAutocomplete";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
 import { PICTOGRAMS } from "@/components/pictograms";
 import {
   Hexagon,
   SectionParagraph,
 } from "@/components/section-content/SectionContent";
-import { FeatureFlags, GRAPHQL_API_URL } from "@/config/config";
-import { graphql } from "@/graphql/generated/gql";
+import { FeatureFlags } from "@/config/config";
 import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
-import request from "graphql-request";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 /* eslint-disable react/no-unescaped-entities */
 import * as React from "react";
-
-const searchCertificationsQuery = graphql(`
-  query searchCertificationsQuery($searchText: String!) {
-    getCertifications(searchText: $searchText) {
-      rows {
-        id
-        label
-      }
-    }
-  }
-`);
 
 const ArrowRight = () => (
   <span className="fr-icon-arrow-right-line mr-6" aria-hidden="true" />
@@ -77,27 +64,10 @@ export const FaitesValiderVosCompetencesParUnDiplome = () => {
         <p className="text-xl leading-relaxed">
           Recherchez-le et commencez votre parcours VAE dès maintenant !
         </p>
-        <Autocomplete
-          searchFunction={async (searchText) =>
-            (
-              await request(GRAPHQL_API_URL, searchCertificationsQuery, {
-                searchText,
-              })
-            ).getCertifications.rows.map((r) => ({
-              value: r.id,
-              label: r.label,
-            }))
-          }
+        <CertificateAutocomplete
           onOptionSelection={(o) =>
             router.push(`/inscription-candidat?certificationId=${o.value}`)
           }
-          placeholder="Rechercher un diplôme ..."
-          emptyState={(searchCriteria) => (
-            <p className="text-lg font-bold p-8">
-              Les diplômes correspondants au métier "{searchCriteria}" ne sont
-              pas disponibles.
-            </p>
-          )}
         />
         <br />
         <h2 className="text-2xl lg:text-3xl mb-10 mt-10">

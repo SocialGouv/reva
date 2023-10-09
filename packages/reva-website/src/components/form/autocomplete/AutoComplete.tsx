@@ -3,7 +3,7 @@ import { Combobox } from "@headlessui/react";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 
-interface AutocompleteOption {
+export interface AutocompleteOption {
   label: string;
   value: string;
 }
