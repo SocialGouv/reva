@@ -1,4 +1,8 @@
 import {
+  CandidateRegistrationForm,
+  CandidateRegistrationFormSchema,
+} from "@/components/candidate-registration/candidate-registration-form/CandidateRegistrationForm";
+import {
   CandidateTypology,
   CandidateTypologySelect,
 } from "@/components/candidate-registration/candidate-typology-select/CandidateTypologySelect";
@@ -29,6 +33,12 @@ const getCertificationQuery = graphql(`
   }
 `);
 
+const askForRegistrationMutation = graphql(`
+  mutation candidate_askForRegistration($candidate: CandidateInput!) {
+    candidate_askForRegistration(candidate: $candidate)
+  }
+`);
+
 const OrientationCandidatPage = () => {
   const router = useRouter();
   const { certificationId } = router.query;
@@ -41,6 +51,13 @@ const OrientationCandidatPage = () => {
     Certification,
     "id" | "label" | "codeRncp" | "typeDiplome"
   > | null>(null);
+
+  const handleFormSubmit = async (form: CandidateRegistrationFormSchema) => {
+    await request(GRAPHQL_API_URL, askForRegistrationMutation, {
+      candidate: form,
+    });
+    router.push("/inscription-candidat/confirmation");
+  };
 
   useEffect(() => {
     const updateCertification = async () => {
@@ -59,6 +76,8 @@ const OrientationCandidatPage = () => {
 
   const invalidTypology =
     candidateTypology === "SALARIE_PUBLIC" || candidateTypology === "AUTRE";
+
+  const validTypology = candidateTypology && !invalidTypology;
 
   return (
     <MainLayout>
@@ -101,6 +120,14 @@ const OrientationCandidatPage = () => {
                 )}
               </div>
               {invalidTypology && <WouldYouLikeToKnowMorePanel />}
+              {validTypology && (
+                <>
+                  <h2 className="text-dsfrBlue-franceSun text-2xl font-bold mt-8 mb-2">
+                    Créez votre compte
+                  </h2>
+                  <CandidateRegistrationForm onSubmit={handleFormSubmit} />
+                </>
+              )}
             </div>
           )}
         </div>
