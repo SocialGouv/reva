@@ -16,11 +16,11 @@ export const CertificateCard = ({
       className="grid grid-cols-2 gap-y-2 p-4 rounded-2xl border-4 border-dsfrBlue-openBlueFrance bg-dsfrGray-defaultGrey max-w-3xl"
     >
       <div
-        data-testid="selected-certificate-label"
+        data-testid="selected-certificate-type-diplome"
         className="flex items-center gap-1 text-dsfrGray-mentionGrey text-xs italic"
       >
         <CheckOffIcon />
-        {label}
+        {certificateType}
       </div>
       <div
         data-testid="selected-certificate-code-rncp"
@@ -29,10 +29,10 @@ export const CertificateCard = ({
         {rncpCode}
       </div>
       <div
-        data-testid="selected-certificate-type-diplome"
+        data-testid="selected-certificate-label"
         className="text-dsfrGray-titleGrey text-xl font-bold"
       >
-        {certificateType}
+        {label}
       </div>
       <span
         className="fr-icon-arrow-right-line ml-auto text-dsfrGray-titleGrey "
