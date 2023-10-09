@@ -260,42 +260,19 @@ export const getActiveFeasibilities = async ({
     ? { decision, isActive: true }
     : { isActive: true };
 
-  //only list feasibilties attached to candidacies that have both certification and department covered by the certification authority linked to the user account
+  //only list feasibilties linked to the account certification authority
   if (hasRole("manage_feasibility")) {
-    const account = await prismaClient.account.findFirst({
-      where: { keycloakId },
-      include: {
-        certificationAuthority: {
-          include: {
-            certificationAuthorityOnDepartment: true,
-            certificationAuthorityOnCertification: true,
-          },
-        },
-      },
+    const account = await prismaClient.account.findFirstOrThrow({
+      where: { keycloakId, NOT: { certificationAuthorityId: null } },
     });
-
-    const accountDepartmentIdList =
-      account?.certificationAuthority?.certificationAuthorityOnDepartment?.map(
-        (c) => c.departmentId
-      ) || [];
-
-    const accountCertificationIdList =
-      account?.certificationAuthority?.certificationAuthorityOnCertification?.map(
-        (c) => c.certificationId
-      ) || [];
 
     queryWhereClause = {
       ...queryWhereClause,
       candidacy: {
-        certificationsAndRegions: {
+        Feasibility: {
           some: {
             isActive: true,
-            certificationId: { in: accountCertificationIdList },
-            region: {
-              departments: {
-                some: { id: { in: accountDepartmentIdList } },
-              },
-            },
+            certificationAuthorityId: account.certificationAuthorityId || "_",
           },
         },
       },
