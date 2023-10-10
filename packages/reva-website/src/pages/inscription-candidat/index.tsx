@@ -120,6 +120,13 @@ const OrientationCandidatPage = () => {
                   candidateTypology={candidateTypology}
                   onChange={setCandidateTypology}
                 />
+                {validTypology && (
+                  <Notice
+                    data-testid="candidate-typology-success-panel"
+                    className="basis-1/2"
+                    title={`Bonne nouvelle ! Vous pouvez continuer votre parcours.`}
+                  />
+                )}
                 {invalidTypology && (
                   <Notice
                     data-testid="candidate-typology-error-panel"
