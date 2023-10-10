@@ -20,6 +20,7 @@ export const WouldYouLikeToKnowMorePanel = () => (
         Si vous ne trouvez pas votre diplôme dans la liste, nous vous invitons à
         vous rapprocher d’un{" "}
         <a
+          target="_blank"
           href="https://vae.centre-inffo.fr/?page=carte-prc"
           title="point relais conseil - nouvelle fenêtre"
         >
@@ -27,6 +28,7 @@ export const WouldYouLikeToKnowMorePanel = () => (
         </a>
         , d’un{" "}
         <a
+          target="_blank"
           href="https://mon-cep.org/#trouver"
           title="conseiller en évolution professionnelle - nouvelle fenêtre"
         >
@@ -34,6 +36,7 @@ export const WouldYouLikeToKnowMorePanel = () => (
         </a>
         , une{" "}
         <a
+          target="_blank"
           href="https://www.transitionspro.fr/"
           title="association de transition professionnelle (AT Pro) - nouvelle fenêtre"
         >
