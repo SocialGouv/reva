@@ -58,9 +58,9 @@ init context subscriptionId =
                 , onSave = Nothing
                 , onSubmit = Api.Form.OrganismSubscription.submitDecision subscriptionId
                 , onRedirect =
-                    Nav.pushUrl
+                    Nav.back
                         context.navKey
-                        (Route.toString context.baseUrl (Route.Subscriptions Route.emptySubscriptionFilters))
+                        1
                 , onValidate = Data.Form.OrganismSubscription.validate
                 , status = Form.Editable
                 }
