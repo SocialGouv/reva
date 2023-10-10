@@ -34,10 +34,6 @@ export const CertificateCard = ({
       >
         {label}
       </div>
-      <span
-        className="fr-icon-arrow-right-line ml-auto text-dsfrGray-titleGrey "
-        aria-hidden="true"
-      />
     </div>
   </div>
 );
