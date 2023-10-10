@@ -16,7 +16,7 @@ export const CandidateTypologySelect = ({
 }) => (
   <Select
     data-testid="candidate-typology-select"
-    className="basis-1/2"
+    className="basis-1/2 !mb-0"
     label="Votre statut"
     nativeSelectProps={{
       value: candidateTypology,
