@@ -12,6 +12,7 @@ export const createBatchFromFundingRequestUnifvae = async (
         candidacy: {
           select: {
             certificationsAndRegions: {
+              where: { isActive: true },
               include: { certification: { select: { rncpId: true } } },
             },
             organism: { select: { siret: true } },

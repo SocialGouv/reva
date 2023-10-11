@@ -41,6 +41,7 @@ beforeAll(async () => {
           {
             regionId: (regionIdf as Region).id,
             certificationId: (certif as Certification).id,
+            isActive: true,
             author: "nawak",
           },
         ],
