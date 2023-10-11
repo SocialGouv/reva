@@ -26,6 +26,7 @@ export interface CandidateRegistrationInput {
   email: string;
   phone: string;
   departmentId: string;
+  certificationId?: string;
   action: "registration";
 }
 

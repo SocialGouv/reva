@@ -12,6 +12,7 @@ interface CandidateInput {
   firstname: string;
   lastname: string;
   departmentId: string;
+  certificationId?: string;
 }
 
 interface AskForRegistrationDeps {

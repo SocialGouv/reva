@@ -1,5 +1,7 @@
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 
+import { updateCertification } from "../../candidacy/database/candidacies";
+import { isCertificationAvailableInDepartment } from "../../referential/features/isCertificationAvailableInDepartment";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -55,7 +57,7 @@ export const candidateAuthentication = async ({
       });
     } else {
       return confirmRegistration({
-        candidate: candidateAuthenticationInput,
+        candidateRegistrationInput: candidateAuthenticationInput,
         keycloakAdmin,
       });
     }
@@ -73,12 +75,13 @@ export const candidateAuthentication = async ({
 };
 
 const confirmRegistration = async ({
-  candidate,
+  candidateRegistrationInput,
   keycloakAdmin,
 }: {
-  candidate: CandidateRegistrationInput;
+  candidateRegistrationInput: CandidateRegistrationInput;
   keycloakAdmin: KeycloakAdminClient;
 }) => {
+  const { certificationId, ...candidate } = candidateRegistrationInput;
   const candidateKeycloakId = (
     await createCandidateAccountInIAM(keycloakAdmin)({
       email: candidate.email,
@@ -94,7 +97,7 @@ const confirmRegistration = async ({
     })
     .unsafeCoerce();
 
-  const candidateWithCandidacy = (
+  let candidateWithCandidacy = (
     await createCandidateWithCandidacy({
       ...candidate,
       keycloakId: candidateKeycloakId,
@@ -107,6 +110,27 @@ const confirmRegistration = async ({
       );
     })
     .unsafeCoerce();
+
+  // if the candidate has selected a certification during its registration, we assign it if it's available in his department
+  if (
+    certificationId &&
+    (await isCertificationAvailableInDepartment({
+      certificationId,
+      departmentId: candidateRegistrationInput.departmentId,
+    }))
+  ) {
+    await updateCertification({
+      candidacyId: candidateWithCandidacy.candidacies[0].id,
+      author: "candidate",
+      certificationId,
+      departmentId: candidateRegistrationInput.departmentId,
+    });
+
+    //reload candidate and candidacy after certification update
+    candidateWithCandidacy = (
+      await getCandidateWithCandidacyFromKeycloakId(candidateKeycloakId)
+    ).unsafeCoerce();
+  }
 
   const iamToken = (await generateIAMToken(keycloakAdmin)(candidateKeycloakId))
     .map((tokens: { accessToken: string; refreshToken: string }) => ({

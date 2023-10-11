@@ -49,6 +49,7 @@ input CandidateInput {
   firstname: String!
   lastname: String!
   departmentId: String!
+  certificationId: String
 }
 
 input FullCandidateInput {

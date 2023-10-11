@@ -224,9 +224,15 @@ encodeCandidateGoalInput input____ =
 
 buildCandidateInput :
     CandidateInputRequiredFields
+    -> (CandidateInputOptionalFields -> CandidateInputOptionalFields)
     -> CandidateInput
-buildCandidateInput required____ =
-    { email = required____.email, phone = required____.phone, firstname = required____.firstname, lastname = required____.lastname, departmentId = required____.departmentId }
+buildCandidateInput required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { certificationId = Absent }
+    in
+    { email = required____.email, phone = required____.phone, firstname = required____.firstname, lastname = required____.lastname, departmentId = required____.departmentId, certificationId = optionals____.certificationId }
 
 
 type alias CandidateInputRequiredFields =
@@ -238,6 +244,10 @@ type alias CandidateInputRequiredFields =
     }
 
 
+type alias CandidateInputOptionalFields =
+    { certificationId : OptionalArgument String }
+
+
 {-| Type for the CandidateInput input object.
 -}
 type alias CandidateInput =
@@ -246,6 +256,7 @@ type alias CandidateInput =
     , firstname : String
     , lastname : String
     , departmentId : String
+    , certificationId : OptionalArgument String
     }
 
 
@@ -254,7 +265,7 @@ type alias CandidateInput =
 encodeCandidateInput : CandidateInput -> Value
 encodeCandidateInput input____ =
     Encode.maybeObject
-        [ ( "email", Encode.string input____.email |> Just ), ( "phone", Encode.string input____.phone |> Just ), ( "firstname", Encode.string input____.firstname |> Just ), ( "lastname", Encode.string input____.lastname |> Just ), ( "departmentId", Encode.string input____.departmentId |> Just ) ]
+        [ ( "email", Encode.string input____.email |> Just ), ( "phone", Encode.string input____.phone |> Just ), ( "firstname", Encode.string input____.firstname |> Just ), ( "lastname", Encode.string input____.lastname |> Just ), ( "departmentId", Encode.string input____.departmentId |> Just ), ( "certificationId", Encode.string |> Encode.optional input____.certificationId ) ]
 
 
 buildCandidateTypologyInformationsInput :
