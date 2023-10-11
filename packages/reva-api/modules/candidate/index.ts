@@ -8,15 +8,8 @@ import {
   sendRegistrationEmail,
   sendUnknownUserEmail,
 } from "../shared/email";
+import { generateJwt } from "./auth.helper";
 import {
-  createCandidateAccountInIAM,
-  generateIAMToken,
-  generateJwt,
-  getCandidateAccountInIAM,
-  getJWTContent,
-} from "./auth.helper";
-import {
-  createCandidateWithCandidacy,
   getCandidateByEmail as getCandidateByEmailFromDb,
   getCandidateWithCandidacyFromKeycloakId,
 } from "./database/candidates";
@@ -97,14 +90,9 @@ export const resolvers = {
       const keycloakAdmin = await app.getKeycloakAdmin();
 
       const result = await candidateAuthentication({
-        createCandidateInIAM: createCandidateAccountInIAM(keycloakAdmin),
-        createCandidateWithCandidacy,
-        extractCandidateFromToken: async () => getJWTContent(params.token),
-        extractEmailFromToken: async () => getJWTContent(params.token),
-        getCandidateIdFromIAM: getCandidateAccountInIAM(keycloakAdmin),
-        generateIAMToken: generateIAMToken(keycloakAdmin),
-        getCandidateWithCandidacy: getCandidateWithCandidacyFromKeycloakId,
-      })(params);
+        ...params,
+        keycloakAdmin,
+      });
 
       return result;
     },
