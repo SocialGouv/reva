@@ -106,9 +106,7 @@ export const resolvers = {
         getCandidateWithCandidacy: getCandidateWithCandidacyFromKeycloakId,
       })(params);
 
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
+      return result;
     },
     candidate_askForLogin: async (
       _: unknown,
