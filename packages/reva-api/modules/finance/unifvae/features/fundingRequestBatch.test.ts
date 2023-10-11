@@ -119,7 +119,7 @@ test("Should create a nice batch", async () => {
     NumAction: "zobilol123",
     ForfaitPartiel: 0,
     SiretAP: aap?.siret,
-    Certification: certif?.label,
+    Certification: certif?.rncpId,
     NomCandidat: candidateSample.candidateLastname,
     PrenomCandidat1: candidateSample.candidateFirstname,
     PrenomCandidat2: null,
