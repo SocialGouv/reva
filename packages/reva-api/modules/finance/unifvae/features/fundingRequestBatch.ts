@@ -79,6 +79,7 @@ export const createBatchFromFundingRequestUnifvae = async (
           .sort()
           .join(", "),
         ActeFormatifComplémentaire_SavoirsDeBase: savoirsDeBase
+          .map(getActeFormatifComplémentaire_SavoirsDeBaseId)
           .sort()
           .join(", "),
         ActeFormatifComplémentaire_BlocDeCompetencesCertifiant:
@@ -119,5 +120,20 @@ const getActeFormatifComplémentaire_FormationObligatoireId = (
       throw new Error(
         `Unknown mandatory training label: ${mandatoryTrainingLabel}`
       );
+  }
+};
+
+const getActeFormatifComplémentaire_SavoirsDeBaseId = (
+  basicSkillLabel: string
+) => {
+  switch (basicSkillLabel) {
+    case "Usage et communication numérique":
+      return "0";
+    case "Utilisation des règles de base de calcul et du raisonnement mathématique":
+      return "1";
+    case "Communication en français":
+      return "2";
+    default:
+      throw new Error(`Unknown basic skill label: ${basicSkillLabel}`);
   }
 };

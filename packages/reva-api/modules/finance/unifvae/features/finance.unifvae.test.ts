@@ -54,35 +54,39 @@ let organism: Organism,
   myCandidate: Candidate,
   candidacyUnireva: Candidacy,
   candidacyUnifvae: any,
-  aapAccount: Account,
   basicSkillId1: string,
   basicSkillId2: string,
   myCandidacy: any,
   myFundingRequest: FundingRequestUnifvae;
 
-const basicSkill1Label = "Pêche au coup",
-  basicSkill2Label = "Arboriculture";
+const basicSkill1Label = "Communication en français",
+  basicSkill2Label = "Usage et communication numérique";
 
 beforeAll(async () => {
-  const bs1 = await prismaClient.basicSkill.create({
-    data: { label: basicSkill1Label },
-    select: { id: true },
-  });
-  basicSkillId1 = bs1.id;
-  const bs2 = await prismaClient.basicSkill.create({
-    data: { label: basicSkill2Label },
-    select: { id: true },
-  });
-  basicSkillId2 = bs2.id;
-
   organism = await prismaClient.organism.create({ data: organismDummy1 });
-  aapAccount = await prismaClient.account.create({
+  await prismaClient.account.create({
     data: {
       email: aapEmail,
       keycloakId: aapKeycloakId,
       organismId: organism.id,
     },
   });
+
+  basicSkillId1 = (
+    await prismaClient.basicSkill.findFirstOrThrow({
+      where: {
+        label: basicSkill1Label,
+      },
+    })
+  ).id;
+
+  basicSkillId2 = (
+    await prismaClient.basicSkill.findFirstOrThrow({
+      where: {
+        label: basicSkill2Label,
+      },
+    })
+  ).id;
 
   const departmentManche = await prismaClient.department.findUniqueOrThrow({
     where: { code: "50" },
@@ -219,9 +223,6 @@ afterAll(async () => {
   await prismaClient.candidate.deleteMany();
   await prismaClient.training.delete({ where: { label: "trainingA" } });
   await prismaClient.basicSkill.delete({ where: { label: "skillA" } });
-  await prismaClient.basicSkill.deleteMany({
-    where: { id: { in: [basicSkillId1, basicSkillId2] } },
-  });
 });
 
 test("should create fundingRequestUnifvae with matching batch", async () => {
@@ -288,7 +289,7 @@ test("should create fundingRequestUnifvae with matching batch", async () => {
       PrenomCandidat2: myCandidate.firstname2,
       PrenomCandidat3: myCandidate.firstname3,
       ActeFormatifComplémentaire_FormationObligatoire: "",
-      ActeFormatifComplémentaire_SavoirsDeBase: "Arboriculture, Pêche au coup",
+      ActeFormatifComplémentaire_SavoirsDeBase: "0, 2",
       ActeFormatifComplémentaire_BlocDeCompetencesCertifiant: "",
       ActeFormatifComplémentaire_Autre: "",
       NbHeureDemAccVAEInd: "2.00",

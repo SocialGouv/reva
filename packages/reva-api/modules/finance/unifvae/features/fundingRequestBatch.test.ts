@@ -53,8 +53,12 @@ beforeAll(async () => {
       candidacyId: (candidacy as Candidacy).id,
       basicSkills: {
         create: [
-          { basicSkill: { create: { label: "skillA" } } },
-          { basicSkill: { create: { label: "skillB" } } },
+          { basicSkill: { connect: { label: "Communication en français" } } },
+          {
+            basicSkill: {
+              connect: { label: "Usage et communication numérique" },
+            },
+          },
         ],
       },
       mandatoryTrainings: {
@@ -114,9 +118,6 @@ afterAll(async () => {
     where: { id: (candidacy as Candidacy).id },
   });
   await prismaClient.organism.delete({ where: { id: (aap as Organism).id } });
-  await prismaClient.basicSkill.deleteMany({
-    where: { label: { in: ["skillA", "skillB"] } },
-  });
 });
 
 test("Should create a nice batch", async () => {
@@ -134,7 +135,7 @@ test("Should create a nice batch", async () => {
     PrenomCandidat2: null,
     PrenomCandidat3: null,
     ActeFormatifComplémentaire_FormationObligatoire: "4, 5",
-    ActeFormatifComplémentaire_SavoirsDeBase: "skillA, skillB",
+    ActeFormatifComplémentaire_SavoirsDeBase: "0, 2",
     ActeFormatifComplémentaire_BlocDeCompetencesCertifiant:
       "Some certification skills",
     ActeFormatifComplémentaire_Autre: "Some other training(s)",
