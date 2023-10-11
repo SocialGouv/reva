@@ -75,6 +75,7 @@ export const createBatchFromFundingRequestUnifvae = async (
         PrenomCandidat2: fundingRequest.candidateSecondname,
         PrenomCandidat3: fundingRequest.candidateThirdname,
         ActeFormatifComplémentaire_FormationObligatoire: formationObligatoire
+          .map(getActeFormatifComplémentaire_FormationObligatoireId)
           .sort()
           .join(", "),
         ActeFormatifComplémentaire_SavoirsDeBase: savoirsDeBase
@@ -94,4 +95,29 @@ export const createBatchFromFundingRequestUnifvae = async (
       },
     },
   });
+};
+
+const getActeFormatifComplémentaire_FormationObligatoireId = (
+  mandatoryTrainingLabel: string
+) => {
+  switch (mandatoryTrainingLabel) {
+    case "Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU 2)":
+      return "0";
+    case "Equipier de Première Intervention":
+      return "1";
+    case "Sauveteur Secouriste du Travail (SST)":
+      return "2";
+    case "Systèmes d'attaches":
+      return "3";
+    case "Prévention et secours civiques de niveau 1 (PSC1)":
+      return "4";
+    case "Premiers secours en équipe de niveau 1 (PSE1)":
+      return "5";
+    case "Brevet national de sécurité et de sauvetage aquatique (BNSSA)":
+      return "6";
+    default:
+      throw new Error(
+        `Unknown mandatory training label: ${mandatoryTrainingLabel}`
+      );
+  }
 };

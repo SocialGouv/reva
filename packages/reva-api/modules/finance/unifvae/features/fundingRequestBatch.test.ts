@@ -59,8 +59,20 @@ beforeAll(async () => {
       },
       mandatoryTrainings: {
         create: [
-          { training: { create: { label: "trainingA" } } },
-          { training: { create: { label: "trainingB" } } },
+          {
+            training: {
+              connect: {
+                label: "Prévention et secours civiques de niveau 1 (PSC1)",
+              },
+            },
+          },
+          {
+            training: {
+              connect: {
+                label: "Premiers secours en équipe de niveau 1 (PSE1)",
+              },
+            },
+          },
         ],
       },
       numAction: "zobilol123",
@@ -102,9 +114,6 @@ afterAll(async () => {
     where: { id: (candidacy as Candidacy).id },
   });
   await prismaClient.organism.delete({ where: { id: (aap as Organism).id } });
-  await prismaClient.training.deleteMany({
-    where: { label: { in: ["trainingA", "trainingB"] } },
-  });
   await prismaClient.basicSkill.deleteMany({
     where: { label: { in: ["skillA", "skillB"] } },
   });
@@ -124,7 +133,7 @@ test("Should create a nice batch", async () => {
     PrenomCandidat1: candidateSample.candidateFirstname,
     PrenomCandidat2: null,
     PrenomCandidat3: null,
-    ActeFormatifComplémentaire_FormationObligatoire: "trainingA, trainingB",
+    ActeFormatifComplémentaire_FormationObligatoire: "4, 5",
     ActeFormatifComplémentaire_SavoirsDeBase: "skillA, skillB",
     ActeFormatifComplémentaire_BlocDeCompetencesCertifiant:
       "Some certification skills",
