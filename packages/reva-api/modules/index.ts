@@ -13,7 +13,7 @@ import {
 } from "graphql-scalars";
 import mercurius, { MercuriusOptions } from "mercurius";
 
-import * as account from "./account";
+import { resolvers as accountResolvers } from "./account/account.resolvers";
 import * as candidacy from "./candidacy";
 import * as candidate from "./candidate";
 import { feasibilityLoaders } from "./feasibility/feasibility.loaders";
@@ -21,6 +21,7 @@ import { feasibilityResolvers } from "./feasibility/feasibility.resolvers";
 import { financeUnifvaeResolvers } from "./finance/unifvae/finance.unifvae.resolvers";
 import { financeResolvers } from "./finance/unireva/finance.resolvers";
 import { organismLoaders } from "./organism/organism.loaders";
+import { resolvers as organismResolvers } from "./organism/organism.resolvers";
 import { referentialResolvers } from "./referential/referential.resolvers";
 import { logger } from "./shared/logger";
 import DecimalGraphqlScalar from "./shared/scalar/DecimalGraphqlScalar";
@@ -36,12 +37,13 @@ const typeDefs = loadFilesSync(path.join(__dirname, "."), {
 const resolvers = mergeResolvers([
   candidacy.resolvers,
   referentialResolvers,
-  account.resolvers,
+  accountResolvers,
   candidate.resolvers,
   financeResolvers,
   subscriptionRequestResolvers,
   feasibilityResolvers,
   financeUnifvaeResolvers,
+  organismResolvers,
 ]);
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;

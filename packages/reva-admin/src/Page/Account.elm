@@ -6,38 +6,31 @@ module Page.Account exposing
     , view
     )
 
--- import Admin.Enum.AccountOrganismTypology exposing (AccountOrganismTypology(..))
--- import Admin.Enum.AccountRequestStatus as AccountRequestStatus
-
-import Accessibility exposing (a, dd, dl, dt, h1, h2, hr, pre)
-import Admin.Enum.LegalStatus as LegalStatus exposing (LegalStatus(..))
-import Admin.Object.Account exposing (firstname, lastname)
+import Accessibility exposing (h1, h2)
 import Api.Account
 import Api.Form.Account
-import Api.Form.OrganismSubscription
+import Api.Form.Organism
 import BetaGouv.DSFR.Button as Button
 import Browser.Navigation as Nav
 import Data.Account exposing (Account)
 import Data.Context exposing (Context)
 import Data.Form exposing (FormData)
-import Data.Form.Account
-import Data.Form.OrganismSubscription exposing (Decision(..), Status(..), decisionToString)
-import Data.Referential exposing (DepartmentWithOrganismMethods)
-import Html exposing (Html, div, li, text, ul)
-import Html.Attributes exposing (class, href)
-import Html.Attributes.Extra exposing (role)
+import Data.Form.Account exposing (account)
+import Data.Form.Organism
+import Html exposing (Html, div, text)
+import Html.Attributes exposing (class)
 import Page.Form as Form exposing (Form)
 import RemoteData exposing (RemoteData(..))
 import Route
 import String exposing (String)
 import View
-import View.Date exposing (toSmallFormat)
 import View.Helpers exposing (dataTest)
 
 
 type Msg
     = GotAccountResponse (RemoteData (List String) Account)
-    | GotFormMsg (Form.Msg ())
+    | GotFormAccountMsg (Form.Msg ())
+    | GotFormStructureMsg (Form.Msg ())
 
 
 type alias State =
@@ -47,7 +40,8 @@ type alias State =
 
 
 type alias Model =
-    { form : Form.Model ()
+    { formAccount : Form.Model ()
+    , formStructure : Form.Model ()
     , state : State
     }
 
@@ -55,9 +49,9 @@ type alias Model =
 init : Context -> String -> ( Model, Cmd Msg )
 init context accountId =
     let
-        ( formModel, formCmd ) =
+        ( formAccountModel, formAccountCmd ) =
             Form.updateForm context
-                { form = form
+                { form = formAccount
                 , onLoad = Just <| Api.Form.Account.get accountId
                 , onSave = Nothing
                 , onSubmit = Api.Form.Account.update accountId
@@ -67,24 +61,31 @@ init context accountId =
                 }
                 Form.empty
 
+        ( formStructureModel, formStructureCmd ) =
+            Form.init
+
         defaultModel : Model
         defaultModel =
-            { form = formModel
+            { formAccount = formAccountModel
+            , formStructure = formStructureModel
             , state =
                 { account = RemoteData.Loading
                 , errors = []
                 }
             }
+
+        defaultCmd =
+            Api.Account.get context.endpoint context.token GotAccountResponse accountId
     in
-    ( defaultModel, Cmd.batch [ Cmd.map GotFormMsg formCmd ] )
+    ( defaultModel, Cmd.batch [ Cmd.map GotFormAccountMsg formAccountCmd, defaultCmd, Cmd.map GotFormStructureMsg formStructureCmd ] )
 
 
 
 -- VIEW
 
 
-form : FormData -> () -> Form
-form _ _ =
+formAccount : FormData -> () -> Form
+formAccount _ _ =
     let
         keys =
             Data.Form.Account.keys
@@ -100,31 +101,33 @@ form _ _ =
     }
 
 
+formOrganism : FormData -> () -> Form
+formOrganism _ _ =
+    let
+        keys =
+            Data.Form.Organism.keys
+    in
+    { elements =
+        [ ( keys.contactAdministrativeEmail, Form.EmailRequired "Email de contact" )
+        , ( keys.contactAdministrativePhone, Form.Input "Téléphone" )
+        , ( keys.website, Form.Input "Website" )
+        ]
+    , saveLabel = Nothing
+    , submitLabel = "Enregistrer"
+    , title = ""
+    }
+
+
 view :
     Context
     -> Model
     -> Html Msg
 view context model =
-    case model.state.account of
-        NotAsked ->
-            div [] []
-
-        Loading ->
-            View.layout
-                ""
-                [ viewAccountsLink context ]
-                []
-                [ viewContent context model ]
-
-        Failure errors ->
-            View.errors errors
-
-        Success account ->
-            View.layout
-                ""
-                [ viewAccountsLink context ]
-                []
-                [ viewContent context model ]
+    View.layout
+        ""
+        [ viewAccountsLink context ]
+        []
+        [ viewContent context model ]
 
 
 viewContent : Context -> Model -> Html Msg
@@ -138,11 +141,39 @@ viewContent context model =
             , class "flex flex-wrap"
             ]
             [ h1 [ class "w-full mb-0" ] [ text "Compte utilisateur" ]
-            , viewTitle "Informations générales"
-            , Form.view (RemoteData.succeed ()) model.form
-                |> Html.map GotFormMsg
+            , viewTitle "Informations compte utilisateur"
+            , Form.view (RemoteData.succeed ()) model.formAccount
+                |> Html.map GotFormAccountMsg
+            , viewStructure context model
             ]
         ]
+
+
+viewStructure : Context -> Model -> Html Msg
+viewStructure _ model =
+    case model.state.account of
+        NotAsked ->
+            div [] []
+
+        Loading ->
+            div [] []
+
+        Failure errors ->
+            View.errors errors
+
+        Success account ->
+            div []
+                [ case account.organismId of
+                    Nothing ->
+                        div [] []
+
+                    Just _ ->
+                        div []
+                            [ viewTitle "Informations structure"
+                            , Form.view (RemoteData.succeed ()) model.formStructure
+                                |> Html.map GotFormStructureMsg
+                            ]
+                ]
 
 
 viewTitle : String -> Accessibility.Html msg
@@ -150,54 +181,64 @@ viewTitle s =
     h2 [ class "w-full mt-6 mb-1 text-xl" ] [ text s ]
 
 
-viewInfo : String -> List (Accessibility.Html msg) -> Accessibility.Html msg
-viewInfo term content =
-    dl
-        [ class "w-full sm:w-1/2 my-2" ]
-        [ dt [ class "font-normal text-sm text-gray-600 mb-1" ] [ text term ]
-        , dd [ class "my-0" ] content
-        ]
-
-
-viewInfoText : String -> List String -> Accessibility.Html msg
-viewInfoText term data =
-    viewInfo term <| (List.intersperse " " data |> List.map text)
-
-
-
--- UPDATE
-
-
 update : Context -> Msg -> Model -> ( Model, Cmd Msg )
 update context msg model =
+    let
+        state =
+            model.state
+    in
     case msg of
         GotAccountResponse remoteAccount ->
-            ( model, Cmd.none ) |> withAccount remoteAccount
+            ( { model | state = { state | account = remoteAccount } }, Cmd.none )
+                |> updateStructure context
 
-        GotFormMsg formMsg ->
+        GotFormAccountMsg formMsg ->
             let
                 ( formModel, formCmd ) =
-                    Form.update context formMsg model.form
+                    Form.update context formMsg model.formAccount
             in
-            ( { model | form = formModel }, Cmd.map GotFormMsg formCmd )
+            ( { model | formAccount = formModel }, Cmd.map GotFormAccountMsg formCmd )
+
+        GotFormStructureMsg formMsg ->
+            let
+                ( formModel, formCmd ) =
+                    Form.update context formMsg model.formStructure
+            in
+            ( { model | formStructure = formModel }, Cmd.map GotFormStructureMsg formCmd )
 
 
-withErrors : List String -> ( Model, Cmd msg ) -> ( Model, Cmd msg )
-withErrors errors ( model, cmd ) =
-    let
-        state =
-            model.state
-    in
-    ( { model | state = { state | errors = errors } }, cmd )
+updateStructure : Context -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+updateStructure context ( model, cmd ) =
+    case model.state.account of
+        NotAsked ->
+            ( model, Cmd.none )
 
+        Loading ->
+            ( model, Cmd.none )
 
-withAccount : RemoteData (List String) Account -> ( Model, Cmd msg ) -> ( Model, Cmd msg )
-withAccount account ( model, cmd ) =
-    let
-        state =
-            model.state
-    in
-    ( { model | state = { state | account = account } }, cmd )
+        Failure _ ->
+            ( model, Cmd.none )
+
+        Success account ->
+            case account.organismId of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just organismId ->
+                    let
+                        ( formStructureModel, formStructureCmd ) =
+                            Form.updateForm context
+                                { form = formOrganism
+                                , onLoad = Just <| Api.Form.Organism.get organismId
+                                , onSave = Nothing
+                                , onSubmit = Api.Form.Organism.update organismId
+                                , onRedirect = Nav.pushUrl context.navKey (Route.toString context.baseUrl <| Route.Account account.id)
+                                , onValidate = \_ _ -> Ok ()
+                                , status = Form.Editable
+                                }
+                                model.formStructure
+                    in
+                    ( { model | formStructure = formStructureModel }, Cmd.batch [ cmd, Cmd.map GotFormStructureMsg formStructureCmd ] )
 
 
 viewAccountsLink : Context -> Html msg

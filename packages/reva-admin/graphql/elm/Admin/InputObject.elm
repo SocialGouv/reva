@@ -891,3 +891,43 @@ encodeUpdateAccountInput : UpdateAccountInput -> Value
 encodeUpdateAccountInput input____ =
     Encode.maybeObject
         [ ( "email", Encode.string input____.email |> Just ), ( "firstname", Encode.string |> Encode.optional input____.firstname ), ( "lastname", Encode.string |> Encode.optional input____.lastname ) ]
+
+
+buildUpdateOrganismInput :
+    UpdateOrganismInputRequiredFields
+    -> (UpdateOrganismInputOptionalFields -> UpdateOrganismInputOptionalFields)
+    -> UpdateOrganismInput
+buildUpdateOrganismInput required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { contactAdministrativePhone = Absent, website = Absent }
+    in
+    { contactAdministrativeEmail = required____.contactAdministrativeEmail, contactAdministrativePhone = optionals____.contactAdministrativePhone, website = optionals____.website }
+
+
+type alias UpdateOrganismInputRequiredFields =
+    { contactAdministrativeEmail : String }
+
+
+type alias UpdateOrganismInputOptionalFields =
+    { contactAdministrativePhone : OptionalArgument String
+    , website : OptionalArgument String
+    }
+
+
+{-| Type for the UpdateOrganismInput input object.
+-}
+type alias UpdateOrganismInput =
+    { contactAdministrativeEmail : String
+    , contactAdministrativePhone : OptionalArgument String
+    , website : OptionalArgument String
+    }
+
+
+{-| Encode a UpdateOrganismInput into a value that can be used as an argument.
+-}
+encodeUpdateOrganismInput : UpdateOrganismInput -> Value
+encodeUpdateOrganismInput input____ =
+    Encode.maybeObject
+        [ ( "contactAdministrativeEmail", Encode.string input____.contactAdministrativeEmail |> Just ), ( "contactAdministrativePhone", Encode.string |> Encode.optional input____.contactAdministrativePhone ), ( "website", Encode.string |> Encode.optional input____.website ) ]

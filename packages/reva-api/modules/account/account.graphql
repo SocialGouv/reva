@@ -23,6 +23,12 @@ input AccountInput {
   organismId: UUID
 }
 
+input UpdateAccountInput {
+  email: String!
+  firstname: String
+  lastname: String
+}
+
 type Mutation {
   account_createAccount(account: AccountInput): Account!
   account_updateAccount(
@@ -34,12 +40,6 @@ type Mutation {
 type AccountsPaginated {
   rows: [Account!]!
   info: PaginationInfo!
-}
-
-input UpdateAccountInput {
-  email: String!
-  firstname: String
-  lastname: String
 }
 
 type Query {

@@ -39,6 +39,20 @@ account_createAccount fillInOptionals____ object____ =
     Object.selectionForCompositeField "account_createAccount" optionalArgs____ object____ Basics.identity
 
 
+type alias AccountUpdateAccountRequiredArguments =
+    { accountId : Data.Scalar.Id
+    , accountData : Admin.InputObject.UpdateAccountInput
+    }
+
+
+account_updateAccount :
+    AccountUpdateAccountRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Account
+    -> SelectionSet decodesTo RootMutation
+account_updateAccount requiredArgs____ object____ =
+    Object.selectionForCompositeField "account_updateAccount" [ Argument.required "accountId" requiredArgs____.accountId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "accountData" requiredArgs____.accountData Admin.InputObject.encodeUpdateAccountInput ] object____ Basics.identity
+
+
 type alias CandidacyCreateCandidacyRequiredArguments =
     { candidacy : Admin.InputObject.CandidacyInput }
 
@@ -436,6 +450,20 @@ candidacy_confirmPaymentRequest requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_confirmPaymentRequest" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ Basics.identity
 
 
+type alias OrganismUpdateOrganismRequiredArguments =
+    { organismId : Data.Scalar.Id
+    , organismData : Admin.InputObject.UpdateOrganismInput
+    }
+
+
+organism_updateOrganism :
+    OrganismUpdateOrganismRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Organism
+    -> SelectionSet decodesTo RootMutation
+organism_updateOrganism requiredArgs____ object____ =
+    Object.selectionForCompositeField "organism_updateOrganism" [ Argument.required "organismId" requiredArgs____.organismId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "organismData" requiredArgs____.organismData Admin.InputObject.encodeUpdateOrganismInput ] object____ Basics.identity
+
+
 type alias SubscriptionCreateSubscriptionRequestRequiredArguments =
     { subscriptionRequest : Admin.InputObject.SubscriptionRequestInput }
 
@@ -470,17 +498,3 @@ subscription_rejectSubscriptionRequest :
     -> SelectionSet (Maybe String) RootMutation
 subscription_rejectSubscriptionRequest requiredArgs____ =
     Object.selectionForField "(Maybe String)" "subscription_rejectSubscriptionRequest" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "reason" requiredArgs____.reason Encode.string ] (Decode.string |> Decode.nullable)
-
-
-type alias AccountUpdateAccountRequiredArguments =
-    { accountId : Data.Scalar.Id
-    , accountData : Admin.InputObject.UpdateAccountInput
-    }
-
-
-account_updateAccount :
-    AccountUpdateAccountRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Account
-    -> SelectionSet decodesTo RootMutation
-account_updateAccount requiredArgs____ object____ =
-    Object.selectionForCompositeField "account_updateAccount" [ Argument.required "accountId" requiredArgs____.accountId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "accountData" requiredArgs____.accountData Admin.InputObject.encodeUpdateAccountInput ] object____ Basics.identity

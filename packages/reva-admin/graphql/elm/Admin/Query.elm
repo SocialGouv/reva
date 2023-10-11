@@ -26,9 +26,8 @@ import Json.Decode as Decode exposing (Decoder)
 type alias AccountGetAccountsOptionalArguments =
     { offset : OptionalArgument Int
     , limit : OptionalArgument Int
-    , statusFilter : OptionalArgument Admin.Enum.AccountGroup.AccountGroup
-    , searchFilter : OptionalArgument String
     , groupFilter : OptionalArgument Admin.Enum.AccountGroup.AccountGroup
+    , searchFilter : OptionalArgument String
     }
 
 
@@ -39,13 +38,25 @@ account_getAccounts :
 account_getAccounts fillInOptionals____ object____ =
     let
         filledInOptionals____ =
-            fillInOptionals____ { offset = Absent, limit = Absent, statusFilter = Absent, searchFilter = Absent, groupFilter = Absent }
+            fillInOptionals____ { offset = Absent, limit = Absent, groupFilter = Absent, searchFilter = Absent }
 
         optionalArgs____ =
-            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "statusFilter" filledInOptionals____.statusFilter (Encode.enum Admin.Enum.AccountGroup.toString), Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string, Argument.optional "groupFilter" filledInOptionals____.groupFilter (Encode.enum Admin.Enum.AccountGroup.toString) ]
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "groupFilter" filledInOptionals____.groupFilter (Encode.enum Admin.Enum.AccountGroup.toString), Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string ]
                 |> List.filterMap Basics.identity
     in
     Object.selectionForCompositeField "account_getAccounts" optionalArgs____ object____ Basics.identity
+
+
+type alias AccountGetAccountRequiredArguments =
+    { id : Data.Scalar.Id }
+
+
+account_getAccount :
+    AccountGetAccountRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Account
+    -> SelectionSet (Maybe decodesTo) RootQuery
+account_getAccount requiredArgs____ object____ =
+    Object.selectionForCompositeField "account_getAccount" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
 
 
 type alias GetCandidacyRequiredArguments =
@@ -252,6 +263,18 @@ candidate_getFundingRequest requiredArgs____ object____ =
     Object.selectionForCompositeField "candidate_getFundingRequest" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ Basics.identity
 
 
+type alias OrganismGetOrganismRequiredArguments =
+    { id : Data.Scalar.Id }
+
+
+organism_getOrganism :
+    OrganismGetOrganismRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Organism
+    -> SelectionSet (Maybe decodesTo) RootQuery
+organism_getOrganism requiredArgs____ object____ =
+    Object.selectionForCompositeField "organism_getOrganism" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+
+
 getReferential :
     SelectionSet decodesTo Admin.Object.Referential
     -> SelectionSet decodesTo RootQuery
@@ -281,6 +304,18 @@ getCertifications fillInOptionals____ object____ =
                 |> List.filterMap Basics.identity
     in
     Object.selectionForCompositeField "getCertifications" optionalArgs____ object____ Basics.identity
+
+
+type alias GetCertificationRequiredArguments =
+    { certificationId : Data.Scalar.Id }
+
+
+getCertification :
+    GetCertificationRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Certification
+    -> SelectionSet decodesTo RootQuery
+getCertification requiredArgs____ object____ =
+    Object.selectionForCompositeField "getCertification" [ Argument.required "certificationId" requiredArgs____.certificationId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ Basics.identity
 
 
 getRegions :
@@ -373,41 +408,3 @@ subscription_getSubscriptionRequest :
     -> SelectionSet (Maybe decodesTo) RootQuery
 subscription_getSubscriptionRequest requiredArgs____ object____ =
     Object.selectionForCompositeField "subscription_getSubscriptionRequest" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
-
-
-type alias AccountGetAccountRequiredArguments =
-    { id : Data.Scalar.Id }
-
-
-account_getAccount :
-    AccountGetAccountRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Account
-    -> SelectionSet (Maybe decodesTo) RootQuery
-account_getAccount requiredArgs____ object____ =
-    Object.selectionForCompositeField "account_getAccount" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
-
-
-type alias AccountUpdateAccountRequiredArguments =
-    { accountId : Data.Scalar.Id
-    , accountData : Admin.InputObject.UpdateAccountInput
-    }
-
-
-account_updateAccount :
-    AccountUpdateAccountRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Account
-    -> SelectionSet decodesTo RootQuery
-account_updateAccount requiredArgs____ object____ =
-    Object.selectionForCompositeField "account_updateAccount" [ Argument.required "accountId" requiredArgs____.accountId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "accountData" requiredArgs____.accountData Admin.InputObject.encodeUpdateAccountInput ] object____ Basics.identity
-
-
-type alias GetCertificationRequiredArguments =
-    { certificationId : Data.Scalar.Id }
-
-
-getCertification :
-    GetCertificationRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Certification
-    -> SelectionSet decodesTo RootQuery
-getCertification requiredArgs____ object____ =
-    Object.selectionForCompositeField "getCertification" [ Argument.required "certificationId" requiredArgs____.certificationId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ Basics.identity

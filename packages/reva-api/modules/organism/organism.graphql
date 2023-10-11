@@ -18,3 +18,20 @@ type OrganismOnDepartment {
   isRemote: Boolean!
   isOnSite: Boolean!
 }
+
+type Query {
+  organism_getOrganism(id: ID!): Organism
+}
+
+input UpdateOrganismInput {
+  contactAdministrativeEmail: String!
+  contactAdministrativePhone: String
+  website: String
+}
+
+type Mutation {
+  organism_updateOrganism(
+    organismId: ID!
+    organismData: UpdateOrganismInput!
+  ): Organism!
+}

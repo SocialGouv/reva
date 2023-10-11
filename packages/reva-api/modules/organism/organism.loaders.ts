@@ -1,4 +1,4 @@
-import { getOrganismOnDepartmentsByOrganismAndDepartmentIds } from "./organism.features";
+import { getOrganismOnDepartmentsByOrganismAndDepartmentIds } from "./features";
 
 export const organismLoaders = {
   Organism: {
