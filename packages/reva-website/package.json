@@ -6,12 +6,17 @@
     "dev": "next dev -p 3002",
     "build": "next build",
     "start": "next start",
+    "start-local": "next start -p 3002",
     "lint": "next lint",
     "graphql:generate": "graphql-codegen",
     "graphql:watch": "graphql-codegen --watch",
     "predev": "only-include-used-icons && npm run graphql:generate",
     "prebuild": "only-include-used-icons && node ./src/scripts/generateRobotsTxt.js && npm i --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && npm run graphql:generate",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "cypress": "cypress run",
+    "cypress:ci": "cypress run --config baseUrl=http://localhost:3002",
+    "start-server": "npm run build &&  npm run start-local",
+    "test:ci": "start-server-and-test start-server http://localhost:3002 cypress:ci"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^0.66.6",
@@ -48,6 +53,7 @@
     "cypress": "^13.3.0",
     "postcss": "^8.4.21",
     "rimraf": "^4.1.2",
+    "start-server-and-test": "^2.0.1",
     "tailwindcss": "^3.2.6"
   }
 }

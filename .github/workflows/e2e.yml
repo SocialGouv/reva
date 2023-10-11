@@ -8,8 +8,11 @@ env:
   REACT_APP_KEYCLOAK_CLIENT_ID: reva-app
   # On la definie uniquement pour que le serveur start...
   DATABASE_URL: postgresql://reva:password@localhost:5444/reva?schema=public
+  NEXT_PUBLIC_WEBSITE_API_GRAPHQL: https://reva.incubateur.net/api/graphql
+  NEXT_PUBLIC_FEATURE_CANDIDATE_ORIENTATION: true
+
 jobs:
-  cypress-run:
+  cypress-run-reva-tests:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -27,3 +30,19 @@ jobs:
       - run: npm run build
       # On met le NODE_ENV ici car si on le met en global, ca install pas les devDeps
       - run: cd packages/reva-tests && NODE_ENV=production npm run test:ci
+
+  cypress-run-reva-website:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: cd packages/reva-website && npm install
+      - run: cd packages/reva-website && NODE_ENV=production npm run test:ci
