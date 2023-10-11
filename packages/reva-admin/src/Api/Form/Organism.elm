@@ -31,7 +31,7 @@ get organismId endpointGraphql token toMsg =
     Query.organism_getOrganism
         requiredArgs
         selection
-        |> Auth.makeQuery "getOrganism" endpointGraphql token (nothingToError "Ce compte utilisateur est introuvable" >> toMsg)
+        |> Auth.makeQuery "getOrganism" endpointGraphql token (nothingToError "Cette organisme est introuvable" >> toMsg)
 
 
 update :

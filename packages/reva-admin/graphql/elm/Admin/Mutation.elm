@@ -410,6 +410,20 @@ candidate_login requiredArgs____ object____ =
     Object.selectionForCompositeField "candidate_login" [ Argument.required "token" requiredArgs____.token Encode.string ] object____ Basics.identity
 
 
+type alias CertificationAuthorityUpdateCertificationAuthorityRequiredArguments =
+    { certificationAuthorityId : Data.Scalar.Id
+    , certificationAuthorityData : Admin.InputObject.UpdateCertificationAuthorityInput
+    }
+
+
+certification_authority_updateCertificationAuthority :
+    CertificationAuthorityUpdateCertificationAuthorityRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.CertificationAuthority
+    -> SelectionSet decodesTo RootMutation
+certification_authority_updateCertificationAuthority requiredArgs____ object____ =
+    Object.selectionForCompositeField "certification_authority_updateCertificationAuthority" [ Argument.required "certificationAuthorityId" requiredArgs____.certificationAuthorityId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "certificationAuthorityData" requiredArgs____.certificationAuthorityData Admin.InputObject.encodeUpdateCertificationAuthorityInput ] object____ Basics.identity
+
+
 type alias CandidacyCreateFundingRequestUnifvaeRequiredArguments =
     { candidacyId : Data.Scalar.Uuid
     , fundingRequest : Admin.InputObject.FundingRequestUnifvaeInput

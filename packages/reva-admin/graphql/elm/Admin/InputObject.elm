@@ -893,6 +893,46 @@ encodeUpdateAccountInput input____ =
         [ ( "email", Encode.string input____.email |> Just ), ( "firstname", Encode.string |> Encode.optional input____.firstname ), ( "lastname", Encode.string |> Encode.optional input____.lastname ) ]
 
 
+buildUpdateCertificationAuthorityInput :
+    UpdateCertificationAuthorityInputRequiredFields
+    -> (UpdateCertificationAuthorityInputOptionalFields -> UpdateCertificationAuthorityInputOptionalFields)
+    -> UpdateCertificationAuthorityInput
+buildUpdateCertificationAuthorityInput required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { contactFullName = Absent, contactEmail = Absent }
+    in
+    { label = required____.label, contactFullName = optionals____.contactFullName, contactEmail = optionals____.contactEmail }
+
+
+type alias UpdateCertificationAuthorityInputRequiredFields =
+    { label : String }
+
+
+type alias UpdateCertificationAuthorityInputOptionalFields =
+    { contactFullName : OptionalArgument String
+    , contactEmail : OptionalArgument String
+    }
+
+
+{-| Type for the UpdateCertificationAuthorityInput input object.
+-}
+type alias UpdateCertificationAuthorityInput =
+    { label : String
+    , contactFullName : OptionalArgument String
+    , contactEmail : OptionalArgument String
+    }
+
+
+{-| Encode a UpdateCertificationAuthorityInput into a value that can be used as an argument.
+-}
+encodeUpdateCertificationAuthorityInput : UpdateCertificationAuthorityInput -> Value
+encodeUpdateCertificationAuthorityInput input____ =
+    Encode.maybeObject
+        [ ( "label", Encode.string input____.label |> Just ), ( "contactFullName", Encode.string |> Encode.optional input____.contactFullName ), ( "contactEmail", Encode.string |> Encode.optional input____.contactEmail ) ]
+
+
 buildUpdateOrganismInput :
     UpdateOrganismInputRequiredFields
     -> (UpdateOrganismInputOptionalFields -> UpdateOrganismInputOptionalFields)

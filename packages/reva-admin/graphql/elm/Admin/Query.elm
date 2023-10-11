@@ -196,6 +196,18 @@ candidate_getCandidateByEmail requiredArgs____ object____ =
     Object.selectionForCompositeField "candidate_getCandidateByEmail" [ Argument.required "email" requiredArgs____.email Encode.string ] object____ (Basics.identity >> Decode.nullable)
 
 
+type alias CertificationAuthorityGetCertificationAuthorityRequiredArguments =
+    { id : Data.Scalar.Id }
+
+
+certification_authority_getCertificationAuthority :
+    CertificationAuthorityGetCertificationAuthorityRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.CertificationAuthority
+    -> SelectionSet (Maybe decodesTo) RootQuery
+certification_authority_getCertificationAuthority requiredArgs____ object____ =
+    Object.selectionForCompositeField "certification_authority_getCertificationAuthority" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+
+
 feasibilityCountByCategory :
     SelectionSet decodesTo Admin.Object.FeasibilityCountByCategory
     -> SelectionSet decodesTo RootQuery

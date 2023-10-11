@@ -4,13 +4,6 @@ enum FeasibilityDecision {
   ADMISSIBLE
 }
 
-type CertificationAuthority {
-  id: ID!
-  label: String!
-  contactFullName: String
-  contactEmail: String
-}
-
 type Feasibility {
   id: ID!
   certificationAuthority: CertificationAuthority

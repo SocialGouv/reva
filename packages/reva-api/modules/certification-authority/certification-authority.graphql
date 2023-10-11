@@ -1,0 +1,25 @@
+type CertificationAuthority {
+  id: ID!
+  label: String!
+  contactFullName: String
+  contactEmail: String
+}
+
+type Query {
+  certification_authority_getCertificationAuthority(
+    id: ID!
+  ): CertificationAuthority
+}
+
+input UpdateCertificationAuthorityInput {
+  label: String!
+  contactFullName: String
+  contactEmail: String
+}
+
+type Mutation {
+  certification_authority_updateCertificationAuthority(
+    certificationAuthorityId: ID!
+    certificationAuthorityData: UpdateCertificationAuthorityInput!
+  ): CertificationAuthority!
+}

@@ -7,15 +7,18 @@ module Page.Account exposing
     )
 
 import Accessibility exposing (h1, h2)
+import Admin.Object.Account exposing (organismId)
 import Api.Account
 import Api.Form.Account
+import Api.Form.CertificationAuthority
 import Api.Form.Organism
 import BetaGouv.DSFR.Button as Button
 import Browser.Navigation as Nav
 import Data.Account exposing (Account)
 import Data.Context exposing (Context)
 import Data.Form exposing (FormData)
-import Data.Form.Account exposing (account)
+import Data.Form.Account
+import Data.Form.CertificationAuthority
 import Data.Form.Organism
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)
@@ -118,6 +121,23 @@ formOrganism _ _ =
     }
 
 
+formCertificationAuthority : FormData -> () -> Form
+formCertificationAuthority _ _ =
+    let
+        keys =
+            Data.Form.CertificationAuthority.keys
+    in
+    { elements =
+        [ ( keys.label, Form.InputRequired "Libellé" )
+        , ( keys.contactFullName, Form.Input "Nom complet" )
+        , ( keys.contactEmail, Form.EmailRequired "Email de contact" )
+        ]
+    , saveLabel = Nothing
+    , submitLabel = "Enregistrer"
+    , title = ""
+    }
+
+
 view :
     Context
     -> Model
@@ -173,6 +193,16 @@ viewStructure _ model =
                             , Form.view (RemoteData.succeed ()) model.formStructure
                                 |> Html.map GotFormStructureMsg
                             ]
+                , case account.certificationAuthorityId of
+                    Nothing ->
+                        div [] []
+
+                    Just _ ->
+                        div []
+                            [ viewTitle "Informations autorité de certification"
+                            , Form.view (RemoteData.succeed ()) model.formStructure
+                                |> Html.map GotFormStructureMsg
+                            ]
                 ]
 
 
@@ -220,25 +250,47 @@ updateStructure context ( model, cmd ) =
             ( model, Cmd.none )
 
         Success account ->
-            case account.organismId of
-                Nothing ->
-                    ( model, Cmd.none )
+            let
+                organismId =
+                    Maybe.withDefault "" account.organismId
 
-                Just organismId ->
-                    let
-                        ( formStructureModel, formStructureCmd ) =
-                            Form.updateForm context
-                                { form = formOrganism
-                                , onLoad = Just <| Api.Form.Organism.get organismId
-                                , onSave = Nothing
-                                , onSubmit = Api.Form.Organism.update organismId
-                                , onRedirect = Nav.pushUrl context.navKey (Route.toString context.baseUrl <| Route.Account account.id)
-                                , onValidate = \_ _ -> Ok ()
-                                , status = Form.Editable
-                                }
-                                model.formStructure
-                    in
-                    ( { model | formStructure = formStructureModel }, Cmd.batch [ cmd, Cmd.map GotFormStructureMsg formStructureCmd ] )
+                certificationAuthorityId =
+                    Maybe.withDefault "" account.certificationAuthorityId
+            in
+            if account.organismId /= Nothing then
+                let
+                    ( formStructureModel, formStructureCmd ) =
+                        Form.updateForm context
+                            { form = formOrganism
+                            , onLoad = Just <| Api.Form.Organism.get organismId
+                            , onSave = Nothing
+                            , onSubmit = Api.Form.Organism.update organismId
+                            , onRedirect = Nav.pushUrl context.navKey (Route.toString context.baseUrl <| Route.Account account.id)
+                            , onValidate = \_ _ -> Ok ()
+                            , status = Form.Editable
+                            }
+                            model.formStructure
+                in
+                ( { model | formStructure = formStructureModel }, Cmd.batch [ cmd, Cmd.map GotFormStructureMsg formStructureCmd ] )
+
+            else if account.certificationAuthorityId /= Nothing then
+                let
+                    ( formStructureModel, formStructureCmd ) =
+                        Form.updateForm context
+                            { form = formCertificationAuthority
+                            , onLoad = Just <| Api.Form.CertificationAuthority.get certificationAuthorityId
+                            , onSave = Nothing
+                            , onSubmit = Api.Form.CertificationAuthority.update certificationAuthorityId
+                            , onRedirect = Nav.pushUrl context.navKey (Route.toString context.baseUrl <| Route.Account account.id)
+                            , onValidate = \_ _ -> Ok ()
+                            , status = Form.Editable
+                            }
+                            model.formStructure
+                in
+                ( { model | formStructure = formStructureModel }, Cmd.batch [ cmd, Cmd.map GotFormStructureMsg formStructureCmd ] )
+
+            else
+                ( model, Cmd.none )
 
 
 viewAccountsLink : Context -> Html msg
