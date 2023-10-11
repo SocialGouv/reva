@@ -75,6 +75,11 @@ describe("candidate registration", () => {
   it("should show a success panel when i select a candidate typology of 'SALARIE_PRIVE', 'DEMANDEUR_EMPLOI' or 'BENEVOLE_OU_AIDANT_FAMILIAL'", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");
+      stubQuery(
+        req,
+        "getDepartments",
+        "candidate_registration_departments.json"
+      );
     });
 
     cy.visit(
@@ -86,6 +91,8 @@ describe("candidate registration", () => {
     cy.get('[data-testid="candidate-typology-select"]')
       .children("select")
       .select("SALARIE_PRIVE");
+
+    cy.wait("@getDepartments");
 
     cy.get('[data-testid="candidate-typology-success-panel"]').should(
       "have.text",
