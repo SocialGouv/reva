@@ -47,3 +47,8 @@ lastname =
 organismId : SelectionSet (Maybe String) Admin.Object.Account
 organismId =
     Object.selectionForField "(Maybe String)" "organismId" [] (Decode.string |> Decode.nullable)
+
+
+certificationAuthorityId : SelectionSet (Maybe String) Admin.Object.Account
+certificationAuthorityId =
+    Object.selectionForField "(Maybe String)" "certificationAuthorityId" [] (Decode.string |> Decode.nullable)

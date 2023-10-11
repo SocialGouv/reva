@@ -138,6 +138,11 @@ view context model =
                         (Route.toString context.baseUrl <| Route.Subscriptions Route.emptySubscriptionFilters)
                     |> Button.tertiary
                     |> Button.view
+                , Button.new { onClick = Nothing, label = "Voir les comptes" }
+                    |> Button.linkButton
+                        (Route.toString context.baseUrl <| Route.Accounts Route.emptyAccountFilters)
+                    |> Button.tertiary
+                    |> Button.view
                 ]
 
             else

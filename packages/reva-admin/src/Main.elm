@@ -13,6 +13,8 @@ import Html exposing (Html, div, text)
 import Html.Attributes exposing (class)
 import Json.Decode as Decode exposing (..)
 import KeycloakConfiguration exposing (KeycloakConfiguration)
+import Page.Account as Account
+import Page.Accounts as Accounts
 import Page.Candidacies as Candidacies exposing (Model)
 import Page.Candidacy as Candidacy
 import Page.Feasibilities as Feasibilities
@@ -60,6 +62,8 @@ type Page
     | NotFound
     | Subscription Subscription.Model
     | Subscriptions Subscriptions.Model
+    | Account Account.Model
+    | Accounts Accounts.Model
     | SiteMap
 
 
@@ -71,6 +75,8 @@ type Msg
     | GotCandidaciesMsg Candidacies.Msg
     | GotSubscriptionsMsg Subscriptions.Msg
     | GotSubscriptionMsg Subscription.Msg
+    | GotAccountsMsg Accounts.Msg
+    | GotAccountMsg Account.Msg
     | GotCandidacyMsg Candidacy.Msg
     | GotLoggedIn Token
     | GotTokenRefreshed Token
@@ -137,6 +143,14 @@ viewPage model =
         Subscription subscriptionModel ->
             Subscription.view model.context subscriptionModel
                 |> Html.map GotSubscriptionMsg
+
+        Accounts accountsModel ->
+            Accounts.view model.context accountsModel
+                |> Html.map GotAccountsMsg
+
+        Account accountModel ->
+            Account.view model.context accountModel
+                |> Html.map GotAccountMsg
 
         Candidacy candidacyModel ->
             Candidacy.view model.context candidacyModel
@@ -221,6 +235,14 @@ changeRouteTo context route model =
             Subscription.init model.context subscriptionId
                 |> updateWith Subscription GotSubscriptionMsg model
 
+        ( Route.Accounts filters, _ ) ->
+            Accounts.init model.context filters.group filters.page
+                |> updateWith Accounts GotAccountsMsg model
+
+        ( Route.Account accountId, _ ) ->
+            Account.init model.context accountId
+                |> updateWith Account GotAccountMsg model
+
         ( Route.Candidacy tab, _ ) ->
             Candidacy.init model.context tab
                 |> updateWith Candidacy GotCandidacyMsg model
@@ -290,6 +312,26 @@ update msg model =
             in
             ( { model | page = Subscription newSubscriptionModel }
             , Cmd.map GotSubscriptionMsg subscriptionCmd
+            )
+
+        -- Accounts
+        ( GotAccountsMsg rganismsMsg, Accounts rganismsModel ) ->
+            let
+                ( newAccountsModel, rganismsCmd ) =
+                    Accounts.update model.context rganismsMsg rganismsModel
+            in
+            ( { model | page = Accounts newAccountsModel }
+            , Cmd.map GotAccountsMsg rganismsCmd
+            )
+
+        -- Account
+        ( GotAccountMsg rganismMsg, Account rganismModel ) ->
+            let
+                ( newAccountModel, rganismCmd ) =
+                    Account.update model.context rganismMsg rganismModel
+            in
+            ( { model | page = Account newAccountModel }
+            , Cmd.map GotAccountMsg rganismCmd
             )
 
         -- Candidacy

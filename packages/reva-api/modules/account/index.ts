@@ -8,7 +8,11 @@ import {
   FunctionalError,
 } from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
+import { AccountGroupFilter } from "./account.types";
 import { createAccount } from "./features/createAccount";
+import { getAccountById } from "./features/getAccount";
+import { getAccounts } from "./features/getAccounts";
+import { updateAccountById } from "./features/updateAccount";
 
 export const resolvers = {
   Mutation: {
@@ -60,6 +64,98 @@ export const resolvers = {
         } else {
           throw new mercurius.ErrorWithProps("unknown error");
         }
+      }
+    },
+    account_updateAccount: async (
+      _parent: unknown,
+      params: {
+        accountId: string;
+        accountData: {
+          email: string;
+          firstname: string;
+          lastname: string;
+        };
+      },
+      context: GraphqlContext
+    ) => {
+      try {
+        if (context.auth.userInfo?.sub == undefined) {
+          throw new FunctionalError(
+            FunctionalCodeError.TECHNICAL_ERROR,
+            "Not authorized"
+          );
+        }
+
+        const keycloakAdmin = await context.app.getKeycloakAdmin();
+
+        return updateAccountById(
+          {
+            hasRole: context.auth.hasRole,
+            keycloakAdmin,
+            keycloakId: context.auth.userInfo?.sub,
+          },
+          params
+        );
+      } catch (e) {
+        logger.error(e);
+        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
+      }
+    },
+  },
+  Query: {
+    account_getAccounts: async (
+      _parent: unknown,
+      params: {
+        limit?: number;
+        offset?: number;
+        groupFilter?: AccountGroupFilter;
+        searchFilter?: string;
+      },
+      context: GraphqlContext
+    ) => {
+      try {
+        if (context.auth.userInfo?.sub == undefined) {
+          throw new FunctionalError(
+            FunctionalCodeError.TECHNICAL_ERROR,
+            "Not authorized"
+          );
+        }
+
+        return getAccounts(
+          {
+            hasRole: context.auth.hasRole,
+          },
+          params
+        );
+      } catch (e) {
+        logger.error(e);
+        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
+      }
+    },
+    account_getAccount: async (
+      _parent: unknown,
+      params: {
+        id: string;
+      },
+      context: GraphqlContext
+    ) => {
+      try {
+        if (context.auth.userInfo?.sub == undefined) {
+          throw new FunctionalError(
+            FunctionalCodeError.TECHNICAL_ERROR,
+            "Not authorized"
+          );
+        }
+
+        return getAccountById(
+          {
+            hasRole: context.auth.hasRole,
+          },
+          params
+        );
+      } catch (e) {
+        logger.error(e);
+        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
     },
   },

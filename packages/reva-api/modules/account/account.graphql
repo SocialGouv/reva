@@ -11,6 +11,7 @@ type Account {
   firstname: String
   lastname: String
   organismId: String
+  certificationAuthorityId: String
 }
 
 input AccountInput {
@@ -24,4 +25,29 @@ input AccountInput {
 
 type Mutation {
   account_createAccount(account: AccountInput): Account!
+  account_updateAccount(
+    accountId: ID!
+    accountData: UpdateAccountInput!
+  ): Account!
+}
+
+type AccountsPaginated {
+  rows: [Account!]!
+  info: PaginationInfo!
+}
+
+input UpdateAccountInput {
+  email: String!
+  firstname: String
+  lastname: String
+}
+
+type Query {
+  account_getAccounts(
+    offset: Int
+    limit: Int
+    groupFilter: AccountGroup
+    searchFilter: String
+  ): AccountsPaginated!
+  account_getAccount(id: ID!): Account
 }

@@ -82,7 +82,7 @@ layout navButtonLabel upperNavContent navContent content =
                         -- When the nav context is empty, we remove the wrapper.
                         -- As a result, on mobile, we can close the nav when browsing to a new page
                         if navContent == [] then
-                            [ div [ class "h-12 mr-24 bg-gray-100 animate-pulse" ] [] ]
+                            [ div [ class "h-12 mr-24 animate-pulse" ] [] ]
 
                         else
                             [ button

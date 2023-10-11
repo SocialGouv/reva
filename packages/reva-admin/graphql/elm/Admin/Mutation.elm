@@ -322,6 +322,18 @@ candidacy_dropOut requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_dropOut" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "dropOut" requiredArgs____.dropOut Admin.InputObject.encodeDropOutInput ] object____ Basics.identity
 
 
+type alias CandidacyCancelDropOutByIdRequiredArguments =
+    { candidacyId : Data.Scalar.Uuid }
+
+
+candidacy_cancelDropOutById :
+    CandidacyCancelDropOutByIdRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet decodesTo RootMutation
+candidacy_cancelDropOutById requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_cancelDropOutById" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ Basics.identity
+
+
 type alias CandidacyUpdateAdmissibilityRequiredArguments =
     { candidacyId : Data.Scalar.Uuid
     , admissibility : Admin.InputObject.AdmissibilityInput
@@ -460,13 +472,15 @@ subscription_rejectSubscriptionRequest requiredArgs____ =
     Object.selectionForField "(Maybe String)" "subscription_rejectSubscriptionRequest" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "reason" requiredArgs____.reason Encode.string ] (Decode.string |> Decode.nullable)
 
 
-type alias CandidacyCancelDropOutByIdRequiredArguments =
-    { candidacyId : Data.Scalar.Uuid }
+type alias AccountUpdateAccountRequiredArguments =
+    { accountId : Data.Scalar.Id
+    , accountData : Admin.InputObject.UpdateAccountInput
+    }
 
 
-candidacy_cancelDropOutById :
-    CandidacyCancelDropOutByIdRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Candidacy
+account_updateAccount :
+    AccountUpdateAccountRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Account
     -> SelectionSet decodesTo RootMutation
-candidacy_cancelDropOutById requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidacy_cancelDropOutById" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ Basics.identity
+account_updateAccount requiredArgs____ object____ =
+    Object.selectionForCompositeField "account_updateAccount" [ Argument.required "accountId" requiredArgs____.accountId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "accountData" requiredArgs____.accountData Admin.InputObject.encodeUpdateAccountInput ] object____ Basics.identity

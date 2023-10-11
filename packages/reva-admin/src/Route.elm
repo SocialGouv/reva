@@ -3,6 +3,7 @@ module Route exposing
     , FeasibilityFilters
     , Route(..)
     , SubscriptionFilters
+    , emptyAccountFilters
     , emptyCandidacyFilters
     , emptyFeasibilityFilters
     , emptySubscriptionFilters
@@ -11,6 +12,7 @@ module Route exposing
     , toString
     )
 
+import Admin.Enum.AccountGroup as AccountGroup exposing (AccountGroup)
 import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
 import Admin.Enum.FeasibilityCategoryFilter as FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
 import Admin.Enum.SubscriptionRequestStatus as SubscriptionRequestStatus exposing (SubscriptionRequestStatus(..))
@@ -32,6 +34,10 @@ type alias SubscriptionFilters =
     { status : SubscriptionRequestStatus, page : Int }
 
 
+type alias AccountFilters =
+    { group : AccountGroup, page : Int }
+
+
 type alias FeasibilityFilters =
     { category : FeasibilityCategoryFilter
     , page : Int
@@ -49,6 +55,8 @@ type Route
     | NotFound
     | Subscription String -- Subscription Id
     | Subscriptions SubscriptionFilters
+    | Account String -- Account Id
+    | Accounts AccountFilters
     | SiteMap
 
 
@@ -60,6 +68,11 @@ emptyCandidacyFilters =
 emptySubscriptionFilters : SubscriptionFilters
 emptySubscriptionFilters =
     { status = SubscriptionRequestStatus.Pending, page = 1 }
+
+
+emptyAccountFilters : AccountFilters
+emptyAccountFilters =
+    { group = AccountGroup.Organism, page = 1 }
 
 
 emptyFeasibilityFilters : FeasibilityFilters
@@ -96,6 +109,12 @@ parser baseUrl =
 
         toFeasibilitiesRoute c p =
             Feasibilities (FeasibilityFilters (feasibilityCategoryStringToCategoryFilter c) (Maybe.withDefault 1 (String.toInt (Maybe.withDefault "1" p))))
+
+        accountGroupStringToGroupFilter g =
+            Maybe.withDefault AccountGroup.Organism (AccountGroup.fromString (Maybe.withDefault "" g))
+
+        toAccountsRoute g p =
+            Accounts (AccountFilters (accountGroupStringToGroupFilter g) (Maybe.withDefault 1 (String.toInt (Maybe.withDefault "1" p))))
     in
     s baseUrl
         </> oneOf
@@ -107,6 +126,8 @@ parser baseUrl =
                 , s "feasibilities" <?> Query.string "category" <?> Query.string "page" |> map toFeasibilitiesRoute
                 , s "subscriptions" <?> Query.string "status" <?> Query.string "page" |> map toSubscriptionsRoute
                 , s "subscriptions" </> string |> map Subscription
+                , s "accounts" <?> Query.string "group" <?> Query.string "page" |> map toAccountsRoute
+                , s "accounts" </> string |> map Account
                 , topLevel "candidacies" string |> candidacyTab Tab.Profile
                 , topLevel "feasibilities" string |> map Feasibility
                 , subLevel "candidacies" "admissibility" |> candidacyTab Tab.Admissibility
@@ -180,6 +201,12 @@ toString baseUrl route =
 
         Subscription subscriptionId ->
             topLevel [ "subscriptions", subscriptionId ] []
+
+        Accounts filters ->
+            topLevel [ "accounts" ] [ Url.Builder.string "group" (AccountGroup.toString filters.group), Url.Builder.int "page" filters.page ]
+
+        Account accountId ->
+            topLevel [ "accounts", accountId ] []
 
 
 tabToString :

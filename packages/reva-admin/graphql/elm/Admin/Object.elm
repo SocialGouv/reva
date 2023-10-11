@@ -9,6 +9,10 @@ type Account
     = Account
 
 
+type AccountsPaginated
+    = AccountsPaginated
+
+
 type Admissibility
     = Admissibility
 

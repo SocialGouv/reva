@@ -63,6 +63,7 @@ type Element
     | Info String String
     | Input String
     | InputRequired String
+    | EmailRequired String
     | Number String
     | Price String
     | HourCount String
@@ -389,6 +390,10 @@ viewEditableElement formData ( elementId, element ) =
             viewFieldsetElement
                 [ inputView label "" identity [ required True ] ]
 
+        EmailRequired label ->
+            viewFieldsetElement
+                [ inputView label "" Input.email [ required True ] ]
+
         Number label ->
             viewFieldsetElement
                 [ inputView label "Un entier supérieur ou égal à 0" Input.numeric [ Html.Attributes.min "0" ] ]
@@ -594,6 +599,9 @@ viewReadOnlyElement formData ( elementId, element ) =
             defaultView label dataOrDefault
 
         InputRequired label ->
+            defaultView label dataOrDefault
+
+        EmailRequired label ->
             defaultView label dataOrDefault
 
         Number label ->

@@ -840,3 +840,43 @@ encodeTrainingInput : TrainingInput -> Value
 encodeTrainingInput input____ =
     Encode.maybeObject
         [ ( "certificateSkills", Encode.string input____.certificateSkills |> Just ), ( "otherTraining", Encode.string input____.otherTraining |> Just ), ( "individualHourCount", Encode.int input____.individualHourCount |> Just ), ( "collectiveHourCount", Encode.int input____.collectiveHourCount |> Just ), ( "additionalHourCount", Encode.int input____.additionalHourCount |> Just ), ( "basicSkillIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.basicSkillIds |> Just ), ( "mandatoryTrainingIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.mandatoryTrainingIds |> Just ), ( "isCertificationPartial", Encode.bool input____.isCertificationPartial |> Just ) ]
+
+
+buildUpdateAccountInput :
+    UpdateAccountInputRequiredFields
+    -> (UpdateAccountInputOptionalFields -> UpdateAccountInputOptionalFields)
+    -> UpdateAccountInput
+buildUpdateAccountInput required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { firstname = Absent, lastname = Absent }
+    in
+    { email = required____.email, firstname = optionals____.firstname, lastname = optionals____.lastname }
+
+
+type alias UpdateAccountInputRequiredFields =
+    { email : String }
+
+
+type alias UpdateAccountInputOptionalFields =
+    { firstname : OptionalArgument String
+    , lastname : OptionalArgument String
+    }
+
+
+{-| Type for the UpdateAccountInput input object.
+-}
+type alias UpdateAccountInput =
+    { email : String
+    , firstname : OptionalArgument String
+    , lastname : OptionalArgument String
+    }
+
+
+{-| Encode a UpdateAccountInput into a value that can be used as an argument.
+-}
+encodeUpdateAccountInput : UpdateAccountInput -> Value
+encodeUpdateAccountInput input____ =
+    Encode.maybeObject
+        [ ( "email", Encode.string input____.email |> Just ), ( "firstname", Encode.string |> Encode.optional input____.firstname ), ( "lastname", Encode.string |> Encode.optional input____.lastname ) ]
