@@ -5,6 +5,7 @@ import "@/styles/dsfr-theme-tac-extra.css";
 import init from "@/components/analytics/matomo-tracker/matomoTracker";
 import { MATOMO } from "@/config/config";
 import { createNextDsfrIntegrationApi } from "@codegouvfr/react-dsfr/next-pagesdir";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { AppProps } from "next/app";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -22,6 +23,8 @@ const { withDsfr, dsfrDocumentApi } = createNextDsfrIntegrationApi({
 
 export { dsfrDocumentApi };
 
+const queryClient = new QueryClient();
+
 function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if (MATOMO.URL && MATOMO.SITE_ID) {
@@ -33,7 +36,11 @@ function App({ Component, pageProps }: AppProps) {
     }
   }, []);
 
-  return <Component {...pageProps} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Component {...pageProps} />
+    </QueryClientProvider>
+  );
 }
 
 export default withDsfr(App);
