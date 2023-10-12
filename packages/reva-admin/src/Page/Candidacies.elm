@@ -323,7 +323,7 @@ searchResults model totalRows =
 viewDirectory : Context -> Model -> String -> Html Msg
 viewDirectory context model title =
     div
-        [ dataTest "directory-group", class "relative mb-2" ]
+        [ class "relative mb-2" ]
         [ div
             [ dataTest "directory-group-name"
             , class "top-0 text-xl font-semibold text-slate-700"
@@ -336,7 +336,10 @@ viewDirectory context model title =
                 div []
                     [ searchResults model candidacyPage.info.totalRows
                     , List.map (viewItem context) candidacyPage.rows
-                        |> ul [ class "list-none pl-0 mt-0 relative z-0" ]
+                        |> ul
+                            [ dataTest "directory-group"
+                            , class "list-none pl-0 mt-0 relative z-0"
+                            ]
                     ]
 
             Failure error ->

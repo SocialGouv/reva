@@ -1,0 +1,14 @@
+<html>
+  <body>
+    <script>
+        let callCount = 0;
+
+        function receiveMessage(event) {
+          event.source.postMessage(callCount > 0 ? "unchanged" : "changed", event.origin);
+          callCount++
+        }
+
+        window.addEventListener("message", receiveMessage, false);
+    </script>
+  </body>
+</html>
