@@ -20,9 +20,9 @@ const CandidateRegistrationConfirmationPage = () => (
           </p>
           <p className="text-dsfrGray-mentionGrey text-sm">
             Afin de vous assurer que vous recevez bien nos e-mails, pensez à
-            vérifiez votre dossier de courrier indésirable (spams).
+            vérifier votre dossier de courrier indésirable (spams).
             <br />
-            En cas de question, vous pouvez contacter :{" "}
+            En cas de question, vous pouvez nous contacter à l’adresse :{" "}
             <a href="mailto:support@vae.gouv.fr">support@vae.gouv.fr</a>
           </p>
           <Button
