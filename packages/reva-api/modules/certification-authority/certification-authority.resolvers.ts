@@ -16,8 +16,8 @@ export const resolvers = {
         certificationAuthorityId: string;
         certificationAuthorityData: {
           label: string;
-          contactFullName?: string;
-          contactEmail?: string;
+          contactFullName: string | null;
+          contactEmail: string | null;
         };
       },
       context: GraphqlContext

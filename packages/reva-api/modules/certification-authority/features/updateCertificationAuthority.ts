@@ -9,8 +9,8 @@ export const updateCertificationAuthorityById = async (
     certificationAuthorityId: string;
     certificationAuthorityData: {
       label: string;
-      contactFullName?: string;
-      contactEmail?: string;
+      contactFullName: string | null;
+      contactEmail: string | null;
     };
   }
 ): Promise<CertificationAuthority> => {
@@ -32,6 +32,12 @@ export const updateCertificationAuthorityById = async (
       `Authorité de certification pour l'id ${certificationAuthorityId} non trouvé`
     );
   }
+
+  // Update certificationAuthority to return it
+  certificationAuthority.label = certificationAuthorityData.label;
+  certificationAuthority.contactFullName =
+    certificationAuthorityData.contactFullName;
+  certificationAuthority.contactEmail = certificationAuthorityData.contactEmail;
 
   // Update Business DB
   await prismaClient.certificationAuthority.update({

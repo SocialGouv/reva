@@ -75,6 +75,11 @@ export const updateAccountById = async (
     }
   }
 
+  // Update accountToUpdate to return it
+  accountToUpdate.email = accountData.email;
+  accountToUpdate.firstname = accountData.firstname;
+  accountToUpdate.lastname = accountData.lastname;
+
   // Update Business DB
   await prismaClient.account.update({
     where: { id: accountToUpdate.id },
