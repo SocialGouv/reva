@@ -10,9 +10,14 @@ env:
   DATABASE_URL: postgresql://reva:password@localhost:5444/reva?schema=public
   NEXT_PUBLIC_WEBSITE_API_GRAPHQL: https://reva.incubateur.net/api/graphql
   NEXT_PUBLIC_FEATURE_CANDIDATE_ORIENTATION: true
+  VITE_KEYCLOAK_REALM: reva
+  VITE_KEYCLOAK_URL: https://auth.reva.incubateur.net/
+  VITE_KEYCLOAK_CLIENT_ID: reva-admin
+  VITE_FEASIBILITY_FEATURE_ENABLED: true
+  VITE_FRANCE_VAE_FINANCE_MODULE_FEATURE_ENABLED: true
 
 jobs:
-  cypress-run-reva-tests:
+  cypress-run-reva-app:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -46,3 +51,20 @@ jobs:
           cache: "npm"
       - run: cd packages/reva-website && npm install
       - run: cd packages/reva-website && NODE_ENV=production npm run test:ci
+
+  cypress-run-reva-admin:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: npm install husky
+      - run: cd packages/reva-admin && npm install && npm run build:app
+      - run: cd packages/reva-admin && NODE_ENV=production npm run test:ci
