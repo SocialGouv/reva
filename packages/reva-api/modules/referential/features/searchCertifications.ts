@@ -35,7 +35,7 @@ export const searchCertifications = async ({
       searchTextInTsQueryFormat
         ? `and certification_searchable_text@@to_tsquery('french',unaccent('${searchTextInTsQueryFormat}'))`
         : ""
-    } offset ${realOffset} limit ${realLimit}`)) as Certification[];
+    } order by c.label offset ${realOffset} limit ${realLimit}`)) as Certification[];
 
   const certificationCount = Number(
     (
