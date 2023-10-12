@@ -28,9 +28,7 @@ interface DepartmentOption {
 const zodSchema = z.object({
   firstname: z.string().min(1, "Ce champ est obligatoire"),
   lastname: z.string().min(1, "Ce champ est obligatoire"),
-  phone: z
-    .string()
-    .regex(/\+33 \d \d\d \d\d \d\d \d\d/, "Format attendu : +33 X XX XX XX XX"),
+  phone: z.string().min(10, "Format attendu : +33 X XX XX XX XX"),
   email: z.string().email("Format attendu : nom@domaine.fr"),
   departmentId: z.string().min(1, "Ce champ est obligatoire"),
 });
