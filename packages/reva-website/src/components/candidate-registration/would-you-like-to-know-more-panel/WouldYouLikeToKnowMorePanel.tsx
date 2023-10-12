@@ -5,7 +5,6 @@ export const WouldYouLikeToKnowMorePanel = () => (
     data-testid="candidate-typology-would-you-like-to-know-more-panel"
     className="flex flex-col rounded-2xl border-2 border-dsfrBlue-openBlueFrance p-8 "
   >
-    {" "}
     <h3 className="text-dsfrGray-titleGrey text-2xl font-bold">
       <span className="fr-icon-info-line mr-6" aria-hidden="true" />
       En savoir plus

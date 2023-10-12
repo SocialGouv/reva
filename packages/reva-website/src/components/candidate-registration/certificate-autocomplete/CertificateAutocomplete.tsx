@@ -19,11 +19,16 @@ const searchCertificationsQuery = graphql(`
 
 export const CertificateAutocomplete = ({
   onOptionSelection,
+  onSubmit,
+  defaultLabel,
 }: {
   onOptionSelection?: (selectedOption: AutocompleteOption) => void;
+  onSubmit?: (searchText: string) => void;
+  defaultLabel?: string;
 }) => {
   return (
     <Autocomplete
+      defaultLabel={defaultLabel}
       searchFunction={async (searchText) =>
         (
           await request(GRAPHQL_API_URL, searchCertificationsQuery, {
@@ -35,13 +40,8 @@ export const CertificateAutocomplete = ({
         }))
       }
       onOptionSelection={onOptionSelection}
+      onSubmit={onSubmit}
       placeholder="Rechercher un diplôme ..."
-      emptyState={() => (
-        <p className="text-lg font-bold p-8">
-          Le diplôme que vous recherchez n’est pas encore couvert par France
-          VAE.
-        </p>
-      )}
     />
   );
 };

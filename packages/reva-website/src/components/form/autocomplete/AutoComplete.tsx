@@ -11,12 +11,14 @@ export const Autocomplete = ({
   searchFunction,
   onOptionSelection,
   placeholder,
-  emptyState,
+  onSubmit,
+  defaultLabel,
 }: {
-  searchFunction: (searchCriteria: string) => Promise<AutocompleteOption[]>;
+  searchFunction: (searchText: string) => Promise<AutocompleteOption[]>;
   onOptionSelection?: (selectedOption: AutocompleteOption) => void;
   placeholder?: string;
-  emptyState?: (searchCriteria: string) => React.ReactNode;
+  onSubmit?: (searchText: string) => void;
+  defaultLabel?: string;
 }) => {
   const [options, setOptions] = useState<AutocompleteOption[]>([]);
 
@@ -27,25 +29,26 @@ export const Autocomplete = ({
     "IDLE" | "SEARCHING" | "GOT_RESULTS" | "GOT_NO_RESULT"
   >("IDLE");
 
-  const [searchCriteria, setSearchCriteria] = useState("");
+  const [searchText, setSearchText] = useState("");
 
-  const [debouncedSearchCriteria] = useDebounce(searchCriteria, 500);
+  const [debouncedSearchText] = useDebounce(searchText, 500);
 
-  const updateSearchCriteria = async (newSearchCriteria: string) => {
-    setSearchCriteria(newSearchCriteria);
+  const updateSearchText = async (newSearchText: string) => {
+    setSearchText(newSearchText);
   };
 
   const handleOptionSelection = (newSelectedOption: AutocompleteOption) => {
     setSelectedOption(newSelectedOption);
     onOptionSelection?.(newSelectedOption);
+    setSearchText("");
   };
 
-  //search and update autocomplete options based on debounced search criteria
+  //search and update autocomplete options based on debounced search text
   useEffect(() => {
     const updateOptions = async () => {
       setStatus("SEARCHING");
-      if (debouncedSearchCriteria) {
-        const newOptions = await searchFunction(debouncedSearchCriteria);
+      if (debouncedSearchText) {
+        const newOptions = await searchFunction(debouncedSearchText);
         setOptions(newOptions);
         setStatus(newOptions.length ? "GOT_RESULTS" : "GOT_NO_RESULT");
       } else {
@@ -54,16 +57,28 @@ export const Autocomplete = ({
       }
     };
     updateOptions();
-  }, [debouncedSearchCriteria, searchFunction]);
+  }, [debouncedSearchText, searchFunction]);
+
+  const handleSubmit = (searchText: string) => {
+    setOptions([]);
+    setSelectedOption(null);
+    onSubmit?.(searchText);
+  };
 
   return (
     <Combobox value={selectedOption} onChange={handleOptionSelection}>
       <>
-        <div className="relative flex rounded-[100px] h-[56px] shadow-[0px_8px_24px_0px_rgba(11,11,248,0.16)]">
+        <div
+          data-testid="autocomplete"
+          className="relative flex rounded-[100px] h-[56px] shadow-[0px_8px_24px_0px_rgba(11,11,248,0.16)]"
+        >
           <Combobox.Input
+            displayValue={(item: AutocompleteOption) =>
+              item ? "" : defaultLabel || ""
+            }
             data-testid="autocomplete-input"
-            displayValue={(option: AutocompleteOption) => option?.label}
-            onChange={(event) => updateSearchCriteria(event.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSubmit(searchText)}
+            onChange={(event) => updateSearchText(event.target.value)}
             placeholder={placeholder}
             className="flex items-center w-full rounded-[100px] rounded-r-none border-2 border-dsfrBlue-franceSun px-6 py-4 outline-none placeholder:italic bg-white"
           />
@@ -94,15 +109,13 @@ export const Autocomplete = ({
                 title="rechercher"
                 iconId="fr-icon-search-line"
                 className="!max-h-full !rounded-r-[100px] !max-w-[56px] !w-[56px]"
+                nativeButtonProps={{
+                  onClick: () => handleSubmit(searchText),
+                }}
               />
             )}
           />
         </div>
-        {status === "GOT_NO_RESULT" && emptyState ? (
-          <div data-testid="autocomplete-empty-state">
-            {emptyState(debouncedSearchCriteria)}
-          </div>
-        ) : null}
       </>
     </Combobox>
   );

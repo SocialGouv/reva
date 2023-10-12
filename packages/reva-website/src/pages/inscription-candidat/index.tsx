@@ -42,7 +42,7 @@ const askForRegistrationMutation = graphql(`
 
 const OrientationCandidatPage = () => {
   const router = useRouter();
-  const { certificationId } = router.query;
+  const { certificationId, searchText } = router.query;
 
   const [candidateTypology, setCandidateTypology] = useState<
     CandidateTypology | undefined
@@ -70,6 +70,8 @@ const OrientationCandidatPage = () => {
             })
           ).getCertification
         );
+      } else {
+        setCertification(null);
       }
     };
     updateCertification();
@@ -93,52 +95,71 @@ const OrientationCandidatPage = () => {
           <p className="text-dsfrGray-mentionGrey mb-8">
             Tous les champs sont obligatoires
           </p>
-          {certification && (
-            <div className="flex flex-col ml-0 lg:ml-32 gap-4 max-w-7xl">
-              <fieldset className="mb-4">
-                <legend className="text-sm mb-2 text-dsfrGray-titleGrey">
-                  Recherchez parmi les diplômes disponibles
-                </legend>
-                <CertificateAutocomplete
-                  onOptionSelection={(o) =>
-                    router.push(
-                      `/inscription-candidat?certificationId=${o.value}`
-                    )
-                  }
-                />
-              </fieldset>
-              <CertificateCard
-                label={certification.label}
-                rncpCode={certification.codeRncp}
-                certificateType={certification.typeDiplome.label}
+          <div className="flex flex-col ml-0 lg:ml-32 gap-4 max-w-7xl">
+            <fieldset className="mb-4">
+              <legend className="text-sm mb-2 text-dsfrGray-titleGrey">
+                Recherchez parmi les diplômes disponibles
+              </legend>
+              <CertificateAutocomplete
+                defaultLabel={searchText as string | undefined}
+                onSubmit={(searchText) =>
+                  router.push({
+                    pathname: "/inscription-candidat",
+                    query: { searchText },
+                  })
+                }
+                onOptionSelection={(o) =>
+                  router.push({
+                    pathname: "/inscription-candidat",
+                    query: { certificationId: o.value },
+                  })
+                }
               />
-              <h2 className="text-dsfrBlue-franceSun text-2xl font-bold mt-4 mb-2">
-                Quel candidat êtes vous ?
-              </h2>
-              <div className="flex flex-col gap-2 lg:flex-row lg:gap-6">
-                <CandidateTypologySelect
-                  candidateTypology={candidateTypology}
-                  onChange={setCandidateTypology}
+            </fieldset>
+            {certification && (
+              <>
+                <CertificateCard
+                  label={certification.label}
+                  rncpCode={certification.codeRncp}
+                  certificateType={certification.typeDiplome.label}
                 />
-                {invalidTypology && (
-                  <Notice
-                    data-testid="candidate-typology-error-panel"
-                    className="basis-1/2"
-                    title={`Le parcours VAE sur vae.gouv.fr n'est pas encore disponible dans votre situation. Nous vous invitons à vous rapprocher d’un point relais conseil, d’un conseiller en évolution professionnelle, une association de transition professionnelle (AT Pro).`}
+                <h2 className="text-dsfrBlue-franceSun text-2xl font-bold mt-4 mb-2">
+                  Quel candidat êtes vous ?
+                </h2>
+                <div className="flex flex-col gap-2 lg:flex-row lg:gap-6">
+                  <CandidateTypologySelect
+                    candidateTypology={candidateTypology}
+                    onChange={setCandidateTypology}
                   />
-                )}
-              </div>
-              {invalidTypology && <WouldYouLikeToKnowMorePanel />}
-              {validTypology && (
-                <>
-                  <h2 className="text-dsfrBlue-franceSun text-2xl font-bold mt-8 mb-2">
-                    Créez votre compte
-                  </h2>
-                  <CandidateRegistrationForm onSubmit={handleFormSubmit} />
-                </>
-              )}
-            </div>
-          )}
+                  {invalidTypology && (
+                    <Notice
+                      data-testid="candidate-typology-error-panel"
+                      className="basis-1/2"
+                      title={`Le parcours VAE sur vae.gouv.fr n'est pas encore disponible dans votre situation. Nous vous invitons à vous rapprocher d’un point relais conseil, d’un conseiller en évolution professionnelle, une association de transition professionnelle (AT Pro).`}
+                    />
+                  )}
+                </div>
+              </>
+            )}
+            {!certification && (
+              <p className="text-lg font-bold">
+                Le diplôme que vous recherchez n’est pas encore couvert par
+                France VAE.
+              </p>
+            )}
+
+            {(invalidTypology || !certification) && (
+              <WouldYouLikeToKnowMorePanel />
+            )}
+            {validTypology && (
+              <>
+                <h2 className="text-dsfrBlue-franceSun text-2xl font-bold mt-8 mb-2">
+                  Créez votre compte
+                </h2>
+                <CandidateRegistrationForm onSubmit={handleFormSubmit} />
+              </>
+            )}
+          </div>
         </div>
       </FullHeightBlueLayout>
     </MainLayout>

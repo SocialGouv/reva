@@ -65,8 +65,17 @@ export const FaitesValiderVosCompetencesParUnDiplome = () => {
           Recherchez-le et commencez votre parcours VAE dès maintenant !
         </p>
         <CertificateAutocomplete
+          onSubmit={(searchText) =>
+            router.push({
+              pathname: "inscription-candidat",
+              query: { searchText },
+            })
+          }
           onOptionSelection={(o) =>
-            router.push(`/inscription-candidat?certificationId=${o.value}`)
+            router.push({
+              pathname: "inscription-candidat",
+              query: { certificationId: o.value },
+            })
           }
         />
         <br />
