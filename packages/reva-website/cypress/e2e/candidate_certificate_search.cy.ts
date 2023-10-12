@@ -41,7 +41,7 @@ describe("candidate certificate search", () => {
 
     cy.get('[data-testid="autocomplete-empty-state"]').should(
       "have.text",
-      'Les diplômes correspondants au métier "chaudronnier" ne sont pas disponibles.'
+      "Le diplôme que vous recherchez n’est pas encore couvert par France VAE."
     );
   });
 

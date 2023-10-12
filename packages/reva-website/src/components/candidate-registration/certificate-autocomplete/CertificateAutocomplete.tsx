@@ -36,10 +36,10 @@ export const CertificateAutocomplete = ({
       }
       onOptionSelection={onOptionSelection}
       placeholder="Rechercher un diplôme ..."
-      emptyState={(searchCriteria) => (
+      emptyState={() => (
         <p className="text-lg font-bold p-8">
-          Les diplômes correspondants au métier "{searchCriteria}" ne sont pas
-          disponibles.
+          Le diplôme que vous recherchez n’est pas encore couvert par France
+          VAE.
         </p>
       )}
     />
