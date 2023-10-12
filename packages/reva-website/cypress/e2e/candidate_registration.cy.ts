@@ -72,52 +72,6 @@ describe("candidate registration", () => {
     );
   });
 
-  it("should show a success panel when i select a candidate typology of 'SALARIE_PRIVE', 'DEMANDEUR_EMPLOI' or 'BENEVOLE_OU_AIDANT_FAMILIAL'", () => {
-    cy.intercept("POST", "/api/graphql", (req) => {
-      stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");
-      stubQuery(
-        req,
-        "getDepartments",
-        "candidate_registration_departments.json"
-      );
-    });
-
-    cy.visit(
-      "http://localhost:3002/inscription-candidat/?certificationId=7ad608c2-5a4b-40eb-8ef9-7a85421b40f0"
-    );
-
-    cy.wait("@getCertification");
-
-    cy.get('[data-testid="candidate-typology-select"]')
-      .children("select")
-      .select("SALARIE_PRIVE");
-
-    cy.wait("@getDepartments");
-
-    cy.get('[data-testid="candidate-typology-success-panel"]').should(
-      "have.text",
-      `Bonne nouvelle ! Vous pouvez continuer votre parcours.`
-    );
-
-    cy.get('[data-testid="candidate-typology-select"]')
-      .children("select")
-      .select("DEMANDEUR_EMPLOI");
-
-    cy.get('[data-testid="candidate-typology-success-panel"]').should(
-      "have.text",
-      `Bonne nouvelle ! Vous pouvez continuer votre parcours.`
-    );
-
-    cy.get('[data-testid="candidate-typology-select"]')
-      .children("select")
-      .select("BENEVOLE_OU_AIDANT_FAMILIAL");
-
-    cy.get('[data-testid="candidate-typology-success-panel"]').should(
-      "have.text",
-      `Bonne nouvelle ! Vous pouvez continuer votre parcours.`
-    );
-  });
-
   it("should show 'would you like to know more ?' panel when i select a candidate typology of 'SALARIE_PUBLIC' or 'AUTRE'", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(req, "getCertification", "certification_bts_chaudronnier.json");
