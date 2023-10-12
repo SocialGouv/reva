@@ -10,11 +10,22 @@ export const WouldYouLikeToKnowMorePanel = () => (
       <span className="fr-icon-info-line mr-6" aria-hidden="true" />
       En savoir plus
     </h3>
-    <CallOut className="!mb-0">
+    <div className="fr-callout !mb-0 flex flex-col items-start">
       <p>
         Du fait de son déploiement progressif, tous les diplômes ne sont pas
-        encore couverts par France VAE.
+        encore couverts par France VAE. De nouveaux diplômes seront ajoutés en
+        2024.
       </p>
+      <br />
+      <a
+        href="https://airtable.com/appQT21E7Sy70YfSB/shrTDCbwwBI4xLLo9/tblWDa9HN0cuqLnAl"
+        title="Voir tous les diplômes actuellement - nouvelle fenêtre"
+        target="_blank"
+      >
+        <strong>
+          Voir tous les diplômes actuellement disponibles via France VAE
+        </strong>
+      </a>
       <br />
       <p>
         Si vous ne trouvez pas votre diplôme dans la liste, nous vous invitons à
@@ -44,6 +55,6 @@ export const WouldYouLikeToKnowMorePanel = () => (
         </a>
         .
       </p>
-    </CallOut>
+    </div>
   </div>
 );
