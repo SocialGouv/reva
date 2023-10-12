@@ -135,8 +135,8 @@ test("Should create a nice batch", async () => {
     PrenomCandidat1: candidateSample.candidateFirstname,
     PrenomCandidat2: null,
     PrenomCandidat3: null,
-    ActeFormatifComplémentaire_FormationObligatoire: "4, 5",
-    ActeFormatifComplémentaire_SavoirsDeBase: "0, 2",
+    ActeFormatifComplémentaire_FormationObligatoire: "4,5",
+    ActeFormatifComplémentaire_SavoirsDeBase: "0,2",
     ActeFormatifComplémentaire_BlocDeCompetencesCertifiant:
       "Some certification skills",
     ActeFormatifComplémentaire_Autre: "Some other training(s)",

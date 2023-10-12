@@ -289,7 +289,7 @@ test("should create fundingRequestUnifvae with matching batch", async () => {
       PrenomCandidat2: myCandidate.firstname2,
       PrenomCandidat3: myCandidate.firstname3,
       ActeFormatifComplémentaire_FormationObligatoire: "",
-      ActeFormatifComplémentaire_SavoirsDeBase: "0, 2",
+      ActeFormatifComplémentaire_SavoirsDeBase: "0,2",
       ActeFormatifComplémentaire_BlocDeCompetencesCertifiant: "",
       ActeFormatifComplémentaire_Autre: "",
       NbHeureDemAccVAEInd: "2.00",

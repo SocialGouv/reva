@@ -78,11 +78,11 @@ export const createBatchFromFundingRequestUnifvae = async (
         ActeFormatifComplémentaire_FormationObligatoire: formationObligatoire
           .map(getActeFormatifComplémentaire_FormationObligatoireId)
           .sort()
-          .join(", "),
+          .join(","),
         ActeFormatifComplémentaire_SavoirsDeBase: savoirsDeBase
           .map(getActeFormatifComplémentaire_SavoirsDeBaseId)
           .sort()
-          .join(", "),
+          .join(","),
         ActeFormatifComplémentaire_BlocDeCompetencesCertifiant:
           fundingRequest.certificateSkills,
         ActeFormatifComplémentaire_Autre: fundingRequest.otherTraining,
