@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "section_d_aides",
+  "info": {
+    "singularName": "section-d-aide",
+    "pluralName": "section-d-aides",
+    "displayName": "Section d'aide",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "titre": {
+      "type": "string"
+    },
+    "article_d_aides": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::article-d-aide.article-d-aide",
+      "mappedBy": "section_d_aides"
+    }
+  }
+}

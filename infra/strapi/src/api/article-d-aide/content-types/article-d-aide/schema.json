@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "article_d_aides",
+  "info": {
+    "singularName": "article-d-aide",
+    "pluralName": "article-d-aides",
+    "displayName": "Article d'aide",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "titre": {
+      "type": "string",
+      "required": true
+    },
+    "vignette": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "section_d_aides": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::section-d-aide.section-d-aide",
+      "inversedBy": "article_d_aides"
+    },
+    "contenu": {
+      "type": "richtext",
+      "required": false
+    },
+    "description": {
+      "type": "text"
+    }
+  }
+}
