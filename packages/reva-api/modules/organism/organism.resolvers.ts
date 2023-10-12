@@ -17,8 +17,8 @@ export const resolvers = {
         organismData: {
           label: string;
           contactAdministrativeEmail: string;
-          contactAdministrativePhone?: string;
-          website?: string;
+          contactAdministrativePhone: string | null;
+          website: string | null;
           isActive: boolean;
         };
       },

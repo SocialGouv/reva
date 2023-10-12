@@ -10,8 +10,8 @@ export const updateOrganismById = async (
     organismData: {
       label: string;
       contactAdministrativeEmail: string;
-      contactAdministrativePhone?: string;
-      website?: string;
+      contactAdministrativePhone: string | null;
+      website: string | null;
       isActive: boolean;
     };
   }
@@ -31,6 +31,12 @@ export const updateOrganismById = async (
   if (!organism) {
     throw new Error(`L'organisme pour l'id ${organismId} non trouvé`);
   }
+
+  organism.label = organismData.label;
+  organism.contactAdministrativeEmail = organismData.contactAdministrativeEmail;
+  organism.contactAdministrativePhone = organismData.contactAdministrativePhone;
+  organism.website = organismData.website;
+  organism.isActive = organismData.isActive;
 
   // Update Business DB
   await prismaClient.organism.update({
