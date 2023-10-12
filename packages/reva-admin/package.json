@@ -6,12 +6,16 @@
     "dev": "concurrently npm:dev:*",
     "dev:elm": "vite --port 3000",
     "dev:css": "npm run css -- --watch",
-    "build": "npm run build:css && npm run build:elm && cp -R ./dist ../reva-api/dist/admin && cp ./silent-check-sso.html ../reva-api/dist/admin/silent-check-sso.html",
     "build:api": "elm-graphql --schema-file ../reva-api/modules/generated-graphql-schema.graphql --scalar-codecs Data.Scalar --output graphql/elm --base Admin",
     "build:css": "NODE_ENV=production npm run css -- --minify",
     "build:elm": "vite build",
+    "build:app": "npm run build:css && npm run build:elm",
+    "build": "npm run build:app && cp -R ./dist ../reva-api/dist/admin && cp ./silent-check-sso.html ../reva-api/dist/admin/silent-check-sso.html",
     "css": "npx tailwindcss -i ./css/index.css -o ./dist/index.css",
-    "postinstall": "npm run css"
+    "postinstall": "npm run css",
+    "start-server": "mv dist admin && python3 -m http.server 3000",
+    "cypress:ci": "cypress run",
+    "test:ci": "start-server-and-test start-server http://localhost:3000/admin/ cypress:ci"
   },
   "keywords": [],
   "devDependencies": {
