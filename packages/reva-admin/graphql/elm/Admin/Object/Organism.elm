@@ -83,3 +83,8 @@ organismOnDepartments fillInOptionals____ object____ =
                 |> List.filterMap Basics.identity
     in
     Object.selectionForCompositeField "organismOnDepartments" optionalArgs____ object____ (Basics.identity >> Decode.list)
+
+
+isActive : SelectionSet Bool Admin.Object.Organism
+isActive =
+    Object.selectionForField "Bool" "isActive" [] Decode.bool

@@ -943,11 +943,14 @@ buildUpdateOrganismInput required____ fillOptionals____ =
             fillOptionals____
                 { contactAdministrativePhone = Absent, website = Absent }
     in
-    { contactAdministrativeEmail = required____.contactAdministrativeEmail, contactAdministrativePhone = optionals____.contactAdministrativePhone, website = optionals____.website }
+    { label = required____.label, contactAdministrativeEmail = required____.contactAdministrativeEmail, contactAdministrativePhone = optionals____.contactAdministrativePhone, website = optionals____.website, isActive = required____.isActive }
 
 
 type alias UpdateOrganismInputRequiredFields =
-    { contactAdministrativeEmail : String }
+    { label : String
+    , contactAdministrativeEmail : String
+    , isActive : Bool
+    }
 
 
 type alias UpdateOrganismInputOptionalFields =
@@ -959,9 +962,11 @@ type alias UpdateOrganismInputOptionalFields =
 {-| Type for the UpdateOrganismInput input object.
 -}
 type alias UpdateOrganismInput =
-    { contactAdministrativeEmail : String
+    { label : String
+    , contactAdministrativeEmail : String
     , contactAdministrativePhone : OptionalArgument String
     , website : OptionalArgument String
+    , isActive : Bool
     }
 
 
@@ -970,4 +975,4 @@ type alias UpdateOrganismInput =
 encodeUpdateOrganismInput : UpdateOrganismInput -> Value
 encodeUpdateOrganismInput input____ =
     Encode.maybeObject
-        [ ( "contactAdministrativeEmail", Encode.string input____.contactAdministrativeEmail |> Just ), ( "contactAdministrativePhone", Encode.string |> Encode.optional input____.contactAdministrativePhone ), ( "website", Encode.string |> Encode.optional input____.website ) ]
+        [ ( "label", Encode.string input____.label |> Just ), ( "contactAdministrativeEmail", Encode.string input____.contactAdministrativeEmail |> Just ), ( "contactAdministrativePhone", Encode.string |> Encode.optional input____.contactAdministrativePhone ), ( "website", Encode.string |> Encode.optional input____.website ), ( "isActive", Encode.bool input____.isActive |> Just ) ]

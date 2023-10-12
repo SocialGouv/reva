@@ -9,6 +9,7 @@ type Organism {
   website: String
   typology: OrganismTypology!
   organismOnDepartments(departmentId: UUID): [OrganismOnDepartment!]!
+  isActive: Boolean!
 }
 
 type OrganismOnDepartment {
@@ -24,9 +25,11 @@ type Query {
 }
 
 input UpdateOrganismInput {
+  label: String!
   contactAdministrativeEmail: String!
   contactAdministrativePhone: String
   website: String
+  isActive: Boolean!
 }
 
 type Mutation {

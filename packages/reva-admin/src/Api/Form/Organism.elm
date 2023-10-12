@@ -49,9 +49,11 @@ update organismId endpointGraphql token toMsg _ formData =
 
         organismData =
             Admin.InputObject.UpdateOrganismInput
+                organism.label
                 organism.contactAdministrativeEmail
                 (Present organism.contactAdministrativePhone)
                 (Present organism.website)
+                organism.isActive
 
         organismRequiredArs =
             Mutation.OrganismUpdateOrganismRequiredArguments
@@ -65,6 +67,8 @@ update organismId endpointGraphql token toMsg _ formData =
 selection : SelectionSet (Dict String String) Admin.Object.Organism
 selection =
     SelectionSet.succeed Data.Form.Organism.organism
+        |> with Admin.Object.Organism.label
         |> with Admin.Object.Organism.contactAdministrativeEmail
         |> with Admin.Object.Organism.contactAdministrativePhone
         |> with Admin.Object.Organism.website
+        |> with Admin.Object.Organism.isActive

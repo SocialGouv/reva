@@ -109,11 +109,19 @@ formOrganism _ _ =
     let
         keys =
             Data.Form.Organism.keys
+
+        radioListOptions =
+            [ ( "enabled", Data.Form.Organism.Enabled )
+            , ( "disabled", Data.Form.Organism.Disabled )
+            ]
+                |> List.map (\( id, status ) -> ( id, Data.Form.Organism.organismStatusToString status ))
     in
     { elements =
-        [ ( keys.contactAdministrativeEmail, Form.EmailRequired "Email de contact" )
+        [ ( keys.label, Form.InputRequired "Libellé" )
+        , ( keys.contactAdministrativeEmail, Form.EmailRequired "Email de contact" )
         , ( keys.contactAdministrativePhone, Form.Input "Téléphone" )
         , ( keys.website, Form.Input "Website" )
+        , ( keys.isActive, Form.RadioList "Statut de la structure" radioListOptions )
         ]
     , saveLabel = Nothing
     , submitLabel = "Enregistrer"

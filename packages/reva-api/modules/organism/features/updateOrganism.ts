@@ -8,9 +8,11 @@ export const updateOrganismById = async (
   params: {
     organismId: string;
     organismData: {
+      label: string;
       contactAdministrativeEmail: string;
       contactAdministrativePhone?: string;
       website?: string;
+      isActive: boolean;
     };
   }
 ): Promise<Organism> => {
@@ -34,9 +36,11 @@ export const updateOrganismById = async (
   await prismaClient.organism.update({
     where: { id: organism.id },
     data: {
+      label: organismData.label,
       contactAdministrativeEmail: organismData.contactAdministrativeEmail,
       contactAdministrativePhone: organismData.contactAdministrativePhone,
       website: organismData.website,
+      isActive: organismData.isActive,
     },
   });
 

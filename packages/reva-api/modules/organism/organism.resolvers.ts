@@ -15,9 +15,11 @@ export const resolvers = {
       params: {
         organismId: string;
         organismData: {
+          label: string;
           contactAdministrativeEmail: string;
           contactAdministrativePhone?: string;
           website?: string;
+          isActive: boolean;
         };
       },
       context: GraphqlContext
