@@ -75,6 +75,9 @@ export const updateAccountById = async (
     }
   }
 
+  const prevEmail = accountToUpdate.email;
+  const nextEmail = accountData.email;
+
   // Update accountToUpdate to return it
   accountToUpdate.email = accountData.email;
   accountToUpdate.firstname = accountData.firstname;
@@ -104,9 +107,9 @@ export const updateAccountById = async (
     }
   );
 
-  if (accountToUpdate.email != accountData.email) {
-    notifyPreviousEmailAddress({ email: accountToUpdate.email });
-    notifyNewEmailAddress({ email: accountData.email });
+  if (prevEmail != nextEmail) {
+    notifyPreviousEmailAddress({ email: prevEmail });
+    notifyNewEmailAddress({ email: nextEmail });
   }
 
   return accountToUpdate;
