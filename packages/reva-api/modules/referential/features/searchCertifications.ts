@@ -33,7 +33,7 @@ export const searchCertifications = async ({
           : ""
       } ${
       searchTextInTsQueryFormat
-        ? `and certification_searchable_text@@to_tsquery('french',unaccent('${searchTextInTsQueryFormat}'))`
+        ? `and certification_searchable_text@@to_tsquery('simple',unaccent('${searchTextInTsQueryFormat}'))`
         : ""
     } order by c.label offset ${realOffset} limit ${realLimit}`)) as Certification[];
 
@@ -46,7 +46,7 @@ export const searchCertifications = async ({
           : ""
       } ${
         searchTextInTsQueryFormat
-          ? `and certification_searchable_text@@to_tsquery('french',unaccent('${searchTextInTsQueryFormat}'))`
+          ? `and certification_searchable_text@@to_tsquery('simple',unaccent('${searchTextInTsQueryFormat}'))`
           : ""
       }`)) as { count: BigInt }[]
     )[0].count
