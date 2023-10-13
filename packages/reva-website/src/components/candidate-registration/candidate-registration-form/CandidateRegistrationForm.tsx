@@ -62,7 +62,9 @@ export const CandidateRegistrationForm = ({
     const initAvailableDepartments = async () =>
       setAvailableDepartments(
         (await request(GRAPHQL_API_URL, getDepartmentsQuery)).getDepartments
-          .sort((a: Department, b: Department) => a.code.localeCompare(b.code))
+          .sort((a: Department, b: Department) =>
+            a.label.localeCompare(b.label)
+          )
           .map((d) => ({ label: d.label, value: d.id }))
       );
     initAvailableDepartments();
