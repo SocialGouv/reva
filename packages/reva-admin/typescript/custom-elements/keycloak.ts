@@ -73,6 +73,7 @@ class KeycloakElement extends HTMLElement {
                 isCertificationAuthority: keycloak.hasResourceRole("manage_feasibility"),
                 isOrganism: keycloak.hasResourceRole("manage_candidacy"),
                 token: keycloak.token,
+                email: keycloak?.tokenParsed?.email
               },
             })
           );

@@ -1,4 +1,4 @@
-module Api.Token exposing (Token, anonymous, init, isAdmin, isCertificationAuthority, isOrganism, toString)
+module Api.Token exposing (Token, anonymous, getEmail, init, isAdmin, isCertificationAuthority, isOrganism, toString)
 
 
 type Token
@@ -6,6 +6,7 @@ type Token
         { isAdmin : Bool
         , isCertificationAuthority : Bool
         , isOrganism : Bool
+        , email : String
         , value : String
         }
 
@@ -13,6 +14,11 @@ type Token
 toString : Token -> String
 toString (Token token) =
     token.value
+
+
+getEmail : Token -> String
+getEmail (Token token) =
+    token.email
 
 
 isAdmin : Token -> Bool
@@ -30,12 +36,13 @@ isOrganism (Token token) =
     token.isOrganism
 
 
-init : Bool -> Bool -> Bool -> String -> Token
-init isAdminToken isCertificationAuthorityToken isOrganismToken value =
+init : Bool -> Bool -> Bool -> String -> String -> Token
+init isAdminToken isCertificationAuthorityToken isOrganismToken email value =
     Token
         { isAdmin = isAdminToken
         , isCertificationAuthority = isCertificationAuthorityToken
         , isOrganism = isOrganismToken
+        , email = email
         , value = value
         }
 
@@ -46,5 +53,6 @@ anonymous =
         { isAdmin = False
         , isCertificationAuthority = False
         , isOrganism = False
+        , email = ""
         , value = "anonymous"
         }
