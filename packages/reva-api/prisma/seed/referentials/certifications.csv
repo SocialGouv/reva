@@ -1,7 +1,7 @@
 ﻿Code RNCP,Certification active ?,uuid,Nom la certification,Description de la certification,Type de diplôme,uuid (from Type de diplôme),Niveau de diplôme,Conventions collective,uuid (from Conventions collectives),Filière,uuid (from Domaines)
 32208,checked,51eef7ae-80c0-481b-946f-9d6e1b9fc70c,Bac Professionnel  Métiers du commerce et de la vente - Option A : Animation et gestion de l'espace commercial - MCV,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métiers Transverses,f69101d2-2824-4093-9ac0-8f8631e5010a
-17477,checked,2f1c2d5f-8b24-471b-8824-b7f5cb4f7bb8,Bac Professionnel Aéronautique option structure,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
-7067,checked,2174d3db-e498-43cf-84a6-f882e66ef9b1,Bac Professionnel Boucher charcutier traiteur,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
+17477,,2f1c2d5f-8b24-471b-8824-b7f5cb4f7bb8,Bac Professionnel Aéronautique option structure,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
+7067,,2174d3db-e498-43cf-84a6-f882e66ef9b1,Bac Professionnel Boucher charcutier traiteur,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
 7068,checked,93f3d1c4-9646-46d6-adcc-16234d5d3186,Bac Professionnel Boulanger pâtissier,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
 14963,checked,1b7003d6-f4d1-4d81-b288-0824880ca298,Bac Professionnel Construction des carrosseries - CC,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 6726,checked,5ef560b4-bf84-44d0-bc17-1e7e9d79e14e,Bac Professionnel Fonderie,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
@@ -11,8 +11,8 @@
 36191,checked,602be48e-f586-4a88-8de5-39984f8506d5,Bac Professionnel Modélisation et prototypage 3D - MP3D,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 4432,checked,de7ab0b1-e9d1-4ec0-b24e-5d78aaa4ef66,Bac Professionnel Ouvrages du bâtiment option métallerie -OBM,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 36428,checked,b9afbbfd-85f7-4f70-ae9c-3f80db4f6375,Bac Professionnel Pilote de ligne de production - PLP,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
-7069,checked,08e4f03e-54c5-476b-a451-5a488bef5bb8,Bac Professionnel Poissonnier écailleur traiteur ,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
-5859,checked,4770f07c-3d2c-4c4e-992f-739543fa77f1,Bac Professionnel Réparation des carrosseries - RC,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
+7069,,08e4f03e-54c5-476b-a451-5a488bef5bb8,Bac Professionnel Poissonnier écailleur traiteur ,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
+5859,,4770f07c-3d2c-4c4e-992f-739543fa77f1,Bac Professionnel Réparation des carrosseries - RC,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 13905,checked,da929b9d-6463-4682-a3f5-e95307f67d49,Bac Professionnel Services aux personnes et territoires - SPAT,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
 35185,checked,e37fbaf6-42a0-4770-95eb-b8f421d52a88,Bac Professionnel Technicien conseil vente en alimentation (produits alimentaires et boissons)- TCVA ,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
 29885,checked,59303b8f-6ed5-4cb0-83de-825d366bdd60,Bac Professionnel Technicien en chaudronnerie industrielle - TCI,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
@@ -26,9 +26,9 @@
 37108,checked,6017130c-6528-44ce-b4a2-4beb2a8a1b28,"Brevet Professionnel de la Jeunesse de l'Education Populaire et du Sport spécialité éducateur sportif, mention sports de contact et disciplines associées - BPJEPS ",,Brevet Professionnel (BP),81d99804-1f46-4ced-924a-5479b58fd541,4,,,Sport,24ebe074-78fc-41c7-8b56-fec2446e6253
 37561,checked,6fbd4906-4e0b-4bb8-a0ed-a6e1407c66ab,BTS Assistance technique d'ingénieur - ATI,,BTS,7d875230-4ce1-47f9-907f-bc876329f1d5,5,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 37464,checked,61024a16-24f4-4cfb-ad50-d4f62667e030,BTS Conception des processus de réalisation de produits - CPRP,,BTS,7d875230-4ce1-47f9-907f-bc876329f1d5,5,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
-35347,checked,1595e5f6-6434-41c0-8dea-65d80d82c51a,BTS Conception des produits industriels - CPI,,BTS,7d875230-4ce1-47f9-907f-bc876329f1d5,5,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
+35347,,1595e5f6-6434-41c0-8dea-65d80d82c51a,BTS Conception des produits industriels - CPI,,BTS,7d875230-4ce1-47f9-907f-bc876329f1d5,5,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 35459,checked,1c27096f-d7de-4de2-bac5-5e5cc113867a,BTS Conception et industrialisation en construction navale - CICN,,BTS,7d875230-4ce1-47f9-907f-bc876329f1d5,5,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
-35334,checked,544a44f2-4c41-42b6-8615-f116a8b7ca5d,BTS Conception et réalisation en chaudronnerie industrielle - CRCI,,BTS,7d875230-4ce1-47f9-907f-bc876329f1d5,5,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
+35334,,544a44f2-4c41-42b6-8615-f116a8b7ca5d,BTS Conception et réalisation en chaudronnerie industrielle - CRCI,,BTS,7d875230-4ce1-47f9-907f-bc876329f1d5,5,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 36938,checked,8d51a69f-ac34-4dfc-ac77-92f3c1de3c5c,BTS Economie sociale et familiale - ESF,,BTS,7d875230-4ce1-47f9-907f-bc876329f1d5,5,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
 35346,checked,29b4e607-0b20-4498-88db-f0518e549c57,BTS Électrotechnique,,BTS,7d875230-4ce1-47f9-907f-bc876329f1d5,5,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 36968,checked,8013f6f2-3f59-44b7-a9af-c9bf0965df7a,BTS Maintenance des systèmes option A : systèmes de production - MSP,,BTS,7d875230-4ce1-47f9-907f-bc876329f1d5,5,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
@@ -44,23 +44,23 @@
 35351,checked,a10a6951-13af-43c4-a864-3325b5281bba,"BUT Qualité, logistique industrielle et organisation : organisation et supply chain- QLIO",,BUT,9beb947d-3265-4f1d-a3e4-1f19eebe6bae,6,,,Métiers Transverses,f69101d2-2824-4093-9ac0-8f8631e5010a
 35356,checked,425b762e-a2c9-4f1d-8c31-d969e7fb9c7e,BUT Techniques de commercialisation : marketing et management du point de vente- TC,,BUT,9beb947d-3265-4f1d-a3e4-1f19eebe6bae,6,,,Métiers Transverses,f69101d2-2824-4093-9ac0-8f8631e5010a
 28048,checked,14d38f55-639d-4d5b-80e8-396a3cbfa2be,CAP Accompagnant éducatif petite enfance - AEPE,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
-17479,checked,707ae84f-c2fa-489b-9600-e44d5dda7a16,CAP Aéronautique - avionique,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
-17482,checked,cacf7d23-85fa-44e4-88cf-ecc95edfe952,CAP Aéronautique - structure,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
-17483,checked,61dbf04a-5568-46d8-992b-a4b62a06d849,CAP Aéronautique - systèmes,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
+17479,,707ae84f-c2fa-489b-9600-e44d5dda7a16,CAP Aéronautique - avionique,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
+17482,,cacf7d23-85fa-44e4-88cf-ecc95edfe952,CAP Aéronautique - structure,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
+17483,,61dbf04a-5568-46d8-992b-a4b62a06d849,CAP Aéronautique - systèmes,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 25085,checked,2de4679a-c385-4fe8-bb2d-b7c08f662ddb,CAP Agricole service aux personnes et vente en espace rural - SPVER,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Métiers Transverses,f69101d2-2824-4093-9ac0-8f8631e5010a
 6993,checked,3bedca37-4438-4a23-8a8b-8ed6f067d5f0,CAP Boucher,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
 37537,checked,8a0a4ad6-bb6b-40ca-b7ea-0acdcf04ec66,CAP Boulanger,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
 37532,checked,d5c573c3-7b0e-4dc9-902c-49826fa690f6,CAP Charcutier traiteur,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
 36429,checked,8f3f1682-5aa3-40b3-94d5-69e32af251de,CAP Conducteur d'installations de production - CIP,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
-28799,checked,541ce269-1ca6-4413-80f4-bd14a77c24d2,CAP Crémier fromager,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
+28799,,541ce269-1ca6-4413-80f4-bd14a77c24d2,CAP Crémier fromager,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
 30328,checked,788b099f-5864-47d0-809c-f2226221e858,CAP Electricien,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 34947,checked,29bff3c3-2654-4719-aba3-0f2d93bf8888,CAP Equipier polyvalent du commerce - EPC,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
 35700,checked,7db7b09a-dd05-4488-93f5-a5911c54527e,CAP Métallier,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
-22689,checked,bf31b3bf-ac2d-4d65-9776-52ee69930741,CAP Opérateur / opératrice logistique - OL,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Métiers Transverses,f69101d2-2824-4093-9ac0-8f8631e5010a
+22689,,bf31b3bf-ac2d-4d65-9776-52ee69930741,CAP Opérateur / opératrice logistique - OL,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Métiers Transverses,f69101d2-2824-4093-9ac0-8f8631e5010a
 646,checked,2fbc1757-c8c2-4be7-8472-bb80c6b82620,CAP Outillage en outils à découper et à emboutir - ODE,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 645,checked,66cc4143-d317-4994-a8b9-06a01092e5db,CAP Outillages en moules métalliques - OMM,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 35316,checked,56217ec4-5090-4336-9762-4e45ab35972b,CAP Pâtissier,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
-5227,checked,b2b7f878-7c73-47ef-b781-9a3685c63266,CAP Poissonnier,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
+5227,,b2b7f878-7c73-47ef-b781-9a3685c63266,CAP Poissonnier,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
 27468,checked,89128a6c-784b-47d4-9a4b-f16996f5c9c3,CAP Réalisations industrielles en chaudronnerie ou soudage - option chaudronnerie - RICS,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 27470,checked,aef180b7-d62c-4915-982b-26100f63aaff,CAP Réalisations industrielles en chaudronnerie ou soudage - option soudage - RICS,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 36836,checked,3ee32529-6ce6-4b27-9294-73b4295a4af8,Certificat d'aptitude aux fonctions d'encadrement et de responsable d'unité d'intervention sociale - CAFERUIS,,Certificat d'aptitude (CA),598a3046-5ca2-4622-8893-f33afac62020,6,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
@@ -139,8 +139,8 @@
 35832,checked,9b3997dd-b7f1-4294-9452-7b133b8d40b5,Diplôme d'Etat Auxiliaire de puériculture - DEAP,,Diplôme d'Etat (DE),7aca63e3-9632-4e58-b462-e64a282a2896,4,,,Santé,b4e5cde7-4e2e-46bb-bbee-b3b92f8b6e3b
 34826,checked,0236bf82-e85d-4e88-927a-c93bb6c44efb,Diplôme d'Etat Conseiller en économie sociale et familiale - DEESF,,Diplôme d'Etat (DE),7aca63e3-9632-4e58-b462-e64a282a2896,6,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
 36831,checked,0b8bed9e-f889-4d16-900c-4def101695ea,"Diplôme d'Etat de la Jeunesse, de l'Education Populaire et du Sport spécialité perfectionnement sportif, mention rugby à XV - DEJEPS",,Diplôme d'Etat (DE),7aca63e3-9632-4e58-b462-e64a282a2896,5,,,Sport,24ebe074-78fc-41c7-8b56-fec2446e6253
-34827,checked,d4fc174f-1db7-4a0c-9a51-41bd7bed4add,Diplôme d'Etat Educateur jeunes Enfants - DEEJE,,Diplôme d'Etat (DE),7aca63e3-9632-4e58-b462-e64a282a2896,6,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
-34825,checked,5da22914-3719-40cf-a7c4-d2988c20f2de,Diplôme d'Etat Educateur spécialisé - DEES,,Diplôme d'Etat (DE),7aca63e3-9632-4e58-b462-e64a282a2896,6,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
+34827,,d4fc174f-1db7-4a0c-9a51-41bd7bed4add,Diplôme d'Etat Educateur jeunes Enfants - DEEJE,,Diplôme d'Etat (DE),7aca63e3-9632-4e58-b462-e64a282a2896,6,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
+34825,,5da22914-3719-40cf-a7c4-d2988c20f2de,Diplôme d'Etat Educateur spécialisé - DEES,,Diplôme d'Etat (DE),7aca63e3-9632-4e58-b462-e64a282a2896,6,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
 492,checked,9b57f1ed-6dec-4e05-8dd2-38f4746e00d7,Diplôme d'Etat Moniteur éducateur - DEME,,Diplôme d'Etat (DE),7aca63e3-9632-4e58-b462-e64a282a2896,4,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
 35904,checked,29abeae2-90a0-4cef-a3a3-39e1d10191f9,"Diplôme d'Etat Supérieur de la Jeunesse, de l'Education Populaire et du Sport spécialité performance sportive, mention football - DESJEPS",,Diplôme d'Etat Supérieur (DES),d2554e09-3edd-4bfe-81db-fb59a5c5efb7,6,,,Sport,24ebe074-78fc-41c7-8b56-fec2446e6253
 4503,checked,4c6a804c-a0c6-461b-a00a-6cc13e19a315,Diplôme d'Etat Technicien de l'intervention sociale et familiale - DETISF,,Diplôme d'Etat (DE),7aca63e3-9632-4e58-b462-e64a282a2896,4,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
@@ -184,7 +184,7 @@
 37277,checked,132c5fa7-dd11-430e-a1fb-99d8373689f2,Titre professionnel Technicien supérieur en méthodes et exploitation logistique - TSMEL ,,Titre Professionnel (TP),47044c6b-b48f-4eb9-9820-e952c092685d,5,,,Métiers Transverses,f69101d2-2824-4093-9ac0-8f8631e5010a
 36236,checked,39ecfbae-14bd-43bd-b01b-ec94a41ca0f9,Titre professionnel Tourneur en réalisation de pièces mécaniques ,,Titre Professionnel (TP),47044c6b-b48f-4eb9-9820-e952c092685d,3,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 34612,checked,2ebd553f-e49e-4a87-9c83-84b5dad746a1,Titre professionnel Tuyauteur industriel,,Titre Professionnel (TP),47044c6b-b48f-4eb9-9820-e952c092685d,3,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
-34824,checked,24f39fdf-fff6-4ef1-bbf5-3e5cd9969fae,Diplôme d'Etat d'Assistant de service social,,Diplôme d'Etat (DE),7aca63e3-9632-4e58-b462-e64a282a2896,6,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
+34824,,24f39fdf-fff6-4ef1-bbf5-3e5cd9969fae,Diplôme d'Etat d'Assistant de service social,,Diplôme d'Etat (DE),7aca63e3-9632-4e58-b462-e64a282a2896,6,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
 12296,checked,efa751cb-f5c2-4d90-b390-e5726eeebb19,"Bac Professionnel Accompagnement, soins et services à la personnes Option A : à domicile",,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
 12301,checked,14aebee9-30ec-4396-bb3a-d772e6d410e8,"Bac Professionnel Accompagnement, soins et services à la personnes Option B : en structure",,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
 36661,checked,3058c5b0-2812-4f0a-9551-d3944765fc4a,CQP Animateur de loisir sportif,,Certificat de Qualification Professionnelle (CQP),0ca9b437-2886-4bbf-9de1-4d0f1e011154,4,Sport,5ed561c0-b6f5-4096-a41c-aa3e05754f84,Sport,24ebe074-78fc-41c7-8b56-fec2446e6253
@@ -194,7 +194,7 @@
 37378,checked,b2022618-e060-4918-a163-44b49c0fb073,BTS Conception des processus de découpe et d'emboutissage - CPDE,,BTS,7d875230-4ce1-47f9-907f-bc876329f1d5,5,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 35490,checked,0ac47818-dad3-4b39-9df4-7c9978aaade3,BTS Conception et réalisation de carrosserie - CRC,,BTS,7d875230-4ce1-47f9-907f-bc876329f1d5,5,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 37115,checked,b5e7b334-7c65-4984-8105-9dc669c850f3,BTS Conception et réalisation des systèmes automatiques - CRSA,,BTS,7d875230-4ce1-47f9-907f-bc876329f1d5,5,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
-35345,checked,7c4ce27e-b0ac-4c95-92aa-476c913adf5c,BTS Fonderie,,BTS,7d875230-4ce1-47f9-907f-bc876329f1d5,5,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
+35345,,7c4ce27e-b0ac-4c95-92aa-476c913adf5c,BTS Fonderie,,BTS,7d875230-4ce1-47f9-907f-bc876329f1d5,5,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 35389,checked,4bfec89c-f6a0-4d28-a457-9887e33db593,"BUT Gestion administrative et commerciale des organisations : Management des activités culturelles, artistiques, sportives et de tourisme",,BUT,9beb947d-3265-4f1d-a3e4-1f19eebe6bae,6,,,Métiers Transverses,f69101d2-2824-4093-9ac0-8f8631e5010a
 35955,checked,b24fc502-8034-4f32-bb71-88de4127b2f2,"DEUST Animation et gestion des activités physiques, sportives ou culturelles",,DEUST,9922cc26-6f53-4f69-ae1b-f9d626d67927,5,,,Sport,24ebe074-78fc-41c7-8b56-fec2446e6253
 30080,checked,e9582948-440a-42cd-afca-47a73c3879bb,Licence professionnelle Intervention Sociale : insertion et réinsertion sociale et professionnelle,,Licence Professionnelle,341a3a5a-50d4-4319-90ef-f6bbcc830321,6,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
@@ -211,3 +211,17 @@
 30089,checked,92b5240c-045a-40f4-b4d1-420151b4e4dd,Licence professionnelle Maintenance et technologie contrôle industriel,,Licence Professionnelle,341a3a5a-50d4-4319-90ef-f6bbcc830321,6,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 29798,checked,9743a6a0-2b52-429e-a243-3d53ca6303cc,Licence professionnelle Métiers de l’industrie : industrie navale et maritime-maintenance,,Licence Professionnelle,341a3a5a-50d4-4319-90ef-f6bbcc830321,6,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 30126,checked,de575d69-d252-4e3c-a424-05dc30c8f606,Licence professionnelle Métiers de l'industrie : conception et amélioration des processus et procédés industriels,,Licence Professionnelle,341a3a5a-50d4-4319-90ef-f6bbcc830321,6,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
+37700,checked,77d8afa6-3379-42a0-99ed-72d042cdfe12,"CAP Aéronautique options Avionique, Structure et Systèmes",,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
+37383,checked,ee937fac-82e7-436b-b388-26f545a40804,CAP Poissonnier-écailler,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
+37913,checked,bc0e1fe4-a295-4f7d-9e0d-2da9a362361e,Bac Professionnel Carrossier peintre automobile,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
+37956,checked,1a777748-c7be-45c1-b694-563f03b80537,BTS Fonderie,,BTS,7d875230-4ce1-47f9-907f-bc876329f1d5,5,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
+37533,checked,7f0aabe4-0cc4-4608-9b1d-c2dee3977b13,CAP Crémier fromager,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
+37672,checked,a7f7efee-d6fd-496a-aacb-621cc0dc01d9,CAP Opérateur / opératrice logistique,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
+37602,checked,12b77d47-17bd-44ed-9a3a-1bf435efe8d3,Bac Professionnel Boucher charcutier traiteur,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
+37927,checked,0547d9c8-7b59-44bf-8bb1-6e1211ba0123,Bac Professionnel Poissonnier écailler traiteur ,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
+37374,checked,05b0359f-de7d-435e-9025-1dfc387ac213,BTS Conception des produits industriels - CPI,,BTS,7d875230-4ce1-47f9-907f-bc876329f1d5,5,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
+37405,checked,1b608092-ac20-4002-9a7c-0803a984a5d2,BTS Conception et réalisation en chaudronnerie industrielle - CRCI,,BTS,7d875230-4ce1-47f9-907f-bc876329f1d5,5,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
+37676,checked,c9868e66-add2-4f37-b205-524d96d3e0b4,Diplôme d'Etat Educateur spécialisé - DEES,,Diplôme d'Etat (DE),7aca63e3-9632-4e58-b462-e64a282a2896,6,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
+37675,checked,333de868-2673-43b7-812c-da0667076853,Diplôme d'Etat Assistant de service social - DEASS,,Diplôme d'Etat (DE),7aca63e3-9632-4e58-b462-e64a282a2896,6,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
+37679,checked,6a578820-acee-412b-b721-613e707b8654,Diplôme d'Etat Educateur jeunes enfants - DEEJE,,Diplôme d'Etat (DE),7aca63e3-9632-4e58-b462-e64a282a2896,6,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
+37928,checked,33587b25-8b48-4917-9ffa-2bfabdad7abb,Bac Professionnel Aéronautique options Avionique - Structure - Systèmes,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
