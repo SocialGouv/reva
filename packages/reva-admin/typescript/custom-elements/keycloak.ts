@@ -31,6 +31,20 @@ class KeycloakElement extends HTMLElement {
     
     this._keycloak = new Keycloak(this._configuration);
     const keycloak = this._keycloak;
+
+    const dispatchEventWithDetail = (eventName: string) => {
+      this.dispatchEvent(
+        new CustomEvent(eventName, {
+          detail: {
+            isAdmin: keycloak.hasResourceRole("admin"),
+            isCertificationAuthority: keycloak.hasResourceRole("manage_feasibility"),
+            isOrganism: keycloak.hasResourceRole("manage_candidacy"),
+            token: keycloak.token,
+            email: keycloak?.tokenParsed?.email
+          },
+        })
+      );
+    }
     
     const setTimeoutRefreshToken = () => {
       if (!keycloak.tokenParsed?.exp) {
@@ -65,18 +79,7 @@ class KeycloakElement extends HTMLElement {
             redirectUri: window.location.href,
           });
         } else {
-          //@ts-ignore
-          this.dispatchEvent(
-            new CustomEvent("loggedIn", {
-              detail: {
-                isAdmin: keycloak.hasResourceRole("admin"),
-                isCertificationAuthority: keycloak.hasResourceRole("manage_feasibility"),
-                isOrganism: keycloak.hasResourceRole("manage_candidacy"),
-                token: keycloak.token,
-                email: keycloak?.tokenParsed?.email
-              },
-            })
-          );
+          dispatchEventWithDetail("loggedIn");
           setTimeoutRefreshToken()
         }
       });
@@ -103,16 +106,7 @@ class KeycloakElement extends HTMLElement {
         clearTimeout(refreshTimeoutId)
       }
       console.log("Token refresh success");
-      this.dispatchEvent(
-        new CustomEvent("tokenRefreshed", {
-          detail: {
-            isAdmin: keycloak.hasResourceRole("admin"),
-            isCertificationAuthority: keycloak.hasResourceRole("manage_feasibility"),
-            isOrganism: keycloak.hasResourceRole("manage_candidacy"),
-            token: keycloak.token,
-          },
-        })
-      );
+      dispatchEventWithDetail("tokenRefreshed");
       setTimeoutRefreshToken()
     };
 
