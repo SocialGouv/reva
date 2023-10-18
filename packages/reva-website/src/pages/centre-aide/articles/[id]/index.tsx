@@ -5,8 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import request from "graphql-request";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import Markdown from "react-markdown";
-import rehypeRaw from "rehype-raw";
 
 const articleQuery = graphql(`
   query getArticleDAide($id: ID!) {
@@ -63,12 +61,13 @@ const ArticleAidePage = () => {
             <h1 className="text-7xl font-bold mb-16">
               {article.data?.articleDAide?.data?.attributes?.titre}
             </h1>
-            <Markdown
+            <div
               className="flex flex-col items-start"
-              rehypePlugins={[rehypeRaw]}
-            >
-              {article.data?.articleDAide?.data?.attributes?.contenu}
-            </Markdown>
+              dangerouslySetInnerHTML={{
+                __html:
+                  article.data?.articleDAide?.data?.attributes?.contenu || "",
+              }}
+            />
           </div>
         </>
       )}

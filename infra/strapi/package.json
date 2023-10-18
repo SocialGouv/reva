@@ -11,6 +11,7 @@
   },
   "devDependencies": {},
   "dependencies": {
+    "@ckeditor/strapi-plugin-ckeditor": "^0.0.9",
     "@strapi/plugin-graphql": "4.14.4",
     "@strapi/plugin-i18n": "4.14.4",
     "@strapi/plugin-users-permissions": "4.14.4",

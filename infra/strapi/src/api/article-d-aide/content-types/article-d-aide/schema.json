@@ -30,12 +30,16 @@
       "target": "api::section-d-aide.section-d-aide",
       "inversedBy": "article_d_aides"
     },
-    "contenu": {
-      "type": "richtext",
-      "required": false
-    },
     "description": {
       "type": "text"
+    },
+    "contenu": {
+      "type": "customField",
+      "options": {
+        "output": "HTML",
+        "preset": "rich"
+      },
+      "customField": "plugin::ckeditor.CKEditor"
     }
   }
 }
