@@ -696,8 +696,15 @@ export interface ApiArticleDAideArticleDAide extends Schema.CollectionType {
       "manyToMany",
       "api::section-d-aide.section-d-aide"
     >;
-    contenu: Attribute.RichText;
     description: Attribute.Text;
+    contenu: Attribute.RichText &
+      Attribute.CustomField<
+        "plugin::ckeditor.CKEditor",
+        {
+          output: "HTML";
+          preset: "rich";
+        }
+      >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
