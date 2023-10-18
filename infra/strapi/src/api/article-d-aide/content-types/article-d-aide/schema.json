@@ -40,6 +40,10 @@
         "preset": "rich"
       },
       "customField": "plugin::ckeditor.CKEditor"
+    },
+    "ordre": {
+      "type": "integer",
+      "required": false
     }
   }
 }

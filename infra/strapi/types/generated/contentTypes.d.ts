@@ -705,6 +705,7 @@ export interface ApiArticleDAideArticleDAide extends Schema.CollectionType {
           preset: "rich";
         }
       >;
+    ordre: Attribute.Integer;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -741,6 +742,7 @@ export interface ApiSectionDAideSectionDAide extends Schema.CollectionType {
       "manyToMany",
       "api::article-d-aide.article-d-aide"
     >;
+    ordre: Attribute.Integer;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
