@@ -20,6 +20,10 @@
       "relation": "manyToMany",
       "target": "api::article-d-aide.article-d-aide",
       "mappedBy": "section_d_aides"
+    },
+    "ordre": {
+      "type": "integer",
+      "required": false
     }
   }
 }

@@ -10,12 +10,12 @@ import { ReactNode } from "react";
 
 const sectionsQuery = graphql(`
   query getSectionDAides {
-    sectionDAides {
+    sectionDAides(sort: "ordre") {
       data {
         id
         attributes {
           titre
-          article_d_aides {
+          article_d_aides(sort: "ordre") {
             data {
               id
               attributes {
