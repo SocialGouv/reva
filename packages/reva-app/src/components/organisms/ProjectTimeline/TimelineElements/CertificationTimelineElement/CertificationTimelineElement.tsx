@@ -1,19 +1,18 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { TimelineElement } from "components/molecules/Timeline/Timeline";
+import { useProjectTimeline } from "components/organisms/ProjectTimeline/ProjectTimeline";
 import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
 
 export const CertificationTimelineElement = () => {
   const { state, mainService } = useMainMachineContext();
+  const { getTimelineElementStatus } = useProjectTimeline();
   return (
     <TimelineElement
       title="Diplôme visé"
-      status={
-        state.context.candidacyStatus === "PROJET"
-          ? state.context.certification
-            ? "editable"
-            : "active"
-          : "readonly"
-      }
+      status={getTimelineElementStatus({
+        previousElementFilled: true,
+        currentElementFilled: !!state.context.certification,
+      })}
     >
       {({ status }) => (
         <>

@@ -3,6 +3,7 @@ import { AccompanimentTimelineElement } from "components/organisms/ProjectTimeli
 import { ProjectEndedTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/ProjectEndedTimelineElement/ProjectEndedTimelineElement";
 import { ProjectSubmissionTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/ProjectSubmissionTimelineElement/ProjectSubmissionTimelineElement";
 import { TrainingProgramTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/TrainingProgramTimelineElement/TrainingProgramTimelineElement";
+import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
 
 import { CertificationTimelineElement } from "./TimelineElements/CertificationTimelineElement/CertificationTimelineElement";
 import { ContactTimelineElement } from "./TimelineElements/ContactTimelineElement/ContactTimelineElement";
@@ -30,4 +31,35 @@ export const ProjectTimeline = ({
       <ProjectEndedTimelineElement />
     </Timeline>
   );
+};
+
+export const useProjectTimeline = () => {
+  const { state } = useMainMachineContext();
+
+  const candidacyStatusAllowsEdition = state.context.activeFeatures.includes(
+    "EDIT_CANDIDACY_AFTER_SUBMISSION"
+  )
+    ? state.context.candidacyStatus === "PROJET" ||
+      state.context.candidacyStatus === "VALIDATION" ||
+      state.context.candidacyStatus === "PRISE_EN_CHARGE"
+    : state.context.candidacyStatus === "PROJET";
+
+  const candidacyAlreadySubmitted = state.context.candidacyStatus !== "PROJET";
+
+  const getTimelineElementStatus = ({
+    previousElementFilled,
+    currentElementFilled,
+  }: {
+    previousElementFilled: boolean;
+    currentElementFilled: boolean;
+  }) =>
+    candidacyStatusAllowsEdition
+      ? previousElementFilled || candidacyAlreadySubmitted
+        ? currentElementFilled || candidacyAlreadySubmitted
+          ? "editable"
+          : "active"
+        : "disabled"
+      : "readonly";
+
+  return { getTimelineElementStatus };
 };

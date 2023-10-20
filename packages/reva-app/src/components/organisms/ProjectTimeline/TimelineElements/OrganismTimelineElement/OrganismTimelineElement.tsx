@@ -1,23 +1,20 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { TimelineElement } from "components/molecules/Timeline/Timeline";
+import { useProjectTimeline } from "components/organisms/ProjectTimeline/ProjectTimeline";
 import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
 
 export const OrganismTimelineElement = () => {
   const { state, mainService } = useMainMachineContext();
+  const { getTimelineElementStatus } = useProjectTimeline();
 
   return (
     <TimelineElement
       title="Votre organisme d'accompagnement"
       description="Il vous guide tout au long du parcours"
-      status={
-        state.context.candidacyStatus === "PROJET"
-          ? state.context.experiences.rest.length
-            ? state.context.organism
-              ? "editable"
-              : "active"
-            : "disabled"
-          : "readonly"
-      }
+      status={getTimelineElementStatus({
+        previousElementFilled: !!state.context.experiences.rest.length,
+        currentElementFilled: !!state.context.organism,
+      })}
     >
       {({ status }) => (
         <>

@@ -1,10 +1,12 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { TimelineElement } from "components/molecules/Timeline/Timeline";
+import { useProjectTimeline } from "components/organisms/ProjectTimeline/ProjectTimeline";
 import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
 import { useMemo } from "react";
 
 export const GoalsTimelineElement = () => {
   const { state, mainService } = useMainMachineContext();
+  const { getTimelineElementStatus } = useProjectTimeline();
 
   const selectedGoals = useMemo(
     () => state.context.goals.filter((goal) => goal.checked),
@@ -14,15 +16,10 @@ export const GoalsTimelineElement = () => {
   return (
     <TimelineElement
       title="Vos objectifs"
-      status={
-        state.context.candidacyStatus === "PROJET"
-          ? state.context.certification
-            ? selectedGoals
-              ? "editable"
-              : "active"
-            : "disabled"
-          : "readonly"
-      }
+      status={getTimelineElementStatus({
+        previousElementFilled: !!state.context.certification,
+        currentElementFilled: !!selectedGoals.length,
+      })}
     >
       {({ status }) => (
         <>

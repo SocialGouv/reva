@@ -1,5 +1,6 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { TimelineElement } from "components/molecules/Timeline/Timeline";
+import { useProjectTimeline } from "components/organisms/ProjectTimeline/ProjectTimeline";
 import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
 import { Experience, duration } from "interface";
 import { useMemo } from "react";
@@ -7,6 +8,7 @@ import { sortExperiences } from "utils/experienceHelpers";
 
 export const ExperiencesTimelineElement = () => {
   const { state, mainService } = useMainMachineContext();
+  const { getTimelineElementStatus } = useProjectTimeline();
 
   const selectedGoals = useMemo(
     () => state.context.goals.filter((goal) => goal.checked),
@@ -21,15 +23,10 @@ export const ExperiencesTimelineElement = () => {
   return (
     <TimelineElement
       title="Vos expériences"
-      status={
-        state.context.candidacyStatus === "PROJET"
-          ? selectedGoals.length
-            ? sortedExperiences.length
-              ? "editable"
-              : "active"
-            : "disabled"
-          : "readonly"
-      }
+      status={getTimelineElementStatus({
+        previousElementFilled: !!selectedGoals.length,
+        currentElementFilled: !!sortedExperiences.length,
+      })}
     >
       {({ status }) => (
         <>
