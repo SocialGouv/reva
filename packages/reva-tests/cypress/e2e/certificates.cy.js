@@ -6,6 +6,7 @@ context("Certificates", () => {
       stubQuery(req, "getDepartments", "departments.json");
       stubMutation(req, "candidate_login", "candidate1.json");
       stubQuery(req, "getReferential", "referential.json");
+      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubQuery(req, "Certifications", "certifications.json");
       stubMutation(
         req,
@@ -15,8 +16,10 @@ context("Certificates", () => {
     });
 
     cy.login();
+
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
+    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get('[data-test="project-home-select-certification"]').click();
     cy.get("[name='select_department']").select("2");

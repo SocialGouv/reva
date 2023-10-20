@@ -11,10 +11,12 @@ context("Training Program", () => {
           "candidate2-training-confirmed.json"
         );
         stubQuery(req, "getReferential", "referential.json");
+        stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       });
       cy.login();
       cy.wait("@candidate_login");
       cy.wait("@getReferential");
+      cy.wait("@activeFeaturesForConnectedUser");
       cy.get('[data-test="view-training-program-button"]').click();
     });
 
@@ -53,10 +55,12 @@ context("Training Program", () => {
           "candidate2-missing-training-fields.json"
         );
         stubQuery(req, "getReferential", "referential.json");
+        stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       });
       cy.login();
       cy.wait("@candidate_login");
       cy.wait("@getReferential");
+      cy.wait("@activeFeaturesForConnectedUser");
       cy.get('[data-test="view-training-program-button"]').click();
     });
 
@@ -90,10 +94,12 @@ context("Training Program", () => {
           "candidacy_confirmTrainingForm",
           "confirm-training-form.json"
         );
+        stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       });
       cy.login();
       cy.wait("@candidate_login");
       cy.wait("@getReferential");
+      cy.wait("@activeFeaturesForConnectedUser");
       cy.get('[data-test="validate-training-program-button"]').click();
 
       cy.get('[data-test="accept-conditions-checkbox-group"]')
@@ -131,10 +137,12 @@ context("Training Program", () => {
           "candidacy_confirmTrainingForm",
           "confirm-training-form.json"
         );
+        stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       });
       cy.login();
       cy.wait("@candidate_login");
       cy.wait("@getReferential");
+      cy.wait("@activeFeaturesForConnectedUser");
       cy.get('[data-test="validate-training-program-button"]').click();
 
       cy.get('[data-test="accept-conditions-checkbox-group"]')

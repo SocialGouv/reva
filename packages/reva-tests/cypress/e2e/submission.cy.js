@@ -6,10 +6,12 @@ context("Submission", () => {
       stubQuery(req, "getDepartments", "departments.json");
       stubMutation(req, "candidate_login", "candidate2-submitted.json");
       stubQuery(req, "getReferential", "referential.json");
+      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
     cy.login();
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
+    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get('[data-test="project-submitted-label"');
   });
@@ -19,10 +21,12 @@ context("Submission", () => {
       stubQuery(req, "getDepartments", "departments.json");
       stubMutation(req, "candidate_login", "candidate2-taken-over.json");
       stubQuery(req, "getReferential", "referential.json");
+      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
     cy.login();
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
+    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get('[data-test="project-submitted-label"');
   });

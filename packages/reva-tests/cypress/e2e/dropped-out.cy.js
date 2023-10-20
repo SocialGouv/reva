@@ -11,11 +11,13 @@ context("Dropped out", () => {
       stubQuery(req, "getDepartments", "departments.json");
       stubMutation(req, "candidate_login", "candidate2-dropped-out.json");
       stubQuery(req, "getReferential", "referential.json");
+      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
     cy.login();
 
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
+    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get('[data-test="home-project-dropped-out"]');
   });
@@ -25,10 +27,12 @@ context("Dropped out", () => {
       stubQuery(req, "getDepartments", "departments.json");
       stubMutation(req, "candidate_login", "candidate2-dropped-out.json");
       stubQuery(req, "getReferential", "referential.json");
+      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
     cy.login();
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
+    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get('[data-test="home-dropped-out-name"').should(
       "have.text",
@@ -45,10 +49,12 @@ context("Dropped out", () => {
       stubQuery(req, "getDepartments", "departments.json");
       stubMutation(req, "candidate_login", "candidate2-dropped-out.json");
       stubQuery(req, "getReferential", "referential.json");
+      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
     cy.login();
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
+    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get('[data-test="home-dropped-out-support-email"').should(
       "have.text",

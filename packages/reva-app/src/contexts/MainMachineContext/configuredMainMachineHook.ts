@@ -5,6 +5,7 @@ import {
 } from "@apollo/client";
 import { Device } from "@capacitor/device";
 import { useContext, useMemo } from "react";
+import { getActiveFeaturesForConnectedUser } from "services/featureFlippingServices";
 import { getDepartments } from "services/referenceDataService";
 
 import { mainMachine } from "../../machines/main.machine";
@@ -55,7 +56,13 @@ export const useConfiguredMainMachine = () => {
               const data = await getCandidateWithCandidacy(
                 client as ApolloClient<object>
               )({ token });
-              return data;
+              const activeFeatures = await getActiveFeaturesForConnectedUser(
+                client as ApolloClient<object>
+              )({
+                token,
+              });
+
+              return { ...data, activeFeatures };
             } else {
               const { tokens, ...rest } = await confirmRegistration(
                 client as ApolloClient<object>
@@ -63,7 +70,12 @@ export const useConfiguredMainMachine = () => {
                 token: data.loginToken,
               });
               setTokens(tokens);
-              return rest;
+              const activeFeatures = await getActiveFeaturesForConnectedUser(
+                client as ApolloClient<object>
+              )({
+                token: data.loginToken,
+              });
+              return { ...rest, activeFeatures };
             }
           },
           getOrganisms: async (context, _event) => {

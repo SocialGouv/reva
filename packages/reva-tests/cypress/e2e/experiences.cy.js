@@ -18,10 +18,12 @@ context("Experiences", () => {
       stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "add_experience", "added-experience1.json");
       stubQuery(req, "update_experience", "updated-experience2.json");
+      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
     });
     cy.login();
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
+    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get('[data-test="timeline-add-experience"]').click();
     cy.get("[name='title']").type(experienceTitle1);

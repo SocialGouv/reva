@@ -58,6 +58,7 @@ export const INVALID_LOGIN_TOKEN_ERROR = "INVALID_LOGIN_TOKEN_ERROR";
 export const UNKNOWN_CANDIDATE_ERROR = "UNKNOWN_CANDIDATE_ERROR";
 export interface MainContext {
   error: string;
+  activeFeatures: string[];
   candidacyId?: string;
   certificationPage: Page<Certification>;
   candidacyCreatedAt?: Date;
@@ -178,6 +179,7 @@ export type MainState =
         | typeof error;
 
       context: MainContext & {
+        activeFeatures: string[];
         candidacyId: string;
         certification: Certification;
         contact: Contact;
@@ -225,6 +227,7 @@ export const mainMachine =
     createMachine<MainContext, MainEvent, MainState>(
       {
         context: {
+          activeFeatures: [],
           error: "",
           certificationPage: {
             rows: [],
@@ -1008,6 +1011,7 @@ export const mainMachine =
             const event = rawEvent as DoneInvokeEvent<any>;
 
             return {
+              activeFeatures: event.data.activeFeatures,
               candidacyId: event.data.candidacy.id,
               candidacyCreatedAt: new Date(event.data.candidacy.createdAt),
               candidacyStatus: event.data.candidacy.candidacyStatus,

@@ -7,6 +7,7 @@ context("Certificate list", () => {
       stubMutation(req, "candidate_login", "candidate1.json");
       stubQuery(req, "getReferential", "referential.json");
       stubQuery(req, "Certifications", "certifications.json");
+      stubQuery(req, "activeFeaturesForConnectedUser", "features.json");
       stubMutation(
         req,
         "candidacy_updateCertification",
@@ -17,6 +18,7 @@ context("Certificate list", () => {
     cy.login();
     cy.wait("@candidate_login");
     cy.wait("@getReferential");
+    cy.wait("@activeFeaturesForConnectedUser");
   });
 
   it("should show only 2 certifications", function () {
