@@ -3,7 +3,7 @@ import mjml2html from "mjml";
 import { sendGenericEmail } from "../shared/email";
 import { formatFreeText } from "../shared/email/utils";
 import { logger } from "../shared/logger";
-import { UploadedFile } from "./feasibility.features";
+import { UploadedFile } from "./feasibility.file";
 
 const template = ({
   headline,

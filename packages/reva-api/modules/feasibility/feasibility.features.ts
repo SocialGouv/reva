@@ -11,6 +11,7 @@ import {
 import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
 import { processPaginationInfo } from "../shared/list/pagination";
 import { logger } from "../shared/logger";
+import { UploadedFile, uploadFeasibilityFiles } from "./feasibility.file";
 import {
   sendFeasibilityDecisionTakenToAAPEmail,
   sendFeasibilityIncompleteMailToAAP,
@@ -20,12 +21,6 @@ import {
 } from "./feasibility.mails";
 
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
-
-export interface UploadedFile {
-  data: Buffer;
-  filename: string;
-  mimetype: string;
-}
 
 export const getCertificationAuthorities = ({
   certificationId,
@@ -90,6 +85,13 @@ export const createFeasibility = async ({
         : undefined,
     },
   });
+
+  await uploadFeasibilityFiles(
+    feasibility,
+    feasibilityFile,
+    documentaryProofFile,
+    certificateOfAttendanceFile
+  );
 
   await updateCandidacyStatus({
     candidacyId,

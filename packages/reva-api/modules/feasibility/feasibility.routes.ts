@@ -3,7 +3,6 @@ import { FastifyPluginAsync } from "fastify";
 
 import { logger } from "../shared/logger";
 import {
-  UploadedFile,
   canDownloadFeasibilityFiles,
   canUserManageCandidacy,
   createFeasibility,
@@ -11,6 +10,7 @@ import {
   getFileWithContent,
   handleFeasibilityDecision,
 } from "./feasibility.features";
+import { FeasibilityFile, UploadedFile } from "./feasibility.file";
 
 interface UploadFeasibilityFileRequestBody {
   candidacyId: string;
@@ -30,7 +30,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
     addToBody: true,
   });
 
-  server.post<{ Params: { candidacyId: string; fileId: string } }>(
+  server.get<{ Params: { candidacyId: string; fileId: string } }>(
     "/candidacy/:candidacyId/feasibility/file/:fileId",
     {
       schema: {
@@ -74,6 +74,18 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
           });
         }
 
+        const feasibilityFile = new FeasibilityFile({ candidacyId, fileId });
+        const fileLink = await feasibilityFile.getDownloadLink();
+
+        if (fileLink) {
+          reply
+            .code(200)
+            .header("Content-Type", "application/json; charset=utf-8")
+            .send({ url: fileLink });
+
+          return;
+        }
+
         const file = await getFileWithContent({ fileId });
 
         if (file) {
@@ -82,9 +94,11 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
             .header("Content-Length", file.content.length)
             .type(file.mimeType)
             .send(file.content);
-        } else {
-          reply.status(400).send("Fichier non trouvé.");
+
+          return;
         }
+
+        reply.status(400).send("Fichier non trouvé.");
       },
     }
   );
