@@ -55,14 +55,34 @@ export const FaitesValiderVosCompetencesParUnDiplome = () => {
   return (
     <section
       id="faites-valider-vos-competences-par-un-diplome"
-      className="w-full fr-container mx-auto mt-[40px] lg:flex lg:items-center"
+      className="w-full mb-20 lg:mb-0 fr-container mx-auto mt-[64px] lg:flex lg:items-center"
     >
-      <div className="sm:flex-1 max-w-3xl md:mr-12 basis-1/2">
-        <h2 className="text-2xl lg:text-3xl">
-          Vous connaissez le diplôme que vous souhaitez obtenir :
+      <div className="sm:flex-1 max-w-3xl md:mr-12 basis-2/3">
+        <h2 className="text-2xl lg:text-5xl text-dsfrBlue-franceSun font-bold mb-8">
+          Découvrez la version beta du portail officiel du service public de la
+          Validation des Acquis de l’Expérience.
         </h2>
-        <p className="text-xl leading-relaxed">
-          Recherchez-le et commencez votre parcours VAE dès maintenant !
+        <p className="text-xl mb-16">
+          France VAE devient l’espace unique pour se renseigner, être accompagné
+          et effectuer toutes ses démarches VAE pour près de{" "}
+          <strong>
+            <a
+              href="https://airtable.com/appQT21E7Sy70YfSB/shrhMGpOWNPJA15Xh/tblWDa9HN0cuqLnAl"
+              target="_blank"
+              title="200 certifications - nouvelle fenêtre"
+            >
+              200 certifications
+            </a>
+          </strong>{" "}
+          dans 6 secteurs prioritaires : la santé, le sanitaire et social, la
+          grande distribution, la métallurgie et le sport.
+        </p>
+        <p className="text-2xl font-bold mb-2">
+          Avec la VAE, faites valider vos compétences par un diplôme.
+        </p>
+        <p className="text-lg leading-relaxed  mb-2">
+          Vous connaissez le diplôme que vous souhaitez obtenir? Commencez votre
+          parcours dès maintenant.
         </p>
         <CertificateAutocomplete
           onSubmit={(searchText) =>
@@ -79,14 +99,12 @@ export const FaitesValiderVosCompetencesParUnDiplome = () => {
           }
         />
         <br />
-        <h2 className="text-2xl lg:text-3xl mb-10 mt-10">
-          Vous souhaitez en savoir plus sur la VAE ? Prenez rendez-vous avec un
-          conseiller près de chez vous.
+        <h2 className="text-2xl lg:text-3xl mb-6 mt-10">
+          Vous souhaitez en savoir plus sur la VAE ?
         </h2>
         <CallOut>
-          Du fait de son déploiement progressif, tous les diplômes ne sont pas
-          encore couverts par France VAE. Si vous ne trouvez pas votre diplôme
-          dans la liste, nous vous invitons à vous rapprocher d’un{" "}
+          Prenez rendez-vous avec un conseiller près de chez vous :
+          rapprochez-vous d’un{" "}
           <a
             href="https://vae.centre-inffo.fr/?page=carte-prc"
             target="_blank"
@@ -113,11 +131,10 @@ export const FaitesValiderVosCompetencesParUnDiplome = () => {
           .
         </CallOut>
       </div>
-      <div className="relative mt-16 -mx-5 max-w-lg basis-1/2">
+      <div className="relative mt-16 lg:-mt-32 flex content-center lg:basis-1/3">
         <Image
-          src="/home-page/image-woman-walking.png"
-          className=""
-          alt=""
+          src="/home-page/image-home-faites-valider-vos-competences.png"
+          alt="avatars de gens souriants"
           width={1067}
           height={969}
         />
@@ -506,11 +523,14 @@ const IndexPage = () => {
           content="Découvrez la version beta du portail officiel du service public de la Validation des Acquis de L’Expérience."
         />
       </Head>
-      <AvenirPro />
       {FeatureFlags.CANDIDATE_ORIENTATION === "true" ? (
         <FaitesValiderVosCompetencesParUnDiplome />
-      ) : null}
-      <ValorisationCompetences />
+      ) : (
+        <>
+          <AvenirPro />
+          <ValorisationCompetences />
+        </>
+      )}
       <Professionnels />
       <Roadmap />
       <CommentCaMarche />
