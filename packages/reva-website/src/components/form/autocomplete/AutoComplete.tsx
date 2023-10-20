@@ -70,7 +70,7 @@ export const Autocomplete = ({
       <>
         <div
           data-testid="autocomplete"
-          className="relative flex rounded-[100px] h-[56px] shadow-[0px_8px_24px_0px_rgba(11,11,248,0.16)]"
+          className="relative flex rounded-[100px] h-[56px] border-dsfrBlue-franceSun border-2 shadow-[0px_8px_24px_0px_rgba(11,11,248,0.16)]"
         >
           <Combobox.Input
             displayValue={(item: AutocompleteOption) =>
