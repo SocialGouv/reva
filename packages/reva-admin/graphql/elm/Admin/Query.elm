@@ -420,3 +420,7 @@ subscription_getSubscriptionRequest :
     -> SelectionSet (Maybe decodesTo) RootQuery
 subscription_getSubscriptionRequest requiredArgs____ object____ =
     Object.selectionForCompositeField "subscription_getSubscriptionRequest" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
+
+activeFeaturesForConnectedUser : SelectionSet (List String) RootQuery
+activeFeaturesForConnectedUser =
+    Object.selectionForField "(List String)" "activeFeaturesForConnectedUser" [] (Decode.string |> Decode.list)

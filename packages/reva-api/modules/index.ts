@@ -19,6 +19,7 @@ import * as candidate from "./candidate";
 import { resolvers as certificationAuthorityResolvers } from "./certification-authority/certification-authority.resolvers";
 import { feasibilityLoaders } from "./feasibility/feasibility.loaders";
 import { feasibilityResolvers } from "./feasibility/feasibility.resolvers";
+import { featureFlippingResolvers } from "./feature-flipping/feature-flipping.resolvers";
 import { financeUnifvaeResolvers } from "./finance/unifvae/finance.unifvae.resolvers";
 import { financeResolvers } from "./finance/unireva/finance.resolvers";
 import { organismLoaders } from "./organism/organism.loaders";
@@ -46,6 +47,8 @@ const resolvers = mergeResolvers([
   financeUnifvaeResolvers,
   organismResolvers,
   certificationAuthorityResolvers,
+  feasibilityResolvers,
+  featureFlippingResolvers,
 ]);
 resolvers.Void = VoidResolver;
 resolvers.Timestamp = TimestampResolver;
