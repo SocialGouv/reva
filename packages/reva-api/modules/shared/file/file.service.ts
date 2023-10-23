@@ -9,13 +9,6 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import { FileInterface } from "./file.interface";
 
-const {
-  OUTSCALE_ACCESS_KEY_ID,
-  OUTSCALE_SECRET_ACCESS_KEY,
-  OUTSCALE_BUCKET_NAME,
-  OUTSCALE_OBJECT_STORAGE_ENDPOINT,
-} = process.env;
-
 const SIGNED_URL_EXPIRE_SECONDS = 60 * 5;
 
 export interface FileServiceInterface {
@@ -41,27 +34,27 @@ export class FileService implements FileServiceInterface {
 
   private constructor() {
     try {
-      if (OUTSCALE_ACCESS_KEY_ID === undefined) {
+      if (process.env.OUTSCALE_ACCESS_KEY_ID === undefined) {
         throw new Error("OUTSCALE_ACCESS_KEY_ID name is missing");
       }
 
-      if (OUTSCALE_SECRET_ACCESS_KEY === undefined) {
+      if (process.env.OUTSCALE_SECRET_ACCESS_KEY === undefined) {
         throw new Error("OUTSCALE_SECRET_ACCESS_KEY name is missing");
       }
 
-      if (OUTSCALE_BUCKET_NAME === undefined) {
+      if (process.env.OUTSCALE_BUCKET_NAME === undefined) {
         throw new Error("OUTSCALE_BUCKET_NAME name is missing");
       }
 
-      if (OUTSCALE_OBJECT_STORAGE_ENDPOINT === undefined) {
+      if (process.env.OUTSCALE_OBJECT_STORAGE_ENDPOINT === undefined) {
         throw new Error("OUTSCALE_OBJECT_STORAGE_ENDPOINT name is missing");
       }
 
       this.client = new S3Client({
-        endpoint: OUTSCALE_OBJECT_STORAGE_ENDPOINT,
+        endpoint: process.env.OUTSCALE_OBJECT_STORAGE_ENDPOINT,
         credentials: {
-          accessKeyId: OUTSCALE_ACCESS_KEY_ID,
-          secretAccessKey: OUTSCALE_SECRET_ACCESS_KEY,
+          accessKeyId: process.env.OUTSCALE_ACCESS_KEY_ID,
+          secretAccessKey: process.env.OUTSCALE_SECRET_ACCESS_KEY,
         },
       });
     } catch (error) {
@@ -81,13 +74,13 @@ export class FileService implements FileServiceInterface {
   }
 
   async exists(file: FileInterface): Promise<boolean> {
-    if (!OUTSCALE_BUCKET_NAME) {
+    if (!process.env.OUTSCALE_BUCKET_NAME) {
       throw new Error("Bucket name is missing");
     }
 
     try {
       const command = new GetObjectAclCommand({
-        Bucket: OUTSCALE_BUCKET_NAME,
+        Bucket: process.env.OUTSCALE_BUCKET_NAME,
         Key: file.fileKeyPath,
       });
       const result = await this.client.send(command);
@@ -101,7 +94,7 @@ export class FileService implements FileServiceInterface {
 
   public async uploadFile(file: FileInterface, data: Buffer): Promise<void> {
     const command = new PutObjectCommand({
-      Bucket: OUTSCALE_BUCKET_NAME,
+      Bucket: process.env.OUTSCALE_BUCKET_NAME,
       Key: file.fileKeyPath,
       Body: data,
       ContentType: file.fileType,
@@ -117,7 +110,7 @@ export class FileService implements FileServiceInterface {
 
   public async deleteFile(file: FileInterface): Promise<void> {
     const command = new DeleteObjectCommand({
-      Bucket: OUTSCALE_BUCKET_NAME,
+      Bucket: process.env.OUTSCALE_BUCKET_NAME,
       Key: file.fileKeyPath,
     });
 
@@ -134,7 +127,7 @@ export class FileService implements FileServiceInterface {
   ): Promise<string | undefined> {
     try {
       const command = new PutObjectCommand({
-        Bucket: OUTSCALE_BUCKET_NAME,
+        Bucket: process.env.OUTSCALE_BUCKET_NAME,
         Key: fileKeyPath,
       });
       const url = await getSignedUrl(this.client, command, {
@@ -153,7 +146,7 @@ export class FileService implements FileServiceInterface {
   ): Promise<string | undefined> {
     try {
       const command = new GetObjectCommand({
-        Bucket: OUTSCALE_BUCKET_NAME,
+        Bucket: process.env.OUTSCALE_BUCKET_NAME,
         Key: fileKeyPath,
       });
       const url = await getSignedUrl(this.client, command, {
