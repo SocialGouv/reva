@@ -45,6 +45,7 @@ You shoud see this in prompt
 
 ### Available buckets
 
+- **reva-dev**
 - **reva-staging**
 - **reva-prod**
 
