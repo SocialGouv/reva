@@ -10,7 +10,7 @@ import {
   getFileWithContent,
   handleFeasibilityDecision,
 } from "./feasibility.features";
-import { UploadedFile } from "./feasibility.file";
+import { FeasibilityFile, UploadedFile } from "./feasibility.file";
 
 interface UploadFeasibilityFileRequestBody {
   candidacyId: string;
@@ -74,17 +74,17 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
           });
         }
 
-        // const feasibilityFile = new FeasibilityFile({ candidacyId, fileId });
-        // const fileLink = await feasibilityFile.getDownloadLink();
+        const feasibilityFile = new FeasibilityFile({ candidacyId, fileId });
+        const fileLink = await feasibilityFile.getDownloadLink();
 
-        // if (fileLink) {
-        //   reply
-        //     .code(200)
-        //     .header("Content-Type", "application/json; charset=utf-8")
-        //     .send({ url: fileLink });
+        if (fileLink) {
+          reply
+            .code(200)
+            .header("Content-Type", "application/json; charset=utf-8")
+            .send({ url: fileLink });
 
-        //   return;
-        // }
+          return;
+        }
 
         const file = await getFileWithContent({ fileId });
 
