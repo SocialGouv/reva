@@ -7,6 +7,8 @@ import request from "graphql-request";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
+import ckeditorStyles from "./content-styles.module.css";
+
 const articleQuery = graphql(`
   query getArticleDAide($id: ID!) {
     articleDAide(id: $id) {
@@ -72,6 +74,7 @@ const ArticleAidePage = () => {
                 {article.data?.articleDAide?.data?.attributes?.titre}
               </h1>
               <div
+                className="ck-content"
                 dangerouslySetInnerHTML={{
                   __html:
                     article.data?.articleDAide?.data?.attributes?.contenu || "",
