@@ -47,7 +47,9 @@ const HelpSection = ({
 }) => (
   <div>
     <h3 className="text-4xl font-bold mb-8">{title}</h3>
-    <div className="flex flex-wrap gap-8">{children}</div>
+    <div className="flex flex-col lg:flex-row flex-wrap gap-8 items-center lg:items-start">
+      {children}
+    </div>
   </div>
 );
 
@@ -65,7 +67,7 @@ const HelpArticle = ({
   url: string;
 }) => (
   <Link href={url} className="!bg-none">
-    <div className="grid grid-rows-2 h-[585px] w-[535px] rounded-[32px] shadow-[0px_8px_24px_0px_rgba(11,11,248,0.16)]">
+    <div className="grid grid-rows-2 w-[267px] lg:w-[535px] h-[400px] lg:h-[585px] rounded-[32px] bg-white shadow-[0px_8px_24px_0px_rgba(11,11,248,0.16)]">
       <div className="flex">
         <Image
           src={thumbnailUrl}
@@ -77,7 +79,7 @@ const HelpArticle = ({
       </div>
       <div className="p-8 overflow-hidden ">
         <h4 className="text-4xl font-bold">{title}</h4>
-        <div>{description}</div>
+        <div className="hidden lg:block">{description}</div>
       </div>
     </div>
   </Link>
@@ -91,12 +93,14 @@ const CentreAidePage = () => {
 
   return (
     <MainLayout>
-      <div className="flex flex-col items-center p-32 pt-16">
-        <h1 className="text-7xl font-bold">Centre d’aide France VAE</h1>
-        <h2 className="text-2xl font-bold">
-          Trouvez des réponses à vos questions à propos de votre VAE.
-        </h2>
-        <div className="self-start mt-20 flex flex-col gap-20">
+      <div className="flex flex-col bg-dsfrGray-altblueFrance">
+        <div className="flex flex-col min-h-[440px] items-center justify-center bg-white bg-[url('/centre-aide/polygons-section2.svg')] bg-cover bg-no-repeat p-4">
+          <h1 className="text-7xl font-bold">Centre d’aide France VAE</h1>
+          <h2 className="text-2xl font-bold">
+            Trouvez des réponses à vos questions à propos de votre VAE.
+          </h2>
+        </div>
+        <div className="mt-20 flex flex-col gap-20 p-4 lg:p-32 lg:pt-16 ">
           {sections.data?.sectionDAides?.data?.map((sa) => (
             <HelpSection key={sa.id} title={sa.attributes?.titre || ""}>
               {sa.attributes?.article_d_aides?.data?.map((aa) => (
