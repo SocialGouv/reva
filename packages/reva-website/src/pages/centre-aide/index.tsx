@@ -1,5 +1,5 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import { STRAPI_BASE_URL, STRAPI_GRAPHQL_API_URL } from "@/config/config";
+import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import request from "graphql-request";
@@ -68,7 +68,7 @@ const HelpArticle = ({
     <div className="grid grid-rows-2 h-[585px] w-[535px] rounded-[32px] shadow-[0px_8px_24px_0px_rgba(11,11,248,0.16)]">
       <div className="flex">
         <Image
-          src={STRAPI_BASE_URL + thumbnailUrl}
+          src={thumbnailUrl}
           alt={thumbnailAlt}
           width={535}
           height={292}

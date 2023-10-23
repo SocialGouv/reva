@@ -1,5 +1,5 @@
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
-import { STRAPI_BASE_URL, STRAPI_GRAPHQL_API_URL } from "@/config/config";
+import { STRAPI_GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import request from "graphql-request";
@@ -44,9 +44,8 @@ const ArticleAidePage = () => {
         <>
           <Image
             src={
-              STRAPI_BASE_URL +
-                article.data?.articleDAide?.data?.attributes?.vignette?.data
-                  ?.attributes?.url || ""
+              article.data?.articleDAide?.data?.attributes?.vignette?.data
+                ?.attributes?.url || ""
             }
             alt={
               article.data?.articleDAide?.data?.attributes?.vignette?.data
