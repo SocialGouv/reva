@@ -1,6 +1,7 @@
 import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
+import { isS3FeatureEnabled } from "../feature-flipping/feature-flipping.features";
 import { logger } from "../shared/logger";
 import {
   canDownloadFeasibilityFiles,
@@ -74,16 +75,19 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
           });
         }
 
-        const feasibilityFile = new FeasibilityFile({ candidacyId, fileId });
-        const fileLink = await feasibilityFile.getDownloadLink();
+        const isS3Enabled = await isS3FeatureEnabled();
+        if (isS3Enabled) {
+          const feasibilityFile = new FeasibilityFile({ candidacyId, fileId });
+          const fileLink = await feasibilityFile.getDownloadLink();
 
-        if (fileLink) {
-          reply
-            .code(200)
-            .header("Content-Type", "application/json; charset=utf-8")
-            .send({ url: fileLink });
+          if (fileLink) {
+            reply
+              .code(200)
+              .header("Content-Type", "application/json; charset=utf-8")
+              .send({ url: fileLink });
 
-          return;
+            return;
+          }
         }
 
         const file = await getFileWithContent({ fileId });
