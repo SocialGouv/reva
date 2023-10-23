@@ -54,13 +54,6 @@ export class FileService implements FileServiceInterface {
         throw new Error("OUTSCALE_OBJECT_STORAGE_ENDPOINT name is missing");
       }
 
-      console.log("OUTSCALE_BUCKET_NAME", process.env.OUTSCALE_BUCKET_NAME);
-      console.log("OUTSCALE_BUCKET_REGION", process.env.OUTSCALE_BUCKET_REGION);
-      console.log(
-        "OUTSCALE_OBJECT_STORAGE_ENDPOINT",
-        process.env.OUTSCALE_OBJECT_STORAGE_ENDPOINT
-      );
-
       this.client = new S3Client({
         endpoint: process.env.OUTSCALE_OBJECT_STORAGE_ENDPOINT,
         region: process.env.OUTSCALE_BUCKET_REGION,
