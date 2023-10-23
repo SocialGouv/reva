@@ -77,9 +77,9 @@ const HelpArticle = ({
           className="object-cover w-full rounded-t-[32px]"
         />
       </div>
-      <div className="p-8 overflow-hidden ">
+      <div className="flex flex-col p-8">
         <h4 className="text-4xl font-bold">{title}</h4>
-        <div className="hidden lg:block">{description}</div>
+        <div className="hidden lg:block overflow-hidden">{description}</div>
       </div>
     </div>
   </Link>
