@@ -27,7 +27,7 @@ export class FeasibilityFile implements FileInterface {
     return FileService.getInstance().uploadFile(this, data);
   }
 
-  getDownloadLink(): Promise<string> {
+  getDownloadLink(): Promise<string | undefined> {
     return FileService.getInstance().getDownloadLink(this);
   }
 }

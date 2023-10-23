@@ -21,8 +21,8 @@ const SIGNED_URL_EXPIRE_SECONDS = 60 * 5;
 export interface FileServiceInterface {
   uploadFile(file: FileInterface, data: Buffer): Promise<void>;
   deleteFile(file: FileInterface): Promise<void>;
-  getUploadLink(file: FileInterface): Promise<string>;
-  getDownloadLink(file: FileInterface): Promise<string>;
+  getUploadLink(file: FileInterface): Promise<string | undefined>;
+  getDownloadLink(file: FileInterface): Promise<string | undefined>;
   exists(file: FileInterface): Promise<boolean>;
 }
 
@@ -70,12 +70,12 @@ export class FileService implements FileServiceInterface {
     }
   }
 
-  async getUploadLink(file: FileInterface): Promise<string> {
+  async getUploadLink(file: FileInterface): Promise<string | undefined> {
     const link = this.getSignedUrlForUpload(file.fileKeyPath);
     return link;
   }
 
-  async getDownloadLink(file: FileInterface): Promise<string> {
+  async getDownloadLink(file: FileInterface): Promise<string | undefined> {
     const link = this.getSignedUrlForDownload(file.fileKeyPath);
     return link;
   }
@@ -129,25 +129,41 @@ export class FileService implements FileServiceInterface {
     }
   }
 
-  private async getSignedUrlForUpload(fileKeyPath: string): Promise<string> {
-    const command = new PutObjectCommand({
-      Bucket: OUTSCALE_BUCKET_NAME,
-      Key: fileKeyPath,
-    });
-    const url = await getSignedUrl(this.client, command, {
-      expiresIn: SIGNED_URL_EXPIRE_SECONDS,
-    });
-    return url;
+  private async getSignedUrlForUpload(
+    fileKeyPath: string
+  ): Promise<string | undefined> {
+    try {
+      const command = new PutObjectCommand({
+        Bucket: OUTSCALE_BUCKET_NAME,
+        Key: fileKeyPath,
+      });
+      const url = await getSignedUrl(this.client, command, {
+        expiresIn: SIGNED_URL_EXPIRE_SECONDS,
+      });
+      return url;
+    } catch (error) {
+      console.error(error);
+    }
+
+    return undefined;
   }
 
-  private async getSignedUrlForDownload(fileKeyPath: string): Promise<string> {
-    const command = new GetObjectCommand({
-      Bucket: OUTSCALE_BUCKET_NAME,
-      Key: fileKeyPath,
-    });
-    const url = await getSignedUrl(this.client, command, {
-      expiresIn: SIGNED_URL_EXPIRE_SECONDS,
-    });
-    return url;
+  private async getSignedUrlForDownload(
+    fileKeyPath: string
+  ): Promise<string | undefined> {
+    try {
+      const command = new GetObjectCommand({
+        Bucket: OUTSCALE_BUCKET_NAME,
+        Key: fileKeyPath,
+      });
+      const url = await getSignedUrl(this.client, command, {
+        expiresIn: SIGNED_URL_EXPIRE_SECONDS,
+      });
+      return url;
+    } catch (error) {
+      console.error(error);
+    }
+
+    return undefined;
   }
 }
