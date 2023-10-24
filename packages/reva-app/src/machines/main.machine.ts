@@ -79,6 +79,7 @@ export interface MainContext {
   organisms: Organism[] | undefined;
   trainingProgram: TrainingProgram | undefined;
   isTrainingProgramConfirmed: boolean;
+  firstAppointmentOccuredAt?: Date;
 }
 
 type selectedDepartment = { type: "SELECT_DEPARTMENT"; departmentCode: string };
@@ -182,6 +183,7 @@ export type MainState =
         activeFeatures: string[];
         candidacyId: string;
         certification: Certification;
+        firstAppointmentOccuredAt?: Date;
         contact: Contact;
         experiences: Experience[];
         goals: Goal[];
@@ -238,6 +240,7 @@ export const mainMachine =
               pageLength: 0,
             },
           },
+          firstAppointmentOccuredAt: undefined,
           currentCertificationPageNumber: 1,
           candidacyStatus: "CANDIDATURE_VIDE",
           showStatusBar: false,
@@ -376,6 +379,11 @@ export const mainMachine =
             },
           },
           searchResults: {
+            exit: [
+              assign({
+                error: () => "",
+              }),
+            ],
             on: {
               SELECT_CERTIFICATION: {
                 target: "certificateDetails",
@@ -416,7 +424,6 @@ export const mainMachine =
               },
               SUBMIT_CERTIFICATION: [
                 {
-                  actions: ["submitCertification", "resetOrganisms"],
                   target: "submittingSelectedCertification",
                 },
               ],
@@ -427,6 +434,7 @@ export const mainMachine =
               src: "updateCertification",
               onDone: [
                 {
+                  actions: ["submitCertification", "resetOrganisms"],
                   target: "#mainMachine.projectHome.ready",
                 },
               ],
@@ -436,20 +444,12 @@ export const mainMachine =
                     "sendErrorToSentry",
                     assign({
                       error: (_, _event) =>
-                        "Une erreur est survenue lors de la mise à jour de la certification.",
+                        "Une erreur est survenue lors de la mise à jour de la certification",
                     }),
                   ],
-                  target: "retry",
+                  target: "searchResults",
                 },
               ],
-            },
-          },
-          retry: {
-            on: {
-              SUBMIT_CERTIFICATION: {
-                actions: ["submitCertification", "resetOrganisms"],
-                target: "#mainMachine.projectHome.ready",
-              },
             },
           },
           submissionHome: {},
@@ -493,7 +493,7 @@ export const mainMachine =
                         "sendErrorToSentry",
                         assign({
                           error: (_, _event) =>
-                            "Une erreur est survenue lors de la soumission du parcours.",
+                            "Une erreur est survenue lors de la soumission du parcours",
                         }),
                       ],
                       target: "retry",
@@ -648,7 +648,7 @@ export const mainMachine =
                         "sendErrorToSentry",
                         assign({
                           error: (_, _event) =>
-                            "Une erreur est survenue lors de l'enregistrement de votre expérience.",
+                            "Une erreur est survenue lors de l'enregistrement de votre expérience",
                         }),
                       ],
                       target: "error",
@@ -701,19 +701,16 @@ export const mainMachine =
                     target: "#mainMachine.projectOrganism",
                   },
                   SUBMIT_ORGANISM: {
-                    actions: [
-                      assign({
-                        organism: (context, event) =>
-                          context.organisms?.find(
-                            (o) => o.id === event.organism?.selectedOrganismId
-                          ),
-                      }),
-                    ],
                     target: "submitting",
                   },
                 },
               },
               error: {
+                exit: [
+                  assign({
+                    error: () => "",
+                  }),
+                ],
                 on: {
                   BACK: {
                     target: "leave",
@@ -728,6 +725,15 @@ export const mainMachine =
                   src: "setOrganismsForCandidacy",
                   onDone: [
                     {
+                      actions: [
+                        assign({
+                          organism: (context, event) =>
+                            context.organisms?.find(
+                              (o) =>
+                                o.id === event.data.organism?.selectedOrganismId
+                            ),
+                        }),
+                      ],
                       target: "leave",
                     },
                   ],
@@ -736,7 +742,8 @@ export const mainMachine =
                       actions: [
                         "sendErrorToSentry",
                         assign({
-                          error: (_, event) => event.data,
+                          error: (_, event) =>
+                            "Une erreur est survenue lors de l'enregistrement de l'organisme",
                         }),
                       ],
                       target: "error",
@@ -794,7 +801,7 @@ export const mainMachine =
                         "sendErrorToSentry",
                         assign({
                           error: (_, _event) =>
-                            "Une erreur est survenue lors de l'enregistrement des objectifs.",
+                            "Une erreur est survenue lors de l'enregistrement des objectifs",
                         }),
                       ],
                       target: "error",
@@ -874,7 +881,7 @@ export const mainMachine =
                       actions: [
                         "sendErrorToSentry",
                         assign({
-                          error: (_, _event) => "Une erreur est survenue.",
+                          error: (_, _event) => "Une erreur est survenue",
                         }),
                       ],
                       target: "retry",
@@ -1016,6 +1023,8 @@ export const mainMachine =
               candidacyCreatedAt: new Date(event.data.candidacy.createdAt),
               candidacyStatus: event.data.candidacy.candidacyStatus,
               certification: event.data.candidacy.certification,
+              firstAppointmentOccuredAt:
+                event.data.candidacy.firstAppointmentOccuredAt,
               isCertificationPartial:
                 event.data.candidacy.isCertificationPartial,
               experiences: {
@@ -1082,8 +1091,8 @@ export const mainMachine =
           }),
           submitCertification: assign({
             certification: (_context, event) => {
-              const typedEvent = event as SelectCertification;
-              return typedEvent.certification;
+              const typedEvent = event as DoneInvokeEvent<Certification>;
+              return typedEvent.data;
             },
             selectedCertification: (_) => undefined,
           }),

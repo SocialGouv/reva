@@ -255,6 +255,7 @@ const CANDIDACY_SELECTION = `
         droppedOutAt
       }
       appointmentCount
+      firstAppointmentOccuredAt
       certificateSkills
       otherTraining
       individualHourCount

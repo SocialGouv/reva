@@ -51,9 +51,6 @@ export const Certificates = ({ mainService }: Props) => {
   };
 
   const displayCards = () => {
-    if (state.matches("searchResultsError")) {
-      return <ErrorAlertFromState />;
-    }
     if (state.matches("loadingCertifications")) {
       return [1, 2, 3, 4, 5].map((i) => <CardSkeleton key={`skeleton-${i}`} />);
     }
@@ -64,6 +61,7 @@ export const Certificates = ({ mainService }: Props) => {
   return (
     <Page data-test="certificates" title="Choix du diplôme">
       <BackToHomeButton />
+      <ErrorAlertFromState />
       <NameBadge as="h1" className="mt-4" />
       <h2 className="text-lg text-dsfrGray-500 font-bold mt-6">
         Nouveau parcours VAE - Choix du diplôme

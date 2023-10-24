@@ -3,6 +3,7 @@ import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { RadioGroup } from "@headlessui/react";
 import { useActor } from "@xstate/react";
 import classNames from "classnames";
+import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/ErrorAlertFromState";
 import { SearchBar } from "components/molecules/SearchBar/SearchBar";
 import { Dispatch, FC, SetStateAction, useState } from "react";
 import { Interpreter } from "xstate";
@@ -131,6 +132,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
   return (
     <Page title="Votre organisme d'accompagnement">
       <BackToHomeButton />
+      <ErrorAlertFromState />
       <h1 className="mt-4 text-3xl font-bold">
         Votre organisme d'accompagnement
       </h1>

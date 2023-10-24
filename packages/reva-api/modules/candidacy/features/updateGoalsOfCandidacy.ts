@@ -5,6 +5,7 @@ import {
   FunctionalError,
 } from "../../shared/error/functionalError";
 import { Candidacy, Goal } from "../candidacy.types";
+import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
 
 interface UpdateGoalsOfCandidacyDeps {
   updateGoals: (params: {
@@ -16,7 +17,7 @@ interface UpdateGoalsOfCandidacyDeps {
 
 export const updateGoalsOfCandidacy =
   (deps: UpdateGoalsOfCandidacyDeps) =>
-  (params: { candidacyId: string; goals: Goal[] }) => {
+  async (params: { candidacyId: string; goals: Goal[] }) => {
     const checkIfCandidacyExists = EitherAsync.fromPromise(() =>
       deps.getCandidacyFromId(params.candidacyId)
     ).mapLeft(
@@ -36,6 +37,14 @@ export const updateGoalsOfCandidacy =
           `Erreur lors de la mise à jour des objectifs`
         )
     );
+
+    if (
+      !(await canCandidateUpdateCandidacy({ candidacyId: params.candidacyId }))
+    ) {
+      throw new Error(
+        "Impossible de mettre à jour la candidature une fois le premier entretien effetué"
+      );
+    }
 
     return checkIfCandidacyExists.chain(() => updateGoals);
   };

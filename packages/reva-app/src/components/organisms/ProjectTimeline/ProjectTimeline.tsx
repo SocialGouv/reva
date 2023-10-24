@@ -4,6 +4,7 @@ import { ProjectEndedTimelineElement } from "components/organisms/ProjectTimelin
 import { ProjectSubmissionTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/ProjectSubmissionTimelineElement/ProjectSubmissionTimelineElement";
 import { TrainingProgramTimelineElement } from "components/organisms/ProjectTimeline/TimelineElements/TrainingProgramTimelineElement/TrainingProgramTimelineElement";
 import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
+import { isBefore } from "date-fns";
 
 import { CertificationTimelineElement } from "./TimelineElements/CertificationTimelineElement/CertificationTimelineElement";
 import { ContactTimelineElement } from "./TimelineElements/ContactTimelineElement/ContactTimelineElement";
@@ -36,12 +37,18 @@ export const ProjectTimeline = ({
 export const useProjectTimeline = () => {
   const { state } = useMainMachineContext();
 
+  //candidate can edit project if a training has not been sent and if the first appointment date has not passed
+  const canEditCandidacyAfterSubmission =
+    (state.context.candidacyStatus === "PROJET" ||
+      state.context.candidacyStatus === "VALIDATION" ||
+      state.context.candidacyStatus === "PRISE_EN_CHARGE") &&
+    (!state.context.firstAppointmentOccuredAt ||
+      isBefore(new Date(), state.context.firstAppointmentOccuredAt));
+
   const candidacyStatusAllowsEdition = state.context.activeFeatures.includes(
     "EDIT_CANDIDACY_AFTER_SUBMISSION"
   )
-    ? state.context.candidacyStatus === "PROJET" ||
-      state.context.candidacyStatus === "VALIDATION" ||
-      state.context.candidacyStatus === "PRISE_EN_CHARGE"
+    ? canEditCandidacyAfterSubmission
     : state.context.candidacyStatus === "PROJET";
 
   const candidacyAlreadySubmitted = state.context.candidacyStatus !== "PROJET";

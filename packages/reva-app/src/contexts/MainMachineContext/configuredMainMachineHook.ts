@@ -100,30 +100,36 @@ export const useConfiguredMainMachine = () => {
           updateCertification: async (context, event) => {
             if (
               event.type !== "SUBMIT_CERTIFICATION" ||
-              !context.certification ||
+              !event.certification ||
               !context.candidacyId
             ) {
               return Promise.reject("Impossible state");
             }
             const deviceId = await Device.getId();
 
-            return updateCertification(client as ApolloClient<object>)({
+            await updateCertification(client as ApolloClient<object>)({
               deviceId: deviceId.uuid,
               candidacyId: context.candidacyId,
               certificationId: event.certification.id,
               departmentId: context.selectedDepartment?.id || "",
             });
+            return event.certification;
           },
-          setOrganismsForCandidacy: async (context, _event) => {
-            if (!context.candidacyId || !context.organism?.id)
+          setOrganismsForCandidacy: async (context, event) => {
+            if (
+              event.type !== "SUBMIT_ORGANISM" ||
+              !context.candidacyId ||
+              !event.organism?.selectedOrganismId
+            )
               return Promise.reject(
                 "unavailable candidacyId or organism in XState context"
               );
 
-            return selectOrganismForCandidacy(client as ApolloClient<object>)({
+            await selectOrganismForCandidacy(client as ApolloClient<object>)({
               candidacyId: context.candidacyId,
-              organismId: context.organism.id,
+              organismId: event.organism.selectedOrganismId,
             });
+            return event;
           },
           saveGoals: async (context, event) => {
             if (event.type !== "SUBMIT_GOALS" || !context.candidacyId) {

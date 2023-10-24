@@ -5,6 +5,7 @@ import {
   FunctionalError,
 } from "../../shared/error/functionalError";
 import { Candidacy, Experience, ExperienceInput } from "../candidacy.types";
+import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
 
 interface AddExperienceToCandidacyDeps {
   createExperience: (params: {
@@ -16,7 +17,7 @@ interface AddExperienceToCandidacyDeps {
 
 export const addExperienceToCandidacy =
   (deps: AddExperienceToCandidacyDeps) =>
-  (params: { candidacyId: string; experience: ExperienceInput }) => {
+  async (params: { candidacyId: string; experience: ExperienceInput }) => {
     const checkIfCandidacyExists = EitherAsync.fromPromise(() =>
       deps.getCandidacyFromId(params.candidacyId)
     ).mapLeft(
@@ -36,6 +37,14 @@ export const addExperienceToCandidacy =
           `Erreur lors de la creation de l'expérience`
         )
     );
+
+    if (
+      !(await canCandidateUpdateCandidacy({ candidacyId: params.candidacyId }))
+    ) {
+      throw new Error(
+        "Impossible de mettre à jour la candidature une fois le premier entretien effetué"
+      );
+    }
 
     return checkIfCandidacyExists.chain(() => createExperience);
   };
