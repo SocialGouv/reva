@@ -135,6 +135,16 @@ export const Footer = ({ className }: { className?: string }) => (
               Nous contacter
             </Link>
           </li>
+          <li className="fr-footer__bottom-item">
+            <Link
+              className="fr-footer__bottom-link"
+              target="_blank"
+              title="Questions fréquentes - nouvelle fenêtre"
+              href="https://reva.crisp.help/fr/category/candidat-rhr5rx/"
+            >
+              Questions fréquentes
+            </Link>
+          </li>
         </ul>
         <div className="fr-footer__bottom-copy">
           <p>
