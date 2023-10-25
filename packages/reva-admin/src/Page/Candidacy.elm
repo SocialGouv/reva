@@ -32,6 +32,7 @@ import Browser.Navigation as Nav
 import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyId)
 import Data.Context exposing (Context)
 import Data.Feasibility
+import Data.Form.Appointment
 import Data.Form.Archive
 import Data.Form.CancelDropOut
 import Data.Form.DropOut
@@ -519,7 +520,7 @@ updateTab context tab ( model, cmd ) =
                         , onSave = Nothing
                         , onSubmit = Api.Form.Appointment.update tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab Profile
-                        , onValidate = \_ _ -> Ok ()
+                        , onValidate = Data.Form.Appointment.validate
                         , status = Form.Editable
                         }
                         model.form

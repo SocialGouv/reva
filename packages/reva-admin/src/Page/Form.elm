@@ -350,7 +350,7 @@ viewEditableElement formData ( elementId, element ) =
 
         Date label ->
             viewFieldsetElement
-                [ inputView (label |> optional) "Date au format 31/12/2022" Input.date [] ]
+                [ inputView label "Date au format 31/12/2022" Input.date [] ]
 
         Empty ->
             text ""

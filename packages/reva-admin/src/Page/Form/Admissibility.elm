@@ -2,7 +2,7 @@ module Page.Form.Admissibility exposing (..)
 
 import Admin.Enum.AdmissibilityStatus exposing (..)
 import Data.Admissibility exposing (admissibilitySatusToString)
-import Data.Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
+import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Form.Admissibility
 import Data.Referential exposing (Referential)
@@ -34,9 +34,9 @@ form formData _ =
                 ]
                 (if not admissibilityFromForm.isCandidateAlreadyAdmissible then
                     [ ( "dates", Form.Title1 "1 - Dates" )
-                    , ( keys.reportSentAt, Form.Date "Date d'envoi du dossier de la faisabilité" )
-                    , ( keys.certifierRespondedAt, Form.Date "Date du prononcé de la recevabilité" )
-                    , ( keys.responseAvailableToCandidateAt, Form.Date "Date de réception de l'avis de recevabilité" )
+                    , ( keys.reportSentAt, Form.Date "Date d'envoi du dossier de la faisabilité (optionnel)" )
+                    , ( keys.certifierRespondedAt, Form.Date "Date du prononcé de la recevabilité (optionnel)" )
+                    , ( keys.responseAvailableToCandidateAt, Form.Date "Date de réception de l'avis de recevabilité (optionnel)" )
                     , ( "admissibility", Form.Title1 "2 - Avis de recevabilité du certificateur" )
                     , ( keys.status, Form.RadioList "" statusList )
                     ]

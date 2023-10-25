@@ -50,7 +50,7 @@ form _ ( candidacy, referential ) =
                 |> Maybe.map (\reason -> Form.SelectOther "dropOutReason" reason "Autre raison")
                 |> Maybe.withDefault Form.Empty
           )
-        , ( keys.droppedOutAt, Form.Date "Date" )
+        , ( keys.droppedOutAt, Form.Date "Date (optionnel)" )
         ]
     , saveLabel = Nothing
     , submitLabel = "Enregistrer"

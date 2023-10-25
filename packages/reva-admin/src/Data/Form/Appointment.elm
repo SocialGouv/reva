@@ -1,9 +1,10 @@
-module Data.Form.Appointment exposing (Appointment, appointment, appointmentFromDict, candidateTypologyFromString, candidateTypologyToString, keys)
+module Data.Form.Appointment exposing (Appointment, appointment, appointmentFromDict, candidateTypologyFromString, candidateTypologyToString, keys, validate)
 
 import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
-import Data.Candidacy exposing (CandidacyId)
+import Data.Candidacy exposing (Candidacy, CandidacyId)
 import Data.Form exposing (FormData)
 import Data.Form.Helper as Helper
+import Data.Referential exposing (Referential)
 import Data.Scalar
 import Dict exposing (Dict)
 
@@ -147,3 +148,17 @@ candidateTypologyFromString candidateTypology =
 
         _ ->
             Autre
+
+
+validate : ( Candidacy, Referential ) -> FormData -> Result (List String) ()
+validate ( _, _ ) formData =
+    let
+        decode =
+            Helper.decode keys formData
+    in
+    case decode.maybe.date .firstAppointmentOccurredAt Nothing of
+        Nothing ->
+            Err [ "Veuillez saisir une date de premier rendez-vous pédagogique" ]
+
+        _ ->
+            Ok ()

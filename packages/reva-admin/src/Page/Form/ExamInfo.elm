@@ -26,8 +26,8 @@ form formData _ =
 
         elements =
             [ ( "dates", Form.Title1 "1 - Dates de passage devant le jury" )
-            , ( keys.estimatedExamDate, Form.Date "Date prévisionnelle" )
-            , ( keys.actualExamDate, Form.Date "Date réelle" )
+            , ( keys.estimatedExamDate, Form.Date "Date prévisionnelle (optionnel)" )
+            , ( keys.actualExamDate, Form.Date "Date réelle (optionnel)" )
             , ( "result", Form.Title1 "2 - Résultat" )
             , ( keys.examResult, Form.Select "Résultat obtenu par le candidat" examResultList )
             ]
