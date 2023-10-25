@@ -131,6 +131,7 @@ selection id =
                 |> with (Admin.Object.Candidacy.certificationAuthorities CertificationAuthority.selection)
                 |> with (Admin.Object.Candidacy.feasibility Api.Feasibility.selection)
                 |> with Admin.Object.Candidacy.financeModule
+                |> with Admin.Object.Candidacy.firstAppointmentOccuredAt
     in
     SelectionSet.succeed
         (\maybeCandidacy companions ->

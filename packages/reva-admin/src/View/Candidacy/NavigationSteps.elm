@@ -24,7 +24,11 @@ view feasibilityFeatureEnabled baseUrl candidacy =
             Just <| Route.href baseUrl <| Route.Candidacy (tab View.Candidacy.Tab.Meetings)
 
         trainingLink =
-            Just <| Route.href baseUrl <| Route.Candidacy (tab View.Candidacy.Tab.Training)
+            if candidacy.firstAppointmentOccuredAt /= Nothing then
+                Just <| Route.href baseUrl <| Route.Candidacy (tab View.Candidacy.Tab.Training)
+
+            else
+                Nothing
 
         admissibilityLink =
             if Candidacy.isStatusEqualOrAbove candidacy ParcoursConfirme then
@@ -93,6 +97,13 @@ view feasibilityFeatureEnabled baseUrl candidacy =
             else
                 WITHOUT_BUTTON
 
+        trainingMenuEntryStatus =
+            if List.member (candidacyStatus candidacy) [ PriseEnCharge ] && candidacy.firstAppointmentOccuredAt /= Nothing then
+                WITH_EDIT_BUTTON
+
+            else
+                WITHOUT_BUTTON
+
         feasibilityMenuEntry =
             if showFeasibilityMenuEntry then
                 [ { content = expandedView feasibilityMenuEntryStatus "Dossier de faisabilité"
@@ -117,10 +128,7 @@ view feasibilityFeatureEnabled baseUrl candidacy =
                 }
               , { content =
                     expandedView
-                        (getDefaultExpandedViewStatusFromCandidacyStatus
-                            candidacy
-                            [ PriseEnCharge ]
-                        )
+                        trainingMenuEntryStatus
                         "Définition du parcours"
                 , navigation = trainingLink
                 }

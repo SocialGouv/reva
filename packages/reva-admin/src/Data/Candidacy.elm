@@ -97,6 +97,7 @@ type alias Candidacy =
     , certificationAuthorities : List CertificationAuthority
     , feasibility : Maybe Feasibility
     , financeModule : FinanceModule
+    , firstAppointmentOccuredAt : Maybe Time.Posix
     }
 
 
