@@ -14,11 +14,6 @@ import View.Date
 import View.Steps
 
 
-type ButtonState
-    = Enabled
-    | Disabled
-
-
 view : Bool -> String -> Candidacy -> Html msg
 view feasibilityFeatureEnabled baseUrl candidacy =
     let
@@ -64,7 +59,13 @@ view feasibilityFeatureEnabled baseUrl candidacy =
 
         admissibilityMenuEntry =
             if showAdmissibilityMenuEntry then
-                [ { content = expandedView Enabled "Gestion de la recevabilité" [ ParcoursConfirme ] candidacy
+                [ { content =
+                        expandedView
+                            (getDefaultExpandedViewStatusFromCandidacyStatus
+                                candidacy
+                                [ ParcoursConfirme ]
+                            )
+                            "Gestion de la recevabilité"
                   , navigation = admissibilityLink
                   }
                 ]
@@ -81,16 +82,20 @@ view feasibilityFeatureEnabled baseUrl candidacy =
                     False
 
         feasibilityMenuEntryStatus =
-            case candidacy.feasibility of
-                Just _ ->
-                    Disabled
+            if List.member (candidacyStatus candidacy) [ ParcoursConfirme, DossierFaisabiliteIncomplet ] then
+                case candidacy.feasibility of
+                    Just _ ->
+                        WITH_READ_ONLY_BUTTON
 
-                Nothing ->
-                    Enabled
+                    Nothing ->
+                        WITH_EDIT_BUTTON
+
+            else
+                WITHOUT_BUTTON
 
         feasibilityMenuEntry =
             if showFeasibilityMenuEntry then
-                [ { content = expandedView feasibilityMenuEntryStatus "Dossier de faisabilité" [ ParcoursConfirme, DossierFaisabiliteIncomplet ] candidacy
+                [ { content = expandedView feasibilityMenuEntryStatus "Dossier de faisabilité"
                   , navigation = feasibilityLink
                   }
                 ]
@@ -101,10 +106,22 @@ view feasibilityFeatureEnabled baseUrl candidacy =
     View.Steps.view (title "Toutes les étapes")
         (Candidacy.statusToProgressPosition (candidacyStatus candidacy))
         (List.concat
-            [ [ { content = expandedView Enabled "Rendez-vous pédagogique" [ PriseEnCharge ] candidacy
+            [ [ { content =
+                    expandedView
+                        (getDefaultExpandedViewStatusFromCandidacyStatus
+                            candidacy
+                            [ PriseEnCharge ]
+                        )
+                        "Rendez-vous pédagogique"
                 , navigation = appointmentLink
                 }
-              , { content = expandedView Enabled "Définition du parcours" [ PriseEnCharge ] candidacy
+              , { content =
+                    expandedView
+                        (getDefaultExpandedViewStatusFromCandidacyStatus
+                            candidacy
+                            [ PriseEnCharge ]
+                        )
+                        "Définition du parcours"
                 , navigation = trainingLink
                 }
               , { content = [ View.Steps.info "Validation du parcours" ]
@@ -113,13 +130,31 @@ view feasibilityFeatureEnabled baseUrl candidacy =
               ]
             , admissibilityMenuEntry
             , feasibilityMenuEntry
-            , [ { content = expandedView Enabled "Jury" [ ParcoursConfirme, DossierFaisabiliteIncomplet ] candidacy
+            , [ { content =
+                    expandedView
+                        (getDefaultExpandedViewStatusFromCandidacyStatus
+                            candidacy
+                            [ ParcoursConfirme, DossierFaisabiliteIncomplet ]
+                        )
+                        "Jury"
                 , navigation = examInfoLink
                 }
-              , { content = expandedView Enabled "Demande de prise en charge" [ DossierFaisabiliteRecevable, DossierFaisabiliteNonRecevable ] candidacy
+              , { content =
+                    expandedView
+                        (getDefaultExpandedViewStatusFromCandidacyStatus
+                            candidacy
+                            [ DossierFaisabiliteRecevable, DossierFaisabiliteNonRecevable ]
+                        )
+                        "Demande de prise en charge"
                 , navigation = fundingRequestLink baseUrl candidacy
                 }
-              , { content = expandedView Enabled "Demande de paiement" [ DemandeFinancementEnvoye ] candidacy
+              , { content =
+                    expandedView
+                        (getDefaultExpandedViewStatusFromCandidacyStatus
+                            candidacy
+                            [ DemandeFinancementEnvoye ]
+                        )
+                        "Demande de paiement"
                 , navigation = paymentRequestLink baseUrl candidacy
                 }
               ]
@@ -156,10 +191,22 @@ dropOutView baseUrl candidacy dropOutDate =
         [ { content = dropOutInfo
           , navigation = dropOutLink
           }
-        , { content = expandedView Enabled "Demande de prise en charge" [ DossierFaisabiliteRecevable, DossierFaisabiliteNonRecevable ] candidacy
+        , { content =
+                expandedView
+                    (getDefaultExpandedViewStatusFromCandidacyStatus
+                        candidacy
+                        [ DossierFaisabiliteRecevable, DossierFaisabiliteNonRecevable ]
+                    )
+                    "Demande de prise en charge"
           , navigation = fundingRequestLink baseUrl candidacy
           }
-        , { content = expandedView Enabled "Demande de paiement" [ DemandeFinancementEnvoye ] candidacy
+        , { content =
+                expandedView
+                    (getDefaultExpandedViewStatusFromCandidacyStatus
+                        candidacy
+                        [ DemandeFinancementEnvoye ]
+                    )
+                    "Demande de paiement"
           , navigation = paymentRequestLink baseUrl candidacy
           }
         ]
@@ -208,17 +255,36 @@ title value =
         [ text value ]
 
 
-expandedView : ButtonState -> String -> List Candidacy.Step -> Candidacy -> List (Html msg)
-expandedView buttonState stepTitle showButtonForGivenStatusList candidacy =
-    let
-        buttonLabel =
-            if buttonState == Enabled then
-                "Compléter"
+type ExpandedViewStatus
+    = WITH_EDIT_BUTTON
+    | WITH_READ_ONLY_BUTTON
+    | WITHOUT_BUTTON
 
-            else
-                "Consulter"
-    in
-    if List.member (candidacyStatus candidacy) showButtonForGivenStatusList then
+
+getDefaultExpandedViewStatusFromCandidacyStatus : Candidacy -> List CandidacyStatusStep -> ExpandedViewStatus
+getDefaultExpandedViewStatusFromCandidacyStatus candidacy statusToEnableExpandedViewFor =
+    if List.member (candidacyStatus candidacy) statusToEnableExpandedViewFor then
+        WITH_EDIT_BUTTON
+
+    else
+        WITHOUT_BUTTON
+
+
+expandedView : ExpandedViewStatus -> String -> List (Html msg)
+expandedView status stepTitle =
+    if status /= WITHOUT_BUTTON then
+        let
+            buttonLabel =
+                case status of
+                    WITH_EDIT_BUTTON ->
+                        "Compléter"
+
+                    WITH_READ_ONLY_BUTTON ->
+                        "Consulter"
+
+                    _ ->
+                        ""
+        in
         [ span [ class "font-semibold text-dsfrBlue-500" ] [ View.Steps.link stepTitle ]
         , div
             []
