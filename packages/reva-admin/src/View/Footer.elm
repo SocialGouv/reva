@@ -133,6 +133,7 @@ view context =
                         [ class "fr-footer__bottom-item" ]
                         [ a
                             [ class "fr-footer__bottom-link"
+                            , target "_parent"
                             , href "/nous-contacter"
                             ]
                             [ text "Nous\u{00A0}contacter" ]
