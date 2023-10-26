@@ -133,9 +133,9 @@ view context =
                         [ class "fr-footer__bottom-item" ]
                         [ a
                             [ class "fr-footer__bottom-link"
-                            , href "mailto:support@vae.gouv.fr"
+                            , href "/nous-contacter"
                             ]
-                            [ text "Nous contacter" ]
+                            [ text "Nous\u{00A0}contacter" ]
                         ]
                     ]
                 , div

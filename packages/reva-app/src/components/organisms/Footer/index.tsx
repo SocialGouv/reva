@@ -100,11 +100,8 @@ export const Footer = () => (
             </a>
           </li>
           <li className="fr-footer__bottom-item">
-            <a
-              className="fr-footer__bottom-link"
-              href="mailto:support@vae.gouv.fr"
-            >
-              Nous contacter
+            <a className="fr-footer__bottom-link" href="/nous-contacter">
+              Nous&nbsp;contacter
             </a>
           </li>
         </ul>
