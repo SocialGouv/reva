@@ -128,11 +128,8 @@ export const Footer = ({ className }: { className?: string }) => (
             </Link>
           </li>
           <li className="fr-footer__bottom-item">
-            <Link
-              className="fr-footer__bottom-link"
-              href="mailto:support@vae.gouv.fr"
-            >
-              Nous contacter
+            <Link className="fr-footer__bottom-link" href="/nous-contacter">
+              Nous&nbsp;contacter
             </Link>
           </li>
           <li className="fr-footer__bottom-item">
