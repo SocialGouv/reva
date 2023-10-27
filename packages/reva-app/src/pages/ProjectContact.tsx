@@ -8,6 +8,7 @@ import { ErrorAlertFromState } from "components/molecules/ErrorAlertFromState/Er
 import { useRef } from "react";
 import { Interpreter } from "xstate";
 
+import { BackToHomeButton } from "../components/molecules/BackToHomeButton/BackToHomeButton";
 import { Page } from "../components/organisms/Page";
 import { Contact } from "../interface";
 import {
@@ -53,7 +54,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
       lastname: elements.lastname.value || null,
       phone: elements.phone.value || null,
       email: elements.email.value || null,
-      departmentId: elements.department.value || null,
+      departmentId: elements.department?.value || null,
     };
     send({
       type: hasCandidacy ? "UPDATE_CONTACT" : "SUBMIT_CONTACT",
@@ -69,6 +70,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
 
   return (
     <Page title="Création de compte">
+      <BackToHomeButton />
       {hasCandidacy ? (
         <></>
       ) : state.context.error ? (
@@ -119,7 +121,9 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
       <form onSubmit={onSubmit} className="mb-6">
         <fieldset>
           <legend>
-            <h2 className="mt-6">Créer votre compte.</h2>
+            <h2 className="mt-6">
+              {hasCandidacy ? "Modifier votre compte" : "Créer votre compte"}
+            </h2>
           </legend>
 
           {state.context.error &&
@@ -129,6 +133,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           <FormOptionalFieldsDisclaimer className="mb-4" />
           <Input
             label="Prénom"
+            disabled={hasCandidacy}
             nativeInputProps={{
               name: "firstname",
               ref: firstnameRef,
@@ -139,6 +144,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           />
           <Input
             label="Nom"
+            disabled={hasCandidacy}
             nativeInputProps={{
               name: "lastname",
               ref: lastnameRef,
@@ -149,6 +155,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           />
           <Input
             label="Téléphone"
+            disabled={hasCandidacy}
             nativeInputProps={{
               name: "phone",
               ref: phoneRef,
@@ -161,6 +168,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           />
           <Input
             label="Email"
+            disabled={hasCandidacy}
             hintText="Format attendu : nom@domaine.fr"
             nativeInputProps={{
               name: "email",
@@ -172,30 +180,36 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
               defaultValue: editedContact?.email || "",
             }}
           />
-          <Select
-            className="my-4"
-            data-test="certificates-select-department"
-            label="Département"
-            hint="Sélectionnez votre département de résidence"
-            nativeSelectProps={{
-              name: "department",
-              defaultValue: "",
-              required: true,
-              ref: departementRef,
-            }}
-          >
-            <option value="" disabled={true} hidden={true}>
-              Votre département
-            </option>
-            {selectsOptionsDepartments.map((d) => (
-              <option key={d.value} value={d.value}>
-                {d.label}
+          {!hasCandidacy && (
+            <Select
+              className="my-4"
+              data-test="certificates-select-department"
+              label="Département"
+              hint="Sélectionnez votre département de résidence"
+              nativeSelectProps={{
+                name: "department",
+                defaultValue: "",
+                required: true,
+                ref: departementRef,
+              }}
+            >
+              <option value="" disabled={true} hidden={true}>
+                Votre département
               </option>
-            ))}
-          </Select>
+              {selectsOptionsDepartments.map((d) => (
+                <option key={d.value} value={d.value}>
+                  {d.label}
+                </option>
+              ))}
+            </Select>
+          )}
         </fieldset>
-        <Button data-test={`project-contact-${editedContact ? "save" : "add"}`} className="mt-6">
-          Créez votre compte
+        <Button
+          disabled={hasCandidacy}
+          data-test={`project-contact-${editedContact ? "save" : "add"}`}
+          className="mt-6"
+        >
+          {hasCandidacy ? "Modifier les informations" : "Créer votre compte"}
         </Button>
       </form>
       {!hasCandidacy && (
