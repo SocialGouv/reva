@@ -36,7 +36,6 @@ import { getCandidacySummaries } from "./features/getCandicacySummaries";
 import { getCandidacy } from "./features/getCandidacy";
 import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus";
 import { getCompanionsForCandidacy } from "./features/getCompanionsForCandidacy";
-import { getDeviceCandidacy } from "./features/getDeviceCandidacy";
 import { getExamInfo } from "./features/getExamInfo";
 import { getActiveOrganismsForCandidacyWithNewTypologies } from "./features/getOrganismsForCandidacy";
 import { getRandomOrganismsForCandidacyWithNewTypologies } from "./features/getRandomOrganismsForCandidacy";
@@ -114,19 +113,6 @@ const unsafeResolvers = {
     },
   },
   Query: {
-    getCandidacy: async (
-      _: unknown,
-      { deviceId }: { deviceId: string }
-    ): Promise<mercurius.ErrorWithProps | Candidacy> => {
-      const result = await getDeviceCandidacy({
-        getCandidacyFromDeviceId: candidacyDb.getCandidacyFromDeviceId,
-      })({ deviceId });
-      return result
-        .map(withBasicSkills)
-        .map(withMandatoryTrainings)
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
     getCandidacyById: async (_: unknown, { id }: { id: string }) => {
       const result = await getCandidacy({
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
