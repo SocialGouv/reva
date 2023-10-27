@@ -326,7 +326,6 @@ input ExamInfoInput {
 }
 
 type Mutation {
-  candidacy_createCandidacy(candidacy: CandidacyInput!): Candidacy
   candidacy_submitCandidacy(deviceId: ID!, candidacyId: ID!): Candidacy
   candidacy_updateCertification(
     deviceId: ID!

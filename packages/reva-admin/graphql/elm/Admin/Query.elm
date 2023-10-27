@@ -59,18 +59,6 @@ account_getAccount requiredArgs____ object____ =
     Object.selectionForCompositeField "account_getAccount" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
 
 
-type alias GetCandidacyRequiredArguments =
-    { deviceId : Data.Scalar.Id }
-
-
-getCandidacy :
-    GetCandidacyRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Candidacy
-    -> SelectionSet (Maybe decodesTo) RootQuery
-getCandidacy requiredArgs____ object____ =
-    Object.selectionForCompositeField "getCandidacy" [ Argument.required "deviceId" requiredArgs____.deviceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
-
-
 type alias GetCandidacyByIdRequiredArguments =
     { id : Data.Scalar.Id }
 
@@ -251,6 +239,11 @@ feasibility requiredArgs____ object____ =
     Object.selectionForCompositeField "feasibility" [ Argument.required "feasibilityId" requiredArgs____.feasibilityId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
 
 
+activeFeaturesForConnectedUser : SelectionSet (List String) RootQuery
+activeFeaturesForConnectedUser =
+    Object.selectionForField "(List String)" "activeFeaturesForConnectedUser" [] (Decode.string |> Decode.list)
+
+
 type alias CandidacyGetFundingRequestUnifvaeRequiredArguments =
     { candidacyId : Data.Scalar.Uuid }
 
@@ -421,6 +414,14 @@ subscription_getSubscriptionRequest :
 subscription_getSubscriptionRequest requiredArgs____ object____ =
     Object.selectionForCompositeField "subscription_getSubscriptionRequest" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
 
-activeFeaturesForConnectedUser : SelectionSet (List String) RootQuery
-activeFeaturesForConnectedUser =
-    Object.selectionForField "(List String)" "activeFeaturesForConnectedUser" [] (Decode.string |> Decode.list)
+
+type alias GetCandidacyRequiredArguments =
+    { deviceId : Data.Scalar.Id }
+
+
+getCandidacy :
+    GetCandidacyRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet (Maybe decodesTo) RootQuery
+getCandidacy requiredArgs____ object____ =
+    Object.selectionForCompositeField "getCandidacy" [ Argument.required "deviceId" requiredArgs____.deviceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)

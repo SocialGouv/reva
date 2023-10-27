@@ -53,18 +53,6 @@ account_updateAccount requiredArgs____ object____ =
     Object.selectionForCompositeField "account_updateAccount" [ Argument.required "accountId" requiredArgs____.accountId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "accountData" requiredArgs____.accountData Admin.InputObject.encodeUpdateAccountInput ] object____ Basics.identity
 
 
-type alias CandidacyCreateCandidacyRequiredArguments =
-    { candidacy : Admin.InputObject.CandidacyInput }
-
-
-candidacy_createCandidacy :
-    CandidacyCreateCandidacyRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Candidacy
-    -> SelectionSet (Maybe decodesTo) RootMutation
-candidacy_createCandidacy requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidacy_createCandidacy" [ Argument.required "candidacy" requiredArgs____.candidacy Admin.InputObject.encodeCandidacyInput ] object____ (Basics.identity >> Decode.nullable)
-
-
 type alias CandidacySubmitCandidacyRequiredArguments =
     { deviceId : Data.Scalar.Id
     , candidacyId : Data.Scalar.Id

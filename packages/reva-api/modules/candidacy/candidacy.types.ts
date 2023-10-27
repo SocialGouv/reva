@@ -139,13 +139,11 @@ export interface Admissibility {
 export type AdmissibilityStatus = "ADMISSIBLE" | "NOT_ADMISSIBLE";
 
 export enum CandidacyBusinessEvent {
-  CREATED_CANDIDACY = "Created Candidacy",
   SUBMITTED_CANDIDACY = "Submitted Candidacy",
   TOOK_OVER_CANDIDACY = "Took over candidacy",
   UPDATED_CERTIFICATION = "Updated Certification",
   ADDED_EXPERIENCE = "Added experience",
   UPDATED_EXPERIENCE = "Updated experience",
-  // DELETED_EXPERIENCE = "Deleted experience",
   UPDATED_GOALS = "Updated goals",
   UPDATED_CONTACT = "Updated contact",
   DELETED_CANDIDACY = "Deleted candidacy",

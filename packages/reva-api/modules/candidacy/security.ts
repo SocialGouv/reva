@@ -16,7 +16,6 @@ export const resolversSecurityMap = {
   "Mutation.*": defaultSecurity, // forbidden
 
   // Mutations candidat
-  "Mutation.candidacy_createCandidacy": isCandidate,
   "Mutation.candidacy_updateContact": isCandidate,
   "Mutation.candidacy_updateCertification": isCandidate,
   "Mutation.candidacy_updateGoals": isCandidate,
