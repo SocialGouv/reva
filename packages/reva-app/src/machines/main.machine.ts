@@ -939,6 +939,9 @@ export const mainMachine =
               error: {},
             },
             on: {
+              UPDATE_CONTACT: {
+                target: "projectContact",
+              },
               EDIT_GOALS: {
                 target: "projectGoals",
               },

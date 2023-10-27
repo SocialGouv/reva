@@ -1,23 +1,36 @@
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { TimelineElement } from "components/molecules/Timeline/Timeline";
 import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineContext";
 
 export const ContactTimelineElement = () => {
-  const { state } = useMainMachineContext();
+  const { state, mainService } = useMainMachineContext();
   return (
     <TimelineElement title="Vos informations de contact" status="editable">
-      {() => (
-        <ul className="leading-tight">
-          {state.context.contact?.phone && (
-            <li data-test="project-home-contact-phone" className="mb-2">
-              {state.context.contact?.phone}
-            </li>
+      {({ status }) => (
+        <>
+          <ul className="leading-tight">
+            {state.context.contact?.phone && (
+              <li data-test="project-home-contact-phone" className="mb-2">
+                {state.context.contact?.phone}
+              </li>
+            )}
+            {state.context.contact?.email && (
+              <li data-test="project-home-contact-email" className="mb-2">
+                {state.context.contact?.email}
+              </li>
+            )}
+          </ul>
+          {status !== "readonly" && (
+            <Button
+              data-test="project-home-update-contact"
+              priority="secondary"
+              onClick={() => mainService.send("UPDATE_CONTACT")}
+              disabled={status === "disabled"}
+            >
+              Modifier les informations
+            </Button>
           )}
-          {state.context.contact?.email && (
-            <li data-test="project-home-contact-email" className="mb-2">
-              {state.context.contact?.email}
-            </li>
-          )}
-        </ul>
+        </>
       )}
     </TimelineElement>
   );
