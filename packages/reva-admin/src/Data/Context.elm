@@ -14,4 +14,5 @@ type alias Context =
     , isMobile : Bool
     , feasibilityFeatureEnabled : Bool
     , franceVaeFinanceModuleFeatureEnabled : Bool
+    , activeFeatures : List String
     }

@@ -1,8 +1,7 @@
 port module Main exposing (main)
 
 import Accessibility exposing (h1)
-import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter
-import Admin.Enum.FeasibilityCategoryFilter as FeasibilityCategoryFilter
+import Api.FeatureFlipping exposing (getActiveFeatures)
 import Api.Token exposing (Token)
 import Browser
 import Browser.Dom as Dom
@@ -23,6 +22,7 @@ import Page.Loading
 import Page.SiteMap as SiteMap
 import Page.Subscription as Subscription
 import Page.Subscriptions as Subscriptions
+import RemoteData exposing (RemoteData(..))
 import Route exposing (Route(..), emptyFeasibilityFilters)
 import Task
 import Url exposing (Url)
@@ -86,6 +86,7 @@ type Msg
     | ScrolledToTop
     | GotFeasibilitiesMsg Feasibilities.Msg
     | GotFeasibilityMsg Feasibility.Msg
+    | GotActiveFeatures (RemoteData (List String) (List String))
 
 
 main : Program Flags Model Msg
@@ -371,6 +372,9 @@ update msg model =
 
                 newContext =
                     { context | token = token }
+
+                getFeaturesCommand =
+                    getActiveFeatures context.endpoint token GotActiveFeatures
             in
             if Api.Token.isAdmin token || Api.Token.isOrganism token then
                 let
@@ -385,7 +389,7 @@ update msg model =
                                 route
                 in
                 ( { model | context = newContext }
-                , Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl redirectRoute)
+                , Cmd.batch [ Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl redirectRoute), getFeaturesCommand ]
                 )
 
             else if Api.Token.isCertificationAuthority token then
@@ -401,12 +405,12 @@ update msg model =
                                 route
                 in
                 ( { model | context = newContext }
-                , Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl redirectRoute)
+                , Cmd.batch [ Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl redirectRoute), getFeaturesCommand ]
                 )
 
             else
                 ( { model | context = newContext, page = NotFound }
-                , Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl <| Route.NotFound)
+                , Cmd.batch [ Nav.pushUrl model.context.navKey (Route.toString model.context.baseUrl <| Route.NotFound), getFeaturesCommand ]
                 )
 
         ( GotTokenRefreshed token, _ ) ->
@@ -423,6 +427,18 @@ update msg model =
 
         ( ScrolledToTop, _ ) ->
             ( { model | context = scrollingToTop False model.context }, Cmd.none )
+
+        ( GotActiveFeatures remoteActiveFeatures, _ ) ->
+            let
+                newActiveFeatures =
+                    case remoteActiveFeatures of
+                        Success f ->
+                            f
+
+                        _ ->
+                            []
+            in
+            ( { model | context = withActiveFeatures newActiveFeatures model.context }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
@@ -458,6 +474,11 @@ withNewBrowserWidth width ({ context } as model) =
     { model | context = newContext }
 
 
+withActiveFeatures : List String -> Context -> Context
+withActiveFeatures activeFeatures context =
+    { context | activeFeatures = activeFeatures }
+
+
 init : Flags -> Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
     initWithoutToken flags url key
@@ -491,6 +512,7 @@ initWithoutToken flags url key =
                     False
                     flags.feasibilityFeatureEnabled
                     flags.franceVaeFinanceModuleFeatureEnabled
+                    []
             , page = NotLoggedIn redirectTo
             , keycloakConfiguration =
                 Decode.decodeValue KeycloakConfiguration.keycloakConfiguration flags.keycloakConfiguration
