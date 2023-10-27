@@ -29,7 +29,6 @@ const blankCandidacy: Candidacy = {
   email: null,
   experiences: [],
   goals: [],
-  phone: null,
 };
 
 const candidacy1: Candidacy = {

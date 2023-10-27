@@ -43,7 +43,6 @@ const toDomainCandidacySummary = (
     firstname: candidacy.firstname,
     lastname: candidacy.lastname,
     email: candidacy.email,
-    phone: candidacy.phone,
     isDroppedOut: candidacy.candidacyDropOut !== null,
     isReorientation: candidacy.reorientationReasonId !== null,
     lastStatus,
@@ -143,7 +142,7 @@ export const getCandidaciesFromDb = async ({
         certification: c.certificationsAndRegions[0]?.certification,
         firstname: c.candidate?.firstname,
         lastname: c.candidate?.lastname,
-        phone: c.candidate?.phone || c.phone,
+        phone: c.candidate?.phone || null,
         email: c.candidate?.email || c.email,
       }))
     ),

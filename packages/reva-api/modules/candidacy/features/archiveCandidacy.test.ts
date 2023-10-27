@@ -67,7 +67,6 @@ const candidacyPriseEnCharge: Candidacy = {
   email: null,
   experiences: [],
   goals: [],
-  phone: null,
   reorientationReason: null,
 };
 

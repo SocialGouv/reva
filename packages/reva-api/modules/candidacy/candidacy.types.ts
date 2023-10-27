@@ -14,7 +14,6 @@ interface CandidacyAbstract {
   // companionId: string | null;
   experiences: Experience[];
   goals: Goal[];
-  phone: string | null;
   email: string | null;
 }
 

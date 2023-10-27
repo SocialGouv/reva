@@ -69,7 +69,6 @@ model Candidacy {
   typologyAdditional        String?                                 @map("typology_additional")
   firstAppointmentOccuredAt DateTime?                               @map("first_appointment_occured_at") @db.Timestamptz(6)
   appointmentCount          Int                                     @default(0) @map("appointment_count")
-  phone                     String?                                 @db.VarChar(255)
   email                     String?                                 @db.VarChar(255)
   trainings                 TrainingOnCandidacies[]
   basicSkills               BasicSkillOnCandidacies[]
