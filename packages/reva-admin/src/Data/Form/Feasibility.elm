@@ -1,8 +1,10 @@
-module Data.Form.Feasibility exposing (Decision(..), decisionFromString, decisionToString, fromDict, keys, validate)
+module Data.Form.Feasibility exposing (Decision(..), decisionFromString, decisionToString, fromDict, hasOptionalFiles, keys, validate, validateSubmittedFiles)
 
+import Data.Candidacy exposing (Candidacy)
 import Data.Feasibility exposing (Feasibility)
 import Data.Form exposing (FormData)
 import Data.Form.Helper as Helper
+import Data.Referential exposing (Referential)
 import File exposing (File)
 
 
@@ -14,6 +16,8 @@ keys =
     , decision = "decision"
     , reason = "reason"
     , infoFile = "infoFile"
+    , feasibilityFileChecked = "feasibilityFileChecked"
+    , optionalFileChecked = "optionalFileChecked"
     }
 
 
@@ -77,6 +81,48 @@ fromDict formData =
 
         Unknown ->
             ( Data.Feasibility.Pending, Nothing )
+
+
+hasOptionalFiles : FormData -> Bool
+hasOptionalFiles formData =
+    case
+        ( Data.Form.getFiles keys.documentaryProofFile formData
+        , Data.Form.getFiles keys.certificateOfAttendanceFile formData
+        )
+    of
+        ( [], [] ) ->
+            False
+
+        _ ->
+            True
+
+
+validateSubmittedFiles : ( Candidacy, Referential ) -> FormData -> Result (List String) ()
+validateSubmittedFiles _ formData =
+    let
+        decode =
+            Helper.decode keys formData
+
+        error =
+            Err [ "Veuillez vérifier les pièces jointes et cocher toutes les cases" ]
+    in
+    if hasOptionalFiles formData then
+        case
+            ( decode.bool .feasibilityFileChecked False
+            , decode.bool .optionalFileChecked False
+            )
+        of
+            ( True, True ) ->
+                Ok ()
+
+            _ ->
+                error
+
+    else if decode.bool .feasibilityFileChecked False then
+        Ok ()
+
+    else
+        error
 
 
 validate : Feasibility -> FormData -> Result (List String) ()

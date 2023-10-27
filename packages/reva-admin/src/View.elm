@@ -182,7 +182,7 @@ logo =
 summaryBlock : String -> List (Html msg) -> Html msg
 summaryBlock titleValue content =
     div
-        [ class "bg-neutral-100 px-8 pt-6 pb-8" ]
+        [ class "bg-neutral-100 px-8 pt-6 pb-8 w-full" ]
     <|
         if titleValue == "" then
             content

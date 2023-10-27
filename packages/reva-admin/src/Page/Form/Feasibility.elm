@@ -4,7 +4,7 @@ import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Form.Feasibility exposing (keys)
 import Data.Referential exposing (Referential)
-import Html exposing (a, div, p, strong, text)
+import Html exposing (a, div, h2, p, strong, text)
 import Html.Attributes exposing (class, href, target, title)
 import Page.Form as Form exposing (Form)
 import View exposing (AlertType(..))
@@ -12,7 +12,7 @@ import View.Candidate
 
 
 form : FormData -> ( Candidacy, Referential ) -> Form
-form _ ( candidacy, _ ) =
+form formData ( candidacy, _ ) =
     let
         candidateInfo =
             ( "candidateWithCertification"
@@ -46,7 +46,7 @@ form _ ( candidacy, _ ) =
             ( "help panel"
             , Form.StaticHtml
                 (View.noticeInfo
-                    [ class "mt-4" ]
+                    [ class "mt-10" ]
                     [ text "Pour retrouver les dossiers de faisabilité et être guidé dans le remplissage, "
                     , a
                         [ class "fr-link text-[#0063cb]"
@@ -80,6 +80,28 @@ form _ ( candidacy, _ ) =
                     ]
             )
 
+        filesChecklistTitle =
+            ( ""
+            , Form.StaticHtml <|
+                div
+                    [ class "mt-6 -mb-8"
+                    , class "pt-6 px-8 bg-neutral-100 w-full"
+                    , class "[&+div]:bg-neutral-100 [&+div]:px-8"
+                    ]
+                    [ h2 [ class "text-xl" ] [ text "Avant de finaliser votre envoi :" ] ]
+            )
+
+        filesChecklist =
+            ( keys.feasibilityFileChecked
+            , "J'ai bien vérifié que le dossier de faisabilité était correct, complet et signé par moi-même ainsi que par le candidat."
+            )
+                :: (if Data.Form.Feasibility.hasOptionalFiles formData then
+                        [ ( keys.optionalFileChecked, "J'ai bien vérifié que les éventuelles pièces jointes optionnelles étaient correctes et complètes." ) ]
+
+                    else
+                        []
+                   )
+
         elements =
             if List.isEmpty candidacy.certificationAuthorities then
                 [ candidateInfo, noCertificationAuthorityWarning ]
@@ -94,7 +116,7 @@ form _ ( candidacy, _ ) =
                 , ( keys.documentaryProofFile, Form.File "Copie du ou des justificatif(s) ouvrant accès à une équivalence ou dispense en lien avec la certification visée." "Format supporté : PDF uniquement" )
                 , ( "certificateOfAttendanceFile", Form.Title2 "3 - Joindre une autre pièce (optionnel)" )
                 , ( keys.certificateOfAttendanceFile, Form.File "Attestation ou certificat de suivi de formation dans le cas du pré-requis demandé par la certification visée." "Format supporté : PDF uniquement" )
-                , ( "", Form.Title1 "Autorité certificatrice" )
+                , ( "", Form.Title1 "" )
                 , case candidacy.certificationAuthorities of
                     [ certificationAuthority ] ->
                         ( "certificationAuthority"
@@ -105,6 +127,8 @@ form _ ( candidacy, _ ) =
                         ( keys.certificationAuthorityId
                         , Form.Select "Sélectionnez l'autorité de certification" certificationAuthorityIds
                         )
+                , filesChecklistTitle
+                , ( "filesChecklist", Form.CheckboxList "" filesChecklist )
                 , helpPanel
                 ]
     in

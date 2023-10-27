@@ -36,6 +36,7 @@ import Data.Form.Appointment
 import Data.Form.Archive
 import Data.Form.CancelDropOut
 import Data.Form.DropOut
+import Data.Form.Feasibility
 import Data.Form.FundingRequestUniFvae
 import Data.Form.FundingRequestUniReva
 import Data.Form.PaymentRequest
@@ -684,7 +685,7 @@ updateTab context tab ( model, cmd ) =
                         , onSave = Nothing
                         , onSubmit = Api.Form.Feasibility.submit tab.candidacyId candidacy.certificationAuthorities context.restApiEndpoint
                         , onRedirect = pushUrl <| candidacyTab Feasibility
-                        , onValidate = \_ _ -> Ok ()
+                        , onValidate = Data.Form.Feasibility.validateSubmittedFiles
                         , status =
                             if candidacy.feasibility /= Nothing || List.isEmpty candidacy.certificationAuthorities then
                                 Form.ReadOnly
