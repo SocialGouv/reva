@@ -1,73 +1,64 @@
-import { Either, EitherAsync } from "purify-ts";
-
+import { prismaClient } from "../../../prisma/client";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../shared/error/functionalError";
-import { Candidacy } from "../candidacy.types";
+import { logger } from "../../shared/logger";
+import { updateCertification, updateOrganism } from "../database/candidacies";
 import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
 
-interface UpdateCertificationOfCandidacyDeps {
-  updateCertification: (params: {
-    candidacyId: string;
-    certificationId: string;
-    departmentId: string;
-    author: string;
-  }) => Promise<Either<string, Candidacy>>;
-  updateOrganism: (params: {
-    candidacyId: string;
-    organismId: string | null;
-  }) => Promise<Either<string, Candidacy>>;
-  getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
-}
+export const updateCertificationOfCandidacy = async ({
+  candidacyId,
+  certificationId,
+  departmentId,
+}: {
+  candidacyId: string;
+  certificationId: string;
+  departmentId: string;
+}) => {
+  const candidacy = await prismaClient.candidacy.findFirst({
+    where: { id: candidacyId },
+    select: { id: true },
+  });
 
-export const updateCertificationOfCandidacy =
-  (deps: UpdateCertificationOfCandidacyDeps) =>
-  async (params: {
-    candidacyId: string;
-    certificationId: string;
-    departmentId: string;
-  }) => {
-    // TODO Check mail format
-    const checkIfCandidacyExists = EitherAsync.fromPromise(() =>
-      deps.getCandidacyFromId(params.candidacyId)
-    ).mapLeft(
-      () =>
-        new FunctionalError(
-          FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-          `Aucune candidature n'a été trouvée`
-        )
+  if (!candidacy) {
+    throw new FunctionalError(
+      FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
+      `Aucune candidature n'a été trouvée`
     );
+  }
 
-    const updateCertification = EitherAsync.fromPromise(() =>
-      deps.updateCertification({ ...params, author: "candidate" })
-    ).mapLeft(
-      () =>
-        new FunctionalError(
-          FunctionalCodeError.CERTIFICATION_NOT_UPDATED,
-          `Erreur lors de la mise à jour de la certification`
-        )
+  if (!(await canCandidateUpdateCandidacy({ candidacyId }))) {
+    throw new Error(
+      "Impossible de mettre à jour la candidature une fois le premier entretien effetué"
     );
+  }
 
-    const resetOrganism = EitherAsync.fromPromise(() =>
-      deps.updateOrganism({ candidacyId: params.candidacyId, organismId: null })
-    ).mapLeft(
-      () =>
-        new FunctionalError(
-          FunctionalCodeError.ORGANISM_NOT_UPDATED,
-          `Erreur lors de la mise à jour de l'organisme`
-        )
+  try {
+    (
+      await updateCertification({
+        candidacyId,
+        certificationId,
+        departmentId,
+        author: "candidate",
+      })
+    ).unsafeCoerce();
+
+    const updatedCandidacy = (
+      await updateOrganism({ candidacyId, organismId: null })
+    ).unsafeCoerce();
+
+    await prismaClient.candidacy.update({
+      where: { id: candidacyId },
+      data: { firstAppointmentOccuredAt: null },
+    });
+
+    return updatedCandidacy;
+  } catch (e) {
+    logger.error(e);
+    throw new FunctionalError(
+      FunctionalCodeError.CERTIFICATION_NOT_UPDATED,
+      `Erreur lors de la mise à jour de la certification`
     );
-
-    if (
-      !(await canCandidateUpdateCandidacy({ candidacyId: params.candidacyId }))
-    ) {
-      throw new Error(
-        "Impossible de mettre à jour la candidature une fois le premier entretien effetué"
-      );
-    }
-
-    return checkIfCandidacyExists
-      .chain(() => updateCertification)
-      .chain(() => resetOrganism);
-  };
+  }
+};

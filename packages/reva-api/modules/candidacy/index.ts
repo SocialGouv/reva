@@ -324,36 +324,12 @@ const unsafeResolvers = {
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
         .extract();
     },
-    candidacy_updateCertification: async (
-      _: unknown,
-      payload: any,
-      context: GraphqlContext
-    ) => {
-      const result = await updateCertificationOfCandidacy({
-        updateCertification: candidacyDb.updateCertification,
-        getCandidacyFromId: candidacyDb.getCandidacyFromId,
-        updateOrganism: candidacyDb.updateOrganism,
-      })({
+    candidacy_updateCertification: async (_: unknown, payload: any) =>
+      updateCertificationOfCandidacy({
         candidacyId: payload.candidacyId,
         certificationId: payload.certificationId,
         departmentId: payload.departmentId,
-      });
-
-      logCandidacyEvent({
-        candidacyId: payload.candidacyId,
-        eventType: CandidacyBusinessEvent.UPDATED_CERTIFICATION,
-        extraInfo: {
-          certificationId: payload.certificationId,
-          departmentId: payload.departmentId,
-        },
-        context,
-        result,
-      });
-
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
+      }),
     candidacy_addExperience: async (
       _: unknown,
       payload: any,
@@ -577,31 +553,11 @@ const unsafeResolvers = {
         .extract();
     },
 
-    candidacy_selectOrganism: async (
-      _: unknown,
-      payload: any,
-      context: GraphqlContext
-    ) => {
-      const result = await selectOrganismForCandidacy({
-        updateOrganism: candidacyDb.updateOrganism,
-        getCandidacyFromId: candidacyDb.getCandidacyFromId,
-      })({
+    candidacy_selectOrganism: async (_: unknown, payload: any) =>
+      selectOrganismForCandidacy({
         candidacyId: payload.candidacyId,
         organismId: payload.organismId,
-      });
-      logCandidacyEvent({
-        candidacyId: payload.candidacyId,
-        eventType: CandidacyBusinessEvent.SELECTED_ORGANISM,
-        extraInfo: {
-          organismId: payload.organismId,
-        },
-        context,
-        result,
-      });
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
+      }),
     candidacy_submitTrainingForm: async (
       _: unknown,
       payload: any,

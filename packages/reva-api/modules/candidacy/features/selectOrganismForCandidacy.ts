@@ -1,50 +1,53 @@
-import { Either, EitherAsync } from "purify-ts";
-
+import { prismaClient } from "../../../prisma/client";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../shared/error/functionalError";
-import { Candidacy } from "../candidacy.types";
+import { logger } from "../../shared/logger";
+import { updateOrganism } from "../database/candidacies";
 import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
 
-interface SelectOrganismForCandidacyDeps {
-  updateOrganism: (params: {
-    candidacyId: string;
-    organismId: string;
-  }) => Promise<Either<string, Candidacy>>;
-  getCandidacyFromId: (id: string) => Promise<Either<string, Candidacy>>;
-}
+export const selectOrganismForCandidacy = async ({
+  candidacyId,
+  organismId,
+}: {
+  candidacyId: string;
+  organismId: string;
+}) => {
+  const candidacy = await prismaClient.candidacy.findFirst({
+    where: { id: candidacyId },
+    select: { id: true },
+  });
 
-export const selectOrganismForCandidacy =
-  (deps: SelectOrganismForCandidacyDeps) =>
-  async (params: { candidacyId: string; organismId: string }) => {
-    const checkIfCandidacyExists = EitherAsync.fromPromise(() =>
-      deps.getCandidacyFromId(params.candidacyId)
-    ).mapLeft(
-      () =>
-        new FunctionalError(
-          FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
-          `Aucune candidature n'a été trouvée`
-        )
+  if (!candidacy) {
+    throw new FunctionalError(
+      FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
+      `Aucune candidature n'a été trouvée`
     );
+  }
 
-    const updateOrganism = EitherAsync.fromPromise(() =>
-      deps.updateOrganism(params)
-    ).mapLeft(
-      () =>
-        new FunctionalError(
-          FunctionalCodeError.ORGANISM_NOT_UPDATED,
-          `Erreur lors de la mise à jour de l'organisme`
-        )
+  if (!(await canCandidateUpdateCandidacy({ candidacyId }))) {
+    throw new Error(
+      "Impossible de mettre à jour la candidature une fois le premier entretien effetué"
     );
+  }
 
-    if (
-      !(await canCandidateUpdateCandidacy({ candidacyId: params.candidacyId }))
-    ) {
-      throw new Error(
-        "Impossible de mettre à jour la candidature une fois le premier entretien effetué"
-      );
-    }
+  try {
+    const updatedCandidacy = (
+      await updateOrganism({ candidacyId, organismId })
+    ).unsafeCoerce();
 
-    return checkIfCandidacyExists.chain(() => updateOrganism);
-  };
+    await prismaClient.candidacy.update({
+      where: { id: candidacyId },
+      data: { firstAppointmentOccuredAt: null },
+    });
+
+    return updatedCandidacy;
+  } catch (e) {
+    logger.error(e);
+    throw new FunctionalError(
+      FunctionalCodeError.ORGANISM_NOT_UPDATED,
+      `Erreur lors de la mise à jour de l'organisme`
+    );
+  }
+};
