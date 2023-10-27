@@ -413,15 +413,3 @@ subscription_getSubscriptionRequest :
     -> SelectionSet (Maybe decodesTo) RootQuery
 subscription_getSubscriptionRequest requiredArgs____ object____ =
     Object.selectionForCompositeField "subscription_getSubscriptionRequest" [ Argument.required "subscriptionRequestId" requiredArgs____.subscriptionRequestId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
-
-
-type alias GetCandidacyRequiredArguments =
-    { deviceId : Data.Scalar.Id }
-
-
-getCandidacy :
-    GetCandidacyRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Candidacy
-    -> SelectionSet (Maybe decodesTo) RootQuery
-getCandidacy requiredArgs____ object____ =
-    Object.selectionForCompositeField "getCandidacy" [ Argument.required "deviceId" requiredArgs____.deviceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)

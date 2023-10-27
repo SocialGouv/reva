@@ -39,59 +39,6 @@ export const candidacyIncludes = {
   reorientationReason: true,
 };
 
-export const getCandidacyFromDeviceId = async (
-  deviceId: string
-): Promise<Either<string, domain.Candidacy>> => {
-  try {
-    const candidacy = await prismaClient.candidacy.findFirst({
-      where: {
-        deviceId: deviceId,
-        candidacyStatuses: {
-          none: {
-            status: "ARCHIVE",
-            isActive: true,
-          },
-        },
-      },
-      include: candidacyIncludes,
-    });
-
-    const certificationAndRegion =
-      await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
-        where: {
-          candidacyId: candidacy?.id,
-          isActive: true,
-        },
-        include: {
-          certification: true,
-          region: true,
-        },
-      });
-
-    if (!certificationAndRegion) {
-      return Left(
-        `error while retrieving the certification and region the device id ${deviceId}`
-      );
-    }
-
-    return Maybe.fromNullable(candidacy)
-      .map((c) => ({
-        ...c,
-        regionId: certificationAndRegion.region.id,
-        region: certificationAndRegion.region,
-        certificationId: certificationAndRegion.certification.id,
-        certification: {
-          ...certificationAndRegion.certification,
-          codeRncp: certificationAndRegion.certification.rncpId,
-        },
-      }))
-      .toEither(`Candidacy with deviceId ${deviceId} not found`);
-  } catch (e) {
-    logger.error(e);
-    return Left(`error while retrieving the candidacy with id ${deviceId}`);
-  }
-};
-
 export const getCandidacyFromId = async (
   candidacyId: string
 ): Promise<Either<string, domain.Candidacy>> => {

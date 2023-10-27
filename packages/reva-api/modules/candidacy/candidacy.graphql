@@ -240,7 +240,6 @@ enum CandidacyStatusFilter {
 }
 
 type Query {
-  getCandidacy(deviceId: ID!): Candidacy
   getCandidacyById(id: ID!): Candidacy
   getCandidacies(
     offset: Int
