@@ -53,6 +53,16 @@ export const createFeasibility = async ({
   documentaryProofFile?: UploadedFile;
   certificateOfAttendanceFile?: UploadedFile;
 }) => {
+  const existingFeasibility = await prismaClient.feasibility.findFirst({
+    where: { candidacyId, isActive: true },
+  });
+
+  if (existingFeasibility) {
+    throw new Error(
+      "Un dossier de faisabilité actif éxiste déjà pour cette candidature"
+    );
+  }
+
   const feasibility = await prismaClient.feasibility.create({
     data: {
       candidacy: { connect: { id: candidacyId } },
