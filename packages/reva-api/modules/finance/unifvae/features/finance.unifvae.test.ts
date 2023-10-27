@@ -297,7 +297,7 @@ test("should create fundingRequestUnifvae with matching batch", async () => {
       NbHeureDemAccVAEColl: "2.00",
       CoutHeureDemAccVAEColl: "21.30",
       NHeureDemActeFormatifCompl: "9.00",
-      CoutHeureDemActeFormatifCompl: "169.20",
+      CoutHeureDemActeFormatifCompl: "18.80",
       ForfaitPartiel: 0,
     },
   });

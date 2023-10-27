@@ -57,10 +57,12 @@ export const createBatchFromFundingRequestUnifvae = async (
     (heures, fc) => heures.plus(fc.count),
     new Decimal(0)
   );
-  const formationComplementaireCoutTotal = formationComplementaire.reduce(
-    (totalCost, fc) => totalCost.plus(fc.cost.times(fc.count)),
-    new Decimal(0)
-  );
+  const formationComplementaireCoutHoraireMoyen = formationComplementaire
+    .reduce(
+      (totalCost, fc) => totalCost.plus(fc.cost.times(fc.count)),
+      new Decimal(0)
+    )
+    .dividedBy(formationComplementaireHeures);
 
   return prismaClient.fundingRequestBatchUnifvae.create({
     data: {
@@ -92,7 +94,7 @@ export const createBatchFromFundingRequestUnifvae = async (
         CoutHeureDemAccVAEColl: fundingRequest.collectiveCost.toFixed(2),
         NHeureDemActeFormatifCompl: formationComplementaireHeures.toFixed(2),
         CoutHeureDemActeFormatifCompl:
-          formationComplementaireCoutTotal.toFixed(2),
+          formationComplementaireCoutHoraireMoyen.toFixed(2, Decimal.ROUND_UP),
         ForfaitPartiel: fundingRequest.isPartialCertification ? 1 : 0,
       },
     },

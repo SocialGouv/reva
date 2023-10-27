@@ -145,6 +145,6 @@ test("Should create a nice batch", async () => {
     NbHeureDemAccVAEColl: "18.00",
     CoutHeureDemAccVAEColl: "8.00",
     NHeureDemActeFormatifCompl: "8.50",
-    CoutHeureDemActeFormatifCompl: "131.00",
+    CoutHeureDemActeFormatifCompl: "15.42",
   });
 });
