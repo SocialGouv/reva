@@ -39,64 +39,6 @@ export const candidacyIncludes = {
   reorientationReason: true,
 };
 
-export const insertCandidacy = async (params: {
-  deviceId: string;
-  certificationId: string;
-  regionId: string;
-}): Promise<Either<string, domain.Candidacy>> => {
-  try {
-    const newCandidacy = await prismaClient.candidacy.create({
-      data: {
-        deviceId: params.deviceId,
-        certificationsAndRegions: {
-          create: {
-            certificationId: params.certificationId,
-            regionId: params.regionId,
-            author: "candidate",
-            isActive: true,
-          },
-        },
-        candidacyStatuses: {
-          create: {
-            status: CandidacyStatusStep.PROJET,
-            isActive: true,
-          },
-        },
-        admissibility: {
-          create: {},
-        },
-        examInfo: {
-          create: {},
-        },
-      },
-      include: candidacyIncludes,
-    });
-
-    return Right({
-      id: newCandidacy.id,
-      deviceId: newCandidacy.deviceId,
-      regionId: newCandidacy.certificationsAndRegions[0].region.id,
-      region: newCandidacy.certificationsAndRegions[0].region,
-      department: newCandidacy.department,
-      certificationId:
-        newCandidacy.certificationsAndRegions[0].certification.id,
-      certification: newCandidacy.certificationsAndRegions[0].certification,
-      isCertificationPartial: false,
-      experiences: toDomainExperiences(newCandidacy.experiences),
-      goals: newCandidacy.goals,
-      phone: newCandidacy.phone,
-      email: newCandidacy.email,
-      candidacyStatuses: newCandidacy.candidacyStatuses,
-      dropOutReason: null,
-      reorientationReason: null,
-      createdAt: newCandidacy.createdAt,
-    });
-  } catch (e) {
-    logger.error(e);
-    return Left("error while creating candidacy");
-  }
-};
-
 export const getCandidacyFromDeviceId = async (
   deviceId: string
 ): Promise<Either<string, domain.Candidacy>> => {

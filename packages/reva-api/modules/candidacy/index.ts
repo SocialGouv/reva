@@ -28,7 +28,6 @@ import { cancelDropOutCandidacyEvent } from "./events";
 import { addExperienceToCandidacy } from "./features/addExperienceToCandidacy";
 import { archiveCandidacy } from "./features/archiveCandidacy";
 import { cancelDropOutCandidacy } from "./features/cancelDropOutCandidacy";
-import { createCandidacy } from "./features/createCandidacy";
 import { deleteCandidacy } from "./features/deleteCandidacy";
 import { dropOutCandidacy } from "./features/dropOutCandidacy";
 import { getAdmissibility } from "./features/getAdmissibility";
@@ -265,40 +264,6 @@ const unsafeResolvers = {
       }),
   },
   Mutation: {
-    candidacy_createCandidacy: async (
-      _: any,
-      {
-        candidacy,
-      }: {
-        candidacy: {
-          deviceId: string;
-          certificationId: string;
-          regionId: string;
-          departmentId: string;
-        };
-      },
-      context: GraphqlContext
-    ) => {
-      const result = await createCandidacy({
-        createCandidacy: candidacyDb.insertCandidacy,
-        getCandidacyFromDeviceId: candidacyDb.getCandidacyFromDeviceId,
-      })({
-        deviceId: candidacy.deviceId,
-        certificationId: candidacy.certificationId,
-        regionId: candidacy.regionId,
-        departmentId: candidacy.departmentId,
-      });
-
-      logCandidacyEvent({
-        eventType: CandidacyBusinessEvent.CREATED_CANDIDACY,
-        context,
-        result,
-      });
-
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
-    },
     candidacy_submitCandidacy: async (
       _: unknown,
       payload: { deviceId: string; candidacyId: string },
