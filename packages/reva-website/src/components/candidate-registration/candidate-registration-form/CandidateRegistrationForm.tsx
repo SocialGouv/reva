@@ -28,7 +28,7 @@ interface DepartmentOption {
 const zodSchema = z.object({
   firstname: z.string().min(1, "Ce champ est obligatoire"),
   lastname: z.string().min(1, "Ce champ est obligatoire"),
-  phone: z.string().min(10, "Format attendu : +33 X XX XX XX XX"),
+  phone: z.string().min(10, "Veuillez entrer un numéro de téléphone valide"),
   email: z.string().email("Format attendu : nom@domaine.fr"),
   departmentId: z.string().min(1, "Ce champ est obligatoire"),
 });
@@ -92,9 +92,9 @@ export const CandidateRegistrationForm = ({
           nativeInputProps={{ ...register("lastname") }}
         />
         <Input
+          className="md:mt-6"
           data-testid="candidate-registration-form-phone-input"
           label="Téléphone"
-          hintText="Format attendu : +33 X XX XX XX XX. Exemple : +33 6 12 34 56 78"
           state={errors.phone ? "error" : "default"}
           stateRelatedMessage={errors.phone?.message}
           nativeInputProps={{

@@ -146,7 +146,6 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           />
           <Input
             label="Téléphone"
-            hintText="Format attendu : 00 33 X XX XX XX XX"
             nativeInputProps={{
               name: "phone",
               ref: phoneRef,
