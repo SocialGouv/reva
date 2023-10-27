@@ -1,6 +1,7 @@
 module View.Candidacy.Filters exposing (Filters, view)
 
 import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
+import Api.Token
 import Data.Candidacy exposing (CandidacyCountByStatus, candidacyStatusFilterToReadableString)
 import Data.Context exposing (Context)
 import Html exposing (Html, a, label, li, text, ul)
@@ -106,7 +107,11 @@ view candidacyCountByStatus filters context =
         , viewFilter CandidacyStatusFilter.Abandon
         , viewFilter CandidacyStatusFilter.Reorientee
         , viewFilter CandidacyStatusFilter.ArchiveHorsAbandonHorsReorientation
-        , viewFilter CandidacyStatusFilter.ProjetHorsAbandon
+        , if Api.Token.isAdmin context.token then
+            viewFilter CandidacyStatusFilter.ProjetHorsAbandon
+
+          else
+            text ""
         ]
     ]
 
