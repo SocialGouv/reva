@@ -56,10 +56,11 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
       departmentId: elements.department.value || null,
     };
     send({
-      type: "SUBMIT_CONTACT",
+      type: hasCandidacy ? "UPDATE_CONTACT" : "SUBMIT_CONTACT",
       contact,
     });
   };
+  const editedContact = state.context.contact;
   const firstnameRef = useRef<HTMLInputElement>(null);
   const lastnameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
@@ -133,6 +134,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
               ref: firstnameRef,
               required: true,
               autoComplete: "given-name",
+              defaultValue: editedContact?.firstname || "",
             }}
           />
           <Input
@@ -142,6 +144,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
               ref: lastnameRef,
               required: true,
               autoComplete: "family-name",
+              defaultValue: editedContact?.lastname || "",
             }}
           />
           <Input
@@ -153,6 +156,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
               required: true,
               type: "tel",
               autoComplete: "tel",
+              defaultValue: editedContact?.phone || "",
             }}
           />
           <Input
@@ -165,6 +169,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
               type: "email",
               autoComplete: "email",
               spellCheck: "false",
+              defaultValue: editedContact?.email || "",
             }}
           />
           <Select
@@ -189,7 +194,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
             ))}
           </Select>
         </fieldset>
-        <Button data-test="project-contact-add" className="mt-6">
+        <Button data-test={`project-contact-${editedContact ? "save" : "add"}`} className="mt-6">
           Créez votre compte
         </Button>
       </form>

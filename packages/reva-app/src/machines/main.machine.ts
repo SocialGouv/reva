@@ -126,6 +126,7 @@ export type MainEvent =
   | { type: "SUBMIT_LOGIN"; login: { email: string } }
   | { type: "SUBMIT_CERTIFICATION"; certification: Certification }
   | { type: "SUBMIT_CONTACT"; contact: Contact }
+  | { type: "UPDATE_CONTACT"; contact: Contact }
   | { type: "SUBMIT_EXPERIENCE"; experience: Experience }
   | { type: "SUBMIT_EXPERIENCES" }
   | { type: "SUBMIT_GOALS"; goals: Goal[] }
@@ -534,6 +535,10 @@ export const mainMachine =
                   SUBMIT_CONTACT: {
                     target: "submitting",
                   },
+                  UPDATE_CONTACT: {
+                    actions: "navigatePrevious",
+                    target: "updating",
+                  },
                   LOGIN: {
                     actions: "resetError",
                     target: "#mainMachine.loginHome",
@@ -560,6 +565,28 @@ export const mainMachine =
                             "Une erreur est survenue lors de la demande de création d'un compte.",
                         }),
                       ],
+                      target: "idle",
+                    },
+                  ],
+                },
+              },
+              updating: {
+                invoke: {
+                  src: "updateContact",
+                  onDone: [
+                    {
+                      actions: assign({
+                        contact: (_context, event) => event.data,
+                      }),
+                      target: "leave",
+                    },
+                  ],
+                  onError: [
+                    {
+                      actions: assign({
+                        error: (_, _event) =>
+                          "Une erreur est survenue lors de l'enregistrement de vos informations de contact.",
+                      }),
                       target: "idle",
                     },
                   ],
