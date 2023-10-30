@@ -10,6 +10,10 @@ import { getDropOutReasonById } from "../referential/features/getDropOutReasonBy
 import { getReorientationReasonById } from "../referential/features/getReorientationReasonById";
 import { sendTrainingEmail } from "../shared/email";
 import { sendNewCandidacyEmail } from "../shared/email/sendNewCandidacyEmail";
+import {
+  FunctionalCodeError,
+  FunctionalError,
+} from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
 import {
   Admissibility,
@@ -365,29 +369,28 @@ const unsafeResolvers = {
 
     candidacy_updateContact: async (
       _: unknown,
-      payload: any,
+      params: { candidateId: string; candidateData: { phone: string } },
       context: GraphqlContext
     ) => {
-      const result = await updateContactOfCandidacy({
-        updateContact: candidacyDb.updateContactOnCandidacy,
-        getCandidacyFromId: candidacyDb.getCandidacyFromId,
-      })({
-        candidacyId: payload.candidacyId,
-        phone: payload.phone,
-        email: payload.email,
-      });
-      logCandidacyEvent({
-        candidacyId: payload.candidacyId,
-        eventType: CandidacyBusinessEvent.UPDATED_CONTACT,
-        extraInfo: result.isRight()
-          ? { phone: payload.phone, email: payload.email }
-          : undefined,
-        context,
-        result,
-      });
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
+      try {
+        if (context.auth.userInfo?.sub == undefined) {
+          throw new FunctionalError(
+            FunctionalCodeError.TECHNICAL_ERROR,
+            "Not authorized"
+          );
+        }
+
+        return updateContactOfCandidacy(
+          {
+            hasRole: context.auth.hasRole,
+            keycloakId: context.auth.userInfo?.sub,
+          },
+          params
+        );
+      } catch (e) {
+        logger.error(e);
+        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
+      }
     },
 
     candidacy_deleteById: async (

@@ -1,5 +1,6 @@
 import { ApolloClient, gql } from "@apollo/client";
 
+import { getTokens } from "../contexts/keycloakContext";
 import { Experience, candidacyStatus } from "../interface";
 
 const UPDATE_CERTIFICATION = gql`
@@ -178,7 +179,13 @@ const ASK_FOR_REGISTRATION = gql`
 
 export const askForRegistration =
   (client: ApolloClient<object>) =>
-  async (candidate: {
+  async ({
+    firstname,
+    lastname,
+    phone,
+    email,
+    departmentId,
+  }: {
     firstname: null | string;
     lastname: null | string;
     phone: null | string;
@@ -187,26 +194,29 @@ export const askForRegistration =
   }) => {
     const { data } = await client.mutate({
       mutation: ASK_FOR_REGISTRATION,
-      variables: { candidate },
+      variables: {
+        candidate: {
+          firstname,
+          lastname,
+          phone,
+          email,
+          departmentId,
+        },
+      },
     });
 
     return data.candidate_askForRegistration;
   };
 
 const UPDATE_CONTACT = gql`
-  mutation update_contact(
-    $deviceId: ID!
-    $candidacyId: ID!
-    $phone: String
-    $email: String
-  ) {
+  mutation update_contact($candidateId: ID!, $phone: String) {
     candidacy_updateContact(
-      candidacyId: $candidacyId
-      deviceId: $deviceId
-      phone: $phone
-      email: $email
+      candidateId: $candidateId
+      candidateData: { phone: $phone }
     ) {
       id
+      firstname
+      lastname
       email
       phone
     }
@@ -216,19 +226,20 @@ const UPDATE_CONTACT = gql`
 export const updateContact =
   (client: ApolloClient<object>) =>
   async ({
-    deviceId,
-    candidacyId,
+    candidateId,
     phone,
-    email,
   }: {
-    deviceId: string;
-    candidacyId: string;
+    candidateId: string;
     phone: null | string;
-    email: null | string;
   }) => {
     const { data } = await client.mutate({
+      context: {
+        headers: {
+          authorization: `Bearer ${getTokens().accessToken}`,
+        },
+      },
       mutation: UPDATE_CONTACT,
-      variables: { deviceId, candidacyId, phone, email },
+      variables: { candidateId, phone },
     });
 
     return data.candidacy_updateContact;
@@ -318,6 +329,7 @@ const CONFIRM_REGISTRATION = gql`
         idToken
       }
       candidate {
+        id
         firstname
         lastname
         email
@@ -367,6 +379,7 @@ export const confirmRegistration =
 const GET_CANDIDATE_WITH_CANDIDACY = gql`
   query candidate_getCandidateWithCandidacy {
     candidate: candidate_getCandidateWithCandidacy {
+      id
       firstname
       lastname
       email
@@ -463,6 +476,7 @@ function formatCandidacy(candidate: any, getReferential: any) {
     candidacy = {
       ...candidate,
       ...candidacy,
+      candidateId: candidate.id,
       candidacyStatus: candidacy.candidacyStatuses?.find(
         (s: { isActive: string; status: candidacyStatus }) => s.isActive
       ).status,

@@ -576,7 +576,10 @@ export const mainMachine =
                   onDone: [
                     {
                       actions: assign({
-                        contact: (_context, event) => event.data,
+                        contact: (_context, event) => ({
+                          ...event.data,
+                          candidateId: event.data.id,
+                        }),
                       }),
                       target: "leave",
                     },
@@ -1062,6 +1065,7 @@ export const mainMachine =
               },
               goals: event.data.candidacy.goals,
               contact: {
+                candidateId: event.data.candidacy.candidateId,
                 firstname: event.data.candidacy.firstname,
                 lastname: event.data.candidacy.lastname,
                 email: event.data.candidacy.email,

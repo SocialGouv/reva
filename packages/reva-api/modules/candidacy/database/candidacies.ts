@@ -222,61 +222,6 @@ export const existsCandidacyWithActiveStatuses = async (params: {
 //     };
 // };
 
-export const updateContactOnCandidacy = async (params: {
-  candidacyId: string;
-  email: string;
-  phone: string;
-}): Promise<Either<string, domain.Candidacy>> => {
-  try {
-    const newCandidacy = await prismaClient.candidacy.update({
-      where: {
-        id: params.candidacyId,
-      },
-      data: {
-        email: params.email,
-      },
-      include: candidacyIncludes,
-    });
-
-    const certificationAndRegion =
-      await prismaClient.candidaciesOnRegionsAndCertifications.findFirst({
-        where: {
-          candidacyId: params.candidacyId,
-          isActive: true,
-        },
-        select: {
-          certification: true,
-          region: true,
-        },
-      });
-
-    return Right({
-      id: newCandidacy.id,
-      deviceId: newCandidacy.deviceId,
-      regionId: certificationAndRegion?.region.id,
-      region: certificationAndRegion?.region,
-      department: newCandidacy.department,
-      certificationId: certificationAndRegion?.certification.id,
-      certification: certificationAndRegion?.certification,
-      organismId: newCandidacy.organismId,
-      experiences: toDomainExperiences(newCandidacy.experiences),
-      goals: newCandidacy.goals,
-      email: newCandidacy.email,
-      // NOTE: updateContactOnCandidacy is not used for the moment
-      // and will be replaced with a proper candidate update implementation
-      phone: null,
-      candidacyStatuses: newCandidacy.candidacyStatuses,
-      candidacyDropOut: newCandidacy.candidacyDropOut,
-      createdAt: newCandidacy.createdAt,
-    });
-  } catch (e) {
-    logger.error(e);
-    return Left(
-      `error while updating contact on candidacy ${params.candidacyId}`
-    );
-  }
-};
-
 export const updateCandidacyStatus = async (params: {
   candidacyId: string;
   status: CandidacyStatusStep;

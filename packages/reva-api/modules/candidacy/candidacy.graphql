@@ -288,6 +288,10 @@ input CandidateTypologyInformationsInput {
   additionalInformation: String
 }
 
+input UpdateCandidateInput {
+  phone: String
+}
+
 input AppointmentInformationsInput {
   firstAppointmentOccuredAt: Timestamp
   appointmentCount: Int!
@@ -354,11 +358,9 @@ type Mutation {
     goals: [CandidateGoalInput!]!
   ): Int!
   candidacy_updateContact(
-    deviceId: ID!
-    candidacyId: ID!
-    email: String
-    phone: String
-  ): Candidacy
+    candidateId: ID!
+    candidateData: UpdateCandidateInput!
+  ): Candidate
   candidacy_archiveById(
     candidacyId: ID!
     reorientationReasonId: UUID

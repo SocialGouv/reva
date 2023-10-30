@@ -190,12 +190,9 @@ export const useConfiguredMainMachine = () => {
               return Promise.reject("Impossible state");
             }
 
-            const deviceId = await Device.getId();
             return updateContact(client as ApolloClient<object>)({
-              deviceId: deviceId.uuid,
-              candidacyId: context.candidacyId,
+              candidateId: context.contact?.candidateId || "unknown candidate",
               phone: event.contact.phone,
-              email: event.contact.email,
             });
           },
           submitCandidacy: async (context, event) => {
