@@ -70,11 +70,6 @@ lastname =
     Object.selectionForField "(Maybe String)" "lastname" [] (Decode.string |> Decode.nullable)
 
 
-phone : SelectionSet (Maybe String) Admin.Object.CandidacySummary
-phone =
-    Object.selectionForField "(Maybe String)" "phone" [] (Decode.string |> Decode.nullable)
-
-
 email : SelectionSet (Maybe String) Admin.Object.CandidacySummary
 email =
     Object.selectionForField "(Maybe String)" "email" [] (Decode.string |> Decode.nullable)

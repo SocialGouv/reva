@@ -66,8 +66,8 @@ view context config =
                     viewSentAt (Data.Candidacy.sentDate config.candidacy.statuses)
                 , div [ class "flex space-x-2" ]
                     [ viewDepartment config.candidacy.department
-                    , config.candidacy.phone
-                        |> Maybe.map (text >> viewInfo "phone-number" "Téléphone")
+                    , config.candidacy.candidate
+                        |> Maybe.map (.phone >> text >> viewInfo "phone-number" "Téléphone")
                         |> Maybe.withDefault (text "")
                     ]
                 , config.candidacy.email
