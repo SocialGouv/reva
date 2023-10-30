@@ -50,6 +50,7 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
     event.preventDefault();
     const elements = event.currentTarget.elements;
     const contact: Contact = {
+      candidateId: state.context.contact?.candidateId || "unknown candidate",
       firstname: elements.firstname.value || null,
       lastname: elements.lastname.value || null,
       phone: elements.phone.value || null,
@@ -155,7 +156,6 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           />
           <Input
             label="Téléphone"
-            disabled={hasCandidacy}
             nativeInputProps={{
               name: "phone",
               ref: phoneRef,
@@ -205,7 +205,6 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           )}
         </fieldset>
         <Button
-          disabled={hasCandidacy}
           data-test={`project-contact-${editedContact ? "save" : "add"}`}
           className="mt-6"
         >

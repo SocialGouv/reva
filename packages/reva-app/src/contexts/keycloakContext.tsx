@@ -26,6 +26,11 @@ export const Keycloak = (config: {
   return keycloak;
 };
 
+export const getTokens = () => {
+  const tokens_ = localStorage.getItem(storageKey);
+  return tokens_ && JSON.parse(tokens_);
+};
+
 export const KeycloakProvider = ({
   keycloakInstance,
   children,
@@ -33,10 +38,7 @@ export const KeycloakProvider = ({
   const [authenticated, setAuthenticated] = useState(false);
   const [token, setToken] = useState<string | undefined>(undefined);
   const [ready, setReady] = useState<boolean>(false);
-  const [tokens, setTokens] = useState(() => {
-    const tokens_ = localStorage.getItem(storageKey);
-    return tokens_ && JSON.parse(tokens_);
-  });
+  const [tokens, setTokens] = useState(getTokens);
 
   const logout = () => {
     localStorage.removeItem(storageKey);

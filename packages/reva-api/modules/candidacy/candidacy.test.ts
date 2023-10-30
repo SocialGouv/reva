@@ -80,3 +80,47 @@ test("get non existing candidacy should yield errors", async () => {
   expect(resp.statusCode).toEqual(200);
   expect(resp.json()).toHaveProperty("errors");
 });
+
+test("a user can't modify the account information of another candidate", async () => {
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "candidate",
+      keycloakId: "20d793c8-4269-44fd-a454-c6b7ab8b4c8e",
+    }),
+    payload: {
+      requestType: "mutation",
+      endpoint: "candidacy_updateContact",
+      arguments: {
+        candidateId: candidate.id,
+        candidateData: { phone: "0612345678" },
+      },
+      returnFields: "{id}",
+    },
+  });
+  expect(resp.statusCode).toEqual(200);
+  expect(resp.json().errors?.[0].message).toEqual("Utilisateur non autorisé");
+});
+
+test("a candidate can modify his account information", async () => {
+  const resp = await injectGraphql({
+    fastify: (global as any).fastify,
+    authorization: authorizationHeaderForUser({
+      role: "candidate",
+      keycloakId: candidate.keycloakId,
+    }),
+    payload: {
+      requestType: "mutation",
+      endpoint: "candidacy_updateContact",
+      arguments: {
+        candidateId: candidate.id,
+        candidateData: { phone: "0612345678" },
+      },
+      returnFields: "{phone}",
+    },
+  });
+  expect(resp.statusCode).toEqual(200);
+  expect(resp.json().data.candidacy_updateContact).toMatchObject({
+    phone: "0612345678",
+  });
+});
