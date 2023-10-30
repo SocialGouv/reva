@@ -10,6 +10,7 @@ type alias Candidate =
     , firstname3 : Maybe String
     , gender : Maybe Gender
     , lastname : String
+    , phone : String
     }
 
 

@@ -88,7 +88,6 @@ type alias Candidacy =
     , experiences : List CandidacyExperience
     , firstname : Maybe String
     , lastname : Maybe String
-    , phone : Maybe String
     , email : Maybe String
     , dropOutDate : Maybe Time.Posix
     , statuses : List CandidacyStatus
@@ -109,7 +108,6 @@ type alias CandidacySummary =
     , organism : Maybe Organism
     , firstname : Maybe String
     , lastname : Maybe String
-    , phone : Maybe String
     , email : Maybe String
     , isDroppedOut : Bool
     , lastStatus : CandidacyStatus

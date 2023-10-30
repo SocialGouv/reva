@@ -372,11 +372,7 @@ viewItem context candidacy =
                     String.concat [ firstname, " ", lastname ]
 
                 _ ->
-                    String.concat
-                        [ Maybe.withDefault "" candidacy.phone
-                        , " "
-                        , Maybe.withDefault "" candidacy.email
-                        ]
+                    Maybe.withDefault "" candidacy.email
     in
     li
         [ dataTest "directory-item", attribute "style" "--li-bottom:0" ]

@@ -122,7 +122,6 @@ selection id =
                 |> with (Admin.Object.Candidacy.experiences experienceSelection)
                 |> with Admin.Object.Candidacy.firstname
                 |> with Admin.Object.Candidacy.lastname
-                |> with Admin.Object.Candidacy.phone
                 |> with Admin.Object.Candidacy.email
                 |> with (Admin.Object.Candidacy.candidacyDropOut droppedOutDateSelection)
                 |> with (Admin.Object.Candidacy.candidacyStatuses statusSelection)
@@ -155,6 +154,7 @@ candidateSelection =
         |> with Admin.Object.Candidate.firstname3
         |> with Admin.Object.Candidate.gender
         |> with Admin.Object.Candidate.lastname
+        |> with Admin.Object.Candidate.phone
 
 
 
@@ -178,7 +178,6 @@ summarySelection =
         |> with (Admin.Object.CandidacySummary.organism Organism.selection)
         |> with Admin.Object.CandidacySummary.firstname
         |> with Admin.Object.CandidacySummary.lastname
-        |> with Admin.Object.CandidacySummary.phone
         |> with Admin.Object.CandidacySummary.email
         |> with Admin.Object.CandidacySummary.isDroppedOut
         |> with (Admin.Object.CandidacySummary.lastStatus statusSelection)
