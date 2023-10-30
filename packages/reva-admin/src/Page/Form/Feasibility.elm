@@ -4,7 +4,7 @@ import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Form.Feasibility exposing (keys)
 import Data.Referential exposing (Referential)
-import Html exposing (a, div, h2, p, strong, text)
+import Html exposing (a, div, h2, p, span, strong, text)
 import Html.Attributes exposing (class, href, target, title)
 import Page.Form as Form exposing (Form)
 import View exposing (AlertType(..))
@@ -25,25 +25,32 @@ form formData ( candidacy, _ ) =
                     ]
             )
 
-        idCardWarning =
-            ( "id-card-warning"
-            , Form.StaticHtml <|
-                View.alert Warning
-                    [ class "mt-4 mb-10" ]
-                    "Attention"
-                    [ p []
-                        [ text "Ne joignez pas la Carte d’Identité du candidat dans ce formulaire. Pour le moment"
-                        , strong [] [ text ", la Carte d’Identité est toujours à communiquer par email." ]
-                        ]
-                    ]
-            )
-
         certificationAuthorityIds =
             candidacy.certificationAuthorities
                 |> List.map (\c -> ( c.id, c.label ))
 
-        helpPanel =
-            ( "help panel"
+        helpPanelHeader =
+            ( "help panel header"
+            , Form.StaticHtml <|
+                View.alert View.Info
+                    [ class "mb-10" ]
+                    ""
+                    [ p []
+                        [ span []
+                            [ text "Si vous ne joignez pas la bonne pièce, cliquez à nouveau sur le bouton"
+                            ]
+                        , strong [ class "italic" ]
+                            [ text " “Parcourir” "
+                            ]
+                        , span []
+                            [ text "pour la remplacer par la pièce valide."
+                            ]
+                        ]
+                    ]
+            )
+
+        helpPanelFooter =
+            ( "help panel footer"
             , Form.StaticHtml
                 (View.noticeInfo
                     [ class "mt-10" ]
@@ -95,6 +102,9 @@ form formData ( candidacy, _ ) =
             ( keys.feasibilityFileChecked
             , "J'ai bien vérifié que le dossier de faisabilité était correct, complet et signé par moi-même ainsi que par le candidat."
             )
+                :: ( keys.iDFileChecked
+                   , "J'ai bien vérifié que la pièce d’identité était conforme, en cours de validité et lisible."
+                   )
                 :: (if Data.Form.Feasibility.hasOptionalFiles formData then
                         [ ( keys.optionalFileChecked, "J'ai bien vérifié que les éventuelles pièces jointes optionnelles étaient correctes et complètes." ) ]
 
@@ -109,12 +119,14 @@ form formData ( candidacy, _ ) =
             else
                 [ candidateInfo
                 , ( "", Form.Title1 "Pièces jointes" )
-                , idCardWarning
-                , ( "feasibilityFile", Form.Title2 "1 - Joindre le dossier de faisabilité" )
-                , ( keys.feasibilityFile, Form.File "" "Format supporté : PDF uniquement" )
-                , ( "documentaryProofFile", Form.Title2 "2 - Joindre une autre pièce (optionnel)" )
+                , helpPanelHeader
+                , ( "feasibilityFile", Form.Title2 "Joindre le dossier de faisabilité" )
+                , ( keys.feasibilityFile, Form.FileRequired "Le dossier doit être complet et signé par vous-même et le candidat. Pensez à vérifier que vous avez tout saisi avant l’envoi." "Format supporté : PDF uniquement" )
+                , ( "idFile", Form.Title2 "Joindre la pièce d’identité (carte identité, passeport, carte de séjour)" )
+                , ( keys.idFile, Form.FileRequired "Copie ou scan lisible (la photo ne doit pas être floue) et en cours de validité. Cette pièce sera demandée au candidat pour justifier de son identité lors du passage devant jury et la délivrance éventuelle du diplôme." "Format supporté : PDF, JPG, JPEG, PNG" )
+                , ( "documentaryProofFile", Form.Title2 "Joindre une autre pièce (optionnel)" )
                 , ( keys.documentaryProofFile, Form.File "Copie du ou des justificatif(s) ouvrant accès à une équivalence ou dispense en lien avec la certification visée." "Format supporté : PDF uniquement" )
-                , ( "certificateOfAttendanceFile", Form.Title2 "3 - Joindre une autre pièce (optionnel)" )
+                , ( "certificateOfAttendanceFile", Form.Title2 "Joindre une autre pièce (optionnel)" )
                 , ( keys.certificateOfAttendanceFile, Form.File "Attestation ou certificat de suivi de formation dans le cas du pré-requis demandé par la certification visée." "Format supporté : PDF uniquement" )
                 , ( "", Form.Title1 "" )
                 , case candidacy.certificationAuthorities of
@@ -129,7 +141,7 @@ form formData ( candidacy, _ ) =
                         )
                 , filesChecklistTitle
                 , ( "filesChecklist", Form.CheckboxList "" filesChecklist )
-                , helpPanel
+                , helpPanelFooter
                 ]
     in
     { elements = elements

@@ -27,6 +27,13 @@ export const feasibilityResolvers = {
       candidacyId: string;
       feasibilityFileId: string;
     }) => getFileNameAndUrl({ candidacyId, fileId: feasibilityFileId }),
+    IDFile: ({
+      candidacyId,
+      IDFileId,
+    }: {
+      candidacyId: string;
+      IDFileId: string;
+    }) => getFileNameAndUrl({ candidacyId, fileId: IDFileId }),
     documentaryProofFile: ({
       candidacyId,
       documentaryProofFileId: documentaryProofFileId,

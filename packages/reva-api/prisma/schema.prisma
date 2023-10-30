@@ -873,8 +873,10 @@ model Feasibility {
   certificationAuthority        CertificationAuthority @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
   certificationAuthorityId      String                 @map("certification_authority_id") @db.Uuid
   feasibilityFile               File                   @relation("feasibility_file", fields: [feasibilityFileId], references: [id])
+  IDFile                        File?                  @relation("ID_file", fields: [IDFileId], references: [id])
   documentaryProofFile          File?                  @relation("documentary_proof_file", fields: [documentaryProofFileId], references: [id])
   feasibilityFileId             String                 @map("feasibility_file_id") @db.Uuid
+  IDFileId                      String?                @map("ID_file_id") @db.Uuid
   documentaryProofFileId        String?                @map("documentary_proof_file_id") @db.Uuid
   certificateOfAttendanceFile   File?                  @relation("certificate_of_attendance_file", fields: [certificateOfAttendanceFileId], references: [id])
   certificateOfAttendanceFileId String?                @map("certificate_of_attendance_file_id") @db.Uuid
@@ -896,6 +898,7 @@ model File {
   content                               Bytes         @map("file_content")
   createdAt                             DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
   linkedAsFeasibilityFileBy             Feasibility[] @relation("feasibility_file")
+  linkedAsIDFileBy                      Feasibility[] @relation("ID_file")
   linkedAsDocumentaryProofFileBy        Feasibility[] @relation("documentary_proof_file")
   linkedAsCertificateOfAttendanceFileBy Feasibility[] @relation("certificate_of_attendance_file")
 

@@ -1,5 +1,6 @@
 module Data.Form.Feasibility exposing (Decision(..), decisionFromString, decisionToString, fromDict, hasOptionalFiles, keys, validate, validateSubmittedFiles)
 
+import Admin.Object.Feasibility exposing (iDFile)
 import Data.Candidacy exposing (Candidacy)
 import Data.Feasibility exposing (Feasibility)
 import Data.Form exposing (FormData)
@@ -10,6 +11,7 @@ import File exposing (File)
 
 keys =
     { feasibilityFile = "feasibilityFile"
+    , idFile = "IDFile"
     , documentaryProofFile = "documentaryProofFile"
     , certificateOfAttendanceFile = "certificateOfAttendanceFile"
     , certificationAuthorityId = "certificationAuthorityId"
@@ -17,6 +19,7 @@ keys =
     , reason = "reason"
     , infoFile = "infoFile"
     , feasibilityFileChecked = "feasibilityFileChecked"
+    , iDFileChecked = "iDFileChecked"
     , optionalFileChecked = "optionalFileChecked"
     }
 
@@ -109,16 +112,17 @@ validateSubmittedFiles _ formData =
     if hasOptionalFiles formData then
         case
             ( decode.bool .feasibilityFileChecked False
+            , decode.bool .iDFileChecked False
             , decode.bool .optionalFileChecked False
             )
         of
-            ( True, True ) ->
+            ( True, True, True ) ->
                 Ok ()
 
             _ ->
                 error
 
-    else if decode.bool .feasibilityFileChecked False then
+    else if decode.bool .feasibilityFileChecked False && decode.bool .iDFileChecked False then
         Ok ()
 
     else

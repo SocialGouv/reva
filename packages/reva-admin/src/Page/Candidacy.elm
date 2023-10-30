@@ -315,6 +315,14 @@ viewFeasibilitySent context candidacy feasibility =
         feasibilityFileNameAndUrl =
             ( feasibility.file.name, feasibility.file.url )
 
+        iDFileNameAndUrl =
+            case feasibility.iDFile of
+                Just iDFile ->
+                    ( iDFile.name, iDFile.url )
+
+                Nothing ->
+                    ( "", "" )
+
         documentaryProofFileNameAndUrl =
             case feasibility.documentaryProofFile of
                 Just documentaryProofFile ->
@@ -338,6 +346,7 @@ viewFeasibilitySent context candidacy feasibility =
             (candidacy.certification |> Maybe.map .label)
             candidacy.candidate
         , viewFileLink context (Tuple.first feasibilityFileNameAndUrl) (Tuple.second feasibilityFileNameAndUrl)
+        , viewFileLink context (Tuple.first iDFileNameAndUrl) (Tuple.second iDFileNameAndUrl)
         , viewFileLink context (Tuple.first documentaryProofFileNameAndUrl) (Tuple.second documentaryProofFileNameAndUrl)
         , viewFileLink context (Tuple.first certificateOfAttendancefFileNameAndUrl) (Tuple.second certificateOfAttendancefFileNameAndUrl)
         , feasibility.certificationAuthority

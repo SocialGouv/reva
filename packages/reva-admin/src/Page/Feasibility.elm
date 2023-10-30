@@ -17,7 +17,7 @@ import Data.File exposing (File)
 import Data.Form exposing (FormData)
 import Data.Form.Feasibility exposing (Decision(..), decisionToString)
 import Data.Organism exposing (Organism)
-import Html exposing (Html, node, text)
+import Html exposing (Html, node, span, strong, text)
 import Html.Attributes exposing (class, classList, property)
 import Json.Encode as Encode
 import Page.Form as Form exposing (Form)
@@ -111,6 +111,9 @@ viewFeasibilityPanel context model =
                         feasibility.certificationLabel
                         feasibility.candidate
                     , viewFileLink context feasibility.file
+                    , feasibility.iDFile
+                        |> Maybe.map (viewIDFileLink context)
+                        |> Maybe.withDefault (text "")
                     , feasibility.documentaryProofFile
                         |> Maybe.map (viewFileLink context)
                         |> Maybe.withDefault (text "")
@@ -145,6 +148,39 @@ viewFileLink context file =
                     ]
             ]
             []
+        ]
+
+
+viewIDFileLink : Context -> File -> Html msg
+viewIDFileLink context file =
+    let
+        helpPanelForIDFile =
+            View.alert View.Warning
+                [ class "mt-2" ]
+                "Attention"
+                [ p []
+                    [ span []
+                        [ text "La pièce d’identité du candidat sera effacée de nos serveurs lorsque la recevabilité sera prononcée (recevable, non recevable ou incomplet)."
+                        ]
+                    ]
+                ]
+    in
+    div
+        [ class "bg-gray-100 px-8 pt-6 pb-8 border" ]
+        [ div []
+            [ node "authenticated-link"
+                [ property "params" <|
+                    Encode.object
+                        [ ( "text", Encode.string file.name )
+                        , ( "title", Encode.string (file.name ++ " - nouvelle fenêtre") )
+                        , ( "url", Encode.string file.url )
+                        , ( "token", Encode.string (Api.Token.toString context.token) )
+                        , ( "class", Encode.string "fr-link text-2xl font-semibold" )
+                        ]
+                ]
+                []
+            ]
+        , helpPanelForIDFile
         ]
 
 

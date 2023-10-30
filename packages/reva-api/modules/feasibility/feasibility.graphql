@@ -9,6 +9,7 @@ type Feasibility {
   certificationAuthority: CertificationAuthority
   feasibilityFileSentAt: Timestamp!
   feasibilityFile: File!
+  IDFile: File
   documentaryProofFile: File
   certificateOfAttendanceFile: File
   candidacy: Candidacy!

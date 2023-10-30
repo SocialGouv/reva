@@ -55,6 +55,7 @@ type Element
     | Date String
     | Empty
     | File String String
+    | FileRequired String String
     | Files String String
     | Title1 String -- h3
     | Title2 String -- h4
@@ -356,10 +357,13 @@ viewEditableElement formData ( elementId, element ) =
             text ""
 
         File label hint ->
-            viewInputFiles False elementId label hint
+            viewInputFiles False elementId label hint False
+
+        FileRequired label hint ->
+            viewInputFiles False elementId label hint True
 
         Files label hint ->
-            viewInputFiles True elementId label hint
+            viewInputFiles True elementId label hint False
 
         Title1 title ->
             legend
@@ -564,6 +568,9 @@ viewReadOnlyElement formData ( elementId, element ) =
             text ""
 
         File _ _ ->
+            text ""
+
+        FileRequired _ _ ->
             text ""
 
         Files _ _ ->
@@ -773,8 +780,8 @@ viewChoice currentChoiceId ( choiceId, choice ) =
         [ text choice ]
 
 
-viewInputFiles : Bool -> String -> String -> String -> Html (Msg referential)
-viewInputFiles acceptMultipleFiles elementId title hint =
+viewInputFiles : Bool -> String -> String -> String -> Bool -> Html (Msg referential)
+viewInputFiles acceptMultipleFiles elementId title hint isRequired =
     let
         filesDecoder : Json.Decode.Decoder (List File)
         filesDecoder =
@@ -797,6 +804,7 @@ viewInputFiles acceptMultipleFiles elementId title hint =
             , id elementId
             , name elementId
             , on "change" (Json.Decode.map (UserSelectFiles elementId) filesDecoder)
+            , required isRequired
             ]
             []
         ]

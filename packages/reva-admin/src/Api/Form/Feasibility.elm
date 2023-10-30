@@ -31,6 +31,10 @@ submit candidacyId certificationAuthorities restApiEndpoint _ token toMsg ( _, _
             Data.Form.getFiles keys.feasibilityFile formData
                 |> List.map (\( _, file ) -> ( keys.feasibilityFile, file ))
 
+        iDFiles =
+            Data.Form.getFiles keys.idFile formData
+                |> List.map (\( _, file ) -> ( keys.idFile, file ))
+
         documentaryProofFiles =
             Data.Form.getFiles keys.documentaryProofFile formData
                 |> List.map (\( _, file ) -> ( keys.documentaryProofFile, file ))
@@ -77,24 +81,7 @@ submit candidacyId certificationAuthorities restApiEndpoint _ token toMsg ( _, _
         error "Veuillez choisir une autorité de certification."
 
     else
-        case ( feasibilityFiles, documentaryProofFiles, certificateOfAttendanceFiles ) of
-            ( [], _, _ ) ->
-                error "Veuillez choisir un dossier de faisabilité."
-
-            ( [ feasibilityFile ], [ documentaryProofFile ], [ certificateOfAttendanceFile ] ) ->
-                post [ feasibilityFile, documentaryProofFile, certificateOfAttendanceFile ]
-
-            ( [ feasibilityFile ], [ documentaryProofFile ], [] ) ->
-                post [ feasibilityFile, documentaryProofFile ]
-
-            ( [ feasibilityFile ], [], [ certificateOfAttendanceFile ] ) ->
-                post [ feasibilityFile, certificateOfAttendanceFile ]
-
-            ( [ feasibilityFile ], _, _ ) ->
-                post [ feasibilityFile ]
-
-            ( _, _, _ ) ->
-                error "Vous ne pouvez pas envoyer plus d'un dossier de faisabilité et plus d'une autre pièce jointe."
+        post (List.concat [ feasibilityFiles, iDFiles, documentaryProofFiles, certificateOfAttendanceFiles ])
 
 
 submitDecision :
