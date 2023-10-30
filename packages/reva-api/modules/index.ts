@@ -31,10 +31,9 @@ import { subscriptionRequestResolvers } from "./subscription/subscription.resolv
 
 // Resolvers
 
-const typeDefs = loadFilesSync(path.join(__dirname, "."), {
-  extensions: ["graphql"],
-  recursive: true,
-});
+const typeDefs = loadFilesSync(
+  path.join(__dirname, "./**/!(generated-graphql-schema).graphql")
+);
 
 const resolvers = mergeResolvers([
   candidacy.resolvers,
