@@ -44,6 +44,13 @@ feasibilityFile object____ =
     Object.selectionForCompositeField "feasibilityFile" [] object____ Basics.identity
 
 
+iDFile :
+    SelectionSet decodesTo Admin.Object.File
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Feasibility
+iDFile object____ =
+    Object.selectionForCompositeField "IDFile" [] object____ (Basics.identity >> Decode.nullable)
+
+
 documentaryProofFile :
     SelectionSet decodesTo Admin.Object.File
     -> SelectionSet (Maybe decodesTo) Admin.Object.Feasibility

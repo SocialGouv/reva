@@ -11,7 +11,11 @@ import {
 import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
 import { processPaginationInfo } from "../shared/list/pagination";
 import { logger } from "../shared/logger";
-import { UploadedFile, uploadFeasibilityFiles } from "./feasibility.file";
+import {
+  FeasibilityFile,
+  UploadedFile,
+  uploadFeasibilityFiles,
+} from "./feasibility.file";
 import {
   sendFeasibilityDecisionTakenToAAPEmail,
   sendFeasibilityIncompleteMailToAAP,
@@ -44,12 +48,14 @@ export const createFeasibility = async ({
   candidacyId,
   certificationAuthorityId,
   feasibilityFile,
+  IDFile,
   documentaryProofFile,
   certificateOfAttendanceFile,
 }: {
   candidacyId: string;
   certificationAuthorityId: string;
   feasibilityFile: UploadedFile;
+  IDFile: UploadedFile;
   documentaryProofFile?: UploadedFile;
   certificateOfAttendanceFile?: UploadedFile;
 }) => {
@@ -75,6 +81,13 @@ export const createFeasibility = async ({
           name: feasibilityFile.filename,
         },
       },
+      IDFile: {
+        create: {
+          content: IDFile.data,
+          mimeType: IDFile.mimetype,
+          name: IDFile.filename,
+        },
+      },
       documentaryProofFile: documentaryProofFile
         ? {
             create: {
@@ -96,12 +109,13 @@ export const createFeasibility = async ({
     },
   });
 
-  await uploadFeasibilityFiles(
+  await uploadFeasibilityFiles({
     feasibility,
     feasibilityFile,
+    IDFile,
     documentaryProofFile,
-    certificateOfAttendanceFile
-  );
+    certificateOfAttendanceFile,
+  });
 
   await updateCandidacyStatus({
     candidacyId,
@@ -401,6 +415,27 @@ export const getFeasibilityById = async ({
   }
 };
 
+const deleteFeasibilityIDFile = async (feasibilityId: string) => {
+  const feasibility = await prismaClient.feasibility.findUnique({
+    where: { id: feasibilityId },
+  });
+
+  if (feasibility?.IDFileId) {
+    await prismaClient.file.delete({
+      where: {
+        id: feasibility.IDFileId,
+      },
+    });
+
+    const file = new FeasibilityFile({
+      fileId: feasibility.IDFileId,
+      candidacyId: feasibility.candidacyId,
+    });
+
+    await file.delete();
+  }
+};
+
 export const validateFeasibility = async ({
   feasibilityId,
   comment,
@@ -468,6 +503,7 @@ export const validateFeasibility = async ({
         "certificateur inconnu",
       infoFile,
     });
+
     if (updatedFeasibility.candidacy.organism?.contactAdministrativeEmail) {
       sendFeasibilityDecisionTakenToAAPEmail({
         email:
@@ -475,6 +511,10 @@ export const validateFeasibility = async ({
         feasibilityUrl: `${baseUrl}/admin/candidacies/${updatedFeasibility.candidacyId}/feasibility`,
       });
     }
+
+    // Delete ID File from feasibility
+    deleteFeasibilityIDFile(feasibilityId);
+
     return updatedFeasibility;
   } else {
     throw new Error("Utilisateur non autorisé");
@@ -538,6 +578,7 @@ export const rejectFeasibility = async ({
         "certificateur inconnu",
       infoFile,
     });
+
     if (updatedFeasibility.candidacy.organism?.contactAdministrativeEmail) {
       sendFeasibilityDecisionTakenToAAPEmail({
         email:
@@ -545,6 +586,10 @@ export const rejectFeasibility = async ({
         feasibilityUrl: `${baseUrl}/admin/candidacies/${updatedFeasibility.candidacy.id}/feasibility`,
       });
     }
+
+    // Delete ID File from feasibility
+    deleteFeasibilityIDFile(feasibilityId);
+
     return updatedFeasibility;
   } else {
     throw new Error("Utilisateur non autorisé");
@@ -609,6 +654,10 @@ export const markFeasibilityAsIncomplete = async ({
         comment,
       });
     }
+
+    // Delete ID File from feasibility
+    deleteFeasibilityIDFile(feasibilityId);
+
     return updatedFeasibility;
   } else {
     throw new Error("Utilisateur non autorisé");

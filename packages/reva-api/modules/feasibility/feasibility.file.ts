@@ -35,14 +35,30 @@ export class FeasibilityFile implements FileInterface {
 
     return undefined;
   }
+
+  async delete(): Promise<void> {
+    const exists = await FileService.getInstance().exists(this);
+    if (exists) {
+      await FileService.getInstance().deleteFile(this);
+    }
+  }
 }
 
-export async function uploadFeasibilityFiles(
-  feasibility: Feasibility,
-  feasibilityFile: UploadedFile,
-  documentaryProofFile?: UploadedFile,
-  certificateOfAttendanceFile?: UploadedFile
-) {
+export async function uploadFeasibilityFiles(params: {
+  feasibility: Feasibility;
+  feasibilityFile: UploadedFile;
+  IDFile: UploadedFile;
+  documentaryProofFile?: UploadedFile;
+  certificateOfAttendanceFile?: UploadedFile;
+}) {
+  const {
+    feasibility,
+    feasibilityFile,
+    IDFile,
+    documentaryProofFile,
+    certificateOfAttendanceFile,
+  } = params;
+
   const feasibilityFileInstance = new FeasibilityFile({
     candidacyId: feasibility.candidacyId,
     fileId: feasibility.feasibilityFileId,
@@ -50,6 +66,16 @@ export async function uploadFeasibilityFiles(
   });
 
   await feasibilityFileInstance.upload(feasibilityFile.data);
+
+  if (feasibility.IDFileId) {
+    const feasibilityIDFileInstance = new FeasibilityFile({
+      candidacyId: feasibility.candidacyId,
+      fileId: feasibility.IDFileId,
+      fileType: IDFile.mimetype,
+    });
+
+    await feasibilityIDFileInstance.upload(IDFile.data);
+  }
 
   if (documentaryProofFile && feasibility.documentaryProofFileId) {
     const documentaryProofFileInstance = new FeasibilityFile({
