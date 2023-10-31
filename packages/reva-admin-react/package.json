@@ -3,12 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "only-include-used-icons",
     "dev": "next dev -p 3003",
+    "prebuild": "only-include-used-icons",
     "build": "next build",
     "start": "next start -p 3003",
     "lint": "next lint"
   },
   "dependencies": {
+    "@codegouvfr/react-dsfr": "^0.78.2",
     "next": "14.0.0",
     "react": "^18",
     "react-dom": "^18"
@@ -23,6 +26,7 @@
     "eslint-config-prettier": "^9.0.0",
     "postcss": "^8",
     "prettier": "^3.0.3",
+    "sass": "^1.69.5",
     "tailwindcss": "^3",
     "typescript": "^5"
   }
