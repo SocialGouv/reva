@@ -1,4 +1,6 @@
+"use client";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
+import { signOut } from "next-auth/react";
 
 export const Header = () => (
   <DsfrHeader
@@ -18,5 +20,14 @@ export const Header = () => (
       imgUrl: "/fvae_logo.svg",
       orientation: "horizontal",
     }}
+    quickAccessItems={[
+      {
+        buttonProps: {
+          onClick: () => signOut({ redirect: false }),
+        },
+        iconId: "ri-logout-box-r-line",
+        text: "Se déconnecter",
+      },
+    ]}
   />
 );
