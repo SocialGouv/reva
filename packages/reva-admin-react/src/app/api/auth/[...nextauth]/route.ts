@@ -10,7 +10,8 @@ const authOptions: AuthOptions = {
     KeycloakProvider({
       clientId: process.env.KEYCLOAK_CLIENT_ID || "",
       clientSecret: process.env.KEYCLOAK_CLIENT_SECRET || "",
-      issuer: process.env.KEYCLOAK_URL + "/realms/reva",
+      issuer:
+        process.env.KEYCLOAK_URL + "/realms/" + process.env.KEYCLOAK_REALM,
       accessTokenUrl: `${process.env.KEYCLOAK_URL}/token`,
       requestTokenUrl: `${process.env.KEYCLOAK_URL}/auth`,
     }),
