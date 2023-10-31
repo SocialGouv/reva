@@ -2,14 +2,14 @@
 import { DsfrHead } from "@codegouvfr/react-dsfr/next-appdir/DsfrHead";
 import { DsfrProvider } from "@codegouvfr/react-dsfr/next-appdir/DsfrProvider";
 import { getHtmlAttributes } from "@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes";
-import { StartDsfr } from "./StartDsfr";
-import { defaultColorScheme } from "./defaultColorScheme";
 import Link from "next/link";
 import "./globals.css";
 import { Header } from "@/components/header/Header";
 import { Footer } from "@/components/footer/Footer";
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import { SessionProvider, signIn, useSession } from "next-auth/react";
+import { defaultColorScheme } from "@/components/dsfr/defaultColorScheme";
+import { StartDsfr } from "@/components/dsfr/StartDsfr";
 
 export default function RootLayout({ children }: { children: JSX.Element }) {
   return (
