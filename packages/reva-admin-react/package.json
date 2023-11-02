@@ -19,7 +19,8 @@
     "next": "14.0.0",
     "next-auth": "^4.24.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "zustand": "^4.4.5"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.0",
