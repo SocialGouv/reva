@@ -289,6 +289,8 @@ input CandidateTypologyInformationsInput {
 }
 
 input UpdateCandidateInput {
+  firstname: String
+  lastname: String
   phone: String
 }
 

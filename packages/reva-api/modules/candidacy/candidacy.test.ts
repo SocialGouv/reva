@@ -103,6 +103,12 @@ test("a user can't modify the account information of another candidate", async (
 });
 
 test("a candidate can modify his account information", async () => {
+  const newCandidate = {
+    firstname: "John",
+    lastname: "Doe",
+    phone: "0612345678",
+  };
+
   const resp = await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -114,13 +120,24 @@ test("a candidate can modify his account information", async () => {
       endpoint: "candidacy_updateContact",
       arguments: {
         candidateId: candidate.id,
-        candidateData: { phone: "0612345678" },
+        candidateData: {
+          firstname: newCandidate.firstname,
+          lastname: newCandidate.lastname,
+          phone: newCandidate.phone,
+        },
       },
-      returnFields: "{phone}",
+      returnFields: "{id,firstname,lastname,phone}",
     },
   });
   expect(resp.statusCode).toEqual(200);
   expect(resp.json().data.candidacy_updateContact).toMatchObject({
-    phone: "0612345678",
+    id: candidate.id,
+    ...newCandidate,
   });
+
+  const updatedCandidate = await prismaClient.candidate.findUnique({
+    where: { id: candidate.id },
+  });
+
+  expect(updatedCandidate).toMatchObject(newCandidate);
 });
