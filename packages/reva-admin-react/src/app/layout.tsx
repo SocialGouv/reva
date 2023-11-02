@@ -61,7 +61,7 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
         id="content"
         className="flex-1 md:bg-gradient-to-r from-[#557AFF] to-[#2400FF] md:pt-16 pb-12"
       >
-        {children}
+        {status == "authenticated" ? children : null}
       </main>
       <Footer />
     </div>
