@@ -5,7 +5,7 @@ const config: CodegenConfig = {
   schema: "../reva-api/modules/generated-graphql-schema.graphql",
   documents: "src/**/*.tsx",
   generates: {
-    "src/graphql/generated": {
+    "src/graphql/generated/": {
       preset: "client",
       plugins: [],
     },

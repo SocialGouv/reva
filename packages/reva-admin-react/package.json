@@ -13,7 +13,9 @@
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^0.78.2",
+    "@tanstack/react-query": "^5.4.3",
     "graphql": "^16.8.1",
+    "graphql-request": "^6.1.0",
     "next": "14.0.0",
     "next-auth": "^4.24.4",
     "react": "^18",
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.0",
+    "@graphql-codegen/client-preset": "4.1.0",
     "@parcel/watcher": "^2.3.0",
     "@types/node": "^20",
     "@types/react": "^18",
@@ -33,7 +36,6 @@
     "prettier": "^3.0.3",
     "sass": "^1.69.5",
     "tailwindcss": "^3",
-    "typescript": "^5.2.2",
-    "@graphql-codegen/client-preset": "4.1.0"
+    "typescript": "^5.2.2"
   }
 }

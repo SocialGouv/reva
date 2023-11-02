@@ -10,8 +10,11 @@ import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import { SessionProvider, signIn, useSession } from "next-auth/react";
 import { defaultColorScheme } from "@/components/dsfr/defaultColorScheme";
 import { StartDsfr } from "@/components/dsfr/StartDsfr";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export default function RootLayout({ children }: { children: JSX.Element }) {
+  const queryClient = new QueryClient();
+
   return (
     <html {...getHtmlAttributes({ defaultColorScheme })}>
       <head>
@@ -21,7 +24,9 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
       <body>
         <DsfrProvider>
           <SessionProvider>
-            <LayoutContent>{children}</LayoutContent>
+            <QueryClientProvider client={queryClient}>
+              <LayoutContent>{children}</LayoutContent>
+            </QueryClientProvider>
           </SessionProvider>
         </DsfrProvider>
       </body>
