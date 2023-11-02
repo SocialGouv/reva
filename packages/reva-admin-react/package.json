@@ -3,21 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "only-include-used-icons",
+    "predev": "only-include-used-icons && graphql-codegen --config codegen.ts",
     "dev": "next dev -p 3003",
-    "prebuild": "only-include-used-icons",
+    "prebuild": "only-include-used-icons && graphql-codegen --config codegen.ts",
     "build": "next build",
     "start": "next start -p 3003",
-    "lint": "next lint"
+    "lint": "next lint",
+    "graphql:generate": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^0.78.2",
+    "graphql": "^16.8.1",
     "next": "14.0.0",
     "next-auth": "^4.24.4",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "5.0.0",
+    "@parcel/watcher": "^2.3.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -29,6 +33,7 @@
     "prettier": "^3.0.3",
     "sass": "^1.69.5",
     "tailwindcss": "^3",
-    "typescript": "^5"
+    "typescript": "^5.2.2",
+    "@graphql-codegen/client-preset": "4.1.0"
   }
 }
