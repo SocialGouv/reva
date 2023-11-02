@@ -9,6 +9,8 @@ export const updateContactOfCandidacy = async (
   params: {
     candidateId: string;
     candidateData: {
+      firstname: string;
+      lastname: string;
       phone: string;
     };
   }
@@ -28,6 +30,8 @@ export const updateContactOfCandidacy = async (
     return prismaClient.candidate.update({
       where: { id: params.candidateId },
       data: {
+        firstname: params.candidateData.firstname,
+        lastname: params.candidateData.lastname,
         phone: params.candidateData.phone,
       },
     });

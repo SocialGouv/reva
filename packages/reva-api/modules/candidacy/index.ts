@@ -369,7 +369,10 @@ const unsafeResolvers = {
 
     candidacy_updateContact: async (
       _: unknown,
-      params: { candidateId: string; candidateData: { phone: string } },
+      params: {
+        candidateId: string;
+        candidateData: { firstname: string; lastname: string; phone: string };
+      },
       context: GraphqlContext
     ) => {
       try {

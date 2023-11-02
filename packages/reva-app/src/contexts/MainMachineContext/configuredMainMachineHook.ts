@@ -192,7 +192,11 @@ export const useConfiguredMainMachine = () => {
 
             return updateContact(client as ApolloClient<object>)({
               candidateId: context.contact?.candidateId || "unknown candidate",
-              phone: event.contact.phone,
+              candidateData: {
+                firstname: event.contact.firstname,
+                lastname: event.contact.lastname,
+                phone: event.contact.phone,
+              },
             });
           },
           submitCandidacy: async (context, event) => {

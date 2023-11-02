@@ -134,7 +134,6 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           <FormOptionalFieldsDisclaimer className="mb-4" />
           <Input
             label="Prénom"
-            disabled={hasCandidacy}
             nativeInputProps={{
               name: "firstname",
               ref: firstnameRef,
@@ -145,7 +144,6 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           />
           <Input
             label="Nom"
-            disabled={hasCandidacy}
             nativeInputProps={{
               name: "lastname",
               ref: lastnameRef,

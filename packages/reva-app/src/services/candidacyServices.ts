@@ -209,10 +209,13 @@ export const askForRegistration =
   };
 
 const UPDATE_CONTACT = gql`
-  mutation update_contact($candidateId: ID!, $phone: String) {
+  mutation update_contact(
+    $candidateId: ID!
+    $candidateData: UpdateCandidateInput!
+  ) {
     candidacy_updateContact(
       candidateId: $candidateId
-      candidateData: { phone: $phone }
+      candidateData: $candidateData
     ) {
       id
       firstname
@@ -227,10 +230,14 @@ export const updateContact =
   (client: ApolloClient<object>) =>
   async ({
     candidateId,
-    phone,
+    candidateData,
   }: {
     candidateId: string;
-    phone: null | string;
+    candidateData: {
+      firstname: string | null;
+      lastname: string | null;
+      phone: string | null;
+    };
   }) => {
     const { data } = await client.mutate({
       context: {
@@ -239,7 +246,7 @@ export const updateContact =
         },
       },
       mutation: UPDATE_CONTACT,
-      variables: { candidateId, phone },
+      variables: { candidateId, candidateData },
     });
 
     return data.candidacy_updateContact;
