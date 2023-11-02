@@ -166,33 +166,18 @@ candidacy_updateGoals requiredArgs____ =
     Object.selectionForField "Int" "candidacy_updateGoals" [ Argument.required "deviceId" requiredArgs____.deviceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "goals" requiredArgs____.goals (Admin.InputObject.encodeCandidateGoalInput |> Encode.list) ] Decode.int
 
 
-type alias CandidacyUpdateContactOptionalArguments =
-    { email : OptionalArgument String
-    , phone : OptionalArgument String
-    }
-
-
 type alias CandidacyUpdateContactRequiredArguments =
-    { deviceId : Data.Scalar.Id
-    , candidacyId : Data.Scalar.Id
+    { candidateId : Data.Scalar.Id
+    , candidateData : Admin.InputObject.UpdateCandidateInput
     }
 
 
 candidacy_updateContact :
-    (CandidacyUpdateContactOptionalArguments -> CandidacyUpdateContactOptionalArguments)
-    -> CandidacyUpdateContactRequiredArguments
-    -> SelectionSet decodesTo Admin.Object.Candidacy
+    CandidacyUpdateContactRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidate
     -> SelectionSet (Maybe decodesTo) RootMutation
-candidacy_updateContact fillInOptionals____ requiredArgs____ object____ =
-    let
-        filledInOptionals____ =
-            fillInOptionals____ { email = Absent, phone = Absent }
-
-        optionalArgs____ =
-            [ Argument.optional "email" filledInOptionals____.email Encode.string, Argument.optional "phone" filledInOptionals____.phone Encode.string ]
-                |> List.filterMap Basics.identity
-    in
-    Object.selectionForCompositeField "candidacy_updateContact" (optionalArgs____ ++ [ Argument.required "deviceId" requiredArgs____.deviceId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ]) object____ (Basics.identity >> Decode.nullable)
+candidacy_updateContact requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_updateContact" [ Argument.required "candidateId" requiredArgs____.candidateId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "candidateData" requiredArgs____.candidateData Admin.InputObject.encodeUpdateCandidateInput ] object____ (Basics.identity >> Decode.nullable)
 
 
 type alias CandidacyArchiveByIdOptionalArguments =
