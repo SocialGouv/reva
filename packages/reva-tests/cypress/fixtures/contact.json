@@ -2,8 +2,10 @@
   "data": {
     "candidacy_updateContact": {
       "id": "device1",
+      "firstname": "John 2",
+      "lastname": "Doe 2",
       "email": "email2@example.com",
-      "phone": "06-01-02-03-05"
+      "phone": "06 01 02 03 05"
     }
   }
 }

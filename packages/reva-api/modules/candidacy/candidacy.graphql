@@ -292,6 +292,7 @@ input UpdateCandidateInput {
   firstname: String
   lastname: String
   phone: String
+  email: String
 }
 
 input AppointmentInformationsInput {

@@ -1,9 +1,12 @@
+import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
+
 import { prismaClient } from "../../../prisma/client";
 import { Candidate } from "../../candidate/candidate.types";
 
 export const updateContactOfCandidacy = async (
   context: {
     hasRole: (role: string) => boolean;
+    keycloakAdmin: KeycloakAdminClient;
     keycloakId: string;
   },
   params: {
@@ -12,30 +15,47 @@ export const updateContactOfCandidacy = async (
       firstname: string;
       lastname: string;
       phone: string;
+      email: string;
     };
   }
 ): Promise<Candidate> => {
+  const { candidateId, candidateData } = params;
   const candidateToUpdate = await prismaClient.candidate.findUnique({
-    where: { id: params.candidateId },
+    where: { id: candidateId },
   });
 
-  if (!candidateToUpdate) {
-    throw new Error(`Compte candidat ${params.candidateId} non trouvé`);
-  }
-
-  if (
-    context.hasRole("admin") ||
-    context.keycloakId == candidateToUpdate.keycloakId
-  ) {
-    return prismaClient.candidate.update({
-      where: { id: params.candidateId },
-      data: {
-        firstname: params.candidateData.firstname,
-        lastname: params.candidateData.lastname,
-        phone: params.candidateData.phone,
-      },
-    });
-  } else {
+  if (context.keycloakId != candidateToUpdate?.keycloakId) {
     throw new Error("Utilisateur non autorisé");
   }
+
+  if (!candidateToUpdate) {
+    throw new Error(`Ce candidat n'existe pas`);
+  }
+
+  const candidateWithEmail = await prismaClient.candidate.findUnique({
+    where: { email: candidateData.email },
+  });
+
+  if (candidateWithEmail && candidateWithEmail.id != candidateToUpdate.id) {
+    throw new Error(
+      `Vous ne pouvez pas utiliser ${candidateData.email} comme nouvelle adresse email`
+    );
+  }
+
+  if (process.env.KEYCLOAK_APP_REALM) {
+    await context.keycloakAdmin.users.update(
+      {
+        id: context.keycloakId,
+        realm: process.env.KEYCLOAK_APP_REALM,
+      },
+      {
+        email: candidateData.email,
+      }
+    );
+  }
+
+  return prismaClient.candidate.update({
+    where: { id: candidateId },
+    data: candidateData,
+  });
 };

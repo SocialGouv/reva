@@ -166,7 +166,6 @@ export const ProjectContact = ({ mainService }: ProjectContactProps) => {
           />
           <Input
             label="Email"
-            disabled={hasCandidacy}
             hintText="Format attendu : nom@domaine.fr"
             nativeInputProps={{
               name: "email",
