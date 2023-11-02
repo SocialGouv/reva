@@ -10,7 +10,7 @@
         "firstname": "John",
         "lastname": "Doe",
         "email": "email@example.com",
-        "phone": "06-01-02-03-04",
+        "phone": "06 01 02 03 04",
         "candidacy": {
           "id": "c1",
           "certificationId": null,

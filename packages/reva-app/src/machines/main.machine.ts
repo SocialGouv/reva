@@ -587,8 +587,7 @@ export const mainMachine =
                   onError: [
                     {
                       actions: assign({
-                        error: (_, _event) =>
-                          "Une erreur est survenue lors de l'enregistrement de vos informations de contact.",
+                        error: (_, event) => event.data.message,
                       }),
                       target: "idle",
                     },

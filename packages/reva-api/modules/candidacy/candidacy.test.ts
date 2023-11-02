@@ -107,6 +107,7 @@ test("a candidate can modify his account information", async () => {
     firstname: "John",
     lastname: "Doe",
     phone: "0612345678",
+    email: "john.doe@example.com",
   };
 
   const resp = await injectGraphql({
@@ -124,9 +125,10 @@ test("a candidate can modify his account information", async () => {
           firstname: newCandidate.firstname,
           lastname: newCandidate.lastname,
           phone: newCandidate.phone,
+          email: newCandidate.email,
         },
       },
-      returnFields: "{id,firstname,lastname,phone}",
+      returnFields: "{id,firstname,lastname,phone,email}",
     },
   });
   expect(resp.statusCode).toEqual(200);
