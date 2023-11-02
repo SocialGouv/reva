@@ -893,6 +893,44 @@ encodeUpdateAccountInput input____ =
         [ ( "email", Encode.string input____.email |> Just ), ( "firstname", Encode.string |> Encode.optional input____.firstname ), ( "lastname", Encode.string |> Encode.optional input____.lastname ) ]
 
 
+buildUpdateCandidateInput :
+    (UpdateCandidateInputOptionalFields -> UpdateCandidateInputOptionalFields)
+    -> UpdateCandidateInput
+buildUpdateCandidateInput fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { firstname = Absent, lastname = Absent, phone = Absent, email = Absent }
+    in
+    { firstname = optionals____.firstname, lastname = optionals____.lastname, phone = optionals____.phone, email = optionals____.email }
+
+
+type alias UpdateCandidateInputOptionalFields =
+    { firstname : OptionalArgument String
+    , lastname : OptionalArgument String
+    , phone : OptionalArgument String
+    , email : OptionalArgument String
+    }
+
+
+{-| Type for the UpdateCandidateInput input object.
+-}
+type alias UpdateCandidateInput =
+    { firstname : OptionalArgument String
+    , lastname : OptionalArgument String
+    , phone : OptionalArgument String
+    , email : OptionalArgument String
+    }
+
+
+{-| Encode a UpdateCandidateInput into a value that can be used as an argument.
+-}
+encodeUpdateCandidateInput : UpdateCandidateInput -> Value
+encodeUpdateCandidateInput input____ =
+    Encode.maybeObject
+        [ ( "firstname", Encode.string |> Encode.optional input____.firstname ), ( "lastname", Encode.string |> Encode.optional input____.lastname ), ( "phone", Encode.string |> Encode.optional input____.phone ), ( "email", Encode.string |> Encode.optional input____.email ) ]
+
+
 buildUpdateCertificationAuthorityInput :
     UpdateCertificationAuthorityInputRequiredFields
     -> (UpdateCertificationAuthorityInputOptionalFields -> UpdateCertificationAuthorityInputOptionalFields)
