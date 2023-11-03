@@ -5,6 +5,51 @@ import KeycloakProvider, {
 } from "next-auth/providers/keycloak";
 import { OAuthConfig } from "next-auth/providers/oauth";
 
+/**
+ * Takes a token, and returns a new token with updated
+ * `accessToken` and `accessTokenExpires`. If an error occurs,
+ * returns the old token and an error property
+ */
+async function refreshAccessToken(token: JWT) {
+  try {
+    const url = `${process.env.KEYCLOAK_URL}/realms/${process.env.KEYCLOAK_REALM}/protocol/openid-connect/token`;
+    const params = new URLSearchParams({
+      client_id: process.env.KEYCLOAK_CLIENT_ID || "",
+      client_secret: process.env.KEYCLOAK_CLIENT_SECRET || "",
+      grant_type: "refresh_token",
+      refresh_token: token.refreshToken as string,
+    });
+
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      method: "POST",
+      body: params,
+    });
+
+    const refreshedTokens = await response.json();
+
+    if (!response.ok) {
+      throw refreshedTokens;
+    }
+
+    return {
+      ...token,
+      accessToken: refreshedTokens.access_token,
+      accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
+      refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token
+    };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      ...token,
+      error: "RefreshAccessTokenError",
+    };
+  }
+}
+
 const authOptions: AuthOptions = {
   providers: [
     KeycloakProvider({
@@ -17,18 +62,33 @@ const authOptions: AuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, account }) {
-      if (account) {
-        token.id_token = account.id_token;
-        token.provider = account.provider;
-        token.access_token = account.access_token;
+    async jwt({ token, account, user }) {
+      // Initial sign in
+      if (account && user) {
+        return {
+          id_token: account.id_token,
+          provider: account.provider,
+          accessToken: account.access_token,
+          accessTokenExpires:
+            Date.now() + (account.expires_in as number) * 1000,
+          refreshToken: account.refresh_token,
+          user,
+        };
       }
-      return token;
+
+      // Return previous token if the access token has not expired yet
+      if (Date.now() < (token.accessTokenExpires as number)) {
+        return token;
+      }
+
+      // Access token has expired, try to update it
+      return refreshAccessToken(token);
     },
     async session({ session, token }) {
       if (session) {
         session = Object.assign({}, session, {
-          access_token: token.access_token,
+          accessToken: token.accessToken,
+          error: token.error,
         });
       }
       return session;

@@ -4,8 +4,9 @@ import { GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
 import { useQuery } from "@tanstack/react-query";
 import request from "graphql-request";
+import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
-
+import { Button } from "@codegouvfr/react-dsfr/Button";
 const candidaciesQuery = graphql(`
   query getCandidacies {
     getCandidacies(limit: 10) {
@@ -19,26 +20,30 @@ const candidaciesQuery = graphql(`
 export default function Home() {
   const { activeFeatures } = useFeatureflipping();
   const { data: session } = useSession();
-
-  const { data: candidacies } = useQuery({
+  const { data: candidacies, refetch } = useQuery({
     queryKey: ["candidacies"],
     queryFn: () =>
       request({
         url: GRAPHQL_API_URL,
         document: candidaciesQuery,
         requestHeaders: {
-          authorization: `Bearer ${(session as any).access_token}`,
+          authorization: `Bearer ${
+            (session as Session & { accessToken: string }).accessToken
+          }`,
         },
       }),
   });
 
-  console.log({ session });
-
   return (
-    <div className="text-white ml-4 flex flex-col">
+    <div className="text-white ml-4 flex flex-col gap-4">
       <div>Active features: {activeFeatures.join(", ")}</div>
       <div>
         Candidacies:
+        <Button className="ml-2" onClick={() => refetch()}>
+          refetch
+        </Button>
+      </div>
+      <div>
         <div>
           {candidacies?.getCandidacies.rows.map((r) => (
             <div key={r.id}>{r.id}</div>

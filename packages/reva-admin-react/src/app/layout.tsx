@@ -11,6 +11,7 @@ import { SessionProvider, signIn, useSession } from "next-auth/react";
 import { defaultColorScheme } from "@/components/dsfr/defaultColorScheme";
 import { StartDsfr } from "@/components/dsfr/StartDsfr";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 export default function RootLayout({ children }: { children: JSX.Element }) {
   const queryClient = new QueryClient();
@@ -23,7 +24,7 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
       </head>
       <body>
         <DsfrProvider>
-          <SessionProvider>
+          <SessionProvider refetchInterval={30}>
             <QueryClientProvider client={queryClient}>
               <LayoutContent>{children}</LayoutContent>
             </QueryClientProvider>
@@ -40,6 +41,13 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
   if (status === "unauthenticated") {
     signIn("keycloak");
   }
+
+  //refresh token expiration error handling
+  useEffect(() => {
+    if ((session as { error?: string })?.error === "RefreshAccessTokenError") {
+      signIn("keycloak");
+    }
+  }, [session]);
 
   return (
     <div className="w-full min-h-screen flex flex-col">
