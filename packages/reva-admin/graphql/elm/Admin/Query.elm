@@ -158,11 +158,24 @@ getBasicSkills object____ =
     Object.selectionForCompositeField "getBasicSkills" [] object____ (Basics.identity >> Decode.list)
 
 
+type alias CandidacyCandidacyCountByStatusOptionalArguments =
+    { searchFilter : OptionalArgument String }
+
+
 candidacy_candidacyCountByStatus :
-    SelectionSet decodesTo Admin.Object.CandidacyCountByStatus
+    (CandidacyCandidacyCountByStatusOptionalArguments -> CandidacyCandidacyCountByStatusOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.CandidacyCountByStatus
     -> SelectionSet decodesTo RootQuery
-candidacy_candidacyCountByStatus object____ =
-    Object.selectionForCompositeField "candidacy_candidacyCountByStatus" [] object____ Basics.identity
+candidacy_candidacyCountByStatus fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { searchFilter = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "candidacy_candidacyCountByStatus" optionalArgs____ object____ Basics.identity
 
 
 candidate_getCandidateWithCandidacy :

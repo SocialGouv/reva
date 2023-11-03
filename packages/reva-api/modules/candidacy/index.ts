@@ -241,12 +241,15 @@ const unsafeResolvers = {
     },
     candidacy_candidacyCountByStatus: (
       _: unknown,
-      _params: unknown,
+      _params: {
+        searchFilter?: string;
+      },
       context: GraphqlContext
     ) =>
       getCandidacyCountByStatus({
         hasRole: context.auth!.hasRole,
         IAMId: context.auth!.userInfo!.sub,
+        searchFilter: _params.searchFilter,
       }),
   },
   Mutation: {

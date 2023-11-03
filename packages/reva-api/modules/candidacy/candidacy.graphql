@@ -253,7 +253,9 @@ type Query {
   ): [Organism!]!
   getCompanionsForCandidacy(candidacyId: UUID!): [Organism!]!
   getBasicSkills: [BasicSkill!]!
-  candidacy_candidacyCountByStatus: CandidacyCountByStatus!
+  candidacy_candidacyCountByStatus(
+    searchFilter: String
+  ): CandidacyCountByStatus!
 }
 
 # MUTATIONS

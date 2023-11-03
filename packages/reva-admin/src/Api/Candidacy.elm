@@ -89,10 +89,17 @@ takeOver endpointGraphql token toMsg candidacyId =
 getCandidacyCountByStatus :
     String
     -> Token
+    -> Maybe String
     -> (RemoteData (List String) Data.Candidacy.CandidacyCountByStatus -> msg)
     -> Cmd msg
-getCandidacyCountByStatus endpointGraphql token toMsg =
-    Query.candidacy_candidacyCountByStatus candidacyCountByStatusSelection
+getCandidacyCountByStatus endpointGraphql token searchFilter toMsg =
+    Query.candidacy_candidacyCountByStatus
+        (\optionals ->
+            { optionals
+                | searchFilter = OptionalArgument.fromMaybe searchFilter
+            }
+        )
+        candidacyCountByStatusSelection
         |> Auth.makeQuery "getCandidacyCountByStatus" endpointGraphql token toMsg
 
 

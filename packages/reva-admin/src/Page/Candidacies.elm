@@ -100,7 +100,7 @@ init context statusFilter page =
         defaultCmd =
             Cmd.batch
                 [ Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse page (Just statusFilter) defaultModel.filters.search
-                , Api.Candidacy.getCandidacyCountByStatus context.endpoint context.token GotCandidacyCountByStatus
+                , Api.Candidacy.getCandidacyCountByStatus context.endpoint context.token defaultModel.filters.search GotCandidacyCountByStatus
                 ]
     in
     ( defaultModel, defaultCmd )
@@ -467,7 +467,10 @@ update context msg model =
                 | filters = { filters | search = model.state.search, page = 1 }
                 , state = model.state |> withCandidacyPage Loading
               }
-            , Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse 1 (Just model.filters.status) model.state.search
+            , Cmd.batch
+                [ Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse 1 (Just model.filters.status) model.state.search
+                , Api.Candidacy.getCandidacyCountByStatus context.endpoint context.token model.state.search GotCandidacyCountByStatus
+                ]
             )
 
         UserClearedSearch ->
@@ -482,7 +485,10 @@ update context msg model =
                         |> withCandidacyPage Loading
                         |> withSearch Nothing
               }
-            , Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse 1 (Just model.filters.status) Nothing
+            , Cmd.batch
+                [ Api.Candidacy.getCandidacies context.endpoint context.token GotCandidaciesResponse 1 (Just model.filters.status) Nothing
+                , Api.Candidacy.getCandidacyCountByStatus context.endpoint context.token Nothing GotCandidacyCountByStatus
+                ]
             )
 
         GotCandidacyCountByStatus remoteCandidacyCountByStatus ->
