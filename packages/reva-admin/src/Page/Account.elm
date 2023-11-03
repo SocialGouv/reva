@@ -117,7 +117,7 @@ formOrganism _ _ =
                 |> List.map (\( id, status ) -> ( id, Data.Form.Organism.organismStatusToString status ))
     in
     { elements =
-        [ ( keys.label, Form.InputRequired "Libellé" )
+        [ ( keys.label, Form.InputRequired "Raison sociale" )
         , ( keys.contactAdministrativeEmail, Form.EmailRequired "Email de contact" )
         , ( keys.contactAdministrativePhone, Form.Input "Téléphone" )
         , ( keys.website, Form.Input "Website" )
@@ -136,7 +136,7 @@ formCertificationAuthority _ _ =
             Data.Form.CertificationAuthority.keys
     in
     { elements =
-        [ ( keys.label, Form.InputRequired "Libellé" )
+        [ ( keys.label, Form.InputRequired "Raison sociale" )
         , ( keys.contactFullName, Form.Input "Nom complet" )
         , ( keys.contactEmail, Form.EmailRequired "Email de contact" )
         ]
