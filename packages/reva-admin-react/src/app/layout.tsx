@@ -35,7 +35,7 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
 }
 
 const LayoutContent = ({ children }: { children: JSX.Element }) => {
-  const { status } = useSession();
+  const { status, data: session } = useSession();
 
   if (status === "unauthenticated") {
     signIn("keycloak");

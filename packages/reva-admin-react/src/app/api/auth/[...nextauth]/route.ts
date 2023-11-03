@@ -21,10 +21,20 @@ const authOptions: AuthOptions = {
       if (account) {
         token.id_token = account.id_token;
         token.provider = account.provider;
+        token.access_token = account.access_token;
       }
       return token;
     },
+    async session({ session, token }) {
+      if (session) {
+        session = Object.assign({}, session, {
+          access_token: token.access_token,
+        });
+      }
+      return session;
+    },
   },
+
   events: {
     async signOut({ token }: { token: JWT }) {
       if (token.provider === "keycloak") {
