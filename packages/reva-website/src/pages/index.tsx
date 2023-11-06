@@ -1,4 +1,3 @@
-import { AdmissibleSectorsInfoPanel } from "@/components/admissible-sectors-info-panel/AdmissibleSectorsInfoPanel";
 import { TrackableButton } from "@/components/analytics/trackable-button/TrackableButton";
 import { CertificateAutocomplete } from "@/components/candidate-registration/certificate-autocomplete/CertificateAutocomplete";
 import { MainLayout } from "@/components/layout/main-layout/MainLayout";
@@ -7,7 +6,6 @@ import {
   Hexagon,
   SectionParagraph,
 } from "@/components/section-content/SectionContent";
-import { FeatureFlags } from "@/config/config";
 import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
 import Head from "next/head";
 import Image from "next/image";
@@ -144,98 +142,6 @@ export const FaitesValiderVosCompetencesParUnDiplome = () => {
     </section>
   );
 };
-
-const AvenirPro = () => (
-  <section
-    id="avenir-professionnel"
-    className="w-full fr-container mx-auto mt-[80px] lg:flex lg:items-center"
-  >
-    <div className="sm:flex-1 max-w-3xl md:mr-12 basis-1/2">
-      <header>
-        <h1 className="leading-tight text-5xl xl:text-7xl xl:leading-[84px]">
-          Bienvenue sur le portail de la VAE
-        </h1>
-      </header>
-      <h2 className="text-2xl lg:text-3xl mb-10">
-        Découvrez la version beta du portail officiel du service public de la
-        Validation des Acquis de l’Expérience.
-      </h2>
-      <p className="text-xl leading-relaxed">
-        Notre mission est de fournir un espace unique rassemblant candidats et
-        professionnels de la VAE autour d’un nouveau dispositif modernisé,
-        simplifié et sécurisé par la loi n°2022-1598 du 21 décembre 2022.
-      </p>
-    </div>
-    <div className="relative mt-16 -mx-5 max-w-lg basis-1/2">
-      <Image
-        src="/home-page/image-app-screenshots.png"
-        className=""
-        alt=""
-        width={1067}
-        height={969}
-      />
-    </div>
-  </section>
-);
-
-const ValorisationCompetences = () => (
-  <section
-    id="valorisation-competences"
-    className="w-full mt-20 sm:mt-24 bg-dsfrGray-altblueFrance md:bg-[url('/home-page/section-background/polygons-section1.5.svg')] md:bg-cover bg-no-repeat overflow-hidden"
-  >
-    <div className="fr-container mx-auto relative md:flex">
-      <div className="relative flex-1 min-h-[200px] max-w-lg -mt-[60px] md:-mt-[190px]">
-        <Image
-          src="/home-page/image-home-section-1.png"
-          className=""
-          alt=""
-          fill={true}
-          style={{
-            objectFit: "contain",
-          }}
-        />
-      </div>
-      <div className="flex-1 px-5 my-12 md:my-24 md:ml-12">
-        <header>
-          <h1 className="leading-tight text-4xl lg:text-7xl lg:leading-[84px]">
-            Vos expériences ont de la valeur
-          </h1>
-        </header>
-        <h2 className="text-2xl lg:text-3xl mt-8 mb-10">
-          Avec la VAE, faites valider vos compétences par un diplôme.
-        </h2>
-        <AdmissibleSectorsInfoPanel className="mb-4" />
-
-        <div className="flex flex-col xl:flex-row space-y-4 xl:space-y-0 xl:space-x-4 mb-4">
-          <TrackableButton
-            eventTracked={{
-              location: "Accueil",
-              event: "Click sur 'Démarrez un parcours VAE'",
-            }}
-            priority="primary"
-            iconPosition="right"
-            iconId="fr-icon-arrow-right-line"
-            linkProps={{ href: "/app" }}
-            size="large"
-          >
-            Démarrez un parcours
-          </TrackableButton>
-          <TrackableButton
-            eventTracked={{
-              location: "Accueil",
-              event: "Click sur 'En savoir plus sur la VAE'",
-            }}
-            priority="secondary"
-            linkProps={{ href: "/espace-candidat" }}
-            size="large"
-          >
-            En savoir plus sur la VAE
-          </TrackableButton>
-        </div>
-      </div>
-    </div>
-  </section>
-);
 
 const CommentCaMarche = () => (
   <section
@@ -525,14 +431,7 @@ const IndexPage = () => {
           content="Découvrez la version beta du portail officiel du service public de la Validation des Acquis de L’Expérience."
         />
       </Head>
-      {FeatureFlags.CANDIDATE_ORIENTATION === "true" ? (
-        <FaitesValiderVosCompetencesParUnDiplome />
-      ) : (
-        <>
-          <AvenirPro />
-          <ValorisationCompetences />
-        </>
-      )}
+      <FaitesValiderVosCompetencesParUnDiplome />
       <Professionnels />
       <Roadmap />
       <CommentCaMarche />
