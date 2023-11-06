@@ -36,7 +36,6 @@ type alias Flags =
     , baseUrl : String
     , keycloakConfiguration : Decode.Value
     , restApiEndpoint : String
-    , feasibilityFeatureEnabled : Bool
     , franceVaeFinanceModuleFeatureEnabled : Bool
     }
 
@@ -510,7 +509,6 @@ initWithoutToken flags url key =
                     flags.restApiEndpoint
                     False
                     False
-                    flags.feasibilityFeatureEnabled
                     flags.franceVaeFinanceModuleFeatureEnabled
                     []
             , page = NotLoggedIn redirectTo

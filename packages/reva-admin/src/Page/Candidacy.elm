@@ -177,7 +177,7 @@ view context model =
                                     NavigationSteps.archiveView context.baseUrl candidacy
 
                             else
-                                NavigationSteps.view context.feasibilityFeatureEnabled (List.member "EDIT_CANDIDACY_AFTER_SUBMISSION" context.activeFeatures) context.baseUrl candidacy
+                                NavigationSteps.view (List.member "EDIT_CANDIDACY_AFTER_SUBMISSION" context.activeFeatures) context.baseUrl candidacy
                     ]
 
                 _ ->

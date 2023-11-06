@@ -14,8 +14,8 @@ import View.Date
 import View.Steps
 
 
-view : Bool -> Bool -> String -> Candidacy -> Html msg
-view feasibilityFeatureEnabled trainingEnabledAfterFirstAppointmentFeatureEnabled baseUrl candidacy =
+view : Bool -> String -> Candidacy -> Html msg
+view trainingEnabledAfterFirstAppointmentFeatureEnabled baseUrl candidacy =
     let
         tab =
             View.Candidacy.Tab.Tab candidacy.id
@@ -80,7 +80,7 @@ view feasibilityFeatureEnabled trainingEnabledAfterFirstAppointmentFeatureEnable
         showFeasibilityMenuEntry =
             case candidacy.organism of
                 Just organism ->
-                    organism.typology /= Experimentation && feasibilityFeatureEnabled
+                    organism.typology /= Experimentation
 
                 Nothing ->
                     False
