@@ -11,17 +11,18 @@ const activeFeaturesQuery = graphql(`
 
 const useFeatureFlippingStore = create<{
   activeFeatures: string[];
-  initialized: boolean;
+  status: "NOT_INITIALIZED" | "INITIALIZED" | "LOADING";
   init: () => Promise<void>;
 }>((set, get) => ({
   activeFeatures: [],
-  initialized: false,
+  status: "NOT_INITIALIZED",
   init: async () => {
-    if (!get().initialized) {
+    if (get().status === "NOT_INITIALIZED") {
+      set({ status: "LOADING" });
       const result = await request(GRAPHQL_API_URL, activeFeaturesQuery);
       set({
         activeFeatures: result.activeFeaturesForConnectedUser,
-        initialized: true,
+        status: "INITIALIZED",
       });
     }
   },
