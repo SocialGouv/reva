@@ -24,6 +24,7 @@ export const Header = () => (
       {
         buttonProps: {
           onClick: () => signOut({ redirect: false }),
+          className: "!text-sm !px-3 !py-1 !mb-4 !mx-1",
         },
         iconId: "ri-logout-box-r-line",
         text: "Se déconnecter",
