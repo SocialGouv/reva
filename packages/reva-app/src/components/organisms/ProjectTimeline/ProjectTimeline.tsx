@@ -45,12 +45,6 @@ export const useProjectTimeline = () => {
     (!state.context.firstAppointmentOccuredAt ||
       isBefore(new Date(), state.context.firstAppointmentOccuredAt));
 
-  const candidacyStatusAllowsEdition = state.context.activeFeatures.includes(
-    "EDIT_CANDIDACY_AFTER_SUBMISSION"
-  )
-    ? canEditCandidacyAfterSubmission
-    : state.context.candidacyStatus === "PROJET";
-
   const candidacyAlreadySubmitted = state.context.candidacyStatus !== "PROJET";
 
   const getTimelineElementStatus = ({
@@ -60,7 +54,7 @@ export const useProjectTimeline = () => {
     previousElementFilled: boolean;
     currentElementFilled: boolean;
   }) =>
-    candidacyStatusAllowsEdition
+    canEditCandidacyAfterSubmission
       ? previousElementFilled || candidacyAlreadySubmitted
         ? currentElementFilled || candidacyAlreadySubmitted
           ? "editable"

@@ -14,8 +14,8 @@ import View.Date
 import View.Steps
 
 
-view : Bool -> String -> Candidacy -> Html msg
-view trainingEnabledAfterFirstAppointmentFeatureEnabled baseUrl candidacy =
+view : String -> Candidacy -> Html msg
+view baseUrl candidacy =
     let
         tab =
             View.Candidacy.Tab.Tab candidacy.id
@@ -24,7 +24,7 @@ view trainingEnabledAfterFirstAppointmentFeatureEnabled baseUrl candidacy =
             Just <| Route.href baseUrl <| Route.Candidacy (tab View.Candidacy.Tab.Meetings)
 
         trainingLink =
-            if not trainingEnabledAfterFirstAppointmentFeatureEnabled || candidacy.firstAppointmentOccuredAt /= Nothing then
+            if candidacy.firstAppointmentOccuredAt /= Nothing then
                 Just <| Route.href baseUrl <| Route.Candidacy (tab View.Candidacy.Tab.Training)
 
             else
@@ -98,7 +98,7 @@ view trainingEnabledAfterFirstAppointmentFeatureEnabled baseUrl candidacy =
                 WITHOUT_BUTTON
 
         trainingMenuEntryStatus =
-            if List.member (candidacyStatus candidacy) [ PriseEnCharge ] && (not trainingEnabledAfterFirstAppointmentFeatureEnabled || candidacy.firstAppointmentOccuredAt /= Nothing) then
+            if List.member (candidacyStatus candidacy) [ PriseEnCharge ] && candidacy.firstAppointmentOccuredAt /= Nothing then
                 WITH_EDIT_BUTTON
 
             else

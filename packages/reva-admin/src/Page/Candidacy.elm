@@ -56,7 +56,6 @@ import Page.Form.ExamInfo
 import Page.Form.Feasibility
 import Page.Form.FundingRequestUniFvae
 import Page.Form.FundingRequestUniReva
-import Page.Form.OldAppointment
 import Page.Form.PaymentRequest
 import Page.Form.PaymentUploads
 import Page.Form.Training
@@ -177,7 +176,7 @@ view context model =
                                     NavigationSteps.archiveView context.baseUrl candidacy
 
                             else
-                                NavigationSteps.view (List.member "EDIT_CANDIDACY_AFTER_SUBMISSION" context.activeFeatures) context.baseUrl candidacy
+                                NavigationSteps.view context.baseUrl candidacy
                     ]
 
                 _ ->
@@ -525,29 +524,16 @@ updateTab context tab ( model, cmd ) =
         ( View.Candidacy.Tab.Meetings, Success _ ) ->
             let
                 ( formModel, formCmd ) =
-                    if List.member "EDIT_CANDIDACY_AFTER_SUBMISSION" context.activeFeatures then
-                        Form.updateForm context
-                            { form = Page.Form.Appointment.form
-                            , onLoad = Just <| Api.Form.Appointment.get tab.candidacyId
-                            , onSave = Nothing
-                            , onSubmit = Api.Form.Appointment.update tab.candidacyId
-                            , onRedirect = pushUrl <| candidacyTab Profile
-                            , onValidate = Data.Form.Appointment.validate
-                            , status = Form.Editable
-                            }
-                            model.form
-
-                    else
-                        Form.updateForm context
-                            { form = Page.Form.OldAppointment.form
-                            , onLoad = Just <| Api.Form.Appointment.get tab.candidacyId
-                            , onSave = Nothing
-                            , onSubmit = Api.Form.Appointment.update tab.candidacyId
-                            , onRedirect = pushUrl <| candidacyTab Profile
-                            , onValidate = \_ _ -> Ok ()
-                            , status = Form.Editable
-                            }
-                            model.form
+                    Form.updateForm context
+                        { form = Page.Form.Appointment.form
+                        , onLoad = Just <| Api.Form.Appointment.get tab.candidacyId
+                        , onSave = Nothing
+                        , onSubmit = Api.Form.Appointment.update tab.candidacyId
+                        , onRedirect = pushUrl <| candidacyTab Profile
+                        , onValidate = Data.Form.Appointment.validate
+                        , status = Form.Editable
+                        }
+                        model.form
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
