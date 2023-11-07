@@ -227,7 +227,9 @@ export const getActiveFeasibilityCountByCategory = async ({
       : "";
     return `select ${select}, count(decision)
             from ${from} 
-            where ${whereClauseAnd} ${whereDecisionAnd} feasibility.is_active = 'true'`;
+            where ${whereClauseAnd} ${whereDecisionAnd} feasibility.is_active = '${
+      decision !== "INCOMPLETE"
+    }'`;
   };
   const countQuery = (decision?: FeasibilityStatus) => {
     if (hasRole("admin")) {
@@ -285,7 +287,7 @@ export const getActiveFeasibilities = async ({
   searchFilter?: string;
 }): Promise<PaginatedListResult<Feasibility>> => {
   let queryWhereClause: Prisma.FeasibilityFindManyArgs["where"] = decision
-    ? { decision, isActive: true }
+    ? { decision, isActive: decision !== "INCOMPLETE" }
     : { isActive: true };
 
   //only list feasibilties linked to the account certification authority
