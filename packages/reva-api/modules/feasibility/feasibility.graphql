@@ -2,6 +2,7 @@ enum FeasibilityDecision {
   PENDING
   REJECTED
   ADMISSIBLE
+  INCOMPLETE
 }
 
 type Feasibility {
@@ -33,6 +34,7 @@ type FeasibilityCountByCategory {
   PENDING: Int!
   REJECTED: Int!
   ADMISSIBLE: Int!
+  INCOMPLETE: Int!
 }
 
 type FeasibilityPage {
@@ -45,12 +47,14 @@ enum FeasibilityCategoryFilter {
   PENDING
   REJECTED
   ADMISSIBLE
+  INCOMPLETE
 }
 
 enum FeasibilityDecisionFilter {
   PENDING
   REJECTED
   ADMISSIBLE
+  INCOMPLETE
 }
 
 type Query {

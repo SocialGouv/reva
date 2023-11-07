@@ -37,3 +37,8 @@ rejected =
 admissible : SelectionSet Int Admin.Object.FeasibilityCountByCategory
 admissible =
     Object.selectionForField "Int" "ADMISSIBLE" [] Decode.int
+
+
+incomplete : SelectionSet Int Admin.Object.FeasibilityCountByCategory
+incomplete =
+    Object.selectionForField "Int" "INCOMPLETE" [] Decode.int

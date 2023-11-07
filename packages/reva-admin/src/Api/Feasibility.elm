@@ -62,6 +62,9 @@ selection =
                     Admin.Enum.FeasibilityDecision.Rejected ->
                         Data.Feasibility.Rejected (Maybe.withDefault "" maybeDecisionComment)
 
+                    Admin.Enum.FeasibilityDecision.Incomplete ->
+                        Data.Feasibility.Incomplete (Maybe.withDefault "" maybeDecisionComment)
+
                     Admin.Enum.FeasibilityDecision.Pending ->
                         Data.Feasibility.Pending
                 )
@@ -162,4 +165,5 @@ feasibilityCountByCategorySelection =
         |> with Admin.Object.FeasibilityCountByCategory.all
         |> with Admin.Object.FeasibilityCountByCategory.pending
         |> with Admin.Object.FeasibilityCountByCategory.admissible
+        |> with Admin.Object.FeasibilityCountByCategory.incomplete
         |> with Admin.Object.FeasibilityCountByCategory.rejected

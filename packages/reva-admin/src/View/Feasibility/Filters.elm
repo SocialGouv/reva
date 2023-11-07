@@ -33,6 +33,9 @@ view feasibilityCountByCategory filters context =
                 FeasibilityCategoryFilter.Rejected ->
                     feasibilityCountByCategory.rejected
 
+                FeasibilityCategoryFilter.Incomplete ->
+                    feasibilityCountByCategory.incomplete
+
                 _ ->
                     feasibilityCountByCategory.all
 
@@ -53,6 +56,7 @@ view feasibilityCountByCategory filters context =
                 [ viewFilter FeasibilityCategoryFilter.Pending
                 , viewFilter FeasibilityCategoryFilter.Admissible
                 , viewFilter FeasibilityCategoryFilter.Rejected
+                , viewFilter FeasibilityCategoryFilter.Incomplete
                 ]
             ]
         ]

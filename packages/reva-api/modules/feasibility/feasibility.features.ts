@@ -206,6 +206,7 @@ export const getActiveFeasibilityCountByCategory = async ({
     PENDING: 0,
     ADMISSIBLE: 0,
     REJECTED: 0,
+    INCOMPLETE: 0,
   };
 
   const countQueryHelper = ({
@@ -244,11 +245,12 @@ export const getActiveFeasibilityCountByCategory = async ({
 
   const query = `${countQuery()} 
   UNION ${countQuery("PENDING")} 
-  UNION ${countQuery("ADMISSIBLE")} 
+  UNION ${countQuery("ADMISSIBLE")}
+  UNION ${countQuery("INCOMPLETE")}
   UNION ${countQuery("REJECTED")}`;
 
   type DecisionWithoutIncomplete = //can't use Omit here since it loses information and mess up the array indexing bellow
-    "ALL" | "PENDING" | "REJECTED" | "ADMISSIBLE";
+    "ALL" | "PENDING" | "REJECTED" | "ADMISSIBLE" | "INCOMPLETE";
 
   const feasibilityCountByStatusFromDb: {
     decision: DecisionWithoutIncomplete;

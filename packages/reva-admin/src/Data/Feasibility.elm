@@ -57,6 +57,7 @@ type alias FeasibilityCountByCategory =
     { all : Int
     , pending : Int
     , admissible : Int
+    , incomplete : Int
     , rejected : Int
     }
 
@@ -72,6 +73,9 @@ feasibilityCategoryFilterToReadableString categoryFilter =
 
         FeasibilityCategoryFilter.Rejected ->
             "Dossiers non recevables"
+
+        FeasibilityCategoryFilter.Incomplete ->
+            "Dossiers incomplets"
 
         _ ->
             "Tous les dossiers"

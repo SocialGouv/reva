@@ -357,7 +357,7 @@ test("should count 1 pending feasibility for admin user", async () => {
     payload: {
       requestType: "query",
       endpoint: "feasibilityCountByCategory",
-      returnFields: "{ALL,PENDING,ADMISSIBLE,REJECTED}",
+      returnFields: "{ALL,PENDING,ADMISSIBLE,REJECTED,INCOMPLETE}",
     },
   });
   expect(resp.statusCode).toEqual(200);
@@ -367,6 +367,7 @@ test("should count 1 pending feasibility for admin user", async () => {
     PENDING: 1,
     ADMISSIBLE: 0,
     REJECTED: 0,
+    INCOMPLETE: 0,
   });
 });
 

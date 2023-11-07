@@ -11,11 +11,12 @@ type FeasibilityDecisionFilter
     = Pending
     | Rejected
     | Admissible
+    | Incomplete
 
 
 list : List FeasibilityDecisionFilter
 list =
-    [ Pending, Rejected, Admissible ]
+    [ Pending, Rejected, Admissible, Incomplete ]
 
 
 decoder : Decoder FeasibilityDecisionFilter
@@ -32,6 +33,9 @@ decoder =
 
                     "ADMISSIBLE" ->
                         Decode.succeed Admissible
+
+                    "INCOMPLETE" ->
+                        Decode.succeed Incomplete
 
                     _ ->
                         Decode.fail ("Invalid FeasibilityDecisionFilter type, " ++ string ++ " try re-running the @dillonkearns/elm-graphql CLI ")
@@ -51,6 +55,9 @@ toString enum____ =
 
         Admissible ->
             "ADMISSIBLE"
+
+        Incomplete ->
+            "INCOMPLETE"
 
 
 {-| Convert from a String representation to an elm representation enum.
@@ -75,6 +82,9 @@ fromString enumString____ =
 
         "ADMISSIBLE" ->
             Just Admissible
+
+        "INCOMPLETE" ->
+            Just Incomplete
 
         _ ->
             Nothing
