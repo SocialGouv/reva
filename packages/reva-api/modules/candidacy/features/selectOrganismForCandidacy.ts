@@ -4,6 +4,7 @@ import {
   FunctionalError,
 } from "../../shared/error/functionalError";
 import { logger } from "../../shared/logger";
+import { sendPreventOrganismCandidateChangeOrganismEmail } from "../candidacy.mails";
 import { updateOrganism } from "../database/candidacies";
 import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
 
@@ -16,7 +17,13 @@ export const selectOrganismForCandidacy = async ({
 }) => {
   const candidacy = await prismaClient.candidacy.findFirst({
     where: { id: candidacyId },
-    select: { id: true },
+    select: {
+      id: true,
+      organism: true,
+      firstAppointmentOccuredAt: true,
+      certificationsAndRegions: true,
+      candidate: true,
+    },
   });
 
   if (!candidacy) {
@@ -41,6 +48,35 @@ export const selectOrganismForCandidacy = async ({
       where: { id: candidacyId },
       data: { firstAppointmentOccuredAt: null },
     });
+
+    const {
+      candidate,
+      organism,
+      firstAppointmentOccuredAt,
+      certificationsAndRegions,
+    } = candidacy;
+    const activeCertificationsAndRegions = certificationsAndRegions.find(
+      (c) => c.isActive
+    );
+
+    const certification = await prismaClient.certification.findUnique({
+      where: { id: activeCertificationsAndRegions?.certificationId },
+    });
+
+    if (
+      candidate &&
+      organism &&
+      organism?.id != organismId &&
+      certification &&
+      firstAppointmentOccuredAt
+    ) {
+      sendPreventOrganismCandidateChangeOrganismEmail({
+        email: organism.contactAdministrativeEmail,
+        candidateFullName: `${candidate.firstname} ${candidate.lastname}`,
+        certificationName: certification.label,
+        date: firstAppointmentOccuredAt,
+      });
+    }
 
     return updatedCandidacy;
   } catch (e) {
