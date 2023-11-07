@@ -435,7 +435,11 @@ export const mainMachine =
               src: "updateCertification",
               onDone: [
                 {
-                  actions: ["submitCertification", "resetOrganisms"],
+                  actions: [
+                    "submitCertification",
+                    "resetOrganisms",
+                    "resetFirstAppointmentOccuredAt",
+                  ],
                   target: "#mainMachine.projectHome.ready",
                 },
               ],
@@ -762,6 +766,7 @@ export const mainMachine =
                                 o.id === event.data.organism?.selectedOrganismId
                             ),
                         }),
+                        "resetFirstAppointmentOccuredAt",
                       ],
                       target: "leave",
                     },
@@ -1138,6 +1143,9 @@ export const mainMachine =
           }),
           sendErrorToSentry: (_, event: any) =>
             Sentry.captureException(event.data),
+          resetFirstAppointmentOccuredAt: assign({
+            firstAppointmentOccuredAt: (_) => undefined,
+          }),
         },
         guards: {
           hasCandidacy: (context, _event) => {
