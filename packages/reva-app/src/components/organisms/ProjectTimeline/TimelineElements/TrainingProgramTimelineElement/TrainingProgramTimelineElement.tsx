@@ -5,14 +5,13 @@ import { useMainMachineContext } from "contexts/MainMachineContext/MainMachineCo
 export const TrainingProgramTimelineElement = () => {
   const { state, mainService } = useMainMachineContext();
 
-  const status =
-    state.context.candidacyStatus === "PROJET"
-      ? "disabled"
-      : ["VALIDATION", "PRISE_EN_CHARGE", "PARCOURS_ENVOYE"].includes(
-          state.context.candidacyStatus
-        )
-      ? "active"
-      : "readonly";
+  const status = ["PROJET", "VALIDATION", "PRISE_EN_CHARGE"].includes(
+    state.context.candidacyStatus
+  )
+    ? "disabled"
+    : ["PARCOURS_ENVOYE"].includes(state.context.candidacyStatus)
+    ? "active"
+    : "readonly";
   return (
     <TimelineElement
       title="Validation de parcours"
