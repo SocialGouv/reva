@@ -191,6 +191,7 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
 
       if (
         feasibilityFile.data?.byteLength > maxUploadFileSizeInBytes ||
+        IDFile.data?.byteLength > maxUploadFileSizeInBytes ||
         (documentaryProofFile?.data?.byteLength ?? 0) >
           maxUploadFileSizeInBytes ||
         (certificateOfAttendanceFile?.data?.byteLength ?? 0) >
