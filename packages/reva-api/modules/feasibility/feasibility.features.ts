@@ -218,19 +218,21 @@ export const getActiveFeasibilityCountByCategory = async ({
     from: string;
     where?: string;
   }) => {
-    const select = decision
-      ? `'${decision.toString()}' as decision`
-      : "'ALL' as decision";
+    const select = decision ? `'${decision}' as decision` : "'ALL' as decision";
+
     const whereClauseAnd = where ? `${where} and` : "";
-    const whereDecisionAnd = decision
-      ? `feasibility.decision = '${decision}' and`
-      : "";
-    return `select ${select}, count(decision)
+
+    return decision
+      ? `select ${select}, count(decision)
             from ${from} 
-            where ${whereClauseAnd} ${whereDecisionAnd} feasibility.is_active = '${
-      decision !== "INCOMPLETE"
-    }'`;
+            where ${whereClauseAnd} feasibility.decision = '${decision}' and feasibility.is_active = '${
+          decision !== "INCOMPLETE"
+        }'`
+      : `select ${select}, count(decision)
+            from ${from} 
+            where ${whereClauseAnd} (feasibility.is_active = 'true' or (feasibility.is_active = 'false' and decision = 'INCOMPLETE'))`;
   };
+
   const countQuery = (decision?: FeasibilityStatus) => {
     if (hasRole("admin")) {
       return countQueryHelper({ decision, from: `feasibility` });
@@ -288,7 +290,17 @@ export const getActiveFeasibilities = async ({
 }): Promise<PaginatedListResult<Feasibility>> => {
   let queryWhereClause: Prisma.FeasibilityFindManyArgs["where"] = decision
     ? { decision, isActive: decision !== "INCOMPLETE" }
-    : { isActive: true };
+    : {
+        OR: [
+          {
+            isActive: true,
+          },
+          {
+            isActive: false,
+            decision: "INCOMPLETE",
+          },
+        ],
+      };
 
   //only list feasibilties linked to the account certification authority
   if (hasRole("manage_feasibility")) {
@@ -298,14 +310,7 @@ export const getActiveFeasibilities = async ({
 
     queryWhereClause = {
       ...queryWhereClause,
-      candidacy: {
-        Feasibility: {
-          some: {
-            isActive: true,
-            certificationAuthorityId: account.certificationAuthorityId || "_",
-          },
-        },
-      },
+      certificationAuthorityId: account.certificationAuthorityId || "_",
     };
   } else if (!hasRole("admin")) {
     //admin has access to everything
