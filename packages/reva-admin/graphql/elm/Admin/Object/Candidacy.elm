@@ -250,6 +250,13 @@ fundingRequestUnifvae object____ =
     Object.selectionForCompositeField "fundingRequestUnifvae" [] object____ (Basics.identity >> Decode.nullable)
 
 
+paymentRequestUnifvae :
+    SelectionSet decodesTo Admin.Object.PaymentRequestUnifvae
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
+paymentRequestUnifvae object____ =
+    Object.selectionForCompositeField "paymentRequestUnifvae" [] object____ (Basics.identity >> Decode.nullable)
+
+
 paymentRequest :
     SelectionSet decodesTo Admin.Object.PaymentRequest
     -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy

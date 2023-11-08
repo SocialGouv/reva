@@ -11,6 +11,7 @@ import { isAdminOrCandidacyCompanion } from "../../shared/security/presets";
 import {
   createFundingRequestUnifvae,
   getFundingRequestUnifvaeFromCandidacyId,
+  getPaymentRequestUnifvaeFromCandidacyId,
 } from "./features/finance.unifvae.features";
 import { logFundingRequestUnifvaeEvent } from "./logFundingRequestUnifvaeEvent";
 import applyBusinessValidationRules from "./validation";
@@ -40,6 +41,8 @@ const unsafeResolvers = {
       withSkillsAndTrainings(
         await getFundingRequestUnifvaeFromCandidacyId(candidacyId)
       ),
+    paymentRequestUnifvae: async ({ id: candidacyId }: { id: string }) =>
+      getPaymentRequestUnifvaeFromCandidacyId(candidacyId),
   },
 
   Query: {

@@ -157,6 +157,10 @@ type PaymentRequest
     = PaymentRequest
 
 
+type PaymentRequestUnifvae
+    = PaymentRequestUnifvae
+
+
 type Referential
     = Referential
 

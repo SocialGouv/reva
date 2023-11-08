@@ -28,6 +28,23 @@ type FundingRequestUnifvae {
   fundingContactPhone: String
 }
 
+type PaymentRequestUnifvae {
+  id: ID!
+  individualEffectiveHourCount: Decimal!
+  individualEffectiveCost: Decimal!
+  collectiveEffectiveHourCount: Decimal!
+  collectiveEffectiveCost: Decimal!
+  mandatoryTrainingsEffectiveHourCount: Decimal!
+  mandatoryTrainingsEffectiveCost: Decimal!
+  basicSkillsEffectiveHourCount: Decimal!
+  basicSkillsEffectiveCost: Decimal!
+  certificateSkillsEffectiveHourCount: Decimal!
+  certificateSkillsEffectiveCost: Decimal!
+  otherTrainingEffectiveHourCount: Decimal!
+  otherTrainingEffectiveCost: Decimal!
+  invoiceNumber: String!
+}
+
 input FundingRequestUnifvaeInput {
   candidateSecondname: String
   candidateThirdname: String
@@ -52,6 +69,7 @@ input FundingRequestUnifvaeInput {
 
 type Candidacy {
   fundingRequestUnifvae: FundingRequestUnifvae
+  paymentRequestUnifvae: PaymentRequestUnifvae
 }
 
 type Query {

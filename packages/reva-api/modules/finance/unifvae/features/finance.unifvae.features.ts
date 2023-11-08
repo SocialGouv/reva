@@ -103,3 +103,8 @@ async function getNextNumAction() {
     .toString()
     .padStart(5, "0")}`;
 }
+
+export const getPaymentRequestUnifvaeFromCandidacyId = (candidacyId: string) =>
+  prismaClient.paymentRequestUniFvae.findFirst({
+    where: { candidacyId },
+  });
