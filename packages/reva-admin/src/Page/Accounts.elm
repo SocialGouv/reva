@@ -173,13 +173,6 @@ viewDirectoryHeader context accountsCount model =
         ]
 
 
-viewErrorItem : String -> Html Msg
-viewErrorItem error =
-    li
-        []
-        [ text error ]
-
-
 viewDirectoryPanel : Context -> AccountSummaryPage -> Model -> List String -> List (Html Msg)
 viewDirectoryPanel context accountSummaryPage model actionErrors =
     [ viewDirectoryHeader context accountSummaryPage.info.totalRows model
@@ -211,7 +204,6 @@ searchBar model =
                 [ role "search", class "fr-search-bar w-full" ]
                 [ input
                     [ type_ "search"
-                    , name "search"
                     , name "search"
                     , id "search"
                     , class "fr-input w-full h-10"

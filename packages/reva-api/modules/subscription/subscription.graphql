@@ -78,8 +78,8 @@ type Query {
   subscription_getSubscriptionRequests(
     offset: Int
     limit: Int
-    orderBy: SubscriptionRequestOrderByInput
     status: SubscriptionRequestStatus
+    searchFilter: String
   ): SubscriptionRequestsPaginated!
   subscription_getSubscriptionRequest(
     subscriptionRequestId: ID!

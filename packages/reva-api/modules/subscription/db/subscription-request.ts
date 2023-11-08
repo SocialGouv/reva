@@ -2,7 +2,6 @@ import { Either, Left, Maybe, Right } from "purify-ts";
 
 import { prismaClient } from "../../../prisma/client";
 import { logger } from "../../shared/logger";
-import { Prisma } from ".prisma/client";
 
 const withoutNullFields = (obj: Record<string, unknown>) => {
   return Object.getOwnPropertyNames(obj).reduce((newObj, propName) => {
@@ -146,52 +145,6 @@ export const rejectSubscriptionRequestById = async (
   }
 };
 
-export const getSubscriptionRequestsCount = async (
-  params: GetSubscriptionRequestsParams
-): Promise<Either<string, number>> => {
-  try {
-    const numSubReq = await prismaClient.subscriptionRequest.count(
-      whereClause(params)
-    );
-    return Right(numSubReq);
-  } catch (e) {
-    logger.error(e);
-    return Left("La récupération des demandes d'inscription a échoué");
-  }
-};
-
-export const getSubscriptionRequests = async (
-  params: GetSubscriptionRequestsParams
-): Promise<Either<string, SubscriptionRequestSummary[]>> => {
-  try {
-    const subscriptionRequests =
-      await prismaClient.subscriptionRequest.findMany(
-        Object.assign(
-          {
-            select: {
-              id: true,
-              accountLastname: true,
-              accountFirstname: true,
-              accountEmail: true,
-              companyName: true,
-              companyAddress: true,
-              createdAt: true,
-            },
-          },
-          whereClause(params),
-          sortClause(params),
-          paginationClause(params)
-        )
-      );
-    return Right(
-      subscriptionRequests.map(withoutNullFields) as SubscriptionRequest[]
-    );
-  } catch (e) {
-    logger.error(e);
-    return Left("La récupération des demandes d'inscription a échoué");
-  }
-};
-
 export const existSubscriptionRequestWithTypologyAndSiret = async ({
   typology,
   companySiret,
@@ -210,37 +163,3 @@ export const existSubscriptionRequestWithTypologyAndSiret = async ({
     return Left(`Error while counting subscription requests matching criteria`);
   }
 };
-
-interface PaginationParams {
-  limit?: number;
-  offset?: number;
-}
-
-const paginationClause = (params: PaginationParams) => {
-  const clause: { take?: number; skip?: number } = {};
-  if (params.limit) {
-    clause.take = params.limit;
-  }
-  if (params.offset) {
-    clause.skip = params.offset;
-  }
-  return clause;
-};
-
-const sortClause = (params: GetSubscriptionRequestsParams) => {
-  if (params.orderBy) {
-    return {
-      orderBy: [
-        ...Object.entries(params.orderBy).map(([column, value]) => ({
-          [column]: value,
-        })),
-      ],
-    };
-  }
-};
-
-const whereClause = (
-  params: GetSubscriptionRequestsParams
-): { where: Prisma.SubscriptionRequestWhereInput } => ({
-  where: params.status ? { status: params.status } : {},
-});

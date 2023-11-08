@@ -18,7 +18,7 @@ import Api.RemoteData exposing (nothingToError)
 import Api.Token exposing (Token)
 import Data.Referential
 import Data.Subscription
-import Graphql.OptionalArgument exposing (OptionalArgument(..))
+import Graphql.OptionalArgument as OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
 
@@ -64,10 +64,18 @@ getSubscriptions :
     -> (RemoteData (List String) Data.Subscription.SubscriptionSummaryPage -> msg)
     -> Int
     -> SubscriptionRequestStatus
+    -> Maybe String
     -> Cmd msg
-getSubscriptions endpointGraphql token toMsg page status =
+getSubscriptions endpointGraphql token toMsg page status searchFilter =
     Query.subscription_getSubscriptionRequests
-        (\optionals -> { optionals | limit = Present 10, offset = Present ((page - 1) * 10), status = Present status, orderBy = Present { accountLastname = Absent, companyName = Absent, createdAt = Present Admin.Enum.Sort.Desc } })
+        (\optionals ->
+            { optionals
+                | limit = Present 10
+                , offset = Present ((page - 1) * 10)
+                , status = Present status
+                , searchFilter = OptionalArgument.fromMaybe searchFilter
+            }
+        )
         subscriptionSummaryPageSelection
         |> Auth.makeQuery "getSubscriptions" endpointGraphql token toMsg
 

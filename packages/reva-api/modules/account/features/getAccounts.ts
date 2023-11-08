@@ -60,22 +60,20 @@ export const getAccounts = async (
   if (searchFilter && searchFilter.length > 0) {
     const containsFilter = buildContainsFilterClause(searchFilter);
 
+    const filters = [
+      containsFilter("firstname"),
+      containsFilter("lastname"),
+      containsFilter("email"),
+    ];
+
     queryAccounts.where = {
       ...queryAccounts.where,
-      OR: [
-        containsFilter("firstname"),
-        containsFilter("lastname"),
-        containsFilter("email"),
-      ],
+      OR: filters,
     };
 
     queryCount.where = {
       ...queryCount.where,
-      OR: [
-        containsFilter("firstname"),
-        containsFilter("lastname"),
-        containsFilter("email"),
-      ],
+      OR: filters,
     };
   }
 

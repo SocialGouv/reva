@@ -8,19 +8,17 @@ import {
 } from "../account/database/accounts";
 import * as IAM from "../account/features/keycloak";
 import * as OrganismDb from "../organism/database/organisms";
+import {
+  FunctionalCodeError,
+  FunctionalError,
+} from "../shared/error/functionalError";
+import { logger } from "../shared/logger";
 import * as db from "./db/subscription-request";
 import * as domain from "./domain/index";
+import { getSubscriptionRequests } from "./features/getSubscriptionRequests";
 import { sendRejectionEmail } from "./mail";
 import { sendSubscriptionValidationInProgressEmail } from "./mail/validationInProgress";
 import { resolversSecurityMap } from "./security";
-
-interface getSubscriptionRequestsParams extends FilteredPaginatedListArgs {
-  status?: SubscriptionRequestStatus;
-  orderBy?: {
-    companyName?: Sort;
-    accountLastname?: Sort;
-  };
-}
 
 const unsafeResolvers = {
   SubscriptionRequest: {
@@ -32,18 +30,32 @@ const unsafeResolvers = {
   Query: {
     subscription_getSubscriptionRequests: async (
       _parent: unknown,
-      payload: getSubscriptionRequestsParams
+      params: {
+        limit?: number;
+        offset?: number;
+        status?: SubscriptionRequestStatus;
+        searchFilter?: string;
+      },
+      context: GraphqlContext
     ) => {
-      const result = await domain.getSubscriptionRequests(
-        {
-          getSubscriptionRequests: db.getSubscriptionRequests,
-          getSubscriptionRequestsCount: db.getSubscriptionRequestsCount,
-        },
-        payload
-      );
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
+      try {
+        if (context.auth.userInfo?.sub == undefined) {
+          throw new FunctionalError(
+            FunctionalCodeError.TECHNICAL_ERROR,
+            "Not authorized"
+          );
+        }
+
+        return getSubscriptionRequests(
+          {
+            hasRole: context.auth.hasRole,
+          },
+          params
+        );
+      } catch (e) {
+        logger.error(e);
+        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
+      }
     },
     subscription_getSubscriptionRequest: async (
       _parent: unknown,
