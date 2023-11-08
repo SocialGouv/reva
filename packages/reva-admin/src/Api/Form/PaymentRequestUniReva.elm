@@ -1,4 +1,4 @@
-module Api.Form.PaymentRequest exposing (confirm, createOrUpdate, get)
+module Api.Form.PaymentRequestUniReva exposing (confirm, createOrUpdate, get)
 
 import Admin.InputObject
 import Admin.Mutation as Mutation
@@ -13,7 +13,7 @@ import Api.Form.FundingRequestUniReva
 import Api.Token exposing (Token)
 import Data.Candidacy exposing (CandidacyId)
 import Data.Form exposing (FormData)
-import Data.Form.PaymentRequest
+import Data.Form.PaymentRequestUniReva
 import Data.Referential
 import Dict exposing (Dict)
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
@@ -31,7 +31,7 @@ createOrUpdate :
 createOrUpdate candidacyId endpointGraphql token toMsg ( candidacy, referential ) formData =
     let
         payment =
-            Data.Form.PaymentRequest.fromDict formData
+            Data.Form.PaymentRequestUniReva.fromDict formData
 
         paymentInput =
             Admin.InputObject.PaymentRequestInput
@@ -102,15 +102,15 @@ get candidacyId endpointGraphql token toMsg =
         paymentRequestSelection =
             Admin.Object.Candidacy.paymentRequest selection
     in
-    SelectionSet.succeed Data.Form.PaymentRequest.maybePaymentRequest
+    SelectionSet.succeed Data.Form.PaymentRequestUniReva.maybePaymentRequest
         |> with (Query.candidate_getFundingRequest fundingInfoRequiredArg fundingRequestSelection)
         |> with (Query.getCandidacyById paymentInfoRequiredArg paymentRequestSelection)
         |> Auth.makeQuery "getPaymentRequest" endpointGraphql token toMsg
 
 
-selection : SelectionSet Data.Form.PaymentRequest.PaymentRequestInput Admin.Object.PaymentRequest
+selection : SelectionSet Data.Form.PaymentRequestUniReva.PaymentRequestInput Admin.Object.PaymentRequest
 selection =
-    SelectionSet.succeed Data.Form.PaymentRequest.PaymentRequestInput
+    SelectionSet.succeed Data.Form.PaymentRequestUniReva.PaymentRequestInput
         |> with Admin.Object.PaymentRequest.diagnosisEffectiveHourCount
         |> with Admin.Object.PaymentRequest.diagnosisEffectiveCost
         |> with Admin.Object.PaymentRequest.postExamEffectiveHourCount

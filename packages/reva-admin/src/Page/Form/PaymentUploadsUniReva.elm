@@ -1,14 +1,14 @@
-module Page.Form.PaymentUploads exposing (..)
+module Page.Form.PaymentUploadsUniReva exposing (..)
 
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
-import Data.Form.PaymentUploads
+import Data.Form.PaymentUploadsUniReva
 import Data.Referential exposing (Referential)
 import Page.Form as Form exposing (Form)
 
 
 keys =
-    Data.Form.PaymentUploads.keys
+    Data.Form.PaymentUploadsUniReva.keys
 
 
 form : FormData -> ( Candidacy, Referential ) -> Form

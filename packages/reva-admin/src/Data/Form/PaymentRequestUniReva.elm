@@ -1,4 +1,4 @@
-module Data.Form.PaymentRequest exposing
+module Data.Form.PaymentRequestUniReva exposing
     ( PaymentRequestInput
     , TrainingForm
     , fromDict

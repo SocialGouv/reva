@@ -1,4 +1,4 @@
-module Data.Form.PaymentUploads exposing
+module Data.Form.PaymentUploadsUniReva exposing
     ( PaymentUploadsInput
     , fromDict
     , keys

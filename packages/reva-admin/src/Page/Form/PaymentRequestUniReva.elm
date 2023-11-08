@@ -1,10 +1,10 @@
-module Page.Form.PaymentRequest exposing (confirmationForm, form)
+module Page.Form.PaymentRequestUniReva exposing (confirmationForm, form)
 
 import Data.Candidacy exposing (Candidacy, CandidacyId, CandidacySummary)
 import Data.Certification exposing (Certification)
 import Data.Form exposing (FormData)
 import Data.Form.Helper
-import Data.Form.PaymentRequest
+import Data.Form.PaymentRequestUniReva
 import Data.Referential exposing (Referential)
 import Page.Form as Form exposing (Form)
 import Page.Form.FundingRequestUniReva as FundingRequest
@@ -13,7 +13,7 @@ import View.Form
 
 
 keys =
-    Data.Form.PaymentRequest.keys
+    Data.Form.PaymentRequestUniReva.keys
 
 
 form : Maybe Certification -> FormData -> ( Candidacy, Referential ) -> Form

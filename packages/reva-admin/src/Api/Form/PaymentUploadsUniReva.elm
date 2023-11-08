@@ -1,9 +1,9 @@
-module Api.Form.PaymentUploads exposing (submit)
+module Api.Form.PaymentUploadsUniReva exposing (submit)
 
 import Api.Token exposing (Token)
 import Data.Candidacy exposing (Candidacy, CandidacyId)
 import Data.Form exposing (FormData)
-import Data.Form.PaymentRequest
+import Data.Form.PaymentRequestUniReva
 import Data.Referential
 import Http
 import RemoteData exposing (RemoteData(..))
@@ -22,7 +22,7 @@ submit :
 submit candidacyId restApiEndpoint _ token toMsg ( _, _ ) formData =
     let
         keys =
-            Data.Form.PaymentRequest.keys
+            Data.Form.PaymentRequestUniReva.keys
 
         invoiceFiles =
             Data.Form.getFiles keys.invoiceFiles formData

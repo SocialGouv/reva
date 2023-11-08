@@ -21,8 +21,8 @@ import Api.Form.ExamInfo
 import Api.Form.Feasibility
 import Api.Form.FundingRequestUniFvae
 import Api.Form.FundingRequestUniReva
-import Api.Form.PaymentRequest
-import Api.Form.PaymentUploads
+import Api.Form.PaymentRequestUniReva
+import Api.Form.PaymentUploadsUniReva
 import Api.Form.Training
 import Api.Form.Unarchive
 import Api.Referential
@@ -39,7 +39,7 @@ import Data.Form.DropOut
 import Data.Form.Feasibility
 import Data.Form.FundingRequestUniFvae
 import Data.Form.FundingRequestUniReva
-import Data.Form.PaymentRequest
+import Data.Form.PaymentRequestUniReva
 import Data.Form.Unarchive
 import Data.Referential exposing (Referential)
 import Html exposing (Html, div, p, text)
@@ -55,8 +55,8 @@ import Page.Form.ExamInfo
 import Page.Form.Feasibility
 import Page.Form.FundingRequestUniFvae
 import Page.Form.FundingRequestUniReva
-import Page.Form.PaymentRequest
-import Page.Form.PaymentUploads
+import Page.Form.PaymentRequestUniReva
+import Page.Form.PaymentUploadsUniReva
 import Page.Form.Training
 import Page.Form.Unarchive
 import RemoteData exposing (RemoteData(..))
@@ -516,12 +516,12 @@ updateTab context tab ( model, cmd ) =
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
-                        { form = Page.Form.PaymentRequest.form candidacy.certification
-                        , onLoad = Just <| Api.Form.PaymentRequest.get tab.candidacyId
+                        { form = Page.Form.PaymentRequestUniReva.form candidacy.certification
+                        , onLoad = Just <| Api.Form.PaymentRequestUniReva.get tab.candidacyId
                         , onSave = Nothing
-                        , onSubmit = Api.Form.PaymentRequest.createOrUpdate tab.candidacyId
+                        , onSubmit = Api.Form.PaymentRequestUniReva.createOrUpdate tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab PaymentUploads
-                        , onValidate = Data.Form.PaymentRequest.validate
+                        , onValidate = Data.Form.PaymentRequestUniReva.validate
                         , status =
                             if Candidacy.isPaymentRequestSent candidacy then
                                 Form.ReadOnly
@@ -537,10 +537,10 @@ updateTab context tab ( model, cmd ) =
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
-                        { form = Page.Form.PaymentUploads.form
+                        { form = Page.Form.PaymentUploadsUniReva.form
                         , onLoad = Nothing
                         , onSave = Nothing
-                        , onSubmit = Api.Form.PaymentUploads.submit tab.candidacyId context.restApiEndpoint
+                        , onSubmit = Api.Form.PaymentUploadsUniReva.submit tab.candidacyId context.restApiEndpoint
                         , onRedirect = pushUrl <| candidacyTab PaymentRequestConfirmation
                         , onValidate = \_ _ -> Ok ()
                         , status = Form.Editable
@@ -553,12 +553,12 @@ updateTab context tab ( model, cmd ) =
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
-                        { form = Page.Form.PaymentRequest.confirmationForm
-                        , onLoad = Just <| Api.Form.PaymentRequest.get tab.candidacyId
+                        { form = Page.Form.PaymentRequestUniReva.confirmationForm
+                        , onLoad = Just <| Api.Form.PaymentRequestUniReva.get tab.candidacyId
                         , onSave = Nothing
-                        , onSubmit = Api.Form.PaymentRequest.confirm tab.candidacyId
+                        , onSubmit = Api.Form.PaymentRequestUniReva.confirm tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab Profile
-                        , onValidate = Data.Form.PaymentRequest.validateConfirmation
+                        , onValidate = Data.Form.PaymentRequestUniReva.validateConfirmation
                         , status = Form.Editable
                         }
                         model.form
