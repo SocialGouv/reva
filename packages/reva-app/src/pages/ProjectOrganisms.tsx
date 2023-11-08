@@ -1,4 +1,8 @@
 import { Button } from "@codegouvfr/react-dsfr/Button";
+import { ReactComponent as IconBuilding } from "@codegouvfr/react-dsfr/dsfr/icons/buildings/building-fill.svg";
+import { ReactComponent as IconCustomerService } from "@codegouvfr/react-dsfr/dsfr/icons/business/customer-service-fill.svg";
+import { ReactComponent as IconInformation } from "@codegouvfr/react-dsfr/dsfr/icons/system/information-fill.svg";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { Tag } from "@codegouvfr/react-dsfr/Tag";
 import { RadioGroup } from "@headlessui/react";
 import { useActor } from "@xstate/react";
@@ -12,6 +16,11 @@ import { BackToHomeButton } from "../components/molecules/BackToHomeButton/BackT
 import { Page } from "../components/organisms/Page";
 import { Organism } from "../interface";
 import { MainContext, MainEvent, MainState } from "../machines/main.machine";
+
+const modalDistanceInfo = createModal({
+  id: "distance-organism-info",
+  isOpenedByDefault: false,
+});
 
 interface PropsOrganisms {
   availableOrganisms?: Organism[];
@@ -58,7 +67,6 @@ const Organisms: FC<PropsOrganisms> = ({
                 <RadioGroup.Label
                   as="h3"
                   data-test="project-organisms-organism-label"
-                  className=""
                 >
                   {organism.website ? (
                     <a href={organism.website} target="blank">
@@ -72,7 +80,7 @@ const Organisms: FC<PropsOrganisms> = ({
                   as="address"
                   className="not-italic leading-relaxed"
                 >
-                  <p>
+                  <div>
                     <span data-test="project-organisms-organism-email">
                       {organism.contactAdministrativeEmail}
                     </span>
@@ -102,7 +110,7 @@ const Organisms: FC<PropsOrganisms> = ({
                         </Tag>
                       )}
                     </div>
-                  </p>
+                  </div>
                 </RadioGroup.Description>
               </>
             )}
@@ -119,85 +127,187 @@ interface Props {
 
 export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
   const [state, send] = useActor(mainService);
-  const { selectedDepartment, organism, organisms, candidacyId } =
-    state.context;
+  const {
+    selectedDepartment,
+    organism,
+    organisms,
+    candidacyId,
+    organismSearchText,
+    organismSearchOnsite,
+    organismSearchRemote,
+  } = state.context;
+
   const [selectedOrganismId, setSelectedOrganismId] = useState(
     organism?.id || ""
   );
+
+  const tagFilledStyle = (isSelected: boolean) =>
+    isSelected
+      ? "bg-dsfrBlue-500 text-white"
+      : "bg-dsfrBlue-300 text-dsfrBlue-500";
+  const iconTagFilledStyle = (isSelected: boolean) =>
+    isSelected ? "fill-white" : "fill-dsfrBlue-500";
 
   const isOrganismsLoaded = organisms && organisms.length > 0;
 
   if (!candidacyId) return <p>Aucun Id de candidat trouvé</p>;
 
   return (
-    <Page title="Votre organisme d'accompagnement">
-      <BackToHomeButton />
-      <ErrorAlertFromState />
-      <h1 className="mt-4 text-3xl font-bold">
-        Votre organisme d'accompagnement
-      </h1>
-      <SearchBar
-        label={"Rechercher un organisme"}
-        nativeInputProps={{
-          defaultValue: state.context.organismSearchText,
-          onChange: (e) => {
-            send({
-              type: "SET_ORGANISM_SEARCH_TEXT",
-              organismSearchText: e.target.value,
-            });
-          },
-        }}
-        className="mt-6"
-      />
-
-      {selectedDepartment && (
-        <>
-          <p className="mt-6 text-black">
-            Voici les organismes d'accompagnement disponibles dans votre
-            département.
-          </p>
-          <p className="mb-4 text-black"> Cochez celui de votre choix.</p>
-        </>
-      )}
-      <Organisms
-        alreadySelectedOrganismId={selectedOrganismId}
-        availableOrganisms={organisms}
-        setOrganismId={setSelectedOrganismId}
-      />
-      <div className="mt-6 w-full flex flex-row items-center justify-between">
-        <Button
-          data-test="project-organisms-refresh-organisms"
-          priority="secondary"
-          nativeButtonProps={{
-            onClick: () => {
+    <>
+      <Page title="Votre organisme d'accompagnement">
+        <BackToHomeButton />
+        <ErrorAlertFromState />
+        <h1 className="mt-4 text-3xl font-bold">
+          Votre organisme d'accompagnement
+        </h1>
+        <SearchBar
+          label="Rechercher un organisme"
+          nativeInputProps={{
+            defaultValue: state.context.organismSearchText,
+            onChange: (e) => {
               send({
-                type: "REFRESH_ORGANISMS",
+                type: "SET_ORGANISM_SEARCH",
+                organismSearchText: e.target.value,
+                organismSearchOnsite,
+                organismSearchRemote,
               });
             },
           }}
-        >
-          Rafraîchir la liste
-        </Button>
-        <Button
-          data-test="project-organisms-submit-organism"
-          disabled={!isOrganismsLoaded}
-          nativeButtonProps={{
-            onClick: () => {
-              if (isOrganismsLoaded) {
+          className="mt-6"
+        />
+
+        <div>
+          <p className="mt-4 mb-2">
+            Comment souhaitez-vous être suivi pour votre VAE ?
+          </p>
+          <div className="flex items-center">
+            <Button
+              data-test="button-select-onsite"
+              priority="tertiary no outline"
+              title="Choisir sur site"
+              onClick={() => {
                 send({
-                  type: "SUBMIT_ORGANISM",
-                  organism: {
-                    candidacyId,
-                    selectedOrganismId: selectedOrganismId || organisms[0]?.id,
-                  },
+                  type: "SET_ORGANISM_SEARCH",
+                  organismSearchText,
+                  organismSearchOnsite: !organismSearchOnsite,
+                  organismSearchRemote,
                 });
-              }
-            },
-          }}
-        >
-          Validez votre organisme d'accompagnement
-        </Button>
-      </div>
-    </Page>
+              }}
+              className="p-2"
+            >
+              <Tag className={tagFilledStyle(organismSearchOnsite)}>
+                <IconBuilding
+                  className={classNames(
+                    iconTagFilledStyle(organismSearchOnsite),
+                    "mr-1"
+                  )}
+                />
+                <span>Sur place</span>
+              </Tag>
+            </Button>
+            <Button
+              data-test="button-select-remote"
+              priority="tertiary no outline"
+              title="Choisir à distance"
+              onClick={() => {
+                send({
+                  type: "SET_ORGANISM_SEARCH",
+                  organismSearchText,
+                  organismSearchOnsite,
+                  organismSearchRemote: !organismSearchRemote,
+                });
+              }}
+              className="p-2"
+            >
+              <Tag className={tagFilledStyle(organismSearchRemote)}>
+                <IconCustomerService
+                  className={classNames(
+                    iconTagFilledStyle(organismSearchRemote),
+                    "mr-1"
+                  )}
+                />
+                <span>À distance</span>
+              </Tag>
+            </Button>
+            <Button
+              data-test="button-open-modal-distance"
+              priority="tertiary no outline"
+              title="Quelle option à distance choisir ?"
+              className="flex py-1 pl-2 pr-3"
+              onClick={() => modalDistanceInfo.open()}
+            >
+              <IconInformation className="fill-dsfrBlue-500 mr-2" />
+              <span className="text-dsfrBlue-500 text-sm font-bold">
+                Quelle option choisir ?
+              </span>
+            </Button>
+          </div>
+        </div>
+
+        {selectedDepartment && (
+          <>
+            <p className="mt-6 text-black">
+              Voici les organismes d'accompagnement disponibles dans votre
+              département.
+            </p>
+            <p className="mb-4 text-black"> Cochez celui de votre choix.</p>
+          </>
+        )}
+        <Organisms
+          alreadySelectedOrganismId={selectedOrganismId}
+          availableOrganisms={organisms}
+          setOrganismId={setSelectedOrganismId}
+        />
+        <div className="mt-6 w-full flex flex-row items-center justify-between">
+          <Button
+            data-test="project-organisms-refresh-organisms"
+            priority="secondary"
+            nativeButtonProps={{
+              onClick: () => {
+                send({
+                  type: "REFRESH_ORGANISMS",
+                });
+              },
+            }}
+          >
+            Rafraîchir la liste
+          </Button>
+          <Button
+            data-test="project-organisms-submit-organism"
+            disabled={!isOrganismsLoaded}
+            nativeButtonProps={{
+              onClick: () => {
+                if (isOrganismsLoaded) {
+                  send({
+                    type: "SUBMIT_ORGANISM",
+                    organism: {
+                      candidacyId,
+                      selectedOrganismId:
+                        selectedOrganismId || organisms[0]?.id,
+                    },
+                  });
+                }
+              },
+            }}
+          >
+            Validez votre organisme d'accompagnement
+          </Button>
+        </div>
+      </Page>
+      <modalDistanceInfo.Component
+        title="Comment bien choisir entre “sur site” et “à distance” ?"
+        size="large"
+      >
+        <p className="my-4">
+          Les accompagnement <strong>sur site </strong>
+          sont réalisées directement dans des locaux de l’organisme sélectionné.
+        </p>
+        <p>
+          Les accompagnement <strong>à distance</strong> se déroulent
+          essentiellement par téléphone ou sur internet, via des outils de
+          visio-conférence.
+        </p>
+      </modalDistanceInfo.Component>
+    </>
   );
 };

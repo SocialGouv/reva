@@ -237,6 +237,15 @@ enum CandidacyStatusFilter {
   PROJET_HORS_ABANDON
 }
 
+enum DistanceStatus {
+  ONSITE
+  REMOTE
+}
+
+input SearchOrganismFilter {
+  distanceStatus: DistanceStatus
+}
+
 type Query {
   getCandidacyById(id: ID!): Candidacy
   getCandidacies(
@@ -250,6 +259,7 @@ type Query {
   getRandomOrganismsForCandidacy(
     candidacyId: UUID!
     searchText: String
+    searchFilter: SearchOrganismFilter
   ): [Organism!]!
   getCompanionsForCandidacy(candidacyId: UUID!): [Organism!]!
   getBasicSkills: [BasicSkill!]!

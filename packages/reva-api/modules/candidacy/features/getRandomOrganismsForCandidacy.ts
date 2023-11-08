@@ -5,7 +5,7 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../shared/error/functionalError";
-import { Candidacy } from "../candidacy.types";
+import { Candidacy, SearchOrganismFilter } from "../candidacy.types";
 
 interface GetRandomActiveOrganismsForCandidacyWithNewTypologiesDeps {
   getCandidacyFromId: (
@@ -15,6 +15,7 @@ interface GetRandomActiveOrganismsForCandidacyWithNewTypologiesDeps {
     certificationId: string;
     departmentId: string;
     searchText?: string;
+    searchFilter: SearchOrganismFilter;
     limit: number;
   }) => Promise<Either<string, Organism[]>>;
 }
@@ -27,10 +28,12 @@ export const getRandomOrganismsForCandidacyWithNewTypologies =
   ({
     candidacyId,
     searchText,
+    searchFilter,
     limit,
   }: {
     candidacyId: string;
     searchText?: string;
+    searchFilter: SearchOrganismFilter;
     limit: number;
   }) => {
     return EitherAsync.fromPromise(() => getCandidacyFromId(candidacyId))
@@ -39,6 +42,7 @@ export const getRandomOrganismsForCandidacyWithNewTypologies =
           certificationId: candidacy.certificationId || "",
           departmentId: candidacy.department?.id || "",
           searchText,
+          searchFilter,
           limit,
         })
       )

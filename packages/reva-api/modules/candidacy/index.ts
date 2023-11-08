@@ -21,6 +21,7 @@ import {
   CandidacyBusinessEvent,
   CandidacyStatusFilter,
   ExamInfo,
+  SearchOrganismFilter,
 } from "./candidacy.types";
 import * as admissibilityDb from "./database/admissibility";
 import * as basicSkillDb from "./database/basicSkills";
@@ -171,7 +172,15 @@ const unsafeResolvers = {
     },
     getRandomOrganismsForCandidacy: async (
       _: unknown,
-      { candidacyId, searchText }: { candidacyId: string; searchText?: string }
+      {
+        candidacyId,
+        searchText,
+        searchFilter,
+      }: {
+        candidacyId: string;
+        searchText?: string;
+        searchFilter: SearchOrganismFilter;
+      }
     ) => {
       const candidacy = await prismaClient.candidacy.findUnique({
         where: { id: candidacyId },
@@ -182,7 +191,7 @@ const unsafeResolvers = {
         getRandomActiveOrganismForCertificationAndDepartment:
           organismDb.getRandomActiveOrganismForCertificationAndDepartment,
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
-      })({ candidacyId, searchText, limit: 11 });
+      })({ candidacyId, searchText, searchFilter, limit: 11 });
 
       return result
         .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))

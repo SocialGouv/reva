@@ -73,6 +73,8 @@ export interface MainContext {
   goals: Goal[];
   organism?: Organism;
   organismSearchText: string;
+  organismSearchOnsite: boolean;
+  organismSearchRemote: boolean;
   departments: Department[];
   selectedDepartment?: Department;
   certificationSearchText: string;
@@ -97,9 +99,11 @@ type SelectCertification = {
   certification: Certification;
 };
 
-type SetOrganismSearchText = {
-  type: "SET_ORGANISM_SEARCH_TEXT";
+type SetOrganismSearch = {
+  type: "SET_ORGANISM_SEARCH";
   organismSearchText: string;
+  organismSearchOnsite: boolean;
+  organismSearchRemote: boolean;
 };
 
 type RefreshOrganisms = {
@@ -111,7 +115,7 @@ export type MainEvent =
   | SelectCertification
   | setCertificationSearchText
   | setCurrentCertificationPageNumber
-  | SetOrganismSearchText
+  | SetOrganismSearch
   | RefreshOrganisms
   | { type: "SHOW_PROJECT_HOME"; certification: Certification }
   | { type: "ADD_EXPERIENCE" }
@@ -249,6 +253,8 @@ export const mainMachine =
           goals: [],
           organism: undefined,
           organismSearchText: "",
+          organismSearchOnsite: false,
+          organismSearchRemote: false,
           departments: [],
           selectedDepartment: undefined,
           organisms: undefined,
@@ -729,8 +735,8 @@ export const mainMachine =
                   REFRESH_ORGANISMS: {
                     target: "#mainMachine.projectOrganism",
                   },
-                  SET_ORGANISM_SEARCH_TEXT: {
-                    actions: "assignOrganismSearchTextToContext",
+                  SET_ORGANISM_SEARCH: {
+                    actions: "assignOrganismSearchToContext",
                     target: "#mainMachine.projectOrganism",
                   },
                   SUBMIT_ORGANISM: {
@@ -1134,10 +1140,18 @@ export const mainMachine =
             },
             selectedCertification: (_) => undefined,
           }),
-          assignOrganismSearchTextToContext: assign({
+          assignOrganismSearchToContext: assign({
             organismSearchText: (_context, event) => {
-              const typedEvent = event as SetOrganismSearchText;
+              const typedEvent = event as SetOrganismSearch;
               return typedEvent.organismSearchText;
+            },
+            organismSearchOnsite: (_context, event) => {
+              const typedEvent = event as SetOrganismSearch;
+              return typedEvent.organismSearchOnsite;
+            },
+            organismSearchRemote: (_context, event) => {
+              const typedEvent = event as SetOrganismSearch;
+              return typedEvent.organismSearchRemote;
             },
             selectedCertification: (_) => undefined,
           }),

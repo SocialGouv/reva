@@ -80,22 +80,38 @@ export const useConfiguredMainMachine = () => {
             }
           },
           getOrganisms: async (context, _event) => {
-            if (!context.candidacyId)
+            const {
+              candidacyId,
+              selectedDepartment,
+              organismSearchRemote,
+              organismSearchOnsite,
+              organismSearchText: searchText,
+            } = context;
+            if (!candidacyId)
               return Promise.reject(
                 "unavailable candidacyId in XState context"
               );
 
-            if (!context.selectedDepartment)
+            if (!selectedDepartment)
               return Promise.reject(
                 "unavailable selectedDepartment in XState context"
               );
 
+            const distanceStatus =
+              (organismSearchOnsite && organismSearchRemote) ||
+              (!organismSearchOnsite && !organismSearchRemote)
+                ? undefined
+                : organismSearchOnsite
+                ? "ONSITE"
+                : "REMOTE";
+
             return getRandomOrganismsForCandidacy(
               client as ApolloClient<object>
             )({
-              candidacyId: context.candidacyId,
-              departmentId: context.selectedDepartment?.id,
-              searchText: context.organismSearchText,
+              candidacyId,
+              departmentId: selectedDepartment?.id,
+              searchText,
+              searchFilter: { distanceStatus },
             });
           },
           updateCertification: async (context, event) => {

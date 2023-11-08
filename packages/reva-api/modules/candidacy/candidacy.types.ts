@@ -188,3 +188,7 @@ export type CandidacyStatusFilter =
   | "DEMANDE_PAIEMENT_ENVOYEE_HORS_ABANDON"
   | "VALIDATION_HORS_ABANDON"
   | "PROJET_HORS_ABANDON";
+
+export interface SearchOrganismFilter {
+  distanceStatus?: string;
+}
