@@ -3,6 +3,7 @@ import { camelCase, mapKeys } from "lodash";
 import { Either, Left, Maybe, Right } from "purify-ts";
 
 import { prismaClient } from "../../../prisma/client";
+import { SearchOrganismFilter } from "../../candidacy/candidacy.types";
 import { logger } from "../../shared/logger";
 import * as domain from "../organism.types";
 
@@ -226,11 +227,13 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
   certificationId,
   departmentId,
   searchText,
+  searchFilter,
   limit,
 }: {
   certificationId: string;
   departmentId: string;
   searchText?: string;
+  searchFilter: SearchOrganismFilter;
   limit: number;
 }): Promise<Either<string, domain.Organism[]>> => {
   try {
@@ -238,11 +241,25 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
       return Right([]);
     }
 
-    let whereClause = `where o.id = ao.organism_id and ao.certification_id=uuid('${certificationId}') and department_id=uuid('${departmentId}')`;
+    let whereClause = `where o.id = ao.organism_id and ao.certification_id=uuid('${certificationId}') and ao.department_id=uuid('${departmentId}')`;
     if (searchText) {
       whereClause += ` and unaccent(o.label) ilike unaccent('%${searchText}%')`;
     }
-    const query = `select * from organism o,active_organism_by_available_certification_and_department ao ${whereClause} order by Random() limit ${limit}`;
+
+    if (searchFilter.distanceStatus) {
+      if (searchFilter.distanceStatus === "REMOTE") {
+        whereClause += ` and od.is_remote = true`;
+      } else if (searchFilter.distanceStatus === "ONSITE") {
+        whereClause += ` and od.is_onsite = true`;
+      }
+    }
+
+    const query = `select * from organism o 
+    inner join organism_department as od
+    on od.organism_id = o.id,
+    active_organism_by_available_certification_and_department ao
+    ${whereClause} 
+    order by Random() limit ${limit}`;
 
     const results = (await prismaClient.$queryRawUnsafe<Organism[]>(query)).map(
       (o) => mapKeys(o, (v, k) => camelCase(k)) //mapping rawquery output field names in snake case to camel case
