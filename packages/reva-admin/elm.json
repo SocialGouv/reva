@@ -29,8 +29,7 @@
             "rtfeldman/elm-iso8601-date-strings": "1.1.4",
             "rtfeldman/elm-validate": "4.0.1",
             "tesk9/accessible-html": "6.1.0",
-            "tesk9/accessible-html-with-css": "4.1.0",
-            "truqu/elm-md5": "1.1.0"
+            "tesk9/accessible-html-with-css": "4.1.0"
         },
         "indirect": {
             "elm/parser": "1.1.0",

@@ -12,6 +12,5 @@ type alias Context =
     , restApiEndpoint : String
     , isScrollingToTop : Bool
     , isMobile : Bool
-    , franceVaeFinanceModuleFeatureEnabled : Bool
     , activeFeatures : List String
     }

@@ -45,7 +45,6 @@ import Data.Referential exposing (Referential)
 import Html exposing (Html, div, p, text)
 import Html.Attributes exposing (alt, class, name)
 import Html.Attributes.Extra exposing (role)
-import MD5
 import Page.Form as Form
 import Page.Form.Admissibility
 import Page.Form.Appointment
@@ -199,31 +198,7 @@ view context model =
                 FundingRequest ->
                     case model.selected of
                         Success candidacy ->
-                            case candidacy.financeModule of
-                                FinanceModule.Unireva ->
-                                    viewForm "funding"
-
-                                FinanceModule.Unifvae ->
-                                    let
-                                        userEmailMd5Hash =
-                                            MD5.hex (Api.Token.getEmail context.token)
-
-                                        featureEnabled =
-                                            context.franceVaeFinanceModuleFeatureEnabled || List.member userEmailMd5Hash [ "2513ed8e5c316ff00d191f0ebea2a220", "a35c09f95db86c9416b1715ea109b688", "92dcf4333122618dde2d9bdbeffdab27", "b55bc8c4bfc7a88fc2c1f9bb9df9f2a4", "1cda04456ab5389b218d6b80df1d6041", "e24e7ca19d72b540cc1046394141cd87", "15cb616d570320cc6428f034a1ef3da3" ]
-                                    in
-                                    if featureEnabled then
-                                        viewForm "funding"
-
-                                    else
-                                        viewArticle "funding"
-                                            [ View.alert View.Warning
-                                                []
-                                                "Attention"
-                                                [ p [] [ text "La demande de prise en charge est momentanément désactivée. Elle est actuellement en cours de développement en collaboration avec notre partenaire." ]
-                                                , p [] [ text "Elle devrait être de nouveau disponible courant septembre 2023. Nous ne manquerons pas de vous tenir informés de sa réactivation." ]
-                                                , p [ class "italic" ] [ text "Nous vous rappelons que l'accord de financement est subordonné à l'obtention de la recevabilité." ]
-                                                ]
-                                            ]
+                            viewForm "funding"
 
                         _ ->
                             div [] []
