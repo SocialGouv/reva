@@ -254,8 +254,9 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
       }
     }
 
-    const query = `select * from organism o 
-        inner join organism_department as od
+    const query = `
+    select o.id,o.label,o.legal_status,o.address,o.zip,o.city,o.contact_administrative_email,o.contact_administrative_phone,o.siret from organism o
+    inner join organism_department as od
     on od.organism_id = o.id,
     active_organism_by_available_certification_and_department ao
     ${whereClause} 
