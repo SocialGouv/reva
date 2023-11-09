@@ -241,7 +241,7 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
       return Right([]);
     }
 
-    let whereClause = `where o.id = ao.organism_id and ao.certification_id=uuid('${certificationId}') and ao.department_id=uuid('${departmentId}')`;
+    let whereClause = `where o.id = ao.organism_id and ao.certification_id=uuid('${certificationId}') and ao.department_id=uuid('${departmentId}') and ao.department_id = od.department_id`;
     if (searchText) {
       whereClause += ` and unaccent(o.label) ilike unaccent('%${searchText}%')`;
     }
@@ -255,7 +255,7 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
     }
 
     const query = `select * from organism o 
-    inner join organism_department as od
+        inner join organism_department as od
     on od.organism_id = o.id,
     active_organism_by_available_certification_and_department ao
     ${whereClause} 
