@@ -40,6 +40,7 @@ import Data.Form.Feasibility
 import Data.Form.FundingRequestUniFvae
 import Data.Form.FundingRequestUniReva
 import Data.Form.PaymentRequestUniReva
+import Data.Form.Training
 import Data.Form.Unarchive
 import Data.Referential exposing (Referential)
 import Html exposing (Html, div, p, text)
@@ -618,7 +619,7 @@ updateTab context tab ( model, cmd ) =
                         , onSave = Nothing
                         , onSubmit = Api.Form.Training.update tab.candidacyId
                         , onRedirect = pushUrl <| candidacyTab TrainingSent
-                        , onValidate = \_ _ -> Ok ()
+                        , onValidate = Data.Form.Training.validate
                         , status =
                             if Candidacy.isFeasibilityFileSent candidacy then
                                 Form.ReadOnly

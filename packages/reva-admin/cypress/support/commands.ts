@@ -1,4 +1,4 @@
-Cypress.Commands.add("aap", (config = { token: "abc" }) => {
+Cypress.Commands.add("aap", (url = "/") => {
   cy.intercept("**/realms/reva/protocol/openid-connect/3p-cookies/step1.html", {
     fixture: "auth-step1.html",
   });
@@ -18,7 +18,7 @@ Cypress.Commands.add("aap", (config = { token: "abc" }) => {
     fixture: "auth-token.json",
   });
 
-  cy.visit(`/`, {
+  cy.visit(url, {
     onBeforeLoad(win) {
       // We store a dummy but valid state in localStorage
       win.localStorage.setItem(

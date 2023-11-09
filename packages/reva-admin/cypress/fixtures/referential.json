@@ -1,0 +1,185 @@
+{
+    "data": {
+        "getReorientationReasons": [
+            {
+                "disabled3880003826": false,
+                "label3832528868": "Droit commun",
+                "id4168169968": "576ca3c5-1ccb-4cb6-a797-0c6b0b540841"
+            },
+            {
+                "disabled3880003826": false,
+                "label3832528868": "Une autre certification de France VAE",
+                "id4168169968": "df490ee2-7b7c-4125-93e9-f7f780651b84"
+            },
+            {
+                "disabled3880003826": true,
+                "label3832528868": "Architecte de parcours neutre",
+                "id4168169968": "167582fa-f23e-4973-a5a6-b2a7fec97710"
+            }
+        ],
+        "getTrainings": [
+            {
+                "label3832528868": "Equipier de Première Intervention",
+                "id4168169968": "2790458c-040f-417d-b081-1d74b715ff9b"
+            },
+            {
+                "label3832528868": "Sauveteur Secouriste du Travail (SST)",
+                "id4168169968": "4a43a687-928b-4568-bec5-69da695322dc"
+            },
+            {
+                "label3832528868": "Systèmes d'attaches",
+                "id4168169968": "73d9b556-9631-4b43-9c8d-da324c31ef54"
+            },
+            {
+                "label3832528868": "Prévention et secours civiques de niveau 1 (PSC1)",
+                "id4168169968": "16ffd197-b95c-431c-890b-77bf58c51c6b"
+            },
+            {
+                "label3832528868": "Premiers secours en équipe de niveau 1 (PSE1)",
+                "id4168169968": "227bce03-4c78-450d-b5a4-cb245df88260"
+            },
+            {
+                "label3832528868": "Brevet national de sécurité et de sauvetage aquatique (BNSSA)",
+                "id4168169968": "378724fb-ba6c-4686-92d9-c48b92534374"
+            },
+            {
+                "label3832528868": "Attestation de Formation aux Gestes et Soins d'Urgence (AFGSU 2)",
+                "id4168169968": "11b7c0e4-069b-4541-83ad-2537b6b774d0"
+            }
+        ],
+        "getReferential": {
+            "goals": [
+                {
+                    "isActive3880003826": true,
+                    "needsAdditionalInformation3880003826": false,
+                    "order1207450440": 1,
+                    "label3832528868": "Trouver plus facilement un emploi",
+                    "id4168169968": "bc5365e2-a208-4c19-98f9-22f15de894cd"
+                },
+                {
+                    "isActive3880003826": true,
+                    "needsAdditionalInformation3880003826": false,
+                    "order1207450440": 2,
+                    "label3832528868": "Être reconnu dans ma profession",
+                    "id4168169968": "a952691b-3826-4a25-a3b2-6238854873bf"
+                },
+                {
+                    "isActive3880003826": true,
+                    "needsAdditionalInformation3880003826": false,
+                    "order1207450440": 3,
+                    "label3832528868": "Avoir un meilleur salaire",
+                    "id4168169968": "fa070bd6-6699-4538-9700-fbef975ecbb8"
+                },
+                {
+                    "isActive3880003826": true,
+                    "needsAdditionalInformation3880003826": false,
+                    "order1207450440": 4,
+                    "label3832528868": "Me réorienter",
+                    "id4168169968": "a3b5852d-bc44-4e54-bf6c-435bc1d85c10"
+                },
+                {
+                    "isActive3880003826": true,
+                    "needsAdditionalInformation3880003826": false,
+                    "order1207450440": 5,
+                    "label3832528868": "Consolider mes acquis métier",
+                    "id4168169968": "9a818722-6b90-4655-9e18-637732dbe945"
+                },
+                {
+                    "isActive3880003826": true,
+                    "needsAdditionalInformation3880003826": false,
+                    "order1207450440": 6,
+                    "label3832528868": "Me redonner confiance en moi",
+                    "id4168169968": "4e8edc27-307d-4b1f-a785-8a87df9701a7"
+                },
+                {
+                    "isActive3880003826": true,
+                    "needsAdditionalInformation3880003826": false,
+                    "order1207450440": 7,
+                    "label3832528868": "Autre",
+                    "id4168169968": "45d51ab2-a077-4324-9159-9c0dc786b4f4"
+                }
+            ]
+        },
+        "getDropOutReasons": [
+            {
+                "isActive3880003826": true,
+                "label3832528868": "Reprise d’emploi",
+                "id4168169968": "107d95ee-6384-45da-9b1a-f9361cc60741"
+            },
+            {
+                "isActive3880003826": true,
+                "label3832528868": "Entrée en formation",
+                "id4168169968": "f312301a-28e7-473f-8610-1642251c7fe8"
+            },
+            {
+                "isActive3880003826": true,
+                "label3832528868": "Découragement",
+                "id4168169968": "b8ecbfd6-3573-42c2-b825-a11907ae6498"
+            },
+            {
+                "isActive3880003826": true,
+                "label3832528868": "Raisons personnelles(santé, famille)",
+                "id4168169968": "6f4ec3dd-4908-4aaf-9a84-9d548bb702f8"
+            },
+            {
+                "isActive3880003826": true,
+                "label3832528868": "Changement de projet",
+                "id4168169968": "0883c875-7971-457e-8183-ed9d8e8aca7f"
+            },
+            {
+                "isActive3880003826": true,
+                "label3832528868": "Manque de temps",
+                "id4168169968": "b01a337e-91b5-40e8-ab2d-bc345fe2ebe9"
+            },
+            {
+                "isActive3880003826": true,
+                "label3832528868": "Pas / plus intéressé",
+                "id4168169968": "375a9f74-3461-4cb3-84ba-334ef8e9fc3f"
+            },
+            {
+                "isActive3880003826": true,
+                "label3832528868": "Rémunération non obtenue",
+                "id4168169968": "e18766d5-14ff-4205-89b2-27c5d3dd3026"
+            },
+            {
+                "isActive3880003826": true,
+                "label3832528868": "Financement non obtenu",
+                "id4168169968": "575c81a7-17d6-4712-b4db-0a60bb024ec1"
+            },
+            {
+                "isActive3880003826": true,
+                "label3832528868": "Avis architecte de parcours défavorable",
+                "id4168169968": "af32a5c2-be21-4daf-93ca-e8fbd055e834"
+            },
+            {
+                "isActive3880003826": true,
+                "label3832528868": "Report du projet à plus tard",
+                "id4168169968": "aa90d5bc-8867-4a97-97c0-b73d9c930dbb"
+            },
+            {
+                "isActive3880003826": true,
+                "label3832528868": "Le parcours France VAE ne répond pas à mes objectifs",
+                "id4168169968": "de191f51-368f-4a6b-9e91-14f0d2901af9"
+            },
+            {
+                "isActive3880003826": false,
+                "label3832528868": "Autre",
+                "id4168169968": "da04a4e7-3be6-49ed-9d7e-fd81ceb9c362"
+            }
+        ],
+        "getBasicSkills": [
+            {
+                "label3832528868": "Usage et communication numérique",
+                "id3509119574": "d2eac236-723b-4bb8-ae4c-5d16d320ec72"
+            },
+            {
+                "label3832528868": "Utilisation des règles de base de calcul et du raisonnement mathématique",
+                "id3509119574": "e2bc46ed-dd85-464a-83b0-1007b07bdeae"
+            },
+            {
+                "label3832528868": "Communication en français",
+                "id3509119574": "55ea812e-5088-441b-b60e-fdfa123292ec"
+            }
+        ]
+    }
+}

@@ -3,7 +3,7 @@ module Page.Form.Training exposing (..)
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Form.Helper
-import Data.Form.Training
+import Data.Form.Training exposing (scopeToString)
 import Data.Referential exposing (Referential)
 import Page.Form as Form exposing (Form)
 
@@ -13,6 +13,12 @@ form _ ( _, referential ) =
     let
         keys =
             Data.Form.Training.keys
+
+        certificationScopes =
+            [ ( "full", Data.Form.Training.Full )
+            , ( "partial", Data.Form.Training.Partial )
+            ]
+                |> List.map (\( id, scope ) -> ( id, scopeToString scope ))
     in
     { elements =
         [ ( "hours", Form.Title1 "1 - Nombre d'heures" )
@@ -32,7 +38,9 @@ form _ ( _, referential ) =
           )
         , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" (Just "RNCP25467BC03 - intitulé") )
         , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" Nothing )
-        , ( keys.isCertificationPartial, Form.Checkbox "Le candidat vise un ou plusieurs blocs de compétences." )
+        , ( keys.certificationScope
+          , Form.RadioList "Le candidat / la candidate vise :" certificationScopes
+          )
         ]
     , saveLabel = Nothing
     , submitLabel = "Envoyer le parcours"

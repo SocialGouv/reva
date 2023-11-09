@@ -13,8 +13,8 @@
     "build": "npm run build:app && cp -R ./dist ../reva-api/dist/admin && cp ./silent-check-sso.html ../reva-api/dist/admin/silent-check-sso.html",
     "css": "npx tailwindcss -i ./css/index.css -o ./dist/index.css",
     "postinstall": "npm run css",
-    "start-server": "mv dist admin && python3 -m http.server 3000",
-    "cypress:ci": "cypress run",
+    "start-server": "mv dist admin && mkdir dist && mv admin dist/ && mv dist/admin/index.html dist/. && serve dist -s",
+    "cypress:ci": "npx cypress run",
     "test:ci": "start-server-and-test start-server http://localhost:3000/admin/ cypress:ci"
   },
   "keywords": [],

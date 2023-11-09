@@ -68,4 +68,5 @@ jobs:
           cache: "npm"
       - run: npm install husky
       - run: cd packages/reva-admin && npm install && npm run build:app
+      - run: cd packages/reva-admin && npm install serve
       - run: cd packages/reva-admin && NODE_ENV=production npm run test:ci

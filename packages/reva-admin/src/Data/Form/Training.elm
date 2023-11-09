@@ -1,10 +1,17 @@
-module Data.Form.Training exposing (Training, fromDict, keys, training)
+module Data.Form.Training exposing (Scope(..), Training, fromDict, keys, scopeFromString, scopeToString, training, validate)
 
 import Admin.Scalar exposing (Uuid)
+import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Form.Helper as Helper exposing (booleanToString, uuidToCheckedList)
-import Data.Referential exposing (BasicSkill, MandatoryTraining)
+import Data.Referential exposing (BasicSkill, MandatoryTraining, Referential)
 import Dict exposing (Dict)
+
+
+type Scope
+    = Partial
+    | Full
+    | Unknown
 
 
 type alias Training =
@@ -16,7 +23,7 @@ type alias Training =
     , individualHourCount : Int
     , collectiveHourCount : Int
     , additionalHourCount : Int
-    , isCertificationPartial : Bool
+    , certificationScope : Scope
     }
 
 
@@ -30,8 +37,56 @@ keys =
     , collectiveHourCount = "collectiveHourCount"
     , additionalHourCount = "additionalHourCount"
     , consent = "consent"
-    , isCertificationPartial = "isCertificationPartial"
+    , certificationScope = "certificationScope"
     }
+
+
+fullCertificationLabel : String
+fullCertificationLabel =
+    "La certification dans sa totalité"
+
+
+partialCertificationLabel : String
+partialCertificationLabel =
+    "Un ou plusieurs bloc(s) de compétences"
+
+
+scopeToString : Scope -> String
+scopeToString scope =
+    case scope of
+        Full ->
+            fullCertificationLabel
+
+        Partial ->
+            partialCertificationLabel
+
+        Unknown ->
+            "Inconnu"
+
+
+scopeFromString : String -> Scope
+scopeFromString scope =
+    if scope == fullCertificationLabel then
+        Full
+
+    else if scope == partialCertificationLabel then
+        Partial
+
+    else
+        Unknown
+
+
+validate : ( Candidacy, Referential ) -> FormData -> Result (List String) ()
+validate _ formData =
+    let
+        decode =
+            Helper.decode keys formData
+    in
+    if (scopeFromString <| decode.string .certificationScope "") == Unknown then
+        Err [ "Veuillez choisir si la certification est visée dans sa totalité ou non" ]
+
+    else
+        Ok ()
 
 
 fromDict : List BasicSkill -> List MandatoryTraining -> FormData -> Training
@@ -49,7 +104,7 @@ fromDict basicSkills mandatoryTrainings formData =
         (decode.int .individualHourCount 0)
         (decode.int .collectiveHourCount 0)
         (decode.int .additionalHourCount 0)
-        (decode.bool .isCertificationPartial False)
+        (scopeFromString <| decode.string .certificationScope "")
 
 
 training :
@@ -76,7 +131,15 @@ training mandatoryTrainings basicSkills certificateSkills otherTraining individu
             , ( .individualHourCount, Maybe.map String.fromInt individualHourCount )
             , ( .collectiveHourCount, Maybe.map String.fromInt collectiveHourCount )
             , ( .additionalHourCount, Maybe.map String.fromInt additionalHourCount )
-            , ( .isCertificationPartial, Just <| booleanToString isCertificationPartial )
+            , ( .certificationScope
+              , Just <|
+                    scopeToString <|
+                        if isCertificationPartial then
+                            Partial
+
+                        else
+                            Full
+              )
             ]
                 |> Helper.toKeyedList keys
     in

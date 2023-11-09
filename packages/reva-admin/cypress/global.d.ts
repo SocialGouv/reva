@@ -6,6 +6,6 @@ declare namespace Cypress {
     /**
      * Logs-in as an aap
      */
-    aap(config? :{ token: string }): void;
+    aap(url?: string): void;
   }
 }
