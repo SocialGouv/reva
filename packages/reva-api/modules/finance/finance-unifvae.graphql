@@ -26,6 +26,7 @@ type FundingRequestUnifvae {
   fundingContactLastname: String
   fundingContactEmail: String
   fundingContactPhone: String
+  numAction: String!
 }
 
 type PaymentRequestUnifvae {

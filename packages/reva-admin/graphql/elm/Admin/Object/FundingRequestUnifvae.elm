@@ -157,3 +157,8 @@ fundingContactEmail =
 fundingContactPhone : SelectionSet (Maybe String) Admin.Object.FundingRequestUnifvae
 fundingContactPhone =
     Object.selectionForField "(Maybe String)" "fundingContactPhone" [] (Decode.string |> Decode.nullable)
+
+
+numAction : SelectionSet String Admin.Object.FundingRequestUnifvae
+numAction =
+    Object.selectionForField "String" "numAction" [] Decode.string
