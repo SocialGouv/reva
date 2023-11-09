@@ -1,12 +1,16 @@
- import path from "path";
+import path from "path";
 
 import dotenv from "dotenv";
-dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
 
 import { buildApp } from "./app";
 
+dotenv.config({ path: path.join(process.cwd(), "..", "..", ".env") });
+
 const start = async () => {
-  const server = await buildApp({ logger: true });
+  const server = await buildApp({
+    logger: true,
+    disableRequestLogging: true,
+  });
   try {
     await server.listen({
       port: (process.env.PORT || 8080) as number,
