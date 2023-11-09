@@ -81,17 +81,17 @@ const unsafeResolvers = {
           {},
           {
             candidacyId: payload.candidacyId,
+            isCertificationPartial: Boolean(candidacy?.isCertificationPartial),
             fundingRequest: {
               ...payload.fundingRequest,
-              isPartialCertification: Boolean(
-                candidacy?.isCertificationPartial
-              ),
             },
           }
         );
-      const validationErrors = await applyBusinessValidationRules(
-        fundingRequestCompleted
-      );
+      const validationErrors = await applyBusinessValidationRules({
+        candidacyId: fundingRequestCompleted.candidacyId,
+        isCertificationPartial: fundingRequestCompleted.isCertificationPartial,
+        ...fundingRequestCompleted.fundingRequest,
+      });
       if (validationErrors.length) {
         const businessErrors = validationErrors.map(({ fieldName, message }) =>
           fieldName === "GLOBAL" ? message : `input.${fieldName}: ${message}`

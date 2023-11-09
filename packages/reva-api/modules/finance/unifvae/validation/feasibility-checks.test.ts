@@ -84,9 +84,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
   test("Should fail when feasibility not sent", async () => {
     const errors = await validateFeasibilityChecks({
       candidacyId: candNoFeasibilty.id,
-      fundingRequest: {
-        ...fundingRequestFullCertOkHours,
-      },
+      ...fundingRequestFullCertOkHours,
     });
     expect(errors.length).toEqual(1);
     expect(errors[0].fieldName).toBe("GLOBAL");
@@ -98,9 +96,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
   test("Should fail when feasibility decision is still pending", async () => {
     const errors = await validateFeasibilityChecks({
       candidacyId: candFeasibiltyPending.id,
-      fundingRequest: {
-        ...fundingRequestFullCertOkHours,
-      },
+      ...fundingRequestFullCertOkHours,
     });
     expect(errors.length).toEqual(1);
     expect(errors[0].fieldName).toBe("GLOBAL");
@@ -112,9 +108,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
   test("Should fail when feasibility rejected and funding request has disallowed items", async () => {
     const errors = await validateFeasibilityChecks({
       candidacyId: candFeasibiltyRejected.id,
-      fundingRequest: {
-        ...fundingRequestFullCertOkHours,
-      },
+      ...fundingRequestFullCertOkHours,
     });
     console.log(errors);
     expect(errors.length).toEqual(6);
@@ -123,9 +117,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
   test("Should succeed when feasibility rejected and request has only allowed items", async () => {
     const errors = await validateFeasibilityChecks({
       candidacyId: candFeasibiltyValidated.id,
-      fundingRequest: {
-        ...fundingRequestNoHours,
-      },
+      ...fundingRequestNoHours,
     });
     expect(errors.length).toEqual(0);
   });
@@ -133,9 +125,7 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
   test("Should succeed when feasibility validated", async () => {
     const errors = await validateFeasibilityChecks({
       candidacyId: candFeasibiltyValidated.id,
-      fundingRequest: {
-        ...fundingRequestFullCertOkHours,
-      },
+      ...fundingRequestFullCertOkHours,
     });
     expect(errors.length).toEqual(0);
   });

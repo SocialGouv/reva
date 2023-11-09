@@ -8,13 +8,26 @@
 // Accompagnement collectif à maximum 35€ l’heure
 // Complément formatif à maximum 25€ l’heure
 
-export const validateCoutsHoraires = (
-  input: FundingRequestUnifvaeInput
-): BusinessRulesValidationError[] => {
-  const fundingRequest = input.fundingRequest;
+import { Decimal } from "@prisma/client/runtime";
+
+export const validateCoutsHoraires = ({
+  individualCost,
+  collectiveCost,
+  mandatoryTrainingsCost,
+  basicSkillsCost,
+  certificateSkillsCost,
+  otherTrainingCost,
+}: {
+  individualCost: Decimal;
+  collectiveCost: Decimal;
+  mandatoryTrainingsCost: Decimal;
+  basicSkillsCost: Decimal;
+  certificateSkillsCost: Decimal;
+  otherTrainingCost: Decimal;
+}): BusinessRulesValidationError[] => {
   const errors: BusinessRulesValidationError[] = [];
 
-  if (fundingRequest.individualCost > 70) {
+  if (individualCost.greaterThan(70)) {
     errors.push({
       fieldName: "individualCost",
       message:
@@ -22,7 +35,7 @@ export const validateCoutsHoraires = (
     });
   }
 
-  if (fundingRequest.collectiveCost > 35) {
+  if (collectiveCost.greaterThan(35)) {
     errors.push({
       fieldName: "collectiveCost",
       message:
@@ -30,26 +43,26 @@ export const validateCoutsHoraires = (
     });
   }
 
-  if (fundingRequest.mandatoryTrainingsCost > 25) {
+  if (mandatoryTrainingsCost.greaterThan(25)) {
     errors.push({
       fieldName: "mandatoryTrainingsCost",
       message: "Le coût du complément formatif ne doit pas excéder 25€ l’heure",
     });
   }
-  if (fundingRequest.basicSkillsCost > 25) {
+  if (basicSkillsCost.greaterThan(25)) {
     errors.push({
       fieldName: "basicSkillsCost",
       message: "Le coût du complément formatif ne doit pas excéder 25€ l’heure",
     });
   }
 
-  if (fundingRequest.certificateSkillsCost > 25) {
+  if (certificateSkillsCost.greaterThan(25)) {
     errors.push({
       fieldName: "certificateSkillsCost",
       message: "Le coût du complément formatif ne doit pas excéder 25€ l’heure",
     });
   }
-  if (fundingRequest.otherTrainingCost > 25) {
+  if (otherTrainingCost.greaterThan(25)) {
     errors.push({
       fieldName: "otherTrainingCost",
       message: "Le coût du complément formatif ne doit pas excéder 25€ l’heure",

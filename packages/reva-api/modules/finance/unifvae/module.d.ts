@@ -29,9 +29,7 @@ interface FundingRequestUnifvaeInput {
 }
 
 type FundingRequestUnifvaeInputCompleted = FundingRequestUnifvaeInput & {
-  fundingRequest: {
-    isPartialCertification: boolean;
-  };
+  isCertificationPartial: boolean;
 };
 
 type BusinessRulesValidationFieldname =

@@ -20,32 +20,32 @@
 
 import { Decimal } from "@prisma/client/runtime";
 
-export const valideForfaitHeures = (
-  input: FundingRequestUnifvaeInputCompleted
-): BusinessRulesValidationError[] => {
-  const fundingRequest = input.fundingRequest;
+export const valideForfaitHeures = ({
+  individualHourCount,
+  collectiveHourCount,
+  mandatoryTrainingsHourCount,
+  basicSkillsHourCount,
+  certificateSkillsHourCount,
+  otherTrainingHourCount,
+  isCertificationPartial,
+}: {
+  individualHourCount: Decimal;
+  collectiveHourCount: Decimal;
+  mandatoryTrainingsHourCount: Decimal;
+  basicSkillsHourCount: Decimal;
+  certificateSkillsHourCount: Decimal;
+  otherTrainingHourCount: Decimal;
+  isCertificationPartial: boolean;
+}): BusinessRulesValidationError[] => {
   const errors: BusinessRulesValidationError[] = [];
-  const certificationStatusName = fundingRequest.isPartialCertification
+  const certificationStatusName = isCertificationPartial
     ? "partielle"
     : "complète";
-  const maxIndividualHours = new Decimal(
-    fundingRequest.isPartialCertification ? 15 : 30
-  );
-  const maxCollectiveHours = new Decimal(
-    fundingRequest.isPartialCertification ? 10 : 20
-  );
+  const maxIndividualHours = new Decimal(isCertificationPartial ? 15 : 30);
+  const maxCollectiveHours = new Decimal(isCertificationPartial ? 10 : 20);
   const maxComplementaryTrainingHours = new Decimal(
-    fundingRequest.isPartialCertification ? 35 : 70
+    isCertificationPartial ? 35 : 70
   );
-
-  let {
-    individualHourCount,
-    collectiveHourCount,
-    mandatoryTrainingsHourCount,
-    basicSkillsHourCount,
-    certificateSkillsHourCount,
-    otherTrainingHourCount,
-  } = fundingRequest;
 
   individualHourCount = individualHourCount ?? new Decimal(0);
   collectiveHourCount = collectiveHourCount ?? new Decimal(0);

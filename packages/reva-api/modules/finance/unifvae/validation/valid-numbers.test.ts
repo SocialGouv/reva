@@ -1,6 +1,5 @@
 import { Decimal } from "@prisma/client/runtime";
 
-import { candidacyId } from "../../../../test/fixtures/funding-request";
 import { Gender } from "../../../candidate/candidate.types";
 import { validHoursCountAndCosts } from "./valid-numbers";
 
@@ -30,11 +29,8 @@ export const fundingRequestFullCertOkHours = {
 
 test("Should yield an error when a number is negative", () => {
   const errors = validHoursCountAndCosts({
-    candidacyId,
-    fundingRequest: {
-      ...fundingRequestFullCertOkHours,
-      individualCost: new Decimal(-3),
-    },
+    ...fundingRequestFullCertOkHours,
+    individualCost: new Decimal(-3),
   });
   expect(errors.length).toBe(1);
   expect(errors[0].fieldName).toBe("individualCost");
@@ -43,12 +39,9 @@ test("Should yield an error when a number is negative", () => {
 
 test("Should yield an error when an hour count is not multiple of 0,5", () => {
   const errors = validHoursCountAndCosts({
-    candidacyId,
-    fundingRequest: {
-      ...fundingRequestFullCertOkHours,
-      basicSkillsHourCount: new Decimal(2.3),
-      basicSkillsCost: new Decimal(34.12),
-    },
+    ...fundingRequestFullCertOkHours,
+    basicSkillsHourCount: new Decimal(2.3),
+    basicSkillsCost: new Decimal(34.12),
   });
   expect(errors.length).toBe(1);
   expect(errors[0].fieldName).toBe("basicSkillsHourCount");

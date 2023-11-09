@@ -2,7 +2,28 @@
 
 import { Decimal } from "@prisma/client/runtime";
 
-export const validHoursCountAndCosts = (input: FundingRequestUnifvaeInput) =>
+const hourFields = [
+  "basicSkillsHourCount",
+  "certificateSkillsHourCount",
+  "collectiveHourCount",
+  "individualHourCount",
+  "mandatoryTrainingsHourCount",
+  "otherTrainingHourCount",
+] as const;
+
+const costFields = [
+  "basicSkillsCost",
+  "certificateSkillsCost",
+  "collectiveCost",
+  "individualCost",
+  "mandatoryTrainingsCost",
+  "otherTrainingCost",
+] as const;
+
+type HourFields = { [Key in typeof hourFields[number]]: Decimal };
+type CostFields = { [Key in typeof costFields[number]]: Decimal };
+
+export const validHoursCountAndCosts = (input: CostFields & HourFields) =>
   ([] as BusinessRulesValidationError[])
     .concat(validHours(input))
     .concat(validCosts(input));
@@ -12,22 +33,12 @@ const isPositiveOrUndefined = (d?: Decimal): boolean =>
 const isMultipleOfHalfOrUndefined = (d?: Decimal): boolean =>
   !d ? true : d.modulo(point5).eq(zero);
 
-const hourFields: Array<keyof FundingRequestUnifvaeHourFields> = [
-  "basicSkillsHourCount",
-  "certificateSkillsHourCount",
-  "collectiveHourCount",
-  "individualHourCount",
-  "mandatoryTrainingsHourCount",
-  "otherTrainingHourCount",
-];
 const point5 = new Decimal(0.5);
 const zero = new Decimal(0);
 
-function validHours(
-  input: FundingRequestUnifvaeInput
-): BusinessRulesValidationError[] {
+function validHours(input: HourFields): BusinessRulesValidationError[] {
   return hourFields.reduce((errors, fieldName) => {
-    if (!isPositiveOrUndefined(input.fundingRequest[fieldName])) {
+    if (!isPositiveOrUndefined(input[fieldName])) {
       return [
         ...errors,
         {
@@ -36,7 +47,7 @@ function validHours(
         },
       ];
     }
-    if (!isMultipleOfHalfOrUndefined(input.fundingRequest[fieldName])) {
+    if (!isMultipleOfHalfOrUndefined(input[fieldName])) {
       return [
         ...errors,
         {
@@ -49,20 +60,9 @@ function validHours(
   }, [] as BusinessRulesValidationError[]);
 }
 
-const costFields: Array<keyof FundingRequestUnifvaeCostFields> = [
-  "basicSkillsCost",
-  "certificateSkillsCost",
-  "collectiveCost",
-  "individualCost",
-  "mandatoryTrainingsCost",
-  "otherTrainingCost",
-];
-
-function validCosts(
-  input: FundingRequestUnifvaeInput
-): BusinessRulesValidationError[] {
+function validCosts(input: CostFields): BusinessRulesValidationError[] {
   return costFields.reduce((errors, fieldName) => {
-    if (!isPositiveOrUndefined(input.fundingRequest[fieldName])) {
+    if (!isPositiveOrUndefined(input[fieldName])) {
       return [
         ...errors,
         {

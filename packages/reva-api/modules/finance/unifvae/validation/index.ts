@@ -7,10 +7,16 @@ import { valideForfaitHeures } from "./forfait-heures";
 import { validHoursCountAndCosts } from "./valid-numbers";
 
 const applyBusinessValidationRules = async (
-  input: FundingRequestUnifvaeInputCompleted
+  input: {
+    candidacyId: string;
+    isCertificationPartial: boolean;
+  } & FundingRequestUnifvaeHourFields &
+    FundingRequestUnifvaeCostFields
 ): Promise<BusinessRulesValidationError[]> => {
   // Feasibility checks are blocking
-  const feasibilityErrors = await validateFeasibilityChecks(input);
+  const feasibilityErrors = await validateFeasibilityChecks({
+    ...input,
+  });
   if (feasibilityErrors.length) {
     return feasibilityErrors;
   }
@@ -21,11 +27,11 @@ const applyBusinessValidationRules = async (
   });
   if (feasibility?.decision === "ADMISSIBLE") {
     errors = errors
-      .concat(validHoursCountAndCosts(input))
-      .concat(valideForfaitHeures(input))
-      .concat(validateCoutsHoraires(input))
-      .concat(validateComplementFormatif(input))
-      .concat(validateAccompagnement(input));
+      .concat(validHoursCountAndCosts({ ...input }))
+      .concat(valideForfaitHeures({ ...input }))
+      .concat(validateCoutsHoraires({ ...input }))
+      .concat(validateComplementFormatif({ ...input }))
+      .concat(validateAccompagnement({ ...input }));
   }
   return errors;
 };

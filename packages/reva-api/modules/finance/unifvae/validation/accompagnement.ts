@@ -11,14 +11,18 @@
 
 import { Decimal } from "@prisma/client/runtime";
 
-export const validateAccompagnement = (input: FundingRequestUnifvaeInput) => {
+export const validateAccompagnement = ({
+  individualHourCount,
+  individualCost,
+  collectiveHourCount,
+  collectiveCost,
+}: {
+  individualHourCount: Decimal;
+  collectiveHourCount: Decimal;
+  individualCost: Decimal;
+  collectiveCost: Decimal;
+}) => {
   const errors = [] as BusinessRulesValidationError[];
-  const individualHourCount =
-    input.fundingRequest.individualHourCount ?? new Decimal(0);
-  const collectiveHourCount =
-    input.fundingRequest.collectiveHourCount ?? new Decimal(0);
-  const individualCost = input.fundingRequest.individualCost ?? new Decimal(0);
-  const collectiveCost = input.fundingRequest.collectiveCost ?? new Decimal(0);
 
   const zero = new Decimal(0);
 

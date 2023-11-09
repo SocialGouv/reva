@@ -9,8 +9,21 @@ import { Decimal } from "@prisma/client/runtime";
 
 import { prismaClient } from "../../../../prisma/client";
 
+const hourFields = [
+  "basicSkillsHourCount",
+  "certificateSkillsHourCount",
+  "collectiveHourCount",
+  "individualHourCount",
+  "mandatoryTrainingsHourCount",
+  "otherTrainingHourCount",
+] as const;
+
+type HourFields = { [Key in typeof hourFields[number]]: Decimal };
+
 export const validateFeasibilityChecks = async (
-  input: FundingRequestUnifvaeInput
+  input: {
+    candidacyId: string;
+  } & HourFields
 ): Promise<BusinessRulesValidationError[]> => {
   const candidacy = await prismaClient.candidacy.findUnique({
     where: { id: input.candidacyId },
@@ -46,18 +59,10 @@ export const validateFeasibilityChecks = async (
 
   // Vérifie qu'on n'a aucun coût hors-forfait si dossier non validé
   if (candidacy.Feasibility?.[0]?.decision === "REJECTED") {
-    const hourFields: Array<keyof FundingRequestUnifvaeHourFields> = [
-      "individualHourCount",
-      "collectiveHourCount",
-      "mandatoryTrainingsHourCount",
-      "basicSkillsHourCount",
-      "certificateSkillsHourCount",
-      "otherTrainingHourCount",
-    ];
     const zero = new Decimal(0);
     errors = errors.concat(
       hourFields
-        .filter((hf) => input.fundingRequest[hf].greaterThan(zero))
+        .filter((hf) => input[hf].greaterThan(zero))
         .map((fieldName) => ({
           fieldName,
           message: `Impossible de prendre en charge "${fieldName}" sur un dossier non recevable.`,
