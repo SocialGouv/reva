@@ -529,7 +529,7 @@ updateTab context tab ( model, cmd ) =
                             , onLoad = Just <| Api.Form.PaymentRequestUniFvae.get tab.candidacyId
                             , onSave = Nothing
                             , onSubmit = Api.Form.PaymentRequestUniFvae.createOrUpdate tab.candidacyId
-                            , onRedirect = pushUrl <| candidacyTab PaymentUploads
+                            , onRedirect = pushUrl <| candidacyTab PaymentRequest
                             , onValidate = Data.Form.PaymentRequestUniFvae.validate
                             , status =
                                 if Candidacy.isPaymentRequestSent candidacy then

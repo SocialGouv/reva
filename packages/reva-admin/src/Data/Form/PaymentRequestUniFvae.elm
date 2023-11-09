@@ -1,13 +1,13 @@
 module Data.Form.PaymentRequestUniFvae exposing
     ( FundingRequest
     , PaymentRequest
+    , fromDict
     , keys
     , maybePaymentRequestFormDict
     , validate
     )
 
 import Admin.Enum.Gender exposing (Gender(..))
-import Admin.Object.FundingRequest exposing (numAction)
 import Admin.Scalar exposing (Decimal)
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
@@ -59,8 +59,29 @@ type alias FundingRequest =
     }
 
 
+fromDict : FormData -> PaymentRequest
+fromDict formData =
+    let
+        decode =
+            Helper.decode keys formData
+    in
+    PaymentRequest
+        (decode.decimal .individualHourCount (Admin.Scalar.Decimal "0"))
+        (decode.decimal .individualCost (Admin.Scalar.Decimal "0"))
+        (decode.decimal .collectiveHourCount (Admin.Scalar.Decimal "0"))
+        (decode.decimal .collectiveCost (Admin.Scalar.Decimal "0"))
+        (decode.decimal .basicSkillsHourCount (Admin.Scalar.Decimal "0"))
+        (decode.decimal .basicSkillsCost (Admin.Scalar.Decimal "0"))
+        (decode.decimal .mandatoryTrainingsHourCount (Admin.Scalar.Decimal "0"))
+        (decode.decimal .mandatoryTrainingsCost (Admin.Scalar.Decimal "0"))
+        (decode.decimal .certificateSkillsHourCount (Admin.Scalar.Decimal "0"))
+        (decode.decimal .certificateSkillsCost (Admin.Scalar.Decimal "0"))
+        (decode.decimal .otherTrainingHourCount (Admin.Scalar.Decimal "0"))
+        (decode.decimal .otherTrainingCost (Admin.Scalar.Decimal "0"))
+
+
 validate : ( Candidacy, Referential ) -> FormData -> Result (List String) ()
-validate ( candidacy, _ ) formData =
+validate ( candidacy, _ ) _ =
     Result.Ok ()
 
 
