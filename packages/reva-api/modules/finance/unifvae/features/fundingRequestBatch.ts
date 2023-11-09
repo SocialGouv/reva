@@ -57,12 +57,15 @@ export const createBatchFromFundingRequestUnifvae = async (
     (heures, fc) => heures.plus(fc.count),
     new Decimal(0)
   );
-  const formationComplementaireCoutHoraireMoyen = formationComplementaire
-    .reduce(
-      (totalCost, fc) => totalCost.plus(fc.cost.times(fc.count)),
-      new Decimal(0)
-    )
-    .dividedBy(formationComplementaireHeures);
+  const formationComplementaireCoutHoraireMoyen =
+    formationComplementaireHeures.isZero()
+      ? 0
+      : formationComplementaire
+          .reduce(
+            (totalCost, fc) => totalCost.plus(fc.cost.times(fc.count)),
+            new Decimal(0)
+          )
+          .dividedBy(formationComplementaireHeures);
 
   return prismaClient.fundingRequestBatchUnifvae.create({
     data: {
