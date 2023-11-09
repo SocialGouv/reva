@@ -10,7 +10,7 @@ module Page.Candidacy exposing
 
 import Accessibility exposing (h1)
 import Admin.Enum.CandidacyStatusStep as Step
-import Admin.Enum.FinanceModule as FinanceModule
+import Admin.Enum.FinanceModule as FinanceModule exposing (FinanceModule)
 import Api.Candidacy
 import Api.Form.Admissibility
 import Api.Form.Appointment
@@ -21,6 +21,7 @@ import Api.Form.ExamInfo
 import Api.Form.Feasibility
 import Api.Form.FundingRequestUniFvae
 import Api.Form.FundingRequestUniReva
+import Api.Form.PaymentRequestUniFvae
 import Api.Form.PaymentRequestUniReva
 import Api.Form.PaymentUploadsUniReva
 import Api.Form.Training
@@ -39,6 +40,7 @@ import Data.Form.DropOut
 import Data.Form.Feasibility
 import Data.Form.FundingRequestUniFvae
 import Data.Form.FundingRequestUniReva
+import Data.Form.PaymentRequestUniFvae
 import Data.Form.PaymentRequestUniReva
 import Data.Form.Training
 import Data.Form.Unarchive
@@ -56,6 +58,7 @@ import Page.Form.ExamInfo
 import Page.Form.Feasibility
 import Page.Form.FundingRequestUniFvae
 import Page.Form.FundingRequestUniReva
+import Page.Form.PaymentRequestUniFvae
 import Page.Form.PaymentRequestUniReva
 import Page.Form.PaymentUploadsUniReva
 import Page.Form.Training
@@ -215,15 +218,19 @@ view context model =
                                     viewForm "payment"
 
                                 FinanceModule.Unifvae ->
-                                    viewArticle "payment"
-                                        [ View.alert View.Warning
-                                            []
-                                            "Attention"
-                                            [ p [] [ text "La demande de paiement est momentanément désactivée. Elle est actuellement en cours de développement en collaboration avec notre partenaire." ]
-                                            , p [] [ text "Elle devrait être de nouveau disponible courant 2023. Nous ne manquerons pas de vous tenir informés de sa réactivation." ]
-                                            , p [ class "italic" ] [ text "Nous vous rappelons que l'accord de financement est subordonné à l'obtention de la recevabilité." ]
+                                    if List.member "PAYMENT_REQUEST_FVAE" context.activeFeatures then
+                                        viewForm "payment"
+
+                                    else
+                                        viewArticle "payment"
+                                            [ View.alert View.Warning
+                                                []
+                                                "Attention"
+                                                [ p [] [ text "La demande de paiement est momentanément désactivée. Elle est actuellement en cours de développement en collaboration avec notre partenaire." ]
+                                                , p [] [ text "Elle devrait être de nouveau disponible courant 2023. Nous ne manquerons pas de vous tenir informés de sa réactivation." ]
+                                                , p [ class "italic" ] [ text "Nous vous rappelons que l'accord de financement est subordonné à l'obtention de la recevabilité." ]
+                                                ]
                                             ]
-                                        ]
 
                         _ ->
                             div [] []
@@ -516,21 +523,39 @@ updateTab context tab ( model, cmd ) =
         ( View.Candidacy.Tab.PaymentRequest, Success candidacy ) ->
             let
                 ( formModel, formCmd ) =
-                    Form.updateForm context
-                        { form = Page.Form.PaymentRequestUniReva.form candidacy.certification
-                        , onLoad = Just <| Api.Form.PaymentRequestUniReva.get tab.candidacyId
-                        , onSave = Nothing
-                        , onSubmit = Api.Form.PaymentRequestUniReva.createOrUpdate tab.candidacyId
-                        , onRedirect = pushUrl <| candidacyTab PaymentUploads
-                        , onValidate = Data.Form.PaymentRequestUniReva.validate
-                        , status =
-                            if Candidacy.isPaymentRequestSent candidacy then
-                                Form.ReadOnly
+                    if candidacy.financeModule == FinanceModule.Unifvae then
+                        Form.updateForm context
+                            { form = Page.Form.PaymentRequestUniFvae.form candidacy.certification
+                            , onLoad = Just <| Api.Form.PaymentRequestUniFvae.get tab.candidacyId
+                            , onSave = Nothing
+                            , onSubmit = Api.Form.PaymentRequestUniFvae.createOrUpdate tab.candidacyId
+                            , onRedirect = pushUrl <| candidacyTab PaymentUploads
+                            , onValidate = Data.Form.PaymentRequestUniFvae.validate
+                            , status =
+                                if Candidacy.isPaymentRequestSent candidacy then
+                                    Form.ReadOnly
 
-                            else
-                                Form.Editable
-                        }
-                        model.form
+                                else
+                                    Form.Editable
+                            }
+                            model.form
+
+                    else
+                        Form.updateForm context
+                            { form = Page.Form.PaymentRequestUniReva.form candidacy.certification
+                            , onLoad = Just <| Api.Form.PaymentRequestUniReva.get tab.candidacyId
+                            , onSave = Nothing
+                            , onSubmit = Api.Form.PaymentRequestUniReva.createOrUpdate tab.candidacyId
+                            , onRedirect = pushUrl <| candidacyTab PaymentUploads
+                            , onValidate = Data.Form.PaymentRequestUniReva.validate
+                            , status =
+                                if Candidacy.isPaymentRequestSent candidacy then
+                                    Form.ReadOnly
+
+                                else
+                                    Form.Editable
+                            }
+                            model.form
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
