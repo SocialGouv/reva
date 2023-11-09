@@ -3,6 +3,7 @@ module Page.Form.PaymentRequestUniFvae exposing (form)
 import Accessibility exposing (Html, div, h3, h4, p, span, text)
 import Accessibility.Aria as Aria
 import Admin.Enum.Gender exposing (Gender(..))
+import Admin.Object.FundingRequest exposing (numAction)
 import Data.Candidacy exposing (Candidacy)
 import Data.Candidate
 import Data.Certification exposing (Certification)
@@ -69,7 +70,9 @@ form maybeCertification formData ( candidacy, referential ) =
                 |> Maybe.map (.label >> Form.Info "Accompagnateur choisi")
                 |> Maybe.withDefault Form.Empty
           )
-        , ( "companion", Form.Title1 "3. Accompagnement" )
+        , ( "num-action", Form.Title1 "3. Numéro de prise en charge France VAE" )
+        , ( "numAction", Form.Text (Maybe.withDefault "" <| Data.Form.get keys.numAction formData) Nothing )
+        , ( "companion", Form.Title1 ". Accompagnement" )
         , ( "forfait", Form.StaticHtml forfaitInfo )
         ]
             ++ (if showCustomFundingFields then

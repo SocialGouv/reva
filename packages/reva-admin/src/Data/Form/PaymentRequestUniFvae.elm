@@ -1,11 +1,13 @@
 module Data.Form.PaymentRequestUniFvae exposing
-    ( PaymentRequest
+    ( FundingRequest
+    , PaymentRequest
     , keys
     , maybePaymentRequestFormDict
     , validate
     )
 
 import Admin.Enum.Gender exposing (Gender(..))
+import Admin.Object.FundingRequest exposing (numAction)
 import Admin.Scalar exposing (Decimal)
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
@@ -32,6 +34,7 @@ keys =
     , otherTraining = "otherTraining"
     , otherTrainingHourCount = "otherTrainingHourCount"
     , otherTrainingCost = "otherTrainingCost"
+    , numAction = "numAction"
     }
 
 
@@ -51,13 +54,18 @@ type alias PaymentRequest =
     }
 
 
+type alias FundingRequest =
+    { numAction : String
+    }
+
+
 validate : ( Candidacy, Referential ) -> FormData -> Result (List String) ()
 validate ( candidacy, _ ) formData =
     Result.Ok ()
 
 
-toDict : PaymentRequest -> List Uuid -> List Uuid -> Maybe String -> Maybe String -> Dict String String
-toDict paymentRequest basicSkillIds mandatoryTrainingIds certificateSkills otherTraining =
+toDict : PaymentRequest -> Maybe FundingRequest -> List Uuid -> List Uuid -> Maybe String -> Maybe String -> Dict String String
+toDict paymentRequest fundingRequest basicSkillIds mandatoryTrainingIds certificateSkills otherTraining =
     let
         decimal key =
             Just <| Helper.decimalToString <| key paymentRequest
@@ -83,14 +91,17 @@ toDict paymentRequest basicSkillIds mandatoryTrainingIds certificateSkills other
             , ( .otherTraining, otherTraining )
             , ( .otherTrainingHourCount, decimal .otherTrainingHourCount )
             , ( .otherTrainingCost, decimal .otherTrainingCost )
+            , ( .numAction
+              , Maybe.map .numAction fundingRequest
+              )
             ]
                 |> Helper.toKeyedList keys
     in
     Dict.fromList (mandatoryTrainingsChecked ++ basicSkillsChecked ++ fundingList)
 
 
-defaultPaymentRequestFormDict : List Uuid -> List Uuid -> Maybe String -> Maybe String -> Dict String String
-defaultPaymentRequestFormDict basicSkillIds mandatoryTrainingIds certificateSkills otherTraining =
+defaultPaymentRequestFormDict : Maybe FundingRequest -> List Uuid -> List Uuid -> Maybe String -> Maybe String -> Dict String String
+defaultPaymentRequestFormDict fr basicSkillIds mandatoryTrainingIds certificateSkills otherTraining =
     let
         mandatoryTrainingsChecked =
             Helper.uuidToCheckedList mandatoryTrainingIds
@@ -101,17 +112,20 @@ defaultPaymentRequestFormDict basicSkillIds mandatoryTrainingIds certificateSkil
         otherFields =
             [ ( .certificateSkills, certificateSkills )
             , ( .otherTraining, otherTraining )
+            , ( .numAction
+              , Maybe.map .numAction fr
+              )
             ]
                 |> Helper.toKeyedList keys
     in
     Dict.fromList (mandatoryTrainingsChecked ++ basicSkillsChecked ++ otherFields)
 
 
-maybePaymentRequestFormDict : Maybe PaymentRequest -> List Uuid -> List Uuid -> Maybe String -> Maybe String -> Dict String String
-maybePaymentRequestFormDict maybePr basicSkillIds mandatoryTrainingIds certificateSkills otherTraining =
+maybePaymentRequestFormDict : Maybe PaymentRequest -> Maybe FundingRequest -> List Uuid -> List Uuid -> Maybe String -> Maybe String -> Dict String String
+maybePaymentRequestFormDict maybePr fr basicSkillIds mandatoryTrainingIds certificateSkills otherTraining =
     case maybePr of
         Just paymentRequest ->
-            toDict paymentRequest basicSkillIds mandatoryTrainingIds certificateSkills otherTraining
+            toDict paymentRequest fr basicSkillIds mandatoryTrainingIds certificateSkills otherTraining
 
         Nothing ->
-            defaultPaymentRequestFormDict basicSkillIds mandatoryTrainingIds certificateSkills otherTraining
+            defaultPaymentRequestFormDict fr basicSkillIds mandatoryTrainingIds certificateSkills otherTraining

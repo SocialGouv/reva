@@ -2,6 +2,7 @@ module Api.Form.PaymentRequestUniFvae exposing (createOrUpdate, get)
 
 import Admin.Object
 import Admin.Object.Candidacy
+import Admin.Object.FundingRequestUnifvae
 import Admin.Object.PaymentRequestUnifvae
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
@@ -30,6 +31,9 @@ get candidacyId endpointGraphql token toMsg =
         paymentRequestFromCandidacySelection =
             Admin.Object.Candidacy.paymentRequestUnifvae paymentRequestSelection
 
+        fundingRequestFromCandidacySelection =
+            Admin.Object.Candidacy.fundingRequestUnifvae fundingRequestSelection
+
         basicSkillIdsFromCandidacySelection =
             Admin.Object.Candidacy.basicSkillIds
 
@@ -44,6 +48,7 @@ get candidacyId endpointGraphql token toMsg =
     in
     SelectionSet.succeed Data.Form.PaymentRequestUniFvae.maybePaymentRequestFormDict
         |> with paymentRequestFromCandidacySelection
+        |> with fundingRequestFromCandidacySelection
         |> with basicSkillIdsFromCandidacySelection
         |> with mandatoryTrainingIdsFromCandidacySelection
         |> with certificateSkillsFromCandidacySelection
@@ -68,6 +73,12 @@ paymentRequestSelection =
         |> with Admin.Object.PaymentRequestUnifvae.certificateSkillsEffectiveCost
         |> with Admin.Object.PaymentRequestUnifvae.otherTrainingEffectiveHourCount
         |> with Admin.Object.PaymentRequestUnifvae.otherTrainingEffectiveCost
+
+
+fundingRequestSelection : SelectionSet Data.Form.PaymentRequestUniFvae.FundingRequest Admin.Object.FundingRequestUnifvae
+fundingRequestSelection =
+    SelectionSet.succeed Data.Form.PaymentRequestUniFvae.FundingRequest
+        |> with Admin.Object.FundingRequestUnifvae.numAction
 
 
 createOrUpdate :
