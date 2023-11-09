@@ -108,3 +108,32 @@ export const getPaymentRequestUnifvaeFromCandidacyId = (candidacyId: string) =>
   prismaClient.paymentRequestUniFvae.findFirst({
     where: { candidacyId },
   });
+
+export const createOrUpdatePaymentRequestUnifvae = async ({
+  candidacyId,
+  paymentRequest,
+}: {
+  candidacyId: string;
+  paymentRequest: PaymentRequestUnifvaeInput;
+}) => {
+  const candidacy = await prismaClient.candidacy.findUnique({
+    where: { id: candidacyId },
+  });
+  if (!candidacy) {
+    throw new Error(
+      "Impossible de créer la demande de paiement. La candidature n'a pas été trouvée"
+    );
+  }
+
+  return prismaClient.paymentRequestUniFvae.upsert({
+    where: { candidacyId },
+    create: {
+      candidacyId,
+      ...paymentRequest,
+      invoiceNumber: paymentRequest.invoiceNumber || "",
+    },
+    update: {
+      ...paymentRequest,
+    },
+  });
+};

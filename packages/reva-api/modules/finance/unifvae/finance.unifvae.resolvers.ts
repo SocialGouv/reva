@@ -10,6 +10,7 @@ import {
 import { isAdminOrCandidacyCompanion } from "../../shared/security/presets";
 import {
   createFundingRequestUnifvae,
+  createOrUpdatePaymentRequestUnifvae,
   getFundingRequestUnifvaeFromCandidacyId,
   getPaymentRequestUnifvaeFromCandidacyId,
 } from "./features/finance.unifvae.features";
@@ -123,10 +124,19 @@ const unsafeResolvers = {
         return new mercurius.ErrorWithProps(error.message, error);
       }
     },
+    candidacy_createOrUpdatePaymentRequestUnifvae: async (
+      _: unknown,
+      params: {
+        candidacyId: string;
+        paymentRequest: PaymentRequestUnifvaeInput;
+      }
+    ) => createOrUpdatePaymentRequestUnifvae(params),
   },
 };
 
 export const financeUnifvaeResolvers = composeResolvers(unsafeResolvers, {
   "Mutation.candidacy_createFundingRequestUnifvae": isAdminOrCandidacyCompanion,
+  "Mutation.candidacy_createOrUpdatePaymentRequestUnifvae":
+    isAdminOrCandidacyCompanion,
   "Query.candidacy_getFundingRequestUnifvae": isAdminOrCandidacyCompanion,
 });

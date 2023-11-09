@@ -68,6 +68,22 @@ input FundingRequestUnifvaeInput {
   fundingContactPhone: String
 }
 
+input PaymentRequestUnifvaeInput {
+  individualEffectiveHourCount: Decimal!
+  individualEffectiveCost: Decimal!
+  collectiveEffectiveHourCount: Decimal!
+  collectiveEffectiveCost: Decimal!
+  mandatoryTrainingsEffectiveHourCount: Decimal!
+  mandatoryTrainingsEffectiveCost: Decimal!
+  basicSkillsEffectiveHourCount: Decimal!
+  basicSkillsEffectiveCost: Decimal!
+  certificateSkillsEffectiveHourCount: Decimal!
+  certificateSkillsEffectiveCost: Decimal!
+  otherTrainingEffectiveHourCount: Decimal!
+  otherTrainingEffectiveCost: Decimal!
+  invoiceNumber: String
+}
+
 type Candidacy {
   fundingRequestUnifvae: FundingRequestUnifvae
   paymentRequestUnifvae: PaymentRequestUnifvae
@@ -82,4 +98,9 @@ type Mutation {
     candidacyId: UUID!
     fundingRequest: FundingRequestUnifvaeInput!
   ): FundingRequestUnifvae!
+
+  candidacy_createOrUpdatePaymentRequestUnifvae(
+    candidacyId: UUID!
+    paymentRequest: PaymentRequestUnifvaeInput!
+  ): PaymentRequestUnifvae!
 }

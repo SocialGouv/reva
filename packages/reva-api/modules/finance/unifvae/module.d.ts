@@ -41,3 +41,19 @@ interface BusinessRulesValidationError {
   fieldName: BusinessRulesValidationFieldname | "GLOBAL";
   message: string;
 }
+
+interface PaymentRequestUnifvaeInput {
+  individualEffectiveHourCount: Decimal;
+  individualEffectiveCost: Decimal;
+  collectiveEffectiveHourCount: Decimal;
+  collectiveEffectiveCost: Decimal;
+  mandatoryTrainingsEffectiveHourCount: Decimal;
+  mandatoryTrainingsEffectiveCost: Decimal;
+  basicSkillsEffectiveHourCount: Decimal;
+  basicSkillsEffectiveCost: Decimal;
+  certificateSkillsEffectiveHourCount: Decimal;
+  certificateSkillsEffectiveCost: Decimal;
+  otherTrainingEffectiveHourCount: Decimal;
+  otherTrainingEffectiveCost: Decimal;
+  invoiceNumber?: string;
+}
