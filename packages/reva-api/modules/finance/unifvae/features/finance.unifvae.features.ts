@@ -3,6 +3,7 @@ import { format } from "date-fns";
 
 import { prismaClient } from "../../../../prisma/client";
 import { updateCandidacyStatus } from "../../../candidacy/database/candidacies";
+import applyBusinessValidationRules from "../validation";
 import { createBatchFromFundingRequestUnifvae } from "./fundingRequestBatch";
 
 export const createFundingRequestUnifvae = async ({
@@ -123,6 +124,32 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
     throw new Error(
       "Impossible de créer la demande de paiement. La candidature n'a pas été trouvée"
     );
+  }
+
+  const validationErrors = await applyBusinessValidationRules({
+    candidacyId,
+    isCertificationPartial: candidacy.isCertificationPartial,
+    individualHourCount: paymentRequest.individualEffectiveHourCount,
+    collectiveHourCount: paymentRequest.collectiveEffectiveHourCount,
+    basicSkillsHourCount: paymentRequest.basicSkillsEffectiveHourCount,
+    mandatoryTrainingsHourCount:
+      paymentRequest.mandatoryTrainingsEffectiveHourCount,
+    certificateSkillsHourCount:
+      paymentRequest.certificateSkillsEffectiveHourCount,
+    otherTrainingHourCount: paymentRequest.otherTrainingEffectiveHourCount,
+    individualCost: paymentRequest.individualEffectiveCost,
+    collectiveCost: paymentRequest.collectiveEffectiveCost,
+    basicSkillsCost: paymentRequest.basicSkillsEffectiveCost,
+    mandatoryTrainingsCost: paymentRequest.mandatoryTrainingsEffectiveCost,
+    certificateSkillsCost: paymentRequest.certificateSkillsEffectiveCost,
+    otherTrainingCost: paymentRequest.otherTrainingEffectiveCost,
+  });
+
+  if (validationErrors.length) {
+    const businessErrors = validationErrors.map(({ fieldName, message }) =>
+      fieldName === "GLOBAL" ? message : `input.${fieldName}: ${message}`
+    );
+    throw new Error(businessErrors[0]);
   }
 
   return prismaClient.paymentRequestUniFvae.upsert({
