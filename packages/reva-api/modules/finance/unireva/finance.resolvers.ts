@@ -87,7 +87,13 @@ const unsafeResolvers = {
       });
 
       return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .mapLeft((error) =>
+          error.errors?.length
+            ? new mercurius.ErrorWithProps(error.errors[0], {
+                businessErrors: error.errors,
+              })
+            : new mercurius.ErrorWithProps(error.message, error)
+        )
         .extract();
     },
     candidacy_confirmPaymentRequest: async (
@@ -110,7 +116,13 @@ const unsafeResolvers = {
       });
 
       return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
+        .mapLeft((error) =>
+          error.errors?.length
+            ? new mercurius.ErrorWithProps(error.errors[0], {
+                businessErrors: error.errors,
+              })
+            : new mercurius.ErrorWithProps(error.message, error)
+        )
         .extract();
     },
   },
