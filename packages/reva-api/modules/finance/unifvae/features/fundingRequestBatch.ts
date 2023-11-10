@@ -59,7 +59,7 @@ export const createBatchFromFundingRequestUnifvae = async (
   );
   const formationComplementaireCoutHoraireMoyen =
     formationComplementaireHeures.isZero()
-      ? 0
+      ? new Decimal(0)
       : formationComplementaire
           .reduce(
             (totalCost, fc) => totalCost.plus(fc.cost.times(fc.count)),
