@@ -25,30 +25,30 @@ export const searchCertifications = async ({
     .map((t) => t + ":*")
     .join("&");
 
-  const certifications =
-    (await prismaClient.$queryRawUnsafe(`select distinct(c.id),c.label,c.summary,c.status, c.rncp_id as "codeRncp"
-      from certification c, available_certification_by_department where c.id=available_certification_by_department.certification_id ${
+  const commonQuery = `
+      from certification c, available_certification_by_department
+      where c.id=available_certification_by_department.certification_id
+      ${
         departmentId
           ? `and available_certification_by_department.department_id=uuid('${departmentId}')`
           : ""
-      } ${
-      searchTextInTsQueryFormat
-        ? `and certification_searchable_text@@to_tsquery('simple',unaccent('${searchTextInTsQueryFormat}'))`
-        : ""
-    } order by c.label offset ${realOffset} limit ${realLimit}`)) as Certification[];
+      }
+      ${
+        searchTextInTsQueryFormat
+          ? `and certification_searchable_text@@to_tsquery('simple',unaccent('${searchTextInTsQueryFormat}'))`
+          : ""
+      }`;
+
+  const certifications =
+    (await prismaClient.$queryRawUnsafe(`select distinct(c.id),c.label,c.summary,c.status, c.rncp_id as "codeRncp"
+      ${commonQuery}
+      order by c.label offset ${realOffset} limit ${realLimit}`)) as Certification[];
 
   const certificationCount = Number(
     (
       (await prismaClient.$queryRawUnsafe(`select count(distinct(c.id))
-      from certification c, available_certification_by_department where c.id=available_certification_by_department.certification_id ${
-        departmentId
-          ? `and available_certification_by_department.department_id=uuid('${departmentId}')`
-          : ""
-      } ${
-        searchTextInTsQueryFormat
-          ? `and certification_searchable_text@@to_tsquery('simple',unaccent('${searchTextInTsQueryFormat}'))`
-          : ""
-      }`)) as { count: BigInt }[]
+      ${commonQuery}
+      `)) as { count: BigInt }[]
     )[0].count
   );
 
