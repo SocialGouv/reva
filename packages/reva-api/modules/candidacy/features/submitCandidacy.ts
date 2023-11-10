@@ -1,4 +1,4 @@
-import { Organism } from "@prisma/client";
+import { CandidacyStatusStep, Organism } from "@prisma/client";
 import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
 
 import {
@@ -16,9 +16,9 @@ interface SubmitCandidacyDeps {
   getOrganismFromCandidacyId: (
     id: string
   ) => Promise<Either<string, Maybe<Organism>>>;
-  existsCandidacyHavingHadStatus: (params: {
+  existsCandidacyWithActiveStatus: (params: {
     candidacyId: string;
-    status: "VALIDATION";
+    status: typeof CandidacyStatusStep.PROJET;
   }) => Promise<Either<string, boolean>>;
   sendNewCandidacyEmail: (to: string) => Promise<Either<string, string>>;
 }
@@ -36,13 +36,13 @@ export const submitCandidacy =
     );
 
     const validateCandidacyNotAlreadySubmitted = EitherAsync.fromPromise(() =>
-      deps.existsCandidacyHavingHadStatus({
+      deps.existsCandidacyWithActiveStatus({
         candidacyId: params.candidacyId,
-        status: "VALIDATION",
+        status: CandidacyStatusStep.PROJET,
       })
     )
       .chain((existsCandidacy) => {
-        if (existsCandidacy) {
+        if (!existsCandidacy) {
           return EitherAsync.liftEither(
             Left(`Cette candidature ne peut être soumise à nouveau.`)
           );
@@ -57,7 +57,7 @@ export const submitCandidacy =
     const updateContact = EitherAsync.fromPromise(() =>
       deps.updateCandidacyStatus({
         candidacyId: params.candidacyId,
-        status: "VALIDATION",
+        status: CandidacyStatusStep.VALIDATION,
       })
     ).mapLeft(
       () =>

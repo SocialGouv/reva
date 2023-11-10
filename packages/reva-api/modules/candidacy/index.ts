@@ -274,8 +274,8 @@ const unsafeResolvers = {
       const result = await submitCandidacy({
         updateCandidacyStatus: candidacyDb.updateCandidacyStatus,
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
-        existsCandidacyHavingHadStatus:
-          candidacyDb.existsCandidacyHavingHadStatus,
+        existsCandidacyWithActiveStatus:
+          candidacyDb.existsCandidacyWithActiveStatus,
         getOrganismFromCandidacyId:
           organismDb.getReferentOrganismFromCandidacyId,
         sendNewCandidacyEmail,
