@@ -44,6 +44,17 @@ const paymentRequest = new cron.CronJob({
   timeZone: "Europe/Paris",
 });
 
+const paymentRequestUnifvae = new cron.CronJob({
+  cronTime: process.env.BATCH_PAYMENT_REQUEST_UNIFVAE_CRONTIME || "*/5 * * * *",
+  onTick: () =>
+    runBatchIfActive({
+      batchKey: "batch.demande-paiement-unifvae",
+      batchCallback: batchPaymentRequest,
+    }),
+  start: true,
+  timeZone: "Europe/Paris",
+});
+
 async function runBatchIfActive({
   batchKey,
   batchCallback,
