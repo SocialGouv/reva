@@ -27,10 +27,15 @@ async function attachOrganismToDepartment(
   });
 }
 
-async function getCertifications(
-  department: Department | null,
-  searchText?: string
-) {
+async function getCertifications({
+  department,
+  searchText,
+  organism,
+}: {
+  department: Department | null;
+  searchText?: string;
+  organism?: Organism | null;
+}) {
   return await injectGraphql({
     fastify: (global as any).fastify,
     authorization: authorizationHeaderForUser({
@@ -45,6 +50,7 @@ async function getCertifications(
         offset: 0,
         limit: 10,
         ...(searchText ? { searchText } : {}),
+        ...(organism ? { organismId: organism?.id || "" } : {}),
       },
       returnFields: "{ rows { label }, info { totalRows } }",
     },
@@ -52,6 +58,15 @@ async function getCertifications(
 }
 
 let ain: Department | null, paris: Department | null, loire: Department | null;
+let generaliste: Organism | null,
+  expertFiliere: Organism | null,
+  expertBranche: Organism | null;
+
+const particulierEmployeurCertifications = [
+  "Titre à finalité professionnelle Assistant de vie dépendance (ADVD)",
+  "Titre à finalité professionnelle Assistant maternel / garde d'enfants ",
+  "Titre à finalité professionnelle Employé familial",
+].map((label) => ({ label }));
 
 beforeAll(async () => {
   ain = await prismaClient.department.findFirst({ where: { code: "01" } });
@@ -69,16 +84,16 @@ beforeAll(async () => {
       },
     });
 
-  const generaliste = await prismaClient.organism.create({
+  generaliste = await prismaClient.organism.create({
     data: generalisteOrganism,
   });
-  const expertFiliere = await prismaClient.organism.create({
+  expertFiliere = await prismaClient.organism.create({
     data: expertFiliereOrganism,
   });
-  const expertBranche = await prismaClient.organism.create({
+  expertBranche = await prismaClient.organism.create({
     data: expertBrancheOrganism,
   });
-  const expertBrancheEtFiliere = await prismaClient.organism.create({
+  await prismaClient.organism.create({
     data: expertBrancheEtFiliereOrganism,
   });
 
@@ -95,6 +110,7 @@ beforeAll(async () => {
   });
 
   // Branche fixtures (also known as Convention Collective)
+  await attachOrganismToDepartment(expertBranche, paris);
   await attachOrganismToDepartment(expertBranche, loire);
   await prismaClient.organismOnConventionCollective.create({
     data: {
@@ -109,40 +125,74 @@ afterAll(async () => {
   await prismaClient.organism.deleteMany({});
 });
 
+/**
+ * Test search certifications by a candidate
+ */
+
 test("should find certifications with keyword électricien available in Paris", async () => {
-  const resp = await getCertifications(paris, "électricien");
+  const resp = await getCertifications({
+    department: paris,
+    searchText: "électricien",
+  });
   expect(resp.statusCode).toEqual(200);
   const obj = resp.json();
-  expect(obj.data.getCertifications.rows).toEqual(
-    expect.arrayContaining([
-      { label: "BP Electricien" },
-      { label: "CAP Electricien" },
-    ])
-  );
+  expect(obj.data.getCertifications.rows).toEqual([
+    { label: "BP Electricien" },
+    { label: "CAP Electricien" },
+  ]);
 });
 
 test("should have no certifications available in Ain", async () => {
-  const resp = await getCertifications(ain);
+  const resp = await getCertifications({ department: ain });
   const obj = resp.json();
-  expect(obj.data.getCertifications.rows).toEqual(expect.arrayContaining([]));
+  expect(obj.data.getCertifications.rows).toEqual([]);
   expect(obj.data.getCertifications.info.totalRows).toEqual(0);
 });
 
 test("should have only certifications of one branche in Loire", async () => {
-  const resp = await getCertifications(loire);
+  const resp = await getCertifications({ department: loire });
   const obj = resp.json();
   // In Loire we have only one organism, an expert on "particulier employeur" branche
   expect(obj.data.getCertifications.rows).toEqual(
-    expect.arrayContaining([
-      {
-        label:
-          "Titre à finalité professionnelle Assistant de vie dépendance (ADVD)",
-      },
-      {
-        label:
-          "Titre à finalité professionnelle Assistant maternel / garde d'enfants ",
-      },
-      { label: "Titre à finalité professionnelle Employé familial" },
-    ])
+    particulierEmployeurCertifications
+  );
+});
+
+/**
+ * Test search certifications by an organism for reorientation purpose
+ */
+
+test("should have several BTS certifications handle by generaliste in Paris", async () => {
+  const resp = await getCertifications({
+    organism: generaliste,
+    department: paris,
+    searchText: "BTS",
+  });
+  const obj = resp.json();
+  expect(obj.data.getCertifications.info.totalRows).toEqual(17);
+});
+
+test("should have only BTS certifications handle by expertFiliere in Paris", async () => {
+  const resp = await getCertifications({
+    organism: expertFiliere,
+    department: paris,
+    searchText: "BTS",
+  });
+  const obj = resp.json();
+  // expertFiliere handle only "social" domaine, and only one BTS is in this domaine
+  expect(obj.data.getCertifications.rows).toEqual([
+    { label: "BTS Economie sociale et familiale - ESF" },
+  ]);
+});
+
+test("should have only certifications handle by expertBranche in Paris", async () => {
+  const resp = await getCertifications({
+    organism: expertBranche,
+    department: paris,
+  });
+  const obj = resp.json();
+  // expertBranche handle only "particulier employeur" branche
+  expect(obj.data.getCertifications.rows).toEqual(
+    particulierEmployeurCertifications
   );
 });

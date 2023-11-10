@@ -95,6 +95,7 @@ type Query {
     offset: Int
     limit: Int
     departmentId: UUID
+    organismId: UUID
     searchText: String
   ): CertificationPage!
   getCertification(certificationId: ID!): Certification!
