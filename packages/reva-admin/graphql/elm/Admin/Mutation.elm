@@ -425,6 +425,18 @@ candidacy_createOrUpdatePaymentRequestUnifvae requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_createOrUpdatePaymentRequestUnifvae" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "paymentRequest" requiredArgs____.paymentRequest Admin.InputObject.encodePaymentRequestUnifvaeInput ] object____ Basics.identity
 
 
+type alias CandidacyConfirmPaymentRequestUnifvaeRequiredArguments =
+    { candidacyId : Data.Scalar.Uuid }
+
+
+candidacy_confirmPaymentRequestUnifvae :
+    CandidacyConfirmPaymentRequestUnifvaeRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet decodesTo RootMutation
+candidacy_confirmPaymentRequestUnifvae requiredArgs____ object____ =
+    Object.selectionForCompositeField "candidacy_confirmPaymentRequestUnifvae" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ Basics.identity
+
+
 type alias CandidacyCreateOrUpdatePaymentRequestRequiredArguments =
     { candidacyId : Data.Scalar.Uuid
     , paymentRequest : Admin.InputObject.PaymentRequestInput

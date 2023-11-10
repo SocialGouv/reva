@@ -103,4 +103,5 @@ type Mutation {
     candidacyId: UUID!
     paymentRequest: PaymentRequestUnifvaeInput!
   ): PaymentRequestUnifvae!
+  candidacy_confirmPaymentRequestUnifvae(candidacyId: UUID!): Candidacy!
 }

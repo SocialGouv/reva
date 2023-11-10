@@ -164,3 +164,25 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
     },
   });
 };
+
+export const confirmPaymentRequestUnifvae = async ({
+  candidacyId,
+}: {
+  candidacyId: string;
+}) => {
+  const paymentRequest = await prismaClient.paymentRequestUniFvae.findFirst({
+    where: { candidacyId },
+  });
+
+  if (!paymentRequest) {
+    throw new Error(
+      "Impossible de confirmer la demande de paiement. La demande de paiement n'a pas été trouvée"
+    );
+  }
+
+  await updateCandidacyStatus({
+    candidacyId,
+    status: "DEMANDE_PAIEMENT_ENVOYEE",
+  });
+  return paymentRequest;
+};
