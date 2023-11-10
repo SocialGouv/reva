@@ -94,7 +94,7 @@ model Candidacy {
   admissibility             Admissibility?
   examInfo                  ExamInfo?
   Feasibility               Feasibility[]
-  PaymentRequestUniFvae     PaymentRequestUniFvae?
+  paymentRequestUnifvae     PaymentRequestUnifvae?
 
   @@map("candidacy")
 }
@@ -609,7 +609,7 @@ model FileUploadSpooler {
   @@map("file_upload_spooler")
 }
 
-model PaymentRequestUniFvae {
+model PaymentRequestUnifvae {
   id                                   String                      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   candidacy                            Candidacy                   @relation(fields: [candidacyId], references: [id])
   candidacyId                          String                      @unique @map("candidacy_id") @db.Uuid
@@ -632,11 +632,11 @@ model PaymentRequestUniFvae {
 }
 
 model PaymentRequestBatchUnifvae {
-  id               String                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  paymentRequest   PaymentRequestUniFvae @relation(fields: [paymentRequestId], references: [id])
-  paymentRequestId String                @unique @map("payment_request_id") @db.Uuid
-  sent             Boolean               @default(false)
-  content          Json
+  id                      String                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  paymentRequestUnifvae   PaymentRequestUnifvae @relation(fields: [paymentRequestUnifvaeId], references: [id])
+  paymentRequestUnifvaeId String                @unique @map("payment_request_id") @db.Uuid
+  sent                    Boolean               @default(false)
+  content                 Json
 
   @@map("payment_request_batch_unifvae")
 }

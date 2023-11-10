@@ -108,7 +108,7 @@ async function getNextNumAction() {
 }
 
 export const getPaymentRequestUnifvaeFromCandidacyId = (candidacyId: string) =>
-  prismaClient.paymentRequestUniFvae.findFirst({
+  prismaClient.paymentRequestUnifvae.findFirst({
     where: { candidacyId },
   });
 
@@ -154,7 +154,7 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
     throw new Error(businessErrors[0]);
   }
 
-  return prismaClient.paymentRequestUniFvae.upsert({
+  return prismaClient.paymentRequestUnifvae.upsert({
     where: { candidacyId },
     create: {
       candidacyId,
@@ -176,7 +176,7 @@ export const confirmPaymentRequestUnifvae = async ({
     where: { id: candidacyId },
     include: {
       fundingRequestUnifvae: true,
-      PaymentRequestUniFvae: true,
+      paymentRequestUnifvae: true,
       organism: true,
     },
   });
@@ -195,7 +195,7 @@ export const confirmPaymentRequestUnifvae = async ({
     );
   }
 
-  const paymentRequest = candidacy?.PaymentRequestUniFvae;
+  const paymentRequest = candidacy?.paymentRequestUnifvae;
 
   if (!paymentRequest) {
     throw new Error(
@@ -243,7 +243,7 @@ export const confirmPaymentRequestUnifvae = async ({
 
   await prismaClient.paymentRequestBatchUnifvae.create({
     data: {
-      paymentRequestId: paymentRequest.id,
+      paymentRequestUnifvaeId: paymentRequest.id,
       content: {
         SiretAP: candidacy?.organism?.siret,
         NumAction: fundingRequest.numAction,
