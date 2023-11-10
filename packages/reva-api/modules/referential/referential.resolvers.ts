@@ -32,6 +32,7 @@ export const referentialResolvers = {
         offset: payload.offset,
         limit: payload.limit,
         departmentId: payload.departmentId,
+        organismId: payload.organismId,
         searchText: payload.searchText,
       }),
     getCertification: (

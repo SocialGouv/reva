@@ -8,11 +8,13 @@ export const searchCertifications = async ({
   offset,
   limit,
   departmentId,
+  organismId,
   searchText,
 }: {
   offset?: number;
   limit?: number;
   departmentId?: string;
+  organismId?: string;
   searchText?: string;
 }): Promise<PaginatedListResult<Certification>> => {
   const realLimit = limit || 10;
@@ -25,12 +27,21 @@ export const searchCertifications = async ({
     .map((t) => t + ":*")
     .join("&");
 
+  const certificationView = organismId
+    ? "active_organism_by_available_certification_and_department"
+    : "available_certification_by_department";
+
   const commonQuery = `
-      from certification c, available_certification_by_department
-      where c.id=available_certification_by_department.certification_id
+      from certification c, ${certificationView} available_certification
+      where c.id=available_certification.certification_id
       ${
         departmentId
-          ? `and available_certification_by_department.department_id=uuid('${departmentId}')`
+          ? `and available_certification.department_id=uuid('${departmentId}')`
+          : ""
+      }
+      ${
+        organismId
+          ? `and available_certification.organism_id=uuid('${organismId}')`
           : ""
       }
       ${
