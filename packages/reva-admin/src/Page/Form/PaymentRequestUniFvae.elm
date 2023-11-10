@@ -72,7 +72,7 @@ form maybeCertification formData ( candidacy, referential ) =
           )
         , ( "num-action", Form.Title1 "3. Numéro de prise en charge France VAE" )
         , ( "numAction", Form.Text (Maybe.withDefault "" <| Data.Form.get keys.numAction formData) Nothing )
-        , ( "companion", Form.Title1 ". Accompagnement" )
+        , ( "companion", Form.Title1 "4. Accompagnement" )
         , ( "forfait", Form.StaticHtml forfaitInfo )
         ]
             ++ (if showCustomFundingFields then
