@@ -613,17 +613,17 @@ model PaymentRequestUnifvae {
   id                                   String                      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   candidacy                            Candidacy                   @relation(fields: [candidacyId], references: [id])
   candidacyId                          String                      @unique @map("candidacy_id") @db.Uuid
-  individualEffectiveHourCount         Decimal                     @map("individual_effective_hour_count")
+  individualEffectiveHourCount         Decimal                     @map("individual_effective_hour_count") @db.Decimal(10, 2)
   individualEffectiveCost              Decimal                     @map("individual_effective_cost") @db.Decimal(10, 2)
-  collectiveEffectiveHourCount         Decimal                     @map("collective_effective_hour_count")
+  collectiveEffectiveHourCount         Decimal                     @map("collective_effective_hour_count") @db.Decimal(10, 2)
   collectiveEffectiveCost              Decimal                     @map("collective_effective_cost") @db.Decimal(10, 2)
-  mandatoryTrainingsEffectiveHourCount Decimal                     @map("mandatory_training_effective_hour_count")
+  mandatoryTrainingsEffectiveHourCount Decimal                     @map("mandatory_training_effective_hour_count") @db.Decimal(10, 2)
   mandatoryTrainingsEffectiveCost      Decimal                     @map("mandatory_training_effective_cost") @db.Decimal(10, 2)
-  basicSkillsEffectiveHourCount        Decimal                     @map("basic_skills_effective_hour_count")
+  basicSkillsEffectiveHourCount        Decimal                     @map("basic_skills_effective_hour_count") @db.Decimal(10, 2)
   basicSkillsEffectiveCost             Decimal                     @map("basic_skills_effective_cost") @db.Decimal(10, 2)
-  certificateSkillsEffectiveHourCount  Decimal                     @map("certificate_skills_effective_hour_count")
+  certificateSkillsEffectiveHourCount  Decimal                     @map("certificate_skills_effective_hour_count") @db.Decimal(10, 2)
   certificateSkillsEffectiveCost       Decimal                     @map("certificate_skills_effective_cost") @db.Decimal(10, 2)
-  otherTrainingEffectiveHourCount      Decimal                     @default(0) @map("other_training_effective_hour_count")
+  otherTrainingEffectiveHourCount      Decimal                     @default(0) @map("other_training_effective_hour_count") @db.Decimal(10, 2)
   otherTrainingEffectiveCost           Decimal                     @default(0) @map("other_training_effective_cost") @db.Decimal(10, 2)
   invoiceNumber                        String                      @map("invoice_number")
   PaymentRequestBatchUnifvae           PaymentRequestBatchUnifvae?
