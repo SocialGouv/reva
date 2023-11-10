@@ -5,6 +5,7 @@ module Data.Form.PaymentRequestUniFvae exposing
     , keys
     , maybePaymentRequestFormDict
     , validate
+    , validateConfirmation
     )
 
 import Admin.Enum.Gender exposing (Gender(..))
@@ -150,3 +151,8 @@ maybePaymentRequestFormDict maybePr fr basicSkillIds mandatoryTrainingIds certif
 
         Nothing ->
             defaultPaymentRequestFormDict fr basicSkillIds mandatoryTrainingIds certificateSkills otherTraining
+
+
+validateConfirmation : ( Candidacy, Referential ) -> FormData -> Result (List String) ()
+validateConfirmation ( _, _ ) formData =
+    Ok ()

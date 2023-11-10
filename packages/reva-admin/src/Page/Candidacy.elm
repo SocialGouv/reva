@@ -529,7 +529,7 @@ updateTab context tab ( model, cmd ) =
                             , onLoad = Just <| Api.Form.PaymentRequestUniFvae.get tab.candidacyId
                             , onSave = Nothing
                             , onSubmit = Api.Form.PaymentRequestUniFvae.createOrUpdate tab.candidacyId
-                            , onRedirect = pushUrl <| candidacyTab PaymentRequest
+                            , onRedirect = pushUrl <| candidacyTab PaymentRequestConfirmation
                             , onValidate = Data.Form.PaymentRequestUniFvae.validate
                             , status =
                                 if Candidacy.isPaymentRequestSent candidacy then
@@ -575,19 +575,32 @@ updateTab context tab ( model, cmd ) =
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
-        ( View.Candidacy.Tab.PaymentRequestConfirmation, Success _ ) ->
+        ( View.Candidacy.Tab.PaymentRequestConfirmation, Success candidacy ) ->
             let
                 ( formModel, formCmd ) =
-                    Form.updateForm context
-                        { form = Page.Form.PaymentRequestUniReva.confirmationForm
-                        , onLoad = Just <| Api.Form.PaymentRequestUniReva.get tab.candidacyId
-                        , onSave = Nothing
-                        , onSubmit = Api.Form.PaymentRequestUniReva.confirm tab.candidacyId
-                        , onRedirect = pushUrl <| candidacyTab Profile
-                        , onValidate = Data.Form.PaymentRequestUniReva.validateConfirmation
-                        , status = Form.Editable
-                        }
-                        model.form
+                    if candidacy.financeModule == FinanceModule.Unifvae then
+                        Form.updateForm context
+                            { form = Page.Form.PaymentRequestUniFvae.confirmationForm
+                            , onLoad = Just <| Api.Form.PaymentRequestUniFvae.get tab.candidacyId
+                            , onSave = Nothing
+                            , onSubmit = Api.Form.PaymentRequestUniFvae.confirm tab.candidacyId
+                            , onRedirect = pushUrl <| candidacyTab Profile
+                            , onValidate = Data.Form.PaymentRequestUniFvae.validateConfirmation
+                            , status = Form.Editable
+                            }
+                            model.form
+
+                    else
+                        Form.updateForm context
+                            { form = Page.Form.PaymentRequestUniReva.confirmationForm
+                            , onLoad = Just <| Api.Form.PaymentRequestUniReva.get tab.candidacyId
+                            , onSave = Nothing
+                            , onSubmit = Api.Form.PaymentRequestUniReva.confirm tab.candidacyId
+                            , onRedirect = pushUrl <| candidacyTab Profile
+                            , onValidate = Data.Form.PaymentRequestUniReva.validateConfirmation
+                            , status = Form.Editable
+                            }
+                            model.form
             in
             ( { newModel | form = formModel }, Cmd.map GotFormMsg formCmd )
 
