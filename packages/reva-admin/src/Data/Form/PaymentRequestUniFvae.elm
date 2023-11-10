@@ -9,6 +9,7 @@ module Data.Form.PaymentRequestUniFvae exposing
     )
 
 import Admin.Enum.Gender exposing (Gender(..))
+import Admin.Object.PaymentRequest exposing (invoiceNumber)
 import Admin.Scalar exposing (Decimal)
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
@@ -36,6 +37,7 @@ keys =
     , otherTrainingHourCount = "otherTrainingHourCount"
     , otherTrainingCost = "otherTrainingCost"
     , numAction = "numAction"
+    , invoiceNumber = "invoiceNumber"
     }
 
 
@@ -52,6 +54,7 @@ type alias PaymentRequest =
     , certificateSkillsCost : Decimal
     , otherTrainingHourCount : Decimal
     , otherTrainingCost : Decimal
+    , invoiceNumber : String
     }
 
 
@@ -79,6 +82,7 @@ fromDict formData =
         (decode.decimal .certificateSkillsCost (Admin.Scalar.Decimal "0"))
         (decode.decimal .otherTrainingHourCount (Admin.Scalar.Decimal "0"))
         (decode.decimal .otherTrainingCost (Admin.Scalar.Decimal "0"))
+        (decode.string .invoiceNumber "")
 
 
 validate : ( Candidacy, Referential ) -> FormData -> Result (List String) ()
@@ -115,6 +119,9 @@ toDict paymentRequest fundingRequest basicSkillIds mandatoryTrainingIds certific
             , ( .otherTrainingCost, decimal .otherTrainingCost )
             , ( .numAction
               , Maybe.map .numAction fundingRequest
+              )
+            , ( .invoiceNumber
+              , Just paymentRequest.invoiceNumber
               )
             ]
                 |> Helper.toKeyedList keys

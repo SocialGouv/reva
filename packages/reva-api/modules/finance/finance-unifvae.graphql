@@ -81,7 +81,7 @@ input PaymentRequestUnifvaeInput {
   certificateSkillsEffectiveCost: Decimal!
   otherTrainingEffectiveHourCount: Decimal!
   otherTrainingEffectiveCost: Decimal!
-  invoiceNumber: String
+  invoiceNumber: String!
 }
 
 type Candidacy {

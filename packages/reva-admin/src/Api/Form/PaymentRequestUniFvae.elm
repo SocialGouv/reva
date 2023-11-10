@@ -76,6 +76,7 @@ paymentRequestSelection =
         |> with Admin.Object.PaymentRequestUnifvae.certificateSkillsEffectiveCost
         |> with Admin.Object.PaymentRequestUnifvae.otherTrainingEffectiveHourCount
         |> with Admin.Object.PaymentRequestUnifvae.otherTrainingEffectiveCost
+        |> with Admin.Object.PaymentRequestUnifvae.invoiceNumber
 
 
 fundingRequestSelection : SelectionSet Data.Form.PaymentRequestUniFvae.FundingRequest Admin.Object.FundingRequestUnifvae
@@ -111,7 +112,7 @@ createOrUpdate candidacyId endpointGraphql token toMsg ( candidacy, referential 
                 payment.certificateSkillsCost
                 payment.otherTrainingHourCount
                 payment.otherTrainingCost
-                OptionalArgument.Absent
+                payment.invoiceNumber
 
         paymentRequiredArg =
             Mutation.CandidacyCreateOrUpdatePaymentRequestUnifvaeRequiredArguments
