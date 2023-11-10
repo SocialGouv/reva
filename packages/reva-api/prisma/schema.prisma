@@ -610,24 +610,35 @@ model FileUploadSpooler {
 }
 
 model PaymentRequestUniFvae {
-  id                                   String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  candidacy                            Candidacy @relation(fields: [candidacyId], references: [id])
-  candidacyId                          String    @unique @map("candidacy_id") @db.Uuid
-  individualEffectiveHourCount         Decimal   @map("individual_effective_hour_count")
-  individualEffectiveCost              Decimal   @map("individual_effective_cost") @db.Decimal(10, 2)
-  collectiveEffectiveHourCount         Decimal   @map("collective_effective_hour_count")
-  collectiveEffectiveCost              Decimal   @map("collective_effective_cost") @db.Decimal(10, 2)
-  mandatoryTrainingsEffectiveHourCount Decimal   @map("mandatory_training_effective_hour_count")
-  mandatoryTrainingsEffectiveCost      Decimal   @map("mandatory_training_effective_cost") @db.Decimal(10, 2)
-  basicSkillsEffectiveHourCount        Decimal   @map("basic_skills_effective_hour_count")
-  basicSkillsEffectiveCost             Decimal   @map("basic_skills_effective_cost") @db.Decimal(10, 2)
-  certificateSkillsEffectiveHourCount  Decimal   @map("certificate_skills_effective_hour_count")
-  certificateSkillsEffectiveCost       Decimal   @map("certificate_skills_effective_cost") @db.Decimal(10, 2)
-  otherTrainingEffectiveHourCount      Decimal   @default(0) @map("other_training_effective_hour_count")
-  otherTrainingEffectiveCost           Decimal   @default(0) @map("other_training_effective_cost") @db.Decimal(10, 2)
-  invoiceNumber                        String    @map("invoice_number")
+  id                                   String                      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  candidacy                            Candidacy                   @relation(fields: [candidacyId], references: [id])
+  candidacyId                          String                      @unique @map("candidacy_id") @db.Uuid
+  individualEffectiveHourCount         Decimal                     @map("individual_effective_hour_count")
+  individualEffectiveCost              Decimal                     @map("individual_effective_cost") @db.Decimal(10, 2)
+  collectiveEffectiveHourCount         Decimal                     @map("collective_effective_hour_count")
+  collectiveEffectiveCost              Decimal                     @map("collective_effective_cost") @db.Decimal(10, 2)
+  mandatoryTrainingsEffectiveHourCount Decimal                     @map("mandatory_training_effective_hour_count")
+  mandatoryTrainingsEffectiveCost      Decimal                     @map("mandatory_training_effective_cost") @db.Decimal(10, 2)
+  basicSkillsEffectiveHourCount        Decimal                     @map("basic_skills_effective_hour_count")
+  basicSkillsEffectiveCost             Decimal                     @map("basic_skills_effective_cost") @db.Decimal(10, 2)
+  certificateSkillsEffectiveHourCount  Decimal                     @map("certificate_skills_effective_hour_count")
+  certificateSkillsEffectiveCost       Decimal                     @map("certificate_skills_effective_cost") @db.Decimal(10, 2)
+  otherTrainingEffectiveHourCount      Decimal                     @default(0) @map("other_training_effective_hour_count")
+  otherTrainingEffectiveCost           Decimal                     @default(0) @map("other_training_effective_cost") @db.Decimal(10, 2)
+  invoiceNumber                        String                      @map("invoice_number")
+  PaymentRequestBatchUnifvae           PaymentRequestBatchUnifvae?
 
   @@map("payment_request_unifvae")
+}
+
+model PaymentRequestBatchUnifvae {
+  id               String                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  paymentRequest   PaymentRequestUniFvae @relation(fields: [paymentRequestId], references: [id])
+  paymentRequestId String                @unique @map("payment_request_id") @db.Uuid
+  sent             Boolean               @default(false)
+  content          Json
+
+  @@map("payment_request_batch_unifvae")
 }
 
 enum LegalStatus {

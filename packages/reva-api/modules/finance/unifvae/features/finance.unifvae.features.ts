@@ -1,8 +1,10 @@
 import { Candidate } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime";
 import { format } from "date-fns";
 
 import { prismaClient } from "../../../../prisma/client";
 import { updateCandidacyStatus } from "../../../candidacy/database/candidacies";
+import { logger } from "../../../shared/logger";
 import applyBusinessValidationRules from "../validation";
 import { createBatchFromFundingRequestUnifvae } from "./fundingRequestBatch";
 
@@ -170,15 +172,97 @@ export const confirmPaymentRequestUnifvae = async ({
 }: {
   candidacyId: string;
 }) => {
-  const paymentRequest = await prismaClient.paymentRequestUniFvae.findFirst({
-    where: { candidacyId },
+  const candidacy = await prismaClient.candidacy.findFirst({
+    where: { id: candidacyId },
+    include: {
+      fundingRequestUnifvae: true,
+      PaymentRequestUniFvae: true,
+      organism: true,
+    },
   });
+
+  if (!candidacy) {
+    throw new Error(
+      "Impossible de confirmer la demande de paiement. La candidature n'a pas été trouvée"
+    );
+  }
+
+  const fundingRequest = candidacy?.fundingRequestUnifvae[0];
+
+  if (!fundingRequest) {
+    throw new Error(
+      "Impossible de confirmer la demande de paiement. La demande de financement n'a pas été trouvée"
+    );
+  }
+
+  const paymentRequest = candidacy?.PaymentRequestUniFvae;
 
   if (!paymentRequest) {
     throw new Error(
-      "Impossible de confirmer la demande de paiement. La demande de paiement n'a pas été trouvée"
+      "Impossible de confirmer la demande de paiement. La demande de paiment n'a pas été trouvée"
     );
   }
+
+  const formationComplementaireHeures =
+    paymentRequest.basicSkillsEffectiveHourCount
+      .plus(paymentRequest.mandatoryTrainingsEffectiveHourCount)
+      .plus(paymentRequest.certificateSkillsEffectiveHourCount)
+      .plus(paymentRequest.otherTrainingEffectiveHourCount);
+
+  const formationComplementaireCoutTotal =
+    paymentRequest.basicSkillsEffectiveHourCount
+      .mul(paymentRequest.basicSkillsEffectiveCost)
+      .plus(
+        paymentRequest.mandatoryTrainingsEffectiveHourCount.mul(
+          paymentRequest.mandatoryTrainingsEffectiveCost
+        )
+      )
+      .plus(
+        paymentRequest.certificateSkillsEffectiveHourCount.mul(
+          paymentRequest.certificateSkillsEffectiveCost
+        )
+      )
+      .plus(
+        paymentRequest.otherTrainingEffectiveHourCount.mul(
+          paymentRequest.otherTrainingEffectiveCost
+        )
+      );
+
+  logger.info({
+    formationComplementaireHeures,
+    formationComplementaireCoutTotal,
+    paymentRequest,
+  });
+
+  const formationComplementaireCoutHoraireMoyen =
+    formationComplementaireHeures.isZero()
+      ? new Decimal(0)
+      : formationComplementaireCoutTotal.dividedBy(
+          formationComplementaireHeures
+        );
+
+  await prismaClient.paymentRequestBatchUnifvae.create({
+    data: {
+      paymentRequestId: paymentRequest.id,
+      content: {
+        SiretAP: candidacy?.organism?.siret,
+        NumAction: fundingRequest.numAction,
+        NumFacture: paymentRequest.invoiceNumber,
+        NbHeureReaAccVAEInd:
+          paymentRequest.individualEffectiveHourCount.toFixed(2),
+        CoutHeureReaAccVAEInd:
+          paymentRequest.individualEffectiveCost.toFixed(2),
+        NbHeureReaAccVAEColl:
+          paymentRequest.collectiveEffectiveHourCount.toFixed(2),
+        CoutHeureReaAccVAEColl:
+          paymentRequest.collectiveEffectiveCost.toFixed(2),
+        NbHeureReaDemActeFormatifCompl:
+          formationComplementaireHeures.toFixed(2),
+        CoutHeureReaDemActeFormatifCompl:
+          formationComplementaireCoutHoraireMoyen.toFixed(2, Decimal.ROUND_UP),
+      },
+    },
+  });
 
   await updateCandidacyStatus({
     candidacyId,
