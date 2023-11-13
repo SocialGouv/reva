@@ -9,7 +9,6 @@ import {
 } from "../../shared/error/functionalError";
 import { isAdminOrCandidacyCompanion } from "../../shared/security/presets";
 import {
-  confirmPaymentRequestUnifvae,
   createFundingRequestUnifvae,
   createOrUpdatePaymentRequestUnifvae,
   getFundingRequestUnifvaeFromCandidacyId,
@@ -132,20 +131,12 @@ const unsafeResolvers = {
         paymentRequest: PaymentRequestUnifvaeInput;
       }
     ) => createOrUpdatePaymentRequestUnifvae(params),
-    candidacy_confirmPaymentRequestUnifvae: async (
-      _: unknown,
-      params: {
-        candidacyId: string;
-      }
-    ) => confirmPaymentRequestUnifvae(params),
   },
 };
 
 export const financeUnifvaeResolvers = composeResolvers(unsafeResolvers, {
   "Mutation.candidacy_createFundingRequestUnifvae": isAdminOrCandidacyCompanion,
   "Mutation.candidacy_createOrUpdatePaymentRequestUnifvae":
-    isAdminOrCandidacyCompanion,
-  "Mutation.candidacy_confirmPaymentRequestUnifvae":
     isAdminOrCandidacyCompanion,
   "Query.candidacy_getFundingRequestUnifvae": isAdminOrCandidacyCompanion,
 });

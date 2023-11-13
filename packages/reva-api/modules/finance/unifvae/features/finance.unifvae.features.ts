@@ -7,6 +7,13 @@ import { updateCandidacyStatus } from "../../../candidacy/database/candidacies";
 import applyBusinessValidationRules from "../validation";
 import { createBatchFromFundingRequestUnifvae } from "./fundingRequestBatch";
 
+export interface UploadedFile {
+  data: Buffer;
+  filename: string;
+  mimetype: string;
+  limit: number;
+}
+
 export const createFundingRequestUnifvae = async ({
   candidacyId,
   fundingRequest,
@@ -166,7 +173,24 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
   });
 };
 
-export const confirmPaymentRequestUnifvae = async ({
+export const addUploadedFileAndConfirmPayment = async ({
+  candidacyId,
+  invoiceFile,
+  certificateOfAttendanceFile,
+}: {
+  candidacyId: string;
+  invoiceFile: UploadedFile;
+  certificateOfAttendanceFile: UploadedFile;
+}) => {
+  await addUploadedFileToPaymentRequestUnifvae({
+    candidacyId,
+    invoiceFile,
+    certificateOfAttendanceFile,
+  });
+  await confirmPaymentRequestUnifvae({ candidacyId });
+};
+
+const confirmPaymentRequestUnifvae = async ({
   candidacyId,
 }: {
   candidacyId: string;
@@ -263,3 +287,54 @@ export const confirmPaymentRequestUnifvae = async ({
   });
   return paymentRequest;
 };
+
+const addUploadedFileToPaymentRequestUnifvae = async ({
+  candidacyId,
+  invoiceFile,
+  certificateOfAttendanceFile,
+}: {
+  candidacyId: string;
+  invoiceFile: UploadedFile;
+  certificateOfAttendanceFile: UploadedFile;
+}) => {
+  const paymentRequest = await prismaClient.paymentRequestUnifvae.findFirst({
+    where: { candidacyId },
+  });
+
+  if (!paymentRequest) {
+    throw new Error("Demande de paiement non trouvée");
+  }
+
+  const fundingRequest = await prismaClient.fundingRequestUnifvae.findFirst({
+    where: { candidacyId },
+  });
+
+  if (!fundingRequest) {
+    throw new Error("Demande de financement non trouvée");
+  }
+
+  await prismaClient.fileUploadSpooler.createMany({
+    data: [
+      {
+        destinationFileName: `facture_${
+          fundingRequest.numAction
+        }.${getFilenameExtension(invoiceFile.filename)}`,
+        destinationPath: "import",
+        description: `Facture pour paymentRequestId ${paymentRequest.id} (${invoiceFile.filename} - ${invoiceFile.mimetype})`,
+        fileContent: invoiceFile.data,
+      },
+      {
+        destinationFileName: `presence_${
+          fundingRequest.numAction
+        }.${getFilenameExtension(certificateOfAttendanceFile.filename)}`,
+        destinationPath: "import",
+        description: `Feuille de présence pour paymentRequestId ${paymentRequest.id} (${certificateOfAttendanceFile.filename} - ${certificateOfAttendanceFile.mimetype})`,
+        fileContent: certificateOfAttendanceFile.data,
+      },
+    ],
+  });
+};
+
+function getFilenameExtension(filename: string) {
+  return filename.split(".").pop();
+}

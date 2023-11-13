@@ -11,6 +11,7 @@ import fastify, {
 } from "fastify";
 
 import { feasibilityFileUploadRoute } from "../../modules/feasibility/feasibility.routes";
+import paymentRequestFvaeFileUploadAndConfirmationRoute from "../../modules/finance/unifvae/finance.routes";
 import proofUploadRoute from "../../modules/finance/unireva/finance.routes";
 import { logger } from "../../modules/shared/logger";
 import { mercuriusGraphQL } from "./mercurius";
@@ -111,6 +112,10 @@ export const buildApp = async (
   });
 
   app.register(proofUploadRoute, {
+    prefix: "/api",
+  });
+
+  app.register(paymentRequestFvaeFileUploadAndConfirmationRoute, {
     prefix: "/api",
   });
 
