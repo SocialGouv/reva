@@ -4,7 +4,6 @@ import { format } from "date-fns";
 
 import { prismaClient } from "../../../../prisma/client";
 import { updateCandidacyStatus } from "../../../candidacy/database/candidacies";
-import { logger } from "../../../shared/logger";
 import applyBusinessValidationRules from "../validation";
 import { createBatchFromFundingRequestUnifvae } from "./fundingRequestBatch";
 
@@ -227,12 +226,6 @@ export const confirmPaymentRequestUnifvae = async ({
           paymentRequest.otherTrainingEffectiveCost
         )
       );
-
-  logger.info({
-    formationComplementaireHeures,
-    formationComplementaireCoutTotal,
-    paymentRequest,
-  });
 
   const formationComplementaireCoutHoraireMoyen =
     formationComplementaireHeures.isZero()
