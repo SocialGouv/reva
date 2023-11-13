@@ -4,6 +4,7 @@ import cron from "cron";
 import dotenv from "dotenv";
 
 import { batchFundingRequestUnifvae } from "../modules/finance/unifvae/batches/fundingRequestUnifvae";
+import { batchPaymentgRequestUnifvae } from "../modules/finance/unifvae/batches/paymentRequestUnifvae";
 import { batchPaymentRequest } from "../modules/finance/unireva/batches/paymentRequest";
 import uploadSpoolerFiles from "../modules/finance/unireva/batches/paymentRequestProofJob";
 import { logger } from "../modules/shared/logger";
@@ -49,7 +50,7 @@ const paymentRequestUnifvae = new cron.CronJob({
   onTick: () =>
     runBatchIfActive({
       batchKey: "batch.demande-paiement-unifvae",
-      batchCallback: batchPaymentRequest,
+      batchCallback: batchPaymentgRequestUnifvae,
     }),
   start: true,
   timeZone: "Europe/Paris",
