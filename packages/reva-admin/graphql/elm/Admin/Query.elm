@@ -115,7 +115,9 @@ getOrganismsForCandidacy requiredArgs____ object____ =
 
 
 type alias GetRandomOrganismsForCandidacyOptionalArguments =
-    { searchText : OptionalArgument String }
+    { searchText : OptionalArgument String
+    , searchFilter : OptionalArgument Admin.InputObject.SearchOrganismFilter
+    }
 
 
 type alias GetRandomOrganismsForCandidacyRequiredArguments =
@@ -130,10 +132,10 @@ getRandomOrganismsForCandidacy :
 getRandomOrganismsForCandidacy fillInOptionals____ requiredArgs____ object____ =
     let
         filledInOptionals____ =
-            fillInOptionals____ { searchText = Absent }
+            fillInOptionals____ { searchText = Absent, searchFilter = Absent }
 
         optionalArgs____ =
-            [ Argument.optional "searchText" filledInOptionals____.searchText Encode.string ]
+            [ Argument.optional "searchText" filledInOptionals____.searchText Encode.string, Argument.optional "searchFilter" filledInOptionals____.searchFilter Admin.InputObject.encodeSearchOrganismFilter ]
                 |> List.filterMap Basics.identity
     in
     Object.selectionForCompositeField "getRandomOrganismsForCandidacy" (optionalArgs____ ++ [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ]) object____ (Basics.identity >> Decode.list)

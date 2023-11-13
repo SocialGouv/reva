@@ -566,13 +566,8 @@ export const deleteCandidacyFromId = async (id: string) => {
 
 export const updateAppointmentInformations = async (params: {
   candidacyId: string;
-  candidateTypologyInformations: {
-    typology: CandidateTypology;
-    additionalInformation: string;
-  };
   appointmentInformations: {
     firstAppointmentOccuredAt: Date;
-    appointmentCount: number;
   };
 }) => {
   try {
@@ -581,12 +576,8 @@ export const updateAppointmentInformations = async (params: {
         id: params.candidacyId,
       },
       data: {
-        typology: params.candidateTypologyInformations.typology,
-        typologyAdditional:
-          params.candidateTypologyInformations.additionalInformation,
         firstAppointmentOccuredAt:
           params.appointmentInformations.firstAppointmentOccuredAt,
-        appointmentCount: params.appointmentInformations.appointmentCount,
       },
       include: {
         ...candidacyIncludes,
@@ -695,6 +686,10 @@ export const updateOrganism = async (params: {
 export const updateTrainingInformations = async (params: {
   candidacyId: string;
   training: {
+    candidateTypologyInformations: {
+      typology: CandidateTypology;
+      additionalInformation: string;
+    };
     basicSkillIds: string[];
     mandatoryTrainingIds: string[];
     certificateSkills: string;
@@ -734,6 +729,9 @@ export const updateTrainingInformations = async (params: {
           id: params.candidacyId,
         },
         data: {
+          typology: params.training.candidateTypologyInformations.typology,
+          typologyAdditional:
+            params.training.candidateTypologyInformations.additionalInformation,
           certificateSkills: params.training.certificateSkills,
           otherTraining: params.training.otherTraining,
           individualHourCount: params.training.individualHourCount,

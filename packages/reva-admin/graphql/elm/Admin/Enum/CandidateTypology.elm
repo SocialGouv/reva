@@ -30,6 +30,11 @@ list =
     [ NonSpecifie, SalariePrive, SalariePublic, SalariePublicHospitalier, SalarieAlternant, SalarieInterimaire, SalarieIntermittent, SalarieEnContratsAides, TravailleurNonSalarie, ConjointCollaborateur, DemandeurEmploi, AidantsFamiliaux, Benevole, Stagiaire, Autre ]
 
 
+availableTypologyList : List CandidateTypology
+availableTypologyList =
+    [ SalariePrive, DemandeurEmploi, AidantsFamiliaux, Benevole, Autre ]
+
+
 decoder : Decoder CandidateTypology
 decoder =
     Decode.string

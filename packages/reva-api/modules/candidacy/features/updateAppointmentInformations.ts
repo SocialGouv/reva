@@ -4,19 +4,11 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../shared/error/functionalError";
-import {
-  AppointmentInformations,
-  Candidacy,
-  CandidateTypology,
-} from "../candidacy.types";
+import { AppointmentInformations, Candidacy } from "../candidacy.types";
 
 interface UpdateAppointmentInformations {
   updateAppointmentInformations: (params: {
     candidacyId: string;
-    candidateTypologyInformations: {
-      typology: CandidateTypology;
-      additionalInformation: string;
-    };
     appointmentInformations: AppointmentInformations;
   }) => Promise<Either<string, Candidacy>>;
 }
@@ -25,10 +17,6 @@ export const updateAppointmentInformations =
   (deps: UpdateAppointmentInformations) =>
   (params: {
     candidacyId: string;
-    candidateTypologyInformations: {
-      typology: CandidateTypology;
-      additionalInformation: string;
-    };
     appointmentInformations: AppointmentInformations;
   }) => {
     const result = EitherAsync.fromPromise(() =>

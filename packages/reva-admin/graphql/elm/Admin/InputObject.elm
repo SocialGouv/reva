@@ -7,6 +7,7 @@ module Admin.InputObject exposing (..)
 import Admin.Enum.AccountGroup
 import Admin.Enum.AdmissibilityStatus
 import Admin.Enum.CandidateTypology
+import Admin.Enum.DistanceStatus
 import Admin.Enum.Duration
 import Admin.Enum.ExamResult
 import Admin.Enum.Gender
@@ -118,20 +119,15 @@ encodeAdmissibilityInput input____ =
 
 
 buildAppointmentInformationsInput :
-    AppointmentInformationsInputRequiredFields
-    -> (AppointmentInformationsInputOptionalFields -> AppointmentInformationsInputOptionalFields)
+    (AppointmentInformationsInputOptionalFields -> AppointmentInformationsInputOptionalFields)
     -> AppointmentInformationsInput
-buildAppointmentInformationsInput required____ fillOptionals____ =
+buildAppointmentInformationsInput fillOptionals____ =
     let
         optionals____ =
             fillOptionals____
                 { firstAppointmentOccuredAt = Absent }
     in
-    { firstAppointmentOccuredAt = optionals____.firstAppointmentOccuredAt, appointmentCount = required____.appointmentCount }
-
-
-type alias AppointmentInformationsInputRequiredFields =
-    { appointmentCount : Int }
+    { firstAppointmentOccuredAt = optionals____.firstAppointmentOccuredAt }
 
 
 type alias AppointmentInformationsInputOptionalFields =
@@ -141,9 +137,7 @@ type alias AppointmentInformationsInputOptionalFields =
 {-| Type for the AppointmentInformationsInput input object.
 -}
 type alias AppointmentInformationsInput =
-    { firstAppointmentOccuredAt : OptionalArgument Data.Scalar.Timestamp
-    , appointmentCount : Int
-    }
+    { firstAppointmentOccuredAt : OptionalArgument Data.Scalar.Timestamp }
 
 
 {-| Encode a AppointmentInformationsInput into a value that can be used as an argument.
@@ -151,7 +145,7 @@ type alias AppointmentInformationsInput =
 encodeAppointmentInformationsInput : AppointmentInformationsInput -> Value
 encodeAppointmentInformationsInput input____ =
     Encode.maybeObject
-        [ ( "firstAppointmentOccuredAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) |> Encode.optional input____.firstAppointmentOccuredAt ), ( "appointmentCount", Encode.int input____.appointmentCount |> Just ) ]
+        [ ( "firstAppointmentOccuredAt", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecTimestamp) |> Encode.optional input____.firstAppointmentOccuredAt ) ]
 
 
 buildCandidacyInput :
@@ -758,6 +752,35 @@ encodePaymentRequestUnifvaeInput input____ =
         [ ( "individualEffectiveHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.individualEffectiveHourCount |> Just ), ( "individualEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.individualEffectiveCost |> Just ), ( "collectiveEffectiveHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.collectiveEffectiveHourCount |> Just ), ( "collectiveEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.collectiveEffectiveCost |> Just ), ( "mandatoryTrainingsEffectiveHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.mandatoryTrainingsEffectiveHourCount |> Just ), ( "mandatoryTrainingsEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.mandatoryTrainingsEffectiveCost |> Just ), ( "basicSkillsEffectiveHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.basicSkillsEffectiveHourCount |> Just ), ( "basicSkillsEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.basicSkillsEffectiveCost |> Just ), ( "certificateSkillsEffectiveHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.certificateSkillsEffectiveHourCount |> Just ), ( "certificateSkillsEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.certificateSkillsEffectiveCost |> Just ), ( "otherTrainingEffectiveHourCount", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.otherTrainingEffectiveHourCount |> Just ), ( "otherTrainingEffectiveCost", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecDecimal) input____.otherTrainingEffectiveCost |> Just ), ( "invoiceNumber", Encode.string input____.invoiceNumber |> Just ) ]
 
 
+buildSearchOrganismFilter :
+    (SearchOrganismFilterOptionalFields -> SearchOrganismFilterOptionalFields)
+    -> SearchOrganismFilter
+buildSearchOrganismFilter fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { distanceStatus = Absent }
+    in
+    { distanceStatus = optionals____.distanceStatus }
+
+
+type alias SearchOrganismFilterOptionalFields =
+    { distanceStatus : OptionalArgument Admin.Enum.DistanceStatus.DistanceStatus }
+
+
+{-| Type for the SearchOrganismFilter input object.
+-}
+type alias SearchOrganismFilter =
+    { distanceStatus : OptionalArgument Admin.Enum.DistanceStatus.DistanceStatus }
+
+
+{-| Encode a SearchOrganismFilter into a value that can be used as an argument.
+-}
+encodeSearchOrganismFilter : SearchOrganismFilter -> Value
+encodeSearchOrganismFilter input____ =
+    Encode.maybeObject
+        [ ( "distanceStatus", Encode.enum Admin.Enum.DistanceStatus.toString |> Encode.optional input____.distanceStatus ) ]
+
 
 buildSubscriptionRequestInput :
     SubscriptionRequestInputRequiredFields
@@ -868,11 +891,12 @@ buildTrainingInput :
     TrainingInputRequiredFields
     -> TrainingInput
 buildTrainingInput required____ =
-    { certificateSkills = required____.certificateSkills, otherTraining = required____.otherTraining, individualHourCount = required____.individualHourCount, collectiveHourCount = required____.collectiveHourCount, additionalHourCount = required____.additionalHourCount, basicSkillIds = required____.basicSkillIds, mandatoryTrainingIds = required____.mandatoryTrainingIds, isCertificationPartial = required____.isCertificationPartial }
+    { candidateTypologyInformations = required____.candidateTypologyInformations, certificateSkills = required____.certificateSkills, otherTraining = required____.otherTraining, individualHourCount = required____.individualHourCount, collectiveHourCount = required____.collectiveHourCount, additionalHourCount = required____.additionalHourCount, basicSkillIds = required____.basicSkillIds, mandatoryTrainingIds = required____.mandatoryTrainingIds, isCertificationPartial = required____.isCertificationPartial }
 
 
 type alias TrainingInputRequiredFields =
-    { certificateSkills : String
+    { candidateTypologyInformations : CandidateTypologyInformationsInput
+    , certificateSkills : String
     , otherTraining : String
     , individualHourCount : Int
     , collectiveHourCount : Int
@@ -886,7 +910,8 @@ type alias TrainingInputRequiredFields =
 {-| Type for the TrainingInput input object.
 -}
 type alias TrainingInput =
-    { certificateSkills : String
+    { candidateTypologyInformations : CandidateTypologyInformationsInput
+    , certificateSkills : String
     , otherTraining : String
     , individualHourCount : Int
     , collectiveHourCount : Int
@@ -902,7 +927,7 @@ type alias TrainingInput =
 encodeTrainingInput : TrainingInput -> Value
 encodeTrainingInput input____ =
     Encode.maybeObject
-        [ ( "certificateSkills", Encode.string input____.certificateSkills |> Just ), ( "otherTraining", Encode.string input____.otherTraining |> Just ), ( "individualHourCount", Encode.int input____.individualHourCount |> Just ), ( "collectiveHourCount", Encode.int input____.collectiveHourCount |> Just ), ( "additionalHourCount", Encode.int input____.additionalHourCount |> Just ), ( "basicSkillIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.basicSkillIds |> Just ), ( "mandatoryTrainingIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.mandatoryTrainingIds |> Just ), ( "isCertificationPartial", Encode.bool input____.isCertificationPartial |> Just ) ]
+        [ ( "candidateTypologyInformations", encodeCandidateTypologyInformationsInput input____.candidateTypologyInformations |> Just ), ( "certificateSkills", Encode.string input____.certificateSkills |> Just ), ( "otherTraining", Encode.string input____.otherTraining |> Just ), ( "individualHourCount", Encode.int input____.individualHourCount |> Just ), ( "collectiveHourCount", Encode.int input____.collectiveHourCount |> Just ), ( "additionalHourCount", Encode.int input____.additionalHourCount |> Just ), ( "basicSkillIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.basicSkillIds |> Just ), ( "mandatoryTrainingIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.mandatoryTrainingIds |> Just ), ( "isCertificationPartial", Encode.bool input____.isCertificationPartial |> Just ) ]
 
 
 buildUpdateAccountInput :

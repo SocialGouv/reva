@@ -1,9 +1,10 @@
-module Data.Form.Training exposing (Scope(..), Training, fromDict, keys, scopeFromString, scopeToString, training, validate)
+module Data.Form.Training exposing (Scope(..), Training, candidateTypologyFromString, candidateTypologyToString, fromDict, keys, scopeFromString, scopeToString, training, validate)
 
+import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
 import Admin.Scalar exposing (Uuid)
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
-import Data.Form.Helper as Helper exposing (booleanToString, uuidToCheckedList)
+import Data.Form.Helper as Helper exposing (uuidToCheckedList)
 import Data.Referential exposing (BasicSkill, MandatoryTraining, Referential)
 import Dict exposing (Dict)
 
@@ -15,7 +16,9 @@ type Scope
 
 
 type alias Training =
-    { mandatoryTrainingIds : List String
+    { typology : Admin.Enum.CandidateTypology.CandidateTypology
+    , additionalInformation : String
+    , mandatoryTrainingIds : List String
     , basicSkillsIds : List String
     , certificateSkills : String
     , consent : Bool
@@ -28,7 +31,9 @@ type alias Training =
 
 
 keys =
-    { certificate = "certificate"
+    { typology = "typology"
+    , additionalInformation = "additionalInformation"
+    , certificate = "certificate"
     , mandatoryTrainings = "mandatory-training"
     , basicSkills = "basicSkills"
     , certificateSkills = "certificateSkills"
@@ -96,6 +101,8 @@ fromDict basicSkills mandatoryTrainings formData =
             Helper.decode keys formData
     in
     Training
+        (decode.generic .typology candidateTypologyFromString NonSpecifie)
+        (decode.string .additionalInformation "")
         (decode.list mandatoryTrainings)
         (decode.list basicSkills)
         (decode.string .certificateSkills "")
@@ -108,7 +115,9 @@ fromDict basicSkills mandatoryTrainings formData =
 
 
 training :
-    List Uuid
+    Maybe CandidateTypology
+    -> Maybe String
+    -> List Uuid
     -> List Uuid
     -> Maybe String
     -> Maybe String
@@ -117,7 +126,7 @@ training :
     -> Maybe Int
     -> Bool
     -> Dict String String
-training mandatoryTrainings basicSkills certificateSkills otherTraining individualHourCount collectiveHourCount additionalHourCount isCertificationPartial =
+training typology typologyAdditional mandatoryTrainings basicSkills certificateSkills otherTraining individualHourCount collectiveHourCount additionalHourCount isCertificationPartial =
     let
         mandatoryTrainingsIds =
             uuidToCheckedList mandatoryTrainings
@@ -126,7 +135,9 @@ training mandatoryTrainings basicSkills certificateSkills otherTraining individu
             uuidToCheckedList basicSkills
 
         otherTrainings =
-            [ ( .certificateSkills, certificateSkills )
+            [ ( .typology, Maybe.map candidateTypologyToString typology )
+            , ( .additionalInformation, typologyAdditional )
+            , ( .certificateSkills, certificateSkills )
             , ( .otherTraining, otherTraining )
             , ( .individualHourCount, Maybe.map String.fromInt individualHourCount )
             , ( .collectiveHourCount, Maybe.map String.fromInt collectiveHourCount )
@@ -144,3 +155,104 @@ training mandatoryTrainings basicSkills certificateSkills otherTraining individu
                 |> Helper.toKeyedList keys
     in
     Dict.fromList (mandatoryTrainingsIds ++ basicSkillsIds ++ otherTrainings)
+
+
+candidateTypologyToString : CandidateTypology -> String
+candidateTypologyToString candidateTypology =
+    case candidateTypology of
+        NonSpecifie ->
+            ""
+
+        SalariePrive ->
+            "Salarié du privé"
+
+        SalariePublicHospitalier ->
+            "Salarié de la fonction publique hospitalière"
+
+        DemandeurEmploi ->
+            "Demandeur d’emploi"
+
+        AidantsFamiliaux ->
+            "Aidant familial"
+
+        SalariePublic ->
+            "Salarié du public"
+
+        SalarieAlternant ->
+            "Salarié alternant"
+
+        SalarieInterimaire ->
+            "Salarié intérimaire"
+
+        SalarieIntermittent ->
+            "Salarié intermittent"
+
+        SalarieEnContratsAides ->
+            "Salariés en contrat aidés (CAE, IAE, service civique...)"
+
+        TravailleurNonSalarie ->
+            "Travailleur non salarié (artisan, gérant, micro entrepreneur...)"
+
+        ConjointCollaborateur ->
+            "Conjoint collaborateur"
+
+        Benevole ->
+            "Bénévole"
+
+        Stagiaire ->
+            "Stagiaire"
+
+        Autre ->
+            "Autre"
+
+
+candidateTypologyFromString : String -> CandidateTypology
+candidateTypologyFromString candidateTypology =
+    case candidateTypology of
+        "" ->
+            NonSpecifie
+
+        "Salarié du privé" ->
+            SalariePrive
+
+        "Salarié de la fonction publique hospitalière" ->
+            SalariePublicHospitalier
+
+        "Demandeur d’emploi" ->
+            DemandeurEmploi
+
+        "Aidant familial" ->
+            AidantsFamiliaux
+
+        "Salarié du public" ->
+            SalariePublic
+
+        "Salarié alternant" ->
+            SalarieAlternant
+
+        "Salarié intérimaire" ->
+            SalarieInterimaire
+
+        "Salarié intermittent" ->
+            SalarieIntermittent
+
+        "Salariés en contrat aidés (CAE, IAE, service civique...)" ->
+            SalarieEnContratsAides
+
+        "Travailleur non salarié (artisan, gérant, micro entrepreneur...)" ->
+            TravailleurNonSalarie
+
+        "Conjoint collaborateur" ->
+            ConjointCollaborateur
+
+        "Bénévole" ->
+            Benevole
+
+        "Stagiaire" ->
+            Stagiaire
+
+        "Autre" ->
+            Autre
+
+        _ ->
+            Autre

@@ -47,23 +47,16 @@ update candidacyId endpointGraphql token toMsg _ formData =
         appointment =
             Data.Form.Appointment.appointmentFromDict candidacyId formData
 
-        typologyInformationInput =
-            Admin.InputObject.CandidateTypologyInformationsInput
-                appointment.typology
-                (Present appointment.additionalInformation)
-
         appointmentInformation =
             Admin.InputObject.AppointmentInformationsInput
                 (appointment.firstAppointmentOccurredAt
                     |> Maybe.map Present
                     |> Maybe.withDefault Absent
                 )
-                appointment.appointmentCount
 
         appointmentRequiredArs =
             Mutation.CandidacyUpdateAppointmentInformationsRequiredArguments
                 (Id <| Data.Candidacy.candidacyIdToString appointment.candidacyId)
-                typologyInformationInput
                 appointmentInformation
     in
     Mutation.candidacy_updateAppointmentInformations appointmentRequiredArs SelectionSet.empty
@@ -73,7 +66,4 @@ update candidacyId endpointGraphql token toMsg _ formData =
 selection : SelectionSet (Dict String String) Admin.Object.Candidacy
 selection =
     SelectionSet.succeed Data.Form.Appointment.appointment
-        |> with Admin.Object.Candidacy.typology
-        |> with Admin.Object.Candidacy.typologyAdditional
         |> with Admin.Object.Candidacy.firstAppointmentOccuredAt
-        |> with Admin.Object.Candidacy.appointmentCount

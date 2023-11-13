@@ -307,10 +307,10 @@ input UpdateCandidateInput {
 
 input AppointmentInformationsInput {
   firstAppointmentOccuredAt: Timestamp
-  appointmentCount: Int!
 }
 
 input TrainingInput {
+  candidateTypologyInformations: CandidateTypologyInformationsInput!
   certificateSkills: String!
   otherTraining: String!
   individualHourCount: Int!
@@ -382,7 +382,6 @@ type Mutation {
   candidacy_deleteById(candidacyId: ID!): String!
   candidacy_updateAppointmentInformations(
     candidacyId: ID!
-    candidateTypologyInformations: CandidateTypologyInformationsInput!
     appointmentInformations: AppointmentInformationsInput!
   ): Candidacy!
   candidacy_takeOver(candidacyId: ID!): Candidacy!

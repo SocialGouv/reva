@@ -230,7 +230,6 @@ candidacy_deleteById requiredArgs____ =
 
 type alias CandidacyUpdateAppointmentInformationsRequiredArguments =
     { candidacyId : Data.Scalar.Id
-    , candidateTypologyInformations : Admin.InputObject.CandidateTypologyInformationsInput
     , appointmentInformations : Admin.InputObject.AppointmentInformationsInput
     }
 
@@ -240,7 +239,7 @@ candidacy_updateAppointmentInformations :
     -> SelectionSet decodesTo Admin.Object.Candidacy
     -> SelectionSet decodesTo RootMutation
 candidacy_updateAppointmentInformations requiredArgs____ object____ =
-    Object.selectionForCompositeField "candidacy_updateAppointmentInformations" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "candidateTypologyInformations" requiredArgs____.candidateTypologyInformations Admin.InputObject.encodeCandidateTypologyInformationsInput, Argument.required "appointmentInformations" requiredArgs____.appointmentInformations Admin.InputObject.encodeAppointmentInformationsInput ] object____ Basics.identity
+    Object.selectionForCompositeField "candidacy_updateAppointmentInformations" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "appointmentInformations" requiredArgs____.appointmentInformations Admin.InputObject.encodeAppointmentInformationsInput ] object____ Basics.identity
 
 
 type alias CandidacyTakeOverRequiredArguments =

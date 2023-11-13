@@ -14,6 +14,7 @@ import Data.Form exposing (FormData)
 import Data.Form.Training
 import Data.Referential
 import Dict exposing (Dict)
+import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
 
@@ -46,8 +47,14 @@ update candidacyId endpointGraphql token toMsg ( _, referential ) formData =
         training =
             Data.Form.Training.fromDict referential.basicSkills referential.mandatoryTrainings formData
 
+        typologyInformationInput =
+            Admin.InputObject.CandidateTypologyInformationsInput
+                training.typology
+                (Present training.additionalInformation)
+
         trainingInformation =
             Admin.InputObject.TrainingInput
+                typologyInformationInput
                 training.certificateSkills
                 training.otherTraining
                 training.individualHourCount
@@ -69,6 +76,8 @@ update candidacyId endpointGraphql token toMsg ( _, referential ) formData =
 selection : SelectionSet (Dict String String) Admin.Object.Candidacy
 selection =
     SelectionSet.succeed Data.Form.Training.training
+        |> with Admin.Object.Candidacy.typology
+        |> with Admin.Object.Candidacy.typologyAdditional
         |> with Admin.Object.Candidacy.mandatoryTrainingIds
         |> with Admin.Object.Candidacy.basicSkillIds
         |> with Admin.Object.Candidacy.certificateSkills

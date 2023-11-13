@@ -113,7 +113,6 @@ export interface Companion {
 
 export interface AppointmentInformations {
   firstAppointmentOccuredAt: Date;
-  appointmentCount: number;
 }
 
 export interface BasicSkill {

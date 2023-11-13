@@ -4,12 +4,16 @@ import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../shared/error/functionalError";
-import { Candidacy } from "../candidacy.types";
+import { Candidacy, CandidateTypology } from "../candidacy.types";
 
 interface SubmitTrainingDeps {
   updateTrainingInformations: (params: {
     candidacyId: string;
     training: {
+      candidateTypologyInformations: {
+        typology: CandidateTypology;
+        additionalInformation: string;
+      };
       basicSkillIds: string[];
       mandatoryTrainingIds: string[];
       certificateSkills: string;
@@ -35,6 +39,10 @@ export const submitTraining =
   (params: {
     candidacyId: string;
     training: {
+      candidateTypologyInformations: {
+        typology: CandidateTypology;
+        additionalInformation: string;
+      };
       basicSkillIds: string[];
       mandatoryTrainingIds: string[];
       certificateSkills: string;

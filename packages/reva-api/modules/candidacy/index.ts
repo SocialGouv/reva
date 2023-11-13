@@ -492,7 +492,6 @@ const unsafeResolvers = {
           candidacyDb.updateAppointmentInformations,
       })({
         candidacyId: payload.candidacyId,
-        candidateTypologyInformations: payload.candidateTypologyInformations,
         appointmentInformations: payload.appointmentInformations,
       });
       logCandidacyEvent({
