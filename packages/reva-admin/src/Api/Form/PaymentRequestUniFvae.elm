@@ -1,4 +1,4 @@
-module Api.Form.PaymentRequestUniFvae exposing (confirm, createOrUpdate, get)
+module Api.Form.PaymentRequestUniFvae exposing (createOrUpdate, get)
 
 import Admin.InputObject
 import Admin.Mutation as Mutation
@@ -15,7 +15,6 @@ import Data.Form exposing (FormData)
 import Data.Form.PaymentRequestUniFvae
 import Data.Referential
 import Dict exposing (Dict)
-import Graphql.OptionalArgument as OptionalArgument
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
 
@@ -121,21 +120,3 @@ createOrUpdate candidacyId endpointGraphql token toMsg ( candidacy, referential 
     in
     Mutation.candidacy_createOrUpdatePaymentRequestUnifvae paymentRequiredArg SelectionSet.empty
         |> Auth.makeMutation "createOrUpdatePaymentRequestUnifvae" endpointGraphql token toMsg
-
-
-confirm :
-    CandidacyId
-    -> String
-    -> Token
-    -> (RemoteData (List String) () -> msg)
-    -> ( Data.Candidacy.Candidacy, Data.Referential.Referential )
-    -> FormData
-    -> Cmd msg
-confirm candidacyId endpointGraphql token toMsg _ _ =
-    let
-        paymentRequiredArg =
-            Mutation.CandidacyConfirmPaymentRequestUnifvaeRequiredArguments
-                (Uuid <| Data.Candidacy.candidacyIdToString candidacyId)
-    in
-    Mutation.candidacy_confirmPaymentRequestUnifvae paymentRequiredArg SelectionSet.empty
-        |> Auth.makeMutation "confirmPaymentRequest" endpointGraphql token toMsg

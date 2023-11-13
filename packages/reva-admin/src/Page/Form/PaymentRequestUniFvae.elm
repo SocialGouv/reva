@@ -1,4 +1,4 @@
-module Page.Form.PaymentRequestUniFvae exposing (confirmationForm, form)
+module Page.Form.PaymentRequestUniFvae exposing (form)
 
 import Accessibility exposing (Html, div, h3, h4, p, span, text)
 import Accessibility.Aria as Aria
@@ -138,7 +138,7 @@ form maybeCertification formData ( candidacy, referential ) =
                     []
                )
     , saveLabel = Nothing
-    , submitLabel = "Envoyer"
+    , submitLabel = "Enregistrer"
     , title = "Demande de paiement"
     }
 
@@ -301,18 +301,3 @@ totalCost formData =
                 + (float .otherTrainingHourCount * float .otherTrainingCost)
     in
     roundCost cost
-
-
-confirmationForm : FormData -> ( Candidacy, Referential ) -> Form
-confirmationForm formData ( _, _ ) =
-    { elements =
-        [ ( "num-action"
-          , Data.Form.get keys.numAction formData
-                |> Maybe.map (Form.Info "Numéro de prise en charge France VAE")
-                |> Maybe.withDefault Form.Empty
-          )
-        ]
-    , saveLabel = Nothing
-    , submitLabel = "Envoyer"
-    , title = "Demande de paiement"
-    }
