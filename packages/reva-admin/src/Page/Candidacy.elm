@@ -42,6 +42,7 @@ import Data.Form.FundingRequestUniFvae
 import Data.Form.FundingRequestUniReva
 import Data.Form.PaymentRequestUniFvae
 import Data.Form.PaymentRequestUniReva
+import Data.Form.PaymentUploadsAndConfirmationUniFvae
 import Data.Form.Training
 import Data.Form.Unarchive
 import Data.Referential exposing (Referential)
@@ -570,7 +571,7 @@ updateTab context tab ( model, cmd ) =
                             , onSave = Nothing
                             , onSubmit = Api.Form.PaymentUploadsAndConfirmationUniFvae.submit tab.candidacyId context.restApiEndpoint
                             , onRedirect = pushUrl <| candidacyTab Profile
-                            , onValidate = Data.Form.PaymentRequestUniFvae.validateConfirmation
+                            , onValidate = Data.Form.PaymentUploadsAndConfirmationUniFvae.validateConfirmation
                             , status = Form.Editable
                             }
                             model.form
