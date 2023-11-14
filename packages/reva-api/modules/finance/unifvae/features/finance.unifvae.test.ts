@@ -3,7 +3,6 @@
  */
 
 import {
-  Account,
   Candidacy,
   CandidacyStatusStep,
   Candidate,
@@ -13,7 +12,7 @@ import {
 } from "@prisma/client";
 
 import { prismaClient } from "../../../../prisma/client";
-import { organismDummy1 } from "../../../../test/fixtures/people-organisms";
+import { generalisteOrganism } from "../../../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../../../test/helpers/graphql-helper";
 
@@ -63,7 +62,7 @@ const basicSkill1Label = "Communication en français",
   basicSkill2Label = "Usage et communication numérique";
 
 beforeAll(async () => {
-  organism = await prismaClient.organism.create({ data: organismDummy1 });
+  organism = await prismaClient.organism.create({ data: generalisteOrganism });
   await prismaClient.account.create({
     data: {
       email: aapEmail,

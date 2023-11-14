@@ -1,15 +1,20 @@
 /**
  * @jest-environment ./test/fastify-test-env.ts
  */
-import { Account, Candidacy, Candidate, Organism } from "@prisma/client";
-import { CandidacyStatusStep } from "@prisma/client";
+import {
+  Account,
+  Candidacy,
+  CandidacyStatusStep,
+  Candidate,
+  Organism,
+} from "@prisma/client";
 
 import { prismaClient } from "../../prisma/client";
 import {
   candidateJPL,
   candidateMPB,
-  organismDummy1,
-  organismDummy2,
+  expertFiliereOrganism,
+  generalisteOrganism,
 } from "../../test/fixtures/people-organisms";
 import { authorizationHeaderForUser } from "../../test/helpers/authorization-helper";
 import { injectGraphql } from "../../test/helpers/graphql-helper";
@@ -30,19 +35,21 @@ beforeAll(async () => {
     where: { code: "75" },
   });
   wrongOrganism = await prismaClient.organism.create({
-    data: organismDummy2,
+    data: expertFiliereOrganism,
   });
   wrongCandidacyManager = await prismaClient.account.create({
     data: {
-      email: organismDummy2.contactAdministrativeEmail,
+      email: expertFiliereOrganism.contactAdministrativeEmail,
       keycloakId: wrongCandidacyManagerKcId,
       organismId: wrongOrganism.id,
     },
   });
-  rightOrganism = await prismaClient.organism.create({ data: organismDummy1 });
+  rightOrganism = await prismaClient.organism.create({
+    data: generalisteOrganism,
+  });
   rightCandidacyManager = await prismaClient.account.create({
     data: {
-      email: organismDummy1.contactAdministrativeEmail,
+      email: generalisteOrganism.contactAdministrativeEmail,
       keycloakId: rightCandidacyManagerKcId,
       organismId: rightOrganism.id,
     },
