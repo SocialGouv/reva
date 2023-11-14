@@ -41,13 +41,13 @@ export const submitCandidacy =
         status: CandidacyStatusStep.PROJET,
       })
     )
-      .chain((existsCandidacy) => {
-        if (!existsCandidacy) {
+      .chain((candidacyInProject) => {
+        if (!candidacyInProject) {
           return EitherAsync.liftEither(
             Left(`Cette candidature ne peut être soumise à nouveau.`)
           );
         }
-        return EitherAsync.liftEither(Right(existsCandidacy));
+        return EitherAsync.liftEither(Right(candidacyInProject));
       })
       .mapLeft(
         (error: string) =>
