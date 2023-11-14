@@ -1,94 +1,94 @@
 {
-    "data": {
-        "getCompanionsForCandidacy2837057383": [
-            {
-                "typology2249897544": "expertBranche",
-                "contactAdministrativeEmail3832528868": "test@example.com",
-                "city3832528868": "Bordeaux",
-                "zip3832528868": "33200",
-                "address3832528868": "22 rue de Paris",
-                "label3832528868": "Demo AAP",
-                "id3509119574": "0eea8acb-f939-446d-9e9a-e54eba6bc168"
-            }
-        ],
-        "getCandidacyById1645362253": {
-            "firstAppointmentOccuredAt2471995693": 1698883200000,
-            "financeModule20786944": "unifvae",
-            "feasibility": null,
-            "certificationAuthorities": [],
-            "reorientationReason": null,
-            "createdAt4151430017": 1698740543936,
-            "candidacyStatuses": [
-                {
-                    "isActive3880003826": false,
-                    "status3238924706": "PROJET",
-                    "createdAt4151430017": 1698740543936
-                },
-                {
-                    "isActive3880003826": false,
-                    "status3238924706": "VALIDATION",
-                    "createdAt4151430017": 1698740603813
-                },
-                {
-                    "isActive3880003826": true,
-                    "status3238924706": "PRISE_EN_CHARGE",
-                    "createdAt4151430017": 1698740853689
-                }
-            ],
-            "candidacyDropOut": null,
-            "email12867311": "alice.doe@example.com",
-            "lastname12867311": "Alice",
-            "firstname12867311": "Doe",
-            "experiences": [
-                {
-                    "description3832528868": "",
-                    "duration2679269091": "unknown",
-                    "startedAt4151430017": 1580428800000,
-                    "title3832528868": "Lorem Ipsum",
-                    "id4168169968": "9181e113-18a8-4eb7-9d7e-a6ea3b5cbde9"
-                }
-            ],
-            "goals": [
-                {
-                    "additionalInformation12867311": null,
-                    "goalId4168169968": "45d51ab2-a077-4324-9159-9c0dc786b4f4"
-                }
-            ],
-            "department": {
-                "label3832528868": "Aveyron",
-                "code3832528868": "12",
-                "id4168169968": "55daedec-f472-41ef-abdb-9987da79495c"
-            },
-            "certification": {
-                "abilities12867311": null,
-                "accessibleJobType12867311": null,
-                "activityArea12867311": null,
-                "activities12867311": null,
-                "level1207450440": 4,
-                "summary3832528868": "",
-                "label3832528868": "Licence professionnelle  Commerce et Distribution dans le cadre de l'accord distrisup",
-                "id4168169968": "2e5be566-354a-43b1-b116-24ec267290b1"
-            },
-            "organism": {
-                "typology2249897544": "expertBranche",
-                "contactAdministrativeEmail3832528868": "test@example.com",
-                "city3832528868": "Bordeaux",
-                "zip3832528868": "33200",
-                "address3832528868": "22 rue de Paris",
-                "label3832528868": "Demo AAP",
-                "id3509119574": "0eea8acb-f939-446d-9e9a-e54eba6bc168"
-            },
-            "certificationId3874409000": "2e5be566-354a-43b1-b116-24ec267290b1",
-            "candidate": {
-                "phone3832528868": "0600000001",
-                "lastname3832528868": "Doe",
-                "gender2125932660": null,
-                "firstname312867311": null,
-                "firstname212867311": null,
-                "firstname3832528868": "Alice",
-                "id3509119574": "1eec86a7-1acf-4c6b-8bde-990658fc4499"
-            },
-            "id4168169968": "52b9171e-5cae-462a-96e4-efe4f43e0b25"
+  "data": {
+    "getCompanionsForCandidacy2837057383": [
+      {
+        "typology2249897544": "expertBranche",
+        "contactAdministrativeEmail3832528868": "test@example.com",
+        "city3832528868": "Bordeaux",
+        "zip3832528868": "33200",
+        "address3832528868": "22 rue de Paris",
+        "label3832528868": "Demo AAP",
+        "id3509119574": "0eea8acb-f939-446d-9e9a-e54eba6bc168"
+      }
+    ],
+    "getCandidacyById1645362253": {
+      "firstAppointmentOccuredAt2471995693": 1698883200000,
+      "financeModule20786944": "unifvae",
+      "feasibility": null,
+      "certificationAuthorities": [],
+      "reorientationReason": null,
+      "createdAt4151430017": 1698740543936,
+      "candidacyStatuses": [
+        {
+          "isActive3880003826": false,
+          "status3238924706": "PROJET",
+          "createdAt4151430017": 1698740543936
+        },
+        {
+          "isActive3880003826": false,
+          "status3238924706": "VALIDATION",
+          "createdAt4151430017": 1698740603813
+        },
+        {
+          "isActive3880003826": true,
+          "status3238924706": "PRISE_EN_CHARGE",
+          "createdAt4151430017": 1698740853689
         }
+      ],
+      "candidacyDropOut": null,
+      "email12867311": "alice.doe@example.com",
+      "lastname12867311": "Alice",
+      "firstname12867311": "Doe",
+      "experiences": [
+        {
+          "description3832528868": "",
+          "duration2679269091": "unknown",
+          "startedAt4151430017": 1580428800000,
+          "title3832528868": "Lorem Ipsum",
+          "id4168169968": "9181e113-18a8-4eb7-9d7e-a6ea3b5cbde9"
+        }
+      ],
+      "goals": [
+        {
+          "additionalInformation12867311": null,
+          "goalId4168169968": "45d51ab2-a077-4324-9159-9c0dc786b4f4"
+        }
+      ],
+      "department": {
+        "label3832528868": "Aveyron",
+        "code3832528868": "12",
+        "id4168169968": "55daedec-f472-41ef-abdb-9987da79495c"
+      },
+      "certification": {
+        "abilities12867311": null,
+        "accessibleJobType12867311": null,
+        "activityArea12867311": null,
+        "activities12867311": null,
+        "level1207450440": 4,
+        "summary3832528868": "",
+        "label3832528868": "Licence professionnelle  Commerce et Distribution dans le cadre de l'accord distrisup",
+        "id4168169968": "2e5be566-354a-43b1-b116-24ec267290b1"
+      },
+      "organism": {
+        "typology2249897544": "expertBranche",
+        "contactAdministrativeEmail3832528868": "test@example.com",
+        "city3832528868": "Bordeaux",
+        "zip3832528868": "33200",
+        "address3832528868": "22 rue de Paris",
+        "label3832528868": "Demo AAP",
+        "id3509119574": "0eea8acb-f939-446d-9e9a-e54eba6bc168"
+      },
+      "certificationId3874409000": "2e5be566-354a-43b1-b116-24ec267290b1",
+      "candidate": {
+        "phone3832528868": "0600000001",
+        "lastname3832528868": "Doe",
+        "gender2125932660": null,
+        "firstname312867311": null,
+        "firstname212867311": null,
+        "firstname3832528868": "Alice",
+        "id3509119574": "1eec86a7-1acf-4c6b-8bde-990658fc4499"
+      },
+      "id4168169968": "52b9171e-5cae-462a-96e4-efe4f43e0b25"
     }
+  }
 }
