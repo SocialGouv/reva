@@ -7,11 +7,4 @@ module.exports = {
       fastify: true,
     },
   },
-  collectCoverage: true,
-  collectCoverageFrom: ["./domain/**", "./modules/**"],
-  // coverageThreshold: {
-  //   global: {
-  //     lines: 90
-  //   }
-  // }
 };
