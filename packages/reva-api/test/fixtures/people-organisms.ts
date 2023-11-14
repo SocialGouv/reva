@@ -47,26 +47,48 @@ const organismIperia = {
   typology: "experimentation" as const,
 };
 
-const organismDummy1 = {
-  label: "Dummyperia",
+const generalisteOrganism = {
+  label: "Generaliste organism",
   siret: "5038235666",
   address: "4 place Thiers",
   city: "Bondy",
   zip: "93140",
-  contactAdministrativeEmail: "bunny@dummyperia.fr",
+  contactAdministrativeEmail: "generalisteOrganism@example.com",
   isActive: true,
   typology: "generaliste" as const,
 };
 
-const organismDummy2 = {
-  label: "Dummyperia2",
+const expertFiliereOrganism = {
+  label: "Expert filiere organism",
   siret: "5038235777",
   address: "14 boulevard Ney",
   city: "Nantes",
   zip: "44000",
-  contactAdministrativeEmail: "elmer@foodbeat.fr",
+  contactAdministrativeEmail: "expertFiliereOrganism@example.com",
   isActive: true,
-  typology: "generaliste" as const,
+  typology: "expertFiliere" as const,
+};
+
+const expertBrancheOrganism = {
+  label: "Expert branch organism",
+  siret: "5038235777",
+  address: "14 boulevard Ney",
+  city: "Nantes",
+  zip: "44000",
+  contactAdministrativeEmail: "expertBranche@example.com",
+  isActive: true,
+  typology: "expertBranche" as const,
+};
+
+const expertBrancheEtFiliereOrganism = {
+  label: "Expert branch organism",
+  siret: "5038235777",
+  address: "14 boulevard Ney",
+  city: "Nantes",
+  zip: "44000",
+  contactAdministrativeEmail: "expertBrancheEtFiliere@example.com",
+  isActive: true,
+  typology: "expertBrancheEtFiliere" as const,
 };
 
 // Architectes
@@ -96,8 +118,10 @@ const adminAccount1 = {
 
 export {
   organismIperia,
-  organismDummy1,
-  organismDummy2,
+  generalisteOrganism,
+  expertFiliereOrganism,
+  expertBrancheOrganism,
+  expertBrancheEtFiliereOrganism,
   candidateJPL,
   candidateMPB,
   archiIperia1,
