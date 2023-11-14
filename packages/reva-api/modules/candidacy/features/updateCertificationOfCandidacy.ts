@@ -1,10 +1,17 @@
+import { CandidacyStatusStep } from "@prisma/client";
+
 import { prismaClient } from "../../../prisma/client";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../shared/error/functionalError";
 import { logger } from "../../shared/logger";
-import { updateCertification, updateOrganism } from "../database/candidacies";
+import {
+  existsCandidacyWithActiveStatus,
+  updateCandidacyStatus,
+  updateCertification,
+  updateOrganism,
+} from "../database/candidacies";
 import { canCandidateUpdateCandidacy } from "./canCandidateUpdateCandidacy";
 
 export const updateCertificationOfCandidacy = async ({
@@ -18,7 +25,9 @@ export const updateCertificationOfCandidacy = async ({
 }) => {
   const candidacy = await prismaClient.candidacy.findFirst({
     where: { id: candidacyId },
-    select: { id: true },
+    select: {
+      id: true,
+    },
   });
 
   if (!candidacy) {
@@ -48,9 +57,26 @@ export const updateCertificationOfCandidacy = async ({
       await updateOrganism({ candidacyId, organismId: null })
     ).unsafeCoerce();
 
+    const hasActiveCandidacyInProject = (
+      await existsCandidacyWithActiveStatus({
+        candidacyId,
+        status: CandidacyStatusStep.PROJET,
+      })
+    ).unsafeCoerce();
+
+    //Only update previous and create a new candidacy status if the candidacy is not already in project
+    if (!hasActiveCandidacyInProject) {
+      await updateCandidacyStatus({
+        candidacyId,
+        status: CandidacyStatusStep.PROJET,
+      });
+    }
+
     await prismaClient.candidacy.update({
       where: { id: candidacyId },
-      data: { firstAppointmentOccuredAt: null },
+      data: {
+        firstAppointmentOccuredAt: null,
+      },
     });
 
     return updatedCandidacy;

@@ -445,6 +445,7 @@ export const mainMachine =
                     "submitCertification",
                     "resetOrganisms",
                     "resetFirstAppointmentOccuredAt",
+                    "resetCandidacyStatus",
                   ],
                   target: "#mainMachine.projectHome.ready",
                 },
@@ -1159,6 +1160,9 @@ export const mainMachine =
             Sentry.captureException(event.data),
           resetFirstAppointmentOccuredAt: assign({
             firstAppointmentOccuredAt: (_) => undefined,
+          }),
+          resetCandidacyStatus: assign({
+            candidacyStatus: (_) => "PROJET",
           }),
         },
         guards: {
