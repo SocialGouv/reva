@@ -17,8 +17,12 @@ form formData ( _, referential ) =
         keys =
             Data.Form.Training.keys
 
+        filteredTypologyList : List CandidateTypology
+        filteredTypologyList =
+            [ SalariePrive, DemandeurEmploi, AidantsFamiliaux, Benevole, Autre ]
+
         typologies =
-            Admin.Enum.CandidateTypology.availableTypologyList
+            filteredTypologyList
                 |> List.map (\el -> ( candidateTypologyToString el, candidateTypologyToString el ))
 
         availableTypologies =
