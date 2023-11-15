@@ -34,6 +34,12 @@ http:
       middlewares:
         - removeHeader
 
+    espace-pro-react-staging:
+      rule: "Host(`reva.incubateur.net`) && PathPrefix(`/admin2`)"
+      service: espace-pro-react-staging
+      middlewares:
+        - removeHeader
+
     app-candidat-staging:
       rule: "Host(`reva.incubateur.net`) && PathPrefix(`/app`)"
       service: app-candidat-staging
@@ -193,6 +199,12 @@ http:
         passHostHeader: false
         servers:
           - url: "https://reva-staging.osc-fr1.scalingo.io/admin/"
+
+    espace-pro-react-staging:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-admin-react.osc-fr1.scalingo.io/admin2/"
 
     app-candidat-staging:
       loadBalancer:
