@@ -12,7 +12,7 @@ export const Footer = () => (
           </p>
           <Link
             title="Accueil - France VAE"
-            href="/"
+            href="../"
             className="fr-footer__brand-link"
           >
             <Image
@@ -76,45 +76,48 @@ export const Footer = () => (
       <div className="fr-footer__bottom">
         <ul className="fr-footer__bottom-list">
           <li className="fr-footer__bottom-item">
-            <Link className="fr-footer__bottom-link" href="/plan-du-site/">
+            <Link className="fr-footer__bottom-link" href="../plan-du-site/">
               Plan du site
             </Link>
           </li>
           <li className="fr-footer__bottom-item">
             <Link
               className="fr-footer__bottom-link"
-              href="/declaration-accessibilite/"
+              href="../declaration-accessibilite/"
             >
               Accessibilité : partiellement conforme
             </Link>
           </li>
           <li className="fr-footer__bottom-item">
-            <Link className="fr-footer__bottom-link" href="/cgu-candidat/">
+            <Link className="fr-footer__bottom-link" href="../cgu-candidat/">
               CGU candidat
             </Link>
           </li>
           <li className="fr-footer__bottom-item">
             <Link
               className="fr-footer__bottom-link"
-              href="/espace-professionnel/creation/"
+              href="../espace-professionnel/creation/"
             >
               CGU structures professionnelles
             </Link>
           </li>
           <li className="fr-footer__bottom-item">
-            <Link className="fr-footer__bottom-link" href="/mentions-legales/">
+            <Link
+              className="fr-footer__bottom-link"
+              href="../mentions-legales/"
+            >
               Mentions légales
             </Link>
           </li>
           <li className="fr-footer__bottom-item">
-            <Link className="fr-footer__bottom-link" href="/confidentialite/">
+            <Link className="fr-footer__bottom-link" href="../confidentialite/">
               Données personnelles
             </Link>
           </li>
           <li className="fr-footer__bottom-item">
             <Link
               className="fr-footer__bottom-link"
-              href="/confidentialite/#definition-cookie"
+              href="../confidentialite/#definition-cookie"
             >
               Gestion des cookies
             </Link>
@@ -128,7 +131,7 @@ export const Footer = () => (
             </Link>
           </li>
           <li className="fr-footer__bottom-item">
-            <Link className="fr-footer__bottom-link" href="/nous-contacter">
+            <Link className="fr-footer__bottom-link" href="../nous-contacter">
               Nous&nbsp;contacter
             </Link>
           </li>

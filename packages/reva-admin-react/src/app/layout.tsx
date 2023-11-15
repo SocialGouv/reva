@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
       </head>
       <body>
         <DsfrProvider>
-          <SessionProvider refetchInterval={30}>
+          <SessionProvider refetchInterval={30} basePath="/admin2/api/auth">
             <QueryClientProvider client={queryClient}>
               <LayoutContent>{children}</LayoutContent>
             </QueryClientProvider>
