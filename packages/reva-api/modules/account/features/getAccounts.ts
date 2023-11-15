@@ -77,7 +77,10 @@ export const getAccounts = async (
     };
   }
 
-  const accounts = await prismaClient.account.findMany(queryAccounts);
+  const accounts = await prismaClient.account.findMany({
+    ...queryAccounts,
+    include: { organism: true },
+  });
   const count = await prismaClient.account.count(queryCount);
 
   return {

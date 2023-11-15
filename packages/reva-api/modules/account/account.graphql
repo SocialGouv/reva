@@ -10,8 +10,8 @@ type Account {
   email: String!
   firstname: String
   lastname: String
-  organismId: String
   certificationAuthorityId: String
+  organism: Organism
 }
 
 input AccountInput {

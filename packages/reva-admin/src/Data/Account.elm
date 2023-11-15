@@ -1,6 +1,7 @@
 module Data.Account exposing (Account, AccountSummaryPage)
 
 import Data.Pagination exposing (PaginationInfo)
+import Data.Organism exposing (Organism)
 
 
 type alias AccountSummaryPage =
@@ -15,6 +16,6 @@ type alias Account =
     , email : String
     , firstname : Maybe String
     , lastname : Maybe String
-    , organismId : Maybe String
+    , organism : Maybe Organism
     , certificationAuthorityId : Maybe String
     }

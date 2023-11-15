@@ -3,7 +3,6 @@ module Api.Account exposing (get, getAccounts)
 -- import Admin.Mutation as Mutation
 
 import Admin.Enum.AccountGroup exposing (AccountGroup(..))
-import Admin.Enum.Sort exposing (Sort)
 import Admin.Object
 import Admin.Object.Account
 import Admin.Object.AccountsPaginated
@@ -14,10 +13,10 @@ import Api.Pagination exposing (pageInfoSelection)
 import Api.RemoteData exposing (nothingToError)
 import Api.Token exposing (Token)
 import Data.Account
-import Dict exposing (Dict)
 import Graphql.OptionalArgument as OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
+import Api.Organism
 
 
 
@@ -79,5 +78,5 @@ accountSummarySelection =
         |> with Admin.Object.Account.email
         |> with Admin.Object.Account.firstname
         |> with Admin.Object.Account.lastname
-        |> with Admin.Object.Account.organismId
+        |> with (Admin.Object.Account.organism Api.Organism.selection)
         |> with Admin.Object.Account.certificationAuthorityId

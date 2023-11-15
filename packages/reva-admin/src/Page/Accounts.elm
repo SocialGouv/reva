@@ -6,7 +6,7 @@ module Page.Accounts exposing
     , view
     )
 
-import Admin.Enum.AccountGroup as AccountGroup exposing (AccountGroup(..))
+import Admin.Enum.AccountGroup as AccountGroup exposing (AccountGroup)
 import Api.Account
 import Api.Token
 import BetaGouv.DSFR.Button as Button
@@ -21,7 +21,6 @@ import RemoteData exposing (RemoteData(..))
 import Route
 import String exposing (String)
 import View
-import View.Date exposing (toFullFormat)
 import View.Helpers exposing (dataTest)
 
 
@@ -139,13 +138,13 @@ viewDirectoryHeader context accountsCount model =
     let
         groupString =
             case model.filters.group of
-                Organism ->
+                AccountGroup.Organism ->
                     "AAP"
 
-                Certification_authority ->
+                AccountGroup.Certification_authority ->
                     "Certificateur"
 
-                Admin ->
+                AccountGroup.Admin ->
                     "Admin"
     in
     div
@@ -266,8 +265,8 @@ withSearch search state =
 viewItem : Context -> Account -> Html Msg
 viewItem context account =
     let
-        username =
-            Maybe.withDefault "" account.lastname ++ " " ++ Maybe.withDefault "" account.firstname
+        libelle =
+            Maybe.withDefault "" (Maybe.map .label account.organism)
 
         email =
             account.email
@@ -281,9 +280,9 @@ viewItem context account =
             , class "focus-within:ring-1 focus-within:ring-inset focus-within:ring-indigo-500"
             ]
             [ div [ class "flex flex-col text-sm mb-2" ]
-                [ p [ class "font-bold mb-0" ] [ text "Nom et Prénom" ]
-                , p [] [ text username ]
-                , p [ class "font-bold mb-0" ] [ text "Mail" ]
+                [ p [ class "font-bold mb-0" ] [ text "LIBELLÉ" ]
+                , p [] [ text libelle ]
+                , p [ class "font-bold mb-0" ] [ text "EMAIL DE CONTACT" ]
                 , p [] [ text email ]
                 ]
             , div

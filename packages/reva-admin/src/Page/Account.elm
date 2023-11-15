@@ -7,7 +7,6 @@ module Page.Account exposing
     )
 
 import Accessibility exposing (h1, h2)
-import Admin.Object.Account exposing (organismId)
 import Api.Account
 import Api.Form.Account
 import Api.Form.CertificationAuthority
@@ -191,7 +190,7 @@ viewStructure _ model =
 
         Success account ->
             div []
-                [ case account.organismId of
+                [ case account.organism of
                     Nothing ->
                         div [] []
 
@@ -260,12 +259,12 @@ updateStructure context ( model, cmd ) =
         Success account ->
             let
                 organismId =
-                    Maybe.withDefault "" account.organismId
+                    Maybe.withDefault "" (Maybe.map .id account.organism)
 
                 certificationAuthorityId =
                     Maybe.withDefault "" account.certificationAuthorityId
             in
-            if account.organismId /= Nothing then
+            if account.organism /= Nothing then
                 let
                     ( formStructureModel, formStructureCmd ) =
                         Form.updateForm context

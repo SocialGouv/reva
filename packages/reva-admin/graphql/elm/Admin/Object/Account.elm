@@ -44,11 +44,13 @@ lastname =
     Object.selectionForField "(Maybe String)" "lastname" [] (Decode.string |> Decode.nullable)
 
 
-organismId : SelectionSet (Maybe String) Admin.Object.Account
-organismId =
-    Object.selectionForField "(Maybe String)" "organismId" [] (Decode.string |> Decode.nullable)
-
-
 certificationAuthorityId : SelectionSet (Maybe String) Admin.Object.Account
 certificationAuthorityId =
     Object.selectionForField "(Maybe String)" "certificationAuthorityId" [] (Decode.string |> Decode.nullable)
+
+
+organism :
+    SelectionSet decodesTo Admin.Object.Organism
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Account
+organism object____ =
+    Object.selectionForCompositeField "organism" [] object____ (Basics.identity >> Decode.nullable)
