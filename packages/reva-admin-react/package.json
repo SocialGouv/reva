@@ -5,7 +5,7 @@
   "scripts": {
     "predev": "only-include-used-icons && graphql-codegen --config codegen.ts",
     "dev": "next dev -p 3003",
-    "prebuild": "only-include-used-icons && graphql-codegen --config codegen.ts",
+    "prebuild": "only-include-used-icons && npm i --include=dev --prefix ../reva-api && npm run graphql:generate --prefix ../reva-api && graphql-codegen --config codegen.ts",
     "build": "next build",
     "start": "next start -p 3003",
     "lint": "next lint",
