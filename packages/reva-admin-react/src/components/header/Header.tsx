@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@/components/auth/auth";
 import { ADMIN_ELM_URL } from "@/config/config";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { signOut } from "next-auth/react";
@@ -6,6 +7,8 @@ import { usePathname } from "next/navigation";
 
 export const Header = () => {
   const currentPathName = usePathname();
+  const { isAdmin, isOrganism } = useAuth();
+
   return (
     <DsfrHeader
       brandTop={
@@ -42,28 +45,36 @@ export const Header = () => {
             target: "_self",
           },
         },
-        {
-          text: "Paramètres du compte",
-          linkProps: {
-            href: "/account-parameters",
-            target: "_self",
-          },
-          isActive: currentPathName.startsWith("/account-parameters"),
-        },
-        {
-          text: "Inscriptions",
-          linkProps: {
-            href: ADMIN_ELM_URL + "/subscritpions",
-            target: "_self",
-          },
-        },
-        {
-          text: "Comptes",
-          linkProps: {
-            href: ADMIN_ELM_URL + "/accounts",
-            target: "_self",
-          },
-        },
+        ...(isOrganism && !isAdmin
+          ? [
+              {
+                text: "Paramètres du compte",
+                linkProps: {
+                  href: "/account-parameters",
+                  target: "_self",
+                },
+                isActive: currentPathName.startsWith("/account-parameters"),
+              },
+            ]
+          : []),
+        ...(isAdmin
+          ? [
+              {
+                text: "Inscriptions",
+                linkProps: {
+                  href: ADMIN_ELM_URL + "/subscritpions",
+                  target: "_self",
+                },
+              },
+              {
+                text: "Comptes",
+                linkProps: {
+                  href: ADMIN_ELM_URL + "/accounts",
+                  target: "_self",
+                },
+              },
+            ]
+          : []),
       ]}
     />
   );
