@@ -4,14 +4,20 @@ import Accessibility exposing (a, button, div, header, li, nav, span, text, ul)
 import Accessibility.Aria as Aria
 import Api.Token
 import Data.Context exposing (Context)
-import Html.Attributes exposing (alt, attribute, class, href, id, style, target, title)
+import Html.Attributes exposing (alt, attribute, class, href, id, style, title)
 import Html.Attributes.Extra exposing (role)
 import Route exposing (Route(..))
 import View
 
 
-view : Context -> Accessibility.Html msg
-view context =
+type HeaderLink
+    = Candidacies
+    | Subscriptions
+    | Accounts
+
+
+view : Context -> Maybe HeaderLink -> Accessibility.Html msg
+view context activeHeaderLink =
     header
         [ attribute "role" "banner"
         , class "fr-header"
@@ -75,22 +81,32 @@ view context =
                     ]
                 ]
             ]
-        , headerMenuModal context
+        , headerMenuModal context activeHeaderLink
         ]
 
 
-headerMenuModal : Context -> Accessibility.Html msg
-headerMenuModal context =
+headerMenuModal : Context -> Maybe HeaderLink -> Accessibility.Html msg
+headerMenuModal context activeHeaderLink =
     let
-        itemLink ( label, url ) =
+        itemLink label url isActive =
             li
                 [ class "fr-nav__item" ]
                 [ a
-                    [ class "fr-nav__link"
-                    , href url
-                    ]
+                    ((if isActive then
+                        [ Aria.currentPage ]
+
+                      else
+                        []
+                     )
+                        ++ [ class "fr-nav__link"
+                           , href url
+                           ]
+                    )
                     [ text label ]
                 ]
+
+        navItemLink label url targetHeaderLink =
+            itemLink label url (activeHeaderLink == Just targetHeaderLink)
     in
     div
         [ class "fr-header__menu fr-modal"
@@ -115,10 +131,14 @@ headerMenuModal context =
                 , Aria.label "Menu principal"
                 ]
                 [ ul [ class "fr-nav__list" ]
-                    (itemLink ( "Candidatures", "/admin/candidacies" )
+                    (navItemLink "Candidatures"
+                        "/admin/candidacies"
+                        Candidacies
                         :: (if Api.Token.isAdmin context.token then
-                                [ itemLink ( "Inscriptions", "/admin/subscriptions" )
-                                , itemLink ( "Comptes", Route.toString context.baseUrl <| Route.Accounts Route.emptyAccountFilters )
+                                [ navItemLink "Inscriptions"
+                                    "/admin/subscriptions"
+                                    Subscriptions
+                                , navItemLink "Comptes" (Route.toString context.baseUrl <| Route.Accounts Route.emptyAccountFilters) Accounts
                                 ]
 
                             else

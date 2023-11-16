@@ -1,6 +1,7 @@
-port module Main exposing (main)
+port module Main exposing (Page)
 
 import Accessibility exposing (h1)
+import Admin.Object.CandidacySummaryFilterInfo exposing (active)
 import Api.FeatureFlipping exposing (getActiveFeatures)
 import Api.Token exposing (Token)
 import Browser
@@ -27,7 +28,7 @@ import Route exposing (Route(..), emptyFeasibilityFilters)
 import Task
 import Url exposing (Url)
 import View.Footer
-import View.Header
+import View.Header as Header exposing (HeaderLink)
 import View.Skiplinks
 
 
@@ -105,12 +106,36 @@ main =
 
 view : Model -> Browser.Document Msg
 view model =
+    let
+        activeHeaderLink =
+            case model.page of
+                Candidacies _ ->
+                    Just Header.Candidacies
+
+                Candidacy _ ->
+                    Just Header.Candidacies
+
+                Subscriptions _ ->
+                    Just Header.Subscriptions
+
+                Subscription _ ->
+                    Just Header.Subscriptions
+
+                Accounts _ ->
+                    Just Header.Accounts
+
+                Account _ ->
+                    Just Header.Accounts
+
+                _ ->
+                    Nothing
+    in
     { title = "France VAE"
     , body =
         [ div
             [ class "min-h-screen flex flex-col" ]
             [ View.Skiplinks.view
-            , View.Header.view model.context
+            , Header.view model.context activeHeaderLink
             , viewPage model
             , KeycloakConfiguration.iframeKeycloak
                 { onLoggedIn = GotLoggedIn
