@@ -37,6 +37,7 @@ type alias Flags =
     , baseUrl : String
     , keycloakConfiguration : Decode.Value
     , restApiEndpoint : String
+    , adminReactUrl : String
     }
 
 
@@ -534,6 +535,7 @@ initWithoutToken flags url key =
                     False
                     False
                     []
+                    flags.adminReactUrl
             , page = NotLoggedIn redirectTo
             , keycloakConfiguration =
                 Decode.decodeValue KeycloakConfiguration.keycloakConfiguration flags.keycloakConfiguration

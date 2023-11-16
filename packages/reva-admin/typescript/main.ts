@@ -29,6 +29,8 @@ const app = Elm.Main.init({
     },
     restApiEndpoint:
       import.meta.env.VITE_API_REST || "http://localhost:8080/api",
+    adminReactUrl:
+      import.meta.env.VITE_ADMIN_REACT_URL || "http://localhost:3003/admin2",
   },
 });
 

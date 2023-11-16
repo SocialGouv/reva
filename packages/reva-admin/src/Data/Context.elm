@@ -13,4 +13,5 @@ type alias Context =
     , isScrollingToTop : Bool
     , isMobile : Bool
     , activeFeatures : List String
+    , adminReactUrl : String
     }

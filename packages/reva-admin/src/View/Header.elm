@@ -4,7 +4,7 @@ import Accessibility exposing (a, button, div, header, li, nav, span, text, ul)
 import Accessibility.Aria as Aria
 import Api.Token
 import Data.Context exposing (Context)
-import Html.Attributes exposing (alt, attribute, class, href, id, style, title)
+import Html.Attributes exposing (alt, attribute, class, href, id, style, target, title)
 import Html.Attributes.Extra exposing (role)
 import Route exposing (Route(..))
 import View
@@ -88,7 +88,7 @@ view context activeHeaderLink =
 headerMenuModal : Context -> Maybe HeaderLink -> Accessibility.Html msg
 headerMenuModal context activeHeaderLink =
     let
-        itemLink label url isActive =
+        itemLink label url isExternal isActive =
             li
                 [ class "fr-nav__item" ]
                 [ a
@@ -98,6 +98,12 @@ headerMenuModal context activeHeaderLink =
                       else
                         []
                      )
+                        ++ (if isExternal then
+                                [ target "_self" ]
+
+                            else
+                                []
+                           )
                         ++ [ class "fr-nav__link"
                            , href url
                            ]
@@ -106,7 +112,7 @@ headerMenuModal context activeHeaderLink =
                 ]
 
         navItemLink label url targetHeaderLink =
-            itemLink label url (activeHeaderLink == Just targetHeaderLink)
+            itemLink label url False (activeHeaderLink == Just targetHeaderLink)
     in
     div
         [ class "fr-header__menu fr-modal"
@@ -134,7 +140,19 @@ headerMenuModal context activeHeaderLink =
                     (navItemLink "Candidatures"
                         "/admin/candidacies"
                         Candidacies
-                        :: (if Api.Token.isAdmin context.token then
+                        :: (if List.member "AAP_ACCOUNT_PARAMETERS" context.activeFeatures && Api.Token.isOrganism context.token then
+                                [ itemLink "Paramètres du compte"
+                                    (context.adminReactUrl
+                                        ++ "/account-parameters"
+                                    )
+                                    True
+                                    False
+                                ]
+
+                            else
+                                []
+                           )
+                        ++ (if Api.Token.isAdmin context.token then
                                 [ navItemLink "Inscriptions"
                                     "/admin/subscriptions"
                                     Subscriptions
