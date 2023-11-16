@@ -17,7 +17,7 @@ export const Header = () => (
     }}
     operatorLogo={{
       alt: "France VAE",
-      imgUrl: "/fvae_logo.svg",
+      imgUrl: "/admin2/fvae_logo.svg",
       orientation: "horizontal",
     }}
     quickAccessItems={[

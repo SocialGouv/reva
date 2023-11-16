@@ -19,7 +19,7 @@ export const Footer = () => (
               className="fr-footer__logo"
               width="225"
               height="138"
-              src="/fvae_logo.svg"
+              src="/admin2/fvae_logo.svg"
               alt="France VAE"
             />
           </Link>
