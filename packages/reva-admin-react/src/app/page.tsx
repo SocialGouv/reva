@@ -35,7 +35,7 @@ export default function Home() {
   });
 
   return (
-    <div className="text-white ml-4 flex flex-col gap-4">
+    <div className="text-black ml-4 flex flex-col gap-4">
       <div>Active features: {activeFeatures.join(", ")}</div>
       <div>
         Candidacies:

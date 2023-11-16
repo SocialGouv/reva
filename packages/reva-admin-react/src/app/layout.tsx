@@ -67,9 +67,13 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
       <main
         role="main"
         id="content"
-        className="flex-1 md:bg-gradient-to-r from-[#557AFF] to-[#2400FF] md:pt-16 pb-12"
+        className="flex-1 md:bg-gradient-to-r from-[#557AFF] to-[#2400FF] "
       >
-        {children}
+        <div className="fr-container">
+          <div className="fr-container md:mt-16 px-8 pt-10 pb-4 fr-grid-row bg-white mb-12 ">
+            {children}
+          </div>
+        </div>
       </main>
       <Footer />
     </div>
