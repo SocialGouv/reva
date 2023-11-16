@@ -400,12 +400,12 @@ const Roadmap = () => (
           suivantes : sanitaire et sociale, grande distribution, industrie
           métallurgique et métiers du sport.
         </RoadmapStep>
-        <RoadmapStep date="Janvier 2024">
-          Le service public de la VAE sera accessible à tous (conditions
-          spécifiques pour les salariés de la fonction publique et les
-          retraités).
+        <RoadmapStep date="Avril 2024">
+          Le service public de la VAE sera progressivement accessible à tous
+          avec l'ajout de nouvelles certifications (conditions spécifiques pour
+          les salariés de la fonction publique, les retraités, les étrangers).
         </RoadmapStep>
-        <RoadmapStep date="Courant 2024">
+        <RoadmapStep date="Janvier 2025">
           Ouverture de la plateforme à l’ensemble des certifications du RNCP, en
           fonction des besoins exprimés par les candidats, les certificateurs ou
           les entreprises.
