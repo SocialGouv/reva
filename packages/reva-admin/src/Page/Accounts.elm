@@ -279,9 +279,9 @@ viewItem context account =
             , class "focus-within:ring-1 focus-within:ring-inset focus-within:ring-indigo-500"
             ]
             [ div [ class "flex flex-col text-sm mb-2" ]
-                [ p [ class "font-bold mb-0" ] [ text (toUpper "raison sociale") ]
+                [ p [ class "font-bold mb-0 uppercase" ] [ text "raison sociale" ]
                 , p [] [ text libelle ]
-                , p [ class "font-bold mb-0" ] [ text (toUpper "email de contact") ]
+                , p [ class "font-bold mb-0 uppercase" ] [ text "email de contact" ]
                 , p [] [ text email ]
                 ]
             , div
