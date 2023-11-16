@@ -140,7 +140,7 @@ headerMenuModal context activeHeaderLink =
                     (navItemLink "Candidatures"
                         "/admin/candidacies"
                         Candidacies
-                        :: (if List.member "AAP_ACCOUNT_PARAMETERS" context.activeFeatures && Api.Token.isOrganism context.token then
+                        :: (if List.member "AAP_ACCOUNT_PARAMETERS" context.activeFeatures && Api.Token.isOrganism context.token && not (Api.Token.isAdmin context.token) then
                                 [ itemLink "Paramètres du compte"
                                     (context.adminReactUrl
                                         ++ "/account-parameters"
