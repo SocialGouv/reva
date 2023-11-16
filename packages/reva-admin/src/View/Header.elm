@@ -1,12 +1,16 @@
 module View.Header exposing (..)
 
-import Accessibility exposing (a, button, div, header, li, span, text)
+import Accessibility exposing (a, button, div, header, li, nav, span, text, ul)
+import Accessibility.Aria as Aria
+import Api.Token
+import Data.Context exposing (Context)
 import Html.Attributes exposing (alt, attribute, class, href, id, style, target, title)
+import Html.Attributes.Extra exposing (role)
 import Route exposing (Route(..))
 import View
 
 
-view : { a | baseUrl : String } -> Accessibility.Html msg
+view : Context -> Accessibility.Html msg
 view context =
     header
         [ attribute "role" "banner"
@@ -71,12 +75,12 @@ view context =
                     ]
                 ]
             ]
-        , headerMenuModal
+        , headerMenuModal context
         ]
 
 
-headerMenuModal : Accessibility.Html msg
-headerMenuModal =
+headerMenuModal : Context -> Accessibility.Html msg
+headerMenuModal context =
     let
         itemLink ( label, url ) =
             li
@@ -84,7 +88,6 @@ headerMenuModal =
                 [ a
                     [ class "fr-nav__link"
                     , href url
-                    , target "_self"
                     ]
                     [ text label ]
                 ]
@@ -105,5 +108,23 @@ headerMenuModal =
             , div
                 [ class "fr-header__menu-links" ]
                 []
+            , nav
+                [ id "fr-header-main-navigation"
+                , class "fr-nav"
+                , role "navigation"
+                , Aria.label "Menu principal"
+                ]
+                [ ul [ class "fr-nav__list" ]
+                    (itemLink ( "Candidatures", "/admin/candidacies" )
+                        :: (if Api.Token.isAdmin context.token then
+                                [ itemLink ( "Inscriptions", "/admin/subscriptions" )
+                                , itemLink ( "Comptes", Route.toString context.baseUrl <| Route.Accounts Route.emptyAccountFilters )
+                                ]
+
+                            else
+                                []
+                           )
+                    )
+                ]
             ]
         ]
