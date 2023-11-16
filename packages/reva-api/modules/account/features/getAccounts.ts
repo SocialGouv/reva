@@ -31,6 +31,7 @@ export const getAccounts = async (
     orderBy: [{ lastname: "asc" }],
     take: limit,
     skip: offset,
+    include: { organism: true },
   };
 
   const queryCount: Prisma.AccountCountArgs = {};
@@ -64,6 +65,9 @@ export const getAccounts = async (
       containsFilter("firstname"),
       containsFilter("lastname"),
       containsFilter("email"),
+      {
+        organism: containsFilter("label"),
+      },
     ];
 
     queryAccounts.where = {
@@ -77,10 +81,7 @@ export const getAccounts = async (
     };
   }
 
-  const accounts = await prismaClient.account.findMany({
-    ...queryAccounts,
-    include: { organism: true },
-  });
+  const accounts = await prismaClient.account.findMany(queryAccounts);
   const count = await prismaClient.account.count(queryCount);
 
   return {

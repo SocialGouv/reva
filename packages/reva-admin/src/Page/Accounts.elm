@@ -22,6 +22,7 @@ import Route
 import String exposing (String)
 import View
 import View.Helpers exposing (dataTest)
+import String exposing (toUpper)
 
 
 type Msg
@@ -278,9 +279,9 @@ viewItem context account =
             , class "focus-within:ring-1 focus-within:ring-inset focus-within:ring-indigo-500"
             ]
             [ div [ class "flex flex-col text-sm mb-2" ]
-                [ p [ class "font-bold mb-0" ] [ text "LIBELLÉ" ]
+                [ p [ class "font-bold mb-0" ] [ text (toUpper "Raison Sociale") ]
                 , p [] [ text libelle ]
-                , p [ class "font-bold mb-0" ] [ text "EMAIL DE CONTACT" ]
+                , p [ class "font-bold mb-0" ] [ text (toUpper "EMAIL DE CONTACT") ]
                 , p [] [ text email ]
                 ]
             , div
