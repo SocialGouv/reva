@@ -272,7 +272,7 @@ view context model =
                         _ ->
                             viewForm "feasibility"
     in
-    View.layout "Accéder aux étapes du parcours" [] maybeNavigationSteps [ content ]
+    View.layout "Accéder aux étapes du parcours" maybeNavigationSteps [ content ]
 
 
 viewTrainingSent : Context -> CandidacyId -> List (Html msg)

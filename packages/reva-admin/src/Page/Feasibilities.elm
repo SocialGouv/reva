@@ -136,13 +136,9 @@ view :
     -> Html Msg
 view context model =
     let
-        upperNavContent =
-            []
-
         viewWithFilters filterContent =
             View.layout
                 "Filtrer les dossiers de faisabilité par catégorie"
-                upperNavContent
                 filterContent
                 (viewDirectoryPanel context model (feasibilityCategoryFilterToReadableString model.filters.category))
     in

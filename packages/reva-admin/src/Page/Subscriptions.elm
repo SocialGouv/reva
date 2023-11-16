@@ -93,7 +93,6 @@ view context model =
         Loading ->
             View.layout
                 ""
-                [ viewCandidaciesLink context ]
                 [ viewFilterLinks context model.filters.status
                 ]
                 [ viewDirectoryHeader context 0 model
@@ -124,7 +123,6 @@ viewContent :
 viewContent context actionErrors model subscriptionPage =
     View.layout
         ""
-        [ viewCandidaciesLink context ]
         [ viewFilterLinks context model.filters.status
         ]
         (viewDirectoryPanel context subscriptionPage model actionErrors)
@@ -354,14 +352,6 @@ withSubscriptions subscriptions ( model, cmd ) =
             model.state
     in
     ( { model | state = { state | subscriptions = subscriptions } }, cmd )
-
-
-viewCandidaciesLink : Context -> Html msg
-viewCandidaciesLink context =
-    Button.new { onClick = Nothing, label = "Voir les candidatures" }
-        |> Button.linkButton (Route.toString context.baseUrl <| Route.Candidacies Route.emptyCandidacyFilters)
-        |> Button.tertiary
-        |> Button.view
 
 
 viewFilterLinks : Context -> SubscriptionRequestStatus -> Html msg

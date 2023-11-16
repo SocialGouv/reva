@@ -131,27 +131,9 @@ view :
     -> Html Msg
 view context model =
     let
-        upperNavContent =
-            if Api.Token.isAdmin context.token then
-                [ Button.new { onClick = Nothing, label = "Voir les inscriptions" }
-                    |> Button.linkButton
-                        (Route.toString context.baseUrl <| Route.Subscriptions Route.emptySubscriptionFilters)
-                    |> Button.tertiary
-                    |> Button.view
-                , Button.new { onClick = Nothing, label = "Voir les comptes" }
-                    |> Button.linkButton
-                        (Route.toString context.baseUrl <| Route.Accounts Route.emptyAccountFilters)
-                    |> Button.tertiary
-                    |> Button.view
-                ]
-
-            else
-                []
-
         viewWithFilters filterContent =
             View.layout
                 filterByStatusTitle
-                upperNavContent
                 (filterContent ++ [ organismHelp ])
                 (viewDirectoryPanel context model (candidacyStatusFilterToReadableString model.filters.status))
     in

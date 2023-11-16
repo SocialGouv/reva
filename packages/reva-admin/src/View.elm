@@ -50,8 +50,8 @@ baseLayout content =
         ]
 
 
-layout : String -> List (Html msg) -> List (Html msg) -> List (Html msg) -> Html msg
-layout navButtonLabel upperNavContent navContent content =
+layout : String -> List (Html msg) -> List (Html msg) -> Html msg
+layout navButtonLabel navContent content =
     baseLayout
         [ div
             [ class "fr-col-12 fr-col-md-3 fr-col-lg-4" ]
@@ -63,17 +63,7 @@ layout navButtonLabel upperNavContent navContent content =
                 ]
                 [ div
                     [ class "h-full md:border-r mr-1 lg:mr-0" ]
-                    [ if upperNavContent == [] then
-                        div [] []
-
-                      else
-                        div
-                            [ class "fr-sidemenu__inner"
-                            , class "shadow-none pr-0"
-                            , class "flex items-center pl-2 lg:pl-6 my-4 md:my-0"
-                            ]
-                            upperNavContent
-                    , div
+                    [ div
                         [ class "fr-sidemenu__inner"
                         , class "shadow-none pr-0"
                         , class "h-full lg:pl-4 md:pb-24"

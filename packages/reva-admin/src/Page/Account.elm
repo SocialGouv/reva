@@ -11,7 +11,6 @@ import Api.Account
 import Api.Form.Account
 import Api.Form.CertificationAuthority
 import Api.Form.Organism
-import BetaGouv.DSFR.Button as Button
 import Browser.Navigation as Nav
 import Data.Account exposing (Account)
 import Data.Context exposing (Context)
@@ -152,7 +151,6 @@ view :
 view context model =
     View.layout
         ""
-        [ viewAccountsLink context ]
         []
         [ viewContent context model ]
 
@@ -298,11 +296,3 @@ updateStructure context ( model, cmd ) =
 
             else
                 ( model, Cmd.none )
-
-
-viewAccountsLink : Context -> Html msg
-viewAccountsLink context =
-    Button.new { onClick = Nothing, label = "Voir les comptes" }
-        |> Button.linkButton (Route.toString context.baseUrl <| Route.Accounts Route.emptyAccountFilters)
-        |> Button.tertiary
-        |> Button.view

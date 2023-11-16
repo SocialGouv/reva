@@ -92,7 +92,6 @@ view context model =
         Loading ->
             View.layout
                 ""
-                [ viewCandidaciesLink context ]
                 [ viewFilterLinks context model.filters.group
                 ]
                 [ viewDirectoryHeader context 0 model
@@ -123,7 +122,6 @@ viewContent :
 viewContent context actionErrors model accountPage =
     View.layout
         ""
-        [ viewCandidaciesLink context ]
         [ viewFilterLinks context model.filters.group
         ]
         (viewDirectoryPanel context accountPage model actionErrors)

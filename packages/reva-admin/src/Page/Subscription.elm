@@ -12,7 +12,6 @@ import Admin.Enum.SubscriptionOrganismTypology exposing (SubscriptionOrganismTyp
 import Admin.Enum.SubscriptionRequestStatus as SubscriptionRequestStatus
 import Api.Form.OrganismSubscription
 import Api.Subscription
-import BetaGouv.DSFR.Button as Button
 import Browser.Navigation as Nav
 import Data.Context exposing (Context)
 import Data.Form exposing (FormData)
@@ -127,7 +126,6 @@ view context model =
         Loading ->
             View.layout
                 ""
-                [ viewCandidaciesLink context ]
                 []
                 [ View.skeleton "ml-10 mt-8 bg-gray-100 mt-24 h-10 w-[353px]" ]
 
@@ -137,7 +135,6 @@ view context model =
         Success subscription ->
             View.layout
                 ""
-                [ viewCandidaciesLink context ]
                 []
                 [ viewContent context model subscription ]
 
@@ -300,11 +297,3 @@ withSubscription subscription ( model, cmd ) =
             model.state
     in
     ( { model | state = { state | subscription = subscription } }, cmd )
-
-
-viewCandidaciesLink : Context -> Html msg
-viewCandidaciesLink context =
-    Button.new { onClick = Nothing, label = "Voir les candidatures" }
-        |> Button.linkButton (Route.toString context.baseUrl <| Route.Candidacies Route.emptyCandidacyFilters)
-        |> Button.tertiary
-        |> Button.view
