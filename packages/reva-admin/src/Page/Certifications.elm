@@ -7,23 +7,39 @@ module Page.Certifications exposing
     )
 
 import Accessibility exposing (h1)
+import Api.Certification
+import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
-import Html exposing (Html, div, text)
-import Html.Attributes exposing (class)
+import Html exposing (Html, div, p, text)
+import Html.Attributes exposing (attribute, class)
+import Page.Search as Search
+import Route
 import View
 
 
-type alias Msg =
-    ()
+type Msg
+    = GotSearchMsg (Search.Msg Certification)
 
 
 type alias Model =
-    ()
+    { search : Search.Model Certification
+    , page : Int
+    }
 
 
 init : Context -> Int -> ( Model, Cmd Msg )
 init context page =
-    ( (), Cmd.none )
+    let
+        ( searchModel, searchCmd ) =
+            Search.init
+                { onSearch = Api.Certification.getCertifications context.endpoint context.token page
+                , toPageRoute = \p -> Route.Certifications (Route.CertificationsFilters p)
+                , viewItem = viewItem context
+                }
+    in
+    ( { page = page, search = searchModel }
+    , Cmd.map GotSearchMsg searchCmd
+    )
 
 
 
@@ -53,7 +69,23 @@ viewDirectoryHeader context =
 
 viewDirectoryPanel : Context -> Model -> List (Html Msg)
 viewDirectoryPanel context model =
-    [ viewDirectoryHeader context ]
+    [ viewDirectoryHeader context
+    , div
+        [ class "sm:px-6"
+        , attribute "aria-label" "Certifications"
+        ]
+        [ Search.view context model.search |> Html.map GotSearchMsg ]
+    ]
+
+
+viewItem : Context -> Certification -> List (Html msg)
+viewItem context certification =
+    [ div
+        [ class "my-6 border-b pb-6 px-4" ]
+        [ div [ class "text-sm text-gray-500" ] [ text certification.codeRncp ]
+        , div [ class "text-xl font-semibold" ] [ text certification.label ]
+        ]
+    ]
 
 
 
@@ -62,4 +94,12 @@ viewDirectoryPanel context model =
 
 update : Context -> Msg -> Model -> ( Model, Cmd Msg )
 update context msg model =
-    ( model, Cmd.none )
+    case msg of
+        GotSearchMsg searchMsg ->
+            let
+                ( newSearchModel, searchCmd ) =
+                    Search.update context searchMsg model.search
+            in
+            ( { model | search = newSearchModel }
+            , Cmd.map GotSearchMsg searchCmd
+            )
