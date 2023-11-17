@@ -2,6 +2,10 @@ import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 
 import { prismaClient } from "../../../prisma/client";
 import { Candidate } from "../../candidate/candidate.types";
+import {
+  sendNewEmailCandidateEmail,
+  sendPreviousEmailCandidateEmail,
+} from "../candidacy.mails";
 
 export const updateContactOfCandidacy = async (
   context: {
@@ -40,6 +44,11 @@ export const updateContactOfCandidacy = async (
     throw new Error(
       `Vous ne pouvez pas utiliser ${candidateData.email} comme nouvelle adresse email`
     );
+  }
+
+  if (candidateData.email !== candidateToUpdate.email) {
+    await sendPreviousEmailCandidateEmail(candidateToUpdate.email);
+    await sendNewEmailCandidateEmail(candidateData.email);
   }
 
   if (process.env.KEYCLOAK_APP_REALM) {
