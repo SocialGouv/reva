@@ -17,6 +17,7 @@ import Page.Account as Account
 import Page.Accounts as Accounts
 import Page.Candidacies as Candidacies exposing (Model)
 import Page.Candidacy as Candidacy
+import Page.Certifications as Certifications
 import Page.Feasibilities as Feasibilities
 import Page.Feasibility as Feasibility
 import Page.Loading
@@ -54,6 +55,7 @@ type alias Model =
 
 type Page
     = Candidacies Candidacies.Model
+    | Certifications Certifications.Model
     | Candidacy Candidacy.Model
     | Feasibilities Feasibilities.Model
     | Feasibility Feasibility.Model
@@ -73,6 +75,7 @@ type Msg
     | UserClickedLink Browser.UrlRequest
     | UserLoggedOut
     | GotCandidaciesMsg Candidacies.Msg
+    | GotCertificationsMsg Certifications.Msg
     | GotSubscriptionsMsg Subscriptions.Msg
     | GotSubscriptionMsg Subscription.Msg
     | GotAccountsMsg Accounts.Msg
@@ -165,6 +168,10 @@ viewPage model =
             Subscriptions.view model.context subscriptionsModel
                 |> Html.map GotSubscriptionsMsg
 
+        Certifications certificationsModel ->
+            Certifications.view model.context certificationsModel
+                |> Html.map GotCertificationsMsg
+
         Subscription subscriptionModel ->
             Subscription.view model.context subscriptionModel
                 |> Html.map GotSubscriptionMsg
@@ -256,6 +263,10 @@ changeRouteTo context route model =
             Subscriptions.init model.context filters.status filters.page
                 |> updateWith Subscriptions GotSubscriptionsMsg model
 
+        ( Route.Certifications filters, _ ) ->
+            Certifications.init context filters.page
+                |> updateWith Certifications GotCertificationsMsg model
+
         ( Route.Subscription subscriptionId, _ ) ->
             Subscription.init model.context subscriptionId
                 |> updateWith Subscription GotSubscriptionMsg model
@@ -317,6 +328,16 @@ update msg model =
             in
             ( { model | page = Candidacies newCandidaciesModel }
             , Cmd.map GotCandidaciesMsg candidaciesCmd
+            )
+
+        -- Certifications
+        ( GotCertificationsMsg candidaciesMsg, Certifications certificationsModel ) ->
+            let
+                ( newCertificationsModel, certificationsCmd ) =
+                    Certifications.update model.context candidaciesMsg certificationsModel
+            in
+            ( { model | page = Certifications newCertificationsModel }
+            , Cmd.map GotCertificationsMsg certificationsCmd
             )
 
         -- Subscriptions

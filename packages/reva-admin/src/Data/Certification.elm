@@ -1,7 +1,14 @@
-module Data.Certification exposing (Certification, CertificationSummary, idToString)
+module Data.Certification exposing (Certification, CertificationSummary, CertificationSummaryPage, idToString)
 
 import Admin.Scalar exposing (Id(..))
+import Data.Pagination exposing (PaginationInfo)
 import Data.Scalar
+
+
+type alias CertificationSummaryPage =
+    { rows : List CertificationSummary
+    , info : PaginationInfo
+    }
 
 
 type alias Certification =

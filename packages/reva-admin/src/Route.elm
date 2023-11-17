@@ -1,5 +1,6 @@
 module Route exposing
     ( CandidacyFilters
+    , CertificationsFilters
     , FeasibilityFilters
     , Route(..)
     , SubscriptionFilters
@@ -30,6 +31,10 @@ type alias CandidacyFilters =
     { status : CandidacyStatusFilter, page : Int }
 
 
+type alias CertificationsFilters =
+    { page : Int }
+
+
 type alias SubscriptionFilters =
     { status : SubscriptionRequestStatus, page : Int }
 
@@ -47,6 +52,7 @@ type alias FeasibilityFilters =
 type Route
     = Candidacy Tab.Tab
     | Candidacies CandidacyFilters
+    | Certifications CertificationsFilters
     | Feasibility String -- Candidacy Id
     | Feasibilities FeasibilityFilters
     | Home
@@ -96,7 +102,10 @@ parser baseUrl =
             Maybe.withDefault CandidacyStatusFilter.ActiveHorsAbandon (CandidacyStatusFilter.fromString (Maybe.withDefault "" s))
 
         toCandidaciesRoute s p =
-            Candidacies (CandidacyFilters (candidacyStatusStringToStatusFilter s) (Maybe.withDefault 1 (String.toInt (Maybe.withDefault "1" p))))
+            Candidacies (CandidacyFilters (candidacyStatusStringToStatusFilter s) (p |> Maybe.andThen String.toInt |> Maybe.withDefault 1))
+
+        toCertificationsRoute p =
+            Certifications (CertificationsFilters (p |> Maybe.andThen String.toInt |> Maybe.withDefault 1))
 
         subscriptionStatusStringToStatusFilter s =
             Maybe.withDefault SubscriptionRequestStatus.Pending (SubscriptionRequestStatus.fromString (Maybe.withDefault "" s))
@@ -123,6 +132,7 @@ parser baseUrl =
                 , s "auth" </> s "logout" |> map Logout
                 , s "plan-du-site" |> map SiteMap
                 , s "candidacies" <?> Query.string "status" <?> Query.string "page" |> map toCandidaciesRoute
+                , s "certifications" <?> Query.string "page" |> map toCertificationsRoute
                 , s "feasibilities" <?> Query.string "category" <?> Query.string "page" |> map toFeasibilitiesRoute
                 , s "subscriptions" <?> Query.string "status" <?> Query.string "page" |> map toSubscriptionsRoute
                 , s "subscriptions" </> string |> map Subscription
@@ -186,6 +196,10 @@ toString baseUrl route =
         Candidacies filters ->
             topLevel [ "candidacies" ]
                 [ Url.Builder.string "status" (CandidacyStatusFilter.toString filters.status), Url.Builder.int "page" filters.page ]
+
+        Certifications { page } ->
+            topLevel [ "certifications" ]
+                [ Url.Builder.int "page" page ]
 
         Candidacy tab ->
             tabToString topLevel subLevel tab
