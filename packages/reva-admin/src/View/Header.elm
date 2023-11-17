@@ -143,7 +143,7 @@ headerMenuModal context activeHeaderLink =
                         :: (if List.member "AAP_ACCOUNT_SETTINGS" context.activeFeatures && Api.Token.isOrganism context.token && not (Api.Token.isAdmin context.token) then
                                 [ itemLink "Paramètres du compte"
                                     (context.adminReactUrl
-                                        ++ "/account-settings"
+                                        ++ "/account-settings/commercial-information"
                                     )
                                     True
                                     False
