@@ -50,10 +50,10 @@ export const Header = () => {
               {
                 text: "Paramètres du compte",
                 linkProps: {
-                  href: "/account-parameters",
+                  href: "/account-settings",
                   target: "_self",
                 },
-                isActive: currentPathname.startsWith("/account-parameters"),
+                isActive: currentPathname.startsWith("/account-settings"),
               },
             ]
           : []),

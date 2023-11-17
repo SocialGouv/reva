@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { usePathname } from "next/navigation";
 
-const AccountParametersLayout = ({ children }: { children: ReactNode }) => {
+const AccountSettingsLayout = ({ children }: { children: ReactNode }) => {
   const currentPathname = usePathname();
 
   const menuItem = (text: string, path: string) => ({
@@ -24,27 +24,27 @@ const AccountParametersLayout = ({ children }: { children: ReactNode }) => {
         items={[
           menuItem(
             "Informations juridiques",
-            "/account-parameters/legal-information",
+            "/account-settings/legal-information",
           ),
           menuItem(
             "Informations commerciales",
-            "/account-parameters/commercial-information",
+            "/account-settings/commercial-information",
           ),
           menuItem(
             "Informations administrateur",
-            "/account-parameters/admin-information",
+            "/account-settings/admin-information",
           ),
           menuItem(
             "Zone d'intervention",
-            "/account-parameters/intervention-zone",
+            "/account-settings/intervention-zone",
           ),
           menuItem(
             "Gestion des certifications",
-            "/account-parameters/certifications",
+            "/account-settings/certifications",
           ),
           menuItem(
             "Gestion des absences et fermetures",
-            "/account-parameters/absence",
+            "/account-settings/absence",
           ),
         ]}
       />
@@ -53,4 +53,4 @@ const AccountParametersLayout = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default AccountParametersLayout;
+export default AccountSettingsLayout;

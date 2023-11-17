@@ -1,4 +1,4 @@
-import { NotImplementedPage } from "@/app/account-parameters/components/not-implemented-page/NotImplementedPage";
+import { NotImplementedPage } from "@/app/account-settings/components/not-implemented-page/NotImplementedPage";
 
 const LegalInformationPage = () => (
   <NotImplementedPage title="Informations juridiques" />
