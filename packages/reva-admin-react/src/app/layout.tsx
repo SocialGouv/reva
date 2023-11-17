@@ -12,7 +12,6 @@ import { defaultColorScheme } from "@/components/dsfr/defaultColorScheme";
 import { StartDsfr } from "@/components/dsfr/StartDsfr";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect } from "react";
-
 export default function RootLayout({ children }: { children: JSX.Element }) {
   const queryClient = new QueryClient();
 
@@ -67,10 +66,12 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
       <main
         role="main"
         id="content"
-        className="flex-1 md:bg-gradient-to-r from-[#557AFF] to-[#2400FF] "
+        className="flex flex-col flex-1 md:bg-gradient-to-r from-[#557AFF] to-[#2400FF] "
       >
-        <div className="fr-container">
-          <div className="fr-container md:mt-16 px-8 pt-10 pb-4 fr-grid-row bg-white mb-12 ">
+        <div className="fr-container flex flex-col flex-1">
+          <div
+            className={`fr-container  flex-1 md:mt-16 px-8 pt-10 pb-4 fr-grid-row bg-white mb-12`}
+          >
             {children}
           </div>
         </div>

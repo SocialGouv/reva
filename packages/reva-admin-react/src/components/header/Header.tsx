@@ -6,7 +6,7 @@ import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 
 export const Header = () => {
-  const currentPathName = usePathname();
+  const currentPathname = usePathname();
   const { isAdmin, isOrganism } = useAuth();
 
   return (
@@ -53,7 +53,7 @@ export const Header = () => {
                   href: "/account-parameters",
                   target: "_self",
                 },
-                isActive: currentPathName.startsWith("/account-parameters"),
+                isActive: currentPathname.startsWith("/account-parameters"),
               },
             ]
           : []),
