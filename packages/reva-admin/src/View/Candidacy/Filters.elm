@@ -10,8 +10,7 @@ import Route
 
 
 type alias Filters =
-    { search : Maybe String
-    , status : CandidacyStatusFilter
+    { status : CandidacyStatusFilter
     , page : Int
     }
 

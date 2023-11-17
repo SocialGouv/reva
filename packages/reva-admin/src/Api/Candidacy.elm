@@ -37,12 +37,12 @@ import View.Date exposing (toDateWithLabels)
 getCandidacies :
     String
     -> Token
-    -> (RemoteData (List String) Data.Candidacy.CandidacySummaryPage -> msg)
     -> Int
     -> Maybe Admin.Enum.CandidacyStatusFilter.CandidacyStatusFilter
+    -> (RemoteData (List String) Data.Candidacy.CandidacySummaryPage -> msg)
     -> Maybe String
     -> Cmd msg
-getCandidacies endpointGraphql token toMsg page statusFilter searchFilter =
+getCandidacies endpointGraphql token page statusFilter toMsg searchFilter =
     Query.getCandidacies
         (\optionals ->
             { optionals
