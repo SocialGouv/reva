@@ -9,7 +9,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "graphql:generate": "graphql-codegen --config codegen.ts"
+    "graphql:generate": "graphql-codegen --config codegen.ts",
+    "graphql:watch": "graphql-codegen --config codegen.ts --watch"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^0.78.2",
