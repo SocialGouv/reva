@@ -49,6 +49,7 @@ import Data.Referential exposing (Referential)
 import Html exposing (Html, div, p, text)
 import Html.Attributes exposing (alt, class, name)
 import Html.Attributes.Extra exposing (role)
+import MD5
 import Page.Form as Form
 import Page.Form.Admissibility
 import Page.Form.Appointment
@@ -220,7 +221,14 @@ view context model =
                                     viewForm "payment"
 
                                 FinanceModule.Unifvae ->
-                                    if List.member "PAYMENT_REQUEST_FVAE" context.activeFeatures then
+                                    let
+                                        userEmailMd5Hash =
+                                            MD5.hex (Api.Token.getEmail context.token)
+
+                                        featureEnabled =
+                                            List.member "PAYMENT_REQUEST_FVAE" context.activeFeatures || List.member userEmailMd5Hash [ "92dcf4333122618dde2d9bdbeffdab27", "a35c09f95db86c9416b1715ea109b688" ]
+                                    in
+                                    if featureEnabled then
                                         viewForm "payment"
 
                                     else
