@@ -53,7 +53,7 @@ export const useConfiguredMainMachine = () => {
               token,
             }),
           initializeApp: async (_context, _event, { data }) => {
-            if (authenticated) {
+            if (authenticated && !data.isConfirmEmail) {
               const data = await getCandidateWithCandidacy(
                 client as ApolloClient<object>
               )({ token });

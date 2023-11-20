@@ -205,9 +205,15 @@ const isLogin =
 const isRegistration =
   window.location.pathname.endsWith("registration") ||
   window.location.pathname.endsWith("registration/");
+
+const isConfirmEmail =
+  window.location.pathname.endsWith("confirmEmail") ||
+  window.location.pathname.endsWith("confirmEmail/");
+
 const loginToken =
-  (isLogin || isRegistration) &&
+  (isLogin || isRegistration || isConfirmEmail) &&
   new URLSearchParams(window.location.search).get("token");
+
 const navigateHome = () => window.history.pushState({}, "", "/app/");
 const hasCandidacyAlreadyHadStatus = (
   status: string,
@@ -869,7 +875,7 @@ export const mainMachine =
               loading: {
                 invoke: {
                   src: "initializeApp",
-                  data: { loginToken },
+                  data: { loginToken, isConfirmEmail },
                   onDone: [
                     {
                       actions: ["loadCandidacy"],

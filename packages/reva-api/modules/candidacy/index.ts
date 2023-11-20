@@ -397,12 +397,9 @@ const unsafeResolvers = {
           );
         }
 
-        const keycloakAdmin = await context.app.getKeycloakAdmin();
-
         return updateContactOfCandidacy(
           {
             hasRole: context.auth.hasRole,
-            keycloakAdmin,
             keycloakId: context.auth.userInfo?.sub,
           },
           params

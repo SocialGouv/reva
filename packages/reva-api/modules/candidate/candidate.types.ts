@@ -18,7 +18,7 @@ export interface Candidate {
 
 export type Gender = "undisclosed" | "man" | "woman";
 
-export type CANDIDATE_LOGIN_ACTION = "registration" | "login";
+export type CANDIDATE_LOGIN_ACTION = "registration" | "login" | "confirmEmail";
 
 export interface CandidateRegistrationInput {
   firstname: string;
@@ -35,9 +35,16 @@ export interface CandidateLoginInput {
   action: "login";
 }
 
+export interface CandidateConfirmEmailInput {
+  previousEmail: string;
+  newEmail: string;
+  action: "confirmEmail";
+}
+
 export type CandidateAuthenticationInput =
   | CandidateRegistrationInput
-  | CandidateLoginInput;
+  | CandidateLoginInput
+  | CandidateConfirmEmailInput;
 
 export interface TrainingForm {
   individualHourCount: number;

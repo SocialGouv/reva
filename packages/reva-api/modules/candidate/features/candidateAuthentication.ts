@@ -1,6 +1,7 @@
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 
 import { updateCertification } from "../../candidacy/database/candidacies";
+import { updateEmailOfCandidacy } from "../../candidacy/features/updateEmailOfCandidacy";
 import { isCertificationAvailableInDepartment } from "../../referential/features/isCertificationAvailableInDepartment";
 import {
   FunctionalCodeError,
@@ -66,6 +67,14 @@ export const candidateAuthentication = async ({
       email: candidateAuthenticationInput.email,
       keycloakAdmin,
     });
+  } else if (candidateAuthenticationInput.action === "confirmEmail") {
+    const { previousEmail, newEmail } = candidateAuthenticationInput;
+    const candidateUpdated = await updateEmailOfCandidacy({
+      keycloakAdmin,
+      previousEmail,
+      newEmail,
+    });
+    return loginCandidate({ email: candidateUpdated.email, keycloakAdmin });
   } else {
     throw new FunctionalError(
       FunctionalCodeError.TECHNICAL_ERROR,
