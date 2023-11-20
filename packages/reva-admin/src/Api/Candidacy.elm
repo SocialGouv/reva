@@ -17,6 +17,7 @@ import Admin.Object.Experience
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
+import Api.Certification as Certification
 import Api.CertificationAuthority as CertificationAuthority
 import Api.Feasibility
 import Api.Organism as Organism
@@ -123,7 +124,7 @@ selection id =
                 |> with (Admin.Object.Candidacy.candidate candidateSelection)
                 |> with (SelectionSet.map (Maybe.map (\(Id certificationId) -> certificationId)) Admin.Object.Candidacy.certificationId)
                 |> with (Admin.Object.Candidacy.organism Organism.selection)
-                |> with (Admin.Object.Candidacy.certification certificationSelection)
+                |> with (Admin.Object.Candidacy.certification Certification.selection)
                 |> with (Admin.Object.Candidacy.department departmentSelection)
                 |> with (Admin.Object.Candidacy.goals goalSelection)
                 |> with (Admin.Object.Candidacy.experiences experienceSelection)
@@ -180,7 +181,7 @@ summarySelection =
     SelectionSet.succeed Data.Candidacy.CandidacySummary
         |> with (SelectionSet.map (\(Id id) -> Data.Candidacy.candidacyIdFromString id) Admin.Object.CandidacySummary.id)
         |> with (SelectionSet.map (Maybe.map (\(Id id) -> id)) Admin.Object.CandidacySummary.certificationId)
-        |> with (Admin.Object.CandidacySummary.certification certificationSummarySelection)
+        |> with (Admin.Object.CandidacySummary.certification Certification.summarySelection)
         |> with (Admin.Object.CandidacySummary.department departmentSelection)
         |> with (Admin.Object.CandidacySummary.organism Organism.selection)
         |> with Admin.Object.CandidacySummary.firstname
@@ -252,27 +253,3 @@ statusSelection =
         |> with (SelectionSet.map toDateWithLabels Admin.Object.CandidacyStatus.createdAt)
         |> with Admin.Object.CandidacyStatus.status
         |> with Admin.Object.CandidacyStatus.isActive
-
-
-
--- CERTIFICATIONS
-
-
-certificationSelection : SelectionSet Data.Certification.Certification Admin.Object.Certification
-certificationSelection =
-    SelectionSet.succeed Data.Certification.Certification
-        |> with Admin.Object.Certification.id
-        |> with Admin.Object.Certification.label
-        |> with Admin.Object.Certification.summary
-        |> with Admin.Object.Certification.level
-        |> with Admin.Object.Certification.activities
-        |> with Admin.Object.Certification.activityArea
-        |> with Admin.Object.Certification.accessibleJobType
-        |> with Admin.Object.Certification.abilities
-
-
-certificationSummarySelection : SelectionSet Data.Certification.CertificationSummary Admin.Object.CertificationSummary
-certificationSummarySelection =
-    SelectionSet.succeed Data.Certification.CertificationSummary
-        |> with Admin.Object.CertificationSummary.id
-        |> with Admin.Object.CertificationSummary.label
