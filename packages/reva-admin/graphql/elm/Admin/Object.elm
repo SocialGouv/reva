@@ -145,6 +145,10 @@ type Organism
     = Organism
 
 
+type OrganismInformationsCommerciales
+    = OrganismInformationsCommerciales
+
+
 type OrganismOnDepartment
     = OrganismOnDepartment
 

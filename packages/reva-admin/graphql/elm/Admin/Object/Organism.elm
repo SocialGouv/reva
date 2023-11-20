@@ -88,3 +88,10 @@ organismOnDepartments fillInOptionals____ object____ =
 isActive : SelectionSet Bool Admin.Object.Organism
 isActive =
     Object.selectionForField "Bool" "isActive" [] Decode.bool
+
+
+informationsCommerciales :
+    SelectionSet decodesTo Admin.Object.OrganismInformationsCommerciales
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Organism
+informationsCommerciales object____ =
+    Object.selectionForCompositeField "informationsCommerciales" [] object____ (Basics.identity >> Decode.nullable)

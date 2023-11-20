@@ -5,10 +5,15 @@ import {
   FunctionalError,
 } from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
+import { getInformationsCommerciales } from "./features/getInformationsCommerciales";
 import { getOrganismById } from "./features/getOrganism";
 import { updateOrganismById } from "./features/updateOrganism";
 
 export const resolvers = {
+  Organism: {
+    informationsCommerciales: (organism: { id: string }) =>
+      getInformationsCommerciales({ organismId: organism.id }),
+  },
   Mutation: {
     organism_updateOrganism: async (
       _parent: unknown,

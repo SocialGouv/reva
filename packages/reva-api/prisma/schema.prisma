@@ -304,9 +304,34 @@ model Organism {
   organismOnConventionCollective                         OrganismOnConventionCollective[]
   qualiopiCertificateExpiresAt                           DateTime?                                                @map("qualiopi_certificate_expires_at")
   website                                                String?                                                  @db.VarChar(255)
+  organismInformationsCommerciales                       OrganismInformationsCommerciales?
+  organismInformationsCommercialesId                     String?                                                  @map("organism_informations_commerciales_id") @db.Uuid
 
   @@unique([siret, typology])
   @@map("organism")
+}
+
+enum ConformiteNormeAccessibilite {
+  CONFORME
+  NON_CONFORME
+  ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC
+}
+
+model OrganismInformationsCommerciales {
+  id                                 String                        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  organism                           Organism                      @relation(fields: [organismId], references: [id], onDelete: Cascade)
+  organismId                         String                        @unique @map("organism_id") @db.Uuid
+  nom                                String?
+  telephone                          String?
+  siteInternet                       String?                       @map("site_internet") @db.VarChar(255)
+  emailContact                       String?                       @map("email_contact") @db.VarChar(255)
+  adresseNumeroEtNomDeRue            String?                       @map("adresse_numero_et_nom_de_rue") @db.VarChar(255)
+  adresseInformationsComplementaires String?                       @map("adresse_informations_complementaires") @db.VarChar(255)
+  adresseCodePostal                  String?                       @map("adresse_code_postal") @db.VarChar(255)
+  adresseVille                       String?                       @map("adresse_ville") @db.VarChar(255)
+  conformeNormesAccessbilite         ConformiteNormeAccessibilite?
+
+  @@map("organism_informations_commerciales")
 }
 
 model OrganismsOnRegionsAndCertifications {

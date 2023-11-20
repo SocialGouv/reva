@@ -10,6 +10,7 @@ type Organism {
   typology: OrganismTypology!
   organismOnDepartments(departmentId: UUID): [OrganismOnDepartment!]!
   isActive: Boolean!
+  informationsCommerciales: OrganismInformationsCommerciales
 }
 
 type OrganismOnDepartment {
@@ -18,6 +19,26 @@ type OrganismOnDepartment {
   departmentId: UUID!
   isRemote: Boolean!
   isOnSite: Boolean!
+}
+
+enum ConformiteNormeAccessibilite {
+  CONFORME
+  NON_CONFORME
+  ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC
+}
+
+type OrganismInformationsCommerciales {
+  id: UUID!
+  organismId: UUID!
+  nom: String
+  telephone: String
+  siteInternet: String
+  emailContact: String
+  adresseNumeroEtNomDeRue: String
+  adresseInformationsComplementaires: String
+  adresseCodePostal: String
+  adresseVille: String
+  conformeNormesAccessbilite: ConformiteNormeAccessibilite
 }
 
 type Query {
