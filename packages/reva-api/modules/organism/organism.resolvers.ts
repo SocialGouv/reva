@@ -60,12 +60,11 @@ export const resolvers = {
           );
         }
 
-        return getOrganismById(
-          {
-            hasRole: context.auth.hasRole,
-          },
-          params
-        );
+        if (!context.auth.hasRole("admin")) {
+          throw new Error("Utilisateur non autorisé");
+        }
+
+        return getOrganismById({ organismId: params.id });
       } catch (e) {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
