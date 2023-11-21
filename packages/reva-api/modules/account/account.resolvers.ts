@@ -11,6 +11,7 @@ import { logger } from "../shared/logger";
 import { AccountGroupFilter } from "./account.types";
 import { createAccount } from "./features/createAccount";
 import { getAccountById } from "./features/getAccount";
+import { getAccountByKeycloakId } from "./features/getAccountByKeycloakId";
 import { getAccounts } from "./features/getAccounts";
 import { updateAccountById } from "./features/updateAccount";
 
@@ -158,5 +159,11 @@ export const resolvers = {
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
     },
+    account_getAccountForConnectedUser: async (
+      _parent: unknown,
+      _params: unknown,
+      context: GraphqlContext
+    ) =>
+      getAccountByKeycloakId({ keycloakId: context.auth.userInfo?.sub || "" }),
   },
 };

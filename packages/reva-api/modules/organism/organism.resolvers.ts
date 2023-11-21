@@ -10,6 +10,10 @@ import { getOrganismById } from "./features/getOrganism";
 import { updateOrganismById } from "./features/updateOrganism";
 
 export const resolvers = {
+  Account: {
+    organism: (account: { organismId: string }) =>
+      getOrganismById({ organismId: account.organismId }),
+  },
   Organism: {
     informationsCommerciales: (organism: { id: string }) =>
       getInformationsCommerciales({ organismId: organism.id }),

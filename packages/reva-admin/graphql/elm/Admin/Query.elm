@@ -59,6 +59,13 @@ account_getAccount requiredArgs____ object____ =
     Object.selectionForCompositeField "account_getAccount" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
 
 
+account_getAccountForConnectedUser :
+    SelectionSet decodesTo Admin.Object.Account
+    -> SelectionSet (Maybe decodesTo) RootQuery
+account_getAccountForConnectedUser object____ =
+    Object.selectionForCompositeField "account_getAccountForConnectedUser" [] object____ (Basics.identity >> Decode.nullable)
+
+
 type alias GetCandidacyByIdRequiredArguments =
     { id : Data.Scalar.Id }
 

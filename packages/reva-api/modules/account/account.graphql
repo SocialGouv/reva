@@ -50,4 +50,5 @@ type Query {
     searchFilter: String
   ): AccountsPaginated!
   account_getAccount(id: ID!): Account
+  account_getAccountForConnectedUser: Account
 }
