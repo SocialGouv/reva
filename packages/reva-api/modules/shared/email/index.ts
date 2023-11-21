@@ -72,7 +72,12 @@ export const sendRegistrationEmail = async (email: string, token: string) => {
       })
     );
 
-  return sendEmailWithLink(email, token, "registration", htmlContent);
+  return sendEmailWithLink({
+    email,
+    token,
+    action: "registration",
+    htmlContent,
+  });
 };
 
 export const sendLoginEmail = async (email: string, token: string) => {
@@ -89,13 +94,13 @@ export const sendLoginEmail = async (email: string, token: string) => {
       })
     );
 
-  return sendEmailWithLink(
+  return sendEmailWithLink({
     email,
     token,
-    "login",
+    action: "login",
     htmlContent,
-    "Accédez à votre compte France VAE"
-  );
+    subject: "Accédez à votre compte France VAE",
+  });
 };
 
 export const sendTrainingEmail = async (email: string, token: string) => {
@@ -132,13 +137,13 @@ export const sendTrainingEmail = async (email: string, token: string) => {
       })
     );
 
-  return sendEmailWithLink(
+  return sendEmailWithLink({
     email,
     token,
-    "login",
+    action: "login",
     htmlContent,
-    "Votre parcours pédagogique est prêt pour validation"
-  );
+    subject: "Votre parcours pédagogique est prêt pour validation",
+  });
 };
 
 export const sendUnknownUserEmail = async (email: string) => {
@@ -160,13 +165,19 @@ export const sendUnknownUserEmail = async (email: string) => {
   });
 };
 
-const sendEmailWithLink = async (
-  email: string,
-  token: string,
-  action: "registration" | "login",
-  htmlContent: (url: string) => { html: string },
-  subject?: string
-) => {
+export const sendEmailWithLink = async ({
+  email,
+  token,
+  action,
+  htmlContent,
+  subject,
+}: {
+  email: string;
+  token: string;
+  action: "registration" | "login" | "confirmEmail";
+  htmlContent: (url: string) => { html: string };
+  subject?: string;
+}) => {
   const url = `${process.env.BASE_URL}/app/${action}?token=${token}`;
   const emailContent = htmlContent(url);
 

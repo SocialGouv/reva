@@ -102,12 +102,12 @@ test("a user can't modify the account information of another candidate", async (
   expect(resp.json().errors?.[0].message).toEqual("Utilisateur non autorisé");
 });
 
-test("a candidate can modify his account information", async () => {
+test("a candidate can modify his account information but not directly his email, it needs to be confirm via an email link", async () => {
   const newCandidate = {
     firstname: "John",
     lastname: "Doe",
     phone: "0612345678",
-    email: "john.doe@example.com",
+    email: "jean-pat.ledru@gmail.com",
   };
 
   const resp = await injectGraphql({

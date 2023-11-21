@@ -1,12 +1,14 @@
-import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
-
 import { prismaClient } from "../../../prisma/client";
+import { generateJwt } from "../../candidate/auth.helper";
 import { Candidate } from "../../candidate/candidate.types";
+import {
+  sendNewEmailCandidateEmail,
+  sendPreviousEmailCandidateEmail,
+} from "../candidacy.mails";
 
 export const updateContactOfCandidacy = async (
   context: {
     hasRole: (role: string) => boolean;
-    keycloakAdmin: KeycloakAdminClient;
     keycloakId: string;
   },
   params: {
@@ -42,20 +44,29 @@ export const updateContactOfCandidacy = async (
     );
   }
 
-  if (process.env.KEYCLOAK_APP_REALM) {
-    await context.keycloakAdmin.users.update(
+  if (candidateData.email !== candidateToUpdate.email) {
+    const previousEmail = candidateToUpdate.email;
+    const newEmail = candidateData.email;
+
+    const token = generateJwt(
       {
-        id: context.keycloakId,
-        realm: process.env.KEYCLOAK_APP_REALM,
+        previousEmail,
+        newEmail,
+        action: "confirmEmail",
       },
-      {
-        email: candidateData.email,
-      }
+      1 * 60 * 60 * 24 * 4
     );
+
+    await sendPreviousEmailCandidateEmail({ email: previousEmail });
+    await sendNewEmailCandidateEmail({ email: newEmail, token });
   }
 
   return prismaClient.candidate.update({
     where: { id: candidateId },
-    data: candidateData,
+    data: {
+      firstname: candidateData.firstname,
+      lastname: candidateData.lastname,
+      phone: candidateData.phone,
+    },
   });
 };
