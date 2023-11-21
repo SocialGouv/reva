@@ -88,7 +88,6 @@ export const sendPreventOrganismCandidateChangeOrganismEmail = async ({
 
           <p>L’équipe France VAE.</p>
         `,
-      labelCTA: "Accéder au dossier",
     })
   );
 
