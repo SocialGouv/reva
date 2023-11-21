@@ -192,9 +192,12 @@ const CommercialInformationPage = () => {
           />
         </fieldset>
 
-        <Button className="self-center md:self-end mt-8">
-          Valider les modifications
-        </Button>
+        <div className="flex flex-col md:flex-row gap-4 self-center md:self-end mt-8">
+          <Button priority="secondary" type="reset">
+            Annuler les modifications
+          </Button>
+          <Button>Valider les modifications</Button>
+        </div>
       </form>
     </div>
   ) : null;
