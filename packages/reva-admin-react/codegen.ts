@@ -8,6 +8,9 @@ const config: CodegenConfig = {
     "src/graphql/generated/": {
       preset: "client",
       plugins: [],
+      config: {
+        enumsAsTypes: true,
+      },
     },
   },
 };
