@@ -49,7 +49,13 @@ init context config =
                         context.token
                         config.page
                         config.organismId
-                , toPageRoute = \p -> Route.Certifications (Route.CertificationsFilters config.organismId p)
+                , toPageRoute =
+                    case config.candidacyId of
+                        Just candidacyId ->
+                            \p -> Route.Reorientation candidacyId (Route.CertificationsFilters config.organismId p)
+
+                        Nothing ->
+                            \p -> Route.Certifications (Route.CertificationsFilters config.organismId p)
                 , viewItem = viewItem context
                 }
     in
