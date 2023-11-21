@@ -63,6 +63,7 @@ type Route
     | Subscriptions SubscriptionFilters
     | Account String -- Account Id
     | Accounts AccountFilters
+    | Reorientation CandidacyId CertificationsFilters
     | SiteMap
 
 
@@ -106,6 +107,9 @@ parser baseUrl =
 
         toCertificationsRoute p =
             Certifications (CertificationsFilters (p |> Maybe.andThen String.toInt |> Maybe.withDefault 1))
+
+        toReorientationRoute candidacyId p =
+            Reorientation (candidacyIdFromString candidacyId) (CertificationsFilters (p |> Maybe.andThen String.toInt |> Maybe.withDefault 1))
 
         subscriptionStatusStringToStatusFilter s =
             Maybe.withDefault SubscriptionRequestStatus.Pending (SubscriptionRequestStatus.fromString (Maybe.withDefault "" s))
@@ -154,6 +158,7 @@ parser baseUrl =
                 , subLevel "candidacies" "training" </> s "confirmation" |> candidacyTab Tab.TrainingSent
                 , subLevel "candidacies" "examInfo" |> candidacyTab Tab.ExamInfo
                 , subLevel "candidacies" "feasibility" |> candidacyTab Tab.Feasibility
+                , subLevel "candidacies" "reorientation" <?> Query.string "page" |> map toReorientationRoute
                 ]
 
 
@@ -221,6 +226,9 @@ toString baseUrl route =
 
         Account accountId ->
             topLevel [ "accounts", accountId ] []
+
+        Reorientation candidacyId filters ->
+            subLevel candidacyId [ "reorientation" ] [ Url.Builder.int "page" filters.page ]
 
 
 tabToString :

@@ -52,11 +52,27 @@ view context config =
               <|
                 h2
                     [ class "text-2xl font-bold leading-none text-gray-900 mb-5"
+                    , class "lg:flex gap-x-4 justify-between items-center"
                     , classList [ ( "italic", config.candidacy.certification == Nothing ) ]
                     ]
                     [ Maybe.map .label config.candidacy.certification
                         |> Maybe.withDefault "Certification non sélectionnée"
                         |> text
+                    , if List.member "REORIENTATION" context.activeFeatures then
+                        div
+                            [ class "mt-4" ]
+                            [ Button.new
+                                { onClick = Nothing, label = "Changer\u{00A0}la\u{00A0}certification" }
+                                |> Button.linkButton
+                                    (Route.toString context.baseUrl
+                                        (Route.Reorientation config.candidacy.id { page = 1 })
+                                    )
+                                |> Button.secondary
+                                |> Button.view
+                            ]
+
+                      else
+                        text ""
                     ]
             ]
         , div

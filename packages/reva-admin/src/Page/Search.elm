@@ -124,33 +124,31 @@ viewPager context model currentPage totalPages =
 
 searchBar : Model data -> Html (Msg data)
 searchBar model =
-    div [ class "mt-6" ]
-        [ form
-            [ onSubmit UserSubmitSearch ]
-            [ label
-                [ for "search", class "fr-hint-text mb-1" ]
-                [ text "" ]
-            , div
-                [ role "search", class "fr-search-bar w-full" ]
-                [ input
-                    [ type_ "search"
-                    , name "search"
-                    , name "search"
-                    , id "search"
-                    , class "fr-input w-full h-10"
-                    , placeholder "Rechercher"
-                    , onInput UserUpdatedKeywords
-                    , Maybe.withDefault "" model.keywords.typed
-                        |> Html.Attributes.value
-                    ]
-                    []
-                , button
-                    [ type_ "submit"
-                    , class "fr-btn"
-                    , Html.Attributes.title "Rechercher"
-                    ]
-                    [ text "Rechercher" ]
+    form
+        [ onSubmit UserSubmitSearch ]
+        [ label
+            [ for "search", class "fr-hint-text mb-1" ]
+            [ text "" ]
+        , div
+            [ role "search", class "fr-search-bar w-full" ]
+            [ input
+                [ type_ "search"
+                , name "search"
+                , name "search"
+                , id "search"
+                , class "fr-input w-full h-10"
+                , placeholder "Rechercher"
+                , onInput UserUpdatedKeywords
+                , Maybe.withDefault "" model.keywords.typed
+                    |> Html.Attributes.value
                 ]
+                []
+            , button
+                [ type_ "submit"
+                , class "fr-btn"
+                , Html.Attributes.title "Rechercher"
+                ]
+                [ text "Rechercher" ]
             ]
         ]
 
