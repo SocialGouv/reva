@@ -5,6 +5,7 @@ import Admin.Object.Certification
 import Admin.Object.CertificationPage
 import Admin.Object.CertificationSummary
 import Admin.Query as Query
+import Admin.Scalar exposing (Uuid(..))
 import Api.Auth as Auth
 import Api.Pagination exposing (pageInfoSelection)
 import Api.Token exposing (Token)
@@ -18,16 +19,18 @@ getCertifications :
     String
     -> Token
     -> Int
+    -> Maybe String
     -> (RemoteData (List String) Data.Certification.CertificationPage -> msg)
     -> Maybe String
     -> Cmd msg
-getCertifications endpointGraphql token page toMsg searchText =
+getCertifications endpointGraphql token page organismId toMsg searchText =
     Query.getCertifications
         (\optionals ->
             { optionals
                 | limit = Present 10
                 , offset = Present ((page - 1) * 10)
                 , searchText = OptionalArgument.fromMaybe searchText
+                , organismId = OptionalArgument.fromMaybe (Maybe.map Uuid organismId)
             }
         )
         pageSelection

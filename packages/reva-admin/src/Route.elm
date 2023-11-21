@@ -32,7 +32,9 @@ type alias CandidacyFilters =
 
 
 type alias CertificationsFilters =
-    { page : Int }
+    { organismId : Maybe String
+    , page : Int
+    }
 
 
 type alias SubscriptionFilters =
@@ -105,11 +107,11 @@ parser baseUrl =
         toCandidaciesRoute s p =
             Candidacies (CandidacyFilters (candidacyStatusStringToStatusFilter s) (p |> Maybe.andThen String.toInt |> Maybe.withDefault 1))
 
-        toCertificationsRoute p =
-            Certifications (CertificationsFilters (p |> Maybe.andThen String.toInt |> Maybe.withDefault 1))
+        toCertificationsRoute organismId p =
+            Certifications (CertificationsFilters organismId (p |> Maybe.andThen String.toInt |> Maybe.withDefault 1))
 
-        toReorientationRoute candidacyId p =
-            Reorientation (candidacyIdFromString candidacyId) (CertificationsFilters (p |> Maybe.andThen String.toInt |> Maybe.withDefault 1))
+        toReorientationRoute candidacyId organismId p =
+            Reorientation (candidacyIdFromString candidacyId) (CertificationsFilters organismId (p |> Maybe.andThen String.toInt |> Maybe.withDefault 1))
 
         subscriptionStatusStringToStatusFilter s =
             Maybe.withDefault SubscriptionRequestStatus.Pending (SubscriptionRequestStatus.fromString (Maybe.withDefault "" s))
@@ -136,7 +138,7 @@ parser baseUrl =
                 , s "auth" </> s "logout" |> map Logout
                 , s "plan-du-site" |> map SiteMap
                 , s "candidacies" <?> Query.string "status" <?> Query.string "page" |> map toCandidaciesRoute
-                , s "certifications" <?> Query.string "page" |> map toCertificationsRoute
+                , s "certifications" <?> Query.string "organism" <?> Query.string "page" |> map toCertificationsRoute
                 , s "feasibilities" <?> Query.string "category" <?> Query.string "page" |> map toFeasibilitiesRoute
                 , s "subscriptions" <?> Query.string "status" <?> Query.string "page" |> map toSubscriptionsRoute
                 , s "subscriptions" </> string |> map Subscription
@@ -158,7 +160,7 @@ parser baseUrl =
                 , subLevel "candidacies" "training" </> s "confirmation" |> candidacyTab Tab.TrainingSent
                 , subLevel "candidacies" "examInfo" |> candidacyTab Tab.ExamInfo
                 , subLevel "candidacies" "feasibility" |> candidacyTab Tab.Feasibility
-                , subLevel "candidacies" "reorientation" <?> Query.string "page" |> map toReorientationRoute
+                , subLevel "candidacies" "reorientation" <?> Query.string "organism" <?> Query.string "page" |> map toReorientationRoute
                 ]
 
 
@@ -228,7 +230,14 @@ toString baseUrl route =
             topLevel [ "accounts", accountId ] []
 
         Reorientation candidacyId filters ->
-            subLevel candidacyId [ "reorientation" ] [ Url.Builder.int "page" filters.page ]
+            subLevel candidacyId
+                [ "reorientation" ]
+                (Url.Builder.int "page" filters.page
+                    :: (filters.organismId
+                            |> Maybe.map (Url.Builder.string "organism" >> List.singleton)
+                            |> Maybe.withDefault []
+                       )
+                )
 
 
 tabToString :

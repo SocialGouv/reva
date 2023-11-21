@@ -264,11 +264,19 @@ changeRouteTo context route model =
                 |> updateWith Subscriptions GotSubscriptionsMsg model
 
         ( Route.Certifications filters, _ ) ->
-            Certifications.init context { candidacyId = Nothing, page = filters.page }
+            Certifications.init context
+                { candidacyId = Nothing
+                , organismId = filters.organismId
+                , page = filters.page
+                }
                 |> updateWith Certifications GotCertificationsMsg model
 
         ( Route.Reorientation candidacyId filters, _ ) ->
-            Certifications.init context { candidacyId = Just candidacyId, page = filters.page }
+            Certifications.init context
+                { candidacyId = Just candidacyId
+                , organismId = filters.organismId
+                , page = filters.page
+                }
                 |> updateWith Certifications GotCertificationsMsg model
 
         ( Route.Subscription subscriptionId, _ ) ->

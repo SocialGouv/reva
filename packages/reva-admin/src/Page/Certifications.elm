@@ -34,6 +34,7 @@ type alias Model =
 
 type alias Config =
     { candidacyId : Maybe CandidacyId
+    , organismId : Maybe String
     , page : Int
     }
 
@@ -43,8 +44,12 @@ init context config =
     let
         ( searchModel, searchCmd ) =
             Search.init
-                { onSearch = Api.Certification.getCertifications context.endpoint context.token config.page
-                , toPageRoute = \p -> Route.Certifications (Route.CertificationsFilters p)
+                { onSearch =
+                    Api.Certification.getCertifications context.endpoint
+                        context.token
+                        config.page
+                        config.organismId
+                , toPageRoute = \p -> Route.Certifications (Route.CertificationsFilters config.organismId p)
                 , viewItem = viewItem context
                 }
     in
