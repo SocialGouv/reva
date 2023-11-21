@@ -183,6 +183,13 @@ toString baseUrl route =
 
         subLevel candidacyId path params =
             topLevel ([ "candidacies", candidacyIdToString candidacyId ] ++ path) params
+
+        certificationsFiltersToParams filters =
+            Url.Builder.int "page" filters.page
+                :: (filters.organismId
+                        |> Maybe.map (Url.Builder.string "organism" >> List.singleton)
+                        |> Maybe.withDefault []
+                   )
     in
     case route of
         Home ->
@@ -204,9 +211,8 @@ toString baseUrl route =
             topLevel [ "candidacies" ]
                 [ Url.Builder.string "status" (CandidacyStatusFilter.toString filters.status), Url.Builder.int "page" filters.page ]
 
-        Certifications { page } ->
-            topLevel [ "certifications" ]
-                [ Url.Builder.int "page" page ]
+        Certifications filters ->
+            topLevel [ "certifications" ] (certificationsFiltersToParams filters)
 
         Candidacy tab ->
             tabToString topLevel subLevel tab
@@ -230,14 +236,7 @@ toString baseUrl route =
             topLevel [ "accounts", accountId ] []
 
         Reorientation candidacyId filters ->
-            subLevel candidacyId
-                [ "reorientation" ]
-                (Url.Builder.int "page" filters.page
-                    :: (filters.organismId
-                            |> Maybe.map (Url.Builder.string "organism" >> List.singleton)
-                            |> Maybe.withDefault []
-                       )
-                )
+            subLevel candidacyId [ "reorientation" ] (certificationsFiltersToParams filters)
 
 
 tabToString :
