@@ -53,11 +53,13 @@ view context config =
                 h2
                     [ class "text-2xl font-bold leading-none text-gray-900 mb-5"
                     , class "lg:flex gap-x-4 justify-between items-center"
-                    , classList [ ( "italic", config.candidacy.certification == Nothing ) ]
                     ]
-                    [ Maybe.map .label config.candidacy.certification
-                        |> Maybe.withDefault "Certification non sélectionnée"
-                        |> text
+                    [ div
+                        [ classList [ ( "italic", config.candidacy.certification == Nothing ) ] ]
+                        [ Maybe.map .label config.candidacy.certification
+                            |> Maybe.withDefault "Certification non sélectionnée"
+                            |> text
+                        ]
                     , if List.member "REORIENTATION" context.activeFeatures then
                         div
                             [ class "mt-4" ]

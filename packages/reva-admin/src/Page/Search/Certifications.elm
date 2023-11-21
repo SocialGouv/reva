@@ -6,16 +6,18 @@ module Page.Search.Certifications exposing
     , view
     )
 
-import Accessibility exposing (h1)
+import Accessibility exposing (h1, h2, span)
+import Api.Candidacy
 import Api.Certification
 import BetaGouv.DSFR.Button as Button
 import BetaGouv.DSFR.Icons.System as Icons
 import Data.Candidacy exposing (Candidacy, CandidacyId)
-import Data.Certification exposing (Certification)
+import Data.Certification exposing (Certification, CertificationSummary)
 import Data.Context exposing (Context)
 import Html exposing (Html, div, p, text)
-import Html.Attributes exposing (attribute, class)
+import Html.Attributes exposing (attribute, class, title)
 import Page.Search as Search
+import RemoteData exposing (RemoteData(..))
 import Route
 import View
 import View.Candidacy.Tab exposing (Value(..))
@@ -23,10 +25,12 @@ import View.Candidacy.Tab exposing (Value(..))
 
 type Msg
     = GotSearchMsg (Search.Msg Certification)
+    | GotCertificationResponse (RemoteData (List String) Certification)
 
 
 type alias Model =
     { candidacyId : Maybe CandidacyId
+    , certification : RemoteData (List String) Certification
     , search : Search.Model Certification
     , page : Int
     }
@@ -60,10 +64,19 @@ init context config =
                 }
     in
     ( { candidacyId = config.candidacyId
+      , certification = Loading
       , page = config.page
       , search = searchModel
       }
-    , Cmd.map GotSearchMsg searchCmd
+    , Cmd.batch
+        [ Cmd.map GotSearchMsg searchCmd
+        , case config.candidacyId of
+            Just candidacyId ->
+                Api.Candidacy.getCertification context.endpoint context.token GotCertificationResponse candidacyId
+
+            Nothing ->
+                Cmd.none
+        ]
     )
 
 
@@ -98,7 +111,7 @@ viewDirectoryHeader context model =
             |> Button.tertiary
             |> Button.view
         , h1
-            [ class "text-3xl my-4" ]
+            [ class "text-3xl mt-4 mb-8" ]
             [ case model.candidacyId of
                 Just _ ->
                     text "Changement de certification"
@@ -106,6 +119,17 @@ viewDirectoryHeader context model =
                 Nothing ->
                     text "Certifications"
             ]
+        , h2 [ class "text-sm font-semibold mb-2" ] [ text "Diplôme sélectionné" ]
+        , case model.candidacyId of
+            Just _ ->
+                div
+                    [ class "mb-10 h-20 flex flex-col justify-center"
+                    , class "bg-gray-100 rounded-xl px-5"
+                    ]
+                    (viewCertification model.certification)
+
+            Nothing ->
+                text ""
         , p [ class "mb-2" ] [ text "Recherchez parmi les diplômes disponibles" ]
         ]
 
@@ -130,7 +154,7 @@ viewItem context certification =
         [ div
             []
             [ div [ class "text-sm text-gray-500" ] [ text certification.codeRncp ]
-            , div [ class "text-xl font-semibold" ] [ text certification.label ]
+            , div [ class "text-lg font-semibold" ] [ text certification.label ]
             ]
         , div
             []
@@ -142,6 +166,36 @@ viewItem context certification =
             ]
         ]
     ]
+
+
+viewCertification : RemoteData (List String) Certification -> List (Html msg)
+viewCertification remoteCertification =
+    case remoteCertification of
+        Loading ->
+            [ span
+                [ class "mt-6 w-full h-6"
+                , class "rounded-lg bg-gray-50"
+                ]
+                []
+            ]
+
+        Failure e ->
+            List.map text e
+
+        Success certification ->
+            [ div
+                [ class "text-sm text-gray-600" ]
+                [ text certification.codeRncp ]
+            , div
+                [ class "text-lg font-semibold"
+                , class "truncate"
+                , title certification.label
+                ]
+                [ text certification.label ]
+            ]
+
+        NotAsked ->
+            [ text "" ]
 
 
 
@@ -159,3 +213,6 @@ update context msg model =
             ( { model | search = newSearchModel }
             , Cmd.map GotSearchMsg searchCmd
             )
+
+        GotCertificationResponse certification ->
+            ( { model | certification = certification }, Cmd.none )

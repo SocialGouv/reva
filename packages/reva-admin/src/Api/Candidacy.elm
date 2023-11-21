@@ -1,4 +1,4 @@
-module Api.Candidacy exposing (get, getCandidacies, getCandidacyCountByStatus, statusSelection, takeOver)
+module Api.Candidacy exposing (get, getCandidacies, getCandidacyCountByStatus, getCertification, statusSelection, takeOver)
 
 import Admin.Enum.CandidacyStatusFilter
 import Admin.Mutation as Mutation
@@ -12,7 +12,6 @@ import Admin.Object.CandidacySummaryPage
 import Admin.Object.Candidate
 import Admin.Object.CandidateGoal
 import Admin.Object.Certification
-import Admin.Object.CertificationSummary
 import Admin.Object.Experience
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
@@ -70,6 +69,38 @@ get endpointGraphql token toMsg candidacyId =
     in
     selection id
         |> Auth.makeQuery "getCandidacy" endpointGraphql token (nothingToError "Cette candidature est introuvable" >> toMsg)
+
+
+getCertification :
+    String
+    -> Token
+    -> (RemoteData (List String) Data.Certification.Certification -> msg)
+    -> CandidacyId
+    -> Cmd msg
+getCertification endpointGraphql token toMsg candidacyId =
+    let
+        id =
+            Data.Candidacy.candidacyIdToString candidacyId
+
+        candidacyRequiredArgs =
+            Query.GetCandidacyByIdRequiredArguments (Id id)
+
+        certificationSelection =
+            SelectionSet.succeed Data.Certification.Certification
+                |> with Admin.Object.Certification.id
+                |> with Admin.Object.Certification.codeRncp
+                |> with Admin.Object.Certification.label
+    in
+    SelectionSet.succeed identity
+        |> with (Admin.Object.Candidacy.certification certificationSelection)
+        |> Query.getCandidacyById candidacyRequiredArgs
+        |> Auth.makeQuery "getCurrentCertification"
+            endpointGraphql
+            token
+            (nothingToError "Cette candidature est introuvable"
+                >> nothingToError "Cette candidature n'a pas de certification"
+                >> toMsg
+            )
 
 
 takeOver :
