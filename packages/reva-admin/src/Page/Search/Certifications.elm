@@ -1,4 +1,4 @@
-module Page.Certifications exposing
+module Page.Search.Certifications exposing
     ( Model
     , Msg
     , init

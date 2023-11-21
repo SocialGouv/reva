@@ -1,4 +1,4 @@
-module Page.Feasibilities exposing
+module Page.Search.Feasibilities exposing
     ( Model
     , Msg
     , init

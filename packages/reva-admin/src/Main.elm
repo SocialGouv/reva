@@ -14,16 +14,16 @@ import Html.Attributes exposing (class)
 import Json.Decode as Decode exposing (..)
 import KeycloakConfiguration exposing (KeycloakConfiguration)
 import Page.Account as Account
-import Page.Accounts as Accounts
-import Page.Candidacies as Candidacies exposing (Model)
 import Page.Candidacy as Candidacy
-import Page.Certifications as Certifications
-import Page.Feasibilities as Feasibilities
 import Page.Feasibility as Feasibility
 import Page.Loading
+import Page.Search.Accounts as Accounts
+import Page.Search.Candidacies as Candidacies exposing (Model)
+import Page.Search.Certifications as Certifications
+import Page.Search.Feasibilities as Feasibilities
+import Page.Search.Subscriptions as Subscriptions
 import Page.SiteMap as SiteMap
 import Page.Subscription as Subscription
-import Page.Subscriptions as Subscriptions
 import RemoteData exposing (RemoteData(..))
 import Route exposing (Route(..), emptyFeasibilityFilters)
 import Task

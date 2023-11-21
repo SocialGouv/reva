@@ -1,4 +1,4 @@
-module Page.Subscriptions exposing
+module Page.Search.Subscriptions exposing
     ( Model
     , Msg
     , init

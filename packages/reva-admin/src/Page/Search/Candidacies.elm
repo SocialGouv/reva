@@ -1,4 +1,4 @@
-module Page.Candidacies exposing
+module Page.Search.Candidacies exposing
     ( Model
     , Msg
     , init

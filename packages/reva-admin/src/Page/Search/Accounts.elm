@@ -1,4 +1,4 @@
-module Page.Accounts exposing
+module Page.Search.Accounts exposing
     ( Model
     , Msg
     , init
@@ -22,7 +22,6 @@ import Route
 import String exposing (String)
 import View
 import View.Helpers exposing (dataTest)
-import String exposing (toUpper)
 
 
 type Msg
