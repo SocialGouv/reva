@@ -13,6 +13,7 @@ import {
 } from "graphql-scalars";
 import mercurius, { MercuriusOptions } from "mercurius";
 
+import { loaders as accountLoaders } from "./account/account.loaders";
 import { resolvers as accountResolvers } from "./account/account.resolvers";
 import * as candidacy from "./candidacy";
 import * as candidate from "./candidate";
@@ -65,7 +66,7 @@ export const graphqlConfiguration: MercuriusOptions = {
     resolvers,
   }),
   graphiql: !!process.env.GRAPHIQL,
-  loaders: { ...feasibilityLoaders, ...organismLoaders },
+  loaders: { ...accountLoaders, ...feasibilityLoaders, ...organismLoaders },
   errorFormatter: (error, ...args) => {
     error.errors
       ? error.errors.forEach((e) => logger.error(e))

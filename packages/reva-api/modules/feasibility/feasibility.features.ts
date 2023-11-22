@@ -409,19 +409,6 @@ export const getActiveFeasibilities = async ({
   return page;
 };
 
-export const getCandidacyById = async ({
-  candidacyId,
-}: {
-  candidacyId: string;
-}): Promise<Candidacy> => {
-  const result = await getCandidacyFromId(candidacyId);
-  if (result.isLeft()) {
-    throw new Error(result.leftOrDefault("Erreur inattendue"));
-  } else {
-    return result.extract() as Candidacy;
-  }
-};
-
 export const getCandidaciesByIds = async ({
   candidacyIds,
 }: {

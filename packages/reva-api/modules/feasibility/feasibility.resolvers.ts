@@ -4,7 +4,6 @@ import {
   getActiveFeasibilities,
   getActiveFeasibilityByCandidacyid,
   getActiveFeasibilityCountByCategory,
-  getCandidacyById,
   getCertificationAuthorities,
   getFeasibilityById,
   getFileNameAndUrl,
@@ -41,8 +40,6 @@ export const feasibilityResolvers = {
       candidacyId: string;
       documentaryProofFileId: string;
     }) => getFileNameAndUrl({ candidacyId, fileId: documentaryProofFileId }),
-    candidacy: ({ candidacyId }: { candidacyId: string }) =>
-      getCandidacyById({ candidacyId }),
     certificateOfAttendanceFile: ({
       candidacyId,
       certificateOfAttendanceFileId: certificateOfAttendanceFileId,
