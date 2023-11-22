@@ -1,4 +1,4 @@
-import { Feasibility } from "@prisma/client";
+import { v4 } from "uuid";
 
 import { FileInterface, FileService } from "../shared/file";
 
@@ -10,95 +10,91 @@ export interface UploadedFile {
 
 interface FeasibilityFileData {
   candidacyId: string;
-  fileId: string;
-  fileType?: string;
+  fileId?: string;
+  fileToUpload?: UploadedFile;
 }
 
-export class FeasibilityFile implements FileInterface {
-  fileType?: string;
-  fileKeyPath: string;
+function wait(milliseconds: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, milliseconds);
+  });
+}
+
+export class FeasibilityFile {
+  id: string;
+  keyPath: string;
+  fileToUpload?: UploadedFile;
 
   constructor(data: FeasibilityFileData) {
-    this.fileType = data.fileType;
-    this.fileKeyPath = `${data.candidacyId}/${data.fileId}`;
+    this.id = data.fileId || v4();
+    this.fileToUpload = data.fileToUpload;
+    this.keyPath = `${data.candidacyId}/${this.id}`;
   }
 
-  upload(data: Buffer): Promise<void> {
-    return FileService.getInstance().uploadFile(this, data);
+  get file(): FileInterface {
+    return { fileKeyPath: this.keyPath };
+  }
+
+  setFileToUpload(file: UploadedFile) {
+    this.fileToUpload = file;
+  }
+
+  async upload(): Promise<void> {
+    await this.uploadWithRetry(0);
+  }
+
+  private async uploadWithRetry(retry: number) {
+    if (!this.fileToUpload) {
+      throw new Error('"fileToUpload" has not been set');
+    }
+
+    await FileService.getInstance().uploadFile(
+      { ...this.file, fileType: this.fileToUpload.mimetype },
+      this.fileToUpload.data
+    );
+
+    const exists = await FileService.getInstance().exists(this.file);
+    if (!exists && retry < 3) {
+      await wait(1000);
+      await this.uploadWithRetry(retry + 1);
+    } else if (!exists) {
+      throw new Error(`Failed to upload ${this.fileToUpload.filename}`);
+    }
   }
 
   async getDownloadLink(): Promise<string | undefined> {
-    const exists = await FileService.getInstance().exists(this);
+    const exists = await FileService.getInstance().exists(this.file);
     if (exists) {
-      return FileService.getInstance().getDownloadLink(this);
+      return FileService.getInstance().getDownloadLink(this.file);
     }
 
     return undefined;
   }
 
   async delete(): Promise<void> {
-    const exists = await FileService.getInstance().exists(this);
+    const exists = await FileService.getInstance().exists(this.file);
     if (exists) {
-      await FileService.getInstance().deleteFile(this);
+      await FileService.getInstance().deleteFile(this.file);
     }
   }
 }
 
-export async function uploadFeasibilityFiles(params: {
-  feasibility: Feasibility;
-  feasibilityFile: UploadedFile;
-  IDFile: UploadedFile;
-  documentaryProofFile?: UploadedFile;
-  certificateOfAttendanceFile?: UploadedFile;
-}) {
-  const {
-    feasibility,
-    feasibilityFile,
-    IDFile,
-    documentaryProofFile,
-    certificateOfAttendanceFile,
-  } = params;
+export async function uploadFeasibilityFiles(
+  files: FeasibilityFile[]
+): Promise<boolean> {
+  try {
+    for (const file of files) {
+      await file.upload();
+    }
 
-  const feasibilityFileInstance = new FeasibilityFile({
-    candidacyId: feasibility.candidacyId,
-    fileId: feasibility.feasibilityFileId,
-    fileType: feasibilityFile.mimetype,
-  });
-
-  await feasibilityFileInstance.upload(feasibilityFile.data);
-
-  if (feasibility.IDFileId) {
-    const feasibilityIDFileInstance = new FeasibilityFile({
-      candidacyId: feasibility.candidacyId,
-      fileId: feasibility.IDFileId,
-      fileType: IDFile.mimetype,
-    });
-
-    await feasibilityIDFileInstance.upload(IDFile.data);
+    return true;
+  } catch (error) {
+    console.error(error);
   }
 
-  if (documentaryProofFile && feasibility.documentaryProofFileId) {
-    const documentaryProofFileInstance = new FeasibilityFile({
-      candidacyId: feasibility.candidacyId,
-      fileId: feasibility.documentaryProofFileId,
-      fileType: documentaryProofFile.mimetype,
-    });
-
-    await documentaryProofFileInstance.upload(documentaryProofFile.data);
+  for (const file of files) {
+    file.delete();
   }
 
-  if (
-    certificateOfAttendanceFile &&
-    feasibility.certificateOfAttendanceFileId
-  ) {
-    const certificateOfAttendanceFileInstance = new FeasibilityFile({
-      candidacyId: feasibility.candidacyId,
-      fileId: feasibility.certificateOfAttendanceFileId,
-      fileType: certificateOfAttendanceFile.mimetype,
-    });
-
-    await certificateOfAttendanceFileInstance.upload(
-      certificateOfAttendanceFile.data
-    );
-  }
+  return false;
 }

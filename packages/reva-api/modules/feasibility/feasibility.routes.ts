@@ -96,18 +96,18 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
 
             return;
           }
-        }
+        } else {
+          const file = await getFileWithContent({ fileId });
 
-        const file = await getFileWithContent({ fileId });
+          if (file) {
+            reply
+              .header("Content-Disposition", "inline")
+              .header("Content-Length", file.content.length)
+              .type(file.mimeType)
+              .send(file.content);
 
-        if (file) {
-          reply
-            .header("Content-Disposition", "inline")
-            .header("Content-Length", file.content.length)
-            .type(file.mimeType)
-            .send(file.content);
-
-          return;
+            return;
+          }
         }
 
         reply.status(400).send("Fichier non trouvé.");

@@ -7,6 +7,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
+import { logger } from "../logger";
 import { FileInterface } from "./file.interface";
 
 const SIGNED_URL_EXPIRE_SECONDS = 60 * 5;
@@ -64,6 +65,8 @@ export class FileService implements FileServiceInterface {
       });
     } catch (error) {
       console.error(error);
+      logger.error(error);
+
       throw new Error("Failed to init S3 Service Provider");
     }
   }
@@ -92,6 +95,7 @@ export class FileService implements FileServiceInterface {
       return result?.$metadata?.httpStatusCode == 200 ? true : false;
     } catch (error) {
       console.error(error);
+      logger.error(error);
     }
 
     return false;
@@ -106,10 +110,10 @@ export class FileService implements FileServiceInterface {
     });
 
     try {
-      const response = await this.client.send(command);
-      console.log(response);
-    } catch (err) {
-      console.error(err);
+      await this.client.send(command);
+    } catch (error) {
+      console.error(error);
+      logger.error(error);
     }
   }
 
@@ -120,10 +124,10 @@ export class FileService implements FileServiceInterface {
     });
 
     try {
-      const response = await this.client.send(command);
-      console.log(response);
-    } catch (err) {
-      console.error(err);
+      await this.client.send(command);
+    } catch (error) {
+      console.error(error);
+      logger.error(error);
     }
   }
 
@@ -141,6 +145,7 @@ export class FileService implements FileServiceInterface {
       return url;
     } catch (error) {
       console.error(error);
+      logger.error(error);
     }
 
     return undefined;
@@ -160,6 +165,7 @@ export class FileService implements FileServiceInterface {
       return url;
     } catch (error) {
       console.error(error);
+      logger.error(error);
     }
 
     return undefined;

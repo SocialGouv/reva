@@ -69,6 +69,45 @@ export const createFeasibility = async ({
     );
   }
 
+  const files: FeasibilityFile[] = [];
+
+  const feasibilityFileInstance = new FeasibilityFile({
+    candidacyId: candidacyId,
+    fileToUpload: feasibilityFile,
+  });
+  files.push(feasibilityFileInstance);
+
+  const IDFileInstance = new FeasibilityFile({
+    candidacyId: candidacyId,
+    fileToUpload: IDFile,
+  });
+  files.push(IDFileInstance);
+
+  let documentaryProofFileInstance: FeasibilityFile | undefined;
+  if (documentaryProofFile) {
+    documentaryProofFileInstance = new FeasibilityFile({
+      candidacyId: candidacyId,
+      fileToUpload: documentaryProofFile,
+    });
+    files.push(documentaryProofFileInstance);
+  }
+
+  let certificateOfAttendanceFileInstance: FeasibilityFile | undefined;
+  if (certificateOfAttendanceFile) {
+    certificateOfAttendanceFileInstance = new FeasibilityFile({
+      candidacyId: candidacyId,
+      fileToUpload: certificateOfAttendanceFile,
+    });
+    files.push(certificateOfAttendanceFileInstance);
+  }
+
+  const success = await uploadFeasibilityFiles(files);
+  if (!success) {
+    throw new Error(
+      `Les fichiers du dossiers de faisabilités n'ont pas pu être enregistrés. Veuillez réessayer.`
+    );
+  }
+
   const feasibility = await prismaClient.feasibility.create({
     data: {
       candidacy: { connect: { id: candidacyId } },
@@ -76,6 +115,7 @@ export const createFeasibility = async ({
       feasibilityFileSentAt: new Date(),
       feasibilityFile: {
         create: {
+          id: feasibilityFileInstance.id,
           content: feasibilityFile.data,
           mimeType: feasibilityFile.mimetype,
           name: feasibilityFile.filename,
@@ -83,6 +123,7 @@ export const createFeasibility = async ({
       },
       IDFile: {
         create: {
+          id: IDFileInstance.id,
           content: IDFile.data,
           mimeType: IDFile.mimetype,
           name: IDFile.filename,
@@ -91,6 +132,7 @@ export const createFeasibility = async ({
       documentaryProofFile: documentaryProofFile
         ? {
             create: {
+              id: documentaryProofFileInstance?.id,
               content: documentaryProofFile.data,
               mimeType: documentaryProofFile.mimetype,
               name: documentaryProofFile.filename,
@@ -100,6 +142,7 @@ export const createFeasibility = async ({
       certificateOfAttendanceFile: certificateOfAttendanceFile
         ? {
             create: {
+              id: certificateOfAttendanceFileInstance?.id,
               content: certificateOfAttendanceFile.data,
               mimeType: certificateOfAttendanceFile.mimetype,
               name: certificateOfAttendanceFile.filename,
@@ -107,14 +150,6 @@ export const createFeasibility = async ({
           }
         : undefined,
     },
-  });
-
-  await uploadFeasibilityFiles({
-    feasibility,
-    feasibilityFile,
-    IDFile,
-    documentaryProofFile,
-    certificateOfAttendanceFile,
   });
 
   await updateCandidacyStatus({
