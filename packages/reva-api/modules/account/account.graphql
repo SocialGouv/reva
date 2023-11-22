@@ -10,7 +10,7 @@ type Account {
   email: String!
   firstname: String
   lastname: String
-  certificationAuthorityId: String
+  certificationAuthority: CertificationAuthority
   organism: Organism
 }
 

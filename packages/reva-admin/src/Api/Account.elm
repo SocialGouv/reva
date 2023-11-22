@@ -9,6 +9,8 @@ import Admin.Object.AccountsPaginated
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
+import Api.CertificationAuthority
+import Api.Organism
 import Api.Pagination exposing (pageInfoSelection)
 import Api.RemoteData exposing (nothingToError)
 import Api.Token exposing (Token)
@@ -16,7 +18,6 @@ import Data.Account
 import Graphql.OptionalArgument as OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import RemoteData exposing (RemoteData(..))
-import Api.Organism
 
 
 
@@ -79,4 +80,4 @@ accountSummarySelection =
         |> with Admin.Object.Account.firstname
         |> with Admin.Object.Account.lastname
         |> with (Admin.Object.Account.organism Api.Organism.selection)
-        |> with Admin.Object.Account.certificationAuthorityId
+        |> with (Admin.Object.Account.certificationAuthority Api.CertificationAuthority.selection)

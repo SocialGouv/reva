@@ -3,6 +3,8 @@ import Keycloak from "keycloak-connect";
 import mercurius from "mercurius";
 import { Left } from "purify-ts";
 
+import { getCertificationAuthorityById } from "../feasibility/feasibility.features";
+import { getOrganismById } from "../organism/features/getOrganism";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -16,6 +18,16 @@ import { getAccounts } from "./features/getAccounts";
 import { updateAccountById } from "./features/updateAccount";
 
 export const resolvers = {
+  Account: {
+    organism: (account: { organismId?: string }) =>
+      account.organismId
+        ? getOrganismById({ organismId: account.organismId })
+        : undefined,
+    certificationAuthority: (account: { certificationAuthorityId?: string }) =>
+      account.certificationAuthorityId
+        ? getCertificationAuthorityById(account.certificationAuthorityId)
+        : undefined,
+  },
   Mutation: {
     account_createAccount: async (
       _: any,

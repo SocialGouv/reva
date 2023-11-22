@@ -198,7 +198,7 @@ viewStructure _ model =
                             , Form.view (RemoteData.succeed ()) model.formStructure
                                 |> Html.map GotFormStructureMsg
                             ]
-                , case account.certificationAuthorityId of
+                , case account.certificationAuthority of
                     Nothing ->
                         div [] []
 
@@ -260,7 +260,7 @@ updateStructure context ( model, cmd ) =
                     Maybe.withDefault "" (Maybe.map .id account.organism)
 
                 certificationAuthorityId =
-                    Maybe.withDefault "" account.certificationAuthorityId
+                    Maybe.withDefault "" (Maybe.map .id account.certificationAuthority)
             in
             if account.organism /= Nothing then
                 let
@@ -278,7 +278,7 @@ updateStructure context ( model, cmd ) =
                 in
                 ( { model | formStructure = formStructureModel }, Cmd.batch [ cmd, Cmd.map GotFormStructureMsg formStructureCmd ] )
 
-            else if account.certificationAuthorityId /= Nothing then
+            else if account.certificationAuthority /= Nothing then
                 let
                     ( formStructureModel, formStructureCmd ) =
                         Form.updateForm context

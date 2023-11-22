@@ -1,7 +1,8 @@
 module Data.Account exposing (Account, AccountSummaryPage)
 
-import Data.Pagination exposing (PaginationInfo)
+import Data.CertificationAuthority exposing (CertificationAuthority)
 import Data.Organism exposing (Organism)
+import Data.Pagination exposing (PaginationInfo)
 
 
 type alias AccountSummaryPage =
@@ -17,5 +18,5 @@ type alias Account =
     , firstname : Maybe String
     , lastname : Maybe String
     , organism : Maybe Organism
-    , certificationAuthorityId : Maybe String
+    , certificationAuthority : Maybe CertificationAuthority
     }

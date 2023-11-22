@@ -31,7 +31,6 @@ export const getAccounts = async (
     orderBy: [{ lastname: "asc" }],
     take: limit,
     skip: offset,
-    include: { organism: true },
   };
 
   const queryCount: Prisma.AccountCountArgs = {};
@@ -65,10 +64,17 @@ export const getAccounts = async (
       containsFilter("firstname"),
       containsFilter("lastname"),
       containsFilter("email"),
-      {
-        organism: containsFilter("label"),
-      },
     ];
+
+    if (groupFilter == "organism") {
+      filters.push({
+        organism: containsFilter("label"),
+      } as any);
+    } else if (groupFilter == "certification_authority") {
+      filters.push({
+        certificationAuthority: containsFilter("label"),
+      } as any);
+    }
 
     queryAccounts.where = {
       ...queryAccounts.where,

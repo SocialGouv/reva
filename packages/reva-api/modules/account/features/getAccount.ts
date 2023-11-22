@@ -18,7 +18,6 @@ export const getAccountById = async (
 
   const account = await prismaClient.account.findUnique({
     where: { id },
-    include: { organism: true },
   });
 
   if (!account) {

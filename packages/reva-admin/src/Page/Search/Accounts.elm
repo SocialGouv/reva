@@ -13,6 +13,7 @@ import BetaGouv.DSFR.Button as Button
 import BetaGouv.DSFR.Pagination
 import Data.Account exposing (Account, AccountSummaryPage)
 import Data.Context exposing (Context)
+import Data.Form.Account exposing (account)
 import Html exposing (Html, a, button, div, form, h2, h4, input, label, li, p, text, ul)
 import Html.Attributes exposing (attribute, class, classList, for, id, name, placeholder, type_)
 import Html.Attributes.Extra exposing (role)
@@ -264,7 +265,14 @@ viewItem : Context -> Account -> Html Msg
 viewItem context account =
     let
         libelle =
-            Maybe.withDefault "" (Maybe.map .label account.organism)
+            if account.organism /= Nothing then
+                Maybe.withDefault "" (Maybe.map .label account.organism)
+
+            else if account.certificationAuthority /= Nothing then
+                Maybe.withDefault "" (Maybe.map .label account.certificationAuthority)
+
+            else
+                ""
 
         email =
             account.email

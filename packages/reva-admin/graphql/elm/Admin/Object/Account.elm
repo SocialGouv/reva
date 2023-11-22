@@ -44,9 +44,11 @@ lastname =
     Object.selectionForField "(Maybe String)" "lastname" [] (Decode.string |> Decode.nullable)
 
 
-certificationAuthorityId : SelectionSet (Maybe String) Admin.Object.Account
-certificationAuthorityId =
-    Object.selectionForField "(Maybe String)" "certificationAuthorityId" [] (Decode.string |> Decode.nullable)
+certificationAuthority :
+    SelectionSet decodesTo Admin.Object.CertificationAuthority
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Account
+certificationAuthority object____ =
+    Object.selectionForCompositeField "certificationAuthority" [] object____ (Basics.identity >> Decode.nullable)
 
 
 organism :
