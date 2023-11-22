@@ -42,7 +42,6 @@ async function refreshAccessToken(token: JWT) {
     };
   } catch (error) {
     console.log(error);
-
     return {
       ...token,
       error: "RefreshAccessTokenError",
@@ -61,6 +60,7 @@ const authOptions: AuthOptions = {
       requestTokenUrl: `${process.env.KEYCLOAK_URL}/auth`,
     }),
   ],
+  pages: { error: "/auth-error" },
   callbacks: {
     async jwt({ token, account, user }) {
       // Initial sign in
