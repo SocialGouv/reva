@@ -5,7 +5,7 @@ import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ReactNode, useEffect, useMemo } from "react";
 
 import { useForm } from "react-hook-form";
@@ -32,7 +32,9 @@ const informationsCommercialesQuery = graphql(`
   query getAccountOrganismAndInformationsCommerciales {
     account_getAccountForConnectedUser {
       organism {
+        id
         informationsCommerciales {
+          id
           nom
           telephone
           siteInternet
@@ -44,6 +46,18 @@ const informationsCommercialesQuery = graphql(`
           conformeNormesAccessbilite
         }
       }
+    }
+  }
+`);
+
+const createOrUpdateInformationsCommercialesMutation = graphql(`
+  mutation createOrUpdateInformationsCommercialesMutation(
+    $informationsCommerciales: CreateOrUpdateInformationsCommercialesInput!
+  ) {
+    organism_createOrUpdateInformationsCommerciales(
+      informationsCommerciales: $informationsCommerciales
+    ) {
+      id
     }
   }
 `);
@@ -60,8 +74,9 @@ const CommercialInformationPage = () => {
   const {
     data: informationsCommercialesResponse,
     status: informationsCommercialesStatus,
+    refetch: refetchInformationsCommerciales,
   } = useQuery({
-    queryKey: ["candidacies"],
+    queryKey: ["informationsCommerciales"],
     queryFn: () => graphqlClient.request(informationsCommercialesQuery),
   });
 
@@ -69,13 +84,20 @@ const CommercialInformationPage = () => {
     () =>
       informationsCommercialesResponse?.account_getAccountForConnectedUser
         ?.organism?.informationsCommerciales,
-    [
-      informationsCommercialesResponse?.account_getAccountForConnectedUser
-        ?.organism?.informationsCommerciales,
-    ],
+    [informationsCommercialesResponse],
   );
 
-  const { register, handleSubmit, reset } = useForm<FormData>({
+  const createOrUpdateInformationsCommerciales = useMutation({
+    mutationFn: (informationsCommerciales: {
+      organismId: string;
+      nom: string;
+    }) =>
+      graphqlClient.request(createOrUpdateInformationsCommercialesMutation, {
+        informationsCommerciales,
+      }),
+  });
+
+  const { register, handleSubmit, reset, formState } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
@@ -83,13 +105,15 @@ const CommercialInformationPage = () => {
     () => reset(informationsCommerciales as FormData),
     [informationsCommerciales, reset],
   );
-
-  const handleFormSubmit = handleSubmit(
-    (data) => {
-      alert(JSON.stringify(data));
-    },
-    (e) => alert(JSON.stringify(e)),
-  );
+  const handleFormSubmit = handleSubmit(async (data) => {
+    await createOrUpdateInformationsCommerciales.mutate({
+      organismId:
+        informationsCommercialesResponse?.account_getAccountForConnectedUser
+          ?.organism?.id || "",
+      ...data,
+    });
+    await refetchInformationsCommerciales();
+  });
 
   return informationsCommercialesStatus === "success" ? (
     <div className="flex flex-col">
@@ -231,7 +255,14 @@ const CommercialInformationPage = () => {
           <Button priority="secondary" type="reset">
             Annuler les modifications
           </Button>
-          <Button>Valider les modifications</Button>
+          <Button
+            disabled={
+              !formState.errors ||
+              createOrUpdateInformationsCommerciales.isPending
+            }
+          >
+            Valider les modifications
+          </Button>
         </div>
       </form>
     </div>
