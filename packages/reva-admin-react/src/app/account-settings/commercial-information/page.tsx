@@ -31,7 +31,7 @@ const schema = z.object({
   adresseVille: z.string().optional().default(""),
   conformeNormesAccessbilite: z
     .enum(["CONFORME", "NON_CONFORME", "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC"])
-    .optional(),
+    .nullable(),
 });
 
 type FormData = z.infer<typeof schema>;
