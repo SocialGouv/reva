@@ -91,7 +91,7 @@ view candidacyCountByStatus filters context =
             link status (candidacyStatusFilterToReadableString status)
     in
     [ ul
-        [ class "font-semibold text-gray-900 py-2"
+        [ class "font-semibold text-gray-900 pb-2"
         , class "fr-sidemenu__list"
         ]
         [ viewFilter CandidacyStatusFilter.ActiveHorsAbandon
@@ -124,7 +124,7 @@ viewLink context filters count statusFilter label =
     li
         []
         [ a
-            [ class "block group my-4 py-1 px-2"
+            [ class "block group mb-4 py-1 px-2"
             , class "flex items-start justify-between transition"
             , class "border-l-2 border-transparent"
             , classList

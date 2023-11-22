@@ -123,7 +123,7 @@ view context model =
         viewWithFilters filterContent =
             View.layout
                 filterByStatusTitle
-                (filterContent ++ [ organismHelp ])
+                filterContent
                 (viewDirectoryPanel context model (candidacyStatusFilterToReadableString model.filters.status))
     in
     case ( context.isMobile && context.isScrollingToTop, model.candidacyCountByStatus ) of
@@ -137,10 +137,10 @@ view context model =
             viewWithFilters []
 
         ( _, Failure errors ) ->
-            viewWithFilters [ div [ class "m-4 font-medium text-red-500", role "alert" ] <| List.map (\e -> div [] [ text e ]) errors ]
+            viewWithFilters <| [ div [ class "m-4 font-medium text-red-500", role "alert" ] <| List.map (\e -> div [] [ text e ]) errors ] ++ [ organismHelp ]
 
         ( _, Success candidacyCountByStatus ) ->
-            viewWithFilters (View.Candidacy.Filters.view candidacyCountByStatus model.filters context)
+            viewWithFilters <| View.Candidacy.Filters.view candidacyCountByStatus model.filters context ++ [ organismHelp ]
 
 
 filterByStatusTitle : String
@@ -185,15 +185,15 @@ viewDirectoryHeader context =
     div
         [ class "sm:px-6 sm:mt-6" ]
         [ h1
-            []
+            [ class "text-4xl" ]
             [ if Api.Token.isAdmin context.token then
-                text "Espace Professionnel - Administrateur"
+                text "Espace pro administrateur"
 
               else
                 text "Espace Professionnel - Architecte Accompagnateur de parcours"
             ]
         , p
-            [ class "text-xl" ]
+            []
             [ if Api.Token.isAdmin context.token then
                 text "En tant qu’administrateur, vous pouvez gérer toutes les candidatures et faire une recherche par architecte de parcours."
 

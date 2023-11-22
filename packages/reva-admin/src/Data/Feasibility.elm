@@ -78,4 +78,4 @@ feasibilityCategoryFilterToReadableString categoryFilter =
             "Dossiers incomplets"
 
         _ ->
-            "Tous les dossiers"
+            "Tous les dossiers de faisabilité"

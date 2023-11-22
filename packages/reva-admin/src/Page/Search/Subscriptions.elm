@@ -144,9 +144,9 @@ viewDirectoryHeader context waitingSubscriptionsCount model =
                     "refusées"
     in
     div
-        [ class "px-8 pt-10 pb-4" ]
+        [ class "px-6 mt-6 pb-4" ]
         [ h2
-            []
+            [ class "text-4xl" ]
             [ if Api.Token.isAdmin context.token then
                 text "Espace pro administrateur"
 
@@ -155,7 +155,7 @@ viewDirectoryHeader context waitingSubscriptionsCount model =
             ]
         , p
             []
-            [ text "En tant que administrateur des conseillers, vous avez la possibilité d'ajouter ou d'accepter de nouveaux architecte de\n                        parcours ou certificateur." ]
+            [ text "En tant qu'administrateur des conseillers, vous avez la possibilité d'ajouter ou d'accepter de nouveaux architecte de\n                        parcours ou certificateur." ]
         , h4
             [ class "mb-2" ]
             [ text
@@ -372,7 +372,7 @@ viewFilterLink context currentStatus linkStatus label =
     li
         []
         [ a
-            [ class "block group my-4 py-1 px-2"
+            [ class "block group mb-4 py-1 px-2"
             , class "flex items-start justify-between transition"
             , class "border-l-2 border-transparent"
             , classList

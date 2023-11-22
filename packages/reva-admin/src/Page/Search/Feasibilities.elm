@@ -11,6 +11,7 @@ import Accessibility exposing (button, h1, h2)
 import Admin.Enum.FeasibilityCategoryFilter as FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
 import Admin.Enum.FeasibilityDecisionFilter as FeasibilityDecisionFilter
 import Api.Feasibility
+import Api.Token
 import BetaGouv.DSFR.Button as Button
 import BetaGouv.DSFR.Pagination
 import Data.Context exposing (Context)
@@ -165,8 +166,7 @@ viewDirectoryHeader =
         [ class "sm:px-6 sm:mt-6" ]
         [ h1
             []
-            [ text "Espace certificateur"
-            ]
+            [ text "Espace certificateur" ]
         ]
 
 
@@ -177,10 +177,14 @@ viewPager context currentPage totalPages categoryFilter =
 
 viewDirectoryPanel : Context -> Model -> String -> List (Html Msg)
 viewDirectoryPanel context model title =
-    [ viewDirectoryHeader
+    [ if Api.Token.isAdmin context.token then
+        text ""
+
+      else
+        viewDirectoryHeader
     , nav
         [ dataTest "directory"
-        , class "min-h-0 overflow-y-auto"
+        , class "min-h-0 overflow-y-auto mt-6"
         , class "sm:px-6"
         , attribute "aria-label" "dossiers de faisabilité"
         ]
@@ -198,7 +202,7 @@ viewDirectoryPanel context model title =
 
 searchBar : Model -> Html Msg
 searchBar model =
-    div [ class "mt-6" ]
+    div []
         [ form
             [ onSubmit UserValidatedSearch ]
             [ label
@@ -267,7 +271,8 @@ viewDirectory context model title =
             , class "top-0 text-xl font-semibold text-slate-700"
             , class "bg-white text-gray-900"
             ]
-            [ h2 [ class "mb-6" ] [ text title ] ]
+            [ h2 [ class "text-3xl mb-6" ] [ text title ] ]
+        , p [ class "mb-2" ] [ text "Recherchez parmi les dossiers de faisabilité" ]
         , searchBar model
         , case model.state.currentFeasibilityPage of
             Success feasibilityPage ->

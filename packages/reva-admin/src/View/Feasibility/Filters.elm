@@ -47,7 +47,7 @@ view feasibilityCountByCategory filters context =
             link category (feasibilityCategoryFilterToReadableString category)
     in
     [ ul
-        [ class "font-semibold text-gray-900 py-2"
+        [ class "font-semibold text-gray-900"
         , class "fr-sidemenu__list"
         ]
         [ viewFilter FeasibilityCategoryFilter.All
@@ -72,7 +72,7 @@ viewLink context filters count categoryFilter label =
     li
         []
         [ a
-            [ class "block group my-4 py-1 px-2"
+            [ class "block group mb-4 py-1 px-2"
             , class "flex items-start justify-between transition"
             , class "border-l-2 border-transparent"
             , classList

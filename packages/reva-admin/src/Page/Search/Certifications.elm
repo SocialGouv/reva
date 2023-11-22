@@ -107,18 +107,18 @@ viewDirectoryHeader context model =
     in
     div
         [ class "sm:px-6 sm:mt-6" ]
-        [ Button.new { onClick = Nothing, label = "Retour" }
-            |> Button.linkButton (Route.toString context.baseUrl backRoute)
-            |> Button.leftIcon Icons.arrowGoBackFill
-            |> Button.tertiary
-            |> Button.view
-        , case model.candidacyId of
+        [ case model.candidacyId of
             Just _ ->
                 div []
-                    [ h1
+                    [ Button.new { onClick = Nothing, label = "Retour" }
+                        |> Button.linkButton (Route.toString context.baseUrl backRoute)
+                        |> Button.leftIcon Icons.arrowGoBackFill
+                        |> Button.tertiary
+                        |> Button.view
+                    , h1
                         [ class "text-3xl mt-4 mb-8" ]
                         [ text "Changement de certification" ]
-                    , h2 [ class "text-sm font-semibold mb-2" ] [ text "Diplôme sélectionné" ]
+                    , h2 [ class "text-sm font-semibold mb-2" ] [ text "Certification sélectionnée" ]
                     , div
                         [ class "mb-10 h-20 flex flex-col justify-center"
                         , class "bg-gray-100 rounded-xl px-5"
@@ -129,8 +129,8 @@ viewDirectoryHeader context model =
             Nothing ->
                 h1
                     [ class "text-3xl mt-4" ]
-                    [ text "Certifications" ]
-        , p [ class "mb-2" ] [ text "Recherchez parmi les diplômes disponibles" ]
+                    [ text "Toutes les certifications" ]
+        , p [ class "mb-2" ] [ text "Recherchez parmi les certifications disponibles" ]
         ]
 
 
