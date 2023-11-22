@@ -31,7 +31,7 @@ export const searchCertifications = async ({
     ? "active_organism_by_available_certification_and_department"
     : "available_certification_by_department";
 
-  const commonQuery = `
+  const departmentOrOrganismQuery = `
       from certification c, ${certificationView} available_certification
       where c.id=available_certification.certification_id
       ${
@@ -49,6 +49,20 @@ export const searchCertifications = async ({
           ? `and certification_searchable_text@@to_tsquery('simple',unaccent('${searchTextInTsQueryFormat}'))`
           : ""
       }`;
+
+  const allCertificationsQuery = `
+      from certification c
+      where c.status='AVAILABLE'
+      ${
+        searchTextInTsQueryFormat
+          ? `and searchable_text@@to_tsquery('simple',unaccent('${searchTextInTsQueryFormat}'))`
+          : ""
+      }`;
+
+  const commonQuery =
+    departmentId || organismId
+      ? departmentOrOrganismQuery
+      : allCertificationsQuery;
 
   const certifications =
     (await prismaClient.$queryRawUnsafe(`select distinct(c.id),c.label,c.summary,c.status, c.rncp_id as "codeRncp"
