@@ -24,14 +24,15 @@ import View.Candidacy.Tab exposing (Value(..))
 
 
 type Msg
-    = GotSearchMsg (Search.Msg Certification)
+    = GotSearchMsg (Search.Msg Certification Msg)
     | GotCertificationResponse (RemoteData (List String) Certification)
+    | UserSelectCertification Certification
 
 
 type alias Model =
     { candidacyId : Maybe CandidacyId
     , certification : RemoteData (List String) Certification
-    , search : Search.Model Certification
+    , search : Search.Model Certification Msg
     , page : Int
     }
 
@@ -53,6 +54,7 @@ init context config =
                         context.token
                         config.page
                         config.organismId
+                , toMsg = GotSearchMsg
                 , toPageRoute =
                     case config.candidacyId of
                         Just candidacyId ->
@@ -69,7 +71,7 @@ init context config =
       , search = searchModel
       }
     , Cmd.batch
-        [ Cmd.map GotSearchMsg searchCmd
+        [ searchCmd
         , case config.candidacyId of
             Just candidacyId ->
                 Api.Candidacy.getCertification context.endpoint context.token GotCertificationResponse candidacyId
@@ -141,11 +143,18 @@ viewDirectoryPanel context model =
         [ class "sm:px-6"
         , attribute "aria-label" "Certifications"
         ]
-        [ Search.view context model.search |> Html.map GotSearchMsg ]
+        [ Search.view context model.search
+        , div
+            [ class "my-6 flex justify-end" ]
+            [ Button.new { onClick = Nothing, label = "Enregistrer" }
+                |> Button.primary
+                |> Button.view
+            ]
+        ]
     ]
 
 
-viewItem : Context -> Certification -> List (Html msg)
+viewItem : Context -> Certification -> List (Html Msg)
 viewItem context certification =
     [ div
         [ class "flex items-end justify-between"
@@ -159,9 +168,10 @@ viewItem context certification =
         , div
             []
             [ Button.new
-                { onClick = Nothing, label = "Choisir" }
+                { onClick = Just (UserSelectCertification certification)
+                , label = "Choisir"
+                }
                 |> Button.tertiary
-                |> Button.disable
                 |> Button.view
             ]
         ]
@@ -216,3 +226,6 @@ update context msg model =
 
         GotCertificationResponse certification ->
             ( { model | certification = certification }, Cmd.none )
+
+        UserSelectCertification certification ->
+            ( { model | certification = Success certification }, Cmd.none )

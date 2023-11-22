@@ -22,19 +22,21 @@ import View
 import View.Helpers exposing (dataTest)
 
 
-type Msg data
+type Msg data userMsg
     = GotSearchResponse (RemoteData (List String) (SearchResults data))
     | UserUpdatedKeywords String
     | UserSubmitSearch
     | UserClearedKeywords
+    | UserMsg userMsg
 
 
-type alias Model data =
+type alias Model data userMsg =
     { keywords : Keywords
-    , onSearch : SearchHandler data
+    , onSearch : SearchHandler data userMsg
     , results : RemoteData (List String) (SearchResults data)
+    , toMsg : Msg data userMsg -> userMsg
     , toPageRoute : Int -> Route
-    , viewItem : data -> List (Html (Msg data))
+    , viewItem : data -> List (Html userMsg)
     }
 
 
@@ -58,10 +60,10 @@ type alias PaginationInfo =
     }
 
 
-type alias SearchHandler data =
-    (RemoteData (List String) (SearchResults data) -> Msg data)
+type alias SearchHandler data userMsg =
+    (RemoteData (List String) (SearchResults data) -> Msg data userMsg)
     -> Maybe String
-    -> Cmd (Msg data)
+    -> Cmd (Msg data userMsg)
 
 
 emptyKeywords : Keywords
@@ -70,26 +72,31 @@ emptyKeywords =
 
 
 init :
-    { onSearch : SearchHandler data
+    { onSearch : SearchHandler data userMsg
+    , toMsg : Msg data userMsg -> userMsg
     , toPageRoute : Int -> Route
-    , viewItem : data -> List (Html (Msg data))
+    , viewItem : data -> List (Html userMsg)
     }
-    -> ( Model data, Cmd (Msg data) )
+    -> ( Model data userMsg, Cmd userMsg )
 init config =
     let
-        defaultModel : Model data
+        defaultModel : Model data userMsg
         defaultModel =
             { keywords = emptyKeywords
             , onSearch = config.onSearch
             , results = NotAsked
+            , toMsg = config.toMsg
             , toPageRoute = config.toPageRoute
             , viewItem = config.viewItem
             }
     in
-    ( defaultModel, config.onSearch GotSearchResponse Nothing )
+    ( defaultModel, Cmd.map config.toMsg (config.onSearch GotSearchResponse Nothing) )
 
 
-reload : Model data -> SearchHandler data -> ( Model data, Cmd (Msg data) )
+reload :
+    Model data userMsg
+    -> SearchHandler data userMsg
+    -> ( Model data userMsg, Cmd (Msg data userMsg) )
 reload model onSearch =
     ( { model | onSearch = onSearch, results = Loading }
     , onSearch GotSearchResponse model.keywords.submitted
@@ -100,7 +107,7 @@ reload model onSearch =
 -- VIEW
 
 
-view : Context -> Model data -> Html (Msg data)
+view : Context -> Model data userMsg -> Html userMsg
 view context model =
     div
         []
@@ -115,17 +122,17 @@ view context model =
         ]
 
 
-viewPager : Context -> Model data -> Int -> Int -> Html (Msg data)
+viewPager : Context -> Model data userMsg -> Int -> Int -> Html userMsg
 viewPager context model currentPage totalPages =
     BetaGouv.DSFR.Pagination.view currentPage
         totalPages
         (\p -> Route.toString context.baseUrl (model.toPageRoute p))
 
 
-searchBar : Model data -> Html (Msg data)
+searchBar : Model data userMsg -> Html userMsg
 searchBar model =
     form
-        [ onSubmit UserSubmitSearch ]
+        [ onSubmit (model.toMsg UserSubmitSearch) ]
         [ label
             [ for "search", class "fr-hint-text mb-1" ]
             [ text "" ]
@@ -138,7 +145,7 @@ searchBar model =
                 , id "search"
                 , class "fr-input w-full h-10"
                 , placeholder "Rechercher"
-                , onInput UserUpdatedKeywords
+                , onInput (model.toMsg << UserUpdatedKeywords)
                 , Maybe.withDefault "" model.keywords.typed
                     |> Html.Attributes.value
                 ]
@@ -153,7 +160,7 @@ searchBar model =
         ]
 
 
-searchResults : Model data -> Int -> Html (Msg data)
+searchResults : Model data userMsg -> Int -> Html userMsg
 searchResults model totalRows =
     let
         countString =
@@ -165,7 +172,7 @@ searchResults model totalRows =
 
         defaultSearchInfo search =
             [ text <| countString ++ " pour « " ++ search ++ " »"
-            , Button.new { label = "Réinitialiser le filtre", onClick = Just UserClearedKeywords }
+            , Button.new { label = "Réinitialiser le filtre", onClick = Just (model.toMsg UserClearedKeywords) }
                 |> Button.secondary
                 |> Button.withAttrs [ class "block mt-2" ]
                 |> Button.view
@@ -183,7 +190,7 @@ searchResults model totalRows =
                 defaultSearchInfo search
 
 
-viewResults : Context -> Model data -> Html (Msg data)
+viewResults : Context -> Model data userMsg -> Html userMsg
 viewResults _ model =
     let
         viewItem data =
@@ -241,7 +248,7 @@ withKeywordsTyped typed keywords =
     { keywords | typed = typed }
 
 
-update : Context -> Msg data -> Model data -> ( Model data, Cmd (Msg data) )
+update : Context -> Msg data userMsg -> Model data userMsg -> ( Model data userMsg, Cmd (Msg data userMsg) )
 update _ msg model =
     case msg of
         GotSearchResponse results ->
@@ -273,3 +280,6 @@ update _ msg model =
               }
             , model.onSearch GotSearchResponse Nothing
             )
+
+        UserMsg _ ->
+            ( model, Cmd.none )

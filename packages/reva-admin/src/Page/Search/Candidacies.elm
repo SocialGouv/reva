@@ -34,11 +34,11 @@ import View.Helpers exposing (dataTest)
 
 type Msg
     = GotCandidacyCountByStatus (RemoteData (List String) CandidacyCountByStatus)
-    | GotSearchMsg (Search.Msg CandidacySummary)
+    | GotSearchMsg (Search.Msg CandidacySummary Msg)
 
 
 type alias Model =
-    { search : Search.Model CandidacySummary
+    { search : Search.Model CandidacySummary Msg
     , filters : Filters
     , candidacyCountByStatus : RemoteData (List String) CandidacyCountByStatus
     }
@@ -86,6 +86,7 @@ init context statusFilter page =
                         context.token
                         page
                         (Just statusFilter)
+                , toMsg = GotSearchMsg
                 , toPageRoute = \p -> Route.Candidacies (Route.CandidacyFilters statusFilter p)
                 , viewItem = viewItem context
                 }
@@ -99,7 +100,7 @@ init context statusFilter page =
 
         defaultCmd =
             Cmd.batch
-                [ Cmd.map GotSearchMsg searchCmd
+                [ searchCmd
                 , Api.Candidacy.getCandidacyCountByStatus context.endpoint
                     context.token
                     defaultModel.search.keywords.submitted
@@ -211,7 +212,7 @@ viewDirectoryPanel context model title =
         , class "sm:px-6"
         , attribute "aria-label" "Candidats"
         ]
-        [ Search.view context model.search |> Html.map GotSearchMsg ]
+        [ Search.view context model.search ]
     ]
 
 
