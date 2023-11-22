@@ -88,12 +88,9 @@ const CommercialInformationPage = () => {
     queryFn: () => graphqlClient.request(informationsCommercialesQuery),
   });
 
-  const informationsCommerciales = useMemo(
-    () =>
-      informationsCommercialesResponse?.account_getAccountForConnectedUser
-        ?.organism?.informationsCommerciales,
-    [informationsCommercialesResponse],
-  );
+  const informationsCommerciales =
+    informationsCommercialesResponse?.account_getAccountForConnectedUser
+      ?.organism?.informationsCommerciales;
 
   const createOrUpdateInformationsCommerciales = useMutation({
     mutationFn: (informationsCommerciales: {
