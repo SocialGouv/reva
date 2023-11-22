@@ -53,9 +53,25 @@ input UpdateOrganismInput {
   isActive: Boolean!
 }
 
+input CreateOrUpdateInformationsCommercialesInput {
+  organismId: UUID!
+  nom: String
+  telephone: String
+  siteInternet: String
+  emailContact: String
+  adresseNumeroEtNomDeRue: String
+  adresseInformationsComplementaires: String
+  adresseCodePostal: String
+  adresseVille: String
+  conformeNormesAccessbilite: ConformiteNormeAccessibilite
+}
+
 type Mutation {
   organism_updateOrganism(
     organismId: ID!
     organismData: UpdateOrganismInput!
   ): Organism!
+  organism_createOrUpdateInformationsCommerciales(
+    informationsCommerciales: CreateOrUpdateInformationsCommercialesInput!
+  ): OrganismInformationsCommerciales!
 }

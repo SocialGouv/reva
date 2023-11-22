@@ -464,6 +464,18 @@ organism_updateOrganism requiredArgs____ object____ =
     Object.selectionForCompositeField "organism_updateOrganism" [ Argument.required "organismId" requiredArgs____.organismId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "organismData" requiredArgs____.organismData Admin.InputObject.encodeUpdateOrganismInput ] object____ Basics.identity
 
 
+type alias OrganismCreateOrUpdateInformationsCommercialesRequiredArguments =
+    { informationsCommerciales : Admin.InputObject.CreateOrUpdateInformationsCommercialesInput }
+
+
+organism_createOrUpdateInformationsCommerciales :
+    OrganismCreateOrUpdateInformationsCommercialesRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.OrganismInformationsCommerciales
+    -> SelectionSet decodesTo RootMutation
+organism_createOrUpdateInformationsCommerciales requiredArgs____ object____ =
+    Object.selectionForCompositeField "organism_createOrUpdateInformationsCommerciales" [ Argument.required "informationsCommerciales" requiredArgs____.informationsCommerciales Admin.InputObject.encodeCreateOrUpdateInformationsCommercialesInput ] object____ Basics.identity
+
+
 type alias SubscriptionCreateSubscriptionRequestRequiredArguments =
     { subscriptionRequest : Admin.InputObject.SubscriptionRequestInput }
 

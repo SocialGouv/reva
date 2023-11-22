@@ -7,6 +7,7 @@ module Admin.InputObject exposing (..)
 import Admin.Enum.AccountGroup
 import Admin.Enum.AdmissibilityStatus
 import Admin.Enum.CandidateTypology
+import Admin.Enum.ConformiteNormeAccessibilite
 import Admin.Enum.DistanceStatus
 import Admin.Enum.Duration
 import Admin.Enum.ExamResult
@@ -326,6 +327,60 @@ encodeCertificationChangeInput : CertificationChangeInput -> Value
 encodeCertificationChangeInput input____ =
     Encode.maybeObject
         [ ( "candidacyId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.candidacyId |> Just ), ( "certificationId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.certificationId |> Just ) ]
+
+
+buildCreateOrUpdateInformationsCommercialesInput :
+    CreateOrUpdateInformationsCommercialesInputRequiredFields
+    -> (CreateOrUpdateInformationsCommercialesInputOptionalFields -> CreateOrUpdateInformationsCommercialesInputOptionalFields)
+    -> CreateOrUpdateInformationsCommercialesInput
+buildCreateOrUpdateInformationsCommercialesInput required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { nom = Absent, telephone = Absent, siteInternet = Absent, emailContact = Absent, adresseNumeroEtNomDeRue = Absent, adresseInformationsComplementaires = Absent, adresseCodePostal = Absent, adresseVille = Absent, conformeNormesAccessbilite = Absent }
+    in
+    { organismId = required____.organismId, nom = optionals____.nom, telephone = optionals____.telephone, siteInternet = optionals____.siteInternet, emailContact = optionals____.emailContact, adresseNumeroEtNomDeRue = optionals____.adresseNumeroEtNomDeRue, adresseInformationsComplementaires = optionals____.adresseInformationsComplementaires, adresseCodePostal = optionals____.adresseCodePostal, adresseVille = optionals____.adresseVille, conformeNormesAccessbilite = optionals____.conformeNormesAccessbilite }
+
+
+type alias CreateOrUpdateInformationsCommercialesInputRequiredFields =
+    { organismId : Data.Scalar.Uuid }
+
+
+type alias CreateOrUpdateInformationsCommercialesInputOptionalFields =
+    { nom : OptionalArgument String
+    , telephone : OptionalArgument String
+    , siteInternet : OptionalArgument String
+    , emailContact : OptionalArgument String
+    , adresseNumeroEtNomDeRue : OptionalArgument String
+    , adresseInformationsComplementaires : OptionalArgument String
+    , adresseCodePostal : OptionalArgument String
+    , adresseVille : OptionalArgument String
+    , conformeNormesAccessbilite : OptionalArgument Admin.Enum.ConformiteNormeAccessibilite.ConformiteNormeAccessibilite
+    }
+
+
+{-| Type for the CreateOrUpdateInformationsCommercialesInput input object.
+-}
+type alias CreateOrUpdateInformationsCommercialesInput =
+    { organismId : Data.Scalar.Uuid
+    , nom : OptionalArgument String
+    , telephone : OptionalArgument String
+    , siteInternet : OptionalArgument String
+    , emailContact : OptionalArgument String
+    , adresseNumeroEtNomDeRue : OptionalArgument String
+    , adresseInformationsComplementaires : OptionalArgument String
+    , adresseCodePostal : OptionalArgument String
+    , adresseVille : OptionalArgument String
+    , conformeNormesAccessbilite : OptionalArgument Admin.Enum.ConformiteNormeAccessibilite.ConformiteNormeAccessibilite
+    }
+
+
+{-| Encode a CreateOrUpdateInformationsCommercialesInput into a value that can be used as an argument.
+-}
+encodeCreateOrUpdateInformationsCommercialesInput : CreateOrUpdateInformationsCommercialesInput -> Value
+encodeCreateOrUpdateInformationsCommercialesInput input____ =
+    Encode.maybeObject
+        [ ( "organismId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) input____.organismId |> Just ), ( "nom", Encode.string |> Encode.optional input____.nom ), ( "telephone", Encode.string |> Encode.optional input____.telephone ), ( "siteInternet", Encode.string |> Encode.optional input____.siteInternet ), ( "emailContact", Encode.string |> Encode.optional input____.emailContact ), ( "adresseNumeroEtNomDeRue", Encode.string |> Encode.optional input____.adresseNumeroEtNomDeRue ), ( "adresseInformationsComplementaires", Encode.string |> Encode.optional input____.adresseInformationsComplementaires ), ( "adresseCodePostal", Encode.string |> Encode.optional input____.adresseCodePostal ), ( "adresseVille", Encode.string |> Encode.optional input____.adresseVille ), ( "conformeNormesAccessbilite", Encode.enum Admin.Enum.ConformiteNormeAccessibilite.toString |> Encode.optional input____.conformeNormesAccessbilite ) ]
 
 
 buildDropOutInput :
