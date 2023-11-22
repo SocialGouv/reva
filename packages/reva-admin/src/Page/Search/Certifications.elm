@@ -62,7 +62,7 @@ init context config =
 
                         Nothing ->
                             \p -> Route.Certifications (Route.CertificationsFilters config.organismId p)
-                , viewItem = viewItem context
+                , viewItem = viewItem config.candidacyId
                 }
     in
     ( { candidacyId = config.candidacyId
@@ -112,26 +112,24 @@ viewDirectoryHeader context model =
             |> Button.leftIcon Icons.arrowGoBackFill
             |> Button.tertiary
             |> Button.view
-        , h1
-            [ class "text-3xl mt-4 mb-8" ]
-            [ case model.candidacyId of
-                Just _ ->
-                    text "Changement de certification"
-
-                Nothing ->
-                    text "Certifications"
-            ]
-        , h2 [ class "text-sm font-semibold mb-2" ] [ text "Diplôme sélectionné" ]
         , case model.candidacyId of
             Just _ ->
-                div
-                    [ class "mb-10 h-20 flex flex-col justify-center"
-                    , class "bg-gray-100 rounded-xl px-5"
+                div []
+                    [ h1
+                        [ class "text-3xl mt-4 mb-8" ]
+                        [ text "Changement de certification" ]
+                    , h2 [ class "text-sm font-semibold mb-2" ] [ text "Diplôme sélectionné" ]
+                    , div
+                        [ class "mb-10 h-20 flex flex-col justify-center"
+                        , class "bg-gray-100 rounded-xl px-5"
+                        ]
+                        (viewCertification model.certification)
                     ]
-                    (viewCertification model.certification)
 
             Nothing ->
-                text ""
+                h1
+                    [ class "text-3xl mt-4" ]
+                    [ text "Certifications" ]
         , p [ class "mb-2" ] [ text "Recherchez parmi les diplômes disponibles" ]
         ]
 
@@ -144,18 +142,19 @@ viewDirectoryPanel context model =
         , attribute "aria-label" "Certifications"
         ]
         [ Search.view context model.search
-        , div
-            [ class "my-6 flex justify-end" ]
-            [ Button.new { onClick = Nothing, label = "Enregistrer" }
-                |> Button.primary
-                |> Button.view
-            ]
+        , displayIf model.candidacyId <|
+            div
+                [ class "my-6 flex justify-end" ]
+                [ Button.new { onClick = Nothing, label = "Enregistrer" }
+                    |> Button.primary
+                    |> Button.view
+                ]
         ]
     ]
 
 
-viewItem : Context -> Certification -> List (Html Msg)
-viewItem context certification =
+viewItem : Maybe CandidacyId -> Certification -> List (Html Msg)
+viewItem candidacyId certification =
     [ div
         [ class "flex items-end justify-between"
         , class "my-6 border-b pb-6 px-4"
@@ -165,15 +164,16 @@ viewItem context certification =
             [ div [ class "text-sm text-gray-500" ] [ text certification.codeRncp ]
             , div [ class "text-lg font-semibold" ] [ text certification.label ]
             ]
-        , div
-            []
-            [ Button.new
-                { onClick = Just (UserSelectCertification certification)
-                , label = "Choisir"
-                }
-                |> Button.tertiary
-                |> Button.view
-            ]
+        , displayIf candidacyId <|
+            div
+                []
+                [ Button.new
+                    { onClick = Just (UserSelectCertification certification)
+                    , label = "Choisir"
+                    }
+                    |> Button.tertiary
+                    |> Button.view
+                ]
         ]
     ]
 
@@ -206,6 +206,16 @@ viewCertification remoteCertification =
 
         NotAsked ->
             [ text "" ]
+
+
+displayIf : Maybe a -> Html msg -> Html msg
+displayIf maybe content =
+    case maybe of
+        Just _ ->
+            content
+
+        Nothing ->
+            text ""
 
 
 
