@@ -40,13 +40,5 @@ export const validateAccompagnement = ({
     });
   }
 
-  if (individualHourCount.plus(collectiveHourCount).equals(zero)) {
-    errors.push({
-      fieldName: "GLOBAL",
-      message:
-        "Le parcours personnalisé doit contenir un accompagnement individuel ou collectif",
-    });
-  }
-
   return errors;
 };

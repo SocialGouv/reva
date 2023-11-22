@@ -77,7 +77,7 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( "forfait", Form.StaticHtml forfaitInfo )
         ]
             ++ (if showCustomFundingFields then
-                    [ ( "individual", Form.Title2 "Accompagnement (au moins une ligne obligatoire)" )
+                    [ ( "individual", Form.Title2 "Accompagnement (optionnel)" )
                     , ( "collective", Form.TitleInlined "Individuel" )
                     , ( keys.individualHourCount, hourCountElement )
                     , ( keys.individualCost, costElement )
