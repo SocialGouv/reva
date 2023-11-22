@@ -16,7 +16,15 @@ const schema = z.object({
   nom: z.string().optional().default(""),
   telephone: z.string().optional().default(""),
   siteInternet: z.string().optional().default(""),
-  emailContact: z.string().optional().default(""),
+  emailContact: z
+    .union([
+      z
+        .string()
+        .length(0, "Le champ doit être vide ou contenir une adresse email"),
+      z.string().email("Le champ doit être vide ou contenir une adresse email"),
+    ])
+    .optional()
+    .default(""),
   adresseNumeroEtNomDeRue: z.string().optional().default(""),
   adresseInformationsComplementaires: z.string().optional().default(""),
   adresseCodePostal: z.string().optional().default(""),
@@ -97,7 +105,12 @@ const CommercialInformationPage = () => {
       }),
   });
 
-  const { register, handleSubmit, reset, formState } = useForm<FormData>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
@@ -179,6 +192,8 @@ const CommercialInformationPage = () => {
             <Input
               className="!mb-4"
               label="E-mail de contact (optionnel)"
+              state={errors.emailContact ? "error" : "default"}
+              stateRelatedMessage={errors.emailContact?.message}
               nativeInputProps={{
                 ...register("emailContact"),
               }}
@@ -255,14 +270,7 @@ const CommercialInformationPage = () => {
           <Button priority="secondary" type="reset">
             Annuler les modifications
           </Button>
-          <Button
-            disabled={
-              !formState.errors ||
-              createOrUpdateInformationsCommerciales.isPending
-            }
-          >
-            Valider les modifications
-          </Button>
+          <Button disabled={isSubmitting}>Valider les modifications</Button>
         </div>
       </form>
     </div>
