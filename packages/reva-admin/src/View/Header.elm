@@ -14,6 +14,8 @@ type HeaderLink
     = Candidacies
     | Subscriptions
     | Accounts
+    | Feasibilities
+    | Certifications
 
 
 view : Context -> Maybe HeaderLink -> Accessibility.Html msg
@@ -113,6 +115,23 @@ headerMenuModal context activeHeaderLink =
 
         navItemLink label url targetHeaderLink =
             itemLink label url False (activeHeaderLink == Just targetHeaderLink)
+
+        optionalLinks =
+            if Api.Token.isAdmin context.token then
+                [ navItemLink "Inscriptions" "/admin/subscriptions" Subscriptions
+                , navItemLink "Comptes"
+                    (Route.toString context.baseUrl <| Route.Accounts Route.emptyAccountFilters)
+                    Accounts
+                , navItemLink "Certifications"
+                    (Route.toString context.baseUrl <| Route.Certifications Route.emptyCertificationsFilters)
+                    Certifications
+                , navItemLink "Dossiers de faisabilité"
+                    (Route.toString context.baseUrl <| Route.Feasibilities Route.emptyFeasibilityFilters)
+                    Feasibilities
+                ]
+
+            else
+                []
     in
     div
         [ class "fr-header__menu fr-modal"
@@ -152,16 +171,7 @@ headerMenuModal context activeHeaderLink =
                             else
                                 []
                            )
-                        ++ (if Api.Token.isAdmin context.token then
-                                [ navItemLink "Inscriptions"
-                                    "/admin/subscriptions"
-                                    Subscriptions
-                                , navItemLink "Comptes" (Route.toString context.baseUrl <| Route.Accounts Route.emptyAccountFilters) Accounts
-                                ]
-
-                            else
-                                []
-                           )
+                        ++ optionalLinks
                     )
                 ]
             ]

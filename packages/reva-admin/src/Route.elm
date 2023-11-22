@@ -6,6 +6,7 @@ module Route exposing
     , SubscriptionFilters
     , emptyAccountFilters
     , emptyCandidacyFilters
+    , emptyCertificationsFilters
     , emptyFeasibilityFilters
     , emptySubscriptionFilters
     , fromUrl
@@ -72,6 +73,11 @@ type Route
 emptyCandidacyFilters : CandidacyFilters
 emptyCandidacyFilters =
     { status = CandidacyStatusFilter.ActiveHorsAbandon, page = 1 }
+
+
+emptyCertificationsFilters : CertificationsFilters
+emptyCertificationsFilters =
+    { organismId = Nothing, page = 1 }
 
 
 emptySubscriptionFilters : SubscriptionFilters

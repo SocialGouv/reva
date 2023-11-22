@@ -119,6 +119,9 @@ view model =
                 Candidacy _ ->
                     Just Header.Candidacies
 
+                Certifications _ ->
+                    Just Header.Certifications
+
                 Subscriptions _ ->
                     Just Header.Subscriptions
 
@@ -130,6 +133,9 @@ view model =
 
                 Account _ ->
                     Just Header.Accounts
+
+                Feasibilities _ ->
+                    Just Header.Feasibilities
 
                 _ ->
                     Nothing
