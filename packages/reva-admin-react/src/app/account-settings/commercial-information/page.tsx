@@ -1,13 +1,32 @@
 "use client";
 import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
 import { graphql } from "@/graphql/generated";
-import { ConformiteNormeAccessibilite } from "@/graphql/generated/graphql";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import { useQuery } from "@tanstack/react-query";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useMemo } from "react";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+const schema = z.object({
+  nom: z.string().optional().default(""),
+  telephone: z.string().optional().default(""),
+  siteInternet: z.string().optional().default(""),
+  emailContact: z.string().optional().default(""),
+  adresseNumeroEtNomDeRue: z.string().optional().default(""),
+  adresseInformationsComplementaires: z.string().optional().default(""),
+  adresseCodePostal: z.string().optional().default(""),
+  adresseVille: z.string().optional().default(""),
+  conformeNormesAccessbilite: z
+    .enum(["CONFORME", "NON_CONFORME", "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC"])
+    .optional(),
+});
+
+type FormData = z.infer<typeof schema>;
 
 const informationsCommercialesQuery = graphql(`
   query getAccountOrganismAndInformationsCommerciales {
@@ -46,9 +65,31 @@ const CommercialInformationPage = () => {
     queryFn: () => graphqlClient.request(informationsCommercialesQuery),
   });
 
-  const informationsCommerciales =
-    informationsCommercialesResponse?.account_getAccountForConnectedUser
-      ?.organism?.informationsCommerciales;
+  const informationsCommerciales = useMemo(
+    () =>
+      informationsCommercialesResponse?.account_getAccountForConnectedUser
+        ?.organism?.informationsCommerciales,
+    [
+      informationsCommercialesResponse?.account_getAccountForConnectedUser
+        ?.organism?.informationsCommerciales,
+    ],
+  );
+
+  const { register, handleSubmit, reset } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  });
+
+  useEffect(
+    () => reset(informationsCommerciales as FormData),
+    [informationsCommerciales, reset],
+  );
+
+  const handleFormSubmit = handleSubmit(
+    (data) => {
+      alert(JSON.stringify(data));
+    },
+    (e) => alert(JSON.stringify(e)),
+  );
 
   return informationsCommercialesStatus === "success" ? (
     <div className="flex flex-col">
@@ -65,15 +106,18 @@ const CommercialInformationPage = () => {
       <form
         data-testid="candidate-registration-form"
         className="flex flex-col mt-10"
+        onSubmit={handleFormSubmit}
+        onReset={(e) => {
+          e.preventDefault();
+          reset(informationsCommerciales as FormData);
+        }}
       >
         <fieldset className="flex flex-col gap-4">
           <div>
             <Input
               className="!mb-4"
               label="Nom commercial (optionnel)"
-              nativeInputProps={{
-                defaultValue: informationsCommerciales?.nom || "",
-              }}
+              nativeInputProps={{ ...register("nom") }}
             />
             <SmallNotice>
               Si vous ne renseignez pas ce champ, votre raison commerciale sera
@@ -85,7 +129,7 @@ const CommercialInformationPage = () => {
               className="!mb-4"
               label="Téléphone (optionnel)"
               nativeInputProps={{
-                defaultValue: informationsCommerciales?.telephone || "",
+                ...register("telephone"),
               }}
             />
             <SmallNotice>
@@ -98,7 +142,7 @@ const CommercialInformationPage = () => {
               className="!mb-4"
               label="Site internet de l'établissement (optionnel)"
               nativeInputProps={{
-                defaultValue: informationsCommerciales?.siteInternet || "",
+                ...register("siteInternet"),
               }}
             />
             <SmallNotice>
@@ -112,7 +156,7 @@ const CommercialInformationPage = () => {
               className="!mb-4"
               label="E-mail de contact (optionnel)"
               nativeInputProps={{
-                defaultValue: informationsCommerciales?.emailContact || "",
+                ...register("emailContact"),
               }}
             />
             <SmallNotice>
@@ -129,28 +173,25 @@ const CommercialInformationPage = () => {
             <Input
               label="Numéro et nom de rue (optionnel)"
               nativeInputProps={{
-                defaultValue:
-                  informationsCommerciales?.adresseNumeroEtNomDeRue || "",
+                ...register("adresseNumeroEtNomDeRue"),
               }}
             />
             <Input
               label="Informations complémentaires (optionnel)"
               nativeInputProps={{
-                defaultValue:
-                  informationsCommerciales?.adresseInformationsComplementaires ||
-                  "",
+                ...register("adresseInformationsComplementaires"),
               }}
             />
             <Input
               label="Code Postal (optionnel)"
               nativeInputProps={{
-                defaultValue: informationsCommerciales?.adresseCodePostal || "",
+                ...register("adresseCodePostal"),
               }}
             />
             <Input
               label="Ville (optionnel)"
               nativeInputProps={{
-                defaultValue: informationsCommerciales?.adresseVille || "",
+                ...register("adresseVille"),
               }}
             />
           </div>
@@ -165,27 +206,21 @@ const CommercialInformationPage = () => {
                 label: "Oui",
                 nativeInputProps: {
                   value: "CONFORME",
-                  defaultChecked:
-                    informationsCommerciales?.conformeNormesAccessbilite ===
-                    "CONFORME",
+                  ...register("conformeNormesAccessbilite"),
                 },
               },
               {
                 label: "Non",
                 nativeInputProps: {
                   value: "NON_CONFORME",
-                  defaultChecked:
-                    informationsCommerciales?.conformeNormesAccessbilite ===
-                    "NON_CONFORME",
+                  ...register("conformeNormesAccessbilite"),
                 },
               },
               {
                 label: "Cet établissement ne reçoit pas de public",
                 nativeInputProps: {
                   value: "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC",
-                  defaultChecked:
-                    informationsCommerciales?.conformeNormesAccessbilite ===
-                    "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC",
+                  ...register("conformeNormesAccessbilite"),
                 },
               },
             ]}
