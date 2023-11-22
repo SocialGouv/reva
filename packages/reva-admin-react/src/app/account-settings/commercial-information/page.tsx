@@ -118,8 +118,9 @@ const CommercialInformationPage = () => {
     () => reset(informationsCommerciales as FormData),
     [informationsCommerciales, reset],
   );
+
   const handleFormSubmit = handleSubmit(async (data) => {
-    await createOrUpdateInformationsCommerciales.mutate({
+    await createOrUpdateInformationsCommerciales.mutateAsync({
       organismId:
         informationsCommercialesResponse?.account_getAccountForConnectedUser
           ?.organism?.id || "",
