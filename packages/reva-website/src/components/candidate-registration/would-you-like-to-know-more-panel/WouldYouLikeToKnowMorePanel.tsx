@@ -31,7 +31,7 @@ export const WouldYouLikeToKnowMorePanel = () => (
         vous rapprocher d’un{" "}
         <a
           target="_blank"
-          href="https://vae.centre-inffo.fr/?page=carte-prc"
+          href="https://airtable.com/appQT21E7Sy70YfSB/shrgvhoKYW1EsXUu5/tblQgchiTKInxOqqr"
           title="point relais conseil - nouvelle fenêtre"
         >
           point relais conseil

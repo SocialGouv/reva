@@ -6,7 +6,7 @@ import {
   SectionSubHeader,
 } from "@/components/section-content/SectionContent";
 import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
-import Button from "@codegouvfr/react-dsfr/Button";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import Notice from "@codegouvfr/react-dsfr/Notice";
 import Head from "next/head";
 import Image from "next/image";
@@ -199,7 +199,7 @@ const TypologiesAAP = () => (
               depuis leur candidature jusqu’à l’entretien post-jury sur
               l’ensemble des certifications d’une ou plusieurs filières ou
               sous-filières, qu’ils auront choisies (plusieurs filières
-              possibles). Ils peuvent être également expert d’une branche
+              possibles). Ils peuvent être également experts d’une branche
               professionnelle.
             </p>
             <a
@@ -268,8 +268,16 @@ const NotreEquipeVousAccompagne = () => (
           France VAE vous soutient dans l’utilisation de l’espace professionnel
           et met à disposition un support dédié pour répondre à vos besoins.
           Nous vous proposons également des webinaires et documents spécifiques
-          pour vous aider à prendre en main l’outil.{" "}
+          pour vous aider à prendre en main l’outil.
         </SectionParagraph>
+        <Button
+          priority="secondary"
+          title="Accéder au centre d'aide - nouvelle fenêtre"
+          linkProps={{ href: "https://reva.crisp.help/fr/" }}
+          size="large"
+        >
+          Accéder au centre d'aide
+        </Button>
       </div>
     </div>
   </section>

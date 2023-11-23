@@ -6,6 +6,7 @@ import {
   Hexagon,
   SectionParagraph,
 } from "@/components/section-content/SectionContent";
+import { Button } from "@codegouvfr/react-dsfr/Button";
 import { CallOut } from "@codegouvfr/react-dsfr/CallOut";
 import Head from "next/head";
 import Image from "next/image";
@@ -105,7 +106,7 @@ export const FaitesValiderVosCompetencesParUnDiplome = () => {
             Prenez rendez-vous avec un conseiller près de chez vous :
             rapprochez-vous d’un{" "}
             <a
-              href="https://vae.centre-inffo.fr/?page=carte-prc"
+              href="https://airtable.com/appQT21E7Sy70YfSB/shrgvhoKYW1EsXUu5/tblQgchiTKInxOqqr"
               target="_blank"
               title="point relais conseil - nouvelle fenêtre"
             >
@@ -341,7 +342,13 @@ const Professionnels = () => (
             disponibles aux candidats à la VAE."
         >
           <p className="!text-sm mb-0">
-            (Cette fonction sera disponible plus tard)
+            <Button
+              priority="secondary"
+              linkProps={{ href: "/admin" }}
+              size="large"
+            >
+              En savoir plus
+            </Button>
           </p>
         </Professionel>
         <Professionel
