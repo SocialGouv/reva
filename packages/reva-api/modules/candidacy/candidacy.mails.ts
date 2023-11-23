@@ -123,7 +123,7 @@ export const sendNewEmailCandidateEmail = ({
       template({
         content: `
         <p>Bonjour,</p>
-        <p>Vous avez demandé à changer votre e-mail sur France VAE. Pour valider cette demande, merci de cliquer sur le button ci-dessous.</p>      
+        <p>Vous avez demandé à changer votre e-mail sur France VAE. Pour valider cette demande, merci de cliquer sur le boutton ci-dessous.</p>      
         `,
         url,
         labelCTA: "Confirmer mon e-mail",
