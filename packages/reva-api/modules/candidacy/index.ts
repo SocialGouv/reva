@@ -53,6 +53,7 @@ import { unarchiveCandidacy } from "./features/unarchiveCandidacy";
 import { updateAdmissibility } from "./features/updateAdmissibility";
 import { updateAppointmentInformations } from "./features/updateAppointmentInformations";
 import { updateCertificationOfCandidacy } from "./features/updateCertificationOfCandidacy";
+import { updateCertificationWithinOrganismScope } from "./features/updateCertificationWithinOrganismScope";
 import { updateContactOfCandidacy } from "./features/updateContactOfCandidacy";
 import { updateExamInfo } from "./features/updateExamInfo";
 import { updateExperienceOfCandidacy } from "./features/updateExperienceOfCandidacy";
@@ -296,6 +297,16 @@ const unsafeResolvers = {
         candidacyId: payload.candidacyId,
         certificationId: payload.certificationId,
         departmentId: payload.departmentId,
+      }),
+    candidacy_updateCertificationWithinOrganismScope: async (
+      _: unknown,
+      payload: any,
+      context: { auth: { hasRole: (role: Role) => boolean } }
+    ) =>
+      updateCertificationWithinOrganismScope({
+        hasRole: context.auth.hasRole,
+        candidacyId: payload.candidacyId,
+        certificationId: payload.certificationId,
       }),
     candidacy_addExperience: async (
       _: unknown,

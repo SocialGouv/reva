@@ -292,8 +292,16 @@ update msg model =
             let
                 route =
                     Route.fromUrl model.context.baseUrl url
+
+                ( newModel, cmd ) =
+                    changeRouteTo model.context route { model | route = route }
             in
-            changeRouteTo model.context route { model | route = route }
+            ( newModel
+            , Cmd.batch
+                [ cmd
+                , Dom.setViewport 0 0 |> Task.perform (\_ -> ScrolledToTop)
+                ]
+            )
 
         ( UserClickedLink urlRequest, _ ) ->
             case urlRequest of

@@ -349,6 +349,10 @@ type Mutation {
     certificationId: ID!
     departmentId: ID!
   ): Candidacy
+  candidacy_updateCertificationWithinOrganismScope(
+    candidacyId: ID!
+    certificationId: ID!
+  ): Candidacy
   candidacy_addExperience(
     deviceId: ID!
     candidacyId: ID!

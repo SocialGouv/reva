@@ -1142,10 +1142,7 @@ update context msg model =
 
         ( GotSaveResponse _ (RemoteData.Success _), _ ) ->
             ( model
-            , Cmd.batch
-                [ Task.perform (\_ -> NoOp) (Browser.Dom.setViewport 0 0)
-                , model.onRedirect
-                ]
+            , model.onRedirect
             )
 
         ( GotSaveResponse referential (RemoteData.Failure errors), Saving form formData ) ->

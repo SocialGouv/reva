@@ -11,6 +11,7 @@ import Api.Candidacy
 import Api.Certification
 import BetaGouv.DSFR.Button as Button
 import BetaGouv.DSFR.Icons.System as Icons
+import Browser.Navigation as Nav
 import Data.Candidacy exposing (Candidacy, CandidacyId)
 import Data.Certification exposing (Certification, CertificationSummary)
 import Data.Context exposing (Context)
@@ -26,14 +27,16 @@ import View.Candidacy.Tab exposing (Value(..))
 type Msg
     = GotSearchMsg (Search.Msg Certification Msg)
     | GotCertificationResponse (RemoteData (List String) Certification)
+    | GotCertificationUpdateResponse CandidacyId (RemoteData (List String) ())
     | UserSelectCertification Certification
 
 
 type alias Model =
     { candidacyId : Maybe CandidacyId
     , certification : RemoteData (List String) Certification
-    , search : Search.Model Certification Msg
     , page : Int
+    , search : Search.Model Certification Msg
+    , submission : RemoteData (List String) ()
     }
 
 
@@ -69,6 +72,7 @@ init context config =
       , certification = Loading
       , page = config.page
       , search = searchModel
+      , submission = NotAsked
       }
     , Cmd.batch
         [ searchCmd
@@ -237,5 +241,34 @@ update context msg model =
         GotCertificationResponse certification ->
             ( { model | certification = certification }, Cmd.none )
 
+        GotCertificationUpdateResponse candidacyId response ->
+            ( { model | submission = response }
+            , if response == Success () then
+                Nav.pushUrl
+                    context.navKey
+                    (Route.toString context.baseUrl
+                        (Route.Candidacy
+                            (View.Candidacy.Tab.Tab candidacyId Profile)
+                        )
+                    )
+
+              else
+                Cmd.none
+            )
+
         UserSelectCertification certification ->
-            ( { model | certification = Success certification }, Cmd.none )
+            ( { model
+                | certification = Success certification
+                , submission = Loading
+              }
+            , case model.candidacyId of
+                Just candidacyId ->
+                    Api.Candidacy.updateCertification context.endpoint
+                        context.token
+                        (GotCertificationUpdateResponse candidacyId)
+                        candidacyId
+                        certification.id
+
+                Nothing ->
+                    Cmd.none
+            )

@@ -1,4 +1,4 @@
-module Api.Candidacy exposing (get, getCandidacies, getCandidacyCountByStatus, getCertification, statusSelection, takeOver)
+module Api.Candidacy exposing (get, getCandidacies, getCandidacyCountByStatus, getCertification, statusSelection, takeOver, updateCertification)
 
 import Admin.Enum.CandidacyStatusFilter
 import Admin.Mutation as Mutation
@@ -101,6 +101,30 @@ getCertification endpointGraphql token toMsg candidacyId =
                 >> nothingToError "Cette candidature n'a pas de certification"
                 >> toMsg
             )
+
+
+updateCertification :
+    String
+    -> Token
+    -> (RemoteData (List String) () -> msg)
+    -> CandidacyId
+    -> Id
+    -> Cmd msg
+updateCertification endpointGraphql token toMsg candidacyId certificationId =
+    let
+        id =
+            Data.Candidacy.candidacyIdToString candidacyId
+
+        requiredArgs =
+            Mutation.CandidacyUpdateCertificationWithinOrganismScopeRequiredArguments
+                (Id id)
+                certificationId
+    in
+    Mutation.candidacy_updateCertificationWithinOrganismScope requiredArgs (SelectionSet.succeed ())
+        |> Auth.makeMutation "updateCertificationWithinOrganismScope"
+            endpointGraphql
+            token
+            (nothingToError "Cette candidature est introuvable" >> toMsg)
 
 
 takeOver :
