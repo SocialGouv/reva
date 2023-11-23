@@ -24,6 +24,7 @@ import Api.Form.FundingRequestUniReva
 import Api.Form.PaymentRequestUniFvae
 import Api.Form.PaymentRequestUniReva
 import Api.Form.PaymentUploadsAndConfirmationUniFvae
+import Api.Form.PaymentUploadsUniReva
 import Api.Form.Training
 import Api.Form.Unarchive
 import Api.Referential
@@ -589,7 +590,7 @@ updateTab context tab ( model, cmd ) =
                             { form = Page.Form.PaymentUploadsUniReva.form
                             , onLoad = Nothing
                             , onSave = Nothing
-                            , onSubmit = Api.Form.PaymentUploadsAndConfirmationUniFvae.submit tab.candidacyId context.restApiEndpoint
+                            , onSubmit = Api.Form.PaymentUploadsUniReva.submit tab.candidacyId context.restApiEndpoint
                             , onRedirect = pushUrl <| candidacyTab PaymentRequestConfirmation
                             , onValidate = \_ _ -> Ok ()
                             , status = Form.Editable
