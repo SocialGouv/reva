@@ -1,16 +1,13 @@
 "use client";
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { graphql } from "@/graphql/generated";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { ReactNode, useEffect, useMemo } from "react";
-
+import { ReactNode, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useCommercialInformationPageQueries } from "@/app/account-settings/commercial-information/commercialInformationPageQueries";
 
 const schema = z.object({
   nom: z.string().optional().default(""),
@@ -36,40 +33,6 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-const informationsCommercialesQuery = graphql(`
-  query getAccountOrganismAndInformationsCommerciales {
-    account_getAccountForConnectedUser {
-      organism {
-        id
-        informationsCommerciales {
-          id
-          nom
-          telephone
-          siteInternet
-          emailContact
-          adresseNumeroEtNomDeRue
-          adresseInformationsComplementaires
-          adresseCodePostal
-          adresseVille
-          conformeNormesAccessbilite
-        }
-      }
-    }
-  }
-`);
-
-const createOrUpdateInformationsCommercialesMutation = graphql(`
-  mutation createOrUpdateInformationsCommercialesMutation(
-    $informationsCommerciales: CreateOrUpdateInformationsCommercialesInput!
-  ) {
-    organism_createOrUpdateInformationsCommerciales(
-      informationsCommerciales: $informationsCommerciales
-    ) {
-      id
-    }
-  }
-`);
-
 const SmallNotice = ({ children }: { children: ReactNode }) => (
   <div className="text-blue-light-text-default-info flex items-start ">
     <span className="fr-icon--sm fr-icon-info-fill mr-2 -mt-[1px]" />
@@ -78,29 +41,13 @@ const SmallNotice = ({ children }: { children: ReactNode }) => (
 );
 
 const CommercialInformationPage = () => {
-  const { graphqlClient } = useGraphQlClient();
   const {
-    data: informationsCommercialesResponse,
-    status: informationsCommercialesStatus,
-    refetch: refetchInformationsCommerciales,
-  } = useQuery({
-    queryKey: ["informationsCommerciales"],
-    queryFn: () => graphqlClient.request(informationsCommercialesQuery),
-  });
-
-  const informationsCommerciales =
-    informationsCommercialesResponse?.account_getAccountForConnectedUser
-      ?.organism?.informationsCommerciales;
-
-  const createOrUpdateInformationsCommerciales = useMutation({
-    mutationFn: (informationsCommerciales: {
-      organismId: string;
-      nom: string;
-    }) =>
-      graphqlClient.request(createOrUpdateInformationsCommercialesMutation, {
-        informationsCommerciales,
-      }),
-  });
+    informationsCommerciales,
+    organismId,
+    informationsCommercialesStatus,
+    refetchInformationsCommerciales,
+    createOrUpdateInformationsCommerciales,
+  } = useCommercialInformationPageQueries();
 
   const {
     register,
@@ -118,9 +65,7 @@ const CommercialInformationPage = () => {
 
   const handleFormSubmit = handleSubmit(async (data) => {
     await createOrUpdateInformationsCommerciales.mutateAsync({
-      organismId:
-        informationsCommercialesResponse?.account_getAccountForConnectedUser
-          ?.organism?.id || "",
+      organismId,
       ...data,
     });
     await refetchInformationsCommerciales();
@@ -139,7 +84,6 @@ const CommercialInformationPage = () => {
       />
 
       <form
-        data-testid="candidate-registration-form"
         className="flex flex-col mt-10"
         onSubmit={handleFormSubmit}
         onReset={(e) => {
