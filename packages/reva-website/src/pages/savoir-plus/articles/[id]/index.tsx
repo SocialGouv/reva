@@ -7,8 +7,6 @@ import request from "graphql-request";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
-import ckeditorStyles from "./content-styles.module.css";
-
 const articleQuery = graphql(`
   query getArticleDAide($id: ID!) {
     articleDAide(id: $id) {
@@ -50,7 +48,7 @@ const ArticleAidePage = () => {
             priority="tertiary no outline"
             iconPosition="left"
             iconId="fr-icon-arrow-left-line"
-            linkProps={{ href: "/centre-aide" }}
+            linkProps={{ href: "/savoir-plus" }}
             size="large"
           >
             Revenir au centre d'aide
@@ -68,7 +66,7 @@ const ArticleAidePage = () => {
             width={100}
             className="object-cover w-screen h-[360px]"
           />
-          <div className="bg-[url('/centre-aide/polygons-section2.svg')] bg-contain bg-no-repeat p-4">
+          <div className="bg-[url('/savoir-plus/polygons-section2.svg')] bg-contain bg-no-repeat p-4">
             <div className="fr-container p-32 pt-16 flex flex-col max-w-4xl items-center">
               <h1 className="text-7xl font-bold mb-16">
                 {article.data?.articleDAide?.data?.attributes?.titre}
