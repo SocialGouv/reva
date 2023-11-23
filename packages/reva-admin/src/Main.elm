@@ -49,6 +49,7 @@ type alias Flags =
 type alias Model =
     { context : Context
     , page : Page
+    , route : Route
     , keycloakConfiguration : Maybe KeycloakConfiguration
     }
 
@@ -110,42 +111,12 @@ main =
 
 view : Model -> Browser.Document Msg
 view model =
-    let
-        activeHeaderLink =
-            case model.page of
-                Candidacies _ ->
-                    Just Header.Candidacies
-
-                Candidacy _ ->
-                    Just Header.Candidacies
-
-                Certifications _ ->
-                    Just Header.Certifications
-
-                Subscriptions _ ->
-                    Just Header.Subscriptions
-
-                Subscription _ ->
-                    Just Header.Subscriptions
-
-                Accounts _ ->
-                    Just Header.Accounts
-
-                Account _ ->
-                    Just Header.Accounts
-
-                Feasibilities _ ->
-                    Just Header.Feasibilities
-
-                _ ->
-                    Nothing
-    in
     { title = "France VAE"
     , body =
         [ div
             [ class "min-h-screen flex flex-col" ]
             [ View.Skiplinks.view
-            , Header.view model.context activeHeaderLink
+            , Header.view model.context model.route
             , viewPage model
             , KeycloakConfiguration.iframeKeycloak
                 { onLoggedIn = GotLoggedIn
@@ -318,7 +289,11 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model.page ) of
         ( BrowserChangedUrl url, _ ) ->
-            changeRouteTo model.context (Route.fromUrl model.context.baseUrl url) model
+            let
+                route =
+                    Route.fromUrl model.context.baseUrl url
+            in
+            changeRouteTo model.context route { model | route = route }
 
         ( UserClickedLink urlRequest, _ ) ->
             case urlRequest of
@@ -576,6 +551,7 @@ initWithoutToken flags url key =
                     []
                     flags.adminReactUrl
             , page = NotLoggedIn redirectTo
+            , route = Route.Home
             , keycloakConfiguration =
                 Decode.decodeValue KeycloakConfiguration.keycloakConfiguration flags.keycloakConfiguration
                     |> Result.map Just

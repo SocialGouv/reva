@@ -18,8 +18,41 @@ type HeaderLink
     | Certifications
 
 
-view : Context -> Maybe HeaderLink -> Accessibility.Html msg
-view context activeHeaderLink =
+view : Context -> Route -> Accessibility.Html msg
+view context route =
+    let
+        activeHeaderLink =
+            case route of
+                Route.Candidacies _ ->
+                    Just Candidacies
+
+                Route.Reorientation _ _ ->
+                    Just Candidacies
+
+                Route.Candidacy _ ->
+                    Just Candidacies
+
+                Route.Certifications _ ->
+                    Just Certifications
+
+                Route.Subscriptions _ ->
+                    Just Subscriptions
+
+                Route.Subscription _ ->
+                    Just Subscriptions
+
+                Route.Accounts _ ->
+                    Just Accounts
+
+                Route.Account _ ->
+                    Just Accounts
+
+                Route.Feasibilities _ ->
+                    Just Feasibilities
+
+                _ ->
+                    Nothing
+    in
     header
         [ attribute "role" "banner"
         , class "fr-header"
