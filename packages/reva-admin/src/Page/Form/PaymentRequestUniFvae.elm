@@ -14,6 +14,7 @@ import Data.Form.PaymentRequestUniFvae exposing (keys)
 import Data.Referential exposing (Referential)
 import Html.Attributes exposing (class)
 import Page.Form as Form exposing (Form)
+import View
 import View.Form
 
 
@@ -78,7 +79,10 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( "forfait", Form.StaticHtml forfaitInfo )
         ]
             ++ (if showCustomFundingFields then
-                    [ ( "individual", Form.Title2 "Accompagnement (optionnel)" )
+                    [ ( "vat-alert"
+                      , Form.StaticHtml vatAlert
+                      )
+                    , ( "individual", Form.Title2 "Accompagnement (optionnel)" )
                     , ( "collective", Form.TitleInlined "Individuel" )
                     , ( keys.individualHourCount, hourCountElement )
                     , ( keys.individualCost, costElement )
@@ -168,6 +172,15 @@ forfaitInfo =
                 [ text "Forfait" ]
             , span [ class "font-medium" ] [ text "300€ net" ]
             ]
+        ]
+
+
+vatAlert : Html msg
+vatAlert =
+    View.alert View.Info
+        [ class "w-full mb-6" ]
+        ""
+        [ p [] [ text "Les montants remplis sont tous net de TVA." ]
         ]
 
 
