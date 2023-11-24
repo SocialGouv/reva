@@ -59,36 +59,34 @@ const HelpSection = ({ articles }: { articles: ArticleDAideEntity[] }) => {
     articles.length > numberOfArticlesToDisplayInitially && !showMore;
 
   return (
-    <div>
-      <div className="flex flex-col lg:flex-row flex-wrap gap-8 items-center lg:items-start">
-        {articlesToDisplay.map(({ id, attributes }) => (
-          <HelpArticle
-            key={id}
-            title={attributes?.titre || ""}
-            description={truncate(attributes?.description || "", {
-              length: 300,
-            })}
-            thumbnailUrl={attributes?.vignette?.data?.attributes?.url || ""}
-            thumbnailAlt={
-              attributes?.vignette?.data?.attributes?.alternativeText || ""
-            }
-            url={`/savoir-plus/articles/${id}`}
-          />
-        ))}
-        {displayMoreButton && (
-          <div className="flex w-full justify-center lg:justify-end lg:pr-16">
-            <Button
-              priority="secondary"
-              onClick={() => {
-                setShowMore(true);
-              }}
-            >
-              <span className="mr-2">Voir tous les articles...</span>
-              <ArrowRight />
-            </Button>
-          </div>
-        )}
-      </div>
+    <div className="flex flex-col lg:flex-row flex-wrap gap-8 items-center lg:items-start">
+      {articlesToDisplay.map(({ id, attributes }) => (
+        <HelpArticle
+          key={id}
+          title={attributes?.titre || ""}
+          description={truncate(attributes?.description || "", {
+            length: 300,
+          })}
+          thumbnailUrl={attributes?.vignette?.data?.attributes?.url || ""}
+          thumbnailAlt={
+            attributes?.vignette?.data?.attributes?.alternativeText || ""
+          }
+          url={`/savoir-plus/articles/${id}`}
+        />
+      ))}
+      {displayMoreButton && (
+        <div className="flex w-full justify-center lg:justify-end lg:pr-16">
+          <Button
+            priority="secondary"
+            onClick={() => {
+              setShowMore(true);
+            }}
+          >
+            <span className="mr-2">Voir tous les articles...</span>
+            <ArrowRight />
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
@@ -107,14 +105,14 @@ const HelpArticle = ({
   url: string;
 }) => (
   <Link href={url} className="!bg-none">
-    <div className="grid grid-rows-2 w-[267px]  h-[400px] lg:h-[585px] rounded-[32px] bg-white shadow-[0px_8px_24px_0px_rgba(11,11,248,0.16)]">
+    <div className="grid grid-rows-2 w-[340px]  h-[400px] lg:h-[585px] rounded-[32px] bg-white shadow-[0px_8px_24px_0px_rgba(11,11,248,0.16)]">
       <div className="flex">
         <Image
           src={thumbnailUrl}
           alt={thumbnailAlt}
-          width={267}
+          width={340}
           height={292}
-          className="object-cover w-full rounded-t-[32px] max-w-[267px]"
+          className="object-cover w-full rounded-t-[32px] max-w-[340px]"
         />
       </div>
       <div className="flex flex-col p-6">
@@ -157,7 +155,11 @@ const SavoirPlusPage = () => {
 
             return (
               <Accordion
-                label={sa.attributes?.titre || ""}
+                label={
+                  <span style={{ fontSize: "20px" }}>
+                    {sa.attributes?.titre || ""}
+                  </span>
+                }
                 defaultExpanded={!index}
                 key={sa.id}
               >
