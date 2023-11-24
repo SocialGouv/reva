@@ -114,6 +114,12 @@ http:
       middlewares:
         - removeHeader
 
+    espace-pro-react-production-vae-gouv-fr:
+      rule: "Host(`vae.gouv.fr`) && PathPrefix(`/admin2`)"
+      service: espace-pro-react-production
+      middlewares:
+        - removeHeader
+
     app-candidat-production-vae-gouv-fr:
       rule: "Host(`vae.gouv.fr`) && PathPrefix(`/app`)"
       service: app-candidat-production-2
@@ -251,6 +257,12 @@ http:
         passHostHeader: false
         servers:
           - url: "https://reva-prod-2.osc-secnum-fr1.scalingo.io/admin/"
+
+    espace-pro-react-production:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "https://reva-prod-admin-react.osc-secnum-fr1.scalingo.io/admin2/"
 
     app-candidat-production-2:
       loadBalancer:
