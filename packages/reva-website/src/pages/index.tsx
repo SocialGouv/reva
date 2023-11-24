@@ -347,7 +347,7 @@ const Professionnels = () => (
               linkProps={{ href: "/admin" }}
               size="large"
             >
-              En savoir plus
+              Connectez-vous
             </Button>
           </p>
         </Professionel>

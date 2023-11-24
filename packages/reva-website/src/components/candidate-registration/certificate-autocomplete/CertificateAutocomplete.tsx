@@ -41,7 +41,7 @@ export const CertificateAutocomplete = ({
       }
       onOptionSelection={onOptionSelection}
       onSubmit={onSubmit}
-      placeholder="Rechercher un diplôme ..."
+      placeholder="Recherchez un diplôme ..."
     />
   );
 };
