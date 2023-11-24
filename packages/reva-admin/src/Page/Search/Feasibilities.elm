@@ -54,6 +54,60 @@ type alias Model =
 ---
 
 
+init : Context -> FeasibilityCategoryFilter -> Int -> ( Model, Cmd Msg )
+init context categoryFilter page =
+    let
+        defaultModel : Model
+        defaultModel =
+            { filters = { search = Nothing, category = categoryFilter, page = page }
+            , state = { currentFeasibilityPage = RemoteData.Loading, feasibilityCountByCategory = RemoteData.Loading, search = Nothing }
+            }
+
+        decisionFilter =
+            FeasibilityDecisionFilter.fromString (FeasibilityCategoryFilter.toString categoryFilter)
+
+        defaultCmd =
+            Cmd.batch
+                [ Api.Feasibility.getFeasibilities context.endpoint context.token GotFeasibilitiesResponse page decisionFilter defaultModel.filters.search
+                , Api.Feasibility.getFeasibilityCountByCategory context.endpoint context.token GotFeasibilitiesCountByCategoryResponse
+                ]
+    in
+    ( defaultModel, defaultCmd )
+
+
+
+-- VIEW
+
+
+view :
+    Context
+    -> Model
+    -> Html Msg
+view context model =
+    let
+        viewWithFilters filterContent =
+            View.layout
+                "Filtrer les dossiers de faisabilité par catégorie"
+                filterContent
+                (viewDirectoryPanel context model (feasibilityCategoryFilterToReadableString model.filters.category))
+    in
+    case ( context.isMobile && context.isScrollingToTop, model.state.feasibilityCountByCategory ) of
+        ( _, NotAsked ) ->
+            div [] []
+
+        ( _, Loading ) ->
+            viewWithFilters []
+
+        ( True, _ ) ->
+            viewWithFilters []
+
+        ( _, Failure errors ) ->
+            viewWithFilters [ div [ class "m-4 font-medium text-red-500", role "alert" ] <| List.map (\e -> div [] [ text e ]) errors ]
+
+        ( _, Success feasibilityCountByCategory ) ->
+            viewWithFilters (View.Feasibility.Filters.view feasibilityCountByCategory model.filters context)
+
+
 withFilters : Context -> Int -> FeasibilityCategoryFilter -> Model -> ( Model, Cmd Msg )
 withFilters context page category model =
     let
@@ -91,27 +145,6 @@ withFilters context page category model =
     )
 
 
-init : Context -> FeasibilityCategoryFilter -> Int -> ( Model, Cmd Msg )
-init context categoryFilter page =
-    let
-        defaultModel : Model
-        defaultModel =
-            { filters = { search = Nothing, category = categoryFilter, page = page }
-            , state = { currentFeasibilityPage = RemoteData.Loading, feasibilityCountByCategory = RemoteData.Loading, search = Nothing }
-            }
-
-        decisionFilter =
-            FeasibilityDecisionFilter.fromString (FeasibilityCategoryFilter.toString categoryFilter)
-
-        defaultCmd =
-            Cmd.batch
-                [ Api.Feasibility.getFeasibilities context.endpoint context.token GotFeasibilitiesResponse page decisionFilter defaultModel.filters.search
-                , Api.Feasibility.getFeasibilityCountByCategory context.endpoint context.token GotFeasibilitiesCountByCategoryResponse
-                ]
-    in
-    ( defaultModel, defaultCmd )
-
-
 withFeasibilityPage : RemoteData (List String) FeasibilitySummaryPage -> State -> State
 withFeasibilityPage feasibilityPage state =
     { state | currentFeasibilityPage = feasibilityPage }
@@ -125,39 +158,6 @@ withSearch search state =
 withFeasibilityCountByCategory : RemoteData (List String) FeasibilityCountByCategory -> State -> State
 withFeasibilityCountByCategory feasibilityCountByCategory state =
     { state | feasibilityCountByCategory = feasibilityCountByCategory }
-
-
-
--- VIEW
-
-
-view :
-    Context
-    -> Model
-    -> Html Msg
-view context model =
-    let
-        viewWithFilters filterContent =
-            View.layout
-                "Filtrer les dossiers de faisabilité par catégorie"
-                filterContent
-                (viewDirectoryPanel context model (feasibilityCategoryFilterToReadableString model.filters.category))
-    in
-    case ( context.isMobile && context.isScrollingToTop, model.state.feasibilityCountByCategory ) of
-        ( _, NotAsked ) ->
-            div [] []
-
-        ( _, Loading ) ->
-            viewWithFilters []
-
-        ( True, _ ) ->
-            viewWithFilters []
-
-        ( _, Failure errors ) ->
-            viewWithFilters [ div [ class "m-4 font-medium text-red-500", role "alert" ] <| List.map (\e -> div [] [ text e ]) errors ]
-
-        ( _, Success feasibilityCountByCategory ) ->
-            viewWithFilters (View.Feasibility.Filters.view feasibilityCountByCategory model.filters context)
 
 
 viewDirectoryHeader : Html msg

@@ -260,6 +260,11 @@ changeRouteTo context route model =
             Subscription.init model.context subscriptionId
                 |> updateWith Subscription GotSubscriptionMsg model
 
+        ( Route.Accounts filters, Accounts accountsModel ) ->
+            accountsModel
+                |> Accounts.withFilters context filters.page filters.group
+                |> updateWith Accounts GotAccountsMsg model
+
         ( Route.Accounts filters, _ ) ->
             Accounts.init model.context filters.group filters.page
                 |> updateWith Accounts GotAccountsMsg model

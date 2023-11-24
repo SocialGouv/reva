@@ -4,6 +4,7 @@ module Page.Search.Accounts exposing
     , init
     , update
     , view
+    , withFilters
     )
 
 import Admin.Enum.AccountGroup as AccountGroup exposing (AccountGroup)
@@ -27,7 +28,6 @@ import View.Helpers exposing (dataTest)
 
 type Msg
     = GotAccountsResponse (RemoteData (List String) AccountSummaryPage)
-    | ClickedViewMore String
     | UserUpdatedSearch String
     | UserValidatedSearch
     | UserClearedSearch
@@ -114,6 +114,40 @@ view context model =
                 |> viewContent context model.state.errors model
 
 
+withFilters : Context -> Int -> AccountGroup -> Model -> ( Model, Cmd Msg )
+withFilters context page group model =
+    let
+        groupChanged =
+            model.filters.group /= group
+
+        pageChanged =
+            model.filters.page /= page
+
+        withNewGroup : Filters -> Filters
+        withNewGroup filters =
+            { filters | group = group }
+
+        withNewPage : Filters -> Filters
+        withNewPage filters =
+            { filters | page = page }
+
+        ( newState, command ) =
+            if groupChanged || pageChanged then
+                ( model.state |> withAccountPage Loading
+                , Api.Account.getAccounts context.endpoint context.token GotAccountsResponse page group model.filters.search
+                )
+
+            else
+                ( model.state, Cmd.none )
+    in
+    ( { model
+        | filters = model.filters |> withNewPage |> withNewGroup
+        , state = newState
+      }
+    , command
+    )
+
+
 viewContent :
     Context
     -> List String
@@ -190,7 +224,7 @@ viewDirectoryPanel context accountSummaryPage model actionErrors =
 
 viewPager : Context -> Int -> Int -> AccountGroup -> Html Msg
 viewPager context currentPage totalPages groupFilter =
-    BetaGouv.DSFR.Pagination.view currentPage totalPages (\p -> Route.toString context.baseUrl (Route.Accounts { group = groupFilter, page = p }))
+    BetaGouv.DSFR.Pagination.view currentPage totalPages (\p -> Route.toString context.baseUrl (Route.Accounts (Route.AccountFilters groupFilter p)))
 
 
 searchBar : Model -> Html Msg
@@ -315,9 +349,6 @@ update context msg model =
         GotAccountsResponse remoteAccounts ->
             ( model, Cmd.none ) |> withAccounts remoteAccounts
 
-        ClickedViewMore id ->
-            ( model, Cmd.none )
-
         UserUpdatedSearch search ->
             let
                 state =
@@ -353,15 +384,6 @@ update context msg model =
             )
 
 
-withErrors : List String -> ( Model, Cmd msg ) -> ( Model, Cmd msg )
-withErrors errors ( model, cmd ) =
-    let
-        state =
-            model.state
-    in
-    ( { model | state = { state | errors = errors } }, cmd )
-
-
 withAccounts : RemoteData (List String) AccountSummaryPage -> ( Model, Cmd msg ) -> ( Model, Cmd msg )
 withAccounts accounts ( model, cmd ) =
     let
@@ -369,14 +391,6 @@ withAccounts accounts ( model, cmd ) =
             model.state
     in
     ( { model | state = { state | accounts = accounts } }, cmd )
-
-
-viewCandidaciesLink : Context -> Html msg
-viewCandidaciesLink context =
-    Button.new { onClick = Nothing, label = "Voir les candidatures" }
-        |> Button.linkButton (Route.toString context.baseUrl <| Route.Candidacies Route.emptyCandidacyFilters)
-        |> Button.tertiary
-        |> Button.view
 
 
 viewFilterLinks : Context -> AccountGroup -> Html msg

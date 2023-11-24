@@ -1,5 +1,6 @@
 module Route exposing
-    ( CandidacyFilters
+    ( AccountFilters
+    , CandidacyFilters
     , CertificationsFilters
     , FeasibilityFilters
     , Route(..)
