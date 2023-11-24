@@ -63,7 +63,7 @@ withFilters context page status model =
 
         ( newSearchModel, searchCmd ) =
             if statusChanged || pageChanged then
-                Search.reload model.search (Api.Candidacy.getCandidacies context.endpoint context.token page (Just status))
+                Search.reload model.search (Api.Candidacy.getCandidacies context.endpoint context.token page (Just status)) (\p -> Route.Candidacies (Route.CandidacyFilters status p))
 
             else
                 ( model.search, Cmd.none )

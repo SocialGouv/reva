@@ -96,9 +96,10 @@ init config =
 reload :
     Model data userMsg
     -> SearchHandler data userMsg
+    -> (Int -> Route)
     -> ( Model data userMsg, Cmd (Msg data userMsg) )
-reload model onSearch =
-    ( { model | onSearch = onSearch, results = Loading }
+reload model onSearch newToPageRoute =
+    ( { model | onSearch = onSearch, results = Loading, toPageRoute = newToPageRoute }
     , onSearch GotSearchResponse model.keywords.submitted
     )
 
