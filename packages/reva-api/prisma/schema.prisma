@@ -244,6 +244,7 @@ model Department {
   OrganismsOnDepartments                                 OrganismsOnDepartments[]
   SubscriptionRequestsOnDepartments                      SubscriptionRequestsOnDepartments[]
   certificationAuthorityOnDepartment                     CertificationAuthorityOnDepartment[]
+  maisonMereAAPOnDepartement                             MaisonMereAAPOnDepartement[]
 
   @@map("department")
 }
@@ -276,6 +277,7 @@ model Account {
   certificationAuthorityId String?                 @map("certification_authority_id") @db.Uuid
   keycloakId               String                  @unique @map("keycloak_id") @db.Uuid
   AuditEvent               AuditEvent[]
+  maisonMereAAP            MaisonMereAAP[]
 
   @@map("account")
 }
@@ -306,6 +308,9 @@ model Organism {
   website                                                String?                                                  @db.VarChar(255)
   organismInformationsCommerciales                       OrganismInformationsCommerciales?
   organismInformationsCommercialesId                     String?                                                  @map("organism_informations_commerciales_id") @db.Uuid
+
+  maisonMereAAP   MaisonMereAAP? @relation(fields: [maisonMereAAPId], references: [id], onDelete: NoAction)
+  maisonMereAAPId String?        @map("maison_mere_aap_id") @db.Uuid
 
   @@unique([siret, typology])
   @@map("organism")
@@ -761,6 +766,7 @@ model Domaine {
   subscriptionRequestOnDomaine SubscriptionRequestOnDomaine[]
   organismOnDomaine            OrganismOnDomaine[]
   certificationOnDomaine       CertificationOnDomaine[]
+  maisonMereAAPOnDomaine       MaisonMereAAPOnDomaine[]
 
   @@map("domaine")
 }
@@ -809,6 +815,7 @@ model ConventionCollective {
   subscriptionRequestOnConventionCollective SubscriptionRequestOnConventionCollective[]
   organismOnConventionCollective            OrganismOnConventionCollective[]
   certificationOnConventionCollective       CertificationOnConventionCollective[]
+  maisonMereAAPOnConventionCollective       MaisonMereAAPOnConventionCollective[]
 
   @@map("convention_collective")
 }
@@ -1044,4 +1051,66 @@ model AuditEvent {
   content   Json
 
   @@map("audit_event")
+}
+
+model MaisonMereAAP {
+  id                                  String                                @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  raisonSociale                       String                                @map("raison_sociale") @db.VarChar(255)
+  statutJuridique                     LegalStatus                           @map("statut_juridique")
+  siret                               String                                @map("siret") @db.VarChar(255)
+  adresse                             String                                @default("") @map("adresse") @db.VarChar(255)
+  codePostal                          String                                @default("") @map("code_postal") @db.VarChar(5)
+  ville                               String                                @default("") @map("ville") @db.VarChar(100)
+  typologie                           OrganismTypology                      @map("typologie")
+  maisonMereAAPOnDomaine              MaisonMereAAPOnDomaine[]
+  maisonMereAAPOnConventionCollective MaisonMereAAPOnConventionCollective[]
+  maisonMereAAPOnDepartement          MaisonMereAAPOnDepartement[]
+  siteWeb                             String?                               @map("site_web") @db.VarChar(255)
+  dateExpirationCertificationQualiopi DateTime                              @map("date_expiration_certification_qualiopi")
+
+  gestionnaire          Account    @relation(fields: [gestionnaireAccountId], references: [id])
+  gestionnaireAccountId String     @map("gestionnaire_account_id") @db.Uuid
+  createdAt             DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime?  @map("updated_at") @db.Timestamptz(6)
+  organismes            Organism[]
+
+  @@map("maison_mere_aap")
+}
+
+model MaisonMereAAPOnConventionCollective {
+  ccn             ConventionCollective @relation(fields: [ccnId], references: [id])
+  ccnId           String               @map("ccn_id") @db.Uuid
+  maisonMereAAP   MaisonMereAAP        @relation(fields: [maisonMereAAPId], references: [id])
+  maisonMereAAPId String               @map("maison_mere_aap_id") @db.Uuid
+  createdAt       DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime?            @map("updated_at") @db.Timestamptz(6)
+
+  @@id([ccnId, maisonMereAAPId])
+  @@map("maison_mere_aap_on_ccn")
+}
+
+model MaisonMereAAPOnDepartement {
+  id              String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  departement     Department    @relation(fields: [departementId], references: [id])
+  departementId   String        @map("departement_id") @db.Uuid
+  estSurPlace     Boolean       @default(false) @map("est_sur_place")
+  estADistance    Boolean       @default(false) @map("est_a_distance")
+  maisonMereAAP   MaisonMereAAP @relation(fields: [maisonMereAAPId], references: [id])
+  maisonMereAAPId String        @map("maison_mere_aap_id") @db.Uuid
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime?     @map("updated_at") @db.Timestamptz(6)
+
+  @@map("maison_mere_aap_on_departements")
+}
+
+model MaisonMereAAPOnDomaine {
+  domaine         Domaine       @relation(fields: [domaineId], references: [id])
+  domaineId       String        @map("domaine_id") @db.Uuid
+  maisonMereAAP   MaisonMereAAP @relation(fields: [maisonMereAAPId], references: [id])
+  maisonMereAAPId String        @map("maison_mere_aap_id") @db.Uuid
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime?     @map("updated_at") @db.Timestamptz(6)
+
+  @@id([domaineId, maisonMereAAPId])
+  @@map("maison_mere_aap_on_domaine")
 }
