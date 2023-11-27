@@ -203,10 +203,10 @@ export const existsCandidacyWithActiveStatuses = async (params: {
       },
     });
 
-    return Right(candidaciesCount === 1);
+    return candidaciesCount === 1;
   } catch (e) {
     logger.error(e);
-    return Left(
+    throw new Error(
       `error while retrieving the candidacy with id ${params.candidacyId}`
     );
   }

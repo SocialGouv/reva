@@ -5,7 +5,10 @@ import {
   FunctionalError,
 } from "../../shared/error/functionalError";
 import { logger } from "../../shared/logger";
-import { updateCertification } from "../database/candidacies";
+import {
+  existsCandidacyWithActiveStatuses,
+  updateCertification,
+} from "../database/candidacies";
 
 export const updateCertificationWithinOrganismScope = async ({
   hasRole,
@@ -31,7 +34,7 @@ export const updateCertificationWithinOrganismScope = async ({
       `Aucune candidature n'a été trouvée`
     );
   }
-  // TODO: allow certification update only at the beginning of the candidacy
+
   // Ensure the new certification is handled by current candidacy organism
   const activeOrganism =
     await prismaClient.activeOrganismsByAvailableCertificationsAndDepartments.findFirst(
@@ -47,6 +50,19 @@ export const updateCertificationWithinOrganismScope = async ({
   if (!activeOrganism) {
     throw new Error(
       "Cette certification n'est pas disponible pour cet organisme"
+    );
+  }
+
+  // Allow certification update only at the beginning of the candidacy
+  const existsCandidacyInRequiredStatuses =
+    await existsCandidacyWithActiveStatuses({
+      candidacyId,
+      statuses: ["PRISE_EN_CHARGE", "PARCOURS_ENVOYE", "PARCOURS_CONFIRME"],
+    });
+
+  if (!existsCandidacyInRequiredStatuses) {
+    throw new Error(
+      "La certification ne peut être mise à jour qu'en début de candidature"
     );
   }
 
