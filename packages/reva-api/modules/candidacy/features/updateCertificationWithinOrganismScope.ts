@@ -1,12 +1,13 @@
+import { CandidacyStatusStep } from "@prisma/client";
+
 import { prismaClient } from "../../../prisma/client";
 import { Role } from "../../account/account.types";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../shared/error/functionalError";
-import { logger } from "../../shared/logger";
 import {
-  existsCandidacyWithActiveStatuses,
+  updateCandidacyStatus,
   updateCertification,
 } from "../database/candidacies";
 
@@ -35,14 +36,20 @@ export const updateCertificationWithinOrganismScope = async ({
     );
   }
 
+  if (!candidacy.departmentId || !candidacy.organismId) {
+    throw new Error(
+      "Impossible de modifier la certification d'une candidature sans département ou sans organisme"
+    );
+  }
+
   // Ensure the new certification is handled by current candidacy organism
   const activeOrganism =
     await prismaClient.activeOrganismsByAvailableCertificationsAndDepartments.findFirst(
       {
         where: {
           certificationId: certificationId,
-          departmentId: candidacy.departmentId || "",
-          organismId: candidacy.organismId || "",
+          departmentId: candidacy.departmentId,
+          organismId: candidacy.organismId,
         },
       }
     );
@@ -54,34 +61,50 @@ export const updateCertificationWithinOrganismScope = async ({
   }
 
   // Allow certification update only at the beginning of the candidacy
-  const existsCandidacyInRequiredStatuses =
-    await existsCandidacyWithActiveStatuses({
-      candidacyId,
-      statuses: ["PRISE_EN_CHARGE", "PARCOURS_ENVOYE", "PARCOURS_CONFIRME"],
-    });
+  const allowedStatues: CandidacyStatusStep[] = [
+    "PRISE_EN_CHARGE",
+    "PARCOURS_ENVOYE",
+    "PARCOURS_CONFIRME",
+  ];
 
-  if (!existsCandidacyInRequiredStatuses) {
+  const lastStatusWithDetails = await prismaClient.candidaciesStatus.findFirst({
+    where: {
+      candidacyId: candidacyId,
+      isActive: true,
+    },
+    select: {
+      status: true,
+    },
+    orderBy: [{ createdAt: "desc" }],
+  });
+
+  if (!lastStatusWithDetails) {
+    throw new Error("La certification n'a aucun statut actif");
+  }
+
+  const lastStatus = lastStatusWithDetails.status;
+
+  if (!allowedStatues.includes(lastStatus)) {
     throw new Error(
       "La certification ne peut être mise à jour qu'en début de candidature"
     );
   }
 
-  try {
-    (
-      await updateCertification({
-        candidacyId,
-        certificationId,
-        departmentId: candidacy.departmentId || "",
-        author: hasRole("admin") ? "admin" : "organism",
-      })
-    ).unsafeCoerce();
-
-    return candidacy;
-  } catch (e) {
-    logger.error(e);
-    throw new FunctionalError(
-      FunctionalCodeError.CERTIFICATION_NOT_UPDATED,
-      `Erreur lors de la mise à jour de la certification`
-    );
+  // Add new candidacy PRISE_EN_CHARGE active status, if it's not already the case
+  if (lastStatus != "PRISE_EN_CHARGE") {
+    await updateCandidacyStatus({
+      candidacyId,
+      status: "PRISE_EN_CHARGE",
+    });
   }
+
+  // Update candidacy certification
+  const updatedCandidacy = await updateCertification({
+    candidacyId,
+    certificationId,
+    departmentId: candidacy.departmentId || "",
+    author: hasRole("admin") ? "admin" : "organism",
+  });
+
+  return updatedCandidacy.unsafeCoerce();
 };
