@@ -29,7 +29,6 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
             feasibilityFile: {
               create: {
                 name: "dummyFile.ext",
-                content: new Buffer("coucou"),
                 mimeType: "kikoo/lol",
               },
             },
@@ -47,7 +46,6 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
             feasibilityFile: {
               create: {
                 name: "dummyFile.ext",
-                content: new Buffer("coucou"),
                 mimeType: "kikoo/lol",
               },
             },
@@ -65,7 +63,6 @@ describe("FundingRequesUnifvae Feasibility checks", () => {
             feasibilityFile: {
               create: {
                 name: "dummyFile.ext",
-                content: new Buffer("coucou"),
                 mimeType: "kikoo/lol",
               },
             },

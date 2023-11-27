@@ -74,7 +74,6 @@ beforeAll(async () => {
     data: {
       name: "filename",
       mimeType: "application/pdf",
-      content: Buffer.from([]),
     },
   });
 

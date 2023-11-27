@@ -136,7 +136,6 @@ beforeAll(async () => {
           feasibilityFile: {
             create: {
               name: "dummyFile.ext",
-              content: new Buffer("coucou"),
               mimeType: "kikoo/lol",
             },
           },
