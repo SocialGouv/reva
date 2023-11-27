@@ -1,14 +1,12 @@
 import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
-import { getFeatureByKey } from "../feature-flipping/feature-flipping.features";
 import { logger } from "../shared/logger";
 import {
   canDownloadFeasibilityFiles,
   canUserManageCandidacy,
   createFeasibility,
   getActiveFeasibilityByCandidacyid,
-  getFileWithContent,
   handleFeasibilityDecision,
 } from "./feasibility.features";
 import { FeasibilityFile, UploadedFile } from "./feasibility.file";
@@ -21,8 +19,6 @@ interface UploadFeasibilityFileRequestBody {
   documentaryProofFile?: UploadedFile[];
   certificateOfAttendanceFile?: UploadedFile[];
 }
-
-const KEY_FEATURE_STORE_FILE_WITH_S3 = "store-file-with-s3";
 
 type MimeType = "application/pdf" | "image/png" | "image/jpg" | "image/jpeg";
 
@@ -80,34 +76,16 @@ export const feasibilityFileUploadRoute: FastifyPluginAsync = async (
           });
         }
 
-        const isS3Enabled =
-          (await getFeatureByKey(KEY_FEATURE_STORE_FILE_WITH_S3))?.isActive ==
-          true;
+        const feasibilityFile = new FeasibilityFile({ candidacyId, fileId });
+        const fileLink = await feasibilityFile.getDownloadLink();
 
-        if (isS3Enabled) {
-          const feasibilityFile = new FeasibilityFile({ candidacyId, fileId });
-          const fileLink = await feasibilityFile.getDownloadLink();
+        if (fileLink) {
+          reply
+            .code(200)
+            .header("Content-Type", "application/json; charset=utf-8")
+            .send({ url: fileLink });
 
-          if (fileLink) {
-            reply
-              .code(200)
-              .header("Content-Type", "application/json; charset=utf-8")
-              .send({ url: fileLink });
-
-            return;
-          }
-        } else {
-          const file = await getFileWithContent({ fileId });
-
-          if (file) {
-            reply
-              .header("Content-Disposition", "inline")
-              .header("Content-Length", file.content.length)
-              .type(file.mimeType)
-              .send(file.content);
-
-            return;
-          }
+          return;
         }
 
         reply.status(400).send("Fichier non trouvé.");

@@ -116,7 +116,6 @@ export const createFeasibility = async ({
       feasibilityFile: {
         create: {
           id: feasibilityFileInstance.id,
-          content: feasibilityFile.data,
           mimeType: feasibilityFile.mimetype,
           name: feasibilityFile.filename,
         },
@@ -124,7 +123,6 @@ export const createFeasibility = async ({
       IDFile: {
         create: {
           id: IDFileInstance.id,
-          content: IDFile.data,
           mimeType: IDFile.mimetype,
           name: IDFile.filename,
         },
@@ -133,7 +131,6 @@ export const createFeasibility = async ({
         ? {
             create: {
               id: documentaryProofFileInstance?.id,
-              content: documentaryProofFile.data,
               mimeType: documentaryProofFile.mimetype,
               name: documentaryProofFile.filename,
             },
@@ -143,7 +140,6 @@ export const createFeasibility = async ({
         ? {
             create: {
               id: certificateOfAttendanceFileInstance?.id,
-              content: certificateOfAttendanceFile.data,
               mimeType: certificateOfAttendanceFile.mimetype,
               name: certificateOfAttendanceFile.filename,
             },
@@ -223,11 +219,6 @@ export const getFileNameAndUrl = async ({
     return null;
   }
 };
-
-export const getFileWithContent = async ({ fileId }: { fileId: string }) =>
-  await prismaClient.file.findFirst({
-    where: { id: fileId },
-  });
 
 export const getActiveFeasibilityCountByCategory = async ({
   keycloakId,
