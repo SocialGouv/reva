@@ -21,6 +21,7 @@ export const updateCertificationWithinOrganismScope = async ({
     select: {
       id: true,
       departmentId: true,
+      organismId: true,
     },
   });
 
@@ -30,9 +31,24 @@ export const updateCertificationWithinOrganismScope = async ({
       `Aucune candidature n'a été trouvée`
     );
   }
-
-  // TODO: ensure the certification is handle by current candidacy organism
   // TODO: allow certification update only at the beginning of the candidacy
+  // Ensure the new certification is handled by current candidacy organism
+  const activeOrganism =
+    await prismaClient.activeOrganismsByAvailableCertificationsAndDepartments.findFirst(
+      {
+        where: {
+          certificationId: certificationId,
+          departmentId: candidacy.departmentId || "",
+          organismId: candidacy.organismId || "",
+        },
+      }
+    );
+
+  if (!activeOrganism) {
+    throw new Error(
+      "Cette certification n'est pas disponible pour cet organisme"
+    );
+  }
 
   try {
     (

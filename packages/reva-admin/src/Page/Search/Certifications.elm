@@ -140,7 +140,13 @@ viewDirectoryHeader context model =
 
 viewDirectoryPanel : Context -> Model -> List (Html Msg)
 viewDirectoryPanel context model =
-    [ viewDirectoryHeader context model
+    [ case model.submission of
+        Failure errors ->
+            View.popupErrors errors
+
+        _ ->
+            text ""
+    , viewDirectoryHeader context model
     , div
         [ class "sm:px-6"
         , attribute "aria-label" "Certifications"
