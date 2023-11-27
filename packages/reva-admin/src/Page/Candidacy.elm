@@ -175,7 +175,7 @@ view context model =
                             NavigationSteps.dropOutView context.baseUrl candidacy droppedOutDate
 
                         Nothing ->
-                            if (Candidacy.lastStatus candidacy.statuses |> .status) == Step.Archive then
+                            if Candidacy.lastStatus candidacy.statuses == Step.Archive then
                                 if Candidacy.isCandidacyReoriented candidacy then
                                     NavigationSteps.reorientationView context.baseUrl candidacy
 
@@ -442,7 +442,7 @@ updateTab context tab ( model, cmd ) =
         ( View.Candidacy.Tab.Archive, Success candidacy ) ->
             let
                 formStatus =
-                    if (Candidacy.lastStatus candidacy.statuses |> .status) == Step.Archive then
+                    if Candidacy.lastStatus candidacy.statuses == Step.Archive then
                         Form.ReadOnly
 
                     else

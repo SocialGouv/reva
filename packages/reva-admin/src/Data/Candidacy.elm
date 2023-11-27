@@ -25,6 +25,7 @@ module Data.Candidacy exposing
     , isStatusEqualOrAbove
     , isTrainingSent
     , lastStatus
+    , lastStatusDate
     , sentDate
     , statusToCategoryString
     , statusToProgressPosition
@@ -338,8 +339,8 @@ statusToProgressPosition status =
             -1
 
 
-lastStatus : List CandidacyStatus -> CandidacyStatus
-lastStatus statuses =
+lastStatusHelper : List CandidacyStatus -> CandidacyStatus
+lastStatusHelper statuses =
     List.filter (\status -> status.isActive) statuses
         |> List.head
         |> Maybe.withDefault
@@ -347,6 +348,16 @@ lastStatus statuses =
             , status = Projet
             , isActive = True
             }
+
+
+lastStatus : List CandidacyStatus -> Step
+lastStatus statuses =
+    statuses |> lastStatusHelper >> .status
+
+
+lastStatusDate : List CandidacyStatus -> DateWithLabels
+lastStatusDate statuses =
+    statuses |> lastStatusHelper >> .createdAt
 
 
 sentDate : List CandidacyStatus -> Maybe DateWithLabels
@@ -358,7 +369,7 @@ sentDate statuses =
 
 currentStatusPosition : Candidacy -> Int
 currentStatusPosition candidacy =
-    (lastStatus >> .status) candidacy.statuses
+    (lastStatusHelper >> .status) candidacy.statuses
         |> statusToProgressPosition
 
 

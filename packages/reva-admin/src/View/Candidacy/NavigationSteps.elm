@@ -224,7 +224,7 @@ archiveView : String -> Candidacy -> Html msg
 archiveView baseUrl candidacy =
     let
         archiveDate =
-            Candidacy.lastStatus candidacy.statuses |> .createdAt
+            Candidacy.lastStatusDate candidacy.statuses
 
         archiveLink =
             Route.href baseUrl <| Route.Candidacy (View.Candidacy.Tab.Tab candidacy.id View.Candidacy.Tab.Archive)
@@ -241,7 +241,7 @@ reorientationView : String -> Candidacy -> Html msg
 reorientationView baseUrl candidacy =
     let
         archiveDate =
-            Candidacy.lastStatus candidacy.statuses |> .createdAt
+            Candidacy.lastStatusDate candidacy.statuses
 
         archiveLink =
             Route.href baseUrl <| Route.Candidacy (View.Candidacy.Tab.Tab candidacy.id View.Candidacy.Tab.Archive)
@@ -345,4 +345,4 @@ paymentRequestLink baseUrl candidacy =
 
 candidacyStatus : Candidacy -> Candidacy.Step
 candidacyStatus candidacy =
-    (Candidacy.lastStatus >> .status) candidacy.statuses
+    Candidacy.lastStatus candidacy.statuses

@@ -23,7 +23,7 @@ keys =
 
 validate : ( Candidacy, Referential ) -> FormData -> Result (List String) ()
 validate ( _, _ ) formData =
-   Ok ()
+    Ok ()
 
 
 fromDict : FormData -> Archive
@@ -39,11 +39,15 @@ fromDict formData =
 
 archive : Maybe Id -> List Data.Candidacy.CandidacyStatus -> Dict String String
 archive maybeReorientationReasonId statuses =
-    let
-        lastStatus =
-            Data.Candidacy.lastStatus statuses |> .status
-    in
-    [ ( .isNotReoriented, Just <| Helper.booleanToString (lastStatus == Step.Archive && maybeReorientationReasonId == Nothing) )
+    [ ( .isNotReoriented
+      , Just <|
+            Helper.booleanToString
+                (Data.Candidacy.lastStatus statuses
+                    == Step.Archive
+                    && maybeReorientationReasonId
+                    == Nothing
+                )
+      )
     , ( .reorientationReason, maybeReorientationReasonId |> Maybe.map (\(Id id) -> id) )
     ]
         |> Helper.toDict keys
