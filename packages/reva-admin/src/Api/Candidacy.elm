@@ -1,6 +1,6 @@
 module Api.Candidacy exposing (get, getCandidacies, getCandidacyCountByStatus, getCertification, statusSelection, takeOver, updateCertification)
 
-import Admin.Enum.CandidacyStatusFilter
+import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
 import Admin.Mutation as Mutation
 import Admin.Object
 import Admin.Object.Candidacy
@@ -38,11 +38,21 @@ getCandidacies :
     String
     -> Token
     -> Int
-    -> Maybe Admin.Enum.CandidacyStatusFilter.CandidacyStatusFilter
+    -> Maybe CandidacyStatusFilter
     -> (RemoteData (List String) Data.Candidacy.CandidacySummaryPage -> msg)
     -> Maybe String
     -> Cmd msg
 getCandidacies endpointGraphql token page statusFilter toMsg searchFilter =
+    let
+        operationName =
+            String.concat
+                [ "getCandidacies_"
+                , Maybe.map CandidacyStatusFilter.toString statusFilter
+                    |> Maybe.withDefault "ALL"
+                , "_p"
+                , String.fromInt page
+                ]
+    in
     Query.getCandidacies
         (\optionals ->
             { optionals
@@ -53,7 +63,7 @@ getCandidacies endpointGraphql token page statusFilter toMsg searchFilter =
             }
         )
         summaryPageSelection
-        |> Auth.makeQuery "getCandidacies" endpointGraphql token toMsg
+        |> Auth.makeQuery operationName endpointGraphql token toMsg
 
 
 get :

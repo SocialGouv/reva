@@ -5,7 +5,7 @@ import Api.Token
 import Data.Candidacy exposing (CandidacyCountByStatus, candidacyStatusFilterToReadableString)
 import Data.Context exposing (Context)
 import Html exposing (Html, a, label, li, text, ul)
-import Html.Attributes exposing (class, classList)
+import Html.Attributes exposing (attribute, class, classList)
 import Route
 
 
@@ -124,7 +124,8 @@ viewLink context filters count statusFilter label =
     li
         []
         [ a
-            [ class "block group mb-4 py-1 px-2"
+            [ attribute "data-nav" (CandidacyStatusFilter.toString statusFilter)
+            , class "block group mb-4 py-1 px-2"
             , class "flex items-start justify-between transition"
             , class "border-l-2 border-transparent"
             , classList
