@@ -1,10 +1,11 @@
 module View.Candidacy exposing (view, viewCreatedAt, viewSentAt)
 
 import Accessibility exposing (h1, h2)
+import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Admin.Enum.Duration exposing (Duration(..))
 import Api.Token
 import BetaGouv.DSFR.Button as Button
-import Data.Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, DateWithLabels, canCancelDropoutCandidacy, canDropoutCandidacy, isCandidacyArchived, isCandidacyReoriented)
+import Data.Candidacy as Candidacy exposing (Candidacy, CandidacyExperience, CandidacyGoal, DateWithLabels, canCancelDropoutCandidacy, canDropoutCandidacy, isCandidacyArchived, isCandidacyReoriented)
 import Data.Context exposing (Context)
 import Data.Organism exposing (Organism)
 import Data.Referential exposing (Department, Referential)
@@ -15,7 +16,7 @@ import RemoteData exposing (RemoteData(..))
 import Route
 import Time
 import View
-import View.Candidacy.Tab exposing (Value(..))
+import View.Candidacy.Tab as Tab exposing (Tab, Value(..))
 import View.Date
 import View.Helpers exposing (dataTest)
 
@@ -23,9 +24,8 @@ import View.Helpers exposing (dataTest)
 view :
     Context
     ->
-        { a
-            | candidacy : Candidacy
-            , referential : RemoteData (List String) Referential
+        { candidacy : Candidacy
+        , referential : RemoteData (List String) Referential
         }
     -> List (Html msg)
 view context config =
@@ -60,7 +60,12 @@ view context config =
                             |> Maybe.withDefault "Certification non sélectionnée"
                             |> text
                         ]
-                    , if List.member "REORIENTATION" context.activeFeatures then
+                    , if
+                        List.member "REORIENTATION" context.activeFeatures
+                            && List.member
+                                (Candidacy.lastStatus config.candidacy.statuses)
+                                [ PriseEnCharge, ParcoursEnvoye, ParcoursConfirme ]
+                      then
                         div
                             [ class "mt-4" ]
                             [ Button.new
@@ -85,7 +90,7 @@ view context config =
             [ class "mt-12 mb-4" ]
             [ View.infoBlock "Ma candidature"
                 [ viewInfo "sent-at" "Date de candidature" <|
-                    viewSentAt (Data.Candidacy.sentDate config.candidacy.statuses)
+                    viewSentAt (Candidacy.sentDate config.candidacy.statuses)
                 , div [ class "flex space-x-2" ]
                     [ viewDepartment config.candidacy.department
                     , config.candidacy.candidate
@@ -127,9 +132,7 @@ view context config =
                     { onClick = Nothing, label = "Restaurer la candidature" }
                     |> Button.linkButton
                         (Route.toString context.baseUrl
-                            (Route.Candidacy <|
-                                View.Candidacy.Tab.Tab config.candidacy.id Unarchive
-                            )
+                            (Route.Candidacy <| Tab config.candidacy.id Tab.Unarchive)
                         )
                     |> Button.secondary
                     |> Button.view
@@ -139,9 +142,7 @@ view context config =
                     { onClick = Nothing, label = "Supprimer la candidature" }
                     |> Button.linkButton
                         (Route.toString context.baseUrl
-                            (Route.Candidacy <|
-                                View.Candidacy.Tab.Tab config.candidacy.id Archive
-                            )
+                            (Route.Candidacy <| Tab config.candidacy.id Tab.Archive)
                         )
                     |> Button.secondary
                     |> Button.view
@@ -149,9 +150,7 @@ view context config =
                 Button.new { onClick = Nothing, label = "Déclarer l'abandon du candidat" }
                     |> Button.linkButton
                         (Route.toString context.baseUrl
-                            (Route.Candidacy <|
-                                View.Candidacy.Tab.Tab config.candidacy.id DropOut
-                            )
+                            (Route.Candidacy <| Tab config.candidacy.id Tab.DropOut)
                         )
                     |> Button.secondary
                     |> Button.withAttrs [ class "mt-3 sm:mt-0 sm:ml-3" ]
@@ -161,9 +160,7 @@ view context config =
                 Button.new { onClick = Nothing, label = "Annuler l'abandon du candidat" }
                     |> Button.linkButton
                         (Route.toString context.baseUrl
-                            (Route.Candidacy <|
-                                View.Candidacy.Tab.Tab config.candidacy.id CancelDropOut
-                            )
+                            (Route.Candidacy <| Tab config.candidacy.id CancelDropOut)
                         )
                     |> Button.secondary
                     |> Button.withAttrs [ class "mt-3 sm:mt-0 sm:ml-3" ]
