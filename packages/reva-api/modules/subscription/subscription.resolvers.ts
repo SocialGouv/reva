@@ -101,15 +101,15 @@ const unsafeResolvers = {
       }
     ) => {
       const keycloakAdmin = await context.app.getKeycloakAdmin();
-      const result = await domain.validateSubscriptionRequest({
-        subscriptionRequestId: payload.subscriptionRequestId,
-        keycloakAdmin,
-      });
-
-      return result
-        .map(() => "Ok")
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
+      try {
+        const result = await domain.validateSubscriptionRequest({
+          subscriptionRequestId: payload.subscriptionRequestId,
+          keycloakAdmin,
+        });
+        return result;
+      } catch (e) {
+        throw new mercurius.ErrorWithProps((e as Error).message, e as object);
+      }
     },
     subscription_rejectSubscriptionRequest: async (
       _: unknown,
