@@ -117,11 +117,15 @@ export const createOrganism = async (data: {
   zip: string;
   city: string;
   contactAdministrativeEmail: string;
+  contactAdministrativePhone: string;
+  website: string;
+  legalStatus: LegalStatus;
   siret: string;
   isActive: boolean;
   typology: OrganismTypology;
   ccnIds?: string[];
   domaineIds?: string[];
+  qualiopiCertificateExpiresAt: Date;
   departmentsWithOrganismMethods: domain.DepartmentWithOrganismMethods[];
 }): Promise<Either<string, domain.Organism>> => {
   try {

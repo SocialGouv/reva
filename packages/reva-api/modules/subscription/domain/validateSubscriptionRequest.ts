@@ -1,60 +1,33 @@
 import { randomUUID } from "crypto";
 
-import { Either, EitherAsync, Left, Maybe, Right } from "purify-ts";
+import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
+import { EitherAsync, Left, Maybe, Right } from "purify-ts";
 
 import {
-  DepartmentWithOrganismMethods,
-  Organism,
-} from "../../organism/organism.types";
+  createAccountProfile,
+  getAccountFromEmail,
+} from "../../account/database/accounts";
+import * as IAM from "../../account/features/keycloak";
+import {
+  createOrganism as createOrganismDb,
+  getOrganismBySiretAndTypology,
+} from "../../organism/database/organisms";
+import { Organism } from "../../organism/organism.types";
 import {
   FunctionalCodeError,
   FunctionalError,
 } from "../../shared/error/functionalError";
 import { logger } from "../../shared/logger";
+import {
+  deleteSubscriptionRequestById,
+  getSubscriptionRequestById,
+} from "../db/subscription-request";
 import { __TEST_IAM_FAIL_CHECK__, __TEST_IAM_PASS_CHECK__ } from "./test-const";
 import { Account } from ".prisma/client";
 
-interface ValidateSubscriptionRequestDeps {
-  getSubscriptionRequestById: (
-    id: string
-  ) => Promise<Either<string, Maybe<SubscriptionRequest>>>;
-  deleteSubscriptionRequestById: (id: string) => Promise<Either<string, void>>;
-  getOrganismBySiretAndTypology: (
-    siret: string,
-    typology: OrganismTypology
-  ) => Promise<Either<string, Maybe<Organism>>>;
-  createOrganism: (
-    data: Omit<Organism, "id"> & {
-      ccnIds?: string[];
-      domaineIds?: string[];
-      departmentsWithOrganismMethods: DepartmentWithOrganismMethods[];
-    }
-  ) => Promise<Either<string, Organism>>;
-  getIamAccount: (params: {
-    email: string;
-    username: string;
-  }) => Promise<Either<string, Maybe<any>>>;
-  getAccountFromEmail: (
-    email: string
-  ) => Promise<Either<string, Maybe<Account>>>;
-  createAccountInIAM: (params: {
-    email: string;
-    username: string;
-    firstname?: string;
-    lastname?: string;
-    group: string;
-  }) => Promise<Either<string, string>>;
-  createAccountProfile: (params: {
-    email: string;
-    firstname: string;
-    lastname: string;
-    organismId: string;
-    keycloakId: string;
-  }) => Promise<Either<string, Account>>;
-}
-
 interface ValidateSubscriptionRequestParams {
   subscriptionRequestId: string;
+  keycloakAdmin: KeycloakAdminClient;
 }
 
 type SubscriptionRequestWithTypologyAssociations = SubscriptionRequest & {
@@ -68,7 +41,6 @@ type SubscriptionRequestWithTypologyAssociations = SubscriptionRequest & {
 };
 
 export const validateSubscriptionRequest = async (
-  deps: ValidateSubscriptionRequestDeps,
   params: ValidateSubscriptionRequestParams
 ) => {
   const $store: {
@@ -77,8 +49,11 @@ export const validateSubscriptionRequest = async (
     keyCloackId?: string;
   } = {};
 
+  const getIamAccount = IAM.getAccount(params.keycloakAdmin);
+  const createAccountInIAM = IAM.createAccount(params.keycloakAdmin);
+
   const getSubscriptionRequest = EitherAsync.fromPromise(async () => {
-    const eitherSubreq = await deps.getSubscriptionRequestById(
+    const eitherSubreq = await getSubscriptionRequestById(
       params.subscriptionRequestId
     );
     if (eitherSubreq.isLeft()) {
@@ -109,7 +84,7 @@ export const validateSubscriptionRequest = async (
   });
 
   const checkIfOrganismExists = EitherAsync.fromPromise(async () => {
-    const eitherOrganism = await deps.getOrganismBySiretAndTypology(
+    const eitherOrganism = await getOrganismBySiretAndTypology(
       ($store.subreq as SubscriptionRequest).companySiret,
       ($store.subreq as SubscriptionRequest).typology
     );
@@ -139,7 +114,7 @@ export const validateSubscriptionRequest = async (
   });
 
   const checkIfAccountExists = EitherAsync.fromPromise(async () => {
-    const eitherAccount = await deps.getAccountFromEmail(
+    const eitherAccount = await getAccountFromEmail(
       ($store.subreq as SubscriptionRequest).accountEmail
     );
     if (eitherAccount.isLeft()) {
@@ -186,7 +161,7 @@ export const validateSubscriptionRequest = async (
       return Right(undefined);
     }
 
-    const eitherAccount = await deps.getIamAccount({
+    const eitherAccount = await getIamAccount({
       email: ($store.subreq as SubscriptionRequest).accountEmail,
       username: "",
     });
@@ -217,7 +192,7 @@ export const validateSubscriptionRequest = async (
 
   const createOrganism = EitherAsync.fromPromise(async () =>
     (
-      await deps.createOrganism({
+      await createOrganismDb({
         label: $store.subreq?.companyName ?? "",
         address: $store.subreq?.companyAddress ?? "",
         contactAdministrativeEmail: $store.subreq?.accountEmail ?? "",
@@ -245,7 +220,7 @@ export const validateSubscriptionRequest = async (
         (error: string) =>
           new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, error)
       )
-      .ifRight((organism) => {
+      .ifRight((organism: Organism) => {
         $store.organism = organism;
         logger.info(
           `[validateSubscriptionRequest] Successfuly created organism with siret ${$store.subreq?.companySiret}`
@@ -255,7 +230,7 @@ export const validateSubscriptionRequest = async (
 
   const createAccount = EitherAsync.fromPromise(async () =>
     (
-      await deps.createAccountProfile({
+      await createAccountProfile({
         firstname: $store.subreq?.accountFirstname ?? "",
         lastname: $store.subreq?.accountLastname ?? "",
         email: $store.subreq?.accountEmail ?? "",
@@ -275,7 +250,7 @@ export const validateSubscriptionRequest = async (
   );
 
   const deleteSubscriptionRequest = EitherAsync.fromPromise(async () =>
-    (await deps.deleteSubscriptionRequestById(params.subscriptionRequestId))
+    (await deleteSubscriptionRequestById(params.subscriptionRequestId))
       .mapLeft(
         (error: string) =>
           new FunctionalError(FunctionalCodeError.TECHNICAL_ERROR, error)
@@ -290,7 +265,7 @@ export const validateSubscriptionRequest = async (
   const createKeycloakAccount = EitherAsync.fromPromise(async () =>
     ($store.subreq?.accountEmail === __TEST_IAM_PASS_CHECK__
       ? Right(randomUUID())
-      : await deps.createAccountInIAM({
+      : await createAccountInIAM({
           email: $store.subreq?.accountEmail ?? "",
           firstname: $store.subreq?.accountFirstname ?? "",
           lastname: $store.subreq?.accountLastname ?? "",

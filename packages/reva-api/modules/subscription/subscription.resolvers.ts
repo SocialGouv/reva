@@ -2,11 +2,6 @@ import { composeResolvers } from "@graphql-tools/resolvers-composition";
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import mercurius from "mercurius";
 
-import {
-  createAccountProfile,
-  getAccountFromEmail,
-} from "../account/database/accounts";
-import * as IAM from "../account/features/keycloak";
 import * as OrganismDb from "../organism/database/organisms";
 import {
   FunctionalCodeError,
@@ -106,20 +101,10 @@ const unsafeResolvers = {
       }
     ) => {
       const keycloakAdmin = await context.app.getKeycloakAdmin();
-      const result = await domain.validateSubscriptionRequest(
-        {
-          getSubscriptionRequestById: db.getSubscriptionRequestById,
-          deleteSubscriptionRequestById: db.deleteSubscriptionRequestById,
-          getIamAccount: IAM.getAccount(keycloakAdmin),
-          createAccountInIAM: IAM.createAccount(keycloakAdmin),
-          createAccountProfile: createAccountProfile,
-          getAccountFromEmail: getAccountFromEmail,
-          getOrganismBySiretAndTypology:
-            OrganismDb.getOrganismBySiretAndTypology,
-          createOrganism: OrganismDb.createOrganism,
-        },
-        { subscriptionRequestId: payload.subscriptionRequestId }
-      );
+      const result = await domain.validateSubscriptionRequest({
+        subscriptionRequestId: payload.subscriptionRequestId,
+        keycloakAdmin,
+      });
 
       return result
         .map(() => "Ok")
