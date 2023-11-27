@@ -148,17 +148,16 @@ viewDirectoryPanel context model =
             text ""
     , viewDirectoryHeader context model
     , div
-        [ class "sm:px-6"
+        [ class "sm:px-6 relative"
         , attribute "aria-label" "Certifications"
         ]
         [ Search.view context model.search
-        , displayIf model.candidacyId <|
-            div
-                [ class "my-6 flex justify-end" ]
-                [ Button.new { onClick = Nothing, label = "Enregistrer" }
-                    |> Button.primary
-                    |> Button.view
-                ]
+        , case model.submission of
+            Loading ->
+                div [ class "mt-24 absolute inset-0 opacity-75 bg-white" ] []
+
+            _ ->
+                text ""
         ]
     ]
 
@@ -263,10 +262,7 @@ update context msg model =
             )
 
         UserSelectCertification certification ->
-            ( { model
-                | certification = Success certification
-                , submission = Loading
-              }
+            ( { model | submission = Loading }
             , case model.candidacyId of
                 Just candidacyId ->
                     Api.Candidacy.updateCertification context.endpoint
