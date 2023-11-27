@@ -262,15 +262,24 @@ update context msg model =
             )
 
         UserSelectCertification certification ->
-            ( { model | submission = Loading }
-            , case model.candidacyId of
+            case model.candidacyId of
                 Just candidacyId ->
-                    Api.Candidacy.updateCertification context.endpoint
-                        context.token
-                        (GotCertificationUpdateResponse candidacyId)
-                        candidacyId
-                        certification.id
+                    if model.certification == Success certification then
+                        ( { model
+                            | submission =
+                                Failure [ "La candidature est déjà positionnée sur cette certification." ]
+                          }
+                        , Cmd.none
+                        )
+
+                    else
+                        ( { model | submission = Loading }
+                        , Api.Candidacy.updateCertification context.endpoint
+                            context.token
+                            (GotCertificationUpdateResponse candidacyId)
+                            candidacyId
+                            certification.id
+                        )
 
                 Nothing ->
-                    Cmd.none
-            )
+                    ( model, Cmd.none )
