@@ -18,9 +18,10 @@ form : FormData -> ( Candidacy, Referential ) -> Form
 form _ ( _, _ ) =
     { elements =
         [ ( "files-heading", Form.Title1 "1 - Pièces jointes liées à la facturation" )
-        , ( "vat-alert", Form.StaticHtml vatAlert )
-        , ( keys.invoiceFiles, Form.File "Ajouter une facture" "Taille maximale : 10 Mo. Format supporté : pdf." )
-        , ( keys.certificateOfAttendanceFiles, Form.File "Ajouter un récapitulatif des attestations de présence" "Taille maximale : 10 Mo. Format supporté : pdf." )
+        , ( "invoiceFile", Form.Title2 "Joindre la facture" )
+        , ( keys.invoiceFiles, Form.File "La facture doit être net de TVA et doit contenir un RIB." "Taille maximale : 10 Mo. Format supporté : pdf." )
+        , ( "certificateFile", Form.Title2 "Joindre un récapitulatif des attestations de présence" )
+        , ( keys.certificateOfAttendanceFiles, Form.File "Le document doit comprendre l’ensemble des attestations d’accompagnement individuel, collectif et formatif du candidat." "Taille maximale : 10 Mo. Format supporté : pdf." )
         , ( "confirmation-heading", Form.Title1 "2 - Confirmation" )
         , ( "confirmation-warning"
           , Form.StaticHtml <|
@@ -49,12 +50,3 @@ form _ ( _, _ ) =
     , submitLabel = "Envoyer"
     , title = "Demande de paiement"
     }
-
-
-vatAlert : Html msg
-vatAlert =
-    View.alert View.Info
-        [ class "w-full mb-6" ]
-        ""
-        [ p [] [ text "La facture doit être net de TVA et doit contenir un RIB." ]
-        ]
