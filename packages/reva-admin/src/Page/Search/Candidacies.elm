@@ -272,14 +272,14 @@ viewItem context candidacy =
                 [ case ( Api.Token.isAdmin context.token, candidacy.organism ) of
                     ( True, Just organism ) ->
                         div
-                            [ class "my-4 sm:my-0"
+                            [ class "my-4 mr-2 sm:my-0 truncate"
                             , class "text-base text-gray-500 whitespace-nowrap"
                             ]
                             [ text organism.label ]
 
                     _ ->
                         div [] []
-                , Button.new { onClick = Nothing, label = "Accéder à la candidature" }
+                , Button.new { onClick = Nothing, label = "Accéder\u{00A0}à\u{00A0}la\u{00A0}candidature" }
                     |> Button.linkButton (Route.toString context.baseUrl (Route.Candidacy { value = Profile, candidacyId = candidacy.id }))
                     |> Button.withAttrs [ attribute "title" ("Accéder à la candidature de " ++ candidatureName) ]
                     |> Button.view
