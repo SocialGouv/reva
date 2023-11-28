@@ -149,9 +149,10 @@ headerMenuModal context activeHeaderLink =
         navItemLink label url targetHeaderLink =
             itemLink label url False (activeHeaderLink == Just targetHeaderLink)
 
-        optionalLinks =
+        navLinks =
             if Api.Token.isAdmin context.token then
-                [ navItemLink "Inscriptions" "/admin/subscriptions" Subscriptions
+                [ navItemLink "Candidatures" "/admin/candidacies" Candidacies
+                , navItemLink "Inscriptions" "/admin/subscriptions" Subscriptions
                 , navItemLink "Comptes"
                     (Route.toString context.baseUrl <| Route.Accounts Route.emptyAccountFilters)
                     Accounts
@@ -161,6 +162,18 @@ headerMenuModal context activeHeaderLink =
                 , navItemLink "Dossiers de faisabilité"
                     (Route.toString context.baseUrl <| Route.Feasibilities Route.emptyFeasibilityFilters)
                     Feasibilities
+                ]
+
+            else if
+                List.member "AAP_ACCOUNT_SETTINGS" context.activeFeatures
+                    && Api.Token.isOrganism context.token
+                    && not (Api.Token.isAdmin context.token)
+            then
+                [ navItemLink "Candidatures" "/admin/candidacies" Candidacies
+                , itemLink "Paramètres du compte"
+                    (context.adminReactUrl ++ "/account-settings/commercial-information")
+                    True
+                    False
                 ]
 
             else
@@ -188,24 +201,6 @@ headerMenuModal context activeHeaderLink =
                 , role "navigation"
                 , Aria.label "Menu principal"
                 ]
-                [ ul [ class "fr-nav__list" ]
-                    (navItemLink "Candidatures"
-                        "/admin/candidacies"
-                        Candidacies
-                        :: (if List.member "AAP_ACCOUNT_SETTINGS" context.activeFeatures && Api.Token.isOrganism context.token && not (Api.Token.isAdmin context.token) then
-                                [ itemLink "Paramètres du compte"
-                                    (context.adminReactUrl
-                                        ++ "/account-settings/commercial-information"
-                                    )
-                                    True
-                                    False
-                                ]
-
-                            else
-                                []
-                           )
-                        ++ optionalLinks
-                    )
-                ]
+                [ ul [ class "fr-nav__list" ] navLinks ]
             ]
         ]
