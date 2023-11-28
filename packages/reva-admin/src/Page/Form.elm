@@ -789,16 +789,18 @@ viewInputFiles acceptMultipleFiles elementId title hint isRequired =
     in
     div
         [ class "fr-upload-group mb-4 max-w-lg" ]
-        [ viewLabel
-            elementId
+        [ label
+            [ for elementId
+            , class "-mt-1 mb-5 block leading-tight"
+            , class "text-sm text-gray-800"
+            ]
             [ text title
             , span
-                [ class "fr-hint-text"
-                ]
+                [ class "text-xs mt-2 fr-hint-text" ]
                 [ text hint ]
             ]
         , input
-            [ class "fr-upload w-full lg:w-[520px]"
+            [ class "-mb-1 fr-upload w-full lg:w-[520px]"
             , type_ "file"
             , multiple acceptMultipleFiles
             , id elementId
