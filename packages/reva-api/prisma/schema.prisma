@@ -1100,7 +1100,7 @@ model MaisonMereAAPOnDepartement {
   createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt       DateTime?     @map("updated_at") @db.Timestamptz(6)
 
-  @@map("maison_mere_aap_on_departements")
+  @@map("maison_mere_aap_on_departement")
 }
 
 model MaisonMereAAPOnDomaine {
