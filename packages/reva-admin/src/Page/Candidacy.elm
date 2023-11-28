@@ -222,26 +222,7 @@ view context model =
                                     viewForm "payment"
 
                                 FinanceModule.Unifvae ->
-                                    let
-                                        userEmailMd5Hash =
-                                            MD5.hex (Api.Token.getEmail context.token)
-
-                                        featureEnabled =
-                                            List.member "PAYMENT_REQUEST_FVAE" context.activeFeatures || List.member userEmailMd5Hash [ "92dcf4333122618dde2d9bdbeffdab27", "a35c09f95db86c9416b1715ea109b688" ]
-                                    in
-                                    if featureEnabled then
-                                        viewForm "payment"
-
-                                    else
-                                        viewArticle "payment"
-                                            [ View.alert View.Warning
-                                                []
-                                                "Attention"
-                                                [ p [] [ text "La demande de paiement est momentanément désactivée. Elle est actuellement en cours de développement en collaboration avec notre partenaire." ]
-                                                , p [] [ text "Elle devrait être de nouveau disponible courant 2023. Nous ne manquerons pas de vous tenir informés de sa réactivation." ]
-                                                , p [ class "italic" ] [ text "Nous vous rappelons que l'accord de financement est subordonné à l'obtention de la recevabilité." ]
-                                                ]
-                                            ]
+                                    viewForm "payment"
 
                         _ ->
                             div [] []
