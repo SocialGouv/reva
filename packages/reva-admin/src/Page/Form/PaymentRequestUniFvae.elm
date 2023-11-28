@@ -75,6 +75,10 @@ form maybeCertification formData ( candidacy, referential ) =
         , ( "numAction", Form.Text (Maybe.withDefault "" <| Data.Form.get keys.numAction formData) Nothing )
         , ( "invoice-number", Form.Title1 "4. Numéro de facture" )
         , ( "invoiceNumber", Form.InputRequired "Numéro de facture" )
+        , ( "invoiceHint"
+          , Form.StaticHtml <|
+                View.infoHint "Vous devez renseigner le numéro de la facture que vous souhaitez joindre à cette demande de paiement."
+          )
         , ( "companion", Form.Title1 "5. Accompagnement" )
         , ( "forfait", Form.StaticHtml forfaitInfo )
         ]
