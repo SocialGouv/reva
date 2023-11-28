@@ -65,6 +65,8 @@ view context config =
                             && List.member
                                 (Candidacy.lastStatus config.candidacy.statuses)
                                 [ PriseEnCharge, ParcoursEnvoye, ParcoursConfirme ]
+                            && config.candidacy.dropOutDate
+                            == Nothing
                       then
                         div
                             [ class "mt-4" ]

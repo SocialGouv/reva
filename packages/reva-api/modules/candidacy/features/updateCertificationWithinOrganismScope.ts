@@ -26,6 +26,7 @@ export const updateCertificationWithinOrganismScope = async ({
       id: true,
       departmentId: true,
       organismId: true,
+      candidacyDropOut: { select: { candidacyId: true } },
     },
   });
 
@@ -39,6 +40,12 @@ export const updateCertificationWithinOrganismScope = async ({
   if (!candidacy.departmentId || !candidacy.organismId) {
     throw new Error(
       "Impossible de modifier la certification d'une candidature sans département ou sans organisme"
+    );
+  }
+
+  if (candidacy.candidacyDropOut) {
+    throw new Error(
+      "Impossible de modifier la certification d'une candidature abandonnée"
     );
   }
 
