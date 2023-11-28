@@ -61,7 +61,7 @@ view context config =
                             |> text
                         ]
                     , if
-                        List.member "REORIENTATION" context.activeFeatures
+                        Api.Token.isAdmin context.token
                             && List.member
                                 (Candidacy.lastStatus config.candidacy.statuses)
                                 [ PriseEnCharge, ParcoursEnvoye, ParcoursConfirme ]
