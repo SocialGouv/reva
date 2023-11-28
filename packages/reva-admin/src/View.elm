@@ -1,6 +1,7 @@
-module View exposing (AlertType(..), alert, article, backLink, errors, image, infoBlock, layout, logo, noNavLayout, noticeInfo, popupErrors, skeleton, summaryBlock, title)
+module View exposing (AlertType(..), alert, article, backLink, errors, image, infoBlock, infoHint, layout, logo, noNavLayout, noticeInfo, popupErrors, skeleton, summaryBlock, title, warningHint)
 
-import Accessibility exposing (a, br, button, h3, h5, nav, p)
+import Accessibility exposing (a, br, button, h3, h5, nav, p, span)
+import Accessibility.Aria as Aria
 import Html exposing (Html, div, h2, h6, img, node, text)
 import Html.Attributes exposing (attribute, class, id, src)
 import Html.Attributes.Extra exposing (role)
@@ -162,6 +163,22 @@ infoBlock label contents =
     div [ class "mb-6 px-6 py-6 bg-neutral-100" ] <|
         h3 [ class "text-2xl font-bold mb-2" ] [ text label ]
             :: contents
+
+
+infoHint : String -> Html msg
+infoHint label =
+    p [ class "flex text-xs text-dsfrBlue-400" ]
+        [ span [ class "fr-icon-info-fill fr-icon--sm mr-1", Aria.hidden True ] []
+        , text label
+        ]
+
+
+warningHint : String -> Html msg
+warningHint label =
+    p [ class "flex text-xs text-dsfrOrange-500" ]
+        [ span [ class "fr-icon-warning-fill fr-icon--sm mr-1", Aria.hidden True ] []
+        , text label
+        ]
 
 
 logo : Accessibility.Html msg

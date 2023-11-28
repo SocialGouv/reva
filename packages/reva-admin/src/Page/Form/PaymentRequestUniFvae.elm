@@ -155,10 +155,7 @@ forfaitInfo =
             [ class "w-full lg:w-2/3 " ]
             [ div [ class "flex flex-col" ]
                 [ h3 [ class "text-base font-medium mb-2" ] [ text "Forfait d’étude de faisabilité et entretien post-jury" ]
-                , p [ class "text-xs text-dsfrOrange-500" ]
-                    [ span [ class "fr-icon-warning-fill fr-icon--sm mr-1", Aria.hidden True ] []
-                    , text "Ne pourra être demandé que si l'étude a été réalisée dans sa totalité."
-                    ]
+                , View.warningHint "Ne pourra être demandé que si l'étude a été réalisée dans sa totalité."
                 ]
             ]
         , div

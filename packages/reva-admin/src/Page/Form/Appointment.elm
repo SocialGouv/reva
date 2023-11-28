@@ -24,10 +24,10 @@ form formdata ( candidacy, _ ) =
         , ( "appointmentDateWarning"
           , Form.StaticHtml <|
                 if firstAppointmentOccurredAtEmpty then
-                    div [ class "text-[#B34000] flex text-sm" ] [ span [ class "fr-icon--sm fr-icon-warning-fill mr-2" ] [], text "Cette information est obligatoire pour continuer le parcours. Le candidat pourra modifier sa candidature jusqu'à cette date, au-delà de laquelle toute modification sera bloquée." ]
+                    View.warningHint "Cette information est obligatoire pour continuer le parcours. Le candidat pourra modifier sa candidature jusqu'à cette date, au-delà de laquelle toute modification sera bloquée."
 
                 else
-                    div [ class "text-[#0063CB] flex text-sm" ] [ span [ class "fr-icon--sm fr-icon-info-fill mr-2" ] [], text "Le candidat pourra modifier sa candidature jusqu'à cette date, au-delà de laquelle toute modification sera bloquée." ]
+                    View.infoHint "Le candidat pourra modifier sa candidature jusqu'à cette date, au-delà de laquelle toute modification sera bloquée."
           )
         ]
     , saveLabel = Nothing
