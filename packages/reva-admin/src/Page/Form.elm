@@ -269,7 +269,7 @@ viewForm referential status errors formData form saveButton submitButton =
                         text ""
 
                       else
-                        p [ class "text-gray-600" ]
+                        p [ class "text-gray-600 mb-2" ]
                             [ text "Sauf mention contraire “(optionnel)” dans le label, tous les champs sont obligatoires." ]
                     ]
                     :: viewFieldsets viewEditableElement formData currentForm.elements

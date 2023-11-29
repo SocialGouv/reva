@@ -42,7 +42,16 @@ form maybeCertification formData ( candidacy, referential ) =
                     False
     in
     { elements =
-        [ ( "candidate-info", Form.Title1 "1. Informations du candidat" )
+        [ ( "stepper"
+          , Form.StaticHtml <|
+                View.stepper
+                    { currentStep = 1
+                    , totalSteps = 2
+                    , currentTitle = "Renseignez les heures d’accompagnement"
+                    , nextTitle = Just "Déposez les pièces justificicatives"
+                    }
+          )
+        , ( "candidate-info", Form.Title1 "1. Informations du candidat" )
         , ( "nom"
           , candidacy.candidate
                 |> Maybe.map (.lastname >> Form.Info "Nom")

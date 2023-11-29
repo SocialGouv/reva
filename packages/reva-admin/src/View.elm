@@ -1,4 +1,4 @@
-module View exposing (AlertType(..), alert, article, backLink, errors, image, infoBlock, infoHint, layout, logo, noNavLayout, noticeInfo, popupErrors, skeleton, summaryBlock, title, warningHint)
+module View exposing (AlertType(..), alert, article, backLink, errors, image, infoBlock, infoHint, layout, logo, noNavLayout, noticeInfo, popupErrors, skeleton, stepper, summaryBlock, title, warningHint)
 
 import Accessibility exposing (a, br, button, h3, h5, nav, p, span)
 import Accessibility.Aria as Aria
@@ -250,3 +250,43 @@ alert alertType attributes alertTitle content =
             []
             [ text alertTitle ]
             :: content
+
+
+stepper :
+    { currentStep : Int
+    , totalSteps : Int
+    , currentTitle : String
+    , nextTitle : Maybe String
+    }
+    -> Html msg
+stepper config =
+    div
+        [ class "fr-stepper" ]
+        [ h2
+            [ class "fr-stepper__title" ]
+            [ span
+                [ class "fr-stepper__state" ]
+                [ text "Étape "
+                , text (String.fromInt config.currentStep)
+                , text " sur "
+                , text (String.fromInt config.totalSteps)
+                ]
+            , text config.currentTitle
+            ]
+        , div
+            [ class "fr-stepper__steps"
+            , attribute "data-fr-current-step" (String.fromInt config.currentStep)
+            , attribute "data-fr-steps" (String.fromInt config.totalSteps)
+            ]
+            []
+        , case config.nextTitle of
+            Just nextTitle ->
+                p
+                    [ class "fr-stepper__details" ]
+                    [ span [ class "fr-text--bold" ] [ text "Étape suivante : " ]
+                    , text nextTitle
+                    ]
+
+            Nothing ->
+                text ""
+        ]

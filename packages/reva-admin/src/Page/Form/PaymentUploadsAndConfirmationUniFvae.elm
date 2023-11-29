@@ -17,7 +17,16 @@ keys =
 form : FormData -> ( Candidacy, Referential ) -> Form
 form _ ( _, _ ) =
     { elements =
-        [ ( "files-heading", Form.Title1 "1 - Pièces jointes liées à la facturation" )
+        [ ( "stepper"
+          , Form.StaticHtml <|
+                View.stepper
+                    { currentStep = 2
+                    , totalSteps = 2
+                    , currentTitle = "Déposez les pièces justificicatives"
+                    , nextTitle = Nothing
+                    }
+          )
+        , ( "files-heading", Form.Title1 "1 - Pièces jointes liées à la facturation" )
         , ( "invoiceFile", Form.Title2 "Joindre la facture" )
         , ( keys.invoiceFiles, Form.File "La facture doit être net de TVA et doit contenir un RIB." "Taille maximale : 10 Mo. Format supporté : pdf." )
         , ( "certificateFile", Form.Title2 "Joindre un récapitulatif des attestations de présence" )

@@ -50,7 +50,6 @@ import Data.Referential exposing (Referential)
 import Html exposing (Html, div, p, text)
 import Html.Attributes exposing (alt, class, name)
 import Html.Attributes.Extra exposing (role)
-import MD5
 import Page.Form as Form
 import Page.Form.Admissibility
 import Page.Form.Appointment
