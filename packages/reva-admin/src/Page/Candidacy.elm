@@ -156,7 +156,7 @@ view context model =
             View.article
                 name
                 (Route.href context.baseUrl (Route.Candidacy (Tab model.tab.candidacyId View.Candidacy.Tab.Profile)))
-                "Retour"
+                "Revenir à la candidature"
                 c
 
         viewForm name =
