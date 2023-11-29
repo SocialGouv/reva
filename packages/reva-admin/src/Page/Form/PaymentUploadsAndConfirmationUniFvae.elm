@@ -2,7 +2,6 @@ module Page.Form.PaymentUploadsAndConfirmationUniFvae exposing (..)
 
 import Accessibility exposing (div)
 import BetaGouv.DSFR.Button as Button
-import BetaGouv.DSFR.Icons.System as Icons
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Form.PaymentUploadsAndConfirmationUniFvae
@@ -10,7 +9,6 @@ import Data.Referential exposing (Referential)
 import Html exposing (Html, p, span, text)
 import Html.Attributes exposing (class)
 import Page.Form as Form exposing (Form)
-import Route
 import View
 
 
@@ -36,18 +34,6 @@ form config _ ( _, _ ) =
         , ( "certificateFile", Form.Title2 "Joindre un récapitulatif des attestations de présence" )
         , ( keys.certificateOfAttendanceFiles, Form.File "Le document doit comprendre l’ensemble des attestations d’accompagnement individuel, collectif et formatif du candidat." "Taille maximale : 10 Mo. Format supporté : pdf." )
         , ( "confirmation-heading", Form.Title1 "2 - Confirmation" )
-        , ( "confirmation-warning"
-          , Form.StaticHtml <|
-                View.alert View.Warning
-                    [ class "mt-2 mb-10" ]
-                    "Confirmation avant envoi du dossier de demande de paiement"
-                    [ p []
-                        [ span []
-                            [ text "Avant de procéder à l’envoi des pièces, veillez à bien vérifier que celles-ci sont les bonnes et que le dossier est complet."
-                            ]
-                        ]
-                    ]
-          )
         , ( "confirmation-checks-heading", Form.Title2 "Avant de finaliser votre envoi :" )
         , ( keys.confirmationCheckPart1
           , Form.Checkbox "Je confirme le montant de paiement. Je ne pourrai pas modifier cette demande de paiement après son envoi."
