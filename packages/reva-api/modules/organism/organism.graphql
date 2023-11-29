@@ -13,6 +13,10 @@ type Organism {
   informationsCommerciales: OrganismInformationsCommerciales
 }
 
+type Account {
+  agences: [Organism!]!
+}
+
 type OrganismOnDepartment {
   id: UUID!
   organismId: UUID!
