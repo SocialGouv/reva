@@ -13,7 +13,6 @@ import {
 } from "../../organism/database/organisms";
 import { assignMaisonMereAAPToOrganism } from "../../organism/features/assignMaisonMereAAPToOrganism";
 import { createMaisonMereAAP } from "../../organism/features/createMaisonMereAAP";
-import { Organism } from "../../organism/organism.types";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -30,25 +29,9 @@ interface ValidateSubscriptionRequestParams {
   keycloakAdmin: KeycloakAdminClient;
 }
 
-type SubscriptionRequestWithTypologyAssociations = SubscriptionRequest & {
-  subscriptionRequestOnDomaine?: { domaineId: string }[];
-  subscriptionRequestOnConventionCollective?: { ccnId: string }[];
-  departmentsWithOrganismMethods?: {
-    departmentId: string;
-    isOnSite: boolean;
-    isRemote: boolean;
-  }[];
-};
-
 export const validateSubscriptionRequest = async (
   params: ValidateSubscriptionRequestParams
 ) => {
-  const $store: {
-    subreq?: SubscriptionRequestWithTypologyAssociations;
-    organism?: Organism;
-    keyCloackId?: string;
-  } = {};
-
   const getIamAccount = IAM.getAccount(params.keycloakAdmin);
   const createAccountInIAM = IAM.createAccount(params.keycloakAdmin);
 
@@ -58,7 +41,7 @@ export const validateSubscriptionRequest = async (
       await getSubscriptionRequestById(params.subscriptionRequestId)
     )
       .unsafeCoerce()
-      .extractNullable() as SubscriptionRequestWithTypologyAssociations | null;
+      .extractNullable();
 
     if (subscriptionRequest == null) {
       const errorMessage = `La demande d'inscription ${params.subscriptionRequestId} n'existe pas`;
@@ -68,13 +51,12 @@ export const validateSubscriptionRequest = async (
         errorMessage
       );
     }
-    $store.subreq = subscriptionRequest;
 
     //organism check
     const oldOrganism = (
       await getOrganismBySiretAndTypology(
-        ($store.subreq as SubscriptionRequest).companySiret,
-        ($store.subreq as SubscriptionRequest).typology
+        subscriptionRequest.companySiret,
+        subscriptionRequest.typology
       )
     )
       .unsafeCoerce()
@@ -83,15 +65,13 @@ export const validateSubscriptionRequest = async (
     if (oldOrganism) {
       throw new FunctionalError(
         FunctionalCodeError.ORGANISM_ALREADY_EXISTS,
-        `Un organisme existe déjà avec le siret ${$store.subreq?.companySiret} pour la typologie ${$store.subreq?.typology}`
+        `Un organisme existe déjà avec le siret ${subscriptionRequest.companySiret} pour la typologie ${subscriptionRequest.typology}`
       );
     }
 
     //account check
     const oldAccount = (
-      await getAccountFromEmail(
-        ($store.subreq as SubscriptionRequest).accountEmail
-      )
+      await getAccountFromEmail(subscriptionRequest.accountEmail)
     )
       .unsafeCoerce()
       .extractNullable();
@@ -99,27 +79,21 @@ export const validateSubscriptionRequest = async (
     if (oldAccount) {
       throw new FunctionalError(
         FunctionalCodeError.ACCOUNT_ALREADY_EXISTS,
-        `Un compte existe déjà avec l'email ${$store.subreq?.accountEmail}`
+        `Un compte existe déjà avec l'email ${subscriptionRequest.accountEmail}`
       );
     }
 
     //iam account check
-    if (
-      ($store.subreq as SubscriptionRequest).accountEmail ===
-      __TEST_IAM_FAIL_CHECK__
-    ) {
+    if (subscriptionRequest.accountEmail === __TEST_IAM_FAIL_CHECK__) {
       throw new FunctionalError(
         FunctionalCodeError.ACCOUNT_IN_IAM_ALREADY_EXISTS,
         "TEST : le compte IAM existe déjà"
       );
     }
-    if (
-      ($store.subreq as SubscriptionRequest).accountEmail !==
-      __TEST_IAM_PASS_CHECK__
-    ) {
+    if (subscriptionRequest.accountEmail !== __TEST_IAM_PASS_CHECK__) {
       const oldIamAccount = (
         await getIamAccount({
-          email: ($store.subreq as SubscriptionRequest).accountEmail,
+          email: subscriptionRequest.accountEmail,
           username: "",
         })
       )
@@ -129,57 +103,56 @@ export const validateSubscriptionRequest = async (
       if (oldIamAccount)
         throw new FunctionalError(
           FunctionalCodeError.ACCOUNT_IN_IAM_ALREADY_EXISTS,
-          `Un compte IAM existe déjà avec l'email ${$store.subreq?.accountEmail}`
+          `Un compte IAM existe déjà avec l'email ${subscriptionRequest.accountEmail}`
         );
     }
 
     //organism creation
     const newOrganism = (
       await createOrganism({
-        label: $store.subreq?.companyName ?? "",
-        address: $store.subreq?.companyAddress ?? "",
-        contactAdministrativeEmail: $store.subreq?.accountEmail ?? "",
-        contactAdministrativePhone: $store.subreq.accountPhoneNumber ?? "",
-        website: $store.subreq?.companyWebsite,
-        city: $store.subreq?.companyCity ?? "",
-        zip: $store.subreq?.companyZipCode ?? "",
-        siret: $store.subreq?.companySiret ?? "",
-        legalStatus: $store.subreq?.companyLegalStatus,
+        label: subscriptionRequest.companyName ?? "",
+        address: subscriptionRequest.companyAddress ?? "",
+        contactAdministrativeEmail: subscriptionRequest.accountEmail ?? "",
+        contactAdministrativePhone:
+          subscriptionRequest.accountPhoneNumber ?? "",
+        website: subscriptionRequest.companyWebsite,
+        city: subscriptionRequest.companyCity ?? "",
+        zip: subscriptionRequest.companyZipCode ?? "",
+        siret: subscriptionRequest.companySiret ?? "",
+        legalStatus: subscriptionRequest.companyLegalStatus,
         isActive: true,
-        typology: $store.subreq?.typology ?? "generaliste",
-        domaineIds: $store.subreq?.subscriptionRequestOnDomaine?.map(
+        typology: subscriptionRequest.typology ?? "generaliste",
+        domaineIds: subscriptionRequest.subscriptionRequestOnDomaine?.map(
           (o: any) => o.domaineId
         ),
-        ccnIds: $store.subreq?.subscriptionRequestOnConventionCollective?.map(
-          (o: any) => o.ccnId
-        ),
+        ccnIds:
+          subscriptionRequest.subscriptionRequestOnConventionCollective?.map(
+            (o: any) => o.ccnId
+          ),
         departmentsWithOrganismMethods:
-          $store.subreq?.departmentsWithOrganismMethods ?? [],
+          subscriptionRequest.departmentsWithOrganismMethods ?? [],
         qualiopiCertificateExpiresAt:
-          $store.subreq?.qualiopiCertificateExpiresAt,
+          subscriptionRequest.qualiopiCertificateExpiresAt,
       })
     ).unsafeCoerce();
 
-    $store.organism = newOrganism || undefined;
     logger.info(
-      `[validateSubscriptionRequest] Successfuly created organism with siret ${$store.subreq?.companySiret}`
+      `[validateSubscriptionRequest] Successfuly created organism with siret ${subscriptionRequest.companySiret}`
     );
 
     //iam account creation
     const newKeycloakId =
-      $store.subreq?.accountEmail === __TEST_IAM_PASS_CHECK__
+      subscriptionRequest.accountEmail === __TEST_IAM_PASS_CHECK__
         ? randomUUID()
         : (
             await createAccountInIAM({
-              email: $store.subreq?.accountEmail ?? "",
-              firstname: $store.subreq?.accountFirstname ?? "",
-              lastname: $store.subreq?.accountLastname ?? "",
-              username: $store.subreq?.accountEmail ?? "",
+              email: subscriptionRequest.accountEmail ?? "",
+              firstname: subscriptionRequest.accountFirstname ?? "",
+              lastname: subscriptionRequest.accountLastname ?? "",
+              username: subscriptionRequest.accountEmail ?? "",
               group: "organism",
             })
           ).unsafeCoerce();
-
-    $store.keyCloackId = newKeycloakId;
 
     logger.info(
       `[validateSubscriptionRequest] Successfuly created IAM account ${newKeycloakId}`
@@ -188,40 +161,41 @@ export const validateSubscriptionRequest = async (
     //db account creation
     const account = (
       await createAccountProfile({
-        firstname: $store.subreq?.accountFirstname ?? "",
-        lastname: $store.subreq?.accountLastname ?? "",
-        email: $store.subreq?.accountEmail ?? "",
-        keycloakId: $store.keyCloackId ?? "",
-        organismId: $store.organism?.id ?? "",
+        firstname: subscriptionRequest.accountFirstname ?? "",
+        lastname: subscriptionRequest.accountLastname ?? "",
+        email: subscriptionRequest.accountEmail ?? "",
+        keycloakId: newKeycloakId,
+        organismId: newOrganism.id,
       })
     ).unsafeCoerce();
 
     logger.info(
-      `[validateSubscriptionRequest] Successfuly created AP with organismId ${$store.subreq?.organismId}`
+      `[validateSubscriptionRequest] Successfuly created AP with organismId ${subscriptionRequest.organismId}`
     );
 
     const newMaisonMereAAP = await createMaisonMereAAP({
       maisonMereAAP: {
-        raisonSociale: $store.subreq?.companyName ?? "",
-        adresse: $store.subreq?.companyAddress ?? "",
-        siteWeb: $store.subreq?.companyWebsite,
-        ville: $store.subreq?.companyCity ?? "",
-        codePostal: $store.subreq?.companyZipCode ?? "",
-        siret: $store.subreq?.companySiret ?? "",
-        statutJuridique: $store.subreq?.companyLegalStatus,
-        typologie: $store.subreq?.typology ?? "generaliste",
+        raisonSociale: subscriptionRequest.companyName ?? "",
+        adresse: subscriptionRequest.companyAddress ?? "",
+        siteWeb: subscriptionRequest.companyWebsite,
+        ville: subscriptionRequest.companyCity ?? "",
+        codePostal: subscriptionRequest.companyZipCode ?? "",
+        siret: subscriptionRequest.companySiret ?? "",
+        statutJuridique: subscriptionRequest.companyLegalStatus,
+        typologie: subscriptionRequest.typology ?? "generaliste",
         dateExpirationCertificationQualiopi:
-          $store.subreq?.qualiopiCertificateExpiresAt,
+          subscriptionRequest.qualiopiCertificateExpiresAt,
         gestionnaireAccountId: account.id,
       },
-      domaineIds: $store.subreq?.subscriptionRequestOnDomaine?.map(
+      domaineIds: subscriptionRequest.subscriptionRequestOnDomaine?.map(
         (o: { domaineId: string }) => o.domaineId
       ),
-      ccnIds: $store.subreq?.subscriptionRequestOnConventionCollective?.map(
-        (o: { ccnId: string }) => o.ccnId
-      ),
+      ccnIds:
+        subscriptionRequest.subscriptionRequestOnConventionCollective?.map(
+          (o: { ccnId: string }) => o.ccnId
+        ),
       maisonMereAAPOnDepartements:
-        $store.subreq?.departmentsWithOrganismMethods?.map(
+        subscriptionRequest.departmentsWithOrganismMethods?.map(
           (d: {
             departmentId: string;
             isOnSite: boolean;
@@ -245,7 +219,7 @@ export const validateSubscriptionRequest = async (
     ).unsafeCoerce();
 
     logger.info(
-      `[validateSubscriptionRequest] Successfuly deleted subscriptionRequest ${$store.subreq?.id}`
+      `[validateSubscriptionRequest] Successfuly deleted subscriptionRequest ${subscriptionRequest.id}`
     );
 
     return "Ok";
