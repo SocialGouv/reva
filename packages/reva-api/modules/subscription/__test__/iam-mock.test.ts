@@ -12,8 +12,13 @@ import {
 import { subreqSampleMin } from "./fixture";
 
 afterEach(async () => {
-  await prismaClient.account.deleteMany();
+  await prismaClient.account.updateMany({ data: { organismId: null } });
   await prismaClient.organism.deleteMany();
+  await prismaClient.maisonMereAAPOnConventionCollective.deleteMany();
+  await prismaClient.maisonMereAAPOnDomaine.deleteMany();
+  await prismaClient.maisonMereAAPOnDepartement.deleteMany();
+  await prismaClient.maisonMereAAP.deleteMany();
+  await prismaClient.account.deleteMany();
 });
 
 test("validating should fail - IAM.getAccount will always return sth", async () => {

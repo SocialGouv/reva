@@ -216,7 +216,12 @@ afterAll(async () => {
   await prismaClient.candidaciesStatus.deleteMany();
   await prismaClient.basicSkillOnCandidacies.deleteMany();
   await prismaClient.candidacy.deleteMany();
+  await prismaClient.account.updateMany({ data: { organismId: null } });
   await prismaClient.organism.deleteMany();
+  await prismaClient.maisonMereAAPOnConventionCollective.deleteMany();
+  await prismaClient.maisonMereAAPOnDomaine.deleteMany();
+  await prismaClient.maisonMereAAPOnDepartement.deleteMany();
+  await prismaClient.maisonMereAAP.deleteMany();
   await prismaClient.account.deleteMany();
   await prismaClient.candidate.deleteMany();
   await prismaClient.training.delete({ where: { label: "trainingA" } });

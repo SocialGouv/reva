@@ -8,9 +8,11 @@ import {
 } from "../../account/database/accounts";
 import * as IAM from "../../account/features/keycloak";
 import {
-  createOrganism as createOrganismDb,
+  createOrganism,
   getOrganismBySiretAndTypology,
 } from "../../organism/database/organisms";
+import { assignMaisonMereAAPToOrganism } from "../../organism/features/assignMaisonMereAAPToOrganism";
+import { createMaisonMereAAP } from "../../organism/features/createMaisonMereAAP";
 import { Organism } from "../../organism/organism.types";
 import {
   FunctionalCodeError,
@@ -133,7 +135,7 @@ export const validateSubscriptionRequest = async (
 
     //organism creation
     const newOrganism = (
-      await createOrganismDb({
+      await createOrganism({
         label: $store.subreq?.companyName ?? "",
         address: $store.subreq?.companyAddress ?? "",
         contactAdministrativeEmail: $store.subreq?.accountEmail ?? "",
@@ -184,7 +186,7 @@ export const validateSubscriptionRequest = async (
     );
 
     //db account creation
-    (
+    const account = (
       await createAccountProfile({
         firstname: $store.subreq?.accountFirstname ?? "",
         lastname: $store.subreq?.accountLastname ?? "",
@@ -197,6 +199,45 @@ export const validateSubscriptionRequest = async (
     logger.info(
       `[validateSubscriptionRequest] Successfuly created AP with organismId ${$store.subreq?.organismId}`
     );
+
+    const newMaisonMereAAP = await createMaisonMereAAP({
+      maisonMereAAP: {
+        raisonSociale: $store.subreq?.companyName ?? "",
+        adresse: $store.subreq?.companyAddress ?? "",
+        siteWeb: $store.subreq?.companyWebsite,
+        ville: $store.subreq?.companyCity ?? "",
+        codePostal: $store.subreq?.companyZipCode ?? "",
+        siret: $store.subreq?.companySiret ?? "",
+        statutJuridique: $store.subreq?.companyLegalStatus,
+        typologie: $store.subreq?.typology ?? "generaliste",
+        dateExpirationCertificationQualiopi:
+          $store.subreq?.qualiopiCertificateExpiresAt,
+        gestionnaireAccountId: account.id,
+      },
+      domaineIds: $store.subreq?.subscriptionRequestOnDomaine?.map(
+        (o: { domaineId: string }) => o.domaineId
+      ),
+      ccnIds: $store.subreq?.subscriptionRequestOnConventionCollective?.map(
+        (o: { ccnId: string }) => o.ccnId
+      ),
+      maisonMereAAPOnDepartements:
+        $store.subreq?.departmentsWithOrganismMethods?.map(
+          (d: {
+            departmentId: string;
+            isOnSite: boolean;
+            isRemote: boolean;
+          }) => ({
+            departementId: d.departmentId,
+            estSurPlace: d.isOnSite,
+            estADistance: d.isRemote,
+          })
+        ) ?? [],
+    });
+
+    await assignMaisonMereAAPToOrganism({
+      organismId: newOrganism.id,
+      maisonMereAAPId: newMaisonMereAAP.id,
+    });
 
     // subscription request deletion
     (

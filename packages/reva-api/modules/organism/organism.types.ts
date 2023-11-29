@@ -1,5 +1,3 @@
-import { getInformationsCommerciales } from "./features/getInformationsCommerciales";
-
 export interface Organism {
   id: string;
   label: string;
@@ -47,4 +45,24 @@ export interface OrganismInformationsCommerciales {
   adresseCodePostal: string | null;
   adresseVille: string | null;
   conformeNormesAccessbilite: ConformiteNormeAccessibilite | null;
+}
+
+export interface MaisonMereAAP {
+  id: string;
+  raisonSociale: string;
+  statutJuridique: LegalStatus;
+  siret: string;
+  adresse: string;
+  codePostal: string;
+  ville: string;
+  typologie: OrganismTypology;
+  siteWeb: string;
+  dateExpirationCertificationQualiopi: Date;
+  gestionnaireAccountId: string;
+}
+
+export interface MaisonMereAAPOnDepartement {
+  departementId: string;
+  estSurplace: boolean;
+  estADistance: boolean;
 }
