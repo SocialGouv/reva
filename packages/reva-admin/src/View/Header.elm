@@ -149,31 +149,43 @@ headerMenuModal context activeHeaderLink =
         navItemLink label url targetHeaderLink =
             itemLink label url False (activeHeaderLink == Just targetHeaderLink)
 
+        baseUrl route =
+            Route.toString context.baseUrl route
+
+        adminReactUrl url =
+            context.adminReactUrl ++ url
+
+        isAccountSettingsActive =
+            List.member "AAP_ACCOUNT_SETTINGS" context.activeFeatures
+
+        isAgenciesActive =
+            List.member "AAP_AGENCES" context.activeFeatures
+
         navLinks =
             if Api.Token.isAdmin context.token then
                 [ navItemLink "Candidatures" "/admin/candidacies" Candidacies
                 , navItemLink "Inscriptions" "/admin/subscriptions" Subscriptions
-                , navItemLink "Comptes"
-                    (Route.toString context.baseUrl <| Route.Accounts Route.emptyAccountFilters)
-                    Accounts
-                , navItemLink "Certifications"
-                    (Route.toString context.baseUrl <| Route.Certifications Route.emptyCertificationsFilters)
-                    Certifications
-                , navItemLink "Dossiers de faisabilité"
-                    (Route.toString context.baseUrl <| Route.Feasibilities Route.emptyFeasibilityFilters)
-                    Feasibilities
+                , navItemLink "Comptes" (baseUrl <| Route.Accounts Route.emptyAccountFilters) Accounts
+                , navItemLink "Certifications" (baseUrl <| Route.Certifications Route.emptyCertificationsFilters) Certifications
+                , navItemLink "Dossiers de faisabilité" (baseUrl <| Route.Feasibilities Route.emptyFeasibilityFilters) Feasibilities
                 ]
 
             else if
-                List.member "AAP_ACCOUNT_SETTINGS" context.activeFeatures
+                (isAccountSettingsActive || isAgenciesActive)
                     && Api.Token.isOrganism context.token
                     && not (Api.Token.isAdmin context.token)
             then
                 [ navItemLink "Candidatures" "/admin/candidacies" Candidacies
-                , itemLink "Paramètres du compte"
-                    (context.adminReactUrl ++ "/account-settings/commercial-information")
-                    True
-                    False
+                , if isAgenciesActive then
+                    itemLink "Gestion des agences" (adminReactUrl "/agences") True False
+
+                  else
+                    text ""
+                , if isAccountSettingsActive then
+                    itemLink "Paramètres du compte" (adminReactUrl "/account-settings/commercial-information") True False
+
+                  else
+                    text ""
                 ]
 
             else

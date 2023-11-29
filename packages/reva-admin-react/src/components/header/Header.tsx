@@ -48,6 +48,14 @@ export const Header = () => {
         ...(isOrganism && !isAdmin
           ? [
               {
+                text: "Gestion des agences",
+                linkProps: {
+                  href: "/agences/",
+                  target: "_self",
+                },
+                isActive: currentPathname.startsWith("/agences"),
+              },
+              {
                 text: "Paramètres du compte",
                 linkProps: {
                   href: "/account-settings/commercial-information",
