@@ -555,7 +555,12 @@ updateTab context tab ( model, cmd ) =
                 ( formModel, formCmd ) =
                     if candidacy.financeModule == FinanceModule.Unifvae then
                         Form.updateForm context
-                            { form = Page.Form.PaymentUploadsAndConfirmationUniFvae.form
+                            { form =
+                                Page.Form.PaymentUploadsAndConfirmationUniFvae.form
+                                    { backUrl =
+                                        Route.toString context.baseUrl <|
+                                            Route.Candidacy (Tab candidacy.id View.Candidacy.Tab.PaymentRequest)
+                                    }
                             , onLoad = Just <| Api.Form.PaymentRequestUniFvae.get tab.candidacyId
                             , onSave = Nothing
                             , onSubmit = Api.Form.PaymentUploadsAndConfirmationUniFvae.submit tab.candidacyId context.restApiEndpoint

@@ -1,5 +1,8 @@
 module Page.Form.PaymentUploadsAndConfirmationUniFvae exposing (..)
 
+import Accessibility exposing (div)
+import BetaGouv.DSFR.Button as Button
+import BetaGouv.DSFR.Icons.System as Icons
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Form.PaymentUploadsAndConfirmationUniFvae
@@ -7,6 +10,7 @@ import Data.Referential exposing (Referential)
 import Html exposing (Html, p, span, text)
 import Html.Attributes exposing (class)
 import Page.Form as Form exposing (Form)
+import Route
 import View
 
 
@@ -14,8 +18,8 @@ keys =
     Data.Form.PaymentUploadsAndConfirmationUniFvae.keys
 
 
-form : FormData -> ( Candidacy, Referential ) -> Form
-form _ ( _, _ ) =
+form : { backUrl : String } -> FormData -> ( Candidacy, Referential ) -> Form
+form config _ ( _, _ ) =
     { elements =
         [ ( "stepper"
           , Form.StaticHtml <|
@@ -54,8 +58,19 @@ form _ ( _, _ ) =
         , ( keys.confirmationCheckPart3
           , Form.Checkbox "J’ai bien vérifié que j’avais ajouté les différentes pièces justificatives nécessaires et qu’elles étaient correctes et complètes."
           )
+        , ( "", Form.BreakToplevel )
+        , ( "previous"
+          , Form.StaticHtml <|
+                div
+                    [ class "-mb-8" ]
+                    [ Button.new { onClick = Nothing, label = "Étape précédente" }
+                        |> Button.linkButton config.backUrl
+                        |> Button.secondary
+                        |> Button.view
+                    ]
+          )
         ]
     , saveLabel = Nothing
-    , submitLabel = "Envoyer"
+    , submitLabel = "Envoyer la demande de paiement"
     , title = "Demande de paiement"
     }
