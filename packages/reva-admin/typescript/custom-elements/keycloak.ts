@@ -28,7 +28,6 @@ class KeycloakElement extends HTMLElement {
   }
 
   connectedCallback() {
-    
     this._keycloak = new Keycloak(this._configuration);
     const keycloak = this._keycloak;
 
@@ -37,27 +36,31 @@ class KeycloakElement extends HTMLElement {
         new CustomEvent(eventName, {
           detail: {
             isAdmin: keycloak.hasResourceRole("admin"),
-            isCertificationAuthority: keycloak.hasResourceRole("manage_feasibility"),
+            isCertificationAuthority:
+              keycloak.hasResourceRole("manage_feasibility"),
             isOrganism: keycloak.hasResourceRole("manage_candidacy"),
+            isGestionnaireMaisonMereAAP: keycloak.hasResourceRole(
+              "gestion_maison_mere_aap",
+            ),
             token: keycloak.token,
-            email: keycloak?.tokenParsed?.email
+            email: keycloak?.tokenParsed?.email,
           },
-        })
+        }),
       );
-    }
-    
+    };
+
     const setTimeoutRefreshToken = () => {
       if (!keycloak.tokenParsed?.exp) {
         return undefined;
       }
 
-      const delai = ((keycloak.tokenParsed.exp * 1000) - Date.now()) / 2
+      const delai = (keycloak.tokenParsed.exp * 1000 - Date.now()) / 2;
 
       return setTimeout(async () => {
-        console.log("[KEYCLOAK] Refresh token manually")
+        console.log("[KEYCLOAK] Refresh token manually");
         await keycloak.updateToken(delai);
-      }, delai)
-    }
+      }, delai);
+    };
 
     // debug purpose
     // @ts-ignore
@@ -80,22 +83,21 @@ class KeycloakElement extends HTMLElement {
           });
         } else {
           dispatchEventWithDetail("loggedIn");
-          setTimeoutRefreshToken()
+          setTimeoutRefreshToken();
         }
       });
 
-    
     let refreshTimeoutId: number | undefined = undefined;
     const DEFAULT_TIMEOUT_VALUE = 5000;
     const MAX_TIMEOUT_VALUE = 60000;
-    
+
     let timeoutValue = DEFAULT_TIMEOUT_VALUE;
 
-    window.addEventListener('online', async () => { 
+    window.addEventListener("online", async () => {
       console.log("Browser online");
       if (refreshTimeoutId) {
         timeoutValue = DEFAULT_TIMEOUT_VALUE;
-        clearTimeout(refreshTimeoutId)
+        clearTimeout(refreshTimeoutId);
       }
       await keycloak.updateToken(5);
     });
@@ -103,25 +105,32 @@ class KeycloakElement extends HTMLElement {
     keycloak.onAuthRefreshSuccess = async () => {
       if (refreshTimeoutId) {
         timeoutValue = DEFAULT_TIMEOUT_VALUE;
-        clearTimeout(refreshTimeoutId)
+        clearTimeout(refreshTimeoutId);
       }
       console.log("Token refresh success");
       dispatchEventWithDetail("tokenRefreshed");
-      setTimeoutRefreshToken()
+      setTimeoutRefreshToken();
     };
 
     keycloak.onAuthRefreshError = async () => {
       console.log("Token refresh failed");
       if (navigator.onLine) {
-        console.log(`Next refresh token in ${timeoutValue}ms`)
-        refreshTimeoutId = setTimeout(async () => {
-          timeoutValue = timeoutValue * 2 >= MAX_TIMEOUT_VALUE ? MAX_TIMEOUT_VALUE : timeoutValue * 2
-          await keycloak.updateToken(5);
-        }, timeoutValue, "Refresh token");
+        console.log(`Next refresh token in ${timeoutValue}ms`);
+        refreshTimeoutId = setTimeout(
+          async () => {
+            timeoutValue =
+              timeoutValue * 2 >= MAX_TIMEOUT_VALUE
+                ? MAX_TIMEOUT_VALUE
+                : timeoutValue * 2;
+            await keycloak.updateToken(5);
+          },
+          timeoutValue,
+          "Refresh token",
+        );
       } else {
         console.log("Browser offline");
       }
-    }
+    };
 
     keycloak.onTokenExpired = async () => {
       console.log("Token expired");
