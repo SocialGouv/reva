@@ -48,6 +48,15 @@ const keycloakPluginMock: FastifyPluginAsync = async (
               roles: [],
             },
           };
+          break;
+        case "gestion_maison_mere_aap":
+          userInfo = {
+            sub,
+            realm_access: {
+              roles: ["manage_candidacy", "gestion_maison_mere_aap"],
+            },
+          };
+          break;
       }
       req.auth = {
         hasRole: (role: KeyCloakUserRole) => {

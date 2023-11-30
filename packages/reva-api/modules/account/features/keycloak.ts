@@ -34,6 +34,8 @@ export const getAccount =
     }
   };
 
+type UserProfileType = "admin" | "organism" | "certification_authority";
+
 export const createAccount =
   (keycloakAdmin: KeycloakAdminClient) =>
   async (account: {
@@ -41,7 +43,11 @@ export const createAccount =
     username: string;
     firstname?: string;
     lastname?: string;
-    group: string;
+    group:
+      | "admin"
+      | "organism"
+      | "certification_authority"
+      | "gestionnaire_maison_mere_aap";
   }): Promise<Either<string, string>> => {
     try {
       const payload: UserRepresentation & { realm?: string | undefined } = {
@@ -58,11 +64,20 @@ export const createAccount =
         realm: process.env.KEYCLOAK_ADMIN_REALM_REVA,
       };
 
-      if (account.group != undefined) {
-        payload.attributes = {
-          user_profile_type: account.group,
-        };
+      let userProfileType: UserProfileType = {} as UserProfileType;
+
+      switch (account.group) {
+        case "gestionnaire_maison_mere_aap":
+          userProfileType = "organism";
+          break;
+        default:
+          userProfileType = account.group;
+          break;
       }
+
+      payload.attributes = {
+        user_profile_type: userProfileType,
+      };
 
       const { id } = await keycloakAdmin.users.create(payload);
 

@@ -150,7 +150,7 @@ export const validateSubscriptionRequest = async (
               firstname: subscriptionRequest.accountFirstname ?? "",
               lastname: subscriptionRequest.accountLastname ?? "",
               username: subscriptionRequest.accountEmail ?? "",
-              group: "organism",
+              group: "gestionnaire_maison_mere_aap",
             })
           ).unsafeCoerce();
 
