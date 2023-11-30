@@ -46,14 +46,14 @@ const sectionsQuery = graphql(`
 `);
 
 const HelpSection = ({ articles }: { articles: ArticleDAideEntity[] }) => {
-  const numberOfArticlesToDisplayInitially = 4;
+  const numberOfArticlesToDisplayInitially = window.innerWidth < 1200 ? 2 : 4;
   const [showMore, setShowMore] = useState(false);
   const articlesToDisplay = useMemo(
     () =>
       showMore
         ? articles
         : articles.slice(0, numberOfArticlesToDisplayInitially),
-    [showMore, articles]
+    [showMore, articles, numberOfArticlesToDisplayInitially]
   );
   const displayMoreButton =
     articles.length > numberOfArticlesToDisplayInitially && !showMore;
@@ -65,7 +65,7 @@ const HelpSection = ({ articles }: { articles: ArticleDAideEntity[] }) => {
           key={id}
           title={attributes?.titre || ""}
           description={truncate(attributes?.description || "", {
-            length: 300,
+            length: 120,
           })}
           thumbnailUrl={attributes?.vignette?.data?.attributes?.url || ""}
           thumbnailAlt={
@@ -105,14 +105,14 @@ const HelpArticle = ({
   url: string;
 }) => (
   <Link href={url} className="!bg-none">
-    <div className="grid grid-rows-2 w-[340px]  h-[400px] lg:h-[585px] rounded-[32px] bg-white shadow-[0px_8px_24px_0px_rgba(11,11,248,0.16)]">
+    <div className="grid grid-rows-2 w-[340px]  h-[200px] lg:h-[400px] rounded-[32px] bg-white shadow-[0px_8px_24px_0px_rgba(11,11,248,0.16)] hover:scale-105">
       <div className="flex">
         <Image
           src={thumbnailUrl}
           alt={thumbnailAlt}
           width={340}
-          height={292}
-          className="object-cover w-full rounded-t-[32px] max-w-[340px]"
+          height={200}
+          className="object-cover w-full rounded-t-[32px] max-w-[340px] max-h-[200px]"
         />
       </div>
       <div className="flex flex-col p-6">
@@ -131,24 +131,24 @@ const SavoirPlusPage = () => {
 
   return (
     <MainLayout>
-      <div className="flex flex-col bg-dsfrGray-altblueFrance">
-        <div className="flex flex-col min-h-[440px] items-center justify-center bg-white bg-[url('/savoir-plus/polygons-section2.svg')] bg-cover bg-no-repeat p-4">
-          <h1 className="text-7xl font-bold">En savoir plus sur la VAE</h1>
+      <div className="flex flex-col">
+        <div className="flex flex-col min-h-[300px] items-center justify-center bg-white p-4">
+          <h1 className="text-5xl font-bold">En savoir plus sur la VAE</h1>
           <h2 className="text-2xl font-bold">
             Trouvez des réponses à vos questions à propos de votre VAE.
           </h2>
           <div className="flex gap-4">
-            <Button>
+            <Button size="small">
               <a href="https://reva.crisp.help/fr/category/candidat-rhr5rx/">
-                Questions fréquentes
+                Foire aux questions
               </a>
             </Button>
-            <Button priority="secondary">
+            <Button priority="secondary" size="small">
               <a href="https://vae.gouv.fr/nous-contacter/">Nous contacter</a>
             </Button>
           </div>
         </div>
-        <div className="mt-16 flex flex-col p-4 lg:p-32 lg:pt-16 ">
+        <div className="flex flex-col p-4 lg:p-32 lg:pt-8 ">
           {sections.data?.sectionDAides?.data?.map((sa, index) => {
             const articles = sa.attributes?.article_d_aides?.data;
             if (!articles?.length) return null;
@@ -156,7 +156,7 @@ const SavoirPlusPage = () => {
             return (
               <Accordion
                 label={
-                  <span style={{ fontSize: "20px" }}>
+                  <span className="text-2xl text-dsfrBlue-franceSun">
                     {sa.attributes?.titre || ""}
                   </span>
                 }
