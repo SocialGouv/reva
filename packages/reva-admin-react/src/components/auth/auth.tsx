@@ -9,7 +9,8 @@ export const useAuth = () => {
 
   let isAdmin,
     isCertificationAuthority,
-    isOrganism = false;
+    isOrganism,
+    isGestionnaireMaisonMereAAP = false;
 
   if (accessToken) {
     const decodedToken = jwtDecode<{
@@ -20,6 +21,12 @@ export const useAuth = () => {
     isAdmin = roles.includes("admin");
     isCertificationAuthority = roles.includes("manage_feasibility");
     isOrganism = roles.includes("manage_candidacy");
+    isGestionnaireMaisonMereAAP = roles.includes("gestion_maison_mere_aap");
   }
-  return { isAdmin, isCertificationAuthority, isOrganism };
+  return {
+    isAdmin,
+    isCertificationAuthority,
+    isOrganism,
+    isGestionnaireMaisonMereAAP,
+  };
 };
