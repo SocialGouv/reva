@@ -1,5 +1,7 @@
 "use client";
 import { useCommercialInformationPageQueries } from "@/app/account-settings/commercial-information/commercialInformationPageQueries";
+import { NotImplementedPage } from "@/app/account-settings/components/not-implemented-page/NotImplementedPage";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
@@ -35,6 +37,8 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const CommercialInformationPage = () => {
+  const { isFeatureActive } = useFeatureflipping();
+
   const {
     informationsCommerciales,
     organismId,
@@ -65,7 +69,7 @@ const CommercialInformationPage = () => {
     await refetchInformationsCommerciales();
   });
 
-  return (
+  return isFeatureActive("EDITION_INFORMATIONS_COMMERTIALES") ? (
     <div className="flex flex-col">
       <h1 className="leading-6 font-bold text-2xl mb-8">
         Informations commerciales
@@ -228,6 +232,8 @@ const CommercialInformationPage = () => {
         </>
       )}
     </div>
+  ) : (
+    <NotImplementedPage title="Informations commerciales" />
   );
 };
 
