@@ -13,6 +13,7 @@ const useFeatureFlippingStore = create<{
   activeFeatures: string[];
   status: "NOT_INITIALIZED" | "INITIALIZED" | "LOADING";
   init: () => Promise<void>;
+  isFeatureActive: (featureName: string) => boolean;
 }>((set, get) => ({
   activeFeatures: [],
   status: "NOT_INITIALIZED",
@@ -26,10 +27,12 @@ const useFeatureFlippingStore = create<{
       });
     }
   },
+  isFeatureActive: (featureName: string) =>
+    get().activeFeatures.includes(featureName),
 }));
 
 export const useFeatureflipping = () => {
-  const { activeFeatures, init } = useFeatureFlippingStore();
+  const { activeFeatures, isFeatureActive, init } = useFeatureFlippingStore();
   init();
-  return { activeFeatures };
+  return { activeFeatures, isFeatureActive };
 };
