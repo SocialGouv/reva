@@ -79,4 +79,8 @@ type Mutation {
   organism_createOrUpdateInformationsCommerciales(
     informationsCommerciales: CreateOrUpdateInformationsCommercialesInput!
   ): OrganismInformationsCommerciales!
+  organism_updateFermePourAbsenceOuConges(
+    organismId: ID!
+    fermePourAbsenceOuConges: Boolean!
+  ): OrganismInformationsCommerciales!
 }

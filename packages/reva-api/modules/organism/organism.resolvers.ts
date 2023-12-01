@@ -1,6 +1,7 @@
 import { OrganismInformationsCommerciales } from "@prisma/client";
 import mercurius from "mercurius";
 
+import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
 import {
   FunctionalCodeError,
   FunctionalError,
@@ -10,6 +11,7 @@ import { createOrUpdateInformationsCommerciales } from "./features/createOrUpdat
 import { getAgencesByGestionnaireAccountId } from "./features/getAgencesByGestionnaireAccountId";
 import { getInformationsCommerciales } from "./features/getInformationsCommerciales";
 import { getOrganismById } from "./features/getOrganism";
+import { updateFermePourAbsenceOuConges } from "./features/updateFermePourAbsenceOuConges";
 import { updateOrganismById } from "./features/updateOrganism";
 
 export const resolvers = {
@@ -66,6 +68,33 @@ export const resolvers = {
       createOrUpdateInformationsCommerciales({
         informationsCommerciales: params.informationsCommerciales,
       }),
+
+    organism_updateFermePourAbsenceOuConges: async (
+      _parent: unknown,
+      {
+        organismId,
+        fermePourAbsenceOuConges,
+      }: {
+        organismId: string;
+        fermePourAbsenceOuConges: boolean;
+      },
+      context: GraphqlContext
+    ) => {
+      const account = await getAccountByKeycloakId({
+        keycloakId: context.auth.userInfo?.sub || "",
+      });
+
+      if (account?.organismId !== organismId) {
+        throw new FunctionalError(
+          FunctionalCodeError.TECHNICAL_ERROR,
+          "Not authorized"
+        );
+      }
+      return updateFermePourAbsenceOuConges({
+        organismId,
+        fermePourAbsenceOuConges,
+      });
+    },
   },
   Query: {
     organism_getOrganism: async (
