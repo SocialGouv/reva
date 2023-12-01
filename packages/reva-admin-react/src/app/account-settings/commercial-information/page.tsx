@@ -3,6 +3,7 @@ import { useCommercialInformationPageQueries } from "@/app/account-settings/comm
 import { NotImplementedPage } from "@/app/account-settings/components/not-implemented-page/NotImplementedPage";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { SmallNotice } from "@/components/small-notice/SmallNotice";
+import { successToast } from "@/components/toast/toast";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { Input } from "@codegouvfr/react-dsfr/Input";
@@ -66,6 +67,7 @@ const CommercialInformationPage = () => {
       organismId,
       ...data,
     });
+    successToast("modifications enregistrées");
     await refetchInformationsCommerciales();
   });
 

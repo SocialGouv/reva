@@ -2,6 +2,7 @@
 import { useAbsencePageQueries } from "@/app/account-settings/absence/absencePageQueries";
 import { NotImplementedPage } from "@/app/account-settings/components/not-implemented-page/NotImplementedPage";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import { successToast } from "@/components/toast/toast";
 import { Alert } from "@codegouvfr/react-dsfr/Alert";
 import { Button } from "@codegouvfr/react-dsfr/Button";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
@@ -50,6 +51,7 @@ const AbsencePage = () => {
       organismId: organism?.id,
       fermePourAbsenceOuConges: data.structureVisible === "non",
     });
+    successToast("modifications enregistrées");
     await refetchOrganism();
   });
 

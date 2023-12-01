@@ -12,6 +12,7 @@ import { defaultColorScheme } from "@/components/dsfr/defaultColorScheme";
 import { StartDsfr } from "@/components/dsfr/StartDsfr";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { Toaster } from "react-hot-toast";
 export default function RootLayout({ children }: { children: JSX.Element }) {
   const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
         <DsfrProvider>
           <SessionProvider refetchInterval={30} basePath="/admin2/api/auth">
             <QueryClientProvider client={queryClient}>
+              <Toaster position="top-right" />
               <LayoutContent>{children}</LayoutContent>
             </QueryClientProvider>
           </SessionProvider>
@@ -70,7 +72,7 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
       >
         <div className="fr-container flex flex-col flex-1">
           <div
-            className={`fr-container  flex-1 md:mt-16 px-8 pt-10 pb-4 fr-grid-row bg-white mb-12`}
+            className={`fr-container flex-1 md:mt-16 px-8 pt-10 pb-4 fr-grid-row bg-white mb-12`}
           >
             {children}
           </div>
