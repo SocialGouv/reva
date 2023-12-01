@@ -12,7 +12,7 @@ export interface Organism {
   isActive: boolean;
   typology: OrganismTypology;
   qualiopiCertificateExpiresAt: Date | null;
-  getInformationsCommerciales?: OrganismInformationsCommerciales;
+  fermePourAbsenceOuConges: boolean;
 }
 
 export type OrganismTypology =

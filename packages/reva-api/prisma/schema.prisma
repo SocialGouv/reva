@@ -309,8 +309,9 @@ model Organism {
   organismInformationsCommerciales                       OrganismInformationsCommerciales?
   organismInformationsCommercialesId                     String?                                                  @map("organism_informations_commerciales_id") @db.Uuid
 
-  maisonMereAAP   MaisonMereAAP? @relation(fields: [maisonMereAAPId], references: [id], onDelete: NoAction)
-  maisonMereAAPId String?        @map("maison_mere_aap_id") @db.Uuid
+  maisonMereAAP            MaisonMereAAP? @relation(fields: [maisonMereAAPId], references: [id], onDelete: NoAction)
+  maisonMereAAPId          String?        @map("maison_mere_aap_id") @db.Uuid
+  fermePourAbsenceOuConges Boolean        @default(false) @map("ferme_pour_absence_ou_conges")
 
   @@unique([siret, typology])
   @@map("organism")

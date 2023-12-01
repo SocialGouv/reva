@@ -90,6 +90,11 @@ isActive =
     Object.selectionForField "Bool" "isActive" [] Decode.bool
 
 
+fermePourAbsenceOuConges : SelectionSet Bool Admin.Object.Organism
+fermePourAbsenceOuConges =
+    Object.selectionForField "Bool" "fermePourAbsenceOuConges" [] Decode.bool
+
+
 informationsCommerciales :
     SelectionSet decodesTo Admin.Object.OrganismInformationsCommerciales
     -> SelectionSet (Maybe decodesTo) Admin.Object.Organism
