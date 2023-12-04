@@ -9,16 +9,11 @@ import {
 import { logger } from "../shared/logger";
 import { createOrUpdateInformationsCommerciales } from "./features/createOrUpdateInformationsCommerciales";
 import { getAgencesByGestionnaireAccountId } from "./features/getAgencesByGestionnaireAccountId";
-import { getInformationsCommerciales } from "./features/getInformationsCommerciales";
 import { getOrganismById } from "./features/getOrganism";
 import { updateFermePourAbsenceOuConges } from "./features/updateFermePourAbsenceOuConges";
 import { updateOrganismById } from "./features/updateOrganism";
 
 export const resolvers = {
-  Organism: {
-    informationsCommerciales: (organism: { id: string }) =>
-      getInformationsCommerciales({ organismId: organism.id }),
-  },
   Account: {
     agences: ({ id: accountId }: { id: string }) =>
       getAgencesByGestionnaireAccountId({ gestionnaireAccountId: accountId }),

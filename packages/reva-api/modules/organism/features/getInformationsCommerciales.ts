@@ -8,3 +8,12 @@ export const getInformationsCommerciales = ({
   prismaClient.organismInformationsCommerciales.findFirst({
     where: { organismId },
   });
+
+export const getInformationsCommercialesByOrganismIds = ({
+  organismIds,
+}: {
+  organismIds: string[];
+}) =>
+  prismaClient.organismInformationsCommerciales.findMany({
+    where: { organismId: { in: organismIds } },
+  });
