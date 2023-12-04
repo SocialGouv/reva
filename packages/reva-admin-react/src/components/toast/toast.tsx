@@ -5,3 +5,18 @@ export const successToast = (message: string) =>
   toast.custom(() => (
     <Alert severity="success" title={message} className="bg-white" />
   ));
+
+export const errorToast = (message: string) =>
+  toast.custom(() => (
+    <Alert severity="error" title={message} className="bg-white" />
+  ));
+
+export const infoToast = (message: string) =>
+  toast.custom(() => (
+    <Alert severity="info" title={message} className="bg-white" />
+  ));
+
+export const warningToast = (message: string) =>
+  toast.custom(() => (
+    <Alert severity="warning" title={message} className="bg-white" />
+  ));

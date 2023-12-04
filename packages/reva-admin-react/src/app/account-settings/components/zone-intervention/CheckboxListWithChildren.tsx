@@ -1,92 +1,26 @@
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
-import { useState } from "react";
+import { ZoneInterventionList } from "./ZoneIntervention";
 
-interface RegionWithNestedDepartments {
-  id: string;
-  label: string;
-  isSelected: boolean;
-  departments: Department[];
-}
-
-interface Department {
-  id: string;
-  label: string;
-  isSelected: boolean;
+interface CheckboxListWithChildrenProps {
+  zoneIntervention: ZoneInterventionList;
+  setZoneIntervention: (zoneIntervention: ZoneInterventionList) => void;
 }
 
 function CheckboxListWithChildren({
-  regionsWithNestedDepartments,
-}: {
-  regionsWithNestedDepartments: RegionWithNestedDepartments[];
-}) {
-  const [zoneInterventionsSelected, setZoneInterventionsSelected] = useState(
-    regionsWithNestedDepartments,
-  );
-
+  zoneIntervention,
+  setZoneIntervention,
+}: CheckboxListWithChildrenProps) {
+  if (!zoneIntervention) return null;
   const handleSelectRegion = (regionId: string) => {
-    const regionFound = zoneInterventionsSelected.find(
+    const regionFound = zoneIntervention.find(
       (region) => region.id === regionId,
     );
     if (!regionFound) return;
     const isSelected = !regionFound.isSelected;
-    setZoneInterventionsSelected((prev) =>
-      prev.map((region) => {
-        if (region.id === regionId) {
-          return {
-            ...region,
-            isSelected,
-            departments: region.departments.map((department) => ({
-              ...department,
-              isSelected,
-            })),
-          };
-        }
-        return region;
-      }),
-    );
-  };
-
-  const handleSelectDepartment = (departmentId: string) => {
-    const regionFound = zoneInterventionsSelected.find((region) =>
-      region.departments.some((department) => department.id === departmentId),
-    );
-    const departmentFound = zoneInterventionsSelected
-      .flatMap((region) => region.departments)
-      .find((department) => department.id === departmentId);
-    if (!departmentFound) return;
-    const isSelected = !departmentFound.isSelected;
-    setZoneInterventionsSelected((prev) =>
-      prev.map((region) => {
-        if (region.id !== regionFound?.id) {
-          return region;
-        }
-        return {
-          ...region,
-          isSelected: region.departments.every(
-            (department) =>
-              (department.isSelected === true &&
-                department.id !== departmentId) ||
-              (department.id === departmentId && isSelected),
-          ),
-          departments: region.departments.map((department) => {
-            if (department.id === departmentId) {
-              return {
-                ...department,
-                isSelected,
-              };
-            }
-            return department;
-          }),
-        };
-      }),
-    );
-  };
-
-  const handleSelectAll = (isSelected: boolean) => {
-    setZoneInterventionsSelected((prev) =>
-      prev.map((region) => {
+    const zoneInterventionSelected = zoneIntervention.map((region) => {
+      if (region.id === regionId) {
         return {
           ...region,
           isSelected,
@@ -95,9 +29,64 @@ function CheckboxListWithChildren({
             isSelected,
           })),
         };
-      }),
-    );
+      }
+      return region;
+    });
+    setZoneIntervention(zoneInterventionSelected);
   };
+
+  const handleSelectDepartment = (departmentId: string) => {
+    const regionFound = zoneIntervention.find((region) =>
+      region.departments.some((department) => department.id === departmentId),
+    );
+    const departmentFound = zoneIntervention
+      .flatMap((region) => region.departments)
+      .find((department) => department.id === departmentId);
+    if (!departmentFound) return;
+    const isSelected = !departmentFound.isSelected;
+    const zoneInterventionSelected = zoneIntervention.map((region) => {
+      if (region.id !== regionFound?.id) {
+        return region;
+      }
+      return {
+        ...region,
+        isSelected: region.departments.every(
+          (department) =>
+            (department.isSelected === true &&
+              department.id !== departmentId) ||
+            (department.id === departmentId && isSelected),
+        ),
+        departments: region.departments.map((department) => {
+          if (department.id === departmentId) {
+            return {
+              ...department,
+              isSelected,
+            };
+          }
+          return department;
+        }),
+      };
+    });
+
+    setZoneIntervention(zoneInterventionSelected);
+  };
+
+  const handleSelectAll = (isSelected: boolean) => {
+    const zoneInterventionSelected = zoneIntervention.map((region) => {
+      return {
+        ...region,
+        isSelected,
+        departments: region.departments.map((department) => ({
+          ...department,
+          isSelected,
+        })),
+      };
+    });
+
+    setZoneIntervention(zoneInterventionSelected);
+  };
+
+  const isAllSelected = zoneIntervention.every((region) => region.isSelected);
 
   return (
     <div className="flex-1">
@@ -107,13 +96,14 @@ function CheckboxListWithChildren({
           label="Toute la France Métropolitaine"
           labelPosition="left"
           showCheckedHint={false}
+          checked={isAllSelected}
           onChange={(event) => {
             handleSelectAll(event);
           }}
         />
       </div>
       <div className="max-h-[500px] overflow-y-scroll overflow-x-hidden">
-        {zoneInterventionsSelected.map((region) => {
+        {zoneIntervention.map((region) => {
           return (
             <div key={region.id} className="relative">
               <Checkbox
