@@ -10,15 +10,17 @@ export const OrganismTimelineElement = () => {
   const organism = state.context.organism;
   const informationsCommerciales = organism?.informationsCommerciales;
 
-  const organismDisplayInfo = {
-    label: informationsCommerciales?.nom || organism?.label,
-    email:
-      informationsCommerciales?.emailContact ||
-      organism?.contactAdministrativeEmail,
-    phone:
-      informationsCommerciales?.telephone ||
-      organism?.contactAdministrativePhone,
-  };
+  const organismDisplayInfo = organism
+    ? {
+        label: informationsCommerciales?.nom || organism?.label,
+        email:
+          informationsCommerciales?.emailContact ||
+          organism?.contactAdministrativeEmail,
+        phone:
+          informationsCommerciales?.telephone ||
+          organism?.contactAdministrativePhone,
+      }
+    : undefined;
 
   return (
     <TimelineElement
