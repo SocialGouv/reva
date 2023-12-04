@@ -37,6 +37,21 @@ const Organisms: FC<PropsOrganisms> = ({
     alreadySelectedOrganismId
   );
 
+  const getOrganismDisplayInfo = (o: Organism) => {
+    const ic = o?.informationsCommerciales;
+    return {
+      label: ic?.nom || o.label,
+      website: ic?.siteInternet || o.website,
+      email: ic?.emailContact || o.contactAdministrativeEmail,
+      phone: ic?.telephone || o.contactAdministrativePhone,
+      pmr: ic?.conformeNormesAccessbilite === "CONFORME",
+      addressStreet: ic?.adresseNumeroEtNomDeRue,
+      addressAdditionalInfo: ic?.adresseInformationsComplementaires,
+      addressZipCode: ic?.adresseCodePostal,
+      addressCity: ic?.adresseVille,
+    };
+  };
+
   return (
     <RadioGroup
       value={selectedOrganismId || availableOrganisms[0]?.id}
@@ -44,78 +59,98 @@ const Organisms: FC<PropsOrganisms> = ({
     >
       <RadioGroup.Label className="sr-only">Accompagnateur</RadioGroup.Label>
       <div className="space-y-4">
-        {availableOrganisms.map((organism) => (
-          <RadioGroup.Option
-            data-test={`project-organisms-organism-${organism.id}`}
-            key={organism.id}
-            value={organism.id}
-            className={({ active }) =>
-              classNames(
-                active ? "ring-2 ring-indigo-500" : "",
-                "relative block cursor-pointer bg-white focus:outline-none",
-                "border  border-dsfrBlue-500 p-4",
-                "text-lg text-black"
-              )
-            }
-            onClick={() => setOrganismId(organism.id)}
-          >
-            {({ checked }) => (
-              <>
-                {checked && (
-                  <span className="fr-icon-success-fill absolute top-4 right-4 text-dsfrBlue-500" />
-                )}
-                <RadioGroup.Label
-                  as="h3"
-                  data-test="project-organisms-organism-label"
-                >
-                  {organism.website ? (
-                    <a href={organism.website} target="blank">
-                      {organism.label}
-                    </a>
-                  ) : (
-                    organism.label
+        {availableOrganisms.map((organism) => {
+          const organismDisplayInfo = getOrganismDisplayInfo(organism);
+          return (
+            <RadioGroup.Option
+              data-test={`project-organisms-organism-${organism.id}`}
+              key={organism.id}
+              value={organism.id}
+              className={({ active }) =>
+                classNames(
+                  active ? "ring-2 ring-indigo-500" : "",
+                  "relative block cursor-pointer bg-white focus:outline-none",
+                  "border  border-dsfrBlue-500 p-4",
+                  "text-lg text-black"
+                )
+              }
+              onClick={() => setOrganismId(organism.id)}
+            >
+              {({ checked }) => (
+                <>
+                  {checked && (
+                    <span className="fr-icon-success-fill absolute top-4 right-4 text-dsfrBlue-500" />
                   )}
-                </RadioGroup.Label>
-                <RadioGroup.Description
-                  as="address"
-                  className="not-italic leading-relaxed"
-                >
-                  <div>
-                    <span data-test="project-organisms-organism-email">
-                      {organism.contactAdministrativeEmail}
-                    </span>
-                    {organism.contactAdministrativePhone && (
-                      <>
-                        &nbsp; - &nbsp;
-                        <span data-test="project-organisms-organism-phone">
-                          {organism.contactAdministrativePhone}
-                        </span>
-                      </>
+                  <RadioGroup.Label
+                    as="h3"
+                    data-test="project-organisms-organism-label"
+                  >
+                    {organismDisplayInfo.website ? (
+                      <a href={organismDisplayInfo.website} target="blank">
+                        {organismDisplayInfo.label}
+                      </a>
+                    ) : (
+                      organismDisplayInfo.label
                     )}
-                    <div className="flex justify-end gap-1 mt-2 lg:mt-0">
-                      {organism.organismOnDepartments?.[0]?.isOnSite && (
-                        <Tag
-                          data-test="project-organisms-onsite-tag"
-                          className="bg-dsfrBlue-500 text-white"
-                        >
-                          Sur place
-                        </Tag>
+                  </RadioGroup.Label>
+                  <RadioGroup.Description
+                    as="address"
+                    className="not-italic leading-relaxed"
+                  >
+                    <div className="flex flex-col gap-2 mt-2">
+                      {organismDisplayInfo?.addressStreet && (
+                        <div data-test="project-organisms-organism-address">
+                          <p>{organismDisplayInfo.addressStreet}</p>
+                          <p> {organismDisplayInfo.addressAdditionalInfo}</p>
+                          <p>
+                            {organismDisplayInfo.addressCity} -{" "}
+                            {organismDisplayInfo.addressZipCode}
+                          </p>
+                        </div>
                       )}
-                      {organism.organismOnDepartments?.[0]?.isRemote && (
-                        <Tag
-                          data-test="project-organisms-remote-tag"
-                          className="bg-dsfrBlue-300 text-dsfrBlue-500"
-                        >
-                          À distance
-                        </Tag>
+                      {organismDisplayInfo.pmr && (
+                        <p data-test="project-organisms-organism-accessibilite-pmr">
+                          Accessibilité PMR
+                        </p>
                       )}
+                      <p>
+                        <span data-test="project-organisms-organism-email">
+                          {organismDisplayInfo.email}
+                        </span>
+                        {organismDisplayInfo.phone && (
+                          <>
+                            &nbsp; - &nbsp;
+                            <span data-test="project-organisms-organism-phone">
+                              {organismDisplayInfo.phone}
+                            </span>
+                          </>
+                        )}
+                      </p>
+                      <div className="flex justify-end gap-1 mt-2 lg:mt-0">
+                        {organism.organismOnDepartments?.[0]?.isOnSite && (
+                          <Tag
+                            data-test="project-organisms-onsite-tag"
+                            className="bg-dsfrBlue-500 text-white"
+                          >
+                            Sur place
+                          </Tag>
+                        )}
+                        {organism.organismOnDepartments?.[0]?.isRemote && (
+                          <Tag
+                            data-test="project-organisms-remote-tag"
+                            className="bg-dsfrBlue-300 text-dsfrBlue-500"
+                          >
+                            À distance
+                          </Tag>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </RadioGroup.Description>
-              </>
-            )}
-          </RadioGroup.Option>
-        ))}
+                  </RadioGroup.Description>
+                </>
+              )}
+            </RadioGroup.Option>
+          );
+        })}
       </div>
     </RadioGroup>
   );

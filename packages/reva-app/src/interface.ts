@@ -70,7 +70,27 @@ export interface Organism {
   label: string;
   website?: string;
   organismOnDepartments?: OrganismOnDepartment[];
+  informationsCommerciales?: OrganismInformationsCommerciales;
 }
+
+export interface OrganismInformationsCommerciales {
+  id: string;
+  organismId: string;
+  nom: string | null;
+  telephone: string | null;
+  siteInternet: string | null;
+  emailContact: string | null;
+  adresseNumeroEtNomDeRue: string | null;
+  adresseInformationsComplementaires: string | null;
+  adresseCodePostal: string | null;
+  adresseVille: string | null;
+  conformeNormesAccessbilite: ConformiteNormeAccessibilite | null;
+}
+
+type ConformiteNormeAccessibilite =
+  | "CONFORME"
+  | "NON_CONFORME"
+  | "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC";
 
 export interface OrganismOnDepartment {
   id: string;

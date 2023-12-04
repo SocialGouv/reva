@@ -22,6 +22,17 @@ const GET_ORGANISMS_FOR_CANDIDACY = gql`
         isRemote
         isOnSite
       }
+      informationsCommerciales {
+        nom
+        telephone
+        siteInternet
+        emailContact
+        adresseNumeroEtNomDeRue
+        adresseInformationsComplementaires
+        adresseCodePostal
+        adresseVille
+        conformeNormesAccessbilite
+      }
     }
   }
 `;
