@@ -7,6 +7,19 @@ export const OrganismTimelineElement = () => {
   const { state, mainService } = useMainMachineContext();
   const { getTimelineElementStatus } = useProjectTimeline();
 
+  const organism = state.context.organism;
+  const informationsCommerciales = organism?.informationsCommerciales;
+
+  const organismDisplayInfo = {
+    label: informationsCommerciales?.nom || organism?.label,
+    email:
+      informationsCommerciales?.emailContact ||
+      organism?.contactAdministrativeEmail,
+    phone:
+      informationsCommerciales?.telephone ||
+      organism?.contactAdministrativePhone,
+  };
+
   return (
     <TimelineElement
       title="Votre organisme d'accompagnement"
@@ -18,26 +31,26 @@ export const OrganismTimelineElement = () => {
     >
       {({ status }) => (
         <>
-          {state.context.organism && (
+          {organismDisplayInfo && (
             <div className="flex flex-col p-4 border border-dsfrBlue-500">
               {state.context.organism?.label && (
                 <h3
                   data-test="project-home-organism-label"
                   className="text-base font-medium"
                 >
-                  {state.context.organism?.label}
+                  {organismDisplayInfo?.label}
                 </h3>
               )}
               <address className="not-italic">
                 <p>
                   <span data-test="project-home-organism-email">
-                    {state.context.organism.contactAdministrativeEmail}
+                    {organismDisplayInfo.email}
                   </span>
-                  {state.context.organism.contactAdministrativePhone && (
+                  {organismDisplayInfo.phone && (
                     <>
                       &nbsp; - &nbsp;
                       <span data-test="project-home-organism-phone">
-                        {state.context.organism.contactAdministrativePhone}
+                        {organismDisplayInfo.phone}
                       </span>
                     </>
                   )}

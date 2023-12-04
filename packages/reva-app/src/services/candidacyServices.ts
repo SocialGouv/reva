@@ -284,6 +284,11 @@ const CANDIDACY_SELECTION = `
         id
         label
         contactAdministrativeEmail
+        informationsCommerciales {
+          nom
+          telephone
+          emailContact
+        }
       }
       createdAt
       certification {
