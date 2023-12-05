@@ -89,11 +89,22 @@ export const getCandidaciesFromDb = async ({
   let whereClause: Prisma.CandidacyWhereInput = organismAccountKeycloakId
     ? {
         organism: {
-          accounts: {
-            some: {
-              keycloakId: organismAccountKeycloakId,
+          OR: [
+            {
+              accounts: {
+                some: {
+                  keycloakId: organismAccountKeycloakId,
+                },
+              },
             },
-          },
+            {
+              maisonMereAAP: {
+                gestionnaire: {
+                  keycloakId: organismAccountKeycloakId,
+                },
+              },
+            },
+          ],
         },
       }
     : {};

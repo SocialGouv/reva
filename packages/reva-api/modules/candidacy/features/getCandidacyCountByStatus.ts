@@ -48,11 +48,22 @@ export const getCandidacyCountByStatus = async ({
                 !hasRole("admin") && hasRole("manage_candidacy")
                   ? {
                       organism: {
-                        accounts: {
-                          some: {
-                            keycloakId: IAMId,
+                        OR: [
+                          {
+                            accounts: {
+                              some: {
+                                keycloakId: IAMId,
+                              },
+                            },
                           },
-                        },
+                          {
+                            maisonMereAAP: {
+                              gestionnaire: {
+                                keycloakId: IAMId,
+                              },
+                            },
+                          },
+                        ],
                       },
                     }
                   : {};
