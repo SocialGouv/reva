@@ -1,8 +1,6 @@
 import fastifyMultipart from "@fastify/multipart";
 import { FastifyPluginAsync } from "fastify";
 
-import { getAccountFromKeycloakId } from "../../account/database/accounts";
-import { getCandidacyFromId } from "../../candidacy/database/candidacies";
 import { canManageCandidacy } from "../../candidacy/features/canManageCandidacy";
 import { addFileToUploadSpooler } from "./database/fileUploadSpooler";
 import { getFundingRequest } from "./database/fundingRequests";
@@ -49,17 +47,11 @@ const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
       },
     },
     handler: async (request, reply) => {
-      const auhtorization = await canManageCandidacy(
-        {
-          hasRole: request.auth.hasRole,
-          getAccountFromKeycloakId,
-          getCandidacyFromId,
-        },
-        {
-          candidacyId: request.body.candidacyId,
-          keycloakId: request.auth?.userInfo?.sub,
-        }
-      );
+      const auhtorization = await canManageCandidacy({
+        hasRole: request.auth.hasRole,
+        candidacyId: request.body.candidacyId,
+        keycloakId: request.auth?.userInfo?.sub,
+      });
       if (auhtorization.isLeft()) {
         return reply.status(500).send({ err: auhtorization.extract() });
       }

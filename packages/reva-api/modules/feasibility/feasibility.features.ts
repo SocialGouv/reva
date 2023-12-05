@@ -1,11 +1,8 @@
 import { Feasibility, FeasibilityStatus, Prisma } from "@prisma/client";
 
 import { prismaClient } from "../../prisma/client";
-import { getAccountFromKeycloakId } from "../account/database/accounts";
-import { Candidacy } from "../candidacy/candidacy.types";
 import {
   getCandidaciesFromIds,
-  getCandidacyFromId,
   updateCandidacyStatus,
 } from "../candidacy/database/candidacies";
 import { canManageCandidacy } from "../candidacy/features/canManageCandidacy";
@@ -743,17 +740,11 @@ export const canUserManageCandidacy = async ({
   keycloakId: string;
 }) => {
   return (
-    await canManageCandidacy(
-      {
-        hasRole,
-        getAccountFromKeycloakId,
-        getCandidacyFromId,
-      },
-      {
-        candidacyId,
-        keycloakId,
-      }
-    )
+    await canManageCandidacy({
+      hasRole,
+      candidacyId,
+      keycloakId,
+    })
   ).orDefault(false);
 };
 

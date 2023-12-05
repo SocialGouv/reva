@@ -1,34 +1,27 @@
-import { Account } from "@prisma/client";
 import debug from "debug";
 import { Either, Left, Right } from "purify-ts";
 
 import { Role } from "../../account/account.types";
-import { Candidacy } from "../candidacy.types";
+import { getAccountFromKeycloakId } from "../../account/database/accounts";
+import { getCandidacyFromId } from "../database/candidacies";
 
 const log = debug("domain:canManageCandidacy");
 
-export interface CanManageCandidacyDeps {
-  hasRole: (role: Role) => boolean;
-  getCandidacyFromId: (
-    candidacyId: string
-  ) => Promise<Either<string, Candidacy>>;
-  getAccountFromKeycloakId: (
-    candidacyId: string
-  ) => Promise<Either<string, Account>>;
-}
-
 interface CanManageCandidacyParams {
+  hasRole: (role: Role) => boolean;
   candidacyId: string;
   keycloakId: string;
   managerOnly?: boolean;
 }
 
-export const canManageCandidacy = async (
-  deps: CanManageCandidacyDeps,
-  params: CanManageCandidacyParams
-): Promise<Either<string, boolean>> => {
-  if (deps.hasRole("admin")) {
-    if (params.managerOnly) {
+export const canManageCandidacy = async ({
+  hasRole,
+  candidacyId,
+  keycloakId,
+  managerOnly,
+}: CanManageCandidacyParams): Promise<Either<string, boolean>> => {
+  if (hasRole("admin")) {
+    if (managerOnly) {
       log("Admins are not authorized");
       return Right(false);
     }
@@ -36,19 +29,19 @@ export const canManageCandidacy = async (
     return Right(true);
   }
 
-  if (!deps.hasRole("manage_candidacy")) {
+  if (!hasRole("manage_candidacy")) {
     log("User is not manager");
     return Right(false);
   }
 
   let candidacy, account;
   try {
-    candidacy = (await deps.getCandidacyFromId(params.candidacyId)).mapLeft(
+    candidacy = (await getCandidacyFromId(candidacyId)).mapLeft(
       (err: string) => {
         throw err;
       }
     );
-    account = (await deps.getAccountFromKeycloakId(params.keycloakId)).mapLeft(
+    account = (await getAccountFromKeycloakId(keycloakId)).mapLeft(
       (err: string) => {
         throw err;
       }
@@ -59,6 +52,7 @@ export const canManageCandidacy = async (
   }
 
   const candidacyOrganismId = candidacy.extract().organism?.id;
+
   const accountOrganismId = account.extract().organismId;
 
   const isSameOrganism = candidacyOrganismId === accountOrganismId;
