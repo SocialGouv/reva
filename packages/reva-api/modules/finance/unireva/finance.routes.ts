@@ -52,10 +52,7 @@ const uploadRoute: FastifyPluginAsync = async (server, _opts: unknown) => {
         candidacyId: request.body.candidacyId,
         keycloakId: request.auth?.userInfo?.sub,
       });
-      if (auhtorization.isLeft()) {
-        return reply.status(500).send({ err: auhtorization.extract() });
-      }
-      if (auhtorization.extract() === false) {
+      if (!auhtorization) {
         return reply.status(403).send({
           err: "Vous n'êtes pas autorisé à gérer cette candidature.",
         });

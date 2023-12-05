@@ -1,5 +1,4 @@
 import debug from "debug";
-import { Either, Left, Right } from "purify-ts";
 
 import { Role } from "../../account/account.types";
 import { getAccountFromKeycloakId } from "../../account/database/accounts";
@@ -19,37 +18,31 @@ export const canManageCandidacy = async ({
   candidacyId,
   keycloakId,
   managerOnly,
-}: CanManageCandidacyParams): Promise<Either<string, boolean>> => {
+}: CanManageCandidacyParams): Promise<boolean> => {
   if (hasRole("admin")) {
     if (managerOnly) {
       log("Admins are not authorized");
-      return Right(false);
+      return false;
     }
     log("User is admin, no further check");
-    return Right(true);
+    return false;
   }
 
   if (!hasRole("manage_candidacy")) {
     log("User is not manager");
-    return Right(false);
+    return false;
   }
 
-  let candidacy, account;
-  try {
-    candidacy = (await getCandidacyFromId(candidacyId)).mapLeft(
-      (err: string) => {
-        throw err;
-      }
-    );
-    account = (await getAccountFromKeycloakId(keycloakId)).mapLeft(
-      (err: string) => {
-        throw err;
-      }
-    );
-  } catch (err) {
-    log("Check failed:", err);
-    return Left(err as string);
-  }
+  const candidacy = (await getCandidacyFromId(candidacyId)).mapLeft(
+    (err: string) => {
+      throw err;
+    }
+  );
+  const account = (await getAccountFromKeycloakId(keycloakId)).mapLeft(
+    (err: string) => {
+      throw err;
+    }
+  );
 
   const candidacyOrganismId = candidacy.extract().organism?.id;
 
@@ -57,5 +50,5 @@ export const canManageCandidacy = async ({
 
   const isSameOrganism = candidacyOrganismId === accountOrganismId;
   log("Manager and candidacy have same organismId:", isSameOrganism);
-  return Right(isSameOrganism);
+  return isSameOrganism;
 };

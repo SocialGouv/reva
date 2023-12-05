@@ -17,16 +17,12 @@ export const isCandidacyOwner =
     const candidacyId = args.candidacyId ?? "";
     const keycloakId = context.auth.userInfo?.sub ?? "";
 
-    const eitherIsAuthorized = await canManageCandidacy({
+    const authorized = await canManageCandidacy({
       hasRole: context.auth.hasRole,
       candidacyId,
       keycloakId,
     });
-    if (eitherIsAuthorized.isLeft()) {
-      log("technical failure");
-      throw new Error(eitherIsAuthorized.extract());
-    }
-    if (!eitherIsAuthorized.extract()) {
+    if (!authorized) {
       log("not authorized");
       throw new Error("Vous n'êtes pas autorisé à gérer cette candidature.");
     }

@@ -738,15 +738,12 @@ export const canUserManageCandidacy = async ({
   hasRole(role: string): boolean;
   candidacyId: string;
   keycloakId: string;
-}) => {
-  return (
-    await canManageCandidacy({
-      hasRole,
-      candidacyId,
-      keycloakId,
-    })
-  ).orDefault(false);
-};
+}) =>
+  await canManageCandidacy({
+    hasRole,
+    candidacyId,
+    keycloakId,
+  });
 
 export const getCertificationAuthorityById = async (id: string) => {
   return await prismaClient.certificationAuthority.findUnique({
