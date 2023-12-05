@@ -2,6 +2,7 @@ import debug from "debug";
 
 import { Role } from "../../account/account.types";
 import { getAccountFromKeycloakId } from "../../account/database/accounts";
+import { getMaisonMereAAPById } from "../../organism/features/getMaisonMereAAPById";
 import { getCandidacyFromId } from "../database/candidacies";
 
 const log = debug("domain:canManageCandidacy");
@@ -33,22 +34,46 @@ export const canManageCandidacy = async ({
     return false;
   }
 
-  const candidacy = (await getCandidacyFromId(candidacyId)).mapLeft(
-    (err: string) => {
+  const candidacy = (await getCandidacyFromId(candidacyId))
+    .mapLeft((err: string) => {
       throw err;
-    }
-  );
-  const account = (await getAccountFromKeycloakId(keycloakId)).mapLeft(
-    (err: string) => {
+    })
+    .extract();
+
+  const account = (await getAccountFromKeycloakId(keycloakId))
+    .mapLeft((err: string) => {
       throw err;
-    }
+    })
+    .extract();
+
+  const maisonMere = candidacy.organism?.maisonMereAAPId
+    ? await getMaisonMereAAPById({
+        maisonMereAAPId: candidacy.organism?.maisonMereAAPId,
+      })
+    : null;
+
+  const candidacyOrganismId = candidacy.organism?.id;
+
+  const accountOrganismId = account.organismId;
+
+  const isCandidacyorganismSameAsAccountOrganism =
+    candidacyOrganismId === accountOrganismId;
+  log(
+    "Manager and candidacy have same organismId:",
+    isCandidacyorganismSameAsAccountOrganism
   );
 
-  const candidacyOrganismId = candidacy.extract().organism?.id;
+  const isCandidacyOrganismPartOfMaisonMere = !!(
+    maisonMere && maisonMere?.id === candidacy?.organism?.maisonMereAAPId
+  );
 
-  const accountOrganismId = account.extract().organismId;
+  log(
+    "candidacy has an organism that is part of manager maison mere:",
+    isCandidacyorganismSameAsAccountOrganism
+  );
 
-  const isSameOrganism = candidacyOrganismId === accountOrganismId;
-  log("Manager and candidacy have same organismId:", isSameOrganism);
-  return isSameOrganism;
+  return (
+    isCandidacyorganismSameAsAccountOrganism ||
+    isCandidacyOrganismPartOfMaisonMere
+  );
 };

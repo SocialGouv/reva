@@ -13,6 +13,7 @@ export interface Organism {
   typology: OrganismTypology;
   qualiopiCertificateExpiresAt: Date | null;
   fermePourAbsenceOuConges: boolean;
+  maisonMereAAPId: string | null;
 }
 
 export type OrganismTypology =
