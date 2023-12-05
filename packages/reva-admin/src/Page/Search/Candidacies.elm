@@ -10,9 +10,11 @@ module Page.Search.Candidacies exposing
 import Accessibility exposing (a, h1, h3)
 import Admin.Enum.CandidacyStatusFilter exposing (CandidacyStatusFilter)
 import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep)
+import Admin.Object.Organism exposing (informationsCommerciales)
 import Api.Candidacy
 import Api.Token exposing (Token)
 import BetaGouv.DSFR.Button as Button
+import Css exposing (true)
 import Data.Candidacy exposing (CandidacyCountByStatus, CandidacySummary, CandidacySummaryPage, candidacyStatusFilterToReadableString)
 import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
@@ -269,13 +271,41 @@ viewItem context candidacy =
                 ]
             , div
                 [ class "sm:flex justify-between items-end" ]
-                [ case ( Api.Token.isAdmin context.token, candidacy.organism ) of
-                    ( True, Just organism ) ->
-                        div
-                            [ class "my-4 mr-2 sm:my-0 truncate"
-                            , class "text-base text-gray-500 whitespace-nowrap"
-                            ]
-                            [ text organism.label ]
+                [ case candidacy.organism of
+                    Just organism ->
+                        let
+                            nomCommercial =
+                                case organism.informationsCommerciales of
+                                    Just ic ->
+                                        Maybe.withDefault "" ic.nom
+
+                                    Nothing ->
+                                        ""
+                        in
+                        case ( Api.Token.isAdmin context.token, Api.Token.isGestionnaireMaisonMereAAP context.token ) of
+                            ( True, _ ) ->
+                                div []
+                                    [ div
+                                        [ class "my-4 mr-2 sm:my-0 truncate"
+                                        , class "text-base text-gray-500 whitespace-nowrap"
+                                        ]
+                                        [ text organism.label ]
+                                    , div
+                                        [ class "my-4 mr-2 sm:my-0 truncate"
+                                        , class "text-base text-gray-500 whitespace-nowrap"
+                                        ]
+                                        [ text nomCommercial ]
+                                    ]
+
+                            ( False, True ) ->
+                                div
+                                    [ class "my-4 mr-2 sm:my-0 truncate"
+                                    , class "text-base text-gray-500 whitespace-nowrap"
+                                    ]
+                                    [ text nomCommercial ]
+
+                            _ ->
+                                div [] []
 
                     _ ->
                         div [] []
