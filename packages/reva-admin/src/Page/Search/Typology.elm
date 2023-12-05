@@ -17,15 +17,15 @@ import Data.Candidacy exposing (Candidacy, CandidacyId)
 import Data.CandidacyConventionCollective exposing (CandidacyConventionCollective)
 import Data.Context exposing (Context)
 import Data.Form.Training exposing (candidateTypologyFromString, candidateTypologyToString)
-import Html exposing (Html, a, div, label, legend, option, p, select, text)
-import Html.Attributes exposing (attribute, class, disabled, for, href, id, required, selected, target, title, value)
-import Html.Events exposing (onInput)
+import Html exposing (Html, a, div, label, legend, p, text)
+import Html.Attributes exposing (attribute, class, href, target, title)
 import Page.Search as Search
 import Platform.Cmd as Cmd
 import RemoteData exposing (RemoteData(..))
 import Route
 import View
 import View.Candidacy.Tab exposing (Value(..))
+import View.Form exposing (viewSelect)
 
 
 type Msg
@@ -158,43 +158,7 @@ viewSelectTypology _ model =
             else
                 typologies
     in
-    div [ class "min-w-[160px] xl:min-w-[228px] max-w-lg mb-6" ]
-        [ div
-            [ class "fr-select-group" ]
-            [ viewLabel elementId [ text "Typologie" ]
-            , select
-                [ class "fr-select"
-                , id elementId
-                , onInput (UserChangedTypology elementId)
-                , required True
-                ]
-                (option
-                    [ disabled True
-                    , selected (typologyValue == "")
-                    , value ""
-                    ]
-                    [ text "Sélectionner" ]
-                    :: List.map (viewChoice typologyValue) availableTypologies
-                )
-            ]
-        ]
-
-
-viewChoice : String -> ( String, String ) -> Html msg
-viewChoice currentChoiceId ( choiceId, choice ) =
-    option
-        [ selected (choiceId == currentChoiceId), value choiceId ]
-        [ text choice ]
-
-
-viewLabel : String -> List (Html msg) -> Html msg
-viewLabel elementId content =
-    label
-        [ for elementId
-        , class "block mt-[6px] mb-[10px]"
-        , class "uppercase text-xs font-semibold"
-        ]
-        content
+    viewSelect elementId "Typologie" typologyValue availableTypologies UserChangedTypology
 
 
 viewDirectoryPanel : Context -> Model -> Html Msg
