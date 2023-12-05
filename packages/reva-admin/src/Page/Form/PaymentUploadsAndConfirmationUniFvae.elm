@@ -30,7 +30,7 @@ form config _ ( _, _ ) =
           )
         , ( "files-heading", Form.Title1 "1 - Pièces jointes liées à la facturation" )
         , ( "invoiceFile", Form.Title2 "Joindre la facture" )
-        , ( keys.invoiceFiles, Form.File "La facture doit être net de TVA et doit contenir un RIB." "Taille maximale : 10 Mo. Format supporté : pdf." )
+        , ( keys.invoiceFiles, Form.File "La facture doit être nette de TVA et doit contenir un RIB." "Taille maximale : 10 Mo. Format supporté : pdf." )
         , ( "certificateFile", Form.Title2 "Joindre un récapitulatif des attestations de présence" )
         , ( keys.certificateOfAttendanceFiles, Form.File "Le document doit comprendre l’ensemble des attestations d’accompagnement individuel, collectif et formatif du candidat." "Taille maximale : 10 Mo. Format supporté : pdf." )
         , ( "confirmation-heading", Form.Title1 "2 - Confirmation" )
