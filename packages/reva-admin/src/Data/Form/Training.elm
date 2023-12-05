@@ -16,9 +16,7 @@ type Scope
 
 
 type alias Training =
-    { typology : Admin.Enum.CandidateTypology.CandidateTypology
-    , additionalInformation : String
-    , mandatoryTrainingIds : List String
+    { mandatoryTrainingIds : List String
     , basicSkillsIds : List String
     , certificateSkills : String
     , consent : Bool
@@ -31,9 +29,7 @@ type alias Training =
 
 
 keys =
-    { typology = "typology"
-    , additionalInformation = "additionalInformation"
-    , certificate = "certificate"
+    { certificate = "certificate"
     , mandatoryTrainings = "mandatory-training"
     , basicSkills = "basicSkills"
     , certificateSkills = "certificateSkills"
@@ -101,8 +97,6 @@ fromDict basicSkills mandatoryTrainings formData =
             Helper.decode keys formData
     in
     Training
-        (decode.generic .typology candidateTypologyFromString NonSpecifie)
-        (decode.string .additionalInformation "")
         (decode.list mandatoryTrainings)
         (decode.list basicSkills)
         (decode.string .certificateSkills "")
@@ -115,9 +109,7 @@ fromDict basicSkills mandatoryTrainings formData =
 
 
 training :
-    Maybe CandidateTypology
-    -> Maybe String
-    -> List Uuid
+    List Uuid
     -> List Uuid
     -> Maybe String
     -> Maybe String
@@ -126,7 +118,7 @@ training :
     -> Maybe Int
     -> Bool
     -> Dict String String
-training typology typologyAdditional mandatoryTrainings basicSkills certificateSkills otherTraining individualHourCount collectiveHourCount additionalHourCount isCertificationPartial =
+training mandatoryTrainings basicSkills certificateSkills otherTraining individualHourCount collectiveHourCount additionalHourCount isCertificationPartial =
     let
         mandatoryTrainingsIds =
             uuidToCheckedList mandatoryTrainings
@@ -135,9 +127,7 @@ training typology typologyAdditional mandatoryTrainings basicSkills certificateS
             uuidToCheckedList basicSkills
 
         otherTrainings =
-            [ ( .typology, Maybe.map candidateTypologyToString typology )
-            , ( .additionalInformation, typologyAdditional )
-            , ( .certificateSkills, certificateSkills )
+            [ ( .certificateSkills, certificateSkills )
             , ( .otherTraining, otherTraining )
             , ( .individualHourCount, Maybe.map String.fromInt individualHourCount )
             , ( .collectiveHourCount, Maybe.map String.fromInt collectiveHourCount )

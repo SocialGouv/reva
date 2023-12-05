@@ -25,6 +25,14 @@ type Candidacy
     = Candidacy
 
 
+type CandidacyConventionCollective
+    = CandidacyConventionCollective
+
+
+type CandidacyConventionCollectivePaginated
+    = CandidacyConventionCollectivePaginated
+
+
 type CandidacyCountByStatus
     = CandidacyCountByStatus
 

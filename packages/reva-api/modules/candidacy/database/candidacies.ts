@@ -1,4 +1,4 @@
-import { CandidacyStatusStep, CandidateTypology } from "@prisma/client";
+import { CandidacyStatusStep } from "@prisma/client";
 import { Either, Left, Maybe, Right } from "purify-ts";
 
 import { prismaClient } from "../../../prisma/client";
@@ -37,6 +37,7 @@ export const candidacyIncludes = {
     },
   },
   reorientationReason: true,
+  ccn: true,
 };
 
 export const getCandidacyFromId = async (
@@ -84,6 +85,8 @@ export const getCandidacyFromId = async (
           ...certificationAndRegion?.certification,
           codeRncp: certificationAndRegion?.certification.rncpId,
         },
+        ccnId: c.ccnId || null,
+        conventionCollective: c.ccn || null,
       }))
       .toEither(`Candidacy ${candidacyId} not found`);
   } catch (e) {
@@ -686,10 +689,6 @@ export const updateOrganism = async (params: {
 export const updateTrainingInformations = async (params: {
   candidacyId: string;
   training: {
-    candidateTypologyInformations: {
-      typology: CandidateTypology;
-      additionalInformation: string;
-    };
     basicSkillIds: string[];
     mandatoryTrainingIds: string[];
     certificateSkills: string;
@@ -729,9 +728,6 @@ export const updateTrainingInformations = async (params: {
           id: params.candidacyId,
         },
         data: {
-          typology: params.training.candidateTypologyInformations.typology,
-          typologyAdditional:
-            params.training.candidateTypologyInformations.additionalInformation,
           certificateSkills: params.training.certificateSkills,
           otherTraining: params.training.otherTraining,
           individualHourCount: params.training.individualHourCount,

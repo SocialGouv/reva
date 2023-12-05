@@ -1,6 +1,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 
 import { injectCsvRows } from "./read-csv";
+import { seedCandidacyConventionCollective } from "./referentials/seed-candidacy-convention-collective";
 import { seedCertificationAuthorities } from "./referentials/seed-certification-authorities";
 import { seedCertifications } from "./referentials/seed-certifications";
 import { insertBasicSkillsIfNone } from "./referentials/table-basic-skills";
@@ -80,6 +81,8 @@ const executeSeed = async () => {
   await seedCertifications(prisma);
 
   await seedCertificationAuthorities(prisma);
+
+  await seedCandidacyConventionCollective(prisma);
 };
 
 export const prisma = new PrismaClient();

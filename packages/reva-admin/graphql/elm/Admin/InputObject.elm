@@ -6,7 +6,6 @@ module Admin.InputObject exposing (..)
 
 import Admin.Enum.AccountGroup
 import Admin.Enum.AdmissibilityStatus
-import Admin.Enum.CandidateTypology
 import Admin.Enum.ConformiteNormeAccessibilite
 import Admin.Enum.DistanceStatus
 import Admin.Enum.Duration
@@ -261,43 +260,6 @@ encodeCandidateInput : CandidateInput -> Value
 encodeCandidateInput input____ =
     Encode.maybeObject
         [ ( "email", Encode.string input____.email |> Just ), ( "phone", Encode.string input____.phone |> Just ), ( "firstname", Encode.string input____.firstname |> Just ), ( "lastname", Encode.string input____.lastname |> Just ), ( "departmentId", Encode.string input____.departmentId |> Just ), ( "certificationId", Encode.string |> Encode.optional input____.certificationId ) ]
-
-
-buildCandidateTypologyInformationsInput :
-    CandidateTypologyInformationsInputRequiredFields
-    -> (CandidateTypologyInformationsInputOptionalFields -> CandidateTypologyInformationsInputOptionalFields)
-    -> CandidateTypologyInformationsInput
-buildCandidateTypologyInformationsInput required____ fillOptionals____ =
-    let
-        optionals____ =
-            fillOptionals____
-                { additionalInformation = Absent }
-    in
-    { typology = required____.typology, additionalInformation = optionals____.additionalInformation }
-
-
-type alias CandidateTypologyInformationsInputRequiredFields =
-    { typology : Admin.Enum.CandidateTypology.CandidateTypology }
-
-
-type alias CandidateTypologyInformationsInputOptionalFields =
-    { additionalInformation : OptionalArgument String }
-
-
-{-| Type for the CandidateTypologyInformationsInput input object.
--}
-type alias CandidateTypologyInformationsInput =
-    { typology : Admin.Enum.CandidateTypology.CandidateTypology
-    , additionalInformation : OptionalArgument String
-    }
-
-
-{-| Encode a CandidateTypologyInformationsInput into a value that can be used as an argument.
--}
-encodeCandidateTypologyInformationsInput : CandidateTypologyInformationsInput -> Value
-encodeCandidateTypologyInformationsInput input____ =
-    Encode.maybeObject
-        [ ( "typology", Encode.enum Admin.Enum.CandidateTypology.toString input____.typology |> Just ), ( "additionalInformation", Encode.string |> Encode.optional input____.additionalInformation ) ]
 
 
 buildCertificationChangeInput :
@@ -946,12 +908,11 @@ buildTrainingInput :
     TrainingInputRequiredFields
     -> TrainingInput
 buildTrainingInput required____ =
-    { candidateTypologyInformations = required____.candidateTypologyInformations, certificateSkills = required____.certificateSkills, otherTraining = required____.otherTraining, individualHourCount = required____.individualHourCount, collectiveHourCount = required____.collectiveHourCount, additionalHourCount = required____.additionalHourCount, basicSkillIds = required____.basicSkillIds, mandatoryTrainingIds = required____.mandatoryTrainingIds, isCertificationPartial = required____.isCertificationPartial }
+    { certificateSkills = required____.certificateSkills, otherTraining = required____.otherTraining, individualHourCount = required____.individualHourCount, collectiveHourCount = required____.collectiveHourCount, additionalHourCount = required____.additionalHourCount, basicSkillIds = required____.basicSkillIds, mandatoryTrainingIds = required____.mandatoryTrainingIds, isCertificationPartial = required____.isCertificationPartial }
 
 
 type alias TrainingInputRequiredFields =
-    { candidateTypologyInformations : CandidateTypologyInformationsInput
-    , certificateSkills : String
+    { certificateSkills : String
     , otherTraining : String
     , individualHourCount : Int
     , collectiveHourCount : Int
@@ -965,8 +926,7 @@ type alias TrainingInputRequiredFields =
 {-| Type for the TrainingInput input object.
 -}
 type alias TrainingInput =
-    { candidateTypologyInformations : CandidateTypologyInformationsInput
-    , certificateSkills : String
+    { certificateSkills : String
     , otherTraining : String
     , individualHourCount : Int
     , collectiveHourCount : Int
@@ -982,7 +942,7 @@ type alias TrainingInput =
 encodeTrainingInput : TrainingInput -> Value
 encodeTrainingInput input____ =
     Encode.maybeObject
-        [ ( "candidateTypologyInformations", encodeCandidateTypologyInformationsInput input____.candidateTypologyInformations |> Just ), ( "certificateSkills", Encode.string input____.certificateSkills |> Just ), ( "otherTraining", Encode.string input____.otherTraining |> Just ), ( "individualHourCount", Encode.int input____.individualHourCount |> Just ), ( "collectiveHourCount", Encode.int input____.collectiveHourCount |> Just ), ( "additionalHourCount", Encode.int input____.additionalHourCount |> Just ), ( "basicSkillIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.basicSkillIds |> Just ), ( "mandatoryTrainingIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.mandatoryTrainingIds |> Just ), ( "isCertificationPartial", Encode.bool input____.isCertificationPartial |> Just ) ]
+        [ ( "certificateSkills", Encode.string input____.certificateSkills |> Just ), ( "otherTraining", Encode.string input____.otherTraining |> Just ), ( "individualHourCount", Encode.int input____.individualHourCount |> Just ), ( "collectiveHourCount", Encode.int input____.collectiveHourCount |> Just ), ( "additionalHourCount", Encode.int input____.additionalHourCount |> Just ), ( "basicSkillIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.basicSkillIds |> Just ), ( "mandatoryTrainingIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) |> Encode.list) input____.mandatoryTrainingIds |> Just ), ( "isCertificationPartial", Encode.bool input____.isCertificationPartial |> Just ) ]
 
 
 buildUpdateAccountInput :

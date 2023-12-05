@@ -56,3 +56,10 @@ organism :
     -> SelectionSet (Maybe decodesTo) Admin.Object.Account
 organism object____ =
     Object.selectionForCompositeField "organism" [] object____ (Basics.identity >> Decode.nullable)
+
+
+agences :
+    SelectionSet decodesTo Admin.Object.Organism
+    -> SelectionSet (List decodesTo) Admin.Object.Account
+agences object____ =
+    Object.selectionForCompositeField "agences" [] object____ (Basics.identity >> Decode.list)

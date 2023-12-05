@@ -187,6 +187,29 @@ candidacy_candidacyCountByStatus fillInOptionals____ object____ =
     Object.selectionForCompositeField "candidacy_candidacyCountByStatus" optionalArgs____ object____ Basics.identity
 
 
+type alias CandidacyGetCandidacyCcnsOptionalArguments =
+    { offset : OptionalArgument Int
+    , limit : OptionalArgument Int
+    , searchFilter : OptionalArgument String
+    }
+
+
+candidacy_getCandidacyCcns :
+    (CandidacyGetCandidacyCcnsOptionalArguments -> CandidacyGetCandidacyCcnsOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.CandidacyConventionCollectivePaginated
+    -> SelectionSet decodesTo RootQuery
+candidacy_getCandidacyCcns fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { offset = Absent, limit = Absent, searchFilter = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "offset" filledInOptionals____.offset Encode.int, Argument.optional "limit" filledInOptionals____.limit Encode.int, Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "candidacy_getCandidacyCcns" optionalArgs____ object____ Basics.identity
+
+
 candidate_getCandidateWithCandidacy :
     SelectionSet decodesTo Admin.Object.Candidate
     -> SelectionSet decodesTo RootQuery

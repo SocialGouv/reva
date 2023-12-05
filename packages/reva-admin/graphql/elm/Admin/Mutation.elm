@@ -4,6 +4,7 @@
 
 module Admin.Mutation exposing (..)
 
+import Admin.Enum.CandidateTypology
 import Admin.InputObject
 import Admin.Interface
 import Admin.Object
@@ -280,6 +281,35 @@ candidacy_selectOrganism :
     -> SelectionSet decodesTo RootMutation
 candidacy_selectOrganism requiredArgs____ object____ =
     Object.selectionForCompositeField "candidacy_selectOrganism" [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid), Argument.required "organismId" requiredArgs____.organismId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) ] object____ Basics.identity
+
+
+type alias CandidacySubmitTypologyFormOptionalArguments =
+    { additionalInformation : OptionalArgument String
+    , ccnId : OptionalArgument Data.Scalar.Id
+    }
+
+
+type alias CandidacySubmitTypologyFormRequiredArguments =
+    { candidacyId : Data.Scalar.Id
+    , typology : Admin.Enum.CandidateTypology.CandidateTypology
+    }
+
+
+candidacy_submitTypologyForm :
+    (CandidacySubmitTypologyFormOptionalArguments -> CandidacySubmitTypologyFormOptionalArguments)
+    -> CandidacySubmitTypologyFormRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.Candidacy
+    -> SelectionSet decodesTo RootMutation
+candidacy_submitTypologyForm fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { additionalInformation = Absent, ccnId = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "additionalInformation" filledInOptionals____.additionalInformation Encode.string, Argument.optional "ccnId" filledInOptionals____.ccnId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "candidacy_submitTypologyForm" (optionalArgs____ ++ [ Argument.required "candidacyId" requiredArgs____.candidacyId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "typology" requiredArgs____.typology (Encode.enum Admin.Enum.CandidateTypology.toString) ]) object____ Basics.identity
 
 
 type alias CandidacySubmitTrainingFormRequiredArguments =

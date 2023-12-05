@@ -28,6 +28,12 @@ export interface CandidacyDropOut {
   otherReasonContent?: string | null;
 }
 
+export interface CandidacyConventionCollective {
+  id: string;
+  idcc: string;
+  label: string;
+}
+
 export interface Candidacy extends CandidacyAbstract {
   id: string;
   certificationId?: string;
@@ -45,6 +51,8 @@ export interface Candidacy extends CandidacyAbstract {
   candidacyDropOut?: CandidacyDropOut | null;
   reorientationReason?: ReorientationReason | null;
   createdAt: Date;
+  ccnId?: string | null;
+  conventionCollective?: CandidacyConventionCollective | null;
 }
 
 export interface CandidacyStatus {

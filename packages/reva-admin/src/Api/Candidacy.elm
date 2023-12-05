@@ -1,9 +1,10 @@
-module Api.Candidacy exposing (get, getCandidacies, getCandidacyCountByStatus, getCertification, statusSelection, takeOver, updateCertification)
+module Api.Candidacy exposing (get, getCandidacies, getCandidacyCountByStatus, getCertification, statusSelection, submitTypologyForm, takeOver, updateCertification)
 
 import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (CandidacyStatusFilter)
+import Admin.Enum.CandidateTypology exposing (CandidateTypology)
 import Admin.Mutation as Mutation
 import Admin.Object
-import Admin.Object.Candidacy
+import Admin.Object.Candidacy exposing (ccnId)
 import Admin.Object.CandidacyCountByStatus
 import Admin.Object.CandidacyDropOut
 import Admin.Object.CandidacyStatus
@@ -16,6 +17,7 @@ import Admin.Object.Experience
 import Admin.Query as Query
 import Admin.Scalar exposing (Id(..), Timestamp(..), Uuid(..))
 import Api.Auth as Auth
+import Api.CandidacyConventionCollective
 import Api.Certification as Certification
 import Api.CertificationAuthority as CertificationAuthority
 import Api.Feasibility
@@ -113,6 +115,45 @@ getCertification endpointGraphql token toMsg candidacyId =
             )
 
 
+submitTypologyForm :
+    String
+    -> Token
+    -> (RemoteData (List String) () -> msg)
+    -> CandidacyId
+    -> CandidateTypology
+    -> Maybe String
+    -> Maybe Id
+    -> Cmd msg
+submitTypologyForm endpointGraphql token toMsg candidacyId typology typologyAdditional ccnId =
+    let
+        typologyRequiredArgs =
+            Mutation.CandidacySubmitTypologyFormRequiredArguments
+                (Id <| Data.Candidacy.candidacyIdToString candidacyId)
+                typology
+
+        typologyOptionalArgs =
+            case ccnId of
+                Nothing ->
+                    \optionals ->
+                        { optionals
+                            | additionalInformation = Present (Maybe.withDefault "" typologyAdditional)
+                            , ccnId = Absent
+                        }
+
+                Just id ->
+                    \optionals ->
+                        { optionals
+                            | additionalInformation = Present (Maybe.withDefault "" typologyAdditional)
+                            , ccnId = Present id
+                        }
+    in
+    Mutation.candidacy_submitTypologyForm
+        typologyOptionalArgs
+        typologyRequiredArgs
+        SelectionSet.empty
+        |> Auth.makeMutation "updateCandidacyTypology" endpointGraphql token toMsg
+
+
 updateCertification :
     String
     -> Token
@@ -204,6 +245,10 @@ selection id =
                 |> with (Admin.Object.Candidacy.feasibility Api.Feasibility.selection)
                 |> with Admin.Object.Candidacy.financeModule
                 |> with Admin.Object.Candidacy.firstAppointmentOccuredAt
+                |> with Admin.Object.Candidacy.typology
+                |> with Admin.Object.Candidacy.typologyAdditional
+                |> with Admin.Object.Candidacy.ccnId
+                |> with (Admin.Object.Candidacy.conventionCollective Api.CandidacyConventionCollective.selection)
     in
     SelectionSet.succeed
         (\maybeCandidacy companions ->

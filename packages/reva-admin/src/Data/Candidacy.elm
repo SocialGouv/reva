@@ -38,7 +38,8 @@ import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Admin.Enum.CandidateTypology exposing (CandidateTypology)
 import Admin.Enum.Duration exposing (Duration)
 import Admin.Enum.FinanceModule exposing (FinanceModule)
-import Admin.Object.Candidacy exposing (typology)
+import Admin.Object.Candidacy exposing (conventionCollective, typology, typologyAdditional)
+import Data.CandidacyConventionCollective exposing (CandidacyConventionCollective)
 import Data.Candidate exposing (Candidate)
 import Data.Certification exposing (Certification, CertificationSummary)
 import Data.CertificationAuthority exposing (CertificationAuthority)
@@ -81,8 +82,6 @@ type alias CandidacyExperience =
 
 type alias Candidacy =
     { id : CandidacyId
-
-    -- , typology : CandidateTypology
     , availableCompanions : List Organism
     , candidate : Maybe Candidate
     , certificationId : Maybe String
@@ -102,6 +101,10 @@ type alias Candidacy =
     , feasibility : Maybe Feasibility
     , financeModule : FinanceModule
     , firstAppointmentOccuredAt : Maybe Time.Posix
+    , typology : CandidateTypology
+    , typologyAdditional : Maybe String
+    , ccnId : Maybe String
+    , conventionCollective : Maybe CandidacyConventionCollective
     }
 
 

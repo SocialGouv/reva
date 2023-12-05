@@ -115,14 +115,26 @@ email =
     Object.selectionForField "(Maybe String)" "email" [] (Decode.string |> Decode.nullable)
 
 
-typology : SelectionSet (Maybe Admin.Enum.CandidateTypology.CandidateTypology) Admin.Object.Candidacy
+typology : SelectionSet Admin.Enum.CandidateTypology.CandidateTypology Admin.Object.Candidacy
 typology =
-    Object.selectionForField "(Maybe Enum.CandidateTypology.CandidateTypology)" "typology" [] (Admin.Enum.CandidateTypology.decoder |> Decode.nullable)
+    Object.selectionForField "Enum.CandidateTypology.CandidateTypology" "typology" [] Admin.Enum.CandidateTypology.decoder
 
 
 typologyAdditional : SelectionSet (Maybe String) Admin.Object.Candidacy
 typologyAdditional =
     Object.selectionForField "(Maybe String)" "typologyAdditional" [] (Decode.string |> Decode.nullable)
+
+
+ccnId : SelectionSet (Maybe String) Admin.Object.Candidacy
+ccnId =
+    Object.selectionForField "(Maybe String)" "ccnId" [] (Decode.string |> Decode.nullable)
+
+
+conventionCollective :
+    SelectionSet decodesTo Admin.Object.CandidacyConventionCollective
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Candidacy
+conventionCollective object____ =
+    Object.selectionForCompositeField "conventionCollective" [] object____ (Basics.identity >> Decode.nullable)
 
 
 firstAppointmentOccuredAt : SelectionSet (Maybe Data.Scalar.Timestamp) Admin.Object.Candidacy

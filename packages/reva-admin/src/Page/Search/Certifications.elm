@@ -12,8 +12,8 @@ import Api.Certification
 import BetaGouv.DSFR.Button as Button
 import BetaGouv.DSFR.Icons.System as Icons
 import Browser.Navigation as Nav
-import Data.Candidacy exposing (Candidacy, CandidacyId)
-import Data.Certification exposing (Certification, CertificationSummary)
+import Data.Candidacy exposing (CandidacyId)
+import Data.Certification exposing (Certification)
 import Data.Context exposing (Context)
 import Html exposing (Html, div, p, text)
 import Html.Attributes exposing (attribute, class, title)

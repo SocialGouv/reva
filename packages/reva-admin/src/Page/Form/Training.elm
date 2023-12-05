@@ -1,41 +1,19 @@
 module Page.Form.Training exposing (..)
 
 import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
-import Admin.Object.Candidacy exposing (typology)
 import Data.Candidacy exposing (Candidacy)
 import Data.Form exposing (FormData)
 import Data.Form.Helper
-import Data.Form.Training exposing (candidateTypologyFromString, candidateTypologyToString, scopeToString)
+import Data.Form.Training exposing (scopeToString)
 import Data.Referential exposing (Referential)
-import List exposing (length)
 import Page.Form as Form exposing (Form)
 
 
 form : FormData -> ( Candidacy, Referential ) -> Form
-form formData ( _, referential ) =
+form _ ( _, referential ) =
     let
         keys =
             Data.Form.Training.keys
-
-        filteredTypologyList : List CandidateTypology
-        filteredTypologyList =
-            [ SalariePrive, DemandeurEmploi, AidantsFamiliaux, Benevole, Autre ]
-
-        typologies =
-            filteredTypologyList
-                |> List.map (\el -> ( candidateTypologyToString el, candidateTypologyToString el ))
-
-        availableTypologies =
-            case Data.Form.get keys.typology formData of
-                Nothing ->
-                    typologies
-
-                Just value ->
-                    if value /= candidateTypologyToString NonSpecifie && (List.length (List.filter (\( _, v ) -> v == value) typologies) == 0) then
-                        List.append [ ( value, value ) ] typologies
-
-                    else
-                        typologies
 
         certificationScopes =
             [ ( "full", Data.Form.Training.Full )
@@ -44,10 +22,7 @@ form formData ( _, referential ) =
                 |> List.map (\( id, scope ) -> ( id, scopeToString scope ))
     in
     { elements =
-        [ ( "candidat", Form.Title1 "1 - Informations du candidat" )
-        , ( keys.typology, Form.Select "Typologie" availableTypologies )
-        , ( keys.additionalInformation, Form.SelectOther "typology" (candidateTypologyToString Autre) "Autre typologie" )
-        , ( "hours", Form.Title1 "2 - Nombre d'heures" )
+        [ ( "hours", Form.Title1 "2 - Nombre d'heures" )
         , ( "companion", Form.Title2 "Accompagnement" )
         , ( keys.individualHourCount, Form.Number "Nombre d'heures d'accompagnement individuel" )
         , ( keys.collectiveHourCount, Form.Number "Nombre d'heures d'accompagnement collectif" )

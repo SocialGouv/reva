@@ -1,5 +1,5 @@
 import { composeResolvers } from "@graphql-tools/resolvers-composition";
-import { Organism } from "@prisma/client";
+import { CandidateTypology, Organism } from "@prisma/client";
 import mercurius from "mercurius";
 
 import { prismaClient } from "../../prisma/client";
@@ -39,6 +39,7 @@ import { getAdmissibility } from "./features/getAdmissibility";
 import { getBasicSkills } from "./features/getBasicSkills";
 import { getCandidacySummaries } from "./features/getCandicacySummaries";
 import { getCandidacy } from "./features/getCandidacy";
+import { getCandidacyCcns } from "./features/getCandidacyCcns";
 import { getCandidacyCountByStatus } from "./features/getCandidacyCountByStatus";
 import { getCompanionsForCandidacy } from "./features/getCompanionsForCandidacy";
 import { getExamInfo } from "./features/getExamInfo";
@@ -52,6 +53,7 @@ import { takeOverCandidacy } from "./features/takeOverCandidacy";
 import { unarchiveCandidacy } from "./features/unarchiveCandidacy";
 import { updateAdmissibility } from "./features/updateAdmissibility";
 import { updateAppointmentInformations } from "./features/updateAppointmentInformations";
+import { updateCandidacyTypologyAndCcn } from "./features/updateCandidacyTypologyAndCcn";
 import { updateCertificationOfCandidacy } from "./features/updateCertificationOfCandidacy";
 import { updateCertificationWithinOrganismScope } from "./features/updateCertificationWithinOrganismScope";
 import { updateContactOfCandidacy } from "./features/updateContactOfCandidacy";
@@ -265,6 +267,34 @@ const unsafeResolvers = {
         IAMId: context.auth!.userInfo!.sub,
         searchFilter: _params.searchFilter,
       }),
+    candidacy_getCandidacyCcns: async (
+      _parent: unknown,
+      params: {
+        limit?: number;
+        offset?: number;
+        searchFilter?: string;
+      },
+      context: GraphqlContext
+    ) => {
+      try {
+        if (context.auth.userInfo?.sub == undefined) {
+          throw new FunctionalError(
+            FunctionalCodeError.TECHNICAL_ERROR,
+            "Not authorized"
+          );
+        }
+
+        return getCandidacyCcns(
+          {
+            hasRole: context.auth.hasRole,
+          },
+          params
+        );
+      } catch (e) {
+        logger.error(e);
+        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
+      }
+    },
   },
   Mutation: {
     candidacy_submitCandidacy: async (
@@ -542,6 +572,32 @@ const unsafeResolvers = {
         candidacyId: payload.candidacyId,
         organismId: payload.organismId,
       }),
+    candidacy_submitTypologyForm: async (
+      _: unknown,
+      payload: {
+        candidacyId: string;
+        typology: CandidateTypology;
+        additionalInformation?: string;
+        ccnId?: string;
+      },
+      context: GraphqlContext
+    ) => {
+      try {
+        if (context.auth.userInfo?.sub == undefined) {
+          throw new FunctionalError(
+            FunctionalCodeError.TECHNICAL_ERROR,
+            "Not authorized"
+          );
+        }
+
+        await updateCandidacyTypologyAndCcn(context.auth, payload);
+
+        return candidacyDb.getCandidacyFromId(payload.candidacyId);
+      } catch (e) {
+        logger.error(e);
+        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
+      }
+    },
     candidacy_submitTrainingForm: async (
       _: unknown,
       payload: any,

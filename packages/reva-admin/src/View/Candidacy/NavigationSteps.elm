@@ -4,6 +4,7 @@ import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
 import Admin.Enum.FinanceModule exposing (FinanceModule(..))
 import Admin.Enum.OrganismTypology exposing (OrganismTypology(..))
 import BetaGouv.DSFR.Button as Button
+import Css exposing (Number)
 import Data.Candidacy as Candidacy exposing (Candidacy)
 import Html exposing (Html, div, h2, h3, span, text)
 import Html.Attributes exposing (attribute, class)
@@ -25,7 +26,7 @@ view baseUrl candidacy =
 
         trainingLink =
             if candidacy.firstAppointmentOccuredAt /= Nothing then
-                Just <| Route.href baseUrl <| Route.Candidacy (tab View.Candidacy.Tab.Training)
+                Just <| Route.href baseUrl <| Route.Typology candidacy.id (Route.TypologyFilters (String.toInt "1" |> Maybe.withDefault 1))
 
             else
                 Nothing
