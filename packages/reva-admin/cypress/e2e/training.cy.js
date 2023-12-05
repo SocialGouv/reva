@@ -32,10 +32,9 @@ context("Candidacy", () => {
 
   it("submit training with full certification scope", function () {
     cy.wait("@getCandidacyTraining");
-    cy.get("select").select("Demandeur d’emploi");
     cy.get("[for=certificationScope-option-full]").click();
 
-    testUpdateTraining("candidacy_submitTrainingForm2410756659", {
+    testUpdateTraining("candidacy_submitTrainingForm3599523568", {
       isCertificationPartial: false,
     });
     cy.get("[type=submit]").click();
@@ -45,10 +44,9 @@ context("Candidacy", () => {
 
   it("submit training form with partial certification scope", function () {
     cy.wait("@getCandidacyTraining");
-    cy.get("select").select("Demandeur d’emploi");
     cy.get("[for=certificationScope-option-partial]").click();
 
-    testUpdateTraining("candidacy_submitTrainingForm218257509", {
+    testUpdateTraining("candidacy_submitTrainingForm2682402612", {
       isCertificationPartial: true,
     });
     cy.get("[type=submit]").click();
