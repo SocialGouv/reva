@@ -22,18 +22,18 @@ import Browser.Dom
 import Data.Context exposing (Context)
 import Data.Form exposing (FormData, get, insert)
 import Data.Form.Helper exposing (booleanFromString, booleanToString)
-import Dict exposing (Dict, isEmpty)
+import Dict exposing (Dict)
 import File exposing (File)
-import Html exposing (Html, div, fieldset, input, label, legend, li, option, p, select, span, text, ul)
-import Html.Attributes exposing (class, disabled, for, id, multiple, name, placeholder, required, selected, title, type_, value)
-import Html.Events exposing (on, onInput, onSubmit)
+import Html exposing (Html, div, fieldset, input, label, legend, li, option, p, span, text, ul)
+import Html.Attributes exposing (class, for, id, multiple, name, placeholder, required, title, type_, value)
+import Html.Events exposing (on, onSubmit)
 import Json.Decode
 import List.Extra
 import RemoteData exposing (RemoteData(..))
 import String exposing (String)
 import Task
 import View
-import View.Form
+import View.Form exposing (viewLabel, viewSelect)
 
 
 type Msg referential
@@ -442,26 +442,7 @@ viewEditableElement formData ( elementId, element ) =
                 ]
 
         Select label choices ->
-            div [ class "min-w-[160px] xl:min-w-[228px] max-w-lg mb-6" ]
-                [ div
-                    [ class "fr-select-group" ]
-                    [ viewLabel elementId [ text label ]
-                    , select
-                        [ class "fr-select"
-                        , id elementId
-                        , onInput (UserChangedElement elementId)
-                        , required True
-                        ]
-                        (option
-                            [ disabled True
-                            , selected (dataOrDefault == "")
-                            , value ""
-                            ]
-                            [ text "Sélectionner" ]
-                            :: List.map (viewChoice dataOrDefault) choices
-                        )
-                    ]
-                ]
+            viewSelect { elementId = elementId, label = label, dataOrDefault = dataOrDefault, choices = choices, onInputMsg = UserChangedElement }
 
         SelectOther selectId otherValue label ->
             case get selectId formData of
@@ -676,16 +657,6 @@ viewReadOnlyElement formData ( elementId, element ) =
             Html.map never content
 
 
-viewLabel : String -> List (Html msg) -> Html msg
-viewLabel elementId content =
-    label
-        [ for elementId
-        , class "block mt-[6px] mb-[10px]"
-        , class "uppercase text-xs font-semibold"
-        ]
-        content
-
-
 defaultValue : Element -> String
 defaultValue element =
     case element of
@@ -771,13 +742,6 @@ viewRadioList elementId label choices current =
         , toValue = Tuple.second
         }
         |> Radio.inline
-
-
-viewChoice : String -> ( String, String ) -> Html msg
-viewChoice currentChoiceId ( choiceId, choice ) =
-    option
-        [ selected (choiceId == currentChoiceId), value choiceId ]
-        [ text choice ]
 
 
 viewInputFiles : Bool -> String -> String -> String -> Bool -> Html (Msg referential)

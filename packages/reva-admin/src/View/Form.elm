@@ -1,8 +1,9 @@
-module View.Form exposing (column, columnAuto, intermediateTotal, summary, total)
+module View.Form exposing (column, columnAuto, intermediateTotal, summary, total, viewLabel, viewSelect)
 
 import Accessibility exposing (Attribute, div, text)
-import Html exposing (Html)
-import Html.Attributes exposing (class)
+import Html exposing (Html, label, option, select)
+import Html.Attributes exposing (class, disabled, for, id, required, selected, value)
+import Html.Events exposing (onInput)
 
 
 column : List (Attribute Never) -> List (Html msg) -> Html msg
@@ -46,6 +47,56 @@ total label total1 total2 =
         , columnAuto [ class "mr-4" ] [ text total1 ]
         , columnAuto [ class "font-medium" ] [ text total2 ]
         ]
+
+
+viewLabel : String -> List (Html msg) -> Html msg
+viewLabel elementId content =
+    label
+        [ for elementId
+        , class "block mt-[6px] mb-[10px]"
+        , class "uppercase text-xs font-semibold"
+        ]
+        content
+
+
+type alias SelectConfig msg =
+    { elementId : String
+    , label : String
+    , dataOrDefault : String
+    , choices : List ( String, String )
+    , onInputMsg : String -> (String -> msg)
+    }
+
+
+viewSelect : SelectConfig msg -> Html msg
+viewSelect config =
+    div [ class "min-w-[160px] xl:min-w-[228px] max-w-lg mb-6" ]
+        [ div
+            [ class "fr-select-group" ]
+            [ viewLabel config.elementId [ text config.label ]
+            , select
+                [ class "fr-select"
+                , id config.elementId
+                , onInput (config.onInputMsg config.elementId)
+                , required True
+                ]
+                (option
+                    [ disabled True
+                    , selected (config.dataOrDefault == "")
+                    , value ""
+                    ]
+                    [ text "Sélectionner" ]
+                    :: List.map (viewChoice config.dataOrDefault) config.choices
+                )
+            ]
+        ]
+
+
+viewChoice : String -> ( String, String ) -> Html msg
+viewChoice currentChoiceId ( choiceId, choice ) =
+    option
+        [ selected (choiceId == currentChoiceId), value choiceId ]
+        [ text choice ]
 
 
 summary : String -> Html msg
