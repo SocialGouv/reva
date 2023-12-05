@@ -1,4 +1,4 @@
-module Data.Organism exposing (Organism)
+module Data.Organism exposing (Organism, OrganismInformationsCommerciales)
 
 import Admin.Enum.OrganismTypology exposing (OrganismTypology)
 
@@ -11,4 +11,11 @@ type alias Organism =
     , city : String
     , contactAdministrativeEmail : String
     , typology : OrganismTypology
+    , informationsCommerciales : Maybe OrganismInformationsCommerciales
+    }
+
+
+type alias OrganismInformationsCommerciales =
+    { id : String
+    , nom : Maybe String
     }

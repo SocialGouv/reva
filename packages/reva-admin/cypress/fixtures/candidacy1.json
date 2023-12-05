@@ -8,7 +8,8 @@
         "zip3832528868": "33200",
         "address3832528868": "22 rue de Paris",
         "label3832528868": "Demo AAP",
-        "id3509119574": "0eea8acb-f939-446d-9e9a-e54eba6bc168"
+        "id3509119574": "0eea8acb-f939-446d-9e9a-e54eba6bc168",
+        "informationsCommerciales": null
       }
     ],
     "getCandidacyById1645362253": {
@@ -75,7 +76,8 @@
         "zip3832528868": "33200",
         "address3832528868": "22 rue de Paris",
         "label3832528868": "Demo AAP",
-        "id3509119574": "0eea8acb-f939-446d-9e9a-e54eba6bc168"
+        "id3509119574": "0eea8acb-f939-446d-9e9a-e54eba6bc168",
+        "informationsCommerciales": null
       },
       "certificationId3874409000": "2e5be566-354a-43b1-b116-24ec267290b1",
       "candidate": {
