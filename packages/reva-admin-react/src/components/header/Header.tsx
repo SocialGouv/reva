@@ -5,11 +5,83 @@ import { ADMIN_ELM_URL } from "@/config/config";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export const Header = () => {
   const currentPathname = usePathname();
   const { isAdmin, isOrganism, isGestionnaireMaisonMereAAP } = useAuth();
   const { isFeatureActive } = useFeatureflipping();
+
+  const { status } = useSession();
+
+  const navigation =
+    status === "authenticated"
+      ? [
+          {
+            text: "Candidatures",
+            linkProps: {
+              href: ADMIN_ELM_URL + "/candidacies",
+              target: "_self",
+            },
+          },
+          ...(isGestionnaireMaisonMereAAP && isFeatureActive("AAP_AGENCES")
+            ? [
+                {
+                  text: "Gestion des agences",
+                  linkProps: {
+                    href: "/agences/",
+                    target: "_self",
+                  },
+                  isActive: currentPathname.startsWith("/agences"),
+                },
+              ]
+            : []),
+          ...(isOrganism && !isAdmin
+            ? [
+                {
+                  text: "Paramètres du compte",
+                  linkProps: {
+                    href: "/account-settings/commercial-information",
+                    target: "_self",
+                  },
+                  isActive: currentPathname.startsWith("/account-settings"),
+                },
+              ]
+            : []),
+          ...(isAdmin
+            ? [
+                {
+                  text: "Inscriptions",
+                  linkProps: {
+                    href: ADMIN_ELM_URL + "/subscritpions",
+                    target: "_self",
+                  },
+                },
+                {
+                  text: "Comptes",
+                  linkProps: {
+                    href: ADMIN_ELM_URL + "/accounts",
+                    target: "_self",
+                  },
+                },
+                {
+                  text: "Certifications",
+                  linkProps: {
+                    href: ADMIN_ELM_URL + "/certifications",
+                    target: "_self",
+                  },
+                },
+                {
+                  text: "Dossiers de faisabilité",
+                  linkProps: {
+                    href: ADMIN_ELM_URL + "/feasibilities",
+                    target: "_self",
+                  },
+                },
+              ]
+            : []),
+        ]
+      : [];
 
   return (
     <DsfrHeader
@@ -39,71 +111,7 @@ export const Header = () => {
           text: "Se déconnecter",
         },
       ]}
-      navigation={[
-        {
-          text: "Candidatures",
-          linkProps: {
-            href: ADMIN_ELM_URL + "/candidacies",
-            target: "_self",
-          },
-        },
-        ...(isGestionnaireMaisonMereAAP && isFeatureActive("AAP_AGENCES")
-          ? [
-              {
-                text: "Gestion des agences",
-                linkProps: {
-                  href: "/agences/",
-                  target: "_self",
-                },
-                isActive: currentPathname.startsWith("/agences"),
-              },
-            ]
-          : []),
-        ...(isOrganism && !isAdmin
-          ? [
-              {
-                text: "Paramètres du compte",
-                linkProps: {
-                  href: "/account-settings/commercial-information",
-                  target: "_self",
-                },
-                isActive: currentPathname.startsWith("/account-settings"),
-              },
-            ]
-          : []),
-        ...(isAdmin
-          ? [
-              {
-                text: "Inscriptions",
-                linkProps: {
-                  href: ADMIN_ELM_URL + "/subscritpions",
-                  target: "_self",
-                },
-              },
-              {
-                text: "Comptes",
-                linkProps: {
-                  href: ADMIN_ELM_URL + "/accounts",
-                  target: "_self",
-                },
-              },
-              {
-                text: "Certifications",
-                linkProps: {
-                  href: ADMIN_ELM_URL + "/certifications",
-                  target: "_self",
-                },
-              },
-              {
-                text: "Dossiers de faisabilité",
-                linkProps: {
-                  href: ADMIN_ELM_URL + "/feasibilities",
-                  target: "_self",
-                },
-              },
-            ]
-          : []),
-      ]}
+      navigation={navigation}
     />
   );
 };

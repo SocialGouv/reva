@@ -50,7 +50,7 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
     }
   }, [session]);
 
-  return status == "authenticated" ? (
+  return (
     <div className="w-full min-h-screen flex flex-col">
       <SkipLinks
         links={[
@@ -74,11 +74,12 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
           <div
             className={`fr-container flex-1 md:mt-16 px-8 pt-10 pb-4 fr-grid-row bg-white mb-12`}
           >
-            {children}
+            {status === "authenticated" && children}
           </div>
         </div>
       </main>
+
       <Footer />
     </div>
-  ) : null;
+  );
 };
