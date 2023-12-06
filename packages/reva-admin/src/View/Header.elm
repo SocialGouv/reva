@@ -4,7 +4,7 @@ import Accessibility exposing (a, button, div, header, li, nav, span, text, ul)
 import Accessibility.Aria as Aria
 import Api.Token
 import Data.Context exposing (Context)
-import Html.Attributes exposing (alt, attribute, class, href, id, style, target, title)
+import Html.Attributes exposing (alt, attribute, class, classList, href, id, style, target, title)
 import Html.Attributes.Extra exposing (role)
 import Route exposing (Route(..))
 import View
@@ -213,6 +213,11 @@ headerMenuModal context activeHeaderLink =
                 , role "navigation"
                 , Aria.label "Menu principal"
                 ]
-                [ ul [ class "fr-nav__list" ] navLinks ]
+                [ ul
+                    [ class "fr-nav__list"
+                    , classList [ ( "h-[56px]", not <| Api.Token.isCertificationAuthority context.token ) ]
+                    ]
+                    navLinks
+                ]
             ]
         ]
