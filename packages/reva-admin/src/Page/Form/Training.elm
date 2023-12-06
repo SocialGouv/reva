@@ -22,13 +22,11 @@ form _ ( _, referential ) =
                 |> List.map (\( id, scope ) -> ( id, scopeToString scope ))
     in
     { elements =
-        [ ( "hours", Form.Title1 "2 - Nombre d'heures" )
-        , ( "companion", Form.Title2 "Accompagnement" )
+        [ ( "hours", Form.Title1 "Nombre d'heures" )
         , ( keys.individualHourCount, Form.Number "Nombre d'heures d'accompagnement individuel" )
         , ( keys.collectiveHourCount, Form.Number "Nombre d'heures d'accompagnement collectif" )
-        , ( "training-hours", Form.Title2 "Formations complémentaires" )
-        , ( keys.additionalHourCount, Form.Number "Nombre d'heures" )
-        , ( "training", Form.Title1 "3 - Compléments formatifs" )
+        , ( keys.additionalHourCount, Form.Number "Nombre d’heures de formations complémentaires" )
+        , ( "training", Form.Title1 "Compléments formatifs" )
         , ( keys.mandatoryTrainings
           , Form.CheckboxList "Formations obligatoires" <|
                 Data.Form.Helper.toIdList referential.mandatoryTrainings
