@@ -76,12 +76,8 @@ const authOptions: AuthOptions = {
         };
       }
 
-      // Return previous token if the access token has not expired yet
-      if (Date.now() < (token.accessTokenExpires as number)) {
-        return token;
-      }
-
-      // Access token has expired, try to update it
+      // Force renew of refresh access token no matter what
+      // poor man fix for admin-elm logout detection
       return refreshAccessToken(token);
     },
     async session({ session, token }) {
