@@ -4,6 +4,7 @@ module Page.Search.Typology exposing
     , init
     , update
     , view
+    , withFilters
     )
 
 import Accessibility exposing (h1, h2)
@@ -38,9 +39,14 @@ type Msg
     | UserSelectConventionCollective CandidacyConventionCollective
 
 
+type alias Filters =
+    { page : Int
+    }
+
+
 type alias Model =
     { candidacyId : CandidacyId
-    , page : Int
+    , filters : Filters
     , search : Search.Model CandidacyConventionCollective Msg
     , submission : RemoteData (List String) ()
     , typology : Maybe CandidateTypology
@@ -53,6 +59,37 @@ type alias Config =
     { candidacyId : CandidacyId
     , page : Int
     }
+
+
+withFilters : Context -> Config -> Model -> ( Model, Cmd Msg )
+withFilters context config model =
+    let
+        pageChanged =
+            model.filters.page /= config.page
+
+        withNewPage : Filters -> Filters
+        withNewPage filters =
+            { filters | page = config.page }
+
+        ( newSearchModel, searchCmd ) =
+            if pageChanged then
+                Search.reload model.search
+                    (Api.CandidacyConventionCollective.getCandidacyConventionCollectives
+                        context.endpoint
+                        context.token
+                        config.page
+                    )
+                    (\p -> Route.Typology config.candidacyId (Route.TypologyFilters p))
+
+            else
+                ( model.search, Cmd.none )
+    in
+    ( { model
+        | filters = model.filters |> withNewPage
+        , search = newSearchModel
+      }
+    , Cmd.map GotSearchMsg searchCmd
+    )
 
 
 init : Context -> Config -> ( Model, Cmd Msg )
@@ -70,7 +107,7 @@ init context config =
                 }
     in
     ( { candidacyId = config.candidacyId
-      , page = config.page
+      , filters = { page = config.page }
       , search = searchModel
       , submission = NotAsked
       , typology = Nothing

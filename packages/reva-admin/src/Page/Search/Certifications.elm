@@ -4,6 +4,7 @@ module Page.Search.Certifications exposing
     , init
     , update
     , view
+    , withFilters
     )
 
 import Accessibility exposing (h1, h2, span)
@@ -31,10 +32,15 @@ type Msg
     | UserSelectCertification Certification
 
 
+type alias Filters =
+    { page : Int
+    }
+
+
 type alias Model =
     { candidacyId : Maybe CandidacyId
     , certification : RemoteData (List String) Certification
-    , page : Int
+    , filters : Filters
     , search : Search.Model Certification Msg
     , submission : RemoteData (List String) ()
     }
@@ -45,6 +51,45 @@ type alias Config =
     , organismId : Maybe String
     , page : Int
     }
+
+
+withFilters : Context -> Config -> Model -> ( Model, Cmd Msg )
+withFilters context config model =
+    let
+        pageChanged =
+            model.filters.page /= config.page
+
+        withNewPage : Filters -> Filters
+        withNewPage filters =
+            { filters | page = config.page }
+
+        route =
+            case config.candidacyId of
+                Just candidacyId ->
+                    \p -> Route.Reorientation candidacyId (Route.CertificationsFilters config.organismId p)
+
+                Nothing ->
+                    \p -> Route.Certifications (Route.CertificationsFilters config.organismId p)
+
+        ( newSearchModel, searchCmd ) =
+            if pageChanged then
+                Search.reload model.search
+                    (Api.Certification.getCertifications context.endpoint
+                        context.token
+                        config.page
+                        config.organismId
+                    )
+                    route
+
+            else
+                ( model.search, Cmd.none )
+    in
+    ( { model
+        | filters = model.filters |> withNewPage
+        , search = newSearchModel
+      }
+    , Cmd.map GotSearchMsg searchCmd
+    )
 
 
 init : Context -> Config -> ( Model, Cmd Msg )
@@ -70,7 +115,7 @@ init context config =
     in
     ( { candidacyId = config.candidacyId
       , certification = Loading
-      , page = config.page
+      , filters = { page = config.page }
       , search = searchModel
       , submission = NotAsked
       }

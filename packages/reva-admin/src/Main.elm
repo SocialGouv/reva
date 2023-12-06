@@ -220,15 +220,15 @@ changeRouteTo context route model =
                 |> Candidacies.withFilters context filters.page filters.status
                 |> updateWith Candidacies GotCandidaciesMsg model
 
+        ( Route.Candidacies filters, _ ) ->
+            Candidacies.init model.context filters.status filters.page
+                |> updateWith Candidacies GotCandidaciesMsg model
+
         ( Route.Candidacy tab, Candidacy candidacyModel ) ->
             ( candidacyModel, Cmd.none )
                 |> Candidacy.resetSelected
                 |> Candidacy.updateTab context tab
                 |> updateWith Candidacy GotCandidacyMsg model
-
-        ( Route.Candidacies filters, _ ) ->
-            Candidacies.init model.context filters.status filters.page
-                |> updateWith Candidacies GotCandidaciesMsg model
 
         ( Route.Feasibilities filters, Feasibilities feasibilitiesModel ) ->
             feasibilitiesModel
@@ -247,12 +247,30 @@ changeRouteTo context route model =
             Subscriptions.init model.context filters.status filters.page
                 |> updateWith Subscriptions GotSubscriptionsMsg model
 
+        ( Route.Certifications filters, Certifications certificationsModel ) ->
+            certificationsModel
+                |> Certifications.withFilters context
+                    { candidacyId = Nothing
+                    , organismId = filters.organismId
+                    , page = filters.page
+                    }
+                |> updateWith Certifications GotCertificationsMsg model
+
         ( Route.Certifications filters, _ ) ->
             Certifications.init context
                 { candidacyId = Nothing
                 , organismId = filters.organismId
                 , page = filters.page
                 }
+                |> updateWith Certifications GotCertificationsMsg model
+
+        ( Route.Reorientation candidacyId filters, Certifications certificationsModel ) ->
+            certificationsModel
+                |> Certifications.withFilters context
+                    { candidacyId = Just candidacyId
+                    , organismId = filters.organismId
+                    , page = filters.page
+                    }
                 |> updateWith Certifications GotCertificationsMsg model
 
         ( Route.Reorientation candidacyId filters, _ ) ->
@@ -283,6 +301,14 @@ changeRouteTo context route model =
         ( Route.Candidacy tab, _ ) ->
             Candidacy.init model.context tab
                 |> updateWith Candidacy GotCandidacyMsg model
+
+        ( Route.Typology candidacyId filters, Typology typologyModel ) ->
+            typologyModel
+                |> Typology.withFilters context
+                    { candidacyId = candidacyId
+                    , page = filters.page
+                    }
+                |> updateWith Typology GotTypologyMsg model
 
         ( Route.Typology candidacyId filters, _ ) ->
             Typology.init context

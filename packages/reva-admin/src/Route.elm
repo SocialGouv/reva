@@ -22,7 +22,7 @@ import Admin.Enum.CandidacyStatusFilter as CandidacyStatusFilter exposing (Candi
 import Admin.Enum.FeasibilityCategoryFilter as FeasibilityCategoryFilter exposing (FeasibilityCategoryFilter)
 import Admin.Enum.SubscriptionRequestStatus as SubscriptionRequestStatus exposing (SubscriptionRequestStatus(..))
 import Data.Candidacy exposing (CandidacyId, candidacyIdFromString, candidacyIdToString)
-import Html exposing (Html)
+import Html
 import Html.Attributes
 import Url
 import Url.Builder
@@ -215,7 +215,7 @@ toString baseUrl route =
                    )
 
         typologyFiltersToParams filters =
-            Url.Builder.int "page" filters.page :: []
+            [ Url.Builder.int "page" filters.page ]
     in
     case route of
         Home ->

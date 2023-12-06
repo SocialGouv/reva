@@ -9,17 +9,13 @@ module Page.Search.Candidacies exposing
 
 import Accessibility exposing (a, h1, h3)
 import Admin.Enum.CandidacyStatusFilter exposing (CandidacyStatusFilter)
-import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep)
-import Admin.Object.Organism exposing (informationsCommerciales)
+import Admin.Enum.CandidacyStatusStep
 import Api.Candidacy
-import Api.Token exposing (Token)
+import Api.Token
 import BetaGouv.DSFR.Button as Button
-import Css exposing (true)
-import Data.Candidacy exposing (CandidacyCountByStatus, CandidacySummary, CandidacySummaryPage, candidacyStatusFilterToReadableString)
-import Data.Certification exposing (Certification)
+import Data.Candidacy exposing (CandidacyCountByStatus, CandidacySummary, candidacyStatusFilterToReadableString)
 import Data.Context exposing (Context)
-import Data.Organism exposing (Organism)
-import Data.Referential exposing (Referential)
+import Data.Referential
 import Html exposing (Html, div, li, nav, p, text, ul)
 import Html.Attributes exposing (attribute, class, classList, href, target)
 import Html.Attributes.Extra exposing (role)
