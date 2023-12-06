@@ -115,8 +115,8 @@ const CommercialInformationPage = () => {
                   nativeInputProps={{ ...register("nom") }}
                 />
                 <SmallNotice>
-                  Si vous ne renseignez pas ce champ, votre raison commerciale
-                  sera affichée par défaut.
+                  Si vous ne renseignez pas ce champ, votre raison sociale sera
+                  affichée aux candidats par défaut.
                 </SmallNotice>
               </div>
               <div>
@@ -197,7 +197,7 @@ const CommercialInformationPage = () => {
             <fieldset className="mt-8">
               <RadioButtons
                 legend="Votre établissement est-il conforme aux normes d'accessibilité et peut
-            recevoir du public à mobilité réduite ?"
+            recevoir du public à mobilité réduite (PMR) ?"
                 options={[
                   {
                     label: "Oui",
