@@ -116,7 +116,7 @@ training :
     -> Maybe Int
     -> Maybe Int
     -> Maybe Int
-    -> Bool
+    -> Maybe Bool
     -> Dict String String
 training mandatoryTrainings basicSkills certificateSkills otherTraining individualHourCount collectiveHourCount additionalHourCount isCertificationPartial =
     let
@@ -135,11 +135,16 @@ training mandatoryTrainings basicSkills certificateSkills otherTraining individu
             , ( .certificationScope
               , Just <|
                     scopeToString <|
-                        if isCertificationPartial then
-                            Partial
+                        case isCertificationPartial of
+                            Nothing ->
+                                Unknown
 
-                        else
-                            Full
+                            Just isPartial ->
+                                if isPartial then
+                                    Partial
+
+                                else
+                                    Full
               )
             ]
                 |> Helper.toKeyedList keys

@@ -92,7 +92,7 @@ model Candidacy {
   FundingRequest            FundingRequest[]
   paymentRequest            PaymentRequest?
   fundingRequestUnifvae     FundingRequestUnifvae[]
-  isCertificationPartial    Boolean                                 @default(false) @map("is_certification_partial")
+  isCertificationPartial    Boolean?                                @map("is_certification_partial")
   admissibility             Admissibility?
   examInfo                  ExamInfo?
   Feasibility               Feasibility[]

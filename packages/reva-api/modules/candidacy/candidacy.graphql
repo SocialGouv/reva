@@ -60,7 +60,7 @@ type Candidacy {
   organismId: UUID
   organism: Organism
   certification: Certification
-  isCertificationPartial: Boolean!
+  isCertificationPartial: Boolean
   experiences: [Experience!]!
   goals: [CandidateGoal!]!
   firstname: String

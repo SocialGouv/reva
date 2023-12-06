@@ -81,9 +81,9 @@ certification object____ =
     Object.selectionForCompositeField "certification" [] object____ (Basics.identity >> Decode.nullable)
 
 
-isCertificationPartial : SelectionSet Bool Admin.Object.Candidacy
+isCertificationPartial : SelectionSet (Maybe Bool) Admin.Object.Candidacy
 isCertificationPartial =
-    Object.selectionForField "Bool" "isCertificationPartial" [] Decode.bool
+    Object.selectionForField "(Maybe Bool)" "isCertificationPartial" [] (Decode.bool |> Decode.nullable)
 
 
 experiences :

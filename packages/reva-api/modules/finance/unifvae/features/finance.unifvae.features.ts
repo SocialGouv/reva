@@ -134,6 +134,13 @@ export const createOrUpdatePaymentRequestUnifvae = async ({
     );
   }
 
+  if (
+    candidacy.isCertificationPartial == undefined ||
+    candidacy.isCertificationPartial == null
+  ) {
+    throw new Error('"isCertificationPartial" has not been set');
+  }
+
   const validationErrors = await applyBusinessValidationRules({
     candidacyId,
     isCertificationPartial: candidacy.isCertificationPartial,
