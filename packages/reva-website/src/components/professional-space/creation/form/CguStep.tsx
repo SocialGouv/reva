@@ -46,9 +46,19 @@ export const CguStep = () => {
       en ligne.
       <br />
       <br />
-      <a href="https://tally.so/r/mVjVeN">
+      <a href="https://tally.so/r/mVjVeN" target="_blank">
         Nous vous encourageons vivement à vous inscrire sur un des créneaux
         disponibles via ce lien.
+      </a>
+      <br />
+      <br />
+      Guide pas à pas{" "}
+      <a
+        href="https://scribehow.com/shared/Creation_dun_compte_Architecte_Accompagnateur_de_Parcours_sur_France_VAE__zlNFiuzSSn2sfiHwH_u7mA"
+        target="_blank"
+      >
+        "création de compte Architecte Accompagnateur de Parcours sur France
+        VAE".
       </a>
     </>
   );
@@ -60,7 +70,7 @@ export const CguStep = () => {
         closable
         description={alertDescription}
         severity="warning"
-        title="Webinaire de présentation"
+        title="Aide à la création de compte"
       />
       <div className="flex flex-col min-w-[70vw]">
         <Stepper
