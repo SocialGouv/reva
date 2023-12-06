@@ -34,7 +34,7 @@ type Msg
     | GotCandidacyResponse (RemoteData (List String) Candidacy)
     | GotCandidacyUpdateResponse CandidacyId (RemoteData (List String) ())
     | GotConventionCollectiveUpdateResponse CandidacyId (RemoteData (List String) ())
-    | UserChangedTypology Candidacy String String
+    | UserChangedTypology String String
     | UserClickNext
     | UserSelectConventionCollective CandidacyConventionCollective
 
@@ -50,7 +50,6 @@ type alias Model =
     , search : Search.Model CandidacyConventionCollective Msg
     , submission : RemoteData (List String) ()
     , candidacy : RemoteData (List String) Candidacy
-    , conventionCollective : Maybe CandidacyConventionCollective
     , errors : List String
     }
 
@@ -111,7 +110,6 @@ init context config =
       , search = searchModel
       , submission = NotAsked
       , candidacy = NotAsked
-      , conventionCollective = Nothing
       , errors = []
       }
     , Cmd.batch
@@ -173,7 +171,7 @@ viewForm context model candidacy =
             [ h2 [ class "text-xl" ] [ text "1 - Informations du candidat" ] ]
         , viewSelectTypology context candidacy
         , if candidacy.typology == SalariePrive || candidacy.typology == DemandeurEmploi then
-            viewDirectoryPanel context model
+            viewDirectoryPanel context model candidacy
 
           else
             div
@@ -214,12 +212,12 @@ viewSelectTypology _ candidacy =
         , label = "Typologie"
         , dataOrDefault = candidateTypologyToString typology
         , choices = availableTypologies |> List.map (\el -> ( candidateTypologyToString el, candidateTypologyToString el ))
-        , onInputMsg = UserChangedTypology candidacy
+        , onInputMsg = UserChangedTypology
         }
 
 
-viewDirectoryPanel : Context -> Model -> Html Msg
-viewDirectoryPanel context model =
+viewDirectoryPanel : Context -> Model -> Candidacy -> Html Msg
+viewDirectoryPanel context model candidacy =
     case model.submission of
         Failure errors ->
             View.popupErrors errors
@@ -227,18 +225,22 @@ viewDirectoryPanel context model =
         _ ->
             div
                 [ attribute "aria-label" "Certifications" ]
-                [ if model.conventionCollective == Nothing then
-                    div [] []
-
-                  else
-                    div []
-                        [ h2 [ class "text-sm font-semibold mb-2" ] [ text "Convention collective sélectionnée" ]
-                        , div
-                            [ class "mb-10 h-20 flex flex-col justify-center"
-                            , class "bg-gray-100 rounded-xl px-5"
-                            ]
-                            (viewConventionCollective model.conventionCollective)
+                [ div []
+                    [ h2 [ class "text-sm font-semibold mb-2" ] [ text "Convention collective sélectionnée" ]
+                    , div
+                        [ class "mb-10 h-20 flex flex-col justify-center"
+                        , class "bg-gray-100 rounded-xl px-5"
                         ]
+                      <|
+                        if candidacy.conventionCollective == Nothing then
+                            [ div
+                                [ class "text-center text-gray-400 font-medium text-sm" ]
+                                [ text "Aucune convention collective sélectionnée" ]
+                            ]
+
+                        else
+                            viewConventionCollective candidacy.conventionCollective
+                    ]
                 , label
                     [ class "block mt-[6px] mb-[10px] uppercase text-xs font-semibold" ]
                     [ text "Convention collective (une seule convention pour un candidat)" ]
@@ -310,6 +312,10 @@ viewConventionCollective conventionCollective =
 
 update : Context -> Msg -> Model -> ( Model, Cmd Msg )
 update context msg model =
+    let
+        updateCandidacy f =
+            RemoteData.map f model.candidacy
+    in
     case msg of
         GotSearchMsg searchMsg ->
             let
@@ -321,7 +327,7 @@ update context msg model =
             )
 
         GotCandidacyResponse (Success candidacy) ->
-            ( { model | candidacy = Success candidacy, conventionCollective = candidacy.conventionCollective }, Cmd.none )
+            ( { model | candidacy = Success candidacy }, Cmd.none )
 
         GotCandidacyResponse remoteCandidacy ->
             ( { model | candidacy = remoteCandidacy }, Cmd.none )
@@ -341,15 +347,15 @@ update context msg model =
                 Cmd.none
             )
 
-        UserChangedTypology candidacy _ elementValue ->
+        UserChangedTypology _ elementValue ->
             let
                 typology =
                     candidateTypologyFromString elementValue
             in
-            ( { model | candidacy = Success { candidacy | typology = typology } }, Cmd.none )
+            ( { model | candidacy = updateCandidacy (\c -> { c | typology = typology }) }, Cmd.none )
 
         UserSelectConventionCollective conventionCollective ->
-            ( { model | conventionCollective = Just conventionCollective }
+            ( { model | candidacy = updateCandidacy (\c -> { c | conventionCollective = Just conventionCollective }) }
             , submitTypology context model (Just conventionCollective.id)
             )
 
