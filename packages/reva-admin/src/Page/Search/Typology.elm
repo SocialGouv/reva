@@ -25,6 +25,7 @@ import Platform.Cmd as Cmd
 import RemoteData exposing (RemoteData(..))
 import Route exposing (Route)
 import View
+import View.Candidacy.NavigationSteps as NavigationSteps
 import View.Candidacy.Tab exposing (Value(..))
 import View.Form exposing (viewSelect)
 
@@ -131,8 +132,8 @@ view context model =
 
         viewPage content =
             View.layout
-                ""
-                []
+                "Accéder aux étapes du parcours"
+                (NavigationSteps.view context model.candidacy)
                 [ View.article
                     "Définition du parcours"
                     (Route.href context.baseUrl backRoute)

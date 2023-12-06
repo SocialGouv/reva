@@ -166,28 +166,6 @@ view context model =
                     |> Html.map GotFormMsg
                 ]
 
-        maybeNavigationSteps =
-            case model.selected of
-                Success candidacy ->
-                    [ case candidacy.dropOutDate of
-                        Just droppedOutDate ->
-                            NavigationSteps.dropOutView context.baseUrl candidacy droppedOutDate
-
-                        Nothing ->
-                            if Candidacy.lastStatus candidacy.statuses == Step.Archive then
-                                if Candidacy.isCandidacyReoriented candidacy then
-                                    NavigationSteps.reorientationView context.baseUrl candidacy
-
-                                else
-                                    NavigationSteps.archiveView context.baseUrl candidacy
-
-                            else
-                                NavigationSteps.view context.baseUrl candidacy
-                    ]
-
-                _ ->
-                    []
-
         content =
             case model.tab.value of
                 Archive ->
@@ -261,7 +239,9 @@ view context model =
                         _ ->
                             viewForm "feasibility"
     in
-    View.layout "Accéder aux étapes du parcours" maybeNavigationSteps [ content ]
+    View.layout "Accéder aux étapes du parcours"
+        (NavigationSteps.view context model.selected)
+        [ content ]
 
 
 viewTrainingSent : Context -> CandidacyId -> List (Html msg)

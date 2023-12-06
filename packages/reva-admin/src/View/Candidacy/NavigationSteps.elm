@@ -1,13 +1,14 @@
-module View.Candidacy.NavigationSteps exposing (archiveView, dropOutView, reorientationView, view)
+module View.Candidacy.NavigationSteps exposing (view)
 
-import Admin.Enum.CandidacyStatusStep exposing (CandidacyStatusStep(..))
+import Admin.Enum.CandidacyStatusStep as Step exposing (CandidacyStatusStep(..))
 import Admin.Enum.FinanceModule exposing (FinanceModule(..))
 import Admin.Enum.OrganismTypology exposing (OrganismTypology(..))
 import BetaGouv.DSFR.Button as Button
-import Css exposing (Number)
 import Data.Candidacy as Candidacy exposing (Candidacy)
+import Data.Context exposing (Context)
 import Html exposing (Html, div, h2, h3, span, text)
 import Html.Attributes exposing (attribute, class)
+import RemoteData exposing (RemoteData(..))
 import Route
 import Time
 import View.Candidacy.Tab
@@ -15,8 +16,32 @@ import View.Date
 import View.Steps
 
 
-view : String -> Candidacy -> Html msg
-view baseUrl candidacy =
+view : Context -> RemoteData (List String) Candidacy -> List (Html msg)
+view context remoteCandidacy =
+    case remoteCandidacy of
+        Success candidacy ->
+            [ case candidacy.dropOutDate of
+                Just droppedOutDate ->
+                    dropOutView context.baseUrl candidacy droppedOutDate
+
+                Nothing ->
+                    if Candidacy.lastStatus candidacy.statuses == Step.Archive then
+                        if Candidacy.isCandidacyReoriented candidacy then
+                            reorientationView context.baseUrl candidacy
+
+                        else
+                            archiveView context.baseUrl candidacy
+
+                    else
+                        activeView context.baseUrl candidacy
+            ]
+
+        _ ->
+            []
+
+
+activeView : String -> Candidacy -> Html msg
+activeView baseUrl candidacy =
     let
         tab =
             View.Candidacy.Tab.Tab candidacy.id
