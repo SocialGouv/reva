@@ -11,7 +11,7 @@ const config: CodegenConfig = {
     process.env.NEXT_PUBLIC_WEBSITE_STRAPI_BASE_URL + "/graphql" ||
       "http://localhost:1337/graphql",
   ],
-  documents: ["src/**/*.tsx"],
+  documents: ["src/**/*.tsx", "src/**/*.ts"],
   ignoreNoDocuments: true, // for better experience with the watcher
   generates: {
     "./src/graphql/generated/": {

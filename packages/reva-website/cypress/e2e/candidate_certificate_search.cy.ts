@@ -5,12 +5,19 @@ describe("candidate certificate search", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
+        "activeFeaturesForConnectedUser",
+        "active_features_empty.json"
+      );
+      stubQuery(
+        req,
         "searchCertificationsQuery",
         "candidate_certificate_search.json"
       );
     });
 
     cy.visit("http://localhost:3002");
+
+    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get('[data-testid="autocomplete-input"]').type("chaudronnier", {
       delay: 0,
@@ -27,12 +34,19 @@ describe("candidate certificate search", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
+        "activeFeaturesForConnectedUser",
+        "active_features_empty.json"
+      );
+      stubQuery(
+        req,
         "searchCertificationsQuery",
         "candidate_certificate_search.json"
       );
     });
 
     cy.visit("http://localhost:3002");
+
+    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get('[data-testid="autocomplete-input"]').type("chaudronnier", {
       delay: 0,
@@ -51,12 +65,19 @@ describe("candidate certificate search", () => {
     cy.intercept("POST", "/api/graphql", (req) => {
       stubQuery(
         req,
+        "activeFeaturesForConnectedUser",
+        "active_features_empty.json"
+      );
+      stubQuery(
+        req,
         "searchCertificationsQuery",
         "candidate_certificate_search_empty.json"
       );
     });
 
     cy.visit("http://localhost:3002");
+
+    cy.wait("@activeFeaturesForConnectedUser");
 
     cy.get('[data-testid="autocomplete-input"]').type("chaudronnier", {
       delay: 0,
