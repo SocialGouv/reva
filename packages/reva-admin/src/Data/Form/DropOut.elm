@@ -21,6 +21,7 @@ keys =
     { dropOutReason = "dropOutReason"
     , droppedOutAt = "droppedOutAt"
     , otherReasonContent = "otherReasonContent"
+    , confirmationChecked = "confirmationChecked"
     }
 
 
@@ -30,12 +31,14 @@ validate ( _, _ ) formData =
         decode =
             Helper.decode keys formData
     in
-    case decode.maybe.string .dropOutReason of
-        Nothing ->
-            Err [ "Veuillez sélectionner une raison d'abandon" ]
+    if decode.maybe.string .dropOutReason == Nothing then
+        Err [ "Veuillez sélectionner une raison d'abandon." ]
 
-        _ ->
-            Ok ()
+    else if decode.bool .confirmationChecked False == False then
+        Err [ "Veuillez confirmer l'abandon." ]
+
+    else
+        Ok ()
 
 
 fromDict : FormData -> DropOut

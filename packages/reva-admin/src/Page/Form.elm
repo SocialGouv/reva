@@ -264,7 +264,7 @@ viewForm referential status errors formData form saveButton submitButton =
             formFieldset <|
                 legend
                     [ class "mb-4" ]
-                    [ h1 [ class "text-dsfrBlue-500 text-4xl mb-1" ] [ text currentForm.title ]
+                    [ h1 [ class "text-dsfrBlack-500 text-4xl mb-1" ] [ text currentForm.title ]
                     , if List.isEmpty currentForm.elements || containsInfoElement then
                         text ""
 

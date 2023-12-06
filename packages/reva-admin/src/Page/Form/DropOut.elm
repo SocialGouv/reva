@@ -27,17 +27,22 @@ form _ ( candidacy, referential ) =
 
         displayDropOutWarning =
             candidacy.dropOutDate == Nothing
+
+        checklist =
+            [ ( keys.confirmationChecked
+              , "Je certifie avoir une trace écrite du candidat confirmant son choix d’abandonner."
+              )
+            ]
     in
     { elements =
         [ ( "info"
           , Form.StaticHtml <|
                 if displayDropOutWarning then
-                    View.alert View.Info
+                    View.alert View.Warning
                         [ class "mb-10" ]
                         ""
-                        [ p []
-                            [ text "Si vous déclarez l’abandon du candidat il ne pourra plus re-candidater dans le cadre de France VAE"
-                            ]
+                        [ p [] [ text "Si vous déclarez l’abandon du candidat il ne pourra plus re-candidater dans le cadre de France VAE" ]
+                        , p [] [ text "Si le dossier du candidat que vous souhaitez mettre en abandon est constitué depuis moins de 6 mois, vous devez vous assurer d’avoir le justificatif du candidat confirmant son choix d’abandon." ]
                         , p [] [ text "Si le cas d’abandon n’est pas listé ci-dessous, privilégiez la suppression de la candidature." ]
                         ]
 
@@ -50,7 +55,7 @@ form _ ( candidacy, referential ) =
                 |> Maybe.map (\reason -> Form.SelectOther "dropOutReason" reason "Autre raison")
                 |> Maybe.withDefault Form.Empty
           )
-        , ( keys.droppedOutAt, Form.Date "Date (optionnel)" )
+        , ( "checklist", Form.CheckboxList "" checklist )
         ]
     , saveLabel = Nothing
     , submitLabel = "Enregistrer"

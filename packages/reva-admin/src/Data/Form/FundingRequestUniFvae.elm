@@ -108,7 +108,7 @@ validate ( candidacy, _ ) formData =
         error =
             Err [ "Veuillez confirmer le montant de la prise en charge." ]
     in
-    if decode.bool .confirmationChecked False then
+    if decode.bool .confirmationChecked False == True then
         Ok ()
 
     else
