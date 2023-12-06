@@ -1,5 +1,6 @@
 "use client";
 import { useAuth } from "@/components/auth/auth";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { ADMIN_ELM_URL } from "@/config/config";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { signOut } from "next-auth/react";
@@ -7,7 +8,8 @@ import { usePathname } from "next/navigation";
 
 export const Header = () => {
   const currentPathname = usePathname();
-  const { isAdmin, isOrganism } = useAuth();
+  const { isAdmin, isOrganism, isGestionnaireMaisonMereAAP } = useAuth();
+  const { isFeatureActive } = useFeatureflipping();
 
   return (
     <DsfrHeader
@@ -45,7 +47,7 @@ export const Header = () => {
             target: "_self",
           },
         },
-        ...(isOrganism && !isAdmin
+        ...(isGestionnaireMaisonMereAAP && isFeatureActive("AAP_AGENCES")
           ? [
               {
                 text: "Gestion des agences",
@@ -55,6 +57,10 @@ export const Header = () => {
                 },
                 isActive: currentPathname.startsWith("/agences"),
               },
+            ]
+          : []),
+        ...(isOrganism && !isAdmin
+          ? [
               {
                 text: "Paramètres du compte",
                 linkProps: {

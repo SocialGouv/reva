@@ -11,7 +11,6 @@ import ToggleSwitch from "@codegouvfr/react-dsfr/ToggleSwitch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormEvent, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { NotImplementedPage } from "../account-settings/components/not-implemented-page/NotImplementedPage";
 import ZoneIntervention from "../account-settings/components/zone-intervention/ZoneIntervention";
 import { AgenceFormData, agenceFormSchema } from "./agenceFormSchema";
 
@@ -145,7 +144,7 @@ const AgencesHomePage = () => {
   //TODO Get data from API
   const nomAgence = "todo nom agence";
 
-  return isFeatureActive("GESTION_AGENCES") ? (
+  return (
     <div className="w-full flex flex-col items-center justify-center p-8">
       <form onSubmit={handleFormSubmit} onReset={handleReset}>
         <h3 className="w-full font-bold text-[28px] uppercase">{nomAgence}</h3>
@@ -335,8 +334,6 @@ const AgencesHomePage = () => {
         </div>
       </form>
     </div>
-  ) : (
-    <NotImplementedPage title="La gestion des collaborateurs arrivera prochainement." />
   );
 };
 
