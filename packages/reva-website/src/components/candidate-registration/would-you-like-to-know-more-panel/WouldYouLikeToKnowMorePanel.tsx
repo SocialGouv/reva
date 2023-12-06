@@ -7,7 +7,7 @@ export const WouldYouLikeToKnowMorePanel = () => (
   >
     <h3 className="text-dsfrGray-titleGrey text-2xl font-bold">
       <span className="fr-icon-info-line mr-6" aria-hidden="true" />
-      En savoir plus
+      Vous ne trouvez pas votre diplôme ?
     </h3>
     <div className="fr-callout !mb-0 flex flex-col items-start">
       <p>
