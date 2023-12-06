@@ -9,9 +9,6 @@ export const hasRole =
     context: MercuriusContext,
     info: any
   ) => {
-    if (!context.auth.userInfo) {
-      throw new Error("Votre session a expiré, veuillez vous reconnecter.");
-    }
     if (!roles.some((role) => context.auth.hasRole(role))) {
       throw new Error("You are not authorized!");
     }
