@@ -1,9 +1,38 @@
 import { push } from "@/components/analytics/matomo-tracker/matomoTracker";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { useRouter } from "next/router";
 
 export const Header = (props: { className?: string }) => {
   const { asPath } = useRouter();
+  const { isFeatureActive } = useFeatureflipping();
+
+  const navigation = [
+    {
+      isActive: !!asPath.match(/\/espace-candidat/)?.length,
+      linkProps: {
+        href: "/espace-candidat",
+      },
+      text: "Je suis candidat",
+    },
+    {
+      isActive: !!asPath.match(/\/espace-professionnel/)?.length,
+      linkProps: {
+        href: "/espace-professionnel",
+      },
+      text: "Je suis professionnel de la VAE",
+    },
+  ];
+
+  if (isFeatureActive("CENTRE_AIDE")) {
+    navigation.push({
+      isActive: !!asPath.match(/\/savoir-plus/)?.length,
+      linkProps: {
+        href: "/savoir-plus",
+      },
+      text: "En savoir plus sur la VAE",
+    });
+  }
 
   return (
     <DsfrHeader
@@ -57,22 +86,7 @@ export const Header = (props: { className?: string }) => {
           text: "Espace candidat",
         },
       ]}
-      navigation={[
-        {
-          isActive: !!asPath.match(/\/espace-candidat/)?.length,
-          linkProps: {
-            href: "/espace-candidat",
-          },
-          text: "Je suis candidat",
-        },
-        {
-          isActive: !!asPath.match(/\/espace-professionnel/)?.length,
-          linkProps: {
-            href: "/espace-professionnel",
-          },
-          text: "Je suis professionnel de la VAE",
-        },
-      ]}
+      navigation={navigation}
     />
   );
 };
