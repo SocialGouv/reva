@@ -1,6 +1,6 @@
 module Page.Form.FundingRequestUniFvae exposing (form)
 
-import Accessibility exposing (Html, div, h3, h4, span, text)
+import Accessibility exposing (Html, div, h2, h3, h4, span, text)
 import Admin.Enum.Gender exposing (Gender(..))
 import Data.Candidacy exposing (Candidacy)
 import Data.Candidate
@@ -16,8 +16,8 @@ import View
 import View.Form
 
 
-form : Maybe Certification -> FormData -> ( Candidacy, Referential ) -> Form
-form maybeCertification formData ( candidacy, referential ) =
+form : Form.Status -> Maybe Certification -> FormData -> ( Candidacy, Referential ) -> Form
+form formStatus maybeCertification formData ( candidacy, referential ) =
     let
         genders =
             [ Undisclosed
@@ -45,6 +45,23 @@ form maybeCertification formData ( candidacy, referential ) =
 
                 Nothing ->
                     False
+
+        checklistTitle =
+            ( ""
+            , Form.StaticHtml <|
+                div
+                    [ class "mt-6 -mb-8"
+                    , class "pt-6 px-8 bg-neutral-100 w-full"
+                    , class "[&+div]:bg-neutral-100 [&+div]:px-8"
+                    ]
+                    [ h2 [ class "text-xl" ] [ text "Avant de finaliser votre envoi :" ] ]
+            )
+
+        checklist =
+            [ ( keys.confirmationChecked
+              , "Je confirme le montant de la prise en charge. Je ne pourrai pas modifier cette demande après son envoi."
+              )
+            ]
     in
     { elements =
         [ ( "candidate-info", Form.Title1 "1. Informations du candidat" )
@@ -142,8 +159,17 @@ form maybeCertification formData ( candidacy, referential ) =
                , ( keys.fundingContactFirstname, Form.Input "Prénom" )
                , ( keys.fundingContactPhone, Form.Input "Téléphone" )
                , ( keys.fundingContactEmail, Form.Input "Adresse email" )
-               , ( "", Form.Break )
+               , ( "", Form.BreakToplevel )
                ]
+            ++ (case formStatus of
+                    Form.Editable ->
+                        [ checklistTitle
+                        , ( "checklist", Form.CheckboxList "" checklist )
+                        ]
+
+                    Form.ReadOnly ->
+                        []
+               )
     , saveLabel = Nothing
     , submitLabel = "Envoyer"
     , title = "Demande de prise en charge"

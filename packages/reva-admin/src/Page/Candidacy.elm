@@ -627,7 +627,15 @@ updateTab context tab ( model, cmd ) =
 
                         FinanceModule.Unifvae ->
                             Form.updateForm context
-                                { form = Page.Form.FundingRequestUniFvae.form candidacy.certification
+                                { form =
+                                    Page.Form.FundingRequestUniFvae.form
+                                        (if isReadOnly then
+                                            Form.ReadOnly
+
+                                         else
+                                            Form.Editable
+                                        )
+                                        candidacy.certification
                                 , onLoad = Just <| Api.Form.FundingRequestUniFvae.get tab.candidacyId
                                 , onSave = Nothing
                                 , onSubmit = Api.Form.FundingRequestUniFvae.create tab.candidacyId

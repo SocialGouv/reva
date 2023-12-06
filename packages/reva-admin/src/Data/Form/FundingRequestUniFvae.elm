@@ -36,6 +36,7 @@ keys =
     , fundingContactLastname = "fundingContactLastname"
     , fundingContactEmail = "fundingContactEmail"
     , fundingContactPhone = "fundingContactPhone"
+    , confirmationChecked = "confirmationChecked"
     }
 
 
@@ -100,7 +101,18 @@ type alias FundingRequest =
 
 validate : ( Candidacy, Referential ) -> FormData -> Result (List String) ()
 validate ( candidacy, _ ) formData =
-    Result.Ok ()
+    let
+        decode =
+            Helper.decode keys formData
+
+        error =
+            Err [ "Veuillez confirmer le montant de la prise en charge." ]
+    in
+    if decode.bool .confirmationChecked False then
+        Ok ()
+
+    else
+        error
 
 
 toDict : FundingRequest -> Dict String String
