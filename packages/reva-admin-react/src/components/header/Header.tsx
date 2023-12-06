@@ -87,6 +87,20 @@ export const Header = () => {
                   target: "_self",
                 },
               },
+              {
+                text: "Certifications",
+                linkProps: {
+                  href: ADMIN_ELM_URL + "/certifications",
+                  target: "_self",
+                },
+              },
+              {
+                text: "Dossiers de faisabilité",
+                linkProps: {
+                  href: ADMIN_ELM_URL + "/feasibilities",
+                  target: "_self",
+                },
+              },
             ]
           : []),
       ]}
