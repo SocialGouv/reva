@@ -26,7 +26,7 @@ export const canManageCandidacy = async ({
       return false;
     }
     log("User is admin, no further check");
-    return false;
+    return true;
   }
 
   if (!hasRole("manage_candidacy")) {
