@@ -9,7 +9,7 @@ module Page.Search.Typology exposing
 
 import Accessibility exposing (h1, h2)
 import Admin.Enum.CandidateTypology exposing (CandidateTypology(..))
-import Admin.Object.Candidacy exposing (conventionCollective, typology)
+import Admin.Scalar exposing (Id)
 import Api.Candidacy
 import Api.CandidacyConventionCollective
 import BetaGouv.DSFR.Button as Button
@@ -23,7 +23,7 @@ import Html.Attributes exposing (attribute, class, href, target, title)
 import Page.Search as Search
 import Platform.Cmd as Cmd
 import RemoteData exposing (RemoteData(..))
-import Route
+import Route exposing (Route)
 import View
 import View.Candidacy.Tab exposing (Value(..))
 import View.Form exposing (viewSelect)
@@ -34,7 +34,7 @@ type Msg
     | GotCandidacyResponse (RemoteData (List String) Candidacy)
     | GotCandidacyUpdateResponse CandidacyId (RemoteData (List String) ())
     | GotConventionCollectiveUpdateResponse CandidacyId (RemoteData (List String) ())
-    | UserChangedTypology String String
+    | UserChangedTypology Candidacy String String
     | UserClickNext
     | UserSelectConventionCollective CandidacyConventionCollective
 
@@ -49,7 +49,7 @@ type alias Model =
     , filters : Filters
     , search : Search.Model CandidacyConventionCollective Msg
     , submission : RemoteData (List String) ()
-    , typology : Maybe CandidateTypology
+    , candidacy : RemoteData (List String) Candidacy
     , conventionCollective : Maybe CandidacyConventionCollective
     , errors : List String
     }
@@ -110,7 +110,7 @@ init context config =
       , filters = { page = config.page }
       , search = searchModel
       , submission = NotAsked
-      , typology = Nothing
+      , candidacy = NotAsked
       , conventionCollective = Nothing
       , errors = []
       }
@@ -127,75 +127,95 @@ init context config =
 
 view : Context -> Model -> Html Msg
 view context model =
-    View.layout
-        ""
-        []
-        [ viewDirectoryHeader context model ]
-
-
-viewDirectoryHeader : Context -> Model -> Html Msg
-viewDirectoryHeader context model =
     let
         backRoute =
             Route.Candidacy { value = Profile, candidacyId = model.candidacyId }
 
-        typologyValue =
-            candidateTypologyToString <| Maybe.withDefault NonSpecifie model.typology
+        viewPage content =
+            View.layout
+                ""
+                []
+                [ View.article
+                    "Définition du parcours"
+                    (Route.href context.baseUrl backRoute)
+                    "Revenir à la candidature"
+                    content
+                ]
     in
-    View.article
-        "Définition du parcours"
-        (Route.href context.baseUrl backRoute)
-        "Revenir à la candidature"
-        [ div []
-            [ h1
-                [ class "text-dsfrBlue-500 text-4xl mb-1" ]
-                [ text "Définition du parcours" ]
-            , p [ class "text-gray-600 mb-2" ]
-                [ text "Sauf mention contraire “(optionnel)” dans le label, tous les champs sont obligatoires." ]
-            , legend
-                [ class "w-full border-t pt-6" ]
-                [ h2 [ class "text-xl" ] [ text "1 - Informations du candidat" ] ]
-            , viewSelectTypology context model
-            , if typologyValue == "Salarié du privé" || typologyValue == "Demandeur d’emploi" then
-                viewDirectoryPanel context model
+    case model.candidacy of
+        Success candidacy ->
+            viewPage [ viewForm context model candidacy ]
 
-              else
-                div
-                    [ class "mt-8 pb-4 flex justify-end pr-2 w-full" ]
-                    [ Button.new { onClick = Just UserClickNext, label = "Suivant" }
-                        |> Button.submit
-                        |> Button.view
-                    ]
-            , View.popupErrors model.errors
-            ]
+        Failure errors ->
+            viewPage [ View.popupErrors errors ]
+
+        _ ->
+            viewPage
+                [ View.skeleton "mt-8 mb-12 w-full sm:w-96 h-12"
+                , View.skeleton "mb-12 w-full w-96 h-5"
+                , View.skeleton "w-full h-12 mb-6"
+                , View.skeleton "w-full h-32 mb-24"
+                , View.skeleton "w-full h-12 mb-6"
+                , View.skeleton "w-full h-64 mb-12"
+                ]
+
+
+viewForm : Context -> Model -> Candidacy -> Html Msg
+viewForm context model candidacy =
+    div []
+        [ h1
+            [ class "text-dsfrBlue-500 text-4xl mb-1" ]
+            [ text "Définition du parcours" ]
+        , p [ class "text-gray-600 mb-2" ]
+            [ text "Sauf mention contraire “(optionnel)” dans le label, tous les champs sont obligatoires." ]
+        , legend
+            [ class "w-full border-t pt-6" ]
+            [ h2 [ class "text-xl" ] [ text "1 - Informations du candidat" ] ]
+        , viewSelectTypology context candidacy
+        , if candidacy.typology == SalariePrive || candidacy.typology == DemandeurEmploi then
+            viewDirectoryPanel context model
+
+          else
+            div
+                [ class "mt-8 pb-4 flex justify-end pr-2 w-full" ]
+                [ Button.new { onClick = Just UserClickNext, label = "Suivant" }
+                    |> Button.submit
+                    |> Button.view
+                ]
+        , View.popupErrors model.errors
         ]
 
 
-viewSelectTypology : Context -> Model -> Html Msg
-viewSelectTypology _ model =
+viewSelectTypology : Context -> Candidacy -> Html Msg
+viewSelectTypology _ candidacy =
     let
         elementId =
             "typology"
-
-        typologyValue =
-            candidateTypologyToString <| Maybe.withDefault NonSpecifie model.typology
 
         filteredTypologyList : List CandidateTypology
         filteredTypologyList =
             [ SalariePrive, DemandeurEmploi, AidantsFamiliaux, Benevole, Autre ]
 
+        typology =
+            candidacy.typology
+
         typologies =
             filteredTypologyList
-                |> List.map (\el -> ( candidateTypologyToString el, candidateTypologyToString el ))
 
         availableTypologies =
-            if typologyValue /= candidateTypologyToString NonSpecifie && (List.length (List.filter (\( _, v ) -> v == typologyValue) typologies) == 0) then
-                List.append [ ( typologyValue, typologyValue ) ] typologies
+            if typology /= NonSpecifie && (not <| List.member typology typologies) then
+                typology :: typologies
 
             else
                 typologies
     in
-    viewSelect { elementId = elementId, label = "Typologie", dataOrDefault = typologyValue, choices = availableTypologies, onInputMsg = UserChangedTypology }
+    viewSelect
+        { elementId = elementId
+        , label = "Typologie"
+        , dataOrDefault = candidateTypologyToString typology
+        , choices = availableTypologies |> List.map (\el -> ( candidateTypologyToString el, candidateTypologyToString el ))
+        , onInputMsg = UserChangedTypology candidacy
+        }
 
 
 viewDirectoryPanel : Context -> Model -> Html Msg
@@ -301,10 +321,10 @@ update context msg model =
             )
 
         GotCandidacyResponse (Success candidacy) ->
-            ( { model | typology = Just candidacy.typology, conventionCollective = candidacy.conventionCollective }, Cmd.none )
+            ( { model | candidacy = Success candidacy, conventionCollective = candidacy.conventionCollective }, Cmd.none )
 
-        GotCandidacyResponse _ ->
-            ( model, Cmd.none )
+        GotCandidacyResponse remoteCandidacy ->
+            ( { model | candidacy = remoteCandidacy }, Cmd.none )
 
         GotConventionCollectiveUpdateResponse candidacyId response ->
             ( { model | submission = response }
@@ -321,34 +341,20 @@ update context msg model =
                 Cmd.none
             )
 
-        UserChangedTypology _ elementValue ->
+        UserChangedTypology candidacy _ elementValue ->
             let
                 typology =
                     candidateTypologyFromString elementValue
             in
-            ( { model | typology = Just typology }, Cmd.none )
+            ( { model | candidacy = Success { candidacy | typology = typology } }, Cmd.none )
 
         UserSelectConventionCollective conventionCollective ->
             ( { model | conventionCollective = Just conventionCollective }
-            , Api.Candidacy.submitTypologyForm context.endpoint
-                context.token
-                (GotCandidacyUpdateResponse model.candidacyId)
-                model.candidacyId
-                (Maybe.withDefault NonSpecifie model.typology)
-                (Just "")
-                (Just conventionCollective.id)
+            , submitTypology context model (Just conventionCollective.id)
             )
 
         UserClickNext ->
-            ( model
-            , Api.Candidacy.submitTypologyForm context.endpoint
-                context.token
-                (GotCandidacyUpdateResponse model.candidacyId)
-                model.candidacyId
-                (Maybe.withDefault NonSpecifie model.typology)
-                (Just "")
-                Nothing
-            )
+            ( model, submitTypology context model Nothing )
 
         GotCandidacyUpdateResponse candidacyId (Success _) ->
             ( model
@@ -366,3 +372,19 @@ update context msg model =
 
         GotCandidacyUpdateResponse _ _ ->
             ( model, Cmd.none )
+
+
+submitTypology : Context -> Model -> Maybe Id -> Cmd Msg
+submitTypology context model ccnId =
+    case model.candidacy of
+        Success candidacy ->
+            Api.Candidacy.submitTypologyForm context.endpoint
+                context.token
+                (GotCandidacyUpdateResponse candidacy.id)
+                model.candidacyId
+                candidacy.typology
+                (Just "")
+                ccnId
+
+        _ ->
+            Cmd.none
