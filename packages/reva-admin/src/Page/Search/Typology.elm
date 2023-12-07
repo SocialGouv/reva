@@ -177,7 +177,7 @@ viewForm context model candidacy =
             [ text "Sauf mention contraire “(optionnel)” dans le label, tous les champs sont obligatoires." ]
         , legend
             [ class "w-full border-t pt-6" ]
-            [ h2 [ class "text-xl" ] [ text "1 - Informations du candidat" ] ]
+            [ h2 [ class "text-xl" ] [ text "Informations du candidat" ] ]
         , viewSelectTypology context candidacy
         , if candidacy.typology == SalariePrive || candidacy.typology == DemandeurEmploi then
             viewDirectoryPanel context model candidacy
