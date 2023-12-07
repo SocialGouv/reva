@@ -636,7 +636,7 @@ updateTab context tab ( model, cmd ) =
             let
                 ( formModel, formCmd ) =
                     Form.updateForm context
-                        { form = Page.Form.Training.form
+                        { form = Page.Form.Training.form context
                         , onLoad = Just <| Api.Form.Training.get tab.candidacyId
                         , onSave = Nothing
                         , onSubmit = Api.Form.Training.update tab.candidacyId
