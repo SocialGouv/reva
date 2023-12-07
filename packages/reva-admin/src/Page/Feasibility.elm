@@ -184,13 +184,38 @@ viewIDFileLink context file =
         ]
 
 
+defaultString : String -> Maybe String -> String
+defaultString defaultValue maybeString =
+    case maybeString of
+        Just value ->
+            if String.isEmpty value then
+                defaultValue
+
+            else
+                value
+
+        Nothing ->
+            defaultValue
+
+
 viewOrganism : Organism -> Accessibility.Html msg
 viewOrganism organism =
+    let
+        ( organismDisplayName, organismDisplayEmail ) =
+            case organism.informationsCommerciales of
+                Just ic ->
+                    ( defaultString organism.label ic.nom
+                    , defaultString organism.contactAdministrativeEmail ic.emailContact
+                    )
+
+                Nothing ->
+                    ( organism.label, organism.contactAdministrativeEmail )
+    in
     View.summaryBlock "Architecte accompagnateur de parcours"
         [ h6
             [ class "text-xl mb-4" ]
-            [ text organism.label ]
-        , p [ class "text-lg mb-0" ] [ text organism.contactAdministrativeEmail ]
+            [ text organismDisplayName ]
+        , p [ class "text-lg mb-0" ] [ text organismDisplayEmail ]
         ]
 
 

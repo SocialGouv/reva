@@ -26,3 +26,4 @@ informationCommercialesSelection =
     SelectionSet.succeed Data.Organism.OrganismInformationsCommerciales
         |> with (SelectionSet.map (\(Uuid id) -> id) Admin.Object.OrganismInformationsCommerciales.id)
         |> with Admin.Object.OrganismInformationsCommerciales.nom
+        |> with Admin.Object.OrganismInformationsCommerciales.emailContact

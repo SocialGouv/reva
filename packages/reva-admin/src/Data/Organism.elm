@@ -18,4 +18,5 @@ type alias Organism =
 type alias OrganismInformationsCommerciales =
     { id : String
     , nom : Maybe String
+    , emailContact : Maybe String
     }
