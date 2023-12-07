@@ -1,8 +1,7 @@
+import { GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
+import request from "graphql-request";
 import { create } from "zustand";
-import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlClient";
-import { GraphQLClient } from "graphql-request";
-import { useSession } from "next-auth/react";
 
 const activeFeaturesQuery = graphql(`
   query activeFeaturesForConnectedUser {
@@ -13,15 +12,15 @@ const activeFeaturesQuery = graphql(`
 const useFeatureFlippingStore = create<{
   activeFeatures: string[];
   status: "NOT_INITIALIZED" | "INITIALIZED" | "LOADING";
-  init: (graphqlClient: GraphQLClient) => Promise<void>;
+  init: () => Promise<void>;
   isFeatureActive: (featureName: string) => boolean;
 }>((set, get) => ({
   activeFeatures: [],
   status: "NOT_INITIALIZED",
-  init: async (graphqlClient) => {
+  init: async () => {
     if (get().status === "NOT_INITIALIZED") {
       set({ status: "LOADING" });
-      const result = await graphqlClient.request(activeFeaturesQuery);
+      const result = await request(GRAPHQL_API_URL, activeFeaturesQuery);
       set({
         activeFeatures: result.activeFeaturesForConnectedUser,
         status: "INITIALIZED",
@@ -34,10 +33,6 @@ const useFeatureFlippingStore = create<{
 
 export const useFeatureflipping = () => {
   const { activeFeatures, isFeatureActive, init } = useFeatureFlippingStore();
-  const { graphqlClient } = useGraphQlClient();
-  const { status } = useSession();
-  if (status === "authenticated") {
-    init(graphqlClient);
-  }
+  init();
   return { activeFeatures, isFeatureActive };
 };
