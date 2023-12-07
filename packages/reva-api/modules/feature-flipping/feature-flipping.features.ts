@@ -14,7 +14,7 @@ export const activeFeaturesForConnectedUser = async ({
   const betaTestedFeatures = userKeycloakId
     ? (
         await prismaClient.featureBetaTest.findMany({
-          where: { accountKeycloakId: userKeycloakId },
+          where: { account:{keycloakId:userKeycloakId} },
         })
       ).map((f) => f.featureKey)
     : [];

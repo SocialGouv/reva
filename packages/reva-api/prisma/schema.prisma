@@ -1131,11 +1131,11 @@ model CandidacyConventionCollective {
 }
 
 model FeatureBetaTest {
-  id                String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  account           Account @relation(fields: [accountKeycloakId], references: [keycloakId])
-  feature           Feature @relation(fields: [featureKey], references: [key])
-  accountKeycloakId String  @map("account_keycloak_id") @db.Uuid
-  featureKey        String  @map("feature_key")
+  id           String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  account      Account @relation(fields: [accountEmail], references: [email])
+  feature      Feature @relation(fields: [featureKey], references: [key])
+  accountEmail String  @map("account_email")
+  featureKey   String  @map("feature_key")
 
   @@map("feature_beta_test")
 }
