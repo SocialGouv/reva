@@ -332,7 +332,7 @@ viewOrganism context candidacy candidatureName organism =
             [ textBlock [ text nomCommercial ], accessButton ]
 
         _ ->
-            []
+            [ div [] [], accessButton ]
 
 
 
