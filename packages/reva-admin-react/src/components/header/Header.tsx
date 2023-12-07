@@ -36,7 +36,7 @@ export const Header = () => {
                 },
               ]
             : []),
-          ...(isOrganism && !isAdmin
+          ...(isOrganism && !isAdmin && isFeatureActive("AAP_ACCOUNT_SETTINGS")
             ? [
                 {
                   text: "Paramètres du compte",
