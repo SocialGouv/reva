@@ -20,6 +20,7 @@ type Department {
   id: ID!
   code: String!
   label: String!
+  region: Region!
 }
 
 type Degree {

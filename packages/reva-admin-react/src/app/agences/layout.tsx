@@ -1,7 +1,9 @@
 "use client";
-import { ReactNode } from "react";
-import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { useAgencesQueries } from "@/app/agences/agenceQueries";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
+import { usePathname } from "next/navigation";
+import { ReactNode } from "react";
 
 const menuItem = ({ id, label }: { id: string; label: string }) => ({
   isActive: false,
@@ -17,6 +19,9 @@ const Skeleton = () => (
 );
 const AgencesLayout = ({ children }: { children: ReactNode }) => {
   const { agences, agencesStatus } = useAgencesQueries();
+  const path = usePathname();
+  const regex = new RegExp(/\/ajouter-agence$/);
+  const isAjouterAgence = regex.test(path);
 
   return (
     <div className="w-full flex flex-col md:flex-row gap-10 md:gap-0">
@@ -26,14 +31,39 @@ const AgencesLayout = ({ children }: { children: ReactNode }) => {
           <Skeleton />
         </div>
       )}
-      {agencesStatus == "success" && (
+      {agencesStatus == "success" && agences && (
         <SideMenu
           className="flex-shrink-0 md:w-[330px]"
           align="left"
           classes={{ inner: "h-full" }}
           burgerMenuButtonText="Agences"
           title="Agences"
-          items={agences?.map(menuItem) || []}
+          items={
+            [
+              ...agences.map(menuItem),
+              !isAjouterAgence
+                ? {
+                    isActive: false,
+                    linkProps: {
+                      href: "/agences/ajouter-agence/",
+                      target: "_self",
+                    },
+                    text: (
+                      <Button size="small" priority="secondary">
+                        Ajouter une agence
+                      </Button>
+                    ),
+                  }
+                : {
+                    isActive: false,
+                    linkProps: {
+                      href: "",
+                      target: "_self",
+                    },
+                    text: "",
+                  },
+            ] || []
+          }
         />
       )}
       {agencesStatus == "error" && (

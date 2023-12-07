@@ -67,3 +67,27 @@ export interface MaisonMereAAPOnDepartement {
   estSurplace: boolean;
   estADistance: boolean;
 }
+
+export interface CreateOrganismAgencyDataRequest {
+  label: string;
+  nomCommercial: string | null;
+  legalStatus: LegalStatus;
+  siret: string;
+  address: string;
+  adresseInformationsComplementaires: string;
+  zip: string;
+  city: string;
+  contactAdministrativeEmail: string;
+  contactAdministrativePhone: string;
+  website: string | null;
+  conformeNormesAccessbilite: ConformiteNormeAccessibilite;
+  isActive: boolean;
+  departmentsWithOrganismMethods: {
+    departmentId: string;
+    isOnSite: boolean;
+    isRemote: boolean;
+  }[];
+  firstname: string;
+  lastname: string;
+  email: string;
+}

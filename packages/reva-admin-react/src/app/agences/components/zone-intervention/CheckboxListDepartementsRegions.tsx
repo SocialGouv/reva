@@ -1,31 +1,33 @@
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
-import { ZoneInterventionList } from "./ZoneIntervention";
+import { ZoneInterventionList } from "./useDepartementsOnRegions";
 
-interface CheckboxListWithChildrenProps {
+interface CheckboxListDepartementsRegionsProps {
   zoneIntervention: ZoneInterventionList;
   setZoneIntervention: (zoneIntervention: ZoneInterventionList) => void;
+  listTitle: string;
 }
 
-function CheckboxListWithChildren({
+function CheckboxListDepartementsRegions({
   zoneIntervention,
   setZoneIntervention,
-}: CheckboxListWithChildrenProps) {
+  listTitle,
+}: CheckboxListDepartementsRegionsProps) {
   if (!zoneIntervention) return null;
   const handleSelectRegion = (regionId: string) => {
     const regionFound = zoneIntervention.find(
-      (region) => region.id === regionId,
+      (region) => region.regionId === regionId,
     );
     if (!regionFound) return;
     const isSelected = !regionFound.isSelected;
     const zoneInterventionSelected = zoneIntervention.map((region) => {
-      if (region.id === regionId) {
+      if (region.regionId === regionId) {
         return {
           ...region,
           isSelected,
-          departments: region.departments.map((department) => ({
-            ...department,
+          departements: region.departements.map((departement) => ({
+            ...departement,
             isSelected,
           })),
         };
@@ -37,33 +39,35 @@ function CheckboxListWithChildren({
 
   const handleSelectDepartment = (departmentId: string) => {
     const regionFound = zoneIntervention.find((region) =>
-      region.departments.some((department) => department.id === departmentId),
+      region.departements.some(
+        (departement) => departement.departementId === departmentId,
+      ),
     );
     const departmentFound = zoneIntervention
-      .flatMap((region) => region.departments)
-      .find((department) => department.id === departmentId);
+      .flatMap((region) => region.departements)
+      .find((departement) => departement.departementId === departmentId);
     if (!departmentFound) return;
     const isSelected = !departmentFound.isSelected;
     const zoneInterventionSelected = zoneIntervention.map((region) => {
-      if (region.id !== regionFound?.id) {
+      if (region.regionId !== regionFound?.regionId) {
         return region;
       }
       return {
         ...region,
-        isSelected: region.departments.every(
-          (department) =>
-            (department.isSelected === true &&
-              department.id !== departmentId) ||
-            (department.id === departmentId && isSelected),
+        isSelected: region.departements.every(
+          (departement) =>
+            (departement.isSelected === true &&
+              departement.departementId !== departmentId) ||
+            (departement.departementId === departmentId && isSelected),
         ),
-        departments: region.departments.map((department) => {
-          if (department.id === departmentId) {
+        departements: region.departements.map((departement) => {
+          if (departement.departementId === departmentId) {
             return {
-              ...department,
+              ...departement,
               isSelected,
             };
           }
-          return department;
+          return departement;
         }),
       };
     });
@@ -76,8 +80,8 @@ function CheckboxListWithChildren({
       return {
         ...region,
         isSelected,
-        departments: region.departments.map((department) => ({
-          ...department,
+        departements: region.departements.map((departement) => ({
+          ...departement,
           isSelected,
         })),
       };
@@ -90,6 +94,7 @@ function CheckboxListWithChildren({
 
   return (
     <div className="flex-1">
+      <h3>{listTitle}</h3>
       <div>
         <ToggleSwitch
           inputTitle="Toute la France Métropolitaine"
@@ -105,35 +110,35 @@ function CheckboxListWithChildren({
       <div className="max-h-[500px] overflow-y-scroll overflow-x-hidden">
         {zoneIntervention.map((region) => {
           return (
-            <div key={region.id} className="relative">
+            <div key={region.regionId} className="relative">
               <Checkbox
                 className="absolute z-10 top-3 sm:left-4"
-                key={region.label}
+                key={region.regionLabel}
                 options={[
                   {
-                    label: region.label,
+                    label: region.regionLabel,
                     nativeInputProps: {
                       checked: region.isSelected,
                       onChange: () => {
-                        handleSelectRegion(region.id);
+                        handleSelectRegion(region.regionId);
                       },
                     },
                   },
                 ]}
               />
               <Accordion label="">
-                {region.departments.map((department) => {
+                {region.departements.map((departement) => {
                   return (
                     <Checkbox
                       className="pl-4"
-                      key={department.id}
+                      key={departement.departementId}
                       options={[
                         {
-                          label: `${department.label} (${department.id})`,
+                          label: `${departement.departementLabel} (${departement.code})`,
                           nativeInputProps: {
-                            checked: department.isSelected,
+                            checked: departement.isSelected,
                             onChange: () =>
-                              handleSelectDepartment(department.id),
+                              handleSelectDepartment(departement.departementId),
                           },
                         },
                       ]}
@@ -149,4 +154,4 @@ function CheckboxListWithChildren({
   );
 }
 
-export default CheckboxListWithChildren;
+export default CheckboxListDepartementsRegions;

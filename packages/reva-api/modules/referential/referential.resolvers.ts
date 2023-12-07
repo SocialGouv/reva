@@ -4,6 +4,7 @@ import { getDegrees } from "./features/getDegrees";
 import { getDepartments } from "./features/getDepartments";
 import { getDropOutReasons } from "./features/getDropOutReasons";
 import { getGoals } from "./features/getGoals";
+import { getRegionById } from "./features/getRegionById";
 import { getRegions } from "./features/getRegions";
 import { getReorientationReasons } from "./features/getReorientationReasons";
 import { getTypeDiplomeById } from "./features/getTypeDiplomeById";
@@ -16,6 +17,10 @@ export const referentialResolvers = {
       codeRncp || rncpId,
     typeDiplome: ({ typeDiplomeId }: { typeDiplomeId: string }) =>
       getTypeDiplomeById({ typeDiplomeId }),
+  },
+  Department: {
+    region: ({ regionId }: { regionId: string }) =>
+      getRegionById({ id: regionId }),
   },
   Query: {
     // eslint-disable-next-line

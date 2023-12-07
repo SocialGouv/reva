@@ -1,6 +1,5 @@
 import { GRAPHQL_API_URL } from "@/config/config";
 import { graphql } from "@/graphql/generated";
-import { Department } from "@/graphql/generated/graphql";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
@@ -62,9 +61,7 @@ export const CandidateRegistrationForm = ({
     const initAvailableDepartments = async () =>
       setAvailableDepartments(
         (await request(GRAPHQL_API_URL, getDepartmentsQuery)).getDepartments
-          .sort((a: Department, b: Department) =>
-            a.label.localeCompare(b.label)
-          )
+          .sort((a, b) => a.label.localeCompare(b.label))
           .map((d) => ({ label: d.label, value: d.id }))
       );
     initAvailableDepartments();

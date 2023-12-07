@@ -12,10 +12,33 @@ type Organism {
   isActive: Boolean!
   fermePourAbsenceOuConges: Boolean!
   informationsCommerciales: OrganismInformationsCommerciales
+  maisonMereAAP: MaisonMereAAP
+}
+
+type MaisonMereAAP {
+  id: UUID!
+  label: String!
+  address: String!
+  zip: String!
+  city: String!
+  contactAdministrativeEmail: String!
+  contactAdministrativePhone: String
+  website: String
+  typology: OrganismTypology!
+  isActive: Boolean!
+  agences: [Organism!]!
+  maisonMereAAPOnDepartements: [MaisonMereAAPOnDepartment!]!
 }
 
 type Account {
   agences: [Organism!]!
+  maisonMereAAP: MaisonMereAAP
+}
+
+type MaisonMereAAPOnDepartment {
+  estSurPlace: Boolean!
+  estADistance: Boolean!
+  departement: Department!
 }
 
 type OrganismOnDepartment {
@@ -71,6 +94,30 @@ input CreateOrUpdateInformationsCommercialesInput {
   conformeNormesAccessbilite: ConformiteNormeAccessibilite
 }
 
+input DepartmentWithOrganismMethodsInput {
+  departmentId: UUID!
+  isOnSite: Boolean!
+  isRemote: Boolean!
+}
+
+input CreateOrganismInput {
+  label: String!
+  nom: String!
+  siret: String!
+  address: String!
+  adresseInformationsComplementaires: String
+  zip: String!
+  city: String!
+  contactAdministrativeEmail: String!
+  contactAdministrativePhone: String!
+  website: String
+  conformeNormesAccessbilite: ConformiteNormeAccessibilite!
+  departmentsWithOrganismMethods: [DepartmentWithOrganismMethodsInput!]!
+  firstname: String!
+  lastname: String!
+  email: String!
+}
+
 type Mutation {
   organism_updateOrganism(
     organismId: ID!
@@ -83,4 +130,7 @@ type Mutation {
     organismId: ID!
     fermePourAbsenceOuConges: Boolean!
   ): OrganismInformationsCommerciales!
+  organism_createOrganismWithMaisonMereAAP(
+    organismData: CreateOrganismInput!
+  ): String!
 }

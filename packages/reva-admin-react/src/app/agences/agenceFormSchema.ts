@@ -1,23 +1,40 @@
 import { z } from "zod";
 
+//TODO valider avec métiers raison sociale et SIRET
 export const agenceFormSchema = z.object({
-  adresseNumeroEtNomDeRue: z
+  firstname: z
     .string()
-    .length(5, "Ce champs doit contenir au moins 5 caractères")
+    .min(2, "Ce champ doit contenir au moins 2 caractères")
     .default(""),
+  lastname: z
+    .string()
+    .min(2, "Ce champ doit contenir au moins 2 caractères")
+    .default(""),
+  siret: z
+    .string()
+    .length(14, "Ce champ doit contenir 14 caractères")
+    .default(""),
+  email: z
+    .string()
+    .email("Le champ doit contenir une adresse email")
+    .default(""),
+  raisonSocial: z
+    .string()
+    .min(2, "Ce champ doit contenir au moins 2 caractères"),
+  adresseNumeroEtNomDeRue: z.string().default(""),
   adresseInformationsComplementaires: z.string().optional().default(""),
   adresseCodePostal: z
     .string()
-    .length(5, "Ce champs doit contenir au moins 5 caractères")
+    .min(5, "Ce champ doit contenir au moins 5 caractères")
     .default(""),
   adresseVille: z
     .string()
-    .length(5, "Ce champs doit contenir au moins 5 caractères")
+    .min(5, "Ce champ doit contenir au moins 5 caractères")
     .default(""),
-  nom: z.string().optional().default(""),
+  nomCommercial: z.string().optional().default(""),
   telephone: z
     .string()
-    .length(10, "Ce champs doit contenir 10 chiffres")
+    .length(10, "Ce champ doit contenir 10 chiffres")
     .default(""),
   siteInternet: z.string().optional().default(""),
   emailContact: z
@@ -29,29 +46,28 @@ export const agenceFormSchema = z.object({
     "NON_CONFORME",
     "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC",
   ]),
-  agenceVisible: z.boolean().default(false),
   zoneInterventionPresentiel: z
     .array(
       z
         .object({
-          id: z.string(),
-          label: z.string(),
+          regionId: z.string(),
+          regionLabel: z.string(),
           isSelected: z.boolean(),
-          departments: z
+          departements: z
             .array(
               z.object({
-                id: z.string(),
-                label: z.string(),
+                departementId: z.string(),
+                departementLabel: z.string(),
                 isSelected: z.boolean(),
               }),
             )
             .default([]),
         })
         .default({
-          id: "",
-          label: "",
+          regionId: "",
+          regionLabel: "",
           isSelected: false,
-          departments: [],
+          departements: [],
         }),
     )
     .default([]),
@@ -59,24 +75,24 @@ export const agenceFormSchema = z.object({
     .array(
       z
         .object({
-          id: z.string(),
-          label: z.string(),
+          regionId: z.string(),
+          regionLabel: z.string(),
           isSelected: z.boolean(),
-          departments: z
+          departements: z
             .array(
               z.object({
-                id: z.string(),
-                label: z.string(),
+                departementId: z.string(),
+                departementLabel: z.string(),
                 isSelected: z.boolean(),
               }),
             )
             .default([]),
         })
         .default({
-          id: "",
-          label: "",
+          regionId: "",
+          regionLabel: "",
           isSelected: false,
-          departments: [],
+          departements: [],
         }),
     )
     .default([]),
