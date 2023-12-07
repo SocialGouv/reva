@@ -1,4 +1,4 @@
-module View.Form exposing (column, columnAuto, intermediateTotal, summary, total, viewLabel, viewSelect)
+module View.Form exposing (column27percent, column33percent, column50percent, intermediateTotal, summary, total, viewLabel, viewSelect)
 
 import Accessibility exposing (Attribute, div, text)
 import Html exposing (Html, label, option, select)
@@ -6,29 +6,41 @@ import Html.Attributes exposing (class, disabled, for, id, required, selected, v
 import Html.Events exposing (onInput)
 
 
-column : List (Attribute Never) -> List (Html msg) -> Html msg
-column extraAttributes content =
+column27percent : List (Attribute Never) -> List (Html msg) -> Html msg
+column27percent extraAttributes content =
     div
         ([ class "w-full lg:w-[180px] xl:w-[190px]" ] ++ extraAttributes)
         content
 
 
-columnAuto : List (Attribute Never) -> List (Html msg) -> Html msg
-columnAuto extraAttributes content =
+column33percent : List (Attribute Never) -> List (Html msg) -> Html msg
+column33percent extraAttributes content =
+    -- On desktop, you can have three 33% columns on the same row **unless** we are inside a form section block
+    -- We use fixed width instead of percentage in order to use them inside
+    -- a section block while keeping alignments across the whole form (ex. funding form).
     div
-        ([ class "w-full sm:w-[160px] lg:w-[160px] xl:w-[228px]" ] ++ extraAttributes)
+        ([ class "w-full sm:w-[170px] xl:w-[228px]" ] ++ extraAttributes)
+        content
+
+
+column50percent : List (Attribute Never) -> List (Html msg) -> Html msg
+column50percent extraAttributes content =
+    div
+        ([ class "w-full sm:w-full lg:w-[260px] xl:w-[340px]" ] ++ extraAttributes)
         content
 
 
 intermediateTotal : String -> String -> String -> Html msg
 intermediateTotal label total1 total2 =
+    -- On desktop, inside a form section block (where this intermediateTotal is used)
+    -- we have only space for one 27% column + two 33 columns
     div
         [ class "mb-2 flex flex-wrap items-end gap-x-4"
         , class "font-medium"
         ]
-        [ column [ class "mb-2 lg:mb-0" ] [ text label ]
-        , columnAuto [] [ text total1 ]
-        , columnAuto [] [ text total2 ]
+        [ column27percent [ class "mb-2 lg:mb-0" ] [ text label ]
+        , column33percent [] [ text total1 ]
+        , column33percent [] [ text total2 ]
         ]
 
 
@@ -39,13 +51,13 @@ total label total1 total2 =
         , class "pl-3 lg:pl-5"
         , class "font-medium"
         ]
-        [ column
+        [ column27percent
             [ class "mr-5 mb-2 lg:mb-0"
             , class "text-lg font-semibold"
             ]
             [ text label ]
-        , columnAuto [ class "mr-4" ] [ text total1 ]
-        , columnAuto [ class "font-medium" ] [ text total2 ]
+        , column33percent [ class "mr-4" ] [ text total1 ]
+        , column33percent [ class "font-medium" ] [ text total2 ]
         ]
 
 
@@ -101,7 +113,7 @@ viewChoice currentChoiceId ( choiceId, choice ) =
 
 summary : String -> Html msg
 summary s =
-    column
+    column27percent
         [ class "mb-2 sm:mb-0"
         , class "max-h-[180px] overflow-auto"
         , class "text-sm text-gray-500"

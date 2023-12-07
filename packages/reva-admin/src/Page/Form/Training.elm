@@ -42,7 +42,7 @@ form context _ ( candidacy, referential ) =
                 Data.Form.Helper.toIdList referential.basicSkills
           )
         , ( keys.certificateSkills, Form.Textarea "Blocs de compétences métier" (Just "RNCP25467BC03 - intitulé") )
-        , ( keys.otherTraining, Form.Textarea "Autres actions de formations complémentaires" Nothing )
+        , ( keys.otherTraining, Form.Textarea "Autres actions de formation" Nothing )
         , ( keys.certificationScope
           , Form.RadioList "Le candidat / la candidate vise :" certificationScopes
           )

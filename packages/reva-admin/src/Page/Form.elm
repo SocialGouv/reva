@@ -310,7 +310,7 @@ viewEditableElement formData ( elementId, element ) =
         textareaView : String -> Maybe String -> Html (Msg referential)
         textareaView label placeholderValue =
             viewInput elementId (label |> optional) dataOrDefault
-                |> Input.textArea (Just 10)
+                |> Input.textArea (Just 6)
                 |> Input.withHint [ text "Texte de description libre" ]
                 |> Input.withInputAttrs [ placeholderValue |> Maybe.map placeholder |> Maybe.withDefault (class "") ]
                 |> Input.view
@@ -379,7 +379,7 @@ viewEditableElement formData ( elementId, element ) =
             legend [] [ viewTitle3 title ]
 
         TitleInlined title ->
-            View.Form.column
+            View.Form.column27percent
                 []
                 [ h4
                     [ class "text-base font-normal h-10 lg:pr-2" ]
@@ -411,8 +411,7 @@ viewEditableElement formData ( elementId, element ) =
                 [ inputView label "Exemple : saisir 2,5 pour 2h30" (Input.decimal 0.5) [ Html.Attributes.min "0" ] ]
 
         Textarea label placeholder ->
-            div [ class "w-full max-w-lg mb-6" ]
-                [ textareaView label placeholder ]
+            View.Form.column50percent [ class "mb-6" ] [ textareaView label placeholder ]
 
         Info label value ->
             viewInfo elementId label value
@@ -530,7 +529,7 @@ viewReadOnlyElement formData ( elementId, element ) =
                     else
                         tagsOrEmpty
             in
-            View.Form.column
+            View.Form.column27percent
                 [ class "max-h-[220px]"
                 , class "overflow-auto mb-5 lg:mb-3"
                 ]
@@ -571,7 +570,7 @@ viewReadOnlyElement formData ( elementId, element ) =
             viewTitle3 title
 
         TitleInlined title ->
-            View.Form.column
+            View.Form.column27percent
                 []
                 [ h4
                     [ class "ml-2"
@@ -998,7 +997,7 @@ viewFieldsetComplexElement =
 -}
 viewFieldsetElement : List (Html msg) -> Html msg
 viewFieldsetElement =
-    View.Form.columnAuto [ class "mb-6" ]
+    View.Form.column33percent [ class "mb-6" ]
 
 
 

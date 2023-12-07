@@ -39,7 +39,7 @@ form maybeCertification formData ( candidacy, referential ) =
             Form.Price "Coût horaire"
 
         emptyColumn =
-            ( "", Form.StaticHtml <| View.Form.column [] [] )
+            ( "", Form.StaticHtml <| View.Form.column27percent [] [] )
 
         displayInfo key =
             ( key
