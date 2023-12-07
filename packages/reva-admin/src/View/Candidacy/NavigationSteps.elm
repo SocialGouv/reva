@@ -50,7 +50,10 @@ activeView baseUrl candidacy =
             Just <| Route.href baseUrl <| Route.Candidacy (tab View.Candidacy.Tab.Meetings)
 
         trainingLink =
-            if candidacy.firstAppointmentOccuredAt /= Nothing then
+            if candidacy.conventionCollective /= Nothing then
+                Just <| Route.href baseUrl <| Route.Candidacy (tab View.Candidacy.Tab.Training)
+
+            else if candidacy.firstAppointmentOccuredAt /= Nothing then
                 Just <| Route.href baseUrl <| Route.Typology candidacy.id (Route.TypologyFilters (String.toInt "1" |> Maybe.withDefault 1))
 
             else
