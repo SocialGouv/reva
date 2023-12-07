@@ -1,4 +1,4 @@
-module View exposing (AlertType(..), alert, article, backLink, errors, image, infoBlock, infoHint, layout, logo, noNavLayout, noticeInfo, popupErrors, skeleton, stepper, summaryBlock, title, warningHint)
+module View exposing (AlertType(..), alert, article, backLink, errors, image, infoBlock, infoHint, layout, layoutWithLargeSidebar, logo, noNavLayout, noticeInfo, popupErrors, skeleton, stepper, summaryBlock, title, warningHint)
 
 import Accessibility exposing (a, br, button, h3, h5, nav, p, span)
 import Accessibility.Aria as Aria
@@ -37,13 +37,13 @@ baseLayout content =
     node "main"
         [ role "main"
         , class "flex relative"
-        , class "md:bg-gradient-to-r from-[#557AFF] to-[#2400FF]"
+        , class "lg:bg-gradient-to-r from-[#557AFF] to-[#2400FF]"
         , id "content"
         ]
         [ div
             [ class "fr-container" ]
             [ div
-                [ class "md:mt-16 fr-grid-row"
+                [ class "lg:mt-16 fr-grid-row"
                 , class "bg-white mb-12"
                 ]
                 content
@@ -51,11 +51,18 @@ baseLayout content =
         ]
 
 
-layout : String -> List (Html msg) -> List (Html msg) -> Html msg
-layout navButtonLabel navContent content =
+layoutHelper :
+    { sidebarClasses : String
+    , mainClasses : String
+    , navContent : List (Html msg)
+    , navButtonLabel : String
+    , content : List (Html msg)
+    }
+    -> Html msg
+layoutHelper config =
     baseLayout
         [ div
-            [ class "fr-col-12 fr-col-md-3 fr-col-lg-4" ]
+            [ class config.sidebarClasses ]
             [ nav
                 [ role "navigation"
                 , attribute "aria-label" "Menu latéral"
@@ -72,7 +79,7 @@ layout navButtonLabel navContent content =
                       <|
                         -- When the nav context is empty, we remove the wrapper.
                         -- As a result, on mobile, we can close the nav when browsing to a new page
-                        if navContent == [] then
+                        if config.navContent == [] then
                             [ div [ class "h-12 mr-24 animate-pulse" ] [] ]
 
                         else
@@ -81,20 +88,42 @@ layout navButtonLabel navContent content =
                                 , attribute "aria-controls" "fr-sidemenu-wrapper"
                                 , attribute "aria-expanded" "false"
                                 ]
-                                [ text navButtonLabel ]
+                                [ text config.navButtonLabel ]
                             , div
                                 [ class "fr-collapse"
                                 , id "fr-sidemenu-wrapper"
                                 ]
-                                navContent
+                                config.navContent
                             ]
                     ]
                 ]
             ]
         , div
-            [ class "fr-col-12 fr-col-md-9 fr-col-lg-8 pt-3 md:pt-0" ]
-            content
+            [ class config.mainClasses, class "pt-3 md:pt-0" ]
+            config.content
         ]
+
+
+layout : String -> List (Html msg) -> List (Html msg) -> Html msg
+layout navButtonLabel navContent content =
+    layoutHelper
+        { sidebarClasses = "fr-col-12 fr-col-md-3"
+        , mainClasses = "fr-col-12 fr-col-md-9"
+        , navButtonLabel = navButtonLabel
+        , navContent = navContent
+        , content = content
+        }
+
+
+layoutWithLargeSidebar : String -> List (Html msg) -> List (Html msg) -> Html msg
+layoutWithLargeSidebar navButtonLabel navContent content =
+    layoutHelper
+        { sidebarClasses = "fr-col-12 fr-col-md-3 fr-col-lg-4"
+        , mainClasses = "fr-col-12 fr-col-md-9 fr-col-lg-8"
+        , navButtonLabel = navButtonLabel
+        , navContent = navContent
+        , content = content
+        }
 
 
 noNavLayout : List (Html msg) -> Html msg
@@ -111,7 +140,7 @@ noNavLayout content =
 article : String -> Html.Attribute Never -> String -> List (Accessibility.Html msg) -> Html msg
 article dataTestValue backLinkRoute backLinkLabel content =
     div
-        [ class "bg-white px-4 pt-0 sm:px-8 sm:pt-6"
+        [ class "bg-white pt-0 sm:pl-4 lg:px-8 sm:pt-6"
         , dataTest dataTestValue
         ]
         [ backLink backLinkRoute backLinkLabel

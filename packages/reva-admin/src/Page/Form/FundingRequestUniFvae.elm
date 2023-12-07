@@ -157,6 +157,7 @@ form formStatus maybeCertification formData ( candidacy, referential ) =
                , ( "funding-contact-title", Form.Title2 "Informations concernant le responsable du financement" )
                , ( keys.fundingContactLastname, Form.Input "Nom" )
                , ( keys.fundingContactFirstname, Form.Input "Prénom" )
+               , ( "", Form.Break )
                , ( keys.fundingContactPhone, Form.Input "Téléphone" )
                , ( keys.fundingContactEmail, Form.Input "Adresse email" )
                , ( "", Form.BreakToplevel )

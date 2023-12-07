@@ -37,7 +37,7 @@ view header currentStepIndex timelineElements =
                 ]
     in
     div
-        [ class "md:ml-4" ]
+        [ class "lg:ml-4" ]
     <|
         header
             :: [ ol
