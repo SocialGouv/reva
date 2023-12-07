@@ -13,8 +13,9 @@ import Admin.Enum.CandidacyStatusStep
 import Api.Candidacy
 import Api.Token
 import BetaGouv.DSFR.Button as Button
-import Data.Candidacy exposing (CandidacyCountByStatus, CandidacySummary, candidacyStatusFilterToReadableString)
+import Data.Candidacy exposing (Candidacy, CandidacyCountByStatus, CandidacySummary, candidacyStatusFilterToReadableString)
 import Data.Context exposing (Context)
+import Data.Organism exposing (Organism)
 import Data.Referential
 import Html exposing (Html, div, li, nav, p, text, ul)
 import Html.Attributes exposing (attribute, class, classList, href, target)
@@ -282,53 +283,56 @@ viewItem context candidacy =
                     View.Candidacy.viewSentAt candidacy.sentAt
                 ]
             , div
-                [ class "sm:flex justify-between items-end" ]
-                [ case candidacy.organism of
+                [ class "sm:flex justify-between items-end max-w-auto" ]
+              <|
+                case candidacy.organism of
                     Just organism ->
-                        let
-                            nomCommercial =
-                                case organism.informationsCommerciales of
-                                    Just ic ->
-                                        Maybe.withDefault "" ic.nom
-
-                                    Nothing ->
-                                        ""
-                        in
-                        case ( Api.Token.isAdmin context.token, Api.Token.isGestionnaireMaisonMereAAP context.token ) of
-                            ( True, _ ) ->
-                                div []
-                                    [ div
-                                        [ class "my-4 mr-2 sm:my-0 truncate"
-                                        , class "text-base text-gray-500 whitespace-nowrap"
-                                        ]
-                                        [ text organism.label ]
-                                    , div
-                                        [ class "my-4 mr-2 sm:my-0 truncate"
-                                        , class "text-base text-gray-500 whitespace-nowrap"
-                                        ]
-                                        [ text nomCommercial ]
-                                    ]
-
-                            ( False, True ) ->
-                                div
-                                    [ class "my-4 mr-2 sm:my-0 truncate"
-                                    , class "text-base text-gray-500 whitespace-nowrap"
-                                    ]
-                                    [ text nomCommercial ]
-
-                            _ ->
-                                div [] []
+                        viewOrganism context candidacy candidatureName organism
 
                     _ ->
-                        div [] []
-                , Button.new { onClick = Nothing, label = "Accéder\u{00A0}à\u{00A0}la\u{00A0}candidature" }
-                    |> Button.linkButton (Route.toString context.baseUrl (Route.Candidacy { value = Profile, candidacyId = candidacy.id }))
-                    |> Button.withAttrs [ attribute "title" ("Accéder à la candidature de " ++ candidatureName) ]
-                    |> Button.view
-                ]
+                        []
             ]
         ]
     ]
+
+
+viewOrganism : Context -> CandidacySummary -> String -> Organism -> List (Html msg)
+viewOrganism context candidacy candidatureName organism =
+    let
+        nomCommercial =
+            case organism.informationsCommerciales of
+                Just ic ->
+                    Maybe.withDefault "" ic.nom
+
+                Nothing ->
+                    ""
+
+        accessButton =
+            Button.new { onClick = Nothing, label = "Accéder\u{00A0}à\u{00A0}la\u{00A0}candidature" }
+                |> Button.linkButton (Route.toString context.baseUrl (Route.Candidacy { value = Profile, candidacyId = candidacy.id }))
+                |> Button.withAttrs [ attribute "title" ("Accéder à la candidature de " ++ candidatureName) ]
+                |> Button.view
+
+        textBlock =
+            div
+                [ class "my-4 mr-2 sm:my-0 truncate"
+                , class "text-base text-gray-500"
+                ]
+    in
+    case ( Api.Token.isAdmin context.token, Api.Token.isGestionnaireMaisonMereAAP context.token ) of
+        ( True, _ ) ->
+            [ div [ class "min-w-0" ]
+                [ textBlock [ text organism.label ]
+                , textBlock [ text nomCommercial ]
+                ]
+            , accessButton
+            ]
+
+        ( False, True ) ->
+            [ textBlock [ text nomCommercial ], accessButton ]
+
+        _ ->
+            []
 
 
 
