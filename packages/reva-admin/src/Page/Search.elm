@@ -61,7 +61,8 @@ type alias PaginationInfo =
 
 
 type alias SearchHandler data userMsg =
-    (RemoteData (List String) (SearchResults data) -> Msg data userMsg)
+    Context
+    -> (RemoteData (List String) (SearchResults data) -> Msg data userMsg)
     -> Maybe String
     -> Cmd (Msg data userMsg)
 
@@ -72,13 +73,15 @@ emptyKeywords =
 
 
 init :
-    { onSearch : SearchHandler data userMsg
-    , toMsg : Msg data userMsg -> userMsg
-    , toPageRoute : Int -> Route
-    , viewItem : data -> List (Html userMsg)
-    }
+    Context
+    ->
+        { onSearch : SearchHandler data userMsg
+        , toMsg : Msg data userMsg -> userMsg
+        , toPageRoute : Int -> Route
+        , viewItem : data -> List (Html userMsg)
+        }
     -> ( Model data userMsg, Cmd userMsg )
-init config =
+init context config =
     let
         defaultModel : Model data userMsg
         defaultModel =
@@ -90,17 +93,18 @@ init config =
             , viewItem = config.viewItem
             }
     in
-    ( defaultModel, Cmd.map config.toMsg (config.onSearch GotSearchResponse Nothing) )
+    ( defaultModel, Cmd.map config.toMsg (config.onSearch context GotSearchResponse Nothing) )
 
 
 reload :
-    Model data userMsg
+    Context
+    -> Model data userMsg
     -> SearchHandler data userMsg
     -> (Int -> Route)
     -> ( Model data userMsg, Cmd (Msg data userMsg) )
-reload model onSearch newToPageRoute =
+reload context model onSearch newToPageRoute =
     ( { model | onSearch = onSearch, results = Loading, toPageRoute = newToPageRoute }
-    , onSearch GotSearchResponse model.keywords.submitted
+    , onSearch context GotSearchResponse model.keywords.submitted
     )
 
 
@@ -250,7 +254,7 @@ withKeywordsTyped typed keywords =
 
 
 update : Context -> Msg data userMsg -> Model data userMsg -> ( Model data userMsg, Cmd (Msg data userMsg) )
-update _ msg model =
+update context msg model =
     case msg of
         GotSearchResponse results ->
             ( { model | results = results }, Cmd.none )
@@ -271,7 +275,7 @@ update _ msg model =
                     }
             in
             ( newModel
-            , model.onSearch GotSearchResponse newModel.keywords.submitted
+            , model.onSearch context GotSearchResponse newModel.keywords.submitted
             )
 
         UserClearedKeywords ->
@@ -279,7 +283,7 @@ update _ msg model =
                 | keywords = emptyKeywords
                 , results = Loading
               }
-            , model.onSearch GotSearchResponse Nothing
+            , model.onSearch context GotSearchResponse Nothing
             )
 
         UserMsg _ ->

@@ -61,7 +61,10 @@ withFilters context page status model =
 
         ( newSearchModel, searchCmd ) =
             if statusChanged || pageChanged then
-                Search.reload model.search (Api.Candidacy.getCandidacies context.endpoint context.token page (Just status)) (\p -> Route.Candidacies (Route.CandidacyFilters status p))
+                Search.reload context
+                    model.search
+                    (getCandidacies page (Just status))
+                    (\p -> Route.Candidacies (Route.CandidacyFilters status p))
 
             else
                 ( model.search, Cmd.none )
@@ -79,11 +82,8 @@ init context statusFilter page =
     let
         ( searchModel, searchCmd ) =
             Search.init
-                { onSearch =
-                    Api.Candidacy.getCandidacies context.endpoint
-                        context.token
-                        page
-                        (Just statusFilter)
+                context
+                { onSearch = getCandidacies page (Just statusFilter)
                 , toMsg = GotSearchMsg
                 , toPageRoute = \p -> Route.Candidacies (Route.CandidacyFilters statusFilter p)
                 , viewItem = viewItem context
@@ -106,6 +106,22 @@ init context statusFilter page =
                 ]
     in
     ( defaultModel, defaultCmd )
+
+
+getCandidacies :
+    Int
+    -> Maybe CandidacyStatusFilter
+    -> Context
+    -> (RemoteData (List String) Data.Candidacy.CandidacySummaryPage -> msg)
+    -> Maybe String
+    -> Cmd msg
+getCandidacies page filters context toMsg searchFilter =
+    Api.Candidacy.getCandidacies context.endpoint
+        context.token
+        page
+        filters
+        toMsg
+        searchFilter
 
 
 

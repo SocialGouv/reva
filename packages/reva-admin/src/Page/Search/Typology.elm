@@ -73,12 +73,9 @@ withFilters context config model =
 
         ( newSearchModel, searchCmd ) =
             if pageChanged then
-                Search.reload model.search
-                    (Api.CandidacyConventionCollective.getCandidacyConventionCollectives
-                        context.endpoint
-                        context.token
-                        config.page
-                    )
+                Search.reload context
+                    model.search
+                    (getCandidacyConventionCollectives config.page)
                     (\p -> Route.Typology config.candidacyId (Route.TypologyFilters p))
 
             else
@@ -97,10 +94,8 @@ init context config =
     let
         ( searchModel, searchCmd ) =
             Search.init
-                { onSearch =
-                    Api.CandidacyConventionCollective.getCandidacyConventionCollectives context.endpoint
-                        context.token
-                        config.page
+                context
+                { onSearch = getCandidacyConventionCollectives config.page
                 , toMsg = GotSearchMsg
                 , toPageRoute = \p -> Route.Typology config.candidacyId (Route.TypologyFilters p)
                 , viewItem = viewItem
@@ -118,6 +113,19 @@ init context config =
         , Api.Candidacy.get context.endpoint context.token GotCandidacyResponse config.candidacyId
         ]
     )
+
+
+getCandidacyConventionCollectives :
+    Int
+    -> Context
+    -> (RemoteData (List String) Data.CandidacyConventionCollective.CandidacyConventionCollectivePaginated -> msg)
+    -> Maybe String
+    -> Cmd.Cmd msg
+getCandidacyConventionCollectives page context =
+    Api.CandidacyConventionCollective.getCandidacyConventionCollectives
+        context.endpoint
+        context.token
+        page
 
 
 

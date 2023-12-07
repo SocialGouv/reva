@@ -73,12 +73,9 @@ withFilters context config model =
 
         ( newSearchModel, searchCmd ) =
             if pageChanged then
-                Search.reload model.search
-                    (Api.Certification.getCertifications context.endpoint
-                        context.token
-                        config.page
-                        config.organismId
-                    )
+                Search.reload context
+                    model.search
+                    (getCertifications config.page config.organismId)
                     route
 
             else
@@ -97,11 +94,8 @@ init context config =
     let
         ( searchModel, searchCmd ) =
             Search.init
-                { onSearch =
-                    Api.Certification.getCertifications context.endpoint
-                        context.token
-                        config.page
-                        config.organismId
+                context
+                { onSearch = getCertifications config.page config.organismId
                 , toMsg = GotSearchMsg
                 , toPageRoute =
                     case config.candidacyId of
@@ -129,6 +123,20 @@ init context config =
                 Cmd.none
         ]
     )
+
+
+getCertifications :
+    Int
+    -> Maybe String
+    -> Context
+    -> (RemoteData (List String) Data.Certification.CertificationPage -> msg)
+    -> Maybe String
+    -> Cmd msg
+getCertifications page organismId context =
+    Api.Certification.getCertifications context.endpoint
+        context.token
+        page
+        organismId
 
 
 
