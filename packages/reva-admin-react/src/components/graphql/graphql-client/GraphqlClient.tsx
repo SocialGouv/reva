@@ -8,9 +8,8 @@ export const useGraphQlClient = () => {
 
   const graphqlClient = new GraphQLClient(GRAPHQL_API_URL, {
     headers: {
-      authorization: `Bearer ${
-        (session as Session & { accessToken: string }).accessToken
-      }`,
+      authorization: `Bearer ${(session as Session & { accessToken: string })
+        ?.accessToken}`,
     },
   });
   return { graphqlClient };
