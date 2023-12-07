@@ -280,6 +280,7 @@ model Account {
   keycloakId               String                  @unique @map("keycloak_id") @db.Uuid
   AuditEvent               AuditEvent[]
   maisonMereAAP            MaisonMereAAP[]
+  featureBetaTest          FeatureBetaTest[]
 
   @@map("account")
 }
@@ -446,13 +447,14 @@ model VulnerabilityIndicator {
 }
 
 model Feature {
-  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  key         String    @unique @db.VarChar(255)
-  label       String    @db.VarChar(255)
-  description String?
-  isActive    Boolean   @default(false) @map("is_active")
-  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime? @map("updated_at") @db.Timestamptz(6)
+  id              String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  key             String            @unique @db.VarChar(255)
+  label           String            @db.VarChar(255)
+  description     String?
+  isActive        Boolean           @default(false) @map("is_active")
+  createdAt       DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime?         @map("updated_at") @db.Timestamptz(6)
+  featureBetaTest FeatureBetaTest[]
 
   @@map("features")
 }
@@ -1126,4 +1128,14 @@ model CandidacyConventionCollective {
   Candidacy Candidacy[]
 
   @@map("candidacy_convention_collective")
+}
+
+model FeatureBetaTest {
+  id                String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  account           Account @relation(fields: [accountKeycloakId], references: [keycloakId])
+  feature           Feature @relation(fields: [featureKey], references: [key])
+  accountKeycloakId String  @map("account_keycloak_id") @db.Uuid
+  featureKey        String  @map("feature_key")
+
+  @@map("feature_beta_test")
 }
