@@ -78,7 +78,15 @@ export const Header = () => {
             ]
           : []),
       ]
-    : [];
+    : [
+        {
+          test: "",
+          linkProps: {
+            href: ADMIN_ELM_URL + "/feasibilities",
+            target: "_self",
+          },
+        },
+      ];
 
   return (
     <DsfrHeader
