@@ -29,7 +29,7 @@ const keycloakInstance =
         realm: KEYCLOAK_REALM || "",
         url: KEYCLOAK_URL,
       })
-    : null;
+    : undefined;
 
 export default function RootLayout({ children }: { children: JSX.Element }) {
   const queryClient = new QueryClient();
@@ -42,14 +42,12 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
       </head>
       <body>
         <DsfrProvider>
-          {keycloakInstance && (
-            <KeycloakProvider keycloakInstance={keycloakInstance}>
-              <QueryClientProvider client={queryClient}>
-                <Toaster position="top-right" />
-                <LayoutContent>{children}</LayoutContent>
-              </QueryClientProvider>
-            </KeycloakProvider>
-          )}
+          <KeycloakProvider keycloakInstance={keycloakInstance}>
+            <QueryClientProvider client={queryClient}>
+              <Toaster position="top-right" />
+              <LayoutContent>{children}</LayoutContent>
+            </QueryClientProvider>
+          </KeycloakProvider>
         </DsfrProvider>
       </body>
     </html>
