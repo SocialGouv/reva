@@ -8,11 +8,29 @@ import { DsfrHead } from "@codegouvfr/react-dsfr/next-appdir/DsfrHead";
 import { DsfrProvider } from "@codegouvfr/react-dsfr/next-appdir/DsfrProvider";
 import { getHtmlAttributes } from "@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { SessionProvider, signIn, useSession } from "next-auth/react";
 import Link from "next/link";
-import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
+import {
+  KeycloakProvider,
+  useKeycloakContext,
+} from "@/components/auth/keycloakContext";
+import Keycloak from "keycloak-js";
+import {
+  KEYCLOAK_CLIENT_ID,
+  KEYCLOAK_REALM,
+  KEYCLOAK_URL,
+} from "@/config/config";
+
+const keycloakInstance =
+  typeof window !== "undefined"
+    ? Keycloak({
+        clientId: KEYCLOAK_CLIENT_ID || "",
+        realm: KEYCLOAK_REALM || "",
+        url: KEYCLOAK_URL,
+      })
+    : null;
+
 export default function RootLayout({ children }: { children: JSX.Element }) {
   const queryClient = new QueryClient();
 
@@ -24,12 +42,14 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
       </head>
       <body>
         <DsfrProvider>
-          <SessionProvider refetchInterval={30} basePath="/admin2/api/auth">
-            <QueryClientProvider client={queryClient}>
-              <Toaster position="top-right" />
-              <LayoutContent>{children}</LayoutContent>
-            </QueryClientProvider>
-          </SessionProvider>
+          {keycloakInstance && (
+            <KeycloakProvider keycloakInstance={keycloakInstance}>
+              <QueryClientProvider client={queryClient}>
+                <Toaster position="top-right" />
+                <LayoutContent>{children}</LayoutContent>
+              </QueryClientProvider>
+            </KeycloakProvider>
+          )}
         </DsfrProvider>
       </body>
     </html>
@@ -37,19 +57,7 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
 }
 
 const LayoutContent = ({ children }: { children: JSX.Element }) => {
-  const { status, data: session } = useSession();
-
-  if (status === "unauthenticated") {
-    signIn("keycloak");
-  }
-
-  //refresh token expiration error handling
-  useEffect(() => {
-    if ((session as { error?: string })?.error === "RefreshAccessTokenError") {
-      signIn("keycloak");
-    }
-  }, [session]);
-
+  const { authenticated } = useKeycloakContext();
   return (
     <div className="w-full min-h-screen flex flex-col">
       <SkipLinks
@@ -74,7 +82,7 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
           <div
             className={`fr-container flex-1 md:mt-16 px-8 pt-10 pb-4 fr-grid-row bg-white mb-12`}
           >
-            {status === "authenticated" && children}
+            {authenticated && children}
           </div>
         </div>
       </main>

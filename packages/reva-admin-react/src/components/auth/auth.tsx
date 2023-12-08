@@ -1,11 +1,8 @@
-import { useSession } from "next-auth/react";
+import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { jwtDecode } from "jwt-decode";
-import { Session } from "next-auth";
 
 export const useAuth = () => {
-  const { data: session } = useSession();
-  const accessToken = (session as Session & { accessToken: string })
-    ?.accessToken;
+  const { accessToken } = useKeycloakContext();
 
   let isAdmin,
     isCertificationAuthority,
