@@ -91,6 +91,7 @@ export const createOrganismAgency = async ({
     const organismWithSiretOrLabelAlreadyExist =
       await getOrganismBySiretOrLabel({
         siret,
+        label,
       });
 
     if (organismWithSiretOrLabelAlreadyExist.length > 0) {
