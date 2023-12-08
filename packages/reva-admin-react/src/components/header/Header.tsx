@@ -1,10 +1,10 @@
 "use client";
 import { useAuth } from "@/components/auth/auth";
+import { useKeycloakContext } from "@/components/auth/keycloakContext";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { ADMIN_ELM_URL } from "@/config/config";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { usePathname } from "next/navigation";
-import { useKeycloakContext } from "@/components/auth/keycloakContext";
 
 export const Header = () => {
   const currentPathname = usePathname();
@@ -80,7 +80,7 @@ export const Header = () => {
       ]
     : [
         {
-          test: "",
+          text: "",
           linkProps: {
             href: ADMIN_ELM_URL + "/feasibilities",
             target: "_self",
