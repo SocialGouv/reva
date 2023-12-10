@@ -73,6 +73,14 @@ export const KeycloakProvider = ({
             setAccessToken(keycloakInstance.token);
             setTimeoutRefreshToken();
           };
+          keycloakInstance.onAuthRefreshError = async () => {
+            console.log("Auth refresh error");
+            setAuthenticated(false);
+            setAccessToken("");
+            keycloakInstance.login({
+              redirectUri: window.location.href,
+            });
+          };
           keycloakInstance.onTokenExpired = async () => {
             console.log("Token expired");
             await keycloakInstance.updateToken(
