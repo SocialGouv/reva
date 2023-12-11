@@ -1,8 +1,9 @@
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
+import { useKeycloakContext } from "contexts/keycloakContext";
 import { Crisp } from "crisp-sdk-web";
 import { CertificateDetails } from "pages/CertificateDetails";
 import { ProjectSubmissionConfirmation } from "pages/ProjectSubmissionConfirmation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { Footer } from "./components/organisms/Footer";
 import { Header } from "./components/organisms/Header/Header";
@@ -22,13 +23,104 @@ import { ProjectHome } from "./pages/ProjectHome";
 import { ProjectOrganisms } from "./pages/ProjectOrganisms";
 import { TrainingProgramSummary } from "./pages/TrainingProgramSummary";
 
-function App() {
+type CrispUser = {
+  tokenId: string;
+  email: string | null;
+  nickname: string | null;
+};
+
+const useCrisp = (): {
+  configureUser: (user: CrispUser) => void;
+  resetUser: () => void;
+} => {
+  const crispId = process.env.REACT_APP_CRISP_ID;
+
+  const [loaded, setLoaded] = useState(false);
+  const [waitingForReset, setWaitingForReset] = useState(false);
+
+  const [user, setUser] = useState<CrispUser | undefined>();
+
   useEffect(() => {
-    const crispId = process.env.REACT_APP_CRISP_ID;
-    crispId && Crisp.configure(crispId);
+    if (crispId) {
+      Crisp.configure(crispId, {
+        autoload: true,
+        sessionMerge: true,
+      });
+
+      Crisp.session.onLoaded(() => {
+        setLoaded(true);
+      });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (loaded && waitingForReset) {
+      Crisp.session.reset();
+
+      console.log("coucou");
+
+      setWaitingForReset(false);
+    }
+  }, [loaded, waitingForReset]);
+
+  const resetUser = () => {
+    if (!!user?.tokenId) {
+      Crisp.setTokenId("");
+
+      setUser(undefined);
+      setWaitingForReset(true);
+    }
+  };
+
+  const configureUser = (_user: CrispUser): void => {
+    console.log(_user);
+
+    if (user?.tokenId !== _user.tokenId) {
+      Crisp.setTokenId(_user.tokenId);
+
+      try {
+        if (_user.email) {
+          Crisp.user.setEmail(_user.email);
+        }
+
+        if (_user.nickname) {
+          Crisp.user.setNickname(_user.nickname);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
+      setUser(_user);
+      setWaitingForReset(true);
+    }
+  };
+
+  return { configureUser, resetUser };
+};
+
+function App() {
   const { state, mainService } = useMainMachineContext();
+  const authContext = useKeycloakContext();
+
+  const { configureUser, resetUser } = useCrisp();
+
+  useEffect(() => {
+    if (authContext?.authenticated && state.context.contact) {
+      const { candidateId, email, firstname, lastname } = state.context.contact;
+
+      configureUser({
+        tokenId: candidateId,
+        email,
+        nickname: firstname && lastname ? `${firstname} ${lastname}` : null,
+      });
+    } else {
+      resetUser();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authContext?.authenticated, state.context.contact]);
 
   // @ts-ignore
   window.state = state;
