@@ -43,7 +43,14 @@ export const KeycloakProvider = ({
 
     return setTimeout(async () => {
       console.log("[KEYCLOAK] Refresh token manually");
-      await keycloakInstance?.updateToken(delay);
+      try {
+        await keycloakInstance?.updateToken(delay);
+      } catch (e) {
+        console.error(e);
+        console.log("error in setTimeoutRefreshToken function. Retrying");
+        await keycloakInstance?.updateToken(5);
+        setTimeoutRefreshToken();
+      }
     }, delay);
   }, [keycloakInstance]);
 
