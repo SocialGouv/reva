@@ -133,7 +133,7 @@ export const resolvers = {
           );
         }
 
-        if (!context.auth.hasRole("admin")) {
+        if (!context.auth.hasRole("gestion_maison_mere_aap")) {
           throw new Error("Utilisateur non autorisé");
         }
         const keycloakAdmin = await context.app.getKeycloakAdmin();
