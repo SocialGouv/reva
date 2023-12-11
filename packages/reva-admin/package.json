@@ -32,6 +32,7 @@
   "dependencies": {
     "@gouvfr/dsfr": "^1.9.0",
     "crisp-sdk-web": "^1.0.5",
+    "crypto-js": "^4.2.0",
     "keycloak-js": "^18.0.1",
     "start-server-and-test": "^2.0.1"
   }

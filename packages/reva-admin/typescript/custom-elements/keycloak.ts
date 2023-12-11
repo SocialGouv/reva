@@ -1,4 +1,22 @@
 import Keycloak from "keycloak-js";
+import { CrispElm } from "../crisp";
+
+type KeycloakUser = {
+  id: string;
+  email: string | null;
+};
+
+function getKeycloakUser(keycloak: Keycloak): KeycloakUser | undefined {
+  if (keycloak.tokenParsed?.sub) {
+    const { sub: id, email } = keycloak.tokenParsed;
+    return {
+      id,
+      email,
+    };
+  }
+
+  return undefined;
+}
 
 class KeycloakElement extends HTMLElement {
   static get observedAttributes() {
@@ -32,6 +50,11 @@ class KeycloakElement extends HTMLElement {
     const keycloak = this._keycloak;
 
     const dispatchEventWithDetail = (eventName: string) => {
+      const keycloakUser = getKeycloakUser(keycloak);
+      if (keycloakUser) {
+        CrispElm.getInstance().configureUser(keycloakUser);
+      }
+
       this.dispatchEvent(
         new CustomEvent(eventName, {
           detail: {
@@ -139,6 +162,9 @@ class KeycloakElement extends HTMLElement {
 
     keycloak.onAuthLogout = function () {
       console.log("Logged out");
+
+      CrispElm.getInstance().resetUser();
+
       keycloak.login({
         redirectUri: window.location.href,
       });

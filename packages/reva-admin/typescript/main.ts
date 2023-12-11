@@ -1,10 +1,10 @@
 import "@gouvfr/dsfr/dist/dsfr/dsfr.module";
-import { Crisp } from "crisp-sdk-web";
 
 // @ts-ignore
 import { Elm } from "../src/Main.elm";
 import keycloakElement from "./custom-elements/keycloak";
 import AuthenticatedLinkElement from "./custom-elements/authenticated-link";
+import { CrispElm } from "./crisp";
 
 customElements.define(keycloakElement.name, keycloakElement.clazz);
 customElements.define(
@@ -12,10 +12,8 @@ customElements.define(
   AuthenticatedLinkElement.clazz,
 );
 
-const crispId = import.meta.env.VITE_CRISP_ID;
-if (crispId) {
-  Crisp.configure(crispId);
-}
+// Init Crisp
+CrispElm.getInstance();
 
 const app = Elm.Main.init({
   flags: {

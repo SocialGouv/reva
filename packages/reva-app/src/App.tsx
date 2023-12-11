@@ -25,7 +25,7 @@ import { ProjectOrganisms } from "./pages/ProjectOrganisms";
 import { TrainingProgramSummary } from "./pages/TrainingProgramSummary";
 
 type CrispUser = {
-  tokenId: string;
+  id: string;
   email: string | null;
 };
 
@@ -64,18 +64,23 @@ const useCrisp = (): {
   }, [loaded, waitingForReset]);
 
   const resetUser = () => {
-    if (!!user?.tokenId) {
+    if (!!user?.id) {
+      // Update user
+      setUser(undefined);
+
       Crisp.setTokenId("");
 
-      setUser(undefined);
       setWaitingForReset(true);
     }
   };
 
   const configureUser = (_user: CrispUser): void => {
-    if (user?.tokenId !== _user.tokenId) {
+    if (user?.id !== _user.id) {
+      // Update user
+      setUser(_user);
+
       // Hash token
-      const tokenMD5 = MD5(_user.tokenId).toString();
+      const tokenMD5 = MD5(_user.id).toString();
       Crisp.setTokenId(tokenMD5);
 
       try {
@@ -86,7 +91,6 @@ const useCrisp = (): {
         console.error(error);
       }
 
-      setUser(_user);
       setWaitingForReset(true);
     }
   };
@@ -105,7 +109,7 @@ function App() {
       const { id, email } = authContext?.keycloakUser;
 
       configureUser({
-        tokenId: id,
+        id,
         email,
       });
     } else {
