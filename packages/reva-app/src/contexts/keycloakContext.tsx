@@ -3,15 +3,21 @@ import React, { useContext, useEffect, useState } from "react";
 
 const storageKey = "tokens";
 
+type KeycloakUser = {
+  id: string;
+  email: string | null;
+};
+
 const KeycloakContext = React.createContext<{
   authenticated: boolean;
   token: string | undefined;
   setTokens: any;
+  keycloakUser?: KeycloakUser;
   logout: () => void;
 } | null>(null);
 
 interface KeycloakProviderProps {
-  keycloakInstance: any; // _Keycloak;
+  keycloakInstance: _Keycloak;
   children: JSX.Element | JSX.Element[];
 }
 
@@ -109,6 +115,18 @@ export const KeycloakProvider = ({
     initKeycloak(tokens);
   }, [tokens, keycloakInstance]);
 
+  const getKeycloakUser = (): KeycloakUser | undefined => {
+    if (keycloakInstance.tokenParsed?.sub) {
+      const { sub: id, email } = keycloakInstance.tokenParsed;
+      return {
+        id,
+        email,
+      };
+    }
+
+    return undefined;
+  };
+
   return (
     <KeycloakContext.Provider
       value={{
@@ -116,6 +134,7 @@ export const KeycloakProvider = ({
         token,
         setTokens,
         logout,
+        keycloakUser: getKeycloakUser(),
       }}
     >
       {ready && children}

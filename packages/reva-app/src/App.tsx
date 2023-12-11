@@ -1,6 +1,7 @@
 import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import { useKeycloakContext } from "contexts/keycloakContext";
 import { Crisp } from "crisp-sdk-web";
+import { MD5 } from "crypto-js";
 import { CertificateDetails } from "pages/CertificateDetails";
 import { ProjectSubmissionConfirmation } from "pages/ProjectSubmissionConfirmation";
 import { useEffect, useState } from "react";
@@ -26,7 +27,6 @@ import { TrainingProgramSummary } from "./pages/TrainingProgramSummary";
 type CrispUser = {
   tokenId: string;
   email: string | null;
-  nickname: string | null;
 };
 
 const useCrisp = (): {
@@ -59,8 +59,6 @@ const useCrisp = (): {
     if (loaded && waitingForReset) {
       Crisp.session.reset();
 
-      console.log("coucou");
-
       setWaitingForReset(false);
     }
   }, [loaded, waitingForReset]);
@@ -75,18 +73,14 @@ const useCrisp = (): {
   };
 
   const configureUser = (_user: CrispUser): void => {
-    console.log(_user);
-
     if (user?.tokenId !== _user.tokenId) {
-      Crisp.setTokenId(_user.tokenId);
+      // Hash token
+      const tokenMD5 = MD5(_user.tokenId).toString();
+      Crisp.setTokenId(tokenMD5);
 
       try {
         if (_user.email) {
           Crisp.user.setEmail(_user.email);
-        }
-
-        if (_user.nickname) {
-          Crisp.user.setNickname(_user.nickname);
         }
       } catch (error) {
         console.error(error);
@@ -107,20 +101,19 @@ function App() {
   const { configureUser, resetUser } = useCrisp();
 
   useEffect(() => {
-    if (authContext?.authenticated && state.context.contact) {
-      const { candidateId, email, firstname, lastname } = state.context.contact;
+    if (authContext?.keycloakUser) {
+      const { id, email } = authContext?.keycloakUser;
 
       configureUser({
-        tokenId: candidateId,
+        tokenId: id,
         email,
-        nickname: firstname && lastname ? `${firstname} ${lastname}` : null,
       });
     } else {
       resetUser();
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authContext?.authenticated, state.context.contact]);
+  }, [authContext?.keycloakUser]);
 
   // @ts-ignore
   window.state = state;
