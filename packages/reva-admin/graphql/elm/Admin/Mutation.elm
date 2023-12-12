@@ -534,6 +534,29 @@ organism_updateFermePourAbsenceOuConges requiredArgs____ object____ =
     Object.selectionForCompositeField "organism_updateFermePourAbsenceOuConges" [ Argument.required "organismId" requiredArgs____.organismId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "fermePourAbsenceOuConges" requiredArgs____.fermePourAbsenceOuConges Encode.bool ] object____ Basics.identity
 
 
+type alias OrganismCreateOrganismWithMaisonMereAAPRequiredArguments =
+    { organismData : Admin.InputObject.CreateOrganismInput }
+
+
+organism_createOrganismWithMaisonMereAAP :
+    OrganismCreateOrganismWithMaisonMereAAPRequiredArguments
+    -> SelectionSet String RootMutation
+organism_createOrganismWithMaisonMereAAP requiredArgs____ =
+    Object.selectionForField "String" "organism_createOrganismWithMaisonMereAAP" [ Argument.required "organismData" requiredArgs____.organismData Admin.InputObject.encodeCreateOrganismInput ] Decode.string
+
+
+type alias OrganismCreateOrUpdateOrganismOnDegreesRequiredArguments =
+    { data : Admin.InputObject.CreateOrUpdateOrganismOnDegreesInput }
+
+
+organism_createOrUpdateOrganismOnDegrees :
+    OrganismCreateOrUpdateOrganismOnDegreesRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.OrganismOnDegree
+    -> SelectionSet (List decodesTo) RootMutation
+organism_createOrUpdateOrganismOnDegrees requiredArgs____ object____ =
+    Object.selectionForCompositeField "organism_createOrUpdateOrganismOnDegrees" [ Argument.required "data" requiredArgs____.data Admin.InputObject.encodeCreateOrUpdateOrganismOnDegreesInput ] object____ (Basics.identity >> Decode.list)
+
+
 type alias SubscriptionCreateSubscriptionRequestRequiredArguments =
     { subscriptionRequest : Admin.InputObject.SubscriptionRequestInput }
 

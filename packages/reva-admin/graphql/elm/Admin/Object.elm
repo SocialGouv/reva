@@ -149,12 +149,24 @@ type Goal
     = Goal
 
 
+type MaisonMereAAP
+    = MaisonMereAAP
+
+
+type MaisonMereAAPOnDepartment
+    = MaisonMereAAPOnDepartment
+
+
 type Organism
     = Organism
 
 
 type OrganismInformationsCommerciales
     = OrganismInformationsCommerciales
+
+
+type OrganismOnDegree
+    = OrganismOnDegree
 
 
 type OrganismOnDepartment

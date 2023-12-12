@@ -13,6 +13,13 @@ type Organism {
   fermePourAbsenceOuConges: Boolean!
   informationsCommerciales: OrganismInformationsCommerciales
   maisonMereAAP: MaisonMereAAP
+  managedDegrees: [OrganismOnDegree!]!
+}
+
+type OrganismOnDegree {
+  id: UUID!
+  organism: Organism!
+  degree: Degree!
 }
 
 type MaisonMereAAP {
@@ -116,6 +123,11 @@ input CreateOrganismInput {
   email: String!
 }
 
+input CreateOrUpdateOrganismOnDegreesInput {
+  organismId: ID!
+  degreeIds: [ID!]!
+}
+
 type Mutation {
   organism_updateOrganism(
     organismId: ID!
@@ -131,4 +143,8 @@ type Mutation {
   organism_createOrganismWithMaisonMereAAP(
     organismData: CreateOrganismInput!
   ): String!
+
+  organism_createOrUpdateOrganismOnDegrees(
+    data: CreateOrUpdateOrganismOnDegreesInput!
+  ): [OrganismOnDegree!]!
 }

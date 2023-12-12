@@ -63,3 +63,10 @@ agences :
     -> SelectionSet (List decodesTo) Admin.Object.Account
 agences object____ =
     Object.selectionForCompositeField "agences" [] object____ (Basics.identity >> Decode.list)
+
+
+maisonMereAAP :
+    SelectionSet decodesTo Admin.Object.MaisonMereAAP
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Account
+maisonMereAAP object____ =
+    Object.selectionForCompositeField "maisonMereAAP" [] object____ (Basics.identity >> Decode.nullable)

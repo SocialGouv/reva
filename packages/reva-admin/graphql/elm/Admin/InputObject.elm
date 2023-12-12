@@ -345,6 +345,131 @@ encodeCreateOrUpdateInformationsCommercialesInput input____ =
         [ ( "organismId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) input____.organismId |> Just ), ( "nom", Encode.string |> Encode.optional input____.nom ), ( "telephone", Encode.string |> Encode.optional input____.telephone ), ( "siteInternet", Encode.string |> Encode.optional input____.siteInternet ), ( "emailContact", Encode.string |> Encode.optional input____.emailContact ), ( "adresseNumeroEtNomDeRue", Encode.string |> Encode.optional input____.adresseNumeroEtNomDeRue ), ( "adresseInformationsComplementaires", Encode.string |> Encode.optional input____.adresseInformationsComplementaires ), ( "adresseCodePostal", Encode.string |> Encode.optional input____.adresseCodePostal ), ( "adresseVille", Encode.string |> Encode.optional input____.adresseVille ), ( "conformeNormesAccessbilite", Encode.enum Admin.Enum.ConformiteNormeAccessibilite.toString |> Encode.optional input____.conformeNormesAccessbilite ) ]
 
 
+buildCreateOrUpdateOrganismOnDegreesInput :
+    CreateOrUpdateOrganismOnDegreesInputRequiredFields
+    -> CreateOrUpdateOrganismOnDegreesInput
+buildCreateOrUpdateOrganismOnDegreesInput required____ =
+    { organismId = required____.organismId, degreeIds = required____.degreeIds }
+
+
+type alias CreateOrUpdateOrganismOnDegreesInputRequiredFields =
+    { organismId : Data.Scalar.Id
+    , degreeIds : List Data.Scalar.Id
+    }
+
+
+{-| Type for the CreateOrUpdateOrganismOnDegreesInput input object.
+-}
+type alias CreateOrUpdateOrganismOnDegreesInput =
+    { organismId : Data.Scalar.Id
+    , degreeIds : List Data.Scalar.Id
+    }
+
+
+{-| Encode a CreateOrUpdateOrganismOnDegreesInput into a value that can be used as an argument.
+-}
+encodeCreateOrUpdateOrganismOnDegreesInput : CreateOrUpdateOrganismOnDegreesInput -> Value
+encodeCreateOrUpdateOrganismOnDegreesInput input____ =
+    Encode.maybeObject
+        [ ( "organismId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.organismId |> Just ), ( "degreeIds", ((Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) |> Encode.list) input____.degreeIds |> Just ) ]
+
+
+buildCreateOrganismInput :
+    CreateOrganismInputRequiredFields
+    -> (CreateOrganismInputOptionalFields -> CreateOrganismInputOptionalFields)
+    -> CreateOrganismInput
+buildCreateOrganismInput required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { adresseInformationsComplementaires = Absent, website = Absent }
+    in
+    { label = required____.label, nom = required____.nom, siret = required____.siret, address = required____.address, adresseInformationsComplementaires = optionals____.adresseInformationsComplementaires, zip = required____.zip, city = required____.city, contactAdministrativeEmail = required____.contactAdministrativeEmail, contactAdministrativePhone = required____.contactAdministrativePhone, website = optionals____.website, conformeNormesAccessbilite = required____.conformeNormesAccessbilite, departmentsWithOrganismMethods = required____.departmentsWithOrganismMethods, firstname = required____.firstname, lastname = required____.lastname, email = required____.email }
+
+
+type alias CreateOrganismInputRequiredFields =
+    { label : String
+    , nom : String
+    , siret : String
+    , address : String
+    , zip : String
+    , city : String
+    , contactAdministrativeEmail : String
+    , contactAdministrativePhone : String
+    , conformeNormesAccessbilite : Admin.Enum.ConformiteNormeAccessibilite.ConformiteNormeAccessibilite
+    , departmentsWithOrganismMethods : List DepartmentWithOrganismMethodsInput
+    , firstname : String
+    , lastname : String
+    , email : String
+    }
+
+
+type alias CreateOrganismInputOptionalFields =
+    { adresseInformationsComplementaires : OptionalArgument String
+    , website : OptionalArgument String
+    }
+
+
+{-| Type for the CreateOrganismInput input object.
+-}
+type alias CreateOrganismInput =
+    { label : String
+    , nom : String
+    , siret : String
+    , address : String
+    , adresseInformationsComplementaires : OptionalArgument String
+    , zip : String
+    , city : String
+    , contactAdministrativeEmail : String
+    , contactAdministrativePhone : String
+    , website : OptionalArgument String
+    , conformeNormesAccessbilite : Admin.Enum.ConformiteNormeAccessibilite.ConformiteNormeAccessibilite
+    , departmentsWithOrganismMethods : List DepartmentWithOrganismMethodsInput
+    , firstname : String
+    , lastname : String
+    , email : String
+    }
+
+
+{-| Encode a CreateOrganismInput into a value that can be used as an argument.
+-}
+encodeCreateOrganismInput : CreateOrganismInput -> Value
+encodeCreateOrganismInput input____ =
+    Encode.maybeObject
+        [ ( "label", Encode.string input____.label |> Just ), ( "nom", Encode.string input____.nom |> Just ), ( "siret", Encode.string input____.siret |> Just ), ( "address", Encode.string input____.address |> Just ), ( "adresseInformationsComplementaires", Encode.string |> Encode.optional input____.adresseInformationsComplementaires ), ( "zip", Encode.string input____.zip |> Just ), ( "city", Encode.string input____.city |> Just ), ( "contactAdministrativeEmail", Encode.string input____.contactAdministrativeEmail |> Just ), ( "contactAdministrativePhone", Encode.string input____.contactAdministrativePhone |> Just ), ( "website", Encode.string |> Encode.optional input____.website ), ( "conformeNormesAccessbilite", Encode.enum Admin.Enum.ConformiteNormeAccessibilite.toString input____.conformeNormesAccessbilite |> Just ), ( "departmentsWithOrganismMethods", (encodeDepartmentWithOrganismMethodsInput |> Encode.list) input____.departmentsWithOrganismMethods |> Just ), ( "firstname", Encode.string input____.firstname |> Just ), ( "lastname", Encode.string input____.lastname |> Just ), ( "email", Encode.string input____.email |> Just ) ]
+
+
+buildDepartmentWithOrganismMethodsInput :
+    DepartmentWithOrganismMethodsInputRequiredFields
+    -> DepartmentWithOrganismMethodsInput
+buildDepartmentWithOrganismMethodsInput required____ =
+    { departmentId = required____.departmentId, isOnSite = required____.isOnSite, isRemote = required____.isRemote }
+
+
+type alias DepartmentWithOrganismMethodsInputRequiredFields =
+    { departmentId : Data.Scalar.Uuid
+    , isOnSite : Bool
+    , isRemote : Bool
+    }
+
+
+{-| Type for the DepartmentWithOrganismMethodsInput input object.
+-}
+type alias DepartmentWithOrganismMethodsInput =
+    { departmentId : Data.Scalar.Uuid
+    , isOnSite : Bool
+    , isRemote : Bool
+    }
+
+
+{-| Encode a DepartmentWithOrganismMethodsInput into a value that can be used as an argument.
+-}
+encodeDepartmentWithOrganismMethodsInput : DepartmentWithOrganismMethodsInput -> Value
+encodeDepartmentWithOrganismMethodsInput input____ =
+    Encode.maybeObject
+        [ ( "departmentId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecUuid) input____.departmentId |> Just ), ( "isOnSite", Encode.bool input____.isOnSite |> Just ), ( "isRemote", Encode.bool input____.isRemote |> Just ) ]
+
+
 buildDropOutInput :
     DropOutInputRequiredFields
     -> (DropOutInputOptionalFields -> DropOutInputOptionalFields)

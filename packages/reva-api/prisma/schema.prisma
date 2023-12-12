@@ -312,11 +312,23 @@ model Organism {
   organismInformationsCommerciales                       OrganismInformationsCommerciales?
   organismInformationsCommercialesId                     String?                                                  @map("organism_informations_commerciales_id") @db.Uuid
 
-  maisonMereAAP            MaisonMereAAP? @relation(fields: [maisonMereAAPId], references: [id], onDelete: NoAction)
-  maisonMereAAPId          String?        @map("maison_mere_aap_id") @db.Uuid
-  fermePourAbsenceOuConges Boolean        @default(false) @map("ferme_pour_absence_ou_conges")
+  maisonMereAAP   MaisonMereAAP? @relation(fields: [maisonMereAAPId], references: [id], onDelete: NoAction)
+  maisonMereAAPId String?        @map("maison_mere_aap_id") @db.Uuid
+
+  fermePourAbsenceOuConges Boolean            @default(false) @map("ferme_pour_absence_ou_conges")
+  managedDegrees           OrganismOnDegree[]
 
   @@map("organism")
+}
+
+model OrganismOnDegree {
+  id         String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  organism   Organism @relation(fields: [organismId], references: [id], onDelete: Cascade)
+  organismId String   @map("organism_id") @db.Uuid
+  degree     Degree   @relation(fields: [degreeId], references: [id], onDelete: Cascade)
+  degreeId   String   @map("degree_id") @db.Uuid
+
+  @@map("organism_on_degree")
 }
 
 enum ConformiteNormeAccessibilite {
@@ -423,14 +435,15 @@ model BasicSkillOnCandidacies {
 }
 
 model Degree {
-  id         String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  code       String      @unique @db.VarChar(255)
-  label      String      @unique @db.VarChar(255)
-  longLabel  String      @unique @map("long_label") @db.VarChar(255)
-  level      Int
-  candidates Candidate[]
-  createdAt  DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt  DateTime?   @map("updated_at") @db.Timestamptz(6)
+  id                String             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  code              String             @unique @db.VarChar(255)
+  label             String             @unique @db.VarChar(255)
+  longLabel         String             @unique @map("long_label") @db.VarChar(255)
+  level             Int
+  candidates        Candidate[]
+  createdAt         DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime?          @map("updated_at") @db.Timestamptz(6)
+  managingOrganisms OrganismOnDegree[]
 
   @@map("degree")
 }

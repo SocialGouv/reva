@@ -2,6 +2,7 @@ import { Organism, OrganismInformationsCommerciales } from "@prisma/client";
 import mercurius from "mercurius";
 
 import { getAccountByKeycloakId } from "../account/features/getAccountByKeycloakId";
+import { getDegreeById } from "../referential/features/getDegreeByid";
 import { getDepartmentById } from "../referential/features/getDepartmentById";
 import {
   FunctionalCodeError,
@@ -10,6 +11,8 @@ import {
 import { logger } from "../shared/logger";
 import { createOrganismAgency } from "./features/createOrganismAgency";
 import { createOrUpdateInformationsCommerciales } from "./features/createOrUpdateInformationsCommerciales";
+import { createOrUpdateOrganismOnDegrees } from "./features/createOrUpdateOrganismOnDegrees";
+import { findOrganismOnDegreeByOrganismId } from "./features/findOrganismOnDegreeByOrganismId";
 import { getAgencesByGestionnaireAccountId } from "./features/getAgencesByGestionnaireAccountId";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./features/getMaisonMereAAPByGestionnaireAccountId";
 import { getMaisonMereAAPOnDepartments } from "./features/getMaisonMereAAPDepartmentsAndRegions";
@@ -37,6 +40,12 @@ export const resolvers = {
         id: organism.maisonMereAAPId,
       });
     },
+    managedDegrees: (organism: Organism) =>
+      findOrganismOnDegreeByOrganismId({ organismId: organism.id }),
+  },
+  OrganismOnDegree: {
+    degree: (organismOnDegree: { degreeId: string }) =>
+      getDegreeById({ degreeId: organismOnDegree.degreeId }),
   },
   MaisonMereAAP: {
     maisonMereAAPOnDepartements: ({ id }: { id: string }) =>
@@ -145,6 +154,16 @@ export const resolvers = {
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
     },
+    organism_createOrUpdateOrganismOnDegrees: async (
+      _parent: unknown,
+      params: {
+        data: { organismId: string; degreeIds: string[] };
+      }
+    ) =>
+      createOrUpdateOrganismOnDegrees({
+        organismId: params.data.organismId,
+        degreeIds: params.data.degreeIds,
+      }),
   },
   Query: {
     organism_getOrganism: async (

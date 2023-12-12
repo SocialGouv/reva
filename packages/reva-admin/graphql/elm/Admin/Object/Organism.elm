@@ -100,3 +100,17 @@ informationsCommerciales :
     -> SelectionSet (Maybe decodesTo) Admin.Object.Organism
 informationsCommerciales object____ =
     Object.selectionForCompositeField "informationsCommerciales" [] object____ (Basics.identity >> Decode.nullable)
+
+
+maisonMereAAP :
+    SelectionSet decodesTo Admin.Object.MaisonMereAAP
+    -> SelectionSet (Maybe decodesTo) Admin.Object.Organism
+maisonMereAAP object____ =
+    Object.selectionForCompositeField "maisonMereAAP" [] object____ (Basics.identity >> Decode.nullable)
+
+
+managedDegrees :
+    SelectionSet decodesTo Admin.Object.OrganismOnDegree
+    -> SelectionSet (List decodesTo) Admin.Object.Organism
+managedDegrees object____ =
+    Object.selectionForCompositeField "managedDegrees" [] object____ (Basics.identity >> Decode.list)
