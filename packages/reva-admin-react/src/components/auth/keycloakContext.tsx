@@ -1,10 +1,16 @@
 import _Keycloak from "keycloak-js";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 
+type KeycloakUser = {
+  id: string;
+  email: string | null;
+};
+
 const KeycloakContext = React.createContext<{
   authenticated: boolean;
   accessToken: string | undefined;
   logout: () => void;
+  keycloakUser?: KeycloakUser;
 }>({ authenticated: false, accessToken: "", logout: () => null });
 
 interface KeycloakProviderProps {
@@ -120,12 +126,25 @@ export const KeycloakProvider = ({
     initKeycloak();
   }, [keycloakInstance, setTimeoutRefreshToken]);
 
+  const getKeycloakUser = (): KeycloakUser | undefined => {
+    if (keycloakInstance?.tokenParsed?.sub) {
+      const { sub: id, email } = keycloakInstance.tokenParsed;
+      return {
+        id,
+        email,
+      };
+    }
+
+    return undefined;
+  };
+
   return (
     <KeycloakContext.Provider
       value={{
         authenticated,
         accessToken,
         logout,
+        keycloakUser: getKeycloakUser(),
       }}
     >
       {children}

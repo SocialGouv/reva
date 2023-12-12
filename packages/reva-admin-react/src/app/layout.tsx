@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import { StartDsfr } from "@/components/dsfr/StartDsfr";
 import { defaultColorScheme } from "@/components/dsfr/defaultColorScheme";
 import { Footer } from "@/components/footer/Footer";
@@ -10,17 +11,18 @@ import { getHtmlAttributes } from "@codegouvfr/react-dsfr/next-appdir/getHtmlAtt
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Link from "next/link";
 import { Toaster } from "react-hot-toast";
+import Keycloak from "keycloak-js";
 import "./globals.css";
 import {
   KeycloakProvider,
   useKeycloakContext,
 } from "@/components/auth/keycloakContext";
-import Keycloak from "keycloak-js";
 import {
   KEYCLOAK_CLIENT_ID,
   KEYCLOAK_REALM,
   KEYCLOAK_URL,
 } from "@/config/config";
+import { useCrisp } from "@/components/crisp/useCrisp";
 
 const keycloakInstance =
   typeof window !== "undefined"
@@ -55,7 +57,25 @@ export default function RootLayout({ children }: { children: JSX.Element }) {
 }
 
 const LayoutContent = ({ children }: { children: JSX.Element }) => {
-  const { authenticated } = useKeycloakContext();
+  const { authenticated, keycloakUser } = useKeycloakContext();
+
+  const { configureUser, resetUser } = useCrisp();
+
+  useEffect(() => {
+    if (keycloakUser) {
+      const { id, email } = keycloakUser;
+
+      configureUser({
+        id,
+        email,
+      });
+    } else {
+      resetUser();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keycloakUser]);
+
   return (
     <div className="w-full min-h-screen flex flex-col">
       <SkipLinks
