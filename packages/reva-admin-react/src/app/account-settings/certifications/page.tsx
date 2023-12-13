@@ -1,7 +1,135 @@
+"use client";
+import { useCertificationsPageQueries } from "@/app/account-settings/certifications/certificationsPageQueries";
 import { NotImplementedPage } from "@/app/account-settings/components/not-implemented-page/NotImplementedPage";
+import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
+import { successToast } from "@/components/toast/toast";
+import Alert from "@codegouvfr/react-dsfr/Alert";
+import Button from "@codegouvfr/react-dsfr/Button";
+import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useCallback, useEffect } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import * as z from "zod";
 
-const CertificationsPage = () => (
-  <NotImplementedPage title="Gestion des certifications" />
-);
+const schema = z.object({
+  niveauxDiplomeGeres: z
+    .object({ id: z.string(), label: z.string(), checked: z.boolean() })
+    .array(),
+});
+
+type FormData = z.infer<typeof schema>;
+
+const CertificationsPage = () => {
+  const { isFeatureActive } = useFeatureflipping();
+  const {
+    organismId,
+    degrees,
+    degreesStatus,
+    managedDegrees,
+    managedDegreesStatus,
+    refetchmanagedDegrees,
+    createOrUpdatemanagedDegrees,
+  } = useCertificationsPageQueries();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  });
+
+  const { fields: managedDegreesFields } = useFieldArray({
+    control,
+    name: "niveauxDiplomeGeres",
+  });
+
+  const resetForm = useCallback(
+    () =>
+      reset({
+        niveauxDiplomeGeres: degrees.map((nd) => ({
+          id: nd.id,
+          label: nd.label,
+          checked: !!managedDegrees.find((ndg) => ndg.id === nd.id),
+        })),
+      }),
+    [managedDegrees, degrees, reset],
+  );
+
+  useEffect(resetForm, [resetForm]);
+
+  const handleFormSubmit = handleSubmit(async (data) => {
+    await createOrUpdatemanagedDegrees.mutateAsync({
+      organismId,
+      managedDegreesIds: data.niveauxDiplomeGeres
+        .filter((ndg) => ndg.checked)
+        .map((ndg) => ndg.id),
+    });
+    successToast("modifications enregistrées");
+    await refetchmanagedDegrees();
+  });
+
+  return isFeatureActive("ADMIN_CERTIFICATION_PAGE") ? (
+    <div className="flex flex-col flex-1">
+      <h1 className="leading-6 font-bold text-2xl mb-8">
+        Gestion des certifications
+      </h1>
+      <h2 className="leading-6 font-bold text-xl">
+        Niveaux de diplômes couverts par votre structure
+      </h2>
+
+      {degreesStatus === "error" ||
+        (managedDegreesStatus === "error" && (
+          <Alert
+            className="my-6"
+            severity="error"
+            title="Une erreur est survenue pensant la récupération des niveaux de diplôme."
+          />
+        ))}
+
+      {createOrUpdatemanagedDegrees.status === "error" && (
+        <Alert
+          className="my-6"
+          severity="error"
+          title="Une erreur est survenue pensant l'enregistrement des niveaux de diplôme."
+        />
+      )}
+
+      {degreesStatus && managedDegreesStatus === "success" && (
+        <form
+          className="flex flex-col mt-10"
+          onSubmit={handleFormSubmit}
+          onReset={(e) => {
+            e.preventDefault();
+            resetForm();
+          }}
+        >
+          <fieldset className="flex flex-col gap-4">
+            <Checkbox
+              legend=""
+              options={managedDegreesFields.map((ndg, ndgIndex) => ({
+                label: ndg.label,
+                nativeInputProps: {
+                  ...register(`niveauxDiplomeGeres.${ndgIndex}.checked`),
+                },
+              }))}
+            />
+          </fieldset>
+
+          <div className="flex flex-col md:flex-row gap-4 self-center md:self-end mt-8">
+            <Button priority="secondary" type="reset">
+              Annuler les modifications
+            </Button>
+            <Button disabled={isSubmitting}>Valider les modifications</Button>
+          </div>
+        </form>
+      )}
+    </div>
+  ) : (
+    <NotImplementedPage title="Gestion des certifications" />
+  );
+};
 
 export default CertificationsPage;

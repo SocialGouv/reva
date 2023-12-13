@@ -16,7 +16,7 @@ const AccountSettingsLayout = ({ children }: { children: ReactNode }) => {
   });
 
   return (
-    <div className="flex flex-col md:flex-row gap-10 md:gap-0">
+    <div className="flex flex-col flex-1 md:flex-row gap-10 md:gap-0">
       <SideMenu
         className="flex-shrink-0 flex-grow-0 md:basis-[330px]"
         align="left"
