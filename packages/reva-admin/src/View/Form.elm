@@ -1,4 +1,4 @@
-module View.Form exposing (column27percent, column33percent, column50percent, intermediateTotal, summary, total, viewLabel, viewSelect)
+module View.Form exposing (column27percent, column33percent, column50percent, intermediateTotal, listElement50percentClass, summary, total, viewLabel, viewSelect)
 
 import Accessibility exposing (Attribute, div, text)
 import Html exposing (Html, label, option, select)
@@ -26,8 +26,13 @@ column33percent extraAttributes content =
 column50percent : List (Attribute Never) -> List (Html msg) -> Html msg
 column50percent extraAttributes content =
     div
-        ([ class "w-full sm:w-full lg:w-[300px] xl:w-[382px]" ] ++ extraAttributes)
+        ([ class "w-full lg:w-[300px] xl:w-[382px]" ] ++ extraAttributes)
         content
+
+
+listElement50percentClass : String
+listElement50percentClass =
+    "w-full lg:w-[282px] xl:w-[368px]"
 
 
 intermediateTotal : String -> String -> String -> Html msg

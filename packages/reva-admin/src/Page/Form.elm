@@ -336,14 +336,22 @@ viewEditableElement formData ( elementId, element ) =
                 ]
 
         CheckboxList label choices ->
-            viewFieldsetComplexElement
+            let
+                extraClass =
+                    if List.length choices == 1 then
+                        "w-full"
+
+                    else
+                        View.Form.listElement50percentClass
+            in
+            viewFieldsetComplexElement extraClass
                 [ (\choiceId -> get choiceId formData)
                     |> viewCheckboxList elementId label choices
                     |> Checkbox.viewGroup
                 ]
 
         RadioList label choices ->
-            viewFieldsetComplexElement
+            viewFieldsetComplexElement View.Form.listElement50percentClass
                 [ get elementId formData
                     |> viewRadioList elementId label choices
                     |> Radio.view
@@ -988,9 +996,9 @@ viewFieldsets viewElement formData elements =
 
 {-| Wrap a complex element that already have internal margins, like radio or checkbox list
 -}
-viewFieldsetComplexElement : List (Html msg) -> Html msg
-viewFieldsetComplexElement =
-    div [ class "mt-2 -mb-3" ]
+viewFieldsetComplexElement : String -> List (Html msg) -> Html msg
+viewFieldsetComplexElement extraClass =
+    div [ class "mt-2 mr-4", class extraClass ]
 
 
 {-| Wrap a simple element like input or textarea

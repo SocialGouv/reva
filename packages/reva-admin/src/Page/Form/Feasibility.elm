@@ -93,7 +93,7 @@ form formData ( candidacy, _ ) =
                 div
                     [ class "mt-6 -mb-8"
                     , class "pt-6 px-8 bg-neutral-100 w-full"
-                    , class "[&+div]:bg-neutral-100 [&+div]:px-8"
+                    , class "[&+div]:!w-full [&+div]:!mr-0 [&+div]:bg-neutral-100 [&+div]:px-8"
                     ]
                     [ h2 [ class "text-xl" ] [ text "Avant de finaliser votre envoi :" ] ]
             )
