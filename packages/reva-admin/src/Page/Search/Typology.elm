@@ -184,7 +184,7 @@ viewForm context model candidacy =
 
           else
             div
-                [ class "mt-8 pb-4 flex justify-end pr-2 w-full" ]
+                [ class "mt-8 pb-4 flex justify-end w-full" ]
                 [ Button.new { onClick = Just UserClickNext, label = "Suivant" }
                     |> Button.submit
                     |> Button.view

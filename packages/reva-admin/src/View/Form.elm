@@ -9,24 +9,24 @@ import Html.Events exposing (onInput)
 column27percent : List (Attribute Never) -> List (Html msg) -> Html msg
 column27percent extraAttributes content =
     div
-        ([ class "w-full lg:w-[180px] xl:w-[236px]" ] ++ extraAttributes)
+        ([ class "w-full md:w-[122px] lg:w-[180px] xl:w-[236px]" ] ++ extraAttributes)
         content
 
 
 column33percent : List (Attribute Never) -> List (Html msg) -> Html msg
 column33percent extraAttributes content =
-    -- On desktop, you can have three 33% columns on the same row **unless** we are inside a form section block
+    -- On desktop, you can have three 33% columns on the same row (even inside a form section block)
     -- We use fixed width instead of percentage in order to use them inside
     -- a section block while keeping alignments across the whole form (ex. funding form).
     div
-        ([ class "w-full sm:w-[160px] md:w-[168px] lg:w-[200px] xl:w-[258px]" ] ++ extraAttributes)
+        ([ class "w-full md:w-[150px] lg:w-[194px] xl:w-[250px]" ] ++ extraAttributes)
         content
 
 
 column50percent : List (Attribute Never) -> List (Html msg) -> Html msg
 column50percent extraAttributes content =
     div
-        ([ class "w-full sm:w-full lg:w-[320px] xl:w-[390px]" ] ++ extraAttributes)
+        ([ class "w-full sm:w-full lg:w-[300px] xl:w-[382px]" ] ++ extraAttributes)
         content
 
 
@@ -82,7 +82,7 @@ type alias SelectConfig msg =
 
 viewSelect : SelectConfig msg -> Html msg
 viewSelect config =
-    div [ class "min-w-[160px] xl:min-w-[228px] lg:w-[416px] xl:w-[532px] mb-6" ]
+    div [ class "w-full md:w-[316px] lg:w-[404px] xl:w-[516px] mb-6" ]
         [ div
             [ class "fr-select-group" ]
             [ viewLabel config.elementId [ text config.label ]

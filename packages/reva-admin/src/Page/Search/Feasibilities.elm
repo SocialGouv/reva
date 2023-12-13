@@ -86,7 +86,7 @@ view :
 view context model =
     let
         viewWithFilters filterContent =
-            View.layout
+            View.layoutWithLargeSidebar
                 "Filtrer les dossiers de faisabilité par catégorie"
                 filterContent
                 (viewDirectoryPanel context model (feasibilityCategoryFilterToReadableString model.filters.category))

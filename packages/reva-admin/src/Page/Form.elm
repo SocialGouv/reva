@@ -251,7 +251,7 @@ viewForm referential status errors formData form saveButton submitButton =
 
         formFieldset content =
             Html.form
-                [ class "my-4"
+                [ class "w-full my-4"
                 , onSubmit (UserClickSubmit referential)
                 ]
                 [ fieldset [] content ]
@@ -274,7 +274,7 @@ viewForm referential status errors formData form saveButton submitButton =
                     ]
                     :: viewFieldsets viewEditableElement formData currentForm.elements
                     ++ [ div
-                            [ class "mt-8 pb-4 flex justify-end pr-2 w-full" ]
+                            [ class "mt-8 pb-4 flex justify-end w-full" ]
                             [ saveButton
                             , submitButton
                             ]
@@ -861,7 +861,7 @@ viewFieldsets viewElement formData elements =
             List.map
                 (\e ->
                     div
-                        [ class "w-full px-6 md:px-3 lg:pl-5 lg:pr-0 pt-5 my-8"
+                        [ class "w-full px-6 lg:pl-6 lg:pr-0 pt-5 my-8"
                         , class "border rounded-xl"
                         ]
                         [ e ]
@@ -876,7 +876,7 @@ viewFieldsets viewElement formData elements =
                         [ class "relative w-full pb-8 last:pb-0 [&:last-child_hr]:hidden" ]
                         [ e
                         , -- We use an absolute hr instead of a border-b to escape the parent padding
-                          hr [ class "absolute bottom-0 left-0 lg:left-[-21px] right-0" ] []
+                          hr [ class "absolute bottom-0 left-0 lg:left-[-24px] right-0" ] []
                         ]
                 )
                 l

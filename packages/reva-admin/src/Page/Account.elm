@@ -92,7 +92,8 @@ formAccount _ _ =
             Data.Form.Account.keys
     in
     { elements =
-        [ ( keys.firstname, Form.InputRequired "Prénom" )
+        [ ( "", Form.Title2 "Informations compte utilisateur" )
+        , ( keys.firstname, Form.InputRequired "Prénom" )
         , ( keys.lastname, Form.InputRequired "Nom" )
         , ( keys.email, Form.EmailRequired "Email" )
         ]
@@ -115,10 +116,13 @@ formOrganism _ _ =
                 |> List.map (\( id, status ) -> ( id, Data.Form.Organism.organismStatusToString status ))
     in
     { elements =
-        [ ( keys.label, Form.InputRequired "Raison sociale" )
+        [ ( "", Form.Title2 "Informations structure" )
+        , ( keys.label, Form.InputRequired "Raison sociale" )
+        , ( keys.website, Form.Input "Website" )
+        , ( "", Form.Break )
         , ( keys.contactAdministrativeEmail, Form.EmailRequired "Email de contact" )
         , ( keys.contactAdministrativePhone, Form.Input "Téléphone" )
-        , ( keys.website, Form.Input "Website" )
+        , ( "", Form.Break )
         , ( keys.isActive, Form.RadioList "Statut de la structure" radioListOptions )
         ]
     , saveLabel = Nothing
@@ -134,7 +138,8 @@ formCertificationAuthority _ _ =
             Data.Form.CertificationAuthority.keys
     in
     { elements =
-        [ ( keys.label, Form.InputRequired "Raison sociale" )
+        [ ( "", Form.Title2 "Informations autorité de certification" )
+        , ( keys.label, Form.InputRequired "Raison sociale" )
         , ( keys.contactFullName, Form.Input "Nom complet" )
         , ( keys.contactEmail, Form.EmailRequired "Email de contact" )
         ]
@@ -166,7 +171,6 @@ viewContent context model =
             , class "flex flex-wrap"
             ]
             [ h1 [ class "w-full mb-0" ] [ text "Compte utilisateur" ]
-            , viewTitle "Informations compte utilisateur"
             , Form.view (RemoteData.succeed ()) model.formAccount
                 |> Html.map GotFormAccountMsg
             , viewStructure context model
@@ -186,29 +190,9 @@ viewStructure _ model =
         Failure errors ->
             View.errors errors
 
-        Success account ->
-            div []
-                [ case account.organism of
-                    Nothing ->
-                        div [] []
-
-                    Just _ ->
-                        div []
-                            [ viewTitle "Informations structure"
-                            , Form.view (RemoteData.succeed ()) model.formStructure
-                                |> Html.map GotFormStructureMsg
-                            ]
-                , case account.certificationAuthority of
-                    Nothing ->
-                        div [] []
-
-                    Just _ ->
-                        div []
-                            [ viewTitle "Informations autorité de certification"
-                            , Form.view (RemoteData.succeed ()) model.formStructure
-                                |> Html.map GotFormStructureMsg
-                            ]
-                ]
+        Success _ ->
+            Form.view (RemoteData.succeed ()) model.formStructure
+                |> Html.map GotFormStructureMsg
 
 
 viewTitle : String -> Accessibility.Html msg
