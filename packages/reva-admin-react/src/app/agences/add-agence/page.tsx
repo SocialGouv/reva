@@ -7,6 +7,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { AgenceFormData, agenceFormSchema } from "../agenceFormSchema";
 import { useAgencesQueries } from "../agenceQueries";
@@ -17,6 +18,8 @@ const AgencesHomePage = () => {
     useAgencesQueries();
   const { mutateAsync: createAgenceByMaisonMereAAPMutate } =
     useCreateAgenceByMaisonMereAAP;
+
+  const router = useRouter();
 
   const methods = useForm<AgenceFormData>({
     resolver: zodResolver(agenceFormSchema),
@@ -102,9 +105,7 @@ const AgencesHomePage = () => {
       return;
     }
     const organismData = {
-      label: data.raisonSocial,
-      nom: data.nomCommercial,
-      siret: data.siret,
+      nom: data.nom,
       address: data.adresseNumeroEtNomDeRue,
       adresseInformationsComplementaires:
         data.adresseInformationsComplementaires,
@@ -124,6 +125,7 @@ const AgencesHomePage = () => {
     successToast("Agence créée avec succès");
     handleReset();
     await agencesRefetch();
+    router.push("/agences");
   });
 
   const handleReset = () => {
@@ -132,7 +134,7 @@ const AgencesHomePage = () => {
       adresseInformationsComplementaires: "",
       adresseCodePostal: "",
       adresseVille: "",
-      nomCommercial: "",
+      nom: "",
       telephone: "",
       siteInternet: "",
       emailContact: "",
@@ -142,8 +144,6 @@ const AgencesHomePage = () => {
       email: "",
       firstname: "",
       lastname: "",
-      raisonSocial: "",
-      siret: "",
     });
   };
 
@@ -157,10 +157,6 @@ const AgencesHomePage = () => {
             handleReset();
           }}
         >
-          <h3 className="w-full font-bold text-[28px] uppercase">
-            Création nouvelle agence
-          </h3>
-
           <fieldset className="flex flex-col gap-4 w-full mt-4">
             <legend className="text-2xl font-bold mb-4">
               Adresse de l'agence
@@ -213,15 +209,6 @@ const AgencesHomePage = () => {
             </legend>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
               <Input
-                label="Raison sociale"
-                state={errors.raisonSocial ? "error" : "default"}
-                stateRelatedMessage={errors.raisonSocial?.message}
-                nativeInputProps={{
-                  ...register("raisonSocial"),
-                  autoComplete: "organization",
-                }}
-              />
-              <Input
                 label="Adresse email du compte administrateur"
                 state={errors.email ? "error" : "default"}
                 stateRelatedMessage={errors.email?.message}
@@ -250,21 +237,12 @@ const AgencesHomePage = () => {
                   autoComplete: "family-name",
                 }}
               />
-
-              <Input
-                label="SIRET de l'établissement"
-                hintText="Format attendu : 14 chiffres"
-                state={errors.siret ? "error" : "default"}
-                stateRelatedMessage={errors.siret?.message}
-                nativeInputProps={{ ...register("siret") }}
-              />
             </div>
           </fieldset>
 
           <fieldset className="flex flex-col gap-4 mt-4">
             <legend className="text-2xl font-bold mb-4">
               Informations commerciales de l’agence affichées aux candidats
-              (optionnelles)
             </legend>
             <Alert
               severity="info"
@@ -276,10 +254,10 @@ const AgencesHomePage = () => {
               <div>
                 <Input
                   className="!mb-4"
-                  label="Nom commercial  (optionnel)"
-                  nativeInputProps={{ ...register("nomCommercial") }}
-                  state={errors.nomCommercial ? "error" : "default"}
-                  stateRelatedMessage={errors.nomCommercial?.message}
+                  label="Nom commercial"
+                  nativeInputProps={{ ...register("nom") }}
+                  state={errors.nom ? "error" : "default"}
+                  stateRelatedMessage={errors.nom?.message}
                 />
                 <SmallNotice>
                   Si vous ne renseignez pas ce champ, votre raison sociale sera

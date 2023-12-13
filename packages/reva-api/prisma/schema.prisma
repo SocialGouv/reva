@@ -316,7 +316,6 @@ model Organism {
   maisonMereAAPId          String?        @map("maison_mere_aap_id") @db.Uuid
   fermePourAbsenceOuConges Boolean        @default(false) @map("ferme_pour_absence_ou_conges")
 
-  @@unique([siret, typology])
   @@map("organism")
 }
 

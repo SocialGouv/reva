@@ -101,9 +101,7 @@ input DepartmentWithOrganismMethodsInput {
 }
 
 input CreateOrganismInput {
-  label: String!
   nom: String!
-  siret: String!
   address: String!
   adresseInformationsComplementaires: String
   zip: String!

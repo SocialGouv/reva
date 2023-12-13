@@ -69,10 +69,8 @@ export interface MaisonMereAAPOnDepartement {
 }
 
 export interface CreateOrganismAgencyDataRequest {
-  label: string;
-  nomCommercial: string | null;
+  nom: string;
   legalStatus: LegalStatus;
-  siret: string;
   address: string;
   adresseInformationsComplementaires: string;
   zip: string;

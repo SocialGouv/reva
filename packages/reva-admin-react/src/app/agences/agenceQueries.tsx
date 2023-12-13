@@ -10,6 +10,9 @@ const agencesQuery = graphql(`
       agences {
         id
         label
+        informationsCommerciales {
+          nom
+        }
       }
       organism {
         maisonMereAAP {

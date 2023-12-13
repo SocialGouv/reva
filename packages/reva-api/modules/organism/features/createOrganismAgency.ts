@@ -16,7 +16,6 @@ import { assignMaisonMereAAPToOrganism } from "./assignMaisonMereAAPToOrganism";
 import { createOrUpdateInformationsCommerciales } from "./createOrUpdateInformationsCommerciales";
 import { getInformationsCommercialesByEmailContact } from "./getInformationsCommercialesByEmailContact";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./getMaisonMereAAPByGestionnaireAccountId";
-import { getOrganismBySiretOrLabel } from "./getOrganismBySiretOrLabel";
 
 interface CreateOrganismAgencyRequestParams {
   organismData: CreateOrganismAgencyDataRequest;
@@ -81,25 +80,16 @@ export const createOrganismAgency = async ({
       zip,
       address,
       contactAdministrativeEmail,
-      label,
-      siret,
+
       departmentsWithOrganismMethods,
     } = organismData;
-    const { typologie, dateExpirationCertificationQualiopi, statutJuridique } =
-      maisonMereAAP;
-
-    const organismWithSiretOrLabelAlreadyExist =
-      await getOrganismBySiretOrLabel({
-        siret,
-        label,
-      });
-
-    if (organismWithSiretOrLabelAlreadyExist.length > 0) {
-      throw new FunctionalError(
-        FunctionalCodeError.ORGANISM_ALREADY_EXISTS,
-        `Un organisme existe déjà avec le siret ${siret} ou le label ${label}`
-      );
-    }
+    const {
+      typologie,
+      dateExpirationCertificationQualiopi,
+      statutJuridique,
+      raisonSociale,
+      siret,
+    } = maisonMereAAP;
 
     const organismInfoCommercialesWithEmailContactAlreadyExist =
       await getInformationsCommercialesByEmailContact({
@@ -116,7 +106,7 @@ export const createOrganismAgency = async ({
     //organism creation
     const newOrganism = (
       await createOrganism({
-        label,
+        label: raisonSociale,
         address,
         contactAdministrativeEmail,
         contactAdministrativePhone:
@@ -134,14 +124,14 @@ export const createOrganismAgency = async ({
     ).unsafeCoerce();
 
     logger.info(
-      `[validateorganismData] Successfuly created organism with siret ${organismData.siret}`
+      `[validateorganismData] Successfuly created organism with siret ${siret}`
     );
 
     await createOrUpdateInformationsCommerciales({
       informationsCommerciales: {
         organismId: newOrganism.id,
         siteInternet: organismData.website ?? "",
-        nom: organismData.nomCommercial ?? "",
+        nom: organismData.nom ?? "",
         adresseCodePostal: organismData.zip,
         adresseVille: organismData.city,
         adresseNumeroEtNomDeRue: organismData.address,

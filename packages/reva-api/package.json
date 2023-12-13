@@ -19,6 +19,7 @@
     "prisma:reset": "prisma migrate reset",
     "prisma:private-seed": "tsx prisma/seed/private-seed.ts",
     "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:generate:migration": "prisma migrate dev --create-only",
     "cron": "npx tsx infra/cron.ts",
     "cron-dev": "npx tsx infra/cron.ts | npx pino-pretty",
     "lint-staged": "lint-staged",

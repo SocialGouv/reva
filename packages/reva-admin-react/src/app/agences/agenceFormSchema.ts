@@ -10,17 +10,10 @@ export const agenceFormSchema = z.object({
     .string()
     .min(2, "Ce champ doit contenir au moins 2 caractères")
     .default(""),
-  siret: z
-    .string()
-    .length(14, "Ce champ doit contenir 14 caractères")
-    .default(""),
   email: z
     .string()
     .email("Le champ doit contenir une adresse email")
     .default(""),
-  raisonSocial: z
-    .string()
-    .min(2, "Ce champ doit contenir au moins 2 caractères"),
   adresseNumeroEtNomDeRue: z.string().default(""),
   adresseInformationsComplementaires: z.string().optional().default(""),
   adresseCodePostal: z
@@ -31,7 +24,7 @@ export const agenceFormSchema = z.object({
     .string()
     .min(5, "Ce champ doit contenir au moins 5 caractères")
     .default(""),
-  nomCommercial: z.string().optional().default(""),
+  nom: z.string().default(""),
   telephone: z
     .string()
     .length(10, "Ce champ doit contenir 10 chiffres")

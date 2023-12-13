@@ -5,14 +5,29 @@ import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 
-const menuItem = ({ id, label }: { id: string; label: string }) => ({
-  isActive: false,
-  linkProps: {
-    href: `#${id}`, // TODO: add agence page
-    target: "_self",
-  },
-  text: label,
-});
+const menuItem = ({
+  id,
+  label,
+  informationsCommerciales,
+}: {
+  id: string;
+  label: string;
+  informationsCommerciales?: {
+    nom?: string | null;
+  } | null;
+}) => {
+  const text = informationsCommerciales?.nom
+    ? informationsCommerciales.nom
+    : label;
+  return {
+    isActive: false,
+    linkProps: {
+      href: `#${id}`, // TODO: add agence page
+      target: "_self",
+    },
+    text,
+  };
+};
 
 const Skeleton = () => (
   <div className="ml-5 mt-6 h-8 animate-pulse bg-gray-100 w-64" />
@@ -20,8 +35,8 @@ const Skeleton = () => (
 const AgencesLayout = ({ children }: { children: ReactNode }) => {
   const { agences, agencesStatus } = useAgencesQueries();
   const path = usePathname();
-  const regex = new RegExp(/\/ajouter-agence$/);
-  const isAjouterAgence = regex.test(path);
+  const regex = new RegExp(/\/add-agence$/);
+  const isAddAgence = regex.test(path);
 
   return (
     <div className="w-full flex flex-col md:flex-row gap-10 md:gap-0">
@@ -41,11 +56,11 @@ const AgencesLayout = ({ children }: { children: ReactNode }) => {
           items={
             [
               ...agences.map(menuItem),
-              !isAjouterAgence
+              !isAddAgence
                 ? {
                     isActive: false,
                     linkProps: {
-                      href: "/agences/ajouter-agence/",
+                      href: "/agences/add-agence/",
                       target: "_self",
                     },
                     text: (
