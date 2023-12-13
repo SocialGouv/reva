@@ -201,7 +201,7 @@ viewSelectTypology _ candidacy =
 
         filteredTypologyList : List CandidateTypology
         filteredTypologyList =
-            [ SalariePrive, DemandeurEmploi, AidantsFamiliaux, Benevole, Autre ]
+            [ SalariePrive, DemandeurEmploi, AidantsFamiliaux, Benevole ]
 
         typology =
             candidacy.typology
