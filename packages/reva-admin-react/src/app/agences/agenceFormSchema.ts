@@ -22,7 +22,7 @@ export const agenceFormSchema = z.object({
     .default(""),
   adresseVille: z
     .string()
-    .min(5, "Ce champ doit contenir au moins 5 caractères")
+    .min(2, "Ce champ doit contenir au moins 2 caractères")
     .default(""),
   nom: z.string().default(""),
   telephone: z
