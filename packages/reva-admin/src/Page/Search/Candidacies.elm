@@ -290,7 +290,7 @@ viewItem context candidacy =
                         viewOrganism context candidacy candidatureName organism
 
                     _ ->
-                        []
+                        [ div [] [], candidacyAccessButton context candidacy candidatureName ]
             ]
         ]
     ]
@@ -308,10 +308,7 @@ viewOrganism context candidacy candidatureName organism =
                     ""
 
         accessButton =
-            Button.new { onClick = Nothing, label = "Accéder\u{00A0}à\u{00A0}la\u{00A0}candidature" }
-                |> Button.linkButton (Route.toString context.baseUrl (Route.Candidacy { value = Profile, candidacyId = candidacy.id }))
-                |> Button.withAttrs [ attribute "title" ("Accéder à la candidature de " ++ candidatureName) ]
-                |> Button.view
+            candidacyAccessButton context candidacy candidatureName
 
         textBlock =
             div
@@ -333,6 +330,14 @@ viewOrganism context candidacy candidatureName organism =
 
         _ ->
             [ div [] [], accessButton ]
+
+
+candidacyAccessButton : Context -> CandidacySummary -> String -> Accessibility.Html msg
+candidacyAccessButton context candidacy candidatureName =
+    Button.new { onClick = Nothing, label = "Accéder\u{00A0}à\u{00A0}la\u{00A0}candidature" }
+        |> Button.linkButton (Route.toString context.baseUrl (Route.Candidacy { value = Profile, candidacyId = candidacy.id }))
+        |> Button.withAttrs [ attribute "title" ("Accéder à la candidature de " ++ candidatureName) ]
+        |> Button.view
 
 
 
