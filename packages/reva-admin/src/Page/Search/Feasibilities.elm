@@ -69,7 +69,7 @@ init context categoryFilter page =
         defaultCmd =
             Cmd.batch
                 [ Api.Feasibility.getFeasibilities context.endpoint context.token GotFeasibilitiesResponse page decisionFilter defaultModel.filters.search
-                , Api.Feasibility.getFeasibilityCountByCategory context.endpoint context.token GotFeasibilitiesCountByCategoryResponse
+                , Api.Feasibility.getFeasibilityCountByCategory context.endpoint context.token defaultModel.filters.search GotFeasibilitiesCountByCategoryResponse
                 ]
     in
     ( defaultModel, defaultCmd )
@@ -344,7 +344,13 @@ update context msg model =
                 | filters = { filters | search = model.state.search, page = 1 }
                 , state = model.state |> withFeasibilityPage Loading
               }
-            , Api.Feasibility.getFeasibilities context.endpoint context.token GotFeasibilitiesResponse 1 decisionFilter model.state.search
+            , Cmd.batch
+                [ Api.Feasibility.getFeasibilities context.endpoint context.token GotFeasibilitiesResponse 1 decisionFilter model.state.search
+                , Api.Feasibility.getFeasibilityCountByCategory context.endpoint
+                    context.token
+                    model.state.search
+                    GotFeasibilitiesCountByCategoryResponse
+                ]
             )
 
         UserClearedSearch ->
@@ -362,5 +368,11 @@ update context msg model =
                         |> withFeasibilityPage Loading
                         |> withSearch Nothing
               }
-            , Api.Feasibility.getFeasibilities context.endpoint context.token GotFeasibilitiesResponse 1 decisionFilter Nothing
+            , Cmd.batch
+                [ Api.Feasibility.getFeasibilities context.endpoint context.token GotFeasibilitiesResponse 1 decisionFilter Nothing
+                , Api.Feasibility.getFeasibilityCountByCategory context.endpoint
+                    context.token
+                    Nothing
+                    GotFeasibilitiesCountByCategoryResponse
+                ]
             )

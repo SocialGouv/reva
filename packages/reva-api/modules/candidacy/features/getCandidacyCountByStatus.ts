@@ -35,7 +35,7 @@ export const getCandidacyCountByStatus = async ({
   };
 
   if (!hasRole("admin") && !hasRole("manage_candidacy")) {
-    return [];
+    throw new Error("Utilisateur non autorisé");
   }
 
   await Promise.all(

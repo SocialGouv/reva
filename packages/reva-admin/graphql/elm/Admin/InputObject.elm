@@ -384,13 +384,11 @@ buildCreateOrganismInput required____ fillOptionals____ =
             fillOptionals____
                 { adresseInformationsComplementaires = Absent, website = Absent }
     in
-    { label = required____.label, nom = required____.nom, siret = required____.siret, address = required____.address, adresseInformationsComplementaires = optionals____.adresseInformationsComplementaires, zip = required____.zip, city = required____.city, contactAdministrativeEmail = required____.contactAdministrativeEmail, contactAdministrativePhone = required____.contactAdministrativePhone, website = optionals____.website, conformeNormesAccessbilite = required____.conformeNormesAccessbilite, departmentsWithOrganismMethods = required____.departmentsWithOrganismMethods, firstname = required____.firstname, lastname = required____.lastname, email = required____.email }
+    { nom = required____.nom, address = required____.address, adresseInformationsComplementaires = optionals____.adresseInformationsComplementaires, zip = required____.zip, city = required____.city, contactAdministrativeEmail = required____.contactAdministrativeEmail, contactAdministrativePhone = required____.contactAdministrativePhone, website = optionals____.website, conformeNormesAccessbilite = required____.conformeNormesAccessbilite, departmentsWithOrganismMethods = required____.departmentsWithOrganismMethods, firstname = required____.firstname, lastname = required____.lastname, email = required____.email }
 
 
 type alias CreateOrganismInputRequiredFields =
-    { label : String
-    , nom : String
-    , siret : String
+    { nom : String
     , address : String
     , zip : String
     , city : String
@@ -413,9 +411,7 @@ type alias CreateOrganismInputOptionalFields =
 {-| Type for the CreateOrganismInput input object.
 -}
 type alias CreateOrganismInput =
-    { label : String
-    , nom : String
-    , siret : String
+    { nom : String
     , address : String
     , adresseInformationsComplementaires : OptionalArgument String
     , zip : String
@@ -436,7 +432,7 @@ type alias CreateOrganismInput =
 encodeCreateOrganismInput : CreateOrganismInput -> Value
 encodeCreateOrganismInput input____ =
     Encode.maybeObject
-        [ ( "label", Encode.string input____.label |> Just ), ( "nom", Encode.string input____.nom |> Just ), ( "siret", Encode.string input____.siret |> Just ), ( "address", Encode.string input____.address |> Just ), ( "adresseInformationsComplementaires", Encode.string |> Encode.optional input____.adresseInformationsComplementaires ), ( "zip", Encode.string input____.zip |> Just ), ( "city", Encode.string input____.city |> Just ), ( "contactAdministrativeEmail", Encode.string input____.contactAdministrativeEmail |> Just ), ( "contactAdministrativePhone", Encode.string input____.contactAdministrativePhone |> Just ), ( "website", Encode.string |> Encode.optional input____.website ), ( "conformeNormesAccessbilite", Encode.enum Admin.Enum.ConformiteNormeAccessibilite.toString input____.conformeNormesAccessbilite |> Just ), ( "departmentsWithOrganismMethods", (encodeDepartmentWithOrganismMethodsInput |> Encode.list) input____.departmentsWithOrganismMethods |> Just ), ( "firstname", Encode.string input____.firstname |> Just ), ( "lastname", Encode.string input____.lastname |> Just ), ( "email", Encode.string input____.email |> Just ) ]
+        [ ( "nom", Encode.string input____.nom |> Just ), ( "address", Encode.string input____.address |> Just ), ( "adresseInformationsComplementaires", Encode.string |> Encode.optional input____.adresseInformationsComplementaires ), ( "zip", Encode.string input____.zip |> Just ), ( "city", Encode.string input____.city |> Just ), ( "contactAdministrativeEmail", Encode.string input____.contactAdministrativeEmail |> Just ), ( "contactAdministrativePhone", Encode.string input____.contactAdministrativePhone |> Just ), ( "website", Encode.string |> Encode.optional input____.website ), ( "conformeNormesAccessbilite", Encode.enum Admin.Enum.ConformiteNormeAccessibilite.toString input____.conformeNormesAccessbilite |> Just ), ( "departmentsWithOrganismMethods", (encodeDepartmentWithOrganismMethodsInput |> Encode.list) input____.departmentsWithOrganismMethods |> Just ), ( "firstname", Encode.string input____.firstname |> Just ), ( "lastname", Encode.string input____.lastname |> Just ), ( "email", Encode.string input____.email |> Just ) ]
 
 
 buildDepartmentWithOrganismMethodsInput :

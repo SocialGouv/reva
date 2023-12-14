@@ -20,6 +20,11 @@ import {
   sendFeasibilityValidatedCandidateEmail,
   sendNewFeasibilitySubmittedEmail,
 } from "./feasibility.mails";
+import {
+  FeasibilityStatusFilter,
+  getWhereClauseFromSearchFilter,
+  getWhereClauseFromStatusFilter,
+} from "./utils/feasibility.helper";
 
 const baseUrl = process.env.BASE_URL || "https://vae.gouv.fr";
 
@@ -220,11 +225,13 @@ export const getFileNameAndUrl = async ({
 export const getActiveFeasibilityCountByCategory = async ({
   keycloakId,
   hasRole,
+  searchFilter,
 }: {
   keycloakId: string;
   hasRole: (role: string) => boolean;
+  searchFilter?: string;
 }) => {
-  const feasibilityCountByCategory = {
+  const feasibilityCountByCategory: Record<FeasibilityStatusFilter, number> = {
     ALL: 0,
     PENDING: 0,
     ADMISSIBLE: 0,
@@ -232,69 +239,60 @@ export const getActiveFeasibilityCountByCategory = async ({
     INCOMPLETE: 0,
   };
 
-  const countQueryHelper = ({
-    decision,
-    from,
-    where,
-  }: {
-    decision?: string;
-    from: string;
-    where?: string;
-  }) => {
-    const select = decision ? `'${decision}' as decision` : "'ALL' as decision";
+  if (!hasRole("admin") && !hasRole("manage_feasibility")) {
+    throw new Error("Utilisateur non autorisé");
+  }
 
-    const whereClauseAnd = where ? `${where} and` : "";
+  await Promise.all(
+    (Object.keys(feasibilityCountByCategory) as FeasibilityStatusFilter[]).map(
+      async (statusFilter) => {
+        try {
+          const value: number = await new Promise((resolve, reject) => {
+            {
+              let whereClause: Prisma.FeasibilityWhereInput =
+                !hasRole("admin") && hasRole("manage_feasibility")
+                  ? {
+                      certificationAuthority: {
+                        Account: {
+                          some: {
+                            keycloakId: keycloakId,
+                          },
+                        },
+                      },
+                    }
+                  : {};
 
-    return decision
-      ? `select ${select}, count(decision)
-            from ${from} 
-            where ${whereClauseAnd} feasibility.decision = '${decision}' and feasibility.is_active = '${
-          decision !== "INCOMPLETE"
-        }'`
-      : `select ${select}, count(decision)
-            from ${from} 
-            where ${whereClauseAnd} (feasibility.is_active = 'true' or (feasibility.is_active = 'false' and decision = 'INCOMPLETE'))`;
-  };
+              whereClause = {
+                ...whereClause,
+                ...getWhereClauseFromStatusFilter(statusFilter),
+                candidacy: {
+                  ...getWhereClauseFromSearchFilter(searchFilter),
+                },
+              };
 
-  const countQuery = (decision?: FeasibilityStatus) => {
-    if (hasRole("admin")) {
-      return countQueryHelper({ decision, from: `feasibility` });
-    } else if (hasRole("manage_feasibility")) {
-      return countQueryHelper({
-        decision,
-        from: `account join feasibility on feasibility.certification_authority_id = account.certification_authority_id`,
-        where: `account.keycloak_id = '${keycloakId}'`,
-      });
-    } else {
-      throw new Error("Utilisateur non autorisé");
-    }
-  };
+              prismaClient.feasibility
+                .count({
+                  where: whereClause,
+                })
+                .then((value) => {
+                  resolve(value);
+                })
+                .catch(() => {
+                  reject();
+                });
+            }
+          });
 
-  const query = `${countQuery()} 
-  UNION ${countQuery("PENDING")} 
-  UNION ${countQuery("ADMISSIBLE")}
-  UNION ${countQuery("INCOMPLETE")}
-  UNION ${countQuery("REJECTED")}`;
-
-  type DecisionWithoutIncomplete = //can't use Omit here since it loses information and mess up the array indexing bellow
-    "ALL" | "PENDING" | "REJECTED" | "ADMISSIBLE" | "INCOMPLETE";
-
-  const feasibilityCountByStatusFromDb: {
-    decision: DecisionWithoutIncomplete;
-    count: bigint;
-  }[] = await prismaClient.$queryRawUnsafe(query);
-
-  feasibilityCountByStatusFromDb.forEach((fcbs) => {
-    feasibilityCountByCategory[fcbs.decision] = Number(fcbs.count);
-  });
+          feasibilityCountByCategory[statusFilter] = value;
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    )
+  );
 
   return feasibilityCountByCategory;
 };
-
-const buildContainsFilterClause =
-  (searchFilter: string) => (field: string) => ({
-    [field]: { contains: searchFilter, mode: "insensitive" },
-  });
 
 export const getActiveFeasibilities = async ({
   keycloakId,
@@ -341,35 +339,10 @@ export const getActiveFeasibilities = async ({
   }
 
   if (searchFilter && searchFilter.length > 0) {
-    const containsFilter = buildContainsFilterClause(searchFilter);
-
     queryWhereClause = {
       ...queryWhereClause,
       candidacy: {
-        ...(queryWhereClause.candidacy as Prisma.CandidacyWhereInput),
-        OR: [
-          {
-            candidate: {
-              OR: [
-                containsFilter("lastname"),
-                containsFilter("firstname"),
-                containsFilter("firstname2"),
-                containsFilter("firstname3"),
-                containsFilter("email"),
-                containsFilter("phone"),
-              ],
-            },
-          },
-          { organism: containsFilter("label") },
-          { department: containsFilter("label") },
-          {
-            certificationsAndRegions: {
-              some: {
-                certification: containsFilter("label"),
-              },
-            },
-          },
-        ],
+        ...getWhereClauseFromSearchFilter(searchFilter),
       },
     };
   }

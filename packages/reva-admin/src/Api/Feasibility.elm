@@ -152,10 +152,17 @@ summarySelection =
 getFeasibilityCountByCategory :
     String
     -> Token
+    -> Maybe String
     -> (RemoteData (List String) Data.Feasibility.FeasibilityCountByCategory -> msg)
     -> Cmd msg
-getFeasibilityCountByCategory endpointGraphql token toMsg =
-    Query.feasibilityCountByCategory feasibilityCountByCategorySelection
+getFeasibilityCountByCategory endpointGraphql token searchFilter toMsg =
+    Query.feasibilityCountByCategory
+        (\optionals ->
+            { optionals
+                | searchFilter = OptionalArgument.fromMaybe searchFilter
+            }
+        )
+        feasibilityCountByCategorySelection
         |> Auth.makeQuery "feasibilityCountByCategory" endpointGraphql token toMsg
 
 

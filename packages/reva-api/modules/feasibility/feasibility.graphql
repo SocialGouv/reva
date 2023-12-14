@@ -58,7 +58,7 @@ enum FeasibilityDecisionFilter {
 }
 
 type Query {
-  feasibilityCountByCategory: FeasibilityCountByCategory!
+  feasibilityCountByCategory(searchFilter: String): FeasibilityCountByCategory!
   feasibilities(
     offset: Int
     limit: Int

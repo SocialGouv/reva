@@ -241,11 +241,24 @@ certification_authority_getCertificationAuthority requiredArgs____ object____ =
     Object.selectionForCompositeField "certification_authority_getCertificationAuthority" [ Argument.required "id" requiredArgs____.id (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) ] object____ (Basics.identity >> Decode.nullable)
 
 
+type alias FeasibilityCountByCategoryOptionalArguments =
+    { searchFilter : OptionalArgument String }
+
+
 feasibilityCountByCategory :
-    SelectionSet decodesTo Admin.Object.FeasibilityCountByCategory
+    (FeasibilityCountByCategoryOptionalArguments -> FeasibilityCountByCategoryOptionalArguments)
+    -> SelectionSet decodesTo Admin.Object.FeasibilityCountByCategory
     -> SelectionSet decodesTo RootQuery
-feasibilityCountByCategory object____ =
-    Object.selectionForCompositeField "feasibilityCountByCategory" [] object____ Basics.identity
+feasibilityCountByCategory fillInOptionals____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { searchFilter = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "searchFilter" filledInOptionals____.searchFilter Encode.string ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "feasibilityCountByCategory" optionalArgs____ object____ Basics.identity
 
 
 type alias FeasibilitiesOptionalArguments =

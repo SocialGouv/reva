@@ -50,10 +50,17 @@ export const feasibilityResolvers = {
       getFileNameAndUrl({ candidacyId, fileId: certificateOfAttendanceFileId }),
   },
   Query: {
-    feasibilityCountByCategory: (_: unknown, _args: unknown, context: any) =>
+    feasibilityCountByCategory: (
+      _: unknown,
+      _params: {
+        searchFilter?: string;
+      },
+      context: any
+    ) =>
       getActiveFeasibilityCountByCategory({
         keycloakId: context.auth.userInfo?.sub,
         hasRole: context.auth.hasRole,
+        searchFilter: _params.searchFilter,
       }),
     feasibilities: (
       _: unknown,
