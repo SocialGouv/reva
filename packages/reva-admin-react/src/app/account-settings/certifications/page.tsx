@@ -12,7 +12,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 
 const schema = z.object({
-  niveauxDiplomeGeres: z
+  managedDegrees: z
     .object({ id: z.string(), label: z.string(), checked: z.boolean() })
     .array(),
 });
@@ -36,23 +36,23 @@ const CertificationsPage = () => {
     handleSubmit,
     reset,
     control,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
   const { fields: managedDegreesFields } = useFieldArray({
     control,
-    name: "niveauxDiplomeGeres",
+    name: "managedDegrees",
   });
 
   const resetForm = useCallback(
     () =>
       reset({
-        niveauxDiplomeGeres: degrees.map((nd) => ({
-          id: nd.id,
-          label: nd.label,
-          checked: !!managedDegrees.find((ndg) => ndg.id === nd.id),
+        managedDegrees: degrees.map((d) => ({
+          id: d.id,
+          label: d.label,
+          checked: !!managedDegrees.find((md) => md.id === d.id),
         })),
       }),
     [managedDegrees, degrees, reset],
@@ -63,9 +63,9 @@ const CertificationsPage = () => {
   const handleFormSubmit = handleSubmit(async (data) => {
     await createOrUpdatemanagedDegrees.mutateAsync({
       organismId,
-      managedDegreesIds: data.niveauxDiplomeGeres
-        .filter((ndg) => ndg.checked)
-        .map((ndg) => ndg.id),
+      managedDegreesIds: data.managedDegrees
+        .filter((md) => md.checked)
+        .map((md) => md.id),
     });
     successToast("modifications enregistrées");
     await refetchmanagedDegrees();
@@ -109,10 +109,10 @@ const CertificationsPage = () => {
           <fieldset className="flex flex-col gap-4">
             <Checkbox
               legend=""
-              options={managedDegreesFields.map((ndg, ndgIndex) => ({
-                label: ndg.label,
+              options={managedDegreesFields.map((md, mdIndex) => ({
+                label: md.label,
                 nativeInputProps: {
-                  ...register(`niveauxDiplomeGeres.${ndgIndex}.checked`),
+                  ...register(`managedDegrees.${mdIndex}.checked`),
                 },
               }))}
             />
