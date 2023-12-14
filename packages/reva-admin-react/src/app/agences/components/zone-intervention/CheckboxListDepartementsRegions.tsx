@@ -3,6 +3,8 @@ import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
 import { ZoneInterventionList } from "./useDepartementsOnRegions";
 
+const departementsDom = ["971", "972", "973", "974", "976"];
+
 interface CheckboxListDepartementsRegionsProps {
   zoneIntervention: ZoneInterventionList;
   setZoneIntervention: (zoneIntervention: ZoneInterventionList) => void;
@@ -77,6 +79,14 @@ function CheckboxListDepartementsRegions({
 
   const handleSelectAll = (isSelected: boolean) => {
     const zoneInterventionSelected = zoneIntervention.map((region) => {
+      const hasDomDepartement = region.departements.some((departement) =>
+        departementsDom.includes(departement.code),
+      );
+
+      if (hasDomDepartement) {
+        return region;
+      }
+
       return {
         ...region,
         isSelected,
@@ -90,7 +100,15 @@ function CheckboxListDepartementsRegions({
     setZoneIntervention(zoneInterventionSelected);
   };
 
-  const isAllSelected = zoneIntervention.every((region) => region.isSelected);
+  const isAllSelected = zoneIntervention.every((region) => {
+    const hasDomDepartement = region.departements.some((departement) =>
+      departementsDom.includes(departement.code),
+    );
+    if (hasDomDepartement) {
+      return true;
+    }
+    return region.isSelected;
+  });
 
   return (
     <div className="flex-1">
@@ -112,11 +130,15 @@ function CheckboxListDepartementsRegions({
           return (
             <div key={region.regionId} className="relative">
               <Checkbox
-                className="absolute z-10 top-3 sm:left-4"
+                className="absolute z-10 top-0.5 bg-white pt-4 sm:pt-2.5 w-10/12 "
                 key={region.regionLabel}
                 options={[
                   {
-                    label: region.regionLabel,
+                    label: (
+                      <span className="text-xs sm:text-base">
+                        {region.regionLabel}
+                      </span>
+                    ),
                     nativeInputProps: {
                       checked: region.isSelected,
                       onChange: () => {
@@ -134,7 +156,12 @@ function CheckboxListDepartementsRegions({
                       key={departement.departementId}
                       options={[
                         {
-                          label: `${departement.departementLabel} (${departement.code})`,
+                          label: (
+                            <span className="text-xs sm:text-base">
+                              {`${departement.departementLabel} (${departement.code})`}
+                            </span>
+                          ),
+
                           nativeInputProps: {
                             checked: departement.isSelected,
                             onChange: () =>
