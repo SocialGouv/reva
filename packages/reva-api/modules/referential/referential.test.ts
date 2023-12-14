@@ -27,6 +27,18 @@ async function attachOrganismToDepartment(
   });
 }
 
+async function attachOrganismToAllDegrees(organism: Organism | null) {
+  const degrees = await prismaClient.degree.findMany();
+  for (const degree of degrees) {
+    await prismaClient.organismOnDegree.create({
+      data: {
+        degreeId: degree?.id || "",
+        organismId: organism?.id || "",
+      },
+    });
+  }
+}
+
 async function getCertifications({
   department,
   searchText,
@@ -112,6 +124,11 @@ beforeAll(async () => {
   // Branche fixtures (also known as Convention Collective)
   await attachOrganismToDepartment(expertBranche, paris);
   await attachOrganismToDepartment(expertBranche, loire);
+
+  await attachOrganismToAllDegrees(generaliste);
+  await attachOrganismToAllDegrees(expertFiliere);
+  await attachOrganismToAllDegrees(expertBranche);
+
   await prismaClient.organismOnConventionCollective.create({
     data: {
       ccnId: particulierEmployeur?.id || "",
