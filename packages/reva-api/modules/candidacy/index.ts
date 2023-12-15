@@ -15,6 +15,7 @@ import {
   FunctionalError,
 } from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
+import { sendCandidacyDropOutEmail } from "./candidacy.mails";
 import {
   Admissibility,
   Candidacy,
@@ -695,6 +696,12 @@ const unsafeResolvers = {
         otherReasonContent: payload.dropOut.otherReasonContent,
         droppedOutAt,
       });
+
+      const candidacy = result.isRight() ? result.extract() : undefined;
+      if (candidacy?.email) {
+        sendCandidacyDropOutEmail(candidacy.email);
+      }
+
       logCandidacyEvent({
         candidacyId: payload.candidacyId,
         eventType: CandidacyBusinessEvent.DROPPED_OUT_CANDIDACY,

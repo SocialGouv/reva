@@ -209,6 +209,13 @@ export const sendGenericEmail = async ({
   subject,
   attachment,
 }: GenericEmailArgs): Promise<Either<string, string>> => {
+  if (process.env.NODE_ENV !== "production") {
+    logger.info("======= EMAIL CONTENT =======");
+    logger.info(htmlContent);
+    logger.info("=========================");
+    return Right(`email sent to ${to.email}`);
+  }
+
   const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
   const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
