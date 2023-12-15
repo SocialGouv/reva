@@ -23,13 +23,13 @@ const modalDistanceInfo = createModal({
 });
 
 interface PropsOrganisms {
-  availableOrganisms?: Organism[];
+  availableOrganisms?: { rows: Organism[]; totalRows: number };
   setOrganismId: Dispatch<SetStateAction<string>>;
   alreadySelectedOrganismId: string;
 }
 
 const Organisms: FC<PropsOrganisms> = ({
-  availableOrganisms = [],
+  availableOrganisms = { rows: [], totalRows: 0 },
   setOrganismId,
   alreadySelectedOrganismId,
 }) => {
@@ -54,12 +54,12 @@ const Organisms: FC<PropsOrganisms> = ({
 
   return (
     <RadioGroup
-      value={selectedOrganismId || availableOrganisms[0]?.id}
+      value={selectedOrganismId || availableOrganisms.rows[0]?.id}
       onChange={setSelectedOrganismId}
     >
       <RadioGroup.Label className="sr-only">Accompagnateur</RadioGroup.Label>
       <div className="space-y-4">
-        {availableOrganisms.map((organism) => {
+        {availableOrganisms.rows.map((organism) => {
           const organismDisplayInfo = getOrganismDisplayInfo(organism);
           return (
             <RadioGroup.Option
@@ -183,7 +183,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
   const iconTagFilledStyle = (isSelected: boolean) =>
     isSelected ? "fill-white" : "fill-dsfrBlue-500";
 
-  const isOrganismsLoaded = organisms && organisms.length > 0;
+  const isOrganismsLoaded = organisms && organisms.rows.length > 0;
 
   if (!candidacyId) return <p>Aucun Id de candidat trouvé</p>;
 
@@ -196,7 +196,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
           Votre organisme d'accompagnement
         </h1>
         <SearchBar
-          label="Rechercher un organisme"
+          label="Recherchez votre organisme d’accompagnement en saisissant son nom"
           nativeInputProps={{
             defaultValue: state.context.organismSearchText,
             onChange: (e) => {
@@ -282,8 +282,10 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
         {selectedDepartment && (
           <>
             <p className="mt-6 text-black">
-              Voici les organismes d'accompagnement disponibles dans votre
-              département.
+              {organisms && organisms.totalRows > 0
+                ? `Il y a ${organisms.totalRows} organisme(s) d'accompagnement disponible(s) dans votre
+              département.`
+                : "Il n'y a pas d'organismes d'accompagnement disponibles dans votre département."}
             </p>
             <p className="mb-4 text-black"> Cochez celui de votre choix.</p>
           </>
@@ -318,7 +320,7 @@ export const ProjectOrganisms: FC<Props> = ({ mainService }) => {
                     organism: {
                       candidacyId,
                       selectedOrganismId:
-                        selectedOrganismId || organisms[0]?.id,
+                        selectedOrganismId || organisms.rows[0]?.id,
                     },
                   });
                 }

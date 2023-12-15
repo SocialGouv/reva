@@ -17,7 +17,7 @@ interface GetRandomActiveOrganismsForCandidacyWithNewTypologiesDeps {
     searchText?: string;
     searchFilter: SearchOrganismFilter;
     limit: number;
-  }) => Promise<Either<string, Organism[]>>;
+  }) => Promise<Either<string, { rows: Organism[]; totalRows: number }>>;
 }
 
 export const getRandomOrganismsForCandidacyWithNewTypologies =

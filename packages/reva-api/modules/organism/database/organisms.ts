@@ -239,10 +239,10 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
   searchText?: string;
   searchFilter: SearchOrganismFilter;
   limit: number;
-}): Promise<Either<string, domain.Organism[]>> => {
+}): Promise<Either<string, { rows: domain.Organism[]; totalRows: number }>> => {
   try {
     if (!certificationId || !departmentId) {
-      return Right([]);
+      return Right({ rows: [], totalRows: 0 });
     }
 
     let whereClause = `where o.id = ao.organism_id and ao.certification_id=uuid('${certificationId}') and ao.department_id=uuid('${departmentId}') and ao.department_id = od.department_id`;
@@ -250,15 +250,13 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
       whereClause += ` and unaccent(o.label) ilike unaccent('%${searchText}%')`;
     }
 
-    if (searchFilter.distanceStatus) {
-      if (searchFilter.distanceStatus === "REMOTE") {
-        whereClause += ` and od.is_remote = true`;
-      } else if (searchFilter.distanceStatus === "ONSITE") {
-        whereClause += ` and od.is_onsite = true`;
-      }
+    if (searchFilter.distanceStatus === "REMOTE") {
+      whereClause += ` and od.is_remote = true`;
+    } else if (searchFilter.distanceStatus === "ONSITE") {
+      whereClause += ` and od.is_onsite = true`;
     }
 
-    const query = `
+    const queryResults = `
     select o.id,o.label,o.legal_status,o.address,o.zip,o.city,o.contact_administrative_email,o.contact_administrative_phone,o.website, o.siret, ao.organism_id from organism o
     inner join organism_department as od
     on od.organism_id = o.id,
@@ -266,11 +264,25 @@ export const getRandomActiveOrganismForCertificationAndDepartment = async ({
     ${whereClause} 
     order by Random() limit ${limit}`;
 
-    const results = (await prismaClient.$queryRawUnsafe<Organism[]>(query)).map(
+    const results = (
+      await prismaClient.$queryRawUnsafe<Organism[]>(queryResults)
+    ).map(
       (o) => mapKeys(o, (v, k) => camelCase(k)) //mapping rawquery output field names in snake case to camel case
     ) as unknown as domain.Organism[];
 
-    return Right(results);
+    const queryCount = `
+    select count(distinct(o.id)) from organism o
+    inner join organism_department as od
+    on od.organism_id = o.id,
+    active_organism_by_available_certification_and_department ao
+    ${whereClause}`;
+
+    const count = Number(
+      (await prismaClient.$queryRawUnsafe<{ count: number }[]>(queryCount))[0]
+        .count
+    );
+
+    return Right({ rows: results, totalRows: count });
   } catch (e) {
     logger.error(e);
     return Left(`error while retreiving organism`);

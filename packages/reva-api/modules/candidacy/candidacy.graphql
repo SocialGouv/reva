@@ -259,6 +259,11 @@ input SearchOrganismFilter {
   distanceStatus: DistanceStatus
 }
 
+type RamdomOrganisms {
+  rows: [Organism!]
+  totalRows: Int!
+}
+
 type Query {
   getCandidacyById(id: ID!): Candidacy
   getCandidacies(
@@ -273,7 +278,7 @@ type Query {
     candidacyId: UUID!
     searchText: String
     searchFilter: SearchOrganismFilter
-  ): [Organism!]!
+  ): RamdomOrganisms!
   getCompanionsForCandidacy(candidacyId: UUID!): [Organism!]!
   getBasicSkills: [BasicSkill!]!
   candidacy_candidacyCountByStatus(

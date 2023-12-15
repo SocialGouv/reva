@@ -12,27 +12,30 @@ const GET_ORGANISMS_FOR_CANDIDACY = gql`
       searchText: $searchText
       searchFilter: $searchFilter
     ) {
-      id
-      label
-      contactAdministrativeEmail
-      contactAdministrativePhone
-      website
-      organismOnDepartments(departmentId: $departmentId) {
+      rows {
         id
-        isRemote
-        isOnSite
+        label
+        contactAdministrativeEmail
+        contactAdministrativePhone
+        website
+        organismOnDepartments(departmentId: $departmentId) {
+          id
+          isRemote
+          isOnSite
+        }
+        informationsCommerciales {
+          nom
+          telephone
+          siteInternet
+          emailContact
+          adresseNumeroEtNomDeRue
+          adresseInformationsComplementaires
+          adresseCodePostal
+          adresseVille
+          conformeNormesAccessbilite
+        }
       }
-      informationsCommerciales {
-        nom
-        telephone
-        siteInternet
-        emailContact
-        adresseNumeroEtNomDeRue
-        adresseInformationsComplementaires
-        adresseCodePostal
-        adresseVille
-        conformeNormesAccessbilite
-      }
+      totalRows
     }
   }
 `;

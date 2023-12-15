@@ -103,6 +103,7 @@ export const sendPreventOrganismCandidateChangeOrganismEmail = async ({
     logger.info("======= EMAIL CONTENT =======");
     logger.info(htmlContent.html);
     logger.info("=========================");
+    return;
   }
   return sendGenericEmail({
     to: { email },

@@ -196,29 +196,40 @@ const unsafeResolvers = {
         getCandidacyFromId: candidacyDb.getCandidacyFromId,
       })({ candidacyId, searchText, searchFilter, limit: 11 });
 
-      return result
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .map((organisms) => {
-          //remove the organism already selected for the candidacy if it's in the list
-          let randomOrganisms = organisms
-            .filter((c) => c.id !== candidacy?.organism?.id)
-            .slice(0, 10);
+      result.mapLeft(
+        (error) => new mercurius.ErrorWithProps(error.message, error)
+      );
 
-          //add the candidacy selected organism as the first result if it exists
-          if (
-            candidacy?.organismId &&
-            !randomOrganisms.some((org) => org.id == candidacy.organismId)
-          ) {
-            randomOrganisms = [
-              candidacy.organism as Organism,
-              ...randomOrganisms.slice(0, 9),
-            ];
-          }
+      if (result.isLeft()) {
+        return result.mapLeft(
+          (error) => new mercurius.ErrorWithProps(error.message, error)
+        );
+      }
 
-          return randomOrganisms;
-        })
-        .mapLeft((error) => new mercurius.ErrorWithProps(error.message, error))
-        .extract();
+      const data = result.extract() as {
+        rows: Organism[];
+        totalRows: number;
+      };
+
+      let randomOrganisms = data.rows
+        .filter((c) => c.id !== candidacy?.organism?.id)
+        .slice(0, 10);
+
+      //add the candidacy selected organism as the first result if it exists
+      if (
+        candidacy?.organismId &&
+        !randomOrganisms.some((org) => org.id == candidacy.organismId)
+      ) {
+        randomOrganisms = [
+          candidacy.organism as Organism,
+          ...randomOrganisms.slice(0, 9),
+        ];
+      }
+
+      return {
+        ...data,
+        rows: randomOrganisms,
+      };
     },
     getBasicSkills: async () => {
       const result = await getBasicSkills({

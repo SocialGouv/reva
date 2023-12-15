@@ -78,7 +78,7 @@ export interface MainContext {
   departments: Department[];
   selectedDepartment?: Department;
   certificationSearchText: string;
-  organisms: Organism[] | undefined;
+  organisms: { rows: Organism[]; totalRows: number } | undefined;
   trainingProgram: TrainingProgram | undefined;
   isTrainingProgramConfirmed: boolean;
   firstAppointmentOccuredAt?: Date;
@@ -774,7 +774,7 @@ export const mainMachine =
                       actions: [
                         assign({
                           organism: (context, event) =>
-                            context.organisms?.find(
+                            context.organisms?.rows?.find(
                               (o) =>
                                 o.id === event.data.organism?.selectedOrganismId
                             ),

@@ -1,40 +1,43 @@
 {
   "data": {
-    "getRandomOrganismsForCandidacy": [
-      {
-        "id": "o1",
-        "label": "Architecte 1",
-        "address": "1 rue de l'exemple",
-        "zip": "75000",
-        "city": "Paris",
-        "contactAdministrativeEmail": "email@exemple.com",
-        "contactAdministrativePhone": "0111111111",
-        "organismOnDepartments": [
-          {
-            "id": "orgaOnDepartment1",
-            "isRemote": false,
-            "isOnSite": true,
-            "__typename": "OrganismOnDepartment"
-          }
-        ]
-      },
-      {
-        "id": "o2",
-        "label": "Architecte 2",
-        "address": "2 rue de l'exemple",
-        "zip": "44000",
-        "city": "Nantes",
-        "contactAdministrativeEmail": "email2@exemple.com",
-        "contactAdministrativePhone": "0222222222",
-        "organismOnDepartments": [
-          {
-            "id": "orgaOnDepartment2",
-            "isRemote": true,
-            "isOnSite": false,
-            "__typename": "OrganismOnDepartment"
-          }
-        ]
-      }
-    ]
+    "getRandomOrganismsForCandidacy": {
+      "rows": [
+        {
+          "id": "o1",
+          "label": "Architecte 1",
+          "address": "1 rue de l'exemple",
+          "zip": "75000",
+          "city": "Paris",
+          "contactAdministrativeEmail": "email@exemple.com",
+          "contactAdministrativePhone": "0111111111",
+          "organismOnDepartments": [
+            {
+              "id": "orgaOnDepartment1",
+              "isRemote": false,
+              "isOnSite": true,
+              "__typename": "OrganismOnDepartment"
+            }
+          ]
+        },
+        {
+          "id": "o2",
+          "label": "Architecte 2",
+          "address": "2 rue de l'exemple",
+          "zip": "44000",
+          "city": "Nantes",
+          "contactAdministrativeEmail": "email2@exemple.com",
+          "contactAdministrativePhone": "0222222222",
+          "organismOnDepartments": [
+            {
+              "id": "orgaOnDepartment2",
+              "isRemote": true,
+              "isOnSite": false,
+              "__typename": "OrganismOnDepartment"
+            }
+          ]
+        }
+      ],
+      "totalRows": 2
+    }
   }
 }
