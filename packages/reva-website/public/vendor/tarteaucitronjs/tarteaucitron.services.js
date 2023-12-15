@@ -4939,7 +4939,7 @@ tarteaucitron.services.matomotm = {
     "name": "Matomo Tag Manager",
     "uri": "https://matomo.org/privacy/",
     "needConsent": true,
-    "cookies": [],
+    "cookies": ['_pk_ref', '_pk_cvar', '_pk_id', '_pk_ses', '_pk_hsr', 'mtm_consent', 'matomo_ignore', 'matomo_sessid','MATOMO_SESSID'],
     "js": function () {
         "use strict";
         if (tarteaucitron.user.matomotmUrl === undefined) {
@@ -4950,6 +4950,28 @@ tarteaucitron.services.matomotm = {
         _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
 
         tarteaucitron.addScript(tarteaucitron.user.matomotmUrl);
+
+         // waiting for Matomo to be ready to check first party cookies
+        var interval = setInterval(function () {
+          if (typeof Matomo === 'undefined') return
+
+          clearInterval(interval)
+
+          // make Matomo cookie accessible by getting tracker
+          Matomo.getTracker();
+
+          // looping through cookies
+          var theCookies = document.cookie.split(';');
+          for (var i = 1; i <= theCookies.length; i++) {
+              var cookie = theCookies[i - 1].split('=');
+              var cookieName = cookie[0].trim();
+
+              // if cookie starts like a matomo one, register it
+              if (cookieName.indexOf('_pk_') === 0 || cookieName.indexOf('MATOMO_SESSID') === 0) {
+                  tarteaucitron.services.matomotm.cookies.push(cookieName);
+              }
+          }
+      }, 100);
     }
 };
 
@@ -6017,7 +6039,7 @@ tarteaucitron.services.crisp = {
     "type": "other",
     "name": "Crisp Chat",
     "uri": "https://help.crisp.chat/en/article/crisp-chatbox-cookie-ip-policy-1147xor/",
-    "needConsent": false,
+    "needConsent": true,
     "cookies": ['crisp-client', '__cfduid'],
     "js": function () {
         "use strict";
@@ -6030,6 +6052,23 @@ tarteaucitron.services.crisp = {
         window.CRISP_WEBSITE_ID = tarteaucitron.user.crispID;
 
         tarteaucitron.addScript('https://client.crisp.chat/l.js');
+
+
+        // waiting for Matomo to be ready to check first party cookies
+        var interval = setInterval(function () {
+            clearInterval(interval)
+            // looping through cookies
+            var theCookies = document.cookie.split(';');
+            for (var i = 1; i <= theCookies.length; i++) {
+                var cookie = theCookies[i - 1].split('=');
+                var cookieName = cookie[0].trim();
+
+                // if cookie starts like a matomo one, register it
+                if (cookieName.indexOf('crisp-client') === 0) {
+                    tarteaucitron.services.crisp.cookies.push(cookieName);
+                }
+            }
+        }, 100);
     }
 };
 
