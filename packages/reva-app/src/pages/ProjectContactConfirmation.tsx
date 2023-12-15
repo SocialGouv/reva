@@ -17,7 +17,7 @@ export const ProjectContactConfirmation = () => (
       </p>
       <p className="mt-4 text-dsfrGray-500">
         Afin de vous assurer que vous recevez bien nos e-mails, pensez à
-        vérifiez votre dossier de courrier indésirable (spams).
+        vérifier votre dossier de courrier indésirable (spams).
         <br />
         En cas de question, vous pouvez contacter :{" "}
         <a
