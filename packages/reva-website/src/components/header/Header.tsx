@@ -2,10 +2,16 @@ import { push } from "@/components/analytics/matomo-tracker/matomoTracker";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { Header as DsfrHeader } from "@codegouvfr/react-dsfr/Header";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 export const Header = (props: { className?: string }) => {
   const { asPath } = useRouter();
   const { isFeatureActive } = useFeatureflipping();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const navigation = [
     {
@@ -86,7 +92,7 @@ export const Header = (props: { className?: string }) => {
           text: "Espace candidat",
         },
       ]}
-      navigation={navigation}
+      navigation={isClient ? navigation : []}
     />
   );
 };
