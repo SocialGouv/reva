@@ -12,7 +12,7 @@
 4432,checked,de7ab0b1-e9d1-4ec0-b24e-5d78aaa4ef66,Bac Professionnel Ouvrages du bâtiment option métallerie -OBM,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 36428,checked,b9afbbfd-85f7-4f70-ae9c-3f80db4f6375,Bac Professionnel Pilote de ligne de production - PLP,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 7069,,08e4f03e-54c5-476b-a451-5a488bef5bb8,Bac Professionnel Poissonnier écailleur traiteur ,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
-5859,,4770f07c-3d2c-4c4e-992f-739543fa77f1,Bac Professionnel Réparation des carrosseries - RC,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
+5859,checked,4770f07c-3d2c-4c4e-992f-739543fa77f1,Bac Professionnel Réparation des carrosseries - RC,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 13905,checked,da929b9d-6463-4682-a3f5-e95307f67d49,Bac Professionnel Services aux personnes et territoires - SPAT,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Social,43062959-9315-4c1b-82b6-fdb9af494b0c
 35185,checked,e37fbaf6-42a0-4770-95eb-b8f421d52a88,Bac Professionnel Technicien conseil vente en alimentation (produits alimentaires et boissons)- TCVA ,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
 29885,checked,59303b8f-6ed5-4cb0-83de-825d366bdd60,Bac Professionnel Technicien en chaudronnerie industrielle - TCI,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
@@ -213,7 +213,7 @@
 30126,checked,de575d69-d252-4e3c-a424-05dc30c8f606,Licence professionnelle Métiers de l'industrie : conception et amélioration des processus et procédés industriels,,Licence Professionnelle,341a3a5a-50d4-4319-90ef-f6bbcc830321,6,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 37700,checked,77d8afa6-3379-42a0-99ed-72d042cdfe12,"CAP Aéronautique options Avionique, Structure et Systèmes",,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 37383,checked,ee937fac-82e7-436b-b388-26f545a40804,CAP Poissonnier-écailler,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
-37913,checked,bc0e1fe4-a295-4f7d-9e0d-2da9a362361e,Bac Professionnel Carrossier peintre automobile,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
+37913,,bc0e1fe4-a295-4f7d-9e0d-2da9a362361e,Bac Professionnel Carrossier peintre automobile,,Bac Pro,8f44da06-39b4-4515-920a-7dbe005d1d9c,4,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 37956,checked,1a777748-c7be-45c1-b694-563f03b80537,BTS Fonderie,,BTS,7d875230-4ce1-47f9-907f-bc876329f1d5,5,,,Métallurgie,4462f3ed-d605-4e08-bb87-b481d3c0b710
 37533,checked,7f0aabe4-0cc4-4608-9b1d-c2dee3977b13,CAP Crémier fromager,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
 37672,checked,a7f7efee-d6fd-496a-aacb-621cc0dc01d9,CAP Opérateur / opératrice logistique,,CAP,764f9665-bf8a-4714-8357-fb85e5167433,3,,,Grande distribution,24a5eeaa-82af-46f6-ad03-b5a6c5babf14
