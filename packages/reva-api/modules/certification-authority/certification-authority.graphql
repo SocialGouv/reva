@@ -3,6 +3,8 @@ type CertificationAuthority {
   label: String!
   contactFullName: String
   contactEmail: String
+  departments: [Department!]!
+  certifications: [Certification!]!
 }
 
 type Query {

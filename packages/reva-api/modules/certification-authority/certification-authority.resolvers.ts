@@ -5,10 +5,23 @@ import {
   FunctionalError,
 } from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
+import { CertificationAuthority } from "./certification-authority.types";
 import { getCertificationAuthorityById } from "./features/getCertificationAuthority";
+import { getCertificationsByCertificationAuthorityId } from "./features/getCertificationsByCertificationAuthorityId";
+import { getDepartmentsByCertificationAuthorityId } from "./features/getDepartmentsByCertificationAuthorityId";
 import { updateCertificationAuthorityById } from "./features/updateCertificationAuthority";
 
 export const resolvers = {
+  CertificationAuthority: {
+    departments: (parent: CertificationAuthority) =>
+      getDepartmentsByCertificationAuthorityId({
+        certificationAuthorityId: parent.id,
+      }),
+    certifications: (parent: CertificationAuthority) =>
+      getCertificationsByCertificationAuthorityId({
+        certificationAuthorityId: parent.id,
+      }),
+  },
   Mutation: {
     certification_authority_updateCertificationAuthority: async (
       _parent: unknown,

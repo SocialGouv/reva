@@ -37,3 +37,17 @@ contactFullName =
 contactEmail : SelectionSet (Maybe String) Admin.Object.CertificationAuthority
 contactEmail =
     Object.selectionForField "(Maybe String)" "contactEmail" [] (Decode.string |> Decode.nullable)
+
+
+departments :
+    SelectionSet decodesTo Admin.Object.Department
+    -> SelectionSet (List decodesTo) Admin.Object.CertificationAuthority
+departments object____ =
+    Object.selectionForCompositeField "departments" [] object____ (Basics.identity >> Decode.list)
+
+
+certifications :
+    SelectionSet decodesTo Admin.Object.Certification
+    -> SelectionSet (List decodesTo) Admin.Object.CertificationAuthority
+certifications object____ =
+    Object.selectionForCompositeField "certifications" [] object____ (Basics.identity >> Decode.list)
