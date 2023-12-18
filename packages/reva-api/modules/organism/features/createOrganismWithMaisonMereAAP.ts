@@ -11,24 +11,24 @@ import {
 } from "../../shared/error/functionalError";
 import { logger } from "../../shared/logger";
 import { createOrganism } from "../database/organisms";
-import { CreateOrganismAgencyDataRequest } from "../organism.types";
+import { CreateOrUpdateOrganismWithMaisonMereAAPDataRequest } from "../organism.types";
 import { assignMaisonMereAAPToOrganism } from "./assignMaisonMereAAPToOrganism";
 import { createOrUpdateInformationsCommerciales } from "./createOrUpdateInformationsCommerciales";
 import { getInformationsCommercialesByEmailContact } from "./getInformationsCommercialesByEmailContact";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./getMaisonMereAAPByGestionnaireAccountId";
 
-interface CreateOrganismAgencyRequestParams {
-  organismData: CreateOrganismAgencyDataRequest;
+interface CreateOrganismWithMaisonMereAAPRequestParams {
+  organismData: CreateOrUpdateOrganismWithMaisonMereAAPDataRequest;
 }
 
-export const createOrganismAgency = async ({
+export const createOrganismWithMaisonMereAAP = async ({
   keycloakAdmin,
   keycloakId,
   params,
 }: {
   keycloakAdmin: KeycloakAdminClient;
   keycloakId: string;
-  params: CreateOrganismAgencyRequestParams;
+  params: CreateOrganismWithMaisonMereAAPRequestParams;
 }) => {
   const { organismData } = params;
   const getIamAccount = IAM.getAccount(keycloakAdmin);
@@ -76,12 +76,12 @@ export const createOrganismAgency = async ({
       firstname,
       lastname,
       email,
-      city,
-      zip,
-      address,
       contactAdministrativeEmail,
-
+      contactAdministrativePhone,
       departmentsWithOrganismMethods,
+      adresseInformationsComplementaires,
+      website,
+      nom,
     } = organismData;
     const {
       typologie,
@@ -89,6 +89,7 @@ export const createOrganismAgency = async ({
       statutJuridique,
       raisonSociale,
       siret,
+      siteWeb,
     } = maisonMereAAP;
 
     const organismInfoCommercialesWithEmailContactAlreadyExist =
@@ -107,13 +108,12 @@ export const createOrganismAgency = async ({
     const newOrganism = (
       await createOrganism({
         label: raisonSociale,
-        address,
+        address: maisonMereAAP.adresse,
         contactAdministrativeEmail,
-        contactAdministrativePhone:
-          organismData.contactAdministrativePhone ?? "",
-        website: organismData.website ?? "",
-        city,
-        zip,
+        contactAdministrativePhone: contactAdministrativePhone ?? "",
+        website: siteWeb ?? "",
+        city: maisonMereAAP.ville,
+        zip: maisonMereAAP.codePostal,
         siret,
         legalStatus: statutJuridique,
         isActive: true,
@@ -130,13 +130,13 @@ export const createOrganismAgency = async ({
     await createOrUpdateInformationsCommerciales({
       informationsCommerciales: {
         organismId: newOrganism.id,
-        siteInternet: organismData.website ?? "",
-        nom: organismData.nom ?? "",
+        siteInternet: website ?? "",
+        nom: nom ?? "",
         adresseCodePostal: organismData.zip,
         adresseVille: organismData.city,
         adresseNumeroEtNomDeRue: organismData.address,
         adresseInformationsComplementaires:
-          organismData.adresseInformationsComplementaires ?? "",
+          adresseInformationsComplementaires ?? "",
         emailContact: organismData.contactAdministrativeEmail,
         telephone: organismData.contactAdministrativePhone ?? "",
         conformeNormesAccessbilite: organismData.conformeNormesAccessbilite,
@@ -147,7 +147,7 @@ export const createOrganismAgency = async ({
     //iam account creation
     const newKeycloakId = (
       await createAccountInIAM({
-        email: organismData.contactAdministrativeEmail,
+        email,
         firstname,
         lastname,
         username: email,

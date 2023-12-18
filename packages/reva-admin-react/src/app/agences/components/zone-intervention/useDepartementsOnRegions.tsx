@@ -1,6 +1,7 @@
-import { useAgencesQueries } from "@/app/agences/agenceQueries";
-import { useEffect } from "react";
-import { useFormContext } from "react-hook-form";
+import { useAgencesQueries } from "@/app/agences/agencesQueries";
+import { Organism } from "@/graphql/generated/graphql";
+import { sortDepartmentsByAlphabeticalOrderAndDOM } from "@/utils/sortDepartmentsByAlphabeticalOrderAndDOM";
+import { useEffect, useRef } from "react";
 
 interface Departement {
   departementId: string;
@@ -18,11 +19,23 @@ interface Region {
 
 export type ZoneInterventionList = Region[];
 
-export function useDepartementsOnRegions() {
+interface UseDepartementsOnRegionsProps {
+  zoneInterventionPresentiel: ZoneInterventionList;
+  zoneInterventionDistanciel: ZoneInterventionList;
+  setValue: (name: any, value: any) => void;
+  agenceSelected?: Partial<Organism>;
+}
+
+export function useDepartementsOnRegions({
+  zoneInterventionPresentiel,
+  zoneInterventionDistanciel,
+  setValue,
+  agenceSelected,
+}: UseDepartementsOnRegionsProps) {
   const { maisonMereAAPOnDepartements } = useAgencesQueries();
-  const { watch, setValue } = useFormContext();
-  const zoneInterventionPresentiel = watch("zoneInterventionPresentiel");
-  const zoneInterventionDistanciel = watch("zoneInterventionDistanciel");
+
+  let organismOndepartementsOnRegionsOnSite = useRef<Region[]>([]);
+  let organismOndepartementsOnRegionsRemote = useRef<Region[]>([]);
 
   /**
    * This useEffect is used to initialize the zoneInterventionPresentiel and zoneInterventionDistanciel
@@ -41,65 +54,76 @@ export function useDepartementsOnRegions() {
       !zoneInterventionPresentiel?.length ||
       !zoneInterventionDistanciel?.length
     ) {
-      const maisonMereAAPOnDepartementsOnRegionsRemote: Record<string, Region> =
-        {};
-
-      const maisonMereAAPOnDepartementsOnRegionsOnSite: Record<string, Region> =
-        {};
+      const departementsOnRegionsRemote: Record<string, Region> = {};
+      const departementsOnRegionsOnSite: Record<string, Region> = {};
+      const organismOnDepartments = agenceSelected?.organismOnDepartments;
 
       maisonMereAAPOnDepartements?.forEach(
         ({ departement, estADistance, estSurPlace }) => {
           const regionId = departement.region.id;
+          const departementSelected = organismOnDepartments?.find(
+            (organismOnDepartment) =>
+              organismOnDepartment.departmentId === departement.id,
+          );
 
           if (estADistance) {
-            if (!maisonMereAAPOnDepartementsOnRegionsRemote[regionId]) {
-              maisonMereAAPOnDepartementsOnRegionsRemote[regionId] = {
+            if (!departementsOnRegionsRemote[regionId]) {
+              departementsOnRegionsRemote[regionId] = {
                 regionId: departement.region.id,
                 regionLabel: departement.region.label,
-                isSelected: false,
+                isSelected: departementSelected?.isRemote ?? false,
                 departements: [
                   {
                     departementLabel: departement.label,
                     departementId: departement.id,
-                    isSelected: false,
+                    isSelected: departementSelected?.isRemote ?? false,
                     code: departement.code,
                   },
                 ],
               };
             } else {
-              maisonMereAAPOnDepartementsOnRegionsRemote[
+              const regionIsSelected = departementsOnRegionsRemote[
                 regionId
-              ].departements.push({
+              ].departements.every((departement) => departement.isSelected);
+
+              departementsOnRegionsRemote[regionId].isSelected =
+                (regionIsSelected && departementSelected?.isRemote) || false;
+              departementsOnRegionsRemote[regionId].departements.push({
                 departementLabel: departement.label,
                 departementId: departement.id,
-                isSelected: false,
+                isSelected: departementSelected?.isRemote ?? false,
                 code: departement.code,
               });
             }
           }
 
           if (estSurPlace) {
-            if (!maisonMereAAPOnDepartementsOnRegionsOnSite[regionId]) {
-              maisonMereAAPOnDepartementsOnRegionsOnSite[regionId] = {
+            if (!departementsOnRegionsOnSite[regionId]) {
+              departementsOnRegionsOnSite[regionId] = {
                 regionId: departement.region.id,
                 regionLabel: departement.region.label,
-                isSelected: false,
+                isSelected: departementSelected?.isOnSite ?? false,
                 departements: [
                   {
                     departementLabel: departement.label,
                     departementId: departement.id,
-                    isSelected: false,
+                    isSelected: departementSelected?.isOnSite ?? false,
                     code: departement.code,
                   },
                 ],
               };
             } else {
-              maisonMereAAPOnDepartementsOnRegionsOnSite[
+              const regionIsSelected = departementsOnRegionsOnSite[
                 regionId
-              ].departements.push({
+              ].departements.every((departement) => departement.isSelected);
+
+              departementsOnRegionsOnSite[regionId].isSelected =
+                (regionIsSelected && departementSelected?.isOnSite) || false;
+
+              departementsOnRegionsOnSite[regionId].departements.push({
                 departementLabel: departement.label,
                 departementId: departement.id,
-                isSelected: false,
+                isSelected: departementSelected?.isOnSite ?? false,
                 code: departement.code,
               });
             }
@@ -107,17 +131,23 @@ export function useDepartementsOnRegions() {
         },
       );
 
+      organismOndepartementsOnRegionsOnSite.current =
+        sortDepartmentsByAlphabeticalOrderAndDOM(
+          Object.values(departementsOnRegionsRemote),
+        );
+
+      organismOndepartementsOnRegionsRemote.current =
+        sortDepartmentsByAlphabeticalOrderAndDOM(
+          Object.values(departementsOnRegionsOnSite),
+        );
+
       setValue(
         "zoneInterventionDistanciel",
-        Object.values(maisonMereAAPOnDepartementsOnRegionsRemote).sort((a, b) =>
-          a.regionLabel.localeCompare(b.regionLabel),
-        ),
+        organismOndepartementsOnRegionsOnSite.current,
       );
       setValue(
         "zoneInterventionPresentiel",
-        Object.values(maisonMereAAPOnDepartementsOnRegionsOnSite).sort((a, b) =>
-          a.regionLabel.localeCompare(b.regionLabel),
-        ),
+        organismOndepartementsOnRegionsRemote.current,
       );
     }
   }, [
@@ -125,5 +155,13 @@ export function useDepartementsOnRegions() {
     setValue,
     zoneInterventionDistanciel?.length,
     zoneInterventionPresentiel?.length,
+    agenceSelected,
   ]);
+
+  return {
+    organismOndepartementsOnRegionsOnSite:
+      organismOndepartementsOnRegionsOnSite.current,
+    organismOndepartementsOnRegionsRemote:
+      organismOndepartementsOnRegionsRemote.current,
+  };
 }

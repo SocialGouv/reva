@@ -1,12 +1,10 @@
 import { useFormContext } from "react-hook-form";
 import CheckboxListWithChildren from "./CheckboxListDepartementsRegions";
-import { useDepartementsOnRegions } from "./useDepartementsOnRegions";
 
 function ZoneIntervention() {
   const { watch, setValue } = useFormContext();
   const zoneInterventionPresentiel = watch("zoneInterventionPresentiel");
   const zoneInterventionDistanciel = watch("zoneInterventionDistanciel");
-  useDepartementsOnRegions();
 
   if (
     !zoneInterventionPresentiel?.length &&

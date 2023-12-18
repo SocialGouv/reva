@@ -1,5 +1,5 @@
 "use client";
-import { useAgencesQueries } from "@/app/agences/agenceQueries";
+import { useAgencesQueries } from "@/app/agences/agencesQueries";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { usePathname } from "next/navigation";
@@ -22,7 +22,7 @@ const menuItem = ({
   return {
     isActive: false,
     linkProps: {
-      href: `#${id}`, // TODO: add agence page
+      href: `/agences/${id}`,
       target: "_self",
     },
     text,
@@ -33,20 +33,20 @@ const Skeleton = () => (
   <div className="ml-5 mt-6 h-8 animate-pulse bg-gray-100 w-64" />
 );
 const AgencesLayout = ({ children }: { children: ReactNode }) => {
-  const { agences, agencesStatus } = useAgencesQueries();
+  const { organisms, organismsStatus } = useAgencesQueries();
   const path = usePathname();
   const regex = new RegExp(/\/add-agence$/);
   const isAddAgence = regex.test(path);
 
   return (
     <div className="w-full flex flex-col md:flex-row gap-10 md:gap-0">
-      {agencesStatus == "pending" && (
+      {organismsStatus == "pending" && (
         <div className="flex-shrink-0 md:w-[298px] pt-8 border-r">
           <Skeleton />
           <Skeleton />
         </div>
       )}
-      {agencesStatus == "success" && agences && (
+      {organismsStatus == "success" && organisms && (
         <SideMenu
           className="flex-shrink-0 md:w-[330px]"
           align="left"
@@ -55,7 +55,7 @@ const AgencesLayout = ({ children }: { children: ReactNode }) => {
           title="Agences"
           items={
             [
-              ...agences.map(menuItem),
+              ...organisms.map(menuItem),
               !isAddAgence
                 ? {
                     isActive: false,
@@ -70,10 +70,9 @@ const AgencesLayout = ({ children }: { children: ReactNode }) => {
                     ),
                   }
                 : {
-                    isActive: false,
                     linkProps: {
+                      hidden: true,
                       href: "",
-                      target: "_self",
                     },
                     text: "",
                   },
@@ -81,7 +80,7 @@ const AgencesLayout = ({ children }: { children: ReactNode }) => {
           }
         />
       )}
-      {agencesStatus == "error" && (
+      {organismsStatus == "error" && (
         <div className="md:w-[330px] text-red-500">
           Une erreur est survenue lors de la récupération de vos agences
         </div>

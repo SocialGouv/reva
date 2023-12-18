@@ -68,18 +68,16 @@ export interface MaisonMereAAPOnDepartement {
   estADistance: boolean;
 }
 
-export interface CreateOrganismAgencyDataRequest {
+export interface CreateOrUpdateOrganismWithMaisonMereAAPDataRequest {
   nom: string;
-  legalStatus: LegalStatus;
   address: string;
-  adresseInformationsComplementaires: string;
+  adresseInformationsComplementaires?: string;
   zip: string;
   city: string;
   contactAdministrativeEmail: string;
-  contactAdministrativePhone: string;
-  website: string | null;
+  contactAdministrativePhone?: string;
+  website?: string;
   conformeNormesAccessbilite: ConformiteNormeAccessibilite;
-  isActive: boolean;
   departmentsWithOrganismMethods: {
     departmentId: string;
     isOnSite: boolean;

@@ -5,19 +5,17 @@ export const organismLoaders = {
   Organism: {
     organismOnDepartments: async (
       queries: {
-        obj: { organismId: string };
+        obj: { id: string };
         params: { departmentId?: string };
       }[]
     ) => {
       const organismAndDepartmentIds: {
         organismId: string;
         departmentId?: string;
-      }[] = queries.map(
-        ({ obj: { organismId }, params: { departmentId } }) => ({
-          organismId,
-          departmentId,
-        })
-      );
+      }[] = queries.map(({ obj: { id }, params: { departmentId } }) => ({
+        organismId: id,
+        departmentId,
+      }));
       const organismOnDepartments =
         await getOrganismOnDepartmentsByOrganismAndDepartmentIds({
           organismAndDepartmentIds,

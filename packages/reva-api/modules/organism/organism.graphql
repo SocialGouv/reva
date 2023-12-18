@@ -14,6 +14,7 @@ type Organism {
   informationsCommerciales: OrganismInformationsCommerciales
   maisonMereAAP: MaisonMereAAP
   managedDegrees: [OrganismOnDegree!]!
+  organismOnAccount: Account
 }
 
 type OrganismOnDegree {
@@ -33,7 +34,7 @@ type MaisonMereAAP {
   website: String
   typology: OrganismTypology!
   isActive: Boolean!
-  agences: [Organism!]!
+  organisms: [Organism!]!
   maisonMereAAPOnDepartements: [MaisonMereAAPOnDepartment!]!
 }
 
@@ -107,7 +108,7 @@ input DepartmentWithOrganismMethodsInput {
   isRemote: Boolean!
 }
 
-input CreateOrganismInput {
+input CreateOrUpdateOrganismWithMaisonMereAAPInput {
   nom: String!
   address: String!
   adresseInformationsComplementaires: String
@@ -133,6 +134,10 @@ type Mutation {
     organismId: ID!
     organismData: UpdateOrganismInput!
   ): Organism!
+  organism_updateOrganismWithMaisonMereAAP(
+    organismId: ID!
+    organismData: CreateOrUpdateOrganismWithMaisonMereAAPInput!
+  ): Organism!
   organism_createOrUpdateInformationsCommerciales(
     informationsCommerciales: CreateOrUpdateInformationsCommercialesInput!
   ): OrganismInformationsCommerciales!
@@ -141,7 +146,7 @@ type Mutation {
     fermePourAbsenceOuConges: Boolean!
   ): OrganismInformationsCommerciales!
   organism_createOrganismWithMaisonMereAAP(
-    organismData: CreateOrganismInput!
+    organismData: CreateOrUpdateOrganismWithMaisonMereAAPInput!
   ): String!
 
   organism_createOrUpdateOrganismOnDegrees(

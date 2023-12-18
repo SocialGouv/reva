@@ -1,9 +1,8 @@
+import { DEPARTEMENTS_DOM } from "@/constants/departments.const";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
 import { ZoneInterventionList } from "./useDepartementsOnRegions";
-
-const departementsDom = ["971", "972", "973", "974", "976"];
 
 interface CheckboxListDepartementsRegionsProps {
   zoneIntervention: ZoneInterventionList;
@@ -80,7 +79,7 @@ function CheckboxListDepartementsRegions({
   const handleSelectAll = (isSelected: boolean) => {
     const zoneInterventionSelected = zoneIntervention.map((region) => {
       const hasDomDepartement = region.departements.some((departement) =>
-        departementsDom.includes(departement.code),
+        DEPARTEMENTS_DOM.includes(departement.code),
       );
 
       if (hasDomDepartement) {
@@ -102,7 +101,7 @@ function CheckboxListDepartementsRegions({
 
   const isAllSelected = zoneIntervention.every((region) => {
     const hasDomDepartement = region.departements.some((departement) =>
-      departementsDom.includes(departement.code),
+      DEPARTEMENTS_DOM.includes(departement.code),
     );
     if (hasDomDepartement) {
       return true;

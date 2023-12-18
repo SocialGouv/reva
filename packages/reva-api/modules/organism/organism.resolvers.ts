@@ -9,18 +9,21 @@ import {
   FunctionalError,
 } from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
-import { createOrganismAgency } from "./features/createOrganismAgency";
+import { createOrganismWithMaisonMereAAP } from "./features/createOrganismWithMaisonMereAAP";
 import { createOrUpdateInformationsCommerciales } from "./features/createOrUpdateInformationsCommerciales";
 import { createOrUpdateOrganismOnDegrees } from "./features/createOrUpdateOrganismOnDegrees";
 import { findOrganismOnDegreeByOrganismId } from "./features/findOrganismOnDegreeByOrganismId";
+import { getAccountByOrganismId } from "./features/getAccountByOrganismId";
 import { getAgencesByGestionnaireAccountId } from "./features/getAgencesByGestionnaireAccountId";
 import { getMaisonMereAAPByGestionnaireAccountId } from "./features/getMaisonMereAAPByGestionnaireAccountId";
 import { getMaisonMereAAPOnDepartments } from "./features/getMaisonMereAAPDepartmentsAndRegions";
 import { getMaisonMereAAPById } from "./features/getMaisonMereAAPId";
 import { getOrganismById } from "./features/getOrganism";
+import { getOrganismsByMaisonAAPId } from "./features/getOrganismsByMaisonAAPId";
 import { updateFermePourAbsenceOuConges } from "./features/updateFermePourAbsenceOuConges";
 import { updateOrganismById } from "./features/updateOrganism";
-import { CreateOrganismAgencyDataRequest } from "./organism.types";
+import { updateOrganismWithMaisonMereAAPById } from "./features/updateOrganismWithMaisonMereAAPById";
+import { CreateOrUpdateOrganismWithMaisonMereAAPDataRequest } from "./organism.types";
 
 export const resolvers = {
   Account: {
@@ -42,6 +45,10 @@ export const resolvers = {
     },
     managedDegrees: (organism: Organism) =>
       findOrganismOnDegreeByOrganismId({ organismId: organism.id }),
+    organismOnAccount: ({ id: organismId }: Organism) =>
+      getAccountByOrganismId({
+        organismId,
+      }),
   },
   OrganismOnDegree: {
     degree: (organismOnDegree: { degreeId: string }) =>
@@ -50,6 +57,8 @@ export const resolvers = {
   MaisonMereAAP: {
     maisonMereAAPOnDepartements: ({ id }: { id: string }) =>
       getMaisonMereAAPOnDepartments({ maisonMereAAPId: id }),
+    organisms: ({ id: maisonMereAAPId }: { id: string }) =>
+      getOrganismsByMaisonAAPId({ maisonMereAAPId }),
   },
   MaisonMereAAPOnDepartment: {
     departement: ({ departementId }: { departementId: string }) =>
@@ -130,7 +139,7 @@ export const resolvers = {
     organism_createOrganismWithMaisonMereAAP: async (
       _parent: unknown,
       params: {
-        organismData: CreateOrganismAgencyDataRequest;
+        organismData: CreateOrUpdateOrganismWithMaisonMereAAPDataRequest;
       },
       context: GraphqlContext
     ) => {
@@ -148,7 +157,38 @@ export const resolvers = {
         const keycloakAdmin = await context.app.getKeycloakAdmin();
         const keycloakId = context.auth.userInfo.sub;
 
-        return createOrganismAgency({ keycloakAdmin, params, keycloakId });
+        return createOrganismWithMaisonMereAAP({
+          keycloakAdmin,
+          params,
+          keycloakId,
+        });
+      } catch (e) {
+        logger.error(e);
+        throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
+      }
+    },
+    organism_updateOrganismWithMaisonMereAAP: async (
+      _parent: unknown,
+      params: {
+        organismId: string;
+        organismData: CreateOrUpdateOrganismWithMaisonMereAAPDataRequest;
+      },
+      context: GraphqlContext
+    ) => {
+      try {
+        if (context.auth.userInfo?.sub == undefined) {
+          throw new FunctionalError(
+            FunctionalCodeError.TECHNICAL_ERROR,
+            "Not authorized"
+          );
+        }
+
+        return updateOrganismWithMaisonMereAAPById(
+          {
+            hasRole: context.auth.hasRole,
+          },
+          params
+        );
       } catch (e) {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);

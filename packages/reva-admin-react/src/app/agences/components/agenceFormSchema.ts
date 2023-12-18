@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-//TODO valider avec métiers raison sociale et SIRET
 export const agenceFormSchema = z.object({
   firstname: z
     .string()
@@ -14,7 +13,10 @@ export const agenceFormSchema = z.object({
     .string()
     .email("Le champ doit contenir une adresse email")
     .default(""),
-  adresseNumeroEtNomDeRue: z.string().default(""),
+  adresseNumeroEtNomDeRue: z
+    .string()
+    .min(2, "Ce champ doit contenir au moins 2 caractères")
+    .default(""),
   adresseInformationsComplementaires: z.string().optional().default(""),
   adresseCodePostal: z
     .string()
@@ -24,7 +26,10 @@ export const agenceFormSchema = z.object({
     .string()
     .min(2, "Ce champ doit contenir au moins 2 caractères")
     .default(""),
-  nom: z.string().default(""),
+  nom: z
+    .string()
+    .min(2, "Ce champ doit contenir au moins 2 caractères")
+    .default(""),
   telephone: z
     .string()
     .length(10, "Ce champ doit contenir 10 chiffres")
