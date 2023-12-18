@@ -25,15 +25,16 @@ interface AgenceFormContainerProps {
     data: CreateOrUpdateOrganismWithMaisonMereAapInput,
   ) => void;
   buttonValidateText: string;
+  toastSuccessText: string;
 }
 
 function AgenceFormContainer({
   onSubmitFormMutation,
   buttonValidateText,
+  toastSuccessText,
 }: AgenceFormContainerProps) {
   const { agence_id } = useParams();
-  const { useCreateOrganismByMaisonMereAAP, organismsRefetch, organisms } =
-    useAgencesQueries();
+  const { organismsRefetch, organisms } = useAgencesQueries();
 
   const router = useRouter();
 
@@ -157,11 +158,14 @@ function AgenceFormContainer({
       email: data.email,
     };
 
-    onSubmitFormMutation(organismData);
-    successToast("Agence créée avec succès");
-    handleReset();
-    await organismsRefetch();
-    router.push("/agences");
+    try {
+      onSubmitFormMutation(organismData);
+      successToast(toastSuccessText);
+      await organismsRefetch();
+      router.push("/agences");
+    } catch (error) {
+      errorToast("Une erreur est survenue");
+    }
   });
 
   const handleReset = useCallback(() => {
@@ -281,6 +285,7 @@ function AgenceFormContainer({
                   type: "email",
                   spellCheck: "false",
                 }}
+                disabled={!!agenceSelected}
               />
               <Input
                 label="Prénom de l'administrateur du compte"

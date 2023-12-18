@@ -14,6 +14,7 @@ const AddAgencePage = () => {
         await createAgenceByMaisonMereAAPMutation(data)
       }
       buttonValidateText="Créer l'agence"
+      toastSuccessText="L'agence a bien été créée"
     />
   );
 };
