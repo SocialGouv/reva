@@ -800,6 +800,7 @@ export const dropOutCandidacy = async ({
         id: candidacyId,
       },
       include: {
+        candidate: true,
         candidacyStatuses: {
           where: {
             isActive: true,
@@ -813,6 +814,7 @@ export const dropOutCandidacy = async ({
     if (candidacy === null) {
       return Left(`could not find candidacy ${candidacyId}`);
     }
+    candidacy.email = candidacy.candidate?.email || candidacy.email;
     candidacyStatus = candidacy.candidacyStatuses[0].status;
   } catch (e) {
     logger.error(e);
