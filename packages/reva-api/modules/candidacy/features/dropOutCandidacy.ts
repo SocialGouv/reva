@@ -72,8 +72,19 @@ export const dropOutCandidacy =
         )
     );
 
+    const getUpdatedCandidacy = EitherAsync.fromPromise(() =>
+      deps.getCandidacyFromId(params.candidacyId)
+    ).mapLeft(
+      () =>
+        new FunctionalError(
+          FunctionalCodeError.CANDIDACY_DOES_NOT_EXIST,
+          `Aucune candidature n'a été trouvée`
+        )
+    );
+
     return checkIfCandidacyExists
       .chain(checkIfCandidacyIsNotAbandonned)
       .chain(() => checkIfDropOutReasonExists)
-      .chain(() => dropOutCandidacyResult);
+      .chain(() => dropOutCandidacyResult)
+      .chain(() => getUpdatedCandidacy);
   };
