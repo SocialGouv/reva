@@ -3,9 +3,9 @@ import { useCertificationsPageQueries } from "@/app/account-settings/certificati
 import { NotImplementedPage } from "@/app/account-settings/components/not-implemented-page/NotImplementedPage";
 import { useFeatureflipping } from "@/components/feature-flipping/featureFlipping";
 import { successToast } from "@/components/toast/toast";
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import Button from "@codegouvfr/react-dsfr/Button";
-import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
+import { Alert } from "@codegouvfr/react-dsfr/Alert";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -80,6 +80,29 @@ const CertificationsPage = () => {
         Niveaux de diplômes couverts par votre structure
       </h2>
 
+      <Alert
+        className="mt-8"
+        severity="info"
+        title=""
+        description={
+          <>
+            <p>
+              Vous pouvez choisir les niveaux de certification pour lesquels
+              vous souhaitez accompagner les démarches VAE correspondant à votre
+              typologie AAP.
+            </p>
+            <p>
+              Votre structure ne sera visible comme structure d'accompagnement
+              que pour les niveaux de certification que vous avez sélectionnés.
+            </p>
+            <p>
+              Il est à noter que vous devez continuer les accompagnements déjà
+              en cours.
+            </p>
+          </>
+        }
+      />
+
       {degreesStatus === "error" ||
         (managedDegreesStatus === "error" && (
           <Alert
@@ -99,7 +122,7 @@ const CertificationsPage = () => {
 
       {degreesStatus && managedDegreesStatus === "success" && (
         <form
-          className="flex flex-col mt-10"
+          className="flex flex-col mt-6"
           onSubmit={handleFormSubmit}
           onReset={(e) => {
             e.preventDefault();
