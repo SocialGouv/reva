@@ -2,7 +2,7 @@ import { useGraphQlClient } from "@/components/graphql/graphql-client/GraphqlCli
 import { graphql } from "@/graphql/generated";
 import { CreateOrUpdateOrganismWithMaisonMereAapInput } from "@/graphql/generated/graphql";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 const getAccountForConnectionUser = graphql(`
   query getMaisonMereAAP {
@@ -81,7 +81,6 @@ const updateOrganismWithMaisonMereAAPMutation = graphql(`
 
 export const useAgencesQueries = () => {
   const { graphqlClient } = useGraphQlClient();
-  const queryClient = useQueryClient();
 
   const {
     data: organismsResponse,
@@ -98,7 +97,7 @@ export const useAgencesQueries = () => {
         organismData,
       }),
     mutationKey: ["organism"],
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["account"] }),
+    onSuccess: async () => await organismsRefetch(),
   });
 
   const useUpdateOrganismByMaisonMereAAP = useMutation({
@@ -114,7 +113,7 @@ export const useAgencesQueries = () => {
         organismData,
       }),
     mutationKey: ["organism"],
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["account"] }),
+    onSuccess: async () => await organismsRefetch(),
   });
 
   const organisms =
