@@ -133,20 +133,20 @@ export function useDepartementsOnRegions({
 
       organismOndepartementsOnRegionsOnSite.current =
         sortDepartmentsByAlphabeticalOrderAndDOM(
-          Object.values(departementsOnRegionsRemote),
+          Object.values(departementsOnRegionsOnSite),
         );
 
       organismOndepartementsOnRegionsRemote.current =
         sortDepartmentsByAlphabeticalOrderAndDOM(
-          Object.values(departementsOnRegionsOnSite),
+          Object.values(departementsOnRegionsRemote),
         );
 
       setValue(
-        "zoneInterventionDistanciel",
+        "zoneInterventionPresentiel",
         organismOndepartementsOnRegionsOnSite.current,
       );
       setValue(
-        "zoneInterventionPresentiel",
+        "zoneInterventionDistanciel",
         organismOndepartementsOnRegionsRemote.current,
       );
     }
