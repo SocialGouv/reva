@@ -46,6 +46,7 @@ model Certification {
   typeDiplomeId                                          String?                                                  @map("type_diplome_id") @db.Uuid
   certificationAuthorityOnCertification                  CertificationAuthorityOnCertification[]
   searchable_text                                        Unsupported("tsvector")?                                 @default(dbgenerated("to_tsvector('french'::regconfig, immutable_unaccent((((COALESCE(label, ''::character varying))::text || ' '::text) || COALESCE(summary, ''::text))))"))
+  certificationAuthorityLocalAccountOnCertification      CertificationAuthorityLocalAccountOnCertification[]
 
   @@map("certification")
 }
@@ -247,6 +248,7 @@ model Department {
   SubscriptionRequestsOnDepartments                      SubscriptionRequestsOnDepartments[]
   certificationAuthorityOnDepartment                     CertificationAuthorityOnDepartment[]
   maisonMereAAPOnDepartement                             MaisonMereAAPOnDepartement[]
+  certificationAuthorityLocalAccountOnDepartment         CertificationAuthorityLocalAccountOnDepartment[]
 
   @@map("department")
 }
@@ -269,18 +271,19 @@ model CandidaciesOnRegionsAndCertifications {
 }
 
 model Account {
-  id                       String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  email                    String                  @unique @db.VarChar(255)
-  firstname                String?                 @db.VarChar(255)
-  lastname                 String?                 @db.VarChar(255)
-  organism                 Organism?               @relation(fields: [organismId], references: [id])
-  organismId               String?                 @map("organism_id") @db.Uuid
-  certificationAuthority   CertificationAuthority? @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
-  certificationAuthorityId String?                 @map("certification_authority_id") @db.Uuid
-  keycloakId               String                  @unique @map("keycloak_id") @db.Uuid
-  AuditEvent               AuditEvent[]
-  maisonMereAAP            MaisonMereAAP[]
-  featureBetaTest          FeatureBetaTest[]
+  id                                 String                               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  email                              String                               @unique @db.VarChar(255)
+  firstname                          String?                              @db.VarChar(255)
+  lastname                           String?                              @db.VarChar(255)
+  organism                           Organism?                            @relation(fields: [organismId], references: [id])
+  organismId                         String?                              @map("organism_id") @db.Uuid
+  certificationAuthority             CertificationAuthority?              @relation(fields: [certificationAuthorityId], references: [id], onDelete: NoAction)
+  certificationAuthorityId           String?                              @map("certification_authority_id") @db.Uuid
+  keycloakId                         String                               @unique @map("keycloak_id") @db.Uuid
+  AuditEvent                         AuditEvent[]
+  maisonMereAAP                      MaisonMereAAP[]
+  featureBetaTest                    FeatureBetaTest[]
+  certificationAuthorityLocalAccount CertificationAuthorityLocalAccount[]
 
   @@map("account")
 }
@@ -913,6 +916,7 @@ model CertificationAuthority {
   certificationAuthorityOnCertification CertificationAuthorityOnCertification[]
   Account                               Account[]
   Feasibility                           Feasibility[]
+  certificationAuthorityLocalAccount    CertificationAuthorityLocalAccount[]
 
   @@map("certification_authority")
 }
@@ -941,6 +945,48 @@ model CertificationAuthorityOnCertification {
 
   @@unique([certificationAuthorityId, certificationId])
   @@map("certification_authority_on_certification")
+}
+
+model CertificationAuthorityLocalAccount {
+  id                                                String                                              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  createdAt                                         DateTime                                            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                                         DateTime?                                           @map("updated_at") @db.Timestamptz(6)
+  accountId                                         String                                              @map("account_id") @db.Uuid
+  account                                           Account                                             @relation(fields: [accountId], references: [id])
+  certificationAuthorityLocalAccountOnCertification CertificationAuthorityLocalAccountOnCertification[]
+  certificationAuthorityLocalAccountOnDepartment    CertificationAuthorityLocalAccountOnDepartment[]
+  certificationAuthority                            CertificationAuthority                              @relation(fields: [certificationAuthorityId], references: [id])
+  certificationAuthorityId                          String                                              @map("certification_authority_id") @db.Uuid
+
+  @@map("certification_authority_local_account")
+}
+
+model CertificationAuthorityLocalAccountOnCertification {
+  id                                   String                             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  certificationAuthorityLocalAccount   CertificationAuthorityLocalAccount @relation(fields: [certificationAuthorityLocalAccountId], references: [id], onDelete: Cascade)
+  certificationAuthorityLocalAccountId String                             @map("certification_authority_local_account_id") @db.Uuid
+  certificationId                      String                             @map("certification_id") @db.Uuid
+  certification                        Certification                      @relation(map: "calaoc_certification", fields: [certificationId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime? @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([certificationAuthorityLocalAccountId, certificationId])
+  @@map("certification_authority_local_account_on_certification")
+}
+
+model CertificationAuthorityLocalAccountOnDepartment {
+  id                                   String                             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  certificationAuthorityLocalAccount   CertificationAuthorityLocalAccount @relation(fields: [certificationAuthorityLocalAccountId], references: [id], onDelete: Cascade)
+  certificationAuthorityLocalAccountId String                             @map("certification_authority_local_account_id") @db.Uuid
+  departmentId                         String                             @map("department_id") @db.Uuid
+  department                           Department                         @relation(map: "calaoc_department", fields: [departmentId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime? @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([certificationAuthorityLocalAccountId, departmentId])
+  @@map("certification_authority_local_account_on_department")
 }
 
 enum FeasibilityStatus {
