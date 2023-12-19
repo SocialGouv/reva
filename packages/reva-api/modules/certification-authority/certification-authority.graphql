@@ -5,6 +5,14 @@ type CertificationAuthority {
   contactEmail: String
   departments: [Department!]!
   certifications: [Certification!]!
+  certificationAuthorityLocalAccounts: [CertificationAuthorityLocalAccount!]!
+}
+
+type CertificationAuthorityLocalAccount {
+  id: ID!
+  account: Account!
+  departments: [Department!]!
+  certifications: [Certification!]!
 }
 
 type Query {

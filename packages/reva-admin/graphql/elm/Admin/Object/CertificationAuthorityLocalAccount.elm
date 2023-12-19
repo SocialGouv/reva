@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module Admin.Object.CertificationAuthority exposing (..)
+module Admin.Object.CertificationAuthorityLocalAccount exposing (..)
 
 import Admin.InputObject
 import Admin.Interface
@@ -19,42 +19,27 @@ import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
 
 
-id : SelectionSet Data.Scalar.Id Admin.Object.CertificationAuthority
+id : SelectionSet Data.Scalar.Id Admin.Object.CertificationAuthorityLocalAccount
 id =
     Object.selectionForField "Data.Scalar.Id" "id" [] (Data.Scalar.codecs |> Admin.Scalar.unwrapCodecs |> .codecId |> .decoder)
 
 
-label : SelectionSet String Admin.Object.CertificationAuthority
-label =
-    Object.selectionForField "String" "label" [] Decode.string
-
-
-contactFullName : SelectionSet (Maybe String) Admin.Object.CertificationAuthority
-contactFullName =
-    Object.selectionForField "(Maybe String)" "contactFullName" [] (Decode.string |> Decode.nullable)
-
-
-contactEmail : SelectionSet (Maybe String) Admin.Object.CertificationAuthority
-contactEmail =
-    Object.selectionForField "(Maybe String)" "contactEmail" [] (Decode.string |> Decode.nullable)
+account :
+    SelectionSet decodesTo Admin.Object.Account
+    -> SelectionSet decodesTo Admin.Object.CertificationAuthorityLocalAccount
+account object____ =
+    Object.selectionForCompositeField "account" [] object____ Basics.identity
 
 
 departments :
     SelectionSet decodesTo Admin.Object.Department
-    -> SelectionSet (List decodesTo) Admin.Object.CertificationAuthority
+    -> SelectionSet (List decodesTo) Admin.Object.CertificationAuthorityLocalAccount
 departments object____ =
     Object.selectionForCompositeField "departments" [] object____ (Basics.identity >> Decode.list)
 
 
 certifications :
     SelectionSet decodesTo Admin.Object.Certification
-    -> SelectionSet (List decodesTo) Admin.Object.CertificationAuthority
+    -> SelectionSet (List decodesTo) Admin.Object.CertificationAuthorityLocalAccount
 certifications object____ =
     Object.selectionForCompositeField "certifications" [] object____ (Basics.identity >> Decode.list)
-
-
-certificationAuthorityLocalAccounts :
-    SelectionSet decodesTo Admin.Object.CertificationAuthorityLocalAccount
-    -> SelectionSet (List decodesTo) Admin.Object.CertificationAuthority
-certificationAuthorityLocalAccounts object____ =
-    Object.selectionForCompositeField "certificationAuthorityLocalAccounts" [] object____ (Basics.identity >> Decode.list)

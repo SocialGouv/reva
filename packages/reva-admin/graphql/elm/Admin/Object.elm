@@ -77,6 +77,10 @@ type CertificationAuthority
     = CertificationAuthority
 
 
+type CertificationAuthorityLocalAccount
+    = CertificationAuthorityLocalAccount
+
+
 type CertificationPage
     = CertificationPage
 

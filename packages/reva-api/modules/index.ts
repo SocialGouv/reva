@@ -17,6 +17,7 @@ import { loaders as accountLoaders } from "./account/account.loaders";
 import { resolvers as accountResolvers } from "./account/account.resolvers";
 import * as candidacy from "./candidacy";
 import * as candidate from "./candidate";
+import { certificationAuthorityLoaders } from "./certification-authority/certification-authority.loaders";
 import { resolvers as certificationAuthorityResolvers } from "./certification-authority/certification-authority.resolvers";
 import { feasibilityLoaders } from "./feasibility/feasibility.loaders";
 import { feasibilityResolvers } from "./feasibility/feasibility.resolvers";
@@ -66,7 +67,12 @@ export const graphqlConfiguration: MercuriusOptions = {
     resolvers,
   }),
   graphiql: !!process.env.GRAPHIQL,
-  loaders: { ...accountLoaders, ...feasibilityLoaders, ...organismLoaders },
+  loaders: {
+    ...accountLoaders,
+    ...feasibilityLoaders,
+    ...organismLoaders,
+    ...certificationAuthorityLoaders,
+  },
   errorFormatter: (error, ...args) => {
     error.errors
       ? error.errors.forEach((e) => logger.error(e))
