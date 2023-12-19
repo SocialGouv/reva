@@ -67,7 +67,7 @@ model Candidacy {
   certificationsAndRegions  CandidaciesOnRegionsAndCertifications[]
   typology                  CandidateTypology                       @default(NON_SPECIFIE)
   typologyAdditional        String?                                 @map("typology_additional")
-  ccn                       CandidacyConventionCollective?          @relation(fields: [ccnId], references: [id])
+  ccn                       CandidacyConventionCollective?          @relation(fields: [ccnId], references: [id], onDelete: NoAction)
   ccnId                     String?                                 @map("ccn_id") @db.Uuid
   firstAppointmentOccuredAt DateTime?                               @map("first_appointment_occured_at") @db.Timestamptz(6)
   appointmentCount          Int                                     @default(0) @map("appointment_count")
