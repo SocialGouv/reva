@@ -1,4 +1,4 @@
-import { DEPARTEMENTS_DOM } from "@/constants/departments.const";
+import { DEPARTEMENTS_DOM } from "@/app/agences/constants/departments.const";
 
 interface Departement {
   departementId: string;

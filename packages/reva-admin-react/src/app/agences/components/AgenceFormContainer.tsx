@@ -286,7 +286,6 @@ function AgenceFormContainer({
                   type: "email",
                   spellCheck: "false",
                 }}
-                disabled={!!agenceSelected}
               />
               <Input
                 label="Prénom de l'administrateur du compte"

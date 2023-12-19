@@ -1,6 +1,6 @@
 import { useAgencesQueries } from "@/app/agences/agencesQueries";
+import { sortDepartmentsByAlphabeticalOrderAndDOM } from "@/app/agences/utils/sortDepartmentsByAlphabeticalOrderAndDOM";
 import { Organism } from "@/graphql/generated/graphql";
-import { sortDepartmentsByAlphabeticalOrderAndDOM } from "@/utils/sortDepartmentsByAlphabeticalOrderAndDOM";
 import { useEffect, useRef } from "react";
 
 interface Departement {

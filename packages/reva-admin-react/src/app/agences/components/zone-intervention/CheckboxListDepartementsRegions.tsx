@@ -1,4 +1,4 @@
-import { DEPARTEMENTS_DOM } from "@/constants/departments.const";
+import { DEPARTEMENTS_DOM } from "@/app/agences/constants/departments.const";
 import Accordion from "@codegouvfr/react-dsfr/Accordion";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
 import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";

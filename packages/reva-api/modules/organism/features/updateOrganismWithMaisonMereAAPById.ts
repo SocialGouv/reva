@@ -18,7 +18,7 @@ export const updateOrganismWithMaisonMereAAPById = async (
     organismData: CreateOrUpdateOrganismWithMaisonMereAAPDataRequest;
   }
 ): Promise<Organism> => {
-  const { hasRole } = context;
+  const { hasRole, keycloakId } = context;
   if (!hasRole("gestion_maison_mere_aap")) {
     throw new Error("Utilisateur non autorisé");
   }
@@ -33,6 +33,23 @@ export const updateOrganismWithMaisonMereAAPById = async (
   if (!organism) {
     throw new Error(`L'organisme pour l'id ${organismId} non trouvé`);
   }
+  const account = await prismaClient.account.findUnique({
+    where: { keycloakId },
+  });
+
+  const maisonMereAAP = await prismaClient.maisonMereAAP.findMany({
+    where: {
+      gestionnaireAccountId: account?.id,
+      organismes: { some: { id: organismId } },
+    },
+  });
+
+  if (maisonMereAAP.length === 0) {
+    throw new Error(
+      `L'organisme pour l'id ${organismId} n'est pas géré par la maison mère`
+    );
+  }
+
   await updateAccountById(context, {
     accountId: organismData.accountId as string,
     accountData: {
