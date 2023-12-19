@@ -1,4 +1,7 @@
+import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
+
 import { prismaClient } from "../../../prisma/client";
+import { updateAccountById } from "../../account/features/updateAccount";
 import {
   CreateOrUpdateOrganismWithMaisonMereAAPDataRequest,
   Organism,
@@ -7,6 +10,8 @@ import {
 export const updateOrganismWithMaisonMereAAPById = async (
   context: {
     hasRole: (role: string) => boolean;
+    keycloakAdmin: KeycloakAdminClient;
+    keycloakId: string;
   },
   params: {
     organismId: string;
@@ -28,8 +33,15 @@ export const updateOrganismWithMaisonMereAAPById = async (
   if (!organism) {
     throw new Error(`L'organisme pour l'id ${organismId} non trouvé`);
   }
+  await updateAccountById(context, {
+    accountId: organismData.accountId as string,
+    accountData: {
+      email: organismData.email,
+      firstname: organismData.firstname,
+      lastname: organismData.lastname,
+    },
+  });
 
-  // Update Business DB
   const [, , organismUpdate] = await prismaClient.$transaction([
     prismaClient.organismsOnDepartments.deleteMany({
       where: { organismId: organism.id },

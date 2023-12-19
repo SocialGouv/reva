@@ -86,4 +86,5 @@ export interface CreateOrUpdateOrganismWithMaisonMereAAPDataRequest {
   firstname: string;
   lastname: string;
   email: string;
+  accountId?: string;
 }

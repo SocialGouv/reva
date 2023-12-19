@@ -10,9 +10,9 @@ const AddAgencePage = () => {
 
   return (
     <AgenceFormContainer
-      onSubmitFormMutation={async (data) =>
-        await createAgenceByMaisonMereAAPMutation(data)
-      }
+      onSubmitFormMutation={async (data) => {
+        await createAgenceByMaisonMereAAPMutation(data);
+      }}
       buttonValidateText="Créer l'agence"
       toastSuccessText="L'agence a bien été créée"
     />

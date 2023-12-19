@@ -23,7 +23,7 @@ import {
 interface AgenceFormContainerProps {
   onSubmitFormMutation: (
     data: CreateOrUpdateOrganismWithMaisonMereAapInput,
-  ) => void;
+  ) => Promise<void>;
   buttonValidateText: string;
   toastSuccessText: string;
 }
@@ -156,12 +156,13 @@ function AgenceFormContainer({
       firstname: data.firstname,
       lastname: data.lastname,
       email: data.email,
+      accountId: agenceSelected?.organismOnAccount?.id ?? "",
     };
 
     try {
-      onSubmitFormMutation(organismData);
-      successToast(toastSuccessText);
+      await onSubmitFormMutation(organismData);
       await organismsRefetch();
+      successToast(toastSuccessText);
       router.push("/agences");
     } catch (error) {
       errorToast("Une erreur est survenue");

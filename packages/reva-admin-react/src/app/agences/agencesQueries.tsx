@@ -33,6 +33,7 @@ const getAccountForConnectionUser = graphql(`
               conformeNormesAccessbilite
             }
             organismOnAccount {
+              id
               firstname
               lastname
               email
@@ -97,7 +98,6 @@ export const useAgencesQueries = () => {
         organismData,
       }),
     mutationKey: ["organism"],
-    onSuccess: async () => await organismsRefetch(),
   });
 
   const useUpdateOrganismByMaisonMereAAP = useMutation({
@@ -113,7 +113,6 @@ export const useAgencesQueries = () => {
         organismData,
       }),
     mutationKey: ["organism"],
-    onSuccess: async () => await organismsRefetch(),
   });
 
   const organisms =

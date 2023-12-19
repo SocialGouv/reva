@@ -182,10 +182,13 @@ export const resolvers = {
             "Not authorized"
           );
         }
+        const keycloakAdmin = await context.app.getKeycloakAdmin();
 
         return updateOrganismWithMaisonMereAAPById(
           {
             hasRole: context.auth.hasRole,
+            keycloakAdmin,
+            keycloakId: context.auth.userInfo?.sub,
           },
           params
         );

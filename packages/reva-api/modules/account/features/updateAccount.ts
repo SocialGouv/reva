@@ -20,7 +20,7 @@ export const updateAccountById = async (
   }
 ): Promise<Account> => {
   const { hasRole } = context;
-  if (!hasRole("admin")) {
+  if (!hasRole("admin") && !hasRole("gestion_maison_mere_aap")) {
     throw new Error("Utilisateur non autorisé");
   }
 

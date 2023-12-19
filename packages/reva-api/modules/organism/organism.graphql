@@ -122,6 +122,7 @@ input CreateOrUpdateOrganismWithMaisonMereAAPInput {
   firstname: String!
   lastname: String!
   email: String!
+  accountId: UUID
 }
 
 input CreateOrUpdateOrganismOnDegreesInput {
