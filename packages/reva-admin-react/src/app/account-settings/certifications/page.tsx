@@ -49,11 +49,13 @@ const CertificationsPage = () => {
   const resetForm = useCallback(
     () =>
       reset({
-        managedDegrees: degrees.map((d) => ({
-          id: d.id,
-          label: d.label,
-          checked: !!managedDegrees.find((md) => md.id === d.id),
-        })),
+        managedDegrees: degrees
+          .filter((d) => d.level > 2)
+          .map((d) => ({
+            id: d.id,
+            label: d.label,
+            checked: !!managedDegrees.find((md) => md.id === d.id),
+          })),
       }),
     [managedDegrees, degrees, reset],
   );

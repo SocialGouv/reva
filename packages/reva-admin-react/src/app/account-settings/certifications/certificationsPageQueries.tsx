@@ -25,6 +25,7 @@ const degreesQuery = graphql(`
     getDegrees {
       id
       label
+      level
     }
   }
 `);
