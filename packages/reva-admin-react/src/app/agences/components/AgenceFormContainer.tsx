@@ -225,195 +225,205 @@ function AgenceFormContainer({
             handleReset();
           }}
         >
-          <fieldset className="flex flex-col gap-4 w-full mt-4">
-            <legend className="text-2xl font-bold mb-4">
-              Adresse de l'agence
-            </legend>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-              <Input
-                className="!mb-4"
-                label="Numéro et nom de rue"
-                nativeInputProps={{ ...register("adresseNumeroEtNomDeRue") }}
-                state={errors.adresseNumeroEtNomDeRue ? "error" : "default"}
-                stateRelatedMessage={errors.adresseNumeroEtNomDeRue?.message}
-              />
+          <div className="flex flex-col gap-16 mb-6">
+            <fieldset className="flex flex-col gap-4 w-full">
+              <legend className="text-2xl font-bold mb-4">
+                Adresse de l'agence
+              </legend>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+                <Input
+                  className="!mb-4"
+                  label="Numéro et nom de rue"
+                  nativeInputProps={{ ...register("adresseNumeroEtNomDeRue") }}
+                  state={errors.adresseNumeroEtNomDeRue ? "error" : "default"}
+                  stateRelatedMessage={errors.adresseNumeroEtNomDeRue?.message}
+                />
 
-              <Input
-                className="!mb-4"
-                label="Informations complémentaires (optionnel)"
-                nativeInputProps={{
-                  ...register("adresseInformationsComplementaires"),
-                }}
-                state={
-                  errors.adresseInformationsComplementaires
-                    ? "error"
-                    : "default"
-                }
-                stateRelatedMessage={
-                  errors.adresseInformationsComplementaires?.message
-                }
-              />
-              <Input
-                className="!mb-4"
-                label="Code Postal"
-                nativeInputProps={{ ...register("adresseCodePostal") }}
-                state={errors.adresseCodePostal ? "error" : "default"}
-                stateRelatedMessage={errors.adresseCodePostal?.message}
-              />
+                <Input
+                  className="!mb-4"
+                  label="Informations complémentaires (optionnel)"
+                  nativeInputProps={{
+                    ...register("adresseInformationsComplementaires"),
+                  }}
+                  state={
+                    errors.adresseInformationsComplementaires
+                      ? "error"
+                      : "default"
+                  }
+                  stateRelatedMessage={
+                    errors.adresseInformationsComplementaires?.message
+                  }
+                />
+                <Input
+                  className="!mb-4"
+                  label="Code Postal"
+                  nativeInputProps={{ ...register("adresseCodePostal") }}
+                  state={errors.adresseCodePostal ? "error" : "default"}
+                  stateRelatedMessage={errors.adresseCodePostal?.message}
+                />
 
-              <Input
-                className="!mb-4"
-                label="Ville"
-                nativeInputProps={{ ...register("adresseVille") }}
-                state={errors.adresseVille ? "error" : "default"}
-                stateRelatedMessage={errors.adresseVille?.message}
+                <Input
+                  className="!mb-4"
+                  label="Ville"
+                  nativeInputProps={{ ...register("adresseVille") }}
+                  state={errors.adresseVille ? "error" : "default"}
+                  stateRelatedMessage={errors.adresseVille?.message}
+                />
+              </div>
+            </fieldset>
+
+            <fieldset className="flex flex-col gap-4">
+              <legend className="text-2xl font-bold mb-4">
+                Informations commerciales de l'agence affichées aux candidats
+              </legend>
+              <Alert
+                severity="info"
+                className="mb-4"
+                title=""
+                description="Les informations suivantes seront affichées aux candidats dans les résultats de recherche d'un AAP et dans le message récapitulant leur candidature. Si elles ne sont pas renseignées, les informations juridiques et administrateur seront prises par défaut."
+              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                <div>
+                  <Input
+                    className="!mb-4"
+                    label="Nom commercial"
+                    nativeInputProps={{ ...register("nom") }}
+                    state={errors.nom ? "error" : "default"}
+                    stateRelatedMessage={errors.nom?.message}
+                  />
+                  <SmallNotice>
+                    Si vous ne renseignez pas ce champ, votre raison sociale
+                    sera affichée aux candidats par défaut.
+                  </SmallNotice>
+                </div>
+
+                <div>
+                  <Input
+                    className="!mb-4"
+                    label="Téléphone"
+                    nativeInputProps={{ ...register("telephone") }}
+                    state={errors.telephone ? "error" : "default"}
+                    stateRelatedMessage={errors.telephone?.message}
+                  />
+                  <SmallNotice>
+                    Ce numéro de téléphone sera également envoyé aux candidats
+                    dans le message récapitulant leur inscription.
+                  </SmallNotice>
+                </div>
+
+                <div>
+                  <Input
+                    className="!mb-4"
+                    label="Site internet de l'établissement (optionnel)"
+                    nativeInputProps={{ ...register("siteInternet") }}
+                    state={errors.siteInternet ? "error" : "default"}
+                    stateRelatedMessage={errors.siteInternet?.message}
+                  />
+                  <SmallNotice>
+                    Ajouter le lien de votre établissement peut permettre à
+                    celui-ci de se démarquer lorsque le candidat choisira son
+                    organisme accompagnateur.
+                  </SmallNotice>
+                </div>
+
+                <div>
+                  <Input
+                    className="!mb-4"
+                    label="E-mail de contact"
+                    nativeInputProps={{ ...register("emailContact") }}
+                    state={errors.emailContact ? "error" : "default"}
+                    stateRelatedMessage={errors.emailContact?.message}
+                  />
+                  <SmallNotice>
+                    Cet e-mail sera également envoyé aux candidats dans le
+                    message récapitulant leur inscription.
+                  </SmallNotice>
+                </div>
+              </div>
+            </fieldset>
+
+            <div className="w-full">
+              <RadioButtons
+                className="m-0 p-0"
+                legend="Votre établissement est-il conforme aux normes d'accessibilité et peut recevoir du public à mobilité réduite (PMR) ?"
+                options={[
+                  {
+                    label: "Oui",
+                    nativeInputProps: {
+                      value: "CONFORME",
+                      ...register("conformeNormesAccessbilite"),
+                    },
+                  },
+                  {
+                    label: "Non",
+                    nativeInputProps: {
+                      value: "NON_CONFORME",
+                      ...register("conformeNormesAccessbilite"),
+                    },
+                  },
+                  {
+                    label: "Cet établissement ne reçoit pas de public",
+                    nativeInputProps: {
+                      value: "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC",
+                      ...register("conformeNormesAccessbilite"),
+                    },
+                  },
+                ]}
+                state={errors.conformeNormesAccessbilite ? "error" : "default"}
+                stateRelatedMessage={"Veuillez sélectionner une option"}
               />
             </div>
-          </fieldset>
 
-          <fieldset className="flex flex-col gap-4 w-full mt-4">
-            <legend className="text-2xl font-bold mb-4">
-              Informations de l'agence
-            </legend>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-              <Input
-                label="Adresse email du compte administrateur"
-                state={errors.email ? "error" : "default"}
-                stateRelatedMessage={errors.email?.message}
-                nativeInputProps={{
-                  ...register("email"),
-                  autoComplete: "email",
-                  type: "email",
-                  spellCheck: "false",
-                }}
-              />
-              <Input
-                label="Prénom de l'administrateur du compte"
-                state={errors.firstname ? "error" : "default"}
-                stateRelatedMessage={errors.firstname?.message}
-                nativeInputProps={{
-                  ...register("firstname"),
-                  autoComplete: "given-name",
-                }}
-              />
-              <Input
-                label="Nom de l'administrateur du compte"
-                state={errors.lastname ? "error" : "default"}
-                stateRelatedMessage={errors.lastname?.message}
-                nativeInputProps={{
-                  ...register("lastname"),
-                  autoComplete: "family-name",
-                }}
-              />
+            <div className="w-full">
+              <ZoneIntervention />
             </div>
-          </fieldset>
 
-          <fieldset className="flex flex-col gap-4 mt-4">
-            <legend className="text-2xl font-bold mb-4">
-              Informations commerciales de l’agence affichées aux candidats
-            </legend>
-            <Alert
-              severity="info"
-              className="mb-4"
-              title=""
-              description="Les informations suivantes seront affichées aux candidats dans les résultats de recherche d’un AAP et dans le message récapitulant leur candidature. Si elles ne sont pas renseignées, les informations juridiques et administrateur seront prises par défaut."
-            />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-              <div>
+            <fieldset className="flex flex-col gap-4 w-full">
+              <legend className="text-2xl font-bold mb-4">
+                Informations du responsable d'agence
+              </legend>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
                 <Input
-                  className="!mb-4"
-                  label="Nom commercial"
-                  nativeInputProps={{ ...register("nom") }}
-                  state={errors.nom ? "error" : "default"}
-                  stateRelatedMessage={errors.nom?.message}
+                  label="Nom"
+                  state={errors.lastname ? "error" : "default"}
+                  stateRelatedMessage={errors.lastname?.message}
+                  nativeInputProps={{
+                    ...register("lastname"),
+                    autoComplete: "family-name",
+                  }}
                 />
-                <SmallNotice>
-                  Si vous ne renseignez pas ce champ, votre raison sociale sera
-                  affichée aux candidats par défaut.
-                </SmallNotice>
-              </div>
-
-              <div>
                 <Input
-                  className="!mb-4"
-                  label="Téléphone"
-                  nativeInputProps={{ ...register("telephone") }}
-                  state={errors.telephone ? "error" : "default"}
-                  stateRelatedMessage={errors.telephone?.message}
+                  label="Prénom"
+                  state={errors.firstname ? "error" : "default"}
+                  stateRelatedMessage={errors.firstname?.message}
+                  nativeInputProps={{
+                    ...register("firstname"),
+                    autoComplete: "given-name",
+                  }}
                 />
-                <SmallNotice>
-                  Ce numéro de téléphone sera également envoyé aux candidats
-                  dans le message récapitulant leur inscription.
-                </SmallNotice>
+                <div>
+                  <Input
+                    label="Adresse email"
+                    state={errors.email ? "error" : "default"}
+                    stateRelatedMessage={errors.email?.message}
+                    nativeInputProps={{
+                      ...register("email"),
+                      autoComplete: "email",
+                      type: "email",
+                      spellCheck: "false",
+                    }}
+                  />
+                  <SmallNotice>
+                    Le responsable d'agence recevra la confirmation pour la
+                    validation du compte sur cet email. Il lui sera également
+                    nécessaire pour se connecter à la plateforme.
+                  </SmallNotice>
+                </div>
               </div>
-
-              <div>
-                <Input
-                  className="!mb-4"
-                  label="Site internet de l'établissement (optionnel)"
-                  nativeInputProps={{ ...register("siteInternet") }}
-                  state={errors.siteInternet ? "error" : "default"}
-                  stateRelatedMessage={errors.siteInternet?.message}
-                />
-                <SmallNotice>
-                  Ajouter le lien de votre établissement peut permettre à
-                  celui-ci de se démarquer lorsque le candidat choisira son
-                  organisme accompagnateur.
-                </SmallNotice>
-              </div>
-
-              <div>
-                <Input
-                  className="!mb-4"
-                  label="E-mail de contact"
-                  nativeInputProps={{ ...register("emailContact") }}
-                  state={errors.emailContact ? "error" : "default"}
-                  stateRelatedMessage={errors.emailContact?.message}
-                />
-                <SmallNotice>
-                  Cet e-mail sera également envoyé aux candidats dans le message
-                  récapitulant leur inscription.
-                </SmallNotice>
-              </div>
-            </div>
-          </fieldset>
-
-          <div className="w-full mt-4">
-            <RadioButtons
-              legend="Votre établissement est-il conforme aux normes d'accessibilité et peut recevoir du public à mobilité réduite (PMR) ?"
-              options={[
-                {
-                  label: "Oui",
-                  nativeInputProps: {
-                    value: "CONFORME",
-                    ...register("conformeNormesAccessbilite"),
-                  },
-                },
-                {
-                  label: "Non",
-                  nativeInputProps: {
-                    value: "NON_CONFORME",
-                    ...register("conformeNormesAccessbilite"),
-                  },
-                },
-                {
-                  label: "Cet établissement ne reçoit pas de public",
-                  nativeInputProps: {
-                    value: "ETABLISSEMENT_NE_RECOIT_PAS_DE_PUBLIC",
-                    ...register("conformeNormesAccessbilite"),
-                  },
-                },
-              ]}
-              state={errors.conformeNormesAccessbilite ? "error" : "default"}
-              stateRelatedMessage={"Veuillez sélectionner une option"}
-            />
+            </fieldset>
           </div>
 
-          <div className="w-full mt-4">
-            <ZoneIntervention />
-          </div>
-
-          <div className="flex flex-col md:flex-row items-center md:items-end justify-between mt-10">
+          <div className="flex flex-col md:flex-row items-center md:items-end justify-between">
             <div></div>
             <div className="flex flex-col md:flex-row gap-4 self-center md:self-end mt-8 md:mt-0">
               <Button priority="secondary" type="reset">

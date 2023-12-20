@@ -13,12 +13,12 @@ function ZoneIntervention() {
     return null;
 
   return (
-    <fieldset className="mt-8">
+    <fieldset>
       <legend className="text-2xl font-bold mb-4">Zone d'intervention</legend>
       <div className="flex flex-col sm:flex-row gap-y-8 sm:gap-x-8">
         {!!zoneInterventionPresentiel?.length && (
           <CheckboxListWithChildren
-            listTitle="Zone d'intervention en présentiel"
+            listTitle="Zone en présentiel"
             setZoneIntervention={(zoneInterventionPresentiel) =>
               setValue("zoneInterventionPresentiel", zoneInterventionPresentiel)
             }
@@ -27,7 +27,7 @@ function ZoneIntervention() {
         )}
         {!!zoneInterventionDistanciel?.length && (
           <CheckboxListWithChildren
-            listTitle="Zone d'intervention à distance"
+            listTitle="Zone en distanciel"
             zoneIntervention={zoneInterventionDistanciel}
             setZoneIntervention={(zoneInterventionDistanciel) =>
               setValue("zoneInterventionDistanciel", zoneInterventionDistanciel)
