@@ -156,7 +156,7 @@ function AgenceFormContainer({
       firstname: data.firstname,
       lastname: data.lastname,
       email: data.email,
-      accountId: agenceSelected?.organismOnAccount?.id ?? "",
+      accountId: agenceSelected?.organismOnAccount?.id,
     };
 
     try {
@@ -280,7 +280,7 @@ function AgenceFormContainer({
                 severity="info"
                 className="mb-4"
                 title=""
-                description="Les informations suivantes seront affichées aux candidats dans les résultats de recherche d'un AAP et dans le message récapitulant leur candidature. Si elles ne sont pas renseignées, les informations juridiques et administrateur seront prises par défaut."
+                description="Les informations suivantes seront affichées aux candidats dans les résultats de recherche d'un AAP et dans le message récapitulant leur candidature. "
               />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                 <div>
@@ -291,10 +291,6 @@ function AgenceFormContainer({
                     state={errors.nom ? "error" : "default"}
                     stateRelatedMessage={errors.nom?.message}
                   />
-                  <SmallNotice>
-                    Si vous ne renseignez pas ce champ, votre raison sociale
-                    sera affichée aux candidats par défaut.
-                  </SmallNotice>
                 </div>
 
                 <div>
