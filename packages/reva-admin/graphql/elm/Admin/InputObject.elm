@@ -291,6 +291,41 @@ encodeCertificationChangeInput input____ =
         [ ( "candidacyId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.candidacyId |> Just ), ( "certificationId", (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId) input____.certificationId |> Just ) ]
 
 
+buildCreateCertificationAuthorityLocalAccountInput :
+    CreateCertificationAuthorityLocalAccountInputRequiredFields
+    -> CreateCertificationAuthorityLocalAccountInput
+buildCreateCertificationAuthorityLocalAccountInput required____ =
+    { accountFirstname = required____.accountFirstname, accountLastname = required____.accountLastname, accountEmail = required____.accountEmail, departmentIds = required____.departmentIds, certificationIds = required____.certificationIds }
+
+
+type alias CreateCertificationAuthorityLocalAccountInputRequiredFields =
+    { accountFirstname : String
+    , accountLastname : String
+    , accountEmail : String
+    , departmentIds : List String
+    , certificationIds : List String
+    }
+
+
+{-| Type for the CreateCertificationAuthorityLocalAccountInput input object.
+-}
+type alias CreateCertificationAuthorityLocalAccountInput =
+    { accountFirstname : String
+    , accountLastname : String
+    , accountEmail : String
+    , departmentIds : List String
+    , certificationIds : List String
+    }
+
+
+{-| Encode a CreateCertificationAuthorityLocalAccountInput into a value that can be used as an argument.
+-}
+encodeCreateCertificationAuthorityLocalAccountInput : CreateCertificationAuthorityLocalAccountInput -> Value
+encodeCreateCertificationAuthorityLocalAccountInput input____ =
+    Encode.maybeObject
+        [ ( "accountFirstname", Encode.string input____.accountFirstname |> Just ), ( "accountLastname", Encode.string input____.accountLastname |> Just ), ( "accountEmail", Encode.string input____.accountEmail |> Just ), ( "departmentIds", (Encode.string |> Encode.list) input____.departmentIds |> Just ), ( "certificationIds", (Encode.string |> Encode.list) input____.certificationIds |> Just ) ]
+
+
 buildCreateOrUpdateInformationsCommercialesInput :
     CreateOrUpdateInformationsCommercialesInputRequiredFields
     -> (CreateOrUpdateInformationsCommercialesInputOptionalFields -> CreateOrUpdateInformationsCommercialesInputOptionalFields)

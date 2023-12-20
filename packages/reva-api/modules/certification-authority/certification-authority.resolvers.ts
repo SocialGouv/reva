@@ -6,6 +6,7 @@ import {
 } from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
 import { CertificationAuthority } from "./certification-authority.types";
+import { createCertificationAuthorityLocalAccount } from "./features/createCertificationAuthorityLocalAccount";
 import { getCertificationAuthorityById } from "./features/getCertificationAuthority";
 import { getCertificationAuthorityLocalAccountByCertificationAuthorityId } from "./features/getCertificationAuthorityLocalAccountByCertificationAuthorityId";
 import { getCertificationsByCertificationAuthorityId } from "./features/getCertificationsByCertificationAuthorityId";
@@ -58,6 +59,27 @@ export const resolvers = {
         logger.error(e);
         throw new mercurius.ErrorWithProps((e as Error).message, e as Error);
       }
+    },
+    certification_authority_createCertificationAuthorityLocalAccount: async (
+      _parent: unknown,
+      params: {
+        input: {
+          accountFirstname: string;
+          accountLastname: string;
+          accountEmail: string;
+          departmentIds: string[];
+          certificationIds: string[];
+        };
+      },
+      context: GraphqlContext
+    ) => {
+      const keycloakAdmin = await context.app.getKeycloakAdmin();
+
+      return createCertificationAuthorityLocalAccount({
+        ...params.input,
+        certificationAuthorityKeycloakId: context.auth.userInfo?.sub || "",
+        keycloakAdmin,
+      });
     },
   },
   Query: {

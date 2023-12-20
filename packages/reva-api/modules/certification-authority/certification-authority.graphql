@@ -27,9 +27,20 @@ input UpdateCertificationAuthorityInput {
   contactEmail: String
 }
 
+input CreateCertificationAuthorityLocalAccountInput {
+  accountFirstname: String!
+  accountLastname: String!
+  accountEmail: String!
+  departmentIds: [String!]!
+  certificationIds: [String!]!
+}
+
 type Mutation {
   certification_authority_updateCertificationAuthority(
     certificationAuthorityId: ID!
     certificationAuthorityData: UpdateCertificationAuthorityInput!
   ): CertificationAuthority!
+  certification_authority_createCertificationAuthorityLocalAccount(
+    input: CreateCertificationAuthorityLocalAccountInput!
+  ): CertificationAuthorityLocalAccount!
 }

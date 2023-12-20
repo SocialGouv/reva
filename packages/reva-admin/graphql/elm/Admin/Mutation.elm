@@ -440,6 +440,18 @@ certification_authority_updateCertificationAuthority requiredArgs____ object____
     Object.selectionForCompositeField "certification_authority_updateCertificationAuthority" [ Argument.required "certificationAuthorityId" requiredArgs____.certificationAuthorityId (Data.Scalar.codecs |> Admin.Scalar.unwrapEncoder .codecId), Argument.required "certificationAuthorityData" requiredArgs____.certificationAuthorityData Admin.InputObject.encodeUpdateCertificationAuthorityInput ] object____ Basics.identity
 
 
+type alias CertificationAuthorityCreateCertificationAuthorityLocalAccountRequiredArguments =
+    { input : Admin.InputObject.CreateCertificationAuthorityLocalAccountInput }
+
+
+certification_authority_createCertificationAuthorityLocalAccount :
+    CertificationAuthorityCreateCertificationAuthorityLocalAccountRequiredArguments
+    -> SelectionSet decodesTo Admin.Object.CertificationAuthorityLocalAccount
+    -> SelectionSet decodesTo RootMutation
+certification_authority_createCertificationAuthorityLocalAccount requiredArgs____ object____ =
+    Object.selectionForCompositeField "certification_authority_createCertificationAuthorityLocalAccount" [ Argument.required "input" requiredArgs____.input Admin.InputObject.encodeCreateCertificationAuthorityLocalAccountInput ] object____ Basics.identity
+
+
 type alias CandidacyCreateFundingRequestUnifvaeRequiredArguments =
     { candidacyId : Data.Scalar.Uuid
     , fundingRequest : Admin.InputObject.FundingRequestUnifvaeInput
