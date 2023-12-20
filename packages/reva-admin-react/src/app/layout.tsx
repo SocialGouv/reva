@@ -98,7 +98,7 @@ const LayoutContent = ({ children }: { children: JSX.Element }) => {
       >
         <div className="fr-container flex flex-col flex-1">
           <div
-            className={`fr-container flex-1 md:mt-16 px-8 pt-10 pb-4 fr-grid-row bg-white mb-12`}
+            className={`fr-container flex-1 md:mt-16 px-8 pt-8 pb-8 fr-grid-row bg-white mb-12`}
           >
             {authenticated && children}
           </div>

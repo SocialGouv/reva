@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .fix-accordion {
+    .fr-collapse--expanded {
+      margin-right: 0px;
+      padding-right: 0px;
+    }
+  }
+
+  .side-bar-menu-add-button {
+    li:last-child {
+      a {
+        cursor: default;
+        background-color: white;
+
+        ::hover {
+          background-color: white;
+        }
+      }
+    }
+  }
+}

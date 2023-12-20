@@ -161,6 +161,9 @@ headerMenuModal context activeHeaderLink =
         isAgenciesActive =
             List.member "AAP_AGENCES" context.activeFeatures
 
+        isLocalAccountsActive =
+            List.member "ADMIN_CERTIFICATION_AUTHORITY" context.activeFeatures
+
         navLinks =
             if Api.Token.isAdmin context.token then
                 [ navItemLink "Candidatures" "/admin/candidacies" Candidacies
@@ -169,6 +172,15 @@ headerMenuModal context activeHeaderLink =
                 , navItemLink "Certifications" (baseUrl <| Route.Certifications Route.emptyCertificationsFilters) Certifications
                 , navItemLink "Dossiers de faisabilité" (baseUrl <| Route.Feasibilities Route.emptyFeasibilityFilters) Feasibilities
                 ]
+
+            else if Api.Token.isCertificationAuthority context.token then
+                if isLocalAccountsActive then
+                    [ navItemLink "Dossiers de faisabilité" (baseUrl <| Route.Feasibilities Route.emptyFeasibilityFilters) Feasibilities
+                    , itemLink "Gestion des comptes locaux" (adminReactUrl "/local-accounts") True False
+                    ]
+
+                else
+                    [ navItemLink "Dossiers de faisabilité" (baseUrl <| Route.Feasibilities Route.emptyFeasibilityFilters) Feasibilities ]
 
             else if
                 (isAccountSettingsActive || isAgenciesActive)

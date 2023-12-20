@@ -49,7 +49,7 @@ const AgencesLayout = ({ children }: { children: ReactNode }) => {
       )}
       {organismsStatus == "success" && organisms && (
         <SideMenu
-          className="flex-shrink-0 md:w-[330px]"
+          className="flex-shrink-0 md:w-[330px] side-bar-menu-add-button"
           align="left"
           classes={{ inner: "h-full" }}
           burgerMenuButtonText="Agences"

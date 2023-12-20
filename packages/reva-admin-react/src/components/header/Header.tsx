@@ -8,19 +8,30 @@ import { usePathname } from "next/navigation";
 
 export const Header = () => {
   const currentPathname = usePathname();
-  const { isAdmin, isOrganism, isGestionnaireMaisonMereAAP } = useAuth();
+  const {
+    isAdmin,
+    isOrganism,
+    isGestionnaireMaisonMereAAP,
+    isCertificationAuthority,
+  } = useAuth();
   const { isFeatureActive } = useFeatureflipping();
   const { authenticated, logout } = useKeycloakContext();
 
   const navigation = authenticated
     ? [
-        {
-          text: "Candidatures",
-          linkProps: {
-            href: ADMIN_ELM_URL + "/candidacies",
-            target: "_self",
-          },
-        },
+        ...(!isCertificationAuthority &&
+        isFeatureActive("ADMIN_CERTIFICATION_AUTHORITY")
+          ? [
+              {
+                text: "Candidatures",
+                linkProps: {
+                  href: ADMIN_ELM_URL + "/candidacies",
+                  target: "_self",
+                },
+              },
+            ]
+          : []),
+
         ...(isGestionnaireMaisonMereAAP && isFeatureActive("AAP_AGENCES")
           ? [
               {
@@ -68,12 +79,29 @@ export const Header = () => {
                   target: "_self",
                 },
               },
+            ]
+          : []),
+        ...(isAdmin || isCertificationAuthority
+          ? [
               {
                 text: "Dossiers de faisabilité",
                 linkProps: {
                   href: ADMIN_ELM_URL + "/feasibilities",
                   target: "_self",
                 },
+              },
+            ]
+          : []),
+        ...(isCertificationAuthority &&
+        isFeatureActive("ADMIN_CERTIFICATION_AUTHORITY")
+          ? [
+              {
+                text: "Gestion des comptes locaux",
+                linkProps: {
+                  href: "/local-accounts/",
+                  target: "_self",
+                },
+                isActive: currentPathname.startsWith("/local-accounts"),
               },
             ]
           : []),
