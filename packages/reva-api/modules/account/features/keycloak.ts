@@ -47,7 +47,8 @@ export const createAccount =
       | "admin"
       | "organism"
       | "certification_authority"
-      | "gestionnaire_maison_mere_aap";
+      | "gestionnaire_maison_mere_aap"
+      | "certification_authority_local_account";
   }): Promise<Either<string, string>> => {
     try {
       const payload: UserRepresentation & { realm?: string | undefined } = {
@@ -69,6 +70,9 @@ export const createAccount =
       switch (account.group) {
         case "gestionnaire_maison_mere_aap":
           userProfileType = "organism";
+          break;
+        case "certification_authority_local_account":
+          userProfileType = "certification_authority";
           break;
         default:
           userProfileType = account.group;

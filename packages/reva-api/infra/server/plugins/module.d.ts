@@ -9,4 +9,5 @@ declare type KeyCloakGroup =
   | "admin"
   | "organism"
   | "certification_authority"
-  | "gestionnaire_maison_mere_aap";
+  | "gestionnaire_maison_mere_aap"
+  | "certification_authority_local_account";

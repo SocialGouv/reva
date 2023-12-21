@@ -53,8 +53,7 @@ export const createCertificationAuthorityLocalAccount = async ({
     email: accountEmail,
     username: accountEmail,
     keycloakAdmin,
-    group: "certification_authority",
-    certificationAuthorityId,
+    group: "certification_authority_local_account",
   });
 
   if (!account) {
