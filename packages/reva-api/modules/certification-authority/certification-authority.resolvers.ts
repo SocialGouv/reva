@@ -6,6 +6,7 @@ import {
 } from "../shared/error/functionalError";
 import { logger } from "../shared/logger";
 import { CertificationAuthority } from "./certification-authority.types";
+import { canUserManageCertificationAuthorityLocalAccount } from "./features/canUserManageCertifiationAuthorityLocalAccount";
 import { createCertificationAuthorityLocalAccount } from "./features/createCertificationAuthorityLocalAccount";
 import { getCertificationAuthorityById } from "./features/getCertificationAuthority";
 import { getCertificationAuthorityLocalAccountByCertificationAuthorityId } from "./features/getCertificationAuthorityLocalAccountByCertificationAuthorityId";
@@ -94,6 +95,17 @@ export const resolvers = {
       },
       context: GraphqlContext
     ) => {
+      const canManage = await canUserManageCertificationAuthorityLocalAccount({
+        certificationAuthorityLocalAccountId:
+          params.input.certificationAuthorityLocalAccountId,
+        userKeycloakId: context.auth.userInfo?.sub || "",
+        userRoles: context.auth.userInfo?.realm_access?.roles || [],
+      });
+      if (!canManage) {
+        throw new Error(
+          "L'utilisateur n'est pas autorisé à modifier ce compte local d'autorité de certification"
+        );
+      }
       return updateCertificationAuthorityLocalAccount(params.input);
     },
   },

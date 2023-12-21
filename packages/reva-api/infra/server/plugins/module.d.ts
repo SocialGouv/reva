@@ -3,6 +3,7 @@ declare type KeyCloakUserRole =
   | "manage_candidacy"
   | "manage_feasibility"
   | "gestion_maison_mere_aap"
+  | "manage_certification_authority_local_account"
   | "candidate";
 
 declare type KeyCloakGroup =

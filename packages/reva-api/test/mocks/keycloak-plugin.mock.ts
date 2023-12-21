@@ -57,6 +57,17 @@ const keycloakPluginMock: FastifyPluginAsync = async (
             },
           };
           break;
+        case "manage_certification_authority_local_account":
+          userInfo = {
+            sub,
+            realm_access: {
+              roles: [
+                "manage_feasibility",
+                "manage_certification_authority_local_account",
+              ],
+            },
+          };
+          break;
       }
       req.auth = {
         hasRole: (role: KeyCloakUserRole) => {
