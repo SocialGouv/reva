@@ -787,16 +787,69 @@ export const canManageFeasibility = async ({
   if (hasRole("admin")) {
     return true;
   } else if (hasRole("manage_feasibility")) {
-    //is user account attached to a certification authority which manage the candidacy certification ?
-    const result = await prismaClient.account.findFirst({
-      where: {
-        keycloakId,
-        certificationAuthorityId: feasibility.certificationAuthorityId,
-      },
-      select: { id: true },
-    });
+    //certification authority admin account
+    if (hasRole("manage_certification_authority_local_account")) {
+      //is user account attached to a certification authority which manage the candidacy certification ?
+      return !!(await prismaClient.account.findFirst({
+        where: {
+          keycloakId,
+          certificationAuthorityId: feasibility.certificationAuthorityId,
+        },
+        select: { id: true },
+      }));
+    }
+    //certification authority local account
+    //check if candidacy department and certification are in the local account access perimeter
+    else {
+      const account = await getAccountByKeycloakId({ keycloakId });
+      if (!account) {
+        throw new Error("Compte utilisateur non trouvé");
+      }
+      const certificationAuthorityLocalAccount =
+        await getCertificationAuthorityLocalAccountByAccountId({
+          accountId: account.id,
+        });
 
-    return !!result;
+      if (!certificationAuthorityLocalAccount) {
+        throw new Error(
+          "Compte local de l'autorité de certification non trouvé"
+        );
+      }
+
+      if (
+        certificationAuthorityLocalAccount.certificationAuthorityId !==
+        feasibility.certificationAuthorityId
+      ) {
+        throw new Error("Vous n'êtes pas autorisé à consulter ce dossier");
+      }
+
+      const departmentIds =
+        certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnDepartment.map(
+          (calad) => calad.departmentId
+        );
+
+      const certificationIds =
+        certificationAuthorityLocalAccount?.certificationAuthorityLocalAccountOnCertification.map(
+          (calac) => calac.certificationId
+        );
+
+      return !!(await prismaClient.feasibility.findFirst({
+        where: {
+          id: feasibility.id,
+          certificationAuthorityId:
+            certificationAuthorityLocalAccount.certificationAuthorityId,
+          candidacy: {
+            departmentId: { in: departmentIds },
+            certificationsAndRegions: {
+              some: {
+                isActive: true,
+                certificationId: { in: certificationIds },
+              },
+            },
+          },
+        },
+      }));
+    }
   }
 
   return false;
