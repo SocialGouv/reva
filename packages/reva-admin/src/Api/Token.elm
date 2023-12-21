@@ -7,6 +7,7 @@ type Token
         , isCertificationAuthority : Bool
         , isOrganism : Bool
         , isGestionnaireMaisonMereAAP : Bool
+        , isAdminCertificationAuthority : Bool
         , email : String
         , value : String
         }
@@ -42,13 +43,14 @@ isGestionnaireMaisonMereAAP (Token token) =
     token.isGestionnaireMaisonMereAAP
 
 
-init : Bool -> Bool -> Bool -> Bool -> String -> String -> Token
-init isAdminToken isCertificationAuthorityToken isOrganismToken isGestionnaireMaisonMereAAPToken email value =
+init : Bool -> Bool -> Bool -> Bool -> Bool -> String -> String -> Token
+init isAdminToken isCertificationAuthorityToken isOrganismToken isGestionnaireMaisonMereAAPToken isAdminCertificationAuthorityToken email value =
     Token
         { isAdmin = isAdminToken
         , isCertificationAuthority = isCertificationAuthorityToken
         , isOrganism = isOrganismToken
         , isGestionnaireMaisonMereAAP = isGestionnaireMaisonMereAAPToken
+        , isAdminCertificationAuthority = isAdminCertificationAuthorityToken
         , email = email
         , value = value
         }
@@ -61,6 +63,7 @@ anonymous =
         , isCertificationAuthority = False
         , isOrganism = False
         , isGestionnaireMaisonMereAAP = False
+        , isAdminCertificationAuthority = False
         , email = ""
         , value = "anonymous"
         }

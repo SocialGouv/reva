@@ -65,6 +65,9 @@ class KeycloakElement extends HTMLElement {
             isGestionnaireMaisonMereAAP: keycloak.hasResourceRole(
               "gestion_maison_mere_aap",
             ),
+            isAdminCertificationAuthority: keycloak.hasResourceRole(
+              "manage_certification_authority_local_account",
+            ),
             token: keycloak.token,
             email: keycloak?.tokenParsed?.email,
           },
